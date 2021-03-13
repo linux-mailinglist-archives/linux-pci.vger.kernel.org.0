@@ -2,261 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CB77339D6C
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 10:46:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD99A339DB6
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 12:13:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230380AbhCMJqS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Mar 2021 04:46:18 -0500
-Received: from lizzard.sbs.de ([194.138.37.39]:37057 "EHLO lizzard.sbs.de"
+        id S232904AbhCMLNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 Mar 2021 06:13:18 -0500
+Received: from mga17.intel.com ([192.55.52.151]:34551 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230309AbhCMJqS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 13 Mar 2021 04:46:18 -0500
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 12D9k0DI026052
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Mar 2021 10:46:00 +0100
-Received: from md1za8fc.ad001.siemens.net ([139.22.115.33])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 12D9jvnd007966;
-        Sat, 13 Mar 2021 10:45:58 +0100
-Date:   Sat, 13 Mar 2021 10:45:57 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
- support library
-Message-ID: <20210313104557.321de08e@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210308122020.57071-4-andriy.shevchenko@linux.intel.com>
-References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
-        <20210308122020.57071-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S230349AbhCMLND (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 13 Mar 2021 06:13:03 -0500
+IronPort-SDR: x6mOhrpk7m+Nrz11pZLcWxkTY/nQxY6ksC0LNxe4s9FKk4TFNXt5Waud8V9lDhVY8ku079h9Z+
+ 3017fOf4N1pw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9921"; a="168848989"
+X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
+   d="scan'208";a="168848989"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2021 03:13:03 -0800
+IronPort-SDR: OVIufC9CCfFq7aLtxc/7rsixXwNpo47zwZKalNoJELleSNY7B1UFrGxKUmo8T1aX/cF3VHcEYY
+ Hegk1bSy0EDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
+   d="scan'208";a="600884239"
+Received: from lkp-server02.sh.intel.com (HELO ce64c092ff93) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Mar 2021 03:13:02 -0800
+Received: from kbuild by ce64c092ff93 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lL2Cb-0001zl-GG; Sat, 13 Mar 2021 11:13:01 +0000
+Date:   Sat, 13 Mar 2021 19:12:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/misc] BUILD SUCCESS
+ 1bb73841ea7a88765db7f641a90120490f1f4aee
+Message-ID: <604c9e31.sv4W1M0igEcnWzKq%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Mon, 8 Mar 2021 14:20:16 +0200
-schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: 1bb73841ea7a88765db7f641a90120490f1f4aee  PCI: Remove MicroGate SyncLink device IDs
 
-> From: Jonathan Yong <jonathan.yong@intel.com>
-> 
-> There is already one and at least one more user is coming which
-> requires an access to Primary to Sideband bridge (P2SB) in order to
-> get IO or MMIO bar hidden by BIOS. Create a library to access P2SB
-> for x86 devices.
-> 
-> Signed-off-by: Jonathan Yong <jonathan.yong@intel.com>
-> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pci/Kconfig      |  8 ++++
->  drivers/pci/Makefile     |  1 +
->  drivers/pci/pci-p2sb.c   | 83
-> ++++++++++++++++++++++++++++++++++++++++ include/linux/pci-p2sb.h |
-> 28 ++++++++++++++ 4 files changed, 120 insertions(+)
->  create mode 100644 drivers/pci/pci-p2sb.c
->  create mode 100644 include/linux/pci-p2sb.h
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 0c473d75e625..740e5b30d6fd 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -252,6 +252,14 @@ config PCIE_BUS_PEER2PEER
->  
->  endchoice
->  
-> +config PCI_P2SB
-> +	bool "Primary to Sideband (P2SB) bridge access support"
-> +	depends on PCI && X86
-> +	help
-> +	  The Primary to Sideband bridge is an interface to some PCI
-> +	  devices connected through it. In particular, SPI NOR
-> +	  controller in Intel Apollo Lake SoC is one of such devices.
-> +
->  source "drivers/pci/hotplug/Kconfig"
->  source "drivers/pci/controller/Kconfig"
->  source "drivers/pci/endpoint/Kconfig"
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index d62c4ac4ae1b..eee8d5dda7d9 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -23,6 +23,7 @@ obj-$(CONFIG_PCI_IOV)		+= iov.o
->  obj-$(CONFIG_PCI_BRIDGE_EMUL)	+= pci-bridge-emul.o
->  obj-$(CONFIG_PCI_LABEL)		+= pci-label.o
->  obj-$(CONFIG_X86_INTEL_MID)	+= pci-mid.o
-> +obj-$(CONFIG_PCI_P2SB)		+= pci-p2sb.o
->  obj-$(CONFIG_PCI_SYSCALL)	+= syscall.o
->  obj-$(CONFIG_PCI_STUB)		+= pci-stub.o
->  obj-$(CONFIG_PCI_PF_STUB)	+= pci-pf-stub.o
-> diff --git a/drivers/pci/pci-p2sb.c b/drivers/pci/pci-p2sb.c
-> new file mode 100644
-> index 000000000000..68d7dad48cdb
-> --- /dev/null
-> +++ b/drivers/pci/pci-p2sb.c
-> @@ -0,0 +1,83 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Primary to Sideband bridge (P2SB) access support
-> + *
-> + * Copyright (c) 2017, 2021 Intel Corporation.
-> + *
-> + * Authors: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> + *	    Jonathan Yong <jonathan.yong@intel.com>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/export.h>
-> +#include <linux/pci-p2sb.h>
-> +
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
-> +
-> +#include "pci.h"
-> +
-> +#define P2SBC_HIDE_BYTE			0xe1
-> +#define P2SBC_HIDE_BIT			BIT(0)
-> +
-> +static const struct x86_cpu_id p2sb_cpu_ids[] = {
-> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,
-> PCI_DEVFN(13, 0)),
-> +	{}
-> +};
-> +
-> +static int pci_p2sb_devfn(unsigned int *devfn)
-> +{
-> +	const struct x86_cpu_id *id;
-> +
-> +	id = x86_match_cpu(p2sb_cpu_ids);
-> +	if (!id)
-> +		return -ENODEV;
-> +
-> +	*devfn = (unsigned int)id->driver_data;
-> +	return 0;
-> +}
-> +
-> +/**
-> + * pci_p2sb_bar - Get Primary to Sideband bridge (P2SB) device BAR
-> + * @pdev:	PCI device to get a PCI bus to communicate with
-> + * @devfn:	PCI slot and function to communicate with
-> + * @mem:	memory resource to be filled in
+elapsed time: 725m
 
-Do we really need that many arguments to it?
+configs tested: 129
+configs skipped: 2
 
-Before i had, in a platform driver that never had its own pci_dev or bus
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  res->start = simatic_ipc_get_membase0(PCI_DEVFN(13, 0));
-  if (res-start == 0)
-    return -ENODEV;
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+s390                          debug_defconfig
+m68k                             alldefconfig
+powerpc               mpc834x_itxgp_defconfig
+arm                       aspeed_g5_defconfig
+arm                        oxnas_v6_defconfig
+sh                   sh7724_generic_defconfig
+sh                         microdev_defconfig
+parisc                generic-64bit_defconfig
+arm                       cns3420vb_defconfig
+powerpc                      bamboo_defconfig
+sh                          lboxre2_defconfig
+sh                         ap325rxa_defconfig
+powerpc                      pcm030_defconfig
+arm                          ep93xx_defconfig
+mips                            gpr_defconfig
+arm                          pxa168_defconfig
+mips                           ip22_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                 mpc85xx_cds_defconfig
+sh                                  defconfig
+powerpc64                           defconfig
+arm                             mxs_defconfig
+xtensa                          iss_defconfig
+sh                            hp6xx_defconfig
+sh                     sh7710voipgw_defconfig
+m68k                          hp300_defconfig
+powerpc                 linkstation_defconfig
+powerpc                      walnut_defconfig
+csky                                defconfig
+powerpc                         ps3_defconfig
+arm                         axm55xx_defconfig
+arm                          moxart_defconfig
+m68k                       m5475evb_defconfig
+sh                             shx3_defconfig
+mips                           gcw0_defconfig
+arm                       imx_v6_v7_defconfig
+mips                          malta_defconfig
+mips                        jmr3927_defconfig
+mips                       capcella_defconfig
+m68k                       bvme6000_defconfig
+sh                           se7751_defconfig
+sparc                       sparc64_defconfig
+powerpc                     mpc83xx_defconfig
+mips                         tb0226_defconfig
+arm                         nhk8815_defconfig
+nios2                         10m50_defconfig
+arc                           tb10x_defconfig
+mips                     cu1830-neo_defconfig
+riscv                            allyesconfig
+sh                        edosk7705_defconfig
+m68k                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20210312
+i386                 randconfig-a005-20210312
+i386                 randconfig-a002-20210312
+i386                 randconfig-a003-20210312
+i386                 randconfig-a004-20210312
+i386                 randconfig-a006-20210312
+i386                 randconfig-a001-20210313
+i386                 randconfig-a005-20210313
+i386                 randconfig-a002-20210313
+i386                 randconfig-a003-20210313
+i386                 randconfig-a004-20210313
+i386                 randconfig-a006-20210313
+x86_64               randconfig-a011-20210312
+x86_64               randconfig-a016-20210312
+x86_64               randconfig-a013-20210312
+x86_64               randconfig-a014-20210312
+x86_64               randconfig-a015-20210312
+x86_64               randconfig-a012-20210312
+i386                 randconfig-a013-20210312
+i386                 randconfig-a016-20210312
+i386                 randconfig-a011-20210312
+i386                 randconfig-a015-20210312
+i386                 randconfig-a014-20210312
+i386                 randconfig-a012-20210312
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-So helper only asked for the devfn, returned base and no dedicated
-error code.
+clang tested configs:
+x86_64               randconfig-a006-20210312
+x86_64               randconfig-a001-20210312
+x86_64               randconfig-a005-20210312
+x86_64               randconfig-a003-20210312
+x86_64               randconfig-a002-20210312
+x86_64               randconfig-a004-20210312
 
-With this i need
-
-  struct pci_bus *bus = pci_find_bus(0, 0);
-  struct pci_dev *pci_dev = bus->self;
-  unsigned int magic_i_do_not_want =  PCI_DEVFN(13, 0);
-
-> + * The BIOS prevents the P2SB device from being enumerated by the PCI
-> + * subsystem, so we need to unhide and hide it back to lookup the
-> BAR.
-> + *
-> + * Caller must provide a valid pointer to @mem.
-> + *
-> + * Locking is handled by pci_rescan_remove_lock mutex.
-> + *
-> + * Return:
-> + * 0 on success or appropriate errno value on error.
-> + */
-> +int pci_p2sb_bar(struct pci_dev *pdev, unsigned int devfn, struct
-> resource *mem) +{
-> +	struct pci_bus *bus = pdev->bus;
-
-if (!pdev)
-	bus = pci_find_bus(0, 0);
-
-Or can we drop the whole arg?
-
-> +	unsigned int df;
-> +	int ret;
-> +
-> +	/* Get devfn for P2SB device itself */
-> +	ret = pci_p2sb_devfn(&df);
-> +	if (ret)
-> +		return ret;
-
-if (!devfn)
-	devfn = df;
-
-I guess that second devfn is for devices behind that bridge. So
-unhiding it might reveal several devices? But when caring about that
-p2sb do i really need to know its devfn. If so i would like to get
-
-EXPORT_SYMBOL(pci_p2sb_devfn);
-
-regards,
-Henning
-
-> +
-> +	pci_lock_rescan_remove();
-> +
-> +	/* Unhide the P2SB device */
-> +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, 0);
-> +
-> +	/* Read the first BAR of the device in question */
-> +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem,
-> PCI_BASE_ADDRESS_0, true); +
-> +	/* Hide the P2SB device */
-> +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE,
-> P2SBC_HIDE_BIT); +
-> +	pci_unlock_rescan_remove();
-> +
-> +	pci_bus_info(bus, devfn, "BAR: %pR\n", mem);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_p2sb_bar);
-> diff --git a/include/linux/pci-p2sb.h b/include/linux/pci-p2sb.h
-> new file mode 100644
-> index 000000000000..15dd42737c84
-> --- /dev/null
-> +++ b/include/linux/pci-p2sb.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Primary to Sideband bridge (P2SB) access support
-> + */
-> +
-> +#ifndef _PCI_P2SB_H
-> +#define _PCI_P2SB_H
-> +
-> +#include <linux/errno.h>
-> +
-> +struct pci_dev;
-> +struct resource;
-> +
-> +#if IS_BUILTIN(CONFIG_PCI_P2SB)
-> +
-> +int pci_p2sb_bar(struct pci_dev *pdev, unsigned int devfn, struct
-> resource *mem); +
-> +#else /* CONFIG_PCI_P2SB is not set */
-> +
-> +static inline
-> +int pci_p2sb_bar(struct pci_dev *pdev, unsigned int devfn, struct
-> resource *mem) +{
-> +	return -ENODEV;
-> +}
-> +
-> +#endif /* CONFIG_PCI_P2SB */
-> +
-> +#endif /* _PCI_P2SB_H */
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
