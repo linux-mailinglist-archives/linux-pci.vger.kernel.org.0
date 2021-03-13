@@ -2,126 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D20A339A77
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 01:39:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 319F3339AE6
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 02:40:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231392AbhCMAil (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 19:38:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229959AbhCMAiC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 19:38:02 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9133EC061574
-        for <linux-pci@vger.kernel.org>; Fri, 12 Mar 2021 16:38:01 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id bx7so10407086edb.12
-        for <linux-pci@vger.kernel.org>; Fri, 12 Mar 2021 16:38:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V55CsUmF+mr/CmKZQo4eJ9DoAvL0H9UDMjqEpaUB6P8=;
-        b=RH9RDg+D75eQrwkyEdi2sgJFftBidFQeJw2cxeSf+OKCsQ+T66mXWa2etqZaWchhv3
-         2SAMfRLrOATudtHmv4stvGgXYh4OBWw572sVy0isD1a4sbdZk1vBXiQ4uBt1WBQfvIws
-         BrKRb1E2N38QPKyOeFrUnsJTMHWv8TJeC/nQ/0GXC8kTZbA7blnT2VEKdL0ZjVgux7z6
-         Grd7Ywj1a79opu4pu5mfmT3WlL5o2Qj/PWPpcqqcTlDGf3INQws5wFAK08kgz6vOwxFB
-         zaEHeEnveJ5uNf/p9fSU/Uhf70o+D58KJLVr32cuMIeqhZatZp8jPwSRuSnxH9epV+xy
-         Uylw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V55CsUmF+mr/CmKZQo4eJ9DoAvL0H9UDMjqEpaUB6P8=;
-        b=g2WcIEp6SIhJIdYV6PpawRXWcfa23vDp1yDIq6saB0rgCkcLr/w3npOB8BUIshuS6z
-         GNRBsTM/A/vqL3g8H492TTTa9LXFGz/wcDZkpMfJCnbtKSLtyKShQkWLE73mbT/1cVK+
-         F6CDZnKxYDGsw9QnEA4qIu3elmRD/Jnxp80b2/3Ah5VKVEmQ58DEucD/kDpoOBT+YPan
-         mInamGkak/gWD/2B/9jdFvkr8ydEBDp0eviqxwumiy8+GEcnPWNXF+XyvIpUEreYQMpQ
-         sRPNCNfsHzAILfYr1IBJHaMZfFbWgsStJMMv0kzFAY3ZHy/6/Bn7hThZEUjDNliWyj9L
-         KkqA==
-X-Gm-Message-State: AOAM531RRs/YhNLSfQvL3GPyZD3oBdr1FPTz5K3L1BZ/E00vH+6bUJJ4
-        llcgEnaM2hin1nSmjR23K6w6KvcGpGZKZYztSiLYww==
-X-Google-Smtp-Source: ABdhPJxA2nrJrysU0o+ZmDC6nfvgpSHtUwP8Uj+zsAeDJef7rmoitYogvGH31sOr5WepfLemcqpL02/a0l9ZafkST+Y=
-X-Received: by 2002:aa7:c3cd:: with SMTP id l13mr17041105edr.52.1615595880149;
- Fri, 12 Mar 2021 16:38:00 -0800 (PST)
+        id S231597AbhCMBjS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 20:39:18 -0500
+Received: from mga07.intel.com ([134.134.136.100]:51336 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229523AbhCMBi6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Mar 2021 20:38:58 -0500
+IronPort-SDR: FYdUZRc4UYH9eFwNznXLdpQsbOFGfrY91cZSp8F386l+M0xFucCAPC5wn4Sal0B0VuMP4wT2bX
+ yiC5V/3Y5TcQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9921"; a="252929088"
+X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
+   d="scan'208";a="252929088"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2021 17:38:57 -0800
+IronPort-SDR: WX0p9R69J0SqVVtAjuI1NyCDa3GoAa0N7h3vw3KXR0KEY1AUvz5NjcbA4fhWSGyck6WC+6RtZ6
+ ly3N0e+cpIbQ==
+X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
+   d="scan'208";a="404606308"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2021 17:38:56 -0800
+Date:   Fri, 12 Mar 2021 17:38:56 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Ira Weiny <iweiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>
+Subject: Re: [RFC PATCH v2 04/11] PCI/P2PDMA: Introduce
+ pci_p2pdma_should_map_bus() and pci_p2pdma_bus_offset()
+Message-ID: <20210313013856.GA3402637@iweiny-DESK2.sc.intel.com>
+References: <20210311233142.7900-1-logang@deltatee.com>
+ <20210311233142.7900-5-logang@deltatee.com>
 MIME-Version: 1.0
-References: <a137e4aa-22fb-5683-7d58-847408c6bf2b@linux.intel.com> <20210312231416.GA2304029@bjorn-Precision-5520>
-In-Reply-To: <20210312231416.GA2304029@bjorn-Precision-5520>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 12 Mar 2021 16:37:49 -0800
-Message-ID: <CAPcyv4jWkwbaBUtcV4B1hMaCWxEdZwzgmLSTiuepb-MQE=ZegA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] PCI: pciehp: Skip DLLSC handling if DPC is triggered
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>, knsathya@kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210311233142.7900-5-logang@deltatee.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 3:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Mar 12, 2021 at 02:11:03PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> > On 3/12/21 1:33 PM, Bjorn Helgaas wrote:
-> > > On Mon, Mar 08, 2021 at 10:34:10PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> > > > +bool is_dpc_reset_active(struct pci_dev *dev)
-> > > > +{
-> > > > + struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> > > > + u16 status;
-> > > > +
-> > > > + if (!dev->dpc_cap)
-> > > > +         return false;
-> > > > +
-> > > > + /*
-> > > > +  * If DPC is owned by firmware and EDR is not supported, there is
-> > > > +  * no race between hotplug and DPC recovery handler. So return
-> > > > +  * false.
-> > > > +  */
-> > > > + if (!host->native_dpc && !IS_ENABLED(CONFIG_PCIE_EDR))
-> > > > +         return false;
-> > > > +
-> > > > + if (atomic_read_acquire(&dev->dpc_reset_active))
-> > > > +         return true;
-> > > > +
-> > > > + pci_read_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_STATUS, &status);
-> > > > +
-> > > > + return !!(status & PCI_EXP_DPC_STATUS_TRIGGER);
-> > >
-> > > I know it's somewhat common in drivers/pci/, but I'm not really a
-> > > big fan of "!!".
-> > I can change it to use ternary operator.
-> > (status & PCI_EXP_DPC_STATUS_TRIGGER) ? true : false;
->
-> Ternary isn't terrible, but what's wrong with:
->
->   if (status & PCI_EXP_DPC_STATUS_TRIGGER)
->     return true;
->   return false;
+On Thu, Mar 11, 2021 at 04:31:34PM -0700, Logan Gunthorpe wrote:
+> Introduce pci_p2pdma_should_map_bus() which is meant to be called by
+> DMA map functions to determine how to map a given p2pdma page.
+> 
+> pci_p2pdma_bus_offset() is also added to allow callers to get the bus
+> offset if they need to map the bus address.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/p2pdma.c       | 50 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci-p2pdma.h | 11 +++++++++
+>  2 files changed, 61 insertions(+)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 7f6836732bce..66d16b7eb668 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -912,6 +912,56 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+>  }
+>  EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
+>  
+> +/**
+> + * pci_p2pdma_bus_offset - returns the bus offset for a given page
+> + * @page: page to get the offset for
+> + *
+> + * Must be passed a PCI p2pdma page.
+> + */
+> +u64 pci_p2pdma_bus_offset(struct page *page)
+> +{
+> +	struct pci_p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(page->pgmap);
+> +
+> +	WARN_ON(!is_pci_p2pdma_page(page));
 
-It was the branch I was trying to get rid of by recommending !!, how about:
+Shouldn't this check be before the to_p2p_pgmap() call?  And I've been told not
+to introduce WARN_ON's.  Should this be?
 
-return (status & PCI_EXP_DPC_STATUS_TRIGGER) == PCI_EXP_DPC_STATUS_TRIGGER;
+	if (!is_pci_p2pdma_page(page))
+		return -1;
 
-...just so I know the style preference for future drivers/pci/ work?
-That at least matches the pattern in the mm helpers that test pte
-bits.
+???
 
->
-> which matches the style of the rest of the function.
->
-> Looking at this again, we return "true" if either dpc_reset_active or
-> PCI_EXP_DPC_STATUS_TRIGGER.  I haven't worked this all out, but that
-> pattern feels racy.  I guess the thought is that if
-> PCI_EXP_DPC_STATUS_TRIGGER is set, dpc_reset_link() will be invoked
-> soon and we don't want to interfere?
-
-Right, and when the trigger is clear then dpc_reset_active keeps
-holding off the hotplug driver until the dpc reset completes in
-polling for the link up event.
+Ira
