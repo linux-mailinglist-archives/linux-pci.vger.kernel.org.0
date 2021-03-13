@@ -2,147 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FCE9339D30
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 10:18:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2F2339D56
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 10:31:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230349AbhCMJSH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Mar 2021 04:18:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55212 "EHLO mx2.suse.de"
+        id S233188AbhCMJbH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 Mar 2021 04:31:07 -0500
+Received: from gecko.sbs.de ([194.138.37.40]:37192 "EHLO gecko.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230309AbhCMJRy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 13 Mar 2021 04:17:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AF3D5ABD7;
-        Sat, 13 Mar 2021 09:17:52 +0000 (UTC)
-Date:   Sat, 13 Mar 2021 10:17:51 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, mmc@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rpadlpar: fix potential drc_name corruption in store
- functions
-Message-ID: <20210313091751.GM6564@kitsune.suse.cz>
-References: <20210310223021.423155-1-tyreld@linux.ibm.com>
+        id S233446AbhCMJau (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 13 Mar 2021 04:30:50 -0500
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 12D9US2d008194
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Mar 2021 10:30:28 +0100
+Received: from md1za8fc.ad001.siemens.net ([139.22.115.33])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 12D9PQjp011793;
+        Sat, 13 Mar 2021 10:25:26 +0100
+Date:   Sat, 13 Mar 2021 10:25:25 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        "Jim Quinlan" <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, <hdegoede@redhat.com>
+Subject: Re: [rfc, PATCH v1 0/7] PCI: introduce p2sb helper
+Message-ID: <20210313102525.425cf40d@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
+References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210310223021.423155-1-tyreld@linux.ibm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 04:30:21PM -0600, Tyrel Datwyler wrote:
-> Both add_slot_store() and remove_slot_store() try to fix up the drc_name
-> copied from the store buffer by placing a NULL terminator at nbyte + 1
-> or in place of a '\n' if present. However, the static buffer that we
-> copy the drc_name data into is not zeored and can contain anything past
-> the n-th byte. This is problematic if a '\n' byte appears in that buffer
-> after nbytes and the string copied into the store buffer was not NULL
-> terminated to start with as the strchr() search for a '\n' byte will mark
-> this incorrectly as the end of the drc_name string resulting in a drc_name
-> string that contains garbage data after the n-th byte. The following
-> debugging shows an example of the drmgr utility writing "PHB 4543" to
-> the add_slot sysfs attribute, but add_slot_store logging a corrupted
-> string value.
-> 
-> [135823.702864] drmgr: drmgr: -c phb -a -s PHB 4543 -d 1
-> [135823.702879] add_slot_store: drc_name = PHB 4543°|<82>!, rc = -19
-> 
-> Fix this by NULL terminating the string when we copy it into our static
-> buffer by coping nbytes + 1 of data from the store buffer. The code has
-Why is it OK to copy nbytes + 1 and why is it expected that the buffer
-contains a nul after the content?
+Am Mon, 8 Mar 2021 14:20:13 +0200
+schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
-Isn't it much saner to just nul terminate the string after copying?
+> There are a few users and even at least one more is coming
+> that would like to utilize p2sb mechanisms like hide/unhide
+> a device from PCI configuration space.
 
-diff --git a/drivers/pci/hotplug/rpadlpar_sysfs.c b/drivers/pci/hotplug/rpadlpar_sysfs.c
-index cdbfa5df3a51..cfbad67447da 100644
---- a/drivers/pci/hotplug/rpadlpar_sysfs.c
-+++ b/drivers/pci/hotplug/rpadlpar_sysfs.c
-@@ -35,11 +35,11 @@ static ssize_t add_slot_store(struct kobject *kobj, struct kobj_attribute *attr,
- 		return 0;
- 
- 	memcpy(drc_name, buf, nbytes);
-+	&drc_name[nbytes] = '\0';
- 
- 	end = strchr(drc_name, '\n');
--	if (!end)
--		end = &drc_name[nbytes];
--	*end = '\0';
-+	if (end)
-+		*end = '\0';
- 
- 	rc = dlpar_add_slot(drc_name);
- 	if (rc)
-@@ -66,11 +66,11 @@ static ssize_t remove_slot_store(struct kobject *kobj,
- 		return 0;
- 
- 	memcpy(drc_name, buf, nbytes);
-+	&drc_name[nbytes] = '\0';
- 
- 	end = strchr(drc_name, '\n');
--	if (!end)
--		end = &drc_name[nbytes];
--	*end = '\0';
-+	if (end)
-+		*end = '\0';
- 
- 	rc = dlpar_remove_slot(drc_name);
- 	if (rc)
+Tried this for my usecase and can confirm it to work as expected.
 
-Thanks
+Tested-by: Henning Schild <henning.schild@siemens.com>
 
-Michal
+Henning
 
-> already made sure that nbytes is not >= MAX_DRC_NAME_LEN and the store
-> buffer is guaranteed to be zeroed beyond the nth-byte of data copied
-> from the user. Further, since the string is now NULL terminated the code
-> only needs to change '\n' to '\0' when present.
+> Here is the series to deduplicate existing users and provide
+> a generic way for new comers.
 > 
-> Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-> ---
->  drivers/pci/hotplug/rpadlpar_sysfs.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
 > 
-> diff --git a/drivers/pci/hotplug/rpadlpar_sysfs.c b/drivers/pci/hotplug/rpadlpar_sysfs.c
-> index cdbfa5df3a51..375087921284 100644
-> --- a/drivers/pci/hotplug/rpadlpar_sysfs.c
-> +++ b/drivers/pci/hotplug/rpadlpar_sysfs.c
-> @@ -34,12 +34,11 @@ static ssize_t add_slot_store(struct kobject *kobj, struct kobj_attribute *attr,
->  	if (nbytes >= MAX_DRC_NAME_LEN)
->  		return 0;
->  
-> -	memcpy(drc_name, buf, nbytes);
-> +	memcpy(drc_name, buf, nbytes + 1);
->  
->  	end = strchr(drc_name, '\n');
-> -	if (!end)
-> -		end = &drc_name[nbytes];
-> -	*end = '\0';
-> +	if (end)
-> +		*end = '\0';
->  
->  	rc = dlpar_add_slot(drc_name);
->  	if (rc)
-> @@ -65,12 +64,11 @@ static ssize_t remove_slot_store(struct kobject *kobj,
->  	if (nbytes >= MAX_DRC_NAME_LEN)
->  		return 0;
->  
-> -	memcpy(drc_name, buf, nbytes);
-> +	memcpy(drc_name, buf, nbytes + 1);
->  
->  	end = strchr(drc_name, '\n');
-> -	if (!end)
-> -		end = &drc_name[nbytes];
-> -	*end = '\0';
-> +	if (end)
-> +		*end = '\0';
->  
->  	rc = dlpar_remove_slot(drc_name);
->  	if (rc)
-> -- 
-> 2.27.0
+> Please, comment on the approach and individual patches.
 > 
+> (Since it's cross subsystem, the PCI seems like a main one and
+>  I think it makes sense to route it thru it with immutable tag
+>  or branch provided for the others).
+> 
+> Andy Shevchenko (5):
+>   PCI: Introduce pci_bus_*() printing macros when device is not
+>     available
+>   PCI: Convert __pci_read_base() to __pci_bus_read_base()
+>   mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
+>   mfd: lpc_ich: Switch to generic pci_p2sb_bar()
+>   i2c: i801: convert to use common P2SB accessor
+> 
+> Jonathan Yong (1):
+>   PCI: New Primary to Sideband (P2SB) bridge support library
+> 
+> Tan Jui Nee (1):
+>   mfd: lpc_ich: Add support for pinctrl in non-ACPI system
+> 
+>  drivers/i2c/busses/Kconfig    |   1 +
+>  drivers/i2c/busses/i2c-i801.c |  40 +++-------
+>  drivers/mfd/Kconfig           |   1 +
+>  drivers/mfd/lpc_ich.c         | 135
+> +++++++++++++++++++++++++++++----- drivers/pci/Kconfig           |
+> 8 ++ drivers/pci/Makefile          |   1 +
+>  drivers/pci/pci-p2sb.c        |  89 ++++++++++++++++++++++
+>  drivers/pci/pci.h             |  13 +++-
+>  drivers/pci/probe.c           |  81 ++++++++++----------
+>  include/linux/pci-p2sb.h      |  28 +++++++
+>  include/linux/pci.h           |   9 +++
+>  11 files changed, 313 insertions(+), 93 deletions(-)
+>  create mode 100644 drivers/pci/pci-p2sb.c
+>  create mode 100644 include/linux/pci-p2sb.h
+> 
+
