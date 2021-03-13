@@ -2,191 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD99A339DB6
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 12:13:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1743339F64
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 18:12:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232904AbhCMLNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Mar 2021 06:13:18 -0500
-Received: from mga17.intel.com ([192.55.52.151]:34551 "EHLO mga17.intel.com"
+        id S234126AbhCMRMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 Mar 2021 12:12:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230349AbhCMLND (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 13 Mar 2021 06:13:03 -0500
-IronPort-SDR: x6mOhrpk7m+Nrz11pZLcWxkTY/nQxY6ksC0LNxe4s9FKk4TFNXt5Waud8V9lDhVY8ku079h9Z+
- 3017fOf4N1pw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9921"; a="168848989"
-X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
-   d="scan'208";a="168848989"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2021 03:13:03 -0800
-IronPort-SDR: OVIufC9CCfFq7aLtxc/7rsixXwNpo47zwZKalNoJELleSNY7B1UFrGxKUmo8T1aX/cF3VHcEYY
- Hegk1bSy0EDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,245,1610438400"; 
-   d="scan'208";a="600884239"
-Received: from lkp-server02.sh.intel.com (HELO ce64c092ff93) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Mar 2021 03:13:02 -0800
-Received: from kbuild by ce64c092ff93 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lL2Cb-0001zl-GG; Sat, 13 Mar 2021 11:13:01 +0000
-Date:   Sat, 13 Mar 2021 19:12:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- 1bb73841ea7a88765db7f641a90120490f1f4aee
-Message-ID: <604c9e31.sv4W1M0igEcnWzKq%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S234174AbhCMRLm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 13 Mar 2021 12:11:42 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C76864E2E;
+        Sat, 13 Mar 2021 17:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615655501;
+        bh=wP5rJWj91sCTtBjfV4gXU1J3V5urwcHzS4UHBgx1JTw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q8EBncD2Zgm+lBQ6vnQcma8UtNCUxMLf20FbAtR7/HSNNGB1oK1ATQS+C6Do1E7K4
+         GDEh5EpmRgJRCAhK8xKlloZzB9N17Absrv7h1jkuQ8Y5JALiU04MK9zBtAVU9vwMAR
+         B5imjpyagFVM2EK6jHxd7q+83+7kYZ/0UUtI3Lowivb/Qvh9vv343S92hIGgzJGGiW
+         VEyMjca295zTpRW23tfbxljAqB2v6jaojPqSJvoKOJ40dAdybxeT3AvsUU1tvfx/Ng
+         oNzKbB1vim6e4O+RAzdDRLkC/hR6Q/IPrnL+aYe5i7yi0O9TtovYymsXM0KRg2dmye
+         NWjFnlthZ+PCA==
+Date:   Sun, 14 Mar 2021 02:11:35 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     James Puthukattukaran <james.puthukattukaran@oracle.com>
+Cc:     "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: pci_do_recovery not handling fata errors
+Message-ID: <20210313171135.GA8648@redsun51.ssa.fujisawa.hgst.com>
+References: <MN2PR10MB4093188B8CDC659AE68E5640996F9@MN2PR10MB4093.namprd10.prod.outlook.com>
+ <B2696632-CB84-420E-B072-044603A6D3B7@intel.com>
+ <MN2PR10MB40933D5232D0F58ECAF4387D996F9@MN2PR10MB4093.namprd10.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <MN2PR10MB40933D5232D0F58ECAF4387D996F9@MN2PR10MB4093.namprd10.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-branch HEAD: 1bb73841ea7a88765db7f641a90120490f1f4aee  PCI: Remove MicroGate SyncLink device IDs
+On Fri, Mar 12, 2021 at 10:57:18PM +0000, James Puthukattukaran wrote:
+> But the clearing of fatal error in the dpc_process_error is only for DPC trigger due to "unmaskable uncorrectable". 
+> If the trigger reason is ERR_FATAL, then it does not hit the else clause and neither is it cleared in the pci_do_recovery code.
 
-elapsed time: 725m
-
-configs tested: 129
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-s390                          debug_defconfig
-m68k                             alldefconfig
-powerpc               mpc834x_itxgp_defconfig
-arm                       aspeed_g5_defconfig
-arm                        oxnas_v6_defconfig
-sh                   sh7724_generic_defconfig
-sh                         microdev_defconfig
-parisc                generic-64bit_defconfig
-arm                       cns3420vb_defconfig
-powerpc                      bamboo_defconfig
-sh                          lboxre2_defconfig
-sh                         ap325rxa_defconfig
-powerpc                      pcm030_defconfig
-arm                          ep93xx_defconfig
-mips                            gpr_defconfig
-arm                          pxa168_defconfig
-mips                           ip22_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                 mpc85xx_cds_defconfig
-sh                                  defconfig
-powerpc64                           defconfig
-arm                             mxs_defconfig
-xtensa                          iss_defconfig
-sh                            hp6xx_defconfig
-sh                     sh7710voipgw_defconfig
-m68k                          hp300_defconfig
-powerpc                 linkstation_defconfig
-powerpc                      walnut_defconfig
-csky                                defconfig
-powerpc                         ps3_defconfig
-arm                         axm55xx_defconfig
-arm                          moxart_defconfig
-m68k                       m5475evb_defconfig
-sh                             shx3_defconfig
-mips                           gcw0_defconfig
-arm                       imx_v6_v7_defconfig
-mips                          malta_defconfig
-mips                        jmr3927_defconfig
-mips                       capcella_defconfig
-m68k                       bvme6000_defconfig
-sh                           se7751_defconfig
-sparc                       sparc64_defconfig
-powerpc                     mpc83xx_defconfig
-mips                         tb0226_defconfig
-arm                         nhk8815_defconfig
-nios2                         10m50_defconfig
-arc                           tb10x_defconfig
-mips                     cu1830-neo_defconfig
-riscv                            allyesconfig
-sh                        edosk7705_defconfig
-m68k                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20210312
-i386                 randconfig-a005-20210312
-i386                 randconfig-a002-20210312
-i386                 randconfig-a003-20210312
-i386                 randconfig-a004-20210312
-i386                 randconfig-a006-20210312
-i386                 randconfig-a001-20210313
-i386                 randconfig-a005-20210313
-i386                 randconfig-a002-20210313
-i386                 randconfig-a003-20210313
-i386                 randconfig-a004-20210313
-i386                 randconfig-a006-20210313
-x86_64               randconfig-a011-20210312
-x86_64               randconfig-a016-20210312
-x86_64               randconfig-a013-20210312
-x86_64               randconfig-a014-20210312
-x86_64               randconfig-a015-20210312
-x86_64               randconfig-a012-20210312
-i386                 randconfig-a013-20210312
-i386                 randconfig-a016-20210312
-i386                 randconfig-a011-20210312
-i386                 randconfig-a015-20210312
-i386                 randconfig-a014-20210312
-i386                 randconfig-a012-20210312
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a006-20210312
-x86_64               randconfig-a001-20210312
-x86_64               randconfig-a005-20210312
-x86_64               randconfig-a003-20210312
-x86_64               randconfig-a002-20210312
-x86_64               randconfig-a004-20210312
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+If the reason is ERR_FATAL, then the port didn't detect the error; it is
+just the first DPC capable downstream port to receive the message from
+some device downstream, so there's nothing to clear in its AER register.
+ 
+> From dpc_process_error with more context -- 
+> 
+>        else if (reason == 0 &&  <<<<<<< only for "unmaskable uncorrectable". What about for ERR_FATAL?
+>                  dpc_get_aer_uncorrect_severity(pdev, &info) &&
+>                  aer_get_device_error_info(pdev, &info)) {
+>                 aer_print_error(pdev, &info);
+>                 pci_aer_clear_nonfatal_status(pdev);
+>                 pci_aer_clear_fatal_status(pdev);
+>         }
+>  
+> 
+> > -----Original Message-----
+> > From: Kelley, Sean V <sean.v.kelley@intel.com>
+> > Sent: Friday, March 12, 2021 5:25 PM
+> > To: James Puthukattukaran <james.puthukattukaran@oracle.com>;
+> > Kuppuswamy, Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@intel.com>
+> > Cc: Linux PCI <linux-pci@vger.kernel.org>; bhelgaas@google.com
+> > Subject: [External] : Re: pci_do_recovery not handling fata errors
+> > 
+> > 
+> > 
+> > > On Mar 12, 2021, at 12:56 PM, James Puthukattukaran
+> > <james.puthukattukaran@oracle.com> wrote:
+> > >
+> > > Hi -
+> > > I’m trying to understand why pci_do_recovery() only clears non-fatal but
+> > not fata errors? My immediate concern is call from dpc_handler. If a device
+> > sends an ERR_FATAL to the root port, I would think that as part of recovery
+> > the fatal status in the AER registers of the endpoint device would be cleared?
+> > >
+> > 
+> > 
+> > Adding Sathya who mentioned to me that:
+> > 
+> > Fatal error are cleared in
+> > 
+> > void dpc_process_error(struct pci_dev *pdev)
+> > 
+> > 253                  dpc_get_aer_uncorrect_severity(pdev, &info) &&
+> > 254                  aer_get_device_error_info(pdev, &info)) {
+> > 255                 aer_print_error(pdev, &info);
+> > 256                 pci_aer_clear_nonfatal_status(pdev);
+> > 257                 pci_aer_clear_fatal_status(pdev);
+> > 
+> > Thanks,
+> > 
+> > Sean
+> > 
+> > > Snippet of concern in pci_do_recovery –
+> > >
+> > >         /*
+> > >          * If we have native control of AER, clear error status in the Root
+> > >          * Port or Downstream Port that signaled the error.  If the
+> > >          * platform retained control of AER, it is responsible for clearing
+> > >          * this status.  In that case, the signaling device may not even be
+> > >          * visible to the OS.
+> > >          */
+> > >         if (host->native_aer || pcie_ports_native) {
+> > >                 pcie_clear_device_status(bridge);
+> > >                 pci_aer_clear_nonfatal_status(bridge);   <<<< Just clearing
+> > nonfatal. What about fatal?
+> > >         }
+> > >
+> > > Thanks
+> > > James
+> 
