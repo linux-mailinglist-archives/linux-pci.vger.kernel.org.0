@@ -2,187 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B5033A8F2
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 00:53:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C786A33A8F5
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 00:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbhCNXww (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Mar 2021 19:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33390 "EHLO mail.kernel.org"
+        id S229570AbhCNX4I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Mar 2021 19:56:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229476AbhCNXwv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 14 Mar 2021 19:52:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E5A2864E76;
-        Sun, 14 Mar 2021 23:52:50 +0000 (UTC)
+        id S229473AbhCNXzt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 14 Mar 2021 19:55:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 514B664E4B;
+        Sun, 14 Mar 2021 23:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615765971;
-        bh=g14k8DNjiTg7h5ZIKFA3+OAP9KpKDeQ09DyhYA64vRQ=;
+        s=k20201202; t=1615766148;
+        bh=ZUbb71zvCmCMdUhP2EHAnGgOZWOho/+CsC6w/rQarDA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JFyQ7IxcK+7G7s4qyWr+HpTbH320rvi/z76ILEiS7euBdXx90uUV6gq4HHJ3XoXnK
-         90VT1Jngmeg6an02YNT3PhqoadRckO4kH1FWezj6DBd0g9vIh77ops8FS8ipZq6qJZ
-         gKa8dIUppxphzPlpi02Dc8hCNsCz5Fb99cE3vaKHzpyiRZdD7oBceHCAXGy9AULosh
-         o5tAkdUfKwYJIzJqe6WPYOV72Q7CyWNA32/0peTUxGkTm/+JHL8U4IiRR5kvf2LnVz
-         UaByH9V56xLjiHt09cYaPF2Lqrk8iEhQxRL1x8wUSeF2DTx1yHfXOX0QGbSVJw1LyJ
-         kcI7tDQnowmAA==
+        b=eu5CRmMjd0QN3oPkgGK7hLPpwhFGnxRsh2ycJpHqiVxTDBFDP78jiEym+KwBTCBih
+         CMFpr40S+ChiKjZRAkvn0airsU2rVO/s/rdCClWob3NKkagrjf+1uHZqH3IfwIpwtb
+         Ur0loaXZ10bIUGe0wuUNmGrwNE6/j2ByFJL1OxSwaZArS0OOP7pA/utWXP/GA8FBwo
+         aSTZsw8J4UMg9TbAlflmx8Y2FPyaM7NuPUOL5e4jLTZ9eH5nDTwDMkNymXd+oCDFQM
+         oFcovdbiFTCNAKFrcYR+IZDql3XhLdwsa+SzxHmadazrI393iJ/7yizsgPbJUP8szq
+         J2d2JnVt2pmzQ==
 Received: by pali.im (Postfix)
-        id B1E4289B; Mon, 15 Mar 2021 00:52:48 +0100 (CET)
-Date:   Mon, 15 Mar 2021 00:52:48 +0100
+        id B723689B; Mon, 15 Mar 2021 00:55:45 +0100 (CET)
+Date:   Mon, 15 Mar 2021 00:55:45 +0100
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     ameynarkhede03@gmail.com
 Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
         raphael.norwitz@nutanix.com
-Subject: Re: [PATCH 3/4] PCI: Remove reset_fn field from pci_dev
-Message-ID: <20210314235248.abcca4phc3h74lgz@pali>
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <20210314235545.girtrazsdxtrqo2q@pali>
 References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
- <20210312173452.3855-4-ameynarkhede03@gmail.com>
+ <20210312173452.3855-5-ameynarkhede03@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210312173452.3855-4-ameynarkhede03@gmail.com>
+In-Reply-To: <20210312173452.3855-5-ameynarkhede03@gmail.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 12 March 2021 23:04:51 ameynarkhede03@gmail.com wrote:
+On Friday 12 March 2021 23:04:52 ameynarkhede03@gmail.com wrote:
 > From: Amey Narkhede <ameynarkhede03@gmail.com>
 > 
-> reset_fn field is used to indicate whether the
-> device supports any reset mechanism or not.
-> Deprecate use of reset_fn in favor of new
-> reset_methods bitmap which can be used to keep
-> track of all supported reset mechanisms of a device.
-
-Hello Amey!
-
-You cannot trigger PCIe Hot Reset (PCI secondary bus reset) in this
-simple way from sysfs via new reset methods.
-
-I proposed very similar functionality just few days ago:
-https://lore.kernel.org/linux-pci/20210301171221.3d42a55i7h5ubqsb@pali/T/#u
-
-And I realized that it needs more steps to be done.
-
-At least some remove-reset-rescan procedure done atomically is required.
-
+> Add reset_methods_enabled bitmap to struct pci_dev to
+> keep track of user preferred device reset mechanisms.
+> Add reset_method sysfs attribute to query and set
+> user preferred device reset mechanisms.
+> 
 > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
 > ---
 > Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 > Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
 > 
->  drivers/net/ethernet/cavium/liquidio/lio_vf_main.c | 2 +-
->  drivers/pci/pci-sysfs.c                            | 6 ++----
->  drivers/pci/pci.c                                  | 6 +++---
->  drivers/pci/probe.c                                | 1 -
->  drivers/pci/quirks.c                               | 2 +-
->  include/linux/pci.h                                | 1 -
->  6 files changed, 7 insertions(+), 11 deletions(-)
+>  Documentation/ABI/testing/sysfs-bus-pci | 15 ++++++
+>  drivers/pci/pci-sysfs.c                 | 66 +++++++++++++++++++++++--
+>  drivers/pci/pci.c                       |  3 +-
+>  include/linux/pci.h                     |  2 +
+>  4 files changed, 82 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> index 9b9d305c6..3e2c49e08 100644
-> --- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> +++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> @@ -526,7 +526,7 @@ static void octeon_destroy_resources(struct octeon_device *oct)
->  			oct->irq_name_storage = NULL;
->  		}
->  		/* Soft reset the octeon device before exiting */
-> -		if (oct->pci_dev->reset_fn)
-> +		if (oct->pci_dev->reset_methods)
->  			octeon_pci_flr(oct);
->  		else
->  			cn23xx_vf_ask_pf_to_do_flr(oct);
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index 25c9c3977..ae53ecd2e 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -121,6 +121,21 @@ Description:
+>  		child buses, and re-discover devices removed earlier
+>  		from this part of the device tree.
+> 
+> +What:		/sys/bus/pci/devices/.../reset_method
+> +Date:		March 2021
+> +Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
+> +Description:
+> +		Some devices allow an individual function to be reset
+> +		without affecting other functions in the same slot.
+> +		For devices that have this support, a file named reset_method
+> +		will be present in sysfs. Reading this file will give names
+> +		of the device supported reset methods. Currently used methods
+> +		are enclosed in brackets. Writing the name of any of the device
+> +		supported reset method to this file will set the reset method to
+> +		be used when resetting the device. Writing "none" to this file
+> +		will disable ability to reset the device and writing "default"
+> +		will return to the original value.
+> +
+
+Hello Amey!
+
+I think that this API does not work for PCIe Hot Reset (=PCI secondary
+bus reset) and PCIe Warm Reset.
+
+First reset method is bound to the bus, not device and therefore kernel
+does not have to see any registered device. So there would be no
+"reset_method" sysfs file, and also no "reset" sysfs file. But PCIe Hot
+Reset is in most cases needed when buggy card is not registered on bus,
+to trigger this reset. And with this API this is not possible.
+
+PCIe Warm Reset is done by PERST# signal. When signal is asserted then
+device is in reset state and therefore is not registered. So again
+kernel does not have to see registered device.
+
+Moreover for mPCIe form factor cards, boards can share one PERST# signal
+with more PCIe cards and control this signal via GPIO. So asserting
+PERST# GPIO can trigger Warm reset for more PCIe cards, not just one. It
+depends on board or topology.
+
+So... I do not think that current approach with "reset_method" sysfs
+entry bound to the PCI device does not work for PCI secondary bus reset
+and also cannot be used for implementing PCIe Warm Reset.
+
+I would rather suggest to re-design and prepare a new API which would
+work also with PCIe Hot Reset and PCIe Warm Reset.
+
+This "reset" sysfs file can work only with PCI Function Level Reset or
+some PM or device specific reset. But not with reset types which are
+more like slot or bus orientated.
+
+>  What:		/sys/bus/pci/devices/.../reset
+>  Date:		July 2009
+>  Contact:	Michael S. Tsirkin <mst@redhat.com>
 > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index f8afd54ca..78d2c130c 100644
+> index 78d2c130c..3cd06d1c0 100644
 > --- a/drivers/pci/pci-sysfs.c
 > +++ b/drivers/pci/pci-sysfs.c
-> @@ -1334,7 +1334,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+> @@ -1304,6 +1304,59 @@ static const struct bin_attribute pcie_config_attr = {
+>  	.write = pci_write_config,
+>  };
 > 
->  	pcie_vpd_create_sysfs_dev_files(dev);
-> 
-> -	if (dev->reset_fn) {
-> +	if (dev->reset_methods) {
+> +static ssize_t reset_method_show(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 char *buf)
+> +{
+> +	const struct pci_reset_fn_method *reset;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	ssize_t len = 0;
+> +	int i;
+> +
+> +	for (i = 0, reset = pci_reset_fn_methods; reset->reset_fn; i++, reset++) {
+> +		if (pdev->reset_methods_enabled & (1 << i))
+> +			len += sysfs_emit_at(buf, len, "[%s] ", reset->name);
+> +		else if (pdev->reset_methods & (1 << i))
+> +			len += sysfs_emit_at(buf, len, "%s ", reset->name);
+> +	}
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t reset_method_store(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	const struct pci_reset_fn_method *reset = pci_reset_fn_methods;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	u8 reset_mechanism;
+> +	int i = 0;
+> +
+> +	/* Writing none disables reset */
+> +	if (sysfs_streq(buf, "none")) {
+> +		reset_mechanism = 0;
+> +	} else if (sysfs_streq(buf, "default")) {
+> +		/* Writing default returns to initial value */
+> +		reset_mechanism = pdev->reset_methods;
+> +	} else {
+> +		reset_mechanism = 0;
+> +		for (; reset->reset_fn; i++, reset++) {
+> +			if (sysfs_streq(buf, reset->name)) {
+> +				reset_mechanism = 1 << i;
+> +				break;
+> +			}
+> +		}
+> +		if (!reset_mechanism || !(pdev->reset_methods & reset_mechanism))
+> +			return -EINVAL;
+> +	}
+> +
+> +	pdev->reset_methods_enabled = reset_mechanism;
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(reset_method);
+> +
+>  static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
+>  			   const char *buf, size_t count)
+>  {
+> @@ -1337,11 +1390,16 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+>  	if (dev->reset_methods) {
 >  		retval = device_create_file(&dev->dev, &dev_attr_reset);
 >  		if (retval)
->  			goto error;
-> @@ -1417,10 +1417,8 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+> -			goto error;
+> +			goto err_reset;
+> +		retval = device_create_file(&dev->dev, &dev_attr_reset_method);
+> +		if (retval)
+> +			goto err_method;
+>  	}
+>  	return 0;
+> 
+> -error:
+> +err_method:
+> +	device_remove_file(&dev->dev, &dev_attr_reset);
+> +err_reset:
+>  	pcie_vpd_remove_sysfs_dev_files(dev);
+>  	return retval;
+>  }
+> @@ -1417,8 +1475,10 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
 >  static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
 >  {
 >  	pcie_vpd_remove_sysfs_dev_files(dev);
-> -	if (dev->reset_fn) {
-> +	if (dev->reset_methods)
+> -	if (dev->reset_methods)
+> +	if (dev->reset_methods) {
 >  		device_remove_file(&dev->dev, &dev_attr_reset);
-> -		dev->reset_fn = 0;
-> -	}
+> +		device_remove_file(&dev->dev, &dev_attr_reset_method);
+> +	}
 >  }
 > 
 >  /**
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 407b44e85..b7f6c6588 100644
+> index b7f6c6588..81cebea56 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -5175,7 +5175,7 @@ int pci_reset_function(struct pci_dev *dev)
->  {
->  	int rc;
+> @@ -5106,7 +5106,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+>  	might_sleep();
 > 
-> -	if (!dev->reset_fn)
-> +	if (!dev->reset_methods)
->  		return -ENOTTY;
+>  	for (i = 0, reset = pci_reset_fn_methods; reset->reset_fn; i++, reset++) {
+> -		if (!(dev->reset_methods & (1 << i)))
+> +		if (!(dev->reset_methods_enabled & (1 << i)))
+>  			continue;
 > 
->  	pci_dev_lock(dev);
-> @@ -5211,7 +5211,7 @@ int pci_reset_function_locked(struct pci_dev *dev)
->  {
->  	int rc;
-> 
-> -	if (!dev->reset_fn)
-> +	if (!dev->reset_methods)
->  		return -ENOTTY;
-> 
->  	pci_dev_save_and_disable(dev);
-> @@ -5234,7 +5234,7 @@ int pci_try_reset_function(struct pci_dev *dev)
->  {
->  	int rc;
-> 
-> -	if (!dev->reset_fn)
-> +	if (!dev->reset_methods)
->  		return -ENOTTY;
-> 
->  	if (!pci_dev_trylock(dev))
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 01dd037bd..4764e031a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2404,7 +2404,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
-> 
->  	pcie_report_downtraining(dev);
->  	pci_init_reset_methods(dev);
-> -	dev->reset_fn = !!dev->reset_methods;
+>  		/*
+> @@ -5153,6 +5153,7 @@ void pci_init_reset_methods(struct pci_dev *dev)
+>  		else if (rc != -ENOTTY)
+>  			break;
+>  	}
+> +	dev->reset_methods_enabled = dev->reset_methods;
 >  }
 > 
->  /*
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 0a3df84c9..20a81b1bc 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5535,7 +5535,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-> 
->  	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
->  	    pdev->subsystem_device != 0x222e ||
-> -	    !pdev->reset_fn)
-> +	    !pdev->reset_methods)
->  		return;
-> 
->  	if (pci_enable_device_mem(pdev))
+>  /**
 > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 56d6e4750..a2f003f4e 100644
+> index a2f003f4e..400f614e0 100644
 > --- a/include/linux/pci.h
 > +++ b/include/linux/pci.h
-> @@ -437,7 +437,6 @@ struct pci_dev {
->  	unsigned int	state_saved:1;
->  	unsigned int	is_physfn:1;
->  	unsigned int	is_virtfn:1;
-> -	unsigned int	reset_fn:1;
->  	unsigned int	is_hotplug_bridge:1;
->  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
->  	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+> @@ -335,6 +335,8 @@ struct pci_dev {
+>  	 * See pci_reset_fn_methods array in pci.c
+>  	 */
+>  	u8 __bitwise reset_methods;		/* bitmap for device supported reset capabilities */
+> +	/* bitmap for user enabled and device supported reset capabilities */
+> +	u8 __bitwise reset_methods_enabled;
+>  #ifdef CONFIG_PCIEAER
+>  	u16		aer_cap;	/* AER capability offset */
+>  	struct aer_stats *aer_stats;	/* AER stats for this device */
 > --
 > 2.30.2
