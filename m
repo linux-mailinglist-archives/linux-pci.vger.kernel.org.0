@@ -2,234 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17F3433A1B4
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 23:37:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 875A933A1FC
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Mar 2021 01:06:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233011AbhCMWgj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Mar 2021 17:36:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48474 "EHLO
+        id S234846AbhCNAFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 Mar 2021 19:05:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234901AbhCMWgS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 Mar 2021 17:36:18 -0500
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C4AC061762
-        for <linux-pci@vger.kernel.org>; Sat, 13 Mar 2021 14:36:18 -0800 (PST)
-Received: by mail-ot1-x32a.google.com with SMTP id m21-20020a9d7ad50000b02901b83efc84a0so3304888otn.10
-        for <linux-pci@vger.kernel.org>; Sat, 13 Mar 2021 14:36:18 -0800 (PST)
+        with ESMTP id S231756AbhCNAFP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 Mar 2021 19:05:15 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68591C061574;
+        Sat, 13 Mar 2021 16:05:15 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id e19so60442020ejt.3;
+        Sat, 13 Mar 2021 16:05:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=v2nM0F1OSZDnsayP8DJnmj8gvTm944LA45fG5RJlAR4=;
-        b=esIzXz11IK5/xkUIRZWExsywCZP7c0K0xyTCruovMIwohs3QhI9Dkv62TxALgb+ukr
-         OyArZWGPm9Na48g4ZMujf+yBV2K2krqMot8Wn9X6IGICiP7RoX5zhMiSUrOmCFsdNwIN
-         o31ZMOU5Rpeiw9vVUzQ5TG2qfv3gkm1mXP+iU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+CXWQ7+4sGrdYWrJJDbJBWya0XStpZlHar12+cyRho8=;
+        b=j7sVR9K6FpFwxScOut4wrc10PxySxpv4ZZVsYmkKe1T9hE6FZTF0Yci2Kw3y6eVUtH
+         C6TuuEsBymzHt7vFIDhzpt2MvAR3csSeVVAU0O+kdQAs4h5/Nsnindd1o507+s5j7QH/
+         r5homKUU2kVCnaWx+rwAEg584Eo2ha+qHFqyozYG0FhOfcOG/pm324izjJ9SqV+IRvwY
+         d6UwnKg6YxiKpB7sDwWQiMCkslOUtibtMl3/JRXpD2ad2H7CfyzT15IsZjTrWyKzNxTN
+         90hBt0Cxs76jfvYJcn4nUDbgKWuW8ri1eucTXLRzAntzZVddgOFwYGyVOGWSZ21roArT
+         mb2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=v2nM0F1OSZDnsayP8DJnmj8gvTm944LA45fG5RJlAR4=;
-        b=lS9KPPrIbSmi/H6W33kZ2ZcHmNWvl1kOjCgXw78mpdT3bXNpIJCdaVDi5idUOfR78o
-         0uHlnJRzGYiP36+asYNyrpaPSHz+H+l6ZnVmqwXSUvZQSemOh+iNCL05j7r5iBvs/sVl
-         glsmrYF69sU0Gn2p9WuKDvGZYb6ASY4kYt4mhha6GDXhFRAuO11kr6xypElNCT4vwWlE
-         NFF1eA7BUNM9E/fXHTg8jhq7DIGuDLNNdt0jeQpzbzg2gKb9XuTH0JdUP2Y3Iem+pHph
-         4z/w/4YKIssFyYCUtrCq1TVMJknMAE4ycfUupUZsJGBTOoN0lWUh5kUqbCd+Sf/dd8DU
-         m90g==
-X-Gm-Message-State: AOAM530ijqtKrsP09x3HCqUPCEdeiOEjnlKGs1xVZBbwniln5h9WxPVF
-        pt5OvOl3rQQBKVXQrCdAi3pN7uHEjeTQyDCqgFb0Yw==
-X-Google-Smtp-Source: ABdhPJx+9a30YontWgcNy6nzPQiRyG8JBRoZfcUjE9SPwclc5y9YC+uZVvc9WajnnQVETEW26MKNrTck27mSKqgVcXY=
-X-Received: by 2002:a9d:7b4e:: with SMTP id f14mr8827539oto.281.1615674977323;
- Sat, 13 Mar 2021 14:36:17 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+CXWQ7+4sGrdYWrJJDbJBWya0XStpZlHar12+cyRho8=;
+        b=TdgzQ/j/9Z1MZmTesIiUyP+nx9awk0THw6V8/Kz0c1dMpe5MNdeZ3kOdHj4yKV0s1Q
+         FbBo6ht6/rmqfISV5y4nbUqyYuOZN3CVDx5P4bj57HmvRPggoOzETnr2CkUIMqjsvIds
+         rCoyjJllHk04JdeUjIMz7mG38MeVnpV+ZJBepZRStKYS6PdtM1K1Wpaz04JDu/hS4vIT
+         FiBC/jYmVG8oIQzc8OLpofrYunQohWl4pZnKAgMhO/PfOz9CQ9KjA+RIZtvgHMkkOcn2
+         IwbxuuWn04Hk3BO8ighYVCuSLQQG2hUgwyvBNhGqgqZTqyKdeuKy960+qO0pBVoCuhD3
+         DNYg==
+X-Gm-Message-State: AOAM532nQ1T8/uczMw4/XhNiVepVrG+Os8gkt5sgqP9nYXZnFjrGuxOc
+        PkHqkuxOmP5yagjAoJOHihGGytQjhPqpMA==
+X-Google-Smtp-Source: ABdhPJyPzltpaDg5XhE/G4ywUQJSFeR7sYykiqzumpbB2yqPd44htfcUiyJSCfsqXKhGSqBeNINl5Q==
+X-Received: by 2002:a17:906:f953:: with SMTP id ld19mr15622227ejb.164.1615680314180;
+        Sat, 13 Mar 2021 16:05:14 -0800 (PST)
+Received: from xws.localdomain ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id a9sm5503835edt.82.2021.03.13.16.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Mar 2021 16:05:13 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: Run platform power transition on initial D0 entry
+Date:   Sun, 14 Mar 2021 01:04:39 +0100
+Message-Id: <20210314000439.3138941-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20210204165831.2703772-3-daniel.vetter@ffwll.ch> <20210313215747.GA2394467@bjorn-Precision-5520>
-In-Reply-To: <20210313215747.GA2394467@bjorn-Precision-5520>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Sat, 13 Mar 2021 23:36:06 +0100
-Message-ID: <CAKMK7uHz3BYxKR6dCHHeP+WYho=WhvYnt=d3=xRfW5kfaP=m8Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: Revoke mappings like devmem
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 13, 2021 at 10:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Krzysztof, Pali, Oliver]
->
-> On Thu, Feb 04, 2021 at 05:58:31PM +0100, Daniel Vetter wrote:
-> > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-> > the region") /dev/kmem zaps ptes when the kernel requests exclusive
-> > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-> > the default for all driver uses.
-> >
-> > Except there's two more ways to access PCI BARs: sysfs and proc mmap
-> > support. Let's plug that hole.
->
-> IIUC, the idea is that if a driver calls request_mem_region() on a PCI
-> BAR, we prevent access to the BAR via sysfs.  I guess I'm OK with that
-> if it's a real security improvement or something.
+On some devices and platforms, the initial platform (e.g. ACPI) power
+state is not in sync with the power state of the PCI device.
 
-Yup.
+This seems like it is, for all intents and purposes, an issue with the
+device firmware (e.g. ACPI). On some devices, specifically Microsoft
+Surface Books 2 and 3, we encounter ACPI code akin to the following
+power resource, corresponding to a PCI device:
 
-> But the downside of this implementation is that it depends on
-> iomem_get_mapping(), which doesn't work until after fs_initcalls,
-> which means the sysfs files cannot be static attributes of devices
-> added before that.  PCI devices are typically enumerated in
-> subsys_initcall.
->
-> Krzysztof is converting PCI sysfs files (config, rom, reset, vpd, etc)
-> to static attributes.  This is a major improvement that could get rid
-> of pci_create_sysfs_dev_files(), the late_initcall pci_sysfs_init(),
-> and the "sysfs_initialized" hack.  This would fix a race reported by
-> Pali [1] (thanks to Oliver for the idea [2]).
->
-> EXCEPT that this revoke change means the "resource%d", "legacy_io",
-> and "legacy_mem" files cannot be static attributes because of
-> iomem_get_mapping().
->
-> Any ideas on how to deal with this?  Having to keep the
-> pci_sysfs_init() initcall just for these few files seems like the tail
-> wagging the dog.
+    PowerResource (PRP5, 0x00, 0x0000)
+    {
+        // Initialized to zero, i.e. off. There is no logic for checking
+        // the actual state dynamically.
+        Name (_STA, Zero)
 
-It's a bit "pick your ugly". Either we have the late init call (not
-pretty), or the sysfs side needs a callback to fish out the
-address_space for the mmap at open() time, which didn't stir up much
-enthusiams with Greg because we need a new callback just for these
-mmio files. Either approach works.
--Daniel
+        Method (_ON, 0, Serialized)
+        {
+            // ... code omitted ...
+            _STA = One
+        }
 
-> [1] https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali
-> [2] https://lore.kernel.org/r/CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKG=
-XQzBfqaA@mail.gmail.com
->
-> > For revoke_devmem() to work we need to link our vma into the same
-> > address_space, with consistent vma->vm_pgoff. ->pgoff is already
-> > adjusted, because that's how (io_)remap_pfn_range works, but for the
-> > mapping we need to adjust vma->vm_file->f_mapping. The cleanest way is
-> > to adjust this at at ->open time:
-> >
-> > - for sysfs this is easy, now that binary attributes support this. We
-> >   just set bin_attr->mapping when mmap is supported
-> > - for procfs it's a bit more tricky, since procfs pci access has only
-> >   one file per device, and access to a specific resources first needs
-> >   to be set up with some ioctl calls. But mmap is only supported for
-> >   the same resources as sysfs exposes with mmap support, and otherwise
-> >   rejected, so we can set the mapping unconditionally at open time
-> >   without harm.
-> >
-> > A special consideration is for arch_can_pci_mmap_io() - we need to
-> > make sure that the ->f_mapping doesn't alias between ioport and iomem
-> > space. There's only 2 ways in-tree to support mmap of ioports: generic
-> > pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the single
-> > architecture hand-rolling. Both approach support ioport mmap through a
-> > special pfn range and not through magic pte attributes. Aliasing is
-> > therefore not a problem.
-> >
-> > The only difference in access checks left is that sysfs PCI mmap does
-> > not check for CAP_RAWIO. I'm not really sure whether that should be
-> > added or not.
-> >
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-samsung-soc@vger.kernel.org
-> > Cc: linux-media@vger.kernel.org
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: linux-pci@vger.kernel.org
-> > ---
-> >  drivers/pci/pci-sysfs.c | 4 ++++
-> >  drivers/pci/proc.c      | 1 +
-> >  2 files changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 0c45b4f7b214..f8afd54ca3e1 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -942,6 +942,7 @@ void pci_create_legacy_files(struct pci_bus *b)
-> >       b->legacy_io->read =3D pci_read_legacy_io;
-> >       b->legacy_io->write =3D pci_write_legacy_io;
-> >       b->legacy_io->mmap =3D pci_mmap_legacy_io;
-> > +     b->legacy_io->mapping =3D iomem_get_mapping();
-> >       pci_adjust_legacy_attr(b, pci_mmap_io);
-> >       error =3D device_create_bin_file(&b->dev, b->legacy_io);
-> >       if (error)
-> > @@ -954,6 +955,7 @@ void pci_create_legacy_files(struct pci_bus *b)
-> >       b->legacy_mem->size =3D 1024*1024;
-> >       b->legacy_mem->attr.mode =3D 0600;
-> >       b->legacy_mem->mmap =3D pci_mmap_legacy_mem;
-> > +     b->legacy_io->mapping =3D iomem_get_mapping();
-> >       pci_adjust_legacy_attr(b, pci_mmap_mem);
-> >       error =3D device_create_bin_file(&b->dev, b->legacy_mem);
-> >       if (error)
-> > @@ -1169,6 +1171,8 @@ static int pci_create_attr(struct pci_dev *pdev, =
-int num, int write_combine)
-> >                       res_attr->mmap =3D pci_mmap_resource_uc;
-> >               }
-> >       }
-> > +     if (res_attr->mmap)
-> > +             res_attr->mapping =3D iomem_get_mapping();
-> >       res_attr->attr.name =3D res_attr_name;
-> >       res_attr->attr.mode =3D 0600;
-> >       res_attr->size =3D pci_resource_len(pdev, num);
-> > diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-> > index 3a2f90beb4cb..9bab07302bbf 100644
-> > --- a/drivers/pci/proc.c
-> > +++ b/drivers/pci/proc.c
-> > @@ -298,6 +298,7 @@ static int proc_bus_pci_open(struct inode *inode, s=
-truct file *file)
-> >       fpriv->write_combine =3D 0;
-> >
-> >       file->private_data =3D fpriv;
-> > +     file->f_mapping =3D iomem_get_mapping();
-> >
-> >       return 0;
-> >  }
-> > --
-> > 2.30.0
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+        Method (_OFF, 0, Serialized)
+        {
+            // ... code omitted ...
+            _STA = Zero
+        }
+    }
 
+This resource is initialized to 'off' and does not have any logic for
+checking its actual state, i.e. the state of the corresponding PCI
+device. The stored state of this resource can only be changed by running
+the (platform/ACPI) power transition functions (i.e. _ON and _OFF).
 
+This means that, at boot, the PCI device power state is out of sync with
+the power state of the corresponding ACPI resource.
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+During initial bring-up of a PCI device, pci_enable_device_flags()
+updates its PCI core state (from initially 'unknown') by reading from
+its PCI_PM_CTRL register. It does, however, not check if the platform
+(here ACPI) state is in sync with/valid for the actual device state and
+needs updating.
+
+The later call to pci_set_power_state(..., PCI_D0), which would normally
+perform such platform transitions, will evaluate to a no-op if the
+stored state has been updated to D0 via this. Thus any such power
+resource, required for D0, will never get "officially" turned on.
+
+One could also make the case that this could cause PCI devices requiring
+some secondary power resources to not work properly, as no attempt is
+ever made at checking that they are in fact synchronized (i.e. turned
+on/off as required e.g. by ACPI) for the updated state.
+
+Ultimately, this breaks the first D3cold entry for the discrete GPU on
+the aforementioned Surface Books. On transition of the PCI device to
+D3cold, the power resource is not properly turned off as it is already
+considered off:
+
+    $ echo auto > /sys/bus/pci/devices/0000:02:00.0/power/control
+
+    [  104.430304] ACPI: \_SB_.PCI0.RP05: ACPI: PM: GPE69 enabled for wakeup
+    [  104.430310] pcieport 0000:00:1c.4: Wakeup enabled by ACPI
+    [  104.444144] ACPI: \_SB_.PCI0.RP05: ACPI: PM: Power state change: D3cold -> D3cold
+    [  104.444151] acpi device:3b: Device already in D3cold
+    [  104.444154] pcieport 0000:00:1c.4: power state changed by ACPI to D3cold
+
+However, the device still consumes a non-negligible amount of power and
+gets warm. A full power-cycle fixes this and results in the device being
+properly transitioned to D3cold:
+
+    $ echo on > /sys/bus/pci/devices/0000:02:00.0/power/control
+
+    [  134.258039] ACPI: \_SB_.PCI0.RP05: ACPI: PM: Power state change: D3cold -> D0
+    [  134.369140] ACPI: PM: Power resource [PRP5] turned on
+    [  134.369157] acpi device:3b: Power state changed to D0
+    [  134.369165] pcieport 0000:00:1c.4: power state changed by ACPI to D0
+    [  134.369338] pcieport 0000:00:1c.4: Wakeup disabled by ACPI
+
+    $ echo auto > /sys/bus/pci/devices/0000:02:00.0/power/control
+
+    [  310.338597] ACPI: \_SB_.PCI0.RP05: ACPI: PM: GPE69 enabled for wakeup
+    [  310.338604] pcieport 0000:00:1c.4: Wakeup enabled by ACPI
+    [  310.353841] ACPI: \_SB_.PCI0.RP05: ACPI: PM: Power state change: D0 -> D3cold
+    [  310.403879] ACPI: PM: Power resource [PRP5] turned off
+    [  310.403894] acpi device:3b: Power state changed to D3cold
+    [  310.403901] pcieport 0000:00:1c.4: power state changed by ACPI to D3cold
+
+By replacing pci_set_power_state(..., PCI_DO) with pci_power_up() in
+do_pci_enable_device(), we can ensure that the state of power resources
+is always checked. This essentially drops the initial (first) check on
+the current state of the PCI device and calls platform specific code,
+i.e. pci_platform_power_transition() to perform the appropriate platform
+transition.
+
+This can be verified by
+
+    $ echo auto > /sys/bus/pci/devices/0000:02:00.0/power/control
+
+    [  152.790448] ACPI: \_SB_.PCI0.RP05: ACPI: PM: GPE69 enabled for wakeup
+    [  152.790454] pcieport 0000:00:1c.4: Wakeup enabled by ACPI
+    [  152.804252] ACPI: \_SB_.PCI0.RP05: ACPI: PM: Power state change: D0 -> D3cold
+    [  152.857548] ACPI: PM: Power resource [PRP5] turned off
+    [  152.857563] acpi device:3b: Power state changed to D3cold
+    [  152.857570] pcieport 0000:00:1c.4: power state changed by ACPI to D3cold
+
+which yields the expected behavior.
+
+Note that
+
+ a) pci_set_power_state() would call pci_power_up() if the check on the
+ current state failed. This means that in case of the updated state not
+ being D0, there is no functional change.
+
+ b) The core and platform transitions, i.e. pci_raw_set_power_state()
+ and pci_platform_power_transition() (should) both have checks on the
+ current state. So in case either state is up to date, the corresponding
+ transition should still evaluate to a no-op. The only notable
+ difference made by the suggested replacement is pci_resume_bus() being
+ called for devices where runtime D3cold is enabled.
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+
+Changes in v2:
+ - No code changes
+ - Improve commit message, add details
+ - Add Rafael and linux-pm to CCs
+
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 16a17215f633..cc42315210e4 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1800,7 +1800,7 @@ static int do_pci_enable_device(struct pci_dev *dev, int bars)
+ 	u16 cmd;
+ 	u8 pin;
+ 
+-	err = pci_set_power_state(dev, PCI_D0);
++	err = pci_power_up(dev);
+ 	if (err < 0 && err != -EIO)
+ 		return err;
+ 
+-- 
+2.30.2
+
