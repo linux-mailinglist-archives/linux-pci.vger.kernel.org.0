@@ -2,121 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1743339F64
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 18:12:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54403339FEC
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Mar 2021 19:36:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234126AbhCMRMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Mar 2021 12:12:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234174AbhCMRLm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 13 Mar 2021 12:11:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C76864E2E;
-        Sat, 13 Mar 2021 17:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615655501;
-        bh=wP5rJWj91sCTtBjfV4gXU1J3V5urwcHzS4UHBgx1JTw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q8EBncD2Zgm+lBQ6vnQcma8UtNCUxMLf20FbAtR7/HSNNGB1oK1ATQS+C6Do1E7K4
-         GDEh5EpmRgJRCAhK8xKlloZzB9N17Absrv7h1jkuQ8Y5JALiU04MK9zBtAVU9vwMAR
-         B5imjpyagFVM2EK6jHxd7q+83+7kYZ/0UUtI3Lowivb/Qvh9vv343S92hIGgzJGGiW
-         VEyMjca295zTpRW23tfbxljAqB2v6jaojPqSJvoKOJ40dAdybxeT3AvsUU1tvfx/Ng
-         oNzKbB1vim6e4O+RAzdDRLkC/hR6Q/IPrnL+aYe5i7yi0O9TtovYymsXM0KRg2dmye
-         NWjFnlthZ+PCA==
-Date:   Sun, 14 Mar 2021 02:11:35 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     James Puthukattukaran <james.puthukattukaran@oracle.com>
-Cc:     "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: Re: pci_do_recovery not handling fata errors
-Message-ID: <20210313171135.GA8648@redsun51.ssa.fujisawa.hgst.com>
-References: <MN2PR10MB4093188B8CDC659AE68E5640996F9@MN2PR10MB4093.namprd10.prod.outlook.com>
- <B2696632-CB84-420E-B072-044603A6D3B7@intel.com>
- <MN2PR10MB40933D5232D0F58ECAF4387D996F9@MN2PR10MB4093.namprd10.prod.outlook.com>
+        id S234319AbhCMSgR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sat, 13 Mar 2021 13:36:17 -0500
+Received: from smtp.econet.co.zw ([77.246.51.158]:65277 "EHLO
+        ironportDMZ.econet.co.zw" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234286AbhCMSf6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 Mar 2021 13:35:58 -0500
+X-Greylist: delayed 472 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Mar 2021 13:35:46 EST
+IronPort-SDR: 2VH7uDjPUxuRF84kGIuoHHaISSCuqZi+ufUVCFmh+/0u/DCFCtj5VFDT1b4h9dNnVvA6flspH+
+ 3h9rw6M4gXRTOO/x00E/RP0IaZ5bJ/VFJjak29BaaBMRsZ8SomhBLF6NshxP1CgwykLJQtbFhT
+ f57yb5yFlreJnhCu99okX5fHlhFOs37BIGqeR55agFxRF7WOiDsNKvGtFuzjle44yqE/60PUcB
+ eSRuIQK9gCbtZaBXI6W4OKIxrnCmM+n1gcMJCNZUjbl9kcbsSMLo+94gqXFyBTYwkpasFfSfmL
+ xM0=
+IronPort-HdrOrdr: A9a23:z3onBKxoaNoCa6u/wVCbKrPwgr1zdoIgy1knxilNYDZSddGVkN
+ 3roe8S0gX6hC1UdHYrn92BP6foewK+ybde544NMbC+GDT3oWfAFuFfxKbr3jGIIUPD38FH06
+ MIScRDIfnRKXQ/ssrg+gm/FL8boeWv1Kyzn+/RwzNMYGhRGsddxjx0AAqaDUF6LTMubfFSKL
+ Om6tNDt36cfx0sA/iTPXUZQ/PF4+TCiZOOW29/Ozcc9AKMgTm0gYSULzGk2H4lIkpy6IZn1V
+ Lgmwz9opy5s/ehygLNvlWjiqh+qZ/EwttHCNfksLlwFhzcziKpYIhGfpHqhkFTnMifrG8wkN
+ /WowoxVv4DiU/sQg==
+X-IronPort-AV: E=Sophos;i="5.81,245,1610402400"; 
+   d="scan'208";a="3444522"
+Received: from unknown (HELO WVALE-MB-SVR-05.econetzw.local) ([192.168.101.173])
+  by ironportLAN.econet.co.zw with ESMTP; 13 Mar 2021 20:27:52 +0200
+Received: from WVALE-CAS-SVR-9.econetzw.local (192.168.101.184) by
+ WVALE-MB-SVR-05.econetzw.local (192.168.101.173) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3; Sat, 13 Mar 2021 20:27:48 +0200
+Received: from User (165.231.148.189) by WVALE-CAS-SVR-9.econetzw.local
+ (10.10.11.230) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Sat, 13 Mar 2021 20:27:59 +0200
+Reply-To: <r19772744@daum.net>
+From:   "Reem E. A" <chawora@econet.co.zw>
+Subject: Re:
+Date:   Sat, 13 Mar 2021 18:27:46 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <MN2PR10MB40933D5232D0F58ECAF4387D996F9@MN2PR10MB4093.namprd10.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 8BIT
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <96f8ff6fe77b4507830ab5cf78a93340@WVALE-CAS-SVR-9.econetzw.local>
+To:     Undisclosed recipients:;
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 10:57:18PM +0000, James Puthukattukaran wrote:
-> But the clearing of fatal error in the dpc_process_error is only for DPC trigger due to "unmaskable uncorrectable". 
-> If the trigger reason is ERR_FATAL, then it does not hit the else clause and neither is it cleared in the pci_do_recovery code.
+Hello,
 
-If the reason is ERR_FATAL, then the port didn't detect the error; it is
-just the first DPC capable downstream port to receive the message from
-some device downstream, so there's nothing to clear in its AER register.
- 
-> From dpc_process_error with more context -- 
-> 
->        else if (reason == 0 &&  <<<<<<< only for "unmaskable uncorrectable". What about for ERR_FATAL?
->                  dpc_get_aer_uncorrect_severity(pdev, &info) &&
->                  aer_get_device_error_info(pdev, &info)) {
->                 aer_print_error(pdev, &info);
->                 pci_aer_clear_nonfatal_status(pdev);
->                 pci_aer_clear_fatal_status(pdev);
->         }
->  
-> 
-> > -----Original Message-----
-> > From: Kelley, Sean V <sean.v.kelley@intel.com>
-> > Sent: Friday, March 12, 2021 5:25 PM
-> > To: James Puthukattukaran <james.puthukattukaran@oracle.com>;
-> > Kuppuswamy, Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@intel.com>
-> > Cc: Linux PCI <linux-pci@vger.kernel.org>; bhelgaas@google.com
-> > Subject: [External] : Re: pci_do_recovery not handling fata errors
-> > 
-> > 
-> > 
-> > > On Mar 12, 2021, at 12:56 PM, James Puthukattukaran
-> > <james.puthukattukaran@oracle.com> wrote:
-> > >
-> > > Hi -
-> > > I’m trying to understand why pci_do_recovery() only clears non-fatal but
-> > not fata errors? My immediate concern is call from dpc_handler. If a device
-> > sends an ERR_FATAL to the root port, I would think that as part of recovery
-> > the fatal status in the AER registers of the endpoint device would be cleared?
-> > >
-> > 
-> > 
-> > Adding Sathya who mentioned to me that:
-> > 
-> > Fatal error are cleared in
-> > 
-> > void dpc_process_error(struct pci_dev *pdev)
-> > 
-> > 253                  dpc_get_aer_uncorrect_severity(pdev, &info) &&
-> > 254                  aer_get_device_error_info(pdev, &info)) {
-> > 255                 aer_print_error(pdev, &info);
-> > 256                 pci_aer_clear_nonfatal_status(pdev);
-> > 257                 pci_aer_clear_fatal_status(pdev);
-> > 
-> > Thanks,
-> > 
-> > Sean
-> > 
-> > > Snippet of concern in pci_do_recovery –
-> > >
-> > >         /*
-> > >          * If we have native control of AER, clear error status in the Root
-> > >          * Port or Downstream Port that signaled the error.  If the
-> > >          * platform retained control of AER, it is responsible for clearing
-> > >          * this status.  In that case, the signaling device may not even be
-> > >          * visible to the OS.
-> > >          */
-> > >         if (host->native_aer || pcie_ports_native) {
-> > >                 pcie_clear_device_status(bridge);
-> > >                 pci_aer_clear_nonfatal_status(bridge);   <<<< Just clearing
-> > nonfatal. What about fatal?
-> > >         }
-> > >
-> > > Thanks
-> > > James
-> 
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (2) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home on their behalf and
+for our "Mutual Benefits".
+
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Turkish Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
+
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+reem.alhashimi@yandex.com
+
+Regards,
+Ms. Reem.
+This mail was sent through Econet Wireless, a Global telecoms leader.
+
+DISCLAIMER
+
+The information in this message is confidential and is legally privileged. It is intended solely for the addressee. Access to this message by anyone else is unauthorized. If received in error please accept our apologies and notify the sender immediately. You must also delete the original message from your machine. If you are not the intended recipient, any use, disclosure, copying, distribution or action taken in reliance of it, is prohibited and may be unlawful. The information, attachments, opinions or advice contained in this email are not the views or opinions of Econet Wireless, its subsidiaries or affiliates. Econet Wireless therefore accepts no liability for claims, losses, or damages arising from the inaccuracy, incorrectness, or lack of integrity of such information.
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/AgileBanner.png]
+WORK ISN'T A PLACE
+IT'S WHAT WE DO
+________________________________
+
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/telephone.png]
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/email.png]
+
+<mailto:>
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/location.png]
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/website.png]
+
+www.econet.co.zw<https://www.econet.co.zw>
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/inspired.jpg]
