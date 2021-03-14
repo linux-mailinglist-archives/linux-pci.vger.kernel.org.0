@@ -2,208 +2,283 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 212C633A88D
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Mar 2021 23:32:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8476E33A8EF
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 00:52:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbhCNWcV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Mar 2021 18:32:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229658AbhCNWcU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Mar 2021 18:32:20 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12EM4GQ0012031;
-        Sun, 14 Mar 2021 18:32:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=bMYUf3tPZFWdirmjnTyN0au4/D2kRROPwGdA+rqqfdU=;
- b=TEpncx+odWV9X5oMS9ArcFXbvTMeYMx4F5WdjZ11KGH7onYQunvsX6fcKFJEUcHwZ+jS
- BNLWKUk7O8fQWatSF1GHHUANqr8XtFEUOXSzkc2l4AGQT+/Z5xXvkPSPPpx8/dNRlqrK
- jSIAdlLi/PEaoMDCZrCXG2DXk/AeaWIz5zdHgHYsIxBixFaTEWgZGt9RFmtfHLh7WQNQ
- vFflz4/YOqJOgKSIABSiRnW8Z4qbq9AN/X/pJcOzFhIlMUN7Zx426BvLSykmdff2pnQj
- m/bd85W3uQFyvKO8ON7lBrPDXsesxkcuZd1KPQXx1HK8q5f2lwqp2P95/800u75573wc tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 379swxsb5u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Mar 2021 18:32:12 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12EM4dL6012561;
-        Sun, 14 Mar 2021 18:32:11 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 379swxsb5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Mar 2021 18:32:11 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12EMVurl016371;
-        Sun, 14 Mar 2021 22:32:10 GMT
-Received: from b03cxnp07027.gho.boulder.ibm.com (b03cxnp07027.gho.boulder.ibm.com [9.17.130.14])
-        by ppma02dal.us.ibm.com with ESMTP id 378n19dttt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Mar 2021 22:32:10 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12EMW9Zb15860146
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Mar 2021 22:32:09 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DE42BE053;
-        Sun, 14 Mar 2021 22:32:09 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D3F8BE051;
-        Sun, 14 Mar 2021 22:32:08 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.160.44.137])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sun, 14 Mar 2021 22:32:07 +0000 (GMT)
-Subject: Re: [PATCH] rpadlpar: fix potential drc_name corruption in store
- functions
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, mmc@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20210310223021.423155-1-tyreld@linux.ibm.com>
- <20210313091751.GM6564@kitsune.suse.cz>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <a67af978-1c47-c66b-47f0-3d754da738f9@linux.ibm.com>
-Date:   Sun, 14 Mar 2021 15:32:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S229520AbhCNXwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Mar 2021 19:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229476AbhCNXvs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 14 Mar 2021 19:51:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 50D7264DFD;
+        Sun, 14 Mar 2021 23:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615765908;
+        bh=TCH0XlPssZVBCrF/57Bwz8SvVdCaoN9rNUbE8rH6CWY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGV6c//1hfum/nEbk0vCXM00/VDPaLJ6ZHrv1Lf/82XCdiJrJfnvRW7/MfB7kX5eL
+         NaGhhUTAYE1tVPQXJ7qt5GDOWrbsEJAo8P5LAMxTypOT5AhSetXk6unF9O5+X+wWza
+         qh3i60jz9n3C3bhX5uBYXsPwsYzVxPJFbsA5a/7H4eY+1qhstf400IFRCLVyu6sior
+         fCTsbhbqB1VvN7HasET2GLmQNV3fjDjzO8WAAjaBU5OJcYT9FzsT+HceGtCZTMl/L9
+         qgAfz3acDy4AI1K2kHyRhwVd8Zu5xwkD84yX+fmo9/djr6jPsuSzMbEMzz8SXAkmdK
+         5UclpZyE4xqOw==
+Received: by pali.im (Postfix)
+        id B8B9789B; Mon, 15 Mar 2021 00:51:44 +0100 (CET)
+Date:   Mon, 15 Mar 2021 00:51:44 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     ameynarkhede03@gmail.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
+        raphael.norwitz@nutanix.com
+Subject: Re: [PATCH 2/4] PCI: Add new bitmap for keeping track of supported
+ reset mechanisms
+Message-ID: <20210314235144.as3hcpmwuxrwouec@pali>
+References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
+ <20210312173452.3855-3-ameynarkhede03@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210313091751.GM6564@kitsune.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-14_13:2021-03-12,2021-03-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- mlxlogscore=999 spamscore=0 mlxscore=0 adultscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103140170
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210312173452.3855-3-ameynarkhede03@gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/13/21 1:17 AM, Michal Suchánek wrote:
-> On Wed, Mar 10, 2021 at 04:30:21PM -0600, Tyrel Datwyler wrote:
->> Both add_slot_store() and remove_slot_store() try to fix up the drc_name
->> copied from the store buffer by placing a NULL terminator at nbyte + 1
->> or in place of a '\n' if present. However, the static buffer that we
->> copy the drc_name data into is not zeored and can contain anything past
->> the n-th byte. This is problematic if a '\n' byte appears in that buffer
->> after nbytes and the string copied into the store buffer was not NULL
->> terminated to start with as the strchr() search for a '\n' byte will mark
->> this incorrectly as the end of the drc_name string resulting in a drc_name
->> string that contains garbage data after the n-th byte. The following
->> debugging shows an example of the drmgr utility writing "PHB 4543" to
->> the add_slot sysfs attribute, but add_slot_store logging a corrupted
->> string value.
->>
->> [135823.702864] drmgr: drmgr: -c phb -a -s PHB 4543 -d 1
->> [135823.702879] add_slot_store: drc_name = PHB 4543°|<82>!, rc = -19
->>
->> Fix this by NULL terminating the string when we copy it into our static
->> buffer by coping nbytes + 1 of data from the store buffer. The code has
-> Why is it OK to copy nbytes + 1 and why is it expected that the buffer
-> contains a nul after the content?
-
-It is my understanding that the store function buffer is allocated as a
-zeroed-page which the kernel copies up to at most (PAGE_SIZE - 1) of user data
-into. Anything after nbytes would therefore be zeroed.
-
+On Friday 12 March 2021 23:04:50 ameynarkhede03@gmail.com wrote:
+> From: Amey Narkhede <ameynarkhede03@gmail.com>
 > 
-> Isn't it much saner to just nul terminate the string after copying?
-
-At the cost of an extra line of code, sure.
-
--Tyrel
-
+> Introduce a new bitmap reset_methods in struct pci_dev
+> to keep track of reset mechanisms supported by the
+> device. Also refactor probing and reset functions
+> to take advantage of calling convention of reset
+> functions.
 > 
-> diff --git a/drivers/pci/hotplug/rpadlpar_sysfs.c b/drivers/pci/hotplug/rpadlpar_sysfs.c
-> index cdbfa5df3a51..cfbad67447da 100644
-> --- a/drivers/pci/hotplug/rpadlpar_sysfs.c
-> +++ b/drivers/pci/hotplug/rpadlpar_sysfs.c
-> @@ -35,11 +35,11 @@ static ssize_t add_slot_store(struct kobject *kobj, struct kobj_attribute *attr,
->  		return 0;
->  
->  	memcpy(drc_name, buf, nbytes);
-> +	&drc_name[nbytes] = '\0';
->  
->  	end = strchr(drc_name, '\n');
-> -	if (!end)
-> -		end = &drc_name[nbytes];
-> -	*end = '\0';
-> +	if (end)
-> +		*end = '\0';
->  
->  	rc = dlpar_add_slot(drc_name);
->  	if (rc)
-> @@ -66,11 +66,11 @@ static ssize_t remove_slot_store(struct kobject *kobj,
->  		return 0;
->  
->  	memcpy(drc_name, buf, nbytes);
-> +	&drc_name[nbytes] = '\0';
->  
->  	end = strchr(drc_name, '\n');
-> -	if (!end)
-> -		end = &drc_name[nbytes];
-> -	*end = '\0';
-> +	if (end)
-> +		*end = '\0';
->  
->  	rc = dlpar_remove_slot(drc_name);
->  	if (rc)
+> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> ---
+> Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+> Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
 > 
-> Thanks
+>  drivers/pci/pci.c   | 106 ++++++++++++++++++++++++--------------------
+>  drivers/pci/pci.h   |  11 ++++-
+>  drivers/pci/probe.c |   5 +--
+>  include/linux/pci.h |  10 +++++
+>  4 files changed, 79 insertions(+), 53 deletions(-)
 > 
-> Michal
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 4a7c084a3..407b44e85 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -40,6 +40,26 @@ const char *pci_power_names[] = {
+>  };
+>  EXPORT_SYMBOL_GPL(pci_power_names);
 > 
->> already made sure that nbytes is not >= MAX_DRC_NAME_LEN and the store
->> buffer is guaranteed to be zeroed beyond the nth-byte of data copied
->> from the user. Further, since the string is now NULL terminated the code
->> only needs to change '\n' to '\0' when present.
->>
->> Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
->> ---
->>  drivers/pci/hotplug/rpadlpar_sysfs.c | 14 ++++++--------
->>  1 file changed, 6 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/hotplug/rpadlpar_sysfs.c b/drivers/pci/hotplug/rpadlpar_sysfs.c
->> index cdbfa5df3a51..375087921284 100644
->> --- a/drivers/pci/hotplug/rpadlpar_sysfs.c
->> +++ b/drivers/pci/hotplug/rpadlpar_sysfs.c
->> @@ -34,12 +34,11 @@ static ssize_t add_slot_store(struct kobject *kobj, struct kobj_attribute *attr,
->>  	if (nbytes >= MAX_DRC_NAME_LEN)
->>  		return 0;
->>  
->> -	memcpy(drc_name, buf, nbytes);
->> +	memcpy(drc_name, buf, nbytes + 1);
->>  
->>  	end = strchr(drc_name, '\n');
->> -	if (!end)
->> -		end = &drc_name[nbytes];
->> -	*end = '\0';
->> +	if (end)
->> +		*end = '\0';
->>  
->>  	rc = dlpar_add_slot(drc_name);
->>  	if (rc)
->> @@ -65,12 +64,11 @@ static ssize_t remove_slot_store(struct kobject *kobj,
->>  	if (nbytes >= MAX_DRC_NAME_LEN)
->>  		return 0;
->>  
->> -	memcpy(drc_name, buf, nbytes);
->> +	memcpy(drc_name, buf, nbytes + 1);
->>  
->>  	end = strchr(drc_name, '\n');
->> -	if (!end)
->> -		end = &drc_name[nbytes];
->> -	*end = '\0';
->> +	if (end)
->> +		*end = '\0';
->>  
->>  	rc = dlpar_remove_slot(drc_name);
->>  	if (rc)
->> -- 
->> 2.27.0
->>
+> +static int pci_af_flr(struct pci_dev *dev, int probe);
+> +static int pci_pm_reset(struct pci_dev *dev, int probe);
+> +static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe);
+> +static int pci_parent_bus_reset(struct pci_dev *dev, int probe);
+> +
+> +/*
+> + * The ordering for functions in pci_reset_fn_methods
+> + * is required for bitmap positions defined
+> + * in reset_methods in struct pci_dev
+> + */
+> +const struct pci_reset_fn_method pci_reset_fn_methods[] = {
+> +	{ .reset_fn = &pci_dev_specific_reset, .name = "device_specific" },
+> +	{ .reset_fn = &pcie_flr, .name = "flr" },
+> +	{ .reset_fn = &pci_af_flr, .name = "af_flr" },
+> +	{ .reset_fn = &pci_pm_reset, .name = "pm" },
+> +	{ .reset_fn = &pci_dev_reset_slot_function, .name = "slot" },
+> +	{ .reset_fn = &pci_parent_bus_reset, .name = "bus" },
 
+Hello Amey! In the list of reset methods is missing PCIe Warm Reset.
+
+Could you extend and prepare API also for PCIe Warm Reset? According to
+PCI Express mini card and m.2 electromechanical specifications, PCIe
+Warm Reset can be triggered by PERST# signal and more kernel drivers can
+internally control PERST#. Just there is no kernel API and therefore
+PCIe Warm Reset nor PERST# signal is unified.
+
+> +	{ 0 },
+> +};
+> +
+>  int isa_dma_bridge_buggy;
+>  EXPORT_SYMBOL(isa_dma_bridge_buggy);
+> 
+> @@ -5080,71 +5100,59 @@ static void pci_dev_restore(struct pci_dev *dev)
+>   */
+>  int __pci_reset_function_locked(struct pci_dev *dev)
+>  {
+> -	int rc;
+> +	int i, rc = -ENOTTY;
+> +	const struct pci_reset_fn_method *reset;
+> 
+>  	might_sleep();
+> 
+> -	/*
+> -	 * A reset method returns -ENOTTY if it doesn't support this device
+> -	 * and we should try the next method.
+> -	 *
+> -	 * If it returns 0 (success), we're finished.  If it returns any
+> -	 * other error, we're also finished: this indicates that further
+> -	 * reset mechanisms might be broken on the device.
+> -	 */
+> -	rc = pci_dev_specific_reset(dev, 0);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pcie_flr(dev, 0);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_af_flr(dev, 0);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_pm_reset(dev, 0);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_dev_reset_slot_function(dev, 0);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	return pci_parent_bus_reset(dev, 0);
+> +	for (i = 0, reset = pci_reset_fn_methods; reset->reset_fn; i++, reset++) {
+> +		if (!(dev->reset_methods & (1 << i)))
+> +			continue;
+> +
+> +		/*
+> +		 * A reset method returns -ENOTTY if it doesn't support this device
+> +		 * and we should try the next method.
+> +		 *
+> +		 * If it returns 0 (success), we're finished.  If it returns any
+> +		 * other error, we're also finished: this indicates that further
+> +		 * reset mechanisms might be broken on the device.
+> +		 */
+> +		rc = reset->reset_fn(dev, 0);
+> +		if (rc != -ENOTTY)
+> +			return rc;
+> +	}
+> +	return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+> 
+>  /**
+> - * pci_probe_reset_function - check whether the device can be safely reset
+> - * @dev: PCI device to reset
+> + * pci_init_reset_methods - check whether device can be safely reset
+> + * and store supported reset mechanisms.
+> + * @dev: PCI device to check for reset mechanisms
+>   *
+>   * Some devices allow an individual function to be reset without affecting
+>   * other functions in the same device.  The PCI device must be responsive
+> - * to PCI config space in order to use this function.
+> + * to reads and writes to its PCI config space in order to use this function.
+>   *
+> - * Returns 0 if the device function can be reset or negative if the
+> - * device doesn't support resetting a single function.
+> + * Stores reset mechanisms supported by device in reset_methods bitmap
+> + * field of struct pci_dev
+>   */
+> -int pci_probe_reset_function(struct pci_dev *dev)
+> +void pci_init_reset_methods(struct pci_dev *dev)
+>  {
+> -	int rc;
+> +	int i, rc;
+> +	const struct pci_reset_fn_method *reset;
+> 
+> -	might_sleep();
+> +	dev->reset_methods = 0;
+> 
+> -	rc = pci_dev_specific_reset(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pcie_flr(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_af_flr(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_pm_reset(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_dev_reset_slot_function(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> +	might_sleep();
+> 
+> -	return pci_parent_bus_reset(dev, 1);
+> +	for (i = 0, reset = pci_reset_fn_methods; reset->reset_fn; i++, reset++) {
+> +		rc = reset->reset_fn(dev, 1);
+> +		if (!rc)
+> +			dev->reset_methods |= (1 << i);
+> +		else if (rc != -ENOTTY)
+> +			break;
+> +	}
+>  }
+> 
+>  /**
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ef7c46613..ec093efdc 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -39,7 +39,7 @@ enum pci_mmap_api {
+>  int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
+>  		  enum pci_mmap_api mmap_api);
+> 
+> -int pci_probe_reset_function(struct pci_dev *dev);
+> +void pci_init_reset_methods(struct pci_dev *dev);
+>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+>  int pci_bus_error_reset(struct pci_dev *dev);
+> 
+> @@ -612,6 +612,15 @@ struct pci_dev_reset_methods {
+>  	int (*reset)(struct pci_dev *dev, int probe);
+>  };
+> 
+> +typedef int (*pci_reset_fn_t)(struct pci_dev *, int);
+> +
+> +struct pci_reset_fn_method {
+> +	pci_reset_fn_t reset_fn;
+> +	char *name;
+> +};
+> +
+> +extern const struct pci_reset_fn_method pci_reset_fn_methods[];
+> +
+>  #ifdef CONFIG_PCI_QUIRKS
+>  int pci_dev_specific_reset(struct pci_dev *dev, int probe);
+>  #else
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 953f15abc..01dd037bd 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2403,9 +2403,8 @@ static void pci_init_capabilities(struct pci_dev *dev)
+>  	pci_rcec_init(dev);		/* Root Complex Event Collector */
+> 
+>  	pcie_report_downtraining(dev);
+> -
+> -	if (pci_probe_reset_function(dev) == 0)
+> -		dev->reset_fn = 1;
+> +	pci_init_reset_methods(dev);
+> +	dev->reset_fn = !!dev->reset_methods;
+>  }
+> 
+>  /*
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 621ff5224..56d6e4750 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -325,6 +325,16 @@ struct pci_dev {
+>  	unsigned int	class;		/* 3 bytes: (base,sub,prog-if) */
+>  	u8		revision;	/* PCI revision, low byte of class word */
+>  	u8		hdr_type;	/* PCI header type (`multi' flag masked out) */
+> +	/*
+> +	 * bit 0 -> dev_specific
+> +	 * bit 1 -> flr
+> +	 * bit 2 -> af_flr
+> +	 * bit 3 -> pm
+> +	 * bit 4 -> slot
+> +	 * bit 5 -> bus
+> +	 * See pci_reset_fn_methods array in pci.c
+> +	 */
+> +	u8 __bitwise reset_methods;		/* bitmap for device supported reset capabilities */
+>  #ifdef CONFIG_PCIEAER
+>  	u16		aer_cap;	/* AER capability offset */
+>  	struct aer_stats *aer_stats;	/* AER stats for this device */
+> --
+> 2.30.2
