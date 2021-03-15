@@ -2,130 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76E4D33B031
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 11:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEC033B360
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 14:12:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbhCOKpb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Mar 2021 06:45:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbhCOKpN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 06:45:13 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A41C061574;
-        Mon, 15 Mar 2021 03:45:12 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id v9so56066161lfa.1;
-        Mon, 15 Mar 2021 03:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cf/aVt0Fbhu5WfotxcxutYkGHVlDLmOpmLNNwK3sBZI=;
-        b=JRHUUhQSGb7+0j6CspMs/ldU2pmnNnbCn9NrSiMrCatZxgv/saxOBi+FE7tRR4acPo
-         kXbX5HeZSs3nWJ8IRz4szlu9ADAbJGeBf7bntPKONeYgAT7WmnMWyvVp128acMDSWGZ2
-         Xy2GkqzHrj4ehh2r8yvCGgxLiTTLzgwHSmAq+Vk/8zbreCfh/9RpHJy0U3kR4OgMyd0T
-         3Jpz9WxbDwLFrm05tf1aKbTsEb8KZA5m0B0c4b8rmgULcgYrZkkY19WKuOdM3uwFmmDK
-         VvJsvSuf4vzsFBbb258wNGIwLjDdo5QFZj6cA4lb7L9xSsuzgJK2ulqmGo8tXqP2sua/
-         6X4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cf/aVt0Fbhu5WfotxcxutYkGHVlDLmOpmLNNwK3sBZI=;
-        b=YD17oryqZckqLrB6PZdbBNHoB64AsxvAh0BJy1cOxnifMBuuQsW2vxfJbxbTwJTLFX
-         um++OQt5q0i1xeGBOK/vEXQ9C3cpT6GfHgE3VtwRHc2+0MriQTaPuIMF7HcziuvgbpdS
-         TZsvbcWstCw6iaoo5mZF7GJAWR55xanKd6ZgA8zEK+5Yo8S5Cz66sWtN18aEdZ1EkMfH
-         8DhmB6GDZ/YgX3deIAJpPMJPHc2cIUh3dQz9zbC4/LW15mKB6pFhySwwTg2Aocn7+Yyd
-         defoM0i8b2AcY3zwfB80p93TlhMz9BK6IwLzd67GMj9NUoK5b2ndxUp7JszCMyneCirb
-         c+wg==
-X-Gm-Message-State: AOAM531igwWgDYyNRHkDVoLTtEmmzSsukKLHtnjRRV8g7xlUO0p60TKa
-        ZT0SABDnMzaq5oVYB46RgHk=
-X-Google-Smtp-Source: ABdhPJyWV3azW1LepSI5Vg3RXAIDsYAFaCVM8bICRrBwtSl9boAGzvHH0mTgJhcRbclZbxpYjG1uew==
-X-Received: by 2002:a05:6512:38ca:: with SMTP id p10mr7662311lft.46.1615805110967;
-        Mon, 15 Mar 2021 03:45:10 -0700 (PDT)
-Received: from ?IPv6:2001:14ba:efe:51f0:9841:e955:b419:83eb? (db7-gd8f4kjz1nqy5ts1t-3.rev.dnainternet.fi. [2001:14ba:efe:51f0:9841:e955:b419:83eb])
-        by smtp.gmail.com with ESMTPSA id k29sm2607068lfj.125.2021.03.15.03.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Mar 2021 03:45:10 -0700 (PDT)
-Subject: Re: [PATCH v3] PCI: Add quirk for preventing bus reset on TI C667X
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     kw@linux.com, alex.williamson@redhat.com, bhelgaas@google.com,
-        kishon@ti.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, m-karicheri2@ti.com
-References: <20210312210917.GA2290948@bjorn-Precision-5520>
-From:   =?UTF-8?Q?Antti_J=c3=a4rvinen?= <antti.jarvinen@gmail.com>
-Message-ID: <e1802666-8f99-c7d6-b72c-3fcf960a87e4@gmail.com>
-Date:   Mon, 15 Mar 2021 12:45:09 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S229897AbhCONMN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Mar 2021 09:12:13 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56986 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230016AbhCONL6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 09:11:58 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12FDBoJU076360;
+        Mon, 15 Mar 2021 08:11:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1615813910;
+        bh=sIjsgm9ldBHvLkWncjvpoTX93sqqn0mFc2qqBMwO7G4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QLRu2Ye1YQdnsWaK8R2FypJcLiTzblaQv+arJsKeUailzDI0Smfv22ye4QXDgd5aY
+         SF/toPP69MMvS4C2cE9x4tHuQ12iJdnF3tdyHXTkywhZKxbBtJMmzJe1Hi+eILXgQq
+         mJtzpMjw15uj0KRZEfIqTpncgzD41etpHFenfWdE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12FDBoKH088022
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Mar 2021 08:11:50 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 15
+ Mar 2021 08:11:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Mon, 15 Mar 2021 08:11:50 -0500
+Received: from [10.250.235.140] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12FDBjRO115051;
+        Mon, 15 Mar 2021 08:11:46 -0500
+Subject: Re: [PATCH 2/2] PCI: cadence: Set LTSSM Detect.Quiet state delay.
+To:     Nadeem Athani <nadeem@cadence.com>, <tjoseph@cadence.com>,
+        <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <pthombar@cadence.com>
+References: <20210309073142.13219-1-nadeem@cadence.com>
+ <20210309073142.13219-3-nadeem@cadence.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <7be9dc0c-3161-f0d1-777c-1704ecb3853c@ti.com>
+Date:   Mon, 15 Mar 2021 18:41:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210312210917.GA2290948@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210309073142.13219-3-nadeem@cadence.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Nadeem,
 
-
-On 12.3.2021 23.09, Bjorn Helgaas wrote:
-> On Mon, Mar 08, 2021 at 02:21:30PM +0000, Antti Järvinen wrote:
->> Some TI KeyStone C667X devices do no support bus/hot reset. Its PCIESS
->> automatically disables LTSSM when secondary bus reset is received and
->> device stops working. Prevent bus reset by adding quirk_no_bus_reset to
->> the device. With this change device can be assigned to VMs with VFIO,
->> but it will leak state between VMs.
+On 09/03/21 1:01 pm, Nadeem Athani wrote:
+> The parameter detect_quiet_min_delay can be used to program the minimum
+> time that LTSSM waits on entering Detect.Quiet state.
+> 00 : 0us minimum wait time in Detect.Quiet state.
+> 01 : 100us minimum wait time in Detect.Quiet state.
+> 10 : 1000us minimum wait time in Detect.Quiet state.
+> 11 : 2000us minimum wait time in Detect.Quiet state.
 > 
-> s/do no/do/not/ (also in the comment below)
+> As per PCIe specification, all Receivers must meet the Z-RX-DC
+> specification for 2.5 GT/s within 1000us of entering Detect.Quiet LTSSM
+> substate. The LTSSM must stay in this substate until the ZRXDC
+> specification for 2.5 GT/s is met.
 > 
-
-Should be fixed in v4 patch.
- 
-> Does the user get any indication of this leaking state?  I looked
-> through drivers/vfio and drivers/pci, but I haven't found anything
-> yet.
+> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 22 ++++++++++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 10 ++++++++++
+>  2 files changed, 32 insertions(+)
 > 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 73dcf8cf98fb..056161b3fe65 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -461,6 +461,20 @@ static int cdns_pcie_host_init(struct device *dev,
+>  	return cdns_pcie_host_init_address_translation(rc);
+>  }
+>  
+> +static void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	u32 delay = rc->detect_quiet_min_delay;
+> +	u32 ltssm_control_cap;
+> +
+> +	ltssm_control_cap = cdns_pcie_readl(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP);
+> +	ltssm_control_cap = ((ltssm_control_cap &
+> +			     ~CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK) |
+> +			    CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay));
+> +
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP, ltssm_control_cap);
+> +}
+> +
 
-I haven't seen any indication too. 
+The issue is not specific to only host mode.
 
-Overall I think all devices having this quirk will leak state, as they
-don't get resetted.
-
-
-> We *could* log something in quirk_no_bus_reset(), but that would just
-> be noise for people who don't pass the device through to a VM.  So
-> maybe it would be nicer if we logged something when we actually *do*
-> pass it through to a VM.
+Thanks
+Kishon
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	struct device *dev = rc->pcie.dev;
+> @@ -485,6 +499,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	rc->device_id = 0xffff;
+>  	of_property_read_u32(np, "device-id", &rc->device_id);
+>  
+> +	rc->detect_quiet_min_delay = 0;
+> +	of_property_read_u32(np, "detect-quiet-min-delay",
+> +			     &rc->detect_quiet_min_delay);
+> +
+>  	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+>  	if (IS_ERR(pcie->reg_base)) {
+>  		dev_err(dev, "missing \"reg\"\n");
+> @@ -497,6 +515,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  		return PTR_ERR(rc->cfg_base);
+>  	rc->cfg_res = res;
+>  
+> +	/* Default Detect.Quiet state delay is 0 */
+> +	if (rc->detect_quiet_min_delay)
+> +		cdns_pcie_detect_quiet_min_delay_set(rc);
+> +
+>  	ret = cdns_pcie_start_link(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to start link\n");
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 254d2570f8c9..f2d3cca2c707 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -189,6 +189,14 @@
+>  /* AXI link down register */
+>  #define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
+>  
+> +/* LTSSM Capabilities register */
+> +#define CDNS_PCIE_LTSSM_CONTROL_CAP		 (CDNS_PCIE_LM_BASE + 0x0054)
+> +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK	 GENMASK(2, 1)
+> +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT 1
+> +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay) \
+> +	  (((delay) << CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT) & \
+> +	  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK)
+> +
+>  enum cdns_pcie_rp_bar {
+>  	RP_BAR_UNDEFINED = -1,
+>  	RP_BAR0,
+> @@ -289,6 +297,7 @@ struct cdns_pcie {
+>   *            single function at a time
+>   * @vendor_id: PCI vendor ID
+>   * @device_id: PCI device ID
+> + * @detect_quiet_min_delay: LTSSM Detect Quite state min. delay
+>   * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
+>   *                available
+>   * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
+> @@ -299,6 +308,7 @@ struct cdns_pcie_rc {
+>  	void __iomem		*cfg_base;
+>  	u32			vendor_id;
+>  	u32			device_id;
+> +	u32			detect_quiet_min_delay;
+>  	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
+>  	bool                    quirk_retrain_flag;
+>  };
 > 
->> Reference: https://e2e.ti.com/support/processors/f/791/t/954382
->> Signed-off-by: Antti Järvinen <antti.jarvinen@gmail.com>
->> ---
->>  drivers/pci/quirks.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 653660e3ba9e..d9201ad1ca39 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -3578,6 +3578,16 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
->>   */
->>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
->>  
->> +/*
->> + * Some TI keystone C667X devices do no support bus/hot reset.
->> + * Its PCIESS automatically disables LTSSM when secondary bus reset is
->> + * received and device stops working. Prevent bus reset by adding
->> + * quirk_no_bus_reset to the device. With this change device can be
->> + * assigned to VMs with VFIO, but it will leak state between VMs.
->> + * Reference https://e2e.ti.com/support/processors/f/791/t/954382
->> + */
->> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TI, 0xb005, quirk_no_bus_reset);
->> +
->>  static void quirk_no_pm_reset(struct pci_dev *dev)
->>  {
->>  	/*
->> -- 
->> 2.17.1
->>
