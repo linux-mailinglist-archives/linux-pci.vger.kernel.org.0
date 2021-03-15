@@ -2,126 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1854933C1BB
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 17:28:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C0FC33C1C8
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 17:30:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbhCOQ1q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Mar 2021 12:27:46 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:49644 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233101AbhCOQ1d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 12:27:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=m8eFPt4Ky/TIsfccDRiBKAA6Im8fSHoSL1rWmfMykMo=; b=litugTKON8LXh2E4fNWf+tdFsh
-        q2CsD9IDYGKKVIawn8gamhxRH644MuufqFWDCKKprPoZHtnAsUpBhIfbDLYsRIwcTEv0TojuuQngh
-        9J3WiaV60JpGFYmjOv2GNCbeGl6swiX0xF3BgMcQ26cgzBguK1z1MH20QdPZRSQUkmZ+cHM0b8weO
-        nMw1zNo5ZDzrtWTjylir56GRiIHipKmvmqBkHqMQTaNXL2ccxzXkV9uRTIH6IoeArfVAH59w8/LqW
-        lQKk+yTetQfXb8ka5Hd5m4l/qqdvdrI67gA7aRHbkH+i+GOkWx0VzhB9jVE/dO+eFCXLyB281bkpf
-        Y9mF4fFg==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lLq3k-0000KL-25; Mon, 15 Mar 2021 10:27:13 -0600
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Ira Weiny <iweiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-5-logang@deltatee.com>
- <20210313013856.GA3402637@iweiny-DESK2.sc.intel.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <7509243d-b605-953b-6941-72876a60d527@deltatee.com>
-Date:   Mon, 15 Mar 2021 10:27:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S232285AbhCOQa0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Mar 2021 12:30:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34675 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232124AbhCOQ35 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 12:29:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1615825796;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lzbk2N/+IjCMMwtklLd0wUDwTbWk4sEAedTIBn0fl1A=;
+        b=CNfwF9RI2HCUZ8uIZIEQ1H1c9ni19PGjIJVs3LwfRBJfl+rzleSUPWRI5L01ftqKK7p2vO
+        G/HHi4qzCMwA2Ao5RBo0kUw/+zzTQrtl0a3Ch+7Y8dSBPUk+hHmtCqisBCwYc6Oo4T0jGl
+        M+zILMhxqKBz8TPBrGJ2LXTkkBJg/Do=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-53-0Q5yoXykNbm-jMx5na5oDw-1; Mon, 15 Mar 2021 12:29:52 -0400
+X-MC-Unique: 0Q5yoXykNbm-jMx5na5oDw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DA9780006E;
+        Mon, 15 Mar 2021 16:29:51 +0000 (UTC)
+Received: from x1.home.shazbot.org (ovpn-112-255.phx2.redhat.com [10.3.112.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97B305D9C0;
+        Mon, 15 Mar 2021 16:29:50 +0000 (UTC)
+Date:   Mon, 15 Mar 2021 10:29:50 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     Leon Romanovsky <leon@kernel.org>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, raphael.norwitz@nutanix.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <20210315102950.230de1d6@x1.home.shazbot.org>
+In-Reply-To: <20210315153341.miip637z35mwv7fv@archlinux>
+References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
+        <20210312173452.3855-5-ameynarkhede03@gmail.com>
+        <20210314235545.girtrazsdxtrqo2q@pali>
+        <20210315134323.llz2o7yhezwgealp@archlinux>
+        <20210315135226.avwmnhkfsgof6ihw@pali>
+        <20210315083409.08b1359b@x1.home.shazbot.org>
+        <YE94InPHLWmOaH/b@unreal>
+        <20210315153341.miip637z35mwv7fv@archlinux>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20210313013856.GA3402637@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, iweiny@intel.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, ira.weiny@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [RFC PATCH v2 04/11] PCI/P2PDMA: Introduce
- pci_p2pdma_should_map_bus() and pci_p2pdma_bus_offset()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, 15 Mar 2021 21:03:41 +0530
+Amey Narkhede <ameynarkhede03@gmail.com> wrote:
 
+> On 21/03/15 05:07PM, Leon Romanovsky wrote:
+> > On Mon, Mar 15, 2021 at 08:34:09AM -0600, Alex Williamson wrote: =20
+> > > On Mon, 15 Mar 2021 14:52:26 +0100
+> > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > =20
+> > > > On Monday 15 March 2021 19:13:23 Amey Narkhede wrote: =20
+> > > > > slot reset (pci_dev_reset_slot_function) and secondary bus
+> > > > > reset(pci_parent_bus_reset) which I think are hot reset and
+> > > > > warm reset respectively. =20
+> > > >
+> > > > No. PCI secondary bus reset =3D PCIe Hot Reset. Slot reset is just =
+another
+> > > > type of reset, which is currently implemented only for PCIe hot plug
+> > > > bridges and for PowerPC PowerNV platform and it just call PCI secon=
+dary
+> > > > bus reset with some other hook. PCIe Warm Reset does not have API in
+> > > > kernel and therefore drivers do not export this type of reset via a=
+ny
+> > > > kernel function (yet). =20
+> > >
+> > > Warm reset is beyond the scope of this series, but could be implement=
+ed
+> > > in a compatible way to fit within the pci_reset_fn_methods[] array
+> > > defined here.  Note that with this series the resets available through
+> > > pci_reset_function() and the per device reset attribute is sysfs rema=
+in
+> > > exactly the same as they are currently.  The bus and slot reset
+> > > methods used here are limited to devices where only a single function=
+ is
+> > > affected by the reset, therefore it is not like the patch you proposed
+> > > which performed a reset irrespective of the downstream devices.  This
+> > > series only enables selection of the existing methods.  Thanks, =20
+> >
+> > Alex,
+> >
+> > I asked the patch author here [1], but didn't get any response, maybe
+> > you can answer me. What is the use case scenario for this functionality?
+> >
+> > Thanks
+> >
+> > [1] https://lore.kernel.org/lkml/YE389lAqjJSeTolM@unreal
+> > =20
+> Sorry for not responding immediately. There were some buggy wifi cards
+> which needed FLR explicitly not sure if that behavior is fixed in
+> drivers. Also there is use a case at Nutanix but the engineer who
+> is involved is on PTO that is why I did not respond immediately as
+> I don't know the details yet.
 
-On 2021-03-12 6:38 p.m., Ira Weiny wrote:
-> On Thu, Mar 11, 2021 at 04:31:34PM -0700, Logan Gunthorpe wrote:
->> Introduce pci_p2pdma_should_map_bus() which is meant to be called by
->> DMA map functions to determine how to map a given p2pdma page.
->>
->> pci_p2pdma_bus_offset() is also added to allow callers to get the bus
->> offset if they need to map the bus address.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> ---
->>  drivers/pci/p2pdma.c       | 50 ++++++++++++++++++++++++++++++++++++++
->>  include/linux/pci-p2pdma.h | 11 +++++++++
->>  2 files changed, 61 insertions(+)
->>
->> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index 7f6836732bce..66d16b7eb668 100644
->> --- a/drivers/pci/p2pdma.c
->> +++ b/drivers/pci/p2pdma.c
->> @@ -912,6 +912,56 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
->>  }
->>  EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
->>  
->> +/**
->> + * pci_p2pdma_bus_offset - returns the bus offset for a given page
->> + * @page: page to get the offset for
->> + *
->> + * Must be passed a PCI p2pdma page.
->> + */
->> +u64 pci_p2pdma_bus_offset(struct page *page)
->> +{
->> +	struct pci_p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(page->pgmap);
->> +
->> +	WARN_ON(!is_pci_p2pdma_page(page));
-> 
-> Shouldn't this check be before the to_p2p_pgmap() call?  
+And more generally, devices continue to have reset issues and we
+impose a fixed priority in our ordering.  We can and probably should
+continue to quirk devices when we find broken resets so that we have
+the best default behavior, but it's currently not easy for an end user
+to experiment, ie. this reset works, that one doesn't.  We might also
+have platform issues where a given reset works better on a certain
+platform.  Exposing a way to test these things might lead to better
+quirks.  In the case I think Pali was looking for, they wanted a
+mechanism to force a bus reset, if this was in reference to a single
+function device, this could be accomplished by setting a priority for
+that mechanism, which would translate to not only the sysfs reset
+attribute, but also the reset mechanism used by vfio-pci.  Thanks,
 
-The to_p2p_pgmap() call is just doing pointer arithmetic, so strictly
-speaking it doesn't need to be before. We just can't access p2p_pgmap
-until it has been checked.
+Alex
 
-> And I've been told not
-> to introduce WARN_ON's.  Should this be?
-> 
-> 	if (!is_pci_p2pdma_page(page))
-> 		return -1;
-
-In this case the WARN_ON is just to guard against misuse of the
-function. It should never happen unless a developer changes the code in
-a way that is incorrect. So I think that's the correct use of WARN_ON.
-Though I might change it to WARN and return, that seems safer.
-
-Logan
