@@ -2,115 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDADF33C8CF
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 22:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E89BC33C8F5
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 23:01:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232194AbhCOVwB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Mar 2021 17:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34368 "EHLO
+        id S231409AbhCOWAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Mar 2021 18:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbhCOVv3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 17:51:29 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5EDC06174A;
-        Mon, 15 Mar 2021 14:51:28 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 67E1822234;
-        Mon, 15 Mar 2021 22:51:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1615845086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qbz18nJ52fhKTcYvqVifixwv65SjhEo6nJ/z7ymJrV0=;
-        b=QwgxxdZ63fdHtC0poTGN4eZlhN+ambTQ2Veti9bfvBQiBvBN4wyHDyw98IiAV+zGHVswPe
-        ZFfhSphnd25WlsBmUEnm2dr6IAYOwvfNphhQE3BGLJITeeJhHD9didZHjZ3QX0+4gBj81o
-        zAb+CBIyYdXWbq3M9hCd9sZFDDi+cuE=
+        with ESMTP id S231666AbhCOWAU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 18:00:20 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F597C06174A
+        for <linux-pci@vger.kernel.org>; Mon, 15 Mar 2021 15:00:19 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id w18so19159401edc.0
+        for <linux-pci@vger.kernel.org>; Mon, 15 Mar 2021 15:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jm6ME5Ke2ec4S2+7NHMKywv1YbT8opTwdatgbb2rJmM=;
+        b=wHU34whALnBvZm+fGkt4RVEOcttX4YJXTa8pwRsSYJiah1gEQZOXfhlVI99dOlHbRM
+         hrvu4sqBZ6v+DVnoPCHOcuUugFLIlk1uVk4EARrZRWO5Y8T+NF3Df9S8LR04DK59/YwC
+         UBpf8RQzS30RftmdopH9sPOi9Cz9Hx+KZQv69dMpDxUgbemU7fSw25uysMGCkB/c6v+5
+         OWYjJA5yPnauuxT9pTsvvSWB9IHXdYg3ky/TD3uZcWy1UQof3nimCFOj7G12Wm/ASAj7
+         tjThqgNo48HKN7NY/xqpmwPGj+5Os9ngTqsd7umyJlMkdKxTBbzPxsrMyZYgVgoUri6R
+         NS3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jm6ME5Ke2ec4S2+7NHMKywv1YbT8opTwdatgbb2rJmM=;
+        b=H2fu8lBYCcLEbEP6m5SkJdhwSQ4GpuZENLQBgJyLBe4GqoC6cEfUMMV+r6oZvahpkw
+         us3e8OA4q3T0upACMv5SJyEwA3WuxoqicgYn29e4aMLXyGrSjMeYgTxrAY1lkxMoiRFV
+         SKFXid3yMtp9vPAggQwNFhiCFUx4yb6Y3DQEki2NveaEHASQHFT5WXG/a1NHFBzx1M/B
+         Vve7WI6nhByNSJbFDL2Qjm62/M31J6yCUgpoM4SMF2lwIhNI9RLYlyZTAI8DA3vC7eII
+         kkA0aws7/0IhMtii37H24WECB5FcdIHQp7KnE9OBFjrc8ULYdskAVWJUCaGpFc4Ig7Jl
+         xTFw==
+X-Gm-Message-State: AOAM533Dpwd6V7EiidvBAOKNrClbPHNXk1PSSSgUyyhRoPxTKKVXAhZp
+        yjBLkZ4D0vH9F1S94VfvzoImkfq3mqD6M8cFi/gwJg==
+X-Google-Smtp-Source: ABdhPJwsUAPzSibKZBdxadwUsL2ZkAE/u7IQj26lhYC+gmkTcFSBdHPqe/IriSvQqkHdTlb9EmRdB4hDsvcZP1JzunM=
+X-Received: by 2002:aa7:cd0e:: with SMTP id b14mr32952432edw.354.1615845617324;
+ Mon, 15 Mar 2021 15:00:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 15 Mar 2021 22:51:25 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-In-Reply-To: <20210201222010.GA31234@bjorn-Precision-5520>
-References: <20210201222010.GA31234@bjorn-Precision-5520>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <d2c7ec0e416dd6bb6818892750bff6d7@walle.cc>
-X-Sender: michael@walle.cc
+References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
+ <20210310180306.1588376-3-Jonathan.Cameron@huawei.com> <20210310181459.000005c7@huawei.com>
+In-Reply-To: <20210310181459.000005c7@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 15 Mar 2021 15:00:08 -0700
+Message-ID: <CAPcyv4jq-KovQcEqesA=kCdzdDNtQ9y8g2aBCSXqQv7cvmABtg@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 2021-02-01 23:20, schrieb Bjorn Helgaas:
-> On Mon, Feb 01, 2021 at 08:49:16PM +0100, Michael Walle wrote:
->> Am 2021-01-17 20:27, schrieb Michael Walle:
->> > Am 2021-01-16 00:57, schrieb Bjorn Helgaas:
->> > > On Wed, Jan 13, 2021 at 12:32:32AM +0100, Michael Walle wrote:
->> > > > Am 2021-01-12 23:58, schrieb Bjorn Helgaas:
->> > > > > On Sat, Jan 09, 2021 at 07:31:46PM +0100, Michael Walle wrote:
->> > > > > > Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
->> > >
->> > > > > > > 3) If the Intel i210 is defective in how it handles an Expansion ROM
->> > > > > > > that overlaps another BAR, a quirk might be the right fix. But my
->> > > > > > > guess is the device is working correctly per spec and there's
->> > > > > > > something wrong in how firmware/Linux is assigning things.  That would
->> > > > > > > mean we need a more generic fix that's not a quirk and not tied to the
->> > > > > > > Intel i210.
->> > > > > >
->> > > > > > Agreed, but as you already stated (and I've also found that in
->> > > > > > the PCI spec) the Expansion ROM address decoder can be shared by
->> > > > > > the other BARs and it shouldn't matter as long as the ExpROM BAR
->> > > > > > is disabled, which is the case here.
->> > > > >
->> > > > > My point is just that if this could theoretically affect devices
->> > > > > other than the i210, the fix should not be an i210-specific quirk.
->> > > > > I'll assume this is a general problem and wait for a generic PCI
->> > > > > core solution unless it's i210-specific.
->> > > >
->> > > > I guess the culprit here is that linux skips the programming of the
->> > > > BAR because of some broken Matrox card. That should have been a
->> > > > quirk instead, right? But I don't know if we want to change that, do
->> > > > we? How many other cards depend on that?
->> > >
->> > > Oh, right.  There's definitely some complicated history there that
->> > > makes me a little scared to change things.  But it's also unfortunate
->> > > if we have to pile quirks on top of quirks.
->> > >
->> > > > And still, how do we find out that the i210 is behaving correctly?
->> > > > In my opinion it is clearly not. You can change the ExpROM BAR value
->> > > > during runtime and it will start working (while keeping it
->> > > > disabled).  Am I missing something here?
->> > >
->> > > I agree; if the ROM BAR is disabled, I don't think it should matter at
->> > > all what it contains, so this does look like an i210 defect.
->> > >
->> > > Would you mind trying the patch below?  It should update the ROM BAR
->> > > value even when it is disabled.  With the current pci_enable_rom()
->> > > code that doesn't rely on the value read from the BAR, I *think* this
->> > > should be safe even on the Matrox and similar devices.
->> >
->> > Your patch will fix my issue:
->> >
->> > Tested-by: Michael Walle <michael@walle.cc>
->> 
->> any news on this?
-> 
-> Thanks for the reminder.  I was thinking this morning that I need to
-> get back to this.  I'm trying to convince myself that doing this
-> wouldn't break the problem fixed by 755528c860b0 ("Ignore disabled ROM
-> resources at setup").  So far I haven't quite succeeded.
+On Wed, Mar 10, 2021 at 10:15 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Thu, 11 Mar 2021 02:03:06 +0800
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+>
+> > This patch simply provides some debug print outs of the entries
+> > at probe time + a sysfs binary attribute to allow dumping of the
+> > whole table.
+> >
+> > Binary dumping is modelled on /sys/firmware/ACPI/tables/
+> >
+> > The ability to dump this table will be very useful for emulation of
+> > real devices once they become available as QEMU CXL type 3 device
+> > emulation will be able to load this file in.
+> >
+> > Open questions:
+> > * No support here for table updates. Worth including these from the
+> >   start, or leave that complexity for later?
+> > * Worth logging the reported info for debug, or is the binary attribute
+> >   sufficient?  Larger open question of whether to expose this info to
+> >   userspace or not left for another day!
+> > * Where to put the CDAT file?  Is it worth a subdirectory?
+> > * What is maximum size of the SSLBIS entry - I haven't quite managed
+> >   to figure that out and this is the record with largest size.
+> >   We could support dynamic allocation of the record size, but it
+> >   would add complexity that seems unnecessary.
+> >   It would not be compliant with the specification for a type 3 memory
+> >   device to report this record anyway so I'm not that worried about this
+> >   for now.  It will become relevant once we have support for reading
+> >   CDAT from CXL switches.
+> > * cdat.h is formatted in a similar style to pci_regs.h on basis that
+> >   it may well be helpful to share this header with userspace tools.
+> > * Move the generic parts of this out to driver/cxl/cdat.c or leave that
+> >   until we have other CXL drivers wishing to use this?
+>
+> Naturally I remembered another open question within 10 seconds of sending :(
+>
+>   * Do we want to add any sort of header to the RAW dump of CDAT to aid
+>     tooling?  Whilst it looks a little like an ACPI table it doesn't have
+>     a signature.
+>
+> My gut feeling is no, because the CDAT specification doesn't define one but
+> I can see that it might be very convenient to have something that identified
+> the data once it was put in a file.
 
-ping #2 ;)
-
--michael
+I'm not yet convinced raw dumping is worth it for the same reason that
+command payload logging was eliminated from the v5.12-rc1 submission.
+There's not much userspace can do with the information besides debug
+the kernel behavior. If the kernel assigns a numa node to target a
+given CXL memory range with NUMA apis then HMEM_REPORTING should
+enumerate the properties. In other words, don't expand the userspace
+ABI problem, funnel users to the canonical source for such data.
