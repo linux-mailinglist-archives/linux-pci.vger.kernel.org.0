@@ -2,88 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EDB133C2BE
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 17:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BB4133C30A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 18:00:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233130AbhCOQ5j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Mar 2021 12:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234470AbhCOQ5N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 12:57:13 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B67C06174A
-        for <linux-pci@vger.kernel.org>; Mon, 15 Mar 2021 09:57:12 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id y1so17085987ljm.10
-        for <linux-pci@vger.kernel.org>; Mon, 15 Mar 2021 09:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
-        b=X7Cu0xAzcqQxX1yxpxJVKYEhqb/mRu38ZTqWqy0ZXSUKhkJPawRSRt4FjOy36rT+gH
-         los4gzKVWLwa5UL/HutB405WENqTdBotMvyeL3m7ikSJqCXmFucgyJXGDgrrkZVU+hrr
-         MfongFu82CVG5/Ny2CtATz0EVr9zHCxCXSLv5pYhj6IReXzp3V7EUnWsQOvkpS6HGRB6
-         DOdSdsvYeAcJK6H6Pe1nM2LiDQnINVop5SOfxb4G1nO93/1SxWhIDMAOFW8atgPYf6Rs
-         +KbsOd4xkQRXHuJ1lFjShzFR02Uao2GIew6kNLfoJYh/qFZvccUcy9cJg4T8v8YL4Ccj
-         V20g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
-        b=WF/+ppcKE4/go3vfWjjSWBN2yjpQFEkLbeqo9Hj0bJD2dAuALOC1C5wsQB6Hv3bB92
-         KT3kCNK1/TeLfT19dUlhaIYCA6CKlpSPnTX+bFeIpFl5M4Sr8bpccxmqE29jZ3igXXMx
-         RBLu8FNpj7LegAFDWqW+12d6Tlg9nzZiW0td7JlhNbYyN3KzWLBuslgYKl217i+K7pp3
-         K1zqsiCDirRDUDqEqxAJpcXpGlyAraq04eb+pXXwa4LwqxretWOTq0DyINe4jgc+EJoM
-         ygjtnp9mWFyLetgaFAVbz/bMxIChkc7HExC+V9roovPloJemtHz46Ty0gWp6uHMB98eH
-         8/JA==
-X-Gm-Message-State: AOAM530sYkql1GgFLAZmdGqCfTZD++l6pZ+ws8QY6ubqFTguxCZ5X0JQ
-        +lfET0mUJEKeo2A8VEbMog4KavjIji+cVQG2y64=
-X-Google-Smtp-Source: ABdhPJxcecR2VWdhBsOr9b5xAV0SdCP20Jmrh4QfIkTM0btlQNwiOx9sL84obmegVw5wWQvr7VRdqR2BE36cW93Nzro=
-X-Received: by 2002:a2e:864d:: with SMTP id i13mr19765ljj.48.1615827431249;
- Mon, 15 Mar 2021 09:57:11 -0700 (PDT)
+        id S234440AbhCOQ7U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Mar 2021 12:59:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234140AbhCOQ7G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 12:59:06 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12FGYU6C155550;
+        Mon, 15 Mar 2021 12:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=/aMOEnE9e033jBmsFRzzqkt6+ubrNZPIPNO8BScYaWE=;
+ b=r4z3FvJZAc/VirHcGxoRxFnRoYcgdmQSPa2sAtyJxp6zRjC+lCHbY0Np8QA59/75PRa9
+ E8vQBYe/oa+rAK9BeYAA3G4iarQLoPR8H8qOfr6xeyYm1MLRuE1rCeVbzPvCjnaaiCZw
+ 3KUJnXP3hq1ZTOHHFc8xzgYtiJxI3Xt29R3vy53LoTTKQTGZP6K2oC06WXtXO5Bbzzgj
+ 4VYWNfZ3DnuWnLvPNu3w/N/37dhoT55hUsjjSjDQh+/6lZZPQWftUzcm9VVWbraCRFaV
+ 5LNnMEk64u871EMge399zQUoJ3z9qHKDsDgxXozXgTpOSY1jm0RbCle18Z64JR2tOwR5 hQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37aa8rb1qs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Mar 2021 12:59:01 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12FGYULv155516;
+        Mon, 15 Mar 2021 12:59:00 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37aa8rb1q9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Mar 2021 12:59:00 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12FGkpoL021172;
+        Mon, 15 Mar 2021 16:58:59 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02wdc.us.ibm.com with ESMTP id 378n1a0rah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Mar 2021 16:58:59 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12FGwwQ010748232
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Mar 2021 16:58:58 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 124E3BE053;
+        Mon, 15 Mar 2021 16:58:58 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2619BE058;
+        Mon, 15 Mar 2021 16:58:56 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.160.44.137])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Mar 2021 16:58:56 +0000 (GMT)
+Subject: Re: [PATCH] rpadlpar: fix potential drc_name corruption in store
+ functions
+To:     Michael Ellerman <michaele@au1.ibm.com>,
+        =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, mmc@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20210310223021.423155-1-tyreld@linux.ibm.com>
+ <20210313091751.GM6564@kitsune.suse.cz>
+ <a67af978-1c47-c66b-47f0-3d754da738f9@linux.ibm.com>
+ <87o8fl3z80.fsf@mpe.ellerman.id.au>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <6b1728cf-c9b7-68fe-f338-3b79210357f2@linux.ibm.com>
+Date:   Mon, 15 Mar 2021 09:58:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Received: by 2002:a05:651c:1382:0:0:0:0 with HTTP; Mon, 15 Mar 2021 09:57:10
- -0700 (PDT)
-Reply-To: ezbtg22@gmail.com
-From:   "Mrs.Glenn" <mrganuserge@gmail.com>
-Date:   Mon, 15 Mar 2021 09:57:10 -0700
-Message-ID: <CA+Wfa7Y=oh62hJxA=00O1f8Fq2dVQUPokPuyAnRc3kUVOnPySA@mail.gmail.com>
-Subject: From Mrs.Glenn
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87o8fl3z80.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-15_08:2021-03-15,2021-03-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103150113
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Dear Beloved,
+On 3/14/21 7:52 PM, Michael Ellerman wrote:
+> Tyrel Datwyler <tyreld@linux.ibm.com> writes:
+>> On 3/13/21 1:17 AM, Michal Suchánek wrote:
+>>> On Wed, Mar 10, 2021 at 04:30:21PM -0600, Tyrel Datwyler wrote:
+>>>> Both add_slot_store() and remove_slot_store() try to fix up the drc_name
+>>>> copied from the store buffer by placing a NULL terminator at nbyte + 1
+>>>> or in place of a '\n' if present. However, the static buffer that we
+>>>> copy the drc_name data into is not zeored and can contain anything past
+>>>> the n-th byte. This is problematic if a '\n' byte appears in that buffer
+>>>> after nbytes and the string copied into the store buffer was not NULL
+>>>> terminated to start with as the strchr() search for a '\n' byte will mark
+>>>> this incorrectly as the end of the drc_name string resulting in a drc_name
+>>>> string that contains garbage data after the n-th byte. The following
+>>>> debugging shows an example of the drmgr utility writing "PHB 4543" to
+>>>> the add_slot sysfs attribute, but add_slot_store logging a corrupted
+>>>> string value.
+>>>>
+>>>> [135823.702864] drmgr: drmgr: -c phb -a -s PHB 4543 -d 1
+>>>> [135823.702879] add_slot_store: drc_name = PHB 4543°|<82>!, rc = -19
+>>>>
+>>>> Fix this by NULL terminating the string when we copy it into our static
+>>>> buffer by coping nbytes + 1 of data from the store buffer. The code has
+>>> Why is it OK to copy nbytes + 1 and why is it expected that the buffer
+>>> contains a nul after the content?
+>>
+>> It is my understanding that the store function buffer is allocated as a
+>> zeroed-page which the kernel copies up to at most (PAGE_SIZE - 1) of user data
+>> into. Anything after nbytes would therefore be zeroed.
+> 
+> I think that's true, but it would be nice if we didn't have to rely on
+> that obscure detail in order for this code to be correct & understandable.
 
-I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
-in a hospital bed in Israel. I am 59 years and childless; my husband
-is dead. I was diagnosed with terminal cancer. And my doctor just
-predicted that I have but very limited time to live due to damages in
-my system and as a result of that I decided to dispose my 10.5 million
-US dollars to a God-fearing one for the continuation of charitable
-work. This is why I located you.My guess about you may not be accurate
-because I came across your contact at the humanitarian calendar event
-of the year but I believe in God who  divinely directed me to you for
-this solemn proposal of charitable work. I wholeheartedly wish to
-bequeath my fortune to you as a God-fearing person for the
-continuation of charitable work anywhere around the world.
+I think its a security guarantee, but I guess barring a comment that explicitly
+outlines the correctness it probably isn't obvious.
 
-I shall be going in for a surgery operations soonest and desire this
-money to be transferred to you as I do not wish to leave this money in
-the bank because bankers might misuse it for their own interest after
-my death. As soon as I receive your quick reply assuring me that you
-will utilize the money as I instructed you for the benefit of the less
-privilege, I shall give you more details and also instruct my bank to
-release the money to you for the charity project. I hope you receive
-this mail in good health.
+> 
+>>> Isn't it much saner to just nul terminate the string after copying?
+>>
+>> At the cost of an extra line of code, sure.
+> 
+> Is there a reason we can't use strscpy()? That should deal with all the
+> corner cases around the string copy, and then all you have to do is look
+> for a newline and turn it into nul.
 
-Because I don t know what will be my situation in next minute,
+Fine with me. I'll spin v2 with strscpy().
 
-I am waiting for your reply.
+-Tyrel
 
-Yours sincerely,
-Mrs Elizabet Glenn.
+> 
+> cheers
+> 
+
