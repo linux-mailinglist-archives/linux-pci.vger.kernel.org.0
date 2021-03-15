@@ -2,229 +2,361 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8042333C5B4
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 19:33:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CE2F33C6DB
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Mar 2021 20:33:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232601AbhCOSc5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Mar 2021 14:32:57 -0400
-Received: from mx0b-002c1b01.pphosted.com ([148.163.155.12]:17802 "EHLO
-        mx0b-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229802AbhCOSck (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Mar 2021 14:32:40 -0400
-Received: from pps.filterd (m0127843.ppops.net [127.0.0.1])
-        by mx0b-002c1b01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12FIWDRs011999;
-        Mon, 15 Mar 2021 11:32:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version;
- s=proofpoint20171006; bh=4ChAqI6FUCHaLWewUFlrtQVsExPncQX/LVzTd9xfBHA=;
- b=Pfo4neU/bdbKWrfj689tiJqqGMlvbbsqjs5LC1rdAH0S2d9MBZVa1t22ZVDjx9KX9Kpo
- RcSxK79Fm/EBoYIPKkM+G2+a3uHqfmt4YNSeXfdNhPdCHTrmNrRGFejz3Y+1d+V6JIqD
- 02wxygGNQvlx/yyD/UV+/7dDkB9/WgeYDEf41WFal/GVhu1YdrtctDnhd85mUaRgg2H1
- vXHgiu+1eLLXHv+3k5SaLnIpTruDMqMje2yiwf6yRLTAxaajMUtF4EOzRTrASpT6T+4s
- JOrajToAE9zZQoIMCWMUyBuHnjXtW9bCclI8uybpS55ebHyUEqiddJ7FU/ghsW8O29kC YQ== 
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
-        by mx0b-002c1b01.pphosted.com with ESMTP id 378vcq4c8u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 11:32:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b7/YaJFwrlqC8seceMjhX4e+FFZHrJqe+VATOrYevzY8B//t3AfH3wjvKYCJxUFdvs0wcFCtimUEH6ht1uNmZuMs8SEiucx5SnhCp3fBMMNVS7C6PTTqyEZNr6M8Hy8QbNEKMTnh56a3f3kICuWCvz70mh6BDMd5+J3oIUM57qinqagVe/TjfIjHm7UXHg27IO139flRDPTApmt/2NljRpywGbQ7TP9rhoNJEMC3I1LJvDbjAD2HLp9IGVVgAHeeCacSSUbnrkhICT54aywU4Fie0F2dSabNA+f4gOCojRUX9yVGtbn303lYPZZpG3JuwJehxAV2LmGy27TFxr/Gpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ChAqI6FUCHaLWewUFlrtQVsExPncQX/LVzTd9xfBHA=;
- b=AWr4Y1Xs8CPfgXmZWGgjAYcUJJlxENAn42A6xdqJVccebtt0pLuSNYFb4XWdvKGP1RkYu3S1AUl3/QaOq4UJMi890lTPJp/W41eqpmflCW9qXCkcxzInSGtk6CIkkUBXcicFXx5OAAsgI3WKV4k94p3z88AHTGgNxqioiYAdeEV5fzEzhS/cgodS5hUy5zGlhkwNt6W9DKwLIjk+ocBA57QUYbEPoxoj2Ps1idhwQZwxQkRTaFrHXs/C3v0kfR+zCOroh2zivEO6qi3Y8TVKEzXLQYlrOf73NFQdOuPMIYh+Pk6BvPEZapiUWLQmCEWMhEEsThBxjzR5qvlDNpW5MA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from SN6PR02MB4543.namprd02.prod.outlook.com (2603:10b6:805:b1::24)
- by SN6PR02MB4111.namprd02.prod.outlook.com (2603:10b6:805:2d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.32; Mon, 15 Mar
- 2021 18:32:33 +0000
-Received: from SN6PR02MB4543.namprd02.prod.outlook.com
- ([fe80::7139:d6a4:cf94:c4b1]) by SN6PR02MB4543.namprd02.prod.outlook.com
- ([fe80::7139:d6a4:cf94:c4b1%4]) with mapi id 15.20.3933.032; Mon, 15 Mar 2021
- 18:32:33 +0000
-From:   Raphael Norwitz <raphael.norwitz@nutanix.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Amey Narkhede <ameynarkhede03@gmail.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alay Shah <alay.shah@nutanix.com>,
-        Suresh Gumpula <suresh.gumpula@nutanix.com>,
-        Shyam Rajendran <shyam.rajendran@nutanix.com>,
-        Felipe Franciosi <felipe@nutanix.com>
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Thread-Topic: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Thread-Index: AQHXF2ZMYtuGPNuUOUiLwgvTDmOeEqqELEyAgADnPYCAAAKHAIAAC6iAgAAJPgCAAAdkgIAAD7AAgAAiQQA=
-Date:   Mon, 15 Mar 2021 18:32:32 +0000
-Message-ID: <20210315183226.GA14801@raphael-debian-dev>
-References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
- <20210312173452.3855-5-ameynarkhede03@gmail.com>
- <20210314235545.girtrazsdxtrqo2q@pali>
- <20210315134323.llz2o7yhezwgealp@archlinux>
- <20210315135226.avwmnhkfsgof6ihw@pali>
- <20210315083409.08b1359b@x1.home.shazbot.org> <YE94InPHLWmOaH/b@unreal>
- <20210315153341.miip637z35mwv7fv@archlinux>
- <20210315102950.230de1d6@x1.home.shazbot.org>
-In-Reply-To: <20210315102950.230de1d6@x1.home.shazbot.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nutanix.com;
-x-originating-ip: [24.165.18.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fdf43914-8441-47ba-2c6d-08d8e7e0b2ca
-x-ms-traffictypediagnostic: SN6PR02MB4111:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR02MB41111FE58066E1F514885291EA6C9@SN6PR02MB4111.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LPkylJcNQ5yG/Mi49wYD65ZTJu3QIxRojW/FRY3t+8FSvyyhtm9gizJrBNJ/45jq6/33pt8xbLPNX76BzXMTDCHCLoLiR6tzNksqfhtfoByVsRxugQ2jI9DROYjXMrqu6J9QCGuMG0GvnmKbpSlOkiuNsD0far5zQacWqYCKzEvfYNtkZXtPyP0WLIS//ipnanei47P8g5B19FVekGUs5Q20EJNk7PRszuGjFLiU4AGv6ZKQQCOb2UKWNfb9DyNXrGck1MAXvpEorUAbowvl0jTieF+M9sCEZBczpPEPHyO3aNmMTDDwADJz6OlapgLJAdlB9Zsf/yO6o0xjpLt8tk1HlsTHMdx2mIp2rZ24dP01bulVGJs2xSJ+2gshuyIwwcxctKETMgOoyRdpsLrD1WXdv4i5OleIPihB9IZeoLYsnnX8vP0ihAuKoOtviWALs0RApLiImS9R8L+KpoMaSabV5GGXk4eEreklW4xfBFdkuYdcUFpZBUBvU9CruUtxqEPzlcy6sfP4hxoZcAtpr+UqRRMRbxtjVqecX4VCT/DBsBNsB6o6o67ic/mDcYckDeqMNWT8b5ZAlqwWbmL7M8X9jPItbf2BIUOjaPbz941OE0W+pVn8HqTPSQrGzx0wxxTpVKasLtuqCJpcZuHisw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR02MB4543.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(346002)(136003)(396003)(376002)(39860400002)(66574015)(83380400001)(86362001)(33656002)(6512007)(6916009)(1076003)(5660300002)(66556008)(316002)(2906002)(64756008)(71200400001)(966005)(478600001)(186003)(6486002)(66476007)(44832011)(66446008)(26005)(107886003)(8936002)(6506007)(66946007)(76116006)(8676002)(9686003)(4326008)(54906003)(33716001)(91956017);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?iso-8859-1?Q?wrtwpqebhlaWOzqWSetTc5XxiIjyiYipiNFiSWLtxviYMdSLet71iSrQIn?=
- =?iso-8859-1?Q?VqT8UlRzwu9MgIY9pP95uAxKUDSM12Vc3uDE2SVA1rlQJmdlF6dwEUkv+e?=
- =?iso-8859-1?Q?mEpALl7xTyv0Tpswhg2w90/wi7ERZ56FBTJYtJskoXwtFuwJR8hCcJHeq6?=
- =?iso-8859-1?Q?zDNoMG94/8twO5gbb87sdhN/aqvfGrZgK4oV8Er4XN81Lwb+rVu1+Ka2/2?=
- =?iso-8859-1?Q?NF6bGOQUbpxcegUN9u7iw6V2GmmuAsxiVt21hz2H1ueS/51lLMA2m0d4Xg?=
- =?iso-8859-1?Q?GaAR6vhDwl1d8SRacQLgYOoHwPuc8SbUEDODVRzLeV8iJ40fGR0IGP0ROg?=
- =?iso-8859-1?Q?hgRtKKtLjkuswfR6X+uHltZwTQAQOAOV3e7IIX5tnPmNRIgh0IPr7vTkAN?=
- =?iso-8859-1?Q?fztOpOfwdvVs3eWkp7d0W7hg6Bg2nUY64zHlzS57uyOrFiobpRutaeH1yO?=
- =?iso-8859-1?Q?hdDlCf7FVLeKGFrTmNsS9isTa2sxrwz3fYUd6xtElpKfHJZDp5N7UTv9sw?=
- =?iso-8859-1?Q?4BnlzIWL6+jJNOwTkX7R9c1aCECsBnpr2x9Xzh4vVeUJzZXUvi6AhK1LNb?=
- =?iso-8859-1?Q?Mo5w9Kjo4lqbTfs9EYDHTK620bpt1jprGSPD0zOFBEI1QCbJtI7WOupLES?=
- =?iso-8859-1?Q?aBZDM3QJdH1jzXDAxzgtMzMPUrr4N+DI9GTFtnrP0EzErRrJxhjMpaVCYE?=
- =?iso-8859-1?Q?BjbTf+b40ubm5QYlUnHJsKomuR+W6WsiWYvrXTRj+/nQbvLj4RQaRxKM/e?=
- =?iso-8859-1?Q?i1RcpVtyeFdV8Av6qlskklgHmp2rtqNLKUdp4jqj99Oh8yC3rCiFoM9aBt?=
- =?iso-8859-1?Q?C3PcOGEeE6xxAunN656kMOFGreCKke+tfVp/zqdBAWmvC2s/LMWd9ws7Il?=
- =?iso-8859-1?Q?MVv2STAJmTuyPJi7TzsrJ74Y8tuA/DKWhuCPTvVlsy0EspXRqWZQBuBBbT?=
- =?iso-8859-1?Q?y4eXvHfpqMNono8/milXo9oz1ZAR6Vt7o7+MhN22CQGp6xeoWENm1hzmjg?=
- =?iso-8859-1?Q?nFXSwzPp2qlT3INVkzHaAPEB49RThlBcficaKGLgfwHqg6/T0jD75VV1z1?=
- =?iso-8859-1?Q?huFiq08IlnQ3HqUaFfOhy5H2DlTub67LDR5xtwIkD4o7WVXgMiRN0CYhRk?=
- =?iso-8859-1?Q?Mc51osjfzgWKOT0TCV6EWbMyY2uFGDv3PSP5dZPun6YqKmj0+2/5CJyAU8?=
- =?iso-8859-1?Q?uPmob3G4/w//gKADE12oP2R8rlf+jMmHtzsBSUMoWvnj9gQ0UYrH9NrgH0?=
- =?iso-8859-1?Q?GTNCXgMGTJFWitAUZ1iqqDkBZHSUFbi7cw0QqzQvGkms+tQBzG2RK60q6D?=
- =?iso-8859-1?Q?PcqPfWrXysrPjhAJSGtW+0znehS1K5+Kxotf2uIHNgCZJeNRVUAmU5UCnW?=
- =?iso-8859-1?Q?xy44TVGT6M?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <2AE6A70E8C58EE4AB152A17B003ABFFB@namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S231587AbhCOTcl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Mar 2021 15:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231424AbhCOTcc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Mar 2021 15:32:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 288E064F2F;
+        Mon, 15 Mar 2021 19:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615836752;
+        bh=uqyDdydnzs/8XIlLVM4w1y/FE2XlDYk4nPR9aubsMg0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=odBhi5YL4xHeJ0UUXyMavmrpuNyXphlLuyrKtFjInZGv7SYu6KtrmzT/EKe8CdJlC
+         ZhkVSE/+3yS1kjordOAK+PT1JHtv6IdumUzIhqGhEQNG7rT5qPVY3MK94IvgtAdQbF
+         7ayGnUnFo9hhHB87KZT95UCMIxYnlnJARuWt8eS9ZaDo9x1gfQ2MOk+wN3iDMVAlNW
+         ewC5zlr2HmbA42UmiRE34QQbYHKPFqK/E3jXTWp59V1hOa3BynHe5TsyTZMEf44Wub
+         X4KljuBp+vVPkukUwVF0iPeFw6bz79NGtibMA0xsgjuLOjKJnzfhUrNsgxfwhH3Rmv
+         nqDGtCZv1EXrA==
+Received: by pali.im (Postfix)
+        id 8750082E; Mon, 15 Mar 2021 20:32:29 +0100 (CET)
+Date:   Mon, 15 Mar 2021 20:32:29 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     =?utf-8?B?UsO2dHRp?= 
+        <espressobinboardarmbiantempmailaddress@posteo.de>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-ide@vger.kernel.org
+Subject: Re: Kernel panic caused by plugging in a sata cable on a a
+ minipcie-sata board
+Message-ID: <20210315193229.iwfytcuosxs4sgwg@pali>
+References: <cbbb2496501fed013ccbeba524e8d573@posteo.de>
+ <764d43dd2cce9159d6f8a920b0b32a97@posteo.de>
+ <20210308095457.4v7dsfjl54tva4sp@pali>
 MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4543.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fdf43914-8441-47ba-2c6d-08d8e7e0b2ca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2021 18:32:32.8641
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A7hHqTL8aWASzurxqGe+3t4qcTxdkdHok4IBO9MSavb8KevM6F+825neX1Z/CO6Eo4PTk3E0EtWPqRkeohVZPkW7StsPV46fTo+mFi+5Zhc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4111
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-15_11:2021-03-15,2021-03-15 signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210308095457.4v7dsfjl54tva4sp@pali>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 10:29:50AM -0600, Alex Williamson wrote:
-> On Mon, 15 Mar 2021 21:03:41 +0530
-> Amey Narkhede <ameynarkhede03@gmail.com> wrote:
->=20
-> > On 21/03/15 05:07PM, Leon Romanovsky wrote:
-> > > On Mon, Mar 15, 2021 at 08:34:09AM -0600, Alex Williamson wrote: =20
-> > > > On Mon, 15 Mar 2021 14:52:26 +0100
-> > > > Pali Roh=E1r <pali@kernel.org> wrote:
-> > > > =20
-> > > > > On Monday 15 March 2021 19:13:23 Amey Narkhede wrote: =20
-> > > > > > slot reset (pci_dev_reset_slot_function) and secondary bus
-> > > > > > reset(pci_parent_bus_reset) which I think are hot reset and
-> > > > > > warm reset respectively. =20
-> > > > >
-> > > > > No. PCI secondary bus reset =3D PCIe Hot Reset. Slot reset is jus=
-t another
-> > > > > type of reset, which is currently implemented only for PCIe hot p=
-lug
-> > > > > bridges and for PowerPC PowerNV platform and it just call PCI sec=
-ondary
-> > > > > bus reset with some other hook. PCIe Warm Reset does not have API=
- in
-> > > > > kernel and therefore drivers do not export this type of reset via=
- any
-> > > > > kernel function (yet). =20
-> > > >
-> > > > Warm reset is beyond the scope of this series, but could be impleme=
-nted
-> > > > in a compatible way to fit within the pci_reset_fn_methods[] array
-> > > > defined here.  Note that with this series the resets available thro=
-ugh
-> > > > pci_reset_function() and the per device reset attribute is sysfs re=
-main
-> > > > exactly the same as they are currently.  The bus and slot reset
-> > > > methods used here are limited to devices where only a single functi=
-on is
-> > > > affected by the reset, therefore it is not like the patch you propo=
-sed
-> > > > which performed a reset irrespective of the downstream devices.  Th=
-is
-> > > > series only enables selection of the existing methods.  Thanks, =20
-> > >
-> > > Alex,
-> > >
-> > > I asked the patch author here [1], but didn't get any response, maybe
-> > > you can answer me. What is the use case scenario for this functionali=
-ty?
-> > >
-> > > Thanks
-> > >
-> > > [1] https://lore.kernel.org/lkml/YE389lAqjJSeTolM@unreal/=20
-> > > =20
-> > Sorry for not responding immediately. There were some buggy wifi cards
-> > which needed FLR explicitly not sure if that behavior is fixed in
-> > drivers. Also there is use a case at Nutanix but the engineer who
-> > is involved is on PTO that is why I did not respond immediately as
-> > I don't know the details yet.
->=20
-> And more generally, devices continue to have reset issues and we
-> impose a fixed priority in our ordering.  We can and probably should
-> continue to quirk devices when we find broken resets so that we have
-> the best default behavior, but it's currently not easy for an end user
-> to experiment, ie. this reset works, that one doesn't.  We might also
-> have platform issues where a given reset works better on a certain
-> platform.  Exposing a way to test these things might lead to better
-> quirks.  In the case I think Pali was looking for, they wanted a
-> mechanism to force a bus reset, if this was in reference to a single
-> function device, this could be accomplished by setting a priority for
-> that mechanism, which would translate to not only the sysfs reset
-> attribute, but also the reset mechanism used by vfio-pci.  Thanks,
->=20
-> Alex
->
+Hello Rötti!
 
-To confirm from our end - we have seen many such instances where default
-reset methods have not worked well on our platform. Debugging these
-issues is painful in practice, and this interface would make it far
-easier.
+Can you check if that your SATA controller is working fine when is
+connected to any other machine, e.g. x86 laptop or desktop?
 
-Having an interface like this would also help us better communicate the
-issues we find with upstream. Allowing others to more easily test our
-(or other entities') findings should give better visibility into
-which issues apply to the device in general and which are platform
-specific. In disambiguating the former from the latter, we should be
-able to better quirk devices for everyone, and in the latter cases, this
-interface allows for a safer and more elegant solution than any of the
-current alternatives.
-
-CC Alay, Suresh, Shyam and Felipe in case they have anything to add.
+On Monday 08 March 2021 10:54:57 Pali Rohár wrote:
+> Adding linux-pci ML to the loop.
+> 
+> Any idea where can be the issue? Problematic interrupt is triggered from
+> the pci-aardvark.c driver. But I guess that issue can be in ahci code.
+> 
+> On Sunday 07 March 2021 13:38:03 Rötti wrote:
+> > Hello everyone,
+> > 
+> > I'm sorry, I've been missing some information:
+> > 
+> > Here is the output of lspci -nn -vv to correctly identify type of your PCIe
+> > SATA controller:
+> > 
+> > 00:00.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [1b4b:0100]
+> > (prog-if 00 [Normal decode])
+> >         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
+> > Stepping- SERR- FastB2B- DisINTx-
+> >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> > <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >         Latency: 0, Cache Line Size: 64 bytes
+> >         Interrupt: pin A routed to IRQ 52
+> >         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+> >         I/O behind bridge: e9001000-e9001fff [size=4K]
+> >         Memory behind bridge: e8000000-e80fffff [size=1M]
+> >         Prefetchable memory behind bridge: [disabled]
+> >         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> > <TAbort- <MAbort- <SERR- <PERR-
+> >         Expansion ROM at e8100000 [virtual] [disabled] [size=2K]
+> >         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+> >                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> >         Capabilities: [40] Express (v1) Root Port (Slot-), MSI 00
+> >                 DevCap: MaxPayload 512 bytes, PhantFunc 0
+> >                         ExtTag- RBE+
+> >                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> >                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> >                         MaxPayload 512 bytes, MaxReadReq 512 bytes
+> >                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr-
+> > TransPend-
+> >                 LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit
+> > Latency L0s <128ns, L1 <2us
+> >                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+> >                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+> >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> >                 LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
+> >                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+> >                 RootCap: CRSVisible-
+> >                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+
+> > CRSVisible-
+> >                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+> >         Kernel driver in use: pcieport
+> > 
+> > 01:00.0 SATA controller [0106]: ASMedia Technology Inc. ASM1062 Serial ATA
+> > Controller [1b21:0612] (rev 02) (prog-if 01 [AHCI 1.0])
+> >         Subsystem: ASMedia Technology Inc. ASM1062 Serial ATA Controller
+> > [1b21:1060]
+> >         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
+> > Stepping- SERR- FastB2B- DisINTx+
+> >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> > <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >         Latency: 0
+> >         Interrupt: pin A routed to IRQ 53
+> >         Region 0: I/O ports at 1020 [size=8]
+> >         Region 1: I/O ports at 1030 [size=4]
+> >         Region 2: I/O ports at 1028 [size=8]
+> >         Region 3: I/O ports at 1034 [size=4]
+> >         Region 4: I/O ports at 1000 [size=32]
+> >         Region 5: Memory at e8010000 (32-bit, non-prefetchable) [size=512]
+> >         Expansion ROM at e8000000 [virtual] [disabled] [size=64K]
+> >         Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
+> >                 Address: 7f044770  Data: 0035
+> >         Capabilities: [78] Power Management version 3
+> >                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
+> > PME(D0-,D1-,D2-,D3hot-,D3cold-)
+> >                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+> >         Capabilities: [80] Express (v2) Legacy Endpoint, MSI 00
+> >                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s <1us,
+> > L1 <8us
+> >                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
+> >                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> >                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+> >                         MaxPayload 512 bytes, MaxReadReq 512 bytes
+> >                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr-
+> > TransPend-
+> >                 LnkCap: Port #1, Speed 5GT/s, Width x1, ASPM not supported
+> >                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+> >                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+> >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> >                 LnkSta: Speed 2.5GT/s (downgraded), Width x1 (ok)
+> >                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> >                 DevCap2: Completion Timeout: Range ABC, TimeoutDis+,
+> > NROPrPrP-, LTR-
+> >                          10BitTagComp-, 10BitTagReq-, OBFF Not Supported,
+> > ExtFmt-, EETLPPrefix-
+> >                          EmergencyPowerReduction Not Supported,
+> > EmergencyPowerReductionInit-
+> >                          FRS-
+> >                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+> >                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-,
+> > LTR-, OBFF Disabled
+> >                          AtomicOpsCtl: ReqEn-
+> >                 LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance-
+> > SpeedDis-
+> >                          Transmit Margin: Normal Operating Range,
+> > EnterModifiedCompliance- ComplianceSOS-
+> >                          Compliance De-emphasis: -6dB
+> >                 LnkSta2: Current De-emphasis Level: -3.5dB,
+> > EqualizationComplete-, EqualizationPhase1-
+> >                          EqualizationPhase2-, EqualizationPhase3-,
+> > LinkEqualizationRequest-
+> >         Capabilities: [100 v1] Virtual Channel
+> >                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+> >                 Arb:    Fixed- WRR32- WRR64- WRR128-
+> >                 Ctrl:   ArbSelect=Fixed
+> >                 Status: InProgress-
+> >                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+> >                         Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128-
+> > WRR256-
+> >                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+> >                         Status: NegoPending- InProgress-
+> >         Kernel driver in use: ahci
+> > 
+> > 
+> > Kind regards, Rötti!
+> > 
+> > Am 27.01.2021 22:27 schrieb Rötti:
+> > > Hello everyone,
+> > > 
+> > > I own two ESPRESSOBin boards V5.
+> > > 
+> > > And to both I attached an XCSOURCE® MiniPCIe Sata3.0 AC696 extension
+> > > card via MiniPCIe.
+> > > 
+> > > This is the link to amazon: https://www.amazon.de/dp/B06XRG2TGV
+> > > 
+> > > I tested several images from
+> > > https://www.armbian.com/espressobin/#kernels-archive-all
+> > > 
+> > > Tested Kernels 8 weeks ago + the latest two this week:
+> > > - 5.10.09-mvebu64  #21.02.0-hirsute (trunk) <-- works not
+> > > - 5.08.18-mvebu64  #20.11.6-bionic <-- works not
+> > > - 5.08.18-mvebu64  #20.11.3-focal <-- works not
+> > > - 5.08.18-mvebu64  #20.11.3-bionic <-- works not
+> > > - 5.08.06-mvebu64  #20.08.2-focal <-- works not
+> > > - 4.14.135-mvebu64 #19.11.3-bionic <-- works
+> > > 
+> > > 
+> > > Here is the whole UART-dump:
+> > > 
+> > > TIM-1.0
+> > > WTMI-devel-18.12.0-a0a1cb8
+> > > WTMI: system early-init
+> > > SVC REV: 3, CPU VDD voltage: 1.155V
+> > > NOTICE:  Booting Trusted Firmware
+> > > NOTICE:  BL1: v1.5(release):1f8ca7e (Marvell-devel-18.12.2)
+> > > NOTICE:  BL1: Built : 09:48:09, Feb 20 2019
+> > > NOTICE:  BL1: Booting BL2
+> > > NOTICE:  BL2: v1.5(release):1f8ca7e (Marvell-devel-18.12.2)
+> > > NOTICE:  BL2: Built : 09:48:10, Feb 20 2019
+> > > NOTICE:  BL1: Booting BL31
+> > > NOTICE:  BL31: v1.5(release):1f8ca7e (Marvell-devel-18.12.2)
+> > > NOTICE:  BL31: Built : 09:4
+> > > 
+> > > U-Boot 2018.03-devel-18.12.3-gc9aa92c-armbian (Feb 20 2019 - 09:45:04
+> > > +0100)
+> > > 
+> > > Model: Marvell Armada 3720 Community Board ESPRESSOBin
+> > >        CPU     1000 [MHz]
+> > >        L2      800 [MHz]
+> > >        TClock  200 [MHz]
+> > >        DDR     800 [MHz]
+> > > DRAM:  2 GiB
+> > > Comphy chip #0:
+> > > Comphy-0: USB3          5 Gbps
+> > > Comphy-1: PEX0          2.5 Gbps
+> > > Comphy-2: SATA0         6 Gbps
+> > > Target spinup took 0 ms.
+> > > AHCI 0001.0300 32 slots 1 ports 6 Gbps 0x1 impl SATA mode
+> > > flags: ncq led only pmp fbss pio slum part sxs
+> > > PCIE-0: Link up
+> > > MMC:   sdhci@d0000: 0, sdhci@d8000: 1
+> > > Loading Environment from SPI Flash... SF: Detected w25q32dw with page
+> > > size 256 Bytes, erase size 4 KiB, total 4 MiB
+> > > OK
+> > > Model: Marvell Armada 3720 Community Board ESPRESSOBin
+> > > Net:   eth0: neta@30000 [PRIME]
+> > > Hit any key to stop autoboot:  0
+> > > starting USB...
+> > > USB0:   Register 2000104 NbrPorts 2
+> > > Starting the controller
+> > > USB XHCI 1.00
+> > > USB1:   USB EHCI 1.00
+> > > scanning bus 0 for devices... 1 USB Device(s) found
+> > > scanning bus 1 for devices... 1 USB Device(s) found
+> > >        scanning usb for storage devices... 0 Storage Device(s) found
+> > > 
+> > > ## Loading init Ramdisk from Legacy Image at 01100000 ...
+> > >    Image Name:   uInitrd
+> > >    Image Type:   AArch64 Linux RAMDisk Image (gzip compressed)
+> > >    Data Size:    10750023 Bytes = 10.3 MiB
+> > >    Load Address: 00000000
+> > >    Entry Point:  00000000
+> > >    Verifying Checksum ... OK
+> > > ## Flattened Device Tree blob at 06000000
+> > >    Booting using the fdt blob at 0x6000000
+> > >    Loading Ramdisk to 7ebea000, end 7f62a847 ... OK
+> > >    Using Device Tree in place at 0000000006000000, end 00000000060059cd
+> > > 
+> > > Starting kernel ...
+> > > 
+> > > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+> > > [    0.000000] Linux version 5.8.18-mvebu64 (root@beast)
+> > > (aarch64-linux-gnu-gcc (GNU Toolchain for the A-profile Architecture
+> > > 8.3-2019.03 (arm-rel-8.36)) 8.3.0, GNU ld (GNU Toolchain for the
+> > > A-profile Architecture 8.3-2019.03 (arm-rel-8.36)) 2.32.0.20190321)
+> > > #20.11.3 SMP PREEMPT Fri Dec 11 21:10:52 CET 2020
+> > > [    0.000000] Machine model: Globalscale Marvell ESPRESSOBin Board
+> > > [    0.000000] earlycon: ar3700_uart0 at MMIO 0x00000000d0012000
+> > > (options '')
+> > > [    0.000000] printk: bootconsole [ar3700_uart0] enabled
+> > > Loading, please wait...
+> > > Starting version 245.4-4ubuntu3.3
+> > > Begin: Loading essential drivers ... done.
+> > > Begin: Running /scripts/init-premount ... done.
+> > > Begin: Mounting root file system ... Begin: Running /scripts/local-top
+> > > ... done.
+> > > Begin: Running /scripts/local-premount ... Scanning for Btrfs
+> > > filesystems
+> > > done.
+> > > Begin: Will now check root file system ... fsck from util-linux 2.34
+> > > [/usr/sbin/fsck.ext4 (1) -- /dev/mmcblk0p1] fsck.ext4 -a -C0
+> > > /dev/mmcblk0p1
+> > > /dev/mmcblk0p1: clean, 41739/1828336 files, 439779/7502824 blocks
+> > > done.
+> > > done.
+> > > Begin: Running /scripts/local-bottom ... done.
+> > > Begin: Running /scripts/init-bottom ... done.
+> > > [    3.694604] Internal error: synchronous external abort: 96000210
+> > > [#1] PREEMPT SMP
+> > > [    3.699465] Modules linked in: tag_edsa mv88e6xxx dsa_core bridge
+> > > stp llc phy_mvebu_a3700_comphy
+> > > [    3.708518] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted
+> > > 5.8.18-mvebu64 #20.11.3
+> > > [    3.716037] Hardware name: Globalscale Marvell ESPRESSOBin Board (DT)
+> > > [    3.722685] Workqueue: events free_work
+> > > [    3.726614] pstate: 00000085 (nzcv daIf -PAN -UAO BTYPE=--)
+> > > [    3.732352] pc : ahci_single_level_irq_intr+0x1c/0x90
+> > > [    3.737549] lr : __handle_irq_event_percpu+0x5c/0x168
+> > > [    3.742737] sp : ffffffc0113bbd10
+> > > [    3.746142] x29: ffffffc0113bbd10 x28: ffffff807d48b700
+> > > [    3.751608] x27: 0000000000000060 x26: ffffffc010f085e8
+> > > [    3.757073] x25: ffffffc0113075a5 x24: ffffff8079101800
+> > > [    3.762539] x23: 000000000000002d x22: ffffffc0113bbdd4
+> > > [    3.768004] x21: 0000000000000000 x20: ffffffc011465008
+> > > [    3.773470] x19: ffffff8079381600 x18: 0000000000000000
+> > > [    3.778936] x17: 0000000000000000 x16: 0000000000000000
+> > > [    3.784401] x15: 000000d2c010fc50 x14: 0000000000000323
+> > > [    3.789867] x13: 00000000000002d4 x12: 0000000000000000
+> > > [    3.795332] x11: 0000000000000040 x10: ffffffc011282dd8
+> > > [    3.800798] x9 : ffffffc011282dd0 x8 : ffffff807d000270
+> > > [    3.806263] x7 : 0000000000000000 x6 : 0000000000000000
+> > > [    3.811729] x5 : ffffffc06ea93000 x4 : ffffffc0113bbe10
+> > > [    3.817196] x3 : ffffffc06ea93000 x2 : ffffff8079101a80
+> > > [    3.822661] x1 : ffffff8078803e00 x0 : 000000000000002d
+> > > [    3.828126] Call trace:
+> > > [    3.830642]  ahci_single_level_irq_intr+0x1c/0x90
+> > > [    3.835478]  __handle_irq_event_percpu+0x5c/0x168
+> > > [    3.840315]  handle_irq_event_percpu+0x38/0x90
+> > > [    3.844885]  handle_irq_event+0x48/0xe0
+> > > [    3.848828]  handle_simple_irq+0x94/0xd0
+> > > [    3.852860]  generic_handle_irq+0x30/0x48
+> > > [    3.856985]  advk_pcie_irq_handler+0x214/0x240
+> > > [    3.861552]  __handle_irq_event_percpu+0x5c/0x168
+> > > [    3.866389]  handle_irq_event_percpu+0x38/0x90
+> > > [    3.870959]  handle_irq_event+0x48/0xe0
+> > > [    3.874900]  handle_fasteoi_irq+0xb8/0x170
+> > > [    3.879112]  generic_handle_irq+0x30/0x48
+> > > [    3.883234]  __handle_domain_irq+0x64/0xc0
+> > > [    3.887447]  gic_handle_irq+0xc8/0x168
+> > > [    3.891298]  el1_irq+0xb8/0x180
+> > > [    3.894524]  unmap_kernel_range_noflush+0x128/0x188
+> > > [    3.899540]  remove_vm_area+0xac/0xd0
+> > > [    3.903303]  __vunmap+0x48/0x298
+> > > [    3.906618]  free_work+0x44/0x60
+> > > [    3.909937]  process_one_work+0x1e8/0x360
+> > > [    3.914057]  worker_thread+0x44/0x480
+> > > [    3.917820]  kthread+0x154/0x158
+> > > [    3.921135]  ret_from_fork+0x10/0x34
+> > > [    3.924812] Code: a90153f3 f9401022 f9400854 91002294 (b9400293)
+> > > [    3.931087] ---[ end trace 98b323414bb99c99 ]---
+> > > [    3.935829] Kernel panic - not syncing: Fatal exception in interrupt
+> > > [    3.942368] SMP: stopping secondary CPUs
+> > > [    3.946403] Kernel Offset: disabled
+> > > [    3.949985] CPU features: 0x240002,2000200c
+> > > [    3.954283] Memory Limit: none
+> > > [    3.957424] ---[ end Kernel panic - not syncing: Fatal exception in
+> > > interrupt ]---
+> > > 
+> > > The boards boots up if I don't plug in any SATA HDDs into the extension
+> > > card.
+> > > 
+> > > I hope this helps. If you need any other information just let me know,
+> > > I'm absolutely willing to help. But I have no clue of kernel
+> > > patching/compiling etc. Sorry!
+> > > 
+> > > Thank you very, very much in advance! You're doing an awesome job.
+> > > 
+> > > Sincerely Rötti
