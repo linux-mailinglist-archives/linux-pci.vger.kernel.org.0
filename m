@@ -2,24 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E945633CF1E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Mar 2021 09:01:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E57F33CF27
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Mar 2021 09:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233834AbhCPIAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Mar 2021 04:00:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:58883 "EHLO verein.lst.de"
+        id S230490AbhCPIBN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Mar 2021 04:01:13 -0400
+Received: from verein.lst.de ([213.95.11.211]:58903 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231510AbhCPIAR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Mar 2021 04:00:17 -0400
+        id S232051AbhCPIAz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Mar 2021 04:00:55 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 75A4D68C4E; Tue, 16 Mar 2021 09:00:09 +0100 (CET)
-Date:   Tue, 16 Mar 2021 09:00:08 +0100
+        id 7AA4368C65; Tue, 16 Mar 2021 09:00:52 +0100 (CET)
+Date:   Tue, 16 Mar 2021 09:00:52 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
         Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -35,31 +34,25 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
         Jason Ekstrand <jason@jlekstrand.net>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Xiong Jianxin <jianxin.xiong@intel.com>
-Subject: Re: [RFC PATCH v2 07/11] dma-mapping: Add flags to dma_map_ops to
- indicate PCI P2PDMA support
-Message-ID: <20210316080008.GC15949@lst.de>
-References: <20210311233142.7900-1-logang@deltatee.com> <20210311233142.7900-8-logang@deltatee.com> <20210313023657.GC3402637@iweiny-DESK2.sc.intel.com> <e9a6689a-3cb7-aa30-33e7-b27015754b73@deltatee.com>
+Subject: Re: [RFC PATCH v2 09/11] block: Add BLK_STS_P2PDMA
+Message-ID: <20210316080051.GD15949@lst.de>
+References: <20210311233142.7900-1-logang@deltatee.com> <20210311233142.7900-10-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e9a6689a-3cb7-aa30-33e7-b27015754b73@deltatee.com>
+In-Reply-To: <20210311233142.7900-10-logang@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 10:33:13AM -0600, Logan Gunthorpe wrote:
-> >> +	return !ops || ops->flags & DMA_F_PCI_P2PDMA_SUPPORTED;
-> > 
-> > Is this logic correct?  I would have expected.
-> > 
-> > 	return (ops && ops->flags & DMA_F_PCI_P2PDMA_SUPPORTED);
+On Thu, Mar 11, 2021 at 04:31:39PM -0700, Logan Gunthorpe wrote:
+> Create a specific error code for when P2PDMA pages are passed to a block
+> devices that cannot map them (due to no IOMMU support or ACS protections).
 > 
-> 
-> If ops is NULL then the operations in kernel/dma/direct.c are used and
-> support is added to those in patch 6. So it is correct as written.
+> This makes request errors in these cases more informative of as to what
+> caused the error.
 
-It is not quite that easy. There also is the bypass flag and for the
-specific case where that is ignored the code needs a really good
-comment.  And to assist that formatted so that it makes sense.  The
-above line is indeed highly confusing even if it ends up being correct.
+I really don't think we should bother with a specific error code here,
+we don't add a new status for every single possible logic error in the
+caller.
