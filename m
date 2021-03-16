@@ -2,58 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F01D33CF0A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Mar 2021 08:59:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E945633CF1E
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Mar 2021 09:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233613AbhCPH6d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Mar 2021 03:58:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:58866 "EHLO verein.lst.de"
+        id S233834AbhCPIAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Mar 2021 04:00:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:58883 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234079AbhCPH6Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Mar 2021 03:58:25 -0400
+        id S231510AbhCPIAR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Mar 2021 04:00:17 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 677A768C65; Tue, 16 Mar 2021 08:58:22 +0100 (CET)
-Date:   Tue, 16 Mar 2021 08:58:21 +0100
+        id 75A4D68C4E; Tue, 16 Mar 2021 09:00:09 +0100 (CET)
+Date:   Tue, 16 Mar 2021 09:00:08 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-mm@kvack.org,
         iommu@lists.linux-foundation.org,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
         Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Ira Weiny <iweiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Xiong Jianxin <jianxin.xiong@intel.com>
-Subject: Re: [RFC PATCH v2 06/11] dma-direct: Support PCI P2PDMA pages in
- dma-direct map_sg
-Message-ID: <20210316075821.GB15949@lst.de>
-References: <20210311233142.7900-1-logang@deltatee.com> <20210311233142.7900-7-logang@deltatee.com> <215e1472-5294-d20a-a43a-ff6dfe8cd66e@arm.com> <d7ead722-7356-8e0f-22de-cb9dea12b556@deltatee.com> <a8205c02-a43f-d4e8-a9fe-5963df3a7b40@arm.com> <367fa81e-588d-5734-c69c-8cdc800dcb7e@deltatee.com>
+Subject: Re: [RFC PATCH v2 07/11] dma-mapping: Add flags to dma_map_ops to
+ indicate PCI P2PDMA support
+Message-ID: <20210316080008.GC15949@lst.de>
+References: <20210311233142.7900-1-logang@deltatee.com> <20210311233142.7900-8-logang@deltatee.com> <20210313023657.GC3402637@iweiny-DESK2.sc.intel.com> <e9a6689a-3cb7-aa30-33e7-b27015754b73@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <367fa81e-588d-5734-c69c-8cdc800dcb7e@deltatee.com>
+In-Reply-To: <e9a6689a-3cb7-aa30-33e7-b27015754b73@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 11:27:46AM -0700, Logan Gunthorpe wrote:
-> So then we reject the patches that make that change. Seems like an odd
-> argument to say that we can't do something that won't cause problems
-> because someone might use it as an example and do something that will
-> cause problems. Reject the change that causes the problem.
+On Mon, Mar 15, 2021 at 10:33:13AM -0600, Logan Gunthorpe wrote:
+> >> +	return !ops || ops->flags & DMA_F_PCI_P2PDMA_SUPPORTED;
+> > 
+> > Is this logic correct?  I would have expected.
+> > 
+> > 	return (ops && ops->flags & DMA_F_PCI_P2PDMA_SUPPORTED);
+> 
+> 
+> If ops is NULL then the operations in kernel/dma/direct.c are used and
+> support is added to those in patch 6. So it is correct as written.
 
-No, the problem is a mess of calling conventions.  A calling convention
-returning 0 for error, positive values for success is fine.  One returning
-a negative errno for error and positive values for success is fine a well.
-One returning 0 for the usual errors and negativ errnos for an unusual
-corner case is just a complete mess.
+It is not quite that easy. There also is the bypass flag and for the
+specific case where that is ignored the code needs a really good
+comment.  And to assist that formatted so that it makes sense.  The
+above line is indeed highly confusing even if it ends up being correct.
