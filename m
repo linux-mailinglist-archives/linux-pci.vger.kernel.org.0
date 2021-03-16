@@ -2,129 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0F9E33D1E6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Mar 2021 11:40:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2483C33D4F8
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Mar 2021 14:37:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236703AbhCPKjb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Mar 2021 06:39:31 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2701 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236699AbhCPKjF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Mar 2021 06:39:05 -0400
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4F08lH3NJKz680gf;
-        Tue, 16 Mar 2021 18:33:31 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 16 Mar 2021 11:38:04 +0100
-Received: from localhost (10.47.94.123) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 16 Mar
- 2021 10:38:03 +0000
-Date:   Tue, 16 Mar 2021 10:36:47 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Chris Browy" <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20210316103647.00002f4b@Huawei.com>
-In-Reply-To: <CAPcyv4jq-KovQcEqesA=kCdzdDNtQ9y8g2aBCSXqQv7cvmABtg@mail.gmail.com>
-References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
-        <20210310180306.1588376-3-Jonathan.Cameron@huawei.com>
-        <20210310181459.000005c7@huawei.com>
-        <CAPcyv4jq-KovQcEqesA=kCdzdDNtQ9y8g2aBCSXqQv7cvmABtg@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S235213AbhCPNhI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Mar 2021 09:37:08 -0400
+Received: from mail-oo1-f54.google.com ([209.85.161.54]:36469 "EHLO
+        mail-oo1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235184AbhCPNhF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Mar 2021 09:37:05 -0400
+Received: by mail-oo1-f54.google.com with SMTP id w1-20020a4adec10000b02901bc77feac3eso1004695oou.3;
+        Tue, 16 Mar 2021 06:37:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HhLaOWaIrJwS9w94aLoGXQMXup2Yi5nytxfqyx+Z2eY=;
+        b=IO7LDc7W91GvsTqFZISMXxGH7aYEIMV/D7hIS+XmomUl4/rAZ5HpNJVCX2jjPczAt6
+         Ol5SdYnz8lsjdPS+z3cIuJ9wie9L12unY+MPLiO0dPpNCiOQ47Vy0IcmL+2vtuYUdB//
+         w3FRv+qWxRlI7i5LOTPXGoR/Flya16cI+km8RpzG3T48laNNJRkdUZsDiTpZJjspG6hJ
+         Gx9vfY8S++pY74kMaeYr1RKIkm4/yFeDM//WpgtIAsKlO3kyHQQ+2MY1h+4qvNIH5Ycn
+         NwYxvpozv8QHbTA5s6VPWaVwSxoWW9kX9hbD1J8zrkL5kqy0LneekMNoDUW8x6D0X/3y
+         cGLw==
+X-Gm-Message-State: AOAM532dlZkKsFXWjVPkOfizeAGlW/C+i34LAZM+9hOBJobcBIJ1TJFc
+        P8qPCvEGfjriTS2YCzV6F4fov2AXeOCX81DLdXI=
+X-Google-Smtp-Source: ABdhPJzwQHSmFwhqAsyF7zjgrycMBhrHMnwnbNNkjLhTMtmKEeI2iQWDOfqbB5CPa7+ftrRb8bJxReNbRW3IrP8TOwQ=
+X-Received: by 2002:a4a:d781:: with SMTP id c1mr3885934oou.44.1615901824913;
+ Tue, 16 Mar 2021 06:37:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.94.123]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20210314000439.3138941-1-luzmaximilian@gmail.com>
+ <CAJZ5v0hY=NgKAU+N_kaya=q3Vk6SnkRTfXuiiP0ttoxHq+pRTA@mail.gmail.com> <781f0963-4ce6-74c9-e884-1e57f1ff9673@gmail.com>
+In-Reply-To: <781f0963-4ce6-74c9-e884-1e57f1ff9673@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Mar 2021 14:36:52 +0100
+Message-ID: <CAJZ5v0g+wkyzrD120yiyyBFjVO=LYS3j0WK1Fi-j+LS5fwgqZg@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Run platform power transition on initial D0 entry
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 15 Mar 2021 15:00:08 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> On Wed, Mar 10, 2021 at 10:15 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
+On Mon, Mar 15, 2021 at 7:28 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>
+> On 3/15/21 4:34 PM, Rafael J. Wysocki wrote:
+> > On Sun, Mar 14, 2021 at 1:06 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+> >>
+> >> On some devices and platforms, the initial platform (e.g. ACPI) power
+> >> state is not in sync with the power state of the PCI device.
+> >>
+> >> This seems like it is, for all intents and purposes, an issue with the
+> >> device firmware (e.g. ACPI). On some devices, specifically Microsoft
+> >> Surface Books 2 and 3, we encounter ACPI code akin to the following
+> >> power resource, corresponding to a PCI device:
+> >>
+> >>      PowerResource (PRP5, 0x00, 0x0000)
+> >>      {
+> >>          // Initialized to zero, i.e. off. There is no logic for checking
+> >>          // the actual state dynamically.
+> >>          Name (_STA, Zero)
+> >>
+> >>          Method (_ON, 0, Serialized)
+> >>          {
+> >>              // ... code omitted ...
+> >>              _STA = One
+> >>          }
+> >>
+> >>          Method (_OFF, 0, Serialized)
+> >>          {
+> >>              // ... code omitted ...
+> >>              _STA = Zero
+> >>          }
+> >>      }
+> >>
+> >> This resource is initialized to 'off' and does not have any logic for
+> >> checking its actual state, i.e. the state of the corresponding PCI
+> >> device. The stored state of this resource can only be changed by running
+> >> the (platform/ACPI) power transition functions (i.e. _ON and _OFF).
 > >
-> > On Thu, 11 Mar 2021 02:03:06 +0800
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >  
-> > > This patch simply provides some debug print outs of the entries
-> > > at probe time + a sysfs binary attribute to allow dumping of the
-> > > whole table.
-> > >
-> > > Binary dumping is modelled on /sys/firmware/ACPI/tables/
-> > >
-> > > The ability to dump this table will be very useful for emulation of
-> > > real devices once they become available as QEMU CXL type 3 device
-> > > emulation will be able to load this file in.
-> > >
-> > > Open questions:
-> > > * No support here for table updates. Worth including these from the
-> > >   start, or leave that complexity for later?
-> > > * Worth logging the reported info for debug, or is the binary attribute
-> > >   sufficient?  Larger open question of whether to expose this info to
-> > >   userspace or not left for another day!
-> > > * Where to put the CDAT file?  Is it worth a subdirectory?
-> > > * What is maximum size of the SSLBIS entry - I haven't quite managed
-> > >   to figure that out and this is the record with largest size.
-> > >   We could support dynamic allocation of the record size, but it
-> > >   would add complexity that seems unnecessary.
-> > >   It would not be compliant with the specification for a type 3 memory
-> > >   device to report this record anyway so I'm not that worried about this
-> > >   for now.  It will become relevant once we have support for reading
-> > >   CDAT from CXL switches.
-> > > * cdat.h is formatted in a similar style to pci_regs.h on basis that
-> > >   it may well be helpful to share this header with userspace tools.
-> > > * Move the generic parts of this out to driver/cxl/cdat.c or leave that
-> > >   until we have other CXL drivers wishing to use this?  
+> > Well, there is _STA that returns "off" initially, so the OS should set
+> > the initial state of the device to D3cold and transition it into D0 as
+> > appropriate (i.e. starting with setting all of the power resources
+> > used by it to "on").
 > >
-> > Naturally I remembered another open question within 10 seconds of sending :(
+> >> This means that, at boot, the PCI device power state is out of sync with
+> >> the power state of the corresponding ACPI resource.
+> >>
+> >> During initial bring-up of a PCI device, pci_enable_device_flags()
+> >> updates its PCI core state (from initially 'unknown') by reading from
+> >> its PCI_PM_CTRL register. It does, however, not check if the platform
+> >> (here ACPI) state is in sync with/valid for the actual device state and
+> >> needs updating.
 > >
-> >   * Do we want to add any sort of header to the RAW dump of CDAT to aid
-> >     tooling?  Whilst it looks a little like an ACPI table it doesn't have
-> >     a signature.
+> > Well, that's inconsistent.
 > >
-> > My gut feeling is no, because the CDAT specification doesn't define one but
-> > I can see that it might be very convenient to have something that identified
-> > the data once it was put in a file.  
-> 
-> I'm not yet convinced raw dumping is worth it for the same reason that
-> command payload logging was eliminated from the v5.12-rc1 submission.
-> There's not much userspace can do with the information besides debug
-> the kernel behavior. If the kernel assigns a numa node to target a
-> given CXL memory range with NUMA apis then HMEM_REPORTING should
-> enumerate the properties. In other words, don't expand the userspace
-> ABI problem, funnel users to the canonical source for such data.
+> > Also, it is rather pointless to update the device's power state at
+> > this point, because nothing between this point and the later
+> > do_pci_enable_device() call in this function requires its
+> > current_state to be up to date AFAICS.
+> >
+> > Have you tried to drop the power state update from
+> > pci_enable_device_flags()?  [Note that we're talking about relatively
+> > old code here and it looks like that code is not necessary any more.]
+>
+> I had not tried this before, as I assumed the comment was still
+> relevant. I did test that now and it works! I can't detect any
+> regressions.
+>
+> Do you want to send this in or should I do that?
 
-As someone who finds raw dumping of ACPI tables extremely helpful in every
-day use for debugging of some of our 'interesting' hardware, I know I'm going
-to end up carrying that element locally anyway.  I don't have a particular
-problem doing so if we decide to not to upstream it.
-
-Much like the ACPI table dumping, it's not an interface you expect userspace
-to ever use and I fully agree that we should expose things properly as you
-describe.
-
-Short term my interest here is to get the DOE code upstream as step 1 of
-moving to a full solution.  The printing and dumping is really just PoC element
-to prove out the interface.  Any issue with putting the prints under _dbg()?
-
-Jonathan
-
-
+I'll post it, thanks!
