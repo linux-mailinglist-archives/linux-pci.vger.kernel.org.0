@@ -2,80 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F39D33F912
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 20:23:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EA7F33F917
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 20:25:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233128AbhCQTWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Mar 2021 15:22:47 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10028 "EHLO mga17.intel.com"
+        id S233143AbhCQTZA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Mar 2021 15:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231378AbhCQTWn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Mar 2021 15:22:43 -0400
-IronPort-SDR: VX/jcGp75E7UGqhLpMxtDCCZ+LWzNUztuw99DtLpDsl+SuyuQDNSc3QRDaW/NvRDYZlI/i9zQc
- wj6GUFq4wfQA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9926"; a="169448226"
-X-IronPort-AV: E=Sophos;i="5.81,257,1610438400"; 
-   d="scan'208";a="169448226"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2021 12:22:43 -0700
-IronPort-SDR: IZ+KWvuirzQOoBPlEhvgFMnYGuqEEOR3NbsFumGkCBLPfsdSHxzHhLMWe4HLm+s/jKIJ4vzUWf
- hHYyKhlYmpYg==
-X-IronPort-AV: E=Sophos;i="5.81,257,1610438400"; 
-   d="scan'208";a="439507943"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2021 12:22:42 -0700
-Date:   Wed, 17 Mar 2021 12:22:41 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Sathyanarayanan Kuppuswamy Natarajan 
-        <sathyanarayanan.nkuppuswamy@gmail.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>, knsathya@kernel.org,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v2 1/1] PCI: pciehp: Skip DLLSC handling if DPC is
- triggered
-Message-ID: <20210317192241.GE52280@otc-nc-03>
-References: <59cb30f5e5ac6d65427ceaadf1012b2ba8dbf66c.1615606143.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210317041342.GA19198@wunner.de>
- <CAPcyv4jxTcUEgcfPRckHqrUPy8gR7ZJsxDaeU__pSq6PqJERAQ@mail.gmail.com>
- <20210317053114.GA32370@wunner.de>
- <CAPcyv4j8t4Y=kpRSvOjOfVHd107YemiRcW0BNQRwp-d9oCddUw@mail.gmail.com>
- <CAC41dw8sX4T-FrwBju2H3TbjDhJMLGw_KHqs+20qzvKU1b5QTA@mail.gmail.com>
- <CAPcyv4gfBTuEj494aeg0opeL=PSbk_Cs16fX7A-cLvSV6EZg-Q@mail.gmail.com>
- <20210317190952.GB27146@wunner.de>
+        id S231378AbhCQTY2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Mar 2021 15:24:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 938DD64E74;
+        Wed, 17 Mar 2021 19:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616009067;
+        bh=KKLdsb/3DlDkU4aWs0Dgdf8TtDZwtJHl3u4fz67AniQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GZRTNw0CPL7kswGGvq7LaYQEyiyMeFE5x9bbrs/0yrOamTF4m1GdnaR/RopyRKCoV
+         jAjzVtaTzi392HO5KVybX1T3uzbbOD+mqq8mpTxvM7ilTURG04TfRvyCdwfhpY90lu
+         5YseBIs6KQdENZi/ng+V8Rie6VcwA0K66GbH66cnm+DaTdAIa4lnBL9qyGnUUYWdOv
+         OJlyQcuoWJsGA3Rnf3GyyPMkzmE8bf9NdCnwtqL7dxQVlV6zs44J/ewhVRYzOC1lAQ
+         mIiojOTxXZHSoFpVnKuYgohf2Jjj8Rbs3kRllnZwH2ySv1x7ql/UglC14uCCIXxBdc
+         W1aKq2IeCOWeA==
+Received: by pali.im (Postfix)
+        id B26938A9; Wed, 17 Mar 2021 20:24:24 +0100 (CET)
+Date:   Wed, 17 Mar 2021 20:24:24 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>, bhelgaas@google.com,
+        raphael.norwitz@nutanix.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <20210317192424.kpfybcrsen3ivr4f@pali>
+References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
+ <20210312173452.3855-5-ameynarkhede03@gmail.com>
+ <20210314235545.girtrazsdxtrqo2q@pali>
+ <20210315134323.llz2o7yhezwgealp@archlinux>
+ <20210315135226.avwmnhkfsgof6ihw@pali>
+ <20210315083409.08b1359b@x1.home.shazbot.org>
+ <20210315145238.6sg5deblr2z2pupu@pali>
+ <20210315090339.54546e91@x1.home.shazbot.org>
+ <20210317190206.zrtzwgskxdogl7dz@pali>
+ <20210317131536.38f398b0@omen.home.shazbot.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210317190952.GB27146@wunner.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210317131536.38f398b0@omen.home.shazbot.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 08:09:52PM +0100, Lukas Wunner wrote:
-> On Wed, Mar 17, 2021 at 10:45:21AM -0700, Dan Williams wrote:
-> > Ah, ok, we're missing a flush of the hotplug event handler after the
-> > link is up to make sure the hotplug handler does not see the Link Up.
-> > I'm not immediately seeing how the new proposal ensures that there is
-> > no Link Up event still in flight after DPC completes its work.
-> > Wouldn't it be required to throw away Link Up to Link Up transitions?
+On Wednesday 17 March 2021 13:15:36 Alex Williamson wrote:
+> On Wed, 17 Mar 2021 20:02:06 +0100
+> Pali Rohár <pali@kernel.org> wrote:
 > 
-> If you look at the new code added to pciehp_ist() by my patch...
+> > On Monday 15 March 2021 09:03:39 Alex Williamson wrote:
+> > > On Mon, 15 Mar 2021 15:52:38 +0100
+> > > Pali Rohár <pali@kernel.org> wrote:
+> > >   
+> > > > On Monday 15 March 2021 08:34:09 Alex Williamson wrote:  
+> > > > > On Mon, 15 Mar 2021 14:52:26 +0100
+> > > > > Pali Rohár <pali@kernel.org> wrote:
+> > > > >     
+> > > > > > On Monday 15 March 2021 19:13:23 Amey Narkhede wrote:    
+> > > > > > > slot reset (pci_dev_reset_slot_function) and secondary bus
+> > > > > > > reset(pci_parent_bus_reset) which I think are hot reset and
+> > > > > > > warm reset respectively.      
+> > > > > > 
+> > > > > > No. PCI secondary bus reset = PCIe Hot Reset. Slot reset is just another
+> > > > > > type of reset, which is currently implemented only for PCIe hot plug
+> > > > > > bridges and for PowerPC PowerNV platform and it just call PCI secondary
+> > > > > > bus reset with some other hook. PCIe Warm Reset does not have API in
+> > > > > > kernel and therefore drivers do not export this type of reset via any
+> > > > > > kernel function (yet).    
+> > > > > 
+> > > > > Warm reset is beyond the scope of this series, but could be implemented
+> > > > > in a compatible way to fit within the pci_reset_fn_methods[] array
+> > > > > defined here.    
+> > > > 
+> > > > Ok!
+> > > >   
+> > > > > Note that with this series the resets available through
+> > > > > pci_reset_function() and the per device reset attribute is sysfs remain
+> > > > > exactly the same as they are currently.  The bus and slot reset
+> > > > > methods used here are limited to devices where only a single function is
+> > > > > affected by the reset, therefore it is not like the patch you proposed
+> > > > > which performed a reset irrespective of the downstream devices.  This
+> > > > > series only enables selection of the existing methods.  Thanks,
+> > > > > 
+> > > > > Alex
+> > > > >     
+> > > > 
+> > > > But with this patch series, there is still an issue with PCI secondary
+> > > > bus reset mechanism as exported sysfs attribute does not do that
+> > > > remove-reset-rescan procedure. As discussed in other thread, this reset
+> > > > let device in unconfigured / broken state.  
+> > > 
+> > > No, there's not:
+> > > 
+> > > int pci_reset_function(struct pci_dev *dev)
+> > > {
+> > >         int rc;
+> > > 
+> > >         if (!dev->reset_fn)
+> > >                 return -ENOTTY;
+> > > 
+> > >         pci_dev_lock(dev);  
+> > > >>>     pci_dev_save_and_disable(dev);  
+> > > 
+> > >         rc = __pci_reset_function_locked(dev);
+> > >   
+> > > >>>     pci_dev_restore(dev);  
+> > >         pci_dev_unlock(dev);
+> > > 
+> > >         return rc;
+> > > }
+> > > 
+> > > The remove/re-scan was discussed primarily because your patch performed
+> > > a bus reset regardless of what devices were affected by that reset and
+> > > it's difficult to manage the scope where multiple devices are affected.
+> > > Here, the bus and slot reset functions will fail unless the scope is
+> > > limited to the single device triggering this reset.  Thanks,
+> > > 
+> > > Alex
+> > >   
+> > 
+> > I was thinking a bit more about it and I'm really sure how it would
+> > behave with hotplugging PCIe bridge.
+> > 
+> > On aardvark PCIe controller I have already tested that secondary bus
+> > reset bit is triggering Hot Reset event and then also Link Down event.
+> > These events are not handled by aardvark driver yet (needs to
+> > implemented into kernel's emulated root bridge code).
+> > 
+> > But I'm not sure how it would behave on real HW PCIe hotplugging bridge.
+> > Kernel has already code which removes PCIe device if it changes presence
+> > bit (and inform via interrupt). And Link Down event triggers this
+> > change.
 > 
->       atomic_and(~PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
->       if (pciehp_check_link_active(ctrl) > 0)
->               events &= ~PCI_EXP_SLTSTA_DLLSC;
+> This is the difference between slot and bus resets, the slot reset is
+> implemented by the hotplug controller and disables presence detection
+> around the bus reset.  Thanks,
 
-When you have a Surprise Link Down and without any DPC, the link trains
-back up. Aren't we expected to take the slot down and add it as if a remove
-and add happens?
+Yes, but I'm talking about bus reset, not about slot reset.
 
-without this change if slot-status == ON_STATE, DLLSC means we would power
-the slot off. Then we check link_active and bring the slot back on isn't
-it?
+I mean: to use bus reset via sysfs on hardware which supports slots and
+hotplugging.
 
+And if I'm reading code correctly, this combination is allowed, right?
+Via these new patches it is possible to disable slot reset and enable
+bus reset.
