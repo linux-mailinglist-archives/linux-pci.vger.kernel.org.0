@@ -2,197 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A0FB33F9CB
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 21:14:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 675D533FB73
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 23:46:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbhCQUNv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Mar 2021 16:13:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
+        id S229537AbhCQWqG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Mar 2021 18:46:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231398AbhCQUNu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Mar 2021 16:13:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 754C364F04;
-        Wed, 17 Mar 2021 20:13:49 +0000 (UTC)
+        id S229658AbhCQWpv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Mar 2021 18:45:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E90B464F07;
+        Wed, 17 Mar 2021 22:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616012029;
-        bh=khQLFq23w2t02jejmWk4dHnPyu+tEJeOprEkv6/XtCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CwoGws9v3BGbaMh1QFzMJJfoRpRBgf8YXc8D6cH+OCeifnFFeKK6nUZs6stYSwkNO
-         i7kTwppKAfvSoP6rBhyTEmobVydytTBWQlNp7Vhg2mCsnDpm/hpjdP8hcrjwWHW/9Q
-         h3ihIpXytuASWpJS/+DaQM18iz1TGtMgOLpNpyrj0uVL4q4tzgssx/aBWW9Koo2fBq
-         Gn8bOfFT4H4W14LFaFLDN/PHPa+jAIQTWAjvEWeLs82kaPk2GywrS/VKAJaRzd4wOB
-         NBSCTlOZRcTOyI1jltQCUeqD46Ad0fdodjaM+/uzfPRPBOVWw4VNo6G98uyRj+BFPn
-         AmRPBFvUMDAKQ==
-Received: by pali.im (Postfix)
-        id 011138A9; Wed, 17 Mar 2021 21:13:46 +0100 (CET)
-Date:   Wed, 17 Mar 2021 21:13:46 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Amey Narkhede <ameynarkhede03@gmail.com>, bhelgaas@google.com,
-        raphael.norwitz@nutanix.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Message-ID: <20210317201346.v6t4rde6nzmt7fwr@pali>
-References: <20210315135226.avwmnhkfsgof6ihw@pali>
- <20210315083409.08b1359b@x1.home.shazbot.org>
- <20210315145238.6sg5deblr2z2pupu@pali>
- <20210315090339.54546e91@x1.home.shazbot.org>
- <20210317190206.zrtzwgskxdogl7dz@pali>
- <20210317131536.38f398b0@omen.home.shazbot.org>
- <20210317192424.kpfybcrsen3ivr4f@pali>
- <20210317133245.7d95909c@omen.home.shazbot.org>
- <20210317194024.nkzrbbvi6utoznze@pali>
- <20210317140020.4375ba76@omen.home.shazbot.org>
+        s=k20201202; t=1616021151;
+        bh=SiIaImEVqlVFRrXonYU+yQjBVT0RVVimMFmScMaARIc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TGmUyLwX9HZkSijy6/ClnaCC9KujuIUFIDUnE4bqTN7vFAp8af/58trITkqSUJ8He
+         34R5LLn5IwkTZbLV3H+cTlwAfXsF9BbtZ/dB5g2TL4BUmHR3f1gF3TgSrDFuHVjmB7
+         StFT5CouhySDg5rR8ESjCs7FDSDDxtla91MMK8leK0djQuT+GRiUKuVK/wT3MWM4+Y
+         +W0M+CkqvAX0G7FCsPo7uJsMHMK677XjY9t1mbJKM8Qr+wZ4WdaEbpzttIVVnE1zZd
+         ZtISjGmVKZ7Stg1yliHy9Ql8PyVxDHVcxcj4JscxZv0CO7RouOYvdmIcADA9wQF7F7
+         O4rpa3RmC+S0w==
+Date:   Wed, 17 Mar 2021 17:45:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        =?iso-8859-1?Q?R=F6tti?= 
+        <espressobinboardarmbiantempmailaddress@posteo.de>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        stable@vger.kernel.org, Zachary Zhang <zhangzg@marvell.com>
+Subject: Re: [PATCH] PCI: Add Max Payload Size quirk for ASMedia ASM1062 SATA
+ controller
+Message-ID: <20210317224549.GA93134@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210317140020.4375ba76@omen.home.shazbot.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20210317115924.31885-1-kabel@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 17 March 2021 14:00:20 Alex Williamson wrote:
-> On Wed, 17 Mar 2021 20:40:24 +0100
-> Pali Roh√°r <pali@kernel.org> wrote:
-> 
-> > On Wednesday 17 March 2021 13:32:45 Alex Williamson wrote:
-> > > On Wed, 17 Mar 2021 20:24:24 +0100
-> > > Pali Roh√°r <pali@kernel.org> wrote:
-> > >   
-> > > > On Wednesday 17 March 2021 13:15:36 Alex Williamson wrote:  
-> > > > > On Wed, 17 Mar 2021 20:02:06 +0100
-> > > > > Pali Roh√°r <pali@kernel.org> wrote:
-> > > > >     
-> > > > > > On Monday 15 March 2021 09:03:39 Alex Williamson wrote:    
-> > > > > > > On Mon, 15 Mar 2021 15:52:38 +0100
-> > > > > > > Pali Roh√°r <pali@kernel.org> wrote:
-> > > > > > >       
-> > > > > > > > On Monday 15 March 2021 08:34:09 Alex Williamson wrote:      
-> > > > > > > > > On Mon, 15 Mar 2021 14:52:26 +0100
-> > > > > > > > > Pali Roh√°r <pali@kernel.org> wrote:
-> > > > > > > > >         
-> > > > > > > > > > On Monday 15 March 2021 19:13:23 Amey Narkhede wrote:        
-> > > > > > > > > > > slot reset (pci_dev_reset_slot_function) and secondary bus
-> > > > > > > > > > > reset(pci_parent_bus_reset) which I think are hot reset and
-> > > > > > > > > > > warm reset respectively.          
-> > > > > > > > > > 
-> > > > > > > > > > No. PCI secondary bus reset = PCIe Hot Reset. Slot reset is just another
-> > > > > > > > > > type of reset, which is currently implemented only for PCIe hot plug
-> > > > > > > > > > bridges and for PowerPC PowerNV platform and it just call PCI secondary
-> > > > > > > > > > bus reset with some other hook. PCIe Warm Reset does not have API in
-> > > > > > > > > > kernel and therefore drivers do not export this type of reset via any
-> > > > > > > > > > kernel function (yet).        
-> > > > > > > > > 
-> > > > > > > > > Warm reset is beyond the scope of this series, but could be implemented
-> > > > > > > > > in a compatible way to fit within the pci_reset_fn_methods[] array
-> > > > > > > > > defined here.        
-> > > > > > > > 
-> > > > > > > > Ok!
-> > > > > > > >       
-> > > > > > > > > Note that with this series the resets available through
-> > > > > > > > > pci_reset_function() and the per device reset attribute is sysfs remain
-> > > > > > > > > exactly the same as they are currently.  The bus and slot reset
-> > > > > > > > > methods used here are limited to devices where only a single function is
-> > > > > > > > > affected by the reset, therefore it is not like the patch you proposed
-> > > > > > > > > which performed a reset irrespective of the downstream devices.  This
-> > > > > > > > > series only enables selection of the existing methods.  Thanks,
-> > > > > > > > > 
-> > > > > > > > > Alex
-> > > > > > > > >         
-> > > > > > > > 
-> > > > > > > > But with this patch series, there is still an issue with PCI secondary
-> > > > > > > > bus reset mechanism as exported sysfs attribute does not do that
-> > > > > > > > remove-reset-rescan procedure. As discussed in other thread, this reset
-> > > > > > > > let device in unconfigured / broken state.      
-> > > > > > > 
-> > > > > > > No, there's not:
-> > > > > > > 
-> > > > > > > int pci_reset_function(struct pci_dev *dev)
-> > > > > > > {
-> > > > > > >         int rc;
-> > > > > > > 
-> > > > > > >         if (!dev->reset_fn)
-> > > > > > >                 return -ENOTTY;
-> > > > > > > 
-> > > > > > >         pci_dev_lock(dev);      
-> > > > > > > >>>     pci_dev_save_and_disable(dev);      
-> > > > > > > 
-> > > > > > >         rc = __pci_reset_function_locked(dev);
-> > > > > > >       
-> > > > > > > >>>     pci_dev_restore(dev);      
-> > > > > > >         pci_dev_unlock(dev);
-> > > > > > > 
-> > > > > > >         return rc;
-> > > > > > > }
-> > > > > > > 
-> > > > > > > The remove/re-scan was discussed primarily because your patch performed
-> > > > > > > a bus reset regardless of what devices were affected by that reset and
-> > > > > > > it's difficult to manage the scope where multiple devices are affected.
-> > > > > > > Here, the bus and slot reset functions will fail unless the scope is
-> > > > > > > limited to the single device triggering this reset.  Thanks,
-> > > > > > > 
-> > > > > > > Alex
-> > > > > > >       
-> > > > > > 
-> > > > > > I was thinking a bit more about it and I'm really sure how it would
-> > > > > > behave with hotplugging PCIe bridge.
-> > > > > > 
-> > > > > > On aardvark PCIe controller I have already tested that secondary bus
-> > > > > > reset bit is triggering Hot Reset event and then also Link Down event.
-> > > > > > These events are not handled by aardvark driver yet (needs to
-> > > > > > implemented into kernel's emulated root bridge code).
-> > > > > > 
-> > > > > > But I'm not sure how it would behave on real HW PCIe hotplugging bridge.
-> > > > > > Kernel has already code which removes PCIe device if it changes presence
-> > > > > > bit (and inform via interrupt). And Link Down event triggers this
-> > > > > > change.    
-> > > > > 
-> > > > > This is the difference between slot and bus resets, the slot reset is
-> > > > > implemented by the hotplug controller and disables presence detection
-> > > > > around the bus reset.  Thanks,    
-> > > > 
-> > > > Yes, but I'm talking about bus reset, not about slot reset.
-> > > > 
-> > > > I mean: to use bus reset via sysfs on hardware which supports slots and
-> > > > hotplugging.
-> > > > 
-> > > > And if I'm reading code correctly, this combination is allowed, right?
-> > > > Via these new patches it is possible to disable slot reset and enable
-> > > > bus reset.  
-> > > 
-> > > That's true, a slot reset is simply a bus reset wrapped around code
-> > > that prevents the device from getting ejected.  
-> > 
-> > Yes, this makes slot reset "safe". But bus reset is "unsafe".
-> > 
-> > > Maybe it would make
-> > > sense to combine the two as far as this interface is concerned, ie. a
-> > > single "bus" reset method that will always use slot reset when
-> > > available.  Thanks,  
-> > 
-> > That should work when slot reset is available.
-> > 
-> > Other option is that mentioned remove-reset-rescan procedure.
-> 
-> That's not something we can introduce to the pci_reset_function() path
-> without a fair bit of collateral in using it through vfio-pci.
-> 
-> > But quick search in drivers/pci/hotplug/ results that not all hotplug
-> > drivers implement reset_slot method.
-> > 
-> > So there is a possible issue with hotplug driver which may eject device
-> > during bus reset (because e.g. slot reset is not implemented)?
-> 
-> People aren't reporting it, so maybe those controllers aren't being
-> used for this use case.  Or maybe introducing this patch will make
-> these reset methods more readily accessible for testing.  We can fix or
-> blacklist those controllers for bus reset when reports come in.  Thanks,
+[+cc Zachary, author of 8a3ebd8de328]
 
-Ok! I do not know neither if those controllers are used, but looks like
-that there are still changes in hotplug code.
+Thanks for the report and the patch, Marek!
 
-So I guess with these patches people can test it and report issues when
-such thing happen.
+On Wed, Mar 17, 2021 at 12:59:24PM +0100, Marek Beh˙n wrote:
+> The ASMedia ASM1062 SATA controller causes an External Abort on
+> controllers which support Max Payload Size >= 512. It happens with
+> Aardvark PCIe controller (tested on Turris MOX) and also with DesignWare
+> controller (armada8k, tested on CN9130-CRB):
+> 
+>   ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+>   ata1.00: ATA-9: WDC WD40EFRX-68WT0N0, 80.00A80, max UDMA/133
+>   ata1.00: 7814037168 sectors, multi 0: LBA48 NCQ (depth 32), AA
+>   ERROR:   Unhandled External Abort received on 0x80000000 at EL3!
+>   ERROR:    exception reason=1 syndrome=0x92000210
+>   PANIC at PC : 0x00000000040273bc
+> 
+> Limiting Max Payload Size to 256 bytes solves this problem.
+> 
+> On Turris MOX this problem first appeared when the pci-aardvark
+> controller started using the pci-emul-bridge API, in commit 8a3ebd8de328
+> ("PCI: aardvark: Implement emulated root PCI bridge config space").
+
+Any ideas about why 8a3ebd8de328 made a difference?  Could there be a
+defect in 8a3ebd8de328?  Or maybe before 8a3ebd8de328 we didn't
+actually read or update MPS settings in the hardware?
+
+> On armada8k this was always a problem because it has HW root bridge.
+
+Can you please open a report at bugzilla.kernel.org and attach the
+complete "sudo lspci -vv" output for both systems?  I think it's OK to
+collect these with the patch applied; we should still be able to see
+the information we use to compute the MPS values.  But please include
+the CONFIG_PCIE_BUS_* settings and any "pcie_bus_*" kernel command
+line arguments.
+
+This quirk suggests that there's a hardware defect in the ASMedia
+ASM1062.  But if that's really the case, we should see reports on lots
+of platforms, and I'm only aware of these two.  You do mention that it
+was always a problem on armada8k; if you know of other reports of
+that, please include URLs in the bugzilla.
+
+If the problem only occurs on these platforms, my first guess would be
+a hardware defect in these platforms or a software defect in the PCIe
+controller driver.  It wouldn't surprise me if we have a generic PCI
+core defect in how we set MPS, either.
+
+> Signed-off-by: Marek Beh˙n <kabel@kernel.org>
+> Reported-by: Rˆtti <espressobinboardarmbiantempmailaddress@posteo.de>
+> Cc: Pali Roh·r <pali@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/quirks.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e3ba9e..a561136efb08 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3251,6 +3251,11 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+>  			 PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+>  			 PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
+> +/*
+> + * For some reason DECLARE_PCI_FIXUP_HEADER does not work with pci-aardvark
+> + * controller. We have to use DECLARE_PCI_FIXUP_EARLY.
+> + */
+
+This is curious, too.  If we need the quirk, I'd like to run this down
+to figure out why we need an EARLY instead of HEADER quirk.
+Differences like that suggest a bug elsewhere, or at least an
+unnecessary difference between PCIe controller drivers.
+
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ASMEDIA, 0x0612, fixup_mpss_256);
+>  
+>  /*
+>   * Intel 5000 and 5100 Memory controllers have an erratum with read completion
+> -- 
+> 2.26.2
+> 
