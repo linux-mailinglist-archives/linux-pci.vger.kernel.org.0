@@ -2,593 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC53B33E67A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 02:56:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E98833E85B
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 05:20:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbhCQB4L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Mar 2021 21:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
+        id S229498AbhCQEUU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Mar 2021 00:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbhCQBz6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Mar 2021 21:55:58 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E9FC06175F
-        for <linux-pci@vger.kernel.org>; Tue, 16 Mar 2021 18:55:57 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id x21so366468eds.4
-        for <linux-pci@vger.kernel.org>; Tue, 16 Mar 2021 18:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5JA7JjsS1pLItx+M40F03cWCF+SOlb+Ygr9DpXI7TGg=;
-        b=UL7VUFkG6g6dGNrnYxUu5HpkZqFzsUfEGuaw2xDB+M9UJ8TNJCJ07gjIF75ImcwPzn
-         wk3TgqAEQZ2wUgls1afmo1QichXRv1M4DfahuuO9xe7qAiRZL+C+xsQNgdHkJUTKtWBi
-         277fzpRAOvnUIMPhISL3tpbT5sTqSM1kiiBDJF8zXINUXiQWr0an0NBE6njIz33cK/7W
-         jlc2HHh6bJGvG3QdNp+MEPmIjLL49meS6l6L8LUDt8FMX17JD18f/wvV2O9tT/CFBl9e
-         KHmlzjlCMWGeUhYy36IWDFWTK/Eh3YzRdCCzloK7po7bshb855Ri9tjodC09ZrDwFpy8
-         0mEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5JA7JjsS1pLItx+M40F03cWCF+SOlb+Ygr9DpXI7TGg=;
-        b=pw3p2ZPwy+Pcz9ZKMI7xpwqfSdxlHljXBbSTj+NjJjmYZGgDkVFU/y3gNU8Iwn9FzV
-         7LC+lko6RyEgdzzOUZ2wqbB1Aw4z3OvTIJHAEI9WCfP59ZKV3iwsKPBS7I5XPeMoxAJS
-         QoqiUYAHJvUPu8etU6j3UGaf1Zv853jkccJlYLhZfs4AyjnQu9+rne5ctQjPJnFcccF1
-         9+yy1/Pyl+ZTSgUsFO8ai/IsCbequFLh+9YVe8gY/HQndjGh6t2rVlEpxYdN2mFO4aT2
-         J23QtmIZRDzoBZyj3ONCHtc2Mv6La3EO6fupQ1XeMHXndsUdMDhCVqOQflZfq/XKsfVF
-         CWyw==
-X-Gm-Message-State: AOAM532/G6WZsOF5pMxlQjzvK9JcHXPeBOQpkLnkukGPZB27AwN+oLJ7
-        YgVcbdgM3f8UhzUVM3KIoIl5Qm4+pefXljciCvI9AA==
-X-Google-Smtp-Source: ABdhPJynDuRtSN4fNF1hH9yrhj86H8T+jexZ+hRk5gq5670+9Bw2Ux0iYK/c1+6naHhfjkmFGLyyEThE4hUfrks3QqY=
-X-Received: by 2002:a05:6402:4301:: with SMTP id m1mr40593749edc.210.1615946155997;
- Tue, 16 Mar 2021 18:55:55 -0700 (PDT)
+        with ESMTP id S229537AbhCQEUP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Mar 2021 00:20:15 -0400
+X-Greylist: delayed 388 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 16 Mar 2021 21:20:14 PDT
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28AFC06174A
+        for <linux-pci@vger.kernel.org>; Tue, 16 Mar 2021 21:20:14 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 09FEF30000CC4;
+        Wed, 17 Mar 2021 05:13:43 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id F17634F33A; Wed, 17 Mar 2021 05:13:42 +0100 (CET)
+Date:   Wed, 17 Mar 2021 05:13:42 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        dan.j.williams@intel.com, kbusch@kernel.org, knsathya@kernel.org,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: pciehp: Skip DLLSC handling if DPC is
+ triggered
+Message-ID: <20210317041342.GA19198@wunner.de>
+References: <59cb30f5e5ac6d65427ceaadf1012b2ba8dbf66c.1615606143.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com> <20210310180306.1588376-3-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20210310180306.1588376-3-Jonathan.Cameron@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Mar 2021 18:55:48 -0700
-Message-ID: <CAPcyv4hZd3K_rE18J+38vje-JTJU3GKV+K879dUtmDgLbJKW5g@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59cb30f5e5ac6d65427ceaadf1012b2ba8dbf66c.1615606143.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 10:08 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> This patch simply provides some debug print outs of the entries
-> at probe time + a sysfs binary attribute to allow dumping of the
-> whole table.
->
-> Binary dumping is modelled on /sys/firmware/ACPI/tables/
->
-> The ability to dump this table will be very useful for emulation of
-> real devices once they become available as QEMU CXL type 3 device
-> emulation will be able to load this file in.
->
+On Fri, Mar 12, 2021 at 07:32:08PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> +	if ((events == PCI_EXP_SLTSTA_DLLSC) && is_dpc_reset_active(pdev)) {
+> +		ctrl_info(ctrl, "Slot(%s): DLLSC event(DPC), skipped\n",
+> +			  slot_name(ctrl));
+> +		ret = IRQ_HANDLED;
+> +		goto out;
+> +	}
 
-Certainly useful for kernel / QEMU development + debug, not
-necessarily as a userspace ABI.
+Two problems here:
 
-> Open questions:
-> * No support here for table updates. Worth including these from the
->   start, or leave that complexity for later?
+(1) If recovery fails, the link will *remain* down, so there'll be
+    no Link Up event.  You've filtered the Link Down event, thus the
+    slot will remain in ON_STATE even though the device in the slot is
+    no longer accessible.  That's not good, the slot should be brought
+    down in this case.
 
-Depends what the kernel will do with this information. If it's just to
-assign a numa node then the interface could be to override / augment
-the numa node assignment, not necessarily override the entire table
-data.
+(2) If recovery succeeds, there's a race where pciehp may call
+    is_dpc_reset_active() *after* dpc_reset_link() has finished.
+    So both the DPC Trigger Status bit as well as pdev->dpc_reset_active
+    will be cleared.  Thus, the Link Up event is not filtered by pciehp
+    and the slot is brought down and back up even though DPC recovery
+    was succesful, which seems undesirable.
 
-> * Worth logging the reported info for debug, or is the binary attribute
->   sufficient?  Larger open question of whether to expose this info to
->   userspace or not left for another day!
+The only viable solution I see is to wait until DPC has completed.
+Sinan (+cc) proposed something along those lines a couple years back:
 
-Of all the options I like logging the least... root-only sysfs at
-least doesn't enable a functional user ABI out of the gate.
+https://patchwork.ozlabs.org/project/linux-pci/patch/20180818065126.77912-1-okaya@kernel.org/
 
-> * Where to put the CDAT file?  Is it worth a subdirectory?
+Included below please find my suggestion for how to fix this.
+I've sort of combined yours and Sinan's approach, but I'm
+using a waitqueue (Sinan used polling) and I'm using atomic bitops
+on pdev->priv_flags (you're using an atomic_t instead, which needs
+additionally space in struct pci_dev).  Note: It's compile-tested
+only, I don't have any DPC-capable hardware at my disposal.
 
-I think where you have it is fine, hanging directly off the memdev. It
-isn't a PCIE property, it's CXL data and the memdev is the CXL
-sub-functionality of the PCIE device.
+Would this work for you?  If so, I can add a commit message to the
+patch and submit it properly.  Let me know what you think.  Thanks!
 
-However, It helps udev scripts if userspace can't race device
-visibility with attribute visibility. I.e. if it is added to the
-static cxl_memdev_attribute_groups rather than a dynamic attribute
-creation then there is no gap between when userspace sees the KOBJ_ADD
-event and when it can access the attribute.
+-- >8 --
+Subject: [PATCH] PCI: pciehp: Ignore Link Down/Up caused by DPC
 
-> * What is maximum size of the SSLBIS entry - I haven't quite managed
->   to figure that out and this is the record with largest size.
->   We could support dynamic allocation of the record size, but it
->   would add complexity that seems unnecessary.
->   It would not be compliant with the specification for a type 3 memory
->   device to report this record anyway so I'm not that worried about this
->   for now.  It will become relevant once we have support for reading
->   CDAT from CXL switches.
-> * cdat.h is formatted in a similar style to pci_regs.h on basis that
->   it may well be helpful to share this header with userspace tools.
-> * Move the generic parts of this out to driver/cxl/cdat.c or leave that
->   until we have other CXL drivers wishing to use this?
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/cdat.h |  79 ++++++++++++++
->  drivers/cxl/cxl.h  |  13 +++
->  drivers/cxl/mem.c  | 253 ++++++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 344 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-> new file mode 100644
-> index 000000000000..e67b18e02c35
-> --- /dev/null
-> +++ b/drivers/cxl/cdat.h
-> @@ -0,0 +1,79 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Coherent Device Attribute table (CDAT)
-> + *
-> + * Specification available from UEFI.org
-> + *
-> + * Whilst CDAT is defined as a single table, the access via DOE maiboxes is
-> + * done one entry at a time, where the first entry is the header.
-> + */
-> +
-> +#define CXL_DOE_TABLE_ACCESS_REQ_CODE          0x000000ff
-> +#define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ   0
-> +#define CXL_DOE_TABLE_ACCESS_TABLE_TYPE                0x0000ff00
-> +#define   CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA        0
-> +#define CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE      0xffff0000
-> +
-> +
-> +/*
-> + * CDAT entries are little endian and are read from PCI config space which
-> + * is also little endian.
-> + * As such, on a big endian system these will have been reversed.
-> + * This prevents us from making easy use of packed structures.
-> + * Style form pci_regs.h
-> + */
-> +
-> +#define CDAT_HEADER_LENGTH_DW 3
-> +#define CDAT_HEADER_DW0_LENGTH         0xFFFFFFFF
-> +#define CDAT_HEADER_DW1_REVISION       0x000000FF
-> +#define CDAT_HEADER_DW1_CHECKSUM       0x0000FF00
-> +#define CDAT_HEADER_DW2_SEQUENCE       0xFFFFFFFF
-> +
-> +/* All structures have a common first DW */
-> +#define CDAT_STRUCTURE_DW0_TYPE                0x000000FF
-> +#define   CDAT_STRUCTURE_DW0_TYPE_DSMAS 0
-> +#define   CDAT_STRUCTURE_DW0_TYPE_DSLBIS 1
-> +#define   CDAT_STRUCTURE_DW0_TYPE_DSMSCIS 2
-> +#define   CDAT_STRUCTURE_DW0_TYPE_DSIS 3
-> +#define   CDAT_STRUCTURE_DW0_TYPE_DSEMTS 4
-> +#define   CDAT_STRUCTURE_DW0_TYPE_SSLBIS 5
-> +
-> +#define CDAT_STRUCTURE_DW0_LENGTH      0xFFFF0000
-> +
-> +/* Device Scoped Memory Affinity Structure */
-> +#define CDAT_DSMAS_DW1_DSMAD_HANDLE    0x000000ff
-> +#define CDAT_DSMAS_DW1_FLAGS           0x0000ff00
-> +#define CDAT_DSMAS_DPA_OFFSET(entry) ((u64)((entry)[3]) << 32 | (entry)[2])
-> +#define CDAT_DSMAS_DPA_LEN(entry) ((u64)((entry)[5]) << 32 | (entry)[4])
-> +
-> +/* Device Scoped Latency and Bandwidth Information Structure */
-> +#define CDAT_DSLBIS_DW1_HANDLE         0x000000ff
-> +#define CDAT_DSLBIS_DW1_FLAGS          0x0000ff00
-> +#define CDAT_DSLBIS_DW1_DATA_TYPE      0x00ff0000
-> +#define CDAT_DSLBIS_BASE_UNIT(entry) ((u64)((entry)[3]) << 32 | (entry)[2])
-> +#define CDAT_DSLBIS_DW4_ENTRY_0                0x0000ffff
-> +#define CDAT_DSLBIS_DW4_ENTRY_1                0xffff0000
-> +#define CDAT_DSLBIS_DW5_ENTRY_2                0x0000ffff
-> +
-> +/* Device Scoped Memory Side Cache Information Structure */
-> +#define CDAT_DSMSCIS_DW1_HANDLE                0x000000ff
-> +#define CDAT_DSMSCIS_MEMORY_SIDE_CACHE_SIZE(entry) \
-> +       ((u64)((entry)[3]) << 32 | (entry)[2])
-> +#define CDAT_DSMSCIS_DW4_MEMORY_SIDE_CACHE_ATTRS 0xffffffff
-> +
-> +/* Device Scoped Initiator Structure */
-> +#define CDAT_DSIS_DW1_FLAGS            0x000000ff
-> +#define CDAT_DSIS_DW1_HANDLE           0x0000ff00
-> +
-> +/* Device Scoped EFI Memory Type Structure */
-> +#define CDAT_DSEMTS_DW1_HANDLE         0x000000ff
-> +#define CDAT_DSEMTS_DW1_EFI_MEMORY_TYPE_ATTR   0x0000ff00
-> +#define CDAT_DSEMTS_DPA_OFFSET(entry)  ((u64)((entry)[3]) << 32 | (entry)[2])
-> +#define CDAT_DSEMTS_DPA_LENGTH(entry)  ((u64)((entry)[5]) << 32 | (entry)[4])
-> +
-> +/* Switch Scoped Latency and Bandwidth Information Structure */
-> +#define CDAT_SSLBIS_DW1_DATA_TYPE      0x000000ff
-> +#define CDAT_SSLBIS_BASE_UNIT(entry)   ((u64)((entry)[3]) << 32 | (entry)[2])
-> +#define CDAT_SSLBIS_ENTRY_PORT_X(entry, i) ((entry)[4 + (i) * 2] & 0x0000ffff)
-> +#define CDAT_SSLBIS_ENTRY_PORT_Y(entry, i) (((entry)[4 + (i) * 2] & 0xffff0000) >> 16)
-> +#define CDAT_SSLBIS_ENTRY_LAT_OR_BW(entry, i) ((entry)[4 + (i) * 2 + 1] & 0x0000ffff)
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6f14838c2d25..2f5a69201fc3 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -7,6 +7,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/io.h>
-> +#include <linux/pcie-doe.h>
->
->  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
->  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
-> @@ -57,10 +58,21 @@
->         (FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
->          CXLMDEV_RESET_NEEDED_NOT)
->
-> +#define CXL_DOE_PROTOCOL_COMPLIANCE 0
-> +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
-> +
-> +/* Common to request and response */
-> +#define CXL_DOE_TABLE_ACCESS_3_CODE GENMASK(7, 0)
-> +#define   CXL_DOE_TABLE_ACCESS_3_CODE_READ 0
-> +#define CXL_DOE_TABLE_ACCESS_3_TYPE GENMASK(15, 8)
-> +#define   CXL_DOE_TABLE_ACCESS_3_TYPE_CDAT 0
-> +#define CXL_DOE_TABLE_ACCESS_3_ENTRY_HANDLE GENMASK(31, 16)
-> +
->  struct cxl_memdev;
->  /**
->   * struct cxl_mem - A CXL memory device
->   * @pdev: The PCI device associated with this CXL device.
-> + * @doe: Data exchange object mailbox used to read tables.
->   * @regs: IO mappings to the device's MMIO
->   * @status_regs: CXL 2.0 8.2.8.3 Device Status Registers
->   * @mbox_regs: CXL 2.0 8.2.8.4 Mailbox Registers
-> @@ -75,6 +87,7 @@ struct cxl_memdev;
->   */
->  struct cxl_mem {
->         struct pci_dev *pdev;
-> +       struct pcie_doe doe;
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/pci/hotplug/pciehp_hpc.c | 11 +++++++++
+ drivers/pci/pci.h                |  4 ++++
+ drivers/pci/pcie/dpc.c           | 51 ++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 64 insertions(+), 2 deletions(-)
 
-Hmm, I would have expected this to be a pointer. DOE is an optional
-component of a hardware device, so it should not be a mandatory
-component of a 'struct cxl_mem' instance.
-
->         void __iomem *regs;
->         struct cxl_memdev *cxlmd;
->
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 4597b28aeb3f..71de66bc6c54 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -12,6 +12,7 @@
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include "pci.h"
->  #include "cxl.h"
-> +#include "cdat.h"
->
->  /**
->   * DOC: cxl mem
-> @@ -91,6 +92,11 @@ struct mbox_cmd {
->  #define CXL_MBOX_SUCCESS 0
->  };
->
-> +struct doe_table_attr {
-> +       struct bin_attribute attr;
-> +       void *table;
-> +};
-> +
->  /**
->   * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
->   * @dev: driver core device object
-> @@ -98,6 +104,7 @@ struct mbox_cmd {
->   * @cxlm: pointer to the parent device driver data
->   * @ops_active: active user of @cxlm in ops handlers
->   * @ops_dead: completion when all @cxlm ops users have exited
-> + * @table_attr: attribute used to provide dumping of table
->   * @id: id number of this memdev instance.
->   */
->  struct cxl_memdev {
-> @@ -106,6 +113,7 @@ struct cxl_memdev {
->         struct cxl_mem *cxlm;
->         struct percpu_ref ops_active;
->         struct completion ops_dead;
-> +       struct doe_table_attr table_attr;
-
-No, cxl_memdev attributes are statically defined and optionally
-visible, see cxl_memdev_attribute_groups.
-
->         int id;
->  };
->
-> @@ -976,13 +984,165 @@ static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
->         return 0;
->  }
->
-> +#define CDAT_DOE_REQ(entry_handle)                                     \
-> +       [0] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID,              \
-> +                        PCI_DVSEC_VENDOR_ID_CXL) |                     \
-> +             FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE,             \
-> +                          CXL_DOE_PROTOCOL_TABLE_ACCESS),              \
-> +       [1] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, 3),       \
-> +       [2] = FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,                 \
-> +                        CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |          \
-> +             FIELD_PREP(CXL_DOE_TABLE_ACCESS_TABLE_TYPE,               \
-> +                        CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |       \
-> +             FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle))
-
-
-I feel like this is asking for more type safety and an easier to read
-definition. I.e. even though specification defines requests in terms
-of arrays of dwords, there's nothing stopping the implementation from
-defining something like:
-
-struct pcie_doe_object {
-    u16 vendor;
-    u8 type;
-    u8 reserved;
-    u32 length;
-    u32 payload[];
-};
-
-> +
-> +static ssize_t cdat_get_length(struct pcie_doe *doe)
-> +{
-> +       u32 cdat_request[3] = {
-> +               CDAT_DOE_REQ(0),
-> +       };
-> +       u32 cdat_response[32];
-> +       ssize_t rc;
-> +
-> +       rc = pcie_doe_exchange(doe, cdat_request, sizeof(cdat_request),
-> +                              cdat_response, sizeof(cdat_response));
-> +       if (rc)
-> +               return rc;
-> +
-> +       return cdat_response[3];
-> +}
-> +
-> +static int cdat_to_buffer(struct pcie_doe *doe, u32 *buffer, size_t length)
-> +{
-> +       int entry_handle = 0;
-> +       int rc;
-> +
-> +       do {
-> +               u32 cdat_request[3] = {
-> +                       CDAT_DOE_REQ(entry_handle)
-> +               };
-> +               u32 cdat_response[32];
-> +               size_t entry_dw;
-> +               u32 *entry;
-> +
-> +               rc = pcie_doe_exchange(doe, cdat_request, sizeof(cdat_request),
-> +                                      cdat_response, sizeof(cdat_response));
-> +               if (rc)
-> +                       return rc;
-> +
-> +               entry = cdat_response + CDAT_HEADER_LENGTH_DW;
-> +
-> +               entry_dw = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, cdat_response[1]);
-> +               /* Skip Header */
-> +               entry_dw -= 3;
-> +               entry_dw = min(length / 4, entry_dw);
-> +               memcpy(buffer, entry, entry_dw * sizeof(u32));
-> +               length -= entry_dw * sizeof(u32);
-> +               buffer += entry_dw;
-> +               entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, cdat_response[2]);
-> +       } while (entry_handle != 0xFFFF);
-> +
-> +       return 0;
-> +}
-> +
-> +static int cdat_dump(struct pcie_doe *doe)
-> +{
-> +       struct pci_dev *dev = doe->pdev;
-> +       int entry_handle = 0;
-> +       int rc;
-> +
-> +       do {
-> +               /* Table access is available */
-> +               u32 cdat_request[3] = {
-> +                       CDAT_DOE_REQ(entry_handle)
-> +               };
-> +               u32 cdat_response[32];
-> +               u32 *entry;
-> +
-> +               rc = pcie_doe_exchange(doe, cdat_request, sizeof(cdat_request),
-> +                                      cdat_response, sizeof(cdat_response));
-> +               if (rc)
-> +                       return rc;
-> +
-> +               entry = cdat_response + CDAT_HEADER_LENGTH_DW;
-> +               if (entry_handle == 0) {
-> +                       pci_info(dev,
-> +                                "CDAT Header (Length=%u, Revision=%u, Checksum=0x%x, Sequence=%u\n",
-> +                                entry[0],
-> +                                FIELD_GET(CDAT_HEADER_DW1_REVISION, entry[1]),
-> +                                FIELD_GET(CDAT_HEADER_DW1_CHECKSUM, entry[1]),
-> +                                entry[2]);
-> +               } else {
-> +                       u8 entry_type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, entry[0]);
-> +
-> +                       switch (entry_type) {
-> +                       case CDAT_STRUCTURE_DW0_TYPE_DSMAS:
-> +                               pci_info(dev,
-> +                                        "CDAT DSMAS (handle=%u flags=0x%x, dpa(0x%llx 0x%llx)\n",
-> +                                        FIELD_GET(CDAT_DSMAS_DW1_DSMAD_HANDLE, entry[1]),
-> +                                        FIELD_GET(CDAT_DSMAS_DW1_FLAGS, entry[1]),
-> +                                        CDAT_DSMAS_DPA_OFFSET(entry),
-> +                                        CDAT_DSMAS_DPA_LEN(entry));
-> +                               break;
-> +                       case CDAT_STRUCTURE_DW0_TYPE_DSLBIS:
-> +                               pci_info(dev,
-> +                                        "CDAT DSLBIS (handle=%u flags=0x%x, ent_base=0x%llx, entry[%u %u %u])\n",
-> +                                        FIELD_GET(CDAT_DSLBIS_DW1_HANDLE, entry[1]),
-> +                                        FIELD_GET(CDAT_DSLBIS_DW1_FLAGS, entry[1]),
-> +                                        CDAT_DSLBIS_BASE_UNIT(entry),
-> +                                        FIELD_GET(CDAT_DSLBIS_DW4_ENTRY_0, entry[4]),
-> +                                        FIELD_GET(CDAT_DSLBIS_DW4_ENTRY_1, entry[4]),
-> +                                        FIELD_GET(CDAT_DSLBIS_DW5_ENTRY_2, entry[5]));
-> +                               break;
-> +                       case CDAT_STRUCTURE_DW0_TYPE_DSMSCIS:
-> +                               pci_info(dev,
-> +                                        "CDAT DSMSCIS (handle=%u sc_size=0x%llx attrs=0x%x)\n",
-> +                                        FIELD_GET(CDAT_DSMSCIS_DW1_HANDLE, entry[1]),
-> +                                        CDAT_DSMSCIS_MEMORY_SIDE_CACHE_SIZE(entry),
-> +                                        FIELD_GET(CDAT_DSMSCIS_DW4_MEMORY_SIDE_CACHE_ATTRS,
-> +                                                  entry[4]));
-> +                               break;
-> +                       case CDAT_STRUCTURE_DW0_TYPE_DSIS:
-> +                               pci_info(dev,
-> +                                        "CDAT DSIS (handle=%u flags=0x%x)\n",
-> +                                        FIELD_GET(CDAT_DSIS_DW1_HANDLE, entry[1]),
-> +                                        FIELD_GET(CDAT_DSIS_DW1_FLAGS, entry[1]));
-> +                               break;
-> +                       case CDAT_STRUCTURE_DW0_TYPE_DSEMTS:
-> +                               pci_info(dev,
-> +                                        "CDAT DSEMTS (handle=%u EFI=0x%x dpa(0x%llx 0x%llx)\n",
-> +                                        FIELD_GET(CDAT_DSEMTS_DW1_HANDLE, entry[1]),
-> +                                        FIELD_GET(CDAT_DSEMTS_DW1_EFI_MEMORY_TYPE_ATTR,
-> +                                                  entry[1]),
-> +                                        CDAT_DSEMTS_DPA_OFFSET(entry),
-> +                                        CDAT_DSEMTS_DPA_LENGTH(entry));
-> +                               break;
-> +                       case CDAT_STRUCTURE_DW0_TYPE_SSLBIS:
-> +                               pci_info(dev,
-> +                                        "CDAT SSLBIS (type%u ent_base=%llu...)\n",
-> +                                        FIELD_GET(CDAT_SSLBIS_DW1_DATA_TYPE,
-> +                                                  entry[1]),
-> +                                        CDAT_SSLBIS_BASE_UNIT(entry));
-> +                               break;
-> +                       }
-> +               }
-> +               entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
-> +                                        cdat_response[2]);
-> +       } while (entry_handle != 0xFFFF);
-
-I'd drop the logging in favor of the bin file.
-
-> +
-> +       return 0;
-> +}
-> +
->  static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
->                                       u32 reg_hi)
->  {
->         struct device *dev = &pdev->dev;
->         struct cxl_mem *cxlm;
->         void __iomem *regs;
-> +       bool doe_use_irq;
-> +       int pos = 0;
->         u64 offset;
-> +       int irqs;
->         u8 bar;
->         int rc;
->
-> @@ -1021,6 +1181,44 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
->                 return NULL;
->         }
->
-> +       /*
-> +        * An implementation of a cxl type3 device may support an unknown
-> +        * number of interrupts. Assume that number is not that large and
-> +        * request them all.
-> +        */
-> +       irqs = pci_msix_vec_count(pdev);
-> +       rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
-> +       if (rc != irqs) {
-> +               /* No interrupt available - carry on */
-> +               dev_dbg(dev, "No interrupts available for DOE\n");
-> +               doe_use_irq = false;
-> +       } else {
-> +               /*
-> +                * Enabling bus mastering could be done within the DOE
-> +                * initialization, but as it potentially has other impacts
-> +                * keep it within the driver.
-> +                */
-> +               pci_set_master(pdev);
-> +               doe_use_irq = true;
-> +       }
-> +
-> +       /*
-> +        * Find a DOE mailbox that supports CDAT.
-> +        * Supporting other DOE protocols will require more complexity.
-> +        */
-> +       do {
-> +               pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
-> +               if (!pos)
-> +                       return NULL;
-> +
-> +               pcie_doe_init(&cxlm->doe, pdev, pos, doe_use_irq);
-
-I don't think the driver needs to say use-irq or not. If
-pcie_doe_init() sees ->{msi,msix}_enabled then try to find the doe
-irq, if not then don't...
-
-> +       } while (pcie_doe_protocol_check(&cxlm->doe, PCI_DVSEC_VENDOR_ID_CXL,
-> +                                        CXL_DOE_PROTOCOL_TABLE_ACCESS));
-
-Feel like this search should be internal to the library the host
-driver does not care which DOE instance is chosen it just cares about
-CXL_DOE_PROTOCOL_TABLE_ACCESS.
-
-> +
-> +       rc = cdat_dump(&cxlm->doe);
-> +       if (rc)
-> +               return NULL;
-> +
->         dev_dbg(dev, "Mapped CXL Memory Device resource\n");
->         return cxlm;
->  }
-> @@ -1178,6 +1376,55 @@ static void cxlmdev_ops_active_release(struct percpu_ref *ref)
->         complete(&cxlmd->ops_dead);
->  }
->
-> +static ssize_t cdat_table_show(struct file *filp, struct kobject *kobj,
-> +                              struct bin_attribute *bin_attr, char *buf,
-> +                              loff_t offset, size_t count)
-> +{
-> +       struct doe_table_attr *table_attr =
-> +               container_of(bin_attr, struct doe_table_attr, attr);
-> +
-> +       return memory_read_from_buffer(buf, count, &offset, table_attr->table,
-> +                                      bin_attr->size);
-> +}
-> +
-> +static void cxl_remove_table_sysfs(void *_cxlmd)
-> +{
-> +       struct cxl_memdev *cxlmd = _cxlmd;
-> +       struct device *dev = &cxlmd->dev;
-> +
-> +       sysfs_remove_bin_file(&dev->kobj, &cxlmd->table_attr.attr);
-> +}
-> +
-> +static int cxl_add_table_sysfs(struct cxl_memdev *cxlmd)
-> +{
-> +       struct cxl_mem *cxlm = cxlmd->cxlm;
-> +       struct device *dev = &cxlmd->dev;
-> +       ssize_t cdat_length;
-> +       int rc;
-> +
-> +       cdat_length = cdat_get_length(&cxlm->doe);
-> +       if (cdat_length < 0)
-> +               return cdat_length;
-> +
-> +       sysfs_attr_init(&cxlmd->table_attr.attr.attr);
-> +       /* Updates of CDAT are not yet handled so length is fixed. */
-> +       cxlmd->table_attr.attr.size = cdat_length;
-> +       cxlmd->table_attr.attr.read = cdat_table_show;
-> +       cxlmd->table_attr.attr.attr.name = "CDAT";
-> +       cxlmd->table_attr.attr.attr.mode = 0400;
-> +       cxlmd->table_attr.table = devm_kzalloc(dev->parent, cdat_length, GFP_KERNEL);
-> +
-
-This all gets fixed up when switching to static DEVICE_ATTR_ADMIN_RO()
-with an ->is_visible() implementation that hides the attribute if the
-table is not found.
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index fb3840e..bcc018e 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -707,6 +707,17 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	}
+ 
+ 	/*
++	 * Ignore Link Down/Up caused by Downstream Port Containment
++	 * if recovery from the error succeeded.
++	 */
++	if ((events & PCI_EXP_SLTSTA_DLLSC) && pci_dpc_recovered(pdev) &&
++	    ctrl->state == ON_STATE) {
++		atomic_and(~PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
++		if (pciehp_check_link_active(ctrl) > 0)
++			events &= ~PCI_EXP_SLTSTA_DLLSC;
++	}
++
++	/*
+ 	 * Disable requests have higher priority than Presence Detect Changed
+ 	 * or Data Link Layer State Changed events.
+ 	 */
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9684b46..e5ae5e8 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -392,6 +392,8 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+ 
+ /* pci_dev priv_flags */
+ #define PCI_DEV_ADDED 0
++#define PCI_DPC_RECOVERED 1
++#define PCI_DPC_RECOVERING 2
+ 
+ static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
+ {
+@@ -446,10 +448,12 @@ struct rcec_ea {
+ void pci_dpc_init(struct pci_dev *pdev);
+ void dpc_process_error(struct pci_dev *pdev);
+ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
++bool pci_dpc_recovered(struct pci_dev *pdev);
+ #else
+ static inline void pci_save_dpc_state(struct pci_dev *dev) {}
+ static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
+ static inline void pci_dpc_init(struct pci_dev *pdev) {}
++static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
+ #endif
+ 
+ #ifdef CONFIG_PCIEPORTBUS
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index e05aba8..7328d9c4 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -71,6 +71,44 @@ void pci_restore_dpc_state(struct pci_dev *dev)
+ 	pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
+ }
+ 
++static bool dpc_completed(struct pci_dev *pdev)
++{
++	u16 status;
++
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS, &status);
++	if (status & PCI_EXP_DPC_STATUS_TRIGGER)
++		return false;
++
++	if (test_bit(PCI_DPC_RECOVERING, &pdev->priv_flags))
++		return false;
++
++	return true;
++}
++
++static DECLARE_WAIT_QUEUE_HEAD(dpc_completed_waitqueue);
++
++bool pci_dpc_recovered(struct pci_dev *pdev)
++{
++	struct pci_host_bridge *host;
++
++	if (!pdev->dpc_cap)
++		return false;
++
++	/*
++	 * If DPC is owned by firmware and EDR is not supported, there is
++	 * no race between hotplug and DPC recovery handler. So return
++	 * false.
++	 */
++	host = pci_find_host_bridge(pdev->bus);
++	if (!host->native_dpc && !IS_ENABLED(CONFIG_PCIE_EDR))
++		return false;
++
++	wait_event_timeout(dpc_completed_waitqueue, dpc_completed(pdev),
++			   msecs_to_jiffies(5000));
++
++	return test_and_clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
++}
++
+ static int dpc_wait_rp_inactive(struct pci_dev *pdev)
+ {
+ 	unsigned long timeout = jiffies + HZ;
+@@ -91,8 +129,12 @@ static int dpc_wait_rp_inactive(struct pci_dev *pdev)
+ 
+ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ {
++	pci_ers_result_t ret;
+ 	u16 cap;
+ 
++	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
++	set_bit(PCI_DPC_RECOVERING, &pdev->priv_flags);
++
+ 	/*
+ 	 * DPC disables the Link automatically in hardware, so it has
+ 	 * already been reset by the time we get here.
+@@ -114,10 +156,15 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 
+ 	if (!pcie_wait_for_link(pdev, true)) {
+ 		pci_info(pdev, "Data Link Layer Link Active not set in 1000 msec\n");
+-		return PCI_ERS_RESULT_DISCONNECT;
++		ret = PCI_ERS_RESULT_DISCONNECT;
++	} else {
++		set_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
++		ret = PCI_ERS_RESULT_RECOVERED;
+ 	}
+ 
+-	return PCI_ERS_RESULT_RECOVERED;
++	clear_bit(PCI_DPC_RECOVERING, &pdev->priv_flags);
++	wake_up_all(&dpc_completed_waitqueue);
++	return ret;
+ }
+ 
+ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+-- 
+2.30.1
