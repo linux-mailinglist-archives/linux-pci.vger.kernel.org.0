@@ -2,86 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 059F733F8CE
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 20:10:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 454F833F8EA
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Mar 2021 20:15:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233082AbhCQTKQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Mar 2021 15:10:16 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:44953 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232976AbhCQTJ4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Mar 2021 15:09:56 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id BC444100D940D;
-        Wed, 17 Mar 2021 20:09:52 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 88A032A9D51; Wed, 17 Mar 2021 20:09:52 +0100 (CET)
-Date:   Wed, 17 Mar 2021 20:09:52 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Sathyanarayanan Kuppuswamy Natarajan 
-        <sathyanarayanan.nkuppuswamy@gmail.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>, knsathya@kernel.org,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: pciehp: Skip DLLSC handling if DPC is
- triggered
-Message-ID: <20210317190952.GB27146@wunner.de>
-References: <59cb30f5e5ac6d65427ceaadf1012b2ba8dbf66c.1615606143.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210317041342.GA19198@wunner.de>
- <CAPcyv4jxTcUEgcfPRckHqrUPy8gR7ZJsxDaeU__pSq6PqJERAQ@mail.gmail.com>
- <20210317053114.GA32370@wunner.de>
- <CAPcyv4j8t4Y=kpRSvOjOfVHd107YemiRcW0BNQRwp-d9oCddUw@mail.gmail.com>
- <CAC41dw8sX4T-FrwBju2H3TbjDhJMLGw_KHqs+20qzvKU1b5QTA@mail.gmail.com>
- <CAPcyv4gfBTuEj494aeg0opeL=PSbk_Cs16fX7A-cLvSV6EZg-Q@mail.gmail.com>
+        id S233125AbhCQTOn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Mar 2021 15:14:43 -0400
+Received: from mga18.intel.com ([134.134.136.126]:13842 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233196AbhCQTOT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Mar 2021 15:14:19 -0400
+IronPort-SDR: KwqNhsd3hQMVRfUIK3OLAoy6yawS9sLlpkJR31CrQoRuVvDSk46QCc4Bt7+n5VvjzNIZhZvQ7G
+ k1l9YtuCpx3g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9926"; a="177125903"
+X-IronPort-AV: E=Sophos;i="5.81,257,1610438400"; 
+   d="scan'208";a="177125903"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2021 12:14:19 -0700
+IronPort-SDR: YwYHs2w9lumWpuB08p5WHfrA6CMiVs4J43sVUpgCMIbQmeEwSRHThJB0srKbMhFMS0wjZIfGjS
+ hYv3XMYCEX6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,257,1610438400"; 
+   d="scan'208";a="406048973"
+Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Mar 2021 12:14:19 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Wed, 17 Mar 2021 12:14:18 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Wed, 17 Mar 2021 12:14:18 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2106.013;
+ Wed, 17 Mar 2021 12:14:18 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+CC:     "Karkra, Kapil" <kapil.karkra@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Patel, Nirmal" <nirmal.patel@intel.com>,
+        "kw@linux.com" <kw@linux.com>
+Subject: Re: [PATCH v4 0/2] VMD MSI Remapping Bypass
+Thread-Topic: [PATCH v4 0/2] VMD MSI Remapping Bypass
+Thread-Index: AQHW/8ernlIsBQTka0W7z8h+KA9vr6qJOSKA
+Date:   Wed, 17 Mar 2021 19:14:17 +0000
+Message-ID: <0a70914085c25cf99536d106a280b27819328fff.camel@intel.com>
+References: <20210210161315.316097-1-jonathan.derrick@intel.com>
+In-Reply-To: <20210210161315.316097-1-jonathan.derrick@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3D316745D3F3BF4A84092E28A6E5659A@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gfBTuEj494aeg0opeL=PSbk_Cs16fX7A-cLvSV6EZg-Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 10:45:21AM -0700, Dan Williams wrote:
-> Ah, ok, we're missing a flush of the hotplug event handler after the
-> link is up to make sure the hotplug handler does not see the Link Up.
-> I'm not immediately seeing how the new proposal ensures that there is
-> no Link Up event still in flight after DPC completes its work.
-> Wouldn't it be required to throw away Link Up to Link Up transitions?
-
-If you look at the new code added to pciehp_ist() by my patch...
-
-      atomic_and(~PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
-      if (pciehp_check_link_active(ctrl) > 0)
-              events &= ~PCI_EXP_SLTSTA_DLLSC;
-
-... the atomic_and() ignores the Link Up event which was picked
-up by the hardirq handler pciehp_isr() while pciehp_ist() waited for
-link recovery.  Afterwards, the Link Down event is only ignored if the
-link is still up:  If the link has gone down again before the call to
-pciehp_check_link_active(), that event is honored immediately (because
-the DLLSC event is then not filtered).  If it goes down after the call,
-that event will be picked up by pciehp_isr().  Thus, only the DLLSC
-events caused by DPC are ignored, but no others.
-
-A DLLSC event caused by surprise removal during DPC may be incorrectly
-ignored, but the expectation is that the ensuing Presence Detect Changed
-event will still cause bringdown of the slot after DPC has completed.
-Hardware does exist which erroneously hardwires Presence Detect to zero,
-but that's rare and DPC-capable systems are likely not affected.
-
-I've realized today that I forgot to add a "synchronize_hardirq(irq);"
-before the call to atomic_and().  Sorry, that will be fixed in the
-next iteration.
-
-Thanks,
-
-Lukas
+R2VudGxlIHJlbWluZGVyLCBmb3IgdjUuMTMgPw0KDQpPbiBXZWQsIDIwMjEtMDItMTAgYXQgMDk6
+MTMgLTA3MDAsIEpvbiBEZXJyaWNrIHdyb3RlOg0KPiBUaGUgSW50ZWwgVm9sdW1lIE1hbmFnZW1l
+bnQgRGV2aWNlIGFjdHMgc2ltaWxhciB0byBhIFBDSS10by1QQ0kgYnJpZGdlIGluIHRoYXQNCj4g
+aXQgY2hhbmdlcyBkb3duc3RyZWFtIGRldmljZXMnIHJlcXVlc3Rlci1pZHMgdG8gaXRzIG93bi4g
+QXMgVk1EIHN1cHBvcnRzIFBDSWUNCj4gZGV2aWNlcywgaXQgaGFzIGl0cyBvd24gTVNJLVggdGFi
+bGUgYW5kIHRyYW5zbWl0cyBjaGlsZCBkZXZpY2UgTVNJLVggYnkNCj4gcmVtYXBwaW5nIGNoaWxk
+IGRldmljZSBNU0ktWCBhbmQgaGFuZGxpbmcgbGlrZSBhIGRlbXVsdGlwbGV4ZXIuDQo+IA0KPiBT
+b21lIG5ld2VyIFZNRCBkZXZpY2VzIChJY2VsYWtlIFNlcnZlcikgaGF2ZSBhbiBvcHRpb24gdG8g
+YnlwYXNzIHRoZSBWTUQgTVNJLVgNCj4gcmVtYXBwaW5nIHRhYmxlLiBUaGlzIGFsbG93cyBmb3Ig
+YmV0dGVyIHBlcmZvcm1hbmNlIHNjYWxpbmcgYXMgdGhlIGNoaWxkIGRldmljZQ0KPiBNU0ktWCB3
+b24ndCBiZSBsaW1pdGVkIGJ5IFZNRCdzIE1TSS1YIGNvdW50IGFuZCBJUlEgaGFuZGxlci4NCj4g
+DQo+IFYzLT5WNDoNCj4gSW50ZWdyYXRlZCB3b3JkaW5nIHN1Z2dlc3Rpb25zOyBubyBmdW5jdGlv
+bmFsIGNoYW5nZXMNCj4gDQo+IFYyLT5WMzoNCj4gVHJpdmlhbCBjb21tZW50IGZpeGVzDQo+IEFk
+ZGVkIGFja3MNCj4gDQo+IFYxLT5WMjoNCj4gVXBkYXRlZCBmb3IgNS4xMi1uZXh0DQo+IE1vdmVk
+IElSUSBhbGxvY2F0aW9uIGFuZCByZW1hcHBpbmcgZW5hYmxlL2Rpc2FibGUgdG8gYSBtb3JlIGxv
+Z2ljYWwgbG9jYXRpb24NCj4gDQo+IFYxIHBhdGNoZXMgMS00IHdlcmUgYWxyZWFkeSBtZXJnZWQN
+Cj4gVjEsIDUvNjogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LXBj
+aS9wYXRjaC8yMDIwMDcyODE5NDk0NS4xNDEyNi02LWpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29t
+Lw0KPiBWMSwgNi82OiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgt
+cGNpL3BhdGNoLzIwMjAwNzI4MTk0OTQ1LjE0MTI2LTctam9uYXRoYW4uZGVycmlja0BpbnRlbC5j
+b20vDQo+IA0KPiANCj4gSm9uIERlcnJpY2sgKDIpOg0KPiAgIGlvbW11L3Z0LWQ6IFVzZSBSZWFs
+IFBDSSBETUEgZGV2aWNlIGZvciBJUlRFDQo+ICAgUENJOiB2bWQ6IERpc2FibGUgTVNJLVggcmVt
+YXBwaW5nIHdoZW4gcG9zc2libGUNCj4gDQo+ICBkcml2ZXJzL2lvbW11L2ludGVsL2lycV9yZW1h
+cHBpbmcuYyB8ICAzICstDQo+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jICAgICAgICB8
+IDYzICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDUz
+IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQ0KPiANCg==
