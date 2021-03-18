@@ -2,106 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4BA6340AD9
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:03:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E17AD340B17
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:12:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231925AbhCRRDC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 13:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231924AbhCRRC4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Mar 2021 13:02:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AF6E564DD8;
-        Thu, 18 Mar 2021 17:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616086976;
-        bh=+z5jr/UHM8gKUEtO0rCYBJ5e2tChijd60hU4bvnv5cw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tCUIHcy192w5oGjBIWxDVBKEvc3UTY0rSW9XR1RwJvicOvyI+qZKjPsBTpbeeB3FM
-         hdIeNs3t7aYi/jMb0ic3GTQr6MP2fPQcbJIIy9ftY7Qj8xeC5CroEyp/X5T09Vh7q6
-         rnvCPItnhHB0GVrhqgyR9vDqJMPdRzc5MFXE1OwQFpc0a40u9D4FOgkLWTa99weVQf
-         r/kdZ2KOf2kXF+pP9Un4L4kcHtwjUDBbTDp/rMcLuoVYta9mwbwBmjEk/us+cWEqcG
-         TrqeWUvvR8ZxEFYH4CG0x+I9EVEz3UsSHxEG3winM8QT4l33Aa5oCshzOtNrc8j1Ap
-         FSS5ClU4cyHsw==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Martin Mares <mj@ucw.cz>
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] lspci: Don't report PCIe link downgrades for downstream ports
-Date:   Thu, 18 Mar 2021 12:02:44 -0500
-Message-Id: <20210318170244.151240-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S232126AbhCRRLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 13:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232257AbhCRRLQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 13:11:16 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A7DC061763
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id v92so6514752ybi.12
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=SCzz0vkCTXCJ+hl1sGhlu0aynSHOxUfyv4GiVUi2UT8=;
+        b=Qn2g5lLRvdKJvgzF43+LCRfbhyf/1XwO7VexN9MTAJ/y7/GXos2MZ6DPQ5+40SXSdr
+         3WUM1haHcbmP9fvJ5H0GP0vnMIfZYFYJ3/skq+V4JOBLmlhGlPExy6gqYwMz2uSJ1gR3
+         Kgl24aisbJ27zFi0E+w0DAM6qtK+mORJD0REsBOc+I74Jm51pwyVzGpvxB7NjD1JArlW
+         Z1Nw3IJcwTpFcPc/OM/mDZYHlik6/X5+hBBgaF+RBWA6lCnTc9Su31yLYk3E+KZP8/w7
+         k1BrfTKfIXXZ46LHA5pZpwKRNzhgz58PNc7YyUV/9wiANk3u5qYBZVv8t0PgePg8ENXo
+         Bcrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=SCzz0vkCTXCJ+hl1sGhlu0aynSHOxUfyv4GiVUi2UT8=;
+        b=KF+wOpBEt0zdXqLDX4RC+NWfEAiOTx9CCs9xbIJ0QxVrhRzF0YnmWF5RJlCti94a1R
+         Iu537vUF8NtnQ/HM6c2JlSKG7CFFnLLSUr3M9HJprdHSOvNFqhNpX2r8NYHXdWos11aC
+         HcXx5L55q+SozY3wWASLDxBWQfy7HVnTVx67qWrTA4RPg7DyJcbK0t5qq3nQat9VRmDE
+         59FA60T1PedBlPFuiNqucShB6GlAUYXaKMUOyZNy8fif7HcthybM0Zvg8G4VXsB0wE3G
+         HvpmJ/ERKVU5McmTneYGpExTBEhIOUAN7m/C1jOqleCYEQEcIn6iVHbM1noyyRPkhOV1
+         mtzw==
+X-Gm-Message-State: AOAM5339+Xwv/GUJdlAc6UIWD059HkUb9iusVPfIyhUxV24PtSZmPxM7
+        rH7WLK+S9UuvVai8wr2emyCILH3nhkTMx4zyOsY=
+X-Google-Smtp-Source: ABdhPJwBMd/Hg8Inw/d+QCjcsX4aY1KphAmvmly7frqYXPa28oCDMQoPY4+7I2PpXYAYog1pvPg18bYfcaeLUFSg7M0=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c0d7:a7ba:fb41:a35a])
+ (user=samitolvanen job=sendgmr) by 2002:a25:4ce:: with SMTP id
+ 197mr429022ybe.462.1616087474808; Thu, 18 Mar 2021 10:11:14 -0700 (PDT)
+Date:   Thu, 18 Mar 2021 10:10:54 -0700
+Message-Id: <20210318171111.706303-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
+Subject: [PATCH v2 00/17] Add support for Clang CFI
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+This series adds support for Clang's Control-Flow Integrity (CFI)
+checking. With CFI, the compiler injects a runtime check before each
+indirect function call to ensure the target is a valid function with
+the correct static type. This restricts possible call targets and
+makes it more difficult for an attacker to exploit bugs that allow the
+modification of stored function pointers. For more details, see:
 
-After b47b5bd408e1 ("lspci: Report if the PCIe link speed/width is full or
-downgraded"), we report "downgraded" or "ok" for PCIe links operating at
-lower speed or width than they're capable of:
+  https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
-  LnkCap: Port #1, Speed 8GT/s, Width x1, ASPM L1, Exit Latency L1 <16us
-  LnkSta: Speed 5GT/s (downgraded), Width x1 (ok)
+The first patch contains build system changes and error handling,
+and implements support for cross-module indirect call checking. The
+remaining patches address issues caused by the compiler
+instrumentation. These include fixing known type mismatches, as well
+as issues with address space confusion and cross-module function
+address equality.
 
-Previously we did this for both ends of the link, but I don't think it's
-very useful for Downstream Ports (the upstream end of the link) because we
-claim the link is downgraded even if (1) there's no device on the other end
-or (2) the other device doesn't support anything faster/wider.
+These patches add support only for arm64, but I'll post patches also
+for x86_64 after we address the remaining issues there, including
+objtool support.
 
-Drop the "downgraded" reporting for Downstream Ports.  If there is a device
-below, we'll still complain at that end if it supports a faster/wider link
-than is available.
+You can also pull this series from
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+  https://github.com/samitolvanen/linux.git cfi-v2
+
 ---
- ls-caps.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+Changes in v2:
+ - Fixed .text merging in module.lds.S.
+ - Added WARN_ON_FUNCTION_MISMATCH() and changed kernel/thread.c
+   and kernel/workqueue.c to use the macro instead.
 
-diff --git a/ls-caps.c b/ls-caps.c
-index db56556..dd17c6b 100644
---- a/ls-caps.c
-+++ b/ls-caps.c
-@@ -758,13 +758,16 @@ static char *link_speed(int speed)
-     }
- }
- 
--static char *link_compare(int sta, int cap)
-+static char *link_compare(int type, int sta, int cap)
- {
-+  if ((type == PCI_EXP_TYPE_ROOT_PORT) || (type == PCI_EXP_TYPE_DOWNSTREAM) ||
-+      (type == PCI_EXP_TYPE_PCIE_BRIDGE))
-+    return "";
-   if (sta < cap)
--    return "downgraded";
-+    return " (downgraded)";
-   if (sta > cap)
--    return "strange";
--  return "ok";
-+    return " (strange)";
-+  return " (ok)";
- }
- 
- static char *aspm_support(int code)
-@@ -837,11 +840,11 @@ static void cap_express_link(struct device *d, int where, int type)
-   w = get_conf_word(d, where + PCI_EXP_LNKSTA);
-   sta_speed = w & PCI_EXP_LNKSTA_SPEED;
-   sta_width = (w & PCI_EXP_LNKSTA_WIDTH) >> 4;
--  printf("\t\tLnkSta:\tSpeed %s (%s), Width x%d (%s)\n",
-+  printf("\t\tLnkSta:\tSpeed %s%s, Width x%d%s\n",
- 	link_speed(sta_speed),
--	link_compare(sta_speed, cap_speed),
-+	link_compare(type, sta_speed, cap_speed),
- 	sta_width,
--	link_compare(sta_width, cap_width));
-+	link_compare(type, sta_width, cap_width));
-   printf("\t\t\tTrErr%c Train%c SlotClk%c DLActive%c BWMgmt%c ABWMgmt%c\n",
- 	FLAG(w, PCI_EXP_LNKSTA_TR_ERR),
- 	FLAG(w, PCI_EXP_LNKSTA_TRAIN),
+
+Sami Tolvanen (17):
+  add support for Clang CFI
+  cfi: add __cficanonical
+  mm: add generic __va_function and __pa_function macros
+  module: ensure __cfi_check alignment
+  workqueue: use WARN_ON_FUNCTION_MISMATCH
+  kthread: use WARN_ON_FUNCTION_MISMATCH
+  kallsyms: strip ThinLTO hashes from static functions
+  bpf: disable CFI in dispatcher functions
+  lib/list_sort: fix function type mismatches
+  lkdtm: use __va_function
+  psci: use __pa_function for cpu_resume
+  arm64: implement __va_function
+  arm64: use __pa_function
+  arm64: add __nocfi to functions that jump to a physical address
+  arm64: add __nocfi to __apply_alternatives
+  KVM: arm64: Disable CFI for nVHE
+  arm64: allow CONFIG_CFI_CLANG to be selected
+
+ Makefile                                  |  17 ++
+ arch/Kconfig                              |  45 +++
+ arch/arm64/Kconfig                        |   1 +
+ arch/arm64/include/asm/memory.h           |  15 +
+ arch/arm64/include/asm/mmu_context.h      |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c |   2 +-
+ arch/arm64/kernel/alternative.c           |   4 +-
+ arch/arm64/kernel/cpu-reset.h             |  10 +-
+ arch/arm64/kernel/cpufeature.c            |   4 +-
+ arch/arm64/kernel/psci.c                  |   3 +-
+ arch/arm64/kernel/smp_spin_table.c        |   2 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile          |   6 +-
+ drivers/firmware/psci/psci.c              |   4 +-
+ drivers/misc/lkdtm/usercopy.c             |   2 +-
+ include/asm-generic/bug.h                 |  16 ++
+ include/asm-generic/vmlinux.lds.h         |  20 +-
+ include/linux/bpf.h                       |   4 +-
+ include/linux/cfi.h                       |  41 +++
+ include/linux/compiler-clang.h            |   3 +
+ include/linux/compiler_types.h            |   8 +
+ include/linux/init.h                      |   6 +-
+ include/linux/mm.h                        |   8 +
+ include/linux/module.h                    |  13 +-
+ include/linux/pci.h                       |   4 +-
+ init/Kconfig                              |   2 +-
+ kernel/Makefile                           |   4 +
+ kernel/cfi.c                              | 329 ++++++++++++++++++++++
+ kernel/kallsyms.c                         |  54 +++-
+ kernel/kthread.c                          |   3 +-
+ kernel/module.c                           |  43 +++
+ kernel/workqueue.c                        |   2 +-
+ lib/list_sort.c                           |   8 +-
+ scripts/Makefile.modfinal                 |   2 +-
+ scripts/module.lds.S                      |  18 +-
+ 34 files changed, 663 insertions(+), 44 deletions(-)
+ create mode 100644 include/linux/cfi.h
+ create mode 100644 kernel/cfi.c
+
+
+base-commit: 6417f03132a6952cd17ddd8eaddbac92b61b17e0
 -- 
-2.25.1
+2.31.0.291.g576ba9dcdaf-goog
 
