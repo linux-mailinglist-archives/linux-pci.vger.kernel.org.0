@@ -2,89 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31FCB340D29
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 19:37:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4E38340D6F
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 19:44:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232583AbhCRSgr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 14:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232262AbhCRSgl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Mar 2021 14:36:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B78ED6023B;
-        Thu, 18 Mar 2021 18:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616092601;
-        bh=12KhgTzjW4N7bDGAzwkMoRKeIVcx9FGipQWCCmfehZ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qCSsMflkjZ3rm7Wq7ogNwItA6pbQGvYXdLQNh6siKBClBj2GMCw15Hq4YQQ9NzQcj
-         6RoyAAtpKpqpESDo4muARn7guKGBRSe6U9+HPTTeCSa/PtGlSPPWMM84z1cgDhS9Zv
-         2WDXaJym4YoX+BKN+toYAS3O3Il2KJOFN8vfVyPaKQrjnlBjeecEAmpKBbNJJv8RKJ
-         53PH1QNZ7D3skGHh4tP8AEb9ojjZw0m8L4O6m2dyo3MJvJcNWlJQKCTq4TlOo1fqfV
-         KY5fWap4K2gEnteRIr49JsZcyZYpvP78O73Ks6n8aPztjbYVcMfdu3+CYAyhyU24VX
-         bI5DbwO+1DnGw==
-Date:   Thu, 18 Mar 2021 13:36:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, hegel666@gmail.com, Prike.Liang@amd.com,
-        Shyam-sundar.S-k@amd.com
-Subject: Re: [PATCH] PCI: quirks: Quirk PCI d3hot delay for AMD xhci
-Message-ID: <20210318183639.GA158657@bjorn-Precision-5520>
+        id S232739AbhCRSoP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 14:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232671AbhCRSno (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 14:43:44 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79ABFC06175F
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 11:43:43 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id a198so6175652lfd.7
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 11:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nO1NtgEydXG2HLjdhqcJj5jPeQtrUPiYrY1ZDV7Qq/s=;
+        b=iVhfN+7riOgr03gvFp6rabJN8XblDjHGtyOGptCHZxdhiECWH17xolvbVqxD61vi5I
+         j7wFaX5OK16XDA5OTljEBtUkLE2p3wAIHOYdcH8ygbsif54rpWGXfnIWvKORxYc4UJ1w
+         6dpCNm4hA+O3GYVYuNboKJbPCS8Oh2iWIqDuNjVnnqHZcMpWEB+u61udXs5p4zIplHiH
+         CBdgrX3qELlJwkMMudYSduN4JtzCQ0guTsDLtI6hfWhmcv5TSoKkA2uF2dne+wk64bzA
+         vhgHY9WcBAhuoxiLklXUyWlxBSx7Duidr12ctcSGZeFqB3A/j6mB7xOZA+MdIuSjYEd1
+         X7hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nO1NtgEydXG2HLjdhqcJj5jPeQtrUPiYrY1ZDV7Qq/s=;
+        b=aQQAZV0KLgnWyMOITClCRfOsPf43dMt8fm3/V5GrukSKRShsT35Psi1dmyzqcHt0m9
+         06gtU7sKnF8PXxpYHK7wvJsGZdnApjuSsUeBUfx1F4Le+I5ta4KtCVMn4Oi0ewG2fWDZ
+         ubEnHDPpBRMZZ2Uzkj9HnHQt79PHO7y02sC0JaT69jfLjETSVpWU3rIkQh0hXQ9tw67p
+         QpZtovvBqdaFsWx5wIO8giD4+qUO991LQAMCPkgTexkjNpCDsip4Qc+hxdv9qSxDYvav
+         LWBsA1UBYRxgHasW+3vsxnpEfZiCCBBesZ6Haa2xcxznAfmb69P+2J3ktID256i2m2qO
+         IejA==
+X-Gm-Message-State: AOAM530vfVaFy06mhmWX7w4M9Ts1DQBOlOEMsFQsmnZSBthzZUYcq7n+
+        Rsy0r9W850sd9ke3bqPg6r/AsZns6n1FpYQL8q8Dvw==
+X-Google-Smtp-Source: ABdhPJwPMFefAwqyWlFWcoKbDZciOiKnXiRQmrMNGrG6rw2lNtQsSLGJF3SwnZ8fBikFCSYXYvEuLtpI1LrMEMs5+eI=
+X-Received: by 2002:ac2:532c:: with SMTP id f12mr6587813lfh.73.1616093021734;
+ Thu, 18 Mar 2021 11:43:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210316192851.286563-1-alexander.deucher@amd.com>
+References: <20210318171111.706303-1-samitolvanen@google.com> <20210318171111.706303-11-samitolvanen@google.com>
+In-Reply-To: <20210318171111.706303-11-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Mar 2021 11:43:29 -0700
+Message-ID: <CAKwvOdkn7MY+-9D0DQ-18OR=s1XmgPaP7VchCm6VV5kYuKSAkA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/17] lkdtm: use __va_function
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 16, 2021 at 03:28:51PM -0400, Alex Deucher wrote:
-> From: Marcin Bachry <hegel666@gmail.com>
-> 
-> Renoir needs a similar delay.
+On Thu, Mar 18, 2021 at 10:11 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> To ensure we take the actual address of a function in kernel text, use
+> __va_function. Otherwise, with CONFIG_CFI_CLANG, the compiler replaces
+> the address with a pointer to the CFI jump table, which is actually in
+> the module when compiled with CONFIG_LKDTM=m.
 
-See https://lore.kernel.org/linux-pci/20210311125322.GA2122226@bjorn-Precision-5520/
+Should patch 10 and 12 be reordered against one another? Otherwise it
+looks like 12 defines __va_function while 10 uses it?
 
-This is becoming a problem.  We shouldn't have to merge a quirk for
-every new device.  Either the devices are defective, and AMD should
-publish errata and have a plan for fixing them, or Linux is broken and
-we should fix that.
 
-There are quite a few mechanisms for controlling delays like this
-(Config Request Retry Status (PCIe r5.0, sec 2.3.1), Readiness
-Notifications (sec 6.23), ACPI _DSM for power-on delays (PCI Firmware
-Spec r3.3)), but most are for *reducing* delay, not for extending it.
-
-Linux supports CRS, but not all the others.  Maybe we're missing
-something we should support?
-
-How do you deal with these issues for Windows?  If it works on Windows
-without quirks, we should be able to make it work on Linux as well.
-
-> Signed-off-by: Marcin Bachry <hegel666@gmail.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Acked-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/pci/quirks.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 653660e3ba9e..36e5ec670fae 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -1904,6 +1904,9 @@ static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-> +/* Renoir XHCI requires longer delay when transitioning from D0 to
-> + * D3hot */
+>  drivers/misc/lkdtm/usercopy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
+> index 109e8d4302c1..d173d6175c87 100644
+> --- a/drivers/misc/lkdtm/usercopy.c
+> +++ b/drivers/misc/lkdtm/usercopy.c
+> @@ -314,7 +314,7 @@ void lkdtm_USERCOPY_KERNEL(void)
+>
+>         pr_info("attempting bad copy_to_user from kernel text: %px\n",
+>                 vm_mmap);
+> -       if (copy_to_user((void __user *)user_addr, vm_mmap,
+> +       if (copy_to_user((void __user *)user_addr, __va_function(vm_mmap),
+>                          unconst + PAGE_SIZE)) {
+>                 pr_warn("copy_to_user failed, but lacked Oops\n");
+>                 goto free_user;
+> --
+> 2.31.0.291.g576ba9dcdaf-goog
+>
 
-No need for "me too" comments that add no additional information.
 
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1639, quirk_ryzen_xhci_d3hot);
->  
->  #ifdef CONFIG_X86_IO_APIC
->  static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
-> -- 
-> 2.30.2
-> 
+--
+Thanks,
+~Nick Desaulniers
