@@ -2,157 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4691033FCB0
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 02:31:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A99A833FF0D
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 06:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbhCRBbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Mar 2021 21:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbhCRBaf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Mar 2021 21:30:35 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D842C06175F
-        for <linux-pci@vger.kernel.org>; Wed, 17 Mar 2021 18:30:34 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id b16so4603005eds.7
-        for <linux-pci@vger.kernel.org>; Wed, 17 Mar 2021 18:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Xw7oYSjjp9oS+nwtaFUBwvJyGYHFUWxpmI1ewSADgIw=;
-        b=BZrGew9/oWoJA2obgfBVdQagf+0A5ehE894LTII2q8NytJOasNPw01gCoODT8Auvpm
-         C5y9r0O3DSTT3dwDuObSXaYWkJJN+9RROyZ5vO0BeOhokrvimFnJT1AXw9aaRt1HE9RE
-         WxnEDrGqSu4icUPLmIB7l/7+O2QtwHjJm4XzElaAomC8Nd8SuzVwDiTM3zM8uSMZcksE
-         vX5v0ark5Cublx+wxqlgP4a+pSWjIwiKoxfNccWMPaXYGiW3BTQzP5gIBpFgZfFAZx+2
-         lZqI6494e15c6Fu90bLlUuGGrURf3MK5J0wnelSWH4lPHK6M+rD+iuWIYhQDODr+aMD9
-         4hlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Xw7oYSjjp9oS+nwtaFUBwvJyGYHFUWxpmI1ewSADgIw=;
-        b=V9LsZbmuRgVxVU2k2BrCC06lbNAhUd1DHQRKgNKlzSKpbuYe4OFnlRXaewTU1PzKey
-         SFlaoclHR1PHYdRtQBvZO1HK/aJ74HZ7ivQtmC1EgdnKzuGMiRwDGS345KEgCVUKtUAb
-         BpeTXDJaNv1HCOMTAwAaBAmBIKwzd/o98JIqltFnD/XJLEzSy+WaKXTNPzMmbD7cUQH6
-         j7Z55PG105hL1kYGX/5TSyt9BnPkXQLuzFtcTk0efqDDsNpZBIXZsziPun833qrHWcIO
-         /BjY9Cu8+p/DOLcSMVdkQDA00Ttk4u3H1F6RQ/Ikx5NbZJpl1r3xKKGaXa80bh/0W5c+
-         i9SQ==
-X-Gm-Message-State: AOAM532LnNBL10aGSVMePcakF2w8/1TyQUVbvIbrvDA2kmPlYxBBuLNv
-        nbNCSCDe3qSBUprWAHC8+5B5KzZJTq3Ssc3F3o/Kag==
-X-Google-Smtp-Source: ABdhPJx1mCZ8Hl5YSv0C5/KWJ35gquENslnXEiug6CmPW+mNiqmJODmAUbzLLiwIDYTp+495NS7WR/bwk+B28+IHcjU=
-X-Received: by 2002:aa7:cd0e:: with SMTP id b14mr640087edw.354.1616031033201;
- Wed, 17 Mar 2021 18:30:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
- <20210310180306.1588376-2-Jonathan.Cameron@huawei.com> <CAPcyv4gG-==Vj9w3d7=gRRSPaoD5eZHZZ2hAA0h3c07eMT_x1A@mail.gmail.com>
- <20210316162952.00001ab7@Huawei.com> <CAPcyv4h6hHCuO=0vHbPz2m4qw6-0=wW9swBrWimBsz6_GJu4Aw@mail.gmail.com>
- <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
-In-Reply-To: <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 17 Mar 2021 18:30:26 -0700
-Message-ID: <CAPcyv4hJG08RaksW3jH_Q5ASqpzX5MtfNFcLqMxAH5jwTidk=w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object Exchange
-To:     Chris Browy <cbrowy@avery-design.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
+        id S229512AbhCRFsi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 01:48:38 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:42576 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229586AbhCRFsP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 01:48:15 -0400
+X-UUID: d92e5c71f2914813ad85043615339670-20210318
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/KcYFvhsJArJ3/t55wAeGyd65YjMgQvBBf9+aHmFNFA=;
+        b=uBIS7mpLD+f+a20uQowQ0YLNirPdUDySth+u9Ew6aEkljuRnDlWu+8E5V/98beVKfomotmQa6i3eiZkoTt/FLiEibyUoWYl4664f374+bMaIq0n1XaLNJU0FA0cAbG8lUmfU5ji5iGtrXkRhP9vgNet0qlgYk7eu3tp46eNbL8k=;
+X-UUID: d92e5c71f2914813ad85043615339670-20210318
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 720661032; Thu, 18 Mar 2021 13:48:10 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 18 Mar
+ 2021 13:48:08 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 18 Mar 2021 13:48:07 +0800
+Message-ID: <1616046487.31760.16.camel@mhfsdcap03>
+Subject: Re: [v8,3/7] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, <maz@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Sj Huang" <sj.huang@mediatek.com>, <youlin.pei@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <sin_jieyang@mediatek.com>, <drinkcat@chromium.org>,
+        <Rex-BC.Chen@mediatek.com>, <anson.chuang@mediatek.com>
+Date:   Thu, 18 Mar 2021 13:48:07 +0800
+In-Reply-To: <20210318000211.ykjsfavfc7suu2sb@pali>
+References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
+         <20210224061132.26526-4-jianjun.wang@mediatek.com>
+         <20210311123844.qzl264ungtk7b6xz@pali>
+         <1615621394.25662.70.camel@mhfsdcap03>
+         <20210318000211.ykjsfavfc7suu2sb@pali>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 35ECDF3533BA98CB7C3ABD2BE2E14BD4CA98B92D80A84EDF57D37D9FD169DF3A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Btw your mailer does something odd with the "In-Reply-To:" field, I
-need to fix it up manually to include your address.
+T24gVGh1LCAyMDIxLTAzLTE4IGF0IDAxOjAyICswMTAwLCBQYWxpIFJvaMOhciB3cm90ZToNCj4g
+T24gU2F0dXJkYXkgMTMgTWFyY2ggMjAyMSAxNTo0MzoxNCBKaWFuanVuIFdhbmcgd3JvdGU6DQo+
+ID4gT24gVGh1LCAyMDIxLTAzLTExIGF0IDEzOjM4ICswMTAwLCBQYWxpIFJvaMOhciB3cm90ZToN
+Cj4gPiA+IE9uIFdlZG5lc2RheSAyNCBGZWJydWFyeSAyMDIxIDE0OjExOjI4IEppYW5qdW4gV2Fu
+ZyB3cm90ZToNCj4gPiA+ID4gK3N0YXRpYyBpbnQgbXRrX3BjaWVfc3RhcnR1cF9wb3J0KHN0cnVj
+dCBtdGtfcGNpZV9wb3J0ICpwb3J0KQ0KPiA+ID4gPiArew0KPiA+ID4gLi4uDQo+ID4gPiA+ICsN
+Cj4gPiA+ID4gKwkvKiBEZWxheSAxMDBtcyB0byB3YWl0IHRoZSByZWZlcmVuY2UgY2xvY2tzIGJl
+Y29tZSBzdGFibGUgKi8NCj4gPiA+ID4gKwltc2xlZXAoMTAwKTsNCj4gPiA+ID4gKw0KPiA+ID4g
+PiArCS8qIERlLWFzc2VydCBQRVJTVCMgc2lnbmFsICovDQo+ID4gPiA+ICsJdmFsICY9IH5QQ0lF
+X1BFX1JTVEI7DQo+ID4gPiA+ICsJd3JpdGVsX3JlbGF4ZWQodmFsLCBwb3J0LT5iYXNlICsgUENJ
+RV9SU1RfQ1RSTF9SRUcpOw0KPiA+ID4gDQo+ID4gPiBIZWxsbyEgVGhpcyBpcyBhIG5ldyBkcml2
+ZXIgd2hpY2ggaW50cm9kdWNlIHlldCBhbm90aGVyIGN1c3RvbSB0aW1lb3V0DQo+ID4gPiBwcmlv
+ciBQRVJTVCMgc2lnbmFsIGZvciBQQ0llIGNhcmQgaXMgZGUtYXNzZXJ0ZWQuIFRpbWVvdXRzIGZv
+ciBvdGhlcg0KPiA+ID4gZHJpdmVycyBJIGNvbGxlY3RlZCBpbiBvbGRlciBlbWFpbCBbMl0uDQo+
+ID4gPiANCj4gPiA+IFBsZWFzZSBsb29rIGF0IG15IGVtYWlsIFsxXSBhYm91dCBQQ0llIFdhcm0g
+UmVzZXQgaWYgeW91IGhhdmUgYW55IGNsdWUNCj4gPiA+IGFib3V0IGl0LiBMb3JlbnpvIGFuZCBS
+b2IgYWxyZWFkeSBleHByZXNzZWQgdGhhdCB0aGlzIHRpbWVvdXQgc2hvdWxkIG5vdA0KPiA+ID4g
+YmUgZHJpdmVyIHNwZWNpZmljLiBCdXQgbm9ib2R5IHdhcyBhYmxlIHRvICJkZWNvZGUiIGFuZCAi
+dW5kZXJzdGFuZCINCj4gPiA+IFBDSWUgc3BlYyB5ZXQgYWJvdXQgdGhlc2UgdGltZW91dHMuDQo+
+ID4gDQo+ID4gSGkgUGFsaSwNCj4gPiANCj4gPiBJIHRoaW5rIHRoaXMgaXMgbW9yZSBsaWtlIGEg
+cGxhdGZvcm0gc3BlY2lmaWMgdGltZW91dCwgd2hpY2ggaXMgdXNlZCB0bw0KPiA+IHdhaXQgZm9y
+IHRoZSByZWZlcmVuY2UgY2xvY2tzIHRvIGJlY29tZSBzdGFibGUgYW5kIGZpbmlzaCB0aGUgcmVz
+ZXQgZmxvdw0KPiA+IG9mIEhXIGJsb2Nrcy4NCj4gPiANCj4gPiBIZXJlIGlzIHRoZSBzdGVwcyB0
+byBzdGFydCBhIGxpbmsgdHJhaW5pbmcgaW4gdGhpcyBIVzoNCj4gPiANCj4gPiAxLiBBc3NlcnQg
+YWxsIHJlc2V0IHNpZ25hbHMgd2hpY2ggaW5jbHVkaW5nIHRoZSB0cmFuc2FjdGlvbiBsYXllciwg
+UElQRQ0KPiA+IGludGVyZmFjZSBhbmQgaW50ZXJuYWwgYnVzIGludGVyZmFjZTsNCj4gPiANCj4g
+PiAyLiBEZS1hc3NlcnQgcmVzZXQgc2lnbmFscyBleGNlcHQgdGhlIFBFUlNUIywgdGhpcyB3aWxs
+IG1ha2UgdGhlDQo+ID4gcGh5c2ljYWwgbGF5ZXIgYWN0aXZlIGFuZCBzdGFydCB0byBvdXRwdXQg
+dGhlIHJlZmVyZW5jZSBjbG9jaywgYnV0IHRoZQ0KPiA+IEVQIGRldmljZSByZW1haW5zIGluIHRo
+ZSByZXNldCBzdGF0ZS4NCj4gPiAgICBCZWZvcmUgcmVsZWFzaW5nIHRoZSBQRVJTVCMgc2lnbmFs
+LCB0aGUgSFcgYmxvY2tzIG5lZWRzIGF0IGxlYXN0IDEwbXMNCj4gPiB0byBmaW5pc2ggdGhlIHJl
+c2V0IGZsb3csIGFuZCByZWYtY2xrIG5lZWRzIGFib3V0IDMwdXMgdG8gYmVjb21lIHN0YWJsZS4N
+Cj4gPiANCj4gPiAzLiBEZS1hc3NlcnQgUEVSU1QjIHNpZ25hbCwgd2FpdCBMVFNTTSBlbnRlciBM
+MCBzdGF0ZS4NCj4gPiANCj4gPiBUaGlzIDEwMG1zIHRpbWVvdXQgaXMgcmVmZXJlbmNlIHRvIFRQ
+VlBFUkwgaW4gdGhlIFBDSWUgQ0VNIHNwZWMuIFNpbmNlDQo+ID4gd2UgYXJlIGluIHRoZSBrZXJu
+ZWwgc3RhZ2UsIHRoZSBwb3dlciBzdXBwbHkgaGFzIGFscmVhZHkgc3RhYmxlZCwgdGhpcw0KPiA+
+IHRpbWVvdXQgbWF5IG5vdCB0YWtlIHRoYXQgbG9uZy4NCj4gDQo+IEkgdGhpbmsgdGhhdCB0aGlz
+IGlzIG5vdCBwbGF0Zm9ybSBzcGVjaWZpYyB0aW1lb3V0IG9yIHBsYXRmb3JtIHNwZWNpZmljDQo+
+IHN0ZXBzLiBUaGlzIG1hdGNoZXMgZ2VuZXJpYyBzdGVwcyBhcyBkZWZpbmVkIGluIFBDSWUgQ0VN
+IHNwZWMsIHNlY3Rpb24NCj4gMi4yLjEuIEluaXRpYWwgUG93ZXItVXAgKEczIHRvIFMwKS4NCj4g
+DQo+IFdoYXQgaXMgcGxhdGZvcm0gc3BlY2lmaWMgaXMganVzdCBob3cgdG8gYWNoaWV2ZSB0aGVz
+ZSBzdGVwcy4NCj4gDQo+IEFtIEkgcmlnaHQ/DQo+IA0KPiAuLi4NCj4gDQo+IFRQVlBFUkwgaXMg
+b25lIG9mIG15IHRpbWVvdXQgY2FuZGlkYXRlcyBhcyBtaW5pbWFsIHJlcXVpcmVkIHRpbWVvdXQg
+Zm9yDQo+IFdhcm0gUmVzZXQuIEkgaGF2ZSB3cm90ZSBpdCBpbiBlbWFpbDoNCj4gDQo+IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8yMDIwMDQzMDA4MjI0NS54Ymx2Yjd4ZWFtbTRl
+MzM2QHBhbGkvDQo+IA0KPiBCdXQgSSdtIG5vdCBzdXJlIGFzIHNwZWNpYWxseSBpbiBub25lIGRp
+YWdyYW0gaXMgZGVzY3JpYmVkIGp1c3Qgd2FybQ0KPiByZXNldCBhcyBkZWZpbmVkIGluIG1QQ0ll
+IENFTSAoMy4yLjQuMy4gUEVSU1QjIFNpZ25hbCkuDQo+IA0KPiAuLi4NCj4gDQo+IEFueXdheSwg
+SSB3b3VsZCBzdWdnZXN0IHRvIGRlZmluZSBjb25zdGFudHMgZm9yIHRob3NlIHRpbWVvdXRzLiBJ
+IGd1ZXNzDQo+IHRoYXQgaW4gZnV0dXJlIHdlIGNvdWxkIGJlIGFibGUgdG8gZGVmaW5lICJnZW5l
+cmljIiB0aW1lb3V0IGNvbnN0YW50cw0KPiB3aGljaCB3b3VsZCBub3QgYmUgaW4gcHJpdmF0ZSBk
+cml2ZXIgc2VjdGlvbiwgYnV0IGluIHNvbWUgY29tbW9uIGhlYWRlcg0KPiBmaWxlLg0KDQpJIGFn
+cmVlIHdpdGggdGhpcywgYnV0IEknbSBub3Qgc3VyZSBpZiB3ZSByZWFsbHkgbmVlZCB0aGF0IGxv
+bmcgdGltZSBpbg0KdGhlIGtlcm5lbCBzdGFnZSwgYmVjYXVzZSB0aGUgcG93ZXIgc3VwcGx5IGhh
+cyBhbHJlYWR5IHN0YWJsZSBhbmQgaXQncw0KcmVhbGx5IGltcGFjdCB0aGUgYm9vdCB0aW1lLCBl
+c3BlY2lhbGx5IHdoZW4gdGhlIHBsYXRmb3JtIGhhdmUgbXVsdGkNCnBvcnRzIGFuZCBub3QgY29u
+bmVjdCBhbnkgRVAgZGV2aWNlLCB3ZSBuZWVkIHRvIHdhaXQgMjAwbXMgZm9yIGVhY2ggcG9ydA0K
+d2hlbiBzeXN0ZW0gYm9vdHVwLg0KDQpGb3IgdGhpcyBQQ0llIGNvbnRyb2xsZXIgZHJpdmVyLCBJ
+IHdvdWxkIGxpa2UgdG8gY2hhbmdlIHRoZSB0aW1lb3V0DQp2YWx1ZSB0byAxMG1zIHRvIGNvbXBs
+eSB3aXRoIHRoZSBIVyBkZXNpZ24sIGFuZCBzYXZlIHNvbWUgYm9vdCB0aW1lLg0KDQo+IA0KPiA+
+ID4gPiArDQo+ID4gPiA+ICsJLyogQ2hlY2sgaWYgdGhlIGxpbmsgaXMgdXAgb3Igbm90ICovDQo+
+ID4gPiA+ICsJZXJyID0gcmVhZGxfcG9sbF90aW1lb3V0KHBvcnQtPmJhc2UgKyBQQ0lFX0xJTktf
+U1RBVFVTX1JFRywgdmFsLA0KPiA+ID4gPiArCQkJCSAhISh2YWwgJiBQQ0lFX1BPUlRfTElOS1VQ
+KSwgMjAsDQo+ID4gPiA+ICsJCQkJIDUwICogVVNFQ19QRVJfTVNFQyk7DQo+ID4gPiANCj4gPiA+
+IElJUkMsIHlvdSBuZWVkIHRvIHdhaXQgYXQgbGVhc3QgMTAwbXMgYWZ0ZXIgZGUtYXNzZXJ0aW5n
+IFBFUlNUIyBzaWduYWwNCj4gPiA+IGFzIGl0IGlzIHJlcXVpcmVkIGJ5IFBDSWUgc3BlY3MgYW5k
+IGFsc28gYmVjYXVzZSBleHBlcmltZW50cyBwcm92ZWQgdGhhdA0KPiA+ID4gc29tZSBDb21wZXgg
+d2lmaSBjYXJkcyAoZS5nLiBXTEU5MDBWWCkgYXJlIG5vdCBkZXRlY3RlZCBpZiB5b3UgZG8gbm90
+DQo+ID4gPiB3YWl0IHRoaXMgbWluaW1hbCB0aW1lLg0KPiA+IA0KPiA+IFllcywgdGhpcyBzaG91
+bGQgYmUgMTAwbXMsIEkgd2lsbCBmaXggaXQgYXQgbmV4dCB2ZXJzaW9uLCB0aGFua3MgZm9yDQo+
+ID4geW91ciByZXZpZXcuDQo+IA0KPiBJbiBwYXN0IEJqb3JuIHN1Z2dlc3RlZCB0byB1c2UgbXNs
+ZWVwKFBDSV9QTV9EM0NPTERfV0FJVCk7IG1hY3JvIGZvcg0KPiB0aGlzIHN0ZXAgZHVyaW5nIHJl
+dmlld2luZyBhYXJkdmFyayBkcml2ZXIuDQo+IA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9s
+aW51eC1wY2kvMjAxOTA0MjYxNjEwNTAuR0ExODk5NjRAZ29vZ2xlLmNvbS8NCj4gDQo+IEFuZCBu
+ZXh0IGl0ZXJhdGlvbiB1c2VkIHRoaXMgUENJX1BNX0QzQ09MRF9XQUlUIG1hY3JvIGluc3RlYWQg
+b2YgMTAwOg0KPiANCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtcGNpLzIwMTkwNTIy
+MjEzMzUxLjIxMzY2LTItcmVwa0B0cmlwbGVmYXUubHQvDQoNClN1cmUsIEkgd2lsbCB1c2UgUENJ
+X1BNX0QzQ09MRF9XQUlUIG1hY3JvIGluc3RlYWQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KVGhh
+bmtzLg0KDQo+IA0KPiA+IFRoYW5rcy4NCj4gPiA+IA0KPiA+ID4gPiArCWlmIChlcnIpIHsNCj4g
+PiA+ID4gKwkJdmFsID0gcmVhZGxfcmVsYXhlZChwb3J0LT5iYXNlICsgUENJRV9MVFNTTV9TVEFU
+VVNfUkVHKTsNCj4gPiA+ID4gKwkJZGV2X2Vycihwb3J0LT5kZXYsICJQQ0llIGxpbmsgZG93biwg
+bHRzc20gcmVnIHZhbDogJSN4XG4iLCB2YWwpOw0KPiA+ID4gPiArCQlyZXR1cm4gZXJyOw0KPiA+
+ID4gPiArCX0NCj4gPiA+IA0KPiA+ID4gWzFdIC0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGlu
+dXgtcGNpLzIwMjEwMzEwMTEwNTM1LnpoNHBubjR2cG12endsNXFAcGFsaS8NCj4gPiA+IFsyXSAt
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8yMDIwMDQyNDA5MjU0Ni4yNXAzaGR0
+a2Vob2hlM3h3QHBhbGkvDQo+ID4gDQoNCg==
 
-On Tue, Mar 16, 2021 at 4:28 PM Chris Browy <cbrowy@avery-design.com> wrote=
-:
->
-> Please address and clarify 2 queries below...
->
->
-> > On Mar 16, 2021, at 2:14 PM, Dan Williams <dan.j.williams@intel.com> wr=
-ote:
-> >
-> > On Tue, Mar 16, 2021 at 9:31 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> >>
-> >> On Mon, 15 Mar 2021 12:45:49 -0700
-> >> Dan Williams <dan.j.williams@intel.com> wrote:
-> >>
-> >>> Hey Jonathan, happy to see this, some comments below...
-> >>
-> >> Hi Dan,
-> >>
-> >> Thanks for taking a look!
-> >>
-> >>>
-> >>> On Wed, Mar 10, 2021 at 10:08 AM Jonathan Cameron
-> >>> <Jonathan.Cameron@huawei.com> wrote:
-> >>>>
-> >>>> Introduced in an ECN to the PCI 5.0, DOE provides a config space
-> >>>> based mailbox with standard protocol discovery.  Each mailbox
-> >>>> is accessed through a DOE PCIE Extended Capability.
-> >>>>
-> >>>> A device may have 1 or more DOE mailboxes, each of which is allowed
-> >>>> to support any number of protocols (some DOE protocols
-> >>>> specifications apply additional restrictions).  A given protocol
-> >>>> may be supported on more than one DOE mailbox on a given function.
-> >>>
-> >>> Are all those protocol instances shared?
-> >>> I'm trying to mental model
-> >>> whether, for example, an auxiliary driver instance could be loaded pe=
-r
-> >>> DOE mailbox, or if there would need to be coordination of a given
-> >>> protocol no matter how many DOE mailboxes on that device implemented
-> >>> that protocol.
-> >>
-> >> Just to check I've understood corectly, you mean multiple instances of=
- same
-> >> protocol across different DOE mailboxes on a given device?
-> >>
-> >
-> > Right.
->
-> Could you confirm this case for clarity?  A CXL device may have multiple =
-VF/PF.
-> For example, PF=3D0 could have one or more DOE instances for CDAT protoco=
-l.
-> The driver will scan PF=3D0 for all DOE instances and finding one or more=
- of CDAT
-> protocol will combine/manage them.  I had not considered multiple CDAT ta=
-bles
-> for single PF.  For CXL devices with multiple PF=E2=80=99s the same proce=
-ss would be
-> carried out on PF=3D1-N.
-
-This patch has nothing to do with CXL. This is a general discussion of
-how a PCIE device implements a DOE mailbox or set of mailboxes. The
-DOE definition is PF-only afaics from the DOE specification.
-
-The CXL specification only says that a device can implement a CDAT per
-DOE capability instance, so the CXL spec does not limit the number of
-DOE instances to 1, but I can't think of a practical reason to support
-more than one.
-
-[..]
-> >>> https://cfp.osfc.io/media/osfc2020/submissions/ECQ88N/resources/An_op=
-en_source_SPDM_implementation_for_secure_devi_kmIgAQe.pdf
-> >>
-> >> Nice!  Looking at CMA / IDE emulation was on my todo list and that loo=
-ks like
-> >> it might make that job a lot easier.
->
-> Would it be useful to integrate the openspdm=E2=80=99s SpdmResponderEmu.c=
- onto the QEMU=E2=80=99s CXL Type3 Device=E2=80=99s
-> DOE backend for CMA/IDE testing?  Doesn=E2=80=99t look hard to do.
-
-Yes, I do think it would be useful.
