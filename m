@@ -2,163 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9516B33FC0F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 01:03:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4691033FCB0
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 02:31:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230071AbhCRACb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Mar 2021 20:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229934AbhCRACP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Mar 2021 20:02:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7EC4D64F26;
-        Thu, 18 Mar 2021 00:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616025734;
-        bh=vresu2JOh2P7GZ/rMBfA5rTS0ajtTjBCvoZV08Sk+io=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=je6CmOhaVM4p4tGNzDMHgEx0pYGEAjhtEWu9Q0qdlDUXnTIGpDK2Bydk3OjUFvhp1
-         xc8b1Wv21q+6HkFj4ed+odlffSNg6Z/TscVV5viovfg0jLODgtIxXk4QSU9gXpLckx
-         QPd7oxHEawOUuj8X08KNOEfmNERjlzy/u7k1iPVzfBElmAJ7b3Ie4n/gx4afV7AH6G
-         lWBwQi17mqeofHOAJcavZbB8KqwsQ9wuSjPBBI8/BHBdMrCMr4m4X8+cSNrXSXLAog
-         AM+H04t9NNykXep1a8u/s8Ujh9t+bSaLKbeRUwzGopUqD8Cef7ehLnU0uJVX7sSVpr
-         fIKfdwlINGo9g==
-Received: by pali.im (Postfix)
-        id EFD9B8A9; Thu, 18 Mar 2021 01:02:11 +0100 (CET)
-Date:   Thu, 18 Mar 2021 01:02:11 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
-        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
-        sin_jieyang@mediatek.com, drinkcat@chromium.org,
-        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
-Subject: Re: [v8,3/7] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
-Message-ID: <20210318000211.ykjsfavfc7suu2sb@pali>
-References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
- <20210224061132.26526-4-jianjun.wang@mediatek.com>
- <20210311123844.qzl264ungtk7b6xz@pali>
- <1615621394.25662.70.camel@mhfsdcap03>
+        id S229721AbhCRBbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Mar 2021 21:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229702AbhCRBaf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Mar 2021 21:30:35 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D842C06175F
+        for <linux-pci@vger.kernel.org>; Wed, 17 Mar 2021 18:30:34 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id b16so4603005eds.7
+        for <linux-pci@vger.kernel.org>; Wed, 17 Mar 2021 18:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Xw7oYSjjp9oS+nwtaFUBwvJyGYHFUWxpmI1ewSADgIw=;
+        b=BZrGew9/oWoJA2obgfBVdQagf+0A5ehE894LTII2q8NytJOasNPw01gCoODT8Auvpm
+         C5y9r0O3DSTT3dwDuObSXaYWkJJN+9RROyZ5vO0BeOhokrvimFnJT1AXw9aaRt1HE9RE
+         WxnEDrGqSu4icUPLmIB7l/7+O2QtwHjJm4XzElaAomC8Nd8SuzVwDiTM3zM8uSMZcksE
+         vX5v0ark5Cublx+wxqlgP4a+pSWjIwiKoxfNccWMPaXYGiW3BTQzP5gIBpFgZfFAZx+2
+         lZqI6494e15c6Fu90bLlUuGGrURf3MK5J0wnelSWH4lPHK6M+rD+iuWIYhQDODr+aMD9
+         4hlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Xw7oYSjjp9oS+nwtaFUBwvJyGYHFUWxpmI1ewSADgIw=;
+        b=V9LsZbmuRgVxVU2k2BrCC06lbNAhUd1DHQRKgNKlzSKpbuYe4OFnlRXaewTU1PzKey
+         SFlaoclHR1PHYdRtQBvZO1HK/aJ74HZ7ivQtmC1EgdnKzuGMiRwDGS345KEgCVUKtUAb
+         BpeTXDJaNv1HCOMTAwAaBAmBIKwzd/o98JIqltFnD/XJLEzSy+WaKXTNPzMmbD7cUQH6
+         j7Z55PG105hL1kYGX/5TSyt9BnPkXQLuzFtcTk0efqDDsNpZBIXZsziPun833qrHWcIO
+         /BjY9Cu8+p/DOLcSMVdkQDA00Ttk4u3H1F6RQ/Ikx5NbZJpl1r3xKKGaXa80bh/0W5c+
+         i9SQ==
+X-Gm-Message-State: AOAM532LnNBL10aGSVMePcakF2w8/1TyQUVbvIbrvDA2kmPlYxBBuLNv
+        nbNCSCDe3qSBUprWAHC8+5B5KzZJTq3Ssc3F3o/Kag==
+X-Google-Smtp-Source: ABdhPJx1mCZ8Hl5YSv0C5/KWJ35gquENslnXEiug6CmPW+mNiqmJODmAUbzLLiwIDYTp+495NS7WR/bwk+B28+IHcjU=
+X-Received: by 2002:aa7:cd0e:: with SMTP id b14mr640087edw.354.1616031033201;
+ Wed, 17 Mar 2021 18:30:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1615621394.25662.70.camel@mhfsdcap03>
-User-Agent: NeoMutt/20180716
+References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
+ <20210310180306.1588376-2-Jonathan.Cameron@huawei.com> <CAPcyv4gG-==Vj9w3d7=gRRSPaoD5eZHZZ2hAA0h3c07eMT_x1A@mail.gmail.com>
+ <20210316162952.00001ab7@Huawei.com> <CAPcyv4h6hHCuO=0vHbPz2m4qw6-0=wW9swBrWimBsz6_GJu4Aw@mail.gmail.com>
+ <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
+In-Reply-To: <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 17 Mar 2021 18:30:26 -0700
+Message-ID: <CAPcyv4hJG08RaksW3jH_Q5ASqpzX5MtfNFcLqMxAH5jwTidk=w@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object Exchange
+To:     Chris Browy <cbrowy@avery-design.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Saturday 13 March 2021 15:43:14 Jianjun Wang wrote:
-> On Thu, 2021-03-11 at 13:38 +0100, Pali Rohár wrote:
-> > On Wednesday 24 February 2021 14:11:28 Jianjun Wang wrote:
-> > > +static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
-> > > +{
-> > ...
-> > > +
-> > > +	/* Delay 100ms to wait the reference clocks become stable */
-> > > +	msleep(100);
-> > > +
-> > > +	/* De-assert PERST# signal */
-> > > +	val &= ~PCIE_PE_RSTB;
-> > > +	writel_relaxed(val, port->base + PCIE_RST_CTRL_REG);
-> > 
-> > Hello! This is a new driver which introduce yet another custom timeout
-> > prior PERST# signal for PCIe card is de-asserted. Timeouts for other
-> > drivers I collected in older email [2].
-> > 
-> > Please look at my email [1] about PCIe Warm Reset if you have any clue
-> > about it. Lorenzo and Rob already expressed that this timeout should not
-> > be driver specific. But nobody was able to "decode" and "understand"
-> > PCIe spec yet about these timeouts.
-> 
-> Hi Pali,
-> 
-> I think this is more like a platform specific timeout, which is used to
-> wait for the reference clocks to become stable and finish the reset flow
-> of HW blocks.
-> 
-> Here is the steps to start a link training in this HW:
-> 
-> 1. Assert all reset signals which including the transaction layer, PIPE
-> interface and internal bus interface;
-> 
-> 2. De-assert reset signals except the PERST#, this will make the
-> physical layer active and start to output the reference clock, but the
-> EP device remains in the reset state.
->    Before releasing the PERST# signal, the HW blocks needs at least 10ms
-> to finish the reset flow, and ref-clk needs about 30us to become stable.
-> 
-> 3. De-assert PERST# signal, wait LTSSM enter L0 state.
-> 
-> This 100ms timeout is reference to TPVPERL in the PCIe CEM spec. Since
-> we are in the kernel stage, the power supply has already stabled, this
-> timeout may not take that long.
+Btw your mailer does something odd with the "In-Reply-To:" field, I
+need to fix it up manually to include your address.
 
-I think that this is not platform specific timeout or platform specific
-steps. This matches generic steps as defined in PCIe CEM spec, section
-2.2.1. Initial Power-Up (G3 to S0).
+On Tue, Mar 16, 2021 at 4:28 PM Chris Browy <cbrowy@avery-design.com> wrote=
+:
+>
+> Please address and clarify 2 queries below...
+>
+>
+> > On Mar 16, 2021, at 2:14 PM, Dan Williams <dan.j.williams@intel.com> wr=
+ote:
+> >
+> > On Tue, Mar 16, 2021 at 9:31 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> >>
+> >> On Mon, 15 Mar 2021 12:45:49 -0700
+> >> Dan Williams <dan.j.williams@intel.com> wrote:
+> >>
+> >>> Hey Jonathan, happy to see this, some comments below...
+> >>
+> >> Hi Dan,
+> >>
+> >> Thanks for taking a look!
+> >>
+> >>>
+> >>> On Wed, Mar 10, 2021 at 10:08 AM Jonathan Cameron
+> >>> <Jonathan.Cameron@huawei.com> wrote:
+> >>>>
+> >>>> Introduced in an ECN to the PCI 5.0, DOE provides a config space
+> >>>> based mailbox with standard protocol discovery.  Each mailbox
+> >>>> is accessed through a DOE PCIE Extended Capability.
+> >>>>
+> >>>> A device may have 1 or more DOE mailboxes, each of which is allowed
+> >>>> to support any number of protocols (some DOE protocols
+> >>>> specifications apply additional restrictions).  A given protocol
+> >>>> may be supported on more than one DOE mailbox on a given function.
+> >>>
+> >>> Are all those protocol instances shared?
+> >>> I'm trying to mental model
+> >>> whether, for example, an auxiliary driver instance could be loaded pe=
+r
+> >>> DOE mailbox, or if there would need to be coordination of a given
+> >>> protocol no matter how many DOE mailboxes on that device implemented
+> >>> that protocol.
+> >>
+> >> Just to check I've understood corectly, you mean multiple instances of=
+ same
+> >> protocol across different DOE mailboxes on a given device?
+> >>
+> >
+> > Right.
+>
+> Could you confirm this case for clarity?  A CXL device may have multiple =
+VF/PF.
+> For example, PF=3D0 could have one or more DOE instances for CDAT protoco=
+l.
+> The driver will scan PF=3D0 for all DOE instances and finding one or more=
+ of CDAT
+> protocol will combine/manage them.  I had not considered multiple CDAT ta=
+bles
+> for single PF.  For CXL devices with multiple PF=E2=80=99s the same proce=
+ss would be
+> carried out on PF=3D1-N.
 
-What is platform specific is just how to achieve these steps.
+This patch has nothing to do with CXL. This is a general discussion of
+how a PCIE device implements a DOE mailbox or set of mailboxes. The
+DOE definition is PF-only afaics from the DOE specification.
 
-Am I right?
+The CXL specification only says that a device can implement a CDAT per
+DOE capability instance, so the CXL spec does not limit the number of
+DOE instances to 1, but I can't think of a practical reason to support
+more than one.
 
-...
+[..]
+> >>> https://cfp.osfc.io/media/osfc2020/submissions/ECQ88N/resources/An_op=
+en_source_SPDM_implementation_for_secure_devi_kmIgAQe.pdf
+> >>
+> >> Nice!  Looking at CMA / IDE emulation was on my todo list and that loo=
+ks like
+> >> it might make that job a lot easier.
+>
+> Would it be useful to integrate the openspdm=E2=80=99s SpdmResponderEmu.c=
+ onto the QEMU=E2=80=99s CXL Type3 Device=E2=80=99s
+> DOE backend for CMA/IDE testing?  Doesn=E2=80=99t look hard to do.
 
-TPVPERL is one of my timeout candidates as minimal required timeout for
-Warm Reset. I have wrote it in email:
-
-https://lore.kernel.org/linux-pci/20200430082245.xblvb7xeamm4e336@pali/
-
-But I'm not sure as specially in none diagram is described just warm
-reset as defined in mPCIe CEM (3.2.4.3. PERST# Signal).
-
-...
-
-Anyway, I would suggest to define constants for those timeouts. I guess
-that in future we could be able to define "generic" timeout constants
-which would not be in private driver section, but in some common header
-file.
-
-> > > +
-> > > +	/* Check if the link is up or not */
-> > > +	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_REG, val,
-> > > +				 !!(val & PCIE_PORT_LINKUP), 20,
-> > > +				 50 * USEC_PER_MSEC);
-> > 
-> > IIRC, you need to wait at least 100ms after de-asserting PERST# signal
-> > as it is required by PCIe specs and also because experiments proved that
-> > some Compex wifi cards (e.g. WLE900VX) are not detected if you do not
-> > wait this minimal time.
-> 
-> Yes, this should be 100ms, I will fix it at next version, thanks for
-> your review.
-
-In past Bjorn suggested to use msleep(PCI_PM_D3COLD_WAIT); macro for
-this step during reviewing aardvark driver.
-
-https://lore.kernel.org/linux-pci/20190426161050.GA189964@google.com/
-
-And next iteration used this PCI_PM_D3COLD_WAIT macro instead of 100:
-
-https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/
-
-> Thanks.
-> > 
-> > > +	if (err) {
-> > > +		val = readl_relaxed(port->base + PCIE_LTSSM_STATUS_REG);
-> > > +		dev_err(port->dev, "PCIe link down, ltssm reg val: %#x\n", val);
-> > > +		return err;
-> > > +	}
-> > 
-> > [1] - https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
-> > [2] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
-> 
+Yes, I do think it would be useful.
