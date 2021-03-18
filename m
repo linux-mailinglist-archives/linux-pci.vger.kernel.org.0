@@ -2,94 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D35CE340B5D
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:12:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCC95340B1D
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:12:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232541AbhCRRMT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 13:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232464AbhCRRLw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 13:11:52 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 668D4C061761
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:52 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id s18so24499174pfe.10
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=WZ2fsTX5FLJhX01BulIdj9aVU+u+1SaaqVDcWrlk7vo=;
-        b=p/MDs2PDjsFiD6r2Ts6jM6BFyv2fovLwrbhh8l+TmOVc+XN/ujL2rtlnXKiP30RH8t
-         S6UgRxg5+yaZATMiFP0V7CZXbXRNJuWO2POyPyc/+mNIGwUkdBn8lGC2KIC6cz2hh6sv
-         CJDbF1wva6NSYjwFp6yOZ5B/8Wi6p/+1TbqSDvFzeJTm5qNOjQDlJzu+az351Kb6k01L
-         8H9aN9DLPhNUJmU3pg9aSJhzVGaGFQW4kJ4pkEcD6+oA15BQDjpnmOHp8Myq3XE58psG
-         csbaakT5tvQ7HUsKigBvtgqMzAnRmEwTfvnkEOj9XxC1ys8T6tR9JZXH1i/okjccLokC
-         xvsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=WZ2fsTX5FLJhX01BulIdj9aVU+u+1SaaqVDcWrlk7vo=;
-        b=Cjt7T0K8pWxXdNUtIwyo8K4w3JTcJq8Y5amJv8HjAlcvykLjkbzMJIA8djUUyq7ZJs
-         4ZCLhP4LWAoQ9C6WkAkR2irnLoAcQhdVqUXJS3VvxjwbILQboGMzdYM1ATy0XSGvA8qJ
-         dq4y8YUT2AG+5Ode3r/hVONGN6v+mDbHxnkxaz0QgQn8KPbBeU9MvOv9Pd8QCGiHWpNn
-         32SCxWQVoBrNSYuauodo8RRnCThRhe4reU/1Pa/ot9GwNUH/sUooXfL8bjeVXYei2ew5
-         abuasmXXryHieOkX11z/QsLOhfhDL4n67rTIrS6wwYlMtqpOvobjfQwNMxq5VoCtW5yt
-         C+mA==
-X-Gm-Message-State: AOAM530esrTL5k7aRaSlklHQKUsA9MB6zme67FjMGIgC+Dd77t2ZMgMq
-        VL1sOSEge/e/qCbTID5yU1w/2D6zoKtyfMx3khY=
-X-Google-Smtp-Source: ABdhPJwVhIeJ7eN/c102kC0C0PDipbzyJDdK32hnyHrtAGB4zJkWiAPX1yDL/oR7lqAn8+vlGW94yr5eZySyWBFd8bM=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c0d7:a7ba:fb41:a35a])
- (user=samitolvanen job=sendgmr) by 2002:a17:902:aa8a:b029:e6:64bd:e29d with
- SMTP id d10-20020a170902aa8ab02900e664bde29dmr10716922plr.24.1616087511958;
- Thu, 18 Mar 2021 10:11:51 -0700 (PDT)
-Date:   Thu, 18 Mar 2021 10:11:11 -0700
-In-Reply-To: <20210318171111.706303-1-samitolvanen@google.com>
-Message-Id: <20210318171111.706303-18-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210318171111.706303-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v2 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S232282AbhCRRLi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 13:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232292AbhCRRLY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Mar 2021 13:11:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ED346601FF;
+        Thu, 18 Mar 2021 17:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616087484;
+        bh=MFIBuAA4jYFqbcWZsIpAtd0iyeV2bPMqk0MdX4Lx+js=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MmHT1Cpm4VtyUMf8ZoCwfWgeMPtJmgNijoNx5bgltDML5M6DkWZzxQl3rj4DpphdE
+         YiG1maac/K13ovuV05nBz0rmL+dKSX23gJUeX+VsblbjSAQSqhtJCCTqeWY7o+MUj+
+         rHx1yx/t9iuusV9mt37qBjvDt9b/eevGV2oATCP/7gR6+jE/kreRRD+qUbtPKuXSOK
+         TGaoTbOIqbPZUKGPhpKuCRqgqhVogbfGnl8lZ//bJBjW+oPyDXXJMmDgXH40fik3oy
+         joTM8Z521KNXpbwmKWo148HXq65nfajf5tsB07hfnXTKDinhdWDeo9iqDrzuwYTsCe
+         KRc2Awp47KTSg==
+Date:   Thu, 18 Mar 2021 12:11:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Martin Mares <mj@ucw.cz>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] lspci: Don't report PCIe link downgrades for downstream
+ ports
+Message-ID: <20210318171122.GA151712@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210318170244.151240-1-helgaas@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+On Thu, Mar 18, 2021 at 12:02:44PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> After b47b5bd408e1 ("lspci: Report if the PCIe link speed/width is full or
+> downgraded"), we report "downgraded" or "ok" for PCIe links operating at
+> lower speed or width than they're capable of:
+> 
+>   LnkCap: Port #1, Speed 8GT/s, Width x1, ASPM L1, Exit Latency L1 <16us
+>   LnkSta: Speed 5GT/s (downgraded), Width x1 (ok)
+> 
+> Previously we did this for both ends of the link, but I don't think it's
+> very useful for Downstream Ports (the upstream end of the link) because we
+> claim the link is downgraded even if (1) there's no device on the other end
+> or (2) the other device doesn't support anything faster/wider.
+> 
+> Drop the "downgraded" reporting for Downstream Ports.  If there is a device
+> below, we'll still complain at that end if it supports a faster/wider link
+> than is available.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  ls-caps.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/ls-caps.c b/ls-caps.c
+> index db56556..dd17c6b 100644
+> --- a/ls-caps.c
+> +++ b/ls-caps.c
+> @@ -758,13 +758,16 @@ static char *link_speed(int speed)
+>      }
+>  }
+>  
+> -static char *link_compare(int sta, int cap)
+> +static char *link_compare(int type, int sta, int cap)
+>  {
+> +  if ((type == PCI_EXP_TYPE_ROOT_PORT) || (type == PCI_EXP_TYPE_DOWNSTREAM) ||
+> +      (type == PCI_EXP_TYPE_PCIE_BRIDGE))
+> +    return "";
+>    if (sta < cap)
+> -    return "downgraded";
+> +    return " (downgraded)";
+>    if (sta > cap)
+> -    return "strange";
+> -  return "ok";
+> +    return " (strange)";
+> +  return " (ok)";
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Personally I would probably just return "" by default and drop the
+"(ok)" notes because they don't really seem necessary.  But either way
+is OK.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 5656e7aacd69..2eefdbc3e3c9 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -75,6 +75,7 @@ config ARM64
- 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
- 	select ARCH_SUPPORTS_NUMA_BALANCING
--- 
-2.31.0.291.g576ba9dcdaf-goog
-
+>  }
+>  
+>  static char *aspm_support(int code)
+> @@ -837,11 +840,11 @@ static void cap_express_link(struct device *d, int where, int type)
+>    w = get_conf_word(d, where + PCI_EXP_LNKSTA);
+>    sta_speed = w & PCI_EXP_LNKSTA_SPEED;
+>    sta_width = (w & PCI_EXP_LNKSTA_WIDTH) >> 4;
+> -  printf("\t\tLnkSta:\tSpeed %s (%s), Width x%d (%s)\n",
+> +  printf("\t\tLnkSta:\tSpeed %s%s, Width x%d%s\n",
+>  	link_speed(sta_speed),
+> -	link_compare(sta_speed, cap_speed),
+> +	link_compare(type, sta_speed, cap_speed),
+>  	sta_width,
+> -	link_compare(sta_width, cap_width));
+> +	link_compare(type, sta_width, cap_width));
+>    printf("\t\t\tTrErr%c Train%c SlotClk%c DLActive%c BWMgmt%c ABWMgmt%c\n",
+>  	FLAG(w, PCI_EXP_LNKSTA_TR_ERR),
+>  	FLAG(w, PCI_EXP_LNKSTA_TRAIN),
+> -- 
+> 2.25.1
+> 
