@@ -2,55 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76529340B45
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:12:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0BD340B55
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:12:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232491AbhCRRMJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 13:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
+        id S232402AbhCRRMP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 13:12:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232327AbhCRRLg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 13:11:36 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58657C061762
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:36 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j19so3401166ybg.5
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:36 -0700 (PDT)
+        with ESMTP id S232341AbhCRRLi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 13:11:38 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24574C061761
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:38 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id 71so19411807pfu.8
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:11:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=79m/4wCgeIzY0Vch1mQ9hDd2/YXny1QOhs6kFFYl+qs=;
-        b=Zik1d3CnZxputVsmGGlAexPLSHJF1N30aQsZC+A49EjAjI41rgMguWULbVHOZuBdPg
-         OQ23FZI5e5lc19k+4wnAGEPbO8ubc3ZLNnH9lf488/mljubW7d/4qBvIEQToXTW14lVr
-         j0ydpHrAO7UAeKBGZTfKjWqNRXa/+aUW3W/Q9xyReJ+HkSh4ZyfQQVf2jl2YoJPNmYgP
-         U8ED0ly++E/R2SKQ5gcXdYQm5bK3aQwaQuAnd0Qz5u7IAaAg9I7S+5U/IZnXR62c9V5n
-         WF5Km9LoVXhtHm9tlACHHs0O6slXVTwziecp89dN+AoViSwFfPOMP88Mo91j0UqUKlOJ
-         Dbbw==
+        bh=xIKsEDWi8EL1j5NSYc2uWQA3l5Y2NiXXcLT9TovNhRQ=;
+        b=uKxyyo5NDdB1QUbA3EnMvjuX1onU20iICbKJ9iP/dqRqzhm0bGPXUszw7wf3GKl1Cw
+         8b6zGQsOgdMHwwqtEMHY8K9uQWWo8Csl7Ij0z216FvJg68YI42t5LQuRc707PLWEIS0l
+         v6mINbfwZQaRHIuEtuhd/w+jw1MkLwDSlSn0PFx/6d0jgHgbFlLEe2zIRvzuxqfIFbB4
+         81s6Y5tTsyTXg3PP3MbUj5QPEwCUc2bn0HIlVMkvO4B9tOKV53UBjXaLwrQa+a/fwExd
+         ndjASAw4BiPpZ/v3XOZOyYf+t4si7VDIT+/WYNd+6rtyQwfJBQtMCpJMP/HwM/sR2oXZ
+         1fYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=79m/4wCgeIzY0Vch1mQ9hDd2/YXny1QOhs6kFFYl+qs=;
-        b=h5Cp30u8xGqLrQUy5047xCJSb10TR+VAmnTsf4sfb0hkmiLybb5dyZ5L0dmjNetwA9
-         BCYMqR+CTMex7ZTda3ks0hNwc/5ylyXC0fCpDgS9PeTQOsbXGQEf9D20kCBZff+aNtZn
-         GHcNCJllPrMi3WSsRi++IAQLx+U5Jjmf5EzgjqrupDAWE1V0A432cVgmlOAPfLjmseXo
-         eqijqS9Ue+wYyAuGJQjPv+lhAQpAaF3ApJDMaWjcmbwdxY4DfqK7s2ZhBDGNfE4WWvYl
-         JjFOiwkBedq+RQdTd+MK63sorHust9CKN25mu4urzUgPLaTlFNrbP/jbKkvl452N0hYc
-         fNug==
-X-Gm-Message-State: AOAM530wsjAOmIzPgTEi/ClDKF1Wmb9qVROzt64quuXexs02LLSWriCH
-        NPPSNMLx+gk7k4Op2p+tKs+z0vgKGDltytTV0WI=
-X-Google-Smtp-Source: ABdhPJyhrd+ijbcKHuUHxkloDz8fmR6k/s2L31mWKV23xRXPA0zTKRcjoj602FSIswWJW0IQy4bbshoZ/FsRp3uVBzQ=
+        bh=xIKsEDWi8EL1j5NSYc2uWQA3l5Y2NiXXcLT9TovNhRQ=;
+        b=XaYWhGyOgk5rBer8dFWB4gqgxuoVN+tPPIIzXJ9bDAXZxVRS02hSYFAu5D0w8EqPyH
+         UKaYGTtpD7qpvoh182Vhik4bRoQ3j+o8HMwEdjEu5WE1VxpQz87r0zrUxsAJ7J4lt05r
+         EBRyg9b6fZQnE1/UChzSBarIRyTKz0DBGuSmw6YiylNiAByV44a0fhvLx7Nfk7ANhQEv
+         NRzotqkIm1ExoPy8T6GTlqAcJxTOuYk06CgItw8w/XRagfCoJ23lrwjlv6wTIFTzdYl5
+         6WdSpd0Oqz1vXkCqHF/Lud4cPusCEoVl2F4OH9tchSgFsCZ6jUhd/8uzPM/OyqvY4Z+8
+         6hag==
+X-Gm-Message-State: AOAM532xdu6pwb/R2EbdCkuhxLwo8EfuJf5BOvBrWcD7n2lWWCFoftAG
+        94wFkK8pp3WwTkFmK1WsWxq1nvb6qQgPAgKmo58=
+X-Google-Smtp-Source: ABdhPJwtUxlgXUjHfalHssJK6ozLwDkIUZpLb/yIsL/9erTHZ+0BV/50LNkOYs0FUF9Eq2xmyoDCO5T7tob2m1K9T6U=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c0d7:a7ba:fb41:a35a])
- (user=samitolvanen job=sendgmr) by 2002:a25:ab11:: with SMTP id
- u17mr494297ybi.192.1616087495554; Thu, 18 Mar 2021 10:11:35 -0700 (PDT)
-Date:   Thu, 18 Mar 2021 10:11:03 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a62:e90c:0:b029:203:90f:6f34 with
+ SMTP id j12-20020a62e90c0000b0290203090f6f34mr5021966pfh.29.1616087497587;
+ Thu, 18 Mar 2021 10:11:37 -0700 (PDT)
+Date:   Thu, 18 Mar 2021 10:11:04 -0700
 In-Reply-To: <20210318171111.706303-1-samitolvanen@google.com>
-Message-Id: <20210318171111.706303-10-samitolvanen@google.com>
+Message-Id: <20210318171111.706303-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210318171111.706303-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v2 09/17] lib/list_sort: fix function type mismatches
+Subject: [PATCH v2 10/17] lkdtm: use __va_function
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -69,52 +70,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Casting the comparison function to a different type trips indirect
-call Control-Flow Integrity (CFI) checking. Remove the additional
-consts from cmp_func, and the now unneeded casts.
+To ensure we take the actual address of a function in kernel text, use
+__va_function. Otherwise, with CONFIG_CFI_CLANG, the compiler replaces
+the address with a pointer to the CFI jump table, which is actually in
+the module when compiled with CONFIG_LKDTM=m.
 
-Fixes: 043b3f7b6388 ("lib/list_sort: simplify and remove MAX_LIST_LENGTH_BITS")
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
 ---
- lib/list_sort.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/misc/lkdtm/usercopy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/list_sort.c b/lib/list_sort.c
-index 52f0c258c895..b14accf4ef83 100644
---- a/lib/list_sort.c
-+++ b/lib/list_sort.c
-@@ -8,7 +8,7 @@
- #include <linux/list.h>
+diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
+index 109e8d4302c1..d173d6175c87 100644
+--- a/drivers/misc/lkdtm/usercopy.c
++++ b/drivers/misc/lkdtm/usercopy.c
+@@ -314,7 +314,7 @@ void lkdtm_USERCOPY_KERNEL(void)
  
- typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
--		struct list_head const *, struct list_head const *);
-+		struct list_head *, struct list_head *);
- 
- /*
-  * Returns a list organized in an intermediate format suited
-@@ -227,7 +227,7 @@ void list_sort(void *priv, struct list_head *head,
- 		if (likely(bits)) {
- 			struct list_head *a = *tail, *b = a->prev;
- 
--			a = merge(priv, (cmp_func)cmp, b, a);
-+			a = merge(priv, cmp, b, a);
- 			/* Install the merged result in place of the inputs */
- 			a->prev = b->prev;
- 			*tail = a;
-@@ -249,10 +249,10 @@ void list_sort(void *priv, struct list_head *head,
- 
- 		if (!next)
- 			break;
--		list = merge(priv, (cmp_func)cmp, pending, list);
-+		list = merge(priv, cmp, pending, list);
- 		pending = next;
- 	}
- 	/* The final merge, rebuilding prev links */
--	merge_final(priv, (cmp_func)cmp, head, pending, list);
-+	merge_final(priv, cmp, head, pending, list);
- }
- EXPORT_SYMBOL(list_sort);
+ 	pr_info("attempting bad copy_to_user from kernel text: %px\n",
+ 		vm_mmap);
+-	if (copy_to_user((void __user *)user_addr, vm_mmap,
++	if (copy_to_user((void __user *)user_addr, __va_function(vm_mmap),
+ 			 unconst + PAGE_SIZE)) {
+ 		pr_warn("copy_to_user failed, but lacked Oops\n");
+ 		goto free_user;
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
