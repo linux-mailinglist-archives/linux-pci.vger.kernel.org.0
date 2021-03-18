@@ -2,236 +2,317 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BEAE340F6C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 21:55:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B295B340FE1
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 22:32:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbhCRUzF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 16:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233122AbhCRUy5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Mar 2021 16:54:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D4A564E37;
-        Thu, 18 Mar 2021 20:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616100896;
-        bh=iI8Uazl5tt1KP7H0SEdxMUR1oadEFMxyq7jgF2Y2rc4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BEA+rybpzkriZQNUKA4Yu1a/dGp32eWbgVKoMDy02EDQJfSkCfRu9CMyOviNag2sQ
-         aemdmyXefjVBj/W0l+JJQ60fOHLoXNi1WEqtDUoXoMHX4OGgRN+rQo4ePqSjinemJT
-         CAwZZ3TpK5uLcl4Rq2w4iILuqL2qKZw4JnS/rIO6krkbavcEbiq+mpDgIXmkHjma5Z
-         WdepdxofYrfxED/y4BU9UgZ76cP4xE07gh4c0ATnHzqhAnwEL/RH0iN2JyYSCELzzC
-         0NOrelFIT+g7OwOnGo2j2f3LuTCFfR9tMmlhQOW4kNlvqMKfglLDbUCMyk1QPbtiYP
-         108VhKsAIlHbg==
-Date:   Thu, 18 Mar 2021 15:54:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chiqijun <chiqijun@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
-        yin.yinshi@huawei.com, cloud.wangxiaoyun@huawei.com,
-        zengweiliang.zengweiliang@huawei.com, chenlizhong@huawei.com
-Subject: Re: [v5] PCI: Add reset quirk for Huawei Intelligent NIC virtual
- function
-Message-ID: <20210318205455.GA160826@bjorn-Precision-5520>
+        id S230333AbhCRVbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 17:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233254AbhCRVbZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 17:31:25 -0400
+Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32965C061762
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 14:31:25 -0700 (PDT)
+Received: by mail-vs1-xe29.google.com with SMTP id k14so2364021vsb.6
+        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 14:31:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tdIaU5y5aj4CvY8gHTbhPiKBxK+0c5ivS4PVgMAZKZ8=;
+        b=VQHQ/IJvAGsBh7hccszXuTdFbZijYzXgXzXCIzA2a7dJpcH6fMreeEP4JQX8vzYKQw
+         17gzUL7p9HLsJm+wzC+7kwxysSLLUOFU16pfSruy8k6oojzW6uUwDEqIIQ26n833XpIJ
+         nRIT5osS4S0zWgKG08L3MvJDPQXbeiXJD6WWF5WIFCRxvrdTy84dUo63hUjFPxVpT7Qy
+         r5rNK69CITHSj/xGsPVpV9x9ROfn6UB5BwpBhGwl6SCSaK4S3ZvoQ6/MX7DPhBlfODxu
+         KDDy3/ne6shrgGrU4yEniwtyCra85G6v6KXM3roh3xjBdCjKrCkGBpOWV+Hs3zFkXA+U
+         WlEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tdIaU5y5aj4CvY8gHTbhPiKBxK+0c5ivS4PVgMAZKZ8=;
+        b=gA47rCE1mSXgJImpL42O4VoxXA6L2Y7G87n3CfwJnscYH8doV8wXx6jpyQyM+tTChe
+         hjymgmROAQDDPDDcbthwe/aZxJf2B8I3FreWmi3ZNchMP+kuq1kQ17JpAWQaw7GDS/df
+         4443OxjUDDV+6CrhztYoTarKEh3aj/TjJDcWFZDQe0tOA12Fxm7y3pCbfsQc6oDOFvJz
+         vDadQH1JJAU0MsXpjDanOZw4oquiQMthfFqkwKtUzyqtCmtCVGCGJ14woYiHP2pCuCHO
+         t48fYf77P/X7RqWNdgx6OQD1TCYuhoCQ0tVvrEcukNJnIyZCjX51WtH9pt1Eyf4YA+K5
+         RV/A==
+X-Gm-Message-State: AOAM530bqBEgy89z/pkF0T4z5G6P/0VOMY+vh89rFtVZzVjV2Dz12Tuw
+        Dpd+zn77ULvPfYqm64jExIZhpJAMCZkIcFTZw1sTzw==
+X-Google-Smtp-Source: ABdhPJxlimnSXWyxeVH26Hx7MVzsZM1C2wpNoVlO6BH9QnMVU1txUFQEowbO9H2O2Syt3coKLcU+m/27jcEX/CvNAbI=
+X-Received: by 2002:a67:2803:: with SMTP id o3mr1129222vso.36.1616103083753;
+ Thu, 18 Mar 2021 14:31:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210316140847.3326-1-chiqijun@huawei.com>
+References: <20210318171111.706303-1-samitolvanen@google.com>
+ <20210318171111.706303-10-samitolvanen@google.com> <CAKwvOdn1mkq1GL0nobyvpiAHMzA6rmvmdd_UfauO9YLs5rUAVw@mail.gmail.com>
+In-Reply-To: <CAKwvOdn1mkq1GL0nobyvpiAHMzA6rmvmdd_UfauO9YLs5rUAVw@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 18 Mar 2021 14:31:11 -0700
+Message-ID: <CABCJKucamBXi4LLLatcjHUOfPX7Pb8NO9Q19mGMX-PLhzCjF3A@mail.gmail.com>
+Subject: Re: [PATCH v2 09/17] lib/list_sort: fix function type mismatches
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 16, 2021 at 10:08:47PM +0800, Chiqijun wrote:
-> When multiple VFs do FLR at the same time, the firmware is
-> processed serially, resulting in some VF FLRs being delayed more
-> than 100ms, when the virtual machine restarts and the device
-> driver is loaded, the firmware is doing the corresponding VF
-> FLR, causing the driver to fail to load.
+On Thu, Mar 18, 2021 at 11:31 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Thu, Mar 18, 2021 at 10:11 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > Casting the comparison function to a different type trips indirect
+> > call Control-Flow Integrity (CFI) checking. Remove the additional
+> > consts from cmp_func, and the now unneeded casts.
+> >
+> > Fixes: 043b3f7b6388 ("lib/list_sort: simplify and remove MAX_LIST_LENGTH_BITS")
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  lib/list_sort.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/lib/list_sort.c b/lib/list_sort.c
+> > index 52f0c258c895..b14accf4ef83 100644
+> > --- a/lib/list_sort.c
+> > +++ b/lib/list_sort.c
+> > @@ -8,7 +8,7 @@
+> >  #include <linux/list.h>
+> >
+> >  typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
+> > -               struct list_head const *, struct list_head const *);
+> > +               struct list_head *, struct list_head *);
+> >
+> >  /*
+> >   * Returns a list organized in an intermediate format suited
+> > @@ -227,7 +227,7 @@ void list_sort(void *priv, struct list_head *head,
+>
+> There's definitely some const confusion going on around here.
+> Comparison functions that modify their in/out parameters are a code
+> smell, and I wonder if any exist in tree?
+>
+> I think it would be better to enforce one signature for cmp_func
+> throughout lib/list_sort.c and the tree, either const or not, but not
+> a mix of both.  I know `const` is messy because it tends to propagate
+> everywhere, so I don't care which is preferred (making cmp_func have
+> const qualified params or not, though if we're already being pedantic
+> about which params are non-null...), but something like this might be
+> nicer:
 
-Nit: VFs do not do FLR; *software* does FLR on a VF.  And I think this
-is a spec compliance issue specific to the Huawei NIC.  I would say
-something like "When we do an FLR on several VFs at the same time, the
-Huawei Intelligent NIC processes them serially, ..."
+Sure, an alternative to removing the internal casts is to actually
+change all the callers to use a comparison function with const
+parameters. That's quite a bit more invasive, but I'm fine with that
+approach too.
 
-"VF FLRs being delayed more than 100ms" does not by itself explain
-what the problem is.  I'm guessing the problem is that it exceeds the
-"msleep(100)" in pcie_flr(), which is based on PCIe r5.0, sec 6.6.2,
-which requires:
-
-  After an FLR has been initiated by writing a 1b to the Initiate
-  Function Level Reset bit, the Function must complete the FLR within
-  100 ms.
-
-So this device is apparently out of spec.  Is there an erratum for
-this?  Please cite it and quote the relevant part here.  I want to
-avoid having to update this quirk with future device IDs.
-
-IIUC, VFIO is initiating the FLR, probably as part of assigning the VF
-to a VM?
-
-> To solve this problem, add host and firmware status synchronization
-> during FLR.
-> 
-> Signed-off-by: Chiqijun <chiqijun@huawei.com>
-> ---
-> v5:
->  - Fix build warning reported by kernel test robot
-> 
-> v4:
->  - Addressed Bjorn's review comments
-> 
-> v3:
->  - The MSE bit in the VF configuration space is hardwired to zero,
->    remove the setting of PCI_COMMAND_MEMORY bit. Add comment for
->    set PCI_COMMAND register.
-> 
-> v2:
->  - Update comments
->  - Use the HINIC_VF_FLR_CAP_BIT_SHIFT and HINIC_VF_FLR_PROC_BIT_SHIFT
->    macro instead of the magic number
-> ---
->  drivers/pci/quirks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 653660e3ba9e..343890432ba8 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3913,6 +3913,73 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
->  	return 0;
+>
+> ```
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index 5132f64a5cee..d475b3cfd06f 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -75,7 +75,8 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+>         blk_mq_run_hw_queue(hctx, true);
 >  }
->  
-> +#define PCI_DEVICE_ID_HINIC_VF      0x375E
-> +#define HINIC_VF_FLR_TYPE           0x1000
-> +#define HINIC_VF_FLR_CAP_BIT_SHIFT  30
-> +#define HINIC_VF_OP                 0xE80
-> +#define HINIC_VF_FLR_PROC_BIT_SHIFT 18
-> +#define HINIC_OPERATION_TIMEOUT     15000	/* 15 seconds */
-
-If you did this:
-
-  #define HINIC_VF_FLR_CAP_BIT   (1UL << 30)
-  #define HINIC_VF_FLR_PROC_BIT  (1UL << 18)
-
-the code below could be a little more readable, e.g,:
-
-  if (!(val & HINIC_VF_FLR_CAP_BIT))
-    ...
-  val |= HINIC_VF_FLR_PROC_BIT;
-
-> +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
-> +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
-> +{
-> +	unsigned long timeout;
-> +	void __iomem *bar;
-> +	u32 val;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	bar = pci_iomap(pdev, 0, 0);
-> +	if (!bar)
-> +		return -ENOTTY;
-> +
-> +	/* Get and check firmware capabilities. */
-> +	val = ioread32be(bar + HINIC_VF_FLR_TYPE);
-> +	if (!(val & (1UL << HINIC_VF_FLR_CAP_BIT_SHIFT))) {
-> +		pci_iounmap(pdev, bar);
-> +		return -ENOTTY;
-> +	}
-> +
-> +	/*
-> +	 * Set the processing bit for the start of FLR, which will be cleared
-> +	 * by the firmware after FLR is completed.
-> +	 */
-> +	val = ioread32be(bar + HINIC_VF_OP);
-> +	val = val | (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT);
-
-> +	iowrite32be(val, bar + HINIC_VF_OP);
-> +
-> +	/* Perform the actual device function reset */
-> +	pcie_flr(pdev);
-> +
-> +	/*
-> +	 * The device must learn BDF after FLR in order to respond to BAR's
-> +	 * read request, therefore, we issue a configure write request to let
-> +	 * the device capture BDF.
-
-Will this device capture the bus/device here even though it hasn't
-completed the reset?  Or does this write need to happen below, after
-the device has cleared HINIC_VF_FLR_PROC_BIT?
-
-> +	 */
-> +	pci_write_config_word(pdev, PCI_VENDOR_ID, 0);
-> +
-> +	/* Waiting for device reset complete */
-> +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
-> +	do {
-> +		val = ioread32be(bar + HINIC_VF_OP);
-> +		if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
-> +			goto reset_complete;
-> +		msleep(20);
-> +	} while (time_before(jiffies, timeout));
-> +
-> +	val = ioread32be(bar + HINIC_VF_OP);
-> +	if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
-> +		goto reset_complete;
-> +
-> +	pci_warn(pdev, "Reset dev timeout, flr ack reg: %#010x\n", val);
-
-s/flr/FLR/
-
-> +reset_complete:
-> +	pci_iounmap(pdev, bar);
-> +
-> +	return 0;
-
-You return 0 (success) even if the reset timed out.  Is that what you
-want?
-
-I'd consider adding an "int err" local variable, then doing this so
-there's a single cleanup place that does the pci_iounmap() and the
-straight-line main path is the non-error one:
-
-    int err = 0;
-
-    if (!(val & HINIC_VF_FLR_CAP_BIT)) {
-      err = -ENOTTY;
-      goto reset_complete;
-    }
-
-    do {
-      ...
-    } while (time_before(jiffies, timeout));
-
-    val = ioread32be(bar + HINIC_VF_OP);
-    if (val & HINIC_VF_FLR_PROC_BIT) {
-      pci_warn(pdev, "Reset dev timeout, FLR ack reg: %#010x\n", val);
-      err = -EBUSY;            /* if you want error here; I dunno */
-      goto reset_complete;
-    }
-
-    /* Let device capture bus/device, per PCIe r5.0, sec 2.2.9 */
-    pci_write_config_word(pdev, PCI_VENDOR_ID, 0);  /* if it goes here? */
-
-  reset_complete:
-    pci_iounmap(pdev, bar);
-    return err;
-
-> +}
-> +
->  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
->  		 reset_intel_82599_sfp_virtfn },
-> @@ -3924,6 +3991,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
->  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->  		reset_chelsio_generic_dev },
-> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-> +		reset_hinic_vf_dev },
->  	{ 0 }
+>
+> -static int sched_rq_cmp(void *priv, struct list_head *a, struct list_head *b)
+> +static int sched_rq_cmp(void *priv, const struct list_head *a,
+> +               const struct list_head *b)
+>  {
+>         struct request *rqa = container_of(a, struct request, queuelist);
+>         struct request *rqb = container_of(b, struct request, queuelist);
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 2e825a7a3606..9ed063ffdb27 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1905,7 +1905,8 @@ void blk_mq_insert_requests(struct blk_mq_hw_ctx
+> *hctx, struct blk_mq_ctx *ctx,
+>         spin_unlock(&ctx->lock);
+>  }
+>
+> -static int plug_rq_cmp(void *priv, struct list_head *a, struct list_head *b)
+> +static int plug_rq_cmp(void *priv, const struct list_head *a,
+> +               const struct list_head *b)
+>  {
+>         struct request *rqa = container_of(a, struct request, queuelist);
+>         struct request *rqb = container_of(b, struct request, queuelist);
+> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+> index 1ac67d4505e0..5a3a343499f6 100644
+> --- a/drivers/gpu/drm/drm_modes.c
+> +++ b/drivers/gpu/drm/drm_modes.c
+> @@ -1290,7 +1290,8 @@ EXPORT_SYMBOL(drm_mode_prune_invalid);
+>   * Negative if @lh_a is better than @lh_b, zero if they're equivalent, or
+>   * positive if @lh_b is better than @lh_a.
+>   */
+> -static int drm_mode_compare(void *priv, struct list_head *lh_a,
+> struct list_head *lh_b)
+> +static int drm_mode_compare(void *priv, const struct list_head *lh_a,
+> +               const struct list_head *lh_b)
+>  {
+>         struct drm_display_mode *a = list_entry(lh_a, struct
+> drm_display_mode, head);
+>         struct drm_display_mode *b = list_entry(lh_b, struct
+> drm_display_mode, head);
+> diff --git a/drivers/gpu/drm/i915/gt/intel_engine_user.c
+> b/drivers/gpu/drm/i915/gt/intel_engine_user.c
+> index 34e6096f196e..7586dffd27d3 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_engine_user.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_engine_user.c
+> @@ -49,7 +49,8 @@ static const u8 uabi_classes[] = {
+>         [VIDEO_ENHANCEMENT_CLASS] = I915_ENGINE_CLASS_VIDEO_ENHANCE,
 >  };
->  
-> -- 
-> 2.17.1
-> 
+>
+> -static int engine_cmp(void *priv, struct list_head *A, struct list_head *B)
+> +static int engine_cmp(void *priv, const struct list_head *A,
+> +               const struct list_head *B)
+>  {
+>         const struct intel_engine_cs *a =
+>                 container_of((struct rb_node *)A, typeof(*a), uabi_node);
+> diff --git a/fs/ext4/fsmap.c b/fs/ext4/fsmap.c
+> index 4c2a9fe30067..4493ef0c715e 100644
+> --- a/fs/ext4/fsmap.c
+> +++ b/fs/ext4/fsmap.c
+> @@ -354,8 +354,8 @@ static unsigned int ext4_getfsmap_find_sb(struct
+> super_block *sb,
+>
+>  /* Compare two fsmap items. */
+>  static int ext4_getfsmap_compare(void *priv,
+> -                                struct list_head *a,
+> -                                struct list_head *b)
+> +                                const struct list_head *a,
+> +                                const struct list_head *b)
+>  {
+>         struct ext4_fsmap *fa;
+>         struct ext4_fsmap *fb;
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 414769a6ad11..0129e6bab985 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -1155,7 +1155,8 @@ iomap_ioend_try_merge(struct iomap_ioend *ioend,
+> struct list_head *more_ioends,
+>  EXPORT_SYMBOL_GPL(iomap_ioend_try_merge);
+>
+>  static int
+> -iomap_ioend_compare(void *priv, struct list_head *a, struct list_head *b)
+> +iomap_ioend_compare(void *priv, const struct list_head *a,
+> +               const struct list_head *b)
+>  {
+>         struct iomap_ioend *ia = container_of(a, struct iomap_ioend, io_list);
+>         struct iomap_ioend *ib = container_of(b, struct iomap_ioend, io_list);
+> diff --git a/include/linux/list_sort.h b/include/linux/list_sort.h
+> index 20f178c24e9d..4fe9cb94d0d1 100644
+> --- a/include/linux/list_sort.h
+> +++ b/include/linux/list_sort.h
+> @@ -6,8 +6,9 @@
+>
+>  struct list_head;
+>
+> +typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
+> +               struct list_head const *, struct list_head const *);
+> +
+
+Note that we already have cmp_func_t in linux/types.h, so something
+like list_cmp_func_t would probably be more appropriate here.
+
+>  __attribute__((nonnull(2,3)))
+> -void list_sort(void *priv, struct list_head *head,
+> -              int (*cmp)(void *priv, struct list_head *a,
+> -                         struct list_head *b));
+> +void list_sort(void *priv, struct list_head *head, cmp_func cmp);
+>  #endif
+> diff --git a/lib/list_sort.c b/lib/list_sort.c
+> index 52f0c258c895..6cfac649c4a6 100644
+> --- a/lib/list_sort.c
+> +++ b/lib/list_sort.c
+> @@ -7,9 +7,6 @@
+>  #include <linux/list_sort.h>
+>  #include <linux/list.h>
+>
+> -typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
+> -               struct list_head const *, struct list_head const *);
+> -
+>  /*
+>   * Returns a list organized in an intermediate format suited
+>   * to chaining of merge() calls: null-terminated, no reserved or
+> @@ -185,9 +182,7 @@ static void merge_final(void *priv, cmp_func cmp,
+> struct list_head *head,
+>   * 2^(k+1) - 1 (second merge of case 5 when x == 2^(k-1) - 1).
+>   */
+>  __attribute__((nonnull(2,3)))
+> -void list_sort(void *priv, struct list_head *head,
+> -               int (*cmp)(void *priv, struct list_head *a,
+> -                       struct list_head *b))
+> +void list_sort(void *priv, struct list_head *head, cmp_func cmp)
+>  {
+>         struct list_head *list = head->next, *pending = NULL;
+>         size_t count = 0;       /* Count of pending */
+> ```
+> There are probably more instances in the tree to clean up, but that
+> compiles with x86_64 defconfig, and I'm sure it doesn't suffer the CFI
+> issue from the cast.
+
+You indeed missed some callers, but after fixing all the remaining
+ones too, arm64 and x86_64 allyesconfigs still seem to build just fine
+for me:
+
+ arch/arm64/kvm/vgic/vgic-its.c                         |    8 ++++----
+ arch/arm64/kvm/vgic/vgic.c                             |    2 +-
+ block/blk-mq-sched.c                                   |    2 +-
+ block/blk-mq.c                                         |    2 +-
+ drivers/acpi/nfit/core.c                               |    2 +-
+ drivers/acpi/numa/hmat.c                               |    2 +-
+ drivers/clk/keystone/sci-clk.c                         |    4 ++--
+ drivers/gpu/drm/drm_modes.c                            |    2 +-
+ drivers/gpu/drm/i915/gt/intel_engine_user.c            |    2 +-
+ drivers/gpu/drm/i915/gvt/debugfs.c                     |    2 +-
+ drivers/gpu/drm/i915/selftests/i915_gem_gtt.c          |    2 +-
+ drivers/gpu/drm/radeon/radeon_cs.c                     |    4 ++--
+ drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c |    2 +-
+ drivers/interconnect/qcom/bcm-voter.c                  |    2 +-
+ drivers/md/raid5.c                                     |    2 +-
+ drivers/misc/sram.c                                    |    4 ++--
+ drivers/nvme/host/core.c                               |    2 +-
+ drivers/pci/controller/cadence/pcie-cadence-host.c     |    3 ++-
+ drivers/spi/spi-loopback-test.c                        |    2 +-
+ fs/btrfs/raid56.c                                      |    2 +-
+ fs/btrfs/tree-log.c                                    |    2 +-
+ fs/btrfs/volumes.c                                     |    2 +-
+ fs/ext4/fsmap.c                                        |    4 ++--
+ fs/gfs2/glock.c                                        |    2 +-
+ fs/gfs2/log.c                                          |    2 +-
+ fs/gfs2/lops.c                                         |    2 +-
+ fs/iomap/buffered-io.c                                 |    2 +-
+ fs/ubifs/gc.c                                          |    6 +++---
+ fs/ubifs/replay.c                                      |    4 ++--
+ fs/xfs/scrub/bitmap.c                                  |    4 ++--
+ fs/xfs/xfs_bmap_item.c                                 |    4 ++--
+ fs/xfs/xfs_buf.c                                       |    4 ++--
+ fs/xfs/xfs_extent_busy.c                               |    4 ++--
+ fs/xfs/xfs_extent_busy.h                               |    2 +-
+ fs/xfs/xfs_extfree_item.c                              |    4 ++--
+ fs/xfs/xfs_refcount_item.c                             |    4 ++--
+ fs/xfs/xfs_rmap_item.c                                 |    4 ++--
+ include/linux/list_sort.h                              |    7 ++++---
+ lib/list_sort.c                                        |   17 ++++++-----------
+ lib/test_list_sort.c                                   |    2 +-
+ net/tipc/name_table.c                                  |    4 ++--
+ 41 files changed, 68 insertions(+), 71 deletions(-)
+
+I'll have to double check that all the affected code is actually
+included in these builds, but if nobody objects and I don't run into
+any issues, I'll include the patch in v3.
+
+Sami
