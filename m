@@ -2,180 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55942340C20
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBB0F340C27
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:52:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232314AbhCRRu0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 13:50:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232292AbhCRRuE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 13:50:04 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62F4C061760
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:50:03 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id w37so5924723lfu.13
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 10:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rnxu0Htej1H516ep79Wgi7n3VX+5maU9JLJNzsCgiUM=;
-        b=Ni7pji1XH63Bsx+pQeydcoFnVFUKTo4EK8YEo+eRY0n8Z2OlAnJtkVrPBHxbEsi1+R
-         +o0D2M9JZb3tGqGl8p3T5U+v1MyYLTUUMRcgkL4iuhrlTfi3bi87ds7MxG2e3n0KlK6i
-         3dJiohcmgFoCgox4RNZsf0OK7goEnUFKbgGqAAdLekm/+D9U6DNU7jqJvakwMwfDAFa4
-         v8f//XFUMtHrMKaTRuIfAgjuRPu2++XBnBmKfeuHtrLLgiyJIOsF+rgRl3qxfjWKRupz
-         HuO8O/BYYDPWXJdD72MiPYs06QEHnux8aIOk5Nz61Niw4ufVgh0Hi+g9U0GNCsttzUhd
-         wMtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rnxu0Htej1H516ep79Wgi7n3VX+5maU9JLJNzsCgiUM=;
-        b=EsxMe9deSIi78ig4/eACD3enE2+PRaeyZUrKBR0u+51nJFDwQmuZJMtgq1m/+lTfck
-         wRVAYwnDtHtrBSYFL8npULwKpu4omaw8iyoakbFvnP7vEMNLyZWOh83+shhVI93ISg9L
-         MMICc/mSSn3A9G9GLc4Ny4BZF6+NhctFzltsn/wOGWxip/pwvfuav8WmThawFHrovEXU
-         js2dKE9GQDzgEwhpB8WaDoeVh2l59QVDYZbmt0LLaw3IwGpryc4K4yowTgS4Ao5SE9j+
-         fOdPPVrnQnWGM6d9Wehsz1hfZnpUb3vrkQ6df7PMPI5kSdzb8KEBg5fZ9vcKxsze5jsX
-         xKow==
-X-Gm-Message-State: AOAM533nt7NQLYNF84X4C3P5HKVNPDW8mVwn/fYbePv+P4Crr1l97OBP
-        mhR1VmRGlWylgXOLlNqj+14jhDVnGbLqP02H707c1A==
-X-Google-Smtp-Source: ABdhPJwKRBRM7MAUZwFeZ179486WWfFrS/ksEmFI/VqMTZ8H+kaaJb/iKuGQiKzYL2s45rV0vHLFMREgPO6HFTWGKDo=
-X-Received: by 2002:a05:6512:985:: with SMTP id w5mr5887489lft.122.1616089801932;
- Thu, 18 Mar 2021 10:50:01 -0700 (PDT)
+        id S229734AbhCRRvd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 13:51:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:41253 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232421AbhCRRvV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 13:51:21 -0400
+Received: from [192.168.1.155] ([77.4.36.33]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MvrRB-1lekpc3nCp-00sxN1; Thu, 18 Mar 2021 18:51:12 +0100
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        ameynarkhede03@gmail.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
+        raphael.norwitz@nutanix.com
+References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
+ <20210312173452.3855-5-ameynarkhede03@gmail.com>
+ <20210314235545.girtrazsdxtrqo2q@pali>
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+Message-ID: <1da0fa2c-8056-9ae8-6ce4-ab645317772d@metux.net>
+Date:   Thu, 18 Mar 2021 18:51:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-References: <20210318171111.706303-1-samitolvanen@google.com> <20210318171111.706303-3-samitolvanen@google.com>
-In-Reply-To: <20210318171111.706303-3-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 18 Mar 2021 10:49:50 -0700
-Message-ID: <CAKwvOd=CfNmVT0RNsXw=vhTee40xpA-LjmyfagAQesS6VdAkXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/17] cfi: add __cficanonical
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210314235545.girtrazsdxtrqo2q@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:yfYWVq+ugqSFaWKTaRJne8X17DPLGCIdmLlkZ0p2Vqk4NFzJ4sk
+ wyZU8aaOyehQbG7HE3yHMMZ4/Mu6oXUPWPPPjRjS1RaoWqCWkr3lGUIwgLl7xh8E+zHnGrU
+ CIIiMJ+KM08ylEkcC53k7jEwNktiyrojKo9IT6bqJ8u5YpSeX1FYNGpBzOgADxyX6s7OnpJ
+ tpWJplS/luDQ8yc9dp2zg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6sccM/UoIG4=:NMyKEYmRkvGFfWLGVyFx43
+ aLjEXXSIVP9dGnA8pEasUcrztSNZy7KzMJipuKc1tZ+BPH5LdBwm0FzvFYMCQRIt7LyVqiFw9
+ EJqZT3Q0wBTA5/m/DwRlIX0APE5l0GCde/qKELTzVK3A+ncegzxPfBBTc8D7zkKV7D+E2eLho
+ 8mlq3LCcYUKX5gPQrNrfsYalZHZb1E+S16KyYpQE955fvznI6xTJCqpyYaZzLldBwpr5h4dlQ
+ CgOEkQ6KYDwxQk4VgnVCfgRHbDOrQNE44CFIHmZXYgzw0OEzHefAgEzEv3rC2HHJgVJgg84p6
+ 3Ewrqt0d/94OK3RV/s8HSOgkL9PeyMOa2l6XL2b2YETU4I7q5mzz+uYesN9gX++wma5AzVuvv
+ Wb+4by2LYPYaRdd/mHpvPTnBtA7jFdXYVR7ZKRZX416+zEs6yxAfsC9YA9xIO
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 10:11 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> With CONFIG_CFI_CLANG, the compiler replaces a function address taken
-> in C code with the address of a local jump table entry, which passes
-> runtime indirect call checks. However, the compiler won't replace
-> addresses taken in assembly code, which will result in a CFI failure
-> if we later jump to such an address in instrumented C code. The code
-> generated for the non-canonical jump table looks this:
->
->   <noncanonical.cfi_jt>: /* In C, &noncanonical points here */
->         jmp noncanonical
->   ...
->   <noncanonical>:        /* function body */
->         ...
->
-> This change adds the __cficanonical attribute, which tells the
-> compiler to use a canonical jump table for the function instead. This
-> means the compiler will rename the actual function to <function>.cfi
-> and points the original symbol to the jump table entry instead:
->
->   <canonical>:           /* jump table entry */
->         jmp canonical.cfi
->   ...
->   <canonical.cfi>:       /* function body */
->         ...
->
-> As a result, the address taken in assembly, or other non-instrumented
-> code always points to the jump table and therefore, can be used for
-> indirect calls in instrumented code without tripping CFI checks.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # pci.h
+On 15.03.21 00:55, Pali Rohár wrote:
 
-Irrelevant to this series, but I checked when the FN attr was first
-available in clang; clang-10. (That's the minimum supported version of
-clang for the kernel, and this series depends on LTO which depends on
-clang-12, so no additional guards are necessary).
+> Moreover for mPCIe form factor cards, boards can share one PERST# signal
+> with more PCIe cards and control this signal via GPIO. So asserting
+> PERST# GPIO can trigger Warm reset for more PCIe cards, not just one. It
+> depends on board or topology.
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+The pcengines apu* boards happen to be such candidates: they've got
+three m.2 slots, but not all wired in the same way (depending on actual
+model, not all have pcie wired). Reset lines are driven via gpio, and
+some devices (I recall some lte basebands) sometimes need an explicit
+reset in order to come up properly.
 
-> ---
->  include/linux/compiler-clang.h | 1 +
->  include/linux/compiler_types.h | 4 ++++
->  include/linux/init.h           | 4 ++--
->  include/linux/pci.h            | 4 ++--
->  4 files changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-> index 6de9d0c9377e..adbe76b203e2 100644
-> --- a/include/linux/compiler-clang.h
-> +++ b/include/linux/compiler-clang.h
-> @@ -63,3 +63,4 @@
->  #endif
->
->  #define __nocfi                __attribute__((__no_sanitize__("cfi")))
-> +#define __cficanonical __attribute__((__cfi_canonical_jump_table__))
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 796935a37e37..d29bda7f6ebd 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -246,6 +246,10 @@ struct ftrace_likely_data {
->  # define __nocfi
->  #endif
->
-> +#ifndef __cficanonical
-> +# define __cficanonical
-> +#endif
-> +
->  #ifndef asm_volatile_goto
->  #define asm_volatile_goto(x...) asm goto(x)
->  #endif
-> diff --git a/include/linux/init.h b/include/linux/init.h
-> index b3ea15348fbd..045ad1650ed1 100644
-> --- a/include/linux/init.h
-> +++ b/include/linux/init.h
-> @@ -220,8 +220,8 @@ extern bool initcall_debug;
->         __initcall_name(initstub, __iid, id)
->
->  #define __define_initcall_stub(__stub, fn)                     \
-> -       int __init __stub(void);                                \
-> -       int __init __stub(void)                                 \
-> +       int __init __cficanonical __stub(void);                 \
-> +       int __init __cficanonical __stub(void)                  \
->         {                                                       \
->                 return fn();                                    \
->         }                                                       \
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 86c799c97b77..39684b72db91 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1944,8 +1944,8 @@ enum pci_fixup_pass {
->  #ifdef CONFIG_LTO_CLANG
->  #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,  \
->                                   class_shift, hook, stub)              \
-> -       void stub(struct pci_dev *dev);                                 \
-> -       void stub(struct pci_dev *dev)                                  \
-> +       void __cficanonical stub(struct pci_dev *dev);                  \
-> +       void __cficanonical stub(struct pci_dev *dev)                   \
->         {                                                               \
->                 hook(dev);                                              \
->         }                                                               \
-> --
-> 2.31.0.291.g576ba9dcdaf-goog
->
+I have to check the schematics for the diffrent models, how exactly
+these gpios are wired. (i've got reports that some production lines
+don't have them wired at all - but couldn't confirm this on my own).
 
+BTW: any idea how to inject board specific reset methods, after the
+host brigde driver is already active ? In my case, apu boards, the
+pci host bridge is probed via acpi and the apu board driver (which sets
+up gpios, leds, keys, ...) comes much later.
+
+
+--mtx
 
 -- 
-Thanks,
-~Nick Desaulniers
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
