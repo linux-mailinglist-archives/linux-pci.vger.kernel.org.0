@@ -2,117 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE360340D1C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 19:35:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31FCB340D29
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 19:37:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230442AbhCRSfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 14:35:10 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:54519 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232474AbhCRSfH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 14:35:07 -0400
-Received: from [192.168.1.155] ([77.4.36.33]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M42Ss-1lMxU11GeO-0007h2; Thu, 18 Mar 2021 19:34:57 +0100
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-To:     Leon Romanovsky <leon@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
-        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
-References: <YFGDgqdTLBhQL8mN@unreal>
- <20210317102447.73no7mhox75xetlf@archlinux> <YFHh3bopQo/CRepV@unreal>
- <20210317112309.nborigwfd26px2mj@archlinux> <YFHsW/1MF6ZSm8I2@unreal>
- <20210317131718.3uz7zxnvoofpunng@archlinux> <YFILEOQBOLgOy3cy@unreal>
- <20210317113140.3de56d6c@omen.home.shazbot.org> <YFMYzkg101isRXIM@unreal>
- <20210318103935.2ec32302@omen.home.shazbot.org> <YFOMShJAm4j/3vRl@unreal>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
-Date:   Thu, 18 Mar 2021 19:34:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S232583AbhCRSgr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 14:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232262AbhCRSgl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Mar 2021 14:36:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B78ED6023B;
+        Thu, 18 Mar 2021 18:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616092601;
+        bh=12KhgTzjW4N7bDGAzwkMoRKeIVcx9FGipQWCCmfehZ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qCSsMflkjZ3rm7Wq7ogNwItA6pbQGvYXdLQNh6siKBClBj2GMCw15Hq4YQQ9NzQcj
+         6RoyAAtpKpqpESDo4muARn7guKGBRSe6U9+HPTTeCSa/PtGlSPPWMM84z1cgDhS9Zv
+         2WDXaJym4YoX+BKN+toYAS3O3Il2KJOFN8vfVyPaKQrjnlBjeecEAmpKBbNJJv8RKJ
+         53PH1QNZ7D3skGHh4tP8AEb9ojjZw0m8L4O6m2dyo3MJvJcNWlJQKCTq4TlOo1fqfV
+         KY5fWap4K2gEnteRIr49JsZcyZYpvP78O73Ks6n8aPztjbYVcMfdu3+CYAyhyU24VX
+         bI5DbwO+1DnGw==
+Date:   Thu, 18 Mar 2021 13:36:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Deucher <alexander.deucher@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, hegel666@gmail.com, Prike.Liang@amd.com,
+        Shyam-sundar.S-k@amd.com
+Subject: Re: [PATCH] PCI: quirks: Quirk PCI d3hot delay for AMD xhci
+Message-ID: <20210318183639.GA158657@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <YFOMShJAm4j/3vRl@unreal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iywlJkpEFuxNE/Ve6FtQn70Tv1GKx5OB/MLu/Wy84sZPqnA43sn
- 12syIC+nmB61lPzHc+9NFDntPxP6RYhT4aqjusTif341gD2PMiEy94bMXzfF8tPpPztEGDt
- SH3kOvoO+oxdRP4qDN5Rom2pRDeOBfRpisU9Eefw/SLdcYJ5oevNYj4XbeaIIDzAIYGcaLb
- eNLYM6wcN6w2/FBy/l3Gw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:E/WAgxaRGZ4=:kTlG8ndNRYWqorilUkQbSJ
- blx0MMl0Hl1bzNdh/OEg+HOich4a9SIRNVFuQVHIqC2KBdq/Y8kHTLVV2356JwHPEfkTIyQjB
- c3Tvzjf/Npf1oaw/YMbGebr64DEezhCo1MuHz8gmmZhrlIjwzcAmjON4nUv2KLQ4g/l39vJ8V
- c34ELhpoho4FYDb3g5IHLJnK3JXYKvB9AG2CSrkN/n/UWaVFlflOyRsxTAJhzwG+2+wKAwec0
- kRi3HqI1XIF5YF6B+Xid0sjlYs7q6RVD9EezcmRrLY7nNsmJwlEUroON5i1HK8YEi+PuQY4Mr
- LBB29ruhIdGdsY6zxhG+5X8a9vfAvLYU1Xvbey1sZc8Lrm1ZWaJ1oy3gxn04292KFnxmiCPwp
- N9d30UBSZ9l2urXZ7XdRoL6m05cS1sgfEdLf5zQVSwEOzE+U/H1R9huxayYQl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210316192851.286563-1-alexander.deucher@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18.03.21 18:22, Leon Romanovsky wrote:
+On Tue, Mar 16, 2021 at 03:28:51PM -0400, Alex Deucher wrote:
+> From: Marcin Bachry <hegel666@gmail.com>
+> 
+> Renoir needs a similar delay.
 
-> Which email client do you use?
-> Your responses are grouped as one huge block without any chance to respond
-> to you on specific point or answer to your question.
+See https://lore.kernel.org/linux-pci/20210311125322.GA2122226@bjorn-Precision-5520/
 
-I'm reading this thread in Tbird, and threading / quoting all looks
-nice.
+This is becoming a problem.  We shouldn't have to merge a quirk for
+every new device.  Either the devices are defective, and AMD should
+publish errata and have a plan for fixing them, or Linux is broken and
+we should fix that.
 
-> I see your flow and understand your position, but will repeat my
-> position. We need to make sure that vendors will have incentive to
-> supply quirks.
+There are quite a few mechanisms for controlling delays like this
+(Config Request Retry Status (PCIe r5.0, sec 2.3.1), Readiness
+Notifications (sec 6.23), ACPI _DSM for power-on delays (PCI Firmware
+Spec r3.3)), but most are for *reducing* delay, not for extending it.
 
-I really doubt we can influence that by any technical decision here in
-the kernel.
+Linux supports CRS, but not all the others.  Maybe we're missing
+something we should support?
 
-> And regarding vendors, see Amey response below about his touchpad troubles.
-> The cheap electronics vendors don't care about their users.
+How do you deal with these issues for Windows?  If it works on Windows
+without quirks, we should be able to make it work on Linux as well.
 
-IMHO, the expensive ones don't care either.
+> Signed-off-by: Marcin Bachry <hegel666@gmail.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> ---
+>  drivers/pci/quirks.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e3ba9e..36e5ec670fae 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -1904,6 +1904,9 @@ static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
+> +/* Renoir XHCI requires longer delay when transitioning from D0 to
+> + * D3hot */
 
-Does eg. Dell publish board schematics ? Do they even publish exact part
-lists (exact chipsets) along with their brochures, so customers can
-check wether their HW is supported, before buying and trying out ?
+No need for "me too" comments that add no additional information.
 
-Doesn't seem so. I've personally seen a lot cases where some supposedly
-supported HW turned out to be some completely different and unsupported
-HW that's sold under exactly the same product ID. One of many reasons
-for not giving them a single penny anymore.
-
-IMHO, there're only very few changes of convincing some HW vendor for
-doing a better job on driver side:
-
-a) product is targeted for a niche that can't live without Linux
-    (eg. embedded)
-b) it's really *dangerous* for your market share if anything doesn't
-    work properly on Linux (eg. certan server machines)
-c) somebody *really* big (like Google) is gun-pointing at some supplier,
-    who's got a lot to loose
-d) a *massive* worldwide shitstorm against the vendor
-
-[ And often, even a combination of them isn't enough. Did you know that
-   even Google doesn't get all specs necessary to replace away the ugly
-   FSP blob ? (it's the same w/ AMD, but meanwhile I'm pissed enought to
-   reverse engineer their AGESA blob). ]
-
-You see, what we do here in the kernel has no practical influence on
-those hw vendors.
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1639, quirk_ryzen_xhci_d3hot);
+>  
+>  #ifdef CONFIG_X86_IO_APIC
+>  static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
+> -- 
+> 2.30.2
+> 
