@@ -2,114 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC95340B1D
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:12:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A2B340BA4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Mar 2021 18:23:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232282AbhCRRLi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 13:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
+        id S230038AbhCRRWv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 13:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232292AbhCRRLY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Mar 2021 13:11:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ED346601FF;
-        Thu, 18 Mar 2021 17:11:23 +0000 (UTC)
+        id S229840AbhCRRWW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Mar 2021 13:22:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A821D64E37;
+        Thu, 18 Mar 2021 17:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616087484;
-        bh=MFIBuAA4jYFqbcWZsIpAtd0iyeV2bPMqk0MdX4Lx+js=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MmHT1Cpm4VtyUMf8ZoCwfWgeMPtJmgNijoNx5bgltDML5M6DkWZzxQl3rj4DpphdE
-         YiG1maac/K13ovuV05nBz0rmL+dKSX23gJUeX+VsblbjSAQSqhtJCCTqeWY7o+MUj+
-         rHx1yx/t9iuusV9mt37qBjvDt9b/eevGV2oATCP/7gR6+jE/kreRRD+qUbtPKuXSOK
-         TGaoTbOIqbPZUKGPhpKuCRqgqhVogbfGnl8lZ//bJBjW+oPyDXXJMmDgXH40fik3oy
-         joTM8Z521KNXpbwmKWo148HXq65nfajf5tsB07hfnXTKDinhdWDeo9iqDrzuwYTsCe
-         KRc2Awp47KTSg==
-Date:   Thu, 18 Mar 2021 12:11:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Martin Mares <mj@ucw.cz>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] lspci: Don't report PCIe link downgrades for downstream
- ports
-Message-ID: <20210318171122.GA151712@bjorn-Precision-5520>
+        s=k20201202; t=1616088142;
+        bh=dc75pwbsctWQPsOF4qhXgHwdNZ7A2PS9JI4jzCZQtD8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JZquC8xKhoSzFRHEFApwcMDGqaxFIaw1hdX8EMc6uJcHjXZz7Bvai5zy5e/xpSEV+
+         9x+OWs1JUskfQZ+s0rAit/FFHL3zuzREq4oKeFq4qIUaTBfzGJRtzZ4md5oCjA+nxe
+         t3lV5Kz9peMkKTeQZeXyxeXls3WFApHPH3T7nqFmfpkfx0YQHXYM1cBMCn/GaLK0V2
+         0b9fNDz0Ck/GrLwPBIjrWPr7RDW+2Cw1XFOOitESs0PRhNfgz62wxwdpF1pix/5PkC
+         PSJ6PIDL6J2V9jYUVHDcGqQQXObkEXSe3mKFURT0a9iHgCwoJ36co6UuYqscCeG8nA
+         1QfpjO0Z06xkw==
+Date:   Thu, 18 Mar 2021 19:22:18 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
+        shyam.rajendran@nutanix.com, felipe@nutanix.com
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <YFOMShJAm4j/3vRl@unreal>
+References: <YFGDgqdTLBhQL8mN@unreal>
+ <20210317102447.73no7mhox75xetlf@archlinux>
+ <YFHh3bopQo/CRepV@unreal>
+ <20210317112309.nborigwfd26px2mj@archlinux>
+ <YFHsW/1MF6ZSm8I2@unreal>
+ <20210317131718.3uz7zxnvoofpunng@archlinux>
+ <YFILEOQBOLgOy3cy@unreal>
+ <20210317113140.3de56d6c@omen.home.shazbot.org>
+ <YFMYzkg101isRXIM@unreal>
+ <20210318103935.2ec32302@omen.home.shazbot.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210318170244.151240-1-helgaas@kernel.org>
+In-Reply-To: <20210318103935.2ec32302@omen.home.shazbot.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 12:02:44PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> After b47b5bd408e1 ("lspci: Report if the PCIe link speed/width is full or
-> downgraded"), we report "downgraded" or "ok" for PCIe links operating at
-> lower speed or width than they're capable of:
-> 
->   LnkCap: Port #1, Speed 8GT/s, Width x1, ASPM L1, Exit Latency L1 <16us
->   LnkSta: Speed 5GT/s (downgraded), Width x1 (ok)
-> 
-> Previously we did this for both ends of the link, but I don't think it's
-> very useful for Downstream Ports (the upstream end of the link) because we
-> claim the link is downgraded even if (1) there's no device on the other end
-> or (2) the other device doesn't support anything faster/wider.
-> 
-> Drop the "downgraded" reporting for Downstream Ports.  If there is a device
-> below, we'll still complain at that end if it supports a faster/wider link
-> than is available.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  ls-caps.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/ls-caps.c b/ls-caps.c
-> index db56556..dd17c6b 100644
-> --- a/ls-caps.c
-> +++ b/ls-caps.c
-> @@ -758,13 +758,16 @@ static char *link_speed(int speed)
->      }
->  }
->  
-> -static char *link_compare(int sta, int cap)
-> +static char *link_compare(int type, int sta, int cap)
->  {
-> +  if ((type == PCI_EXP_TYPE_ROOT_PORT) || (type == PCI_EXP_TYPE_DOWNSTREAM) ||
-> +      (type == PCI_EXP_TYPE_PCIE_BRIDGE))
-> +    return "";
->    if (sta < cap)
-> -    return "downgraded";
-> +    return " (downgraded)";
->    if (sta > cap)
-> -    return "strange";
-> -  return "ok";
-> +    return " (strange)";
-> +  return " (ok)";
+On Thu, Mar 18, 2021 at 10:39:35AM -0600, Alex Williamson wrote:
+> On Thu, 18 Mar 2021 11:09:34 +0200
+> Leon Romanovsky <leon@kernel.org> wrote:
 
-Personally I would probably just return "" by default and drop the
-"(ok)" notes because they don't really seem necessary.  But either way
-is OK.
+<...>
 
->  }
->  
->  static char *aspm_support(int code)
-> @@ -837,11 +840,11 @@ static void cap_express_link(struct device *d, int where, int type)
->    w = get_conf_word(d, where + PCI_EXP_LNKSTA);
->    sta_speed = w & PCI_EXP_LNKSTA_SPEED;
->    sta_width = (w & PCI_EXP_LNKSTA_WIDTH) >> 4;
-> -  printf("\t\tLnkSta:\tSpeed %s (%s), Width x%d (%s)\n",
-> +  printf("\t\tLnkSta:\tSpeed %s%s, Width x%d%s\n",
->  	link_speed(sta_speed),
-> -	link_compare(sta_speed, cap_speed),
-> +	link_compare(type, sta_speed, cap_speed),
->  	sta_width,
-> -	link_compare(sta_width, cap_width));
-> +	link_compare(type, sta_width, cap_width));
->    printf("\t\t\tTrErr%c Train%c SlotClk%c DLActive%c BWMgmt%c ABWMgmt%c\n",
->  	FLAG(w, PCI_EXP_LNKSTA_TR_ERR),
->  	FLAG(w, PCI_EXP_LNKSTA_TRAIN),
-> -- 
-> 2.25.1
-> 
+> > I'm lost here, does vfio-pci use sysfs interface or internal to the kernel API?
+> >
+> > If it is latter then we don't really need sysfs, if not, we still need
+> > some sort of DB to create second policy, because "supported != working".
+> > What am I missing?
+>
+> vfio-pci uses the internal kernel API, ie. the variants of
+> pci_reset_function(), which is the same interface used by the existing
+> sysfs reset mechanism.  This proposed configuration of the reset method
+> would affect any driver using that same core infrastructure and from my
+> perspective that's really the goal.  In the case where a supported
+> reset mechanism fails for a device, continuing to quirk those out for
+> the best default behavior makes sense, I'd be disappointed for a vendor
+> to not pursue improving the default behavior where it clearly makes
+> sense.  However, there's also a policy decision, the kernel imposes a
+> preferential ordering of reset mechanism.  Is that ordering the best
+> case for all users?  I've presented above a case where a userspace may
+> prefer a policy of preferring a bus reset to a PM reset.  So I think
+> the question is not only are there supported mechanisms that don't
+> work, where this interface allows userspace to more readily identify
+> and work around those sorts of issues, but it also enables user
+> preference and easier evaluation whether all of the supported reset
+> mechanisms work rather than just the first one we encounter in the
+> ordering we've decided to impose today.  Thanks,
+
+Alex,
+
+Which email client do you use?
+Your responses are grouped as one huge block without any chance to respond
+to you on specific point or answer to your question.
+
+I see your flow and understand your position, but will repeat my
+position. We need to make sure that vendors will have incentive to
+supply quirks.
+
+And regarding vendors, see Amey response below about his touchpad troubles.
+The cheap electronics vendors don't care about their users.
+
+Thanks
+
+>
+> Alex
+>
