@@ -2,132 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6DC734242E
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 19:12:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1B5342551
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 19:54:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230219AbhCSSMK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Mar 2021 14:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbhCSSLt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 14:11:49 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2660C06174A
-        for <linux-pci@vger.kernel.org>; Fri, 19 Mar 2021 11:11:49 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id w70so5693344oie.0
-        for <linux-pci@vger.kernel.org>; Fri, 19 Mar 2021 11:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3z4Ip00lYdJc5oGJqkZi/FZJHg9JJdinGpv4fGHlXnw=;
-        b=UixOYv8kqZcjzaQfODhZIaIjkiRC8MjI3+jqaUXIxPOE4992q28tK6qKadLqopGvZd
-         N27kPwRT+DSqVr+tgh7KWbJZ7Wh7f6ytHrgwoeukn8wD+diDdgLSM1I7vMq+vJKPxUNB
-         xgxSOAHpiop/KQQgOBSuYnCodc9jLkXzZThrafS50p3+OMwWGQjkZva2TtN+ECQod3Wc
-         p7rP0KlEmiszGtBarclnpYPR6BPz0DpW8ZYJ5iI2OtYNdsNBAEJjMD6t/tiEAoXScL2O
-         ybdW5UezcZUeW7b6u8qZwxKIaPEUmoXXTYXJV3/FZeemwV6r0RBp/3unV+RuHuPaT/3Y
-         ynBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3z4Ip00lYdJc5oGJqkZi/FZJHg9JJdinGpv4fGHlXnw=;
-        b=Jht8GiQLcV8DGEcsUbTYsEjllCfkn3O94tcbR8ITWDmhZHithvGI/4xUSeGPLzf0PY
-         JlZXOr6DC6kSiMOx1LcKyf2wK5cbV4bfYOgRdhCpSeCMdcKpGeVRKsVqBHnWlLcfzU7+
-         DAhy7+fwEi2yMtuQ6hdn5wjY82TK/w1khrJ/9emRp3yt+mVhnCAzcWZz9e/HZF+QHgdR
-         vKV++vDc2yrgqeQbSqhinE0SF0XBrEqMU5nW5WTNZVjVXXQLLoJSYI3q5g4pm5ptivFk
-         /dK7VQ7m48rMx1oMZOCt+ez8cSD7kCfz66+K3x5X41vGGD/ivSowbQZydA2WDX1kosVb
-         Oh9g==
-X-Gm-Message-State: AOAM532GSr3QLejDXpdLBg65gIeOvovH7TZgEP4rhYOn93J5+ZnvpZN0
-        wB3jigPPaUbdZy9+UeX2hDndnpSYEBrzkyKGqbU=
-X-Google-Smtp-Source: ABdhPJzR86QWoDCxkQPmd3OBmR0ZOm9XTHhyFOBjEE8EgTr803+bjwp5hjJCpgZmhh+gnkoJRo2w5rKGA94slJ2PAVA=
-X-Received: by 2002:aca:af10:: with SMTP id y16mr1910455oie.120.1616177509039;
- Fri, 19 Mar 2021 11:11:49 -0700 (PDT)
+        id S230090AbhCSSyF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Mar 2021 14:54:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229912AbhCSSxp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Mar 2021 14:53:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 468CD6191F;
+        Fri, 19 Mar 2021 18:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616180024;
+        bh=NwrtCO6JNbhykgaZnJI5HFj68c9ePk8Pf1xRIwTiWys=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iNpInxvuzmJYjrSuGnFKJUchQYHAX33qIUU75+sTbxSRGGfrkazg472r9REvA4yzk
+         2IRuJGLN0iVIKMqwoK/vEP+/0YE+Ad3sJe6dyA74/SzRv3elKepID9Oj/Kn4yHzTfX
+         iAoD7C7cT8ddnD7Y4Rnht+vWTT7Ni9WKYKodpga/jEkbzSI1n0OaIHwxFjybCbZmXp
+         GjTXmszGDFo/bf2LOVEu5ac79qxsexjYpxmm8V48CKVQwAdFRTGUzLf+Lr8M7kAXS4
+         xAuujS8A4i5WiRool75oNI6FFiBF9P7mXgd2xtubLBSs/PlHas0bzNRYRWNvA6OjB8
+         S1DHtLjMIhGRg==
+Received: by pali.im (Postfix)
+        id 596916FE; Fri, 19 Mar 2021 19:53:41 +0100 (CET)
+Date:   Fri, 19 Mar 2021 19:53:41 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        sin_jieyang@mediatek.com, drinkcat@chromium.org,
+        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
+Subject: Re: [v8,3/7] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+Message-ID: <20210319185341.nyxmo7nwii5fzsxc@pali>
+References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
+ <20210224061132.26526-4-jianjun.wang@mediatek.com>
+ <20210311123844.qzl264ungtk7b6xz@pali>
+ <1615621394.25662.70.camel@mhfsdcap03>
+ <20210318000211.ykjsfavfc7suu2sb@pali>
+ <1616046487.31760.16.camel@mhfsdcap03>
 MIME-Version: 1.0
-References: <20210316192851.286563-1-alexander.deucher@amd.com> <20210318183639.GA158657@bjorn-Precision-5520>
-In-Reply-To: <20210318183639.GA158657@bjorn-Precision-5520>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 19 Mar 2021 14:11:38 -0400
-Message-ID: <CADnq5_NN=Of+b4N6gUFsLiOuTkEznp8f5aVW4fuJX3sOZpHy5w@mail.gmail.com>
-Subject: Re: [PATCH] PCI: quirks: Quirk PCI d3hot delay for AMD xhci
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>, Shyam-sundar.S-k@amd.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Prike Liang <Prike.Liang@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Marcin Bachry <hegel666@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1616046487.31760.16.camel@mhfsdcap03>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 2:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Mar 16, 2021 at 03:28:51PM -0400, Alex Deucher wrote:
-> > From: Marcin Bachry <hegel666@gmail.com>
-> >
-> > Renoir needs a similar delay.
->
-> See https://lore.kernel.org/linux-pci/20210311125322.GA2122226@bjorn-Precision-5520/
->
-> This is becoming a problem.  We shouldn't have to merge a quirk for
-> every new device.  Either the devices are defective, and AMD should
-> publish errata and have a plan for fixing them, or Linux is broken and
-> we should fix that.
->
-> There are quite a few mechanisms for controlling delays like this
-> (Config Request Retry Status (PCIe r5.0, sec 2.3.1), Readiness
-> Notifications (sec 6.23), ACPI _DSM for power-on delays (PCI Firmware
-> Spec r3.3)), but most are for *reducing* delay, not for extending it.
->
-> Linux supports CRS, but not all the others.  Maybe we're missing
-> something we should support?
->
-> How do you deal with these issues for Windows?  If it works on Windows
-> without quirks, we should be able to make it work on Linux as well.
+On Thursday 18 March 2021 13:48:07 Jianjun Wang wrote:
+> On Thu, 2021-03-18 at 01:02 +0100, Pali Rohár wrote:
+> > On Saturday 13 March 2021 15:43:14 Jianjun Wang wrote:
+> > > On Thu, 2021-03-11 at 13:38 +0100, Pali Rohár wrote:
+> > > > On Wednesday 24 February 2021 14:11:28 Jianjun Wang wrote:
+> > > > > +static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+> > > > > +{
+> > > > ...
+> > > > > +
+> > > > > +	/* Delay 100ms to wait the reference clocks become stable */
+> > > > > +	msleep(100);
+> > > > > +
+> > > > > +	/* De-assert PERST# signal */
+> > > > > +	val &= ~PCIE_PE_RSTB;
+> > > > > +	writel_relaxed(val, port->base + PCIE_RST_CTRL_REG);
+> > > > 
+> > > > Hello! This is a new driver which introduce yet another custom timeout
+> > > > prior PERST# signal for PCIe card is de-asserted. Timeouts for other
+> > > > drivers I collected in older email [2].
+> > > > 
+> > > > Please look at my email [1] about PCIe Warm Reset if you have any clue
+> > > > about it. Lorenzo and Rob already expressed that this timeout should not
+> > > > be driver specific. But nobody was able to "decode" and "understand"
+> > > > PCIe spec yet about these timeouts.
+> > > 
+> > > Hi Pali,
+> > > 
+> > > I think this is more like a platform specific timeout, which is used to
+> > > wait for the reference clocks to become stable and finish the reset flow
+> > > of HW blocks.
+> > > 
+> > > Here is the steps to start a link training in this HW:
+> > > 
+> > > 1. Assert all reset signals which including the transaction layer, PIPE
+> > > interface and internal bus interface;
+> > > 
+> > > 2. De-assert reset signals except the PERST#, this will make the
+> > > physical layer active and start to output the reference clock, but the
+> > > EP device remains in the reset state.
+> > >    Before releasing the PERST# signal, the HW blocks needs at least 10ms
+> > > to finish the reset flow, and ref-clk needs about 30us to become stable.
+> > > 
+> > > 3. De-assert PERST# signal, wait LTSSM enter L0 state.
+> > > 
+> > > This 100ms timeout is reference to TPVPERL in the PCIe CEM spec. Since
+> > > we are in the kernel stage, the power supply has already stabled, this
+> > > timeout may not take that long.
+> > 
+> > I think that this is not platform specific timeout or platform specific
+> > steps. This matches generic steps as defined in PCIe CEM spec, section
+> > 2.2.1. Initial Power-Up (G3 to S0).
+> > 
+> > What is platform specific is just how to achieve these steps.
+> > 
+> > Am I right?
+> > 
+> > ...
+> > 
+> > TPVPERL is one of my timeout candidates as minimal required timeout for
+> > Warm Reset. I have wrote it in email:
+> > 
+> > https://lore.kernel.org/linux-pci/20200430082245.xblvb7xeamm4e336@pali/
+> > 
+> > But I'm not sure as specially in none diagram is described just warm
+> > reset as defined in mPCIe CEM (3.2.4.3. PERST# Signal).
+> > 
+> > ...
+> > 
+> > Anyway, I would suggest to define constants for those timeouts. I guess
+> > that in future we could be able to define "generic" timeout constants
+> > which would not be in private driver section, but in some common header
+> > file.
+> 
+> I agree with this, but I'm not sure if we really need that long time in
+> the kernel stage, because the power supply has already stable and it's
+> really impact the boot time, especially when the platform have multi
+> ports and not connect any EP device, we need to wait 200ms for each port
+> when system bootup.
 
-It works fine in windows.  Unfortunately, it's hard to tell what
-windows does exactly since MS supplies the USB driver in that case.
-Also, the extended delays are not necessary on our reference
-platforms, these seem to only be an issue on some OEM platforms.  I
-did confirm with the windows team that we use d3hot for USB on our
-current platforms due to bios bugs, but this is fixed on upcoming
-platforms.  Still digging for any more details.
+Ports are independent. So you can initialize them in parallel, right?
 
->
-> > Signed-off-by: Marcin Bachry <hegel666@gmail.com>
-> > Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> > ---
-> >  drivers/pci/quirks.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 653660e3ba9e..36e5ec670fae 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -1904,6 +1904,9 @@ static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
-> >  }
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-> > +/* Renoir XHCI requires longer delay when transitioning from D0 to
-> > + * D3hot */
->
-> No need for "me too" comments that add no additional information.
+If you initialize each port in separate worker then during msleep calls
+kernel can schedule other kernel thread to run and so it does not
+increase boot time. While pcie is sleeping kernel can do other things.
+So the result is that whole boot time is not increased, just reordered.
 
-Will drop that.
+> For this PCIe controller driver, I would like to change the timeout
+> value to 10ms to comply with the HW design, and save some boot time.
 
-Alex
+In case you can connect _any_ PCIe card to your HW then you cannot
+decrease or change timeouts required by PCIe specs. Otherwise there can
+be a card which would not be initialized correctly.
 
->
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1639, quirk_ryzen_xhci_d3hot);
-> >
-> >  #ifdef CONFIG_X86_IO_APIC
-> >  static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
-> > --
-> > 2.30.2
-> >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+I'm debugging driver for aardvark PCIe controller and I see that Compex
+cards really needs these timeouts, otherwise link is down and card
+cannot be detected.
+
+So I guess that there can be also other cards which requires other
+timeouts as specified in PCIe specs.
+
+> > 
+> > > > > +
+> > > > > +	/* Check if the link is up or not */
+> > > > > +	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_REG, val,
+> > > > > +				 !!(val & PCIE_PORT_LINKUP), 20,
+> > > > > +				 50 * USEC_PER_MSEC);
+> > > > 
+> > > > IIRC, you need to wait at least 100ms after de-asserting PERST# signal
+> > > > as it is required by PCIe specs and also because experiments proved that
+> > > > some Compex wifi cards (e.g. WLE900VX) are not detected if you do not
+> > > > wait this minimal time.
+> > > 
+> > > Yes, this should be 100ms, I will fix it at next version, thanks for
+> > > your review.
+> > 
+> > In past Bjorn suggested to use msleep(PCI_PM_D3COLD_WAIT); macro for
+> > this step during reviewing aardvark driver.
+> > 
+> > https://lore.kernel.org/linux-pci/20190426161050.GA189964@google.com/
+> > 
+> > And next iteration used this PCI_PM_D3COLD_WAIT macro instead of 100:
+> > 
+> > https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/
+> 
+> Sure, I will use PCI_PM_D3COLD_WAIT macro instead in the next version.
+> 
+> Thanks.
+> 
+> > 
+> > > Thanks.
+> > > > 
+> > > > > +	if (err) {
+> > > > > +		val = readl_relaxed(port->base + PCIE_LTSSM_STATUS_REG);
+> > > > > +		dev_err(port->dev, "PCIe link down, ltssm reg val: %#x\n", val);
+> > > > > +		return err;
+> > > > > +	}
+> > > > 
+> > > > [1] - https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+> > > > [2] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
+> > > 
+> 
