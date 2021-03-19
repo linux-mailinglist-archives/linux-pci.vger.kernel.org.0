@@ -2,137 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D963418BE
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 10:49:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E11123418C4
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 10:50:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbhCSJtK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Mar 2021 05:49:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:13644 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbhCSJtH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 05:49:07 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4F1zYq3nFYzmZb5;
-        Fri, 19 Mar 2021 17:46:39 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.498.0; Fri, 19 Mar 2021 17:48:56 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <mika.westerberg@linux.intel.com>, <rafael.j.wysocki@intel.com>,
-        <peter@lekensteyn.nl>, <kw@linux.com>, <prime.zeng@huawei.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH v3] PCI: Make sure the bus bridge powered on when scanning bus
-Date:   Fri, 19 Mar 2021 17:46:33 +0800
-Message-ID: <1616147193-13186-1-git-send-email-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S229736AbhCSJuP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Mar 2021 05:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229814AbhCSJto (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 05:49:44 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED235C06174A
+        for <linux-pci@vger.kernel.org>; Fri, 19 Mar 2021 02:49:43 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1lNBl6-0005lz-WD; Fri, 19 Mar 2021 10:49:33 +0100
+Message-ID: <f501f7da736e6dce90df722033381a0dc0821ad7.camel@pengutronix.de>
+Subject: Re: [PATCH 1/3] dt-bindings: imx6q-pcie: specify the imx8mq pcie
+ phy voltage
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>, andrew.smirnov@gmail.com,
+        shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
+        stefan@agner.ch, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Date:   Fri, 19 Mar 2021 10:49:29 +0100
+In-Reply-To: <1616142247-13789-1-git-send-email-hongxing.zhu@nxp.com>
+References: <1616142247-13789-1-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the bus bridge is runtime suspended, we'll fail to rescan
-the devices through sysfs as we cannot access the configuration
-space correctly when the bridge is in D3hot.
-It can be reproduced like:
+Am Freitag, dem 19.03.2021 um 16:24 +0800 schrieb Richard Zhu:
+> Both 1.8v and 3.3v power supplies can be feeded to i.MX8MQ PCIe PHY.
+> In default, the PCIE_VPH voltage is suggested to be 1.8v refer to data
+> sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic design,
+> the VREG_BYPASS bits of GPR registers should be cleared from default
+> value 1b'1 to 1b'0.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index de4b2baf91e8..23efbad9e804 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -59,6 +59,10 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
+>  Additional required properties for imx8mq-pcie:
+>  - clock-names: Must include the following additional entries:
+>  	- "pcie_aux"
+> +- pcie-vph-3v3: If present then PCIE_VPH is feeded by 3.3v in the HW
+> +  schematic design. The PCIE_VPH is suggested to be 1.8v refer to the
+> +  data sheet. If the PCIE_VPH is supplied by 3.3V, the VREG_BYPASS
+> +  should be cleared to zero accordingly.
 
-$ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
-$ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+Uhm, no. Please don't add boolean DT properties for random parts of the
+board design.
 
-0000:80:00.0 is root port and is runtime suspended and we cannot
-get 0000:81:00.1 after rescan.
+If we need to know the voltage of PCIE_VPH, we should really add the
+VPH regulator as a supply to the PCIe controller node, then work out
+the voltage the usual way by using the Linux regulator API.
 
-Make bridge powered on when scanning the child bus, by adding
-pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
-
-A similar issue is met and solved by
-d963f6512e15 ("PCI: Power on bridges before scanning new devices")
-which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
-The callstack is like:
-
-dev_rescan_restore()
-  pci_rescan_bus()
-    pci_scan_bridge_extend()
-      pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
-
-With this patch the issue is also resolved, so let's remove the calls of
-pm_runtime_*() in pci_scan_bridge_extend().
-
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
-Change since v2:
-- rebase on v5.12-rc3
-Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
-
-Change since v1:
-address the comments from Bjorn:
-- use an intermediate variable *bridge as suggested
-- remove the pm_runtime_*() calls in pci_scan_bridge_extend()
-Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
-
- drivers/pci/probe.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 953f15a..6ad3c48 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1224,12 +1224,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
- 	u8 fixed_sec, fixed_sub;
- 	int next_busnr;
- 
--	/*
--	 * Make sure the bridge is powered on to be able to access config
--	 * space of devices below it.
--	 */
--	pm_runtime_get_sync(&dev->dev);
--
- 	pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
- 	primary = buses & 0xFF;
- 	secondary = (buses >> 8) & 0xFF;
-@@ -1431,8 +1425,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
- out:
- 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
- 
--	pm_runtime_put(&dev->dev);
--
- 	return max;
- }
- 
-@@ -2797,11 +2789,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
- 	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
- 	unsigned int start = bus->busn_res.start;
- 	unsigned int devfn, fn, cmax, max = start;
--	struct pci_dev *dev;
-+	struct pci_dev *dev, *bridge = bus->self;
- 	int nr_devs;
- 
- 	dev_dbg(&bus->dev, "scanning bus\n");
- 
-+	/*
-+	 * Make sure the bus bridge is powered on, otherwise we may not be
-+	 * able to scan the devices as we may fail to access the configuration
-+	 * space of subordinates.
-+	 */
-+	if (bridge)
-+		pm_runtime_get_sync(&bridge->dev);
-+
- 	/* Go find them, Rover! */
- 	for (devfn = 0; devfn < 256; devfn += 8) {
- 		nr_devs = pci_scan_slot(bus, devfn);
-@@ -2914,6 +2914,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
- 		}
- 	}
- 
-+	if (bridge)
-+		pm_runtime_put(&bridge->dev);
-+
- 	/*
- 	 * We've scanned the bus and so we know all about what's on
- 	 * the other side of any bridges that may be on this bus plus
--- 
-2.8.1
+Regards,
+Lucas
 
