@@ -2,114 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC5CB341132
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 00:49:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ED803413E3
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 04:56:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230510AbhCRXtN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Mar 2021 19:49:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbhCRXsz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 19:48:55 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B906C06175F
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 16:48:55 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id l22so2524189vsr.13
-        for <linux-pci@vger.kernel.org>; Thu, 18 Mar 2021 16:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w4SsUNnog1rCkxnTwPGBzmgfbYVmtvLwFsZIIDtRJ+0=;
-        b=tODKum7fYlaP1p1/wInlRZv3OQMdfXJCpiBT7MtQvTeiTInxAIccKNZwbuStHykgX3
-         pRr40h9mudP1dFh48XCe0B1EMgnJcSgbjagFRqIbPF47JfIw3hqWAW02qmqzw4JIXudz
-         snxbbOtqclC4Lv3msvK7EpgiJaio9ooDeRrV7xs3WxxWoANXDrrh620DCmhwBCkpz9VV
-         DbB0XB7ayvEMnQzN/DRg2GCM/4XFWT7sKKJO07hT4K2b0cRrMSrUUreDquUusRAW5V4O
-         NMWrcZjLq44F3N7hMmnke7yr9/YdGfdRQ9JD6SCye+TXaalPNgyyWzK8ZktScxsbGGoi
-         /Mhw==
+        id S233508AbhCSD4V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Mar 2021 23:56:21 -0400
+Received: from mail-ed1-f54.google.com ([209.85.208.54]:43669 "EHLO
+        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233489AbhCSD4V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Mar 2021 23:56:21 -0400
+Received: by mail-ed1-f54.google.com with SMTP id e7so9152748edu.10;
+        Thu, 18 Mar 2021 20:56:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w4SsUNnog1rCkxnTwPGBzmgfbYVmtvLwFsZIIDtRJ+0=;
-        b=lBYaomhBtlhvHr1nPgCkifgBfUR/qKd6a6wVsE/M+ivERsEFY6chjMZAcbnb3SHHzu
-         rCZQ1XFyrN9Tl5EGSN6PmmC440XPnIpA9x/qWaBOqakaGkwQjO50yPjX/lO2MeghWeIO
-         n2LrtAEGe5DLgeGNKv/96vuPja54paKEgMkwokTq93FVwiE+uVFAbGf3TtbG/6usE368
-         T0a//E9fjOpl1yFwS3hzKukc+djvYc28oL+xzlvFBmOU7COqFLNS/1S0R5J2Kp9PL0wm
-         4uFBtO8t85yFUtgxT8YuRBENQRcuDTagzEBh5bTE3W1mDcPAtIqLQUH+uVnEvX3WXp10
-         Elvw==
-X-Gm-Message-State: AOAM533D49+XERMUcQpIoGINlzlLObrWbaGK1fmiaQNL6b8q8OzjxwHy
-        DsoSKFf4og3mCL6VfKkl5nnRqXkJjRrnU6cULDjHIQ==
-X-Google-Smtp-Source: ABdhPJzbqtERqnP82xx5uHkisRqkk8CIF+77aYgiFY0OIofKP/nQ8IPXRpr1qeG2yOzhWdw89ZfJnXTYr43XinbZUe8=
-X-Received: by 2002:a05:6102:124e:: with SMTP id p14mr1245907vsg.14.1616111334467;
- Thu, 18 Mar 2021 16:48:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zuozRhYHLPEHI/9P6pE8GrRW/dv3ARhH5puPoNBpR8w=;
+        b=X8LpldBaZCwPIF8e1/wERzh8zca2ibQ544uAncH9QvIty9vPDNc09HLU0VGySVdECs
+         4wA0BdqWxl6wvuY7QXJYUxyGtzLMvF5wYppAaCJeQukFi3piKUedKIc+JcAUytUIrUV3
+         U3sLgcAv7uD+02Rb0fzqKE//Nz6NiZ8av1v5jknn2wsEinqtbPR7GZC5hMXeU+0wg/up
+         XHdg0vAofWC2k7mhB8zeB5jmziwHmLmLfEnPxl4jIQ2BuScn8Dsyy4Ijqzxf2qWH2dkt
+         LIXWNRcb+Jx0/DcYkMWL/ZmXXbeK9pIIHtOR9Kjg5A+VEfhdV/ge8D1wdur3cBNLNxoK
+         uetQ==
+X-Gm-Message-State: AOAM531Yn6Sa8oCQMHO46ApvQoV0InTTOLdHkrUCec1HTQC7kl61higg
+        wWSXcWYkmOqwTmfb8f85L/Y=
+X-Google-Smtp-Source: ABdhPJxyssy9zDn2RmoeOErpQKJpYn48Kh+W0/J9I6FyH4ME5wlgtBlBjPohUOIs4WWNjivrfwKoqw==
+X-Received: by 2002:a05:6402:10c9:: with SMTP id p9mr7377600edu.268.1616126179855;
+        Thu, 18 Mar 2021 20:56:19 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id l1sm3287589edt.59.2021.03.18.20.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Mar 2021 20:56:19 -0700 (PDT)
+Date:   Fri, 19 Mar 2021 04:56:17 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     paul.walmsley@sifive.com, hes@sifive.com, erik.danie@sifive.com,
+        zong.li@sifive.com, bhelgaas@google.com, robh+dt@kernel.org,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, mturquette@baylibre.com,
+        sboyd@kernel.org, lorenzo.pieralisi@arm.com,
+        p.zabel@pengutronix.de, alex.dewar90@gmail.com,
+        khilman@baylibre.com, hayashi.kunihiko@socionext.com,
+        vidyas@nvidia.com, jh80.chung@samsung.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, helgaas@kernel.org
+Subject: Re: [PATCH v2 4/6] dt-bindings: PCI: Add SiFive FU740 PCIe host
+ controller
+Message-ID: <YFQg4RdOWUABOlPN@rocinante>
+References: <cover.1615954045.git.greentime.hu@sifive.com>
+ <8008af6d86737b74020d7d8f9c3fbc9b500e9993.1615954046.git.greentime.hu@sifive.com>
 MIME-Version: 1.0
-References: <20210318171111.706303-1-samitolvanen@google.com>
- <20210318171111.706303-2-samitolvanen@google.com> <YFPUNlOomp173o5B@hirez.programming.kicks-ass.net>
-In-Reply-To: <YFPUNlOomp173o5B@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 18 Mar 2021 16:48:43 -0700
-Message-ID: <CABCJKufkQay5Fk5mZspn4PY2+mBC0CqC5t9QGkKafX4vUQv6Lg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/17] add support for Clang CFI
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8008af6d86737b74020d7d8f9c3fbc9b500e9993.1615954046.git.greentime.hu@sifive.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Mar 18, 2021 at 10:10:55AM -0700, Sami Tolvanen wrote:
-> > +static void update_shadow(struct module *mod, unsigned long base_addr,
-> > +             update_shadow_fn fn)
-> > +{
-> > +     struct cfi_shadow *prev;
-> > +     struct cfi_shadow *next;
-> > +     unsigned long min_addr, max_addr;
-> > +
-> > +     next = vmalloc(SHADOW_SIZE);
-> > +
-> > +     mutex_lock(&shadow_update_lock);
-> > +     prev = rcu_dereference_protected(cfi_shadow,
-> > +                                      mutex_is_locked(&shadow_update_lock));
-> > +
-> > +     if (next) {
-> > +             next->base = base_addr >> PAGE_SHIFT;
-> > +             prepare_next_shadow(prev, next);
-> > +
-> > +             min_addr = (unsigned long)mod->core_layout.base;
-> > +             max_addr = min_addr + mod->core_layout.text_size;
-> > +             fn(next, mod, min_addr & PAGE_MASK, max_addr & PAGE_MASK);
-> > +
-> > +             set_memory_ro((unsigned long)next, SHADOW_PAGES);
-> > +     }
-> > +
-> > +     rcu_assign_pointer(cfi_shadow, next);
-> > +     mutex_unlock(&shadow_update_lock);
-> > +     synchronize_rcu_expedited();
->
-> expedited is BAD(tm), why is it required and why doesn't it have a
-> comment?
+Hi,
 
-Ah, this uses synchronize_rcu_expedited() because we have a case where
-synchronize_rcu() hangs here with a specific SoC family after the
-vendor's cpu_pm driver powers down CPU cores. Would you say expedited
-is bad enough that we should avoid it here? The function is called
-only when kernel modules are loaded or unloaded, so not very
-frequently.
+Thank you for sending the patches over!
 
-Sami
+A few nitpicks.
+
+> +title: SiFive fu740 PCIe host controller
+> +
+> +description:
+> +  SiFive fu740 PCIe host controller is based on the Synopsys DesignWare
+> +  PCI core. It shares common features with the PCIe DesignWare core and
+> +  inherits common properties defined in
+> +  Documentation/devicetree/bindings/pci/designware-pcie.txt.
+[...]
+
+In the above title and description it would be "FU740" to keep this
+consistent with everything else.
+
+Also, as this is a YAML file, a multi-line description might be better
+expressed as "description: |" or "description: |+", of course it depends
+on whether you would like or not to preserve line endings.
+
+[...]
+> +  dma-coherent:
+> +    description: Indicates that the PCIe IP block can ensure the coherency
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+[...]
+> +  resets:
+> +    description: A phandle to the PCIe power up reset line
+> +
+> +  pwren-gpios:
+> +    description: Should specify the GPIO for controlling the PCI bus device power on
+> +
+> +  perstn-gpios:
+> +    description: Should specify the GPIO for controlling the PCI bus device reset
+[...]
+
+All the above descriptions should end with a period, so that we keep
+things consistent throughout.
+
+Krzysztof
