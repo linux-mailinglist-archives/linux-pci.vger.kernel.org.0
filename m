@@ -2,122 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 828AA342134
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 16:52:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 203B8342152
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 16:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbhCSPvh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Mar 2021 11:51:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229893AbhCSPvI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Mar 2021 11:51:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 066C661958;
-        Fri, 19 Mar 2021 15:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616169067;
-        bh=Gq99zMTfS839iv5eD+lVSuZ2Ekpn/SvAmKBiII1gFqE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e1GIJDW3rChLnNn9n4eQ1LHldoFJ6HeIt7DsCetvfiPM8ubbd2cXV1UCTXQZ0k9yM
-         hSs0N7I6dXCphrb8Q5HrwdXpW7KXRDGzi+SpXAGPNDyajnFRno5l9xYQW36IB+IQrZ
-         G4toEeHaDgByQq1oJ653krn9ah/15n0uuMDR3nR4kN91Y6whOwCGgf5oq+/lewJQf5
-         hiLpkP/K+kt2JPGrVM7mw7di5aHmPouwfCUDVBfwMhoR+YJvyDc7MLsdRONLj334gN
-         PT0dCyzgkT+zBa/AWS7MwaRsJomj8dYb14ECJd7fHu4ZL15V0EoTEChUnxe02p0RiG
-         GZ8IGSsbjQidA==
-Date:   Fri, 19 Mar 2021 17:51:03 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
+        id S230107AbhCSPys (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Mar 2021 11:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230177AbhCSPyh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 11:54:37 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFF0C06174A;
+        Fri, 19 Mar 2021 08:54:37 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id m7so3960958pgj.8;
+        Fri, 19 Mar 2021 08:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XORtYAHbG9JOQiFezkjwFrACKw99bbCHdzV5HKtNWRE=;
+        b=SQ1qh19RY1G4ZdM26EVGR603nMlSNM5luT6l8whbU40uPYbKhuTZt4gWFcEG2sg+Rj
+         S+JArkF/u2r2Q4DT+0qIQ/W9xHQhjqcJ6QKxUgK4zMd0byFcqoU1f7jfGziohBPmGAxa
+         6OY8L9VxFFZc/CsIVGjSws7JfxQoifA6r45MPN5j9216kIk5gD87dQWLQ3BG6YpBsl0i
+         iIna5TxEGKGryHwf0+qI6uxJ/aoB3pGmqOTZfjNeVMwVdbKdDKNUJWLyyEQhl+jBfYpp
+         0d6AWpJmZACejAtqW1Ci2yTSXz6ZkEFOU6WLVFoVLmqj3pZ88ogJYc3S+1vsByiC2r+Q
+         VUYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XORtYAHbG9JOQiFezkjwFrACKw99bbCHdzV5HKtNWRE=;
+        b=FB8Vi+ZJlf6Al6MKsVO47LuBzRLmFTiGxrXB5GD/o+rJ+swUNBoot8Ta8gNZBV6K0g
+         uEikg/F+BKM0LiWGTQi4LyZMfXNm6FECwf02u89xZEZ+6SZRz6IAV2/3U5bS6NhlWa78
+         +8RBt3Dwr/3RfDQ/asBKPsauPu9EX23S7XB+fviAfnDqYhOZYGZY4Jd/FU+UVkCl1evp
+         /hgwVqBMxusNsD6pcYevIGVDR00XQ3RfhEXF3CkR0QbzN6E0qJO6l7U5U6rzzx3aBwoK
+         n7kNYj5K9+suRXc0LjdazAQvHfu8I1DfTad/LJnXzDClbdQKFjjrdihs/SvaMwkDg8dB
+         Ru5w==
+X-Gm-Message-State: AOAM533EXyJKa4XRFqcHjBfaeteqJDO2WL2qS8d3gS2KbFa71g7e97yY
+        ilmwHvT6O8+0od2EG//mMHI=
+X-Google-Smtp-Source: ABdhPJzYLBlBKndimmvTRLl+X03Ij0bxB4NCXhesL4NTlngd1Cdz7jp2iPZRPsAPDFlBYrD7VYGhQA==
+X-Received: by 2002:a62:8c45:0:b029:207:d29b:b160 with SMTP id m66-20020a628c450000b0290207d29bb160mr9481387pfd.80.1616169276577;
+        Fri, 19 Mar 2021 08:54:36 -0700 (PDT)
+Received: from localhost ([103.248.31.158])
+        by smtp.gmail.com with ESMTPSA id y20sm6096888pfo.210.2021.03.19.08.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Mar 2021 08:54:36 -0700 (PDT)
+Date:   Fri, 19 Mar 2021 21:23:52 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
         bhelgaas@google.com, linux-kernel@vger.kernel.org,
         alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
+        shyam.rajendran@nutanix.com, felipe@nutanix.com,
+        alex.williamson@redhat.com
 Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
  reset mechanism
-Message-ID: <YFTIZ8nbQ3U25RGl@unreal>
-References: <YFHsW/1MF6ZSm8I2@unreal>
- <20210317131718.3uz7zxnvoofpunng@archlinux>
- <YFILEOQBOLgOy3cy@unreal>
- <20210317113140.3de56d6c@omen.home.shazbot.org>
+Message-ID: <20210319155352.b2r6b4apjrmuebbx@archlinux>
+References: <20210317113140.3de56d6c@omen.home.shazbot.org>
  <YFMYzkg101isRXIM@unreal>
- <20210318103935.2ec32302@omen.home.shazbot.org>
- <YFOMShJAm4j/3vRl@unreal>
- <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
- <YFSgQ2RWqt4YyIV4@unreal>
- <27aedf13-9c08-0ac7-e6ef-a027913c288a@metux.net>
+ <20210318142252.fqi3das3mtct4yje@archlinux>
+ <YFNqbJZo3wqhMc1S@unreal>
+ <20210318170143.ustrbjaqdl644ozj@archlinux>
+ <YFOPYs3IGaemTLMj@unreal>
+ <20210318174344.yslqpfyct6ziwypd@archlinux>
+ <YFShlUgePr1BNnRI@unreal>
+ <20210319152317.babevldyslat2gqa@archlinux>
+ <YFTFNAeAyovUmQ/W@unreal>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <27aedf13-9c08-0ac7-e6ef-a027913c288a@metux.net>
+In-Reply-To: <YFTFNAeAyovUmQ/W@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 02:48:12PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 19.03.21 13:59, Leon Romanovsky wrote:
+On 21/03/19 05:37PM, Leon Romanovsky wrote:
+> On Fri, Mar 19, 2021 at 08:53:17PM +0530, Amey Narkhede wrote:
+> > On 21/03/19 03:05PM, Leon Romanovsky wrote:
+>
+> <...>
+>
+> > > > > It was exactly the reason why I think that VM usecase presented by
+> > > > > you is not viable.
+> > > > >
+> > > > Well I didn't present it as new use case. I just gave existing
+> > > > usecase based on existing reset attribute. Nothing new here.
+> > > > Nothing really changes wrt that use case.
+> > >
+> > > Of course it is new, please see Alex's response, he said that vfio uses
+> > > in-kernel API and not sysfs.
+> > >
+> > Still it doesn't change in-kernel API either.
+>
+> Right, but the issue is with user space part of this proposal and not
+> in-kernel API.
+Userspace part just inhances existing reset attribute still no
+significant changes there.
+>
+>
+> <...>
+>
+> > > > As mentioned earlier not all vendors care about Linux and not
+> > > > all of the population can afford to buy new HW just to run Linux.
+> > >
+> > > Sorry, but you are not consistent. At the beginning, we talked about new HW
+> > > that has bugs but don't have quirks yet. Here we are talking about old HW
+> > > that still doesn't have quirks.
+> > >
+> > > Thanks
+> > >
+> > Does it really matter whether HW is old or new?
+> > If old HW doesn't have quirks yet how can we expect
+> > new one to have quirks? What if new HW is made by same vendors
+> > who don't have any interest in Linux?
+>
+> It is pretty clear that this sysfs won't improve quirks situation but
+> has all potential to reduce their amount even more.
+>
+> Let's stop this discussion here.
+>
+> Thanks
+>
+IMO it does improve usability of devices which I consider to be more
+important than developing quirks which are just bandages in the end
+not HW fix. There's no point in using Linux if
+I can't use the device in the first place and expecting to wait
+for some community member to develop quirk without vendor support
+is simply unrealistic.
+So let's stop this discussion here.
 
-<...>
-
-> In any case, I still fail to see why giving operators an debug knob
-> should make anything worse.
-
-I see this patch as a workaround to stop and provide quirks for reset issues.
-As a way forward, we can do this sysfs visible for DEBUG/EXPERT .config builds.
-What do you think?
-
-> 
-> > > [ And often, even a combination of them isn't enough. Did you know that
-> > >    even Google doesn't get all specs necessary to replace away the ugly
-> > >    FSP blob ? (it's the same w/ AMD, but meanwhile I'm pissed enought to
-> > >    reverse engineer their AGESA blob). ]
-> > 
-> > I don't know about this specific Google case, but from my previous experience.
-> > The reasons why vendor says no to Google are usually due to licensing and legal
-> > issues and not open source vs. proprietary.
-> 
-> In short words: Google did (still does?) build their own mainboards and
-> FW (IIRC that's where LinuxBoot came from), but even with their HUGE
-> quantities (they buy cpus in quantities of truck loads) they still did
-> not manage to get any specs for writing their own early init w/o the
-> proprietary FSP.
-> 
-> The licensing / legal issues can either be:
-> 
-> a) we, the mightly Intel Corp., have been so extremly stupid for
->    licensing some vital IP stuff (what exactly could that be, in exactly
->    the prime domain of Intel ?) and signing such insane crontracts, that
->    we're not allowed to tell anybody how to actually use our own
->    products (yes: initializing the CPU and built-in interfaces belongs
->    exactly into that category)
-> b) we, the mighty Intel Corp., couldn't build something on our own, but
->    just stolen IP (in our primary domain) and are scared that anybody
->    could find out from just reading some early setup code.
-> c) we, the mighty Intel Corp., rule the world and we give a phrack on
->    what some tiny Customers like Google want from us.
-> d) we, the mightly Intel Corp., did do what our name tells: INTEL,
->    and we don't want anybody raise unpleasant questions.
-
-I would say
- e) We, Intel, have fixes and optimization logic (patented or specific to different
- customers) that is applicable  to our HW and we can't open it to Google because it
- will be used against us, in procurement and development. See recent article about
- ex-Intel employee who used this information when placed bids in Microsoft.
- https://www.usnews.com/news/best-states/oregon/articles/2021-02-08/intel-sues-engineer-who-went-to-microsoft-over-trade-secrets
-
-> 
-> 
-> choose your poison :P
-> 
-> 
-> --mtx
-> 
-> -- 
-> ---
-> Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-> werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-> GPG/PGP-Schlüssel zu.
-> ---
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+Thanks,
+Amey
