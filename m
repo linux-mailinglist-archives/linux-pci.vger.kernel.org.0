@@ -2,93 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97B3D341799
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 09:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD415341838
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 10:28:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234410AbhCSIh7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Mar 2021 04:37:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41450 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234399AbhCSIhl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Mar 2021 04:37:41 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E301920530D;
-        Fri, 19 Mar 2021 09:37:39 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4A98320271D;
-        Fri, 19 Mar 2021 09:37:33 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EE295402D2;
-        Fri, 19 Mar 2021 09:37:24 +0100 (CET)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
-        shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
-        stefan@agner.ch, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH 3/3] PCI: imx: clear vreg bypass when pcie vph voltage is 3v3
-Date:   Fri, 19 Mar 2021 16:24:07 +0800
-Message-Id: <1616142247-13789-3-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1616142247-13789-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1616142247-13789-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S229680AbhCSJ2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Mar 2021 05:28:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:13642 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229917AbhCSJ1x (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 05:27:53 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4F1z5G1KCLzmZcM;
+        Fri, 19 Mar 2021 17:25:22 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.498.0; Fri, 19 Mar 2021 17:27:41 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <helgaas@kernel.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>
+CC:     <alex.williamson@redhat.com>, <prime.zeng@huawei.com>,
+        <yangyicong@hisilicon.com>, <linuxarm@huawei.dom>
+Subject: [PATCH v2] PCI: Factor functions of PCI function reset
+Date:   Fri, 19 Mar 2021 17:25:18 +0800
+Message-ID: <1616145918-31356-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Both 1.8v and 3.3v power supplies can be feeded to i.MX8MQ PCIe PHY.
-In default, the PCIE_VPH voltage is suggested to be 1.8v refer to data
-sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic design,
-the VREG_BYPASS bits of GPR registers should be cleared from default
-value 1b'1 to 1b'0.
+Previously we used pci_probe_reset_function() to probe whether a function
+can be reset and use __pci_reset_function_locked() to perform a function
+reset. These two functions have lots of common lines.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Factor the two functions and reduce the redundancy.
+
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Change since v1:
+- reword the comments a bit(Krzysztof)
+- fix typos in the commit(Bjorn)
+Link: https://lore.kernel.org/linux-pci/1605090123-14243-1-git-send-email-yangyicong@hisilicon.com/
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 853ea8e82952..c35d5511b55b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -37,6 +37,7 @@
- #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
- #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
- #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-+#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
- #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
- #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
+ drivers/pci/pci.c   | 62 ++++++++++++++++-------------------------------------
+ drivers/pci/pci.h   |  2 +-
+ drivers/pci/probe.c |  2 +-
+ 3 files changed, 21 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 16a1721..254bbe9 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5055,9 +5055,11 @@ static void pci_dev_restore(struct pci_dev *dev)
+ }
  
-@@ -611,6 +612,10 @@ static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
- 
- static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ /**
+- * __pci_reset_function_locked - reset a PCI device function while holding
+- * the @dev mutex lock.
++ * pci_probe_reset_function - check whether the device can be safely reset
++ *                            or reset a PCI device function while holding
++ *                            the @dev mutex lock.
+  * @dev: PCI device to reset
++ * @probe: Probe or not whether the device can be reset.
+  *
+  * Some devices allow an individual function to be reset without affecting
+  * other functions in the same device.  The PCI device must be responsive
+@@ -5071,10 +5073,11 @@ static void pci_dev_restore(struct pci_dev *dev)
+  * device including MSI, bus mastering, BARs, decoding IO and memory spaces,
+  * etc.
+  *
+- * Returns 0 if the device function was successfully reset or negative if the
+- * device doesn't support resetting a single function.
++ * Returns 0 if the device function can be reset or was successfully
++ * reset, otherwise negative if the device doesn't support resetting
++ * a single function.
+  */
+-int __pci_reset_function_locked(struct pci_dev *dev)
++int pci_probe_reset_function(struct pci_dev *dev, int probe)
  {
-+	struct dw_pcie *pci = imx6_pcie->pci;
-+	struct device *dev = pci->dev;
-+	struct device_node *node = dev->of_node;
+ 	int rc;
+ 
+@@ -5088,61 +5091,34 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+ 	 * other error, we're also finished: this indicates that further
+ 	 * reset mechanisms might be broken on the device.
+ 	 */
+-	rc = pci_dev_specific_reset(dev, 0);
++	rc = pci_dev_specific_reset(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+ 	if (pcie_has_flr(dev)) {
++		if (probe)
++			return 0;
+ 		rc = pcie_flr(dev);
+ 		if (rc != -ENOTTY)
+ 			return rc;
+ 	}
+-	rc = pci_af_flr(dev, 0);
++	rc = pci_af_flr(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	rc = pci_pm_reset(dev, 0);
++	rc = pci_pm_reset(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	rc = pci_dev_reset_slot_function(dev, 0);
++	rc = pci_dev_reset_slot_function(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	return pci_parent_bus_reset(dev, 0);
 +
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MQ:
- 		/*
-@@ -621,6 +626,16 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 				   imx6_pcie_grp_offset(imx6_pcie),
- 				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
- 				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
-+		/*
-+		 * Regarding to the datasheet, the PCIE_VPH is suggested
-+		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
-+		 * VREG_BYPASS should be cleared to zero.
-+		 */
-+		if (of_property_read_bool(node, "pcie-vph-3v3"))
-+			regmap_update_bits(imx6_pcie->iomuxc_gpr,
-+					   imx6_pcie_grp_offset(imx6_pcie),
-+					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
-+					   0);
- 		break;
- 	case IMX7D:
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
++	return pci_parent_bus_reset(dev, probe);
+ }
+-EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+ 
+-/**
+- * pci_probe_reset_function - check whether the device can be safely reset
+- * @dev: PCI device to reset
+- *
+- * Some devices allow an individual function to be reset without affecting
+- * other functions in the same device.  The PCI device must be responsive
+- * to PCI config space in order to use this function.
+- *
+- * Returns 0 if the device function can be reset or negative if the
+- * device doesn't support resetting a single function.
+- */
+-int pci_probe_reset_function(struct pci_dev *dev)
++int __pci_reset_function_locked(struct pci_dev *dev)
+ {
+-	int rc;
+-
+-	might_sleep();
+-
+-	rc = pci_dev_specific_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	if (pcie_has_flr(dev))
+-		return 0;
+-	rc = pci_af_flr(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_pm_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_dev_reset_slot_function(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-
+-	return pci_parent_bus_reset(dev, 1);
++	return pci_probe_reset_function(dev, 0);
+ }
++EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+ 
+ /**
+  * pci_reset_function - quiesce and reset a PCI device function
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index ef7c466..f349d48 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -39,7 +39,7 @@ enum pci_mmap_api {
+ int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
+ 		  enum pci_mmap_api mmap_api);
+ 
+-int pci_probe_reset_function(struct pci_dev *dev);
++int pci_probe_reset_function(struct pci_dev *dev, int probe);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
+ 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 953f15a..cc0c21d 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2404,7 +2404,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 
+ 	pcie_report_downtraining(dev);
+ 
+-	if (pci_probe_reset_function(dev) == 0)
++	if (pci_probe_reset_function(dev, 1) == 0)
+ 		dev->reset_fn = 1;
+ }
+ 
 -- 
-2.17.1
+2.8.1
 
