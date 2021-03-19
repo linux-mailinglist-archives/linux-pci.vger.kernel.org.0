@@ -2,138 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44714341EB9
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 14:49:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22784341ECA
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 14:52:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbhCSNsa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Mar 2021 09:48:30 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:39233 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbhCSNsW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 09:48:22 -0400
-Received: from [192.168.1.155] ([95.114.29.199]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mzydy-1lZqeJ1yGE-00x5Wc; Fri, 19 Mar 2021 14:48:13 +0100
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-To:     Leon Romanovsky <leon@kernel.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
-References: <YFHh3bopQo/CRepV@unreal>
- <20210317112309.nborigwfd26px2mj@archlinux> <YFHsW/1MF6ZSm8I2@unreal>
- <20210317131718.3uz7zxnvoofpunng@archlinux> <YFILEOQBOLgOy3cy@unreal>
- <20210317113140.3de56d6c@omen.home.shazbot.org> <YFMYzkg101isRXIM@unreal>
- <20210318103935.2ec32302@omen.home.shazbot.org> <YFOMShJAm4j/3vRl@unreal>
- <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net> <YFSgQ2RWqt4YyIV4@unreal>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <27aedf13-9c08-0ac7-e6ef-a027913c288a@metux.net>
-Date:   Fri, 19 Mar 2021 14:48:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S229866AbhCSNvm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Mar 2021 09:51:42 -0400
+Received: from mail-bn8nam12on2048.outbound.protection.outlook.com ([40.107.237.48]:18305
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229785AbhCSNvN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Mar 2021 09:51:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LQsh/5uMB8lIr84OEBsvh6aAu+Gz7IBhVKEDCrtwcR7GLpnSBdirZ3jmrlhFAF1QGPQFd+SMvpr3QTueCoNN8te9tOJyyv4lfrZ79EVJyAuHv3ZqGtJP6IGDczmHgQxAC/+lNAbw+1jjbPlkP2UCFV9QkrvIjnJFL9KU4VbqirGDtvgErM7BTR9WPSaB9BpD5ahAzyuwD76VZmChRi0QpoemAzx0kFSMxqi4+kH3M4NdCyqXp/loSNnlg4LDuL+KKL96MjWCYcxUL1oco8NI4HS5fNhVAsfB201xP4m7SMot71nq4irdwmoxSb/Sl2au4QxGXmCIhCARrU0Mw4GKag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kb/BsPH8uX7QHsJ/cyYgNoToou7c0wdfmtQxYjQ5Txc=;
+ b=UXCY4lQXVFdfizCI4eIWNN32IXtdEAGN4Z9GP40iWLR5zOXG/ZgMbaV02bGkok91F4J9rbn2o//khU7sAwBmjkkM6BXtjDH9B7vhuQJHsbR5F8PLLE/NIxmoaBFvXaS+8Fd69tVlvniaeat9lRAhUgZxgrmr93n0Z3Gw5ZW+BKroeOTxW28V0h5zUYsp3x4/pAKdzanmVSQFgk8QvCTinrFwCTHIlVjAGdzI1W+A9iEpQsveMA9UF9r0qz/sTLxCI2mq6QrY4byKgm77UVXScVX8W6TxbrgnsS1acuLHrPs2scxG2fNZTYhq8TJGgosc/U77ttKku0UzR/fkKo5XTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kb/BsPH8uX7QHsJ/cyYgNoToou7c0wdfmtQxYjQ5Txc=;
+ b=ZnJV7e9AyK38DZ8KjLQwC9xbSRoAv3ZdfypkyFhhg9zA9bJPigZNvvxyXRiiECtEd4LpcxFmRsKd5S4N8IUSaMMspVA99cfugBC8B/BJcLz7ZY93hYToI3/KVRpwsz/Vy29zyjSSNK0YJFAk5iET0H/BqZ5C9UdInbGoxNUtnH4=
+Received: from SN1PR12MB2352.namprd12.prod.outlook.com (2603:10b6:802:25::13)
+ by SA0PR12MB4351.namprd12.prod.outlook.com (2603:10b6:806:71::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Fri, 19 Mar
+ 2021 13:51:11 +0000
+Received: from SN1PR12MB2352.namprd12.prod.outlook.com
+ ([fe80::d1b:6232:d444:4330]) by SN1PR12MB2352.namprd12.prod.outlook.com
+ ([fe80::d1b:6232:d444:4330%4]) with mapi id 15.20.3955.024; Fri, 19 Mar 2021
+ 13:51:11 +0000
+From:   "Schroeder, Julian" <Julian.Schroeder@amd.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "S, Shirish" <Shirish.S@amd.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: RE: [PATCH] PCI: Add AMD RV2 based APUs, such as 3015Ce, to D3hot to
+ D3 quirk table.
+Thread-Topic: [PATCH] PCI: Add AMD RV2 based APUs, such as 3015Ce, to D3hot to
+ D3 quirk table.
+Thread-Index: AQHXFjDf5flW2OWgCk2cPUWWKvSWjqp+vqcAgAygzXA=
+Date:   Fri, 19 Mar 2021 13:51:11 +0000
+Message-ID: <SN1PR12MB2352A8037F7C248F024DF3E695689@SN1PR12MB2352.namprd12.prod.outlook.com>
+References: <20210311044135.119942-1-shirish.s@amd.com>
+ <20210311125322.GA2122226@bjorn-Precision-5520>
+In-Reply-To: <20210311125322.GA2122226@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2021-03-19T13:50:53Z;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal Use Only -
+ Unrestricted;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=2f0dc422-fd6c-4c8c-a58b-99120f3f941d;
+ MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=1
+msip_justification: I confirm the recipients are approved for sharing this
+ content
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [165.204.77.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: aeafdcfd-39dd-4340-dc7f-08d8eade0e3d
+x-ms-traffictypediagnostic: SA0PR12MB4351:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SA0PR12MB4351FCB9E509FCDAEC38293095689@SA0PR12MB4351.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:747;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pqmy+5yzaAaFehGuYr7Rxxa8uhsAvUl6PDgzZLY8o6dQoRgGn1vGfBCiF0mLa7x5JiDvXxA1hmwrQGpOZMTYa+RQpNcqjoCHHZXAkh2Ki1qJH6VHwmH7rdbldmDC5IC3GCDZ/Rj0xNbqlD2x4oiluBT1pwWTghlRyNBDAM/4vrBVcnvYfquLMk6gp9zKPK+yuSmQtr+TtTO2rUgPH/C99jsOPpMeYh+hDcg+2dMp5V+HJQuAnWihP0fLwXx5sUeOFQiiP6aXMi1OkUXfc2iIVTWaH2aLtR7FgI4hvRM/Jz5OdQ+NvK/lcWU6DD0snZB7f3/0+rlil0QgJHtNiR5in57Hbbkh6RVMOdqxk66rRUF0KYCE+qOgjlj3KtQhem7f8sPu/abdUHYrQ+tlCcxX7K4Vca+9VCGXoLAe3GHkh+InJKqjn51exIRRPis9J/KK2z3/+gEy0w5e1Zfon+NKtWaBsR9pfoNxYMuLX53kLnAh1i+dzTBBYheqhUfDGUECjUZ1icaiD9jASm/qMMxXljKOJyftCq3Hj5YCOLFgjQREjlI35t9nqFyBIBjAYnoy8cyDliJh+Q49AffinH6SCtF5SuOBwPovmiE+Gqj+0e1Y94r0RfNETfIhW4i24CMd0A8T72pT6rUUKpVNLssRgYyWpcMlS19oRbKND/wMet/yeI4kWQZxg7sHtAcaeMjU/+D4M10mruXBycJow8pp0wLFf6M4RFAjxsZewEutWAT5B8KLt2+JwlC6NBKyksugOpB/5omMaVorGpMJs1JyxA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2352.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(396003)(366004)(346002)(66946007)(8936002)(64756008)(186003)(66556008)(2906002)(33656002)(316002)(38100700001)(76116006)(9686003)(110136005)(54906003)(6636002)(66476007)(66446008)(45080400002)(26005)(7696005)(71200400001)(52536014)(966005)(8676002)(6506007)(86362001)(55016002)(478600001)(4326008)(53546011)(5660300002)(83380400001)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?z4oMH/+eVI6rNFniovsUHzGBYp/gUxUXSi2V29x14KnxEfUrSOFCgTbTa3xg?=
+ =?us-ascii?Q?PDMGCoG+zmfaCNIfGF5/Q9NwjOCCqKTPS3QKD/MIjG52FRMY47VJVLaqnice?=
+ =?us-ascii?Q?0vDvPlmA8cWOhbNSJWtXnKJ+4msdhLm6Zo2le6s7h2X8daKRSeihp24JmY1t?=
+ =?us-ascii?Q?14P4wAOzZgKj+KllpzF3BSH50sQ3BYBZm4yO+4bPs58IFTHh6XPicwl+5xdm?=
+ =?us-ascii?Q?5gFwQj+2/kEZv2H+UdGAVhQaHpjzDrn5SBlVhvgyr3EiL5bRxykYPstIwmuT?=
+ =?us-ascii?Q?irWveKVbNVoUFK2RZhBF9gUu9vWoCnU/vmSSOhT7ubDcmo6egLv1RGmV3TUZ?=
+ =?us-ascii?Q?hBFtrXFlYfoRuxx6TPFcDV674FuLCbtCq2pbXLJeHNqGLOLgjJnqCHi6OLJZ?=
+ =?us-ascii?Q?2kILFrXiOzuUMGYLL9ZKXVAGTphZaz7SuKvrJ92DOwmLh5QO9xYgrSPn1QRH?=
+ =?us-ascii?Q?kWfEUKnfxdVeIKBvYveRqOQ9IJ4joqsHAMS3UznuNlgWSSeDrJyHZo8JwO0G?=
+ =?us-ascii?Q?31AcnnFwo1saeyxD5bJwh20hzi/aU7lQnjWwFUMnC/dQ8mtjykC8b/W+I3NZ?=
+ =?us-ascii?Q?omBobHFf+cb7RpP7B42FHvSyxCvPoEB26Q8Hn+Dycm1ZI/PpfoK3nvIJ9nqn?=
+ =?us-ascii?Q?BqY5WDxfGVGlPRmIe9ujfr5xdHB8gKaB/wYFb2j81WxnIpYwZRfEx0Zrk2SM?=
+ =?us-ascii?Q?NGByoC/zk5T6SqheEKofltXn9Oah97YF5aOeKY+hY3SY+mw8ICla7Lggs9jz?=
+ =?us-ascii?Q?SRzE6+8atT+nhoL1/Q74YuZpw/mdAU+k+EEaiwtfyPhSylaVlog89TdSDKc3?=
+ =?us-ascii?Q?QZUbmMnTqmlVXfwLzuXnto0MscuHNr3O7D1ld/on0D2uoFe3oFCtn6VB5NMZ?=
+ =?us-ascii?Q?pGWgZXVNlJJWny3Bgweak2aIT7bloliJXZYzeQlqLVeoeb37pcH/kLCA5vNM?=
+ =?us-ascii?Q?UXB9Hekg1XJarAM1iqvoQLfR5HKCEuUhH6XFjH1afhLTMrIE66ypmpgunTS5?=
+ =?us-ascii?Q?9q82/sd6nC8zQgjuJVzwCl4NSc/OXTJppgCtNKXF+F9CLvzX8UIkypD1rN6j?=
+ =?us-ascii?Q?n6L2elzpXwbCTPVX+sN4KlQaLjxG2jyDLLu/e8eP046Q6xu/XfxBctSiCUXP?=
+ =?us-ascii?Q?pgpJUXVv0bAiT4I1klIeq7EjQg+gLx/sX0q38BcAOYwx6P2fHOMsyitywytg?=
+ =?us-ascii?Q?CbnXG3BEXV3kUMoDmUTV6PwfMlw+IW4CI8/wsbaq2PLQvc7EU3rccqQnVRVA?=
+ =?us-ascii?Q?KcdE/2/QIpD6B4DISAylAGNDxkuga5nzHMWkLa0XYTNor5pyFlP4WfY9RyL9?=
+ =?us-ascii?Q?w8J+6DrjjJblUBEjDpa6GUM3?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <YFSgQ2RWqt4YyIV4@unreal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:YuQY/oPIl1gjw5CVFKYwndq+QPlRq6cXN5N0R+s6dC6fCrlwTIP
- Sd/uA36LCSxAzGcyfWlWDY4BQtmhtHLy4FLt/X9MoKZccpch5LSkP3tp4uDuxP3H6iw2l+D
- Gx2gdR/ndHfQ2H0niyRZcgkABPpxME47a5Qc4OCKq8Yze3CIhCKet1LiBfeO3JHOZUu/Ybl
- FfB/H/OWZcYOpAZkBZGMQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iSB6CUCeqYg=:wdzZZxPh/GwsMbZS5KydnJ
- hmY2rEuGblfg+iMdwRd6+CJGxwCfmKAUaTUgbP0VoiVdEUda8hdPHOYRlCXXFtIaX7wjG0mnf
- 0g3eCKU6Z315GY+F0qMriF6pjnywyehYtPr9syKebDXPzin4gSZRzhN0wUjHTUJDqy2hkL/pV
- 1odCHqKXDl8rEm3SvB6erRRwuvia5N/dfLKcHL38vyLgEqEx8qoZsYrn2FUAkpag0ovr3W06g
- 5J3v6NSpyKWdXskDG+qn2o0jydB6/zoBtWuKppoD/MOCTHmGCKBB7aYPA4YlA55EQlppr2LTN
- /KUWdyttys5FEgwFULPb8MUkDQb8Ro9peMuzlk5DDKVBc6yxJnISYd9NCpxoA2YnfQBAZ+g10
- 5OUM1jICSis9wo+o59YnC5Z2ynxEtU2APkcWMs328xCCxXYMv8aXiu1elC3/T
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2352.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aeafdcfd-39dd-4340-dc7f-08d8eade0e3d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2021 13:51:11.3800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yElS6eFyBK2xN8HgTPNymW+LVaAZhZ5+mB5aiDUqExkeRPCw4/HOxGGVkM0RYJjRyh3FxiCoCzhkIRiJkyfdeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4351
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19.03.21 13:59, Leon Romanovsky wrote:
+[AMD Official Use Only - Internal Distribution Only]
 
->> I really doubt we can influence that by any technical decision here in
->> the kernel.
-> 
-> There are subsystems that succeeded to do it, for example netdev, RDMA e.t.c.
+I observed an issue with D3hot to D0 transition on 3015e APUs.
+Since the peripheral device IP of the APUs already covered by this quirk is=
+ almost identical. I added the 3015e.=20
+Further testing an a great many machines has not shown the issue occur agai=
+n.
 
-I'd guess either hi-end / server or embedded products - already
-mentioned that these are different fields. I've been talking about the
-average consumer products.
+-----Original Message-----
+From: Bjorn Helgaas <helgaas@kernel.org>=20
+Sent: Thursday, March 11, 2021 6:53 AM
+To: S, Shirish <Shirish.S@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org; linux-k=
+ernel@vger.kernel.org; Schroeder, Julian <Julian.Schroeder@amd.com>; Daniel=
+ Drake <drake@endlessm.com>; Mika Westerberg <mika.westerberg@linux.intel.c=
+om>
+Subject: Re: [PATCH] PCI: Add AMD RV2 based APUs, such as 3015Ce, to D3hot =
+to D3 quirk table.
 
-OTOH, there're also very expensive vendors that are exceptionally bad,
-eg. National instruments (who even are capable of breaking rpm so badly
-with their proprietary packages that they open up 0day holes - i once
-filed a report @FD on such a case).
+[CAUTION: External Email]
 
->> IMHO, the expensive ones don't care either.
->>
->> Does eg. Dell publish board schematics ? Do they even publish exact part
->> lists (exact chipsets) along with their brochures, so customers can
->> check wether their HW is supported, before buying and trying out ?
-> 
-> They do it because they are allowed to do it and not because they
-> explicitly want to annoyance their customers.
+[+cc Daniel, Mika (author, reviewer of 3030df209aa8]
 
-Yes, they're just ignorant. They can still do that, because buy their
-pretty expensive cheap-hardware. And that's mostly driven by purchase
-people inside the customer organisations, who just don't care how much
-damage they do to their own employers, by dictating purchase of
-expensive broken-by-design hardware. ... but that's nothing we here have
-any influence on - except for dissuasion and purchase boycott ...
+On Thu, Mar 11, 2021 at 10:11:35AM +0530, Shirish S wrote:
+> From: Julian Schroeder <julian.schroeder@amd.com>
+>
+> This allows for an extra 10ms for the state transition.
+> Currently only AMD PCO based APUs are covered by this table.
 
-In any case, I still fail to see why giving operators an debug knob
-should make anything worse.
+I'm really glad to see this coming straight from AMD.  Is this a documented=
+ erratum?  Please provide a reference to that.
 
->> [ And often, even a combination of them isn't enough. Did you know that
->>    even Google doesn't get all specs necessary to replace away the ugly
->>    FSP blob ? (it's the same w/ AMD, but meanwhile I'm pissed enought to
->>    reverse engineer their AGESA blob). ]
-> 
-> I don't know about this specific Google case, but from my previous experience.
-> The reasons why vendor says no to Google are usually due to licensing and legal
-> issues and not open source vs. proprietary.
+The point is that quirks are for working around hardware defects.  If the d=
+evice is not defective, and it is actually following the spec correctly, th=
+ere should be a way to fix this in a generic way that doesn't require quirk=
+s.  That avoids the need to add more quirks for future devices.
 
-In short words: Google did (still does?) build their own mainboards and
-FW (IIRC that's where LinuxBoot came from), but even with their HUGE
-quantities (they buy cpus in quantities of truck loads) they still did
-not manage to get any specs for writing their own early init w/o the
-proprietary FSP.
+> WIP. Working on commit to kernel.org.
 
-The licensing / legal issues can either be:
+I'm not sure what "WIP. Working on commit to kernel.org." means.  Does it m=
+ean I should ignore this and wait for the final posting?
 
-a) we, the mightly Intel Corp., have been so extremly stupid for
-    licensing some vital IP stuff (what exactly could that be, in exactly
-    the prime domain of Intel ?) and signing such insane crontracts, that
-    we're not allowed to tell anybody how to actually use our own
-    products (yes: initializing the CPU and built-in interfaces belongs
-    exactly into that category)
-b) we, the mighty Intel Corp., couldn't build something on our own, but
-    just stolen IP (in our primary domain) and are scared that anybody
-    could find out from just reading some early setup code.
-c) we, the mighty Intel Corp., rule the world and we give a phrack on
-    what some tiny Customers like Google want from us.
-d) we, the mightly Intel Corp., did do what our name tells: INTEL,
-    and we don't want anybody raise unpleasant questions.
+I'm OCD enough that I like commits doing the same thing to have the same su=
+bject line.  This is an extension of 3030df209aa8 ("PCI:
+Increase D3 delay for AMD Ryzen5/7 XHCI controllers"), so it should look li=
+ke that.
 
+> Signed-off-by: Julian Schroeder <julian.schroeder@amd.com>
 
-choose your poison :P
+This appears to require an additional signoff from you, Shiresh; see [1].
 
+Bjorn
 
---mtx
+[1] https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
+.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git%2Ftre=
+e%2FDocumentation%2Fprocess%2Fsubmitting-patches.rst%23n356&amp;data=3D04%7=
+C01%7Cjulian.schroeder%40amd.com%7C7fc41008b90e486b882008d8e48ca91c%7C3dd89=
+61fe4884e608e11a82d994e183d%7C0%7C0%7C637510640444272647%7CUnknown%7CTWFpbG=
+Zsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C=
+3000&amp;sdata=3DnyJcTD5Vy%2BV1raz%2Fb7ZSiRdp7quMXcydjMdcD2FmQYs%3D&amp;res=
+erved=3D0
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> ---
+>  drivers/pci/quirks.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index=20
+> 653660e3ba9e..7d8f52524ada 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -1904,6 +1904,7 @@ static void quirk_ryzen_xhci_d3hot(struct=20
+> pci_dev *dev)  }  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0,=20
+> quirk_ryzen_xhci_d3hot);  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD,=20
+> 0x15e1, quirk_ryzen_xhci_d3hot);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e5,=20
+> +quirk_ryzen_xhci_d3hot);
+>
+>  #ifdef CONFIG_X86_IO_APIC
+>  static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
+> --
+> 2.17.1
+>
