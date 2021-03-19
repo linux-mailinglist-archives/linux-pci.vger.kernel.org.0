@@ -2,117 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34DE6341CEC
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 13:28:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E1A1341D98
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Mar 2021 14:00:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbhCSM1o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Mar 2021 08:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbhCSM12 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Mar 2021 08:27:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CCAC06175F;
-        Fri, 19 Mar 2021 05:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HGGyfd8GrXRUYl8t/lIrcBczKW5EZl0r2vGbtH69BjM=; b=adFFxpGZQzg62xh/9Ba4l9lwfu
-        F6vR/ZaT6jVOK8XBdN443zktlYfZQFE6KzBnW5MwH3eVqjWSvBEUOKrp/4w94gPSdWAWxhHJ3V1wM
-        JHocPFEFyKktLVXuAuzwFOWOp/KNeXMoG9xD4e0pSSw5guUU6iX3zwS+9iJaXvGVtoak9cQUiKXdk
-        aaTRO8gzVbVR2DUv+LCZp6q/nOcMAZFn5oDnxPol2/x260iyr/gFYohOT8wUIn7bWOGSaBBFsHhXM
-        5W9vjiPOxO3G/F43MluX4VccPO0R+IdphdHCQCiZ5xy5MJJ3Wg5a8xTujshBLU4gCmsDllD60Lvyz
-        4nI6ItgA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lNEDU-004Ogd-1x; Fri, 19 Mar 2021 12:27:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8E33C307975;
-        Fri, 19 Mar 2021 13:26:59 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7709D21244621; Fri, 19 Mar 2021 13:26:59 +0100 (CET)
-Date:   Fri, 19 Mar 2021 13:26:59 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 01/17] add support for Clang CFI
-Message-ID: <YFSYkyNFb34N8Ile@hirez.programming.kicks-ass.net>
-References: <20210318171111.706303-1-samitolvanen@google.com>
- <20210318171111.706303-2-samitolvanen@google.com>
- <YFPUNlOomp173o5B@hirez.programming.kicks-ass.net>
- <CABCJKufkQay5Fk5mZspn4PY2+mBC0CqC5t9QGkKafX4vUQv6Lg@mail.gmail.com>
+        id S229524AbhCSM75 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Mar 2021 08:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229766AbhCSM7v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Mar 2021 08:59:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7000A64ECD;
+        Fri, 19 Mar 2021 12:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616158791;
+        bh=s1jBvRIzG2KtXnlm97XSiogBmYB5Emrm/1OV0N1QTEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rwOsufUV2ChWTrrOGzFS76/AIq8CUh4toMupaCQSNNTfy1xIUPx4Drpf0tEypTeiX
+         SS/hsRPSFhgvYpmTNrM6+ny0hkWDmCSjSZfh1BaBaXz/Ic6KMb+Cz6XXHpwZxbbrX7
+         KNSlkdLOtHZ2Tc1PX93rDqzQSCOJG4CPZE9vyKL0+8MC4cdMeMG2aGjU+OF/s3Wxde
+         OHmDbsTjnRELvHu2wXHsg44dfi3MfSf4JEYk8rw7NCASrZ5y96omUiyblKhLhhxyFG
+         U8COopenns+BT+fbEaX1PzNn8qQ14YF4B/y3c0Q7KdxdutaIoRprjlEDxSsSpVyYfj
+         CkMD3eSqUUVZw==
+Date:   Fri, 19 Mar 2021 14:59:47 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
+        shyam.rajendran@nutanix.com, felipe@nutanix.com
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <YFSgQ2RWqt4YyIV4@unreal>
+References: <YFHh3bopQo/CRepV@unreal>
+ <20210317112309.nborigwfd26px2mj@archlinux>
+ <YFHsW/1MF6ZSm8I2@unreal>
+ <20210317131718.3uz7zxnvoofpunng@archlinux>
+ <YFILEOQBOLgOy3cy@unreal>
+ <20210317113140.3de56d6c@omen.home.shazbot.org>
+ <YFMYzkg101isRXIM@unreal>
+ <20210318103935.2ec32302@omen.home.shazbot.org>
+ <YFOMShJAm4j/3vRl@unreal>
+ <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CABCJKufkQay5Fk5mZspn4PY2+mBC0CqC5t9QGkKafX4vUQv6Lg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 04:48:43PM -0700, Sami Tolvanen wrote:
-> On Thu, Mar 18, 2021 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Mar 18, 2021 at 10:10:55AM -0700, Sami Tolvanen wrote:
-> > > +static void update_shadow(struct module *mod, unsigned long base_addr,
-> > > +             update_shadow_fn fn)
-> > > +{
-> > > +     struct cfi_shadow *prev;
-> > > +     struct cfi_shadow *next;
-> > > +     unsigned long min_addr, max_addr;
-> > > +
-> > > +     next = vmalloc(SHADOW_SIZE);
-> > > +
-> > > +     mutex_lock(&shadow_update_lock);
-> > > +     prev = rcu_dereference_protected(cfi_shadow,
-> > > +                                      mutex_is_locked(&shadow_update_lock));
-> > > +
-> > > +     if (next) {
-> > > +             next->base = base_addr >> PAGE_SHIFT;
-> > > +             prepare_next_shadow(prev, next);
-> > > +
-> > > +             min_addr = (unsigned long)mod->core_layout.base;
-> > > +             max_addr = min_addr + mod->core_layout.text_size;
-> > > +             fn(next, mod, min_addr & PAGE_MASK, max_addr & PAGE_MASK);
-> > > +
-> > > +             set_memory_ro((unsigned long)next, SHADOW_PAGES);
-> > > +     }
-> > > +
-> > > +     rcu_assign_pointer(cfi_shadow, next);
-> > > +     mutex_unlock(&shadow_update_lock);
-> > > +     synchronize_rcu_expedited();
-> >
-> > expedited is BAD(tm), why is it required and why doesn't it have a
-> > comment?
+On Thu, Mar 18, 2021 at 07:34:56PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 18.03.21 18:22, Leon Romanovsky wrote:
 > 
-> Ah, this uses synchronize_rcu_expedited() because we have a case where
-> synchronize_rcu() hangs here with a specific SoC family after the
-> vendor's cpu_pm driver powers down CPU cores.
+> > Which email client do you use?
+> > Your responses are grouped as one huge block without any chance to respond
+> > to you on specific point or answer to your question.
+> 
+> I'm reading this thread in Tbird, and threading / quoting all looks
+> nice.
 
-Broken vendor drivers seem like an exceedingly poor reason for this.
+I'm not talking about threading or quoting but about response itself.
+See it here https://lore.kernel.org/lkml/20210318103935.2ec32302@omen.home.shazbot.org/
+Alex's response is one big chunk without any separations to paragraphs.
 
-> Would you say expedited is bad enough that we should avoid it here?
-> The function is called only when kernel modules are loaded or
-> unloaded, so not very frequently.
+> 
+> > I see your flow and understand your position, but will repeat my
+> > position. We need to make sure that vendors will have incentive to
+> > supply quirks.
+> 
+> I really doubt we can influence that by any technical decision here in
+> the kernel.
 
-Module unload is pretty crap (it has stop_machine), so an expedited
-would not really be noticable, but module load isn't nearly as bad.
+There are subsystems that succeeded to do it, for example netdev, RDMA e.t.c.
 
-Also, getting the vendor to fix their driver seems like a good thing :-)
+> 
+> > And regarding vendors, see Amey response below about his touchpad troubles.
+> > The cheap electronics vendors don't care about their users.
+> 
+> IMHO, the expensive ones don't care either.
+> 
+> Does eg. Dell publish board schematics ? Do they even publish exact part
+> lists (exact chipsets) along with their brochures, so customers can
+> check wether their HW is supported, before buying and trying out ?
 
-So please consider using regular synchronize_rcu() here.
+They do it because they are allowed to do it and not because they
+explicitly want to annoyance their customers. 
+
+> 
+> Doesn't seem so. I've personally seen a lot cases where some supposedly
+> supported HW turned out to be some completely different and unsupported
+> HW that's sold under exactly the same product ID. One of many reasons
+> for not giving them a single penny anymore.
+> 
+> IMHO, there're only very few changes of convincing some HW vendor for
+> doing a better job on driver side:
+> 
+> a) product is targeted for a niche that can't live without Linux
+>    (eg. embedded)
+> b) it's really *dangerous* for your market share if anything doesn't
+>    work properly on Linux (eg. certan server machines)
+> c) somebody *really* big (like Google) is gun-pointing at some supplier,
+>    who's got a lot to loose
+> d) a *massive* worldwide shitstorm against the vendor
+> 
+> [ And often, even a combination of them isn't enough. Did you know that
+>   even Google doesn't get all specs necessary to replace away the ugly
+>   FSP blob ? (it's the same w/ AMD, but meanwhile I'm pissed enought to
+>   reverse engineer their AGESA blob). ]
+
+I don't know about this specific Google case, but from my previous experience.
+The reasons why vendor says no to Google are usually due to licensing and legal
+issues and not open source vs. proprietary.
+
+> 
+> You see, what we do here in the kernel has no practical influence on
+> those hw vendors.
+
+I see it differently, but it doesn't matter. This is too theoretical
+discussion to my taste.
+
+> 
+> 
+> --mtx
+> 
+> -- 
+> ---
+> Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+> werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+> GPG/PGP-Schlüssel zu.
+> ---
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
