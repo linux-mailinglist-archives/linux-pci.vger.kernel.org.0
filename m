@@ -2,110 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2407234331D
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Mar 2021 16:10:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD4A0343329
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Mar 2021 16:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbhCUPKF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Mar 2021 11:10:05 -0400
-Received: from mout02.posteo.de ([185.67.36.66]:44899 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229784AbhCUPJg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 21 Mar 2021 11:09:36 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id 173CA2400FD
-        for <linux-pci@vger.kernel.org>; Sun, 21 Mar 2021 16:09:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1616339374; bh=lhFd45mIGXuppYqfgZze5IoFnJZ5RSTPVIt6oeO3OVg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FdevwaJdxl8mL65jhQv1DQH7IwJJ7QiaLB6OD6G607r5rtRlGo8N8A6M0NUbVlGY3
-         BcF8aGweJmAkaEi+VRyBjQrqQX5ENt7E7RoDo+5a5NBkn/nBuAXeEcDiwUOwKGyY4l
-         qe9kcw7qoLF36ZIMhvt2GWTpa5HnIOR+PIJ947vKgTXvEB1G0cv+HMI46CS4/YhWDf
-         qRQIYQZkX2cGC7zEhIvEixjfpytZgMliu5XvjJQpUS7yqYWQ6fqOjGpY35rkE1n5Kp
-         YAhWN5iFeb09f5c3rcCv6efkoXTv0lci5vI7XhMNFNE8iSK8TXncXB1eZHbE50jnvX
-         7/FKwRHaS9HaQ==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 4F3LdT38r8z6tmX;
-        Sun, 21 Mar 2021 16:09:33 +0100 (CET)
+        id S230260AbhCUPaJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Mar 2021 11:30:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:13998 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230225AbhCUP3k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Mar 2021 11:29:40 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4F3M2P1TmhzrZNw;
+        Sun, 21 Mar 2021 23:27:41 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.117) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.498.0; Sun, 21 Mar 2021
+ 23:29:30 +0800
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <bhelgaas@google.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, linfeilong <linfeilong@huawei.com>,
+        <liuzhiqiang26@huawei.com>, "wubo (T)" <wubo40@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] pci: fix memory leak when virtio pci hotplug
+Message-ID: <c48998b7-5308-e196-66b5-905fc8c4edc4@huawei.com>
+Date:   Sun, 21 Mar 2021 23:29:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: quoted-printable
-Date:   Sun, 21 Mar 2021 16:09:33 +0100
-From:   =?UTF-8?Q?R=C3=B6tti?= 
-        <espressobinboardarmbiantempmailaddress@posteo.de>
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, stable@vger.kernel.org,
-        Zachary Zhang <zhangzg@marvell.com>
-Subject: Re: [PATCH] PCI: Add Max Payload Size quirk for ASMedia ASM1062
- SATA controller
-In-Reply-To: <20210319190228.xdejimfdpjch6de4@pali>
-References: <20210317225544.fm4oyuujylsxa77b@pali>
- <20210317230355.GA95738@bjorn-Precision-5520>
- <20210319190228.xdejimfdpjch6de4@pali>
-Message-ID: <cac9265e1c53638eca1aebe8a18bebc2@posteo.de>
-X-Sender: espressobinboardarmbiantempmailaddress@posteo.de
-User-Agent: Posteo Webmail
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.117]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I organized a T60 Thinkpad, pulled out the Wificard (MiniPCIE) and=20
-plugged in the Marvell SATA-Controller card. Good news is that you're=20
-right, the DevCap MaxPayload is 128 bytes, so I couldn't reproduce that=20
-error on that thinkpad. I tried two different Marvell controller cards.=20
-Wierd thing is, that both cards did not sho up in the lspci -nn -vv=20
-command. So I'm not sure if these got recognized.
+From: Feilong Lin <linfeilong@huawei.com>
 
-With these patches supplied (@thank you very much Marek & Bj=C3=B6rn) is=20
-there a build server I can download a nightly version of armbian I can=20
-test for you?
-Is there any way I can support?
+Repeated hot-plugging of pci devices for a virtual
+machine driven by virtio, we found that there is a
+leak in kmalloc-4k, which was confirmed as the memory
+of the pci_device structure. Then we found out that
+it was missing pci_dev_put() after pci_get_slot() in
+enable_slot() of acpiphp_glue.c.
 
-Thank you very much in advance!
+Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+ drivers/pci/hotplug/acpiphp_glue.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Am 19.03.2021 20:02 schrieb Pali Roh=C3=A1r:
-> On Wednesday 17 March 2021 18:03:55 Bjorn Helgaas wrote:
->> On Wed, Mar 17, 2021 at 11:55:44PM +0100, Pali Roh=C3=A1r wrote:
->> > On Wednesday 17 March 2021 17:45:49 Bjorn Helgaas wrote:
->> > > This quirk suggests that there's a hardware defect in the ASMedia
->> > > ASM1062.  But if that's really the case, we should see reports on lo=
-ts
->> > > of platforms, and I'm only aware of these two.
->> >
->> > Do you have platform which support MPS of 512 bytes? Because I have no=
-t
->> > seen any x86 / Intel PCIe controller with such support on ordinary
->> > laptop and desktop.
->> >
->> > These two (A3720 and CN9130) are the only which has support for it.
->> >
->> > Has somebody else PCIe controller which Root Bridge supports MPS of 51=
-2
->> > bytes?
->> >
->> > Maybe they are in servers, but then such "cheap" SATA controllers are
->> > not used in servers. So this is probably reason why nobody else report=
-ed
->> > such issue.
->>=20
->> I have no idea.  My laptop only supports 512 (except for an ASMedia
->> USB controller).  If the device advertises it, I would expect the
->> vendor to test it.  Obviously it still could be a device defect.  They
->> should publish an erratum if that's the case so people know to avoid
->> it.  So I would try to get ASMedia to say "no, that's tested and
->> should work" or "oh, sorry, here's an erratum and we'll fix it in the
->> next round."
->=20
-> I doubt that ASMedia publish something...
->=20
-> But has somebody contact to ASMedia? I can try it.
->=20
-> Basically these ASMedia SATA controller chips are present on more
-> "noname" mPCIe-form cards and I guess ASMedia is not going to support
-> them.
->=20
-> Note that we have also tested Marvell PCIe-based SATA controllers which
-> support MPS of 512 bytes too and there were no problem with them on
-> A3720 nor CN9130.
+diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+index 3365c93abf0e..f031302ad401 100644
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -533,6 +533,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 			slot->flags &= ~SLOT_ENABLED;
+ 			continue;
+ 		}
++		pci_dev_put(dev);
+ 	}
+ }
+
+-- 
+2.19.1
+
+
