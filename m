@@ -2,142 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CE8334317B
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Mar 2021 06:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6EB93431C4
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Mar 2021 09:42:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbhCUFwK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Mar 2021 01:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbhCUFvr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Mar 2021 01:51:47 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C60C061574;
-        Sat, 20 Mar 2021 22:51:47 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id l13so10005412qtu.9;
-        Sat, 20 Mar 2021 22:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6awWR6J01S3VvaFl3l226JcCIWl910GFIDAp2HokN38=;
-        b=QfSc/Hmcj8RYWcukNSs5oJtHP2rBqciQFojqJRMh6+2MmKoJQXWQQezTv1iIdaoa+H
-         9dHDCJBi0i8woUgns9Pdq/K3BaAghbaojHycO3qsOshhmP3dL577Z1zgRl2CfjwziExu
-         4ANF1fR45LA8yeESbxi1l9ZbSk3hnoIoc4kW/5qwFiBJcyF+pdG98Pa6p0EYiS6+0mR8
-         hZNYVMiaHG2FE4XhrD6ClFUaOCmLDEvHFnS51q8zK3jLHvctMUSwFRfovmnRVDy9D13p
-         55l2fY1IteMLVTDSs8KM7oarbwFxjOFuWrfSw1Pht4AfdV8N2ybkwL6K3/QryNVijTAi
-         ggXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6awWR6J01S3VvaFl3l226JcCIWl910GFIDAp2HokN38=;
-        b=M3LL2qvBPW33t7mzQK5HLsPik4ckL9EtXmgLpOb7PXSlISzMh5fOvAM5ZoZjd9przk
-         jZCwgkSQVEX+TypgKPNOOIQ6SRbGvVQM8vU9yDJQMeFuVHpeeLQqV8TwN/eoPRgc5AEF
-         73DYqp4mvAxjW5w6aoOCU914wrMaoCoIuSDG00pR4ArGfWWOJ5w4IxIx2ZJ3d8K2PaFQ
-         aOyU/bdmaZpUB1KKuhSv/pmeR+Oq1mNIX/qar+qw9+KPGDsmqIbYHmsqq8KAW6qbF9ti
-         H5h38VAJKRS4rKhTQa2bM4NYNb9olY3dK/IudtiHVVGmi3FZW/lfsKoeP8x007Sgl5Ft
-         WFJA==
-X-Gm-Message-State: AOAM533H9bKykexhgd9v1UU2GlpqlkJ2L1I/brbt7RO9LwtnQqjU557R
-        BWSGdccs2VWR/bzX4I3bshw=
-X-Google-Smtp-Source: ABdhPJySkkAFeiAd27mDgmoUE9tw3W94rJaHOLPZBbRrst+ymaFnUzDlKMhjico51M13z2959Urs6g==
-X-Received: by 2002:a05:622a:293:: with SMTP id z19mr4905508qtw.309.1616305906600;
-        Sat, 20 Mar 2021 22:51:46 -0700 (PDT)
-Received: from tong-desktop.local ([2601:5c0:c200:27c6:f925:bb4b:54d2:533])
-        by smtp.googlemail.com with ESMTPSA id n77sm8359502qkn.128.2021.03.20.22.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Mar 2021 22:51:46 -0700 (PDT)
-From:   Tong Zhang <ztong0001@gmail.com>
-To:     Scott Murray <scott@spiteful.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tong Zhang <ztong0001@gmail.com>
-Subject: [PATCH] PCI: hotplug: fix null-ptr-dereferencd in cpcihp error path
-Date:   Sun, 21 Mar 2021 01:51:08 -0400
-Message-Id: <20210321055109.322496-1-ztong0001@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        id S230002AbhCUIlU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Mar 2021 04:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229962AbhCUIlA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 21 Mar 2021 04:41:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 349D96192F;
+        Sun, 21 Mar 2021 08:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616316059;
+        bh=hUjP8gjXkv59/qRwHCDIZvmaaJ65Cw8tqmmsnzvQ6fs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H1tmabDu7jn7+x+9IzhPgGZvbXrY9ooMFJlQp5k8FI7BCjUEK+07B4cDn+ZtHNWLV
+         P47XVhhPiXR/CkgdhxHpu/fR71WZfY/jLMJxAwh+/+R5OjvaujypPKJa9ZMjh4nbdL
+         0MK2e48mE80YRSWQh5ToUMkJxdnck6loIQFYS/rTxoOgKMtd5QmK9pUIog4xDKiHLK
+         vfcn0QObgj2bSw7hEkGgcCiAhuG0np2T6Iza731HJBYBSQuktPOTnpWULbwNWNANSe
+         xe/uGEZrhjWzaR6AOQNKyxUPDoVMqtRtLBlF6k473YvyEdKC8K5g5VDq2+lSvgBc4y
+         ZNyb+dPB7gMXg==
+Date:   Sun, 21 Mar 2021 10:40:55 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
+        shyam.rajendran@nutanix.com, felipe@nutanix.com
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <YFcGlzbaSzQ5Qota@unreal>
+References: <YFILEOQBOLgOy3cy@unreal>
+ <20210317113140.3de56d6c@omen.home.shazbot.org>
+ <YFMYzkg101isRXIM@unreal>
+ <20210318103935.2ec32302@omen.home.shazbot.org>
+ <YFOMShJAm4j/3vRl@unreal>
+ <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
+ <YFSgQ2RWqt4YyIV4@unreal>
+ <20210319102313.179e9969@omen.home.shazbot.org>
+ <YFW78AfbhYpn16H4@unreal>
+ <20210320085942.3cefcc48@x1.home.shazbot.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210320085942.3cefcc48@x1.home.shazbot.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is an issue in the error path, which cpci_thread may remain NULL.
-Calling kthread_stop(cpci_thread) will trigger a BUG().
-It is better to check whether the thread is really created and started
-before stop it.
+On Sat, Mar 20, 2021 at 08:59:42AM -0600, Alex Williamson wrote:
+> On Sat, 20 Mar 2021 11:10:08 +0200
+> Leon Romanovsky <leon@kernel.org> wrote:
+> > On Fri, Mar 19, 2021 at 10:23:13AM -0600, Alex Williamson wrote: 
+> > > 
+> > > What if we taint the kernel or pci_warn() for cases where either all
+> > > the reset methods are disabled, ie. 'echo none > reset_method', or any
+> > > time a device specific method is disabled?  
+> > 
+> > What does it mean "none"? Does it mean nothing supported? If yes, I think that
+> > pci_warn() will be enough. At least for me, taint is usable during debug stages,
+> > probably if device doesn't crash no one will look to see /proc/sys/kernel/tainted.
+> 
+> "none" as implemented in this patch, clearing the enabled function
+> reset methods.
 
-[    1.292859] BUG: kernel NULL pointer dereference, address: 0000000000000028
-[    1.293252] #PF: supervisor write access in kernel mode
-[    1.293533] #PF: error_code(0x0002) - not-present page
-[    1.295163] RIP: 0010:kthread_stop+0x22/0x170
-[    1.300491] Call Trace:
-[    1.300628]  cpci_hp_unregister_controller+0xf6/0x130
-[    1.300906]  zt5550_hc_init_one+0x27a/0x27f [cpcihp_zt5550]
+It is far from intuitive, the empty string will be easier to understand,
+because "none" means no reset at all.
 
-Signed-off-by: Tong Zhang <ztong0001@gmail.com>
----
- drivers/pci/hotplug/cpci_hotplug_core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> > > I'd almost go so far as to prevent disabling a device specific reset
+> > > altogether, but for example should a device specific reset that fixes
+> > > an aspect of FLR behavior prevent using a bus reset?  I'd prefer in that
+> > > case if direct FLR were disabled via a device flag introduced with the
+> > > quirk and the remaining resets can still be selected by preference.  
+> > 
+> > I don't know enough to discuss the PCI details, but you raised good point.
+> > This sysfs is user visible API that is presented as is from device point
+> > of view. It can be easily run into problems if PCI/core doesn't work with
+> > user's choice.
+> > 
+> > > 
+> > > Theoretically all the other reset methods work and are available, it's
+> > > only a policy decision which to use, right?  
+> > 
+> > But this patch was presented as a way to overcome situations where
+> > supported != working and user magically knows which reset type to set.
+> 
+> It's not magic, the new sysfs attributes expose which resets are
+> enabled and the order that they're used, the user can simply select the
+> next one.  Being able to bypass a broken reset method is a helpful side
+> effect of getting to select a preferred reset method.
 
-diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-index d0559d2faf50..b44da397d631 100644
---- a/drivers/pci/hotplug/cpci_hotplug_core.c
-+++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-@@ -47,7 +47,7 @@ static atomic_t extracting;
- int cpci_debug;
- static struct cpci_hp_controller *controller;
- static struct task_struct *cpci_thread;
--static int thread_finished;
-+static int thread_started;
- 
- static int enable_slot(struct hotplug_slot *slot);
- static int disable_slot(struct hotplug_slot *slot);
-@@ -447,7 +447,7 @@ event_thread(void *data)
- 				msleep(500);
- 			} else if (rc < 0) {
- 				dbg("%s - error checking slots", __func__);
--				thread_finished = 1;
-+				thread_started = 0;
- 				goto out;
- 			}
- 		} while (atomic_read(&extracting) && !kthread_should_stop());
-@@ -479,7 +479,7 @@ poll_thread(void *data)
- 					msleep(500);
- 				} else if (rc < 0) {
- 					dbg("%s - error checking slots", __func__);
--					thread_finished = 1;
-+					thread_started = 0;
- 					goto out;
- 				}
- 			} while (atomic_read(&extracting) && !kthread_should_stop());
-@@ -501,7 +501,7 @@ cpci_start_thread(void)
- 		err("Can't start up our thread");
- 		return PTR_ERR(cpci_thread);
- 	}
--	thread_finished = 0;
-+	thread_started = 1;
- 	return 0;
- }
- 
-@@ -509,7 +509,7 @@ static void
- cpci_stop_thread(void)
- {
- 	kthread_stop(cpci_thread);
--	thread_finished = 1;
-+	thread_started = 0;
- }
- 
- int
-@@ -571,7 +571,7 @@ cpci_hp_unregister_controller(struct cpci_hp_controller *old_controller)
- 	int status = 0;
- 
- 	if (controller) {
--		if (!thread_finished)
-+		if (thread_started)
- 			cpci_stop_thread();
- 		if (controller->irq)
- 			free_irq(controller->irq, controller->dev_id);
--- 
-2.25.1
+Magic in a sense that user has no idea what those resets mean, the
+expectation is that he will blindly iterate till something works.
 
+> 
+> > If you want to take this patch to be policy decision tool,
+> > it will need to accept "reset_type1,reset_type2,..." sort of input,
+> > so fallback will work natively.
+> 
+> I don't see that as a requirement.  We have fall-through support in the
+> kernel, but for a given device we're really only ever going to make use
+> of one of those methods.  If a user knows enough about a device to have
+> a preference, I think it can be singular.  That also significantly
+> simplifies the interface and supporting code.  Thanks,
+
+I'm struggling to get requirements from this thread. You talked about
+policy decision to overtake fallback mechanism, Amey wanted to avoid
+quirks.
+
+Do you have an example of such devices or we are talking about
+theoretical case?
+
+And I don't see why simple line parser with loop iterator over strchr()
+suddenly becomes complicated code.
+
+Thanks
+
+> 
+> Alex
+> 
