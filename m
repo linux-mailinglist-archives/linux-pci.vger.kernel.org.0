@@ -2,75 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4EE344049
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 12:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96C06344097
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 13:15:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbhCVL5A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Mar 2021 07:57:00 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:14840 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbhCVL4c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 07:56:32 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4F3tFy67Jqz92FB;
-        Mon, 22 Mar 2021 19:54:30 +0800 (CST)
-Received: from [127.0.0.1] (10.69.38.196) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.498.0; Mon, 22 Mar 2021
- 19:56:22 +0800
-Subject: Re: [PATCH v2] PCI: Factor functions of PCI function reset
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        <alex.williamson@redhat.com>, <prime.zeng@huawei.com>,
-        <linuxarm@huawei.dom>, Amey Narkhede <ameynarkhede03@gmail.com>
-References: <1616145918-31356-1-git-send-email-yangyicong@hisilicon.com>
- <YFTaskobyoEzLkeE@rocinante>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <29166e97-950c-47da-d226-e8827befde75@hisilicon.com>
-Date:   Mon, 22 Mar 2021 19:56:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S230248AbhCVMOx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Mar 2021 08:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230290AbhCVMOr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 08:14:47 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71862C061574
+        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:14:47 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1lOJSD-0004KF-HJ; Mon, 22 Mar 2021 13:14:41 +0100
+Message-ID: <cf739f3dcc02c57ce7ac1cba64765a015ffe6f16.camel@pengutronix.de>
+Subject: Re: Re: [PATCH 1/3] dt-bindings: imx6q-pcie: specify the imx8mq
+ pcie phy voltage
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Date:   Mon, 22 Mar 2021 13:14:39 +0100
+In-Reply-To: <VI1PR04MB585364FC420972C538281F2B8C659@VI1PR04MB5853.eurprd04.prod.outlook.com>
+References: <VI1PR04MB585364FC420972C538281F2B8C659@VI1PR04MB5853.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-In-Reply-To: <YFTaskobyoEzLkeE@rocinante>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.69.38.196]
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Krzysztof，
+Hi Richard,
 
-On 2021/3/20 1:09, Krzysztof Wilczyński wrote:
-> [+cc Amey as he is workingo on a larger refactor of the reset functions]
-> 
-> Hi,
-> 
->> Previously we used pci_probe_reset_function() to probe whether a function
->> can be reset and use __pci_reset_function_locked() to perform a function
->> reset. These two functions have lots of common lines.
->>
->> Factor the two functions and reduce the redundancy.
-> [...]
-> 
-> I wanted to bring the following thread to your attention as you are
-> working on the same code that it's being talked about there in the
-> on-going conversation, see:
-> 
->   https://lore.kernel.org/linux-pci/20210312173452.3855-1-ameynarkhede03@gmail.com/
-> 
-> I wonder if there would be some overlap, etc.
+Am Montag, dem 22.03.2021 um 09:06 +0000 schrieb Richard Zhu:
+> > -----Original Message-----
+> > From: Lucas Stach <l.stach@pengutronix.de>
+> > Sent: Friday, March 19, 2021 5:49 PM
+> > To: Richard Zhu <hongxing.zhu@nxp.com>; andrew.smirnov@gmail.com;
+> > shawnguo@kernel.org; kw@linux.com; bhelgaas@google.com;
+> > stefan@agner.ch; lorenzo.pieralisi@arm.com
+> > Cc: linux-pci@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>;
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > kernel@pengutronix.de
+> > Subject: [EXT] Re: [PATCH 1/3] dt-bindings: imx6q-pcie: specify the
+> > imx8mq
+> > pcie phy voltage
+> > Am Freitag, dem 19.03.2021 um 16:24 +0800 schrieb Richard Zhu:
+> > > Both 1.8v and 3.3v power supplies can be feeded to i.MX8MQ PCIe
+> > > PHY.
+> > > In default, the PCIE_VPH voltage is suggested to be 1.8v refer to
+> > > data
+> > > sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic
+> > > design,
+> > > the VREG_BYPASS bits of GPR registers should be cleared from
+> > > default
+> > > value 1b'1 to 1b'0.
+> > > 
+> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 4
+> > > ++++
+> > >  1 file changed, 4 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-
+> > > pcie.txt
+> > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > index de4b2baf91e8..23efbad9e804 100644
+> > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > @@ -59,6 +59,10 @@ Additional required properties for imx7d-pcie
+> > > and
+> > imx8mq-pcie:
+> > >  Additional required properties for imx8mq-pcie:
+> > >  - clock-names: Must include the following additional entries:
+> > >       - "pcie_aux"
+> > > +- pcie-vph-3v3: If present then PCIE_VPH is feeded by 3.3v in
+> > > the HW
+> > > +  schematic design. The PCIE_VPH is suggested to be 1.8v refer
+> > > to the
+> > > +  data sheet. If the PCIE_VPH is supplied by 3.3V, the
+> > > VREG_BYPASS
+> > > +  should be cleared to zero accordingly.
+> > 
+> > Uhm, no. Please don't add boolean DT properties for random parts of
+> > the
+> > board design.
+> > 
+> > If we need to know the voltage of PCIE_VPH, we should really add
+> > the VPH
+> > regulator as a supply to the PCIe controller node, then work out
+> > the voltage
+> > the usual way by using the Linux regulator API.
+> > 
+> [Richard Zhu] Hi Lucas:
+> Thanks for your comments. Since the vgen5_reg is used to power up
+> PCIe PHY on i.MX8MQ EVK board,
+>  and it's set to be "regulator-always-on;".
+> Did only the regulator_get_voltage or combined with
+> regulator_enable/regulator_disable can be used in the driver?
 
-thanks for the reminder. i roughly look through Amey's series and i think this little
-refactor is unnecessary anymore. i'll follow on that series and i may need a further
-understanding.
+The regulator API doesn't care, you can call enable/disable in the
+driver as normal. If the regulator is marked as always-on it will just
+stay enabled even if the use-count drops to 0.
 
-Thanks,
-Yicong
+The other question however is if it's even allowed by the SoC design to
+disable this supply outside of deep power down. A quick look into the
+reference manual and datasheet didn't yield any information about this.
 
-> 
-> Krzysztof
-> 
-> .
-> 
+Regards,
+Lucas
 
