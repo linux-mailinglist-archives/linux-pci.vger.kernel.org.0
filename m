@@ -2,115 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8572344607
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 14:41:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EA5C344685
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 15:04:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbhCVNkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Mar 2021 09:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230368AbhCVNkd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 09:40:33 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on0610.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0d::610])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0D7C061574;
-        Mon, 22 Mar 2021 06:40:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VHl2orBAhrMh/H9Rr7DZecJQuDyd7tafdQ53jr+3DjSDNKOVExPTpPWrjBM9TzURFFFLRdZvqiHicLVmbV5r/dpS1ZMS4F/E/qoF8F7fECfkg9RNBpSgUIZntvunF/ef7OwJoFOValc7TYtk3ZyPn9HgBflEKO6RGBewLwzLKXWQU8qbwQ0JzQPaY/skyIzeMikBt8r/a1glLpPDx3bltpdAakn5wjySMKo2C539tQyhx1z1POC/ACy6/8//P2rZlXTY08WhXHrTpFn96BQZuSKYflgYMn3vM7sFWtpy59f617eQj6gad2P4nOum830ilMEBnuFYidX9LKuweWbbrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PKqh++oX7Zt6nJpqVqI89wscfmjEKsMhztCrswjTVKY=;
- b=JDz71OpMRtQ6Pih978vbv/HdVWYk6OSySFtCD8pNmlLqh+Z1rAjzOi67f7P2jWbcPlJ7tfdtzhlRTYrH5lpR1+p8oAp5J7OV5kpb++Bbf6Qpc1xA4kk7Acz4KnMMvKilyCRvm9Vtzb7sXh5oV62s9sslbTd1nzZKVyIt1B4tRk6H6iTMtOaTj95P+XCpE90LfMWDPNFeyyMD8uJ0nDElWld7jTjHRO4VY7NEx+ch+QTrRbfvLlWz7cZShmG2t8UQnp/GIll3w8z9Re70Es1Gr+1AACz1/2kS8CVltDQ/R6m0zVsN+TjEAVd3cFV6Sg0KkGkZTjztgWXE59AukVLgNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PKqh++oX7Zt6nJpqVqI89wscfmjEKsMhztCrswjTVKY=;
- b=jmdR0SesGaposubr6DPXvV6CzntIp2lxSvl+6IVFRLW5gExtz1tDDKvgWVnAyenEhi45c5xpwd47ooV20RRJcxwvauEwEjcXJMEm4T/Zs1ZfPtk6WCs9vUXMX7zol7PzgDmhneMH/Etvs38LfFXhnaPz+lXW1srfONNRmr42xG4=
-Received: from VI1PR04MB5967.eurprd04.prod.outlook.com (2603:10a6:803:cc::27)
- by VI1PR0402MB3456.eurprd04.prod.outlook.com (2603:10a6:803:7::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Mon, 22 Mar
- 2021 13:40:16 +0000
-Received: from VI1PR04MB5967.eurprd04.prod.outlook.com
- ([fe80::d1cb:cbf8:2e78:8826]) by VI1PR04MB5967.eurprd04.prod.outlook.com
- ([fe80::d1cb:cbf8:2e78:8826%2]) with mapi id 15.20.3955.025; Mon, 22 Mar 2021
- 13:40:16 +0000
-From:   Roy Zang <roy.zang@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Zheng Yongjun <zhengyongjun3@huawei.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next] pci/controller/dwc: convert comma to semicolon
-Thread-Topic: [PATCH -next] pci/controller/dwc: convert comma to semicolon
-Thread-Index: AQHW067swcgbu9wBmkKgbXrNx0haraobFvQAgA2nIACAUJxCgIAXMDMAgAAPvDA=
-Date:   Mon, 22 Mar 2021 13:40:16 +0000
-Message-ID: <VI1PR04MB5967D3FCEE442AF30738939B8B659@VI1PR04MB5967.eurprd04.prod.outlook.com>
-References: <20201216131944.14990-1-zhengyongjun3@huawei.com>
- <20210106190722.GA1327553@bjorn-Precision-5520>
- <20210115113654.GA22508@e121166-lin.cambridge.arm.com>
- <YEUdSZpwzg0k5z2+@rocinante>
- <20210322124326.GD11469@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20210322124326.GD11469@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [72.177.85.142]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ab813604-a0b2-472f-2a1f-08d8ed380746
-x-ms-traffictypediagnostic: VI1PR0402MB3456:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB34568646F1D49631F79737678B659@VI1PR0402MB3456.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0OVKhn3Y0VMKGZFHD1gi89doFVtpHp8pWcZCK/FTDzPdXwelbSSnM7OBYhaJu3JBSuI6Y3LB92+SxePx85LaHTXVINCuJSdyNLR8tEPmbXFbxgGb7LarqOy4P2ubadisBwpUk0JFx4wEutbNUNw39Rj3n3Jj+u5I04WM0GO3Kpg2xhCK390jDn5m2TA6r6o5YLYXwh5IukdmvcslMeNNHotFTgkqkzzH33NF89RZ3yNnWDsOwZeKGZ+dGC84VcEa+SDIZctFknZsbbiU2ezISSkxFaJtVIAvKY28+6u/cSAYV8D8/tYl0YJsUeCgfy5P/yFuMpZbVjiqeT4Ng6eALuRaXYnyfjhT34nK3v+LfmYHglTKJAPl4D03SyMUeahSSjsqLSUONDfgowcGtvdLq6wb96p3deKutjNP85xvZvfoM8/Wo8uEIFI63noZTyau0QTUtCYhXz28zerZGDB/z8+NwauaGHDfGVqVXYaxWJ7/giRHQyxNS9WqXdPMyTK/apEfWmfacdgVTx8XNEo9qB23n26CEq+1mMq41w0xm/f5mydAnA93XYa4Or+7P7H99Lux+4bpEh+upmZB7Y4C7LHkwWi30i5N1aFINjdXZ65fmIBsG8uLl0ElyQPRt+QrP725Ix5F4lRn950mtfhuvrB05UB1UoE5Vz2ouvAQ4bQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5967.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(86362001)(33656002)(83380400001)(66556008)(66946007)(5660300002)(8936002)(66476007)(6636002)(26005)(66446008)(8676002)(66574015)(2906002)(76116006)(4744005)(478600001)(52536014)(64756008)(110136005)(55016002)(4326008)(44832011)(38100700001)(316002)(9686003)(186003)(71200400001)(7696005)(6506007)(54906003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ykWGt9fZZwISCcx5EE0D9pwmBnLLgeDgftrg9FkZ/5h5P33fr+Z1OxYug48QROoLVVpwE2Zh1Wv7R8mIR3K+OFGmBcpq5FqQWVKQlyurSpSY4IZVpxwYgzwi3p0Gi+ySqJcBvOHm5YOmc2P8G0wT6sTUbZpmnY5y2xCXF2KcmDaflWZrDU9Hqz3zjDvU2Zljb7BZeUOrll4iXdDpzttXVQ1yLIft+R+RmnG5MIpOeJ/qNrrYH5qJ73Y9wVOL6B9R0Cq4rSuus2vGxmaM2+UGnwr1v5KCJgySlqtqkRSYYBNU7/wEIl+tqs64w+U6rDP9Iv5nFcxRofsWo60FhkDP/6P4nvs/TvQBMNPOToA0D15SstASwa8TwC91nHZWLGLSKBu5pV1M4JSJ0NheamzIs7g5V/+6hUdMW8YbMTPpcLtFIpR2SLjMt/kcFycU6VKmcEU0moezle+a+2aciz9tqEv8tzoJoJeG/RkZXABzpg48XfjlttGe5G/jR6DJf1tXiz+dVOUPqaA19M3AGJDTWOctDcA8uEhQOYdHZv7oTcYWyIDSdKX1qZCFwi2qvEyYW9GhWAM6OIfU8Zgay9j2qo4usBuFbK1HsSq80DnF7TBAt4t9/BErwQ9DL5aUxTzaYBggdqQvoXZQ/L27GIyiCzDVB8p0JJOwK6EjBdrk1cQZKC7EYtGNvQhlIiXSnoQx7MwZWEph8Dy/y6S+JJ0E5y2ELumXpGPaKrDs2l+G7BQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5967.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab813604-a0b2-472f-2a1f-08d8ed380746
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2021 13:40:16.7836
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: woS37cya3l6XgzBQ0RN8NpecGgNJB2AJuFsC7NUGNb5JNoC9lI5duhxYt668GQepKYOXP3yx+UrCwLiQobAxPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3456
+        id S230266AbhCVOER (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Mar 2021 10:04:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230227AbhCVOEK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Mar 2021 10:04:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAD966196C;
+        Mon, 22 Mar 2021 14:04:09 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lOLA7-00351E-P3; Mon, 22 Mar 2021 14:04:07 +0000
+Date:   Mon, 22 Mar 2021 14:04:06 +0000
+Message-ID: <87mtuvgu95.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 03/13] PCI: xilinx: Convert to MSI domains
+In-Reply-To: <20210322122315.GB11469@e121166-lin.cambridge.arm.com>
+References: <20210225151023.3642391-1-maz@kernel.org>
+        <20210225151023.3642391-4-maz@kernel.org>
+        <20210322122315.GB11469@e121166-lin.cambridge.arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, frank-w@public-files.de, treding@nvidia.com, tglx@linutronix.de, robh@kernel.org, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, ryder.lee@mediatek.com, marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, michal.simek@xilinx.com, paul.walmsley@sifive.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-WWVzLiAgSXQgaXMgbWFpbnRhaW5lZC4NCkkgd2lsbCBzZW5kIG91dCBhIHBhdGNoLg0KVGhhbmtz
-Lg0KUm95DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMb3JlbnpvIFBpZXJh
-bGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4gDQoNCk9uIFN1biwgTWFyIDA3LCAyMDIx
-IGF0IDA3OjM2OjU3UE0gKzAxMDAsIEtyenlzenRvZiBXaWxjennFhHNraSB3cm90ZToNCj4gSGks
-DQo+IA0KPiBbLi4uXQ0KPiA+IEkgd291bGQgcmVxdWVzdCBOWFAgbWFpbnRhaW5lcnMgdG8gdGFr
-ZSB0aGlzIHBhdGNoLCByZXdyaXRlIGl0IGFzIA0KPiA+IEJqb3JuIHJlcXVlc3RlZCBhbmQgcmVz
-ZW5kIGl0IGFzIGZhc3QgYXMgcG9zc2libGUsIHRoaXMgaXMgYSB2ZXJ5IA0KPiA+IHJlbGV2YW50
-IGZpeC4NCj4gWy4uLl0NCj4gDQo+IExvb2tpbmcgYXQgdGhlIHN0YXRlIG9mIHRoZSBwY2ktbGF5
-ZXJzY2FwZS1lcC5jIGZpbGUgaW4gTGludXMnIHRyZWUsIA0KPiB0aGlzIHN0aWxsIGhhc24ndCBi
-ZWVuIGZpeGVkLCBhbmQgaXQgaGFzIGJlZW4gYSB3aGlsZS4NCj4gDQo+IE5YUCBmb2xrcywgYXJl
-IHlvdSBpbnRlbmQgdG8gcGljayB0aGlzIHVwPyAgRG8gbGV0IHVzIGtub3cuDQoNCk1pbmdodWFu
-LCBNaW5na2FpLCBSb3ksDQoNCmVpdGhlciBvbmUgb2YgeW91IHJlcGx5IGFuZCBmb2xsb3cgdXAg
-dGhpcyBwYXRjaCBvciBJIHdpbGwgaGF2ZSB0byB1cGRhdGUgdGhlIE1BSU5UQUlORVJTIGVudHJ5
-IGFuZCB0YWtlIGFjdGlvbiBhY2NvcmRpbmdseSwgeW91IGFyZSBub3QgbWFpbnRhaW5pbmcgdGhp
-cyBkcml2ZXIgYW5kIEkgd29uJ3QgbWFpbnRhaW4geW91ciBjb2RlLCBzb3JyeS4NCg0KTG9yZW56
-bw0KDQo+IEtyenlzenRvZg0K
+Hi Lorenzo,
+
+On Mon, 22 Mar 2021 12:23:15 +0000,
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> 
+> On Thu, Feb 25, 2021 at 03:10:13PM +0000, Marc Zyngier wrote:
+> > In anticipation of the removal of the msi_controller structure, convert
+> > the ancient xilinx host controller driver to MSI domains.
+> > 
+> > We end-up with the usual two domain structure, the top one being a
+> > generic PCI/MSI domain, the bottom one being xilinx-specific and handling
+> > the actual HW interrupt allocation.
+> > 
+> > This allows us to fix some of the most appaling MSI programming, where
+> > the message programmed in the device is the virtual IRQ number instead
+> > of the allocated vector number. The allocator is also made safe with
+> > a mutex. This should allow support for MultiMSI, but I decided not to
+> > even try, since I cannot test it.
+> > 
+> > Also take the opportunity to get rid of the cargo-culted memory allocation
+> > for the MSI capture address. *ANY* sufficiently aligned address should
+> > be good enough, so use the physical address of the xilinx_pcie_host
+> > structure instead.
+> 
+> I'd agree with Bjorn that the MSI doorbell change is better split into
+> a separate patch, I can do it myself at merge if you agree.
+
+I need to respin the series as it now conflicts badly with the current
+state of the tree (rcar has introduced one subtle change that needs
+addressing). I'll post that later this week (hopefully tomorrow) with
+rcar and xilinx having the doorbell fix in separate patches.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
