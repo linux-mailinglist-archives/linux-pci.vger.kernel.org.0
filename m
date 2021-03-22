@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E1234418A
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 13:35:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 214A53441AC
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 13:37:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230455AbhCVMeN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Mar 2021 08:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
+        id S231601AbhCVMfP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Mar 2021 08:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231432AbhCVMdO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 08:33:14 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB20BC061763
-        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:33:13 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id x21so19094068eds.4
-        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:33:13 -0700 (PDT)
+        with ESMTP id S231241AbhCVMd6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 08:33:58 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86F1C0613DB
+        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:33:30 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id bf3so19122913edb.6
+        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SVanQr0nOKD358IYkjRAx3PCoRE9oI5X2zMEqx499hk=;
-        b=In/2zB5DflwheyajBKF2sx8W9MNDzsh1OSXWuUfKtL/FRN8c9FQQ2cj+JpRaMJ8aAU
-         XCEdMl5E1nKXsJ7LPr/dtmRUfPx5+I1x5doeJjGnHJs2u9wPfhjKCteG52TK/mXsWmp0
-         r9Anh7nKKI7VMsuXAdYXcsCGpZElkzpp47nt0czliuc/sgnYDu/CCcQloeUW02Hubge7
-         sWrpe/oCUN6WhcZa9kKsbPAqAXLDiS1XaNnARw1txUwxLHGsZeVRD+wmAVt2sQW9eS55
-         UyTJMvhgC22uRmJJA3ffzwFbfulqEQ+Y37qGJg3epzU8Qv8Y9P3aSJ9V5kCcRG0/y2iv
-         oQLw==
+        bh=bFXSCk7jXzi1oDqUKnupFbkdc1ED5SojZj7S5YlWylo=;
+        b=Nb6vq2/ii4Uu5XEatx9s0w0vyMHBFNdJ9XkyhRXQRTYCa2DlOgNpuMLBtGI32mU4LR
+         mM7dCOyOsSQiBYx78D9Tou6WPJCLVJK2++P19JKJpLnY6jpQoN++z2bIdKzEKPwiTfB8
+         flKUIx/jPAbEh+WGHPcfHxffQaeLfuKX6yZiKFKqfDTbAz9SFCQqpEeOUdO2QyBtYKaB
+         Oaywbong+u/EvIZ1Ewmyy2wctKFSPqSSpRnb2lmoQ1pHGjZFL4kuL558WSZeqj9KAhZv
+         uvC/l92Hw9hGqb+CsWq5oYBUh8+QoyxagBJkBo5OWb8T+4+67ScVqWdqIvHbdZ1sM5Rt
+         FeCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SVanQr0nOKD358IYkjRAx3PCoRE9oI5X2zMEqx499hk=;
-        b=S0ULSSXiDx/F+RRD6m6ATy92xSeWamV/MRMs3PXAR7bQGQgon+RgDtKOanD8cg7NTx
-         MmDb7JyB6n68JIpaLq1cYFF515RzJK4jwO5bbrIq9UTI0PxpWH4n88wK+Auxkj8W6myA
-         1i/rbqbemaamHSnhEgQmYzYFuFdkfDCPJrGy8+lo/8o6nMQzclaKM+n1lEnopTuwV7E+
-         2Si30Yw8lQI6csIqYqXCksWOtkk/FP+toqSWBlAQgRYrn43WCDY61s+YFeoCmL0TlQb2
-         E7fc9mtApbQNvPQHGuLlHPrkUtcGw+bsSugMd2QYwEjxLhPY9Mp9GDdHwBISzZ1zun8y
-         4Q5w==
-X-Gm-Message-State: AOAM530z/ub1xohdPnoG4U9acyfi7s/LPZnoIhJ2fW0qHHDtSucK68oT
-        jfCCCosoyOt7doc7aapZomnD0A==
-X-Google-Smtp-Source: ABdhPJzU8lxBAEHdWAbezgHwbSa71swddR2DYb7EY4LfoVvJcbMJx1acYwfadWxsyNH4XNxBLRVo6A==
-X-Received: by 2002:a50:f391:: with SMTP id g17mr25306211edm.26.1616416392520;
-        Mon, 22 Mar 2021 05:33:12 -0700 (PDT)
+        bh=bFXSCk7jXzi1oDqUKnupFbkdc1ED5SojZj7S5YlWylo=;
+        b=WZWFD3LTR9MY6Vdljv5HWdJYsQqfFxDHNphpBc8NzmC2aF84z6Sv9HSJm0Ucj03ht9
+         BQKZwCO1EPUmOj+0skZY/9k7K3UoE+vjTrU2t7+IHFUlS8UZsn4G0OeJluZvWv5EaY/O
+         8Wg81ntsvn+4i6P9A3Qxz3fEayE7OC4CxA/1y1sgiT/VSzpm/6AKsn5nM9lVyIrHk53t
+         kdQPbaTqlt3CUKrJL3YCLv9tYanFgcbsKe60RnEek1sZTmDfUUr5d2HFaoAlE8qb9PAP
+         rKSUsTKnKWtABSjw8zf6uOATUybpUS4uphrB1vNO/HJRBhjIHyXbgoQGlLBy+2ab6Oc5
+         /61g==
+X-Gm-Message-State: AOAM530NvdI3/1HHs47R0+saZiCQJ+EGfX3lweP94uGZqr6AezioFgPe
+        qdlGG+79ofmBdgakeoBHqSHPHQ==
+X-Google-Smtp-Source: ABdhPJxjAmo2ovKlm60IvoJxky+iKUF6BuDJdKXWp1pzrvgmxzgCNEarFOfUlp+DzNDRON+cPs/jug==
+X-Received: by 2002:a50:fc94:: with SMTP id f20mr25432235edq.370.1616416409440;
+        Mon, 22 Mar 2021 05:33:29 -0700 (PDT)
 Received: from ?IPv6:2a02:768:2307:40d6::e05? ([2a02:768:2307:40d6::e05])
-        by smtp.gmail.com with ESMTPSA id t27sm9618783ejc.62.2021.03.22.05.33.11
+        by smtp.gmail.com with ESMTPSA id q10sm11247181eds.67.2021.03.22.05.33.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Mar 2021 05:33:12 -0700 (PDT)
+        Mon, 22 Mar 2021 05:33:29 -0700 (PDT)
 Subject: Re: [PATCH 03/13] PCI: xilinx: Convert to MSI domains
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>, michal.simek@xilinx.com
+        Marc Zyngier <maz@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Frank Wunderlich <frank-w@public-files.de>,
         Thierry Reding <treding@nvidia.com>,
@@ -65,6 +65,7 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Ryder Lee <ryder.lee@mediatek.com>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
@@ -72,14 +73,14 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-renesas-soc@vger.kernel.org
 References: <20210225151023.3642391-1-maz@kernel.org>
  <20210225151023.3642391-4-maz@kernel.org>
- <20210322122100.GA11469@e121166-lin.cambridge.arm.com>
+ <20210322122315.GB11469@e121166-lin.cambridge.arm.com>
 From:   Michal Simek <monstr@monstr.eu>
-Message-ID: <74cffc38-df12-7d92-1bfe-20eed4b60e86@monstr.eu>
-Date:   Mon, 22 Mar 2021 13:33:10 +0100
+Message-ID: <a9fee2d4-5810-7a16-78bc-4b192e1123dc@monstr.eu>
+Date:   Mon, 22 Mar 2021 13:33:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210322122100.GA11469@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20210322122315.GB11469@e121166-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,9 +88,9 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On 3/22/21 1:21 PM, Lorenzo Pieralisi wrote:
+
+On 3/22/21 1:23 PM, Lorenzo Pieralisi wrote:
 > On Thu, Feb 25, 2021 at 03:10:13PM +0000, Marc Zyngier wrote:
 >> In anticipation of the removal of the msi_controller structure, convert
 >> the ancient xilinx host controller driver to MSI domains.
@@ -108,24 +109,11 @@ On 3/22/21 1:21 PM, Lorenzo Pieralisi wrote:
 >> for the MSI capture address. *ANY* sufficiently aligned address should
 >> be good enough, so use the physical address of the xilinx_pcie_host
 >> structure instead.
->>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/pci/controller/Kconfig       |   2 +-
->>  drivers/pci/controller/pcie-xilinx.c | 238 +++++++++++----------------
->>  2 files changed, 96 insertions(+), 144 deletions(-)
 > 
-> Michal,
-> 
-> can you please test these changes or make sure someone does and report
-> back on the mailing list please ?
-> 
-> I would like to merge this series for v5.13.
+> I'd agree with Bjorn that the MSI doorbell change is better split into
+> a separate patch, I can do it myself at merge if you agree.
 
-I got just private response (not sure why) from Bharat March 5 that
-changes are fine.
-It means go ahead with it.
+Thank you for doing it.
 
 Thanks,
 Michal
-
