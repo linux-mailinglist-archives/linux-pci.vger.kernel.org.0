@@ -2,70 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7A553440F2
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 13:29:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2E1234418A
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 13:35:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbhCVM2u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Mar 2021 08:28:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:58658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229879AbhCVM2l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Mar 2021 08:28:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3E8E1063;
-        Mon, 22 Mar 2021 05:28:40 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E75903F718;
-        Mon, 22 Mar 2021 05:28:39 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 12:28:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Nirmal Patel <nirmal.patel@intel.com>,
-        Sushma Kalakota <sushmax.kalakota@intel.com>
-Subject: Re: [PATCH 0/5] Legacy direct-assign mode
-Message-ID: <20210322122837.GC11469@e121166-lin.cambridge.arm.com>
-References: <20201120225144.15138-1-jonathan.derrick@intel.com>
+        id S230455AbhCVMeN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Mar 2021 08:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231432AbhCVMdO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 08:33:14 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB20BC061763
+        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:33:13 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id x21so19094068eds.4
+        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 05:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SVanQr0nOKD358IYkjRAx3PCoRE9oI5X2zMEqx499hk=;
+        b=In/2zB5DflwheyajBKF2sx8W9MNDzsh1OSXWuUfKtL/FRN8c9FQQ2cj+JpRaMJ8aAU
+         XCEdMl5E1nKXsJ7LPr/dtmRUfPx5+I1x5doeJjGnHJs2u9wPfhjKCteG52TK/mXsWmp0
+         r9Anh7nKKI7VMsuXAdYXcsCGpZElkzpp47nt0czliuc/sgnYDu/CCcQloeUW02Hubge7
+         sWrpe/oCUN6WhcZa9kKsbPAqAXLDiS1XaNnARw1txUwxLHGsZeVRD+wmAVt2sQW9eS55
+         UyTJMvhgC22uRmJJA3ffzwFbfulqEQ+Y37qGJg3epzU8Qv8Y9P3aSJ9V5kCcRG0/y2iv
+         oQLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SVanQr0nOKD358IYkjRAx3PCoRE9oI5X2zMEqx499hk=;
+        b=S0ULSSXiDx/F+RRD6m6ATy92xSeWamV/MRMs3PXAR7bQGQgon+RgDtKOanD8cg7NTx
+         MmDb7JyB6n68JIpaLq1cYFF515RzJK4jwO5bbrIq9UTI0PxpWH4n88wK+Auxkj8W6myA
+         1i/rbqbemaamHSnhEgQmYzYFuFdkfDCPJrGy8+lo/8o6nMQzclaKM+n1lEnopTuwV7E+
+         2Si30Yw8lQI6csIqYqXCksWOtkk/FP+toqSWBlAQgRYrn43WCDY61s+YFeoCmL0TlQb2
+         E7fc9mtApbQNvPQHGuLlHPrkUtcGw+bsSugMd2QYwEjxLhPY9Mp9GDdHwBISzZ1zun8y
+         4Q5w==
+X-Gm-Message-State: AOAM530z/ub1xohdPnoG4U9acyfi7s/LPZnoIhJ2fW0qHHDtSucK68oT
+        jfCCCosoyOt7doc7aapZomnD0A==
+X-Google-Smtp-Source: ABdhPJzU8lxBAEHdWAbezgHwbSa71swddR2DYb7EY4LfoVvJcbMJx1acYwfadWxsyNH4XNxBLRVo6A==
+X-Received: by 2002:a50:f391:: with SMTP id g17mr25306211edm.26.1616416392520;
+        Mon, 22 Mar 2021 05:33:12 -0700 (PDT)
+Received: from ?IPv6:2a02:768:2307:40d6::e05? ([2a02:768:2307:40d6::e05])
+        by smtp.gmail.com with ESMTPSA id t27sm9618783ejc.62.2021.03.22.05.33.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Mar 2021 05:33:12 -0700 (PDT)
+Subject: Re: [PATCH 03/13] PCI: xilinx: Convert to MSI domains
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>, michal.simek@xilinx.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+References: <20210225151023.3642391-1-maz@kernel.org>
+ <20210225151023.3642391-4-maz@kernel.org>
+ <20210322122100.GA11469@e121166-lin.cambridge.arm.com>
+From:   Michal Simek <monstr@monstr.eu>
+Message-ID: <74cffc38-df12-7d92-1bfe-20eed4b60e86@monstr.eu>
+Date:   Mon, 22 Mar 2021 13:33:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201120225144.15138-1-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210322122100.GA11469@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 03:51:39PM -0700, Jon Derrick wrote:
-> This set adds a legacy direct-assign mode. Newer enterprise hardware has
-> physical addressing hints to assist device passthrough to guests that needs to
-> correctly program bridge windows with physical addresses. Some customers are
-> using a legacy method that relies on the VMD subdevice domain's root port
-> windows to be written with the physical addresses. This method also allows
-> other hypervisors besides QEMU/KVM to perform guest passthrough.
-> 
-> This patchset adds a host and guest mode to write the physical address
-> information to the root port registers in the host and read them in the guest,
-> and restore them in both cases on module unload.
-> 
-> This patchset also folds in the VMD subdevice domain secondary bus reset
-> patchset [1] to clear the domain prior to guest passthrough.
-> 
-> [1] https://patchwork.kernel.org/project/linux-pci/cover/20200928010557.5324-1-jonathan.derrick@intel.com/
-> 
-> Jon Derrick (5):
->   PCI: vmd: Reset the VMD subdevice domain on probe
->   PCI: Add a reset quirk for VMD
->   PCI: vmd: Add offset translation helper
->   PCI: vmd: Pass features to vmd_get_phys_offsets()
->   PCI: vmd: Add legacy guest passthrough mode
-> 
->  drivers/pci/controller/vmd.c | 200 ++++++++++++++++++++++++++++++++++++++-----
->  drivers/pci/quirks.c         |  48 +++++++++++
->  2 files changed, 227 insertions(+), 21 deletions(-)
+Hi,
 
-Hi Jon,
+On 3/22/21 1:21 PM, Lorenzo Pieralisi wrote:
+> On Thu, Feb 25, 2021 at 03:10:13PM +0000, Marc Zyngier wrote:
+>> In anticipation of the removal of the msi_controller structure, convert
+>> the ancient xilinx host controller driver to MSI domains.
+>>
+>> We end-up with the usual two domain structure, the top one being a
+>> generic PCI/MSI domain, the bottom one being xilinx-specific and handling
+>> the actual HW interrupt allocation.
+>>
+>> This allows us to fix some of the most appaling MSI programming, where
+>> the message programmed in the device is the virtual IRQ number instead
+>> of the allocated vector number. The allocator is also made safe with
+>> a mutex. This should allow support for MultiMSI, but I decided not to
+>> even try, since I cannot test it.
+>>
+>> Also take the opportunity to get rid of the cargo-culted memory allocation
+>> for the MSI capture address. *ANY* sufficiently aligned address should
+>> be good enough, so use the physical address of the xilinx_pcie_host
+>> structure instead.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/pci/controller/Kconfig       |   2 +-
+>>  drivers/pci/controller/pcie-xilinx.c | 238 +++++++++++----------------
+>>  2 files changed, 96 insertions(+), 144 deletions(-)
+> 
+> Michal,
+> 
+> can you please test these changes or make sure someone does and report
+> back on the mailing list please ?
+> 
+> I would like to merge this series for v5.13.
 
-it is unclear to me where we are with this series, please let me know.
+I got just private response (not sure why) from Bharat March 5 that
+changes are fine.
+It means go ahead with it.
 
 Thanks,
-Lorenzo
+Michal
+
