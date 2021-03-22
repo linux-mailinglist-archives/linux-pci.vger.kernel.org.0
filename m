@@ -2,114 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00512344F35
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 19:54:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D703B34503A
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 20:50:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232231AbhCVSyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Mar 2021 14:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231724AbhCVSxo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Mar 2021 14:53:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B71661990;
-        Mon, 22 Mar 2021 18:53:44 +0000 (UTC)
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1lOPZV-0038p5-VO; Mon, 22 Mar 2021 18:46:38 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-Subject: [PATCH v2 15/15] PCI: Refactor HT advertising of NO_MSI flag
-Date:   Mon, 22 Mar 2021 18:46:14 +0000
-Message-Id: <20210322184614.802565-16-maz@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210322184614.802565-1-maz@kernel.org>
-References: <20210322184614.802565-1-maz@kernel.org>
+        id S230027AbhCVTth (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Mar 2021 15:49:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229771AbhCVTtB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 15:49:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF890C061574
+        for <linux-pci@vger.kernel.org>; Mon, 22 Mar 2021 12:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=a2YNmkFHFWJdUV3G4mTov/7QvS9+ADavhMLaJEkKeio=; b=i9FF28K/oSTYnMuAINyz46NpQC
+        Z+smB3s551EiSa/A9n+LWS58Afh9EvXd7Pitjf62vJyPjACu07shyPBI0Cexhgkuez31YesBTq8H3
+        VcoOwfEUf0wSnT/OBP24DwjWYSDW3aAqcImD3giQ3aL77ZdQkWAZ1V5WOn0bFJoLl82r5b+YMR6K6
+        833z2n91XflFRYWQ4dUFTxIVdScJFp9CUMt+0fDmzIvdygDxAzaDN2bMfl88eW9vSw4113veLxh4f
+        sJlQfpsk2Xxz8XPf7y6Nv+D7ZGRKs7DwTRLPNk9fd1BGf0unE4Gu5kuIWIKqL/5eYpWQuT1d6KTVo
+        mufPP4Sg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lOQX5-008zTM-3z; Mon, 22 Mar 2021 19:48:18 +0000
+Date:   Mon, 22 Mar 2021 19:48:11 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Nirmal Patel <nirmal.patel@intel.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>
+Subject: Re: [PATCH 0/5] Legacy direct-assign mode
+Message-ID: <20210322194811.GA2141770@infradead.org>
+References: <20201120225144.15138-1-jonathan.derrick@intel.com>
+ <20210322122837.GC11469@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, frank-w@public-files.de, treding@nvidia.com, tglx@linutronix.de, robh@kernel.org, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, mikelley@microsoft.com, wei.liu@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, ryder.lee@mediatek.com, marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, michal.simek@xilinx.com, paul.walmsley@sifive.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210322122837.GC11469@e121166-lin.cambridge.arm.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The few quirks that deal with NO_MSI tend to be copy-paste heavy.
-Refactor them so that the hierarchy of conditions is slightly
-cleaner.
+On Mon, Mar 22, 2021 at 12:28:37PM +0000, Lorenzo Pieralisi wrote:
+> > correctly program bridge windows with physical addresses. Some customers are
+> > using a legacy method that relies on the VMD subdevice domain's root port
+> > windows to be written with the physical addresses. This method also allows
+> > other hypervisors besides QEMU/KVM to perform guest passthrough.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/pci/quirks.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+This seems like a bad idea.  What are these other hypervisors?  AFAIK
+there are no purely userspace hypervisors, so in other words what you
+propose here is only for unsupported external modules.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..972bb0f9f994 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2585,10 +2585,8 @@ static int msi_ht_cap_enabled(struct pci_dev *dev)
- /* Check the HyperTransport MSI mapping to know whether MSI is enabled or not */
- static void quirk_msi_ht_cap(struct pci_dev *dev)
- {
--	if (dev->subordinate && !msi_ht_cap_enabled(dev)) {
--		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
--		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
--	}
-+	if (!msi_ht_cap_enabled(dev))
-+		quirk_disable_msi(dev);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SERVERWORKS, PCI_DEVICE_ID_SERVERWORKS_HT2000_PCIE,
- 			quirk_msi_ht_cap);
-@@ -2601,9 +2599,6 @@ static void quirk_nvidia_ck804_msi_ht_cap(struct pci_dev *dev)
- {
- 	struct pci_dev *pdev;
- 
--	if (!dev->subordinate)
--		return;
--
- 	/*
- 	 * Check HT MSI cap on this chipset and the root one.  A single one
- 	 * having MSI is enough to be sure that MSI is supported.
-@@ -2611,10 +2606,8 @@ static void quirk_nvidia_ck804_msi_ht_cap(struct pci_dev *dev)
- 	pdev = pci_get_slot(dev->bus, 0);
- 	if (!pdev)
- 		return;
--	if (!msi_ht_cap_enabled(dev) && !msi_ht_cap_enabled(pdev)) {
--		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
--		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
--	}
-+	if (!msi_ht_cap_enabled(pdev))
-+		quirk_msi_ht_cap(dev);
- 	pci_dev_put(pdev);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_CK804_PCIE,
--- 
-2.29.2
-
+I don't think we shoud merge something like this.
