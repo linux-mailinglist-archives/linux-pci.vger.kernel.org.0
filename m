@@ -2,161 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D895346C5F
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 23:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C377B346D88
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 23:48:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234029AbhCWWVr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 18:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39888 "EHLO mail.kernel.org"
+        id S234036AbhCWWrc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 18:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234037AbhCWWTm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Mar 2021 18:19:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C783619B3;
-        Tue, 23 Mar 2021 22:19:41 +0000 (UTC)
+        id S233908AbhCWWrR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Mar 2021 18:47:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B552E6044F;
+        Tue, 23 Mar 2021 22:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616537981;
-        bh=hCB5Ph3FFz48xKeAxtmyZUvCAPJWnOJQU5bn9hbls78=;
+        s=k20201202; t=1616539637;
+        bh=11JtZEcq3IKgiIIgu80BAiSlfm+ye/04q50fmAGg3jg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nPj5Hltm5PS/XtPw8EhpbAjV985Dk/FLiwh1DCgxn0aW3mtcc8cPuAxBA47TuxXwp
-         OzL64YIwRKeuCp2t484VYw3DSdjC9nf9g2pE5WttCWSk9nJnsTLDpo4xuCn1yqXWbB
-         dYUffi3etn74k0gFWelQeZUuwJgRKoVSMHhp3uqB2viDT7ewYSX9VGHogrUBoMgrqm
-         BE3fgAtYRJSlOF7xurkLLFK5sRB3KAJBgkax1HR0a5UypOFPP6zmu5xZVzsoeC92HV
-         ps9YsZrJb3vhuISbpWVKS9iiza7NyBm+fyCtvW7dGktanjSL80Lo5ovtOfVK37ooPm
-         f//YirHtcvHJg==
-Date:   Tue, 23 Mar 2021 17:19:40 -0500
+        b=JmKMS58xYat0cbG/A2nxsstga6nHPOupcFJEpL9nbqpUxD3RTXLZtxEN0np5zLGoc
+         dbqkegEUrvHYbGZibt1Rrb508T82Y6ELq/BW8MDMCUussGg95w4OAW5mR2fh7s7vnd
+         PuLIajwUK717b6ELznVp0ENfac/RQDrugSp6AaVaK6DB68Cdn334HgK8iD6NyBNBcJ
+         PvepB4xX/FVTA99EaVMkUBMiyOHggbbz+32vQ1m7AJY5P41MWKX7oxYVu9ruyxehc+
+         8qWSM7YUN5NR/lsinxoaTP4E9WwW/duwoYQn0haJ3uufgMlgd+2a0yMMTzbaj/ZhgR
+         lRKSCmtRfNWuQ==
+Date:   Tue, 23 Mar 2021 17:47:10 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tong Zhang <ztong0001@gmail.com>
-Cc:     Scott Murray <scott@spiteful.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: hotplug: fix null-ptr-dereferencd in cpcihp error
- path
-Message-ID: <20210323221940.GA493013@bjorn-Precision-5520>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
+        linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Gordeev <agordeev@redhat.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v5 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <20210323224710.GA610170@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210321055109.322496-1-ztong0001@gmail.com>
+In-Reply-To: <20210226155056.1068534-2-zhengdejin5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 21, 2021 at 01:51:08AM -0400, Tong Zhang wrote:
-> There is an issue in the error path, which cpci_thread may remain NULL.
-> Calling kthread_stop(cpci_thread) will trigger a BUG().
-> It is better to check whether the thread is really created and started
-> before stop it.
+[+cc Christoph, Thomas, Alexander, in case you're interested]
+[+cc Jonathan, Kurt, Logan: vmd.c and switchtec.c use managed resources
+and pci_alloc_irq_vectors()]
+
+On Fri, Feb 26, 2021 at 11:50:53PM +0800, Dejin Zheng wrote:
+> Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> pci_alloc_irq_vectors(). Introducing this function can simplify
+> the error handling path in many drivers.
 > 
-> [    1.292859] BUG: kernel NULL pointer dereference, address: 0000000000000028
-> [    1.293252] #PF: supervisor write access in kernel mode
-> [    1.293533] #PF: error_code(0x0002) - not-present page
-> [    1.295163] RIP: 0010:kthread_stop+0x22/0x170
-> [    1.300491] Call Trace:
-> [    1.300628]  cpci_hp_unregister_controller+0xf6/0x130
-> [    1.300906]  zt5550_hc_init_one+0x27a/0x27f [cpcihp_zt5550]
+> And use pci_free_irq_vectors() to replace some code in pcim_release(),
+> they are equivalent, and no functional change. It is more explicit
+> that pcim_alloc_irq_vectors() is a device-managed function.
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-Wow, I didn't know anybody actually used this driver :)
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+Let me know if you'd like me to take the series.
+
 > ---
->  drivers/pci/hotplug/cpci_hotplug_core.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> v4 -> v5:
+> 	- Remove the check of enable device in pcim_alloc_irq_vectors()
+> 	  and make it as a static line function.
+> v3 -> v4:
+> 	- No change
+> v2 -> v3:
+> 	- Add some commit comments for replace some codes in
+> 	  pcim_release() by pci_free_irq_vectors().
+> v1 -> v2:
+> 	- Use pci_free_irq_vectors() to replace some code in
+> 	  pcim_release().
+> 	- Modify some commit messages.
 > 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-> index d0559d2faf50..b44da397d631 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-> @@ -47,7 +47,7 @@ static atomic_t extracting;
->  int cpci_debug;
->  static struct cpci_hp_controller *controller;
->  static struct task_struct *cpci_thread;
-> -static int thread_finished;
-> +static int thread_started;
-
-Why are we messing around with "thread_started" or "thread_finished"?
-We should know whether cpci_thread has been started by the control
-flow.
-
-There are two ways to start cpci_thread:
-
-  1)  cpcihp_generic_init                        # module_init function
-        cpci_hp_start
-          cpci_start_thread
-            cpci_thread = kthread_run(...)
-
-  2)  zt5550_hc_init_one                         # .probe function
-        cpci_hp_start
-          cpci_start_thread
-            cpci_thread = kthread_run(...)
-
-cpci_hp_start() returns a non-zero error if kthread_run() fails, and 
-both cpcihp_generic_init() and zt5550_hc_init_one() clean up and exit
-in that case.
-
-The error cleanup is a little sloppy: if cpci_hp_register_bus() fails,
-cpcihp_generic_init() calls cpci_hp_unregister_controller(), which
-stops cpci_thread if it has been started.  But in that case, we *know*
-there's no cpci_thread because we haven't even tried to start it.  I
-think this error cleanup could be done better by splitting the
-cpci_stop_thread() out from cpci_hp_unregister_controller() so it
-could be done separately.  zt5550_hc_init_one() has a similar problem.
-
-If cpcihp_generic_init() or zt5550_hc_init_one() succeeds, we *know*
-there is a cpci_thread.  We should be able to call kthread_stop() on
-it unconditionally in the cpcihp_generic_exit() and
-zt5550_hc_remove_one() paths.
-
-What do you think?  It's a little more restructuring work, but I think
-"thread_started" and "thread_finished" are basically kind of kludgy
-and they add complication without giving me confidence that they're
-actually correct.
-
->  static int enable_slot(struct hotplug_slot *slot);
->  static int disable_slot(struct hotplug_slot *slot);
-> @@ -447,7 +447,7 @@ event_thread(void *data)
->  				msleep(500);
->  			} else if (rc < 0) {
->  				dbg("%s - error checking slots", __func__);
-> -				thread_finished = 1;
-> +				thread_started = 0;
->  				goto out;
->  			}
->  		} while (atomic_read(&extracting) && !kthread_should_stop());
-> @@ -479,7 +479,7 @@ poll_thread(void *data)
->  					msleep(500);
->  				} else if (rc < 0) {
->  					dbg("%s - error checking slots", __func__);
-> -					thread_finished = 1;
-> +					thread_started = 0;
->  					goto out;
->  				}
->  			} while (atomic_read(&extracting) && !kthread_should_stop());
-> @@ -501,7 +501,7 @@ cpci_start_thread(void)
->  		err("Can't start up our thread");
->  		return PTR_ERR(cpci_thread);
->  	}
-> -	thread_finished = 0;
-> +	thread_started = 1;
->  	return 0;
+>  drivers/pci/pci.c   |  5 +----
+>  include/linux/pci.h | 24 ++++++++++++++++++++++++
+>  2 files changed, 25 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 16a17215f633..fecfdc0add2f 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1969,10 +1969,7 @@ static void pcim_release(struct device *gendev, void *res)
+>  	struct pci_devres *this = res;
+>  	int i;
+>  
+> -	if (dev->msi_enabled)
+> -		pci_disable_msi(dev);
+> -	if (dev->msix_enabled)
+> -		pci_disable_msix(dev);
+> +	pci_free_irq_vectors(dev);
+>  
+>  	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
+>  		if (this->region_mask & (1 << i))
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 86c799c97b77..5cafd7d65fd7 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1818,6 +1818,30 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  					      NULL);
 >  }
 >  
-> @@ -509,7 +509,7 @@ static void
->  cpci_stop_thread(void)
->  {
->  	kthread_stop(cpci_thread);
-> -	thread_finished = 1;
-> +	thread_started = 0;
->  }
+> +/**
+> + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
+> + * @dev:		PCI device to operate on
+> + * @min_vecs:		minimum number of vectors required (must be >= 1)
+> + * @max_vecs:		maximum (desired) number of vectors
+> + * @flags:		flags or quirks for the allocation
+> + *
+> + * Return the number of vectors allocated, (which might be smaller than
+> + * @max_vecs) if successful, or a negative error code on error. If less
+> + * than @min_vecs interrupt vectors are available for @dev the function
+> + * will fail with -ENOSPC.
+> + *
+> + * It depends on calling pcim_enable_device() to make IRQ resources
+> + * manageable.
+> + */
+> +static inline int
+> +pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +			unsigned int max_vecs, unsigned int flags)
+> +{
+> +	if (!pci_is_managed(dev))
+> +		return -EINVAL;
+> +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
+> +}
+> +
+>  /* Include architecture-dependent settings and functions */
 >  
->  int
-> @@ -571,7 +571,7 @@ cpci_hp_unregister_controller(struct cpci_hp_controller *old_controller)
->  	int status = 0;
->  
->  	if (controller) {
-> -		if (!thread_finished)
-> +		if (thread_started)
->  			cpci_stop_thread();
->  		if (controller->irq)
->  			free_irq(controller->irq, controller->dev_id);
+>  #include <asm/pci.h>
 > -- 
-> 2.25.1
+> 2.25.0
 > 
