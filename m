@@ -2,80 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81FA93452A5
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Mar 2021 23:56:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A921E3454F5
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 02:25:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbhCVW4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Mar 2021 18:56:09 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57523 "EHLO mga12.intel.com"
+        id S231583AbhCWBY4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Mar 2021 21:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229854AbhCVWzu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Mar 2021 18:55:50 -0400
-IronPort-SDR: K+aZhq/DU+NqMHdKZIp2W3jELkUWIP88l3q+GF7MIIjLwEaihVLR3yldYeDnNg/N7s2tyQGqMK
- MkMCv6eDJNhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="169695211"
-X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="169695211"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 15:55:50 -0700
-IronPort-SDR: BssIbhqRzOJph8uk8GBi10Xr6YbQb1TFdq06/blY2VChBatHeEgctadd/e06sU5QUmXtFOGGXn
- uLjqlbFEp1Og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="441382204"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Mar 2021 15:55:49 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 22 Mar 2021 15:55:47 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 22 Mar 2021 15:55:47 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2106.013;
- Mon, 22 Mar 2021 15:55:47 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "hch@infradead.org" <hch@infradead.org>
-CC:     "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Patel, Nirmal" <nirmal.patel@intel.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH 0/5] Legacy direct-assign mode
-Thread-Topic: [PATCH 0/5] Legacy direct-assign mode
-Thread-Index: AQHWv4+9xH1gXYcWf0W+ts3rSqbAv6qRI/2AgAB60ICAADRogA==
-Date:   Mon, 22 Mar 2021 22:55:46 +0000
-Message-ID: <804d2bff5bbe8e80004cbcbeaed3245b1acedf28.camel@intel.com>
-References: <20201120225144.15138-1-jonathan.derrick@intel.com>
-         <20210322122837.GC11469@e121166-lin.cambridge.arm.com>
-         <20210322194811.GA2141770@infradead.org>
-In-Reply-To: <20210322194811.GA2141770@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D74815433A0A0348B6EC36B1E8177837@intel.com>
-Content-Transfer-Encoding: base64
+        id S231569AbhCWBYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Mar 2021 21:24:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 917C461934;
+        Tue, 23 Mar 2021 01:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616462682;
+        bh=EoBN4W8jvfpgQpUiF4qeqHSUMWuVaP/vkiyeVe8OrcU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oITALvP94gugPGD651TSoMU9ZT+C6s7/z3V7eEEvHJVif1U4nNfPwIl98YX6LC5Gb
+         Sjc/lGg89KkYXllxsObRlxKaAbhozN6xI65U0ZO1evxGeydfnx+c3yuNqSxlKat122
+         pRMixEZ4fWN0S/gcxYpRr6o7s5RdDbuwZllx5n2/pIqFJwATcugypivBje51xzpaTJ
+         zlkJHIXMmMFjKzM2Xgcc/QnJeAvwf0bTYV0CULiS7+N0c8g9bG5VAyLRZtwRQyJnd7
+         Hmi7rfrwfc0wz6vPu5uLpM2R7sbbPjIOqG8a2VCylRorJGVC3ehqcnmtQNPm65/qLx
+         n5uwmG8Z5WSfQ==
+Date:   Mon, 22 Mar 2021 20:24:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [PATCH RESEND] PCI: dwc: Fix MSI not work after resume
+Message-ID: <20210323012441.GA515937@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210301111031.220a38b8@xhacker.debian>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIxLTAzLTIyIGF0IDE5OjQ4ICswMDAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gTW9uLCBNYXIgMjIsIDIwMjEgYXQgMTI6Mjg6MzdQTSArMDAwMCwgTG9yZW56byBQ
-aWVyYWxpc2kgd3JvdGU6DQo+ID4gPiBjb3JyZWN0bHkgcHJvZ3JhbSBicmlkZ2Ugd2luZG93cyB3
-aXRoIHBoeXNpY2FsIGFkZHJlc3Nlcy4gU29tZSBjdXN0b21lcnMgYXJlDQo+ID4gPiB1c2luZyBh
-IGxlZ2FjeSBtZXRob2QgdGhhdCByZWxpZXMgb24gdGhlIFZNRCBzdWJkZXZpY2UgZG9tYWluJ3Mg
-cm9vdCBwb3J0DQo+ID4gPiB3aW5kb3dzIHRvIGJlIHdyaXR0ZW4gd2l0aCB0aGUgcGh5c2ljYWwg
-YWRkcmVzc2VzLiBUaGlzIG1ldGhvZCBhbHNvIGFsbG93cw0KPiA+ID4gb3RoZXIgaHlwZXJ2aXNv
-cnMgYmVzaWRlcyBRRU1VL0tWTSB0byBwZXJmb3JtIGd1ZXN0IHBhc3N0aHJvdWdoLg0KPiANCj4g
-VGhpcyBzZWVtcyBsaWtlIGEgYmFkIGlkZWEuICBXaGF0IGFyZSB0aGVzZSBvdGhlciBoeXBlcnZp
-c29ycz8gIEFGQUlLDQo+IHRoZXJlIGFyZSBubyBwdXJlbHkgdXNlcnNwYWNlIGh5cGVydmlzb3Jz
-LCBzbyBpbiBvdGhlciB3b3JkcyB3aGF0IHlvdQ0KPiBwcm9wb3NlIGhlcmUgaXMgb25seSBmb3Ig
-dW5zdXBwb3J0ZWQgZXh0ZXJuYWwgbW9kdWxlcy4NCkFueSBvZiB0aGUgdHlwZSAxIGh5cGVydmlz
-b3JzIGhlcmU6DQpodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9IeXBlcnZpc29yDQoNCj4g
-DQo+IEkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWQgbWVyZ2Ugc29tZXRoaW5nIGxpa2UgdGhpcy4NCg==
+[+cc Kishon, Richard, Lucas, Dilip]
+
+On Mon, Mar 01, 2021 at 11:10:31AM +0800, Jisheng Zhang wrote:
+> After we move dw_pcie_msi_init() into core -- dw_pcie_host_init(), the
+> MSI stops working after resume. Because dw_pcie_host_init() is only
+> called once during probe. To fix this issue, we move dw_pcie_msi_init()
+> to dw_pcie_setup_rc().
+
+This patch looks fine, but I don't think the commit log tells the
+whole story.
+
+Prior to 59fbab1ae40e, it looks like the only dwc-based drivers with
+resume functions were dra7xx, imx6, intel-gw, and tegra [1].
+
+Only tegra called dw_pcie_msi_init() in the resume path, and I do
+think 59fbab1ae40e broke MSI after resume because it removed the
+dw_pcie_msi_init() call from tegra_pcie_enable_msi_interrupts().
+
+I'm not convinced this patch fixes it reliably, though.  The call
+chain looks like this:
+
+  tegra_pcie_dw_resume_noirq
+    tegra_pcie_dw_start_link
+      if (dw_pcie_wait_for_link(pci))
+        dw_pcie_setup_rc
+
+dw_pcie_wait_for_link() returns 0 if the link is up, so we only call
+dw_pcie_setup_rc() in the case where the link *didn't* come up.  If
+the link comes up nicely without retry, we won't call
+dw_pcie_setup_rc() and hence won't call dw_pcie_msi_init().
+
+Since then, exynos added a resume function.  My guess is MSI never
+worked after resume for dra7xx, exynos, imx6, and intel-gw because
+they don't call dw_pcie_msi_init() in their resume functions.
+
+This patch looks like it should fix MSI after resume for exynos, imx6,
+and intel-gw because they *do* call dw_pcie_setup_rc() from their
+resume functions [2], and after this patch, dw_pcie_msi_init() will be
+called from there.
+
+I suspect MSI after resume still doesn't work on dra7xx.
+
+[1] git grep -A20 -e "static.*resume_noirq" 59fbab1ae40e^:drivers/pci/controller/dwc
+[2] git grep -A20 -e "static.*resume_noirq" drivers/pci/controller/dwc
+
+> Fixes: 59fbab1ae40e ("PCI: dwc: Move dw_pcie_msi_init() into core")
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+> Since v1:
+>  - collect Reviewed-by tag
+> 
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 7e55b2b66182..e6c274f4485c 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -400,7 +400,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	}
+>  
+>  	dw_pcie_setup_rc(pp);
+> -	dw_pcie_msi_init(pp);
+>  
+>  	if (!dw_pcie_link_up(pci) && pci->ops && pci->ops->start_link) {
+>  		ret = pci->ops->start_link(pci);
+> @@ -551,6 +550,8 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> +	dw_pcie_msi_init(pp);
+> +
+>  	/* Setup RC BARs */
+>  	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
+>  	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+> -- 
+> 2.30.1
+> 
