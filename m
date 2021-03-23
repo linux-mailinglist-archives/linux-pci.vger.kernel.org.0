@@ -2,345 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 270423464C0
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 17:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B2BD3464E3
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 17:21:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233205AbhCWQQD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 12:16:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30164 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233163AbhCWQPp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 12:15:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616516145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eMXOr9cqKamxuKoAg/D1bTKRo0SAKBVJ3Gkwela4hHg=;
-        b=DZemtJ04cj+kHKFNGKGbU08e6ZfGmGrTj9iX3zhwY6G1HB707vFpRsCqgyuXiUZBDTN/9b
-        8msWuvPa7SIrxL059enNxgfAXfzDmbphy5dpTQ2HFt0IMw3K7AvtZbkXwJ1U9IM1DiFUvR
-        geSwzhzweZ8oshoEwV9IFyOWyoF6Ed4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-B33VMCFuPSOcktSBz75x_w-1; Tue, 23 Mar 2021 12:15:40 -0400
-X-MC-Unique: B33VMCFuPSOcktSBz75x_w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30F1D107ACCA;
-        Tue, 23 Mar 2021 16:15:39 +0000 (UTC)
-Received: from omen.home.shazbot.org (ovpn-112-120.phx2.redhat.com [10.3.112.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B187660BE5;
-        Tue, 23 Mar 2021 16:15:38 +0000 (UTC)
-Date:   Tue, 23 Mar 2021 10:15:38 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     bhelgaas@google.com, pali@kernel.org, raphael.norwitz@nutanix.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Message-ID: <20210323101538.0f683e53@omen.home.shazbot.org>
-In-Reply-To: <20210323100625.0021a943@omen.home.shazbot.org>
-References: <20210317190206.zrtzwgskxdogl7dz@pali>
-        <20210317131536.38f398b0@omen.home.shazbot.org>
-        <20210317192424.kpfybcrsen3ivr4f@pali>
-        <20210317133245.7d95909c@omen.home.shazbot.org>
-        <20210317194024.nkzrbbvi6utoznze@pali>
-        <20210317140020.4375ba76@omen.home.shazbot.org>
-        <20210317201346.v6t4rde6nzmt7fwr@pali>
-        <20210318143155.4vuf3izuzihiujaa@archlinux>
-        <20210323143419.syqf4dg7wcxorcmk@pali>
-        <20210323084438.37bfcc8e@omen.home.shazbot.org>
-        <20210323153221.n2pwjixqen6hx26h@archlinux>
-        <20210323100625.0021a943@omen.home.shazbot.org>
+        id S233175AbhCWQU7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 12:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233125AbhCWQU3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 12:20:29 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078BBC061574;
+        Tue, 23 Mar 2021 09:20:29 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id kk2-20020a17090b4a02b02900c777aa746fso10327091pjb.3;
+        Tue, 23 Mar 2021 09:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=C/wsOsHKAQ1XBRFwha550Qx3YH4mgBDe2e9NThAGXek=;
+        b=VK9xjlPofk3BwoLQgbj31mIWYYlmii7xIsdbNXoGlPSPVrIBUSVbqctOkOrSLCHZtm
+         NLyq/rOMQtwCxGBT42ueF74WLk1Jq0fMbZ5uV74KRarUdbJCETtces7bwlkIuIwCPBFt
+         Qk4Gh9tErGJyh2tRK/jOJ3rm0qqyMzNe0TdR2eNTqyNhaNzraRRBs3m+LzXWOZ2HTyuW
+         4KYE7Z8i6uz0t56ufTLIXpATmpK9UWlqmVJry1QH6YPdY7XlLYFZCwegK+6KMpOiOyQX
+         XK3OI6xiNUXBgZcgdRW0Cxl0TXV5TywUGE9UVGMps9mZj7ptGusVgFXOVOO72SaCckdO
+         K0sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=C/wsOsHKAQ1XBRFwha550Qx3YH4mgBDe2e9NThAGXek=;
+        b=N2CbVshOXnaBA2gFY6WHeNpAhMdH+ki8XH7Yuaj27aBMBXaPEU9sDid8NnYI7UT4We
+         sMHC4azz+8zvFus4FSmdkYmC5XCa4BPCbixTFRDhAYBdMH7rDRkMclkhQX47c4evx9kX
+         +OJhpCXyym+pJsOFm6w73xEJEKdgnRY3o8DCMF2noys0m+pnDvDfMzY/OjyYYaswassV
+         +2RbSpSi+h1z07v5szsP18qIFeBTJrXyywml3QozDy5xek0Y4T3aSKf5ImWQlfLlA3Xg
+         RkrGLyXUoLmC5aHzVsmWiTg9Vcwh9w4odSEC/D6ltfVxWgfgxQJSob8vDHK85+yGtZJc
+         MD1g==
+X-Gm-Message-State: AOAM5322AeMFLxiKXSQOWQ46/dvjQO//2gQgDG81QJvw3/5Le602+ZJX
+        +lZxpR0kEWC5Bk1OzepN8lk=
+X-Google-Smtp-Source: ABdhPJzszYg5j4ZmGwF5H1N4Z0ZTDZX7slOHg7r6GpQ1D2ykDq4UPdCh41SnHBdaCYRvRqgCb3JbOQ==
+X-Received: by 2002:a17:90b:360b:: with SMTP id ml11mr5099805pjb.98.1616516428582;
+        Tue, 23 Mar 2021 09:20:28 -0700 (PDT)
+Received: from localhost ([2401:4900:5298:bb2f:6d40:6041:a658:f52a])
+        by smtp.gmail.com with ESMTPSA id f2sm17981129pfq.129.2021.03.23.09.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Mar 2021 09:20:28 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 21:49:41 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     alex.williamson@redhat.com, helgaas@kernel.org,
+        lorenzo.pieralisi@arm.com, kabel@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        raphael.norwitz@nutanix.com
+Subject: Re: How long should be PCIe card in Warm Reset state?
+Message-ID: <20210323161941.gim6msj3ruu3flnf@archlinux>
+References: <20210310110535.zh4pnn4vpmvzwl5q@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210310110535.zh4pnn4vpmvzwl5q@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 23 Mar 2021 10:06:25 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On 21/03/10 12:05PM, Pali Rohár wrote:
+> Hello!
+>
+> I would like to open a question about PCIe Warm Reset. Warm Reset of
+> PCIe card is triggered by asserting PERST# signal and in most cases
+> PERST# signal is controlled by GPIO.
+>
+> Basically every native Linux PCIe controller driver is doing this Warm
+> Reset of connected PCIe card during native driver initialization
+> procedure.
+>
+> And now the important question is: How long should be PCIe card in Warm
+> Reset state? After which timeout can be PERST# signal de-asserted by
+> Linux controller driver?
+>
+> Lorenzo and Rob already expressed concerns [1] [2] that this Warm Reset
+> timeout should not be driver specific and I agree with them.
+>
+> I have done investigation which timeout is using which native PCIe
+> driver [3] and basically every driver is using different timeout.
+>
+> I have tried to find timeouts in PCIe specifications, I was not able to
+> understand and deduce correct timeout value for Warm Reset from PCIe
+> specifications. What I have found is written in my email [4].
+>
+> Alex (as a "reset expert"), could you look at this issue?
+>
+> Or is there somebody else who understand PCIe specifications and PCIe
+> diagrams to figure out what is the minimal timeout for de-asserting
+> PERST# signal?
+>
+> There are still some issues with WiFi cards (e.g. Compex one) which
+> sometimes do not appear on PCIe bus. And based on these "reset timeout
+> differences" in Linux PCIe controller drivers, I suspect that it is not
+> (only) the problems in WiFi cards but also in Linux PCIe controller
+> drivers. In my email [3] I have written that I figured out that WLE1216
+> card needs to be in Warm Reset state for at least 10ms, otherwise card
+> is not detected.
+>
+> [1] - https://lore.kernel.org/linux-pci/20200513115940.fiemtnxfqcyqo6ik@pali/
+> [2] - https://lore.kernel.org/linux-pci/20200507212002.GA32182@bogus/
+> [3] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
+> [4] - https://lore.kernel.org/linux-pci/20200430082245.xblvb7xeamm4e336@pali/
 
-> On Tue, 23 Mar 2021 21:02:21 +0530
-> Amey Narkhede <ameynarkhede03@gmail.com> wrote:
->=20
-> > On 21/03/23 08:44AM, Alex Williamson wrote: =20
-> > > On Tue, 23 Mar 2021 15:34:19 +0100
-> > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > >   =20
-> > > > On Thursday 18 March 2021 20:01:55 Amey Narkhede wrote:   =20
-> > > > > On 21/03/17 09:13PM, Pali Roh=C3=A1r wrote:   =20
-> > > > > > On Wednesday 17 March 2021 14:00:20 Alex Williamson wrote:   =20
-> > > > > > > On Wed, 17 Mar 2021 20:40:24 +0100
-> > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > > > >   =20
-> > > > > > > > On Wednesday 17 March 2021 13:32:45 Alex Williamson wrote: =
-  =20
-> > > > > > > > > On Wed, 17 Mar 2021 20:24:24 +0100
-> > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > > > > > >   =20
-> > > > > > > > > > On Wednesday 17 March 2021 13:15:36 Alex Williamson wro=
-te:   =20
-> > > > > > > > > > > On Wed, 17 Mar 2021 20:02:06 +0100
-> > > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > > > > > > > >   =20
-> > > > > > > > > > > > On Monday 15 March 2021 09:03:39 Alex Williamson wr=
-ote:   =20
-> > > > > > > > > > > > > On Mon, 15 Mar 2021 15:52:38 +0100
-> > > > > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > > > > > > > > > >   =20
-> > > > > > > > > > > > > > On Monday 15 March 2021 08:34:09 Alex Williamso=
-n wrote:   =20
-> > > > > > > > > > > > > > > On Mon, 15 Mar 2021 14:52:26 +0100
-> > > > > > > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > > > > > > > > > > > >   =20
-> > > > > > > > > > > > > > > > On Monday 15 March 2021 19:13:23 Amey Narkh=
-ede wrote:   =20
-> > > > > > > > > > > > > > > > > slot reset (pci_dev_reset_slot_function) =
-and secondary bus
-> > > > > > > > > > > > > > > > > reset(pci_parent_bus_reset) which I think=
- are hot reset and
-> > > > > > > > > > > > > > > > > warm reset respectively.   =20
-> > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > No. PCI secondary bus reset =3D PCIe Hot Re=
-set. Slot reset is just another
-> > > > > > > > > > > > > > > > type of reset, which is currently implement=
-ed only for PCIe hot plug
-> > > > > > > > > > > > > > > > bridges and for PowerPC PowerNV platform an=
-d it just call PCI secondary
-> > > > > > > > > > > > > > > > bus reset with some other hook. PCIe Warm R=
-eset does not have API in
-> > > > > > > > > > > > > > > > kernel and therefore drivers do not export =
-this type of reset via any
-> > > > > > > > > > > > > > > > kernel function (yet).   =20
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Warm reset is beyond the scope of this series=
-, but could be implemented
-> > > > > > > > > > > > > > > in a compatible way to fit within the pci_res=
-et_fn_methods[] array
-> > > > > > > > > > > > > > > defined here.   =20
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Ok!
-> > > > > > > > > > > > > >   =20
-> > > > > > > > > > > > > > > Note that with this series the resets availab=
-le through
-> > > > > > > > > > > > > > > pci_reset_function() and the per device reset=
- attribute is sysfs remain
-> > > > > > > > > > > > > > > exactly the same as they are currently.  The =
-bus and slot reset
-> > > > > > > > > > > > > > > methods used here are limited to devices wher=
-e only a single function is
-> > > > > > > > > > > > > > > affected by the reset, therefore it is not li=
-ke the patch you proposed
-> > > > > > > > > > > > > > > which performed a reset irrespective of the d=
-ownstream devices.  This
-> > > > > > > > > > > > > > > series only enables selection of the existing=
- methods.  Thanks,
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Alex
-> > > > > > > > > > > > > > >   =20
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > But with this patch series, there is still an i=
-ssue with PCI secondary
-> > > > > > > > > > > > > > bus reset mechanism as exported sysfs attribute=
- does not do that
-> > > > > > > > > > > > > > remove-reset-rescan procedure. As discussed in =
-other thread, this reset
-> > > > > > > > > > > > > > let device in unconfigured / broken state.   =20
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > No, there's not:
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > int pci_reset_function(struct pci_dev *dev)
-> > > > > > > > > > > > > {
-> > > > > > > > > > > > >         int rc;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >         if (!dev->reset_fn)
-> > > > > > > > > > > > >                 return -ENOTTY;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >         pci_dev_lock(dev);   =20
-> > > > > > > > > > > > > >>>     pci_dev_save_and_disable(dev);   =20
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >         rc =3D __pci_reset_function_locked(dev);
-> > > > > > > > > > > > >   =20
-> > > > > > > > > > > > > >>>     pci_dev_restore(dev);   =20
-> > > > > > > > > > > > >         pci_dev_unlock(dev);
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >         return rc;
-> > > > > > > > > > > > > }
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > The remove/re-scan was discussed primarily becaus=
-e your patch performed
-> > > > > > > > > > > > > a bus reset regardless of what devices were affec=
-ted by that reset and
-> > > > > > > > > > > > > it's difficult to manage the scope where multiple=
- devices are affected.
-> > > > > > > > > > > > > Here, the bus and slot reset functions will fail =
-unless the scope is
-> > > > > > > > > > > > > limited to the single device triggering this rese=
-t.  Thanks,
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Alex
-> > > > > > > > > > > > >   =20
-> > > > > > > > > > > >
-> > > > > > > > > > > > I was thinking a bit more about it and I'm really s=
-ure how it would
-> > > > > > > > > > > > behave with hotplugging PCIe bridge.
-> > > > > > > > > > > >
-> > > > > > > > > > > > On aardvark PCIe controller I have already tested t=
-hat secondary bus
-> > > > > > > > > > > > reset bit is triggering Hot Reset event and then al=
-so Link Down event.
-> > > > > > > > > > > > These events are not handled by aardvark driver yet=
- (needs to
-> > > > > > > > > > > > implemented into kernel's emulated root bridge code=
-).
-> > > > > > > > > > > >
-> > > > > > > > > > > > But I'm not sure how it would behave on real HW PCI=
-e hotplugging bridge.
-> > > > > > > > > > > > Kernel has already code which removes PCIe device i=
-f it changes presence
-> > > > > > > > > > > > bit (and inform via interrupt). And Link Down event=
- triggers this
-> > > > > > > > > > > > change.   =20
-> > > > > > > > > > >
-> > > > > > > > > > > This is the difference between slot and bus resets, t=
-he slot reset is
-> > > > > > > > > > > implemented by the hotplug controller and disables pr=
-esence detection
-> > > > > > > > > > > around the bus reset.  Thanks,   =20
-> > > > > > > > > >
-> > > > > > > > > > Yes, but I'm talking about bus reset, not about slot re=
-set.
-> > > > > > > > > >
-> > > > > > > > > > I mean: to use bus reset via sysfs on hardware which su=
-pports slots and
-> > > > > > > > > > hotplugging.
-> > > > > > > > > >
-> > > > > > > > > > And if I'm reading code correctly, this combination is =
-allowed, right?
-> > > > > > > > > > Via these new patches it is possible to disable slot re=
-set and enable
-> > > > > > > > > > bus reset.   =20
-> > > > > > > > >
-> > > > > > > > > That's true, a slot reset is simply a bus reset wrapped a=
-round code
-> > > > > > > > > that prevents the device from getting ejected.   =20
-> > > > > > > >
-> > > > > > > > Yes, this makes slot reset "safe". But bus reset is "unsafe=
-".
-> > > > > > > >   =20
-> > > > > > > > > Maybe it would make
-> > > > > > > > > sense to combine the two as far as this interface is conc=
-erned, ie. a
-> > > > > > > > > single "bus" reset method that will always use slot reset=
- when
-> > > > > > > > > available.  Thanks,   =20
-> > > > > > > >
-> > > > > > > > That should work when slot reset is available.
-> > > > > > > >
-> > > > > > > > Other option is that mentioned remove-reset-rescan procedur=
-e.   =20
-> > > > > > >
-> > > > > > > That's not something we can introduce to the pci_reset_functi=
-on() path
-> > > > > > > without a fair bit of collateral in using it through vfio-pci.
-> > > > > > >   =20
-> > > > > > > > But quick search in drivers/pci/hotplug/ results that not a=
-ll hotplug
-> > > > > > > > drivers implement reset_slot method.
-> > > > > > > >
-> > > > > > > > So there is a possible issue with hotplug driver which may =
-eject device
-> > > > > > > > during bus reset (because e.g. slot reset is not implemente=
-d)?   =20
-> > > > > > >
-> > > > > > > People aren't reporting it, so maybe those controllers aren't=
- being
-> > > > > > > used for this use case.  Or maybe introducing this patch will=
- make
-> > > > > > > these reset methods more readily accessible for testing.  We =
-can fix or
-> > > > > > > blacklist those controllers for bus reset when reports come i=
-n.  Thanks,   =20
-> > > > > >
-> > > > > > Ok! I do not know neither if those controllers are used, but lo=
-oks like
-> > > > > > that there are still changes in hotplug code.
-> > > > > >
-> > > > > > So I guess with these patches people can test it and report iss=
-ues when
-> > > > > > such thing happen.   =20
-> > > > > So after a bit research as I understood we need to group slot
-> > > > > and bus reset together in a single category of reset methods and
-> > > > > then implicitly use slot reset if it is available when bus reset =
-is
-> > > > > enabled by the user.
-> > > > > Is that right?   =20
-> > > >
-> > > > Yes, I understand it in same way. Just I do not know which name to
-> > > > choose for this reset category. In PCI spec it is called Secondary =
-Bus
-> > > > Reset (as it resets whole bus with all devices; but we allow this r=
-eset
-> > > > in this patch series only if on the bus is connected exactly one de=
-vice).
-> > > > In PCIe spec it is called Hot Reset. And if kernel detects Slot sup=
-port
-> > > > then kernel currently calls it Slot reset. But it is still same thi=
-ng.
-> > > > Any opinion? I think that we could call it Hot Reset as this patch
-> > > > series exports it only for single device (so calling it _bus_ is no=
-t the
-> > > > best match).   =20
-> > >
-> > > A similar abstraction where our scope is not limited to a single
-> > > function calls this a bus reset:
-> > >
-> > > int pci_reset_bus(struct pci_dev *pdev)
-> > > {
-> > >         return (!pci_probe_reset_slot(pdev->slot)) ?
-> > >             __pci_reset_slot(pdev->slot) : __pci_reset_bus(pdev->bus);
-> > > }
-> > >
-> > > Thanks,
-> > > Alex
-> > >   =20
-> > I was going to use similar function
-> >=20
-> > int pci_bus_reset(struct pci_dev *dev, int probe)
-> > {
-> >        return pci_dev_reset_slot_function(dev, probe) ?
-> >                pci_parent_bus_reset(dev, probe) : 0;
-> >=20
-> > } =20
->=20
-> I think via the sysfs attribute we can simply call this "bus" reset,
-> but internally having both pci_reset_bus() and pci_bus_reset() would be
-> really confusing.  We're doing the same thing as pci_bus_reset() but
-> with a different scope, so I'd probably suggest
-> pci_bus_reset_function().
+I somehow got my hands on PCIe Gen4 spec. It says on page no 555-
+"When PERST# is provided to a component or adapter, this signal must be
+used by the component or adapter as Fundamental Reset.
+When PERST# is not provided to a component or adapter, Fundamental Reset is
+generated autonomously by the component or adapter, and the details of how
+this is done are outside the scope of this document."
+Not sure what component/adapter means in this context.
 
-I'm already confusing them, s/bus_reset/reset_bus/ in the last sentence
-above.  Thanks,
+Then below it says-
+"In some cases, it may be possible for the Fundamental Reset mechanism
+to be triggered  by hardware without the removal and re-application of
+power to the component.  This is called a warm reset. This document does
+not specify a means for generating a warm reset."
 
-Alex
-
->=20
-> Also, the above ternary form isn't true to the original, only -ENOTTY
-> allows fall-through, so something more like:
->=20
-> int pci_reset_bus_function(struct pci_dev *dev, int probe)
-> {
-> 	int rc =3D pci_dev_reset_slot_function(dev, probe);
->=20
-> 	return (rc =3D=3D -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
-> }
->=20
-> Thanks,
-> Alex
->=20
-
+Thanks,
+Amey
