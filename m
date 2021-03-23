@@ -2,94 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60083346A44
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 21:41:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 107B8346B11
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 22:29:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233670AbhCWUko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 16:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
+        id S233584AbhCWV2x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 17:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233584AbhCWUkZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 16:40:25 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6548EC0613EE
-        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 13:40:21 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id m8so1960598qtp.14
-        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 13:40:21 -0700 (PDT)
+        with ESMTP id S233498AbhCWV21 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 17:28:27 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04C4BC061763
+        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 14:28:26 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id o126so19294054lfa.0
+        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 14:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WZ2fsTX5FLJhX01BulIdj9aVU+u+1SaaqVDcWrlk7vo=;
-        b=ec/02RNqMxC3NtjfEqCKWLv4qwmQTmHrkXsCeNO2KBn8qSqKzTE24FKGqfuKH+TVkK
-         X/VKFkbL4vsRYCrPeFIrZP8DeiwqKS96n7WGnqpK5r2/VAz0Iab+2cnLr9ixgbVx3i2+
-         bJO7ki2MVhZqoAWHQEzmE5B7oTVS3IIOSVMH6lZh48SF/0j7bgW6jHNwPIk8gKuBLJqR
-         4qQ5N4v6mKVofR2cSUqiTSphpJlczKzRN+vOPaGMsYJ3GFsS6r9eXFPtqA3WSVhoq05F
-         zPIbSYNFmagSwu4VxL+cE8EfslHOGZyTYBOn5X3fzMMM4mw38aQ1r1FrLS9fBfhCQ2tj
-         1law==
+        bh=oE8Re7U2eiRTAh9p3PAj7D06IDZ16XlxhTmOYb89s/8=;
+        b=FJMeWXH+SaUw1EE94VwNSxeUROOX72sUs1KyGDlEqEifmVqm6Nm3+EZZBosnRVkNGA
+         DwxLHCyqmfawP6Noi2RmaV7umcSzUA11e/grp81xPwUhI1/iUNw/31OWqPVezUi91wPY
+         utRanRrza0bGC2bDni7GFzhhO8qr0A+tJ0WoLmYS03HJlVuW9rKonI4L+EpSvQFYjHz9
+         bx+e6/Rti7mbXHAHS4ixI/leP99NIwuDcxTcvOG3aXffNhVOM7g7cM+FEvnwPm4H6KYn
+         FURJXnuQWRaVS4qInf/SKXxXGqlhptU8V21fgmbumrv01osdiuNJB+olA1xskDVq/+2Q
+         LP1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=WZ2fsTX5FLJhX01BulIdj9aVU+u+1SaaqVDcWrlk7vo=;
-        b=VVRT8ccjd9GniSDw52Q6dusdLCEOztE1OL6q0u0BLPpNznMtNahjJNQMasZkj+wlVz
-         92SdaLpAPw51ACFH1PiwIeUkb5MGjBNBRooSu4aURvI7Gwj/VBIliqAnbcR/Qf1R32M4
-         A7ed4Go7vBjJ0j9bfZf0h7H+0ec2RkqDeb/C2lAg0SH4/Qz9xWIM1FleJ2dN3VG0wcFS
-         YMe5KIo5IKgwUSu37OuDeBLqEL4wwVkgfKuiZpt7zGjxo5ojs0OmXc7pyhtyEX5E7hGc
-         Szk2Hs4haNFH/hVl+JK+qTHmh5FLQY15MTS36mwqWAK+oAHfGLv62ozp2ObcrLSP2AKL
-         40Jw==
-X-Gm-Message-State: AOAM533jCCvsC9DHePYjpJT25Dv375PkzxFjjvyX209L0kGH0I8geOP0
-        kcCqxvPEIJKi8c8MyRMP1mMTJXPX1t4PepWFMxI=
-X-Google-Smtp-Source: ABdhPJyxpPvs3kGL5X0rhxaceHJDwoHelX5/WOAlmnNB1fMlzzx1j3iwVr8PFhB1zHKJQ3nkMRVGiRyWH5xdyb6dFU8=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e9a3:260d:763b:67dc])
- (user=samitolvanen job=sendgmr) by 2002:a0c:bec3:: with SMTP id
- f3mr6577376qvj.49.1616532020445; Tue, 23 Mar 2021 13:40:20 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 13:39:46 -0700
-In-Reply-To: <20210323203946.2159693-1-samitolvanen@google.com>
-Message-Id: <20210323203946.2159693-18-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20210323203946.2159693-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v3 17/17] arm64: allow CONFIG_CFI_CLANG to be selected
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oE8Re7U2eiRTAh9p3PAj7D06IDZ16XlxhTmOYb89s/8=;
+        b=QWjtSU6Y7aXtuBZGX3W2Xh1ZnLJ/xKEaHYaWchfMhFd4vzgQ5Djq0dTD5lmRQ1NykY
+         EUDtL4VjutdwEPZi9cJmB1tN1XOzP0PVArNk7qAhUefP1NLIU+2x7vj3HHByVRjm+9bY
+         95MLMGiZspdDNrLNyxfbMtc/zeqAUFqX8a68VL2pHzOI0l8u7Ry3Aj9gcX/ykJRqDbIM
+         PyY9w5hMWYmow2ezJqHHq8yUIaGjoM3q+2g5/c+zNa+a0Z4JyNTUUJbc6yFwqXz9znTN
+         L8b2ST/oX2eprV7InafOCtikkz7ZEWfZG6Gi9Q0IXY2R7vfHd+4zK4fsrbaYxTACZG89
+         Ahnw==
+X-Gm-Message-State: AOAM533RD2oUB/xgas2f66t/tyzntAw3qeg9S4CGS+FGXScGOjCakt0l
+        meSKxzH28ECMw7T+SUkmncgT+bZPVWGgi4lktQGQyQ==
+X-Google-Smtp-Source: ABdhPJyQ7qsEvILqWPc3g5iRiytFJpTt4UTAmMg5r+eaD3LvYwwXBwdUjRC4U6ywX5x/yBprcY72YeaBiQ3jH5EanL4=
+X-Received: by 2002:a19:8c19:: with SMTP id o25mr1333lfd.547.1616534904876;
+ Tue, 23 Mar 2021 14:28:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210323203946.2159693-1-samitolvanen@google.com> <20210323203946.2159693-10-samitolvanen@google.com>
+In-Reply-To: <20210323203946.2159693-10-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 23 Mar 2021 14:28:13 -0700
+Message-ID: <CAKwvOdnZwMKjJKd5Fbx5hH1Ute1ZkMZGP=Kn0tJq=rxF2P3eNw@mail.gmail.com>
+Subject: Re: [PATCH v3 09/17] treewide: Change list_sort to use const pointers
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Select ARCH_SUPPORTS_CFI_CLANG to allow CFI to be enabled.
+On Tue, Mar 23, 2021 at 1:40 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> list_sort() internally casts the comparison function passed to it
+> to a different type with constant struct list_head pointers, and
+> uses this pointer to call the functions, which trips indirect call
+> Control-Flow Integrity (CFI) checking.
+>
+> Instead of removing the consts, this change defines the
+> list_cmp_func_t type and changes the comparison function types of
+> all list_sort() callers to use const pointers, thus avoiding type
+> mismatches.
+>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/kvm/vgic/vgic-its.c                  |  8 ++++----
+>  arch/arm64/kvm/vgic/vgic.c                      |  3 ++-
+>  block/blk-mq-sched.c                            |  3 ++-
+>  block/blk-mq.c                                  |  3 ++-
+>  drivers/acpi/nfit/core.c                        |  3 ++-
+>  drivers/acpi/numa/hmat.c                        |  3 ++-
+>  drivers/clk/keystone/sci-clk.c                  |  4 ++--
+>  drivers/gpu/drm/drm_modes.c                     |  3 ++-
+>  drivers/gpu/drm/i915/gt/intel_engine_user.c     |  3 ++-
+>  drivers/gpu/drm/i915/gvt/debugfs.c              |  2 +-
+>  drivers/gpu/drm/i915/selftests/i915_gem_gtt.c   |  3 ++-
+>  drivers/gpu/drm/radeon/radeon_cs.c              |  4 ++--
+>  .../hw/usnic/usnic_uiom_interval_tree.c         |  3 ++-
+>  drivers/interconnect/qcom/bcm-voter.c           |  2 +-
+>  drivers/md/raid5.c                              |  3 ++-
+>  drivers/misc/sram.c                             |  4 ++--
+>  drivers/nvme/host/core.c                        |  3 ++-
+>  .../pci/controller/cadence/pcie-cadence-host.c  |  3 ++-
+>  drivers/spi/spi-loopback-test.c                 |  3 ++-
+>  fs/btrfs/raid56.c                               |  3 ++-
+>  fs/btrfs/tree-log.c                             |  3 ++-
+>  fs/btrfs/volumes.c                              |  3 ++-
+>  fs/ext4/fsmap.c                                 |  4 ++--
+>  fs/gfs2/glock.c                                 |  3 ++-
+>  fs/gfs2/log.c                                   |  2 +-
+>  fs/gfs2/lops.c                                  |  3 ++-
+>  fs/iomap/buffered-io.c                          |  3 ++-
+>  fs/ubifs/gc.c                                   |  7 ++++---
+>  fs/ubifs/replay.c                               |  4 ++--
+>  fs/xfs/scrub/bitmap.c                           |  4 ++--
+>  fs/xfs/xfs_bmap_item.c                          |  4 ++--
+>  fs/xfs/xfs_buf.c                                |  6 +++---
+>  fs/xfs/xfs_extent_busy.c                        |  4 ++--
+>  fs/xfs/xfs_extent_busy.h                        |  3 ++-
+>  fs/xfs/xfs_extfree_item.c                       |  4 ++--
+>  fs/xfs/xfs_refcount_item.c                      |  4 ++--
+>  fs/xfs/xfs_rmap_item.c                          |  4 ++--
+>  include/linux/list_sort.h                       |  7 ++++---
+>  lib/list_sort.c                                 | 17 ++++++-----------
+>  lib/test_list_sort.c                            |  3 ++-
+>  net/tipc/name_table.c                           |  4 ++--
+>  41 files changed, 90 insertions(+), 72 deletions(-)
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+This looks like all of the call sites I could find.  Yes, this looks
+much better, thank you for taking the time to fix all of these. I ran
+this through some build tests of ARCH=arm64 defconfig, allyesconfig,
+and same for my host (x86_64). All LGTM.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 5656e7aacd69..2eefdbc3e3c9 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -75,6 +75,7 @@ config ARM64
- 	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_LTO_CLANG if CPU_LITTLE_ENDIAN
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
-+	select ARCH_SUPPORTS_CFI_CLANG
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
- 	select ARCH_SUPPORTS_NUMA_BALANCING
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 -- 
-2.31.0.291.g576ba9dcdaf-goog
-
+Thanks,
+~Nick Desaulniers
