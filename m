@@ -2,86 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8661346912
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 20:30:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D7E346936
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 20:40:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230153AbhCWT3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 15:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
+        id S230364AbhCWTjk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 15:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230327AbhCWT3W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Mar 2021 15:29:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D4C23619C0;
-        Tue, 23 Mar 2021 19:29:21 +0000 (UTC)
+        id S230018AbhCWTjZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Mar 2021 15:39:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 247C3614A5;
+        Tue, 23 Mar 2021 19:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616527762;
-        bh=VFfthgrx5eg5s7ViJTgggc7NvEWm00e/YlW73Py92H8=;
+        s=k20201202; t=1616528365;
+        bh=tnWhfJQiaw5ptja+gnHDao9U3U7TNeGkUgzd8HGqX6M=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E5gLsn81PDKuJBowb2D3xFoo9pj68DMGA5H7CFoXuDyxYPH2V5HoUy86gIhNG8mN6
-         MqHwzY85AX8RDp7gQ7zW9P0eTMZWktgz8qLmhXfcB+jJGg2/T02Pp7jGsvS6vwBm+/
-         anh+5F+U7FDh4Kr6eZTAJyKcuXTzGBu//Kznz+Jt6BNn5noZq5CxZgJc8c7wH/i/wd
-         iwjuCVqfwFVldmvRUt7TI0lPuAukVl5CX95K/Wf9NLbzugO8gN+P8qxxHdoslQKChZ
-         zkUzjJYHL3i88qgqhv8TJdnt8YxTf3kIYauCFLTklBV0ekorAiwWYcQvaXO3TIbWmL
-         uJtZ8li3WRZxw==
-Date:   Tue, 23 Mar 2021 14:29:20 -0500
+        b=J803I7TanM+5tCsc4HOkg9etCbENfY9Os0QAKLg1TBkk6guFrojwPL8wMjCLhUcLI
+         P5oJ6/Dg/TbiQCy9MBIKviL8zMS+mtcxxsr491pepxwCAH8QuWpty5m2TJ4+29lG8+
+         FyOP4fewglEZVpgSdGSAqfQqN2CBlE5wefJseV+T153ZQvXO8m3kP0u3MfL+PQEXeR
+         8dxpeCmVNK/0IE/+mK943kLJJUolc9NtFPMjG5KsWiP1kqrtRljKjmvSJZ6/q1/M1p
+         ZqxXdpM4tO54KhQNH2wPhwP+i9bkgmCo7E0jf9Yw3jxVqlj4rNhFsVUt9fbhzUfej/
+         DedIhuOtq72EQ==
+Date:   Tue, 23 Mar 2021 14:39:23 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Cc:     intel-wired-lan@lists.osuosl.org, sasha.neftin@intel.com,
         anthony.l.nguyen@intel.com, linux-pci@vger.kernel.org,
         bhelgaas@google.com, netdev@vger.kernel.org, mlichvar@redhat.com,
         richardcochran@gmail.com
-Subject: Re: [PATCH next-queue v3 2/3] igc: Enable PCIe PTM
-Message-ID: <20210323192920.GA597326@bjorn-Precision-5520>
+Subject: Re: [PATCH next-queue v3 3/3] igc: Add support for PTP
+ getcrosststamp()
+Message-ID: <20210323193923.GA597480@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210322161822.1546454-3-vinicius.gomes@intel.com>
+In-Reply-To: <20210322161822.1546454-4-vinicius.gomes@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 09:18:21AM -0700, Vinicius Costa Gomes wrote:
-> In practice, enabling PTM also sets the enabled_ptm flag in the PCI
-> device, the flag will be used for detecting if PTM is enabled before
-> adding support for the SYSOFFSET_PRECISE ioctl() (which is added by
-> implementing the getcrosststamp() PTP function).
+On Mon, Mar 22, 2021 at 09:18:22AM -0700, Vinicius Costa Gomes wrote:
+> i225 has support for PCIe PTM, which allows us to implement support
+> for the PTP_SYS_OFFSET_PRECISE ioctl(), implemented in the driver via
+> the getcrosststamp() function.
 
-I think you're referring to the "pci_dev.ptm_enabled" flag.  I'm not
-sure what the connection to this patch is.  The SYSOFFSET_PRECISE
-stuff also seems to belong with some other patch.
+> +static bool igc_is_ptm_supported(struct igc_adapter *adapter)
+> +{
+> +#if IS_ENABLED(CONFIG_X86_TSC) && IS_ENABLED(CONFIG_PCIE_PTM)
+> +	return adapter->pdev->ptm_enabled;
+> +#endif
 
-This patch merely enables PTM if it's supported (might be worth
-expanding Precision Time Measurement for context).
+It's not obvious why you make this x86-specific.  Maybe a comment?
 
-> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> ---
->  drivers/net/ethernet/intel/igc/igc_main.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index f77feadde8d2..04319ffae288 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -12,6 +12,8 @@
->  #include <net/pkt_sched.h>
->  #include <linux/bpf_trace.h>
->  #include <net/xdp_sock_drv.h>
-> +#include <linux/pci.h>
+You shouldn't have to test for CONFIG_PCIE_PTM, either.  We probably
+should have a pdev->ptm_enabled() predicate with a stub that returns
+false when CONFIG_PCIE_PTM is not set.
+
+> +	return false;
+> +}
+
+> +/* PCIe Registers */
+> +#define IGC_PTM_CTRL		0x12540  /* PTM Control */
+> +#define IGC_PTM_STAT		0x12544  /* PTM Status */
+> +#define IGC_PTM_CYCLE_CTRL	0x1254C  /* PTM Cycle Control */
 > +
->  #include <net/ipv6.h>
->  
->  #include "igc.h"
-> @@ -5792,6 +5794,10 @@ static int igc_probe(struct pci_dev *pdev,
->  
->  	pci_enable_pcie_error_reporting(pdev);
->  
-> +	err = pci_enable_ptm(pdev, NULL);
-> +	if (err < 0)
-> +		dev_err(&pdev->dev, "PTM not supported\n");
+> +/* PTM Time registers */
+> +#define IGC_PTM_T1_TIM0_L	0x12558  /* T1 on Timer 0 Low */
+> +#define IGC_PTM_T1_TIM0_H	0x1255C  /* T1 on Timer 0 High */
 > +
->  	pci_set_master(pdev);
->  
->  	err = -ENOMEM;
-> -- 
-> 2.31.0
-> 
+> +#define IGC_PTM_CURR_T2_L	0x1258C  /* Current T2 Low */
+> +#define IGC_PTM_CURR_T2_H	0x12590  /* Current T2 High */
+> +#define IGC_PTM_PREV_T2_L	0x12584  /* Previous T2 Low */
+> +#define IGC_PTM_PREV_T2_H	0x12588  /* Previous T2 High */
+> +#define IGC_PTM_PREV_T4M1	0x12578  /* T4 Minus T1 on previous PTM Cycle */
+> +#define IGC_PTM_CURR_T4M1	0x1257C  /* T4 Minus T1 on this PTM Cycle */
+> +#define IGC_PTM_PREV_T3M2	0x12580  /* T3 Minus T2 on previous PTM Cycle */
+> +#define IGC_PTM_TDELAY		0x12594  /* PTM PCIe Link Delay */
+> +
+> +#define IGC_PCIE_DIG_DELAY	0x12550  /* PCIe Digital Delay */
+> +#define IGC_PCIE_PHY_DELAY	0x12554  /* PCIe PHY Delay */
+
+I assume the above are device-specific registers, right?  Nothing that
+would be found in the PCIe base spec?
+
+Bjorn
