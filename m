@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE208346A11
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 21:41:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35959346A1F
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 21:41:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233590AbhCWUkb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 16:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
+        id S233482AbhCWUkg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 16:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233468AbhCWUj6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 16:39:58 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 025A0C061763
-        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 13:39:57 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id p10so1969755qtq.12
-        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 13:39:56 -0700 (PDT)
+        with ESMTP id S233477AbhCWUj7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 16:39:59 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B6DC0613DC
+        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 13:39:58 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id 130so149900qkm.0
+        for <linux-pci@vger.kernel.org>; Tue, 23 Mar 2021 13:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=2eJKl2P+mphx8MXuY5eZ3j0r297zj+fSj+T5WKlAy0E=;
-        b=F7DyYoTINGuplDxZdhovljaDSjsbsbsHDaccNJNpVFG1uHl0pH2Jb8ZGxI9pRViGzn
-         P9bXGOaY4DL6wqzXTQkCjWG3FbAPFgW9yZwRM/QptFOt0nz84XtEbqR1NLBkEGidZJa3
-         CrJkw9qpHdhwZrMFRZHgVsRqmb2+bUfA3erzvVzdp42rL0vgo1/PfyIuO8eBVtII3M96
-         zF220AVy6U0HEFNIfOCZZan85P2t79rpIjJGqHqbbixIsFbkx3V9i1GVLeV4Nyw/Kyqe
-         1GNwZ/VIvbro/fYpjQY24QiS/HC8Qnb62x6xeycl0QxRVHSbtfzTj1X67bnIdj4QhdeH
-         nwSw==
+        bh=EKy6eSpRty5bSmZbwR30NkKAGzsTESRLoXrAS0NLKzs=;
+        b=SHiuDwK39cZpUPhp4hdoHOuGGDuRvdgVruquA5OhzT20BoTxNAsr9v4IssAUSm++Wu
+         Gdigd5fbbNiaLy/ry4ApwbLMVFLE/K8FS9T8hHmeF+HMjwCwC1pX53Mm0BNeat42pW6A
+         vudqk7VvICGdH7ZzkH/77tQzcGfMs8BokGif9s1iaTr4/OXPToVBkScJWmDX17YliXvx
+         qqE/rODtG05P0dv7CE4/9UcCl0G27AKyydISoJgw84bjphFaaOWXGCFldHhaDhA0vXjv
+         6uLVLqt6EaTZd1uB/NSBl+SDtBiFuBudKFH8Sf5XHxGzWkbtxux1it75UPI4B3F4MoBR
+         bzIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=2eJKl2P+mphx8MXuY5eZ3j0r297zj+fSj+T5WKlAy0E=;
-        b=G8vuUnDZ7t50WAS9Vr23oynUfBpADnt8mxFidkRFZ3cKyhCbTvHd1Bl9XLVDFXJVni
-         ZDO3Dmm/rWsg7Yfh+InHTeEjA/b3zMWR0lRx6ZWeTeLyX1sK3UdGzQDTEqCzHmo0WtC4
-         AnMtIRp9xgmtGdHI1VhhJpepMGxHpZ0sUYbWFjC1NVlrKrmokOnEal/6IIgThFTCDPQx
-         Oju1Gb9H9GcsKmAiT49Ty5Al0BJ6Z/GByCtYQ+CF+wUUv9ECo9WzCPkotqw2NScQPB9k
-         36IaO1Og24qbLX9IKBKaeoOhAjB6/JJojzs1rzQvwdjgOEKKEDqWLY/FfLSa81PLqer8
-         sjhg==
-X-Gm-Message-State: AOAM531sS7H4HhOTFKH8KAgwEusRxlpgdQDuDcTQ5GVK2pgPjxEFxAq0
-        iy3G2ctgVQGoAg5gDqvLQ85h8/yLJqcvzQdlllU=
-X-Google-Smtp-Source: ABdhPJxkrzfmdWRBTsfApsBgU0/vtdyh9mzsMw1+qzCVhW8+YL7dn0iZkK/RRt+cwJ1LZa5E4YW9O+Nm9AJq6lZMkTQ=
+        bh=EKy6eSpRty5bSmZbwR30NkKAGzsTESRLoXrAS0NLKzs=;
+        b=auNoJNVAaoc16cmIf3Pz8rxSwzy/vwHBZ06hlxUiAUInavhlxSIeL3iu13tdSsh3Lp
+         AETmHDwdPNugvnDPugUXhmY59JEZGXSa3xbQUswodUgMqs+2stKwRw59YwT8dK5lE4zr
+         8l7BHuUEY7TAkmYYeos8ZQMZmG8yK2RNB9KMPtrZhLma9I+QPDmI3vjs7Z6xywNkq7Ru
+         EyiCNC2HQHESYdyr5i91aXk8PuhjWgbmA+88dsdBSLo7ngKWt9Jc3AgzoeiEWpDjM8uy
+         zSLPk/3ZF+JrHJIY0YTtXQnMmuvC422YST7qkSNdN4cX10eJ3TZEMoi6Nu2FZcURSF3B
+         8G8g==
+X-Gm-Message-State: AOAM531hwX5qzyvp5oNV/yNlFiTBKdLjWD9rlRnHto71gXcozq/0mw/G
+        tNFPGP5B2L9U5kW/+Qu5Hd80TrtiXnRNDoese/M=
+X-Google-Smtp-Source: ABdhPJzHeOXxkC8OlUHUZt0DqSgHN9t2rhpi+pE22x1dKho2TmMlfck6McMlcAxQskeb4L29PcbGG9gfenN7WPTbeOU=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e9a3:260d:763b:67dc])
- (user=samitolvanen job=sendgmr) by 2002:a0c:ea4b:: with SMTP id
- u11mr129682qvp.43.1616531996172; Tue, 23 Mar 2021 13:39:56 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 13:39:33 -0700
+ (user=samitolvanen job=sendgmr) by 2002:ad4:5887:: with SMTP id
+ dz7mr198051qvb.12.1616531998043; Tue, 23 Mar 2021 13:39:58 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 13:39:34 -0700
 In-Reply-To: <20210323203946.2159693-1-samitolvanen@google.com>
-Message-Id: <20210323203946.2159693-5-samitolvanen@google.com>
+Message-Id: <20210323203946.2159693-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210323203946.2159693-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.291.g576ba9dcdaf-goog
-Subject: [PATCH v3 04/17] module: ensure __cfi_check alignment
+Subject: [PATCH v3 05/17] workqueue: use WARN_ON_FUNCTION_MISMATCH
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -70,63 +70,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CONFIG_CFI_CLANG_SHADOW assumes the __cfi_check() function is page
-aligned and at the beginning of the .text section. While Clang would
-normally align the function correctly, it fails to do so for modules
-with no executable code.
+With CONFIG_CFI_CLANG, a callback function passed to
+__queue_delayed_work from a module points to a jump table entry
+defined in the module instead of the one used in the core kernel,
+which breaks function address equality in this check:
 
-This change ensures the correct __cfi_check() location and
-alignment. It also discards the .eh_frame section, which Clang can
-generate with certain sanitizers, such as CFI.
+  WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=46293
+Use WARN_ON_FUNCTION_MISMATCH() instead to disable the warning
+when CFI and modules are both enabled.
+
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- scripts/module.lds.S | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ kernel/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/module.lds.S b/scripts/module.lds.S
-index 168cd27e6122..2ba9e5ce71df 100644
---- a/scripts/module.lds.S
-+++ b/scripts/module.lds.S
-@@ -3,10 +3,21 @@
-  * Archs are free to supply their own linker scripts.  ld will
-  * combine them automatically.
-  */
-+#include <asm/page.h>
-+
-+#ifdef CONFIG_CFI_CLANG
-+# define ALIGN_CFI 		ALIGN(PAGE_SIZE)
-+# define SANITIZER_DISCARDS	*(.eh_frame)
-+#else
-+# define ALIGN_CFI
-+# define SANITIZER_DISCARDS
-+#endif
-+
- SECTIONS {
- 	/DISCARD/ : {
- 		*(.discard)
- 		*(.discard.*)
-+		SANITIZER_DISCARDS
- 	}
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 0d150da252e8..03fe07d2f39f 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1630,7 +1630,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
+ 	struct work_struct *work = &dwork->work;
  
- 	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
-@@ -40,7 +51,14 @@ SECTIONS {
- 		*(.rodata..L*)
- 	}
+ 	WARN_ON_ONCE(!wq);
+-	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
++	WARN_ON_FUNCTION_MISMATCH(timer->function, delayed_work_timer_fn);
+ 	WARN_ON_ONCE(timer_pending(timer));
+ 	WARN_ON_ONCE(!list_empty(&work->entry));
  
--	.text : { *(.text .text.[0-9a-zA-Z_]*) }
-+	/*
-+	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
-+	 * of the .text section, and is aligned to PAGE_SIZE.
-+	 */
-+	.text : ALIGN_CFI {
-+		*(.text.__cfi_check)
-+		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
-+	}
- }
- 
- /* bring in arch-specific sections */
 -- 
 2.31.0.291.g576ba9dcdaf-goog
 
