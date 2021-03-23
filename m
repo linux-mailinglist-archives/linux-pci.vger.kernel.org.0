@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9337534565F
+	by mail.lfdr.de (Postfix) with ESMTP id A22F3345660
 	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 04:40:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbhCWDkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229590AbhCWDkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 22 Mar 2021 23:40:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54001 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229590AbhCWDjo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 23:39:44 -0400
-X-UUID: 0490d67554ca458f8f5784dbed14f12b-20210323
-X-UUID: 0490d67554ca458f8f5784dbed14f12b-20210323
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+Received: from mailgw02.mediatek.com ([210.61.82.184]:50498 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229622AbhCWDju (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Mar 2021 23:39:50 -0400
+X-UUID: f0dccd5691c44faf959b4ac87e38451a-20210323
+X-UUID: f0dccd5691c44faf959b4ac87e38451a-20210323
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
         (envelope-from <chuanjia.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 606109520; Tue, 23 Mar 2021 11:39:38 +0800
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 2054289094; Tue, 23 Mar 2021 11:39:47 +0800
 Received: from mtkcas10.mediatek.inc (172.21.101.39) by
  mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 23 Mar 2021 11:39:36 +0800
+ 15.0.1497.2; Tue, 23 Mar 2021 11:39:45 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 23 Mar 2021 11:39:35 +0800
+ Transport; Tue, 23 Mar 2021 11:39:45 +0800
 From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
 To:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
         <matthias.bgg@gmail.com>
@@ -32,149 +32,349 @@ CC:     <ryder.lee@mediatek.com>, <lorenzo.pieralisi@arm.com>,
         <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
         <frank-w@public-files.de>
-Subject: [PATCH v8 2/4] PCI: mediatek: Add new method to get shared pcie-cfg base address and parse node
-Date:   Tue, 23 Mar 2021 11:38:31 +0800
-Message-ID: <20210323033833.14954-3-chuanjia.liu@mediatek.com>
+Subject: [PATCH v8 3/4] arm64: dts: mediatek: Split PCIe node for MT2712 and MT7622
+Date:   Tue, 23 Mar 2021 11:38:32 +0800
+Message-ID: <20210323033833.14954-4-chuanjia.liu@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20210323033833.14954-1-chuanjia.liu@mediatek.com>
 References: <20210323033833.14954-1-chuanjia.liu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 2E36C7F3901E0ECAF56480B004CEDB4ED3374B43F66849B606AAFD2AC10FA9D32000:8
+X-TM-SNTS-SMTP: C8E5C0D01BF44F732BE95FB8E01224B286F8E7D3F7905DBE0F630ECBB68424C72000:8
 X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For the new dts format, add a new method to get
-shared pcie-cfg base address and parse node.
+There are two independent PCIe controllers in MT2712 and MT7622
+platform. Each of them should contain an independent MSI domain.
+
+In old dts architecture, MSI domain will be inherited from the root
+bridge, and all of the devices will share the same MSI domain.
+Hence that, the PCIe devices will not work properly if the irq number
+which required is more than 32.
+
+Split the PCIe node for MT2712 and MT7622 platform to comply with
+the hardware design and fix MSI issue.
 
 Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
 Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 50 +++++++++++++++++++-------
- 1 file changed, 38 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi     |  97 +++++++--------
+ .../dts/mediatek/mt7622-bananapi-bpi-r64.dts  |  16 ++-
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts  |   6 +-
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      | 112 ++++++++++--------
+ 4 files changed, 118 insertions(+), 113 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 23548b517e4b..c40d933d2c06 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -14,6 +14,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/msi.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-@@ -23,6 +24,7 @@
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
- #include <linux/reset.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index db17d0a4ed57..0e20e13b0942 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -915,64 +915,67 @@
+ 		};
+ 	};
  
- #include "../pci.h"
-@@ -205,6 +207,7 @@ struct mtk_pcie_port {
-  * struct mtk_pcie - PCIe host information
-  * @dev: pointer to PCIe device
-  * @base: IO mapped register base
-+ * @cfg: IO mapped register map for PCIe config
-  * @free_ck: free-run reference clock
-  * @mem: non-prefetchable memory resource
-  * @ports: pointer to PCIe port information
-@@ -213,6 +216,7 @@ struct mtk_pcie_port {
- struct mtk_pcie {
- 	struct device *dev;
- 	void __iomem *base;
-+	struct regmap *cfg;
- 	struct clk *free_ck;
+-	pcie: pcie@11700000 {
++	pcie1: pcie@112ff000 {
+ 		compatible = "mediatek,mt2712-pcie";
+ 		device_type = "pci";
+-		reg = <0 0x11700000 0 0x1000>,
+-		      <0 0x112ff000 0 0x1000>;
+-		reg-names = "port0", "port1";
++		reg = <0 0x112ff000 0 0x1000>;
++		reg-names = "port1";
++		linux,pci-domain = <1>;
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+-		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
+-			 <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
+-			 <&pericfg CLK_PERI_PCIE0>,
++		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "pcie_irq";
++		clocks = <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
+ 			 <&pericfg CLK_PERI_PCIE1>;
+-		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1";
+-		phys = <&u3port0 PHY_TYPE_PCIE>, <&u3port1 PHY_TYPE_PCIE>;
+-		phy-names = "pcie-phy0", "pcie-phy1";
++		clock-names = "sys_ck1", "ahb_ck1";
++		phys = <&u3port1 PHY_TYPE_PCIE>;
++		phy-names = "pcie-phy1";
+ 		bus-range = <0x00 0xff>;
+-		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
++		ranges = <0x82000000 0 0x11400000  0x0 0x11400000  0 0x300000>;
++		status = "disabled";
  
- 	struct list_head ports;
-@@ -648,7 +652,11 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
- 		return err;
- 	}
+-		pcie0: pcie@0,0 {
+-			device_type = "pci";
+-			status = "disabled";
+-			reg = <0x0000 0 0 0 0>;
+-			#address-cells = <3>;
+-			#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie_intc1 0>,
++				<0 0 0 2 &pcie_intc1 1>,
++				<0 0 0 3 &pcie_intc1 2>,
++				<0 0 0 4 &pcie_intc1 3>;
++		pcie_intc1: interrupt-controller {
++			interrupt-controller;
++			#address-cells = <0>;
+ 			#interrupt-cells = <1>;
+-			ranges;
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+-					<0 0 0 2 &pcie_intc0 1>,
+-					<0 0 0 3 &pcie_intc0 2>,
+-					<0 0 0 4 &pcie_intc0 3>;
+-			pcie_intc0: interrupt-controller {
+-				interrupt-controller;
+-				#address-cells = <0>;
+-				#interrupt-cells = <1>;
+-			};
+ 		};
++	};
  
--	port->irq = platform_get_irq(pdev, port->slot);
-+	if (of_find_property(dev->of_node, "interrupt-names", NULL))
-+		port->irq = platform_get_irq_byname(pdev, "pcie_irq");
-+	else
-+		port->irq = platform_get_irq(pdev, port->slot);
+-		pcie1: pcie@1,0 {
+-			device_type = "pci";
+-			status = "disabled";
+-			reg = <0x0800 0 0 0 0>;
+-			#address-cells = <3>;
+-			#size-cells = <2>;
++	pcie0: pcie@11700000 {
++		compatible = "mediatek,mt2712-pcie";
++		device_type = "pci";
++		reg = <0 0x11700000 0 0x1000>;
++		reg-names = "port0";
++		linux,pci-domain = <0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "pcie_irq";
++		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
++			 <&pericfg CLK_PERI_PCIE0>;
++		clock-names = "sys_ck0", "ahb_ck0";
++		phys = <&u3port0 PHY_TYPE_PCIE>;
++		phy-names = "pcie-phy0";
++		bus-range = <0x00 0xff>;
++		ranges = <0x82000000 0 0x20000000 0x0 0x20000000 0 0x10000000>;
++		status = "disabled";
 +
- 	if (port->irq < 0)
- 		return port->irq;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++				<0 0 0 2 &pcie_intc0 1>,
++				<0 0 0 3 &pcie_intc0 2>,
++				<0 0 0 4 &pcie_intc0 3>;
++		pcie_intc0: interrupt-controller {
++			interrupt-controller;
++			#address-cells = <0>;
+ 			#interrupt-cells = <1>;
+-			ranges;
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+-					<0 0 0 2 &pcie_intc1 1>,
+-					<0 0 0 3 &pcie_intc1 2>,
+-					<0 0 0 4 &pcie_intc1 3>;
+-			pcie_intc1: interrupt-controller {
+-				interrupt-controller;
+-				#address-cells = <0>;
+-				#interrupt-cells = <1>;
+-			};
+ 		};
+ 	};
  
-@@ -680,6 +688,10 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		val |= PCIE_CSR_LTSSM_EN(port->slot) |
- 		       PCIE_CSR_ASPM_L1_EN(port->slot);
- 		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-+	} else if (pcie->cfg) {
-+		val = PCIE_CSR_LTSSM_EN(port->slot) |
-+		      PCIE_CSR_ASPM_L1_EN(port->slot);
-+		regmap_update_bits(pcie->cfg, PCIE_SYS_CFG_V2, val, val);
- 	}
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+index 2f77dc40b9b8..2b9bf8dd14ec 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+@@ -257,18 +257,16 @@
+ 	};
+ };
  
- 	/* Assert all reset signals */
-@@ -983,6 +995,7 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 	struct device *dev = pcie->dev;
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct resource *regs;
-+	struct device_node *cfg_node;
- 	int err;
+-&pcie {
++&pcie0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pcie0_pins>, <&pcie1_pins>;
++	pinctrl-0 = <&pcie0_pins>;
+ 	status = "okay";
++};
  
- 	/* get shared registers, which are optional */
-@@ -995,6 +1008,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 		}
- 	}
- 
-+	cfg_node = of_find_compatible_node(NULL, NULL,
-+					   "mediatek,generic-pciecfg");
-+	if (cfg_node) {
-+		pcie->cfg = syscon_node_to_regmap(cfg_node);
-+		if (IS_ERR(pcie->cfg))
-+			return PTR_ERR(pcie->cfg);
-+	}
-+
- 	pcie->free_ck = devm_clk_get(dev, "free_ck");
- 	if (IS_ERR(pcie->free_ck)) {
- 		if (PTR_ERR(pcie->free_ck) == -EPROBE_DEFER)
-@@ -1027,20 +1048,25 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
- 	struct device *dev = pcie->dev;
- 	struct device_node *node = dev->of_node, *child;
- 	struct mtk_pcie_port *port, *tmp;
--	int err;
-+	int err, slot;
-+
-+	slot = of_get_pci_domain_nr(dev->of_node);
-+	if (slot < 0) {
-+		for_each_available_child_of_node(node, child) {
-+			err = of_pci_get_devfn(child);
-+			if (err < 0) {
-+				dev_err(dev, "failed to get devfn: %d\n", err);
-+				goto error_put_node;
-+			}
- 
--	for_each_available_child_of_node(node, child) {
--		int slot;
-+			slot = PCI_SLOT(err);
- 
--		err = of_pci_get_devfn(child);
--		if (err < 0) {
--			dev_err(dev, "failed to parse devfn: %d\n", err);
--			goto error_put_node;
-+			err = mtk_pcie_parse_port(pcie, child, slot);
-+			if (err)
-+				goto error_put_node;
- 		}
+-	pcie@0,0 {
+-		status = "okay";
+-	};
 -
--		slot = PCI_SLOT(err);
+-	pcie@1,0 {
+-		status = "okay";
+-	};
++&pcie1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_pins>;
++	status = "okay";
+ };
+ 
+ &pio {
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 08ad0ffb24df..182eba502522 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -234,14 +234,10 @@
+ 	};
+ };
+ 
+-&pcie {
++&pcie0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie0_pins>;
+ 	status = "okay";
 -
--		err = mtk_pcie_parse_port(pcie, child, slot);
-+	} else {
-+		err = mtk_pcie_parse_port(pcie, node, slot);
- 		if (err)
- 			goto error_put_node;
- 	}
+-	pcie@0,0 {
+-		status = "okay";
+-	};
+ };
+ 
+ &pio {
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index 7c6d871538a6..df83d531a0f4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -781,75 +781,83 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
+-	pcie: pcie@1a140000 {
++	pciecfg: pciecfg@1a140000 {
++		compatible = "mediatek,generic-pciecfg", "syscon";
++		reg = <0 0x1a140000 0 0x1000>;
++	};
++
++	pcie0: pcie@1a143000 {
+ 		compatible = "mediatek,mt7622-pcie";
+ 		device_type = "pci";
+-		reg = <0 0x1a140000 0 0x1000>,
+-		      <0 0x1a143000 0 0x1000>,
+-		      <0 0x1a145000 0 0x1000>;
+-		reg-names = "subsys", "port0", "port1";
++		reg = <0 0x1a143000 0 0x1000>;
++		reg-names = "port0";
++		linux,pci-domain = <0>;
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+-		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "pcie_irq";
+ 		clocks = <&pciesys CLK_PCIE_P0_MAC_EN>,
+-			 <&pciesys CLK_PCIE_P1_MAC_EN>,
+-			 <&pciesys CLK_PCIE_P0_AHB_EN>,
+ 			 <&pciesys CLK_PCIE_P0_AHB_EN>,
+ 			 <&pciesys CLK_PCIE_P0_AUX_EN>,
+-			 <&pciesys CLK_PCIE_P1_AUX_EN>,
+ 			 <&pciesys CLK_PCIE_P0_AXI_EN>,
+-			 <&pciesys CLK_PCIE_P1_AXI_EN>,
+ 			 <&pciesys CLK_PCIE_P0_OBFF_EN>,
+-			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
+-			 <&pciesys CLK_PCIE_P0_PIPE_EN>,
+-			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
+-		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1",
+-			      "aux_ck0", "aux_ck1", "axi_ck0", "axi_ck1",
+-			      "obff_ck0", "obff_ck1", "pipe_ck0", "pipe_ck1";
++			 <&pciesys CLK_PCIE_P0_PIPE_EN>;
++		clock-names = "sys_ck0", "ahb_ck0", "aux_ck0",
++			      "axi_ck0", "obff_ck0", "pipe_ck0";
++
+ 		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
+ 		bus-range = <0x00 0xff>;
+-		ranges = <0x82000000 0 0x20000000 0x0 0x20000000 0 0x10000000>;
++		ranges = <0x82000000 0 0x20000000 0x0 0x20000000 0 0x8000000>;
+ 		status = "disabled";
+ 
+-		pcie0: pcie@0,0 {
+-			reg = <0x0000 0 0 0 0>;
+-			#address-cells = <3>;
+-			#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++				<0 0 0 2 &pcie_intc0 1>,
++				<0 0 0 3 &pcie_intc0 2>,
++				<0 0 0 4 &pcie_intc0 3>;
++		pcie_intc0: interrupt-controller {
++			interrupt-controller;
++			#address-cells = <0>;
+ 			#interrupt-cells = <1>;
+-			ranges;
+-			status = "disabled";
+-
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+-					<0 0 0 2 &pcie_intc0 1>,
+-					<0 0 0 3 &pcie_intc0 2>,
+-					<0 0 0 4 &pcie_intc0 3>;
+-			pcie_intc0: interrupt-controller {
+-				interrupt-controller;
+-				#address-cells = <0>;
+-				#interrupt-cells = <1>;
+-			};
+ 		};
++	};
+ 
+-		pcie1: pcie@1,0 {
+-			reg = <0x0800 0 0 0 0>;
+-			#address-cells = <3>;
+-			#size-cells = <2>;
++	pcie1: pcie@1a145000 {
++		compatible = "mediatek,mt7622-pcie";
++		device_type = "pci";
++		reg = <0 0x1a145000 0 0x1000>;
++		reg-names = "port1";
++		linux,pci-domain = <1>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "pcie_irq";
++		clocks = <&pciesys CLK_PCIE_P1_MAC_EN>,
++			 /* designer has connect RC1 with p0_ahb clock */
++			 <&pciesys CLK_PCIE_P0_AHB_EN>,
++			 <&pciesys CLK_PCIE_P1_AUX_EN>,
++			 <&pciesys CLK_PCIE_P1_AXI_EN>,
++			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
++			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
++		clock-names = "sys_ck1", "ahb_ck1", "aux_ck1",
++			      "axi_ck1", "obff_ck1", "pipe_ck1";
++
++		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
++		bus-range = <0x00 0xff>;
++		ranges = <0x82000000 0 0x28000000 0x0 0x28000000 0 0x8000000>;
++		status = "disabled";
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie_intc1 0>,
++				<0 0 0 2 &pcie_intc1 1>,
++				<0 0 0 3 &pcie_intc1 2>,
++				<0 0 0 4 &pcie_intc1 3>;
++		pcie_intc1: interrupt-controller {
++			interrupt-controller;
++			#address-cells = <0>;
+ 			#interrupt-cells = <1>;
+-			ranges;
+-			status = "disabled";
+-
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+-					<0 0 0 2 &pcie_intc1 1>,
+-					<0 0 0 3 &pcie_intc1 2>,
+-					<0 0 0 4 &pcie_intc1 3>;
+-			pcie_intc1: interrupt-controller {
+-				interrupt-controller;
+-				#address-cells = <0>;
+-				#interrupt-cells = <1>;
+-			};
+ 		};
+ 	};
+ 
 -- 
 2.18.0
 
