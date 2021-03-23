@@ -2,187 +2,328 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C958346461
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 17:06:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BB8834646C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Mar 2021 17:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232902AbhCWQFy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 12:05:54 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36268 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232930AbhCWQFt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 12:05:49 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12NG5Voo061626;
-        Tue, 23 Mar 2021 11:05:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1616515531;
-        bh=K4fwQJg6ForgmFFqDP5hpVwKkfU//raomS14z9sDVDs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VlQNUlC4T4qbziL3cqSwVR78bDxHopSDUHyYWbLHoCL6RZs5quyDFcNsruukGC8ZX
-         KW7AUDqVb3XSpway/2V1EhOyU7U21vLleVZBzndJMXU3LFYNdV/gEPnrWHXLYpXi6h
-         BzIEuJ4s6zlKALTt8XkhdyKV/o34zjLcS3HJL3J4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12NG5VdQ049384
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Mar 2021 11:05:31 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 23
- Mar 2021 11:05:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 23 Mar 2021 11:05:09 -0500
-Received: from [10.250.232.230] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12NG55P4089384;
-        Tue, 23 Mar 2021 11:05:06 -0500
-Subject: Re: [PATCH RESEND] PCI: dwc: Fix MSI not work after resume
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-CC:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-References: <20210323151250.GA576016@bjorn-Precision-5520>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <310d1d4b-a4b5-37c6-6f59-c822acbe9b19@ti.com>
-Date:   Tue, 23 Mar 2021 21:34:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S232905AbhCWQG5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 12:06:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34529 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233080AbhCWQGb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 12:06:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616515591;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DCppzRt5yVFQRFuyWqBhrRYjU8pyziGBcX03eT5KikY=;
+        b=XRE7Y2sUeOgPC7Vm6dZPx95Jyrthn3+1WYdrQcHI70s+4/SgqAhdg+ukGQXdBQhE1XZwpi
+        ZZqlH2NRiz/URmlYyXaeLrJ3/vxXLFGWmL8/xA9l26AFRgJb6GZS39hQltUavNNVU1AMEt
+        15YJ4lfsuyuiBJHxB7E7wO37E4YeSHM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-7QUfYVdmOHSddyrvPAl3Lg-1; Tue, 23 Mar 2021 12:06:28 -0400
+X-MC-Unique: 7QUfYVdmOHSddyrvPAl3Lg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D827F801817;
+        Tue, 23 Mar 2021 16:06:26 +0000 (UTC)
+Received: from omen.home.shazbot.org (ovpn-112-120.phx2.redhat.com [10.3.112.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 650255D9C0;
+        Tue, 23 Mar 2021 16:06:26 +0000 (UTC)
+Date:   Tue, 23 Mar 2021 10:06:25 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     bhelgaas@google.com, pali@kernel.org, raphael.norwitz@nutanix.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <20210323100625.0021a943@omen.home.shazbot.org>
+In-Reply-To: <20210323153221.n2pwjixqen6hx26h@archlinux>
+References: <20210317190206.zrtzwgskxdogl7dz@pali>
+        <20210317131536.38f398b0@omen.home.shazbot.org>
+        <20210317192424.kpfybcrsen3ivr4f@pali>
+        <20210317133245.7d95909c@omen.home.shazbot.org>
+        <20210317194024.nkzrbbvi6utoznze@pali>
+        <20210317140020.4375ba76@omen.home.shazbot.org>
+        <20210317201346.v6t4rde6nzmt7fwr@pali>
+        <20210318143155.4vuf3izuzihiujaa@archlinux>
+        <20210323143419.syqf4dg7wcxorcmk@pali>
+        <20210323084438.37bfcc8e@omen.home.shazbot.org>
+        <20210323153221.n2pwjixqen6hx26h@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <20210323151250.GA576016@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, 23 Mar 2021 21:02:21 +0530
+Amey Narkhede <ameynarkhede03@gmail.com> wrote:
 
-On 23/03/21 8:42 pm, Bjorn Helgaas wrote:
-> [-cc Dilip (mail to him bounced)]
-> 
-> On Tue, Mar 23, 2021 at 11:01:15AM +0800, Jisheng Zhang wrote:
->> On Mon, 22 Mar 2021 20:24:41 -0500 Bjorn Helgaas wrote:
->>>
->>> [+cc Kishon, Richard, Lucas, Dilip]
->>>
->>> On Mon, Mar 01, 2021 at 11:10:31AM +0800, Jisheng Zhang wrote:
->>>> After we move dw_pcie_msi_init() into core -- dw_pcie_host_init(), the
->>>> MSI stops working after resume. Because dw_pcie_host_init() is only
->>>> called once during probe. To fix this issue, we move dw_pcie_msi_init()
->>>> to dw_pcie_setup_rc().  
->>>
->>> This patch looks fine, but I don't think the commit log tells the
->>> whole story.
->>>
->>> Prior to 59fbab1ae40e, it looks like the only dwc-based drivers with
->>> resume functions were dra7xx, imx6, intel-gw, and tegra [1].
->>>
->>> Only tegra called dw_pcie_msi_init() in the resume path, and I do
->>> think 59fbab1ae40e broke MSI after resume because it removed the
->>> dw_pcie_msi_init() call from tegra_pcie_enable_msi_interrupts().
->>>
->>> I'm not convinced this patch fixes it reliably, though.  The call
->>> chain looks like this:
->>>
->>>   tegra_pcie_dw_resume_noirq
->>>     tegra_pcie_dw_start_link
->>>       if (dw_pcie_wait_for_link(pci))
->>>         dw_pcie_setup_rc
->>>
->>> dw_pcie_wait_for_link() returns 0 if the link is up, so we only call
->>> dw_pcie_setup_rc() in the case where the link *didn't* come up.  If
->>> the link comes up nicely without retry, we won't call
->>> dw_pcie_setup_rc() and hence won't call dw_pcie_msi_init().
->>
->> The v1 version patch was sent before commit 275e88b06a (PCI: tegra: Fix host
->> link initialization"). At that time, the resume path looks like this:
->>
->> tegra_pcie_dw_resume_noirq
->>   tegra_pcie_dw_host_init
->>     tegra_pcie_prepare_host
->>       dw_pcie_setup_rc
->>
->> so after patch, dw_pcie_msi_init() will be called. But now it seems that
->> the tegra version needs one more fix for the resume.
->>
->> So could I sent a new patch to update the commit-msg a bit?
-> 
-> This patch only touches the dwc core, and the commit log says
-> generically that it fixes MSI after resume, so one could assume that
-> it applies to all dwc-based drivers.  But I don't think it's that
-> simple, so I'd like to know *which* drivers are fixed and which
-> commits are related.  I don't see how 59fbab1ae40e breaks anything
-> except tegra.
-> 
->>> Since then, exynos added a resume function.  My guess is MSI never
->>> worked after resume for dra7xx, exynos, imx6, and intel-gw because
->>> they don't call dw_pcie_msi_init() in their resume functions.
->>>
->>> This patch looks like it should fix MSI after resume for exynos, imx6,
->>> and intel-gw because they *do* call dw_pcie_setup_rc() from their
->>> resume functions [2], and after this patch, dw_pcie_msi_init() will be
->>> called from there.
->>>
->>> I suspect MSI after resume still doesn't work on dra7xx.
->>
->> I checked the dra7xx history, I'm afraid that the resume never works
->> from the beginning if the host lost power during suspend, I guess the
->> platform never power off the host but only the phy?
+> On 21/03/23 08:44AM, Alex Williamson wrote:
+> > On Tue, 23 Mar 2021 15:34:19 +0100
+> > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > =20
+> > > On Thursday 18 March 2021 20:01:55 Amey Narkhede wrote: =20
+> > > > On 21/03/17 09:13PM, Pali Roh=C3=A1r wrote: =20
+> > > > > On Wednesday 17 March 2021 14:00:20 Alex Williamson wrote: =20
+> > > > > > On Wed, 17 Mar 2021 20:40:24 +0100
+> > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > =20
+> > > > > > > On Wednesday 17 March 2021 13:32:45 Alex Williamson wrote: =20
+> > > > > > > > On Wed, 17 Mar 2021 20:24:24 +0100
+> > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > > > =20
+> > > > > > > > > On Wednesday 17 March 2021 13:15:36 Alex Williamson wrote=
+: =20
+> > > > > > > > > > On Wed, 17 Mar 2021 20:02:06 +0100
+> > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > > > > > =20
+> > > > > > > > > > > On Monday 15 March 2021 09:03:39 Alex Williamson wrot=
+e: =20
+> > > > > > > > > > > > On Mon, 15 Mar 2021 15:52:38 +0100
+> > > > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > > > > > > > =20
+> > > > > > > > > > > > > On Monday 15 March 2021 08:34:09 Alex Williamson =
+wrote: =20
+> > > > > > > > > > > > > > On Mon, 15 Mar 2021 14:52:26 +0100
+> > > > > > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > > > > > > > > > =20
+> > > > > > > > > > > > > > > On Monday 15 March 2021 19:13:23 Amey Narkhed=
+e wrote: =20
+> > > > > > > > > > > > > > > > slot reset (pci_dev_reset_slot_function) an=
+d secondary bus
+> > > > > > > > > > > > > > > > reset(pci_parent_bus_reset) which I think a=
+re hot reset and
+> > > > > > > > > > > > > > > > warm reset respectively. =20
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > No. PCI secondary bus reset =3D PCIe Hot Rese=
+t. Slot reset is just another
+> > > > > > > > > > > > > > > type of reset, which is currently implemented=
+ only for PCIe hot plug
+> > > > > > > > > > > > > > > bridges and for PowerPC PowerNV platform and =
+it just call PCI secondary
+> > > > > > > > > > > > > > > bus reset with some other hook. PCIe Warm Res=
+et does not have API in
+> > > > > > > > > > > > > > > kernel and therefore drivers do not export th=
+is type of reset via any
+> > > > > > > > > > > > > > > kernel function (yet). =20
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Warm reset is beyond the scope of this series, =
+but could be implemented
+> > > > > > > > > > > > > > in a compatible way to fit within the pci_reset=
+_fn_methods[] array
+> > > > > > > > > > > > > > defined here. =20
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Ok!
+> > > > > > > > > > > > > =20
+> > > > > > > > > > > > > > Note that with this series the resets available=
+ through
+> > > > > > > > > > > > > > pci_reset_function() and the per device reset a=
+ttribute is sysfs remain
+> > > > > > > > > > > > > > exactly the same as they are currently.  The bu=
+s and slot reset
+> > > > > > > > > > > > > > methods used here are limited to devices where =
+only a single function is
+> > > > > > > > > > > > > > affected by the reset, therefore it is not like=
+ the patch you proposed
+> > > > > > > > > > > > > > which performed a reset irrespective of the dow=
+nstream devices.  This
+> > > > > > > > > > > > > > series only enables selection of the existing m=
+ethods.  Thanks,
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Alex
+> > > > > > > > > > > > > > =20
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > But with this patch series, there is still an iss=
+ue with PCI secondary
+> > > > > > > > > > > > > bus reset mechanism as exported sysfs attribute d=
+oes not do that
+> > > > > > > > > > > > > remove-reset-rescan procedure. As discussed in ot=
+her thread, this reset
+> > > > > > > > > > > > > let device in unconfigured / broken state. =20
+> > > > > > > > > > > >
+> > > > > > > > > > > > No, there's not:
+> > > > > > > > > > > >
+> > > > > > > > > > > > int pci_reset_function(struct pci_dev *dev)
+> > > > > > > > > > > > {
+> > > > > > > > > > > >         int rc;
+> > > > > > > > > > > >
+> > > > > > > > > > > >         if (!dev->reset_fn)
+> > > > > > > > > > > >                 return -ENOTTY;
+> > > > > > > > > > > >
+> > > > > > > > > > > >         pci_dev_lock(dev); =20
+> > > > > > > > > > > > >>>     pci_dev_save_and_disable(dev); =20
+> > > > > > > > > > > >
+> > > > > > > > > > > >         rc =3D __pci_reset_function_locked(dev);
+> > > > > > > > > > > > =20
+> > > > > > > > > > > > >>>     pci_dev_restore(dev); =20
+> > > > > > > > > > > >         pci_dev_unlock(dev);
+> > > > > > > > > > > >
+> > > > > > > > > > > >         return rc;
+> > > > > > > > > > > > }
+> > > > > > > > > > > >
+> > > > > > > > > > > > The remove/re-scan was discussed primarily because =
+your patch performed
+> > > > > > > > > > > > a bus reset regardless of what devices were affecte=
+d by that reset and
+> > > > > > > > > > > > it's difficult to manage the scope where multiple d=
+evices are affected.
+> > > > > > > > > > > > Here, the bus and slot reset functions will fail un=
+less the scope is
+> > > > > > > > > > > > limited to the single device triggering this reset.=
+  Thanks,
+> > > > > > > > > > > >
+> > > > > > > > > > > > Alex
+> > > > > > > > > > > > =20
+> > > > > > > > > > >
+> > > > > > > > > > > I was thinking a bit more about it and I'm really sur=
+e how it would
+> > > > > > > > > > > behave with hotplugging PCIe bridge.
+> > > > > > > > > > >
+> > > > > > > > > > > On aardvark PCIe controller I have already tested tha=
+t secondary bus
+> > > > > > > > > > > reset bit is triggering Hot Reset event and then also=
+ Link Down event.
+> > > > > > > > > > > These events are not handled by aardvark driver yet (=
+needs to
+> > > > > > > > > > > implemented into kernel's emulated root bridge code).
+> > > > > > > > > > >
+> > > > > > > > > > > But I'm not sure how it would behave on real HW PCIe =
+hotplugging bridge.
+> > > > > > > > > > > Kernel has already code which removes PCIe device if =
+it changes presence
+> > > > > > > > > > > bit (and inform via interrupt). And Link Down event t=
+riggers this
+> > > > > > > > > > > change. =20
+> > > > > > > > > >
+> > > > > > > > > > This is the difference between slot and bus resets, the=
+ slot reset is
+> > > > > > > > > > implemented by the hotplug controller and disables pres=
+ence detection
+> > > > > > > > > > around the bus reset.  Thanks, =20
+> > > > > > > > >
+> > > > > > > > > Yes, but I'm talking about bus reset, not about slot rese=
+t.
+> > > > > > > > >
+> > > > > > > > > I mean: to use bus reset via sysfs on hardware which supp=
+orts slots and
+> > > > > > > > > hotplugging.
+> > > > > > > > >
+> > > > > > > > > And if I'm reading code correctly, this combination is al=
+lowed, right?
+> > > > > > > > > Via these new patches it is possible to disable slot rese=
+t and enable
+> > > > > > > > > bus reset. =20
+> > > > > > > >
+> > > > > > > > That's true, a slot reset is simply a bus reset wrapped aro=
+und code
+> > > > > > > > that prevents the device from getting ejected. =20
+> > > > > > >
+> > > > > > > Yes, this makes slot reset "safe". But bus reset is "unsafe".
+> > > > > > > =20
+> > > > > > > > Maybe it would make
+> > > > > > > > sense to combine the two as far as this interface is concer=
+ned, ie. a
+> > > > > > > > single "bus" reset method that will always use slot reset w=
+hen
+> > > > > > > > available.  Thanks, =20
+> > > > > > >
+> > > > > > > That should work when slot reset is available.
+> > > > > > >
+> > > > > > > Other option is that mentioned remove-reset-rescan procedure.=
+ =20
+> > > > > >
+> > > > > > That's not something we can introduce to the pci_reset_function=
+() path
+> > > > > > without a fair bit of collateral in using it through vfio-pci.
+> > > > > > =20
+> > > > > > > But quick search in drivers/pci/hotplug/ results that not all=
+ hotplug
+> > > > > > > drivers implement reset_slot method.
+> > > > > > >
+> > > > > > > So there is a possible issue with hotplug driver which may ej=
+ect device
+> > > > > > > during bus reset (because e.g. slot reset is not implemented)=
+? =20
+> > > > > >
+> > > > > > People aren't reporting it, so maybe those controllers aren't b=
+eing
+> > > > > > used for this use case.  Or maybe introducing this patch will m=
+ake
+> > > > > > these reset methods more readily accessible for testing.  We ca=
+n fix or
+> > > > > > blacklist those controllers for bus reset when reports come in.=
+  Thanks, =20
+> > > > >
+> > > > > Ok! I do not know neither if those controllers are used, but look=
+s like
+> > > > > that there are still changes in hotplug code.
+> > > > >
+> > > > > So I guess with these patches people can test it and report issue=
+s when
+> > > > > such thing happen. =20
+> > > > So after a bit research as I understood we need to group slot
+> > > > and bus reset together in a single category of reset methods and
+> > > > then implicitly use slot reset if it is available when bus reset is
+> > > > enabled by the user.
+> > > > Is that right? =20
+> > >
+> > > Yes, I understand it in same way. Just I do not know which name to
+> > > choose for this reset category. In PCI spec it is called Secondary Bus
+> > > Reset (as it resets whole bus with all devices; but we allow this res=
+et
+> > > in this patch series only if on the bus is connected exactly one devi=
+ce).
+> > > In PCIe spec it is called Hot Reset. And if kernel detects Slot suppo=
+rt
+> > > then kernel currently calls it Slot reset. But it is still same thing.
+> > > Any opinion? I think that we could call it Hot Reset as this patch
+> > > series exports it only for single device (so calling it _bus_ is not =
+the
+> > > best match). =20
+> >
+> > A similar abstraction where our scope is not limited to a single
+> > function calls this a bus reset:
+> >
+> > int pci_reset_bus(struct pci_dev *pdev)
+> > {
+> >         return (!pci_probe_reset_slot(pdev->slot)) ?
+> >             __pci_reset_slot(pdev->slot) : __pci_reset_bus(pdev->bus);
+> > }
+> >
+> > Thanks,
+> > Alex
+> > =20
+> I was going to use similar function
+>=20
+> int pci_bus_reset(struct pci_dev *dev, int probe)
+> {
+>        return pci_dev_reset_slot_function(dev, probe) ?
+>                pci_parent_bus_reset(dev, probe) : 0;
+>=20
+> }
 
-Suspend on dra7xx disabled clocks and powered off phy (at-least while
-suspend/resume hooks were merged) and resume enabled clocks and phy.
-However suspend/resume is broken in dra7xx system and is not validated.
-I'll send a patch to remove the suspend/resume hooks in dra7xx.
+I think via the sysfs attribute we can simply call this "bus" reset,
+but internally having both pci_reset_bus() and pci_bus_reset() would be
+really confusing.  We're doing the same thing as pci_bus_reset() but
+with a different scope, so I'd probably suggest
+pci_bus_reset_function().
 
-Thanks
-Kishon
+Also, the above ternary form isn't true to the original, only -ENOTTY
+allows fall-through, so something more like:
 
-> 
-> Sounds like that would make sense.
-> 
->>> [1] git grep -A20 -e "static.*resume_noirq" 59fbab1ae40e^:drivers/pci/controller/dwc
->>> [2] git grep -A20 -e "static.*resume_noirq" drivers/pci/controller/dwc
->>>
->>>> Fixes: 59fbab1ae40e ("PCI: dwc: Move dw_pcie_msi_init() into core")
->>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
->>>> ---
->>>> Since v1:
->>>>  - collect Reviewed-by tag
->>>>
->>>>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> index 7e55b2b66182..e6c274f4485c 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> @@ -400,7 +400,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>       }
->>>>
->>>>       dw_pcie_setup_rc(pp);
->>>> -     dw_pcie_msi_init(pp);
->>>>
->>>>       if (!dw_pcie_link_up(pci) && pci->ops && pci->ops->start_link) {
->>>>               ret = pci->ops->start_link(pci);
->>>> @@ -551,6 +550,8 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>>>               }
->>>>       }
->>>>
->>>> +     dw_pcie_msi_init(pp);
->>>> +
->>>>       /* Setup RC BARs */
->>>>       dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
->>>>       dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
->>>> --
->>>> 2.30.1
->>>>  
->>
+int pci_reset_bus_function(struct pci_dev *dev, int probe)
+{
+	int rc =3D pci_dev_reset_slot_function(dev, probe);
+
+	return (rc =3D=3D -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
+}
+
+Thanks,
+Alex
+
