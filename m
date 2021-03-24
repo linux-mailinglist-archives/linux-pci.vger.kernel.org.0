@@ -2,254 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20860347A07
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 14:57:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E102347AE4
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 15:38:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235696AbhCXN4h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Mar 2021 09:56:37 -0400
-Received: from mail-eopbgr770052.outbound.protection.outlook.com ([40.107.77.52]:45554
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235793AbhCXN4T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Mar 2021 09:56:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UllG1U6PCB15oD7uRc49V7sBJMcZQxQiUU+6W6D/N1M/pKg3P+eRfzgmkiZ9G04MbqeXpNdicmdQtaTx+L//trkTwxsnT4TFohEXNwChw5/9tmvxja074PK10V1aSPAvaGH2o4RHEWze813i44+JTfvc86UtibRWpTWFhaPByh+2zKRFxS99+PVEtceBZYUImWvwDHpIPoTj67TfQBX1lXWFsdQlba8FuejzWXYDtW9Gai5ToRFrdoCBruYiepXM6D42Exd1q+UNz9LvybJ30CZk+x5K30fS6YA9jnWd8vRmaPwPGdwfAdHfkxT0C3182pAjsQDTbemPoatWSysz7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ma9VBPHSJAXFz8V/7f6vlUdnTsmXhusqfeS8VBf/+F8=;
- b=WTFegcHr7dmqi5LZrw5wdfqdRlAd/7+gOhWykokZ9ZuQPNSJNTSiXxfmSUhKL78fEoIEJfSFdmHHtpJ1FCYfX8K6hU4jcWw9aIR/4Atx2ts7YvY3HscIVA1zvEHphTeIfOi2ROhON/jlr+lnnAtstu8GltyX+UEu3E5BUAq1CyLJBjLJacmZA0HeCw02tPey8LsDoNydgSaHOytUkiw5Vciujpa8YLflARwYLmpwpqkeqe/QHPyCjbe3w1CwOCdZga4iKlmU+ippXFe5RaucmkhmdK0v9FJDM/JsuALNgvSl6oys7QfSWHSQN2VDFm7Yxf54rflhasx7CaLVIExDKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ma9VBPHSJAXFz8V/7f6vlUdnTsmXhusqfeS8VBf/+F8=;
- b=mPVPVpnt242CMk7u5TsK81fEABamInPBxZM9ujWOaGT1KzXriaZsyHwirC7i5b9Tggcx7IYYwr4/R8nM1iQhy7KTxaCipCRBSquUa1FB5sFYeCar5mt79RAEHkGHAkFmGLfiqeNoX7RUIKbvlmzqfrICs3T5HP6kWwRe6fT0r8A=
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
- by BYAPR02MB5429.namprd02.prod.outlook.com (2603:10b6:a03:99::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Wed, 24 Mar
- 2021 13:56:16 +0000
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::2418:b7d2:cbb:27f]) by BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::2418:b7d2:cbb:27f%5]) with mapi id 15.20.3955.027; Wed, 24 Mar 2021
- 13:56:16 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michals@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>
-Subject: RE: [PATCH v2 05/15] PCI: xilinx: Convert to MSI domains
-Thread-Topic: [PATCH v2 05/15] PCI: xilinx: Convert to MSI domains
-Thread-Index: AQHXH0vIUXC892kDXkW3zUak9HM8+aqTE3EQgAANhwCAAArBcA==
-Date:   Wed, 24 Mar 2021 13:56:16 +0000
-Message-ID: <BYAPR02MB5559590C1395C15205582976A5639@BYAPR02MB5559.namprd02.prod.outlook.com>
-References: <20210322184614.802565-1-maz@kernel.org>
-        <20210322184614.802565-6-maz@kernel.org>
-        <BYAPR02MB5559A0B0DA88866EDC7BDFE5A5639@BYAPR02MB5559.namprd02.prod.outlook.com>
- <877dlwk805.wl-maz@kernel.org>
-In-Reply-To: <877dlwk805.wl-maz@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a388b3a0-3cba-402d-98ce-08d8eecc983e
-x-ms-traffictypediagnostic: BYAPR02MB5429:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB5429BAB4DD62B44DA18CCE72A5639@BYAPR02MB5429.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WdJg/UkTD7+8URxl0VsYK0Y03V+knyrmOmTNRONz/qBAgPabt+aY3KrUrw0BNkxNOaEUeZzHKjjRQaVpd7x2uOcptVipZQI8/zraYxtbXNzJu5tygid98dReUEkSHk5N/pG61jKXaLdfGvIEM6vECRLGgtR9TvXbVxCV+w2NUGxIxzPp7v5boWC2lujQwK+fy5U/EZdyQ7HrX0jE/oGVy/SkhpqTYBzL7c602j0uqOmTzONt+QN3h2BNxIESvSEIT0OGYUUgj2BYu8xtSTVC5BCjljvpA9hW7pusiAWfclTR4jLzHbHcG3fl+e2or5n19UD4qp9Blgspry4mBRGBMZadW3r7+2ze6JZeP9vtXBGc3c/s3QTmRYoo+ngW8kgsrsgYiJPgYVx74ghb7JmXQi+45d8E2KIeW47N/QZU7rWmDSyzOCpBOJ4m/uYc+6MONSsgBtyDO6dln8PmxtZhu6Z/1RK5/Rl7K+Serp1/fvDIAztzb5nXO3KsnN+OdjtfILl8g1SMVmwrEmqo6wwNX64PyLDQCM+6ZpG2pK3S8rSnnA9MpDLFJeAio45gp1vHOknWw+vHCBPiFerdEGna4gQsN0jsoQhTVHp37KGAIfiYS2WuzHpt8wTmbl53vAiSt1IVYT4HR6K0BVqQw6OHyWJZND2GOkcVv2k2J6P3Brw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(39860400002)(346002)(136003)(396003)(6916009)(4326008)(478600001)(66946007)(64756008)(76116006)(54906003)(66446008)(7696005)(38100700001)(8936002)(86362001)(66556008)(52536014)(5660300002)(55016002)(2906002)(83380400001)(71200400001)(316002)(33656002)(9686003)(186003)(8676002)(7416002)(66476007)(6506007)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?CwCz9iBx19ly093Y32ZCmxPnp5bUFISqk6soD9jZRlhaMCE0dTKDnc9F7qyr?=
- =?us-ascii?Q?4NwH72Xshat9crKQVTFWqTtX5Ugfy19hmM5Zs0YrPzahML32G1GOIRPp4Jmo?=
- =?us-ascii?Q?fCUSPkYTxg31hFohiG92aPo5nE/Jp5m23KJyxLH9RP+0dSetzpigSi66Bdbl?=
- =?us-ascii?Q?dzfxSI5fVtdgKJiQHYKPoHaraX1SJ4uKIYqdqM8FQmhPxQMxqap+S2hasJ4l?=
- =?us-ascii?Q?bMCDWvaGnKDvjxX3MWt6kD79N31Q71nXAUMJDFzpAAYp8JjybPkqnNqUAbx0?=
- =?us-ascii?Q?58RW8pkV7MgTe01CtgZJiK96acbymmBeoWaNDk6PekCLu2WsS+ZDPEb5zcJR?=
- =?us-ascii?Q?B7XyIixW+Ef8xd+XDJojVczdD/TiXNOT9almZAS3SSI0wmIw/YwYVqOjoNZw?=
- =?us-ascii?Q?0bttGHFvdP90Tt5cq3eaKPeZYKoWgrTdAdlNBdypKwIUBcqhJiKPAf3XAggN?=
- =?us-ascii?Q?k1TGDT/O8YJPFeQWIq7Wgpn+li77RGB6ohujsirASHxHRbkCLAcrwZK7Mamz?=
- =?us-ascii?Q?V3SQ/DohD2hqvyh/B+Bm3pgZWj6KohOl9oFgTrQ2juX0XmSxbSErEJ8BYdzL?=
- =?us-ascii?Q?eI0S/nNu/xLx+2VVzbyO2ycps896RKZ8gu4IQpMFQO+SSftGL3qaqCn1Qa/i?=
- =?us-ascii?Q?kNPBxIJtBTJKCgphQTbE74qwzzcI2Sj74D4j+GnPNq0jJfnHTwlvV+UxylZL?=
- =?us-ascii?Q?y8kxO1aTEpaklB6YJ+xdo1czdRa2W+rdz4sQarHCYjaOnVYnYcHnEMVcuvfx?=
- =?us-ascii?Q?t6M0yQyIy4WizHvNeuR3EJco9awTsqvzOJ0CP8GnlQICJph2/FEeKnd2J6K8?=
- =?us-ascii?Q?qk4rUZglhFeKbtdZVVM2stXhLrKbd5ZdldC0obdDl+FKpIr+e1bjquy7dyXF?=
- =?us-ascii?Q?n4OkWS19kntodaZM5wrJRQPQHq04MMUcNNPjq6lQ3ub0y+pSDJoAHvAj52qj?=
- =?us-ascii?Q?9P097yJsTpZOC/8jn2UY8Za/TcXQ3KuQCWMU5HV1RRfbGAbhUI3ADFwd80bQ?=
- =?us-ascii?Q?Xj4ejVQpCMVk1lnBojvGsVc799L7gy739JFMg/L238C+I4wSdKVZLQB6Mhsi?=
- =?us-ascii?Q?zVmQSRrbVmG/relfKuRwPvh9H/wCB2T26zE5wSB4M2KQ4N2qNld0jGrG6lyC?=
- =?us-ascii?Q?gORCNN/dM1IE4xocFkbbgj8xGueRCgpnVeUAb/s208bBkgjxVJk5rGaUOfyl?=
- =?us-ascii?Q?jwTOTDpfjojIzkkim09eK/fsba516LJCO/hvEGJLvb8OStR34rkM0R/KvQyL?=
- =?us-ascii?Q?7Q/cJA/jbbfRIlDBstsAK0iYZRl+yYDzZFABgu+bFx8vnq1fPV69V9fd2q1o?=
- =?us-ascii?Q?og5qiPX0vJhOBpoJgq03IjE8?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S236314AbhCXOiK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Mar 2021 10:38:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51366 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236139AbhCXOhw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Mar 2021 10:37:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616596671;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=36On/MZVZK9J50S/ENtrT9lDH1ORl6BouIE2J0nqrFE=;
+        b=dOGH5QZaUGaqhKtPf+UeDd7kr7P8eS5ck1LYBiyKfr2vxf1KAyWXBfbTehGnQbj1hg2TIy
+        aOwW2p75nRoGtL/nkhnjsHVLDc5y9y6XkfoxaPEqBFa/RjbQUFDLrSOEnhdkPwIML9jnN6
+        IxQF3EQFsL1hQulyFjV6YmhSAnfgp+Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-juNwz2lXNM6Dp7ntU_nQCA-1; Wed, 24 Mar 2021 10:37:47 -0400
+X-MC-Unique: juNwz2lXNM6Dp7ntU_nQCA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C299B107ACCA;
+        Wed, 24 Mar 2021 14:37:45 +0000 (UTC)
+Received: from omen.home.shazbot.org (ovpn-112-120.phx2.redhat.com [10.3.112.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EADA0866DC;
+        Wed, 24 Mar 2021 14:37:44 +0000 (UTC)
+Date:   Wed, 24 Mar 2021 08:37:43 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
+        shyam.rajendran@nutanix.com, felipe@nutanix.com
+Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+Message-ID: <20210324083743.791d6191@omen.home.shazbot.org>
+In-Reply-To: <YFsOVNM1zIqNUN8f@unreal>
+References: <YFMYzkg101isRXIM@unreal>
+        <20210318103935.2ec32302@omen.home.shazbot.org>
+        <YFOMShJAm4j/3vRl@unreal>
+        <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
+        <YFSgQ2RWqt4YyIV4@unreal>
+        <20210319102313.179e9969@omen.home.shazbot.org>
+        <YFW78AfbhYpn16H4@unreal>
+        <20210320085942.3cefcc48@x1.home.shazbot.org>
+        <YFcGlzbaSzQ5Qota@unreal>
+        <20210322111003.50d64f2c@omen.home.shazbot.org>
+        <YFsOVNM1zIqNUN8f@unreal>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB5559.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a388b3a0-3cba-402d-98ce-08d8eecc983e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2021 13:56:16.5814
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sF6iO+SVrS+nD9WueX/IqrzeK3Jd+fsj7QFytRUl1raTRGI2hNDQoJME87yOa6BQ+hP9a2SeKxYNyAAt5LqSsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5429
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > Hi Marc,
-> >
-> > Thanks for the patch.
-> >
-> > > Subject: [PATCH v2 05/15] PCI: xilinx: Convert to MSI domains
-> > >
-> > > In anticipation of the removal of the msi_controller structure,
-> > > convert the ancient xilinx host controller driver to MSI domains.
-> > >
-> > > We end-up with the usual two domain structure, the top one being a
-> > > generic PCI/MSI domain, the bottom one being xilinx-specific and
-> > > handling the actual HW interrupt allocation.
-> > >
-> > > This allows us to fix some of the most appalling MSI programming,
-> > > where the message programmed in the device is the virtual IRQ number
-> > > instead of the allocated vector number. The allocator is also made
-> > > safe with a mutex. This should allow support for MultiMSI, but I
-> > > decided not to even try, since I cannot test it.
-> > >
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > > ---
-> > >  drivers/pci/controller/Kconfig       |   2 +-
-> > >  drivers/pci/controller/pcie-xilinx.c | 234
-> > > +++++++++++----------------
-> > >  2 files changed, 97 insertions(+), 139 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/Kconfig
-> > > b/drivers/pci/controller/Kconfig index 5cc07d28a3a0..60045f7aafc5
-> > > 100644
-> > ...
-> >
-> >
-> > > +static struct irq_chip xilinx_msi_bottom_chip =3D {
-> > > +	.name			=3D "Xilinx MSI",
-> > > +	.irq_set_affinity 	=3D xilinx_msi_set_affinity,
-> > > +	.irq_compose_msi_msg	=3D xilinx_compose_msi_msg,
-> > > +};
-> > >
-> > I see a crash while testing MSI in handle_edge_irq [<c015bdd4>]
-> > (handle_edge_irq) from [<c0157164>] (generic_handle_irq+0x28/0x38)
-> > [<c0157164>] (generic_handle_irq) from [<c03a9714>]
-> > (xilinx_pcie_intr_handler+0x17c/0x2b0)
-> > [<c03a9714>] (xilinx_pcie_intr_handler) from [<c0157d94>]
-> > (__handle_irq_event_percpu+0x3c/0xc0)
-> > [<c0157d94>] (__handle_irq_event_percpu) from [<c0157e44>]
-> > (handle_irq_event_percpu+0x2c/0x7c)
-> > [<c0157e44>] (handle_irq_event_percpu) from [<c0157ecc>]
-> > (handle_irq_event+0x38/0x5c) [<c0157ecc>] (handle_irq_event) from
-> > [<c015bc8c>] (handle_fasteoi_irq+0x9c/0x114)
->=20
-> Thanks for that. Can you please try the following patch and let me know i=
-f it
-> helps?
->=20
-> Thanks,
->=20
-> 	M.
->=20
-> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controlle=
-r/pcie-
-> xilinx.c
-> index ad9abf405167..14001febf59a 100644
-> --- a/drivers/pci/controller/pcie-xilinx.c
-> +++ b/drivers/pci/controller/pcie-xilinx.c
-> @@ -194,8 +194,18 @@ static struct pci_ops xilinx_pcie_ops =3D {
->=20
->  /* MSI functions */
->=20
-> +static void xilinx_msi_top_irq_ack(struct irq_data *d) {
-> +	/*
-> +	 * xilinx_pcie_intr_handler() will have performed the Ack.
-> +	 * Eventually, this should be fixed and the Ack be moved in
-> +	 * the respective callbacks for INTx and MSI.
-> +	 */
-> +}
-> +
->  static struct irq_chip xilinx_msi_top_chip =3D {
->  	.name		=3D "PCIe MSI",
-> +	.irq_ack	=3D xilinx_msi_top_irq_ack,
->  };
->=20
->  static int xilinx_msi_set_affinity(struct irq_data *d, const struct cpum=
-ask
-> *mask, bool force) @@ -206,7 +216,7 @@ static int
-> xilinx_msi_set_affinity(struct irq_data *d, const struct cpumask *mas  st=
-atic
-> void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)  =
-{
->  	struct xilinx_pcie_port *pcie =3D irq_data_get_irq_chip_data(data);
-> -	phys_addr_t pa =3D virt_to_phys(pcie);
-> +	phys_addr_t pa =3D ALIGN_DOWN(virt_to_phys(pcie), SZ_4K);
->=20
->  	msg->address_lo =3D lower_32_bits(pa);
->  	msg->address_hi =3D upper_32_bits(pa);
-> @@ -468,7 +478,7 @@ static int xilinx_pcie_init_irq_domain(struct
-> xilinx_pcie_port *port)
->=20
->  	/* Setup MSI */
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> -		phys_addr_t pa =3D virt_to_phys(port);
-> +		phys_addr_t pa =3D ALIGN_DOWN(virt_to_phys(port), SZ_4K);
->=20
->  		ret =3D xilinx_allocate_msi_domains(port);
->  		if (ret)
->=20
-Thanks Marc.
-With above patch now everything works fine, tested a Samsung NVMe SSD.=20
-tst~# lspci
-00:00.0 PCI bridge: Xilinx Corporation Device 0706
-01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD=
- Controller 172Xa/172Xb (rev 01)
+On Wed, 24 Mar 2021 12:03:00 +0200
+Leon Romanovsky <leon@kernel.org> wrote:
 
-Regards,
-Bharat
+> On Mon, Mar 22, 2021 at 11:10:03AM -0600, Alex Williamson wrote:
+> > On Sun, 21 Mar 2021 10:40:55 +0200
+> > Leon Romanovsky <leon@kernel.org> wrote:
+> >   
+> > > On Sat, Mar 20, 2021 at 08:59:42AM -0600, Alex Williamson wrote:  
+> > > > On Sat, 20 Mar 2021 11:10:08 +0200
+> > > > Leon Romanovsky <leon@kernel.org> wrote:    
+> > > > > On Fri, Mar 19, 2021 at 10:23:13AM -0600, Alex Williamson wrote:     
+> > > > > > 
+> > > > > > What if we taint the kernel or pci_warn() for cases where either all
+> > > > > > the reset methods are disabled, ie. 'echo none > reset_method', or any
+> > > > > > time a device specific method is disabled?      
+> > > > > 
+> > > > > What does it mean "none"? Does it mean nothing supported? If yes, I think that
+> > > > > pci_warn() will be enough. At least for me, taint is usable during debug stages,
+> > > > > probably if device doesn't crash no one will look to see /proc/sys/kernel/tainted.    
+> > > > 
+> > > > "none" as implemented in this patch, clearing the enabled function
+> > > > reset methods.    
+> > > 
+> > > It is far from intuitive, the empty string will be easier to understand,
+> > > because "none" means no reset at all.  
+> > 
+> > "No reset at all" is what "none" achieves, the
+> > pci_dev.reset_methods_enabled bitmap is cleared.  We can use an empty
+> > string, but I think we want a way to clear all enabled resets and a way
+> > to return it to the default.  I could see arguments for an empty string
+> > serving either purpose, so this version proposed explicitly using
+> > "none" and "default", as included in the ABI update.  
+> 
+> I will stick with "default" only and leave "none" for something else.
+
+Are you suggesting writing "default" restores the unmodified behavior
+and writing an empty string clears all enabled reset methods?
+ 
+> > > > > > I'd almost go so far as to prevent disabling a device specific reset
+> > > > > > altogether, but for example should a device specific reset that fixes
+> > > > > > an aspect of FLR behavior prevent using a bus reset?  I'd prefer in that
+> > > > > > case if direct FLR were disabled via a device flag introduced with the
+> > > > > > quirk and the remaining resets can still be selected by preference.      
+> > > > > 
+> > > > > I don't know enough to discuss the PCI details, but you raised good point.
+> > > > > This sysfs is user visible API that is presented as is from device point
+> > > > > of view. It can be easily run into problems if PCI/core doesn't work with
+> > > > > user's choice.
+> > > > >     
+> > > > > > 
+> > > > > > Theoretically all the other reset methods work and are available, it's
+> > > > > > only a policy decision which to use, right?      
+> > > > > 
+> > > > > But this patch was presented as a way to overcome situations where
+> > > > > supported != working and user magically knows which reset type to set.    
+> > > > 
+> > > > It's not magic, the new sysfs attributes expose which resets are
+> > > > enabled and the order that they're used, the user can simply select the
+> > > > next one.  Being able to bypass a broken reset method is a helpful side
+> > > > effect of getting to select a preferred reset method.    
+> > > 
+> > > Magic in a sense that user has no idea what those resets mean, the
+> > > expectation is that he will blindly iterate till something works.  
+> > 
+> > Which ought to actually be a safe thing to do.  We should have quirks to
+> > exclude resets that are known broken but still probe as present and I'd
+> > be perfectly fine if we issue a warning if the user disables all resets
+> > for a given device.
+> >    
+> > > > > If you want to take this patch to be policy decision tool,
+> > > > > it will need to accept "reset_type1,reset_type2,..." sort of input,
+> > > > > so fallback will work natively.    
+> > > > 
+> > > > I don't see that as a requirement.  We have fall-through support in the
+> > > > kernel, but for a given device we're really only ever going to make use
+> > > > of one of those methods.  If a user knows enough about a device to have
+> > > > a preference, I think it can be singular.  That also significantly
+> > > > simplifies the interface and supporting code.  Thanks,    
+> > > 
+> > > I'm struggling to get requirements from this thread. You talked about
+> > > policy decision to overtake fallback mechanism, Amey wanted to avoid
+> > > quirks.
+> > > 
+> > > Do you have an example of such devices or we are talking about
+> > > theoretical case?  
+> > 
+> > Look at any device that already has a reset quirk and the process it
+> > took to get there.  Those are more than just theoretical cases.  
+> 
+> So let's fix the process. The long standing kernel policy is that kernel
+> bugs (and missing quirk can be seen as such bug) should be fixed in the
+> kernel and not workaround by the users.
+
+I don't see an actual proposal here to fix the process.  Allowing
+specific reset methods to be trivially tested is a step towards fixing
+the process.  Unfortunately we can't tell the difference between
+someone setting a policy because they prefer a reset mechanism, are
+testing a reset mechanism, or they're avoiding a broken reset mechanism.
+We can't force participation if we've made it clear that the interface
+should not be used long term for anything other than policy preference
+and testing.
+
+> > For policy preference, I already described how I've configured QEMU to
+> > prefer a bus reset rather than a PM reset due to lack of specification
+> > regarding the scope of a PM "soft reset".  This interface would allow a
+> > system policy to do that same thing.
+> > 
+> > I don't think anyone is suggesting this as a means to avoid quirks that
+> > would resolve reset issues and create the best default general behavior.
+> > This provides a mechanism to test various reset methods, and thereby
+> > identify broken methods, and set a policy.  Sure, that policy might be
+> > to avoid a broken reset in the interim before it gets quirked and
+> > there's potential for abuse there, but I think the benefits outweigh
+> > the risks.  
+> 
+> This interface is proposed as first class citizen in the general sysfs
+> layout. Of course, it will be seen as a way to bypass the kernel.
+> 
+> At least, put it under CONFIG_EXPERT option, so no distro will enable it
+> by default.
+
+Of course we're proposing it to be accessible, it should also require
+admin privileges to modify, sysfs has lots of such things.  If it's
+relegated to non-default accessibility, it won't be used for testing
+and it won't be available for system policy and it's pointless.
+ 
+> > > And I don't see why simple line parser with loop iterator over strchr()
+> > > suddenly becomes complicated code.  
+> > 
+> > Setting multiple bits in a bitmap is easy.  How do you then go on to
+> > allow the user to specify an ordering preference?  If you have an
+> > algorithm you'd like to propose that allows the user to manage the
+> > ordering when enabling multiple methods without substantially
+> > increasing the complexity, please share.  IMO, a given device will
+> > generally use one reset method and it seems sufficient to restrict user
+> > preference to achieve all the use cases I've noted.  Thanks,  
+> 
+> Linked list + iterator will do the trick.
+
+So you're suggesting to add potentially multiple dynamic allocations per
+device and list locking and management for an unspecified use case for
+an interface you seem to be opposed to anyway.  It should be pretty
+clear why the keep-it-simple approach was taken in this series.  Thanks,
+
+Alex
+
