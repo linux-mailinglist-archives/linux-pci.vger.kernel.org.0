@@ -2,221 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41B63347BDA
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 16:14:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B5DC347CA9
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 16:32:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236550AbhCXPOT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Mar 2021 11:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236542AbhCXPOB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Mar 2021 11:14:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 17312619CD;
-        Wed, 24 Mar 2021 15:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616598840;
-        bh=0gRZm+WIBbcZF9DMDRD/ls7vTIsweOK/2Y5PO8kAujc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IVAIoTTbrDkpxZY7oc/SGa2fP+8nBCDLOJMA2EsVmKcecyqWGXpqSKGEus/vi8mcZ
-         /A9gJlKeE+tefDJv3yxNr53MxQfVriW7D4bs7I/7JM8jK5OThFdH2gUsBPt+gT1Fdj
-         ANprcewk+T9q+ugQzfHvJ+v4XnGFvlh1FUcrVj8bXgyiM7NRvZTA7PxL9EbX6Wd4Uk
-         8mOU6O79gEorimwjekYsBK9lb6IDikNZhPMqoMRd/398j1OA9DdJX1W1x/F1P3Ii8s
-         YFHKSio6H3/3ryHBVhblJq980tcKC/f7jl+kg9Vylp12t2t+1Um2bSl60jkDYtbqvd
-         3/v85QeZUq2rQ==
-Date:   Wed, 24 Mar 2021 17:13:56 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Message-ID: <YFtXNF+t/0G26dwS@unreal>
-References: <YFOMShJAm4j/3vRl@unreal>
- <a2b9dc7e-e73a-3a70-5899-8ed37a8ef700@metux.net>
- <YFSgQ2RWqt4YyIV4@unreal>
- <20210319102313.179e9969@omen.home.shazbot.org>
- <YFW78AfbhYpn16H4@unreal>
- <20210320085942.3cefcc48@x1.home.shazbot.org>
- <YFcGlzbaSzQ5Qota@unreal>
- <20210322111003.50d64f2c@omen.home.shazbot.org>
- <YFsOVNM1zIqNUN8f@unreal>
- <20210324083743.791d6191@omen.home.shazbot.org>
+        id S236672AbhCXPbe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Mar 2021 11:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236668AbhCXPbV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Mar 2021 11:31:21 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481A8C0613DE
+        for <linux-pci@vger.kernel.org>; Wed, 24 Mar 2021 08:31:20 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id jy13so33563047ejc.2
+        for <linux-pci@vger.kernel.org>; Wed, 24 Mar 2021 08:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fckQzWuJnvD6S/jFF8HUa1PwKAcbSDOKJ4gWr/ndvyk=;
+        b=OlKQtU1q2ZxhFAsb1Cs2Js3zE+ZJzDOEI4+bnRMrr1+uVB7P/Iu6eKckjnXg8zK56l
+         Irrft7thQGCzqA32QFBdXE4+uBuO6iQgfPeDjc1NS4TUbZsPKk2pdNdVY5R9tx4z25Dg
+         ozY6uLy7niX57VhmCVl+dE8zMrZFu7sQlODj4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fckQzWuJnvD6S/jFF8HUa1PwKAcbSDOKJ4gWr/ndvyk=;
+        b=p73d7Ahhju16yLgLWes/zzizZplODM7GR4DcrB8wIcM3pttT8AS78QiZKBxsjSWW/i
+         zejYsQivQhXW5MrvnCyasGQr45pLZhv2BYAt0y3bXU5yFh8vXq2RPJQ58eR8zmQpUdYr
+         lQ6Zf+l9U10LjVbbcuajxMbeEvyUP3gPt0NP5t3VlbZVQrGMqLtsxosQsOu/O24GoR9h
+         S2VCvbmuIo4mBVKKiR0hq+ZdwOJkNCptA2TZsVzmMYVsn7cEfshwHB9m9WbVFH/EPRQ7
+         QGbpHdz6Tmynfp/bpjKxlHV5kbaqBwxdz2Qs4d41MQRRi3jHqfbYccI5OVU6LWL7DvEI
+         m62A==
+X-Gm-Message-State: AOAM531kL/1OqWmvCrvSiZoA+OXvJjkgy85AUIVQWx7H9b5G8lH6FrSu
+        kvyTQjGfnvDEZ4uLU2jttwD4WQ==
+X-Google-Smtp-Source: ABdhPJwQj/wpq3nFF6bQFT/Rz0xc2jmEi77W566MBeimLH4Wx2lLOahfvWOwYafWC5mURjTYGhXuXw==
+X-Received: by 2002:a17:906:358c:: with SMTP id o12mr4397574ejb.156.1616599878962;
+        Wed, 24 Mar 2021 08:31:18 -0700 (PDT)
+Received: from [192.168.1.149] ([80.208.71.248])
+        by smtp.gmail.com with ESMTPSA id b12sm1262238eds.94.2021.03.24.08.31.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Mar 2021 08:31:18 -0700 (PDT)
+Subject: Re: [PATCH v3 02/17] cfi: add __cficanonical
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210323203946.2159693-1-samitolvanen@google.com>
+ <20210323203946.2159693-3-samitolvanen@google.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <92afcbea-1415-2df1-5e78-4e9a7a4d364b@rasmusvillemoes.dk>
+Date:   Wed, 24 Mar 2021 16:31:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210324083743.791d6191@omen.home.shazbot.org>
+In-Reply-To: <20210323203946.2159693-3-samitolvanen@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 08:37:43AM -0600, Alex Williamson wrote:
-> On Wed, 24 Mar 2021 12:03:00 +0200
-> Leon Romanovsky <leon@kernel.org> wrote:
+On 23/03/2021 21.39, Sami Tolvanen wrote:
+> With CONFIG_CFI_CLANG, the compiler replaces a function address taken
+> in C code with the address of a local jump table entry, which passes
+> runtime indirect call checks. However, the compiler won't replace
+> addresses taken in assembly code, which will result in a CFI failure
+> if we later jump to such an address in instrumented C code. The code
+> generated for the non-canonical jump table looks this:
 > 
-> > On Mon, Mar 22, 2021 at 11:10:03AM -0600, Alex Williamson wrote:
-> > > On Sun, 21 Mar 2021 10:40:55 +0200
-> > > Leon Romanovsky <leon@kernel.org> wrote:
-> > >   
-> > > > On Sat, Mar 20, 2021 at 08:59:42AM -0600, Alex Williamson wrote:  
-> > > > > On Sat, 20 Mar 2021 11:10:08 +0200
-> > > > > Leon Romanovsky <leon@kernel.org> wrote:    
-> > > > > > On Fri, Mar 19, 2021 at 10:23:13AM -0600, Alex Williamson wrote:     
-> > > > > > > 
-> > > > > > > What if we taint the kernel or pci_warn() for cases where either all
-> > > > > > > the reset methods are disabled, ie. 'echo none > reset_method', or any
-> > > > > > > time a device specific method is disabled?      
-> > > > > > 
-> > > > > > What does it mean "none"? Does it mean nothing supported? If yes, I think that
-> > > > > > pci_warn() will be enough. At least for me, taint is usable during debug stages,
-> > > > > > probably if device doesn't crash no one will look to see /proc/sys/kernel/tainted.    
-> > > > > 
-> > > > > "none" as implemented in this patch, clearing the enabled function
-> > > > > reset methods.    
-> > > > 
-> > > > It is far from intuitive, the empty string will be easier to understand,
-> > > > because "none" means no reset at all.  
-> > > 
-> > > "No reset at all" is what "none" achieves, the
-> > > pci_dev.reset_methods_enabled bitmap is cleared.  We can use an empty
-> > > string, but I think we want a way to clear all enabled resets and a way
-> > > to return it to the default.  I could see arguments for an empty string
-> > > serving either purpose, so this version proposed explicitly using
-> > > "none" and "default", as included in the ABI update.  
-> > 
-> > I will stick with "default" only and leave "none" for something else.
+>   <noncanonical.cfi_jt>: /* In C, &noncanonical points here */
+> 	jmp noncanonical
+>   ...
+>   <noncanonical>:        /* function body */
+> 	...
 > 
-> Are you suggesting writing "default" restores the unmodified behavior
-> and writing an empty string clears all enabled reset methods?
->  
-> > > > > > > I'd almost go so far as to prevent disabling a device specific reset
-> > > > > > > altogether, but for example should a device specific reset that fixes
-> > > > > > > an aspect of FLR behavior prevent using a bus reset?  I'd prefer in that
-> > > > > > > case if direct FLR were disabled via a device flag introduced with the
-> > > > > > > quirk and the remaining resets can still be selected by preference.      
-> > > > > > 
-> > > > > > I don't know enough to discuss the PCI details, but you raised good point.
-> > > > > > This sysfs is user visible API that is presented as is from device point
-> > > > > > of view. It can be easily run into problems if PCI/core doesn't work with
-> > > > > > user's choice.
-> > > > > >     
-> > > > > > > 
-> > > > > > > Theoretically all the other reset methods work and are available, it's
-> > > > > > > only a policy decision which to use, right?      
-> > > > > > 
-> > > > > > But this patch was presented as a way to overcome situations where
-> > > > > > supported != working and user magically knows which reset type to set.    
-> > > > > 
-> > > > > It's not magic, the new sysfs attributes expose which resets are
-> > > > > enabled and the order that they're used, the user can simply select the
-> > > > > next one.  Being able to bypass a broken reset method is a helpful side
-> > > > > effect of getting to select a preferred reset method.    
-> > > > 
-> > > > Magic in a sense that user has no idea what those resets mean, the
-> > > > expectation is that he will blindly iterate till something works.  
-> > > 
-> > > Which ought to actually be a safe thing to do.  We should have quirks to
-> > > exclude resets that are known broken but still probe as present and I'd
-> > > be perfectly fine if we issue a warning if the user disables all resets
-> > > for a given device.
-> > >    
-> > > > > > If you want to take this patch to be policy decision tool,
-> > > > > > it will need to accept "reset_type1,reset_type2,..." sort of input,
-> > > > > > so fallback will work natively.    
-> > > > > 
-> > > > > I don't see that as a requirement.  We have fall-through support in the
-> > > > > kernel, but for a given device we're really only ever going to make use
-> > > > > of one of those methods.  If a user knows enough about a device to have
-> > > > > a preference, I think it can be singular.  That also significantly
-> > > > > simplifies the interface and supporting code.  Thanks,    
-> > > > 
-> > > > I'm struggling to get requirements from this thread. You talked about
-> > > > policy decision to overtake fallback mechanism, Amey wanted to avoid
-> > > > quirks.
-> > > > 
-> > > > Do you have an example of such devices or we are talking about
-> > > > theoretical case?  
-> > > 
-> > > Look at any device that already has a reset quirk and the process it
-> > > took to get there.  Those are more than just theoretical cases.  
-> > 
-> > So let's fix the process. The long standing kernel policy is that kernel
-> > bugs (and missing quirk can be seen as such bug) should be fixed in the
-> > kernel and not workaround by the users.
+> This change adds the __cficanonical attribute, which tells the
+> compiler to use a canonical jump table for the function instead. This
+> means the compiler will rename the actual function to <function>.cfi
+> and points the original symbol to the jump table entry instead:
 > 
-> I don't see an actual proposal here to fix the process.  Allowing
-> specific reset methods to be trivially tested is a step towards fixing
-> the process.  Unfortunately we can't tell the difference between
-> someone setting a policy because they prefer a reset mechanism, are
-> testing a reset mechanism, or they're avoiding a broken reset mechanism.
-> We can't force participation if we've made it clear that the interface
-> should not be used long term for anything other than policy preference
-> and testing.
-
-Yes, and real testing/debugging almost always requires kernel rebuild.
-Everything else is waste of time.
-
+>   <canonical>:           /* jump table entry */
+> 	jmp canonical.cfi
+>   ...
+>   <canonical.cfi>:       /* function body */
+> 	...
 > 
-> > > For policy preference, I already described how I've configured QEMU to
-> > > prefer a bus reset rather than a PM reset due to lack of specification
-> > > regarding the scope of a PM "soft reset".  This interface would allow a
-> > > system policy to do that same thing.
-> > > 
-> > > I don't think anyone is suggesting this as a means to avoid quirks that
-> > > would resolve reset issues and create the best default general behavior.
-> > > This provides a mechanism to test various reset methods, and thereby
-> > > identify broken methods, and set a policy.  Sure, that policy might be
-> > > to avoid a broken reset in the interim before it gets quirked and
-> > > there's potential for abuse there, but I think the benefits outweigh
-> > > the risks.  
-> > 
-> > This interface is proposed as first class citizen in the general sysfs
-> > layout. Of course, it will be seen as a way to bypass the kernel.
-> > 
-> > At least, put it under CONFIG_EXPERT option, so no distro will enable it
-> > by default.
-> 
-> Of course we're proposing it to be accessible, it should also require
-> admin privileges to modify, sysfs has lots of such things.  If it's
-> relegated to non-default accessibility, it won't be used for testing
-> and it won't be available for system policy and it's pointless.
+> As a result, the address taken in assembly, or other non-instrumented
+> code always points to the jump table and therefore, can be used for
+> indirect calls in instrumented code without tripping CFI checks.
 
-We probably have difference in view of what testing is. I expect from
-the users who experience issues with reset to do extra steps and one of
-them is to require from them to compile their kernel.
+Random ramblings, I'm trying to understand how this CFI stuff works.
 
-The root permissions doesn't protect from anything, SO lovers will use
-root without even thinking twice.
+First, patch 1 and 2 explain the pros and cons of canonical vs
+non-canonical jump tables, in either case, there's problems with stuff
+implemented in assembly. But I don't understand why those pros and cons
+then end up with using the non-canonical jump tables by default. IIUC,
+with canonical jump tables, function pointer equality would keep working
+for functions implemented in C, because &func would always refer to the
+same stub "function" that lives in the same object file as func.cfi,
+whereas with the non-canonical version, each TU (or maybe DSO) that
+takes the address of func ends up with its own func.cfi_jt.
 
->  
-> > > > And I don't see why simple line parser with loop iterator over strchr()
-> > > > suddenly becomes complicated code.  
-> > > 
-> > > Setting multiple bits in a bitmap is easy.  How do you then go on to
-> > > allow the user to specify an ordering preference?  If you have an
-> > > algorithm you'd like to propose that allows the user to manage the
-> > > ordering when enabling multiple methods without substantially
-> > > increasing the complexity, please share.  IMO, a given device will
-> > > generally use one reset method and it seems sufficient to restrict user
-> > > preference to achieve all the use cases I've noted.  Thanks,  
-> > 
-> > Linked list + iterator will do the trick.
-> 
-> So you're suggesting to add potentially multiple dynamic allocations per
-> device and list locking and management for an unspecified use case for
-> an interface you seem to be opposed to anyway.  It should be pretty
-> clear why the keep-it-simple approach was taken in this series.  Thanks,
+There are of course lots of direct calls of assembly functions, but
+I don't think we take the address of such functions very often. So why
+can't we instead equip the declarations of those with a
+__cfi_noncanonical attribute?
 
-I'm trying to help you with your use case of providing reset policy
-mechanism, which can be without CONFIG_EXPERT. However if you want
-to continue path of having specific reset type only, please ensure
-that this is not taken to the "bypass kernel" direction.
+And now, more directed at the clang folks on cc:
 
-Thanks
+As to how CFI works, I've tried to make sense of the clang docs. So at
+place where some int (*)(long, int) function pointer is called, the
+compiler computes (roughly) md5sum("int (*)(long, int)") and uses the
+first 8 bytes as a cookie representing that type. It then goes to some
+global table of jump table ranges indexed by that cookie and checks that
+the address it is about to call is within that range. All jump table
+entries for one type of function are consecutive in memory (with
+complications arising from cross-DSO calls).
 
-> 
-> Alex
-> 
+What I don't understand about all this is why that indirection through
+some hidden global table and magic jump table (whether canonical or not)
+is even needed in the simple common case of ordinary C functions. Why
+can't the compiler just emit the cookie corresponding to a given
+function's prototype immediately prior to the function? Then the inline
+check would just be "if (*(u64*)((void*)func - 8) == cookie)" and
+function pointer comparison would just work because there's no magic
+involved when doing &func. Cross-DSO calls of C function have no extra
+cost to look up a __cfi_check function in the target DSO. An indirect
+call doesn't touch at least two extra cache lines (the range table and
+the jump table entry). It seems to rely on LTO anyway, so it's not even
+that the compiler would have to emit that cookie for every single
+function, it knows at link time which functions have their address
+taken. Calling functions implemented in assembly through a function
+pointer will have the same problem as with the "canonical" jump table
+approach, but with a suitable attribute on those surely the compiler
+could emit a func.cfi_hoop
+
+  .quad 0x1122334455667788 // cookie
+  <func.cfi_hoop>:
+	jmp func
+
+and perhaps no such attribute would even be needed (with LTO, the
+compiler should be able to see "hey, I don't know that function, it's
+probably implemented in assembly, so lemme emit that trampoline with a
+cookie in front and redirect address-of to that").
+
+Rasmus
