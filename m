@@ -2,97 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80C26347D0D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 16:55:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BB81347D5D
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 17:12:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236804AbhCXPyh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Mar 2021 11:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236794AbhCXPyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Mar 2021 11:54:32 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B7A7C0613E0
-        for <linux-pci@vger.kernel.org>; Wed, 24 Mar 2021 08:54:31 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id z68so11588151vsb.10
-        for <linux-pci@vger.kernel.org>; Wed, 24 Mar 2021 08:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jvdMNpuLDTAr72CZhKMnuvvxwLSHQueODNwVd/tQkSw=;
-        b=fB+V4oDpRcxIY7NRezv/LgYAX+HS0KhU+rJZTEOffFFfAiDhycklq7vjJKyxwAyN6d
-         FwVooeLY/l/eF0g2TiN+AEb+pWaU9Yjy4oeAuL2EjKqlXuPDwvNse4NeL0O8VLQsYJrj
-         MduPgnhW4BoOEKm+9blk0AOlC9ZFe2MWNVdXg05XsLH8u13/F+l8TvAs/zdYNo204lOb
-         UO2ejvr4schD5aphabcQ/rkR6XZAgxxn8+gOR3cZyqZ26gf7fuyTuc2VNfchDyeH/tfJ
-         /ihpDMwEMU+3K5BBUlLCDwOe8gCAWXmR5ilixiAwXqQwXtxAH6TLPNups0PP1aS/TPeQ
-         E9eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jvdMNpuLDTAr72CZhKMnuvvxwLSHQueODNwVd/tQkSw=;
-        b=m+bjZgEDR+YPsJGr/IUcUXqwRZb9u35WqRPLzpmSdDbiCKXvXknLBm8rWdOGfur2v/
-         d8RINrMWoo9yBSh80aiyFm2SjHi+FTa0BkdXd18ybJcrs9pTY7fN53RCsmm/Mq0rZDuL
-         wzpFJTtoFvJlIKjWap38gkIXk34HVUo1P9vFaxn6PRfExcFdMzawgaV2rc0GAjnxMPWT
-         h8HnhpjipdOGysclhmimDudwmzUHeYJADkUWH3+6D4oCHPVn1/UkfgYqK4Sgm17kR97y
-         LMhzmhrwMAJY9sbiC5wy3YT+/0TpwVdRqGJzql2C35Ee0iPeCHB9mtiQtUZHs5Eps6B7
-         2m4Q==
-X-Gm-Message-State: AOAM533tedE5ShwPdqSwDdALUe61LHOP80GhTbQtfuzUSkD6XNOl6AzQ
-        2hxjLHbHXIka9CXe6f9o+DrRCiQgOK3E1i1HN4mVGQ==
-X-Google-Smtp-Source: ABdhPJw/Tt5Eglhjkk3DSFJmZtQNB1612Zn3Mq7A5Is3NYScePeRKnpnTe64INtZMtYBNux7wDX2SFzRZ2Nc/eNRj+g=
-X-Received: by 2002:a67:b447:: with SMTP id c7mr2227327vsm.54.1616601270219;
- Wed, 24 Mar 2021 08:54:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210323203946.2159693-1-samitolvanen@google.com>
- <20210323203946.2159693-4-samitolvanen@google.com> <20210324071357.GB2639075@infradead.org>
-In-Reply-To: <20210324071357.GB2639075@infradead.org>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 24 Mar 2021 08:54:18 -0700
-Message-ID: <CABCJKufRHCb0sjr1tMGCoVMzV-5dKPPn-t8=+ihNFAgTr2k0DA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/17] mm: add generic __va_function and __pa_function macros
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S233182AbhCXQMZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Mar 2021 12:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233296AbhCXQMA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Mar 2021 12:12:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F0061A01;
+        Wed, 24 Mar 2021 16:11:59 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lP66v-003YPB-O4; Wed, 24 Mar 2021 16:11:57 +0000
+Date:   Wed, 24 Mar 2021 16:11:56 +0000
+Message-ID: <8735wkjzub.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 12/15] PCI/MSI: Let PCI host bridges declare their reliance on MSI domains
+In-Reply-To: <20210324131938.GA16722@e121166-lin.cambridge.arm.com>
+References: <20210322184614.802565-1-maz@kernel.org>
+        <20210322184614.802565-13-maz@kernel.org>
+        <6a2eaa5d-1d83-159f-69e5-c9e0a00a7b50@arm.com>
+        <87im5hkahr.wl-maz@kernel.org>
+        <20210324131938.GA16722@e121166-lin.cambridge.arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, robin.murphy@arm.com, bhelgaas@google.com, frank-w@public-files.de, treding@nvidia.com, tglx@linutronix.de, robh@kernel.org, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, mikelley@microsoft.com, wei.liu@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, ryder.lee@mediatek.com, marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, michal.simek@xilinx.com, paul.walmsley@sifive.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 12:14 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Tue, Mar 23, 2021 at 01:39:32PM -0700, Sami Tolvanen wrote:
-> > With CONFIG_CFI_CLANG, the compiler replaces function addresses
-> > in instrumented C code with jump table addresses. This means that
-> > __pa_symbol(function) returns the physical address of the jump table
-> > entry instead of the actual function, which may not work as the jump
-> > table code will immediately jump to a virtual address that may not be
-> > mapped.
-> >
-> > To avoid this address space confusion, this change adds generic
-> > definitions for __va_function and __pa_function, which architectures
-> > that support CFI can override. The typical implementation of the
-> > __va_function macro would use inline assembly to take the function
-> > address, which avoids compiler instrumentation.
->
-> I think these helper are sensible, but shouldn't they have somewhat
-> less arcane names and proper documentation?
+On Wed, 24 Mar 2021 13:19:38 +0000,
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> 
+> On Tue, Mar 23, 2021 at 06:09:36PM +0000, Marc Zyngier wrote:
+> > Hi Robin,
+> > 
+> > On Tue, 23 Mar 2021 11:45:02 +0000,
+> > Robin Murphy <robin.murphy@arm.com> wrote:
+> > > 
+> > > On 2021-03-22 18:46, Marc Zyngier wrote:
+> > > > The new 'no_msi' attribute solves the problem of advertising the lack
+> > > > of MSI capability for host bridges that know for sure that there will
+> > > > be no MSI for their end-points.
+> > > > 
+> > > > However, there is a whole class of host bridges that cannot know
+> > > > whether MSIs will be provided or not, as they rely on other blocks
+> > > > to provide the MSI functionnality, using MSI domains.  This is
+> > > > the case for example on systems that use the ARM GIC architecture.
+> > > > 
+> > > > Introduce a new attribute ('msi_domain') indicating that implicit
+> > > > dependency, and use this property to set the NO_MSI flag when
+> > > > no MSI domain is found at probe time.
+> > > > 
+> > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > > > ---
+> > > >   drivers/pci/probe.c | 2 +-
+> > > >   include/linux/pci.h | 1 +
+> > > >   2 files changed, 2 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > > index 146bd85c037e..bac9f69a06a8 100644
+> > > > --- a/drivers/pci/probe.c
+> > > > +++ b/drivers/pci/probe.c
+> > > > @@ -925,7 +925,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+> > > >   	device_enable_async_suspend(bus->bridge);
+> > > >   	pci_set_bus_of_node(bus);
+> > > >   	pci_set_bus_msi_domain(bus);
+> > > > -	if (bridge->no_msi)
+> > > > +	if (bridge->no_msi || (bridge->msi_domain && !bus->dev.msi_domain))
+> > > >   		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+> > > >     	if (!parent)
+> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > > index 48605cca82ae..d322d00db432 100644
+> > > > --- a/include/linux/pci.h
+> > > > +++ b/include/linux/pci.h
+> > > > @@ -551,6 +551,7 @@ struct pci_host_bridge {
+> > > >   	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+> > > >   	unsigned int	size_windows:1;		/* Enable root bus sizing */
+> > > >   	unsigned int	no_msi:1;		/* Bridge has no MSI support */
+> > > > +	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
+> > > 
+> > > Aren't these really the same thing? Either way we're saying the bridge
+> > > itself doesn't handle MSIs, it's just in one case we're effectively
+> > > encoding a platform-specific assumption that an external domain won't
+> > > be provided. I can't help wondering whether that distinction is really
+> > > necessary...
+> > 
+> > There is a subtle difference: no_msi indicates that there is no way
+> > *any* MSI can be dealt with whatsoever (maybe because the RC doesn't
+> > forward the corresponding TLPs?). msi_domain says "no MSI unless...".
+> > 
+> > We could implement the former with the latter, but I have the feeling
+> > that's not totally bullet proof. Happy to revisit this if you think it
+> > really matters.
+> 
+> IIUC msi_domain == 1 means: this host bridge needs an msi_domain to enable
+> MSIs, which in turn means that there are bridges that do _not_ require
+> an msi_domain to enable MSIs. I don't know how other arches handle the 
+> msi_domain pointer but I am asking whether making:
+> 
+> if (bridge->no_msi || !bus->dev.msi_domain))
+> 	bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+> 
+> is a possibility (removing the need for the msi_domain flag).
+> 
+> At least this looks more like an arch property than a host bridge
+> specific property (eg patch [13] pci_host_common_probe() may be used on
+> arches other than ARM where it is not necessary true that it requires an
+> msi_domain to enable MSIs).
+> 
+> I agree that's complicated to untangle - just asking if there is way
+> to simplify it.
 
-Good point, I'll add comments in the next version. I thought
-__pa_function would be a fairly straightforward replacement for
-__pa_symbol, but I'm fine with renaming these. Any suggestions for
-less arcane names?
+I tried to simplify that in the past (see the original discussion at
+[1]), and tglx reported some breakages on systems that do not use MSI
+domains, which is why we ended up with an explicit flag.
 
-Sami
+What I have done for now is to go with Robin's proposal of dropping
+'no_msi' and rely on solely on 'msi_domain' to set
+PCI_BUS_FLAGS_NO_MSI when no domain is found.
+
+Note that if we indeed have a host bridge that uses
+pci_host_common_probe() that doesn't use MSI domains, we may indeed
+run into problems. I don't have a good way around that, unfortunately.
+
+Thanks,
+
+	M.
+
+[1] https://lore.kernel.org/r/20201031140330.83768-1-linux@fw-web.de
+
+-- 
+Without deviation from the norm, progress is not possible.
