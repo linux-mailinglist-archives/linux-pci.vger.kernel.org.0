@@ -2,92 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA03346EE1
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 02:33:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E33D3346FD0
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Mar 2021 04:06:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234706AbhCXBcR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Mar 2021 21:32:17 -0400
-Received: from mail-lf1-f42.google.com ([209.85.167.42]:39772 "EHLO
-        mail-lf1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234543AbhCXBbp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 21:31:45 -0400
-Received: by mail-lf1-f42.google.com with SMTP id b4so5585588lfi.6;
-        Tue, 23 Mar 2021 18:31:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VxiNq12BBkrbM53aTNkI6bHyLip/3/EfWfu40n01gwI=;
-        b=I5ofrO43zpTmAPNMOWxXiQ/rryE4psbG+w/gCtwsoJCIy1RHEDtZ3kHf2FnKweoHEn
-         MJPliRAcaIn1ozvpWSpqtaKfvz18pIflWp15F6zEbR9g6o16W6Gnm8i/0ZY1zzVLRfrM
-         e2KkVC/ptpFU0OCDVn7LqFrbQsGG1MyYgpaLlmdzlgtDdHd9Px8QOi/aaoX3wpT8Bdfy
-         08ZmfAXX3zhYwBzBN7bolbahTtrAYNdVU8uNZxuw96jCqp+/2f9NzNTqpi3O9iClkkFt
-         drbIhTwlOVrLuUTSvJYrVr1/CJ484bdyOQZ6pqKd4l1aRNTqMlfw8lZ5bHphfO11j1rq
-         DiQA==
-X-Gm-Message-State: AOAM530l+lEhv2r1RgGrXc+x5kmP2s9v8VU0/lJgWWhoaZcVOQxoNJCM
-        e7DDG/O21U5gKA6F6Tm8OsI=
-X-Google-Smtp-Source: ABdhPJwwm1H6hy6izV3QUqfh+Sv3+rWYvbjmPeAZrxKVbhXL+n4b0rSUKunbP1A31kywGgq0MlsIOA==
-X-Received: by 2002:a19:98a:: with SMTP id 132mr479464lfj.139.1616549504215;
-        Tue, 23 Mar 2021 18:31:44 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id f9sm95975ljg.115.2021.03.23.18.31.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Mar 2021 18:31:43 -0700 (PDT)
-Date:   Wed, 24 Mar 2021 02:31:42 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] PCI: dwc: put struct dw_pcie::{ep,pp} into a
- union to reduce its size
-Message-ID: <YFqWftATEbuxsJbn@rocinante>
-References: <20210312140116.9453-1-alobakin@pm.me>
+        id S235022AbhCXDGK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Mar 2021 23:06:10 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:43579 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S232318AbhCXDFq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Mar 2021 23:05:46 -0400
+X-UUID: 759810d6a0c541d18963cbf02d7fc87d-20210324
+X-UUID: 759810d6a0c541d18963cbf02d7fc87d-20210324
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 57941088; Wed, 24 Mar 2021 11:05:44 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 24 Mar 2021 11:05:43 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 24 Mar 2021 11:05:41 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        <youlin.pei@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        <qizhong.cheng@mediatek.com>, <sin_jieyang@mediatek.com>,
+        <drinkcat@chromium.org>, <Rex-BC.Chen@mediatek.com>,
+        <anson.chuang@mediatek.com>, Krzysztof Wilczyski <kw@linux.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [v9,0/7] PCI: mediatek: Add new generation controller support
+Date:   Wed, 24 Mar 2021 11:05:03 +0800
+Message-ID: <20210324030510.29177-1-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210312140116.9453-1-alobakin@pm.me>
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alexander,
+These series patches add pcie-mediatek-gen3.c and dt-bindings file to
+support new generation PCIe controller.
 
-Thank you for sending the patch over!
+Changes in v9:
+1. Use mtk_pcie_parse_port() to get the hw resources;
+2. Remove unnecessary logs;
+3. Add local IRQ enable status save/restore instead of
+   the enable/disable callbacks for suspend/resume;
+4. Fix typos.
 
-> A single dw_pcie entity can't be a root complex and an endpoint at
-> the same time.
+Changes in v8:
+1. Add irq_clock to protect IRQ register access;
+2. Mask all INTx interrupt when startup port;
+3. Remove activate/deactivate callbacks from bottom_domain_ops;
+4. Add unmask/mask callbacks in mtk_msi_bottom_irq_chip;
+5. Add property information for reg-names.
 
-Nice catch!
+Changes in v7:
+1. Split the driver patch to core PCIe, INTx, MSI and PM patches;
+2. Reshape MSI init and handle flow, use msi_bottom_domain to cover all sets;
+3. Replace readl/writel with their relaxed version;
+4. Add MSI description in binding document;
+5. Add pl_250m clock in binding document.
 
-A small nitpick: this would be Root Complex and Endpoint, as it's
-customary to capitalise these.
+Changes in v6:
+1. Export pci_pio_to_address() to support compiling as kernel module;
+2. Replace usleep_range(100 * 1000, 120 * 1000) with msleep(100);
+3. Replace dev_notice with dev_err;
+4. Fix MSI get hwirq flow;
+5. Fix warning for possible recursive locking in mtk_pcie_set_affinity.
 
-Also, if you could capitalise the subject line - it could also perhaps
-be simplified to something like, for example:
+Changes in v5:
+1. Remove unused macros
+2. Modify the config read/write callbacks, set the config byte field
+   in TLP header and use pci_generic_config_read32/write32
+   to access the config space
+3. Fix the settings of translation window, both MEM and IO regions
+   works properly
+4. Fix typos
 
-  Optimize struct dw_pcie to reduce its size
+Changes in v4:
+1. Fix PCIe power up/down flow
+2. Use "mac" and "phy" for reset names
+3. Add clock names
+4. Fix the variables type
 
-Feel free to ignore both suggestions, as these are just nitpicks.
+Changes in v3:
+1. Remove standard property in binding document
+2. Return error number when get_optional* API throws an error
+3. Use the bulk clk APIs
 
-> We can use this to reduce the size of dw_pcie by 80, from 280 to 200
-> bytes (on x32, guess more on x64), by putting the related embedded
-> structures (struct pcie_port and struct dw_pcie_ep) into a union.
+Changes in v2:
+1. Fix the typo of dt-bindings patch
+2. Remove the unnecessary properties in binding document
+3. dispos the irq mappings of msi top domain when irq teardown
 
-[...]
-> -	struct pcie_port	pp;
-> -	struct dw_pcie_ep	ep;
-> +	union {
-> +		struct pcie_port	pp;
-> +		struct dw_pcie_ep	ep;
-> +	};
-[...]
+Jianjun Wang (7):
+  dt-bindings: PCI: mediatek-gen3: Add YAML schema
+  PCI: Export pci_pio_to_address() for module use
+  PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+  PCI: mediatek-gen3: Add INTx support
+  PCI: mediatek-gen3: Add MSI support
+  PCI: mediatek-gen3: Add system PM support
+  MAINTAINERS: Add Jianjun Wang as MediaTek PCI co-maintainer
 
-How did you measure the difference?  Often, people include pahole output
-for the "before" and "after", so to speak, to showcase the difference
-and/or improvement.  Do you have something like that handy?
+ .../bindings/pci/mediatek-pcie-gen3.yaml      |  181 +++
+ MAINTAINERS                                   |    1 +
+ drivers/pci/controller/Kconfig                |   13 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-mediatek-gen3.c   | 1025 +++++++++++++++++
+ drivers/pci/pci.c                             |    1 +
+ 6 files changed, 1222 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+ create mode 100644 drivers/pci/controller/pcie-mediatek-gen3.c
 
-Krzysztof
+-- 
+2.25.1
+
