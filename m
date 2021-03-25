@@ -2,147 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF0BB34983C
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:37:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E01D334987F
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:44:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbhCYRhD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 13:37:03 -0400
-Received: from mail-bn8nam12on2043.outbound.protection.outlook.com ([40.107.237.43]:3040
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229676AbhCYRgx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Mar 2021 13:36:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CkoB5iB8fm+j+jXiPrOvOxQAvVdRqAmMjnWW1UyAhlP6tQYxnTAbIWRegxdlCU3xC7Vpxr9iLsNTyp/qH88Si4Bs4mINLfC10JouZ7YIeeuOD9T0vseKJc8tovJuK9KZiO2N4lwIcirq6C+pw3mFqriRtyvuAltkMHfm5gAQxwItPqp1MWZsfLPW3d0L1XVWWKX2qeyIbZCoci9FPG7VJL3NL30yZPYOgHTE3yjSkh8UoR5J+OR1IUHQeNlCZM7ob26siJhyIVHHj9DvAucJIXSpP8nKjk82jZCOtdbLSFKloCU8YUmzVDbuviXC+rSQ0IRFkLriWtlWFpj8F8TGNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C3lGqG6BWvw47EoBsUQ/8ytSaXn6G+HNve4YkBRWZk8=;
- b=g0qhmCqMvv4RK1/kLf6s4BFnIPh2Lmj7/QTyzlIhauSvGxJlluY/PRdjd20NhGZvzT4B/vEDcovw0GI4Cr7zFlXZ/0zwxSIjUQQ8WnlE3xAYZVCMtSjZX8wiudyh54dLdR1Y7rhNt3I2IKdBqYfA7ryraH/tImULGar4GfzWf/YZTRcpBHrBDOsWZq5g7onVfUkbl8bmzm1kH2Ji7neT5h2YY6dzkuixv+RJ3va7+l5F2fLAmTLb++gbuivz0/H2pLX+JQK3vB3Oj6Kratkx/ilucfa5k8BwPjVMRVJbXhsP6n4/m+nVYb7ODLxbgX02GIcpkdg8EGodtuuPE2iYig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C3lGqG6BWvw47EoBsUQ/8ytSaXn6G+HNve4YkBRWZk8=;
- b=GyGcBHulzeIH5UM0jPj6mJRmIXK/iRsICrqB+4kI6BAS+X+Z+Ya9If9jyUBEtkUD3Q4TY18alHo3/WAzJbwBm/hMl5h+MLaBn9Hg/CpGNrnSpW4+I1zAO7597/q4uFnJOOV643M6ZuUrb2cb2KQBKT9nnkcs+h/Vcip9wbAVBCy8iN0NfHkFid4Ks/c6QyYZKsODKBZfH41xu6qQ0Hq7asHGcuipISo+DFwijJfQNAtRwph9IEEQQ5wQO5I9UIBLGpmqnb7Fn+kHbBP+Y4QHqas02y3JHpbwBbvxiiHxgX7gbXu6swp3x3XQR2UwyujNElMf53H9jhPIryf6pmv6NQ==
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1243.namprd12.prod.outlook.com (2603:10b6:3:74::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Thu, 25 Mar
- 2021 17:36:48 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3977.029; Thu, 25 Mar 2021
- 17:36:48 +0000
-Date:   Thu, 25 Mar 2021 14:36:46 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <20210325173646.GG2356281@nvidia.com>
-References: <20210311214424.GQ2356281@nvidia.com>
- <20210325172144.GA696830@bjorn-Precision-5520>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210325172144.GA696830@bjorn-Precision-5520>
-X-Originating-IP: [206.223.160.26]
-X-ClientProxiedBy: CH2PR11CA0017.namprd11.prod.outlook.com
- (2603:10b6:610:54::27) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S229629AbhCYRoA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 13:44:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229614AbhCYRny (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 13:43:54 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC4BC06175F
+        for <linux-pci@vger.kernel.org>; Thu, 25 Mar 2021 10:43:54 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id e7so3351740edu.10
+        for <linux-pci@vger.kernel.org>; Thu, 25 Mar 2021 10:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tou3h9jnBqeaQGEPmPurXQuY6E2+g7FGdoVck2muf4Q=;
+        b=hnpu95FThTFSu1cIpbhwYwf625S3TgCZvUsfx9bIM6JBEpdS1bCpgCciHKGpNGcJcf
+         g6TAGM2Kf3J5By5zYfoxrOPKZDWRg5t/ECtMLmm4mDCK+6M18QD4DWnLxXI7/NV8p65+
+         RdVQR991tTHPfwNt4D6H8yWujSsZU+AXFrMuyR8dRcSZehFNS+GAHLeN8m8pNewKNcjy
+         jcOvJsm5AKl7OBaaVhIF3J2qpLEQzUBSun//UazAeWiPtqCD4hRA+Tko53v0HCEvGQBh
+         EKCXkenDE951yN0Q91yoGrrt3bILEJdW3hVdnpTwXbTBqhJbjY6ukb8TQFML2KEDiMtS
+         F7VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tou3h9jnBqeaQGEPmPurXQuY6E2+g7FGdoVck2muf4Q=;
+        b=FqTSJ1Gg1dR9t8uLGS6smel87KByP6aRHy8xeypbSF36KhU0v24LE9/SplugsVHByO
+         oplpO1XpwTOuyx2s2SUYnC5CzTBYhw71OqxHixgTe+rFYDcJKNY800I5iQZYcIcPzcmm
+         VLKkAo15RzXC2wRQu8+64XxhYVMXQf6RnR8WZ1BtdyoJkT3Vz15JqkjqbH5m6om1uc5A
+         l+qXMPYWGzcpfx+QSD3eBBqXn9EGiHNU7zs2T2g7iguBC4P5arQsfd2q/sVpmDku/QT5
+         Wf+5AH+5d9jyiyX1ui+Ls45AY6GlyKS8a0IiO5corqVhMULXW8ND5ZyED1J/GuC+xz1G
+         KlcQ==
+X-Gm-Message-State: AOAM532tOJKPtDdOCq2EQXhxIUhKOgqKPl+8OqIERN+UaTuLfWsjLoQY
+        JEGD/n6fmrKGQw1RaWbHg3AbsCA9UFshotfko5Ghyw==
+X-Google-Smtp-Source: ABdhPJzDjN0uH+pfe/CI7t1H7ZO4vfoquVXWi1vDbfzNIi4DeUdtOcjW5Qre8hqNZzQZQ3qMdqrFhubJT2q5qe4/oQI=
+X-Received: by 2002:a05:6402:11c9:: with SMTP id j9mr10398289edw.348.1616694232248;
+ Thu, 25 Mar 2021 10:43:52 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (206.223.160.26) by CH2PR11CA0017.namprd11.prod.outlook.com (2603:10b6:610:54::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.25 via Frontend Transport; Thu, 25 Mar 2021 17:36:48 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lPTuY-002kfy-V0; Thu, 25 Mar 2021 14:36:46 -0300
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0a526200-005d-4578-0fd9-08d8efb4911b
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1243:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1243103D8C552975D96F1ACAC2629@DM5PR12MB1243.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZGwF6af37sV7clJNUYfkW7lpwcDV7YvyrmprNqQGpvpnh9m9DMBq1w1xn1dDk3r596uJ67gdbR5yjelMxUZ7xv/J2HAca/mPpr9sf99fnydBzY6FeIp66Ouk1zEW5onP57fS0w6Hoo3ueAPXZeTwfBGXnsAcRkjuUSMdaVxf5y7I5VLuvpuitpd+kT3cKrvwNeqXTvNXF2F/ORHSpp9ggPuHcWswycqIqZ8FxaFxnVvPj3t3L3t+I6ONuUWsMYnP3h9OrBru7Sv9HM47w8bYwo+NuRBGDr7om28nhSsRLY+x7CRcs13BJff0CkoBD+Qq1Sj6PObwnAD+S6464Dcv+G6HSgFZ5H20Nn//o+SVoqmaGx3D6KbXZ5o+uO+gF7scTrFqrjK6btkVUdQi8dtYc5EoF62cmC6OuFMXClVUbYjXHFBnbTRAFmHqJfzcjaHcd2VHfHtkQXi38ORL0yGMgO+OmLSPpvShCh48T4qZVkB5k/cDJz3SBY/HBZTWpngMQ5B7cXGwwuF8Wbbxoz8pbkqaSfTxwBhGXgYZo8D1wEJyBH/yjdHljCfdvIiY5v6sZ7HgMAL0hAzhY9M5CDrjTq2N4pWkLBm3Jivc7yQa/xXHScgv4yIlf6RvrZWe7/y5O+qlh3npOgwwu6Ss7e7ekw/6Y8NGcsWMN9nh4/TZFRc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(39860400002)(366004)(376002)(136003)(38100700001)(426003)(5660300002)(54906003)(7416002)(66476007)(36756003)(8676002)(26005)(6916009)(186003)(8936002)(9746002)(9786002)(2906002)(66946007)(4326008)(2616005)(316002)(478600001)(83380400001)(66556008)(33656002)(1076003)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?VB8hrdCEufVaWa6e+bsNgCnlrmn64JJuR03+LdEpQYCSyue4JUCUQPLHw0Cc?=
- =?us-ascii?Q?4Ze4f3/0MeFFewjqQM+JWtxVOa+eKQ0d8O6CPbRiWVAsLWsj01PAELmpNzFw?=
- =?us-ascii?Q?vGEu7K3blxdt9AakA3jDHGAJlAEMc5Mq1IIS4eTqLrzGeZ2EI/tYK+z3zM7+?=
- =?us-ascii?Q?ae7Z2u+7W+Lpp2P/2liwfshGLvqkzvy5xGMYLjPLz9qInIClRnZDzNZJtpaQ?=
- =?us-ascii?Q?e3POxDGRt4MVWrkClGCsfQCFqzpMeBeoYiu1WuocXkutfADolITTnkQfVDFi?=
- =?us-ascii?Q?TDvWiC/aXWTDvcEDZaRS9akrcdp02vOwYZXgFdp6V053u1QEziK2v+SlwTkz?=
- =?us-ascii?Q?1TPylF7YGwrsSO9B0A//cnPDX9jvEy034Ts7bFwafszXLDksisGYXUAMh4HZ?=
- =?us-ascii?Q?Zi9Mzi2WWDd6OIDolxOosxan9NkWV9C7PGuQFryZube6Oj8xRsZU0l52btfx?=
- =?us-ascii?Q?4NeGdpCAnpjueL74R0pW4C9FIwq6cxGMlrE3tKA2YgSIHtgRLYAimoGLtYoo?=
- =?us-ascii?Q?o0JJ71cuoYnfDqCBu8Ogje5gRL/GBHtYZeeVy9hF7p0R7QqRhGSd9jJtndjW?=
- =?us-ascii?Q?MSAcTsdx7UOHau3FTK2PEoDs4NsxPKLOBT9yH1yQZHixtsjaEdJCP2yCESz9?=
- =?us-ascii?Q?d06Sjvzg46mcOL8bdyEJfiKxZzgQqXWnmSLPMueXpsCVa6bajmI5oWWyCRBq?=
- =?us-ascii?Q?tdwzjkGK9Mo42D6EzxKR8UnvDDJQeW+B3xIEBbEyuWsol63CiJ7MZiO55rfA?=
- =?us-ascii?Q?VvtgtzaZM4s5W/V0RxX0HZAJQgXthqjTSDW1CYL1+cIf2f3I6PaFiwBiXICd?=
- =?us-ascii?Q?kPcV+XpC75LmZBBH0YNt89yLKzYE8sof1xShNYnW5zC32AgfFT5JKlJ2rixL?=
- =?us-ascii?Q?rl3sDuiJq6I9nNYW05IMvH4Qo7jpwPKrPC30mVUlqkHa2Hc4Az8KoJfUMN4D?=
- =?us-ascii?Q?/jMW+hSiuWYCzFz8OULH41Woh4M0QryVCoQ2YvFYrrWkmH054HcBXBt7Pb7p?=
- =?us-ascii?Q?iXK0nmX0eHZFztVYkOtBNW7AKoY7665mkwsBCmAB34E2DD80mE0FpEPUiGfu?=
- =?us-ascii?Q?8GkQnpVXNpPLS6979QNp2c3TEhKqrclBEL/r/4YA9QpYmHOUoBxI5Jg5fbDg?=
- =?us-ascii?Q?Gbl9gtjhrlogR8w+/h0EyqkfZpddd8UZOb2kNQR0rkhZVJBtLOn7/KU8oI1D?=
- =?us-ascii?Q?mSQhrAW6ho+4JoJoGrt7S3UjC+f9tC/ms1O/koyv+ViR7Tcj0zZrSbyb78VM?=
- =?us-ascii?Q?azVISuWSX5twV/IiEoid7tPvmHrnWaZgj0JV6VGlO33AG9ECW81FnUDkHLIq?=
- =?us-ascii?Q?KFaBbhhx2mvc0TF6y2ZWWxEs?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a526200-005d-4578-0fd9-08d8efb4911b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2021 17:36:48.1746
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wU0Q+MqF+tCdZ9zKhWGO6J6ntefceQKUD2ATTACto3y6A+Hkg9EEjFJy1QWaiVvp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1243
+References: <161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <YFwzw3VK0okr+taA@kroah.com>
+In-Reply-To: <YFwzw3VK0okr+taA@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 25 Mar 2021 10:43:41 -0700
+Message-ID: <CAPcyv4huzgpCvT+MVjpVPRE+ZcxPaqB2jqVMt7nJuP0hpzQ82A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Allow drivers to claim exclusive access to config regions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 12:21:44PM -0500, Bjorn Helgaas wrote:
+On Wed, Mar 24, 2021 at 11:55 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Mar 24, 2021 at 06:23:54PM -0700, Dan Williams wrote:
+> > The PCIE Data Object Exchange (DOE) mailbox is a protocol run over
+> > configuration cycles. It assumes one initiator at a time is
+> > reading/writing the data registers.
+>
+> That sounds like a horrible protocol for a multi-processor system.
+> Where is it described and who can we go complain to for creating such a
+> mess?
 
-> NVMe and mlx5 have basically identical functionality in this respect.
-> Other devices and vendors will likely implement similar functionality.
-> It would be ideal if we had an interface generic enough to support
-> them all.
-> 
-> Is the mlx5 interface proposed here sufficient to support the NVMe
-> model?  I think it's close, but not quite, because the the NVMe
-> "offline" state isn't explicitly visible in the mlx5 model.
+It appears it was added to the PCIE specification in March of last
+year, I don't attend those meetings. I only learned about it since the
+CXL specification adopted it.
 
-I thought Keith basically said "offline" wasn't really useful as a
-distinct idea. It is an artifact of nvme being a standards body
-divorced from the operating system.
+>
+> > If userspace reads from the response
+> > data payload it may steal data that a kernel driver was expecting to
+> > read. If userspace writes to the request payload it may corrupt the
+> > request a driver was trying to send.
+>
+> Fun!  So you want to keep root in userspace from doing this?  I thought
+> we already do that today?
 
-In linux offline and no driver attached are the same thing, you'd
-never want an API to make a nvme device with a driver attached offline
-because it would break the driver.
+The only limitation I found was temporary locking via
+pci_cfg_access_lock(), and some limitations on max config offset, not
+permanent access disable.
 
-So I think it is good as is (well one of the 8 versions anyhow).
+>
+> > Introduce pci_{request,release}_config_region() for a driver to exclude
+> > the possibility of userspace induced corruption while accessing the DOE
+> > mailbox. Likely there are other configuration state assumptions that a
+> > driver may want to assert are under its exclusive control, so this
+> > capability is not limited to any specific configuration range.
+>
+> As you do not have a user for these functions, it's hard to see how they
+> would be used.  We also really can't add new apis with no in-tree users,
+> so do you have a patch series that requires this functionality
+> somewhere?
 
-Keith didn't go into detail why the queue allocations in nvme were any
-different than the queue allocations in mlx5. I expect they can
-probably work the same where the # of interrupts is an upper bound on
-the # of CPUs that can get queues and the device, once instantiated,
-could be configured for the number of queues to actually operate, if
-it wants.
+Whoops, I buried the lead here. This is in reaction to / support of
+Jonathan's efforts to use this mailbox to retrieve a blob of memory
+characteristics data from CXL devices called the CDAT [1]. That blob
+is used to populate / extend ACPI SRAT/HMAT/SLIT data for CXL attached
+memory. So while I was reviewing his patches it occurred to me that
+the b0rked nature of this interface relative to pci-sysfs needed to be
+addressed. This should wait to go in with his series.
 
-Jason
+[1]: https://lore.kernel.org/linux-acpi/20210310180306.1588376-2-Jonathan.Cameron@huawei.com/
+
+>
+> > Since writes are targeted and are already prepared for failure the
+> > entire request is failed. The same can not be done for reads as the
+> > device completely disappears from lspci output if any configuration
+> > register in the request is exclusive. Instead skip the actual
+> > configuration cycle on a per-access basis and return all f's as if the
+> > read had failed.
+>
+> returning all ff is a huge hint to many drivers that the device is gone,
+> not that it just failed.  So what happens to code that thinks that and
+> then tears stuff down as if the device has been removed?
+
+This is limited to the pci_user_* family of accessors, kernel drivers
+should be unaffected. The protection for kernel drivers colliding is
+the same as request_mem_region() coordination.
+
+Userspace drivers will of course be horribly confused, but those
+should not be binding to devices that are claimed by a kernel driver
+in the first place.
+
+> Trying to protect drivers from userspace here feels odd, what userspace
+> tools are trying to access these devices while they are under
+> "exclusive" control from the kernel?  lspci not running as root should
+> not be doing anything crazy, but if you want to run it as root,
+> shouldn't you be allowed to access it properly?
+
+The main concern is unwanted userspace reads. An inopportune "hexdump
+/sys/bus/pci/devices/$device/config" will end up reading the DOE
+payload register and advancing the device state machine surprising the
+kernel iterator that might be reading the payload.
+
+If root really wants to read that portion of config space it can also
+unload the driver similar to the policy for /dev/mem colliding with
+exclusive device-mmio... although that raises the question how would
+root know. At least for exclusive /dev/mem /proc/iomem can show who is
+claiming that resource.
+
+If userspace needs to submit DOE requests then that should probably be
+a proper generic driver to submit requests, not raw pci config access.
+
+> What hardware has this problem that we need to claim exclusive ownership
+> over that differs from the old hardware we used to have that would do
+> crazy things when reading from from userspace?  We had this problem a
+> long time ago and lived with it, what changed now?
+
+All I can infer from the comments in drivers/pci/access.c is "bad
+things happens on some devices if you allow reads past a certain
+offset", but no concern for reads for offsets less than
+pdev->cfg_size. I think what's changed is that this is the first time
+Linux has had to worry about an awkward polled I/O data transfer
+protocol over config cycles.
+
+To make matters worse there appears to be a proliferation of protocols
+being layered on top of DOE. In addition to CXL Table Access for CDAT
+retrieval [2] I'm aware of CXL Compliance Testing [3], Integrity and
+Data Encryption (IDE) [4], and Component Measurement and
+Authentication (CMA) [5].
+
+I've not read those, but I worry security_locked_down() may want to
+prevent even root userspace mucking with "security" interfaces. So
+that *might* be a reason to ensure exclusive kernel access beyond the
+basic sanity of the kernel being able to have uninterrupted request /
+response sessions with this mailbox
+
+[2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+[3]: https://www.computeexpresslink.org/download-the-specification
+[4]: https://members.pcisig.com/wg/PCI-SIG/document/15149
+[5]: https://members.pcisig.com/wg/PCI-SIG/document/14236
