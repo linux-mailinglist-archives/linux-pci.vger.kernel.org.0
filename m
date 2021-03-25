@@ -2,87 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 208BD34975D
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 17:57:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3105334979E
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:09:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbhCYQ4c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 12:56:32 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:38900 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbhCYQ4K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 12:56:10 -0400
-Received: by mail-io1-f41.google.com with SMTP id e8so2582692iok.5;
-        Thu, 25 Mar 2021 09:56:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=/9bA5Jr6nBNzEDVNyBoXSb1uufBPuYO8ogYWDnbdKho=;
-        b=gDpNn0uhp0VEWBTUh6K0pW8PSn7jNh+yO1bIRfMoWFntlRFdmCDBgWB8ZYKoJPor5q
-         PVUcbAQiwGpuhk+QFnPr9BiiixZfGOxGfQCBpMHcMIQ0UzDTmKahxTQBSL/yVqO2h8jQ
-         GlFn0YFIrHgq6OIcsoJ++n7Sjxnx0izO6rpbgY84ZEGOkWqZcmXjwQS2ZAX9Av29+a8M
-         7qXzRjksWl9na1uMEDOcBq97hcz1OLY/ilcrzw7rCpKBIaR3x4CoMSYXSkWRB5i17v4F
-         n87DVmE61kivy2P0mbuXhLQUUomACnVKMjpf4AuW4QcOCqQYun2L+S19tuyRIdt5NL+0
-         MOPw==
-X-Gm-Message-State: AOAM533GOIauYqeZAeTd9Xdgdd2ubKfSQf3Vk5E1ykxtq5qtuBzsuwJD
-        fUX0LCnT3szduZ7Nn+e7Rg==
-X-Google-Smtp-Source: ABdhPJx8qw/p2/OTtJmxZY8i7gZ67jrTFFrG8AnyWvJl91ABfd66Uhoya1//ywm0WOR4p7W5tlk5Kw==
-X-Received: by 2002:a5e:d901:: with SMTP id n1mr7232684iop.84.1616691370334;
-        Thu, 25 Mar 2021 09:56:10 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id s16sm2864094ioe.44.2021.03.25.09.56.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Mar 2021 09:56:09 -0700 (PDT)
-Received: (nullmailer pid 1321889 invoked by uid 1000);
-        Thu, 25 Mar 2021 16:56:01 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>
-In-Reply-To: <20210325090026.8843-2-kishon@ti.com>
-References: <20210325090026.8843-1-kishon@ti.com> <20210325090026.8843-2-kishon@ti.com>
-Subject: Re: [PATCH 1/6] dt-bindings: PCI: ti, am65: Add PCIe host mode dt-bindings for TI's AM65 SoC
-Date:   Thu, 25 Mar 2021 10:56:01 -0600
-Message-Id: <1616691361.046934.1321888.nullmailer@robh.at.kernel.org>
+        id S229869AbhCYRIc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 13:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229940AbhCYRIR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Mar 2021 13:08:17 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1791619C2;
+        Thu, 25 Mar 2021 17:08:16 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lPTSw-003n47-M2; Thu, 25 Mar 2021 17:08:14 +0000
+Date:   Thu, 25 Mar 2021 17:08:13 +0000
+Message-ID: <8735wjrwjm.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Megha Dey <megha.dey@intel.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com,
+        dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+Subject: Re: [Patch V2 07/13] irqdomain/msi: Provide msi_alloc/free_store() callbacks
+In-Reply-To: <1614370277-23235-8-git-send-email-megha.dey@intel.com>
+References: <1614370277-23235-1-git-send-email-megha.dey@intel.com>
+        <1614370277-23235-8-git-send-email-megha.dey@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: megha.dey@intel.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com, dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com, dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, bhelgaas@google.com, linux-pci@vger.kernel.org, baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 25 Mar 2021 14:30:21 +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe host mode dt-bindings for TI's AM65 SoC.
+On Fri, 26 Feb 2021 20:11:11 +0000,
+Megha Dey <megha.dey@intel.com> wrote:
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> For devices which don't have a standard storage for MSI messages like the
+> upcoming IMS (Interrupt Message Store) it's required to allocate storage
+> space before allocating interrupts and after freeing them.
+> 
+> This could be achieved with the existing callbacks, but that would be
+> awkward because they operate on msi_alloc_info_t which is not uniform
+> across architectures. Also these callbacks are invoked per interrupt but
+> the allocation might have bulk requirements depending on the device.
+> 
+> As such devices can operate on different architectures it is simpler to
+> have separate callbacks which operate on struct device. The resulting
+> storage information has to be stored in struct msi_desc so the underlying
+> irq chip implementation can retrieve it for the relevant operations.
+> 
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Megha Dey <megha.dey@intel.com>
 > ---
->  .../bindings/pci/ti,am65-pci-host.yaml        | 111 ++++++++++++++++++
->  1 file changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+>  include/linux/msi.h |  8 ++++++++
+>  kernel/irq/msi.c    | 11 +++++++++++
+>  2 files changed, 19 insertions(+)
 > 
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 46e879c..e915932 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -323,6 +323,10 @@ struct msi_domain_info;
+>   *			function.
+>   * @domain_free_irqs:	Optional function to override the default free
+>   *			function.
+> + * @msi_alloc_store:	Optional callback to allocate storage in a device
+> + *			specific non-standard MSI store
+> + * @msi_alloc_free:	Optional callback to free storage in a device
+> + *			specific non-standard MSI store
+>   *
+>   * @get_hwirq, @msi_init and @msi_free are callbacks used by
+>   * msi_create_irq_domain() and related interfaces
+> @@ -372,6 +376,10 @@ struct msi_domain_ops {
+>  					     struct device *dev, int nvec);
+>  	void		(*domain_free_irqs)(struct irq_domain *domain,
+>  					    struct device *dev);
+> +	int		(*msi_alloc_store)(struct irq_domain *domain,
+> +					   struct device *dev, int nvec);
+> +	void		(*msi_free_store)(struct irq_domain *domain,
+> +					  struct device *dev);
+>  };
+>  
+>  /**
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index c54316d..047b59d 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -434,6 +434,12 @@ int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (ops->msi_alloc_store) {
+> +		ret = ops->msi_alloc_store(domain, dev, nvec);
 
-My bot found errors running 'make dt_binding_check' on your patch:
+What is supposed to happen if we get aliasing devices (similar to what
+we have with devices behind a PCI bridge)?
 
-yamllint warnings/errors:
+The ITS code goes through all kind of hoops to try and detect this
+case when sizing the translation tables (in the .prepare callback),
+and I have the feeling that sizing the message store is analogous.
 
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dts:44.35-36 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [scripts/Makefile.lib:349: Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dt.yaml] Error 1
-make: *** [Makefile:1380: dt_binding_check] Error 2
+Or do we all have the warm fuzzy feeling that aliasing is a thing of
+the past and that we can ignore this potential problem?
 
-See https://patchwork.ozlabs.org/patch/1458243
+Thanks,
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+	M.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+-- 
+Without deviation from the norm, progress is not possible.
