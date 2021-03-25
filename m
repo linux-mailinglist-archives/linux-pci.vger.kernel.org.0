@@ -2,88 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D52B3348C59
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:11:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8D42348CA3
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:19:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbhCYJKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 05:10:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40550 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbhCYJKV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:10:21 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12P9A1EC104845;
-        Thu, 25 Mar 2021 04:10:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1616663401;
-        bh=fizCFa2FC7q85wBtLkQgLLvgIMCdjLrp+tEVBpiTQXI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SSr7Jx3/AA1GeZQKpipzaX4Txc2++7hZ6xpfzAyyEjuUXJBK6yogFr4jGMp2ZbUG6
-         eyWI36wRrZDrqFxnl+oYMvPXQM60SNwbO8pLo8diNmQ0AlLwiRaJl8tkRXsqdZBTMj
-         0SNQtFPqSEwvfkkAzpJpDZgbdd1A/LRF6PkjFgrM=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12P9A1Of022983
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Mar 2021 04:10:01 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 25
- Mar 2021 04:10:01 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Thu, 25 Mar 2021 04:10:01 -0500
-Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12P99bA1078373;
-        Thu, 25 Mar 2021 04:09:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>, <linux-omap@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 4/4] PCI: j721e: Add PCIe support for AM64
-Date:   Thu, 25 Mar 2021 14:39:36 +0530
-Message-ID: <20210325090936.9306-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210325090936.9306-1-kishon@ti.com>
-References: <20210325090936.9306-1-kishon@ti.com>
+        id S229574AbhCYJSt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 05:18:49 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:25958 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229934AbhCYJSn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:18:43 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-223-13BMoTGZMQaaO9FQ8WC1tA-1; Thu, 25 Mar 2021 09:18:39 +0000
+X-MC-Unique: 13BMoTGZMQaaO9FQ8WC1tA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Thu, 25 Mar 2021 09:18:37 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Thu, 25 Mar 2021 09:18:37 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Amey Narkhede' <ameynarkhede03@gmail.com>,
+        =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kabel@kernel.org" <kabel@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "raphael.norwitz@nutanix.com" <raphael.norwitz@nutanix.com>
+Subject: RE: How long should be PCIe card in Warm Reset state?
+Thread-Topic: How long should be PCIe card in Warm Reset state?
+Thread-Index: AQHXIAXnrcmc2gEB8kyyLgm3o0lr1qqUbNMg
+Date:   Thu, 25 Mar 2021 09:18:37 +0000
+Message-ID: <a8e256ece0334734b1ef568820b95a15@AcuMS.aculab.com>
+References: <20210310110535.zh4pnn4vpmvzwl5q@pali>
+ <20210323161941.gim6msj3ruu3flnf@archlinux>
+ <20210323162747.tscfovntsy7uk5bk@pali>
+ <20210323165749.retjprjgdj7seoan@archlinux>
+In-Reply-To: <20210323165749.retjprjgdj7seoan@archlinux>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-AM64 has the same PCIe IP as in J7200 (legacy interrupt handling is
-same as J7200 instead of J721E). Add support for "ti,am64-pcie-host"
-compatible that is specific to AM64.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index f175f116abf6..38895a5f4b68 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -467,6 +467,10 @@ static const struct of_device_id of_j721e_pcie_match[] = {
- 		.compatible = "ti,j7200-pcie-host",
- 		.data = &j7200_pcie_rc_data,
- 	},
-+	{
-+		.compatible = "ti,am64-pcie-host",
-+		.data = &j7200_pcie_rc_data,
-+	},
- 	{},
- };
- 
--- 
-2.17.1
+RnJvbTogQW1leSBOYXJraGVkZQ0KPiBTZW50OiAyMyBNYXJjaCAyMDIxIDE2OjU4DQo+IA0KPiBP
+biAyMS8wMy8yMyAwNToyN1BNLCBQYWxpIFJvaMOhciB3cm90ZToNCj4gPiBPbiBUdWVzZGF5IDIz
+IE1hcmNoIDIwMjEgMjE6NDk6NDEgQW1leSBOYXJraGVkZSB3cm90ZToNCj4gPiA+IE9uIDIxLzAz
+LzEwIDEyOjA1UE0sIFBhbGkgUm9ow6FyIHdyb3RlOg0KPiA+ID4gPiBIZWxsbyENCj4gPiA+ID4N
+Cj4gPiA+ID4gSSB3b3VsZCBsaWtlIHRvIG9wZW4gYSBxdWVzdGlvbiBhYm91dCBQQ0llIFdhcm0g
+UmVzZXQuIFdhcm0gUmVzZXQgb2YNCj4gPiA+ID4gUENJZSBjYXJkIGlzIHRyaWdnZXJlZCBieSBh
+c3NlcnRpbmcgUEVSU1QjIHNpZ25hbCBhbmQgaW4gbW9zdCBjYXNlcw0KPiA+ID4gPiBQRVJTVCMg
+c2lnbmFsIGlzIGNvbnRyb2xsZWQgYnkgR1BJTy4NCj4gPiA+ID4NCj4gPiA+ID4gQmFzaWNhbGx5
+IGV2ZXJ5IG5hdGl2ZSBMaW51eCBQQ0llIGNvbnRyb2xsZXIgZHJpdmVyIGlzIGRvaW5nIHRoaXMg
+V2FybQ0KPiA+ID4gPiBSZXNldCBvZiBjb25uZWN0ZWQgUENJZSBjYXJkIGR1cmluZyBuYXRpdmUg
+ZHJpdmVyIGluaXRpYWxpemF0aW9uDQo+ID4gPiA+IHByb2NlZHVyZS4NCj4gPiA+ID4NCj4gPiA+
+ID4gQW5kIG5vdyB0aGUgaW1wb3J0YW50IHF1ZXN0aW9uIGlzOiBIb3cgbG9uZyBzaG91bGQgYmUg
+UENJZSBjYXJkIGluIFdhcm0NCj4gPiA+ID4gUmVzZXQgc3RhdGU/IEFmdGVyIHdoaWNoIHRpbWVv
+dXQgY2FuIGJlIFBFUlNUIyBzaWduYWwgZGUtYXNzZXJ0ZWQgYnkNCj4gPiA+ID4gTGludXggY29u
+dHJvbGxlciBkcml2ZXI/DQo+ID4gPiA+DQo+ID4gPiA+IExvcmVuem8gYW5kIFJvYiBhbHJlYWR5
+IGV4cHJlc3NlZCBjb25jZXJucyBbMV0gWzJdIHRoYXQgdGhpcyBXYXJtIFJlc2V0DQo+ID4gPiA+
+IHRpbWVvdXQgc2hvdWxkIG5vdCBiZSBkcml2ZXIgc3BlY2lmaWMgYW5kIEkgYWdyZWUgd2l0aCB0
+aGVtLg0KPiA+ID4gPg0KPiA+ID4gPiBJIGhhdmUgZG9uZSBpbnZlc3RpZ2F0aW9uIHdoaWNoIHRp
+bWVvdXQgaXMgdXNpbmcgd2hpY2ggbmF0aXZlIFBDSWUNCj4gPiA+ID4gZHJpdmVyIFszXSBhbmQg
+YmFzaWNhbGx5IGV2ZXJ5IGRyaXZlciBpcyB1c2luZyBkaWZmZXJlbnQgdGltZW91dC4NCj4gPiA+
+ID4NCj4gPiA+ID4gSSBoYXZlIHRyaWVkIHRvIGZpbmQgdGltZW91dHMgaW4gUENJZSBzcGVjaWZp
+Y2F0aW9ucywgSSB3YXMgbm90IGFibGUgdG8NCj4gPiA+ID4gdW5kZXJzdGFuZCBhbmQgZGVkdWNl
+IGNvcnJlY3QgdGltZW91dCB2YWx1ZSBmb3IgV2FybSBSZXNldCBmcm9tIFBDSWUNCj4gPiA+ID4g
+c3BlY2lmaWNhdGlvbnMuIFdoYXQgSSBoYXZlIGZvdW5kIGlzIHdyaXR0ZW4gaW4gbXkgZW1haWwg
+WzRdLg0KPiA+ID4gPg0KPiA+ID4gPiBBbGV4IChhcyBhICJyZXNldCBleHBlcnQiKSwgY291bGQg
+eW91IGxvb2sgYXQgdGhpcyBpc3N1ZT8NCj4gPiA+ID4NCj4gPiA+ID4gT3IgaXMgdGhlcmUgc29t
+ZWJvZHkgZWxzZSB3aG8gdW5kZXJzdGFuZCBQQ0llIHNwZWNpZmljYXRpb25zIGFuZCBQQ0llDQo+
+ID4gPiA+IGRpYWdyYW1zIHRvIGZpZ3VyZSBvdXQgd2hhdCBpcyB0aGUgbWluaW1hbCB0aW1lb3V0
+IGZvciBkZS1hc3NlcnRpbmcNCj4gPiA+ID4gUEVSU1QjIHNpZ25hbD8NCj4gPiA+ID4NCj4gPiA+
+ID4gVGhlcmUgYXJlIHN0aWxsIHNvbWUgaXNzdWVzIHdpdGggV2lGaSBjYXJkcyAoZS5nLiBDb21w
+ZXggb25lKSB3aGljaA0KPiA+ID4gPiBzb21ldGltZXMgZG8gbm90IGFwcGVhciBvbiBQQ0llIGJ1
+cy4gQW5kIGJhc2VkIG9uIHRoZXNlICJyZXNldCB0aW1lb3V0DQo+ID4gPiA+IGRpZmZlcmVuY2Vz
+IiBpbiBMaW51eCBQQ0llIGNvbnRyb2xsZXIgZHJpdmVycywgSSBzdXNwZWN0IHRoYXQgaXQgaXMg
+bm90DQo+ID4gPiA+IChvbmx5KSB0aGUgcHJvYmxlbXMgaW4gV2lGaSBjYXJkcyBidXQgYWxzbyBp
+biBMaW51eCBQQ0llIGNvbnRyb2xsZXINCj4gPiA+ID4gZHJpdmVycy4gSW4gbXkgZW1haWwgWzNd
+IEkgaGF2ZSB3cml0dGVuIHRoYXQgSSBmaWd1cmVkIG91dCB0aGF0IFdMRTEyMTYNCj4gPiA+ID4g
+Y2FyZCBuZWVkcyB0byBiZSBpbiBXYXJtIFJlc2V0IHN0YXRlIGZvciBhdCBsZWFzdCAxMG1zLCBv
+dGhlcndpc2UgY2FyZA0KPiA+ID4gPiBpcyBub3QgZGV0ZWN0ZWQuDQo+ID4gPiA+DQo+ID4gPiA+
+IFsxXSAtIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8yMDIwMDUxMzExNTk0MC5m
+aWVtdG54ZnFjeXFvNmlrQHBhbGkvDQo+ID4gPiA+IFsyXSAtIGh0dHBzOi8vbG9yZS5rZXJuZWwu
+b3JnL2xpbnV4LXBjaS8yMDIwMDUwNzIxMjAwMi5HQTMyMTgyQGJvZ3VzLw0KPiA+ID4gPiBbM10g
+LSBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1wY2kvMjAyMDA0MjQwOTI1NDYuMjVwM2hk
+dGtlaG9oZTN4d0BwYWxpLw0KPiA+ID4gPiBbNF0gLSBodHRwczovL2xvcmUua2VybmVsLm9yZy9s
+aW51eC1wY2kvMjAyMDA0MzAwODIyNDUueGJsdmI3eGVhbW00ZTMzNkBwYWxpLw0KPiA+ID4NCj4g
+PiA+IEkgc29tZWhvdyBnb3QgbXkgaGFuZHMgb24gUENJZSBHZW40IHNwZWMuIEl0IHNheXMgb24g
+cGFnZSBubyA1NTUtDQo+ID4gPiAiV2hlbiBQRVJTVCMgaXMgcHJvdmlkZWQgdG8gYSBjb21wb25l
+bnQgb3IgYWRhcHRlciwgdGhpcyBzaWduYWwgbXVzdCBiZQ0KPiA+ID4gdXNlZCBieSB0aGUgY29t
+cG9uZW50IG9yIGFkYXB0ZXIgYXMgRnVuZGFtZW50YWwgUmVzZXQuDQo+ID4gPiBXaGVuIFBFUlNU
+IyBpcyBub3QgcHJvdmlkZWQgdG8gYSBjb21wb25lbnQgb3IgYWRhcHRlciwgRnVuZGFtZW50YWwg
+UmVzZXQgaXMNCj4gPiA+IGdlbmVyYXRlZCBhdXRvbm9tb3VzbHkgYnkgdGhlIGNvbXBvbmVudCBv
+ciBhZGFwdGVyLCBhbmQgdGhlIGRldGFpbHMgb2YgaG93DQo+ID4gPiB0aGlzIGlzIGRvbmUgYXJl
+IG91dHNpZGUgdGhlIHNjb3BlIG9mIHRoaXMgZG9jdW1lbnQuIg0KPiA+ID4gTm90IHN1cmUgd2hh
+dCBjb21wb25lbnQvYWRhcHRlciBtZWFucyBpbiB0aGlzIGNvbnRleHQuDQo+ID4gPg0KPiA+ID4g
+VGhlbiBiZWxvdyBpdCBzYXlzLQ0KPiA+ID4gIkluIHNvbWUgY2FzZXMsIGl0IG1heSBiZSBwb3Nz
+aWJsZSBmb3IgdGhlIEZ1bmRhbWVudGFsIFJlc2V0IG1lY2hhbmlzbQ0KPiA+ID4gdG8gYmUgdHJp
+Z2dlcmVkICBieSBoYXJkd2FyZSB3aXRob3V0IHRoZSByZW1vdmFsIGFuZCByZS1hcHBsaWNhdGlv
+biBvZg0KPiA+ID4gcG93ZXIgdG8gdGhlIGNvbXBvbmVudC4gIFRoaXMgaXMgY2FsbGVkIGEgd2Fy
+bSByZXNldC4gVGhpcyBkb2N1bWVudCBkb2VzDQo+ID4gPiBub3Qgc3BlY2lmeSBhIG1lYW5zIGZv
+ciBnZW5lcmF0aW5nIGEgd2FybSByZXNldC4iDQo+ID4gPg0KPiA+ID4gVGhhbmtzLA0KPiA+ID4g
+QW1leQ0KPiA+DQo+ID4gSGVsbG8gQW1leSwgUENJZSBCYXNlIGRvY3VtZW50IGRvZXMgbm90IHNw
+ZWNpZnkgaG93IHRvIGNvbnRyb2wgUEVSU1QjDQo+ID4gc2lnbmFsIGFuZCBob3cgdG8gaXNzdWUg
+V2FybSBSZXNldC4gQnV0IGl0IGlzIGRvY3VtZW50ZWQgaW4gUENJZSBDRU0sDQo+ID4gTWluaSBQ
+Q0llIENFTSBhbmQgTS4yIENFTSBkb2N1bWVudHMgKG1heWJlIGluIHNvbWUgb3RoZXIgUENJZSBk
+b2NzIHRvbykuDQo+ID4NCj4gPiBJdCBpcyBuZWVkZWQgbG9vayBpbnRvIG1vcmUgZG9jdW1lbnRz
+LCAibWVyZ2UgdGhlbSBpbiBoZWFkIiBhbmQgdGhlbg0KPiA+IGRlZHVjZSBmaW5hbCBtZWFuaW5n
+Li4uDQo+IE9rYXkgc28gUENJZSBDRU0gcmV2aXNpb24gMi4wKGZyb20gMjAwNykgb24gcGFnZSBu
+byAyMiBzYXlzLQ0KPiAiT24gcG93ZXIgdXAsIHRoZSBkZWFzc2VydGlvbiBvZiBQRVJTVCMgaXMg
+ZGVsYXllZCAxMDAgbXMgKFRQVlBFUkwpDQo+IGZyb20gdGhlIHBvd2VyIHJhaWxzIGFjaGlldmlu
+ZyBzcGVjaWZpZWQgb3BlcmF0aW5nIGxpbWl0cy4gIEFsc28sIHdpdGhpbg0KPiB0aGlzIHRpbWUs
+IHRoZSByZWZlcmVuY2UgY2xvY2tzICAoUkVGQ0xLKywgUkVGQ0xLLSkgYWxzbyBiZWNvbWUgc3Rh
+YmxlLA0KPiBhdCBsZWFzdCBUUEVSU1QtQ0xLIGJlZm9yZSBQRVJTVCMgaXMgZGVhc3NlcnRlZC4i
+DQo+IA0KPiBUaGVuIGJlbG93IGl0IHNheXMtDQo+ICJBZnRlciB0aGVyZSBoYXMgYmVlbiB0aW1l
+IChUUFZQRVJMKSBmb3IgdGhlIHBvd2VyIGFuZCBjbG9jayB0byBiZWNvbWUNCj4gc3RhYmxlLCBQ
+RVJTVCMgaXMgZGVhc3NlcnRlZCBoaWdoIGFuZCB0aGUgUENJIEV4cHJlc3MgZnVuY3Rpb25zIGNh
+biBzdGFydA0KPiB1cC4iDQo+IA0KPiBBbmQgdGhlbiB0aGVyZSBpcyB0YWJsZSBvZiB0aW1pbmcg
+b24gcGFnZSBubyAzMy0NCj4gU3ltYm9sIAkJUGFyYW1ldGVyIAkJCQlNaW4NCj4gVFBWUEVSTCAJ
+UG93ZXIgU3RhYmxlIHRvIFBFUlNUIyBpbmFjdGl2ZSAJMTAwbXMNCj4gVFBFUlNULUNMSyAJUkVG
+Q0xLIHN0YWJsZSBiZWZvcmUgUEVSU1QjIGluYWN0aXZlIAkxMDDOvHMNCj4gVFBFUlNUIAkJUEVS
+U1QjIGFjdGl2ZSB0aW1lIAkJCTEwMM68cw0KPiBURkFJTCAJCVBvd2VyIGxldmVsIGludmFsaWQg
+dG8gUEVSU1QjIGFjdGl2ZSAJNTAwbnMNCj4gLi4uDQo+IA0KPiBJIGFncmVlIHRoaXMgaXMgY29u
+ZnVzaW5nLg0KDQpUaGVyZSBpcyBhbHNvIHRoZSByZWxhdGVkIGlzc3VlIG9mIHRoZSB0aW1lIGFm
+dGVyIHJlc2V0IGlzIHJlbW92ZWQNCmJlZm9yZSB0aGUgdGFyZ2V0IG11c3QgcmVzcG9uZCB0byB0
+aGUgZmlyc3QgY29uZmlndXJhdGlvbiBjeWNsZS4NCg0KSSBjYW4ndCBzZWUgdGhlIHZhbHVlIGlu
+IHRoZSAobmljZSBib3VuZCkgY29weSBvZiB0aGUgUENJIDIuMCBzcGVjIEkgaGF2ZS4NCkJ1dCBJ
+SVJDIGl0IGlzIDEwMG1zIChpdCBtaWdodCBqdXN0IG1lIDUwMG1zKS4NCldoaWxlIHRoaXMgbWln
+aHQgc2VlbSBsaWtlIGFnZXMgaXQgY2FuIGJlIHByb2JsZW1hdGljIGlmIHRhcmdldHMgaGF2ZQ0K
+dG8gbG9hZCBsYXJnZSBGUEdBIGltYWdlcyBmcm9tIHNlcmlhbCBFRVBST01zLg0KDQpNb3N0IHg4
+NiBzeXN0ZW1zIGhhdmUgbG90cyBvZiBzbG93IGJpb3MgY29kZSBzbyB0ZW5kIHRvIGJlIGZpbmUu
+DQpCdXQgc29tZSBvdGhlciBzeXN0ZW1zIGNhbiB0cnkgdG8gZW51bWVyYXRlIHRoZSBQQ0llIHRh
+cmdldCBiZWZvcmUNCml0IGlzIGFjdHVhbGx5IHJlYWR5IC0gY2F1c2luZyBzZW1pLXJhbmRvbSBm
+YWlsdXJlcy4NCg0KT3VyIGN1cnJlbnQgZnBnYXMgZG8gbG9hZCB0aGUgcGNpZSBpbnRlcmZhY2Ug
+YmVmb3JlIG1vc3Qgb2YgdGhlDQpsb2dpYywgYW5kIGNhbiBiZSBjb25maWd1cmVkIHRvIGZvcmNl
+IGN5Y2xlIHJlcnVucyBvbiB0aGUgY29uZmlnDQpzcGFjZSBhY2Nlc3NlcyB1bnRpbCBmdWxseSBs
+b2FkZWQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
+ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
+dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
