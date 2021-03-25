@@ -2,83 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA58E349727
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 17:47:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5168C349763
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 17:57:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbhCYQrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 12:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229519AbhCYQq6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Mar 2021 12:46:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 17FE661A16;
-        Thu, 25 Mar 2021 16:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616690817;
-        bh=XDSpgiMwLXpSi0DeO5zI9TpSBGRc8mVOW9ocu02P7hw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pANO59Hy9KdhMWb8VT+AJRkMbByYezSLJpEwH5huqGS0A6kK6tx1totwF35nP+T7u
-         ARlUyhHyIwPuYKW9PE82J0pbkIsWgga1ETzKR36BjR7mRmn+OO5QyKVFFwmJ+ktjsJ
-         jO1mz+Ebo3ysTRJOf0/Spcv4NwZbEwbV9m3obh70dR0vWDJO4rWZ3YuZjnQ+rgzwqU
-         2rgfyNkqix3RBtsNj7NVLHUpajYmsMJNED4muy5qjfyNGlEG7yhKc61i/8TtbylEdw
-         0EbVeG9hw4dOtEaxOAPPjCUxOZqeXcabkU42oKqzn6X3zDHus8QAdfyKM5UIyQo5ss
-         5pcJV5Dvm+0wQ==
-Date:   Thu, 25 Mar 2021 18:46:53 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     info@metux.net, raphael.norwitz@nutanix.com,
-        alex.williamson@redhat.com, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Message-ID: <YFy+fdL8PdD2CgOy@unreal>
-References: <YFW78AfbhYpn16H4@unreal>
- <20210320085942.3cefcc48@x1.home.shazbot.org>
- <YFcGlzbaSzQ5Qota@unreal>
- <20210322111003.50d64f2c@omen.home.shazbot.org>
- <YFsOVNM1zIqNUN8f@unreal>
- <20210324083743.791d6191@omen.home.shazbot.org>
- <YFtXNF+t/0G26dwS@unreal>
- <20210324111729.702b3942@omen.home.shazbot.org>
- <YFxL4o/QpmhM8KiH@unreal>
- <20210325162637.6ewxkxhvogdsgdxv@archlinux>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210325162637.6ewxkxhvogdsgdxv@archlinux>
+        id S229524AbhCYQ4e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 12:56:34 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:45034 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229614AbhCYQ4O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 12:56:14 -0400
+Received: by mail-io1-f42.google.com with SMTP id v26so2558963iox.11;
+        Thu, 25 Mar 2021 09:56:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=+Byms4pK4Tr8p9R8BbBdKHq/oMBldoupWVsIn9Ftc2U=;
+        b=DkAZn/8PB6QpGcfGryvjMVDp9WjScHfECraFXPAtkNLAZlaZmWSQXI/aXXoPl5R7Xs
+         pOVN1RXS2in3NkE794/1AGLYjsofORC3ZZWj9b3No5Piao7B3YTBlJQd45ERwYUFMHIS
+         ZUB+EYJQu0tIS2Ly970kjj01rvkZDNzMopsdXKDqrr4RYRv4s6U72yoft/dezDHYL4bl
+         59AP/rjb6jahA5RxSJWtDopfu6oZbHxHVqpGMd4TSDbQauQP5ZB0xCR+h6ieQvyBSZWr
+         2QFevOf49I9Yo1Ct1KRhWK9TiP0k5UsoyS9jW+X2mV9HBgtpwV3eryUaO6kCwifudntb
+         Vj/Q==
+X-Gm-Message-State: AOAM531s6IAULgOycODLWwLuW8XQ9u826TZcjtsfx7ebhVML2Hv6RcfG
+        C6nlOfDYLmPRoLuOUCT3CQIhJyMN+g==
+X-Google-Smtp-Source: ABdhPJxyw7HD5gin3k4/HN2QE7YpG8aa4kqpYdKljz5sArazZpNs7Hl/KxaTDan9f5FMYUtPEI2+jw==
+X-Received: by 2002:a05:6602:2018:: with SMTP id y24mr7304821iod.74.1616691373920;
+        Thu, 25 Mar 2021 09:56:13 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id o23sm2994475ioo.24.2021.03.25.09.56.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Mar 2021 09:56:12 -0700 (PDT)
+Received: (nullmailer pid 1321893 invoked by uid 1000);
+        Thu, 25 Mar 2021 16:56:01 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-omap@vger.kernel.org, Tom Joseph <tjoseph@cadence.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+In-Reply-To: <20210325090936.9306-2-kishon@ti.com>
+References: <20210325090936.9306-1-kishon@ti.com> <20210325090936.9306-2-kishon@ti.com>
+Subject: Re: [PATCH 1/4] dt-bindings: PCI: ti, j721e: Add bindings to specify legacy interrupts
+Date:   Thu, 25 Mar 2021 10:56:01 -0600
+Message-Id: <1616691361.062216.1321892.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 09:56:37PM +0530, Amey Narkhede wrote:
-> On 21/03/25 10:37AM, Leon Romanovsky wrote:
-> > On Wed, Mar 24, 2021 at 11:17:29AM -0600, Alex Williamson wrote:
-> > > On Wed, 24 Mar 2021 17:13:56 +0200
-> > > Leon Romanovsky <leon@kernel.org> wrote:
-
-<...>
-
-> > I expect that QEMU sets same reset policy for all devices at the same
-> > time instead of trying per-device to guess which one works.
-> >
-> The current reset attribute does the same thing internally you described
-> at the end.
-> > And yes, you will be able to bypass kernel, but at least this interface
-> > will be broader than initial one that serves only SO and workarounds.
-> >
-> What does it mean by "bypassing" kernel?
-> I don't see any problem with SO and workaround if that is the only
-> way an user can use their device. Why are you expecting every vendor to
-> develop quirk? Also I don't see any point of using linked list to
-> unnecessarily complicate a simple thing.
-
-Please reread our conversation with Alex, it has answers to both of your
-questions.
-
-Thanks
-
+On Thu, 25 Mar 2021 14:39:33 +0530, Kishon Vijay Abraham I wrote:
+> Add bindings to specify interrupt controller for legacy interrupts.
 > 
-> Thanks,
-> Amey
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml  | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dts:59.39-40 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [scripts/Makefile.lib:349: Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1380: dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1458255
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
