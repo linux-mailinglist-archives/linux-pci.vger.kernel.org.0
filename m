@@ -2,181 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E01D334987F
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:44:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE32349881
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:45:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbhCYRoA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229904AbhCYRod (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 13:44:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229616AbhCYRoA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 25 Mar 2021 13:44:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbhCYRny (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 13:43:54 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC4BC06175F
-        for <linux-pci@vger.kernel.org>; Thu, 25 Mar 2021 10:43:54 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id e7so3351740edu.10
-        for <linux-pci@vger.kernel.org>; Thu, 25 Mar 2021 10:43:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tou3h9jnBqeaQGEPmPurXQuY6E2+g7FGdoVck2muf4Q=;
-        b=hnpu95FThTFSu1cIpbhwYwf625S3TgCZvUsfx9bIM6JBEpdS1bCpgCciHKGpNGcJcf
-         g6TAGM2Kf3J5By5zYfoxrOPKZDWRg5t/ECtMLmm4mDCK+6M18QD4DWnLxXI7/NV8p65+
-         RdVQR991tTHPfwNt4D6H8yWujSsZU+AXFrMuyR8dRcSZehFNS+GAHLeN8m8pNewKNcjy
-         jcOvJsm5AKl7OBaaVhIF3J2qpLEQzUBSun//UazAeWiPtqCD4hRA+Tko53v0HCEvGQBh
-         EKCXkenDE951yN0Q91yoGrrt3bILEJdW3hVdnpTwXbTBqhJbjY6ukb8TQFML2KEDiMtS
-         F7VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tou3h9jnBqeaQGEPmPurXQuY6E2+g7FGdoVck2muf4Q=;
-        b=FqTSJ1Gg1dR9t8uLGS6smel87KByP6aRHy8xeypbSF36KhU0v24LE9/SplugsVHByO
-         oplpO1XpwTOuyx2s2SUYnC5CzTBYhw71OqxHixgTe+rFYDcJKNY800I5iQZYcIcPzcmm
-         VLKkAo15RzXC2wRQu8+64XxhYVMXQf6RnR8WZ1BtdyoJkT3Vz15JqkjqbH5m6om1uc5A
-         l+qXMPYWGzcpfx+QSD3eBBqXn9EGiHNU7zs2T2g7iguBC4P5arQsfd2q/sVpmDku/QT5
-         Wf+5AH+5d9jyiyX1ui+Ls45AY6GlyKS8a0IiO5corqVhMULXW8ND5ZyED1J/GuC+xz1G
-         KlcQ==
-X-Gm-Message-State: AOAM532tOJKPtDdOCq2EQXhxIUhKOgqKPl+8OqIERN+UaTuLfWsjLoQY
-        JEGD/n6fmrKGQw1RaWbHg3AbsCA9UFshotfko5Ghyw==
-X-Google-Smtp-Source: ABdhPJzDjN0uH+pfe/CI7t1H7ZO4vfoquVXWi1vDbfzNIi4DeUdtOcjW5Qre8hqNZzQZQ3qMdqrFhubJT2q5qe4/oQI=
-X-Received: by 2002:a05:6402:11c9:: with SMTP id j9mr10398289edw.348.1616694232248;
- Thu, 25 Mar 2021 10:43:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com>
- <YFwzw3VK0okr+taA@kroah.com>
-In-Reply-To: <YFwzw3VK0okr+taA@kroah.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 25 Mar 2021 10:43:41 -0700
-Message-ID: <CAPcyv4huzgpCvT+MVjpVPRE+ZcxPaqB2jqVMt7nJuP0hpzQ82A@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Allow drivers to claim exclusive access to config regions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47F8D61A1E;
+        Thu, 25 Mar 2021 17:44:00 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lPU1W-003nbD-6t; Thu, 25 Mar 2021 17:43:58 +0000
+Date:   Thu, 25 Mar 2021 17:43:57 +0000
+Message-ID: <87zgyrqgbm.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Megha Dey <megha.dey@intel.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com,
+        dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+Subject: Re: [Patch V2 12/13] irqchip: Add IMS (Interrupt Message Store) driver
+In-Reply-To: <1614370277-23235-13-git-send-email-megha.dey@intel.com>
+References: <1614370277-23235-1-git-send-email-megha.dey@intel.com>
+        <1614370277-23235-13-git-send-email-megha.dey@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: megha.dey@intel.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com, dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com, dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, bhelgaas@google.com, linux-pci@vger.kernel.org, baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 11:55 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Mar 24, 2021 at 06:23:54PM -0700, Dan Williams wrote:
-> > The PCIE Data Object Exchange (DOE) mailbox is a protocol run over
-> > configuration cycles. It assumes one initiator at a time is
-> > reading/writing the data registers.
->
-> That sounds like a horrible protocol for a multi-processor system.
-> Where is it described and who can we go complain to for creating such a
-> mess?
+On Fri, 26 Feb 2021 20:11:16 +0000,
+Megha Dey <megha.dey@intel.com> wrote:
+> 
+> Generic IMS(Interrupt Message Store) irq chips and irq domain
+> implementations for IMS based devices which store the interrupt messages
+> in an array in device memory.
+> 
+> Allocation and freeing of interrupts happens via the generic
+> msi_domain_alloc/free_irqs() interface. No special purpose IMS magic
+> required as long as the interrupt domain is stored in the underlying
+> device struct. The irq_set_auxdata() is used to program the pasid into
+> the IMS entry.
+> 
+> [Megha: Fixed compile time errors
+>         Added necessary dependencies to IMS_MSI_ARRAY config
+>         Fixed polarity of IMS_VECTOR_CTRL
+>         Added reads after writes to flush writes to device
+>         Added set_desc ops to IMS msi domain ops
+>         Tested the IMS infrastructure with the IDXD driver]
+> 
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Megha Dey <megha.dey@intel.com>
+> ---
+>  drivers/irqchip/Kconfig             |  14 +++
+>  drivers/irqchip/Makefile            |   1 +
+>  drivers/irqchip/irq-ims-msi.c       | 211 ++++++++++++++++++++++++++++++++++++
+>  include/linux/irqchip/irq-ims-msi.h |  68 ++++++++++++
+>  4 files changed, 294 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-ims-msi.c
+>  create mode 100644 include/linux/irqchip/irq-ims-msi.h
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index e74fa20..2fb0c24 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -586,4 +586,18 @@ config MST_IRQ
+>  	help
+>  	  Support MStar Interrupt Controller.
+>  
+> +config IMS_MSI
+> +	depends on PCI
+> +	select DEVICE_MSI
+> +	bool
+> +
+> +config IMS_MSI_ARRAY
+> +	bool "IMS Interrupt Message Store MSI controller for device memory storage arrays"
+> +	depends on PCI
+> +	select IMS_MSI
+> +	select GENERIC_MSI_IRQ_DOMAIN
+> +	help
+> +	  Support for IMS Interrupt Message Store MSI controller
+> +	  with IMS slot storage in a slot array in device memory
+> +
+>  endmenu
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index c59b95a..e903201 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -113,3 +113,4 @@ obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
+>  obj-$(CONFIG_MST_IRQ)			+= irq-mst-intc.o
+>  obj-$(CONFIG_SL28CPLD_INTC)		+= irq-sl28cpld.o
+>  obj-$(CONFIG_MACH_REALTEK_RTL)		+= irq-realtek-rtl.o
+> +obj-$(CONFIG_IMS_MSI)			+= irq-ims-msi.o
+> diff --git a/drivers/irqchip/irq-ims-msi.c b/drivers/irqchip/irq-ims-msi.c
+> new file mode 100644
+> index 0000000..fa23207
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-ims-msi.c
+> @@ -0,0 +1,211 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// (C) Copyright 2021 Thomas Gleixner <tglx@linutronix.de>
+> +/*
+> + * Shared interrupt chips and irq domains for IMS devices
+> + */
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +#include <linux/msi.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +
+> +#include <linux/irqchip/irq-ims-msi.h>
+> +
+> +#ifdef CONFIG_IMS_MSI_ARRAY
 
-It appears it was added to the PCIE specification in March of last
-year, I don't attend those meetings. I only learned about it since the
-CXL specification adopted it.
+Given that this covers the whole driver, what is this #defined used
+for? You might as well make the driver depend on this config option.
 
->
-> > If userspace reads from the response
-> > data payload it may steal data that a kernel driver was expecting to
-> > read. If userspace writes to the request payload it may corrupt the
-> > request a driver was trying to send.
->
-> Fun!  So you want to keep root in userspace from doing this?  I thought
-> we already do that today?
+Thanks,
 
-The only limitation I found was temporary locking via
-pci_cfg_access_lock(), and some limitations on max config offset, not
-permanent access disable.
+	M.
 
->
-> > Introduce pci_{request,release}_config_region() for a driver to exclude
-> > the possibility of userspace induced corruption while accessing the DOE
-> > mailbox. Likely there are other configuration state assumptions that a
-> > driver may want to assert are under its exclusive control, so this
-> > capability is not limited to any specific configuration range.
->
-> As you do not have a user for these functions, it's hard to see how they
-> would be used.  We also really can't add new apis with no in-tree users,
-> so do you have a patch series that requires this functionality
-> somewhere?
-
-Whoops, I buried the lead here. This is in reaction to / support of
-Jonathan's efforts to use this mailbox to retrieve a blob of memory
-characteristics data from CXL devices called the CDAT [1]. That blob
-is used to populate / extend ACPI SRAT/HMAT/SLIT data for CXL attached
-memory. So while I was reviewing his patches it occurred to me that
-the b0rked nature of this interface relative to pci-sysfs needed to be
-addressed. This should wait to go in with his series.
-
-[1]: https://lore.kernel.org/linux-acpi/20210310180306.1588376-2-Jonathan.Cameron@huawei.com/
-
->
-> > Since writes are targeted and are already prepared for failure the
-> > entire request is failed. The same can not be done for reads as the
-> > device completely disappears from lspci output if any configuration
-> > register in the request is exclusive. Instead skip the actual
-> > configuration cycle on a per-access basis and return all f's as if the
-> > read had failed.
->
-> returning all ff is a huge hint to many drivers that the device is gone,
-> not that it just failed.  So what happens to code that thinks that and
-> then tears stuff down as if the device has been removed?
-
-This is limited to the pci_user_* family of accessors, kernel drivers
-should be unaffected. The protection for kernel drivers colliding is
-the same as request_mem_region() coordination.
-
-Userspace drivers will of course be horribly confused, but those
-should not be binding to devices that are claimed by a kernel driver
-in the first place.
-
-> Trying to protect drivers from userspace here feels odd, what userspace
-> tools are trying to access these devices while they are under
-> "exclusive" control from the kernel?  lspci not running as root should
-> not be doing anything crazy, but if you want to run it as root,
-> shouldn't you be allowed to access it properly?
-
-The main concern is unwanted userspace reads. An inopportune "hexdump
-/sys/bus/pci/devices/$device/config" will end up reading the DOE
-payload register and advancing the device state machine surprising the
-kernel iterator that might be reading the payload.
-
-If root really wants to read that portion of config space it can also
-unload the driver similar to the policy for /dev/mem colliding with
-exclusive device-mmio... although that raises the question how would
-root know. At least for exclusive /dev/mem /proc/iomem can show who is
-claiming that resource.
-
-If userspace needs to submit DOE requests then that should probably be
-a proper generic driver to submit requests, not raw pci config access.
-
-> What hardware has this problem that we need to claim exclusive ownership
-> over that differs from the old hardware we used to have that would do
-> crazy things when reading from from userspace?  We had this problem a
-> long time ago and lived with it, what changed now?
-
-All I can infer from the comments in drivers/pci/access.c is "bad
-things happens on some devices if you allow reads past a certain
-offset", but no concern for reads for offsets less than
-pdev->cfg_size. I think what's changed is that this is the first time
-Linux has had to worry about an awkward polled I/O data transfer
-protocol over config cycles.
-
-To make matters worse there appears to be a proliferation of protocols
-being layered on top of DOE. In addition to CXL Table Access for CDAT
-retrieval [2] I'm aware of CXL Compliance Testing [3], Integrity and
-Data Encryption (IDE) [4], and Component Measurement and
-Authentication (CMA) [5].
-
-I've not read those, but I worry security_locked_down() may want to
-prevent even root userspace mucking with "security" interfaces. So
-that *might* be a reason to ensure exclusive kernel access beyond the
-basic sanity of the kernel being able to have uninterrupted request /
-response sessions with this mailbox
-
-[2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
-[3]: https://www.computeexpresslink.org/download-the-specification
-[4]: https://members.pcisig.com/wg/PCI-SIG/document/15149
-[5]: https://members.pcisig.com/wg/PCI-SIG/document/14236
+-- 
+Without deviation from the norm, progress is not possible.
