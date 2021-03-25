@@ -2,106 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDC2D348BFF
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 09:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2242348C0A
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:01:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbhCYI66 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 04:58:58 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57014 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229666AbhCYI6f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Mar 2021 04:58:35 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CDA91A133E;
-        Thu, 25 Mar 2021 09:58:34 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 59C8C1A313B;
-        Thu, 25 Mar 2021 09:58:29 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 72B2A40307;
-        Thu, 25 Mar 2021 09:58:22 +0100 (CET)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
-        shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
-        stefan@agner.ch, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v3 3/3] PCI: imx: clear vreg bypass when pcie vph voltage is 3v3
-Date:   Thu, 25 Mar 2021 16:44:42 +0800
-Message-Id: <1616661882-26487-4-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1616661882-26487-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1616661882-26487-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S229904AbhCYJBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 05:01:07 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38288 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229854AbhCYJAt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:00:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12P90Wcp101275;
+        Thu, 25 Mar 2021 04:00:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1616662832;
+        bh=5JJpg9j3RLrGgrdEl+YnV8LMQv7KjuW4Rj/Mh+ZOO5I=;
+        h=From:To:CC:Subject:Date;
+        b=CcaLQPF+uM7Sb8AiTSgn95YOey1r+MfuZCupzUJfyEUh8LhqTTepDGQrZ2ia6vKao
+         hunPStMLCgFQLnOBGCOxPxmPi/lSXMKTgpeI2ymz7dYYmfLJHctmdjQzBlUXz3/tuT
+         9yf0qpi2GY5qUiZNKk3sWF7iqm9FGTLWq6uG4Mjg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12P90Wa5017892
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Mar 2021 04:00:32 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 25
+ Mar 2021 04:00:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Thu, 25 Mar 2021 04:00:31 -0500
+Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12P90Rk7115556;
+        Thu, 25 Mar 2021 04:00:28 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH 0/6] PCI: Add legacy interrupt support in Keystone
+Date:   Thu, 25 Mar 2021 14:30:20 +0530
+Message-ID: <20210325090026.8843-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Both 1.8v and 3.3v power supplies can be used by i.MX8MQ PCIe PHY.
-In default, the PCIE_VPH voltage is suggested to be 1.8v refer to data
-sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic design,
-the VREG_BYPASS bits of GPR registers should be cleared from default
-value 1b'1 to 1b'0. Thus, the internal 3v3 to 1v8 translator would be
-turned on.
+Keystone driver is used by K2G and AM65 and the interrupt handling of
+both of them is different. Add support to handle legacy interrupt for
+both K2G and AM65 here.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Some discussions regarding this was already done here [1] and it was
+around having pulse interrupt for legacy interrupt.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 853ea8e82952..d9d534f0840f 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -37,6 +37,7 @@
- #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
- #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
- #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-+#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
- #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
- #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
- 
-@@ -80,6 +81,7 @@ struct imx6_pcie {
- 	u32			tx_swing_full;
- 	u32			tx_swing_low;
- 	struct regulator	*vpcie;
-+	struct regulator	*vph;
- 	void __iomem		*phy_base;
- 
- 	/* power domain for pcie */
-@@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 				   imx6_pcie_grp_offset(imx6_pcie),
- 				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
- 				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
-+		/*
-+		 * Regarding to the datasheet, the PCIE_VPH is suggested
-+		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
-+		 * VREG_BYPASS should be cleared to zero.
-+		 */
-+		if (imx6_pcie->vph &&
-+		    regulator_get_voltage(imx6_pcie->vph) > 3000000)
-+			regmap_update_bits(imx6_pcie->iomuxc_gpr,
-+					   imx6_pcie_grp_offset(imx6_pcie),
-+					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
-+					   0);
- 		break;
- 	case IMX7D:
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-@@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		imx6_pcie->vpcie = NULL;
- 	}
- 
-+	imx6_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
-+	if (IS_ERR(imx6_pcie->vph)) {
-+		if (PTR_ERR(imx6_pcie->vph) != -ENODEV)
-+			return PTR_ERR(imx6_pcie->vph);
-+		imx6_pcie->vph = NULL;
-+	}
-+
- 	platform_set_drvdata(pdev, imx6_pcie);
- 
- 	ret = imx6_pcie_attach_pd(dev);
+The HW interrupt line connected to GIC is a pulse interrupt whereas
+the legacy interrupts by definition is level interrupt. In order to
+provide level interrupt functionality to edge interrupt line, PCIe
+in AM654 has provided IRQ_EOI register. When the SW writes to IRQ_EOI
+register after handling the interrupt, the IP checks the state of
+legacy interrupt and re-triggers pulse interrupt invoking the handler
+again.
+
+Patch series also includes converting AM65 binding to YAML and an
+errata applicable for i2037.
+
+[1] -> https://lore.kernel.org/linux-arm-kernel/20190221101518.22604-4-kishon@ti.com/
+
+Kishon Vijay Abraham I (6):
+  dt-bindings: PCI: ti,am65: Add PCIe host mode dt-bindings for TI's
+    AM65 SoC
+  dt-bindings: PCI: ti,am65: Add PCIe endpoint mode dt-bindings for TI's
+    AM65 SoC
+  irqdomain: Export of_phandle_args_to_fwspec()
+  PCI: keystone: Convert to using hierarchy domain for legacy interrupts
+  PCI: keystone: Add PCI legacy interrupt support for AM654
+  PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
+
+ .../bindings/pci/ti,am65-pci-ep.yaml          |  80 ++++
+ .../bindings/pci/ti,am65-pci-host.yaml        | 111 ++++++
+ drivers/pci/controller/dwc/pci-keystone.c     | 343 +++++++++++++-----
+ include/linux/irqdomain.h                     |   2 +
+ kernel/irq/irqdomain.c                        |   6 +-
+ 5 files changed, 440 insertions(+), 102 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+
 -- 
 2.17.1
 
