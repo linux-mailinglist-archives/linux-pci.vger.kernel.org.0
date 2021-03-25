@@ -2,156 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8D42348CA3
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:19:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BF8F348CB7
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:25:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbhCYJSt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 05:18:49 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:25958 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229934AbhCYJSn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:18:43 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-223-13BMoTGZMQaaO9FQ8WC1tA-1; Thu, 25 Mar 2021 09:18:39 +0000
-X-MC-Unique: 13BMoTGZMQaaO9FQ8WC1tA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Thu, 25 Mar 2021 09:18:37 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.012; Thu, 25 Mar 2021 09:18:37 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Amey Narkhede' <ameynarkhede03@gmail.com>,
-        =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kabel@kernel.org" <kabel@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "raphael.norwitz@nutanix.com" <raphael.norwitz@nutanix.com>
-Subject: RE: How long should be PCIe card in Warm Reset state?
-Thread-Topic: How long should be PCIe card in Warm Reset state?
-Thread-Index: AQHXIAXnrcmc2gEB8kyyLgm3o0lr1qqUbNMg
-Date:   Thu, 25 Mar 2021 09:18:37 +0000
-Message-ID: <a8e256ece0334734b1ef568820b95a15@AcuMS.aculab.com>
-References: <20210310110535.zh4pnn4vpmvzwl5q@pali>
- <20210323161941.gim6msj3ruu3flnf@archlinux>
- <20210323162747.tscfovntsy7uk5bk@pali>
- <20210323165749.retjprjgdj7seoan@archlinux>
-In-Reply-To: <20210323165749.retjprjgdj7seoan@archlinux>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S229576AbhCYJYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 05:24:45 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:48485 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229914AbhCYJYc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:24:32 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20210325092430euoutp01915a8156f82fb66db630c7e0c2250c79~vi5alIZah2608626086euoutp01N
+        for <linux-pci@vger.kernel.org>; Thu, 25 Mar 2021 09:24:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20210325092430euoutp01915a8156f82fb66db630c7e0c2250c79~vi5alIZah2608626086euoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1616664270;
+        bh=4nZTfqFXPrsScvJfwc/c+eBJ5+ZNv+Y/FOMxLuWtpZc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Hr2FGZ+DlKP1jpGs488NkHjciE+HB8Gx1NCcC3TPMgOaM4izbW6n+wOJwTrq5h2Nq
+         q0ftz/8/9xXPyjgY+d70lX/5G52FC3MNXuYs5cilj11z4Ct10srziNuCgnqR39xZOm
+         Rq2WagvDCi9ivZ4mo5kbSxg9oZkYR3SOl76B9PzM=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20210325092429eucas1p106479fc7bf90e39b3074f303b535a37a~vi5aJCOTf1386513865eucas1p1P;
+        Thu, 25 Mar 2021 09:24:29 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id D3.4A.09444.DC65C506; Thu, 25
+        Mar 2021 09:24:29 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20210325092429eucas1p25e95dd1920f2a1c9f808c72d10d1952d~vi5ZvzGiJ2937029370eucas1p2V;
+        Thu, 25 Mar 2021 09:24:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20210325092429eusmtrp185501bcc08513c92f0f956c63ed1afce~vi5ZvDUiI0207502075eusmtrp1e;
+        Thu, 25 Mar 2021 09:24:29 +0000 (GMT)
+X-AuditID: cbfec7f4-dd5ff700000024e4-7c-605c56cd9c68
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 60.09.08696.DC65C506; Thu, 25
+        Mar 2021 09:24:29 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20210325092428eusmtip1278fea7145449b5197a62306e9c55020~vi5ZFerjl1001710017eusmtip1j;
+        Thu, 25 Mar 2021 09:24:28 +0000 (GMT)
+Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com
+Cc:     robh@kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        =?UTF-8?B?7KCV7J6s7ZuI?= <jh80.chung@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <21daa79d-cdb3-f31c-0fbf-5d653de02517@samsung.com>
+Date:   Thu, 25 Mar 2021 10:24:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
+        Gecko/20100101 Thunderbird/78.8.1
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+In-Reply-To: <20210125044803.4310-1-Zhiqiang.Hou@nxp.com>
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7djPc7pnw2ISDI4vMrZY0pRhsetuB7vF
+        jV9trBYrvsxkt7i8aw6bxdl5x9ks3vx+wW7xf88OdosTbR/YHTg91sxbw+ixc9Zddo8Fm0o9
+        Nq3qZPPY+G4Hk0ffllWMHlv2f2b0+LxJLoAjissmJTUnsyy1SN8ugStj58ZNbAUbFSvaJi1i
+        amC8Jt3FyMkhIWAi0X+vk6WLkYtDSGAFo8Sp56uhnC+MEof7l7BDOJ8ZJSb/OM3cxcgB1rLw
+        WxFEfDmjxIYv+5kgnI+MEp3b/rOBzBUWcJOY+3oqO0iDiECtxMxjQiA1zAKTGCUWbLvMDFLD
+        JmAo0fW2C6yeV8BO4sPlRSwgNouAqkTz7NtgvaICSRIbDsVClAhKnJz5BKyEU8BS4tL8xWBj
+        mAXkJba/nQNli0vcejIf7B4Jgf8cEg0X9zBC/Oki0XrqF5QtLPHq+BZ2CFtG4vTkHhaIhmZG
+        iYfn1rJDOD2MEpebZkB1WEvcOfeLDeQiZgFNifW79CHCjhKt/WdZIKHCJ3HjrSDEEXwSk7ZN
+        hwYWr0RHmxBEtZrErOPr4NYevHCJeQKj0iwkr81C8s4sJO/MQti7gJFlFaN4amlxbnpqsVFe
+        arlecWJucWleul5yfu4mRmDCOv3v+JcdjMtffdQ7xMjEwXiIUYKDWUmEN8k3JkGINyWxsiq1
+        KD++qDQntfgQozQHi5I4b9KWNfFCAumJJanZqakFqUUwWSYOTqkGpgk3fpodWLr8cfGZJ88y
+        /KbkL1jpEztZSPRUx7+zztc3+TZ/u3rN99etLQen13ZpxjXcslonqKvkUFtwi/uI9OH/jHIy
+        Rfq7ZXyOC/YKBT59VyzzLDLqp8IDK93IxSKT/aOaKnpv7eqwNfzz9N6OADGWE9paYXf4pP/p
+        nhSY/KHhc+TXFUEuU5IuHBS4pK4w9bDq+0sxGS1qFQptH492HEvWvqwXc/zbPtM5Rl+Es7kW
+        r368K/6psv5qvaVbFxQ2Xn7Rv/O1U49josc/s2Az4z+Op4351NbbmHzqY9FokFOofZAqvoVb
+        7dVthdV3lPaxCi08fDxh7wml6Xs8nipIPHvUqZO+Kyhlypo1/DLT/ymxFGckGmoxFxUnAgBP
+        oY8bxwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7pnw2ISDDZOlbRY0pRhsetuB7vF
+        jV9trBYrvsxkt7i8aw6bxdl5x9ks3vx+wW7xf88OdosTbR/YHTg91sxbw+ixc9Zddo8Fm0o9
+        Nq3qZPPY+G4Hk0ffllWMHlv2f2b0+LxJLoAjSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRS
+        z9DYPNbKyFRJ384mJTUnsyy1SN8uQS9j58ZNbAUbFSvaJi1iamC8Jt3FyMEhIWAisfBbURcj
+        J4eQwFJGiStT5UFsCQEZiZPTGlghbGGJP9e62LoYuYBq3jNKbNv4kA0kISzgJjH39VR2EFtE
+        oFaibeF9ZpAiZoFJjBJn2vczQ0y1kHh0bwYTiM0mYCjR9bYLrJlXwE7iw+VFLCA2i4CqRPPs
+        22CDRAWSJC4vmcgKUSMocXLmE7AaTgFLiUvzF4PNZBYwk5i3+SGULS+x/e0cKFtc4taT+UwT
+        GIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiM0G3Hfm7Zwbjy
+        1Ue9Q4xMHIyHGCU4mJVEeJN8YxKEeFMSK6tSi/Lji0pzUosPMZoC/TORWUo0OR+YIvJK4g3N
+        DEwNTcwsDUwtzYyVxHlNjqyJFxJITyxJzU5NLUgtgulj4uCUamBanONc2yfxMOtRuafJpyJB
+        g6LZV4JyUzVEuhj91SWUwjbd3rhu6izL7tplFx/e5dU8WycpPHXzMc5czkIXs7La7ctbqr9I
+        MRVVs11jUy78ttL079qt7sa7A9tSBA9HLuibeLE/Jm75Bw0xQx1PH8MZc17en/TiaEJ2t/LT
+        kgar3kXJP+9n+y7iNLay4HGJlUk4tXJZQMvWlauzcnwipXnnzmYJOW5ztU3ZR5Ov68w5s+s8
+        fp1G64Pm7N3MEW6aJr7TdP0kf25rUY0irbe8ETFBEXMPXOvUVDy2fHeypdkL3mIzCftdQsqC
+        Wardlfdk2X9NPLK5svcqh7Kw5B2RXy+z80PL39jOyXxhMLdGiaU4I9FQi7moOBEA0C1GaFkD
+        AAA=
+X-CMS-MailID: 20210325092429eucas1p25e95dd1920f2a1c9f808c72d10d1952d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20210325092429eucas1p25e95dd1920f2a1c9f808c72d10d1952d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20210325092429eucas1p25e95dd1920f2a1c9f808c72d10d1952d
+References: <20210125044803.4310-1-Zhiqiang.Hou@nxp.com>
+        <CGME20210325092429eucas1p25e95dd1920f2a1c9f808c72d10d1952d@eucas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogQW1leSBOYXJraGVkZQ0KPiBTZW50OiAyMyBNYXJjaCAyMDIxIDE2OjU4DQo+IA0KPiBP
-biAyMS8wMy8yMyAwNToyN1BNLCBQYWxpIFJvaMOhciB3cm90ZToNCj4gPiBPbiBUdWVzZGF5IDIz
-IE1hcmNoIDIwMjEgMjE6NDk6NDEgQW1leSBOYXJraGVkZSB3cm90ZToNCj4gPiA+IE9uIDIxLzAz
-LzEwIDEyOjA1UE0sIFBhbGkgUm9ow6FyIHdyb3RlOg0KPiA+ID4gPiBIZWxsbyENCj4gPiA+ID4N
-Cj4gPiA+ID4gSSB3b3VsZCBsaWtlIHRvIG9wZW4gYSBxdWVzdGlvbiBhYm91dCBQQ0llIFdhcm0g
-UmVzZXQuIFdhcm0gUmVzZXQgb2YNCj4gPiA+ID4gUENJZSBjYXJkIGlzIHRyaWdnZXJlZCBieSBh
-c3NlcnRpbmcgUEVSU1QjIHNpZ25hbCBhbmQgaW4gbW9zdCBjYXNlcw0KPiA+ID4gPiBQRVJTVCMg
-c2lnbmFsIGlzIGNvbnRyb2xsZWQgYnkgR1BJTy4NCj4gPiA+ID4NCj4gPiA+ID4gQmFzaWNhbGx5
-IGV2ZXJ5IG5hdGl2ZSBMaW51eCBQQ0llIGNvbnRyb2xsZXIgZHJpdmVyIGlzIGRvaW5nIHRoaXMg
-V2FybQ0KPiA+ID4gPiBSZXNldCBvZiBjb25uZWN0ZWQgUENJZSBjYXJkIGR1cmluZyBuYXRpdmUg
-ZHJpdmVyIGluaXRpYWxpemF0aW9uDQo+ID4gPiA+IHByb2NlZHVyZS4NCj4gPiA+ID4NCj4gPiA+
-ID4gQW5kIG5vdyB0aGUgaW1wb3J0YW50IHF1ZXN0aW9uIGlzOiBIb3cgbG9uZyBzaG91bGQgYmUg
-UENJZSBjYXJkIGluIFdhcm0NCj4gPiA+ID4gUmVzZXQgc3RhdGU/IEFmdGVyIHdoaWNoIHRpbWVv
-dXQgY2FuIGJlIFBFUlNUIyBzaWduYWwgZGUtYXNzZXJ0ZWQgYnkNCj4gPiA+ID4gTGludXggY29u
-dHJvbGxlciBkcml2ZXI/DQo+ID4gPiA+DQo+ID4gPiA+IExvcmVuem8gYW5kIFJvYiBhbHJlYWR5
-IGV4cHJlc3NlZCBjb25jZXJucyBbMV0gWzJdIHRoYXQgdGhpcyBXYXJtIFJlc2V0DQo+ID4gPiA+
-IHRpbWVvdXQgc2hvdWxkIG5vdCBiZSBkcml2ZXIgc3BlY2lmaWMgYW5kIEkgYWdyZWUgd2l0aCB0
-aGVtLg0KPiA+ID4gPg0KPiA+ID4gPiBJIGhhdmUgZG9uZSBpbnZlc3RpZ2F0aW9uIHdoaWNoIHRp
-bWVvdXQgaXMgdXNpbmcgd2hpY2ggbmF0aXZlIFBDSWUNCj4gPiA+ID4gZHJpdmVyIFszXSBhbmQg
-YmFzaWNhbGx5IGV2ZXJ5IGRyaXZlciBpcyB1c2luZyBkaWZmZXJlbnQgdGltZW91dC4NCj4gPiA+
-ID4NCj4gPiA+ID4gSSBoYXZlIHRyaWVkIHRvIGZpbmQgdGltZW91dHMgaW4gUENJZSBzcGVjaWZp
-Y2F0aW9ucywgSSB3YXMgbm90IGFibGUgdG8NCj4gPiA+ID4gdW5kZXJzdGFuZCBhbmQgZGVkdWNl
-IGNvcnJlY3QgdGltZW91dCB2YWx1ZSBmb3IgV2FybSBSZXNldCBmcm9tIFBDSWUNCj4gPiA+ID4g
-c3BlY2lmaWNhdGlvbnMuIFdoYXQgSSBoYXZlIGZvdW5kIGlzIHdyaXR0ZW4gaW4gbXkgZW1haWwg
-WzRdLg0KPiA+ID4gPg0KPiA+ID4gPiBBbGV4IChhcyBhICJyZXNldCBleHBlcnQiKSwgY291bGQg
-eW91IGxvb2sgYXQgdGhpcyBpc3N1ZT8NCj4gPiA+ID4NCj4gPiA+ID4gT3IgaXMgdGhlcmUgc29t
-ZWJvZHkgZWxzZSB3aG8gdW5kZXJzdGFuZCBQQ0llIHNwZWNpZmljYXRpb25zIGFuZCBQQ0llDQo+
-ID4gPiA+IGRpYWdyYW1zIHRvIGZpZ3VyZSBvdXQgd2hhdCBpcyB0aGUgbWluaW1hbCB0aW1lb3V0
-IGZvciBkZS1hc3NlcnRpbmcNCj4gPiA+ID4gUEVSU1QjIHNpZ25hbD8NCj4gPiA+ID4NCj4gPiA+
-ID4gVGhlcmUgYXJlIHN0aWxsIHNvbWUgaXNzdWVzIHdpdGggV2lGaSBjYXJkcyAoZS5nLiBDb21w
-ZXggb25lKSB3aGljaA0KPiA+ID4gPiBzb21ldGltZXMgZG8gbm90IGFwcGVhciBvbiBQQ0llIGJ1
-cy4gQW5kIGJhc2VkIG9uIHRoZXNlICJyZXNldCB0aW1lb3V0DQo+ID4gPiA+IGRpZmZlcmVuY2Vz
-IiBpbiBMaW51eCBQQ0llIGNvbnRyb2xsZXIgZHJpdmVycywgSSBzdXNwZWN0IHRoYXQgaXQgaXMg
-bm90DQo+ID4gPiA+IChvbmx5KSB0aGUgcHJvYmxlbXMgaW4gV2lGaSBjYXJkcyBidXQgYWxzbyBp
-biBMaW51eCBQQ0llIGNvbnRyb2xsZXINCj4gPiA+ID4gZHJpdmVycy4gSW4gbXkgZW1haWwgWzNd
-IEkgaGF2ZSB3cml0dGVuIHRoYXQgSSBmaWd1cmVkIG91dCB0aGF0IFdMRTEyMTYNCj4gPiA+ID4g
-Y2FyZCBuZWVkcyB0byBiZSBpbiBXYXJtIFJlc2V0IHN0YXRlIGZvciBhdCBsZWFzdCAxMG1zLCBv
-dGhlcndpc2UgY2FyZA0KPiA+ID4gPiBpcyBub3QgZGV0ZWN0ZWQuDQo+ID4gPiA+DQo+ID4gPiA+
-IFsxXSAtIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8yMDIwMDUxMzExNTk0MC5m
-aWVtdG54ZnFjeXFvNmlrQHBhbGkvDQo+ID4gPiA+IFsyXSAtIGh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2xpbnV4LXBjaS8yMDIwMDUwNzIxMjAwMi5HQTMyMTgyQGJvZ3VzLw0KPiA+ID4gPiBbM10g
-LSBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1wY2kvMjAyMDA0MjQwOTI1NDYuMjVwM2hk
-dGtlaG9oZTN4d0BwYWxpLw0KPiA+ID4gPiBbNF0gLSBodHRwczovL2xvcmUua2VybmVsLm9yZy9s
-aW51eC1wY2kvMjAyMDA0MzAwODIyNDUueGJsdmI3eGVhbW00ZTMzNkBwYWxpLw0KPiA+ID4NCj4g
-PiA+IEkgc29tZWhvdyBnb3QgbXkgaGFuZHMgb24gUENJZSBHZW40IHNwZWMuIEl0IHNheXMgb24g
-cGFnZSBubyA1NTUtDQo+ID4gPiAiV2hlbiBQRVJTVCMgaXMgcHJvdmlkZWQgdG8gYSBjb21wb25l
-bnQgb3IgYWRhcHRlciwgdGhpcyBzaWduYWwgbXVzdCBiZQ0KPiA+ID4gdXNlZCBieSB0aGUgY29t
-cG9uZW50IG9yIGFkYXB0ZXIgYXMgRnVuZGFtZW50YWwgUmVzZXQuDQo+ID4gPiBXaGVuIFBFUlNU
-IyBpcyBub3QgcHJvdmlkZWQgdG8gYSBjb21wb25lbnQgb3IgYWRhcHRlciwgRnVuZGFtZW50YWwg
-UmVzZXQgaXMNCj4gPiA+IGdlbmVyYXRlZCBhdXRvbm9tb3VzbHkgYnkgdGhlIGNvbXBvbmVudCBv
-ciBhZGFwdGVyLCBhbmQgdGhlIGRldGFpbHMgb2YgaG93DQo+ID4gPiB0aGlzIGlzIGRvbmUgYXJl
-IG91dHNpZGUgdGhlIHNjb3BlIG9mIHRoaXMgZG9jdW1lbnQuIg0KPiA+ID4gTm90IHN1cmUgd2hh
-dCBjb21wb25lbnQvYWRhcHRlciBtZWFucyBpbiB0aGlzIGNvbnRleHQuDQo+ID4gPg0KPiA+ID4g
-VGhlbiBiZWxvdyBpdCBzYXlzLQ0KPiA+ID4gIkluIHNvbWUgY2FzZXMsIGl0IG1heSBiZSBwb3Nz
-aWJsZSBmb3IgdGhlIEZ1bmRhbWVudGFsIFJlc2V0IG1lY2hhbmlzbQ0KPiA+ID4gdG8gYmUgdHJp
-Z2dlcmVkICBieSBoYXJkd2FyZSB3aXRob3V0IHRoZSByZW1vdmFsIGFuZCByZS1hcHBsaWNhdGlv
-biBvZg0KPiA+ID4gcG93ZXIgdG8gdGhlIGNvbXBvbmVudC4gIFRoaXMgaXMgY2FsbGVkIGEgd2Fy
-bSByZXNldC4gVGhpcyBkb2N1bWVudCBkb2VzDQo+ID4gPiBub3Qgc3BlY2lmeSBhIG1lYW5zIGZv
-ciBnZW5lcmF0aW5nIGEgd2FybSByZXNldC4iDQo+ID4gPg0KPiA+ID4gVGhhbmtzLA0KPiA+ID4g
-QW1leQ0KPiA+DQo+ID4gSGVsbG8gQW1leSwgUENJZSBCYXNlIGRvY3VtZW50IGRvZXMgbm90IHNw
-ZWNpZnkgaG93IHRvIGNvbnRyb2wgUEVSU1QjDQo+ID4gc2lnbmFsIGFuZCBob3cgdG8gaXNzdWUg
-V2FybSBSZXNldC4gQnV0IGl0IGlzIGRvY3VtZW50ZWQgaW4gUENJZSBDRU0sDQo+ID4gTWluaSBQ
-Q0llIENFTSBhbmQgTS4yIENFTSBkb2N1bWVudHMgKG1heWJlIGluIHNvbWUgb3RoZXIgUENJZSBk
-b2NzIHRvbykuDQo+ID4NCj4gPiBJdCBpcyBuZWVkZWQgbG9vayBpbnRvIG1vcmUgZG9jdW1lbnRz
-LCAibWVyZ2UgdGhlbSBpbiBoZWFkIiBhbmQgdGhlbg0KPiA+IGRlZHVjZSBmaW5hbCBtZWFuaW5n
-Li4uDQo+IE9rYXkgc28gUENJZSBDRU0gcmV2aXNpb24gMi4wKGZyb20gMjAwNykgb24gcGFnZSBu
-byAyMiBzYXlzLQ0KPiAiT24gcG93ZXIgdXAsIHRoZSBkZWFzc2VydGlvbiBvZiBQRVJTVCMgaXMg
-ZGVsYXllZCAxMDAgbXMgKFRQVlBFUkwpDQo+IGZyb20gdGhlIHBvd2VyIHJhaWxzIGFjaGlldmlu
-ZyBzcGVjaWZpZWQgb3BlcmF0aW5nIGxpbWl0cy4gIEFsc28sIHdpdGhpbg0KPiB0aGlzIHRpbWUs
-IHRoZSByZWZlcmVuY2UgY2xvY2tzICAoUkVGQ0xLKywgUkVGQ0xLLSkgYWxzbyBiZWNvbWUgc3Rh
-YmxlLA0KPiBhdCBsZWFzdCBUUEVSU1QtQ0xLIGJlZm9yZSBQRVJTVCMgaXMgZGVhc3NlcnRlZC4i
-DQo+IA0KPiBUaGVuIGJlbG93IGl0IHNheXMtDQo+ICJBZnRlciB0aGVyZSBoYXMgYmVlbiB0aW1l
-IChUUFZQRVJMKSBmb3IgdGhlIHBvd2VyIGFuZCBjbG9jayB0byBiZWNvbWUNCj4gc3RhYmxlLCBQ
-RVJTVCMgaXMgZGVhc3NlcnRlZCBoaWdoIGFuZCB0aGUgUENJIEV4cHJlc3MgZnVuY3Rpb25zIGNh
-biBzdGFydA0KPiB1cC4iDQo+IA0KPiBBbmQgdGhlbiB0aGVyZSBpcyB0YWJsZSBvZiB0aW1pbmcg
-b24gcGFnZSBubyAzMy0NCj4gU3ltYm9sIAkJUGFyYW1ldGVyIAkJCQlNaW4NCj4gVFBWUEVSTCAJ
-UG93ZXIgU3RhYmxlIHRvIFBFUlNUIyBpbmFjdGl2ZSAJMTAwbXMNCj4gVFBFUlNULUNMSyAJUkVG
-Q0xLIHN0YWJsZSBiZWZvcmUgUEVSU1QjIGluYWN0aXZlIAkxMDDOvHMNCj4gVFBFUlNUIAkJUEVS
-U1QjIGFjdGl2ZSB0aW1lIAkJCTEwMM68cw0KPiBURkFJTCAJCVBvd2VyIGxldmVsIGludmFsaWQg
-dG8gUEVSU1QjIGFjdGl2ZSAJNTAwbnMNCj4gLi4uDQo+IA0KPiBJIGFncmVlIHRoaXMgaXMgY29u
-ZnVzaW5nLg0KDQpUaGVyZSBpcyBhbHNvIHRoZSByZWxhdGVkIGlzc3VlIG9mIHRoZSB0aW1lIGFm
-dGVyIHJlc2V0IGlzIHJlbW92ZWQNCmJlZm9yZSB0aGUgdGFyZ2V0IG11c3QgcmVzcG9uZCB0byB0
-aGUgZmlyc3QgY29uZmlndXJhdGlvbiBjeWNsZS4NCg0KSSBjYW4ndCBzZWUgdGhlIHZhbHVlIGlu
-IHRoZSAobmljZSBib3VuZCkgY29weSBvZiB0aGUgUENJIDIuMCBzcGVjIEkgaGF2ZS4NCkJ1dCBJ
-SVJDIGl0IGlzIDEwMG1zIChpdCBtaWdodCBqdXN0IG1lIDUwMG1zKS4NCldoaWxlIHRoaXMgbWln
-aHQgc2VlbSBsaWtlIGFnZXMgaXQgY2FuIGJlIHByb2JsZW1hdGljIGlmIHRhcmdldHMgaGF2ZQ0K
-dG8gbG9hZCBsYXJnZSBGUEdBIGltYWdlcyBmcm9tIHNlcmlhbCBFRVBST01zLg0KDQpNb3N0IHg4
-NiBzeXN0ZW1zIGhhdmUgbG90cyBvZiBzbG93IGJpb3MgY29kZSBzbyB0ZW5kIHRvIGJlIGZpbmUu
-DQpCdXQgc29tZSBvdGhlciBzeXN0ZW1zIGNhbiB0cnkgdG8gZW51bWVyYXRlIHRoZSBQQ0llIHRh
-cmdldCBiZWZvcmUNCml0IGlzIGFjdHVhbGx5IHJlYWR5IC0gY2F1c2luZyBzZW1pLXJhbmRvbSBm
-YWlsdXJlcy4NCg0KT3VyIGN1cnJlbnQgZnBnYXMgZG8gbG9hZCB0aGUgcGNpZSBpbnRlcmZhY2Ug
-YmVmb3JlIG1vc3Qgb2YgdGhlDQpsb2dpYywgYW5kIGNhbiBiZSBjb25maWd1cmVkIHRvIGZvcmNl
-IGN5Y2xlIHJlcnVucyBvbiB0aGUgY29uZmlnDQpzcGFjZSBhY2Nlc3NlcyB1bnRpbCBmdWxseSBs
-b2FkZWQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
-ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
-dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Hi,
+
+On 25.01.2021 05:48, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>
+> In the dw_pcie_ep_init(), it depends on the detected iATU region
+> numbers to allocate the in/outbound window management bit map.
+> It fails after the commit 281f1f99cf3a ("PCI: dwc: Detect number
+> of iATU windows").
+>
+> So this patch move the iATU region detection into a new function,
+> move forward the detection to the very beginning of functions
+> dw_pcie_host_init() and dw_pcie_ep_init(). And also remove it
+> from the dw_pcie_setup(), since it's more like a software
+> perspective initialization step than hardware setup.
+>
+> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+
+This patch causes exynos-pcie to hang during the initialization. It 
+looks that some resources are not enabled yet, so calling 
+dw_pcie_iatu_detect() much earlier causes a hang. When I have some time, 
+I will try to identify what is needed to call it properly.
+
+> ---
+>   drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 ++
+>   drivers/pci/controller/dwc/pcie-designware-host.c |  2 ++
+>   drivers/pci/controller/dwc/pcie-designware.c      | 11 ++++++++---
+>   drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+>   4 files changed, 13 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index bcd1cd9ba8c8..fcf935bf6f5e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -707,6 +707,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   		}
+>   	}
+>   
+> +	dw_pcie_iatu_detect(pci);
+> +
+>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>   	if (!res)
+>   		return -EINVAL;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 8a84c005f32b..8eae817c138d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -316,6 +316,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>   			return PTR_ERR(pci->dbi_base);
+>   	}
+>   
+> +	dw_pcie_iatu_detect(pci);
+> +
+>   	bridge = devm_pci_alloc_host_bridge(dev, 0);
+>   	if (!bridge)
+>   		return -ENOMEM;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 5b72a5448d2e..5b9bf02d918b 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -654,11 +654,9 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
+>   	pci->num_ob_windows = ob;
+>   }
+>   
+> -void dw_pcie_setup(struct dw_pcie *pci)
+> +void dw_pcie_iatu_detect(struct dw_pcie *pci)
+>   {
+> -	u32 val;
+>   	struct device *dev = pci->dev;
+> -	struct device_node *np = dev->of_node;
+>   	struct platform_device *pdev = to_platform_device(dev);
+>   
+>   	if (pci->version >= 0x480A || (!pci->version &&
+> @@ -687,6 +685,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>   
+>   	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
+>   		 pci->num_ob_windows, pci->num_ib_windows);
+> +}
+> +
+> +void dw_pcie_setup(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+> +	struct device *dev = pci->dev;
+> +	struct device_node *np = dev->of_node;
+>   
+>   	if (pci->link_gen > 0)
+>   		dw_pcie_link_set_max_speed(pci, pci->link_gen);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 5d979953800d..867369d4c4f7 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -305,6 +305,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+>   void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+>   			 enum dw_pcie_region_type type);
+>   void dw_pcie_setup(struct dw_pcie *pci);
+> +void dw_pcie_iatu_detect(struct dw_pcie *pci);
+>   
+>   static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
+>   {
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
