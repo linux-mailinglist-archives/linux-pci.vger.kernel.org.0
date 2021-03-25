@@ -2,253 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E54D5349836
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:37:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF0BB34983C
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 18:37:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230105AbhCYRgb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Mar 2021 13:36:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230098AbhCYRgH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Mar 2021 13:36:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BA63761A1E;
-        Thu, 25 Mar 2021 17:36:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616693767;
-        bh=eT9zfN+78m5/pu1eHoRBGPw92wW17X08L+rDfR3REwY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nvdobjEGdT9GkQZoo68ZxCnYmJm/WZgYKr5TmRFa3x649yc6anm8bTNCFRjp3inaX
-         8Hyp5cJa/mQjZFGs+FCqv1FRrYb/fUPASkppiGvff0AneqUMZz6I5TQELbFhEYIROR
-         1RQuQW0CfbAx63SQ3GAfZGpruOJfcsHj8FC8R+1oIN5B5OO6eVmDwenEdmaqhsfEzC
-         GZd/jsI0x0RYEi2p+u8/A0s6c8x9+XddpJuVq5mZdoPrjf9iqQIjzFgELhuYsdxamw
-         g7QirNv0CsclGIi78/MW2imByTrqLRlfzI1L3Kmgn6m1KGvO/N6oAZU2W9m+3obv34
-         g93NvJCR0bYEQ==
-Date:   Thu, 25 Mar 2021 19:36:03 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     info@metux.net, raphael.norwitz@nutanix.com,
-        alex.williamson@redhat.com, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Message-ID: <YFzKA8Qd4phT+IrK@unreal>
-References: <YFcGlzbaSzQ5Qota@unreal>
- <20210322111003.50d64f2c@omen.home.shazbot.org>
- <YFsOVNM1zIqNUN8f@unreal>
- <20210324083743.791d6191@omen.home.shazbot.org>
- <YFtXNF+t/0G26dwS@unreal>
- <20210324111729.702b3942@omen.home.shazbot.org>
- <YFxL4o/QpmhM8KiH@unreal>
- <20210325085504.051e93f2@omen.home.shazbot.org>
- <YFy11u+fm4MEGU5X@unreal>
- <20210325172257.jo67q62zxw45adwi@archlinux>
-MIME-Version: 1.0
+        id S229995AbhCYRhD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Mar 2021 13:37:03 -0400
+Received: from mail-bn8nam12on2043.outbound.protection.outlook.com ([40.107.237.43]:3040
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229676AbhCYRgx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Mar 2021 13:36:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CkoB5iB8fm+j+jXiPrOvOxQAvVdRqAmMjnWW1UyAhlP6tQYxnTAbIWRegxdlCU3xC7Vpxr9iLsNTyp/qH88Si4Bs4mINLfC10JouZ7YIeeuOD9T0vseKJc8tovJuK9KZiO2N4lwIcirq6C+pw3mFqriRtyvuAltkMHfm5gAQxwItPqp1MWZsfLPW3d0L1XVWWKX2qeyIbZCoci9FPG7VJL3NL30yZPYOgHTE3yjSkh8UoR5J+OR1IUHQeNlCZM7ob26siJhyIVHHj9DvAucJIXSpP8nKjk82jZCOtdbLSFKloCU8YUmzVDbuviXC+rSQ0IRFkLriWtlWFpj8F8TGNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C3lGqG6BWvw47EoBsUQ/8ytSaXn6G+HNve4YkBRWZk8=;
+ b=g0qhmCqMvv4RK1/kLf6s4BFnIPh2Lmj7/QTyzlIhauSvGxJlluY/PRdjd20NhGZvzT4B/vEDcovw0GI4Cr7zFlXZ/0zwxSIjUQQ8WnlE3xAYZVCMtSjZX8wiudyh54dLdR1Y7rhNt3I2IKdBqYfA7ryraH/tImULGar4GfzWf/YZTRcpBHrBDOsWZq5g7onVfUkbl8bmzm1kH2Ji7neT5h2YY6dzkuixv+RJ3va7+l5F2fLAmTLb++gbuivz0/H2pLX+JQK3vB3Oj6Kratkx/ilucfa5k8BwPjVMRVJbXhsP6n4/m+nVYb7ODLxbgX02GIcpkdg8EGodtuuPE2iYig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C3lGqG6BWvw47EoBsUQ/8ytSaXn6G+HNve4YkBRWZk8=;
+ b=GyGcBHulzeIH5UM0jPj6mJRmIXK/iRsICrqB+4kI6BAS+X+Z+Ya9If9jyUBEtkUD3Q4TY18alHo3/WAzJbwBm/hMl5h+MLaBn9Hg/CpGNrnSpW4+I1zAO7597/q4uFnJOOV643M6ZuUrb2cb2KQBKT9nnkcs+h/Vcip9wbAVBCy8iN0NfHkFid4Ks/c6QyYZKsODKBZfH41xu6qQ0Hq7asHGcuipISo+DFwijJfQNAtRwph9IEEQQ5wQO5I9UIBLGpmqnb7Fn+kHbBP+Y4QHqas02y3JHpbwBbvxiiHxgX7gbXu6swp3x3XQR2UwyujNElMf53H9jhPIryf6pmv6NQ==
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1243.namprd12.prod.outlook.com (2603:10b6:3:74::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Thu, 25 Mar
+ 2021 17:36:48 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3977.029; Thu, 25 Mar 2021
+ 17:36:48 +0000
+Date:   Thu, 25 Mar 2021 14:36:46 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210325173646.GG2356281@nvidia.com>
+References: <20210311214424.GQ2356281@nvidia.com>
+ <20210325172144.GA696830@bjorn-Precision-5520>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210325172257.jo67q62zxw45adwi@archlinux>
+In-Reply-To: <20210325172144.GA696830@bjorn-Precision-5520>
+X-Originating-IP: [206.223.160.26]
+X-ClientProxiedBy: CH2PR11CA0017.namprd11.prod.outlook.com
+ (2603:10b6:610:54::27) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by CH2PR11CA0017.namprd11.prod.outlook.com (2603:10b6:610:54::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.25 via Frontend Transport; Thu, 25 Mar 2021 17:36:48 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lPTuY-002kfy-V0; Thu, 25 Mar 2021 14:36:46 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0a526200-005d-4578-0fd9-08d8efb4911b
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1243:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1243103D8C552975D96F1ACAC2629@DM5PR12MB1243.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZGwF6af37sV7clJNUYfkW7lpwcDV7YvyrmprNqQGpvpnh9m9DMBq1w1xn1dDk3r596uJ67gdbR5yjelMxUZ7xv/J2HAca/mPpr9sf99fnydBzY6FeIp66Ouk1zEW5onP57fS0w6Hoo3ueAPXZeTwfBGXnsAcRkjuUSMdaVxf5y7I5VLuvpuitpd+kT3cKrvwNeqXTvNXF2F/ORHSpp9ggPuHcWswycqIqZ8FxaFxnVvPj3t3L3t+I6ONuUWsMYnP3h9OrBru7Sv9HM47w8bYwo+NuRBGDr7om28nhSsRLY+x7CRcs13BJff0CkoBD+Qq1Sj6PObwnAD+S6464Dcv+G6HSgFZ5H20Nn//o+SVoqmaGx3D6KbXZ5o+uO+gF7scTrFqrjK6btkVUdQi8dtYc5EoF62cmC6OuFMXClVUbYjXHFBnbTRAFmHqJfzcjaHcd2VHfHtkQXi38ORL0yGMgO+OmLSPpvShCh48T4qZVkB5k/cDJz3SBY/HBZTWpngMQ5B7cXGwwuF8Wbbxoz8pbkqaSfTxwBhGXgYZo8D1wEJyBH/yjdHljCfdvIiY5v6sZ7HgMAL0hAzhY9M5CDrjTq2N4pWkLBm3Jivc7yQa/xXHScgv4yIlf6RvrZWe7/y5O+qlh3npOgwwu6Ss7e7ekw/6Y8NGcsWMN9nh4/TZFRc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(39860400002)(366004)(376002)(136003)(38100700001)(426003)(5660300002)(54906003)(7416002)(66476007)(36756003)(8676002)(26005)(6916009)(186003)(8936002)(9746002)(9786002)(2906002)(66946007)(4326008)(2616005)(316002)(478600001)(83380400001)(66556008)(33656002)(1076003)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?VB8hrdCEufVaWa6e+bsNgCnlrmn64JJuR03+LdEpQYCSyue4JUCUQPLHw0Cc?=
+ =?us-ascii?Q?4Ze4f3/0MeFFewjqQM+JWtxVOa+eKQ0d8O6CPbRiWVAsLWsj01PAELmpNzFw?=
+ =?us-ascii?Q?vGEu7K3blxdt9AakA3jDHGAJlAEMc5Mq1IIS4eTqLrzGeZ2EI/tYK+z3zM7+?=
+ =?us-ascii?Q?ae7Z2u+7W+Lpp2P/2liwfshGLvqkzvy5xGMYLjPLz9qInIClRnZDzNZJtpaQ?=
+ =?us-ascii?Q?e3POxDGRt4MVWrkClGCsfQCFqzpMeBeoYiu1WuocXkutfADolITTnkQfVDFi?=
+ =?us-ascii?Q?TDvWiC/aXWTDvcEDZaRS9akrcdp02vOwYZXgFdp6V053u1QEziK2v+SlwTkz?=
+ =?us-ascii?Q?1TPylF7YGwrsSO9B0A//cnPDX9jvEy034Ts7bFwafszXLDksisGYXUAMh4HZ?=
+ =?us-ascii?Q?Zi9Mzi2WWDd6OIDolxOosxan9NkWV9C7PGuQFryZube6Oj8xRsZU0l52btfx?=
+ =?us-ascii?Q?4NeGdpCAnpjueL74R0pW4C9FIwq6cxGMlrE3tKA2YgSIHtgRLYAimoGLtYoo?=
+ =?us-ascii?Q?o0JJ71cuoYnfDqCBu8Ogje5gRL/GBHtYZeeVy9hF7p0R7QqRhGSd9jJtndjW?=
+ =?us-ascii?Q?MSAcTsdx7UOHau3FTK2PEoDs4NsxPKLOBT9yH1yQZHixtsjaEdJCP2yCESz9?=
+ =?us-ascii?Q?d06Sjvzg46mcOL8bdyEJfiKxZzgQqXWnmSLPMueXpsCVa6bajmI5oWWyCRBq?=
+ =?us-ascii?Q?tdwzjkGK9Mo42D6EzxKR8UnvDDJQeW+B3xIEBbEyuWsol63CiJ7MZiO55rfA?=
+ =?us-ascii?Q?VvtgtzaZM4s5W/V0RxX0HZAJQgXthqjTSDW1CYL1+cIf2f3I6PaFiwBiXICd?=
+ =?us-ascii?Q?kPcV+XpC75LmZBBH0YNt89yLKzYE8sof1xShNYnW5zC32AgfFT5JKlJ2rixL?=
+ =?us-ascii?Q?rl3sDuiJq6I9nNYW05IMvH4Qo7jpwPKrPC30mVUlqkHa2Hc4Az8KoJfUMN4D?=
+ =?us-ascii?Q?/jMW+hSiuWYCzFz8OULH41Woh4M0QryVCoQ2YvFYrrWkmH054HcBXBt7Pb7p?=
+ =?us-ascii?Q?iXK0nmX0eHZFztVYkOtBNW7AKoY7665mkwsBCmAB34E2DD80mE0FpEPUiGfu?=
+ =?us-ascii?Q?8GkQnpVXNpPLS6979QNp2c3TEhKqrclBEL/r/4YA9QpYmHOUoBxI5Jg5fbDg?=
+ =?us-ascii?Q?Gbl9gtjhrlogR8w+/h0EyqkfZpddd8UZOb2kNQR0rkhZVJBtLOn7/KU8oI1D?=
+ =?us-ascii?Q?mSQhrAW6ho+4JoJoGrt7S3UjC+f9tC/ms1O/koyv+ViR7Tcj0zZrSbyb78VM?=
+ =?us-ascii?Q?azVISuWSX5twV/IiEoid7tPvmHrnWaZgj0JV6VGlO33AG9ECW81FnUDkHLIq?=
+ =?us-ascii?Q?KFaBbhhx2mvc0TF6y2ZWWxEs?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a526200-005d-4578-0fd9-08d8efb4911b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2021 17:36:48.1746
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wU0Q+MqF+tCdZ9zKhWGO6J6ntefceQKUD2ATTACto3y6A+Hkg9EEjFJy1QWaiVvp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1243
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 10:52:57PM +0530, Amey Narkhede wrote:
-> On 21/03/25 06:09PM, Leon Romanovsky wrote:
-> > On Thu, Mar 25, 2021 at 08:55:04AM -0600, Alex Williamson wrote:
-> > > On Thu, 25 Mar 2021 10:37:54 +0200
-> > > Leon Romanovsky <leon@kernel.org> wrote:
-> > >
-> > > > On Wed, Mar 24, 2021 at 11:17:29AM -0600, Alex Williamson wrote:
-> > > > > On Wed, 24 Mar 2021 17:13:56 +0200
-> > > > > Leon Romanovsky <leon@kernel.org> wrote:
-> > > >
-> > > > <...>
-> > > >
-> > > > > > Yes, and real testing/debugging almost always requires kernel rebuild.
-> > > > > > Everything else is waste of time.
-> > > > >
-> > > > > Sorry, this is nonsense.  Allowing users to debug issues without a full
-> > > > > kernel rebuild is a good thing.
-> > > >
-> > > > It is far from debug, this interface doesn't give you any answers why
-> > > > the reset didn't work, it just helps you to find the one that works.
-> > > >
-> > > > Unless you believe that this information will be enough to understand
-> > > > the root cause, you will need to ask from the user to perform extra
-> > > > tests, maybe try some quirk. All of that requires from the users to
-> > > > rebuild their kernel.
-> > > >
-> > > > So no, it is not debug.
-> > >
-> > > It allows a user to experiment to determine (a) my device doesn't work
-> > > in a given scenario with the default configuration, but (b) if I change
-> > > the reset to this other thing it does work.  That is a step in
-> > > debugging.
-> > >
-> > > It's absurd to think that a sysfs attribute could provide root cause,
-> > > but it might be enough for someone to further help that user.  It would
-> > > be a useful clue for a bug report.  Yes, reaching root cause might
-> > > involve building a kernel, but that doesn't invalidate that having a
-> > > step towards debugging in the base kernel might be a useful tool.
-> >
-> > Let's agree to do not agree.
-> >
-> > >
-> > > > > > > > > For policy preference, I already described how I've configured QEMU to
-> > > > > > > > > prefer a bus reset rather than a PM reset due to lack of specification
-> > > > > > > > > regarding the scope of a PM "soft reset".  This interface would allow a
-> > > > > > > > > system policy to do that same thing.
-> > > > > > > > >
-> > > > > > > > > I don't think anyone is suggesting this as a means to avoid quirks that
-> > > > > > > > > would resolve reset issues and create the best default general behavior.
-> > > > > > > > > This provides a mechanism to test various reset methods, and thereby
-> > > > > > > > > identify broken methods, and set a policy.  Sure, that policy might be
-> > > > > > > > > to avoid a broken reset in the interim before it gets quirked and
-> > > > > > > > > there's potential for abuse there, but I think the benefits outweigh
-> > > > > > > > > the risks.
-> > > > > > > >
-> > > > > > > > This interface is proposed as first class citizen in the general sysfs
-> > > > > > > > layout. Of course, it will be seen as a way to bypass the kernel.
-> > > > > > > >
-> > > > > > > > At least, put it under CONFIG_EXPERT option, so no distro will enable it
-> > > > > > > > by default.
-> > > > > > >
-> > > > > > > Of course we're proposing it to be accessible, it should also require
-> > > > > > > admin privileges to modify, sysfs has lots of such things.  If it's
-> > > > > > > relegated to non-default accessibility, it won't be used for testing
-> > > > > > > and it won't be available for system policy and it's pointless.
-> > > > > >
-> > > > > > We probably have difference in view of what testing is. I expect from
-> > > > > > the users who experience issues with reset to do extra steps and one of
-> > > > > > them is to require from them to compile their kernel.
-> > > > >
-> > > > > I would define the ability to generate a CI test that can pick a
-> > > > > device, unbind it from its driver, and iterate reset methods as a
-> > > > > worthwhile improvement in testing.
-> > > >
-> > > > Who is going to run this CI? At least all kernel CIs (external and
-> > > > internal to HW vendors) that I'm familiar are building kernel themselves.
-> > > >
-> > > > Distro kernel is too bloat to be really usable for CI.
-> > >
-> > > At this point I'm suspicious you're trolling.  A distro kernel CI
-> > > certainly uses the kernel they intend to ship and support in their
-> > > environment. You're concerned about a bloated kernel, but the proposal
-> > > here adds 2-bytes per device to track reset methods and a trivial array
-> > > in text memory, meanwhile you're proposing multiple per-device memory
-> > > allocations to enhance the feature you think is too bloated for CI.
-> >
-> > I don't know why you decided to focus on memory footprint which is not
-> > important at all during CI runs. The bloat is in Kconfig options that
-> > are not needed. Those extra options add significant overhead during
-> > builds and runs itself.
-> >
-> > And not, I'm not trolling, but representing HW vendor that pushes its CI
-> > and developers environment to the limit, by running full kernel builds with
-> > less than 30 seconds and boot-to-test with less than 6 seconds for full
-> > Fedora VM.
-> >
-> > >
-> > > > > > The root permissions doesn't protect from anything, SO lovers will use
-> > > > > > root without even thinking twice.
-> > > > >
-> > > > > Yes, with great power comes great responsibility.  Many admins ignore
-> > > > > this.  That's far beyond the scope of this series.
-> > > >
-> > > > <...>
-> > > >
-> > > > > > I'm trying to help you with your use case of providing reset policy
-> > > > > > mechanism, which can be without CONFIG_EXPERT. However if you want
-> > > > > > to continue path of having specific reset type only, please ensure
-> > > > > > that this is not taken to the "bypass kernel" direction.
-> > > > >
-> > > > > You've lost me, are you saying you'd be in favor of an interface that
-> > > > > allows an admin to specify an arbitrary list of reset methods because
-> > > > > that's somehow more in line with a policy choice than a userspace
-> > > > > workaround?  This seems like unnecessary bloat because (a) it allows
-> > > > > the same bypass mechanism, and (b) a given device is only going to use
-> > > > > a single method anyway, so the functionality is unnecessary.  Please
-> > > > > help me understand how this favors the policy use case.  Thanks,
-> > > >
-> > > > The policy decision is global logic that is easier to grasp. At some
-> > > > point of our discussion, you presented the case where PM reset is not
-> > > > defined well and you prefer to do bus reset (something like that).
-> > > >
-> > > > I expect that QEMU sets same reset policy for all devices at the same
-> > > > time instead of trying per-device to guess which one works.
-> > > >
-> > > > And yes, you will be able to bypass kernel, but at least this interface
-> > > > will be broader than initial one that serves only SO and workarounds.
-> > >
-> > > I still think allocating objects for a list and managing that list is
-> > > too bloated and complicated, but I agree that being able to have more
-> > > fine grained control could be useful.  Is it necessary to be able to
-> > > re-order reset methods or might it still be better aligned to a policy
-> > > use case if we allow plus and minus operators?  For example, a device
-> > > might list:
-> > >
-> > > [pm] [bus]
-> > >
-> > > Indicating that PM and bus reset are both available and enabled.  The
-> > > user could do:
-> > >
-> > > echo -pm > reset_methods
-> > >
-> > > This would result in:
-> > >
-> > > pm [bus]
-> > >
-> > > Indicating that both PM and bus resets are available, but only bus reset
-> > > is enabled (note this is the identical result to "echo bus >" in the
-> > > current proposal).  "echo +pm" or "echo default" could re-enable the PM
-> > > reset.  Would something like that be satisfactory?
-> >
-> > Yes, I actually imagined simpler interface:
-> > To set specific type:
-> > echo pm > reset_methods
-> > To set policy:
-> > echo "pm,bus" > reset_methods
-> >
-> > But your proposal is nicer.
-> >
-> Okay I'll include this in v2
-> > >
-> > > If we need to allow re-ording, we'd want to use a byte-array where each
-> > > byte indicates a type of reset and perhaps a non-zero value in the
-> > > array indicates the method is enabled and the value indicates priority.
-> > > For example writing "dev_spec,flr,bus" would parse to write 1 to the
-> > > byte associated with the device specific reset, 2 to flr, 3 to bus
-> > > reset, then we'd process low to high (or maybe starting at a high value
-> > > to count down to zero might be more simple).  We could do that with
-> > > only adding less than a fixed 8-bytes per device and no dynamic
-> > > allocation.  Thoughts?  Thanks,
-> >
-> > Like I suggested, linked list will be easier and the reset will be
-> > something like:
-> >  for_each_reset_type(device, type) {
-> >    switch (type) {
-> >    	case PM:
-> > 	       ret = do_some_reset(device);
-> > 	       break;
-> > 	case BUS:
-> > 		.....
-> > 	}
-> >    if (!ret || ret == -ENOMEM)  <-- go to next type in linked list
-> >      return ret;
-> >    }
-> >
-> Maybe we can use a byte array here. Lets consider current pci_reset_fn_methods
-> array. If a input is "pm, flr" we can have byte array with index of
-> those methods in pci_reset_fn_methods like [3, 1]. So when user triggers a
-> reset we use reset method at index 3(pm) and then at index 1(flr).
-> Does that make sense?
+On Thu, Mar 25, 2021 at 12:21:44PM -0500, Bjorn Helgaas wrote:
 
-I'm not worried about in-kernel implementation, we will rewrite it if
-needed. The most important part is user visible ABI, which we won't be
-able to fix.
-
-Thanks
-
+> NVMe and mlx5 have basically identical functionality in this respect.
+> Other devices and vendors will likely implement similar functionality.
+> It would be ideal if we had an interface generic enough to support
+> them all.
 > 
-> Thanks,
-> Amey
+> Is the mlx5 interface proposed here sufficient to support the NVMe
+> model?  I think it's close, but not quite, because the the NVMe
+> "offline" state isn't explicitly visible in the mlx5 model.
+
+I thought Keith basically said "offline" wasn't really useful as a
+distinct idea. It is an artifact of nvme being a standards body
+divorced from the operating system.
+
+In linux offline and no driver attached are the same thing, you'd
+never want an API to make a nvme device with a driver attached offline
+because it would break the driver.
+
+So I think it is good as is (well one of the 8 versions anyhow).
+
+Keith didn't go into detail why the queue allocations in nvme were any
+different than the queue allocations in mlx5. I expect they can
+probably work the same where the # of interrupts is an upper bound on
+the # of CPUs that can get queues and the device, once instantiated,
+could be configured for the number of queues to actually operate, if
+it wants.
+
+Jason
