@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E96348C10
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:01:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 887DA348C16
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Mar 2021 10:01:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbhCYJBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229913AbhCYJBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 25 Mar 2021 05:01:08 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38290 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbhCYJAu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:00:50 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12P90eNS101329;
-        Thu, 25 Mar 2021 04:00:40 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49414 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229617AbhCYJBC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Mar 2021 05:01:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12P90ieq035055;
+        Thu, 25 Mar 2021 04:00:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1616662840;
-        bh=5v/9COS7STv0Pp1b/RvH5GIPWWy1VQ/hFRswDe7GXZw=;
+        s=ti-com-17Q1; t=1616662844;
+        bh=abH1W5WXyijsp3MpriPtz1CV3oRWfYGjXmRCI8jXfHw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RDW6z0wWjaJIa+KkFEnsAqIRweNP0lOHtQ5YCHxai1fyyuTSLVcCevGW1y+vdiszq
-         BtsrK6mnpxeLxnPKKRHCNcVBnKDSwyD544o0+1MtKWNtOyXjqHc+OrvlOpZcaTxnEy
-         eXFkt1L/6ys5bdwzwdD0LtjeUntxhve5yCob1268=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12P90eVO124244
+        b=lM2KiiKkp96TVlEqMMbEPuTxv1ikOMSktPK+iUxy7v6cTZe+/WmWXoNBpBOyhe6Iz
+         EYULf55yXukDGF1q2ZgKSIlnqUlD6itch/SmschQGS1mUduTrDk+52igdtxJ97V5Se
+         bGvk9FuxEPzRnUd6FsRl1PS/Cj+dL2RNvsPhHBqs=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12P90imA008768
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Mar 2021 04:00:40 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 25 Mar 2021 04:00:44 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 25
- Mar 2021 04:00:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2021 04:00:44 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Thu, 25 Mar 2021 04:00:40 -0500
+ Frontend Transport; Thu, 25 Mar 2021 04:00:44 -0500
 Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12P90Rk9115556;
-        Thu, 25 Mar 2021 04:00:36 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12P90RkA115556;
+        Thu, 25 Mar 2021 04:00:40 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -46,9 +46,9 @@ CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 2/6] dt-bindings: PCI: ti,am65: Add PCIe endpoint mode dt-bindings for TI's AM65 SoC
-Date:   Thu, 25 Mar 2021 14:30:22 +0530
-Message-ID: <20210325090026.8843-3-kishon@ti.com>
+Subject: [PATCH 3/6] irqdomain: Export of_phandle_args_to_fwspec()
+Date:   Thu, 25 Mar 2021 14:30:23 +0530
+Message-ID: <20210325090026.8843-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210325090026.8843-1-kishon@ti.com>
 References: <20210325090026.8843-1-kishon@ti.com>
@@ -59,100 +59,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe endpoint mode dt-bindings for TI's AM65 SoC.
+Export of_phandle_args_to_fwspec() to be used by drivers.
+of_phandle_args_to_fwspec() can be used by drivers to get irq specifier
+from device node useful while creating hierarchy domain. This was
+suggested by Marc Zyngier [1].
 
+[1] -> http://lore.kernel.org/r/20190223121143.14c1f150@why.wild-wind.fr.eu.org/
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../bindings/pci/ti,am65-pci-ep.yaml          | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
+ include/linux/irqdomain.h | 2 ++
+ kernel/irq/irqdomain.c    | 6 +++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-new file mode 100644
-index 000000000000..f0a5518e6331
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/pci/ti,am65-pci-ep.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: TI AM65 PCI Endpoint
-+
-+maintainers:
-+  - Kishon Vijay Abraham I <kishon@ti.com>
-+
-+allOf:
-+  - $ref: "pci-ep.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,am654-pcie-ep
-+
-+  reg:
-+    maxItems: 4
-+
-+  reg-names:
-+    items:
-+      - const: app
-+      - const: dbics
-+      - const: addr_space
-+      - const: atu
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  ti,syscon-pcie-mode:
-+    description: Phandle to the SYSCON entry required for configuring PCIe in RC or EP mode.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  interrupts:
-+    minItems: 1
-+
-+  dma-coherent: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - max-link-speed
-+  - num-lanes
-+  - power-domains
-+  - ti,syscon-pcie-mode
-+  - phys
-+  - phy-names
-+  - dma-coherent
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie0_ep: pcie-ep@5500000 {
-+                compatible = "ti,am654-pcie-ep";
-+                reg =  <0x0 0x5500000 0x0 0x1000>,
-+                       <0x0 0x5501000 0x0 0x1000>,
-+                       <0x0 0x10000000 0x0 0x8000000>,
-+                       <0x0 0x5506000 0x0 0x1000>;
-+                reg-names = "app", "dbics", "addr_space", "atu";
-+                power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
-+                ti,syscon-pcie-mode = <&pcie0_mode>;
-+                num-ib-windows = <16>;
-+                num-ob-windows = <16>;
-+                max-link-speed = <2>;
-+                dma-coherent;
-+                interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-+        };
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 42d196805f58..0236f508259e 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -391,6 +391,8 @@ extern void irq_domain_associate_many(struct irq_domain *domain,
+ extern unsigned int irq_create_mapping_affinity(struct irq_domain *host,
+ 				      irq_hw_number_t hwirq,
+ 				      const struct irq_affinity_desc *affinity);
++void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args, unsigned int count,
++			       struct irq_fwspec *fwspec);
+ extern unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec);
+ extern void irq_dispose_mapping(unsigned int virq);
+ 
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 288151393a06..70f050741ab2 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -756,9 +756,8 @@ static int irq_domain_translate(struct irq_domain *d,
+ 	return 0;
+ }
+ 
+-static void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+-				      unsigned int count,
+-				      struct irq_fwspec *fwspec)
++void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args, unsigned int count,
++			       struct irq_fwspec *fwspec)
+ {
+ 	int i;
+ 
+@@ -768,6 +767,7 @@ static void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+ 	for (i = 0; i < count; i++)
+ 		fwspec->param[i] = args[i];
+ }
++EXPORT_SYMBOL_GPL(of_phandle_args_to_fwspec);
+ 
+ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ {
 -- 
 2.17.1
 
