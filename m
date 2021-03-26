@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 457D834A4A5
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 10:38:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1F734A4AD
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 10:41:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbhCZJhp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 05:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44988 "EHLO
+        id S229590AbhCZJk7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 05:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229474AbhCZJhk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 05:37:40 -0400
+        with ESMTP id S229882AbhCZJk2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 05:40:28 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F2DC0613AA
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 02:37:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D85C0613B1
+        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 02:40:18 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1lPiuK-0007EC-Fu; Fri, 26 Mar 2021 10:37:32 +0100
-Message-ID: <bbeaa30c0c68695c194a67e1940e466c47c9e93f.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] dt-bindings: imx6q-pcie: add one regulator used
+        id 1lPiws-0007SS-Cr; Fri, 26 Mar 2021 10:40:10 +0100
+Message-ID: <9a966c24bddbace74365eaea44bd0686e9bd99f9.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/3] arm64: dts: imx8mq-evk: add one regulator used
  to power up pcie phy
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Richard Zhu <hongxing.zhu@nxp.com>, andrew.smirnov@gmail.com,
@@ -29,10 +29,10 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>, andrew.smirnov@gmail.com,
 Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de
-Date:   Fri, 26 Mar 2021 10:37:30 +0100
-In-Reply-To: <1616661882-26487-2-git-send-email-hongxing.zhu@nxp.com>
+Date:   Fri, 26 Mar 2021 10:40:08 +0100
+In-Reply-To: <1616661882-26487-3-git-send-email-hongxing.zhu@nxp.com>
 References: <1616661882-26487-1-git-send-email-hongxing.zhu@nxp.com>
-         <1616661882-26487-2-git-send-email-hongxing.zhu@nxp.com>
+         <1616661882-26487-3-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
@@ -54,26 +54,34 @@ Am Donnerstag, dem 25.03.2021 um 16:44 +0800 schrieb Richard Zhu:
 > turned on.
 > 
 > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index de4b2baf91e8..e6d1886144ce 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -38,6 +38,9 @@ Optional properties:
->    The regulator will be enabled when initializing the PCIe host and
->    disabled either as part of the init process or when shutting down the
->    host.
-> +- vph-supply: Should specify the regulator in charge of VPH one of the three
-> +  PCIe PHY powers. This regulator can be supplied by both 1.8v and 3.3v voltage
-> +  supplies. Might be used to distinguish different HW board designs.
 
-Please just get rid of the last sentence. All DT properties are used in
-one way or the other to distinguish different HW designs, so no need to
-mention this.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
+I guess you need to split this patch out of the series and post it for
+Shawn to pick up into the imx DT tree, after the other two patches of
+the series have been accepted into the PCIe tree.
 
 Regards,
 Lucas
+
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> index 85b045253a0e..4d2035e3dd7c 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> @@ -318,6 +318,7 @@
+>  		 <&clk IMX8MQ_CLK_PCIE1_PHY>,
+>  		 <&pcie0_refclk>;
+>  	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
+> +	vph-supply = <&vgen5_reg>;
+>  	status = "okay";
+>  };
+>  
+> 
+> 
+> 
+
 
