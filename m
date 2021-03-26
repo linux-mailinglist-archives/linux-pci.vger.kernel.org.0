@@ -2,78 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A91434A562
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 11:17:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 303B834A5AB
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 11:33:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbhCZKRZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 06:17:25 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:44859 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229474AbhCZKQy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 06:16:54 -0400
-Received: by mail-lj1-f175.google.com with SMTP id u9so6704624ljd.11
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 03:16:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OpUz9bJiyFsQLECiLjbpS4JDAF5Mbq0A2LJG0VBJw0k=;
-        b=g+29QZO5TBBpudt/2V2uYFgjQsXHCq+1P8Qe5U5ZNOwqwDmpUniBK8lzDVqrUEcGTZ
-         k0Jv2GqYLrPsiKvwYbczxeernpVQMUwrlddkmbdwmer4s092U3s6cFBq0U7nelWg0EtY
-         C+G0J10XDWVe4+V8yJP84ve7k/H9xNA8YhwW1IBLkrhE30shUncVPcsJ+DuPsboJDy8N
-         bNfWnKcMEnxq8wvXdnKtovZqAngWItvomOqHWF8arvkJy6b4iLo2Yamipyf7GQM8snrJ
-         saB0H0vDfrzG5ZE/a+cL1dcbDo0gt8L2p4eb9wUTg70oH6uSRyGh+oDr/uWu1vPsHx0g
-         UNDg==
-X-Gm-Message-State: AOAM532TPmlAqrF9vy4MkObeFkQILL7oVMPQMUEf5mTp3Hk0oy39O/Sl
-        ltpLl4cw2KZ8yvWmLE3ofyo=
-X-Google-Smtp-Source: ABdhPJyCc6/gKg/ABYeo6/vtXy+bgJwVSNiQyzkmJCpEFGcpxDFN5bb18v+4nM4hA26Rb3PsnCrH6A==
-X-Received: by 2002:a2e:9899:: with SMTP id b25mr8521719ljj.376.1616753813364;
-        Fri, 26 Mar 2021 03:16:53 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id j1sm824783lfb.85.2021.03.26.03.16.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Mar 2021 03:16:52 -0700 (PDT)
-Date:   Fri, 26 Mar 2021 11:16:52 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linuxarm@huawei.com, prime.zeng@huawei.com
-Subject: Re: [PATCH] PCI/AER: Use consistent format when print PCI device
-Message-ID: <YF20lDlJlikTKNkI@rocinante>
-References: <1616752057-9720-1-git-send-email-yangyicong@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1616752057-9720-1-git-send-email-yangyicong@hisilicon.com>
+        id S229969AbhCZKcv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 06:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229474AbhCZKcu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 06:32:50 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF24E61A48;
+        Fri, 26 Mar 2021 10:32:49 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lPjln-003xXC-LI; Fri, 26 Mar 2021 10:32:47 +0000
+Date:   Fri, 26 Mar 2021 10:32:45 +0000
+Message-ID: <87v99efbn6.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Megha Dey <megha.dey@intel.com>, linux-kernel@vger.kernel.org,
+        dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com,
+        dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+Subject: Re: [Patch V2 08/13] genirq: Set auxiliary data for an interrupt
+In-Reply-To: <87im5fvz2z.fsf@nanos.tec.linutronix.de>
+References: <1614370277-23235-1-git-send-email-megha.dey@intel.com>
+        <1614370277-23235-9-git-send-email-megha.dey@intel.com>
+        <871rc3rvuc.wl-maz@kernel.org>
+        <87im5fvz2z.fsf@nanos.tec.linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, megha.dey@intel.com, linux-kernel@vger.kernel.org, dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com, dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com, dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, bhelgaas@google.com, linux-pci@vger.kernel.org, baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Yicong,
+On Thu, 25 Mar 2021 18:59:48 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Thu, Mar 25 2021 at 17:23, Marc Zyngier wrote:
+> >> +{
+> >> +	struct irq_desc *desc;
+> >> +	struct irq_data *data;
+> >> +	unsigned long flags;
+> >> +	int res = -ENODEV;
+> >> +
+> >> +	desc = irq_get_desc_buslock(irq, &flags, 0);
+> >> +	if (!desc)
+> >> +		return -EINVAL;
+> >> +
+> >> +	for (data = &desc->irq_data; data; data = irqd_get_parent_data(data)) {
+> >> +		if (data->chip->irq_set_auxdata) {
+> >> +			res = data->chip->irq_set_auxdata(data, which, val);
+> >
+> > And this is where things can break: because you don't define what
+> > 'which' is, you can end-up with two stacked layers clashing in their
+> > interpretation of 'which', potentially doing the wrong thing.
+> >
+> > Short of having a global, cross architecture definition of all the
+> > possible states, this is frankly dodgy.
+> 
+> My bad, I suggested this in the first place.
+> 
+> So what you suggest is to make 'which' an enum and have that in
+> include/linux/whatever.h so we end up with unique identifiers accross
+> architectures, irqdomains and whatever, right?
 
-> We use format domain:bus:slot.function when print
-> PCI device. Use consistent format in AER messages.
+Exactly. As long as 'which' is unique and unambiguous, we can solve
+the stacking issue (which is oddly starting to smell like the ghost of
+the SVR3 STREAMS... /me runs ;-).
 
-A small nitpick: the commit message and in the subject line it should
-probably use "printing" rather than "print".  But I suppose whoever is
-going be applying this patch can fix this, so probably no need to send
-another version, unless you really want to do it.
+Once we have that, I can start killing the irq_set_vcpu_affinity()
+abuse I have been guilty of over the past years. Even more, we could
+kill irq_set_vcpu_affinity() altogether, because we have a generic way
+of passing side-band information from a driver down to the IRQ stack.
 
-[...]
-> -			pr_err("AER recover: Can not find pci_dev for %04x:%02x:%02x:%x\n",
-> +			pr_err("AER recover: Can not find pci_dev for %04x:%02x:%02x.%x\n",
->  			       entry.domain, entry.bus,
->  			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
-[...]
-> -		pr_err("AER recover: Buffer overflow when recovering AER for %04x:%02x:%02x:%x\n",
-> +		pr_err("AER recover: Buffer overflow when recovering AER for %04x:%02x:%02x.%x\n",
->  		       domain, bus, PCI_SLOT(devfn), PCI_FUNC(devfn));
+> That makes a lot of sense.
+> 
+> Though that leaves the question of the data type for 'val'. While u64 is
+> probably good enough for most stuff, anything which needs more than that
+> is left out (again). union as arguments are horrible especially if you
+> need the counterpart irq_get_auxdata() for which you need a pointer and
+> then you can't do a forward declaration. Something like this might work
+> though and avoid to make the pointer business unconditional:
+> 
+>         struct irq_auxdata {
+>                union {
+>         	     u64        val;
+>                      struct foo *foo;
+>                };
+>         };
 
-Seems like a good idea!  This BDF-like notation is used at few other
-places.  Nice catch.
+I guess that at some point, irq_get_auxdata() will become a
+requirement so we might as well bite the bullet now, and the above
+looks like a good start to me.
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+Thanks,
 
-Krzysztof
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
