@@ -2,181 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1B9B34ACF0
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 17:57:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8BDA34AD12
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 18:06:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbhCZQ4e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 12:56:34 -0400
-Received: from mail-bn8nam11on2081.outbound.protection.outlook.com ([40.107.236.81]:47712
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230363AbhCZQ4Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Mar 2021 12:56:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eSAkJwqgd65buw1f8T60Fx53ygLpx6llseI6yyf+iNnynNEpS/+HJ/NrodswYPlsQcHpEldC8jOcLBHSBdhOMsvGhxvva2DHyFsa2fWFUIA5+Z4Vhb30TjJL7Qt/ClRlKLc/uE34UqO7s9g7hGyfH5+91RamKctrfu2ls3yIWZO4iy0TueUoklb7A+cuv3BaF1vtHSH93SyJmpZAb+meLusLr2K71cEe0ayLrKFQ+4eQ0LZHD61/VsDD5eZFw8sFktUnjdA2w7u1Lq1LK97K+R/LHI+hcJomcSt5DJS3V2wNupv9aUkh8mYWDbz09qdaAl7OOShMBDcp/buF1o3bdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5e+fzLhrIfaHaYmaZT4a5tP7lxyNmilppEo+NB56Opg=;
- b=RES2k2v0d18xtR1ekijhkCw39vDTUyaYiMtBXHHD4dq7H3p48RjchPhXNTIoSgIapL1Zsz1BtfpeqMMavzrRNlvlHJIiKZNoqJdajbTABSYz+eOCULn9t42isduGxJ7TolHL07utsDXd1ExyU29+bPwDylnWrOUEjEM8QqshTgW15Zl/ahqqf/G4u5uhuU5nev+RnSFyy/NlxoPDMZ6UZxhTIkhtNKlOue3Asu98CSR9WzfGKpXjzu+05gHzD6/odVg+UbWtW151GXI/PMcGOTHf0OVbUOB/MME4IfLtv3sBr87ZnIUhpORGSjw8ufa4nIrehXQlMGE/T3xR1MQFJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5e+fzLhrIfaHaYmaZT4a5tP7lxyNmilppEo+NB56Opg=;
- b=Pk/YPcjD8VY8z74dLh0MTXAbIxt1wuOC821ModYB+mArbLJEcZY9w6bOrCBbAulCSXpg3Y7vlbH6nZsk/aWxy5qD/hfpVK4p7G1qILYGlsZH5JI1O6d6OX1i7Sm2AxH/Iw40IxOt/em9qaZ5AP0tU+SQ6N3y7Z7UzsHFffoyUe2KC6ik1WuagpfLuCqPwPs0GCgXrsck0IKt9HSfgzCbTV+Lvuaf6Vso/eyGupKc5t+jKEXHUeDmvnYeOE41IBpt8N0q5MhZppFt+D9HAIQj/HkSlTbT6sLvnTLeHDHBSfs9ukwU9Eak0UkqA6wJQpnHSRjd8esUpc4kX4B1KLA58Q==
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3739.namprd12.prod.outlook.com (2603:10b6:5:1c4::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Fri, 26 Mar
- 2021 16:56:14 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3977.029; Fri, 26 Mar 2021
- 16:56:14 +0000
-Date:   Fri, 26 Mar 2021 13:56:12 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <20210326165612.GO2356281@nvidia.com>
-References: <20210325173646.GG2356281@nvidia.com>
- <20210325182021.GA795636@bjorn-Precision-5520>
- <20210325182836.GJ2356281@nvidia.com>
- <YF2CtFmOxL6Noi96@unreal>
- <CAKgT0UfK3eTYH+hRRC0FcL0rdncKJi=6h5j6MN0uDA98cHCb9A@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UfK3eTYH+hRRC0FcL0rdncKJi=6h5j6MN0uDA98cHCb9A@mail.gmail.com>
-X-Originating-IP: [142.162.115.133]
-X-ClientProxiedBy: MN2PR15CA0046.namprd15.prod.outlook.com
- (2603:10b6:208:237::15) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S230202AbhCZRFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 13:05:45 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:55794 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230152AbhCZRFM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 13:05:12 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20210326170510euoutp0206628def8d06f518fa5a187df74f829e~v8060LtxI1677516775euoutp02J
+        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 17:05:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20210326170510euoutp0206628def8d06f518fa5a187df74f829e~v8060LtxI1677516775euoutp02J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1616778310;
+        bh=bK6Sh1ykvaHJopM4VaF7WSzOE4FIOny1NZwJ98izPJQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=A9R7rgEhiRhN3UakbNPcZ7BIpIeorCujGrDZW4c00dELoWmZHEc0oqSaEe00fCnte
+         HXSaXJ1vvp+AnYuOiOQutC5XM+swUh3qGEap9uVFp9d+gtjkPBPXL4moqdHRWEg63Q
+         CfEhRw/gAl9c/rsPrO35Nptzz3+bTEolxvqawzwg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20210326170510eucas1p114b3d0df97f795f05c9dd188fce8a725~v806c1rCy2000520005eucas1p1A;
+        Fri, 26 Mar 2021 17:05:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 29.76.09439.6441E506; Fri, 26
+        Mar 2021 17:05:10 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20210326170509eucas1p2416134a674fe6929f2cb3ee7da99ef8c~v806GIKgL0468304683eucas1p2q;
+        Fri, 26 Mar 2021 17:05:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20210326170509eusmtrp2a200d0c56556ef35d4028db0e4e1eae7~v806FTG9e2122521225eusmtrp2L;
+        Fri, 26 Mar 2021 17:05:09 +0000 (GMT)
+X-AuditID: cbfec7f5-c1bff700000024df-ae-605e1446874f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 64.98.08696.5441E506; Fri, 26
+        Mar 2021 17:05:09 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20210326170509eusmtip16725afc0cf58262339bd33633a5e764f~v805eKGzh2038320383eusmtip1B;
+        Fri, 26 Mar 2021 17:05:09 +0000 (GMT)
+Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        =?UTF-8?B?7KCV7J6s7ZuI?= <jh80.chung@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <5a4a7177-f8e1-6c8b-7c8a-8f5831de8455@samsung.com>
+Date:   Fri, 26 Mar 2021 18:05:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
+        Gecko/20100101 Thunderbird/78.8.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.162.115.133) by MN2PR15CA0046.namprd15.prod.outlook.com (2603:10b6:208:237::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.26 via Frontend Transport; Fri, 26 Mar 2021 16:56:14 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lPpkq-003bYx-OW; Fri, 26 Mar 2021 13:56:12 -0300
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 41a8d7ad-877c-4038-ed5e-08d8f07810b9
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3739:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3739E23B3199F539D31178DAC2619@DM6PR12MB3739.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l6HXiUnn9mxcITPTxOyvHJyB5mWOEzLITRtn14BHMS+khKrn7hz7DbL0yON6CfmRWK/r6vaq56Th9tmkI4L8vOc0vapVV3gC/HUJtb3fWXL5GsL8D9NchJISNvEJRcaSyeiDZgzLySCh1RKugiDWMFLs/fWAfWVnTEKLpoP83W+hXATiOgnpYxyn/lDClBXCQiUt8POv/t48PgE8mftoHqbur4L605BFst9fOExnahJSiPAOJaairYGfksR1ovX7znfdC0Zthm8rRmhYVvkXudxGBs+h5I18AoKybklgAkTjCF73sIaHhx1GqBerLKvCPEYn+eOe/GoCmRLAnzjI4azaY/UNHXmMTRlZGNZjtZJuMeZT9tzNgmJ9E4uEWT2carAPPz7Eip/01+sRW5QKyr1WpubWm33XgJTTCgLUbxunmOga4j7tKHsVODeIOwnOiKeAjZ5e9BFQEjoT7tshhGIfO7EnigWiRhQ+KnywP0ts1TgN4nW7IsP1aoZO4SJbWjLUfhwxEv6V0/Qe5YO+NLZhTu6YcFETj280ulqojbr4ZHJiyzd0YT4Akz6rtQtYIlMn9o0KNlOxbdpddUBpCjnJKxZqBDHM6F6VQZoh6vnwzphv5H+usKfzw9oWf/3pscOmBWi80tXCmN0oyi6KNlLIZwwlFeiYj2sFie4JUes=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(53546011)(7416002)(2616005)(5660300002)(4326008)(54906003)(36756003)(66946007)(26005)(6916009)(426003)(186003)(478600001)(38100700001)(8676002)(66476007)(66556008)(33656002)(1076003)(8936002)(2906002)(316002)(86362001)(9786002)(9746002)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Yxqo9EWOVsB8UGb+AJKSHQYIb/v3NvaM2GUukm9+Q/I75pyzxWIIJolVEALf?=
- =?us-ascii?Q?NNV+z0dsocW9b+Fc0dZwQnfMUD0+fhZVd/6XBamvABvwBficqZW2PhXNCRMn?=
- =?us-ascii?Q?04hf3B89w0WV5nwU/Bew2zij6a3jQG47CkfWEPyzGTRYEXdM1j645T7h8zFW?=
- =?us-ascii?Q?YfjLnqTgqCwL04FtgoKW3sBPDyhr1e35VSiHexcQAhJu2t3SCselAmF4KbAZ?=
- =?us-ascii?Q?sP34dT5GIASGlk74qi2oAZk9/NkmslB2GUOXKVRna/UK7EJP8OfznTvLLkIM?=
- =?us-ascii?Q?pD4ZNuTAEV0yw6pIhTpuCOlxykAqjqQykvzhAlcLQPTLQWeEhwMeL2tk0KM8?=
- =?us-ascii?Q?kdQt3ahUCOT/HOeRtwMn1cG7aXZoTx0GtEAjddRJ6dbspxoJz9vJItxAqON/?=
- =?us-ascii?Q?zEPe2ybUIFNkDavdDDH+hSH0Fu8o3S9PqRCk5PrOBUnV7pgpaka59/FtXd49?=
- =?us-ascii?Q?KmDxb4O5/uNQHrQL3/hZEfQuMfd4qAwYFe9VAv1YNa4qmeQKfbXeuLousCNX?=
- =?us-ascii?Q?XOYrZ9bn5M3Eq7X2bxMZ7d43oSRbf+nLA7RDq4BBAnmVeOR1n0oXV8RyOfBw?=
- =?us-ascii?Q?WIABRGElr+ZW9LFOtfGnFu+iSjO8J2MT3Eh7YXllVDDgqpL/h+GfsJt95qLW?=
- =?us-ascii?Q?b2tIbnHUJWs7VQGGbfPcvIBhjEzN4T3Ip2f+SK0ypNHppHf6GBBZRqTB3Pfk?=
- =?us-ascii?Q?gUXnTcxnRdNmKzEtKOlPSCTDeC7Wx+APN5f1CSvLkDnqT7C+aiF2SLmyNBNh?=
- =?us-ascii?Q?xCGNbxmydWHN1HURXX07Lz189Jv+BQijtg2ozZ0PO43SMNbak50QO8flx81d?=
- =?us-ascii?Q?lYwljHptrpC/8ZQ8Of1ULnFQxDIDjMOcN87GP6wSJOYXpsxK3madAOLTWokW?=
- =?us-ascii?Q?sAi8b4C3ntmoY0CY6656aMKSuDvNPc0X//iW1j9n+BWxzZcTY4hOVa0yaQEN?=
- =?us-ascii?Q?KsXS5u21BHXe/tZ72wgMgE0Lgqu7koWlFCzC2XBT+8Gyaod8G3i0GwqbY0RZ?=
- =?us-ascii?Q?PS8eUc3yYfx+AEOFGYx9qMY317UsNvsFWY/fjlIJqWSBpTd8cjUnv8laffh7?=
- =?us-ascii?Q?gTqatqUpkT+vMh3HPtu5Blr+fLWeOI5qEGifKw8DaNFeJqxNbm2JaMjY9Ek0?=
- =?us-ascii?Q?ZKOF00jCAg/oyGLujfl18xzEGMlVwMVbRsm04z3g4QfCs2DULhOrNRzl2AGp?=
- =?us-ascii?Q?vKuLGWyaq+5An9Si4x8fbQ0VZDoKkGXFcOm57YOAmRRkgIo/xsC0twbzPBUi?=
- =?us-ascii?Q?fEFF2LYNgkJeJSKim/pq1Daq5ywE1ug4YvgnyPHrQsOjpZOXKoLsziVeUVDo?=
- =?us-ascii?Q?iiv740IOeVaJW5EUtuC6r0WYTWc/3F2AO+uBgRMzUvT7Tw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41a8d7ad-877c-4038-ed5e-08d8f07810b9
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2021 16:56:14.2805
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +dZoddN67RdC9gvQq5eQL/MKJpK4QImVpGtVmxrqs45xh6IShkmS3TyaPMehemul
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3739
+In-Reply-To: <20210325201932.GA808102@bjorn-Precision-5520>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djPc7puInEJBsdPclgsacqw2HW3g93i
+        1Zm1bBY3frWxWqz4MpPd4vKuOWwWZ+cdZ7N48/sFu8X/PTvYLU60fWB34PJYM28No8fOWXfZ
+        PRZsKvXYtKqTzWPjux1MHn1bVjF6bNn/mdHj8ya5AI4oLpuU1JzMstQifbsEroyOLZ/YC05r
+        V8z7comxgfGqchcjJ4eEgInEzVW/mbsYuTiEBFYwSsz9uoAFwvnCKLFi+VEo5zOjxOy39xhh
+        Wta9Ps0EkVjOKDF1whkmkISQwEdGiZsn2UFsYQE3ibmvpwLZHBwiAmoSXe2hIPXMAv1MEk8P
+        XGAGqWETMJToetvFBmLzCthJ3H84DWwBi4CqxLPtrWC9ogJJEhsOxUKUCEqcnPmEBcTmFLCW
+        2Dl9AyuIzSwgL7H97RxmCFtc4taT+WC3SQi0c0p8fHaZCeJoF4mOK5OZIWxhiVfHt7BD2DIS
+        /3fCNDQzSjw8t5YdwulhlLjcNAPqZWuJO+d+sYFcxCygKbF+lz5E2FHibesNsEMlBPgkbrwV
+        hDiCT2LStunMEGFeiY42IYhqNYlZx9fBrT144RLzBEalWUhem4XknVlI3pmFsHcBI8sqRvHU
+        0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwNR1+t/xrzsYV7z6qHeIkYmD8RCjBAezkggv6+nY
+        BCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8u7auiRcSSE8sSc1OTS1ILYLJMnFwSjUwcVQ3bznA
+        cIwxjf310ZvzZgd9cPP6vcVfKlAg9/2ihwWVz+/zL7+dz+b/Z/cjZy+f0zd2FZ9/nDxRdepO
+        /klTJ3H/ndActW2Gipiz3PTnkfYX+kTlT9ld7TRTk5CXXF95Wz+4gvsky0eRlzpSkTMTy/6+
+        3/t8kqfp0YLW9XoiRh3u+pNsAo6smfK8ZWXijd8apzMX9EuXXuFLMFEzuSvwJYcj4U/DQ/VX
+        Qqy3urZo+69pY9hU8lU8ZnnNDoemaSKH3kSmndC7ect7ekNwgNb96Qc929JZdotPm8e1SMh6
+        3/9jq+S2RajO/Kd9LMnFefUK5arAj8oHtpplX/+iXnxJ/9+irYtipV97+wR7Lo55rcRSnJFo
+        qMVcVJwIANi1RQvMAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xu7quInEJBn/faVksacqw2HW3g93i
+        1Zm1bBY3frWxWqz4MpPd4vKuOWwWZ+cdZ7N48/sFu8X/PTvYLU60fWB34PJYM28No8fOWXfZ
+        PRZsKvXYtKqTzWPjux1MHn1bVjF6bNn/mdHj8ya5AI4oPZui/NKSVIWM/OISW6VoQwsjPUNL
+        Cz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyOLZ/YC05rV8z7comxgfGqchcjJ4eEgInE
+        utenmboYuTiEBJYySizZMoMVIiEjcXJaA5QtLPHnWhcbRNF7RonWhn52kISwgJvE3NdTgWwO
+        DhEBNYmu9lCQGmaBfiaJp8s2QjX0MUq8X/6VDaSBTcBQouttF5jNK2Ancf/hNEYQm0VAVeLZ
+        9lawoaICSRKXl0xkhagRlDg58wkLiM0pYC2xc/oGsDizgJnEvM0PmSFseYntb+dA2eISt57M
+        Z5rAKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusZFecWJucWleul5yfu4mRmC8bjv2c8sO
+        xpWvPuodYmTiYDzEKMHBrCTCy3o6NkGINyWxsiq1KD++qDQntfgQoynQPxOZpUST84EJI68k
+        3tDMwNTQxMzSwNTSzFhJnNfkyJp4IYH0xJLU7NTUgtQimD4mDk6pBibTijWyj8sWuYcWC1lw
+        P89avtN7+bXEmq3hvnnPSw9vXNq+xXZWihM/Q66egJlF9OKICTI/zihcCN57tNR5+xF189yi
+        0yEfc6bP28p47/C+P9UfOEQlJb1mPQ63+DA5RDq2WJbJ/tYvg8O2VxZwrz2yxfO508Qlkgc3
+        1+Sy1pmeNvt0fHeT5FzZ8O1LOK4zsxal5z3ec3mxoIIxo+b3nqKpfQ0q7/JlEl+uyZeOnf9a
+        lkkgiGneC/5pXLUNh76fnSTDWMR1gKX9+8PC7pN9YreNNm08J7konofj/GXVpCs39XXDTEuK
+        9wvGacx4uq+TS2f+IeW3Kl1Lrr1u5l70yUpe2+ER57vvE9jPu7PyViuxFGckGmoxFxUnAgCr
+        uosVYAMAAA==
+X-CMS-MailID: 20210326170509eucas1p2416134a674fe6929f2cb3ee7da99ef8c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20210325201938eucas1p14d874a2805450173ef7eb1ac20bb7941
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20210325201938eucas1p14d874a2805450173ef7eb1ac20bb7941
+References: <CGME20210325201938eucas1p14d874a2805450173ef7eb1ac20bb7941@eucas1p1.samsung.com>
+        <20210325201932.GA808102@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 26, 2021 at 09:00:50AM -0700, Alexander Duyck wrote:
-> On Thu, Mar 25, 2021 at 11:44 PM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Thu, Mar 25, 2021 at 03:28:36PM -0300, Jason Gunthorpe wrote:
-> > > On Thu, Mar 25, 2021 at 01:20:21PM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Mar 25, 2021 at 02:36:46PM -0300, Jason Gunthorpe wrote:
-> > > > > On Thu, Mar 25, 2021 at 12:21:44PM -0500, Bjorn Helgaas wrote:
-> > > > >
-> > > > > > NVMe and mlx5 have basically identical functionality in this respect.
-> > > > > > Other devices and vendors will likely implement similar functionality.
-> > > > > > It would be ideal if we had an interface generic enough to support
-> > > > > > them all.
-> > > > > >
-> > > > > > Is the mlx5 interface proposed here sufficient to support the NVMe
-> > > > > > model?  I think it's close, but not quite, because the the NVMe
-> > > > > > "offline" state isn't explicitly visible in the mlx5 model.
-> > > > >
-> > > > > I thought Keith basically said "offline" wasn't really useful as a
-> > > > > distinct idea. It is an artifact of nvme being a standards body
-> > > > > divorced from the operating system.
-> > > > >
-> > > > > In linux offline and no driver attached are the same thing, you'd
-> > > > > never want an API to make a nvme device with a driver attached offline
-> > > > > because it would break the driver.
-> > > >
-> > > > I think the sticky part is that Linux driver attach is not visible to
-> > > > the hardware device, while the NVMe "offline" state *is*.  An NVMe PF
-> > > > can only assign resources to a VF when the VF is offline, and the VF
-> > > > is only usable when it is online.
-> > > >
-> > > > For NVMe, software must ask the PF to make those online/offline
-> > > > transitions via Secondary Controller Offline and Secondary Controller
-> > > > Online commands [1].  How would this be integrated into this sysfs
-> > > > interface?
-> > >
-> > > Either the NVMe PF driver tracks the driver attach state using a bus
-> > > notifier and mirrors it to the offline state, or it simply
-> > > offline/onlines as part of the sequence to program the MSI change.
-> > >
-> > > I don't see why we need any additional modeling of this behavior.
-> > >
-> > > What would be the point of onlining a device without a driver?
-> >
-> > Agree, we should remember that we are talking about Linux kernel model
-> > and implementation, where _no_driver_ means _offline_.
-> 
-> The only means you have of guaranteeing the driver is "offline" is by
-> holding on the device lock and checking it. So it is only really
-> useful for one operation and then you have to release the lock. The
-> idea behind having an "offline" state would be to allow you to
-> aggregate multiple potential operations into a single change.
+On 25.03.2021 21:19, Bjorn Helgaas wrote:
+> On Thu, Mar 25, 2021 at 10:24:28AM +0100, Marek Szyprowski wrote:
+>> On 25.01.2021 05:48, Zhiqiang Hou wrote:
+>>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>>>
+>>> In the dw_pcie_ep_init(), it depends on the detected iATU region
+>>> numbers to allocate the in/outbound window management bit map.
+>>> It fails after the commit 281f1f99cf3a ("PCI: dwc: Detect number
+>>> of iATU windows").
+>>>
+>>> So this patch move the iATU region detection into a new function,
+>>> move forward the detection to the very beginning of functions
+>>> dw_pcie_host_init() and dw_pcie_ep_init(). And also remove it
+>>> from the dw_pcie_setup(), since it's more like a software
+>>> perspective initialization step than hardware setup.
+>>>
+>>> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
+>>> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>> This patch causes exynos-pcie to hang during the initialization. It
+>> looks that some resources are not enabled yet, so calling
+>> dw_pcie_iatu_detect() much earlier causes a hang. When I have some time,
+>> I will try to identify what is needed to call it properly.
+> Thanks, I dropped it for now.  We can add it back after we figure out
+> what the exynos issue is.
+Thanks, I will try to identify at which point of initialization it is 
+safe to call iATU region detection.
+> For reference, here's the patch I dropped (I had made some minor
+> corrections to the commit log):
+>
+> commit fd4162f05194 ("PCI: dwc: Move iATU detection earlier")
+> Author: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Date:   Mon Jan 25 12:48:03 2021 +0800
+>
+>      PCI: dwc: Move iATU detection earlier
+>      
+>      dw_pcie_ep_init() depends on the detected iATU region numbers to allocate
+>      the in/outbound window management bitmap.  It fails after 281f1f99cf3a
+>      ("PCI: dwc: Detect number of iATU windows").
+>      
+>      Move the iATU region detection into a new function, move the detection to
+>      the very beginning of dw_pcie_host_init() and dw_pcie_ep_init().  Also
+>      remove it from the dw_pcie_setup(), since it's more like a software
+>      initialization step than hardware setup.
+>      
+>      Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
+>      Link: https://lore.kernel.org/r/20210125044803.4310-1-Zhiqiang.Hou@nxp.com
+>      Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>      Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>      Reviewed-by: Rob Herring <robh@kernel.org>
+>      Cc: stable@vger.kernel.org	# v5.11+
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1c25d8337151..8d028a88b375 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -705,6 +705,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   		}
+>   	}
+>   
+> +	dw_pcie_iatu_detect(pci);
+> +
+>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>   	if (!res)
+>   		return -EINVAL;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 7e55b2b66182..52f6887179cd 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -319,6 +319,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>   			return PTR_ERR(pci->dbi_base);
+>   	}
+>   
+> +	dw_pcie_iatu_detect(pci);
+> +
+>   	bridge = devm_pci_alloc_host_bridge(dev, 0);
+>   	if (!bridge)
+>   		return -ENOMEM;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 004cb860e266..a945f0c0e73d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -660,11 +660,9 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
+>   	pci->num_ob_windows = ob;
+>   }
+>   
+> -void dw_pcie_setup(struct dw_pcie *pci)
+> +void dw_pcie_iatu_detect(struct dw_pcie *pci)
+>   {
+> -	u32 val;
+>   	struct device *dev = pci->dev;
+> -	struct device_node *np = dev->of_node;
+>   	struct platform_device *pdev = to_platform_device(dev);
+>   
+>   	if (pci->version >= 0x480A || (!pci->version &&
+> @@ -693,6 +691,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>   
+>   	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
+>   		 pci->num_ob_windows, pci->num_ib_windows);
+> +}
+> +
+> +void dw_pcie_setup(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+> +	struct device *dev = pci->dev;
+> +	struct device_node *np = dev->of_node;
+>   
+>   	if (pci->link_gen > 0)
+>   		dw_pcie_link_set_max_speed(pci, pci->link_gen);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 7247c8b01f04..7d6e9b7576be 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -306,6 +306,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+>   void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+>   			 enum dw_pcie_region_type type);
+>   void dw_pcie_setup(struct dw_pcie *pci);
+> +void dw_pcie_iatu_detect(struct dw_pcie *pci);
+>   
+>   static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
+>   {
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-What we really want is a solution where the SRIOV device exist for the
-HW but isn't registered yet as a pci_device. We have endless problems
-with needing to configure SRIOV instances at the PF before they get
-plugged into the kernel and the no driver autoprobe buisness is such a
-hack.
-
-But that is a huge problem and not this series.
-
-Jason
