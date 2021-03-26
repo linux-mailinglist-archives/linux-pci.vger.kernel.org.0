@@ -2,238 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2341D34A369
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 09:51:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2F6E34A36B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 09:52:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbhCZIvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 04:51:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26347 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229935AbhCZIuq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Mar 2021 04:50:46 -0400
-IronPort-SDR: 9/0C/3EWaoEqwPU0phWZX8Lj1prBnMf3T3PJZlow2KtzLut0gjdkufTqJ9f/Wpsm56N2IRx/so
- p6ABE2owwFxQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9934"; a="188829534"
-X-IronPort-AV: E=Sophos;i="5.81,280,1610438400"; 
-   d="scan'208";a="188829534"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 01:50:45 -0700
-IronPort-SDR: zDvVo1MA4k4Sb/BRRA0k7l89ETnR+sUxULDZ/rudqM+WCJI0HYOy6OHSI/bRkVZUbTcPd7Jg+o
- /FnMDm8Pn82A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,280,1610438400"; 
-   d="scan'208";a="453434507"
-Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2021 01:50:44 -0700
-Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lPiB1-0002d1-Rb; Fri, 26 Mar 2021 08:50:43 +0000
-Date:   Fri, 26 Mar 2021 16:50:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- cf673bd0cc973b25961d41355990beaed710068f
-Message-ID: <605da05c.LkpDWB/rT5NFfAvK%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S229695AbhCZIvh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 04:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229871AbhCZIvI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 04:51:08 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3496C0613B1
+        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 01:51:07 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id x7-20020a17090a2b07b02900c0ea793940so3920272pjc.2
+        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 01:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qXKllH4DZp+PJmXaj590vznrjlQGXwA3qvbOlc3azSk=;
+        b=ltSxYvjpQGcstE6G4k6RSWbKDuooSNtXutRV7H9eO2h9Zv2zjf+ZAzz61K0k44DHGr
+         PCxVLcXDNOIzp+TLmyR0OATS79z+AhvwDets+g6U/0pSS/ThoipATd4Nj3EmJWF6reHq
+         4FEET9pD965Ozqoc2ODcX5rD3b+RBRHHEzkrHzSpaOnaQ0OTjA5oHbEojmruiPqdxuti
+         j6r6Of49aUn6n15klnZ8sVm5ZBvjjL23MFY6rhQp1RYZYNEs1bX1AKWrK02Exblg5oGh
+         skemN90BZ8S7UTC7Kj/DVhyvqC5BmzNm829KjUX7Mx4uxUfw38KkLVrWwAPOZrSjX7in
+         X1EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qXKllH4DZp+PJmXaj590vznrjlQGXwA3qvbOlc3azSk=;
+        b=fxANaT+qQTdziqInmVT3KSliIHYdidQSgiz5I2fAkjVhYi9LnUrFd9WtRAnJ719P1a
+         AJvLQ1eLmAWbHoTxk7c8zWFP3lmIBdjh8dSGHMHBrRxlrv7pmOsf75xHjyRamCLa3Bnw
+         2d1MFdc4jPjC9PjtEo5Q7CR2SJZVcWS7Ou5g/3jmxdUUKxXi/duDOZ0nhHxocv2hXsqi
+         yWYoN1kvp96QL1Ko4bvGIjf7Z7rWtAFF3UB2AM98CXCA8kyMY9KhWGA4GMvtu2SX/KXu
+         2lQXeT6EMCT7A6pJwpbUUixwFUqZs+aNtmr1A8+O8rZ1RHow8Zmdc0GYVkmRbMxsA9hr
+         HMqw==
+X-Gm-Message-State: AOAM5329mddnlxaX/4QG2P/DhVw0eeltI7GvIZgClb0SEWiCZAhwHXai
+        j2XYfCZlnBhF9uJBwbxmARwbTCAkyvaM
+X-Google-Smtp-Source: ABdhPJxCuL3UHmza9XEGdjW7AGeUC8CosFdtNqpLLE4aXSjoNz7eqeDAcDhQzrR+o/kgKEtGEWT7mg==
+X-Received: by 2002:a17:902:c1c4:b029:e6:7bc9:71fd with SMTP id c4-20020a170902c1c4b02900e67bc971fdmr13788321plc.5.1616748667147;
+        Fri, 26 Mar 2021 01:51:07 -0700 (PDT)
+Received: from work ([103.77.37.139])
+        by smtp.gmail.com with ESMTPSA id o76sm7036325pfg.217.2021.03.26.01.51.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Mar 2021 01:51:06 -0700 (PDT)
+Date:   Fri, 26 Mar 2021 14:21:02 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 04/11] PCI: dwc: pcie-kirin: add support for Kirin 970
+ PCIe controller
+Message-ID: <20210326085102.GA25371@work>
+References: <cover.1612335031.git.mchehab+huawei@kernel.org>
+ <4c9d6581478aa966698758c0420933f5defab4dd.1612335031.git.mchehab+huawei@kernel.org>
+ <CAL_JsqK7_hAw4aacHyiqJWE6zSWiMez5695+deaCSHfeWuX-XA@mail.gmail.com>
+ <20210326093936.02ba3a03@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210326093936.02ba3a03@coco.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: cf673bd0cc973b25961d41355990beaed710068f  PCI: switchtec: Fix Spectre v1 vulnerability
+On Fri, Mar 26, 2021 at 09:39:36AM +0100, Mauro Carvalho Chehab wrote:
+> Em Wed, 3 Feb 2021 08:34:21 -0600
+> Rob Herring <robh@kernel.org> escreveu:
+> 
+> > On Wed, Feb 3, 2021 at 1:02 AM Mauro Carvalho Chehab
+> > <mchehab+huawei@kernel.org> wrote:
+> > >
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >
+> > > Add support for HiSilicon Kirin 970 (hi3670) SoC PCIe controller, based
+> > > on Synopsys DesignWare PCIe controller IP.
+> > >
+> > > [mchehab+huawei@kernel.org: fix merge conflicts]
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-kirin.c | 723 +++++++++++++++++++++++-
+> > >  1 file changed, 707 insertions(+), 16 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> > > index 026fd1e42a55..5925d2b345a8 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> > > @@ -29,6 +29,7 @@
+> > 
 
-elapsed time: 722m
+[...]
 
-configs tested: 176
-configs skipped: 2
+> > This looks like it is almost all phy related. I think it should all be
+> > moved to a separate phy driver. Yes, we have some other PCI drivers
+> > controlling their phys directly where the phy registers are
+> > intermingled with the PCI host registers, but I think those either
+> > predate the phy subsystem or are really simple. I also have a dream to
+> > move all the phy control to the DWC core code.
+> 
+> Please notice that this patch was not written by me, but, instead,
+> by Mannivannan. So, I can't change it.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Feel free to move the PHY pieces to a separate PHY driver as suggested.
+My driver code was merely WIP one and I don't have any objection to
+change the patch.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-i386                             allyesconfig
-riscv                            allyesconfig
-mips                           ip28_defconfig
-powerpc                   lite5200b_defconfig
-arm                         s5pv210_defconfig
-powerpc                   currituck_defconfig
-h8300                            alldefconfig
-powerpc                     ksi8560_defconfig
-powerpc                       maple_defconfig
-powerpc                      obs600_defconfig
-sparc64                             defconfig
-arm                         assabet_defconfig
-xtensa                              defconfig
-sh                         ecovec24_defconfig
-sh                               alldefconfig
-m68k                       m5475evb_defconfig
-sh                   secureedge5410_defconfig
-arm                        cerfcube_defconfig
-powerpc                     mpc5200_defconfig
-arm                          pxa3xx_defconfig
-sh                          rsk7264_defconfig
-csky                                defconfig
-sh                     sh7710voipgw_defconfig
-m68k                        stmark2_defconfig
-powerpc                 xes_mpc85xx_defconfig
-mips                          rb532_defconfig
-powerpc                 mpc834x_mds_defconfig
-arm                       aspeed_g5_defconfig
-arm                            pleb_defconfig
-arm                            mmp2_defconfig
-s390                             alldefconfig
-xtensa                  cadence_csp_defconfig
-powerpc                         ps3_defconfig
-parisc                generic-64bit_defconfig
-mips                        qi_lb60_defconfig
-sh                   sh7770_generic_defconfig
-mips                        vocore2_defconfig
-parisc                           alldefconfig
-arm                        shmobile_defconfig
-powerpc                       ppc64_defconfig
-arm                           spitz_defconfig
-arm                        keystone_defconfig
-arm                          lpd270_defconfig
-mips                      maltaaprp_defconfig
-arm                        spear3xx_defconfig
-arm                       imx_v6_v7_defconfig
-mips                     loongson1c_defconfig
-powerpc                     sequoia_defconfig
-powerpc                      katmai_defconfig
-arm                        multi_v7_defconfig
-nds32                             allnoconfig
-sh                ecovec24-romimage_defconfig
-arm                      pxa255-idp_defconfig
-arm                            mps2_defconfig
-powerpc                      makalu_defconfig
-powerpc                   motionpro_defconfig
-arm                         lpc18xx_defconfig
-mips                     decstation_defconfig
-sh                             espt_defconfig
-mips                        bcm63xx_defconfig
-m68k                                defconfig
-mips                  cavium_octeon_defconfig
-sh                          sdk7780_defconfig
-powerpc                      acadia_defconfig
-powerpc                     tqm5200_defconfig
-powerpc                 linkstation_defconfig
-powerpc64                           defconfig
-mips                          malta_defconfig
-csky                             alldefconfig
-nds32                            alldefconfig
-riscv                    nommu_k210_defconfig
-powerpc                      ep88xc_defconfig
-xtensa                    xip_kc705_defconfig
-mips                        omega2p_defconfig
-sh                     magicpanelr2_defconfig
-arm                          pcm027_defconfig
-powerpc                     stx_gp3_defconfig
-mips                           ip22_defconfig
-sh                           se7712_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                        multi_v5_defconfig
-mips                         cobalt_defconfig
-powerpc                        icon_defconfig
-nios2                               defconfig
-arm                         axm55xx_defconfig
-ia64                        generic_defconfig
-m68k                            mac_defconfig
-mips                      bmips_stb_defconfig
-m68k                         amcore_defconfig
-arm                         mv78xx0_defconfig
-openrisc                 simple_smp_defconfig
-arm                         orion5x_defconfig
-powerpc                     tqm8548_defconfig
-arm                           u8500_defconfig
-arm                       netwinder_defconfig
-powerpc                       eiger_defconfig
-sh                          polaris_defconfig
-mips                       lemote2f_defconfig
-powerpc                     tqm8541_defconfig
-m68k                            q40_defconfig
-xtensa                    smp_lx200_defconfig
-arm                  colibri_pxa270_defconfig
-powerpc                 mpc837x_mds_defconfig
-um                            kunit_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a002-20210325
-x86_64               randconfig-a003-20210325
-x86_64               randconfig-a006-20210325
-x86_64               randconfig-a001-20210325
-x86_64               randconfig-a005-20210325
-x86_64               randconfig-a004-20210325
-i386                 randconfig-a003-20210325
-i386                 randconfig-a004-20210325
-i386                 randconfig-a001-20210325
-i386                 randconfig-a002-20210325
-i386                 randconfig-a006-20210325
-i386                 randconfig-a005-20210325
-i386                 randconfig-a014-20210325
-i386                 randconfig-a011-20210325
-i386                 randconfig-a015-20210325
-i386                 randconfig-a016-20210325
-i386                 randconfig-a013-20210325
-i386                 randconfig-a012-20210325
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+I'd be happy if you add my Co-developed tag to the PCIe driver patch with
+the SoB ofc.
 
-clang tested configs:
-x86_64               randconfig-a012-20210325
-x86_64               randconfig-a015-20210325
-x86_64               randconfig-a014-20210325
-x86_64               randconfig-a013-20210325
-x86_64               randconfig-a011-20210325
-x86_64               randconfig-a016-20210325
+> What I can certainly do is to
+> write a separate patch at the end of this series moving the Kirin 970
+> phy to a separate driver. Would this be accepted?
+> 
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Ah, please don't do that. I know that you've already followed the same
+process for other HiSi drivers but that looks messy IMO.
+
+> Btw, what should be done with the Kirin 960 PHY code that it is
+> already embedded on this driver, and whose some of the DT properties
+> are for its phy layer? 
+> 
+
+You might need to create a PHY driver for both 960 and 970. I don't see
+any harm there. But please make sure you test the patches on both boards.
+
+Thanks,
+Mani
+
+> Thanks,
+> Mauro
