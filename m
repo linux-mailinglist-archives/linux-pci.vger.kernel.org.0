@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1F734A4AD
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 10:41:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8184134A4BF
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 10:42:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbhCZJk7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 05:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45586 "EHLO
+        id S229730AbhCZJmF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 05:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbhCZJk2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 05:40:28 -0400
+        with ESMTP id S229622AbhCZJlj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 05:41:39 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D85C0613B1
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 02:40:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFE3C0613AA
+        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 02:41:39 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1lPiws-0007SS-Cr; Fri, 26 Mar 2021 10:40:10 +0100
-Message-ID: <9a966c24bddbace74365eaea44bd0686e9bd99f9.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/3] arm64: dts: imx8mq-evk: add one regulator used
- to power up pcie phy
+        id 1lPiyD-0007tw-Uh; Fri, 26 Mar 2021 10:41:34 +0100
+Message-ID: <5b376408a9521298dc289467f15bf6dc338cac6c.camel@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] PCI: imx: clear vreg bypass when pcie vph
+ voltage is 3v3
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Richard Zhu <hongxing.zhu@nxp.com>, andrew.smirnov@gmail.com,
         shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
@@ -29,10 +29,10 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>, andrew.smirnov@gmail.com,
 Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de
-Date:   Fri, 26 Mar 2021 10:40:08 +0100
-In-Reply-To: <1616661882-26487-3-git-send-email-hongxing.zhu@nxp.com>
+Date:   Fri, 26 Mar 2021 10:41:32 +0100
+In-Reply-To: <1616661882-26487-4-git-send-email-hongxing.zhu@nxp.com>
 References: <1616661882-26487-1-git-send-email-hongxing.zhu@nxp.com>
-         <1616661882-26487-3-git-send-email-hongxing.zhu@nxp.com>
+         <1616661882-26487-4-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
@@ -57,31 +57,73 @@ Am Donnerstag, dem 25.03.2021 um 16:44 +0800 schrieb Richard Zhu:
 
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-I guess you need to split this patch out of the series and post it for
-Shawn to pick up into the imx DT tree, after the other two patches of
-the series have been accepted into the PCIe tree.
-
-Regards,
-Lucas
-
 > ---
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> index 85b045253a0e..4d2035e3dd7c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-> @@ -318,6 +318,7 @@
->  		 <&clk IMX8MQ_CLK_PCIE1_PHY>,
->  		 <&pcie0_refclk>;
->  	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
-> +	vph-supply = <&vgen5_reg>;
->  	status = "okay";
->  };
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 853ea8e82952..d9d534f0840f 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -37,6 +37,7 @@
+>  #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
+>  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
+>  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
+> +#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
+>  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
+>  #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
 >  
 > 
 > 
 > 
+> @@ -80,6 +81,7 @@ struct imx6_pcie {
+>  	u32			tx_swing_full;
+>  	u32			tx_swing_low;
+>  	struct regulator	*vpcie;
+> +	struct regulator	*vph;
+>  	void __iomem		*phy_base;
+>  
+> 
+> 
+> 
+>  	/* power domain for pcie */
+> @@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  				   imx6_pcie_grp_offset(imx6_pcie),
+>  				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
+>  				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
+> +		/*
+> +		 * Regarding to the datasheet, the PCIE_VPH is suggested
+> +		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
+> +		 * VREG_BYPASS should be cleared to zero.
+> +		 */
+> +		if (imx6_pcie->vph &&
+> +		    regulator_get_voltage(imx6_pcie->vph) > 3000000)
+> +			regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> +					   imx6_pcie_grp_offset(imx6_pcie),
+> +					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
+> +					   0);
+>  		break;
+>  	case IMX7D:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> @@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  		imx6_pcie->vpcie = NULL;
+>  	}
+>  
+> 
+> 
+> 
+> +	imx6_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
+> +	if (IS_ERR(imx6_pcie->vph)) {
+> +		if (PTR_ERR(imx6_pcie->vph) != -ENODEV)
+> +			return PTR_ERR(imx6_pcie->vph);
+> +		imx6_pcie->vph = NULL;
+> +	}
+> +
+>  	platform_set_drvdata(pdev, imx6_pcie);
+>  
+> 
+> 
+> 
+>  	ret = imx6_pcie_attach_pd(dev);
 
 
