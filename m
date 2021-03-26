@@ -2,235 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8BDA34AD12
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 18:06:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD3D34AD1B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 18:09:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbhCZRFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 13:05:45 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:55794 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbhCZRFM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 13:05:12 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20210326170510euoutp0206628def8d06f518fa5a187df74f829e~v8060LtxI1677516775euoutp02J
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 17:05:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20210326170510euoutp0206628def8d06f518fa5a187df74f829e~v8060LtxI1677516775euoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1616778310;
-        bh=bK6Sh1ykvaHJopM4VaF7WSzOE4FIOny1NZwJ98izPJQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=A9R7rgEhiRhN3UakbNPcZ7BIpIeorCujGrDZW4c00dELoWmZHEc0oqSaEe00fCnte
-         HXSaXJ1vvp+AnYuOiOQutC5XM+swUh3qGEap9uVFp9d+gtjkPBPXL4moqdHRWEg63Q
-         CfEhRw/gAl9c/rsPrO35Nptzz3+bTEolxvqawzwg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20210326170510eucas1p114b3d0df97f795f05c9dd188fce8a725~v806c1rCy2000520005eucas1p1A;
-        Fri, 26 Mar 2021 17:05:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 29.76.09439.6441E506; Fri, 26
-        Mar 2021 17:05:10 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20210326170509eucas1p2416134a674fe6929f2cb3ee7da99ef8c~v806GIKgL0468304683eucas1p2q;
-        Fri, 26 Mar 2021 17:05:09 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20210326170509eusmtrp2a200d0c56556ef35d4028db0e4e1eae7~v806FTG9e2122521225eusmtrp2L;
-        Fri, 26 Mar 2021 17:05:09 +0000 (GMT)
-X-AuditID: cbfec7f5-c1bff700000024df-ae-605e1446874f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 64.98.08696.5441E506; Fri, 26
-        Mar 2021 17:05:09 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20210326170509eusmtip16725afc0cf58262339bd33633a5e764f~v805eKGzh2038320383eusmtip1B;
-        Fri, 26 Mar 2021 17:05:09 +0000 (GMT)
-Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
-        =?UTF-8?B?7KCV7J6s7ZuI?= <jh80.chung@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <5a4a7177-f8e1-6c8b-7c8a-8f5831de8455@samsung.com>
-Date:   Fri, 26 Mar 2021 18:05:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
-        Gecko/20100101 Thunderbird/78.8.1
+        id S230107AbhCZRJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 13:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229871AbhCZRIe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 13:08:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2698561A38;
+        Fri, 26 Mar 2021 17:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616778513;
+        bh=YKDykDVQ6KTEU7hT/GXP9jb6Ht59J6HUtCvZspqwUyU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rRUOHKdiPSDwgWtMrMoIXOvWs3VOISZGUO0+28Sv55mKmVIxSOZ87Aba9C+V9JZSQ
+         RqhIcAOWjHMXK7gdyWo5D5qEb0eIlX/yPYF9c515wEqv8TiaS2hF4X+FFoLd0l9qjQ
+         0csayiFFwacng5/+3ZM5lfgqMyCzqqTcuPx9d3DRzELBHB6BRMuYhKm7ezCaaHeMkD
+         edA9O0yYU3L36CtuCrCNGldqYN0j2PRThoZCg3hIJxGW8lFAz6n/m47wvDTLF3dyQn
+         UbwdoDzr8RV40ulIkuTbhn2oh+/+P0quhPsAk8BQQE7Djqy91apPXys5oPcCZdXOfP
+         m9zZJgEtvm0bg==
+Date:   Fri, 26 Mar 2021 12:08:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210326170831.GA890834@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210325201932.GA808102@bjorn-Precision-5520>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djPc7puInEJBsdPclgsacqw2HW3g93i
-        1Zm1bBY3frWxWqz4MpPd4vKuOWwWZ+cdZ7N48/sFu8X/PTvYLU60fWB34PJYM28No8fOWXfZ
-        PRZsKvXYtKqTzWPjux1MHn1bVjF6bNn/mdHj8ya5AI4oLpuU1JzMstQifbsEroyOLZ/YC05r
-        V8z7comxgfGqchcjJ4eEgInEzVW/mbsYuTiEBFYwSsz9uoAFwvnCKLFi+VEo5zOjxOy39xhh
-        Wta9Ps0EkVjOKDF1whkmkISQwEdGiZsn2UFsYQE3ibmvpwLZHBwiAmoSXe2hIPXMAv1MEk8P
-        XGAGqWETMJToetvFBmLzCthJ3H84DWwBi4CqxLPtrWC9ogJJEhsOxUKUCEqcnPmEBcTmFLCW
-        2Dl9AyuIzSwgL7H97RxmCFtc4taT+WC3SQi0c0p8fHaZCeJoF4mOK5OZIWxhiVfHt7BD2DIS
-        /3fCNDQzSjw8t5YdwulhlLjcNAPqZWuJO+d+sYFcxCygKbF+lz5E2FHibesNsEMlBPgkbrwV
-        hDiCT2LStunMEGFeiY42IYhqNYlZx9fBrT144RLzBEalWUhem4XknVlI3pmFsHcBI8sqRvHU
-        0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwNR1+t/xrzsYV7z6qHeIkYmD8RCjBAezkggv6+nY
-        BCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8u7auiRcSSE8sSc1OTS1ILYLJMnFwSjUwcVQ3bznA
-        cIwxjf310ZvzZgd9cPP6vcVfKlAg9/2ihwWVz+/zL7+dz+b/Z/cjZy+f0zd2FZ9/nDxRdepO
-        /klTJ3H/ndActW2Gipiz3PTnkfYX+kTlT9ld7TRTk5CXXF95Wz+4gvsky0eRlzpSkTMTy/6+
-        3/t8kqfp0YLW9XoiRh3u+pNsAo6smfK8ZWXijd8apzMX9EuXXuFLMFEzuSvwJYcj4U/DQ/VX
-        Qqy3urZo+69pY9hU8lU8ZnnNDoemaSKH3kSmndC7ect7ekNwgNb96Qc929JZdotPm8e1SMh6
-        3/9jq+S2RajO/Kd9LMnFefUK5arAj8oHtpplX/+iXnxJ/9+irYtipV97+wR7Lo55rcRSnJFo
-        qMVcVJwIANi1RQvMAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xu7quInEJBn/faVksacqw2HW3g93i
-        1Zm1bBY3frWxWqz4MpPd4vKuOWwWZ+cdZ7N48/sFu8X/PTvYLU60fWB34PJYM28No8fOWXfZ
-        PRZsKvXYtKqTzWPjux1MHn1bVjF6bNn/mdHj8ya5AI4oPZui/NKSVIWM/OISW6VoQwsjPUNL
-        Cz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyOLZ/YC05rV8z7comxgfGqchcjJ4eEgInE
-        utenmboYuTiEBJYySizZMoMVIiEjcXJaA5QtLPHnWhcbRNF7RonWhn52kISwgJvE3NdTgWwO
-        DhEBNYmu9lCQGmaBfiaJp8s2QjX0MUq8X/6VDaSBTcBQouttF5jNK2Ancf/hNEYQm0VAVeLZ
-        9lawoaICSRKXl0xkhagRlDg58wkLiM0pYC2xc/oGsDizgJnEvM0PmSFseYntb+dA2eISt57M
-        Z5rAKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusZFecWJucWleul5yfu4mRmC8bjv2c8sO
-        xpWvPuodYmTiYDzEKMHBrCTCy3o6NkGINyWxsiq1KD++qDQntfgQoynQPxOZpUST84EJI68k
-        3tDMwNTQxMzSwNTSzFhJnNfkyJp4IYH0xJLU7NTUgtQimD4mDk6pBibTijWyj8sWuYcWC1lw
-        P89avtN7+bXEmq3hvnnPSw9vXNq+xXZWihM/Q66egJlF9OKICTI/zihcCN57tNR5+xF189yi
-        0yEfc6bP28p47/C+P9UfOEQlJb1mPQ63+DA5RDq2WJbJ/tYvg8O2VxZwrz2yxfO508Qlkgc3
-        1+Sy1pmeNvt0fHeT5FzZ8O1LOK4zsxal5z3ec3mxoIIxo+b3nqKpfQ0q7/JlEl+uyZeOnf9a
-        lkkgiGneC/5pXLUNh76fnSTDWMR1gKX9+8PC7pN9YreNNm08J7konofj/GXVpCs39XXDTEuK
-        9wvGacx4uq+TS2f+IeW3Kl1Lrr1u5l70yUpe2+ER57vvE9jPu7PyViuxFGckGmoxFxUnAgCr
-        uosVYAMAAA==
-X-CMS-MailID: 20210326170509eucas1p2416134a674fe6929f2cb3ee7da99ef8c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20210325201938eucas1p14d874a2805450173ef7eb1ac20bb7941
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20210325201938eucas1p14d874a2805450173ef7eb1ac20bb7941
-References: <CGME20210325201938eucas1p14d874a2805450173ef7eb1ac20bb7941@eucas1p1.samsung.com>
-        <20210325201932.GA808102@bjorn-Precision-5520>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UfK3eTYH+hRRC0FcL0rdncKJi=6h5j6MN0uDA98cHCb9A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25.03.2021 21:19, Bjorn Helgaas wrote:
-> On Thu, Mar 25, 2021 at 10:24:28AM +0100, Marek Szyprowski wrote:
->> On 25.01.2021 05:48, Zhiqiang Hou wrote:
->>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->>>
->>> In the dw_pcie_ep_init(), it depends on the detected iATU region
->>> numbers to allocate the in/outbound window management bit map.
->>> It fails after the commit 281f1f99cf3a ("PCI: dwc: Detect number
->>> of iATU windows").
->>>
->>> So this patch move the iATU region detection into a new function,
->>> move forward the detection to the very beginning of functions
->>> dw_pcie_host_init() and dw_pcie_ep_init(). And also remove it
->>> from the dw_pcie_setup(), since it's more like a software
->>> perspective initialization step than hardware setup.
->>>
->>> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
->>> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->> This patch causes exynos-pcie to hang during the initialization. It
->> looks that some resources are not enabled yet, so calling
->> dw_pcie_iatu_detect() much earlier causes a hang. When I have some time,
->> I will try to identify what is needed to call it properly.
-> Thanks, I dropped it for now.  We can add it back after we figure out
-> what the exynos issue is.
-Thanks, I will try to identify at which point of initialization it is 
-safe to call iATU region detection.
-> For reference, here's the patch I dropped (I had made some minor
-> corrections to the commit log):
->
-> commit fd4162f05194 ("PCI: dwc: Move iATU detection earlier")
-> Author: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Date:   Mon Jan 25 12:48:03 2021 +0800
->
->      PCI: dwc: Move iATU detection earlier
->      
->      dw_pcie_ep_init() depends on the detected iATU region numbers to allocate
->      the in/outbound window management bitmap.  It fails after 281f1f99cf3a
->      ("PCI: dwc: Detect number of iATU windows").
->      
->      Move the iATU region detection into a new function, move the detection to
->      the very beginning of dw_pcie_host_init() and dw_pcie_ep_init().  Also
->      remove it from the dw_pcie_setup(), since it's more like a software
->      initialization step than hardware setup.
->      
->      Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
->      Link: https://lore.kernel.org/r/20210125044803.4310-1-Zhiqiang.Hou@nxp.com
->      Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->      Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->      Reviewed-by: Rob Herring <robh@kernel.org>
->      Cc: stable@vger.kernel.org	# v5.11+
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 1c25d8337151..8d028a88b375 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -705,6 +705,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->   		}
->   	}
->   
-> +	dw_pcie_iatu_detect(pci);
-> +
->   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->   	if (!res)
->   		return -EINVAL;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 7e55b2b66182..52f6887179cd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -319,6 +319,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->   			return PTR_ERR(pci->dbi_base);
->   	}
->   
-> +	dw_pcie_iatu_detect(pci);
-> +
->   	bridge = devm_pci_alloc_host_bridge(dev, 0);
->   	if (!bridge)
->   		return -ENOMEM;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 004cb860e266..a945f0c0e73d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -660,11 +660,9 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
->   	pci->num_ob_windows = ob;
->   }
->   
-> -void dw_pcie_setup(struct dw_pcie *pci)
-> +void dw_pcie_iatu_detect(struct dw_pcie *pci)
->   {
-> -	u32 val;
->   	struct device *dev = pci->dev;
-> -	struct device_node *np = dev->of_node;
->   	struct platform_device *pdev = to_platform_device(dev);
->   
->   	if (pci->version >= 0x480A || (!pci->version &&
-> @@ -693,6 +691,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
->   
->   	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
->   		 pci->num_ob_windows, pci->num_ib_windows);
-> +}
-> +
-> +void dw_pcie_setup(struct dw_pcie *pci)
-> +{
-> +	u32 val;
-> +	struct device *dev = pci->dev;
-> +	struct device_node *np = dev->of_node;
->   
->   	if (pci->link_gen > 0)
->   		dw_pcie_link_set_max_speed(pci, pci->link_gen);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 7247c8b01f04..7d6e9b7576be 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -306,6 +306,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
->   void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
->   			 enum dw_pcie_region_type type);
->   void dw_pcie_setup(struct dw_pcie *pci);
-> +void dw_pcie_iatu_detect(struct dw_pcie *pci);
->   
->   static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
->   {
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+On Fri, Mar 26, 2021 at 09:00:50AM -0700, Alexander Duyck wrote:
+> On Thu, Mar 25, 2021 at 11:44 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > On Thu, Mar 25, 2021 at 03:28:36PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, Mar 25, 2021 at 01:20:21PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Mar 25, 2021 at 02:36:46PM -0300, Jason Gunthorpe wrote:
+> > > > > On Thu, Mar 25, 2021 at 12:21:44PM -0500, Bjorn Helgaas wrote:
+> > > > >
+> > > > > > NVMe and mlx5 have basically identical functionality in this respect.
+> > > > > > Other devices and vendors will likely implement similar functionality.
+> > > > > > It would be ideal if we had an interface generic enough to support
+> > > > > > them all.
+> > > > > >
+> > > > > > Is the mlx5 interface proposed here sufficient to support the NVMe
+> > > > > > model?  I think it's close, but not quite, because the the NVMe
+> > > > > > "offline" state isn't explicitly visible in the mlx5 model.
+> > > > >
+> > > > > I thought Keith basically said "offline" wasn't really useful as a
+> > > > > distinct idea. It is an artifact of nvme being a standards body
+> > > > > divorced from the operating system.
+> > > > >
+> > > > > In linux offline and no driver attached are the same thing, you'd
+> > > > > never want an API to make a nvme device with a driver attached offline
+> > > > > because it would break the driver.
+> > > >
+> > > > I think the sticky part is that Linux driver attach is not visible to
+> > > > the hardware device, while the NVMe "offline" state *is*.  An NVMe PF
+> > > > can only assign resources to a VF when the VF is offline, and the VF
+> > > > is only usable when it is online.
+> > > >
+> > > > For NVMe, software must ask the PF to make those online/offline
+> > > > transitions via Secondary Controller Offline and Secondary Controller
+> > > > Online commands [1].  How would this be integrated into this sysfs
+> > > > interface?
+> > >
+> > > Either the NVMe PF driver tracks the driver attach state using a bus
+> > > notifier and mirrors it to the offline state, or it simply
+> > > offline/onlines as part of the sequence to program the MSI change.
+> > >
+> > > I don't see why we need any additional modeling of this behavior.
+> > >
+> > > What would be the point of onlining a device without a driver?
+> >
+> > Agree, we should remember that we are talking about Linux kernel model
+> > and implementation, where _no_driver_ means _offline_.
+> 
+> The only means you have of guaranteeing the driver is "offline" is by
+> holding on the device lock and checking it. So it is only really
+> useful for one operation and then you have to release the lock. The
+> idea behind having an "offline" state would be to allow you to
+> aggregate multiple potential operations into a single change.
+> 
+> For example you would place the device offline, then change
+> interrupts, and then queues, and then you could online it again. The
+> kernel code could have something in place to prevent driver load on
+> "offline" devices. What it gives you is more of a transactional model
+> versus what you have right now which is more of a concurrent model.
 
+Thanks, Alex.  Leon currently does enforce the "offline" situation by
+holding the VF device lock while checking that it has no driver and
+asking the PF to do the assignment.  I agree this is only useful for a
+single operation.  Would the current series *prevent* a transactional
+model from being added later if it turns out to be useful?  I think I
+can imagine keeping the same sysfs files but changing the
+implementation to check for the VF being offline, while adding
+something new to control online/offline.
+
+I also want to resurrect your idea of associating
+"sriov_vf_msix_count" with the PF instead of the VF.  I really like
+that idea, and it better reflects the way both mlx5 and NVMe work.  I
+don't think there was a major objection to it, but the discussion
+seems to have petered out after your suggestion of putting the PCI
+bus/device/funcion in the filename, which I also like [1].
+
+Leon has implemented a ton of variations, but I don't think having all
+the files in the PF directory was one of them.
+
+Bjorn
+
+[1] https://lore.kernel.org/r/CAKgT0Ue363fZEwqGUa1UAAYotUYH8QpEADW1U5yfNS7XkOLx0Q@mail.gmail.com
