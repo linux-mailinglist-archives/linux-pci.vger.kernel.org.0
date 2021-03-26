@@ -2,146 +2,238 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2923034A34E
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 09:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2341D34A369
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 09:51:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbhCZIkD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 04:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50862 "EHLO mail.kernel.org"
+        id S229486AbhCZIvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 04:51:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26347 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230059AbhCZIjm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Mar 2021 04:39:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 86CAB619BB;
-        Fri, 26 Mar 2021 08:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616747982;
-        bh=+wb5b5oRQGDTigmzHdt1l9UCuT1gNoKZ2eYfjxeiYVY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TwttunlxS5iT1c/6hyWCK6C2IzcgMJpD/kh0yM65NraB3A+4l5rcH1P2acgcxgBrC
-         LgNpMFNQJFVjlFLrMgEw5pXvcsAp8jbufj549ZL7g7/wRPy3t26FCMrAgUwSaJsc30
-         /vwUHGdmyfFEgmjas3wDiqmBq9txm305xyU8SnK5o87XFo6JA+M2dY2+Il//UqFgTK
-         fpx9a9ZWAtUg5IXCP6IbV+LTUZpaZ049Fxp2nw9A6velZ6PhwANBXghOGbrKQEbHPq
-         oB+l1WtGLFHRLiRUDKe2tT/LbaQkAilbTNOa7HmihrcY4PclgF3ZQAgCg5AkzODcvR
-         Hf9SIGhQRzdhg==
-Date:   Fri, 26 Mar 2021 09:39:36 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 04/11] PCI: dwc: pcie-kirin: add support for Kirin
- 970 PCIe controller
-Message-ID: <20210326093936.02ba3a03@coco.lan>
-In-Reply-To: <CAL_JsqK7_hAw4aacHyiqJWE6zSWiMez5695+deaCSHfeWuX-XA@mail.gmail.com>
-References: <cover.1612335031.git.mchehab+huawei@kernel.org>
-        <4c9d6581478aa966698758c0420933f5defab4dd.1612335031.git.mchehab+huawei@kernel.org>
-        <CAL_JsqK7_hAw4aacHyiqJWE6zSWiMez5695+deaCSHfeWuX-XA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S229935AbhCZIuq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 04:50:46 -0400
+IronPort-SDR: 9/0C/3EWaoEqwPU0phWZX8Lj1prBnMf3T3PJZlow2KtzLut0gjdkufTqJ9f/Wpsm56N2IRx/so
+ p6ABE2owwFxQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9934"; a="188829534"
+X-IronPort-AV: E=Sophos;i="5.81,280,1610438400"; 
+   d="scan'208";a="188829534"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 01:50:45 -0700
+IronPort-SDR: zDvVo1MA4k4Sb/BRRA0k7l89ETnR+sUxULDZ/rudqM+WCJI0HYOy6OHSI/bRkVZUbTcPd7Jg+o
+ /FnMDm8Pn82A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,280,1610438400"; 
+   d="scan'208";a="453434507"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2021 01:50:44 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lPiB1-0002d1-Rb; Fri, 26 Mar 2021 08:50:43 +0000
+Date:   Fri, 26 Mar 2021 16:50:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ cf673bd0cc973b25961d41355990beaed710068f
+Message-ID: <605da05c.LkpDWB/rT5NFfAvK%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Wed, 3 Feb 2021 08:34:21 -0600
-Rob Herring <robh@kernel.org> escreveu:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: cf673bd0cc973b25961d41355990beaed710068f  PCI: switchtec: Fix Spectre v1 vulnerability
 
-> On Wed, Feb 3, 2021 at 1:02 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >
-> > Add support for HiSilicon Kirin 970 (hi3670) SoC PCIe controller, based
-> > on Synopsys DesignWare PCIe controller IP.
-> >
-> > [mchehab+huawei@kernel.org: fix merge conflicts]
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-kirin.c | 723 +++++++++++++++++++++++-
-> >  1 file changed, 707 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> > index 026fd1e42a55..5925d2b345a8 100644
-> > --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> > +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> > @@ -29,6 +29,7 @@
-> >  #define to_kirin_pcie(x) dev_get_drvdata((x)->dev)
-> >
-> >  #define REF_CLK_FREQ                   100000000
-> > +#define AXI_CLK_FREQ                   207500000
-> >
-> >  /* PCIe ELBI registers */
-> >  #define SOC_PCIECTRL_CTRL0_ADDR                0x000
-> > @@ -60,6 +61,65 @@
-> >  #define PCIE_DEBOUNCE_PARAM    0xF0F400
-> >  #define PCIE_OE_BYPASS         (0x3 << 28)
-> >
-> > +/* PCIe CTRL registers */
-> > +#define SOC_PCIECTRL_CTRL0_ADDR   0x000
-> > +#define SOC_PCIECTRL_CTRL1_ADDR   0x004
-> > +#define SOC_PCIECTRL_CTRL7_ADDR   0x01c
-> > +#define SOC_PCIECTRL_CTRL12_ADDR  0x030
-> > +#define SOC_PCIECTRL_CTRL20_ADDR  0x050
-> > +#define SOC_PCIECTRL_CTRL21_ADDR  0x054
-> > +#define SOC_PCIECTRL_STATE0_ADDR  0x400
-> > +
-> > +/* PCIe PHY registers */
-> > +#define SOC_PCIEPHY_CTRL0_ADDR    0x000
-> > +#define SOC_PCIEPHY_CTRL1_ADDR    0x004
-> > +#define SOC_PCIEPHY_CTRL2_ADDR    0x008
-> > +#define SOC_PCIEPHY_CTRL3_ADDR    0x00c
-> > +#define SOC_PCIEPHY_CTRL38_ADDR   0x0098
-> > +#define SOC_PCIEPHY_STATE0_ADDR   0x400
-> > +
-> > +#define PCIE_LINKUP_ENABLE            (0x8020)
-> > +#define PCIE_ELBI_SLV_DBI_ENABLE      (0x1 << 21)
-> > +#define PCIE_LTSSM_ENABLE_BIT         (0x1 << 11)
-> > +#define PCIEPHY_RESET_BIT             (0x1 << 17)
-> > +#define PCIEPHY_PIPE_LINE0_RESET_BIT  (0x1 << 19)
-> > +
-> > +#define PORT_MSI_CTRL_ADDR            0x820
-> > +#define PORT_MSI_CTRL_UPPER_ADDR      0x824
-> > +#define PORT_MSI_CTRL_INT0_ENABLE     0x828  
-> 
-> These are common DWC 'port logic' registers. I think the core DWC
-> should handle them if not already.
-> 
-> > +
-> > +#define EYEPARAM_NOCFG 0xFFFFFFFF
-> > +#define RAWLANEN_DIG_PCS_XF_TX_OVRD_IN_1 0x3001
-> > +#define SUP_DIG_LVL_OVRD_IN 0xf
-> > +#define LANEN_DIG_ASIC_TX_OVRD_IN_1 0x1002
-> > +#define LANEN_DIG_ASIC_TX_OVRD_IN_2 0x1003
-> > +
-> > +/* kirin970 pciephy register */
-> > +#define SOC_PCIEPHY_MMC1PLL_CTRL1  0xc04
-> > +#define SOC_PCIEPHY_MMC1PLL_CTRL16 0xC40
-> > +#define SOC_PCIEPHY_MMC1PLL_CTRL17 0xC44
-> > +#define SOC_PCIEPHY_MMC1PLL_CTRL20 0xC50
-> > +#define SOC_PCIEPHY_MMC1PLL_CTRL21 0xC54
-> > +#define SOC_PCIEPHY_MMC1PLL_STAT0  0xE00  
-> 
-> This looks like it is almost all phy related. I think it should all be
-> moved to a separate phy driver. Yes, we have some other PCI drivers
-> controlling their phys directly where the phy registers are
-> intermingled with the PCI host registers, but I think those either
-> predate the phy subsystem or are really simple. I also have a dream to
-> move all the phy control to the DWC core code.
+elapsed time: 722m
 
-Please notice that this patch was not written by me, but, instead,
-by Mannivannan. So, I can't change it. What I can certainly do is to
-write a separate patch at the end of this series moving the Kirin 970
-phy to a separate driver. Would this be accepted?
+configs tested: 176
+configs skipped: 2
 
-Btw, what should be done with the Kirin 960 PHY code that it is
-already embedded on this driver, and whose some of the DT properties
-are for its phy layer? 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-Mauro
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+x86_64                           allyesconfig
+riscv                            allmodconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+mips                           ip28_defconfig
+powerpc                   lite5200b_defconfig
+arm                         s5pv210_defconfig
+powerpc                   currituck_defconfig
+h8300                            alldefconfig
+powerpc                     ksi8560_defconfig
+powerpc                       maple_defconfig
+powerpc                      obs600_defconfig
+sparc64                             defconfig
+arm                         assabet_defconfig
+xtensa                              defconfig
+sh                         ecovec24_defconfig
+sh                               alldefconfig
+m68k                       m5475evb_defconfig
+sh                   secureedge5410_defconfig
+arm                        cerfcube_defconfig
+powerpc                     mpc5200_defconfig
+arm                          pxa3xx_defconfig
+sh                          rsk7264_defconfig
+csky                                defconfig
+sh                     sh7710voipgw_defconfig
+m68k                        stmark2_defconfig
+powerpc                 xes_mpc85xx_defconfig
+mips                          rb532_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                       aspeed_g5_defconfig
+arm                            pleb_defconfig
+arm                            mmp2_defconfig
+s390                             alldefconfig
+xtensa                  cadence_csp_defconfig
+powerpc                         ps3_defconfig
+parisc                generic-64bit_defconfig
+mips                        qi_lb60_defconfig
+sh                   sh7770_generic_defconfig
+mips                        vocore2_defconfig
+parisc                           alldefconfig
+arm                        shmobile_defconfig
+powerpc                       ppc64_defconfig
+arm                           spitz_defconfig
+arm                        keystone_defconfig
+arm                          lpd270_defconfig
+mips                      maltaaprp_defconfig
+arm                        spear3xx_defconfig
+arm                       imx_v6_v7_defconfig
+mips                     loongson1c_defconfig
+powerpc                     sequoia_defconfig
+powerpc                      katmai_defconfig
+arm                        multi_v7_defconfig
+nds32                             allnoconfig
+sh                ecovec24-romimage_defconfig
+arm                      pxa255-idp_defconfig
+arm                            mps2_defconfig
+powerpc                      makalu_defconfig
+powerpc                   motionpro_defconfig
+arm                         lpc18xx_defconfig
+mips                     decstation_defconfig
+sh                             espt_defconfig
+mips                        bcm63xx_defconfig
+m68k                                defconfig
+mips                  cavium_octeon_defconfig
+sh                          sdk7780_defconfig
+powerpc                      acadia_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                 linkstation_defconfig
+powerpc64                           defconfig
+mips                          malta_defconfig
+csky                             alldefconfig
+nds32                            alldefconfig
+riscv                    nommu_k210_defconfig
+powerpc                      ep88xc_defconfig
+xtensa                    xip_kc705_defconfig
+mips                        omega2p_defconfig
+sh                     magicpanelr2_defconfig
+arm                          pcm027_defconfig
+powerpc                     stx_gp3_defconfig
+mips                           ip22_defconfig
+sh                           se7712_defconfig
+arc                    vdk_hs38_smp_defconfig
+arm                        multi_v5_defconfig
+mips                         cobalt_defconfig
+powerpc                        icon_defconfig
+nios2                               defconfig
+arm                         axm55xx_defconfig
+ia64                        generic_defconfig
+m68k                            mac_defconfig
+mips                      bmips_stb_defconfig
+m68k                         amcore_defconfig
+arm                         mv78xx0_defconfig
+openrisc                 simple_smp_defconfig
+arm                         orion5x_defconfig
+powerpc                     tqm8548_defconfig
+arm                           u8500_defconfig
+arm                       netwinder_defconfig
+powerpc                       eiger_defconfig
+sh                          polaris_defconfig
+mips                       lemote2f_defconfig
+powerpc                     tqm8541_defconfig
+m68k                            q40_defconfig
+xtensa                    smp_lx200_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                 mpc837x_mds_defconfig
+um                            kunit_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210325
+x86_64               randconfig-a003-20210325
+x86_64               randconfig-a006-20210325
+x86_64               randconfig-a001-20210325
+x86_64               randconfig-a005-20210325
+x86_64               randconfig-a004-20210325
+i386                 randconfig-a003-20210325
+i386                 randconfig-a004-20210325
+i386                 randconfig-a001-20210325
+i386                 randconfig-a002-20210325
+i386                 randconfig-a006-20210325
+i386                 randconfig-a005-20210325
+i386                 randconfig-a014-20210325
+i386                 randconfig-a011-20210325
+i386                 randconfig-a015-20210325
+i386                 randconfig-a016-20210325
+i386                 randconfig-a013-20210325
+i386                 randconfig-a012-20210325
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a012-20210325
+x86_64               randconfig-a015-20210325
+x86_64               randconfig-a014-20210325
+x86_64               randconfig-a013-20210325
+x86_64               randconfig-a011-20210325
+x86_64               randconfig-a016-20210325
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
