@@ -2,121 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1F4434AE50
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 19:14:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 041CB34AEC7
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 19:51:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230194AbhCZSNo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 14:13:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57870 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230196AbhCZSNW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 14:13:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616782401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pap7BptUHGKykCeFu/8MT0qbOtaTjDcy9qwuilzOGIw=;
-        b=Lvrg18vE91uCsfFdRV6peot03xajV/DUtnt+SZa+XSbLxlyfsYQNEdk+AS+tdHE2ilN7aE
-        w7AzzrSIQPtzqG/Wfo8RmM3qYa1ah2nx8p0E97cx9p1NJK4k+IM0162mA8BoUTc3JU1aft
-        X1+wU9Kdhzk0lNv+9CdFG6yJMZinrX4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-wnntg5OdN9C2ix40XVyYkQ-1; Fri, 26 Mar 2021 14:13:18 -0400
-X-MC-Unique: wnntg5OdN9C2ix40XVyYkQ-1
-Received: by mail-ed1-f70.google.com with SMTP id r19so4846058edv.3
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 11:13:18 -0700 (PDT)
+        id S230114AbhCZSvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 14:51:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230138AbhCZSu4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 14:50:56 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B586C0613AA;
+        Fri, 26 Mar 2021 11:50:56 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id z136so6393840iof.10;
+        Fri, 26 Mar 2021 11:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Iu1JNF6SF7oEppHvP+plVN0qFTWdU5EACnfxSAygZtg=;
+        b=kb62XZaX4YZ5qWRcmfvd5q2Gcf9eguV6Xdrv4Hkx+5Q1WWyj3dn2aS/WLvMTjpYEQw
+         1NPs6/vCYIZee9AU99ZWUHD1oQjYCIL4+lGZn8S+yLmltUcqaY/oPWidCo+Fc2xyjhRL
+         KxL5gIjuwj4aEs0x0kZ0gncw0EYeXHEL7Pe/G9GUNo+wW0UhSa364+MW7wUJd/TE4vAs
+         iwXaq9FdJF6IV3AaSVvmmWa5GoS5vA8OZLRa8i8mM339erc/OF4UV1BE+bJ37DFhtT5j
+         gU8L2+zzP7OpjycgSts7ybbeCPOsicsdjjYbITxZan0qrJtDcktfFLVU65FdV/MRnUO8
+         WkGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=pap7BptUHGKykCeFu/8MT0qbOtaTjDcy9qwuilzOGIw=;
-        b=YX74CSm7XUabBISVLxGp2uJdyJOTAfjYYvkuzAqXr1+ssrxtwt5pLw+sIvMYQKjeVi
-         flAg7KDtdDpjdgeVqLXaKjDtK9PwEHw53GgZHsI4xE3pkYpmb8toDRjQv+X21ex+NIh+
-         FnQ/dSpuNHjRUwIf1Y5BaZN722qfW4TKOq71fzGVcvqE15EGjTc0/IT5/ahtgR0c32IO
-         rSi3qHf43msOt62VyfiKrFL9nCLS8m/HfPXvNJbJsZsXtNTpZiZFl70Wk5i1vqfarHKF
-         k+Alkn0/eK0hMpgPrVp4So1W7lE2ifIzlYdXmCY2eXKI5VHl6aNqaXsFnBCAl7EFNswV
-         swxA==
-X-Gm-Message-State: AOAM532ESXFWav1ofylMD+bhDyo1D5sKJobhfOPtizB1QZiPBKO2U0KA
-        DI9A7SNrGAbv9XgEZYS+osFw1tEZLq031jiLXZ1f+wXWtBGX2QQ2ytOwGWlkV9qMDtO9zBLGCMA
-        lZIb3/Enz+yeLHUUEhBU5
-X-Received: by 2002:a17:906:1386:: with SMTP id f6mr16596260ejc.45.1616782397372;
-        Fri, 26 Mar 2021 11:13:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvc3mTnPMkhQBDrVBxW5/RWmuM3jHJDelx7UJ+pb/VP1j+SOnbQqRjHmOXJgwr+aDlkaxn3g==
-X-Received: by 2002:a17:906:1386:: with SMTP id f6mr16596244ejc.45.1616782397225;
-        Fri, 26 Mar 2021 11:13:17 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id f16sm4141390ejb.3.2021.03.26.11.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Mar 2021 11:13:16 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id D32FA1801A3; Fri, 26 Mar 2021 19:13:15 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>, linux-pci@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Disallow retraining link for Atheros QCA98xx chips
- on non-Gen1 PCIe bridges
-In-Reply-To: <20210326124326.21163-1-pali@kernel.org>
-References: <20210326124326.21163-1-pali@kernel.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 26 Mar 2021 19:13:15 +0100
-Message-ID: <87a6qpbx6s.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Iu1JNF6SF7oEppHvP+plVN0qFTWdU5EACnfxSAygZtg=;
+        b=HYjX+ewB6Lm9v4L8k+CbCBM3UdVghDbQYbzCiUXxXOwXwb22b0h98wxkW7MDvOsQ64
+         E+03Jo5TBsbqKOdbX7otjQubJMOKFPqXjFVI9UE2YK6ZtdZ1+6HJWQCWy3Ww0/tCZQUF
+         C0RI6EpYbCm6rg71tdhtuPlXk6U8punDgJJlYrKT6Z9d/d3kAwS6tQr7wlLRze2JZO71
+         Z8wN0q240DdPlOclAZQGA1o7GGjYnrA0dRrfUhoS94fWyNTWNA/jLk7oQNG2GI0NC0qx
+         fZ42Cs8YDH7tn7QnrVLtEhSWKH0tCJgp04TJUNgC4afzSTtj2n9QhvBmglmjZQfzaJ3I
+         1kkw==
+X-Gm-Message-State: AOAM530II3SPARPxkJ59forEI+g818hg/mFReG96lcpEei7FMOVd/5Zv
+        gW7ezDhrQjRgiA1BZ9OJC8cDv3eaoVci5XHHrIc=
+X-Google-Smtp-Source: ABdhPJytGgFcY8iTzhYD7d9LbEm1RzeN+QzWwUM4N7jiyltAzMSUqYm7I0K+eS+vcsEYViOIomiovODA+ea6vLj0K1w=
+X-Received: by 2002:a05:6638:238c:: with SMTP id q12mr13494324jat.114.1616784655635;
+ Fri, 26 Mar 2021 11:50:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <CAKgT0UfK3eTYH+hRRC0FcL0rdncKJi=6h5j6MN0uDA98cHCb9A@mail.gmail.com>
+ <20210326170831.GA890834@bjorn-Precision-5520>
+In-Reply-To: <20210326170831.GA890834@bjorn-Precision-5520>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 26 Mar 2021 11:50:44 -0700
+Message-ID: <CAKgT0UcXwNKDSP2ciEjM2AWj2xOZwBxkPCdzkUqDKAMtvTTKPg@mail.gmail.com>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
+On Fri, Mar 26, 2021 at 10:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Mar 26, 2021 at 09:00:50AM -0700, Alexander Duyck wrote:
+> > On Thu, Mar 25, 2021 at 11:44 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > > On Thu, Mar 25, 2021 at 03:28:36PM -0300, Jason Gunthorpe wrote:
+> > > > On Thu, Mar 25, 2021 at 01:20:21PM -0500, Bjorn Helgaas wrote:
+> > > > > On Thu, Mar 25, 2021 at 02:36:46PM -0300, Jason Gunthorpe wrote:
+> > > > > > On Thu, Mar 25, 2021 at 12:21:44PM -0500, Bjorn Helgaas wrote:
+> > > > > >
+> > > > > > > NVMe and mlx5 have basically identical functionality in this respect.
+> > > > > > > Other devices and vendors will likely implement similar functionality.
+> > > > > > > It would be ideal if we had an interface generic enough to support
+> > > > > > > them all.
+> > > > > > >
+> > > > > > > Is the mlx5 interface proposed here sufficient to support the NVMe
+> > > > > > > model?  I think it's close, but not quite, because the the NVMe
+> > > > > > > "offline" state isn't explicitly visible in the mlx5 model.
+> > > > > >
+> > > > > > I thought Keith basically said "offline" wasn't really useful as a
+> > > > > > distinct idea. It is an artifact of nvme being a standards body
+> > > > > > divorced from the operating system.
+> > > > > >
+> > > > > > In linux offline and no driver attached are the same thing, you'd
+> > > > > > never want an API to make a nvme device with a driver attached offline
+> > > > > > because it would break the driver.
+> > > > >
+> > > > > I think the sticky part is that Linux driver attach is not visible to
+> > > > > the hardware device, while the NVMe "offline" state *is*.  An NVMe PF
+> > > > > can only assign resources to a VF when the VF is offline, and the VF
+> > > > > is only usable when it is online.
+> > > > >
+> > > > > For NVMe, software must ask the PF to make those online/offline
+> > > > > transitions via Secondary Controller Offline and Secondary Controller
+> > > > > Online commands [1].  How would this be integrated into this sysfs
+> > > > > interface?
+> > > >
+> > > > Either the NVMe PF driver tracks the driver attach state using a bus
+> > > > notifier and mirrors it to the offline state, or it simply
+> > > > offline/onlines as part of the sequence to program the MSI change.
+> > > >
+> > > > I don't see why we need any additional modeling of this behavior.
+> > > >
+> > > > What would be the point of onlining a device without a driver?
+> > >
+> > > Agree, we should remember that we are talking about Linux kernel model
+> > > and implementation, where _no_driver_ means _offline_.
+> >
+> > The only means you have of guaranteeing the driver is "offline" is by
+> > holding on the device lock and checking it. So it is only really
+> > useful for one operation and then you have to release the lock. The
+> > idea behind having an "offline" state would be to allow you to
+> > aggregate multiple potential operations into a single change.
+> >
+> > For example you would place the device offline, then change
+> > interrupts, and then queues, and then you could online it again. The
+> > kernel code could have something in place to prevent driver load on
+> > "offline" devices. What it gives you is more of a transactional model
+> > versus what you have right now which is more of a concurrent model.
+>
+> Thanks, Alex.  Leon currently does enforce the "offline" situation by
+> holding the VF device lock while checking that it has no driver and
+> asking the PF to do the assignment.  I agree this is only useful for a
+> single operation.  Would the current series *prevent* a transactional
+> model from being added later if it turns out to be useful?  I think I
+> can imagine keeping the same sysfs files but changing the
+> implementation to check for the VF being offline, while adding
+> something new to control online/offline.
 
-> Atheros QCA9880 and QCA9890 chips do not behave after a bus reset and also
-> after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
-> The device will throw a Link Down error and config space is not accessible
-> again. Retrain link can be called only when using GEN1 PCIe bridge or when
-> PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 registe=
-r.
->
-> This issue was reproduced with more Compex WLE900VX cards (QCA9880 based)
-> on Armada 385 with pci-mvebu.c driver and also on Armada 3720 with
-> pci-aardvark.c driver. Also this issue was reproduced with some "noname"
-> card with QCA9890 WiFi chip on Armada 3720. All problematic cards with
-> these QCA chips have PCI device id 0x003c.
->
-> Tests showed that other WiFi cards based on AR93xx (PCI device id 0x0030)
-> and AR9287 (PCI device id 0x002e) chips do not have these problems.
->
-> To workaround this issue, this change introduces a new PCI quirk called
-> PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 for PCI device id 0x003c.
->
-> When this quirk is set then kernel disallows triggering PCI_EXP_LNKCTL_RL
-> bit in config space of PCIe Bridge in case PCIe Bridge is capable of high=
-er
-> speed than 2.5 GT/s and higher speed is already allowed. When PCIe Bridge
-> has accessible LNKCTL2 register then kernel tries to force target link
-> speed via PCI_EXP_LNKCTL2_TLS* bits to 2.5 GT/s. After this change it is
-> possible to trigger PCI_EXP_LNKCTL_RL bit without causing issues on
-> problematic Atheros QCA98xx cards.
->
-> Currently only PCIe ASPM kernel code triggers this PCI_EXP_LNKCTL_RL bit,
-> so quirk check is added only into pcie/aspm.c file.
->
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Reported-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> Tested-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> Link: https://lore.kernel.org/linux-pci/87h7l8axqp.fsf@toke.dk/
-> Cc: stable@vger.kernel.org # c80851f6ce63a ("PCI: Add
-> PCI_EXP_LNKCTL2_TLS* macros")
+My concern would be that we are defining the user space interface.
+Once we have this working as a single operation I could see us having
+to support it that way going forward as somebody will script something
+not expecting an "offline" sysfs file, and the complaint would be that
+we are breaking userspace if we require the use of an "offline" file.
+So my preference would be to just do it that way now rather than wait
+as the behavior will be grandfathered in once we allow the operation
+without it.
 
-Thanks!
+> I also want to resurrect your idea of associating
+> "sriov_vf_msix_count" with the PF instead of the VF.  I really like
+> that idea, and it better reflects the way both mlx5 and NVMe work.  I
+> don't think there was a major objection to it, but the discussion
+> seems to have petered out after your suggestion of putting the PCI
+> bus/device/funcion in the filename, which I also like [1].
+>
+> Leon has implemented a ton of variations, but I don't think having all
+> the files in the PF directory was one of them.
+>
+> Bjorn
+>
+> [1] https://lore.kernel.org/r/CAKgT0Ue363fZEwqGUa1UAAYotUYH8QpEADW1U5yfNS7XkOLx0Q@mail.gmail.com
 
-Tested-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-
+I almost wonder if it wouldn't make sense to just partition this up to
+handle flexible resources in the future. Maybe something like having
+the directory setup such that you have "sriov_resources/msix/" and
+then you could have individual files with one for the total and the
+rest with the VF BDF naming scheme. Then if we have to, we could add
+other subdirectories in the future to handle things like queues in the
+future.
