@@ -2,76 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3FA034A799
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 13:55:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F45034A7AD
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 13:59:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbhCZMym (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 08:54:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58186 "EHLO mail.kernel.org"
+        id S229995AbhCZM66 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 08:58:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229839AbhCZMyN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Mar 2021 08:54:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 91648619BF;
-        Fri, 26 Mar 2021 12:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616763253;
-        bh=MJUmJK07J9WuIQ3mScOK1VfUQwjeKea+oTAtpHDy0cA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l0Byd8d36sSgQl69KbKShLXhSwBqkhaL849pSA59Bxr0iGPzWu+TGnc4cRRltQ8SG
-         xQmNycEmxJ6nAbnjOzhFwCWgIgsjxGKCGQeG/zzlBvun+cWtV3kcIUOcrDj/4Dm7Uj
-         iBV6VpNp4fkJcAEOsXNvB+5HVIkd1/rtkRQUS+CE7vt8eLuvHZxyJraX0UzSICiMqY
-         Na/x6plq2Xtm4pqKdB7MEf9E6OP68SZSAItpGDaJQtbp/TDo7C9Xc8Xydf1mjV13mB
-         Fojwjld6YJ6rcAr5MhfPYmu0qyowLWMPROTp91FDP1SCgQEEyK0ktTPTkUwmGk3J+a
-         iRnAUIJJvYaOg==
-Date:   Fri, 26 Mar 2021 15:54:09 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        alay.shah@nutanix.com, suresh.gumpula@nutanix.com,
-        shyam.rajendran@nutanix.com, felipe@nutanix.com
-Subject: Re: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Message-ID: <YF3ZcQptMzN1Iad1@unreal>
-References: <YFsOVNM1zIqNUN8f@unreal>
- <20210324083743.791d6191@omen.home.shazbot.org>
- <YFtXNF+t/0G26dwS@unreal>
- <20210324111729.702b3942@omen.home.shazbot.org>
- <YFxL4o/QpmhM8KiH@unreal>
- <20210325085504.051e93f2@omen.home.shazbot.org>
- <YFy11u+fm4MEGU5X@unreal>
- <20210325115324.046ddca8@omen.home.shazbot.org>
- <YF2B3oZfkYGEha/w@unreal>
- <YF2m4amcwj9BkQ+S@rocinante>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YF2m4amcwj9BkQ+S@rocinante>
+        id S230093AbhCZM6k (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 08:58:40 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489C7619BF;
+        Fri, 26 Mar 2021 12:58:40 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lPm2w-003yqm-1z; Fri, 26 Mar 2021 12:58:38 +0000
+Date:   Fri, 26 Mar 2021 12:58:37 +0000
+Message-ID: <87r1k2f4w2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Dey, Megha" <megha.dey@intel.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com,
+        dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+Subject: Re: [Patch V2 13/13] genirq/msi: Provide helpers to return Linux IRQ/dev_msi hw IRQ number
+In-Reply-To: <5bed6fea-32e1-d909-0a5c-439d0f0a7dfe@intel.com>
+References: <1614370277-23235-1-git-send-email-megha.dey@intel.com>
+        <1614370277-23235-14-git-send-email-megha.dey@intel.com>
+        <87y2ebqfw5.wl-maz@kernel.org>
+        <5bed6fea-32e1-d909-0a5c-439d0f0a7dfe@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: megha.dey@intel.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com, dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com, dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, bhelgaas@google.com, linux-pci@vger.kernel.org, baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 26, 2021 at 10:18:25AM +0100, Krzysztof Wilczyński wrote:
-> Hello,
+On Fri, 26 Mar 2021 01:02:43 +0000,
+"Dey, Megha" <megha.dey@intel.com> wrote:
 > 
-> [...]
+> Hi Marc,
 > 
-> Aside of the sysfs interface, would this new functionality also require
-> anything to be overridden at boot time via passing some command-line
-> arguments?  Not sure how relevant such thing would be to device, but,
-> whatnot reset, though.
-
-This is per-device property and can't be universally correct like kernel
-command-line arguments. I don't think that we need to add such functionality.
-
+> On 3/25/2021 10:53 AM, Marc Zyngier wrote:
+> > On Fri, 26 Feb 2021 20:11:17 +0000,
+> > Megha Dey <megha.dey@intel.com> wrote:
+> >> From: Dave Jiang <dave.jiang@intel.com>
+> >> 
+> >> Add new helpers to get the Linux IRQ number and device specific index
+> >> for given device-relative vector so that the drivers don't need to
+> >> allocate their own arrays to keep track of the vectors and hwirq for
+> >> the multi vector device MSI case.
+> >> 
+> >> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> >> Signed-off-by: Megha Dey <megha.dey@intel.com>
+> >> ---
+> >>   include/linux/msi.h |  2 ++
+> >>   kernel/irq/msi.c    | 44 ++++++++++++++++++++++++++++++++++++++++++++
+> >>   2 files changed, 46 insertions(+)
+> >> 
+> >> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> >> index 24abec0..d60a6ba 100644
+> >> --- a/include/linux/msi.h
+> >> +++ b/include/linux/msi.h
+> >> @@ -451,6 +451,8 @@ struct irq_domain *platform_msi_create_irq_domain(struct fwnode_handle *fwnode,
+> >>   int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
+> >>   				   irq_write_msi_msg_t write_msi_msg);
+> >>   void platform_msi_domain_free_irqs(struct device *dev);
+> >> +int msi_irq_vector(struct device *dev, unsigned int nr);
+> >> +int dev_msi_hwirq(struct device *dev, unsigned int nr);
+> >>     /* When an MSI domain is used as an intermediate domain */
+> >>   int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+> >> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> >> index 047b59d..f2a8f55 100644
+> >> --- a/kernel/irq/msi.c
+> >> +++ b/kernel/irq/msi.c
+> >> @@ -581,4 +581,48 @@ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain)
+> >>   	return (struct msi_domain_info *)domain->host_data;
+> >>   }
+> >>   +/**
+> >> + * msi_irq_vector - Get the Linux IRQ number of a device vector
+> >> + * @dev: device to operate on
+> >> + * @nr: device-relative interrupt vector index (0-based).
+> >> + *
+> >> + * Returns the Linux IRQ number of a device vector.
+> >> + */
+> >> +int msi_irq_vector(struct device *dev, unsigned int nr)
+> >> +{
+> >> +	struct msi_desc *entry;
+> >> +	int i = 0;
+> >> +
+> >> +	for_each_msi_entry(entry, dev) {
+> >> +		if (i == nr)
+> >> +			return entry->irq;
+> >> +		i++;
+> > This obviously doesn't work with Multi-MSI, does it?
 > 
-> I am curious whether there would be a need for anything like that.
-
-I prefer not.
-
+> This API is only for devices that support device MSI interrupts. They
+> follow MSI-x format and don't support multi MSI (part of MSI).
 > 
-> Krzysztof
+> Not sure if I am missing something here, can you please let me know?
+
+Nothing in the prototype of the function indicates this limitation,
+nor does the documentation. And I'm not sure why you should exclude
+part of the MSI functionality here. It can't be for performance
+reason, so you might as well make sure this works for all the MSI
+variants:
+
+int msi_irq_vector(struct device *dev, unsigned int nr)
+{
+	struct msi_desc *entry;
+	int irq, index = 0;
+
+	for_each_msi_vector(entry, irq, dev) {
+		if (index == nr}
+			return irq;
+		index++;
+	}
+
+	return WARN_ON_ONCE(-EINVAL);
+}
+
+>
+> > 
+> >> +	}
+> >> +	WARN_ON_ONCE(1);
+> >> +	return -EINVAL;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(msi_irq_vector);
+> >> +
+> >> +/**
+> >> + * dev_msi_hwirq - Get the device MSI hw IRQ number of a device vector
+> >> + * @dev: device to operate on
+> >> + * @nr: device-relative interrupt vector index (0-based).
+> >> + *
+> >> + * Return the dev_msi hw IRQ number of a device vector.
+> >> + */
+> >> +int dev_msi_hwirq(struct device *dev, unsigned int nr)
+> >> +{
+> >> +	struct msi_desc *entry;
+> >> +	int i = 0;
+> >> +
+> >> +	for_each_msi_entry(entry, dev) {
+> >> +		if (i == nr)
+> >> +			return entry->device_msi.hwirq;
+> >> +		i++;
+> >> +	}
+> >> +	WARN_ON_ONCE(1);
+> >> +	return -EINVAL;
+> >> +}
+
+And this helper would be more generally useful if it returned the n-th
+msi_desc entry rather than some obscure field in a substructure.
+
+struct msi_desc *msi_get_nth_desc(struct device *dev, unsigned int nth)
+{
+	struct msi_desc *entry = NULL;
+	unsigned int i = 0;
+
+	for_each_msi_entry(entry, dev) {
+		if (i == nth)
+			return entry;
+
+		i++;
+	}
+
+	WARN_ON_ONCE(!entry);
+	return entry;
+}
+
+You can always wrap it for your particular use case.
+
+> >> +EXPORT_SYMBOL_GPL(dev_msi_hwirq);
+> >> +
+> >>   #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
+> > And what uses these helpers?]
+> These helpers are to be used by a driver series(Intel's IDXD driver)
+> which is currently stuck due to VFIO refactoring.
+
+Then I's suggest you keep the helpers together with the actual user,
+unless this can generally be useful to existing users (exported
+symbols without in-tree users is always a bit odd).
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
