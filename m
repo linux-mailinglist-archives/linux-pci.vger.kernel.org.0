@@ -2,198 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7309934A780
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 13:44:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8952134A788
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 13:51:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbhCZMoT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 08:44:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57226 "EHLO mail.kernel.org"
+        id S230006AbhCZMut (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 08:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229906AbhCZMoG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Mar 2021 08:44:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 89CB961934;
-        Fri, 26 Mar 2021 12:44:05 +0000 (UTC)
+        id S229961AbhCZMuc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 08:50:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 885F1619B8;
+        Fri, 26 Mar 2021 12:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616762645;
-        bh=epXzz5EdeBcKJtt84doD3MjxaFxXg0K4xpUlN/qscHs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rX5b3yfyxL/cY8ut0THFRwMvU0Zbu85FAL7Vt/r9rFv5K7Z/D4NBIictd77rd33mh
-         zy5h+xoShLSeDNqLnHPw8VTKrrhj+GKRGdMhjwkFP9t+VsXH9A35MDgrFEvz1NbKIo
-         vMBFw8YbQFPNLFApqUX/v1HNB6OE2e5JAE0fOwAnRz8Qu/rm1UnyYnhioysj/YP2de
-         fclAzFyVOsfXA+ISJoUZGheB2p/hHWp9I4pGwIJW6QVb3zyh0sZAzqC5yXiulCpD/9
-         fK8eB2It4m8jlLxxtZAWBk7VGTbI+KtMURyl63Ye6/EILpQiGO5qxFgDRM/HWkYGn1
-         1anMHOZ519kMQ==
+        s=k20201202; t=1616763031;
+        bh=orDrcbH1GJdOBLLwEPlKgGn5RA8WPUrIw/vmIOhOztM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e9ZjiPF3T4ns+yNrugPtzGMJgm+i8LSIIbNXCoBiiI6KOCEOWzbybw6Gn6w51TBwS
+         H8oFVx7L1QVKpIj6XTC3dZTYV5fbARA5Lu3OhCxkASLDlxyQVAciXkUWpbT52cHXx6
+         qtn33PKAW03BLS6LwmB6pcYzfQjwTb3cwj4DB8C7WF4eGBbgn/7WaGr0JMPaQoAuH6
+         k1vOn4LU3/gTovT2VZEWc9FZvEcJim8NXNRsV1E4AhOW7880xvDD/yE8+YWQwnvKNL
+         Kh5eJbC/wzHZN17m8bdReGufHsFxiCNTokfS1Xls/AcdiBtWMkq0tbaQGJBdifzDH5
+         vQhQugyVbBiDA==
 Received: by pali.im (Postfix)
-        id E316B842; Fri, 26 Mar 2021 13:44:02 +0100 (CET)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
+        id 054E7842; Fri, 26 Mar 2021 13:50:28 +0100 (CET)
+Date:   Fri, 26 Mar 2021 13:50:28 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>, linux-pci@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Disallow retraining link for Atheros QCA98xx chips on non-Gen1 PCIe bridges
-Date:   Fri, 26 Mar 2021 13:43:26 +0100
-Message-Id: <20210326124326.21163-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20210326125028.tyqkcc5fvaqbwqkn@pali>
+References: <87k0v7n9y9.fsf@toke.dk>
+ <20201030142337.yushrdcuecycfhcu@pali>
+ <b9683fc3-bb8d-3dac-4a5d-fe7fbf2f0177@gmail.com>
+ <87zh42lfv6.fsf@toke.dk>
+ <20201102152403.4jlmcaqkqeivuypm@pali>
+ <877dr3lpok.fsf@toke.dk>
+ <20210315195806.iqdt5wvvkvpmnep7@pali>
+ <20210316092534.czuondwbg3tqjs6w@pali>
+ <87h7l8axqp.fsf@toke.dk>
+ <20210318231629.vhix2cqpt25bgrne@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210318231629.vhix2cqpt25bgrne@pali>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Atheros QCA9880 and QCA9890 chips do not behave after a bus reset and also
-after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
-The device will throw a Link Down error and config space is not accessible
-again. Retrain link can be called only when using GEN1 PCIe bridge or when
-PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
+On Friday 19 March 2021 00:16:29 Pali Rohár wrote:
+> On Thursday 18 March 2021 23:43:58 Toke Høiland-Jørgensen wrote:
+> > Pali Rohár <pali@kernel.org> writes:
+> > 
+> > > On Monday 15 March 2021 20:58:06 Pali Rohár wrote:
+> > >> On Monday 02 November 2020 16:54:35 Toke Høiland-Jørgensen wrote:
+> > >> > Pali Rohár <pali@kernel.org> writes:
+> > >> > 
+> > >> > > On Saturday 31 October 2020 13:49:49 Toke Høiland-Jørgensen wrote:
+> > >> > >> "™֟☻̭҇ Ѽ ҉ ®" <vtolkm@googlemail.com> writes:
+> > >> > >> 
+> > >> > >> > On 30/10/2020 15:23, Pali Rohár wrote:
+> > >> > >> >> On Friday 30 October 2020 14:02:22 Toke Høiland-Jørgensen wrote:
+> > >> > >> >>> Pali Rohár <pali@kernel.org> writes:
+> > >> > >> >>>> My experience with that WLE900VX card, aardvark driver and aspm code:
+> > >> > >> >>>>
+> > >> > >> >>>> Link training in GEN2 mode for this card succeed only once after reset.
+> > >> > >> >>>> Repeated link retraining fails and it fails even when aardvark is
+> > >> > >> >>>> reconfigured to GEN1 mode. Reset via PERST# signal is required to have
+> > >> > >> >>>> working link training.
+> > >> > >> >>>>
+> > >> > >> >>>> What I did in aardvark driver: Set mode to GEN2, do link training. If
+> > >> > >> >>>> success read "negotiated link speed" from "Link Control Status Register"
+> > >> > >> >>>> (for WLE900VX it is 0x1 - GEN1) and set it into aardvark. And then
+> > >> > >> >>>> retrain link again (for WLE900VX now it would be at GEN1). After that
+> > >> > >> >>>> card is stable and all future retraining (e.g. from aspm.c) also passes.
+> > >> > >> >>>>
+> > >> > >> >>>> If I do not change aardvark mode from GEN2 to GEN1 the second link
+> > >> > >> >>>> training fails. And if I change mode to GEN1 after this failed link
+> > >> > >> >>>> training then nothing happen, link training do not success.
+> > >> > >> >>>>
+> > >> > >> >>>> So just speculation now... In current setup initialization of card does
+> > >> > >> >>>> one link training at GEN2. Then aspm.c is called which is doing second
+> > >> > >> >>>> link retraining at GEN2. And if it fails then below patch issue third
+> > >> > >> >>>> link retraining at GEN1. If A38x/pci-mvebu has same problem as aardvark
+> > >> > >> >>>> then second link retraining must be at GEN1 (not GEN2) to workaround
+> > >> > >> >>>> this issue.
+> > >> > >> >>>>
+> > >> > >> >>>> Bjorn, Toke: what about trying to hack aspm.c code to never do link
+> > >> > >> >>>> retraining at GEN2 speed? And always force GEN1 speed prior link
+> > >> > >> >>>> training?
+> > >> > >> >>> Sounds like a plan. I poked around in aspm.c and must confess to being a
+> > >> > >> >>> bit lost in the soup of registers ;)
+> > >> > >> >>>
+> > >> > >> >>> So if one of you can cook up a patch, that would be most helpful!
+> > >> > >> >> I modified Bjorn's patch, explicitly set tls to 1 and added debug info
+> > >> > >> >> about cls (current link speed, that what is used by aardvark). It is
+> > >> > >> >> untested, I just tried to compile it.
+> > >> > >> >>
+> > >> > >> >> Can try it?
+> > >> > >> >>
+> > >> > >> >> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > >> > >> >> index 253c30cc1967..f934c0b52f41 100644
+> > >> > >> >> --- a/drivers/pci/pcie/aspm.c
+> > >> > >> >> +++ b/drivers/pci/pcie/aspm.c
+> > >> > >> >> @@ -206,6 +206,27 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
+> > >> > >> >>   	unsigned long end_jiffies;
+> > >> > >> >>   	u16 reg16;
+> > >> > >> >>   
+> > >> > >> >> +	u32 lnkcap2;
+> > >> > >> >> +	u16 lnksta, lnkctl2, cls, tls;
+> > >> > >> >> +
+> > >> > >> >> +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &lnkcap2);
+> > >> > >> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &lnksta);
+> > >> > >> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &lnkctl2);
+> > >> > >> >> +	cls = lnksta & PCI_EXP_LNKSTA_CLS;
+> > >> > >> >> +	tls = lnkctl2 & PCI_EXP_LNKCTL2_TLS;
+> > >> > >> >> +
+> > >> > >> >> +	pci_info(parent, "lnkcap2 %#010x sls %#04x lnksta %#06x cls %#03x lnkctl2 %#06x tls %#03x\n",
+> > >> > >> >> +		lnkcap2, (lnkcap2 & 0x3F) >> 1,
+> > >> > >> >> +		lnksta, cls,
+> > >> > >> >> +		lnkctl2, tls);
+> > >> > >> >> +
+> > >> > >> >> +	tls = 1;
+> > >> > >> >> +	pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
+> > >> > >> >> +					PCI_EXP_LNKCTL2_TLS, tls);
+> > >> > >> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &lnkctl2);
+> > >> > >> >> +	pci_info(parent, "lnkctl2 %#010x new tls %#03x\n",
+> > >> > >> >> +		lnkctl2, tls);
+> > >> > >> >> +
+> > >> > >> >>   	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+> > >> > >> >>   	reg16 |= PCI_EXP_LNKCTL_RL;
+> > >> > >> >>   	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> > >> > >> >> @@ -227,6 +248,8 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
+> > >> > >> >>   			break;
+> > >> > >> >>   		msleep(1);
+> > >> > >> >>   	} while (time_before(jiffies, end_jiffies));
+> > >> > >> >> +	pci_info(parent, "lnksta %#06x new cls %#03x\n",
+> > >> > >> >> +		lnksta, (cls & PCI_EXP_LNKSTA_CLS));
+> > >> > >> >>   	return !(reg16 & PCI_EXP_LNKSTA_LT);
+> > >> > >> >>   }
+> > >> > >> >>   
+> > >> > >> >
+> > >> > >> > Still exhibiting the BAR update error, run tested with next--20201030
+> > >> > >> 
+> > >> > >> Yup, same for me :(
+> > >> 
+> > >> I'm answering my own question. This code does not work on Omnia because
+> > >> A38x pci-mvebu.c driver is using emulator for PCIe root bridge and it
+> > >> does not implement PCI_EXP_LNKCTL2 and PCI_EXP_LNKCTL2 registers. So
+> > >> code for forcing link speed has no effect on Omnia...
+> > >
+> > > Toke, on A38x PCIe controller it is possible to access PCI_EXP_LNKCTL2
+> > > register. Just access is not exported via emulated root bridge.
+> > >
+> > > Documentation for this PCIe controller is public, so anybody can look at
+> > > register description. See page 571, A.7 PCI Express 2.0 Port 0 Registers
+> > >
+> > > http://web.archive.org/web/20200420191927/https://www.marvell.com/content/dam/marvell/en/public-collateral/embedded-processors/marvell-embedded-processors-armada-38x-functional-specifications-2015-11.pdf
+> > >
+> > > In drivers/pci/controller/pci-mvebu.c you can set a new value for this
+> > > register via function call:
+> > >
+> > >     mvebu_writel(port, val, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL2);
+> > >
+> > > So, could you try to set PCI_EXP_LNKCTL2_TLS bits to gen1 in some hw
+> > > init function, e.g. mvebu_pcie_setup_hw()?
+> > >
+> > >     u32 val = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL2);
+> > >     val &= ~PCI_EXP_LNKCTL2_TLS;
+> > >     val |= PCI_EXP_LNKCTL2_TLS_2_5GT;
+> > >     mvebu_writel(port, val, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL2);
+> > 
+> > I pasted this into the top of mvebu_pcie_setup_hw(), and that indeed
+> > seems to fix things so that all three PCIE devices work even with ASPM
+> > turned on! :)
+> 
+> Perfect! Now I'm sure that it is same issue as in aardvark driver.
+> 
+> I will prepare patches for both pci-aardvark.c and pci-mvebu.c to export
+> PCI_EXP_LNKCTL2 register via emulated bridge. And so aspm.c code would
+> be able to use Bjorn or my patch which I have sent last year.
+> 
+> Question reminds, if this is issue with QCA wifi chip on that Compex
+> card or it is issue with PCIe controllers, now on A38x and A3720 SoC.
+> Note that both A38x and A3720 platforms are from Marvell, but they have
+> different PCIe controllers (so it does not mean that both must have same
+> hw bugs).
 
-This issue was reproduced with more Compex WLE900VX cards (QCA9880 based)
-on Armada 385 with pci-mvebu.c driver and also on Armada 3720 with
-pci-aardvark.c driver. Also this issue was reproduced with some "noname"
-card with QCA9890 WiFi chip on Armada 3720. All problematic cards with
-these QCA chips have PCI device id 0x003c.
+Seems that this is really issue in QCA98xx chips. I have send patch
+which adds quirk for these wifi chips:
 
-Tests showed that other WiFi cards based on AR93xx (PCI device id 0x0030)
-and AR9287 (PCI device id 0x002e) chips do not have these problems.
+https://lore.kernel.org/linux-pci/20210326124326.21163-1-pali@kernel.org/
 
-To workaround this issue, this change introduces a new PCI quirk called
-PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 for PCI device id 0x003c.
-
-When this quirk is set then kernel disallows triggering PCI_EXP_LNKCTL_RL
-bit in config space of PCIe Bridge in case PCIe Bridge is capable of higher
-speed than 2.5 GT/s and higher speed is already allowed. When PCIe Bridge
-has accessible LNKCTL2 register then kernel tries to force target link
-speed via PCI_EXP_LNKCTL2_TLS* bits to 2.5 GT/s. After this change it is
-possible to trigger PCI_EXP_LNKCTL_RL bit without causing issues on
-problematic Atheros QCA98xx cards.
-
-Currently only PCIe ASPM kernel code triggers this PCI_EXP_LNKCTL_RL bit,
-so quirk check is added only into pcie/aspm.c file.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reported-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Tested-by: Marek Behún <kabel@kernel.org>
-Link: https://lore.kernel.org/linux-pci/87h7l8axqp.fsf@toke.dk/
-Cc: stable@vger.kernel.org # c80851f6ce63a ("PCI: Add PCI_EXP_LNKCTL2_TLS* macros")
----
- drivers/pci/pcie/aspm.c | 43 +++++++++++++++++++++++++++++++++++++++++
- drivers/pci/quirks.c    | 15 +++++++++++++-
- include/linux/pci.h     |  2 ++
- 3 files changed, 59 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index ac0557a305af..ea5bdf6107f6 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -192,11 +192,54 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- 	link->clkpm_disable = blacklist ? 1 : 0;
- }
- 
-+static int pcie_change_tls_to_gen1(struct pci_dev *parent)
-+{
-+	u16 reg16;
-+	u32 reg32;
-+	int ret;
-+
-+	/* Check if link speed can be forced to 2.5 GT/s */
-+	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &reg32);
-+	if (!(reg32 & PCI_EXP_LNKCAP2_SLS_2_5GB)) {
-+		pci_err(parent, "ASPM: Bridge does not support changing Link Speed to 2.5 GT/s\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	/* Force link speed to 2.5 GT/s */
-+	ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
-+						 PCI_EXP_LNKCTL2_TLS,
-+						 PCI_EXP_LNKCTL2_TLS_2_5GT);
-+	if (ret == 0) {
-+		/* Verify that new value was really set */
-+		pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &reg16);
-+		if ((reg16 & PCI_EXP_LNKCTL2_TLS) != PCI_EXP_LNKCTL2_TLS_2_5GT)
-+			ret = -EINVAL;
-+	}
-+
-+	if (ret != 0)
-+		pci_err(parent, "ASPM: Changing Target Link Speed to 2.5 GT/s failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
- static bool pcie_retrain_link(struct pcie_link_state *link)
- {
- 	struct pci_dev *parent = link->pdev;
- 	unsigned long end_jiffies;
- 	u16 reg16;
-+	u32 reg32;
-+
-+	if (link->downstream->dev_flags & PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1) {
-+		/* Check if link is capable of higher speed than 2.5 GT/s and needs quirk */
-+		pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &reg32);
-+		if ((reg32 & PCI_EXP_LNKCAP_SLS) > PCI_EXP_LNKCAP_SLS_2_5GB) {
-+			if (pcie_change_tls_to_gen1(parent) != 0) {
-+				pci_err(parent, "ASPM: Retrain Link at higher speed is disallowed by quirk\n");
-+				return false;
-+			}
-+			pci_info(parent, "ASPM: Target Link Speed changed to 2.5 GT/s due to quirk\n");
-+		}
-+	}
- 
- 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
- 	reg16 |= PCI_EXP_LNKCTL_RL;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..8ff690c7679d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3558,6 +3558,11 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
- }
- 
-+static void quirk_no_bus_reset_and_no_retrain_link(struct pci_dev *dev)
-+{
-+	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET | PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1;
-+}
-+
- /*
-  * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
-  * The device will throw a Link Down error on AER-capable systems and
-@@ -3567,10 +3572,18 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
-  */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
- 
-+/*
-+ * Atheros QCA9880 and QCA9890 chips do not behave after a bus reset and also
-+ * after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
-+ * The device will throw a Link Down error and config space is not accessible
-+ * again. Retrain link can be called only when using GEN1 PCIe bridge or when
-+ * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
-+ */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset_and_no_retrain_link);
-+
- /*
-  * Root port on some Cavium CN8xxx chips do not successfully complete a bus
-  * reset when used with certain child devices.  After the reset, config
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97b77..fdbf7254e4ab 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -227,6 +227,8 @@ enum pci_dev_flags {
- 	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
- 	/* Don't use Relaxed Ordering for TLPs directed at this device */
- 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-+	/* Don't Retrain Link for device when bridge is not in GEN1 mode */
-+	PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 = (__force pci_dev_flags_t) (1 << 12),
- };
- 
- enum pci_irq_reroute_variant {
--- 
-2.20.1
-
+> > Do you still need me to test the card on a different machine? Not sure I
+> > have an x86 machine with a mini-PCIe slot handy, but I can go hunting if
+> > needed...
+> 
+> Yes, now it is needed to know if we can find any other PCIe controller
+> in which this card does not work when ASPM is enabled and above "retrain
+> link" kernel code is executed.
+> 
+> It does not have to be x86. But due to how UEFI, ACPI and other
+> firmwares touches PCIe, there is a high chance that on some x86 machine
+> this bug can appear too. More firmwares = more problems.
+> 
+> On arm platforms with native controller drivers there does not have to
+> be any firmware (like in Marvell case) so only kernel touches PCIe HW at
+> the same time.
+> 
+> Note that on x86, ASPM may be disabled (if firmware indicates it), so
+> command line argument like "pcie_aspm=force" is probably required for
+> tests.
