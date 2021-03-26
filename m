@@ -2,197 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA9E234A444
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 10:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B74834A448
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 10:30:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbhCZJ1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 05:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbhCZJ1Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 05:27:25 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4CFC0613AA
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 02:27:24 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id q12so2578653qvc.8
-        for <linux-pci@vger.kernel.org>; Fri, 26 Mar 2021 02:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NNlOJhf9wbzaVcR7TW78N7o1F0EzxSL4BjJh/DQlfYE=;
-        b=iuEym6MLuDUoRCdXw+/mgPFlpgawcXXbRJlthqpVyRHECu1gzzqdarIJbU4Co8O8dm
-         +F6JRXYS3/ctJqC5omZqQNsdVch6GyvCnKToQSgsH+OAynvgOhhUjyywtjYqByLYctXy
-         sW1HO+lu7oh5ubZnpP/AJvTG6NzhfYi1cPA8LtXDkhIV+5x5g3dm04MOBOSnX29jUG7V
-         Gwy0EyBk5uo5HMpGy6Z1xUoRTgQz8Nj1N69kLR0Ytcj1pyuWlIaM4vXWxh2j6eCOQl5t
-         TxQd6WTePAV5za8r4pTMUaijNfM9smmpPoghiSL3/ks4xDSrit1yUcrs/JuYGNyTyPO9
-         4flA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NNlOJhf9wbzaVcR7TW78N7o1F0EzxSL4BjJh/DQlfYE=;
-        b=Eybe4c+h7Ej/WbcQphnwfodRlSKIIkAb6ka9T9/+7IXv2/j1+3YpxwYgq/mXpHbcDP
-         KzIEsc9d8wQGqzQVxZzTVR3RFQJDsChWeYj2cpTJgg8rHSkr1GW6XDq0uMsIms+WQt6x
-         IBPjp0aEyJ6MJ1Gjgempw748CiQixSAu6hv3h0ehpsaEGfLo68/ny1xOgmxs6pRFxAxf
-         maNzHzF0KNzjzTC34iB7BuTref8U6/2+MVB9wIA0jfLdyEDwlChagxxzrhyJ4LYUqiO4
-         HAdkGoKrt36bvWNF0odcLzzrt7y+4wb5BQPO5GH/r2V6ZDvpPJEmCTPlnvE9UWGAjvej
-         f2xQ==
-X-Gm-Message-State: AOAM530yOKB/yRozHXDZ6bNiqa02L16z1Ql/8Z2jlrKOdeKmKSUf7lCG
-        67++T1VLaD1BrlTj+rH9rWqaNT5DCHaPB6vcgAgV6A==
-X-Google-Smtp-Source: ABdhPJzNOGFXKcQdtf0HjgZhGgGlGQJazS0heiA3DfCudK3yVva/yDmZQ8oe2tSV5f8pbJyGUh6xfXuwioOUoQwGcpg=
-X-Received: by 2002:a0c:aa04:: with SMTP id d4mr12165321qvb.16.1616750843999;
- Fri, 26 Mar 2021 02:27:23 -0700 (PDT)
+        id S229590AbhCZJ3K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 05:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229931AbhCZJ2c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 05:28:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 11A6B61A2B;
+        Fri, 26 Mar 2021 09:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1616750910;
+        bh=Mp4Rov7gyKbVHVPla9zE4uiVkHzu622ZTYByfZyJTcQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ahlYhvuX6we8xzTLtjZbnnI3x+Eo2J1zB2tpOquazXAO6eiYXo7zxyC4Y7C+GwYF+
+         HHJCrjN66zfEXLaWTgWFnsTJCMI/cO0EOXy83Rwn6770snE5e3UJMRFNZrXJGDL5r/
+         bvtY3awZ/t5P+gMFO40vIzeXIN08aY+zMnkGuyfM=
+Date:   Fri, 26 Mar 2021 10:28:27 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: Allow drivers to claim exclusive access to config
+ regions
+Message-ID: <YF2pO4E3vsXIy6Dq@kroah.com>
+References: <161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <YFwzw3VK0okr+taA@kroah.com>
+ <CAPcyv4huzgpCvT+MVjpVPRE+ZcxPaqB2jqVMt7nJuP0hpzQ82A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <20210107181416.GA3536@willie-the-truck> <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
- <20210108103216.GA17931@e121166-lin.cambridge.arm.com> <20210122194829.GE25471@willie-the-truck>
- <b37bbff9-d4f8-ece6-3a89-fa21093e15e1@nvidia.com> <20210126225351.GA30941@willie-the-truck>
- <20210325131231.GA18590@e121166-lin.cambridge.arm.com> <CAPv3WKcgZ9aEx7s6keWMssGefYH=rtdxSp5eiBVibtjY=sctpg@mail.gmail.com>
- <CA+kK7Ziz+k5iJjBT8BuUDCCfCB5eat+SUYXNV+fH3UN2DLRRXA@mail.gmail.com>
-In-Reply-To: <CA+kK7Ziz+k5iJjBT8BuUDCCfCB5eat+SUYXNV+fH3UN2DLRRXA@mail.gmail.com>
-From:   Marcin Wojtas <mw@semihalf.com>
-Date:   Fri, 26 Mar 2021 10:27:12 +0100
-Message-ID: <CAPv3WKfivVPHV3Z5ksTe_aw4hMUZCosZENvqMafA8ws=6SHPqA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-To:     Jon Masters <jcm@redhat.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vikram Sethi <vsethi@nvidia.com>, vidyas@nvidia.com,
-        Thierry Reding <treding@nvidia.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Eric Brower <ebrower@nvidia.com>,
-        Grzegorz Jaszczyk <jaz@semihalf.com>,
-        Tomasz Nowicki <tn@semihalf.com>,
-        Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4huzgpCvT+MVjpVPRE+ZcxPaqB2jqVMt7nJuP0hpzQ82A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jon,
+On Thu, Mar 25, 2021 at 10:43:41AM -0700, Dan Williams wrote:
+> On Wed, Mar 24, 2021 at 11:55 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Mar 24, 2021 at 06:23:54PM -0700, Dan Williams wrote:
+> > > The PCIE Data Object Exchange (DOE) mailbox is a protocol run over
+> > > configuration cycles. It assumes one initiator at a time is
+> > > reading/writing the data registers.
+> >
+> > That sounds like a horrible protocol for a multi-processor system.
+> > Where is it described and who can we go complain to for creating such a
+> > mess?
+> 
+> It appears it was added to the PCIE specification in March of last
+> year, I don't attend those meetings. I only learned about it since the
+> CXL specification adopted it.
 
-Thank you for your answer.
+Given that the kernel community can not participate in the PCI spec
+process, we rely on the member companies that do work there to at least
+create sane things.  Who do I need to go complain to about this
+happening, again?
 
-czw., 25 mar 2021 o 22:12 Jon Masters <jcm@redhat.com> napisa=C5=82(a):
->
-> Hi Marcin,
->
-> Many thanks for your thoughtful, heartfelt response, and I don't
-> disagree with your sentiments.
->
-> The truth is that we have a messy situation. As a collective community
-> of people who are passionate about the success of Arm in general
-> purpose systems, I know many who would share my personal feeling that
-> this is all beyond very unfortunate. That other architecture has
-> working, robust, PCI IP that adheres to standards (more or less)
-> correctly. There is no reason we can't either. But it takes a
-> collective industry wide effort, alongside leadership from Arm (and
-> others) to push things forward. I'm very impressed with where
-> SystemReady is headed and there are great people behind making that
-> happen. So I have faith that things will improve. Now is a good time
-> to unite as an industry behind improving both the status quo (quirks)
-> and future IP so that it is properly compliant. My opinion is that now
-> is not a good moment to rework entirely how we do PCI enumeration to
-> use an alternative scheme.
->
-> Please see the below for more.
->
-> On Thu, Mar 25, 2021 at 4:45 PM Marcin Wojtas <mw@semihalf.com> wrote:
->
-> > So what we have after 4 years:
-> > * Direct convincing of IP vendors still being a plan.
->
-> Things need to improve here. I've *expressed* as much to certain folks
-> around the industry. I'm not afraid to get more vocal. There is too
-> much IP out there even now that is doing inexcusably non-compliant
-> things. When I would talk to these vendors they didn't seem to take
-> standards compliance seriously (to any standard) because they're used
-> to making some BSP for some platform and nobody has stood thoroughly
-> over them to the point of extreme discomfort so that they change their
-> approach. It is now past time that we stand over these folks and get
-> them to change. I am not afraid to get much more intense here in my
-> approach and I would hope that others who feel similarly about
-> standardization would also choose to engage with extreme vigor.
-> Extreme vigor. It must become an extreme embarrassment for any of them
-> to continue to have any IP that claims to be "PCI" which is....not
-> PCI.
->
-> > * Reverting the original approach towards MCFG quirks.
-> > * Double-standards in action as displayed by 2 cases above.
->
-> The truth is we've had an inconsistent approach. But an understandable
-> one. It's painful to take quirks. I am grateful that the maintainers
-> are willing to consider this approach now in order to get to where we
-> want to be, but I completely understand the hesitance in the past.
-> Along with the above, we all need to do all we can to ensure that
-> quirks are an absolute last resort. It's one thing to have a corner
-> case issue that couldn't be tested pre-silicon, but there is *no
-> excuse* in 2021 to ever tape out another chip that hasn't had at least
-> a basic level of ECAM testing (and obviously it should be much more).
-> Emulation time should catch the vast majority of bugs as real PCIe
-> devices are used against a design using speed bridges and the like.
-> There's no excuse not to test. And frankly it boggles my mind that
-> anyone would think that was a prudent way to do business. You can have
-> every distro "just work" by doing it right, or you can have years of
-> pain by doing it wrong. And too many still think the BSP hack it up
-> model is the way to go. We ought to be dealing predominantly with the
-> long tail of stuff that is using obviously busted IP that was already
-> baked. We can use quirks for that. But then they need to go away and
-> be replaced with real ECAM that works on future platforms.
->
-> > I'm sorry for my bitter tone, but I think this time could and should
-> > have been spent better - I doubt it managed to push us in any
-> > significant way towards wide fully-standard compliant PCIE IP
-> > adoption.
->
-> Truthfully there will be some parts of the Arm story that will be
-> unpleasant footnotes in the historical telling. How we haven't moved
-> the third party IP vendors faster is a significant one. I think we
-> have a chance to finally change that now that Arm is gaining traction.
-> I am very sad that some of the early comers who tried to do the right
-> thing had to deal with the state of third party IP at the time.
->
+> > > If userspace reads from the response
+> > > data payload it may steal data that a kernel driver was expecting to
+> > > read. If userspace writes to the request payload it may corrupt the
+> > > request a driver was trying to send.
+> >
+> > Fun!  So you want to keep root in userspace from doing this?  I thought
+> > we already do that today?
+> 
+> The only limitation I found was temporary locking via
+> pci_cfg_access_lock(), and some limitations on max config offset, not
+> permanent access disable.
 
-There will be for sure a time for a post-mortem analysis on
-appropriate levels. IMO main problems were inconsistent approach (e.g.
-mentioned quirk exceptions) and lack of coordinated efforts with
-sufficient pushing the vendors. You are perfectly aware about the dark
-embedded/everything-custom-in-BSP times of armv7. And this mentality
-was initially inherited when switching to 64-bits, whose remains we
-can sometimes still observe in DT-world. This has significantly
-changed during the 5 years, with a huge drive from community - it is
-more and more common to use a board with a fixed firmware version and
-install various distros/BSD's/ESXI or even Windows10 in a civilized
-way. SystemReady can accellerate that, and this is what I really count
-on.
+Temp locking should be all that is needed, right?  If not then something
+really is wrong with the protocol design.
 
-I only wanted to stress out, that there should be some bridge between
-what we want and what is possible, with the users also in mind, who
-should not be blamed for vendors' decisions. In 2017 the bar was
-raised to the server-grade levels for all devices, however there was
-no existing arm64 system (even server) that would fully comply to it.
-IMO in day0 (and later) the slash was too hard for embedded systems -
-in a perfect world ARM (possibly with some partner) should have
-created a reference design with pure ECAM, GICv3, SMMU, etc. and say
-'look up to this golden standard, within X years you either align to
-it, or you will be left without mainline Linux support'. Unfortunately
-the time passed and we are in a similar place in terms of HW.
+> > > Introduce pci_{request,release}_config_region() for a driver to exclude
+> > > the possibility of userspace induced corruption while accessing the DOE
+> > > mailbox. Likely there are other configuration state assumptions that a
+> > > driver may want to assert are under its exclusive control, so this
+> > > capability is not limited to any specific configuration range.
+> >
+> > As you do not have a user for these functions, it's hard to see how they
+> > would be used.  We also really can't add new apis with no in-tree users,
+> > so do you have a patch series that requires this functionality
+> > somewhere?
+> 
+> Whoops, I buried the lead here. This is in reaction to / support of
+> Jonathan's efforts to use this mailbox to retrieve a blob of memory
+> characteristics data from CXL devices called the CDAT [1]. That blob
+> is used to populate / extend ACPI SRAT/HMAT/SLIT data for CXL attached
+> memory. So while I was reviewing his patches it occurred to me that
+> the b0rked nature of this interface relative to pci-sysfs needed to be
+> addressed. This should wait to go in with his series.
+> 
+> [1]: https://lore.kernel.org/linux-acpi/20210310180306.1588376-2-Jonathan.Cameron@huawei.com/
 
-Fortunately there's been an impressive leap forward in the software
-support - I'd like to express huge thanks to all people making huge,
-often voluntary, effort and contribution to have such a great, more
-and more developed arm64 ecosystem. Let's help them and all potential
-users to enjoy the platforms that can already 'just work' and
-push/blame/punish the vendors instead.
+Interesting.  Messy.  Ick.
 
-Best regards,
-Marcin
+> > > Since writes are targeted and are already prepared for failure the
+> > > entire request is failed. The same can not be done for reads as the
+> > > device completely disappears from lspci output if any configuration
+> > > register in the request is exclusive. Instead skip the actual
+> > > configuration cycle on a per-access basis and return all f's as if the
+> > > read had failed.
+> >
+> > returning all ff is a huge hint to many drivers that the device is gone,
+> > not that it just failed.  So what happens to code that thinks that and
+> > then tears stuff down as if the device has been removed?
+> 
+> This is limited to the pci_user_* family of accessors, kernel drivers
+> should be unaffected. The protection for kernel drivers colliding is
+> the same as request_mem_region() coordination.
+
+So you want to lock out user accesses entirely if a kernel driver is
+bound to the device?  I missed that here.  If so, that's a big change
+that people are not going to like.
+
+> Userspace drivers will of course be horribly confused, but those
+> should not be binding to devices that are claimed by a kernel driver
+> in the first place.
+
+I'm not worried about "userspace drivers", I'm worried about tools like
+'lspci' and others that like reading PCI device state from userspace at
+tiems.
+
+> > Trying to protect drivers from userspace here feels odd, what userspace
+> > tools are trying to access these devices while they are under
+> > "exclusive" control from the kernel?  lspci not running as root should
+> > not be doing anything crazy, but if you want to run it as root,
+> > shouldn't you be allowed to access it properly?
+> 
+> The main concern is unwanted userspace reads. An inopportune "hexdump
+> /sys/bus/pci/devices/$device/config" will end up reading the DOE
+> payload register and advancing the device state machine surprising the
+> kernel iterator that might be reading the payload.
+> 
+> If root really wants to read that portion of config space it can also
+> unload the driver similar to the policy for /dev/mem colliding with
+> exclusive device-mmio... although that raises the question how would
+> root know. At least for exclusive /dev/mem /proc/iomem can show who is
+> claiming that resource.
+
+Yes, root does not know, so this feels really broken from a spec
+point-of-view.
+
+> If userspace needs to submit DOE requests then that should probably be
+> a proper generic driver to submit requests, not raw pci config access.
+
+True, but again as this is exposed through the "normal" config space,
+that is not possible.  Again, broken design :(
+
+> > What hardware has this problem that we need to claim exclusive ownership
+> > over that differs from the old hardware we used to have that would do
+> > crazy things when reading from from userspace?  We had this problem a
+> > long time ago and lived with it, what changed now?
+> 
+> All I can infer from the comments in drivers/pci/access.c is "bad
+> things happens on some devices if you allow reads past a certain
+> offset", but no concern for reads for offsets less than
+> pdev->cfg_size. I think what's changed is that this is the first time
+> Linux has had to worry about an awkward polled I/O data transfer
+> protocol over config cycles.
+
+I recall many old PCI devices that didn't like their memory being read
+at all, and could cause bus lockups, which is why the userspace tools
+would print scary warnings if you really wanted to do this.
+
+Feels like we are back to that mess again.
+
+> To make matters worse there appears to be a proliferation of protocols
+> being layered on top of DOE. In addition to CXL Table Access for CDAT
+> retrieval [2] I'm aware of CXL Compliance Testing [3], Integrity and
+> Data Encryption (IDE) [4], and Component Measurement and
+> Authentication (CMA) [5].
+> 
+> I've not read those, but I worry security_locked_down() may want to
+> prevent even root userspace mucking with "security" interfaces. So
+> that *might* be a reason to ensure exclusive kernel access beyond the
+> basic sanity of the kernel being able to have uninterrupted request /
+> response sessions with this mailbox
+> 
+> [2]: https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+> [3]: https://www.computeexpresslink.org/download-the-specification
+> [4]: https://members.pcisig.com/wg/PCI-SIG/document/15149
+> [5]: https://members.pcisig.com/wg/PCI-SIG/document/14236
+
+I have no access to these proposed specs, sorry.
+
+If things are being layered on top of a broken design, well, they get
+what they asked for.
+
+How are the "other" operating systems going to handle this mess?  How
+did they "sign off" on this crazy thing?
+
+thanks,
+
+greg k-h
