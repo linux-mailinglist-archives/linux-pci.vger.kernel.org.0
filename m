@@ -2,128 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CD3D34AD1B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 18:09:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB6934AD20
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Mar 2021 18:11:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbhCZRJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 13:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
+        id S230106AbhCZRLV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 13:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229871AbhCZRIe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Mar 2021 13:08:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2698561A38;
-        Fri, 26 Mar 2021 17:08:33 +0000 (UTC)
+        id S230070AbhCZRLF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Mar 2021 13:11:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E52EC619FF;
+        Fri, 26 Mar 2021 17:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616778513;
-        bh=YKDykDVQ6KTEU7hT/GXP9jb6Ht59J6HUtCvZspqwUyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rRUOHKdiPSDwgWtMrMoIXOvWs3VOISZGUO0+28Sv55mKmVIxSOZ87Aba9C+V9JZSQ
-         RqhIcAOWjHMXK7gdyWo5D5qEb0eIlX/yPYF9c515wEqv8TiaS2hF4X+FFoLd0l9qjQ
-         0csayiFFwacng5/+3ZM5lfgqMyCzqqTcuPx9d3DRzELBHB6BRMuYhKm7ezCaaHeMkD
-         edA9O0yYU3L36CtuCrCNGldqYN0j2PRThoZCg3hIJxGW8lFAz6n/m47wvDTLF3dyQn
-         UbwdoDzr8RV40ulIkuTbhn2oh+/+P0quhPsAk8BQQE7Djqy91apPXys5oPcCZdXOfP
-         m9zZJgEtvm0bg==
-Date:   Fri, 26 Mar 2021 12:08:31 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <20210326170831.GA890834@bjorn-Precision-5520>
+        s=k20201202; t=1616778665;
+        bh=8iNushOzyU4yjvf/2b7KgfbpYeYoZ8AZAqb0V7RwRrc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MrqUoF6l8LICdBdD8IuQqBPP71/k5OU4kYlGZOYv2nXRQgqELndLC7RDYkAeAW/gL
+         7pA7pZGOjXk4dHrfsz8GwWn5/ElveLR4B61ovvy0scClBylY8RmqTr45FxS5f3W1OG
+         w9A85uuXyXAyTuLv6MgY95OPwPdKo8J4cbDRwBFM+eYzSKaWSIUKknRS1CR7Trs6R8
+         rv6T9u9vFeDnD+NUwEVNQPVWZC9d49e+pEZzcCDtS7IdA6/zDlvjfc6d+efWrlLA1o
+         k6PE+uHzv7e+VRN2oQEqte2Jh5JsriX2BZR3PWPFMQGdHW3QEc24ceB6U99NRVonfE
+         ayzmaOvWj4ITA==
+Received: by pali.im (Postfix)
+        id 28598842; Fri, 26 Mar 2021 18:11:01 +0100 (CET)
+Date:   Fri, 26 Mar 2021 18:11:00 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20210326171100.s53mslkjc7tdgs6f@pali>
+References: <20201102152403.4jlmcaqkqeivuypm@pali>
+ <877dr3lpok.fsf@toke.dk>
+ <20210315195806.iqdt5wvvkvpmnep7@pali>
+ <20210316092534.czuondwbg3tqjs6w@pali>
+ <87h7l8axqp.fsf@toke.dk>
+ <20210318231629.vhix2cqpt25bgrne@pali>
+ <20210326125028.tyqkcc5fvaqbwqkn@pali>
+ <874kgyc4yg.fsf@toke.dk>
+ <20210326153444.cdccc3e2axqxzejy@pali>
+ <87o8f5c0tt.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAKgT0UfK3eTYH+hRRC0FcL0rdncKJi=6h5j6MN0uDA98cHCb9A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87o8f5c0tt.fsf@toke.dk>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 26, 2021 at 09:00:50AM -0700, Alexander Duyck wrote:
-> On Thu, Mar 25, 2021 at 11:44 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > On Thu, Mar 25, 2021 at 03:28:36PM -0300, Jason Gunthorpe wrote:
-> > > On Thu, Mar 25, 2021 at 01:20:21PM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Mar 25, 2021 at 02:36:46PM -0300, Jason Gunthorpe wrote:
-> > > > > On Thu, Mar 25, 2021 at 12:21:44PM -0500, Bjorn Helgaas wrote:
-> > > > >
-> > > > > > NVMe and mlx5 have basically identical functionality in this respect.
-> > > > > > Other devices and vendors will likely implement similar functionality.
-> > > > > > It would be ideal if we had an interface generic enough to support
-> > > > > > them all.
-> > > > > >
-> > > > > > Is the mlx5 interface proposed here sufficient to support the NVMe
-> > > > > > model?  I think it's close, but not quite, because the the NVMe
-> > > > > > "offline" state isn't explicitly visible in the mlx5 model.
-> > > > >
-> > > > > I thought Keith basically said "offline" wasn't really useful as a
-> > > > > distinct idea. It is an artifact of nvme being a standards body
-> > > > > divorced from the operating system.
-> > > > >
-> > > > > In linux offline and no driver attached are the same thing, you'd
-> > > > > never want an API to make a nvme device with a driver attached offline
-> > > > > because it would break the driver.
-> > > >
-> > > > I think the sticky part is that Linux driver attach is not visible to
-> > > > the hardware device, while the NVMe "offline" state *is*.  An NVMe PF
-> > > > can only assign resources to a VF when the VF is offline, and the VF
-> > > > is only usable when it is online.
-> > > >
-> > > > For NVMe, software must ask the PF to make those online/offline
-> > > > transitions via Secondary Controller Offline and Secondary Controller
-> > > > Online commands [1].  How would this be integrated into this sysfs
-> > > > interface?
-> > >
-> > > Either the NVMe PF driver tracks the driver attach state using a bus
-> > > notifier and mirrors it to the offline state, or it simply
-> > > offline/onlines as part of the sequence to program the MSI change.
-> > >
-> > > I don't see why we need any additional modeling of this behavior.
-> > >
-> > > What would be the point of onlining a device without a driver?
+On Friday 26 March 2021 17:54:38 Toke Høiland-Jørgensen wrote:
+> Pali Rohár <pali@kernel.org> writes:
+> > On Friday 26 March 2021 16:25:27 Toke Høiland-Jørgensen wrote:
+> >> Pali Rohár <pali@kernel.org> writes:
+> >> > Seems that this is really issue in QCA98xx chips. I have send patch
+> >> > which adds quirk for these wifi chips:
+> >> >
+> >> > https://lore.kernel.org/linux-pci/20210326124326.21163-1-pali@kernel.org/
+> >> 
+> >> I tried applying that, and while it does fix the ath10k card, it seems
+> >> to break the ath9k card in the slot next to it.
 > >
-> > Agree, we should remember that we are talking about Linux kernel model
-> > and implementation, where _no_driver_ means _offline_.
+> > Ehm, what?
 > 
-> The only means you have of guaranteeing the driver is "offline" is by
-> holding on the device lock and checking it. So it is only really
-> useful for one operation and then you have to release the lock. The
-> idea behind having an "offline" state would be to allow you to
-> aggregate multiple potential operations into a single change.
+> I know, right?! :/
 > 
-> For example you would place the device offline, then change
-> interrupts, and then queues, and then you could online it again. The
-> kernel code could have something in place to prevent driver load on
-> "offline" devices. What it gives you is more of a transactional model
-> versus what you have right now which is more of a concurrent model.
+> > Patch which I have sent today to mailing list calls quirk code only
+> > for PCI device id used by QCA98xx cards. For all other cards it is
+> > noop.
+> 
+> So upon further investigation this seems to be unrelated to the patch.
+> Meaning that I can't reliably get the ath9k device to work again by
+> reverting it. And the patch does seem to fix the ath10k device, so I
+> think that's probably good.
+> 
+> However, the issue with ath9k does seem to be related to ASPM; if I turn
+> that off in .config, I get the ath9k device back.
 
-Thanks, Alex.  Leon currently does enforce the "offline" situation by
-holding the VF device lock while checking that it has no driver and
-asking the PF to do the assignment.  I agree this is only useful for a
-single operation.  Would the current series *prevent* a transactional
-model from being added later if it turns out to be useful?  I think I
-can imagine keeping the same sysfs files but changing the
-implementation to check for the VF being offline, while adding
-something new to control online/offline.
+Ok, perfect. So this my patch is does not break ath9k.
 
-I also want to resurrect your idea of associating
-"sriov_vf_msix_count" with the PF instead of the VF.  I really like
-that idea, and it better reflects the way both mlx5 and NVMe work.  I
-don't think there was a major objection to it, but the discussion
-seems to have petered out after your suggestion of putting the PCI
-bus/device/funcion in the filename, which I also like [1].
+> So we have these
+> cases:
+> 
+> ASPM disabled:          ath9k, ath10k and mt76 cards all work
+> ASPM enabled, no patch: only mt76 card works
+> ASPM enabled + patch:   ath10k and mt76 cards work
+> 
+> So IDK, maybe the ath9k card needs a quirk as well? Or the mvebu board
+> is just generally flaky?
 
-Leon has implemented a ton of variations, but I don't think having all
-the files in the PF directory was one of them.
+I'm not sure. Maybe ASPM is somehow buggy on ath9k or needs some special
+handling. But issue is not at PCI config space as ath9k driver start
+initialization of this card. Needs also some debugging in ath9k driver
+if it prints that strange "mac chip rev" error.
 
-Bjorn
+I think this issue should be handled separately. Could you report it
+also to ath9k mailing list (and CC me)? Maybe other ath developers would
+know some more details.
 
-[1] https://lore.kernel.org/r/CAKgT0Ue363fZEwqGUa1UAAYotUYH8QpEADW1U5yfNS7XkOLx0Q@mail.gmail.com
+> > Can you send PCI device id of your ath9k card (lspci -nn)? Because all
+> > my tested ath9k cards have different PCI device id.
+> 
+> [root@omnia-arch ~]# lspci -nn
+> 00:01.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> 00:02.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> 00:03.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e] (rev 01)
+> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+
+That is fine. Also all ath9k testing cards have id 0x002e.
+
+> >> When booting with the
+> >> patch applied, I get this in dmesg:
+> >> 
+> >> [    3.556599] ath: phy0: Mac Chip Rev 0xfffc0.f is not supported by this driver
+> >
+> > Can you send whole dmesg log? So I can see which new err/info lines are
+> > printed.
+> 
+> Pasting all three cases below:
+...
+
+Seem that there is no ASPM related line... But your logs are not
+complete, beginning is missing. So important lines are maybe trimmed.
+
+> >> Could there be some kind of data corruption in play here making the
+> >> driver think the chip revision is wrong, or something like that? If I
+> >> boot the same kernel without the patch applied, the ath9k initialisation
+> >> works fine, but obviously the ath10k is then still broken...
+> >
+> > There is something really strange.
+> >
+> > Can you add debug log into pcie_change_tls_to_gen1() function to check
+> > for which card is this function called?
+> 
+> Erm, it looks like it's never called? I added this:
+
+Ehm? With patch it must be called otherwise ath10k card would not be
+detected on PCIe bus. And you tested that patch fixes it...
+
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index ea5bdf6107f6..794c682d4bd3 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -198,6 +198,9 @@ static int pcie_change_tls_to_gen1(struct pci_dev *parent)
+>         u32 reg32;
+>         int ret;
+>  
+> +       printk("pcie_change_tls_to_getn1() called for device %x:%x:%x\n",
+> +              parent->device, parent->subsystem_vendor, parent->subsystem_device);
+> +
+
+Try pci_err(parent, "message...\n"); if something changes?
+
+>         /* Check if link speed can be forced to 2.5 GT/s */
+>         pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &reg32);
+>         if (!(reg32 & PCI_EXP_LNKCAP2_SLS_2_5GB)) {
+> 
+> But 'dmesg | grep called' returns nothing...
+> 
+> > Are you testing this new patch with or without changes to
+> > mvebu_pcie_setup_hw() function?
+> 
+> I applied your patch on top of latest mac80211-next, which right now is
+> this commit:
+> https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211-next.git/commit/?id=4b837ad53be2ab100dfaa99dc73a9443a8a2392d
+
+Just to ensure that you are _not_ using hack for mvebu_pcie_setup_hw()
+function in pci-mvebu.c (which I have sent few days ago).
