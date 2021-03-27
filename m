@@ -2,95 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD78734B712
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Mar 2021 13:11:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7C2134B73D
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Mar 2021 13:38:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230298AbhC0MLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Mar 2021 08:11:16 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:15014 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbhC0MLO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Mar 2021 08:11:14 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4F6yKv0wzSzPstZ;
-        Sat, 27 Mar 2021 20:08:35 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.498.0; Sat, 27 Mar 2021 20:11:03 +0800
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-To:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <rui.zhang@intel.com>,
-        <bhelgaas@google.com>
-CC:     Xiaofei Tan <tanxiaofei@huawei.com>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linuxarm@openeuler.org>
-Subject: [PATCH v3 12/12] ACPI: dock: fix some coding style issues
-Date:   Sat, 27 Mar 2021 20:08:24 +0800
-Message-ID: <1616846904-25719-13-git-send-email-tanxiaofei@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1616846904-25719-1-git-send-email-tanxiaofei@huawei.com>
-References: <1616846904-25719-1-git-send-email-tanxiaofei@huawei.com>
+        id S230271AbhC0Mia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Mar 2021 08:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229627AbhC0Mia (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 27 Mar 2021 08:38:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4AF316196C;
+        Sat, 27 Mar 2021 12:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1616848687;
+        bh=Iy5IFoCV3jFpegN8htE9TCzHt5nX7xsGq2wa29AG4Mo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ziWReXLrV1j5Yjp7ZkGCTqN8eYAezPVe1u5PhFiynFczxHVb3G6SAfgEIZJNzpa6p
+         UqVs/00MPSpVWyPAe0d4iHjtLcUFqNBrGQ9NHEWS8N+XTUul/t6hmSw5H8gTPX4pP3
+         HgNiDe/GfFHofOSACrlbzd6sVu5HYxwLbxgUt24M=
+Date:   Sat, 27 Mar 2021 13:38:05 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <YF8nLR3cVOc0y+Rl@kroah.com>
+References: <CAKgT0UcXwNKDSP2ciEjM2AWj2xOZwBxkPCdzkUqDKAMtvTTKPg@mail.gmail.com>
+ <20210326193631.GA902426@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210326193631.GA902426@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix some coding style issues reported by checkpatch.pl, including
-following types:
+On Fri, Mar 26, 2021 at 02:36:31PM -0500, Bjorn Helgaas wrote:
+> On Fri, Mar 26, 2021 at 11:50:44AM -0700, Alexander Duyck wrote:
+> 
+> > I almost wonder if it wouldn't make sense to just partition this up to
+> > handle flexible resources in the future. Maybe something like having
+> > the directory setup such that you have "sriov_resources/msix/" and
+> > then you could have individual files with one for the total and the
+> > rest with the VF BDF naming scheme. Then if we have to, we could add
+> > other subdirectories in the future to handle things like queues in the
+> > future.
+> 
+> Subdirectories would be nice, but Greg KH said earlier in a different
+> context that there's an issue with them [1].  He went on to say tools
+> like udev would miss uevents for the subdirs [2].
+> 
+> I don't know whether that's really a problem in this case -- it
+> doesn't seem like we would care about uevents for files that do MSI-X
+> vector assignment.
+> 
+> [1] https://lore.kernel.org/linux-pci/20191121211017.GA854512@kroah.com/
+> [2] https://lore.kernel.org/linux-pci/20191124170207.GA2267252@kroah.com/
 
-WARNING: Missing a blank line after declarations
-ERROR: spaces required around that ':'
-WARNING: Statements should start on a tabstop
+You can only go "one level deep" on subdirectories tied to a 'struct
+device' and have userspace tools know they are still there.  You can do
+that by giving an attribute group a "name" for the directory.
 
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
----
- drivers/acpi/dock.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Anything more than that just gets very very messy very quickly and I do
+not recommend doing that at all.
 
-diff --git a/drivers/acpi/dock.c b/drivers/acpi/dock.c
-index 0937cea..7cf9215 100644
---- a/drivers/acpi/dock.c
-+++ b/drivers/acpi/dock.c
-@@ -271,6 +271,7 @@ static void hotplug_dock_devices(struct dock_station *ds, u32 event)
- 
- 		if (!acpi_device_enumerated(adev)) {
- 			int ret = acpi_bus_scan(adev->handle);
-+
- 			if (ret)
- 				dev_dbg(&adev->dev, "scan error %d\n", -ret);
- 		}
-@@ -502,6 +503,7 @@ static ssize_t flags_show(struct device *dev,
- 			  struct device_attribute *attr, char *buf)
- {
- 	struct dock_station *dock_station = dev->platform_data;
-+
- 	return snprintf(buf, PAGE_SIZE, "%d\n", dock_station->flags);
- 
- }
-@@ -523,7 +525,7 @@ static ssize_t undock_store(struct device *dev, struct device_attribute *attr,
- 	begin_undock(dock_station);
- 	ret = handle_eject_request(dock_station, ACPI_NOTIFY_EJECT_REQUEST);
- 	acpi_scan_lock_release();
--	return ret ? ret: count;
-+	return ret ? ret : count;
- }
- static DEVICE_ATTR_WO(undock);
- 
-@@ -535,10 +537,11 @@ static ssize_t uid_show(struct device *dev,
- {
- 	unsigned long long lbuf;
- 	struct dock_station *dock_station = dev->platform_data;
-+
- 	acpi_status status = acpi_evaluate_integer(dock_station->handle,
- 					"_UID", NULL, &lbuf);
- 	if (ACPI_FAILURE(status))
--	    return 0;
-+		return 0;
- 
- 	return snprintf(buf, PAGE_SIZE, "%llx\n", lbuf);
- }
--- 
-2.8.1
+thanks,
 
+greg k-h
