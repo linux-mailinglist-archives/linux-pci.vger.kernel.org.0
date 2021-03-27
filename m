@@ -2,118 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A685834B345
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Mar 2021 01:16:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7E5D34B3E4
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Mar 2021 04:08:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbhC0AOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Mar 2021 20:14:32 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:34704 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbhC0AON (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 20:14:13 -0400
-Received: by mail-lf1-f41.google.com with SMTP id i26so10141651lfl.1;
-        Fri, 26 Mar 2021 17:14:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SEcUk0EunwKzPM97F5uKAKJTsTQwxZ5rqKq25o2rWsk=;
-        b=K3cXqbbbsMAxi/RhBEeziukGrjLj7pExUZgP9tDu9qsQjYZW2c7d6F6mBz7rSxSf45
-         uFDvK19qCrozli+tpvMcM5Zz1MknVaIyPiNibLYZ2abPuxJhcsWSWRvKu3vyLFdSY+gd
-         b7KkTggwtGr5SpFQoclPiFYwQtZuLXHCYuF0S0DnbRF2zA1IYwmjvN4Bf+gfYQ82Dltg
-         QVifIrfo2i5vvs/RLdfgL/hKIflUoyJxVwbvYb7Ptpl0t0jYCmNCMwSGPSarxi0Lv0YN
-         JJhaRG8AIuoMkEuAuvIjWU10j33OgH5XphZIdT41qfvYVtqjGku9VU/+vGkg3dnIwxvh
-         ye5w==
-X-Gm-Message-State: AOAM533QvoC1+6Ohuj331Lbiry7S9AB+FnUo4ZvUB2V/8pixe9+vAKY5
-        Sozl9acLWzXgki1K5d0FiLY=
-X-Google-Smtp-Source: ABdhPJwEVBAE3qKqw210nGGw3dr7TjeUGuqo7YWb7wiIf7rFqesRT4vsCS7XhGpR62hq2S4BArj0Ag==
-X-Received: by 2002:a05:6512:405:: with SMTP id u5mr9253215lfk.574.1616804051808;
-        Fri, 26 Mar 2021 17:14:11 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id n11sm1020676lfe.243.2021.03.26.17.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Mar 2021 17:14:11 -0700 (PDT)
-Date:   Sat, 27 Mar 2021 01:14:10 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>, linux-pci@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Disallow retraining link for Atheros QCA98xx chips
- on non-Gen1 PCIe bridges
-Message-ID: <YF540gjh156QIirA@rocinante>
-References: <20210326124326.21163-1-pali@kernel.org>
+        id S230352AbhC0DHk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Mar 2021 23:07:40 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:50484 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229880AbhC0DHI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Mar 2021 23:07:08 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E7ADD40396;
+        Sat, 27 Mar 2021 03:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1616814427; bh=YgEWhwoMwnFlsWEuVKVkKKjj6tDqXAabsNLouryl93A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ijKaN0eZbwMOeoXXckSzH6hQPbiwNmFdc/vOTwvdzeStxLch3MOon4/pnF5ZzyiFh
+         sDXJWVnEFesKCbhq513P1+cm4GSfCqKZPb0Sqz/TefmScRrjeeCcIWqoN+PGl9Jn/3
+         BrED7sZwAAekcWIcJn0aZPWo6Riqcy66TWumyoil0keTHUyXtJns4TKTkICZsRsUrw
+         HzHj5kSKJc5NNUu3V4aA+CDV4QhfBwiWwnXEOoaoMzUxJsnvHeaGF/snaYJbT819wy
+         h/8VkYIpCfQtSNhaPPTAo6QjRlNvH67CsFLWVxgJAtBN0POZQw2BLuNgxB8MCMyJtp
+         0m8CaHZ0tBOrw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 22187A022E;
+        Sat, 27 Mar 2021 03:07:04 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v7 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Date:   Sat, 27 Mar 2021 04:06:50 +0100
+Message-Id: <cover.1616814273.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210326124326.21163-1-pali@kernel.org>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Pali,
+This patch series adds a new driver called xData-pcie for the Synopsys
+DesignWare PCIe prototype.
 
-Thank you for sending the patch over!
+The driver configures and enables the Synopsys DesignWare PCIe traffic
+generator IP inside of prototype Endpoint which will generate upstream
+and downstream PCIe traffic. This allows to quickly test the PCIe link
+throughput speed and check is the prototype solution has some limitation
+or not.
 
-[...]
-> +static int pcie_change_tls_to_gen1(struct pci_dev *parent)
+Changes:
+ V2: Rework driver according to Greg Kroah-Hartman' feedback
+ V3: Fixed issues detected while running on 64 bits platforms
+     Rebased patches on top of v5.11-rc1 version
+ V4: Rework driver according to Greg Kroah-Hartman' feedback
+     Add the ABI doc related to the sysfs implemented on this driver
+ V5: Rework driver accordingly to Leon Romanovsky' feedback
+     Rework driver accordingly to Krzysztof Wilczyński' feedback
+ V6: Rework driver according to Greg Kroah-Hartman' feedback
+     Rework driver accordingly to Krzysztof Wilczyński' feedback
+     Rework driver accordingly to Leon Romanovsky' feedback
+ V7: Rework driver according to Greg Kroah-Hartman' feedback
 
-Just a nitpick, so feel free to ignore it.  I would just call the
-variable "dev" as we pass a pointer to a particular device, but it does
-not matter as much, so I am leaving this to you.
+Cc: linux-doc@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Krzysztof Wilczyński <kw@linux.com>
 
-[...]
-> +	if (ret == 0) {
+Gustavo Pimentel (5):
+  misc: Add Synopsys DesignWare xData IP driver
+  misc: Add Synopsys DesignWare xData IP driver to Makefile and Kconfig
+  Documentation: misc-devices: Add Documentation for dw-xdata-pcie
+    driver
+  MAINTAINERS: Add Synopsys xData IP driver maintainer
+  docs: ABI: Add sysfs documentation interface of dw-xdata-pcie driver
 
-You prefer this style over "if (!ret)"?  Just asking in the view of the
-style that seem to be preferred in the code base at the moment.
+ Documentation/ABI/testing/sysfs-driver-xdata |  46 +++
+ Documentation/misc-devices/dw-xdata-pcie.rst |  40 +++
+ MAINTAINERS                                  |   7 +
+ drivers/misc/Kconfig                         |  10 +
+ drivers/misc/Makefile                        |   1 +
+ drivers/misc/dw-xdata-pcie.c                 | 401 +++++++++++++++++++++++++++
+ 6 files changed, 505 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
+ create mode 100644 drivers/misc/dw-xdata-pcie.c
 
-> +		/* Verify that new value was really set */
-> +		pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &reg16);
-> +		if ((reg16 & PCI_EXP_LNKCTL2_TLS) != PCI_EXP_LNKCTL2_TLS_2_5GT)
-> +			ret = -EINVAL;
+-- 
+2.7.4
 
-I am wondering about this verification - did you have a case where the
-device would not properly set its capability, or accept the write and do
-nothing?
-
-> +	if (ret != 0)
-
-I think "if (ret)" would be fine to use here, unless you prefer being
-more explicit.  See my question about style above.
-
->  static bool pcie_retrain_link(struct pcie_link_state *link)
->  {
->  	struct pci_dev *parent = link->pdev;
->  	unsigned long end_jiffies;
->  	u16 reg16;
-> +	u32 reg32;
-> +
-> +		/* Check if link is capable of higher speed than 2.5 GT/s and needs quirk */
-> +		pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &reg32);
-> +		if ((reg32 & PCI_EXP_LNKCAP_SLS) > PCI_EXP_LNKCAP_SLS_2_5GB) {
-
-I wonder if moving this check to pcie_change_tls_to_gen1() would make
-more sense?  It would then make this function a little cleaner.  What do
-you think?
-
-[...]
-> +static void quirk_no_bus_reset_and_no_retrain_link(struct pci_dev *dev)
-> +{
-> +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET | PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1;
-> +}
-[...]
-
-I know that the style has been changed to allow 100 characters width and
-that checkpatch.pl now also does not warn about line length, as per
-commit bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column
-warning"), but I think Bjorn still prefers 80 characters, thus this line
-above might have to be aligned.
-
-Krzysztof
