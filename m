@@ -2,17 +2,17 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29C1A34B530
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Mar 2021 08:50:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08BAA34B52D
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Mar 2021 08:50:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231382AbhC0Hto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231401AbhC0Hto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 27 Mar 2021 03:49:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:14926 "EHLO
+Received: from szxga06-in.huawei.com ([45.249.212.32]:14925 "EHLO
         szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbhC0HtS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Mar 2021 03:49:18 -0400
+        with ESMTP id S231172AbhC0HtT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Mar 2021 03:49:19 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4F6rXg5sryzkjVg;
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4F6rXg5ZwjzkjTs;
         Sat, 27 Mar 2021 15:47:31 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.24) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
@@ -23,9 +23,9 @@ To:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <rui.zhang@intel.com>,
 CC:     Xiaofei Tan <tanxiaofei@huawei.com>, <linux-acpi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linuxarm@openeuler.org>
-Subject: [PATCH v2 07/15] ACPI: memhotplug: fix a coding style issue
-Date:   Sat, 27 Mar 2021 15:46:25 +0800
-Message-ID: <1616831193-17920-8-git-send-email-tanxiaofei@huawei.com>
+Subject: [PATCH v2 08/15] ACPI: acpi_pad: fix a coding style issue
+Date:   Sat, 27 Mar 2021 15:46:26 +0800
+Message-ID: <1616831193-17920-9-git-send-email-tanxiaofei@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
 References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
@@ -39,28 +39,49 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Fix the following coding style issue reported by checkpatch.pl
 
-WARNING: __initdata should be placed after acpi_no_memhotplug
-FILE: drivers/acpi/acpi_memhotplug.c:326:
-+static bool __initdata acpi_no_memhotplug;
+WARNING: Missing a blank line after declarations
 
 Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
 ---
- drivers/acpi/acpi_memhotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpi_pad.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-index 8cc195c..5c5ed22 100644
---- a/drivers/acpi/acpi_memhotplug.c
-+++ b/drivers/acpi/acpi_memhotplug.c
-@@ -323,7 +323,7 @@ static void acpi_memory_device_remove(struct acpi_device *device)
- 	acpi_memory_device_free(mem_device);
- }
- 
--static bool __initdata acpi_no_memhotplug;
-+static bool acpi_no_memhotplug __initdata;
- 
- void __init acpi_memory_hotplug_init(void)
+diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
+index b84ab72..df4adeb 100644
+--- a/drivers/acpi/acpi_pad.c
++++ b/drivers/acpi/acpi_pad.c
+@@ -128,6 +128,7 @@ static void round_robin_cpu(unsigned int tsk_index)
+ static void exit_round_robin(unsigned int tsk_index)
  {
+ 	struct cpumask *pad_busy_cpus = to_cpumask(pad_busy_cpus_bits);
++
+ 	cpumask_clear_cpu(tsk_in_cpu[tsk_index], pad_busy_cpus);
+ 	tsk_in_cpu[tsk_index] = -1;
+ }
+@@ -265,6 +266,7 @@ static ssize_t rrtime_store(struct device *dev,
+ 	struct device_attribute *attr, const char *buf, size_t count)
+ {
+ 	unsigned long num;
++
+ 	if (kstrtoul(buf, 0, &num))
+ 		return -EINVAL;
+ 	if (num < 1 || num >= 100)
+@@ -286,6 +288,7 @@ static ssize_t idlepct_store(struct device *dev,
+ 	struct device_attribute *attr, const char *buf, size_t count)
+ {
+ 	unsigned long num;
++
+ 	if (kstrtoul(buf, 0, &num))
+ 		return -EINVAL;
+ 	if (num < 1 || num >= 100)
+@@ -307,6 +310,7 @@ static ssize_t idlecpus_store(struct device *dev,
+ 	struct device_attribute *attr, const char *buf, size_t count)
+ {
+ 	unsigned long num;
++
+ 	if (kstrtoul(buf, 0, &num))
+ 		return -EINVAL;
+ 	mutex_lock(&isolated_cpus_lock);
 -- 
 2.8.1
 
