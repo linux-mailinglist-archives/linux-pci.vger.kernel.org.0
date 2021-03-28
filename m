@@ -2,106 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C3AA34BC8B
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Mar 2021 16:11:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB6EE34BC9F
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Mar 2021 16:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbhC1OJe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Mar 2021 10:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229543AbhC1OJP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 28 Mar 2021 10:09:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C00996193A;
-        Sun, 28 Mar 2021 14:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616940555;
-        bh=DHwJSTtuCKRKmPj4HNFhZMEWl63yFpOKo19nx3Oh+3s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Hrva6G+Q2NIAGwKa+PmxeE0rKif0gKF2H7q7deh9rjIqAEVlG1MvFvssQFhgVpemG
-         k4YYw6Cwi/geTcwp/uTlIswoSWytbfagefbGEBL0i/4WOGaPAfOpH0wC92yf6iK+Hl
-         h54/uKPrkS2bKtaYipkKQcyenK0WgJ37LtYNvxbh95ZyfWolkTglOVBmxU76lWD8BQ
-         U13afxkgfd+YAyrNwZhQxbcSTKO/A//JpiDTtfX6P8iroNGaH5so4NOtF9I467DHPh
-         1xFfocDEpuK1EI7qdMg5j0ldudrMEG/EHYzceytl8MwDO7ghLQIWg9y92Mat5UJOO0
-         ZQJ1X5KhtFrJw==
-Received: by pali.im (Postfix)
-        id 5BB5656D; Sun, 28 Mar 2021 16:09:12 +0200 (CEST)
-Date:   Sun, 28 Mar 2021 16:09:12 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Subject: Interrupts in pci-aardvark
-Message-ID: <20210328140912.k33qqfpkizdtlrcp@pali>
+        id S230196AbhC1Olk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Mar 2021 10:41:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229762AbhC1Ol0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Mar 2021 10:41:26 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2270C061756;
+        Sun, 28 Mar 2021 07:41:25 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id m7so7773163pgj.8;
+        Sun, 28 Mar 2021 07:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yc6QjgSudbKWQkdConiaKqiDBMnbnOx4Gm3AgRAanEM=;
+        b=aLCQk5kLbjZyZx0gEfGu6LdSgR2yv5X1RaQVw9hbl6DwAsEsFg7zpq3i13Tm1Mpucr
+         nwCQk1Hk7xUeynIHTybcXyS6P1LBpIn6+teRJhLTDE2nGPncn2d1RtbPYArVjJK1x9wH
+         2QsSTSs5fMrfyRNdizLqjiPy2t6mOJI84qvtFcXfRDRVG3uFYgsMJIO7qsXqmkxfHVAh
+         XcgNYLuH+YzeS8R6V+E/ukHJIjpBRs+XW7/ztUOSlWOFi/ukSOvzgp3YzRQkCyNE0HGp
+         qrUdmf5pNVs98x/ciIKsgnGU+wKPnRI+6eBFIjT2JswuoAAuIek6GfDjAYM5lLkGeIAr
+         Utdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yc6QjgSudbKWQkdConiaKqiDBMnbnOx4Gm3AgRAanEM=;
+        b=DJrPpa20M7yy5Kl2swXKQzATEj7Be1PWcVgRzogD/G4LtOPrZAkXHkavlu0LXHB16E
+         TcyVXafAHs7cZYwww0veAS7q/1CnuRVHBrtIf9DJ0MS1OyP7yWeeg14NA36WVcg/ZFqS
+         FqC0N6R1WovykYPS9J83VX62th6IZjFCu3jdATY2WGOH7cCJc3icWFpP8v2AdYlkU+3X
+         Wrf7URFIp7GYsgi/EOj8VChgzevBW/Rdv5D7RRmvzetU3H1xqkqBD5U6EXWs0W41OEfg
+         gejT8Zi/2D3+5x6wTK5C1FE5H4k4oMkiJ7KgWmqnOWwECFmR3QScTCkg7I2vUIZ6pCSq
+         OPLQ==
+X-Gm-Message-State: AOAM532eAeC/IjGStkS7dHg8rYoD2bLn6tiv67ZFcWKaJ+k5BPuyOoQk
+        +1AM0QQvewhXgayByuUzOyE=
+X-Google-Smtp-Source: ABdhPJykeiLPTumSaMDTWBbwJymgj36YvDeBXU2mBDpVg49b9grcwUSnZNboFud/O2Ut7iLHs27vRw==
+X-Received: by 2002:a62:5c5:0:b029:217:7019:d9e8 with SMTP id 188-20020a6205c50000b02902177019d9e8mr22158225pff.10.1616942485326;
+        Sun, 28 Mar 2021 07:41:25 -0700 (PDT)
+Received: from localhost (185.212.56.149.16clouds.com. [185.212.56.149])
+        by smtp.gmail.com with ESMTPSA id s12sm13923980pgj.70.2021.03.28.07.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Mar 2021 07:41:25 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     toan@os.amperecomputing.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        dann.frazier@canonical.com
+Subject: [PATCH] PCI: xgene: fix a mistake about cfg address
+Date:   Sun, 28 Mar 2021 22:41:18 +0800
+Message-Id: <20210328144118.305074-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+It has a wrong modification to the xgene driver by the commit
+e2dcd20b1645a. it use devm_platform_ioremap_resource_byname() to
+simplify codes and remove the res variable, But the following code
+needs to use this res variable, So after this commit, the port->cfg_addr
+will get a wrong address. Now, revert it.
 
-I need some help with fixing interrupt handling in pci-aardvark.c
-driver. If my understanding of HW is correct then whole interrupt
-hierarchy for aardvark PCIe controller looks like this tree diagram:
+Fixes: e2dcd20b1645a ("PCI: controller: Convert to devm_platform_ioremap_resource_byname()")
+Reported-by: dann.frazier@canonical.com
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/pci/controller/pci-xgene.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-                                     GIC
-                                      |
-                                      v
-                                 Aardvark TOP
-                                 |    |    |
-                                 v    |    v
-                                ...   |   ...
-                                      |
-                                      v
-             +----+----+----+-- Aardvark CORE --+----+----+----+----+-- ...
-             |    |    |    |    |    |    |    |    |    |    |
-             v    v    v    v    v    v    v    v    |    v    v
-            PME  ERR INTA INTB INTC INTD Link  Hot   |   ...  ...
-                                         Down Reset  |
-                                                     |
-                                                     v
-                 +----------------------------- Aardvark MSI ----------- ... ---------------+
-                 |                                   |                                      |
-                 v                                   v                                      v
-   +------+- MSI bit0 --+- .. -+       +------+- MSI bit1 --+- .. -+          +------+- MSI bit31 -+- .. -+
-   |      |      |      |      |       |      |      |      |      |          |      |      |      |      |
-   v      v      v      v      v       v      v      v      v      v          v      v      v      v      v
-  MSI    MSI    MSI    ...    MSI     MSI    MSI    MSI    ...    MSI        MSI    MSI    MSI    ...    MSI
-0x0000 0x0020 0x0040        0xFFE0  0x0001 0x0021 0x0041        0xFFE1     0x001F 0x003F 0x005F        0xFFFF
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index 2afdc865253e..7f503dd4ff81 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -354,7 +354,8 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
+ 	if (IS_ERR(port->csr_base))
+ 		return PTR_ERR(port->csr_base);
+ 
+-	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
++	port->cfg_base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(port->cfg_base))
+ 		return PTR_ERR(port->cfg_base);
+ 	port->cfg_addr = res->start;
+-- 
+2.30.1
 
-
-Aardvark TOP interrupt is handled by advk_pcie_irq_handler() which then
-calls advk_pcie_handle_int() for processing aardvark CORE interrupts and
-then if summary MSI bit is set is called also advk_pcie_handle_msi().
-
-When GIC triggers summary aardvark TOP interrupt then from aardvark HW I
-can read which particular bits were set and therefore it is possible
-that more interrupt happened. E.g. PME, ERR, INTB and MSI bit 4,5,8 can
-be set at the same time. But for each MSI bit can be set only one final
-16bit MSI interrupt number. So in interrupt handler I need to issue
-callbacks for all those interrupts after mapping them to linux interrupt
-numbers.
-
-Aardvark HW allows to mask summary TOP, summary CORE, individual CORE
-(PME, ERR, INTA, INTB, ...), summary MSI and individual MSI bits
-interrupts, but not final 16 bit MSI interrupt number. MSI bits are low
-5 bits of 16 bit interrupt number. So it is not possible to mask or
-unmask MSI interrupt number X. It is possible to only mask/unmask all
-MSI interrupts which low 5 bits is specific value.
-
-Also aardvark HW allows to globally enable / disable processing of MSI
-interrupts. Masking summary MSI interrupt just cause that GIC does not
-trigger it but from registers I can read it (e.g. when GIC calls
-aardvark interrupt handler for other non-MSI interrupt).
-
-And I would like to ask, what is in this hierarchy from kernel point of
-view "bottom part of MSI" and what is the "upper part of MSI"? As in
-above diagram there are 3 MSI layers.
-
-And which irq enable/disable/mask/unmask/ack callbacks I need to
-implement for legacy irq, bottom MSI and upper MSI domains?
-
-And where should I add code which globally enable/disable receiving of
-aardvark MSI interrupts? Currently it is part of aardvark driver probe
-function.
