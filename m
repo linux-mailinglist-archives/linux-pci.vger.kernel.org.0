@@ -2,119 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C56C34BBE3
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Mar 2021 12:04:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5772934BC5D
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Mar 2021 14:44:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230223AbhC1Jxx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Mar 2021 05:53:53 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:57801 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbhC1Jxe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Mar 2021 05:53:34 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id E27652800B3E0;
-        Sun, 28 Mar 2021 11:53:32 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id D6C861EEC7; Sun, 28 Mar 2021 11:53:32 +0200 (CEST)
-Date:   Sun, 28 Mar 2021 11:53:32 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Sathyanarayanan Kuppuswamy Natarajan 
-        <sathyanarayanan.nkuppuswamy@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        id S229757AbhC1MoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Mar 2021 08:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229543AbhC1MoA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 28 Mar 2021 08:44:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 43AE661584;
+        Sun, 28 Mar 2021 12:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1616935439;
+        bh=UbLXBcavn3YT3P2cE0yfY81eLjUKbQOHiJGeedJ1Swg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CNJJx/JGViRlh28SFmeNSd4EsrUKpXjPwFWhzBEdcd08wvWnONl+Tzk6QlfOq4zNy
+         tMItYCVRpWabj6J3WqXA7qooR4wjFXcp4ol/BgBRH9MeyaFt4rq7UNyufaJkiJ0Fs0
+         iorGhjjqmaw5ZAzKzy6yfzzjd9ovSPxlU4oZD2AY=
+Date:   Sun, 28 Mar 2021 14:43:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>, knsathya@kernel.org,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: pciehp: Skip DLLSC handling if DPC is
- triggered
-Message-ID: <20210328095332.GA8657@wunner.de>
-References: <59cb30f5e5ac6d65427ceaadf1012b2ba8dbf66c.1615606143.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210317041342.GA19198@wunner.de>
- <CAPcyv4jxTcUEgcfPRckHqrUPy8gR7ZJsxDaeU__pSq6PqJERAQ@mail.gmail.com>
- <20210317053114.GA32370@wunner.de>
- <CAPcyv4j8t4Y=kpRSvOjOfVHd107YemiRcW0BNQRwp-d9oCddUw@mail.gmail.com>
- <CAC41dw8sX4T-FrwBju2H3TbjDhJMLGw_KHqs+20qzvKU1b5QTA@mail.gmail.com>
- <CAPcyv4gfBTuEj494aeg0opeL=PSbk_Cs16fX7A-cLvSV6EZg-Q@mail.gmail.com>
- <CAC41dw_BJBMdwyccdvWNZsdAzzh7ko=q4oSpQXo-jJDTfQGkZw@mail.gmail.com>
- <20210317190151.GA27146@wunner.de>
- <0a020128-80e8-76a7-6b94-e165d3c6f778@linux.intel.com>
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH v7 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Message-ID: <YGB6DWw+qE+uFnB2@kroah.com>
+References: <cover.1616814273.git.gustavo.pimentel@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0a020128-80e8-76a7-6b94-e165d3c6f778@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1616814273.git.gustavo.pimentel@synopsys.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 01:02:07PM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> On 3/17/21 12:01 PM, Lukas Wunner wrote:
-> > If the events are ignored, the driver of the device in the hotplug slot
-> > is not unbound and rebound.  So the driver must be able to cope with
-> > loss of TLPs during DPC recovery and it must be able to cope with
-> > whatever state the endpoint device is in after DPC recovery.
-> > Is this really safe?  How does the nvme driver deal with it?
+On Sat, Mar 27, 2021 at 04:06:50AM +0100, Gustavo Pimentel wrote:
+> This patch series adds a new driver called xData-pcie for the Synopsys
+> DesignWare PCIe prototype.
 > 
-> During DPC recovery, in pcie_do_recovery() function, we use
-> report_frozen_detected() to notify all devices attached to the port
-> about the fatal error. After this notification, we expect all
-> affected devices to halt its IO transactions.
+> The driver configures and enables the Synopsys DesignWare PCIe traffic
+> generator IP inside of prototype Endpoint which will generate upstream
+> and downstream PCIe traffic. This allows to quickly test the PCIe link
+> throughput speed and check is the prototype solution has some limitation
+> or not.
 > 
-> Regarding state restoration, after successful recovery, we use
-> report_slot_reset() to notify about the slot/link reset. So device
-> drivers are expected to restore the device to working state after this
-> notification.
+> Changes:
+>  V2: Rework driver according to Greg Kroah-Hartman' feedback
+>  V3: Fixed issues detected while running on 64 bits platforms
+>      Rebased patches on top of v5.11-rc1 version
+>  V4: Rework driver according to Greg Kroah-Hartman' feedback
+>      Add the ABI doc related to the sysfs implemented on this driver
+>  V5: Rework driver accordingly to Leon Romanovsky' feedback
+>      Rework driver accordingly to Krzysztof Wilczyński' feedback
+>  V6: Rework driver according to Greg Kroah-Hartman' feedback
+>      Rework driver accordingly to Krzysztof Wilczyński' feedback
+>      Rework driver accordingly to Leon Romanovsky' feedback
+>  V7: Rework driver according to Greg Kroah-Hartman' feedback
 
-Thanks a lot for the explanation.
+This really doesn't help as I know I don't remember what my feedback
+was, so I can't know what to look at to see if it was changed properly
+:(
 
+Please be more specific next time.
 
-> I am not sure how pure firmware DPC recovery works. Is there a platform
-> which uses this combination? For firmware DPC model, spec does not clarify
-> following points.
-> 
-> 1. Who will notify the affected device drivers to halt the IO transactions.
-> 2. Who is responsible to restore the state of the device after link reset.
-> 
-> IMO, pure firmware DPC does not support seamless recovery. I think after it
-> clears the DPC trigger status, it might expect hotplug handler be responsible
-> for device recovery.
-> 
-> I don't want to add fix to the code path that I don't understand. This is the
-> reason for extending this logic to pure firmware DPC case.
+thanks,
 
-I agree, let's just declare synchronization of pciehp with
-pure firmware DPC recovery as unsupported for now.
-
-
-I've just submitted a refined version of my patch to the list:
-https://lore.kernel.org/linux-pci/b70e19324bbdded90b728a5687aa78dc17c20306.1616921228.git.lukas@wunner.de/
-
-If you could give this new version a whirl I'd be grateful.
-
-This version contains more code comments and kernel-doc.
-
-There's now a check in dpc_completed() whether the DPC Status
-register contains "all ones", which can happen when a DPC-capable
-hotplug port is hot-removed, i.e. for cascaded DPC-capable hotplug
-ports.
-
-I've also realized that the previous version was prone to races
-which are theoretical but should nonetheless be avoided:
-E.g., previously the DLLSC event was only removed from "events"
-if the link is still up after DPC recovery.  However if DPC
-triggers and recovers multiple times in a row, the link may
-happen to be up but a new DLLSC event may have been picked up
-in "pending_events" which should be ignored.  I've solved this
-by inverting the logic such that DLLSC is *always* removed from
-"events", and if the link is unexpectedly *down* after successful
-recovery, a DLLSC event is synthesized.
-
-Thanks,
-
-Lukas
+greg k-h
