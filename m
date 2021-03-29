@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4EB34D7DB
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 21:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D96534D7ED
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 21:15:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231645AbhC2TMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 15:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
+        id S231786AbhC2TO2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 15:14:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231725AbhC2TMJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 15:12:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55B8261981;
-        Mon, 29 Mar 2021 19:12:09 +0000 (UTC)
+        id S230271AbhC2TOH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 15:14:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 36C9461936;
+        Mon, 29 Mar 2021 19:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617045129;
-        bh=Vc2qS5hN4gZcx9XVb4kiJ5C2Wd27YQis4mRFE/m1Yi0=;
+        s=k20201202; t=1617045243;
+        bh=ToS0MidpfphiNtS55x67RiSvWClxRs/ZhbXeO1EBtAw=;
         h=In-Reply-To:References:Subject:From:To:Date:From;
-        b=fV1LNkzXGn9Mc3Fw6yeG1RGnwBl2WsKC+w4QRKp7Y6UuilQaL/ElEbExswvzSGKcF
-         XRpur9mkXWS2+CYUagZyNrfQoHv2HvQPw84Zsxdd5ZHn9HQt3XgA0MtcWEKcdwxovS
-         O9Ax0FSHhjwRz0OzabCYph24IIRRdY1UwvWt6kNzP31rEm1H2FnotG6oP92K3FUrZU
-         PGRpPxvQfJ1HD4ik8UADPr+WNu9lEcCwGoBKXAm8buLNa17z3wFfO3By+hSjWmmDXI
-         Hz7476i8jjwwRMvblxSGWQqp6y4TwfJ4/kFYZbLX4VRpTfxykg+llkwvg6WMKXPXci
-         /yEQMAOLlKh6w==
+        b=oQfZOPcCqmdWePI7Lw64BaJIMp8Fg02xLSjbmILupDBGx799hmQd5C/AhhnXHzQPh
+         Fo5TIF3XxWugMx0k7kmS8Ub6sBSGHfY8Pu5uk3SgFlHTuHOhPS0/l2ulNsQzLRsyry
+         iQUpHuII7FhbQZDUyDqx5our/WCk8VKvumz8VEwUPLkHxyZoFrJ+iG5/NBTnpIgHhe
+         ba8T5QPdvcUOTLUrJhsIQt0T3nqIJYvxBhwZ9gmmxDPeT8QDBvAgZcJoNndcspOyw8
+         RvPJunEY33GrQTQsxgpSTYG+qxr+qMtywMxS3CcMthZ2PpH3T2TYfJFvaAew8UQeGF
+         MW7BaGRcOa81g==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <cover.1615954045.git.greentime.hu@sifive.com>
-References: <cover.1615954045.git.greentime.hu@sifive.com>
-Subject: Re: [PATCH v2 0/6] Add SiFive FU740 PCIe host controller driver support
+In-Reply-To: <91d016e59bab9d9175168a63e7bcd81fdb69b549.1615954046.git.greentime.hu@sifive.com>
+References: <cover.1615954045.git.greentime.hu@sifive.com> <91d016e59bab9d9175168a63e7bcd81fdb69b549.1615954046.git.greentime.hu@sifive.com>
+Subject: Re: [PATCH v2 2/6] clk: sifive: Use reset-simple in prci driver for PCIe driver
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     alex.dewar90@gmail.com, aou@eecs.berkeley.edu, bhelgaas@google.com,
         devicetree@vger.kernel.org, erik.danie@sifive.com,
@@ -40,27 +40,39 @@ To:     alex.dewar90@gmail.com, aou@eecs.berkeley.edu, bhelgaas@google.com,
         mturquette@baylibre.com, p.zabel@pengutronix.de,
         palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
         vidyas@nvidia.com, zong.li@sifive.com
-Date:   Mon, 29 Mar 2021 12:12:08 -0700
-Message-ID: <161704512808.3012082.7539298875497991635@swboyd.mtv.corp.google.com>
+Date:   Mon, 29 Mar 2021 12:14:02 -0700
+Message-ID: <161704524201.3012082.13807741329367593907@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quoting Greentime Hu (2021-03-17 23:08:07)
-> This patchset includes SiFive FU740 PCIe host controller driver. We also
-> add pcie_aux clock and pcie_power_on_reset controller to prci driver for
-> PCIe driver to use it.
->=20
-> This is tested with e1000e: Intel(R) PRO/1000 Network Card, AMD Radeon R5
-> 230 graphics card and SP M.2 PCIe Gen 3 SSD in SiFive Unmatched based on
-> v5.11 Linux kernel.
+Quoting Greentime Hu (2021-03-17 23:08:09)
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 71ab75a46491..f094df93d911 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -173,7 +173,7 @@ config RESET_SCMI
+> =20
+>  config RESET_SIMPLE
+>         bool "Simple Reset Controller Driver" if COMPILE_TEST
+> -       default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REALTE=
+K || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC
+> +       default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REALTE=
+K || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC || RISCV
 
-Can I merge the clk patches to clk-next? Or is the dts patch going to be
-sent in for the merge window? I'd like to merge the clk patches if the
-other patches are going to miss the next merge window.
+This conflicts. Can this default be part of the riscv defconfig instead?
 
->=20
-> Changes in v2:
->  - Refine codes based on reviewers' feedback
->  - Remove define and use the common one
+>         help
+>           This enables a simple reset controller driver for reset lines t=
+hat
+>           that can be asserted and deasserted by toggling bits in a conti=
+guous,
+> @@ -187,6 +187,7 @@ config RESET_SIMPLE
+>            - RCC reset controller in STM32 MCUs
+>            - Allwinner SoCs
+>            - ZTE's zx2967 family
+> +          - SiFive FU740 SoCs
+> =20
+>  config RESET_STM32MP157
+>         bool "STM32MP157 Reset Driver" if COMPILE_TEST
