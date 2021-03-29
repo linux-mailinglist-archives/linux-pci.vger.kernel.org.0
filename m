@@ -2,118 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FE7034D5A1
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 19:02:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A955834D5C5
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 19:10:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230339AbhC2RCE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 13:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbhC2RBv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Mar 2021 13:01:51 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E635C061574;
-        Mon, 29 Mar 2021 10:01:51 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id gb6so6324883pjb.0;
-        Mon, 29 Mar 2021 10:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3KaU2X8BYBo2iEYrCYnDX7Io7zwEGngt8bXiDSOA3dU=;
-        b=Kg42A+C8lwb0lncwa2RQMG/aGsCwIFedHnSNQ5tAzBoKpV7+4z32DzKBLqagztyFcR
-         5foEL4IWF1C2q3jlXjdsh7nliv2yDPKhtPOIpnPICy4j8l0aMeZoXyAQyrTmUcL32PAB
-         b3XxiYzpReNucgoVjwzRn+OFrqbtj07XYipNt6AhQ8uemiICKdx+rPfhBi2AfDs7HQ4J
-         xWAdzSQlZGkbN7nHm5QkqXUCiO9A7gorZVuGXwdS8EyAeO9CrvEH8NBGLWktcPooXpeJ
-         q4LxzdRWU9wkxHOF0Mhl0aJKJy2nDI6nVYe6jeAVrr5lgPsx+AOfGkRFnsCHsCSEmOHH
-         Re0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3KaU2X8BYBo2iEYrCYnDX7Io7zwEGngt8bXiDSOA3dU=;
-        b=Pw7docRGW/AJJl653krYWmO7Ldv5byPNrMVn4FY7Rk8kOaT7oGwPmJO9q+hZVhzcDh
-         O7Y1NeylzqgELkM+N7+R1OK0TMWub61QrtIUWLOyiOJoTBITqerP2LNYua+JHf/+BhJw
-         +aHyjG3lE4fIiF6Y+JCj4WhGoj4WxwlNd5TicknvmYvwALkp/MG7UjOp0Y+LsE5+hjF1
-         vNKQMBXPHi1kUQ66N36HWpq13euhqeBhjGvufpOT0FeUjRB5yxFQQeCmUQ5Tn1qn98gg
-         1c7CD5+yFyaErAmxeWF84WqSf7FSgeu5fOfYs9TgUtUs8Acf44fu3ua2sBn3SdnFfpfA
-         z6Ig==
-X-Gm-Message-State: AOAM532HgDxETakxLXCrC/PvUc5XQ86cVe1BMwgPvEaEQFnDQPzpKOyM
-        HOd0INU2snlEq/mAaJ0gsSJ+mVkOask=
-X-Google-Smtp-Source: ABdhPJzLqubBwMwApiffsPDmTZ/4mHx8yGrQUWgZKoYE3ro/5jmcfBk2I7198NgYttUDrK18m1+TqQ==
-X-Received: by 2002:a17:90a:bb81:: with SMTP id v1mr62162pjr.123.1617037310528;
-        Mon, 29 Mar 2021 10:01:50 -0700 (PDT)
-Received: from [10.67.49.104] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id w3sm43671pjg.7.2021.03.29.10.01.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Mar 2021 10:01:50 -0700 (PDT)
-Subject: Re: [PATCH v5 2/2] PCI: brcmstb: Use reset/rearm instead of
- deassert/assert
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        id S231445AbhC2RJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 13:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231593AbhC2RJe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 13:09:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ACC3A6196C;
+        Mon, 29 Mar 2021 17:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617037772;
+        bh=bhvt+t47VTVGr9fOOy6yfX7BF4QGIZKFXRGUPjYvIAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TXwRQmqAXT9gZBzO2vjTAMXrrwxU8CrLkhAm3/WrTq7rqhjzstFXBfV5r+EAkIgbj
+         d+7lwIYfMI4A3qhE7Z/4AEEMVNL/FZ0Puh1dYX0M4U9SChDK5J7GD9a/CX1H3QcBVu
+         AMznuRZFwhglZMgqR6sb3Gta8RG9A/yLYmAAdY6aMwff8MI1bCcZxKCmxiGme4JT2g
+         ufcgoyHvUNMlTG8g4WZXbVu8chv/DT2AvzCXhz0RDeOzQBeCgKkV5zHD7Z5nwAYyFF
+         0vCWLM3H3hpTC6ObI1/iyph7SyWrOIMxdKYBgR2tDasgp8vPt5vbfpG5Br55vIDd1z
+         7SgpwnjFScFig==
+Received: by pali.im (Postfix)
+        id 5E60CA79; Mon, 29 Mar 2021 19:09:29 +0200 (CEST)
+Date:   Mon, 29 Mar 2021 19:09:29 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20210312204556.5387-1-jim2101024@gmail.com>
- <20210312204556.5387-3-jim2101024@gmail.com>
- <20210329161040.GB9677@lpieralisi>
- <71903454-c20c-31f7-aaee-0d05eb22db7f@gmail.com>
- <20210329165847.GA10454@lpieralisi>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <e602340f-c13d-0cda-25cf-960dd546857e@gmail.com>
-Date:   Mon, 29 Mar 2021 10:01:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20210329170929.uhpttc4oxbkghkpr@pali>
+References: <20210315195806.iqdt5wvvkvpmnep7@pali>
+ <20210316092534.czuondwbg3tqjs6w@pali>
+ <87h7l8axqp.fsf@toke.dk>
+ <20210318231629.vhix2cqpt25bgrne@pali>
+ <20210326125028.tyqkcc5fvaqbwqkn@pali>
+ <874kgyc4yg.fsf@toke.dk>
+ <20210326153444.cdccc3e2axqxzejy@pali>
+ <87o8f5c0tt.fsf@toke.dk>
+ <20210326171100.s53mslkjc7tdgs6f@pali>
+ <87ft0hby6p.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <20210329165847.GA10454@lpieralisi>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87ft0hby6p.fsf@toke.dk>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/29/21 9:58 AM, Lorenzo Pieralisi wrote:
-> On Mon, Mar 29, 2021 at 09:50:13AM -0700, Florian Fainelli wrote:
->> On 3/29/21 9:10 AM, Lorenzo Pieralisi wrote:
->>> On Fri, Mar 12, 2021 at 03:45:55PM -0500, Jim Quinlan wrote:
->>>> The Broadcom STB PCIe RC uses a reset control "rescal" for certain chips.
->>>> The "rescal" implements a "pulse reset" so using assert/deassert is wrong
->>>> for this device.  Instead, we use reset/rearm.  We need to use rearm so
->>>> that we can reset it after a suspend/resume cycle; w/o using "rearm", the
->>>> "rescal" device will only ever fire once.
->>>>
->>>> Of course for suspend/resume to work we also need to put the reset/rearm
->>>> calls in the suspend and resume routines.
->>>
->>> Actually - I am sorry but it looks like you will have to split the patch
->>> in two since this is two logical changes.
->>
->> I do not believe this can be easily split, since there is currently a
->> misused of the reset controller API and this patch fixes all call sites
->> at once. It would not really make sense to fix probe/remove and then
->> leave suspend/resume broken in the same manner.
+On Friday 26 March 2021 18:51:42 Toke Høiland-Jørgensen wrote:
+> Pali Rohár <pali@kernel.org> writes:
+> > On Friday 26 March 2021 17:54:38 Toke Høiland-Jørgensen wrote:
+> >> So we have these
+> >> cases:
+> >> 
+> >> ASPM disabled:          ath9k, ath10k and mt76 cards all work
+> >> ASPM enabled, no patch: only mt76 card works
+> >> ASPM enabled + patch:   ath10k and mt76 cards work
+> >> 
+> >> So IDK, maybe the ath9k card needs a quirk as well? Or the mvebu board
+> >> is just generally flaky?
+> >
+> > I'm not sure. Maybe ASPM is somehow buggy on ath9k or needs some special
+> > handling. But issue is not at PCI config space as ath9k driver start
+> > initialization of this card. Needs also some debugging in ath9k driver
+> > if it prints that strange "mac chip rev" error.
 > 
-> Right - I was reading the previous versions of the set, it makes sense
-> to keep it in one logical change.
+> Well that's just being output because it gets a revision that it doesn't
+> recognise - which it seems to be just reading from a register:
 > 
-> Do you want me to take it or you prefer an ACK so that it can go via
-> a different tree ?
+> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/ath/ath9k/hw.c#L255
+> 
+> The value returned is consistent with the value returned just being
+> 0xffffffff. Which from looking at ioread32() is the value being returned
+> on a failed read. So there's a driver bug there - the check against -EIO
+> here is obviously nonsensical:
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/ath/ath9k/hw.c#L290
+> 
+> But the underlying cause appears to be that the read from the register
+> fails, which I suppose is related to something the PCI bus does?
+> 
+> > I think this issue should be handled separately. Could you report it
+> > also to ath9k mailing list (and CC me)? Maybe other ath developers would
+> > know some more details.
+> 
+> I'll send a patch for the nonsensical check above, but other than that I
+> think we're still in PCI land here, or?
 
-I would be comfortable with you taking this via the PCI driver trees, we
-would want an Ack from Jens that he is okay with taking the ahci_brcm.c
-change as well through your tree.
+First, can you try to enable my quirk also for this ath9k card with ASPM
+enabled?
 
-Thank you!
--- 
-Florian
+I have there another ath9k card which after toggling link retraining
+changes PCI device ID (really!) to 0xABCD. But lspci ...
+
+There is long story about broken ath9k cards that are reporting 0xABCD
+id on x86 machines with specific BIOS versions. It can be find in
+ath9k-devel mailing list archive:
+
+https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
+
+Maybe we now found root cause of this ABCD? If yes, then it also answers
+why above ath9k driver check fails (device id was changed) and also
+because kernel see correct id (kernel reads id before configuring ASPM
+and therefore before triggering link retraining).
+
+> >> > Can you send PCI device id of your ath9k card (lspci -nn)? Because all
+> >> > my tested ath9k cards have different PCI device id.
+> >> 
+> >> [root@omnia-arch ~]# lspci -nn
+> >> 00:01.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> >> 00:02.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> >> 00:03.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> >> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e] (rev 01)
+> >> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+> >
+> > That is fine. Also all ath9k testing cards have id 0x002e.
+
+Today I found out that lspci -nn may lie! Please send output from
+command: lspci -nn -x because real PCI device id can read only from -x
+hexdump output.
+
+> >> >> When booting with the
+> >> >> patch applied, I get this in dmesg:
+> >> >> 
+> >> >> [    3.556599] ath: phy0: Mac Chip Rev 0xfffc0.f is not supported by this driver
