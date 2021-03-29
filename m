@@ -2,107 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A1434C10C
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 03:24:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5EA34C242
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 05:40:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbhC2BXd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Mar 2021 21:23:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:14938 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbhC2BXX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Mar 2021 21:23:23 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4F7vtP64ZBzkgGl;
-        Mon, 29 Mar 2021 09:21:33 +0800 (CST)
-Received: from [127.0.0.1] (10.40.188.87) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.498.0; Mon, 29 Mar 2021
- 09:23:07 +0800
-Subject: Re: [PATCH] dt-bindings: PCI: hisi: Delete the useless HiSilicon PCIe
- file
-To:     Dongdong Liu <liudongdong3@huawei.com>, <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>
-References: <1616842062-21823-1-git-send-email-liudongdong3@huawei.com>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <2003b874-f692-09b3-732d-09ee2665fe7f@hisilicon.com>
-Date:   Mon, 29 Mar 2021 09:23:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S230213AbhC2DkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Mar 2021 23:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230039AbhC2DkH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Mar 2021 23:40:07 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74107C061762
+        for <linux-pci@vger.kernel.org>; Sun, 28 Mar 2021 20:40:07 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id q12so5838393qvc.8
+        for <linux-pci@vger.kernel.org>; Sun, 28 Mar 2021 20:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=t+xrhMH6Gr2A3zI8Lcey2uhccYuzey1LBxw8FGRBr38=;
+        b=GlrshGa0JheYxNSV53Bg30loaFV1EoaqTDeQ4sNl5yMfy0XcZRrlxMtdMSPW1A7Yf4
+         EbTgvKP2xqK9gpYlJKevK6F099bP6A7MjXe561/2v+ADngUOs3cryvs85OYWgtjJZXfk
+         1iQoDgHm2qxjio8Y9Ymp80ANC43PudXOfx/WUcIOvInOgXAy7VcIgWyRsm98QhImbst5
+         +/1tM1ELbjLI5lHjScnDyL90S4FRIHjiUbfHkrmzex7q+YurcZfSlSqSK3bSb3xrZVAs
+         MnNvbTC7Hmn51U/oVHggPrGZ47AxohQwlQ8dtGXWZ4z6bqbTVeScW2T0abx16japHG9X
+         wOPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=t+xrhMH6Gr2A3zI8Lcey2uhccYuzey1LBxw8FGRBr38=;
+        b=VWxaFMhpX8+0m/7fnTwtcE6hYVmSBh24yy79OEkVreVnftR3xHxk29Smrh637nee0P
+         9LvWgX3UyrWy49Go8F1X7N0GsO7ClHJe/ndSR+rOc5RK/QiMlCabfY3w6WUD9avA9PvX
+         JOHDOlN2K9ccQk5ZIXSm04h5CwZV8v27yfoBxmOVZr8JbAprkZJduBOze2UEdCld5xIq
+         V5ksfyY+aX0J4FzGZG8SCGBqMZMIoVhiT+IrtlIx6Z+PwCLbAgt+svT6XElpARW1tmj3
+         RO2auJAspNaq9aUIHm04OK9tf4W7SpVFVy5uqun/NCFV2Ubw4EUZvHCpgFWaTLyLG4Gg
+         S9ig==
+X-Gm-Message-State: AOAM530hJTLH4mGNkjpNUTNKdi0BCAwkK/dtPPpuk6OHVYS0RZJWNU1F
+        iVjJESGMjTbj2l0c5kZqzqxC6L1GPa4/Xf356MbDPg==
+X-Google-Smtp-Source: ABdhPJwtzOJzKprrFyS651SYxqerVpA4YQVKn1jE961aUbyTUomzkbGS4bOkuGuS6qbJozSOfhU9WUXqdidGPMyRNcE=
+X-Received: by 2002:a0c:dd14:: with SMTP id u20mr24167583qvk.13.1616989206452;
+ Sun, 28 Mar 2021 20:40:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1616842062-21823-1-git-send-email-liudongdong3@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.188.87]
-X-CFilter-Loop: Reflected
+References: <cover.1615954045.git.greentime.hu@sifive.com> <8008af6d86737b74020d7d8f9c3fbc9b500e9993.1615954046.git.greentime.hu@sifive.com>
+ <20210323203508.GA1251968@robh.at.kernel.org>
+In-Reply-To: <20210323203508.GA1251968@robh.at.kernel.org>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Mon, 29 Mar 2021 11:39:54 +0800
+Message-ID: <CAHCEehKw2Sb6DN-hQCZB8-ARuaOf47mmzS18Fqm1amr4sXVCRg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] dt-bindings: PCI: Add SiFive FU740 PCIe host controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>, hes@sifive.com,
+        Erik Danie <erik.danie@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
+        lorenzo.pieralisi@arm.com, Philipp Zabel <p.zabel@pengutronix.de>,
+        alex.dewar90@gmail.com, khilman@baylibre.com,
+        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
+        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/3/27 18:47, Dongdong Liu wrote:
-> The hisilicon-pcie.txt file is no longer useful since commit
-> c2fa6cf76d20 (PCI: dwc: hisi: Remove non-ECAM HiSilicon
-> hip05/hip06 driver), so delete it.
+Rob Herring <robh@kernel.org> =E6=96=BC 2021=E5=B9=B43=E6=9C=8824=E6=97=A5 =
+=E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=884:35=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Mar 18, 2021 at 02:08:11PM +0800, Greentime Hu wrote:
+> > Add PCIe host controller DT bindings of SiFive FU740.
+> >
+> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > ---
+> >  .../bindings/pci/sifive,fu740-pcie.yaml       | 119 ++++++++++++++++++
+> >  1 file changed, 119 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/sifive,fu740-=
+pcie.yaml
+[...]
+> > +examples:
+> > +  - |
+> > +    pcie@e00000000 {
+> > +        #address-cells =3D <3>;
+> > +        #interrupt-cells =3D <1>;
+> > +        #size-cells =3D <2>;
+> > +        compatible =3D "sifive,fu740-pcie";
+> > +        reg =3D <0xe 0x00000000 0x1 0x0
+>
+> Humm, 4GB for DBI space? The DWC controller doesn't have that much
+> space, and the kernel will map *all* of that. That's not an
+> insignificant amount of memory just for page tables.
 
-No, it is no needed now. Thanks for removing this, and please
-also remove related code in MAINTAINERS file :)
+Thank you for review and point this out. :)
 
-Best,
-Zhou
+I check the spec description for DBI in DWC_pcie_ctl_dm_databook.pdf
+section 3.15 3.16 and table 3-17.
 
-> 
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-> ---
->  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 43 ----------------------
->  1 file changed, 43 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> deleted file mode 100644
-> index d6796ef..0000000
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> +++ /dev/null
-> @@ -1,43 +0,0 @@
-> -HiSilicon Hip05 and Hip06 PCIe host bridge DT description
-> -
-> -HiSilicon PCIe host controller is based on the Synopsys DesignWare PCI core.
-> -It shares common functions with the PCIe DesignWare core driver and inherits
-> -common properties defined in
-> -Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> -
-> -Additional properties are described here:
-> -
-> -Required properties
-> -- compatible: Should contain "hisilicon,hip05-pcie" or "hisilicon,hip06-pcie".
-> -- reg: Should contain rc_dbi, config registers location and length.
-> -- reg-names: Must include the following entries:
-> -  "rc_dbi": controller configuration registers;
-> -  "config": PCIe configuration space registers.
-> -- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
-> -- port-id: Should be 0, 1, 2 or 3.
-> -
-> -Optional properties:
-> -- status: Either "ok" or "disabled".
-> -- dma-coherent: Present if DMA operations are coherent.
-> -
-> -Hip05 Example (note that Hip06 is the same except compatible):
-> -	pcie@b0080000 {
-> -		compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
-> -		reg = <0 0xb0080000 0 0x10000>, <0x220 0x00000000 0 0x2000>;
-> -		reg-names = "rc_dbi", "config";
-> -		bus-range = <0  15>;
-> -		msi-parent = <&its_pcie>;
-> -		#address-cells = <3>;
-> -		#size-cells = <2>;
-> -		device_type = "pci";
-> -		dma-coherent;
-> -		ranges = <0x82000000 0 0x00000000 0x220 0x00000000 0 0x10000000>;
-> -		num-lanes = <8>;
-> -		port-id = <1>;
-> -		#interrupt-cells = <1>;
-> -		interrupt-map-mask = <0xf800 0 0 7>;
-> -		interrupt-map = <0x0 0 0 1 &mbigen_pcie 1 10
-> -				 0x0 0 0 2 &mbigen_pcie 2 11
-> -				 0x0 0 0 3 &mbigen_pcie 3 12
-> -				 0x0 0 0 4 &mbigen_pcie 4 13>;
-> -	};
-> 
+I think CX_SRIOV_ENABLE and CX_ARI_ENABLE will be set to 0 because
+these 2 are endpoint mode features.
+Single Root I/O Virtualization (SR-IOV) This section describes the
+SR-IOV features implemented in EP mode. The parameter for enabling
+SR-IOV is CX_SRIOV_ENABLE
+Alternative Routing-ID Interpretation (ARI) ARI allows an endpoint to
+support more than eight physical functions (PFs). ARI is enabled by
+the CX_ARI_ENABLE parameter.
 
+So based on Table 3-17, we will need to map 2GB(bit30) instead of 4GB(bit31=
+).
