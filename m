@@ -2,79 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC89834CDA1
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 12:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A80EC34CDA8
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 12:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232118AbhC2KI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 06:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232070AbhC2KIO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 06:08:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 78F0E61585;
-        Mon, 29 Mar 2021 10:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1617012494;
-        bh=c/7u/i7ph/tkb1ucVKeq7qerOvzc66BELd2N9yKT6Qo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xi8z6QdvTQisUhBYLvuH+RY6/Ar4ZYGIuQ6n08/iItJYlqAAZnaxkoeuXDw9aMpj+
-         XoG/64oHaZ9QotDYjedPS5h+aUMK8hpIJfROZiCuiezNc9/qrPrZQqZlkMDH3FbTe3
-         KffsAwS6ZGeTd5YofEP/7OvODgm5LbhfEATrZoDc=
-Date:   Mon, 29 Mar 2021 12:08:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH v9 4/4] docs: ABI: Add sysfs documentation interface of
- dw-xdata-pcie driver
-Message-ID: <YGGnC8LouF+paZ6G@kroah.com>
-References: <cover.1617011831.git.gustavo.pimentel@synopsys.com>
- <5840637a206dd1287caf142a0dbedf0dac9ccd48.1617011831.git.gustavo.pimentel@synopsys.com>
+        id S232295AbhC2KJf convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 29 Mar 2021 06:09:35 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:50937 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232466AbhC2KJZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Mar 2021 06:09:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-88-4yJ4TLFFOSu6qY5lPx_EXg-1; Mon, 29 Mar 2021 11:09:14 +0100
+X-MC-Unique: 4yJ4TLFFOSu6qY5lPx_EXg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Mon, 29 Mar 2021 11:09:13 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Mon, 29 Mar 2021 11:09:13 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Xiaofei Tan' <tanxiaofei@huawei.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
+Subject: RE: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Thread-Topic: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Thread-Index: AQHXIt3reusKxfb1K0qiX/864DlgraqavWWQ
+Date:   Mon, 29 Mar 2021 10:09:13 +0000
+Message-ID: <6df04be78e544e17b3b57f159312541f@AcuMS.aculab.com>
+References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
+ <1616831193-17920-5-git-send-email-tanxiaofei@huawei.com>
+In-Reply-To: <1616831193-17920-5-git-send-email-tanxiaofei@huawei.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5840637a206dd1287caf142a0dbedf0dac9ccd48.1617011831.git.gustavo.pimentel@synopsys.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 29, 2021 at 11:59:40AM +0200, Gustavo Pimentel wrote:
-> This patch describes the sysfs interface implemented on the dw-xdata-pcie
-> driver.
+From: Xiaofei Tan
+> Sent: 27 March 2021 07:46
 > 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Replace __attribute__((packed)) by __packed following the
+> advice of checkpatch.pl.
+> 
+> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
 > ---
->  Documentation/ABI/testing/sysfs-driver-xdata | 46 ++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
+>  drivers/acpi/acpi_fpdt.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-xdata b/Documentation/ABI/testing/sysfs-driver-xdata
-> new file mode 100644
-> index 00000000..66af19a
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-xdata
-> @@ -0,0 +1,46 @@
-> +What:		/sys/class/misc/drivers/dw-xdata-pcie.<device>/write
-> +Date:		April 2021
-> +KernelVersion:	5.13
-> +Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> +Description:	Allows the user to enable the PCIe traffic generator which
-> +		will create write TLPs frames - from the Root Complex to the
-> +		Endpoint direction.
-> +		Usage e.g.
-> +		 echo 1 > /sys/class/misc/dw-xdata-pcie.<device>/write
+> diff --git a/drivers/acpi/acpi_fpdt.c b/drivers/acpi/acpi_fpdt.c
+> index a89a806..690a88a 100644
+> --- a/drivers/acpi/acpi_fpdt.c
+> +++ b/drivers/acpi/acpi_fpdt.c
+> @@ -53,7 +53,7 @@ struct resume_performance_record {
+>  	u32 resume_count;
+>  	u64 resume_prev;
+>  	u64 resume_avg;
+> -} __attribute__((packed));
+> +} __packed;
+> 
+>  struct boot_performance_record {
+>  	struct fpdt_record_header header;
+> @@ -63,13 +63,13 @@ struct boot_performance_record {
+>  	u64 bootloader_launch;
+>  	u64 exitbootservice_start;
+>  	u64 exitbootservice_end;
+> -} __attribute__((packed));
+> +} __packed;
+> 
+>  struct suspend_performance_record {
+>  	struct fpdt_record_header header;
+>  	u64 suspend_start;
+>  	u64 suspend_end;
+> -} __attribute__((packed));
+> +} __packed;
 
-Again, this does not match the code.  Either fix the code (which I
-recommend), or change this and the other sysfs descriptions of writing
-values here.
+My standard question about 'packed' is whether it is actually needed.
+It should only be used if the structures might be misaligned in memory.
+If the only problem is that a 64bit item needs to be 32bit aligned
+then a suitable type should be used for those specific fields.
 
-thanks,
+Those all look very dubious - the standard header isn't packed
+so everything must eb assumed to be at least 32bit aligned.
 
-greg k-h
+There are also other sub-structures that contain 64bit values.
+These don't contain padding - but that requires 64bit alignement.
+
+The only problematic structure is the last one - which would have
+a 32bit pad after the header.
+Is this even right given than there are explicit alignment pads
+in some of the other structures.
+
+If 64bit alignment isn't guaranteed then a '64bit aligned to 32bit'
+type should be used for the u64 fields.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
