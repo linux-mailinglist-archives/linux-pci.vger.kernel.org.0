@@ -2,50 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D8934D33A
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 17:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CD3434D477
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 18:06:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbhC2PDo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 11:03:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:54526 "EHLO foss.arm.com"
+        id S230252AbhC2QGR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 12:06:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:56316 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229655AbhC2PDN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 11:03:13 -0400
+        id S230248AbhC2QGP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 12:06:15 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07590142F;
-        Mon, 29 Mar 2021 08:03:13 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.51.224])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22AF73F694;
-        Mon, 29 Mar 2021 08:03:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7E02142F;
+        Mon, 29 Mar 2021 09:06:14 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B7333F719;
+        Mon, 29 Mar 2021 09:06:12 -0700 (PDT)
+Date:   Mon, 29 Mar 2021 17:06:07 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3] PCI: mediatek: Configure FC and FTS for functions other than 0
-Date:   Mon, 29 Mar 2021 16:03:04 +0100
-Message-Id: <161703017046.25709.10524533647443450444.b4-ty@arm.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <c529dbfc066f4bda9b87edbdbf771f207e69b84e.1604510053.git.ryder.lee@mediatek.com>
-References: <c529dbfc066f4bda9b87edbdbf771f207e69b84e.1604510053.git.ryder.lee@mediatek.com>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jim Quinlan <jquinlan@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] PCI: brcmstb: Use reset/rearm instead of
+ deassert/assert
+Message-ID: <20210329160607.GA9677@lpieralisi>
+References: <20210312204556.5387-1-jim2101024@gmail.com>
+ <20210312204556.5387-3-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210312204556.5387-3-jim2101024@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 5 Nov 2020 04:58:33 +0800, Ryder Lee wrote:
-> PCI_FUNC(port->slot << 3)" is always 0, so previously
-> mtk_pcie_startup_port() only configured FC credits and FTs for
-> function 0.
+On Fri, Mar 12, 2021 at 03:45:55PM -0500, Jim Quinlan wrote:
+> The Broadcom STB PCIe RC uses a reset control "rescal" for certain chips.
+> The "rescal" implements a "pulse reset" so using assert/deassert is wrong
+> for this device.  Instead, we use reset/rearm.  We need to use rearm so
+> that we can reset it after a suspend/resume cycle; w/o using "rearm", the
+> "rescal" device will only ever fire once.
 > 
-> Compute "func" correctly so we also configure functions other than
-> 0. This affects MT2701 and MT7623.
+> Of course for suspend/resume to work we also need to put the reset/rearm
+> calls in the suspend and resume routines.
+> 
+> Fixes: 740d6c3708a9 ("PCI: brcmstb: Add control of rescal reset")
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
 
-Applied to pci/mediatek, thanks!
-
-[1/1] PCI: mediatek: Configure FC and FTS for functions other than 0
-      https://git.kernel.org/lpieralisi/pci/c/31ec9c2746
+Should I take this patch in the PCI queue ?
 
 Thanks,
 Lorenzo
+
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index e330e6811f0b..3b35d629035e 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1148,6 +1148,7 @@ static int brcm_pcie_suspend(struct device *dev)
+>  
+>  	brcm_pcie_turn_off(pcie);
+>  	ret = brcm_phy_stop(pcie);
+> +	reset_control_rearm(pcie->rescal);
+>  	clk_disable_unprepare(pcie->clk);
+>  
+>  	return ret;
+> @@ -1163,9 +1164,13 @@ static int brcm_pcie_resume(struct device *dev)
+>  	base = pcie->base;
+>  	clk_prepare_enable(pcie->clk);
+>  
+> +	ret = reset_control_reset(pcie->rescal);
+> +	if (ret)
+> +		goto err_disable_clk;
+> +
+>  	ret = brcm_phy_start(pcie);
+>  	if (ret)
+> -		goto err;
+> +		goto err_reset;
+>  
+>  	/* Take bridge out of reset so we can access the SERDES reg */
+>  	pcie->bridge_sw_init_set(pcie, 0);
+> @@ -1180,14 +1185,16 @@ static int brcm_pcie_resume(struct device *dev)
+>  
+>  	ret = brcm_pcie_setup(pcie);
+>  	if (ret)
+> -		goto err;
+> +		goto err_reset;
+>  
+>  	if (pcie->msi)
+>  		brcm_msi_set_regs(pcie->msi);
+>  
+>  	return 0;
+>  
+> -err:
+> +err_reset:
+> +	reset_control_rearm(pcie->rescal);
+> +err_disable_clk:
+>  	clk_disable_unprepare(pcie->clk);
+>  	return ret;
+>  }
+> @@ -1197,7 +1204,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+>  	brcm_msi_remove(pcie);
+>  	brcm_pcie_turn_off(pcie);
+>  	brcm_phy_stop(pcie);
+> -	reset_control_assert(pcie->rescal);
+> +	reset_control_rearm(pcie->rescal);
+>  	clk_disable_unprepare(pcie->clk);
+>  }
+>  
+> @@ -1278,13 +1285,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(pcie->perst_reset);
+>  	}
+>  
+> -	ret = reset_control_deassert(pcie->rescal);
+> +	ret = reset_control_reset(pcie->rescal);
+>  	if (ret)
+>  		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+>  
+>  	ret = brcm_phy_start(pcie);
+>  	if (ret) {
+> -		reset_control_assert(pcie->rescal);
+> +		reset_control_rearm(pcie->rescal);
+>  		clk_disable_unprepare(pcie->clk);
+>  		return ret;
+>  	}
+> -- 
+> 2.17.1
+> 
