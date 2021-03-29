@@ -2,68 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8171534CD02
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 11:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57C3734CD24
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 11:33:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231730AbhC2J02 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 05:26:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56828 "EHLO mail.kernel.org"
+        id S231673AbhC2Jcw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 05:32:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:45292 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231659AbhC2J0T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 05:26:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B45876193C;
-        Mon, 29 Mar 2021 09:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617009979;
-        bh=2m63iLs4WAe9lYjvi0CAGkdEF4a/0HxPdd40RsaZgHE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YDnyZC5YOgX7yXRUjz9IGEO0C6G0nFmFS/eHflmgry96kPs8l5LfKHOfjeOx1269E
-         9AKlzXbO73/J3hgxgOJ3WYU8xLgMtAhEyA/YTdmezdrEGiYR1Fre1yP8TTftBagrNC
-         wv3RmU15M+bgWdIZUnlXbkpLQVt1BkWh1L3AI4zr5NW//9NVSaS2METzlmPoClL74i
-         AehOpRfLKdbxWuSRWc036zO/qqoOyDZ9y25rnaJCDrzPrUmzQzv1Kko/WdUBeMJZgk
-         Cci7SrTHk1S6Jj+IJPSSAgN+6ISiauwjudqnn+snE9Psh1UV2z4bwsdwYP57+VxxFj
-         sjSV9H1gLbeMQ==
-Date:   Mon, 29 Mar 2021 11:26:12 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/17] module: ensure __cfi_check alignment
-Message-ID: <YGGdNAygysK8MfnZ@gunter>
-References: <20210323203946.2159693-1-samitolvanen@google.com>
- <20210323203946.2159693-5-samitolvanen@google.com>
+        id S231654AbhC2Jcn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 05:32:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDF80142F;
+        Mon, 29 Mar 2021 02:32:42 -0700 (PDT)
+Received: from e123427-lin.arm.com (unknown [10.57.51.224])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65DE83F7D7;
+        Mon, 29 Mar 2021 02:32:41 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     gustavo.pimentel@synopsys.com, bhelgaas@google.com,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        toan@os.amperecomputing.com, linux-pci@vger.kernel.org,
+        robh@kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, dann.frazier@canonical.com
+Subject: Re: [PATCH] PCI: xgene: fix a mistake about cfg address
+Date:   Mon, 29 Mar 2021 10:32:35 +0100
+Message-Id: <161701033575.5341.4105470875260495956.b4-ty@arm.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20210328144118.305074-1-zhengdejin5@gmail.com>
+References: <20210328144118.305074-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20210323203946.2159693-5-samitolvanen@google.com>
-X-OS:   Linux gunter 5.11.6-1-default x86_64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+++ Sami Tolvanen [23/03/21 13:39 -0700]:
->CONFIG_CFI_CLANG_SHADOW assumes the __cfi_check() function is page
->aligned and at the beginning of the .text section. While Clang would
->normally align the function correctly, it fails to do so for modules
->with no executable code.
->
->This change ensures the correct __cfi_check() location and
->alignment. It also discards the .eh_frame section, which Clang can
->generate with certain sanitizers, such as CFI.
->
->Link: https://bugs.llvm.org/show_bug.cgi?id=46293
->Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Sun, 28 Mar 2021 22:41:18 +0800, Dejin Zheng wrote:
+> It has a wrong modification to the xgene driver by the commit
+> e2dcd20b1645a. it use devm_platform_ioremap_resource_byname() to
+> simplify codes and remove the res variable, But the following code
+> needs to use this res variable, So after this commit, the port->cfg_addr
+> will get a wrong address. Now, revert it.
 
-Acked-by: Jessica Yu <jeyu@kernel.org>
+Applied to pci/xgene, thanks!
 
-Thanks!
+[1/1] PCI: xgene: Fix cfg resource mapping
+      https://git.kernel.org/lpieralisi/pci/c/f243b619b4
+
+Thanks,
+Lorenzo
