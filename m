@@ -2,120 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 223B734D98D
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 23:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4257434DC43
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 00:59:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbhC2Vbz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 17:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
+        id S229763AbhC2W7B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 18:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231157AbhC2Vbg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 17:31:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 16C2661987;
-        Mon, 29 Mar 2021 21:31:35 +0000 (UTC)
+        id S230161AbhC2W6i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 18:58:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E3E6761987;
+        Mon, 29 Mar 2021 22:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617053496;
-        bh=8ghVlDWkzL0HiWRkkw2+JJFtOaLFpyBnexad2aWMoYI=;
+        s=k20201202; t=1617058718;
+        bh=jhysSetweRUJdS8VenXWdDpmgxH3meIzQdLA2n+rNm0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VwuYLQes1JJrvn7+77m7Vfeh4h3B/sr5B71bKCq4je3izd9m/Mmf3118e8VERoKce
-         9BARcFZxMUU8jSnUgQzaNpkk32WbzFhkLP2/qEy7EPw3rton/m9Dkf+T7aF3EXFqJ8
-         hOjHRDNKGlxUlV1tTJSGmSftRet8OejhBl/7Lx1umA8XdH+CScdoF+hp6d71kSh9NF
-         9LwE6P8R/iEu8y2Kq6jyz9JHBItkhYFMyh6e/+y2yEFNjUr8NcmP/pHPrInD4nvTuH
-         0ZETd5C+IjpeR4w0vWFT+i+G5IjqJAEadRwPry00OeAdAWFGA9ZXqroIDXc+sV2pOL
-         yfSQ206wBLAPQ==
-Date:   Mon, 29 Mar 2021 22:31:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/6] PCI: brcmstb: Add control of EP voltage regulators
-Message-ID: <20210329213125.GK5166@sirena.org.uk>
-References: <20210326191906.43567-1-jim2101024@gmail.com>
- <20210326191906.43567-3-jim2101024@gmail.com>
- <20210329162539.GG5166@sirena.org.uk>
- <CANCKTBsBNhwG8VQQAQfAfw9jaWLkT+yYJ0oG-HBhA9xiO+jLvA@mail.gmail.com>
- <20210329171613.GI5166@sirena.org.uk>
- <CANCKTBvwWdVgjgTf620KqaAyyMwPkRgO3FHOqs_Gen+bnYTJFw@mail.gmail.com>
- <20210329204543.GJ5166@sirena.org.uk>
- <e364818a-daa3-7313-3ad2-41dbe6e5be62@gmail.com>
+        b=NX3jpCkg50kc51Psd4U6zDewVQFQWSR2kXksn3BxHwIudf8SBsko8ehoG3HOi7ujV
+         1slDQ533ySqgv5YqvAXuO11FrXhiX/iv+8p9oGHz0GvXy5Uz5DrB+c7W8mNRaBqYok
+         5rY8oD3x8lYdsWu1EWHhKnk9cMTMQFDZRB/Cc56SH3eofsTWzNIA08RdWG1iAwwMbG
+         sb5+OlZREYqIz19u8KIwGYX2lkDefSMoiTK33xlN84ZFTXcz5aapzHdjSxhVj3EyPC
+         NA/XOqYB9xIMoLA5y+9MyJj1dDgdUoIkLq0F7f58WhJzmMP5BNjy2ixirK0Yxb+Qss
+         VKMeJCgQHDZWA==
+Received: by pali.im (Postfix)
+        id 515CBA79; Tue, 30 Mar 2021 00:58:35 +0200 (CEST)
+Date:   Tue, 30 Mar 2021 00:58:35 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        sin_jieyang@mediatek.com, drinkcat@chromium.org,
+        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
+Subject: Re: [v8,3/7] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+Message-ID: <20210329225835.cv2ev5ou5szvrws2@pali>
+References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
+ <20210224061132.26526-4-jianjun.wang@mediatek.com>
+ <20210311123844.qzl264ungtk7b6xz@pali>
+ <1615621394.25662.70.camel@mhfsdcap03>
+ <20210318000211.ykjsfavfc7suu2sb@pali>
+ <1616046487.31760.16.camel@mhfsdcap03>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Tv3+oRj6D9L8lW+H"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e364818a-daa3-7313-3ad2-41dbe6e5be62@gmail.com>
-X-Cookie: Never give an inch!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1616046487.31760.16.camel@mhfsdcap03>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thursday 18 March 2021 13:48:07 Jianjun Wang wrote:
+> On Thu, 2021-03-18 at 01:02 +0100, Pali Rohár wrote:
+> > On Saturday 13 March 2021 15:43:14 Jianjun Wang wrote:
+> > > On Thu, 2021-03-11 at 13:38 +0100, Pali Rohár wrote:
+> > > > On Wednesday 24 February 2021 14:11:28 Jianjun Wang wrote:
+> > > > > +
+> > > > > +	/* Check if the link is up or not */
+> > > > > +	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_REG, val,
+> > > > > +				 !!(val & PCIE_PORT_LINKUP), 20,
+> > > > > +				 50 * USEC_PER_MSEC);
+> > > > 
+> > > > IIRC, you need to wait at least 100ms after de-asserting PERST# signal
+> > > > as it is required by PCIe specs and also because experiments proved that
+> > > > some Compex wifi cards (e.g. WLE900VX) are not detected if you do not
+> > > > wait this minimal time.
+> > > 
+> > > Yes, this should be 100ms, I will fix it at next version, thanks for
+> > > your review.
+> > 
+> > In past Bjorn suggested to use msleep(PCI_PM_D3COLD_WAIT); macro for
+> > this step during reviewing aardvark driver.
+> > 
+> > https://lore.kernel.org/linux-pci/20190426161050.GA189964@google.com/
+> > 
+> > And next iteration used this PCI_PM_D3COLD_WAIT macro instead of 100:
+> > 
+> > https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/
+> 
+> Sure, I will use PCI_PM_D3COLD_WAIT macro instead in the next version.
+> 
+> Thanks.
 
---Tv3+oRj6D9L8lW+H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Anyway, now I found out that kernel has functions for this waiting:
+pcie_wait_for_link_delay() and pcie_wait_for_link()
 
-On Mon, Mar 29, 2021 at 02:09:58PM -0700, Florian Fainelli wrote:
-> On 3/29/21 1:45 PM, Mark Brown wrote:
+Function is called from pci_bridge_wait_for_secondary_bus().
 
-> > management in the driver anyway?  Just mark the regualtors as always on
-> > and set up an appropriate suspend mode configuration and everything
-> > should work without the drivers doing anything.  Unless your PMIC isn't
-> > able to provide separate suspend mode configuration for the regulators?
+But in current form it is not usable for native controller drivers.
 
-> We have typically GPIO-controlled and PMIC (via SCMI) controlled
-> regulators. During PCIe enumeration we need these regulators turned on
-> to be successful in training the PCIe link and discover the end-point
-> attached, so there an always on regulator would work.
+This looks like another candidate for code de-duplication or providing
+"framework".
 
-> When we enter a system suspend state however there are really two cases:
 
-> - the end-point supports Wake-on (typically wake-on-WLAN) and we need
-> its power supplied kept on to support that
-
-> - the end-point does not support or participate in any wake-up, there we
-> want to turn its supplies off to save power
-
-> How would we go about supporting such an use case with an always on
-> regulator?
-
-With a PMIC most PMICs have a system suspend mode with separate
-regulator configuration for that and there's seprate regulator API
-control for those, including DT bindings.  If that needs runtime
-configuration for something hidden by SCMI I'd hope the SCMI regulator
-stuff has facilities for that, if not then I guess a spec extension is
-needed.  If you want to dynamically select if something is on during
-suspend there's not really a way around regulator API support.
-
-For a GPIO regulator you probably need something that does a disable on
-the way down, assuming that the GPIO/pin controller doesn't end up
-having it's own suspend mode control that ends up powering things off
-anyway.  With GPIOs pinctrl on the pins rather than exposing as a
-regulator might be enough.
-
---Tv3+oRj6D9L8lW+H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBiRywACgkQJNaLcl1U
-h9A9Wgf/YVc41hHYybrh8iBYOVdDtq3M8kN3ICbhU/Sqw/lFzvvHwP6Upwk2Z+e9
-TDF04FrxRmLCXiWSLENBrN+RtxxqGENtz7upbWX8dyFdc/ET8ZSN6aick09KbecO
-7dNwRSq+jMh1ckT3afATGi43JS1EJq9rohRYP7VbcZbcoErS3Z1rlefrJYWcGWXS
-xO/zH+v0Z1EO3CsT0HmAxsoGP2ndQ7NAMlyclaNxKtuUT5LlDAJ90fsqG3h6LwDt
-AlRQODfKwxkfDn8is0NnQrJLvFl8lbfngkUyezU2p66Y8M6/vtICvJ36LELTCo1c
-mHQkYF0rB+mAegH37R8x1jhoBSAydw==
-=RXG3
------END PGP SIGNATURE-----
-
---Tv3+oRj6D9L8lW+H--
+Lorenzo, as maintainer of native controller drivers, do you have some
+ideas about providing "framework", common functions or something for
+avoiding to implement same code patterns in every native controller
+driver, which is de-facto standard PCIe codepath? Including a way how to
+export PERST# reset gpio?
