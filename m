@@ -2,145 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D96634D48D
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 18:11:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D583434D4BD
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 18:20:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbhC2QLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 12:11:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:56482 "EHLO foss.arm.com"
+        id S229557AbhC2QUP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 12:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229709AbhC2QKo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 12:10:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25516142F;
-        Mon, 29 Mar 2021 09:10:44 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D3B63F719;
-        Mon, 29 Mar 2021 09:10:42 -0700 (PDT)
-Date:   Mon, 29 Mar 2021 17:10:40 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        id S230373AbhC2QT7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 12:19:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B86A961581;
+        Mon, 29 Mar 2021 16:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617034799;
+        bh=dGnCcl2HoA3NAkBzINwsXE0G5XK/4b9V3Ban3IDHg88=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OkLzbe3QDGc1oMRtw5aruwVpi0ycj9OCNunY6J0QBr2Fi89tQ5rXRo6/qIc9yhr4A
+         TnsIqf7T1wqbC8GALzht716qBrUD2OnJcTQVwDcx9NsUMC6FC0dBpcmeN7j4hteSQD
+         LBym5ykEJkdE5oQ+MqvHGCGFpg95zqSM2sV4uYVwBseyRBvnk+yrBVjPfCY1tki9ir
+         rOlR53NOOSLz/5pnqlaZUcwEnIGeWXt9XCfEARQqX/7rL6k45NUhlKyB2m8bYTTVCz
+         4jvuSIvfqYdU/vlhzd+83qmcwM+uqtd3c6/gLsOfBukBRd4cu+YH9/DPatU8KQ8nH5
+         ky7No+8Au3lQA==
+Date:   Mon, 29 Mar 2021 17:19:48 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+Cc:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
         Rob Herring <robh@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jim Quinlan <jquinlan@broadcom.com>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] PCI: brcmstb: Use reset/rearm instead of
- deassert/assert
-Message-ID: <20210329161040.GB9677@lpieralisi>
-References: <20210312204556.5387-1-jim2101024@gmail.com>
- <20210312204556.5387-3-jim2101024@gmail.com>
+Subject: Re: [PATCH v3 2/6] PCI: brcmstb: Add control of EP voltage regulators
+Message-ID: <20210329161948.GF5166@sirena.org.uk>
+References: <20210326191906.43567-1-jim2101024@gmail.com>
+ <20210326191906.43567-3-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9ADF8FXzFeE7X4jE"
 Content-Disposition: inline
-In-Reply-To: <20210312204556.5387-3-jim2101024@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210326191906.43567-3-jim2101024@gmail.com>
+X-Cookie: Never give an inch!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 12, 2021 at 03:45:55PM -0500, Jim Quinlan wrote:
-> The Broadcom STB PCIe RC uses a reset control "rescal" for certain chips.
-> The "rescal" implements a "pulse reset" so using assert/deassert is wrong
-> for this device.  Instead, we use reset/rearm.  We need to use rearm so
-> that we can reset it after a suspend/resume cycle; w/o using "rearm", the
-> "rescal" device will only ever fire once.
-> 
-> Of course for suspend/resume to work we also need to put the reset/rearm
-> calls in the suspend and resume routines.
 
-Actually - I am sorry but it looks like you will have to split the patch
-in two since this is two logical changes.
+--9ADF8FXzFeE7X4jE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Lorenzo
+On Fri, Mar 26, 2021 at 03:19:00PM -0400, Jim Quinlan wrote:
 
-> Fixes: 740d6c3708a9 ("PCI: brcmstb: Add control of rescal reset")
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index e330e6811f0b..3b35d629035e 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -1148,6 +1148,7 @@ static int brcm_pcie_suspend(struct device *dev)
->  
->  	brcm_pcie_turn_off(pcie);
->  	ret = brcm_phy_stop(pcie);
-> +	reset_control_rearm(pcie->rescal);
->  	clk_disable_unprepare(pcie->clk);
->  
->  	return ret;
-> @@ -1163,9 +1164,13 @@ static int brcm_pcie_resume(struct device *dev)
->  	base = pcie->base;
->  	clk_prepare_enable(pcie->clk);
->  
-> +	ret = reset_control_reset(pcie->rescal);
-> +	if (ret)
-> +		goto err_disable_clk;
-> +
->  	ret = brcm_phy_start(pcie);
->  	if (ret)
-> -		goto err;
-> +		goto err_reset;
->  
->  	/* Take bridge out of reset so we can access the SERDES reg */
->  	pcie->bridge_sw_init_set(pcie, 0);
-> @@ -1180,14 +1185,16 @@ static int brcm_pcie_resume(struct device *dev)
->  
->  	ret = brcm_pcie_setup(pcie);
->  	if (ret)
-> -		goto err;
-> +		goto err_reset;
->  
->  	if (pcie->msi)
->  		brcm_msi_set_regs(pcie->msi);
->  
->  	return 0;
->  
-> -err:
-> +err_reset:
-> +	reset_control_rearm(pcie->rescal);
-> +err_disable_clk:
->  	clk_disable_unprepare(pcie->clk);
->  	return ret;
->  }
-> @@ -1197,7 +1204,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->  	brcm_msi_remove(pcie);
->  	brcm_pcie_turn_off(pcie);
->  	brcm_phy_stop(pcie);
-> -	reset_control_assert(pcie->rescal);
-> +	reset_control_rearm(pcie->rescal);
->  	clk_disable_unprepare(pcie->clk);
->  }
->  
-> @@ -1278,13 +1285,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(pcie->perst_reset);
->  	}
->  
-> -	ret = reset_control_deassert(pcie->rescal);
-> +	ret = reset_control_reset(pcie->rescal);
->  	if (ret)
->  		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
->  
->  	ret = brcm_phy_start(pcie);
->  	if (ret) {
-> -		reset_control_assert(pcie->rescal);
-> +		reset_control_rearm(pcie->rescal);
->  		clk_disable_unprepare(pcie->clk);
->  		return ret;
->  	}
-> -- 
-> 2.17.1
-> 
+> Control of EP regulators by the RC is needed because of the chicken-and-egg
+> situation: although the regulator is "owned" by the EP and would be best
+> handled on its driver, the EP cannot be discovered and probed unless its
+> regulator is already turned on.
+
+Ideally the driver core would have a way for buses to register devices
+pre physical enumeration and give drivers a callback that could be used
+to do whatever is needed to trigger enumeration, letting the bus then
+match newly physically enumerated devices with the software enumerated
+struct devices.  Soundwire has something in this area for a bus level
+solution.
+
+--9ADF8FXzFeE7X4jE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBh/iMACgkQJNaLcl1U
+h9CvUQf/S+WYaVzUIqvnb0K6nY7Y7Tu7+dSYNItIsI9PpgGSQjVigAJvpvWuMQc1
+0KS2Py/C77GDOsx0pEBX5hoLAU98BjvW+sjJTRCU2hjICoPtwEMrvVsmM7XzzFk1
+rL1PXwJUgmlEzmknREWDe6VGAR5ddIke+9VdS5CBw2+d7HFviUb6bIyKBWPnm97+
+El8J6IK37KCBy56NGGg3fqPwjFEZxy4oKyO7tklbqUi2qjweSsMR188Pw490LIYQ
+54DjSMJY5ZoiLSkA+qJiB2vuCl7+Vtc6eQfsm4gio+rYxdYIduu685jrAfrYxopT
+He2MtwZwq1ks96Kt7R/FFDtZm7xCRQ==
+=0N2B
+-----END PGP SIGNATURE-----
+
+--9ADF8FXzFeE7X4jE--
