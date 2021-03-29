@@ -2,122 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D5134CEB1
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 13:19:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C0834D063
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Mar 2021 14:51:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232464AbhC2LSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 07:18:34 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:46732 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232208AbhC2LSD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Mar 2021 07:18:03 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8714C405C4;
-        Mon, 29 Mar 2021 11:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1617016683; bh=iSxtzBdDE2cJnjE+FKkXJyxRBdv7BWhqnOaNUTMnKw0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=MnleN+marL8tlDKG4oFA9Ec6DYnbs2I4LGW2YLQ4dFBxr64tLtSQOBYOdjl+vgrSv
-         1ppTkZS2ylh463eR28qs3/ykZLV9D9lS8P1axZXoLiTbsgnMjL4yHa0P/nrcmIB0lL
-         0M9Z0jRQ7Zp8JAzXstnVD5um6kpEcIs17H0tFLv2hMkADjiKkTNZUSfGI1PxDmhAHE
-         1FGf2Z9/3cLnetvbiPy3xylm5Rn2zfmKQcFJ5XdbsPgDaUqSz48L5eWmw6FXuyGlsA
-         Bair0CdR+WnTip2UaGAEoEetT8DzzYf4OCRBsm9uczPg7ZVfwE6gmcDcv76veTgwP9
-         vclu1ob9qiZsA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 4D74EA022E;
-        Mon, 29 Mar 2021 11:18:02 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S231468AbhC2Mu2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 08:50:28 -0400
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:36824 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231238AbhC2MuX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Mar 2021 08:50:23 -0400
+Received: by mail-ot1-f50.google.com with SMTP id g8-20020a9d6c480000b02901b65ca2432cso12142376otq.3;
+        Mon, 29 Mar 2021 05:50:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=br2tK1trYV4Jvbr3eTgWM2JDYY7hp12me+F3CgBMdrA=;
+        b=WlOKAKWAD1t30AIC64LCiFY1BwIIzb9fXU48yC3SQhKZB71X9gfvfevHIOOMwzXpV+
+         qN899qFjtXv44uF/vwWiPA+lc84YaSYtTMoJgk+q6cz8DOINloYEDNaAH5MW4yY52GlW
+         7FL9c/EbJPyiibYvEqI9d4MDTbxl7FD4uhvkmCUE4RyI3IrCY6HKH3LhXSctf6ixFY06
+         QayThEMNol8u/JlwGB7NmeydUuGh0Sjjry5R7wAM3XIX9Zrish8W0eUEuOvo3EaUVr/I
+         F+jUklpoRiTU5SEmtKroX0A8BKhG1UkItTJPFAjt8h/BJEQd803MFXLEGxiKqapx8C1b
+         +FfQ==
+X-Gm-Message-State: AOAM533YEynOecuLKLsDh2UezyHJV+R2iXTUI1CVoJrdI+xqLg3G2T2q
+        efthYBZyY/hrD9JJdllyehZMVvut4X96yfEqZEs=
+X-Google-Smtp-Source: ABdhPJyJTrglwRj2zltNzATMDclxPvxrsMLnZATq/gbKpWmce0C83JluLrG5v0kceaqH+WKTiJ5e3hauxUXLybLMCP0=
+X-Received: by 2002:a05:6830:20d2:: with SMTP id z18mr22296906otq.260.1617022222927;
+ Mon, 29 Mar 2021 05:50:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1616846904-25719-1-git-send-email-tanxiaofei@huawei.com>
+In-Reply-To: <1616846904-25719-1-git-send-email-tanxiaofei@huawei.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 29 Mar 2021 14:50:08 +0200
+Message-ID: <CAJZ5v0i=RPyvWfVuGQ0nWf_0QRw70=qZd6j85CTPWaaWPa_5KQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] acpi: fix some coding style issues
+To:     Xiaofei Tan <tanxiaofei@huawei.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v10 4/4] docs: ABI: Add sysfs documentation interface of dw-xdata-pcie driver
-Date:   Mon, 29 Mar 2021 13:17:48 +0200
-Message-Id: <438c4ca9f6cc9e1cb29a65c0d2cca9a3d3f181b1.1617016509.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1617016509.git.gustavo.pimentel@synopsys.com>
-References: <cover.1617016509.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1617016509.git.gustavo.pimentel@synopsys.com>
-References: <cover.1617016509.git.gustavo.pimentel@synopsys.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>, linuxarm@openeuler.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch describes the sysfs interface implemented on the dw-xdata-pcie
-driver.
+On Sat, Mar 27, 2021 at 1:11 PM Xiaofei Tan <tanxiaofei@huawei.com> wrote:
+>
+> Fix some coding style issues reported by checkpatch.pl.
+> Only cleanup and no function changes.
+>
+> Differences from v2 to v3:
+> - Remove the modifications that may cause function change.
+>
+> Differences from v1 to v2:
+> - Add subsystem and module name in the name of patch 05/15.
+> - Change to use more proper module name for some patch names.
+>
+> Xiaofei Tan (12):
+>   ACPI: APD: fix a block comment align issue
+>   ACPI: processor: fix some coding style issues
+>   ACPI: ipmi: remove useless return statement for void function
+>   ACPI: LPSS: add a missed blank line after declarations
+>   ACPI: acpi_pad: add a missed blank line after declarations
+>   ACPI: battery: fix some coding style issues
+>   ACPI: button: fix some coding style issues
+>   ACPI: CPPC: fix some coding style issues
+>   ACPI: custom_method: fix a coding style issue
+>   ACPI: PM: add a missed blank line after declarations
+>   ACPI: sysfs: fix some coding style issues
+>   ACPI: dock: fix some coding style issues
+>
+>  drivers/acpi/acpi_apd.c       |  8 ++---
+>  drivers/acpi/acpi_ipmi.c      |  1 -
+>  drivers/acpi/acpi_lpss.c      |  2 ++
+>  drivers/acpi/acpi_pad.c       |  4 +++
+>  drivers/acpi/acpi_processor.c | 18 +++--------
+>  drivers/acpi/battery.c        | 63 ++++++++++++++++++++------------------
+>  drivers/acpi/button.c         |  9 ++----
+>  drivers/acpi/cppc_acpi.c      | 71 ++++++++++++++++++++++---------------------
+>  drivers/acpi/custom_method.c  |  2 +-
+>  drivers/acpi/device_pm.c      |  3 ++
+>  drivers/acpi/device_sysfs.c   | 15 ++++++---
+>  drivers/acpi/dock.c           |  7 +++--
+>  12 files changed, 106 insertions(+), 97 deletions(-)
+>
+> --
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- Documentation/ABI/testing/sysfs-driver-xdata | 49 ++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
+Can you please stop sending new versions of this for a while?
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-xdata b/Documentation/ABI/testing/sysfs-driver-xdata
-new file mode 100644
-index 00000000..f574e8e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-xdata
-@@ -0,0 +1,49 @@
-+What:		/sys/class/misc/drivers/dw-xdata-pcie.<device>/write
-+Date:		April 2021
-+KernelVersion:	5.13
-+Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+Description:	Allows the user to enable the PCIe traffic generator which
-+		will create write TLPs frames - from the Root Complex to the
-+		Endpoint direction or to disable the PCIe traffic generator
-+		in all directions.
-+
-+		Write y/1/on to enable, n/0/off to disable
-+
-+		Usage e.g.
-+		 echo 1 > /sys/class/misc/dw-xdata-pcie.<device>/write
-+		or
-+		 echo 0 > /sys/class/misc/dw-xdata-pcie.<device>/write
-+
-+		The user can read the current PCIe link throughput generated
-+		through this generator in MB/s.
-+
-+		Usage e.g.
-+		 cat /sys/class/misc/dw-xdata-pcie.<device>/write
-+		 204
-+
-+		The file is read and write.
-+
-+What:		/sys/class/misc/dw-xdata-pcie.<device>/read
-+Date:		April 2021
-+KernelVersion:	5.13
-+Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+Description:	Allows the user to enable the PCIe traffic generator which
-+		will create read TLPs frames - from the Endpoint to the Root
-+		Complex direction or to disable the PCIe traffic generator
-+                in all directions.
-+
-+		Write y/1/on to enable, n/0/off to disable
-+
-+		Usage e.g.
-+		 echo 1 > /sys/class/misc/dw-xdata-pcie.<device>/read
-+		or
-+		 echo 0 > /sys/class/misc/dw-xdata-pcie.<device>/read
-+
-+		The user can read the current PCIe link throughput generated
-+		through this generator in MB/s.
-+
-+		Usage e.g.
-+		 cat /sys/class/misc/dw-xdata-pcie.<device>/read
-+		 199
-+
-+		The file is read and write.
--- 
-2.7.4
-
+You've sent three of them over the last weekend and honestly I haven't
+had a chance to look at the first one even.
