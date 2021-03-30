@@ -2,151 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9C5534EC6F
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 17:30:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 419BE34EC78
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 17:31:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232068AbhC3P3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Mar 2021 11:29:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:38796 "EHLO foss.arm.com"
+        id S232201AbhC3PbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Mar 2021 11:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232240AbhC3P3G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Mar 2021 11:29:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A653C31B;
-        Tue, 30 Mar 2021 08:29:05 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 263A73F719;
-        Tue, 30 Mar 2021 08:29:02 -0700 (PDT)
-Date:   Tue, 30 Mar 2021 16:28:57 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v3 02/14] PCI: rcar: Don't allocate extra memory for the
- MSI capture address
-Message-ID: <20210330152857.GA27749@lpieralisi>
-References: <20210330151145.997953-1-maz@kernel.org>
- <20210330151145.997953-3-maz@kernel.org>
+        id S232432AbhC3Pag (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Mar 2021 11:30:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 847AD619A7;
+        Tue, 30 Mar 2021 15:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617118235;
+        bh=v1dbBvYnlnpeTi3yQZ8GGvJpMY8lThR6ab6uDmszjNA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ty9EUPL3HTj8+YrfsfYyzLPCIKZuI8lC98RSM576+OaLbAQtCG9IyX+JMnsZbZjb2
+         b3iF6sKWOqywqKAtqXDBC2EVlssXjBIIiNxcHGSfgQFHDa0gCoXj/lGn/sFaYlWSdO
+         4Rc3grw7579SkDENhbiqf2Uy81ekouIzL4RiDjovcXuZei+fwFZtHywx//4XaCsPR7
+         FHgP2mVFsuX3CKmO0F0GDV7WUPdsYwOlfkzBA2enlSvLzscXw1SkHAUJ568xfgFaqM
+         MDCpT9XQQC77ZEQ9CcRJGiMpQz0QZ60WTKOmT90LWEH2lkF30ayIPoftEE6OLuwl7Z
+         /+xEaYmRTLUyg==
+Date:   Tue, 30 Mar 2021 16:30:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+Message-ID: <20210330153023.GE4976@sirena.org.uk>
+References: <20210326191906.43567-1-jim2101024@gmail.com>
+ <20210326191906.43567-2-jim2101024@gmail.com>
+ <20210330150816.GA306420@robh.at.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JBi0ZxuS5uaEhkUZ"
 Content-Disposition: inline
-In-Reply-To: <20210330151145.997953-3-maz@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210330150816.GA306420@robh.at.kernel.org>
+X-Cookie: Memory fault - where am I?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 04:11:33PM +0100, Marc Zyngier wrote:
-> A long cargo-culted behaviour of PCI drivers is to allocate memory
-> to obtain an address that is fed to the controller as the MSI
-> capture address (i.e. the MSI doorbell).
-> 
-> But there is no actual requirement for this address to be RAM.
-> All it needs to be is a suitable aligned address that will
-> *not* be DMA'd to.
-> 
-> Since the rcar platform already has a requirement that this
-> address should be in the first 4GB of the physical address space,
-> use the controller's own base address as the capture address.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pci/controller/pcie-rcar-host.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
 
-Marek, Yoshihiro,
+--JBi0ZxuS5uaEhkUZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-can you test this patch please and report back ? It is not fundamental
-for the rest of the series (ie the rest of the series does not depend on
-it) and we can still merge the series without it but it would be good if
-you can review and test anyway.
+On Tue, Mar 30, 2021 at 10:08:16AM -0500, Rob Herring wrote:
+> On Fri, Mar 26, 2021 at 03:18:59PM -0400, Jim Quinlan wrote:
 
-I'd like to merge this series into -next shortly.
+> > +                    pcie-ep@0,0 {
+> > +                            reg =3D <0x0 0x0 0x0 0x0 0x0>;
+> > +                            compatible =3D "pci14e4,1688";
+> > +                            vpcie12v-supply: <&vreg12>;
 
-Thanks,
-Lorenzo
+> For other cases, these properties are in the host bridge node. If these=
+=20
+> are standard PCI rails, then I think that's where they belong unless we=
+=20
+> define slot nodes.
 
-> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-> index a728e8f9ad3c..ce952403e22c 100644
-> --- a/drivers/pci/controller/pcie-rcar-host.c
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-> @@ -36,7 +36,6 @@ struct rcar_msi {
->  	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
->  	struct irq_domain *domain;
->  	struct msi_controller chip;
-> -	unsigned long pages;
->  	struct mutex lock;
->  	int irq1;
->  	int irq2;
-> @@ -680,14 +679,15 @@ static void rcar_pcie_unmap_msi(struct rcar_pcie_host *host)
->  static void rcar_pcie_hw_enable_msi(struct rcar_pcie_host *host)
->  {
->  	struct rcar_pcie *pcie = &host->pcie;
-> -	struct rcar_msi *msi = &host->msi;
-> -	unsigned long base;
-> +	struct device *dev = pcie->dev;
-> +	struct resource res;
->  
-> -	/* setup MSI data target */
-> -	base = virt_to_phys((void *)msi->pages);
-> +	if (WARN_ON(of_address_to_resource(dev->of_node, 0, &res)))
-> +		return;
->  
-> -	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
-> -	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
-> +	/* setup MSI data target */
-> +	rcar_pci_write_reg(pcie, lower_32_bits(res.start) | MSIFE, PCIEMSIALR);
-> +	rcar_pci_write_reg(pcie, upper_32_bits(res.start), PCIEMSIAUR);
->  
->  	/* enable all MSI interrupts */
->  	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
-> @@ -735,7 +735,6 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
->  	}
->  
->  	/* setup MSI data target */
-> -	msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA32, 0);
->  	rcar_pcie_hw_enable_msi(host);
->  
->  	return 0;
-> @@ -748,7 +747,6 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
->  static void rcar_pcie_teardown_msi(struct rcar_pcie_host *host)
->  {
->  	struct rcar_pcie *pcie = &host->pcie;
-> -	struct rcar_msi *msi = &host->msi;
->  
->  	/* Disable all MSI interrupts */
->  	rcar_pci_write_reg(pcie, 0, PCIEMSIIER);
-> @@ -756,8 +754,6 @@ static void rcar_pcie_teardown_msi(struct rcar_pcie_host *host)
->  	/* Disable address decoding of the MSI interrupt, MSIFE */
->  	rcar_pci_write_reg(pcie, 0, PCIEMSIALR);
->  
-> -	free_pages(msi->pages, 0);
-> -
->  	rcar_pcie_unmap_msi(host);
->  }
->  
-> -- 
-> 2.29.2
-> 
+For a soldered down part I'd expect we'd want both (if the host even
+cares) - for anything except a supply that I/O or something else shared
+is referenced off there's no great reason why it has to be physically
+the same supply going to every device on the bus so each device should
+be able to specify separately.
+
+--JBi0ZxuS5uaEhkUZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBjRA8ACgkQJNaLcl1U
+h9ANmwf7BttjRKh+uxAdgHhy0rI2LYRxFUkT8SfE/LGAEH8CvkYc4HHNnh0Ej99C
+FwJ0PuvncXiHwDAJnbhiiOTNvb7b8yaQFR/IBYXJ1QWXj2LGaLZAmRKVKxtwRJmq
+R5YMCL0owt8qits6jfUtrJgzwxRjmG7Rh1ailPmE30WMvd8zchuSaDWAdT6BaNdt
+jeWaonyazB0MM1TzVtR9Aiov/vMfdBLT692mVzO4QCtCmoUwDU0PInMh5lKcihYQ
+65HCHT/xknVn7Rph+qacZKLozK+skalElePvTK79cYb9+8LhwnOZ8FsIQ98ACQNI
+zvtnhgexwvQ8tldRw8qp8iB3eDzlCg==
+=hPcY
+-----END PGP SIGNATURE-----
+
+--JBi0ZxuS5uaEhkUZ--
