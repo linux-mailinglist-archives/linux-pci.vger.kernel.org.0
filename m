@@ -2,115 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E334634EC31
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 17:24:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3841E34EC1B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 17:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232414AbhC3PYO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Mar 2021 11:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232141AbhC3PXo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Mar 2021 11:23:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475E661957;
-        Tue, 30 Mar 2021 15:23:44 +0000 (UTC)
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1lRG2G-004i6i-Jk; Tue, 30 Mar 2021 16:12:04 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-Subject: [PATCH v3 14/14] PCI: Refactor HT advertising of NO_MSI flag
-Date:   Tue, 30 Mar 2021 16:11:45 +0100
-Message-Id: <20210330151145.997953-15-maz@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210330151145.997953-1-maz@kernel.org>
-References: <20210330151145.997953-1-maz@kernel.org>
+        id S231910AbhC3PXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Mar 2021 11:23:07 -0400
+Received: from angie.orcam.me.uk ([157.25.102.26]:38218 "EHLO
+        angie.orcam.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231808AbhC3PWx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Mar 2021 11:22:53 -0400
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id D62EC92009C; Tue, 30 Mar 2021 17:22:51 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id CEC7892009B;
+        Tue, 30 Mar 2021 17:22:51 +0200 (CEST)
+Date:   Tue, 30 Mar 2021 17:22:51 +0200 (CEST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+cc:     David Laight <David.Laight@ACULAB.COM>,
+        'Amey Narkhede' <ameynarkhede03@gmail.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kabel@kernel.org" <kabel@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "raphael.norwitz@nutanix.com" <raphael.norwitz@nutanix.com>
+Subject: Re: How long should be PCIe card in Warm Reset state?
+In-Reply-To: <20210330150458.gzz44gczhraxc6bc@pali>
+Message-ID: <alpine.DEB.2.21.2103301714450.18977@angie.orcam.me.uk>
+References: <20210310110535.zh4pnn4vpmvzwl5q@pali> <20210323161941.gim6msj3ruu3flnf@archlinux> <20210323162747.tscfovntsy7uk5bk@pali> <20210323165749.retjprjgdj7seoan@archlinux> <a8e256ece0334734b1ef568820b95a15@AcuMS.aculab.com>
+ <alpine.DEB.2.21.2103301428030.18977@angie.orcam.me.uk> <20210330131018.gby4ze3u6mii23ls@pali> <alpine.DEB.2.21.2103301628180.18977@angie.orcam.me.uk> <20210330150458.gzz44gczhraxc6bc@pali>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, frank-w@public-files.de, treding@nvidia.com, tglx@linutronix.de, robh@kernel.org, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, mikelley@microsoft.com, wei.liu@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, ryder.lee@mediatek.com, marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, michal.simek@xilinx.com, paul.walmsley@sifive.com, bharatku@xilinx.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The few quirks that deal with NO_MSI tend to be copy-paste heavy.
-Refactor them so that the hierarchy of conditions is slightly
-cleaner.
+On Tue, 30 Mar 2021, Pali Rohár wrote:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/pci/quirks.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+> >  The spec does not give any exceptions AFAICT as to the timeouts required 
+> > between the three kinds of a Conventional Reset (Hot, Warm, or Cold) and 
+> > refers to them collectively as a Conventional Reset across the relevant 
+> > parts of the document, so clearly the same rules apply.
+> 
+> There are specified more timeouts related to Warm reset and PERST#
+> signal. Just they are not in Base spec, but in CEM spec. See previous
+> Amey's email where are described some timeouts and also links in my
+> first email where I put other timeouts defined in specs relevant for
+> PERST# signal and therefore also for Warm Reset.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..972bb0f9f994 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2585,10 +2585,8 @@ static int msi_ht_cap_enabled(struct pci_dev *dev)
- /* Check the HyperTransport MSI mapping to know whether MSI is enabled or not */
- static void quirk_msi_ht_cap(struct pci_dev *dev)
- {
--	if (dev->subordinate && !msi_ht_cap_enabled(dev)) {
--		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
--		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
--	}
-+	if (!msi_ht_cap_enabled(dev))
-+		quirk_disable_msi(dev);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SERVERWORKS, PCI_DEVICE_ID_SERVERWORKS_HT2000_PCIE,
- 			quirk_msi_ht_cap);
-@@ -2601,9 +2599,6 @@ static void quirk_nvidia_ck804_msi_ht_cap(struct pci_dev *dev)
- {
- 	struct pci_dev *pdev;
- 
--	if (!dev->subordinate)
--		return;
--
- 	/*
- 	 * Check HT MSI cap on this chipset and the root one.  A single one
- 	 * having MSI is enough to be sure that MSI is supported.
-@@ -2611,10 +2606,8 @@ static void quirk_nvidia_ck804_msi_ht_cap(struct pci_dev *dev)
- 	pdev = pci_get_slot(dev->bus, 0);
- 	if (!pdev)
- 		return;
--	if (!msi_ht_cap_enabled(dev) && !msi_ht_cap_enabled(pdev)) {
--		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
--		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
--	}
-+	if (!msi_ht_cap_enabled(pdev))
-+		quirk_msi_ht_cap(dev);
- 	pci_dev_put(pdev);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_CK804_PCIE,
--- 
-2.29.2
+ I specifically referred to the time allowed for devices to take between a 
+reset and the first successful configuration cycle David wondered about.  
+I don't think I can comment on the timeouts given in the CEM spec as I 
+don't have a copy.  Sorry.
 
+  Maciej
