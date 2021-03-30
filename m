@@ -2,103 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1702C34F093
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 20:11:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D4BA34F183
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 21:20:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232658AbhC3SLB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Mar 2021 14:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
+        id S233072AbhC3TTa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Mar 2021 15:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232659AbhC3SKr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Mar 2021 14:10:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 70C5B619D1;
-        Tue, 30 Mar 2021 18:10:45 +0000 (UTC)
+        id S233006AbhC3TT2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Mar 2021 15:19:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F2E6961998;
+        Tue, 30 Mar 2021 19:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617127847;
-        bh=E4CSAOav2miwBccqpWx6Wl4oB6R4c2qqsJVd8NGrcos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pU90oj8QlnmK3EtLJzLSRK50ZsjvBKKwT+Hljpotn2sk/KlEr5oS2o3mCP2tlf+bh
-         lX4qI5onDRKex/2Db4BTok3V0yfSkh/99x5HRFESSbJH0rVZeZXELeZu/yNWow7axx
-         ZennwI3NBGTbOscxZmECAUhpaIRQJ1WUYGQq7RHNs5TbpDLz79EdTAQ3aY2kdIYYXR
-         43i6a7NcAJJmaA5B9VAppcwA1i25ZtSP6NBf5Ioc5bIMAmx3z1NJvmuXfNcJx3M+PG
-         aMEV4faG8gfbVol7bdb7qS4xGb9+RNJiMRl0Luai9DF4lEBGTCin/SXYJ4vifVGfIP
-         x6MUqJNBmNy0Q==
-Date:   Wed, 31 Mar 2021 03:10:39 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <20210330181039.GA22898@redsun51.ssa.fujisawa.hgst.com>
-References: <20210326190148.GN2710221@ziepe.ca>
- <20210330012949.GA1205505@bjorn-Precision-5520>
+        s=k20201202; t=1617131968;
+        bh=XBxHhXmWgSj4QgRnO4vvOh88DUWa5B1fPdpOmU7Kao4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nKR+gyj5umi3lc+byor8F0C6I4kPN3zODildT5lBj8ALRfxfkZTEcxQyEDCrxi1yU
+         mwykLsUedWBKSgaZ1oRIgfSnJqwDdPjO8vbz3kSPxGX5zXEMtVJn2OEakQ8/ZasiCt
+         RshA5pgyFBWItHnLDlJux9wgWYB6KdzeL7mxvS0069ccwcHZch3GVKZx6meFHnWe7j
+         tmXok+pQK4smKKH1O3DgmjY02h/4ZbnXASf35+nND4gSrnijbAdqpSgZ+/sqDtmGjF
+         uFQ9R1qKyrg9aRi0OfVRAlqg7bS/5hkUW57XF3JsUzTgKm/xlsg8rZGGktet6qE3aA
+         YOgtDMw74Ou2Q==
+Date:   Tue, 30 Mar 2021 14:19:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     toan@os.amperecomputing.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dann.frazier@canonical.com
+Subject: Re: [PATCH] PCI: xgene: fix a mistake about cfg address
+Message-ID: <20210330191926.GA1297928@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210330012949.GA1205505@bjorn-Precision-5520>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20210328144118.305074-1-zhengdejin5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 29, 2021 at 08:29:49PM -0500, Bjorn Helgaas wrote:
-> On Fri, Mar 26, 2021 at 04:01:48PM -0300, Jason Gunthorpe wrote:
-> > On Fri, Mar 26, 2021 at 11:50:44AM -0700, Alexander Duyck wrote:
-> > 
-> > > My concern would be that we are defining the user space interface.
-> > > Once we have this working as a single operation I could see us having
-> > > to support it that way going forward as somebody will script something
-> > > not expecting an "offline" sysfs file, and the complaint would be that
-> > > we are breaking userspace if we require the use of an "offline"
-> > > file.
-> > 
-> > Well, we wouldn't do that. The semantic we define here is that the
-> > msix_count interface 'auto-offlines' if that is what is required. If
-> > we add some formal offline someday then 'auto-offline' would be a NOP
-> > when the device is offline and do the same online/offline sequence as
-> > today if it isn't.
+On Sun, Mar 28, 2021 at 10:41:18PM +0800, Dejin Zheng wrote:
+> It has a wrong modification to the xgene driver by the commit
+> e2dcd20b1645a. it use devm_platform_ioremap_resource_byname() to
+> simplify codes and remove the res variable, But the following code
+> needs to use this res variable, So after this commit, the port->cfg_addr
+> will get a wrong address. Now, revert it.
 > 
-> Alexander, Keith, any more thoughts on this?
-> 
-> I think I misunderstood Greg's subdirectory comment.  We already have
-> directories like this:
-> 
->   /sys/bus/pci/devices/0000:01:00.0/link/
->   /sys/bus/pci/devices/0000:01:00.0/msi_irqs/
->   /sys/bus/pci/devices/0000:01:00.0/power/
-> 
-> and aspm_ctrl_attr_group (for "link") is nicely done with static
-> attributes.  So I think we could do something like this:
-> 
->   /sys/bus/pci/devices/0000:01:00.0/   # PF directory
->     sriov/                             # SR-IOV related stuff
->       vf_total_msix
->       vf_msix_count_BB:DD.F        # includes bus/dev/fn of first VF
->       ...
->       vf_msix_count_BB:DD.F        # includes bus/dev/fn of last VF
-> 
-> And I think this could support the mlx5 model as well as the NVMe
-> model.
-> 
-> For NVMe, a write to vf_msix_count_* would have to auto-offline the VF
-> before asking the PF to assign the vectors, as Jason suggests above.
-> Before VF Enable is set, the vf_msix_count_* files wouldn't exist and
-> we wouldn't be able to assign vectors to VFs; IIUC that's a difference
-> from the NVMe interface, but maybe not a terrible one?
+> Fixes: e2dcd20b1645a ("PCI: controller: Convert to devm_platform_ioremap_resource_byname()")
+> Reported-by: dann.frazier@canonical.com
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-Yes, that's fine, nvme can handle this flow. It is a little easier to
-avoid nvme user error if we could mainpulate the counts prior to VF Enable,
-but it's really not a problem this way either.
+This looks right to me, but since e2dcd20b1645a appeared in v5.9-rc1,
+I think it should have:
 
-I think it's reasonable for nvme to subscribe to this interface, but I
-will have to defer to someone with capable nvme devices to implement it.
+  Cc: stable@vger.kernel.org	# v5.9+
+
+> ---
+>  drivers/pci/controller/pci-xgene.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+> index 2afdc865253e..7f503dd4ff81 100644
+> --- a/drivers/pci/controller/pci-xgene.c
+> +++ b/drivers/pci/controller/pci-xgene.c
+> @@ -354,7 +354,8 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
+>  	if (IS_ERR(port->csr_base))
+>  		return PTR_ERR(port->csr_base);
+>  
+> -	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> +	port->cfg_base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(port->cfg_base))
+>  		return PTR_ERR(port->cfg_base);
+>  	port->cfg_addr = res->start;
+> -- 
+> 2.30.1
+> 
