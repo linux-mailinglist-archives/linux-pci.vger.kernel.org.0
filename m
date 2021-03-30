@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 376CC34E310
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 10:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A734634E30E
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 10:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231124AbhC3IWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231359AbhC3IWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 30 Mar 2021 04:22:43 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39910 "EHLO inva021.nxp.com"
+Received: from inva021.nxp.com ([92.121.34.21]:39980 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231194AbhC3IW1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Mar 2021 04:22:27 -0400
+        id S231318AbhC3IW3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Mar 2021 04:22:29 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C827202FF2;
-        Tue, 30 Mar 2021 10:22:26 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F319C202FF4;
+        Tue, 30 Mar 2021 10:22:27 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E8126202FF8;
-        Tue, 30 Mar 2021 10:22:20 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AE85520132C;
+        Tue, 30 Mar 2021 10:22:22 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B308E402B0;
-        Tue, 30 Mar 2021 10:22:14 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D7E07402F0;
+        Tue, 30 Mar 2021 10:22:15 +0200 (CEST)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
         shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
@@ -27,9 +27,9 @@ To:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
 Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one regulator used to power up pcie phy
-Date:   Tue, 30 Mar 2021 16:08:20 +0800
-Message-Id: <1617091701-6444-2-git-send-email-hongxing.zhu@nxp.com>
+Subject: [RESEND v4 2/2] PCI: imx: clear vreg bypass when pcie vph voltage is 3v3
+Date:   Tue, 30 Mar 2021 16:08:21 +0800
+Message-Id: <1617091701-6444-3-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1617091701-6444-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1617091701-6444-1-git-send-email-hongxing.zhu@nxp.com>
@@ -48,23 +48,61 @@ turned on.
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-index de4b2baf91e8..d8971ab99274 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -38,6 +38,9 @@ Optional properties:
-   The regulator will be enabled when initializing the PCIe host and
-   disabled either as part of the init process or when shutting down the
-   host.
-+- vph-supply: Should specify the regulator in charge of VPH one of the three
-+  PCIe PHY powers. This regulator can be supplied by both 1.8v and 3.3v voltage
-+  supplies.
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 853ea8e82952..94b43b4ecca1 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -37,6 +37,7 @@
+ #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
+ #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
+ #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
++#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
+ #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
+ #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
  
- Additional required properties for imx6sx-pcie:
- - clock names: Must include the following additional entries:
+@@ -80,6 +81,7 @@ struct imx6_pcie {
+ 	u32			tx_swing_full;
+ 	u32			tx_swing_low;
+ 	struct regulator	*vpcie;
++	struct regulator	*vph;
+ 	void __iomem		*phy_base;
+ 
+ 	/* power domain for pcie */
+@@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 				   imx6_pcie_grp_offset(imx6_pcie),
+ 				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
+ 				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
++		/*
++		 * Regarding the datasheet, the PCIE_VPH is suggested
++		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
++		 * VREG_BYPASS should be cleared to zero.
++		 */
++		if (imx6_pcie->vph &&
++		    regulator_get_voltage(imx6_pcie->vph) > 3000000)
++			regmap_update_bits(imx6_pcie->iomuxc_gpr,
++					   imx6_pcie_grp_offset(imx6_pcie),
++					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
++					   0);
+ 		break;
+ 	case IMX7D:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+@@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 		imx6_pcie->vpcie = NULL;
+ 	}
+ 
++	imx6_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
++	if (IS_ERR(imx6_pcie->vph)) {
++		if (PTR_ERR(imx6_pcie->vph) != -ENODEV)
++			return PTR_ERR(imx6_pcie->vph);
++		imx6_pcie->vph = NULL;
++	}
++
+ 	platform_set_drvdata(pdev, imx6_pcie);
+ 
+ 	ret = imx6_pcie_attach_pd(dev);
 -- 
 2.17.1
 
