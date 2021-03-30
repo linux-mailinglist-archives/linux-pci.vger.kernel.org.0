@@ -2,122 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EADF34DE45
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 04:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B16634DF72
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 05:37:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230495AbhC3CXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 22:23:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:14189 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbhC3CX0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Mar 2021 22:23:26 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4F8Y8C1lbrzmc49;
-        Tue, 30 Mar 2021 10:20:43 +0800 (CST)
-Received: from [127.0.0.1] (10.40.192.162) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.498.0; Tue, 30 Mar 2021
- 10:23:16 +0800
-Subject: Re: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
- __packed
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
- <1616831193-17920-5-git-send-email-tanxiaofei@huawei.com>
- <6df04be78e544e17b3b57f159312541f@AcuMS.aculab.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-Message-ID: <34dd3de8-644d-6e44-965a-0991b7027cae@huawei.com>
-Date:   Tue, 30 Mar 2021 10:23:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S231142AbhC3Dge (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 23:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230328AbhC3Dg0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Mar 2021 23:36:26 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3F1C061764
+        for <linux-pci@vger.kernel.org>; Mon, 29 Mar 2021 20:36:25 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id t16so7503766qvr.12
+        for <linux-pci@vger.kernel.org>; Mon, 29 Mar 2021 20:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5oFbwfLQwyYfYwndfNuhqzfmnicAmT4eTuezCa87hZ8=;
+        b=Ig+y6Y+c1gyTxgnPBQWPhpOyXg4OoXKv2BE4qr6DHkGfLyEyHrKOUH7MGn1otpkWcN
+         kyE/XgUxXw2odCG9cs8Z01SbUYyCaZ5Lu35u7upzKgWerIlCX9tcG+ej8dGbF4oft59o
+         Jz45nZZMBILlzNrBpaIkRVJbA0/irRVXLZ8M5ZS6fbuk1zvqLF+xmgeATsd8G2M9wchi
+         ZqQaXZAQqhmisluHGosx2pBeGVINB4/GAWUybfaWEiIDOJmmYrmqzWrCWg05rXXqsEwA
+         DRvVz8/su4/18C7RTUF8HDL18/u0ZvAZd8OvyXlYSmkfecn/kES13pwqea31yuVPL438
+         0pHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5oFbwfLQwyYfYwndfNuhqzfmnicAmT4eTuezCa87hZ8=;
+        b=NF91fAhJewuIG3k9FRnfGeIUYWVtP767owMXkFyD6VP4pFXdfvsjdbfLa67/WXDBiS
+         DZ0luFmwTzcUOVRaPOhuSol5AzO5I8ns+2nAehqoRBLai/33+0QzESM2UM+xwFkRoxjv
+         r41IzojCNNZuDvkBefJ8yX8fPtsm2siZ4Gw/x61/UoMK8ncsbsgubjfgiy89d0lpHOek
+         48W4HlnAd9aEqt3J7OwHQ3gXYtqo7jDw1u0MrKW2KU+P2hFPsD6EG1DQNZhIIB1dnOoy
+         ofPlZu8Xlz+BnNFizhglP9m72bbTS5SIfcajaSN3Hle6YqXA6DGrTa9lO4UwJCRtPAno
+         UV4w==
+X-Gm-Message-State: AOAM5300M49rH6bsakZBdHZRRzagVhP6UuJGYY1oixGoyVfisGdTRcvP
+        h+TzNz9NrVQvTrpRYrQWOZjkHhfhfqQC6yiJpqFuqw==
+X-Google-Smtp-Source: ABdhPJycQJX/y0PAtsFp+YXjKCTZ+dLVuREDX7kiJ+wyKRjUQUcZEbZpXPSdS3GtQqa6UBU6KpvoUU+fWG5o791GvQ0=
+X-Received: by 2002:a0c:e9c7:: with SMTP id q7mr28188265qvo.7.1617075384531;
+ Mon, 29 Mar 2021 20:36:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6df04be78e544e17b3b57f159312541f@AcuMS.aculab.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.192.162]
-X-CFilter-Loop: Reflected
+References: <cover.1615954045.git.greentime.hu@sifive.com> <91d016e59bab9d9175168a63e7bcd81fdb69b549.1615954046.git.greentime.hu@sifive.com>
+ <161704524201.3012082.13807741329367593907@swboyd.mtv.corp.google.com>
+In-Reply-To: <161704524201.3012082.13807741329367593907@swboyd.mtv.corp.google.com>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Tue, 30 Mar 2021 11:36:12 +0800
+Message-ID: <CAHCEehL63aJQPA3DdRCa3pZHWX3DH9ktgKbo1+nD=KWxADsogA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] clk: sifive: Use reset-simple in prci driver for
+ PCIe driver
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     alex.dewar90@gmail.com, Albert Ou <aou@eecs.berkeley.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, Erik Danie <erik.danie@sifive.com>,
+        hayashi.kunihiko@socionext.com, Bjorn Helgaas <helgaas@kernel.org>,
+        hes@sifive.com, jh80.chung@samsung.com, khilman@baylibre.com,
+        linux-clk@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        lorenzo.pieralisi@arm.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
+        vidyas@nvidia.com, Zong Li <zong.li@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi David,
-
-On 2021/3/29 18:09, David Laight wrote:
-> From: Xiaofei Tan
->> Sent: 27 March 2021 07:46
->>
->> Replace __attribute__((packed)) by __packed following the
->> advice of checkpatch.pl.
->>
->> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
->> ---
->>  drivers/acpi/acpi_fpdt.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/acpi/acpi_fpdt.c b/drivers/acpi/acpi_fpdt.c
->> index a89a806..690a88a 100644
->> --- a/drivers/acpi/acpi_fpdt.c
->> +++ b/drivers/acpi/acpi_fpdt.c
->> @@ -53,7 +53,7 @@ struct resume_performance_record {
->>  	u32 resume_count;
->>  	u64 resume_prev;
->>  	u64 resume_avg;
->> -} __attribute__((packed));
->> +} __packed;
->>
->>  struct boot_performance_record {
->>  	struct fpdt_record_header header;
->> @@ -63,13 +63,13 @@ struct boot_performance_record {
->>  	u64 bootloader_launch;
->>  	u64 exitbootservice_start;
->>  	u64 exitbootservice_end;
->> -} __attribute__((packed));
->> +} __packed;
->>
->>  struct suspend_performance_record {
->>  	struct fpdt_record_header header;
->>  	u64 suspend_start;
->>  	u64 suspend_end;
->> -} __attribute__((packed));
->> +} __packed;
+Stephen Boyd <sboyd@kernel.org> =E6=96=BC 2021=E5=B9=B43=E6=9C=8830=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:14=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> My standard question about 'packed' is whether it is actually needed.
-> It should only be used if the structures might be misaligned in memory.
-> If the only problem is that a 64bit item needs to be 32bit aligned
-> then a suitable type should be used for those specific fields.
+> Quoting Greentime Hu (2021-03-17 23:08:09)
+> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> > index 71ab75a46491..f094df93d911 100644
+> > --- a/drivers/reset/Kconfig
+> > +++ b/drivers/reset/Kconfig
+> > @@ -173,7 +173,7 @@ config RESET_SCMI
+> >
+> >  config RESET_SIMPLE
+> >         bool "Simple Reset Controller Driver" if COMPILE_TEST
+> > -       default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REAL=
+TEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC
+> > +       default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REAL=
+TEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC || RISC=
+V
 >
-> Those all look very dubious - the standard header isn't packed
-> so everything must eb assumed to be at least 32bit aligned.
->
-> There are also other sub-structures that contain 64bit values.
-> These don't contain padding - but that requires 64bit alignement.
->
-> The only problematic structure is the last one - which would have
-> a 32bit pad after the header.
-> Is this even right given than there are explicit alignment pads
-> in some of the other structures.
->
-> If 64bit alignment isn't guaranteed then a '64bit aligned to 32bit'
-> type should be used for the u64 fields.
+> This conflicts. Can this default be part of the riscv defconfig instead?
 >
 
-Yes, some of them has been aligned already, then nothing changed when 
-add this "packed ". Maybe the purpose of the original author is for 
-extension, and can tell others that this struct need be packed.
+Maybe I should remove this since it has been selected by CLK_SIFIVE_PRCI?
 
-> 	David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
->
->
-> .
->
+ config CLK_SIFIVE_PRCI
+        bool "PRCI driver for SiFive SoCs"
++       select RESET_CONTROLLER
++       select RESET_SIMPLE
 
+> >         help
+> >           This enables a simple reset controller driver for reset lines=
+ that
+> >           that can be asserted and deasserted by toggling bits in a con=
+tiguous,
+> > @@ -187,6 +187,7 @@ config RESET_SIMPLE
+> >            - RCC reset controller in STM32 MCUs
+> >            - Allwinner SoCs
+> >            - ZTE's zx2967 family
+> > +          - SiFive FU740 SoCs
+> >
+> >  config RESET_STM32MP157
+> >         bool "STM32MP157 Reset Driver" if COMPILE_TEST
