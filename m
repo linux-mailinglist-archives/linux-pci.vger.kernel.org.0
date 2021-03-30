@@ -2,103 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0294834EDB0
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 18:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4EC134EEC4
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 19:01:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232377AbhC3QYF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Mar 2021 12:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232357AbhC3QXr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Mar 2021 12:23:47 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F53C061574;
-        Tue, 30 Mar 2021 09:23:47 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id 68-20020a9d0f4a0000b02901b663e6258dso16081487ott.13;
-        Tue, 30 Mar 2021 09:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8k/R3Z1NvB0DXO6K99UF1wGAXsYisfDguT4FZRHCp1c=;
-        b=RJEpI15QZsXpm89FHqBATwZuAP+vcibkzS4tIbzICBo2ZMT3O03knPvcfV41vkqE8J
-         9sV1CP4KLKCd44GRPWr3Ftfy6+YmSTtnXIPIPPftUKpAGJxH+CMilF7utCn8ENBC/Exa
-         46GfqszzK9aG4SyoLzDjMlHkqoPxIcKaS0y2Tvyv3FJtN/ypakskg+5TUW7hFkIASYjr
-         b8WDtYNmTzpfpqboelnuQ+GsY/o/spXtF4u8WJYfJx9DrNyRhCr968qSThsp1xKZZfWx
-         d0J9sre6DnG3zG5fTTXXKAvoPWBfk/svvJEd+qn5vCWw7+x8Rkx0WKU135z2n3Zsks9s
-         jdpA==
+        id S232608AbhC3RA5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Mar 2021 13:00:57 -0400
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:46728 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231650AbhC3RAr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Mar 2021 13:00:47 -0400
+Received: by mail-ot1-f47.google.com with SMTP id 68-20020a9d0f4a0000b02901b663e6258dso16193092ott.13;
+        Tue, 30 Mar 2021 10:00:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8k/R3Z1NvB0DXO6K99UF1wGAXsYisfDguT4FZRHCp1c=;
-        b=KkS5h9MlAu7BeWxKEELLTLXtno2fcjPgqnOV+sv0lSX0gkWItrf9cMvkPU/1b04WJL
-         fxTTTxOAUpukGq4okY4hojcvndLGomCik0StaedjaMeuiuqZBx/U3TAqL35VzWS7nMSN
-         CSFpzZxJKLu9YWsMWsh9+lThSV9Ys/FUAXNajXSrki8Fte1c/db2L3oSFEZPBFfalKsd
-         nbP3lS7+7YoFt0G8Cfbo+/jLZRShc+wSYnbblesdqSKcj4oaNE0LwF3Mtgfd4/A0ibqo
-         0znEM2sCtkoO0kWPC/AZpO/FinEHylon3l/VTSbrT3W1FnTMLfwbuc5EoxnXTSZT8avv
-         ZTWw==
-X-Gm-Message-State: AOAM5316Og7SBhCvpfIdEy6u5a+Lc5h4cb4ZFZhlMFnupcIrD3f++8t9
-        0i5u/0y22jbjVSLAF92j5qucdG5cSLCeheiD9a4=
-X-Google-Smtp-Source: ABdhPJxxDLiLh8bABF8yNOzeiW0symW5513NoaUkwy5zJnItSU9Kwjrw867zd1DAqcnFUdeY0dHqzy7bq/Jq3XuSe90=
-X-Received: by 2002:a05:6830:14a:: with SMTP id j10mr28568308otp.143.1617121427121;
- Tue, 30 Mar 2021 09:23:47 -0700 (PDT)
+        bh=GrRt3u7iqTFYKYQM2kMqnl4TPPvQxpiAG7TTBqlqQcY=;
+        b=SUvdubfcuobp6viiZFjLvFggNNsSllcy6DzV0ka1Ep+I000Q52ZOKzBEGpUXd5RH5C
+         wXsCCXDc9Esu40/RaTBhpC0BvK5Cc2KtETE6ows1X6LntO4wsqN8oey4ff1+TeX4e1ef
+         RsRxGgkOrjO551hPt+Qfu8SkJcHFF37z6BGzwXHvXc6wLC8dGPSfIimfwrT++O9lLQ71
+         HJno3G6zns7h+YhHRPbUjCw+OX523ZoHgESpfgvnKs0Z2Q4ipV4hWLdUUSQZmbGC36B8
+         KGT/XFWYPKr6qdKoudHHnGLbqDSkONI+Zm2T7Wongyn+4A9RWyO0t1niiArQIipGDZDM
+         1lhw==
+X-Gm-Message-State: AOAM5319S6u/OwUz0vTPPcatNsf7P3PRS2AmsBwdNc8n4UcK2z8GOuov
+        iO0M9eMr1Xc1KNMkxHmPIFYkqPhFNeovnvC055c=
+X-Google-Smtp-Source: ABdhPJz+lW82gZmQ0GMHD4FdEDFEY51f8BcLrLAWfgu86kEPKK44Q3AH1fe7Dl5zN+oDsSjCsVO2M430UPrtd5vx+BA=
+X-Received: by 2002:a05:6830:20d2:: with SMTP id z18mr27637560otq.260.1617123646616;
+ Tue, 30 Mar 2021 10:00:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210326191906.43567-1-jim2101024@gmail.com> <20210326191906.43567-2-jim2101024@gmail.com>
- <20210330150816.GA306420@robh.at.kernel.org> <20210330153023.GE4976@sirena.org.uk>
-In-Reply-To: <20210330153023.GE4976@sirena.org.uk>
-From:   Jim Quinlan <jim2101024@gmail.com>
-Date:   Tue, 30 Mar 2021 12:23:35 -0400
-Message-ID: <CANCKTBvDdkLk0o4NboaOTZ26vfwJjPAfnXK3ay4v9E91G2gYOQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
+ <1616831193-17920-5-git-send-email-tanxiaofei@huawei.com> <6df04be78e544e17b3b57f159312541f@AcuMS.aculab.com>
+ <34dd3de8-644d-6e44-965a-0991b7027cae@huawei.com> <b5ad5909f3fb14b46d6ff0f81c10e42507a60c74.camel@intel.com>
+ <af3fd5adb62dcac93f2ff4ea7b6aff74d0106ac5.camel@intel.com> <6df8e01e2e9e4906be5ceaea72c61c0f@AcuMS.aculab.com>
+In-Reply-To: <6df8e01e2e9e4906be5ceaea72c61c0f@AcuMS.aculab.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Mar 2021 19:00:31 +0200
+Message-ID: <CAJZ5v0hz8dadumTTDbe6+xyNBMhkTLq6C60U+=Ec44WxL2Jdxw@mail.gmail.com>
+Subject: Re: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by __packed
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 11:30 AM Mark Brown <broonie@kernel.org> wrote:
->10.22.8.121
-> On Tue, Mar 30, 2021 at 10:08:16AM -0500, Rob Herring wrote:
-> > On Fri, Mar 26, 2021 at 03:18:59PM -0400, Jim Quinlan wrote:
+On Tue, Mar 30, 2021 at 10:15 AM David Laight <David.Laight@aculab.com> wrote:
 >
-> > > +                    pcie-ep@0,0 {
-> > > +                            reg = <0x0 0x0 0x0 0x0 0x0>;
-> > > +                            compatible = "pci14e4,1688";
-> > > +                            vpcie12v-supply: <&vreg12>;
+> From: Zhang Rui
+> > Sent: 30 March 2021 09:00
+> > To: Xiaofei Tan <tanxiaofei@huawei.com>; David Laight <David.Laight@ACULAB.COM>; rjw@rjwysocki.net;
+> > lenb@kernel.org; bhelgaas@google.com
+> > Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+> > linuxarm@openeuler.org
+> > Subject: Re: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by __packed
+> >
+> > On Tue, 2021-03-30 at 15:31 +0800, Zhang Rui wrote:
+> > > On Tue, 2021-03-30 at 10:23 +0800, Xiaofei Tan wrote:
+> > > > Hi David,
+> > > >
+> > > > On 2021/3/29 18:09, David Laight wrote:
+> > > > > From: Xiaofei Tan
+> > > > > > Sent: 27 March 2021 07:46
+> > > > > >
+> > > > > > Replace __attribute__((packed)) by __packed following the
+> > > > > > advice of checkpatch.pl.
+> > > > > >
+> > > > > > Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+> > > > > > ---
+> > > > > >  drivers/acpi/acpi_fpdt.c | 6 +++---
+> > > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/acpi/acpi_fpdt.c
+> > > > > > b/drivers/acpi/acpi_fpdt.c
+> > > > > > index a89a806..690a88a 100644
+> > > > > > --- a/drivers/acpi/acpi_fpdt.c
+> > > > > > +++ b/drivers/acpi/acpi_fpdt.c
+> > > > > > @@ -53,7 +53,7 @@ struct resume_performance_record {
+> > > > > >       u32 resume_count;
+> > > > > >       u64 resume_prev;
+> > > > > >       u64 resume_avg;
+> > > > > > -} __attribute__((packed));
+> > > > > > +} __packed;
+> > > > > >
+> > > > > >  struct boot_performance_record {
+> > > > > >       struct fpdt_record_header header;
+> > > > > > @@ -63,13 +63,13 @@ struct boot_performance_record {
+> > > > > >       u64 bootloader_launch;
+> > > > > >       u64 exitbootservice_start;
+> > > > > >       u64 exitbootservice_end;
+> > > > > > -} __attribute__((packed));
+> > > > > > +} __packed;
+> > > > > >
+> > > > > >  struct suspend_performance_record {
+> > > > > >       struct fpdt_record_header header;
+> > > > > >       u64 suspend_start;
+> > > > > >       u64 suspend_end;
+> > > > > > -} __attribute__((packed));
+> > > > > > +} __packed;
+> > > > >
+> > > > > My standard question about 'packed' is whether it is actually
+> > > > > needed.
+> > > > > It should only be used if the structures might be misaligned in
+> > > > > memory.
+> > > > > If the only problem is that a 64bit item needs to be 32bit
+> > > > > aligned
+> > > > > then a suitable type should be used for those specific fields.
+> > > > >
+> > > > > Those all look very dubious - the standard header isn't packed
+> > > > > so everything must eb assumed to be at least 32bit aligned.
+> > > > >
+> > > > > There are also other sub-structures that contain 64bit values.
+> > > > > These don't contain padding - but that requires 64bit alignement.
+> > > > >
+> > > > > The only problematic structure is the last one - which would have
+> > > > > a 32bit pad after the header.
+> > > > > Is this even right given than there are explicit alignment pads
+> > > > > in some of the other structures.
+> > > > >
+> > > > > If 64bit alignment isn't guaranteed then a '64bit aligned to
+> > > > > 32bit'
+> > > > > type should be used for the u64 fields.
+> > > > >
+> > > >
+> > > > Yes, some of them has been aligned already, then nothing changed
+> > > > when
+> > > > add this "packed ". Maybe the purpose of the original author is
+> > > > for
+> > > > extension, and can tell others that this struct need be packed.
+> > > >
+> > >
+> > > The patch is upstreamed recently but it was made long time ago.
+> > > I think the original problem is that one of the address, probably the
+> > > suspend_performance record, is not 64bit aligned, thus we can not
+> > > read
+> > > the proper content of suspend_start and suspend_end, mapped from
+> > > physical memory.
+> > >
+> > > I will try to find a machine to reproduce the problem with all
+> > > __attribute__((packed)) removed to double confirm this.
+> > >
+> >
+> > So here is the problem, without __attribute__((packed))
+> >
+> > [    0.858442] suspend_record: 0xffffaad500175020
+> > /sys/firmware/acpi/fpdt/suspend/suspend_end_ns:addr:
+> > 0xffffaad500175030, 15998179292659843072
+> > /sys/firmware/acpi/fpdt/suspend/suspend_start_ns:addr:
+> > 0xffffaad500175028, 0
+> >
+> > suspend_record is mapped to 0xffffaad500175020, and it is combined with
+> > one 32bit header and two 64bit fields (suspend_start and suspend_end),
+> > this is how it is located in physical memory.
+> > So the addresses of the two 64bit fields are actually not 64bit
+> > aligned.
+> >
+> > David,
+> > Is this the "a 64bit item needs to be 32bit aligned" problem you
+> > referred?
+> > If yes, what is the proper fix? should I used two 32bits for each of
+> > the field instead?
 >
-> > For other cases, these properties are in the host bridge node. If these
-> > are standard PCI rails, then I think that's where they belong unless we10.22.8.121
-> > define slot nodes.
+> Define something like:
+> typedef u64 __attribute__((aligned(4))) u64_align32;
+> and then use it for the 64bit structure members.
 >
-> For a soldered down part I'd expect we'd want both (if the host even
-> cares) - for anything except a supply that I/O or something else shared
-> is referenced off there's no great reason why it has to be physically
-> the same supply going to every device on the bus so each device should
-> be able to specify separately.
-Our developer and reference boards frequently have Mini and half-mini
-PCIe sockets (a few exceptions), whereas production boards are mostly
-soldered down.
+> There doesn't seem to be a standard type name for it - although
+> it is used in several places.
+>
+> I'm not entirely sure but is ACPI always LE?
 
-If I resubmit this pullreq  so that it  looks for "vpcie12v-supply"
-and "vpcie3v3-supply" in the host node, will that be acceptable for
-both of you?
+Yes.
 
-Thanks,
-Jim Quinlan
-Broadcom STB
+> (is it even x86 only??)
+
+No.
