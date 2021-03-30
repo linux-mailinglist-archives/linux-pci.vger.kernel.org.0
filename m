@@ -2,108 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4257434DC43
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 00:59:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0413534DD8D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 03:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229763AbhC2W7B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Mar 2021 18:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        id S230220AbhC3B34 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Mar 2021 21:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230161AbhC2W6i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Mar 2021 18:58:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E3E6761987;
-        Mon, 29 Mar 2021 22:58:37 +0000 (UTC)
+        id S229555AbhC3B3v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Mar 2021 21:29:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B6B8361601;
+        Tue, 30 Mar 2021 01:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617058718;
-        bh=jhysSetweRUJdS8VenXWdDpmgxH3meIzQdLA2n+rNm0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NX3jpCkg50kc51Psd4U6zDewVQFQWSR2kXksn3BxHwIudf8SBsko8ehoG3HOi7ujV
-         1slDQ533ySqgv5YqvAXuO11FrXhiX/iv+8p9oGHz0GvXy5Uz5DrB+c7W8mNRaBqYok
-         5rY8oD3x8lYdsWu1EWHhKnk9cMTMQFDZRB/Cc56SH3eofsTWzNIA08RdWG1iAwwMbG
-         sb5+OlZREYqIz19u8KIwGYX2lkDefSMoiTK33xlN84ZFTXcz5aapzHdjSxhVj3EyPC
-         NA/XOqYB9xIMoLA5y+9MyJj1dDgdUoIkLq0F7f58WhJzmMP5BNjy2ixirK0Yxb+Qss
-         VKMeJCgQHDZWA==
-Received: by pali.im (Postfix)
-        id 515CBA79; Tue, 30 Mar 2021 00:58:35 +0200 (CEST)
-Date:   Tue, 30 Mar 2021 00:58:35 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
-        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
-        sin_jieyang@mediatek.com, drinkcat@chromium.org,
-        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
-Subject: Re: [v8,3/7] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
-Message-ID: <20210329225835.cv2ev5ou5szvrws2@pali>
-References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
- <20210224061132.26526-4-jianjun.wang@mediatek.com>
- <20210311123844.qzl264ungtk7b6xz@pali>
- <1615621394.25662.70.camel@mhfsdcap03>
- <20210318000211.ykjsfavfc7suu2sb@pali>
- <1616046487.31760.16.camel@mhfsdcap03>
+        s=k20201202; t=1617067791;
+        bh=FOL/caVD4F/jBznmonolFIU/T5q9WM3HTqqkenGFCD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WjuFs13elkNkZd4Oh+RqKnUtLPlM8q1WmvgfuKiozP+azVPfxjEjHTyvbqyRZxyIk
+         ke1Yb5mL/4btqeV/nCyt16sVaOE7gT/BVZ7zjSgasVe+19mMCopsTCnglESSYr1eLW
+         n9YW5Y6BA8Q80BXmq4/UBNKSQeV/4vP4N1Qk1Jm2GYjdKZDBJwSNF8Z6JA42ApBwQA
+         JkzqeiFc7VY+BZqZa4Q9r0OyPw/WcCPnBxk1xSTAO0AajFp+6ehqWEvUql3PCG1L29
+         9l/4HjLJolgL6h30/M9A2EE47xd8yVCxGHbVa5140qQkg72mns2csA8xyeLpAzA6An
+         5IbkKuNkUkXBw==
+Date:   Mon, 29 Mar 2021 20:29:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Keith Busch <kbusch@kernel.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210330012949.GA1205505@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1616046487.31760.16.camel@mhfsdcap03>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20210326190148.GN2710221@ziepe.ca>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 18 March 2021 13:48:07 Jianjun Wang wrote:
-> On Thu, 2021-03-18 at 01:02 +0100, Pali Rohár wrote:
-> > On Saturday 13 March 2021 15:43:14 Jianjun Wang wrote:
-> > > On Thu, 2021-03-11 at 13:38 +0100, Pali Rohár wrote:
-> > > > On Wednesday 24 February 2021 14:11:28 Jianjun Wang wrote:
-> > > > > +
-> > > > > +	/* Check if the link is up or not */
-> > > > > +	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_REG, val,
-> > > > > +				 !!(val & PCIE_PORT_LINKUP), 20,
-> > > > > +				 50 * USEC_PER_MSEC);
-> > > > 
-> > > > IIRC, you need to wait at least 100ms after de-asserting PERST# signal
-> > > > as it is required by PCIe specs and also because experiments proved that
-> > > > some Compex wifi cards (e.g. WLE900VX) are not detected if you do not
-> > > > wait this minimal time.
-> > > 
-> > > Yes, this should be 100ms, I will fix it at next version, thanks for
-> > > your review.
-> > 
-> > In past Bjorn suggested to use msleep(PCI_PM_D3COLD_WAIT); macro for
-> > this step during reviewing aardvark driver.
-> > 
-> > https://lore.kernel.org/linux-pci/20190426161050.GA189964@google.com/
-> > 
-> > And next iteration used this PCI_PM_D3COLD_WAIT macro instead of 100:
-> > 
-> > https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/
+On Fri, Mar 26, 2021 at 04:01:48PM -0300, Jason Gunthorpe wrote:
+> On Fri, Mar 26, 2021 at 11:50:44AM -0700, Alexander Duyck wrote:
 > 
-> Sure, I will use PCI_PM_D3COLD_WAIT macro instead in the next version.
+> > My concern would be that we are defining the user space interface.
+> > Once we have this working as a single operation I could see us having
+> > to support it that way going forward as somebody will script something
+> > not expecting an "offline" sysfs file, and the complaint would be that
+> > we are breaking userspace if we require the use of an "offline"
+> > file.
 > 
-> Thanks.
+> Well, we wouldn't do that. The semantic we define here is that the
+> msix_count interface 'auto-offlines' if that is what is required. If
+> we add some formal offline someday then 'auto-offline' would be a NOP
+> when the device is offline and do the same online/offline sequence as
+> today if it isn't.
 
-Anyway, now I found out that kernel has functions for this waiting:
-pcie_wait_for_link_delay() and pcie_wait_for_link()
+Alexander, Keith, any more thoughts on this?
 
-Function is called from pci_bridge_wait_for_secondary_bus().
+I think I misunderstood Greg's subdirectory comment.  We already have
+directories like this:
 
-But in current form it is not usable for native controller drivers.
+  /sys/bus/pci/devices/0000:01:00.0/link/
+  /sys/bus/pci/devices/0000:01:00.0/msi_irqs/
+  /sys/bus/pci/devices/0000:01:00.0/power/
 
-This looks like another candidate for code de-duplication or providing
-"framework".
+and aspm_ctrl_attr_group (for "link") is nicely done with static
+attributes.  So I think we could do something like this:
 
+  /sys/bus/pci/devices/0000:01:00.0/   # PF directory
+    sriov/                             # SR-IOV related stuff
+      vf_total_msix
+      vf_msix_count_BB:DD.F        # includes bus/dev/fn of first VF
+      ...
+      vf_msix_count_BB:DD.F        # includes bus/dev/fn of last VF
 
-Lorenzo, as maintainer of native controller drivers, do you have some
-ideas about providing "framework", common functions or something for
-avoiding to implement same code patterns in every native controller
-driver, which is de-facto standard PCIe codepath? Including a way how to
-export PERST# reset gpio?
+And I think this could support the mlx5 model as well as the NVMe
+model.
+
+For NVMe, a write to vf_msix_count_* would have to auto-offline the VF
+before asking the PF to assign the vectors, as Jason suggests above.
+Before VF Enable is set, the vf_msix_count_* files wouldn't exist and
+we wouldn't be able to assign vectors to VFs; IIUC that's a difference
+from the NVMe interface, but maybe not a terrible one?
+
+I'm not proposing changing nvme-cli to use this, but if the interface
+is general enough to support both, that would be a good clue that it
+might be able to support future devices with similar functionality.
+
+Bjorn
