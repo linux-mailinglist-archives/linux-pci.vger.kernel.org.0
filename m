@@ -2,113 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A922E34F004
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 19:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1702C34F093
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Mar 2021 20:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232440AbhC3Rn7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Mar 2021 13:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33108 "EHLO mail.kernel.org"
+        id S232658AbhC3SLB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Mar 2021 14:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232101AbhC3Rn2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Mar 2021 13:43:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8E757619D6;
-        Tue, 30 Mar 2021 17:43:27 +0000 (UTC)
+        id S232659AbhC3SKr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 30 Mar 2021 14:10:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 70C5B619D1;
+        Tue, 30 Mar 2021 18:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617126207;
-        bh=oJFKuCUfkKRL7zkTo3uhLRMFcjPrNPutwqIV6AWcUUI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aczD3+BA9FjpTgcNUhiYA6AdAoLO0jJQioJVqdFN+VQkRX4CxxXewXc6uybN4UgOU
-         m4aYzk+MvJ5tBJmJijW5DqSxl3WVCZgZ5FwN5AOdJnfwygy0Op4wCCUtSuWoQXJe6j
-         OnaWH+wC2hT7LVF+/4tbZGpvBdQEt7AQxKbmSVNn18Uy/HU/rZp9eoxOqnLBkkLd6m
-         VxyyLcQM5HN8prUBZrLim6HhoaMUD3Ov1bSsJ4hblswe7i3LZRJBBNQ7/XFyPX3EnP
-         jcvlGRhiO7DoPO+xP5Zl8kGJGNffDo7ykjlYW7LBESWu63efhsUJjwdAwnQgaJ3Y9Q
-         yaJospq8aBiiw==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, nic_swsd@realtek.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v4 3/3] ARM: iop32x: disable N2100 PCI parity reporting
-Date:   Tue, 30 Mar 2021 12:43:18 -0500
-Message-Id: <20210330174318.1289680-4-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210330174318.1289680-1-helgaas@kernel.org>
-References: <20210330174318.1289680-1-helgaas@kernel.org>
+        s=k20201202; t=1617127847;
+        bh=E4CSAOav2miwBccqpWx6Wl4oB6R4c2qqsJVd8NGrcos=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pU90oj8QlnmK3EtLJzLSRK50ZsjvBKKwT+Hljpotn2sk/KlEr5oS2o3mCP2tlf+bh
+         lX4qI5onDRKex/2Db4BTok3V0yfSkh/99x5HRFESSbJH0rVZeZXELeZu/yNWow7axx
+         ZennwI3NBGTbOscxZmECAUhpaIRQJ1WUYGQq7RHNs5TbpDLz79EdTAQ3aY2kdIYYXR
+         43i6a7NcAJJmaA5B9VAppcwA1i25ZtSP6NBf5Ioc5bIMAmx3z1NJvmuXfNcJx3M+PG
+         aMEV4faG8gfbVol7bdb7qS4xGb9+RNJiMRl0Luai9DF4lEBGTCin/SXYJ4vifVGfIP
+         x6MUqJNBmNy0Q==
+Date:   Wed, 31 Mar 2021 03:10:39 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210330181039.GA22898@redsun51.ssa.fujisawa.hgst.com>
+References: <20210326190148.GN2710221@ziepe.ca>
+ <20210330012949.GA1205505@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210330012949.GA1205505@bjorn-Precision-5520>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+On Mon, Mar 29, 2021 at 08:29:49PM -0500, Bjorn Helgaas wrote:
+> On Fri, Mar 26, 2021 at 04:01:48PM -0300, Jason Gunthorpe wrote:
+> > On Fri, Mar 26, 2021 at 11:50:44AM -0700, Alexander Duyck wrote:
+> > 
+> > > My concern would be that we are defining the user space interface.
+> > > Once we have this working as a single operation I could see us having
+> > > to support it that way going forward as somebody will script something
+> > > not expecting an "offline" sysfs file, and the complaint would be that
+> > > we are breaking userspace if we require the use of an "offline"
+> > > file.
+> > 
+> > Well, we wouldn't do that. The semantic we define here is that the
+> > msix_count interface 'auto-offlines' if that is what is required. If
+> > we add some formal offline someday then 'auto-offline' would be a NOP
+> > when the device is offline and do the same online/offline sequence as
+> > today if it isn't.
+> 
+> Alexander, Keith, any more thoughts on this?
+> 
+> I think I misunderstood Greg's subdirectory comment.  We already have
+> directories like this:
+> 
+>   /sys/bus/pci/devices/0000:01:00.0/link/
+>   /sys/bus/pci/devices/0000:01:00.0/msi_irqs/
+>   /sys/bus/pci/devices/0000:01:00.0/power/
+> 
+> and aspm_ctrl_attr_group (for "link") is nicely done with static
+> attributes.  So I think we could do something like this:
+> 
+>   /sys/bus/pci/devices/0000:01:00.0/   # PF directory
+>     sriov/                             # SR-IOV related stuff
+>       vf_total_msix
+>       vf_msix_count_BB:DD.F        # includes bus/dev/fn of first VF
+>       ...
+>       vf_msix_count_BB:DD.F        # includes bus/dev/fn of last VF
+> 
+> And I think this could support the mlx5 model as well as the NVMe
+> model.
+> 
+> For NVMe, a write to vf_msix_count_* would have to auto-offline the VF
+> before asking the PF to assign the vectors, as Jason suggests above.
+> Before VF Enable is set, the vf_msix_count_* files wouldn't exist and
+> we wouldn't be able to assign vectors to VFs; IIUC that's a difference
+> from the NVMe interface, but maybe not a terrible one?
 
-On the N2100, instead of just marking the r8169 chips as having
-broken_parity_status, disable parity error reporting for them entirely.
+Yes, that's fine, nvme can handle this flow. It is a little easier to
+avoid nvme user error if we could mainpulate the counts prior to VF Enable,
+but it's really not a problem this way either.
 
-This was the only relevant place that set broken_parity_status, so we no
-longer need to check for it in the r8169 error interrupt handler.
-
-[bhelgaas: squash into one patch, commit log]
-Link: https://lore.kernel.org/r/0c0dcbf2-5f1e-954c-ebd7-e6ccfae5c60e@gmail.com
-Link: https://lore.kernel.org/r/9e312679-a684-e9c7-2656-420723706451@gmail.com
----
- arch/arm/mach-iop32x/n2100.c              |  8 ++++----
- drivers/net/ethernet/realtek/r8169_main.c | 14 --------------
- 2 files changed, 4 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/mach-iop32x/n2100.c b/arch/arm/mach-iop32x/n2100.c
-index 78b9a5ee41c9..bf99e718f8b8 100644
---- a/arch/arm/mach-iop32x/n2100.c
-+++ b/arch/arm/mach-iop32x/n2100.c
-@@ -116,16 +116,16 @@ static struct hw_pci n2100_pci __initdata = {
- };
- 
- /*
-- * Both r8169 chips on the n2100 exhibit PCI parity problems.  Set
-- * the ->broken_parity_status flag for both ports so that the r8169
-- * driver knows it should ignore error interrupts.
-+ * Both r8169 chips on the n2100 exhibit PCI parity problems.  Turn
-+ * off parity reporting for both ports so we don't get error interrupts
-+ * for them.
-  */
- static void n2100_fixup_r8169(struct pci_dev *dev)
- {
- 	if (dev->bus->number == 0 &&
- 	    (dev->devfn == PCI_DEVFN(1, 0) ||
- 	     dev->devfn == PCI_DEVFN(2, 0)))
--		dev->broken_parity_status = 1;
-+		pci_disable_parity(dev);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REALTEK, PCI_ANY_ID, n2100_fixup_r8169);
- 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index f704da3f214c..a6aff0d993eb 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4358,20 +4358,6 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- 	if (net_ratelimit())
- 		netdev_err(dev, "PCI error (cmd = 0x%04x, status_errs = 0x%04x)\n",
- 			   pci_cmd, pci_status_errs);
--	/*
--	 * The recovery sequence below admits a very elaborated explanation:
--	 * - it seems to work;
--	 * - I did not see what else could be done;
--	 * - it makes iop3xx happy.
--	 *
--	 * Feel free to adjust to your needs.
--	 */
--	if (pdev->broken_parity_status)
--		pci_cmd &= ~PCI_COMMAND_PARITY;
--	else
--		pci_cmd |= PCI_COMMAND_SERR | PCI_COMMAND_PARITY;
--
--	pci_write_config_word(pdev, PCI_COMMAND, pci_cmd);
- 
- 	rtl_schedule_task(tp, RTL_FLAG_TASK_RESET_PENDING);
- }
--- 
-2.25.1
-
+I think it's reasonable for nvme to subscribe to this interface, but I
+will have to defer to someone with capable nvme devices to implement it.
