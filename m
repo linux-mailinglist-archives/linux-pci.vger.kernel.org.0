@@ -2,189 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17CEC350539
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 19:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E1D135055C
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 19:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbhCaRHq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 13:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbhCaRHW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 13:07:22 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A989DC061574
-        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 10:07:22 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id o5so20073190qkb.0
-        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 10:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CBJLgij8JRUpa6bM6F2HzF0AcYEY2HXB4yx3yMAYHWY=;
-        b=I3icD9WkMNJ0dAyK1Wv8cpeBrTixRgfSrUKvPdVhK07yhGUYb5MnZRDMK9Vr0FnEEI
-         Wl6GG1mls7jaG40HUL5BNvQrQNI/K8/HURlFIyAZkh+HHxmKK3YhuUimgRG87npzRwDj
-         xhkgqi9ZQlhHO9MyemttQn9IOX1dUpcLrqMq/AuaN0rDu43guNce+zJyQxCShGZzzhFb
-         O58Ig1j6IPpubs+o37HZv0lUXHJwmL807FrPxwRtygMpaLPyZldw4nxt9UFM0e9/HfNx
-         pDW+A0FeZuPUMGCpITJKXMZir+Vlygh+VHIOqeL76FiFJxqeLN1YJ6IgjS8M08pyDCUO
-         RJhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CBJLgij8JRUpa6bM6F2HzF0AcYEY2HXB4yx3yMAYHWY=;
-        b=mwCgQUfLFZiSjvgGpQBzpIZeQPrBAhLL2uDsMBV52y1zYzewvx2vb1zLtQoSgosk2c
-         GldB+1r7HX4yFeLhjrYgdBf/SPm3pHrMeKV0+rDB+G45PrAIK/Lo6rlzROCsGWw5sVt3
-         aN2lEpWh4MIrLIyvsFpsWigDzgFV5oNuu6YNuxQza7T5eA5VxXqxi1BCsu/5b0lxwoem
-         URqJCW7tPW7Im+f4ENMmdyPTOwPCdDQcjHdtIMoYcGj3DLea4jR5qUNS7+ljAihZvC42
-         9leE65kFJ54K6MFHqql/byxCZ27EDqrIgV5DLiPqNpyFqaY2kpK14pZoeZw2R8xBjGWS
-         R4bg==
-X-Gm-Message-State: AOAM5324JT9SWguQQ1PiE7Em4rAXKTfFoUISeI4ZSeU2bd1T26aUO67p
-        YsOHfHjkJYP0gdz7Q+HHU10d/A==
-X-Google-Smtp-Source: ABdhPJwAoOIqYtNI2MwGauM5rPZT26vCbcrvCwwOUhjCAPlzbZW+C4ASvagifSG/VZz4tKBdzSM95Q==
-X-Received: by 2002:a37:6348:: with SMTP id x69mr4015891qkb.154.1617210441706;
-        Wed, 31 Mar 2021 10:07:21 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-115-133.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.115.133])
-        by smtp.gmail.com with ESMTPSA id h75sm1819948qke.80.2021.03.31.10.07.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Mar 2021 10:07:21 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1lReJM-006OXG-AR; Wed, 31 Mar 2021 14:07:20 -0300
-Date:   Wed, 31 Mar 2021 14:07:20 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <20210331170720.GY2710221@ziepe.ca>
-References: <20210330194716.GV2710221@ziepe.ca>
- <20210330204141.GA1305530@bjorn-Precision-5520>
- <20210330224341.GW2710221@ziepe.ca>
- <YGQY72LnGB6bfIsI@kroah.com>
- <20210331121929.GX2710221@ziepe.ca>
- <YGSPUewD5J+F7ZRe@kroah.com>
+        id S233945AbhCaRWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 13:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233900AbhCaRWN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 31 Mar 2021 13:22:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B721961041;
+        Wed, 31 Mar 2021 17:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617211332;
+        bh=UNNvx8KRbir/+SlHakk0v0B4spVKeTNYcTv3zPs9JaY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Y+w6NTt0eiDQrd/3cvK6U8FxlBYYQDStYl+pTMOrnYv5SRqR9ou5//rEZoXqXa6iA
+         bqZXtWIHoGkR6BCUqOR+xkJxAtrXK6++GFvEVtTQLuuQz8rb/G424ffNkHN3OFDU5j
+         T87XdnLPLslscLynwtM+aQU2UKqpAJyG/rBkXwzmCXyJFkgjalwgzG2a5UVkBb1/bG
+         0dMtuuEOkTsb1YIEuAQURB9HE++Xu9K14sG2y+EXAGYNlXPGZ8f0qnlI/kFYmSbViT
+         V8qFnLiFWMgqdtxbciYGFSLK1MYyb9yBFezmbQLzjhb+3F292NIj0dXTbiCSJZlm1t
+         DeUVdbnQRnPYw==
+Date:   Wed, 31 Mar 2021 12:22:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
+Subject: Re: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Message-ID: <20210331172210.GA1397554@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YGSPUewD5J+F7ZRe@kroah.com>
+In-Reply-To: <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 31, 2021 at 05:03:45PM +0200, Greg Kroah-Hartman wrote:
-> > It isn't a struct device object at all though, it just organizing
-> > attributes.
+On Wed, Mar 31, 2021 at 11:55:08PM +0800, Zhang Rui wrote:
+> ...
+
+> From e18c942855e2f51e814d057fff4dd951cd0d0907 Mon Sep 17 00:00:00 2001
+> From: Zhang Rui <rui.zhang@intel.com>
+> Date: Wed, 31 Mar 2021 20:34:13 +0800
+> Subject: [PATCH] ACPI: tables: FPDT: Fix 64bit alignment issue
 > 
-> That's the point, it really is not.  You are forced to create a real
-> object for that subdirectory, and by doing so, you are "breaking" the
-> driver/device model.  As is evident by userspace not knowing what is
-> going on here.
+> Some of the 64bit items in FPDT table may be 32bit aligned.
+> Using __attribute__((packed)) is not needed in this case, fixing it by
+> allowing 32bit alignment for these 64bit items.
 
-I'm still not really sure about what this means in practice..
+1) Can you please add a spec reference for this?  I think it's ACPI
+   v6.3, sec 5.2.23.5, or something close to that.
 
-I found an nested attribute in RDMA land so lets see how it behaves.
- 
-   /sys/class/infiniband/ibp0s9/ <-- This is a struct device/ib_device
+2) The exact layout in memory is prescribed by the spec.  I think
+   that's basically what "packed" accomplishes.  I don't understand
+   why using "aligned" would be preferable.  Using "aligned" means
+   things can be at different offsets depending on the starting
+   address of the structure.  We always want the identical layout, no
+   matter what the starting address is.
 
-Then we have 261 'attribute' files under a ports subdirectory, for
-instance:
-
- /sys/class/infiniband/ibp0s9/ports/1/cm_tx_retries/dreq
-
-Open/read works fine, and the specialty userspace that people built on
-this has been working for a long time.
-
-Does udev see the deeply nested attributes? Apparently yes:
-
-$ udevadm info -a /sys/class/infiniband/ibp0s9
-    ATTR{ports/1/cm_rx_duplicates/dreq}=="0"
-    [..]
-
-Given your remarks, I'm surprised, but it seems to work - I assume if
-udevadm shows it then all the rules will work too.
-
-Has udev become confused about what is a struct device? Looks like no:
-
-$ udevadm info -a /sys/class/infiniband/ibp0s9/port
-Unknown device "/sys/class/infiniband/ibp0s9/port": No such device
-
-Can you give an example where things go wrong?
-
-(and I inherited this RDMA stuff. In the last two years we moved it
- all to netlink and modern userspace largely no longer touches sysfs,
- but I can't break in-use uAPI)
-
-> > > Does that help?  The rules are:
-> > > 	- Once you use a 'struct device', all subdirs below that device
-> > > 	  are either an attribute group for that device or a child
-> > > 	  device.
-> > > 	- A struct device can NOT have an attribute group as a parent,
-> > > 	  it can ONLY have another struct device as a parent.
-> > > 
-> > > If you break those rules, the kernel has the ability to get really
-> > > confused unless you are very careful, and userspace will be totally lost
-> > > as you can not do anything special there.
-> > 
-> > The kernel gets confused?
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+>  drivers/acpi/acpi_fpdt.c | 28 +++++++++++++++-------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
 > 
-> Putting a kobject as a child of a struct device can easily cause
-> confusion as that is NOT what you should be doing.  Especially if you
-> then try to add a device to be a child of that kobject. 
-
-That I've never seen. I've only seen people making extra levels of
-directories for organizing attributes.
-
-> > How do you fix them? It is uAPI at this point so we can't change the
-> > directory names. Can't make them struct devices (userspace would get
-> > confused if we add *more* sysfs files)
+> diff --git a/drivers/acpi/acpi_fpdt.c b/drivers/acpi/acpi_fpdt.c
+> index a89a806a7a2a..94e107b9a114 100644
+> --- a/drivers/acpi/acpi_fpdt.c
+> +++ b/drivers/acpi/acpi_fpdt.c
+> @@ -23,12 +23,14 @@ enum fpdt_subtable_type {
+>  	SUBTABLE_S3PT,
+>  };
+>  
+> +typedef u64 __attribute__((aligned(4))) u64_align32;
+> +
+>  struct fpdt_subtable_entry {
+>  	u16 type;		/* refer to enum fpdt_subtable_type */
+>  	u8 length;
+>  	u8 revision;
+>  	u32 reserved;
+> -	u64 address;		/* physical address of the S3PT/FBPT table */
+> +	u64_align32 address;		/* physical address of the S3PT/FBPT table */
+>  };
+>  
+>  struct fpdt_subtable_header {
+> @@ -51,25 +53,25 @@ struct fpdt_record_header {
+>  struct resume_performance_record {
+>  	struct fpdt_record_header header;
+>  	u32 resume_count;
+> -	u64 resume_prev;
+> -	u64 resume_avg;
+> -} __attribute__((packed));
+> +	u64_align32 resume_prev;
+> +	u64_align32 resume_avg;
+> +};
+>  
+>  struct boot_performance_record {
+>  	struct fpdt_record_header header;
+>  	u32 reserved;
+> -	u64 firmware_start;
+> -	u64 bootloader_load;
+> -	u64 bootloader_launch;
+> -	u64 exitbootservice_start;
+> -	u64 exitbootservice_end;
+> -} __attribute__((packed));
+> +	u64_align32 firmware_start;
+> +	u64_align32 bootloader_load;
+> +	u64_align32 bootloader_launch;
+> +	u64_align32 exitbootservice_start;
+> +	u64_align32 exitbootservice_end;
+> +};
+>  
+>  struct suspend_performance_record {
+>  	struct fpdt_record_header header;
+> -	u64 suspend_start;
+> -	u64 suspend_end;
+> -} __attribute__((packed));
+> +	u64_align32 suspend_start;
+> +	u64_align32 suspend_end;
+> +};
+>  
+>  
+>  static struct resume_performance_record *record_resume;
+> -- 
+> 2.17.1
 > 
-> How would userspace get confused?  If anything it would suddenly "wake
-> up" and see these attributes properly.
-
-We are talking about specialty userspace that is designed to work with
-the sysfs layout as-is. Not udev. In some of these subdirs the
-userspace does readdir() on - if you start adding random stuff it will
-break it.
-
-> > Since it seems like kind of a big problem can we make this allowed
-> > somehow?
 > 
-> No, not at all.  Please do not do that.  I will look into the existing
-> users and try to see if I can fix them up.  Maybe start annoying people
-> by throwing warnings if you try to register a kobject as a child of a
-> device...
-
-How does that mesh with our don't break userspace ideal?? :(
-
-> > Well, from what I understand, it wont be used because udev can't do
-> > three level deep attributes, and if that hasn't been a problem in that
-> > last 10 years for the existing places, it might not ever be needed in
-> > udev at all.
-> 
-> If userspace is not seeing these attributes then WHY CREATE THEM AT
-> ALL???
-
-*udev* is not the userspace! People expose sysfs attributes and then
-make specialty userspace to consume them! I've seen it many times now.
-
-> Seriously, what is needing to see these in sysfs if not the tools that
-> we have today to use sysfs?  Are you wanting to create new tools instead
-> to handle these new attributes?  Maybe just do not create them in the
-> first place?
-
-This advice is about 10 years too late :(
-
-Regardless, lets not do deeply nested attributes here in PCI. They are
-PITA anyhow.
-
-Jason
