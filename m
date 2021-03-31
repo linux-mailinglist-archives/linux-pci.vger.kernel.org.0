@@ -2,224 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3B5D3501D3
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 16:03:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A76C13502E9
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 17:04:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235865AbhCaODL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 10:03:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48697 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235835AbhCaOC5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 10:02:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617199372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Hlmnr+UG7BiBkvH30HcnEtujKeCz3ed2vJqeg/FJdVc=;
-        b=ip33lVK/YvMR8Rw6b7UarFIvTbpxq+Urg6Pz+uvkraPoaGpG68986dsYvL2gHvO32+tV3T
-        Sg7+hL5uSoOWyomw0C66EkS4/bAqub6gHyknVhOmWQn/KU+C5fptuviTOzU7WpySkOfFvs
-        LlL6TwRTwzdFA04RO/6OcteeRPiw5CY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-553-Q2rQZ3QUOf6Ghd14OMUxYA-1; Wed, 31 Mar 2021 10:02:47 -0400
-X-MC-Unique: Q2rQZ3QUOf6Ghd14OMUxYA-1
-Received: by mail-ej1-f69.google.com with SMTP id gv58so836789ejc.6
-        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 07:02:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=Hlmnr+UG7BiBkvH30HcnEtujKeCz3ed2vJqeg/FJdVc=;
-        b=hKUl3eUNfrOo+uuvFKJrxoBT52NmTp8zGS+F575KbV7BuoN+7HZZyh+3HunPvI52Vt
-         I8NUotjV+5xly/B3aDPIH6AZpF0rVdXFp14iTpSJxJ4xpFEphIi25SQUGi+GcHOvPidH
-         jL6lMnL93+fR1odJ6sh5UNRrn+HkS9ogJGC1Uk/q52AdotwhR35ChgGrdUmmtWJbInEg
-         WrnhsauA0Cg7eBfelhXq5nZXScdM3xfMw+m+IDUpx/eHtIef/227Eo8AEyOmL85jbmUn
-         Ivbet13RSm0/Pfbcp0/l/ap1zVeu3aMFnyHG6paVKmOdASQTLoHDQDKXHKAl5+dcC99l
-         rZGw==
-X-Gm-Message-State: AOAM533IXgjJplbSfiyWF7S3omdaqK55kX7EBq8/ciUWg1b+i3FrXL5T
-        it9ZZax6ISHlpvjpSM0yDM/DusJyvODbCu2RJXsjaYO1iYaJ+vQrfRBcwUlmowtr5dnW5Rok4/C
-        HmdtO86kT/PVOa6BYNa4n
-X-Received: by 2002:a17:906:753:: with SMTP id z19mr3710756ejb.447.1617199364680;
-        Wed, 31 Mar 2021 07:02:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwRe7Y9ZHWzTmLS3+8EDQWcF0PD3xKiXOeEFU0qSXaxunupi50J+lB6I8tYs2mDqSGXffkT7g==
-X-Received: by 2002:a17:906:753:: with SMTP id z19mr3710713ejb.447.1617199364155;
-        Wed, 31 Mar 2021 07:02:44 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id l10sm1710023edr.87.2021.03.31.07.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Mar 2021 07:02:43 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 385211801A8; Wed, 31 Mar 2021 16:02:42 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: PCI trouble on mvebu (Turris Omnia)
-In-Reply-To: <20210329170929.uhpttc4oxbkghkpr@pali>
-References: <20210315195806.iqdt5wvvkvpmnep7@pali>
- <20210316092534.czuondwbg3tqjs6w@pali> <87h7l8axqp.fsf@toke.dk>
- <20210318231629.vhix2cqpt25bgrne@pali>
- <20210326125028.tyqkcc5fvaqbwqkn@pali> <874kgyc4yg.fsf@toke.dk>
- <20210326153444.cdccc3e2axqxzejy@pali> <87o8f5c0tt.fsf@toke.dk>
- <20210326171100.s53mslkjc7tdgs6f@pali> <87ft0hby6p.fsf@toke.dk>
- <20210329170929.uhpttc4oxbkghkpr@pali>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Wed, 31 Mar 2021 16:02:42 +0200
-Message-ID: <87im57pgjh.fsf@toke.dk>
+        id S235618AbhCaPEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 11:04:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235452AbhCaPDs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 31 Mar 2021 11:03:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 56FE561008;
+        Wed, 31 Mar 2021 15:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1617203028;
+        bh=863aX93AcJHX1oErxRoyJSXA0uo+jfXjrQ8F/dyxdH8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xh1wvdJgrfNbVSxMWd2RWOfST3I77c9iE+kBXf899KrVQhqBj520UpRXxmLxnFxE1
+         ccntcEOWgLFxmyp0WUOygh+8bKxGtpuYOrStECMBzTuZgdVjtp4/gpnPQLiXP6K2yZ
+         +TxHrU1ngxOkpxDCyCX1cFbSkR+E4fF3UyJi94q8=
+Date:   Wed, 31 Mar 2021 17:03:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <YGSPUewD5J+F7ZRe@kroah.com>
+References: <20210330194716.GV2710221@ziepe.ca>
+ <20210330204141.GA1305530@bjorn-Precision-5520>
+ <20210330224341.GW2710221@ziepe.ca>
+ <YGQY72LnGB6bfIsI@kroah.com>
+ <20210331121929.GX2710221@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210331121929.GX2710221@ziepe.ca>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
+On Wed, Mar 31, 2021 at 09:19:29AM -0300, Jason Gunthorpe wrote:
+> On Wed, Mar 31, 2021 at 08:38:39AM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 30, 2021 at 07:43:41PM -0300, Jason Gunthorpe wrote:
+> > > > With 0000:01:00.0/sriov/BB:DD.F/vf_msix_count, sriov/ will contain
+> > > > 1 file and 1K subdirectories.
+> > > 
+> > > The smallest directory sizes is with the current patch since it
+> > > re-uses the existing VF directory. Do we care about directory size at
+> > > the sysfs level?
+> > 
+> > No, that should not matter.
+> > 
+> > The "issue" here is that you "broke" the device chain here by adding a
+> > random kobject to the directory tree: "BB:DD.F"
+> > 
+> > Again, devices are allowed to have attributes associated with it to be
+> > _ONE_ subdirectory level deep.
+> > 
+> > So, to use your path above, this is allowed:
+> > 	0000:01:00.0/sriov/vf_msix_count
+> > 
+> > as these are sriov attributes for the 0000:01:00.0 device, but this is
+> > not:
+> > 	0000:01:00.0/sriov/BB:DD.F/vf_msix_count
+> > as you "threw" a random kobject called BB:DD.F into the middle.
+> >
+> > If you want to have "BB:DD.F" in there, then it needs to be a real
+> > struct device and _THEN_ it needs to point its parent to "0000:01:00.0",
+> > another struct device, as "sriov" is NOT ANYTHING in the heirachy here
+> > at all.
+> 
+> It isn't a struct device object at all though, it just organizing
+> attributes.
 
-> On Friday 26 March 2021 18:51:42 Toke H=C3=B8iland-J=C3=B8rgensen wrote:
->> Pali Roh=C3=A1r <pali@kernel.org> writes:
->> > On Friday 26 March 2021 17:54:38 Toke H=C3=B8iland-J=C3=B8rgensen wrot=
-e:
->> >> So we have these
->> >> cases:
->> >>=20
->> >> ASPM disabled:          ath9k, ath10k and mt76 cards all work
->> >> ASPM enabled, no patch: only mt76 card works
->> >> ASPM enabled + patch:   ath10k and mt76 cards work
->> >>=20
->> >> So IDK, maybe the ath9k card needs a quirk as well? Or the mvebu board
->> >> is just generally flaky?
->> >
->> > I'm not sure. Maybe ASPM is somehow buggy on ath9k or needs some speci=
-al
->> > handling. But issue is not at PCI config space as ath9k driver start
->> > initialization of this card. Needs also some debugging in ath9k driver
->> > if it prints that strange "mac chip rev" error.
->>=20
->> Well that's just being output because it gets a revision that it doesn't
->> recognise - which it seems to be just reading from a register:
->>=20
->> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/ath/=
-ath9k/hw.c#L255
->>=20
->> The value returned is consistent with the value returned just being
->> 0xffffffff. Which from looking at ioread32() is the value being returned
->> on a failed read. So there's a driver bug there - the check against -EIO
->> here is obviously nonsensical:
->>=20
->> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/ath/=
-ath9k/hw.c#L290
->>=20
->> But the underlying cause appears to be that the read from the register
->> fails, which I suppose is related to something the PCI bus does?
->>=20
->> > I think this issue should be handled separately. Could you report it
->> > also to ath9k mailing list (and CC me)? Maybe other ath developers wou=
-ld
->> > know some more details.
->>=20
->> I'll send a patch for the nonsensical check above, but other than that I
->> think we're still in PCI land here, or?
->
-> First, can you try to enable my quirk also for this ath9k card with ASPM
-> enabled?
+That's the point, it really is not.  You are forced to create a real
+object for that subdirectory, and by doing so, you are "breaking" the
+driver/device model.  As is evident by userspace not knowing what is
+going on here.
 
-Yup, with this I get both devices working:
+> > Does that help?  The rules are:
+> > 	- Once you use a 'struct device', all subdirs below that device
+> > 	  are either an attribute group for that device or a child
+> > 	  device.
+> > 	- A struct device can NOT have an attribute group as a parent,
+> > 	  it can ONLY have another struct device as a parent.
+> > 
+> > If you break those rules, the kernel has the ability to get really
+> > confused unless you are very careful, and userspace will be totally lost
+> > as you can not do anything special there.
+> 
+> The kernel gets confused?
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 8ff690c7679d..7e2f9c69f6b2 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3583,6 +3583,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003=
-4, quirk_no_bus_reset);
-  * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 regis=
-ter.
-  */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset=
-_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e, quirk_no_bus_reset=
-_and_no_retrain_link);
-=20
- /*
-  * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+Putting a kobject as a child of a struct device can easily cause
+confusion as that is NOT what you should be doing.  Especially if you
+then try to add a device to be a child of that kobject.  Now the kernel
+core can not walk all devices in the correct order and lots of other
+problems that you are lucky you do not hit.
 
->
-> I have there another ath9k card which after toggling link retraining
-> changes PCI device ID (really!) to 0xABCD. But lspci ...
->
-> There is long story about broken ath9k cards that are reporting 0xABCD
-> id on x86 machines with specific BIOS versions. It can be find in
-> ath9k-devel mailing list archive:
->
-> https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
->
-> Maybe we now found root cause of this ABCD? If yes, then it also answers
-> why above ath9k driver check fails (device id was changed) and also
-> because kernel see correct id (kernel reads id before configuring ASPM
-> and therefore before triggering link retraining).
->
->> >> > Can you send PCI device id of your ath9k card (lspci -nn)? Because =
-all
->> >> > my tested ath9k cards have different PCI device id.
->> >>=20
->> >> [root@omnia-arch ~]# lspci -nn
->> >> 00:01.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab=
-:6820] (rev 04)
->> >> 00:02.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab=
-:6820] (rev 04)
->> >> 00:03.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab=
-:6820] (rev 04)
->> >> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless N=
-etwork Adapter (PCI-Express) [168c:002e] (rev 01)
->> >> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.=
-11ac Wireless Network Adapter [168c:003c]
->> >
->> > That is fine. Also all ath9k testing cards have id 0x002e.
->
-> Today I found out that lspci -nn may lie! Please send output from
-> command: lspci -nn -x because real PCI device id can read only from -x
-> hexdump output.
+> I'm not sure I understand why userspace gets confused. I can guess
+> udev has some issue, but everything else seems OK, it is just a path.
 
-Without the quirk added to the ath9k:
+No, it is not a "path".
 
-01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network=
- Adapter (PCI-Express) [168c:002e] (rev 01)
-00: 8c 16 2e 00 02 00 10 00 01 00 80 02 10 00 00 00
-10: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 8c 16 a4 30
-30: 00 00 00 00 40 00 00 00 00 00 00 00 3d 01 00 00
+Again, here are the driver/device model rules:
+	- once you have a "struct device", only "struct device" can be
+	  children.
+	- You are allowed to place attributes in subdirectories if you
+	  want to make things cleaner.  Don't make me doubt giving that
+	  type of permission to people by trying to abuse it by going
+	  "lower" than one level.
+	- If you have to represent something dynamic below a struct
+	  device that is not an attribute, make it a real struct device.
 
-02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac W=
-ireless Network Adapter [168c:003c]
-00: 8c 16 3c 00 46 05 10 00 00 00 80 02 10 00 00 00
-10: 04 00 20 e0 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-30: 00 00 20 ea 40 00 00 00 00 00 00 00 3e 01 00 00
+And userspace "gets confused" because it thinks it can properly walk the
+tree and get a record of all devices in the system.  When you put a
+kobject in there just to make a new subdirectory, you break the
+notification model and everything else.
 
-And with:
+Again, do not do that.
 
-01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network=
- Adapter (PCI-Express) [168c:002e] (rev 01)
-00: 8c 16 2e 00 46 01 10 00 01 00 80 02 10 00 00 00
-10: 04 00 00 e0 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 8c 16 a4 30
-30: 00 00 00 00 40 00 00 00 00 00 00 00 3d 01 00 00
+> > > > I'm dense and don't fully understand Greg's subdirectory comment.
+> > > 
+> > > I also don't know udev well enough. I've certainly seen drivers
+> > > creating extra subdirectories using kobjects.
+> > 
+> > And those drivers are broken.  Please point them out to me and I will be
+> > glad to go fix them.  Or tell their authors why they are broken :)
+> 
+> How do you fix them? It is uAPI at this point so we can't change the
+> directory names. Can't make them struct devices (userspace would get
+> confused if we add *more* sysfs files)
 
-02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac W=
-ireless Network Adapter [168c:003c]
-00: 8c 16 3c 00 46 05 10 00 00 00 80 02 10 00 00 00
-10: 04 00 20 e0 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-30: 00 00 20 ea 40 00 00 00 00 00 00 00 3e 01 00 00
+How would userspace get confused?  If anything it would suddenly "wake
+up" and see these attributes properly.
 
+> Grep for kobject_init_and_add() under drivers/ and I think you get a
+> pretty good overview of the places.
 
+Yes, lots of places where people are abusing things and it should not be
+done.  Do not add to the mess by knowingly adding broken code please.
 
-Is that change in bytes 5 and 6 significant?
+> Since it seems like kind of a big problem can we make this allowed
+> somehow?
 
--Toke
+No, not at all.  Please do not do that.  I will look into the existing
+users and try to see if I can fix them up.  Maybe start annoying people
+by throwing warnings if you try to register a kobject as a child of a
+device...
 
+> > > > But it doesn't seem like that level of control would be in a udev rule
+> > > > anyway.  A PF udev rule might *start* a program to manage MSI-X
+> > > > vectors, but such a program should be able to deal with whatever
+> > > > directory structure we want.
+> > >
+> > > Yes, I can't really see this being used from udev either. 
+> > 
+> > It doesn't matter if you think it could be used, it _will_ be used as
+> > you are exposing this stuff to userspace.
+> 
+> Well, from what I understand, it wont be used because udev can't do
+> three level deep attributes, and if that hasn't been a problem in that
+> last 10 years for the existing places, it might not ever be needed in
+> udev at all.
+
+If userspace is not seeing these attributes then WHY CREATE THEM AT
+ALL???
+
+Seriously, what is needing to see these in sysfs if not the tools that
+we have today to use sysfs?  Are you wanting to create new tools instead
+to handle these new attributes?  Maybe just do not create them in the
+first place?
+
+> > > I assume there is also the usual race about triggering the uevent
+> > > before the subdirectories are created, but we have the
+> > > dev_set_uevent_suppress() thing now for that..
+> > 
+> > Unless you are "pci bus code" you shouldn't be using that :)
+> 
+> There are over 40 users now.
+
+Let's not add more if you do not have to.  PCI has not needed it so far,
+no need to rush to add it here if at all possible please.
+
+thanks,
+
+greg k-h
