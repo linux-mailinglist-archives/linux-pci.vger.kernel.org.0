@@ -2,294 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9444350522
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 18:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17CEC350539
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 19:08:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233999AbhCaQxx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 12:53:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46370 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232406AbhCaQxV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 12:53:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617209600;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DgbjJQxaI1SV4rGX0KjktrAl4EiEIsLd6qWYsSp47qo=;
-        b=Ki5O/0P7G+WwJfOkuqc5iR0L4JT9YOlKIHV1DN+uF07xnSC/5yMFhNXO40K2zAgmllDr0u
-        Lod8uRJRXBV1c3r+aVN9tyz2Cul3JeBpqoxWYj3s420a/Sjhu8R6qAwqctY4Q+bm9ZxaRD
-        S+i4LSntFCnX9EuB01YqLt3N07PInD8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-584-Xkw26JvmORWqhegTt6p6Zw-1; Wed, 31 Mar 2021 12:53:12 -0400
-X-MC-Unique: Xkw26JvmORWqhegTt6p6Zw-1
-Received: by mail-ed1-f72.google.com with SMTP id r19so1447060edv.3
-        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 09:53:12 -0700 (PDT)
+        id S229615AbhCaRHq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 13:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229787AbhCaRHW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 13:07:22 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A989DC061574
+        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 10:07:22 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id o5so20073190qkb.0
+        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 10:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CBJLgij8JRUpa6bM6F2HzF0AcYEY2HXB4yx3yMAYHWY=;
+        b=I3icD9WkMNJ0dAyK1Wv8cpeBrTixRgfSrUKvPdVhK07yhGUYb5MnZRDMK9Vr0FnEEI
+         Wl6GG1mls7jaG40HUL5BNvQrQNI/K8/HURlFIyAZkh+HHxmKK3YhuUimgRG87npzRwDj
+         xhkgqi9ZQlhHO9MyemttQn9IOX1dUpcLrqMq/AuaN0rDu43guNce+zJyQxCShGZzzhFb
+         O58Ig1j6IPpubs+o37HZv0lUXHJwmL807FrPxwRtygMpaLPyZldw4nxt9UFM0e9/HfNx
+         pDW+A0FeZuPUMGCpITJKXMZir+Vlygh+VHIOqeL76FiFJxqeLN1YJ6IgjS8M08pyDCUO
+         RJhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=DgbjJQxaI1SV4rGX0KjktrAl4EiEIsLd6qWYsSp47qo=;
-        b=ogg41c7PFtCarbYwPLbmEeQfQHhU17XB+Mueuq77fC/UG9l7DWoPTzIW2MV+mXZynb
-         hNuxqIIBr4yNMp8d8F3MUhP+K/8Pefe0N2NKj9O3ZXh/QoqY12nytwF5QuIuL1islnKu
-         eCACvKz7VjLiFSxE09Pjy6bHUzUZZc9c+aweCO8LpwnK8Nt3t0s4eYimSdJKR1i1RQV1
-         ELcLsN2cZLO9dRbGVdbO0y4gv1TA2kwRBxw/SOjWC1z4b3EIBk+oTJjBV/E9ifDbSY6n
-         9wLPjXPSO3Jdxn3V9MExQtyQOGNAOGRifTQECe9adXGiuXaPnvWLcvcMHdRZc3m3AkiH
-         HRBQ==
-X-Gm-Message-State: AOAM5310Lfu8pCJwnDIsf2L0G/2Z3S2htv/cCvJYR69OKF/eoF2CGuhH
-        99bHz3pz2Rhi6VpSTS/0HiF/pajtxrnDM6nNlJaLEOWz8j6FW3z/xT2WusZb+JeYEVDliqSVa9H
-        RETqtkKuDRhCNN3Zz5Xje
-X-Received: by 2002:a17:906:495a:: with SMTP id f26mr4438986ejt.271.1617209590831;
-        Wed, 31 Mar 2021 09:53:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwsxVxiLlOP4j4Ol3+GusyqLdmOcQhxh78uvh5p414DwCZr0HCwFEHLA8EqcEhY31FMrGPVow==
-X-Received: by 2002:a17:906:495a:: with SMTP id f26mr4438945ejt.271.1617209590309;
-        Wed, 31 Mar 2021 09:53:10 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id p24sm2067022edt.5.2021.03.31.09.53.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CBJLgij8JRUpa6bM6F2HzF0AcYEY2HXB4yx3yMAYHWY=;
+        b=mwCgQUfLFZiSjvgGpQBzpIZeQPrBAhLL2uDsMBV52y1zYzewvx2vb1zLtQoSgosk2c
+         GldB+1r7HX4yFeLhjrYgdBf/SPm3pHrMeKV0+rDB+G45PrAIK/Lo6rlzROCsGWw5sVt3
+         aN2lEpWh4MIrLIyvsFpsWigDzgFV5oNuu6YNuxQza7T5eA5VxXqxi1BCsu/5b0lxwoem
+         URqJCW7tPW7Im+f4ENMmdyPTOwPCdDQcjHdtIMoYcGj3DLea4jR5qUNS7+ljAihZvC42
+         9leE65kFJ54K6MFHqql/byxCZ27EDqrIgV5DLiPqNpyFqaY2kpK14pZoeZw2R8xBjGWS
+         R4bg==
+X-Gm-Message-State: AOAM5324JT9SWguQQ1PiE7Em4rAXKTfFoUISeI4ZSeU2bd1T26aUO67p
+        YsOHfHjkJYP0gdz7Q+HHU10d/A==
+X-Google-Smtp-Source: ABdhPJwAoOIqYtNI2MwGauM5rPZT26vCbcrvCwwOUhjCAPlzbZW+C4ASvagifSG/VZz4tKBdzSM95Q==
+X-Received: by 2002:a37:6348:: with SMTP id x69mr4015891qkb.154.1617210441706;
+        Wed, 31 Mar 2021 10:07:21 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-115-133.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.115.133])
+        by smtp.gmail.com with ESMTPSA id h75sm1819948qke.80.2021.03.31.10.07.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Mar 2021 09:53:09 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id E1B711801A8; Wed, 31 Mar 2021 18:53:08 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: PCI trouble on mvebu (Turris Omnia)
-In-Reply-To: <20210331161542.3e57qdtwnoz74xea@pali>
-References: <87h7l8axqp.fsf@toke.dk> <20210318231629.vhix2cqpt25bgrne@pali>
- <20210326125028.tyqkcc5fvaqbwqkn@pali> <874kgyc4yg.fsf@toke.dk>
- <20210326153444.cdccc3e2axqxzejy@pali> <87o8f5c0tt.fsf@toke.dk>
- <20210326171100.s53mslkjc7tdgs6f@pali> <87ft0hby6p.fsf@toke.dk>
- <20210329170929.uhpttc4oxbkghkpr@pali> <87im57pgjh.fsf@toke.dk>
- <20210331161542.3e57qdtwnoz74xea@pali>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Wed, 31 Mar 2021 18:53:08 +0200
-Message-ID: <87a6qjp8nf.fsf@toke.dk>
+        Wed, 31 Mar 2021 10:07:21 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1lReJM-006OXG-AR; Wed, 31 Mar 2021 14:07:20 -0300
+Date:   Wed, 31 Mar 2021 14:07:20 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210331170720.GY2710221@ziepe.ca>
+References: <20210330194716.GV2710221@ziepe.ca>
+ <20210330204141.GA1305530@bjorn-Precision-5520>
+ <20210330224341.GW2710221@ziepe.ca>
+ <YGQY72LnGB6bfIsI@kroah.com>
+ <20210331121929.GX2710221@ziepe.ca>
+ <YGSPUewD5J+F7ZRe@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YGSPUewD5J+F7ZRe@kroah.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
+On Wed, Mar 31, 2021 at 05:03:45PM +0200, Greg Kroah-Hartman wrote:
+> > It isn't a struct device object at all though, it just organizing
+> > attributes.
+> 
+> That's the point, it really is not.  You are forced to create a real
+> object for that subdirectory, and by doing so, you are "breaking" the
+> driver/device model.  As is evident by userspace not knowing what is
+> going on here.
 
-> On Wednesday 31 March 2021 16:02:42 Toke H=C3=B8iland-J=C3=B8rgensen wrot=
-e:
->> Pali Roh=C3=A1r <pali@kernel.org> writes:
->>=20
->> > On Friday 26 March 2021 18:51:42 Toke H=C3=B8iland-J=C3=B8rgensen wrot=
-e:
->> >> Pali Roh=C3=A1r <pali@kernel.org> writes:
->> >> > On Friday 26 March 2021 17:54:38 Toke H=C3=B8iland-J=C3=B8rgensen w=
-rote:
->> >> >> So we have these
->> >> >> cases:
->> >> >>=20
->> >> >> ASPM disabled:          ath9k, ath10k and mt76 cards all work
->> >> >> ASPM enabled, no patch: only mt76 card works
->> >> >> ASPM enabled + patch:   ath10k and mt76 cards work
->> >> >>=20
->> >> >> So IDK, maybe the ath9k card needs a quirk as well? Or the mvebu b=
-oard
->> >> >> is just generally flaky?
->> >> >
->> >> > I'm not sure. Maybe ASPM is somehow buggy on ath9k or needs some sp=
-ecial
->> >> > handling. But issue is not at PCI config space as ath9k driver start
->> >> > initialization of this card. Needs also some debugging in ath9k dri=
-ver
->> >> > if it prints that strange "mac chip rev" error.
->> >>=20
->> >> Well that's just being output because it gets a revision that it does=
-n't
->> >> recognise - which it seems to be just reading from a register:
->> >>=20
->> >> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/a=
-th/ath9k/hw.c#L255
->> >>=20
->> >> The value returned is consistent with the value returned just being
->> >> 0xffffffff. Which from looking at ioread32() is the value being retur=
-ned
->> >> on a failed read. So there's a driver bug there - the check against -=
-EIO
->> >> here is obviously nonsensical:
->> >>=20
->> >> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/a=
-th/ath9k/hw.c#L290
->> >>=20
->> >> But the underlying cause appears to be that the read from the register
->> >> fails, which I suppose is related to something the PCI bus does?
->> >>=20
->> >> > I think this issue should be handled separately. Could you report it
->> >> > also to ath9k mailing list (and CC me)? Maybe other ath developers =
-would
->> >> > know some more details.
->> >>=20
->> >> I'll send a patch for the nonsensical check above, but other than tha=
-t I
->> >> think we're still in PCI land here, or?
->> >
->> > First, can you try to enable my quirk also for this ath9k card with AS=
-PM
->> > enabled?
->>=20
->> Yup, with this I get both devices working:
->>=20
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 8ff690c7679d..7e2f9c69f6b2 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -3583,6 +3583,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x=
-0034, quirk_no_bus_reset);
->>   * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 re=
-gister.
->>   */
->>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_re=
-set_and_no_retrain_link);
->> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e, quirk_no_bus_re=
-set_and_no_retrain_link);
->>=20=20
->>  /*
->>   * Root port on some Cavium CN8xxx chips do not successfully complete a=
- bus
->
-> Ok, thank you for testing!
->
-> I'm seeing that testing unit 0x0030 (AR93xx) also needs this quirk, so I
-> will mark all Atheros chips in above no bus reset list with no retrain
-> link quirk.
+I'm still not really sure about what this means in practice..
 
-SGTM.
+I found an nested attribute in RDMA land so lets see how it behaves.
+ 
+   /sys/class/infiniband/ibp0s9/ <-- This is a struct device/ib_device
 
->> >
->> > I have there another ath9k card which after toggling link retraining
->> > changes PCI device ID (really!) to 0xABCD. But lspci ...
->> >
->> > There is long story about broken ath9k cards that are reporting 0xABCD
->> > id on x86 machines with specific BIOS versions. It can be find in
->> > ath9k-devel mailing list archive:
->> >
->> > https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
->> >
->> > Maybe we now found root cause of this ABCD? If yes, then it also answe=
-rs
->> > why above ath9k driver check fails (device id was changed) and also
->> > because kernel see correct id (kernel reads id before configuring ASPM
->> > and therefore before triggering link retraining).
->> >
->> >> >> > Can you send PCI device id of your ath9k card (lspci -nn)? Becau=
-se all
->> >> >> > my tested ath9k cards have different PCI device id.
->> >> >>=20
->> >> >> [root@omnia-arch ~]# lspci -nn
->> >> >> 00:01.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [1=
-1ab:6820] (rev 04)
->> >> >> 00:02.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [1=
-1ab:6820] (rev 04)
->> >> >> 00:03.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [1=
-1ab:6820] (rev 04)
->> >> >> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireles=
-s Network Adapter (PCI-Express) [168c:002e] (rev 01)
->> >> >> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 8=
-02.11ac Wireless Network Adapter [168c:003c]
->> >> >
->> >> > That is fine. Also all ath9k testing cards have id 0x002e.
->> >
->> > Today I found out that lspci -nn may lie! Please send output from
->> > command: lspci -nn -x because real PCI device id can read only from -x
->> > hexdump output.
->>=20
->> Without the quirk added to the ath9k:
->>=20
->> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Netw=
-ork Adapter (PCI-Express) [168c:002e] (rev 01)
->> 00: 8c 16 2e 00 02 00 10 00 01 00 80 02 10 00 00 00
->> 10: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 20: 00 00 00 00 00 00 00 00 00 00 00 00 8c 16 a4 30
->> 30: 00 00 00 00 40 00 00 00 00 00 00 00 3d 01 00 00
->>=20
->> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11a=
-c Wireless Network Adapter [168c:003c]
->> 00: 8c 16 3c 00 46 05 10 00 00 00 80 02 10 00 00 00
->> 10: 04 00 20 e0 00 00 00 00 00 00 00 00 00 00 00 00
->> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 30: 00 00 20 ea 40 00 00 00 00 00 00 00 3e 01 00 00
->>=20
->> And with:
->>=20
->> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Netw=
-ork Adapter (PCI-Express) [168c:002e] (rev 01)
->> 00: 8c 16 2e 00 46 01 10 00 01 00 80 02 10 00 00 00
->> 10: 04 00 00 e0 00 00 00 00 00 00 00 00 00 00 00 00
->> 20: 00 00 00 00 00 00 00 00 00 00 00 00 8c 16 a4 30
->> 30: 00 00 00 00 40 00 00 00 00 00 00 00 3d 01 00 00
->>=20
->> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11a=
-c Wireless Network Adapter [168c:003c]
->> 00: 8c 16 3c 00 46 05 10 00 00 00 80 02 10 00 00 00
->> 10: 04 00 20 e0 00 00 00 00 00 00 00 00 00 00 00 00
->> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 30: 00 00 20 ea 40 00 00 00 00 00 00 00 3e 01 00 00
->>=20
->
-> Yesterday both MJ and Bjorn told me to use lspci '-b' switch which
-> instruct lspci to parse capabilities from config space (instead of
-> kernel cache).
->
-> Could you try to run 'lspci -nn -vv' and 'lspci -nn -vv -b' and compare
-> results? If something changes?
+Then we have 261 'attribute' files under a ports subdirectory, for
+instance:
 
-Without -b there seems to be some [size=3DXX] suffixes to some lines, and
-there are some AtomicOpsCap lines that are not there with -b. Also, the
-IRQ number and memory offset for ath10k changed like this:
+ /sys/class/infiniband/ibp0s9/ports/1/cm_tx_retries/dreq
 
--	Interrupt: pin A routed to IRQ 63
--	Region 0: Memory at e0200000 (64-bit, non-prefetchable) [size=3D2M]
--	Expansion ROM at e0400000 [disabled] [size=3D64K]
-+	Interrupt: pin A routed to IRQ 62
-+	Region 0: Memory at e0200000 (64-bit, non-prefetchable)
-+	Expansion ROM at ea200000 [disabled]
+Open/read works fine, and the specialty userspace that people built on
+this has been working for a long time.
 
-> Anyway I have discussion with Adrian Chadd about 0xABCD issue and these
-> Qualcomm/Atheros cards. When post-AR9300 card is not initialized it
-> reports PCI device id 0xABCD. Pre-AR9300 cards should report correct PCI
-> device id even when it is not initialized. WLE200 is AR9287-based, so it
-> reports always correct id, should not change it during usage.
+Does udev see the deeply nested attributes? Apparently yes:
 
-Right, makes sense.
+$ udevadm info -a /sys/class/infiniband/ibp0s9
+    ATTR{ports/1/cm_rx_duplicates/dreq}=="0"
+    [..]
 
-> But seems that also this AR9287 has issue with EEPROM/OTP as you figured
-> out that ath9k driver is not able to read some device id from internal
-> register. So please prepare patch for fixing -EIO in ath9k.
+Given your remarks, I'm surprised, but it seems to work - I assume if
+udevadm shows it then all the rules will work too.
 
-Yup, already did, just forgot to Cc you (sorry about that):
-https://patchwork.kernel.org/project/linux-wireless/patch/20210326180819.14=
-2480-1-toke@redhat.com/
+Has udev become confused about what is a struct device? Looks like no:
 
-> PCI vendor & device id is in first 4 bytes and as you can see it is
-> correct and was not changed.
->
-> So I guess lspci output would not change for this card.
->
->> Is that change in bytes 5 and 6 significant?
->
-> At offset 0x04 is 16bit PCI Command Register.
->
-> In second (with) output is set bit 2 which means that Bus Mastering is
-> enabled. This is normal and required when card communicate with system.
-> Then is enabled bit 6 (Parity Error Response) and bit 8 (SERR# Enable),
-> both for error reporting. This is normal when device is active.
->
-> So nothing suspicious here.
+$ udevadm info -a /sys/class/infiniband/ibp0s9/port
+Unknown device "/sys/class/infiniband/ibp0s9/port": No such device
 
-Alright, cool. Thanks a lot for your help with this :)
+Can you give an example where things go wrong?
 
--Toke
+(and I inherited this RDMA stuff. In the last two years we moved it
+ all to netlink and modern userspace largely no longer touches sysfs,
+ but I can't break in-use uAPI)
 
+> > > Does that help?  The rules are:
+> > > 	- Once you use a 'struct device', all subdirs below that device
+> > > 	  are either an attribute group for that device or a child
+> > > 	  device.
+> > > 	- A struct device can NOT have an attribute group as a parent,
+> > > 	  it can ONLY have another struct device as a parent.
+> > > 
+> > > If you break those rules, the kernel has the ability to get really
+> > > confused unless you are very careful, and userspace will be totally lost
+> > > as you can not do anything special there.
+> > 
+> > The kernel gets confused?
+> 
+> Putting a kobject as a child of a struct device can easily cause
+> confusion as that is NOT what you should be doing.  Especially if you
+> then try to add a device to be a child of that kobject. 
+
+That I've never seen. I've only seen people making extra levels of
+directories for organizing attributes.
+
+> > How do you fix them? It is uAPI at this point so we can't change the
+> > directory names. Can't make them struct devices (userspace would get
+> > confused if we add *more* sysfs files)
+> 
+> How would userspace get confused?  If anything it would suddenly "wake
+> up" and see these attributes properly.
+
+We are talking about specialty userspace that is designed to work with
+the sysfs layout as-is. Not udev. In some of these subdirs the
+userspace does readdir() on - if you start adding random stuff it will
+break it.
+
+> > Since it seems like kind of a big problem can we make this allowed
+> > somehow?
+> 
+> No, not at all.  Please do not do that.  I will look into the existing
+> users and try to see if I can fix them up.  Maybe start annoying people
+> by throwing warnings if you try to register a kobject as a child of a
+> device...
+
+How does that mesh with our don't break userspace ideal?? :(
+
+> > Well, from what I understand, it wont be used because udev can't do
+> > three level deep attributes, and if that hasn't been a problem in that
+> > last 10 years for the existing places, it might not ever be needed in
+> > udev at all.
+> 
+> If userspace is not seeing these attributes then WHY CREATE THEM AT
+> ALL???
+
+*udev* is not the userspace! People expose sysfs attributes and then
+make specialty userspace to consume them! I've seen it many times now.
+
+> Seriously, what is needing to see these in sysfs if not the tools that
+> we have today to use sysfs?  Are you wanting to create new tools instead
+> to handle these new attributes?  Maybe just do not create them in the
+> first place?
+
+This advice is about 10 years too late :(
+
+Regardless, lets not do deeply nested attributes here in PCI. They are
+PITA anyhow.
+
+Jason
