@@ -2,126 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C01DB34FD8E
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 11:58:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCCEF34FDFB
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 12:24:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbhCaJ5f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 05:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57486 "EHLO mail.kernel.org"
+        id S234855AbhCaKXn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 06:23:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60146 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234375AbhCaJ5D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 31 Mar 2021 05:57:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1FFED6195C;
-        Wed, 31 Mar 2021 09:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617184622;
-        bh=8rL65lt1qV8iT7ZE18EYU50vT0TsGC32h7IxPz6FjaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhf+WD7AxKKtAeGLC3msHJEc36Ka122A2z7DM46mkLJ8sYCh8sb/8VhTRP/9zxzuV
-         2kzdMfgvL2NsjL+sSYaOoRPBEvfZ7Tq/w0kJixoaOLVl6i/xOFxtA1cCMLQs1pHq1D
-         xh8Ot/WowRQe7FoAMBZfZ1tfYdDT+PxfxT4nV4jtXTD6SI9ZHmg4v51/Jyrdga/L+2
-         boe+OsxKwajjFIWBYkHNHUioTgp3f8ffWUEf7f/Mz0fmml+oqq5WU0oENhn7vW+Nke
-         q/jpGscRCnE7PWJyRC23Y3iYekdr9j4YECCacLxCN1YtUK62kcmI1lpHssO4p1NXEI
-         Lkob02lSIaCUg==
-Received: by pali.im (Postfix)
-        id 6E216AF7; Wed, 31 Mar 2021 11:56:59 +0200 (CEST)
-Date:   Wed, 31 Mar 2021 11:56:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Subject: Re: Interrupts in pci-aardvark
-Message-ID: <20210331095659.dmnbn3aiblbnk7qe@pali>
-References: <20210328140912.k33qqfpkizdtlrcp@pali>
- <87im58rd3o.wl-maz@kernel.org>
+        id S229890AbhCaKXP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 31 Mar 2021 06:23:15 -0400
+IronPort-SDR: P/V9XOAaBB2LT05aUYpduXvVjh/m3Cpnv0EPGFNrAdOPJjS4T/8YMzn2eyt0eQw5VA5gQl3V8E
+ w+Xb9x0ItiLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="189740056"
+X-IronPort-AV: E=Sophos;i="5.81,293,1610438400"; 
+   d="scan'208";a="189740056"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 03:23:15 -0700
+IronPort-SDR: ql3z9lKOrP5xJTcheLMVmoPkAL9Iwhowp5/cCy5ldBJ+6vLPPOLKZ9kS2pvmttd8t2wXDQXLDy
+ 6cQ+e5uY961A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,293,1610438400"; 
+   d="scan'208";a="377211545"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 31 Mar 2021 03:23:12 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lRY0G-0005px-62; Wed, 31 Mar 2021 10:23:12 +0000
+Date:   Wed, 31 Mar 2021 18:22:13 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/vpd] BUILD SUCCESS
+ f349223f076e4c2d44ccf89d19056acbda3076f5
+Message-ID: <60644d55.K68h7SL0RyEKKsIJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87im58rd3o.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 30 March 2021 14:21:47 Marc Zyngier wrote:
-> On Sun, 28 Mar 2021 15:09:12 +0100,
-> Pali Rohár <pali@kernel.org> wrote:
-> 
-> [...]
-> 
-> > Aardvark HW allows to mask summary TOP, summary CORE, individual CORE
-> > (PME, ERR, INTA, INTB, ...), summary MSI and individual MSI bits
-> > interrupts, but not final 16 bit MSI interrupt number. MSI bits are low
-> > 5 bits of 16 bit interrupt number. So it is not possible to mask or
-> > unmask MSI interrupt number X. It is possible to only mask/unmask all
-> > MSI interrupts which low 5 bits is specific value.
-> 
-> If you cannot mask individual MSIs, you have two choices:
-> 
-> - you only support MSI-X *or* MSI (not multi-MSI) and mask interrupts
->   at the device level
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
+branch HEAD: f349223f076e4c2d44ccf89d19056acbda3076f5  PCI/VPD: Remove pci_set_vpd_size()
 
-There is no information in available documentation how to implement
-MSI-X in Root Complex mode, so currently MSI-X is not possible.
+elapsed time: 723m
 
-> - you restrict the number of MSIs to those you can actually control,
->   and that's 2^5 = 32 (which is what the driver currently supports, I
->   believe).
+configs tested: 147
+configs skipped: 3
 
-Well, 32 MSI interrupts is not enough for new modern wifi cards. E.g.
-QCA6390 (ath11k) wifi card requires 32 interrupts and when this card is
-connected to 2 port PCIe packet switch then packet switch requires 3
-additional interrupts (1 for downstream and 1 for each upstream = 1+2).
-So in this setup at least 64 MSI interrupts are required because PCI
-functions of packet switch are initialized first (take interrupts 0,1,2)
-and then is initialized wifi card which requires 32 aligned interrupts
-(so 32,33,...,63). This setup is common on existing A3720 hardware:
-Turris Mox with Mox G module.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Currently aardvark driver unmask all MSI interrupts and does not
-implement masking/unmasking callbacks for individual interrupts.
-Currently it has implemented support for 32 individual interrupts.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+x86_64                           allyesconfig
+riscv                            allmodconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+mips                           gcw0_defconfig
+powerpc                        warp_defconfig
+powerpc                     kmeter1_defconfig
+mips                           ip22_defconfig
+powerpc                 mpc837x_rdb_defconfig
+sh                          rsk7203_defconfig
+arm                          iop32x_defconfig
+um                            kunit_defconfig
+sh                        sh7757lcr_defconfig
+mips                         db1xxx_defconfig
+arm                        cerfcube_defconfig
+arm                           tegra_defconfig
+sh                              ul2_defconfig
+arm                        neponset_defconfig
+sh                          urquell_defconfig
+arm                            mmp2_defconfig
+powerpc                      bamboo_defconfig
+powerpc                 mpc837x_mds_defconfig
+arm                          lpd270_defconfig
+powerpc                 mpc836x_rdk_defconfig
+xtensa                         virt_defconfig
+sh                            titan_defconfig
+arm                        mini2440_defconfig
+arm                          gemini_defconfig
+powerpc                 xes_mpc85xx_defconfig
+powerpc                        fsp2_defconfig
+arc                              alldefconfig
+ia64                      gensparse_defconfig
+nios2                         3c120_defconfig
+mips                      fuloong2e_defconfig
+arm                       netwinder_defconfig
+powerpc                      acadia_defconfig
+powerpc                     tqm8560_defconfig
+arm                     am200epdkit_defconfig
+sh                           se7343_defconfig
+ia64                            zx1_defconfig
+parisc                           allyesconfig
+mips                         cobalt_defconfig
+powerpc                     pq2fads_defconfig
+powerpc                      obs600_defconfig
+mips                        bcm47xx_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                      ppc44x_defconfig
+arm                         s3c6400_defconfig
+powerpc                     sbc8548_defconfig
+mips                  decstation_64_defconfig
+sh                           se7780_defconfig
+mips                            ar7_defconfig
+mips                     cu1000-neo_defconfig
+sparc                       sparc64_defconfig
+sh                           se7619_defconfig
+arm                    vt8500_v6_v7_defconfig
+powerpc                      arches_defconfig
+mips                        qi_lb60_defconfig
+sh                          sdk7786_defconfig
+powerpc                         wii_defconfig
+m68k                        stmark2_defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                    socrates_defconfig
+arm                           u8500_defconfig
+arm                         s5pv210_defconfig
+riscv                    nommu_virt_defconfig
+m68k                       bvme6000_defconfig
+powerpc                      ppc40x_defconfig
+h8300                               defconfig
+arm                            mps2_defconfig
+sh                     magicpanelr2_defconfig
+mips                malta_kvm_guest_defconfig
+powerpc                       ebony_defconfig
+sh                            migor_defconfig
+mips                       lemote2f_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20210330
+x86_64               randconfig-a003-20210330
+x86_64               randconfig-a002-20210330
+x86_64               randconfig-a001-20210330
+x86_64               randconfig-a005-20210330
+x86_64               randconfig-a006-20210330
+i386                 randconfig-a004-20210330
+i386                 randconfig-a006-20210330
+i386                 randconfig-a003-20210330
+i386                 randconfig-a002-20210330
+i386                 randconfig-a001-20210330
+i386                 randconfig-a005-20210330
+i386                 randconfig-a015-20210330
+i386                 randconfig-a011-20210330
+i386                 randconfig-a014-20210330
+i386                 randconfig-a013-20210330
+i386                 randconfig-a016-20210330
+i386                 randconfig-a012-20210330
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-So it is an issue if masking / unmasking stay unimplemented?
+clang tested configs:
+x86_64               randconfig-a012-20210330
+x86_64               randconfig-a015-20210330
+x86_64               randconfig-a014-20210330
+x86_64               randconfig-a016-20210330
+x86_64               randconfig-a013-20210330
+x86_64               randconfig-a011-20210330
 
-> > Also aardvark HW allows to globally enable / disable processing of MSI
-> > interrupts. Masking summary MSI interrupt just cause that GIC does not
-> > trigger it but from registers I can read it (e.g. when GIC calls
-> > aardvark interrupt handler for other non-MSI interrupt).
-> > 
-> > And I would like to ask, what is in this hierarchy from kernel point of
-> > view "bottom part of MSI" and what is the "upper part of MSI"? As in
-> > above diagram there are 3 MSI layers.
-> 
-> The upper part is the bus-specific part, PCI in your case. You don't
-> need to implement it.
-
-Ok!
-
-> The bottom part controls the HW, and deals with all the masking,
-> acknoledgement, allocation and demuxing.
-
-So it is basically everything related to MSI interrupts in that diagram.
-
-> > And which irq enable/disable/mask/unmask/ack callbacks I need to
-> > implement for legacy irq, bottom MSI and upper MSI domains?
-> 
-> You need to provide what makes sense for your HW. I would guess that
-> you need at least mask/unmask and most probably ack at both levels,
-> and of course a compose_msg callback at the bottom level.
-> 
-> > And where should I add code which globally enable/disable receiving of
-> > aardvark MSI interrupts? Currently it is part of aardvark driver probe
-> > function.
-> 
-> Seems like the logical place to put it. The kernel deals with
-> individual interrupts, and not with global switches.
-
-Global enable is needed to call also when HW resume from suspend state.
-Suspend is not currently implemented, but I would like to know what is
-the preferred way, where to put "MSI initialization code" which needs
-to be called for "global initialization & enable" and also after wakeup
-from suspend. Has struct irq_chip callback for this action? Or such code
-really should be called in driver probe function and then also in driver
-resume function?
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
