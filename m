@@ -2,105 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6101134FFAC
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 13:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14FAF350011
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 14:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235268AbhCaLrU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 07:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235205AbhCaLrE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 31 Mar 2021 07:47:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 546F961983;
-        Wed, 31 Mar 2021 11:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617191223;
-        bh=MEHIAOJCnD5NSU7ULLzWpFbC8P2mR31ilMdQBMXtbOc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bmP1RP5T5z4hKGvW98EtdBNRGmgIe9dzS3auzf3Op2eraqOzCajqJGuQ5s7AXikt6
-         emDr2FxSiK3XVUN5PvSID7n1dl0bjmDjzb+d8JlDLUqd5RjjodFV3qv7wcoegBb8CE
-         7/XW1HSWHbO+YtwlWiePfNvEvGB0HLOGWkr/afsbG+eAhWoW4FEQ/3EAMrcWAbv9bl
-         XhIFWjSF2s+CavpXg0zQkiZUi155OuXnICXwL8e9RL5dxd1PhtrvLeVsKB/NBfwY+F
-         T5483A70ZZLzjIgWOcz1ojyqZri9NkgTyhRdKsY+bx98ympZhlrw1MRdi8SBsGS7Vd
-         CmiyU4xF6JsOw==
-Date:   Wed, 31 Mar 2021 12:46:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        id S235452AbhCaMTh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 08:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235466AbhCaMTc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 08:19:32 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59FBCC061574
+        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 05:19:32 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id c3so19058831qkc.5
+        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 05:19:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PJyuYOXEPThE2Fv31/yb2A5G05WFpUI9cqxqY5aTGFs=;
+        b=lY8FLwMa2kcF/T7oV3kAmGT+GFcjJzTyqpBzA0VBe7KQERhmtwl70OEeapllblGjH/
+         /4zrxh0leobwu+cTHedaMGjHtmJjx/0MkqMPf93pxbD7f7z4esKkdxUIK4DEivB3lS3a
+         P7q9kBsdvo66lka3YUC3xOk6Vuz0E+Sk85v6ktzK5vrJRJlm+QgxCTkSfCQrTt2EZhN7
+         NCP/xox83L2uC+0j0vMhEf4EdwSVvXcpjEZNIm6thm6uNHm1QjkZdLAoI3Z+lve2tCa/
+         qtROhBm9fOvvIG7IG1gQuY1ssIzdHesBWb3jKi7webZdFK6jQONMHiZ9CXV9piz8jLi/
+         GBfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PJyuYOXEPThE2Fv31/yb2A5G05WFpUI9cqxqY5aTGFs=;
+        b=QcUwECT9SMPRgO+bQl9Uyhrp95ISfO5iBbhqSlbvzsm7OfKOUybQJlm4YWSdjf9p6s
+         X+3mOIO9oUFm+eX2i6DSBwxAHOy3PX9zvMNGiGGAQWWa8qq3fRH38QYClOgQfTlvPfaY
+         g2RHbrdnvObQsPMtu6hghOR5NhZGd1fd8U7efkXmpaDshXz4Jv1V3JtpFc5IFrur4Fz5
+         O5S1jm4DT+PQQn2yHWrtJjiU+uEK4DAyC6Wlf+/1ipTh6fHDkbkCaUXpcNeANkBWG2Us
+         4XaSvT0/83/ivYQrurxovcBk0M5XPOHNviWrqSpdMJRlPEDnOK4R/H+p5d13XRTAbxDu
+         +jlQ==
+X-Gm-Message-State: AOAM530tREOuwLxOYGqjrCAq9hPzpGlaUUhrJx/GLe5aim8ArVpLGtKI
+        8CLIsmc2x1P2zi+qo3Mq41aHMxJZCps2RuIV
+X-Google-Smtp-Source: ABdhPJwkTUWmwjW/6AxVt/xVKUV2IWciFy7YCIjz7ea+0L3y7vHWpvlGHOx2deUuGfkMXIkbZdH3Qw==
+X-Received: by 2002:ae9:c011:: with SMTP id u17mr2869066qkk.2.1617193171556;
+        Wed, 31 Mar 2021 05:19:31 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-115-133.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.115.133])
+        by smtp.gmail.com with ESMTPSA id w5sm1288993qkc.85.2021.03.31.05.19.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Mar 2021 05:19:30 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1lRZon-006Jwt-R3; Wed, 31 Mar 2021 09:19:29 -0300
+Date:   Wed, 31 Mar 2021 09:19:29 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-Message-ID: <20210331114650.GA4758@sirena.org.uk>
-References: <20210326191906.43567-1-jim2101024@gmail.com>
- <20210326191906.43567-2-jim2101024@gmail.com>
- <20210330150816.GA306420@robh.at.kernel.org>
- <20210330153023.GE4976@sirena.org.uk>
- <CANCKTBvDdkLk0o4NboaOTZ26vfwJjPAfnXK3ay4v9E91G2gYOQ@mail.gmail.com>
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210331121929.GX2710221@ziepe.ca>
+References: <20210330194716.GV2710221@ziepe.ca>
+ <20210330204141.GA1305530@bjorn-Precision-5520>
+ <20210330224341.GW2710221@ziepe.ca>
+ <YGQY72LnGB6bfIsI@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANCKTBvDdkLk0o4NboaOTZ26vfwJjPAfnXK3ay4v9E91G2gYOQ@mail.gmail.com>
-X-Cookie: You can't take damsel here now.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <YGQY72LnGB6bfIsI@kroah.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Mar 31, 2021 at 08:38:39AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Mar 30, 2021 at 07:43:41PM -0300, Jason Gunthorpe wrote:
+> > > With 0000:01:00.0/sriov/BB:DD.F/vf_msix_count, sriov/ will contain
+> > > 1 file and 1K subdirectories.
+> > 
+> > The smallest directory sizes is with the current patch since it
+> > re-uses the existing VF directory. Do we care about directory size at
+> > the sysfs level?
+> 
+> No, that should not matter.
+> 
+> The "issue" here is that you "broke" the device chain here by adding a
+> random kobject to the directory tree: "BB:DD.F"
+> 
+> Again, devices are allowed to have attributes associated with it to be
+> _ONE_ subdirectory level deep.
+> 
+> So, to use your path above, this is allowed:
+> 	0000:01:00.0/sriov/vf_msix_count
+> 
+> as these are sriov attributes for the 0000:01:00.0 device, but this is
+> not:
+> 	0000:01:00.0/sriov/BB:DD.F/vf_msix_count
+> as you "threw" a random kobject called BB:DD.F into the middle.
+>
+> If you want to have "BB:DD.F" in there, then it needs to be a real
+> struct device and _THEN_ it needs to point its parent to "0000:01:00.0",
+> another struct device, as "sriov" is NOT ANYTHING in the heirachy here
+> at all.
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It isn't a struct device object at all though, it just organizing
+attributes.
 
-On Tue, Mar 30, 2021 at 12:23:35PM -0400, Jim Quinlan wrote:
-> On Tue, Mar 30, 2021 at 11:30 AM Mark Brown <broonie@kernel.org> wrote:
+> Does that help?  The rules are:
+> 	- Once you use a 'struct device', all subdirs below that device
+> 	  are either an attribute group for that device or a child
+> 	  device.
+> 	- A struct device can NOT have an attribute group as a parent,
+> 	  it can ONLY have another struct device as a parent.
+> 
+> If you break those rules, the kernel has the ability to get really
+> confused unless you are very careful, and userspace will be totally lost
+> as you can not do anything special there.
 
-> > For a soldered down part I'd expect we'd want both (if the host even
-> > cares) - for anything except a supply that I/O or something else shared
-> > is referenced off there's no great reason why it has to be physically
-> > the same supply going to every device on the bus so each device should
-> > be able to specify separately.
+The kernel gets confused?
 
-> Our developer and reference boards frequently have Mini and half-mini
-> PCIe sockets (a few exceptions), whereas production boards are mostly
-> soldered down.
+I'm not sure I understand why userspace gets confused. I can guess
+udev has some issue, but everything else seems OK, it is just a path.
 
-On reflection I think the above probably also applies to sockets - you'd
-just have to have a socket visible in the DT.
+> > > I'm dense and don't fully understand Greg's subdirectory comment.
+> > 
+> > I also don't know udev well enough. I've certainly seen drivers
+> > creating extra subdirectories using kobjects.
+> 
+> And those drivers are broken.  Please point them out to me and I will be
+> glad to go fix them.  Or tell their authors why they are broken :)
 
-> If I resubmit this pullreq  so that it  looks for "vpcie12v-supply"
-> and "vpcie3v3-supply" in the host node, will that be acceptable for
-> both of you?
+How do you fix them? It is uAPI at this point so we can't change the
+directory names. Can't make them struct devices (userspace would get
+confused if we add *more* sysfs files)
 
-I think you will need both (assuming the controller actually physically
-gets the supplies) - like I say the sockets/devices may not all share
-the same 12V and 3.3V rails.
+Grep for kobject_init_and_add() under drivers/ and I think you get a
+pretty good overview of the places.
 
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
+Since it seems like kind of a big problem can we make this allowed
+somehow?
 
------BEGIN PGP SIGNATURE-----
+> > > But it doesn't seem like that level of control would be in a udev rule
+> > > anyway.  A PF udev rule might *start* a program to manage MSI-X
+> > > vectors, but such a program should be able to deal with whatever
+> > > directory structure we want.
+> >
+> > Yes, I can't really see this being used from udev either. 
+> 
+> It doesn't matter if you think it could be used, it _will_ be used as
+> you are exposing this stuff to userspace.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBkYSoACgkQJNaLcl1U
-h9AzZwf+IHeeyiF1l7tnQ0F0NICTUvUfGXdva6I5FzgczPxucf1w9Y/VIHGfrFi4
-E09OZWs/FH0fFgUQWO+bqeaXYInpMnGsMCdXZSEYsABgQoMTtvoCQr+o1QKvJ/Ye
-5IR1iPxdigor4QKIXvTIi0sIC/iFvMVo6wFfIInf7qzmsLnZE/uuJmHh3Sq2I1JW
-urO6SiyAzZkdn6ZVA5Asu/8MeUmIMCC7Cidc25fBedch6a8+dqewQds0uZCJC40k
-k8rsYDdF1E8DuKITqLcNiYDS677bgx/F+0DXWRrVMYawSiOxmrLTk+fBYq3EzYq3
-8I/egyMtNle4xXbSt4WSpuODegtakw==
-=YqRz
------END PGP SIGNATURE-----
+Well, from what I understand, it wont be used because udev can't do
+three level deep attributes, and if that hasn't been a problem in that
+last 10 years for the existing places, it might not ever be needed in
+udev at all.
 
---3MwIy2ne0vdjdPXF--
+> > I assume there is also the usual race about triggering the uevent
+> > before the subdirectories are created, but we have the
+> > dev_set_uevent_suppress() thing now for that..
+> 
+> Unless you are "pci bus code" you shouldn't be using that :)
+
+There are over 40 users now.
+
+Jason
