@@ -2,68 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B87934F572
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 02:25:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 009C134F56F
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 02:25:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbhCaAZD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Mar 2021 20:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32956 "EHLO
+        id S229626AbhCaAZE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Mar 2021 20:25:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232101AbhCaAY1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Mar 2021 20:24:27 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255C0C061574
-        for <linux-pci@vger.kernel.org>; Tue, 30 Mar 2021 17:24:27 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id y32so11773448pga.11
-        for <linux-pci@vger.kernel.org>; Tue, 30 Mar 2021 17:24:27 -0700 (PDT)
+        with ESMTP id S232490AbhCaAY2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Mar 2021 20:24:28 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA21C061765
+        for <linux-pci@vger.kernel.org>; Tue, 30 Mar 2021 17:24:28 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id v10so12892360pgs.12
+        for <linux-pci@vger.kernel.org>; Tue, 30 Mar 2021 17:24:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=t8GisNUKhAXhRRmhb5Tmd7cSosC0ChQ5VE6Rcal6IVk=;
-        b=urdw3ivXzWShCpZ72V3nD7ok9QIvHP0ke8jFdQ6gOdSvymUjIs2/ErLZOItEsi3Exq
-         Zs/3q45bKVnrvrbSLkghBP8hFtj6qVeMzz3QGjNAbe8vYCKmt67b0HU/a1rimNbVG/bG
-         9i5i5OG5X0jCsbYssTZKB2kEzfUjkj/Tz2IgeJP/MkJhFphCczFN6i17moOy/H7qOQ3e
-         aI+4KGsS3P5GrnDzdy7q9IblINvwNF1BiXXQaD5XzCxZULPiIcfhxzp7xxrMM0HeWyVS
-         JANPccHlgxQi8ZyQM3ouLqwjeOC7ke9gUVjz5HNCEAVRcxOfa39fRx9hzMCTKz9mMlld
-         ffdw==
+        bh=ub28FHj/nP801IQO46xUZahOb4byvrwZQUANAPDaSEA=;
+        b=SOcvf/tGl+Al4KoWwPZq+DDeyAcVz2fMNFsevwb00+4IxVKFLY+T5o5h3mSdiCgM7k
+         yEp5mEg+0He6/AbTRXBrdnSBU4NV3EcOCdNyLAEZvBB8EPDiFZxQtUm+BkcumlwvtIP/
+         sqDp6BioT6jIx6uD800hvxx44tUtOxEat2QFdqDjEkIRMajE74l1SvLgmtrObxlHts4I
+         X77DrWlnbT5DziL+Kuc6jou+0BVCxNs3Q/+6rUG+LgsZl82QRMYcmKi9cVaH/gyVp7ea
+         Rm+3z87LxjdEc2Onwmr8NVrkPCh07y3jLu3F05NpbZFz3X6urGoDTtoOKgvIlvnV7RO2
+         BvFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=t8GisNUKhAXhRRmhb5Tmd7cSosC0ChQ5VE6Rcal6IVk=;
-        b=AFfjyWU1STjQdk3eeqE8iFc81WJ3eWLyVbvmJrfJRpWm828yPQK+LYanf8KE2hAnpW
-         1uuWNZO0D0zmF+SITOYc7BxMe3AaR5csLqrwSVXzO7ih/IRaGO/2UwQLC5T0htFUzlr0
-         GkcGkbPxE9QdrHgyohkCKfxgJ7nCxVL7FXIGWgINi6R/RW2IqEyyEjw8UjEL/FZm0InB
-         8AWxwppb1UGWq8VzBF9taX5u73aMx7xZ7acB8Z1H8IUm3oC30VpB6CIAbopEVRSgQt8M
-         bIvBu7bQPKAO/aPCtgjV3F7lcZpYVzMHOryWMyEWnd4TgQngGB28oI9fmNVFqUA4EAAP
-         xGug==
-X-Gm-Message-State: AOAM5323jp6zpH2ECyZ9ZkGJR6GNnBjM/Oeh6PT3/p3huZT56b70lABn
-        UVyD9hngj0Cf/zZ4X7oBUgsVlg==
-X-Google-Smtp-Source: ABdhPJzu1TA+qlBzM73yS6GhrKUJdqQ2kl7j2QOiV7JjAougt35JjgWoZLN67F4hgX4tR8a+GoQsxw==
-X-Received: by 2002:aa7:9687:0:b029:22e:e5ce:95b6 with SMTP id f7-20020aa796870000b029022ee5ce95b6mr502259pfk.53.1617150266450;
-        Tue, 30 Mar 2021 17:24:26 -0700 (PDT)
+        bh=ub28FHj/nP801IQO46xUZahOb4byvrwZQUANAPDaSEA=;
+        b=AANRS9f4EsYtV4tYU9IUCYZUMuKTUKVj1+aWwBhcttmW3TAucp99MPIiS1JiSSQ/qa
+         N3ZLKrahUnCawunAka2c5dwVAJaJqSYGbAmfaIV2Y6ZV3xZf5e9hOGA9amgvbEYnZFcZ
+         owHIHEdvTJPJei/xdHe65A4YeFah7Ouq1XxMpF1gFmNtuTQ09QiFfdbgZYaeC/ClQtXp
+         GEwjTk/XjoKuc45VMwDa+T0JDA20OkFSqydoqHWuqi8ein+LL5CPJT49Rwb0xA7XnAUY
+         qIm6IcPLPgAl/KczrHANKZ9TGk5oAfHL+R8m477jU02H9J8DoanRYxZM8dGwnAP/jKFw
+         GB6Q==
+X-Gm-Message-State: AOAM533dPdrZD5D5lQWHIPIKrrBejd2CgjKJNvgymft3KM0JOCCdqenD
+        wDFDiOIai6/g4EY7HmgI50WKbQ==
+X-Google-Smtp-Source: ABdhPJybsZFi/2pN93X3ZjdAqDBFgjVrY3uiPHLxNABzi4IU4lfFKhHkaqZRMkHbJDl9onKr2z/Byg==
+X-Received: by 2002:a62:8103:0:b029:1ef:26e4:494f with SMTP id t3-20020a6281030000b02901ef26e4494fmr461898pfd.41.1617150267976;
+        Tue, 30 Mar 2021 17:24:27 -0700 (PDT)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id p25sm169258pfe.100.2021.03.30.17.24.25
+        by smtp.gmail.com with ESMTPSA id f21sm238126pjj.52.2021.03.30.17.24.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 17:24:25 -0700 (PDT)
-Date:   Tue, 30 Mar 2021 17:24:25 -0700 (PDT)
-X-Google-Original-Date: Tue, 30 Mar 2021 17:06:40 PDT (-0700)
-Subject:     Re: [PATCH v2 2/6] clk: sifive: Use reset-simple in prci driver for PCIe driver
-In-Reply-To: <CAHCEehL63aJQPA3DdRCa3pZHWX3DH9ktgKbo1+nD=KWxADsogA@mail.gmail.com>
-CC:     sboyd@kernel.org, alex.dewar90@gmail.com, aou@eecs.berkeley.edu,
-        bhelgaas@google.com, devicetree@vger.kernel.org,
-        erik.danie@sifive.com, hayashi.kunihiko@socionext.com,
-        helgaas@kernel.org, hes@sifive.com, jh80.chung@samsung.com,
-        khilman@baylibre.com, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, lorenzo.pieralisi@arm.com,
-        mturquette@baylibre.com, p.zabel@pengutronix.de,
-        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
-        vidyas@nvidia.com, zong.li@sifive.com
+        Tue, 30 Mar 2021 17:24:27 -0700 (PDT)
+Date:   Tue, 30 Mar 2021 17:24:27 -0700 (PDT)
+X-Google-Original-Date: Tue, 30 Mar 2021 17:16:56 PDT (-0700)
+Subject:     Re: [PATCH v2 6/6] riscv: dts: Add PCIe support for the SiFive FU740-C000 SoC
+In-Reply-To: <17994571deaf703e65ece7e44c742f82c988cf39.1615954046.git.greentime.hu@sifive.com>
+CC:     greentime.hu@sifive.com, Paul Walmsley <paul.walmsley@sifive.com>,
+        hes@sifive.com, erik.danie@sifive.com, zong.li@sifive.com,
+        bhelgaas@google.com, robh+dt@kernel.org, aou@eecs.berkeley.edu,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        alex.dewar90@gmail.com, khilman@baylibre.com,
+        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
+        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        helgaas@kernel.org
 From:   Palmer Dabbelt <palmer@dabbelt.com>
 To:     greentime.hu@sifive.com
-Message-ID: <mhng-78a4de2c-8723-4b35-b64e-2e1866ad6743@palmerdabbelt-glaptop>
+Message-ID: <mhng-30f397a9-b7af-4247-baa0-d8e1d30c6b97@palmerdabbelt-glaptop>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -71,43 +72,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 29 Mar 2021 20:36:12 PDT (-0700), greentime.hu@sifive.com wrote:
-> Stephen Boyd <sboyd@kernel.org> 於 2021年3月30日 週二 上午3:14寫道：
->>
->> Quoting Greentime Hu (2021-03-17 23:08:09)
->> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> > index 71ab75a46491..f094df93d911 100644
->> > --- a/drivers/reset/Kconfig
->> > +++ b/drivers/reset/Kconfig
->> > @@ -173,7 +173,7 @@ config RESET_SCMI
->> >
->> >  config RESET_SIMPLE
->> >         bool "Simple Reset Controller Driver" if COMPILE_TEST
->> > -       default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REALTEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC
->> > +       default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REALTEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC || RISCV
->>
->> This conflicts. Can this default be part of the riscv defconfig instead?
->>
+On Wed, 17 Mar 2021 23:08:13 PDT (-0700), greentime.hu@sifive.com wrote:
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu740-c000.dtsi | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
 >
-> Maybe I should remove this since it has been selected by CLK_SIFIVE_PRCI?
->
->  config CLK_SIFIVE_PRCI
->         bool "PRCI driver for SiFive SoCs"
-> +       select RESET_CONTROLLER
-> +       select RESET_SIMPLE
+> diff --git a/arch/riscv/boot/dts/sifive/fu740-c000.dtsi b/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+> index d1bb22b11920..d0839739b425 100644
+> --- a/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu740-c000.dtsi
+> @@ -158,6 +158,7 @@ prci: clock-controller@10000000 {
+>  			reg = <0x0 0x10000000 0x0 0x1000>;
+>  			clocks = <&hfclk>, <&rtcclk>;
+>  			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+>  		};
+>  		uart0: serial@10010000 {
+>  			compatible = "sifive,fu740-c000-uart", "sifive,uart0";
+> @@ -288,5 +289,38 @@ gpio: gpio@10060000 {
+>  			clocks = <&prci PRCI_CLK_PCLK>;
+>  			status = "disabled";
+>  		};
+> +		pcie@e00000000 {
+> +			#address-cells = <3>;
+> +			#interrupt-cells = <1>;
+> +			#num-lanes = <8>;
+> +			#size-cells = <2>;
+> +			compatible = "sifive,fu740-pcie";
+> +			reg = <0xe 0x00000000 0x1 0x0
+> +			       0xd 0xf0000000 0x0 0x10000000
+> +			       0x0 0x100d0000 0x0 0x1000>;
+> +			reg-names = "dbi", "config", "mgmt";
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000  0x0 0x60080000  0x0 0x60080000 0x0 0x10000        /* I/O */
+> +				  0x82000000  0x0 0x60090000  0x0 0x60090000 0x0 0xff70000      /* mem */
+> +				  0x82000000  0x0 0x70000000  0x0 0x70000000 0x0 0x1000000      /* mem */
+> +				  0xc3000000 0x20 0x00000000 0x20 0x00000000 0x20 0x00000000>;  /* mem prefetchable */
+> +			num-lanes = <0x8>;
+> +			interrupts = <56 57 58 59 60 61 62 63 64>;
+> +			interrupt-names = "msi", "inta", "intb", "intc", "intd";
+> +			interrupt-parent = <&plic0>;
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0x0 0x0 0x0 0x1 &plic0 57>,
+> +					<0x0 0x0 0x0 0x2 &plic0 58>,
+> +					<0x0 0x0 0x0 0x3 &plic0 59>,
+> +					<0x0 0x0 0x0 0x4 &plic0 60>;
+> +			clock-names = "pcie_aux";
+> +			clocks = <&prci PRCI_CLK_PCIE_AUX>;
+> +			pwren-gpios = <&gpio 5 0>;
+> +			perstn-gpios = <&gpio 8 0>;
+> +			resets = <&prci 4>;
+> +			status = "okay";
+> +		};
+>  	};
+>  };
 
-Ya, that's better.  IIRC I suggested something similar in some other 
-version, but I might have not actually sent the mail.
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
->
->> >         help
->> >           This enables a simple reset controller driver for reset lines that
->> >           that can be asserted and deasserted by toggling bits in a contiguous,
->> > @@ -187,6 +187,7 @@ config RESET_SIMPLE
->> >            - RCC reset controller in STM32 MCUs
->> >            - Allwinner SoCs
->> >            - ZTE's zx2967 family
->> > +          - SiFive FU740 SoCs
->> >
->> >  config RESET_STM32MP157
->> >         bool "STM32MP157 Reset Driver" if COMPILE_TEST
+I'm happy to take these all through the RISC-V tree if that helps, but 
+as usual I'd like reviews or acks from the subsystem maintainers.  It 
+looks like there are some issues so I'm going to drop this from my 
+inbox.
