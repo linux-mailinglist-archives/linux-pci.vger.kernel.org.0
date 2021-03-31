@@ -2,43 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A5D3503E0
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 17:55:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF14B350448
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 18:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235645AbhCaPzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 11:55:23 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47227 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235420AbhCaPzT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 31 Mar 2021 11:55:19 -0400
-IronPort-SDR: L5jsaMFXn6dsX5ft3xEkyqmpXC09OyvnnZ0D+WHC9TvsuJ0C7wCbAiIkPKid+5Yd4Eet0T/HR3
- CILnTiwUgLLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9940"; a="172066831"
-X-IronPort-AV: E=Sophos;i="5.81,293,1610438400"; 
-   d="scan'208";a="172066831"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 08:55:15 -0700
-IronPort-SDR: 1gs2iwEQ81BKIm8hX2KQBV5VrMdvf/QA6g+pQjH405jIVgm2VsMNlJhuTYFFAvCtoFTCqi1E9I
- rdbdX3Rg+2pg==
-X-IronPort-AV: E=Sophos;i="5.81,293,1610438400"; 
-   d="scan'208";a="418734698"
-Received: from yijiazho-mobl.ccr.corp.intel.com ([10.249.174.198])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 08:55:11 -0700
-Message-ID: <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
-Subject: Re: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed))
- by __packed
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
+        id S233805AbhCaQPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 12:15:01 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:58033 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233784AbhCaQOx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 12:14:53 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-54-t95uJ3fxP-yvQHheQ6tJXQ-1; Wed, 31 Mar 2021 17:14:48 +0100
+X-MC-Unique: t95uJ3fxP-yvQHheQ6tJXQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Wed, 31 Mar 2021 17:14:47 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Wed, 31 Mar 2021 17:14:47 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Zhang Rui' <rui.zhang@intel.com>,
         Xiaofei Tan <tanxiaofei@huawei.com>,
         "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
         "lenb@kernel.org" <lenb@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Date:   Wed, 31 Mar 2021 23:55:08 +0800
-In-Reply-To: <6df8e01e2e9e4906be5ceaea72c61c0f@AcuMS.aculab.com>
+Subject: RE: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Thread-Topic: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Thread-Index: AQHXJTqteusKxfb1K0qiX/864DlgraqcLa0ggAIDjACAABX/gA==
+Date:   Wed, 31 Mar 2021 16:14:47 +0000
+Message-ID: <e437f6e69219460099a3764ab4b9391f@AcuMS.aculab.com>
 References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
          <1616831193-17920-5-git-send-email-tanxiaofei@huawei.com>
          <6df04be78e544e17b3b57f159312541f@AcuMS.aculab.com>
@@ -46,230 +45,159 @@ References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
          <b5ad5909f3fb14b46d6ff0f81c10e42507a60c74.camel@intel.com>
          <af3fd5adb62dcac93f2ff4ea7b6aff74d0106ac5.camel@intel.com>
          <6df8e01e2e9e4906be5ceaea72c61c0f@AcuMS.aculab.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+ <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
+In-Reply-To: <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2021-03-30 at 08:14 +0000, David Laight wrote:
-> From: Zhang Rui
-> > Sent: 30 March 2021 09:00
-> > To: Xiaofei Tan <tanxiaofei@huawei.com>; David Laight <
-> > David.Laight@ACULAB.COM>; rjw@rjwysocki.net;
-> > lenb@kernel.org; bhelgaas@google.com
-> > Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; 
-> > linux-pci@vger.kernel.org;
-> > linuxarm@openeuler.org
-> > Subject: Re: [PATCH v2 04/15] ACPI: table: replace
-> > __attribute__((packed)) by __packed
-> > 
-> > On Tue, 2021-03-30 at 15:31 +0800, Zhang Rui wrote:
-> > > On Tue, 2021-03-30 at 10:23 +0800, Xiaofei Tan wrote:
-> > > > Hi David,
-> > > > 
-> > > > On 2021/3/29 18:09, David Laight wrote:
-> > > > > From: Xiaofei Tan
-> > > > > > Sent: 27 March 2021 07:46
-> > > > > > 
-> > > > > > Replace __attribute__((packed)) by __packed following the
-> > > > > > advice of checkpatch.pl.
-> > > > > > 
-> > > > > > Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-> > > > > > ---
-> > > > > >  drivers/acpi/acpi_fpdt.c | 6 +++---
-> > > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/acpi/acpi_fpdt.c
-> > > > > > b/drivers/acpi/acpi_fpdt.c
-> > > > > > index a89a806..690a88a 100644
-> > > > > > --- a/drivers/acpi/acpi_fpdt.c
-> > > > > > +++ b/drivers/acpi/acpi_fpdt.c
-> > > > > > @@ -53,7 +53,7 @@ struct resume_performance_record {
-> > > > > >  	u32 resume_count;
-> > > > > >  	u64 resume_prev;
-> > > > > >  	u64 resume_avg;
-> > > > > > -} __attribute__((packed));
-> > > > > > +} __packed;
-> > > > > > 
-> > > > > >  struct boot_performance_record {
-> > > > > >  	struct fpdt_record_header header;
-> > > > > > @@ -63,13 +63,13 @@ struct boot_performance_record {
-> > > > > >  	u64 bootloader_launch;
-> > > > > >  	u64 exitbootservice_start;
-> > > > > >  	u64 exitbootservice_end;
-> > > > > > -} __attribute__((packed));
-> > > > > > +} __packed;
-> > > > > > 
-> > > > > >  struct suspend_performance_record {
-> > > > > >  	struct fpdt_record_header header;
-> > > > > >  	u64 suspend_start;
-> > > > > >  	u64 suspend_end;
-> > > > > > -} __attribute__((packed));
-> > > > > > +} __packed;
-> > > > > 
-> > > > > My standard question about 'packed' is whether it is actually
-> > > > > needed.
-> > > > > It should only be used if the structures might be misaligned
-> > > > > in
-> > > > > memory.
-> > > > > If the only problem is that a 64bit item needs to be 32bit
-> > > > > aligned
-> > > > > then a suitable type should be used for those specific
-> > > > > fields.
-> > > > > 
-> > > > > Those all look very dubious - the standard header isn't
-> > > > > packed
-> > > > > so everything must eb assumed to be at least 32bit aligned.
-> > > > > 
-> > > > > There are also other sub-structures that contain 64bit
-> > > > > values.
-> > > > > These don't contain padding - but that requires 64bit
-> > > > > alignement.
-> > > > > 
-> > > > > The only problematic structure is the last one - which would
-> > > > > have
-> > > > > a 32bit pad after the header.
-> > > > > Is this even right given than there are explicit alignment
-> > > > > pads
-> > > > > in some of the other structures.
-> > > > > 
-> > > > > If 64bit alignment isn't guaranteed then a '64bit aligned to
-> > > > > 32bit'
-> > > > > type should be used for the u64 fields.
-> > > > > 
-> > > > 
-> > > > Yes, some of them has been aligned already, then nothing
-> > > > changed
-> > > > when
-> > > > add this "packed ". Maybe the purpose of the original author is
-> > > > for
-> > > > extension, and can tell others that this struct need be packed.
-> > > > 
-> > > 
-> > > The patch is upstreamed recently but it was made long time ago.
-> > > I think the original problem is that one of the address, probably
-> > > the
-> > > suspend_performance record, is not 64bit aligned, thus we can not
-> > > read
-> > > the proper content of suspend_start and suspend_end, mapped from
-> > > physical memory.
-> > > 
-> > > I will try to find a machine to reproduce the problem with all
-> > > __attribute__((packed)) removed to double confirm this.
-> > > 
-> > 
-> > So here is the problem, without __attribute__((packed))
-> > 
-> > [    0.858442] suspend_record: 0xffffaad500175020
-> > /sys/firmware/acpi/fpdt/suspend/suspend_end_ns:addr:
-> > 0xffffaad500175030, 15998179292659843072
-> > /sys/firmware/acpi/fpdt/suspend/suspend_start_ns:addr:
-> > 0xffffaad500175028, 0
-> > 
-> > suspend_record is mapped to 0xffffaad500175020, and it is combined
-> > with
-> > one 32bit header and two 64bit fields (suspend_start and
-> > suspend_end),
-> > this is how it is located in physical memory.
-> > So the addresses of the two 64bit fields are actually not 64bit
-> > aligned.
-> > 
-> > David,
-> > Is this the "a 64bit item needs to be 32bit aligned" problem you
-> > referred?
-> > If yes, what is the proper fix? should I used two 32bits for each
-> > of
-> > the field instead?
-> 
-> Define something like:
-> typedef u64 __attribute__((aligned(4))) u64_align32;
-> and then use it for the 64bit structure members.
-> 
-Hi, David,
-
-Please kindly help check if the following patch is the right fix or
-not. I've verified it to work on my test box.
-
-The reason I use this typedef for all the u64 items because there is no
-guarantee that the suspend_performance record is in the end of the
-memory, thus it may pollute the others.
-
-From e18c942855e2f51e814d057fff4dd951cd0d0907 Mon Sep 17 00:00:00 2001
-From: Zhang Rui <rui.zhang@intel.com>
-Date: Wed, 31 Mar 2021 20:34:13 +0800
-Subject: [PATCH] ACPI: tables: FPDT: Fix 64bit alignment issue
-
-Some of the 64bit items in FPDT table may be 32bit aligned.
-Using __attribute__((packed)) is not needed in this case, fixing it by
-allowing 32bit alignment for these 64bit items.
-
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- drivers/acpi/acpi_fpdt.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/acpi/acpi_fpdt.c b/drivers/acpi/acpi_fpdt.c
-index a89a806a7a2a..94e107b9a114 100644
---- a/drivers/acpi/acpi_fpdt.c
-+++ b/drivers/acpi/acpi_fpdt.c
-@@ -23,12 +23,14 @@ enum fpdt_subtable_type {
- 	SUBTABLE_S3PT,
- };
- 
-+typedef u64 __attribute__((aligned(4))) u64_align32;
-+
- struct fpdt_subtable_entry {
- 	u16 type;		/* refer to enum fpdt_subtable_type */
- 	u8 length;
- 	u8 revision;
- 	u32 reserved;
--	u64 address;		/* physical address of the S3PT/FBPT table */
-+	u64_align32 address;		/* physical address of the S3PT/FBPT table */
- };
- 
- struct fpdt_subtable_header {
-@@ -51,25 +53,25 @@ struct fpdt_record_header {
- struct resume_performance_record {
- 	struct fpdt_record_header header;
- 	u32 resume_count;
--	u64 resume_prev;
--	u64 resume_avg;
--} __attribute__((packed));
-+	u64_align32 resume_prev;
-+	u64_align32 resume_avg;
-+};
- 
- struct boot_performance_record {
- 	struct fpdt_record_header header;
- 	u32 reserved;
--	u64 firmware_start;
--	u64 bootloader_load;
--	u64 bootloader_launch;
--	u64 exitbootservice_start;
--	u64 exitbootservice_end;
--} __attribute__((packed));
-+	u64_align32 firmware_start;
-+	u64_align32 bootloader_load;
-+	u64_align32 bootloader_launch;
-+	u64_align32 exitbootservice_start;
-+	u64_align32 exitbootservice_end;
-+};
- 
- struct suspend_performance_record {
- 	struct fpdt_record_header header;
--	u64 suspend_start;
--	u64 suspend_end;
--} __attribute__((packed));
-+	u64_align32 suspend_start;
-+	u64_align32 suspend_end;
-+};
- 
- 
- static struct resume_performance_record *record_resume;
--- 
-2.17.1
-
+RnJvbTogWmhhbmcgUnVpDQo+IFNlbnQ6IDMxIE1hcmNoIDIwMjEgMTY6NTUNCj4gT24gVHVlLCAy
+MDIxLTAzLTMwIGF0IDA4OjE0ICswMDAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+ID4gRnJvbTog
+WmhhbmcgUnVpDQo+ID4gPiBTZW50OiAzMCBNYXJjaCAyMDIxIDA5OjAwDQo+ID4gPiA+IE9uIFR1
+ZSwgMjAyMS0wMy0zMCBhdCAxMDoyMyArMDgwMCwgWGlhb2ZlaSBUYW4gd3JvdGU6DQo+ID4gPiA+
+ID4gSGkgRGF2aWQsDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiAyMDIxLzMvMjkgMTg6MDksIERh
+dmlkIExhaWdodCB3cm90ZToNCj4gPiA+ID4gPiA+IEZyb206IFhpYW9mZWkgVGFuDQo+ID4gPiA+
+ID4gPiA+IFNlbnQ6IDI3IE1hcmNoIDIwMjEgMDc6NDYNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4g
+PiA+ID4gUmVwbGFjZSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKSBieSBfX3BhY2tlZCBmb2xsb3dp
+bmcgdGhlDQo+ID4gPiA+ID4gPiA+IGFkdmljZSBvZiBjaGVja3BhdGNoLnBsLg0KPiA+ID4gPiA+
+ID4gPg0KPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvZmVpIFRhbiA8dGFueGlhb2Zl
+aUBodWF3ZWkuY29tPg0KPiA+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gIGRyaXZlcnMv
+YWNwaS9hY3BpX2ZwZHQuYyB8IDYgKysrLS0tDQo+ID4gPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPg0KPiA+ID4g
+PiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL2FjcGlfZnBkdC5jDQo+ID4gPiA+ID4g
+PiA+IGIvZHJpdmVycy9hY3BpL2FjcGlfZnBkdC5jDQo+ID4gPiA+ID4gPiA+IGluZGV4IGE4OWE4
+MDYuLjY5MGE4OGEgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvYWNwaS9hY3Bp
+X2ZwZHQuYw0KPiA+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2FjcGkvYWNwaV9mcGR0LmMNCj4g
+PiA+ID4gPiA+ID4gQEAgLTUzLDcgKzUzLDcgQEAgc3RydWN0IHJlc3VtZV9wZXJmb3JtYW5jZV9y
+ZWNvcmQgew0KPiA+ID4gPiA+ID4gPiAgCXUzMiByZXN1bWVfY291bnQ7DQo+ID4gPiA+ID4gPiA+
+ICAJdTY0IHJlc3VtZV9wcmV2Ow0KPiA+ID4gPiA+ID4gPiAgCXU2NCByZXN1bWVfYXZnOw0KPiA+
+ID4gPiA+ID4gPiAtfSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKTsNCj4gPiA+ID4gPiA+ID4gK30g
+X19wYWNrZWQ7DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICBzdHJ1Y3QgYm9vdF9wZXJm
+b3JtYW5jZV9yZWNvcmQgew0KPiA+ID4gPiA+ID4gPiAgCXN0cnVjdCBmcGR0X3JlY29yZF9oZWFk
+ZXIgaGVhZGVyOw0KPiA+ID4gPiA+ID4gPiBAQCAtNjMsMTMgKzYzLDEzIEBAIHN0cnVjdCBib290
+X3BlcmZvcm1hbmNlX3JlY29yZCB7DQo+ID4gPiA+ID4gPiA+ICAJdTY0IGJvb3Rsb2FkZXJfbGF1
+bmNoOw0KPiA+ID4gPiA+ID4gPiAgCXU2NCBleGl0Ym9vdHNlcnZpY2Vfc3RhcnQ7DQo+ID4gPiA+
+ID4gPiA+ICAJdTY0IGV4aXRib290c2VydmljZV9lbmQ7DQo+ID4gPiA+ID4gPiA+IC19IF9fYXR0
+cmlidXRlX18oKHBhY2tlZCkpOw0KPiA+ID4gPiA+ID4gPiArfSBfX3BhY2tlZDsNCj4gPiA+ID4g
+PiA+ID4NCj4gPiA+ID4gPiA+ID4gIHN0cnVjdCBzdXNwZW5kX3BlcmZvcm1hbmNlX3JlY29yZCB7
+DQo+ID4gPiA+ID4gPiA+ICAJc3RydWN0IGZwZHRfcmVjb3JkX2hlYWRlciBoZWFkZXI7DQo+ID4g
+PiA+ID4gPiA+ICAJdTY0IHN1c3BlbmRfc3RhcnQ7DQo+ID4gPiA+ID4gPiA+ICAJdTY0IHN1c3Bl
+bmRfZW5kOw0KPiA+ID4gPiA+ID4gPiAtfSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKTsNCj4gPiA+
+ID4gPiA+ID4gK30gX19wYWNrZWQ7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gTXkgc3RhbmRh
+cmQgcXVlc3Rpb24gYWJvdXQgJ3BhY2tlZCcgaXMgd2hldGhlciBpdCBpcyBhY3R1YWxseQ0KPiA+
+ID4gPiA+ID4gbmVlZGVkLg0KPiA+ID4gPiA+ID4gSXQgc2hvdWxkIG9ubHkgYmUgdXNlZCBpZiB0
+aGUgc3RydWN0dXJlcyBtaWdodCBiZSBtaXNhbGlnbmVkDQo+ID4gPiA+ID4gPiBpbg0KPiA+ID4g
+PiA+ID4gbWVtb3J5Lg0KPiA+ID4gPiA+ID4gSWYgdGhlIG9ubHkgcHJvYmxlbSBpcyB0aGF0IGEg
+NjRiaXQgaXRlbSBuZWVkcyB0byBiZSAzMmJpdA0KPiA+ID4gPiA+ID4gYWxpZ25lZA0KPiA+ID4g
+PiA+ID4gdGhlbiBhIHN1aXRhYmxlIHR5cGUgc2hvdWxkIGJlIHVzZWQgZm9yIHRob3NlIHNwZWNp
+ZmljDQo+ID4gPiA+ID4gPiBmaWVsZHMuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhvc2Ug
+YWxsIGxvb2sgdmVyeSBkdWJpb3VzIC0gdGhlIHN0YW5kYXJkIGhlYWRlciBpc24ndA0KPiA+ID4g
+PiA+ID4gcGFja2VkDQo+ID4gPiA+ID4gPiBzbyBldmVyeXRoaW5nIG11c3QgZWIgYXNzdW1lZCB0
+byBiZSBhdCBsZWFzdCAzMmJpdCBhbGlnbmVkLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFRo
+ZXJlIGFyZSBhbHNvIG90aGVyIHN1Yi1zdHJ1Y3R1cmVzIHRoYXQgY29udGFpbiA2NGJpdA0KPiA+
+ID4gPiA+ID4gdmFsdWVzLg0KPiA+ID4gPiA+ID4gVGhlc2UgZG9uJ3QgY29udGFpbiBwYWRkaW5n
+IC0gYnV0IHRoYXQgcmVxdWlyZXMgNjRiaXQNCj4gPiA+ID4gPiA+IGFsaWduZW1lbnQuDQo+ID4g
+PiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhlIG9ubHkgcHJvYmxlbWF0aWMgc3RydWN0dXJlIGlzIHRo
+ZSBsYXN0IG9uZSAtIHdoaWNoIHdvdWxkDQo+ID4gPiA+ID4gPiBoYXZlDQo+ID4gPiA+ID4gPiBh
+IDMyYml0IHBhZCBhZnRlciB0aGUgaGVhZGVyLg0KPiA+ID4gPiA+ID4gSXMgdGhpcyBldmVuIHJp
+Z2h0IGdpdmVuIHRoYW4gdGhlcmUgYXJlIGV4cGxpY2l0IGFsaWdubWVudA0KPiA+ID4gPiA+ID4g
+cGFkcw0KPiA+ID4gPiA+ID4gaW4gc29tZSBvZiB0aGUgb3RoZXIgc3RydWN0dXJlcy4NCj4gPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gPiBJZiA2NGJpdCBhbGlnbm1lbnQgaXNuJ3QgZ3VhcmFudGVlZCB0
+aGVuIGEgJzY0Yml0IGFsaWduZWQgdG8NCj4gPiA+ID4gPiA+IDMyYml0Jw0KPiA+ID4gPiA+ID4g
+dHlwZSBzaG91bGQgYmUgdXNlZCBmb3IgdGhlIHU2NCBmaWVsZHMuDQo+ID4gPiA+ID4gPg0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gWWVzLCBzb21lIG9mIHRoZW0gaGFzIGJlZW4gYWxpZ25lZCBhbHJl
+YWR5LCB0aGVuIG5vdGhpbmcNCj4gPiA+ID4gPiBjaGFuZ2VkDQo+ID4gPiA+ID4gd2hlbg0KPiA+
+ID4gPiA+IGFkZCB0aGlzICJwYWNrZWQgIi4gTWF5YmUgdGhlIHB1cnBvc2Ugb2YgdGhlIG9yaWdp
+bmFsIGF1dGhvciBpcw0KPiA+ID4gPiA+IGZvcg0KPiA+ID4gPiA+IGV4dGVuc2lvbiwgYW5kIGNh
+biB0ZWxsIG90aGVycyB0aGF0IHRoaXMgc3RydWN0IG5lZWQgYmUgcGFja2VkLg0KPiA+ID4gPiA+
+DQo+ID4gPiA+DQo+ID4gPiA+IFRoZSBwYXRjaCBpcyB1cHN0cmVhbWVkIHJlY2VudGx5IGJ1dCBp
+dCB3YXMgbWFkZSBsb25nIHRpbWUgYWdvLg0KPiA+ID4gPiBJIHRoaW5rIHRoZSBvcmlnaW5hbCBw
+cm9ibGVtIGlzIHRoYXQgb25lIG9mIHRoZSBhZGRyZXNzLCBwcm9iYWJseQ0KPiA+ID4gPiB0aGUN
+Cj4gPiA+ID4gc3VzcGVuZF9wZXJmb3JtYW5jZSByZWNvcmQsIGlzIG5vdCA2NGJpdCBhbGlnbmVk
+LCB0aHVzIHdlIGNhbiBub3QNCj4gPiA+ID4gcmVhZA0KPiA+ID4gPiB0aGUgcHJvcGVyIGNvbnRl
+bnQgb2Ygc3VzcGVuZF9zdGFydCBhbmQgc3VzcGVuZF9lbmQsIG1hcHBlZCBmcm9tDQo+ID4gPiA+
+IHBoeXNpY2FsIG1lbW9yeS4NCj4gPiA+ID4NCj4gPiA+ID4gSSB3aWxsIHRyeSB0byBmaW5kIGEg
+bWFjaGluZSB0byByZXByb2R1Y2UgdGhlIHByb2JsZW0gd2l0aCBhbGwNCj4gPiA+ID4gX19hdHRy
+aWJ1dGVfXygocGFja2VkKSkgcmVtb3ZlZCB0byBkb3VibGUgY29uZmlybSB0aGlzLg0KPiA+ID4g
+Pg0KPiA+ID4NCj4gPiA+IFNvIGhlcmUgaXMgdGhlIHByb2JsZW0sIHdpdGhvdXQgX19hdHRyaWJ1
+dGVfXygocGFja2VkKSkNCj4gPiA+DQo+ID4gPiBbICAgIDAuODU4NDQyXSBzdXNwZW5kX3JlY29y
+ZDogMHhmZmZmYWFkNTAwMTc1MDIwDQo+ID4gPiAvc3lzL2Zpcm13YXJlL2FjcGkvZnBkdC9zdXNw
+ZW5kL3N1c3BlbmRfZW5kX25zOmFkZHI6DQo+ID4gPiAweGZmZmZhYWQ1MDAxNzUwMzAsIDE1OTk4
+MTc5MjkyNjU5ODQzMDcyDQo+ID4gPiAvc3lzL2Zpcm13YXJlL2FjcGkvZnBkdC9zdXNwZW5kL3N1
+c3BlbmRfc3RhcnRfbnM6YWRkcjoNCj4gPiA+IDB4ZmZmZmFhZDUwMDE3NTAyOCwgMA0KPiA+ID4N
+Cj4gPiA+IHN1c3BlbmRfcmVjb3JkIGlzIG1hcHBlZCB0byAweGZmZmZhYWQ1MDAxNzUwMjAsIGFu
+ZCBpdCBpcyBjb21iaW5lZA0KPiA+ID4gd2l0aA0KPiA+ID4gb25lIDMyYml0IGhlYWRlciBhbmQg
+dHdvIDY0Yml0IGZpZWxkcyAoc3VzcGVuZF9zdGFydCBhbmQNCj4gPiA+IHN1c3BlbmRfZW5kKSwN
+Cj4gPiA+IHRoaXMgaXMgaG93IGl0IGlzIGxvY2F0ZWQgaW4gcGh5c2ljYWwgbWVtb3J5Lg0KPiA+
+ID4gU28gdGhlIGFkZHJlc3NlcyBvZiB0aGUgdHdvIDY0Yml0IGZpZWxkcyBhcmUgYWN0dWFsbHkg
+bm90IDY0Yml0DQo+ID4gPiBhbGlnbmVkLg0KPiA+ID4NCj4gPiA+IERhdmlkLA0KPiA+ID4gSXMg
+dGhpcyB0aGUgImEgNjRiaXQgaXRlbSBuZWVkcyB0byBiZSAzMmJpdCBhbGlnbmVkIiBwcm9ibGVt
+IHlvdQ0KPiA+ID4gcmVmZXJyZWQ/DQo+ID4gPiBJZiB5ZXMsIHdoYXQgaXMgdGhlIHByb3BlciBm
+aXg/IHNob3VsZCBJIHVzZWQgdHdvIDMyYml0cyBmb3IgZWFjaA0KPiA+ID4gb2YNCj4gPiA+IHRo
+ZSBmaWVsZCBpbnN0ZWFkPw0KPiA+DQo+ID4gRGVmaW5lIHNvbWV0aGluZyBsaWtlOg0KPiA+IHR5
+cGVkZWYgdTY0IF9fYXR0cmlidXRlX18oKGFsaWduZWQoNCkpKSB1NjRfYWxpZ24zMjsNCj4gPiBh
+bmQgdGhlbiB1c2UgaXQgZm9yIHRoZSA2NGJpdCBzdHJ1Y3R1cmUgbWVtYmVycy4NCj4gPg0KPiBI
+aSwgRGF2aWQsDQo+IA0KPiBQbGVhc2Uga2luZGx5IGhlbHAgY2hlY2sgaWYgdGhlIGZvbGxvd2lu
+ZyBwYXRjaCBpcyB0aGUgcmlnaHQgZml4IG9yDQo+IG5vdC4gSSd2ZSB2ZXJpZmllZCBpdCB0byB3
+b3JrIG9uIG15IHRlc3QgYm94Lg0KPiANCj4gVGhlIHJlYXNvbiBJIHVzZSB0aGlzIHR5cGVkZWYg
+Zm9yIGFsbCB0aGUgdTY0IGl0ZW1zIGJlY2F1c2UgdGhlcmUgaXMgbm8NCj4gZ3VhcmFudGVlIHRo
+YXQgdGhlIHN1c3BlbmRfcGVyZm9ybWFuY2UgcmVjb3JkIGlzIGluIHRoZSBlbmQgb2YgdGhlDQo+
+IG1lbW9yeSwgdGh1cyBpdCBtYXkgcG9sbHV0ZSB0aGUgb3RoZXJzLg0KDQpMb29rcyBhYm91dCBy
+aWdodC4NCg0KCURhdmlkDQoNCj4gDQo+IEZyb20gZTE4Yzk0Mjg1NWUyZjUxZTgxNGQwNTdmZmY0
+ZGQ5NTFjZDBkMDkwNyBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCj4gRnJvbTogWmhhbmcgUnVp
+IDxydWkuemhhbmdAaW50ZWwuY29tPg0KPiBEYXRlOiBXZWQsIDMxIE1hciAyMDIxIDIwOjM0OjEz
+ICswODAwDQo+IFN1YmplY3Q6IFtQQVRDSF0gQUNQSTogdGFibGVzOiBGUERUOiBGaXggNjRiaXQg
+YWxpZ25tZW50IGlzc3VlDQo+IA0KPiBTb21lIG9mIHRoZSA2NGJpdCBpdGVtcyBpbiBGUERUIHRh
+YmxlIG1heSBiZSAzMmJpdCBhbGlnbmVkLg0KPiBVc2luZyBfX2F0dHJpYnV0ZV9fKChwYWNrZWQp
+KSBpcyBub3QgbmVlZGVkIGluIHRoaXMgY2FzZSwgZml4aW5nIGl0IGJ5DQo+IGFsbG93aW5nIDMy
+Yml0IGFsaWdubWVudCBmb3IgdGhlc2UgNjRiaXQgaXRlbXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBaaGFuZyBSdWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9hY3Bp
+L2FjcGlfZnBkdC5jIHwgMjggKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvYWNwaS9hY3BpX2ZwZHQuYyBiL2RyaXZlcnMvYWNwaS9hY3BpX2ZwZHQu
+Yw0KPiBpbmRleCBhODlhODA2YTdhMmEuLjk0ZTEwN2I5YTExNCAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9hY3BpL2FjcGlfZnBkdC5jDQo+ICsrKyBiL2RyaXZlcnMvYWNwaS9hY3BpX2ZwZHQuYw0K
+PiBAQCAtMjMsMTIgKzIzLDE0IEBAIGVudW0gZnBkdF9zdWJ0YWJsZV90eXBlIHsNCj4gIAlTVUJU
+QUJMRV9TM1BULA0KPiAgfTsNCj4gDQo+ICt0eXBlZGVmIHU2NCBfX2F0dHJpYnV0ZV9fKChhbGln
+bmVkKDQpKSkgdTY0X2FsaWduMzI7DQo+ICsNCj4gIHN0cnVjdCBmcGR0X3N1YnRhYmxlX2VudHJ5
+IHsNCj4gIAl1MTYgdHlwZTsJCS8qIHJlZmVyIHRvIGVudW0gZnBkdF9zdWJ0YWJsZV90eXBlICov
+DQo+ICAJdTggbGVuZ3RoOw0KPiAgCXU4IHJldmlzaW9uOw0KPiAgCXUzMiByZXNlcnZlZDsNCj4g
+LQl1NjQgYWRkcmVzczsJCS8qIHBoeXNpY2FsIGFkZHJlc3Mgb2YgdGhlIFMzUFQvRkJQVCB0YWJs
+ZSAqLw0KPiArCXU2NF9hbGlnbjMyIGFkZHJlc3M7CQkvKiBwaHlzaWNhbCBhZGRyZXNzIG9mIHRo
+ZSBTM1BUL0ZCUFQgdGFibGUgKi8NCj4gIH07DQo+IA0KPiAgc3RydWN0IGZwZHRfc3VidGFibGVf
+aGVhZGVyIHsNCj4gQEAgLTUxLDI1ICs1MywyNSBAQCBzdHJ1Y3QgZnBkdF9yZWNvcmRfaGVhZGVy
+IHsNCj4gIHN0cnVjdCByZXN1bWVfcGVyZm9ybWFuY2VfcmVjb3JkIHsNCj4gIAlzdHJ1Y3QgZnBk
+dF9yZWNvcmRfaGVhZGVyIGhlYWRlcjsNCj4gIAl1MzIgcmVzdW1lX2NvdW50Ow0KPiAtCXU2NCBy
+ZXN1bWVfcHJldjsNCj4gLQl1NjQgcmVzdW1lX2F2ZzsNCj4gLX0gX19hdHRyaWJ1dGVfXygocGFj
+a2VkKSk7DQo+ICsJdTY0X2FsaWduMzIgcmVzdW1lX3ByZXY7DQo+ICsJdTY0X2FsaWduMzIgcmVz
+dW1lX2F2ZzsNCj4gK307DQo+IA0KPiAgc3RydWN0IGJvb3RfcGVyZm9ybWFuY2VfcmVjb3JkIHsN
+Cj4gIAlzdHJ1Y3QgZnBkdF9yZWNvcmRfaGVhZGVyIGhlYWRlcjsNCj4gIAl1MzIgcmVzZXJ2ZWQ7
+DQo+IC0JdTY0IGZpcm13YXJlX3N0YXJ0Ow0KPiAtCXU2NCBib290bG9hZGVyX2xvYWQ7DQo+IC0J
+dTY0IGJvb3Rsb2FkZXJfbGF1bmNoOw0KPiAtCXU2NCBleGl0Ym9vdHNlcnZpY2Vfc3RhcnQ7DQo+
+IC0JdTY0IGV4aXRib290c2VydmljZV9lbmQ7DQo+IC19IF9fYXR0cmlidXRlX18oKHBhY2tlZCkp
+Ow0KPiArCXU2NF9hbGlnbjMyIGZpcm13YXJlX3N0YXJ0Ow0KPiArCXU2NF9hbGlnbjMyIGJvb3Rs
+b2FkZXJfbG9hZDsNCj4gKwl1NjRfYWxpZ24zMiBib290bG9hZGVyX2xhdW5jaDsNCj4gKwl1NjRf
+YWxpZ24zMiBleGl0Ym9vdHNlcnZpY2Vfc3RhcnQ7DQo+ICsJdTY0X2FsaWduMzIgZXhpdGJvb3Rz
+ZXJ2aWNlX2VuZDsNCj4gK307DQo+IA0KPiAgc3RydWN0IHN1c3BlbmRfcGVyZm9ybWFuY2VfcmVj
+b3JkIHsNCj4gIAlzdHJ1Y3QgZnBkdF9yZWNvcmRfaGVhZGVyIGhlYWRlcjsNCj4gLQl1NjQgc3Vz
+cGVuZF9zdGFydDsNCj4gLQl1NjQgc3VzcGVuZF9lbmQ7DQo+IC19IF9fYXR0cmlidXRlX18oKHBh
+Y2tlZCkpOw0KPiArCXU2NF9hbGlnbjMyIHN1c3BlbmRfc3RhcnQ7DQo+ICsJdTY0X2FsaWduMzIg
+c3VzcGVuZF9lbmQ7DQo+ICt9Ow0KPiANCj4gDQo+ICBzdGF0aWMgc3RydWN0IHJlc3VtZV9wZXJm
+b3JtYW5jZV9yZWNvcmQgKnJlY29yZF9yZXN1bWU7DQo+IC0tDQo+IDIuMTcuMQ0KPiANCg0KLQ0K
+UmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1p
+bHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVz
+KQ0K
 
