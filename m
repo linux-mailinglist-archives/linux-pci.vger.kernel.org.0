@@ -2,202 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF14B350448
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 18:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD2BD35044D
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Mar 2021 18:16:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233805AbhCaQPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 Mar 2021 12:15:01 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:58033 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233784AbhCaQOx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 Mar 2021 12:14:53 -0400
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-54-t95uJ3fxP-yvQHheQ6tJXQ-1; Wed, 31 Mar 2021 17:14:48 +0100
-X-MC-Unique: t95uJ3fxP-yvQHheQ6tJXQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Wed, 31 Mar 2021 17:14:47 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.012; Wed, 31 Mar 2021 17:14:47 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Zhang Rui' <rui.zhang@intel.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
- __packed
-Thread-Topic: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
- __packed
-Thread-Index: AQHXJTqteusKxfb1K0qiX/864DlgraqcLa0ggAIDjACAABX/gA==
-Date:   Wed, 31 Mar 2021 16:14:47 +0000
-Message-ID: <e437f6e69219460099a3764ab4b9391f@AcuMS.aculab.com>
-References: <1616831193-17920-1-git-send-email-tanxiaofei@huawei.com>
-         <1616831193-17920-5-git-send-email-tanxiaofei@huawei.com>
-         <6df04be78e544e17b3b57f159312541f@AcuMS.aculab.com>
-         <34dd3de8-644d-6e44-965a-0991b7027cae@huawei.com>
-         <b5ad5909f3fb14b46d6ff0f81c10e42507a60c74.camel@intel.com>
-         <af3fd5adb62dcac93f2ff4ea7b6aff74d0106ac5.camel@intel.com>
-         <6df8e01e2e9e4906be5ceaea72c61c0f@AcuMS.aculab.com>
- <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
-In-Reply-To: <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S230385AbhCaQQE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 Mar 2021 12:16:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233867AbhCaQPq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 31 Mar 2021 12:15:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 58A3F61005;
+        Wed, 31 Mar 2021 16:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617207345;
+        bh=BUNwnFSsIIQo5XpiIwa+OiY6tCAbOgLYkN+U7v0grxA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SAuyOkQE3voJ9HNK0pJT7be0KH/s1KtXnDPkYuuII8uaX737LBHgdqcYVFrqkAM9T
+         vr5UzBEmmymprsuGn+qs2tBpPS56pJEAKhWUS0JkMy7nqspRYi5NmGBgDVb+S0kZ+8
+         xcClLS+hKVjiK/lf8OB07BJ+zAt9pEPVLiq68q1KEmXpKrLrO+XIuYKqNp4XqGE15Q
+         1Qj62KlbQLVZzhW+ua7wS7ms4SiBRjIPJbSKrdUb6F/rV+a0G2VON+TFRGNoAwwWqO
+         unSglqNNMnSdKieFNhaJtfb0ryxpgys52WExrJGZfKGVErTNvtQgXjkX0Z0natrk1t
+         2446uPgUCNQcQ==
+Received: by pali.im (Postfix)
+        id D346DAF7; Wed, 31 Mar 2021 18:15:42 +0200 (CEST)
+Date:   Wed, 31 Mar 2021 18:15:42 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20210331161542.3e57qdtwnoz74xea@pali>
+References: <87h7l8axqp.fsf@toke.dk>
+ <20210318231629.vhix2cqpt25bgrne@pali>
+ <20210326125028.tyqkcc5fvaqbwqkn@pali>
+ <874kgyc4yg.fsf@toke.dk>
+ <20210326153444.cdccc3e2axqxzejy@pali>
+ <87o8f5c0tt.fsf@toke.dk>
+ <20210326171100.s53mslkjc7tdgs6f@pali>
+ <87ft0hby6p.fsf@toke.dk>
+ <20210329170929.uhpttc4oxbkghkpr@pali>
+ <87im57pgjh.fsf@toke.dk>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87im57pgjh.fsf@toke.dk>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogWmhhbmcgUnVpDQo+IFNlbnQ6IDMxIE1hcmNoIDIwMjEgMTY6NTUNCj4gT24gVHVlLCAy
-MDIxLTAzLTMwIGF0IDA4OjE0ICswMDAwLCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+ID4gRnJvbTog
-WmhhbmcgUnVpDQo+ID4gPiBTZW50OiAzMCBNYXJjaCAyMDIxIDA5OjAwDQo+ID4gPiA+IE9uIFR1
-ZSwgMjAyMS0wMy0zMCBhdCAxMDoyMyArMDgwMCwgWGlhb2ZlaSBUYW4gd3JvdGU6DQo+ID4gPiA+
-ID4gSGkgRGF2aWQsDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiAyMDIxLzMvMjkgMTg6MDksIERh
-dmlkIExhaWdodCB3cm90ZToNCj4gPiA+ID4gPiA+IEZyb206IFhpYW9mZWkgVGFuDQo+ID4gPiA+
-ID4gPiA+IFNlbnQ6IDI3IE1hcmNoIDIwMjEgMDc6NDYNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4g
-PiA+ID4gUmVwbGFjZSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKSBieSBfX3BhY2tlZCBmb2xsb3dp
-bmcgdGhlDQo+ID4gPiA+ID4gPiA+IGFkdmljZSBvZiBjaGVja3BhdGNoLnBsLg0KPiA+ID4gPiA+
-ID4gPg0KPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvZmVpIFRhbiA8dGFueGlhb2Zl
-aUBodWF3ZWkuY29tPg0KPiA+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gIGRyaXZlcnMv
-YWNwaS9hY3BpX2ZwZHQuYyB8IDYgKysrLS0tDQo+ID4gPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL2FjcGlfZnBkdC5jDQo+ID4gPiA+ID4g
-PiA+IGIvZHJpdmVycy9hY3BpL2FjcGlfZnBkdC5jDQo+ID4gPiA+ID4gPiA+IGluZGV4IGE4OWE4
-MDYuLjY5MGE4OGEgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvYWNwaS9hY3Bp
-X2ZwZHQuYw0KPiA+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2FjcGkvYWNwaV9mcGR0LmMNCj4g
-PiA+ID4gPiA+ID4gQEAgLTUzLDcgKzUzLDcgQEAgc3RydWN0IHJlc3VtZV9wZXJmb3JtYW5jZV9y
-ZWNvcmQgew0KPiA+ID4gPiA+ID4gPiAgCXUzMiByZXN1bWVfY291bnQ7DQo+ID4gPiA+ID4gPiA+
-ICAJdTY0IHJlc3VtZV9wcmV2Ow0KPiA+ID4gPiA+ID4gPiAgCXU2NCByZXN1bWVfYXZnOw0KPiA+
-ID4gPiA+ID4gPiAtfSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKTsNCj4gPiA+ID4gPiA+ID4gK30g
-X19wYWNrZWQ7DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICBzdHJ1Y3QgYm9vdF9wZXJm
-b3JtYW5jZV9yZWNvcmQgew0KPiA+ID4gPiA+ID4gPiAgCXN0cnVjdCBmcGR0X3JlY29yZF9oZWFk
-ZXIgaGVhZGVyOw0KPiA+ID4gPiA+ID4gPiBAQCAtNjMsMTMgKzYzLDEzIEBAIHN0cnVjdCBib290
-X3BlcmZvcm1hbmNlX3JlY29yZCB7DQo+ID4gPiA+ID4gPiA+ICAJdTY0IGJvb3Rsb2FkZXJfbGF1
-bmNoOw0KPiA+ID4gPiA+ID4gPiAgCXU2NCBleGl0Ym9vdHNlcnZpY2Vfc3RhcnQ7DQo+ID4gPiA+
-ID4gPiA+ICAJdTY0IGV4aXRib290c2VydmljZV9lbmQ7DQo+ID4gPiA+ID4gPiA+IC19IF9fYXR0
-cmlidXRlX18oKHBhY2tlZCkpOw0KPiA+ID4gPiA+ID4gPiArfSBfX3BhY2tlZDsNCj4gPiA+ID4g
-PiA+ID4NCj4gPiA+ID4gPiA+ID4gIHN0cnVjdCBzdXNwZW5kX3BlcmZvcm1hbmNlX3JlY29yZCB7
-DQo+ID4gPiA+ID4gPiA+ICAJc3RydWN0IGZwZHRfcmVjb3JkX2hlYWRlciBoZWFkZXI7DQo+ID4g
-PiA+ID4gPiA+ICAJdTY0IHN1c3BlbmRfc3RhcnQ7DQo+ID4gPiA+ID4gPiA+ICAJdTY0IHN1c3Bl
-bmRfZW5kOw0KPiA+ID4gPiA+ID4gPiAtfSBfX2F0dHJpYnV0ZV9fKChwYWNrZWQpKTsNCj4gPiA+
-ID4gPiA+ID4gK30gX19wYWNrZWQ7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gTXkgc3RhbmRh
-cmQgcXVlc3Rpb24gYWJvdXQgJ3BhY2tlZCcgaXMgd2hldGhlciBpdCBpcyBhY3R1YWxseQ0KPiA+
-ID4gPiA+ID4gbmVlZGVkLg0KPiA+ID4gPiA+ID4gSXQgc2hvdWxkIG9ubHkgYmUgdXNlZCBpZiB0
-aGUgc3RydWN0dXJlcyBtaWdodCBiZSBtaXNhbGlnbmVkDQo+ID4gPiA+ID4gPiBpbg0KPiA+ID4g
-PiA+ID4gbWVtb3J5Lg0KPiA+ID4gPiA+ID4gSWYgdGhlIG9ubHkgcHJvYmxlbSBpcyB0aGF0IGEg
-NjRiaXQgaXRlbSBuZWVkcyB0byBiZSAzMmJpdA0KPiA+ID4gPiA+ID4gYWxpZ25lZA0KPiA+ID4g
-PiA+ID4gdGhlbiBhIHN1aXRhYmxlIHR5cGUgc2hvdWxkIGJlIHVzZWQgZm9yIHRob3NlIHNwZWNp
-ZmljDQo+ID4gPiA+ID4gPiBmaWVsZHMuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhvc2Ug
-YWxsIGxvb2sgdmVyeSBkdWJpb3VzIC0gdGhlIHN0YW5kYXJkIGhlYWRlciBpc24ndA0KPiA+ID4g
-PiA+ID4gcGFja2VkDQo+ID4gPiA+ID4gPiBzbyBldmVyeXRoaW5nIG11c3QgZWIgYXNzdW1lZCB0
-byBiZSBhdCBsZWFzdCAzMmJpdCBhbGlnbmVkLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFRo
-ZXJlIGFyZSBhbHNvIG90aGVyIHN1Yi1zdHJ1Y3R1cmVzIHRoYXQgY29udGFpbiA2NGJpdA0KPiA+
-ID4gPiA+ID4gdmFsdWVzLg0KPiA+ID4gPiA+ID4gVGhlc2UgZG9uJ3QgY29udGFpbiBwYWRkaW5n
-IC0gYnV0IHRoYXQgcmVxdWlyZXMgNjRiaXQNCj4gPiA+ID4gPiA+IGFsaWduZW1lbnQuDQo+ID4g
-PiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhlIG9ubHkgcHJvYmxlbWF0aWMgc3RydWN0dXJlIGlzIHRo
-ZSBsYXN0IG9uZSAtIHdoaWNoIHdvdWxkDQo+ID4gPiA+ID4gPiBoYXZlDQo+ID4gPiA+ID4gPiBh
-IDMyYml0IHBhZCBhZnRlciB0aGUgaGVhZGVyLg0KPiA+ID4gPiA+ID4gSXMgdGhpcyBldmVuIHJp
-Z2h0IGdpdmVuIHRoYW4gdGhlcmUgYXJlIGV4cGxpY2l0IGFsaWdubWVudA0KPiA+ID4gPiA+ID4g
-cGFkcw0KPiA+ID4gPiA+ID4gaW4gc29tZSBvZiB0aGUgb3RoZXIgc3RydWN0dXJlcy4NCj4gPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gPiBJZiA2NGJpdCBhbGlnbm1lbnQgaXNuJ3QgZ3VhcmFudGVlZCB0
-aGVuIGEgJzY0Yml0IGFsaWduZWQgdG8NCj4gPiA+ID4gPiA+IDMyYml0Jw0KPiA+ID4gPiA+ID4g
-dHlwZSBzaG91bGQgYmUgdXNlZCBmb3IgdGhlIHU2NCBmaWVsZHMuDQo+ID4gPiA+ID4gPg0KPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gWWVzLCBzb21lIG9mIHRoZW0gaGFzIGJlZW4gYWxpZ25lZCBhbHJl
-YWR5LCB0aGVuIG5vdGhpbmcNCj4gPiA+ID4gPiBjaGFuZ2VkDQo+ID4gPiA+ID4gd2hlbg0KPiA+
-ID4gPiA+IGFkZCB0aGlzICJwYWNrZWQgIi4gTWF5YmUgdGhlIHB1cnBvc2Ugb2YgdGhlIG9yaWdp
-bmFsIGF1dGhvciBpcw0KPiA+ID4gPiA+IGZvcg0KPiA+ID4gPiA+IGV4dGVuc2lvbiwgYW5kIGNh
-biB0ZWxsIG90aGVycyB0aGF0IHRoaXMgc3RydWN0IG5lZWQgYmUgcGFja2VkLg0KPiA+ID4gPiA+
-DQo+ID4gPiA+DQo+ID4gPiA+IFRoZSBwYXRjaCBpcyB1cHN0cmVhbWVkIHJlY2VudGx5IGJ1dCBp
-dCB3YXMgbWFkZSBsb25nIHRpbWUgYWdvLg0KPiA+ID4gPiBJIHRoaW5rIHRoZSBvcmlnaW5hbCBw
-cm9ibGVtIGlzIHRoYXQgb25lIG9mIHRoZSBhZGRyZXNzLCBwcm9iYWJseQ0KPiA+ID4gPiB0aGUN
-Cj4gPiA+ID4gc3VzcGVuZF9wZXJmb3JtYW5jZSByZWNvcmQsIGlzIG5vdCA2NGJpdCBhbGlnbmVk
-LCB0aHVzIHdlIGNhbiBub3QNCj4gPiA+ID4gcmVhZA0KPiA+ID4gPiB0aGUgcHJvcGVyIGNvbnRl
-bnQgb2Ygc3VzcGVuZF9zdGFydCBhbmQgc3VzcGVuZF9lbmQsIG1hcHBlZCBmcm9tDQo+ID4gPiA+
-IHBoeXNpY2FsIG1lbW9yeS4NCj4gPiA+ID4NCj4gPiA+ID4gSSB3aWxsIHRyeSB0byBmaW5kIGEg
-bWFjaGluZSB0byByZXByb2R1Y2UgdGhlIHByb2JsZW0gd2l0aCBhbGwNCj4gPiA+ID4gX19hdHRy
-aWJ1dGVfXygocGFja2VkKSkgcmVtb3ZlZCB0byBkb3VibGUgY29uZmlybSB0aGlzLg0KPiA+ID4g
-Pg0KPiA+ID4NCj4gPiA+IFNvIGhlcmUgaXMgdGhlIHByb2JsZW0sIHdpdGhvdXQgX19hdHRyaWJ1
-dGVfXygocGFja2VkKSkNCj4gPiA+DQo+ID4gPiBbICAgIDAuODU4NDQyXSBzdXNwZW5kX3JlY29y
-ZDogMHhmZmZmYWFkNTAwMTc1MDIwDQo+ID4gPiAvc3lzL2Zpcm13YXJlL2FjcGkvZnBkdC9zdXNw
-ZW5kL3N1c3BlbmRfZW5kX25zOmFkZHI6DQo+ID4gPiAweGZmZmZhYWQ1MDAxNzUwMzAsIDE1OTk4
-MTc5MjkyNjU5ODQzMDcyDQo+ID4gPiAvc3lzL2Zpcm13YXJlL2FjcGkvZnBkdC9zdXNwZW5kL3N1
-c3BlbmRfc3RhcnRfbnM6YWRkcjoNCj4gPiA+IDB4ZmZmZmFhZDUwMDE3NTAyOCwgMA0KPiA+ID4N
-Cj4gPiA+IHN1c3BlbmRfcmVjb3JkIGlzIG1hcHBlZCB0byAweGZmZmZhYWQ1MDAxNzUwMjAsIGFu
-ZCBpdCBpcyBjb21iaW5lZA0KPiA+ID4gd2l0aA0KPiA+ID4gb25lIDMyYml0IGhlYWRlciBhbmQg
-dHdvIDY0Yml0IGZpZWxkcyAoc3VzcGVuZF9zdGFydCBhbmQNCj4gPiA+IHN1c3BlbmRfZW5kKSwN
-Cj4gPiA+IHRoaXMgaXMgaG93IGl0IGlzIGxvY2F0ZWQgaW4gcGh5c2ljYWwgbWVtb3J5Lg0KPiA+
-ID4gU28gdGhlIGFkZHJlc3NlcyBvZiB0aGUgdHdvIDY0Yml0IGZpZWxkcyBhcmUgYWN0dWFsbHkg
-bm90IDY0Yml0DQo+ID4gPiBhbGlnbmVkLg0KPiA+ID4NCj4gPiA+IERhdmlkLA0KPiA+ID4gSXMg
-dGhpcyB0aGUgImEgNjRiaXQgaXRlbSBuZWVkcyB0byBiZSAzMmJpdCBhbGlnbmVkIiBwcm9ibGVt
-IHlvdQ0KPiA+ID4gcmVmZXJyZWQ/DQo+ID4gPiBJZiB5ZXMsIHdoYXQgaXMgdGhlIHByb3BlciBm
-aXg/IHNob3VsZCBJIHVzZWQgdHdvIDMyYml0cyBmb3IgZWFjaA0KPiA+ID4gb2YNCj4gPiA+IHRo
-ZSBmaWVsZCBpbnN0ZWFkPw0KPiA+DQo+ID4gRGVmaW5lIHNvbWV0aGluZyBsaWtlOg0KPiA+IHR5
-cGVkZWYgdTY0IF9fYXR0cmlidXRlX18oKGFsaWduZWQoNCkpKSB1NjRfYWxpZ24zMjsNCj4gPiBh
-bmQgdGhlbiB1c2UgaXQgZm9yIHRoZSA2NGJpdCBzdHJ1Y3R1cmUgbWVtYmVycy4NCj4gPg0KPiBI
-aSwgRGF2aWQsDQo+IA0KPiBQbGVhc2Uga2luZGx5IGhlbHAgY2hlY2sgaWYgdGhlIGZvbGxvd2lu
-ZyBwYXRjaCBpcyB0aGUgcmlnaHQgZml4IG9yDQo+IG5vdC4gSSd2ZSB2ZXJpZmllZCBpdCB0byB3
-b3JrIG9uIG15IHRlc3QgYm94Lg0KPiANCj4gVGhlIHJlYXNvbiBJIHVzZSB0aGlzIHR5cGVkZWYg
-Zm9yIGFsbCB0aGUgdTY0IGl0ZW1zIGJlY2F1c2UgdGhlcmUgaXMgbm8NCj4gZ3VhcmFudGVlIHRo
-YXQgdGhlIHN1c3BlbmRfcGVyZm9ybWFuY2UgcmVjb3JkIGlzIGluIHRoZSBlbmQgb2YgdGhlDQo+
-IG1lbW9yeSwgdGh1cyBpdCBtYXkgcG9sbHV0ZSB0aGUgb3RoZXJzLg0KDQpMb29rcyBhYm91dCBy
-aWdodC4NCg0KCURhdmlkDQoNCj4gDQo+IEZyb20gZTE4Yzk0Mjg1NWUyZjUxZTgxNGQwNTdmZmY0
-ZGQ5NTFjZDBkMDkwNyBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCj4gRnJvbTogWmhhbmcgUnVp
-IDxydWkuemhhbmdAaW50ZWwuY29tPg0KPiBEYXRlOiBXZWQsIDMxIE1hciAyMDIxIDIwOjM0OjEz
-ICswODAwDQo+IFN1YmplY3Q6IFtQQVRDSF0gQUNQSTogdGFibGVzOiBGUERUOiBGaXggNjRiaXQg
-YWxpZ25tZW50IGlzc3VlDQo+IA0KPiBTb21lIG9mIHRoZSA2NGJpdCBpdGVtcyBpbiBGUERUIHRh
-YmxlIG1heSBiZSAzMmJpdCBhbGlnbmVkLg0KPiBVc2luZyBfX2F0dHJpYnV0ZV9fKChwYWNrZWQp
-KSBpcyBub3QgbmVlZGVkIGluIHRoaXMgY2FzZSwgZml4aW5nIGl0IGJ5DQo+IGFsbG93aW5nIDMy
-Yml0IGFsaWdubWVudCBmb3IgdGhlc2UgNjRiaXQgaXRlbXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiBaaGFuZyBSdWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9hY3Bp
-L2FjcGlfZnBkdC5jIHwgMjggKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvYWNwaS9hY3BpX2ZwZHQuYyBiL2RyaXZlcnMvYWNwaS9hY3BpX2ZwZHQu
-Yw0KPiBpbmRleCBhODlhODA2YTdhMmEuLjk0ZTEwN2I5YTExNCAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9hY3BpL2FjcGlfZnBkdC5jDQo+ICsrKyBiL2RyaXZlcnMvYWNwaS9hY3BpX2ZwZHQuYw0K
-PiBAQCAtMjMsMTIgKzIzLDE0IEBAIGVudW0gZnBkdF9zdWJ0YWJsZV90eXBlIHsNCj4gIAlTVUJU
-QUJMRV9TM1BULA0KPiAgfTsNCj4gDQo+ICt0eXBlZGVmIHU2NCBfX2F0dHJpYnV0ZV9fKChhbGln
-bmVkKDQpKSkgdTY0X2FsaWduMzI7DQo+ICsNCj4gIHN0cnVjdCBmcGR0X3N1YnRhYmxlX2VudHJ5
-IHsNCj4gIAl1MTYgdHlwZTsJCS8qIHJlZmVyIHRvIGVudW0gZnBkdF9zdWJ0YWJsZV90eXBlICov
-DQo+ICAJdTggbGVuZ3RoOw0KPiAgCXU4IHJldmlzaW9uOw0KPiAgCXUzMiByZXNlcnZlZDsNCj4g
-LQl1NjQgYWRkcmVzczsJCS8qIHBoeXNpY2FsIGFkZHJlc3Mgb2YgdGhlIFMzUFQvRkJQVCB0YWJs
-ZSAqLw0KPiArCXU2NF9hbGlnbjMyIGFkZHJlc3M7CQkvKiBwaHlzaWNhbCBhZGRyZXNzIG9mIHRo
-ZSBTM1BUL0ZCUFQgdGFibGUgKi8NCj4gIH07DQo+IA0KPiAgc3RydWN0IGZwZHRfc3VidGFibGVf
-aGVhZGVyIHsNCj4gQEAgLTUxLDI1ICs1MywyNSBAQCBzdHJ1Y3QgZnBkdF9yZWNvcmRfaGVhZGVy
-IHsNCj4gIHN0cnVjdCByZXN1bWVfcGVyZm9ybWFuY2VfcmVjb3JkIHsNCj4gIAlzdHJ1Y3QgZnBk
-dF9yZWNvcmRfaGVhZGVyIGhlYWRlcjsNCj4gIAl1MzIgcmVzdW1lX2NvdW50Ow0KPiAtCXU2NCBy
-ZXN1bWVfcHJldjsNCj4gLQl1NjQgcmVzdW1lX2F2ZzsNCj4gLX0gX19hdHRyaWJ1dGVfXygocGFj
-a2VkKSk7DQo+ICsJdTY0X2FsaWduMzIgcmVzdW1lX3ByZXY7DQo+ICsJdTY0X2FsaWduMzIgcmVz
-dW1lX2F2ZzsNCj4gK307DQo+IA0KPiAgc3RydWN0IGJvb3RfcGVyZm9ybWFuY2VfcmVjb3JkIHsN
-Cj4gIAlzdHJ1Y3QgZnBkdF9yZWNvcmRfaGVhZGVyIGhlYWRlcjsNCj4gIAl1MzIgcmVzZXJ2ZWQ7
-DQo+IC0JdTY0IGZpcm13YXJlX3N0YXJ0Ow0KPiAtCXU2NCBib290bG9hZGVyX2xvYWQ7DQo+IC0J
-dTY0IGJvb3Rsb2FkZXJfbGF1bmNoOw0KPiAtCXU2NCBleGl0Ym9vdHNlcnZpY2Vfc3RhcnQ7DQo+
-IC0JdTY0IGV4aXRib290c2VydmljZV9lbmQ7DQo+IC19IF9fYXR0cmlidXRlX18oKHBhY2tlZCkp
-Ow0KPiArCXU2NF9hbGlnbjMyIGZpcm13YXJlX3N0YXJ0Ow0KPiArCXU2NF9hbGlnbjMyIGJvb3Rs
-b2FkZXJfbG9hZDsNCj4gKwl1NjRfYWxpZ24zMiBib290bG9hZGVyX2xhdW5jaDsNCj4gKwl1NjRf
-YWxpZ24zMiBleGl0Ym9vdHNlcnZpY2Vfc3RhcnQ7DQo+ICsJdTY0X2FsaWduMzIgZXhpdGJvb3Rz
-ZXJ2aWNlX2VuZDsNCj4gK307DQo+IA0KPiAgc3RydWN0IHN1c3BlbmRfcGVyZm9ybWFuY2VfcmVj
-b3JkIHsNCj4gIAlzdHJ1Y3QgZnBkdF9yZWNvcmRfaGVhZGVyIGhlYWRlcjsNCj4gLQl1NjQgc3Vz
-cGVuZF9zdGFydDsNCj4gLQl1NjQgc3VzcGVuZF9lbmQ7DQo+IC19IF9fYXR0cmlidXRlX18oKHBh
-Y2tlZCkpOw0KPiArCXU2NF9hbGlnbjMyIHN1c3BlbmRfc3RhcnQ7DQo+ICsJdTY0X2FsaWduMzIg
-c3VzcGVuZF9lbmQ7DQo+ICt9Ow0KPiANCj4gDQo+ICBzdGF0aWMgc3RydWN0IHJlc3VtZV9wZXJm
-b3JtYW5jZV9yZWNvcmQgKnJlY29yZF9yZXN1bWU7DQo+IC0tDQo+IDIuMTcuMQ0KPiANCg0KLQ0K
-UmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1p
-bHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVz
-KQ0K
+On Wednesday 31 March 2021 16:02:42 Toke Høiland-Jørgensen wrote:
+> Pali Rohár <pali@kernel.org> writes:
+> 
+> > On Friday 26 March 2021 18:51:42 Toke Høiland-Jørgensen wrote:
+> >> Pali Rohár <pali@kernel.org> writes:
+> >> > On Friday 26 March 2021 17:54:38 Toke Høiland-Jørgensen wrote:
+> >> >> So we have these
+> >> >> cases:
+> >> >> 
+> >> >> ASPM disabled:          ath9k, ath10k and mt76 cards all work
+> >> >> ASPM enabled, no patch: only mt76 card works
+> >> >> ASPM enabled + patch:   ath10k and mt76 cards work
+> >> >> 
+> >> >> So IDK, maybe the ath9k card needs a quirk as well? Or the mvebu board
+> >> >> is just generally flaky?
+> >> >
+> >> > I'm not sure. Maybe ASPM is somehow buggy on ath9k or needs some special
+> >> > handling. But issue is not at PCI config space as ath9k driver start
+> >> > initialization of this card. Needs also some debugging in ath9k driver
+> >> > if it prints that strange "mac chip rev" error.
+> >> 
+> >> Well that's just being output because it gets a revision that it doesn't
+> >> recognise - which it seems to be just reading from a register:
+> >> 
+> >> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/ath/ath9k/hw.c#L255
+> >> 
+> >> The value returned is consistent with the value returned just being
+> >> 0xffffffff. Which from looking at ioread32() is the value being returned
+> >> on a failed read. So there's a driver bug there - the check against -EIO
+> >> here is obviously nonsensical:
+> >> 
+> >> https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/ath/ath9k/hw.c#L290
+> >> 
+> >> But the underlying cause appears to be that the read from the register
+> >> fails, which I suppose is related to something the PCI bus does?
+> >> 
+> >> > I think this issue should be handled separately. Could you report it
+> >> > also to ath9k mailing list (and CC me)? Maybe other ath developers would
+> >> > know some more details.
+> >> 
+> >> I'll send a patch for the nonsensical check above, but other than that I
+> >> think we're still in PCI land here, or?
+> >
+> > First, can you try to enable my quirk also for this ath9k card with ASPM
+> > enabled?
+> 
+> Yup, with this I get both devices working:
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 8ff690c7679d..7e2f9c69f6b2 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3583,6 +3583,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+>   * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
+>   */
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e, quirk_no_bus_reset_and_no_retrain_link);
+>  
+>  /*
+>   * Root port on some Cavium CN8xxx chips do not successfully complete a bus
 
+Ok, thank you for testing!
+
+I'm seeing that testing unit 0x0030 (AR93xx) also needs this quirk, so I
+will mark all Atheros chips in above no bus reset list with no retrain
+link quirk.
+
+> >
+> > I have there another ath9k card which after toggling link retraining
+> > changes PCI device ID (really!) to 0xABCD. But lspci ...
+> >
+> > There is long story about broken ath9k cards that are reporting 0xABCD
+> > id on x86 machines with specific BIOS versions. It can be find in
+> > ath9k-devel mailing list archive:
+> >
+> > https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
+> >
+> > Maybe we now found root cause of this ABCD? If yes, then it also answers
+> > why above ath9k driver check fails (device id was changed) and also
+> > because kernel see correct id (kernel reads id before configuring ASPM
+> > and therefore before triggering link retraining).
+> >
+> >> >> > Can you send PCI device id of your ath9k card (lspci -nn)? Because all
+> >> >> > my tested ath9k cards have different PCI device id.
+> >> >> 
+> >> >> [root@omnia-arch ~]# lspci -nn
+> >> >> 00:01.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> >> >> 00:02.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> >> >> 00:03.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+> >> >> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e] (rev 01)
+> >> >> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+> >> >
+> >> > That is fine. Also all ath9k testing cards have id 0x002e.
+> >
+> > Today I found out that lspci -nn may lie! Please send output from
+> > command: lspci -nn -x because real PCI device id can read only from -x
+> > hexdump output.
+> 
+> Without the quirk added to the ath9k:
+> 
+> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e] (rev 01)
+> 00: 8c 16 2e 00 02 00 10 00 01 00 80 02 10 00 00 00
+> 10: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 8c 16 a4 30
+> 30: 00 00 00 00 40 00 00 00 00 00 00 00 3d 01 00 00
+> 
+> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+> 00: 8c 16 3c 00 46 05 10 00 00 00 80 02 10 00 00 00
+> 10: 04 00 20 e0 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 30: 00 00 20 ea 40 00 00 00 00 00 00 00 3e 01 00 00
+> 
+> And with:
+> 
+> 01:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e] (rev 01)
+> 00: 8c 16 2e 00 46 01 10 00 01 00 80 02 10 00 00 00
+> 10: 04 00 00 e0 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 8c 16 a4 30
+> 30: 00 00 00 00 40 00 00 00 00 00 00 00 3d 01 00 00
+> 
+> 02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+> 00: 8c 16 3c 00 46 05 10 00 00 00 80 02 10 00 00 00
+> 10: 04 00 20 e0 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 30: 00 00 20 ea 40 00 00 00 00 00 00 00 3e 01 00 00
+> 
+
+Yesterday both MJ and Bjorn told me to use lspci '-b' switch which
+instruct lspci to parse capabilities from config space (instead of
+kernel cache).
+
+Could you try to run 'lspci -nn -vv' and 'lspci -nn -vv -b' and compare
+results? If something changes?
+
+Anyway I have discussion with Adrian Chadd about 0xABCD issue and these
+Qualcomm/Atheros cards. When post-AR9300 card is not initialized it
+reports PCI device id 0xABCD. Pre-AR9300 cards should report correct PCI
+device id even when it is not initialized. WLE200 is AR9287-based, so it
+reports always correct id, should not change it during usage.
+
+But seems that also this AR9287 has issue with EEPROM/OTP as you figured
+out that ath9k driver is not able to read some device id from internal
+register. So please prepare patch for fixing -EIO in ath9k.
+
+PCI vendor & device id is in first 4 bytes and as you can see it is
+correct and was not changed.
+
+So I guess lspci output would not change for this card.
+
+> Is that change in bytes 5 and 6 significant?
+
+At offset 0x04 is 16bit PCI Command Register.
+
+In second (with) output is set bit 2 which means that Bus Mastering is
+enabled. This is normal and required when card communicate with system.
+Then is enabled bit 6 (Parity Error Response) and bit 8 (SERR# Enable),
+both for error reporting. This is normal when device is active.
+
+So nothing suspicious here.
+
+> -Toke
+> 
