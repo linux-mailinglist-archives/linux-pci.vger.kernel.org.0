@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 101CD3523D7
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Apr 2021 01:37:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D771F3523DF
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Apr 2021 01:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236336AbhDAXdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 19:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50124 "EHLO
+        id S236382AbhDAXdi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 19:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235702AbhDAXdB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 19:33:01 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB44C061225
-        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 16:32:40 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id k188so4803591qkb.5
-        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 16:32:40 -0700 (PDT)
+        with ESMTP id S236384AbhDAXdK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 19:33:10 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8443FC061794
+        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 16:32:42 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id i1so4298547qvu.12
+        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 16:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ihXC2HiiYMKXSpC6M6Il6sHAA7ZrY8nJsA58n/MMk7w=;
-        b=SUsTTUFBC5XLjQ0kmj8Tomq7Zqx0Hb4Il6WGzaLjEgbPEKek7Gt1me/9rrPDrJbPoB
-         6L1gXdtEKIn2CaQiuuMwYHqPbPbF0YPAF8fn25t4Ahhl3F8CvP41+aSphFCMmkLjRpWg
-         7K0837iEZV3dQwTL7t1gAd8fykHHRmRjN8S97mvJc83fQtkRf21ag0uG3eFsXsOk3Yd6
-         WfTbU1jI8iYmDAR8EzY9A7Wn1NsSCmROqZbh/lmvjzPYFoMpIzncArJGl0L9vTKNaQM6
-         MRiorZyAUvBbvRmKtGbgcwRV5/XjpHI7Xi/pEgwuUr7VNluRrDSo9BSLVCZJvGbuWltR
-         ITtA==
+        bh=h2cUBfrxKiLvUm4K3FiEqQsW7/CwbTTOloFCTdH2CHs=;
+        b=WwXYJEUtzPp5OgieXNSDH1jlEl5JZ0W/R7AL0K533fvUhOWdAZ9AGUs2eGGOPAXoOV
+         9ozbSMsvBM3fx5D5LtP6Wwj5vTRMKtVGliPsMJFstImK8hWqbNvneO11EFMHlgjN9j8E
+         Gxgb+CYWv9/NMpO603YX/M1xglU8wTRB2je50aC09bt/Q+N13fSJMOHOutVU+FJW8VRH
+         buFVQ6JhTKnPP9sHJSvuwhCmHBM3KlHMmvtXp8wtpQYRTn/+3gN0dNfz6qElxu5IW19P
+         6wyJ5fhugbFhtzg1oHjkOAL/OAUuMNDm5YMcIesJpyOU9dDyMEApglZuAgeX/R91ZsV9
+         QlzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ihXC2HiiYMKXSpC6M6Il6sHAA7ZrY8nJsA58n/MMk7w=;
-        b=WRMETVQoNuj4LC4m2p71nE0tXpemSggxBvEtelxQpRgogDL2yg82zjqOqEUIKrxQuJ
-         43oMEVrdIiSOO9lfwQ4z73Dn+OxcnYHVJfdi+/N/a6FtX9neES+urD9PJoha4Aoidz/3
-         Rtr8fEm5XxclsqzEUXC0AihOU8ClKuwx9qB9c4ZmjdfSL05hyzViC5x8izI6IbPmEq0J
-         BHlANtobBwXk/Y4TURBEVV0Jt5P/jbXcCsayDEuMbJRDHwM7R9g9QgigpgUTehlE+b77
-         rEc9AqKrH/i24dP6yikezdrFKv9+uwX82Ndr4LyI879S1Bw8rlkGv4NMI9mTIadBOJDA
-         WMIw==
-X-Gm-Message-State: AOAM5331dbQwgQNsX4PqpDObjR1AsRq3nO4pFVldqz1ol9mHLpIDhiAK
-        hhyeQLXznTargRWg/flEs0ecZ2IMPPp0sbXworQ=
-X-Google-Smtp-Source: ABdhPJxErjZybX6soSrTYGg1pcOu5YtycPfse7AYAmfc2HvtvvwrXxUQhki/vENl6RaYOLy3XisKMpVir5YUwgpINiw=
+        bh=h2cUBfrxKiLvUm4K3FiEqQsW7/CwbTTOloFCTdH2CHs=;
+        b=Ql0CqEI1/VAwKupa/YTJZw+s4QeWLriZ4Bcv7txhA32jXQgGEUKWZOhs2/W18NT7zG
+         4t4KYL2KJWMOvKVzzuAkC1K9cN33dL09IOktvDh5YW0uql9zjvP1cMqfbTK/NenmgjdE
+         WkcwUK12Rwn9UodexOCVIbxp2xbdRdAmpm/gySTjWw0dpC3QyjMkcHM9BJBtymPz14ca
+         R5FYwka4tiq4lGfHCnYrZ+2V5cLtlFSmkM8qu/0CbUzidgosGcUW3aspwgQbaCYZ3Hzp
+         otm+kQJJ2PrGupjQSaNRgXkN/SP7erA1cIp6LWn7YEH6iJOiJVzW7UyvDab5csuS7Q5a
+         /7hQ==
+X-Gm-Message-State: AOAM531g8L9rWdb8sBFbjLItChmaGEUNaI/TXx/k89M4eA5lM+iepj0+
+        LwrAiVfnLhfUHjG8SSBw3OG0KKnezx+rHcdi3wc=
+X-Google-Smtp-Source: ABdhPJziT3D45uCf3xMud/lYL8zWHTujTbizJ/biGPptb9CAf5S2oQq2ohDlzAjndytnNYlfJC1g6e8VKQiUGTMfQg8=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:4cd1:da86:e91b:70b4])
- (user=samitolvanen job=sendgmr) by 2002:a0c:c345:: with SMTP id
- j5mr10638318qvi.52.1617319959483; Thu, 01 Apr 2021 16:32:39 -0700 (PDT)
-Date:   Thu,  1 Apr 2021 16:32:08 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:eb87:: with SMTP id
+ x7mr10859482qvo.14.1617319961673; Thu, 01 Apr 2021 16:32:41 -0700 (PDT)
+Date:   Thu,  1 Apr 2021 16:32:09 -0700
 In-Reply-To: <20210401233216.2540591-1-samitolvanen@google.com>
-Message-Id: <20210401233216.2540591-11-samitolvanen@google.com>
+Message-Id: <20210401233216.2540591-12-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210401233216.2540591-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.208.g409f899ff0-goog
-Subject: [PATCH v5 10/18] lkdtm: use function_nocfi
+Subject: [PATCH v5 11/18] psci: use function_nocfi for cpu_resume
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -74,30 +74,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To ensure we take the actual address of a function in kernel text,
-use function_nocfi. Otherwise, with CONFIG_CFI_CLANG, the compiler
-replaces the address with a pointer to the CFI jump table, which is
-actually in the module when compiled with CONFIG_LKDTM=m.
+With CONFIG_CFI_CLANG, the compiler replaces function pointers with
+jump table addresses, which results in __pa_symbol returning the
+physical address of the jump table entry. As the jump table contains
+an immediate jump to an EL1 virtual address, this typically won't
+work as intended. Use function_nocfi to get the actual address of
+cpu_resume.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/lkdtm/usercopy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/psci/psci.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
-index 109e8d4302c1..15d220ef35a5 100644
---- a/drivers/misc/lkdtm/usercopy.c
-+++ b/drivers/misc/lkdtm/usercopy.c
-@@ -314,7 +314,7 @@ void lkdtm_USERCOPY_KERNEL(void)
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index f5fc429cae3f..64344e84bd63 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -325,8 +325,9 @@ static int __init psci_features(u32 psci_func_id)
+ static int psci_suspend_finisher(unsigned long state)
+ {
+ 	u32 power_state = state;
++	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
  
- 	pr_info("attempting bad copy_to_user from kernel text: %px\n",
- 		vm_mmap);
--	if (copy_to_user((void __user *)user_addr, vm_mmap,
-+	if (copy_to_user((void __user *)user_addr, function_nocfi(vm_mmap),
- 			 unconst + PAGE_SIZE)) {
- 		pr_warn("copy_to_user failed, but lacked Oops\n");
- 		goto free_user;
+-	return psci_ops.cpu_suspend(power_state, __pa_symbol(cpu_resume));
++	return psci_ops.cpu_suspend(power_state, pa_cpu_resume);
+ }
+ 
+ int psci_cpu_suspend_enter(u32 state)
+@@ -344,8 +345,10 @@ int psci_cpu_suspend_enter(u32 state)
+ 
+ static int psci_system_suspend(unsigned long unused)
+ {
++	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
++
+ 	return invoke_psci_fn(PSCI_FN_NATIVE(1_0, SYSTEM_SUSPEND),
+-			      __pa_symbol(cpu_resume), 0, 0);
++			      pa_cpu_resume, 0, 0);
+ }
+ 
+ static int psci_system_suspend_enter(suspend_state_t state)
 -- 
 2.31.0.208.g409f899ff0-goog
 
