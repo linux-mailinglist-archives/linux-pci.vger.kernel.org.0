@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 029CC3523A4
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Apr 2021 01:32:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D183D3523A3
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Apr 2021 01:32:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235961AbhDAXc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S234103AbhDAXc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 1 Apr 2021 19:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235930AbhDAXcZ (ORCPT
+        with ESMTP id S235711AbhDAXcZ (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 19:32:25 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE3EC0613A7
-        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 16:32:22 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id e12so3670162plh.7
-        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 16:32:22 -0700 (PDT)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFDAC061788
+        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 16:32:25 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v186so7431304ybe.5
+        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 16:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=UueCb+prJKWXLp5VR3fqk5CXQc0Ab5GgzQzu/xo2P9E=;
-        b=YgEJwWoldHoDIKiiF7PoeaO8mKT/D1SC1mTBCW9jcHft8TDOoFkoTFE/n/qTe4cHzS
-         FztWbduBQ23TJLiO+mu///7uMJY+YT6crA5fpe7E11aMdWdQbvQKLPnIA/prLfkdJsoD
-         /gLPPkiVdX1e5JHp1IfygeNMt+vsf5l6xHjyi+MeJ3Gd/zp9xSBVOqrBTkESVBrWVPi5
-         p6zsc1zF1OPOrGKhTIeaqp1Bo0ntss5/i03JAhypbGIvFWF+QSdyx/QTUK0iJYg5og0v
-         bBK53xcbRUcpRHI6NdfegG+ozN4YNkjRHX89w9/GRXhoQFxsv6cJ+xMRfKc66Ll3i4eY
-         k2mQ==
+        bh=MkcfzR92H2jDmq2d4RL+VoRfm9LM05H88oYR/VzcB5I=;
+        b=Rkz+baugCU0boZ02HoTqlKubiEntpTT9QoWd+o+BAtncvl/retLEsZJAVH1rB01pBf
+         9MWWF5Ch6NCgBFjhkYOnIyGZkaUHAm4WQipSnmL1TN8jSdE1KnFkhrDGOdtJwAMKUq7Y
+         ICnqrEyN5y2FKL4wdgElMDjDKvF3tSZHAaNz5+nfb285KADVJhqWX3UYzFsXrMf6/kld
+         bJQuBvFO6EnQ41XejqN7DiVAEPNg1FbXVySMSbcg8voHCyEIDpyF5ZrhRYBVPedQE8xQ
+         qcVp8YZPEw+NmZ9Yi0mzjnmQy7xzaJDg/OgCMdv++swJ3YMIgKApL8IVshi8YNvR0HJb
+         NrrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=UueCb+prJKWXLp5VR3fqk5CXQc0Ab5GgzQzu/xo2P9E=;
-        b=J7Ven4be6hXsY7xR0imjBFSeL3dP4J/QFkn1qpmP+tzt2NSLTaa3hrJ2OU0yYzW6pp
-         oF+nEIpjQFYgnOcgXxXgCHcjBPVqYdh/mn1NDU9sAd4GAn3wohYwX6Ag8N9FePJlukNo
-         2AmXjl7H+Z0BnQk+dWvFZdTQKCD/b0NyiNLJ16JEL1utV28btqppksd13BzRCjIiSjGw
-         Lt4ZhAZuoTy1VAMun1iBM3Qmvc2ePppYAjVhribUZWifMYItWzkdIszuSItw8C+TNbzU
-         7UHUcmZf2YjfCR+CHrDY+Lwb+NvhFkFQGT/Eo01PKSjYtju+UY3SOX36XZM5w+DA/DQ2
-         HN3A==
-X-Gm-Message-State: AOAM53094l5NW2iEOU27HRCYpDFhJO/fTgEEAiTz9b/XYpYYbl6+CaF8
-        oZsgcd+blnW2e8I4EciWzK+Um6EZtxO/0xWlhbw=
-X-Google-Smtp-Source: ABdhPJwxduIri2IKJBaAY8ilTJfPwgodBRJfhWjsSvt8WBSIvP9IkLfHwtarDxMGAwPZXg2+pGsTEU0CI9ZmvdZhNMc=
+        bh=MkcfzR92H2jDmq2d4RL+VoRfm9LM05H88oYR/VzcB5I=;
+        b=jdeBAogYRe4uQofDRGOl5AKYWNwf7yfTnDC9m6ABm8d4jsDKQfTU9M6ga0mzQufSlF
+         z7VmxEyd1P4fdsdPw/de56hI523828yqW8hx6AGZtTVX+ZTd8TVJ1aobOn9fDE1tpwyu
+         Ul8a7Te6z56/jQV3pAKAXJwfl6PwIEgu9tYOayAb+3q3tZhnl2lmcMrOPBEVs4g92/9Q
+         ZlDYkaMzGrrAg0lKmCwals45GCQH1i2ul6WMVOySGhCcTNHksf3OqXdgpvhFT7OhFaaG
+         OomGHA6DWYrFfV4sJWSz6RQD8p4S8yyDWY80VgRWF6hFO6PGfSlxHXBACUwj2BawMONs
+         zDqQ==
+X-Gm-Message-State: AOAM532ba1UGfA5WGiq1H1uCsnrvmYdZeMAyCYfj8IzRE3lnCdW6yg+p
+        r+6H1x9Gv58Rkb68x9mGqBnVt7zfqRjhG7b9mBs=
+X-Google-Smtp-Source: ABdhPJxZYcMHvWjMRQqjhTv5hlYtkLPcoAOWWHLVSo1F+sDIZa5GooWGPiUDl1KsIBupRPE2wPS+ZDp0ie617LFUrGg=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:4cd1:da86:e91b:70b4])
- (user=samitolvanen job=sendgmr) by 2002:a17:90a:ba05:: with SMTP id
- s5mr11390928pjr.194.1617319942329; Thu, 01 Apr 2021 16:32:22 -0700 (PDT)
-Date:   Thu,  1 Apr 2021 16:32:00 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:d045:: with SMTP id
+ h66mr15244938ybg.138.1617319944327; Thu, 01 Apr 2021 16:32:24 -0700 (PDT)
+Date:   Thu,  1 Apr 2021 16:32:01 -0700
 In-Reply-To: <20210401233216.2540591-1-samitolvanen@google.com>
-Message-Id: <20210401233216.2540591-3-samitolvanen@google.com>
+Message-Id: <20210401233216.2540591-4-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20210401233216.2540591-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.31.0.208.g409f899ff0-goog
-Subject: [PATCH v5 02/18] cfi: add __cficanonical
+Subject: [PATCH v5 03/18] mm: add generic function_nocfi macro
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Nathan Chancellor <nathan@kernel.org>,
@@ -74,98 +74,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With CONFIG_CFI_CLANG, the compiler replaces a function address taken
-in C code with the address of a local jump table entry, which passes
-runtime indirect call checks. However, the compiler won't replace
-addresses taken in assembly code, which will result in a CFI failure
-if we later jump to such an address in instrumented C code. The code
-generated for the non-canonical jump table looks this:
+With CONFIG_CFI_CLANG, the compiler replaces function addresses
+in instrumented C code with jump table addresses. This means that
+__pa_symbol(function) returns the physical address of the jump table
+entry instead of the actual function, which may not work as the jump
+table code will immediately jump to a virtual address that may not be
+mapped.
 
-  <noncanonical.cfi_jt>: /* In C, &noncanonical points here */
-	jmp noncanonical
-  ...
-  <noncanonical>:        /* function body */
-	...
-
-This change adds the __cficanonical attribute, which tells the
-compiler to use a canonical jump table for the function instead. This
-means the compiler will rename the actual function to <function>.cfi
-and points the original symbol to the jump table entry instead:
-
-  <canonical>:           /* jump table entry */
-	jmp canonical.cfi
-  ...
-  <canonical.cfi>:       /* function body */
-	...
-
-As a result, the address taken in assembly, or other non-instrumented
-code always points to the jump table and therefore, can be used for
-indirect calls in instrumented code without tripping CFI checks.
+To avoid this address space confusion, this change adds a generic
+definition for function_nocfi(), which architectures that support CFI
+can override. The typical implementation of would use inline assembly
+to take the function address, which avoids compiler instrumentation.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # pci.h
 ---
- include/linux/compiler-clang.h | 1 +
- include/linux/compiler_types.h | 4 ++++
- include/linux/init.h           | 4 ++--
- include/linux/pci.h            | 4 ++--
- 4 files changed, 9 insertions(+), 4 deletions(-)
+ include/linux/mm.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-index 6de9d0c9377e..adbe76b203e2 100644
---- a/include/linux/compiler-clang.h
-+++ b/include/linux/compiler-clang.h
-@@ -63,3 +63,4 @@
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8ba434287387..22cce9c7dd05 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -124,6 +124,16 @@ extern int mmap_rnd_compat_bits __read_mostly;
+ #define lm_alias(x)	__va(__pa_symbol(x))
  #endif
  
- #define __nocfi		__attribute__((__no_sanitize__("cfi")))
-+#define __cficanonical	__attribute__((__cfi_canonical_jump_table__))
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 796935a37e37..d29bda7f6ebd 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -246,6 +246,10 @@ struct ftrace_likely_data {
- # define __nocfi
- #endif
- 
-+#ifndef __cficanonical
-+# define __cficanonical
++/*
++ * With CONFIG_CFI_CLANG, the compiler replaces function addresses in
++ * instrumented C code with jump table addresses. Architectures that
++ * support CFI can define this macro to return the actual function address
++ * when needed.
++ */
++#ifndef function_nocfi
++#define function_nocfi(x) (x)
 +#endif
 +
- #ifndef asm_volatile_goto
- #define asm_volatile_goto(x...) asm goto(x)
- #endif
-diff --git a/include/linux/init.h b/include/linux/init.h
-index b3ea15348fbd..045ad1650ed1 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -220,8 +220,8 @@ extern bool initcall_debug;
- 	__initcall_name(initstub, __iid, id)
- 
- #define __define_initcall_stub(__stub, fn)			\
--	int __init __stub(void);				\
--	int __init __stub(void)					\
-+	int __init __cficanonical __stub(void);			\
-+	int __init __cficanonical __stub(void)			\
- 	{ 							\
- 		return fn();					\
- 	}							\
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97b77..39684b72db91 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1944,8 +1944,8 @@ enum pci_fixup_pass {
- #ifdef CONFIG_LTO_CLANG
- #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
- 				  class_shift, hook, stub)		\
--	void stub(struct pci_dev *dev);					\
--	void stub(struct pci_dev *dev)					\
-+	void __cficanonical stub(struct pci_dev *dev);			\
-+	void __cficanonical stub(struct pci_dev *dev)			\
- 	{ 								\
- 		hook(dev); 						\
- 	}								\
+ /*
+  * To prevent common memory management code establishing
+  * a zero page mapping on a read fault.
 -- 
 2.31.0.208.g409f899ff0-goog
 
