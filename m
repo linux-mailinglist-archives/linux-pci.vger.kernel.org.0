@@ -2,387 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1732B351A8C
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68D57351A07
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235829AbhDASB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 14:01:56 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59662 "EHLO mga09.intel.com"
+        id S236284AbhDAR5l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 13:57:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:34705 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234944AbhDARzw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Apr 2021 13:55:52 -0400
-IronPort-SDR: xlrU0ByliDK02srKwuW0ffihGOe7pRyCZpkqmBsPtmXy0dZVhTxSU5ObJpNVC9q49lgq6jaLY/
- wKhTIfWl+9pg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="192358848"
+        id S236369AbhDARyR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Apr 2021 13:54:17 -0400
+IronPort-SDR: UnMUne0xLMr5lhy0REfGPXdAlaLJmBC/IZ7bJjlQ5e8V21YHdTj6vPK0Y/qdjT0UlbxbJJV7PI
+ ccFKJyU5Zagg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="179387826"
 X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="192358848"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:21 -0700
-IronPort-SDR: d41I3XFVRBuLbz54UwBfUTbHhPj7JHdovMreh79gSQTMJ/RsnISoUzX8Vx7wxoSGPYyWYMxmN3
- peTVtA8GwBpQ==
+   d="scan'208";a="179387826"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:26 -0700
+IronPort-SDR: wa6hs9oGtoxrHuvyQg19fYNaeBrJU6JaiVXyUtqlV3gT9q4lxonpLVTVr0CtnWZqLbk9E8NpZ9
+ zMmOBtKt+aDw==
 X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="419223227"
+   d="scan'208";a="412711168"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:21 -0700
-Subject: [PATCH v2 7/8] cxl/port: Introduce cxl_port objects
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:26 -0700
+Subject: [PATCH v2 8/8] cxl/acpi: Add module parameters to stand in for ACPI
+ tables
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, ben.widawsky@intel.com,
         linux-kernel@vger.kernel.org
-Date:   Thu, 01 Apr 2021 07:31:20 -0700
-Message-ID: <161728748083.2474040.753623311074560290.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 01 Apr 2021 07:31:26 -0700
+Message-ID: <161728748604.2474040.9352867415899369103.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Once the cxl_root is established then other ports in the hierarchy can
-be attached. The cxl_port object, unlike cxl_root that is associated
-with host bridges, is associated with PCIE Root Ports or PCIE Switch
-Ports. Add cxl_port instances for all PCIE Root Ports in an ACPI0016
-host bridge. The cxl_port instances for PCIE Switch Ports are not
-included here as those are to be modeled as another service device
-registered on the pcie_port_bus_type.
+[debug / to-be-replaced / not-for-upstream]
 
-A sample sysfs topology for a single-host-bridge with
-single-PCIE/CXL-root-port:
-
-/sys/bus/cxl/devices/root0
-├── address_space0
-│   ├── devtype
-│   ├── end
-│   ├── start
-│   ├── supports_ram
-│   ├── supports_type2
-│   ├── supports_type3
-│   └── uevent
-├── address_space1
-│   ├── devtype
-│   ├── end
-│   ├── start
-│   ├── supports_pmem
-│   ├── supports_type2
-│   ├── supports_type3
-│   └── uevent
-├── devtype
-├── port1
-│   ├── devtype
-│   ├── host -> ../../../../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:00
-│   ├── port2
-│   │   ├── devtype
-│   │   ├── host -> ../../../../../pci0000:34/0000:34:00.0
-│   │   ├── subsystem -> ../../../../../../bus/cxl
-│   │   ├── target_id
-│   │   └── uevent
-│   ├── subsystem -> ../../../../../bus/cxl
-│   ├── target_id
-│   └── uevent
-├── subsystem -> ../../../../bus/cxl
-├── target_id
-└── uevent
-
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Given ACPICA support is needed before drivers can integrate ACPI
+functionality add some module parameters as proxies.
 ---
- drivers/cxl/acpi.c |   99 +++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core.c |  121 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h  |    5 ++
- 3 files changed, 224 insertions(+), 1 deletion(-)
+ drivers/cxl/acpi.c |   81 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index d54c2d5de730..bc2a35ae880b 100644
+index bc2a35ae880b..2a48a728f3e0 100644
 --- a/drivers/cxl/acpi.c
 +++ b/drivers/cxl/acpi.c
-@@ -5,18 +5,117 @@
+@@ -4,10 +4,84 @@
+ #include <linux/module.h>
  #include <linux/device.h>
  #include <linux/kernel.h>
++#include <linux/range.h>
  #include <linux/acpi.h>
-+#include <linux/pci.h>
+ #include <linux/pci.h>
  #include "cxl.h"
  
-+static int match_ACPI0016(struct device *dev, const void *host)
-+{
-+	struct acpi_device *adev = to_acpi_device(dev);
-+	const char *hid = acpi_device_hid(adev);
++/*
++ * TODO: Replace all of the below module parameters with ACPI CXL
++ * resource descriptions once ACPICA makes them available.
++ */
++static unsigned long chbcr[4];
++module_param_named(chbcr0, chbcr[0], ulong, 0400);
++module_param_named(chbcr1, chbcr[1], ulong, 0400);
++module_param_named(chbcr2, chbcr[2], ulong, 0400);
++module_param_named(chbcr3, chbcr[3], ulong, 0400);
 +
-+	return strcmp(hid, "ACPI0016") == 0;
-+}
-+
-+struct cxl_walk_context {
-+	struct device *dev;
-+	struct pci_bus *root;
-+	struct cxl_port *port;
-+	int error;
-+	int count;
++/* TODO: cross-bridge interleave */
++static struct cxl_address_space cxl_space[] = {
++	[0] = { .range = { 0, -1 }, .targets = 0x1, },
++	[1] = { .range = { 0, -1 }, .targets = 0x1, },
++	[2] = { .range = { 0, -1 }, .targets = 0x1, },
++	[3] = { .range = { 0, -1 }, .targets = 0x1, },
 +};
 +
-+static int match_add_root_ports(struct pci_dev *pdev, void *data)
++static int set_range(const char *val, const struct kernel_param *kp)
 +{
-+	struct cxl_walk_context *ctx = data;
-+	struct pci_bus *root_bus = ctx->root;
-+	struct cxl_port *port = ctx->port;
-+	int type = pci_pcie_type(pdev);
-+	struct device *dev = ctx->dev;
-+	resource_size_t cxl_regs_phys;
-+	int target_id = ctx->count;
++	unsigned long long size, base;
++	struct cxl_address_space *space;
++	unsigned long flags;
++	char *p;
++	int rc;
 +
-+	if (pdev->bus != root_bus)
-+		return 0;
-+	if (!pci_is_pcie(pdev))
-+		return 0;
-+	if (type != PCI_EXP_TYPE_ROOT_PORT)
-+		return 0;
++	size = memparse(val, &p);
++	if (*p != '@')
++		return -EINVAL;
 +
-+	ctx->count++;
++	base = memparse(p + 1, &p);
++	if (*p != ':')
++		return -EINVAL;
 +
-+	/* TODO walk DVSEC to find component register base */
-+	cxl_regs_phys = -1;
++	rc = kstrtoul(p + 1, 0, &flags);
++	if (rc)
++		return rc;
++	if (!flags || flags > CXL_ADDRSPACE_MASK)
++		return rc;
 +
-+	port = devm_cxl_add_port(dev, port, &pdev->dev, target_id,
-+				 cxl_regs_phys);
-+	if (IS_ERR(port)) {
-+		ctx->error = PTR_ERR(port);
-+		return ctx->error;
-+	}
-+
-+	dev_dbg(dev, "%s: register: %s\n", dev_name(&pdev->dev),
-+		dev_name(&port->dev));
++	space = kp->arg;
++	*space = (struct cxl_address_space) {
++		.range = {
++			.start = base,
++			.end = base + size - 1,
++		},
++		.flags = flags,
++	};
 +
 +	return 0;
 +}
 +
-+/*
-+ * A host bridge may contain one or more root ports.  Register each port
-+ * as a child of the cxl_root.
-+ */
-+static int cxl_acpi_register_ports(struct device *dev, struct acpi_device *root,
-+				   struct cxl_port *port, int idx)
++static int get_range(char *buf, const struct kernel_param *kp)
 +{
-+	struct acpi_pci_root *pci_root = acpi_pci_find_root(root->handle);
-+	struct cxl_walk_context ctx;
++	struct cxl_address_space *space = kp->arg;
 +
-+	if (!pci_root)
-+		return -ENXIO;
++	if (!range_len(&space->range))
++		return -EINVAL;
 +
-+	/* TODO: fold in CEDT.CHBS retrieval */
-+	port = devm_cxl_add_port(dev, port, &root->dev, idx, ~0ULL);
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
-+	dev_dbg(dev, "%s: register: %s\n", dev_name(&root->dev),
-+		dev_name(&port->dev));
-+
-+	ctx = (struct cxl_walk_context) {
-+		.dev = dev,
-+		.root = pci_root->bus,
-+		.port = port,
-+	};
-+	pci_walk_bus(pci_root->bus, match_add_root_ports, &ctx);
-+
-+	if (ctx.count == 0)
-+		return -ENODEV;
-+	return ctx.error;
++	return sysfs_emit(buf, "%#llx@%#llx :%s%s%s%s\n",
++			  (unsigned long long)range_len(&space->range),
++			  (unsigned long long)space->range.start,
++			  space->flags & CXL_ADDRSPACE_RAM ? " ram" : "",
++			  space->flags & CXL_ADDRSPACE_PMEM ? " pmem" : "",
++			  space->flags & CXL_ADDRSPACE_TYPE2 ? " type2" : "",
++			  space->flags & CXL_ADDRSPACE_TYPE3 ? " type3" : "");
 +}
 +
- static int cxl_acpi_probe(struct platform_device *pdev)
++module_param_call(range0, set_range, get_range, &cxl_space[0], 0400);
++module_param_call(range1, set_range, get_range, &cxl_space[1], 0400);
++module_param_call(range2, set_range, get_range, &cxl_space[2], 0400);
++module_param_call(range3, set_range, get_range, &cxl_space[3], 0400);
++
+ static int match_ACPI0016(struct device *dev, const void *host)
  {
- 	struct device *dev = &pdev->dev;
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct device *bridge = NULL;
- 	struct cxl_root *cxl_root;
-+	int rc, i = 0;
+ 	struct acpi_device *adev = to_acpi_device(dev);
+@@ -67,13 +141,16 @@ static int cxl_acpi_register_ports(struct device *dev, struct acpi_device *root,
+ 				   struct cxl_port *port, int idx)
+ {
+ 	struct acpi_pci_root *pci_root = acpi_pci_find_root(root->handle);
++	resource_size_t chbcr_base = ~0ULL;
+ 	struct cxl_walk_context ctx;
  
- 	cxl_root = devm_cxl_add_root(dev, NULL, 0);
+ 	if (!pci_root)
+ 		return -ENXIO;
+ 
+ 	/* TODO: fold in CEDT.CHBS retrieval */
+-	port = devm_cxl_add_port(dev, port, &root->dev, idx, ~0ULL);
++	if (idx < ARRAY_SIZE(chbcr))
++		chbcr_base = chbcr[idx];
++	port = devm_cxl_add_port(dev, port, &root->dev, idx, chbcr_base);
+ 	if (IS_ERR(port))
+ 		return PTR_ERR(port);
+ 	dev_dbg(dev, "%s: register: %s\n", dev_name(&root->dev),
+@@ -99,7 +176,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+ 	struct cxl_root *cxl_root;
+ 	int rc, i = 0;
+ 
+-	cxl_root = devm_cxl_add_root(dev, NULL, 0);
++	cxl_root = devm_cxl_add_root(dev, cxl_space, ARRAY_SIZE(cxl_space));
  	if (IS_ERR(cxl_root))
  		return PTR_ERR(cxl_root);
  	dev_dbg(dev, "register: %s\n", dev_name(&cxl_root->port.dev));
- 
-+	while (true) {
-+		bridge = bus_find_device(adev->dev.bus, bridge, dev,
-+					 match_ACPI0016);
-+		if (!bridge)
-+			break;
-+
-+		rc = cxl_acpi_register_ports(dev, to_acpi_device(bridge),
-+					     &cxl_root->port, i++);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index 46c3b2588d2f..65cd704581bc 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -148,6 +148,15 @@ static void cxl_root_release(struct device *dev)
- 	kfree(cxl_root);
- }
- 
-+static void cxl_port_release(struct device *dev)
-+{
-+	struct cxl_port *port = to_cxl_port(dev);
-+
-+	ida_free(&cxl_port_ida, port->id);
-+	put_device(port->port_host);
-+	kfree(port);
-+}
-+
- static ssize_t target_id_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
-@@ -178,6 +187,12 @@ static const struct device_type cxl_root_type = {
- 	.groups = cxl_port_attribute_groups,
- };
- 
-+static const struct device_type cxl_port_type = {
-+	.name = "cxl_port",
-+	.release = cxl_port_release,
-+	.groups = cxl_port_attribute_groups,
-+};
-+
- struct cxl_root *to_cxl_root(struct device *dev)
- {
- 	if (dev_WARN_ONCE(dev, dev->type != &cxl_root_type,
-@@ -188,7 +203,9 @@ struct cxl_root *to_cxl_root(struct device *dev)
- 
- struct cxl_port *to_cxl_port(struct device *dev)
- {
--	if (dev_WARN_ONCE(dev, dev->type != &cxl_root_type,
-+	if (dev_WARN_ONCE(dev,
-+			  dev->type != &cxl_root_type &&
-+			  dev->type != &cxl_port_type,
- 			  "not a cxl_port device\n"))
- 		return NULL;
- 	return container_of(dev, struct cxl_port, dev);
-@@ -360,6 +377,108 @@ struct cxl_root *devm_cxl_add_root(struct device *host,
- }
- EXPORT_SYMBOL_GPL(devm_cxl_add_root);
- 
-+static void cxl_unlink_port(void *_port)
-+{
-+	struct cxl_port *port = _port;
-+
-+	sysfs_remove_link(&port->dev.kobj, "host");
-+}
-+
-+static int devm_cxl_link_port(struct device *dev, struct cxl_port *port)
-+{
-+	int rc;
-+
-+	rc = sysfs_create_link(&port->dev.kobj, &port->port_host->kobj, "host");
-+	if (rc)
-+		return rc;
-+	return devm_add_action_or_reset(dev, cxl_unlink_port, port);
-+}
-+
-+static struct cxl_port *cxl_port_alloc(struct cxl_port *parent_port,
-+				       struct device *port_dev, int target_id,
-+				       resource_size_t component_regs_phys)
-+{
-+	struct cxl_port *port;
-+	struct device *dev;
-+	int rc;
-+
-+	if (!port_dev)
-+		return ERR_PTR(-EINVAL);
-+
-+	port = kzalloc(sizeof(*port), GFP_KERNEL);
-+	if (!port)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
-+	if (rc < 0)
-+		goto err;
-+
-+	port->id = rc;
-+	port->target_id = target_id;
-+	port->port_host = get_device(port_dev);
-+	port->component_regs_phys = component_regs_phys;
-+
-+	dev = &port->dev;
-+	device_initialize(dev);
-+	device_set_pm_not_required(dev);
-+	dev->parent = &parent_port->dev;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_port_type;
-+
-+	return port;
-+
-+err:
-+	kfree(port);
-+	return ERR_PTR(rc);
-+}
-+
-+/**
-+ * devm_cxl_add_port() - add a cxl_port to the topology
-+ * @host: devm context / discovery agent
-+ * @parent_port: immediate ancestor towards cxl_root
-+ * @port_host: PCI or platform-firmware device hosting this port
-+ * @target_id: ordinal id relative to other siblings under @parent_port
-+ * @component_regs_phys: CXL component register base address
-+ */
-+struct cxl_port *devm_cxl_add_port(struct device *host,
-+				   struct cxl_port *parent_port,
-+				   struct device *port_host, int target_id,
-+				   resource_size_t component_regs_phys)
-+{
-+	struct cxl_port *port;
-+	struct device *dev;
-+	int rc;
-+
-+	port = cxl_port_alloc(parent_port, port_host, target_id,
-+			      component_regs_phys);
-+	if (IS_ERR(port))
-+		return port;
-+
-+	dev = &port->dev;
-+	rc = dev_set_name(dev, "port%d", port->id);
-+	if (rc)
-+		goto err;
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
-+
-+	rc = devm_add_action_or_reset(host, unregister_dev, dev);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	rc = devm_cxl_link_port(host, port);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	return port;
-+
-+err:
-+	put_device(dev);
-+	return ERR_PTR(rc);
-+}
-+EXPORT_SYMBOL_GPL(devm_cxl_add_port);
-+
- /*
-  * cxl_setup_device_regs() - Detect CXL Device register blocks
-  * @dev: Host device of the @base mapping
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 559f8343fee4..0211f44c95a2 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -134,5 +134,10 @@ struct cxl_address_space_dev *to_cxl_address_space(struct device *dev);
- struct cxl_root *devm_cxl_add_root(struct device *parent,
- 				   struct cxl_address_space *cxl_space,
- 				   int nr_spaces);
-+struct cxl_port *devm_cxl_add_port(struct device *host,
-+				   struct cxl_port *parent_port,
-+				   struct device *port_host, int target_id,
-+				   resource_size_t component_regs_phys);
-+
- extern struct bus_type cxl_bus_type;
- #endif /* __CXL_H__ */
 
