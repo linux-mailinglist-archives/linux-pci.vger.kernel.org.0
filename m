@@ -2,170 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68D57351A07
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 337C7351B9A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236284AbhDAR5l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 13:57:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34705 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236369AbhDARyR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Apr 2021 13:54:17 -0400
-IronPort-SDR: UnMUne0xLMr5lhy0REfGPXdAlaLJmBC/IZ7bJjlQ5e8V21YHdTj6vPK0Y/qdjT0UlbxbJJV7PI
- ccFKJyU5Zagg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="179387826"
-X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="179387826"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:26 -0700
-IronPort-SDR: wa6hs9oGtoxrHuvyQg19fYNaeBrJU6JaiVXyUtqlV3gT9q4lxonpLVTVr0CtnWZqLbk9E8NpZ9
- zMmOBtKt+aDw==
-X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="412711168"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 07:31:26 -0700
-Subject: [PATCH v2 8/8] cxl/acpi: Add module parameters to stand in for ACPI
- tables
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, ben.widawsky@intel.com,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 01 Apr 2021 07:31:26 -0700
-Message-ID: <161728748604.2474040.9352867415899369103.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S237879AbhDASJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 14:09:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235407AbhDASCl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:02:41 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B6AC031154
+        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 09:48:21 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id x16so2478037wrn.4
+        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 09:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V1mDpvuqnGJ8dPBR2OvhLT/0WD4buh61rulA5EoTQ9Q=;
+        b=A0w+MZpZY9sazwO4uioINy18JBM8SDfCa+ORIbfVMlQiY+ptHmMCmvjYc7UxYe4TrF
+         25DSLy7G0UZ4QNshcWW/f66hcEwEpLefPZWgaE9QY2Z1FGfpE8EKVje/4f/LlhTv9iOw
+         ZIA/KDdoEWQbytleCk1E6P96jbEeuHBbarsgQtbjdKhNR8P0/MbJ9Da9HjdFMRHjIIK/
+         zNo953xI4v/u5hPqghRhBrzkjCcDsKjUPL95MIzdC6ojDdhICaHU1y+R08DQp+YFI17e
+         UXlkx6VcMZU/x64brBXdUcauE4Fh2K/CcNkFfYQTCVj/Ibks+4VdPfJI8RQrXfj0eEkh
+         7MrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V1mDpvuqnGJ8dPBR2OvhLT/0WD4buh61rulA5EoTQ9Q=;
+        b=SK0KikXBXlf3DOz0ITEQrjFeJPkw/37s3s0xv5SThYiBf5AORYagDrz9M6Q6thyaVP
+         s658YPsHTwUkIAfOqxtd/fAINPPByNOkV7uqwyr6SuGu4qn7T9YDC5XopdDLT+UmdrdG
+         N+ZWZfz8717bLV9ZP/4ffcs9f8HpuJrQRlvGi6H/e+A+kPql14ZftsX+DUQ+ekdRNlxV
+         kZ1yEWxMf6iaYkEqyHH0lZOfaVLS5CdT2USMkMxCO9qcnEd6L8YjhptTsQyxRL8TtAlL
+         tTJUjcNY07bN5oLUQJFpVe+ap0gOjyDDepTiIxafjgK3W8kqsMNIcSc6THHSeMPCHnSn
+         4CMA==
+X-Gm-Message-State: AOAM533YVXXpqAmVMkP2eIcGvKICnASwQmPrWoszU1wHBum3FPoLmzZ2
+        qLFQ+xbjQyTZis5AhDBYUElCB8pj5w2vVw==
+X-Google-Smtp-Source: ABdhPJwhpY7JcVizl9hdf8VRgTtACBg/TQ/pP8t9QFcc1IYJ6J2ELNYbNZrNigtnn6Yo+1V2ZNsgKg==
+X-Received: by 2002:adf:e60e:: with SMTP id p14mr10828584wrm.221.1617295700032;
+        Thu, 01 Apr 2021 09:48:20 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f1f:bb00:5544:e633:d47e:4b76? (p200300ea8f1fbb005544e633d47e4b76.dip0.t-ipconnect.de. [2003:ea:8f1f:bb00:5544:e633:d47e:4b76])
+        by smtp.googlemail.com with ESMTPSA id y205sm11696165wmc.18.2021.04.01.09.48.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Apr 2021 09:48:19 -0700 (PDT)
+Subject: Re: [PATCH 0/3] PCI/VPD: Some improvements
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
+Message-ID: <09cfc65f-b205-9a7d-1e77-e7d96bdbc44c@gmail.com>
+Date:   Thu, 1 Apr 2021 18:48:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[debug / to-be-replaced / not-for-upstream]
-
-Given ACPICA support is needed before drivers can integrate ACPI
-functionality add some module parameters as proxies.
----
- drivers/cxl/acpi.c |   81 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 79 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index bc2a35ae880b..2a48a728f3e0 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -4,10 +4,84 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-+#include <linux/range.h>
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include "cxl.h"
- 
-+/*
-+ * TODO: Replace all of the below module parameters with ACPI CXL
-+ * resource descriptions once ACPICA makes them available.
-+ */
-+static unsigned long chbcr[4];
-+module_param_named(chbcr0, chbcr[0], ulong, 0400);
-+module_param_named(chbcr1, chbcr[1], ulong, 0400);
-+module_param_named(chbcr2, chbcr[2], ulong, 0400);
-+module_param_named(chbcr3, chbcr[3], ulong, 0400);
-+
-+/* TODO: cross-bridge interleave */
-+static struct cxl_address_space cxl_space[] = {
-+	[0] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[1] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[2] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[3] = { .range = { 0, -1 }, .targets = 0x1, },
-+};
-+
-+static int set_range(const char *val, const struct kernel_param *kp)
-+{
-+	unsigned long long size, base;
-+	struct cxl_address_space *space;
-+	unsigned long flags;
-+	char *p;
-+	int rc;
-+
-+	size = memparse(val, &p);
-+	if (*p != '@')
-+		return -EINVAL;
-+
-+	base = memparse(p + 1, &p);
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	rc = kstrtoul(p + 1, 0, &flags);
-+	if (rc)
-+		return rc;
-+	if (!flags || flags > CXL_ADDRSPACE_MASK)
-+		return rc;
-+
-+	space = kp->arg;
-+	*space = (struct cxl_address_space) {
-+		.range = {
-+			.start = base,
-+			.end = base + size - 1,
-+		},
-+		.flags = flags,
-+	};
-+
-+	return 0;
-+}
-+
-+static int get_range(char *buf, const struct kernel_param *kp)
-+{
-+	struct cxl_address_space *space = kp->arg;
-+
-+	if (!range_len(&space->range))
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%#llx@%#llx :%s%s%s%s\n",
-+			  (unsigned long long)range_len(&space->range),
-+			  (unsigned long long)space->range.start,
-+			  space->flags & CXL_ADDRSPACE_RAM ? " ram" : "",
-+			  space->flags & CXL_ADDRSPACE_PMEM ? " pmem" : "",
-+			  space->flags & CXL_ADDRSPACE_TYPE2 ? " type2" : "",
-+			  space->flags & CXL_ADDRSPACE_TYPE3 ? " type3" : "");
-+}
-+
-+module_param_call(range0, set_range, get_range, &cxl_space[0], 0400);
-+module_param_call(range1, set_range, get_range, &cxl_space[1], 0400);
-+module_param_call(range2, set_range, get_range, &cxl_space[2], 0400);
-+module_param_call(range3, set_range, get_range, &cxl_space[3], 0400);
-+
- static int match_ACPI0016(struct device *dev, const void *host)
- {
- 	struct acpi_device *adev = to_acpi_device(dev);
-@@ -67,13 +141,16 @@ static int cxl_acpi_register_ports(struct device *dev, struct acpi_device *root,
- 				   struct cxl_port *port, int idx)
- {
- 	struct acpi_pci_root *pci_root = acpi_pci_find_root(root->handle);
-+	resource_size_t chbcr_base = ~0ULL;
- 	struct cxl_walk_context ctx;
- 
- 	if (!pci_root)
- 		return -ENXIO;
- 
- 	/* TODO: fold in CEDT.CHBS retrieval */
--	port = devm_cxl_add_port(dev, port, &root->dev, idx, ~0ULL);
-+	if (idx < ARRAY_SIZE(chbcr))
-+		chbcr_base = chbcr[idx];
-+	port = devm_cxl_add_port(dev, port, &root->dev, idx, chbcr_base);
- 	if (IS_ERR(port))
- 		return PTR_ERR(port);
- 	dev_dbg(dev, "%s: register: %s\n", dev_name(&root->dev),
-@@ -99,7 +176,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	struct cxl_root *cxl_root;
- 	int rc, i = 0;
- 
--	cxl_root = devm_cxl_add_root(dev, NULL, 0);
-+	cxl_root = devm_cxl_add_root(dev, cxl_space, ARRAY_SIZE(cxl_space));
- 	if (IS_ERR(cxl_root))
- 		return PTR_ERR(cxl_root);
- 	dev_dbg(dev, "register: %s\n", dev_name(&cxl_root->port.dev));
-
+On 01.04.2021 18:35, Heiner Kallweit wrote:
+> This series includes some improvements. No functional change intended.
+> 
+> Heiner Kallweit (3):
+>   PCI/VPD: Change pci_vpd_init return type to void
+>   PCI/VPD: Remove argument off from pci_vpd_find_tag
+>   PCI/VPD: Improve and simplify pci_vpd_find_tag
+> 
+>  drivers/net/ethernet/broadcom/bnx2.c          |  2 +-
+>  .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
+>  drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  2 +-
+>  drivers/net/ethernet/broadcom/tg3.c           |  4 +-
+>  drivers/net/ethernet/chelsio/cxgb4/t4_hw.c    |  2 +-
+>  drivers/net/ethernet/sfc/efx.c                |  2 +-
+>  drivers/net/ethernet/sfc/falcon/efx.c         |  2 +-
+>  drivers/pci/pci.h                             |  2 +-
+>  drivers/pci/vpd.c                             | 40 +++++--------------
+>  drivers/scsi/cxlflash/main.c                  |  3 +-
+>  include/linux/pci.h                           |  3 +-
+>  11 files changed, 21 insertions(+), 44 deletions(-)
+> 
+Forgot to say: This series is based on the pci/vpd branch.
