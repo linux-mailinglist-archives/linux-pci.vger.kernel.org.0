@@ -2,96 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC9E350EEC
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 08:17:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A865350F1A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 08:36:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233050AbhDAGRD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 02:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233153AbhDAGQk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 02:16:40 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F4CC06178A
-        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 23:16:40 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id i9so1251081qka.2
-        for <linux-pci@vger.kernel.org>; Wed, 31 Mar 2021 23:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/tdHq+eMgfvUCfgr19g4KGgjUw8dwNFaPcptJLMvv20=;
-        b=d1tet9Y2otJ4bPKkudFR7D1GN4TSxbb31ttdrlkl/P3sIGNBKqc6I78rPuwagFZLLP
-         91dZeX1IuFNgTohpD/7akTLAyWiZR/t0GCbC7hQJFaTYIzg/1yxYzN48AUTERaZYb92I
-         d5X5ASx9YOH20slwp7tXU1V8OlvUf4JNjbmasNAhuntVXe11XdwFpLt/Pqm/VPF3LI98
-         wj9AKLkB4qVEmBFKJposxVO3VlPRrmBgrjmHiJRND+jlasqobxNVWZF6L0k5Po8PJh5Q
-         DK3ZIR+/syfAhiRsujKvn1J0W61ILlAfeucEfPwH7DPcWSxFLVCfg/WaEjEWdcWbeJQO
-         TDHA==
+        id S229539AbhDAGgD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 02:36:03 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:42686 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbhDAGfw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 02:35:52 -0400
+Received: by mail-wr1-f42.google.com with SMTP id x13so619943wrs.9;
+        Wed, 31 Mar 2021 23:35:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/tdHq+eMgfvUCfgr19g4KGgjUw8dwNFaPcptJLMvv20=;
-        b=c+xRvMzuq0Sy1E6ZrXLw13uI4+CotJVO1hwNNwo95LjwR8wwtxytKGpldWuImbpFWn
-         oVOON4sLy5uOgIc6SKfZMXL9VjY+rI0UoWw7aqzLCNttB6q6hv0n6mZ8Q8Ujlgf9XWYD
-         f7bico+65fSKoPyaki5axu1ln4cGhskJFObbOwbEq4JOp3skyRNCze5TS58UhibSbAcj
-         M+jald9C/hOOeMBQpvkwnVNOooEomRaPlv/iPWpjXrs+GYTs9fGx1NT10u2XYuCO8ABR
-         BQrcTjs3G47tb5X6KlhQbpNzfq4KeZf3wpCPPNKxxlJdAi9OUByV3/ES+eFL2juJCPkc
-         jByg==
-X-Gm-Message-State: AOAM530xiYQOQ4xmEDlGwgCbSS0nOic8swO0Bg+52OtcVugvSd54syAy
-        aY5VDy0PIhb0W884nDJ8iiYy2V468ys0ibtn/YZ5TQ==
-X-Google-Smtp-Source: ABdhPJxN7gKZfahwJhOWLIepnEZQQrrtp1Bkzqp9sIf8uf8W7egGtdMcqMlqet9G2ktx96KkylccNRofqZFJM0jdU/A=
-X-Received: by 2002:a37:66cd:: with SMTP id a196mr7046403qkc.374.1617257799357;
- Wed, 31 Mar 2021 23:16:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4rL9IgiyziFhXFq9JhHe8MRiCspi+Fv8AChbH+YGoiU=;
+        b=Rj5XDwKRTS5/KBbtPpopcf5XDovGAoqH5lC3YJGlqXaJ0YssGzN3200uen4VpP3mM3
+         nuxZsVvbOtAwRFrgUb6t0MBX9306iBcfgvYq9xjUk9f3MSNgPwyYLhM8jlf/BV8VHIjF
+         PkCKGdIkJ4jEr+bp0Ct+TfuS2TRe+Hsd2r0HhkItB+K9RP212JFbHLUc+0D9QX8FG5fh
+         qxkK1npDe06eUExH/QkRLZPJILAI1yZtDgZXJWF66Un+8cakJITbaQ3KtwLwpCtYC2wZ
+         yRqIBhexWG9r/eUfQ6+qSlql6wO1waLAlD0Sz8x8RMNU3rv6qof49em6K8CEZRBrRgwF
+         sKRQ==
+X-Gm-Message-State: AOAM533EgJiax2A1+UafRvswvjLynK8RJtOKYQMFN5N83JI8DgvMqv1x
+        stijOfvs1zl4j38ezPS5rpw=
+X-Google-Smtp-Source: ABdhPJw/qtpkUX8J2ufQv5E/USmElRfcGrQQSfQnIFS25ZxrLYmTbD+T5qkceGS46q+4xdmea/1CTg==
+X-Received: by 2002:a5d:4d45:: with SMTP id a5mr7872790wru.396.1617258950754;
+        Wed, 31 Mar 2021 23:35:50 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id k4sm11620091wrd.9.2021.03.31.23.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Mar 2021 23:35:50 -0700 (PDT)
+Date:   Thu, 1 Apr 2021 08:35:48 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     paul.walmsley@sifive.com, hes@sifive.com, erik.danie@sifive.com,
+        zong.li@sifive.com, bhelgaas@google.com, robh+dt@kernel.org,
+        aou@eecs.berkeley.edu, mturquette@baylibre.com, sboyd@kernel.org,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        alex.dewar90@gmail.com, khilman@baylibre.com,
+        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
+        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        helgaas@kernel.org
+Subject: Re: [PATCH v4 5/6] PCI: fu740: Add SiFive FU740 PCIe host controller
+ driver
+Message-ID: <YGVpxHd/JhYPyaMQ@rocinante>
+References: <20210401060054.40788-1-greentime.hu@sifive.com>
+ <20210401060054.40788-6-greentime.hu@sifive.com>
 MIME-Version: 1.0
-References: <cover.1615954045.git.greentime.hu@sifive.com> <161704512808.3012082.7539298875497991635@swboyd.mtv.corp.google.com>
-In-Reply-To: <161704512808.3012082.7539298875497991635@swboyd.mtv.corp.google.com>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Thu, 1 Apr 2021 14:16:28 +0800
-Message-ID: <CAHCEehJyzsTOHpMhRQ4U3Ex+QiO8h2emBAq3ZemFrgqB-XRZNw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Add SiFive FU740 PCIe host controller driver support
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     alex.dewar90@gmail.com, Albert Ou <aou@eecs.berkeley.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, Erik Danie <erik.danie@sifive.com>,
-        hayashi.kunihiko@socionext.com, Bjorn Helgaas <helgaas@kernel.org>,
-        hes@sifive.com, jh80.chung@samsung.com, khilman@baylibre.com,
-        linux-clk@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        lorenzo.pieralisi@arm.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org,
-        vidyas@nvidia.com, Zong Li <zong.li@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210401060054.40788-6-greentime.hu@sifive.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Stephen Boyd <sboyd@kernel.org> =E6=96=BC 2021=E5=B9=B43=E6=9C=8830=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:12=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Quoting Greentime Hu (2021-03-17 23:08:07)
-> > This patchset includes SiFive FU740 PCIe host controller driver. We als=
-o
-> > add pcie_aux clock and pcie_power_on_reset controller to prci driver fo=
-r
-> > PCIe driver to use it.
-> >
-> > This is tested with e1000e: Intel(R) PRO/1000 Network Card, AMD Radeon =
-R5
-> > 230 graphics card and SP M.2 PCIe Gen 3 SSD in SiFive Unmatched based o=
-n
-> > v5.11 Linux kernel.
->
-> Can I merge the clk patches to clk-next? Or is the dts patch going to be
-> sent in for the merge window? I'd like to merge the clk patches if the
-> other patches are going to miss the next merge window.
+Hi Greentime,
 
-Hi Stephen,
+[...]
+> +	/* Wait for wait_idle */
+> +	ret = readl_poll_timeout(phy_cr_para_ack, val, val, 10, 5000);
+> +	if (ret)
+> +		dev_err(dev, "Wait for wait_ilde state failed!\n");
+> +
+> +	/* Clear */
+> +	writel_relaxed(0, phy_cr_para_wr_en);
+> +
+> +	/* Wait for ~wait_idle */
+> +	ret = readl_poll_timeout(phy_cr_para_ack, val, !val, 10, 5000);
+> +	if (ret)
+> +		dev_err(dev, "Wait for !wait_ilde state failed!\n");
+> +}
+[...]
+> +static int fu740_pcie_start_link(struct dw_pcie *pci)
+> +{
+> +	struct device *dev = pci->dev;
+> +
+> +	/* Start LTSSM. */
+> +	fu740_pcie_ltssm_enable(dev);
+> +	return 0;
+> +}
 
-Thank you for reviewing. I am ok with either way. :)
+The typos etc., are still here.  See:
+
+  https://lore.kernel.org/linux-pci/YFQqpojmJyX0l6lx@rocinante/
+
+Krzysztof
