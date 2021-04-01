@@ -2,87 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D49535176C
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 19:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5A0351771
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 19:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234728AbhDARmO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 13:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234548AbhDARh7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 13:37:59 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6BBC02FEBE
-        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 09:35:31 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id p19so1352738wmq.1
-        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 09:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=Pv6jKxkc1D3IQH8AU5ppAe0sEFoEe1ZBtjtF7SjWL70=;
-        b=bHCZ/+2rHYb/CNMwDAXkfGdJ09EMWy9etPE0vVFYfae9erQmqS0yE9yHxgdZY0IDqi
-         dMzqSDwuOnuZaUKwBXzvNHZNf61KFZp/pXnWGZhRqoI2wZCTivnp4FOj3icjo9Z2bown
-         KUitGqYifC+1U7i0ts/xc+xavqUEhip4WPl08XWVcJ/5nOsfIaD/r3d6TnG6+TRY10dY
-         BdEBulvNa2XHgJ+0cZOHIU+q7PLghHZm6W6k+UgfKZK2G/jfkfXk6emvWfEGmkV/NRaV
-         y9Z1zEPRFxPrdmpg+aOHwQdIMDtC2jd7Kt+KmA+RGcHNiHDWsfTMOPddnM/0/DEKEv39
-         4byg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=Pv6jKxkc1D3IQH8AU5ppAe0sEFoEe1ZBtjtF7SjWL70=;
-        b=Sdf4x3/xFPTmd8c/f211MeOSFAG8AHeYnyMWWHTqetSqFF2n5qIBVLnxcG8Vrvw8sT
-         uwesAMuO4R3ZI6a+2G+5ljwYz0hgATp8erxl42ElOZXeLQseZMYCFXjtxxUFzQwx+/OV
-         UE9po5S0BPVxPoy1VtQA9kX5t92Z6eLcwYwNB8AIX95E+QXOuMtrI1w82XAu2hbSezk9
-         bMVaMRbK1+wwnDhqVHFw/AqFsRohwBwfYte7gIBzYMtojDjtAO7pdo9h/cyO2zWdvGNL
-         ge/qTDH6S6EWONODqUvcwGdxv9MnHwWjp+bFu3/qGhtq6hqX5GLYnBUEyj3B0N6CugsI
-         H/eg==
-X-Gm-Message-State: AOAM532AN9PJKnS2L1jr1SS5kA57F6Ix/JvUwOlm+FhPqALhEkXJ9h0F
-        Gu2QU6J0m5CjA1WIffe0Cvx0N1A+KDR9qQ==
-X-Google-Smtp-Source: ABdhPJxQV6BWdl9GB9T4jKeP7oxpQGf1AUFP1VQd2qlVsi0hoAiAoR4Y0qyr9yjPrA9OT8/ViC/FdA==
-X-Received: by 2002:a1c:f614:: with SMTP id w20mr8770710wmc.70.1617294930075;
-        Thu, 01 Apr 2021 09:35:30 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f1f:bb00:5544:e633:d47e:4b76? (p200300ea8f1fbb005544e633d47e4b76.dip0.t-ipconnect.de. [2003:ea:8f1f:bb00:5544:e633:d47e:4b76])
-        by smtp.googlemail.com with ESMTPSA id a13sm10115740wrp.31.2021.04.01.09.35.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Apr 2021 09:35:29 -0700 (PDT)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 0/3] PCI/VPD: Some improvements
-Message-ID: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
-Date:   Thu, 1 Apr 2021 18:35:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        id S234466AbhDARmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 13:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234559AbhDARiA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Apr 2021 13:38:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B76F161386;
+        Thu,  1 Apr 2021 16:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617295378;
+        bh=i04niHeXuQvwIy5MixftZzotTP0TGOM+jM0OxbF9CXw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=V0A1RN+DPE2xtWYyDCDoxSGkMsS1QrILEzosJPbis4ibuJoVVIl4ZdF3i89mvsOY6
+         +fH7WX9Ps2Jlw9/cbCJBJ5mE48dsmK6NXkCaZyPpEvUSmKuddYv4gHqDBUra6f0Ov4
+         nsJ3lsAcFsxMUwflSoK41pwCfsEUJjmbZyP54B0FA4EbtF5Lil1xT4B5yteUg0cR6O
+         44aRc52oTCBzFrJ/QDenCd7I7SjQU+BqxUMTOsg65DGdcFl/pJDm9X3KNf6oNC+8bX
+         O+nOlYUmtOKeZLZEjVUn4oBVUMvm5rzm9B0e6Vr7a4PrWk6PM1tA3AKtNmQXJt5Kd5
+         bVuJrTDgpDRZg==
+Date:   Thu, 1 Apr 2021 11:42:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Henning Schild <henning.schild@siemens.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com
+Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
+ support library
+Message-ID: <20210401164256.GA1516177@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YGXqfvBv37eLL28Z@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series includes some improvements. No functional change intended.
+On Thu, Apr 01, 2021 at 06:45:02PM +0300, Andy Shevchenko wrote:
+> On Tue, Mar 09, 2021 at 09:42:52AM +0100, Henning Schild wrote:
+> > Am Mon, 8 Mar 2021 19:42:21 -0600
+> > schrieb Bjorn Helgaas <helgaas@kernel.org>:
+> > > On Mon, Mar 08, 2021 at 09:16:50PM +0200, Andy Shevchenko wrote:
+> > > > On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:  
+> > > > > On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:  
+> 
+> ...
+> 
+> > > > > > +	/* Read the first BAR of the device in question */
+> > > > > > +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem,
+> > > > > > PCI_BASE_ADDRESS_0, true);  
+> > > > > 
+> > > > > I don't get this.  Apparently this normally hidden device is
+> > > > > consuming PCI address space.  The PCI core needs to know
+> > > > > about this.  If it doesn't, the PCI core may assign this
+> > > > > space to another device.  
+> > > > 
+> > > > Right, it returns all 1:s to any request so PCI core *thinks*
+> > > > it's plugged off (like D3cold or so).  
+> > > 
+> > > I'm asking about the MMIO address space.  The BAR is a register
+> > > in config space.  AFAICT, clearing P2SBC_HIDE_BYTE makes that
+> > > BAR visible.  The BAR describes a region of PCI address space.
+> > > It looks like setting P2SBC_HIDE_BIT makes the BAR disappear
+> > > from config space, but it sounds like the PCI address space
+> > > *described* by the BAR is still claimed by the device.  If the
+> > > device didn't respond to that MMIO space, you would have no
+> > > reason to read the BAR at all.
+> > > 
+> > > So what keeps the PCI core from assigning that MMIO space to
+> > > another device?
+> > 
+> > The device will respond to MMIO while being hidden. I am afraid
+> > nothing stops a collision, except for the assumption that the BIOS
+> > is always right and PCI devices never get remapped. But just
+> > guessing here.
+> > 
+> > I have seen devices with coreboot having the P2SB visible, and
+> > most likely relocatable. Making it visible in Linux and not hiding
+> > it again might work, but probably only as long as Linux will not
+> > relocate it.  Which i am afraid might seriously upset the BIOS,
+> > depending on what a device does with those GPIOs and which parts
+> > are implemented in the BIOS.
+> 
+> So the question is, do we have knobs in PCI core to mark device
+> fixes in terms of BARs, no relocation must be applied, no other
+> devices must have the region?
 
-Heiner Kallweit (3):
-  PCI/VPD: Change pci_vpd_init return type to void
-  PCI/VPD: Remove argument off from pci_vpd_find_tag
-  PCI/VPD: Improve and simplify pci_vpd_find_tag
+I think the closest thing is the IORESOURCE_PCI_FIXED bit that we use
+for things that must not be moved.  Generally PCI resources are
+associated with a pci_dev, and we set IORESOURCE_PCI_FIXED for BARs,
+e.g., dev->resource[n].  We do that for IDE legacy regions (see
+LEGACY_IO_RESOURCE), Langwell devices (pci_fixed_bar_fixup()),
+"enhanced allocation" (pci_ea_flags()), and some quirks (quirk_io()).
 
- drivers/net/ethernet/broadcom/bnx2.c          |  2 +-
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  2 +-
- drivers/net/ethernet/broadcom/tg3.c           |  4 +-
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c    |  2 +-
- drivers/net/ethernet/sfc/efx.c                |  2 +-
- drivers/net/ethernet/sfc/falcon/efx.c         |  2 +-
- drivers/pci/pci.h                             |  2 +-
- drivers/pci/vpd.c                             | 40 +++++--------------
- drivers/scsi/cxlflash/main.c                  |  3 +-
- include/linux/pci.h                           |  3 +-
- 11 files changed, 21 insertions(+), 44 deletions(-)
+In your case, the device is hidden so it doesn't respond to config
+accesses, so there is no pci_dev for it.
 
--- 
-2.31.1
+Maybe you could do some sort of quirk that allocates its own struct
+resource, fills it in, sets IORESOURCE_PCI_FIXED, and does something
+similar to pci_claim_resource()?
 
+Bjorn
