@@ -2,108 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F41F435177F
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 19:47:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A51AC351B9B
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235139AbhDARmS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 13:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57162 "EHLO
+        id S236102AbhDASJI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 14:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234942AbhDARl1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 13:41:27 -0400
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB44AC0319DA;
-        Thu,  1 Apr 2021 10:29:50 -0700 (PDT)
-Received: by mail-ot1-x32f.google.com with SMTP id t23-20020a0568301e37b02901b65ab30024so2807917otr.4;
-        Thu, 01 Apr 2021 10:29:50 -0700 (PDT)
+        with ESMTP id S237269AbhDASDi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:03:38 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D79C0613B3
+        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 05:04:23 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id d8-20020a1c1d080000b029010f15546281so2712051wmd.4
+        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 05:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=gAhlVxUutQWC+uNCYQO7uX+BL4jBPv4pGWL5UxAihDE=;
+        b=C+boqniJPxxl9EWgDxaWo+jwpZvpBejsNa/n+E8+hxJg5N76dxz78vpIPM9J9eLxhP
+         Wfqlg5DyPhcVl68uwlqgao2K9Px16Zj8nvDiOFuTQtyeGnX1nmbf+0UNFt6ykcLa8v6F
+         NJpp6qQD8qHmtZs1qMjhpJxPmiNdTi2th8uaMiXa4f7oD4hTXer2fcqtY3xGB3t9+8vs
+         bEfBEgNVEm/Q6moBajcPvaCbsVPqg8ZqDoN7T5tA7GNkmqSOJ+7Jfst3eigoTKNGWcyY
+         Q2UfZP1l8k7I9RuDeya05Eh8jBvsBFmj/6tubQ4NElONoVr9QgrM4c3maukYXgRuNyu6
+         k2kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h/Y0TLuXldSxTdiqZd7pJGoS1WrwZ+szrP8juLbRVoE=;
-        b=hkd7Wgr66M1x3TUeOgNtvPYD41ItceMUGmm+DHR2TWouNeWTt67Cns2aAymq6g1XmO
-         n5V4nJoAEbaoimndwP7DHBygrmjKWwCb4mbPR1UYov3TV7o1naepBdQsZc+dkQYBgMRu
-         58TPsNL9QBkh1DJDdAZYCiPpCizXN1FUwJkSWJlHrFBriMCSEwfB4R3rCF37l1YKpeM5
-         rqkAywyqa1eekp5AphuzGVgc9p9/p9BwRliJX9NQXBiZTu0HdLgp4+hzWSICCYrCmQkK
-         w3+GwpFTOlkk5JD1pEdMP7LlyYrEp457kNnmPwX1wCDt2Xr/5d0jo5WOu8sHxUx3tHyP
-         4P7Q==
-X-Gm-Message-State: AOAM5303bpa38PgLut9l40K6wVo/yiQ02waGCsdaas0px6qgO35shlsP
-        roCFROnmnp7Didz9y/VaOl3p92wp8SSAgeGnqcs=
-X-Google-Smtp-Source: ABdhPJxB+a85xzGa1aBcrm1XeVIq1EGWAh8fIgqpKk8CzFKZH4xWv4cuKYRlQXuKB+REgIX3kbXuq7r8gsu4V4bQt6c=
-X-Received: by 2002:a05:6830:55b:: with SMTP id l27mr7147365otb.260.1617298188698;
- Thu, 01 Apr 2021 10:29:48 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=gAhlVxUutQWC+uNCYQO7uX+BL4jBPv4pGWL5UxAihDE=;
+        b=eQwqXUXmoh0Uwct5z0GEbhug6QLxRncOnQjUWRZbUcqwuCeBvIefbCXM1AE0ybLWNh
+         mPzmQ6LpTOpGnZRch/HCr818s3/9BfHNlVFMwJip5axfVIqQZgoji2o6nJkx1D6oL/Q2
+         2kgl+VCDl2ncUfXrnuM9OGm8ynEm5i1wzqruWG8sLNR3iYX3wC+xd+gMHgkvucB3D76s
+         VpR9ZW4aCvvDox3TTH7RefOmsZ/5+d+1QIITfpLfTWL2rO/toWWlTcAwVIck/pafod7m
+         n2g9mowCDehXL1FWCTk21RJKTcviS8nbIY1STG+epvQkkeNFD5tqvoWK0XlluVco+zwq
+         OLOQ==
+X-Gm-Message-State: AOAM533eQRB1Oeb23jy2sXEhXeylsxwFnW9PCr1CDdY/vMoNoKCftQXd
+        i0A27MvaEW6/tBVmOTii5wxe7bCSPJCJEw==
+X-Google-Smtp-Source: ABdhPJxtG4iO1JfOb85+6KFeCw8Mtx4ZhcVPwP/rhse1ygwLQadmCx1NZvaW8acQcTqYHgN7AW/RUQ==
+X-Received: by 2002:a05:600c:358c:: with SMTP id p12mr7938490wmq.159.1617278662063;
+        Thu, 01 Apr 2021 05:04:22 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f1f:bb00:5544:e633:d47e:4b76? (p200300ea8f1fbb005544e633d47e4b76.dip0.t-ipconnect.de. [2003:ea:8f1f:bb00:5544:e633:d47e:4b76])
+        by smtp.googlemail.com with ESMTPSA id q19sm8025984wmc.44.2021.04.01.05.04.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Apr 2021 05:04:21 -0700 (PDT)
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2] PCI/VPD: Silence warning if optional VPD PROM is missing
+Message-ID: <ccbc11f1-4dbb-e2c8-d0ea-559e06d4c340@gmail.com>
+Date:   Thu, 1 Apr 2021 14:03:49 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-References: <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
- <20210331172210.GA1397554@bjorn-Precision-5520> <100f5a45dae14c77b341b7f1c5ea1db0@AcuMS.aculab.com>
- <CAJZ5v0jJ2XDYSwqP3AyKuUvuxhwuNwvk3Z=xwtAL3hG5uYGG-Q@mail.gmail.com> <a0ec3dbdffc145ac909089048e552eb6@AcuMS.aculab.com>
-In-Reply-To: <a0ec3dbdffc145ac909089048e552eb6@AcuMS.aculab.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 1 Apr 2021 19:29:37 +0200
-Message-ID: <CAJZ5v0h0XMkrYYyOLd8bDcngxnei7VbAh=cYWA4Sy3qm2b69iQ@mail.gmail.com>
-Subject: Re: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by __packed
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 1, 2021 at 4:23 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Rafael J. Wysocki
-> > Sent: 01 April 2021 14:50
-> ...
-> > So what exactly is wrong with using "packed"?  It is way easier to
-> > understand for a casual reader of the code.
->
-> Because it is usually wrong!
->
-> If I have:
->         struct foo {
->                 u64 val;
->         } __packed;
->
-> And then have:
-> u64 bar(struct foo *foo)
-> {
->         return foo->val;
-> }
->
-> The on some cpu the compiler has to generate the equivalent of:
->         u8 *x = (void *)&foo->val;
->         return x[0] | x[1] << 8 | x[2] << 16 | x[3] << 24 | x[4] << 32 | x[5] << 40 | x[6] << 48 | x[7] << 56;
->
-> If you can guarantee that the structure is 32bit aligned
-> then it can generate the simpler:
->         u32 *x = (void *)&foo->val;
->         return x[0] | x[1] << 32;
->
-> (Yes I've missed out the 64-bit casts)
->
-> This is why you should almost never use __packed.
->
-> There are historic structures with 64 bit items on 4 byte boundaries
-> (and 32 bit values on 2 byte boundaries).
-> Typically most of the fields are shorter so can be read directly
-> (although they might need a byte-swapping load).
+Realtek RTL8169/8168/8125 NIC families indicate VPD capability and an
+optional VPD EEPROM can be connected via I2C/SPI. However I haven't
+seen any card or system with such a VPD EEPROM yet. The missing EEPROM
+causes the following warning whenever e.g. lscpi -vv is executed.
 
-The possible overhead impact is clear to me, but I really don't like
-the "local" typedef idea.
+invalid short VPD tag 00 at offset 01
 
-It at least would need to be accompanied by a comment explaining why
-it is there and why using it is better than using __packed and why
-this needs to be defined locally and not in some generic header file.
+The warning confuses users, I think we should handle the situation more
+gentle. Therefore, if first VPD byte is read as 0x00, assume a missing
+optional VPD PROM and replace the warning with a more descriptive
+message at info level.
 
-Also, the FPDT code is just one function that parses the entire table
-and there is no object passing between functions in it etc, so is
-__packed still problematic in there?
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2: - don't remove user info completely, replace the warning with a more
+      message at info level
+---
+ drivers/pci/vpd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index d1cbc5e64..48f4a9ae8 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -74,6 +74,11 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+ 	       pci_read_vpd(dev, off, 1, header) == 1) {
+ 		unsigned char tag;
+ 
++		if (!header[0] && !off) {
++			pci_info(dev, "Invalid VPD tag 00, assume missing optional VPD EPROM\n");
++			return 0;
++		}
++
+ 		if (header[0] & PCI_VPD_LRDT) {
+ 			/* Large Resource Data Type Tag */
+ 			tag = pci_vpd_lrdt_tag(header);
+-- 
+2.31.1
+
