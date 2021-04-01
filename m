@@ -2,133 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1787D351ECA
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:55:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9282351E28
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237722AbhDASrB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 14:47:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238558AbhDASo7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Apr 2021 14:44:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 769D66112D;
-        Thu,  1 Apr 2021 12:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617280061;
-        bh=6hbeoJ4IU0VAYkOxOutAUGEasgxae6JptOzfhG1Kkfc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IKEIEtKNXNCtYYmT5WvsSYESDz2+fglABxfVImzWJebuOYggWp+qEKUuAmnddpoxN
-         CFqyOL18PjAK9dpeO7E8cAIVdZ+IJAHRlguVex37xyKPUy2hVzlAhlZf7MEznyHHat
-         Iz0ZwzkKf7A6GQCjN4B+jA4DOO93J00hO8M5C1FCS+TJJ3J1JPVw1mxiOx9Gmko9Rm
-         O2BZaVrujhcTB3Eqi5BnyymxM6xT0rxZRU5weGSr9end4PIMoT5PY45cblzSgICzpy
-         ZQLD0EGUcnn0ZaCH5Uw5TbRzK/zU0peIX8X9WxZ7Lm/8JTY72iHpcccyx5+//3hAUI
-         RFIqe9HkabqEQ==
-Date:   Thu, 1 Apr 2021 15:27:37 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Raphael Norwitz <raphael.norwitz@nutanix.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        id S234114AbhDASf7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 14:35:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:48755 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238089AbhDASYT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:24:19 -0400
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-121-k3M7_sOBMMSUMd0vtI6_sg-1; Thu, 01 Apr 2021 15:23:18 +0100
+X-MC-Unique: k3M7_sOBMMSUMd0vtI6_sg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.2; Thu, 1 Apr 2021 15:23:17 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.012; Thu, 1 Apr 2021 15:23:17 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
-Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
-Message-ID: <YGW8Oe9jn+n9sVsw@unreal>
-References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
+Subject: RE: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Thread-Topic: [PATCH v2 04/15] ACPI: table: replace __attribute__((packed)) by
+ __packed
+Thread-Index: AQHXJlJheusKxfb1K0qiX/864DlgraqfWwQwgABDWwCAABZkEA==
+Date:   Thu, 1 Apr 2021 14:23:17 +0000
+Message-ID: <a0ec3dbdffc145ac909089048e552eb6@AcuMS.aculab.com>
+References: <e0d626837e577e60f226b8bbf354bd8cbb1fe40a.camel@intel.com>
+ <20210331172210.GA1397554@bjorn-Precision-5520>
+ <100f5a45dae14c77b341b7f1c5ea1db0@AcuMS.aculab.com>
+ <CAJZ5v0jJ2XDYSwqP3AyKuUvuxhwuNwvk3Z=xwtAL3hG5uYGG-Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jJ2XDYSwqP3AyKuUvuxhwuNwvk3Z=xwtAL3hG5uYGG-Q@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:
-> Slot resets are bus resets with additional logic to prevent a device
-> from being removed during the reset. Currently slot and bus resets have
-> separate implementations in pci.c, complicating higher level logic. As
-> discussed on the mailing list, they should be combined into a generic
-> function which performs an SBR. This change adds a function,
-> pci_reset_bus_function(), which first attempts a slot reset and then
-> attempts a bus reset if -ENOTTY is returned, such that there is now a
-> single device agnostic function to perform an SBR.
-> 
-> This new function is also needed to add SBR reset quirks and therefore
-> is exposed in pci.h.
-> 
-> Link: https://lkml.org/lkml/2021/3/23/911
-> 
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-> ---
->  drivers/pci/pci.c   | 17 +++++++++--------
->  include/linux/pci.h |  1 +
->  2 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 16a17215f633..12a91af2ade4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
->  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
->  }
->  
-> +int pci_reset_bus_function(struct pci_dev *dev, int probe)
-> +{
-> +	int rc = pci_dev_reset_slot_function(dev, probe);
-> +
-> +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
+RnJvbTogUmFmYWVsIEouIFd5c29ja2kNCj4gU2VudDogMDEgQXByaWwgMjAyMSAxNDo1MA0KLi4u
+DQo+IFNvIHdoYXQgZXhhY3RseSBpcyB3cm9uZyB3aXRoIHVzaW5nICJwYWNrZWQiPyAgSXQgaXMg
+d2F5IGVhc2llciB0bw0KPiB1bmRlcnN0YW5kIGZvciBhIGNhc3VhbCByZWFkZXIgb2YgdGhlIGNv
+ZGUuDQoNCkJlY2F1c2UgaXQgaXMgdXN1YWxseSB3cm9uZyENCg0KSWYgSSBoYXZlOg0KCXN0cnVj
+dCBmb28gew0KCQl1NjQgdmFsOw0KCX0gX19wYWNrZWQ7DQoNCkFuZCB0aGVuIGhhdmU6DQp1NjQg
+YmFyKHN0cnVjdCBmb28gKmZvbykNCnsNCglyZXR1cm4gZm9vLT52YWw7DQp9DQoNClRoZSBvbiBz
+b21lIGNwdSB0aGUgY29tcGlsZXIgaGFzIHRvIGdlbmVyYXRlIHRoZSBlcXVpdmFsZW50IG9mOg0K
+CXU4ICp4ID0gKHZvaWQgKikmZm9vLT52YWw7DQoJcmV0dXJuIHhbMF0gfCB4WzFdIDw8IDggfCB4
+WzJdIDw8IDE2IHwgeFszXSA8PCAyNCB8IHhbNF0gPDwgMzIgfCB4WzVdIDw8IDQwIHwgeFs2XSA8
+PCA0OCB8IHhbN10gPDwgNTY7DQoNCklmIHlvdSBjYW4gZ3VhcmFudGVlIHRoYXQgdGhlIHN0cnVj
+dHVyZSBpcyAzMmJpdCBhbGlnbmVkDQp0aGVuIGl0IGNhbiBnZW5lcmF0ZSB0aGUgc2ltcGxlcjoN
+Cgl1MzIgKnggPSAodm9pZCAqKSZmb28tPnZhbDsNCglyZXR1cm4geFswXSB8IHhbMV0gPDwgMzI7
+DQoNCihZZXMgSSd2ZSBtaXNzZWQgb3V0IHRoZSA2NC1iaXQgY2FzdHMpDQoNClRoaXMgaXMgd2h5
+IHlvdSBzaG91bGQgYWxtb3N0IG5ldmVyIHVzZSBfX3BhY2tlZC4NCg0KVGhlcmUgYXJlIGhpc3Rv
+cmljIHN0cnVjdHVyZXMgd2l0aCA2NCBiaXQgaXRlbXMgb24gNCBieXRlIGJvdW5kYXJpZXMNCihh
+bmQgMzIgYml0IHZhbHVlcyBvbiAyIGJ5dGUgYm91bmRhcmllcykuDQpUeXBpY2FsbHkgbW9zdCBv
+ZiB0aGUgZmllbGRzIGFyZSBzaG9ydGVyIHNvIGNhbiBiZSByZWFkIGRpcmVjdGx5DQooYWx0aG91
+Z2ggdGhleSBtaWdodCBuZWVkIGEgYnl0ZS1zd2FwcGluZyBsb2FkKS4NCg0KCURhdmlkDQoNCi0N
+ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
+aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
+cykNCg==
 
-The previous coding style is preferable one in the Linux kernel.
-int rc = pci_dev_reset_slot_function(dev, probe);
-if (rc != -ENOTTY)
-  return rc;
-return pci_parent_bus_reset(dev, probe);
-
-
-> +}
-> +
->  static void pci_dev_lock(struct pci_dev *dev)
->  {
->  	pci_cfg_access_lock(dev);
-> @@ -5102,10 +5109,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
->  	rc = pci_pm_reset(dev, 0);
->  	if (rc != -ENOTTY)
->  		return rc;
-> -	rc = pci_dev_reset_slot_function(dev, 0);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	return pci_parent_bus_reset(dev, 0);
-> +	return pci_reset_bus_function(dev, 0);
->  }
->  EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
->  
-> @@ -5135,13 +5139,10 @@ int pci_probe_reset_function(struct pci_dev *dev)
->  	if (rc != -ENOTTY)
->  		return rc;
->  	rc = pci_pm_reset(dev, 1);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pci_dev_reset_slot_function(dev, 1);
->  	if (rc != -ENOTTY)
->  		return rc;
->  
-> -	return pci_parent_bus_reset(dev, 1);
-> +	return pci_reset_bus_function(dev, 1);
->  }
->  
->  /**
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 86c799c97b77..979d54335ac1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1228,6 +1228,7 @@ int pci_probe_reset_bus(struct pci_bus *bus);
->  int pci_reset_bus(struct pci_dev *dev);
->  void pci_reset_secondary_bus(struct pci_dev *dev);
->  void pcibios_reset_secondary_bus(struct pci_dev *dev);
-> +int pci_reset_bus_function(struct pci_dev *dev, int probe);
->  void pci_update_resource(struct pci_dev *dev, int resno);
->  int __must_check pci_assign_resource(struct pci_dev *dev, int i);
->  int __must_check pci_reassign_resource(struct pci_dev *dev, int i, resource_size_t add_size, resource_size_t align);
-> -- 
-> 2.20.1
