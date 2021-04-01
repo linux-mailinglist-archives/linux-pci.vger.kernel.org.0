@@ -2,198 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5B37351B99
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:11:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88EA6351A8D
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234821AbhDASI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 14:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234914AbhDASBg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:01:36 -0400
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7977DC03116B;
-        Thu,  1 Apr 2021 09:54:16 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id r17-20020a4acb110000b02901b657f28cdcso703126ooq.6;
-        Thu, 01 Apr 2021 09:54:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CL6cxNJtKIKQmvSTfzksNAMYKqjon+6PChUUz9zmOJ4=;
-        b=WTlh/ItSs7haofddu0vSTF4AYv7kJ2T13HGo4CjcrJO4KSIxEeWC95FL/SCpnAAfdS
-         0vR9yUMA3Ot3f9iO3Rn7L1KYBdw6yexBoQnPWjd9zV0vdzSjbhZXA1xztKAclrWyCOBI
-         Du+ieCSnSx1vMJlVR2P05s36JkwRRQVaJPJVa7y8zC5XpKMKuXA6ymwIznhi/2LTMqes
-         HhXSwyXF15eHB0RaqRUoXz9o/V/9yvxHLpfYHWDVRENwjMnn9YmKtopV6Wya1d8aOX98
-         AQurodFZSbwF4/LJcVf8unyEDwkarACJPLCKeM0BkjhNL7RM+KOh46I6h7pYOWuDdcjC
-         MIJg==
-X-Gm-Message-State: AOAM530uc2tNrHGVfCOEoCVSM3x3UJSqi9J+DuNzCsxNQQJeL1uKUkXS
-        oEucHEQphTcUIT5UChBpRg==
-X-Google-Smtp-Source: ABdhPJw+gejICHezMAuNryQdqWA8Zve/kSvWD62nMm2wCCAlpKJgdKHwi2th5zEK21YRRtHo5Tw8jA==
-X-Received: by 2002:a4a:e615:: with SMTP id f21mr7883695oot.91.1617296055414;
-        Thu, 01 Apr 2021 09:54:15 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h17sm1241240otj.38.2021.04.01.09.54.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 09:54:13 -0700 (PDT)
-Received: (nullmailer pid 597920 invoked by uid 1000);
-        Thu, 01 Apr 2021 16:54:12 -0000
-Date:   Thu, 1 Apr 2021 11:54:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     paul.walmsley@sifive.com, hes@sifive.com, erik.danie@sifive.com,
-        zong.li@sifive.com, bhelgaas@google.com, aou@eecs.berkeley.edu,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
-        alex.dewar90@gmail.com, khilman@baylibre.com,
-        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
-        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        helgaas@kernel.org
-Subject: Re: [PATCH v4 4/6] dt-bindings: PCI: Add SiFive FU740 PCIe host
- controller
-Message-ID: <20210401165412.GB573380@robh.at.kernel.org>
-References: <20210401060054.40788-1-greentime.hu@sifive.com>
- <20210401060054.40788-5-greentime.hu@sifive.com>
+        id S235767AbhDASB5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 14:01:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31185 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236972AbhDAR4l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 13:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617299800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QIKK3VZ5wPeLTNPPED7wrhhBskYELwzoCKx6AQcmW3w=;
+        b=Ktf2HheVNNm4nL609+0Oux41PclhPq6VvMpCp7Qeg6dz9yJH0Luq9I7djmsuAqban3vfs9
+        X0MHb5qaVLpg4WLg/9OQHtFtHN07SSX9ZJVo32h4XNRq4KOzx7y6VjF4MPYi1CYtDcGFxz
+        JTt3h1uncHvPdLmRluj1nIydPNNlDwk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-p5fM_ziwNSKp583x5rEgPw-1; Thu, 01 Apr 2021 12:56:18 -0400
+X-MC-Unique: p5fM_ziwNSKp583x5rEgPw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B7541084D77;
+        Thu,  1 Apr 2021 16:56:17 +0000 (UTC)
+Received: from omen (ovpn-112-85.phx2.redhat.com [10.3.112.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AF96E18A77;
+        Thu,  1 Apr 2021 16:56:16 +0000 (UTC)
+Date:   Thu, 1 Apr 2021 10:56:16 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
+Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
+Message-ID: <20210401105616.71156d08@omen>
+In-Reply-To: <YGW8Oe9jn+n9sVsw@unreal>
+References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
+        <YGW8Oe9jn+n9sVsw@unreal>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210401060054.40788-5-greentime.hu@sifive.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 02:00:52PM +0800, Greentime Hu wrote:
-> Add PCIe host controller DT bindings of SiFive FU740.
+On Thu, 1 Apr 2021 15:27:37 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
+
+> On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:
+> > Slot resets are bus resets with additional logic to prevent a device
+> > from being removed during the reset. Currently slot and bus resets have
+> > separate implementations in pci.c, complicating higher level logic. As
+> > discussed on the mailing list, they should be combined into a generic
+> > function which performs an SBR. This change adds a function,
+> > pci_reset_bus_function(), which first attempts a slot reset and then
+> > attempts a bus reset if -ENOTTY is returned, such that there is now a
+> > single device agnostic function to perform an SBR.
+> > 
+> > This new function is also needed to add SBR reset quirks and therefore
+> > is exposed in pci.h.
+> > 
+> > Link: https://lkml.org/lkml/2021/3/23/911
+> > 
+> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > ---
+> >  drivers/pci/pci.c   | 17 +++++++++--------
+> >  include/linux/pci.h |  1 +
+> >  2 files changed, 10 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 16a17215f633..12a91af2ade4 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
+> >  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+> >  }
+> >  
+> > +int pci_reset_bus_function(struct pci_dev *dev, int probe)
+> > +{
+> > +	int rc = pci_dev_reset_slot_function(dev, probe);
+> > +
+> > +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;  
 > 
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> ---
->  .../bindings/pci/sifive,fu740-pcie.yaml       | 109 ++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> new file mode 100644
-> index 000000000000..ccb58e5f06d4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> @@ -0,0 +1,109 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/sifive,fu740-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SiFive FU740 PCIe host controller
-> +
-> +description: |+
-> +  SiFive FU740 PCIe host controller is based on the Synopsys DesignWare
-> +  PCI core. It shares common features with the PCIe DesignWare core and
-> +  inherits common properties defined in
-> +  Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +
-> +maintainers:
-> +  - Paul Walmsley <paul.walmsley@sifive.com>
-> +  - Greentime Hu <greentime.hu@sifive.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: sifive,fu740-pcie
-> +
-> +  reg:
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: mgmt
-> +
-> +  num-lanes:
-> +    const: 8
-> +
-> +  msi-parent: true
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: msi
-> +      - const: inta
-> +      - const: intb
-> +      - const: intc
-> +      - const: intd
-> +
-> +  resets:
-> +    description: A phandle to the PCIe power up reset line.
+> The previous coding style is preferable one in the Linux kernel.
+> int rc = pci_dev_reset_slot_function(dev, probe);
+> if (rc != -ENOTTY)
+>   return rc;
+> return pci_parent_bus_reset(dev, probe);
 
-How many (maxItems)?
 
-> +
-> +  pwren-gpios:
-> +    description: Should specify the GPIO for controlling the PCI bus device power on.
-> +    maxItems: 1
+That'd be news to me, do you have a reference?  I've never seen
+complaints for ternaries previously.  Thanks,
 
-Still need to list 'reset-gpios' here.
+Alex
 
-> +
-> +required:
-> +  - dma-coherent
-> +  - num-lanes
-> +  - interrupts
-> +  - interrupt-names
-> +  - interrupt-parent
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - clock-names
-> +  - clocks
-> +  - resets
-> +  - pwren-gpios
-> +  - reset-gpios
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        #include <dt-bindings/clock/sifive-fu740-prci.h>
-> +
-> +        pcie@e00000000 {
-> +            compatible = "sifive,fu740-pcie";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            #interrupt-cells = <1>;
-> +            reg = <0xe 0x00000000 0x0 0x80000000>,
-> +                  <0xd 0xf0000000 0x0 0x10000000>,
-> +                  <0x0 0x100d0000 0x0 0x1000>;
-> +            reg-names = "dbi", "config", "mgmt";
-> +            device_type = "pci";
-> +            dma-coherent;
-> +            bus-range = <0x0 0xff>;
-> +            ranges = <0x81000000  0x0 0x60080000  0x0 0x60080000 0x0 0x10000>,      /* I/O */
-> +                     <0x82000000  0x0 0x60090000  0x0 0x60090000 0x0 0xff70000>,    /* mem */
-> +                     <0x82000000  0x0 0x70000000  0x0 0x70000000 0x0 0x1000000>,    /* mem */
-> +                     <0xc3000000 0x20 0x00000000 0x20 0x00000000 0x20 0x00000000>;  /* mem prefetchable */
-> +            num-lanes = <0x8>;
-> +            interrupts = <56>, <57>, <58>, <59>, <60>, <61>, <62>, <63>, <64>;
-> +            interrupt-names = "msi", "inta", "intb", "intc", "intd";
-> +            interrupt-parent = <&plic0>;
-> +            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +            interrupt-map = <0x0 0x0 0x0 0x1 &plic0 57>,
-> +                            <0x0 0x0 0x0 0x2 &plic0 58>,
-> +                            <0x0 0x0 0x0 0x3 &plic0 59>,
-> +                            <0x0 0x0 0x0 0x4 &plic0 60>;
-> +            clock-names = "pcie_aux";
-> +            clocks = <&prci PRCI_CLK_PCIE_AUX>;
-> +            resets = <&prci 4>;
-> +            pwren-gpios = <&gpio 5 0>;
-> +            reset-gpios = <&gpio 8 0>;
-> +        };
-> +    };
-> -- 
-> 2.30.2
-> 
