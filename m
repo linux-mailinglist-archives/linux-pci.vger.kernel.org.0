@@ -2,108 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 460D2351EAB
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9773351CE4
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235162AbhDASpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 14:45:14 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21588 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239257AbhDASfj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Apr 2021 14:35:39 -0400
-IronPort-SDR: tXO/dxmlE5sqd1abhq/7nn/2XptM3h5IpMnQ6tsBCsPJRlAOfWs3a87FqDV+pmd6RLyHt4oF/i
- jaEYdmYFPIJg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="172302385"
-X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="172302385"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 08:45:09 -0700
-IronPort-SDR: 9JIoGX7euufyX4xQWwr0Nz8ALNgrGaxn0Oao/n8CFrYiEl1uSjPYxQOBJdkMAJKtCd5w6N1DlZ
- 2Mm0sBPNEIiQ==
-X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="377743107"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 08:45:05 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lRzVG-000IET-2U; Thu, 01 Apr 2021 18:45:02 +0300
-Date:   Thu, 1 Apr 2021 18:45:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com
-Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
- support library
-Message-ID: <YGXqfvBv37eLL28Z@smile.fi.intel.com>
-References: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
- <20210309014221.GA1831206@bjorn-Precision-5520>
- <20210309094252.396b7f2d@md1za8fc.ad001.siemens.net>
+        id S237286AbhDASW6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 14:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236948AbhDASLl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:11:41 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B801C03114D
+        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 09:44:30 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id e18so2460592wrt.6
+        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 09:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YSnhs+QugQX12bb4GkY/AXYl7X1tCBk+JT0tdjERlBo=;
+        b=Wcd3lEvvpTNi2r3myGrKY/G9gxpe497zxepnIBDzVdUXV/f6CXhN8lkS+XuU/awnzT
+         CS1WdiHekcKHkBbcZA7WrGO6G/cJAU4kliOSdUFb3MasyMHr3uEn4VPIOmvV8gAC8drP
+         rk69xX45ifNRXYL5IKAsLD4Sw5xFo1RHXWO+a3602LE8peUDpYSMJyO28EIZAESjoiXL
+         TMAMwtBVlV4xpMXicr+3+1EeDx+3rB8DqgWhrOKFPazE80HmDgCdpwiMDOoSoYOXUg1V
+         9d3o6cVvVFjf0s7oP2bqik3zTRY/69RgGNrjT70HCIh70my0rAMJIf+IjpKt1THSBUAF
+         TGCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YSnhs+QugQX12bb4GkY/AXYl7X1tCBk+JT0tdjERlBo=;
+        b=MTrmYWf0EC/SYffAXYwntVZmcjKwNDS/KZzXvHipqDGnc5c+ev8/9NOehL2jfAPOMf
+         ZZ/q1U7F0m2bdPUgkqG5SQJLlXa4aa4ZCEe97u3SpbPWep/iEFPYXfCbwb6bEXO8riyW
+         nxhVtazhqq2/rQesJaDzNB7iHkyzrZiNwu6E+iDpp9hI0+kC9QghsoSJcTQ8Mz3B9jz1
+         iwdVg7hSt+zb06esM/HL18dXqzeCNS5lwaqhy1xRfceVqEdtAfTq+9mSMJ5Naj/kdLGB
+         TBzTr4TC2efREqkao9kP8bDLCHKGyl5IoDCHU7EjoOVs6acfAMZiJLXIvxBLigjGiERE
+         Ls7A==
+X-Gm-Message-State: AOAM530bSnrm1WNeryBPGGW1TePKn0R+JhOwf+Sbl53zFq5agUv5NbuM
+        HlV+V5sbhVkDAs1EH9WjC6sbonFU7mS8Zg==
+X-Google-Smtp-Source: ABdhPJwaGgPmDPMmXXEY+GmlIa8Z5vaCpSw6GR8dpI4krTiFjJI4LWV4pE8+CCfAJei+hc5CmugbFA==
+X-Received: by 2002:a5d:554b:: with SMTP id g11mr10492913wrw.411.1617295468920;
+        Thu, 01 Apr 2021 09:44:28 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f1f:bb00:5544:e633:d47e:4b76? (p200300ea8f1fbb005544e633d47e4b76.dip0.t-ipconnect.de. [2003:ea:8f1f:bb00:5544:e633:d47e:4b76])
+        by smtp.googlemail.com with ESMTPSA id a13sm10148732wrp.31.2021.04.01.09.44.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Apr 2021 09:44:28 -0700 (PDT)
+Subject: [PATCH 1/3] PCI/VPD: Change pci_vpd_init return type to void
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
+Message-ID: <663ec440-8375-1459-ddb4-98ea76e75917@gmail.com>
+Date:   Thu, 1 Apr 2021 18:37:47 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210309094252.396b7f2d@md1za8fc.ad001.siemens.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 09, 2021 at 09:42:52AM +0100, Henning Schild wrote:
-> Am Mon, 8 Mar 2021 19:42:21 -0600
-> schrieb Bjorn Helgaas <helgaas@kernel.org>:
-> > On Mon, Mar 08, 2021 at 09:16:50PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:  
-> > > > On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:  
+pci_init_capabilities() is the only caller and doesn't use the return
+value. So let's change the return type to void.
 
-...
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/pci/pci.h | 2 +-
+ drivers/pci/vpd.c | 7 +++----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-> > > > > +	/* Read the first BAR of the device in question */
-> > > > > +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem,
-> > > > > PCI_BASE_ADDRESS_0, true);  
-> > > > 
-> > > > I don't get this.  Apparently this normally hidden device is
-> > > > consuming PCI address space.  The PCI core needs to know about
-> > > > this.  If it doesn't, the PCI core may assign this space to
-> > > > another device.  
-> > > 
-> > > Right, it returns all 1:s to any request so PCI core *thinks* it's
-> > > plugged off (like D3cold or so).  
-> > 
-> > I'm asking about the MMIO address space.  The BAR is a register in
-> > config space.  AFAICT, clearing P2SBC_HIDE_BYTE makes that BAR
-> > visible.  The BAR describes a region of PCI address space.  It looks
-> > like setting P2SBC_HIDE_BIT makes the BAR disappear from config space,
-> > but it sounds like the PCI address space *described* by the BAR is
-> > still claimed by the device.  If the device didn't respond to that
-> > MMIO space, you would have no reason to read the BAR at all.
-> > 
-> > So what keeps the PCI core from assigning that MMIO space to another
-> > device?
-> 
-> The device will respond to MMIO while being hidden. I am afraid nothing
-> stops a collision, except for the assumption that the BIOS is always
-> right and PCI devices never get remapped. But just guessing here.
-> 
-> I have seen devices with coreboot having the P2SB visible, and most
-> likely relocatable. Making it visible in Linux and not hiding it again
-> might work, but probably only as long as Linux will not relocate it.
-> Which i am afraid might seriously upset the BIOS, depending on what a
-> device does with those GPIOs and which parts are implemented in the
-> BIOS.
-
-So the question is, do we have knobs in PCI core to mark device fixes in terms
-of BARs, no relocation must be applied, no other devices must have the region?
-
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index bbbc55965..ff0f4aeef 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -141,7 +141,7 @@ static inline bool pcie_downstream_port(const struct pci_dev *dev)
+ 	       type == PCI_EXP_TYPE_PCIE_BRIDGE;
+ }
+ 
+-int pci_vpd_init(struct pci_dev *dev);
++void pci_vpd_init(struct pci_dev *dev);
+ void pci_vpd_release(struct pci_dev *dev);
+ 
+ /* PCI Virtual Channel */
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 48f4a9ae8..85889718a 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -337,18 +337,18 @@ static const struct pci_vpd_ops pci_vpd_f0_ops = {
+ 	.write = pci_vpd_f0_write,
+ };
+ 
+-int pci_vpd_init(struct pci_dev *dev)
++void pci_vpd_init(struct pci_dev *dev)
+ {
+ 	struct pci_vpd *vpd;
+ 	u8 cap;
+ 
+ 	cap = pci_find_capability(dev, PCI_CAP_ID_VPD);
+ 	if (!cap)
+-		return -ENODEV;
++		return;
+ 
+ 	vpd = kzalloc(sizeof(*vpd), GFP_ATOMIC);
+ 	if (!vpd)
+-		return -ENOMEM;
++		return;
+ 
+ 	vpd->len = PCI_VPD_MAX_SIZE;
+ 	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0)
+@@ -360,7 +360,6 @@ int pci_vpd_init(struct pci_dev *dev)
+ 	vpd->busy = 0;
+ 	vpd->valid = 0;
+ 	dev->vpd = vpd;
+-	return 0;
+ }
+ 
+ void pci_vpd_release(struct pci_dev *dev)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.31.1
 
 
