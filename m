@@ -2,274 +2,341 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F0AA35125F
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 11:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF531351374
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 12:28:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233258AbhDAJe4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 05:34:56 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3929 "EHLO mga02.intel.com"
+        id S234185AbhDAK0N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 06:26:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:35868 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233024AbhDAJem (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Apr 2021 05:34:42 -0400
-IronPort-SDR: yhQofLZZpk7UEVQztgMJWwWljpTTrkkqgLPbuGKxDlTW5n1gmExW1JpFP1EBmkEL9ZM/5ZhvbT
- Y7UKZDIguUEA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9940"; a="179332195"
-X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="179332195"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 02:34:38 -0700
-IronPort-SDR: UNSvYo8T2iRiV2u6P1th9CP1Gn1/+W9YcRi5MgQTOvrnY41qDO9csbsPEvxmiAdVOlBbrPGwSF
- WG4o/X5Eevtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,296,1610438400"; 
-   d="scan'208";a="446171755"
-Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Apr 2021 02:34:36 -0700
-Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lRtim-0006QA-0M; Thu, 01 Apr 2021 09:34:36 +0000
-Date:   Thu, 01 Apr 2021 17:33:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/pm] BUILD SUCCESS
- 96ff775c35a2c0414efc4ce07b43399b04996691
-Message-ID: <60659383./eMDqgTZBpRUmGe8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233850AbhDAKUH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Apr 2021 06:20:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8158AD6E;
+        Thu,  1 Apr 2021 03:20:06 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36FE73F694;
+        Thu,  1 Apr 2021 03:20:03 -0700 (PDT)
+Date:   Thu, 1 Apr 2021 11:19:57 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bharat Kumar Gogada <bharatku@xilinx.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v3 03/14] PCI: rcar: Convert to MSI domains
+Message-ID: <20210401101957.GA30653@lpieralisi>
+References: <20210330151145.997953-1-maz@kernel.org>
+ <20210330151145.997953-4-maz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210330151145.997953-4-maz@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
-branch HEAD: 96ff775c35a2c0414efc4ce07b43399b04996691  PCI/ACPI: Fix debug message in acpi_pci_set_power_state()
+On Tue, Mar 30, 2021 at 04:11:34PM +0100, Marc Zyngier wrote:
 
-elapsed time: 727m
+[...]
 
-configs tested: 212
-configs skipped: 2
+> +static void rcar_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct rcar_msi *msi = irq_data_get_irq_chip_data(data);
+> +	unsigned long pa = virt_to_phys(msi);
+>  
+> -	hwirq = rcar_msi_alloc_region(msi, nvec);
+> -	if (hwirq < 0)
+> -		return -ENOSPC;
+> +	/* Use the msi structure as the PA for the MSI doorbell */
+> +	msg->address_lo = lower_32_bits(pa);
+> +	msg->address_hi = upper_32_bits(pa);
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I don't think this change is aligned with the previous patch (is it ?),
+the PA address we are using here is different from the one programmed
+into the controller registers - either that or I am missing something,
+please let me know.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-i386                             allyesconfig
-riscv                            allyesconfig
-sh                           se7705_defconfig
-mips                         tb0219_defconfig
-arm                     am200epdkit_defconfig
-mips                           ip32_defconfig
-sh                        sh7785lcr_defconfig
-m68k                        stmark2_defconfig
-m68k                         amcore_defconfig
-arm                       spear13xx_defconfig
-arm                           viper_defconfig
-um                            kunit_defconfig
-xtensa                  cadence_csp_defconfig
-m68k                        m5307c3_defconfig
-mips                            gpr_defconfig
-mips                        nlm_xlp_defconfig
-powerpc                     akebono_defconfig
-arm                           corgi_defconfig
-sh                             sh03_defconfig
-sh                              ul2_defconfig
-mips                        bcm63xx_defconfig
-powerpc                 mpc836x_mds_defconfig
-powerpc                    mvme5100_defconfig
-arc                            hsdk_defconfig
-sparc                       sparc64_defconfig
-powerpc                     ksi8560_defconfig
-sh                          rsk7201_defconfig
-mips                malta_kvm_guest_defconfig
-sh                        edosk7760_defconfig
-sh                               allmodconfig
-alpha                               defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                          rsk7203_defconfig
-arc                         haps_hs_defconfig
-mips                          ath79_defconfig
-arm                          collie_defconfig
-mips                         cobalt_defconfig
-m68k                         apollo_defconfig
-arc                           tb10x_defconfig
-arm                            dove_defconfig
-arm                        multi_v7_defconfig
-arm                  colibri_pxa300_defconfig
-x86_64                           alldefconfig
-sh                           se7619_defconfig
-powerpc                  mpc885_ads_defconfig
-mips                           mtx1_defconfig
-powerpc                      cm5200_defconfig
-arm                   milbeaut_m10v_defconfig
-ia64                            zx1_defconfig
-riscv                          rv32_defconfig
-sh                          r7780mp_defconfig
-m68k                          sun3x_defconfig
-ia64                         bigsur_defconfig
-h8300                            alldefconfig
-arm                         nhk8815_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                        icon_defconfig
-powerpc                 mpc85xx_cds_defconfig
-sh                          landisk_defconfig
-mips                     cu1000-neo_defconfig
-xtensa                       common_defconfig
-arm                      integrator_defconfig
-arm                       mainstone_defconfig
-sh                         apsh4a3a_defconfig
-mips                     loongson1c_defconfig
-riscv             nommu_k210_sdcard_defconfig
-powerpc                     kilauea_defconfig
-powerpc                 mpc836x_rdk_defconfig
-sh                                  defconfig
-arm                        spear6xx_defconfig
-sh                           se7722_defconfig
-arm                           sama5_defconfig
-parisc                           allyesconfig
-powerpc                     redwood_defconfig
-sh                           se7751_defconfig
-mips                        workpad_defconfig
-arm                         lpc32xx_defconfig
-sh                        sh7757lcr_defconfig
-s390                       zfcpdump_defconfig
-arm                       aspeed_g4_defconfig
-sh                           se7724_defconfig
-sh                   sh7770_generic_defconfig
-arm                           spitz_defconfig
-arm                         socfpga_defconfig
-powerpc                 linkstation_defconfig
-mips                         tb0226_defconfig
-m68k                           sun3_defconfig
-arm                         orion5x_defconfig
-mips                           gcw0_defconfig
-powerpc                        fsp2_defconfig
-powerpc                  mpc866_ads_defconfig
-mips                     loongson1b_defconfig
-arm                          pcm027_defconfig
-sh                            shmin_defconfig
-xtensa                generic_kc705_defconfig
-arm                       cns3420vb_defconfig
-m68k                        mvme147_defconfig
-mips                 decstation_r4k_defconfig
-arm                              alldefconfig
-riscv                            alldefconfig
-arm                            pleb_defconfig
-mips                       lemote2f_defconfig
-powerpc                      chrp32_defconfig
-alpha                            alldefconfig
-powerpc                       ppc64_defconfig
-powerpc                     tqm8555_defconfig
-sh                           sh2007_defconfig
-arm                         cm_x300_defconfig
-arm                          lpd270_defconfig
-arm                            zeus_defconfig
-powerpc                      walnut_defconfig
-microblaze                          defconfig
-powerpc                 mpc8315_rdb_defconfig
-m68k                          multi_defconfig
-mips                      malta_kvm_defconfig
-powerpc                mpc7448_hpc2_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                             allnoconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210330
-x86_64               randconfig-a003-20210330
-x86_64               randconfig-a002-20210330
-x86_64               randconfig-a001-20210330
-x86_64               randconfig-a005-20210330
-x86_64               randconfig-a006-20210330
-i386                 randconfig-a006-20210401
-i386                 randconfig-a003-20210401
-i386                 randconfig-a001-20210401
-i386                 randconfig-a004-20210401
-i386                 randconfig-a002-20210401
-i386                 randconfig-a005-20210401
-i386                 randconfig-a004-20210330
-i386                 randconfig-a006-20210330
-i386                 randconfig-a003-20210330
-i386                 randconfig-a002-20210330
-i386                 randconfig-a001-20210330
-i386                 randconfig-a005-20210330
-x86_64               randconfig-a014-20210401
-x86_64               randconfig-a015-20210401
-x86_64               randconfig-a011-20210401
-x86_64               randconfig-a013-20210401
-x86_64               randconfig-a012-20210401
-x86_64               randconfig-a016-20210401
-i386                 randconfig-a014-20210401
-i386                 randconfig-a011-20210401
-i386                 randconfig-a016-20210401
-i386                 randconfig-a012-20210401
-i386                 randconfig-a013-20210401
-i386                 randconfig-a015-20210401
-i386                 randconfig-a015-20210330
-i386                 randconfig-a011-20210330
-i386                 randconfig-a014-20210330
-i386                 randconfig-a013-20210330
-i386                 randconfig-a016-20210330
-i386                 randconfig-a012-20210330
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Thanks,
+Lorenzo
 
-clang tested configs:
-x86_64               randconfig-a004-20210401
-x86_64               randconfig-a005-20210401
-x86_64               randconfig-a003-20210401
-x86_64               randconfig-a001-20210401
-x86_64               randconfig-a002-20210401
-x86_64               randconfig-a006-20210401
-x86_64               randconfig-a012-20210330
-x86_64               randconfig-a015-20210330
-x86_64               randconfig-a014-20210330
-x86_64               randconfig-a016-20210330
-x86_64               randconfig-a013-20210330
-x86_64               randconfig-a011-20210330
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +	msg->data = data->hwirq;
+> +}
+>  
+> -	irq = irq_find_mapping(msi->domain, hwirq);
+> -	if (!irq)
+> -		return -ENOSPC;
+> +static struct irq_chip rcar_msi_bottom_chip = {
+> +	.name			= "Rcar MSI",
+> +	.irq_ack		= rcar_msi_irq_ack,
+> +	.irq_mask		= rcar_msi_irq_mask,
+> +	.irq_unmask		= rcar_msi_irq_unmask,
+> +	.irq_set_affinity 	= rcar_msi_set_affinity,
+> +	.irq_compose_msi_msg	= rcar_compose_msi_msg,
+> +};
+>  
+> -	for (i = 0; i < nvec; i++) {
+> -		/*
+> -		 * irq_create_mapping() called from rcar_pcie_probe() pre-
+> -		 * allocates descs,  so there is no need to allocate descs here.
+> -		 * We can therefore assume that if irq_find_mapping() above
+> -		 * returns non-zero, then the descs are also successfully
+> -		 * allocated.
+> -		 */
+> -		if (irq_set_msi_desc_off(irq, i, desc)) {
+> -			/* TODO: clear */
+> -			return -EINVAL;
+> -		}
+> -	}
+> +static int rcar_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				  unsigned int nr_irqs, void *args)
+> +{
+> +	struct rcar_msi *msi = domain->host_data;
+> +	unsigned int i;
+> +	int hwirq;
+> +
+> +	mutex_lock(&msi->map_lock);
+>  
+> -	desc->nvec_used = nvec;
+> -	desc->msi_attrib.multiple = order_base_2(nvec);
+> +	hwirq = bitmap_find_free_region(msi->used, INT_PCI_MSI_NR, order_base_2(nr_irqs));
+>  
+> -	msg.address_lo = rcar_pci_read_reg(pcie, PCIEMSIALR) & ~MSIFE;
+> -	msg.address_hi = rcar_pci_read_reg(pcie, PCIEMSIAUR);
+> -	msg.data = hwirq;
+> +	mutex_unlock(&msi->map_lock);
+> +
+> +	if (hwirq < 0)
+> +		return -ENOSPC;
+>  
+> -	pci_write_msi_msg(irq, &msg);
+> +	for (i = 0; i < nr_irqs; i++)
+> +		irq_domain_set_info(domain, virq + i, hwirq + i,
+> +				    &rcar_msi_bottom_chip, domain->host_data,
+> +				    handle_edge_irq, NULL, NULL);
+>  
+>  	return 0;
+>  }
+>  
+> -static void rcar_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
+> +static void rcar_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+> +				  unsigned int nr_irqs)
+>  {
+> -	struct rcar_msi *msi = to_rcar_msi(chip);
+> -	struct irq_data *d = irq_get_irq_data(irq);
+> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> +	struct rcar_msi *msi = domain->host_data;
+>  
+> -	rcar_msi_free(msi, d->hwirq);
+> -}
+> -
+> -static struct irq_chip rcar_msi_irq_chip = {
+> -	.name = "R-Car PCIe MSI",
+> -	.irq_enable = pci_msi_unmask_irq,
+> -	.irq_disable = pci_msi_mask_irq,
+> -	.irq_mask = pci_msi_mask_irq,
+> -	.irq_unmask = pci_msi_unmask_irq,
+> -};
+> +	mutex_lock(&msi->map_lock);
+>  
+> -static int rcar_msi_map(struct irq_domain *domain, unsigned int irq,
+> -			irq_hw_number_t hwirq)
+> -{
+> -	irq_set_chip_and_handler(irq, &rcar_msi_irq_chip, handle_simple_irq);
+> -	irq_set_chip_data(irq, domain->host_data);
+> +	bitmap_release_region(msi->used, d->hwirq, order_base_2(nr_irqs));
+>  
+> -	return 0;
+> +	mutex_unlock(&msi->map_lock);
+>  }
+>  
+> -static const struct irq_domain_ops msi_domain_ops = {
+> -	.map = rcar_msi_map,
+> +static const struct irq_domain_ops rcar_msi_domain_ops = {
+> +	.alloc	= rcar_msi_domain_alloc,
+> +	.free	= rcar_msi_domain_free,
+> +};
+> +
+> +static struct msi_domain_info rcar_msi_info = {
+> +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +		   MSI_FLAG_MULTI_PCI_MSI),
+> +	.chip	= &rcar_msi_top_chip,
+>  };
+>  
+> -static void rcar_pcie_unmap_msi(struct rcar_pcie_host *host)
+> +static int rcar_allocate_domains(struct rcar_msi *msi)
+>  {
+> -	struct rcar_msi *msi = &host->msi;
+> -	int i, irq;
+> +	struct rcar_pcie *pcie = &msi_to_host(msi)->pcie;
+> +	struct fwnode_handle *fwnode = dev_fwnode(pcie->dev);
+> +	struct irq_domain *parent;
+> +
+> +	parent = irq_domain_create_linear(fwnode, INT_PCI_MSI_NR,
+> +					  &rcar_msi_domain_ops, msi);
+> +	if (!parent) {
+> +		dev_err(pcie->dev, "failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
+>  
+> -	for (i = 0; i < INT_PCI_MSI_NR; i++) {
+> -		irq = irq_find_mapping(msi->domain, i);
+> -		if (irq > 0)
+> -			irq_dispose_mapping(irq);
+> +	msi->domain = pci_msi_create_irq_domain(fwnode, &rcar_msi_info, parent);
+> +	if (!msi->domain) {
+> +		dev_err(pcie->dev, "failed to create MSI domain\n");
+> +		irq_domain_remove(parent);
+> +		return -ENOMEM;
+>  	}
+>  
+> -	irq_domain_remove(msi->domain);
+> +	return 0;
+>  }
+>  
+> -static void rcar_pcie_hw_enable_msi(struct rcar_pcie_host *host)
+> +static void rcar_free_domains(struct rcar_msi *msi)
+>  {
+> -	struct rcar_pcie *pcie = &host->pcie;
+> -	struct device *dev = pcie->dev;
+> -	struct resource res;
+> +	struct irq_domain *parent = msi->domain->parent;
+>  
+> -	if (WARN_ON(of_address_to_resource(dev->of_node, 0, &res)))
+> -		return;
+> -
+> -	/* setup MSI data target */
+> -	rcar_pci_write_reg(pcie, lower_32_bits(res.start) | MSIFE, PCIEMSIALR);
+> -	rcar_pci_write_reg(pcie, upper_32_bits(res.start), PCIEMSIAUR);
+> -
+> -	/* enable all MSI interrupts */
+> -	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
+> +	irq_domain_remove(msi->domain);
+> +	irq_domain_remove(parent);
+>  }
+>  
+>  static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+> @@ -698,29 +675,24 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+>  	struct rcar_pcie *pcie = &host->pcie;
+>  	struct device *dev = pcie->dev;
+>  	struct rcar_msi *msi = &host->msi;
+> -	int err, i;
+> -
+> -	mutex_init(&msi->lock);
+> +	struct resource res;
+> +	int err;
+>  
+> -	msi->chip.dev = dev;
+> -	msi->chip.setup_irq = rcar_msi_setup_irq;
+> -	msi->chip.setup_irqs = rcar_msi_setup_irqs;
+> -	msi->chip.teardown_irq = rcar_msi_teardown_irq;
+> +	mutex_init(&msi->map_lock);
+> +	spin_lock_init(&msi->mask_lock);
+>  
+> -	msi->domain = irq_domain_add_linear(dev->of_node, INT_PCI_MSI_NR,
+> -					    &msi_domain_ops, &msi->chip);
+> -	if (!msi->domain) {
+> -		dev_err(dev, "failed to create IRQ domain\n");
+> -		return -ENOMEM;
+> -	}
+> +	err = of_address_to_resource(dev->of_node, 0, &res);
+> +	if (err)
+> +		return err;
+>  
+> -	for (i = 0; i < INT_PCI_MSI_NR; i++)
+> -		irq_create_mapping(msi->domain, i);
+> +	err = rcar_allocate_domains(msi);
+> +	if (err)
+> +		return err;
+>  
+>  	/* Two irqs are for MSI, but they are also used for non-MSI irqs */
+>  	err = devm_request_irq(dev, msi->irq1, rcar_pcie_msi_irq,
+>  			       IRQF_SHARED | IRQF_NO_THREAD,
+> -			       rcar_msi_irq_chip.name, host);
+> +			       rcar_msi_bottom_chip.name, host);
+>  	if (err < 0) {
+>  		dev_err(dev, "failed to request IRQ: %d\n", err);
+>  		goto err;
+> @@ -728,19 +700,26 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+>  
+>  	err = devm_request_irq(dev, msi->irq2, rcar_pcie_msi_irq,
+>  			       IRQF_SHARED | IRQF_NO_THREAD,
+> -			       rcar_msi_irq_chip.name, host);
+> +			       rcar_msi_bottom_chip.name, host);
+>  	if (err < 0) {
+>  		dev_err(dev, "failed to request IRQ: %d\n", err);
+>  		goto err;
+>  	}
+>  
+> -	/* setup MSI data target */
+> -	rcar_pcie_hw_enable_msi(host);
+> +	/* disable all MSIs */
+> +	rcar_pci_write_reg(pcie, 0, PCIEMSIIER);
+> +
+> +	/*
+> +	 * Setup MSI data target using RC base address address, which
+> +	 * is guaranteed to be in the low 32bit range on any RCar HW.
+> +	 */
+> +	rcar_pci_write_reg(pcie, lower_32_bits(res.start) | MSIFE, PCIEMSIALR);
+> +	rcar_pci_write_reg(pcie, upper_32_bits(res.start), PCIEMSIAUR);
+>  
+>  	return 0;
+>  
+>  err:
+> -	rcar_pcie_unmap_msi(host);
+> +	rcar_free_domains(msi);
+>  	return err;
+>  }
+>  
+> @@ -754,7 +733,7 @@ static void rcar_pcie_teardown_msi(struct rcar_pcie_host *host)
+>  	/* Disable address decoding of the MSI interrupt, MSIFE */
+>  	rcar_pci_write_reg(pcie, 0, PCIEMSIALR);
+>  
+> -	rcar_pcie_unmap_msi(host);
+> +	rcar_free_domains(&host->msi);
+>  }
+>  
+>  static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
+> @@ -1007,8 +986,17 @@ static int __maybe_unused rcar_pcie_resume(struct device *dev)
+>  	dev_info(dev, "PCIe x%d: link up\n", (data >> 20) & 0x3f);
+>  
+>  	/* Enable MSI */
+> -	if (IS_ENABLED(CONFIG_PCI_MSI))
+> -		rcar_pcie_hw_enable_msi(host);
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		struct resource res;
+> +		u32 val;
+> +
+> +		of_address_to_resource(dev->of_node, 0, &res);
+> +		rcar_pci_write_reg(pcie, upper_32_bits(res.start), PCIEMSIAUR);
+> +		rcar_pci_write_reg(pcie, lower_32_bits(res.start) | MSIFE, PCIEMSIALR);
+> +
+> +		bitmap_to_arr32(&val, host->msi.used, INT_PCI_MSI_NR);
+> +		rcar_pci_write_reg(pcie, val, PCIEMSIIER);
+> +	}
+>  
+>  	rcar_pcie_hw_enable(host);
+>  
+> -- 
+> 2.29.2
+> 
