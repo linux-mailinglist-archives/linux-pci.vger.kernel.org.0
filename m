@@ -2,89 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 337C7351B9A
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5B37351B99
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Apr 2021 20:11:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237879AbhDASJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Apr 2021 14:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
+        id S234821AbhDASI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Apr 2021 14:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235407AbhDASCl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:02:41 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B6AC031154
-        for <linux-pci@vger.kernel.org>; Thu,  1 Apr 2021 09:48:21 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id x16so2478037wrn.4
-        for <linux-pci@vger.kernel.org>; Thu, 01 Apr 2021 09:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V1mDpvuqnGJ8dPBR2OvhLT/0WD4buh61rulA5EoTQ9Q=;
-        b=A0w+MZpZY9sazwO4uioINy18JBM8SDfCa+ORIbfVMlQiY+ptHmMCmvjYc7UxYe4TrF
-         25DSLy7G0UZ4QNshcWW/f66hcEwEpLefPZWgaE9QY2Z1FGfpE8EKVje/4f/LlhTv9iOw
-         ZIA/KDdoEWQbytleCk1E6P96jbEeuHBbarsgQtbjdKhNR8P0/MbJ9Da9HjdFMRHjIIK/
-         zNo953xI4v/u5hPqghRhBrzkjCcDsKjUPL95MIzdC6ojDdhICaHU1y+R08DQp+YFI17e
-         UXlkx6VcMZU/x64brBXdUcauE4Fh2K/CcNkFfYQTCVj/Ibks+4VdPfJI8RQrXfj0eEkh
-         7MrQ==
+        with ESMTP id S234914AbhDASBg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Apr 2021 14:01:36 -0400
+Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7977DC03116B;
+        Thu,  1 Apr 2021 09:54:16 -0700 (PDT)
+Received: by mail-oo1-xc35.google.com with SMTP id r17-20020a4acb110000b02901b657f28cdcso703126ooq.6;
+        Thu, 01 Apr 2021 09:54:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V1mDpvuqnGJ8dPBR2OvhLT/0WD4buh61rulA5EoTQ9Q=;
-        b=SK0KikXBXlf3DOz0ITEQrjFeJPkw/37s3s0xv5SThYiBf5AORYagDrz9M6Q6thyaVP
-         s658YPsHTwUkIAfOqxtd/fAINPPByNOkV7uqwyr6SuGu4qn7T9YDC5XopdDLT+UmdrdG
-         N+ZWZfz8717bLV9ZP/4ffcs9f8HpuJrQRlvGi6H/e+A+kPql14ZftsX+DUQ+ekdRNlxV
-         kZ1yEWxMf6iaYkEqyHH0lZOfaVLS5CdT2USMkMxCO9qcnEd6L8YjhptTsQyxRL8TtAlL
-         tTJUjcNY07bN5oLUQJFpVe+ap0gOjyDDepTiIxafjgK3W8kqsMNIcSc6THHSeMPCHnSn
-         4CMA==
-X-Gm-Message-State: AOAM533YVXXpqAmVMkP2eIcGvKICnASwQmPrWoszU1wHBum3FPoLmzZ2
-        qLFQ+xbjQyTZis5AhDBYUElCB8pj5w2vVw==
-X-Google-Smtp-Source: ABdhPJwhpY7JcVizl9hdf8VRgTtACBg/TQ/pP8t9QFcc1IYJ6J2ELNYbNZrNigtnn6Yo+1V2ZNsgKg==
-X-Received: by 2002:adf:e60e:: with SMTP id p14mr10828584wrm.221.1617295700032;
-        Thu, 01 Apr 2021 09:48:20 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f1f:bb00:5544:e633:d47e:4b76? (p200300ea8f1fbb005544e633d47e4b76.dip0.t-ipconnect.de. [2003:ea:8f1f:bb00:5544:e633:d47e:4b76])
-        by smtp.googlemail.com with ESMTPSA id y205sm11696165wmc.18.2021.04.01.09.48.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Apr 2021 09:48:19 -0700 (PDT)
-Subject: Re: [PATCH 0/3] PCI/VPD: Some improvements
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
-Message-ID: <09cfc65f-b205-9a7d-1e77-e7d96bdbc44c@gmail.com>
-Date:   Thu, 1 Apr 2021 18:48:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CL6cxNJtKIKQmvSTfzksNAMYKqjon+6PChUUz9zmOJ4=;
+        b=WTlh/ItSs7haofddu0vSTF4AYv7kJ2T13HGo4CjcrJO4KSIxEeWC95FL/SCpnAAfdS
+         0vR9yUMA3Ot3f9iO3Rn7L1KYBdw6yexBoQnPWjd9zV0vdzSjbhZXA1xztKAclrWyCOBI
+         Du+ieCSnSx1vMJlVR2P05s36JkwRRQVaJPJVa7y8zC5XpKMKuXA6ymwIznhi/2LTMqes
+         HhXSwyXF15eHB0RaqRUoXz9o/V/9yvxHLpfYHWDVRENwjMnn9YmKtopV6Wya1d8aOX98
+         AQurodFZSbwF4/LJcVf8unyEDwkarACJPLCKeM0BkjhNL7RM+KOh46I6h7pYOWuDdcjC
+         MIJg==
+X-Gm-Message-State: AOAM530uc2tNrHGVfCOEoCVSM3x3UJSqi9J+DuNzCsxNQQJeL1uKUkXS
+        oEucHEQphTcUIT5UChBpRg==
+X-Google-Smtp-Source: ABdhPJw+gejICHezMAuNryQdqWA8Zve/kSvWD62nMm2wCCAlpKJgdKHwi2th5zEK21YRRtHo5Tw8jA==
+X-Received: by 2002:a4a:e615:: with SMTP id f21mr7883695oot.91.1617296055414;
+        Thu, 01 Apr 2021 09:54:15 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h17sm1241240otj.38.2021.04.01.09.54.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Apr 2021 09:54:13 -0700 (PDT)
+Received: (nullmailer pid 597920 invoked by uid 1000);
+        Thu, 01 Apr 2021 16:54:12 -0000
+Date:   Thu, 1 Apr 2021 11:54:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     paul.walmsley@sifive.com, hes@sifive.com, erik.danie@sifive.com,
+        zong.li@sifive.com, bhelgaas@google.com, aou@eecs.berkeley.edu,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        alex.dewar90@gmail.com, khilman@baylibre.com,
+        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
+        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        helgaas@kernel.org
+Subject: Re: [PATCH v4 4/6] dt-bindings: PCI: Add SiFive FU740 PCIe host
+ controller
+Message-ID: <20210401165412.GB573380@robh.at.kernel.org>
+References: <20210401060054.40788-1-greentime.hu@sifive.com>
+ <20210401060054.40788-5-greentime.hu@sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <1a0155ce-6c20-b653-d319-58e6505a1a40@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210401060054.40788-5-greentime.hu@sifive.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 01.04.2021 18:35, Heiner Kallweit wrote:
-> This series includes some improvements. No functional change intended.
+On Thu, Apr 01, 2021 at 02:00:52PM +0800, Greentime Hu wrote:
+> Add PCIe host controller DT bindings of SiFive FU740.
 > 
-> Heiner Kallweit (3):
->   PCI/VPD: Change pci_vpd_init return type to void
->   PCI/VPD: Remove argument off from pci_vpd_find_tag
->   PCI/VPD: Improve and simplify pci_vpd_find_tag
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> ---
+>  .../bindings/pci/sifive,fu740-pcie.yaml       | 109 ++++++++++++++++++
+>  1 file changed, 109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
 > 
->  drivers/net/ethernet/broadcom/bnx2.c          |  2 +-
->  .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
->  drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  2 +-
->  drivers/net/ethernet/broadcom/tg3.c           |  4 +-
->  drivers/net/ethernet/chelsio/cxgb4/t4_hw.c    |  2 +-
->  drivers/net/ethernet/sfc/efx.c                |  2 +-
->  drivers/net/ethernet/sfc/falcon/efx.c         |  2 +-
->  drivers/pci/pci.h                             |  2 +-
->  drivers/pci/vpd.c                             | 40 +++++--------------
->  drivers/scsi/cxlflash/main.c                  |  3 +-
->  include/linux/pci.h                           |  3 +-
->  11 files changed, 21 insertions(+), 44 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> new file mode 100644
+> index 000000000000..ccb58e5f06d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> @@ -0,0 +1,109 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/sifive,fu740-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SiFive FU740 PCIe host controller
+> +
+> +description: |+
+> +  SiFive FU740 PCIe host controller is based on the Synopsys DesignWare
+> +  PCI core. It shares common features with the PCIe DesignWare core and
+> +  inherits common properties defined in
+> +  Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +
+> +maintainers:
+> +  - Paul Walmsley <paul.walmsley@sifive.com>
+> +  - Greentime Hu <greentime.hu@sifive.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: sifive,fu740-pcie
+> +
+> +  reg:
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: mgmt
+> +
+> +  num-lanes:
+> +    const: 8
+> +
+> +  msi-parent: true
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: msi
+> +      - const: inta
+> +      - const: intb
+> +      - const: intc
+> +      - const: intd
+> +
+> +  resets:
+> +    description: A phandle to the PCIe power up reset line.
+
+How many (maxItems)?
+
+> +
+> +  pwren-gpios:
+> +    description: Should specify the GPIO for controlling the PCI bus device power on.
+> +    maxItems: 1
+
+Still need to list 'reset-gpios' here.
+
+> +
+> +required:
+> +  - dma-coherent
+> +  - num-lanes
+> +  - interrupts
+> +  - interrupt-names
+> +  - interrupt-parent
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - clock-names
+> +  - clocks
+> +  - resets
+> +  - pwren-gpios
+> +  - reset-gpios
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        #include <dt-bindings/clock/sifive-fu740-prci.h>
+> +
+> +        pcie@e00000000 {
+> +            compatible = "sifive,fu740-pcie";
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            #interrupt-cells = <1>;
+> +            reg = <0xe 0x00000000 0x0 0x80000000>,
+> +                  <0xd 0xf0000000 0x0 0x10000000>,
+> +                  <0x0 0x100d0000 0x0 0x1000>;
+> +            reg-names = "dbi", "config", "mgmt";
+> +            device_type = "pci";
+> +            dma-coherent;
+> +            bus-range = <0x0 0xff>;
+> +            ranges = <0x81000000  0x0 0x60080000  0x0 0x60080000 0x0 0x10000>,      /* I/O */
+> +                     <0x82000000  0x0 0x60090000  0x0 0x60090000 0x0 0xff70000>,    /* mem */
+> +                     <0x82000000  0x0 0x70000000  0x0 0x70000000 0x0 0x1000000>,    /* mem */
+> +                     <0xc3000000 0x20 0x00000000 0x20 0x00000000 0x20 0x00000000>;  /* mem prefetchable */
+> +            num-lanes = <0x8>;
+> +            interrupts = <56>, <57>, <58>, <59>, <60>, <61>, <62>, <63>, <64>;
+> +            interrupt-names = "msi", "inta", "intb", "intc", "intd";
+> +            interrupt-parent = <&plic0>;
+> +            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +            interrupt-map = <0x0 0x0 0x0 0x1 &plic0 57>,
+> +                            <0x0 0x0 0x0 0x2 &plic0 58>,
+> +                            <0x0 0x0 0x0 0x3 &plic0 59>,
+> +                            <0x0 0x0 0x0 0x4 &plic0 60>;
+> +            clock-names = "pcie_aux";
+> +            clocks = <&prci PRCI_CLK_PCIE_AUX>;
+> +            resets = <&prci 4>;
+> +            pwren-gpios = <&gpio 5 0>;
+> +            reset-gpios = <&gpio 8 0>;
+> +        };
+> +    };
+> -- 
+> 2.30.2
 > 
-Forgot to say: This series is based on the pci/vpd branch.
