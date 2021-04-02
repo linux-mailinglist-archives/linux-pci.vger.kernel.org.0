@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03ECD35272D
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Apr 2021 10:02:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 968D635278C
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Apr 2021 10:45:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234201AbhDBICL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Apr 2021 04:02:11 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11403 "EHLO mga06.intel.com"
+        id S229599AbhDBIpQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Apr 2021 04:45:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:41524 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233521AbhDBICL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Apr 2021 04:02:11 -0400
-IronPort-SDR: JEOH+iWzlSoj2w9kyncIuiLm3wAEUiPXW5aGH7A8VH5fGNJq9uEM2B7xwf/PssBh2CD7Yetyv3
- KSX2F0vfgJ5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="253751209"
+        id S229553AbhDBIpQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Apr 2021 04:45:16 -0400
+IronPort-SDR: iG7CbvN9Lwd4n8cOYCUbm/uJ8LFR3xYRsWNRpMah0Xx+xI/AjDay8uzWGkiM/IzTXH19sEbB19
+ 3pyd++vvs9sA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="190194050"
 X-IronPort-AV: E=Sophos;i="5.81,299,1610438400"; 
-   d="scan'208";a="253751209"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 01:02:09 -0700
-IronPort-SDR: QxIKo359q0h6u4bNjaFkkcLiHax9MgCoB+ojb4rYcVnu+7i20nUS2gabsq26RRepG04gGdwF3b
- Iqkx3VqZEUKw==
+   d="scan'208";a="190194050"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 01:45:15 -0700
+IronPort-SDR: gWSxDad2PpXnW/C1QTR7oTUDGen2xiSewCLk+Ms/+mXqi1mEwUVG8dcLGmelZjN9VZe0zQ105P
+ 5ApED6NfZKhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,299,1610438400"; 
-   d="scan'208";a="446394494"
+   d="scan'208";a="394885436"
 Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Apr 2021 01:02:07 -0700
+  by orsmga002.jf.intel.com with ESMTP; 02 Apr 2021 01:45:13 -0700
 Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lSEkp-00070C-84; Fri, 02 Apr 2021 08:02:07 +0000
-Date:   Fri, 02 Apr 2021 16:01:27 +0800
+        id 1lSFQX-00071S-5J; Fri, 02 Apr 2021 08:45:13 +0000
+Date:   Fri, 02 Apr 2021 16:44:52 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/vpd] BUILD SUCCESS
- bb4c0992c232e935499a24dfb1a8a9adb7733d08
-Message-ID: <6066cf57.q26RFGw+AffEG8it%lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS 3a376659a7c175b8ae8b56e79d21e7e305058011
+Message-ID: <6066d984.I1AR0fTLDQthHKTY%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +42,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
-branch HEAD: bb4c0992c232e935499a24dfb1a8a9adb7733d08  PCI/VPD: Make missing VPD message less alarming
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 3a376659a7c175b8ae8b56e79d21e7e305058011  Merge branch 'remotes/lorenzo/pci/misc'
 
-elapsed time: 720m
+elapsed time: 733m
 
-configs tested: 157
+configs tested: 152
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -113,20 +112,15 @@ arm                        magician_defconfig
 ia64                      gensparse_defconfig
 arm                       spear13xx_defconfig
 h8300                       h8s-sim_defconfig
-um                                allnoconfig
 arm                          badge4_defconfig
 mips                      loongson3_defconfig
 arc                     nsimosci_hs_defconfig
+um                                allnoconfig
 arm                         cm_x300_defconfig
 sh                   sh7724_generic_defconfig
 powerpc                   lite5200b_defconfig
 arm                           viper_defconfig
 arm                          imote2_defconfig
-arm                     eseries_pxa_defconfig
-arm                     am200epdkit_defconfig
-h8300                    h8300h-sim_defconfig
-arm                        oxnas_v6_defconfig
-sh                          lboxre2_defconfig
 mips                        qi_lb60_defconfig
 mips                       rbtx49xx_defconfig
 arm                           tegra_defconfig
@@ -136,7 +130,6 @@ sh                        dreamcast_defconfig
 mips                            e55_defconfig
 riscv                               defconfig
 mips                        vocore2_defconfig
-s390                                defconfig
 powerpc                 mpc8315_rdb_defconfig
 powerpc                       eiger_defconfig
 ia64                         bigsur_defconfig
@@ -171,8 +164,9 @@ sh                               allmodconfig
 parisc                              defconfig
 s390                             allmodconfig
 parisc                           allyesconfig
-sparc                               defconfig
+s390                                defconfig
 sparc                            allyesconfig
+sparc                               defconfig
 i386                                defconfig
 mips                             allyesconfig
 powerpc                          allyesconfig
