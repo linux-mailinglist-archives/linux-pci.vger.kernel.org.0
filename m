@@ -2,122 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B10603532EE
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Apr 2021 09:12:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BA9E353347
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Apr 2021 11:25:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232157AbhDCHMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Apr 2021 03:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231282AbhDCHMS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Apr 2021 03:12:18 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A90DEC0613E6
-        for <linux-pci@vger.kernel.org>; Sat,  3 Apr 2021 00:12:15 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id u9so7551064ljd.11
-        for <linux-pci@vger.kernel.org>; Sat, 03 Apr 2021 00:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=CF/3jwDj3VECDMfzCq7fZcVL+I5UbV6PDqhPAdFcRlo=;
-        b=go+d2ZlL0kA90JnO+nurpO7eKY0UrlsfjZP0vKBkydtc8mTJD1npCiQqftRgfKWYbh
-         KHtDbJykERgRCB96I9KpjOoMqr8sdO5t9s3QmrupV4VCpoloZ6NeX5vWg/Yg09/7VsA3
-         tyfxyJQFD7AzesSc+X8cYflfFXOg+cOFBlVc/folhI8nAiwv20exbOrKuDTApEc+etyc
-         PrTTJ7g33HuUuNgAYWSJJFpKEOgGy/rdh5EZxpR4lF29cyA0uY59uD8BO1glTi6JxiC/
-         c9ElcS1AWzmIU8U90M2GPD7sQz45hV4EkmZtqXe/abIuYEiyDUSUn6JeJGyRIn9OFlvA
-         xmlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=CF/3jwDj3VECDMfzCq7fZcVL+I5UbV6PDqhPAdFcRlo=;
-        b=f8UOFglEpvlB+myBhlfziLavi19tqOQIrDrEX3de7CukbXA0Vst5TPoeqi84034tvq
-         8OY8i8bhIYMhczWZrcmufYFuAXs1iIoD/Q1UzdNWNV03QXPnsobNjezpWjbAxkLkAR2G
-         bxLMJRyEmk769TMuo1WOfUIuETkuhJ+frGCVZZpWJgEDkdAaia5yape54j8OMWKSarNt
-         V5yTljR5XD3iOAYlw5xu0wL8Nnf1/tHdkEj3GLMfLB+WEaLDO2kZyLDwkK/8XmyVeM41
-         /QGdgx6wPgllxDOqqCg9iXqO4Ra+wCJLmOtYN1crBS7j9Hc/Oc+0l1zkIsCSnh8GXOT0
-         i/4g==
-X-Gm-Message-State: AOAM532gc3gyhVmEpQY9Zq8qDTRBb0Jf+UzDBzYhY9T/hBwGz7gVeQFO
-        yM1HHKx2toYLMC7Wo0MxDJGk7Zgf37P/XIqDjv8=
-X-Google-Smtp-Source: ABdhPJw3V8HwtWt4mEqwYzSKt++aVzJz5hVICHAhIFKpGvQ+TwqjqxkhvtSNEPFivBWqgmGZPScrU7yTwp6ihtc8d7w=
-X-Received: by 2002:a2e:95d2:: with SMTP id y18mr10954783ljh.353.1617433934080;
- Sat, 03 Apr 2021 00:12:14 -0700 (PDT)
+        id S236105AbhDCJQ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 3 Apr 2021 05:16:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:15473 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236731AbhDCJQ1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Apr 2021 05:16:27 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FCB7X1LW7zyNht;
+        Sat,  3 Apr 2021 17:14:16 +0800 (CST)
+Received: from linux-ioko.site (10.78.228.23) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.498.0; Sat, 3 Apr 2021 17:16:17 +0800
+From:   Dongdong Liu <liudongdong3@huawei.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+Subject: [PATCH 0/4] PCI: Enable 10-Bit tag support for PCIe devices
+Date:   Sat, 3 Apr 2021 16:54:15 +0800
+Message-ID: <1617440059-2478-1-git-send-email-liudongdong3@huawei.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Received: by 2002:a05:6512:789:0:0:0:0 with HTTP; Sat, 3 Apr 2021 00:12:13
- -0700 (PDT)
-Reply-To: drkaboreaminatouharouna221@gmail.com
-From:   "Ms. Aminatou Harouna Kabore" 
-        <reverendsistermercyandrew010@gmail.com>
-Date:   Sat, 3 Apr 2021 00:12:13 -0700
-Message-ID: <CAHEbwFGOWMwk5ndaXrcaKK0cKoYs7C0j7=9DjeEdE506hY-XoA@mail.gmail.com>
-Subject: FOR YOUR FAVOR PLEASE READ CAREFULLY AND REPLIES AS SOON AS POSSIBLE;
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.78.228.23]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DEAR BENEFICIARY;
+10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+field size from 8 bits to 10 bits.
 
-ATTENTIONS TO THIS MATTER OF YOU=E2=80=99RE DISCOVERY FUNDS;
+This patchset is to enable 10-Bit tag for PCIe EP devices (include VF) and
+RP devices.
 
-CONGRATULATIONS TO YOU AND YOUR LOVELY FAMILIES, IT IS MY PLEASURE TO
-PROVIDE YOU THIS E-MAIL TO YOUR NEEDS. OUR NATION BURKINA FASO
-GOVERNMENT HAS DISCOVERY YOUR FUNDS HERE IN OUR OFFICE OF FUNDS
-RECOVERY UNIT OUAGADOUGOU BURKINA FASO, IN CONJUNCTION WITH OFFICE OF
-THE PRESIDENCY KOSYAM, ON BEHALF OF THIS NATIONS GOVERNMENT
-BURKINA-FASO,
+Dongdong Liu (4):
+  PCI: Add 10-Bit Tag register definitions
+  PCI: Enable 10-Bit tag support for PCIe Endpoint devices
+  PCI/IOV: Enable 10-Bit tag support for PCIe VF devices
+  PCI: Enable 10-Bit tag support for PCIe RP devices
 
-WE ARE HEREBY BRINGING TO YOUR NOTICED THAT, A TOTAL SUM OF $10.5
-MILLION UNITED STATE AMERICA DOLLARS, HAS BEEN DISCOVERED HERE DURING
-OUR VERIFICATION CONTROL AS THE RIGHTFUL OWNER BENEFICIARY TO THE
-FUNDS. AM HERE TO INFORM YOU ALSO THAT WE HAVE VERIFIED YOUR FILE
-PRESENTLY ON MY DESK, AND I FOUND OUT THAT YOU HAVE NOT YET RECEIVED
-YOUR FUNDS AS THE RIGHTFUL OWNER BENEFICIARY.
+ drivers/pci/iov.c              |   8 +++
+ drivers/pci/pci.h              |   2 +
+ drivers/pci/pcie/portdrv_pci.c |   3 +
+ drivers/pci/probe.c            | 125 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h            |   1 +
+ include/uapi/linux/pci_regs.h  |   5 ++
+ 6 files changed, 144 insertions(+)
 
-WE HAVE JUST FINISHED OUR GENERAL MEETING AND AFTER THE END OF OUR
-BOARD OF DIRECTORS MEETING HELD AT OUR HEADQUARTERS, WITH THE CENTRAL
-BANK OF BURKINA FASO (BCEAO), NOTICE; OUR GOVERNMENT HAS DECIDED TO
-RELEASE AND TRANSFER TO YOU YOUR FUNDS, UPON YOUR CONTACT TO US, YOUR
-FUNDS WILL BE RELEASE AND TRANSFERRING INTO YOUR BANK ACCOUNT OR, CAN
-BE  CREDITED INTO THE ATM VISA CARD AND SEND IT TO YOU DIRECTLY TO
-YOUR HOME ADDRESS VIA ANY COURIER SERVICES AVAILABLE TO YOUR COUNTRY
-IMMEDIATELY WITHOUT ANY DELAY AS LAW DEMANDED, WE HAVE ARRANGED YOUR
-PAYMENT TO BE DELIVERED TO YOU THROUGH ANY AVAILABLE DELIVERY COMPANY,
+--
+1.9.1
 
-AS SOON AS WE RECEIVE YOUR HOME ADDRESS OF YOUR COUNTRY AS WILL
-ALREADY PROGRAMMED LIKE; YOUR FULL  BANK ACCOUNT  DETAILS  AND YOUR
-FULL ADDRESS; DIRECT TELEPHONE-FAX NUMBERS AND PASSPORT ; WILL SHALL
-SEND TO YOU YOUR (ATM VISA CARD), AND YOU CAN WITHDRAW IN ANY ATM CARD
-MACHINES IN YOUR COUNTRY AROUND THE WORLD WIDE WITH A MINIMUM
-WITHDRAWAL OF AMOUNT $2,500 UNITED STATE DOLLARS, PER DAY YOU CAN ALSO
-USE THE ATM VISA CARD TO DO ANY SHOPPING THROUGH POST TO ANY ACCOUNT
-OF YOUR CHOICE IN YOUR COUNTRY. YOUR LIMIT CAN BE INCREASED UPON YOUR
-REQUEST.
-
-AND IF YOU DECIDED TO RECEIVE THE FUNDS INTO YOUR BANK ACCOUNT AS YOUR
-HEART=E2=80=99S DESIRES IS ACCEPTED BY YOU, BUT UPON YOUR RESPOND TO OUR
-OFFICE, (FUNDS RECOVERY UNIT BF), WILL SHALL SALVE YOU BETTER I
-PROMISE BECAUSE IS OUR GOVERNMENT BURKINA-FASO NATIONS INTENTIONS TO
-RELEASE YOUR FUNDS TO YOUR DESTINATION, BUT ENSURE THAT YOU KEEP THIS
-PROJECT CONFIDENTIAL BETWEEN YOURSELF FOR SECURITY REASONS.
-
-PLEASE; ENDEAVOR TO GET FEEDBACK TO THIS IMPORTANT MESSAGE IS FOR YOUR
-FAVOR; SO THAT WE CAN PROCEED AS SOON AS POSSIBLE, ONCE AGAIN
-CONGRATULATIONS TO YOU AND YOUR LOVELY FAMILIES, AND ALSO TO BE
-COMPLETED BY THE BENEFICIARY AND ALL REQUIRED IN-FORMATIONS IS HIGHLY
-NEEDED BELLOW;
-
-1.	YOUR FULL NAMES.
-2.	CURRENT ADDRESS.
-3.	DIRECT TELEPHONE AND FAX NUMBERS.
-4.	PASSPORT OR, IDENTITY CARD.
-
-YOU ARE EXPECTED TO ANSWER THIS ENTIRE QUESTION'S WITHIN 72 HOURS. MY
-DEAR; DON=E2=80=99T BEEN DELAY FOR YOUR RESPOND;
-
-BEST REGARDS,
-
-MS. HAROUNA AMINATOU KABORE;
