@@ -2,101 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A0DF353494
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Apr 2021 17:48:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CCD235371F
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Apr 2021 09:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230450AbhDCPsX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Apr 2021 11:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230266AbhDCPsW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Apr 2021 11:48:22 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3ACC0613E6
-        for <linux-pci@vger.kernel.org>; Sat,  3 Apr 2021 08:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=WsLManB+MfoSegKGNLw1LGetGT5rOJNYbXyb7raZb6w=; b=eXSPaLc9lRgcWNXM+zaTIQ1OM+
-        2wG/F0uBf6bLjrAAN/FGphBGvmWgZwVSdZ7jBPmVzFdoBfX+P1E1jcrcrUN3npgYE/f+HvBjZywCK
-        8RStMF7NKc3/t/6H11UO5Slx55ADMX+Md6DXSbYVIplcROXBksJ40UXaiRn9AdcwMWN2uVR0yAuER
-        RYHabFSXwgHE8OTZpFuQ+VeEpocJGlW68htLFT+1z8aC2VMaYNSm0hlu3PTpAOdjAgnr9xlIpVjaZ
-        nyF0XF+99vOCYN9RDfYjkaR9qyZ3Iy0ATbb3455uPXfgMtaV9InuI114QttxtWED6M6ls1CBWAX5v
-        j994zhiA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lSiVM-0093ey-E8; Sat, 03 Apr 2021 15:48:09 +0000
-Date:   Sat, 3 Apr 2021 16:48:08 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Martin Mares <mj@ucw.cz>, Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: lspci: Slot Power Limit values above EFh
-Message-ID: <20210403154808.GR351017@casper.infradead.org>
-References: <20210403114857.n3h2wr3e3bpdsgnl@pali>
+        id S229550AbhDDHCl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Apr 2021 03:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229479AbhDDHCl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 4 Apr 2021 03:02:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F1EF6136A;
+        Sun,  4 Apr 2021 07:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617519756;
+        bh=wDHeSpp21bHcFsxv+473kLXqepmISuehI5Xc0f2rNoc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rf99YKqZDA/pVCnPCLveICKE7TuEpUn8V2aK5bg0IAoeJxCJjCM2KBz0Tc3qo7CDE
+         WqPcHnnFz27VxNMFPFzIhb1J+4tgHHzTZia/efPu7C6jAcYSxpKUWRZLu4GQ69at4P
+         FK0i+XgLaVHA5Arsz+ix1NE6D4YnivLG+OIYeVtnd5PONvrS9EYFEdwp0wnnR/10xH
+         mb8bTt7Z/5VH5nzvsBzIQLEJK4otZ+JN4bI/Lnz3n0wZgIdXifKiMkkEPW3xh5bjNN
+         56iFi+sdclYnmJxPSVR0RMqQ7CDCkJXv0i+Qc1nKrmhunRg7ygIBX/mCUZwhxROlru
+         c6sLB3+EGVapg==
+Date:   Sun, 4 Apr 2021 10:02:32 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v8 1/4] PCI: Add a sysfs file to change the
+ MSI-X table size of SR-IOV VFs
+Message-ID: <YGlkiBpcZwWFdE81@unreal>
+References: <20210314124256.70253-2-leon@kernel.org>
+ <20210403002426.GA1560457@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210403114857.n3h2wr3e3bpdsgnl@pali>
+In-Reply-To: <20210403002426.GA1560457@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 03, 2021 at 01:48:57PM +0200, Pali Rohár wrote:
-> Hello!
+On Fri, Apr 02, 2021 at 07:24:26PM -0500, Bjorn Helgaas wrote:
+> Possible subject, since this adds *two* files, not just "a file":
 > 
-> PCI Express Base Specification rev. 3.0 has the following definition for
-> the Slot Power Limit Value:
+>   PCI/IOV: Add sysfs MSI-X vector assignment interface
 
-FWIW, it's the same in rev 5.  I had thought they might add even more
-power encodings, but no.
+Sure
 
-> But the function power_limit() in ls-caps.c does not handle value above
-> EFh according to this definition.
 > 
-> Here is a simple patch which fixes it for values F0h..F2h. But I'm not
-> sure how (reserved) values above F2h should be handled.
+> On Sun, Mar 14, 2021 at 02:42:53PM +0200, Leon Romanovsky wrote:
+> > A typical cloud provider SR-IOV use case is to create many VFs for use by
+> > guest VMs. The VFs may not be assigned to a VM until a customer requests a
+> > VM of a certain size, e.g., number of CPUs. A VF may need MSI-X vectors
+> > proportional to the number of CPUs in the VM, but there is no standard way
+> > to change the number of MSI-X vectors supported by a VF.
+> > ...
 > 
-> diff --git a/ls-caps.c b/ls-caps.c
-> index db56556971cb..bc1eaa15017d 100644
-> --- a/ls-caps.c
-> +++ b/ls-caps.c
-> @@ -659,6 +659,9 @@ static int exp_downstream_port(int type)
->  static float power_limit(int value, int scale)
->  {
->    static const float scales[4] = { 1.0, 0.1, 0.01, 0.001 };
-> +  static const int scale0_values[3] = { 250, 275, 300 }; /* F3h to FFh = Reserved for Slot Power Limit values above 300 W */
-> +  if (scale == 0 && value >= 0xF0)
-> +    value = scale0_values[(value > 0xF2 ? 0xF2 : value) & 0xF];
->    return value * scales[scale];
->  }
+> > +#ifdef CONFIG_PCI_MSI
+> > +static ssize_t sriov_vf_msix_count_store(struct device *dev,
+> > +					 struct device_attribute *attr,
+> > +					 const char *buf, size_t count)
+> > +{
+> > +	struct pci_dev *vf_dev = to_pci_dev(dev);
+> > +	struct pci_dev *pdev = pci_physfn(vf_dev);
+> > +	int val, ret;
+> > +
+> > +	ret = kstrtoint(buf, 0, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (val < 0)
+> > +		return -EINVAL;
+> > +
+> > +	device_lock(&pdev->dev);
+> > +	if (!pdev->driver || !pdev->driver->sriov_set_msix_vec_count) {
+> > +		ret = -EOPNOTSUPP;
+> > +		goto err_pdev;
+> > +	}
+> > +
+> > +	device_lock(&vf_dev->dev);
+> > +	if (vf_dev->driver) {
+> > +		/*
+> > +		 * A driver is already attached to this VF and has configured
+> > +		 * itself based on the current MSI-X vector count. Changing
+> > +		 * the vector size could mess up the driver, so block it.
+> > +		 */
+> > +		ret = -EBUSY;
+> > +		goto err_dev;
+> > +	}
+> > +
+> > +	ret = pdev->driver->sriov_set_msix_vec_count(vf_dev, val);
+> > +
+> > +err_dev:
+> > +	device_unlock(&vf_dev->dev);
+> > +err_pdev:
+> > +	device_unlock(&pdev->dev);
+> > +	return ret ? : count;
+> > +}
+> > +static DEVICE_ATTR_WO(sriov_vf_msix_count);
+> > +
+> > +static ssize_t sriov_vf_total_msix_show(struct device *dev,
+> > +					struct device_attribute *attr,
+> > +					char *buf)
+> > +{
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	u32 vf_total_msix = 0;
+> > +
+> > +	device_lock(dev);
+> > +	if (!pdev->driver || !pdev->driver->sriov_get_vf_total_msix)
+> > +		goto unlock;
+> > +
+> > +	vf_total_msix = pdev->driver->sriov_get_vf_total_msix(pdev);
+> > +unlock:
+> > +	device_unlock(dev);
+> > +	return sysfs_emit(buf, "%u\n", vf_total_msix);
+> > +}
+> > +static DEVICE_ATTR_RO(sriov_vf_total_msix);
+> 
+> Can you reverse the order of sriov_vf_total_msix_show() and
+> sriov_vf_msix_count_store()?  Currently we have:
+> 
+>   VF stuff (msix_count_store)
+>   PF stuff (total_msix)
+>   more VF stuff related to the above (vf_dev_attrs, are_visible)
+> 
+> so the total_msix bit is mixed in the middle.
 
-How about ...
+No problem, I'll do.
 
-  if (scale == 0)
-    {
-      if (value > 0xf2)
-        return 0.0f/0;
-      if (value >= 0xf0)
-        return scale0_values[value - 0xf0];
-    }
+> 
+> > +#endif
+> > +
+> > +static struct attribute *sriov_vf_dev_attrs[] = {
+> > +#ifdef CONFIG_PCI_MSI
+> > +	&dev_attr_sriov_vf_msix_count.attr,
+> > +#endif
+> > +	NULL,
+> > +};
+> > +
+> > +static umode_t sriov_vf_attrs_are_visible(struct kobject *kobj,
+> > +					  struct attribute *a, int n)
+> > +{
+> > +	struct device *dev = kobj_to_dev(kobj);
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +
+> > +	if (!pdev->is_virtfn)
+> > +		return 0;
+> > +
+> > +	return a->mode;
+> > +}
+> > +
+> > +const struct attribute_group sriov_vf_dev_attr_group = {
+> > +	.attrs = sriov_vf_dev_attrs,
+> > +	.is_visible = sriov_vf_attrs_are_visible,
+> > +};
+> > +
+> >  int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> >  {
+> >  	int i;
+> > @@ -400,18 +487,21 @@ static DEVICE_ATTR_RO(sriov_stride);
+> >  static DEVICE_ATTR_RO(sriov_vf_device);
+> >  static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+> > 
+> > -static struct attribute *sriov_dev_attrs[] = {
+> > +static struct attribute *sriov_pf_dev_attrs[] = {
+> 
+> This and the related sriov_pf_attrs_are_visible change below are nice.
+> Would you mind splitting them to a preliminary patch, since they
+> really aren't related to the concept of *this* patch?
 
-(btw, a float is the same size as an int -- 32 bits, so there's no
-benefit to storing the values as an int and doing the conversion at runtime.
-may as well have the compiler put the right set of bits in the binary)
+I don't think so, that prepatch will have only two lines of renames
+from sriov_dev_attrs to be sriov_pf_dev_attrs. It is not worth the
+hassle.
 
-in the caller:
+Thanks
 
-  if ((type == PCI_EXP_TYPE_ENDPOINT) || (type == PCI_EXP_TYPE_UPSTREAM) ||
-      (type == PCI_EXP_TYPE_PCI_BRIDGE))
-    {
-      float power = power_limit((t & PCI_EXP_DEVCAP_PWR_VAL) >> 18,
-				(t & PCI_EXP_DEVCAP_PWR_SCL) >> 26));
-      if (isnan(power))
-        printf(" SlotPowerLimit >300W");
-      else
-	printf(" SlotPowerLimit %.3fW", power);
-    }
-
+> 
+> >  	&dev_attr_sriov_totalvfs.attr,
+> >  	&dev_attr_sriov_numvfs.attr,
+> >  	&dev_attr_sriov_offset.attr,
+> >  	&dev_attr_sriov_stride.attr,
+> >  	&dev_attr_sriov_vf_device.attr,
+> >  	&dev_attr_sriov_drivers_autoprobe.attr,
+> > +#ifdef CONFIG_PCI_MSI
+> > +	&dev_attr_sriov_vf_total_msix.attr,
+> > +#endif
+> >  	NULL,
+> >  };
+> > 
+> > -static umode_t sriov_attrs_are_visible(struct kobject *kobj,
+> > -				       struct attribute *a, int n)
+> > +static umode_t sriov_pf_attrs_are_visible(struct kobject *kobj,
+> > +					  struct attribute *a, int n)
+> >  {
+> >  	struct device *dev = kobj_to_dev(kobj);
+> > 
+> > @@ -421,9 +511,9 @@ static umode_t sriov_attrs_are_visible(struct kobject *kobj,
+> >  	return a->mode;
+> >  }
+> > 
+> > -const struct attribute_group sriov_dev_attr_group = {
+> > -	.attrs = sriov_dev_attrs,
+> > -	.is_visible = sriov_attrs_are_visible,
+> > +const struct attribute_group sriov_pf_dev_attr_group = {
+> > +	.attrs = sriov_pf_dev_attrs,
+> > +	.is_visible = sriov_pf_attrs_are_visible,
+> >  };
