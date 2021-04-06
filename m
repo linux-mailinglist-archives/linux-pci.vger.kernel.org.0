@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8293354F36
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 10:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00740354F3A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 10:58:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239646AbhDFI6k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 04:58:40 -0400
-Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:47938
+        id S244680AbhDFI6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 04:58:47 -0400
+Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:51430
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230032AbhDFI6k (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Apr 2021 04:58:40 -0400
+        id S244677AbhDFI6q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 04:58:46 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SFgnmr3BdfANS0IvDB5nZ5qIygnvXNW+NlaumxxpDQwczMt0v4BFzrDHrWvfCW7ek++5kMdh25yT8oPMu+8DopP/H4//VxUkA6Keg44TBZDJS3yWP/6ty6JtpaF709s0RWadvNl6NoMt3tKCaFRT2HKoVv+XWMKWU5JKErZA5CXyatZUnRJviDyPZC1jGPDsKfvGvlP7kbl2XLn87PuCer5z9gZ8G43TNiPABNBugm+cAtZ9B/3XmA27kmO4m3J5LXO8uG4Ofy9N+baTDEIkSffPi55S831o6j9CcYXL2Q8JTuuNBPeAjZAL1zC+5LydOnos/WfkUUkvtSQ/d4W/Qg==
+ b=gH24pxBXpUyGlPTbGA9Un8SuYo9hyZ4OGX0V8nRjspoKa8ZqulA15IbMO/QXbQOUZiyhhSgZbTltaSmc8sFMs0HBdK2uu8AURV57nY5CxNMj0QD7ZxsU52O4xEQMSHJkYCXbQolwdQYbidpfoswb1tdyrsLjKNjqbT3YOhQf7fcTm2cHEQkDMOVrT5QSoFP6NVczPhAq5ZqCpnVPzQXnDLO0yQyqaE5w2HSQJJV5H8OsGl5ltlZlTweqZ6fek/HuVQmL+RBULfFm13gVtJ7Ag2IWc0Jwpd2rizefkbOux0i38yplC7WquQ/DYljAZfRggmEF7gfFslhcmkjD728yZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VAbBAoouRYaYgCHOwiaLhrepf+ZbxfLMS73y1W5APAk=;
- b=foCoGSqar68a3AvHLoxcMeZLBoh4CKXV0klQdGEp5hrQPl6vPVw18z/TIpUB6b15refwJS3K/xoV5Tu16MN4jU2ke0RMEv6RVdct+97xKqikH/zoBKtJsOARYxcXaS6oF7xutVMZAzbLl4It/VNyIYRtUfZF+4aVGJDdnM7lfNHxqjfCQcvF+z4IPb4risB92t/IDW6JFDxbaE0ablogQRhfiuP1EIH9kD2lgddV/LxWoXTh60r/eS3ayGQT00XlCoorUlv2uUQShxhJmOhUPRVaU96FYlOU9rUT0W5Azr2oKoSJ+TSzGzrOlSl4uZKNiSL7Zx2lpvgTRnEzGc9a0Q==
+ bh=B8oPtZG3/KEuNv1kq4QTPIQiUVJpZ5+MpjdtlBX0vT0=;
+ b=KMm5rztjkbRh767o0ZRJPXK2f4DiK6hxlu5SDdFbJn1cAMFm872yhjLt0kEbpmYB+ayCHn6wwp3OKk11EgBLIPqZ2C3af9NglbR5x/pYCufdGHz1mRyG/mVMgiwBNs/CyNrG4GUoYfTVxL4Lzwd0H601vU9vaZKPqGbHbyrxm11tjb08FqHEypKbL3bXFUADOt/v2Hqnv/MxGu5pLCPwvOaGJBGIvXUCPNkkbwIbQcPj9WAc0LWJQae30NoqseIXywg00KnjTmITa2vQjwcUX8abNt4aPYOUvPUdEPR35VPc2D6RduOu9kRJBBP1Yrztat6qHDu/Np60gpcswFx7Kg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VAbBAoouRYaYgCHOwiaLhrepf+ZbxfLMS73y1W5APAk=;
- b=QvDbgDuRQBPVfV4pooapmZmE04a0Y2pof0o4xiYafu38d0LwziThecBcVR/4xls8qlu6SNHtF91Nt+sXfRPL2SoKrXFdGBlet5byAaJq+riKanhd01ipBbW+Da2x1+haGqq+AYPTR+gwUQEAc6hTChpgdYgbDIJR2rr/t3GiQ04=
+ bh=B8oPtZG3/KEuNv1kq4QTPIQiUVJpZ5+MpjdtlBX0vT0=;
+ b=L6a1mlBbn+iOMvVc9+2kcGH6spDs5kNsiUw9l66YnjlkPAV+H0PHgnqnr5ML+sRoeB7DbFkALiMnv9bUKKnYBZ0MGZNSv61aRgI7Q9C1nGNXvlRdmXtpu4ldOE3R7V8s6lybyMOOsJwLCqdKBrv49TpUHZB9TnonyI2vxoTjkDY=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
  by HE1PR04MB3275.eurprd04.prod.outlook.com (2603:10a6:7:1a::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.32; Tue, 6 Apr
- 2021 08:58:30 +0000
+ 2021 08:58:35 +0000
 Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
  ([fe80::5df8:1a69:47c3:44fc]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
  ([fe80::5df8:1a69:47c3:44fc%3]) with mapi id 15.20.3999.032; Tue, 6 Apr 2021
- 08:58:30 +0000
+ 08:58:35 +0000
 From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -45,9 +45,9 @@ To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         gustavo.pimentel@synopsys.com
 Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv4 1/6] PCI: layerscape: Change to use the DWC common link-up check function
-Date:   Tue,  6 Apr 2021 17:04:44 +0800
-Message-Id: <20210406090449.36352-2-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 2/6] dt-bindings: pci: layerscape-pci: Add a optional property big-endian
+Date:   Tue,  6 Apr 2021 17:04:45 +0800
+Message-Id: <20210406090449.36352-3-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210406090449.36352-1-Zhiqiang.Hou@nxp.com>
 References: <20210406090449.36352-1-Zhiqiang.Hou@nxp.com>
@@ -58,50 +58,50 @@ X-ClientProxiedBy: HK2PR06CA0001.apcprd06.prod.outlook.com
  (2603:10a6:7:85::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.73) by HK2PR06CA0001.apcprd06.prod.outlook.com (2603:1096:202:2e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Tue, 6 Apr 2021 08:58:25 +0000
+Received: from localhost.localdomain (119.31.174.73) by HK2PR06CA0001.apcprd06.prod.outlook.com (2603:1096:202:2e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27 via Frontend Transport; Tue, 6 Apr 2021 08:58:30 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7dbf0886-57c1-4426-0797-08d8f8da25e8
+X-MS-Office365-Filtering-Correlation-Id: ef60c421-7691-4cb1-a2ef-08d8f8da2925
 X-MS-TrafficTypeDiagnostic: HE1PR04MB3275:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR04MB3275D8DC1915D666C877B9FE84769@HE1PR04MB3275.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Microsoft-Antispam-PRVS: <HE1PR04MB32752E300BB9AFA11C52EBBF84769@HE1PR04MB3275.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YEOz65d/NUv9RmIS9kdDW88hEttkKEIV2n+HhI/edPmcsqMkNscUInMe0Xdrr8iQUhXW8sM2FS3WZdsGBqI5x+F/+IHN+rb079B5MRXFgcBkj1xnNmTe7XoiIVOpM3tgH4SPdf/kv9SnEcnwtG8NlX4b80A4HkOpHcn3U+7Of2PiAsmqSE0o3L26a6WItVRLjh6BVFnFbwQIbnJWGDxnA6Zk15guHdiBtxMez3HpLowYHACFXFfk+ZB3Vu+G0ZJ5M6kehWGInxFFo0GomUkFDOERZxctfTOfMapEpn8T6hHubJbJaSDpGTZZuT5n5A+CTNmRxkpjJt6AB0poh8wxVdxQIbxfcUbMltB8Pq5/NFFeWTy/OdQFOBGObOPqkcq553TvdejYPy1vFDVnSXsyUSnfJ1DmGdxacGdI/2DJW4pmriCz3xiuWTu5F6J158T9hMctoFnu6S5SQinXX7UcE6sACeQUL6ZSvRY8jwG64RJewwp+OI0jv9YkHn2gw7HMVRwKKSo+zxP31s/eg5xjryKLQtMQ92oCvntZZEnZbPqwRQX/mVx1FzMCg7VFLNi8Sv6ZlCyw2jM2ZDUlb94RDyah0BVPzZawNeEpKn2SVcpBwvq2ylP0kK/j3kHMB/HAkz4eJQAXSHbsKS7MEPwuhxHjNTB9MMw5NugNBZ6xeYLJkPnZNTEvEd9m/5WuYR5B7BhyDbGg4TTceHwUzhOtZ1IOJn1+4pRlkzZ8JOCWr5FG9k7Jh+UfEV4/WDDMaIyd
+X-Microsoft-Antispam-Message-Info: moCVaNw4jKZ+6+b8BLiDE6t0jjoeIKDHzm/oxNwTtshqziBnkXs582puf79jXbnsSHe8Gk3LokG6yG2054WiM0VKeLCRjmQEMhRb6tT8hR0Jv3xnmJU1JDPOxeXkJEOtLravDnD+ORAxXwd9gD/OR0++Pw7vLDw2WC24a7yneeG3xQuNwc3+goPTRKobx3eBTDYec55tOUfI3qidteu7+lKitmTZarCV76s1ff1RuyMlahnO0Y2SqrjY4+2wkXuxB4lhPApbOy3SJoxs+T+wZOI34IfroE5/o0E0bCDlHxUFeCs3eNTPXUmkCrOZKZ/DDOvhkKyRQh/fr+ZExKegwmzyalT+sl9aR/zcNNCHef8sewwZt0N9jJaU4jsp5tPYq8k08B80kVGr71PLuBQPp0aDnDat1E7e4gP6y2uMCTT0LXQGZ11mgf4khtpjU3Iddo6Lh1386xhByDA6dSd4Dk2JmeL+pZ0j3sSctp/l9LRwwHB1YRK5GOhX/3QgHeflHHqJhSxxOR7V6go9iA8pWGpuuQmoOPV8oWtUuOEjsXoAR7MMOAxW9njSHRUUODoWI+/ENoqQ2MQbnK5lL9iEbXyRhtGkfHkz/Y7GPo4F5dXwo/kAzPNN3B+NzqobICedlPdDiq1fSD/oJBjKrXJnIChg7XbzDW++PUhOcRzQ7a28w6UIdYh3A7PrbdVFglezoRrDnGiU0ee+dhfoASBwwTNTlHaajEFWM4PaDutx2s8itslpu1KXE8JjZR5Np2xy
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(6506007)(38100700001)(8936002)(316002)(921005)(2906002)(66476007)(478600001)(36756003)(6512007)(5660300002)(6486002)(1076003)(8676002)(52116002)(69590400012)(4326008)(26005)(6666004)(186003)(66556008)(83380400001)(66946007)(86362001)(2616005)(16526019)(956004)(38350700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?YOADZ9rXpodjfODuB04FkDzKZOAmyJLNG4Fz2ECmzpxTvNxv1gycjklPBmzZ?=
- =?us-ascii?Q?ThGVbPbNKXJEvEhKIlD48V6Gm03k1g+Z6fQWrnEIPRegC44uVRNXsa707CBJ?=
- =?us-ascii?Q?g/BTysUbGdKYHSyrXMtUIurdzjFFXEeCLGZ+W0NYowFd/DXeVNEsh4+Vu982?=
- =?us-ascii?Q?hTMO+oZ3DBS/FeMF4BUkHoVQ36ZaDhwMibQ6SSnke5A1fz2kjQSX7KFV088U?=
- =?us-ascii?Q?unxTjC5ooZupgKFA3o0NZQXVhBM4IWrmkdgejjHMVgA3qe/tsCIF77FAx7dX?=
- =?us-ascii?Q?WCYfb6wuZbuv9R4NZAOX/1lLYe5H5AAsNUuNBmvCgWOWOKh0kQOZC5GSq5UB?=
- =?us-ascii?Q?PHDXeKVvRuqp2OM601t4HBYwy6prM5wz7OFoksNxlVbFalQXDHLDQjkDWrTO?=
- =?us-ascii?Q?qBW2SNDRBVfaXXw70Ch7qnydrgroAwwGS2EW/13aeXeGpOEsv4jmjNQ+5N3i?=
- =?us-ascii?Q?D4t20pER3nyMaoIDusFB+cTHWL6BWOMjyGgzS0VjpXeGL2hDK+vNHCeKw7up?=
- =?us-ascii?Q?sQwqdkZb34HSfs3mv0B2ta5h3DnpSnQ3ngbzK+TYmoY1jiKT4OXVniCjeNW1?=
- =?us-ascii?Q?R3Xbxv+GrdbergKQE56xV3pnadSoygCBUKFVHrUFx1QA0NQO3/rH92FB9yLn?=
- =?us-ascii?Q?LFqvkhfx+2DRgVnU/KjKLb38LUe5XV+VdVcA6iAHiRWFC/9SDLzblQdvkoXa?=
- =?us-ascii?Q?0Jwf08t8WpyK2lPfSuU3RtBrqLShUX3FwVWVeWLvz6tKJVJoZfjfMVU4bLKz?=
- =?us-ascii?Q?7p3I+z655GDIVnBkdoDCyeXavMCkFhrbgYjtUSdeLi7BP8K0SI6bQuSJS77o?=
- =?us-ascii?Q?2rzCyRu86EKDky1e0lWA262QA1OUHglG36Ms+D5HjhynIL/J9+PcnNe46g70?=
- =?us-ascii?Q?l+tcpWvm0PFLwRvBn9coiMeUAZIrchMG3KCgfGD3Ok6Al/x93L4mea4fWJY0?=
- =?us-ascii?Q?ydE9rNLI9e6uD94n2l6VMZ8tO897P/6TMJj1fwO3Uw39JrnjGERU0KDs+X5h?=
- =?us-ascii?Q?HArDvhSL3KxFkjUN9upxrTwUf+3W/t+GK5E0TICRNTVQkwz1m2wbfvSKBYcT?=
- =?us-ascii?Q?k34H+nz9IzUQddBl5IkUAAqLD8vgVdaBwDIj5YoRtQD5pyoFL9Du7obakGIv?=
- =?us-ascii?Q?ZvlUT7riJBiZ80qW1TPiwCNrRGzUZEAoKgxcwkcPHuZ5vYXlqyGEKFfzXV8V?=
- =?us-ascii?Q?iRHMLVB2fwZNEtQqnld95h/JVXzG5VGZsW+ZyuIK18k6ZLhpOD/qJnS6dwo9?=
- =?us-ascii?Q?bqwFY+rczxoC8kzXJeluk2fg5NhyUzJ018ZX/kR8ovTsCHhauLCCl61fAIYd?=
- =?us-ascii?Q?v6os8KK+X9UPKUh3lAVLbe+W?=
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?l+OhUyXaYyDrimQjf9MsWAM78NBSCkSxSLXykpQsokKsBniFCLW38qk2qULg?=
+ =?us-ascii?Q?HG0V2BkTrsTwFtD37zkUdXQTjQJ4bxZy/r9r1jfMnHkRbfi930aG5EqTmI/e?=
+ =?us-ascii?Q?3Q8/UWMCVkn6kcbXrDPsg+mpGPuchi/3ttAnqZxdIsXNqCKFGMdlIiywwi58?=
+ =?us-ascii?Q?b4uSzT67/DOMP5fZ+NQghTGxKK9XtBunhf7W/kHW9CD3PfV6Uo9ToxvrQ61Q?=
+ =?us-ascii?Q?65C0YbfQAWDhBbr5n7wT4L7druqQ1y5E+MIq+zU0C/p4pVtGehEjZqxIk9rc?=
+ =?us-ascii?Q?KL7edI6lH64ZrZYZwzEZIUMQFcdg0Wz8zqXtxSZ100at6EQApP5S9A0l/9TV?=
+ =?us-ascii?Q?5V96xV+y390k0Auopez+6OtkZ95tPbirUxtbKOct4AqlzE445gmPtymPKXXI?=
+ =?us-ascii?Q?owbUtc3/AGwaBqVPIQTHEbv1uqfFeS4I5rt2SrJQ4XJMRKWJXbgotyTgCUjN?=
+ =?us-ascii?Q?9jk9Yv/GsP+Q6Aj1dWab8bOJTeia/oEb5qyE82mBZ+VMVIkpX8vwv/GHQ1iO?=
+ =?us-ascii?Q?ABaW+IULbXGzoT2C0FYQ2d2pg8qWVufTsXF6jDSIv2DMY9/8b1M7tGs0G5La?=
+ =?us-ascii?Q?1mQ2/Ac6u7uKbBP5CNjYc5jwsIPhY6lp8KTy7pAXkaYetvSxQHR3XNmojxS9?=
+ =?us-ascii?Q?ZrCrbevLJirHI1IfSuXPKcV+9tgpqI9LCZnBD5Hsdn1ALddXAWhQsVRjlF7S?=
+ =?us-ascii?Q?DkdTKEcpd8m8FgHsYAOLrGYvwoFkBxEq9S7N2JwnMxlrWfvDtWX63Hcv0pST?=
+ =?us-ascii?Q?RRbpKPxW1KNo1Bm8AeKJi7jgpuVNZjGslQPQ2CQc3SckDRgqrkv0y63FgkKT?=
+ =?us-ascii?Q?4PquDTqi0X2FalgNQZ18PKRQm2S9sbVG24CwVrVMCN3I5jy8xju6DoL+PnZi?=
+ =?us-ascii?Q?2OKSjKoCQZmOeC8E4v7+Lq9872IbKGxAaZnE1HrWQQVhiGEjpDqrsDsHGnin?=
+ =?us-ascii?Q?H73fmRDSVOB5HTRfLVSOR4rj0pv19xsw3FLD/Ax7qmtlAVYeWYpjqrhQy+1S?=
+ =?us-ascii?Q?diBddxizEu0Z3Yaq3Bs2+gs1UISrUd1qmFK8ql+SH9E20aoeIF8/pYpd7YWQ?=
+ =?us-ascii?Q?SXsNTPWtjZLQ13fmpvNfaKE34ZontBlNenJWB79eWHX38S+BQMCEWzpjvxDd?=
+ =?us-ascii?Q?d6bkEw3CadJgFydMzEhUUzlYIxLfLclS9mO9AFIlM9XEz7h+19Im/MZhn37u?=
+ =?us-ascii?Q?HCPG1dmWjpoaJt9F+4uETRgx8c+/Pkaiasu1uEB80dX23n+new10zcE0xL99?=
+ =?us-ascii?Q?1dtf6WnAEdNv45s9WLdYeToxgaMm4MM0p/ju1+6KYWZUciEsen7WKhMtZ5rd?=
+ =?us-ascii?Q?6U6pxplcgPtg5sI2o376DiJ+?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dbf0886-57c1-4426-0797-08d8f8da25e8
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef60c421-7691-4cb1-a2ef-08d8f8da2925
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2021 08:58:30.0974
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2021 08:58:35.4503
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rKNk8ks80R1MQymRIx+kAmumfJ8QVMLe4Vf4ZM1yGQw37aUsmFklQnY4h1+FKgvaslfJQfKFxH/2049Ols9ETA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 20lRYIw89fMfvX8OKNmJxaeyKKiC4dNlQJuNgCq4R4/uJ4pzYwSClx3pF0fVAgzAtrC59FZZ8pzMfbp5tLleug==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3275
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -109,221 +109,34 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The current Layerscape PCIe driver directly uses the physical layer
-LTSSM code to check the link-up state, which treats the > L0 states
-as link-up. This is not correct, since there is not explicit map
-between link-up state and LTSSM. So this patch changes to use the
-DWC common link-up check function.
+This property is to indicate the endianness when accessing the
+PEX_LUT and PF register block, so if these registers are
+implemented in big-endian, specify this property.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 V4:
  - Rebased against the latest code base
 
- drivers/pci/controller/dwc/pci-layerscape.c | 140 ++------------------
- 1 file changed, 10 insertions(+), 130 deletions(-)
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index 5b9c625df7b8..71911ca4c589 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -22,12 +22,6 @@
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index 6d898dd4a8e2..d633c1fabdb4 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -40,6 +40,10 @@ Required properties:
+   of the data transferred from/to the IP block. This can avoid the software
+   cache flush/invalid actions, and improve the performance significantly.
  
- #include "pcie-designware.h"
++Optional properties:
++- big-endian: If the PEX_LUT and PF register block is in big-endian, specify
++  this property.
++
+ Example:
  
--/* PEX1/2 Misc Ports Status Register */
--#define SCFG_PEXMSCPORTSR(pex_idx)	(0x94 + (pex_idx) * 4)
--#define LTSSM_STATE_SHIFT	20
--#define LTSSM_STATE_MASK	0x3f
--#define LTSSM_PCIE_L0		0x11 /* L0 state */
--
- /* PEX Internal Configuration Registers */
- #define PCIE_STRFMR1		0x71c /* Symbol Timer & Filter Mask Register1 */
- #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
-@@ -36,19 +30,12 @@
- #define PCIE_IATU_NUM		6
- 
- struct ls_pcie_drvdata {
--	u32 lut_offset;
--	u32 ltssm_shift;
--	u32 lut_dbg;
- 	const struct dw_pcie_host_ops *ops;
--	const struct dw_pcie_ops *dw_pcie_ops;
- };
- 
- struct ls_pcie {
- 	struct dw_pcie *pci;
--	void __iomem *lut;
--	struct regmap *scfg;
- 	const struct ls_pcie_drvdata *drvdata;
--	int index;
- };
- 
- #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
-@@ -83,38 +70,6 @@ static void ls_pcie_drop_msg_tlp(struct ls_pcie *pcie)
- 	iowrite32(val, pci->dbi_base + PCIE_STRFMR1);
- }
- 
--static int ls1021_pcie_link_up(struct dw_pcie *pci)
--{
--	u32 state;
--	struct ls_pcie *pcie = to_ls_pcie(pci);
--
--	if (!pcie->scfg)
--		return 0;
--
--	regmap_read(pcie->scfg, SCFG_PEXMSCPORTSR(pcie->index), &state);
--	state = (state >> LTSSM_STATE_SHIFT) & LTSSM_STATE_MASK;
--
--	if (state < LTSSM_PCIE_L0)
--		return 0;
--
--	return 1;
--}
--
--static int ls_pcie_link_up(struct dw_pcie *pci)
--{
--	struct ls_pcie *pcie = to_ls_pcie(pci);
--	u32 state;
--
--	state = (ioread32(pcie->lut + pcie->drvdata->lut_dbg) >>
--		 pcie->drvdata->ltssm_shift) &
--		 LTSSM_STATE_MASK;
--
--	if (state < LTSSM_PCIE_L0)
--		return 0;
--
--	return 1;
--}
--
- /* Forward error response of outbound non-posted requests */
- static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
- {
-@@ -139,96 +94,24 @@ static int ls_pcie_host_init(struct pcie_port *pp)
- 	return 0;
- }
- 
--static int ls1021_pcie_host_init(struct pcie_port *pp)
--{
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct ls_pcie *pcie = to_ls_pcie(pci);
--	struct device *dev = pci->dev;
--	u32 index[2];
--	int ret;
--
--	pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node,
--						     "fsl,pcie-scfg");
--	if (IS_ERR(pcie->scfg)) {
--		ret = PTR_ERR(pcie->scfg);
--		dev_err(dev, "No syscfg phandle specified\n");
--		pcie->scfg = NULL;
--		return ret;
--	}
--
--	if (of_property_read_u32_array(dev->of_node,
--				       "fsl,pcie-scfg", index, 2)) {
--		pcie->scfg = NULL;
--		return -EINVAL;
--	}
--	pcie->index = index[1];
--
--	return ls_pcie_host_init(pp);
--}
--
--static const struct dw_pcie_host_ops ls1021_pcie_host_ops = {
--	.host_init = ls1021_pcie_host_init,
--};
--
- static const struct dw_pcie_host_ops ls_pcie_host_ops = {
- 	.host_init = ls_pcie_host_init,
- };
- 
--static const struct dw_pcie_ops dw_ls1021_pcie_ops = {
--	.link_up = ls1021_pcie_link_up,
--};
--
--static const struct dw_pcie_ops dw_ls_pcie_ops = {
--	.link_up = ls_pcie_link_up,
--};
--
--static const struct ls_pcie_drvdata ls1021_drvdata = {
--	.ops = &ls1021_pcie_host_ops,
--	.dw_pcie_ops = &dw_ls1021_pcie_ops,
--};
--
--static const struct ls_pcie_drvdata ls1043_drvdata = {
--	.lut_offset = 0x10000,
--	.ltssm_shift = 24,
--	.lut_dbg = 0x7fc,
-+static const struct ls_pcie_drvdata layerscape_drvdata = {
- 	.ops = &ls_pcie_host_ops,
--	.dw_pcie_ops = &dw_ls_pcie_ops,
--};
--
--static const struct ls_pcie_drvdata ls1046_drvdata = {
--	.lut_offset = 0x80000,
--	.ltssm_shift = 24,
--	.lut_dbg = 0x407fc,
--	.ops = &ls_pcie_host_ops,
--	.dw_pcie_ops = &dw_ls_pcie_ops,
--};
--
--static const struct ls_pcie_drvdata ls2080_drvdata = {
--	.lut_offset = 0x80000,
--	.ltssm_shift = 0,
--	.lut_dbg = 0x7fc,
--	.ops = &ls_pcie_host_ops,
--	.dw_pcie_ops = &dw_ls_pcie_ops,
--};
--
--static const struct ls_pcie_drvdata ls2088_drvdata = {
--	.lut_offset = 0x80000,
--	.ltssm_shift = 0,
--	.lut_dbg = 0x407fc,
--	.ops = &ls_pcie_host_ops,
--	.dw_pcie_ops = &dw_ls_pcie_ops,
- };
- 
- static const struct of_device_id ls_pcie_of_match[] = {
--	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
--	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
--	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
--	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
--	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
--	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
--	{ .compatible = "fsl,ls2085a-pcie", .data = &ls2080_drvdata },
--	{ .compatible = "fsl,ls2088a-pcie", .data = &ls2088_drvdata },
--	{ .compatible = "fsl,ls1088a-pcie", .data = &ls2088_drvdata },
-+	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1021a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1043a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
- 	{ },
- };
- 
-@@ -250,7 +133,6 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	pcie->drvdata = of_device_get_match_data(dev);
- 
- 	pci->dev = dev;
--	pci->ops = pcie->drvdata->dw_pcie_ops;
- 	pci->pp.ops = pcie->drvdata->ops;
- 
- 	pcie->pci = pci;
-@@ -260,8 +142,6 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(pci->dbi_base))
- 		return PTR_ERR(pci->dbi_base);
- 
--	pcie->lut = pci->dbi_base + pcie->drvdata->lut_offset;
--
- 	if (!ls_pcie_is_bridge(pcie))
- 		return -ENODEV;
- 
+ 	pcie@3400000 {
 -- 
 2.17.1
 
