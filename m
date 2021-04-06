@@ -2,134 +2,398 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEBCA355A9C
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 19:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0E92355AAE
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 19:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236558AbhDFRoN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 13:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240787AbhDFRoL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 13:44:11 -0400
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38634C061760
-        for <linux-pci@vger.kernel.org>; Tue,  6 Apr 2021 10:44:03 -0700 (PDT)
-Received: by mail-vk1-xa33.google.com with SMTP id o4so3367363vka.12
-        for <linux-pci@vger.kernel.org>; Tue, 06 Apr 2021 10:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EtQUUFH1idf1LCKyK4bnY5JsWaSl6wulsAadPAZ7yAY=;
-        b=k44fY36vdgSsXvuMKXVH2LPUy3SZsyFWOTycUHNSmOyjQKKd2jYRXyVswoQDx+BXc/
-         qbXVT6sU8A/aog8FxFGQmnA5OqijC8l7d4uKXWgAcKoYSY0f87EdOMdUKGccXRucONjM
-         kQuT9XA70rCkKLQps0fdWPpH+vpwXbGFnuA1rBrLaowSoqzpHxTPvmWAgZWPwrwjiRCP
-         EDsJHhTiPdQdRAMcx1879N1yM38qIuq7ue+gjrpg0ULB7XtmuX4WlsmNRC6gF7c8Oero
-         5G+Qe4AzXmDuJRsj/DVfwuCngDmnz4A5oZH11YIIOMykr0JDwT+RxONPGTfNr6cno1SG
-         C/9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EtQUUFH1idf1LCKyK4bnY5JsWaSl6wulsAadPAZ7yAY=;
-        b=AQ6g3DhllT4x8JPiO7GUiVmkMe4Vs299MPVN6v7PLF7jK92l4QEM67ynrT23s6babs
-         ifw4YQM4s4ivsbfEivm3OXQAQR77jgFc3fOM4ANp5pP1sclCFDKC9ECcOzGwTOwSDB5x
-         mg2roUuMwIzkLpNYrceBXDunldm+TWnZLZ38vzm/qA8qdfUbfVRC08Cwc0wdgyT4d5iU
-         BJJIz0gHUQmO1riNbO5PsostjuYIsgpahpValzuJbRmFyBiE6c5YLV4wFPDIP/vYFuQk
-         XSf/jLyVB2mpXRaBXWBIkDZrlqAcYhlh2TN6fE8dMn2VIepyEhgIeZfve31eQzHHIwhI
-         Evdw==
-X-Gm-Message-State: AOAM532AEeNWQXr41j1SlgOt8Oc++BwgL3V4+Fynh7cyDdFUKI/HeNt+
-        fJyTUBlct6gQPxDeECTORuChIQiz76XBOujEpfoIzA==
-X-Google-Smtp-Source: ABdhPJw/vL1B1lwxMga5y/GzF9RJd38fkIy6KReE2RxFlfigxn9W8Lc55czyHQX2OxWT1+hnyyz72VsWoaRuC/f5D4k=
-X-Received: by 2002:a1f:9345:: with SMTP id v66mr18088483vkd.22.1617731041913;
- Tue, 06 Apr 2021 10:44:01 -0700 (PDT)
+        id S1347088AbhDFRrV convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 6 Apr 2021 13:47:21 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2777 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347058AbhDFRrQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 13:47:16 -0400
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FFFCq5K06z686vg;
+        Wed,  7 Apr 2021 01:40:07 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Tue, 6 Apr 2021 19:47:05 +0200
+Received: from localhost (10.47.87.56) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 6 Apr 2021
+ 18:47:05 +0100
+Date:   Tue, 6 Apr 2021 18:44:58 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <ben.widawsky@intel.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/8] cxl/port: Introduce cxl_port objects
+Message-ID: <20210406184458.000061c0@Huawei.com>
+In-Reply-To: <161728748083.2474040.753623311074560290.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <161728748083.2474040.753623311074560290.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20210401233216.2540591-1-samitolvanen@google.com>
- <20210401233216.2540591-15-samitolvanen@google.com> <20210406115357.GE96480@C02TD0UTHF1T.local>
-In-Reply-To: <20210406115357.GE96480@C02TD0UTHF1T.local>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 6 Apr 2021 10:43:50 -0700
-Message-ID: <CABCJKuchDg74Md_He1nKgXKUf=pVEmiaVr_yJXB_yX+tKNhByA@mail.gmail.com>
-Subject: Re: [PATCH v5 14/18] arm64: add __nocfi to functions that jump to a
- physical address
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.47.87.56]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 4:54 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> [adding Ard for EFI runtime services bits]
->
-> On Thu, Apr 01, 2021 at 04:32:12PM -0700, Sami Tolvanen wrote:
-> > Disable CFI checking for functions that switch to linear mapping and
-> > make an indirect call to a physical address, since the compiler only
-> > understands virtual addresses and the CFI check for such indirect calls
-> > would always fail.
->
-> What does physical vs virtual have to do with this? Does the address
-> actually matter, or is this just a general thing that when calling an
-> assembly function we won't have a trampoline that the caller expects?
+On Thu, 1 Apr 2021 07:31:20 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-No, this is about the actual address. The compiler-generated runtime
-checks only know about EL1 virtual addresses, so if we switch to a
-different address space, all indirect calls will trip CFI.
+> Once the cxl_root is established then other ports in the hierarchy can
+> be attached. The cxl_port object, unlike cxl_root that is associated
+> with host bridges, is associated with PCIE Root Ports or PCIE Switch
+> Ports. Add cxl_port instances for all PCIE Root Ports in an ACPI0016
+> host bridge. The cxl_port instances for PCIE Switch Ports are not
+> included here as those are to be modeled as another service device
+> registered on the pcie_port_bus_type.
 
-> I wonder if we need to do something with asmlinkage here, perhaps?
->
-> I didn't spot anything in the seriues handling EFI runtime services
-> calls, and I strongly suspect we need to do something for those, unless
-> they're handled implicitly by something else.
->
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/arm64/include/asm/mmu_context.h | 2 +-
-> >  arch/arm64/kernel/cpu-reset.h        | 8 ++++----
-> >  arch/arm64/kernel/cpufeature.c       | 2 +-
-> >  3 files changed, 6 insertions(+), 6 deletions(-)
-> >https://www.cnbc.com/2021/04/06/donald-trump-save-america-pac-has-85-million-on-hand-ahead-of-midterms.html
-> > diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-> > index 386b96400a57..d3cef9133539 100644
-> > --- a/arch/arm64/include/asm/mmu_context.h
-> > +++ b/arch/arm64/include/asm/mmu_context.h
-> > @@ -119,7 +119,7 @@ static inline void cpu_install_idmap(void)
-> >   * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
-> >   * avoiding the possibility of conflicting TLB entries being allocated.
-> >   */
-> > -static inline void cpu_replace_ttbr1(pgd_t *pgdp)
-> > +static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
->
-> Given these are inlines, what's the effect when these are inlined into a
-> function that would normally use CFI? Does CFI get supressed for the
-> whole function, or just the bit that got inlined?
+Good to give a bit of description of what port2 represents vs port1.
 
-Just for the bit that gets inlined.
+> 
+> A sample sysfs topology for a single-host-bridge with
+> single-PCIE/CXL-root-port:
+> 
+> /sys/bus/cxl/devices/root0
+> ├── address_space0
+> │   ├── devtype
+> │   ├── end
+> │   ├── start
+> │   ├── supports_ram
+> │   ├── supports_type2
+> │   ├── supports_type3
+> │   └── uevent
+> ├── address_space1
+> │   ├── devtype
+> │   ├── end
+> │   ├── start
+> │   ├── supports_pmem
+> │   ├── supports_type2
+> │   ├── supports_type3
+> │   └── uevent
+> ├── devtype
+> ├── port1
+> │   ├── devtype
+> │   ├── host -> ../../../../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:00
+> │   ├── port2
+> │   │   ├── devtype
+> │   │   ├── host -> ../../../../../pci0000:34/0000:34:00.0
+> │   │   ├── subsystem -> ../../../../../../bus/cxl
+> │   │   ├── target_id
+> │   │   └── uevent
+> │   ├── subsystem -> ../../../../../bus/cxl
+> │   ├── target_id
+> │   └── uevent
+> ├── subsystem -> ../../../../bus/cxl
+> ├── target_id
+> └── uevent
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/acpi.c |   99 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core.c |  121 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h  |    5 ++
+>  3 files changed, 224 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index d54c2d5de730..bc2a35ae880b 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -5,18 +5,117 @@
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
+>  #include <linux/acpi.h>
+> +#include <linux/pci.h>
+>  #include "cxl.h"
+>  
+> +static int match_ACPI0016(struct device *dev, const void *host)
+> +{
+> +	struct acpi_device *adev = to_acpi_device(dev);
+> +	const char *hid = acpi_device_hid(adev);
+> +
+> +	return strcmp(hid, "ACPI0016") == 0;
+> +}
+> +
+> +struct cxl_walk_context {
+> +	struct device *dev;
+> +	struct pci_bus *root;
+> +	struct cxl_port *port;
+> +	int error;
+> +	int count;
+> +};
+> +
+> +static int match_add_root_ports(struct pci_dev *pdev, void *data)
+> +{
+> +	struct cxl_walk_context *ctx = data;
+> +	struct pci_bus *root_bus = ctx->root;
+> +	struct cxl_port *port = ctx->port;
+> +	int type = pci_pcie_type(pdev);
+> +	struct device *dev = ctx->dev;
+> +	resource_size_t cxl_regs_phys;
+> +	int target_id = ctx->count;
+> +
+> +	if (pdev->bus != root_bus)
+> +		return 0;
+> +	if (!pci_is_pcie(pdev))
+> +		return 0;
+> +	if (type != PCI_EXP_TYPE_ROOT_PORT)
+> +		return 0;
+> +
+> +	ctx->count++;
+> +
+> +	/* TODO walk DVSEC to find component register base */
+> +	cxl_regs_phys = -1;
+> +
+> +	port = devm_cxl_add_port(dev, port, &pdev->dev, target_id,
+> +				 cxl_regs_phys);
+> +	if (IS_ERR(port)) {
+> +		ctx->error = PTR_ERR(port);
+> +		return ctx->error;
+> +	}
+> +
+> +	dev_dbg(dev, "%s: register: %s\n", dev_name(&pdev->dev),
+> +		dev_name(&port->dev));
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * A host bridge may contain one or more root ports.  Register each port
+> + * as a child of the cxl_root.
+> + */
+> +static int cxl_acpi_register_ports(struct device *dev, struct acpi_device *root,
+> +				   struct cxl_port *port, int idx)
+> +{
+> +	struct acpi_pci_root *pci_root = acpi_pci_find_root(root->handle);
+> +	struct cxl_walk_context ctx;
+> +
+> +	if (!pci_root)
+> +		return -ENXIO;
+> +
+> +	/* TODO: fold in CEDT.CHBS retrieval */
+> +	port = devm_cxl_add_port(dev, port, &root->dev, idx, ~0ULL);
+> +	if (IS_ERR(port))
+> +		return PTR_ERR(port);
+> +	dev_dbg(dev, "%s: register: %s\n", dev_name(&root->dev),
+> +		dev_name(&port->dev));
+> +
+> +	ctx = (struct cxl_walk_context) {
+> +		.dev = dev,
+> +		.root = pci_root->bus,
+> +		.port = port,
+> +	};
+> +	pci_walk_bus(pci_root->bus, match_add_root_ports, &ctx);
+> +
+> +	if (ctx.count == 0)
+> +		return -ENODEV;
+> +	return ctx.error;
+> +}
+> +
+>  static int cxl_acpi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +	struct device *bridge = NULL;
+>  	struct cxl_root *cxl_root;
+> +	int rc, i = 0;
+>  
+>  	cxl_root = devm_cxl_add_root(dev, NULL, 0);
+>  	if (IS_ERR(cxl_root))
+>  		return PTR_ERR(cxl_root);
+>  	dev_dbg(dev, "register: %s\n", dev_name(&cxl_root->port.dev));
+>  
+> +	while (true) {
+> +		bridge = bus_find_device(adev->dev.bus, bridge, dev,
+> +					 match_ACPI0016);
+> +		if (!bridge)
+> +			break;
+> +
+> +		rc = cxl_acpi_register_ports(dev, to_acpi_device(bridge),
+> +					     &cxl_root->port, i++);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+> index 46c3b2588d2f..65cd704581bc 100644
+> --- a/drivers/cxl/core.c
+> +++ b/drivers/cxl/core.c
+> @@ -148,6 +148,15 @@ static void cxl_root_release(struct device *dev)
+>  	kfree(cxl_root);
+>  }
+>  
+> +static void cxl_port_release(struct device *dev)
+> +{
+> +	struct cxl_port *port = to_cxl_port(dev);
+> +
+> +	ida_free(&cxl_port_ida, port->id);
+> +	put_device(port->port_host);
+> +	kfree(port);
+> +}
+> +
+>  static ssize_t target_id_show(struct device *dev, struct device_attribute *attr,
+>  			      char *buf)
+>  {
+> @@ -178,6 +187,12 @@ static const struct device_type cxl_root_type = {
+>  	.groups = cxl_port_attribute_groups,
+>  };
+>  
+> +static const struct device_type cxl_port_type = {
+> +	.name = "cxl_port",
+> +	.release = cxl_port_release,
+> +	.groups = cxl_port_attribute_groups,
+> +};
+> +
+>  struct cxl_root *to_cxl_root(struct device *dev)
+>  {
+>  	if (dev_WARN_ONCE(dev, dev->type != &cxl_root_type,
+> @@ -188,7 +203,9 @@ struct cxl_root *to_cxl_root(struct device *dev)
+>  
+>  struct cxl_port *to_cxl_port(struct device *dev)
+>  {
+> -	if (dev_WARN_ONCE(dev, dev->type != &cxl_root_type,
+> +	if (dev_WARN_ONCE(dev,
+> +			  dev->type != &cxl_root_type &&
+> +			  dev->type != &cxl_port_type,
+>  			  "not a cxl_port device\n"))
+>  		return NULL;
+>  	return container_of(dev, struct cxl_port, dev);
+> @@ -360,6 +377,108 @@ struct cxl_root *devm_cxl_add_root(struct device *host,
+>  }
+>  EXPORT_SYMBOL_GPL(devm_cxl_add_root);
+>  
+> +static void cxl_unlink_port(void *_port)
+> +{
+> +	struct cxl_port *port = _port;
+> +
+> +	sysfs_remove_link(&port->dev.kobj, "host");
+> +}
+> +
+> +static int devm_cxl_link_port(struct device *dev, struct cxl_port *port)
+> +{
+> +	int rc;
+> +
+> +	rc = sysfs_create_link(&port->dev.kobj, &port->port_host->kobj, "host");
+> +	if (rc)
+> +		return rc;
+> +	return devm_add_action_or_reset(dev, cxl_unlink_port, port);
+> +}
+> +
+> +static struct cxl_port *cxl_port_alloc(struct cxl_port *parent_port,
+> +				       struct device *port_dev, int target_id,
+> +				       resource_size_t component_regs_phys)
+> +{
+> +	struct cxl_port *port;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	if (!port_dev)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	port = kzalloc(sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
+> +	if (rc < 0)
+> +		goto err;
+> +
+> +	port->id = rc;
+> +	port->target_id = target_id;
+> +	port->port_host = get_device(port_dev);
+> +	port->component_regs_phys = component_regs_phys;
+> +
+> +	dev = &port->dev;
+> +	device_initialize(dev);
+> +	device_set_pm_not_required(dev);
+> +	dev->parent = &parent_port->dev;
+> +	dev->bus = &cxl_bus_type;
+> +	dev->type = &cxl_port_type;
+> +
+> +	return port;
+> +
+> +err:
+> +	kfree(port);
+> +	return ERR_PTR(rc);
+> +}
+> +
+> +/**
+> + * devm_cxl_add_port() - add a cxl_port to the topology
+> + * @host: devm context / discovery agent
+> + * @parent_port: immediate ancestor towards cxl_root
+> + * @port_host: PCI or platform-firmware device hosting this port
+> + * @target_id: ordinal id relative to other siblings under @parent_port
+> + * @component_regs_phys: CXL component register base address
+> + */
+> +struct cxl_port *devm_cxl_add_port(struct device *host,
+> +				   struct cxl_port *parent_port,
+> +				   struct device *port_host, int target_id,
+> +				   resource_size_t component_regs_phys)
+> +{
+> +	struct cxl_port *port;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	port = cxl_port_alloc(parent_port, port_host, target_id,
+> +			      component_regs_phys);
+> +	if (IS_ERR(port))
+> +		return port;
+> +
+> +	dev = &port->dev;
+> +	rc = dev_set_name(dev, "port%d", port->id);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = devm_add_action_or_reset(host, unregister_dev, dev);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	rc = devm_cxl_link_port(host, port);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	return port;
+> +
+> +err:
+> +	put_device(dev);
+> +	return ERR_PTR(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_cxl_add_port);
+> +
+>  /*
+>   * cxl_setup_device_regs() - Detect CXL Device register blocks
+>   * @dev: Host device of the @base mapping
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 559f8343fee4..0211f44c95a2 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -134,5 +134,10 @@ struct cxl_address_space_dev *to_cxl_address_space(struct device *dev);
+>  struct cxl_root *devm_cxl_add_root(struct device *parent,
+>  				   struct cxl_address_space *cxl_space,
+>  				   int nr_spaces);
+> +struct cxl_port *devm_cxl_add_port(struct device *host,
+> +				   struct cxl_port *parent_port,
+> +				   struct device *port_host, int target_id,
+> +				   resource_size_t component_regs_phys);
+> +
+>  extern struct bus_type cxl_bus_type;
+>  #endif /* __CXL_H__ */
+> 
 
-> Is there an attribute that we could place on a function pointer to tell
-> the compiler to not check calls via that pointer? If that existed we'd
-> be able to scope this much more tightly.
-
-There isn't, but I do agree that this would be a useful feature.
-
-Sami
