@@ -2,139 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1920354AFC
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 04:43:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD03354B53
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 05:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239509AbhDFCl4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Apr 2021 22:41:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:16341 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233030AbhDFCl4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Apr 2021 22:41:56 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4FDsDm70Yfz9wSf;
-        Tue,  6 Apr 2021 10:39:36 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.498.0; Tue, 6 Apr 2021 10:41:42 +0800
-Subject: Re: [PATCH 4/4] PCI: Enable 10-Bit tag support for PCIe RP devices
-To:     kernel test robot <lkp@intel.com>, <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>
-References: <1617440059-2478-5-git-send-email-liudongdong3@huawei.com>
- <202104032041.7KejD0wG-lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, <clang-built-linux@googlegroups.com>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <2c074283-3822-18ec-4907-4eef6247f065@huawei.com>
-Date:   Tue, 6 Apr 2021 10:41:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S233878AbhDFDoh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Apr 2021 23:44:37 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55233 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233639AbhDFDog (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Apr 2021 23:44:36 -0400
+X-UUID: adbfed03089440dc8300f9cfdd18acab-20210406
+X-UUID: adbfed03089440dc8300f9cfdd18acab-20210406
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1924477419; Tue, 06 Apr 2021 11:44:26 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 6 Apr 2021 11:44:24 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 6 Apr 2021 11:44:23 +0800
+From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+To:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
+        <matthias.bgg@gmail.com>
+CC:     <ryder.lee@mediatek.com>, <lorenzo.pieralisi@arm.com>,
+        <jianjun.wang@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
+        <frank-w@public-files.de>
+Subject: [PATCH v9 0/4] PCI: mediatek: Spilt PCIe node to comply with hardware design 
+Date:   Tue, 6 Apr 2021 11:44:06 +0800
+Message-ID: <20210406034410.24381-1-chuanjia.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <202104032041.7KejD0wG-lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+There are two independent PCIe controllers in MT2712 and MT7622 platform. Each of them should contain an independent MSI domain.
 
-Thnaks for your report. I made a mistake.
-Maybe I need to move these functions implementation
-to drivers/pci/pcie/portdrv_pci.c. No need to
-define in drivers/pci/pci.h
+In old dts architecture, MSI domain will be inherited from the root bridge, and all of the devices will share the same MSI domain.
+Hence that, the PCIe devices will not work properly if the irq number which required is more than 32.
 
-Thanks,
-Dongdong
-On 2021/4/3 20:33, kernel test robot wrote:
-> Hi Dongdong,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on v5.12-rc5 next-20210401]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/Dongdong-Liu/PCI-Enable-10-Bit-tag-support-for-PCIe-devices/20210403-171726
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: x86_64-randconfig-a004-20210403 (attached as .config)
-> compiler: clang version 13.0.0 (https://github.com/llvm/llvm-project 0fe8af94688aa03c01913c2001d6a1a911f42ce6)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install x86_64 cross compiling tool for clang build
->         # apt-get install binutils-x86-64-linux-gnu
->         # https://github.com/0day-ci/linux/commit/c1497e514c78375b8c9e9e074e5b84c62eaef20f
->         git remote add linux-review https://github.com/0day-ci/linux
->         git fetch --no-tags linux-review Dongdong-Liu/PCI-Enable-10-Bit-tag-support-for-PCIe-devices/20210403-171726
->         git checkout c1497e514c78375b8c9e9e074e5b84c62eaef20f
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->>> drivers/pci/probe.c:2096:6: error: redefinition of 'pci_configure_rp_10bit_tag'
->    void pci_configure_rp_10bit_tag(struct pci_dev *dev)
->         ^
->    drivers/pci/pci.h:468:20: note: previous definition is here
->    static inline void pci_configure_rp_10bit_tag(struct pci_dev *dev) {}
->                       ^
->    1 error generated.
->
->
-> vim +/pci_configure_rp_10bit_tag +2096 drivers/pci/probe.c
->
->   2095	
->> 2096	void pci_configure_rp_10bit_tag(struct pci_dev *dev)
->   2097	{
->   2098		u8 support = 1;
->   2099		u32 cap;
->   2100		int ret;
->   2101	
->   2102		if (!pci_is_pcie(dev))
->   2103			return;
->   2104	
->   2105		if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
->   2106			return;
->   2107	
->   2108		if (dev->subordinate == NULL)
->   2109			return;
->   2110	
->   2111		pci_10bit_tag_comp_support(dev, &support);
->   2112		if (!support)
->   2113			return;
->   2114	
->   2115		/*
->   2116		 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note
->   2117		 * In configurations where a Requester with 10-Bit Tag Requester capability
->   2118		 * needs to target multiple Completers, one needs to ensure that the
->   2119		 * Requester sends 10-Bit Tag Requests only to Completers that have 10-Bit
->   2120		 * Tag Completer capability. So we enable 10-Bit Tag Requester for root port
->   2121		 * only when the devices under the root port support 10-Bit Tag Completer.
->   2122		 */
->   2123		pci_walk_bus(dev->subordinate, pci_10bit_tag_comp_support, &support);
->   2124		if (!support)
->   2125			return;
->   2126	
->   2127		ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
->   2128		if (ret)
->   2129			return;
->   2130	
->   2131		if (!(cap & PCI_EXP_DEVCAP2_10BIT_TAG_REQ))
->   2132			return;
->   2133	
->   2134		pci_info(dev, "enabling 10-Bit Tag Requester\n");
->   2135		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
->   2136					 PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
->   2137	}
->   2138	
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
+Split the PCIe node for MT2712 and MT7622 platform to comply with the hardware design and fix MSI issue.
+
+change note:
+  v9:fix kernel-ci bot warning. In the scene of using new dts format,
+     when mtk_pcie_parse_port fails, of_node_put don't need to be called.
+  v8:remove slot node and fix yaml warning.
+  v7:dt-bindings file was modified as suggested by Rob, other file no
+     change.
+  v6:Fix yaml error. make sure driver compatible with old and 
+     new DTS format.
+  v5:rebase for 5.9-rc1, no code change. 
+  v4:change commit message due to bayes statistical bogofilter
+     considers this series patch SPAM.
+  v3:rebase for 5.8-rc1. Only collect ack of Ryder, No code change.
+  v2:change the allocation of MT2712 PCIe MMIO space due to the
+     allocation size is not right in v1.
+
+Chuanjia Liu (4):
+ dt-bindings: PCI: mediatek: Update the Device tree bindings
+ PCI: mediatek: Add new method to get shared pcie-cfg base address and
+	parse node
+ arm64: dts: mediatek: Split PCIe node for MT2712 and MT7622
+ ARM: dts: mediatek: Update MT7629 PCIe node for new format
+
+ .../bindings/pci/mediatek-pcie-cfg.yaml       |  39 ++++
+ .../devicetree/bindings/pci/mediatek-pcie.txt | 201 ++++++++++--------
+ arch/arm/boot/dts/mt7629-rfb.dts              |   3 +-
+ arch/arm/boot/dts/mt7629.dtsi                 |  45 ++--
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi     |  97 +++++----
+ .../dts/mediatek/mt7622-bananapi-bpi-r64.dts  |  16 +-
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts  |   6 +-
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      | 112 +++++-----
+ drivers/pci/controller/pcie-mediatek.c        |  52 +++--
+ 9 files changed, 326 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
+
+--
+2.18.0
+
+
