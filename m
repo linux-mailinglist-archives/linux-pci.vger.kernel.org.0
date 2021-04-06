@@ -2,101 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 183F6355A74
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 19:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEBCA355A9C
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 19:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244742AbhDFReN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 13:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244730AbhDFReM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Apr 2021 13:34:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0DAA5613DE;
-        Tue,  6 Apr 2021 17:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1617730444;
-        bh=2BJ3z9VA1NfEv8PmUpsTWkMzbB7AVDenNhbsdlNeaCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SZ/Tz1UKqbmmrOtLho4pKYHy9TMyYfQdmgAdSFfoP11mLiQEkw6N9KA7Mvk41pBjU
-         3gTSCyFZJja9Vr2QeO5/n7OZtwNyKekgHQttYPIyIoqd51Haf5kR9WbkyXdvfB/Xtp
-         I3bw4PwY1feFSiUR7xtayBFHq+eqnmeduEhl4tW0=
-Date:   Tue, 6 Apr 2021 19:34:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v11 0/4] misc: Add Synopsys DesignWare xData IP driver
-Message-ID: <YGybivASLNlAymk0@kroah.com>
-References: <cover.1617729785.git.gustavo.pimentel@synopsys.com>
+        id S236558AbhDFRoN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 13:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240787AbhDFRoL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 13:44:11 -0400
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38634C061760
+        for <linux-pci@vger.kernel.org>; Tue,  6 Apr 2021 10:44:03 -0700 (PDT)
+Received: by mail-vk1-xa33.google.com with SMTP id o4so3367363vka.12
+        for <linux-pci@vger.kernel.org>; Tue, 06 Apr 2021 10:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EtQUUFH1idf1LCKyK4bnY5JsWaSl6wulsAadPAZ7yAY=;
+        b=k44fY36vdgSsXvuMKXVH2LPUy3SZsyFWOTycUHNSmOyjQKKd2jYRXyVswoQDx+BXc/
+         qbXVT6sU8A/aog8FxFGQmnA5OqijC8l7d4uKXWgAcKoYSY0f87EdOMdUKGccXRucONjM
+         kQuT9XA70rCkKLQps0fdWPpH+vpwXbGFnuA1rBrLaowSoqzpHxTPvmWAgZWPwrwjiRCP
+         EDsJHhTiPdQdRAMcx1879N1yM38qIuq7ue+gjrpg0ULB7XtmuX4WlsmNRC6gF7c8Oero
+         5G+Qe4AzXmDuJRsj/DVfwuCngDmnz4A5oZH11YIIOMykr0JDwT+RxONPGTfNr6cno1SG
+         C/9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EtQUUFH1idf1LCKyK4bnY5JsWaSl6wulsAadPAZ7yAY=;
+        b=AQ6g3DhllT4x8JPiO7GUiVmkMe4Vs299MPVN6v7PLF7jK92l4QEM67ynrT23s6babs
+         ifw4YQM4s4ivsbfEivm3OXQAQR77jgFc3fOM4ANp5pP1sclCFDKC9ECcOzGwTOwSDB5x
+         mg2roUuMwIzkLpNYrceBXDunldm+TWnZLZ38vzm/qA8qdfUbfVRC08Cwc0wdgyT4d5iU
+         BJJIz0gHUQmO1riNbO5PsostjuYIsgpahpValzuJbRmFyBiE6c5YLV4wFPDIP/vYFuQk
+         XSf/jLyVB2mpXRaBXWBIkDZrlqAcYhlh2TN6fE8dMn2VIepyEhgIeZfve31eQzHHIwhI
+         Evdw==
+X-Gm-Message-State: AOAM532AEeNWQXr41j1SlgOt8Oc++BwgL3V4+Fynh7cyDdFUKI/HeNt+
+        fJyTUBlct6gQPxDeECTORuChIQiz76XBOujEpfoIzA==
+X-Google-Smtp-Source: ABdhPJw/vL1B1lwxMga5y/GzF9RJd38fkIy6KReE2RxFlfigxn9W8Lc55czyHQX2OxWT1+hnyyz72VsWoaRuC/f5D4k=
+X-Received: by 2002:a1f:9345:: with SMTP id v66mr18088483vkd.22.1617731041913;
+ Tue, 06 Apr 2021 10:44:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1617729785.git.gustavo.pimentel@synopsys.com>
+References: <20210401233216.2540591-1-samitolvanen@google.com>
+ <20210401233216.2540591-15-samitolvanen@google.com> <20210406115357.GE96480@C02TD0UTHF1T.local>
+In-Reply-To: <20210406115357.GE96480@C02TD0UTHF1T.local>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Tue, 6 Apr 2021 10:43:50 -0700
+Message-ID: <CABCJKuchDg74Md_He1nKgXKUf=pVEmiaVr_yJXB_yX+tKNhByA@mail.gmail.com>
+Subject: Re: [PATCH v5 14/18] arm64: add __nocfi to functions that jump to a
+ physical address
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 07:26:45PM +0200, Gustavo Pimentel wrote:
-> This patch series adds a new driver called xData-pcie for the Synopsys
-> DesignWare PCIe prototype.
-> 
-> The driver configures and enables the Synopsys DesignWare PCIe traffic
-> generator IP inside of prototype Endpoint which will generate upstream
-> and downstream PCIe traffic. This allows to quickly test the PCIe link
-> throughput speed and check is the prototype solution has some limitation
-> or not.
-> 
-> Changes:
->  V2: Rework driver according to Greg Kroah-Hartman' feedback
->      - Replace module parameter by sysfs use.
->      - Replace bit fields structure with macros and masks use.
->      - Removed SET() and GET() macros by the writel() and readl().
->      - Removed some noisy info messages.
->  V3: Fixed issues detected while running on 64 bits platforms
->      Rebased patches on top of v5.11-rc1 version
->  V4: Rework driver according to Greg Kroah-Hartman' feedback
->      - Add the ABI doc related to the sysfs implemented on this driver
->  V5: Rework driver accordingly to Leon Romanovsky' feedback
->      - Removed "default n" on Kconfig
->      Rework driver accordingly to Krzysztof Wilczyński' feedback
->      - Added some explanatory comments for some steps
->      - Added some bit defines instead of magic numbers
->  V6: Rework driver according to Greg Kroah-Hartman' feedback
->      - Squashed patches #2 and #3
->      - Removed units (MB/s) on the sys file
->      - Reduced mutex scope on the functions called by sysfs
->      Rework driver accordingly to Krzysztof Wilczyński' feedback
->      - Fix typo "DesignWare"
->  V7: Rework driver according to Greg Kroah-Hartman' feedback
->      - Created a sub device (misc device) that will be associated with the PCI driver
->      - sysfs group is now associated with the misc drivers instead of the PCI driver
->  V8: Rework driver according to Greg Kroah-Hartman' feedback
->      - Added more detail to the version changes on the cover letter
->      - Squashed patches #1 and #2
->      - Removed struct device from the dw_xdata_pcie structure
->      - Replaced the pci_*() use by dev_*()
->      - Added free call for the misc driver name allocation
->      - Added reference counting
->      - Removed snps_edda_data structure and their usage
->      Rebased patches on top of v5.12-rc4 version
->  V9: Squashed temporary development patch #5 into the driver patch #1
->  V10: Reworked the write_store() and read_store() to validate the input using kstrtobool()
->      Removed stop_store()
->      Update ABI documentation accordingly
->  V11: Fixed the documentation based on the warnings detected by Stephen Rothwell
+On Tue, Apr 6, 2021 at 4:54 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> [adding Ard for EFI runtime services bits]
+>
+> On Thu, Apr 01, 2021 at 04:32:12PM -0700, Sami Tolvanen wrote:
+> > Disable CFI checking for functions that switch to linear mapping and
+> > make an indirect call to a physical address, since the compiler only
+> > understands virtual addresses and the CFI check for such indirect calls
+> > would always fail.
+>
+> What does physical vs virtual have to do with this? Does the address
+> actually matter, or is this just a general thing that when calling an
+> assembly function we won't have a trampoline that the caller expects?
 
-As mentioned on the other thread, I can't take these as I took your v10
-into my public tree.  Please send fixes on top of that.
+No, this is about the actual address. The compiler-generated runtime
+checks only know about EL1 virtual addresses, so if we switch to a
+different address space, all indirect calls will trip CFI.
 
-thanks,
+> I wonder if we need to do something with asmlinkage here, perhaps?
+>
+> I didn't spot anything in the seriues handling EFI runtime services
+> calls, and I strongly suspect we need to do something for those, unless
+> they're handled implicitly by something else.
+>
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/arm64/include/asm/mmu_context.h | 2 +-
+> >  arch/arm64/kernel/cpu-reset.h        | 8 ++++----
+> >  arch/arm64/kernel/cpufeature.c       | 2 +-
+> >  3 files changed, 6 insertions(+), 6 deletions(-)
+> >https://www.cnbc.com/2021/04/06/donald-trump-save-america-pac-has-85-million-on-hand-ahead-of-midterms.html
+> > diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> > index 386b96400a57..d3cef9133539 100644
+> > --- a/arch/arm64/include/asm/mmu_context.h
+> > +++ b/arch/arm64/include/asm/mmu_context.h
+> > @@ -119,7 +119,7 @@ static inline void cpu_install_idmap(void)
+> >   * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
+> >   * avoiding the possibility of conflicting TLB entries being allocated.
+> >   */
+> > -static inline void cpu_replace_ttbr1(pgd_t *pgdp)
+> > +static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
+>
+> Given these are inlines, what's the effect when these are inlined into a
+> function that would normally use CFI? Does CFI get supressed for the
+> whole function, or just the bit that got inlined?
 
-greg k-h
+Just for the bit that gets inlined.
+
+> Is there an attribute that we could place on a function pointer to tell
+> the compiler to not check calls via that pointer? If that existed we'd
+> be able to scope this much more tightly.
+
+There isn't, but I do agree that this would be a useful feature.
+
+Sami
