@@ -2,69 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9799355323
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 14:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67987355435
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 14:48:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343701AbhDFMHF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 08:07:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:15495 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343692AbhDFMHC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 08:07:02 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FF5mp4S8Zzrd7S;
-        Tue,  6 Apr 2021 20:04:42 +0800 (CST)
-Received: from mdc.localdomain (10.175.104.57) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.498.0; Tue, 6 Apr 2021 20:06:42 +0800
-From:   Huang Guobin <huangguobin4@huawei.com>
-To:     <huangguobin4@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] PCI: Use DEFINE_SPINLOCK() for spinlock
-Date:   Tue, 6 Apr 2021 20:06:37 +0800
-Message-ID: <1617710797-48903-1-git-send-email-huangguobin4@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S1344202AbhDFMsr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 08:48:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:15920 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243230AbhDFMsr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 08:48:47 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4FF6jP0wzCzkhqX;
+        Tue,  6 Apr 2021 20:46:49 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.498.0; Tue, 6 Apr 2021 20:48:27 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <gregkh@linuxfoundation.org>,
+        <jonathan.cameron@huawei.com>, <song.bao.hua@hisilicon.com>,
+        <prime.zeng@huawei.com>, <yangyicong@hisilicon.com>,
+        <linux-doc@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH 0/4] Add support for HiSilicon PCIe Tune and Trace device
+Date:   Tue, 6 Apr 2021 20:45:50 +0800
+Message-ID: <1617713154-35533-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.175.104.57]
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Guobin Huang <huangguobin4@huawei.com>
+HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+integrated Endpoint(RCiEP) device, providing the capability
+to dynamically monitor and tune the PCIe traffic(tune),
+and trace the TLP headers(trace). The driver exposes the user
+interface through debugfs, so no need for extra user space tools.
+The usage is described in the document.
 
-spinlock can be initialized automatically with DEFINE_SPINLOCK()
-rather than explicitly calling spin_lock_init().
+Yicong Yang (4):
+  hwtracing: Add trace function support for HiSilicon PCIe Tune and
+    Trace device
+  hwtracing: Add tune function support for HiSilicon PCIe Tune and Trace
+    device
+  docs: Add documentation for HiSilicon PTT device driver
+  MAINTAINERS: Add maintainer for HiSilicon PTT driver
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Guobin Huang <huangguobin4@huawei.com>
----
- drivers/pci/hotplug/cpqphp_nvram.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ Documentation/trace/hisi-ptt.rst       |  316 ++++++
+ MAINTAINERS                            |    7 +
+ drivers/Makefile                       |    1 +
+ drivers/hwtracing/Kconfig              |    2 +
+ drivers/hwtracing/hisilicon/Kconfig    |    8 +
+ drivers/hwtracing/hisilicon/Makefile   |    2 +
+ drivers/hwtracing/hisilicon/hisi_ptt.c | 1636 ++++++++++++++++++++++++++++++++
+ 7 files changed, 1972 insertions(+)
+ create mode 100644 Documentation/trace/hisi-ptt.rst
+ create mode 100644 drivers/hwtracing/hisilicon/Kconfig
+ create mode 100644 drivers/hwtracing/hisilicon/Makefile
+ create mode 100644 drivers/hwtracing/hisilicon/hisi_ptt.c
 
-diff --git a/drivers/pci/hotplug/cpqphp_nvram.c b/drivers/pci/hotplug/cpqphp_nvram.c
-index 00cd2b43364f..7a65d427ac11 100644
---- a/drivers/pci/hotplug/cpqphp_nvram.c
-+++ b/drivers/pci/hotplug/cpqphp_nvram.c
-@@ -80,7 +80,7 @@ static u8 evbuffer[1024];
- static void __iomem *compaq_int15_entry_point;
- 
- /* lock for ordering int15_bios_call() */
--static spinlock_t int15_lock;
-+static DEFINE_SPINLOCK(int15_lock);
- 
- 
- /* This is a series of function that deals with
-@@ -415,9 +415,6 @@ void compaq_nvram_init(void __iomem *rom_start)
- 		compaq_int15_entry_point = (rom_start + ROM_INT15_PHY_ADDR - ROM_PHY_ADDR);
- 
- 	dbg("int15 entry  = %p\n", compaq_int15_entry_point);
--
--	/* initialize our int15 lock */
--	spin_lock_init(&int15_lock);
- }
- 
- 
+-- 
+2.8.1
 
