@@ -2,77 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70B1335558C
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 15:44:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25DA43555AB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 15:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344673AbhDFNor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 09:44:47 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:43233 "EHLO lizzard.sbs.de"
+        id S233709AbhDFNte (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 09:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344659AbhDFNon (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Apr 2021 09:44:43 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 136DhfCQ018008
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Apr 2021 15:43:41 +0200
-Received: from md1za8fc.ad001.siemens.net ([167.87.42.66])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 136De2KZ031989;
-        Tue, 6 Apr 2021 15:40:02 +0200
-Date:   Tue, 6 Apr 2021 15:40:01 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        "Jim Quinlan" <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
- support library
-Message-ID: <20210406154001.3eec0698@md1za8fc.ad001.siemens.net>
-In-Reply-To: <3f33a178-3002-e93e-89f1-8cf05097da25@metux.net>
-References: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
-        <20210309014221.GA1831206@bjorn-Precision-5520>
-        <20210309094252.396b7f2d@md1za8fc.ad001.siemens.net>
-        <3f33a178-3002-e93e-89f1-8cf05097da25@metux.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S232452AbhDFNtd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 09:49:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0090D61246;
+        Tue,  6 Apr 2021 13:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1617716965;
+        bh=AHTodKbzDwdE4aT+sGBqYSzfgMa+SmLxo8yj2F+6ktU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l8XVzr8pCamhBopVmKZDH1S/qhaNTTX6x5IgAXtZDVjhyYDucCaW/YPHzw/NdvDAO
+         UcX5g9zsj0ofonVWjLzmzoQpioJDQujm2xCHsNkPljKqp36ohQ8gPFQIsTxulg3hax
+         9fUWtdIO+GunlUTPcyp+qpQhbxZR6jn4ic30VSag=
+Date:   Tue, 6 Apr 2021 15:49:23 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     alexander.shishkin@linux.intel.com, helgaas@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, jonathan.cameron@huawei.com,
+        song.bao.hua@hisilicon.com, prime.zeng@huawei.com,
+        linux-doc@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH 0/4] Add support for HiSilicon PCIe Tune and Trace device
+Message-ID: <YGxm49c9cT69NV5Q@kroah.com>
+References: <1617713154-35533-1-git-send-email-yangyicong@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1617713154-35533-1-git-send-email-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Fri, 2 Apr 2021 15:09:12 +0200
-schrieb "Enrico Weigelt, metux IT consult" <lkml@metux.net>:
+On Tue, Apr 06, 2021 at 08:45:50PM +0800, Yicong Yang wrote:
+> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+> integrated Endpoint(RCiEP) device, providing the capability
+> to dynamically monitor and tune the PCIe traffic(tune),
+> and trace the TLP headers(trace). The driver exposes the user
+> interface through debugfs, so no need for extra user space tools.
+> The usage is described in the document.
 
-> On 09.03.21 09:42, Henning Schild wrote:
-> 
-> > The device will respond to MMIO while being hidden. I am afraid
-> > nothing stops a collision, except for the assumption that the BIOS
-> > is always right and PCI devices never get remapped. But just
-> > guessing here.  
-> 
-> What could go wrong if it is remapped, except that this driver would
-> write to the wrong mmio space ?
-> 
-> If it's unhidden, pci-core should see it and start the usual probing,
-> right ?
+Why use debugfs and not the existing perf tools for debugging?
 
-I have seen this guy exposed to Linux on coreboot machines. No issues.
-But i can imagine BIOSs that somehow make use of the device and assume
-it wont move. So we would at least need a parameter to allow keeping
-that device hidden, or "fixed" in memory.
+thanks,
 
-Henning
-
-> 
-> --mtx
-> 
-
+greg k-h
