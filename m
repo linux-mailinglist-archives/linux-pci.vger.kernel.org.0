@@ -2,113 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1096C355B48
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 20:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80DD1355CF4
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 22:35:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233914AbhDFS0J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 14:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233156AbhDFS0J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 14:26:09 -0400
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18427C06174A;
-        Tue,  6 Apr 2021 11:26:01 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id k14-20020a9d7dce0000b02901b866632f29so15591025otn.1;
-        Tue, 06 Apr 2021 11:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S+YrVHF4/ePuOuqqtVeXHUraWj9qRsuousQu2nUgUwY=;
-        b=gy164X6YSgASgLtXNiV0A9vOVIBKYTyWcyLcF3DpYEZh4wirzOP2hYxdlXvyhIr5D1
-         gk3B4MjQMlQWelgHFtX7QtWkB49FyDyKpC2+SlWe1JiD8C/LIC4OpuyT6rd1qHqMuP3M
-         dLij2UUrWupRlqAYfK2YIsEh/0bli4zeR1g43BSShibYToVxHcH7uwUWzkKR3o/jydQx
-         12c6leDYY1bT2SDcjKtnRxLPobCQPX/HOsigeM6sE4TpS78NIucpDlTU7GBE74jv46Hc
-         YXjtnr/RioHrvx+nQEtKQZjKK7c9M1XPcnclswNI5X/qAwKlvU1EWDbvQ0aSfhe1Koon
-         Gk0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+YrVHF4/ePuOuqqtVeXHUraWj9qRsuousQu2nUgUwY=;
-        b=fDImMX6ZTAcMz1E7TNRmzfnvH5IB+6ZPqRqzCC3JZbz7qAaEFtfeBNWZ9V5qocQujM
-         FkPh8xVQiGP+sK2sJ3DtSTTMl+bkhB+xQ3RYgoZ8QaaP1NJmR9f3IxY+gg0SQaXDyHP+
-         f70Gb8sxkpF7sFxOBO9EzMjQ7lhJ0Jw1+iRT8JTdSkCK2djRpKZOcz1jeWfrCVmT2apF
-         7zFb7NgcKoc5Vc4Gx0SpMK4ffJe61NkhnqaglLVQYAlFYQxiDQQYNvV3lUKaEVqpe49C
-         60iOkozrDMYoLo5pDckDniz2+isKbb3OPMVaCoIYsn3EDOIfxRAcOQzSaLoFBuotM1na
-         s+pg==
-X-Gm-Message-State: AOAM532E7rlUVz5Lg0ADDlwJnb6KZFvctEgJSEU5LEsYPDklSuTQSXLU
-        NQ4nIx+40obRxXu9I1itLWttGaA07zMSm5wAS9o=
-X-Google-Smtp-Source: ABdhPJxwg9vd9+MahRWgSay31WWghgV7JzI7axm3jThr1fYHICcQZP169QbCdS0oklbH8a3X8ZgxFJxyij7UiRsyUzs=
-X-Received: by 2002:a05:6830:1c6e:: with SMTP id s14mr28119450otg.17.1617733560549;
- Tue, 06 Apr 2021 11:26:00 -0700 (PDT)
+        id S235185AbhDFUfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 16:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231488AbhDFUfQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 16:35:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 46D4B613D5;
+        Tue,  6 Apr 2021 20:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617741308;
+        bh=N/P/v83SVqNFY3Fry7EvoEZEpk4y/c7ESbkj/VS1lHg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CiNE4Z4BihALsyCnKHSZxUeDOGqCP4QtrZKYtJ0+3H7wfbdlejkzy4MtQ/LOQm9v7
+         Y4YEbo0XPX4LU3hpaZAIG1XgEnZ/tUbHzltHYCvZNfGYnUYmgOs9vEeC85Wdp4Nckf
+         s743+1JMPYonwGWYoqyezxwN/8qTZF73UE4s646s1bZ30gsXT9bZfLuda10Fx1+Ub0
+         9tK5P1svYqZd5d+o+SRXysnR9jSH4QMYsxgisLf8U3WxLWnEmwDck499AI4WOTVUVC
+         TLPVo3LZCI2x99IgIYoQFI/kOKKQSm3TXe7LbbzXqIFY0e+aL2yWMPnQQFT6cG5UO2
+         IQ1S5xCiXyruA==
+Received: by mail-qv1-f51.google.com with SMTP id 30so7862642qva.9;
+        Tue, 06 Apr 2021 13:35:08 -0700 (PDT)
+X-Gm-Message-State: AOAM5335GdCOpgOibbDJ8Plczoqa64hN6HGInSRdMaE04vsUet0wZh4U
+        QSkurOmr4oT9yR0bgUaLyQV+rMFyRuFnlf/IYg==
+X-Google-Smtp-Source: ABdhPJwg+M3sUpoOAcY6QNJB29EAcEzTm+oglmAhJGlpHQdhW52fxF5MqlsGat4RgDZvcKKE9l41rMv0BC2r+Cq+9Gc=
+X-Received: by 2002:a05:6214:18d2:: with SMTP id cy18mr30403123qvb.50.1617741307499;
+ Tue, 06 Apr 2021 13:35:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401212148.47033-1-jim2101024@gmail.com> <20210401212148.47033-3-jim2101024@gmail.com>
- <20210406164708.GM6443@sirena.org.uk> <CANCKTBsiujTkOdh60etBqF_hE8exg6m9TDxkGHVVAGVS2SFCcQ@mail.gmail.com>
- <20210406173211.GP6443@sirena.org.uk>
-In-Reply-To: <20210406173211.GP6443@sirena.org.uk>
-From:   Jim Quinlan <jim2101024@gmail.com>
-Date:   Tue, 6 Apr 2021 14:25:49 -0400
-Message-ID: <CANCKTBv63b4bGepZbDp1wmFrOeddiDikoXbheMjHhbguAbR2sA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: PCI: Add bindings for Brcmstb
- endpoint device voltage regulators
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20210222084732.21521-1-bharat.kumar.gogada@xilinx.com> <20210406142004.GA25082@lpieralisi>
+In-Reply-To: <20210406142004.GA25082@lpieralisi>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 6 Apr 2021 15:34:56 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+TKsZpHsjm0dBVTGdCMeDYLeOxqFBmNhuM_-xLizX6Fg@mail.gmail.com>
+Message-ID: <CAL_Jsq+TKsZpHsjm0dBVTGdCMeDYLeOxqFBmNhuM_-xLizX6Fg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PCI: xilinx-nwl: Enable coherent PCIe DMA traffic
+ using CCI
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 1:32 PM Mark Brown <broonie@kernel.org> wrote:
+On Tue, Apr 6, 2021 at 9:20 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 >
-> On Tue, Apr 06, 2021 at 01:26:51PM -0400, Jim Quinlan wrote:
-> > On Tue, Apr 6, 2021 at 12:47 PM Mark Brown <broonie@kernel.org> wrote:
+> [+ Rob, Robin]
 >
-> > > No great problem with having these in the controller node (assming it
-> > > accurately describes the hardware) but I do think we ought to also be
-> > > able to describe these per slot.
+> On Mon, Feb 22, 2021 at 02:17:31PM +0530, Bharat Kumar Gogada wrote:
+> > Add support for routing PCIe DMA traffic coherently when
+> > Cache Coherent Interconnect (CCI) is enabled in the system.
+> > The "dma-coherent" property is used to determine if CCI is enabled
+> > or not.
+> > Refer to https://developer.arm.com/documentation/ddi0470/k/preface
+> > for the CCI specification.
+> >
+> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-nwl.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > index 07e36661bbc2..8689311c5ef6 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > @@ -26,6 +26,7 @@
+> >
+> >  /* Bridge core config registers */
+> >  #define BRCFG_PCIE_RX0                       0x00000000
+> > +#define BRCFG_PCIE_RX1                       0x00000004
+> >  #define BRCFG_INTERRUPT                      0x00000010
+> >  #define BRCFG_PCIE_RX_MSG_FILTER     0x00000020
+> >
+> > @@ -128,6 +129,7 @@
+> >  #define NWL_ECAM_VALUE_DEFAULT               12
+> >
+> >  #define CFG_DMA_REG_BAR                      GENMASK(2, 0)
+> > +#define CFG_PCIE_CACHE                       GENMASK(7, 0)
+> >
+> >  #define INT_PCI_MSI_NR                       (2 * 32)
+> >
+> > @@ -675,6 +677,11 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
+> >       nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
+> >                         BRCFG_PCIE_RX_MSG_FILTER);
+> >
+> > +     /* This routes the PCIe DMA traffic to go through CCI path */
+> > +     if (of_dma_is_coherent(dev->of_node))
+> > +             nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX1) |
+> > +                               CFG_PCIE_CACHE, BRCFG_PCIE_RX1);
+> > +
 >
-> > Can you explain what you think that would look like in the DT?
+> This is weird. FW is telling us that the RC is DMA coherent hence
+> we have to program the RC so that it is indeed DMA coherent.
 >
-> I *think* that's just some properties on the nodes for the endpoints,
-> note that the driver could just ignore them for now.  Not sure where or
-> if we document any extensions but child nodes are in section 4 of the
-> v2.1 PCI bus binding.
+> It does not make much sense. I think this is a set-up that should be
+> programmed by firmware and reported to the kernel via the standard
+> "dma-coherent" property. The kernel can read that register to check the
+> HW configuration complies with the DT property.
+>
+> I'd like to get RobH/Robin thoughts on this before proceeding - they
+> have more insights about the DT dma-coherent usage/bindings and
+> expected behaviour.
 
-Hi Mark,
+Without the above change or firmware setup, a DT with 'dma-coherent'
+and a kernel without it will be broken because the above register
+won't be configured, yet we'll be using coherent DMA ops.
 
-I'm a little confused -- here is how I remember the chronology of the
-"DT bindings" commit reviews, please correct me if I'm wrong:
+Originally when I added 'dma-coherent' (for Calxeda h/w), I had to do
+all the coherent path setup in the kernel to ensure the h/w setup was
+in-sync with the DMA ops. Nowadays, it's probably safe to assume the
+OS has coherent support, but can we say that for sure for all OSs?
 
-o JimQ submitted a pullreq for using voltage regulators in the same
-style as the existing "rockport" PCIe driver.
-o After some deliberation, RobH preferred that the voltage regulators
-should go into the PCIe subnode device's DT node.
-o JimQ put the voltage regulators in the subnode device's DT node.
-o MarkB didn't like the fact that the code did a global search for the
-regulator since it could not provide the owning struct device* handle.
-o RobH relented, and said that if it is just two specific and standard
-voltage regulators, perhaps they can go in the parent DT node after
-all.
-o JimQ put the regulators back in the PCIe node.
-o MarkB now wants the regulators to go back into the child node again?
+It also is going to depend if this register survives resets of the
+module. If not, then it needs to be done in the kernel.
 
-Folks, please advise.
-
-Regards,
-Jim Quinlan
-Broadcom STB
+Rob
