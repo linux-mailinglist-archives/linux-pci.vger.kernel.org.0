@@ -2,128 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE7693559E8
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 19:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56884355A01
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 19:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234299AbhDFRDR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 13:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236300AbhDFRDR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 13:03:17 -0400
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE651C061762
-        for <linux-pci@vger.kernel.org>; Tue,  6 Apr 2021 10:03:08 -0700 (PDT)
-Received: by mail-vs1-xe2b.google.com with SMTP id r12so8178873vsj.5
-        for <linux-pci@vger.kernel.org>; Tue, 06 Apr 2021 10:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aSGe0bQ5V3W50ybbudz7bPErfQLcHAnbU3s+nR3236o=;
-        b=NC4Z5tuEQPH56mSVdL6re/GYvhMXmcZBBZJAe0K5oARYXXzfmQy/y1gj01ihWMSmli
-         1Lb/UGbC8aKZb1zPEG9o6M9ucnwbSG6WIoA+FHAPLLbQ01uPDRIuyTwZIpAHLwOG+yq1
-         kkZI+8JMwHOnnEn+lyCTAlWm8etMOLtVCp3S1q3K3aO4yA/23/eH2gEXX6vdFz0CJGwN
-         VF7c5vQJUcdiwYPAChJeB0X1E472u2faiMpy7Ui5DpvqvQTq4h26rGokMp0GpoEMI+P1
-         LV6JUbpNRzT8/BwmE+OHq/ZwSd4sY0JKeDMdURpYfRd1bJM30/6AX5SE7dZl6ySWo0EK
-         KluA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aSGe0bQ5V3W50ybbudz7bPErfQLcHAnbU3s+nR3236o=;
-        b=NNe1zjgXi7kHgBl6zgWCseFw3/ny3cdu3BdccAqdJv/tqMhI3NqtkIrX3R3yT0URw4
-         Ynx6MfPpI78aXJcrTi2NH5sGxS0xRZtP27zjS3ehTQHnWPFJ9UtVbbDx8kymLhJXMMLI
-         XQ3nEHUH5ETf/9u0isZny+Rs0aoLWnrfFGtkGpRrCvU2eOCy3/JvhZZiGVVbTzzSkjSv
-         Qb+fUtnuQMhnCsOB3gZa365cBXIwxVO9bxBajNhMFxs/s1tDJXjU1dZK+QKNtaJDX/+I
-         7At5MKoxmcHzoDU2KZHfgYysgQiioe08G1g02xiDdI9f3OCtCHnvgyg5USWsB5D/2j40
-         b/+Q==
-X-Gm-Message-State: AOAM5301siHfmykv+5sRU4so8Krpdl7G7uKf/ccWJJ99qtickmXv5ims
-        eUCH8sqj36ftWw8hvwhyH7GWTaHnT1T6TyH7wxzDQQ==
-X-Google-Smtp-Source: ABdhPJxQSX0S7k4FzbEyhTnhHluxlT34cEUaV5NL9+ccGUPUJJazSLwY0K1+rikJtvM1UuMR3n/GOvlAUPSV1eX6hZs=
-X-Received: by 2002:a05:6102:2423:: with SMTP id l3mr16985008vsi.54.1617728587679;
- Tue, 06 Apr 2021 10:03:07 -0700 (PDT)
+        id S1346758AbhDFRIo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 13:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232822AbhDFRIn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 13:08:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 93F25610CC;
+        Tue,  6 Apr 2021 17:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617728915;
+        bh=edUzF5nJv0vwtrQnLt0WqWx2dJz93v6JQ8nfxVFT+Pg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EJEusLmGIB3wcSA1NdCl8ZZ5/H2kB+o0U7+LoQTb94T24cUw6JjuNEThslx1eBh/W
+         TPZ/qGrO7GPmm1itdIVr4TcXkZtyKem6lC5qBAwiZPQyxVmVkgmO1KvFE0yDdzPkUf
+         T6tyGxJrYRtiRzRIEeTdLXtrERmyzZgSLWC2oEMTRGtPQfND5hcclG7dIgH7x+0fK0
+         3nZS+FeWta12S4uqiOqy/oRBSs5nyB4b6r0JEFKPJWQ1U+i5A5C4DXave8AgO77YoV
+         BHkGoahkoI4CJ/zpcNGn8JmUp6Jceqkuq8o+Y2X0iUqTj30wBv5HE3nUaJXGLBm4bg
+         qkDYKuGQixrsQ==
+Date:   Tue, 6 Apr 2021 12:08:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Change the inheritance between the abstracted
+ structures
+Message-ID: <20210406170834.GA1716535@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210401233216.2540591-1-samitolvanen@google.com>
- <20210401233216.2540591-13-samitolvanen@google.com> <20210406113657.GC96480@C02TD0UTHF1T.local>
-In-Reply-To: <20210406113657.GC96480@C02TD0UTHF1T.local>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 6 Apr 2021 10:02:56 -0700
-Message-ID: <CABCJKueabmkC3OXSGHKMKS9wJEeRGHBd3b1hK6fM=mMKkj3b1A@mail.gmail.com>
-Subject: Re: [PATCH v5 12/18] arm64: implement function_nocfi
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        bpf <bpf@vger.kernel.org>, linux-hardening@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210406092825.24579-1-Zhiqiang.Hou@nxp.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 4:37 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Thu, Apr 01, 2021 at 04:32:10PM -0700, Sami Tolvanen wrote:
-> > With CONFIG_CFI_CLANG, the compiler replaces function addresses in
-> > instrumented C code with jump table addresses. This change implements
-> > the function_nocfi() macro, which returns the actual function address
-> > instead.
-> >
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> I think that it's unfortunate that we have to drop to assembly here, but
-> given this is infrequent I agree it's not the end of the world, so:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
-> > ---
-> >  arch/arm64/include/asm/memory.h | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> > index 0aabc3be9a75..b55410afd3d1 100644
-> > --- a/arch/arm64/include/asm/memory.h
-> > +++ b/arch/arm64/include/asm/memory.h
-> > @@ -321,6 +321,21 @@ static inline void *phys_to_virt(phys_addr_t x)
-> >  #define virt_to_pfn(x)               __phys_to_pfn(__virt_to_phys((unsigned long)(x)))
-> >  #define sym_to_pfn(x)                __phys_to_pfn(__pa_symbol(x))
-> >
-> > +#ifdef CONFIG_CFI_CLANG
-> > +/*
-> > + * With CONFIG_CFI_CLANG, the compiler replaces function address
-> > + * references with the address of the function's CFI jump table
-> > + * entry. The function_nocfi macro always returns the address of the
-> > + * actual function instead.
-> > + */
-> > +#define function_nocfi(x) ({                                         \
-> > +     void *addr;                                                     \
-> > +     asm("adrp %0, " __stringify(x) "\n\t"                           \
-> > +         "add  %0, %0, :lo12:" __stringify(x) : "=r" (addr));        \
->
-> If it's not too painful, could we please move the asm constrain onto its
-> own line? That makes it slightly easier to read, and aligns with what
-> we've (mostly) done elsewhere in arm64.
+On Tue, Apr 06, 2021 at 05:28:25PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Currently the core struct dw_pcie includes both struct pcie_port
+> and dw_pcie_ep and the RC and EP platform drivers directly
+> includes the dw_pcie. So it results in a RC or EP platform driver
+> has 2 indirect parents pcie_port and dw_pcie_ep, but it doesn't
+> make sense let RC platform driver includes the dw_pcie_ep and
+> so does the EP platform driver.
+> 
+> This patch makes the struct pcie_port and dw_pcie_ep includes
+> the core struct dw_pcie and the RC and EP platform drivers
+> include struct pcie_port and dw_pcie_ep respectively.
 
-Sure, I'll change this in the next version.
+I really like the way this patch is heading.  There's a lot of
+historical cruft in these drivers and this is a good step to cleaning
+it up.  Thanks a lot for working on this!
 
-> Not a big deal either way, and the ack stands regardless.
->
-> Thanks,
-> Mark.
+What does this patch apply to?  It doesn't apply cleanly to either my
+"main" branch or the "next" branch.  Try to send things that apply to
+"main" and if it needs to apply on top of something else, mention what
+that is.
 
-Sami
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 12726c63366f..0e914df6eaba 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -85,7 +85,8 @@
+>  #define PCIE_B0_B1_TSYNCEN				BIT(0)
+>  
+>  struct dra7xx_pcie {
+> -	struct dw_pcie		*pci;
+> +	struct pcie_port	*pp;
+> +	struct dw_pcie_ep	*ep;
+
+1) This is not related to your patch, but I think "pcie_port" used to
+   make more sense before we had endpoint drivers, but now it's the
+   wrong name.  Root Ports and Endpoints both have "PCIe Ports", but
+   IIUC "struct pcie_port" only applies to Root Ports, and "struct
+   dw_pcie_ep" is the analogue for Endpoints.
+
+   It would be nice to coordinate these names with a separate patch,
+   e.g., maybe "dw_pcie_rc" (or "dw_pcie_rp") and "dw_pcie_ep".
+
+2) We allocate struct dra7xx_pcie for both RPs and EPs.  But IIUC, RPs
+   only use "struct pcie_port", and EPs only use "struct dw_pcie_ep".
+   It doesn't seem right to keep both pointers when only one is ever
+   used.
+
+3) I'm not sure why these should be pointers at all.  Why can't they
+   be directly embedded, e.g., "struct pcie_port pp" instead of
+   "struct pcie_port *pp"?  Obviously this would have to be done in a
+   way that we allocate an RC-specific structure or an EP-specific
+   one.
+
+>  	void __iomem		*base;		/* DT ti_conf */
+>  	int			phy_count;	/* DT phy-names count */
+>  	struct phy		**phy;
+
+> @@ -796,6 +798,17 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  
+>  	switch (mode) {
+>  	case DW_PCIE_RC_TYPE:
+> +		pp = devm_kzalloc(dev, sizeof(*pp), GFP_KERNEL);
+
+We know "mode" right after the of_match_device() at the top of this
+function.  I think we should allocate the RC or EP structure way up
+there, ideally with a single alloc for everything we need
+(dra7xx_pcie, pcie_port, dw_pcie_ep, etc).  That would be fewer allocs
+and would simplify error handling because if the alloc fails we
+wouldn't have to undo anything.
+
+> +		if (!pp) {
+> +			ret = -ENOMEM;
+> +			goto err_gpio;
+> +		}
+> +
+> +		pci = &pp->pcie;
+> +		pci->dev = dev;
+> +		pci->ops = &dw_pcie_ops;
+> +		dra7xx->pp = pp;
+> +
+>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
+>  			ret = -ENODEV;
+>  			goto err_gpio;
+> @@ -813,6 +826,17 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  			goto err_gpio;
+>  		break;
+>  	case DW_PCIE_EP_TYPE:
+> +		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> +		if (!ep) {
+> +			ret = -ENOMEM;
+> +			goto err_gpio;
+> +		}
+> +
+> +		pci = &ep->pcie;
+> +		pci->dev = dev;
+> +		pci->ops = &dw_pcie_ops;
+> +		dra7xx->ep = ep;
+> +
+>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_EP)) {
+>  			ret = -ENODEV;
+>  			goto err_gpio;
+
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -171,12 +171,44 @@ enum dw_pcie_device_mode {
+>  	DW_PCIE_RC_TYPE,
+>  };
+>  
+> +struct dw_pcie_ops {
+> +	u64	(*cpu_addr_fixup)(struct dw_pcie *pcie, u64 cpu_addr);
+> +	u32	(*read_dbi)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
+> +			    size_t size);
+> +	void	(*write_dbi)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
+> +			     size_t size, u32 val);
+> +	void    (*write_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
+> +			      size_t size, u32 val);
+> +	int	(*link_up)(struct dw_pcie *pcie);
+> +	int	(*start_link)(struct dw_pcie *pcie);
+> +	void	(*stop_link)(struct dw_pcie *pcie);
+> +};
+
+I *think* this is a pure code move.  It would make the patch easier to
+read if you did the move in a separate patch to reduce the size of
+this one.
+
+> +struct dw_pcie {
+> +	struct device		*dev;
+> +	void __iomem		*dbi_base;
+> +	void __iomem		*dbi_base2;
+> +	/* Used when iatu_unroll_enabled is true */
+> +	void __iomem		*atu_base;
+> +	size_t			atu_size;
+> +	u32			num_ib_windows;
+> +	u32			num_ob_windows;
+> +	const struct dw_pcie_ops *ops;
+> +	unsigned int		version;
+> +	int			num_lanes;
+> +	int			link_gen;
+> +	u8			n_fts[2];
+> +	bool			iatu_unroll_enabled: 1;
+> +	bool			io_cfg_atu_shared: 1;
+> +};
+
+Same here.
+
+>  struct kirin_pcie {
+> -	struct dw_pcie	*pci;
+> -	void __iomem	*apb_base;
+> -	void __iomem	*phy_base;
+> -	struct regmap	*crgctrl;
+> -	struct regmap	*sysctrl;
+> -	struct clk	*apb_sys_clk;
+> -	struct clk	*apb_phy_clk;
+> -	struct clk	*phy_ref_clk;
+> -	struct clk	*pcie_aclk;
+> -	struct clk	*pcie_aux_clk;
+> -	int		gpio_id_reset;
+> +	struct pcie_port	*pp;
+> +	void __iomem		*apb_base;
+> +	void __iomem		*phy_base;
+> +	struct regmap		*crgctrl;
+> +	struct regmap		*sysctrl;
+> +	struct clk		*apb_sys_clk;
+> +	struct clk		*apb_phy_clk;
+> +	struct clk		*phy_ref_clk;
+> +	struct clk		*pcie_aclk;
+> +	struct clk		*pcie_aux_clk;
+> +	int			gpio_id_reset;
+
+Put reformats like this in a separate patch that doesn't actually
+change any code (no new or deleted members).  Then this patch will be
+smaller and the important changes will be more obvious.
