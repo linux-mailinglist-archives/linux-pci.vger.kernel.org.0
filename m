@@ -2,74 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D236355B05
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 20:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F300355B28
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 20:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240404AbhDFSIC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 14:08:02 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:35854 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232876AbhDFSIC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 14:08:02 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A43A540031;
-        Tue,  6 Apr 2021 18:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1617732474; bh=S6cOsqxe037fjdIYzX+/jnn4hCGE134NlmKz+eWZVUg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ab29aTfWlhRXDKAUxOiTn1gzoyrtz2GzTzLvvl2BWPmZswZQDxfbdB6GRo+AyqNrZ
-         ZZeTkV+0M4RMERGby+6Peaibli6cGFDMAznSrYWkdrZWalIZaOIPz6wWhckNE6Kbyk
-         /jdrWwCZICbe1c1D6kyNxKjoONoKOOkkzoK4LSF5T6ZvnhmfmnKoyk8VvG+BuWBE2w
-         1wrspuoDhuwsckwie8ZRx3PZYRWv+XukliP+BG/UIvxVG2Wk7twVGWhi+kWVQPvU0G
-         gJMcJg1IS6FSFdKQ7gZ5AB92iR91OXhAovn0Z/WbFUhcZNSv1zvu+cZV0fyumVKbJW
-         GrWPERR44xwXw==
-Received: from de02dwvm009.internal.synopsys.com (de02dwvm009.internal.synopsys.com [10.225.17.73])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 07864A022E;
-        Tue,  6 Apr 2021 18:07:50 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S237518AbhDFSSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 14:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235539AbhDFSSb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 14:18:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 854BB613B8;
+        Tue,  6 Apr 2021 18:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1617733103;
+        bh=c2G4rDYRbYPtcYobdDZ+O/zbe5/Gl8tdD2GW2tRKoLU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VMoNwIonxr/5wnvt4ku7M3MIX94eMtOmrUSrBM9T4tfrMkjBvMnYK8oWnq20Spxgx
+         AIU8lLs2zfg6mWJA2DPmbHsuT10N1V2BlW7jipWLVNKgHQKEFk2Rkr2McPNNIS6pPC
+         lgUJjBVl64DyJkeUdsn+MtSgJHr+fdoMGOMsS3X8=
+Date:   Tue, 6 Apr 2021 20:18:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Derek Kiernan <derek.kiernan@xilinx.com>,
         Dragan Cvetic <dragan.cvetic@xilinx.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH] Documentation: misc-devices: Add missing entry on the table of content related to dw-xdata-pcie
-Date:   Tue,  6 Apr 2021 20:07:43 +0200
-Message-Id: <1fedd7b269b5d5543333340c44f0a917f578389d.1617732463.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+Subject: Re: [PATCH] Documentation: misc-devices: Fix indentation,
+ formatting, and update outdated info
+Message-ID: <YGyl7OWHJm1NuaV2@kroah.com>
+References: <689d1827d98b2f7a51175ff1efd3a92d8191b28d.1617732412.git.gustavo.pimentel@synopsys.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <689d1827d98b2f7a51175ff1efd3a92d8191b28d.1617732412.git.gustavo.pimentel@synopsys.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing entry on the table of content related to dw-xdata-pcie misc
-driver reported in a warning by doing *make htmldocs*.
+On Tue, Apr 06, 2021 at 08:06:52PM +0200, Gustavo Pimentel wrote:
+> Fixes indentation issues reported by doing *make htmldocs* as well some
+> text formatting.
+> 
+> Besides these fixes, there was some outdated information related to stop
+> file interface in sysfs.
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- Documentation/misc-devices/index.rst | 1 +
- 1 file changed, 1 insertion(+)
+Your subject line is odd, it should look something like:
+	[PATCH] dw-xdata-pcie: fix up documentation issues
 
-diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
-index 64420b331..30ac58f 100644
---- a/Documentation/misc-devices/index.rst
-+++ b/Documentation/misc-devices/index.rst
-@@ -19,6 +19,7 @@ fit into other categories.
-    bh1770glc
-    eeprom
-    c2port
-+   dw-xdata-pcie
-    ibmvmc
-    ics932s401
-    isl29003
--- 
-2.7.4
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
+You do not have a "Reported-by:" line?
+
+Please fix.
+
+thanks,
+
+greg k-h
