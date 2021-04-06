@@ -2,139 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FCD735563D
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 16:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8581035564B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 16:16:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244364AbhDFOPi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 10:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244344AbhDFOPh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 10:15:37 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F387C061756
-        for <linux-pci@vger.kernel.org>; Tue,  6 Apr 2021 07:15:28 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id h10so16731718edt.13
-        for <linux-pci@vger.kernel.org>; Tue, 06 Apr 2021 07:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citymesh-com.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=syu1Q2zFBZO/WT38eA0jnz3HW13lws9Lu6W/8qRxwyg=;
-        b=Ie8+tmEC0KGhp7QyI++MEIAnf0w0Dep7DeGdmO9bVQxN31Z786gHzev2fLM50HfmVW
-         u11oifmFDH7CqLbGl2TvqeH4N8RFX5GyqCrTtS9DI/9kMVQOtUM4a1LExFXSLksw63fx
-         qRe7ed+WTGVSsFGyqHY39yPGPfZw81kk0MQB/3sw/NgCtbH4/lg/94ULlVDi9NjwmjKd
-         PBnBqWmcQAnQvI1UiLQBxZLr1BhdzkU65dHzwUg6JcUY6VUadKaUUU2jqEWRAZkM4puD
-         +0z6aj//ZtDCN1JA056uU8NmOoAPb07bh+C3th2QFlxn9VjJYPB5Q6xVUKA0zJvCyqfg
-         PBAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=syu1Q2zFBZO/WT38eA0jnz3HW13lws9Lu6W/8qRxwyg=;
-        b=kumPSbaVEa3t2c1q5jAO3VfNuQPAykt8TQJtJ6T+x9vhFD1xylDRhIZmPhrhQT8l6b
-         N9l0IQBmFiMQF45X0dpQqzdlxrsWfwHmWYiXsK+qmC1FAgjSUGVhkeRI69TD3GzCOBbn
-         IYZ6dhxi+UDEReIFQAmAlhJSDm64bywGArEVKxLrnkhli5kLJtRW4XU80JSm1iOLPmVb
-         +PlCGWV9GsfTtSss2JEMtyCjnrZohp6Srx1fCQb8XpQtrocgzzVe5ZFQzXHaxq4MIEc2
-         2705igY+VjnHxPJ8spGhyjs8kPwjp935K46cHcw7cykhlxAzabx2ORKybzHpy2V4v9k5
-         l0ww==
-X-Gm-Message-State: AOAM531KPxx2S0f8+elIETNfKM2PNB8OQJ8b8nhRm6eW9UzLMYnvxiIC
-        +VBZZP9fSbG93ziDdWeGWEsFCwpuhP7GtOwo
-X-Google-Smtp-Source: ABdhPJxovm1H11qGF71/xH3f4H7lDU1sriHrZDaqcs13U3LOSGqJyL2sBtL+YV2dwTClU5HyjdV2Vg==
-X-Received: by 2002:a50:cdd1:: with SMTP id h17mr38044939edj.178.1617718526787;
-        Tue, 06 Apr 2021 07:15:26 -0700 (PDT)
-Received: from [10.202.0.7] ([31.31.140.89])
-        by smtp.gmail.com with ESMTPSA id a19sm4401644ejy.42.2021.04.06.07.15.25
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Apr 2021 07:15:26 -0700 (PDT)
-To:     linux-pci@vger.kernel.org
-From:   Koen Vandeputte <koen.vandeputte@citymesh.com>
-Subject: imx6: Question regarding warning in pci addition
-Message-ID: <eef67246-43ac-f081-bca1-4327a2a6d4f5@citymesh.com>
-Date:   Tue, 6 Apr 2021 16:15:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1344996AbhDFOQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 10:16:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44020 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344977AbhDFOQl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 10:16:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617718593;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TXQG7GfvF1Ng7FzSKt4ktIki+yjQeoa1qkYOKApty+c=;
+        b=JwiraQIcesN3lKZKzFLi/IqWLBYbZlQrwLEVLmxmd59SBb6HmOzi5EJ6diktEvz37uK//B
+        F6BFW5/bm0IOAbmIVE4WkZSAdGvjrg/fGjFkiqkuOkKQZXXJo4UhRnlTCMGdLfPgEbfYZQ
+        HsQKz29z6jKHdHlP3lIcY/aWd7DWRUw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-VprOzs9nMXKakP89jFEt9w-1; Tue, 06 Apr 2021 10:16:29 -0400
+X-MC-Unique: VprOzs9nMXKakP89jFEt9w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01CEE108BD0F;
+        Tue,  6 Apr 2021 14:16:28 +0000 (UTC)
+Received: from x1.home.shazbot.org (ovpn-112-85.phx2.redhat.com [10.3.112.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 708FB19D61;
+        Tue,  6 Apr 2021 14:16:27 +0000 (UTC)
+Date:   Tue, 6 Apr 2021 08:16:26 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
+Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
+Message-ID: <20210406081626.31f19c0f@x1.home.shazbot.org>
+In-Reply-To: <YGlzEA5HL6ZvNsB8@unreal>
+References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
+        <YGW8Oe9jn+n9sVsw@unreal>
+        <20210401105616.71156d08@omen>
+        <YGlzEA5HL6ZvNsB8@unreal>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+On Sun, 4 Apr 2021 11:04:32 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
 
-Pinging on this list as it might trigger someone :-)
+> On Thu, Apr 01, 2021 at 10:56:16AM -0600, Alex Williamson wrote:
+> > On Thu, 1 Apr 2021 15:27:37 +0300
+> > Leon Romanovsky <leon@kernel.org> wrote:
+> >   
+> > > On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:  
+> > > > Slot resets are bus resets with additional logic to prevent a device
+> > > > from being removed during the reset. Currently slot and bus resets have
+> > > > separate implementations in pci.c, complicating higher level logic. As
+> > > > discussed on the mailing list, they should be combined into a generic
+> > > > function which performs an SBR. This change adds a function,
+> > > > pci_reset_bus_function(), which first attempts a slot reset and then
+> > > > attempts a bus reset if -ENOTTY is returned, such that there is now a
+> > > > single device agnostic function to perform an SBR.
+> > > > 
+> > > > This new function is also needed to add SBR reset quirks and therefore
+> > > > is exposed in pci.h.
+> > > > 
+> > > > Link: https://lkml.org/lkml/2021/3/23/911
+> > > > 
+> > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > > > Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > > > ---
+> > > >  drivers/pci/pci.c   | 17 +++++++++--------
+> > > >  include/linux/pci.h |  1 +
+> > > >  2 files changed, 10 insertions(+), 8 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index 16a17215f633..12a91af2ade4 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
+> > > >  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+> > > >  }
+> > > >  
+> > > > +int pci_reset_bus_function(struct pci_dev *dev, int probe)
+> > > > +{
+> > > > +	int rc = pci_dev_reset_slot_function(dev, probe);
+> > > > +
+> > > > +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;    
+> > > 
+> > > The previous coding style is preferable one in the Linux kernel.
+> > > int rc = pci_dev_reset_slot_function(dev, probe);
+> > > if (rc != -ENOTTY)
+> > >   return rc;
+> > > return pci_parent_bus_reset(dev, probe);  
+> > 
+> > 
+> > That'd be news to me, do you have a reference?  I've never seen
+> > complaints for ternaries previously.  Thanks,  
+> 
+> The complaint is not to ternaries, but to the function call as one of
+> the parameters, that makes it harder to read.
 
-
-I just started testing kernel 5.10.27 in-depth (OpenWRT master) on imx6 
-hw (Gateworks GW-52xx boards).
-
-Following warnings are now present which were not using kernel 5.4.
-They seem to get printed on every device being added to the PCIe 
-topology during enumeration:    (See full log)
-
-
-[    1.904789] sysfs: cannot create duplicate filename 
-'/devices/platform/soc/1ffc000.pcie/pci0000:00/0000:00:00.0/config'
-[    1.945983] CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.10.27 #0
-[    1.952254] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[    1.958811] Workqueue: events_unbound async_run_entry_fn
-[    1.964157] [<8010d5e0>] (unwind_backtrace) from [<801099f8>] 
-(show_stack+0x10/0x14)
-[    1.971917] [<801099f8>] (show_stack) from [<804a67cc>] 
-(dump_stack+0x94/0xa8)
-[    1.979154] [<804a67cc>] (dump_stack) from [<802fd440>] 
-(sysfs_warn_dup+0x54/0x60)
-[    1.986734] [<802fd440>] (sysfs_warn_dup) from [<802fd098>] 
-(sysfs_add_file_mode_ns+0x15c/0x1a0)
-[    1.995529] [<802fd098>] (sysfs_add_file_mode_ns) from [<802fd314>] 
-(sysfs_create_bin_file+0x7c/0x84)
-[    2.004768] [<802fd314>] (sysfs_create_bin_file) from [<804e55d4>] 
-(pci_create_sysfs_dev_files+0x44/0x298)
-[    2.014441] [<804e55d4>] (pci_create_sysfs_dev_files) from 
-[<804d7248>] (pci_bus_add_device+0x20/0x84)
-[    2.023757] [<804d7248>] (pci_bus_add_device) from [<804d72d8>] 
-(pci_bus_add_devices+0x2c/0x70)
-[    2.032465] [<804d72d8>] (pci_bus_add_devices) from [<804dabcc>] 
-(pci_host_probe+0x40/0x94)
-[    2.040833] [<804dabcc>] (pci_host_probe) from [<804f822c>] 
-(dw_pcie_host_init+0x1c0/0x3fc)
-[    2.049196] [<804f822c>] (dw_pcie_host_init) from [<804f88ec>] 
-(imx6_pcie_probe+0x358/0x63c)
-[    2.057648] [<804f88ec>] (imx6_pcie_probe) from [<8054710c>] 
-(platform_drv_probe+0x48/0x98)
-[    2.066009] [<8054710c>] (platform_drv_probe) from [<80545368>] 
-(really_probe+0xfc/0x4dc)
-[    2.074195] [<80545368>] (really_probe) from [<80545a28>] 
-(driver_probe_device+0x5c/0xb4)
-[    2.082378] [<80545a28>] (driver_probe_device) from [<80545b28>] 
-(__driver_attach_async_helper+0xa8/0xac)
-[    2.091963] [<80545b28>] (__driver_attach_async_helper) from 
-[<8014bf48>] (async_run_entry_fn+0x44/0x108)
-[    2.101546] [<8014bf48>] (async_run_entry_fn) from [<80141bbc>] 
-(process_one_work+0x1d8/0x43c)
-[    2.110168] [<80141bbc>] (process_one_work) from [<80141e84>] 
-(worker_thread+0x64/0x5b0)
-[    2.118268] [<80141e84>] (worker_thread) from [<80147708>] 
-(kthread+0x148/0x14c)
-[    2.125672] [<80147708>] (kthread) from [<80100148>] 
-(ret_from_fork+0x14/0x2c)
-[    2.132896] Exception stack(0x80c75fb0 to 0x80c75ff8)
-[    2.137953] 5fa0:                                     00000000 
-00000000 00000000 00000000
-[    2.146136] 5fc0: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    2.154316] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-
-
-Any idea what changed?
-
-
-Full logs: https://pastebin.com/raw/D0NHAnbH
-
-Thanks,
-
-Koen
+Sorry, I don't find a function call as a parameter to a ternary to be
+extraordinary, nor do I find it to be a discouraged usage model within
+the kernel.  This seems like a pretty low bar for hard to read code.
 
