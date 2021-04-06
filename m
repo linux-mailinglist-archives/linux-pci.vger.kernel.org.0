@@ -2,124 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80DD1355CF4
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 22:35:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02C2B355DC1
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Apr 2021 23:18:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235185AbhDFUfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 16:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231488AbhDFUfQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Apr 2021 16:35:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 46D4B613D5;
-        Tue,  6 Apr 2021 20:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617741308;
-        bh=N/P/v83SVqNFY3Fry7EvoEZEpk4y/c7ESbkj/VS1lHg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CiNE4Z4BihALsyCnKHSZxUeDOGqCP4QtrZKYtJ0+3H7wfbdlejkzy4MtQ/LOQm9v7
-         Y4YEbo0XPX4LU3hpaZAIG1XgEnZ/tUbHzltHYCvZNfGYnUYmgOs9vEeC85Wdp4Nckf
-         s743+1JMPYonwGWYoqyezxwN/8qTZF73UE4s646s1bZ30gsXT9bZfLuda10Fx1+Ub0
-         9tK5P1svYqZd5d+o+SRXysnR9jSH4QMYsxgisLf8U3WxLWnEmwDck499AI4WOTVUVC
-         TLPVo3LZCI2x99IgIYoQFI/kOKKQSm3TXe7LbbzXqIFY0e+aL2yWMPnQQFT6cG5UO2
-         IQ1S5xCiXyruA==
-Received: by mail-qv1-f51.google.com with SMTP id 30so7862642qva.9;
-        Tue, 06 Apr 2021 13:35:08 -0700 (PDT)
-X-Gm-Message-State: AOAM5335GdCOpgOibbDJ8Plczoqa64hN6HGInSRdMaE04vsUet0wZh4U
-        QSkurOmr4oT9yR0bgUaLyQV+rMFyRuFnlf/IYg==
-X-Google-Smtp-Source: ABdhPJwg+M3sUpoOAcY6QNJB29EAcEzTm+oglmAhJGlpHQdhW52fxF5MqlsGat4RgDZvcKKE9l41rMv0BC2r+Cq+9Gc=
-X-Received: by 2002:a05:6214:18d2:: with SMTP id cy18mr30403123qvb.50.1617741307499;
- Tue, 06 Apr 2021 13:35:07 -0700 (PDT)
+        id S1343573AbhDFVS3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 17:18:29 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:34792 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1343556AbhDFVS0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Apr 2021 17:18:26 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 854C3C008D;
+        Tue,  6 Apr 2021 21:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1617743898; bh=vGBK5U+o+ZHgapDyTLygfAiRN0XZJ6pSVSoGE1cYj2o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T/+jMF0T+CkZvPnxwAeZ6tbTqEmuAS4ET84NdwDmr2m1D/d2B39wIWohHd7JEokPt
+         1wsSTskB4naPs6toUK5J+H26GQOarOMVWb3coTyeub6m6h+cKd0z1Pg50LDWgKsBQm
+         3ZbBnCCLzmla3Xp8s68d3Kxcz3kgnE+GGKs9+dhcHC8xqVn28RM8YZQE5aUF+DXAfo
+         5Tf2no3eoknLYXmjyegkwrhHP+r6ziim15sle4FbjOYS1LFgsmvIzfPGj+jPqsseP0
+         qwROxaQmPEo6xUyPa1emS5JlhV+xgynk8U92J9q6g8dXgJRUVUSBMBFdP7V7ITALdl
+         KGdGWwMsPxFmA==
+Received: from de02dwvm009.internal.synopsys.com (de02dwvm009.internal.synopsys.com [10.225.17.73])
+        by mailhost.synopsys.com (Postfix) with ESMTP id BC738A022E;
+        Tue,  6 Apr 2021 21:18:12 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v2 0/2] Documentation: misc-devices: Fix documentation issues (indentation, text format, toc) and outdated information
+Date:   Tue,  6 Apr 2021 23:17:47 +0200
+Message-Id: <cover.1617743702.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20210222084732.21521-1-bharat.kumar.gogada@xilinx.com> <20210406142004.GA25082@lpieralisi>
-In-Reply-To: <20210406142004.GA25082@lpieralisi>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 6 Apr 2021 15:34:56 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+TKsZpHsjm0dBVTGdCMeDYLeOxqFBmNhuM_-xLizX6Fg@mail.gmail.com>
-Message-ID: <CAL_Jsq+TKsZpHsjm0dBVTGdCMeDYLeOxqFBmNhuM_-xLizX6Fg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: xilinx-nwl: Enable coherent PCIe DMA traffic
- using CCI
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 9:20 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> [+ Rob, Robin]
->
-> On Mon, Feb 22, 2021 at 02:17:31PM +0530, Bharat Kumar Gogada wrote:
-> > Add support for routing PCIe DMA traffic coherently when
-> > Cache Coherent Interconnect (CCI) is enabled in the system.
-> > The "dma-coherent" property is used to determine if CCI is enabled
-> > or not.
-> > Refer to https://developer.arm.com/documentation/ddi0470/k/preface
-> > for the CCI specification.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> >  drivers/pci/controller/pcie-xilinx-nwl.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > index 07e36661bbc2..8689311c5ef6 100644
-> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > @@ -26,6 +26,7 @@
-> >
-> >  /* Bridge core config registers */
-> >  #define BRCFG_PCIE_RX0                       0x00000000
-> > +#define BRCFG_PCIE_RX1                       0x00000004
-> >  #define BRCFG_INTERRUPT                      0x00000010
-> >  #define BRCFG_PCIE_RX_MSG_FILTER     0x00000020
-> >
-> > @@ -128,6 +129,7 @@
-> >  #define NWL_ECAM_VALUE_DEFAULT               12
-> >
-> >  #define CFG_DMA_REG_BAR                      GENMASK(2, 0)
-> > +#define CFG_PCIE_CACHE                       GENMASK(7, 0)
-> >
-> >  #define INT_PCI_MSI_NR                       (2 * 32)
-> >
-> > @@ -675,6 +677,11 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
-> >       nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
-> >                         BRCFG_PCIE_RX_MSG_FILTER);
-> >
-> > +     /* This routes the PCIe DMA traffic to go through CCI path */
-> > +     if (of_dma_is_coherent(dev->of_node))
-> > +             nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX1) |
-> > +                               CFG_PCIE_CACHE, BRCFG_PCIE_RX1);
-> > +
->
-> This is weird. FW is telling us that the RC is DMA coherent hence
-> we have to program the RC so that it is indeed DMA coherent.
->
-> It does not make much sense. I think this is a set-up that should be
-> programmed by firmware and reported to the kernel via the standard
-> "dma-coherent" property. The kernel can read that register to check the
-> HW configuration complies with the DT property.
->
-> I'd like to get RobH/Robin thoughts on this before proceeding - they
-> have more insights about the DT dma-coherent usage/bindings and
-> expected behaviour.
+This patch series fixes the documentation issues reported by doing
+*make htmldocs*, such as:
+ - indentation
+ - text formatting
+ - missing entry on the table of content related to dw-xdata-pcie misc
+ driver index
 
-Without the above change or firmware setup, a DT with 'dma-coherent'
-and a kernel without it will be broken because the above register
-won't be configured, yet we'll be using coherent DMA ops.
+Besides these warnings also fixes some outdated information related to
+stop file interface in sysfs.
 
-Originally when I added 'dma-coherent' (for Calxeda h/w), I had to do
-all the coherent path setup in the kernel to ensure the h/w setup was
-in-sync with the DMA ops. Nowadays, it's probably safe to assume the
-OS has coherent support, but can we say that for sure for all OSs?
+Changes:
+ V2: Added cover-letter
+     Added Reported-by, Link, and Fixes tags
 
-It also is going to depend if this register survives resets of the
-module. If not, then it needs to be done in the kernel.
+Cc: linux-doc@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Krzysztof Wilczyński <kw@linux.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 
-Rob
+Gustavo Pimentel (2):
+  Documentation: misc-devices: Fix indentation, formatting, and update
+    outdated info
+  Documentation: misc-devices: Add missing entry on the table of content
+    related to dw-xdata-pcie
+
+ Documentation/misc-devices/dw-xdata-pcie.rst | 62 +++++++++++++++++++---------
+ Documentation/misc-devices/index.rst         |  1 +
+ 2 files changed, 44 insertions(+), 19 deletions(-)
+
+-- 
+2.7.4
+
