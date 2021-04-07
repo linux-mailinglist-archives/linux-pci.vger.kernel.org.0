@@ -2,123 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F084C356D64
+	by mail.lfdr.de (Postfix) with ESMTP id 6F328356D63
 	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 15:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344565AbhDGNhi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 09:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245267AbhDGNhh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 09:37:37 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5E3C06175F
-        for <linux-pci@vger.kernel.org>; Wed,  7 Apr 2021 06:37:27 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id x9so13697656qto.8
-        for <linux-pci@vger.kernel.org>; Wed, 07 Apr 2021 06:37:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9XbvLyn2BjN/TsGrST9aWCimExiN5HlLvokM7BNpnYA=;
-        b=fl1sCdaq/tbjdrhwx7sdDhyNuYzekwKPQEsjpOwLhA4+RDh9pADFrizW46c94BVqy/
-         ro+3GOiGAEyVd2nk266p0se8pRm+nL4HuslN7+NHi3NUZ7aaN6QTbvpJ5CgA4L0FsOwV
-         cVO94hTkh/AOlfzDnwvwVmMpL/L3VHrxHq6AaYD6y9p4Aiuad1U83I5gQJPk+5siXox5
-         VZuM2nAsaLQZs0yI0Xhng8qQnzVsmDKvkk8Ehh5ckjN5ZsdUJF3N3E9XmQOPxCM6eVPS
-         MkcXOMRclQSntMKFvCMXqdoAiVxJW4tkmMOeid/5jiE+WBK/m2hR/CZbECY3/X3gkaE+
-         LHTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9XbvLyn2BjN/TsGrST9aWCimExiN5HlLvokM7BNpnYA=;
-        b=RXlji4/TPNCRykn1t1c6e7jSAHi8K2kNHGbIvn9cu5+ThPIRiHbkjNNG6gMz/20wNK
-         miqXM3RvbQs1u4PN3lgyA7fEFFgYYXlkco4ymjKTdFgTwXeh7fSY99wM8+Lw1VNWjray
-         pHp61O/VO87cvUcdmgsP9HH71EsSh/z9XAccywrIof9QET1JKGkaQN1SwYhq33Qtp7Sm
-         3H/jD45PHjE28nkoqMgTQZHmFTafjxGJc2drsjt6wEwEQPnKkfsreT1bXw15dTKXLXi0
-         hmkPSG/jQWnlSuzWNiND3Uq2aBFWXI96o5vaQukHd5xgdGPO3ghdtCJOo4YEEBEmTYbS
-         tJqA==
-X-Gm-Message-State: AOAM530UxsRywyBI8O+3KC/1sxbDTZI7WUrxBbpgPM5cbYxgkQ9vMOhN
-        Ta1yTZ6Bwkk8DI2/1AZ1AUlQYhnoYdtUTe2wS8Hcxg==
-X-Google-Smtp-Source: ABdhPJyH3mLgKrUYzrtHypBKex2qr7oGWmH9Nx/2r3bE0LpA/5oMj8GIY5Z6P5aBUGlJgucLDPXTXz3DkJ+tdva9MKE=
-X-Received: by 2002:ac8:5f87:: with SMTP id j7mr2703109qta.135.1617802647013;
- Wed, 07 Apr 2021 06:37:27 -0700 (PDT)
+        id S1344467AbhDGNhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 09:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233071AbhDGNhg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Apr 2021 09:37:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8E11861246;
+        Wed,  7 Apr 2021 13:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617802647;
+        bh=mrQ+Tm9p4blQbqcBd/No61KqFpi6MoGU+N73xYe9Hd8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dakhUNsMCUgRJpYExHY5DP+8MwFdh9zNH2uIlFX0ZjA8RarfeVZSM33KYVPWEl4D8
+         gDWhEH70bTa21CdezzxVT0Z3kjYG6dzK0pqDVOAxWorEC9248v2pNJPxYfs9p7P+s8
+         4NKnYbuXwM+Z3HiQuGVbdIqY10XjinL8cODJ5lyk4stD3d0qgWE8dInb40jp5C6/ju
+         CnFdHqzHyMXN/32hc+NXjs0rzo/ps8xbJE/p8h0oau8vY5gKSJbPt9aLr8zJsE1fbF
+         cwLafD3dNmnXZNELYOzEWfi99TJgetlRskL8dClWEeT4h4kh7Vj9ZFwVSK/psq/jlP
+         Z9XxWwBrKz+qw==
+Date:   Wed, 7 Apr 2021 16:37:23 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
+Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        AlexWilliamson@archlinux, alex.williamson@redhat.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
+Message-ID: <YG21k6/4QQNrw41S@unreal>
+References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
+ <YGW8Oe9jn+n9sVsw@unreal>
+ <20210401105616.71156d08@omen>
+ <YGlzEA5HL6ZvNsB8@unreal>
+ <20210406081626.31f19c0f@x1.home.shazbot.org>
+ <YG1eBUY0vCTV+Za/@unreal>
+ <20210407082356.53subv4np2fx777x@archlinux>
+ <YG2l+AbQW1N0bbQ9@unreal>
+ <20210407130601.aleyww5d5mttitry@archlinux>
 MIME-Version: 1.0
-References: <20210407131255.702054-1-dmitry.baryshkov@linaro.org>
-In-Reply-To: <20210407131255.702054-1-dmitry.baryshkov@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Wed, 7 Apr 2021 16:37:15 +0300
-Message-ID: <CAA8EJpooq2-vw19YKeiFxWoM-=6DwnhjF+8M7sSACgjqdnHznw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: dwc: move dw_pcie_iatu_detect() after host_init callback
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210407130601.aleyww5d5mttitry@archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Wed, Apr 07, 2021 at 06:36:01PM +0530, ameynarkhede03@gmail.com wrote:
+> On 21/04/07 03:30PM, Leon Romanovsky wrote:
+> > On Wed, Apr 07, 2021 at 01:53:56PM +0530, ameynarkhede03@gmail.com wrote:
+> > > On 21/04/07 10:23AM, Leon Romanovsky wrote:
+> > > > On Tue, Apr 06, 2021 at 08:16:26AM -0600, Alex Williamson wrote:
+> > > > > On Sun, 4 Apr 2021 11:04:32 +0300
+> > > > > Leon Romanovsky <leon@kernel.org> wrote:
+> > > > >
+> > > > > > On Thu, Apr 01, 2021 at 10:56:16AM -0600, Alex Williamson wrote:
+> > > > > > > On Thu, 1 Apr 2021 15:27:37 +0300
+> > > > > > > Leon Romanovsky <leon@kernel.org> wrote:
+> > > > > > >
+> > > > > > > > On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:
+> > > > > > > > > Slot resets are bus resets with additional logic to prevent a device
+> > > > > > > > > from being removed during the reset. Currently slot and bus resets have
+> > > > > > > > > separate implementations in pci.c, complicating higher level logic. As
+> > > > > > > > > discussed on the mailing list, they should be combined into a generic
+> > > > > > > > > function which performs an SBR. This change adds a function,
+> > > > > > > > > pci_reset_bus_function(), which first attempts a slot reset and then
+> > > > > > > > > attempts a bus reset if -ENOTTY is returned, such that there is now a
+> > > > > > > > > single device agnostic function to perform an SBR.
+> > > > > > > > >
+> > > > > > > > > This new function is also needed to add SBR reset quirks and therefore
+> > > > > > > > > is exposed in pci.h.
+> > > > > > > > >
+> > > > > > > > > Link: https://lkml.org/lkml/2021/3/23/911
+> > > > > > > > >
+> > > > > > > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > > > > > > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > > > > > > > > Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/pci/pci.c   | 17 +++++++++--------
+> > > > > > > > >  include/linux/pci.h |  1 +
+> > > > > > > > >  2 files changed, 10 insertions(+), 8 deletions(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > > > > > > index 16a17215f633..12a91af2ade4 100644
+> > > > > > > > > --- a/drivers/pci/pci.c
+> > > > > > > > > +++ b/drivers/pci/pci.c
+> > > > > > > > > @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
+> > > > > > > > >  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +int pci_reset_bus_function(struct pci_dev *dev, int probe)
+> > > > > > > > > +{
+> > > > > > > > > +	int rc = pci_dev_reset_slot_function(dev, probe);
+> > > > > > > > > +
+> > > > > > > > > +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
+> > > > > > > >
+> > > > > > > > The previous coding style is preferable one in the Linux kernel.
+> > > > > > > > int rc = pci_dev_reset_slot_function(dev, probe);
+> > > > > > > > if (rc != -ENOTTY)
+> > > > > > > >   return rc;
+> > > > > > > > return pci_parent_bus_reset(dev, probe);
+> > > > > > >
+> > > > > > >
+> > > > > > > That'd be news to me, do you have a reference?  I've never seen
+> > > > > > > complaints for ternaries previously.  Thanks,
+> > > > > >
+> > > > > > The complaint is not to ternaries, but to the function call as one of
+> > > > > > the parameters, that makes it harder to read.
+> > > > >
+> > > > > Sorry, I don't find a function call as a parameter to a ternary to be
+> > > > > extraordinary, nor do I find it to be a discouraged usage model within
+> > > > > the kernel.  This seems like a pretty low bar for hard to read code.
+> > > >
+> > > > It is up to us where this bar is set.
+> > > >
+> > > > Thanks
+> > > On the side note there are plenty of places where this pattern is used
+> > > though
+> > > for example -
+> > > kernel/time/clockevents.c:328:
+> > > return force ? clockevents_program_min_delta(dev) : -ETIME;
+> > >
+> > > kernel/trace/trace_kprobe.c:233:
+> > > return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
+> > >        false;
+> > >
+> > > kernel/signal.c:3104:
+> > > return oset ? put_compat_sigset(oset, &old_set, sizeof(*oset)) : 0;
+> > > etc
+> >
+> > Did you look when they were introduced?
+> >
+> > Thanks
+> >
+> that code trace_kprobe in 2 years old.
+> If you want more recent example checkout
+> drivers/pci/controller/pcie-brcmstb.c:1112,1117:
+> return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
+> which was introduced 7 months ago.
+> There are lot of examples in pci.c also.
 
-On Wed, 7 Apr 2021 at 16:12, Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> The commit 9ea483375ded ("PCI: dwc: Move forward the iATU detection
-> process") broke PCIe support on Qualcomm SM8250 (and maybe other
-> platforms) since it moves the call to dw_pcie_iatu_detect() at the
-> beginning of the dw_pcie_host_init(), before ops->host_init() callback.
-> Accessing PCIe registers at this point causes the board to reboot since
-> not all clocks are enabled, making PCIe registers unavailable.
->
-> Move dw_pcie_iatu_detect() call after calling ops->host_init() callback,
-> so that all register are accessible.
->
-> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Fixes: 9ea483375ded ("PCI: dwc: Move forward the iATU detection process")
+Yeah, I know, copy-paste is a powerful tool.
 
-Please disregard the Fixes: tag here, the patch in question came to me
-from a local tree, which I failed to notice.
-The patch still applies on top of the previously dropped patch (and it
-is the same fix as the one proposed for exynos by Marek Szyprowski at
-https://lore.kernel.org/linux-pci/b777ab31-e0b9-bbc0-9631-72b93097919e@samsung.com/.
+Can we please progress with this patch instead of doing
+archaeological research?
 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 52f6887179cd..24192b40e3a2 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -319,8 +319,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->                         return PTR_ERR(pci->dbi_base);
->         }
->
-> -       dw_pcie_iatu_detect(pci);
-> -
->         bridge = devm_pci_alloc_host_bridge(dev, 0);
->         if (!bridge)
->                 return -ENOMEM;
-> @@ -400,6 +398,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->                 if (ret)
->                         goto err_free_msi;
->         }
-> +       dw_pcie_iatu_detect(pci);
->
->         dw_pcie_setup_rc(pp);
->         dw_pcie_msi_init(pp);
-> --
-> 2.30.2
->
+Thanks
 
-
--- 
-With best wishes
-Dmitry
+> 
+> Thanks,
+> Amey
