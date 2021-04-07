@@ -2,114 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F7FD356B2B
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 13:27:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E1B9356C17
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 14:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243171AbhDGL1k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 07:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38260 "EHLO mail.kernel.org"
+        id S1352171AbhDGMbC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 08:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234334AbhDGL1k (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Apr 2021 07:27:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A1D266102A;
-        Wed,  7 Apr 2021 11:27:30 +0000 (UTC)
+        id S235368AbhDGMbB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Apr 2021 08:31:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3AD3460FEE;
+        Wed,  7 Apr 2021 12:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617794851;
-        bh=Oc+4fiOadZVriRmtYF2X6D50TYJGSbWqaPmJNsL0qLQ=;
+        s=k20201202; t=1617798651;
+        bh=kkWVCkUc0NJVVv2evc8bpyZsUPichPzeLxsPzJH+f4Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AcZ+rPjZz3fSPP2eQqqw4sfVrloxYvRvcvxmPhw8cGgSVABR5U0zrDA6YdQO63iaR
-         WC6RrIIcDA3iQ5ZGUO5F90z5ukGGtCUExsRfsH0Plbbe9/DUeaqV8+xope8ueDd84X
-         712Y08fenbQ7hrGjDYBPgNMYOMkKrSL/qSbWNzr63qNSOTlyYV37PQfLM3aGoIIxxn
-         t4PJA6lzDIb5zfnF63QX8J/B7ISDKgUQyTrr/70fjA+d5rVvEPYm8/E4mKDe19bbRA
-         zudGmSuAJtbi/Zso1I0own9s8EtIG02uI6E6V6xz7hqQ3S6mKkLoNt1Hd7EG3y+aL4
-         Qwr3KX6hkQYyQ==
-Date:   Wed, 7 Apr 2021 12:27:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: PCI: Add bindings for Brcmstb
- endpoint device voltage regulators
-Message-ID: <20210407112713.GB5510@sirena.org.uk>
-References: <20210401212148.47033-1-jim2101024@gmail.com>
- <20210401212148.47033-3-jim2101024@gmail.com>
- <20210406164708.GM6443@sirena.org.uk>
- <CANCKTBsiujTkOdh60etBqF_hE8exg6m9TDxkGHVVAGVS2SFCcQ@mail.gmail.com>
- <20210406173211.GP6443@sirena.org.uk>
- <CANCKTBv63b4bGepZbDp1wmFrOeddiDikoXbheMjHhbguAbR2sA@mail.gmail.com>
+        b=o2V0VZZZHZIPJQ6GHChv3VKyITqB/OqkvnFFKwsBJMHZehszOzM3IjEELsL8s399c
+         bx/GhVQeAVRpN9hiA2DmCiR1LlujuzQ34SbotgdYnn4Af4VO4hWQ5rCA1ibtRgQUbR
+         KlbLETjo/R79EMC/mx7r53fF1UAhPaa2hzXTGg/mUjwnsczqLnjNl0O5iBkCQDTOgb
+         Ax9dXwTUlB6TO9jyNkHLfk4q1kZcm987/SwgjaWTwSQ1eFJWjrnxIIj+Q+kqc9Fp/u
+         9Od0IsH09WuhqloQrllP7WVC8etG+rn6pfV49evkpshFSbwtBUrlbdoi0ZwwVhPkve
+         MvrjoD9P92RLw==
+Date:   Wed, 7 Apr 2021 15:30:48 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
+Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "bhelgaas@google.com <bhelgaas@google.com>,linux-pci@vger.kernel.org" 
+        <linux-pci@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
+Message-ID: <YG2l+AbQW1N0bbQ9@unreal>
+References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
+ <YGW8Oe9jn+n9sVsw@unreal>
+ <20210401105616.71156d08@omen>
+ <YGlzEA5HL6ZvNsB8@unreal>
+ <20210406081626.31f19c0f@x1.home.shazbot.org>
+ <YG1eBUY0vCTV+Za/@unreal>
+ <20210407082356.53subv4np2fx777x@archlinux>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANCKTBv63b4bGepZbDp1wmFrOeddiDikoXbheMjHhbguAbR2sA@mail.gmail.com>
-X-Cookie: Dry clean only.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210407082356.53subv4np2fx777x@archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Apr 07, 2021 at 01:53:56PM +0530, ameynarkhede03@gmail.com wrote:
+> On 21/04/07 10:23AM, Leon Romanovsky wrote:
+> > On Tue, Apr 06, 2021 at 08:16:26AM -0600, Alex Williamson wrote:
+> > > On Sun, 4 Apr 2021 11:04:32 +0300
+> > > Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > > On Thu, Apr 01, 2021 at 10:56:16AM -0600, Alex Williamson wrote:
+> > > > > On Thu, 1 Apr 2021 15:27:37 +0300
+> > > > > Leon Romanovsky <leon@kernel.org> wrote:
+> > > > >
+> > > > > > On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:
+> > > > > > > Slot resets are bus resets with additional logic to prevent a device
+> > > > > > > from being removed during the reset. Currently slot and bus resets have
+> > > > > > > separate implementations in pci.c, complicating higher level logic. As
+> > > > > > > discussed on the mailing list, they should be combined into a generic
+> > > > > > > function which performs an SBR. This change adds a function,
+> > > > > > > pci_reset_bus_function(), which first attempts a slot reset and then
+> > > > > > > attempts a bus reset if -ENOTTY is returned, such that there is now a
+> > > > > > > single device agnostic function to perform an SBR.
+> > > > > > >
+> > > > > > > This new function is also needed to add SBR reset quirks and therefore
+> > > > > > > is exposed in pci.h.
+> > > > > > >
+> > > > > > > Link: https://lkml.org/lkml/2021/3/23/911
+> > > > > > >
+> > > > > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > > > > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > > > > > > Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > > > > > > ---
+> > > > > > >  drivers/pci/pci.c   | 17 +++++++++--------
+> > > > > > >  include/linux/pci.h |  1 +
+> > > > > > >  2 files changed, 10 insertions(+), 8 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > > > > index 16a17215f633..12a91af2ade4 100644
+> > > > > > > --- a/drivers/pci/pci.c
+> > > > > > > +++ b/drivers/pci/pci.c
+> > > > > > > @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
+> > > > > > >  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +int pci_reset_bus_function(struct pci_dev *dev, int probe)
+> > > > > > > +{
+> > > > > > > +	int rc = pci_dev_reset_slot_function(dev, probe);
+> > > > > > > +
+> > > > > > > +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
+> > > > > >
+> > > > > > The previous coding style is preferable one in the Linux kernel.
+> > > > > > int rc = pci_dev_reset_slot_function(dev, probe);
+> > > > > > if (rc != -ENOTTY)
+> > > > > >   return rc;
+> > > > > > return pci_parent_bus_reset(dev, probe);
+> > > > >
+> > > > >
+> > > > > That'd be news to me, do you have a reference?  I've never seen
+> > > > > complaints for ternaries previously.  Thanks,
+> > > >
+> > > > The complaint is not to ternaries, but to the function call as one of
+> > > > the parameters, that makes it harder to read.
+> > >
+> > > Sorry, I don't find a function call as a parameter to a ternary to be
+> > > extraordinary, nor do I find it to be a discouraged usage model within
+> > > the kernel.  This seems like a pretty low bar for hard to read code.
+> >
+> > It is up to us where this bar is set.
+> >
+> > Thanks
+> On the side note there are plenty of places where this pattern is used
+> though
+> for example -
+> kernel/time/clockevents.c:328:
+> return force ? clockevents_program_min_delta(dev) : -ETIME;
+> 
+> kernel/trace/trace_kprobe.c:233:
+> return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
+>        false;
+> 
+> kernel/signal.c:3104:
+> return oset ? put_compat_sigset(oset, &old_set, sizeof(*oset)) : 0;
+> etc
 
---xXmbgvnjoT4axfJE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Did you look when they were introduced?
 
-On Tue, Apr 06, 2021 at 02:25:49PM -0400, Jim Quinlan wrote:
+Thanks
 
-> I'm a little confused -- here is how I remember the chronology of the
-> "DT bindings" commit reviews, please correct me if I'm wrong:
-
-> o JimQ submitted a pullreq for using voltage regulators in the same
-> style as the existing "rockport" PCIe driver.
-> o After some deliberation, RobH preferred that the voltage regulators
-> should go into the PCIe subnode device's DT node.
-> o JimQ put the voltage regulators in the subnode device's DT node.
-> o MarkB didn't like the fact that the code did a global search for the
-> regulator since it could not provide the owning struct device* handle.
-> o RobH relented, and said that if it is just two specific and standard
-> voltage regulators, perhaps they can go in the parent DT node after
-> all.
-> o JimQ put the regulators back in the PCIe node.
-> o MarkB now wants the regulators to go back into the child node again?
-
-...having pointed out a couple of times now that there's no physical
-requirement that the supplies be shared between slots never mind with
-the controller.  Also note that as I've said depending on what the
-actual requirements of the controller node are you might want to have
-the regulators in both places, and further note that the driver does not
-have to actively use everything in the binding document (although if
-it's not using something that turns out to be a requirement it's likely
-to run into hardware where that causes bugs at some point).
-
-Frankly I'm not clear why you're trying to handle powering on PCI slots
-in a specific driver, surely PCI devices are PCI devices regardless of
-the controller?
-
---xXmbgvnjoT4axfJE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBtlxAACgkQJNaLcl1U
-h9AVggf+KlMNZIoTcOq/oLb3wKm6+ONJs3mMv2sDmONFmlTeFHAMuy2gNTI9//f7
-J7oWgDx/7VcL3Fn3ODnM+rBsCYXxWIi8oeryGPmn4Z7eF2RkPR3gfNYz5sCopQD8
-jXlpB0wv+wwEuj2jmiFNnLUWDDA4U4mK4oo4Genm/9a9Rm0QN3e1lX0c8ku/Fg5Z
-sc+2kh5IZr8da5JrJPoMTIKx2DgsESM/vOC0ZtnVsPDqTGLTa/NtPSp+gX9l2jif
-4ff65/knyAyc4mhni/5vFBNkhmNpE7qpiOFZkelDDNRQIUp2vEtsezt1mrUsIFli
-shZcnBD1K3uwGQhIrLwsSnesnX7SVQ==
-=SqjM
------END PGP SIGNATURE-----
-
---xXmbgvnjoT4axfJE--
+> 
+> Thanks,
+> Amey
