@@ -2,499 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79952356E84
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 16:27:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01D6F356ED6
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 16:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235723AbhDGO1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 10:27:48 -0400
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:40458 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233090AbhDGO1q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 10:27:46 -0400
-Received: by mail-ot1-f47.google.com with SMTP id w31-20020a9d36220000b02901f2cbfc9743so18213591otb.7;
-        Wed, 07 Apr 2021 07:27:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GeyrD5ghfz4rzn7ICuiBNSSZHeofCDW3BjhxNR9ViTE=;
-        b=NSgwBiqo1+9tv59G/V/DQM4Yf5az2h6MSk8Flc/THBUSO2SejYgLJbqqmugeEQ73nL
-         reOga5rcLvODc+6e4lZsJD/SKNAX9LAYvFX5Lwla9GLbMnkaV3PQgJ4WDN3M6D67S3e8
-         CMJcOlgIavdz3DPC97bl7qnDKMHnId4J4xA3NGu6wjuvo7YAR4dq51AvN8BNCng0EOHn
-         CkReYKvp3zdkv0+sSsYSTtX8K5Ujm8ZASZES7sKbhRe2Z6bHZaYGwj1Ef5Y3IMUTdrdr
-         j1EODUcUQ6vmGM2VHHCn1LJFHld4TpTYP3GvdceWyyTzOL0qyDAS3uVzYNwzaie1BryE
-         O26w==
-X-Gm-Message-State: AOAM533vL6sR//0zz2rHQMq5MX78RO67Wf/LflEBdTJ2Z1mWt6g+zYNJ
-        KLYndAiRZS5ch3uhcxCVMZHL5zjkxw==
-X-Google-Smtp-Source: ABdhPJyNKFMEFwJcnUzq1wQa6V2Kn3g3Xv6gOY+oidexIMAeVtgMTVYEtcZQ108oAoR/oweS6lVxBQ==
-X-Received: by 2002:a05:6830:1b69:: with SMTP id d9mr3294582ote.165.1617805656864;
-        Wed, 07 Apr 2021 07:27:36 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r15sm5556966ote.27.2021.04.07.07.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 07:27:35 -0700 (PDT)
-Received: (nullmailer pid 3696080 invoked by uid 1000);
-        Wed, 07 Apr 2021 14:27:34 -0000
-Date:   Wed, 7 Apr 2021 09:27:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1353025AbhDGOfq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 10:35:46 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:25220 "EHLO smtp-out.xnet.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236080AbhDGOfp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Apr 2021 10:35:45 -0400
+X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Apr 2021 10:35:44 EDT
+Received: from meh.true.cz (meh.true.cz [108.61.167.218])
+        (Authenticated sender: petr@true.cz)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 462061821B;
+        Wed,  7 Apr 2021 16:25:49 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id b65bb993;
+        Wed, 7 Apr 2021 16:25:24 +0200 (CEST)
+Date:   Wed, 7 Apr 2021 16:25:46 +0200
+From:   Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: dwc: Visoconti: PCIe RC controller driver
-Message-ID: <20210407142734.GA3606952@robh.at.kernel.org>
-References: <20210407031839.386088-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210407031839.386088-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Yinghai Lu <yinghai@kernel.org>,
+        Koen Vandeputte <koen.vandeputte@citymesh.com>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20210407142538.GA12387@meh.true.cz>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+References: <20200909112850.hbtgkvwqy2rlixst@pali>
+ <20201006222222.GA3221382@bjorn-Precision-5520>
+ <20201007081227.d6f6otfsnmlgvegi@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210407031839.386088-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201007081227.d6f6otfsnmlgvegi@pali>
+X-PGP-Key: https://gist.githubusercontent.com/ynezz/477f6d7a1623a591b0806699f9fc8a27/raw/a0878b8ed17e56f36ebf9e06a6b888a2cd66281b/pgp-key.pub
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 12:18:38PM +0900, Nobuhiro Iwamatsu wrote:
-> Add support to PCIe RC controller on Toshiba Visconti ARM SoCs.
-> PCIe controller is based of Synopsys DesignWare PCIe core.
-> 
-> Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> ---
->  drivers/pci/controller/dwc/Kconfig         |  10 +
->  drivers/pci/controller/dwc/Makefile        |   1 +
->  drivers/pci/controller/dwc/pcie-visconti.c | 358 +++++++++++++++++++++
->  3 files changed, 369 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-visconti.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index b9aaa84452c4..ae125d7cf375 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -286,6 +286,16 @@ config PCIE_TEGRA194_EP
->  	  in order to enable device-specific features PCIE_TEGRA194_EP must be
->  	  selected. This uses the DesignWare core.
->  
-> +config PCIE_VISCONTI
-> +	bool "Toshiba VISCONTI PCIe controllers"
-> +	depends on ARCH_VISCONTI || COMPILE_TEST
-> +	depends on OF && HAS_IOMEM
+Pali Rohár <pali@kernel.org> [2020-10-07 10:12:27]:
 
-Is this line really needed? Seems we have a mixture on other drivers.
+Hi,
 
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
-> +	  This driver supports TMPV77xx.
-> +
->  config PCIE_UNIPHIER
->  	bool "Socionext UniPhier PCIe host controllers"
->  	depends on ARCH_UNIPHIER || COMPILE_TEST
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index ba7c42f6df6f..46ac5d49dc75 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
->  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> +obj-$(CONFIG_PCIE_VISCONTI) += pcie-visconti.o
->  
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-> new file mode 100644
-> index 000000000000..e24f83df41b8
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-visconti.c
-> @@ -0,0 +1,358 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * DWC PCIe RC driver for Toshiba Visconti ARM SoC
-> + *
-> + * Copyright (C) 2019, 2020 Toshiba Electronic Device & Storage Corporation
-> + * Copyright (C) 2020, TOSHIBA CORPORATION
-> + *
-> + * Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/init.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/resource.h>
-> +#include <linux/types.h>
-> +
-> +#include "pcie-designware.h"
-> +#include "../../pci.h"
-> +
-> +struct visconti_pcie {
-> +	struct dw_pcie *pci;
+[adding Koen to Cc:]
 
-Embed this rather than a pointer. 1 less alloc.
+> I'm hitting these race conditions randomly on pci aardvark controller
+> driver- I prepared patch which speed up initialization of this driver,
+> but also increase probability that it hits above race conditions :-(
 
-> +	void __iomem *ulreg_base;
-> +	void __iomem *smu_base;
-> +	void __iomem *mpu_base;
-> +	struct clk *refclk;
-> +	struct clk *sysclk;
-> +	struct clk *auxclk;
-> +};
-> +
-> +#define PCIE_UL_REG_S_PCIE_MODE		0x00F4
-> +#define  PCIE_UL_REG_S_PCIE_MODE_EP	0x00
-> +#define  PCIE_UL_REG_S_PCIE_MODE_RC	0x04
-> +
-> +#define PCIE_UL_REG_S_PERSTN_CTRL	0x00F8
-> +#define  PCIE_UL_IOM_PCIE_PERSTN_I_EN	BIT(3)
-> +#define  PCIE_UL_DIRECT_PERSTN_EN	BIT(2)
-> +#define  PCIE_UL_PERSTN_OUT		BIT(1)
-> +#define  PCIE_UL_DIRECT_PERSTN		BIT(0)
-> +
-> +#define PCIE_UL_REG_S_PHY_INIT_02	0x0104
-> +#define  PCIE_UL_PHY0_SRAM_EXT_LD_DONE	BIT(0)
-> +
-> +#define PCIE_UL_REG_S_PHY_INIT_03	0x0108
-> +#define  PCIE_UL_PHY0_SRAM_INIT_DONE	BIT(0)
-> +
-> +#define PCIE_UL_REG_S_INT_EVENT_MASK1	0x0138
-> +#define  PCIE_UL_CFG_PME_INT		BIT(0)
-> +#define  PCIE_UL_CFG_LINK_EQ_REQ_INT	BIT(1)
-> +#define  PCIE_UL_EDMA_INT0		BIT(2)
-> +#define  PCIE_UL_EDMA_INT1		BIT(3)
-> +#define  PCIE_UL_EDMA_INT2		BIT(4)
-> +#define  PCIE_UL_EDMA_INT3		BIT(5)
-> +#define  PCIE_UL_S_INT_EVENT_MASK1_ALL  (PCIE_UL_CFG_PME_INT | PCIE_UL_CFG_LINK_EQ_REQ_INT | \
-> +					 PCIE_UL_EDMA_INT0 | PCIE_UL_EDMA_INT1 | \
-> +					 PCIE_UL_EDMA_INT2 | PCIE_UL_EDMA_INT3)
-> +
-> +#define PCIE_UL_REG_S_SB_MON		0x0198
-> +#define PCIE_UL_REG_S_SIG_MON		0x019C
-> +#define  PCIE_UL_CORE_RST_N_MON		BIT(0)
-> +
-> +#define PCIE_UL_REG_V_SII_DBG_00	0x0844
-> +#define PCIE_UL_REG_V_SII_GEN_CTRL_01	0x0860
-> +#define  PCIE_UL_APP_LTSSM_ENABLE	BIT(0)
-> +
-> +#define PCIE_UL_REG_V_PHY_ST_00		0x0864
-> +#define  PCIE_UL_SMLH_LINK_UP		BIT(0)
-> +
-> +#define PCIE_UL_REG_V_PHY_ST_02		0x0868
-> +#define  PCIE_UL_S_DETECT_ACT		0x01
-> +#define  PCIE_UL_S_L0			0x11
-> +
-> +#define PISMU_CKON_PCIE			0x0038
-> +#define  PISMU_CKON_PCIE_AUX_CLK	BIT(1)
-> +#define  PISMU_CKON_PCIE_MSTR_ACLK	BIT(0)
-> +
-> +#define PISMU_RSOFF_PCIE		0x0538
-> +#define  PISMU_RSOFF_PCIE_ULREG_RST_N	BIT(1)
-> +#define  PISMU_RSOFF_PCIE_PWR_UP_RST_N	BIT(0)
-> +
-> +#define PCIE_MPU_REG_MP_EN		0x0
-> +#define  MPU_MP_EN_DISABLE		BIT(0)
-> +
-> +#define PCIE_BUS_OFFSET			0x40000000
-> +
-> +/* Access registers in PCIe ulreg */
-> +static inline void visconti_ulreg_writel(struct visconti_pcie *pcie, u32 val, u32 reg)
-> +{
-> +	writel(val, pcie->ulreg_base + reg);
+it seems, that I'm able to reproduce this race condition on every boot with
+5.10 on my Freescale i.MX6Q board, see the log excerpt bellow. I don't know if
+this helps, but it's not happening on 5.4 kernel.
 
-Do these need ordering WRT DMA? If not, use _relaxed variant.
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.10.27 (ynezz@ntbk) (arm-openwrt-linux-muslgnueabi-gcc (OpenWrt GCC 8.4.0 r12719+30-84f4a783c698) 8.4.0, GNU ld (GNU Binutils) 2.34) #0 SMP Wed Apr 7 12:52:23 2021
+[    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: Toradex Apalis iMX6Q/D Module on Ixora Carrier Board
 
-> +}
-> +
-> +/* Access registers in PCIe smu */
-> +static inline void visconti_smu_writel(struct visconti_pcie *pcie, u32 val, u32 reg)
-> +{
-> +	writel(val, pcie->smu_base + reg);
-> +}
-> +
-> +/* Access registers in PCIe mpu */
-> +static inline void visconti_mpu_writel(struct visconti_pcie *pcie, u32 val, u32 reg)
-> +{
-> +	writel(val, pcie->mpu_base + reg);
-> +}
-> +
-> +static inline u32 visconti_mpu_readl(struct visconti_pcie *pcie, u32 reg)
-> +{
-> +	return readl(pcie->mpu_base + reg);
-> +}
-> +
-> +static int visconti_pcie_check_link_status(struct visconti_pcie *pcie)
-> +{
-> +	int err;
-> +	u32 val;
-> +
-> +	/* wait for linkup of phy link layer */
-> +	err = readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_V_PHY_ST_00, val,
-> +				 (val & PCIE_UL_SMLH_LINK_UP), 1000, 10000);
-> +	if (err)
-> +		return err;
-> +
-> +	/* wait for linkup of data link layer */
-> +	err = readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_V_PHY_ST_02, val,
-> +				 (val & PCIE_UL_S_DETECT_ACT), 1000, 10000);
-> +	if (err)
-> +		return err;
-> +
-> +	/* wait for LTSSM Status */
-> +	return readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_V_PHY_ST_02, val,
-> +				  (val & PCIE_UL_S_L0), 1000, 10000);
-> +}
-> +
-> +static int visconti_pcie_establish_link(struct pcie_port *pp)
-> +{
-> +	int ret;
-> +	u32 val;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct visconti_pcie *pcie = dev_get_drvdata(pci->dev);
-> +
-> +	visconti_ulreg_writel(pcie, PCIE_UL_APP_LTSSM_ENABLE, PCIE_UL_REG_V_SII_GEN_CTRL_01);
-> +
-> +	ret = visconti_pcie_check_link_status(pcie);
-> +	if (ret < 0) {
-> +		dev_info(pci->dev, "Link failure\n");
-> +		return ret;
-> +	}
-> +
-> +	val = visconti_mpu_readl(pcie, PCIE_MPU_REG_MP_EN);
-> +	visconti_mpu_writel(pcie, val & ~MPU_MP_EN_DISABLE, PCIE_MPU_REG_MP_EN);
-> +
-> +	visconti_ulreg_writel(pcie, PCIE_UL_S_INT_EVENT_MASK1_ALL, PCIE_UL_REG_S_INT_EVENT_MASK1);
+...
 
-Seems like all this should be a phy driver.
+[    2.239498] pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff]
+[    2.266430] pci 0000:00:00.0: BAR 6: assigned [mem 0x01100000-0x0110ffff pref]
+����#���+$HH��.274570] pci 0000:00:00.0: Max Payload Size set to  128/ 128 (was  128), Max Read Rq  128
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int visconti_pcie_host_init(struct pcie_port *pp)
-> +{
-> +	int ret;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +
-> +	dw_pcie_setup_rc(pp);
+ (this serial console hiccup during PCI initialization seems quite strange as well, happens always)
 
-> +	ret = visconti_pcie_establish_link(pp);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	dw_pcie_wait_for_link(pci);
+[    2.283074] sysfs: cannot create duplicate filename '/devices/platform/soc/1ffc000.pcie/pci0000:00/0000:00:00.0/config'
+[    2.293884] CPU: 1 PID: 47 Comm: kworker/u8:3 Not tainted 5.10.27 #0
+[    2.300165] random: fast init done
+[    2.300249] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[    2.310186] Workqueue: events_unbound async_run_entry_fn
+[    2.315507] Backtrace:
+[    2.317976] [<8010cc88>] (dump_backtrace) from [<8010d134>] (show_stack+0x20/0x24)
+[    2.325556]  r7:813283d4 r6:60000013 r5:00000000 r4:80ec845c
+[    2.331236] [<8010d114>] (show_stack) from [<805971fc>] (dump_stack+0xa4/0xb8)
+[    2.338480] [<80597158>] (dump_stack) from [<803a7128>] (sysfs_warn_dup+0x68/0x74)
+[    2.346058]  r7:813283d4 r6:80af0dfc r5:812f48f0 r4:81afa000
+[    2.351726] [<803a70c0>] (sysfs_warn_dup) from [<803a6c90>] (sysfs_add_file_mode_ns+0x100/0x1cc)
+[    2.360518]  r7:813283d4 r6:812f48f0 r5:80b4299c r4:ffffffef
+[    2.366187] [<803a6b90>] (sysfs_add_file_mode_ns) from [<803a6fe8>] (sysfs_create_bin_file+0x94/0x9c)
+[    2.375411]  r6:81eb8078 r5:80b4299c r4:00000000
+[    2.380043] [<803a6f54>] (sysfs_create_bin_file) from [<805da848>] (pci_create_sysfs_dev_files+0x58/0x2cc)
+[    2.389701]  r6:81eb8000 r5:81eb8078 r4:81eb8000
+[    2.394341] [<805da7f0>] (pci_create_sysfs_dev_files) from [<805cba98>] (pci_bus_add_device+0x34/0x90)
+[    2.403659]  r10:80b45d88 r9:81818810 r8:81328200 r7:813283d4 r6:8190c000 r5:81eb8078
+[    2.411490]  r4:81eb8000
+[    2.414034] [<805cba64>] (pci_bus_add_device) from [<805cbb30>] (pci_bus_add_devices+0x3c/0x80)
+[    2.421744] random: crng init done
+[    2.422737]  r5:8190c014 r4:81eb8000
+[    2.429720] [<805cbaf4>] (pci_bus_add_devices) from [<805cf898>] (pci_host_probe+0x50/0xa0)
+[    2.438078]  r7:813283d4 r6:8190c000 r5:8190c00c r4:00000000
+[    2.443753] [<805cf848>] (pci_host_probe) from [<805eeb20>] (dw_pcie_host_init+0x1d0/0x414)
+[    2.452111]  r7:813283d4 r6:81328058 r5:00000200 r4:00000000
+[    2.457780] [<805ee950>] (dw_pcie_host_init) from [<805ef5a8>] (imx6_pcie_probe+0x38c/0x69c)
+[    2.466226]  r10:81226180 r9:ef0205c4 r8:81818800 r7:81328040 r6:81328040 r5:81818810
+[    2.474060]  r4:00000020
+[    2.476615] [<805ef21c>] (imx6_pcie_probe) from [<8065e858>] (platform_drv_probe+0x58/0xa8)
+[    2.484977]  r10:80ec9f78 r9:00000000 r8:80f160a8 r7:00000000 r6:80ec9f78 r5:00000000
+[    2.492809]  r4:81818810
+[    2.495357] [<8065e800>] (platform_drv_probe) from [<8065c0a0>] (really_probe+0x128/0x534)
+[    2.503627]  r7:00000000 r6:80f5b8c4 r5:81818810 r4:80f5b8d4
+[    2.509296] [<8065bf78>] (really_probe) from [<8065c700>] (driver_probe_device+0x88/0x200)
+[    2.517570]  r10:00000000 r9:80f0bb60 r8:00000000 r7:80f160a8 r6:80ec9f78 r5:80ec9f78
+[    2.525401]  r4:81818810
+[    2.527946] [<8065c678>] (driver_probe_device) from [<8065c904>] (__driver_attach_async_helper+0x8c/0xb4)
+[    2.537521]  r9:80f0bb60 r8:00000000 r7:8104d000 r6:80ec9f78 r5:80f25010 r4:81818810
+[    2.545273] [<8065c878>] (__driver_attach_async_helper) from [<8015b930>] (async_run_entry_fn+0x58/0x1bc)
+[    2.554843]  r6:819fb480 r5:80f25010 r4:819fb490
+[    2.559479] [<8015b8d8>] (async_run_entry_fn) from [<8015114c>] (process_one_work+0x238/0x5ac)
+[    2.568099]  r8:00000000 r7:8104d000 r6:81048400 r5:8127a080 r4:819fb490
+[    2.574811] [<80150f14>] (process_one_work) from [<8015152c>] (worker_thread+0x6c/0x5c0)
+[    2.582909]  r10:81048400 r9:80e03d00 r8:81048418 r7:00000088 r6:81048400 r5:8127a094
+[    2.590742]  r4:8127a080
+[    2.593290] [<801514c0>] (worker_thread) from [<80158168>] (kthread+0x174/0x178)
+[    2.600694]  r10:8127a080 r9:812e3024 r8:8116fe74 r7:813c0000 r6:00000000 r5:8127b040
+[    2.608527]  r4:812e3000
+[    2.611073] [<80157ff4>] (kthread) from [<80100148>] (ret_from_fork+0x14/0x2c)
+[    2.618302] Exception stack(0x813c1fb0 to 0x813c1ff8)
+[    2.623362] 1fa0:                                     00000000 00000000 00000000 00000000
+[    2.631548] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    2.639731] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    2.646354]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:80157ff4
+[    2.654187]  r4:8127b040
+[    2.657157] pcieport 0000:00:00.0: PME: Signaling with IRQ 316
+[    2.674770] VFS: Mounted root (squashfs filesystem) readonly on device 179:2.
+[    2.686264] Freeing unused kernel memory: 1024K
 
-The DWC core code does link handling now.
+Complete serial console log http://sprunge.us/wCe6zs
 
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_host_ops visconti_pcie_host_ops = {
-> +	.host_init = visconti_pcie_host_init,
-> +};
-> +
-> +static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 pci_addr)
-> +{
-> +	return pci_addr - PCIE_BUS_OFFSET;
-> +}
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
-> +};
-> +
-> +static int visconti_get_resources(struct platform_device *pdev,
-> +				  struct visconti_pcie *pcie)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +
-> +	pcie->pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
-> +	if (IS_ERR(pcie->pci->dbi_base))
-> +		return PTR_ERR(pcie->pci->dbi_base);
+Cheers,
 
-The DWC core handles this now.
-
-> +
-> +	pcie->ulreg_base = devm_platform_ioremap_resource_byname(pdev, "ulreg");
-> +	if (IS_ERR(pcie->ulreg_base))
-> +		return PTR_ERR(pcie->ulreg_base);
-> +
-> +	pcie->smu_base = devm_platform_ioremap_resource_byname(pdev, "smu");
-> +	if (IS_ERR(pcie->smu_base))
-> +		return PTR_ERR(pcie->smu_base);
-> +
-> +	pcie->mpu_base = devm_platform_ioremap_resource_byname(pdev, "mpu");
-> +	if (IS_ERR(pcie->mpu_base))
-> +		return PTR_ERR(pcie->mpu_base);
-> +
-> +	pcie->refclk = devm_clk_get(dev, "pcie_refclk");
-> +	if (IS_ERR(pcie->refclk)) {
-> +		dev_err(dev, "Failed to get refclk clock: %ld\n", PTR_ERR(pcie->refclk));
-> +		return PTR_ERR(pcie->refclk);
-> +	}
-> +
-> +	pcie->sysclk = devm_clk_get(dev, "sysclk");
-> +	if (IS_ERR(pcie->sysclk)) {
-> +		dev_err(dev, "Failed to get sysclk clock: %ld\n", PTR_ERR(pcie->sysclk));
-> +		return PTR_ERR(pcie->sysclk);
-> +	}
-> +
-> +	pcie->auxclk = devm_clk_get(dev, "auxclk");
-> +	if (IS_ERR(pcie->auxclk)) {
-> +		dev_err(dev, "Failed to get auxclk clock: %ld\n", PTR_ERR(pcie->auxclk));
-> +		return PTR_ERR(pcie->auxclk);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int visconti_device_turnon(struct visconti_pcie *pcie)
-> +{
-> +	int err;
-> +	u32 val;
-> +
-> +	visconti_smu_writel(pcie, PISMU_CKON_PCIE_AUX_CLK | PISMU_CKON_PCIE_MSTR_ACLK,
-> +			    PISMU_CKON_PCIE);
-
-Clock control? Should be a clock provider then.
-
-> +	ndelay(250);
-> +
-> +	visconti_smu_writel(pcie, PISMU_RSOFF_PCIE_ULREG_RST_N, PISMU_RSOFF_PCIE);
-> +
-> +	visconti_ulreg_writel(pcie, PCIE_UL_REG_S_PCIE_MODE_RC, PCIE_UL_REG_S_PCIE_MODE);
-> +
-> +	val = PCIE_UL_IOM_PCIE_PERSTN_I_EN | PCIE_UL_DIRECT_PERSTN_EN | PCIE_UL_DIRECT_PERSTN;
-> +	visconti_ulreg_writel(pcie, val, PCIE_UL_REG_S_PERSTN_CTRL);
-> +	udelay(100);
-> +
-> +	val |= PCIE_UL_PERSTN_OUT;
-> +	visconti_ulreg_writel(pcie, val, PCIE_UL_REG_S_PERSTN_CTRL);
-> +	udelay(100);
-> +
-> +	visconti_smu_writel(pcie, PISMU_RSOFF_PCIE_PWR_UP_RST_N, PISMU_RSOFF_PCIE);
-> +
-> +	err = readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_S_PHY_INIT_03, val,
-> +				 (val & PCIE_UL_PHY0_SRAM_INIT_DONE), 100, 1000);
-> +	if (err)
-> +		return err;
-> +
-> +	visconti_ulreg_writel(pcie, PCIE_UL_PHY0_SRAM_EXT_LD_DONE, PCIE_UL_REG_S_PHY_INIT_02);
-> +
-> +	return readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_S_SIG_MON, val,
-> +				 (val & PCIE_UL_CORE_RST_N_MON), 100, 1000);
-> +}
-> +
-> +static int visconti_add_pcie_port(struct visconti_pcie *pcie, struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct pcie_port *pp = &pci->pp;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	pp->irq = platform_get_irq_byname(pdev, "intr");
-> +	if (pp->irq < 0) {
-> +		dev_err(dev, "interrupt intr is missing");
-> +		return pp->irq;
-> +	}
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> +		if (pp->msi_irq < 0) {
-> +			dev_err(dev, "interrupt msi is missing");
-> +			return pp->msi_irq;
-> +		}
-> +	}
-
-DWC core handles this now.
-
-> +
-> +	pp->ops = &visconti_pcie_host_ops;
-> +
-> +	pci->link_gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> +	if (pci->link_gen < 0 || pci->link_gen > 3) {
-> +		pci->link_gen = 3;
-> +		dev_dbg(dev, "Applied default link speed\n");
-> +	}
-> +
-> +	dev_dbg(dev, "link speed Gen %d", pci->link_gen);
-> +
-> +	ret = visconti_device_turnon(pcie);
-> +	if (ret)
-> +		goto error;
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret)
-> +		dev_err(dev, "Failed to initialize host\n");
-> +
-> +error:
-> +	return ret;
-> +}
-> +
-> +static int visconti_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct visconti_pcie *pcie;
-> +	struct pcie_port *pp;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
-> +	if (ret)
-> +		return ret;
-> +
-> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> +	if (!pci)
-> +		return -ENOMEM;
-> +
-> +	pp = &pci->pp;
-> +	pp->num_vectors = MAX_MSI_IRQS;
-> +
-> +	pci->dev = dev;
-> +	pci->ops = &dw_pcie_ops;
-> +	pcie->pci = pci;
-> +
-> +	ret = visconti_get_resources(pdev, pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	return visconti_add_pcie_port(pcie, pdev);
-> +}
-> +
-> +static const struct of_device_id visconti_pcie_match[] = {
-> +	{ .compatible = "toshiba,visconti-pcie" },
-> +	{},
-> +};
-> +
-> +static struct platform_driver visconti_pcie_driver = {
-> +	.probe = visconti_pcie_probe,
-> +	.driver = {
-> +		.name = "visconti-pcie",
-> +		.of_match_table = visconti_pcie_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +};
-> +
-> +builtin_platform_driver(visconti_pcie_driver);
-> -- 
-> 2.30.0.rc2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Petr
