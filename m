@@ -2,168 +2,293 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C73D1356CE5
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 15:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCEEE356CFC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 15:12:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234278AbhDGNHN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 09:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233590AbhDGNHN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 09:07:13 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397AAC061756;
-        Wed,  7 Apr 2021 06:07:02 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id d10so8168599pgf.12;
-        Wed, 07 Apr 2021 06:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w6x1JaJJswXDRLPdzMKjakBv3oDpC21g21byrf7hBec=;
-        b=ejHnGwmupOSP6O3pYirdbklm+kJ+2OA2Egwj3xANUZxTm1vqLVNshLMu1RlNYmHBFy
-         xVwiLY1c1OdGP/FFgQAasjJcRIstI/EPpKavIu8JbDmFHeYqknI6oKurz3I3Nno7Ek0T
-         t6l3NFRDJ3Z23r1O4T+vg3sESwkoo4+s3vxhtcj+1vYRxzk/Oxgimy6XsiDAOLNVvLNG
-         QBKXmzlymUVyWyiem+0SQHol1y2K4r5r4BShlFriFkkFspvRXyoPm6prLvKj+UlTqP+8
-         /A6w20lT96pROzb4Y24YXF/EKlFsVNuta8PulBFGs21PhLj068UGMrNTcjN66+Z8G2lu
-         9IiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w6x1JaJJswXDRLPdzMKjakBv3oDpC21g21byrf7hBec=;
-        b=taflkDctOx44CjnupUIPsPZ7cgqLp27TeBtwyAXJinV1BvQZPxQKHvCtAzyyt3jjAG
-         X+93tNRQWGvX7EB9nEY/qkIfzcJeCoXq+zzPpyShHL0MHBvoKsuSjPcdnsPuRiEmhKWm
-         9hGBqFvpLJMAjlzF97PVEppDVfOnZuRbsUL9ADCLcpZ8ZTMV1Ix7bYttGf+Uk/5yFWKv
-         gZJenHyxEFBEhtgbQnfia4DfWBjqaNZUCK5aJV//fIg33smqIK/jhoWp5Qaa4+80klRw
-         iFh2yBdTB1gi5RhHfkQ+Xdt8XxPV9kILVu+fjpbFFwvxSOkntJAyb+6Wld1FD1DByvj2
-         cr1Q==
-X-Gm-Message-State: AOAM533GZ7rnAii7dTt0LuH+NOjqu8+h4uWCv4QjT1PLXiVdRNNAvM6Q
-        TdvJV1S7n3woTAt+3j+h94s=
-X-Google-Smtp-Source: ABdhPJw8U2MstWbZ6Da0Id8vwDXFIANzA23CR1DCHRvQwVep9+ruget3m7Vi/p/KN+fsi9qeGzUfDg==
-X-Received: by 2002:aa7:9a89:0:b029:200:1eed:1388 with SMTP id w9-20020aa79a890000b02902001eed1388mr2876710pfi.79.1617800821618;
-        Wed, 07 Apr 2021 06:07:01 -0700 (PDT)
-Received: from localhost ([103.77.152.190])
-        by smtp.gmail.com with ESMTPSA id w16sm2095444pfn.200.2021.04.07.06.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 06:07:01 -0700 (PDT)
-Date:   Wed, 7 Apr 2021 18:36:01 +0530
-From:   "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        AlexWilliamson@archlinux, alex.williamson@redhat.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
-Message-ID: <20210407130601.aleyww5d5mttitry@archlinux>
-References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
- <YGW8Oe9jn+n9sVsw@unreal>
- <20210401105616.71156d08@omen>
- <YGlzEA5HL6ZvNsB8@unreal>
- <20210406081626.31f19c0f@x1.home.shazbot.org>
- <YG1eBUY0vCTV+Za/@unreal>
- <20210407082356.53subv4np2fx777x@archlinux>
- <YG2l+AbQW1N0bbQ9@unreal>
+        id S1344213AbhDGNMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 09:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233153AbhDGNMF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Apr 2021 09:12:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AEDDF61394;
+        Wed,  7 Apr 2021 13:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617801112;
+        bh=eeopD4HuNWjJ1ys1W14ZKAy3+7M0vO3sMwIst/bVzEU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gAL8/wYBTmNHf1JDpM1xLSelNUqoT12/o3dYm+4Rotz3rSyTeyTVOm3F+Ihbs8BUa
+         4yFSSyKHPBjwG/bc6+WipZ5mPsFGKPmkkcS/9A5Aw79/5XXxv7ujeiCmxA3SUxLaN4
+         4Zyy2HM2BBS7GG6sq/T+9I5pwJI8TciC2kKybRFAPcJIb4AEeczTjNbkQk4GWjwkyj
+         tSrqevNaAC04wnq7lg+nF31YSAGOxeMcNC43296VYszAzbnh6TJZN9twwhhzF2ZsRv
+         rS302TP2iNU6dRKFTON1Ec+EzfzEYgPW5TYMldE0LQb+RvFjbTr5ZkO398JEDIVxS4
+         2FZs/rDPaUx1g==
+Received: by mail-ej1-f41.google.com with SMTP id b7so27623059ejv.1;
+        Wed, 07 Apr 2021 06:11:51 -0700 (PDT)
+X-Gm-Message-State: AOAM532gAx6c/yG9gF2Gnzo0M1UHXlkFJwqpIlhzK6wjJ+FkoI+APWxo
+        zZP6iJ4hUzL6jnZuDC6xzj3Q6c2psriHeFalgA==
+X-Google-Smtp-Source: ABdhPJzrdSeOkw1OZanx3JvG8ZVkzpr5V2EM7ddV32iGHwYMKmtfZt7YdCiCrqX3uiUINZPHVMITXfiEJHlJRGd+UY4=
+X-Received: by 2002:a17:906:7806:: with SMTP id u6mr3450858ejm.130.1617801110063;
+ Wed, 07 Apr 2021 06:11:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YG2l+AbQW1N0bbQ9@unreal>
+References: <20210129094003.18102-1-Zhiqiang.Hou@nxp.com> <CAL_JsqLk7Gr1cMTZU+jASvx=sLK0UihYhEbnEw=Ok5vj8F7YTQ@mail.gmail.com>
+ <HE1PR0402MB3371180444018B74FB1C340784759@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+In-Reply-To: <HE1PR0402MB3371180444018B74FB1C340784759@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 7 Apr 2021 08:11:37 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+BGCDyNLNVYSKPc_CqkyAm2_z22RmhEfPaboYuHMAh3g@mail.gmail.com>
+Message-ID: <CAL_Jsq+BGCDyNLNVYSKPc_CqkyAm2_z22RmhEfPaboYuHMAh3g@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Change the inheritance between the abstracted structures
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/04/07 03:30PM, Leon Romanovsky wrote:
-> On Wed, Apr 07, 2021 at 01:53:56PM +0530, ameynarkhede03@gmail.com wrote:
-> > On 21/04/07 10:23AM, Leon Romanovsky wrote:
-> > > On Tue, Apr 06, 2021 at 08:16:26AM -0600, Alex Williamson wrote:
-> > > > On Sun, 4 Apr 2021 11:04:32 +0300
-> > > > Leon Romanovsky <leon@kernel.org> wrote:
-> > > >
-> > > > > On Thu, Apr 01, 2021 at 10:56:16AM -0600, Alex Williamson wrote:
-> > > > > > On Thu, 1 Apr 2021 15:27:37 +0300
-> > > > > > Leon Romanovsky <leon@kernel.org> wrote:
-> > > > > >
-> > > > > > > On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:
-> > > > > > > > Slot resets are bus resets with additional logic to prevent a device
-> > > > > > > > from being removed during the reset. Currently slot and bus resets have
-> > > > > > > > separate implementations in pci.c, complicating higher level logic. As
-> > > > > > > > discussed on the mailing list, they should be combined into a generic
-> > > > > > > > function which performs an SBR. This change adds a function,
-> > > > > > > > pci_reset_bus_function(), which first attempts a slot reset and then
-> > > > > > > > attempts a bus reset if -ENOTTY is returned, such that there is now a
-> > > > > > > > single device agnostic function to perform an SBR.
-> > > > > > > >
-> > > > > > > > This new function is also needed to add SBR reset quirks and therefore
-> > > > > > > > is exposed in pci.h.
-> > > > > > > >
-> > > > > > > > Link: https://lkml.org/lkml/2021/3/23/911
-> > > > > > > >
-> > > > > > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> > > > > > > > Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/pci/pci.c   | 17 +++++++++--------
-> > > > > > > >  include/linux/pci.h |  1 +
-> > > > > > > >  2 files changed, 10 insertions(+), 8 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > > > > > index 16a17215f633..12a91af2ade4 100644
-> > > > > > > > --- a/drivers/pci/pci.c
-> > > > > > > > +++ b/drivers/pci/pci.c
-> > > > > > > > @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
-> > > > > > > >  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > > +int pci_reset_bus_function(struct pci_dev *dev, int probe)
-> > > > > > > > +{
-> > > > > > > > +	int rc = pci_dev_reset_slot_function(dev, probe);
-> > > > > > > > +
-> > > > > > > > +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
-> > > > > > >
-> > > > > > > The previous coding style is preferable one in the Linux kernel.
-> > > > > > > int rc = pci_dev_reset_slot_function(dev, probe);
-> > > > > > > if (rc != -ENOTTY)
-> > > > > > >   return rc;
-> > > > > > > return pci_parent_bus_reset(dev, probe);
-> > > > > >
-> > > > > >
-> > > > > > That'd be news to me, do you have a reference?  I've never seen
-> > > > > > complaints for ternaries previously.  Thanks,
-> > > > >
-> > > > > The complaint is not to ternaries, but to the function call as one of
-> > > > > the parameters, that makes it harder to read.
-> > > >
-> > > > Sorry, I don't find a function call as a parameter to a ternary to be
-> > > > extraordinary, nor do I find it to be a discouraged usage model within
-> > > > the kernel.  This seems like a pretty low bar for hard to read code.
-> > >
-> > > It is up to us where this bar is set.
-> > >
-> > > Thanks
-> > On the side note there are plenty of places where this pattern is used
-> > though
-> > for example -
-> > kernel/time/clockevents.c:328:
-> > return force ? clockevents_program_min_delta(dev) : -ETIME;
+On Wed, Apr 7, 2021 at 4:04 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> Thanks a lot for the comments!
+>
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: 2021=E5=B9=B44=E6=9C=887=E6=97=A5 6:00
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: PCI <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org; Lore=
+nzo
+> > Pieralisi <lorenzo.pieralisi@arm.com>; Bjorn Helgaas
+> > <bhelgaas@google.com>; Kishon Vijay Abraham I <kishon@ti.com>; Jingoo
+> > Han <jingoohan1@gmail.com>; Richard Zhu <hongxing.zhu@nxp.com>;
+> > Lucas Stach <l.stach@pengutronix.de>; Murali Karicheri
+> > <m-karicheri2@ti.com>; M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu
+> > <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>; Yue Wang
+> > <yue.wang@amlogic.com>; Jonathan Chocron <jonnyc@amazon.com>;
+> > Thomas Petazzoni <thomas.petazzoni@bootlin.com>; Jesper Nilsson
+> > <jesper.nilsson@axis.com>; Gustavo Pimentel
+> > <gustavo.pimentel@synopsys.com>; Xiaowei Song
+> > <songxiaowei@hisilicon.com>; Binghui Wang <wangbinghui@hisilicon.com>;
+> > Stanimir Varbanov <svarbanov@mm-sol.com>; Pratyush Anand
+> > <pratyush.anand@gmail.com>; Kunihiko Hayashi
+> > <hayashi.kunihiko@socionext.com>; Jason Yan <yanaijie@huawei.com>;
+> > Thierry Reding <thierry.reding@gmail.com>
+> > Subject: Re: [PATCH] PCI: dwc: Change the inheritance between the
+> > abstracted structures
 > >
-> > kernel/trace/trace_kprobe.c:233:
-> > return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
-> >        false;
+> > On Fri, Jan 29, 2021 at 3:32 AM Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+> > wrote:
+> > >
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > Currently the core struct dw_pcie includes both struct pcie_port
+> > > and dw_pcie_ep and the RC and EP platform drivers directly
+> > > includes the dw_pcie. So it results in a RC or EP platform driver
+> > > has 2 indirect parents pcie_port and dw_pcie_ep, but it doesn't
+> > > make sense let RC platform driver includes the dw_pcie_ep and
+> > > so does the EP platform driver.
 > >
-> > kernel/signal.c:3104:
-> > return oset ? put_compat_sigset(oset, &old_set, sizeof(*oset)) : 0;
-> > etc
+> > A less invasive change would be just doing a union:
+> >
+> >    union {
+> >        struct pcie_port        pp;
+> >        struct dw_pcie_ep       ep;
+> >    };
+> >
+> > Though I agree reversing how the structs are embedded is more logical.
+> [Z.q. Hou]
+> Yes, this change involved all the platform drivers, but I think it's wort=
+h,
+> this change makes the drivers more easy to understand and maintain.
 >
-> Did you look when they were introduced?
+> >
+> > Ideally, I'd like to see all drivers move to a single alloc using
+> > devm_pci_alloc_host_bridge() which takes extra size for a private
+> > struct. Currently, every driver has either 2 or 3 allocs. The first
+> > step I think is getting rid of the 3rd alloc by embedding the DWC
+> > struct into the platform specific struct rather than having a pointer
+> > to the DWC struct.
 >
-> Thanks
->
-that code trace_kprobe in 2 years old.
-If you want more recent example checkout
-drivers/pci/controller/pcie-brcmstb.c:1112,1117:
-return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-which was introduced 7 months ago.
-There are lot of examples in pci.c also.
+> Yes, agree it's the direction we are stepping to and it doesn't conflict
+> with this change.
 
-Thanks,
-Amey
+I'm not convinced of that. If anything we're changing the same code twice.
+
+> > > This patch makes the struct pcie_port and dw_pcie_ep includes
+> > > the core struct dw_pcie and the RC and EP platform drivers
+> > > include struct pcie_port and dw_pcie_ep respectively.
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > Cc: Murali Karicheri <m-karicheri2@ti.com>
+> > > Cc: Minghuan Lian <minghuan.Lian@nxp.com>
+> > > Cc: Mingkai Hu <mingkai.hu@nxp.com>
+> > > Cc: Roy Zang <roy.zang@nxp.com>
+> > > Cc: Yue Wang <yue.wang@Amlogic.com>
+> > > Cc: Jonathan Chocron <jonnyc@amazon.com>
+> > > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> > > Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+> > > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > Cc: Xiaowei Song <songxiaowei@hisilicon.com>
+> > > Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> > > Cc: Stanimir Varbanov <svarbanov@mm-sol.com>
+> > > Cc: Pratyush Anand <pratyush.anand@gmail.com>
+> > > Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > Cc: Jason Yan <yanaijie@huawei.com>
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pci-dra7xx.c       |  74 +++++---
+> > >  drivers/pci/controller/dwc/pci-exynos.c       |  26 +--
+> > >  drivers/pci/controller/dwc/pci-imx6.c         |  46 +++--
+> > >  drivers/pci/controller/dwc/pci-keystone.c     |  79 +++++---
+> > >  .../pci/controller/dwc/pci-layerscape-ep.c    |  18 +-
+> > >  drivers/pci/controller/dwc/pci-layerscape.c   |  51 +++---
+> > >  drivers/pci/controller/dwc/pci-meson.c        |  25 +--
+> > >  drivers/pci/controller/dwc/pcie-al.c          |  21 ++-
+> > >  drivers/pci/controller/dwc/pcie-armada8k.c    |  17 +-
+> > >  drivers/pci/controller/dwc/pcie-artpec6.c     |  74 +++++---
+> > >  .../pci/controller/dwc/pcie-designware-host.c |   2 +-
+> > >  .../pci/controller/dwc/pcie-designware-plat.c |  38 ++--
+> > >  drivers/pci/controller/dwc/pcie-designware.h  |  72 ++++----
+> > >  drivers/pci/controller/dwc/pcie-histb.c       |  27 +--
+> > >  drivers/pci/controller/dwc/pcie-intel-gw.c    |  42 +++--
+> > >  drivers/pci/controller/dwc/pcie-kirin.c       |  42 +++--
+> > >  drivers/pci/controller/dwc/pcie-qcom.c        |  40 ++---
+> > >  drivers/pci/controller/dwc/pcie-spear13xx.c   |  16 +-
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c    | 169
+> > +++++++++++-------
+> > >  drivers/pci/controller/dwc/pcie-uniphier-ep.c |  14 +-
+> > >  drivers/pci/controller/dwc/pcie-uniphier.c    |  17 +-
+> > >  21 files changed, 557 insertions(+), 353 deletions(-)
+> >
+> > What exactly have we improved with 200 more lines?
+>
+> No performance improvement, but corrected the cluttered inheritance logic=
+.
+
+I prefer the 200 fewer lines and the current structure. So you had
+better make the diffstat more appealing.
+
+> > > diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c
+> > b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > index 12726c63366f..0e914df6eaba 100644
+> > > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > @@ -85,7 +85,8 @@
+> > >  #define PCIE_B0_B1_TSYNCEN                             BIT(0)
+> > >
+> > >  struct dra7xx_pcie {
+> > > -       struct dw_pcie          *pci;
+> > > +       struct pcie_port        *pp;
+> > > +       struct dw_pcie_ep       *ep;
+> >
+> > It's better to keep struct dw_pcie ptr here because we can easily get
+> > pp or ep from it.
+>
+> With this patch, I want to change all the RC and EP platform drivers use =
+the 'struct pcie_port'
+> and 'struct dw_pcie_ep' respectively instead of embedded the core 'struct=
+ dw_pcie'.
+> As this driver is for both RC and EP mode, and they are using the same pr=
+ivate
+> 'struct dra7xx_pcie', so the 'struct pcie_port *pp' and 'struct dw_pcie_e=
+p *ep' are both
+> put into the private struct and they are used by the corresponding driver=
+.
+>
+>
+> >
+> > >         void __iomem            *base;          /* DT ti_conf */
+> > >         int                     phy_count;      /* DT phy-names
+> > count */
+> > >         struct phy              **phy;
+> > > @@ -290,11 +291,19 @@ static void dra7xx_pcie_msi_irq_handler(struct
+> > irq_desc *desc)
+> > >  static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
+> > >  {
+> > >         struct dra7xx_pcie *dra7xx =3D arg;
+> > > -       struct dw_pcie *pci =3D dra7xx->pci;
+> > > -       struct device *dev =3D pci->dev;
+> > > -       struct dw_pcie_ep *ep =3D &pci->ep;
+> > > +       struct dw_pcie_ep *ep;
+> > > +       struct dw_pcie *pci;
+> > > +       struct device *dev;
+> > >         u32 reg;
+> > >
+> > > +       if (dra7xx->mode =3D=3D DW_PCIE_RC_TYPE) {
+> > > +               pci =3D to_dw_pcie_from_pp(dra7xx->pp);
+> > > +       } else {
+> > > +               ep =3D dra7xx->ep;
+> > > +               pci =3D to_dw_pcie_from_ep(ep);
+> > > +       }
+> >
+> > This is not a good pattern...
+>
+> Will change to the 'switch (mode) {...}' in next version.
+
+No! Even worse. Given the function needs struct dw_pcie, it should be
+able to get it without having to check the mode. We could before, so
+this is a step backwards.
+
+Also, dra7xx->mode is something I plan to move into struct dw_pcie
+because it's duplicated across drivers. And this change just makes
+doing that harder.
+
+
+> > > @@ -105,11 +105,12 @@ static void histb_pcie_dbi_r_mode(struct
+> > pcie_port *pp, bool enable)
+> > >  static u32 histb_pcie_read_dbi(struct dw_pcie *pci, void __iomem *ba=
+se,
+> > >                                u32 reg, size_t size)
+> > >  {
+> > > +       struct histb_pcie *hipcie =3D to_histb_pcie(pci);
+> > >         u32 val;
+> > >
+> > > -       histb_pcie_dbi_r_mode(&pci->pp, true);
+> > > +       histb_pcie_dbi_r_mode(hipcie->pp, true);
+> >
+> > DBI access really has nothing to do with RC or EP mode, so this
+> > function should probably take a struct dw_pcie *.
+>
+> Agree, it can be improved but this patch is not intend to change the plat=
+form driver
+> internal operations.
+
+IMO, you should before doing this change. That's how you'll make the
+diffstat more appealing.
+
+> > >         dw_pcie_read(base + reg, size, &val);
+> > > -       histb_pcie_dbi_r_mode(&pci->pp, false);
+> > > +       histb_pcie_dbi_r_mode(hipcie->pp, false);
+> > >
+> > >         return val;
+> > >  }
