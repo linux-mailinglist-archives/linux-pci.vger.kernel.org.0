@@ -2,52 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6859035714D
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 18:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24588357342
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 19:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343542AbhDGQCJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 12:02:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:59878 "EHLO foss.arm.com"
+        id S1354890AbhDGRfb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 13:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242044AbhDGQCI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Apr 2021 12:02:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA99F1063;
-        Wed,  7 Apr 2021 09:01:58 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.58.205])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AA133F73D;
-        Wed,  7 Apr 2021 09:01:57 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-pci@vger.kernel.org,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, bhelgaas@google.com
-Subject: Re: [PATCH v3 1/2] PCI: xilinx-nwl: Enable coherent PCIe DMA traffic using CCI
-Date:   Wed,  7 Apr 2021 17:01:50 +0100
-Message-Id: <161781127065.668.2308248891622722223.b4-ty@arm.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20210222084732.21521-1-bharat.kumar.gogada@xilinx.com>
-References: <20210222084732.21521-1-bharat.kumar.gogada@xilinx.com>
+        id S232356AbhDGRfa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Apr 2021 13:35:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9EB7861359;
+        Wed,  7 Apr 2021 17:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1617816919;
+        bh=DJKF3mtl+EHxdpObT36wNiXsVe+AFPcJJOhQgKgWBRs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WXyM+1WfBORK3yhGZkxvb6do5kfLE5WyjwfwjPtMqhcMyOMYq83GuHMK2WuTMEGly
+         JuorDZ1mEqFscvAzyD2rG9/8FL4tsGaaEMfmdQtxJ1eKh4cPhHYbnY7st+bab28dYE
+         8qiRpQQItTEU1+iX+/WmuyvtL0ph7gzms4puoy1k=
+Date:   Wed, 7 Apr 2021 19:35:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v2 1/2] Documentation: misc-devices: Fix indentation,
+ formatting, and update outdated info
+Message-ID: <YG3tVEnjUEg5g7mz@kroah.com>
+References: <cover.1617743702.git.gustavo.pimentel@synopsys.com>
+ <95bef5f98380bc91b4d321c2638d08da61ef6d6e.1617743702.git.gustavo.pimentel@synopsys.com>
+ <YG1OaKU7slMHfweX@kroah.com>
+ <DM5PR12MB183598B5F93D4DBC515F61B1DA759@DM5PR12MB1835.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR12MB183598B5F93D4DBC515F61B1DA759@DM5PR12MB1835.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 22 Feb 2021 14:17:31 +0530, Bharat Kumar Gogada wrote:
-> Add support for routing PCIe DMA traffic coherently when
-> Cache Coherent Interconnect (CCI) is enabled in the system.
-> The "dma-coherent" property is used to determine if CCI is enabled
-> or not.
-> Refer to https://developer.arm.com/documentation/ddi0470/k/preface
-> for the CCI specification.
+On Wed, Apr 07, 2021 at 03:57:31PM +0000, Gustavo Pimentel wrote:
+> On Wed, Apr 7, 2021 at 7:17:12, Greg Kroah-Hartman 
+> <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Tue, Apr 06, 2021 at 11:17:48PM +0200, Gustavo Pimentel wrote:
+> > > Fixes indentation issues reported by doing *make htmldocs* as well some
+> > > text formatting.
+> > > 
+> > > Besides these fixes, there was some outdated information related to stop
+> > > file interface in sysfs.
+> > 
+> > You are not doing this for all "misc-devices", you are doing this only
+> > for one specific driver file.
+> > 
+> > Please look at the example I provided for how to name this and fix up.
+> 
+> Sorry Greg, I didn't see an example provided. Perhaps you forgot it?
 
-Applied to pci/xilinx, thanks!
+Nope: https://lore.kernel.org/r/YGyl7OWHJm1NuaV2@kroah.com
 
-[1/2] PCI: xilinx-nwl: Enable coherent PCIe DMA traffic using CCI
-      https://git.kernel.org/lpieralisi/pci/c/213e122052
-[2/2] PCI: xilinx-nwl: Add optional "dma-coherent" property
-      https://git.kernel.org/lpieralisi/pci/c/1c4422f226
+> 
+> > 
+> > > 
+> > > Fixes: e1181b5bbc3c ("Documentation: misc-devices: Add Documentation for dw-xdata-pcie driver")
+> > > Link: https://urldefense.com/v3/__https://lore.kernel.org/linux-next/20210406214615.40cf3493@canb.auug.org.au/__;!!A4F2R9G_pg!MeIXpmOYi4yJTBq19JEADll7-g6cYBmmwG92EWipqsBiPzeubfMGVllrpMt8FpwvW5ZemHY$ 
+> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > ---
+> > >  Documentation/misc-devices/dw-xdata-pcie.rst | 62 +++++++++++++++++++---------
+> > >  1 file changed, 43 insertions(+), 19 deletions(-)
+> > 
+> > What changed from v1?  Always put that below the --- line.
+> 
+> I've considered the V1 the 2 patches sent wrongly separately, based on 
+> your feedback I've generated a v2 to include the cover letter and the 
+> reported-by, link, and fixes tags.
+> Was this wrong?
 
-Thanks,
-Lorenzo
+No, but you need to say that here, otherwise how do we know this?
+
+> I also placed the change list on the cover letter. Or do you prefer on 
+> each patch?
+
+Ah, if you put it in the cover letter, that's fine, but I almost never
+read them :)
+
+thanks,
+
+greg k-h
