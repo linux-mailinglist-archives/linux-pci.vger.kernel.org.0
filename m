@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DD983561A9
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 05:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B457C3561AC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 05:04:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348209AbhDGDD5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 23:03:57 -0400
-Received: from mail-db8eur05on2059.outbound.protection.outlook.com ([40.107.20.59]:62177
+        id S1348223AbhDGDEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 23:04:04 -0400
+Received: from mail-db8eur05on2041.outbound.protection.outlook.com ([40.107.20.41]:63409
         "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1344228AbhDGDDy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Apr 2021 23:03:54 -0400
+        id S1348216AbhDGDEC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 23:04:02 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J0OC2IhU1MsDqZ43kbb52DUGHMrPiHMDfRrMxOcvfhFDMlQbtPDQFQ31EfsXzHdn3yed2DTaE6Ye56a3n99rcWWPeKzgXfPvIntLvnDG2a3kI6axDhr5Pt6K54tz4/FByQlBiW+/FwHnDRz4KwFjOCha/6jNwWiYAwnOtozB4PugPmNdowVhYyEuMWQYIEEorgix3edq9U3Ws058mrXP1+u7Tel2RRAUr6Wih/theiW/PZkkZYnOoM7TFFIUWDwefjY/IZJ1nkP6emK6lpyycqfceIG9b2O/0cHqa/U4Yc2zKdXqbetgbSoVjFK1TWGNlXJICEovK6ODqcz2viej4A==
+ b=EueMg1loAjO1SAsOxFNR1ReLuUqjbNMe5JmvX7+uYZMcyMZPPii1eXO8UQiFlADenogDt6Uk9oskvriTXznIwUFQ+BlkUwes+y/t6NsJqK4TYIcNjBO2b1ePQcR6DU8FH/4MyJVsnvHWYhrl9NHyAWgbqo6spQcIAYr1GLyO0GruQjtYhLy0dzD0P2pM6UFMTrQ6vpJpZvM8P4b8oA68qP8alLDaES15x348u5cIUkwKdZ0LKP80vvbWEbfFSpvXE473bC8y5W1A4nKYQblpD3OzMnqfkUcfras07igjSvY+mrbh94yfPS3x2EHfdmxagshtxLvW3XyLQ8B2kOw5KQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2lKAep+0+Cc2ajk+UnkD5zLCckdWXnbpRCto72XKAfM=;
- b=NPf0Z3r9NQxNpkYWfe8eW5JEoh/fcNFE7ykFVgKliERtiDHw/ZC1n8vTLjof/8DepQ/qjMo9BLJCI+prWsP7koVLvmYWel5cmlzDJjMjUoGaHWwQC954GbV6ZpwhHi3uPMrXs8FGMeg+CcH1GI3HgCPjVddv9o16SL96ep0iIrnm0jxpg2jtwzMJHDxj5zY/N/im8MR8cGdD+9poHuMkMawlfNwTzhdTrL5BEf+ok8psvsSUuYRfWSTfqMzWc9FTbtHUpiVmdp6+iucIfot8dTT+7paBh6ZGCjCUuIGg3Fvink5rSDbaMt1IOhECnVMyBfP/I4OrivE8kUOka1Z+2g==
+ bh=Ncn5u62IfCKvDWDOq5oYa00zSenRGTKkEgmSOnxa7gM=;
+ b=QP4Q9ANzrxCdMSev2K17sDlPefgYsaLcvatJFgLLmXrVQrnPEEqIZAhXRVFd/SW8m4hEYfbEhyKxaoXVl91+HfT7Z8JGSSNTzRcu0MbgO7W/8egAUDB8GRBHgBlZrrlbY6vjTQFaBOCH21YcFWuphO+UaSmD344Jogu7oV+LswtIdJwEBb9OIxPeHnU+CF23dGE5EbsTcsvgiXSBRnu8PZJNuPRmnKzkfGzcRS+GNoD8Icf+AC6YWriW/y3vYa9IkRzDYOgSEOhd5R+zZGGeUd/t8OL3Q0NkNBThpXIj92Y0lfE1K/P3iPCDVwieb21DE5envE6G0Y6LB3HlVRACZg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2lKAep+0+Cc2ajk+UnkD5zLCckdWXnbpRCto72XKAfM=;
- b=mHJbAWvz3z/sR0CItvK2AnywjBheLMIVG6ZPOEwsN43Z9GPtuHzLppPgkKLYl3faE4rQOopCJ1J8nyIN6//74cZCXJ8epK/GGvgy5O774hIokG7Xx5RcL2QJSliY3o6YjIEsowmbp3OulN5j3aMaewlIdUX8Qe6A9QQKEWTbvg4=
+ bh=Ncn5u62IfCKvDWDOq5oYa00zSenRGTKkEgmSOnxa7gM=;
+ b=IbE9ohOg81OKy4Dx64BTuzg5bfJISbwk4Bb8OSo0h+jNccgFpnFM9cc6rVUAs2LzbVCwWpNhlsNX6NrqhQW+OaEF4PtuGuVAFpKvroq503DTZfiLyugGCg8BAXsdpd4ix9V++kRwVC2+GJAE6LAajRGCbGdb+q0i6EbPw3z1ckU=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
  by HE1PR04MB3276.eurprd04.prod.outlook.com (2603:10a6:7:22::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.32; Wed, 7 Apr
- 2021 03:03:44 +0000
+ 2021 03:03:51 +0000
 Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
  ([fe80::5df8:1a69:47c3:44fc]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
  ([fe80::5df8:1a69:47c3:44fc%3]) with mapi id 15.20.3999.032; Wed, 7 Apr 2021
- 03:03:44 +0000
+ 03:03:50 +0000
 From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -45,9 +45,9 @@ To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         gustavo.pimentel@synopsys.com
 Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv5 2/6] dt-bindings: pci: layerscape-pci: Add a optional property big-endian
-Date:   Wed,  7 Apr 2021 11:09:44 +0800
-Message-Id: <20210407030948.3845-3-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv5 3/6] arm64: dts: layerscape: Add big-endian property for PCIe nodes
+Date:   Wed,  7 Apr 2021 11:09:45 +0800
+Message-Id: <20210407030948.3845-4-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
 References: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
@@ -58,50 +58,50 @@ X-ClientProxiedBy: MA1PR01CA0156.INDPRD01.PROD.OUTLOOK.COM
  (2603:10a6:7:85::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.73) by MA1PR01CA0156.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17 via Frontend Transport; Wed, 7 Apr 2021 03:03:38 +0000
+Received: from localhost.localdomain (119.31.174.73) by MA1PR01CA0156.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17 via Frontend Transport; Wed, 7 Apr 2021 03:03:44 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e3daf7b7-278e-4276-762e-08d8f971c0b0
+X-MS-Office365-Filtering-Correlation-Id: 03175b5f-4b17-4ccf-5bf0-08d8f971c409
 X-MS-TrafficTypeDiagnostic: HE1PR04MB3276:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR04MB3276B9BD64C8AB3C15CA79F884759@HE1PR04MB3276.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Microsoft-Antispam-PRVS: <HE1PR04MB327677F403B4AC028994193E84759@HE1PR04MB3276.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mtIA0MdmM/ebyivwIJl0c1QVgqp4pLqOtI5j805d/appBVx1wY1fTCvBr0Qdd7qy0Z9wP+L17nujsxuBe+oxIgGXNwao3mKzJmyI7qRFpZQpiXe6HieA19YW18+VTwp/p1s5Yu6x3M6yNIuZO48K28UItjpSNol5v41UmxivQphmMmowdEe0R7Xji5XErcxYPahdJmdNtaa/JI39bnFxrtmzI9lY9uCrLmMCWl8xJK5Sh9PA0+2XYTedrx/xJJK+ZSeFvJzp4chlGo+WAnll/wzBJoSSqSSwnnyYgvAMDBMyzQRxVGrhRhAUIEw9HL8mCJId7RoGC+8ojnsOFyEQpJqVvIfYAcXBj3uyxp/1lcrVyorY4t9KNSsXSLwtrc5ad9eXiUpUyKNR4WJUsqq9V61jRXjPzNjdlkMePxXC0frqOCmxNR6nq0PtLohJgi8hda2qhiRL8yxrIGwvcQZN72oLCOtmdYASjbFXRn9/tq0YWOMlgZPHNDf3cS30Wi9NOYryYhhNTGExZmltGDKk/ElSgiMqTP2h45dQIsyue416bv/e4QLt/Bq0DDH8lOl68j06hMRLr1gEN2xxK8ZfeHYf0tSm8O3nyBLKNRshGrJgz88lFlGclwq/Gn0jcrT2OaMVCl5g98n6tRdqeJygRlT6qLI7D0mwVHSFglz1gw2/VXRsVUV9yIhG4QBa7RNyure5lH8UlChFks1iIoV298j+sIHgCYh9MI91ZUsvNnw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(4326008)(6506007)(36756003)(38350700001)(26005)(2906002)(6666004)(6486002)(1076003)(66476007)(16526019)(186003)(66556008)(956004)(86362001)(66946007)(38100700001)(69590400012)(316002)(6512007)(83380400001)(478600001)(8936002)(2616005)(8676002)(5660300002)(52116002)(921005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?PsalVuelNE4O1QOw9j931DfC4/w+1Nnesr19GA7p8dwle1XtwUYW4AEs8Yol?=
- =?us-ascii?Q?BEsWGktIM3HbAZsDTjrRQkOP1MjBz5+7KcoYpUk8f7ZpVFD7ELRtS9Q0VV48?=
- =?us-ascii?Q?ulVk9Maqs55/cnUA2yO8OtqABvcZtXCSOKqxMZVKiDY3W33wTPlO+AwXmDKY?=
- =?us-ascii?Q?EnqAkPqI4jaxIkEgJMMcj2kd0ZWFZPUv18RWXScI9Kb7+e2CFrARX5Yomi2T?=
- =?us-ascii?Q?Ql0Oq/0rPnbevUl4Br9lqAfA5wVPnEu7kaNUTPn/GfQdTr2h1xecsBPnKqw+?=
- =?us-ascii?Q?ywX6LCufIthQ1/dq/eRjdBXT+4op4La53eYGNyiOAD8IY8oW0N22mQoUS7Q6?=
- =?us-ascii?Q?6btI9X5erFaf9Ihk1WaJ12nnx1bUaY7eYZ/4zcvnln0kU55KkQDxootoms25?=
- =?us-ascii?Q?lgAobkmkON7kJ45pVv/rQP83Z8sy85W8LVWmS5w+XPd/5cZtF0kppPT0wTJ2?=
- =?us-ascii?Q?L4wZ4vV5oH3nEH+Svn06pGA6sIkLUEHI+sC7Vo4Ip2uz/eEA+VVtTPZsx7Wz?=
- =?us-ascii?Q?/V8f3kaFViR639KjDvrUl58XNlc6iRhnc0ZNffZgAxbR2qrxQC4dCOiJ78wZ?=
- =?us-ascii?Q?fqR0NW38hxvB8RRojO2GGS/KMyFT5KGYR6IGGkXC3REvpmHkf0UzAjFXh9YB?=
- =?us-ascii?Q?jqU1nbxegCnVtrGLnukFuaotG1tvm1wWIg7Pr8WaNtc2NpQaAqcKD/r+x+pJ?=
- =?us-ascii?Q?C07A2JyrfaI7uZu7A4++CSykjS9vNvnGowVqPHR4WcRQH63SosFxQQ4K+KBM?=
- =?us-ascii?Q?nP075Ew2efRsgBE3P4k6ep3M2zHtKhlcRJ9QCm6OrgnH19pwS9JZ8YLn1alb?=
- =?us-ascii?Q?icBL0qmiBsE6G/Hq3VmsE7o9+ZUm3JZ65MlIG89m58vrW/x5Qtk2+vbhurqd?=
- =?us-ascii?Q?GJLVdWrLAOY9LDMuG39FLhLp+KCJZfMsOh7VqJu8YboZar+TaR03AsaHDDzk?=
- =?us-ascii?Q?hzYGp5tKrVX8taAVmZ/k87MJM/jyVvt7/ZwFZDngrvb8kCP6t59Wb3GvfEb7?=
- =?us-ascii?Q?Xj7zyfjc+RUrkY8QP9yaNRIl5CNVz/QdpTU2oHFKD7zwpV3kQfARmMeaeLgl?=
- =?us-ascii?Q?PRYxLKBhBgacLnM//PNV0uSc0GHEWgKAWF8LlMoPgiiCiMoknnISMGW4uZa1?=
- =?us-ascii?Q?3cLV4InOy3ZL7S7XldqbrkzuSBoscQLHDs56PUw7zPwzgLOdbhpYGw9Ndfgq?=
- =?us-ascii?Q?3nZmleoei1GrJ6L+pHFyMxRh6NN/Qy7YwtCmNaO/tbZlaYPm6Hl3PH3lJ4wQ?=
- =?us-ascii?Q?vAb336aUaPYM6sqKLKWIkH1fedhX4nB0kORFuCb+ZUOKVW8Axc95g3NHI/2E?=
- =?us-ascii?Q?BNZgyn41PEDJdF1ZzU5t1JuR?=
+X-Microsoft-Antispam-Message-Info: yi+JCOYLpYPJjtoyqwp33JqPy3pZX0cBiXZcGDQtIBbMkq82OLcUT5zVz3ryrgMB8+/LS6mQpjC8S9vEFkTkQOMYwpMXSZyKylNNpiwW16YhM3w60cJGcROu4dvB5mWSsJ4b2PYOStgAxHp/eGR8nqyD50P4XWAdSyPj0ibZ98M/HqBrChgtuc6AVir1Bjedv2/mhsP4X+9NECjks0UwB+2qwbU7DK3EsyYFJnVpKtJp+iFy3q0cb7/vAvfglsBPxxzfjxDJX5d065YzUqGeW/KT6r1O20AXmZzcvPyxEpVOXkYs9gWIBqRRs3y5TYqPO3gt0Je+8K2FfcqO/bZTNpvIi9C2sg3LrMHN+/rFIw3CWv/cfjhZleyqnWAZusgnwfObocS2yPe0OkxjHjKz4aJmNw98Xvjs/IxS8D9R+Mn0mzLVyii0YDybQ+Qif1TdzZBNtjS3TVakDphZ3L5yhrRKW744fEOmg1gg/owhxLxMS36BwdcLIFtDb4Teckg+nFDr+/69bFIPhhgrtprDBEYvTVnZl8eNqZYxJITwVT1KWRZfu2zZWEtwdPUYELQTSu7PprxoeY38+Q/bHl7Qfyn4Xfn71SiMQf5Gl9Yns3OViGuBtO5PQcNM8Vn7O7/+tARPrko7hjOOejk3wbGwYvyHVCF8+k7kImkqoG2j1BqLZgcTyJg7mB9fQPQp2fCd2WcHz8zX2Uo4wrGKOR5R8DjqaZaBj/mXnPvddvcEt5M=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(4326008)(6506007)(36756003)(38350700001)(26005)(2906002)(6486002)(1076003)(66476007)(16526019)(186003)(66556008)(956004)(86362001)(66946007)(38100700001)(69590400012)(316002)(6512007)(83380400001)(478600001)(8936002)(2616005)(8676002)(5660300002)(52116002)(921005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?eAoBPs/It/9NaWx2MJ/FKg0J8imCBjErQ5G31x2lFP5CWoDsFrE+BG7umPsA?=
+ =?us-ascii?Q?qABX/QH9fsa87+5zI2Rqq4yu1AynxtajptIWaQ8yL8FCyDrdJp572rg6joBY?=
+ =?us-ascii?Q?hhZLU8bd7JHx+b/FV+vDQZVQ32WMPBD2BeT8qwEZENdWLgcUQDfKpYsR3FHH?=
+ =?us-ascii?Q?tYVwpHOMvG8nguGuVPtvuhSxcNjrhccszWgCojatvcfnvtxbMKUt/eIAN5G0?=
+ =?us-ascii?Q?tXWkfKUQ7qxZRA70seOGbfoimzRUNbvmkdDRouT6MrSpb7U8nUr3ATHqcR8o?=
+ =?us-ascii?Q?mQ9lTCFRi1XAN3FM6BRLiaeAHz4Vl8TfkYeTS3Hoj2VNeB0uI1GWfXFgE5QF?=
+ =?us-ascii?Q?m7RvLKHf6n0xuGWONqPzwaapj+lut4zASEf0TPV0d/TvY3AyDdtcLiF/R9xP?=
+ =?us-ascii?Q?lk75SQ0jz+5OD7KyAVpzQDcivdgEmww5OQbBR/X1TTD83CsQmr0b1cmqhUnP?=
+ =?us-ascii?Q?Ucd0NXMNaxcZlyfN7QWUBfstYO8FilZ+WvAGGlFmAoKyKVOJ6+upiJgqi/c5?=
+ =?us-ascii?Q?9sz9iZUovipQLJpNLxypkr403loJfu4E42xdmalV3ilhkNv3dTTPxUb4V/68?=
+ =?us-ascii?Q?7krHxvlpEM6/eSL9+8/YwSX6MjtSzdSpNjPc7teiEHhUGJ+/ZGAFFSwCwnik?=
+ =?us-ascii?Q?ukXKK1PM9HYKiCaDnLmpXZ3c+8+55LGfWyCoP6UfVbGXTiPKIEvTcgOCgRzt?=
+ =?us-ascii?Q?MqWL6fudaDBU9Z0QOGxrw4fCVL4yHbtbSw/KnJEXdwIkUTVedzao3NhLKA/L?=
+ =?us-ascii?Q?T9isVROmj25zSX8r2zXNTB8RpJpbQLEJ7x+0TFO/0jpolwp3sWeRNol389Uk?=
+ =?us-ascii?Q?UTJZWXOV2Cpf2LaiYlG7+i92Bg9/3SvI41szKcV18Sm8qgccGHZQRXCzb3Yq?=
+ =?us-ascii?Q?fHibRC2kpTVoCG2zei9Mt7Y29nQlWsZWA/Zjo8TJJjF+iOtSnef/AcmfVgp3?=
+ =?us-ascii?Q?tYEmyRXa6BVpsDzGPJ87Zz07OpN+qselJXZyK1xrerrnQI/uqeBnIGxCYnad?=
+ =?us-ascii?Q?yl/PHqPEHk9yEBqlcE5hSU73gdSRUM8lGtJQagte4Euxamzei3kbSNjDlwXb?=
+ =?us-ascii?Q?/m8MzrDT9as3FMQFDPDI9DA0bKmnjx4sJf7+9lo4ys5oUaFt6jetB1t0H+Mj?=
+ =?us-ascii?Q?RCxec0TnyIE3X620M9c6cab0MOmnobE8UkExAV33WL4THsw9DljcPSPNp6PA?=
+ =?us-ascii?Q?2RCtE0vqSqUeuX3V9N2DJe3rWnbPLYc65e63hI2f2nIWS7y5ik9j4fF3AUbE?=
+ =?us-ascii?Q?SsxDb/z0jA1kGdZdOLZdK5yNN9Ji5cN+h5QptmhZJG1WE+AmErc1MIVXx07M?=
+ =?us-ascii?Q?I1biY7kNfsMtbGLO7DQ0qTN3?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3daf7b7-278e-4276-762e-08d8f971c0b0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03175b5f-4b17-4ccf-5bf0-08d8f971c409
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2021 03:03:43.7962
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2021 03:03:50.8202
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z0/5ROx33dK6K9YFoBIQZ6BN+B0ICBSKXXY3i16252ExV6U57LVEwFuyPiNJ8MfU1QzHvfabpPaK0vP1NqU77w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: IXb9etByFOfG63ZVSLQOFef0JUEdqZB1v/UhUAIU4FO17KX/FWvhTvmp9a16OkfiI0FA5xV43bDbni6bDKNUdw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3276
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -109,34 +109,87 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-This property is to indicate the endianness when accessing the
-PEX_LUT and PF register block, so if these registers are
-implemented in big-endian, specify this property.
+Add the big-endian property for LS1012A, LS1043A and LS1046A
+PCIe devicetree nodes.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 V5:
  - No change
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
+ 3 files changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index 6d898dd4a8e2..d633c1fabdb4 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -40,6 +40,10 @@ Required properties:
-   of the data transferred from/to the IP block. This can avoid the software
-   cache flush/invalid actions, and improve the performance significantly.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 9058cfa4980f..ac23e938fd1d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -542,6 +542,7 @@
+ 					<0000 0 0 2 &gic 0 111 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++			big-endian;
+ 			status = "disabled";
+ 		};
  
-+Optional properties:
-+- big-endian: If the PEX_LUT and PF register block is in big-endian, specify
-+  this property.
-+
- Example:
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 28c51e521cb2..46826752a691 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -890,6 +890,7 @@
+ 					<0000 0 0 2 &gic 0 111 0x4>,
+ 					<0000 0 0 3 &gic 0 112 0x4>,
+ 					<0000 0 0 4 &gic 0 113 0x4>;
++			big-endian;
+ 			status = "disabled";
+ 		};
  
- 	pcie@3400000 {
+@@ -916,6 +917,7 @@
+ 					<0000 0 0 2 &gic 0 121 0x4>,
+ 					<0000 0 0 3 &gic 0 122 0x4>,
+ 					<0000 0 0 4 &gic 0 123 0x4>;
++			big-endian;
+ 			status = "disabled";
+ 		};
+ 
+@@ -942,6 +944,7 @@
+ 					<0000 0 0 2 &gic 0 155 0x4>,
+ 					<0000 0 0 3 &gic 0 156 0x4>,
+ 					<0000 0 0 4 &gic 0 157 0x4>;
++			big-endian;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 39458305e333..f21ee7825d40 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -794,6 +794,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			big-endian;
+ 			status = "disabled";
+ 		};
+ 
+@@ -830,6 +831,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++			big-endian;
+ 			status = "disabled";
+ 		};
+ 
+@@ -866,6 +868,7 @@
+ 					<0000 0 0 2 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 3 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+ 					<0000 0 0 4 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			big-endian;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.17.1
 
