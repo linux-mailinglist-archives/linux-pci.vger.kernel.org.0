@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 032153561AF
+	by mail.lfdr.de (Postfix) with ESMTP id 9E6D33561B1
 	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 05:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344367AbhDGDEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Apr 2021 23:04:16 -0400
+        id S1348219AbhDGDER (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Apr 2021 23:04:17 -0400
 Received: from mail-db8eur05on2070.outbound.protection.outlook.com ([40.107.20.70]:24289
         "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1348242AbhDGDEJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Apr 2021 23:04:09 -0400
+        id S1348248AbhDGDEN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Apr 2021 23:04:13 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mMZ9LLlvRMUsLxedR4lDCZ1eaRmqmDZhpje48a9uPiT37IKQ4tOD38wxVplCBtAO6xJTrkbC231lfw60RiFQCAKIY6xHlB0yCdChkNiGaMkG9tTUft5dU/C42FRpEmLjlu8CpDj7WOAMfdPK9v3swJu/sas+WjoyHbJ1riXAGnbHucCHWE0b4BLxbt5v9FeBTw4mQbpikX3umkTBpSIyED2hylUsJanqgj2oJGiuZO/wfRGTSXgg6g1lHkaa00OsqeNWTUMFG/3Z03w9DrjEOATav6QF4BAM1rVwx3H9RURu2jURSkYIXxp8V8gvrCR5gzi9UvQJjBbn4aubEqClSg==
+ b=j0v6J7q675GEhd3PyapQEaCTJ7lUg8dl3PcJKZjAQTZDH9Gc58ZbH5cqfaftgBIeNIzloD7AhSVLk2lsTJuZGGTpp7Sh7T5OTSQMuDKVDQGneneEMOuTH4tf+tvfu61vWKx3ioej/p7U3VP6kZB3jNbyLFPYkHsdTNjAxAnogLITQZOoqHRtAOLQ68HhjKskm+akRb0YFLsRyAZQ2K6qBTzFVNyoMlqmSMwcgqWHsfT3tj3bwEU2F86DcV/WC3xkzXzWZB6Z0LYmfDlJ+cCYSpT0U3RFNV5vIBIoATuMqn0+k/6S1vifvGhgWmZI/wtyYyso5lrE/KSwy7vHcvT4hg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tzv1Cgjir5RKDEfup/QVU5uhiZAlb/vI5ETZ03SKVW4=;
- b=OW/+wQxRSHLgyqF3eHfYDKiiEUbxWpGQILRCI0tCdUgBumXw5iB3H4Lj79ubkyD4S27OsOJ5HLSQMWvxW8mJDn8mZj5jFrfjBcTNUvJcFU2zPh38oNyIIqS/9aIW4pP47Ev6LntBxyNvGpF891BvrUB0MwWOOh5oGYZ44iEfnd8Q5Beqg2pbzW9rGvTcACz2NkK6H0rTHRL/di7nhgjh3JlfO6xCnlMl51z0K2rvPbnEScJk8y815Zc5yW/foSKwRj61tFvdkxBmJAcp4eVKAoMkTeyDUcQMPO+fgzT2rCIg2NI0rYqdlA4rkn9CkQEqEMgfJFpjXyO/zZh3Eb8/0Q==
+ bh=i7KWig5tKl4+q2AtgwOkF376aZCYnwqiW+tQpr6nafE=;
+ b=bMUAyhWs9C9uWPIr85/HdYF/SGnp+w6IK4LIhQB+e0JN8hdLxT0spw0xIlRov1PngZgbfJosdVBtdbynPkgC15d+2gUJ453C4xKtp0yOs6CR2eK0YdypGPmsnzggv93QuBoZ+kwaInlltnmhA/i7ia2J23zTPlaWXK3eUZc9S2PzC8vzLBKcM6r38sd/ortxtqOWfVcvT7lsgmbna/4EfXHB8wxE0i8N0WjRZweyrHiOU7om+yaRPXq9HdvEj0TOoLMNyQGPs+wpCshk34/Rmq9pKdlGoMBx110MlZ4VpCanPs4CI9OqBnALI27BWZwcTO10Nji3eo4zjYdMhuOWDQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tzv1Cgjir5RKDEfup/QVU5uhiZAlb/vI5ETZ03SKVW4=;
- b=KvPw1RzTB2LusElas7/qATNrnUCRA7gfN1J7wf0hcVGWbbf6Od0moKvAGlSL1hboNTq19boGnyU1SD2k+ahDpaoJ5F3pcde2QzWrtQf5Qu+ugHIHGIagOsuiXJOZkYWNWv1Jwfby/6hl9PlDjL9YFPcVIoXdEQmH2zIEJS2GBos=
+ bh=i7KWig5tKl4+q2AtgwOkF376aZCYnwqiW+tQpr6nafE=;
+ b=QZ68pqpwUR+VAKwa1/vSFA7zzYFAmJ5M1RK2jQzMqplKzR8xLja8q0lgjZq64Qp35qKRZG0NrpWh/ovpXgxCwyi4IEF5HPaqH8mjN/6Z27YNchS3SCWaNawE+jY+cDAby+t9sTDopiTZ3Q9SYtebwPH9BEg4AdVe+ei1fo66N0c=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
  by HE1PR04MB3276.eurprd04.prod.outlook.com (2603:10a6:7:22::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.32; Wed, 7 Apr
- 2021 03:03:57 +0000
+ 2021 03:04:03 +0000
 Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
  ([fe80::5df8:1a69:47c3:44fc]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
  ([fe80::5df8:1a69:47c3:44fc%3]) with mapi id 15.20.3999.032; Wed, 7 Apr 2021
- 03:03:57 +0000
+ 03:04:03 +0000
 From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -45,9 +45,9 @@ To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         gustavo.pimentel@synopsys.com
 Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv5 4/6] dt-bindings: pci: layerscape-pci: Update the description of SCFG property
-Date:   Wed,  7 Apr 2021 11:09:46 +0800
-Message-Id: <20210407030948.3845-5-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv5 5/6] arm64: dts: ls1043a: Add SCFG phandle for PCIe nodes
+Date:   Wed,  7 Apr 2021 11:09:47 +0800
+Message-Id: <20210407030948.3845-6-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
 References: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
@@ -58,50 +58,50 @@ X-ClientProxiedBy: MA1PR01CA0156.INDPRD01.PROD.OUTLOOK.COM
  (2603:10a6:7:85::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.73) by MA1PR01CA0156.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17 via Frontend Transport; Wed, 7 Apr 2021 03:03:52 +0000
+Received: from localhost.localdomain (119.31.174.73) by MA1PR01CA0156.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17 via Frontend Transport; Wed, 7 Apr 2021 03:03:57 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a2410e1e-3f10-4570-afc0-08d8f971c8b9
+X-MS-Office365-Filtering-Correlation-Id: a5e6b0f1-493f-4ede-e4d7-08d8f971cc3d
 X-MS-TrafficTypeDiagnostic: HE1PR04MB3276:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR04MB32763DB9E032CA483B294B7884759@HE1PR04MB3276.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Microsoft-Antispam-PRVS: <HE1PR04MB3276E55A993914D67714A15584759@HE1PR04MB3276.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UrFHjxlRs57od5Mx8ogCLICw1B6wIfCs/7Mr8tb2GgK58gJUJx150XNup2PAD1RMEeos+LSYrvKLMDLgxs2Ehe3egkfMBHgmytxLCmbg4e+dfzDPagQwfq1FRXLUD+K2CniepUy+u36ESACr74RtSBSuU9NUwadHFE8sskUzplLrxxGE/61QOl7y5WYXHGxwWk4RsdblBCM6jrI4FGY1d+tGZq8iYW3Kjh/U3drPqVKFUFqloXN1TqFdpLaQK5w0ykExeftbWQ5SciMlGt/nDVk94b41MWg1Qc8uHeP7vHoa9MfVFik7i9+gPOF1hEv3q4Yk6jNb2Dd7fSFB4fS80aaDjUbfCreVDfM0nFqhjjlMTeIs93pOCILKrSpj208Hy32CxQPrBdfXDxNrb4x1723P7p14qdDr8/tfdmgerkJDAgUTID9Avr2QK20HCb2V8qw+lerxvNH2UZFivGJ5ODGxpK9QlVE6ryu9r9ghLWVg6nxyJDpnuKuiMpldBwv95oRYNu55y+8Rmb2kAK9P/jI5eRC6gFkrbdlqK5FMV+rLVBYuxAvoTveZ7CKmOaMASZjB3S0TAVarXzowcqC6xRPtXsIQlLl+Anr5+A07kpRniJQ/iIWFRJIh1kO1A9DVWOE7v2moU6mQsnmvX8wCl+Cmrz/6OCbomplGYsk6qhxrPorw21IlMZrOMf3tuWwFAXD1tSF1LLMcAwblFfhq2TZhSFz5DRvpfNNfWKPPxfw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(4326008)(6506007)(36756003)(38350700001)(26005)(2906002)(6666004)(6486002)(1076003)(66476007)(16526019)(186003)(66556008)(956004)(15650500001)(86362001)(66946007)(38100700001)(69590400012)(316002)(6512007)(83380400001)(478600001)(8936002)(2616005)(8676002)(5660300002)(52116002)(921005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?XGVyigjO29flqhrDdugI+qI1UbohvOamrjOrcZQGxebcEbJkE0DGE/r0uM02?=
- =?us-ascii?Q?m6R22EgfZouFvAKkBIqMs8IWS3jcEXNiaO23qdwlnqd8X9MW0WVOycm5h/XH?=
- =?us-ascii?Q?A6ZuoffED654Q9/nQFYLhL9UL2fQoEh9Th7CfI675SEuoztUaQrjjFTu8nhT?=
- =?us-ascii?Q?CiY5zcthJLWEghRJmREg5yXzmacwRHejUcTKbAzwDnEYZtBOKIdgiK6dEIMH?=
- =?us-ascii?Q?1Sv1IWIb+T78mP/z2cyeWbwnFNMnwk3keabJkKtKlGPmyCG8kE3myYlyH2JL?=
- =?us-ascii?Q?C/wvN9H1m8PTppMbYJpgCe4MG3qOi4RcdI0TJIGAVAnaxysKfr9gM9VhbZ2b?=
- =?us-ascii?Q?JYZZ73PvC6lmihUEqXiN6Mu+T2GTNcC8DSNxRQZdCqQEGh5ao/9h2pYr9TNU?=
- =?us-ascii?Q?HdsgOCHDFroM8fNxCPcYJWPtM/BjkiTxAx8NvMUyo7L7zSx41GxShOyfBNMB?=
- =?us-ascii?Q?I2UtxBYNFzdOKW8Tl0ntL30+Zq7hNb1LaTcJHww8Zs4G3U+jY8Pq8ePmgVlO?=
- =?us-ascii?Q?fMULcTDvvtIKNGQc3RFt4hgv3N6BmrcqAZzbj3sx6YQycjjFhS7guXDFgWLE?=
- =?us-ascii?Q?EwLedS5wartENW7jx83BKiU0CLmlAnhKn9q/t27NIWSI3ZBHx26gOiBSvd1N?=
- =?us-ascii?Q?CqsYZ5ALYdx95wrMOv7TpXc7tdS4ZBnVrUhy2xab3LEZTUmNvuyS/XXg79hO?=
- =?us-ascii?Q?IF4r4CvVHPnDjrm4H2gndzMPZy2nEuf9HWWIZTHxBKReU5fd/YD9j9ENTlMw?=
- =?us-ascii?Q?CTz7mwKpP/+zyFh8zmtkKb2SznJ/7DUV6bMFXVhqXE7eClc89eyCGPF6V2Sl?=
- =?us-ascii?Q?8ZbDPFxBVhcEqRmkWyd2eBQ5ScX3tPyy8V9Km7juYaXGFBn8fzWAy0c5FZPp?=
- =?us-ascii?Q?wfOa0XcFmYHCykLdJdJhNznD2+5f4W0ko1Q49jr6lDSsamNdF0AajQ97Bn6W?=
- =?us-ascii?Q?gFkxCspTNBC/4PPhS5vltED+YPdv6jC52uHGcom7Cvg2QC1Ii50gC7MMhL7O?=
- =?us-ascii?Q?B5F3UnCq6QC6cWdOSTOmpJm9E2x9qDIAD/CzUzyOlWC/j84/0fTAd4UYvBW+?=
- =?us-ascii?Q?aOjuP1OAkINfTt1nWtYpl4/dH/JFjlgSl78f5mRZdEAqF52lZOxr9JboNVM8?=
- =?us-ascii?Q?SgKMkvwQkwtCjm2qZ0t2BO4qdG3kdVUwmUzzaFyiOAyrqJk/bKtmQfGKH1Nx?=
- =?us-ascii?Q?XMT9ahWGBMp1DxPvK6WESguIUzhcOiLmsNwsQdDFrTWZLNIl1+tN719WbJMO?=
- =?us-ascii?Q?pb9TdYu7w50KER5n3Ts3o9ihh2MxpYX4rfAFhII+YU4VyDw5irZIc9LpZDB3?=
- =?us-ascii?Q?kxzbrllg6t9cNf50R/yQlQ/S?=
+X-Microsoft-Antispam-Message-Info: 2EVDZhb94M4WooI8xU0nCE0QkeOqFDVErcTvhOjyjDm7fvKTTzyjhftPV1n9gRx524fvCFd6PI7Mz0AGjsoR3bWLyQTVjuj2NmTNisHlIpLCJgP60MsbG0CuUzwCNdTvsDfKwTiLv0mQ9GOHdV9rfBb26mH0adLENwCgMeAVD6xs8N0XgrvFHsfiLOVLY4cEo44/ngEplxGYK3Yqd2+Q1OLF3QLSiVfRfxBOXZGLUxRKD2xhK9wJVrq0ojAAbYF6mItzCgu6WSX/kBue/NP7Cf6Re4x/dK7RwceJpJFx9UupOjYMUztzbkhJG1lPERVUGCnjhSkzmLcmoaUl61IcYUkEMpenFaJ+tlH4ccOXJMYFBybMQPwTmFA0WCEZ/gKai9/r9oua8jXo3hS0hWji+0jjar4RA25fhz3mmMn/V3OYAomkbxakDEveyV2Hrew1Yxfx/UwXVofMB44Z2vtr0gJtblaQ0AcFYocx5AKFJ6BvKYiGZxl7uDPE2vUqSCPoXBlyWjHocDvA2HGJ50nvZEanO/xxs/ruULNWAUA5IKWl4ijJQ+VRxz5I0+EG2lCE0Acljewuf5I7XWJZqrdOYCdLbN6+stBqHCAN4MHAEbwCnUn781QNVAHO3ANkiQkiiIPSkz/UUZnw8FkmMGfe4718BTawBO0u3xmFio8OFuksp9tWKViUu+WvUMo01irkM6gojzix3eW7v/Vap+m7f+U4mGCScCX3z9Cl+UsAuvo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(4326008)(6506007)(36756003)(38350700001)(26005)(2906002)(6666004)(6486002)(1076003)(66476007)(16526019)(186003)(66556008)(956004)(86362001)(66946007)(38100700001)(69590400012)(316002)(6512007)(83380400001)(478600001)(8936002)(2616005)(8676002)(5660300002)(52116002)(921005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?z0j7Zjp0/hta/VnzuZ+AvP6ipOQAacOtZ13cZFlUhhCtZSJhrihsZzvD4eLh?=
+ =?us-ascii?Q?htUL23VsIpCd5IoUhQGveJSh1al08Fmn3+ugG9bKlLDJlvP3ITk1yQ/TZnGZ?=
+ =?us-ascii?Q?ce5wdRXskVl6uv3ZU7qV+/VQyBtRpuvbTc02GkL1DImLS0fcgwkMFIzrRzsG?=
+ =?us-ascii?Q?ctmepzWqoA47tt5f5zXucgyQmXnISGgW36ftCIeQL8FiEooKRt/sSf5w4Eod?=
+ =?us-ascii?Q?/QsZ3QGd3SFplouiWI0z22TaPRNR1la364akkmc23PE8K7a/VoCEe7J71rFJ?=
+ =?us-ascii?Q?TofF5Pbz0Jw0YwxKgBU5DIxqtut3JtTvJsqb4aAPQpXAx9BKohbjJUfS2h0i?=
+ =?us-ascii?Q?97S5n2g36K2S5BWP7POKkIFjvkKOZrw3y1ivKD5KDAeMKNGb3iwTl7RlKLJz?=
+ =?us-ascii?Q?6P77f9ff1xxV1j4q7AY6AhSvvL9x2agCNjTeDUwzkk4CrPowXjKc5UuQTOd/?=
+ =?us-ascii?Q?BFMhx65XfXVUq8/wmLMfYOTfR52x/0+NCM3z8ric6qPK7wxTc5E8FWWYImTy?=
+ =?us-ascii?Q?isjGUOHMTLQLrAWpYhEu5u91J9JR6VlfsmiJGKAbSQkfcYPhslsvUdO6xtOZ?=
+ =?us-ascii?Q?GFsd+Y+HCE9mrOTR2VypUPob04gqX9w6t9lkf7qp+27Fbikuc5YGLaszJU1w?=
+ =?us-ascii?Q?Mm0YHQXZij4kDj+8IiCVIRikWSHECHcQrexovlxLV6nNqfric4TIJ4L9jW2M?=
+ =?us-ascii?Q?7AjsdZaaf15UDAgTXSU32EO2Ylw70RDHahKUdsQt8XynZSkwA4ca4GYp5N1/?=
+ =?us-ascii?Q?xvv2NEVZu1zPz0wNaPbSIwR7jTB4f5OgYdM1JeU94aWrcEPs0xyvBLpss6mU?=
+ =?us-ascii?Q?BGZCwb2Hsfe/PHAwi2+OwVFEFVHjIzwZpIYC2o3foLpbJb9H9qfi3M+zvx77?=
+ =?us-ascii?Q?n2UJoa953o2JCV1xdKUk0okXpajW1uRw8nqwEIgqkM4RH5jyD29nvmZ0hAcq?=
+ =?us-ascii?Q?azO36Atijea2UoU7GvOHjPtrqN2XYlb6RM+ub4JaWkepu4EotHmFVkzuewA+?=
+ =?us-ascii?Q?vd1TxjarKFtydtCdjOLufPCTuzWV4umponhwD4PlyIx6H2V4Dyx/GRumRHxZ?=
+ =?us-ascii?Q?F28OQDQQRaU/onoZQfme7+BQS0oOhtMpsmeyqLjl9wwwrnQJnaDNu8Vlaech?=
+ =?us-ascii?Q?hHlikSG5S+0sHG3LNiXpCp/4l7FSbMEA0woRIlzx840vzhWgPzjNAK1UzfQf?=
+ =?us-ascii?Q?rilsDZDafWeQQQvD9Jf/MME9MLrks/9x24NIUvHPFRu+wGCkHwMT4BGhFF30?=
+ =?us-ascii?Q?/L8xUPdfagW6ssa1PbCdLHIoP6yUWLhZOVJEPPwW/n3CerndN9quhwL81jHX?=
+ =?us-ascii?Q?hOKaouq7yzAiYCyhoddXYQKr?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2410e1e-3f10-4570-afc0-08d8f971c8b9
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5e6b0f1-493f-4ede-e4d7-08d8f971cc3d
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2021 03:03:57.0676
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2021 03:04:03.1161
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XQ4n5N8FT6SdwNnFaY0LrXWyQX0BdjDShu6kw7DGqgQiLf2w5yHLA3Gkkp3VDGadL4DW4ed2v9vhZmkZBGdI+w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: vPlTgnJeKddu3K3VwhnGGphrdcDvmn1vKLbazHv4eGt1UBGxD9uYK1h48u0y158YZmzxudY4YEU4la8QGMHpCg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR04MB3276
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -109,32 +109,46 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Update the description of the second entry of 'fsl,pcie-scfg' property,
-as the LS1043A PCIe controller also has some control registers in SCFG
-block, while it has 3 controllers.
+The LS1043A PCIe controller has some control registers
+in SCFG block, so add the SCFG phandle for each PCIe
+controller DT node.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 V5:
  - No change
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index d633c1fabdb4..8231f6729385 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -34,7 +34,7 @@ Required properties:
-   "intr": The interrupt that is asserted for controller interrupts
- - fsl,pcie-scfg: Must include two entries.
-   The first entry must be a link to the SCFG device node
--  The second entry must be '0' or '1' based on physical PCIe controller index.
-+  The second entry is the physical PCIe controller index starting from '0'.
-   This is used to get SCFG PEXN registers
- - dma-coherent: Indicates that the hardware IP block can ensure the coherency
-   of the data transferred from/to the IP block. This can avoid the software
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 46826752a691..704e9e249729 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -875,6 +875,7 @@
+ 			interrupts = <0 118 0x4>, /* controller interrupt */
+ 				     <0 117 0x4>; /* PME interrupt */
+ 			interrupt-names = "intr", "pme";
++			fsl,pcie-scfg = <&scfg 0>;
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -902,6 +903,7 @@
+ 			interrupts = <0 128 0x4>,
+ 				     <0 127 0x4>;
+ 			interrupt-names = "intr", "pme";
++			fsl,pcie-scfg = <&scfg 1>;
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -929,6 +931,7 @@
+ 			interrupts = <0 162 0x4>,
+ 				     <0 161 0x4>;
+ 			interrupt-names = "intr", "pme";
++			fsl,pcie-scfg = <&scfg 2>;
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
 -- 
 2.17.1
 
