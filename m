@@ -2,153 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEDB63566BB
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 10:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F15C03568BC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 12:05:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233086AbhDGIZG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 04:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232650AbhDGIZG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 04:25:06 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF387C06174A;
-        Wed,  7 Apr 2021 01:24:55 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id x26so5631645pfn.0;
-        Wed, 07 Apr 2021 01:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QXNUwUsXQtc3oLOfnVTDYNZGH2B/RvCuyd2vJRt7U6k=;
-        b=QuDve7Xbw9Zg/JwbmFdZQy8I5yAO7AI2zejTNejmEaF9vgs86CwffH3BkOqn9b1jiv
-         5/BFVlXFDm34bCJVALLX7B1s2HckMWatSHCgk/YPFFJ73JBq733PN1d/vHG65LJcg2V/
-         W/Em9Uc59vSyk9Tet7AjE7TGV2uuOkUzqpaFmFH6DcsEtkXNzHqqTFjdWu4KDapNdAF8
-         kkQLsi2Cl0l4wxqetS1d/4JHZd6NLLH74+DtlDnz3E13Q5atiiIBfqfnl9yzKWVSI1II
-         fHAyzipdokIWZ9532Ixdmvrx7lxPU9tLDSZpJgYRz7chMQu4BeM6NFurFWl8xYsj/Ozu
-         gfeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QXNUwUsXQtc3oLOfnVTDYNZGH2B/RvCuyd2vJRt7U6k=;
-        b=UO9byuNHF9CjQ+VCrY0W9MI1ZkpiJP+NFRMOwSGqeN699KL2OQts1I27x+qjFKtrbl
-         /HGzDoHRX0cFnnCnZOzHBy60659O/t+CLo8+N4dYxDbW3HwdVzXWWm2UBhnKgiVt7uWz
-         ++9jqQAGdap6N5vAusKL7Jkz+VzKuicCZCLayAOEpa8X2Cb/tZvqAFu78bCWCNfz5zG+
-         1CovQbZFhepN9uQJ5kn5k1wIUJysP2O4FtjAuvSi+QNVFms080EFTByMh0zUBrKvNky9
-         NmKGgZ9aeqQb7OT0modHkPNNNOUMTKmx1DgHDV3ZDfF+8BhhAeXfUA9vjw7LkgU/3FUE
-         0O3Q==
-X-Gm-Message-State: AOAM531zKsY+6/i3ItRMbghrHc3tSjPeEqE8DmE+Zc+sqzSgeYrE0IKA
-        m60odkQvZVZcbfCWLPt9nOk=
-X-Google-Smtp-Source: ABdhPJwvJTLxlEvt6oOwNtq0clEbGMOdqzD5Pr7pxUO3cWc2eu+2kkyCfTQLdB19NaZBSsx1cyBBnA==
-X-Received: by 2002:aa7:91d1:0:b029:1fe:2a02:73b9 with SMTP id z17-20020aa791d10000b02901fe2a0273b9mr1846572pfa.2.1617783895551;
-        Wed, 07 Apr 2021 01:24:55 -0700 (PDT)
-Received: from localhost ([103.77.152.190])
-        by smtp.gmail.com with ESMTPSA id i14sm20013180pgl.79.2021.04.07.01.24.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 01:24:55 -0700 (PDT)
-Date:   Wed, 7 Apr 2021 13:53:56 +0530
-From:   "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "bhelgaas@google.com <bhelgaas@google.com>,linux-pci@vger.kernel.org" 
-        <linux-pci@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: merge slot and bus reset implementations
-Message-ID: <20210407082356.53subv4np2fx777x@archlinux>
-References: <20210401053656.16065-1-raphael.norwitz@nutanix.com>
- <YGW8Oe9jn+n9sVsw@unreal>
- <20210401105616.71156d08@omen>
- <YGlzEA5HL6ZvNsB8@unreal>
- <20210406081626.31f19c0f@x1.home.shazbot.org>
- <YG1eBUY0vCTV+Za/@unreal>
+        id S1350573AbhDGKEC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 06:04:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:16379 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350489AbhDGKD3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 06:03:29 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4FFg0C2Z4ZzjYZn;
+        Wed,  7 Apr 2021 18:01:31 +0800 (CST)
+Received: from [127.0.0.1] (10.69.38.196) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.498.0; Wed, 7 Apr 2021
+ 18:03:11 +0800
+Subject: Re: [PATCH 0/4] Add support for HiSilicon PCIe Tune and Trace device
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <jonathan.cameron@huawei.com>,
+        <song.bao.hua@hisilicon.com>, <prime.zeng@huawei.com>,
+        <linux-doc@vger.kernel.org>, <linuxarm@huawei.com>,
+        "liuqi (BA)" <liuqi115@huawei.com>
+References: <1617713154-35533-1-git-send-email-yangyicong@hisilicon.com>
+ <YGxm49c9cT69NV5Q@kroah.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <01b6e8f7-3282-514e-818d-0e768dcc5ba3@hisilicon.com>
+Date:   Wed, 7 Apr 2021 18:03:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YG1eBUY0vCTV+Za/@unreal>
+In-Reply-To: <YGxm49c9cT69NV5Q@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.38.196]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/04/07 10:23AM, Leon Romanovsky wrote:
-> On Tue, Apr 06, 2021 at 08:16:26AM -0600, Alex Williamson wrote:
-> > On Sun, 4 Apr 2021 11:04:32 +0300
-> > Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > > On Thu, Apr 01, 2021 at 10:56:16AM -0600, Alex Williamson wrote:
-> > > > On Thu, 1 Apr 2021 15:27:37 +0300
-> > > > Leon Romanovsky <leon@kernel.org> wrote:
-> > > >
-> > > > > On Thu, Apr 01, 2021 at 05:37:16AM +0000, Raphael Norwitz wrote:
-> > > > > > Slot resets are bus resets with additional logic to prevent a device
-> > > > > > from being removed during the reset. Currently slot and bus resets have
-> > > > > > separate implementations in pci.c, complicating higher level logic. As
-> > > > > > discussed on the mailing list, they should be combined into a generic
-> > > > > > function which performs an SBR. This change adds a function,
-> > > > > > pci_reset_bus_function(), which first attempts a slot reset and then
-> > > > > > attempts a bus reset if -ENOTTY is returned, such that there is now a
-> > > > > > single device agnostic function to perform an SBR.
-> > > > > >
-> > > > > > This new function is also needed to add SBR reset quirks and therefore
-> > > > > > is exposed in pci.h.
-> > > > > >
-> > > > > > Link: https://lkml.org/lkml/2021/3/23/911
-> > > > > >
-> > > > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> > > > > > Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-> > > > > > ---
-> > > > > >  drivers/pci/pci.c   | 17 +++++++++--------
-> > > > > >  include/linux/pci.h |  1 +
-> > > > > >  2 files changed, 10 insertions(+), 8 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > > > index 16a17215f633..12a91af2ade4 100644
-> > > > > > --- a/drivers/pci/pci.c
-> > > > > > +++ b/drivers/pci/pci.c
-> > > > > > @@ -4982,6 +4982,13 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
-> > > > > >  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
-> > > > > >  }
-> > > > > >
-> > > > > > +int pci_reset_bus_function(struct pci_dev *dev, int probe)
-> > > > > > +{
-> > > > > > +	int rc = pci_dev_reset_slot_function(dev, probe);
-> > > > > > +
-> > > > > > +	return (rc == -ENOTTY) ? pci_parent_bus_reset(dev, probe) : rc;
-> > > > >
-> > > > > The previous coding style is preferable one in the Linux kernel.
-> > > > > int rc = pci_dev_reset_slot_function(dev, probe);
-> > > > > if (rc != -ENOTTY)
-> > > > >   return rc;
-> > > > > return pci_parent_bus_reset(dev, probe);
-> > > >
-> > > >
-> > > > That'd be news to me, do you have a reference?  I've never seen
-> > > > complaints for ternaries previously.  Thanks,
-> > >
-> > > The complaint is not to ternaries, but to the function call as one of
-> > > the parameters, that makes it harder to read.
-> >
-> > Sorry, I don't find a function call as a parameter to a ternary to be
-> > extraordinary, nor do I find it to be a discouraged usage model within
-> > the kernel.  This seems like a pretty low bar for hard to read code.
->
-> It is up to us where this bar is set.
->
-> Thanks
-On the side note there are plenty of places where this pattern is used
-though
-for example -
-kernel/time/clockevents.c:328:
-return force ? clockevents_program_min_delta(dev) : -ETIME;
+On 2021/4/6 21:49, Greg KH wrote:
+> On Tue, Apr 06, 2021 at 08:45:50PM +0800, Yicong Yang wrote:
+>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+>> integrated Endpoint(RCiEP) device, providing the capability
+>> to dynamically monitor and tune the PCIe traffic(tune),
+>> and trace the TLP headers(trace). The driver exposes the user
+>> interface through debugfs, so no need for extra user space tools.
+>> The usage is described in the document.
+> 
+> Why use debugfs and not the existing perf tools for debugging?
+> 
 
-kernel/trace/trace_kprobe.c:233:
-return tk ? within_error_injection_list(trace_kprobe_address(tk)) :
-       false;
+The perf doesn't match our device as we've analyzed.
 
-kernel/signal.c:3104:
-return oset ? put_compat_sigset(oset, &old_set, sizeof(*oset)) : 0;
-etc
+For the tune function it doesn't do the sampling at all.
+User specifys one link parameter and reads its current value or set
+the desired one. The process is static. We didn't find a
+way to adapt to perf.
+
+For the trace function, we may barely adapt to the perf framework
+but it doesn't seems like a better choice. We have our own format
+of data and don't need perf doing the parsing, and we'll get extra
+information added by perf as well. The settings through perf tools
+won't satisfy our needs, we cannot present available settings
+(filter BDF number, TLP types, buffer controls) to
+the user and user cannot set in a friendly way. For example,
+we cannot count on perf to decode the usual format BDF number like
+<domain>:<bus>:<dev>.<fn>, which user can use filter the TLP
+headers.
+
+So we intended to make the operation of this driver a bit like
+ftrace. user sets the control settings through control files
+and get the result through files as well. No additional tools
+is necessay. A user space tool is necessary if we use a character
+device or misc device for implementing this. The trace data maybe
+hundreds of megabytes, and debugfs file can just satisfy it.
 
 Thanks,
-Amey
+Yicong
+
