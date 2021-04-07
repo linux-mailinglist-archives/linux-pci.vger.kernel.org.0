@@ -2,311 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6463577B6
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 00:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EABEE357818
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 00:57:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbhDGW2o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 18:28:44 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14322 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230019AbhDGW1S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Apr 2021 18:27:18 -0400
-IronPort-SDR: lPaykhO6VkLQW/HdKprY7nxn9boQ/Jiaj0ue62D1GsaCNYo8nMg8IBYDejnnxminzpNJZ6oN02
- Es+gBZRZbNaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9947"; a="193524935"
-X-IronPort-AV: E=Sophos;i="5.82,204,1613462400"; 
-   d="scan'208";a="193524935"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2021 15:26:40 -0700
-IronPort-SDR: R9ujXl52iR8YMDKrsOUx8qsQTner51AqLlnqDBiirEAx2zaj3ODQ3vmT0nFZ44ZJXw0Yc8192x
- XVtG3rxIOSsg==
-X-IronPort-AV: E=Sophos;i="5.82,204,1613462400"; 
-   d="scan'208";a="458548559"
-Received: from hmfaraby-mobl.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.128.243])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2021 15:26:40 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] cxl: Add HDM decoder capbilities
-Date:   Wed,  7 Apr 2021 15:26:25 -0700
-Message-Id: <20210407222625.320177-8-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210407222625.320177-1-ben.widawsky@intel.com>
-References: <20210407222625.320177-1-ben.widawsky@intel.com>
+        id S229845AbhDGW5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 18:57:47 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:29826 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229460AbhDGW5r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 18:57:47 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 137MuhKQ019052;
+        Wed, 7 Apr 2021 15:57:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=8m49GbG4M/pYXsG3YpXl5KihbBBvfyriAv3RT1h560g=;
+ b=ff7Ulmn8lBCCtB1co35xPm8N2li79gfF50eSkKFc8PL3Ql0qqecr1aGgdS29SBENGTlO
+ j3QH+hTPnOIbmSBX7qW0AsauPdeqVdY1rNBFAorJJXNo1fNK5LiUsb+rTYy3x+Tcdd1Q
+ E+ZiptSfckmJeNiArDNKevpjjVHxV2wFnAx/6nOu3ity3rn9gptHcMrR8/khpnvBeys8
+ zMRuZ+9UmnvYTW9329KWZ/sK0Il6STp2kZEDOGfpixVLcmA/DhJaPb3LRZfYJW8dztlV
+ Q/KZtcc90Z0VTqT1fZCRnGrr11MKx8WlMNfh8cSLqbcVOp09O2cyy2JppilMtpoCxQsF bA== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 37shqxgtx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 07 Apr 2021 15:57:33 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 7 Apr
+ 2021 15:57:32 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 7 Apr 2021 15:57:32 -0700
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id 947463F703F;
+        Wed,  7 Apr 2021 15:57:32 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 137MvWKC029508;
+        Wed, 7 Apr 2021 15:57:32 -0700
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Wed, 7 Apr 2021 15:57:32 -0700
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Girish Basrur" <GBasrur@marvell.com>,
+        Quinn Tran <qutran@marvell.com>
+Subject: Re: [PATCH 1/1] PCI/VPD: Fix blocking of VPD data in lspci for QLogic
+ 1077:2261
+In-Reply-To: <20210407221312.GA1872228@bjorn-Precision-5520>
+Message-ID: <alpine.LRH.2.21.9999.2104071535110.13940@irv1user01.caveonetworks.com>
+References: <20210407221312.GA1872228@bjorn-Precision-5520>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-ORIG-GUID: GgTjBsau_zKITH1dqI9LbYy2ilZeY6gE
+X-Proofpoint-GUID: GgTjBsau_zKITH1dqI9LbYy2ilZeY6gE
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-07_11:2021-04-07,2021-04-07 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-An HDM decoder is defined in the CXL 2.0 specification as a mechanism
-that allow devices and upstream ports to claim memory address ranges and
-participate in interleave sets. HDM decoder registers are within the
-component register block defined in CXL 2.0 8.2.3 CXL 2.0 Component
-Registers as part of the CXL.cache and CXL.mem subregion.
+On Wed, 7 Apr 2021, 3:13pm, Bjorn Helgaas wrote:
 
-The Component Register Block is found via the Register Locator DVSEC
-in a similar fashion to how the CXL Device Register Block is found. The
-primary difference is the capability id size of the Component Register
-Block is a single DWORD instead of 4 DWORDS.
+> On Wed, Mar 03, 2021 at 02:42:50PM -0800, Arun Easi wrote:
+> > "lspci -vvv" for Qlogic Fibre Channel HBA 1077:2261 displays
+> > "Vital Product Data" as "Not readable" today and thus preventing
+> > customers from getting relevant HBA information. Fix it by removing
+> > the blacklist quirk.
+> > 
+> > The VPD quirk was added by [0] to avoid a system NMI; this issue has
+> > been long fixed in the HBA firmware. In addition, PCI also has changes
+> > to check the VPD size [1], so this quirk can be reverted now regardless
+> > of a firmware update.
+> 
+> This is not a very convincing argument yet since 104daa71b396 ("PCI:
+> Determine actual VPD size on first access") appeared in v4.6 and
+> 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722") appeared
+> in v4.11.
+> 
+> If 104daa71b396 really fixed the problem, why did we need
+> 0d5370d1d852?
 
-It's now possible to configure a CXL type 3 device's HDM decoder. Such
-programming is expected for CXL devices with persistent memory, and hot
-plugged CXL devices that participate in CXL.mem with volatile memory.
+True, 0d5370d1d852 was not really neeeded for 104daa71b396 and newer 
+kernels; my theory is that when Ethan Z. ran the tests, he was using an 
+older (older than 104daa71b396) kernel, but by the time the blacklisting 
+was put in place, the kernel already had the fix that made the 
+blacklisting unnecessary.
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/core.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h  | 48 ++++++++++++++++++++++++++++++
- drivers/cxl/mem.c  | 37 ++++++++++++++++++++---
- drivers/cxl/pci.h  |  1 +
- 4 files changed, 155 insertions(+), 4 deletions(-)
+More of my investigation details explained here:
+	https://lore.kernel.org/linux-pci/alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com/
 
-diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-index 65cd704581bc..db6a83eed0a2 100644
---- a/drivers/cxl/core.c
-+++ b/drivers/cxl/core.c
-@@ -479,6 +479,79 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
- }
- EXPORT_SYMBOL_GPL(devm_cxl_add_port);
- 
-+void cxl_setup_component_regs(struct device *dev, void __iomem *base,
-+			      struct cxl_component_regs *regs)
-+{
-+	int cap, cap_count;
-+	u64 cap_array;
-+
-+	*regs = (struct cxl_component_regs) { 0 };
-+
-+	/*
-+	 * CXL.cache and CXL.mem registers are at offset 0x1000 as defined in
-+	 * CXL 2.0 8.2.4 Table 141.
-+	 *
-+	 * TODO: Map other registers as needed.
-+	 */
-+	base += CXL_CM_OFFSET;
-+
-+	cap_array = readq(base + CXL_CM_CAP_HDR_OFFSET);
-+
-+	if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, cap_array) != CM_CAP_HDR_CAP_ID) {
-+		dev_err(dev,
-+			"Couldn't locate the CXL.cache and CXL.mem capability array header./n");
-+		return;
-+	}
-+
-+	/* It's assumed that future versions will be backward compatible */
-+#define CAPID_VERSION_CHECK(data, mask, expected, capability_msg)              \
-+	do {                                                                   \
-+		if (FIELD_GET(mask, data) < expected) {                        \
-+			dev_err(dev,                                           \
-+				capability_msg                                 \
-+				" version %ld is below expected %d",           \
-+				FIELD_GET(mask, data), expected);              \
-+			return;                                                \
-+		}                                                              \
-+	} while (0)
-+
-+	CAPID_VERSION_CHECK(cap_array, CXL_CM_CAP_HDR_VERSION_MASK,
-+			    CM_CAP_HDR_CAP_VERSION, "Capability array header");
-+	CAPID_VERSION_CHECK(cap_array, CXL_CM_CAP_HDR_CACHE_MEM_VERSION_MASK,
-+			    CM_CAP_HDR_CACHE_MEM_VERSION,
-+			    "Capability array header CXL.cache CXL.mem");
-+
-+	cap_count = FIELD_GET(CXL_CM_CAP_HDR_ARRAY_SIZE_MASK, cap_array);
-+
-+	for (cap = 1; cap <= cap_count; cap++) {
-+		void __iomem *register_block;
-+		u32 hdr;
-+		u16 cap_id, offset;
-+
-+		hdr = readl(base + cap * 0x4);
-+
-+		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
-+		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
-+		register_block = base + offset;
-+
-+		switch (cap_id) {
-+		case CXL_CM_CAP_CAP_ID_HDM:
-+			CAPID_VERSION_CHECK(hdr, CXL_CM_CAP_HDR_VERSION_MASK,
-+					    CXL_CM_CAP_CAP_HDM_VERSION,
-+					    "HDM decoder capability");
-+			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
-+				offset);
-+			regs->hdm_decoder = register_block;
-+			break;
-+		default:
-+			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
-+				offset);
-+			break;
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(cxl_setup_component_regs);
-+
- /*
-  * cxl_setup_device_regs() - Detect CXL Device register blocks
-  * @dev: Host device of the @base mapping
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 0211f44c95a2..a4ad1176dc5a 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -8,6 +8,31 @@
- #include <linux/bitops.h>
- #include <linux/io.h>
- 
-+/* CXL 2.0 8.2.5 CXL.cache and CXL.mem Registers*/
-+#define CXL_CM_OFFSET 0x1000
-+#define CXL_CM_CAP_HDR_OFFSET 0x0
-+#define   CXL_CM_CAP_HDR_ID_MASK GENMASK(15, 0)
-+#define     CM_CAP_HDR_CAP_ID 1
-+#define   CXL_CM_CAP_HDR_VERSION_MASK GENMASK(19, 16)
-+#define     CM_CAP_HDR_CAP_VERSION 1
-+#define   CXL_CM_CAP_HDR_CACHE_MEM_VERSION_MASK GENMASK(23, 20)
-+#define     CM_CAP_HDR_CACHE_MEM_VERSION 1
-+#define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
-+#define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
-+
-+#define   CXL_CM_CAP_CAP_ID_HDM 0x5
-+#define   CXL_CM_CAP_CAP_HDM_VERSION 1
-+
-+/* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
-+#define CXL_HDM_DECODER_CAP_OFFSET 0x0
-+#define   CXL_HDM_DECODER_COUNT_MASK GENMASK(3, 0)
-+#define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
-+#define CXL_HDM_DECODER0_BASE_LOW_OFFSET 0x10
-+#define CXL_HDM_DECODER0_BASE_HIGH_OFFSET 0x14
-+#define CXL_HDM_DECODER0_SIZE_LOW_OFFSET 0x18
-+#define CXL_HDM_DECODER0_SIZE_HIGH_OFFSET 0x1c
-+#define CXL_HDM_DECODER0_CTRL_OFFSET 0x20
-+
- /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
- #define CXLDEV_CAP_ARRAY_OFFSET 0x0
- #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-@@ -35,11 +60,26 @@
- #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
- 
- /* See note for 'struct cxl_regs' for the rationale of this organization */
-+#define CXL_COMPONENT_REGS() \
-+	void __iomem *hdm_decoder
-+
- #define CXL_DEVICE_REGS() \
- 	void __iomem *status; \
- 	void __iomem *mbox; \
- 	void __iomem *memdev
- 
-+/**
-+ * struct cxl_component_regs - Common container of CXL component register block
-+ *			       base pointers.
-+ *
-+ * The only component registers that we care about are the CXL.cache and CXL.mem
-+ * registers which are at offset 0x1000 from the component register base (CXL
-+ * 2.0 8.2.4)
-+ */
-+struct cxl_component_regs {
-+	CXL_COMPONENT_REGS();
-+};
-+
- /**
-  * struct cxl_device_regs - Common container of CXL Device register
-  * 			    block base pointers
-@@ -59,6 +99,12 @@ struct cxl_device_regs {
-  * The specificity reads naturally from left-to-right.
-  */
- struct cxl_regs {
-+	union {
-+		struct {
-+			CXL_COMPONENT_REGS();
-+		};
-+		struct cxl_component_regs component;
-+	};
- 	union {
- 		struct {
- 			CXL_DEVICE_REGS();
-@@ -67,6 +113,8 @@ struct cxl_regs {
- 	};
- };
- 
-+void cxl_setup_component_regs(struct device *dev, void __iomem *base,
-+			      struct cxl_component_regs *regs);
- void cxl_setup_device_regs(struct device *dev, void __iomem *base,
- 			   struct cxl_device_regs *regs);
- 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index b7342aaf38c4..e915e3743b76 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -974,6 +974,21 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
- 	return 0;
- }
- 
-+static int __cxl_setup_component_regs(struct cxl_mem *cxlm, void __iomem *base)
-+{
-+	struct cxl_regs *regs = &cxlm->regs;
-+	struct pci_dev *pdev = cxlm->pdev;
-+	struct device *dev = &pdev->dev;
-+
-+	cxl_setup_component_regs(dev, base, &regs->component);
-+	if (!regs->hdm_decoder) {
-+		dev_err(dev, "HDM decoder registers not found\n");
-+		return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
- static int __cxl_setup_device_regs(struct cxl_mem *cxlm, void __iomem *base)
- {
- 	struct cxl_regs *regs = &cxlm->regs;
-@@ -1032,16 +1047,30 @@ static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
- 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
- 
- 		reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
-+		if (reg_type == CXL_REGLOC_RBI_EMPTY ||
-+		    reg_type > CXL_REGLOC_RBI_MAX)
-+			continue;
-+
-+		base = cxl_mem_map_regblock(cxlm, reg_lo, reg_hi);
-+		if (IS_ERR(base))
-+			return PTR_ERR(base);
- 
--		if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
--			base = cxl_mem_map_regblock(cxlm, reg_lo, reg_hi);
--			if (IS_ERR(base))
--				return PTR_ERR(base);
-+		switch (reg_type) {
-+		case CXL_REGLOC_RBI_COMPONENT:
-+			rc = __cxl_setup_component_regs(cxlm, base);
-+			if (rc)
-+				return rc;
- 
-+			dev_dbg(dev, "Set up component registers\n");
-+			break;
-+		case CXL_REGLOC_RBI_MEMDEV:
- 			rc = __cxl_setup_device_regs(cxlm, base);
- 			if (rc)
- 				return rc;
- 
-+			dev_dbg(dev, "Set up device registers\n");
-+			break;
-+		default:
- 			break;
- 		}
- 	}
-diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-index af3ec078cf6c..8b8c6afbe605 100644
---- a/drivers/cxl/pci.h
-+++ b/drivers/cxl/pci.h
-@@ -25,6 +25,7 @@
- #define CXL_REGLOC_RBI_COMPONENT 1
- #define CXL_REGLOC_RBI_VIRT 2
- #define CXL_REGLOC_RBI_MEMDEV 3
-+#define CXL_REGLOC_RBI_MAX CXL_REGLOC_RBI_MEMDEV
- 
- #define CXL_REGLOC_ADDR_MASK GENMASK(31, 16)
- 
--- 
-2.31.1
+A quick summary of which is that, when Ethan reported the crash stack, it 
+had pci_vpd_pci22* calls which is seen only in older kernels. Though 
+104daa71b396 too had those calls, it was very close to the commit that 
+renamed those calls (f1cd93f9aabe) -- and I theorized Ethan probably was 
+not running a kernel between 104daa71b396 and f1cd93f9aabe (only 3 
+commits (drivers/pci/) away).
 
+Unfortunately, Ethan's blacklisting patch did not have the kernel commit 
+SHA he had used.
+
+Regards,
+-Arun
+
+> 
+> > Some more details can be found in the following thread:
+> >     "VPD blacklist of Marvell QLogic 1077/2261" [2].
+> > 
+> > [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
+> > [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
+> > [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dpci_alpine.LRH.2.21.9999.2012161641230.28924-40irv1user01.caveonetworks.com_&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=P-q_Qkt75qFy33SvdD2nAxAyN87eO1d-mFO-lqNOomw&m=lPsRSUHeHa9BMJpm_qohlCkGzpRmhdPSNythG7ljHAU&s=Orsa4H3WN7tR8DOfCIof1toWvMUQZ2Mq0HzHPIFzEhQ&e= 
+> > 
+> > Signed-off-by: Arun Easi <aeasi@marvell.com>
+> > CC: stable@vger.kernel.org      # v4.6+
+> > ---
+> >  drivers/pci/vpd.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > index 7915d10..bd54907 100644
+> > --- a/drivers/pci/vpd.c
+> > +++ b/drivers/pci/vpd.c
+> > @@ -570,7 +570,6 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005d, quirk_blacklist_vpd);
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005f, quirk_blacklist_vpd);
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, PCI_ANY_ID,
+> >  		quirk_blacklist_vpd);
+> > -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
+> >  /*
+> >   * The Amazon Annapurna Labs 0x0031 device id is reused for other non Root Port
+> >   * device types, so the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> > -- 
+> > 2.9.5
+> > 
+> 
