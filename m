@@ -2,207 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 064BF356D22
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 15:19:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F084C356D64
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Apr 2021 15:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234246AbhDGNT3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Apr 2021 09:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235861AbhDGNTV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Apr 2021 09:19:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D90DC61394;
-        Wed,  7 Apr 2021 13:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617801552;
-        bh=LTkohUbPF6Bi0usi+I5EMI/7O/T2JNpdfdjkmll4mqc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kqp8jArwrojMAJGeP7WVtOPuOJb6aLYI1QEAYtSX69pVNYOckcJv82nFfEUAkn22R
-         KlQ2ugk7eqW8nUoO9zLMEDqF20/YlvesWxR3cl+aTfTEaAlXBPHh3jtdgc1PcbdBw/
-         oly69z9hBpeNoy1kLCYLD7TOyIysnk3U/G3ZNby56pUoe5px6/masGj96nDAzy8EuB
-         5mrZozq/gYR4DfqP5QZ+3weOFPxTN0c41uGVnL2feqVp5ahmMmdCc3ZXEPATH18oYV
-         U42nGp/NvJtmBl8GR/sltvnc01LEaiQDIeSlNbdRqtSTzBMZBFSgi7qMg8ZGdbbEHx
-         uQnmvBalRM7Fg==
-Received: by mail-ed1-f47.google.com with SMTP id ba6so13313241edb.1;
-        Wed, 07 Apr 2021 06:19:11 -0700 (PDT)
-X-Gm-Message-State: AOAM532PU5w/4/8r0kEXwCQZH/LOxZ2mmlxsTdRYlJAHAERV9gSlpU0S
-        NeVMWgofYvaQvtDa4BqH3+38tkcWtXi+H/RWLA==
-X-Google-Smtp-Source: ABdhPJxouTy0fl89h71UvityxWxXCCSfDE+yhlKWwGiRJuvEWO5V5qJmXkmAupn88a+4qG04LBTr4o4N2tIv4Y6sAw4=
-X-Received: by 2002:aa7:d3c8:: with SMTP id o8mr4435514edr.289.1617801550253;
- Wed, 07 Apr 2021 06:19:10 -0700 (PDT)
+        id S1344565AbhDGNhi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Apr 2021 09:37:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245267AbhDGNhh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Apr 2021 09:37:37 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5E3C06175F
+        for <linux-pci@vger.kernel.org>; Wed,  7 Apr 2021 06:37:27 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id x9so13697656qto.8
+        for <linux-pci@vger.kernel.org>; Wed, 07 Apr 2021 06:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9XbvLyn2BjN/TsGrST9aWCimExiN5HlLvokM7BNpnYA=;
+        b=fl1sCdaq/tbjdrhwx7sdDhyNuYzekwKPQEsjpOwLhA4+RDh9pADFrizW46c94BVqy/
+         ro+3GOiGAEyVd2nk266p0se8pRm+nL4HuslN7+NHi3NUZ7aaN6QTbvpJ5CgA4L0FsOwV
+         cVO94hTkh/AOlfzDnwvwVmMpL/L3VHrxHq6AaYD6y9p4Aiuad1U83I5gQJPk+5siXox5
+         VZuM2nAsaLQZs0yI0Xhng8qQnzVsmDKvkk8Ehh5ckjN5ZsdUJF3N3E9XmQOPxCM6eVPS
+         MkcXOMRclQSntMKFvCMXqdoAiVxJW4tkmMOeid/5jiE+WBK/m2hR/CZbECY3/X3gkaE+
+         LHTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9XbvLyn2BjN/TsGrST9aWCimExiN5HlLvokM7BNpnYA=;
+        b=RXlji4/TPNCRykn1t1c6e7jSAHi8K2kNHGbIvn9cu5+ThPIRiHbkjNNG6gMz/20wNK
+         miqXM3RvbQs1u4PN3lgyA7fEFFgYYXlkco4ymjKTdFgTwXeh7fSY99wM8+Lw1VNWjray
+         pHp61O/VO87cvUcdmgsP9HH71EsSh/z9XAccywrIof9QET1JKGkaQN1SwYhq33Qtp7Sm
+         3H/jD45PHjE28nkoqMgTQZHmFTafjxGJc2drsjt6wEwEQPnKkfsreT1bXw15dTKXLXi0
+         hmkPSG/jQWnlSuzWNiND3Uq2aBFWXI96o5vaQukHd5xgdGPO3ghdtCJOo4YEEBEmTYbS
+         tJqA==
+X-Gm-Message-State: AOAM530UxsRywyBI8O+3KC/1sxbDTZI7WUrxBbpgPM5cbYxgkQ9vMOhN
+        Ta1yTZ6Bwkk8DI2/1AZ1AUlQYhnoYdtUTe2wS8Hcxg==
+X-Google-Smtp-Source: ABdhPJyH3mLgKrUYzrtHypBKex2qr7oGWmH9Nx/2r3bE0LpA/5oMj8GIY5Z6P5aBUGlJgucLDPXTXz3DkJ+tdva9MKE=
+X-Received: by 2002:ac8:5f87:: with SMTP id j7mr2703109qta.135.1617802647013;
+ Wed, 07 Apr 2021 06:37:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210407031839.386088-1-nobuhiro1.iwamatsu@toshiba.co.jp> <20210407031839.386088-2-nobuhiro1.iwamatsu@toshiba.co.jp>
-In-Reply-To: <20210407031839.386088-2-nobuhiro1.iwamatsu@toshiba.co.jp>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 7 Apr 2021 08:18:58 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJew19jBJ-WpGNCK2AD+nUQsQBjJ7-ye9Cgort8AuG8mQ@mail.gmail.com>
-Message-ID: <CAL_JsqJew19jBJ-WpGNCK2AD+nUQsQBjJ7-ye9Cgort8AuG8mQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pci: Add DT binding for Toshiba Visconti
- PCIe controller
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+References: <20210407131255.702054-1-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20210407131255.702054-1-dmitry.baryshkov@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 7 Apr 2021 16:37:15 +0300
+Message-ID: <CAA8EJpooq2-vw19YKeiFxWoM-=6DwnhjF+8M7sSACgjqdnHznw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: move dw_pcie_iatu_detect() after host_init callback
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         PCI <linux-pci@vger.kernel.org>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        yuji2.ishikawa@toshiba.co.jp,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 10:19 PM Nobuhiro Iwamatsu
-<nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+Hi,
+
+On Wed, 7 Apr 2021 at 16:12, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
 >
-> This commit adds the Device Tree binding documentation that allows
-> to describe the PCIe controller found in Toshiba Visconti SoCs.
+> The commit 9ea483375ded ("PCI: dwc: Move forward the iATU detection
+> process") broke PCIe support on Qualcomm SM8250 (and maybe other
+> platforms) since it moves the call to dw_pcie_iatu_detect() at the
+> beginning of the dw_pcie_host_init(), before ops->host_init() callback.
+> Accessing PCIe registers at this point causes the board to reboot since
+> not all clocks are enabled, making PCIe registers unavailable.
 >
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> Move dw_pcie_iatu_detect() call after calling ops->host_init() callback,
+> so that all register are accessible.
+>
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Fixes: 9ea483375ded ("PCI: dwc: Move forward the iATU detection process")
+
+Please disregard the Fixes: tag here, the patch in question came to me
+from a local tree, which I failed to notice.
+The patch still applies on top of the previously dropped patch (and it
+is the same fix as the one proposed for exynos by Marek Szyprowski at
+https://lore.kernel.org/linux-pci/b777ab31-e0b9-bbc0-9631-72b93097919e@samsung.com/.
+
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  .../bindings/pci/toshiba,visconti-pcie.yaml   | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
-> new file mode 100644
-> index 000000000000..8ab60c235007
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
-> @@ -0,0 +1,121 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/toshiba,visconti-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Toshiba Visconti5 SoC PCIe Host Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> +
-> +description: |+
-> +  Toshiba Visconti5 SoC PCIe host controller is based on the Synopsys DesignWare PCIe IP.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: toshiba,visconti-pcie
-> +
-> +  reg:
-> +    items:
-> +      - description: Data Bus Interface (DBI) registers.
-> +      - description: PCIe configuration space region.
-> +      - description: Visconti specific additional registers.
-> +      - description: Visconti specific SMU registers
-> +      - description: Visconti specific memory protection unit registers (MPU)
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: ulreg
-> +      - const: smu
-> +      - const: mpu
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: PCIe reference clock
-> +      - description: PCIe system clock
-> +      - description: Auxiliary clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pcie_refclk
-> +      - const: sysclk
-> +      - const: auxclk
-> +
-> +  num-lanes:
-> +    const: 2
-> +
-> +  num-viewport:
-> +    const: 8
-
-Drop this, we detect this now.
-
-> +
-> +required:
-
-Drop everything that pci-bus.yaml already requires.
-
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#interrupt-cells"
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +  - ranges
-> +  - bus-range
-
-If you support 0-0xff, there's no need for this to be required.
-
-> +  - device_type
-> +  - num-lanes
-> +  - num-viewport
-> +  - clocks
-> +  - clock-names
-> +  - max-link-speed
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie: pcie@28400000 {
-> +            compatible = "toshiba,visconti-pcie";
-> +            reg = <0x0 0x28400000 0x0 0x00400000>,
-> +                  <0x0 0x70000000 0x0 0x10000000>,
-> +                  <0x0 0x28050000 0x0 0x00010000>,
-> +                  <0x0 0x24200000 0x0 0x00002000>,
-> +                  <0x0 0x24162000 0x0 0x00001000>;
-> +            reg-names  = "dbi", "config", "ulreg", "smu", "mpu";
-> +            device_type = "pci";
-> +            bus-range = <0x00 0xff>;
-> +            num-lanes = <2>;
-> +            num-viewport = <8>;
-> +
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            #interrupt-cells = <1>;
-> +            ranges = <0x81000000 0 0x40000000 0 0x40000000 0 0x00010000>,
-> +                     <0x82000000 0 0x50000000 0 0x50000000 0 0x20000000>;
-> +            interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "intr";
-> +            interrupt-map-mask = <0 0 0 7>;
-> +            interrupt-map =
-> +                <0 0 0 1 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
-> +                 0 0 0 2 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
-> +                 0 0 0 3 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
-> +                 0 0 0 4 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
-> +            clocks = <&extclk100mhz>, <&clk600mhz>, <&clk25mhz>;
-> +            clock-names = "pcie_refclk", "sysclk", "auxclk";
-> +            max-link-speed = <2>;
-> +
-> +            status = "disabled";
-
-Don't show status in examples.
-
-> +        };
-> +    };
-> +...
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 52f6887179cd..24192b40e3a2 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -319,8 +319,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                         return PTR_ERR(pci->dbi_base);
+>         }
+>
+> -       dw_pcie_iatu_detect(pci);
+> -
+>         bridge = devm_pci_alloc_host_bridge(dev, 0);
+>         if (!bridge)
+>                 return -ENOMEM;
+> @@ -400,6 +398,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                 if (ret)
+>                         goto err_free_msi;
+>         }
+> +       dw_pcie_iatu_detect(pci);
+>
+>         dw_pcie_setup_rc(pp);
+>         dw_pcie_msi_init(pp);
 > --
-> 2.30.0.rc2
+> 2.30.2
 >
+
+
+-- 
+With best wishes
+Dmitry
