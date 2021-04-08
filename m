@@ -2,112 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D9D33589D3
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 18:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F8B358A58
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 18:58:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231908AbhDHQeP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 12:34:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32808 "EHLO mail.kernel.org"
+        id S231480AbhDHQ6L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 12:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232334AbhDHQeO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Apr 2021 12:34:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AC066610CF;
-        Thu,  8 Apr 2021 16:34:02 +0000 (UTC)
+        id S230522AbhDHQ6L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Apr 2021 12:58:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 77A23610A2;
+        Thu,  8 Apr 2021 16:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617899643;
-        bh=P34rZqQzi+uzqbnqI1xrfto1c/3g6EjqvX+IANZ0Ldw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m3PgvK+HL3hhMHpBbsVGb9/zZ3wV9TxxzbAhXOCQjM08rdJsEMsBMd56D8f5OOItb
-         maNBjXrmHn0TMYzrXQ/S/0l7z0aXUr4mDfHxTnN8FEmEIU7ep5q9MeVIXrU8S/b8ZG
-         sKqi4l1yopBc32AYxD5bxlInwWaw90VRNI/dEa3rV2W465ed6VgxyLarwPw9pr0oep
-         mI2zLugITmI57b/s1Ep/ePTMN+t0IX+DcL10FNBxf9U5X+dSmVL8dEUV9V1oAc09Tu
-         mAjNfmGmR3MGK8izPTsV8eUjIjis2jv0ZyRuUdKHMyGckWatEWhhsKYx4ynpl657YY
-         /RMp+9gevqvXA==
-Date:   Thu, 8 Apr 2021 17:33:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: PCI: Add bindings for Brcmstb
- endpoint device voltage regulators
-Message-ID: <20210408163345.GO4516@sirena.org.uk>
-References: <20210401212148.47033-1-jim2101024@gmail.com>
- <20210401212148.47033-3-jim2101024@gmail.com>
- <20210406164708.GM6443@sirena.org.uk>
- <CANCKTBsiujTkOdh60etBqF_hE8exg6m9TDxkGHVVAGVS2SFCcQ@mail.gmail.com>
- <20210406173211.GP6443@sirena.org.uk>
- <CANCKTBv63b4bGepZbDp1wmFrOeddiDikoXbheMjHhbguAbR2sA@mail.gmail.com>
- <20210408162016.GA1556444@robh.at.kernel.org>
+        s=k20201202; t=1617901079;
+        bh=/ZNonnVvJf8TVEI5fHURSn+FdH/9H7lo0rxmwdxIEcw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cShOX9ZUA3azSBUoknrPAWWS0N37VHpG7doQjfy7+ItILHntTKF/JR1E5GLw93Mdx
+         5CUL1do84tp4UhfmDxDO1y5UMlMqJ2ADwOD60+kStRm3HJ7g6JWtvVnkahVdnju7Wb
+         UrUXQfkj82ZVoY9ou1M822gpvStntBqE+L7Jy5D7HTkoSfz8jAMTHPQJSvevJuc2F8
+         +sN/S0UiOYhDUWkCASC7I+6u/sj6XVAwLxrHMKRAmCrcl5HI1K0DQNicofx5yanooS
+         gAXpRd8WOJe8RHEUxCZ7Z4dhrs4xo8OmU91GlssiuZ5ukApcWOkNnthN8GbHBWNKUO
+         UctgcSHxb1Y4A==
+Date:   Thu, 8 Apr 2021 11:57:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        gregkh@linuxfoundation.org, jonathan.cameron@huawei.com,
+        song.bao.hua@hisilicon.com, prime.zeng@huawei.com,
+        linux-doc@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH 3/4] docs: Add documentation for HiSilicon PTT device
+ driver
+Message-ID: <20210408165758.GA1935187@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tzZdJ4yHDV5r1Akt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210408162016.GA1556444@robh.at.kernel.org>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9ecc2177-1c3d-9899-923d-9514f652bb4e@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Apr 08, 2021 at 09:22:52PM +0800, Yicong Yang wrote:
+> On 2021/4/8 2:55, Bjorn Helgaas wrote:
+> > On Tue, Apr 06, 2021 at 08:45:53PM +0800, Yicong Yang wrote:
 
---tzZdJ4yHDV5r1Akt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> +On Kunpeng 930 SoC, the PCIe root complex is composed of several
+> >> +PCIe cores.
+> 
+> > Can you connect "Kunpeng 930" to something in the kernel tree?
+> > "git grep -i kunpeng" shows nothing that's obviously relevant.
+> > I assume there's a related driver in drivers/pci/controller/?
+> 
+> Kunpeng 930 is the product name of Hip09 platform. The PCIe
+> controller uses the generic PCIe driver based on ACPI.
 
-On Thu, Apr 08, 2021 at 11:20:16AM -0500, Rob Herring wrote:
-> On Tue, Apr 06, 2021 at 02:25:49PM -0400, Jim Quinlan wrote:
-> > On Tue, Apr 6, 2021 at 1:32 PM Mark Brown <broonie@kernel.org> wrote:
+I guess I'm just looking for a hint to help users know when to enable
+the Kconfig for this.  Maybe the "HiSilicon" in the Kconfig help is
+enough?  Maybe "Kunpeng 930" is not even necessary?  If "Kunpeng 930"
+*is* necessary, there should be some way to relate it to something
+else.
 
-> > > > On Tue, Apr 6, 2021 at 12:47 PM Mark Brown <broonie@kernel.org> wro=
-te:
+> >> +from the file, and the desired value written to the file to tune.
+> > 
+> >> +Tuning multiple events at the same time is not permitted, which means
+> >> +you cannot read or write more than one tune file at one time.
+> > 
+> > I think this is obvious from the model, so the sentence doesn't really
+> > add anything.  Each event is a separate file, and it's obvious that
+> > there's no way to write to multiple files simultaneously.
+> 
+> from the usage we shown below this situation won't happen. I just worry
+> that users may have a program to open multiple files at the same time and
+> read/write simultaneously, so add this line here to mention the restriction.
 
-> > > > > No great problem with having these in the controller node (assmin=
-g it
-> > > > > accurately describes the hardware) but I do think we ought to als=
-o be
-> > > > > able to describe these per slot.
+How is this possible?  I don't think "writing multiple files
+simultaneously" is even possible in the Linux syscall model.  I don't
+think a user will do anything differently after reading "you cannot
+read or write more than one tune file at one time."
 
-> PCIe is effectively point to point, so there's only 1 slot unless=20
-> there's a PCIe switch in the middle. If that's the case, then it's all=20
-> more complicated.
+> >> +- tx_path_rx_req_alloc_buf_level: watermark of RX requested
+> >> +- tx_path_tx_req_alloc_buf_level: watermark of TX requested
+> >> +
+> >> +These events influence the watermark of the buffer allocated for each
+> >> +type. RX means the inbound while Tx means outbound. For a busy
+> >> +direction, you should increase the related buffer watermark to enhance
+> >> +the performance.
+> > 
+> > Based on what you have written here, I would just write 2 to both
+> > files to enhance the performance in both directions.  But obviously
+> > there must be some tradeoff here, e.g., increasing Rx performance
+> > comes at the cost of Tx performane.
+> 
+> the Rx buffer and Tx buffer are separate, so they won't influence
+> each other.
 
-So even for PCIe that case exists, and it's not entirely clear to me
-that this is all definitively PCIe specific.
+Why would I write anything other than 2 to these files?  That's the
+question I think this paragraph should answer.
 
-> > o After some deliberation, RobH preferred that the voltage regulators
-> > should go into the PCIe subnode device's DT node.
+> >> +9. data_format
+> >> +--------------
+> >> +
+> >> +File to indicate the format of the traced TLP headers. User can also
+> >> +specify the desired format of traced TLP headers. Available formats
+> >> +are 4DW, 8DW which indicates the length of each TLP headers traced.
+> >> +::
+> >> +    $ cat data_format
+> >> +    [4DW]    8DW
+> >> +    $ echo 8 > data_format
+> >> +    $ cat data_format
+> >> +    4DW     [8DW]
+> >> +
+> >> +The traced TLP header format is different from the PCIe standard.
+> > 
+> > I'm confused.  Below you say the fields of the traced TLP header are
+> > defined by the PCIe spec.  But here you say the format is *different*.
+> > What exactly is different?
+> 
+> For the Request Header Format for 64-bit addressing of Memory, defind in
+> PCIe spec 4.0, Figure 2-15, the 1st DW is like:
+> 
+> Byte 0 > [Fmt] [Type] [T9] [Tc] [T8] [Attr] [LN] [TH] ... [Length]
+> 
+> some are recorded in our traced header like below, which some are not.
+> that's what I mean the format of the header are different. But for a
+> certain field like 'Fmt', the meaning keeps same with what Spec defined.
+> that's what I mean the fields definition of our traced header keep same
+> with the Spec.
 
-> IIRC, that's because you said there isn't a standard slot.
+Ah, that helps a lot, thank you.  Maybe you could say something along
+the lines of this:
 
-I recall some message in the thread that said both cases exist even with
-this specific system.
+  When using the 8DW data format, the entire TLP header is logged.
+  For example, the TLP header for Memory Reads with 64-bit addresses
+  is shown in PCIe r5.0, Figure 2-17; the header for Configuration
+  Requests is shown in Figure 2.20, etc.
 
---tzZdJ4yHDV5r1Akt
-Content-Type: application/pgp-signature; name="signature.asc"
+  In addition, 8DW trace buffer entries contain a timestamp and
+  possibly a prefix, e.g., a PASID TLP prefix (see Figure 6-20).  TLPs
+  may include more than one prefix, but only one can be logged in
+  trace buffer entries.
 
------BEGIN PGP SIGNATURE-----
+  When using the 4DW data format, DW0 of the trace buffer entry
+  contains selected fields of DW0 of the TLP, together with a
+  timestamp.  DW1-DW3 of the trace buffer entry contain DW1-DW3
+  directly from the TLP header.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBvMGgACgkQJNaLcl1U
-h9CUJAf+Nh0zP3iQ9+LL3Pr4m5J6LT5Fgs87NVCBediwBRM7EedTFDAFkspKdppU
-Vwvd3CFuyzGrWppnMDgDC6bchMMoeGeryDpGanZWbWgsNBb9B8Kdf7auVwuOOKNe
-fLN37q0+Gb0gpwNFmRQUnwCCNCOTvo1Bt5I2cuIMdEy4LmsU0sRvtXVtlAeJBNQU
-5sx0opfkCgPp2zeodCt4CVV4HlUOc2GaxiFpdMQV6s9irjyVX3UnfxYToR5MqBJO
-4Si9uDN7QAdgQnxvLi47LtT+4MzL84wFqHTjgf9++Yyxr2vBEvaGgz6O0iHpMVHs
-iwhnfagNwF+dn6zPIMO40a+2o2XgWQ==
-=b2of
------END PGP SIGNATURE-----
+This looks like a really cool device.  I wish we had this for more
+platforms.
 
---tzZdJ4yHDV5r1Akt--
+Bjorn
