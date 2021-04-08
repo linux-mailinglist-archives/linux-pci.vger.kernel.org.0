@@ -2,34 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 134C2357D45
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 09:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23C65357D4D
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 09:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbhDHHY2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 03:24:28 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:26720 "EHLO zju.edu.cn"
+        id S229586AbhDHH10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 03:27:26 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:27138 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229506AbhDHHY2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Apr 2021 03:24:28 -0400
+        id S229510AbhDHH1Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Apr 2021 03:27:25 -0400
 Received: from localhost.localdomain (unknown [10.192.24.118])
-        by mail-app2 (Coremail) with SMTP id by_KCgC3v2+Sr25gmiHdAA--.48607S4;
-        Thu, 08 Apr 2021 15:24:06 +0800 (CST)
+        by mail-app2 (Coremail) with SMTP id by_KCgAXEPhEsG5gRSbdAA--.46582S4;
+        Thu, 08 Apr 2021 15:27:03 +0800 (CST)
 From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
 To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: rcar: Fix runtime PM imbalance in rcar_pcie_ep_probe
-Date:   Thu,  8 Apr 2021 15:24:02 +0800
-Message-Id: <20210408072402.15069-1-dinghao.liu@zju.edu.cn>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: tegra: Fix runtime PM imbalance in pex_ep_event_pex_rst_deassert
+Date:   Thu,  8 Apr 2021 15:26:58 +0800
+Message-Id: <20210408072700.15791-1-dinghao.liu@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgC3v2+Sr25gmiHdAA--.48607S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrZrW3JFykZrWrWr4fZrykAFb_yoWDuFc_u3
-        45ZFnrCr45WFy7Kry7t3W5Zr9Y9342qw1UGa1rt3W3AFySyrn8XrWkXFWDZr4fWa15Cr1j
-        yr909FWxCa4DujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: by_KCgAXEPhEsG5gRSbdAA--.46582S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrW3JFykZrWrWr4fZrykAFb_yoWDCFXE9r
+        1DWFs7Ar45uFZxtFy2y3WfZr92va13Xw18Ka9YyanxAFyS9rn8trWkWF95A3ZxWw15JF1D
+        trnIyFyxCF1DZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
         9fnUUIcSsGvfJTRUUUbsAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
         wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
         vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
@@ -43,7 +47,7 @@ X-Coremail-Antispam: 1UD129KBjvdXoWrZrW3JFykZrWrWr4fZrykAFb_yoWDuFc_u3
         IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2
         z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
         UI43ZEXa7VUbE_M3UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0JBlZdtTTcOgAKsm
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0JBlZdtTTcOgAMsg
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -56,25 +60,22 @@ PM counter on error.
 
 Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- drivers/pci/controller/pcie-rcar-ep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-index b4a288e24aaf..c91d85b15129 100644
---- a/drivers/pci/controller/pcie-rcar-ep.c
-+++ b/drivers/pci/controller/pcie-rcar-ep.c
-@@ -492,9 +492,9 @@ static int rcar_pcie_ep_probe(struct platform_device *pdev)
- 	pcie->dev = dev;
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 6fa216e52d14..0e94190ca4e8 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1645,7 +1645,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+ 	if (pcie->ep_state == EP_STATE_ENABLED)
+ 		return;
  
- 	pm_runtime_enable(dev);
--	err = pm_runtime_get_sync(dev);
-+	err = pm_runtime_resume_and_get(dev);
- 	if (err < 0) {
--		dev_err(dev, "pm_runtime_get_sync failed\n");
-+		dev_err(dev, "pm_runtime_resume_and_get failed\n");
- 		goto err_pm_disable;
- 	}
- 
+-	ret = pm_runtime_get_sync(dev);
++	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
+ 			ret);
 -- 
 2.17.1
 
