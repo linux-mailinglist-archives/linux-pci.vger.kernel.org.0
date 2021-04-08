@@ -2,152 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F8B358A58
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 18:58:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB0A358A5E
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 18:58:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231480AbhDHQ6L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 12:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230522AbhDHQ6L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Apr 2021 12:58:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 77A23610A2;
-        Thu,  8 Apr 2021 16:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617901079;
-        bh=/ZNonnVvJf8TVEI5fHURSn+FdH/9H7lo0rxmwdxIEcw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cShOX9ZUA3azSBUoknrPAWWS0N37VHpG7doQjfy7+ItILHntTKF/JR1E5GLw93Mdx
-         5CUL1do84tp4UhfmDxDO1y5UMlMqJ2ADwOD60+kStRm3HJ7g6JWtvVnkahVdnju7Wb
-         UrUXQfkj82ZVoY9ou1M822gpvStntBqE+L7Jy5D7HTkoSfz8jAMTHPQJSvevJuc2F8
-         +sN/S0UiOYhDUWkCASC7I+6u/sj6XVAwLxrHMKRAmCrcl5HI1K0DQNicofx5yanooS
-         gAXpRd8WOJe8RHEUxCZ7Z4dhrs4xo8OmU91GlssiuZ5ukApcWOkNnthN8GbHBWNKUO
-         UctgcSHxb1Y4A==
-Date:   Thu, 8 Apr 2021 11:57:58 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        gregkh@linuxfoundation.org, jonathan.cameron@huawei.com,
-        song.bao.hua@hisilicon.com, prime.zeng@huawei.com,
-        linux-doc@vger.kernel.org, linuxarm@huawei.com
-Subject: Re: [PATCH 3/4] docs: Add documentation for HiSilicon PTT device
- driver
-Message-ID: <20210408165758.GA1935187@bjorn-Precision-5520>
+        id S232316AbhDHQ6e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 12:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232315AbhDHQ6c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 12:58:32 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00E3C061760;
+        Thu,  8 Apr 2021 09:58:18 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id g8-20020a9d6c480000b02901b65ca2432cso2970514otq.3;
+        Thu, 08 Apr 2021 09:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dLfL6NGDf1LKpWbeCzWAP7jc5FPnwrsHYlt5iXOvOjo=;
+        b=BrrTo5jt3fBAewJtfcCj0Dmjc88uaRVXQ+FSh8mXnVcc3MoNZKkk6tUbzUs9/3bnRY
+         XMgEePkfUOtiWlD9KMMLS6L14O/zMsTN8x9guGoPoYlAXrPYmOGkgl9fEMFTVHkiXCS8
+         O9Cd4pA83aq9m4AB7lwjpgvi8q9Z6ya8Ek5MR1w04qzXHrS6bXfs4gv+XjDsqjtJuzX8
+         ytTnEpJKLI8FBNgKG9b/N45eQQru1mxhOZTupz6uI2Pd20mz44FXBDDo5BI1S7Bpz6lc
+         tZW054A2vnCkf5VKN3eNUHemoLHvDhSSlH5CErsG8vCIstDIohtlwmTQEHWDcoc531eh
+         4lcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dLfL6NGDf1LKpWbeCzWAP7jc5FPnwrsHYlt5iXOvOjo=;
+        b=IQeP63bFzajyxDXUpwZYY53o16V8HmNDaARM/+mYuwbTIfL/HBLTP9zRud68QB7UKS
+         XrlrvhcEivWRg5Dlhcy78BH2vzeRZjvbjt1U8gYfBX4lFWuL1XyI3vkc6YHsJVPgBDKc
+         xEXMeVTCHejJTywmCQReAO6qMuj1P/MkeTQafnDw5cmOjdtApOFpalrIsUYqqJ3JpsuZ
+         dSs6IqyTEuIE6a0EGD98BSixg3Wo8jRF0sh9pSq6UK+7KrAAKbS2i9Lh9mx8uyJ8bRIF
+         taGvPbmVkIgWms8rMjJqs74ZDCFhNVy5jkCplBTZR9r0rKT3Zo3aj5yTnO15pv48pvJv
+         NQTw==
+X-Gm-Message-State: AOAM531k4nDGwBeIP0rsoPfrwa87ZRG+HTPcqMMZ460NjByJeYIi5M+b
+        qTBidmlGKfgD0qwqy1h7ITqq5XFQOn9QZRJBFkE=
+X-Google-Smtp-Source: ABdhPJxLWNL9rcfGgrbFaxzZ6Oxk0MHa2Ab+PtbdE+BZlANacJomJj5MGsmfDWVX59T8dm/2ATpOk3vgnlaUtDmlHA8=
+X-Received: by 2002:a05:6830:1c6e:: with SMTP id s14mr8683363otg.17.1617901098305;
+ Thu, 08 Apr 2021 09:58:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ecc2177-1c3d-9899-923d-9514f652bb4e@hisilicon.com>
+References: <20210401212148.47033-1-jim2101024@gmail.com> <20210401212148.47033-3-jim2101024@gmail.com>
+ <20210406164708.GM6443@sirena.org.uk> <CANCKTBsiujTkOdh60etBqF_hE8exg6m9TDxkGHVVAGVS2SFCcQ@mail.gmail.com>
+ <20210406173211.GP6443@sirena.org.uk> <CANCKTBv63b4bGepZbDp1wmFrOeddiDikoXbheMjHhbguAbR2sA@mail.gmail.com>
+ <20210408162016.GA1556444@robh.at.kernel.org>
+In-Reply-To: <20210408162016.GA1556444@robh.at.kernel.org>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Thu, 8 Apr 2021 12:58:05 -0400
+Message-ID: <CANCKTBv_g9FPcBCOi-JxEDrrQWFhNcdsfDATFBydwnLiebj-HA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: PCI: Add bindings for Brcmstb
+ endpoint device voltage regulators
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 09:22:52PM +0800, Yicong Yang wrote:
-> On 2021/4/8 2:55, Bjorn Helgaas wrote:
-> > On Tue, Apr 06, 2021 at 08:45:53PM +0800, Yicong Yang wrote:
+On Thu, Apr 8, 2021 at 12:20 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Apr 06, 2021 at 02:25:49PM -0400, Jim Quinlan wrote:
+> > On Tue, Apr 6, 2021 at 1:32 PM Mark Brown <broonie@kernel.org> wrote:
+> > >
+> > > On Tue, Apr 06, 2021 at 01:26:51PM -0400, Jim Quinlan wrote:
+> > > > On Tue, Apr 6, 2021 at 12:47 PM Mark Brown <broonie@kernel.org> wrote:
+> > >
+> > > > > No great problem with having these in the controller node (assming it
+> > > > > accurately describes the hardware) but I do think we ought to also be
+> > > > > able to describe these per slot.
+>
+> PCIe is effectively point to point, so there's only 1 slot unless
+> there's a PCIe switch in the middle. If that's the case, then it's all
+> more complicated.
+>
+> > > > Can you explain what you think that would look like in the DT?
+> > >
+> > > I *think* that's just some properties on the nodes for the endpoints,
+> > > note that the driver could just ignore them for now.  Not sure where or
+> > > if we document any extensions but child nodes are in section 4 of the
+> > > v2.1 PCI bus binding.
+> >
+> > Hi Mark,
+> >
+> > I'm a little confused -- here is how I remember the chronology of the
+> > "DT bindings" commit reviews, please correct me if I'm wrong:
+> >
+> > o JimQ submitted a pullreq for using voltage regulators in the same
+> > style as the existing "rockport" PCIe driver.
+> > o After some deliberation, RobH preferred that the voltage regulators
+> > should go into the PCIe subnode device's DT node.
+>
+> IIRC, that's because you said there isn't a standard slot.
+Admittedly, I'm not exactly sure what you mean by a "standard slot".
+Our PCIIe HW does not support  hotplug or have a presence bit or
+anything like that.  Our root complex has one port; it can only
+directly connect to a single switch or endpoint. This connection shows
+up as slot0.  The voltage regulator(s) involved depend on a GPIO that
+turns the power  on/off for the connected device/chip.  The gpio pin
+can vary from board to board but this is easily handled in our DT.
+Some boards have regulators that are always on and not associated with
+a GPIO pin -- these have no representation in our DT.
 
-> >> +On Kunpeng 930 SoC, the PCIe root complex is composed of several
-> >> +PCIe cores.
-> 
-> > Can you connect "Kunpeng 930" to something in the kernel tree?
-> > "git grep -i kunpeng" shows nothing that's obviously relevant.
-> > I assume there's a related driver in drivers/pci/controller/?
-> 
-> Kunpeng 930 is the product name of Hip09 platform. The PCIe
-> controller uses the generic PCIe driver based on ACPI.
+Regards,
+Jim
 
-I guess I'm just looking for a hint to help users know when to enable
-the Kconfig for this.  Maybe the "HiSilicon" in the Kconfig help is
-enough?  Maybe "Kunpeng 930" is not even necessary?  If "Kunpeng 930"
-*is* necessary, there should be some way to relate it to something
-else.
 
-> >> +from the file, and the desired value written to the file to tune.
-> > 
-> >> +Tuning multiple events at the same time is not permitted, which means
-> >> +you cannot read or write more than one tune file at one time.
-> > 
-> > I think this is obvious from the model, so the sentence doesn't really
-> > add anything.  Each event is a separate file, and it's obvious that
-> > there's no way to write to multiple files simultaneously.
-> 
-> from the usage we shown below this situation won't happen. I just worry
-> that users may have a program to open multiple files at the same time and
-> read/write simultaneously, so add this line here to mention the restriction.
-
-How is this possible?  I don't think "writing multiple files
-simultaneously" is even possible in the Linux syscall model.  I don't
-think a user will do anything differently after reading "you cannot
-read or write more than one tune file at one time."
-
-> >> +- tx_path_rx_req_alloc_buf_level: watermark of RX requested
-> >> +- tx_path_tx_req_alloc_buf_level: watermark of TX requested
-> >> +
-> >> +These events influence the watermark of the buffer allocated for each
-> >> +type. RX means the inbound while Tx means outbound. For a busy
-> >> +direction, you should increase the related buffer watermark to enhance
-> >> +the performance.
-> > 
-> > Based on what you have written here, I would just write 2 to both
-> > files to enhance the performance in both directions.  But obviously
-> > there must be some tradeoff here, e.g., increasing Rx performance
-> > comes at the cost of Tx performane.
-> 
-> the Rx buffer and Tx buffer are separate, so they won't influence
-> each other.
-
-Why would I write anything other than 2 to these files?  That's the
-question I think this paragraph should answer.
-
-> >> +9. data_format
-> >> +--------------
-> >> +
-> >> +File to indicate the format of the traced TLP headers. User can also
-> >> +specify the desired format of traced TLP headers. Available formats
-> >> +are 4DW, 8DW which indicates the length of each TLP headers traced.
-> >> +::
-> >> +    $ cat data_format
-> >> +    [4DW]    8DW
-> >> +    $ echo 8 > data_format
-> >> +    $ cat data_format
-> >> +    4DW     [8DW]
-> >> +
-> >> +The traced TLP header format is different from the PCIe standard.
-> > 
-> > I'm confused.  Below you say the fields of the traced TLP header are
-> > defined by the PCIe spec.  But here you say the format is *different*.
-> > What exactly is different?
-> 
-> For the Request Header Format for 64-bit addressing of Memory, defind in
-> PCIe spec 4.0, Figure 2-15, the 1st DW is like:
-> 
-> Byte 0 > [Fmt] [Type] [T9] [Tc] [T8] [Attr] [LN] [TH] ... [Length]
-> 
-> some are recorded in our traced header like below, which some are not.
-> that's what I mean the format of the header are different. But for a
-> certain field like 'Fmt', the meaning keeps same with what Spec defined.
-> that's what I mean the fields definition of our traced header keep same
-> with the Spec.
-
-Ah, that helps a lot, thank you.  Maybe you could say something along
-the lines of this:
-
-  When using the 8DW data format, the entire TLP header is logged.
-  For example, the TLP header for Memory Reads with 64-bit addresses
-  is shown in PCIe r5.0, Figure 2-17; the header for Configuration
-  Requests is shown in Figure 2.20, etc.
-
-  In addition, 8DW trace buffer entries contain a timestamp and
-  possibly a prefix, e.g., a PASID TLP prefix (see Figure 6-20).  TLPs
-  may include more than one prefix, but only one can be logged in
-  trace buffer entries.
-
-  When using the 4DW data format, DW0 of the trace buffer entry
-  contains selected fields of DW0 of the TLP, together with a
-  timestamp.  DW1-DW3 of the trace buffer entry contain DW1-DW3
-  directly from the TLP header.
-
-This looks like a really cool device.  I wish we had this for more
-platforms.
-
-Bjorn
+>
+> > o JimQ put the voltage regulators in the subnode device's DT node.
+> > o MarkB didn't like the fact that the code did a global search for the
+> > regulator since it could not provide the owning struct device* handle.
+> > o RobH relented, and said that if it is just two specific and standard
+> > voltage regulators, perhaps they can go in the parent DT node after
+> > all.
+> > o JimQ put the regulators back in the PCIe node.
+> > o MarkB now wants the regulators to go back into the child node again?
+> >
+> > Folks, please advise.
+> >
+> > Regards,
+> > Jim Quinlan
+> > Broadcom STB
