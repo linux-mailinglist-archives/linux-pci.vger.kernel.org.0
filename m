@@ -2,445 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CDB9357F40
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 11:34:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8955E35835B
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 14:34:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229837AbhDHJep (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 05:34:45 -0400
-Received: from mo-csw1115.securemx.jp ([210.130.202.157]:56986 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbhDHJep (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 05:34:45 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 1389YC0h006297; Thu, 8 Apr 2021 18:34:12 +0900
-X-Iguazu-Qid: 2wHHDhxhkAp5tsrylS
-X-Iguazu-QSIG: v=2; s=0; t=1617874452; q=2wHHDhxhkAp5tsrylS; m=3rgoWAxTwdXRBbLmXMVY93ZjM701Smc2Urp9/fFaA/g=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-        by relay.securemx.jp (mx-mr1113) id 1389YAPC002324
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 8 Apr 2021 18:34:11 +0900
-Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 9B46E1000C6;
-        Thu,  8 Apr 2021 18:34:10 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 1389YAZA026914;
-        Thu, 8 Apr 2021 18:34:10 +0900
-Date:   Thu, 8 Apr 2021 18:34:09 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: dwc: Visoconti: PCIe RC controller driver
-X-TSB-HOP: ON
-Message-ID: <20210408093409.v7djeagids4j7pad@toshiba.co.jp>
-References: <20210407031839.386088-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210407031839.386088-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210407142734.GA3606952@robh.at.kernel.org>
+        id S229837AbhDHMe5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 08:34:57 -0400
+Received: from mail-dm6nam08on2060.outbound.protection.outlook.com ([40.107.102.60]:18400
+        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229741AbhDHMez (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Apr 2021 08:34:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LHGJKdVRvVcnkts+JNUav4tFMV2ZHTV3opAf+y2drTj1U4RgVWsPAGKk8anrviE4lU/J/k7yg+hXly+1PJCIccNg/7Mk12ciDtDvu6lc3QuhROJv4/hMtlYAh+5Yfd/22AizDGvMrwrsaVy9bO38N39h1JeTTKoBZwUsQxDW3p7UEDLgzsK1Sdrk86ZBdbcutEqlEFsx1SwnLu4aosFeIhBaXWfVKFL8ZUDnQM7pX4pmV9gqznk7f4jscI96i6zfBWe5lA2agoTz/YkDaIDkvqWkAnlGps1erQlIKUA/SMwOO6WUnSoGPVRj0NPLhlfbMo/9zhSNX6yz/mY95hNGgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hYk2q2cb/3NeVg4oymiu2JtnLsDpresVBCUCCeRmI+k=;
+ b=d3Bu5xYpgExyN13RIncmHoeXesWtpDFlEKQWeSBR6EHNOAcpD/nhSZQu7EcGCyRja1I8ed8f52xuKq+SaehM7XTwVl/RU2pQTnIiohzcDNXTAPXpYDB3YQK5sjP7xERORjuWHYQfvez8zJLJsDeP4+sMH5+JlX0ghxV0sgwMRnDoY1lf7qXPHsYucfcgr2brhyDAAPotkMDZ5JUW2tFnVh3wZFj4zFathfzqPmd0whOWqsna3sB/bSxP67Gl1bSnQe6NEy+dXEdPtuyGQ2zJuCg1GB+qBULvp7435hf8FTJI3KeFvrAtG+I9iuf62aHQ3Vg/9ULDOpMkUP0m6Zd1bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hYk2q2cb/3NeVg4oymiu2JtnLsDpresVBCUCCeRmI+k=;
+ b=YEKNbeovuiCzFTYuPHQHa5RbgrCTCq29bsE7HbzhCwKA5IEyOIqMunthnGJhrZPHyHIwgI3XbH9nu/bENXQueySa3/GFkjuO+5bQQpQXzPkcghAOeFOwRb6MGpGIS0aa8YHT9EEGU5wCqXjTKH+Fy6HAo/CY3/WIRzFfgyz/v91nZX468G12bpQJoH1vtnml0axJMauVHv60kJWNC6qpm5mH5RnzGEx80UuGKzsglHXSAAGWrp7mrO95gIzRm08R7+UCfo6norXNDeA7z5Ouj09E6lgs7K03HLt4a+3GG2JLiWK8qLpFvf2Ry6RcDnh7ua7a50ZdxjYB0/FJl9C7+w==
+Received: from BN6PR11CA0070.namprd11.prod.outlook.com (2603:10b6:404:f7::32)
+ by DM6PR12MB4730.namprd12.prod.outlook.com (2603:10b6:5:30::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.29; Thu, 8 Apr
+ 2021 12:34:43 +0000
+Received: from BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:f7:cafe::3) by BN6PR11CA0070.outlook.office365.com
+ (2603:10b6:404:f7::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17 via Frontend
+ Transport; Thu, 8 Apr 2021 12:34:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT031.mail.protection.outlook.com (10.13.177.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4020.17 via Frontend Transport; Thu, 8 Apr 2021 12:34:42 +0000
+Received: from [10.26.49.14] (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 8 Apr
+ 2021 12:34:39 +0000
+Subject: Re: [PATCH] PCI: tegra: Fix runtime PM imbalance in
+ pex_ep_event_pex_rst_deassert
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20210408072700.15791-1-dinghao.liu@zju.edu.cn>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <11feff02-c466-5296-b4c3-85754c755c9a@nvidia.com>
+Date:   Thu, 8 Apr 2021 13:34:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210407142734.GA3606952@robh.at.kernel.org>
+In-Reply-To: <20210408072700.15791-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0e876ea1-a1f5-4ca5-d961-08d8fa8aaf98
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4730:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4730C21919897466540FCFE1D9749@DM6PR12MB4730.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eFmCuG5zupDiOc41OqAMuO4pZe5hjO7CRRaQfFvetsoVVECrdFcIM2BfcELHMHvUz1bK1D792/DBt/se837Mred0zMo44OSPK6NT4AG80xrC1P7faK41QHBHcjd7unKaDprhqkWD7bsjog3ByT3nYXJKzTZtVUwuxA+PqQfLlTPJBu91v4saRcz72WpeNLoHhdWy50ve9n6Rq2/JkR0Dc6Pquqz06TlafUEDy3w3CUT0K2OVkGqFMDWbTPDPfIK/nJGP2KMtyzb+YXHZFQl9oXe73cJaNOnjASmM2VZN6pR8mPzmsrSq6s7noqJl887bjIxRPgO3/V/GshyYob+/wp1sNJkwT2+RsvoxVvI8uKTwj9otwEzWJRNYQmg2AtaMSBc7FGdGl248wu41fR/kPjRhWgQJkJ2Hh4Qq/yq8KnMMvrCEMVsQZob07A9RGilT5s0/UqmVqZ0djzdK65gR+VTYcPr+Wts909vPxe/9U1Xvttv4tEspQDvNmEBEnKSK6rZdrW4ZJp19eHnT0ydDxQC2U4xn93BArqp0LKAxEJ1ZCuLX9bmE0Yuo5CEUkvIRWT9UHIxWU+elzeYB3Nsgk6u9YeEiet2d2dYaFUDxEgkooBC1k+YwPZsUeTK4XPAW/ugQqET9DFvJddNbPfmuKlM8wneSa0auXk9bpzi2gJm5jhFZZ3H9v14ZVH4sm0OM
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(376002)(136003)(36840700001)(46966006)(26005)(36860700001)(83380400001)(36906005)(36756003)(426003)(7636003)(16576012)(47076005)(70206006)(186003)(2616005)(478600001)(356005)(16526019)(2906002)(70586007)(8676002)(7416002)(82740400003)(82310400003)(53546011)(54906003)(31696002)(110136005)(8936002)(316002)(4326008)(5660300002)(86362001)(336012)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2021 12:34:42.9766
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e876ea1-a1f5-4ca5-d961-08d8fa8aaf98
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT031.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4730
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-Thanks for your review.
-
-On Wed, Apr 07, 2021 at 09:27:34AM -0500, Rob Herring wrote:
-> On Wed, Apr 07, 2021 at 12:18:38PM +0900, Nobuhiro Iwamatsu wrote:
-> > Add support to PCIe RC controller on Toshiba Visconti ARM SoCs.
-> > PCIe controller is based of Synopsys DesignWare PCIe core.
-> > 
-> > Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig         |  10 +
-> >  drivers/pci/controller/dwc/Makefile        |   1 +
-> >  drivers/pci/controller/dwc/pcie-visconti.c | 358 +++++++++++++++++++++
-> >  3 files changed, 369 insertions(+)
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-visconti.c
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index b9aaa84452c4..ae125d7cf375 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -286,6 +286,16 @@ config PCIE_TEGRA194_EP
-> >  	  in order to enable device-specific features PCIE_TEGRA194_EP must be
-> >  	  selected. This uses the DesignWare core.
-> >  
-> > +config PCIE_VISCONTI
-> > +	bool "Toshiba VISCONTI PCIe controllers"
-> > +	depends on ARCH_VISCONTI || COMPILE_TEST
-> > +	depends on OF && HAS_IOMEM
+On 08/04/2021 08:26, Dinghao Liu wrote:
+> pm_runtime_get_sync() will increase the runtime PM counter
+> even it returns an error. Thus a pairing decrement is needed
+> to prevent refcount leak. Fix this by replacing this API with
+> pm_runtime_resume_and_get(), which will not change the runtime
+> PM counter on error.
 > 
-> Is this line really needed? Seems we have a mixture on other drivers.
-
-hmm, thanks. I will remove this.
-
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > +	depends on PCI_MSI_IRQ_DOMAIN
-> > +	select PCIE_DW_HOST
-> > +	help
-> > +	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
-> > +	  This driver supports TMPV77xx.
-> > +
-> >  config PCIE_UNIPHIER
-> >  	bool "Socionext UniPhier PCIe host controllers"
-> >  	depends on ARCH_UNIPHIER || COMPILE_TEST
-> > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> > index ba7c42f6df6f..46ac5d49dc75 100644
-> > --- a/drivers/pci/controller/dwc/Makefile
-> > +++ b/drivers/pci/controller/dwc/Makefile
-> > @@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
-> >  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
-> >  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
-> >  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> > +obj-$(CONFIG_PCIE_VISCONTI) += pcie-visconti.o
-> >  
-> >  # The following drivers are for devices that use the generic ACPI
-> >  # pci_root.c driver but don't support standard ECAM config access.
-> > diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-> > new file mode 100644
-> > index 000000000000..e24f83df41b8
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-visconti.c
-> > @@ -0,0 +1,358 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * DWC PCIe RC driver for Toshiba Visconti ARM SoC
-> > + *
-> > + * Copyright (C) 2019, 2020 Toshiba Electronic Device & Storage Corporation
-> > + * Copyright (C) 2020, TOSHIBA CORPORATION
-> > + *
-> > + * Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > + *
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/init.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/resource.h>
-> > +#include <linux/types.h>
-> > +
-> > +#include "pcie-designware.h"
-> > +#include "../../pci.h"
-> > +
-> > +struct visconti_pcie {
-> > +	struct dw_pcie *pci;
-> 
-> Embed this rather than a pointer. 1 less alloc.
-
-I see. I will change .
-
-> 
-> > +	void __iomem *ulreg_base;
-> > +	void __iomem *smu_base;
-> > +	void __iomem *mpu_base;
-> > +	struct clk *refclk;
-> > +	struct clk *sysclk;
-> > +	struct clk *auxclk;
-> > +};
-> > +
-> > +#define PCIE_UL_REG_S_PCIE_MODE		0x00F4
-> > +#define  PCIE_UL_REG_S_PCIE_MODE_EP	0x00
-> > +#define  PCIE_UL_REG_S_PCIE_MODE_RC	0x04
-> > +
-> > +#define PCIE_UL_REG_S_PERSTN_CTRL	0x00F8
-> > +#define  PCIE_UL_IOM_PCIE_PERSTN_I_EN	BIT(3)
-> > +#define  PCIE_UL_DIRECT_PERSTN_EN	BIT(2)
-> > +#define  PCIE_UL_PERSTN_OUT		BIT(1)
-> > +#define  PCIE_UL_DIRECT_PERSTN		BIT(0)
-> > +
-> > +#define PCIE_UL_REG_S_PHY_INIT_02	0x0104
-> > +#define  PCIE_UL_PHY0_SRAM_EXT_LD_DONE	BIT(0)
-> > +
-> > +#define PCIE_UL_REG_S_PHY_INIT_03	0x0108
-> > +#define  PCIE_UL_PHY0_SRAM_INIT_DONE	BIT(0)
-> > +
-> > +#define PCIE_UL_REG_S_INT_EVENT_MASK1	0x0138
-> > +#define  PCIE_UL_CFG_PME_INT		BIT(0)
-> > +#define  PCIE_UL_CFG_LINK_EQ_REQ_INT	BIT(1)
-> > +#define  PCIE_UL_EDMA_INT0		BIT(2)
-> > +#define  PCIE_UL_EDMA_INT1		BIT(3)
-> > +#define  PCIE_UL_EDMA_INT2		BIT(4)
-> > +#define  PCIE_UL_EDMA_INT3		BIT(5)
-> > +#define  PCIE_UL_S_INT_EVENT_MASK1_ALL  (PCIE_UL_CFG_PME_INT | PCIE_UL_CFG_LINK_EQ_REQ_INT | \
-> > +					 PCIE_UL_EDMA_INT0 | PCIE_UL_EDMA_INT1 | \
-> > +					 PCIE_UL_EDMA_INT2 | PCIE_UL_EDMA_INT3)
-> > +
-> > +#define PCIE_UL_REG_S_SB_MON		0x0198
-> > +#define PCIE_UL_REG_S_SIG_MON		0x019C
-> > +#define  PCIE_UL_CORE_RST_N_MON		BIT(0)
-> > +
-> > +#define PCIE_UL_REG_V_SII_DBG_00	0x0844
-> > +#define PCIE_UL_REG_V_SII_GEN_CTRL_01	0x0860
-> > +#define  PCIE_UL_APP_LTSSM_ENABLE	BIT(0)
-> > +
-> > +#define PCIE_UL_REG_V_PHY_ST_00		0x0864
-> > +#define  PCIE_UL_SMLH_LINK_UP		BIT(0)
-> > +
-> > +#define PCIE_UL_REG_V_PHY_ST_02		0x0868
-> > +#define  PCIE_UL_S_DETECT_ACT		0x01
-> > +#define  PCIE_UL_S_L0			0x11
-> > +
-> > +#define PISMU_CKON_PCIE			0x0038
-> > +#define  PISMU_CKON_PCIE_AUX_CLK	BIT(1)
-> > +#define  PISMU_CKON_PCIE_MSTR_ACLK	BIT(0)
-> > +
-> > +#define PISMU_RSOFF_PCIE		0x0538
-> > +#define  PISMU_RSOFF_PCIE_ULREG_RST_N	BIT(1)
-> > +#define  PISMU_RSOFF_PCIE_PWR_UP_RST_N	BIT(0)
-> > +
-> > +#define PCIE_MPU_REG_MP_EN		0x0
-> > +#define  MPU_MP_EN_DISABLE		BIT(0)
-> > +
-> > +#define PCIE_BUS_OFFSET			0x40000000
-> > +
-> > +/* Access registers in PCIe ulreg */
-> > +static inline void visconti_ulreg_writel(struct visconti_pcie *pcie, u32 val, u32 reg)
-> > +{
-> > +	writel(val, pcie->ulreg_base + reg);
-> 
-> Do these need ordering WRT DMA? If not, use _relaxed variant.
-
-This and others does not required WRT DMA. I will change to use _relaxed functions.
-
-> 
-> > +}
-> > +
-> > +/* Access registers in PCIe smu */
-> > +static inline void visconti_smu_writel(struct visconti_pcie *pcie, u32 val, u32 reg)
-> > +{
-> > +	writel(val, pcie->smu_base + reg);
-> > +}
-> > +
-> > +/* Access registers in PCIe mpu */
-> > +static inline void visconti_mpu_writel(struct visconti_pcie *pcie, u32 val, u32 reg)
-> > +{
-> > +	writel(val, pcie->mpu_base + reg);
-> > +}
-> > +
-> > +static inline u32 visconti_mpu_readl(struct visconti_pcie *pcie, u32 reg)
-> > +{
-> > +	return readl(pcie->mpu_base + reg);
-> > +}
-> > +
-> > +static int visconti_pcie_check_link_status(struct visconti_pcie *pcie)
-> > +{
-> > +	int err;
-> > +	u32 val;
-> > +
-> > +	/* wait for linkup of phy link layer */
-> > +	err = readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_V_PHY_ST_00, val,
-> > +				 (val & PCIE_UL_SMLH_LINK_UP), 1000, 10000);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/* wait for linkup of data link layer */
-> > +	err = readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_V_PHY_ST_02, val,
-> > +				 (val & PCIE_UL_S_DETECT_ACT), 1000, 10000);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/* wait for LTSSM Status */
-> > +	return readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_V_PHY_ST_02, val,
-> > +				  (val & PCIE_UL_S_L0), 1000, 10000);
-> > +}
-> > +
-> > +static int visconti_pcie_establish_link(struct pcie_port *pp)
-> > +{
-> > +	int ret;
-> > +	u32 val;
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +	struct visconti_pcie *pcie = dev_get_drvdata(pci->dev);
-> > +
-> > +	visconti_ulreg_writel(pcie, PCIE_UL_APP_LTSSM_ENABLE, PCIE_UL_REG_V_SII_GEN_CTRL_01);
-> > +
-> > +	ret = visconti_pcie_check_link_status(pcie);
-> > +	if (ret < 0) {
-> > +		dev_info(pci->dev, "Link failure\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	val = visconti_mpu_readl(pcie, PCIE_MPU_REG_MP_EN);
-> > +	visconti_mpu_writel(pcie, val & ~MPU_MP_EN_DISABLE, PCIE_MPU_REG_MP_EN);
-> > +
-> > +	visconti_ulreg_writel(pcie, PCIE_UL_S_INT_EVENT_MASK1_ALL, PCIE_UL_REG_S_INT_EVENT_MASK1);
-> 
-> Seems like all this should be a phy driver.
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 6fa216e52d14..0e94190ca4e8 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -1645,7 +1645,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  	if (pcie->ep_state == EP_STATE_ENABLED)
+>  		return;
+>  
+> -	ret = pm_runtime_get_sync(dev);
+> +	ret = pm_runtime_resume_and_get(dev);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
+>  			ret);
 > 
 
-I see. I will consider if it can be replaced with a phy driver.
+There are two places in the driver where pm_runtime_get_sync() is called.
 
+Thanks
+Jon
 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int visconti_pcie_host_init(struct pcie_port *pp)
-> > +{
-> > +	int ret;
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +
-> > +	dw_pcie_setup_rc(pp);
-> 
-> > +	ret = visconti_pcie_establish_link(pp);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	dw_pcie_wait_for_link(pci);
-> 
-> The DWC core code does link handling now.
-> 
-
-OK, I will check this.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct dw_pcie_host_ops visconti_pcie_host_ops = {
-> > +	.host_init = visconti_pcie_host_init,
-> > +};
-> > +
-> > +static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 pci_addr)
-> > +{
-> > +	return pci_addr - PCIE_BUS_OFFSET;
-> > +}
-> > +
-> > +static const struct dw_pcie_ops dw_pcie_ops = {
-> > +	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
-> > +};
-> > +
-> > +static int visconti_get_resources(struct platform_device *pdev,
-> > +				  struct visconti_pcie *pcie)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +
-> > +	pcie->pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
-> > +	if (IS_ERR(pcie->pci->dbi_base))
-> > +		return PTR_ERR(pcie->pci->dbi_base);
-> 
-> The DWC core handles this now.
-
-OK, I will drop this.
-
-> 
-> > +
-> > +	pcie->ulreg_base = devm_platform_ioremap_resource_byname(pdev, "ulreg");
-> > +	if (IS_ERR(pcie->ulreg_base))
-> > +		return PTR_ERR(pcie->ulreg_base);
-> > +
-> > +	pcie->smu_base = devm_platform_ioremap_resource_byname(pdev, "smu");
-> > +	if (IS_ERR(pcie->smu_base))
-> > +		return PTR_ERR(pcie->smu_base);
-> > +
-> > +	pcie->mpu_base = devm_platform_ioremap_resource_byname(pdev, "mpu");
-> > +	if (IS_ERR(pcie->mpu_base))
-> > +		return PTR_ERR(pcie->mpu_base);
-> > +
-> > +	pcie->refclk = devm_clk_get(dev, "pcie_refclk");
-> > +	if (IS_ERR(pcie->refclk)) {
-> > +		dev_err(dev, "Failed to get refclk clock: %ld\n", PTR_ERR(pcie->refclk));
-> > +		return PTR_ERR(pcie->refclk);
-> > +	}
-> > +
-> > +	pcie->sysclk = devm_clk_get(dev, "sysclk");
-> > +	if (IS_ERR(pcie->sysclk)) {
-> > +		dev_err(dev, "Failed to get sysclk clock: %ld\n", PTR_ERR(pcie->sysclk));
-> > +		return PTR_ERR(pcie->sysclk);
-> > +	}
-> > +
-> > +	pcie->auxclk = devm_clk_get(dev, "auxclk");
-> > +	if (IS_ERR(pcie->auxclk)) {
-> > +		dev_err(dev, "Failed to get auxclk clock: %ld\n", PTR_ERR(pcie->auxclk));
-> > +		return PTR_ERR(pcie->auxclk);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int visconti_device_turnon(struct visconti_pcie *pcie)
-> > +{
-> > +	int err;
-> > +	u32 val;
-> > +
-> > +	visconti_smu_writel(pcie, PISMU_CKON_PCIE_AUX_CLK | PISMU_CKON_PCIE_MSTR_ACLK,
-> > +			    PISMU_CKON_PCIE);
-> 
-> Clock control? Should be a clock provider then.
-> 
-
-Visconti does not have clock driver yet, I'm also developping a driver for this,
-but it's still in the process. I plan to replace it with a clock driver later.
-And I should have written this in the commit message.
-
-
-> > +	ndelay(250);
-> > +
-> > +	visconti_smu_writel(pcie, PISMU_RSOFF_PCIE_ULREG_RST_N, PISMU_RSOFF_PCIE);
-> > +
-> > +	visconti_ulreg_writel(pcie, PCIE_UL_REG_S_PCIE_MODE_RC, PCIE_UL_REG_S_PCIE_MODE);
-> > +
-> > +	val = PCIE_UL_IOM_PCIE_PERSTN_I_EN | PCIE_UL_DIRECT_PERSTN_EN | PCIE_UL_DIRECT_PERSTN;
-> > +	visconti_ulreg_writel(pcie, val, PCIE_UL_REG_S_PERSTN_CTRL);
-> > +	udelay(100);
-> > +
-> > +	val |= PCIE_UL_PERSTN_OUT;
-> > +	visconti_ulreg_writel(pcie, val, PCIE_UL_REG_S_PERSTN_CTRL);
-> > +	udelay(100);
-> > +
-> > +	visconti_smu_writel(pcie, PISMU_RSOFF_PCIE_PWR_UP_RST_N, PISMU_RSOFF_PCIE);
-> > +
-> > +	err = readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_S_PHY_INIT_03, val,
-> > +				 (val & PCIE_UL_PHY0_SRAM_INIT_DONE), 100, 1000);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	visconti_ulreg_writel(pcie, PCIE_UL_PHY0_SRAM_EXT_LD_DONE, PCIE_UL_REG_S_PHY_INIT_02);
-> > +
-> > +	return readl_poll_timeout(pcie->ulreg_base + PCIE_UL_REG_S_SIG_MON, val,
-> > +				 (val & PCIE_UL_CORE_RST_N_MON), 100, 1000);
-> > +}
-> > +
-> > +static int visconti_add_pcie_port(struct visconti_pcie *pcie, struct platform_device *pdev)
-> > +{
-> > +	struct dw_pcie *pci = pcie->pci;
-> > +	struct pcie_port *pp = &pci->pp;
-> > +	struct device *dev = &pdev->dev;
-> > +	int ret;
-> > +
-> > +	pp->irq = platform_get_irq_byname(pdev, "intr");
-> > +	if (pp->irq < 0) {
-> > +		dev_err(dev, "interrupt intr is missing");
-> > +		return pp->irq;
-> > +	}
-> > +
-> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> > +		if (pp->msi_irq < 0) {
-> > +			dev_err(dev, "interrupt msi is missing");
-> > +			return pp->msi_irq;
-> > +		}
-> > +	}
-> 
-> DWC core handles this now.
-
-OK, I will drop this.
-
-Best regards,
-  Nobuhiro
-
+-- 
+nvpublic
