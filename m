@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA654358A8E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 19:01:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375AF358A93
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 19:01:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232502AbhDHRBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 13:01:54 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:36074 "EHLO
+        id S232511AbhDHRBz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 13:01:55 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:36082 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232438AbhDHRBu (ORCPT
+        with ESMTP id S232447AbhDHRBu (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 13:01:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=e4nFtZ9eIzk7XhQ6GfieUVA4TNHz6gGxAh+sM5UV0Tk=; b=rfqvnGA7loT9D1lWVvySKX1+Bb
-        23abxioysy1FlGsfI3ksw76VWNTic/FiwWVZWmF2oWnTDECpc9x6Jp5fGK2MSfqfE5MsMK/Ms4Gq4
-        XW2B4im7HKMg1gqracq7RRl6stSRtWmB8n5h2rG+XfSluanlzzz+DFUgbdLDMRo8jyHWlnD/T/zWv
-        Gl5ocL65JqrBkOYVpvPC+OuCDq/fNBv2BLqU/S5QJovuoOSHi8Ds2MpGbPBXxCMVzRCBR1hZv7eoT
-        tP+ydDzvXF/TbmUYRTGPgqceKI/ydQDZh7saGeh7L8FZyJQje2UH0nZ+tmDxAaYTv5r30y/IBszrl
-        fi+2rCgQ==;
+        bh=g9xBAi+F7zuYbb3gnefNIBW0Hb9qWvlDa8LJ/Rn/AY0=; b=PgV1DoTm1cSW2QgJfJD9aPPUI1
+        szfOFtzh3wS66ohgqOFz7vKJmj1nOfuDthGtEul6Xv8OJvPll6Bkz5tBeFE+poapiK1WoB44d7jE1
+        dKzrRL3LHjb6lYPSwRH2oy+VX/u04UlPGaNCRC/MqHdMa6svoXVruX1NRR5Oi2ENrAd0me90MvlnK
+        hqwYIxlp5urvKOXRMAlaJ3CKT2tSC9/8wOHXgZEd754nEbPf5HDolFiAhvT2WWRosaTO14DbrccFM
+        AXUjpn1f1Pvrr3eZX2+A6lzBb3MIBLiKJIcf5El5ijFBrVBvoosa+n4xIZRSA9hNxWR+iOP9yYoUP
+        6r6v9qQw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1lUY2B-0002Lk-0b; Thu, 08 Apr 2021 11:01:38 -0600
+        id 1lUY2A-0002Li-Bo; Thu, 08 Apr 2021 11:01:38 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1lUY26-0002JI-Jy; Thu, 08 Apr 2021 11:01:30 -0600
+        id 1lUY26-0002JL-Op; Thu, 08 Apr 2021 11:01:30 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -50,8 +50,8 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  8 Apr 2021 11:01:19 -0600
-Message-Id: <20210408170123.8788-13-logang@deltatee.com>
+Date:   Thu,  8 Apr 2021 11:01:20 -0600
+Message-Id: <20210408170123.8788-14-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210408170123.8788-1-logang@deltatee.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
@@ -65,89 +65,86 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         MYRULES_FREE,MYRULES_NO_TEXT autolearn=no autolearn_force=no
         version=3.4.2
-Subject: [PATCH 12/16] nvme-pci: Check DMA ops when indicating support for PCI P2PDMA
+Subject: [PATCH 13/16] nvme-pci: Convert to using dma_map_sg_p2pdma for p2pdma pages
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduce a supports_pci_p2pdma() operation in nvme_ctrl_ops to
-replace the fixed NVME_F_PCI_P2PDMA flag such that the dma_map_ops
-flags can be checked for PCI P2PDMA support.
+Convert to using dma_map_sg_p2pdma() for PCI p2pdma pages.
+
+This should be equivalent but allows for heterogeneous scatterlists
+with both P2PDMA and regular pages. However, P2PDMA support will be
+slightly more restricted (only dma-direct and dma-iommu are currently
+supported).
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/nvme/host/core.c |  3 ++-
- drivers/nvme/host/nvme.h |  2 +-
- drivers/nvme/host/pci.c  | 11 +++++++++--
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/nvme/host/pci.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 0896e21642be..223419454516 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3907,7 +3907,8 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid,
- 		blk_queue_flag_set(QUEUE_FLAG_STABLE_WRITES, ns->queue);
- 
- 	blk_queue_flag_set(QUEUE_FLAG_NONROT, ns->queue);
--	if (ctrl->ops->flags & NVME_F_PCI_P2PDMA)
-+	if (ctrl->ops->supports_pci_p2pdma &&
-+	    ctrl->ops->supports_pci_p2pdma(ctrl))
- 		blk_queue_flag_set(QUEUE_FLAG_PCI_P2PDMA, ns->queue);
- 
- 	ns->queue->queuedata = ns;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 07b34175c6ce..9c04df982d2c 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -473,7 +473,6 @@ struct nvme_ctrl_ops {
- 	unsigned int flags;
- #define NVME_F_FABRICS			(1 << 0)
- #define NVME_F_METADATA_SUPPORTED	(1 << 1)
--#define NVME_F_PCI_P2PDMA		(1 << 2)
- 	int (*reg_read32)(struct nvme_ctrl *ctrl, u32 off, u32 *val);
- 	int (*reg_write32)(struct nvme_ctrl *ctrl, u32 off, u32 val);
- 	int (*reg_read64)(struct nvme_ctrl *ctrl, u32 off, u64 *val);
-@@ -481,6 +480,7 @@ struct nvme_ctrl_ops {
- 	void (*submit_async_event)(struct nvme_ctrl *ctrl);
- 	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
- 	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
-+	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
- };
- 
- #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 7249ae74f71f..14f092973792 100644
+index 14f092973792..a1ed07ff38b7 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -2759,17 +2759,24 @@ static int nvme_pci_get_address(struct nvme_ctrl *ctrl, char *buf, int size)
- 	return snprintf(buf, size, "%s\n", dev_name(&pdev->dev));
+@@ -577,17 +577,6 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
+ 
  }
  
-+static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
-+{
-+	struct nvme_dev *dev = to_nvme_dev(ctrl);
-+
-+	return dma_pci_p2pdma_supported(dev->dev);
-+}
-+
- static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.name			= "pcie",
- 	.module			= THIS_MODULE,
--	.flags			= NVME_F_METADATA_SUPPORTED |
--				  NVME_F_PCI_P2PDMA,
-+	.flags			= NVME_F_METADATA_SUPPORTED,
- 	.reg_read32		= nvme_pci_reg_read32,
- 	.reg_write32		= nvme_pci_reg_write32,
- 	.reg_read64		= nvme_pci_reg_read64,
- 	.free_ctrl		= nvme_pci_free_ctrl,
- 	.submit_async_event	= nvme_pci_submit_async_event,
- 	.get_address		= nvme_pci_get_address,
-+	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
- };
+-static void nvme_unmap_sg(struct nvme_dev *dev, struct request *req)
+-{
+-	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+-
+-	if (is_pci_p2pdma_page(sg_page(iod->sg)))
+-		pci_p2pdma_unmap_sg(dev->dev, iod->sg, iod->nents,
+-				    rq_dma_dir(req));
+-	else
+-		dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+-}
+-
+ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
+ {
+ 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+@@ -600,7 +589,7 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
  
- static int nvme_dev_map(struct nvme_dev *dev)
+ 	WARN_ON_ONCE(!iod->nents);
+ 
+-	nvme_unmap_sg(dev, req);
++	dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+ 	if (iod->npages == 0)
+ 		dma_pool_free(dev->prp_small_pool, nvme_pci_iod_list(req)[0],
+ 			      iod->first_dma);
+@@ -868,14 +857,13 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+ 	if (!iod->nents)
+ 		goto out_free_sg;
+ 
+-	if (is_pci_p2pdma_page(sg_page(iod->sg)))
+-		nr_mapped = pci_p2pdma_map_sg_attrs(dev->dev, iod->sg,
+-				iod->nents, rq_dma_dir(req), DMA_ATTR_NO_WARN);
+-	else
+-		nr_mapped = dma_map_sg_attrs(dev->dev, iod->sg, iod->nents,
+-					     rq_dma_dir(req), DMA_ATTR_NO_WARN);
+-	if (!nr_mapped)
++	nr_mapped = dma_map_sg_p2pdma_attrs(dev->dev, iod->sg, iod->nents,
++				     rq_dma_dir(req), DMA_ATTR_NO_WARN);
++	if (nr_mapped < 0) {
++		if (nr_mapped != -ENOMEM)
++			ret = BLK_STS_TARGET;
+ 		goto out_free_sg;
++	}
+ 
+ 	iod->use_sgl = nvme_pci_use_sgls(dev, req);
+ 	if (iod->use_sgl)
+@@ -887,7 +875,7 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+ 	return BLK_STS_OK;
+ 
+ out_unmap_sg:
+-	nvme_unmap_sg(dev, req);
++	dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+ out_free_sg:
+ 	mempool_free(iod->sg, dev->iod_mempool);
+ 	return ret;
 -- 
 2.20.1
 
