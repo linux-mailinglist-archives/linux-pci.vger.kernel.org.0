@@ -2,210 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F69358C1E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 20:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20E8358C29
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 20:28:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232383AbhDHSYD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 14:24:03 -0400
-Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:19060 "EHLO
-        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231676AbhDHSYC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 14:24:02 -0400
-Received: from pps.filterd (m0127840.ppops.net [127.0.0.1])
-        by mx0a-002c1b01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 138ICRHY030405;
-        Thu, 8 Apr 2021 11:23:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
- subject : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=proofpoint20171006;
- bh=sMm/8wCQ5emWBlBd0qwh3UKAPvKxQVHyyLFdn/v7HLg=;
- b=S8KeCMwLMbMNOUPWVAzGCTXKR3FyQX+NxJHvZwBBM58Dm06hP2rQPvtnzfBJujeuZJA4
- 4taFw5TmNUIgjAdrsJ5hjnlMmS5Hm2E5IvgfgmXMEDklObSheVkp07DN5QBU8ectd9Gh
- c+VjVySuzz+gPaYWF/ipQB8zdAKbtgaIz3Kle8PscFFh2SOMc8QoF6dq5n8Wcg7/nM9C
- N4eyZ2MK9Bsin/FYXuv255L2bz6b9x4gSfvoXVe0CR1yH6UwDonOvLspIi+v1ygHl1Js
- vPgZpYrnGT0SuO+OtxqzQxggRwk1FvFwUhwqSrROe1y0nHz8XjkRLOIxV8QDWb6Urnqt jQ== 
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-        by mx0a-002c1b01.pphosted.com with ESMTP id 37sw981ggk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Apr 2021 11:23:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NsmzuDvjy1jpTJhMQW2ZbGDcZpe74LThBvsGS69T8tU2XK6cyMu5sz5M5QlngovKBiArRzqK/oMdncc5Mm8qTZo2WtQ9SXw4eNMoMNWhhq7JpKjDHQ5xIWncFF8ifMjFYcKL0LgoADr6ntDspFcVDC8KnQE/hO0kF9nEh2ctuhcUY01GXooUPOklpcMspQZ//X44HvT5AtT3yam7sn+/6z2GfwScuQH5oSa49+f+Ju7waoS3GFZamf4fBX0JP5z02/ffZNK6w7UO0guEimEh/PR1cCQPx9McDIMq6LTIvzjWIZi4InYCJQ2Be7RQYh1UQVK+yNLON5ma+Wdew5wajw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sMm/8wCQ5emWBlBd0qwh3UKAPvKxQVHyyLFdn/v7HLg=;
- b=NqsMxZVQ9q0/bdL57yuKXhtXZXYots/QvVjS8DqvgUuelte1+JGWspcrIOQLS5A8tSfiXTVIvpdjHmRidVm6zD3G/FsN/IJHq+BvpYGdfWj2iHxTsMhs3IoDz+jAy+CqnzI7R2G1fTGk3Q/3+Vm8nX0jRN+0e4pFE/G3uzvSLm+27hGH1GRqcd91NsTDBFFwp8/9OiIjpLmtte3t4HvITjG+hgb2S5V0nAMRK6t/rXPHaENJhFkyrIvvbzh1moR+4YPyJPrMKzQSyIFE1Ca/ogR5cyoF9CQpbTkNsRkP/D42JmGxA4C6sKVoQc+2FxL0bmHjBYydshlFhwu6HlkauA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from SN6PR02MB4543.namprd02.prod.outlook.com (2603:10b6:805:b1::24)
- by SN6PR02MB4942.namprd02.prod.outlook.com (2603:10b6:805:96::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.32; Thu, 8 Apr
- 2021 18:23:40 +0000
-Received: from SN6PR02MB4543.namprd02.prod.outlook.com
- ([fe80::7139:d6a4:cf94:c4b1]) by SN6PR02MB4543.namprd02.prod.outlook.com
- ([fe80::7139:d6a4:cf94:c4b1%4]) with mapi id 15.20.3999.034; Thu, 8 Apr 2021
- 18:23:40 +0000
-From:   Raphael Norwitz <raphael.norwitz@nutanix.com>
-To:     "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>
-Subject: [PATCH v2] PCI: merge slot and bus reset implementations
-Thread-Topic: [PATCH v2] PCI: merge slot and bus reset implementations
-Thread-Index: AQHXLKRMegmdSIbwh0yUAOjSYPt99g==
-Date:   Thu, 8 Apr 2021 18:23:40 +0000
-Message-ID: <20210408182328.12323-1-raphael.norwitz@nutanix.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.20.1
-authentication-results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=nutanix.com;
-x-originating-ip: [24.94.68.249]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d8df34df-1938-410d-688d-08d8fabb6f76
-x-ms-traffictypediagnostic: SN6PR02MB4942:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR02MB4942D66308BB2FBE9B23DF24EA749@SN6PR02MB4942.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lT2hWjVURWP7HqKvQLlc8w7wSx1qJ2WbYzspBvfHuU78phsbnb526FQytAGNMjxEN28ZYosF+67Kzg2RJs5Q0R70ICsMBmLv8jekOHECQYZLo4iG165aCHP+AXcbGoSSwvjX5zCQE7H8ylKSiPgz8by+QMtt4RJUaCNRVCgl0F1I35xePW/7xXrkMhV1RuYOfuMS6znGz8P2Mi+W85uORLUQWfhfaKgZ0xrtT0tvoxuhXy+oSMX+cg7h+V5jlM+Dv3f5tGBVp9x46Q0IgZrXVko5dnY1abSlyn5Cd36JAmzpBopPWcthkgy9LgNwnnwnQH/RRx1XeV6AQdZv2uGKgArs2j0fm397068t3nUno46gQM+6wHA3173kz80NyPAkxNj2mQVvqVoRG+BTVCXmj+2Fnuv92N2FV/IvPEXELwCORzOgL0NHaRyxdtJ7XZpNqXuVCzSXdvc6w7wtG1JA1S+53+CFZQF2iCp5r3YO1pu+2X689X1RAHjyBWR70/WPIdGEDoMe3ObOeDAHDxilGav+p9S18mlMYirpt6p3Hf4gtdkKRMhwqaUPEUJLirqqJpMfRTSaAZJ1YmCXJYuBmo48cfU8HnR47wHim1ZTxGz+vaWjFVXifj8ARBUC6TMv4nKrkCG2sPvb6d2rM2k6E6YU0XGv9266mZx2UkbdYX6O9cfMjOUokpntZdp9BcHXeOQUpjvTDQMErTLNBAa/ITVj168NrFBifVqpU/cHmTs7DzAw0QtBmoa6vQ+XUMKC
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR02MB4543.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(136003)(346002)(39860400002)(366004)(966005)(66946007)(38100700001)(2616005)(4326008)(76116006)(8676002)(66556008)(66476007)(44832011)(6506007)(86362001)(91956017)(36756003)(478600001)(64756008)(54906003)(8936002)(2906002)(6916009)(66446008)(6486002)(316002)(107886003)(1076003)(6512007)(71200400001)(26005)(5660300002)(83380400001)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?iso-8859-1?Q?VdipimDS1/MqS3dzMDCJ6IU8Hyd+sYyPuEzuRLZDu8T+ZN1m5vQB5BAvQr?=
- =?iso-8859-1?Q?smT7+5mVl8VTi0GHj3y7V0UFI76MaG1iJ4Y52layM/vINjfQOcTWg/tjvn?=
- =?iso-8859-1?Q?9dW12GKRH+hGdUiSk40gxnI+dXfCKHqISTQ1LRfkqdrTHg6BFfFC5ly9qt?=
- =?iso-8859-1?Q?T1XMn/Qao7z3inQXNGDO/0bnUWEoFZWSIU7DgNQHOtcK2iWN3TgPbNfwEs?=
- =?iso-8859-1?Q?uHs4bHnixJCfYc2e52V9KCoNJelOh5RoUhOh2f33nN3nOm2OxcTPk8Qyei?=
- =?iso-8859-1?Q?s18wb4DfTrXQe7uj0Ey902PHJAd7Z3Xn3yKxt4tYplHFfSgpjlZiFoTShN?=
- =?iso-8859-1?Q?pNkD+wGXREMqoDjhgWRvg7JgHG594SKPZXFs7k4HLGPCynm8EJ0/nva3oQ?=
- =?iso-8859-1?Q?zZH6X27PZwghFHGqw8dcytVP1UYsH/YaYKKFgSkGdnn8B/SFI7yxxl8QGy?=
- =?iso-8859-1?Q?sQjSft6NIL00f3d78gEmoAnrDWszm/fDK9Gg/BrXO6p4OmeL4kUuKEi25f?=
- =?iso-8859-1?Q?DvqKbnlH1Pe63FiBajQ3h9MUyQdL16MszaTkLNiHbvEN+M3gBdUC+en5Hx?=
- =?iso-8859-1?Q?Bn6Foz/pjB0R3NczYqkyqlz8KpX13utqNyr+Nawo5WdGAz00V8ZrTJWRVd?=
- =?iso-8859-1?Q?cTtK1QBVJejiySfenaRscw6M+h6GD3HTVIY5rGfqRgUokDVAx/YY0cbGaL?=
- =?iso-8859-1?Q?+++56q8vP1Nhj+qGbfaNSGESU5V90lKrU9NdudPpK2VWIGVsRy2PwDvyH7?=
- =?iso-8859-1?Q?lyHkZjJZqwRsT+GnEL075KErErRuCubYJFFn3JosUFKTuOQAqzCTs+9EkD?=
- =?iso-8859-1?Q?I8Kcn9qGAR80B/H+HZ6ndDzn4nFNDFd7QpzVGjvWe2ElQqewt53iHRhF6m?=
- =?iso-8859-1?Q?j6RS/Gai1clZOd1g0GL2EJdJaMY7B7HOUUeOgXfFiPaGNrD0le5RiZCMvx?=
- =?iso-8859-1?Q?nnkM2jC13mqv/ORmai3zeihDcq6vCw2fpMrGrJ9mOwtDgKcP7FFWznSEvx?=
- =?iso-8859-1?Q?bcOJbvYbxzDr4SMKsboo7EjZrUr8m2LHSMO5yykXU/KrlZh40mEe6KNQJA?=
- =?iso-8859-1?Q?BXya1uaDkOtHibi2bGwWpcdZveFaam1sPJabmWx/FmShllGuyWuxz52SmA?=
- =?iso-8859-1?Q?6WbqtG624IEQSBvwoBzAOtsVfVzf9go/Qc/WxzvPbeCL+3/BGz2TWiFqCn?=
- =?iso-8859-1?Q?FuoA9f4j0hY98ckSdUPKazPZAnTOdMkZG/k689uCks87rdZrfUk3Vn4S/1?=
- =?iso-8859-1?Q?/HvLF4Dn9BcscQBP6jDNp7mDYvfoyMiA+QbqKRa+IBScZ1ICcJLAdstRln?=
- =?iso-8859-1?Q?bkfU0TyTNsAr5Y9MN2C1txMHdblHIOUkNC8HyM/ANGDN611kgjtVY8LRqw?=
- =?iso-8859-1?Q?8J2nmpIpXi?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4543.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8df34df-1938-410d-688d-08d8fabb6f76
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2021 18:23:40.7585
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VTNdPa3nCk+Tsr1UDLzBmf/fvRC8I3ayfcV90DSLP4wL3FguT6W8wpchePH2EnATVAoc/G9SWJjCLysgRbFv3vFxWaKddgDLzwcJX5MCViA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4942
-X-Proofpoint-ORIG-GUID: 2gUrDDLyTDSiwx3MIudJEvKeefsyvdzK
-X-Proofpoint-GUID: 2gUrDDLyTDSiwx3MIudJEvKeefsyvdzK
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-08_04:2021-04-08,2021-04-08 signatures=0
-X-Proofpoint-Spam-Reason: safe
+        id S232663AbhDHS26 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 14:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232517AbhDHS25 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 14:28:57 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF51C061763
+        for <linux-pci@vger.kernel.org>; Thu,  8 Apr 2021 11:28:46 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id i6so2882656ybk.2
+        for <linux-pci@vger.kernel.org>; Thu, 08 Apr 2021 11:28:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=hFbfrV6NLQcaUFBI7qoKubPMd6hwVRmqL95jk4+jyxc=;
+        b=JBj3h6xqwlztdZoD9Dqpfp7Alwo8u054FoOK8zma9pkGeWTeuATHhjoaZNawNS9+V6
+         Tb0dfg5qd67tmw3R8nLEKrnIYOWChn0hf/JHJSKf1HDGlH5u4FFW0wRgpWmyLSvt4ajs
+         5NMl9F0QfJzNd/l72+LsejYvM3DXrFq4dHIUFzx2BzuMfxcENkc+lXht5+iKIHiJQ9jO
+         5Hv8ezegeHjGE0ZRU2sZBv0I3I9xLvPzXRtinDBJ/SSxL2hsoHBwdVVGqnvIdCCslKLV
+         FjLUh4sBAuzykaGDJG7ZoK2ZyXcz8dON+CCNISz/BBMbMLgM2CAMTit3atSJCz7eDK7b
+         N/3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=hFbfrV6NLQcaUFBI7qoKubPMd6hwVRmqL95jk4+jyxc=;
+        b=MkYossg7JNkKdpWK9Z1JynrJPQR2ieCmYpRZKbzLf0ihjgHcsV8et4FCjYplB0wwQi
+         LG7C85pYduHV0req4IvggYXLGvDgRB0+IRHUml+wCHpCREptRyAy10t/atH7cyZgfEW4
+         F09LP/6fqKjIc7+UROetPyUid8PGpVIm1AaHXF6tbgJ0+3RkGxxgsdS1jwtLsKi6GWJo
+         FJnB8GQagvSGV/NN1KaH7YhMBs8PECLdXwW4DmH2PZFenTwblk0A158oM709dNgkKPrU
+         oUNaCD1TjkiX+TQqUofF7X5fOE2I8IurPUHMXB2zOKwkznniVhtQwSe9k/6b0zZM+0Fj
+         9YdA==
+X-Gm-Message-State: AOAM533t+uo3qvk7Bp+TvvAiMIcCwQ1K6BGE+Eee1X6SyNMcNQoxAKw7
+        5281b7q8Fmm2fNQ7h7Z1bS/eIn2Unq92YE48OUo=
+X-Google-Smtp-Source: ABdhPJzp417bGfyY56r6I/HGmGdmkcvMSkgwww5nAXRa8l4TGBMnYYcrRloFTGcs6uh2r5JE+hqZHf9jDTXST4AD3dM=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:3560:8505:40a2:e021])
+ (user=samitolvanen job=sendgmr) by 2002:a25:31d5:: with SMTP id
+ x204mr13666827ybx.3.1617906525373; Thu, 08 Apr 2021 11:28:45 -0700 (PDT)
+Date:   Thu,  8 Apr 2021 11:28:25 -0700
+Message-Id: <20210408182843.1754385-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.1.295.g9ea45b61b8-goog
+Subject: [PATCH v6 00/18] Add support for Clang CFI
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Slot resets are bus resets with additional logic to prevent a device
-from being removed during the reset. Currently slot and bus resets have
-separate implementations in pci.c, complicating higher level logic. As
-discussed on the mailing list, they should be combined into a generic
-function which performs an SBR. This change adds a function,
-pci_reset_bus_function(), which first attempts a slot reset and then
-attempts a bus reset if -ENOTTY is returned, such that there is now a
-single device agnostic function to perform an SBR.
+This series adds support for Clang's Control-Flow Integrity (CFI)
+checking. With CFI, the compiler injects a runtime check before each
+indirect function call to ensure the target is a valid function with
+the correct static type. This restricts possible call targets and
+makes it more difficult for an attacker to exploit bugs that allow the
+modification of stored function pointers. For more details, see:
 
-This new function is also needed to add SBR reset quirks and therefore
-is exposed in pci.h.
+  https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
-Link: https://lkml.org/lkml/2021/3/23/911
+The first patch contains build system changes and error handling,
+and implements support for cross-module indirect call checking. The
+remaining patches address issues caused by the compiler
+instrumentation. These include fixing known type mismatches, as well
+as issues with address space confusion and cross-module function
+address equality.
 
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+These patches add support only for arm64, but I'll post patches also
+for x86_64 after we address the remaining issues there, including
+objtool support.
+
+You can also pull this series from
+
+  https://github.com/samitolvanen/linux.git cfi-v6
+
 ---
- drivers/pci/pci.c   | 19 +++++++++++--------
- include/linux/pci.h |  1 +
- 2 files changed, 12 insertions(+), 8 deletions(-)
+Changes in v6:
+ - Added temporary variables and moved assembly constraints to a
+   separate line based on Mark's suggestions.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 16a17215f633..a8f8dd588d15 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4982,6 +4982,15 @@ static int pci_dev_reset_slot_function(struct pci_de=
-v *dev, int probe)
- 	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
- }
-=20
-+int pci_reset_bus_function(struct pci_dev *dev, int probe)
-+{
-+	int rc =3D pci_dev_reset_slot_function(dev, probe);
-+
-+	if (rc !=3D -ENOTTY)
-+		return rc;
-+	return pci_parent_bus_reset(dev, probe);
-+}
-+
- static void pci_dev_lock(struct pci_dev *dev)
- {
- 	pci_cfg_access_lock(dev);
-@@ -5102,10 +5111,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
- 	rc =3D pci_pm_reset(dev, 0);
- 	if (rc !=3D -ENOTTY)
- 		return rc;
--	rc =3D pci_dev_reset_slot_function(dev, 0);
--	if (rc !=3D -ENOTTY)
--		return rc;
--	return pci_parent_bus_reset(dev, 0);
-+	return pci_reset_bus_function(dev, 0);
- }
- EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
-=20
-@@ -5135,13 +5141,10 @@ int pci_probe_reset_function(struct pci_dev *dev)
- 	if (rc !=3D -ENOTTY)
- 		return rc;
- 	rc =3D pci_pm_reset(dev, 1);
--	if (rc !=3D -ENOTTY)
--		return rc;
--	rc =3D pci_dev_reset_slot_function(dev, 1);
- 	if (rc !=3D -ENOTTY)
- 		return rc;
-=20
--	return pci_parent_bus_reset(dev, 1);
-+	return pci_reset_bus_function(dev, 1);
- }
-=20
- /**
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97b77..979d54335ac1 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1228,6 +1228,7 @@ int pci_probe_reset_bus(struct pci_bus *bus);
- int pci_reset_bus(struct pci_dev *dev);
- void pci_reset_secondary_bus(struct pci_dev *dev);
- void pcibios_reset_secondary_bus(struct pci_dev *dev);
-+int pci_reset_bus_function(struct pci_dev *dev, int probe);
- void pci_update_resource(struct pci_dev *dev, int resno);
- int __must_check pci_assign_resource(struct pci_dev *dev, int i);
- int __must_check pci_reassign_resource(struct pci_dev *dev, int i, resourc=
-e_size_t add_size, resource_size_t align);
---=20
-2.20.1
+Changes in v5:
+ - Changed module.lds.S to only include <asm/page.h> when CFI is
+   enabled to fix the MIPS build.
+ - Added a patch that fixes dynamic ftrace with CFI on arm64.
+
+Changes in v4:
+ - Per Mark's suggestion, dropped __pa_function() and renamed
+   __va_function() to function_nocfi().
+ - Added a comment to function_nocfi() to explain what it does.
+ - Updated the psci patch to use an intermediate variable for
+   the physical address for clarity.
+
+Changes in v3:
+ - Added a patch to change list_sort() callers treewide to use
+   const pointers instead of simply removing the internal casts.
+ - Changed cleanup_symbol_name() to return bool.
+ - Changed module.lds.S to drop the .eh_frame section only with
+   CONFIG_CFI_CLANG.
+ - Switched to synchronize_rcu() in update_shadow().
+
+Changes in v2:
+ - Fixed .text merging in module.lds.S.
+ - Added WARN_ON_FUNCTION_MISMATCH() and changed kernel/thread.c
+   and kernel/workqueue.c to use the macro instead.
+
+
+Sami Tolvanen (18):
+  add support for Clang CFI
+  cfi: add __cficanonical
+  mm: add generic function_nocfi macro
+  module: ensure __cfi_check alignment
+  workqueue: use WARN_ON_FUNCTION_MISMATCH
+  kthread: use WARN_ON_FUNCTION_MISMATCH
+  kallsyms: strip ThinLTO hashes from static functions
+  bpf: disable CFI in dispatcher functions
+  treewide: Change list_sort to use const pointers
+  lkdtm: use function_nocfi
+  psci: use function_nocfi for cpu_resume
+  arm64: implement function_nocfi
+  arm64: use function_nocfi with __pa_symbol
+  arm64: add __nocfi to functions that jump to a physical address
+  arm64: add __nocfi to __apply_alternatives
+  arm64: ftrace: use function_nocfi for ftrace_call
+  KVM: arm64: Disable CFI for nVHE
+  arm64: allow CONFIG_CFI_CLANG to be selected
+
+ Makefile                                      |  17 +
+ arch/Kconfig                                  |  45 +++
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/memory.h               |  16 +
+ arch/arm64/include/asm/mmu_context.h          |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c     |   3 +-
+ arch/arm64/kernel/alternative.c               |   4 +-
+ arch/arm64/kernel/cpu-reset.h                 |  10 +-
+ arch/arm64/kernel/cpufeature.c                |   4 +-
+ arch/arm64/kernel/ftrace.c                    |   2 +-
+ arch/arm64/kernel/psci.c                      |   3 +-
+ arch/arm64/kernel/smp_spin_table.c            |   3 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |   6 +-
+ arch/arm64/kvm/vgic/vgic-its.c                |   8 +-
+ arch/arm64/kvm/vgic/vgic.c                    |   3 +-
+ block/blk-mq-sched.c                          |   3 +-
+ block/blk-mq.c                                |   3 +-
+ drivers/acpi/nfit/core.c                      |   3 +-
+ drivers/acpi/numa/hmat.c                      |   3 +-
+ drivers/clk/keystone/sci-clk.c                |   4 +-
+ drivers/firmware/psci/psci.c                  |   7 +-
+ drivers/gpu/drm/drm_modes.c                   |   3 +-
+ drivers/gpu/drm/i915/gt/intel_engine_user.c   |   3 +-
+ drivers/gpu/drm/i915/gvt/debugfs.c            |   2 +-
+ drivers/gpu/drm/i915/selftests/i915_gem_gtt.c |   3 +-
+ drivers/gpu/drm/radeon/radeon_cs.c            |   4 +-
+ .../hw/usnic/usnic_uiom_interval_tree.c       |   3 +-
+ drivers/interconnect/qcom/bcm-voter.c         |   2 +-
+ drivers/md/raid5.c                            |   3 +-
+ drivers/misc/lkdtm/usercopy.c                 |   2 +-
+ drivers/misc/sram.c                           |   4 +-
+ drivers/nvme/host/core.c                      |   3 +-
+ .../controller/cadence/pcie-cadence-host.c    |   3 +-
+ drivers/spi/spi-loopback-test.c               |   3 +-
+ fs/btrfs/raid56.c                             |   3 +-
+ fs/btrfs/tree-log.c                           |   3 +-
+ fs/btrfs/volumes.c                            |   3 +-
+ fs/ext4/fsmap.c                               |   4 +-
+ fs/gfs2/glock.c                               |   3 +-
+ fs/gfs2/log.c                                 |   2 +-
+ fs/gfs2/lops.c                                |   3 +-
+ fs/iomap/buffered-io.c                        |   3 +-
+ fs/ubifs/gc.c                                 |   7 +-
+ fs/ubifs/replay.c                             |   4 +-
+ fs/xfs/scrub/bitmap.c                         |   4 +-
+ fs/xfs/xfs_bmap_item.c                        |   4 +-
+ fs/xfs/xfs_buf.c                              |   6 +-
+ fs/xfs/xfs_extent_busy.c                      |   4 +-
+ fs/xfs/xfs_extent_busy.h                      |   3 +-
+ fs/xfs/xfs_extfree_item.c                     |   4 +-
+ fs/xfs/xfs_refcount_item.c                    |   4 +-
+ fs/xfs/xfs_rmap_item.c                        |   4 +-
+ include/asm-generic/bug.h                     |  16 +
+ include/asm-generic/vmlinux.lds.h             |  20 +-
+ include/linux/bpf.h                           |   4 +-
+ include/linux/cfi.h                           |  41 +++
+ include/linux/compiler-clang.h                |   3 +
+ include/linux/compiler_types.h                |   8 +
+ include/linux/init.h                          |   6 +-
+ include/linux/list_sort.h                     |   7 +-
+ include/linux/mm.h                            |  10 +
+ include/linux/module.h                        |  13 +-
+ include/linux/pci.h                           |   4 +-
+ init/Kconfig                                  |   2 +-
+ kernel/Makefile                               |   4 +
+ kernel/cfi.c                                  | 329 ++++++++++++++++++
+ kernel/kallsyms.c                             |  55 ++-
+ kernel/kthread.c                              |   3 +-
+ kernel/module.c                               |  43 +++
+ kernel/workqueue.c                            |   2 +-
+ lib/list_sort.c                               |  17 +-
+ lib/test_list_sort.c                          |   3 +-
+ net/tipc/name_table.c                         |   4 +-
+ scripts/Makefile.modfinal                     |   2 +-
+ scripts/module.lds.S                          |  19 +-
+ 75 files changed, 760 insertions(+), 113 deletions(-)
+ create mode 100644 include/linux/cfi.h
+ create mode 100644 kernel/cfi.c
+
+
+base-commit: e0a472fffe435af52ea4e21e1e0001c5c8ffc6c7
+-- 
+2.31.1.295.g9ea45b61b8-goog
+
