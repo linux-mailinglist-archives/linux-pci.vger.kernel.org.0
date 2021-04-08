@@ -2,77 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C07E5358728
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 16:29:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76AE635880D
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Apr 2021 17:19:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231830AbhDHO3P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Apr 2021 10:29:15 -0400
-Received: from mail-oo1-f49.google.com ([209.85.161.49]:33555 "EHLO
-        mail-oo1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbhDHO3O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 10:29:14 -0400
-Received: by mail-oo1-f49.google.com with SMTP id i25-20020a4aa1190000b02901bbd9429832so559749ool.0;
-        Thu, 08 Apr 2021 07:29:02 -0700 (PDT)
+        id S232187AbhDHPTO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Apr 2021 11:19:14 -0400
+Received: from mail-oo1-f46.google.com ([209.85.161.46]:46624 "EHLO
+        mail-oo1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232119AbhDHPTI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Apr 2021 11:19:08 -0400
+Received: by mail-oo1-f46.google.com with SMTP id 125-20020a4a1a830000b02901b6a144a417so578695oof.13;
+        Thu, 08 Apr 2021 08:18:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H04usHloaVg6tf6A8ybuI1YTbDpURH0NcMFvOKIlRQU=;
-        b=oX3m8+x+oj3Dr2nMmjzQu02VqXj03kfelebUinN9mBHLAgqXYJF6fZXQUNL0YJjO+x
-         PHkjtcoO9yzmCbaIiDy9YTD1S9t6sSfKtWZ+qf6ncnz+wHJTsx/C1WGvXff7jpJ6MfTw
-         0Zbbbxu7LbxJzn3PKTbdCbYNqkfUSmVLIBsBOlGPDTx1sVdRbii7pfYk82EzKGKA+eDG
-         gtsnIhhKKd8bduzYfnY4J086Negt0ZaG/k5Hjmc048n6mdBIAMLCldk98UtnlgkL0POX
-         Eg7Qwr8RDEbWI5njTQubc6Lc1rIov7um6A2ozML2hrv0Y8t5RlbF5ojCGwG7iKOJkhMc
-         uNtA==
-X-Gm-Message-State: AOAM530ofJQ8rmwhWVTmb52gSrvzLSli9thS/0d4gm6u3hdPbCzMyI8w
-        npmmk99F1+YTaMKcWf4MeeAMTmZLnw8IMtstK5A=
-X-Google-Smtp-Source: ABdhPJyX+7fnmLnCETM7MrmUY9bylTJxEFAdLApno+5ZbW7NFaljU1VN6MCtAKB8dVUH1FdOzdvfB7Y43869vOkk1+Y=
-X-Received: by 2002:a4a:d48b:: with SMTP id o11mr7726147oos.2.1617892142020;
- Thu, 08 Apr 2021 07:29:02 -0700 (PDT)
+        bh=NBesEj2fSrr43l9kt9D4AtU33PrnTTnDZIAdB81qk+I=;
+        b=B3qsHKK2TooeVj9GZujny0vQo3dEiZ/gZz3nC9nzTfA6UVO6gZ+yKe6uHvv4EnvwyD
+         gXdSTrIN5WEjyTM7Rx9DMFPyiyXoG47kyeB9nSdSri2Vmhh5Qn5mUTMDMvjVtWxswdLS
+         kG46vCHxPRuJMcl3aYlWoE8vaLTIv/5WmuAIxKz2r1BjjqlcCfKiilA44AYKcCfv80Ns
+         m1lFtL2avxe/f0SysLxToEi/mtD07ueJY6dvxwqHv4dsQV8ohzfSQ1OFLHZIAKz4l/LH
+         RGuJtcXcG66IbKMf1X1FYhupa2lQzwWWq4S1I5+usuK6H8nd14b2poTzmVJysOwxe3Rg
+         P7MQ==
+X-Gm-Message-State: AOAM531OQMHU5I+jptwEeTjSZYhLCiW+r5B/oKeo2Y2rNUmVExmSpxQH
+        Pix5H/ZsoI6D55sLx/lNEJiEetLujcAkQG9ltPG1l7HF
+X-Google-Smtp-Source: ABdhPJwVEMJhK8+sgSmB9cm72hb4M6W0oHnJovlQTNy7RP187o2yTsTnPnRWXrah2/JAZTIkhMHC1ggeWpqDECdKj+o=
+X-Received: by 2002:a4a:d48b:: with SMTP id o11mr7919111oos.2.1617895137220;
+ Thu, 08 Apr 2021 08:18:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <1616846904-25719-1-git-send-email-tanxiaofei@huawei.com>
-In-Reply-To: <1616846904-25719-1-git-send-email-tanxiaofei@huawei.com>
+References: <b411af88-5049-a1c6-83ac-d104a1f429be@huawei.com>
+In-Reply-To: <b411af88-5049-a1c6-83ac-d104a1f429be@huawei.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 8 Apr 2021 16:28:51 +0200
-Message-ID: <CAJZ5v0jNktGd+dPZG-1ui3qZt9GZH5AbTae9uQBQCWYMj-y+VA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] acpi: fix some coding style issues
-To:     Xiaofei Tan <tanxiaofei@huawei.com>
+Date:   Thu, 8 Apr 2021 17:18:46 +0200
+Message-ID: <CAJZ5v0j2a803ye6KYzM9dZ_inCTqiwmN7UvAdYeynk+A9F97Fg@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI / hotplug / PCI: fix memory leak in enable_slot()
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>, linuxarm@openeuler.org
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linfeilong <linfeilong@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 27, 2021 at 1:11 PM Xiaofei Tan <tanxiaofei@huawei.com> wrote:
+On Thu, Mar 25, 2021 at 8:27 AM Zhiqiang Liu <liuzhiqiang26@huawei.com> wrote:
 >
-> Fix some coding style issues reported by checkpatch.pl.
-> Only cleanup and no function changes.
+> From: Feilong Lin <linfeilong@huawei.com>
 >
-> Differences from v2 to v3:
-> - Remove the modifications that may cause function change.
+> In enable_slot() in drivers/pci/hotplug/acpiphp_glue.c, if pci_get_slot()
+> will return NULL, we will do not set SLOT_ENABLED flag of slot. if one
+> device is found by calling pci_get_slot(), its reference count will be
+> increased. In this case, we did not call pci_dev_put() to decrement the
+> its reference count, the memory of the device (struct pci_dev type) will
+> leak.
 >
-> Differences from v1 to v2:
-> - Add subsystem and module name in the name of patch 05/15.
-> - Change to use more proper module name for some patch names.
+> Fix it by calling pci_dev_put() to decrement its reference count after that
+> pci_get_slot() returns a PCI device.
 >
-> Xiaofei Tan (12):
->   ACPI: APD: fix a block comment align issue
->   ACPI: processor: fix some coding style issues
->   ACPI: ipmi: remove useless return statement for void function
->   ACPI: LPSS: add a missed blank line after declarations
->   ACPI: acpi_pad: add a missed blank line after declarations
->   ACPI: battery: fix some coding style issues
->   ACPI: button: fix some coding style issues
->   ACPI: CPPC: fix some coding style issues
->   ACPI: custom_method: fix a coding style issue
->   ACPI: PM: add a missed blank line after declarations
->   ACPI: sysfs: fix some coding style issues
->   ACPI: dock: fix some coding style issues
+> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> --
+> v2: rewrite subject and commit log as suggested by Bjorn Helgaas.
 
-All applied as 5.13 material, thanks!
+The fix is correct AFAICS, so
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Bjorn, has this been applied already?  If not, do you want me to take
+it or are you going to queue it up yourself?
+
+> ---
+>  drivers/pci/hotplug/acpiphp_glue.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index 3365c93abf0e..f031302ad401 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -533,6 +533,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+>                         slot->flags &= ~SLOT_ENABLED;
+>                         continue;
+>                 }
+> +               pci_dev_put(dev);
+>         }
+>  }
+>
+> --
+> 2.19.1
+>
