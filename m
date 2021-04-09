@@ -2,162 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D45EC3598C8
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 11:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6025E359941
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 11:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233087AbhDIJJB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Apr 2021 05:09:01 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:16502 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232276AbhDIJI5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Apr 2021 05:08:57 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FGsg719SdzPnx8;
-        Fri,  9 Apr 2021 17:05:55 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.498.0; Fri, 9 Apr 2021 17:08:33 +0800
-From:   Qi Liu <liuqi115@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <zhangshaokun@hisilicon.com>
-Subject: [PATCH v2 2/2] docs: perf: Add description for HiSilicon PCIe PMU driver
-Date:   Fri, 9 Apr 2021 17:05:57 +0800
-Message-ID: <1617959157-22956-3-git-send-email-liuqi115@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1617959157-22956-1-git-send-email-liuqi115@huawei.com>
-References: <1617959157-22956-1-git-send-email-liuqi115@huawei.com>
+        id S231621AbhDIJcO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Apr 2021 05:32:14 -0400
+Received: from mout.web.de ([217.72.192.78]:41525 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231402AbhDIJcN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Apr 2021 05:32:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1617960720;
+        bh=mV7Gf0E4pKSxCBiYk5/r+b0Y2W8Sg8IWSbkx0NVisD4=;
+        h=X-UI-Sender-Class:Subject:From:To:References:Date:In-Reply-To;
+        b=POdMu8lLmhlvxwlvxXGZKhsjMH+UApJJs2/8lpXkL7r+e0k1CjQeqc4nizYH9OFwz
+         H5q0sshhxZPYWONDawoA5vD7wfuJ1TRB8PzuFB0F312VoTDQyDKY9XZ6bOI4oyfG0M
+         HTBiuu3bxGZG/20CpGkzFTyr8Nb2epcWaOygT32w=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.2.111] ([178.12.13.154]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M8iH2-1lPJlM1bdk-00C9w1; Fri, 09
+ Apr 2021 11:26:56 +0200
+Subject: QCA6174 pcie wifi: Add pci quirks
+From:   Ingmar Klein <ingmar_klein@web.de>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <d74205a4-8a69-c383-e265-1ed5b8508422@web.de>
+Message-ID: <08982e05-b6e8-5a8d-24ab-da1488ee50a8@web.de>
+Date:   Fri, 9 Apr 2021 11:26:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+In-Reply-To: <d74205a4-8a69-c383-e265-1ed5b8508422@web.de>
+Content-Type: multipart/mixed;
+ boundary="------------F1B74CA691FACCFBE3B85674"
+X-Provags-ID: V03:K1:chun0BMzlWK90Q9n2LVfo5mWcWjCg5VxjPKy81Az0Ifu/dlPx7S
+ vduCgChCREtGnT8EMmfMFiO61cdz3UF4ljHeiEX9i+mUekkqSrf/ntTFuq2G9uWXqFaFqLw
+ 89QxxH899CORXezOwnywKVPV/EtsMmkVx6cQ7DxaNc/tzM03lh75IKfQll7hZtQyfSL5T9o
+ +QsD5wbNAZXLgabu9oTyA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sFKvg7aMoQc=:/b78TfJ2dxpfGAcXgytJ02
+ bnHe9yua8++thjRFeaa8qJxv8Lv+N73yu/pe2TSTdkJmh08XnybcFNkMu5gfcodwpXEsRrmj/
+ AgF+9rhKN3XdWTtGZZzn9/4ScjRzPykjDzUHl6U/slnnj/Rprbkqb9hBhkrxHSKYp2eKc75kz
+ poi43Uf59tQifxYtWMEIjTM+qrppqa7zECDXB4JqJurFQz0PE974R1U5zLb08p0BFtUIUYaBi
+ XmIuxpEOna12GL/LL3+lh3i3TNHFfPXTTGQfRWs25lBNxjheBRNYCs1akNMI8YYmSkDUuhn1r
+ LVXmfq5UrYNdJnal+tnf08683fR89Q6XAUftn/tmR0HRt/fHqBs8pwXqID0W2KSSB8BECBybD
+ WHWplUgcXRk3Sffzi6YA2F3qNMC9G8J7M2Bjj5xt82MVlh0dkWTtXKobYK5hyJKUxrILVMWKe
+ ZH3N3enE4vf1KzKfg9nM3RiAvLQCQZ2ku9i3qZTdHvL5s5iFVCol1EOHutbQuhq/yQjet3X7a
+ Z6KrlSGhHTBvl/uFfuEZeo0TS65kLz1BGRztyZ1Qq+cmztIreydOMUavzrF9H4D/3e11VEclW
+ gbxXZMmLHQvcrSjM5pTAZr8rSHFzTk5y+rSIlQAg+smw9ancXfKYPQKIwXmftKSE/TpsfDGzC
+ N5HwalFx7E4f9p0oscOZE3yhx2fFHbPzpcmFEpmnTAiMFJj79mvbFjD2HjFHpgudTU0eNGkps
+ Eg8HtWkOxSz9hWgC4zLzdBNqvbDPtYqi6g1rYey4YpvvD/nO1hg2kbeTJqE6qxj8wxUffsyX2
+ X/cSmgsaTNAOIVjfYEgFt1hxIVMV6BCteJGpNrkI7ggxC8vAlAPUb2sQU2LknDQYpOtV4pwNe
+ Jw8CWpjN27l8FxMMKMjYjuyn4Gm1Or8xkY77zsZrM1ZafMtW45kfYKvZAD4P0l4740XhkwS8t
+ 5AgWctSr7H3nYb2WS4gbIb7wWrPPgZX2rXxQVKuh+frQ7mtXjfHVy20V0BzYTyyhnQZ0tQfq3
+ mT94ST2kSRYaU4V/FAOtDr/0+yAw33DYWQe3xtoLg0uSQ+WmnJtrxtxugpQvy2xqhY1UlSz1V
+ GZahHuuqTWazZScmvAoSddQaNG2memk2O/0Zc6y6xfSQeKEgVtaR8HJa2sl1k4LX2lGTKewcN
+ Wdvp7uvamrKh6QfAvjP438iiPvdK1SclKRPH2oYLY8hNyPob8a3gQFKfGaZpZGLZhOUIE=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported on
-HiSilicon HIP09 platform. Document it to provide guidance on how to
-use it.
+This is a multi-part message in MIME format.
+--------------F1B74CA691FACCFBE3B85674
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
----
+Edit: Retry, as I did not consider, that my mail-client would make this
+party html.
 
- Documentation/admin-guide/perf/hisi-pcie-pmu.rst | 104 +++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+Dear maintainers,
+I recently encountered an issue on my Proxmox server system, that
+includes a Qualcomm QCA6174 m.2 PCIe wifi module.
+https://deviwiki.com/wiki/AIRETOS_AFX-QCA6174-NX
 
-diff --git a/Documentation/admin-guide/perf/hisi-pcie-pmu.rst b/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
-new file mode 100644
-index 0000000..2084b53
---- /dev/null
-+++ b/Documentation/admin-guide/perf/hisi-pcie-pmu.rst
-@@ -0,0 +1,104 @@
-+================================================
-+HiSilicon PCIe Performance Monitoring Unit (PMU)
-+================================================
-+
-+HiSilicon PCIe Performance Monitoring Unit (PMU) is a PCIe Root Complex
-+integrated End Point (RCiEP) device. On Hip09, each PCIe Core has a PMU RCiEP
-+to monitor multi Root Ports and all Endpoints downstream these Root Ports.
-+
-+HiSilicon PCIe PMU is supported to collect performance data of PCIe bus, such
-+as: bandwidth, latency etc.
-+
-+
-+HiSilicon PCIe PMU driver
-+=========================
-+
-+The PCIe PMU driver registers a perf PMU with the name of its sicl-id and PCIe
-+Core id.::
-+
-+  /sys/bus/event_source/hisi_pcie<sicl>_<core>
-+
-+PMU driver provides description of available events and filter options in sysfs,
-+see /sys/bus/event_source/devices/hisi_pcie<sicl>_<core>.
-+
-+The "format" directory describes all formats of the config (events) and config1
-+(filter options) fields of the perf_event_attr structure. The "events" directory
-+describes all documented events shown in perf list.
-+
-+The "identifier" sysfs file allows users to identify the version of the
-+PMU hardware device.
-+
-+The "bus" sysfs file allows users to get the bus number of Root Ports
-+monitored by PMU.
-+
-+Example usage of perf::
-+
-+  $# perf list
-+  hisi_pcie0_0/bw_rx/ [kernel PMU event]
-+  ------------------------------------------
-+
-+  $# perf stat -e hisi_pcie0_0/bw_rx/ sleep 5
-+
-+The current driver does not support sampling. So "perf record" is unsupported.
-+Also attach to a task is unsupported for PCIe PMU.
-+
-+Filter options
-+--------------
-+
-+1. Target filter
-+PMU could only monitor the performance of traffic downstream target Root Ports
-+or downstream target Endpoint. PCIe PMU driver support "port" and "bdf"
-+interfaces for users, and these two interfaces aren't supported at the same
-+time.
-+
-+-port
-+"port" filter can be used in all PCIe PMU events, target Root Port can be
-+selected by configuring the 16-bits-bitmap "port". Multi ports can be selected
-+for AP-layer-events, and only one port can be selected for TL/DL-layer-events.
-+
-+For example, if target Root Port is 0000:00:00.0 (x8 lanes), bit0 of bitmap
-+should be set, port=0x1; if target Root Port is 0000:00:04.0 (x4 lanes),
-+bit8 is set, port=0x100; if these two Root Ports are both monitored, port=0x101.
-+
-+Example usage of perf::
-+
-+  $# perf stat -e hisi_pcie0_0/bw_rx,port=0x1/ sleep 5
-+
-+-bdf
-+
-+"bdf" filter can only be used in bandwidth events, target Endpoint is selected
-+by configuring BDF to "bdf". Counter only counts the bandwidth of message
-+requested by target Endpoint.
-+
-+For example, "bdf=0x3900" means BDF of target Endpoint is 0000:39:00.0.
-+
-+Example usage of perf::
-+
-+  $# perf stat -e hisi_pcie0_0/bw_rx,bdf=0x3900/ sleep 5
-+
-+2. Trigger filter
-+Event statistics start when the first time TLP length is greater/smaller
-+than trigger condition. You can set the trigger condition by writing "trig_len",
-+and set the trigger mode by writing "trig_mode". This filter can only be used
-+in bandwidth events.
-+
-+For example, "trig_len=4" means trigger condition is 2^4 DW, "trig_mode=0"
-+means statistics start when TLP length > trigger condition, "trig_mode=1"
-+means start when TLP length < condition.
-+
-+Example usage of perf::
-+
-+  $# perf stat -e hisi_pcie0_0/bw_rx,trig_len=0x4,trig_mode=1/ sleep 5
-+
-+3. Threshold filter
-+Counter counts when TLP length within the specified range. You can set the
-+threshold by writing "thr_len", and set the threshold mode by writing
-+"thr_mode". This filter can only be used in bandwidth events.
-+
-+For example, "thr_len=4" means threshold is 2^4 DW, "thr_mode=0" means
-+counter counts when TLP length >= threshold, and "thr_mode=1" means counts
-+when TLP length < threshold.
-+
-+Example usage of perf::
-+
-+  $# perf stat -e hisi_pcie0_0/bw_rx,thr_len=0x4,thr_mode=1/ sleep 5
--- 
-2.8.1
+On system boot and subsequent virtual machine start (with passed-through
+QCA6174), the VM would just freeze/hang, at the point where the ath10k
+driver loads.
+Quick search in the proxmox related topics, brought me to the following
+discussion, which suggested a PCI quirk entry for the QCA6174 in the kerne=
+l:
+https://forum.proxmox.com/threads/pcie-passthrough-freezes-proxmox.27513/
 
+I then went ahead, got the Proxmox kernel source (v5.4.106) and applied
+the attached patch.
+Effect was as hoped, that the VM hangs are now gone. System boots and
+runs as intended.
+
+Judging by the existing quirk entries for Atheros, I would think, that
+my proposed "fix" could be included in the vanilla kernel.
+As far as I saw, there is no entry yet, even in the latest kernel sources.
+
+Thank you very much!
+Best regards,
+Ingmar
+
+--------------F1B74CA691FACCFBE3B85674
+Content-Type: text/plain; charset=UTF-8;
+ name="qualcomm_qca6174_add_pci_quirks.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="qualcomm_qca6174_add_pci_quirks.patch"
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jIGIvZHJpdmVycy9wY2kvcXVpcmtz
+LmMKaW5kZXggNzA2ZjI3YTg2YThlLi5lY2ZlODBlYzViOWMgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvcGNpL3F1aXJrcy5jCisrKyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jCkBAIC0zNTg0LDYg
+KzM1ODQsNyBAQCBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9BVEhF
+Uk9TLCAweDAwMzIsIHF1aXJrX25vX2J1c19yZXNldCk7CiBERUNMQVJFX1BDSV9GSVhVUF9I
+RUFERVIoUENJX1ZFTkRPUl9JRF9BVEhFUk9TLCAweDAwM2MsIHF1aXJrX25vX2J1c19yZXNl
+dCk7CiBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9BVEhFUk9TLCAw
+eDAwMzMsIHF1aXJrX25vX2J1c19yZXNldCk7CiBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIo
+UENJX1ZFTkRPUl9JRF9BVEhFUk9TLCAweDAwMzQsIHF1aXJrX25vX2J1c19yZXNldCk7CitE
+RUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9BVEhFUk9TLCAweDAwM2Us
+IHF1aXJrX25vX2J1c19yZXNldCk7CiAKIC8qCiAgKiBSb290IHBvcnQgb24gc29tZSBDYXZp
+dW0gQ044eHh4IGNoaXBzIGRvIG5vdCBzdWNjZXNzZnVsbHkgY29tcGxldGUgYSBidXMK
+--------------F1B74CA691FACCFBE3B85674--
