@@ -2,76 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2C2835A3EB
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 18:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BABE435A43C
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 19:00:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233929AbhDIQq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Apr 2021 12:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44636 "EHLO mail.kernel.org"
+        id S232642AbhDIRAa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Apr 2021 13:00:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232990AbhDIQq1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Apr 2021 12:46:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B65EF610A7;
-        Fri,  9 Apr 2021 16:46:13 +0000 (UTC)
+        id S229665AbhDIRA3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Apr 2021 13:00:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 88E1E610CA;
+        Fri,  9 Apr 2021 17:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617986774;
-        bh=UQn1oy9ovI4wcnd7hZW7lUvbYomqZrBjvcbkP9zVz8M=;
+        s=k20201202; t=1617987616;
+        bh=NcMu3K5s+EstN7YGbfSrZEaN+hQc8nD73JtF3kYhCn0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hJqXuthM+urxzSEEUmo18nHrBsBJKJx61gmZHfvC7ayobxOz3yTG1IBURdFRtk9ly
-         R7I5jgHmipy3w5rxg6IElx4X0MnYvW66QmD9xa0Tl9NDdv0VTNeMUIbv5X/Al70veg
-         lnCwRwLLyplYP5nJ+KHa53phA2v9d1pIAwCHXVRGFmHYXmOxQ1wo8rKfWUYbw/xMJD
-         yQuXKJ/LV5XNm3QvveTAFYllmCep3Qdo0tZ147QABIBhpoOdwqg4djwtJM8k5kMlak
-         9DOVQqv2tnJru/wS4sZg6O9uD5WwzE3Nm3wL+7LflCV9fB1KfeYlNCpAnGVX/IAge8
-         F0bCCHWybD7QA==
-Date:   Fri, 9 Apr 2021 11:46:12 -0500
+        b=u87IevmXQVwdtN8T4HwxhlKLVxb1XMWubwx2vpzRrCOXIvXiYWovubRituAtHEFuu
+         S1k5uETe3LqxWN9fZKj3591AFUblCTOYCqEE7QTCi1bCZva71e5M6+nykR7dKRU471
+         PGiU7NkzjLq1aMazRw0BOgugWtSvyRVLZ0tRGd9whfLolZ75gQLHfXe0l08yjQO21W
+         PuQFBkvP8fvWF2ozg4OT8Itg5XdYYBGcTPQQzBwB1E6NZ/2f1th1I8listNB2JqHt/
+         13DCu0NLeQ/kCaHhYTE4XQ3SYOAL+OjR8rBlTkuT7QQNlLqTAc/uXXhnt7wC8FiFfg
+         pYD1CB+2uvYKw==
+Date:   Fri, 9 Apr 2021 12:00:15 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Raphael Norwitz <raphael.norwitz@nutanix.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>,
-        Alay Shah <alay.shah@nutanix.com>,
-        Suresh Gumpula <suresh.gumpula@nutanix.com>
-Subject: Re: [PATCH] PCI: Delay after FLR of Intel DC P4510 NVMe
-Message-ID: <20210409164612.GA2037722@bjorn-Precision-5520>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
+        Andrey Grodzovsky <Andrey.Grodzovsky@amd.com>
+Subject: Re: Are back to back PCIe BAR allocations supported by Linux?
+Message-ID: <20210409170015.GA2038290@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210408190521.16897-1-raphael.norwitz@nutanix.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <30b3cc23-75db-a2f7-cf1d-e02182db8be3@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 07:05:27PM +0000, Raphael Norwitz wrote:
-> Like the Intel DC P3700 NVMe, the Intel P4510 NVMe exhibits a timeout
-> failure when the driver tries to interact with the device to soon after
-> an FLR. The same reset quirk the P3700 uses also resolves the failure
-> for the P4510, so this change introduces the same reset quirk for the
-> P4510.
+On Thu, Apr 01, 2021 at 02:03:34PM +0200, Christian König wrote:
+> Hello everyone,
 > 
-> Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alay Shah <alay.shah@nutanix.com>
-> Signed-off-by: Suresh Gumpula <suresh.gumpula@nutanix.com>
-> Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-
-Applied to pci/virtualization for v5.13, thanks!
-
-> ---
->  drivers/pci/quirks.c | 1 +
->  1 file changed, 1 insertion(+)
+> we recently had a bug report of a system which works fine when a PCIe
+> hotplug device is connected on boot, but fails to initialize if those device
+> are disconnected and then reconnected again.
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 653660e3ba9e..5a8c059b848d 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3922,6 +3922,7 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  		reset_ivb_igd },
->  	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
->  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
-> +	{ PCI_VENDOR_ID_INTEL, 0x0a54, delay_250ms_after_flr },
->  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->  		reset_chelsio_generic_dev },
->  	{ 0 }
-> -- 
-> 2.20.1
+> During investigation I've found that Linux isn't able to assign the BARs of
+> the device correctly while reconnecting. The problem seems to be that the
+> Linux PCI code doesn't seem to use back to back BAR allocations.
+> 
+> Now what's back to back BAR allocation? Let's assume you have two devices
+> with a 256MiB BAR and a 2MiB BAR each behind a common upstream bridge.
+> 
+> The configuration Linux seems to use is the following:
+> Device A - 256MiB BAR
+> Device A -     2MiB BAR
+> Padding     254MiB
+> Device B - 256MiB BAR
+> Device B -     2MIB BAR
+> 
+> With padding this results in at least 770MiB address space requirement for
+> the common upstream bridge, with alignment this is probably more like 1GiB.
+> 
+> The BIOS on the other hand seems to be capable of configuring the BARs like
+> this:
+> 
+> Device A - 256MiB BAR
+> Device A -     2MiB BAR
+> Padding     252MiB
+> Device B -     2MIB BAR
+> Device B - 256MiB BAR
+> 
+> The result is that you only need 768MiB address space for the upstream
+> bridge which then perfectly fits into what is assigned for hotplug here.
+> 
+> Is that already supported by the Linux PCIe code? If yes then how? I've
+> tried to read a bit into the BAR allocation code, but it is kind of hard to
+> understand.
+
+I'm sorry that I don't have a ready answer.  The Linux resource
+allocation code is indeed very difficult to understand.  I'm quite
+sure it is incapable of doing optimal assignments.
+
+If the BIOS has already assigned working values, Linux generally
+doesn't change them.  But when you hot-remove and then reconnect a
+device, the BIOS assignments are lost, of course, and it's not
+surprising that Linux doesn't recreate them exactly.  I certainly
+agree that if it worked before, Linux *should* be able to make it work
+again.
+
+Bjorn
