@@ -2,101 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8E8535A869
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 23:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D334E35A87B
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 23:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234513AbhDIVir (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Apr 2021 17:38:47 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11145 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234079AbhDIViq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Apr 2021 17:38:46 -0400
-IronPort-SDR: qJI689LOldELAh2+KYz3YI8AfBtmG5OaudRUv9JblTLXMRF54QFeb4BOPyEuFs9KGwV1BUdnmh
- oqEp2X1vTO5Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9949"; a="193882333"
-X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
-   d="scan'208";a="193882333"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2021 14:38:32 -0700
-IronPort-SDR: YODXat/xmzgv//GR+FDkbrd9drwW9Vcm5OJSECTqHTPZtsThOPDRXy36L3FpRPme+J5RamMrLO
- 0nC+h4aYf/ow==
-X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
-   d="scan'208";a="416431312"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2021 14:38:32 -0700
-Date:   Fri, 9 Apr 2021 14:38:26 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] PCI: pciehp: Ignore spurious link inactive change when
- off
-Message-ID: <20210409213826.GB101733@otc-nc-03>
-References: <20210409205935.41881-1-jonathan.derrick@intel.com>
+        id S234602AbhDIVwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Apr 2021 17:52:16 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:26726 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234079AbhDIVwP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Apr 2021 17:52:15 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 139LpHZg030172;
+        Fri, 9 Apr 2021 14:51:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0220;
+ bh=hM0P6oTa0YiBb3d9caveIaX75+Xf+ZvYqQgY9spdLx8=;
+ b=CZUrYq0hwH4V9FH838XmSSvXQFnoaLxHct6FigjfQy4v/hnlNyNm+ELb1Zr9UAYZXiZk
+ DJuHa60RfP8y3rNUGW5acDVmVbaDL2dQ4p39TENOblGTcctwUreTXUQp7K7+ruvXyLBa
+ Pye0/FtpM51N0GsIWMsY5EDMB+az6XfXe9zhgkfXjX6R3/tNqSkV9WfzUzVBA4aELVP7
+ /gefIBBR32BxV9ZkcZ+UZCrhm54H1D+bjQgu/kc18MA3p1OR38MwVDRADMOGTF03I+Fr
+ IW27RtgEvxb8a1XxYijo4dC0N5MsZOQoz9Apcd8ZATpJ7aatqQ73CR6OL0BUubDOx1ya nw== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 37tftpakp0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 09 Apr 2021 14:51:58 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 9 Apr
+ 2021 14:51:57 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 9 Apr 2021 14:51:57 -0700
+Received: from dut6246.localdomain (unknown [10.112.88.36])
+        by maili.marvell.com (Postfix) with ESMTP id 6F9693F703F;
+        Fri,  9 Apr 2021 14:51:57 -0700 (PDT)
+Received: by dut6246.localdomain (Postfix, from userid 0)
+        id 49846228069; Fri,  9 Apr 2021 14:51:57 -0700 (PDT)
+From:   Arun Easi <aeasi@marvell.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, Girish Basrur <GBasrur@marvell.com>,
+        "Quinn Tran" <qutran@marvell.com>
+Subject: [PATCH v2 0/1] PCI/VPD: Fix blocking of VPD data in lspci for QLogic 1077:2261
+Date:   Fri, 9 Apr 2021 14:51:52 -0700
+Message-ID: <20210409215153.16569-1-aeasi@marvell.com>
+X-Mailer: git-send-email 2.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210409205935.41881-1-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Proofpoint-GUID: YFA8Kxcwcuek6qa1gkNE5V5S1GazeHHe
+X-Proofpoint-ORIG-GUID: YFA8Kxcwcuek6qa1gkNE5V5S1GazeHHe
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-09_08:2021-04-09,2021-04-09 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 02:59:35PM -0600, Derrick, Jonathan wrote:
-> When a specific x8 CEM card is bifurcated into x4x4 mode, and the
-> upstream ports both support hotplugging on each respective x4 device, a
-> slot management system for the CEM card requires both x4 devices to be
-> sysfs removed from the OS before it can safely turn-off physical power.
-> The implications are that Slot Control will display Powered Off status
-> for the device where the device is actually powered until both ports
-> have powered off.
-> 
-> When power is removed from the first half, the link remains active to
-> provide clocking while waiting for the second half to have power
-> removed. When power is then removed from the second half, the first half
-> starts shutdown sequence and will trigger a link status change event.
-> This is misinterpreted as an enabling event due to positive presence
-> detect and causes the first half to be re-enabled.
-> 
-> The spurious enable can be resolved by ignoring link status change
-> events when no link is active when in the off state.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Hi Bjorn,
 
-Although this seems like it should never happen with normal cards, it seems
-harmless otherwise. 
+Please queue this up for the next release.
 
+Change from v1:
+    * Commit message modified to add more clarity on the chronology of
+      the issues referred as well as justification.
 
-Reviewed by: Ashok Raj <ashok.raj@intel.com>
-> ---
->  drivers/pci/hotplug/pciehp_ctrl.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 529c34808440..a2c5eef03e7d 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -265,6 +265,11 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  		cancel_delayed_work(&ctrl->button_work);
->  		fallthrough;
->  	case OFF_STATE:
-> +		if ((events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
-> +			mutex_unlock(&ctrl->state_lock);
-> +			break;
-> +		}
-> +
->  		ctrl->state = POWERON_STATE;
->  		mutex_unlock(&ctrl->state_lock);
->  		if (present)
-> -- 
-> 2.26.2
-> 
+Regards,
+-Arun
+
+Arun Easi (1):
+  PCI/VPD: Fix blocking of VPD data in lspci for QLogic 1077:2261
+
+ drivers/pci/vpd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 -- 
-Cheers,
-Ashok
+2.9.5
 
-[Forgiveness is the attribute of the STRONG - Gandhi]
+base-commit: ed4d2116b283a1a79e2911c687d83e6b33a462d3
