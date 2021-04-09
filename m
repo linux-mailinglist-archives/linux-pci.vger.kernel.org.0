@@ -2,229 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8446835A713
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 21:26:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2123C35A775
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 21:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235065AbhDITZh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Apr 2021 15:25:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235064AbhDITZa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Apr 2021 15:25:30 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF65C061763;
-        Fri,  9 Apr 2021 12:25:17 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id a4so6664511wrr.2;
-        Fri, 09 Apr 2021 12:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lJOBwH8PLMV6va8nHZHAu/lGBTZiJMwsNPKzTsCadho=;
-        b=YFeiAQqkzRyLI7KPbrQihpTSznzNqlJw1kxh0MqV7ediPPGoojzm1wAEA1kSiEXdXU
-         JZoMDIn6oVAYQH8INKXfOX6c6gS6puekLieBoc1uMGTUV2EqLv0mXwUAoFbsGqKjpTZx
-         NwCYNN69C0Pqk5GidET3IIfe3wsrhbghxvY78yGZwwWQ95GIDBGOBYtz1BiEe3kMWIOv
-         J+VufKAH86tBlkzcqkORr0myrx0RE+3UGiMriZ8jzKOYStJF1ddB5tU0hJD8pWrSApFN
-         fR4jD56DLA5hSP91y1bNAJUNR0YWCn3/a/V8vScaeO0JK5dSWJQ4sexjLsJ1vC/EcYmX
-         5K+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lJOBwH8PLMV6va8nHZHAu/lGBTZiJMwsNPKzTsCadho=;
-        b=OXIff24Ty09lii/vPGZfwQa86AC32plp4qHB9N9dq8qiKDjDPkErRwD0ZEEO0eOaSV
-         AQjcmY0zwgVmKKZMRnEajlFRcv2v2cJHrOJRB5eUURiVSDfaSWqP74qqBpI0/jipMSvD
-         kG9gTI3d5LOz8HIrC5l/vkUVQB5Z3dQUm7h5HLBYW34xXsPxm3DsSuqpH/IOoQPANPQl
-         Ty3ZJ5ULNg/DI7rg8C0UUz5qZutYupptgDfrlTh4BSWUqIrB+fccv6Qarvt7xcPtWvvy
-         JT+2CfLqPHLavLNt6IyF0qSCA3pwQCtb35Ku9X1Xz21L/9B0mZYpV6vkZ5BeAP+mI2vk
-         ICuQ==
-X-Gm-Message-State: AOAM532XJZF/31CBCLfnS/VAtJmVWfEnJ2YcVgEbCcQkVxQtZbgmOc2S
-        Jf9QvntG/62z2h+8om0QTGuCSzoEqpHzmA==
-X-Google-Smtp-Source: ABdhPJxdote4h5p5q5ywYLtODBQR4XcGJaybGZxhzoLFFxbMQYCux2/HmBqhju8mE/wpI1QSMY1PwQ==
-X-Received: by 2002:adf:ffc3:: with SMTP id x3mr3749501wrs.263.1617996315835;
-        Fri, 09 Apr 2021 12:25:15 -0700 (PDT)
-Received: from localhost.localdomain ([103.248.31.176])
-        by smtp.googlemail.com with ESMTPSA id j6sm6618573wru.18.2021.04.09.12.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 12:25:15 -0700 (PDT)
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     alex.williamson@redhat.com, raphael.norwitz@nutanix.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: [PATCH v2 5/5] PCI/sysfs: Allow userspace to query and set device reset mechanism
-Date:   Sat, 10 Apr 2021 00:53:24 +0530
-Message-Id: <20210409192324.30080-6-ameynarkhede03@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210409192324.30080-1-ameynarkhede03@gmail.com>
-References: <20210409192324.30080-1-ameynarkhede03@gmail.com>
+        id S234273AbhDIT7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Apr 2021 15:59:09 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:13438 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232855AbhDIT7I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Apr 2021 15:59:08 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 139JuXuN011941;
+        Fri, 9 Apr 2021 12:58:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=4NiYhGVCH8GN2M6Y3X9LTuBR+VPe2jWncvPnS5UTpfE=;
+ b=U0BOrWedV7OMNfBzvSMCLAItiHERRhVG8e8LFmJ2Ki0Z4W6gaxXhSk4ko4ft8heoR+k1
+ 4mk62oSSbNGMwEJ4frz0Mh8uY4dyJlSdjZZAKZZ0risyjgEfB2VAyzpJXXIgYvTY6Qha
+ Mme+NqNWv8qRz2rGxt36nnJ5lhZF3LNR4hxOO+kCI5GRL5fUHC/pkZqliYaiCm2x3Umi
+ n1XLXMw2fbbQBectctWobDfg1DF1kP6y6UvVX9Ap4byjxZECgP7hAnaiS6S3WUnchMzX
+ btXOTCVF9wWhQ2HbNOcmcROznTQ1o9lTXeQcmp4q9oJU41g4+sFAr/uoZbrdLMLqyRsw Zw== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 37tftpac6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 09 Apr 2021 12:58:51 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 9 Apr
+ 2021 12:58:50 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 9 Apr 2021 12:58:50 -0700
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id 474353F703F;
+        Fri,  9 Apr 2021 12:58:50 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 139Jwo9Z022597;
+        Fri, 9 Apr 2021 12:58:50 -0700
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Fri, 9 Apr 2021 12:58:49 -0700
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Girish Basrur" <GBasrur@marvell.com>,
+        Quinn Tran <qutran@marvell.com>
+Subject: Re: [EXT] Re: [PATCH 1/1] PCI/VPD: Fix blocking of VPD data in lspci
+ for QLogic 1077:2261
+In-Reply-To: <20210408172747.GA1940414@bjorn-Precision-5520>
+Message-ID: <alpine.LRH.2.21.9999.2104091255490.13940@irv1user01.caveonetworks.com>
+References: <20210408172747.GA1940414@bjorn-Precision-5520>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-GUID: k3T8v6_IxLnWiTLQVdkakwdRWbdLqSBm
+X-Proofpoint-ORIG-GUID: k3T8v6_IxLnWiTLQVdkakwdRWbdLqSBm
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-09_07:2021-04-09,2021-04-09 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add reset_method sysfs attribute to enable user to
-query and set user preferred device reset methods and
-their ordering.
+On Thu, 8 Apr 2021, 10:27am, Bjorn Helgaas wrote:
 
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
----
- Documentation/ABI/testing/sysfs-bus-pci | 16 +++++
- drivers/pci/pci-sysfs.c                 | 91 ++++++++++++++++++++++++-
- 2 files changed, 104 insertions(+), 3 deletions(-)
+> External Email
+> 
+> ----------------------------------------------------------------------
+> On Wed, Apr 07, 2021 at 03:57:32PM -0700, Arun Easi wrote:
+> > On Wed, 7 Apr 2021, 3:13pm, Bjorn Helgaas wrote:
+> > 
+> > > On Wed, Mar 03, 2021 at 02:42:50PM -0800, Arun Easi wrote:
+> > > > "lspci -vvv" for Qlogic Fibre Channel HBA 1077:2261 displays
+> > > > "Vital Product Data" as "Not readable" today and thus preventing
+> > > > customers from getting relevant HBA information. Fix it by removing
+> > > > the blacklist quirk.
+> > > > 
+> > > > The VPD quirk was added by [0] to avoid a system NMI; this issue has
+> > > > been long fixed in the HBA firmware. In addition, PCI also has changes
+> > > > to check the VPD size [1], so this quirk can be reverted now regardless
+> > > > of a firmware update.
+> > > 
+> > > This is not a very convincing argument yet since 104daa71b396 ("PCI:
+> > > Determine actual VPD size on first access") appeared in v4.6 and
+> > > 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722") appeared
+> > > in v4.11.
+> > > 
+> > > If 104daa71b396 really fixed the problem, why did we need
+> > > 0d5370d1d852?
+> > 
+> > True, 0d5370d1d852 was not really neeeded for 104daa71b396 and newer 
+> > kernels; my theory is that when Ethan Z. ran the tests, he was using an 
+> > older (older than 104daa71b396) kernel, but by the time the blacklisting 
+> > was put in place, the kernel already had the fix that made the 
+> > blacklisting unnecessary.
+> > 
+> > More of my investigation details explained here:
+> > 	https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dpci_alpine.LRH.2.21.9999.2012161641230.28924-40irv1user01.caveonetworks.com_&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=P-q_Qkt75qFy33SvdD2nAxAyN87eO1d-mFO-lqNOomw&m=6AxpinjPP1ODX7dE-syNBDgke94moUP_K_jm_ZTu6pI&s=YxWnXn7ZfcD1PJlUkl82l8TK5sNX7uBwkCJxKgpAgEM&e= 
+> > 
+> > A quick summary of which is that, when Ethan reported the crash stack, it 
+> > had pci_vpd_pci22* calls which is seen only in older kernels. Though 
+> > 104daa71b396 too had those calls, it was very close to the commit that 
+> > renamed those calls (f1cd93f9aabe) -- and I theorized Ethan probably was 
+> > not running a kernel between 104daa71b396 and f1cd93f9aabe (only 3 
+> > commits (drivers/pci/) away).
+> 
+> We should put the outline of this theory in the commit log for the
+> benefit of future readers who have the same question I did.
+> 
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 25c9c3977..36fba7ebf 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -121,6 +121,22 @@ Description:
- 		child buses, and re-discover devices removed earlier
- 		from this part of the device tree.
- 
-+What:		/sys/bus/pci/devices/.../reset_method
-+Date:		March 2021
-+Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-+Description:
-+		Some devices allow an individual function to be reset
-+		without affecting other functions in the same slot.
-+		For devices that have this support, a file named reset_method
-+		will be present in sysfs. Reading this file will give names
-+		of the device supported reset methods and their ordering.
-+		Writing the name or comma separated list of names of any of
-+		the device supported reset methods to this file will set the
-+		reset methods and their ordering to be used when resetting
-+		the device. Writing empty string to this file will disable
-+		ability to reset the device and writing "default" will return
-+		to the original value.
-+
- What:		/sys/bus/pci/devices/.../reset
- Date:		July 2009
- Contact:	Michael S. Tsirkin <mst@redhat.com>
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 388895099..cf2f66270 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1304,6 +1304,84 @@ static const struct bin_attribute pcie_config_attr = {
- 	.write = pci_write_config,
- };
- 
-+static ssize_t reset_method_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t len = 0;
-+	int i, prio;
-+
-+	for (prio = PCI_RESET_FN_METHODS; prio; prio--) {
-+		for (i = 0; i < PCI_RESET_FN_METHODS; i++) {
-+			if (prio == pdev->reset_methods[i]) {
-+				len += sysfs_emit_at(buf, len, "%s%s",
-+						     len ? "," : "",
-+						     pci_reset_fn_methods[i].name);
-+				break;
-+			}
-+		}
-+
-+		if (i == PCI_RESET_FN_METHODS)
-+			break;
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t reset_method_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	u8 reset_methods[PCI_RESET_FN_METHODS];
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	u8 prio = PCI_RESET_FN_METHODS;
-+	char *name;
-+	int i;
-+
-+	/*
-+	 * Initialize reset_method such that 0xff indicates
-+	 * supported but not currently enabled reset methods
-+	 * as we only use priority values which are within
-+	 * the range of PCI_RESET_FN_METHODS array size
-+	 */
-+	for (i = 0; i < PCI_RESET_FN_METHODS; i++)
-+		reset_methods[i] = pdev->reset_methods[i] ? 0xff : 0;
-+
-+	if (sysfs_streq(buf, "")) {
-+		pci_warn(pdev, "All device reset methods disabled by user");
-+		goto set_reset_methods;
-+	}
-+
-+	if (sysfs_streq(buf, "default")) {
-+		for (i = 0; i < PCI_RESET_FN_METHODS; i++)
-+			reset_methods[i] = reset_methods[i] ? prio-- : 0;
-+		goto set_reset_methods;
-+	}
-+
-+	while ((name = strsep((char **)&buf, ",")) != NULL) {
-+		for (i = 0; i < PCI_RESET_FN_METHODS; i++) {
-+			if (reset_methods[i] &&
-+			    sysfs_streq(name, pci_reset_fn_methods[i].name)) {
-+				reset_methods[i] = prio--;
-+				break;
-+			}
-+		}
-+		if (i == PCI_RESET_FN_METHODS)
-+			return -EINVAL;
-+	}
-+
-+	if (reset_methods[0] &&
-+	    reset_methods[0] != PCI_RESET_FN_METHODS)
-+		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
-+
-+set_reset_methods:
-+	memcpy(pdev->reset_methods, reset_methods, sizeof(reset_methods));
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(reset_method);
-+
- static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
- 			   const char *buf, size_t count)
- {
-@@ -1337,11 +1415,16 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- 	if (pci_reset_supported(dev)) {
- 		retval = device_create_file(&dev->dev, &dev_attr_reset);
- 		if (retval)
--			goto error;
-+			goto err_reset;
-+		retval = device_create_file(&dev->dev, &dev_attr_reset_method);
-+		if (retval)
-+			goto err_method;
- 	}
- 	return 0;
- 
--error:
-+err_method:
-+	device_remove_file(&dev->dev, &dev_attr_reset);
-+err_reset:
- 	pcie_vpd_remove_sysfs_dev_files(dev);
- 	return retval;
- }
-@@ -1417,8 +1500,10 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
- {
- 	pcie_vpd_remove_sysfs_dev_files(dev);
--	if (pci_reset_supported(dev))
-+	if (pci_reset_supported(dev)) {
- 		device_remove_file(&dev->dev, &dev_attr_reset);
-+		device_remove_file(&dev->dev, &dev_attr_reset_method);
-+	}
- }
- 
- /**
--- 
-2.31.1
+Sure, will post a V2. BTW, the details were mentioned as a link "[2]" in 
+the commit, I will pull the contents to the commit message.
 
+Thanks Bjorn.
+
+Regards,
+-Arun
