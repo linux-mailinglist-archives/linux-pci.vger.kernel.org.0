@@ -2,138 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2B45359C1D
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 12:29:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10664359E45
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Apr 2021 14:05:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232469AbhDIKaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Apr 2021 06:30:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:47724 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231402AbhDIKaG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Apr 2021 06:30:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72E8F1FB;
-        Fri,  9 Apr 2021 03:29:53 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 397DB3F73D;
-        Fri,  9 Apr 2021 03:29:52 -0700 (PDT)
-Date:   Fri, 9 Apr 2021 11:29:46 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rahul Tanwar <rtanwar@maxlinear.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Cheol Yong Kim <ckim@maxlinear.com>,
-        Qiming Wu <qwu@maxlinear.com>,
-        Lei Chuan Hua <lchuanhua@maxlinear.com>
-Subject: Re: [PATCH] PCI: dwc/intel-gw: Fix enabling the legacy PCI interrupt
- lines
-Message-ID: <20210409102946.GA14799@lpieralisi>
-References: <20210106135540.48420-1-martin.blumenstingl@googlemail.com>
- <20210323113559.GE29286@e121166-lin.cambridge.arm.com>
- <CAFBinCBaa_uGBg8x=nPTs6sYNqv_OCU2PgCaUKLQGNSN+Up99A@mail.gmail.com>
- <MN2PR19MB36934176A011B86624E1EA2BB1739@MN2PR19MB3693.namprd19.prod.outlook.com>
+        id S233364AbhDIMGB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Apr 2021 08:06:01 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25445 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231946AbhDIMGB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Apr 2021 08:06:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1617969043; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=cAFQ52Y3aWd6re2msI2y7pjE6Z2OHHrgb2wjoGYA3BycuiLgRMKBMKRRSPhF5Es1MGleYOZYdETaUNZ4iTj8NA2zGpXps08pKrWN9IE86zkH5j4vbC94RuLJh1T94wuHPz4fFOZeL3JMVS6SPJA93Uf5lSmUnTJZdWxVC2FrjFg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1617969043; h=Content-Type:Content-Transfer-Encoding:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=KQJLqhWr4z4TkHCANPbJ96wpXshdO3B0VxT6bsUQBT8=; 
+        b=e/EOyVJ5vdIR2ofv5dP1xGvJibyc5ZCfSJFPczxg5BmmJ2QhSYJj1n5FkR2C6C1FHmeBpaksAmMzSX/zfeC4jUf29FB3+7lhajbuPLf2JUoUa3WCv4rUXiuR8XMMoGgCaX3LnJvUko+i5CY5wd4AT5j/PDRkGJ27Pg6vHuWU56Q=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=ragasgupta@zoho.com;
+        dmarc=pass header.from=<ragasgupta@zoho.com> header.from=<ragasgupta@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=date:from:to:message-id:in-reply-to:references:subject:mime-version:content-type:user-agent; 
+  b=uHhrG0uH0qZHfO6V+yK7HD8tyigwQFFd551jzfVh0JDdV5Iyq/k30U2puGgTwxPgrRhk5TpLfTTM
+    lUdDHSLj9HMvyKP4f60qJX4vZyMP90EO0ywAu2QeQyvRFNdjTPgA  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1617969043;
+        s=zm2020; d=zoho.com; i=ragasgupta@zoho.com;
+        h=Date:From:To:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=KQJLqhWr4z4TkHCANPbJ96wpXshdO3B0VxT6bsUQBT8=;
+        b=VBaPnGc0Q9fzmyy14QHbA58ldw/QgMO9gmAmXzZi0MIOnxH8038UUiUPHLSnvY6t
+        LFJ9K5NgaeSqxLQELdwae7pnPvvH189BS/jBSDzljYQvmlgRwjyBAajcyYSF1PP+LAJ
+        YdA2LGqOzUYezqdylsCaPSV00T/27nbUnla6NZ3w=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 1617969040367259.9782655721767; Fri, 9 Apr 2021 04:50:40 -0700 (PDT)
+Received: from  [34.98.205.117] by mail.zoho.com
+        with HTTP;Fri, 9 Apr 2021 04:50:40 -0700 (PDT)
+Date:   Fri, 09 Apr 2021 17:20:40 +0530
+From:   ragas gupta <ragasgupta@zoho.com>
+To:     "linux-pci" <linux-pci@vger.kernel.org>
+Message-ID: <178b6784bd7.f1a37c91132657.4038524595161012155@zoho.com>
+In-Reply-To: <178b67644d1.107ad1ec3132641.8033434734705028022@zoho.com>
+References: <178b641aeb9.ec6e71c9132052.6218745065153370962@zoho.com> <178b67644d1.107ad1ec3132641.8033434734705028022@zoho.com>
+Subject: Function Level Reset notification to PCIe device driver
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR19MB36934176A011B86624E1EA2BB1739@MN2PR19MB3693.namprd19.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 10:17:12AM +0000, Rahul Tanwar wrote:
-> On 9/4/2021 4:40 am, Martin Blumenstingl wrote:
-> > This email was sent from outside of MaxLinear.
-> > 
-> > Hi Lorenzo,
-> > 
-> > On Tue, Mar 23, 2021 at 12:36 PM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> >  >
-> >  > On Wed, Jan 06, 2021 at 02:55:40PM +0100, Martin Blumenstingl wrote:
-> >  > > The legacy PCI interrupt lines need to be enabled using PCIE_APP_IRNEN
-> >  > > bits 13 (INTA), 14 (INTB), 15 (INTC) and 16 (INTD). The old code 
-> > however
-> >  > > was taking (for example) "13" as raw value instead of taking BIT(13).
-> >  > > Define the legacy PCI interrupt bits using the BIT() macro and then use
-> >  > > these in PCIE_APP_IRN_INT.
-> >  > >
-> >  > > Fixes: ed22aaaede44 ("PCI: dwc: intel: PCIe RC controller driver")
-> >  > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> >  > > ---
-> >  > > drivers/pci/controller/dwc/pcie-intel-gw.c | 10 ++++++----
-> >  > > 1 file changed, 6 insertions(+), 4 deletions(-)
-> >  > >
-> >  > > diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c 
-> > b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> >  > > index 0cedd1f95f37..ae96bfbb6c83 100644
-> >  > > --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> >  > > +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> >  > > @@ -39,6 +39,10 @@
-> >  > > #define PCIE_APP_IRN_PM_TO_ACK BIT(9)
-> >  > > #define PCIE_APP_IRN_LINK_AUTO_BW_STAT BIT(11)
-> >  > > #define PCIE_APP_IRN_BW_MGT BIT(12)
-> >  > > +#define PCIE_APP_IRN_INTA BIT(13)
-> >  > > +#define PCIE_APP_IRN_INTB BIT(14)
-> >  > > +#define PCIE_APP_IRN_INTC BIT(15)
-> >  > > +#define PCIE_APP_IRN_INTD BIT(16)
-> >  > > #define PCIE_APP_IRN_MSG_LTR BIT(18)
-> >  > > #define PCIE_APP_IRN_SYS_ERR_RC BIT(29)
-> >  > > #define PCIE_APP_INTX_OFST 12
-> >  > > @@ -48,10 +52,8 @@
-> >  > > PCIE_APP_IRN_RX_VDM_MSG | PCIE_APP_IRN_SYS_ERR_RC | \
-> >  > > PCIE_APP_IRN_PM_TO_ACK | PCIE_APP_IRN_MSG_LTR | \
-> >  > > PCIE_APP_IRN_BW_MGT | PCIE_APP_IRN_LINK_AUTO_BW_STAT | \
-> >  > > - (PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTA) | \
-> >  > > - (PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTB) | \
-> >  > > - (PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTC) | \
-> >  > > - (PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTD))
-> >  > > + PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
-> >  > > + PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
-> >  > >
-> >  > > #define BUS_IATU_OFFSET SZ_256M
-> >  > > #define RESET_INTERVAL_MS 100
-> >  >
-> >  > This looks like a significant bug - which in turn raises the question
-> >  > on how well this driver has been tested.
-> > to give them the benefit of doubt: maybe only MSIs were tested
-> > 
-> >  > Dilip, can you review and ACK asap please ?
-> >  From "Re: MaxLinear, please maintain your drivers was Re: [PATCH]
-> > leds: lgm: fix gpiolib dependency" [0]:
-> >  > Please send any Lightning Mountain SoC related issues email to Rahul
-> >  > Tanwar (rtanwar@maxlinear.com) and I will ensure that I address the
-> >  > issues in a timely manner.
-> > so I added rtanwar@maxlinear.com to this email
-> > 
-> > 
-> > Best regards,
-> > Martin
-> > 
-> > 
-> > [0] https://lkml.org/lkml/2021/3/16/282 
-> > <https://lkml.org/lkml/2021/3/16/282>
-> 
-> 
-> Dilip has left the org. So not sure how exactly he tested it (maybe only 
-> MSIs). But i have confirmed it to be a bug. Thanks Martin for fixing it.
+Hello,=20
+ =20
+This query is regarding Function level reset feature for SRIOV.=20
+As per code in Linux PCIe driver the function level reset is done by writin=
+g =E2=80=9C1=E2=80=9D to =E2=80=9Creset=E2=80=9D under sysfs interface.=20
+e.g. =E2=80=9Cecho 1 > /sys/bus/pci/devices/<interface id> /reset =E2=80=9C=
+=20
+=20
+As function level reset is not triggered via the PCIe device driver how PCI=
+e device driver can get the notification of the function level reset(FLR)?=
+=20
 
-Can you take on maintainership for this driver please ?
-
-If yes please send a MAINTAINERS file patch.
-
-Thanks,
-Lorenzo
-
-> Acked-by: Rahul Tanwar <rtanwar@maxlinear.com>
-> 
-> Regards,
-> Rahul
-> 
-> 
-> 
-> 
-> 
