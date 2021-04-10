@@ -2,81 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22E4135AC14
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 11:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E71E35AD45
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 14:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234306AbhDJJBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Apr 2021 05:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
+        id S234427AbhDJM3D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Apr 2021 08:29:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229591AbhDJJBO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Apr 2021 05:01:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 828CF610CF;
-        Sat, 10 Apr 2021 09:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1618045260;
-        bh=7mmCaNKlQoq2SsPWz8tNNebBdY4KFROg02VwRgfwieg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NNtxcV50PeEkecrUWLS/c3t6KHXOhn/P4vkDEtP/9TvuCb7DBhZV4WW7ZyQ96/8OM
-         QhvFA+irUPGq9ZOrmlD7jwS/2meufGVr+JQlZ+Y6V0CyveQUnF+lBY/mQUS9fUsG5A
-         ZzUaeHP9n/KGqLh/aLhIXgYm6kMPZUaV+n50sCJg=
-Date:   Sat, 10 Apr 2021 11:00:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v3 1/2] dw-xdata-pcie: Fix documentation build warns and
- update outdated info
-Message-ID: <YHFpSQOSYEWRuDoX@kroah.com>
-References: <cover.1617827290.git.gustavo.pimentel@synopsys.com>
- <5e1bc55d098322908ebdf1c32512acad5b65d4d7.1617827290.git.gustavo.pimentel@synopsys.com>
+        id S234392AbhDJM3D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Apr 2021 08:29:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9AD89611AE
+        for <linux-pci@vger.kernel.org>; Sat, 10 Apr 2021 12:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618057728;
+        bh=jJM9L8VGUMULEWespnVrhB2m5QplbVSrK7u3PS8oAvM=;
+        h=Date:From:To:Subject:From;
+        b=sgmNvXnymx1GQUJC8OCtagvl5g0WXNB8K7Prby7ZJzV/MZ3ps0FnkrVmiYWni4XI8
+         n8jpFVPWg35hFmESOnCzYu6/nONhjN6vERiSfv2CqoVyC6Bfgln+suM19OtlYFQA/G
+         nhr3E+oxTNHy95kfijO/3T5SYwRsFAT8jlzLFAGymSKQbS9XDe/aRxYUC6M0HYOvH0
+         dAUgGGTMcneOJxp05EGt2qPc/ny5/NV7TfgPUl5Y1TiQ93nG3yVRJxGY+arC7i5JIB
+         +KHbucoLGUVQlg10ObyFNkWQv0DVafE3iayrL8pdYz6k+TFkVkDHKoQzcavmFuCKlS
+         QdKd1OuhPQFUA==
+Received: by pali.im (Postfix)
+        id 35626BEF; Sat, 10 Apr 2021 14:28:45 +0200 (CEST)
+Date:   Sat, 10 Apr 2021 14:28:45 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     linux-pci@vger.kernel.org
+Subject: PCI service interrupt handlers & access to PCI config space
+Message-ID: <20210410122845.nhenihbygmcjlegn@pali>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5e1bc55d098322908ebdf1c32512acad5b65d4d7.1617827290.git.gustavo.pimentel@synopsys.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 10:31:48PM +0200, Gustavo Pimentel wrote:
-> Fixes documentation build warnings related to indentation and text
-> formatting, such as:
-> 
-> Documentation/misc-devices/dw-xdata-pcie.rst:20: WARNING: Unexpected
-> indentation.
-> Documentation/misc-devices/dw-xdata-pcie.rst:24: WARNING: Unexpected
-> indentation.
-> Documentation/misc-devices/dw-xdata-pcie.rst:25: WARNING: Block quote
-> ends without a blank line; unexpected unindent.
-> Documentation/misc-devices/dw-xdata-pcie.rst:30: WARNING: Unexpected
-> indentation.
-> Documentation/misc-devices/dw-xdata-pcie.rst:34: WARNING: Unexpected
-> indentation.
-> Documentation/misc-devices/dw-xdata-pcie.rst:35: WARNING: Block quote
-> ends without a blank line; unexpected unindent.
-> Documentation/misc-devices/dw-xdata-pcie.rst:40: WARNING: Unexpected
-> indentation.
+Hello!
 
-In the future, there's no need to wrap error/warning lines like this in
-a changelog text.  Not a big deal, but the above is messy to read,
-right?
+I see that more PCI service drivers in their interrupt handlers are
+accessing PCI config space.
 
-> 
-> Also fixes some outdated information related to stop file interface in sysfs.
+E.g. in PCIe Hot Plug interrupt handler pciehp_isr handler is called
+pcie_capability_read_word() function.
 
-When you say "also", that means you need a separate patch usually.  And
-for this patch, that is exactly what you need.  Please split this up
-into one patch that fixes the reported problem, and another one that
-adds the needed information.
+It is correct? Because these capability functions are protected by
+pci_lock_config() / pci_unlock_config() calls.
 
-thanks,
-
-greg k-h
+And what would happen when during execution of reading or writing to
+PCIe config space (e.g. via pcie_capability_read_word()) is triggered
+PCIe HP interrupt? Would not enter interrupt handler function in
+deadlock (waiting for unlocking config space)?
