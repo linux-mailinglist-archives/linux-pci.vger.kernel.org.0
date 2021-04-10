@@ -2,94 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29AF135AF0E
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 18:26:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C49535B00F
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 21:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234392AbhDJQ0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Apr 2021 12:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53490 "EHLO
+        id S234536AbhDJTSI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Apr 2021 15:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234334AbhDJQ0k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Apr 2021 12:26:40 -0400
+        with ESMTP id S234439AbhDJTSH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 10 Apr 2021 15:18:07 -0400
 Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D683C06138A
-        for <linux-pci@vger.kernel.org>; Sat, 10 Apr 2021 09:26:25 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA90C06138A
+        for <linux-pci@vger.kernel.org>; Sat, 10 Apr 2021 12:17:52 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id A2CCC300002CB;
-        Sat, 10 Apr 2021 18:26:22 +0200 (CEST)
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id AA5D330013709;
+        Sat, 10 Apr 2021 21:17:49 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 8D2154C22F; Sat, 10 Apr 2021 18:26:22 +0200 (CEST)
-Date:   Sat, 10 Apr 2021 18:26:22 +0200
+        id 9E2C91E6B5; Sat, 10 Apr 2021 21:17:49 +0200 (CEST)
+Date:   Sat, 10 Apr 2021 21:17:49 +0200
 From:   Lukas Wunner <lukas@wunner.de>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: PCI service interrupt handlers & access to PCI config space
-Message-ID: <20210410162622.GA23381@wunner.de>
-References: <20210410122845.nhenihbygmcjlegn@pali>
- <20210410142524.GA31187@wunner.de>
- <20210410151709.yb42uloq3aiwcoog@pali>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>, linux-pci@vger.kernel.org,
+        sathyanarayanan.kuppuswamy@linux.intel.com, kbusch@kernel.org,
+        sean.v.kelley@intel.com, qiuxu.zhuo@intel.com,
+        prime.zeng@huawei.com, linuxarm@openeuler.org
+Subject: Re: [PATCH] PCI/DPC: Disable ERR_COR explicitly for native dpc
+ service
+Message-ID: <20210410191749.GA16240@wunner.de>
+References: <1612356795-32505-2-git-send-email-yangyicong@hisilicon.com>
+ <20210410152103.GA2043340@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210410151709.yb42uloq3aiwcoog@pali>
+In-Reply-To: <20210410152103.GA2043340@bjorn-Precision-5520>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 10, 2021 at 05:17:09PM +0200, Pali Rohár wrote:
-> On Saturday 10 April 2021 16:25:24 Lukas Wunner wrote:
-> > raw_spin_locks are not supposed to be held for a prolonged
-> > period of time.
-> 
-> What is "prolonged period of time"? Because for example PCIe controller
-> on A3720 has upper limit about 1.5s when accessing config space. This is
-> what I measured in real example. It really took PCIe HW more than 1s to
-> return error code if it happens.
+On Sat, Apr 10, 2021 at 10:21:03AM -0500, Bjorn Helgaas wrote:
+> Anybody want to chime in and review this?  Sometimes I feel like a
+> one-man band :)
 
-Linux Device Drivers (2005) says:
+Can't say anything about the object of the patch, but style-wise
+this looks cryptic:
 
-   "The last important rule for spinlock usage is that spinlocks must
-    always be held for the minimum time possible. The longer you hold
-    a lock, the longer another processor may have to spin waiting for
-    you to release it, and the chance of it having to spin at all is
-    greater. Long lock hold times also keep the current processor from
-    scheduling, meaning that a higher priority process -- which really
-    should be able to get the CPU -- may have to wait. The kernel
-    developers put a great deal of effort into reducing kernel latency
-    (the time a process may have to wait to be scheduled) in the 2.5
-    development series. A poorly written driver can wipe out all that
-    progress just by holding a lock for too long. To avoid creating
-    this sort of problem, make a point of keeping your lock-hold times
-    short."
+> > --- a/drivers/pci/pcie/dpc.c
+> > +++ b/drivers/pci/pcie/dpc.c
+> > @@ -302,7 +302,7 @@ static int dpc_probe(struct pcie_device *dev)
+> >  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+> >  
+> > -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> > +	ctl = (ctl & 0xffe4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> >  	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
 
-1.5 sec is definitely too long.  This sounds like a quirk of this
-specific hardware.  Try to find out if the hardware can be configured
-differently to respond quicker.
+Instead of writing "ctl & 0xfff4", I'd prefer defining macros for the
+register bits of interest, then use "ctl &= ~(u16)(bits to clear)"
+and in a separate line use "ctl |= (bits to set)".
+
+Obviously, clearing bits that are unconditionally set afterwards is
+unnecessary (as is done here).
 
 
-> > The interrupt is masked when it triggers and until it's been handled,
-> > so the interrupt handler never runs multiple times concurrently.
-> > See e.g. handle_level_irq() in kernel/irq/chip.c.
-> 
-> I'm thinking if it is really safe here. On dual-core system, there may
-> be two tasks (on each CPU) which calls pcie_capability_read_word() (or
-> other access function). Exactly one pass pci lock. And after that two
-> different interrupts (for each CPU) may occur which handlers would like
-> to call pcie_capability_read_word(). raw_spin_lock_irqsave (which is
-> called from pci_lock_config()) disable interrupts on local CPU, right?
-> But what with second CPU? Could not be there issue?
+> >  	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
 
-No.
-
-
-> And what would happen if pcie_capability_read_word() is locked for 1.5s
-> as described above? Does not look safe for me.
-
-It's safe, but performs poorly.
+This looks superfluous since the IRQ can be found out in /proc/interrupts.
 
 Thanks,
 
