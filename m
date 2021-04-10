@@ -2,88 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B6535AEC7
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 17:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3E4435AECA
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 17:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234680AbhDJPR0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Apr 2021 11:17:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
+        id S234680AbhDJPVU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Apr 2021 11:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234392AbhDJPR0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Apr 2021 11:17:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D34CB6113A;
-        Sat, 10 Apr 2021 15:17:11 +0000 (UTC)
+        id S234392AbhDJPVU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Apr 2021 11:21:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1DB57611C2;
+        Sat, 10 Apr 2021 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618067832;
-        bh=4WHOBwE1WNOvLxdgMJwpN6D5kOlBOL+bHFlPdgW9/mI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ezKoJfWEz+bhqrmzsXCDIY2E638wmad41z4+Ihzck0ZVBAzZ1DAM6acWZCqOxTfWb
-         BlA1g6Nya+9fIktw1lacCV/4BX4TdvLqxpnj/0Lvz+KhpBBMsSmpLbD7LKbSGaduLU
-         KrE0aDSoVEqEcitKmjfC1HfW+Vl4fZIO4puUfUvV/bT5MVp6vuxCsqDUixJg5tsT8C
-         vJ4Lv6zBgKo9fzFfgwy35hHF2epvlkvJ7BTEuUA/HYZBFgi4RwpuXUsKMKZqdBqNpX
-         SSNYlxM00sl6dBZh6oWHFKxBtvFDTNEvSJ5gRjMfAIRd1SlbMVYl1rCyzXGVo+DyEq
-         /rTe3DNLtzHkw==
-Received: by pali.im (Postfix)
-        id 7F9D2BEF; Sat, 10 Apr 2021 17:17:09 +0200 (CEST)
-Date:   Sat, 10 Apr 2021 17:17:09 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: PCI service interrupt handlers & access to PCI config space
-Message-ID: <20210410151709.yb42uloq3aiwcoog@pali>
-References: <20210410122845.nhenihbygmcjlegn@pali>
- <20210410142524.GA31187@wunner.de>
+        s=k20201202; t=1618068065;
+        bh=+Qmc8k9G7vMTnKZ+bWVMEMwIV3SSxAOpo2eWKe1OI34=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UYd9OmxHnb7appWRQ8iQL3leCzRl37H7nnLSzWqLc5ErqDRhZq1iza6dr8VUk4IxC
+         n8SObzrC7tABlMkRHQBHuF2DKuEn7EbZZgscLt17p3s9nXzo6gUd0dBvNSuV95/33K
+         081+K+wmtAAb7RiAG6pIp9heu5SnLsbyrTZbC7xYMPHxFXEfBMHURIQoZTygoN8doh
+         MWVWSC5PqA2Gp5ydRke/4DD00qyO7BaQhkr4Ou/hOrFiLhKr+rCf0WH0QTkRYHL58a
+         m6ffahp4Jxp5Iitd8kL/aWFyXlXqlxYmhIuhAFOEc28o/9vTlR610h1pWAILDsxnSw
+         Ral1EREVDwCpw==
+Date:   Sat, 10 Apr 2021 10:21:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     linux-pci@vger.kernel.org,
+        sathyanarayanan.kuppuswamy@linux.intel.com, kbusch@kernel.org,
+        sean.v.kelley@intel.com, qiuxu.zhuo@intel.com,
+        prime.zeng@huawei.com, linuxarm@openeuler.org
+Subject: Re: [PATCH] PCI/DPC: Disable ERR_COR explicitly for native dpc
+ service
+Message-ID: <20210410152103.GA2043340@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210410142524.GA31187@wunner.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1612356795-32505-2-git-send-email-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
-
-On Saturday 10 April 2021 16:25:24 Lukas Wunner wrote:
-> On Sat, Apr 10, 2021 at 02:28:45PM +0200, Pali Rohár wrote:
-> > I see that more PCI service drivers in their interrupt handlers are
-> > accessing PCI config space.
-> > 
-> > E.g. in PCIe Hot Plug interrupt handler pciehp_isr handler is called
-> > pcie_capability_read_word() function.
-> > 
-> > It is correct? Because these capability functions are protected by
-> > pci_lock_config() / pci_unlock_config() calls.
+On Wed, Feb 03, 2021 at 08:53:15PM +0800, Yicong Yang wrote:
+> Per Downstream Port Containment Related Enhancements ECN[1],
+> Table 4-6 Interpretation of _OSC Control Field Returned Value,
+> for bit 7 of _OSC control return value:
 > 
-> Looks fine to me.  That's a raw_spin_lock, which is allowed to be taken
-> in interrupt context.
+>   "If firmware allows the OS control of this feature, then,
+>   in the context of the _OSC method the OS must ensure that
+>   Downstream Port Containment ERR_COR signaling is disabled
+>   as described in the PCI Express Base Specification."
 > 
-> > And what would happen when during execution of reading or writing to
-> > PCIe config space (e.g. via pcie_capability_read_word()) is triggered
-> > PCIe HP interrupt? Would not enter interrupt handler function in
-> > deadlock (waiting for unlocking config space)?
+> and PCI Express Base Specification Revision 4.0 Version 1.0
+> section 6.2.10.2, Use of DPC ERR_COR Signaling:
 > 
-> The interrupt handler would spin until the lock is released.
-> raw_spin_locks are not supposed to be held for a prolonged
-> period of time.
+>   "...DPC ERR_COR signaling is primarily intended for use by
+>   platform firmware..."
+> 
+> Currently we don't set DPC ERR_COR enable bit, but explicitly
+> clear the bit to ensure it's disabled.
+> 
+> [1] Downstream Port Containment Related Enhancements ECN,
+>     Jan 28, 2019, affecting PCI Firmware Specification, Rev. 3.2
+>     https://members.pcisig.com/wg/PCI-SIG/document/12888
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-What is "prolonged period of time"? Because for example PCIe controller
-on A3720 has upper limit about 1.5s when accessing config space. This is
-what I measured in real example. It really took PCIe HW more than 1s to
-return error code if it happens.
+Anybody want to chime in and review this?  Sometimes I feel like a
+one-man band :)
 
-> The interrupt is masked when it triggers and until it's been handled,
-> so the interrupt handler never runs multiple times concurrently.
-> See e.g. handle_level_irq() in kernel/irq/chip.c.
-
-I'm thinking if it is really safe here. On dual-core system, there may
-be two tasks (on each CPU) which calls pcie_capability_read_word() (or
-other access function). Exactly one pass pci lock. And after that two
-different interrupts (for each CPU) may occur which handlers would like
-to call pcie_capability_read_word(). raw_spin_lock_irqsave (which is
-called from pci_lock_config()) disable interrupts on local CPU, right?
-But what with second CPU? Could not be there issue?
-
-And what would happen if pcie_capability_read_word() is locked for 1.5s
-as described above? Does not look safe for me.
+> ---
+>  drivers/pci/pcie/dpc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index e05aba8..5cc8ef3 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -302,7 +302,7 @@ static int dpc_probe(struct pcie_device *dev)
+>  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+>  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+>  
+> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> +	ctl = (ctl & 0xffe4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+>  	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+>  	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
+>  
+> -- 
+> 2.8.1
+> 
