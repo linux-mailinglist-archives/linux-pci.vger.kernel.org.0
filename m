@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7352635AAEC
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 06:53:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF55D35AAEA
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Apr 2021 06:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbhDJEvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229992AbhDJEvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 10 Apr 2021 00:51:20 -0400
-Received: from mga06.intel.com ([134.134.136.31]:58001 "EHLO mga06.intel.com"
+Received: from mga07.intel.com ([134.134.136.100]:42699 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229494AbhDJEvT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S229472AbhDJEvT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Sat, 10 Apr 2021 00:51:19 -0400
-IronPort-SDR: R5RNoK3t9p7Lgjb43Wmstt65xy4EHjmbk9lACJsNYlLSpChwiQwmI9TDjDGKQCl2mQO0tE3ehL
- u6Xhkky/Tyjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9949"; a="255216194"
+IronPort-SDR: KjqhuNcH3SoVc2ewCGrNqDbno5Y+B4h8B0fsLKYiop/L5rwWVTgC1F6u/ItmfrsDQESt/D7lSr
+ bb37NVKdWK0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9949"; a="257868307"
 X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
-   d="scan'208";a="255216194"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2021 21:51:05 -0700
-IronPort-SDR: RBElchxxr/1IWrHUZQdqrKhjhA6YVr/fP8Vm8WJLze85Sy9Et93yoEMGm5RtOc+Zo5FcO2ZEFY
- JQmNLaNUwuNg==
+   d="scan'208";a="257868307"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2021 21:51:04 -0700
+IronPort-SDR: F92diy1vrOiLTqOMcPyaRSHXQ1wxrFc0l3rZ13THqlbAxuaHTyIi2pubc1izKVoS+srzN689Be
+ VPTxLbrOpwmw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,210,1613462400"; 
-   d="scan'208";a="397705805"
+   d="scan'208";a="423018024"
 Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2021 21:51:03 -0700
+  by orsmga008.jf.intel.com with ESMTP; 09 Apr 2021 21:51:03 -0700
 Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lV5aI-000Hr5-KD; Sat, 10 Apr 2021 04:51:02 +0000
-Date:   Sat, 10 Apr 2021 12:50:28 +0800
+        id 1lV5aI-000HrJ-Pq; Sat, 10 Apr 2021 04:51:02 +0000
+Date:   Sat, 10 Apr 2021 12:50:34 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/virtualization] BUILD SUCCESS
- 0349a070881f7e3b4472d886989db092ed3ccac8
-Message-ID: <60712e94.+sfbWtjJzSGXcHu7%lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS ed4d2116b283a1a79e2911c687d83e6b33a462d3
+Message-ID: <60712e9a.73BbMfGxrv5oec3o%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,13 +42,13 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/virtualization
-branch HEAD: 0349a070881f7e3b4472d886989db092ed3ccac8  PCI: Delay after FLR of Intel DC P4510 NVMe
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: ed4d2116b283a1a79e2911c687d83e6b33a462d3  Merge branch 'remotes/lorenzo/pci/misc'
 
-elapsed time: 726m
+elapsed time: 727m
 
-configs tested: 168
-configs skipped: 4
+configs tested: 152
+configs skipped: 3
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -62,8 +61,8 @@ arm                              allyesconfig
 arm                              allmodconfig
 x86_64                           allyesconfig
 riscv                            allmodconfig
-i386                             allyesconfig
 riscv                            allyesconfig
+i386                             allyesconfig
 arm64                            alldefconfig
 powerpc                      bamboo_defconfig
 m68k                       bvme6000_defconfig
@@ -102,35 +101,20 @@ um                                allnoconfig
 mips                       bmips_be_defconfig
 sh                            shmin_defconfig
 arm                        multi_v7_defconfig
-riscv                    nommu_k210_defconfig
 arc                            hsdk_defconfig
 riscv             nommu_k210_sdcard_defconfig
 arm                        multi_v5_defconfig
 h8300                               defconfig
-mips                         tb0287_defconfig
-mips                         tb0219_defconfig
-sh                          urquell_defconfig
-arm                        spear6xx_defconfig
-sh                            titan_defconfig
-powerpc                 mpc8315_rdb_defconfig
 powerpc                 mpc836x_rdk_defconfig
 m68k                       m5249evb_defconfig
 ia64                            zx1_defconfig
 arm                          ixp4xx_defconfig
-mips                             allyesconfig
-sh                           se7712_defconfig
-mips                        qi_lb60_defconfig
-powerpc                     pseries_defconfig
 powerpc                   bluestone_defconfig
 mips                      loongson3_defconfig
 m68k                          multi_defconfig
 arc                          axs101_defconfig
 sh                          sdk7780_defconfig
 arm                          badge4_defconfig
-s390                             allyesconfig
-arm                             pxa_defconfig
-powerpc                      walnut_defconfig
-mips                       lemote2f_defconfig
 arm                     am200epdkit_defconfig
 sh                        sh7757lcr_defconfig
 arm                         nhk8815_defconfig
@@ -156,10 +140,6 @@ powerpc                      mgcoge_defconfig
 m68k                        m5407c3_defconfig
 i386                                defconfig
 arm                        vexpress_defconfig
-sh                               alldefconfig
-mips                     loongson1b_defconfig
-arm                            pleb_defconfig
-arm                          collie_defconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
@@ -179,10 +159,12 @@ h8300                            allyesconfig
 arc                                 defconfig
 sh                               allmodconfig
 parisc                              defconfig
+s390                             allyesconfig
 parisc                           allyesconfig
 s390                                defconfig
 sparc                            allyesconfig
 sparc                               defconfig
+mips                             allyesconfig
 mips                             allmodconfig
 powerpc                          allyesconfig
 powerpc                          allmodconfig
@@ -205,6 +187,7 @@ i386                 randconfig-a016-20210409
 i386                 randconfig-a012-20210409
 i386                 randconfig-a013-20210409
 i386                 randconfig-a015-20210409
+riscv                    nommu_k210_defconfig
 riscv                    nommu_virt_defconfig
 riscv                             allnoconfig
 riscv                               defconfig
