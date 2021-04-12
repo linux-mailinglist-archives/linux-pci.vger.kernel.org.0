@@ -2,104 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E26F935C9F2
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Apr 2021 17:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F166435CC58
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Apr 2021 18:28:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242946AbhDLPcP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Apr 2021 11:32:15 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:51308 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S242922AbhDLPcG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Apr 2021 11:32:06 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13CFVLuf004634;
-        Mon, 12 Apr 2021 08:31:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pfpt0220;
- bh=+PPQ0jPh/9sOaCsxsOMINjzr4p98Q80wtAyKsrfihdg=;
- b=QT0Rq0AfzzjdHzptiCyVprRbVLpd0ykuA5BX3hxmLcRHLkJ1VumAvz/8d0nW8p4PQ2gN
- D8Nwiybkfa5PiU3A8j8wz0IyHXlyDcnNkWhBzVmS5c5Exev90o/Zq0HhtsyOHIC9nDRt
- TEiPfNb8uawLYZUod1f8RMA68GZNya4hWvuGfDcxkyCLrKdKSVSqYhHZjV8IvqzdGR1/
- 1sjiv0lJB05pZZGfasMU6LUzurp0wWi7LTt2hSmg1ii+K5iyMQVn+FG7+obCQE04FOPY
- PA3qSZg5UxUnjBL/fwweJZhIJZfuw6uuNi4hn6nOZ6tzCeVUwnVZ3xrXroygmNpTqPR5 PQ== 
-Received: from dc5-exch02.marvell.com ([199.233.59.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 37vcu99xrb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 12 Apr 2021 08:31:28 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 12 Apr
- 2021 08:31:27 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 12 Apr
- 2021 08:31:27 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 12 Apr 2021 08:31:27 -0700
-Received: from nw-bp.marvell.com (nw-bp.marvell.com [10.5.24.22])
-        by maili.marvell.com (Postfix) with ESMTP id F3DE73F7043;
-        Mon, 12 Apr 2021 08:31:22 -0700 (PDT)
-From:   <bpeled@marvell.com>
-To:     <thomas.petazzoni@bootlin.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <sebastian.hesselbarth@gmail.com>, <gregory.clement@bootlin.com>,
-        <andrew@lunn.ch>, <robh+dt@kernel.org>, <mw@semihalf.com>,
-        <jaz@semihalf.com>, <kostap@marvell.com>, <nadavh@marvell.com>,
-        <stefanc@marvell.com>, <oferh@marvell.com>, <bpeled@marvell.com>
-Subject: =?UTF-8?q?=5B=E2=80=9DPATCH=E2=80=9D=205/5=5D=20PCI=3A=20armada8k=3A=20add=20device=20reset=20to=20link-down=20handle?=
-Date:   Mon, 12 Apr 2021 18:30:56 +0300
-Message-ID: <1618241456-27200-6-git-send-email-bpeled@marvell.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1618241456-27200-1-git-send-email-bpeled@marvell.com>
-References: <1618241456-27200-1-git-send-email-bpeled@marvell.com>
+        id S243450AbhDLQ2U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Apr 2021 12:28:20 -0400
+Received: from mail.corporacionlely.com.pe ([148.102.48.85]:34892 "EHLO
+        mail.corporacionlely.com.pe" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243892AbhDLQ0S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Apr 2021 12:26:18 -0400
+X-Greylist: delayed 11818 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Apr 2021 12:26:18 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.corporacionlely.com.pe (Postfix) with ESMTP id CA49D68E439;
+        Mon, 12 Apr 2021 06:42:52 -0500 (-05)
+Received: from mail.corporacionlely.com.pe ([127.0.0.1])
+        by localhost (mail.corporacionlely.com.pe [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id BSfOlh3E3qM6; Mon, 12 Apr 2021 06:42:52 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.corporacionlely.com.pe (Postfix) with ESMTP id A2CA27896B8;
+        Sun, 11 Apr 2021 22:58:36 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.corporacionlely.com.pe A2CA27896B8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=corporacionlely.com.pe; s=84F15BC8-E104-11E7-AB8C-73B7F641F5F0;
+        t=1618199916; bh=EU/ykBBxlpljSbtcO1wDFtnwXnp3CdCnuCf3RbtnQtU=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=dX5pf1hk3WOoLwt6LvQMX98vrBZit7tpzY4F/VKcxLzvZhKQKrbp2vSQS2aW5nYoV
+         jL70YxRJ/O7njZHMTaWzkYuePMuvIPQuLTDsjEG626aJQEWjWidrsCSsVOuQw3zQ5Q
+         DMiTpoAi8jtAtALZlpLrqfUI+/xLGGScUvLsKZABoVeyCmyiyVKyk3QjKUd3K8kPpl
+         q8TgTqbJfNvRyYvxLIE4OMWR2iKug61ASwIs9PX9XKm2SCTG1oxXMLjSUSKTgRh7Ts
+         f8wUEwosDzX2PXzNkIKx0rfgeLy7U1JchFxoB82Uzl0uvpy2rAVfmVu0nUGL+aFfhH
+         2CGDTRqRk3Cag==
+X-Virus-Scanned: amavisd-new at corporacionlely.com.pe
+Received: from mail.corporacionlely.com.pe ([127.0.0.1])
+        by localhost (mail.corporacionlely.com.pe [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id GOGcfqO8IwnP; Sun, 11 Apr 2021 22:58:36 -0500 (-05)
+Received: from [192.168.8.101] (unknown [41.147.0.2])
+        by mail.corporacionlely.com.pe (Postfix) with ESMTPSA id B1656788FF7;
+        Sun, 11 Apr 2021 22:56:31 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: YDRy_dGnY5Gad4s8J5DMr13f1F-C1kzp
-X-Proofpoint-ORIG-GUID: YDRy_dGnY5Gad4s8J5DMr13f1F-C1kzp
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-12_11:2021-04-12,2021-04-12 signatures=0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Spende von 2.000.000,00. Euro  
+To:     Recipients <evasqueze@corporacionlely.com.pe>
+From:   "manuel franco" <evasqueze@corporacionlely.com.pe>
+Date:   Mon, 12 Apr 2021 05:56:15 +0200
+Reply-To: manuelfrancospende2@gmail.com
+Message-Id: <20210412035632.B1656788FF7@mail.corporacionlely.com.pe>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Peled <bpeled@marvell.com>
+Sie haben eine Spende von 2.000.000,00. Euro
 
-Added pcie reset via gpio support as described in the
-designware-pcie.txt DT binding document.
-In cases link down cause still exist in device.
-The device need to be reset to reestablish the link.
-If reset-gpio pin provided in the device tree, then the linkdown
-handle resets the device before reestablishing link.
-
-Signed-off-by: Ben Peled <bpeled@marvell.com>
----
- drivers/pci/controller/dwc/pcie-armada8k.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index 4eb8607..83ac91e 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -24,6 +24,7 @@
- #include <linux/of_irq.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-+#include <linux/of_gpio.h>
- 
- #include "pcie-designware.h"
- 
-@@ -38,6 +39,7 @@ struct armada8k_pcie {
- 	struct regmap *sysctrl_base;
- 	u32 mac_rest_bitmask;
- 	struct work_struct recover_link_work;
-+	enum of_gpio_flags flags;
- };
- 
- #define PCIE_VENDOR_REGS_OFFSET		0x8000
--- 
-2.7.4
-
+Mein Name ist Manuel Franco aus den USA. Ich habe die America-Lotterie im W=
+ert von 768 Millionen US-Dollar gewonnen und spende einen Teil davon an nur=
+ 5 gl=FCckliche Menschen und einige Waisenh=E4user als Wohlwollen f=FCr die=
+ Menschheit.
