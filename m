@@ -2,60 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F166435CC58
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Apr 2021 18:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7C3635CA9D
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Apr 2021 18:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243450AbhDLQ2U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Apr 2021 12:28:20 -0400
-Received: from mail.corporacionlely.com.pe ([148.102.48.85]:34892 "EHLO
-        mail.corporacionlely.com.pe" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243892AbhDLQ0S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Apr 2021 12:26:18 -0400
-X-Greylist: delayed 11818 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Apr 2021 12:26:18 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.corporacionlely.com.pe (Postfix) with ESMTP id CA49D68E439;
-        Mon, 12 Apr 2021 06:42:52 -0500 (-05)
-Received: from mail.corporacionlely.com.pe ([127.0.0.1])
-        by localhost (mail.corporacionlely.com.pe [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id BSfOlh3E3qM6; Mon, 12 Apr 2021 06:42:52 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.corporacionlely.com.pe (Postfix) with ESMTP id A2CA27896B8;
-        Sun, 11 Apr 2021 22:58:36 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.corporacionlely.com.pe A2CA27896B8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=corporacionlely.com.pe; s=84F15BC8-E104-11E7-AB8C-73B7F641F5F0;
-        t=1618199916; bh=EU/ykBBxlpljSbtcO1wDFtnwXnp3CdCnuCf3RbtnQtU=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=dX5pf1hk3WOoLwt6LvQMX98vrBZit7tpzY4F/VKcxLzvZhKQKrbp2vSQS2aW5nYoV
-         jL70YxRJ/O7njZHMTaWzkYuePMuvIPQuLTDsjEG626aJQEWjWidrsCSsVOuQw3zQ5Q
-         DMiTpoAi8jtAtALZlpLrqfUI+/xLGGScUvLsKZABoVeyCmyiyVKyk3QjKUd3K8kPpl
-         q8TgTqbJfNvRyYvxLIE4OMWR2iKug61ASwIs9PX9XKm2SCTG1oxXMLjSUSKTgRh7Ts
-         f8wUEwosDzX2PXzNkIKx0rfgeLy7U1JchFxoB82Uzl0uvpy2rAVfmVu0nUGL+aFfhH
-         2CGDTRqRk3Cag==
-X-Virus-Scanned: amavisd-new at corporacionlely.com.pe
-Received: from mail.corporacionlely.com.pe ([127.0.0.1])
-        by localhost (mail.corporacionlely.com.pe [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id GOGcfqO8IwnP; Sun, 11 Apr 2021 22:58:36 -0500 (-05)
-Received: from [192.168.8.101] (unknown [41.147.0.2])
-        by mail.corporacionlely.com.pe (Postfix) with ESMTPSA id B1656788FF7;
-        Sun, 11 Apr 2021 22:56:31 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S243206AbhDLQBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Apr 2021 12:01:44 -0400
+Received: from lizzard.sbs.de ([194.138.37.39]:56388 "EHLO lizzard.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238498AbhDLQBn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Apr 2021 12:01:43 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 13CG18SA016672
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Apr 2021 18:01:08 +0200
+Received: from md1za8fc.ad001.siemens.net ([139.22.41.180])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 13CG17PN005253;
+        Mon, 12 Apr 2021 18:01:07 +0200
+Date:   Mon, 12 Apr 2021 18:01:06 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        "Jim Quinlan" <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 6/7] mfd: lpc_ich: Add support for pinctrl in
+ non-ACPI system
+Message-ID: <20210412180106.7dc524e8@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210308122020.57071-7-andriy.shevchenko@linux.intel.com>
+References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
+        <20210308122020.57071-7-andriy.shevchenko@linux.intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Spende von 2.000.000,00. Euro  
-To:     Recipients <evasqueze@corporacionlely.com.pe>
-From:   "manuel franco" <evasqueze@corporacionlely.com.pe>
-Date:   Mon, 12 Apr 2021 05:56:15 +0200
-Reply-To: manuelfrancospende2@gmail.com
-Message-Id: <20210412035632.B1656788FF7@mail.corporacionlely.com.pe>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Sie haben eine Spende von 2.000.000,00. Euro
+Am Mon, 8 Mar 2021 14:20:19 +0200
+schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
-Mein Name ist Manuel Franco aus den USA. Ich habe die America-Lotterie im W=
-ert von 768 Millionen US-Dollar gewonnen und spende einen Teil davon an nur=
- 5 gl=FCckliche Menschen und einige Waisenh=E4user als Wohlwollen f=FCr die=
- Menschheit.
+> From: Tan Jui Nee <jui.nee.tan@intel.com>
+> 
+> Add support for non-ACPI systems, such as system that uses
+> Advanced Boot Loader (ABL) whereby a platform device has to be created
+> in order to bind with pin control and GPIO.
+> 
+> At the moment, Intel Apollo Lake In-Vehicle Infotainment (IVI) system
+> requires a driver to hide and unhide P2SB to lookup P2SB BAR and pass
+> the PCI BAR address to GPIO.
+> 
+> Signed-off-by: Tan Jui Nee <jui.nee.tan@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/lpc_ich.c | 100
+> +++++++++++++++++++++++++++++++++++++++++- 1 file changed, 99
+> insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich.c
+> index 8e9bd6813287..959247b6987a 100644
+> --- a/drivers/mfd/lpc_ich.c
+> +++ b/drivers/mfd/lpc_ich.c
+> @@ -8,7 +8,8 @@
+>   *  Configuration Registers.
+>   *
+>   *  This driver is derived from lpc_sch.
+> -
+> + *
+> + *  Copyright (C) 2017, 2021 Intel Corporation
+>   *  Copyright (c) 2011 Extreme Engineering Solution, Inc.
+>   *  Author: Aaron Sierra <asierra@xes-inc.com>
+>   *
+> @@ -43,6 +44,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-p2sb.h>
+> +#include <linux/pinctrl/pinctrl.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/lpc_ich.h>
+>  #include <linux/platform_data/itco_wdt.h>
+> @@ -140,6 +142,73 @@ static struct mfd_cell lpc_ich_gpio_cell = {
+>  	.ignore_resource_conflicts = true,
+>  };
+>  
+> +/* Offset data for Apollo Lake GPIO controllers */
+> +#define APL_GPIO_SOUTHWEST_OFFSET	0xc00000
+> +#define APL_GPIO_SOUTHWEST_SIZE		0x654
+> +#define APL_GPIO_NORTHWEST_OFFSET	0xc40000
+> +#define APL_GPIO_NORTHWEST_SIZE		0x764
+> +#define APL_GPIO_NORTH_OFFSET		0xc50000
+> +#define APL_GPIO_NORTH_SIZE		0x76c
+
+drivers/pinctrl/intel/pinctrl-broxton.c:653
+BXT_COMMUNITY(0, 77),
+
+> +#define APL_GPIO_WEST_OFFSET		0xc70000
+> +#define APL_GPIO_WEST_SIZE		0x674
+
+All these sizes correlate with 4 magic numbers from pinctrl-broxton.
+
+SIZE - 0x500 (pad_base?) - 4 (no clue) / 8
+
+It might be worth basing both numbers on a define and giving the magic
+numbers some names.
+
+But all this seems like duplication of pinctrl-broxton, maybe the
+pinctrl driver should unhide the p2sb ...
+
+regards,
+Henning
+
+> +
+> +#define APL_GPIO_NR_DEVICES		4
+> +#define APL_GPIO_IRQ			14
+> +
+> +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET,
+> APL_GPIO_NORTH_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_NORTHWEST_OFFSET,
+> APL_GPIO_NORTHWEST_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_WEST_OFFSET,
+> APL_GPIO_WEST_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_SOUTHWEST_OFFSET,
+> APL_GPIO_SOUTHWEST_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +};
+> +
+> +/* The order must be in sync with apl_pinctrl_soc_data */
+> +static const struct mfd_cell apl_gpio_devices[APL_GPIO_NR_DEVICES] =
+> {
+> +	{
+> +		/* North */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 0,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[0]),
+> +		.resources = apl_gpio_resources[0],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +	{
+> +		/* NorthWest */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 1,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[1]),
+> +		.resources = apl_gpio_resources[1],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +	{
+> +		/* West */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 2,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[2]),
+> +		.resources = apl_gpio_resources[2],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +	{
+> +		/* SouthWest */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 3,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[3]),
+> +		.resources = apl_gpio_resources[3],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +};
+>  
+>  static struct mfd_cell lpc_ich_spi_cell = {
+>  	.name = "intel-spi",
+> @@ -1082,6 +1151,29 @@ static int lpc_ich_init_wdt(struct pci_dev
+> *dev) return ret;
+>  }
+>  
+> +static int lpc_ich_init_pinctrl(struct pci_dev *dev)
+> +{
+> +	struct resource base;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = pci_p2sb_bar(dev, PCI_DEVFN(13, 0), &base);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
+> +		struct resource *mem = &apl_gpio_resources[i][0];
+> +
+> +		/* Fill MEM resource */
+> +		mem->start += base.start;
+> +		mem->end += base.start;
+> +		mem->flags = base.flags;
+> +	}
+> +
+> +	return mfd_add_devices(&dev->dev, 0, apl_gpio_devices,
+> +			       ARRAY_SIZE(apl_gpio_devices), NULL,
+> 0, NULL); +}
+> +
+>  static void lpc_ich_test_spi_write(struct pci_dev *dev, unsigned int
+> devfn, struct intel_spi_boardinfo *info)
+>  {
+> @@ -1198,6 +1290,12 @@ static int lpc_ich_probe(struct pci_dev *dev,
+>  			cell_added = true;
+>  	}
+>  
+> +	if (priv->chipset == LPC_APL) {
+> +		ret = lpc_ich_init_pinctrl(dev);
+> +		if (!ret)
+> +			cell_added = true;
+> +	}
+> +
+>  	if (lpc_chipset_info[priv->chipset].spi_type) {
+>  		ret = lpc_ich_init_spi(dev);
+>  		if (!ret)
+
