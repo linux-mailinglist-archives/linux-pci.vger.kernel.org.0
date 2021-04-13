@@ -2,196 +2,453 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB65735E637
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Apr 2021 20:22:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6589435E65D
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Apr 2021 20:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347620AbhDMSWv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Apr 2021 14:22:51 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:43376 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347617AbhDMSWr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Apr 2021 14:22:47 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13DILrPV024591;
-        Tue, 13 Apr 2021 14:22:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=QF1UAHjHl35iTWRnWVofBM2Bta6+/0zLycLcvk4A2aU=;
- b=w9V17P3eenpcXwmxPgJ10p9Hh+87B9WXsppCNlQd195VPoWAo6VVu3UsaqEXP93geXml
- A+oGfI6TvcJue0+9h59qQs3sppxeWGMFxrLhW9K0ARLIINEDbJj/K8B1i06nHGG7wRVm
- 5NGLOh2DRxgeg5iHJxWxsnh5BudMQM9CDb+VXMoDi53AGLCCNy9vrTwSSjdjlBFtK77/
- 9y9gq6I2yLpSUCSIZSs6G+O3vqDgu5sUKHlh8Azm+pIl98nX5+9JLBQL9YLcG/60S8V9
- ttr2VW2UYjnM+M5J6X6Zso8OBoQL54gxrIoJSiyfOpBSrVFQbpZmvYJ4VsgaGbB3g/xG jQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 37vun5mhqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Apr 2021 14:22:25 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13DH9DlZ020597;
-        Tue, 13 Apr 2021 14:22:25 -0400
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2172.outbound.protection.outlook.com [104.47.58.172])
-        by mx0a-00154901.pphosted.com with ESMTP id 37usp3nupr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Apr 2021 14:22:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZpJZKC9VuBOw3qSxV+e3MMt3Wk6ZJTx7as1/+T1toIQdkHRHiY/b4gnDhVfucx5+f3HRgjOHNCLwRYOrMQLEpMpWP+7RAHuW/X772iJYak+NnHp5h5VRoky3zdBTCHeeb8q7+fqiV+QKvYzC/Ir8DUiggylNijHcDk13qmo+kyGR+8fqK0uJ6hUg6RLyYOeooShUiaJo8k5PFQJTK8tmKf2KDXk0Lz4KO443gcjmPd/TBfgOqx4vJaq6WC7MpkVD0nHRG5UAHNebMm+wsYal3iQ9WUdrpH9wCdXoUtk04c39pyqgL/hCGXJVqRPB+KTaI7Ur+jxhYzQCi3H6via4EQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QF1UAHjHl35iTWRnWVofBM2Bta6+/0zLycLcvk4A2aU=;
- b=A2b5LLGgUHI1Lpx5UA7HzdZzBjz+Pl6Xzeh3v44h2AP2jr+t+gWON3fzqsaePN9Ym4mAJKYKV0yfoGmrsXLwBsd9t7ocAkRp7FQlADfNYE9nTSpdipZ3+2US2E7t3OPQ0tefTj9ZULDnYXaA0Tc/3CobGKxmKqpnAfOQ78+sUjscbzkJyQNojNFwixiFV2Q1f71EdrbJX9b8ST+bv0XNDveS1/1hSFNSRLtPKmgT6fB9tbzJAdDDD1CoSDAR6GrJgj29lk7Wy1No3+ywErE7ahUfALb6sHdZM4r4O80GfezIoC7WVvKXJ0P6JRs2LK5TzA3iZ7o7JhsJLK603CqpcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from BYAPR19MB4711.namprd19.prod.outlook.com (2603:10b6:a03:9b::15)
- by BY5PR19MB3812.namprd19.prod.outlook.com (2603:10b6:a03:225::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.21; Tue, 13 Apr
- 2021 18:22:23 +0000
-Received: from BYAPR19MB4711.namprd19.prod.outlook.com
- ([fe80::ec13:7aef:e53f:2f99]) by BYAPR19MB4711.namprd19.prod.outlook.com
- ([fe80::ec13:7aef:e53f:2f99%2]) with mapi id 15.20.4020.022; Tue, 13 Apr 2021
- 18:22:22 +0000
-From:   "K, Narendra" <Narendra.K@dell.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-CC:     Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        "linux-netdev@vger.kernel.org" <linux-netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "K, Narendra" <Narendra.K@dell.com>
-Subject: =?utf-8?B?UkU6IFtQQVRDSCAwLzFdIFVzZSBvZiAvc3lzL2J1cy9wY2kvZGV2aWNlcy8=?=
- =?utf-8?B?4oCmL2luZGV4IGZvciBub24tU01CSU9TIHBsYXRmb3Jtcw==?=
-Thread-Topic: =?utf-8?B?W1BBVENIIDAvMV0gVXNlIG9mIC9zeXMvYnVzL3BjaS9kZXZpY2VzL+KApi9p?=
- =?utf-8?Q?ndex_for_non-SMBIOS_platforms?=
-Thread-Index: AQHXL6QKk7fts0IlSUyTkZlYCaJGvqqyudsg
-Date:   Tue, 13 Apr 2021 18:22:22 +0000
-Message-ID: <BYAPR19MB4711D0F78D778178ADCACC64814F9@BYAPR19MB4711.namprd19.prod.outlook.com>
-References: <20210412135905.1434249-1-schnelle@linux.ibm.com>
-In-Reply-To: <20210412135905.1434249-1-schnelle@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_Enabled=True;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_Owner=Narendra_K@Dell.com;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_SetDate=2021-04-13T18:08:06.9223385Z;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_Name=Internal Use;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_ActionId=aa3a2b56-bace-4fa7-977b-b16225f0996d;
- MSIP_Label_7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90_Extended_MSFT_Method=Manual;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_Enabled=True;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_Owner=Narendra_K@Dell.com;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_SetDate=2021-04-13T18:08:06.9223385Z;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_Name=No Visual Marking;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_ActionId=aa3a2b56-bace-4fa7-977b-b16225f0996d;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_Parent=7de70ee2-0cb4-4d60-aee5-75ef2c4c8a90;
- MSIP_Label_c6e0e3e8-8921-4906-b77b-3374d4e05132_Extended_MSFT_Method=Manual
-authentication-results: linux.ibm.com; dkim=none (message not signed)
- header.d=none;linux.ibm.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [157.46.167.26]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47454121-cc09-4648-1742-08d8fea9151b
-x-ms-traffictypediagnostic: BY5PR19MB3812:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR19MB38129EE5FD2C14EB9AD8629A814F9@BY5PR19MB3812.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Pn7wvsBhdDhqnwfMJU5c2sMlTRF05RrY4l6I1w4LpnPZAKAMus2qgh/TH43NNNgaw/LFrTM6Oq7DbLbliCFHA40TNu77azTBsPQYFsis7oGykufk5B5bv+q1XH9i1hVGFa6i2QHynp3HzmSykFSK9E1kbA0MAkqtM02dC/KspwYEGPv8FdBg4VCRBdqqfs6XZ848Z+cAJxJYSiQb/89g0VycQqzIxPdXwWJvhzMYA9nMFGD7K27k09cq08Sc9mBsqxXBedI9Isx3oH/C8ul8stHjKMAOui/hcDwbkX2Zzhj9XjQvZDzXlEs8L0AOQzf32tMetcukzYixLbNysmlGiiXAnafoZPlsI54JjEIQxf3dM+V9JqK+DZ7qkVeCJDZ3tu+2TGvyrqQxZUyNIypmvok+qL9+YoX8u2XP+4Ld16KQr45KpSB1eTNyms5BM/pAz30Swr4i39VU7VZawaD3CcxuFeocAX+L/JyWcrucGHVMesSadVoiFlJ9huQVRB6hrPR3PepnsIV7PSpN/xE0kRtCGr8zUChP4g76F2lho7gyUNCNsIbWd7j1+bq4qhWWuwnDC2guZBUD6yfzW7MTGJWZ4EzxLBN4TJq2MWIvxG8=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR19MB4711.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(39860400002)(346002)(396003)(26005)(4326008)(6506007)(7696005)(33656002)(2906002)(53546011)(9686003)(107886003)(52536014)(38100700002)(6916009)(186003)(66476007)(64756008)(66556008)(66946007)(786003)(316002)(54906003)(76116006)(66446008)(478600001)(71200400001)(86362001)(55016002)(5660300002)(83380400001)(8936002)(122000001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?OVlCSzU4UmJyOHhrOFcwSFpVTzZuc2NNNFcxbkhmNDZZamVCangvTWRSd3py?=
- =?utf-8?B?cFVRM2dFU2VTVEVqcEVCOUxJMmIybmVOTGRKbEFTbTFQbW5Ld1VQMDJyV3l4?=
- =?utf-8?B?aXpKR1NBRWlTS1pRbkdIdG1OWjQrc2hqRGZWdFg2UVZLcEt5SFZ3dm4rdENS?=
- =?utf-8?B?L0FLbnR4Rzl5c2RnUk1tT3FzRXpzd3RydTJmT3NiZENtL3dJN2IxSmFwMDVG?=
- =?utf-8?B?Q3BFTWVzQ3RzZGRhWGZuNWFyRFJJdThzanBIOFV4VVVnZXE0Qm5lcTh2ZFBY?=
- =?utf-8?B?K2xCWUo0K1pCSkVaNDlJUlVhY2RXNUJNS0Vmc3UyQW83NTRrK0pvUERtdXY3?=
- =?utf-8?B?cU5WUjBRdjF0WDVMUGZpQlRTR3dBWUt4Unp6OGtNRCtZMklEc25zazI0aith?=
- =?utf-8?B?S3NNSEkzR2ZuZnloY3dIeXl0WUZHOFI4RW9OdEtoZEx1aGNlVUY5RWx5bXNH?=
- =?utf-8?B?MzYxa0J5VmJVUjQ3dmVrZmgveXY4alZKc2pBSzdMR3Blbi8va3RpUlZ0VE5H?=
- =?utf-8?B?YnAvZ0Q5NFhJdUt2Z1NIWkQwNFRPK05qanB2NUQvcnkxcm1WV2VVQTFmbTJ2?=
- =?utf-8?B?c1J5cjhRNDRCbW9JYjd0TllzSm91eUQ4S1RrR0RoWGwreGc0SGpNdkpKUGxR?=
- =?utf-8?B?MzdSM2M1TkNFZlFzQTFUcG1FV0xrZVRhT2NCeE1WdjU0L3g0bHJiWGRpK0Zq?=
- =?utf-8?B?eU1IWmhuc0NhNTRUZmhFSEhlTmhOQnhPZVNYcURhVE5rRlZsSS83S1ljMmlZ?=
- =?utf-8?B?TTgvQ1UweU9DcHFJNWpTMWxtQ3lwK0tqaWpxQ24vbGh2SEN0OG9ENHdjazVy?=
- =?utf-8?B?bGxnOVlPQkJ1Z0c4aUlTdWkwbENQb3RkWjhSQzNFK284Y0kxVHpvZDErcG84?=
- =?utf-8?B?ZFY1dm96ZFoza2ZleGl1Tk9GVVVpT2Z6NHFrNEppdTJIakNtK3pKNUFJelVG?=
- =?utf-8?B?SVhQVW1YVlpad0VSMjQ4ZVZWVG43V0ZmSGxZUjdZM2NwMXU3eVNjQTRxQi9Y?=
- =?utf-8?B?M3h6UnFDL2JZMmJKc3UxWm5EYWNrYjBUMTZZSTZsVnp3anBQdHhGVWlvM2tG?=
- =?utf-8?B?UXZ6UXkrekpscFBjaGt2bVFKZHJ4cm4wOVlCWTJEQUZBMWNySUx3WG5PeDBl?=
- =?utf-8?B?QXE1RCtlT0tDUXhXSUQ0RWlFOHB3ZlVwa2tRbmdrRS9yY05MVDI2akhHN0Jj?=
- =?utf-8?B?QzM0MVZKcXAxcnkxaC9mRU9ac0ZWSkFxQ0syKzVWOG9kdzNnUktaUDhOS3dS?=
- =?utf-8?B?U0VWY0lRWXZ0NTluWHUvMzNFWTlTNkh4eHNyRWxwcFRNRFYzSkdFVEF1d3Ax?=
- =?utf-8?B?NTNWMFQ3QUcxQ0ZWeTE4TDdyZExWcTZQNk0xRy8yZGVmNTZoLzlvNW1zWmdO?=
- =?utf-8?B?M01WeWFLcS9LRzlJWjNyei80QlNVTGhXTzlkU1dJcSt4ekVLbGlSc05ZSmg1?=
- =?utf-8?B?ZXZGS1lRVGtrd2tUdmxabDRxWHc4OHZTTVVrbHR1Z1I5MjU4OUw0dmxpNVQ1?=
- =?utf-8?B?UFlhUVpwR0FzZ1pqL3NuWE45cXc2NEliZXZaQjlldU5zQnZUOGlLQjMwVm05?=
- =?utf-8?B?RTB3dTVRQXIwS1RoaUQrZnhpZzFOMWc4bjJ5bHoyZGlieHFEb2luaFgwU0Fp?=
- =?utf-8?B?WEVMNnF6SnAxM2QxM29OOEZHYWJhSmZEL0Y0WTVsdjEzYmQ2dlB4VEJzMld1?=
- =?utf-8?B?Tjl1Q0ovbDF0NzV3VzZQZmVhSytlV29KSE16OXZ0WWNZS0UwNjAzcDZPaGl1?=
- =?utf-8?Q?9ooLejyEuYaRP4gA2wWNcLHCJLHC/ySRSXu0fS2?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S237770AbhDMS2o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Apr 2021 14:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231869AbhDMS2n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Apr 2021 14:28:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E1D92613C4;
+        Tue, 13 Apr 2021 18:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618338503;
+        bh=hlHQhpdtYbvHmi4yFqlhIj4v3zpUU5HMZBF1IpTwO3w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DIHP0tjlqSnriXa1qeSnt110gP3GS3fppw+oUcGUaZHStGHmWqcg0JVrrla3hhXGY
+         IiKpWQ40pxnJeSkHnieEi0uH4ZUOKzkdqCBNjea9NpABaCN/6umQJ0sEVzd60fF72Z
+         Q4eMQGfKAmSEjb48qSHwXI+ytiH3ToMgAPYL5+fe/TinpL0liIUZjLIcbDA6OwLWHt
+         rXhwvP/ChgDpypEQJ0qdeK2nsVyco7azqQLddcpEawMuAMydF/P8pvuSWZ0Azw4D86
+         ub+yQrrKbUB5Z0ZFnk59CqRMOW9WhOuK6ww9cZFwdFwa+vEeGtcGseSBQYg8/1vK7u
+         9M/8Gn/MgPd4w==
+Received: by mail-qk1-f181.google.com with SMTP id e13so9008997qkl.6;
+        Tue, 13 Apr 2021 11:28:23 -0700 (PDT)
+X-Gm-Message-State: AOAM531AS7Onf05kg7QuKRNUP+Q9hqVKMC4zCQZisg3gvB/Zil2gDNCX
+        9CZ+bEJhxXP9A2gw1S2UzoLNe4GZ17Ci4J76WA==
+X-Google-Smtp-Source: ABdhPJwoNzcvXe/w+Vm+GWgGZ/BTfrP62IeF+en7uyEo5Y4RgmbuDEG30VNHO22szYM53cRJUiu78Wlp6C4dNWvCz2E=
+X-Received: by 2002:a37:84b:: with SMTP id 72mr7308119qki.464.1618338503029;
+ Tue, 13 Apr 2021 11:28:23 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR19MB4711.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47454121-cc09-4648-1742-08d8fea9151b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2021 18:22:22.8960
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bh/4Swu+Jtg97D7xiRqZK2fC64xH2yKA3mjWqTognUv+0oR5rrDCt6cvlmxevWYHrYZEhgBUS/Q1Ufo8HyO2YQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR19MB3812
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-11_01:2021-04-09,2021-04-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 lowpriorityscore=0 clxscore=1011 bulkscore=0 spamscore=0
- malwarescore=0 impostorscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104130111
-X-Proofpoint-ORIG-GUID: tDyZRriPoG9DnqGyeGqSx1sB8kmNCyRY
-X-Proofpoint-GUID: tDyZRriPoG9DnqGyeGqSx1sB8kmNCyRY
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
- definitions=main-2104130124
+References: <20210325010413.3618261-1-xxm@rock-chips.com>
+In-Reply-To: <20210325010413.3618261-1-xxm@rock-chips.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 13 Apr 2021 13:28:11 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKxP_i7U57UrG641ArD1symHfxvjWBxf_3gt3kVBBsp9Q@mail.gmail.com>
+Message-ID: <CAL_JsqKxP_i7U57UrG641ArD1symHfxvjWBxf_3gt3kVBBsp9Q@mail.gmail.com>
+Subject: Re: [PATCH v6] PCI: rockchip: Add Rockchip RK356X host controller driver
+To:     Simon Xue <xxm@rock-chips.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBOaWtsYXMgU2NobmVsbGUgPHNj
-aG5lbGxlQGxpbnV4LmlibS5jb20+DQo+IFNlbnQ6IE1vbmRheSwgQXByaWwgMTIsIDIwMjEgNzoy
-OSBQTQ0KPiBUbzogSywgTmFyZW5kcmENCj4gQ2M6IFZpa3RvciBNaWhhamxvdnNraTsgU3RlZmFu
-IFJhc3BsOyBQZXRlciBPYmVycGFybGVpdGVyOyBsaW51eC0NCj4gbmV0ZGV2QHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LXMzOTBAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSCAw
-LzFdIFVzZSBvZiAvc3lzL2J1cy9wY2kvZGV2aWNlcy/igKYvaW5kZXggZm9yIG5vbi1TTUJJT1MN
-Cj4gcGxhdGZvcm1zDQo+IA0KPiANCj4gW0VYVEVSTkFMIEVNQUlMXQ0KPiANCj4gSGkgTmFyZW5k
-cmEsIEhpIEFsbCwNCj4gDQo+IEFjY29yZGluZyB0byBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5n
-L3N5c2ZzLWJ1cy1wY2kgeW91IGFyZSByZXNwb25zaWJsZSBmb3INCj4gdGhlIGluZGV4IGRldmlj
-ZSBhdHRyaWJ1dGUgdGhhdCBpcyB1c2VkIGJ5IHN5c3RlbWQgdG8gY3JlYXRlIG5ldHdvcmsgaW50
-ZXJmYWNlDQo+IG5hbWVzLg0KPiANCj4gTm93IHdlIHdvdWxkIGxpa2UgdG8gcmV1c2UgdGhpcyBh
-dHRyaWJ1dGUgZm9yIGZpcm13YXJlIHByb3ZpZGVkIFBDSSBkZXZpY2UNCj4gaW5kZXggbnVtYmVy
-cyBvbiB0aGUgczM5MCBhcmNoaXRlY3R1cmUgd2hpY2ggZG9lc24ndCBoYXZlIFNNQklPUy9ETUkg
-bm9yDQo+IEFDUEkuIEFsbCBjb2RlIGNoYW5nZXMgYXJlIHdpdGhpbiBvdXIgYXJjaGl0ZWN0dXJl
-IHNwZWNpZmljIGNvZGUgYnV0IEknZCBsaWtlIHRvDQo+IGdldCBzb21lIEFja3MgZm9yIHRoaXMg
-cmV1c2UuIEkndmUgc2VudCBhbiBSRkMgdmVyc2lvbiBvZiB0aGlzIHBhdGNoIG9uIDE1dGggb2YN
-Cj4gTWFyY2ggd2l0aCB0aGUgc3ViamVjdDoNCj4gDQo+ICAgIHMzOTAvcGNpOiBleHBvc2UgYSBQ
-Q0kgZGV2aWNlJ3MgVUlEIGFzIGl0cyBpbmRleA0KPiANCj4gYnV0IGdvdCBubyByZXNwb25zZS4g
-DQoNCkhpIE5pa2xhcywNCg0KU29ycnksIEkgbWlzc2VkIHJlc3BvbmRpbmcgdG8gdGhlIFJGQyBz
-ZW50IGVhcmxpZXIuICANCg0KPiBXb3VsZCBpdCBiZSBva2F5IHRvIHJlLXVzZSB0aGlzIGF0dHJp
-YnV0ZSBmb3IgZXNzZW50aWFsbHkNCj4gdGhlIHNhbWUgcHVycG9zZSBidXQgd2l0aCBpbmRleCBu
-dW1iZXJzIHByb3ZpZGVkIGJ5IGEgZGlmZmVyZW50IHBsYXRmb3JtDQo+IG1lY2hhbmlzbT8gDQoN
-Ckkgd2lsbCBnbyB0aHJvdWdoIHRoZSByZXF1ZXN0IGFib3ZlIGFuZCBwcm92aWRlIGNvbW1lbnRz
-IGluIHR3byBvciB0aHJlZSBkYXlzLg0KIA0KV2l0aCByZWdhcmRzLA0KTmFyZW5kcmEgSw0KDQo=
+On Wed, Mar 24, 2021 at 8:04 PM Simon Xue <xxm@rock-chips.com> wrote:
+>
+> Add a driver for the DesignWare-based PCIe controller found on
+> RK356X. The existing pcie-rockchip-host driver is only used for
+> the Rockchip-designed IP found on RK3399.
+>
+> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig            |  10 +
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 291 ++++++++++++++++++
+>  3 files changed, 302 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index 22c5529e9a65..159791775cc6 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -214,6 +214,16 @@ config PCIE_ARTPEC6_EP
+>           Enables support for the PCIe controller in the ARTPEC-6 SoC to =
+work in
+>           endpoint mode. This uses the DesignWare core.
+>
+> +config PCIE_ROCKCHIP_DW_HOST
+> +       bool "Rockchip DesignWare PCIe controller"
+> +       select PCIE_DW
+> +       select PCIE_DW_HOST
+> +       depends on ARCH_ROCKCHIP || COMPILE_TEST
+> +       depends on OF
+> +       help
+> +         Enables support for the DesignWare PCIe controller in the
+> +         Rockchip SoC except RK3399.
+> +
+>  config PCIE_INTEL_GW
+>         bool "Intel Gateway PCIe host controller support"
+>         depends on OF && (X86 || COMPILE_TEST)
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
+/dwc/Makefile
+> index a751553fa0db..30eef8e9ee8a 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE_EP) +=3D pci-layerscape-ep.=
+o
+>  obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) +=3D pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) +=3D pcie-artpec6.o
+> +obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) +=3D pcie-dw-rockchip.o
+>  obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
+>  obj-$(CONFIG_PCIE_KIRIN) +=3D pcie-kirin.o
+>  obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/=
+controller/dwc/pcie-dw-rockchip.c
+> new file mode 100644
+> index 000000000000..6d003353d030
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -0,0 +1,291 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe host controller driver for Rockchip SoCs.
+> + *
+> + * Copyright (C) 2021 Rockchip Electronics Co., Ltd.
+> + *             http://www.rock-chips.com
+> + *
+> + * Author: Simon Xue <xxm@rock-chips.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +/*
+> + * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
+> + * mask for the lower 16 bits.
+> + */
+> +#define HIWORD_UPDATE(mask, val) (((mask) << 16) | (val))
+> +#define HIWORD_UPDATE_BIT(val) HIWORD_UPDATE(val, val)
+> +
+> +#define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
+> +
+> +#define PCIE_CLIENT_RC_MODE            HIWORD_UPDATE_BIT(0x40)
+> +#define PCIE_CLIENT_ENABLE_LTSSM       HIWORD_UPDATE_BIT(0xc)
+> +#define PCIE_SMLH_LINKUP               BIT(16)
+> +#define PCIE_RDLH_LINKUP               BIT(17)
+> +#define PCIE_LINKUP                    (PCIE_SMLH_LINKUP | PCIE_RDLH_LIN=
+KUP)
+> +#define PCIE_L0S_ENTRY                 0x11
+> +#define PCIE_CLIENT_GENERAL_CONTROL    0x0
+> +#define PCIE_CLIENT_GENERAL_DEBUG      0x104
+> +#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
+> +#define PCIE_CLIENT_LTSSM_STATUS       0x300
+> +#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
+> +
+> +struct rockchip_pcie {
+> +       struct dw_pcie                  pci;
+> +       void __iomem                    *apb_base;
+> +       struct phy                      *phy;
+> +       struct clk_bulk_data            *clks;
+> +       unsigned int                    clk_cnt;
+> +       struct reset_control            *rst;
+> +       struct gpio_desc                *rst_gpio;
+> +       struct regulator                *vpcie3v3;
+> +};
+> +
+> +static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
+> +                                            u32 reg)
+> +{
+> +       return readl(rockchip->apb_base + reg);
+> +}
+> +
+> +static void rockchip_pcie_writel_apb(struct rockchip_pcie *rockchip,
+> +                                               u32 val, u32 reg)
+> +{
+> +       writel(val, rockchip->apb_base + reg);
+> +}
+> +
+> +static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+> +{
+> +       rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+> +                                PCIE_CLIENT_GENERAL_CONTROL);
+> +}
+> +
+> +static int rockchip_pcie_link_up(struct dw_pcie *pci)
+> +{
+> +       struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
+> +       u32 val =3D rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_S=
+TATUS);
+> +
+> +       if ((val & (PCIE_RDLH_LINKUP | PCIE_SMLH_LINKUP)) =3D=3D PCIE_LIN=
+KUP &&
+> +           (val & GENMASK(5, 0)) =3D=3D PCIE_L0S_ENTRY)
+> +               return 1;
+> +
+> +       return 0;
+> +}
+> +
+> +static int rockchip_pcie_start_link(struct dw_pcie *pci)
+> +{
+> +       struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
+> +
+> +       /* Reset device */
+> +       gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
+> +
+> +       rockchip_pcie_enable_ltssm(rockchip);
+> +
+> +       /*
+> +        * PCIe requires the refclk to be stable for 100=C2=B5s prior to =
+releasing
+> +        * PERST. See table 2-4 in section 2.6.2 AC Specifications of the=
+ PCI
+> +        * Express Card Electromechanical Specification, 1.1. However, we=
+ don't
+> +        * know if the refclk is coming from RC's PHY or external OSC. If=
+ it's
+> +        * from RC, so enabling LTSSM is the just right place to release =
+#PERST.
+> +        * We need a little more extra time as before, rather than settin=
+g just
+
+1000x more is not 'a little more'.
+
+> +        * 100us as we don't know how long should the device need to rese=
+t.
+> +        */
+> +       msleep(100);
+> +       gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
+> +
+> +       return 0;
+> +}
+> +
+> +static void rockchip_pcie_fast_link_setup(struct rockchip_pcie *rockchip=
+)
+> +{
+> +       u32 val;
+> +
+> +       /* LTSSM enable control mode */
+> +       val =3D rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_HOT_RESET_C=
+TRL);
+> +       val |=3D PCIE_LTSSM_ENABLE_ENHANCE | (PCIE_LTSSM_ENABLE_ENHANCE <=
+< 16);
+> +       rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTR=
+L);
+> +}
+> +
+> +static int rockchip_pcie_host_init(struct pcie_port *pp)
+> +{
+> +       struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+> +       struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
+> +
+> +       rockchip_pcie_fast_link_setup(rockchip);
+
+This is the only caller, just move the function contents here.
+
+> +
+> +       rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
+> +                                PCIE_CLIENT_GENERAL_CONTROL);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct dw_pcie_host_ops rockchip_pcie_host_ops =3D {
+> +       .host_init =3D rockchip_pcie_host_init,
+> +};
+> +
+> +static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
+> +{
+> +       struct device *dev =3D rockchip->pci.dev;
+> +       int ret;
+> +
+> +       ret =3D devm_clk_bulk_get_all(dev, &rockchip->clks);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       rockchip->clk_cnt =3D ret;
+> +
+> +       return clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks)=
+;
+> +}
+> +
+> +static int rockchip_pcie_resource_get(struct platform_device *pdev,
+> +                                     struct rockchip_pcie *rockchip)
+> +{
+> +       rockchip->apb_base =3D devm_platform_ioremap_resource_byname(pdev=
+, "apb");
+> +       if (IS_ERR(rockchip->apb_base))
+> +               return PTR_ERR(rockchip->apb_base);
+> +
+> +       rockchip->rst_gpio =3D devm_gpiod_get_optional(&pdev->dev, "reset=
+",
+> +                                                    GPIOD_OUT_HIGH);
+> +       if (IS_ERR(rockchip->rst_gpio))
+> +               return PTR_ERR(rockchip->rst_gpio);
+> +
+> +       return 0;
+> +}
+> +
+> +static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+> +{
+> +       struct device *dev =3D rockchip->pci.dev;
+> +       int ret;
+> +
+> +       rockchip->phy =3D devm_phy_get(dev, "pcie-phy");
+> +       if (IS_ERR(rockchip->phy))
+> +               return dev_err_probe(dev, PTR_ERR(rockchip->phy),
+> +                                    "missing PHY\n");
+> +
+> +       ret =3D phy_init(rockchip->phy);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret =3D phy_power_on(rockchip->phy);
+> +       if (ret)
+> +               phy_exit(rockchip->phy);
+> +
+> +       return ret;
+> +}
+> +
+> +static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
+> +{
+> +       phy_exit(rockchip->phy);
+> +       phy_power_off(rockchip->phy);
+> +}
+> +
+> +static int rockchip_pcie_reset_control_release(struct rockchip_pcie *roc=
+kchip)
+> +{
+> +       struct device *dev =3D rockchip->pci.dev;
+> +
+> +       rockchip->rst =3D devm_reset_control_array_get_exclusive(dev);
+> +       if (IS_ERR(rockchip->rst))
+> +               return dev_err_probe(dev, PTR_ERR(rockchip->rst),
+> +                                    "failed to get reset lines\n");
+> +
+> +       return reset_control_deassert(rockchip->rst);
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops =3D {
+> +       .link_up =3D rockchip_pcie_link_up,
+> +       .start_link =3D rockchip_pcie_start_link,
+> +};
+> +
+> +static int rockchip_pcie_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct rockchip_pcie *rockchip;
+> +       struct pcie_port *pp;
+> +       int ret;
+> +
+> +       rockchip =3D devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
+> +       if (!rockchip)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, rockchip);
+> +
+> +       rockchip->pci.dev =3D dev;
+> +       rockchip->pci.ops =3D &dw_pcie_ops;
+> +
+> +       pp =3D &rockchip->pci.pp;
+> +       pp->ops =3D &rockchip_pcie_host_ops;
+> +
+> +       ret =3D rockchip_pcie_resource_get(pdev, rockchip);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* DON'T MOVE ME: must be enable before PHY init */
+> +       rockchip->vpcie3v3 =3D devm_regulator_get_optional(dev, "vpcie3v3=
+");
+> +       if (IS_ERR(rockchip->vpcie3v3)) {
+> +               if (PTR_ERR(rockchip->vpcie3v3) !=3D -ENODEV)
+> +                       return dev_err_probe(dev, PTR_ERR(rockchip->rst),
+> +                                       "failed to get vpcie3v3 regulator=
+\n");
+> +               rockchip->vpcie3v3 =3D NULL;
+
+devm_regulator_get_optional should do all this for you. IOW, -ENODEV
+is changed to a NULL return.
+
+> +       }
+> +
+> +       if (rockchip->vpcie3v3) {
+
+Don't need this.
+
+> +               ret =3D regulator_enable(rockchip->vpcie3v3);
+> +               if (ret) {
+> +                       dev_err(dev, "failed to enable vpcie3v3 regulator=
+\n");
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       ret =3D rockchip_pcie_phy_init(rockchip);
+> +       if (ret)
+> +               goto disable_regulator;
+> +
+> +       ret =3D rockchip_pcie_reset_control_release(rockchip);
+> +       if (ret)
+> +               goto deinit_phy;
+> +
+> +       ret =3D rockchip_pcie_clk_init(rockchip);
+> +       if (ret)
+> +               goto deinit_phy;
+> +
+> +       ret =3D dw_pcie_host_init(pp);
+
+This:
+> +       if (ret)
+> +               goto deinit_clk;
+> +
+> +       return 0;
+
+can be:
+
+if (!ret)
+  return 0;
+
+> +
+> +deinit_clk:
+> +       clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+> +deinit_phy:
+> +       rockchip_pcie_phy_deinit(rockchip);
+> +disable_regulator:
+> +       if (rockchip->vpcie3v3)
+
+Don't need this check.
+
+> +               regulator_disable(rockchip->vpcie3v3);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct of_device_id rockchip_pcie_of_match[] =3D {
+> +       { .compatible =3D "rockchip,rk3568-pcie", },
+> +       {},
+> +};
+> +
+> +static struct platform_driver rockchip_pcie_driver =3D {
+> +       .driver =3D {
+> +               .name   =3D "rockchip-dw-pcie",
+> +               .of_match_table =3D rockchip_pcie_of_match,
+> +               .suppress_bind_attrs =3D true,
+> +       },
+> +       .probe =3D rockchip_pcie_probe,
+> +};
+> +builtin_platform_driver(rockchip_pcie_driver);
+> --
+> 2.25.1
+>
+>
+>
