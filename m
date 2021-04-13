@@ -2,179 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 240D335E211
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Apr 2021 16:58:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D13E635E254
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Apr 2021 17:10:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345303AbhDMO6H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Apr 2021 10:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345313AbhDMO5k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Apr 2021 10:57:40 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E5AC06138E
-        for <linux-pci@vger.kernel.org>; Tue, 13 Apr 2021 07:57:19 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id a12so11581763pfc.7
-        for <linux-pci@vger.kernel.org>; Tue, 13 Apr 2021 07:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CSgRgzubmTxt/v88qdNcpZFeicX9rDyswIgEAQYYcss=;
-        b=fQtJjAoJCntHet7/C4V7yKrYZknKDdR+yYNzxMoDR/+Z4P/RdDBleHKVfBauFWHSIj
-         TjPz9Z6n1uMhnafygBFxpYiCFxkNhHtz7CHqzTrH0KpLbsSpJHnSBoPzs9Uiu+b0uwN8
-         LeuI0Mcd1TFkJFLhe2fwEP6Px+zGg29/TPIECzusj2V/McN7Fc3mt/VNWOmp1B8MSDd2
-         ZtTJG5JPauheaMzlpoHrTVmmohCk4/TYqtsgD2BOlIyecydjW5X02UgdpHdlgZbsuqCh
-         oN4gmLY98tkvaz1QgX4oXawq1WPlxk3w7+ZdvXlUvpG1kZh+EJzrOTnnEElxFM8GfYkH
-         gA5g==
+        id S239643AbhDMPKj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Apr 2021 11:10:39 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:45823 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240690AbhDMPKi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Apr 2021 11:10:38 -0400
+Received: by mail-oi1-f173.google.com with SMTP id d12so17281078oiw.12;
+        Tue, 13 Apr 2021 08:10:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=CSgRgzubmTxt/v88qdNcpZFeicX9rDyswIgEAQYYcss=;
-        b=l1Rrle35DS4pfnlRaXksVlOhv85BEKHP0dXC6xhmAHEv9g7m8XvynpNMzMdUkf5u6g
-         RLL/T2wZXOhQLaJoqfhW5KUK1HucafCntc+RCkSOQv69m+G94zs8jUHuHVLU11BolOpJ
-         hS0gxtYzgiRWDTYM+1OVh+rLwgk9PslzYOBpEKoQy+s60hxYvp80vWSqzBuXdGYIFDOY
-         SzwIORKFYobOAyF6s/nZoeaLHnWbvIJpSTYNr83uE43izQ2jEY5RaQRjPrOEp4ImxpC7
-         K32h7hSz+0IASXA8apyMABtcP4slGeEwV1Wf4xyowV3q1chQU3sYcoZHuB7/nCntvoRS
-         Fkzw==
-X-Gm-Message-State: AOAM531h0Cg8oECz87/xShuwitAfIeEjhD+calWkY1ZRvdQomQsuOLr2
-        6I2SA1bYbRsY1Z3tHZ6GRfBt
-X-Google-Smtp-Source: ABdhPJy771UybKC1Cj1hoQBu8uJnBZUdSXMGa2LZwyZv/Ed+wdAYBoggN9HYoI5RPskIp6gegJ/K0Q==
-X-Received: by 2002:a63:4f08:: with SMTP id d8mr783253pgb.79.1618325839330;
-        Tue, 13 Apr 2021 07:57:19 -0700 (PDT)
-Received: from thinkpad ([2409:4072:188:336c:f8f0:1ccd:9421:e069])
-        by smtp.gmail.com with ESMTPSA id x19sm13076406pff.14.2021.04.13.07.57.13
+        bh=YsCanL7b/TjLkmx+enx9Aus4Vr+uIbAaQh+vlFwv0l8=;
+        b=fHREhs4nzanSlZjyzq6dXXI/IojJCiai1w3o+ysNLZztaumMATzpeRg55MuObor/ci
+         6CpzR6mLmczhB/holIG2CB2suHp3LLcg116NvmYlkvpUYOf3dk2+Qm5zdtbzOZyASArY
+         tJ55tvMuoYDU8X3bWGA/Ms3wCHfE5J/g8Pfz3A0AICjAs/2bfJcRBZa4CrcVAgq8j4z6
+         uvp987zA+ByrTogFvQ4bNYdUF930CER2hE+e5in/9QZ7Rapi9w6bibU0z+TdEK+gWP5o
+         En+cXcBXaaQeNc2ff8oYkkgs5Ma1rpib2TL+q+fdOVM/Amw1qgpxU9/E1rMb5sjPtBvO
+         PK1w==
+X-Gm-Message-State: AOAM530+vcInOC7JrWrlf7c7tsP8RBjoRN4eKwQ6+17KhBu/oYtD6Q8m
+        Jf5hQ2Uho9a6efehIQHZ9Q==
+X-Google-Smtp-Source: ABdhPJzF1zgWHCJiGfVKDmhrJ2wTKR6x2ewP8TcygE4TuVMBkDsYK6eQpMYOS/t6b7dptR+qRTWBRw==
+X-Received: by 2002:a05:6808:10c5:: with SMTP id s5mr369821ois.58.1618326616659;
+        Tue, 13 Apr 2021 08:10:16 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x2sm3539688ote.47.2021.04.13.08.10.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 07:57:18 -0700 (PDT)
-Date:   Tue, 13 Apr 2021 20:27:09 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>, stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2] PCI: dwc: Move iATU detection earlier
-Message-ID: <20210413145709.GA2967@thinkpad>
-References: <20210413142219.2301430-1-dmitry.baryshkov@linaro.org>
+        Tue, 13 Apr 2021 08:10:15 -0700 (PDT)
+Received: (nullmailer pid 1686803 invoked by uid 1000);
+        Tue, 13 Apr 2021 15:10:13 -0000
+Date:   Tue, 13 Apr 2021 10:10:13 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     bpeled@marvell.com
+Cc:     thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, sebastian.hesselbarth@gmail.com,
+        gregory.clement@bootlin.com, andrew@lunn.ch, mw@semihalf.com,
+        jaz@semihalf.com, kostap@marvell.com, nadavh@marvell.com,
+        stefanc@marvell.com, oferh@marvell.com
+Subject: Re: =?utf-8?B?W+KAnVBBVENI4oCdIDMvNV0gZHQt?=
+ =?utf-8?Q?bindings=3A_pci=3A_add_system_controlle?= =?utf-8?Q?r?= and MAC
+ reset bit to Armada 7K/8K controller bindings
+Message-ID: <20210413151013.GA1683364@robh.at.kernel.org>
+References: <1618241456-27200-1-git-send-email-bpeled@marvell.com>
+ <1618241456-27200-4-git-send-email-bpeled@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210413142219.2301430-1-dmitry.baryshkov@linaro.org>
+In-Reply-To: <1618241456-27200-4-git-send-email-bpeled@marvell.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 05:22:19PM +0300, Dmitry Baryshkov wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Mon, Apr 12, 2021 at 06:30:54PM +0300, bpeled@marvell.com wrote:
+> From: Ben Peled <bpeled@marvell.com>
 > 
-> dw_pcie_ep_init() depends on the detected iATU region numbers to allocate
-> the in/outbound window management bitmap.  It fails after 281f1f99cf3a
-> ("PCI: dwc: Detect number of iATU windows").
+> Adding optional system-controller and mac-reset-bit-mask
+> needed for linkdown procedure.
 > 
-> Move the iATU region detection into a new function, move the detection to
-> the very beginning of dw_pcie_host_init() and dw_pcie_ep_init().  Also
-> remove it from the dw_pcie_setup(), since it's more like a software
-> initialization step than hardware setup.
-> 
-> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
-> Link: https://lore.kernel.org/r/20210125044803.4310-1-Zhiqiang.Hou@nxp.com
-> Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: stable@vger.kernel.org	# v5.11+
-> [DB: moved dw_pcie_iatu_detect to happen after host_init callback]
-> Link: https://lore.kernel.org/linux-pci/20210407131255.702054-1-dmitry.baryshkov@linaro.org
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
+> Signed-off-by: Ben Peled <bpeled@marvell.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 ++
->  drivers/pci/controller/dwc/pcie-designware-host.c |  1 +
->  drivers/pci/controller/dwc/pcie-designware.c      | 11 ++++++++---
->  drivers/pci/controller/dwc/pcie-designware.h      |  1 +
->  4 files changed, 12 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/pci/pci-armada8k.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 1c25d8337151..8d028a88b375 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -705,6 +705,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		}
->  	}
->  
-> +	dw_pcie_iatu_detect(pci);
-> +
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->  	if (!res)
->  		return -EINVAL;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 7e55b2b66182..24192b40e3a2 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -398,6 +398,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		if (ret)
->  			goto err_free_msi;
->  	}
-> +	dw_pcie_iatu_detect(pci);
->  
->  	dw_pcie_setup_rc(pp);
->  	dw_pcie_msi_init(pp);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 004cb860e266..a945f0c0e73d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -660,11 +660,9 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
->  	pci->num_ob_windows = ob;
->  }
->  
-> -void dw_pcie_setup(struct dw_pcie *pci)
-> +void dw_pcie_iatu_detect(struct dw_pcie *pci)
->  {
-> -	u32 val;
->  	struct device *dev = pci->dev;
-> -	struct device_node *np = dev->of_node;
->  	struct platform_device *pdev = to_platform_device(dev);
->  
->  	if (pci->version >= 0x480A || (!pci->version &&
-> @@ -693,6 +691,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  
->  	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
->  		 pci->num_ob_windows, pci->num_ib_windows);
-> +}
-> +
-> +void dw_pcie_setup(struct dw_pcie *pci)
-> +{
-> +	u32 val;
-> +	struct device *dev = pci->dev;
-> +	struct device_node *np = dev->of_node;
->  
->  	if (pci->link_gen > 0)
->  		dw_pcie_link_set_max_speed(pci, pci->link_gen);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 7247c8b01f04..7d6e9b7576be 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -306,6 +306,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
->  void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
->  			 enum dw_pcie_region_type type);
->  void dw_pcie_setup(struct dw_pcie *pci);
-> +void dw_pcie_iatu_detect(struct dw_pcie *pci);
->  
->  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
->  {
-> -- 
-> 2.30.2
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> index 7a813d0..2696e79 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> @@ -24,6 +24,10 @@ Optional properties:
+>  - phy-names: names of the PHYs corresponding to the number of lanes.
+>  	Must be "cp0-pcie0-x4-lane0-phy", "cp0-pcie0-x4-lane1-phy" for
+>  	2 PHYs.
+> +- marvell,system-controller: address of system controller needed
+> +	in order to reset MAC used by link-down handle
+> +- marvell,mac-reset-bit-mask: MAC reset bit of system controller
+> +	needed in order to reset MAC used by link-down handle
+
+Seems like this should use the reset controller binding instead.
+
+If not, this can be a single property with a phandle plus arg.
+
+Rob
