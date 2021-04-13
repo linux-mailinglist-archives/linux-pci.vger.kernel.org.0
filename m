@@ -2,170 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95B7735E14C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Apr 2021 16:22:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECA2735E19C
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Apr 2021 16:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237794AbhDMOWr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Apr 2021 10:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231288AbhDMOWo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Apr 2021 10:22:44 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD74FC061756
-        for <linux-pci@vger.kernel.org>; Tue, 13 Apr 2021 07:22:23 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id x13so17538722lfr.2
-        for <linux-pci@vger.kernel.org>; Tue, 13 Apr 2021 07:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sSdkvcoRP/DLD226a2zcjxaqs8CSLLa63pnFVOEgkYc=;
-        b=CCZYPUChjpWx+NonKRNO2t2uLvncd+6QV5OYgzIv0mW7RUb2PXRzCrp9YvNG7NavmT
-         Hv4Q4buek8R1ReXrHv5tWDpVzDs9A9XkdPFSzNwSnAW63VqafrqUh4nt2lf+CSIVTzfJ
-         8RSlYD/yJc7ScBTWdXj6DTyAjBE+Sg7H2vwdAqxk/PGKVyTE6ZbyjnMaSoKx+dCerr8h
-         ZZphWWEVF29QQYmM9dNL7tOK3yTMcYe9Irwit5fIWJbzQOIwY1ATZ/bb4kodsEm8mXk5
-         riY/0u9CD9MUgnbtrR/xxiNeOto3j8fvNRvZ5BmEobzxNr2nJLv5w1VLD0tUqDqiaXsN
-         TMrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sSdkvcoRP/DLD226a2zcjxaqs8CSLLa63pnFVOEgkYc=;
-        b=kin+fO2zeFysv3TyLauCUE81je7gTleQc9xfEGW2VrIdFh++hY6XTs6hpfqFXlD3Go
-         lzR7iozWwDJSaWD6k800oa4+qyKsz5768HB9VR7q4s0mFkG3OVtdV5LhfeDyQvkyWll3
-         yL0Lep/h+gL5aF2GrMtNzKsSrclm7c+LtFs5y6nZk+QdDvs0f0DPe+2K/oV6ieE83iG8
-         NK1YDjd4unBioCoQ7XSUcDTew69WVDvfvCGyG6ytkpnb5YGB9YMvP7GKCmAUspIPZjB+
-         2mDhLAaaCn8k+7OtMaB1+CxSuWfCXXvzsps9WhHkUgAP/KwOOPsziHPGwJS6GrOxNkpZ
-         YZIQ==
-X-Gm-Message-State: AOAM530gc3Ctj1Qd8f4Hudt78X+Xb/S6DGAn7kltLOqE6KxJ3ARHPpSb
-        So9hjNYucSuVv1Q7LN2wGVfzYQ==
-X-Google-Smtp-Source: ABdhPJwWFZFUurHVGHK85bLZPRnJfU7A7DCmBmeM8JgP8wxpiCWeGBGIsnFMr+7bE6gxL9tu9LdRoQ==
-X-Received: by 2002:a19:c187:: with SMTP id r129mr7608474lff.457.1618323741124;
-        Tue, 13 Apr 2021 07:22:21 -0700 (PDT)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id n7sm3397814lft.65.2021.04.13.07.22.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 07:22:20 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>, stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v2] PCI: dwc: Move iATU detection earlier
-Date:   Tue, 13 Apr 2021 17:22:19 +0300
-Message-Id: <20210413142219.2301430-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.30.2
+        id S241119AbhDMOd6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Apr 2021 10:33:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:58955 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343824AbhDMOdh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Apr 2021 10:33:37 -0400
+IronPort-SDR: ab/navwAl0RBZiGUZc7OwJn3pgVDRlHzzbmJV5WDgjAbQMLA3OPCkf+WO1yj2OIC1KES/K96Bv
+ ON1y5Gi1OWcw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9953"; a="255744581"
+X-IronPort-AV: E=Sophos;i="5.82,219,1613462400"; 
+   d="scan'208";a="255744581"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2021 07:32:53 -0700
+IronPort-SDR: qxIHVA/iFiSeIjcOBRUEdggu0+r9rrF9/zHBHjMBmB8UWTYELRxZ2+Ob4rnbvhVtWm0uzuJvVQ
+ Xbwst7Wd8HAQ==
+X-IronPort-AV: E=Sophos;i="5.82,219,1613462400"; 
+   d="scan'208";a="420811972"
+Received: from damilitx-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.134.165])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2021 07:32:53 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl/mem: Clarify UAPI documentation
+Date:   Tue, 13 Apr 2021 07:32:47 -0700
+Message-Id: <20210413143247.546256-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-
-dw_pcie_ep_init() depends on the detected iATU region numbers to allocate
-the in/outbound window management bitmap.  It fails after 281f1f99cf3a
-("PCI: dwc: Detect number of iATU windows").
-
-Move the iATU region detection into a new function, move the detection to
-the very beginning of dw_pcie_host_init() and dw_pcie_ep_init().  Also
-remove it from the dw_pcie_setup(), since it's more like a software
-initialization step than hardware setup.
-
-Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
-Link: https://lore.kernel.org/r/20210125044803.4310-1-Zhiqiang.Hou@nxp.com
-Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: stable@vger.kernel.org	# v5.11+
-[DB: moved dw_pcie_iatu_detect to happen after host_init callback]
-Link: https://lore.kernel.org/linux-pci/20210407131255.702054-1-dmitry.baryshkov@linaro.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 ++
- drivers/pci/controller/dwc/pcie-designware-host.c |  1 +
- drivers/pci/controller/dwc/pcie-designware.c      | 11 ++++++++---
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- 4 files changed, 12 insertions(+), 3 deletions(-)
+ include/uapi/linux/cxl_mem.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1c25d8337151..8d028a88b375 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -705,6 +705,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		}
- 	}
- 
-+	dw_pcie_iatu_detect(pci);
-+
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
- 	if (!res)
- 		return -EINVAL;
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 7e55b2b66182..24192b40e3a2 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -398,6 +398,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		if (ret)
- 			goto err_free_msi;
- 	}
-+	dw_pcie_iatu_detect(pci);
- 
- 	dw_pcie_setup_rc(pp);
- 	dw_pcie_msi_init(pp);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 004cb860e266..a945f0c0e73d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -660,11 +660,9 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
- 	pci->num_ob_windows = ob;
- }
- 
--void dw_pcie_setup(struct dw_pcie *pci)
-+void dw_pcie_iatu_detect(struct dw_pcie *pci)
- {
--	u32 val;
- 	struct device *dev = pci->dev;
--	struct device_node *np = dev->of_node;
- 	struct platform_device *pdev = to_platform_device(dev);
- 
- 	if (pci->version >= 0x480A || (!pci->version &&
-@@ -693,6 +691,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 
- 	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
- 		 pci->num_ob_windows, pci->num_ib_windows);
-+}
-+
-+void dw_pcie_setup(struct dw_pcie *pci)
-+{
-+	u32 val;
-+	struct device *dev = pci->dev;
-+	struct device_node *np = dev->of_node;
- 
- 	if (pci->link_gen > 0)
- 		dw_pcie_link_set_max_speed(pci, pci->link_gen);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 7247c8b01f04..7d6e9b7576be 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -306,6 +306,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
- void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
- 			 enum dw_pcie_region_type type);
- void dw_pcie_setup(struct dw_pcie *pci);
-+void dw_pcie_iatu_detect(struct dw_pcie *pci);
- 
- static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
- {
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index f6e8a005b113..8dd516ddb098 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -81,6 +81,13 @@ static const struct {
+  *  - @size_in = -1
+  *  - @size_out = 0
+  *
++ * Commands which have a variable length input likely have a minimum length.
++ * This is not enforced by the UAPI, and therefore might look like the command
++ * succeeded when sending too small of an input payload. Caution should be taken
++ * by checking the @cxl_send_command.retval for such cases. For commands with a
++ * variable length output, the caller is free to consume as little or as much as
++ * they want.
++ *
+  * See struct cxl_mem_query_commands.
+  */
+ struct cxl_command_info {
 -- 
-2.30.2
+2.31.1
 
