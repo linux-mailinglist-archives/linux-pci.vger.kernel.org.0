@@ -2,78 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC2335FCA7
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 22:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 071FA35FCD4
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 22:45:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243465AbhDNU1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Apr 2021 16:27:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50124 "EHLO mail.kernel.org"
+        id S234129AbhDNUpc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Apr 2021 16:45:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232940AbhDNU1O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Apr 2021 16:27:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 332FA61090;
-        Wed, 14 Apr 2021 20:26:52 +0000 (UTC)
+        id S233093AbhDNUpc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Apr 2021 16:45:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1B30161074;
+        Wed, 14 Apr 2021 20:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618432012;
-        bh=+tL5RoPUY0L+AS8fwgMWwYIbyeP9WumdPTZtx6+OaVs=;
+        s=k20201202; t=1618433110;
+        bh=JX3xsI+XANgtBxpkB7G2Z/Gaw8lu/CAgqgZB6yYmDxI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rjtCFBiQsFK8cHVxOA+QVwj1EgsfDzZ7acAImmZ+sGbRsSc88oAGYdb/lwRWtclJZ
-         ez4qZbimFgknQsiGSFtPYZ7QhXpCqwL6DjHlFjT9Oca1blAW71NitTL6wl+ewOdtr4
-         ZEoqgXxqUpBFnOyOXw1t63J+NVCWGFQo97alxMqhupVSe3AFDXkk8Dn3fTuDukRIy2
-         eTeBtVk+XBOKrL6zJJhNTrsf9Q2lWG0+3uiqPPBtyKA2SYv8uFReX8pI03Tw4Jqckm
-         9uitz38zFCR5SCMziDPpyVfjT0H5oGIVdR/wWVkjRuh9mb9l4Kd2ldpKZS0HbLcAv1
-         Z1XNfwWHNIv5A==
-Date:   Wed, 14 Apr 2021 15:26:50 -0500
+        b=oK8nX9zj1lXIQhKN5e7wqCSXrVAf9jgw0ig5MVuFPZfnhh+szvqkQ02fmcOvE8n+M
+         F1kYM9OyLd3dG88CUYjbGEEDo/HNmc1wiFWkgFPa6Xr5XcsLnMncgbJuNo2qB2lflK
+         wpZ9ad4V97xBX6jWxQZ5OYhESHNyd7EiXf0DNtCmwhNtqck3G2bP374xC6bUvyqKfu
+         jCzho9Tb6ddq3NDP/2DhxPs3nID1r25SgKiVqqGl3Mci1Tmw9Ph1ihRIgoXURxHb7c
+         BPxiIl9c1W0PRdsRWwrltoOQSj2cAAnwxnMySNn+pLeqWL+We8bvpI3Ytl8C38P8f3
+         Y60+Xu/I0staA==
+Date:   Wed, 14 Apr 2021 15:45:08 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huang Guobin <huangguobin4@huawei.com>
+To:     Arun Easi <aeasi@marvell.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: Use DEFINE_SPINLOCK() for spinlock
-Message-ID: <20210414202650.GA2534339@bjorn-Precision-5520>
+        Girish Basrur <GBasrur@marvell.com>,
+        Quinn Tran <qutran@marvell.com>
+Subject: Re: [PATCH v2 1/1] PCI/VPD: Fix blocking of VPD data in lspci for
+ QLogic 1077:2261
+Message-ID: <20210414204508.GA2536430@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1617710797-48903-1-git-send-email-huangguobin4@huawei.com>
+In-Reply-To: <20210409215153.16569-2-aeasi@marvell.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 08:06:37PM +0800, Huang Guobin wrote:
-> From: Guobin Huang <huangguobin4@huawei.com>
+On Fri, Apr 09, 2021 at 02:51:53PM -0700, Arun Easi wrote:
+> "lspci -vvv" for Qlogic Fibre Channel HBA 1077:2261 displays
+> "Vital Product Data" as "Not readable" today and thus preventing
+> customers from getting relevant HBA information. Fix it by removing
+> the blacklist quirk.
 > 
-> spinlock can be initialized automatically with DEFINE_SPINLOCK()
-> rather than explicitly calling spin_lock_init().
+> The VPD quirk was added by [0] to avoid a system NMI; this issue has
+> been long fixed in the HBA firmware. In addition, PCI also has changes
+> to check the VPD size [1], so this quirk can be reverted now regardless
+> of a firmware update.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Guobin Huang <huangguobin4@huawei.com>
+> Some more details can be found in the following thread:
+>     "VPD blacklist of Marvell QLogic 1077/2261" [2]
+> 
+> [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
+> [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
+> [2] https://lore.kernel.org/linux-pci/alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com/
+> [3] https://lore.kernel.org/linux-pci/alpine.LRH.2.21.9999.2104071535110.13940@irv1user01.caveonetworks.com/
+> 
+> Clarification on why [0], which appeared in v4.11, would be an issue
+> given that [1] appeared in v4.6:
+> 
+>     Firstly, we do not have information on which exact kernel the
+>     tester was using that resulted in [0]. That said, the call
+>     trace for the issue had pci_vpd_pci22_* calls, which appeared
+>     only in pre-4.6 kernels. Those functions were renamed v4.6 and
+>     above, so tester was indeed testing using an older kernel.
+>     See [3] for further details.
+> 
+> Signed-off-by: Arun Easi <aeasi@marvell.com>
+> CC: stable@vger.kernel.org      # v4.6+
 
-Applied to pci/hotplug for v5.13, thanks!
+Applied to pci/vpd for v5.13, thanks!
 
 > ---
->  drivers/pci/hotplug/cpqphp_nvram.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  drivers/pci/vpd.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/pci/hotplug/cpqphp_nvram.c b/drivers/pci/hotplug/cpqphp_nvram.c
-> index 00cd2b43364f..7a65d427ac11 100644
-> --- a/drivers/pci/hotplug/cpqphp_nvram.c
-> +++ b/drivers/pci/hotplug/cpqphp_nvram.c
-> @@ -80,7 +80,7 @@ static u8 evbuffer[1024];
->  static void __iomem *compaq_int15_entry_point;
->  
->  /* lock for ordering int15_bios_call() */
-> -static spinlock_t int15_lock;
-> +static DEFINE_SPINLOCK(int15_lock);
->  
->  
->  /* This is a series of function that deals with
-> @@ -415,9 +415,6 @@ void compaq_nvram_init(void __iomem *rom_start)
->  		compaq_int15_entry_point = (rom_start + ROM_INT15_PHY_ADDR - ROM_PHY_ADDR);
->  
->  	dbg("int15 entry  = %p\n", compaq_int15_entry_point);
-> -
-> -	/* initialize our int15 lock */
-> -	spin_lock_init(&int15_lock);
->  }
->  
->  
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 6909253..a41818a 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -474,7 +474,6 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005d, quirk_blacklist_vpd);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005f, quirk_blacklist_vpd);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, PCI_ANY_ID,
+>  		quirk_blacklist_vpd);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
+>  /*
+>   * The Amazon Annapurna Labs 0x0031 device id is reused for other non Root Port
+>   * device types, so the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> -- 
+> 2.9.5
 > 
