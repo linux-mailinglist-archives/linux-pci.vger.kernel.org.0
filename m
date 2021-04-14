@@ -2,161 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBEE235FC6F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 22:17:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED6F35FC88
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 22:23:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233923AbhDNUST (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Apr 2021 16:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48346 "EHLO mail.kernel.org"
+        id S232705AbhDNUXd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Apr 2021 16:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232735AbhDNUSS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Apr 2021 16:18:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5156B608FC;
-        Wed, 14 Apr 2021 20:17:56 +0000 (UTC)
+        id S231710AbhDNUXd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Apr 2021 16:23:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 13B7A61158;
+        Wed, 14 Apr 2021 20:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618431476;
-        bh=yFk2cx4HrXNqOm2e36DgIZtP17/Q9M1Lfp4gu+Ir38U=;
+        s=k20201202; t=1618431791;
+        bh=Q5pb7SCK4vCX3kzIoucnyWc080J5IiTOY/mwTdt6Jpo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XRF4vv6yLAaH6SxWfUzh4NaKkN7a9JAum1Tfn1vJ8UegP7s4GPMCgm1u2VreSfiBT
-         Npzm0PSKq3Aq8z6UAfv86m46XNiQ6N6En2aZC6Cqia/3aMoclI4x1FS8bNMB9ZlG6I
-         Q40prXp18K7YDqWUlUDTFwvh99YpFA1qRyUEqPq9CUr6cPrU9D69Eehj25apsoBZst
-         uOMQN2Wawhm4q8eqwWUvwD7LLHwNfud5+9+ErFUAfT1BAealvjWkQHzB0KkSlm1KIv
-         kBlO6tkPex7HbtgvQA54S5P8QPxKqyCESkftYx6TaCci+jJOTMld7ir6zZp7QX+BTl
-         XKfluHrlirYEg==
-Date:   Wed, 14 Apr 2021 15:17:55 -0500
+        b=TJSGivUWv7lySsBuF922sMyiY7IWiWqoNWmE/fVcs97ZRQlRtvLTQbvM4F3Rww0yl
+         KQvh2KH5kEvj2oq1qG0ktmswUpBbisVjpUQBYXe/ev5rcSBSU+iKwU/lJIiROpyUOn
+         lVopzP4Bx6OuHRwIikuF80CgfcZHksDcs35Pwzzu2NwpVOmpdLciCwyh7wQCG4m1u5
+         bbsWaV9pzxA0HwbaYJDXuLGxCcAoLFgw2EDrjpUYgMFrmT8EzjZ/eSFTCV2mocMYft
+         fxL8X45lTr8Mkx2pJ0grZRPEJ2LqpWxDB3wb7I3w3OqSlo+67GhLq1LaCXLn/GK2rc
+         poRC3/x793Seg==
+Date:   Wed, 14 Apr 2021 15:23:09 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Narendra K <narendra_k@dell.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 1/1] s390/pci: expose a PCI device's UID as its index
-Message-ID: <20210414201755.GA2532433@bjorn-Precision-5520>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add PCI_EXP_DEVCTL_PAYLOAD_* macros
+Message-ID: <20210414202309.GA2533708@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210412135905.1434249-2-schnelle@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210413083916.5wwe6lsl65jix3gc@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 12, 2021 at 03:59:05PM +0200, Niklas Schnelle wrote:
-> On s390 each PCI device has a user-defined ID (UID) exposed under
-> /sys/bus/pci/devices/<dev>/uid. This ID was designed to serve as the PCI
-> device's primary index and to match the device within Linux to the
-> device configured in the hypervisor. To serve as a primary identifier
-> the UID must be unique within the Linux instance, this is guaranteed by
-> the platform if and only if the UID Uniqueness Checking flag is set
-> within the CLP List PCI Functions response.
+On Tue, Apr 13, 2021 at 10:39:16AM +0200, Pali Rohár wrote:
+> On Monday 12 April 2021 14:27:40 Bjorn Helgaas wrote:
+> > On Mon, Apr 12, 2021 at 02:46:02PM +0200, Pali Rohár wrote:
+> > > Define new PCI_EXP_DEVCTL_PAYLOAD_* macros in linux/pci_regs.h header file
+> > > for Max Payload Size. Macros are defined in the same style as existing
+> > > macros PCI_EXP_DEVCTL_READRQ_* macros.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > ---
+> > >  include/uapi/linux/pci_regs.h | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > > 
+> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > > index e709ae8235e7..8f1b15eea53e 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -504,6 +504,12 @@
+> > >  #define  PCI_EXP_DEVCTL_URRE	0x0008	/* Unsupported Request Reporting En. */
+> > >  #define  PCI_EXP_DEVCTL_RELAX_EN 0x0010 /* Enable relaxed ordering */
+> > >  #define  PCI_EXP_DEVCTL_PAYLOAD	0x00e0	/* Max_Payload_Size */
+> > > +#define  PCI_EXP_DEVCTL_PAYLOAD_128B 0x0000 /* 128 Bytes */
+> > > +#define  PCI_EXP_DEVCTL_PAYLOAD_256B 0x0020 /* 256 Bytes */
+> > > +#define  PCI_EXP_DEVCTL_PAYLOAD_512B 0x0040 /* 512 Bytes */
+> > > +#define  PCI_EXP_DEVCTL_PAYLOAD_1024B 0x0060 /* 1024 Bytes */
+> > > +#define  PCI_EXP_DEVCTL_PAYLOAD_2048B 0x0080 /* 2048 Bytes */
+> > > +#define  PCI_EXP_DEVCTL_PAYLOAD_4096B 0x00A0 /* 4096 Bytes */
+> > 
+> > This is fine if we're going to use them, but we generally don't add
+> > definitions purely for documentation.
+> > 
+> > 5929b8a38ce0 ("PCI: Add defines for PCIe Max_Read_Request_Size") added
+> > the PCI_EXP_DEVCTL_READRQ_* definitions and we do have a few (very
+> > few) uses in drivers.
 > 
-> In this sense the UID serves an analogous function as the SMBIOS
-> instance number or ACPI index exposed as the "index" respectively
-> "acpi_index" device attributes and used by e.g. systemd to set interface
-> names. As s390 does not use and will likely never use ACPI nor SMBIOS
-> there is no conflict and we can just expose the UID under the "index"
-> attribute whenever UID Uniqueness Checking is active and get systemd's
-> interface naming support for free.
+> I'm planning to use this constant to fix pci-aardvark.c driver. Aardvark
+> changes are not ready yet, but I'm preparing them in my git tree
+> https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
+> (commit PCI: aardvark: Fix PCIe Max Payload Size setting)
 > 
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> Acked-by: Viktor Mihajlovski <mihajlov@linux.ibm.com>
+> But as this is not change in aardvark driver, I sent it separately and
+> earlier. As it would be dependency for aardvark changes.
 
-This seems like a nice solution to me.
+OK, just include this in that series.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci | 11 +++++---
->  arch/s390/pci/pci_sysfs.c               | 35 +++++++++++++++++++++++++
->  2 files changed, 42 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index 25c9c39770c6..1241b6d11a52 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -195,10 +195,13 @@ What:		/sys/bus/pci/devices/.../index
->  Date:		July 2010
->  Contact:	Narendra K <narendra_k@dell.com>, linux-bugs@dell.com
->  Description:
-> -		Reading this attribute will provide the firmware
-> -		given instance (SMBIOS type 41 device type instance) of the
-> -		PCI device. The attribute will be created only if the firmware
-> -		has given an instance number to the PCI device.
-> +		Reading this attribute will provide the firmware given instance
-> +		number of the PCI device.  Depending on the platform this can
-> +		be for example the SMBIOS type 41 device type instance or the
-> +		user-defined ID (UID) on s390. The attribute will be created
-> +		only if the firmware has given an instance number to the PCI
-> +		device and that number is guaranteed to uniquely identify the
-> +		device in the system.
->  Users:
->  		Userspace applications interested in knowing the
->  		firmware assigned device type instance of the PCI
-> diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-> index e14d346dafd6..20dbb2058d51 100644
-> --- a/arch/s390/pci/pci_sysfs.c
-> +++ b/arch/s390/pci/pci_sysfs.c
-> @@ -138,6 +138,38 @@ static ssize_t uid_is_unique_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(uid_is_unique);
->  
-> +#ifndef CONFIG_DMI
-> +/* analogous to smbios index */
-
-I think this is smbios_attr_instance, right?  Maybe mention that
-specifically to make it easier to match these up.
-
-Looks like smbios_attr_instance and the similar ACPI stuff could use
-some updating to use the current attribute group infrastructure.
-
-> +static ssize_t index_show(struct device *dev,
-> +			  struct device_attribute *attr, char *buf)
-> +{
-> +	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
-> +	u32 index = ~0;
-> +
-> +	if (zpci_unique_uid)
-> +		index = zdev->uid;
-> +
-> +	return sysfs_emit(buf, "%u\n", index);
-> +}
-> +static DEVICE_ATTR_RO(index);
-> +
-> +static umode_t zpci_unique_uids(struct kobject *kobj,
-> +				struct attribute *attr, int n)
-> +{
-> +	return zpci_unique_uid ? attr->mode : 0;
-> +}
-> +
-> +static struct attribute *zpci_ident_attrs[] = {
-> +	&dev_attr_index.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group zpci_ident_attr_group = {
-> +	.attrs = zpci_ident_attrs,
-> +	.is_visible = zpci_unique_uids,
-
-It's conventional to name these functions *_is_visible() (another
-convention that smbios_attr_instance and acpi_attr_index probably
-predate).
-
-> +};
-> +#endif
-> +
->  static struct bin_attribute *zpci_bin_attrs[] = {
->  	&bin_attr_util_string,
->  	&bin_attr_report_error,
-> @@ -179,5 +211,8 @@ static struct attribute_group pfip_attr_group = {
->  const struct attribute_group *zpci_attr_groups[] = {
->  	&zpci_attr_group,
->  	&pfip_attr_group,
-> +#ifndef CONFIG_DMI
-> +	&zpci_ident_attr_group,
-> +#endif
->  	NULL,
->  };
-> -- 
-> 2.25.1
-> 
+Bjorn
