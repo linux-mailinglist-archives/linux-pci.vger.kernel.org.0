@@ -2,119 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DFE535F0D1
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 11:26:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9949235F144
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 12:10:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346454AbhDNJ0o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Apr 2021 05:26:44 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2851 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235651AbhDNJ0e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Apr 2021 05:26:34 -0400
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FKxfq5LpTz681qN;
-        Wed, 14 Apr 2021 17:16:19 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Wed, 14 Apr 2021 11:26:11 +0200
-Received: from localhost (10.47.83.55) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 14 Apr
- 2021 10:26:10 +0100
-Date:   Wed, 14 Apr 2021 10:24:43 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] cxl/mem: Get rid of @cxlm.base
-Message-ID: <20210414102443.000071a7@Huawei.com>
-In-Reply-To: <20210413161726.tz7rg46krrekk3lp@intel.com>
-References: <20210407222625.320177-1-ben.widawsky@intel.com>
-        <20210407222625.320177-5-ben.widawsky@intel.com>
-        <20210408182635.00003997@Huawei.com>
-        <20210413161726.tz7rg46krrekk3lp@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S232683AbhDNKJf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Apr 2021 06:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348894AbhDNKJW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Apr 2021 06:09:22 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A589EC061574
+        for <linux-pci@vger.kernel.org>; Wed, 14 Apr 2021 03:09:00 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id u20so22633306lja.13
+        for <linux-pci@vger.kernel.org>; Wed, 14 Apr 2021 03:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=IoWd7ISfu+qm1LMorXfGwj664j+WGMzolIkgq9YPrsE=;
+        b=RMh9Vo92gx5be1f+HWTpwtyB+vy4Wt6ikyLXykSXUXiTIrtcZUJuy6WdBGaI5XY6md
+         FaLXNmdtQdJyqJyholqeG+bHKzZagRsIxHhxhMW10KKSwmqARnYdpr2cpV1izZFKFnaf
+         H8onF9oCOvUaGusHYE4pLmcsEnzYM2ZIInGJ4NjIpKa17TM8fRYq8yRVXzVAmNhwSWdU
+         6zasQgv28jtIpeJ4war/Ot2mTHiFoPpcMTVrVeX+khHDFo0oJhO7nYIQJJiIFYMcR1op
+         qm/Vf4aCSxeA/pESVMeSHU4uUx8QnY8mOTmhLG9PasmJM5FjJKlijyQjcSayg2H/AHMQ
+         UuKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=IoWd7ISfu+qm1LMorXfGwj664j+WGMzolIkgq9YPrsE=;
+        b=WUf/LH75tyonXkYzUuCXiKF5fL/j6Uhjg5erRFfu1S+5+ROuUW/0NqlvCDWGCqbaoP
+         jA3pVCHXgNeUOOPk8j6xG3NSgM5dUug0eLMsBcWO2Ntsuzr9xByVljW/S/DbR5J5jie2
+         HYDaLrCelWgecrRqenGknwccWCMmABa9eKBuILtNW31vKtm8UvCHnRFQXVMDundV5Y2O
+         +TvpbT5se5R+EJKkfL8768odta8LgyDHG2hfbvAabDZgXmaBsMDTk4jfgKLGionH1Zvt
+         KI7fwzqZxeNKd5BU9IiPIZLWg05+h5bbAgO/djzlfIlhCX7JQjniXA9DbkOion72MI+c
+         OKlg==
+X-Gm-Message-State: AOAM531zphDbIjyXHmMRztoRjTJ9LqRys2sznu9dg+U2+9nhDfBd95Xg
+        /j30xM9rgTcGgCUYIOM/txV2LNVAHbzn+9GekwI=
+X-Google-Smtp-Source: ABdhPJyd5Yz7Qe3Xv8XsffzISLdyWwFTJ0J+scyWmsmvvCJ7zhGANpDsESkkKGA3RfiGgRnydooqJ185vUc3sh0zXjc=
+X-Received: by 2002:a2e:b5b9:: with SMTP id f25mr23955199ljn.90.1618394939101;
+ Wed, 14 Apr 2021 03:08:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.83.55]
-X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Reply-To: salkavar2@gmail.com
+Sender: revjgeorge3@gmail.com
+Received: by 2002:ab3:7ad1:0:0:0:0:0 with HTTP; Wed, 14 Apr 2021 03:08:58
+ -0700 (PDT)
+From:   "Mr.Sal kavar" <salkavar2@gmail.com>
+Date:   Wed, 14 Apr 2021 10:08:58 +0000
+X-Google-Sender-Auth: cPttl82FTrbs6YymiYJyFzl3H-U
+Message-ID: <CAOvqe1D-QkOMwhCVKNW5uaiXNCGshhiS++VfkZULERZ0KRqQAA@mail.gmail.com>
+Subject: Yours Faithful,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 13 Apr 2021 09:17:26 -0700
-Ben Widawsky <ben.widawsky@intel.com> wrote:
+Dear friend.
 
-> On 21-04-08 18:26:35, Jonathan Cameron wrote:
-> > On Wed, 7 Apr 2021 15:26:22 -0700
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >   
-> > > @cxlm.base only existed to support holding the base found in the
-> > > register block mapping code, and pass it along to the register setup
-> > > code. Now that the register setup function has all logic around managing
-> > > the registers, from DVSEC to iomapping up to populating our CXL specific
-> > > information, it is easy to turn the @base values into local variables
-> > > and remove them from our device driver state.
-> > > 
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
-> > 
-> > Patch is basically fine, but I do wonder if you could avoid the
-> > nasty casting in and out of __iomem in the error paths.
-> > 
-> > It's a common enough idiom though so I'm not htat fussed.
-> > 
-> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >   
-> > > ---
-> > >  drivers/cxl/mem.c | 24 +++++++++++-------------
-> > >  drivers/cxl/mem.h |  2 --
-> > >  2 files changed, 11 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > index 04b4f7445083..60b95c524c3e 100644
-> > > --- a/drivers/cxl/mem.c
-> > > +++ b/drivers/cxl/mem.c
-> > > @@ -922,11 +922,10 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev)
-> > >  	return cxlm;
-> > >  }
-> > >  
-> > > -static int cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32 reg_hi)
-> > > +static void __iomem *cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32 reg_hi)
-> > >  {
-> > >  	struct pci_dev *pdev = cxlm->pdev;
-> > >  	struct device *dev = &pdev->dev;
-> > > -	void __iomem *regs;
-> > >  	u64 offset;
-> > >  	u8 bar;
-> > >  	int rc;
-> > > @@ -938,20 +937,18 @@ static int cxl_mem_map_regblock(struct cxl_mem *cxlm, u32 reg_lo, u32 reg_hi)
-> > >  	if (pci_resource_len(pdev, bar) < offset) {
-> > >  		dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
-> > >  			&pdev->resource[bar], (unsigned long long)offset);
-> > > -		return -ENXIO;
-> > > +		return (void __iomem *)ERR_PTR(-ENXIO);
-> > >  	}
-> > >  
-> > >  	rc = pcim_iomap_regions(pdev, BIT(bar), pci_name(pdev));
-> > >  	if (rc) {
-> > >  		dev_err(dev, "failed to map registers\n");
-> > > -		return rc;
-> > > +		return (void __iomem *)ERR_PTR(rc);  
-> > 
-> > The casting is fairly horrible, perhaps just pass in
-> > a void __iomem ** and pass base back through that?
-> >   
-> 
-> TIL: IOMEM_ERR_PTR. Would that suffice?
+I assume you and your family are in good health.
 
-Definitely.  Didn't know about that!
+This being a wide world in which it can be difficult to make new
+acquaintances and because it is virtually impossible to know who is
+trustworthy and who can be believed, i have decided to repose
+confidence in you after much fasting and prayer. It is only because of
+this that I have decided to confide in you and to share with you this
+confidential business.
 
-Jonathan
+Overdue and unclaimed sum of $15.5m, (Fifteen Million Five Hundred
+Thousand Dollars Only) when the account holder suddenly passed on, he
+left no beneficiary who would be entitled to the receipt of this fund.
+For this reason, I have found it expedient to transfer this fund to a
+trustworthy individual with capacity to act as foreign business
+partner.
 
+Thus i humbly request your assistance to claim this fund. Upon the
+transfer of this fund in your account, you will take 45% as your share
+from the total fund, 10% will be shared to Charity Organizations in
+both country and 45% will be for me,reply on this project for more
+Details.
+
+Yours Faithful,
+Mr.Sal Kavar.
