@@ -2,105 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4396E35EF72
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 10:25:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3276735F0B9
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 11:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349745AbhDNIWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Apr 2021 04:22:16 -0400
-Received: from mx.socionext.com ([202.248.49.38]:53655 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348780AbhDNIWQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Apr 2021 04:22:16 -0400
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 14 Apr 2021 17:21:54 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 52740205902A;
-        Wed, 14 Apr 2021 17:21:54 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 14 Apr 2021 17:21:54 +0900
-Received: from yuzu2.css.socionext.com (yuzu2 [172.31.9.57])
-        by iyokan2.css.socionext.com (Postfix) with ESMTP id 24EDFB1D40;
-        Wed, 14 Apr 2021 17:21:54 +0900 (JST)
-Received: from [10.212.23.128] (unknown [10.212.23.128])
-        by yuzu2.css.socionext.com (Postfix) with ESMTP id 4B646623D;
-        Wed, 14 Apr 2021 17:21:53 +0900 (JST)
-Subject: Re: [PATCH v10 1/3] PCI: portdrv: Add pcie_port_service_get_irq()
- function
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>
-References: <1617985338-19648-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1617985338-19648-2-git-send-email-hayashi.kunihiko@socionext.com>
- <20210412094219.000031ca@Huawei.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <1001a75f-76fb-5a99-7af2-602aef31b01b@socionext.com>
-Date:   Wed, 14 Apr 2021 17:21:52 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S1348534AbhDNJXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Apr 2021 05:23:09 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2850 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348526AbhDNJXI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Apr 2021 05:23:08 -0400
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FKxZq4rnxz6893H;
+        Wed, 14 Apr 2021 17:12:51 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Wed, 14 Apr 2021 11:22:43 +0200
+Received: from localhost (10.47.83.55) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 14 Apr
+ 2021 10:22:42 +0100
+Date:   Wed, 14 Apr 2021 10:21:15 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+        "Linux ACPI" <linux-acpi@vger.kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Vishal L Verma" <vishal.l.verma@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/8] cxl/mem: Move some definitions to mem.h
+Message-ID: <20210414102115.00001f09@Huawei.com>
+In-Reply-To: <CAPcyv4iueMDPxcEuLg=NKydkRL+xmEn-udHjKYB493iTQShaAg@mail.gmail.com>
+References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <161728744762.2474040.11009693084215696415.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20210406173845.00000bec@Huawei.com>
+        <CAPcyv4h4z9Y_Zbzk_jiZXs6+gPAbdw0UJHW5NvTaM2ZcvJ6ftw@mail.gmail.com>
+        <CAPcyv4iueMDPxcEuLg=NKydkRL+xmEn-udHjKYB493iTQShaAg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20210412094219.000031ca@Huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.83.55]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jonathan,
+On Tue, 13 Apr 2021 17:42:37 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-On 2021/04/12 17:42, Jonathan Cameron wrote:
-> On Sat, 10 Apr 2021 01:22:16 +0900
-> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+> On Tue, Apr 13, 2021 at 5:18 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Tue, Apr 6, 2021 at 10:47 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:  
+> > >
+> > > On Thu, 1 Apr 2021 07:30:47 -0700
+> > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > >  
+> > > > In preparation for sharing cxl.h with other generic CXL consumers,
+> > > > move / consolidate some of the memory device specifics to mem.h.
+> > > >
+> > > > Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> > >
+> > > Hi Dan,
+> > >
+> > > Would be good to see something in this patch description saying
+> > > why you chose to have mem.h rather than push the defines down
+> > > into mem.c (which from the current code + patch set looks like
+> > > the more logical thing to do).  
+> >
+> > The main motivation was least privilege access to memory-device
+> > details, so they had to move out of cxl.h. As to why move them in to a
+> > new mem.h instead of piling more into mem.c that's just a personal
+> > organizational style choice to aid review. I tend to go to headers
+> > first and read data structure definitions before reading the
+> > implementation, and having that all in one place is cleaner than
+> > interspersed with implementation details in the C code. It's all still
+> > private to drivers/cxl/ so I don't see any "least privilege" concerns
+> > with moving it there.
+> >
+> > Does that satisfy your concern?
+> >
+> > If yes, I'll add the above to v3.  
 > 
->> Add pcie_port_service_get_irq() that returns the virtual IRQ number
->> for specified portdrv service.
-> 
-> Trivial comment inline.
-> 
->>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> ---
->>   drivers/pci/pcie/portdrv.h      |  1 +
->>   drivers/pci/pcie/portdrv_core.c | 16 ++++++++++++++++
->>   2 files changed, 17 insertions(+)
->>
->> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
->> index 2ff5724..628a3de 100644
->> --- a/drivers/pci/pcie/portdrv.h
->> +++ b/drivers/pci/pcie/portdrv.h
->> @@ -144,4 +144,5 @@ static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
->>   #endif /* !CONFIG_PCIE_PME */
->>   
->>   struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
->> +int pcie_port_service_get_irq(struct pci_dev *dev, u32 service);
->>   #endif /* _PORTDRV_H_ */
->> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
->> index e1fed664..b60f0f3 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -477,7 +477,22 @@ struct device *pcie_port_find_device(struct pci_dev *dev,
->>   }
->>   EXPORT_SYMBOL_GPL(pcie_port_find_device);
->>   
->> +/*
-> 
-> /**
-> 
-> this is kernel-doc style, so why not mark it as such?
+> Oh, another thing it helps is the information content of diffstats to
+> distinguish definition changes from implementation development.
 
-Thank you for pointing out.
-I'll apply the style to this comment.
+I go the other way style wise, but agree it doesn't really matter for
+local headers included from few other files.  Adding a above to
+comment will at least avoid anyone else (or forgetful me) raising question on v3.
 
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+Jonathan
