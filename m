@@ -2,94 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 071FA35FCD4
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 22:45:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C368E35FCF1
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 23:04:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234129AbhDNUpc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Apr 2021 16:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
+        id S230436AbhDNVET (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Apr 2021 17:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233093AbhDNUpc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Apr 2021 16:45:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1B30161074;
-        Wed, 14 Apr 2021 20:45:10 +0000 (UTC)
+        id S230350AbhDNVEO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Apr 2021 17:04:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1C30060240;
+        Wed, 14 Apr 2021 21:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618433110;
-        bh=JX3xsI+XANgtBxpkB7G2Z/Gaw8lu/CAgqgZB6yYmDxI=;
+        s=k20201202; t=1618434232;
+        bh=cgcS4OT2OQ9yztrLDGKDqC6WZcpOr+I4kBHjkeeifHI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oK8nX9zj1lXIQhKN5e7wqCSXrVAf9jgw0ig5MVuFPZfnhh+szvqkQ02fmcOvE8n+M
-         F1kYM9OyLd3dG88CUYjbGEEDo/HNmc1wiFWkgFPa6Xr5XcsLnMncgbJuNo2qB2lflK
-         wpZ9ad4V97xBX6jWxQZ5OYhESHNyd7EiXf0DNtCmwhNtqck3G2bP374xC6bUvyqKfu
-         jCzho9Tb6ddq3NDP/2DhxPs3nID1r25SgKiVqqGl3Mci1Tmw9Ph1ihRIgoXURxHb7c
-         BPxiIl9c1W0PRdsRWwrltoOQSj2cAAnwxnMySNn+pLeqWL+We8bvpI3Ytl8C38P8f3
-         Y60+Xu/I0staA==
-Date:   Wed, 14 Apr 2021 15:45:08 -0500
+        b=RyyQi/TmEIUBU+HOZ21LdL23oaLp2hBjZuOmAPFhhbi8qfzcfRIBmL6v1bCTQArTY
+         coseRP6wrzY78lz0d9FYncNFhxNPVvXo+7KuJWIGGJsJt2e4lMfvKuHXJ0CY/OIBz5
+         afSssNEzxZjBR0nEBGWAzZ0OhZRrCypnVzy6z3AH0nQROcwvILiTdGgEm/5e/RGFWs
+         hdAKI+cBjORjkgsJ3MM05L6PWYIo+mjU0tzfFU0/QWGKVZm3AFj+iZo7PhyKOjy+lH
+         SEUZ4clOsj/5gZGs3oPzTOqzfhvL1rJl8KJpjm4kc7BYYEC6iU1el7OKYSLshEMRvk
+         64bdHZhw9OMJA==
+Date:   Wed, 14 Apr 2021 16:03:50 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arun Easi <aeasi@marvell.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Girish Basrur <GBasrur@marvell.com>,
-        Quinn Tran <qutran@marvell.com>
-Subject: Re: [PATCH v2 1/1] PCI/VPD: Fix blocking of VPD data in lspci for
- QLogic 1077:2261
-Message-ID: <20210414204508.GA2536430@bjorn-Precision-5520>
+To:     Ingmar Klein <ingmar_klein@web.de>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: QCA6174 pcie wifi: Add pci quirks
+Message-ID: <20210414210350.GA2537653@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210409215153.16569-2-aeasi@marvell.com>
+In-Reply-To: <08982e05-b6e8-5a8d-24ab-da1488ee50a8@web.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 02:51:53PM -0700, Arun Easi wrote:
-> "lspci -vvv" for Qlogic Fibre Channel HBA 1077:2261 displays
-> "Vital Product Data" as "Not readable" today and thus preventing
-> customers from getting relevant HBA information. Fix it by removing
-> the blacklist quirk.
-> 
-> The VPD quirk was added by [0] to avoid a system NMI; this issue has
-> been long fixed in the HBA firmware. In addition, PCI also has changes
-> to check the VPD size [1], so this quirk can be reverted now regardless
-> of a firmware update.
-> 
-> Some more details can be found in the following thread:
->     "VPD blacklist of Marvell QLogic 1077/2261" [2]
-> 
-> [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
-> [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
-> [2] https://lore.kernel.org/linux-pci/alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com/
-> [3] https://lore.kernel.org/linux-pci/alpine.LRH.2.21.9999.2104071535110.13940@irv1user01.caveonetworks.com/
-> 
-> Clarification on why [0], which appeared in v4.11, would be an issue
-> given that [1] appeared in v4.6:
-> 
->     Firstly, we do not have information on which exact kernel the
->     tester was using that resulted in [0]. That said, the call
->     trace for the issue had pci_vpd_pci22_* calls, which appeared
->     only in pre-4.6 kernels. Those functions were renamed v4.6 and
->     above, so tester was indeed testing using an older kernel.
->     See [3] for further details.
-> 
-> Signed-off-by: Arun Easi <aeasi@marvell.com>
-> CC: stable@vger.kernel.org      # v4.6+
+[+cc Alex]
 
-Applied to pci/vpd for v5.13, thanks!
-
-> ---
->  drivers/pci/vpd.c | 1 -
->  1 file changed, 1 deletion(-)
+On Fri, Apr 09, 2021 at 11:26:33AM +0200, Ingmar Klein wrote:
+> Edit: Retry, as I did not consider, that my mail-client would make this
+> party html.
 > 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 6909253..a41818a 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -474,7 +474,6 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005d, quirk_blacklist_vpd);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005f, quirk_blacklist_vpd);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, PCI_ANY_ID,
->  		quirk_blacklist_vpd);
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
+> Dear maintainers,
+> I recently encountered an issue on my Proxmox server system, that
+> includes a Qualcomm QCA6174 m.2 PCIe wifi module.
+> https://deviwiki.com/wiki/AIRETOS_AFX-QCA6174-NX
+> 
+> On system boot and subsequent virtual machine start (with passed-through
+> QCA6174), the VM would just freeze/hang, at the point where the ath10k
+> driver loads.
+> Quick search in the proxmox related topics, brought me to the following
+> discussion, which suggested a PCI quirk entry for the QCA6174 in the kernel:
+> https://forum.proxmox.com/threads/pcie-passthrough-freezes-proxmox.27513/
+> 
+> I then went ahead, got the Proxmox kernel source (v5.4.106) and applied
+> the attached patch.
+> Effect was as hoped, that the VM hangs are now gone. System boots and
+> runs as intended.
+> 
+> Judging by the existing quirk entries for Atheros, I would think, that
+> my proposed "fix" could be included in the vanilla kernel.
+> As far as I saw, there is no entry yet, even in the latest kernel sources.
+
+This would need a signed-off-by; see
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.11#n361
+
+This is an old issue, and likely we'll end up just applying this as
+yet another quirk.  But looking at c3e59ee4e766 ("PCI: Mark Atheros
+AR93xx to avoid bus reset"), where it started, it seems to be
+connected to 425c1b223dac ("PCI: Add Virtual Channel to save/restore
+support").
+
+I'd like to dig into that a bit more to see if there are any clues.
+AFAIK Linux itself still doesn't use VC at all, and 425c1b223dac added
+a fair bit of code.  I wonder if we're restoring something out of
+order or making some simple mistake in the way to restore VC config.
+
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 706f27a86a8e..ecfe80ec5b9c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3584,6 +3584,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
+>  
 >  /*
->   * The Amazon Annapurna Labs 0x0031 device id is reused for other non Root Port
->   * device types, so the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-> -- 
-> 2.9.5
-> 
+>   * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+
