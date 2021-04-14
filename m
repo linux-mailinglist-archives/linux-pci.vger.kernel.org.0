@@ -2,164 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19A3235EA3B
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 03:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A0F635EBE1
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Apr 2021 06:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233079AbhDNBPL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Apr 2021 21:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
+        id S229926AbhDNE2u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Apr 2021 00:28:50 -0400
+Received: from mga11.intel.com ([192.55.52.93]:35327 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232096AbhDNBPK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 13 Apr 2021 21:15:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A3660613B6;
-        Wed, 14 Apr 2021 01:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618362889;
-        bh=Ilz1fM4cCSvk1C8dy8sdftyD3f2Y9Vn7ORj9gYC+c78=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TfzHmFoATvLhvsRPQwb/lc4tiIiefyzF0hHoLrgoST/f/dCEaXpUriR1lf8HF7QdH
-         Y5XKg2RqWOynWCKLwe1FlC/BpacdaNauWU/YJMjZCDqDa0B+OIhZ9hxX+Yy87Ur3br
-         sCIEkxe6z6zIK2Rc3FDQ5uBcn+xX0gkAryvxxFwgRtTdffcGhqVQv4lm/MZ+HADa7V
-         l7Xhd5QFsUSJ/7fc+Y/k6d3qWVnYqbvkop6QaP+2pdJ21ZckUcdJI3BKs+b1nRV1AN
-         3vEJ/JOco/D7B3+LLKlVz3EebttvZ04/gzltpa3JDZU/az8MPMTShHL9zLTAe83XxG
-         UrT7upD3RkXOA==
-Date:   Tue, 13 Apr 2021 20:14:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 7/8] cxl/port: Introduce cxl_port objects
-Message-ID: <20210414011448.GA2266325@bjorn-Precision-5520>
+        id S229450AbhDNE2p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Apr 2021 00:28:45 -0400
+IronPort-SDR: i52fHXywz4EbknWCMO/pTAs3PmWIHTTAjB7MkwhW6OpYE5zpZVy0FkijlJskidjq+OB8HIyuIE
+ w0MEXmZ9drUg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9953"; a="191375890"
+X-IronPort-AV: E=Sophos;i="5.82,221,1613462400"; 
+   d="scan'208";a="191375890"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2021 21:28:23 -0700
+IronPort-SDR: AO8xkHb/E321dIiDzXFZ41NoOBHl0f+ze6beRdnSMMZyDM9fMm4pT1Qv65o4k0IRjtmK20kRcR
+ WHQxiyMNpFuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,221,1613462400"; 
+   d="scan'208";a="418140794"
+Received: from lkp-server01.sh.intel.com (HELO 69d8fcc516b7) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Apr 2021 21:28:22 -0700
+Received: from kbuild by 69d8fcc516b7 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lWX8X-0001Ys-Kc; Wed, 14 Apr 2021 04:28:21 +0000
+Date:   Wed, 14 Apr 2021 12:27:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 2125db52a0b9d6391f0e764e19515b7423988411
+Message-ID: <60766f29.RuOIbRhyN+cCIX2J%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hAc=DERr1z8kr=V01+NSi74f-kSfMAdeArLmVb112_Dw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 07:13:38PM -0700, Dan Williams wrote:
-> Hi Bjorn, thanks for taking a look.
-> 
-> On Thu, Apr 8, 2021 at 3:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Greg, Rafael, Matthew: device model questions]
-> >
-> > Hi Dan,
-> >
-> > On Thu, Apr 01, 2021 at 07:31:20AM -0700, Dan Williams wrote:
-> > > Once the cxl_root is established then other ports in the hierarchy can
-> > > be attached. The cxl_port object, unlike cxl_root that is associated
-> > > with host bridges, is associated with PCIE Root Ports or PCIE Switch
-> > > Ports. Add cxl_port instances for all PCIE Root Ports in an ACPI0016
-> > > host bridge.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 2125db52a0b9d6391f0e764e19515b7423988411  Merge branch 'remotes/lorenzo/pci/misc'
 
-Incidentally, "PCIe" is the abbreviation used in the PCIe specs, so I
-try to use that instead of "PCIE" in drivers/pci/.
+elapsed time: 723m
 
-> > I'm not a device model expert, but I'm not sure about adding a new
-> > /sys/bus/cxl/devices hierarchy.  I'm under the impression that CXL
-> > devices will be enumerated by the PCI core as PCIe devices.
-> 
-> Yes, PCIe is involved, but mostly only for the CXL.io slow path
-> (configuration and provisioning via mailbox) when we're talking about
-> memory expander devices (CXL calls these Type-3). So-called "Type-3"
-> support is the primary driver of this infrastructure.
->
-> You might be thinking of CXL accelerator devices that will look like
-> plain PCIe devices that happen to participate in the CPU cache
-> hierarchy (CXL calls these Type-1). There will also be accelerator
-> devices that want to share coherent memory with the system (CXL calls
-> these Type-2).
+configs tested: 176
+configs skipped: 2
 
-IIUC all these CXL devices will be enumerated by the PCI core.  They
-seem to have regular PCI BARs (separate from the HDM stuff), so the
-PCI core will presumably manage address allocation for them.  It looks
-like Function Level Reset and hotplug are supposed to use the regular
-PCIe code.  I guess this will all be visible via lspci just like
-regular PCI devices, right?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> The infrastructure being proposed here is primarily for the memory
-> expander (Type-3) device case where the PCI sysfs hierarchy is wholly
-> unsuited for modeling it. A single CXL memory region device may span
-> multiple endpoints, switches, and host bridges. It poses similar
-> stress to an OS device model as RAID where there is a driver for the
-> component contributors to an upper level device / driver that exposes
-> the RAID Volume (CXL memory region interleave set). The CXL memory
-> decode space (HDM: Host Managed Device Memory) is independent of the
-> PCIe MMIO BAR space.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+x86_64                           allyesconfig
+riscv                            allmodconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+sh                          rsk7269_defconfig
+sh                             sh03_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                         alldefconfig
+powerpc64                           defconfig
+sh                        apsh4ad0a_defconfig
+arm                          pxa3xx_defconfig
+h8300                       h8s-sim_defconfig
+sh                           se7206_defconfig
+s390                             allmodconfig
+riscv             nommu_k210_sdcard_defconfig
+sh                           se7343_defconfig
+arm                       imx_v4_v5_defconfig
+m68k                          atari_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                          iop32x_defconfig
+arm                           sunxi_defconfig
+arc                         haps_hs_defconfig
+powerpc                     taishan_defconfig
+powerpc64                        alldefconfig
+powerpc                     ksi8560_defconfig
+xtensa                  cadence_csp_defconfig
+sh                          urquell_defconfig
+h8300                    h8300h-sim_defconfig
+arm                          collie_defconfig
+powerpc                    socrates_defconfig
+powerpc                      bamboo_defconfig
+arm                            xcep_defconfig
+powerpc                  iss476-smp_defconfig
+powerpc                   lite5200b_defconfig
+mips                        nlm_xlp_defconfig
+mips                         db1xxx_defconfig
+sh                            titan_defconfig
+m68k                         amcore_defconfig
+arm                       netwinder_defconfig
+m68k                        mvme147_defconfig
+ia64                            zx1_defconfig
+sh                           se7722_defconfig
+arm                         at91_dt_defconfig
+mips                      pistachio_defconfig
+powerpc                      pmac32_defconfig
+i386                                defconfig
+sh                          landisk_defconfig
+csky                             alldefconfig
+powerpc                     tqm8560_defconfig
+arm                       spear13xx_defconfig
+i386                             alldefconfig
+mips                          rm200_defconfig
+arm                            mmp2_defconfig
+arm                          pcm027_defconfig
+arm                        cerfcube_defconfig
+microblaze                          defconfig
+arm                     eseries_pxa_defconfig
+sparc                            allyesconfig
+mips                        maltaup_defconfig
+xtensa                  nommu_kc705_defconfig
+mips                           ip27_defconfig
+sh                   sh7724_generic_defconfig
+powerpc                 xes_mpc85xx_defconfig
+xtensa                  audio_kc705_defconfig
+arm                             ezx_defconfig
+h8300                            alldefconfig
+arm                           corgi_defconfig
+mips                        omega2p_defconfig
+arm                          ixp4xx_defconfig
+powerpc                     tqm8540_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                     rainier_defconfig
+arm                          pxa168_defconfig
+mips                           ci20_defconfig
+arm                       aspeed_g4_defconfig
+sh                         microdev_defconfig
+powerpc                     sequoia_defconfig
+sh                          lboxre2_defconfig
+arm                         bcm2835_defconfig
+sh                          rsk7201_defconfig
+arc                          axs103_defconfig
+arm                        clps711x_defconfig
+xtensa                generic_kc705_defconfig
+arm                      footbridge_defconfig
+sparc64                          alldefconfig
+arm                      jornada720_defconfig
+powerpc                    amigaone_defconfig
+powerpc                     powernv_defconfig
+powerpc                       ebony_defconfig
+sh                        edosk7760_defconfig
+arm                           stm32_defconfig
+sh                        sh7785lcr_defconfig
+arc                          axs101_defconfig
+powerpc                   motionpro_defconfig
+mips                        nlm_xlr_defconfig
+mips                            gpr_defconfig
+m68k                             allyesconfig
+powerpc                 canyonlands_defconfig
+arm                       multi_v4t_defconfig
+sh                     magicpanelr2_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20210413
+x86_64               randconfig-a002-20210413
+x86_64               randconfig-a001-20210413
+x86_64               randconfig-a005-20210413
+x86_64               randconfig-a006-20210413
+x86_64               randconfig-a004-20210413
+i386                 randconfig-a003-20210413
+i386                 randconfig-a001-20210413
+i386                 randconfig-a006-20210413
+i386                 randconfig-a005-20210413
+i386                 randconfig-a004-20210413
+i386                 randconfig-a002-20210413
+i386                 randconfig-a015-20210413
+i386                 randconfig-a014-20210413
+i386                 randconfig-a013-20210413
+i386                 randconfig-a012-20210413
+i386                 randconfig-a016-20210413
+i386                 randconfig-a011-20210413
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-It looks like you add a cxl_port for each ACPI0016 device and every
-PCIe Root Port below it.  So I guess the upper level spanning is at a
-higher level than cxl_port?
+clang tested configs:
+x86_64               randconfig-a003-20210414
+x86_64               randconfig-a002-20210414
+x86_64               randconfig-a005-20210414
+x86_64               randconfig-a001-20210414
+x86_64               randconfig-a006-20210414
+x86_64               randconfig-a004-20210414
+x86_64               randconfig-a014-20210413
+x86_64               randconfig-a015-20210413
+x86_64               randconfig-a011-20210413
+x86_64               randconfig-a013-20210413
+x86_64               randconfig-a012-20210413
+x86_64               randconfig-a016-20210413
 
-> That's where the /sys/bus/cxl hierarchy is needed, to manage the HDM
-> space across the CXL topology in a way that is foreign to PCIE (HDM
-> Decoder hierarchy).
-
-When we do FLR on the PCIe device, what happens to these CXL clients?
-Do they care?  Are they notified?  Do they need to do anything before
-or after the FLR?
-
-What about hotplug?  Spec says it leverages PCIe hotplug, but it looks
-like maybe this all requires ACPI hotplug (acpiphp) for adding
-ACPI0017 devices and notifying of hot remove requests?  If it uses
-PCIe native hotplug (pciehp), what connects the CXL side to the PCI
-side?
-
-I guess the HDM address space management is entirely outside the scope
-of PCI -- the address space is not described by the CXL host bridge
-_CRS and not described by CXL endpoint BARs?  Where *is* it described
-and who manages and allocates it?  I guess any transaction routing
-through the CXL fabric for HDM space is also completely outside the
-scope of PCI -- we don't need to worry about managing PCI-to-PCI
-bridge windows, for instance?
-
-Is there a cxl_register_driver() or something?  I assume there will be
-drivers that need to manage CXL devices?  Or will they use
-pci_register_driver() and search for a CXL capability?
-
-> > Doesn't that mean we will have one struct device in the pci_dev,
-> > and another one in the cxl_port?
-> 
-> Yes, that is the proposal.
-
-> The superfluous power/ issue can be cleaned up with
-> device_set_pm_not_required().
-
-Thanks, we might be able to use that for portdrv.  I added it to my
-list to investigate.
-
-> What are the other problems this poses, because in other areas this
-> ability to subdivide a device's functionality into sub-drivers is a
-> useful organization principle?
-
-Well, I'm thinking about things like enumeration, hotplug, reset,
-resource management (BARs, bridge windows, etc), interrupts, power
-management (suspend, resume, etc), and error reporting.  These are all
-things that PCIe defines on a per-Function basis and seem kind of hard
-to cleanly subdivide.
-
-> So much so that several device writer teams came together to create
-> the auxiliary-bus for the purpose of allowing sub-drivers to be
-> carved off for independent functionality similar to the portdrv
-> organization.
-
-Is "auxiliary-bus" a specific thing?  I'm not familiar with it but
-again I'd like to read up on it in case it has ideas we could
-leverage.
-
-Sub-drivers *is* an issue for PCI in general, although mostly I think
-it tends to be historical devices where people made the design mistake
-of putting several unrelated pieces of functionality in the same PCI
-function, so I don't think PCI has good infrastructure for doing that.
-
-Bjorn
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
