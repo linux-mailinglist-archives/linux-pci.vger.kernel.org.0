@@ -2,207 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 472B436033E
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Apr 2021 09:24:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5B836043B
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Apr 2021 10:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbhDOHZL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Apr 2021 03:25:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14566 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231280AbhDOHZK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Apr 2021 03:25:10 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13F73hkK136923;
-        Thu, 15 Apr 2021 03:24:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=q9T8SahEZUqDVixHepan04p7Sk4pDUeFxzkOwHaURFg=;
- b=dlZeaupqjVIc5GSpHSE+gdpu7tsZANMiW38zVzpg/8NUEJlCT3oNl6I7OzXruGdYDGjT
- CSoFTle7AsQznYRJca4p19MS3Fh3BxxIR0uQ09eU7KGRObWJZjBCkeweVE1LrnGGKbTj
- 5DFcuLBiN3BZf8e16o4vSgZxrszn+TpidTpU9ZZR/fDXblsitHN5WSWUrvS4fRCJQHhN
- E3UgU1oKzCu4mpIQMb+02qkfYXgSj5Ns+H4SyrV8yUdPXRmR1rE0eDR97yL73ZurSkpI
- VNH3yTuxYnLnK1CUPqaw/CMqgy1uNBEijPZF+W/lGs4OTBdqjed227c4c07qHpGN115Q YA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37x88hu7df-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Apr 2021 03:24:42 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13F77RnN023783;
-        Thu, 15 Apr 2021 07:24:37 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 37u3n8bq4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Apr 2021 07:24:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13F7OXWh66060664
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Apr 2021 07:24:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D397AAE055;
-        Thu, 15 Apr 2021 07:24:33 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58A46AE045;
-        Thu, 15 Apr 2021 07:24:33 +0000 (GMT)
-Received: from sig-9-145-170-145.de.ibm.com (unknown [9.145.170.145])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 15 Apr 2021 07:24:33 +0000 (GMT)
-Message-ID: <bd95605ed435ad3978535d865b883f58c1d542d6.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] s390/pci: expose a PCI device's UID as its index
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
+        id S231300AbhDOI0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Apr 2021 04:26:40 -0400
+Received: from mga14.intel.com ([192.55.52.115]:22201 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231215AbhDOI0i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Apr 2021 04:26:38 -0400
+IronPort-SDR: sGnV2ewzAiKH7Im3q/Vy5l2vsiIjmajm0YEr433yGb2fh8Y6YSG6pG43l8xHE17LiTbEDqBlUT
+ jbL2d3JYgZgA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9954"; a="194374605"
+X-IronPort-AV: E=Sophos;i="5.82,223,1613462400"; 
+   d="scan'208";a="194374605"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 01:26:16 -0700
+IronPort-SDR: BtWCZpsYbzyszReTfYh1+nDJtfp4wiCWS2NW8mL371QY54hzoSW0owOReH3gkstgKxmn75NqkG
+ U4pijRjPdE9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,223,1613462400"; 
+   d="scan'208";a="522286446"
+Received: from lkp-server02.sh.intel.com (HELO fa9c8fcc3464) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Apr 2021 01:26:15 -0700
+Received: from kbuild by fa9c8fcc3464 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lWxKI-0000li-B8; Thu, 15 Apr 2021 08:26:14 +0000
+Date:   Thu, 15 Apr 2021 16:25:30 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Narendra K <narendra_k@dell.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Date:   Thu, 15 Apr 2021 09:24:33 +0200
-In-Reply-To: <20210414201755.GA2532433@bjorn-Precision-5520>
-References: <20210414201755.GA2532433@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-14.el8) 
-Mime-Version: 1.0
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS e4e573c9a39080f43693c70e4efd805674ba0216
+Message-ID: <6077f87a.JjG+hwixGvqvNMQ/%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bRJFPuNoMNuWoQLkOpRZm60i16bhhTiI
-X-Proofpoint-ORIG-GUID: bRJFPuNoMNuWoQLkOpRZm60i16bhhTiI
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-15_03:2021-04-15,2021-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
- mlxscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104150046
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2021-04-14 at 15:17 -0500, Bjorn Helgaas wrote:
-> On Mon, Apr 12, 2021 at 03:59:05PM +0200, Niklas Schnelle wrote:
-> > On s390 each PCI device has a user-defined ID (UID) exposed under
-> > /sys/bus/pci/devices/<dev>/uid. This ID was designed to serve as the PCI
-> > device's primary index and to match the device within Linux to the
-> > device configured in the hypervisor. To serve as a primary identifier
-> > the UID must be unique within the Linux instance, this is guaranteed by
-> > the platform if and only if the UID Uniqueness Checking flag is set
-> > within the CLP List PCI Functions response.
-> > 
-> > In this sense the UID serves an analogous function as the SMBIOS
-> > instance number or ACPI index exposed as the "index" respectively
-> > "acpi_index" device attributes and used by e.g. systemd to set interface
-> > names. As s390 does not use and will likely never use ACPI nor SMBIOS
-> > there is no conflict and we can just expose the UID under the "index"
-> > attribute whenever UID Uniqueness Checking is active and get systemd's
-> > interface naming support for free.
-> > 
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > Acked-by: Viktor Mihajlovski <mihajlov@linux.ibm.com>
-> 
-> This seems like a nice solution to me.
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: e4e573c9a39080f43693c70e4efd805674ba0216  Merge branch 'remotes/lorenzo/pci/misc'
 
-Thanks! Yes I agree it's a simple solution that also makes sense from a
-design point. I'll wait for Narendra's opinion of course.
+elapsed time: 720m
 
-> 
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-pci | 11 +++++---
-> >  arch/s390/pci/pci_sysfs.c               | 35 +++++++++++++++++++++++++
-> >  2 files changed, 42 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > index 25c9c39770c6..1241b6d11a52 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > @@ -195,10 +195,13 @@ What:		/sys/bus/pci/devices/.../index
-> >  Date:		July 2010
-> >  Contact:	Narendra K <narendra_k@dell.com>, linux-bugs@dell.com
-> >  Description:
-> > -		Reading this attribute will provide the firmware
-> > -		given instance (SMBIOS type 41 device type instance) of the
-> > -		PCI device. The attribute will be created only if the firmware
-> > -		has given an instance number to the PCI device.
-> > +		Reading this attribute will provide the firmware given instance
-> > +		number of the PCI device.  Depending on the platform this can
-> > +		be for example the SMBIOS type 41 device type instance or the
-> > +		user-defined ID (UID) on s390. The attribute will be created
-> > +		only if the firmware has given an instance number to the PCI
-> > +		device and that number is guaranteed to uniquely identify the
-> > +		device in the system.
-> >  Users:
-> >  		Userspace applications interested in knowing the
-> >  		firmware assigned device type instance of the PCI
-> > diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-> > index e14d346dafd6..20dbb2058d51 100644
-> > --- a/arch/s390/pci/pci_sysfs.c
-> > +++ b/arch/s390/pci/pci_sysfs.c
-> > @@ -138,6 +138,38 @@ static ssize_t uid_is_unique_show(struct device *dev,
-> >  }
-> >  static DEVICE_ATTR_RO(uid_is_unique);
-> >  
-> > +#ifndef CONFIG_DMI
-> > +/* analogous to smbios index */
-> 
-> I think this is smbios_attr_instance, right?  Maybe mention that
-> specifically to make it easier to match these up.
-> 
-> Looks like smbios_attr_instance and the similar ACPI stuff could use
-> some updating to use the current attribute group infrastructure.
-> 
-> > +static ssize_t index_show(struct device *dev,
-> > +			  struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
-> > +	u32 index = ~0;
-> > +
-> > +	if (zpci_unique_uid)
-> > +		index = zdev->uid;
-> > +
-> > +	return sysfs_emit(buf, "%u\n", index);
-> > +}
-> > +static DEVICE_ATTR_RO(index);
-> > +
-> > +static umode_t zpci_unique_uids(struct kobject *kobj,
-> > +				struct attribute *attr, int n)
-> > +{
-> > +	return zpci_unique_uid ? attr->mode : 0;
-> > +}
-> > +
-> > +static struct attribute *zpci_ident_attrs[] = {
-> > +	&dev_attr_index.attr,
-> > +	NULL,
-> > +};
-> > +
-> > +static struct attribute_group zpci_ident_attr_group = {
-> > +	.attrs = zpci_ident_attrs,
-> > +	.is_visible = zpci_unique_uids,
-> 
-> It's conventional to name these functions *_is_visible() (another
-> convention that smbios_attr_instance and acpi_attr_index probably
-> predate).
+configs tested: 174
+configs skipped: 3
 
-Thanks, will change. Since he function then references the attribtue
-instead of the condition, I'll go with zpci_index_is_visible().
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> > +};
-> > +#endif
-> > +
-> >  static struct bin_attribute *zpci_bin_attrs[] = {
-> >  	&bin_attr_util_string,
-> >  	&bin_attr_report_error,
-> > @@ -179,5 +211,8 @@ static struct attribute_group pfip_attr_group = {
-> >  const struct attribute_group *zpci_attr_groups[] = {
-> >  	&zpci_attr_group,
-> >  	&pfip_attr_group,
-> > +#ifndef CONFIG_DMI
-> > +	&zpci_ident_attr_group,
-> > +#endif
-> >  	NULL,
-> >  };
-> > -- 
-> > 2.25.1
-> > 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+riscv                            allmodconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+powerpc                       maple_defconfig
+arm                          ep93xx_defconfig
+mips                            e55_defconfig
+ia64                      gensparse_defconfig
+m68k                             alldefconfig
+arc                         haps_hs_defconfig
+powerpc                      ppc64e_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                      makalu_defconfig
+s390                          debug_defconfig
+powerpc                     tqm8555_defconfig
+arm                         bcm2835_defconfig
+sh                            migor_defconfig
+mips                      maltasmvp_defconfig
+xtensa                  cadence_csp_defconfig
+arm                         shannon_defconfig
+arm                         lpc32xx_defconfig
+m68k                           sun3_defconfig
+powerpc                      ppc44x_defconfig
+nds32                             allnoconfig
+powerpc                   lite5200b_defconfig
+arm                         vf610m4_defconfig
+sh                            shmin_defconfig
+powerpc                     tqm8548_defconfig
+powerpc                 mpc8272_ads_defconfig
+riscv                            alldefconfig
+arm                          exynos_defconfig
+xtensa                          iss_defconfig
+powerpc                     ksi8560_defconfig
+powerpc                     ppa8548_defconfig
+arm                           h3600_defconfig
+arm                         palmz72_defconfig
+powerpc                 mpc837x_mds_defconfig
+xtensa                              defconfig
+sh                   rts7751r2dplus_defconfig
+arm                      jornada720_defconfig
+powerpc                     redwood_defconfig
+powerpc                        fsp2_defconfig
+arm                       versatile_defconfig
+mips                           ci20_defconfig
+sh                          lboxre2_defconfig
+arm                            qcom_defconfig
+powerpc                     pq2fads_defconfig
+mips                     loongson1c_defconfig
+powerpc                      bamboo_defconfig
+mips                         cobalt_defconfig
+arc                        vdk_hs38_defconfig
+arm                         s3c6400_defconfig
+arm                          pcm027_defconfig
+arm                            mps2_defconfig
+arm                          simpad_defconfig
+arm                            zeus_defconfig
+sh                          rsk7264_defconfig
+powerpc64                           defconfig
+powerpc                      arches_defconfig
+h8300                            alldefconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                 xes_mpc85xx_defconfig
+arm                      integrator_defconfig
+powerpc                        icon_defconfig
+arm                         axm55xx_defconfig
+sh                           se7722_defconfig
+m68k                       m5475evb_defconfig
+mips                      fuloong2e_defconfig
+mips                     decstation_defconfig
+powerpc                    sam440ep_defconfig
+mips                           ip28_defconfig
+m68k                       bvme6000_defconfig
+powerpc                       eiger_defconfig
+riscv                             allnoconfig
+powerpc                   bluestone_defconfig
+i386                                defconfig
+arm                          lpd270_defconfig
+mips                        nlm_xlp_defconfig
+powerpc                      chrp32_defconfig
+parisc                           alldefconfig
+arc                        nsimosci_defconfig
+sh                         ap325rxa_defconfig
+sparc                               defconfig
+powerpc                       ppc64_defconfig
+powerpc                   motionpro_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                         db1xxx_defconfig
+arm                             pxa_defconfig
+arm                         hackkit_defconfig
+sh                           se7751_defconfig
+powerpc                     kilauea_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+nios2                               defconfig
+arc                              allyesconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20210414
+i386                 randconfig-a006-20210414
+i386                 randconfig-a001-20210414
+i386                 randconfig-a005-20210414
+i386                 randconfig-a004-20210414
+i386                 randconfig-a002-20210414
+i386                 randconfig-a003-20210415
+i386                 randconfig-a006-20210415
+i386                 randconfig-a001-20210415
+i386                 randconfig-a005-20210415
+i386                 randconfig-a004-20210415
+i386                 randconfig-a002-20210415
+x86_64               randconfig-a014-20210414
+x86_64               randconfig-a015-20210414
+x86_64               randconfig-a011-20210414
+x86_64               randconfig-a013-20210414
+x86_64               randconfig-a012-20210414
+x86_64               randconfig-a016-20210414
+i386                 randconfig-a015-20210414
+i386                 randconfig-a014-20210414
+i386                 randconfig-a013-20210414
+i386                 randconfig-a012-20210414
+i386                 randconfig-a016-20210414
+i386                 randconfig-a011-20210414
+i386                 randconfig-a015-20210415
+i386                 randconfig-a014-20210415
+i386                 randconfig-a013-20210415
+i386                 randconfig-a012-20210415
+i386                 randconfig-a016-20210415
+i386                 randconfig-a011-20210415
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
+clang tested configs:
+x86_64               randconfig-a003-20210414
+x86_64               randconfig-a002-20210414
+x86_64               randconfig-a005-20210414
+x86_64               randconfig-a001-20210414
+x86_64               randconfig-a006-20210414
+x86_64               randconfig-a004-20210414
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
