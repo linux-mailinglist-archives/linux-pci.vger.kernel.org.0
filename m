@@ -2,134 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8F5C361060
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Apr 2021 18:46:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AC4E3611A0
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Apr 2021 20:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233847AbhDOQqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Apr 2021 12:46:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:50672 "EHLO foss.arm.com"
+        id S234525AbhDOSCy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Apr 2021 14:02:54 -0400
+Received: from mout.web.de ([212.227.15.3]:37907 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231137AbhDOQqg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Apr 2021 12:46:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB1B111B3;
-        Thu, 15 Apr 2021 09:46:12 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9FCC3FA35;
-        Thu, 15 Apr 2021 09:46:11 -0700 (PDT)
-Date:   Thu, 15 Apr 2021 17:46:06 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     marek.vasut@gmail.com
-Cc:     linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V5] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20210415164606.GA32085@lpieralisi>
-References: <20210411185030.8818-1-marek.vasut@gmail.com>
+        id S234407AbhDOSCy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Apr 2021 14:02:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1618509745;
+        bh=JVNsfyzS9pcv9aOIQP2PqYZOV0tqmt0zJQQhKeJU3fc=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=fgmi82RqwnG8uVWenVb4P5JAIkJ0EAuLQOCOi+qTYXHMeqLnOeG0ZBsYqoy04l5Nh
+         xdZly78oXPs1c1whNL29N432jrql6XdiumDvENow4z6bdreK3IgUWk7OSmJ6AhCtRL
+         PvFjmEnkK+G/zQkgqLVP/9IZbFCZ3Cj5dP2TiOWc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.2.111] ([178.4.39.112]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M5OaF-1lk3na1Jq3-00zU5j; Thu, 15
+ Apr 2021 20:02:25 +0200
+Subject: Re: QCA6174 pcie wifi: Add pci quirks
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <08982e05-b6e8-5a8d-24ab-da1488ee50a8@web.de>
+ <20210414210350.GA2537653@bjorn-Precision-5520>
+ <20210414203650.1f83a5dd@x1.home.shazbot.org>
+From:   Ingmar Klein <ingmar_klein@web.de>
+Message-ID: <eec3bb3b-9eba-a0cb-73da-88353a0d3e99@web.de>
+Date:   Thu, 15 Apr 2021 20:02:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210411185030.8818-1-marek.vasut@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210414203650.1f83a5dd@x1.home.shazbot.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:j2RWH3VMgFo4SJLh5Oqo3oT6N1ks0sB8h/CGSCzOScAvbQU0EKE
+ ua5oklAip9qKaAqw2LTMzHn7GclOLNvAmhbNSmeqFu6KFy7gX/ObqoQsLXJblrQnXCjpJNl
+ 2LNDtmDgQhU4e5nHV03gMwY5LJ7SkY7O6ZNeIG3F0YC+qztWlrjc7PD/+9wbsd9bRszi+2d
+ 9KMMN14H76Takn4I+di0g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B76y/98jsU0=:eNACdmYeQ0p39ggwgPuGDc
+ OKj02qUQBS/NYp3i0eQ0Rscs7v1QXkgqXVMuVMkMpNXPsqw3s51CRUrvpSj982OIwu9JKORPv
+ tLizloQnKW7VheU3YHPftE8bBgYj41krTs1KC0ADEY4tSXl1XFq7gG1diTDw9ZUlHGo2xt1Aw
+ y3/wOMCe0cxfcun3K0eH1VLmeH1KwRrh7qpmLGgI2gqe7fkFF8P/DddjjtvVnyrb/a7m/h0ES
+ IAk+WAVtdGUsSIW+armM8irCDr2dbhEm69uY1pxORG7duTq1ov2i9xNLHWL+HdyfNK+HqRsRS
+ JOxmF9BwHVZalyLJ9ab9lBLUo2z5pHNrvBvEyHVnMZn0sRUfCK5xoy2EpoXucopeYHuDRr94a
+ VazmEhec0O1pxOm8wPSti5qtAsy07WfgSvcAkRiSCGhNH2QEw5eFJPlWdiFFT3LUOADXnkYeQ
+ s8yRjx912EMtrJd3BMn1Sm2caFmKGCEaauBwieCOuaRErqd+3hle/e+lZfb+g++yfWPhqGfo+
+ 4MX/lHgtxfp76YFyPnZVYWnCCUVFLJFeBVNpX1AFVSgqfLzryefn5AU1oGfP04D4YsV7ENB41
+ iZXMSixJzUvLvF3tQlvLpizz2QAf1sXvuYjc9Sxhm61R93kmRyk0Hbu+VIupH37z7+jCrECS+
+ NI6phVvlmFBjRXb2hAlgnOk8+wePulEkzlgHOo8mDuweZhZwyoJaBpezn3azxvoBYPIfuzbef
+ YVIx1JOTvoXuUHJ/CbhQPRXgGTPMwjHazrfqiVWxQrlSuUnVeATJGc4jZiN+VOr2qZJfFTBHM
+ pCnGfWqNtfr9kOidi+OUyRz//7xQ+G+iXEIBPRZ0hFkN24ACkfYlGVYk1gVS4IHLX1RQFmD+o
+ ZIc7++k5jRijG1+clWO720itIYPDiAzQhYx11TIce3Xpx2D0kGjtwtYairogAMa1+z68lc7oI
+ FRz3UnYk+VzRmHleDk6lI/NqcvwuSdVAibB6k/E14JhPKyOMKPgcUMHpQ5rVaeQMoTHJXJx1E
+ K2+8WnG0TxVz+C5evwfFQRO0gbCn1SdxHlLLqR0ueGM27ldby2AtD9+UKwO16BtMQfoj48nUo
+ QM/Bc9nAdiipjNb6U8Rs7L9Or8mKlujXUmfQCiB9nT6MPBMb10+LrUW1z/OoUxKPdceoBeesg
+ MHdxFpnBJyoHFJaDtQGmy6rbA8s8xQufNfYOdXRJlcboRgHRKcrUOgvew+sO8l5sylgoU=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Apr 11, 2021 at 08:50:30PM +0200, marek.vasut@gmail.com wrote:
+First thanks to you both, Alex and Bjorn!
+I am in no way an expert on this topic, so I have to fully rely on your
+feedback, concerning this issue.
 
-[...]
+If you should have any other solution approach, in form of patch-set, I
+would be glad to test it out. Just let me know, what you think might
+make sense.
+I will wait for your further feedback on the issue. In the meantime I
+have my current workaround via quirk entry.
 
-> +#ifdef CONFIG_ARM
-> +static DEFINE_SPINLOCK(pmsr_lock);
-> +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-> +		unsigned int fsr, struct pt_regs *regs)
-> +{
-> +	unsigned long flags;
-> +	int ret = 1;
+By the way, my layman's question:
+Do you think, that the following topic might also apply for the QCA6174?
+https://www.spinics.net/lists/linux-pci/msg106395.html
+Or in other words, should a similar approach be tried for the QCA6174
+and if yes, would it bring any benefit at all?
+I hope you can excuse me, in case the questions should not make too much
+sense.
 
-I think we should return 1 only if the condition that triggered
-the fault can't be fixed. If it is fixed on another core we
-should not return 1 so ret should be set according to the PMSR
-register state IIUC.
+Best regards,
+Ingmar
 
-Lorenzo
 
-> +	u32 pmsr;
-> +
-> +	spin_lock_irqsave(&pmsr_lock, flags);
-> +
-> +	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk))
-> +		goto unlock_exit;
-> +
-> +	pmsr = readl(pcie_base + PMSR);
-> +
-> +	/*
-> +	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
-> +	 * the PCIe controller is not in L1 link state. If true, apply
-> +	 * fix, which will put the controller into L1 link state, from
-> +	 * which it can return to L0s/L0 on its own.
-> +	 */
-> +	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
-> +		writel(L1IATN, pcie_base + PMCTLR);
-> +		while (!(readl(pcie_base + PMSR) & L1FAEG))
-> +			;
-> +		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
-> +		ret = 0;
-> +	}
-> +
-> +unlock_exit:
-> +	spin_unlock_irqrestore(&pmsr_lock, flags);
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
-> +	{ .compatible = "renesas,pcie-r8a7779" },
-> +	{ .compatible = "renesas,pcie-r8a7790" },
-> +	{ .compatible = "renesas,pcie-r8a7791" },
-> +	{ .compatible = "renesas,pcie-rcar-gen2" },
-> +	{},
-> +};
-> +
-> +static int __init rcar_pcie_init(void)
-> +{
-> +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-> +#ifdef CONFIG_ARM_LPAE
-> +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> +				"asynchronous external abort");
-> +#else
-> +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> +				"imprecise external abort");
-> +#endif
-> +	}
-> +
-> +	return platform_driver_register(&rcar_pcie_driver);
-> +}
-> +device_initcall(rcar_pcie_init);
-> +#else
->  builtin_platform_driver(rcar_pcie_driver);
-> +#endif
-> diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-> index d4c698b5f821..9bb125db85c6 100644
-> --- a/drivers/pci/controller/pcie-rcar.h
-> +++ b/drivers/pci/controller/pcie-rcar.h
-> @@ -85,6 +85,13 @@
->  #define  LTSMDIS		BIT(31)
->  #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
->  #define PMSR			0x01105c
-> +#define  L1FAEG			BIT(31)
-> +#define  PMEL1RX		BIT(23)
-> +#define  PMSTATE		GENMASK(18, 16)
-> +#define  PMSTATE_L1		(3 << 16)
-> +#define PMCTLR			0x011060
-> +#define  L1IATN			BIT(31)
-> +
->  #define MACS2R			0x011078
->  #define MACCGSPSETR		0x011084
->  #define  SPCNGRSN		BIT(31)
-> -- 
-> 2.30.2
-> 
+Am 15.04.2021 um 04:36 schrieb Alex Williamson:
+> On Wed, 14 Apr 2021 16:03:50 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+>> [+cc Alex]
+>>
+>> On Fri, Apr 09, 2021 at 11:26:33AM +0200, Ingmar Klein wrote:
+>>> Edit: Retry, as I did not consider, that my mail-client would make thi=
+s
+>>> party html.
+>>>
+>>> Dear maintainers,
+>>> I recently encountered an issue on my Proxmox server system, that
+>>> includes a Qualcomm QCA6174 m.2 PCIe wifi module.
+>>> https://deviwiki.com/wiki/AIRETOS_AFX-QCA6174-NX
+>>>
+>>> On system boot and subsequent virtual machine start (with passed-throu=
+gh
+>>> QCA6174), the VM would just freeze/hang, at the point where the ath10k
+>>> driver loads.
+>>> Quick search in the proxmox related topics, brought me to the followin=
+g
+>>> discussion, which suggested a PCI quirk entry for the QCA6174 in the k=
+ernel:
+>>> https://forum.proxmox.com/threads/pcie-passthrough-freezes-proxmox.275=
+13/
+>>>
+>>> I then went ahead, got the Proxmox kernel source (v5.4.106) and applie=
+d
+>>> the attached patch.
+>>> Effect was as hoped, that the VM hangs are now gone. System boots and
+>>> runs as intended.
+>>>
+>>> Judging by the existing quirk entries for Atheros, I would think, that
+>>> my proposed "fix" could be included in the vanilla kernel.
+>>> As far as I saw, there is no entry yet, even in the latest kernel sour=
+ces.
+>> This would need a signed-off-by; see
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/submitting-patches.rst?id=3Dv5.11#n361
+>>
+>> This is an old issue, and likely we'll end up just applying this as
+>> yet another quirk.  But looking at c3e59ee4e766 ("PCI: Mark Atheros
+>> AR93xx to avoid bus reset"), where it started, it seems to be
+>> connected to 425c1b223dac ("PCI: Add Virtual Channel to save/restore
+>> support").
+>>
+>> I'd like to dig into that a bit more to see if there are any clues.
+>> AFAIK Linux itself still doesn't use VC at all, and 425c1b223dac added
+>> a fair bit of code.  I wonder if we're restoring something out of
+>> order or making some simple mistake in the way to restore VC config.
+> I don't really have any faith in that bisect report in commit
+> c3e59ee4e766.  To double check I dug out the card from that commit,
+> installed an old Fedora release so I could build kernel v3.13,
+> pre-dating 425c1b223dac and tested triggering a bus reset both via
+> setpci and by masking PM reset so that sysfs can trigger the bus reset
+> path with the kernel save/restore code.  Both result in the system
+> hanging when the device is accessed either restoring from the kernel
+> bus reset or reading from the device after the setpci reset.  Thanks,
+>
+> Alex
+>
