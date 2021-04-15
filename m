@@ -2,75 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2063615BC
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 00:54:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA56361627
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 01:26:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236767AbhDOWyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Apr 2021 18:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235937AbhDOWyh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Apr 2021 18:54:37 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C77C06175F
-        for <linux-pci@vger.kernel.org>; Thu, 15 Apr 2021 15:54:13 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id o20so3712967edc.7
-        for <linux-pci@vger.kernel.org>; Thu, 15 Apr 2021 15:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LZPmXSJHlNJkGabrxCzQ+1bNVgcNhlvvFPZsThC87BQ=;
-        b=0/Bv9AMjps8ZT69MpMit11F2p9twNVTVYb+XVv9QK0JxYFc5DvplRTa70eF1YbSfMu
-         IBkP1v8RHWg08P2iK/miye29yig2XeDlud0R4CkYnz0EAOTuVpy+cX7jEx6dcHmdnzsC
-         6DhGckcXW/uRc2ecX2R+QDWHPUPGMN2b7OZhI25TlWuDwO7+Y7BtCCGo+z1tHYpWubGh
-         W6IOmdyWPbvgjU9ZxMQ2zo0MnTE+QTrwXHN2bNY/B/wuPeBSD8viT2PIlL34ggRpAtYF
-         RFPmZfJFEWz3M/cDojI6+EXjosI04PgHYSlkQH/mCcaVIhycSv9J0ikMzMpmmbuP7qgb
-         PPAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LZPmXSJHlNJkGabrxCzQ+1bNVgcNhlvvFPZsThC87BQ=;
-        b=fhBX0hVxWoJiF4WUnwTEdpYGarLo2RJ7CKTo3bL1+S3APZu+SyJxNMK2cpT9EQqZLK
-         u+EpWhr6Cub4kgsN5SExOG0zRwkhoJfzgLxpyXaYy+fXIuQoFloJjvCpPHGhOR18anBZ
-         B6OEymaX34uhv6/eAJ+ozfXIobgf3D70cBQ/dUnoo634mQ+s7OFHPCUkhOUQa4FEWI87
-         Zo0nZQgH89wdXcEf3qpqAiM8XhBtvt4cSgqP3lRXgZUcJlAE1owj6fPqN3Vv4hlrygar
-         VttGb0Bbt8kU56N4xMGPa8dSPMO2dp3tEVAsEfronfnGiaXtUg1UQ+YxWgKhMuwk8k7t
-         xcOg==
-X-Gm-Message-State: AOAM530nvw6KayTIp93eM+aFl7patnqnOdp9uA7nM5zie+VqZuUz+jYO
-        9aX5eC3ib4IeDwamkho04bP4s8DAVVrdXlIgAdp4mg==
-X-Google-Smtp-Source: ABdhPJz2afjkEzncwyQD1rDlPyo0Ht+aLitlIBNnnevfCO5TgZ+sU9A5sYUKn48QokZdzy1MDkhkJuwtfpo7kv0FJJg=
-X-Received: by 2002:a50:e607:: with SMTP id y7mr7076665edm.18.1618527252572;
- Thu, 15 Apr 2021 15:54:12 -0700 (PDT)
+        id S237762AbhDOX0q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Apr 2021 19:26:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7826 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237756AbhDOX0p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Apr 2021 19:26:45 -0400
+IronPort-SDR: IxQPiblq7NKmtC7U4nMp7rxv24m5zhkX3PU6biTdMPRRn3eQf+iZQ8lAvxGYBkMXXMTnkTLSBi
+ sWaAescTqjXg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="280279113"
+X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
+   d="scan'208";a="280279113"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:26:19 -0700
+IronPort-SDR: 00aMwu4UlW9fnUV8MBvABkj1YdCXaV6Rg3y8GVTloR8Z3+GSonkXvtCHK2E0IKCgdb6D8NnMjw
+ gMatbJHw+QzQ==
+X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
+   d="scan'208";a="522540082"
+Received: from oamoninu-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.130.91])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:26:18 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] cxl/mem: Fix register block offset calculation
+Date:   Thu, 15 Apr 2021 16:26:08 -0700
+Message-Id: <20210415232610.603273-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210407222625.320177-1-ben.widawsky@intel.com> <20210407222625.320177-7-ben.widawsky@intel.com>
-In-Reply-To: <20210407222625.320177-7-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 15 Apr 2021 15:54:00 -0700
-Message-ID: <CAPcyv4huxaVj=Czk7KgbwfS=6_Dc_N3MmoN-=faB_hSuSt7u8w@mail.gmail.com>
-Subject: Re: [PATCH 6/7] cxl/mem: Create a helper to setup device regs
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 7, 2021 at 3:26 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Memory devices have a list of required register regions within the
-> register block, but this isn't required of all CXL components or
-> devices. To make things more tidy, and allow for easily setting up other
-> block types in this loop, the helper is introduced.
+The offset for the register block should be a 64K aligned value, and
+therefore FIELD_GET (which will shift) is not correct for the
+calculation.
 
-I don't understand the point of this or the organization choice.
-cxl_setup_device_regs() *is* the core implementation so there
-shouldn't be a "__" prefixed version wrapping it. I agree that some
-users will not care that some of the device registers are not found,
-but that won't be cxl_mem_setup_regs() making that call.
+From 8.1.9.1 of the CXL 2.0 spec:
+  A[31:16] of offset from the address contained by one of the Function's
+  Base Address Registers to point to the base of the Register Block.
+  Register Block Offset is 64K aligned. Hence A[15:0] is zero
+
+Fix this by simply using a mask.
+
+This wasn't found earlier because the primary development done in the
+QEMU environment only uses 0 offsets
+
+Fixes: 8adaf747c9f0b ("cxl/mem: Find device capabilities")
+Reported-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+---
+ drivers/cxl/mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index e3003f49b329..1b5078311f7d 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -998,7 +998,7 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+ 		return NULL;
+ 	}
+ 
+-	offset = ((u64)reg_hi << 32) | FIELD_GET(CXL_REGLOC_ADDR_MASK, reg_lo);
++	offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+ 	bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+ 
+ 	/* Basic sanity check that BAR is big enough */
+-- 
+2.31.1
+
