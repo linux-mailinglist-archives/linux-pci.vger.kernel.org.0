@@ -2,117 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59C5A3613BA
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Apr 2021 22:54:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E92C36140C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Apr 2021 23:20:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234668AbhDOUyW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Apr 2021 16:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235210AbhDOUyV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Apr 2021 16:54:21 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA3CC061760
-        for <linux-pci@vger.kernel.org>; Thu, 15 Apr 2021 13:53:58 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id d21so9603133edv.9
-        for <linux-pci@vger.kernel.org>; Thu, 15 Apr 2021 13:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Caxsq6e5w5hQHzn1UKSM5N/N92XMDfAKUSIuBiGg3co=;
-        b=jfaruwTDBJhPEKQ+qT+r2RQ5DZYvXkNdItYaLCzE+XzuI8fDE/3egCvAmxAQkQTiOw
-         sAnxvqxSejrXWgvGuJEUrtowr3zeumlHpYbymconBrIDs3iMy2OCDXX5CmgfhI5tkUGo
-         a1hFFpnj0UxHeaQBM57ny7f+AEJq7JmrLYtxxPlhCO7OhC+t8iy69UlGgQhVHwx6FYgz
-         FksTuAQW5dxKrKxOAQhRX3PKSOYbISq/OpQ1catH5/zpedXM2WEZ2aRrwSEhXsTRbYXM
-         8fDUp+3DPqm9ap4ufqtakMIIduXVGDM8ns9Ydf2YXQFlFp7scc6yzcg68wKm58YIY1G3
-         J7jw==
+        id S235569AbhDOVUe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Apr 2021 17:20:34 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:34327 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234959AbhDOVUe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Apr 2021 17:20:34 -0400
+Received: by mail-oi1-f173.google.com with SMTP id k18so20812206oik.1;
+        Thu, 15 Apr 2021 14:20:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Caxsq6e5w5hQHzn1UKSM5N/N92XMDfAKUSIuBiGg3co=;
-        b=M4bka3vvYKLhfETVnqsLErSL+YDJrRgg4M4jvNQ8WI9+YwZ5EdFy7VjwTvC7bhovR+
-         VRglqtBtwEtq/bTXo59FRhm7quCGmVO7jlKQuvMteUbKLZ11GcUjAcbx+WhgNA5aDKhg
-         Lc4AU+TozJx+XbDluL5bWt0Ql7xIzevXmv5U/VjaS9+5tQbP+5r4NoE+FGLV7bJl3lj5
-         wufxXC7TrGT5ZbV5kgosdsnv114nKNLfDGLKDaBJM7aO18VE4VKWdcTTTj3xrjpS/Wuo
-         pDQY8yGK2Kel1V6EnqPjpppxQppYRyKG4pZ7JQxOA0Tg9ld0+emgXZDdjzkmufSv6YI4
-         DNHQ==
-X-Gm-Message-State: AOAM533ZS+ONm3dLOkbdVygerjXEJa6DG7DQblnTe90I9nqh8fuQampr
-        tX/AW5s0qDNggM8frCeafj0mxuE9VI80HxwA1E+dBw==
-X-Google-Smtp-Source: ABdhPJwGTnM9gKHfSenuZUu2QdmiM+hPocsH6E5LwiEukrwmUz1IvJmjkAvwkbTmOJyECBXmisr84jGxDwbChsANS1k=
-X-Received: by 2002:aa7:cd7b:: with SMTP id ca27mr6607714edb.354.1618520036847;
- Thu, 15 Apr 2021 13:53:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Pj47mw5Z19bo4piR6xETutvYCvQRjAqDcCMQcTewtb0=;
+        b=CFRqTyNIiYSuYzGQMB2ptFfgcIebn23WyzrX76+6CP3KynTiMo4D7cTXTa5pjc8dav
+         +hH+ZPkKuHS/YaULoREOhQ/p4Va7FRQXW0rEGAA6Z8w35KEg2DjXj3hnHsp0cIanNZJC
+         N7Nd1KGZ7+BndINfdTy7cFYU0a4e04AF75UDQy3KBDR+dIrImCf75GE31Dk9hH0PAqy8
+         8gJ1sgMZrqT2Uv+pmQ/YNIlqDsS/o1PQXeAwU/ZmGHVHxLswCkYgHFSuVqz8DRzeURR6
+         JGOeucsmC4mu1mZgKbNmVayC1Kfi+wp5C0Cu0rvUcDOewrL+YRq+a/curcVYc1/OHUB9
+         PXmw==
+X-Gm-Message-State: AOAM531jXzc9CAFklkoy5V6iSJ2SEIC/gfd+VpJTFk5ZIbPh6NRRY860
+        gJKcQ7p+DtdugZzLRLg+gw==
+X-Google-Smtp-Source: ABdhPJzB+zGK5+x9z0k6g9pTrJvnmc0/86T4mHby4SRSIHNvDcP2g42n+KY2RNWooSLxfUActPPVbA==
+X-Received: by 2002:aca:d907:: with SMTP id q7mr3934890oig.17.1618521610466;
+        Thu, 15 Apr 2021 14:20:10 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j4sm860879oiw.0.2021.04.15.14.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Apr 2021 14:20:09 -0700 (PDT)
+Received: (nullmailer pid 1901537 invoked by uid 1000);
+        Thu, 15 Apr 2021 21:20:08 -0000
+Date:   Thu, 15 Apr 2021 16:20:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     bpeled@marvell.com
+Cc:     thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, sebastian.hesselbarth@gmail.com,
+        gregory.clement@bootlin.com, andrew@lunn.ch, mw@semihalf.com,
+        jaz@semihalf.com, kostap@marvell.com, nadavh@marvell.com,
+        stefanc@marvell.com, oferh@marvell.com
+Subject: Re: =?utf-8?B?W+KAnVBBVENI4oCdIHYyIDMvNV0g?=
+ =?utf-8?Q?dt-bindings=3A_pci=3A_add_system_controlle?= =?utf-8?Q?r?= and MAC
+ reset bit to Armada 7K/8K controller bindings
+Message-ID: <20210415212008.GA1899572@robh.at.kernel.org>
+References: <1618406454-7953-1-git-send-email-bpeled@marvell.com>
+ <1618406454-7953-4-git-send-email-bpeled@marvell.com>
 MIME-Version: 1.0
-References: <161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com>
- <161728746354.2474040.14531317270409827157.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210406180017.00000875@Huawei.com>
-In-Reply-To: <20210406180017.00000875@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 15 Apr 2021 13:53:45 -0700
-Message-ID: <CAPcyv4hmtHscAW14gu_avwXo-TWr2KeGPRubu0eE72UrQrj7pw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] cxl/core: Refactor CXL register lookup for bridge reuse
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1618406454-7953-4-git-send-email-bpeled@marvell.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 10:47 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 1 Apr 2021 07:31:03 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > While CXL Memory Device endpoints locate the CXL MMIO registers in a PCI
-> > BAR, CXL root bridges have their MMIO base address described by platform
-> > firmware. Refactor the existing register lookup into a generic facility
-> > for endpoints and bridges to share.
-> >
-> > Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Nice to make the docs kernel-doc, but otherwise this is simple and makes sense
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> > ---
-> >  drivers/cxl/core.c |   57 +++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  drivers/cxl/cxl.h  |    3 +++
-> >  drivers/cxl/mem.c  |   50 +++++-----------------------------------------
-> >  3 files changed, 65 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> > index 7f8d2034038a..2ab467ef9909 100644
-> > --- a/drivers/cxl/core.c
-> > +++ b/drivers/cxl/core.c
-> > @@ -1,7 +1,8 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> > -/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> > +/* Copyright(c) 2020-2021 Intel Corporation. All rights reserved. */
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> > +#include "cxl.h"
-> >
-> >  /**
-> >   * DOC: cxl core
-> > @@ -10,6 +11,60 @@
-> >   * point for cross-device interleave coordination through cxl ports.
-> >   */
-> >
-> > +/*
-> > + * cxl_setup_device_regs() - Detect CXL Device register blocks
-> > + * @dev: Host device of the @base mapping
-> > + * @base: mapping of CXL 2.0 8.2.8 CXL Device Register Interface
->
-> Not much to add to make this kernel-doc. Just the one missing parameter
-> and mark it /**  Given it's exported, it would be nice to tidy that up.
+On Wed, Apr 14, 2021 at 04:20:52PM +0300, bpeled@marvell.com wrote:
+> From: Ben Peled <bpeled@marvell.com>
+> 
+> Adding optional system-controller and mac-reset-bit-mask
+> needed for linkdown procedure.
 
-Will do, thanks.
+Same comment as v1.
+
+BTW, it's PATCH not "PATCH". Don't do anything and git will do the right 
+thing here.
+
+> 
+> Signed-off-by: Ben Peled <bpeled@marvell.com>
+> ---
+>  Documentation/devicetree/bindings/pci/pci-armada8k.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> index 7a813d0..2696e79 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> @@ -24,6 +24,10 @@ Optional properties:
+>  - phy-names: names of the PHYs corresponding to the number of lanes.
+>  	Must be "cp0-pcie0-x4-lane0-phy", "cp0-pcie0-x4-lane1-phy" for
+>  	2 PHYs.
+> +- marvell,system-controller: address of system controller needed
+> +	in order to reset MAC used by link-down handle
+> +- marvell,mac-reset-bit-mask: MAC reset bit of system controller
+> +	needed in order to reset MAC used by link-down handle
+>  
+>  Example:
+>  
+> @@ -45,4 +49,6 @@ Example:
+>  		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+>  		num-lanes = <1>;
+>  		clocks = <&cpm_syscon0 1 13>;
+> +		marvell,system-controller = <&CP11X_LABEL(syscon0)>;
+> +		marvell,mac-reset-bit-mask = <CP11X_PCIEx_MAC_RESET_BIT_MASK(1)>;
+>  	};
+> -- 
+> 2.7.4
+> 
