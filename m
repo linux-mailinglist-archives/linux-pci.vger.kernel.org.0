@@ -2,128 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52F193629C6
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 22:58:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5E33629CC
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 22:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243128AbhDPU6e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 16:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243809AbhDPU6b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Apr 2021 16:58:31 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2DBC061574;
-        Fri, 16 Apr 2021 13:58:06 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id o5so30335179qkb.0;
-        Fri, 16 Apr 2021 13:58:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=qnIWecU4j0go3BHki/tPX89ICgmbfzbrXzKLY+iWOac=;
-        b=pz/bSOQmz9g+p6n0hHD1XQp4RAoq2j/Dj0uYmko1vHfn5u7RxBa80ABt2yiEG25v68
-         haJilWm4NQoEiFZmf6ZCbgXgD0WEvFImh7UxgbDrysgLT0RyxcXbeAQsfenuXFUhxMZ0
-         kqgYHnrvKY1kb9ACeLaIhxNJTlueR0VDBoK5nyTA7AWNFEcOVXwKX/bhRfyDzO5BDxYu
-         iyyzTYTkUbhk8xG+XjJB0unQDDTTmiCESPhkYjks9+OV4j3FvRjcw8FUhL+gaUffJ1XI
-         Ix5RU/RXzOdSgrB+BelgyWuXjivn2djucxlh6gW5fRKzGgkoysyHferoLsZxEue8M1RI
-         O/Og==
+        id S236340AbhDPU7Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 16:59:24 -0400
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:45614 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244245AbhDPU7Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Apr 2021 16:59:24 -0400
+Received: by mail-ed1-f46.google.com with SMTP id bx20so32690496edb.12
+        for <linux-pci@vger.kernel.org>; Fri, 16 Apr 2021 13:58:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qnIWecU4j0go3BHki/tPX89ICgmbfzbrXzKLY+iWOac=;
-        b=m589olun8jgQ7LV6pwltR65I4dYsSpTih87CCIIid0ogIa0FvJHrzFEARdA2J/VFYq
-         m+qvf7HETq77/z8P0jObY0Mkwr9OszSL4Vpzfwi8anDSHG8jfxHyGOE1ofsKVoKVPdR2
-         JpfMDxTBpRPJQSQPq1IAVbWfyaxK5/nr8npWQ3ikDuhRi+jTqy4bN+Wz0QvuD65EgBNT
-         8ykPf0e2udle4InyL3iPYJVwwPB/yNx6D0i/8keL7CY17r0Q90KBoiHoMri21zkPk+8A
-         n1xRQIrR219fejD9GQTVLqCeJqHNfZ2tRJc+VBvCZPQTBkMs/sXVONJqWeuOMsIFSpCX
-         UgwQ==
-X-Gm-Message-State: AOAM530Lebemi5nzWTma+PcqkqIQpnzStr46S4LDhoGmlVW+0nEh3XzK
-        CtiZZu6XFnpHgucPPwS0nHz7r14K1m4=
-X-Google-Smtp-Source: ABdhPJxFhinlHNn02trTin40jfBumlNTfk5ie7OrDNyXW4/JI/YC1pS+0OjO1mDC9iZf7UePRpjcKg==
-X-Received: by 2002:a37:d4e:: with SMTP id 75mr1110422qkn.457.1618606685688;
-        Fri, 16 Apr 2021 13:58:05 -0700 (PDT)
-Received: from li-908e0a4c-2250-11b2-a85c-f027e903211b.ibm.com ([177.35.200.187])
-        by smtp.gmail.com with ESMTPSA id n15sm4860020qkk.109.2021.04.16.13.58.02
+        bh=Jrw+va8EMj1cW8KmwEq3RRStTBBt0c/mXibBzE08DgU=;
+        b=L3200Y1RgrUh77WRENT7D9YaqbubUml1fJXMzWixCXkYnHchGkkHn3s1cc1X7emdxu
+         6r4Lgo4kznR62KoA9Z2d3K7KPVXtNfzyoBE3rvjAxZuaj4Db9QIODlJ7iVHGpu20adqU
+         bMIVkoJul7lrLJNRks+x1dwkHKX/EK+83xvYdw1W+pGLYCXYfm+r6FN7k4WGp1v98P3F
+         1THFiP+UhRpE3jonJ2WjK7zNBt7JDNXfEf9IgS6kzl5brgCRrHU7Rz0NUuiiQfG2sxLx
+         4W6ScIfVcqK/MTR5p0gx8EFVtIHQblP1LLzFdpl9A3xR9df/VkZ7OoBrc6evZ9WohQ/m
+         vhSA==
+X-Gm-Message-State: AOAM5335sUN2Y0htTnIqa17M++OAuP24XzAsBVzWrG6CSUaA749KFJDP
+        pPrJAaOhAd/CnhbQb3i22rY=
+X-Google-Smtp-Source: ABdhPJxsy+nnEMjKDqg2724lVZ9ZfA2sFNPkWVpplGLSwKSDn2SJNxZOSM214DtzZu2PZNJBLojFjg==
+X-Received: by 2002:a05:6402:354b:: with SMTP id f11mr12047340edd.361.1618606737956;
+        Fri, 16 Apr 2021 13:58:57 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id n11sm5103864ejg.43.2021.04.16.13.58.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Apr 2021 13:58:05 -0700 (PDT)
-Message-ID: <7b089cd48b90f2445c7cb80da1ce8638607c46fc.camel@gmail.com>
-Subject: Re: [PATCH 1/1] of/pci: Add IORESOURCE_MEM_64 to resource flags for
- 64-bit memory addresses
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Date:   Fri, 16 Apr 2021 17:57:59 -0300
-In-Reply-To: <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
-References: <20210415180050.373791-1-leobras.c@gmail.com>
-         <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Fri, 16 Apr 2021 13:58:57 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Joe Perches <joe@perches.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        David Sterba <dsterba@suse.com>, linux-pci@vger.kernel.org
+Subject: [PATCH 00/20] PCI: Convert dynamic sysfs objects into static
+Date:   Fri, 16 Apr 2021 20:58:36 +0000
+Message-Id: <20210416205856.3234481-1-kw@linux.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Rob, thanks for this feedback!
+Hello,
 
-On Thu, 2021-04-15 at 13:59 -0500, Rob Herring wrote:
-> +PPC and PCI lists
-> 
-> On Thu, Apr 15, 2021 at 1:01 PM Leonardo Bras <leobras.c@gmail.com> wrote:
-> > 
-> > Many other resource flag parsers already add this flag when the input
-> > has bits 24 & 25 set, so update this one to do the same.
-> 
-> Many others? Looks like sparc and powerpc to me. 
-> 
+Currently, a lot of PCI-related sysfs objects that are created when
+either the PCI driver is initialised or when a new device is added are
+dynamically created under the "/sys/bus/pci/devices/..." path.
 
-s390 also does that, but it look like it comes from a device-tree.
+All the attributes are added when late_initcall() function executes when
+the PCI driver, and hence the PCI sub-system, is initialised, and also
+when the function pci_bus_add_devices() executes when a device is added:
 
-> Those would be the
-> ones I worry about breaking. Sparc doesn't use of/address.c so it's
-> fine. Powerpc version of the flags code was only fixed in 2019, so I
-> don't think powerpc will care either.
+  late_initcall()
+    pci_sysfs_init()
+      pci_create_sysfs_dev_files()
+        sysfs_create_bin_file()
 
-In powerpc I reach this function with this stack, while configuring a
-virtio-net device for a qemu/KVM pseries guest:
+  pci_bus_add_devices()
+    pci_bus_add_device()
+      pci_create_sysfs_dev_files()
+        ...
 
-pci_process_bridge_OF_ranges+0xac/0x2d4
-pSeries_discover_phbs+0xc4/0x158
-discover_phbs+0x40/0x60
-do_one_initcall+0x60/0x2d0
-kernel_init_freeable+0x308/0x3a8
-kernel_init+0x2c/0x168
-ret_from_kernel_thread+0x5c/0x70
+When a device is stopped and removed the pci_remove_sysfs_dev_files()
+function executes dynamically removing all the attributes that were
+previously added:
 
-For this, both MMIO32 and MMIO64 resources will have flags 0x200.
+  pci_stop_bus_device()
+    pci_stop_dev()
+      pci_remove_sysfs_dev_files()
+        sysfs_remove_bin_file()
 
-> 
-> I noticed both sparc and powerpc set PCI_BASE_ADDRESS_MEM_TYPE_64 in
-> the flags. AFAICT, that's not set anywhere outside of arch code. So
-> never for riscv, arm and arm64 at least. That leads me to
-> pci_std_update_resource() which is where the PCI code sets BARs and
-> just copies the flags in PCI_BASE_ADDRESS_MEM_MASK ignoring
-> IORESOURCE_* flags. So it seems like 64-bit is still not handled and
-> neither is prefetch.
-> 
+The current implementation is known to cause problems [1].
 
-I am not sure if you mean here:
-a) it's ok to add IORESOURCE_MEM_64 here, because it does not affect
-anything else, or
-b) it should be using PCI_BASE_ADDRESS_MEM_TYPE_64 
-(or IORESOURCE_MEM_64 | PCI_BASE_ADDRESS_MEM_TYPE_64) instead, since
-it's how it's added in powerpc/sparc, and else there is no point.
+As most of the PCI-related attributes does not need to be created and
+removed dynamically, and thus there is no need to also manage their
+create and remove life cycle manually.
 
-Again, thanks for helping!
+This series aims to convert the majority of the dynamic sysfs objects
+into static ones so that the PCI driver core can manage them
+automatically when the device is either added or removed.
 
-Best regards,
-Leonardo Bras
+The aim is also to first reduce the reliance on using late_initcall()
+and eventually remove the need for it completely - this hopefully should
+move everything closer towards addressing the issue that has been
+identified in [1].
+
+Aside from converting sysfs objects, this series also offers a series of
+style clean-up patches offering updates, style changes, etc.
+
+1. https://lore.kernel.org/linux-pci/20200716110423.xtfyb3n6tn5ixedh@pali/
+
+Krzysztof
+
+Krzysztof Wilczyński (20):
+  PCI: Convert dynamic "config" sysfs object into static
+  PCI: Convert dynamic "rom" sysfs object into static
+  PCI: Convert dynamic "reset" sysfs object into static
+  PCI/VPD: Convert dynamic "vpd" sysfs object into static
+  PCI: Convert dynamic "index" and "label" sysfs objects into static
+  sysfs: Introduce BIN_ATTR_ADMIN_RO and BIN_ATTR_ADMIN_RW
+  PCI: Convert PCI sysfs objects to use BIN_ATTR_ADMIN_RW macro
+  PCI: Move to kstrtobool() to handle user input
+  PCI: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+  PCI: Update style to be more consistent
+  PCI: Rearrange attributes from the pci_dev_group
+  PCI: Rearrange attributes from the pci_dev_config_attr_group
+  PCI: Rearrange attributes from the pci_dev_rom_attr_group
+  PCI: Rearrange attributes from the pci_dev_reset_attr_group
+  PCI: Rearrange attributes from the pci_dev_attr_group
+  PCI: Rearrange attributes from the pci_dev_hp_attr_group
+  PCI: Rearrange attributes from the pci_bridge_attr_group
+  PCI: Rearrange attributes from the pcie_dev_attr_group
+  PCI: Rearrange attributes from the pci_bus_group
+  PCI: Rearrange attributes from the pcibus_group
+
+ drivers/pci/pci-label.c |  241 ++----
+ drivers/pci/pci-sysfs.c | 1655 ++++++++++++++++++++-------------------
+ drivers/pci/pci.h       |   16 +-
+ drivers/pci/remove.c    |    2 +
+ drivers/pci/vpd.c       |   58 +-
+ include/linux/pci.h     |    1 -
+ include/linux/sysfs.h   |   23 +
+ 7 files changed, 976 insertions(+), 1020 deletions(-)
+
+-- 
+2.31.0
 
