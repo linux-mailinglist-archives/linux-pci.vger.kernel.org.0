@@ -2,67 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7043A362184
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 15:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 617D936259B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 18:23:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235774AbhDPNzG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 09:55:06 -0400
-Received: from lists.nic.cz ([217.31.204.67]:42124 "EHLO mail.nic.cz"
+        id S236252AbhDPQYR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 12:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235464AbhDPNzF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Apr 2021 09:55:05 -0400
-Received: from dellmb (unknown [IPv6:2001:1488:fffe:6:be02:5020:4be2:aff5])
-        by mail.nic.cz (Postfix) with ESMTPSA id EB5D41409FC;
-        Fri, 16 Apr 2021 15:54:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1618581280; bh=3zLHGzqpXiOFijTJd2eKBv8+LmxOxZvIGjl2GPyBxrw=;
-        h=Date:From:To;
-        b=jFMbcYHztMPfNJ90M41/vHcqBqFD53GdHRJ+BSbImb1zfob0iD5pqYKjznQg1oSqX
-         efC+0dI02L8hIRmWNMT1g8vQvREy8JeIkSZVJKjtScIR5ZEGTdRgr4knBHqK4fzzsY
-         STp+R9PA9NvxASxaFEx5dhoEjzGUJAgQlhCNoEo0=
-Date:   Fri, 16 Apr 2021 15:54:00 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org,
-        =?UTF-8?B?UsO2dHRp?= 
-        <espressobinboardarmbiantempmailaddress@posteo.de>,
-        Pali =?UTF-8?B?Um9o?= =?UTF-8?B?w6Fy?= <pali@kernel.org>,
-        stable@vger.kernel.org, Zachary Zhang <zhangzg@marvell.com>
-Subject: Re: [PATCH] PCI: Add Max Payload Size quirk for ASMedia ASM1062
- SATA controller
-Message-ID: <20210416155400.695f7629@dellmb>
-In-Reply-To: <20210317224549.GA93134@bjorn-Precision-5520>
-References: <20210317115924.31885-1-kabel@kernel.org>
-        <20210317224549.GA93134@bjorn-Precision-5520>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S235820AbhDPQYL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Apr 2021 12:24:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2042D61002;
+        Fri, 16 Apr 2021 16:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618590226;
+        bh=/a1sDlZNCDt5H3fPLy5LZGMuwyqS+pjC9L/aHXdKetg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qpPtXvXJvZoWTh9JsEGBV7yfVq6HuU/P+r+9+1OYTzBFavLG7+9dckQWFi4m3c42e
+         e1z9FXj4qE3/bia1biZrNff/7PaIY9mmw2V8KD37IKI2F6Fw2AQiH0txmTxa6ahQsq
+         GZJRlEpOvJLJOzzX2xpDsHkEbMqtIBdUe3jH1CY0zR4qQ4H0cuks/3MEb9Su2clpIk
+         IRKmhL0CPrkZlFfT836gZrNjjAq7BYzt/l87/j+rGfAnAb07dlhaObA/PShPPqJ7BE
+         pKOE4GN43RzoPq/R9f64FjooWFPEazQxZIq6Riis1k88MW518WfltJUtZjOBFtj6iV
+         UnA9BQ7cb/8fA==
+Date:   Fri, 16 Apr 2021 11:23:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: shpchp: remove unused function
+Message-ID: <20210416162344.GA2724691@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-100.0 required=5.9 tests=SHORTCIRCUIT,
-        USER_IN_WELCOMELIST,USER_IN_WHITELIST shortcircuit=ham
-        autolearn=disabled version=3.4.2
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.nic.cz
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1618475422-96531-1-git-send-email-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 17 Mar 2021 17:45:49 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Apr 15, 2021 at 04:30:22PM +0800, Jiapeng Chong wrote:
+> Fix the following clang warning:
+> 
+> drivers/pci/hotplug/shpchp_hpc.c:177:20: warning: unused function
+> 'shpc_writeb' [-Wunused-function].
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-> Can you please open a report at bugzilla.kernel.org and attach the
-> complete "sudo lspci -vv" output for both systems?  I think it's OK to
-> collect these with the patch applied; we should still be able to see
-> the information we use to compute the MPS values.  But please include
-> the CONFIG_PCIE_BUS_* settings and any "pcie_bus_*" kernel command
-> line arguments.
+Applied to pci/hotplug for v5.13 with the following subject, thanks!
 
-Bjorn, I have submitted a report on bugzilla 
+  PCI: shpchp: Remove unused shpc_writeb()
 
-https://bugzilla.kernel.org/show_bug.cgi?id=212695
-
-is this enough?
-
-Marek
+> ---
+>  drivers/pci/hotplug/shpchp_hpc.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/shpchp_hpc.c b/drivers/pci/hotplug/shpchp_hpc.c
+> index db04728..9e3b277 100644
+> --- a/drivers/pci/hotplug/shpchp_hpc.c
+> +++ b/drivers/pci/hotplug/shpchp_hpc.c
+> @@ -174,11 +174,6 @@ static inline u8 shpc_readb(struct controller *ctrl, int reg)
+>  	return readb(ctrl->creg + reg);
+>  }
+>  
+> -static inline void shpc_writeb(struct controller *ctrl, int reg, u8 val)
+> -{
+> -	writeb(val, ctrl->creg + reg);
+> -}
+> -
+>  static inline u16 shpc_readw(struct controller *ctrl, int reg)
+>  {
+>  	return readw(ctrl->creg + reg);
+> -- 
+> 1.8.3.1
+> 
