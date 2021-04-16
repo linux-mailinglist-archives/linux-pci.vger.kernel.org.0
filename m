@@ -2,75 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 617D936259B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 18:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DA3A3626D5
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 19:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236252AbhDPQYR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 12:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
+        id S242430AbhDPRbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 13:31:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235820AbhDPQYL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Apr 2021 12:24:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2042D61002;
-        Fri, 16 Apr 2021 16:23:46 +0000 (UTC)
+        id S242574AbhDPRbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Apr 2021 13:31:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A6B3613B0;
+        Fri, 16 Apr 2021 17:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618590226;
-        bh=/a1sDlZNCDt5H3fPLy5LZGMuwyqS+pjC9L/aHXdKetg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qpPtXvXJvZoWTh9JsEGBV7yfVq6HuU/P+r+9+1OYTzBFavLG7+9dckQWFi4m3c42e
-         e1z9FXj4qE3/bia1biZrNff/7PaIY9mmw2V8KD37IKI2F6Fw2AQiH0txmTxa6ahQsq
-         GZJRlEpOvJLJOzzX2xpDsHkEbMqtIBdUe3jH1CY0zR4qQ4H0cuks/3MEb9Su2clpIk
-         IRKmhL0CPrkZlFfT836gZrNjjAq7BYzt/l87/j+rGfAnAb07dlhaObA/PShPPqJ7BE
-         pKOE4GN43RzoPq/R9f64FjooWFPEazQxZIq6Riis1k88MW518WfltJUtZjOBFtj6iV
-         UnA9BQ7cb/8fA==
-Date:   Fri, 16 Apr 2021 11:23:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: shpchp: remove unused function
-Message-ID: <20210416162344.GA2724691@bjorn-Precision-5520>
+        s=k20201202; t=1618594282;
+        bh=hj57UH0PPanx+MEohamSMzcPciTQvnY4292VHrksXPs=;
+        h=Date:From:To:Subject:From;
+        b=GYuoJ3aEZ6ub147HDOv/cvDyhYbPVfsDr1LBo5u7pgaCEDOYnxRvzA9baXxHIGbYh
+         6/+rMNDKx3ZQG/1OritGBtzAc3cPk9bTKtRsi/rG+sWEgivgqAKYCuWRbx0hN1O5Et
+         uem2jwHolWn+G/g4sj9nfykodTVR9FEuNvadWnTX5E64/1d/XRC3UGZFqY649E7Twp
+         WwHSVuPGIafLEEtsR7DVVLZgYnszF0/je241HgtUBlNyIDQzK/dMLcdMPcO1YgN5ZR
+         hwRaNRr504yppn8e3Z+oVMGZzsIXY3MeuH8NpTsJrOAWchy3tGCV9LVRa5ELMPyFbj
+         rfZI0sjHhRUKA==
+Received: by pali.im (Postfix)
+        id A277C88D; Fri, 16 Apr 2021 19:31:19 +0200 (CEST)
+Date:   Fri, 16 Apr 2021 19:31:19 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     linux-pci@vger.kernel.org,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: PCIe: can't set Max Payload Size to 256
+Message-ID: <20210416173119.d2eq2zetzp5awunj@pali>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1618475422-96531-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 15, 2021 at 04:30:22PM +0800, Jiapeng Chong wrote:
-> Fix the following clang warning:
-> 
-> drivers/pci/hotplug/shpchp_hpc.c:177:20: warning: unused function
-> 'shpc_writeb' [-Wunused-function].
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Hello! I'm getting following error line in dmesg for NVMe disk with
+v5.12-rc7 kernel version:
 
-Applied to pci/hotplug for v5.13 with the following subject, thanks!
+[    3.226462] pci 0000:04:00.0: can't set Max Payload Size to 256; if necessary, use "pci=pcie_bus_safe" and report a bug
 
-  PCI: shpchp: Remove unused shpc_writeb()
+lspci output for this NVMe disk is:
 
-> ---
->  drivers/pci/hotplug/shpchp_hpc.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/shpchp_hpc.c b/drivers/pci/hotplug/shpchp_hpc.c
-> index db04728..9e3b277 100644
-> --- a/drivers/pci/hotplug/shpchp_hpc.c
-> +++ b/drivers/pci/hotplug/shpchp_hpc.c
-> @@ -174,11 +174,6 @@ static inline u8 shpc_readb(struct controller *ctrl, int reg)
->  	return readb(ctrl->creg + reg);
->  }
->  
-> -static inline void shpc_writeb(struct controller *ctrl, int reg, u8 val)
-> -{
-> -	writeb(val, ctrl->creg + reg);
-> -}
-> -
->  static inline u16 shpc_readw(struct controller *ctrl, int reg)
->  {
->  	return readw(ctrl->creg + reg);
-> -- 
-> 1.8.3.1
-> 
+04:00.0 Non-Volatile memory controller [0108]: Silicon Motion, Inc. Device [126f:2263] (rev 03) (prog-if 02 [NVM Express])
+        Subsystem: Silicon Motion, Inc. Device [126f:2263]
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
+        Interrupt: pin A routed to IRQ 55
+        Region 0: Memory at e8000000 (64-bit, non-prefetchable) [size=16K]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [50] MSI: Enable- Count=1/8 Maskable+ 64bit+
+                Address: 0000000000000000  Data: 0000
+                Masking: 00000000  Pending: 00000000
+        Capabilities: [70] Express (v2) Endpoint, MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 26.000W
+                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
+                        MaxPayload 128 bytes, MaxReadReq 512 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+                LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM not supported
+                        ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s (downgraded), Width x1 (downgraded)
+                        TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+                DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP- LTR+
+                         10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+                         EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+                         FRS- TPHComp- ExtTPHComp-
+                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- 10BitTagReq- OBFF Disabled,
+                         AtomicOpsCtl: ReqEn-
+                LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
+                LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+                         Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+                         Compliance De-emphasis: -6dB
+                LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
+                         EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+                         Retimer- 2Retimers- CrosslinkRes: unsupported
+        Capabilities: [b0] MSI-X: Enable+ Count=16 Masked-
+                Vector table: BAR=0 offset=00002000
+                PBA: BAR=0 offset=00002100
+        Capabilities: [100 v2] Advanced Error Reporting
+                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+                AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+                HeaderLog: 00000000 00000000 00000000 00000000
+        Capabilities: [158 v1] Secondary PCI Express
+                LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+                LaneErrStat: 0
+        Capabilities: [178 v1] Latency Tolerance Reporting
+                Max snoop latency: 0ns
+                Max no snoop latency: 0ns
+        Capabilities: [180 v1] L1 PM Substates
+                L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1- L1_PM_Substates+
+                          PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
+                L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+                           T_CommonMode=0us
+                L1SubCtl2: T_PwrOn=10us
+        Kernel driver in use: nvme
+
+And I cannot understand. Why is kernel trying to set Max Payload Size to
+256 bytes when NVMe disk in Device Capabilities register presents that
+supports Maximal Payload size only 128 bytes?
