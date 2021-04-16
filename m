@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 898903629DC
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 22:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C543629DD
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 22:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343888AbhDPU7n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 16:59:43 -0400
-Received: from mail-ed1-f52.google.com ([209.85.208.52]:38640 "EHLO
-        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343947AbhDPU7j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Apr 2021 16:59:39 -0400
-Received: by mail-ed1-f52.google.com with SMTP id m3so33809395edv.5
-        for <linux-pci@vger.kernel.org>; Fri, 16 Apr 2021 13:59:14 -0700 (PDT)
+        id S1343947AbhDPU7o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 16:59:44 -0400
+Received: from mail-ej1-f51.google.com ([209.85.218.51]:39509 "EHLO
+        mail-ej1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343954AbhDPU7k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Apr 2021 16:59:40 -0400
+Received: by mail-ej1-f51.google.com with SMTP id v6so42706287ejo.6
+        for <linux-pci@vger.kernel.org>; Fri, 16 Apr 2021 13:59:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6qxNYzZBqS/3l+6iffEqt9nD120CmaQyJj6jPaGw3Nw=;
-        b=RNAVIpVFt4KCa6oHr1MdBrxxUpZYMq608p9Kq8NT0zVexsFowsK7GEqodHk5wECLwd
-         cw5YWoRdEZ5ETWPlYd6rCTOBapC/LRsMD1JwY6/EAojf3bQVGh853iCqXxPLVziGjcYD
-         0kHGL4uKHOuxGgX4Y+3MrFgh+XDhnXfS0DKtbiv4BcNrIiDn11HbduKVlcPEoDMtyey2
-         BfMEfw1LWwNAAV8MSYaMHWAs0Qf9wUV2H+GQ9MDta6IZwr72E+Ec4y7dPZUu1zsmmRvD
-         RY3nnskWDCJH7TvHfyEW/VJsLvSqXV3F3Pj7rAqBYijddBzxhSCO30JJXY8h+MHdxXPD
-         a5IA==
-X-Gm-Message-State: AOAM533XbXcRH2d7j52Kh6L5hJchk5kTreKX4maHs5/FeIA0rOWRCIqA
-        OLQPNCGHWRxbjWljEEONIhc=
-X-Google-Smtp-Source: ABdhPJxSwupV8+2GHx4KMde0bKr/CYzofemZLeHLeCRkMLFoTx1PBB6mQjrW1lzjaFnSXEakAZpx5g==
-X-Received: by 2002:a05:6402:b66:: with SMTP id cb6mr11504723edb.248.1618606753911;
-        Fri, 16 Apr 2021 13:59:13 -0700 (PDT)
+        bh=imUCWi5f0L0u44r4h5ePrxjMjkXDq587H6qCYb8kQvE=;
+        b=PxclICk0vbACZjOXqP3DScizUQO0k0h26EHTBNUQZSDNYL7oUbQ9qK5GHZXmO9BLf1
+         bTj4VzYThLqdPctiwz9fAK8EfHajZV+sVUh26K5jOGmg0xJbm4WaWnUfwzPoIB02mFE+
+         0BXe3jCvweO62zveJHRNejqOsLZ5vg9xXiVyO1rkVZ5BGSrLHw073VjlhdY0H7HcH/wR
+         lSlyOIkkzOVWTuPDmbfbdB0h9djW9romjs+rQKubMS9YMTqZPpJgwaWLpmc3q/sZGaA9
+         aYKMi7kK/YclR/3wIXdncl6RpaBN8zLkayrcROV+QhjXrVJmvbs7YFyltAlQvslC5ZZI
+         r1Jw==
+X-Gm-Message-State: AOAM530B+7SP3TODVxMf7nh642CKjHYAhnCyzZgzcga2v6a1S33ZvxEo
+        M9JILZCCIuHLLPV5u7FQoas=
+X-Google-Smtp-Source: ABdhPJw5PQ1ZoXzIDd+BYON0gNtmEdml9gLAKllaEqpuZ/gPEM5mL2RMO9aizP/o61O5o4l6bky/Cg==
+X-Received: by 2002:a17:907:f93:: with SMTP id kb19mr9993175ejc.207.1618606754838;
+        Fri, 16 Apr 2021 13:59:14 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id n11sm5103864ejg.43.2021.04.16.13.59.13
+        by smtp.gmail.com with ESMTPSA id n11sm5103864ejg.43.2021.04.16.13.59.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Apr 2021 13:59:13 -0700 (PDT)
+        Fri, 16 Apr 2021 13:59:14 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
@@ -43,9 +43,9 @@ Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         David Sterba <dsterba@suse.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 16/20] PCI: Rearrange attributes from the pci_dev_hp_attr_group
-Date:   Fri, 16 Apr 2021 20:58:52 +0000
-Message-Id: <20210416205856.3234481-17-kw@linux.com>
+Subject: [PATCH 17/20] PCI: Rearrange attributes from the pci_bridge_attr_group
+Date:   Fri, 16 Apr 2021 20:58:53 +0000
+Message-Id: <20210416205856.3234481-18-kw@linux.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20210416205856.3234481-1-kw@linux.com>
 References: <20210416205856.3234481-1-kw@linux.com>
@@ -61,7 +61,7 @@ that implemented new attributes has been added in many different places
 in the pci-sysfs.c file.  This makes it hard to read and also hard to
 find relevant code.
 
-Thus, collect all the attributes that are part of the "pci_dev_hp_attr_group"
+Thus, collect all the attributes that are part of the "pci_bridge_attr_group"
 attribute group together and move to the top of the file sorting
 everything attribute in the order of use.
 
@@ -70,161 +70,156 @@ No functional change intended.
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/pci-sysfs.c | 120 ++++++++++++++++++++--------------------
- 1 file changed, 60 insertions(+), 60 deletions(-)
+ drivers/pci/pci-sysfs.c | 108 ++++++++++++++++++++--------------------
+ 1 file changed, 54 insertions(+), 54 deletions(-)
 
 diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index fd89a391b1c7..bf909e9a9528 100644
+index bf909e9a9528..1899c24081f7 100644
 --- a/drivers/pci/pci-sysfs.c
 +++ b/drivers/pci/pci-sysfs.c
-@@ -826,6 +826,66 @@ static const struct attribute_group pci_dev_attr_group = {
- 	.is_visible = pci_dev_attr_is_visible,
+@@ -886,6 +886,60 @@ static const struct attribute_group pci_dev_hp_attr_group = {
+ 	.is_visible = pci_dev_hp_attr_is_visible,
  };
  
-+static ssize_t remove_store(struct device *dev,
-+			    struct device_attribute *attr, const char *buf,
-+			    size_t count)
++static ssize_t subordinate_bus_number_show(struct device *dev,
++					   struct device_attribute *attr,
++					   char *buf)
 +{
-+	bool remove;
 +	struct pci_dev *pdev = to_pci_dev(dev);
++	u8 sub_bus;
++	int err;
 +
-+	if (kstrtobool(buf, &remove) < 0)
++	err = pci_read_config_byte(pdev, PCI_SUBORDINATE_BUS, &sub_bus);
++	if (err)
 +		return -EINVAL;
 +
-+	if (remove && device_remove_file_self(dev, attr))
-+		pci_stop_and_remove_bus_device_locked(pdev);
-+
-+	return count;
++	return sysfs_emit(buf, "%u\n", sub_bus);
 +}
-+static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL, remove_store);
++static DEVICE_ATTR_RO(subordinate_bus_number);
 +
-+static ssize_t dev_rescan_store(struct device *dev,
-+				struct device_attribute *attr, const char *buf,
-+				size_t count)
++static ssize_t secondary_bus_number_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
 +{
-+	bool rescan;
 +	struct pci_dev *pdev = to_pci_dev(dev);
++	u8 sec_bus;
++	int err;
 +
-+	if (kstrtobool(buf, &rescan) < 0)
++	err = pci_read_config_byte(pdev, PCI_SECONDARY_BUS, &sec_bus);
++	if (err)
 +		return -EINVAL;
 +
-+	if (rescan) {
-+		pci_lock_rescan_remove();
-+		pci_rescan_bus(pdev->bus);
-+		pci_unlock_rescan_remove();
-+	}
-+
-+	return count;
++	return sysfs_emit(buf, "%u\n", sec_bus);
 +}
-+static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
-+							    dev_rescan_store);
++static DEVICE_ATTR_RO(secondary_bus_number);
 +
-+static struct attribute *pci_dev_hp_attrs[] = {
-+	&dev_attr_remove.attr,
-+	&dev_attr_dev_rescan.attr,
++static struct attribute *pci_bridge_attrs[] = {
++	&dev_attr_subordinate_bus_number.attr,
++	&dev_attr_secondary_bus_number.attr,
 +	NULL,
 +};
 +
-+static umode_t pci_dev_hp_attr_is_visible(struct kobject *kobj,
++static umode_t pci_bridge_attr_is_visible(struct kobject *kobj,
 +					  struct attribute *a, int n)
 +{
 +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
 +
-+	if (pdev->is_virtfn)
++	if (!pci_is_bridge(pdev))
 +		return 0;
 +
 +	return a->mode;
 +}
 +
-+static const struct attribute_group pci_dev_hp_attr_group = {
-+	.attrs = pci_dev_hp_attrs,
-+	.is_visible = pci_dev_hp_attr_is_visible,
++static const struct attribute_group pci_bridge_attr_group = {
++	.attrs = pci_bridge_attrs,
++	.is_visible = pci_bridge_attr_is_visible,
 +};
 +
  /*
   * PCI Bus Class Devices
   */
-@@ -957,44 +1017,6 @@ const struct attribute_group *pci_bus_groups[] = {
- 	NULL,
- };
- 
--static ssize_t dev_rescan_store(struct device *dev,
--				struct device_attribute *attr, const char *buf,
--				size_t count)
--{
--	bool rescan;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	if (kstrtobool(buf, &rescan) < 0)
--		return -EINVAL;
--
--	if (rescan) {
--		pci_lock_rescan_remove();
--		pci_rescan_bus(pdev->bus);
--		pci_unlock_rescan_remove();
--	}
--
--	return count;
--}
--static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
--							    dev_rescan_store);
--
--static ssize_t remove_store(struct device *dev,
--			    struct device_attribute *attr, const char *buf,
--			    size_t count)
--{
--	bool remove;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	if (kstrtobool(buf, &remove) < 0)
--		return -EINVAL;
--
--	if (remove && device_remove_file_self(dev, attr))
--		pci_stop_and_remove_bus_device_locked(pdev);
--
--	return count;
--}
--static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL, remove_store);
--
- static ssize_t bus_rescan_store(struct device *dev,
- 				struct device_attribute *attr, const char *buf,
- 				size_t count)
-@@ -1517,23 +1539,6 @@ static int __init pci_sysfs_init(void)
+@@ -952,38 +1006,6 @@ static ssize_t current_link_width_show(struct device *dev,
  }
- late_initcall(pci_sysfs_init);
+ static DEVICE_ATTR_RO(current_link_width);
  
--static struct attribute *pci_dev_hp_attrs[] = {
--	&dev_attr_remove.attr,
--	&dev_attr_dev_rescan.attr,
+-static ssize_t secondary_bus_number_show(struct device *dev,
+-					 struct device_attribute *attr,
+-					 char *buf)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	u8 sec_bus;
+-	int err;
+-
+-	err = pci_read_config_byte(pdev, PCI_SECONDARY_BUS, &sec_bus);
+-	if (err)
+-		return -EINVAL;
+-
+-	return sysfs_emit(buf, "%u\n", sec_bus);
+-}
+-static DEVICE_ATTR_RO(secondary_bus_number);
+-
+-static ssize_t subordinate_bus_number_show(struct device *dev,
+-					   struct device_attribute *attr,
+-					   char *buf)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	u8 sub_bus;
+-	int err;
+-
+-	err = pci_read_config_byte(pdev, PCI_SUBORDINATE_BUS, &sub_bus);
+-	if (err)
+-		return -EINVAL;
+-
+-	return sysfs_emit(buf, "%u\n", sub_bus);
+-}
+-static DEVICE_ATTR_RO(subordinate_bus_number);
+-
+ static ssize_t rescan_store(struct bus_type *bus, const char *buf, size_t count)
+ {
+ 	bool rescan;
+@@ -1041,12 +1063,6 @@ static ssize_t bus_rescan_store(struct device *dev,
+ static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
+ 							    bus_rescan_store);
+ 
+-static struct attribute *pci_bridge_attrs[] = {
+-	&dev_attr_subordinate_bus_number.attr,
+-	&dev_attr_secondary_bus_number.attr,
 -	NULL,
 -};
 -
--static umode_t pci_dev_hp_attr_is_visible(struct kobject *kobj,
+ static struct attribute *pcie_dev_attrs[] = {
+ 	&dev_attr_current_link_speed.attr,
+ 	&dev_attr_current_link_width.attr,
+@@ -1539,17 +1555,6 @@ static int __init pci_sysfs_init(void)
+ }
+ late_initcall(pci_sysfs_init);
+ 
+-static umode_t pci_bridge_attr_is_visible(struct kobject *kobj,
 -					  struct attribute *a, int n)
 -{
 -	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
 -
--	if (pdev->is_virtfn)
+-	if (!pci_is_bridge(pdev))
 -		return 0;
 -
 -	return a->mode;
 -}
 -
- static umode_t pci_bridge_attr_is_visible(struct kobject *kobj,
- 					  struct attribute *a, int n)
+ static umode_t pcie_dev_attr_is_visible(struct kobject *kobj,
+ 					struct attribute *a, int n)
  {
-@@ -1571,11 +1576,6 @@ const struct attribute_group *pci_dev_groups[] = {
+@@ -1576,11 +1581,6 @@ const struct attribute_group *pci_dev_groups[] = {
  	NULL,
  };
  
--static const struct attribute_group pci_dev_hp_attr_group = {
--	.attrs = pci_dev_hp_attrs,
--	.is_visible = pci_dev_hp_attr_is_visible,
+-static const struct attribute_group pci_bridge_attr_group = {
+-	.attrs = pci_bridge_attrs,
+-	.is_visible = pci_bridge_attr_is_visible,
 -};
 -
- static const struct attribute_group pci_bridge_attr_group = {
- 	.attrs = pci_bridge_attrs,
- 	.is_visible = pci_bridge_attr_is_visible,
+ static const struct attribute_group pcie_dev_attr_group = {
+ 	.attrs = pcie_dev_attrs,
+ 	.is_visible = pcie_dev_attr_is_visible,
 -- 
 2.31.0
 
