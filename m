@@ -2,128 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18CDC362A4D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 23:27:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD56362BBB
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Apr 2021 01:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243934AbhDPV1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 17:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235451AbhDPV1f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Apr 2021 17:27:35 -0400
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ABCC061574;
-        Fri, 16 Apr 2021 14:27:09 -0700 (PDT)
-Received: by mail-qv1-xf34.google.com with SMTP id gv2so4865925qvb.8;
-        Fri, 16 Apr 2021 14:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=qnIWecU4j0go3BHki/tPX89ICgmbfzbrXzKLY+iWOac=;
-        b=PhDBZAzo+OIHeHKPUkiWebd2RIRE8h8B3dLA1tcUMxGsYd1ao5o99BL9jDla3voE9Y
-         GPrLd+bUmEtL5Yk6emTGq2QA+qjodIhVTE5gLa8+vGwH+nqQiXqR5PTrNRb7megwHdKn
-         Wy9vXZS5Sm4Ta5Zkbx3QfxiAas3oyIsb/c1ikDetmr7ImtGSBYSrROdswWOEGxzN4OK/
-         0tDo7I6b4S8YsPrY8Bq/+YVu2x7RMm/LIm/Y5NiS/zm5t/vCRaPTSryG0Re/JDsrjUbG
-         RL8lzHi9gtqu2COx+wLHUWnLJ1pKupIZsi9gTJPZNhnIAMrKyEgcA3tHthGlMk2qXO2B
-         YjIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=qnIWecU4j0go3BHki/tPX89ICgmbfzbrXzKLY+iWOac=;
-        b=D7t4FGUSdaCk1GUwEdmgslFVhjyMcfMqTM5ag/6YnPCWDHEsFqXyhhuodqD+fHi5mS
-         8x+3Xz2s94Z+EEY1LYLJmUwA1AbYn7ESVAMTZyRVXbLWOGwAvOaT5uGUakxKZk5mnju7
-         CIpEPw8Ia4H82ENvQukmYtdepoDfZ1NSW+MDEetDedgHw/v1NUnGnzw4ms74Erm1Z/Ct
-         YeOknntbws/xoMG5f0gH46yTitEeXR475TRmsegNnHWWA/JMRq6NuVY+sqXQtNtU1m1d
-         RdZplT9ddaDcu2IYC1ayG58R8DcQFllE42n6df/qriY7AS9+gy1OH8/mt7vlXyqkPjzR
-         S97Q==
-X-Gm-Message-State: AOAM531VHiBekJzpEB9LkwUxRUxEgz7K8ch9TxP+ndxa8roV2Vxum/I9
-        0MdLBEqqKiFq/eeb2Ou5iMo=
-X-Google-Smtp-Source: ABdhPJxiaMQSF5aQnwptHbIMI7IyFwQxTjUhS8gbDjqudrYedippV2ExrK8pQT0GQ6TQ9sjUaHt5/g==
-X-Received: by 2002:ad4:522b:: with SMTP id r11mr10787069qvq.6.1618608429096;
-        Fri, 16 Apr 2021 14:27:09 -0700 (PDT)
-Received: from li-908e0a4c-2250-11b2-a85c-f027e903211b.ibm.com ([177.35.200.187])
-        by smtp.gmail.com with ESMTPSA id l4sm5081376qkd.105.2021.04.16.14.27.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Apr 2021 14:27:08 -0700 (PDT)
-Message-ID: <bd3767f61d0a604918e9886ae6da2eadc8dde310.camel@gmail.com>
-Subject: Re: [PATCH 1/1] of/pci: Add IORESOURCE_MEM_64 to resource flags for
- 64-bit memory addresses
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Date:   Fri, 16 Apr 2021 18:27:03 -0300
-In-Reply-To: <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
-References: <20210415180050.373791-1-leobras.c@gmail.com>
-         <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S230432AbhDPXE7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 19:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229719AbhDPXE7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Apr 2021 19:04:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A4D9D60E0C;
+        Fri, 16 Apr 2021 23:04:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618614273;
+        bh=vu5OfkV5cWx2wZfVj0vVM9+QKpr99UrgwgrXoI5rSd4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PfFPAl2SbFWIPHqeXWg+V4AqiCy7QHqqb7uB6+Eg3Egzep2VCSBOPlAfp9Ryh6Sts
+         jsQqleQrt5l1yXwmlIkaofE6uDuCoL7SbE0yZwVpbdUdY50/pkfpDk7wpGnwhJhcdt
+         7pQM9OCYldVLK9aRt1HJ3sWBC0JMcx0rwRmCTSNB5wAiXdmBQ2gM3+7qytiEpMEk1k
+         Lhfe1/VQaQ7zvH4/eXC+RaOCBSsNo1Uu8Pmn5xiMrJJ2HQ+icynTOpv93rHUoDCWHS
+         wP9Jmu7bVE6+DDWVl0HYgp8+9xV0OcGQdPKBrR6q571ZUjP6EUqivRnwfB404c0n7H
+         kFKAs8vpJH4mw==
+Received: by pali.im (Postfix)
+        id 19343B4A; Sat, 17 Apr 2021 01:04:30 +0200 (CEST)
+Date:   Sat, 17 Apr 2021 01:04:30 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: PCIe: can't set Max Payload Size to 256
+Message-ID: <20210416230430.cdzlnifaenzhbsmm@pali>
+References: <20210416173119.d2eq2zetzp5awunj@pali>
+ <20210416202941.GB32082@redsun51.ssa.fujisawa.hgst.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210416202941.GB32082@redsun51.ssa.fujisawa.hgst.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Rob, thanks for this feedback!
-
-On Thu, 2021-04-15 at 13:59 -0500, Rob Herring wrote:
-> +PPC and PCI lists
-> 
-> On Thu, Apr 15, 2021 at 1:01 PM Leonardo Bras <leobras.c@gmail.com> wrote:
+On Saturday 17 April 2021 05:29:41 Keith Busch wrote:
+> On Fri, Apr 16, 2021 at 07:31:19PM +0200, Pali Rohár wrote:
+> > Hello! I'm getting following error line in dmesg for NVMe disk with
+> > v5.12-rc7 kernel version:
 > > 
-> > Many other resource flag parsers already add this flag when the input
-> > has bits 24 & 25 set, so update this one to do the same.
+> > [    3.226462] pci 0000:04:00.0: can't set Max Payload Size to 256; if necessary, use "pci=pcie_bus_safe" and report a bug
+> > 
+> > lspci output for this NVMe disk is:
+> > 
+> > 04:00.0 Non-Volatile memory controller [0108]: Silicon Motion, Inc. Device [126f:2263] (rev 03) (prog-if 02 [NVM Express])
+> >         Subsystem: Silicon Motion, Inc. Device [126f:2263]
+> >         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+> >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >         Latency: 0
+> >         Interrupt: pin A routed to IRQ 55
+> >         Region 0: Memory at e8000000 (64-bit, non-prefetchable) [size=16K]
+> >         Capabilities: [40] Power Management version 3
+> >                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+> >                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+> >         Capabilities: [50] MSI: Enable- Count=1/8 Maskable+ 64bit+
+> >                 Address: 0000000000000000  Data: 0000
+> >                 Masking: 00000000  Pending: 00000000
+> >         Capabilities: [70] Express (v2) Endpoint, MSI 00
+> >                 DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+> >                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 26.000W
+> >                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+> >                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
+> >                         MaxPayload 128 bytes, MaxReadReq 512 bytes
+> >                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+> >                 LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM not supported
+> >                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+> >                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+> >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> >                 LnkSta: Speed 2.5GT/s (downgraded), Width x1 (downgraded)
+> >                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> >                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP- LTR+
+> >                          10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+> >                          EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+> >                          FRS- TPHComp- ExtTPHComp-
+> >                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+> >                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- 10BitTagReq- OBFF Disabled,
+> >                          AtomicOpsCtl: ReqEn-
+> >                 LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
+> >                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+> >                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> >                          Compliance De-emphasis: -6dB
+> >                 LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
+> >                          EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+> >                          Retimer- 2Retimers- CrosslinkRes: unsupported
+> >         Capabilities: [b0] MSI-X: Enable+ Count=16 Masked-
+> >                 Vector table: BAR=0 offset=00002000
+> >                 PBA: BAR=0 offset=00002100
+> >         Capabilities: [100 v2] Advanced Error Reporting
+> >                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> >                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> >                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+> >                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+> >                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+> >                 AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+> >                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+> >                 HeaderLog: 00000000 00000000 00000000 00000000
+> >         Capabilities: [158 v1] Secondary PCI Express
+> >                 LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+> >                 LaneErrStat: 0
+> >         Capabilities: [178 v1] Latency Tolerance Reporting
+> >                 Max snoop latency: 0ns
+> >                 Max no snoop latency: 0ns
+> >         Capabilities: [180 v1] L1 PM Substates
+> >                 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1- L1_PM_Substates+
+> >                           PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
+> >                 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+> >                            T_CommonMode=0us
+> >                 L1SubCtl2: T_PwrOn=10us
+> >         Kernel driver in use: nvme
+> > 
+> > And I cannot understand. Why is kernel trying to set Max Payload Size to
+> > 256 bytes when NVMe disk in Device Capabilities register presents that
+> > supports Maximal Payload size only 128 bytes?
 > 
-> Many others? Looks like sparc and powerpc to me. 
+> The error indicates that the port your nvme pcie device is connected
+> is not reporting a matching MPS. The kernel will attempt to tune the
+> port if it's a RP so they match. If you see this error, that means the
+> RP setting wasn't successful.
 > 
+> If the SSD is connected to a bridge, you'll need to use the kernel
+> parameter to force retuning the bus.
 
-s390 also does that, but it look like it comes from a device-tree.
+Above NVMe disk is connected to PCIe packet switch (which acts as pair
+of Upstream and Downstream ports of PCI bridge) and PCIe packet switch
+is connected to the Root port.
 
-> Those would be the
-> ones I worry about breaking. Sparc doesn't use of/address.c so it's
-> fine. Powerpc version of the flags code was only fixed in 2019, so I
-> don't think powerpc will care either.
-
-In powerpc I reach this function with this stack, while configuring a
-virtio-net device for a qemu/KVM pseries guest:
-
-pci_process_bridge_OF_ranges+0xac/0x2d4
-pSeries_discover_phbs+0xc4/0x158
-discover_phbs+0x40/0x60
-do_one_initcall+0x60/0x2d0
-kernel_init_freeable+0x308/0x3a8
-kernel_init+0x2c/0x168
-ret_from_kernel_thread+0x5c/0x70
-
-For this, both MMIO32 and MMIO64 resources will have flags 0x200.
-
-> 
-> I noticed both sparc and powerpc set PCI_BASE_ADDRESS_MEM_TYPE_64 in
-> the flags. AFAICT, that's not set anywhere outside of arch code. So
-> never for riscv, arm and arm64 at least. That leads me to
-> pci_std_update_resource() which is where the PCI code sets BARs and
-> just copies the flags in PCI_BASE_ADDRESS_MEM_MASK ignoring
-> IORESOURCE_* flags. So it seems like 64-bit is still not handled and
-> neither is prefetch.
-> 
-
-I am not sure if you mean here:
-a) it's ok to add IORESOURCE_MEM_64 here, because it does not affect
-anything else, or
-b) it should be using PCI_BASE_ADDRESS_MEM_TYPE_64 
-(or IORESOURCE_MEM_64 | PCI_BASE_ADDRESS_MEM_TYPE_64) instead, since
-it's how it's added in powerpc/sparc, and else there is no point.
-
-Again, thanks for helping!
-
-Best regards,
-Leonardo Bras
-
+I'm not sure what should I set or what to force.
