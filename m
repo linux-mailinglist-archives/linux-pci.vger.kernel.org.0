@@ -2,122 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 456673628EE
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 21:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4427A362959
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 22:29:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243580AbhDPTwm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 15:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236465AbhDPTwl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Apr 2021 15:52:41 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19294C061574
-        for <linux-pci@vger.kernel.org>; Fri, 16 Apr 2021 12:52:15 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id u20so10336246wmj.0
-        for <linux-pci@vger.kernel.org>; Fri, 16 Apr 2021 12:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=HOj00Gk52N7nOt2IKSKSD/MvqQ/sL2eaeADGpmhPkkA=;
-        b=GWTH9DXUsq2aHRI4ZXgh9WlPis6AcsjjbDWYeCp8m/xSjOuT/fEX2CLOvDe8jszrUV
-         SGxbtFVhcRLevRU9HTcezoauiamJyYt+MLstSliJ970PKpJHd1yS9HETpw6Vdd4cq/Nx
-         ceQEiecxtsIyz+d8eaE0RuZYJRHXA0m744LFejKg6acx2AZxrQTzKe4CiiWLxrdRqs5B
-         3ryZtz7+ZjqxeIK5BxXfgK7rLniMJkvaFVmGd3S1S01vPZpGIl2Wkx2bEpgl55Gw/Z/K
-         VmtUt9e1RoO9tqSNwuUFqPADep5TDZtcT9YhzCNaMHHblhAM2pEN4clU/i/+tT+zXR5f
-         LWaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=HOj00Gk52N7nOt2IKSKSD/MvqQ/sL2eaeADGpmhPkkA=;
-        b=FlDhzZ5JJ1FdRn13mRe86V3nZs3LYnZNpiBpvB4QR2IudomYpLFH2cUA6zmV7cvs2o
-         pd7H7ZBlZxLgq/vreYy8Lbjbq7KbFvmDTgxvtq4RG8VE/uMjA5skK2JZq4wMS9A08R6n
-         +w91f3/b+goxBMaRGhKTc0R3kohpNzi7WZmO7nIEZZXWHjpmlA+ThCZqe6e3+iMY6iuB
-         +a4/scQGJB77bP7FXFeL2ubxlr629/996IvIERKkzkCctC1OHWqNZAAGueUzpxKklo8B
-         LP/tCE2kl/MTyg8B5bN1L6/VqW9j6BauWvEB9iTqBMp68LuivU2QPqEJOz7bQya67AME
-         8w9Q==
-X-Gm-Message-State: AOAM5333vtbV7TD3nBWJ3nLVzqE9FFivFfvEQbqDw3upjtNukptkup1y
-        ts72IkPz+edvBdfxN7Cnq5EjPYje2Gjs/w==
-X-Google-Smtp-Source: ABdhPJwdRupUZOk14TyyOpADKjzOvWTsBoeqvHg8hFRwL5/zkVG3T9amvm3yO09uWBoKUQ8VbNpabg==
-X-Received: by 2002:a7b:c189:: with SMTP id y9mr9595186wmi.126.1618602733557;
-        Fri, 16 Apr 2021 12:52:13 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f38:4600:90ba:9dfd:13a:f370? (p200300ea8f38460090ba9dfd013af370.dip0.t-ipconnect.de. [2003:ea:8f38:4600:90ba:9dfd:13a:f370])
-        by smtp.googlemail.com with ESMTPSA id u8sm11885860wrp.66.2021.04.16.12.52.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Apr 2021 12:52:13 -0700 (PDT)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] PCI/VPD: Add helper pci_get_func0_dev
-Message-ID: <75d1f619-8a35-690d-8fc8-e851264a4bbb@gmail.com>
-Date:   Fri, 16 Apr 2021 21:52:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
+        id S245118AbhDPUaN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 16:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244843AbhDPUaM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Apr 2021 16:30:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F8F76124B;
+        Fri, 16 Apr 2021 20:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618604987;
+        bh=b4BDXufcBVHLJMdwRjF00+zGergeAnWG63yCydwVoOg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bUnBAnO2zNYUNrKRt+x0hXqmTjQoVZOroTnBOq6sm0nHWK2r0104Sdyjrmlj2gy1U
+         wJml00SH+s+menWBXVWGAFWJe224sg6mHdMrdRZtAJk7qtY7DkLcCUEfjvEhbSpRLp
+         Jpy3ynT+Z7lFIkccIj5kKzUTgv3I5pCoMWq4kh+cGkE0olZ63sBczCXBrpJ7VTHpxl
+         /m8S2cPYMSKtWGyo4YTW+ydGa+3p6UlYjufuaT+L4yKcCLwcqVpnCLYQivbuePVOzR
+         DXqBddCkTIuCkb/JohevxqmR/aFy3+/UzpnEa8n7SDLGvyHjm1UR23AIpuPhVN3Zdm
+         x/rMki/ELBrAQ==
+Date:   Sat, 17 Apr 2021 05:29:41 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Subject: Re: PCIe: can't set Max Payload Size to 256
+Message-ID: <20210416202941.GB32082@redsun51.ssa.fujisawa.hgst.com>
+References: <20210416173119.d2eq2zetzp5awunj@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210416173119.d2eq2zetzp5awunj@pali>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The combined use of the PCI_DEVFN() and PCI_SLOT() macros in several
-places is unnecessarily complex. Use a simplified version and add
-a helper for it.
+On Fri, Apr 16, 2021 at 07:31:19PM +0200, Pali Rohár wrote:
+> Hello! I'm getting following error line in dmesg for NVMe disk with
+> v5.12-rc7 kernel version:
+> 
+> [    3.226462] pci 0000:04:00.0: can't set Max Payload Size to 256; if necessary, use "pci=pcie_bus_safe" and report a bug
+> 
+> lspci output for this NVMe disk is:
+> 
+> 04:00.0 Non-Volatile memory controller [0108]: Silicon Motion, Inc. Device [126f:2263] (rev 03) (prog-if 02 [NVM Express])
+>         Subsystem: Silicon Motion, Inc. Device [126f:2263]
+>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin A routed to IRQ 55
+>         Region 0: Memory at e8000000 (64-bit, non-prefetchable) [size=16K]
+>         Capabilities: [40] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+>         Capabilities: [50] MSI: Enable- Count=1/8 Maskable+ 64bit+
+>                 Address: 0000000000000000  Data: 0000
+>                 Masking: 00000000  Pending: 00000000
+>         Capabilities: [70] Express (v2) Endpoint, MSI 00
+>                 DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+>                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 26.000W
+>                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+>                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
+>                         MaxPayload 128 bytes, MaxReadReq 512 bytes
+>                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+>                 LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM not supported
+>                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 2.5GT/s (downgraded), Width x1 (downgraded)
+>                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+>                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP- LTR+
+>                          10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+>                          FRS- TPHComp- ExtTPHComp-
+>                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- 10BitTagReq- OBFF Disabled,
+>                          AtomicOpsCtl: ReqEn-
+>                 LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
+>                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+>                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+>                          Compliance De-emphasis: -6dB
+>                 LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
+>                          EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+>                          Retimer- 2Retimers- CrosslinkRes: unsupported
+>         Capabilities: [b0] MSI-X: Enable+ Count=16 Masked-
+>                 Vector table: BAR=0 offset=00002000
+>                 PBA: BAR=0 offset=00002100
+>         Capabilities: [100 v2] Advanced Error Reporting
+>                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+>                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+>                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+>                 AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+>                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+>                 HeaderLog: 00000000 00000000 00000000 00000000
+>         Capabilities: [158 v1] Secondary PCI Express
+>                 LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+>                 LaneErrStat: 0
+>         Capabilities: [178 v1] Latency Tolerance Reporting
+>                 Max snoop latency: 0ns
+>                 Max no snoop latency: 0ns
+>         Capabilities: [180 v1] L1 PM Substates
+>                 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1- L1_PM_Substates+
+>                           PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
+>                 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+>                            T_CommonMode=0us
+>                 L1SubCtl2: T_PwrOn=10us
+>         Kernel driver in use: nvme
+> 
+> And I cannot understand. Why is kernel trying to set Max Payload Size to
+> 256 bytes when NVMe disk in Device Capabilities register presents that
+> supports Maximal Payload size only 128 bytes?
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/pci/vpd.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+The error indicates that the port your nvme pcie device is connected
+is not reporting a matching MPS. The kernel will attempt to tune the
+port if it's a RP so they match. If you see this error, that means the
+RP setting wasn't successful.
 
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 42f762ab0..60573f27a 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -28,6 +28,12 @@ struct pci_vpd {
- 	unsigned int	valid:1;
- };
- 
-+static struct pci_dev *pci_get_func0_dev(struct pci_dev *dev)
-+{
-+	/* bits 2:0 in devfn is the device function */
-+	return pci_get_slot(dev->bus, dev->devfn & 0xf8);
-+}
-+
- /**
-  * pci_read_vpd - Read one entry from Vital Product Data
-  * @dev:	pci device struct
-@@ -305,8 +311,7 @@ static const struct pci_vpd_ops pci_vpd_ops = {
- static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
- 			       void *arg)
- {
--	struct pci_dev *tdev = pci_get_slot(dev->bus,
--					    PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
-+	struct pci_dev *tdev = pci_get_func0_dev(dev);
- 	ssize_t ret;
- 
- 	if (!tdev)
-@@ -320,8 +325,7 @@ static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
- static ssize_t pci_vpd_f0_write(struct pci_dev *dev, loff_t pos, size_t count,
- 				const void *arg)
- {
--	struct pci_dev *tdev = pci_get_slot(dev->bus,
--					    PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
-+	struct pci_dev *tdev = pci_get_func0_dev(dev);
- 	ssize_t ret;
- 
- 	if (!tdev)
-@@ -414,7 +418,7 @@ static void quirk_f0_vpd_link(struct pci_dev *dev)
- 	if (!PCI_FUNC(dev->devfn))
- 		return;
- 
--	f0 = pci_get_slot(dev->bus, PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
-+	f0 = pci_get_func0_dev(dev);
- 	if (!f0)
- 		return;
- 
--- 
-2.31.1
-
+If the SSD is connected to a bridge, you'll need to use the kernel
+parameter to force retuning the bus.
