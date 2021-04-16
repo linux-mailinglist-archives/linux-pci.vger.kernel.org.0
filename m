@@ -2,92 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 708D636288F
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 21:24:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F055A3628B7
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Apr 2021 21:36:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239173AbhDPTYg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Apr 2021 15:24:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
+        id S243688AbhDPTgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Apr 2021 15:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235362AbhDPTYf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Apr 2021 15:24:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B84B6137D;
-        Fri, 16 Apr 2021 19:24:10 +0000 (UTC)
+        id S235029AbhDPTgW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Apr 2021 15:36:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B348F613B4;
+        Fri, 16 Apr 2021 19:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618601050;
-        bh=qHawK0oSTOLvJhEkLLbelkvEtYDRemD5y/71PvXJsow=;
+        s=k20201202; t=1618601757;
+        bh=6nsEld/AHz4O3V/FKZ7eZE/3Z4jHZfTnVOsQzEoVmqg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i+nsE09tHA0GPcdM2/MeTaNM0szdQ0WdGtOryocd2mlqAtBAPS//L0i0bzZXsO8/u
-         fkLV7Gvab0QGNzDId6j792QJPu/gog3Dicsi9l6jZFfqUa3Plj723IeLds1pJpEKyr
-         6OgPJZied02D4CRJM27ck/2DbUH0P6noqZEX7ncjo7RzthjBNAzaObjGEgxy17r7VL
-         +SzfZO2eKYv3O9Q0TMm2hz5GTNKJ/yfV2ONFoik610B/49nvK59V7cy8m7CfnUYsqV
-         5lioX2gDeS8C6LthsG8R30YIzz9snIrCPJCSf5aLBXNxUvo3ks8yjt+OS6lELHHJwv
-         0hfkytCmujThA==
-Date:   Fri, 16 Apr 2021 14:24:09 -0500
+        b=ShJQH/ttUPnvDeFENN/fYbcliDcNW0ltqfXcBNZR03iyBqiUkzSJdyydh/ucrgHsX
+         V1JflqEgdN597Kkj4fknxjhvEighrLaFI5zAjq1G+t0mF+NzotuM/iZayFMO58yq7r
+         EAuAUC/lXReWCducjwlBxEE3taFe3zwOuOzUOxLshx2W2WFFk3lse7Dd0uTJW4SlY1
+         euMplf+CQXaWuEtLq2Xr9sd3bP/44hiFUl3exV9lJgi5Y3kJFWchu9j0uQtdH0LX8x
+         FzzMZ7iz7asrNfOB+5Y8TDlSNQC6m/9J3ccwjN0Q6eppQ3ibfYJcfEoi+PMAN1rgKG
+         HrzftFEpORahQ==
+Date:   Fri, 16 Apr 2021 14:35:55 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com,
-        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
-        sin_jieyang@mediatek.com, drinkcat@chromium.org,
-        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com,
-        Krzysztof Wilczyski <kw@linux.com>
-Subject: Re: [v9,2/7] PCI: Export pci_pio_to_address() for module use
-Message-ID: <20210416192409.GA2744791@bjorn-Precision-5520>
+To:     chakravarthikulkarni <chakravarthikulkarni2021@gmail.com>
+Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] PCI: acpiphp:  Fixed coding style
+Message-ID: <20210416193555.GA2747805@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210413095257.GA21802@lpieralisi>
+In-Reply-To: <20210301072145.19018-1-chakravarthikulkarni2021@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 10:53:05AM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Mar 24, 2021 at 10:09:42AM +0100, Pali Rohár wrote:
-> > On Wednesday 24 March 2021 11:05:05 Jianjun Wang wrote:
-> > > This interface will be used by PCI host drivers for PIO translation,
-> > > export it to support compiling those drivers as kernel modules.
-> > > 
-> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > > ---
-> > >  drivers/pci/pci.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 16a17215f633..12bba221c9f2 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -4052,6 +4052,7 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
-> > >  
-> > >  	return address;
-> > >  }
-> > > +EXPORT_SYMBOL(pci_pio_to_address);
-> > 
-> > Hello! I'm not sure if EXPORT_SYMBOL is correct because file has GPL-2.0
-> > header. Should not be in this case used only EXPORT_SYMBOL_GPL? Maybe
-> > other people would know what is correct?
+On Mon, Mar 01, 2021 at 12:51:45PM +0530, chakravarthikulkarni wrote:
+> In this commit fixed coding style for braces and comments.
 > 
-> I think this should be EXPORT_SYMBOL_GPL(), I can make this change
-> but this requires Bjorn's ACK to go upstream (Bjorn, it is my fault,
-> it was assigned to me on patchwork, now updated, please have a look).
+> Signed-off-by: chakravarthikulkarni <chakravarthikulkarni2021@gmail.com>
 
-Yep, looks good to me, and I agree it should be EXPORT_SYMBOL_GPL().
+Applied to pci/hotplug for v5.13, thanks!
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I dropped the comment change because it's really one comment that
+should remain connected, so it doesn't seem like an improvement to me
+to add comment start/stop in the middle.
 
-> > >  
-> > >  unsigned long __weak pci_address_to_pio(phys_addr_t address)
-> > >  {
-> > > -- 
-> > > 2.25.1
-> > > 
+> ---
+>  drivers/pci/hotplug/acpiphp.h | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
+> index a74b274a8c45..e0964600a78f 100644
+> --- a/drivers/pci/hotplug/acpiphp.h
+> +++ b/drivers/pci/hotplug/acpiphp.h
+> @@ -80,8 +80,8 @@ struct acpiphp_bridge {
+>  struct acpiphp_slot {
+>  	struct list_head node;
+>  	struct pci_bus *bus;
+> -	struct list_head funcs;		/* one slot may have different
+> -					   objects (i.e. for each function) */
+> +	struct list_head funcs;		/* one slot may have different */
+> +					/* objects (i.e. for each function) */
+>  	struct slot *slot;
+>  
+>  	u8		device;		/* pci device# */
+> @@ -148,8 +148,7 @@ static inline struct acpiphp_root_context *to_acpiphp_root_context(struct acpi_h
+>   * ACPI has no generic method of setting/getting attention status
+>   * this allows for device specific driver registration
+>   */
+> -struct acpiphp_attention_info
+> -{
+> +struct acpiphp_attention_info {
+>  	int (*set_attn)(struct hotplug_slot *slot, u8 status);
+>  	int (*get_attn)(struct hotplug_slot *slot, u8 *status);
+>  	struct module *owner;
+> -- 
+> 2.17.1
+> 
