@@ -2,44 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E733364251
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Apr 2021 15:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31CBE36432E
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Apr 2021 15:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbhDSNEu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Apr 2021 09:04:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:17361 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238300AbhDSND5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Apr 2021 09:03:57 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4FP6Pq1J0Sz7vwK;
-        Mon, 19 Apr 2021 21:01:03 +0800 (CST)
-Received: from [127.0.0.1] (10.69.38.196) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.498.0; Mon, 19 Apr 2021
- 21:03:18 +0800
-Subject: Re: [PATCH RESEND 0/4] Add support for HiSilicon PCIe Tune and Trace
- device
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>,
+        id S240304AbhDSNPR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Apr 2021 09:15:17 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:16603 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239980AbhDSNNh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Apr 2021 09:13:37 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FP6d05Hd3z1BGKt;
+        Mon, 19 Apr 2021 21:10:44 +0800 (CST)
+Received: from [127.0.0.1] (10.69.38.196) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.498.0; Mon, 19 Apr 2021
+ 21:12:57 +0800
+Subject: Re: [PATCH RESEND 3/4] docs: Add HiSilicon PTT device driver
+ documentation
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>
-CC:     <helgaas@kernel.org>, <gregkh@linuxfoundation.org>,
-        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <leo.yan@linaro.org>, <jonathan.cameron@huawei.com>,
-        <song.bao.hua@hisilicon.com>, <john.garry@huawei.com>,
-        <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <gregkh@linuxfoundation.org>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <song.bao.hua@hisilicon.com>,
+        <john.garry@huawei.com>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>
 References: <1618654631-42454-1-git-send-email-yangyicong@hisilicon.com>
- <8735vpf20c.fsf@ashishki-desk.ger.corp.intel.com>
+ <1618654631-42454-4-git-send-email-yangyicong@hisilicon.com>
+ <20210419090750.g6aeyyrki7fiotxl@maple.lan>
 From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <628f2f4a-03ce-a646-bf27-d6836baca425@hisilicon.com>
-Date:   Mon, 19 Apr 2021 21:03:18 +0800
+Message-ID: <e884000f-3131-490b-eb0c-bc82ed642a85@hisilicon.com>
+Date:   Mon, 19 Apr 2021 21:12:57 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <8735vpf20c.fsf@ashishki-desk.ger.corp.intel.com>
+In-Reply-To: <20210419090750.g6aeyyrki7fiotxl@maple.lan>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.69.38.196]
@@ -48,77 +50,101 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/4/17 21:56, Alexander Shishkin wrote:
-> Yicong Yang <yangyicong@hisilicon.com> writes:
-> 
->> The reason for not using perf is because there is no current support
->> for uncore tracing in the perf facilities.
-> 
-> Not unless you count
-> 
-> $ perf list|grep -ic uncore
-> 77
-> 
-
-these are uncore events probably do not support sampling.
-
-I tried on x86:
-
-# ./perf record -e uncore_imc_0/cas_count_read/
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_imc_0/cas_count_read/).
-/bin/dmesg | grep -i perf may provide additional information.
-
-For HiSilicon uncore PMUs, we don't support uncore sampling:
-
-'The current driver does not support sampling. So "perf record" is unsupported. ' [1]
-
-and also in another PMU:
-
-'PMU doesn't support process specific events and cannot be used in sampling mode.' [2]
-
-[1] Documentation/admin-guide/perf/hisi-pmu.rst
-[2] Documentation/admin-guide/perf/arm_dsu_pmu.rst
-
->> We have our own format
->> of data and don't need perf doing the parsing.
-> 
-> Perf has AUX buffers, which are used for all kinds of own formats.
-> 
-
-ok. we thought perf will break the data format but AUX buffers seems won't.
-do we need to add full support for tracing as well as parsing or it's ok for
-not parsing it through perf?
-
->> A similar approach for implementing this function is ETM, which use
->> sysfs for configuring and a character device for dumping data.
-> 
-> And also perf. One reason ETM has a sysfs interface is because the
-> driver predates perf's AUX buffers. Can't say if it's the only
-> reason. I'm assuming you're talking about Coresight ETM.
-> 
-
-got it. thanks.
-
->> Greg has some comments on our implementation and doesn't advocate
->> to build driver on debugfs [1]. So I resend this series to
->> collect more feedbacks on the implementation of this driver.
+On 2021/4/19 17:07, Daniel Thompson wrote:
+> On Sat, Apr 17, 2021 at 06:17:10PM +0800, Yicong Yang wrote:
+>> Document the introduction and usage of HiSilicon PTT device driver.
 >>
->> Hi perf and ETM related experts, is it suggested to adapt this driver
->> to perf? Or is the debugfs approach acceptable? Otherwise use
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>  Documentation/trace/hisi-ptt.rst | 326 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 326 insertions(+)
+>>  create mode 100644 Documentation/trace/hisi-ptt.rst
+>>
+>> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+>> new file mode 100644
+>> index 0000000..f093846
+>> --- /dev/null
+>> +++ b/Documentation/trace/hisi-ptt.rst
+>> @@ -0,0 +1,326 @@
+>> [...]
+>> +On Kunpeng 930 SoC, the PCIe Root Complex is composed of several
+>> +PCIe cores. Each PCIe core includes several Root Ports and a PTT
+>> +RCiEP, like below. The PTT device is capable of tuning and
+>> +tracing the link of the PCIe core.
+>> +::
+>> +          +--------------Core 0-------+
+>> +          |       |       [   PTT   ] |
+>> +          |       |       [Root Port]---[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint]
+>> +    Root Complex  |------Core 1-------+
+>> +          |       |       [   PTT   ] |
+>> +          |       |       [Root Port]---[ Switch ]---[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint] `-[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint]
+>> +          +---------------------------+
+>> +
+>> +The PTT device driver cannot be loaded if debugfs is not mounted.
 > 
-> Aside from the above, I don't think the use of debugfs for kernel ABIs
-> is ever encouraged.
+> This can't be right can it? Obviously debugfs must be enabled but why
+> mounted?
 > 
 
-ok. thanks for the suggestions.
+just mention the limit as I'm not sure it's always be mounted.
+
+> 
+>> +Each PTT device will be presented under /sys/kernel/debugfs/hisi_ptt
+>> +as its root directory, with name of its BDF number.
+>> +::
+>> +
+>> +    /sys/kernel/debug/hisi_ptt/<domain>:<bus>:<device>.<function>
+>> +
+>> +Tune
+>> +====
+>> +
+>> +PTT tune is designed for monitoring and adjusting PCIe link parameters (events).
+>> +Currently we support events in 4 classes. The scope of the events
+>> +covers the PCIe core to which the PTT device belongs.
+>> +
+>> +Each event is presented as a file under $(PTT root dir)/$(BDF)/tune, and
+>> +mostly a simple open/read/write/close cycle will be used to tune
+>> +the event.
+>> +::
+>> +    $ cd /sys/kernel/debug/hisi_ptt/$(BDF)/tune
+>> +    $ ls
+>> +    qos_tx_cpl    qos_tx_np    qos_tx_p
+>> +    tx_path_rx_req_alloc_buf_level
+>> +    tx_path_tx_req_alloc_buf_level
+>> +    $ cat qos_tx_dp
+>> +    1
+>> +    $ echo 2 > qos_tx_dp
+>> +    $ cat qos_tx_dp
+>> +    2
+>> +
+>> +Current value (numerical value) of the event can be simply read
+>> +from the file, and the desired value written to the file to tune.
+> 
+> I saw that this RFC asks about whether debugfs is an appropriate
+> interface for the *tracing* capability of the platform. Have similar
+> questions been raised about the tuning interfaces?
+> 
+
+yes. as well.
+
+> It looks to me like tuning could be handled entirely using sysfs
+> attributes. I think trying to handle these mostly decoupled feature
+> in the same place is likely to be a mistake.
+> 
+
+Tuning and tracing are two separate functions and it does make sense
+to decouple them. Thanks for the advice, we can make tuning using
+sysfs attributes as debugfs is not encouraged.
 
 Regards,
 Yicong
 
-> Regards,
-> --
-> Ale
+> 
+> Daniel.
 > 
 > .
 > 
