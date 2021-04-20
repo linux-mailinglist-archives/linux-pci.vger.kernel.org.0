@@ -2,97 +2,278 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97210366163
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 23:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 590F436622D
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 00:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233882AbhDTVJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Apr 2021 17:09:49 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:53189 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233682AbhDTVJt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Apr 2021 17:09:49 -0400
-Received: by mail-wm1-f54.google.com with SMTP id y204so19607587wmg.2
-        for <linux-pci@vger.kernel.org>; Tue, 20 Apr 2021 14:09:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JTRCOmXX1jOykQZsnt0iXQ7ZwVNHOLdtcHQQb1R69D0=;
-        b=nA66ybTZr5tss1/AWPsGD9PTRXM162cALXc5LHl3K9c0A+XR1+4/uQ7ogRgVxlMS2L
-         IR0WKZJSZGO8+As2Lx4T3YlhkAcPmzckNydpRfd5a8cHtb2GFeTlonV/xzHSr/oMCIba
-         DEumFwo9JULxCKzLWhj5hhBylJ3vMcZzfBz5FmsXW8ShgtgSJpgrD+LFpfSJEqO1qdtJ
-         Vr/dU82NUNQUeF/R5J2dd+ImZ6WIeSBwDt5i/f914nquqMne+hrSz8em1mprRujXykXO
-         +Q6tmOpSMt5nTbV+/Vy+/OAPYlFz44Yul/QN6GyibVz+W2lXLltZC+UXt6kyODFMBcCK
-         Ov7w==
-X-Gm-Message-State: AOAM531jBgcTcUCu6nR3zTGooDVDj70pzulNo4Ywz9JU7Bh4kqOicLnn
-        khW5phjuBzeLfMS1StrN6uM=
-X-Google-Smtp-Source: ABdhPJzw5JgDgJXAOvzOFEJsDiiJUG9jUd6moFrO1EgkxsvTbuknAyyRPTI1S6FvrJA+f7k3srN5hQ==
-X-Received: by 2002:a1c:35c6:: with SMTP id c189mr6183632wma.127.1618952955413;
-        Tue, 20 Apr 2021 14:09:15 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id v8sm229616wrt.71.2021.04.20.14.09.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Apr 2021 14:09:15 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] x86/PCI: Remove unused assignment to variable info
-Date:   Tue, 20 Apr 2021 21:09:13 +0000
-Message-Id: <20210420210913.1137116-1-kw@linux.com>
-X-Mailer: git-send-email 2.31.0
+        id S234158AbhDTWfU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Apr 2021 18:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233964AbhDTWfU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Apr 2021 18:35:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4731861401;
+        Tue, 20 Apr 2021 22:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618958088;
+        bh=mOdMYZl26/NOZWPNIO9NmvmkA7iXHbO5ZbM5OlOhJyM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UAQY+BL1k7rdXPpPvgQJgrM8geVQzuys0slJrTAdT7UuqrUiOBVtqFrBW+ElljARL
+         yvNlamYTz7mTbZZ7HYf27F3FFL9cRKUw4w0W72LQtOEzh4LdCvJN21TLhwK6s6SipP
+         ONsy/FmdBUEAceLTfZkYuT9ts4sg+nmeTAZEBtFqUyRU1NpKHCnXWb9XsKC6VjVPE4
+         apnsh022cPpsuUndcYBm8GrzZYzvVT+fHeUGjFfsfK27xwdC0AA3+o6S6YH6qTDnEG
+         F/kV3G2E5ZUs8FDEeUVOYEXMhrNQhgumVLOsJOrd9sT9hbMyJmtedJ+5Mborxx3yj3
+         6F3umTtEVmxpw==
+Received: by mail-qk1-f174.google.com with SMTP id 66so1553492qkf.2;
+        Tue, 20 Apr 2021 15:34:48 -0700 (PDT)
+X-Gm-Message-State: AOAM532j6vocPVM3BjLABlt+HqNiRdKvH7/KX4/yuaBAFH/m1gT/+Hbw
+        mhRKC8cMlGnLD2PITD3C679i0BrGk4aTUMWQRQ==
+X-Google-Smtp-Source: ABdhPJy10+HqQKmcie6cSAKhZUBGN3k1UWCcvqC9FDITLEQDDTu1Rf0nYi5UC6N88wAkUE0CAVsmU4z6sgJ4wuehLfA=
+X-Received: by 2002:a05:620a:1642:: with SMTP id c2mr13807588qko.311.1618958087193;
+ Tue, 20 Apr 2021 15:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20210415180050.373791-1-leobras.c@gmail.com> <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
+ <7b089cd48b90f2445c7cb80da1ce8638607c46fc.camel@gmail.com>
+ <CAL_Jsq+m6CkGj_NYGvwxoKwoQ4PkEu6hfGdMTT3i4APoHSkNeg@mail.gmail.com>
+ <b875ef1778e17a87ee1f4b71d26f2782831b1d07.camel@gmail.com>
+ <CAL_JsqK83MFqZ4yCz+i7sunpXFmi+vvjCSxVmcCh1YG=mOxY9A@mail.gmail.com> <b56b8a5c8f02a2afea9554ebf16a423c182a9fc3.camel@gmail.com>
+In-Reply-To: <b56b8a5c8f02a2afea9554ebf16a423c182a9fc3.camel@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Apr 2021 17:34:36 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJXKVUFh9KrJjobn-jE-PFKN0w-V_i3qkfBrpTah4g8Xw@mail.gmail.com>
+Message-ID: <CAL_JsqJXKVUFh9KrJjobn-jE-PFKN0w-V_i3qkfBrpTah4g8Xw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] of/pci: Add IORESOURCE_MEM_64 to resource flags for
+ 64-bit memory addresses
+To:     Leonardo Bras <leobras.c@gmail.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The value returned from the alloc_pci_root_info() function that is
-assigned to the "info" variable within the loop body is never used for
-anything once the loop finishes its run, and it is overridden later
-within another loop body where the value returned from the
-find_pci_root_info() will be assigned to it.
+On Mon, Apr 19, 2021 at 9:03 PM Leonardo Bras <leobras.c@gmail.com> wrote:
+>
+> On Mon, 2021-04-19 at 20:39 -0500, Rob Herring wrote:
+> > On Mon, Apr 19, 2021 at 7:35 PM Leonardo Bras <leobras.c@gmail.com> wrote:
+> > >
+> > > On Mon, 2021-04-19 at 10:44 -0500, Rob Herring wrote:
+> > > > On Fri, Apr 16, 2021 at 3:58 PM Leonardo Bras <leobras.c@gmail.com> wrote:
+> > > > >
+> > > > > Hello Rob, thanks for this feedback!
+> > > > >
+> > > > > On Thu, 2021-04-15 at 13:59 -0500, Rob Herring wrote:
+> > > > > > +PPC and PCI lists
+> > > > > >
+> > > > > > On Thu, Apr 15, 2021 at 1:01 PM Leonardo Bras <leobras.c@gmail.com> wrote:
+> > > > > > >
+> > > > > > > Many other resource flag parsers already add this flag when the input
+> > > > > > > has bits 24 & 25 set, so update this one to do the same.
+> > > > > >
+> > > > > > Many others? Looks like sparc and powerpc to me.
+> > > > > >
+> > > > >
+> > > > > s390 also does that, but it look like it comes from a device-tree.
+> > > >
+> > > > I'm only looking at DT based platforms, and s390 doesn't use DT.
+> > >
+> > > Correct.
+> > > Sorry, I somehow write above the opposite of what I was thinking.
+> > >
+> > > >
+> > > > > > Those would be the
+> > > > > > ones I worry about breaking. Sparc doesn't use of/address.c so it's
+> > > > > > fine. Powerpc version of the flags code was only fixed in 2019, so I
+> > > > > > don't think powerpc will care either.
+> > > > >
+> > > > > In powerpc I reach this function with this stack, while configuring a
+> > > > > virtio-net device for a qemu/KVM pseries guest:
+> > > > >
+> > > > > pci_process_bridge_OF_ranges+0xac/0x2d4
+> > > > > pSeries_discover_phbs+0xc4/0x158
+> > > > > discover_phbs+0x40/0x60
+> > > > > do_one_initcall+0x60/0x2d0
+> > > > > kernel_init_freeable+0x308/0x3a8
+> > > > > kernel_init+0x2c/0x168
+> > > > > ret_from_kernel_thread+0x5c/0x70
+> > > > >
+> > > > > For this, both MMIO32 and MMIO64 resources will have flags 0x200.
+> > > >
+> > > > Oh good, powerpc has 2 possible flags parsing functions. So in the
+> > > > above path, do we need to set PCI_BASE_ADDRESS_MEM_TYPE_64?
+> > > >
+> > > > Does pci_parse_of_flags() get called in your case?
+> > > >
+> > >
+> > > It's called in some cases, but not for the device I am debugging
+> > > (virtio-net pci@800000020000000).
+> > >
+> > > For the above device, here is an expanded stack trace:
+> > >
+> > > of_bus_pci_get_flags() (from parser->bus->get_flags())
+> > > of_pci_range_parser_one() (from macro for_each_of_pci_range)
+> > > pci_process_bridge_OF_ranges+0xac/0x2d4
+> > > pSeries_discover_phbs+0xc4/0x158
+> > > discover_phbs+0x40/0x60
+> > > do_one_initcall+0x60/0x2d0
+> > > kernel_init_freeable+0x308/0x3a8
+> > > kernel_init+0x2c/0x168
+> > > ret_from_kernel_thread+0x5c/0x70
+> > >
+> > > For other devices, I could also see the following stack trace:
+> > > ## device ethernet@8
+> > >
+> > > pci_parse_of_flags()
+> > > of_create_pci_dev+0x7f0/0xa40
+> > > __of_scan_bus+0x248/0x320
+> > > pcibios_scan_phb+0x370/0x3b0
+> > > pcibios_init+0x8c/0x12c
+> > > do_one_initcall+0x60/0x2d0
+> > > kernel_init_freeable+0x308/0x3a8
+> > > kernel_init+0x2c/0x168
+> > > ret_from_kernel_thread+0x5c/0x70
+> > >
+> > > Devices that get parsed with of_bus_pci_get_flags() appears first at
+> > > dmesg (around 0.015s in my test), while devices that get parsed by
+> > > pci_parse_of_flags() appears later (0.025s in my test).
+> > >
+> > > I am not really used to this code, but having the term "discover phbs"
+> > > in the first trace and the term "scan phb" in the second, makes me
+> > > wonder if the first trace is seen on devices that are seen/described in
+> > > the device-tree and the second trace is seen in devices not present in
+> > > the device-tree and found scanning pci bus.
+> >
+> > That was my guess as well. I think on pSeries that most PCI devices
+> > are in the DT whereas on Arm and other flattened DT (non OpenFirmware)
+> > platforms PCI devices are not in DT.
+> >
+>
+> It makes sense to me.
+>
+> >  Of course, for virtio devices,
+> > they would not be in DT in either case.
+>
+> I don't get this part... in pseries it looks like virtio devices can be
+> in device-tree.
+>
+> Oh, I think I get it... this pci@800000020000000 looks like a bus
+> (described in device-tree, so discovered), and then the devices are
+> inside it, getting scanned.
+>
+> The virtio device gets the correct flags (from pci_parse_of_flags), but
+> the bus (pci@800000020000000) does not seem to get it correctly,
+> because it comes from of_bus_pci_get_flags() which makes sense
+> according to the name of the function.
+>
+> (see lspci bellow, output without patch)
+>
+>
+> 00:08.0 Ethernet controller: Red Hat, Inc. Virtio network device (rev
+> 01)
+>         Subsystem: Red Hat, Inc. Device 1100
+>         Device tree node:
+> /sys/firmware/devicetree/base/pci@800000020000000/ethernet@8
+>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR+ FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin A routed to IRQ 19
+>         IOMMU group: 0
+>         Region 1: Memory at 200080020000 (32-bit, non-prefetchable)
+> [size=4K]
+>         Region 4: Memory at 210000010000 (64-bit, prefetchable)
+> [size=16K]
+>         Expansion ROM at 200080040000 [disabled] [size=256K]
+>         Capabilities: [98] MSI-X: Enable+ Count=3 Masked-
+>                 Vector table: BAR=1 offset=00000000
+>                 PBA: BAR=1 offset=00000800
+>         Capabilities: [84] Vendor Specific Information: VirtIO:
+> <unknown>
+>                 BAR=0 offset=00000000 size=00000000
+>         Capabilities: [70] Vendor Specific Information: VirtIO: Notify
+>                 BAR=4 offset=00003000 size=00001000 multiplier=00000004
+>         Capabilities: [60] Vendor Specific Information: VirtIO:
+> DeviceCfg
+>                 BAR=4 offset=00002000 size=00001000
+>         Capabilities: [50] Vendor Specific Information: VirtIO: ISR
+>                 BAR=4 offset=00001000 size=00001000
+>         Capabilities: [40] Vendor Specific Information: VirtIO:
+> CommonCfg
+>                 BAR=4 offset=00000000 size=00001000
+>         Kernel driver in use: virtio-pci
+>
+>
+> >
+> > > > > > I noticed both sparc and powerpc set PCI_BASE_ADDRESS_MEM_TYPE_64 in
+> > > > > > the flags. AFAICT, that's not set anywhere outside of arch code. So
+> > > > > > never for riscv, arm and arm64 at least. That leads me to
+> > > > > > pci_std_update_resource() which is where the PCI code sets BARs and
+> > > > > > just copies the flags in PCI_BASE_ADDRESS_MEM_MASK ignoring
+> > > > > > IORESOURCE_* flags. So it seems like 64-bit is still not handled and
+> > > > > > neither is prefetch.
+> > > > > >
+> > > > >
+> > > > > I am not sure if you mean here:
+> > > > > a) it's ok to add IORESOURCE_MEM_64 here, because it does not affect
+> > > > > anything else, or
+> > > > > b) it should be using PCI_BASE_ADDRESS_MEM_TYPE_64
+> > > > > (or IORESOURCE_MEM_64 | PCI_BASE_ADDRESS_MEM_TYPE_64) instead, since
+> > > > > it's how it's added in powerpc/sparc, and else there is no point.
+> > > >
+> > > > I'm wondering if a) is incomplete and PCI_BASE_ADDRESS_MEM_TYPE_64
+> > > > also needs to be set. The question is ultimately are BARs getting set
+> > > > correctly for 64-bit? It looks to me like they aren't.
+> > >
+> > > I am not used to these terms, does BAR means 'Base Address Register'?
+> >
+> > Yes. Standard PCI thing.
+>
+> Nice :)
+>
+> >
+> > > If so, those are the addresses stored in pci->phb->mem_resources[i] and
+> > > pci->phb->mem_offset[i], printed from enable_ddw() (which takes place a
+> > > lot after discovering the device (0.17s in my run)).
+> > >
+> > > resource #1 pci@800000020000000: start=0x200080000000
+> > > end=0x2000ffffffff flags=0x200 desc=0x0 offset=0x200000000000
+> > > resource #2 pci@800000020000000: start=0x210000000000
+> > > end=0x21ffffffffff flags=0x200 desc=0x0 offset=0x0
+> > >
+> > > The message above was printed without this patch.
+> > > With the patch, the flags for memory resource #2 gets ORed with
+> > > 0x00100000.
+> >
+> > Right, as expected.
+> >
+> > > Is it enough to know if BARs are correctly set for 64-bit?
+> >
+> > No, because AFAICT, bit 2 in the BAR would not be set.
+> >
+> > > If it's not, how can I check?
+> >
+> > Can you try 'lspci -vv' and look at the 'Region X:' lines which will
+> > say 32 or 64-bit. I *think* that should reflect what actually got
+> > written into the BARs.
+>
+> As seen in the lspci from above comment:
+> Region 1: Memory at 200080020000 (32-bit, non-prefetchable) [size=4K]
+> Region 4: Memory at 210000010000 (64-bit, prefetchable) [size=16K]
+>
+> So it seems to be getting configured properly.
+>
+> I think the point here is bus resources not getting the MEM_64 flag,
+> but device resources getting it correctly. Is that supposed to happen?
 
-When the function alloc_pci_root_info() is executed within the body of
-the first loop, it would allocate a new struct pci_root_info and then
-store pointer to it in a global linked list called "pci_root_infos",
-thus the value that the "info" variable would contain after the loop
-finishes would reference the struct pci_root_info that was allocated the
-last, thus it might not necessarily be of use.
+I experimented with this on Arm with qemu and it seems fine there too.
+Looks like the BARs are first read and will have bit 2 set by default
+(or hardwired?). Now I'm just wondering why powerpc needs the code it
+has...
 
-Additionally, the function find_pci_root_info() can be used to find and
-retrieve the relevant pci_root_info stored on the aforementioned linked
-list.
+Anyways, I'll apply the patch.
 
-Since the value of the "info" variable following the first loop is never
-used in any meaningful way the assigned can be removed.
-
-Related:
-  commit d28e5ac2a07e ("x86/PCI: dynamically allocate pci_root_info for native host bridge drivers")
-  commit a10bb128b64f ("x86/PCI: put busn resource in pci_root_info for native host bridge drivers")
-
-Addresses-Coverity-ID: 1222153 ("Unused value")
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- arch/x86/pci/amd_bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
-index bfa50e65ef6c..ae744b6a0785 100644
---- a/arch/x86/pci/amd_bus.c
-+++ b/arch/x86/pci/amd_bus.c
-@@ -126,7 +126,7 @@ static int __init early_root_info_init(void)
- 		node = (reg >> 4) & 0x07;
- 		link = (reg >> 8) & 0x03;
- 
--		info = alloc_pci_root_info(min_bus, max_bus, node, link);
-+		alloc_pci_root_info(min_bus, max_bus, node, link);
- 	}
- 
- 	/*
--- 
-2.31.0
-
+Rob
