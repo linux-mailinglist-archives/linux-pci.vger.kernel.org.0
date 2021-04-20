@@ -2,296 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3B9365014
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 04:03:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8BDC365018
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 04:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbhDTCDk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Apr 2021 22:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbhDTCDj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Apr 2021 22:03:39 -0400
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EB9C06174A;
-        Mon, 19 Apr 2021 19:03:03 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id j3so17905256qvs.1;
-        Mon, 19 Apr 2021 19:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=fHhMp1izLsGzJ/KHQOE6VnVJl5ZHajURFxKM6P2mHok=;
-        b=C0S3+dtiWhekGRCm+71p/U4cmNShTOFOOyDn9hkvzfDLTZM+KS0Vd1fg7YyzBinztT
-         gjVzasMXfxI0d8Ug91Y1x5xAsLkdMnXTn0ikhRVfMf1AeydNUWCPefRaYuceRvfX1GYl
-         p9NFNk9Nn5MMrTV0ckVIJK1UvOZzweHkQqV+W5VtxIT0kqdKBT0MpEIQV6ARdAOvkZtM
-         yBexaTMs22OBcucNzFB9Rv0xv5BzKWiMk97ZgW8ZnKWXoSV/qoV5tgB/dEbskEj7RRlk
-         HhOqLeaokxleDTpTdOeizJScvOrN4xAv8M9yemkAIY1rwt/zeSD716tcbS7Dlxo5rpMR
-         vx+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=fHhMp1izLsGzJ/KHQOE6VnVJl5ZHajURFxKM6P2mHok=;
-        b=RqXEYpxFbIUFPbb6VEvbX8J/OR3fMvVDIHiHYwFe47S8j6gbZftFxhsxCnnzaGhOte
-         blKHGciI5xqQvO6/Rh4YaYMVg9qeN9/9UPacWu4WiRP5BTu1vN2CH52u0O7nXlsn/RM1
-         Nr/qMxSRMqTc2Fz8QZQUwo7Ec7bId4pvUp1MiOYB6jTD2ikBrjIdx91ssdVUvY2H8J9g
-         pSxP6TddjcfPdjHsBBJD9G+LpxouC/kzIuhEwdcTA8sonUYVvnC7watmYWfLzH0sjfa+
-         Y0e7Kw8Sw/2sevu93UTmcxwHxufuPxmW21y+8J9zGFJm76RPceZDIanF6rpkSO2UFNKH
-         rjKA==
-X-Gm-Message-State: AOAM533Vtw1Y/5iMRbH19f51Z0ux7+P7D9RJrrrfCT8a7NXLZxc+/2Ss
-        DlwPlv6iGNZXO3mTTpo36emwTfEaoFM=
-X-Google-Smtp-Source: ABdhPJxZ2VJ3svnFSsoxgK/eD1pa/4UxgkQsYwnbL8HHMGvLd/1M6htGOoqlrCctiyPnMtMuosi5ig==
-X-Received: by 2002:a05:6214:4ac:: with SMTP id w12mr20049754qvz.40.1618884182429;
-        Mon, 19 Apr 2021 19:03:02 -0700 (PDT)
-Received: from li-908e0a4c-2250-11b2-a85c-f027e903211b.ibm.com ([177.35.200.187])
-        by smtp.gmail.com with ESMTPSA id c29sm3543001qtv.93.2021.04.19.19.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Apr 2021 19:03:01 -0700 (PDT)
-Message-ID: <b56b8a5c8f02a2afea9554ebf16a423c182a9fc3.camel@gmail.com>
-Subject: Re: [PATCH 1/1] of/pci: Add IORESOURCE_MEM_64 to resource flags for
- 64-bit memory addresses
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Date:   Mon, 19 Apr 2021 23:02:58 -0300
-In-Reply-To: <CAL_JsqK83MFqZ4yCz+i7sunpXFmi+vvjCSxVmcCh1YG=mOxY9A@mail.gmail.com>
-References: <20210415180050.373791-1-leobras.c@gmail.com>
-         <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
-         <7b089cd48b90f2445c7cb80da1ce8638607c46fc.camel@gmail.com>
-         <CAL_Jsq+m6CkGj_NYGvwxoKwoQ4PkEu6hfGdMTT3i4APoHSkNeg@mail.gmail.com>
-         <b875ef1778e17a87ee1f4b71d26f2782831b1d07.camel@gmail.com>
-         <CAL_JsqK83MFqZ4yCz+i7sunpXFmi+vvjCSxVmcCh1YG=mOxY9A@mail.gmail.com>
-Organization: IBM
+        id S233342AbhDTCGY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Apr 2021 22:06:24 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:60999 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229534AbhDTCGX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Apr 2021 22:06:23 -0400
+X-UUID: a621cc90d6e44dd98733707a5bf2256c-20210420
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Z09ggkvCRJiJ4/N9vlMDVPDlpKZyre12NKJNa+h4uZw=;
+        b=el27YFigHbltheeF4/OrPPrBwGB/2mHaIOAp+PXxxgVwIwshaC+8F2fLog3fC3+dmQCMX7EyKm+58C8AYmUb45XQO84O5L5U/yEorDJvd8tJkOn/DHmhouO+WbN6CfSW7kGufDz/ySduHg1FBDIHofn4NGgElDwv01qVdnZqcYE=;
+X-UUID: a621cc90d6e44dd98733707a5bf2256c-20210420
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 127489997; Tue, 20 Apr 2021 10:05:44 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 20 Apr
+ 2021 10:05:39 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 20 Apr 2021 10:05:38 +0800
+Message-ID: <1618884338.29460.3.camel@mhfsdcap03>
+Subject: Re: [v9,0/7] PCI: mediatek: Add new generation controller support
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <sin_jieyang@mediatek.com>, <drinkcat@chromium.org>,
+        <Rex-BC.Chen@mediatek.com>, <anson.chuang@mediatek.com>,
+        Krzysztof Wilczyski <kw@linux.com>,
+        Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Date:   Tue, 20 Apr 2021 10:05:38 +0800
+In-Reply-To: <20210419104432.GA2427@lpieralisi>
+References: <20210324030510.29177-1-jianjun.wang@mediatek.com>
+         <20210416192100.GA2745484@bjorn-Precision-5520>
+         <20210419104432.GA2427@lpieralisi>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: B45CF740E0F6667A28FE967807155FA258A3BB8BAE458FD2526271E6569C26AC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2021-04-19 at 20:39 -0500, Rob Herring wrote:
-> On Mon, Apr 19, 2021 at 7:35 PM Leonardo Bras <leobras.c@gmail.com> wrote:
-> > 
-> > On Mon, 2021-04-19 at 10:44 -0500, Rob Herring wrote:
-> > > On Fri, Apr 16, 2021 at 3:58 PM Leonardo Bras <leobras.c@gmail.com> wrote:
-> > > > 
-> > > > Hello Rob, thanks for this feedback!
-> > > > 
-> > > > On Thu, 2021-04-15 at 13:59 -0500, Rob Herring wrote:
-> > > > > +PPC and PCI lists
-> > > > > 
-> > > > > On Thu, Apr 15, 2021 at 1:01 PM Leonardo Bras <leobras.c@gmail.com> wrote:
-> > > > > > 
-> > > > > > Many other resource flag parsers already add this flag when the input
-> > > > > > has bits 24 & 25 set, so update this one to do the same.
-> > > > > 
-> > > > > Many others? Looks like sparc and powerpc to me.
-> > > > > 
-> > > > 
-> > > > s390 also does that, but it look like it comes from a device-tree.
-> > > 
-> > > I'm only looking at DT based platforms, and s390 doesn't use DT.
-> > 
-> > Correct.
-> > Sorry, I somehow write above the opposite of what I was thinking.
-> > 
-> > > 
-> > > > > Those would be the
-> > > > > ones I worry about breaking. Sparc doesn't use of/address.c so it's
-> > > > > fine. Powerpc version of the flags code was only fixed in 2019, so I
-> > > > > don't think powerpc will care either.
-> > > > 
-> > > > In powerpc I reach this function with this stack, while configuring a
-> > > > virtio-net device for a qemu/KVM pseries guest:
-> > > > 
-> > > > pci_process_bridge_OF_ranges+0xac/0x2d4
-> > > > pSeries_discover_phbs+0xc4/0x158
-> > > > discover_phbs+0x40/0x60
-> > > > do_one_initcall+0x60/0x2d0
-> > > > kernel_init_freeable+0x308/0x3a8
-> > > > kernel_init+0x2c/0x168
-> > > > ret_from_kernel_thread+0x5c/0x70
-> > > > 
-> > > > For this, both MMIO32 and MMIO64 resources will have flags 0x200.
-> > > 
-> > > Oh good, powerpc has 2 possible flags parsing functions. So in the
-> > > above path, do we need to set PCI_BASE_ADDRESS_MEM_TYPE_64?
-> > > 
-> > > Does pci_parse_of_flags() get called in your case?
-> > > 
-> > 
-> > It's called in some cases, but not for the device I am debugging
-> > (virtio-net pci@800000020000000).
-> > 
-> > For the above device, here is an expanded stack trace:
-> > 
-> > of_bus_pci_get_flags() (from parser->bus->get_flags())
-> > of_pci_range_parser_one() (from macro for_each_of_pci_range)
-> > pci_process_bridge_OF_ranges+0xac/0x2d4
-> > pSeries_discover_phbs+0xc4/0x158
-> > discover_phbs+0x40/0x60
-> > do_one_initcall+0x60/0x2d0
-> > kernel_init_freeable+0x308/0x3a8
-> > kernel_init+0x2c/0x168
-> > ret_from_kernel_thread+0x5c/0x70
-> > 
-> > For other devices, I could also see the following stack trace:
-> > ## device ethernet@8
-> > 
-> > pci_parse_of_flags()
-> > of_create_pci_dev+0x7f0/0xa40
-> > __of_scan_bus+0x248/0x320
-> > pcibios_scan_phb+0x370/0x3b0
-> > pcibios_init+0x8c/0x12c
-> > do_one_initcall+0x60/0x2d0
-> > kernel_init_freeable+0x308/0x3a8
-> > kernel_init+0x2c/0x168
-> > ret_from_kernel_thread+0x5c/0x70
-> > 
-> > Devices that get parsed with of_bus_pci_get_flags() appears first at
-> > dmesg (around 0.015s in my test), while devices that get parsed by
-> > pci_parse_of_flags() appears later (0.025s in my test).
-> > 
-> > I am not really used to this code, but having the term "discover phbs"
-> > in the first trace and the term "scan phb" in the second, makes me
-> > wonder if the first trace is seen on devices that are seen/described in
-> > the device-tree and the second trace is seen in devices not present in
-> > the device-tree and found scanning pci bus.
-> 
-> That was my guess as well. I think on pSeries that most PCI devices
-> are in the DT whereas on Arm and other flattened DT (non OpenFirmware)
-> platforms PCI devices are not in DT.
-> 
-
-It makes sense to me. 
-
->  Of course, for virtio devices,
-> they would not be in DT in either case.
-
-I don't get this part... in pseries it looks like virtio devices can be
-in device-tree.
-
-Oh, I think I get it... this pci@800000020000000 looks like a bus
-(described in device-tree, so discovered), and then the devices are
-inside it, getting scanned.
-
-The virtio device gets the correct flags (from pci_parse_of_flags), but
-the bus (pci@800000020000000) does not seem to get it correctly,
-because it comes from of_bus_pci_get_flags() which makes sense
-according to the name of the function.
-
-(see lspci bellow, output without patch)
-
-
-00:08.0 Ethernet controller: Red Hat, Inc. Virtio network device (rev
-01)
-        Subsystem: Red Hat, Inc. Device 1100
-        Device tree node:
-/sys/firmware/devicetree/base/pci@800000020000000/ethernet@8
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-ParErr- Stepping- SERR+ FastB2B- DisINTx+
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0
-        Interrupt: pin A routed to IRQ 19
-        IOMMU group: 0
-        Region 1: Memory at 200080020000 (32-bit, non-prefetchable)
-[size=4K]
-        Region 4: Memory at 210000010000 (64-bit, prefetchable)
-[size=16K]
-        Expansion ROM at 200080040000 [disabled] [size=256K]
-        Capabilities: [98] MSI-X: Enable+ Count=3 Masked-
-                Vector table: BAR=1 offset=00000000
-                PBA: BAR=1 offset=00000800
-        Capabilities: [84] Vendor Specific Information: VirtIO:
-<unknown>
-                BAR=0 offset=00000000 size=00000000
-        Capabilities: [70] Vendor Specific Information: VirtIO: Notify
-                BAR=4 offset=00003000 size=00001000 multiplier=00000004
-        Capabilities: [60] Vendor Specific Information: VirtIO:
-DeviceCfg
-                BAR=4 offset=00002000 size=00001000
-        Capabilities: [50] Vendor Specific Information: VirtIO: ISR
-                BAR=4 offset=00001000 size=00001000
-        Capabilities: [40] Vendor Specific Information: VirtIO:
-CommonCfg
-                BAR=4 offset=00000000 size=00001000
-        Kernel driver in use: virtio-pci
-
-
-> 
-> > > > > I noticed both sparc and powerpc set PCI_BASE_ADDRESS_MEM_TYPE_64 in
-> > > > > the flags. AFAICT, that's not set anywhere outside of arch code. So
-> > > > > never for riscv, arm and arm64 at least. That leads me to
-> > > > > pci_std_update_resource() which is where the PCI code sets BARs and
-> > > > > just copies the flags in PCI_BASE_ADDRESS_MEM_MASK ignoring
-> > > > > IORESOURCE_* flags. So it seems like 64-bit is still not handled and
-> > > > > neither is prefetch.
-> > > > > 
-> > > > 
-> > > > I am not sure if you mean here:
-> > > > a) it's ok to add IORESOURCE_MEM_64 here, because it does not affect
-> > > > anything else, or
-> > > > b) it should be using PCI_BASE_ADDRESS_MEM_TYPE_64
-> > > > (or IORESOURCE_MEM_64 | PCI_BASE_ADDRESS_MEM_TYPE_64) instead, since
-> > > > it's how it's added in powerpc/sparc, and else there is no point.
-> > > 
-> > > I'm wondering if a) is incomplete and PCI_BASE_ADDRESS_MEM_TYPE_64
-> > > also needs to be set. The question is ultimately are BARs getting set
-> > > correctly for 64-bit? It looks to me like they aren't.
-> > 
-> > I am not used to these terms, does BAR means 'Base Address Register'?
-> 
-> Yes. Standard PCI thing.
-
-Nice :)
-
-> 
-> > If so, those are the addresses stored in pci->phb->mem_resources[i] and
-> > pci->phb->mem_offset[i], printed from enable_ddw() (which takes place a
-> > lot after discovering the device (0.17s in my run)).
-> > 
-> > resource #1 pci@800000020000000: start=0x200080000000
-> > end=0x2000ffffffff flags=0x200 desc=0x0 offset=0x200000000000
-> > resource #2 pci@800000020000000: start=0x210000000000
-> > end=0x21ffffffffff flags=0x200 desc=0x0 offset=0x0
-> > 
-> > The message above was printed without this patch.
-> > With the patch, the flags for memory resource #2 gets ORed with
-> > 0x00100000.
-> 
-> Right, as expected.
-> 
-> > Is it enough to know if BARs are correctly set for 64-bit?
-> 
-> No, because AFAICT, bit 2 in the BAR would not be set.
-> 
-> > If it's not, how can I check?
-> 
-> Can you try 'lspci -vv' and look at the 'Region X:' lines which will
-> say 32 or 64-bit. I *think* that should reflect what actually got
-> written into the BARs.
-
-As seen in the lspci from above comment:
-Region 1: Memory at 200080020000 (32-bit, non-prefetchable) [size=4K]
-Region 4: Memory at 210000010000 (64-bit, prefetchable) [size=16K]
-
-So it seems to be getting configured properly.
-
-I think the point here is bus resources not getting the MEM_64 flag,
-but device resources getting it correctly. Is that supposed to happen?
-
-> 
-> Rob
-
-Thanks Rob!
-
-Leonardo Bras
+T24gTW9uLCAyMDIxLTA0LTE5IGF0IDExOjQ0ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gRnJpLCBBcHIgMTYsIDIwMjEgYXQgMDI6MjE6MDBQTSAtMDUwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4gPiBPbiBXZWQsIE1hciAyNCwgMjAyMSBhdCAxMTowNTowM0FNICswODAw
+LCBKaWFuanVuIFdhbmcgd3JvdGU6DQo+ID4gPiBUaGVzZSBzZXJpZXMgcGF0Y2hlcyBhZGQgcGNp
+ZS1tZWRpYXRlay1nZW4zLmMgYW5kIGR0LWJpbmRpbmdzIGZpbGUgdG8NCj4gPiA+IHN1cHBvcnQg
+bmV3IGdlbmVyYXRpb24gUENJZSBjb250cm9sbGVyLg0KPiA+IA0KPiA+IEluY2lkZW50YWw6IGI0
+IGRvZXNuJ3Qgd29yayBvbiB0aGlzIHRocmVhZCwgSSBzdXNwZWN0IGJlY2F1c2UgdGhlDQo+ID4g
+dXN1YWwgc3ViamVjdCBsaW5lIGZvcm1hdCBpczoNCj4gPiANCj4gPiAgIFtQQVRDSCB2OSA5Lzdd
+DQo+ID4gDQo+ID4gaW5zdGVhZCBvZjoNCj4gPiANCj4gPiAgIFt2OSwwLzddDQo+ID4gDQo+ID4g
+Rm9yIGI0IGluZm8sIHNlZSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vdXRpbHMvYjQv
+YjQuZ2l0L3RyZWUvUkVBRE1FLnJzdA0KPiANCj4gSmlhbmp1biB3aWxsIHVwZGF0ZSB0aGUgc2Vy
+aWVzIGFjY29yZGluZ2x5IChhbmQgcGxlYXNlIGFkZCB0byB2MTAgdGhlDQo+IHJldmlldyB0YWdz
+IHlvdSByZWNlaXZlZC4NCj4gDQo+IExvcmVuem8NCg0KWWVzLCBJIHdpbGwgdXBkYXRlIHRoaXMg
+c2VyaWVzIGluIHYxMCB0byBmaXggdGhlIHN1YmplY3QgbGluZSBmb3JtYXQgYW5kDQp1c2UgRVhQ
+T1JUX1NZTUJPTF9HUEwoKSwgdGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KDQpUaGFua3MuDQoN
+Cg==
 
