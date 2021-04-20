@@ -2,77 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8BDC365018
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 04:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5AF336507F
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 04:51:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233342AbhDTCGY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Apr 2021 22:06:24 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:60999 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229534AbhDTCGX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Apr 2021 22:06:23 -0400
-X-UUID: a621cc90d6e44dd98733707a5bf2256c-20210420
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Z09ggkvCRJiJ4/N9vlMDVPDlpKZyre12NKJNa+h4uZw=;
-        b=el27YFigHbltheeF4/OrPPrBwGB/2mHaIOAp+PXxxgVwIwshaC+8F2fLog3fC3+dmQCMX7EyKm+58C8AYmUb45XQO84O5L5U/yEorDJvd8tJkOn/DHmhouO+WbN6CfSW7kGufDz/ySduHg1FBDIHofn4NGgElDwv01qVdnZqcYE=;
-X-UUID: a621cc90d6e44dd98733707a5bf2256c-20210420
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 127489997; Tue, 20 Apr 2021 10:05:44 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 20 Apr
- 2021 10:05:39 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 20 Apr 2021 10:05:38 +0800
-Message-ID: <1618884338.29460.3.camel@mhfsdcap03>
-Subject: Re: [v9,0/7] PCI: mediatek: Add new generation controller support
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
-        <sin_jieyang@mediatek.com>, <drinkcat@chromium.org>,
-        <Rex-BC.Chen@mediatek.com>, <anson.chuang@mediatek.com>,
-        Krzysztof Wilczyski <kw@linux.com>,
-        Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Date:   Tue, 20 Apr 2021 10:05:38 +0800
-In-Reply-To: <20210419104432.GA2427@lpieralisi>
-References: <20210324030510.29177-1-jianjun.wang@mediatek.com>
-         <20210416192100.GA2745484@bjorn-Precision-5520>
-         <20210419104432.GA2427@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: B45CF740E0F6667A28FE967807155FA258A3BB8BAE458FD2526271E6569C26AC2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        id S229579AbhDTCuK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Apr 2021 22:50:10 -0400
+Received: from mga05.intel.com ([192.55.52.43]:64046 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229508AbhDTCuK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Apr 2021 22:50:10 -0400
+IronPort-SDR: 0UlayDdUJWfk2YeLyjMNpR1kfzId1HhLio17rBpFch6WvYKNsYe9NlfCO7mKMPTqCyl9ujf40O
+ ehyRgiR6rpzA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9959"; a="280758686"
+X-IronPort-AV: E=Sophos;i="5.82,235,1613462400"; 
+   d="scan'208";a="280758686"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 19:49:39 -0700
+IronPort-SDR: rTnn6ycqI0aiWmbkDOqGJ7/a9qIe/xFdKLSNYge8jfGYHa47etVRhbcqrizoDTs9ywOI3wpqGF
+ hc1GlQ7pYg9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,235,1613462400"; 
+   d="scan'208";a="523636963"
+Received: from ipu5-build.bj.intel.com ([10.238.232.202])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Apr 2021 19:49:35 -0700
+From:   Bingbu Cao <bingbu.cao@intel.com>
+To:     linux-kernel@vger.kernel.org,
+        stable.vger.kernel.org@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
+        will@kernel.org, bhelgaas@google.com, rajatja@google.com,
+        grundler@chromium.org, tfiga@chromium.org,
+        senozhatsky@chromium.org, sakari.ailus@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, bingbu.cao@intel.com,
+        bingbu.cao@linux.intel.com
+Subject: [PATCH v2] iommu/vt-d: Use passthrough mode for the Intel IPUs
+Date:   Tue, 20 Apr 2021 10:42:36 +0800
+Message-Id: <1618886556-6412-1-git-send-email-bingbu.cao@intel.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIxLTA0LTE5IGF0IDExOjQ0ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gRnJpLCBBcHIgMTYsIDIwMjEgYXQgMDI6MjE6MDBQTSAtMDUwMCwgQmpvcm4gSGVs
-Z2FhcyB3cm90ZToNCj4gPiBPbiBXZWQsIE1hciAyNCwgMjAyMSBhdCAxMTowNTowM0FNICswODAw
-LCBKaWFuanVuIFdhbmcgd3JvdGU6DQo+ID4gPiBUaGVzZSBzZXJpZXMgcGF0Y2hlcyBhZGQgcGNp
-ZS1tZWRpYXRlay1nZW4zLmMgYW5kIGR0LWJpbmRpbmdzIGZpbGUgdG8NCj4gPiA+IHN1cHBvcnQg
-bmV3IGdlbmVyYXRpb24gUENJZSBjb250cm9sbGVyLg0KPiA+IA0KPiA+IEluY2lkZW50YWw6IGI0
-IGRvZXNuJ3Qgd29yayBvbiB0aGlzIHRocmVhZCwgSSBzdXNwZWN0IGJlY2F1c2UgdGhlDQo+ID4g
-dXN1YWwgc3ViamVjdCBsaW5lIGZvcm1hdCBpczoNCj4gPiANCj4gPiAgIFtQQVRDSCB2OSA5Lzdd
-DQo+ID4gDQo+ID4gaW5zdGVhZCBvZjoNCj4gPiANCj4gPiAgIFt2OSwwLzddDQo+ID4gDQo+ID4g
-Rm9yIGI0IGluZm8sIHNlZSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vdXRpbHMvYjQv
-YjQuZ2l0L3RyZWUvUkVBRE1FLnJzdA0KPiANCj4gSmlhbmp1biB3aWxsIHVwZGF0ZSB0aGUgc2Vy
-aWVzIGFjY29yZGluZ2x5IChhbmQgcGxlYXNlIGFkZCB0byB2MTAgdGhlDQo+IHJldmlldyB0YWdz
-IHlvdSByZWNlaXZlZC4NCj4gDQo+IExvcmVuem8NCg0KWWVzLCBJIHdpbGwgdXBkYXRlIHRoaXMg
-c2VyaWVzIGluIHYxMCB0byBmaXggdGhlIHN1YmplY3QgbGluZSBmb3JtYXQgYW5kDQp1c2UgRVhQ
-T1JUX1NZTUJPTF9HUEwoKSwgdGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KDQpUaGFua3MuDQoN
-Cg==
+Intel IPU(Image Processing Unit) has its own (IO)MMU hardware,
+The IPU driver allocates its own page table that is not mapped
+via the DMA, and thus the Intel IOMMU driver blocks access giving
+this error:
+
+DMAR: DRHD: handling fault status reg 3
+DMAR: [DMA Read] Request device [00:05.0] PASID ffffffff
+      fault addr 76406000 [fault reason 06] PTE Read access is not set
+
+As IPU is not an external facing device which is not risky, so use
+IOMMU passthrough mode for Intel IPUs.
+
+Fixes: 26f5689592e2 ("media: staging/intel-ipu3: mmu: Implement driver")
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+---
+Changes since v1:
+ - Use IPU PCI DID value instead of macros to align with others
+ - Check IPU PCI device ID in quirk
+
+---
+ drivers/iommu/intel/iommu.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index ee0932307d64..7e2fbdae467e 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -55,6 +55,12 @@
+ #define IS_GFX_DEVICE(pdev) ((pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY)
+ #define IS_USB_DEVICE(pdev) ((pdev->class >> 8) == PCI_CLASS_SERIAL_USB)
+ #define IS_ISA_DEVICE(pdev) ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA)
++#define IS_INTEL_IPU(pdev) ((pdev)->vendor == PCI_VENDOR_ID_INTEL &&	\
++			    ((pdev)->device == 0x9a19 ||		\
++			     (pdev)->device == 0x9a39 ||		\
++			     (pdev)->device == 0x4e19 ||		\
++			     (pdev)->device == 0x465d ||		\
++			     (pdev)->device == 0x1919))
+ #define IS_AZALIA(pdev) ((pdev)->vendor == 0x8086 && (pdev)->device == 0x3a3e)
+ 
+ #define IOAPIC_RANGE_START	(0xfee00000)
+@@ -360,6 +366,7 @@ int intel_iommu_enabled = 0;
+ EXPORT_SYMBOL_GPL(intel_iommu_enabled);
+ 
+ static int dmar_map_gfx = 1;
++static int dmar_map_ipu = 1;
+ static int dmar_forcedac;
+ static int intel_iommu_strict;
+ static int intel_iommu_superpage = 1;
+@@ -368,6 +375,7 @@ static int iommu_skip_te_disable;
+ 
+ #define IDENTMAP_GFX		2
+ #define IDENTMAP_AZALIA		4
++#define IDENTMAP_IPU		8
+ 
+ int intel_iommu_gfx_mapped;
+ EXPORT_SYMBOL_GPL(intel_iommu_gfx_mapped);
+@@ -2839,6 +2847,9 @@ static int device_def_domain_type(struct device *dev)
+ 
+ 		if ((iommu_identity_mapping & IDENTMAP_GFX) && IS_GFX_DEVICE(pdev))
+ 			return IOMMU_DOMAIN_IDENTITY;
++
++		if ((iommu_identity_mapping & IDENTMAP_IPU) && IS_INTEL_IPU(pdev))
++			return IOMMU_DOMAIN_IDENTITY;
+ 	}
+ 
+ 	return 0;
+@@ -3278,6 +3289,9 @@ static int __init init_dmars(void)
+ 	if (!dmar_map_gfx)
+ 		iommu_identity_mapping |= IDENTMAP_GFX;
+ 
++	if (!dmar_map_ipu)
++		iommu_identity_mapping |= IDENTMAP_IPU;
++
+ 	check_tylersburg_isoch();
+ 
+ 	ret = si_domain_init(hw_pass_through);
+@@ -5622,6 +5636,18 @@ static void quirk_iommu_igfx(struct pci_dev *dev)
+ 	dmar_map_gfx = 0;
+ }
+ 
++static void quirk_iommu_ipu(struct pci_dev *dev)
++{
++	if (!IS_INTEL_IPU(dev))
++		return;
++
++	if (risky_device(dev))
++		return;
++
++	pci_info(dev, "Passthrough IOMMU for integrated Intel IPU\n");
++	dmar_map_ipu = 0;
++}
++
+ /* G4x/GM45 integrated gfx dmar support is totally busted. */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2a40, quirk_iommu_igfx);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2e00, quirk_iommu_igfx);
+@@ -5657,6 +5683,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x1632, quirk_iommu_igfx);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163A, quirk_iommu_igfx);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
++/* disable IPU dmar support */
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_ANY_ID, quirk_iommu_ipu);
++
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
+ 	if (risky_device(dev))
+-- 
+2.7.4
 
