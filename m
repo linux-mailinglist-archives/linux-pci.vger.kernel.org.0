@@ -2,42 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5AF336507F
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 04:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D55365098
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 04:55:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbhDTCuK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Apr 2021 22:50:10 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64046 "EHLO mga05.intel.com"
+        id S229515AbhDTC4I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Apr 2021 22:56:08 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44248 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229508AbhDTCuK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Apr 2021 22:50:10 -0400
-IronPort-SDR: 0UlayDdUJWfk2YeLyjMNpR1kfzId1HhLio17rBpFch6WvYKNsYe9NlfCO7mKMPTqCyl9ujf40O
- ehyRgiR6rpzA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9959"; a="280758686"
+        id S229508AbhDTC4I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Apr 2021 22:56:08 -0400
+IronPort-SDR: edVZBTkDAL8hrKhLzk5bV0ia7wFsQHyxCR9rr3MN+mvkaELGeqM+cRdUSq2PGEzg0+kMxh3/qe
+ C8xR2nOHuX0g==
+X-IronPort-AV: E=McAfee;i="6200,9189,9959"; a="193308685"
 X-IronPort-AV: E=Sophos;i="5.82,235,1613462400"; 
-   d="scan'208";a="280758686"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 19:49:39 -0700
-IronPort-SDR: rTnn6ycqI0aiWmbkDOqGJ7/a9qIe/xFdKLSNYge8jfGYHa47etVRhbcqrizoDTs9ywOI3wpqGF
- hc1GlQ7pYg9g==
+   d="scan'208";a="193308685"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2021 19:55:37 -0700
+IronPort-SDR: CAJVH2FbCBXOeh6Kk14yftkJhGYblD+fDKdZFAavVfQs8qrSKUvF5hKBHiy3H9PwQ/ci15O3Iu
+ SZ1MWQiQOfqQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,235,1613462400"; 
-   d="scan'208";a="523636963"
+   d="scan'208";a="400848296"
 Received: from ipu5-build.bj.intel.com ([10.238.232.202])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Apr 2021 19:49:35 -0700
+  by orsmga002.jf.intel.com with ESMTP; 19 Apr 2021 19:55:32 -0700
 From:   Bingbu Cao <bingbu.cao@intel.com>
-To:     linux-kernel@vger.kernel.org,
-        stable.vger.kernel.org@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
 Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
         will@kernel.org, bhelgaas@google.com, rajatja@google.com,
         grundler@chromium.org, tfiga@chromium.org,
         senozhatsky@chromium.org, sakari.ailus@linux.intel.com,
         andriy.shevchenko@linux.intel.com, bingbu.cao@intel.com,
         bingbu.cao@linux.intel.com
-Subject: [PATCH v2] iommu/vt-d: Use passthrough mode for the Intel IPUs
-Date:   Tue, 20 Apr 2021 10:42:36 +0800
-Message-Id: <1618886556-6412-1-git-send-email-bingbu.cao@intel.com>
+Subject: [RESEND v2] iommu/vt-d: Use passthrough mode for the Intel IPUs
+Date:   Tue, 20 Apr 2021 10:48:33 +0800
+Message-Id: <1618886913-6594-1-git-send-email-bingbu.cao@intel.com>
 X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -57,11 +56,6 @@ IOMMU passthrough mode for Intel IPUs.
 
 Fixes: 26f5689592e2 ("media: staging/intel-ipu3: mmu: Implement driver")
 Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
----
-Changes since v1:
- - Use IPU PCI DID value instead of macros to align with others
- - Check IPU PCI device ID in quirk
-
 ---
  drivers/iommu/intel/iommu.c | 29 +++++++++++++++++++++++++++++
  1 file changed, 29 insertions(+)
