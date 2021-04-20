@@ -2,87 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8113659A1
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 15:16:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EEB1365A5D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 15:42:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232026AbhDTNQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Apr 2021 09:16:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:34694 "EHLO foss.arm.com"
+        id S232084AbhDTNmi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Apr 2021 09:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231422AbhDTNQk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Apr 2021 09:16:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CB311478;
-        Tue, 20 Apr 2021 06:16:09 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CAF53F792;
-        Tue, 20 Apr 2021 06:16:08 -0700 (PDT)
-Date:   Tue, 20 Apr 2021 14:16:05 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        kernel-team@android.com, Jon Hunter <jonathanh@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] PCI: tegra: Restore MSI enable state on resume
-Message-ID: <20210420131605.GB5734@lpieralisi>
-References: <20210420130526.531138-1-maz@kernel.org>
+        id S230408AbhDTNmh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Apr 2021 09:42:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2CB746113C;
+        Tue, 20 Apr 2021 13:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618926126;
+        bh=wOcgrREubiHfbL01aIGXmwpp3fzaqzvs0JU635iNdoo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=irFkel9vWOajGYsLV90EI0+u5kOkuln2S0r2OVjJi3suCvbtbInNDcbdqoyCewFnM
+         iD+YqUluxJqxarPsj2BUrL7TRg/h0LnU8Le5gA80KLFQ44klHL5wz81TvnIy2U0MwZ
+         e2KNsO+TkG+4eHjpy+MEXf19+ValtcyxbZsHiSKGkOcUMUupGUuRdTfBULf//2uXNR
+         Ht+b3Zb57b+Lpc2amSrOgWOxZgFKHkbpIYeUKT3TOUOEhoadKGx4GRJsjuQtn9ELPU
+         fOVNRcFsxl09kLi78h9Gt/kHMZNRPSIgIgwytwI9wnhEEswoLWrff3hhkfMxi6jvS3
+         TI/4d+pGnWGYQ==
+Date:   Tue, 20 Apr 2021 08:42:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Siyu Jin <jinsiyu940203@163.com>
+Cc:     linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] Bug fix: 500ms is not enough for pcie training
+Message-ID: <20210420134204.GA2811908@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210420130526.531138-1-maz@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210419112218.10921-1-jinsiyu940203@163.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 20, 2021 at 02:05:26PM +0100, Marc Zyngier wrote:
-> When going into suspend, the Tegra MSI controller loses its
-> state. Restore the MSI allocation on resume so that PCI devices
-> are usable again.
-> 
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Fixes: 973a28677e39 ("PCI: tegra: Convert to MSI domains")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
+[+cc rockchip maintainers]
+
+On Mon, Apr 19, 2021 at 07:22:18PM +0800, Siyu Jin wrote:
+
+Thanks for this.  Before this can be applied:
+
+- Run "git log --oneline drivers/pci/controller/pcie-rockchip-host.c"
+  and make your subject line match in structure and style.
+
+- Add a commit log.  It should explain the problem this fixes.  Since
+  this changes a timeout, you should be able to cite something in the
+  spec (either the PCIe spec or the Rockchip spec) that describes the
+  time needed.
+
+- Add a signed-off-by: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.11#n361
+
+- CC the relevant maintainers (use ./scripts/get_maintainer.pl)
+
 > ---
->  drivers/pci/controller/pci-tegra.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-
-Squashed with the Fixes: commit, updated my pci/msi branch with it
-and pushed out.
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index eaba7b2fab4a..507b23d43ad1 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -1802,13 +1802,19 @@ static void tegra_pcie_enable_msi(struct tegra_pcie *pcie)
->  {
->  	const struct tegra_pcie_soc *soc = pcie->soc;
->  	struct tegra_msi *msi = &pcie->msi;
-> -	u32 reg;
-> +	u32 reg, msi_state[INT_PCI_MSI_NR / 32];
-> +	int i;
->  
->  	afi_writel(pcie, msi->phys >> soc->msi_base_shift, AFI_MSI_FPCI_BAR_ST);
->  	afi_writel(pcie, msi->phys, AFI_MSI_AXI_BAR_ST);
->  	/* this register is in 4K increments */
->  	afi_writel(pcie, 1, AFI_MSI_BAR_SZ);
->  
-> +	/* Restore the MSI allocation state */
-> +	bitmap_to_arr32(msi_state, msi->used, INT_PCI_MSI_NR);
-> +	for (i = 0; i < ARRAY_SIZE(msi_state); i++)
-> +		afi_writel(pcie, msi_state[i], AFI_MSI_EN_VEC(i));
-> +
->  	/* and unmask the MSI interrupt */
->  	reg = afi_readl(pcie, AFI_INTR_MASK);
->  	reg |= AFI_INTR_MASK_MSI_MASK;
-> -- 
-> 2.30.2
+>  drivers/pci/controller/pcie-rockchip-host.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index f1d08a1b1591..9da831b2b7c2 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -332,7 +332,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  	/* 500ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
+>  				 status, PCIE_LINK_UP(status), 20,
+> -				 500 * USEC_PER_MSEC);
+> +				 1000 * USEC_PER_MSEC);
+>  	if (err) {
+>  		dev_err(dev, "PCIe link training gen1 timeout!\n");
+>  		goto err_power_off_phy;
+> @@ -349,7 +349,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+> 
+>  		err = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
+>  					 status, PCIE_LINK_IS_GEN2(status), 20,
+> -					 500 * USEC_PER_MSEC);
+> +					 1000 * USEC_PER_MSEC);
+>  		if (err)
+>  			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
+>  	}
+> --
+> 2.17.1
 > 
