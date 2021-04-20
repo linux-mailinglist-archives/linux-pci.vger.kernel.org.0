@@ -2,69 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3652E365F0E
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 20:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97210366163
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 23:09:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232648AbhDTSNx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Apr 2021 14:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233473AbhDTSNw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Apr 2021 14:13:52 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BA2C06138A
-        for <linux-pci@vger.kernel.org>; Tue, 20 Apr 2021 11:13:18 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id x12so38905407ejc.1
-        for <linux-pci@vger.kernel.org>; Tue, 20 Apr 2021 11:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nvYFjNJGmHgAWjON/xjeZZGkptTrI+q+RvIm7dqQFfw=;
-        b=EYxY7vtLiHVVmCgR+vXaiL/ryAZaakWpKzjC9BoczkxP7mU297GvaLpxVdOWN0zodl
-         4HZrqw1EeYkzyhmdZMv+elFntRNxIWN+66KvMGATSfDLMn4BaHHppyOgawjy8HXhDtps
-         etI+EenwabyutXsJCMjx/DdB7J+ybz+f+4pvKbVubVVdufzVaPRp4BBqQnAsfXG3rCCT
-         2lQU/CNL6GBHclGx5Zn3U23ysSvL16MBsM4igq63zhkVZfpVJuB04fzuTxqAS11PPa4+
-         sZE/zLrRVrgPZYSKtTKpdDGMwqxeWvXQ8QLJOWd5qPtaS78cC0KAhhOGxi+Wl3PGx2HV
-         9Q+g==
+        id S233882AbhDTVJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Apr 2021 17:09:49 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:53189 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233682AbhDTVJt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Apr 2021 17:09:49 -0400
+Received: by mail-wm1-f54.google.com with SMTP id y204so19607587wmg.2
+        for <linux-pci@vger.kernel.org>; Tue, 20 Apr 2021 14:09:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=nvYFjNJGmHgAWjON/xjeZZGkptTrI+q+RvIm7dqQFfw=;
-        b=p/Vl7R2oMFlfmg+PoOE+ltmgoL0b6jnTJdj9tDx4k5P3jEtMxwjQHc2yROHvgEbEew
-         ge6vK7dSF7ViD8J01fYFvfew0EHOmaHRCUPtYH+t1/Z8YnwZMtPq3p6XULLDDJWBIAxo
-         c0yNEhdcFf/1Z8bEVyG0eqSkh1caxyVvXtcjaAQS0+61zOwYmm2szS9zW/1zEz41MlBm
-         nmHnXgv6pEBj3iZ1RD+Eb11hjBfwcRjpmGgER2ylFgFYBFrQ34gIc7ChDFtm5bFsmXid
-         +wtR1P/1ctZBU2Q2AlBUU1sHcXaY23kIrd94pUwG4YUIKNVlUpW9sVl+FXtNnA1ljFKG
-         iT8w==
-X-Gm-Message-State: AOAM530QueSClM8vBTGA/LcIlqeQvmgC7VMg/U8Irq9A4p3fDIhq6pbJ
-        2z24vPn6FzXCeSrJ61Xrcmypl1LbrwKBWurYb4g=
-X-Google-Smtp-Source: ABdhPJyMtJAU/3tRd+EprZ27FXkRtRb+vdoel/xTzRGhMUWsFjapKqXNxvDEgNqxKktvQW7CCY83Y3Pe7aly4PJa95s=
-X-Received: by 2002:a17:906:953:: with SMTP id j19mr29287422ejd.56.1618942397443;
- Tue, 20 Apr 2021 11:13:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JTRCOmXX1jOykQZsnt0iXQ7ZwVNHOLdtcHQQb1R69D0=;
+        b=nA66ybTZr5tss1/AWPsGD9PTRXM162cALXc5LHl3K9c0A+XR1+4/uQ7ogRgVxlMS2L
+         IR0WKZJSZGO8+As2Lx4T3YlhkAcPmzckNydpRfd5a8cHtb2GFeTlonV/xzHSr/oMCIba
+         DEumFwo9JULxCKzLWhj5hhBylJ3vMcZzfBz5FmsXW8ShgtgSJpgrD+LFpfSJEqO1qdtJ
+         Vr/dU82NUNQUeF/R5J2dd+ImZ6WIeSBwDt5i/f914nquqMne+hrSz8em1mprRujXykXO
+         +Q6tmOpSMt5nTbV+/Vy+/OAPYlFz44Yul/QN6GyibVz+W2lXLltZC+UXt6kyODFMBcCK
+         Ov7w==
+X-Gm-Message-State: AOAM531jBgcTcUCu6nR3zTGooDVDj70pzulNo4Ywz9JU7Bh4kqOicLnn
+        khW5phjuBzeLfMS1StrN6uM=
+X-Google-Smtp-Source: ABdhPJzw5JgDgJXAOvzOFEJsDiiJUG9jUd6moFrO1EgkxsvTbuknAyyRPTI1S6FvrJA+f7k3srN5hQ==
+X-Received: by 2002:a1c:35c6:: with SMTP id c189mr6183632wma.127.1618952955413;
+        Tue, 20 Apr 2021 14:09:15 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id v8sm229616wrt.71.2021.04.20.14.09.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Apr 2021 14:09:15 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] x86/PCI: Remove unused assignment to variable info
+Date:   Tue, 20 Apr 2021 21:09:13 +0000
+Message-Id: <20210420210913.1137116-1-kw@linux.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-Received: by 2002:a17:906:ac5:0:0:0:0 with HTTP; Tue, 20 Apr 2021 11:13:16
- -0700 (PDT)
-Reply-To: hajundoyun1@gmail.com
-From:   Hajun Doyun <chris.g3v@gmail.com>
-Date:   Tue, 20 Apr 2021 18:13:16 +0000
-Message-ID: <CABzcbwKAA+cUS+OqcX6s_agp8VU5GD1n0Hc=kF5874iKmiDb5A@mail.gmail.com>
-Subject: Regards
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I=E2=80=99m Hajun Doyun from South Korea, I refer to seek your collaboratio=
-n
-in a joint business partnership venture in your country as my
-investment manager with the Escrow fund amounted the total sum of
-($22,000,000) twenty two million dollars.
+The value returned from the alloc_pci_root_info() function that is
+assigned to the "info" variable within the loop body is never used for
+anything once the loop finishes its run, and it is overridden later
+within another loop body where the value returned from the
+find_pci_root_info() will be assigned to it.
 
-Kindly revert back to me for further negotiation.
+When the function alloc_pci_root_info() is executed within the body of
+the first loop, it would allocate a new struct pci_root_info and then
+store pointer to it in a global linked list called "pci_root_infos",
+thus the value that the "info" variable would contain after the loop
+finishes would reference the struct pci_root_info that was allocated the
+last, thus it might not necessarily be of use.
 
-Regards
-Hajun Doyun
+Additionally, the function find_pci_root_info() can be used to find and
+retrieve the relevant pci_root_info stored on the aforementioned linked
+list.
+
+Since the value of the "info" variable following the first loop is never
+used in any meaningful way the assigned can be removed.
+
+Related:
+  commit d28e5ac2a07e ("x86/PCI: dynamically allocate pci_root_info for native host bridge drivers")
+  commit a10bb128b64f ("x86/PCI: put busn resource in pci_root_info for native host bridge drivers")
+
+Addresses-Coverity-ID: 1222153 ("Unused value")
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ arch/x86/pci/amd_bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
+index bfa50e65ef6c..ae744b6a0785 100644
+--- a/arch/x86/pci/amd_bus.c
++++ b/arch/x86/pci/amd_bus.c
+@@ -126,7 +126,7 @@ static int __init early_root_info_init(void)
+ 		node = (reg >> 4) & 0x07;
+ 		link = (reg >> 8) & 0x03;
+ 
+-		info = alloc_pci_root_info(min_bus, max_bus, node, link);
++		alloc_pci_root_info(min_bus, max_bus, node, link);
+ 	}
+ 
+ 	/*
+-- 
+2.31.0
+
