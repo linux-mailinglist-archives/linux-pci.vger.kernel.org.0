@@ -2,133 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37B8636510D
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 05:42:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56C1A36521A
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 08:11:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbhDTDmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Apr 2021 23:42:40 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:11410 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229467AbhDTDmk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Apr 2021 23:42:40 -0400
-X-UUID: 25649c7056af49b6b646971e6bbbd657-20210420
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MiCJROun/rsttV6xwvxiZQv1L1IxFNsuoy0zUTwLry0=;
-        b=aShDz8tMW7oFTQhrv6POinZq3zsjHD5pWflpkkL8YX9jQxljjg3xqch8JE/v2u4dd0+kKL55EHMv7Kd4kgy74nxG30rG1wCJgCC3ZynyRBkYTbNU2tpdaUDNroLK9S/YYjBD7e49R/0tLgTlwIbWTdhDwZ4e3w9OFvyVpNVNZMw=;
-X-UUID: 25649c7056af49b6b646971e6bbbd657-20210420
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1873081110; Tue, 20 Apr 2021 11:42:04 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 20 Apr
- 2021 11:42:02 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 20 Apr 2021 11:42:01 +0800
-Message-ID: <1618890121.31169.4.camel@mhfsdcap03>
-Subject: Re: [PATCH v9 2/4] PCI: mediatek: Add new method to get shared
- pcie-cfg base address and parse node
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>
-CC:     <robh+dt@kernel.org.matthias.bgg>, <ryder.lee@mediatek.com>,
-        <jianjun.wang@mediatek.com>, <linux-pci@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
-        <frank-w@public-files.de>
-Date:   Tue, 20 Apr 2021 11:42:01 +0800
-In-Reply-To: <20210406034410.24381-3-chuanjia.liu@mediatek.com>
-References: <20210406034410.24381-1-chuanjia.liu@mediatek.com>
-         <20210406034410.24381-3-chuanjia.liu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S229523AbhDTGLx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Apr 2021 02:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229577AbhDTGLw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Apr 2021 02:11:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E19C06174A;
+        Mon, 19 Apr 2021 23:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VtGKwlLzt3o9NMgYENh3GoR2m2ntsi4c0i/iVk3g+b0=; b=KJc8dDKOso7aewyB5hdF/M9Udy
+        MJFlVN+fw0/ovRszP9qlI2D1dVX1Unx0DlfQMBXu/8B5zNzja2NRAwcbv9Hax+2208lVnYl4EQzDM
+        dDzsBnXkPcIrhbt5+GGxdQJlZuNRSWdk9PSwFdbm6nVnfM/B33tSPYZnJiMGwJagLpEIHv1V8EMc9
+        1b9DQtuLk+/Pcvpad9gemSkgNe83axRZwq+6+OR1iQs0SNSXPvBD4i6rQ4JEOOle03Lvr0PMVkRvb
+        ajK7yNVB5eB6QHGkIW8XCyA1iHit+L7KevaB89YmWSGSnlyCRRHH0+L6CvPAGBksDlK26hvVKwwue
+        8e6w2fhQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lYjaI-00EmxI-EI; Tue, 20 Apr 2021 06:10:11 +0000
+Date:   Tue, 20 Apr 2021 07:10:06 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org, rajatxjain@gmail.com
+Subject: Re: [PATCH] pci: Rename pci_dev->untrusted to pci_dev->external
+Message-ID: <20210420061006.GA3523612@infradead.org>
+References: <20210420003049.1635027-1-rajatja@google.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 49C9D70BAE7D6D133CC15AD9F4DA50839F38EE4E8A9754DE6F163B20324B26BA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210420003049.1635027-1-rajatja@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGksIExvcmVuem8sIEJqb3JuLA0KDQpKdXN0IGEgZ2VudGxlIHBpbmcuIFBsZWFzZSBsZXQgbWUg
-a25vdyB5b3VyIGNvbW1lbnRzIGFib3V0IHRoaXMgcGF0Y2gNCnNldC4NCg0KdGhhbmtzDQoNCk9u
-IFR1ZSwgMjAyMS0wNC0wNiBhdCAxMTo0NCArMDgwMCwgQ2h1YW5qaWEgTGl1IHdyb3RlOg0KPiBG
-b3IgdGhlIG5ldyBkdHMgZm9ybWF0LCBhZGQgYSBuZXcgbWV0aG9kIHRvIGdldA0KPiBzaGFyZWQg
-cGNpZS1jZmcgYmFzZSBhZGRyZXNzIGFuZCBwYXJzZSBub2RlLg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogQ2h1YW5qaWEgTGl1IDxjaHVhbmppYS5saXVAbWVkaWF0ZWsuY29tPg0KPiBBY2tlZC1ieTog
-UnlkZXIgTGVlIDxyeWRlci5sZWVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jIHwgNTIgKysrKysrKysrKysrKysrKysrKy0tLS0t
-LS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsu
-YyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jDQo+IGluZGV4IDIzNTQ4
-YjUxN2U0Yi4uNjVlYmNkYjhhYjU3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL3BjaWUtbWVkaWF0ZWsuYw0KPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUt
-bWVkaWF0ZWsuYw0KPiBAQCAtMTQsNiArMTQsNyBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L2lycWNo
-aXAvY2hhaW5lZF9pcnEuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9pcnFkb21haW4uaD4NCj4gICNp
-bmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+
-DQo+ICAjaW5jbHVkZSA8bGludXgvbXNpLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+
-DQo+ICAjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiBAQCAtMjMsNiArMjQsNyBAQA0K
-PiAgI2luY2x1ZGUgPGxpbnV4L3BoeS9waHkuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9y
-bV9kZXZpY2UuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+DQo+ICsjaW5jbHVk
-ZSA8bGludXgvcmVnbWFwLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvcmVzZXQuaD4NCj4gIA0KPiAg
-I2luY2x1ZGUgIi4uL3BjaS5oIg0KPiBAQCAtMjA1LDYgKzIwNyw3IEBAIHN0cnVjdCBtdGtfcGNp
-ZV9wb3J0IHsNCj4gICAqIHN0cnVjdCBtdGtfcGNpZSAtIFBDSWUgaG9zdCBpbmZvcm1hdGlvbg0K
-PiAgICogQGRldjogcG9pbnRlciB0byBQQ0llIGRldmljZQ0KPiAgICogQGJhc2U6IElPIG1hcHBl
-ZCByZWdpc3RlciBiYXNlDQo+ICsgKiBAY2ZnOiBJTyBtYXBwZWQgcmVnaXN0ZXIgbWFwIGZvciBQ
-Q0llIGNvbmZpZw0KPiAgICogQGZyZWVfY2s6IGZyZWUtcnVuIHJlZmVyZW5jZSBjbG9jaw0KPiAg
-ICogQG1lbTogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgcmVzb3VyY2UNCj4gICAqIEBwb3J0czog
-cG9pbnRlciB0byBQQ0llIHBvcnQgaW5mb3JtYXRpb24NCj4gQEAgLTIxMyw2ICsyMTYsNyBAQCBz
-dHJ1Y3QgbXRrX3BjaWVfcG9ydCB7DQo+ICBzdHJ1Y3QgbXRrX3BjaWUgew0KPiAgCXN0cnVjdCBk
-ZXZpY2UgKmRldjsNCj4gIAl2b2lkIF9faW9tZW0gKmJhc2U7DQo+ICsJc3RydWN0IHJlZ21hcCAq
-Y2ZnOw0KPiAgCXN0cnVjdCBjbGsgKmZyZWVfY2s7DQo+ICANCj4gIAlzdHJ1Y3QgbGlzdF9oZWFk
-IHBvcnRzOw0KPiBAQCAtNjQ4LDcgKzY1MiwxMSBAQCBzdGF0aWMgaW50IG10a19wY2llX3NldHVw
-X2lycShzdHJ1Y3QgbXRrX3BjaWVfcG9ydCAqcG9ydCwNCj4gIAkJcmV0dXJuIGVycjsNCj4gIAl9
-DQo+ICANCj4gLQlwb3J0LT5pcnEgPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIHBvcnQtPnNsb3Qp
-Ow0KPiArCWlmIChvZl9maW5kX3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgImludGVycnVwdC1uYW1l
-cyIsIE5VTEwpKQ0KPiArCQlwb3J0LT5pcnEgPSBwbGF0Zm9ybV9nZXRfaXJxX2J5bmFtZShwZGV2
-LCAicGNpZV9pcnEiKTsNCj4gKwllbHNlDQo+ICsJCXBvcnQtPmlycSA9IHBsYXRmb3JtX2dldF9p
-cnEocGRldiwgcG9ydC0+c2xvdCk7DQo+ICsNCj4gIAlpZiAocG9ydC0+aXJxIDwgMCkNCj4gIAkJ
-cmV0dXJuIHBvcnQtPmlycTsNCj4gIA0KPiBAQCAtNjgwLDYgKzY4OCwxMCBAQCBzdGF0aWMgaW50
-IG10a19wY2llX3N0YXJ0dXBfcG9ydF92MihzdHJ1Y3QgbXRrX3BjaWVfcG9ydCAqcG9ydCkNCj4g
-IAkJdmFsIHw9IFBDSUVfQ1NSX0xUU1NNX0VOKHBvcnQtPnNsb3QpIHwNCj4gIAkJICAgICAgIFBD
-SUVfQ1NSX0FTUE1fTDFfRU4ocG9ydC0+c2xvdCk7DQo+ICAJCXdyaXRlbCh2YWwsIHBjaWUtPmJh
-c2UgKyBQQ0lFX1NZU19DRkdfVjIpOw0KPiArCX0gZWxzZSBpZiAocGNpZS0+Y2ZnKSB7DQo+ICsJ
-CXZhbCA9IFBDSUVfQ1NSX0xUU1NNX0VOKHBvcnQtPnNsb3QpIHwNCj4gKwkJICAgICAgUENJRV9D
-U1JfQVNQTV9MMV9FTihwb3J0LT5zbG90KTsNCj4gKwkJcmVnbWFwX3VwZGF0ZV9iaXRzKHBjaWUt
-PmNmZywgUENJRV9TWVNfQ0ZHX1YyLCB2YWwsIHZhbCk7DQo+ICAJfQ0KPiAgDQo+ICAJLyogQXNz
-ZXJ0IGFsbCByZXNldCBzaWduYWxzICovDQo+IEBAIC05ODMsNiArOTk1LDcgQEAgc3RhdGljIGlu
-dCBtdGtfcGNpZV9zdWJzeXNfcG93ZXJ1cChzdHJ1Y3QgbXRrX3BjaWUgKnBjaWUpDQo+ICAJc3Ry
-dWN0IGRldmljZSAqZGV2ID0gcGNpZS0+ZGV2Ow0KPiAgCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYgPSB0b19wbGF0Zm9ybV9kZXZpY2UoZGV2KTsNCj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJl
-Z3M7DQo+ICsJc3RydWN0IGRldmljZV9ub2RlICpjZmdfbm9kZTsNCj4gIAlpbnQgZXJyOw0KPiAg
-DQo+ICAJLyogZ2V0IHNoYXJlZCByZWdpc3RlcnMsIHdoaWNoIGFyZSBvcHRpb25hbCAqLw0KPiBA
-QCAtOTk1LDYgKzEwMDgsMTQgQEAgc3RhdGljIGludCBtdGtfcGNpZV9zdWJzeXNfcG93ZXJ1cChz
-dHJ1Y3QgbXRrX3BjaWUgKnBjaWUpDQo+ICAJCX0NCj4gIAl9DQo+ICANCj4gKwljZmdfbm9kZSA9
-IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsDQo+ICsJCQkJCSAgICJtZWRpYXRl
-ayxnZW5lcmljLXBjaWVjZmciKTsNCj4gKwlpZiAoY2ZnX25vZGUpIHsNCj4gKwkJcGNpZS0+Y2Zn
-ID0gc3lzY29uX25vZGVfdG9fcmVnbWFwKGNmZ19ub2RlKTsNCj4gKwkJaWYgKElTX0VSUihwY2ll
-LT5jZmcpKQ0KPiArCQkJcmV0dXJuIFBUUl9FUlIocGNpZS0+Y2ZnKTsNCj4gKwl9DQo+ICsNCj4g
-IAlwY2llLT5mcmVlX2NrID0gZGV2bV9jbGtfZ2V0KGRldiwgImZyZWVfY2siKTsNCj4gIAlpZiAo
-SVNfRVJSKHBjaWUtPmZyZWVfY2spKSB7DQo+ICAJCWlmIChQVFJfRVJSKHBjaWUtPmZyZWVfY2sp
-ID09IC1FUFJPQkVfREVGRVIpDQo+IEBAIC0xMDI3LDIyICsxMDQ4LDI3IEBAIHN0YXRpYyBpbnQg
-bXRrX3BjaWVfc2V0dXAoc3RydWN0IG10a19wY2llICpwY2llKQ0KPiAgCXN0cnVjdCBkZXZpY2Ug
-KmRldiA9IHBjaWUtPmRldjsNCj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBkZXYtPm9m
-X25vZGUsICpjaGlsZDsNCj4gIAlzdHJ1Y3QgbXRrX3BjaWVfcG9ydCAqcG9ydCwgKnRtcDsNCj4g
-LQlpbnQgZXJyOw0KPiArCWludCBlcnIsIHNsb3Q7DQo+ICsNCj4gKwlzbG90ID0gb2ZfZ2V0X3Bj
-aV9kb21haW5fbnIoZGV2LT5vZl9ub2RlKTsNCj4gKwlpZiAoc2xvdCA8IDApIHsNCj4gKwkJZm9y
-X2VhY2hfYXZhaWxhYmxlX2NoaWxkX29mX25vZGUobm9kZSwgY2hpbGQpIHsNCj4gKwkJCWVyciA9
-IG9mX3BjaV9nZXRfZGV2Zm4oY2hpbGQpOw0KPiArCQkJaWYgKGVyciA8IDApIHsNCj4gKwkJCQlk
-ZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgZGV2Zm46ICVkXG4iLCBlcnIpOw0KPiArCQkJCWdv
-dG8gZXJyb3JfcHV0X25vZGU7DQo+ICsJCQl9DQo+ICANCj4gLQlmb3JfZWFjaF9hdmFpbGFibGVf
-Y2hpbGRfb2Zfbm9kZShub2RlLCBjaGlsZCkgew0KPiAtCQlpbnQgc2xvdDsNCj4gKwkJCXNsb3Qg
-PSBQQ0lfU0xPVChlcnIpOw0KPiAgDQo+IC0JCWVyciA9IG9mX3BjaV9nZXRfZGV2Zm4oY2hpbGQp
-Ow0KPiAtCQlpZiAoZXJyIDwgMCkgew0KPiAtCQkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcGFy
-c2UgZGV2Zm46ICVkXG4iLCBlcnIpOw0KPiAtCQkJZ290byBlcnJvcl9wdXRfbm9kZTsNCj4gKwkJ
-CWVyciA9IG10a19wY2llX3BhcnNlX3BvcnQocGNpZSwgY2hpbGQsIHNsb3QpOw0KPiArCQkJaWYg
-KGVycikNCj4gKwkJCQlnb3RvIGVycm9yX3B1dF9ub2RlOw0KPiAgCQl9DQo+IC0NCj4gLQkJc2xv
-dCA9IFBDSV9TTE9UKGVycik7DQo+IC0NCj4gLQkJZXJyID0gbXRrX3BjaWVfcGFyc2VfcG9ydChw
-Y2llLCBjaGlsZCwgc2xvdCk7DQo+ICsJfSBlbHNlIHsNCj4gKwkJZXJyID0gbXRrX3BjaWVfcGFy
-c2VfcG9ydChwY2llLCBub2RlLCBzbG90KTsNCj4gIAkJaWYgKGVycikNCj4gLQkJCWdvdG8gZXJy
-b3JfcHV0X25vZGU7DQo+ICsJCQlyZXR1cm4gZXJyOw0KPiAgCX0NCj4gIA0KPiAgCWVyciA9IG10
-a19wY2llX3N1YnN5c19wb3dlcnVwKHBjaWUpOw0KDQo=
+On Mon, Apr 19, 2021 at 05:30:49PM -0700, Rajat Jain wrote:
+> The current flag name "untrusted" is not correct as it is populated
+> using the firmware property "external-facing" for the parent ports. In
+> other words, the firmware only says which ports are external facing, so
+> the field really identifies the devices as external (vs internal).
+> 
+> Only field renaming. No functional change intended.
 
+I don't think this is a good idea.  First the field should have been
+added to the generic struct device as requested multiple times before.
+Right now this requires horrible hacks in the IOMMU code to get at the
+pci_dev, and also doesn't scale to various other potential users.
+
+Second the untrusted is objectively a better name.  Because untrusted
+is how we treat the device, which is what mattes.  External is just
+how we come to that conclusion.
