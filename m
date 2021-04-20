@@ -2,64 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56C1A36521A
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 08:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ED8436522A
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Apr 2021 08:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbhDTGLx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Apr 2021 02:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbhDTGLw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Apr 2021 02:11:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E19C06174A;
-        Mon, 19 Apr 2021 23:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VtGKwlLzt3o9NMgYENh3GoR2m2ntsi4c0i/iVk3g+b0=; b=KJc8dDKOso7aewyB5hdF/M9Udy
-        MJFlVN+fw0/ovRszP9qlI2D1dVX1Unx0DlfQMBXu/8B5zNzja2NRAwcbv9Hax+2208lVnYl4EQzDM
-        dDzsBnXkPcIrhbt5+GGxdQJlZuNRSWdk9PSwFdbm6nVnfM/B33tSPYZnJiMGwJagLpEIHv1V8EMc9
-        1b9DQtuLk+/Pcvpad9gemSkgNe83axRZwq+6+OR1iQs0SNSXPvBD4i6rQ4JEOOle03Lvr0PMVkRvb
-        ajK7yNVB5eB6QHGkIW8XCyA1iHit+L7KevaB89YmWSGSnlyCRRHH0+L6CvPAGBksDlK26hvVKwwue
-        8e6w2fhQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lYjaI-00EmxI-EI; Tue, 20 Apr 2021 06:10:11 +0000
-Date:   Tue, 20 Apr 2021 07:10:06 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org, rajatxjain@gmail.com
-Subject: Re: [PATCH] pci: Rename pci_dev->untrusted to pci_dev->external
-Message-ID: <20210420061006.GA3523612@infradead.org>
-References: <20210420003049.1635027-1-rajatja@google.com>
+        id S229953AbhDTGSQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Apr 2021 02:18:16 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56414 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229577AbhDTGSQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Apr 2021 02:18:16 -0400
+X-UUID: e64997969f214ffe9c8521d07650a47c-20210420
+X-UUID: e64997969f214ffe9c8521d07650a47c-20210420
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1752252126; Tue, 20 Apr 2021 14:17:40 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 20 Apr 2021 14:17:39 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 20 Apr 2021 14:17:38 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        <youlin.pei@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        <qizhong.cheng@mediatek.com>, <sin_jieyang@mediatek.com>,
+        <drinkcat@chromium.org>, <Rex-BC.Chen@mediatek.com>,
+        <anson.chuang@mediatek.com>, Krzysztof Wilczyski <kw@linux.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [PATCH v10 0/7] PCI: mediatek: Add new generation controller support
+Date:   Tue, 20 Apr 2021 14:17:16 +0800
+Message-ID: <20210420061723.989-1-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210420003049.1635027-1-rajatja@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 19, 2021 at 05:30:49PM -0700, Rajat Jain wrote:
-> The current flag name "untrusted" is not correct as it is populated
-> using the firmware property "external-facing" for the parent ports. In
-> other words, the firmware only says which ports are external facing, so
-> the field really identifies the devices as external (vs internal).
-> 
-> Only field renaming. No functional change intended.
+From: mtk15901 <jianjun.wang@mediatek.com>
 
-I don't think this is a good idea.  First the field should have been
-added to the generic struct device as requested multiple times before.
-Right now this requires horrible hacks in the IOMMU code to get at the
-pci_dev, and also doesn't scale to various other potential users.
+These series patches add pcie-mediatek-gen3.c and dt-bindings file to
+support new generation PCIe controller.
 
-Second the untrusted is objectively a better name.  Because untrusted
-is how we treat the device, which is what mattes.  External is just
-how we come to that conclusion.
+Changes in v10:
+1. Fix the subject line format in commit message;
+2. Use EXPORT_SYMBOL_GPL() to export pci_pio_to_address().
+
+Changes in v9:
+1. Use mtk_pcie_parse_port() to get the hw resources;
+2. Remove unnecessary logs;
+3. Add local IRQ enable status save/restore instead of
+   the enable/disable callbacks;
+4. Fix typos.
+
+Changes in v8:
+1. Add irq_clock to protect IRQ register access;
+2. Mask all INTx interrupt when startup port;
+3. Remove activate/deactivate callbacks from bottom_domain_ops;
+4. Add unmask/mask callbacks in mtk_msi_bottom_irq_chip;
+5. Add property information for reg-names.
+
+Changes in v7:
+1. Split the driver patch to core PCIe, INTx, MSI and PM patches;
+2. Reshape MSI init and handle flow,
+   use msi_bottom_domain to cover all sets;
+3. Replace readl/writel with their relaxed version;
+4. Add MSI description in binding document;
+5. Add pl_250m clock in binding document.
+
+Changes in v6:
+1. Export pci_pio_to_address() to support compiling as kernel module;
+2. Replace usleep_range(100 * 1000, 120 * 1000) with msleep(100);
+3. Replace dev_notice with dev_err;
+4. Fix MSI get hwirq flow;
+5. Fix warning for possible recursive locking in mtk_pcie_set_affinity.
+
+Changes in v5:
+1. Remove unused macros
+2. Modify the config read/write callbacks, set the config byte field
+   in TLP header and use pci_generic_config_read32/write32
+   to access the config space
+3. Fix the settings of translation window, both MEM and IO regions
+   works properly
+4. Fix typos
+
+Changes in v4:
+1. Fix PCIe power up/down flow
+2. Use "mac" and "phy" for reset names
+3. Add clock names
+4. Fix the variables type
+
+Changes in v3:
+1. Remove standard property in binding document
+2. Return error number when get_optional* API throws an error
+3. Use the bulk clk APIs
+
+Changes in v2:
+1. Fix the typo of dt-bindings patch
+2. Remove the unnecessary properties in binding document
+3. dispos the irq mappings of msi top domain when irq teardown
+
+Jianjun Wang (7):
+  dt-bindings: PCI: mediatek-gen3: Add YAML schema
+  PCI: Export pci_pio_to_address() for module use
+  PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+  PCI: mediatek-gen3: Add INTx support
+  PCI: mediatek-gen3: Add MSI support
+  PCI: mediatek-gen3: Add system PM support
+  MAINTAINERS: Add Jianjun Wang as MediaTek PCI co-maintainer
+
+ .../bindings/pci/mediatek-pcie-gen3.yaml      |  181 +++
+ MAINTAINERS                                   |    1 +
+ drivers/pci/controller/Kconfig                |   13 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-mediatek-gen3.c   | 1025 +++++++++++++++++
+ drivers/pci/pci.c                             |    1 +
+ 6 files changed, 1222 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+ create mode 100644 drivers/pci/controller/pcie-mediatek-gen3.c
+
+-- 
+2.25.1
+
