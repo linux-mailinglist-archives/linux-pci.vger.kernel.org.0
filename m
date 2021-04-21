@@ -2,184 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF4D6367163
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 19:33:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE783672C5
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 20:45:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241272AbhDUReF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Apr 2021 13:34:05 -0400
-Received: from mail-mw2nam10on2119.outbound.protection.outlook.com ([40.107.94.119]:32321
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S239822AbhDUReE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Apr 2021 13:34:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VtN+8Yk7u/bsw8MC9fwmEbdeoq+pCocpnheTnN7RpePI85cmBdpxFwU6jz98CnUh8EOfqzOjEbYXPhA3aLVcymltiRNEKRCLmx0o5auEJo0BXI6bgpZi+VEBwOR9deWQTik2a3kiwYEJaE4TbjqNhN4jo1zCXDMKCrPBOGPYHM4A910RAu3Bgy088i+NWIBs2OJFa9seApc24U9jRWZELDfUWa8D3/beIvmEt3QZssDHsPENVCl5w81cFbwYWzqBSsrgBQFzhNae4f7Iak5ix8QwVEBJcCSlZy+6uuTdLPh2EgfMIIU+uKRCa2Rzso8vjAi1wXhBaeddf+vUDYpnaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DIaA5h2arZwGRXuP7WWy47PiFdDmhN5OqlHH5rrfjjk=;
- b=M0yX4D4NmIcC6bMgucGgvFzUciYjthDTXy7/nGOmO1lgmGthNC53oEa7lZUNAwszxlb90dk+FREA9FaodW7ZMjl/Ii+2qt6jMumgUjhxIBwohCxP5SShYc9T0xrReJAVeDMGcV9ntXXt4Z8AmMAeUd0vTovqziACifnQTXKrUFUmfzojirv6XbOctLSZfY3u14LyttV1lYPKsNvLfFd8fZOKwkTSMKsiKg48zwFOSV4n8zCI6/49R4/FjfkQCucQcu7KorzMb1cKu4AOO4CqAPrhYLzkxDij6axJwdyf3J8fD5gK5+GhTVSH28r245n0YsgFVxL2IxnIH+Cb5WnMFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DIaA5h2arZwGRXuP7WWy47PiFdDmhN5OqlHH5rrfjjk=;
- b=DJOqaKF/RcTi7eNYhZ4uEQXvlHQ1wvmZYYgMKvXd29KHtr9SiLrUx6SyLNXCHD/ZT/TvH+5Rk32SFRRqksP0TrZDgMLszRVe9n7/GmwNz5JKg3H1Y8gEtyq2lL6DMk+C/qZt2hRNlm/qh40WoheFyLfDGFqqhtJX7T68pQ1yRG8=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MWHPR21MB0477.namprd21.prod.outlook.com (2603:10b6:300:ec::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.10; Wed, 21 Apr
- 2021 17:33:30 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::3c30:6e04:401d:c31f]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::3c30:6e04:401d:c31f%5]) with mapi id 15.20.4087.016; Wed, 21 Apr 2021
- 17:33:30 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     Long Li <longli@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Fix a race condition when removing the device
-Thread-Topic: [PATCH] PCI: hv: Fix a race condition when removing the device
-Thread-Index: AQHXNVHtsv1pPhn/lUymN/4kjb1Ps6q/O9jQ
-Date:   Wed, 21 Apr 2021 17:33:29 +0000
-Message-ID: <MWHPR21MB1593CAEAFB8988ECB93BE6E3D7479@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <1618860054-928-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1618860054-928-1-git-send-email-longli@linuxonhyperv.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0c2cd82d-a9ce-4184-9a5b-6c1855cc9093;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-21T17:24:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: linuxonhyperv.com; dkim=none (message not signed)
- header.d=none;linuxonhyperv.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [75.104.93.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 530ced51-da83-425b-abef-08d904eb9440
-x-ms-traffictypediagnostic: MWHPR21MB0477:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB047749C92D59B76EB2A84962D7479@MWHPR21MB0477.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uJPxflBkWy+ZSRIaowK4XsUXQughcKxSqiHkeQhuy2RRvOEOlOUXXNmMXCmpZW3y+WEPyecpSlATQy94EaHYKjtzbPD+8+a69VkEWJoHJM5Uft4rCZAesn/QvKD8ihdR10XSFPsTPkhrYCuYOTDz6Xkz8JS91epRozNY9d+SYW9a7iCpXQMWFEElzUPbbBMXrlTLUZidjaupuTTeoDDvqyeynWn5SBLleFT0xQolD8C5W1pJLf/IrU3+9kT0l+7oPcYwwLnmsFEqqsI3MF9U9FzWjrXUVOmC9GBWUVB2H6NmL3zmrnXL+k6sl0dgXMq5xIFqP70zoTw1QeV2W8LVQ2yY+bEw5rYNzaQkCsTNlpPeSBeu1AS0vFw/CPHv6DTlzbhlShRwoUqRPnXwe+mPJXFTXVk3fZRvxU5mWE/0CpCyWIX9nHhaIZ+LHBtU37/axB6QMUC1fUXTVNKN31stp9+RyNB+e3GAciwBk+XMIMYaqZ0WWV/3PUEPREQ4cZonKYDpAvKN3FDnjr/APpZa50l7Pp7CXYcapAXsidXnPZbJU6E+E5lThctY2EcXA/OYeophI2xk3YYNNFBv1rUtkXcAkaxgYt0sTY3aI6MYcrsoLS1KR5Leemwx2I8MvKR71EW8WFpq5ZfvMXAb23ok4Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(6506007)(110136005)(26005)(186003)(478600001)(6636002)(316002)(8936002)(10290500003)(82950400001)(8990500004)(7696005)(9686003)(8676002)(55016002)(52536014)(76116006)(83380400001)(921005)(38100700002)(2906002)(4326008)(107886003)(82960400001)(66946007)(66476007)(66556008)(64756008)(66446008)(33656002)(86362001)(71200400001)(122000001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?PMQIs0D1SuEwunDLDLIs6ULvrvSdwaFdiZsl8AAe+p0u6U58qMDe5V5+lcm0?=
- =?us-ascii?Q?9gxk1gtHzFAhRMR34b/JO9WeToU1Zrxje00jWvd/tJjLzlkJ7n0QS96o1phL?=
- =?us-ascii?Q?LyxuK+oo1Sn93mhl5wRhtHil3+WkL4I5bm7Jr4cppZeyAZoA7TW2BoCFPsnC?=
- =?us-ascii?Q?WsRrQd45Mk9djHfNv2PIuRVJuwlOP64vOZqVTLMcsYvaIvH4LdEU/kQgHqZz?=
- =?us-ascii?Q?dYGCyK/8WHE1nzJ+07HOD4GdSbNN2OEeRz+Zuh1FMtK+u6qN6X2oRG9rmxhT?=
- =?us-ascii?Q?90Dba4Uu3kymGqcWJv5cyhXE0dlsFJVLstB8lkcUqisPMvfWY5qvQiRojMmN?=
- =?us-ascii?Q?xd/vPbFKCc1BQ07gt6w+7+32x//4A6l5qEJ4J0k8NhazbEyNZiOhPrNFcbU1?=
- =?us-ascii?Q?svfVmflcezYJBZm+hBTk20B06i+R73AIOxD4hiKj049JJAOarfe8HlMRJ4jt?=
- =?us-ascii?Q?Q3AG5Ct5Yq6zUQ1ZDRnAiaDBLYrcszWgQbiZoNiYfy1BpIF/4wEFEFbIBsRl?=
- =?us-ascii?Q?9EARFl1rCzTnMRYDFH1wnYnE9aBBmRz+ErUAB9uZjUb9BppTQVEgd3UszLuk?=
- =?us-ascii?Q?pX+doXFJUwzOGnbOK56/ISvjISflDSPDNYnd+2UhHtP6k4TKNcG+nU0esU12?=
- =?us-ascii?Q?nFDDVor0eYXWiThjT42GWBGQNUbHHf3QVCiJbuBdUVldzv42HQm45Lf4wHLo?=
- =?us-ascii?Q?b7netdRMmEtNflJVec3URaf8QZebF7KcR1eC4XfcitUA0xwr+l4k/CwodEoq?=
- =?us-ascii?Q?9ewApSzXEj4A38aRmG188Z7f402oWd/aaigeXdaVsRRW65Gb11yr3wQqpoHQ?=
- =?us-ascii?Q?GBXWtqsaS9XOv65zGRdNV5qeT5RQ56GiQzjqVfSpHU0pYegXdMl8XWFfjTsX?=
- =?us-ascii?Q?D5DlnjPYz36d0DjzQ4uRv8m1+OR/I5oNAM8deesvdkJ+du7s6pJeK4NqByNm?=
- =?us-ascii?Q?Tgk9TbDObbIZ5XcHf2r77WX63aoBsJmGybVJ5J57mmxuJIl8PJY8QQgRhmMT?=
- =?us-ascii?Q?vkrQuptD523boipsJCcsRn0+lBEsGsYfSitA3if/ESAHiRTwOnHAjXKHoio0?=
- =?us-ascii?Q?qY1teAmihtNKUwb8pRr27kXAyxrMjL1zWWMyt1h5ZOFhSv7ycCqSStvAyHKf?=
- =?us-ascii?Q?N0FHOay1e1hld0Ng5ufynj8UARDKwBG+fYg7a/OBE//U2VZeQjfu+Uch/b2U?=
- =?us-ascii?Q?uCYqnHF4neyLY4Fdr/iE5TsstzVeezuE0/nMnk1af4tdgVhlNqZZ+gugbfCe?=
- =?us-ascii?Q?MtPJaU861AU/vUQhXcQtnNuKyiHezKVTQdSfJhPUEro3Jy9d9KDKFz6KoTZw?=
- =?us-ascii?Q?W1ssEhXyLIV1u9cJWwrlG96F?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S245259AbhDUSqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Apr 2021 14:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245261AbhDUSqN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Apr 2021 14:46:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3DF7E6144D;
+        Wed, 21 Apr 2021 18:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619030740;
+        bh=UKjUh24QqYmwHHSQuEySdCcJc2UvAvWPJoLiR3wCGKc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=URABPCKSQG09ALSpWO9/iywOZvM0Llx/PBU5zWecpkWfgaSZuCQIfHbzBQPm2DZvG
+         UZ9CcDUUu2LviLN1OjO1D+0LPyViI3CgrPUSJuEPuqUsm2I0cH57MQiSCEOb9iNsWJ
+         bR06s9dMbze28GFon41XmlwIh79KKW9i93jloIbAmxkbBZPM3zvn17RcDgXqMraw9I
+         r1dFr5AV/8Qw+vFedr+Y6y+fEm6WCQ1jC2jiv/k0+TmqEDcYgzHQ5ZPHWM+sZ3QqFM
+         uG9t7sx9dez/I4XgiYON2ooCYT9kg3FkWwxE+pjRk2RcVAypv3CS9R2eo5qLfEY4N/
+         NygmfvynIDwpw==
+Received: by mail-ej1-f52.google.com with SMTP id x12so44222834ejc.1;
+        Wed, 21 Apr 2021 11:45:40 -0700 (PDT)
+X-Gm-Message-State: AOAM530FrYLa5kmmKT0U/QSbq3luJUHg+eTMyU/YMH3qcfEpiMXKhcID
+        /iNvUXV3zpO3teMuMocuc5NRrIOSMnBtWhWvxQ==
+X-Google-Smtp-Source: ABdhPJxGEGQ5XZOIN12a5/tf2rH4PRymOB2OCJQlg4vuUdHH5WJ4aW20jpXWygeIzqi8xAkH01TNnrppfzRQmPD+E3c=
+X-Received: by 2002:a17:906:1984:: with SMTP id g4mr33699798ejd.525.1619030738569;
+ Wed, 21 Apr 2021 11:45:38 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 530ced51-da83-425b-abef-08d904eb9440
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2021 17:33:29.8878
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: m4Ca54nd67u0NNrxISrZsOcekgVUzAiTPjO6ti65CyXSczwOntva5vM6hKTZcNnAix2NS2BvVOM/jk4Xqfsi8Hn65mzhpVYwRgRBECEFvgc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0477
+References: <cover.1618916235.git.baruch@tkos.co.il> <c6ff03d1377ea9b5ff40ab283c884aeff6254dd9.1618916235.git.baruch@tkos.co.il>
+ <20210420161855.GA3402221@robh.at.kernel.org> <87r1j4kzzm.fsf@tarshish>
+In-Reply-To: <87r1j4kzzm.fsf@tarshish>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 21 Apr 2021 13:45:26 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKP1hZ6UGEuevjcMC_ZLbojemZ7-X-koyaxViRHQOoN4g@mail.gmail.com>
+Message-ID: <CAL_JsqKP1hZ6UGEuevjcMC_ZLbojemZ7-X-koyaxViRHQOoN4g@mail.gmail.com>
+Subject: Re: [PATCH 1/5] PCI: qcom: add support for IPQ60xx PCIe controller
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        linux-phy@lists.infradead.org, PCI <linux-pci@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>  Sent: Monday, Ap=
-ril 19, 2021 12:21 PM
->=20
-> On removing the device, any work item (hv_pci_devices_present() or
-> hv_pci_eject_device()) scheduled on workqueue hbus->wq may still be runni=
-ng
-> and race with hv_pci_remove().
->=20
-> This can happen because the host may send PCI_EJECT or PCI_BUS_RELATIONS(=
-2)
-> and decide to rescind the channel immediately after that.
->=20
-> Fix this by flushing/stopping the workqueue of hbus before doing hbus rem=
-ove.
+On Tue, Apr 20, 2021 at 11:45 PM Baruch Siach <baruch@tkos.co.il> wrote:
+>
+> Hi Rob,
+>
+> Thanks for your review.
+>
+> I have a few comments below.
+>
+> On Tue, Apr 20 2021, Rob Herring wrote:
+> > On Tue, Apr 20, 2021 at 02:21:36PM +0300, Baruch Siach wrote:
+> >> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> >>
+> >> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
+> >> platform.
+> >>
+> >> The code is based on downstream Codeaurora kernel v5.4. Split out the
+> >> registers access part from .init into .post_init. Registers are only
+> >> accessible after phy_power_on().
+> >>
+> >> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> >> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> >> ---
+> >>  drivers/pci/controller/dwc/pcie-qcom.c | 279 +++++++++++++++++++++++++
+> >>  1 file changed, 279 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> >> index 8a7a300163e5..3e27de744738 100644
+> >> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> >> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> >> @@ -41,6 +41,31 @@
+> >>  #define L23_CLK_RMV_DIS                             BIT(2)
+> >>  #define L1_CLK_RMV_DIS                              BIT(1)
+> >>
+> >> +#define PCIE_ATU_CR1_OUTBOUND_6_GEN3                0xC00
+> >> +#define PCIE_ATU_CR2_OUTBOUND_6_GEN3                0xC04
+> >> +#define PCIE_ATU_LOWER_BASE_OUTBOUND_6_GEN3 0xC08
+> >> +#define PCIE_ATU_UPPER_BASE_OUTBOUND_6_GEN3 0xC0C
+> >> +#define PCIE_ATU_LIMIT_OUTBOUND_6_GEN3              0xC10
+> >> +#define PCIE_ATU_LOWER_TARGET_OUTBOUND_6_GEN3       0xC14
+> >> +#define PCIE_ATU_UPPER_TARGET_OUTBOUND_6_GEN3       0xC18
+> >> +
+> >> +#define PCIE_ATU_CR1_OUTBOUND_7_GEN3                0xE00
+> >> +#define PCIE_ATU_CR2_OUTBOUND_7_GEN3                0xE04
+> >> +#define PCIE_ATU_LOWER_BASE_OUTBOUND_7_GEN3 0xE08
+> >> +#define PCIE_ATU_UPPER_BASE_OUTBOUND_7_GEN3 0xE0C
+> >> +#define PCIE_ATU_LIMIT_OUTBOUND_7_GEN3              0xE10
+> >> +#define PCIE_ATU_LOWER_TARGET_OUTBOUND_7_GEN3       0xE14
+> >> +#define PCIE_ATU_UPPER_TARGET_OUTBOUND_7_GEN3       0xE18
+> >
+> > ATU registers are standard DWC registers. Plus upstream now dynamically
+> > detects how many ATU regions there are.
+> >
+> >> +#define PCIE20_COMMAND_STATUS                       0x04
+> >> +#define BUS_MASTER_EN                               0x7
+> >> +#define PCIE20_DEVICE_CONTROL2_STATUS2              0x98
+> >> +#define PCIE_CAP_CPL_TIMEOUT_DISABLE                0x10
+> >
+> > All PCI standard registers.
+>
+> PCIE20_COMMAND_STATUS is indeed the common PCI_COMMAND. I could not find
+> anything that matches PCIE20_DEVICE_CONTROL2_STATUS2. Where should I
+> look?
 
-I can see that this change follows the same pattern as in hv_pci_suspend().=
-   The
-comments there give a full explanation of the issue and the solution.  But
-interestingly, the current code also has a reference count mechanism on
-the hbus.  And code near the end of hv_pci_remove() decrements the referenc=
-e
-count and then waits for all users to finish before destroying the workqueu=
-e.
-With this change, is this reference counting mechanism still needed?   If t=
-he
-workqueue has already been emptied, it seems like the wait_for_completion()
-near the end of hv_pci_remove() would never be waiting for anything.  It ma=
-kes
-me wonder if moving the reference count checking code from near the end of
-hv_pci_remove() up to near the beginning would solve the problem as well
-(and maybe in hv_pci_suspend also?).
+Looks like PCI_EXP_DEVCTL2 and PCI_EXP_DEVSTA2 to me. The register bit
+looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS. Those are extended config
+registers so their offset is variable.
 
-Michael=20
+>
+> >
+> >> +#define PCIE30_GEN3_RELATED_OFF                     0x890
+> >
+> > Looks like a DWC port logic register. The define at a minimum goes in
+> > the common code. We probably already have one. Code touching the
+> > register should ideally be there too (hint: look at the other drivers).
+>
+> pcie-tegra194.c uses the equivalent GEN3_RELATED_OFF. So I can move the
+> definition to a common header. As for the code, I don't know. The tegra
+> configuration sequence involves other registers as well.
 
->=20
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 27a17a1e4a7c..116815404313 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -3305,6 +3305,17 @@ static int hv_pci_remove(struct hv_device *hdev)
->=20
->  	hbus =3D hv_get_drvdata(hdev);
->  	if (hbus->state =3D=3D hv_pcibus_installed) {
-> +		tasklet_disable(&hdev->channel->callback_event);
-> +		hbus->state =3D hv_pcibus_removing;
-> +		tasklet_enable(&hdev->channel->callback_event);
-> +
-> +		flush_workqueue(hbus->wq);
-> +		/*
-> +		 * At this point, no work is running or can be scheduled
-> +		 * on hbus-wq. We can't race with hv_pci_devices_present()
-> +		 * or hv_pci_eject_device(), it's safe to proceed.
-> +		 */
-> +
->  		/* Remove the bus from PCI's point of view. */
->  		pci_lock_rescan_remove();
->  		pci_stop_root_bus(hbus->pci_bus);
-> --
-> 2.27.0
+I'm sure the Tegra folks will be happy to tell you if anything breaks.
 
+>
+> [snip]
+>
+> >> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+> >> +{
+> >> +    struct dw_pcie *pci = pcie->pci;
+> >> +    u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> >> +    u32 val;
+> >> +    int i;
+> >> +
+> >> +    writel(SLV_ADDR_SPACE_SZ,
+> >> +            pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
+> >> +
+> >> +    val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> >> +    val &= ~BIT(0);
+> >
+> > What's BIT(0)?
+>
+> I have no idea. I have no access to hardware documentation. I'm just
+> porting working code from the Codeaurora tree.
+
+Based on the 7 other existing modifications to that bit, it's 'enable
+PCIe clocks and resets'. Looks like we need some refactoring at least
+so there's not yet another copy.
+
+> >> +    writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> >> +
+> >> +    writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> >> +
+> >> +    writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+> >> +    writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+> >> +            pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> >> +    writel(RXEQ_RGRDLESS_RXTS | GEN3_ZRXDC_NONCOMPL,
+> >> +            pci->dbi_base + PCIE30_GEN3_RELATED_OFF);
+> >> +
+> >> +    writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+> >> +            | SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+> >> +            AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+> >> +            pcie->parf + PCIE20_PARF_SYS_CTRL);
+> >> +
+> >> +    writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
+> >> +
+> >> +    writel(BUS_MASTER_EN, pci->dbi_base + PCIE20_COMMAND_STATUS);
+> >
+> > Pretty sure the DWC core or PCI core does this already.
+> >
+> >> +
+> >> +    writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
+> >> +    writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+
+I have to wonder if all the bits being set here are really true.
+Hotplug is really supported? There's an attention button? Power
+indicator? If anything, that's all board specific and would need to
+come from firmware (DT).
+
+> >> +
+> >> +    /* Configure PCIe link capabilities for ASPM */
+> >> +    val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> >> +    val &= ~PCI_EXP_LNKCAP_ASPMS;
+> >> +    writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> >> +
+> >> +    writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
+> >> +            PCIE20_DEVICE_CONTROL2_STATUS2);
+> >> +
+> >> +    writel(PCIE_CAP_CURR_DEEMPHASIS | SPEED_GEN3,
+
+SPEED_GEN3 does not look right for PCI_EXP_DEVCTL2.
+
+> >> +                    pci->dbi_base + offset + PCI_EXP_DEVCTL2);
+> >
+> > This all looks like stuff that should be in the DWC core code. Maybe we
+> > need an ASPM disable quirk or something? That's probably somewhat
+> > common.
+>
+> Where in common code should that be?
+
+If these registers are initialized elsewhere, in the same place.
+Otherwise, probably in dw_pcie_setup_rc().
+
+> Which part is quirky?
+
+Disabling ASPM. It's a bit strange that some of this is needed at all
+considering no other platform using the same IP needs it.
+
+Rob
