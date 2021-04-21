@@ -2,98 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE255366F11
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 17:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C463670A8
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 18:54:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240987AbhDUPYq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Apr 2021 11:24:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:35687 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244010AbhDUPYC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Apr 2021 11:24:02 -0400
-IronPort-SDR: cdTdzFgRViFcDv8gRKs8iUF7CgxnaoVW1zrXGcJafDiGZdZeCCDwCk8AyYZHbr6cpteVfwUiEN
- kJU3XFV7cHEw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9961"; a="195273900"
-X-IronPort-AV: E=Sophos;i="5.82,240,1613462400"; 
-   d="scan'208";a="195273900"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2021 08:23:29 -0700
-IronPort-SDR: goI6wrw2Cay5It9IfcIPGyGV379vnJrjvX3s1ZHB8nSCryD3TSo2CIT4KGJ7ZpNmtZstU7CY7x
- 4ha8JHMX5UqQ==
-X-IronPort-AV: E=Sophos;i="5.82,240,1613462400"; 
-   d="scan'208";a="455380891"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2021 08:23:26 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lZEhH-0064QA-K1; Wed, 21 Apr 2021 18:23:23 +0300
-Date:   Wed, 21 Apr 2021 18:23:23 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
-        mika.westerberg@linux.intel.com, rric@kernel.org,
-        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S234323AbhDUQy7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Apr 2021 12:54:59 -0400
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:42723 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236426AbhDUQy6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Apr 2021 12:54:58 -0400
+Received: by mail-ed1-f49.google.com with SMTP id d21so30083378edv.9;
+        Wed, 21 Apr 2021 09:54:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LwXhMkGUMNYwRKRStEL04Gs6Tphs7NzMu5XYeJimgo8=;
+        b=uJRhbTSULmzlqgrkJy4ph5/So8zPjpSW1EeMWWLxvbYDZ+E50W9Dfl+Dve3OOOJeXy
+         hX3T3RofsHTvSrKKL74SmThBZ7zmY7p/jcyYX8pQmei4R4fRk9lQ1Rzto1FDjddZyxSU
+         WMnltyNR/VU3MOUal0kkRjbQp8aB91nAdeAYDEj0fMyvhGmv0raI/J1lqSJoIdEuI4Z/
+         WKS1ysjkBehptsEkfhsBdzIf5BPIVA2/zrCEAXK+it4iN0ex5OjdxZoU2MfINNNip+b6
+         tI6IhBCULbWABwdnsPMzxTSXw7EGO+tyaFM1WqV1/TIaXfPYUSYDcM43o6iGwtB4fRrO
+         8+AQ==
+X-Gm-Message-State: AOAM531nFZ2eq0kNCbmXLFoCR7yPsPcCkNY7O7wcGJzTbugtryCfvadN
+        /LFZjDCyBBdJcAqnRp9ms2w=
+X-Google-Smtp-Source: ABdhPJyGCcVU826RHHkW/QBdZ6r/MsN4F0wdJSbV7FA19XAFP1HUc+Rq8MpQnk2kKxg3ciJEek9I1w==
+X-Received: by 2002:a05:6402:6da:: with SMTP id n26mr26868699edy.203.1619024061980;
+        Wed, 21 Apr 2021 09:54:21 -0700 (PDT)
+Received: from client-192-168-1-100.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id q6sm55200ejt.51.2021.04.21.09.54.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Apr 2021 09:54:21 -0700 (PDT)
+Date:   Wed, 21 Apr 2021 18:54:20 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] Introduce pcim_alloc_irq_vectors()
-Message-ID: <YIBDa1bvKInOg2LH@smile.fi.intel.com>
-References: <20210226155056.1068534-1-zhengdejin5@gmail.com>
+Subject: Re: [PATCH] PCI/VPD: fix unused pci_vpd_set_size function warning
+Message-ID: <YIBYvJV0Hr7pt/T1@client-192-168-1-100.lan>
+References: <20210421140334.3847155-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210226155056.1068534-1-zhengdejin5@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210421140334.3847155-1-arnd@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 26, 2021 at 11:50:52PM +0800, Dejin Zheng wrote:
-> Introduce pcim_alloc_irq_vectors(), a device-managed version of
-> pci_alloc_irq_vectors(), In some i2c drivers, If pcim_enable_device()
-> has been called before, then pci_alloc_irq_vectors() is actually a
-> device-managed function. It is used as a device-managed function, So
-> replace it with pcim_alloc_irq_vectors().
+Hi Arnd,
 
-Bjorn, I don't see this anywhere, except mailing list. Neither your opinion.
-What is the plan?
-
-> Changelog
-> ---------
-> v4 -> v5:
-> 	- Remove the check of enable device in pcim_alloc_irq_vectors()
-> 	  and make it as a static line function.
-> 	- Modify the subject name in patch 3 and patch 4.
-> v3 -> v4:
-> 	- add some commit comments for patch 3
-> v2 -> v3:
-> 	- Add some commit comments for replace some codes in
-> 	  pcim_release() by pci_free_irq_vectors().
-> 	- Simplify the error handling path in i2c designware
-> 	  driver.
-> v1 -> v2:
-> 	- Use pci_free_irq_vectors() to replace some code in
-> 	  pcim_release().
-> 	- Modify some commit messages.
+> The only user of this function is now in an #ifdef, causing
+> a warning when that symbol is not defined:
 > 
-> Dejin Zheng (4):
->   PCI: Introduce pcim_alloc_irq_vectors()
->   Documentation: devres: Add pcim_alloc_irq_vectors()
->   i2c: designware: Use pcim_alloc_irq_vectors() to allocate IRQ vectors
->   i2c: thunderx: Use pcim_alloc_irq_vectors() to allocate IRQ vectors
+> drivers/pci/vpd.c:289:13: error: 'pci_vpd_set_size' defined but not used [-Werror=unused-function]
+>   289 | static void pci_vpd_set_size(struct pci_dev *dev, size_t len)
 > 
->  .../driver-api/driver-model/devres.rst        |  1 +
->  drivers/i2c/busses/i2c-designware-pcidrv.c    | 15 ++++--------
->  drivers/i2c/busses/i2c-thunderx-pcidrv.c      |  2 +-
->  drivers/pci/pci.c                             |  5 +---
->  include/linux/pci.h                           | 24 +++++++++++++++++++
->  5 files changed, 31 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 2.25.0
-> 
+> Move the function into that #ifdef block.
+[...]
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thank you!
 
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
+Krzysztof
