@@ -2,96 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 488EC366DD9
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 16:14:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE255366F11
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 17:24:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238544AbhDUOPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Apr 2021 10:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236743AbhDUOPF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Apr 2021 10:15:05 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7DAC06174A;
-        Wed, 21 Apr 2021 07:14:30 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id q136so21935722qka.7;
-        Wed, 21 Apr 2021 07:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=H0xUL+VFdyIa0ji4Th/5YMGTFHYr1jkOK9wBOItrp/Y=;
-        b=Htq4AavTUvaIKjrSwYSgfk/9LOhsOQRau62GNNkBD79Sh4VxHePzD2L+B52RENCsHI
-         4PL+nqqx70rsT6DneonIWLk2JgIAAKH4RYpwmo9Wn4GDqdmpAlfpjtk7jRllYJmXZiyo
-         tnWbbNT+p3igXVTAx/jBF1NGPsOxeu1AmVb87QTHjEKTdSc2O7Jo3LKCuXXR0KpW4+Bg
-         RW9awX3klxF+hBslxw/CUl5QEoKtY33EQ/HmP0wx4EJ0xHnjRpqiBjFbzcGxBnN5SQYr
-         KgFfi77SLsFAOdNhi6+68ezGqnlxjq1tZBqUtfj/RhDFkEwEa14TQvGCRvorbKiVdznv
-         Pi9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=H0xUL+VFdyIa0ji4Th/5YMGTFHYr1jkOK9wBOItrp/Y=;
-        b=BcCnbKgSX+9JiOELj0lrxdNt7av1PMyExWtdW2rZo89dYSMsVNTvCQjq+fjnknYpaz
-         0+oio0U8DoiIoXaQhNylUwR9J7x4zLZwRH+N5RQZ0xjchC+qkhtutQLivuAcJrGxteju
-         W+RJfAIQLHGrIPidehikS6wFOQCU2wrsuPYchBVfWSb5QcN0NGqk01OkJ8+EN1uLI7ZE
-         llyXQTiHWU3AG+r8Ru+Bm5+k3+3UP8fdCTL1VKDDfrpt2bttZY4SAB2sgx2A0ql+9JeL
-         XLSr61FeUYrajZP3BJ9HnyCSiYznZaKMRJqovwkrRkI2h/vp2sIHrsKLG+aS5B56cXWq
-         gRMg==
-X-Gm-Message-State: AOAM532YjNp+LV96fyjnYWaS1iAaC2FjC9wHGBNeZEQ6zImoLPIxL70P
-        PZS2/OBwXmZon3htt+qjtp4=
-X-Google-Smtp-Source: ABdhPJw8CLguVFAPzF8l1/1q5ENNtjHkvPtfqw/PekYFKdTDnJWRL0D+IoF3dUIZdep6LDU4L/VqjQ==
-X-Received: by 2002:a37:a5d6:: with SMTP id o205mr11119679qke.166.1619014469882;
-        Wed, 21 Apr 2021 07:14:29 -0700 (PDT)
-Received: from li-908e0a4c-2250-11b2-a85c-f027e903211b.ibm.com ([177.35.200.187])
-        by smtp.gmail.com with ESMTPSA id o12sm2150348qkg.36.2021.04.21.07.14.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Apr 2021 07:14:29 -0700 (PDT)
-Message-ID: <5da23b1199c897b464c7bf7027ac50057d1cb5b6.camel@gmail.com>
-Subject: Re: [PATCH 1/1] of/pci: Add IORESOURCE_MEM_64 to resource flags for
- 64-bit memory addresses
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Date:   Wed, 21 Apr 2021 11:14:25 -0300
-In-Reply-To: <CAL_JsqJXKVUFh9KrJjobn-jE-PFKN0w-V_i3qkfBrpTah4g8Xw@mail.gmail.com>
-References: <20210415180050.373791-1-leobras.c@gmail.com>
-         <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
-         <7b089cd48b90f2445c7cb80da1ce8638607c46fc.camel@gmail.com>
-         <CAL_Jsq+m6CkGj_NYGvwxoKwoQ4PkEu6hfGdMTT3i4APoHSkNeg@mail.gmail.com>
-         <b875ef1778e17a87ee1f4b71d26f2782831b1d07.camel@gmail.com>
-         <CAL_JsqK83MFqZ4yCz+i7sunpXFmi+vvjCSxVmcCh1YG=mOxY9A@mail.gmail.com>
-         <b56b8a5c8f02a2afea9554ebf16a423c182a9fc3.camel@gmail.com>
-         <CAL_JsqJXKVUFh9KrJjobn-jE-PFKN0w-V_i3qkfBrpTah4g8Xw@mail.gmail.com>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S240987AbhDUPYq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Apr 2021 11:24:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35687 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244010AbhDUPYC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Apr 2021 11:24:02 -0400
+IronPort-SDR: cdTdzFgRViFcDv8gRKs8iUF7CgxnaoVW1zrXGcJafDiGZdZeCCDwCk8AyYZHbr6cpteVfwUiEN
+ kJU3XFV7cHEw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9961"; a="195273900"
+X-IronPort-AV: E=Sophos;i="5.82,240,1613462400"; 
+   d="scan'208";a="195273900"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2021 08:23:29 -0700
+IronPort-SDR: goI6wrw2Cay5It9IfcIPGyGV379vnJrjvX3s1ZHB8nSCryD3TSo2CIT4KGJ7ZpNmtZstU7CY7x
+ 4ha8JHMX5UqQ==
+X-IronPort-AV: E=Sophos;i="5.82,240,1613462400"; 
+   d="scan'208";a="455380891"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2021 08:23:26 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lZEhH-0064QA-K1; Wed, 21 Apr 2021 18:23:23 +0300
+Date:   Wed, 21 Apr 2021 18:23:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        mika.westerberg@linux.intel.com, rric@kernel.org,
+        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] Introduce pcim_alloc_irq_vectors()
+Message-ID: <YIBDa1bvKInOg2LH@smile.fi.intel.com>
+References: <20210226155056.1068534-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210226155056.1068534-1-zhengdejin5@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2021-04-20 at 17:34 -0500, Rob Herring wrote:
-> > [...]
-> > I think the point here is bus resources not getting the MEM_64 flag,
-> > but device resources getting it correctly. Is that supposed to happen?
-> 
-> I experimented with this on Arm with qemu and it seems fine there too.
-> Looks like the BARs are first read and will have bit 2 set by default
-> (or hardwired?). Now I'm just wondering why powerpc needs the code it
-> has...
-> 
-> Anyways, I'll apply the patch.
-> 
-> Rob
+On Fri, Feb 26, 2021 at 11:50:52PM +0800, Dejin Zheng wrote:
+> Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> pci_alloc_irq_vectors(), In some i2c drivers, If pcim_enable_device()
+> has been called before, then pci_alloc_irq_vectors() is actually a
+> device-managed function. It is used as a device-managed function, So
+> replace it with pcim_alloc_irq_vectors().
 
-Thanks Rob!
+Bjorn, I don't see this anywhere, except mailing list. Neither your opinion.
+What is the plan?
+
+> Changelog
+> ---------
+> v4 -> v5:
+> 	- Remove the check of enable device in pcim_alloc_irq_vectors()
+> 	  and make it as a static line function.
+> 	- Modify the subject name in patch 3 and patch 4.
+> v3 -> v4:
+> 	- add some commit comments for patch 3
+> v2 -> v3:
+> 	- Add some commit comments for replace some codes in
+> 	  pcim_release() by pci_free_irq_vectors().
+> 	- Simplify the error handling path in i2c designware
+> 	  driver.
+> v1 -> v2:
+> 	- Use pci_free_irq_vectors() to replace some code in
+> 	  pcim_release().
+> 	- Modify some commit messages.
+> 
+> Dejin Zheng (4):
+>   PCI: Introduce pcim_alloc_irq_vectors()
+>   Documentation: devres: Add pcim_alloc_irq_vectors()
+>   i2c: designware: Use pcim_alloc_irq_vectors() to allocate IRQ vectors
+>   i2c: thunderx: Use pcim_alloc_irq_vectors() to allocate IRQ vectors
+> 
+>  .../driver-api/driver-model/devres.rst        |  1 +
+>  drivers/i2c/busses/i2c-designware-pcidrv.c    | 15 ++++--------
+>  drivers/i2c/busses/i2c-thunderx-pcidrv.c      |  2 +-
+>  drivers/pci/pci.c                             |  5 +---
+>  include/linux/pci.h                           | 24 +++++++++++++++++++
+>  5 files changed, 31 insertions(+), 16 deletions(-)
+> 
+> -- 
+> 2.25.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
