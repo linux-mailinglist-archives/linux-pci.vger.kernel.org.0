@@ -2,42 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E42367499
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Apr 2021 23:05:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A39FB36777B
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Apr 2021 04:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244088AbhDUVGV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Apr 2021 17:06:21 -0400
-Received: from mail-mw2nam10on2097.outbound.protection.outlook.com ([40.107.94.97]:36225
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S233606AbhDVCb7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Apr 2021 22:31:59 -0400
+Received: from mail-eopbgr760123.outbound.protection.outlook.com ([40.107.76.123]:21134
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S243828AbhDUVGV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Apr 2021 17:06:21 -0400
+        id S230259AbhDVCb7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Apr 2021 22:31:59 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dYjhAQJlmJiRLERDYfOTF8Hj6Xn44e4P6ceAN3Mwt2IBtrKZi411hDe1sZsvTl32972EWj5+Dpj/TsIhb6M4UJcvIaXJ3avV1+ZyFlAqEoDiZ8QV3+uV/vik/vqxG/4V4Coha4QoEA07S84w44ra5h9pvQFi/35yLHFfl6xPoiZLCpSGYHtTZMVoUyMLohyBsX/FmPlpspnaUQHoGE74hMQf5camr9p9qrlcG96aSpotsGWRbNht7lMNKQGHeqEp61R3G7QYB2nBmdgiqVBmQtgYLc5ITzDlA2YwBUtQcewcgITTbmJ5QFYU67/CWpljk6MJkyzPhgWkrvAp7tsaUA==
+ b=G6x5121hdmyGi/UoWmqD12g1Q4LSV0hgQzEzzvHAINN9p9vQWICWsfrdu9LTIjFVetoMYdD+klnfsi5euEEPWlLnxB1z/qv+SnSuHAMvXXJtcDSK0k1+f8C26R5eO4TRQI5MBx7iVMshsgKZ/frIlQhM2xsBYi8tse+8TYyOcGg8G0/oFPe5sCUzq5tlWxneKlrmPGZeVbHqi6dkHz61kM2Wa17NXm4z6OdAh9i9AHxXpeHJ2NBB/q5qFK2napGhb8Cp4ir2Z/7/xCj3D03JfLmqnfX59hg6dQngg4MqHe6iVhqXqPpw43aksjlDPk2GYLdk2Ge2zaX6q4Lnyt8X+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fBgZyUszv1UCVVSmPI/s4+z47buSFS4FVyKS5KuBVj8=;
- b=TnWS/lHI/beyWITIpkL6Y0wEncDtHV4qp7EaB0U796KYUM+BwznZr9VfhVIBQIiT43zWWJt4QRAPfxwCx9CaKLaUUn8vXLi9sG+SzRcFhjUb4mCaAjcvBFQjAGJN2GD4dggNigNf0sz9zQ7JjFnKQQOZHcFLkyEJh7RzSZPk4vTzGozdh5+b+8WUf7vH2f8OBegGm/y+KNZisc2PHXmEHwfBivO8gHIAMkOEyl45Z3D/sPVhny3lUo+N8CkbIk5zAhc4PzkYLronX6saDV3rtNIH7Z9Tcia/DkVFg/OEsT15kV9jM4Erk+okPy8VJ10/ooRvDDc228x0ahHENOst6A==
+ bh=aSmKIosZ1KWHkSkh6/BOsrkDxKXU9buulbMbhyeu6xE=;
+ b=Av7LmtInlpM3KEaFO2+thZG+Gbpjt1m5HQayl+W6261Wv14hJbaGobQRNom1c523EIRsuW3H4GSw1epdGfsJ9Xrt+y7ULcQB5HpIMgwQcmqsGr+8vektS7QXgCzi5MSWXuROSIXWRj+6EZjwR8iZuoFqyNSVf79jhUP6SOgI8hgXAplIprx3mIKiY/n8uRpEHIrboswPAL03ZTl1JrdN+oyB33i07A7yv9NnlejI0BvVgvWz72awTFMHZKE7MEq/+8wmy7FjSfDeoqd3aSECKwJt248J8gwzz3+qvmduF212EbLKkcoNut3TE5IT4o5rXuBYZvkXj3lE7wSp018hZg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fBgZyUszv1UCVVSmPI/s4+z47buSFS4FVyKS5KuBVj8=;
- b=aIu4V1bZSHqJrGJ5tTWQOnh/4Z9A3Tn7dlqhD/ddzCE5HpBVC3BMPwomKkf5tg+q/Tssi6YNJ8ZKxqpBm3pACfcDdn3RkbSEKWYdCOzZYjMZe6w9QXxkDkCzCPUqH1IIKKlZ+fCX2MUwi+7Eo/IaBO8G1wbphrgFY274dKsL+AA=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW4PR21MB1970.namprd21.prod.outlook.com (2603:10b6:303:70::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.9; Wed, 21 Apr
- 2021 21:05:46 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::3c30:6e04:401d:c31f]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::3c30:6e04:401d:c31f%5]) with mapi id 15.20.4087.016; Wed, 21 Apr 2021
- 21:05:46 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Long Li <longli@microsoft.com>,
+ bh=aSmKIosZ1KWHkSkh6/BOsrkDxKXU9buulbMbhyeu6xE=;
+ b=jrhEOS2jHifTcftIMHNUd2kUDU55bq343GbJ5w5OFjYFkAzX1uMBuhg08QQ2jsysy0FxhLwR7FJywhUzZi8pC6vNGRMSYA2CdN73/wsDCF3gtM3KyMsTkpriuloGXGPqtAVIoHn5ddhogEKCq5VsrHbejuv/x+LNxhRX2xXwTWo=
+Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
+ (2603:10b6:302:10::24) by MWHPR21MB0637.namprd21.prod.outlook.com
+ (2603:10b6:300:127::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.5; Thu, 22 Apr
+ 2021 02:31:23 +0000
+Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
+ ([fe80::5548:cbd8:43cd:aa3d]) by MW2PR2101MB0892.namprd21.prod.outlook.com
+ ([fe80::5548:cbd8:43cd:aa3d%6]) with mapi id 15.20.4065.008; Thu, 22 Apr 2021
+ 02:31:23 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
         "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -48,17 +49,17 @@ To:     Long Li <longli@microsoft.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: RE: [PATCH] PCI: hv: Fix a race condition when removing the device
 Thread-Topic: [PATCH] PCI: hv: Fix a race condition when removing the device
-Thread-Index: AQHXNVHtsv1pPhn/lUymN/4kjb1Ps6q/O9jQgAAqeACAABF+EA==
-Date:   Wed, 21 Apr 2021 21:05:46 +0000
-Message-ID: <MWHPR21MB15933F28861A2C448C3F233DD7479@MWHPR21MB1593.namprd21.prod.outlook.com>
+Thread-Index: AQHXNVHtsv1pPhn/lUymN/4kjb1Ps6q/O9jQgAAqeACAABF+EIAAVhsw
+Date:   Thu, 22 Apr 2021 02:31:23 +0000
+Message-ID: <MW2PR2101MB0892B264810E6E6E54A96C4DBF469@MW2PR2101MB0892.namprd21.prod.outlook.com>
 References: <1618860054-928-1-git-send-email-longli@linuxonhyperv.com>
  <MWHPR21MB1593CAEAFB8988ECB93BE6E3D7479@MWHPR21MB1593.namprd21.prod.outlook.com>
  <BYAPR21MB12711AF8B782FAA4B492D0CFCE479@BYAPR21MB1271.namprd21.prod.outlook.com>
-In-Reply-To: <BYAPR21MB12711AF8B782FAA4B492D0CFCE479@BYAPR21MB1271.namprd21.prod.outlook.com>
+ <MWHPR21MB15933F28861A2C448C3F233DD7479@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB15933F28861A2C448C3F233DD7479@MWHPR21MB1593.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -67,155 +68,110 @@ msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0c2cd82d-a
 authentication-results: microsoft.com; dkim=none (message not signed)
  header.d=none;microsoft.com; dmarc=none action=none
  header.from=microsoft.com;
-x-originating-ip: [8.46.73.4]
+x-originating-ip: [2601:600:8b00:6b90:688b:1c6e:a2b1:f6c7]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a4a1995f-3379-4990-cc60-08d905093bc0
-x-ms-traffictypediagnostic: MW4PR21MB1970:
+x-ms-office365-filtering-correlation-id: a973216a-8340-4883-71f2-08d90536b8e4
+x-ms-traffictypediagnostic: MWHPR21MB0637:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW4PR21MB197097B9F204BEC6A512ECAAD7479@MW4PR21MB1970.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam-prvs: <MWHPR21MB0637F25659A253D7362F1214BF469@MWHPR21MB0637.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Iei+qwveFsrkT5Pfmyxtx9SbI0Y4QK4pJk11Ds5aOzhFZ5wmzxQzdUXq81Wcr7JAnkJEmDTISDG82mN3oyTGUfADDSPOCowj7dUwbj3rfkh20q8h/k4siXl4r9W8qIXfam58KM8upa6JDbRoKEBSViyvjHtAfWTZ6UPQ0uXHxy5hkz9Sq8xm/vIfTt3UooBreTwC2vNNjLScLjOlAXhH6J7U3x0MdTeeoU1HJkJtjbetPxPpsCUphC+YqU68bUOM46TNLNZuOW3p82bKAO+sH71uW3VwMsiICMhsAz3PF031quKUAtPejOT10/otakJhEcOX8v/P9agAgf/KC2yW6taaGPcyi599/4HamnIyup/oEsg97XDzpojcifP2UQnDWxIafZuimldzITHYaXK3vXzw1ZxaFv7w8/P8ipWBbPe7XD1ZOhYB1nI84zRVIzbkuwvSOxPkhWTNaf6+FFob4SQ5jiGJmhqbQtWHZc8yl7b/cpmDltdqH/CIXKVxUYgV8ERJjZljxpY5Kec/pYCVCxJu4QbR4iuBYGiyTjAq0+oe3riGSRW9qIHkyY7pmsCH8efM1luZ/q5Oci3ePmklE0Ps4wgAoZnhO4dFYhpZFwwOqKhz3raLKiz5HzYpQ6YMPY1IIQRGzjLAXxP3/17jAg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(71200400001)(76116006)(64756008)(110136005)(7696005)(316002)(66556008)(2906002)(66446008)(9686003)(6636002)(10290500003)(82960400001)(82950400001)(55016002)(66476007)(83380400001)(33656002)(66946007)(6506007)(921005)(8990500004)(38100700002)(186003)(5660300002)(8936002)(86362001)(8676002)(122000001)(26005)(478600001)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?o0CvNKdfPDPV1aGu0+5kCTeEpLhunKWGzK8RJAzDuXC07XuztBmda9w2grYe?=
- =?us-ascii?Q?a2ftI7f5pomp5sTFfVo5zh9JnG25r+mSQnklU+EP5EbZlAhCPMLY/FMlSpzU?=
- =?us-ascii?Q?lyreaOcyaFhiAK5vsFv4BDUzptHdQBiGOtJlWSbYoTqoGv7AY4kJe4hbT+kP?=
- =?us-ascii?Q?ZYcuMa67Hb6ZgJ6JdT3TpUUbAS2DrM3v2jOR0zHDDRykNz7WvyYKX3PzJGLs?=
- =?us-ascii?Q?0vN7G4QgEkQvEkXJcJHZQhTB9twm1hPT3v45UoIemNtAUEvzueORW1vzNBHt?=
- =?us-ascii?Q?EHAI+O8ovoXpgC+0rpBgLQzfjI5Y6fyZUmgx85tdgHEVZpvQzNIV7O1DZhEf?=
- =?us-ascii?Q?E+KMW7lcwcf6uwEDGnSYQwE5ahxZT+p0Qq6ZbKoHeRIcNQF2Vx6athzLyZaW?=
- =?us-ascii?Q?FwFLNuJAeTsDPORejFCfcQkbN7hbgz3UxlJe9nEBivL3epl6Ttb0/5jtU8wO?=
- =?us-ascii?Q?FzwnfZHfQiPm7EtLUZxEVqFccEa/ko45GRC8hIANe4/aloyGJsqYzGt7CYju?=
- =?us-ascii?Q?UrrSEVOTmz3iSZm2CwRrZnqS3Cu51/i4sGH7Jw0z9RI7kjugfOkLyINhUQLw?=
- =?us-ascii?Q?68pFpJ5gnonGNxmFv6BnOPEE02Bu+IaBI0mT4nRzEJjbdsGnZ4Dvc0JXxcAf?=
- =?us-ascii?Q?daxtWpyct4XiUNVguW2kOyWaCmFcHjnq1+dzvYd+3YnmAqW6eG3Dl4LufLKa?=
- =?us-ascii?Q?ZkD5Ie4lRLirsHk2RrL+O+magAMtdxOBYGgETGsjO8yDcalUJnZoaTJbg+VL?=
- =?us-ascii?Q?a6eKM0zqJYsVdJntvGHpNQq8arpK2f2S3DwJ7bgD1wpH0irGIKY0npMf2DwF?=
- =?us-ascii?Q?3gXEj0MNB8I5DL+dpUDJum1Ej9c+b/14KupThmUlP/MUP3+z4R0WAykS4KOV?=
- =?us-ascii?Q?RTiwnTRkrLYmPIFReNsK+w/JQQIl+5CC9hFVUqVtlHGJWKi2JQwZ9TEjVNie?=
- =?us-ascii?Q?q2P5XsYxWeE4vwCfaYsFCn2IvtEvQIn3QdkcbzZnNtUFpsSKJQNz2CFw4bB2?=
- =?us-ascii?Q?9gobGU9k/H6lAj2q//ge1fvQwaSbjYvaFc1J6iE4YYl2VkS6JFHaB97fB+/+?=
- =?us-ascii?Q?EdO/nantHff80S9ZMWBpyTMtQuBfoTd7JqjOdhSC1BVo/CxUksivMftPLuK+?=
- =?us-ascii?Q?xPlInEcBdTOTzWWpU8wXWc6WmHbLEdkXin2Rm6Kwulhet439KW4e+J7M8CBO?=
- =?us-ascii?Q?KfR59g/AGCBNSBTYrKKxlYwru1TGouLpP1VsF4hhxokqlhJboRmKY3oRm7pg?=
- =?us-ascii?Q?szlpGUr9G4o2icZ7Wc5clORVBmfDG1DMB/yapXcyo0TgISrWIaG5AtI6SpLh?=
- =?us-ascii?Q?dKs=3D?=
+x-microsoft-antispam-message-info: SlNA6XE8sScjC31HUGDStsH63TJYdxXBixMYb4rZO6ruJsj4HwbiRnVvxPUDsjUvZjS9Ctaqt1XnW57JDdEKciLrwpaoL+r2cQyvpDlvO/sGza4LVWxb1LGruSu50/QsI/5h08p+lpjctYYRgdCMUdgZUTnT1IF7rvAWuXyo0tEAZQ7x9/2yo6AuxdEZ7xii9CLSlJhyJFLCaV1bfLAerJMw9RgI01tpu9bLgkomB0dbgjOdJsiw6jiIpnJWItxQ4VkjbiveGt1vvN3/CxmR1wBCthlElbYr2MOCI2gxi4Hx+FtGK6VavKya/5HK12yj/tmRxt7rPp2KaljDcFptlW9EhRAbY2lLwKC4hvcfbeAOMi++5HDS/A0w/m7OfrJTHU58sRG2z7M17wTc2/a8Af7vcd1nG8WFCjIWVuHgfkA8EsW7flkbiPGMs6QAI5Z8Y8rHfFKipfR2FVkQl7C4kuUtRyuHHApJ2xIjofup3rm/ICfXiwfGcyKq8ziC5slMS8YXTudht9+MyGjkfBMiSkdQXCY4jab0Pp1flZSjvDPe5Ps4/q7+FO5dnzylZJ//T23dTQblFr3YNrGK27pzIdQexgNEzZC/Apuphn+wJ4GwD3o/9XImR5NJWc62s8GpEHsfcPLg9pERRHqSwTnVrg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(5660300002)(55016002)(9686003)(8990500004)(10290500003)(52536014)(478600001)(2906002)(186003)(8936002)(110136005)(33656002)(8676002)(921005)(122000001)(38100700002)(76116006)(86362001)(7696005)(316002)(64756008)(66476007)(66446008)(66946007)(66556008)(82960400001)(82950400001)(6506007)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?kL8O+n8Xx3LOj2UgUhB8lqREY7s54oubozQWnKNLMbT7gaN808hM3c692c+Z?=
+ =?us-ascii?Q?2uqyEDcK93vNMcdsM5mSNk5BZOGVtDJmmzovnOEW+LoBBao3jizZtWoe9/gR?=
+ =?us-ascii?Q?hrqq5aGv8shGg1iObUI6RydIabSHzGotjyZk9kAHh/3ZojUX2VmkIvgx9ht8?=
+ =?us-ascii?Q?n/1mP2NuCDuwcVk2eExQRoMd0gLz8EBz8j1nUQtWtgB4NhDS5z8bmHSAOubz?=
+ =?us-ascii?Q?Fxb1adlz72xi8sd1Fvma+wakm9u9X0Yv6//yGZh0kXPt9LliXJQ1SXqZHaGq?=
+ =?us-ascii?Q?uTY20SPDRLnBTi+GYsCwI1jb1dm74gxLBQP8x73XfroSobPG5de8G8pr/5zU?=
+ =?us-ascii?Q?IZ+E0v4JWMm+8E2vmcLgwUw8nYMf7Rudd9CLFTv4QT+z+6QJAiDFzfG1Yubk?=
+ =?us-ascii?Q?6oWddHgiQE/vGnzh3oIZbkPgDJsVVz67GJzQMfGIajjrBtmcdFfFEbF+j99c?=
+ =?us-ascii?Q?B2g9JnCHKNnNs+J18PvJoa3MO5XCaT4J3171HT7OcSJEoaa23D+hkBs8G9As?=
+ =?us-ascii?Q?nrHbI20ibDU4xO7aKsVQlgMH/3a0Dzd2HwYUdRQYXNfasp889gm3Zii4Ex1D?=
+ =?us-ascii?Q?XBqUBjhKnaJN3tmncwQFT0KGEKQ2zt3DFVxLI35sM3DBcgPU1OK47XBbesmv?=
+ =?us-ascii?Q?VyLTUkSXkQbTnY4zMy0OJFBMeAO0zeUpWvyhkM+OEYNgItzzjVk5VV1VMVbp?=
+ =?us-ascii?Q?czeflfREuE3SYeQbsDO989ZY2X2sjpz9VaXTkHSXk0NkjYHvhTVMvez0F6iY?=
+ =?us-ascii?Q?Js8MivEEJSTWCBg9qhz7Oa185i6mrT4BJCeynwZB81M7NI/eYCAw7LdMyM7b?=
+ =?us-ascii?Q?HLDRHFLC740CBVayjO49lidIFM+jbJgWIRkU8iGgqc/RNHU9ljquh+VD5sxO?=
+ =?us-ascii?Q?FzFwzpD/QP80fQy8LMCYzX02scWaxICHG0qOaL83os80RX/dIQrw2ITvGHq9?=
+ =?us-ascii?Q?d33jVpQ/tWitpz2hW8CKfuwGLGNMoTwN7DzWw2VLHwaJCSK4NI5+hBEqTGMh?=
+ =?us-ascii?Q?MDgIDLlrzu0GtchGqaW3mPRH6bInrzFXiiHWyHH6USB3yHICwW3e5qm0+MfS?=
+ =?us-ascii?Q?epmSKwGXsrEp1i0GhNdTc2nk+8rlIoSI9i8qOBzoGSIrGcA4GGEcxEJpeQqn?=
+ =?us-ascii?Q?TKrmPhWHHhLoMaHAAYOlqNa09OKvPO7M6yvFT0ec/v/woXgMmqkRYGOsWw7p?=
+ =?us-ascii?Q?sBNuWsZV2j4Zyw7QMBSCww/eptBsbGIP9UPgGBsHengah8cgNFwQxW8PDbod?=
+ =?us-ascii?Q?YesLhLVep5sednO+rpKMFG2t48P/tX6VKuOfbdWDZd4m/hjidFvXlSG70mu7?=
+ =?us-ascii?Q?tKPodlDaD551tqNJNpPzik1YMXCB/eO1mgjh4FvgorF0Rkf5HV2yVCFeZzMU?=
+ =?us-ascii?Q?oPXbxJ+V6Go2Nx6nZSfJduq8N6ks?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4a1995f-3379-4990-cc60-08d905093bc0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2021 21:05:46.3862
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB0892.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a973216a-8340-4883-71f2-08d90536b8e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2021 02:31:23.5968
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9yU/h4rzG5kzNkRhBbJcejdOLe1eIWZ3RS6WIoCZTCxXS6GKppuFAXEFXOcSVFIVQyf8e/Z593uY/XxxV21emsTlMzK4TJXETaT72pK2Dqo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1970
+X-MS-Exchange-CrossTenant-userprincipalname: 3wCuUjb1hi7mh1KOasvGCWUfnW0tGnCeM05Tm3a+TEQmRgneNwkrjd+CWGn8EwsdxAqctmKfGmci3MMS5YW6tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0637
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Long Li <longli@microsoft.com> Sent: Wednesday, April 21, 2021 12:57 =
-PM
-> > From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>  Sent:
-> > Monday, April 19, 2021 12:21 PM
-> > >
-> > > On removing the device, any work item (hv_pci_devices_present() or
-> > > hv_pci_eject_device()) scheduled on workqueue hbus->wq may still be
-> > > running and race with hv_pci_remove().
-> > >
-> > > This can happen because the host may send PCI_EJECT or
-> > > PCI_BUS_RELATIONS(2) and decide to rescind the channel immediately
-> > after that.
-> > >
-> > > Fix this by flushing/stopping the workqueue of hbus before doing hbus
-> > remove.
-> >
-> > I can see that this change follows the same pattern as in hv_pci_suspen=
-d().
-> > The comments there give a full explanation of the issue and the solutio=
-n.  But
-> > interestingly, the current code also has a reference count mechanism on=
- the
-> > hbus.  And code near the end of hv_pci_remove() decrements the referenc=
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Wednesday, April 21, 2021 2:06 PM
+>  ...
+> > Yes I think put_hvpcibus() and get_hvpcibus() can be removed, as we hav=
 e
-> > count and then waits for all users to finish before destroying the work=
-queue.
-> > With this change, is this reference counting mechanism still needed?   =
-If the
-> > workqueue has already been emptied, it seems like the
-> > wait_for_completion() near the end of hv_pci_remove() would never be
-> > waiting for anything.  It makes me wonder if moving the reference count
-> > checking code from near the end of hv_pci_remove() up to near the begin=
-ning
-> > would solve the problem as well (and maybe in hv_pci_suspend also?).
->=20
-> Yes I think put_hvpcibus() and get_hvpcibus() can be removed, as we have =
-changed to use
-> a dedicated workqueue for hbus since they were introduced.
->=20
-> But we still need to call tasklet_disable/enable() the same way hv_pci_su=
-spend() does, the
-> reason is that we need to protect hbus->state. This value needs to be con=
-sistent for the
-> driver. For example, a CPU may decide to schedule a work on a work queue =
-that we just
-> flushed or destroyed, by reading the wrong hbus->state.
->=20
-
-Yes, I would agree the tasklet disable/enable are needed, especially since =
-tasklet_disable()
-is what ensures that the tasklet is not currently running.
-
-If the hbus ref counting isn't needed any longer, I would strongly recommen=
-d adding
-a patch to the series that removes it.  This synchronization stuff is hard =
-enough to
-understand and reason about; having a leftover mechanism that doesn't reall=
-y do
-anything useful makes it nearly impossible. :-)
-
-Dexuan -- I'm hoping you can take a look as well and see if you agree.
-
-Michael
-
+> > changed to use
+> > a dedicated workqueue for hbus since they were introduced.
 > >
-> > Michael
+> > But we still need to call tasklet_disable/enable() the same way
+> > hv_pci_suspend() does, the
+> > reason is that we need to protect hbus->state. This value needs to be
+> consistent for the
+> > driver. For example, a CPU may decide to schedule a work on a work queu=
+e
+> that we just
+> > flushed or destroyed, by reading the wrong hbus->state.
 > >
-> > >
-> > > Signed-off-by: Long Li <longli@microsoft.com>
-> > > ---
-> > >  drivers/pci/controller/pci-hyperv.c | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > > b/drivers/pci/controller/pci-hyperv.c
-> > > index 27a17a1e4a7c..116815404313 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -3305,6 +3305,17 @@ static int hv_pci_remove(struct hv_device
-> > > *hdev)
-> > >
-> > >  	hbus =3D hv_get_drvdata(hdev);
-> > >  	if (hbus->state =3D=3D hv_pcibus_installed) {
-> > > +		tasklet_disable(&hdev->channel->callback_event);
-> > > +		hbus->state =3D hv_pcibus_removing;
-> > > +		tasklet_enable(&hdev->channel->callback_event);
-> > > +
-> > > +		flush_workqueue(hbus->wq);
-> > > +		/*
-> > > +		 * At this point, no work is running or can be scheduled
-> > > +		 * on hbus-wq. We can't race with hv_pci_devices_present()
-> > > +		 * or hv_pci_eject_device(), it's safe to proceed.
-> > > +		 */
-> > > +
-> > >  		/* Remove the bus from PCI's point of view. */
-> > >  		pci_lock_rescan_remove();
-> > >  		pci_stop_root_bus(hbus->pci_bus);
-> > > --
-> > > 2.27.0
+>=20
+> Yes, I would agree the tasklet disable/enable are needed, especially sinc=
+e
+> tasklet_disable()
+> is what ensures that the tasklet is not currently running.
+>=20
+> If the hbus ref counting isn't needed any longer, I would strongly recomm=
+end
+> adding
+> a patch to the series that removes it.  This synchronization stuff is har=
+d
+> enough to
+> understand and reason about; having a leftover mechanism that doesn't rea=
+lly
+> do
+> anything useful makes it nearly impossible. :-)
+>=20
+> Dexuan -- I'm hoping you can take a look as well and see if you agree.
+>=20
+> Michael
+
+I also think we can remove the reference counting.
+
+But it looks like there is still race in hv_pci_remove() even with Long's
+patch: in hv_pci_remove(), we disable the tasklet, change hbus->state to
+hv_pcibus_removing, re-enable the tasklet and flush hbus->wq, and set
+hbus->state to hv_pcibus_removed -- what if the channel callback runs
+again? -- now hbus->state is no longer hv_pcibus_removing, so
+hv_pci_devices_present() -> hv_pci_start_relations_work() and
+hv_pci_eject_device() can still add new work items to hbus->wq, and the new
+work items may race with the vmbus_close().
+
+It looks like we should remove the state hv_pcibus_removed?
+
+Thanks,
+-- Dexuan
 
