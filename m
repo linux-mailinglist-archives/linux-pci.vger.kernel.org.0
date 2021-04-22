@@ -2,178 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F31367D08
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Apr 2021 10:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AE0E367DF7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Apr 2021 11:46:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235553AbhDVI6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Apr 2021 04:58:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56253 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235339AbhDVI63 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Apr 2021 04:58:29 -0400
-Received: from mail-lf1-f70.google.com ([209.85.167.70])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1lZV9l-0005us-UG
-        for linux-pci@vger.kernel.org; Thu, 22 Apr 2021 08:57:54 +0000
-Received: by mail-lf1-f70.google.com with SMTP id q24-20020a0565122118b02901ae16b0713aso9603096lfr.16
-        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 01:57:53 -0700 (PDT)
+        id S235553AbhDVJoN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Apr 2021 05:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235792AbhDVJoH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Apr 2021 05:44:07 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DD7C061342;
+        Thu, 22 Apr 2021 02:43:27 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id q2so1301340pfk.9;
+        Thu, 22 Apr 2021 02:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZOhhMfIBG+uU3b1BF40thPwTl45IKGv6ZvRg7Wdznxs=;
+        b=XT00Q88pF576La5YpPNOfex03np4a8WZmLXTEXjEvzHpZYkDu2zYPW1mYTJx+h5n9K
+         YNU44UciVfRYCYEw6ihFn7PD76CC4obP/gQ1MX+hZzqBAIH5dQd7BPn/ykbADD+Wgufu
+         XQToXQFZlE9hCk7zx5m2ezrZ9pUaWtFXa57z8eZ84KQacPrdpYloF0nYUNmSGqalsJ07
+         XvT156aXV9YsF+Fcg8wmHq7EInSt1Kg7wllti2gVgx2Sp9WtJDzI5Z944Fcr2DZWQkaw
+         lORRuFL/1khkCd7k4HmgdEpWJSh/kMtqy4rGlexY5CM8x8cGccG2DXtNj82br7tRQAfa
+         sjXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uhKCITlC8z0lLRtKu0vRLYsI5e5s6htEBYCstI+rfV0=;
-        b=fBZVwM/5Mrz88uPYPJYNQo6csHNz49ejidKyV44xYB4y+wJ9mMgTfz75Rh2Voouwql
-         gzfYfK+5Fn9WUkcMHXoRxbA03e8mUOKpEKxgdslDE+KrAIXcCP2WdKuc/xT/1hJad/Mq
-         rXbZFytVv4igEMMIqBD/CjIAj/Mm9sf9VmngVEveEJX55vTnh288+fZW4NGgte08aCAV
-         DOcrU0+66xztlEAb0e+cpIluH1mW5oRTVXoil0qnwSFj+E4AOhAiWahvtONeyu+avUZn
-         m7MGKxUpHrscpj/3cDbQlLUEWgXIjWRkIC/o8/7/IDO8c8PWdJURSXMMlCnp4t58DHht
-         jT+g==
-X-Gm-Message-State: AOAM5302VHeL63U0LiZnTp4Gx1Y1Q5BaYX1cUOkecKjLf+7rOpMWFay6
-        FI2HJw6Bm8FEDzkmbSvEmmbWjxsI/ejD0VnIq6ZPmhdl3ec5z7r6ISvuAdP5FWZ72Z7LXCm1tjk
-        iNXALXq1iXdzQkTWxFUaIslYyFbM/hWBKAZCkP6ux80cSj++vW3GNKA==
-X-Received: by 2002:a2e:97c6:: with SMTP id m6mr1782296ljj.403.1619081873363;
-        Thu, 22 Apr 2021 01:57:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxf1VedjgFvgDyRthjvX0RdF1wlywxyF26kdMlppzEwkoidctA07kTG4IOcwZiQDCy/WaMCHpJ3r4j8aPuJjio=
-X-Received: by 2002:a2e:97c6:: with SMTP id m6mr1782284ljj.403.1619081873008;
- Thu, 22 Apr 2021 01:57:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZOhhMfIBG+uU3b1BF40thPwTl45IKGv6ZvRg7Wdznxs=;
+        b=cshD6ZhyDgzy6Y5B8BfriApYqOXl3yWIph9bOfrGZ66cy2yh7PmXAk1zzlOvcepAXJ
+         rdnIHs6xaN0fiD703nzOBWKLIQgw6EJPp3vy/PM6dvbcPIISe1SFFDxFfBHaV3VzEHxq
+         g9ReAeaZ6c70v6a3c7iHJ3EMVsI+7d2m+LmR61uSpj3hkhsHxgv2Rgeuouwi24UZ13jU
+         mf+Is07vqKoPnjvBF8O44WKC/inpOKW0sifmbkcO+LzHhE5RG5B1QzLTEnKRKkF+d3O7
+         quw20hfsB3LcCuVYljHH8EuAamMs9hQoO0Q9gfr6qiXadd53hrtGe3ss51VWXhMIt0MF
+         GbpA==
+X-Gm-Message-State: AOAM530oDqJEYrsxKFCwLjf6hAJ6s9K5fgxV3Pit1AceJUh1dInNpvnM
+        VsUZ778ZAVyHpZ79HKdY94c=
+X-Google-Smtp-Source: ABdhPJweiPx0+6LIFLMP1adOGnINvQsxWodZOCXwtbemOlcSLYOhvTUI77FBQnnlbDUhHcf0zN4xsg==
+X-Received: by 2002:a63:d755:: with SMTP id w21mr2735436pgi.400.1619084607387;
+        Thu, 22 Apr 2021 02:43:27 -0700 (PDT)
+Received: from localhost ([103.248.31.176])
+        by smtp.gmail.com with ESMTPSA id i11sm1673484pfo.183.2021.04.22.02.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Apr 2021 02:43:26 -0700 (PDT)
+Date:   Thu, 22 Apr 2021 15:13:23 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Check value of resource alignment before using __ffs
+Message-ID: <20210422094323.i4foiagx3hmzxpj4@archlinux>
+References: <20210421184747.62391-1-ameynarkhede03@gmail.com>
+ <YIEa/5E45SzKzvuf@unreal>
 MIME-Version: 1.0
-References: <20210401131252.531935-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20210401131252.531935-1-kai.heng.feng@canonical.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Thu, 22 Apr 2021 16:57:41 +0800
-Message-ID: <CAAd53p5rtZW_yqV2S77g34Dv9m9941yoBM6a_6fAvKpEuzXJ9g@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Coalesce contiguous regions for host bridges
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YIEa/5E45SzKzvuf@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 1, 2021 at 9:12 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
+On 21/04/22 09:43AM, Leon Romanovsky wrote:
+> On Thu, Apr 22, 2021 at 12:17:47AM +0530, Amey Narkhede wrote:
+> > Return value of __ffs is undefined if no set bit exists in
+> > its argument. This indicates that the associated BAR has
+> > invalid alignment.
+> >
+> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > ---
+> >  drivers/pci/setup-bus.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index 2ce636937c6e..44e8449418ae 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -1044,6 +1044,11 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+> >  			 * resources.
+> >  			 */
+> >  			align = pci_resource_alignment(dev, r);
+> > +			if (!align) {
+> > +				pci_warn(dev, "BAR %d: %pR has bogus alignment\n",
+> > +					 i, r);
+> > +				continue;
+> > +			}
 >
-> Built-in graphics on HP EliteDesk 805 G6 doesn't work because graphics
-> can't get the BAR it needs:
-> [    0.611504] pci_bus 0000:00: root bus resource [mem 0x10020200000-0x100303fffff window]
-> [    0.611505] pci_bus 0000:00: root bus resource [mem 0x10030400000-0x100401fffff window]
-> ...
-> [    0.638083] pci 0000:00:08.1:   bridge window [mem 0xd2000000-0xd23fffff]
-> [    0.638086] pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100401fffff 64bit pref]
-> [    0.962086] pci 0000:00:08.1: can't claim BAR 15 [mem 0x10030000000-0x100401fffff 64bit pref]: no compatible bridge window
-> [    0.962086] pci 0000:00:08.1: [mem 0x10030000000-0x100401fffff 64bit pref] clipped to [mem 0x10030000000-0x100303fffff 64bit pref]
-> [    0.962086] pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100303fffff 64bit pref]
-> [    0.962086] pci 0000:07:00.0: can't claim BAR 0 [mem 0x10030000000-0x1003fffffff 64bit pref]: no compatible bridge window
-> [    0.962086] pci 0000:07:00.0: can't claim BAR 2 [mem 0x10040000000-0x100401fffff 64bit pref]: no compatible bridge window
+> I see that you copied it from pdev_sort_resources(), but it is
+> incorrect change, see how negative order is handled and later
+> ARRAY_SIZE() check.
 >
-> However, the root bus has two contiguous regions that can contain the
-> child resource requested.
+> Thanks
 >
-> Bjorn Helgaas pointed out that we can simply coalesce contiguous regions
-> for host bridges, since host bridge don't have _SRS. So do that
-> accordingly to make child resource can be contained. This change makes
-> the graphics works on the system in question.
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212013
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Is it guaranteed that it will return value which will result
+in negative value or >= ARRAY_SIZE? Comment on __ffs says value
+is undefined for 0 that means it could be anything or am I missing
+something?
 
-A gentle ping...
-
-> ---
-> v2:
->  - Coalesce all contiguous regresion in pci_register_host_bridge(), if
->    conditions are met.
->
->  drivers/pci/probe.c | 49 +++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 45 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 953f15abc850..3607ce7402b4 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -19,6 +19,7 @@
->  #include <linux/hypervisor.h>
->  #include <linux/irqdomain.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/list_sort.h>
->  #include "pci.h"
->
->  #define CARDBUS_LATENCY_TIMER  176     /* secondary latency timer */
-> @@ -874,14 +875,30 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
->         dev_set_msi_domain(&bus->dev, d);
->  }
->
-> +static int res_cmp(void *priv, struct list_head *a, struct list_head *b)
-> +{
-> +       struct resource_entry *entry1, *entry2;
-> +
-> +       entry1 = container_of(a, struct resource_entry, node);
-> +       entry2 = container_of(b, struct resource_entry, node);
-> +
-> +       if (entry1->res->flags != entry2->res->flags)
-> +               return entry1->res->flags > entry2->res->flags;
-> +
-> +       if (entry1->offset != entry2->offset)
-> +               return entry1->offset > entry2->offset;
-> +
-> +       return entry1->res->start > entry2->res->start;
-> +}
-> +
->  static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  {
->         struct device *parent = bridge->dev.parent;
-> -       struct resource_entry *window, *n;
-> +       struct resource_entry *window, *next, *n;
->         struct pci_bus *bus, *b;
-> -       resource_size_t offset;
-> +       resource_size_t offset, next_offset;
->         LIST_HEAD(resources);
-> -       struct resource *res;
-> +       struct resource *res, *next_res;
->         char addr[64], *fmt;
->         const char *name;
->         int err;
-> @@ -959,11 +976,35 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->         if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
->                 dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
->
-> +       /* Sort and coalesce contiguous windows */
-> +       list_sort(NULL, &resources, res_cmp);
-> +       resource_list_for_each_entry_safe(window, n, &resources) {
-> +               if (list_is_last(&window->node, &resources))
-> +                       break;
-> +
-> +               next = list_next_entry(window, node);
-> +               offset = window->offset;
-> +               res = window->res;
-> +               next_offset = next->offset;
-> +               next_res = next->res;
-> +
-> +               if (res->flags != next_res->flags || offset != next_offset)
-> +                       continue;
-> +
-> +               if (res->end + 1 == next_res->start) {
-> +                       next_res->start = res->start;
-> +                       res->flags = res->start = res->end = 0;
-> +               }
-> +       }
-> +
->         /* Add initial resources to the bus */
->         resource_list_for_each_entry_safe(window, n, &resources) {
-> -               list_move_tail(&window->node, &bridge->windows);
->                 offset = window->offset;
->                 res = window->res;
-> +               if (!res->end)
-> +                       continue;
-> +
-> +               list_move_tail(&window->node, &bridge->windows);
->
->                 if (res->flags & IORESOURCE_BUS)
->                         pci_bus_insert_busn_res(bus, bus->number, res->end);
-> --
-> 2.30.2
->
+Thanks,
+Amey
