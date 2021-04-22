@@ -2,183 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BCE0367C53
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Apr 2021 10:17:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27F31367D08
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Apr 2021 10:58:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235362AbhDVISS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Apr 2021 04:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235267AbhDVISM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Apr 2021 04:18:12 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FAB0C06138D
-        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 01:17:35 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id j7so22885555pgi.3
-        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 01:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5bO8jBPxmhc0FYqpDIHIi403K+/m2pjsRxNa/hQYLNg=;
-        b=l9dZkekI9ynak1cuuz1gZEfzuFdcwaCQxSVspMCgfzWBUCPeiChd4qGtfGgmbrGqK2
-         DyiawYfp+L38t6whTuTgSmM/zP9uUBMfUt0vr6RIepKhIQRnK+Qsf9YyFSWIU0Sx1467
-         uTVIPlK/thBY3/BeX7BGvXMZOQsxqlxc89h6k=
+        id S235553AbhDVI6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Apr 2021 04:58:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56253 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235339AbhDVI63 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Apr 2021 04:58:29 -0400
+Received: from mail-lf1-f70.google.com ([209.85.167.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1lZV9l-0005us-UG
+        for linux-pci@vger.kernel.org; Thu, 22 Apr 2021 08:57:54 +0000
+Received: by mail-lf1-f70.google.com with SMTP id q24-20020a0565122118b02901ae16b0713aso9603096lfr.16
+        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 01:57:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5bO8jBPxmhc0FYqpDIHIi403K+/m2pjsRxNa/hQYLNg=;
-        b=NnIx2e0Mu1cQsEX7NEYS2M38W7mNkwxMI9dbd2ZGZiwjFHH+XYVckoB67nMRSAhWkM
-         on0ldlV4kZlIia0sA8O1/oVpuH4zx+ZFIs2FVXc4gO6G3OMlhtOMhSPxJuBkpkj1Bukp
-         XhUwmvpOGtIhs9e9lKSdHUBJP/lJbQi1R9LqmE9Y9B2LW0zxa54fFQb0K2zLAI8Nmj/g
-         tyaiYMk2Bie9qi3L/eJ/JRBMDFv2FmWcV4dVVmu2gHJfThU8Ev09fjJ+y3gwHy4CmziK
-         Xazvs72CiQUw9vEaOHF08rRhRx569GuQ4xvLcdrwm/Yzpa8kZzfps3EAevLeCh+yvene
-         NnmQ==
-X-Gm-Message-State: AOAM531XhNgJa/xhrVDPrTQ/PmML+AanlI4+7cB/WRPZLRp94fie5Nwj
-        vrYIhxoEHHF9aLvPs5w58TDCFQ==
-X-Google-Smtp-Source: ABdhPJzasU+vpN6SUMMsssz/FXWOLp6M4bgGVD/oD8ztZdWuu4tvnvoUWMHmVZ54Ezi6ND2Z2q+dSQ==
-X-Received: by 2002:a65:6a4c:: with SMTP id o12mr2325173pgu.371.1619079455178;
-        Thu, 22 Apr 2021 01:17:35 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:1a8e:1bde:f79e:c302])
-        by smtp.gmail.com with UTF8SMTPSA id mv13sm4264856pjb.29.2021.04.22.01.17.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Apr 2021 01:17:34 -0700 (PDT)
-From:   Claire Chang <tientzu@chromium.org>
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
-        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
-        tientzu@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, jxgao@google.com,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        nouveau@lists.freedesktop.org, rodrigo.vivi@intel.com,
-        thomas.hellstrom@linux.intel.com
-Subject: [PATCH v5 16/16] of: Add plumbing for restricted DMA pool
-Date:   Thu, 22 Apr 2021 16:15:08 +0800
-Message-Id: <20210422081508.3942748-17-tientzu@chromium.org>
-X-Mailer: git-send-email 2.31.1.368.gbe11c130af-goog
-In-Reply-To: <20210422081508.3942748-1-tientzu@chromium.org>
-References: <20210422081508.3942748-1-tientzu@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uhKCITlC8z0lLRtKu0vRLYsI5e5s6htEBYCstI+rfV0=;
+        b=fBZVwM/5Mrz88uPYPJYNQo6csHNz49ejidKyV44xYB4y+wJ9mMgTfz75Rh2Voouwql
+         gzfYfK+5Fn9WUkcMHXoRxbA03e8mUOKpEKxgdslDE+KrAIXcCP2WdKuc/xT/1hJad/Mq
+         rXbZFytVv4igEMMIqBD/CjIAj/Mm9sf9VmngVEveEJX55vTnh288+fZW4NGgte08aCAV
+         DOcrU0+66xztlEAb0e+cpIluH1mW5oRTVXoil0qnwSFj+E4AOhAiWahvtONeyu+avUZn
+         m7MGKxUpHrscpj/3cDbQlLUEWgXIjWRkIC/o8/7/IDO8c8PWdJURSXMMlCnp4t58DHht
+         jT+g==
+X-Gm-Message-State: AOAM5302VHeL63U0LiZnTp4Gx1Y1Q5BaYX1cUOkecKjLf+7rOpMWFay6
+        FI2HJw6Bm8FEDzkmbSvEmmbWjxsI/ejD0VnIq6ZPmhdl3ec5z7r6ISvuAdP5FWZ72Z7LXCm1tjk
+        iNXALXq1iXdzQkTWxFUaIslYyFbM/hWBKAZCkP6ux80cSj++vW3GNKA==
+X-Received: by 2002:a2e:97c6:: with SMTP id m6mr1782296ljj.403.1619081873363;
+        Thu, 22 Apr 2021 01:57:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxf1VedjgFvgDyRthjvX0RdF1wlywxyF26kdMlppzEwkoidctA07kTG4IOcwZiQDCy/WaMCHpJ3r4j8aPuJjio=
+X-Received: by 2002:a2e:97c6:: with SMTP id m6mr1782284ljj.403.1619081873008;
+ Thu, 22 Apr 2021 01:57:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210401131252.531935-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20210401131252.531935-1-kai.heng.feng@canonical.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 22 Apr 2021 16:57:41 +0800
+Message-ID: <CAAd53p5rtZW_yqV2S77g34Dv9m9941yoBM6a_6fAvKpEuzXJ9g@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Coalesce contiguous regions for host bridges
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If a device is not behind an IOMMU, we look up the device node and set
-up the restricted DMA when the restricted-dma-pool is presented.
+On Thu, Apr 1, 2021 at 9:12 PM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> Built-in graphics on HP EliteDesk 805 G6 doesn't work because graphics
+> can't get the BAR it needs:
+> [    0.611504] pci_bus 0000:00: root bus resource [mem 0x10020200000-0x100303fffff window]
+> [    0.611505] pci_bus 0000:00: root bus resource [mem 0x10030400000-0x100401fffff window]
+> ...
+> [    0.638083] pci 0000:00:08.1:   bridge window [mem 0xd2000000-0xd23fffff]
+> [    0.638086] pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100401fffff 64bit pref]
+> [    0.962086] pci 0000:00:08.1: can't claim BAR 15 [mem 0x10030000000-0x100401fffff 64bit pref]: no compatible bridge window
+> [    0.962086] pci 0000:00:08.1: [mem 0x10030000000-0x100401fffff 64bit pref] clipped to [mem 0x10030000000-0x100303fffff 64bit pref]
+> [    0.962086] pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100303fffff 64bit pref]
+> [    0.962086] pci 0000:07:00.0: can't claim BAR 0 [mem 0x10030000000-0x1003fffffff 64bit pref]: no compatible bridge window
+> [    0.962086] pci 0000:07:00.0: can't claim BAR 2 [mem 0x10040000000-0x100401fffff 64bit pref]: no compatible bridge window
+>
+> However, the root bus has two contiguous regions that can contain the
+> child resource requested.
+>
+> Bjorn Helgaas pointed out that we can simply coalesce contiguous regions
+> for host bridges, since host bridge don't have _SRS. So do that
+> accordingly to make child resource can be contained. This change makes
+> the graphics works on the system in question.
+>
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212013
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Signed-off-by: Claire Chang <tientzu@chromium.org>
----
- drivers/of/address.c    | 25 +++++++++++++++++++++++++
- drivers/of/device.c     |  3 +++
- drivers/of/of_private.h |  5 +++++
- 3 files changed, 33 insertions(+)
+A gentle ping...
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 54f221dde267..fff3adfe4986 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -8,6 +8,7 @@
- #include <linux/logic_pio.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/pci.h>
- #include <linux/pci_regs.h>
- #include <linux/sizes.h>
-@@ -1109,6 +1110,30 @@ bool of_dma_is_coherent(struct device_node *np)
- }
- EXPORT_SYMBOL_GPL(of_dma_is_coherent);
- 
-+int of_dma_set_restricted_buffer(struct device *dev)
-+{
-+	struct device_node *node;
-+	int count, i;
-+
-+	if (!dev->of_node)
-+		return 0;
-+
-+	count = of_property_count_elems_of_size(dev->of_node, "memory-region",
-+						sizeof(phandle));
-+	for (i = 0; i < count; i++) {
-+		node = of_parse_phandle(dev->of_node, "memory-region", i);
-+		/* There might be multiple memory regions, but only one
-+		 * restriced-dma-pool region is allowed.
-+		 */
-+		if (of_device_is_compatible(node, "restricted-dma-pool") &&
-+		    of_device_is_available(node))
-+			return of_reserved_mem_device_init_by_idx(
-+				dev, dev->of_node, i);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * of_mmio_is_nonposted - Check if device uses non-posted MMIO
-  * @np:	device node
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index c5a9473a5fb1..d8d865223e51 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -165,6 +165,9 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
- 
- 	arch_setup_dma_ops(dev, dma_start, size, iommu, coherent);
- 
-+	if (!iommu)
-+		return of_dma_set_restricted_buffer(dev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_dma_configure_id);
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index d717efbd637d..e9237f5eff48 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -163,12 +163,17 @@ struct bus_dma_region;
- #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_HAS_DMA)
- int of_dma_get_range(struct device_node *np,
- 		const struct bus_dma_region **map);
-+int of_dma_set_restricted_buffer(struct device *dev);
- #else
- static inline int of_dma_get_range(struct device_node *np,
- 		const struct bus_dma_region **map)
- {
- 	return -ENODEV;
- }
-+static inline int of_dma_get_restricted_buffer(struct device *dev)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- #endif /* _LINUX_OF_PRIVATE_H */
--- 
-2.31.1.368.gbe11c130af-goog
-
+> ---
+> v2:
+>  - Coalesce all contiguous regresion in pci_register_host_bridge(), if
+>    conditions are met.
+>
+>  drivers/pci/probe.c | 49 +++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 45 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 953f15abc850..3607ce7402b4 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/hypervisor.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/list_sort.h>
+>  #include "pci.h"
+>
+>  #define CARDBUS_LATENCY_TIMER  176     /* secondary latency timer */
+> @@ -874,14 +875,30 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
+>         dev_set_msi_domain(&bus->dev, d);
+>  }
+>
+> +static int res_cmp(void *priv, struct list_head *a, struct list_head *b)
+> +{
+> +       struct resource_entry *entry1, *entry2;
+> +
+> +       entry1 = container_of(a, struct resource_entry, node);
+> +       entry2 = container_of(b, struct resource_entry, node);
+> +
+> +       if (entry1->res->flags != entry2->res->flags)
+> +               return entry1->res->flags > entry2->res->flags;
+> +
+> +       if (entry1->offset != entry2->offset)
+> +               return entry1->offset > entry2->offset;
+> +
+> +       return entry1->res->start > entry2->res->start;
+> +}
+> +
+>  static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  {
+>         struct device *parent = bridge->dev.parent;
+> -       struct resource_entry *window, *n;
+> +       struct resource_entry *window, *next, *n;
+>         struct pci_bus *bus, *b;
+> -       resource_size_t offset;
+> +       resource_size_t offset, next_offset;
+>         LIST_HEAD(resources);
+> -       struct resource *res;
+> +       struct resource *res, *next_res;
+>         char addr[64], *fmt;
+>         const char *name;
+>         int err;
+> @@ -959,11 +976,35 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>         if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+>                 dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
+>
+> +       /* Sort and coalesce contiguous windows */
+> +       list_sort(NULL, &resources, res_cmp);
+> +       resource_list_for_each_entry_safe(window, n, &resources) {
+> +               if (list_is_last(&window->node, &resources))
+> +                       break;
+> +
+> +               next = list_next_entry(window, node);
+> +               offset = window->offset;
+> +               res = window->res;
+> +               next_offset = next->offset;
+> +               next_res = next->res;
+> +
+> +               if (res->flags != next_res->flags || offset != next_offset)
+> +                       continue;
+> +
+> +               if (res->end + 1 == next_res->start) {
+> +                       next_res->start = res->start;
+> +                       res->flags = res->start = res->end = 0;
+> +               }
+> +       }
+> +
+>         /* Add initial resources to the bus */
+>         resource_list_for_each_entry_safe(window, n, &resources) {
+> -               list_move_tail(&window->node, &bridge->windows);
+>                 offset = window->offset;
+>                 res = window->res;
+> +               if (!res->end)
+> +                       continue;
+> +
+> +               list_move_tail(&window->node, &bridge->windows);
+>
+>                 if (res->flags & IORESOURCE_BUS)
+>                         pci_bus_insert_busn_res(bus, bus->number, res->end);
+> --
+> 2.30.2
+>
