@@ -2,22 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91A2B36911F
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Apr 2021 13:34:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14886369374
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Apr 2021 15:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbhDWLfQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Apr 2021 07:35:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:33662 "EHLO foss.arm.com"
+        id S242672AbhDWNdE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Apr 2021 09:33:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:34898 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229890AbhDWLfP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Apr 2021 07:35:15 -0400
+        id S231220AbhDWNcI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 23 Apr 2021 09:32:08 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F85211D4
-        for <linux-pci@vger.kernel.org>; Fri, 23 Apr 2021 04:34:39 -0700 (PDT)
-Received: from [192.168.1.179] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48233F694;
-        Fri, 23 Apr 2021 04:34:32 -0700 (PDT)
-Subject: Re: [PATCH v5 05/16] swiotlb: Add restricted DMA pool initialization
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DBFB1396;
+        Fri, 23 Apr 2021 06:31:31 -0700 (PDT)
+Received: from [10.57.62.63] (unknown [10.57.62.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B58A3F73B;
+        Fri, 23 Apr 2021 06:31:22 -0700 (PDT)
+Subject: Re: [PATCH v5 08/16] swiotlb: Update is_swiotlb_active to add a
+ struct device argument
 To:     Claire Chang <tientzu@chromium.org>,
         Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
@@ -27,8 +28,7 @@ To:     Claire Chang <tientzu@chromium.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>
 Cc:     benh@kernel.crashing.org, paulus@samba.org,
         "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
+        sstabellini@kernel.org, grant.likely@arm.com, xypron.glpk@gmx.de,
         Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
         bauerman@linux.ibm.com, peterz@infradead.org,
         Greg KH <gregkh@linuxfoundation.org>,
@@ -52,14 +52,14 @@ Cc:     benh@kernel.crashing.org, paulus@samba.org,
         matthew.auld@intel.com, nouveau@lists.freedesktop.org,
         rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
 References: <20210422081508.3942748-1-tientzu@chromium.org>
- <20210422081508.3942748-6-tientzu@chromium.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <c9abca62-328d-d0d6-a8a6-a67475171f92@arm.com>
-Date:   Fri, 23 Apr 2021 12:34:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ <20210422081508.3942748-9-tientzu@chromium.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1f84aa4c-f966-0986-b5a4-eecbf3b454ec@arm.com>
+Date:   Fri, 23 Apr 2021 14:31:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210422081508.3942748-6-tientzu@chromium.org>
+In-Reply-To: <20210422081508.3942748-9-tientzu@chromium.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -67,131 +67,122 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22/04/2021 09:14, Claire Chang wrote:
-> Add the initialization function to create restricted DMA pools from
-> matching reserved-memory nodes.
+On 2021-04-22 09:15, Claire Chang wrote:
+> Update is_swiotlb_active to add a struct device argument. This will be
+> useful later to allow for restricted DMA pool.
 > 
 > Signed-off-by: Claire Chang <tientzu@chromium.org>
 > ---
->   include/linux/device.h  |  4 +++
->   include/linux/swiotlb.h |  3 +-
->   kernel/dma/swiotlb.c    | 80 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 86 insertions(+), 1 deletion(-)
+>   drivers/gpu/drm/i915/gem/i915_gem_internal.c | 2 +-
+>   drivers/gpu/drm/nouveau/nouveau_ttm.c        | 2 +-
+>   drivers/pci/xen-pcifront.c                   | 2 +-
+>   include/linux/swiotlb.h                      | 4 ++--
+>   kernel/dma/direct.c                          | 2 +-
+>   kernel/dma/swiotlb.c                         | 4 ++--
+>   6 files changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 38a2071cf776..4987608ea4ff 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -416,6 +416,7 @@ struct dev_links_info {
->    * @dma_pools:	Dma pools (if dma'ble device).
->    * @dma_mem:	Internal for coherent mem override.
->    * @cma_area:	Contiguous memory area for dma allocations
-> + * @dma_io_tlb_mem: Internal for swiotlb io_tlb_mem override.
->    * @archdata:	For arch-specific additions.
->    * @of_node:	Associated device tree node.
->    * @fwnode:	Associated device node supplied by platform firmware.
-> @@ -521,6 +522,9 @@ struct device {
->   #ifdef CONFIG_DMA_CMA
->   	struct cma *cma_area;		/* contiguous memory area for dma
->   					   allocations */
-> +#endif
-> +#ifdef CONFIG_DMA_RESTRICTED_POOL
-> +	struct io_tlb_mem *dma_io_tlb_mem;
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_internal.c b/drivers/gpu/drm/i915/gem/i915_gem_internal.c
+> index ce6b664b10aa..7d48c433446b 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_internal.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_internal.c
+> @@ -42,7 +42,7 @@ static int i915_gem_object_get_pages_internal(struct drm_i915_gem_object *obj)
+>   
+>   	max_order = MAX_ORDER;
+>   #ifdef CONFIG_SWIOTLB
+> -	if (is_swiotlb_active()) {
+> +	if (is_swiotlb_active(NULL)) {
+>   		unsigned int max_segment;
+>   
+>   		max_segment = swiotlb_max_segment();
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+> index e8b506a6685b..2a2ae6d6cf6d 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+> @@ -321,7 +321,7 @@ nouveau_ttm_init(struct nouveau_drm *drm)
+>   	}
+>   
+>   #if IS_ENABLED(CONFIG_SWIOTLB) && IS_ENABLED(CONFIG_X86)
+> -	need_swiotlb = is_swiotlb_active();
+> +	need_swiotlb = is_swiotlb_active(NULL);
 >   #endif
->   	/* arch specific additions */
->   	struct dev_archdata	archdata;
+>   
+>   	ret = ttm_device_init(&drm->ttm.bdev, &nouveau_bo_driver, drm->dev->dev,
+> diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+> index b7a8f3a1921f..6d548ce53ce7 100644
+> --- a/drivers/pci/xen-pcifront.c
+> +++ b/drivers/pci/xen-pcifront.c
+> @@ -693,7 +693,7 @@ static int pcifront_connect_and_init_dma(struct pcifront_device *pdev)
+>   
+>   	spin_unlock(&pcifront_dev_lock);
+>   
+> -	if (!err && !is_swiotlb_active()) {
+> +	if (!err && !is_swiotlb_active(NULL)) {
+>   		err = pci_xen_swiotlb_init_late();
+>   		if (err)
+>   			dev_err(&pdev->xdev->dev, "Could not setup SWIOTLB!\n");
 > diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> index 216854a5e513..03ad6e3b4056 100644
+> index 2a6cca07540b..c530c976d18b 100644
 > --- a/include/linux/swiotlb.h
 > +++ b/include/linux/swiotlb.h
-> @@ -72,7 +72,8 @@ extern enum swiotlb_force swiotlb_force;
->    *		range check to see if the memory was in fact allocated by this
->    *		API.
->    * @nslabs:	The number of IO TLB blocks (in groups of 64) between @start and
-> - *		@end. This is command line adjustable via setup_io_tlb_npages.
-> + *		@end. For default swiotlb, this is command line adjustable via
-> + *		setup_io_tlb_npages.
->    * @used:	The number of used IO TLB block.
->    * @list:	The free list describing the number of free entries available
->    *		from each index.
+> @@ -123,7 +123,7 @@ static inline bool is_swiotlb_buffer(struct device *dev, phys_addr_t paddr)
+>   void __init swiotlb_exit(void);
+>   unsigned int swiotlb_max_segment(void);
+>   size_t swiotlb_max_mapping_size(struct device *dev);
+> -bool is_swiotlb_active(void);
+> +bool is_swiotlb_active(struct device *dev);
+>   void __init swiotlb_adjust_size(unsigned long size);
+>   #else
+>   #define swiotlb_force SWIOTLB_NO_FORCE
+> @@ -143,7 +143,7 @@ static inline size_t swiotlb_max_mapping_size(struct device *dev)
+>   	return SIZE_MAX;
+>   }
+>   
+> -static inline bool is_swiotlb_active(void)
+> +static inline bool is_swiotlb_active(struct device *dev)
+>   {
+>   	return false;
+>   }
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 84c9feb5474a..7a88c34d0867 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -495,7 +495,7 @@ int dma_direct_supported(struct device *dev, u64 mask)
+>   size_t dma_direct_max_mapping_size(struct device *dev)
+>   {
+>   	/* If SWIOTLB is active, use its maximum mapping size */
+> -	if (is_swiotlb_active() &&
+> +	if (is_swiotlb_active(dev) &&
+>   	    (dma_addressing_limited(dev) || swiotlb_force == SWIOTLB_FORCE))
+
+I wonder if it's worth trying to fold these other conditions into 
+is_swiotlb_active() itself? I'm not entirely sure what matters for Xen, 
+but for the other cases it seems like they probably only care about 
+whether bouncing may occur for their particular device or not (possibly 
+they want to be using dma_max_mapping_size() now anyway - TBH I'm 
+struggling to make sense of what the swiotlb_max_segment business is 
+supposed to mean).
+
+Otherwise, patch #9 will need to touch here as well to make sure that 
+per-device forced bouncing is reflected correctly.
+
+Robin.
+
+>   		return swiotlb_max_mapping_size(dev);
+>   	return SIZE_MAX;
 > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index 57a9adb920bf..ffbb8724e06c 100644
+> index ffbb8724e06c..1d221343f1c8 100644
 > --- a/kernel/dma/swiotlb.c
 > +++ b/kernel/dma/swiotlb.c
-> @@ -39,6 +39,13 @@
->   #ifdef CONFIG_DEBUG_FS
->   #include <linux/debugfs.h>
->   #endif
-> +#ifdef CONFIG_DMA_RESTRICTED_POOL
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/of_reserved_mem.h>
-> +#include <linux/slab.h>
-> +#endif
+> @@ -659,9 +659,9 @@ size_t swiotlb_max_mapping_size(struct device *dev)
+>   	return ((size_t)IO_TLB_SIZE) * IO_TLB_SEGSIZE;
+>   }
 >   
->   #include <asm/io.h>
->   #include <asm/dma.h>
-> @@ -681,3 +688,76 @@ static int __init swiotlb_create_default_debugfs(void)
->   late_initcall(swiotlb_create_default_debugfs);
+> -bool is_swiotlb_active(void)
+> +bool is_swiotlb_active(struct device *dev)
+>   {
+> -	return io_tlb_default_mem != NULL;
+> +	return get_io_tlb_mem(dev) != NULL;
+>   }
+>   EXPORT_SYMBOL_GPL(is_swiotlb_active);
 >   
->   #endif
-> +
-> +#ifdef CONFIG_DMA_RESTRICTED_POOL
-> +static int rmem_swiotlb_device_init(struct reserved_mem *rmem,
-> +				    struct device *dev)
-> +{
-> +	struct io_tlb_mem *mem = rmem->priv;
-> +	unsigned long nslabs = rmem->size >> IO_TLB_SHIFT;
-> +
-> +	if (dev->dma_io_tlb_mem)
-> +		return 0;
-> +
-> +	/* Since multiple devices can share the same pool, the private data,
-> +	 * io_tlb_mem struct, will be initialized by the first device attached
-> +	 * to it.
-> +	 */
-> +	if (!mem) {
-> +		mem = kzalloc(struct_size(mem, slots, nslabs), GFP_KERNEL);
-> +		if (!mem)
-> +			return -ENOMEM;
-> +#ifdef CONFIG_ARM
-> +		if (!PageHighMem(pfn_to_page(PHYS_PFN(rmem->base)))) {
-> +			kfree(mem);
-> +			return -EINVAL;
-> +		}
-> +#endif /* CONFIG_ARM */
-> +		swiotlb_init_io_tlb_mem(mem, rmem->base, nslabs, false);
-> +
-> +		rmem->priv = mem;
-> +	}
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	if (!io_tlb_default_mem->debugfs)
-> +		io_tlb_default_mem->debugfs =
-> +			debugfs_create_dir("swiotlb", NULL);
-
-At this point it's possible for io_tlb_default_mem to be NULL, leading 
-to a splat.
-
-But even then if it's not and we have the situation where debugfs==NULL 
-then the debugfs_create_dir() here will cause a subsequent attempt in 
-swiotlb_create_debugfs() to fail (directory already exists) leading to 
-mem->debugfs being assigned an error value. I suspect the creation of 
-the debugfs directory needs to be separated from io_tlb_default_mem 
-being set.
-
-Other than that I gave this series a go with our prototype of Arm's 
-Confidential Computer Architecture[1] - since the majority of the 
-guest's memory is protected from the host the restricted DMA pool allows 
-(only) a small area to be shared with the host.
-
-After fixing (well hacking round) the above it all seems to be working 
-fine with virtio drivers.
-
-Thanks,
-
-Steve
-
-[1] 
-https://www.arm.com/why-arm/architecture/security-features/arm-confidential-compute-architecture
+> 
