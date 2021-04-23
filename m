@@ -2,106 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47888369646
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Apr 2021 17:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A7F3699BC
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Apr 2021 20:32:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbhDWPho (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Apr 2021 11:37:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27631 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242623AbhDWPhn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Apr 2021 11:37:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619192226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QE00ekCvz72op1kqPnrabeAOzDQ62cHgXJniiHHMFJ8=;
-        b=NQYMzCzYtkZqLFBTDgVAsRkXMGZcWClNWuosVyG9IAtEyCRGnDWIi0YNLT18gxKYZPjlIu
-        lHq4ASjZsGynJ1zV3aJwt2bEdkiTwfGojQTbtRFl/Q3o4rw0+Gol9YcA92f/9uLuemsVSj
-        q1CXLMFd1YtgFQGqyqqGzk4ASOtdn9g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-501-2thQh4izMbe4Ge3gmIpgBA-1; Fri, 23 Apr 2021 11:37:04 -0400
-X-MC-Unique: 2thQh4izMbe4Ge3gmIpgBA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 990C6652;
-        Fri, 23 Apr 2021 15:37:02 +0000 (UTC)
-Received: from redhat.com (ovpn-114-21.phx2.redhat.com [10.3.114.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 297A719704;
-        Fri, 23 Apr 2021 15:37:02 +0000 (UTC)
-Date:   Fri, 23 Apr 2021 09:37:01 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sinan Kaya <okaya@kernel.org>
-Cc:     Shanker Donthineni <sdonthineni@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vikram Sethi <vsethi@nvidia.com>
-Subject: Re: [PATCH 1/1] PCI: Add pci reset quirk for Nvidia GPUs
-Message-ID: <20210423093701.594efd86@redhat.com>
-In-Reply-To: <ff4812ba-ec1d-9462-0cbd-029635af3267@kernel.org>
-References: <20210423145402.14559-1-sdonthineni@nvidia.com>
-        <ff4812ba-ec1d-9462-0cbd-029635af3267@kernel.org>
+        id S231728AbhDWSdE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Apr 2021 14:33:04 -0400
+Received: from mail-co1nam11on2095.outbound.protection.outlook.com ([40.107.220.95]:36961
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229691AbhDWSdD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 23 Apr 2021 14:33:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WoJbsuagWor5UWUsrj2Ev06cl7mbImLaazW3SHQpOxluvYZJqmck+ZVJKlCdkBbxRpVed8kjOatnW9NXLvprr2QcLZgqa2dJu0numRoQonCitivfOYucJVHgSu3E3y8rdkJDAU97Gdj/k5sTJ0xNss2PH3NwSqF/jSqzgPYi+dLPn66Ba2mvmZJcGjrD8nFTATtLTZxhCpyuGIZzdN9IiZaimM6cTzPXby+XR+0EGE/tLGkG9UMv30QYvO64+uz1gLrAfTUYhaQ8ph8qqGpK0TjzbcQO0siGjMOYq42LcZvdjT1T6W5I3YlvgcpGo283whTduwCmqpRjA8kii4VMnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z1eYiaL3brpENw+NzMw4ggunRuxiY/yWu4xptkH/zpg=;
+ b=MIVcT7iMhMfvwEa8/3K0Cg7UHRs4ghVsyyiQk4vLlvIRY/ptMbX/3gr/11DeQxfWSIcC8wxw8adNN4N3DqNOk/wBSVXOgsL8ku9yT/tuZaCM12i7ZWz+VwsQpx593BAW3J4qDwNLdPmKvmIJNcycx48kgVpb6xS7nqvjYNJfu7Lnw7To1uM9jjHFjgIGiI7wFd5x2AMc5XtZW0fLwz4uFuCaE3NjVahpzTMTvjqZtTVvd38H50474t1JAwxJRUpVjh8Z99ZRPWEvn7mfNEV6XDgOi2o3uxoYzpKUH+YzJhWkMcD3uvUCME6qty3/nFBwrGH9uZ6tZ2Iw69oYra8LCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z1eYiaL3brpENw+NzMw4ggunRuxiY/yWu4xptkH/zpg=;
+ b=Do98JKwCnPPqJuEw8sNSmtkDe7GL4VIiGSJGlAtSkgR61okr9lbi+CvWnM2APS5fp1XqjF8i3O7EntO6oJRfG6JnHX6SCDeQ/SVFw7QLbSrpKNtGT6wFWAO01/w9c1zhxy4Rm66v+KTMSPoUBAQX+UNYT4/uVsZHcM9NxHKKuWA=
+Received: from BYAPR21MB1271.namprd21.prod.outlook.com (2603:10b6:a03:109::27)
+ by BYAPR21MB1238.namprd21.prod.outlook.com (2603:10b6:a03:107::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.3; Fri, 23 Apr
+ 2021 18:32:24 +0000
+Received: from BYAPR21MB1271.namprd21.prod.outlook.com
+ ([fe80::c074:b476:d8d6:4e86]) by BYAPR21MB1271.namprd21.prod.outlook.com
+ ([fe80::c074:b476:d8d6:4e86%9]) with mapi id 15.20.4087.021; Fri, 23 Apr 2021
+ 18:32:24 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v2 1/2] PCI: hv: Fix a race condition when removing the
+ device
+Thread-Topic: [Patch v2 1/2] PCI: hv: Fix a race condition when removing the
+ device
+Thread-Index: AQHXNzrFBLwYwYTj8kqzheBKY3VooKrBsNwAgAC786A=
+Date:   Fri, 23 Apr 2021 18:32:24 +0000
+Message-ID: <BYAPR21MB1271F9B76FAA423D7BE6DDEECE459@BYAPR21MB1271.namprd21.prod.outlook.com>
+References: <1619070346-21557-1-git-send-email-longli@linuxonhyperv.com>
+ <MW2PR2101MB0892A9A0972199A2FF6D68B0BF459@MW2PR2101MB0892.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB0892A9A0972199A2FF6D68B0BF459@MW2PR2101MB0892.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=825368ff-303b-448a-ba43-6f3872c68267;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-23T06:58:52Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [76.22.9.184]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 164a47f6-9ec6-40f2-ba5e-08d906862404
+x-ms-traffictypediagnostic: BYAPR21MB1238:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR21MB1238DE2AF7A27B42029CBB50CE459@BYAPR21MB1238.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AM1C3dADYcyEKpzY8DDVkad2aFolafzG+pXip7DTvgFyEPlBbaEaFSa9kuSb7fvy7LEH4wdKdV9jgUAAHZ0ZUYNbqt6CO/ojs4lZWvFZrly8MW2PSB7g4XKDUupobP+UyFWbqzVpXvffnPoTrdovchaQjhnhLP/3nsYNJgJDpTCQQUG9TI2YhmZYwgfTPYCyY8Ac/oEApG/yE4kEBiUEsZUrL/07a0phH9Fr3jPbDpBRpG6jMF/zVjqYPvonJoSQMOrbjTppzOvMDPQk/Kx/ha2X4qDP//DslcoloHpUjwiWkslJyOBjfC4lVj8VSDoKUbU8Kg7PZ+3vOlGzMSREcf22JDeMOCTeF0OzkvfJvQ+Sb3cXz8DtBuIF3SYXbRhrndD1MBbHIJQn75QaKs9wqtS359IheB5tin+T4+mK1hcjI4Mtp6TXRlN6Vk765px8TU1Q+7BoYeLZeyvV88vLQgfirr8j4sEebLN4wk3xKczBO8e0+EMjNFkJNtjUd7OFklQTarqDCKZeRTxGv8sK+L+tkSVkrt7N6rMmX1Fs/z/4mxRjEX0JWCWfn2sVu6VcYfngwq06tU6JTkO6mwJlMIxdD8h74+LNhw5eldm72XXV5Ju4icLXrXnKfPsRfgJtJjnTVzIIC1+DVthGCJ+rdQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1271.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(186003)(26005)(478600001)(38100700002)(8676002)(8936002)(122000001)(110136005)(10290500003)(2906002)(8990500004)(6506007)(5660300002)(52536014)(7696005)(55016002)(83380400001)(9686003)(82960400001)(921005)(33656002)(66446008)(66946007)(76116006)(71200400001)(82950400001)(66556008)(316002)(66476007)(86362001)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?2ljEMYYLINhXW5VBevHDdJotgXj3L2Owh+yFhYeVLpQb5wxz8TMZYHpR7/wP?=
+ =?us-ascii?Q?C+8gfcAJXUPEnZvPRt9m3nTxPw73s/tozrBsSntp+CV5Pe3waW6ffbseM+rG?=
+ =?us-ascii?Q?7i4VKawk5GEcXFLQlLyH24K5KTVL/t6VWo1ew9Gw95kdBwVdxFnEIgliAL/F?=
+ =?us-ascii?Q?26GrMACI2wBT59gWRfCiWQbH1FVNn/C4p1z3Pan0v4ViCGwpQGCeWyU5diyx?=
+ =?us-ascii?Q?obqjjs7HG5stKcBR3j2hrM7x5BUv+tzDk+s23T24tfWTsU8CdNqJ58aO2vvx?=
+ =?us-ascii?Q?9zww7gLgU7eBG3QXQ1JAiJtTmhvVaH/pjGEkxqSNyH0VbU8KDCVB6SElHZPo?=
+ =?us-ascii?Q?T8qEgEQWAg9bPKQAMTVPMLFAJujSwO9pIR1ONaLPVzepOYoe/Sryw43xjkAu?=
+ =?us-ascii?Q?hmvVBK6ZVhecrfSpZ47JRM0pVDKeo0XtGaZ04Is+alH4n8l/Sn7+68OUok8H?=
+ =?us-ascii?Q?8HAYYNchCL28TVQ/vdAK4H8bKtVXFiUxyNxbuZfxA/jeFzzQBti1/uxQ6yaT?=
+ =?us-ascii?Q?Tar39viztWFmumf8T+9hhfZPtOgmZzqmggpQUAY3uabiA0IwIsRmYDgH/OGR?=
+ =?us-ascii?Q?cOPEwk0i2uX2JpJo+pwLeplLiRb4gXy4eJFvGLygdLXSGNxsBvnl6S9orW3F?=
+ =?us-ascii?Q?/itHXx+kxSBE57cjoKvc74GgHi8kekCzaqtA5RTBfH9g4xtDdLTO+v7Q0r89?=
+ =?us-ascii?Q?SBCRu+4kAsJdyq6uzt901oFkoRfBJc9pP2gx6EZO+2gXS03yReGOhB3PSikr?=
+ =?us-ascii?Q?yE5va/ZCnMmvXq2FjeJsYWaowLPPsrFep9Z9ll+I2xKXI5/eqyRMb3YysaMD?=
+ =?us-ascii?Q?Zcnp3B1avXFNCDBf5CmXoHzxpyxnZ81Wl+pd0HQJMMyRcOcJvDrTvsMxsv+M?=
+ =?us-ascii?Q?eYbvXZ+yxpqzh9VqZp1OhY/sOqvzj6f1xBopSn/n489oRuEQKzHnho1u56po?=
+ =?us-ascii?Q?6/3c/4C9ObW+cBXmOYxqlQad3i7KCZOgWsA8Cb6tMf5GSzQRjvv1fPCZLtDL?=
+ =?us-ascii?Q?knZhRSINQiygFsjeGFUQ7G8ls3QCYW4DUsCY+NFiWrercMo/6VuCJVdV+8PH?=
+ =?us-ascii?Q?29S7jwGye/BzwRirJl8dSQAJJ5mk/NUI9bx2oZYspwZ6lKq3703PJWXN88VG?=
+ =?us-ascii?Q?jPeINDN2QobFjISKyq+cidLv8OEltoWh6RVc83EyO738CTDnryIzAHJ3tXoP?=
+ =?us-ascii?Q?pzmS+l6ieYunZmy10AEvhXnWmHK2kMthXZi05m1Nu6Fpeamt6SxdR0MltNFk?=
+ =?us-ascii?Q?+QsOphmXVWzd212ddeN6B0XA6zbOyePHp5hcvYmynLhpAyQVC6HRzolcyVs5?=
+ =?us-ascii?Q?rPA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1271.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 164a47f6-9ec6-40f2-ba5e-08d906862404
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2021 18:32:24.8520
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QBzJ1B1Ht2NGR3Imns6pdxYNWPT/opGWX0W7gPCB7kXUXFCcmfh4hDZqrBRvUKOtiQq6V8aAQ+n7GbxYiWAskw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1238
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 23 Apr 2021 11:12:05 -0400
-Sinan Kaya <okaya@kernel.org> wrote:
+> Subject: RE: [Patch v2 1/2] PCI: hv: Fix a race condition when removing t=
+he
+> device
+>=20
+> > From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>
+> > Sent: Wednesday, April 21, 2021 10:46 PM ...
+> > diff --git a/drivers/pci/controller/pci-hyperv.c
+> > b/drivers/pci/controller/pci-hyperv.c
+> > index 27a17a1e4a7c..fc948a2ed703 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -444,7 +444,6 @@ enum hv_pcibus_state {
+> >  	hv_pcibus_probed,
+> >  	hv_pcibus_installed,
+> >  	hv_pcibus_removing,
+> > -	hv_pcibus_removed,
+> >  	hv_pcibus_maximum
+> >  };
+> >
+> > @@ -3305,13 +3304,22 @@ static int hv_pci_remove(struct hv_device
+> > *hdev)
+> >
+> >  	hbus =3D hv_get_drvdata(hdev);
+> >  	if (hbus->state =3D=3D hv_pcibus_installed) {
+> > +		tasklet_disable(&hdev->channel->callback_event);
+> > +		hbus->state =3D hv_pcibus_removing;
+> > +		tasklet_enable(&hdev->channel->callback_event);
+> > +		destroy_workqueue(hbus->wq);
+>=20
+> If we test "rmmod pci-hyperv", I suspect the warning will be printed:
+> hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_start_relations_work():
 
-> +Alex,
-> 
-> On 4/23/2021 10:54 AM, Shanker Donthineni wrote:
-> > +static int reset_nvidia_gpu_quirk(struct pci_dev *dev, int probe)
-> > +{
-> > +#ifdef CONFIG_ACPI
-> > +	acpi_handle handle = ACPI_HANDLE(&dev->dev);
-> > +
-> > +	/*
-> > +	 * Check for the affected devices' ID range. If device is not in
-> > +	 * the affected range, return -ENOTTY indicating no device
-> > +	 * specific reset method is available.
-> > +	 */
-> > +	if ((dev->device & 0xffc0) != 0x2340)
-> > +		return -ENOTTY;
-> > +
-> > +	/*
-> > +	 * Return -ENOTTY indicating no device-specific reset method if _RST
-> > +	 * method is not defined
-> > +	 */
-> > +	if (!handle || !acpi_has_method(handle, "_RST"))
-> > +		return -ENOTTY;
-> > +
-> > +	/* Return 0 for probe phase indicating that we can reset this device */
-> > +	if (probe)
-> > +		return 0;
-> > +
-> > +	/* Invoke _RST() method to perform the device-specific reset */
-> > +	if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
-> > +		pci_warn(dev, "Failed to reset the device\n");
-> > +		return -EINVAL;
-> > +	}
-> > +	return 0;
-> > +#else
-> > +	return -ENOTTY;
-> > +#endif
-> > +}  
-> 
-> Interesting, some pieces of this function (especially the ACPI _RST)
-> could be generalized.
+In most case, it will not print anything.=20
 
-Agreed, we should add a new function level reset method for this rather
-than a device specific reset.  At that point the extent of the device
-specific quirk could be to restrict SBR.  It'd be useful to know what
-these devices are (not in pciids yet), why we expect to only see them in
-specific platforms (embedded device?), and the failure mode of the SBR.
-Thanks,
+It will print something if there is a PCI_BUS_RELATION work pending at the =
+time of remove. The same goes to PCI_EJECT. In those cases, the message is =
+valuable to troubleshooting.
 
-Alex
+>=20
+>         if (hbus->state =3D=3D hv_pcibus_removing) {
+>                 dev_info(&hbus->hdev->device,
+>                          "PCI VMBus BUS_RELATIONS: ignored\n");
+>                 return -ENOENT;
+>         }
+>=20
+> Ideally we'd like to avoid the warning in the driver unloading case.
+>=20
+> BTW, can you please add "hbus->wq =3D NULL;" after the line
+> "destroy_workqueue(hbus->wq);"? In case some other function could still
+> try to use hbus->wq by accident in the future, the error would be easier =
+to
+> be understood.
 
+I will send v3 to add =3DNULL.
