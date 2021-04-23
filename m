@@ -2,193 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81C15368B48
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Apr 2021 04:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17E6A368C4A
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Apr 2021 06:43:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbhDWCx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Apr 2021 22:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59056 "EHLO
+        id S237187AbhDWEnm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Apr 2021 00:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbhDWCx6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Apr 2021 22:53:58 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D51BC061756
-        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 19:53:22 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id j7so24826706pgi.3
-        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 19:53:22 -0700 (PDT)
+        with ESMTP id S231974AbhDWEnl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Apr 2021 00:43:41 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B657C06138B
+        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 21:43:04 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id u11so18816326pjr.0
+        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 21:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=40nhsz+kltJTf7tq6pLLkes92lT1dy5Rll207DlKzWM=;
-        b=HdsQJQRkixDre+dpQSVR58nl8K7T4MbrI4XmlnSivkYb875qGKmhwngqhS/XX43exh
-         bg5Ne9Oub0puKLH8FRaSSn/FCuQxwpgf1ynisAFuTF4Wvjhe+t5iF+WotV6g96hB8Oro
-         fWaQA0hAXWZxawu4WTORJsnwcVbFEg+0cCZO8=
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vmwMfJKV2MTnV8e34ZcnkdOiNEV3WHgx/mF/LO5zhjc=;
+        b=RYueedh/cAfcFVTIodUVgv+DSG8NBbF0QpyZO+xaUpKWH18+PY4lPB29KMYH9dUfOR
+         lJkdYWiDlbqCIBtzV8KIBo73ujgxGIGMCRfFlA+cAjqHMCT2hGpklHCiIU9J1geUVXkx
+         DH9CKKHwPPMhWh2oeqjVn1gnki1vuhFplYKQxzuSSxg3FujyaQ6Av2i6GWw6B4Ehpkmg
+         qCpONwsOlQRCSI0lHafPMHKeMQxeJhkHv3ENcuT/vZEpnamG3FXylHBQXHBTeU6eKX3R
+         R70dPddH4xPRuDHa8omrcc67GVQucJt0VUnKNl0J61GfTo2KqHRfFck06uEM9pROj6bX
+         oqkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=40nhsz+kltJTf7tq6pLLkes92lT1dy5Rll207DlKzWM=;
-        b=joJowrMV4L93mi2GDciARX+EeHsSt32vyAAwUqgmuj3cJMgTK9d0AGPVEIpPjtkEfq
-         RLNFmeXoAfr8Un9DahfG84cbAARE2rlDJM1PI3pApIhtjcx2YoyuoR/9vnXfS5oADMcR
-         0X7Wh848hHMipAuUAHlkSfPzmMNi/aLN2O0pUhRcVP/mlSc7AyXXTlzbHWbV8O8zZt3n
-         ZNBX2lhhPTcTagJJdaHS/oF0zOg2nUj/DJeD6DQY6uj/FsgKNRyJFck9y6/oFKF8D5AQ
-         Nt7UQtqfWjMDq8uxA3tgQqZNuNINCW3mbuqDXfgAjNyaFviT18ZfaJ1+Kq5zKdJ1ACZK
-         pm3Q==
-X-Gm-Message-State: AOAM532xhv0Kjt46Rms93+1+yqRFlAb6XqRh3CfAcp3eOU8/7o0JNdtc
-        hgHlM2qKqPmSOkiVfbK1cjVlPUt/RuhrGQ==
-X-Google-Smtp-Source: ABdhPJxIbJmuSpkK4jrdg8ghAmdvtpSvus3IRYZ5pbPgs1iLI6c3iq82pNEJt+vYWQ31mdjaXP4wdA==
-X-Received: by 2002:a63:6ec3:: with SMTP id j186mr1671038pgc.249.1619146401056;
-        Thu, 22 Apr 2021 19:53:21 -0700 (PDT)
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com. [209.85.210.174])
-        by smtp.gmail.com with ESMTPSA id j36sm3625908pgi.81.2021.04.22.19.53.20
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Apr 2021 19:53:20 -0700 (PDT)
-Received: by mail-pf1-f174.google.com with SMTP id c3so14339747pfo.3
-        for <linux-pci@vger.kernel.org>; Thu, 22 Apr 2021 19:53:20 -0700 (PDT)
-X-Received: by 2002:a6b:c913:: with SMTP id z19mr1627785iof.50.1619146389385;
- Thu, 22 Apr 2021 19:53:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210422081508.3942748-1-tientzu@chromium.org> <20210422081508.3942748-17-tientzu@chromium.org>
-In-Reply-To: <20210422081508.3942748-17-tientzu@chromium.org>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Fri, 23 Apr 2021 10:52:58 +0800
-X-Gmail-Original-Message-ID: <CALiNf29NzRTRB-0JbCL7=0qF0SAiER_pJ_-SCtVRA7DHCsSpEg@mail.gmail.com>
-Message-ID: <CALiNf29NzRTRB-0JbCL7=0qF0SAiER_pJ_-SCtVRA7DHCsSpEg@mail.gmail.com>
-Subject: Re: [PATCH v5 16/16] of: Add plumbing for restricted DMA pool
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        bhelgaas@google.com, chris@chris-wilson.co.uk, daniel@ffwll.ch,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
-        jxgao@google.com, joonas.lahtinen@linux.intel.com,
-        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        matthew.auld@intel.com, nouveau@lists.freedesktop.org,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=vmwMfJKV2MTnV8e34ZcnkdOiNEV3WHgx/mF/LO5zhjc=;
+        b=VS174We8wuzSmo18dS/boRSw8h7OrYdfgZEHqVxgXBBELm0JYO5evnj/d42DGmLJC0
+         FJogvvYRCs/cLz83D9fXCmgadVNy4m4Cimw0nlDHIjkuXT9Dot0ubyeaHf8U5dHiRnPE
+         xsorUlun9B10YbaJOH3lLorSF/6cXsAm8Oj8ZuVVF8BqcU0DASJwy71GV3ApRv41a2LH
+         Byr5kDesG0dxtG58pk8/yT0Lp0nwbaMEJFlUqTFm5SPwkURIFI3S08gCeu5EIQoT16Ja
+         UCPnf9I+7/+wDQEZOIRkma/HEYAQON6rlOSmsW2yXzvcWFxczjDh4H6lJ4hmOc1d1qkf
+         n++g==
+X-Gm-Message-State: AOAM531k0IxIkuGPBGhIqOQDD2GgpQFepL5GHjwb4w5dNmzGuVfba7F9
+        vNvI/7+jN8ptv5DdSttcS2usLw==
+X-Google-Smtp-Source: ABdhPJxK2Og4+NYNGBddpr8IYw3HqTOQjisfWTquNVdzdYRnApFSJvMMN5algJYF50FdZYhhcfRV3w==
+X-Received: by 2002:a17:90a:6c88:: with SMTP id y8mr2462165pjj.38.1619152983812;
+        Thu, 22 Apr 2021 21:43:03 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id u17sm3351189pfm.113.2021.04.22.21.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Apr 2021 21:43:03 -0700 (PDT)
+Date:   Thu, 22 Apr 2021 21:43:03 -0700 (PDT)
+X-Google-Original-Date: Thu, 22 Apr 2021 21:43:00 PDT (-0700)
+Subject:     Re: [PATCH v5 0/6] Add SiFive FU740 PCIe host controller driver support
+In-Reply-To: <CAHCEehJajVGWnAwvX+Jg3_U=WNxaNq89Xq3uvcfcHzt04qNfMQ@mail.gmail.com>
+CC:     lorenzo.pieralisi@arm.com, jh80.chung@samsung.com,
+        zong.li@sifive.com, robh+dt@kernel.org, vidyas@nvidia.com,
+        alex.dewar90@gmail.com, erik.danie@sifive.com,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+        mturquette@baylibre.com, aou@eecs.berkeley.edu, sboyd@kernel.org,
+        hayashi.kunihiko@socionext.com, hes@sifive.com,
+        khilman@baylibre.com, p.zabel@pengutronix.de, bhelgaas@google.com,
+        helgaas@kernel.org, devicetree@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     greentime.hu@sifive.com
+Message-ID: <mhng-f3dd2202-8d2b-4e17-9067-c4521aac8125@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 22, 2021 at 4:17 PM Claire Chang <tientzu@chromium.org> wrote:
+On Sun, 11 Apr 2021 19:37:50 PDT (-0700), greentime.hu@sifive.com wrote:
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> 於 2021年4月9日 週五 下午4:54寫道：
+>>
+>> On Tue, 6 Apr 2021 17:26:28 +0800, Greentime Hu wrote:
+>> > This patchset includes SiFive FU740 PCIe host controller driver. We also
+>> > add pcie_aux clock and pcie_power_on_reset controller to prci driver for
+>> > PCIe driver to use it.
+>> >
+>> > This is tested with e1000e: Intel(R) PRO/1000 Network Card, AMD Radeon R5
+>> > 230 graphics card and SP M.2 PCIe Gen 3 SSD in SiFive Unmatched based on
+>> > v5.11 Linux kernel.
+>> >
+>> > [...]
+>>
+>> Applied to pci/dwc [dropped patch 6], thanks!
+>>
+>> [1/6] clk: sifive: Add pcie_aux clock in prci driver for PCIe driver
+>>       https://git.kernel.org/lpieralisi/pci/c/f3ce593b1a
+>> [2/6] clk: sifive: Use reset-simple in prci driver for PCIe driver
+>>       https://git.kernel.org/lpieralisi/pci/c/0a78fcfd3d
+>> [3/6] MAINTAINERS: Add maintainers for SiFive FU740 PCIe driver
+>>       https://git.kernel.org/lpieralisi/pci/c/8bb1c66a90
+>> [4/6] dt-bindings: PCI: Add SiFive FU740 PCIe host controller
+>>       https://git.kernel.org/lpieralisi/pci/c/b86d55c107
+>> [5/6] PCI: fu740: Add SiFive FU740 PCIe host controller driver
+>>       https://git.kernel.org/lpieralisi/pci/c/327c333a79
+>>
+>> Thanks,
+>> Lorenzo
 >
-> If a device is not behind an IOMMU, we look up the device node and set
-> up the restricted DMA when the restricted-dma-pool is presented.
+> Hi Palmer,
 >
-> Signed-off-by: Claire Chang <tientzu@chromium.org>
-> ---
->  drivers/of/address.c    | 25 +++++++++++++++++++++++++
->  drivers/of/device.c     |  3 +++
->  drivers/of/of_private.h |  5 +++++
->  3 files changed, 33 insertions(+)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 54f221dde267..fff3adfe4986 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -8,6 +8,7 @@
->  #include <linux/logic_pio.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_reserved_mem.h>
->  #include <linux/pci.h>
->  #include <linux/pci_regs.h>
->  #include <linux/sizes.h>
-> @@ -1109,6 +1110,30 @@ bool of_dma_is_coherent(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(of_dma_is_coherent);
->
-> +int of_dma_set_restricted_buffer(struct device *dev)
-> +{
-> +       struct device_node *node;
-> +       int count, i;
-> +
-> +       if (!dev->of_node)
-> +               return 0;
-> +
-> +       count = of_property_count_elems_of_size(dev->of_node, "memory-region",
-> +                                               sizeof(phandle));
-> +       for (i = 0; i < count; i++) {
-> +               node = of_parse_phandle(dev->of_node, "memory-region", i);
-> +               /* There might be multiple memory regions, but only one
-> +                * restriced-dma-pool region is allowed.
-> +                */
-> +               if (of_device_is_compatible(node, "restricted-dma-pool") &&
-> +                   of_device_is_available(node))
-> +                       return of_reserved_mem_device_init_by_idx(
-> +                               dev, dev->of_node, i);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * of_mmio_is_nonposted - Check if device uses non-posted MMIO
->   * @np:        device node
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index c5a9473a5fb1..d8d865223e51 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -165,6 +165,9 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
->
->         arch_setup_dma_ops(dev, dma_start, size, iommu, coherent);
->
-> +       if (!iommu)
-> +               return of_dma_set_restricted_buffer(dev);
-> +
->         return 0;
->  }
->  EXPORT_SYMBOL_GPL(of_dma_configure_id);
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index d717efbd637d..e9237f5eff48 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -163,12 +163,17 @@ struct bus_dma_region;
->  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_HAS_DMA)
->  int of_dma_get_range(struct device_node *np,
->                 const struct bus_dma_region **map);
-> +int of_dma_set_restricted_buffer(struct device *dev);
->  #else
->  static inline int of_dma_get_range(struct device_node *np,
->                 const struct bus_dma_region **map)
->  {
->         return -ENODEV;
->  }
-> +static inline int of_dma_get_restricted_buffer(struct device *dev)
+> Since the PCIE driver has been applied, would you please pick patch 6
+> to RISC-V for-next tree?
+> Thank you. :)
 
-This one should be of_dma_set_restricted_buffer. Sorry for the typo.
-
-> +{
-> +       return -ENODEV;
-> +}
->  #endif
->
->  #endif /* _LINUX_OF_PRIVATE_H */
-> --
-> 2.31.1.368.gbe11c130af-goog
->
+Sorry, I got this confused between the Linux patch set and the u-boot 
+patch set so I thought more versions of this had kept comming.  The DT 
+is on for-next now.
