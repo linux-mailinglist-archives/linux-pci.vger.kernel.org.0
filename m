@@ -2,78 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FC8636B9D6
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Apr 2021 21:15:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D4AB36BA40
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Apr 2021 21:49:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239434AbhDZTQ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Apr 2021 15:16:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42080 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238186AbhDZTQ1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Apr 2021 15:16:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619464545;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EHv0fIxmz1Q+mf+5JqjbH8u/oeuUq3vqULPyyQz5N/U=;
-        b=ZZNRRGN38kzaPrPY5gBJyBAZDyl6EnCrv8qX7dDZh/wOzQAcGEbfKfBs+AqbOhzlWC6Spm
-        TtOa0+l7qDs0DUGZAFr/Vh1rIZk7Hg7IGJFX0wsuzpo0oxlRjfdLZ6OBbPckf9s1Vv47Fe
-        6CCoEY8nxSPzVfES8iOj1cbmRI/Kh5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-236-goOPhWKlOaWoyOe6agTp1A-1; Mon, 26 Apr 2021 15:15:41 -0400
-X-MC-Unique: goOPhWKlOaWoyOe6agTp1A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29369CC625;
-        Mon, 26 Apr 2021 19:15:40 +0000 (UTC)
-Received: from redhat.com (ovpn-113-225.phx2.redhat.com [10.3.113.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 95A2219C78;
-        Mon, 26 Apr 2021 19:15:39 +0000 (UTC)
-Date:   Mon, 26 Apr 2021 13:15:38 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Shanker R Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vikram Sethi <vsethi@nvidia.com>
-Subject: Re: [PATCH 1/1] PCI: Add pci reset quirk for Nvidia GPUs
-Message-ID: <20210426131538.0b69c69b@redhat.com>
-In-Reply-To: <20210426181943.GA1418150@infradead.org>
-References: <20210423145402.14559-1-sdonthineni@nvidia.com>
-        <ff4812ba-ec1d-9462-0cbd-029635af3267@kernel.org>
-        <20210423093701.594efd86@redhat.com>
-        <c758d8a8-4f8b-c505-118e-b364e93ae539@nvidia.com>
-        <20210426181943.GA1418150@infradead.org>
+        id S241955AbhDZTtj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Apr 2021 15:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241656AbhDZTtT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Apr 2021 15:49:19 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC27C061756
+        for <linux-pci@vger.kernel.org>; Mon, 26 Apr 2021 12:48:36 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 124so9034202lff.5
+        for <linux-pci@vger.kernel.org>; Mon, 26 Apr 2021 12:48:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hu/O6kjV+ayX6H+srxTD5OhjR3joShOstPqgPMhXlRY=;
+        b=O+nxianCcFegGRK1s69+e+erwUh5FFbkPGGe/FuY2GqsZJKR/Oge7ZOlZDxaTMsw6A
+         C1kuarMhKrcAOyYngCsa24OF+gAzv8uoy28yfMflStTHSYJWB7+MfqEHUWDFN1pQcwEE
+         2lpPONUV85ttYNP9UWMQgp7j+UqzzQ7xYq43cPw9zFqdnJKoYa0cKU3gtnGe50ZlW2Fg
+         wbm6ywMFnTuB3+sUQitug6l+m6FAnouemjIBnwqGtf6ngDiFZMtEeVigxSvIniyNeNQR
+         TOQuzZYT6Efly/9FdFXdU2j1aMJ9rC8kpfplYqSL0E2V5iSoF0R1zA+ORo3PGC/qahf2
+         BGUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hu/O6kjV+ayX6H+srxTD5OhjR3joShOstPqgPMhXlRY=;
+        b=lDv1+Ouh1MvNg5eQrUrsd8z3MpJq8LVvvxZESw6rZVd9tLqSfpl2v9TNEB78bQkMYY
+         k5TicWzgSm8e5zeEZHDbPYCtZ18AWdS4jYiGGpB+ZI05q94Frgc+ZxGjyG4reJbhk0tZ
+         HNVFwL0naKPrDklKHfQ69QRzn9m6OuQqpgzhxODEb13YciHxxexM03N7mA5g7eqFgBFM
+         YiefMqvIdsz3UyPp/OSE1vEeRe5nqT+ikK0OPPzQJRRACx2nz31DijK+TL7k7qCDrTNf
+         Y0qpu/Knq/H+zMaSvXk8jXdEkGsycKBpQFWoBxbM5QNuNv71RANNWnzvoVxP1TkYekEs
+         23lw==
+X-Gm-Message-State: AOAM5300CWaW7pQ/+Jrc8N2X+3SEzPQfb5q7chR/jscVvwt5tXOg+tmo
+        jX9Ug7XdTTVNHaqb8aRJSgGVsM4sDPmrhn5WbLVJvw==
+X-Google-Smtp-Source: ABdhPJzQqSictmcpMxegywuWj1tXbz1nnVcZqr9VC5hCAv9/toUwrlDZVb0ijgerD80Y1Y0Pz84x/oxXoSrYAvmY/WY=
+X-Received: by 2002:a19:354:: with SMTP id 81mr7756832lfd.174.1619466515188;
+ Mon, 26 Apr 2021 12:48:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20210424021631.1972022-1-rajatja@google.com> <20210424021631.1972022-2-rajatja@google.com>
+ <d53c72949d81db9f092a9aecb49bf56b47727738.camel@suse.com> <CAJZ5v0iNrSFjhmTE8K-JrO07kJon3ikhatbg0Jg2hs+x-frDJg@mail.gmail.com>
+ <79b994f2476249498797e1784f735fd7@AcuMS.aculab.com>
+In-Reply-To: <79b994f2476249498797e1784f735fd7@AcuMS.aculab.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 26 Apr 2021 12:47:59 -0700
+Message-ID: <CACK8Z6E=JwkzyF8Ph=F_ATzVAxNWB5TL-xKfS12Y87nmaQTbFg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pci: Support "removable" attribute for PCI devices
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Dmitry Torokhov <dtor@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 26 Apr 2021 19:19:43 +0100
-Christoph Hellwig <hch@infradead.org> wrote:
+On Mon, Apr 26, 2021 at 6:01 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Rafael J. Wysocki
+> > Sent: 26 April 2021 12:49
+> >
+> > On Mon, Apr 26, 2021 at 11:17 AM Oliver Neukum <oneukum@suse.com> wrote:
+> > >
+> > > Am Freitag, den 23.04.2021, 19:16 -0700 schrieb Rajat Jain:
+> > > > Export the already available info, to the userspace via the
+> > > > device core, so that userspace can implement whatever policies it
+> > > > wants to, for external removable devices.
+> > >
+> > > Hi,
+> > >
+> > > is there a way to tell apart whether a device can undergo regular
+> > > surprise removal?
+> >
+> > PCI devices located under a removable parent can undergo surprise
+> > removal.  The ones on a Thunderbolt chain too.
+> >
+> > > Do we want that?
+> >
+> > Do you mean surprise removal?  Yes, we do.
+>
+> Always been true - think of cardbus (PCI pcmcia) cards with
+> PCI bridges to external PCI expansion chassis containing
+> additional PCI slots.
+> The cardbus card is hot removable.
 
-> On Fri, Apr 23, 2021 at 04:45:15PM -0500, Shanker R Donthineni wrote:
-> > > specific platforms (embedded device?), and the failure mode of the SBR.  
-> > These are not plug-in PCIe GPU cards, will exist on upcoming
-> > server baseboards. Triggering SBR without firmware notification  
-> 
-> Please submit the quirks together with the actual support for the GPUs
-> in the nouveau driver, as they are completely useless without that.
+Hi Oliver / Folks, please let me know if there is a suggestion for me
+here, or if there is still a question for me to answer.
 
-My default assumption would be that this resolves an issue with
-assigning this device to a userspace or VM driver through vfio-pci, as
-most in-kernel drivers don't make use of this interface themselves;
-they often know more device specific ways to re-initialize hardware.
-This reset path is also trivially accessible through pci-sysfs.  I
-don't expect nouveau would have much use for this even if it did
-include support for these devices.  Thanks,
+Thanks,
 
-Alex
+Rajat
 
+PS: To give some background about this change, we'd like to implement
+some policies around disabling user plugged devices when a user logs
+out, and collect statistics around use of such devices.
+
+>
+>         David
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
