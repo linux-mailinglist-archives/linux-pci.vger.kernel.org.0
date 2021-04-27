@@ -2,136 +2,304 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0657036BD51
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 04:28:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B943A36BFC5
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 09:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231666AbhD0C3K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Apr 2021 22:29:10 -0400
-Received: from mail-bn8nam12on2063.outbound.protection.outlook.com ([40.107.237.63]:62049
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231958AbhD0C3H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Apr 2021 22:29:07 -0400
+        id S230232AbhD0HIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Apr 2021 03:08:31 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:6146 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229547AbhD0HIa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 03:08:30 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13R770Di023926;
+        Tue, 27 Apr 2021 00:07:25 -0700
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2104.outbound.protection.outlook.com [104.47.55.104])
+        by mx0b-0016f401.pphosted.com with ESMTP id 385tvvkby2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Apr 2021 00:07:25 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=maGEdpFFUMvACFn7QHtq1NqSyPueOtWClc+PmZ/TtbnvL+q7/ONY4gdiSZ0pUklgZRvhbCGhXaJFLNoB6boXdH+5mOLwHkQTfcVG4YGmxUPh0GFMRDNXoD6KidFTi1CoZCXB3KNZcwX+wcXmALRMaYxmzU+3XkPt73rPGfsINovKxduICcD+HAojx/5K4MwKZJAHvaZk9hAofGvx1QAJn/ig1a4/TclmivaF7C9N6Ua29JouF2NLeRsFjn58pZkQ3XtJfSN1hqZZHU8rlFwwRUk9Q01EG/BwB9rN/zBj+p0+4hZOI09+S/URPtJtgThsK2p3FftL3yZNkDbJE8qqaA==
+ b=f8KY6h7F+7i6U0Y2JYBMC4VZrR1qFXyeYz8Iskc7ElBq4dSztQezeT9/MYrHb+9HjCeY4GWkvfpyni2hhAc/2TTUKXH9uwReYah7IHB1pNdG81Yi3YdQmn78WvRQpvVB5nYw9HtBMedVkHqF//2eUch6cScZ3ozlNG/sJbgbAH0hVbHRf+7+fwo7rdQmwlywOeBGRw3Zwp5MbAC+oTL9QSqsB/3b2c6j9f2Rit7/sCyBbC48IsL7rKhR6oD11bjlWo6n6QhnESvnAZ3z7yKvp8iFnNZp8K0DZsVAT4qAykCeGgbjtumHyrqlPPRF6KeoTZHck8VI0DpWwp4tsI/g0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RNm2ODLdbWIlzfCihzUgQ7QJjbWZbrti0ZEUhppWpFQ=;
- b=jCbGhq9zl78GfMRvN1J4rUTIOhX6Zr1gC0zBgC82b6CHy2CQ+EBIljdwlku05q1dDZoOIE22M/KTdrsX/SWRDIO3GUw1r/xTdduCtQe/DUVkixy9M9A1U2wmsMOengyjsmOuSYybrVcY11K1mv2F5t4Epyc22eh/oz7lAOCuXwAAdydr5GKFpZ11kd4/SCBRZdGxADvl0aJpTB3zRM1wiNV0x7HoUZvLzMbCOW8VBzRmSiKX0Y31pVtSqn3+mDON5L3d3pjJNpPg7tQZxn9qejHKqov+LZ8I28oCe7pLYaByiDbSqjzpVG+07nwxRJ8lUHA0RvLQz35WZLUF8e7iAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=S22nnT+5FpFE2zyYZ801HvBF2BL/foB/jy6MFrDLbLs=;
+ b=mZm6F+MNd1/Xeq9NCyh14IYFeHSdXuTcKs03mgH5VfPO/jHxQh9oDo/JG1Vp9P3E5CgA2HOG3eTmo7T1Odjsv9kuqMtjBvVUuXIvpLUAjpL2c+gv1RL76epRnZBGVHO8HL6hiOA5uyz8n6IpxX8RUW6ri82S+XEV9LX4SHlJQgo5keFHswDRzv2hiVxTZ6xzqzDfj4uhM9b6uup3KANm++cxm2YiRUA/UJe20Au2+lcE7QrNKszK2Qz6k3TJsF501qBCboNGw19UrdKFV99JE2U1FBKNBGajavwo2Ethq97WhkMhZw8xOahxFoBpB530N+06q20Cda2jnfMRq3gg1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RNm2ODLdbWIlzfCihzUgQ7QJjbWZbrti0ZEUhppWpFQ=;
- b=l6rvlVVxNqHx4cIlDTOl57Je/sNWFaWewajemzHPY02GGXcOpq6D5pNhX4aFeY6qNqErdOio5UOtGCevcuVw0MrA6thkuFR0pMYfl4Dk7FxUAkbtvCeC6Y/7b688N0Z6K0Ewa8FlTCQRF32tz1p4BRrXBUgpbbRplAfe+8RvRYwpgZCubN2VhhP9IvVc1OhjRLs97uERfE8eT45vH/P9HVpEfT5GFgqHZ2sO4Ezec7c1LKSYBVeN6vTt3I5ZpC39cDaOimrJPVGhrHclHSFCto/EJEgLk1/+qmGnnpcEj+KdoA1qYPr28JDdLS5XDVUK3V7nNbuMvx5nxpaffixXJA==
-Received: from MW4PR04CA0132.namprd04.prod.outlook.com (2603:10b6:303:84::17)
- by SN1PR12MB2381.namprd12.prod.outlook.com (2603:10b6:802:2f::13) with
+ bh=S22nnT+5FpFE2zyYZ801HvBF2BL/foB/jy6MFrDLbLs=;
+ b=Kov5PiBPTBPomQZZYy1Yjw/nFAWlk3YVe6WP4XftIAKykkvZRYXZGVCRU8bsYOEFVCCfRCPxpKDLZO0Ek2fnlcHRjnakxbyHw5PRp/FCyXD5zBG6XNvgXy45enMPm6ieh4JeLJ3+SY8YLJgH1BoBq9zffd14BKmW/X73EUVsZ+c=
+Received: from MW2PR18MB2217.namprd18.prod.outlook.com (2603:10b6:907:7::33)
+ by CO6PR18MB4033.namprd18.prod.outlook.com (2603:10b6:5:34d::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21; Tue, 27 Apr
- 2021 02:28:23 +0000
-Received: from CO1NAM11FT056.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:84:cafe::7c) by MW4PR04CA0132.outlook.office365.com
- (2603:10b6:303:84::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.20 via Frontend
- Transport; Tue, 27 Apr 2021 02:28:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT056.mail.protection.outlook.com (10.13.175.107) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4065.21 via Frontend Transport; Tue, 27 Apr 2021 02:28:23 +0000
-Received: from SDONTHINENI-DESKTOP.nvidia.com (172.20.145.6) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 27 Apr 2021 02:28:21 +0000
-From:   Shanker Donthineni <sdonthineni@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sinan Kaya <okaya@kernel.org>,
-        Vikram Sethi <vsethi@nvidia.com>,
-        Shanker Donthineni <sdonthineni@nvidia.com>
-Subject: [PATCH v2 2/2] PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
-Date:   Mon, 26 Apr 2021 21:28:02 -0500
-Message-ID: <20210427022802.21458-2-sdonthineni@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210427022802.21458-1-sdonthineni@nvidia.com>
-References: <20210427022802.21458-1-sdonthineni@nvidia.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.23; Tue, 27 Apr
+ 2021 07:07:21 +0000
+Received: from MW2PR18MB2217.namprd18.prod.outlook.com
+ ([fe80::3811:5dde:7523:bb7d]) by MW2PR18MB2217.namprd18.prod.outlook.com
+ ([fe80::3811:5dde:7523:bb7d%3]) with mapi id 15.20.4065.027; Tue, 27 Apr 2021
+ 07:07:21 +0000
+From:   Ben Peled <bpeled@marvell.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mw@semihalf.com" <mw@semihalf.com>,
+        "jaz@semihalf.com" <jaz@semihalf.com>,
+        Kostya Porotchkin <kostap@marvell.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Ofer Heifetz <oferh@marvell.com>
+Subject: =?Windows-1252?Q?RE:_[EXT]_Re:_[=94PATCH=94_2/5]_PCI:_armada8k:_Add_link-?=
+ =?Windows-1252?Q?down_handle?=
+Thread-Topic: =?Windows-1252?Q?[EXT]_Re:_[=94PATCH=94_2/5]_PCI:_armada8k:_Add_link-down?=
+ =?Windows-1252?Q?_handle?=
+Thread-Index: AQHXL7Dz+S99QhJ6zUeoX2ZX7SJU4aqz9+0AgBMS6gA=
+Date:   Tue, 27 Apr 2021 07:07:20 +0000
+Message-ID: <MW2PR18MB2217E007583257709A026553C2419@MW2PR18MB2217.namprd18.prod.outlook.com>
+References: <1618241456-27200-1-git-send-email-bpeled@marvell.com>
+        <1618241456-27200-3-git-send-email-bpeled@marvell.com>
+ <20210414134240.000057b4@Huawei.com>
+In-Reply-To: <20210414134240.000057b4@Huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: Huawei.com; dkim=none (message not signed)
+ header.d=none;Huawei.com; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [93.173.98.221]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e24b211a-36af-4655-980b-08d9094b19df
+x-ms-traffictypediagnostic: CO6PR18MB4033:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CO6PR18MB4033C187B85A9FA5175AE24FC2419@CO6PR18MB4033.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +Ol/7J/NMy5G7NI6CRuGK4DMZxDSmMtuxmwAhIGhHRIhPsC4SiLl+VgvGwQO64t1b9IG9cnCJ/KrUHlSIu8nD0INfZWqxlIyx5W/TcsQ/CEllUSJ68xfbdWoXTBUlDuPGqmM7jghGji5XB86SUMXn46x5lxIcI6Skv8hBEShIYmVNaidenkmbOXx4X2NYxJ2Si2lsPEZE6J4G8Q4mw70s2R8mjtVxiu6aRTSB2H9XBG6/dND3lZGAGMBf+45mc04D3ccQruMV6DCU2BmMpAlo4T9J3kndOFF6W1LLssGfjpwpcUuz5YJwVkTYdwYDwDh7SkokpvjT4xZ6U0uAa40YBXBIQa1JgqHOIuj1EoZl2r8/FA/9RD04HbZO2/89yu7BvVU0gHNWshbPThb1F20pC+vXoFQ5uqIwNrBzmQFvwvJmk6W+qzz4aldaypKtGLUz82DsXDr318YHlpLkFL6ITQ0XsGs1KeSH0hcvWfXyvWkxKU9Iv4aQJDHdWBsU+Jl2ndsdWvPGU3v4qbqyOu40SscmWQvgChK7T7m0dxWiXxfrjihMkIi+gvOjCkVRJ/bWTs4wrSsjxXHiWTSI9YE1/f0IgnWBaJxJ59xwix3tzeNbpah/J/0gmluQpTo64mvY/GiPTacM8LDlY93v0ZbpQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2217.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(478600001)(64756008)(122000001)(26005)(66556008)(316002)(76116006)(66446008)(71200400001)(7416002)(5660300002)(52536014)(107886003)(66476007)(54906003)(83380400001)(4326008)(8936002)(9686003)(7696005)(186003)(2906002)(6916009)(33656002)(55016002)(66946007)(38100700002)(6506007)(86362001)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?Windows-1252?Q?u8gRh1kI2TvDq6AY9axeKcGF7dXAwcOFPoRVyGtZ1FG4i2RLD71kzd0d?=
+ =?Windows-1252?Q?shLG2nsZIXtpIgaXh5ivXTEg8Z54NyWSU7F43MfBZq6hyiKhRis2qy9N?=
+ =?Windows-1252?Q?tADuOJQhxGF5hRa710xbvw1oNNncoWovZwvgjBF9pbTPZ+IDfnNDWgzd?=
+ =?Windows-1252?Q?abTk9znHU8WJXVm1UZ2vLTlBz1vTJ3BTtNjv0ZPN6cuTq5TkxqlRoaR0?=
+ =?Windows-1252?Q?Et5nXmAZ/NJJodcPwCnr6iUDridc4U7HtoK3wkdjpamjocgQnXDwX2vb?=
+ =?Windows-1252?Q?UHgR2FKJQds3m04dib4XnFA6xLB2XnIpVqjTC7pZip7uwIrNSriUp2oV?=
+ =?Windows-1252?Q?zJEe9Zxh4rmX6rGTSB4vtoGyLuElbr2cbco+Buut2pe8CiN7haILI32Y?=
+ =?Windows-1252?Q?xpGUJGzyelsOluFXuYmnYRWo5kKb9+fDEo2dZflwtHW0zA79dejAP5Vl?=
+ =?Windows-1252?Q?NGXWUwtCbNKmTjIM0n2Jxc1bq632i2oL2p8cSgcAQFgP9gMZ8zv1pxtO?=
+ =?Windows-1252?Q?eIpN9DTPRssk91F0KkX2PxdeKokMeXySnScu3Tfd7jeruz6X2JVXKJ22?=
+ =?Windows-1252?Q?vuCwqV04Lhpf1HRViqMd2qm07QWnd4crZfBSKMsqwH1tm4/n74Wvig9M?=
+ =?Windows-1252?Q?AODGRjRqxO1xnucmRMSnnBs1uZN+dlql14+NRDRU8XtoQtyVI/zvFMNy?=
+ =?Windows-1252?Q?MJxLpHAEVPuQp3DTithRkBa+J8QQN0Xl0q/bE3/Ws4CQxrNy7Ep55Lag?=
+ =?Windows-1252?Q?KjrBwKmK7voHgMSzVKY6adCuNW1DlpGjkr5EU/YlV/7+IoKcOLQo42wb?=
+ =?Windows-1252?Q?HH8IBzr1CX+Nc+1Mog22PMaXB9x9ddlEge2GudgBxDtdDy+cP3rQSTAC?=
+ =?Windows-1252?Q?F2QJV0UAnoF9Iw3/R/YoMv1tTTcU7IrKW0XfflLxNkFE3IhtAsU7k/2H?=
+ =?Windows-1252?Q?j+PcsBr7phfHAl2w+rqdIp/YBrIx1e0ebbPyljLQ1WyosbEn38Crgn4/?=
+ =?Windows-1252?Q?ZWIt2iaJMAa7nU5G/LNQq/byLUtr55jYI8Kc2NJU/Do2zACvfWhFRZ13?=
+ =?Windows-1252?Q?Xc6ofOQGgzr1bG8CVUaz+JZVF882eUgo+7lR/VvKmaosaIvjgwn1ArGc?=
+ =?Windows-1252?Q?YC8R2mfidKY4E0x0bjL+A73LEx8OT+pl4YGdke4Qb/PttJIo97DHZ5H+?=
+ =?Windows-1252?Q?UCSsd1De6bh6LZyGxfpxTMYroZ78iwtrdM+Et+iS0p5RQ84tQeqMY6VG?=
+ =?Windows-1252?Q?OIF25FHn8IVdWwHDip6Ks1++afYuTpMgf0UzrdzkfK++mVwLkLD0OQA/?=
+ =?Windows-1252?Q?wiNKky5ytOtS9N4ckb81BwPP+VcebZ6nyK4ucn0gykHX/M0SOb+W+tym?=
+ =?Windows-1252?Q?tA3FP6UhYKs9XRJV9ZxB/iUpO3+gyqon6JnPfxmqD7Fu65cYRMOhGyB5?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 240aada0-ead6-48b5-7f4a-08d909242169
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2381:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2381D3BD9F1E083782512E3FC7419@SN1PR12MB2381.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: D03KJY9DW+FWJOmaz9JPwn+S3weWBj88R6uPLcENXEFCrFDMEVttZ0cMZnW5TBYnhf20H6S9X4BS8Go27lS6bPUgwFPI2U1XJST1b+5GozwD5FqbOLaCe8RU+DI68hEsoG6TlSF2x/tqk91AMwZjO7Zo6FV361N5l+aiU43wOr27y5GD15TZsgK18a5CTQk1s7HiLdoUHTKpT3YmroNgltMMyVkQ1kmAx/DVB2xTw0NHqHBezggfASa9hnfdziyEVYRE95qdkVl/7FxosEJTX+M7FIQS++oxfswFCUFCikzS9HQoipGPfPe7BknF39JvFeXR3+PzSLJZa1/A+S6b/5i/YuqScpihfMYUUu+zAiQXw18nDSKBtJEoroB8MANDQKLNF71V6jEbYhpAddMmClwtLXy4gVyPJqtcDu5Uwl4TdaCyL08pY8XK1jmFJmrr79d/aG7s8DjCDcge406ll4x7SkoJIeJ1p3mNazvRk3QkMREBjntB6gb/L0GHoRk1q9WVGB+Zos/rlC1+tt6yO5Yqi5ujTzi+vHH5HStTJpaf19hmm5KVzZW1SkL7KLu9Sox9JetogKay0YwqjorjF4pJpWccdljUvFKTLV1siImKjP4QE3/bOBqBnFD17fg6yyrlIojDGMyK/oBwEsrAHVEicUZMT+B7D23bnG88EiM=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(39860400002)(396003)(46966006)(36840700001)(70206006)(336012)(47076005)(70586007)(86362001)(1076003)(82310400003)(2906002)(82740400003)(7636003)(26005)(8936002)(8676002)(426003)(316002)(356005)(36860700001)(2616005)(186003)(36756003)(16526019)(7696005)(6916009)(54906003)(4326008)(107886003)(36906005)(5660300002)(478600001)(6666004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2021 02:28:23.2601
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2217.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e24b211a-36af-4655-980b-08d9094b19df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2021 07:07:20.8328
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 240aada0-ead6-48b5-7f4a-08d909242169
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT056.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2381
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VzrfKdW6jyvC0EHvztMWO5/xQa/RKxExR8KWvl/o28MvKhBdcyEAbaOu6ju+p0yDrIwOCOtIUF/p9+s2i/r7sw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR18MB4033
+X-Proofpoint-GUID: TQnYQ9MAHeyI7OKZ59zdyxRKsIEqvbrG
+X-Proofpoint-ORIG-GUID: TQnYQ9MAHeyI7OKZ59zdyxRKsIEqvbrG
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-27_02:2021-04-27,2021-04-27 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On select platforms, some Nvidia GPU devices do not work with SBR.
-Triggering SBR would leave the device inoperable for the current
-system boot. It requires a system hard-reboot to get the GPU device
-back to normal operating condition post-SBR. For the affected
-devices, enable NO_BUS_RESET quirk to fix the issue.
+Hi Jonathan,
 
-This issue will be fixed in the next generation of hardware.
 
-Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
----
-Changes since v1:
- - Split patch into 2, code for handling _RST and SBR specific quirk
- - The RST based reset is called as a first-class mechanism in the reset code path
+> > In PCIE ISR routine caused by RST_LINK_DOWN we schedule work to handle
+> > the link-down procedure.
+> > Link-down procedure will:
+> > 1. Remove PCIe bus
+> > 2. Reset the MAC
+> > 3. Reconfigure link back up
+> > 4. Rescan PCIe bus
+> >
+> > Signed-off-by: Ben Peled <bpeled@marvell.com>
+>=20
+> Trivial comment inline.
+>=20
+> Also, something odd with quotes around PATCH in the title you probably
+> want to clean up.
+>=20
 
- drivers/pci/quirks.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I'll change the comment to more informative comments
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..1da80e772ee1 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3913,6 +3913,18 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
- 	return 0;
- }
- 
-+/*
-+ * Some Nvidia GPU devices do not work with bus reset, SBR needs to be
-+ * prevented for those affected devices.
-+ */
-+static void quirk_nvidia_no_bus_reset(struct pci_dev *dev)
-+{
-+	if ((dev->device & 0xffc0) == 0x2340)
-+		dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-+			 quirk_nvidia_no_bus_reset);
-+
- static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
- 		 reset_intel_82599_sfp_virtfn },
--- 
-2.17.1
+> > ---
+> >  drivers/pci/controller/dwc/pcie-armada8k.c | 68 ++++++++++++++++++++
+> >  1 file changed, 68 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c
+> > b/drivers/pci/controller/dwc/pcie-armada8k.c
+> > index b2278b1..4eb8607 100644
+> > --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> > +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> > @@ -22,6 +22,8 @@
+> >  #include <linux/resource.h>
+> >  #include <linux/of_pci.h>
+> >  #include <linux/of_irq.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/regmap.h>
+> >
+> >  #include "pcie-designware.h"
+> >
+> > @@ -33,6 +35,9 @@ struct armada8k_pcie {
+> >  	struct clk *clk_reg;
+> >  	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
+> >  	unsigned int phy_count;
+> > +	struct regmap *sysctrl_base;
+> > +	u32 mac_rest_bitmask;
+> > +	struct work_struct recover_link_work;
+> >  };
+> >
+> >  #define PCIE_VENDOR_REGS_OFFSET		0x8000
+> > @@ -73,6 +78,8 @@ struct armada8k_pcie {
+> >  #define AX_USER_DOMAIN_MASK		0x3
+> >  #define AX_USER_DOMAIN_SHIFT		4
+> >
+> > +#define UNIT_SOFT_RESET_CONFIG_REG	0x268
+> > +
+> >  #define to_armada8k_pcie(x)	dev_get_drvdata((x)->dev)
+> >
+> >  static void armada8k_pcie_disable_phys(struct armada8k_pcie *pcie) @@
+> > -224,6 +231,49 @@ static int armada8k_pcie_host_init(struct pcie_port
+> > *pp)
+> >
+> >  	return 0;
+> >  }
+> > +static void armada8k_pcie_recover_link(struct work_struct *ws) {
+> > +	struct armada8k_pcie *pcie =3D container_of(ws, struct
+> armada8k_pcie, recover_link_work);
+> > +	struct pcie_port *pp =3D &pcie->pci->pp;
+> > +	struct pci_bus *bus =3D pp->bridge->bus;
+> > +	struct pci_dev *root_port;
+> > +	int ret;
+> > +
+> > +	root_port =3D pci_get_slot(bus, 0);
+> > +	if (!root_port) {
+> > +		dev_err(pcie->pci->dev, "failed to get root port\n");
+> > +		return;
+> > +	}
+> > +	pci_lock_rescan_remove();
+> > +	pci_stop_and_remove_bus_device(root_port);
+> > +	/*
+> > +	 * Sleep needed to make sure all pcie transactions and access
+> > +	 * are flushed before resetting the mac
+> > +	 */
+> > +	msleep(100);
+> > +
+> > +	/* Reset mac */
+> > +	regmap_update_bits_base(pcie->sysctrl_base,
+> UNIT_SOFT_RESET_CONFIG_REG,
+> > +				pcie->mac_rest_bitmask, 0, NULL, false, true);
+> > +	udelay(1);
+> > +	regmap_update_bits_base(pcie->sysctrl_base,
+> UNIT_SOFT_RESET_CONFIG_REG,
+> > +				pcie->mac_rest_bitmask, pcie-
+> >mac_rest_bitmask,
+> > +				NULL, false, true);
+> > +	udelay(1);
+> > +	ret =3D armada8k_pcie_host_init(pp);
+> > +	if (ret) {
+> > +		dev_err(pcie->pci->dev, "failed to initialize host: %d\n", ret);
+> > +		pci_unlock_rescan_remove();
+> > +		pci_dev_put(root_port);
+> > +		return;
+> > +	}
+> > +
+> > +	bus =3D NULL;
+> > +	while ((bus =3D pci_find_next_bus(bus)) !=3D NULL)
+> > +		pci_rescan_bus(bus);
+> > +	pci_unlock_rescan_remove();
+> > +	pci_dev_put(root_port);
+> > +}
+> >
+> >  static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)  {
+> > @@ -262,6 +312,9 @@ static irqreturn_t armada8k_pcie_irq_handler(int
+> irq, void *arg)
+> >  		 * initiate a link retrain. If link retrains were
+> >  		 * possible, that is.
+> >  		 */
+> > +		if (pcie->sysctrl_base && pcie->mac_rest_bitmask)
+> > +			schedule_work(&pcie->recover_link_work);
+> > +
+> >  		dev_dbg(pci->dev, "%s: link went down\n", __func__);
+> >  	}
+> >
+> > @@ -330,6 +383,8 @@ static int armada8k_pcie_probe(struct
+> > platform_device *pdev)
+> >
+> >  	pcie->pci =3D pci;
+> >
+> > +	INIT_WORK(&pcie->recover_link_work,
+> armada8k_pcie_recover_link);
+> > +
+> >  	pcie->clk =3D devm_clk_get(dev, NULL);
+> >  	if (IS_ERR(pcie->clk))
+> >  		return PTR_ERR(pcie->clk);
+> > @@ -357,6 +412,19 @@ static int armada8k_pcie_probe(struct
+> platform_device *pdev)
+> >  		goto fail_clkreg;
+> >  	}
+> >
+> > +	pcie->sysctrl_base =3D syscon_regmap_lookup_by_phandle(pdev-
+> >dev.of_node,
+> > +						       "marvell,system-
+> controller");
+> > +	if (IS_ERR(pcie->sysctrl_base)) {
+> > +		dev_warn(dev, "failed to find marvell,system-controller\n");
+> > +		pcie->sysctrl_base =3D 0x0;
+>=20
+> =3D NULL; ?
+>=20
+I will change this to NULL in v3
+> > +	}
+> > +
+> > +	ret =3D of_property_read_u32(pdev->dev.of_node, "marvell,mac-reset-
+> bit-mask",
+> > +				   &pcie->mac_rest_bitmask);
+> > +	if (ret < 0) {
+> > +		dev_warn(dev, "couldn't find mac reset bit mask: %d\n", ret);
+> > +		pcie->mac_rest_bitmask =3D 0x0;
+> > +	}
+> >  	ret =3D armada8k_pcie_setup_phys(pcie);
+> >  	if (ret)
+> >  		goto fail_clkreg;
+
+Thanks,
+Ben
+
+
 
