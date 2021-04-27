@@ -2,89 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 338AC36CBBE
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8134C36CBCA
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:40:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235686AbhD0TgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Apr 2021 15:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
+        id S238699AbhD0TlB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Apr 2021 15:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235661AbhD0TgX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:36:23 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B00C061574;
-        Tue, 27 Apr 2021 12:35:38 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id v191so312748pfc.8;
-        Tue, 27 Apr 2021 12:35:38 -0700 (PDT)
+        with ESMTP id S238671AbhD0TlA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:41:00 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CAAC061760
+        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:40:16 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id d19so25510987qkk.12
+        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:40:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZMPrTbpcRPZqLLWfJUV6/8gKwil/V2GxAivfmlOoGDU=;
-        b=Fo3ZZx2whMOA0w3yRY3563soue/j2+CXIv8haxx8QIgXXkkVtxvvi45s73nOgknLx1
-         rvrzZnf55N4G28TWARtQKtNc3guhKts3JLb6n+CEWIIBn/rh/qOBNe9ZvNT5jixYaL6t
-         +VJ/FE4amGmMkcmc113faY3jB+wIYJyEKjF8f7TFuAacca3+QIs7JikmfgOOHvsHC/0X
-         sJNmn4VpWDvXafeyYnzfXVDnbAOkYziogAW0/JIzdsh+8bnP+7uxCqAQJ/N0K8J2ckVw
-         QiOP4maXBsz1acPZA54JA9Kl8Hzzci19rXDb+s/LxckRqrFmbHVJkJX7KHFXkchW9x57
-         BlmQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qjlzws9tOjfG2kgF5PSaus20BHkak4AbpiykyhDCpWc=;
+        b=FgJgWNr62C5ZYe5v1vnbBayAlBas9KMfjlI+laH23uWCOINrv2HqPW9/a2+lK1+qpn
+         Zdr+bMJ3dVh1M82cRSTI4JbQADrXanZ5JfGjdWIrOPB62lKoHfvu6nr6Gx+k2tmRlxI9
+         VnIPeqy1NjUABHuJSDWeU4As9HayrnVGiZr56daurC5uY37+XvT8TZlGM0+FK9uB/Zvv
+         YTKfdf8OvZo8ENhSomjWbrDXc8AvVOdpQ72iroWjNxj+tV6CHjB8W81hADxRNQW+tUQ7
+         dB77SYRDbWj7e5FkrYJA2fixQk601M0tulsmdtPUJHEnm9ZHX5SNJW5GF5Co+YjnesqM
+         4DUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZMPrTbpcRPZqLLWfJUV6/8gKwil/V2GxAivfmlOoGDU=;
-        b=XLeMtTirLBbpEXXwzvHkKEzpedoWQhFXEam4/l3hisbvtHSfw8KTo6DGpLQnDjRL3r
-         n0CN7QhIrm0Uo0r7mbNNUhsbIdZytsoWFQW3COI70Xo5W4qTrMtiLr0qZOGYgD2nojPE
-         pzT0y6QiHyXG9/maZxsLGTxqwDt1l3dsaXpYo/XwJ3sIp3hYiHb6qDDQcNdk5EWupZdj
-         zxrZYwCEHiiHyA47clIS8IBxwNOu42QaJZc+ZixBQu4HYyzUSn2AqcWsjHR/1r07sGUq
-         I2Bbb7fIUvZnHw54Ldma9oj3AXcB1Q0YnIYL7RgNUvFdO2NYghYHh3gxN0f4eFrAXbN5
-         E/pw==
-X-Gm-Message-State: AOAM530Bb/WzFqMj1mBt/u8XmoQo/lXjWXHzQDPMbb82a605pD7HZEig
-        qZWcZHEE9HEycN7EII6t90TwXYjZMg0=
-X-Google-Smtp-Source: ABdhPJxOyxXu3eWopTKSKy1TEPelHm7VC8hk6tUk0rppNeruFZfSxf9pW4kyeSEpztKiG08TcD1RHw==
-X-Received: by 2002:a65:6216:: with SMTP id d22mr22642011pgv.87.1619552137521;
-        Tue, 27 Apr 2021 12:35:37 -0700 (PDT)
-Received: from [10.230.29.202] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id o127sm3292967pfd.147.2021.04.27.12.35.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Apr 2021 12:35:36 -0700 (PDT)
-Subject: Re: [PATCH v1 4/4] PCI: brcmstb: add shutdown call to driver
-To:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20210427175140.17800-1-jim2101024@gmail.com>
- <20210427175140.17800-5-jim2101024@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <3a5a67e0-4554-f581-91b2-a8098814a9e9@gmail.com>
-Date:   Tue, 27 Apr 2021 12:35:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qjlzws9tOjfG2kgF5PSaus20BHkak4AbpiykyhDCpWc=;
+        b=syhpOunzldGylIzSWsRgYIcyWALs0hVnsHD7ilvitl885xGWv1ZtM0lKpN4R2qhwCV
+         srqbVw2fAGth1aAA3vGh/UFU6GHl+neCulsqUIbqPe7ckL5V30eWdrsPqxFEaEkyLbjZ
+         xLPCx5dJUgPHKAwmiZooxCkfohKj1wj1vL0xPINKYio0kpaeMTTwjWL4OL58D8aA39k5
+         Xeo0vq88MoMgjUCn4ZzfPABrqXT3w9kjDNYloU+0sTvgUgnnLInFNcLRvxtwXmLkUbCW
+         ZdMuUdcfIwqVJpY/BQ35hxDH+h2mNwubwerf7XVKp9NL9mK5sQHkye0tcDhQ6yVmIx8J
+         d9nw==
+X-Gm-Message-State: AOAM531aQ1HText8wTftdsnCSlZMxiEMj4Pr5fk+dhLMyM95jxJAIYV4
+        9COC9HSr/SfTM+ngwjzfFfn98Q==
+X-Google-Smtp-Source: ABdhPJzTB/kVzpwj6kXVp9NJ/SmSPf5xftMaBkmkgU98M9PRxB8v4F4XSKjG3yTN0WaJic3//dLNPQ==
+X-Received: by 2002:a37:ccb:: with SMTP id 194mr7861132qkm.45.1619552415304;
+        Tue, 27 Apr 2021 12:40:15 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id d3sm605486qtm.56.2021.04.27.12.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Apr 2021 12:40:14 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1lbTZ7-00Dh3g-Sk; Tue, 27 Apr 2021 16:40:13 -0300
+Date:   Tue, 27 Apr 2021 16:40:13 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 09/16] dma-direct: Support PCI P2PDMA pages in dma-direct
+ map_sg
+Message-ID: <20210427194013.GS2047089@ziepe.ca>
+References: <20210408170123.8788-1-logang@deltatee.com>
+ <20210408170123.8788-10-logang@deltatee.com>
+ <20210427193351.GR2047089@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20210427175140.17800-5-jim2101024@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210427193351.GR2047089@ziepe.ca>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 4/27/2021 10:51 AM, Jim Quinlan wrote:
-> The shutdown() call is similar to the remove() call except the former does
-> not need to invoke pci_{stop,remove}_root_bus(), and besides, errors occur
-> if it does.
+On Tue, Apr 27, 2021 at 04:33:51PM -0300, Jason Gunthorpe wrote:
+> On Thu, Apr 08, 2021 at 11:01:16AM -0600, Logan Gunthorpe wrote:
+> > Add PCI P2PDMA support for dma_direct_map_sg() so that it can map
+> > PCI P2PDMA pages directly without a hack in the callers. This allows
+> > for heterogeneous SGLs that contain both P2PDMA and regular pages.
+> > 
+> > SGL segments that contain PCI bus addresses are marked with
+> > sg_mark_pci_p2pdma() and are ignored when unmapped.
+> > 
+> > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >  kernel/dma/direct.c | 25 ++++++++++++++++++++++---
+> >  1 file changed, 22 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > index 002268262c9a..108dfb4ecbd5 100644
+> > +++ b/kernel/dma/direct.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/vmalloc.h>
+> >  #include <linux/set_memory.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/pci-p2pdma.h>
+> >  #include "direct.h"
+> >  
+> >  /*
+> > @@ -387,19 +388,37 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+> >  	struct scatterlist *sg;
+> >  	int i;
+> >  
+> > -	for_each_sg(sgl, sg, nents, i)
+> > +	for_each_sg(sgl, sg, nents, i) {
+> > +		if (sg_is_pci_p2pdma(sg)) {
+> > +			sg_unmark_pci_p2pdma(sg);
 > 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> This doesn't seem nice, the DMA layer should only alter the DMA
+> portion of the SG, not the other portions. Is it necessary?
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Oh, I got it completely wrong what this is for.
+
+This should be named sg_dma_mark_pci_p2p() and similar for other
+functions to make it clear it is part of the DMA side of the SG
+interface (eg it is like sg_dma_address, sg_dma_len, etc)
+
+Jason
