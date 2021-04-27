@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F8CF36CBA1
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEBC36CBB2
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:32:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235661AbhD0T3Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Apr 2021 15:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36622 "EHLO
+        id S238725AbhD0Tcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Apr 2021 15:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235563AbhD0T3Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:29:24 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D86EC061756
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:28:41 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id l21so17528718iob.1
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:28:41 -0700 (PDT)
+        with ESMTP id S238696AbhD0Tcn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:32:43 -0400
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95829C061760
+        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:31:59 -0700 (PDT)
+Received: by mail-io1-xd2a.google.com with SMTP id l21so17538100iob.1
+        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:31:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=DYcG+6Y4wulABOgwFwb1rxhdjQCINJ8GzZ3NxIxoP+4=;
-        b=d1W1Aqvy0WDQgLHfXd6KVJkwoZwwpQfM3q3r5Boe9IMOb1Ks78SGk5p7ivRqzqy7BA
-         gSU82n1JTpmb9daPjD5Irwhh8B8KTsNa9G4UpI9HD9aQfAMHpjP5UnmkWK6P30EssgPr
-         qJxOA1NOdKo9K00d+kPRugkI7hzjIwbR6beAJw47nAWJhCVUyqPECz8ykdHt9yMZoQDf
-         ogK6wY42jY6a/WZjKm0cnc2nvFx8F0yTrlY8RDJ+yRE9tNcvkLbJZ6C9WY9hob38kSQH
-         OkOHfjfKQxlSWxbGIOGwjc5CcjsPzLBsDhznnnN1CnbOGBl9wX3p6dSPxI4qPEJLDYmB
-         oq4g==
+        bh=Z2dfVSyAhAt8vgpBqMWbMDHuRDstq7cheYx2I0gCKqA=;
+        b=f+N9LA0t4CUwDpMHIjT1MaiOY0YP0yEI1fdCq6n/9G2sApcPu0kfC7g65PrZSCas0q
+         et2NNQvtx3ytlLSajvn/g9dwQLy9IwqF1tmAC4Z2Wbb5I+Ch5gtBC1EMrWz4jvcK7cRt
+         BzVK1SMsB3tJk0fk7jkLyb2kxQrjE4ZWpPcEIZ7o4pMgr6mhJqYb+dQUMgERAwDuQnuT
+         HZjT+3IRZb6PI3RPSgOlfb2kyWKwrBOn3yf7eoc9FCkyAhJ/Wgl0HqJKfJ1IUrN5ptMx
+         F66dcUTstJRLGIfvFqeC68gHCYIb4UfUh4NvcMqsFPQso8Hhnq5J0oEUDdR/Ozo03mHZ
+         ak0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=DYcG+6Y4wulABOgwFwb1rxhdjQCINJ8GzZ3NxIxoP+4=;
-        b=ai9+1xUgAfNbJWVPVVuWgheBQKrV/OVSraxtWBn+RT1HiFbY3jIRvIZlSCSPfnpF8P
-         pybMpCOkj9GIIDBma65lGpzM1VHc1mX2o41UBGN2rmzt3jN9FqdF86eUC+yTmgtYE3jK
-         GGt0LGn0MVZuzA31xFagDtLALtWWyuowXjNfdWEOoecgrYJfA1Go1jcxDb3iC3TxbK0x
-         5YJrWEuqSJ1H54wMxzRPt2ZSpeQR+/ZBcc/NMHJ99+UEn7GVI1ti/OxGIm/nitGjAd75
-         ydqh8PiwEQPg56vHOO1kCx8tiCQv3M5rTZ/8v+t32N94+3HTYTrtUV2i/3FiDor1H6bS
-         7tsw==
-X-Gm-Message-State: AOAM5321u3qC6iRH32ACeemaRxJF3N/dDk+L2QYQwUMeIt0EdOQYON0F
-        wZH5XVVZyarU+kebqacoK/Mz4A==
-X-Google-Smtp-Source: ABdhPJwQwDDELwuTsaB4Sx8qcFBGHVeacGfq4J3MKE4o16MniIdqkGIoAquFFRl+dmeSeAYT8wzXKQ==
-X-Received: by 2002:a6b:3bcd:: with SMTP id i196mr20979811ioa.121.1619551720518;
-        Tue, 27 Apr 2021 12:28:40 -0700 (PDT)
+        bh=Z2dfVSyAhAt8vgpBqMWbMDHuRDstq7cheYx2I0gCKqA=;
+        b=fQDUXvIdEJvh8bRoFUbLsjUnyE1Q8t9uHx9uaOvJrOTFqy6s+k72702VPiZrSKHMyr
+         xlN2V0kVC3sO7sQl71t9Cgpc7AmmwsYB3BgPUqaDWDneaN/nnjcgEALoLF5EvnGz9yhG
+         /aKRLkXM69nkqNuaODI/uNTbHYT+j+lp3GCrotJcV5vj6hJHuc1M3UH7YD9vGQa/VZ7O
+         i71X9H+R19+M0g3jYAtuVoG6MakBL03g260czRMqu7kN1FigXCiJdgotii+vRbtcheok
+         auEtoIpw8EJTqtVdnickKBWXoPWKPiW26IKSxO4EBfK+Vgnbj4beq/biBwTGDj+hlVnq
+         A0+g==
+X-Gm-Message-State: AOAM533tVeg86dzyH53M7Bwy6SJ7tUQRiz+MTDlzgNRluQoCew9I4/i8
+        6Sl6/iO9z0NmipL3V2Mwr2Q0Ag==
+X-Google-Smtp-Source: ABdhPJz1PrEuptJElb3400TY97NuVzdikMTMhxSGmMRmyGUliOenKdPiL7SsLe1HAEp58UA3cwiqXQ==
+X-Received: by 2002:a5d:84c5:: with SMTP id z5mr20535269ior.33.1619551919040;
+        Tue, 27 Apr 2021 12:31:59 -0700 (PDT)
 Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id d16sm1715512ils.48.2021.04.27.12.28.39
+        by smtp.gmail.com with ESMTPSA id d8sm340022iow.25.2021.04.27.12.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Apr 2021 12:28:39 -0700 (PDT)
+        Tue, 27 Apr 2021 12:31:58 -0700 (PDT)
 Received: from jgg by mlx with local (Exim 4.94)
         (envelope-from <jgg@ziepe.ca>)
-        id 1lbTNu-00DgsM-R2; Tue, 27 Apr 2021 16:28:38 -0300
-Date:   Tue, 27 Apr 2021 16:28:38 -0300
+        id 1lbTR7-00Dgv4-Ig; Tue, 27 Apr 2021 16:31:57 -0300
+Date:   Tue, 27 Apr 2021 16:31:57 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -72,37 +72,44 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 00/16] Add new DMA mapping operation for P2PDMA
-Message-ID: <20210427192838.GP2047089@ziepe.ca>
+Subject: Re: [PATCH 05/16] dma-mapping: Introduce dma_map_sg_p2pdma()
+Message-ID: <20210427193157.GQ2047089@ziepe.ca>
 References: <20210408170123.8788-1-logang@deltatee.com>
+ <20210408170123.8788-6-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210408170123.8788-1-logang@deltatee.com>
+In-Reply-To: <20210408170123.8788-6-logang@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 11:01:07AM -0600, Logan Gunthorpe wrote:
-> Hi,
-> 
-> This patchset continues my work to to add P2PDMA support to the common
-> dma map operations. This allows for creating SGLs that have both P2PDMA
-> and regular pages which is a necessary step to allowing P2PDMA pages in
-> userspace.
-> 
-> The earlier RFC[1] generated a lot of great feedback and I heard no show
-> stopping objections. Thus, I've incorporated all the feedback and have
-> decided to post this as a proper patch series with hopes of eventually
-> getting it in mainline.
->
-> I'm happy to do a few more passes if anyone has any further feedback
-> or better ideas.
+On Thu, Apr 08, 2021 at 11:01:12AM -0600, Logan Gunthorpe wrote:
+> +/*
+> + * dma_maps_sg_attrs returns 0 on error and > 0 on success.
+> + * It should never return a value < 0.
+> + */
 
-For the user of the DMA API the idea seems reasonable enough, the next
-steps to integrate with pin_user_pages() seem fairly straightfoward
-too
+Also it is weird a function that can't return 0 is returning an int type
 
-Was there no feedback on this at all?
+> +int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
+> +		enum dma_data_direction dir, unsigned long attrs)
+> +{
+> +	int ents;
+> +
+> +	ents = __dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+>  	BUG_ON(ents < 0);
+
+if (WARN_ON(ents < 0))
+     return 0;
+
+instead of bug on?
+
+Also, I see only 8 users of this function. How about just fix them all
+to support negative returns and use this as the p2p API instead of
+adding new API?
+
+Add the opposite logic flag, 'DMA_ATTRS_NO_ERROR' and pass it through
+the other api entry callers that can't handle it?
 
 Jason
