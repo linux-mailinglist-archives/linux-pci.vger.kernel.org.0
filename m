@@ -2,122 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1236A36CBB7
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:33:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 338AC36CBBE
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236287AbhD0Tei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Apr 2021 15:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
+        id S235686AbhD0TgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Apr 2021 15:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235686AbhD0Teh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:34:37 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C247C061574
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:33:54 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id t21so365092plo.2
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:33:54 -0700 (PDT)
+        with ESMTP id S235661AbhD0TgX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:36:23 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B00C061574;
+        Tue, 27 Apr 2021 12:35:38 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id v191so312748pfc.8;
+        Tue, 27 Apr 2021 12:35:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R+F2zOJdoXavuDhUMY1QiZp/NrhfLweB0na9Qyx1V6M=;
-        b=TJz59G9wTmQQcbNbRY6OLyN78TksPOrBEHchyw0NBoPqX7sH+F3GGV9C/CfZW1h60M
-         za+EgCvhm5j94fG3EFrSszh3F9AtXSEv6o4v4pzjNzSIPeAEJTXAJgDlK3w7dIOwvVl3
-         GDz/9VRq+nxGIFibJgIM4ZDwttw1bZanScMikT8vBhr3hHdh3+D1AMW+87r/3r/WeSeL
-         mFN1NYGu0fU/BHLpJfQ111ayxh2eOXs3wIHf4Gc1C7LSKzpmBZACVlSiQZcSoeU7Fukr
-         d9IJK8EwTF9bbg0KdJNjSvCfq8EatvIhTdt5V794cL+MA6LlTikeW2O5j+OCr1c9eKX8
-         S8Mg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZMPrTbpcRPZqLLWfJUV6/8gKwil/V2GxAivfmlOoGDU=;
+        b=Fo3ZZx2whMOA0w3yRY3563soue/j2+CXIv8haxx8QIgXXkkVtxvvi45s73nOgknLx1
+         rvrzZnf55N4G28TWARtQKtNc3guhKts3JLb6n+CEWIIBn/rh/qOBNe9ZvNT5jixYaL6t
+         +VJ/FE4amGmMkcmc113faY3jB+wIYJyEKjF8f7TFuAacca3+QIs7JikmfgOOHvsHC/0X
+         sJNmn4VpWDvXafeyYnzfXVDnbAOkYziogAW0/JIzdsh+8bnP+7uxCqAQJ/N0K8J2ckVw
+         QiOP4maXBsz1acPZA54JA9Kl8Hzzci19rXDb+s/LxckRqrFmbHVJkJX7KHFXkchW9x57
+         BlmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R+F2zOJdoXavuDhUMY1QiZp/NrhfLweB0na9Qyx1V6M=;
-        b=YVCXqelmGi3PJ8gDxLBw244G9YTXCZwkEYJJyqidPjlJ7lUnix1xtm6a6Zk4Hrlv7P
-         QJClZe2Y9xV1JN34UA7HdAqa8Tz6N+0i/B/0+3tsMiUkqcbpmbM2YfltEYd9uJlBzPOG
-         SpifpLZ6JuBLfFIHqOXCNUylnHi1HIjDHEzRi3Ebxa1IVa9MxsSAFA93me63VqWHCR1y
-         7sIkcUjSg2qC0GjVHTn5tUgtXqOr8c3/nxYUQo44cROw7WE4ZM9/cS4O2NE8EXFIaI8X
-         4rmywhQUOYr5zd8Lg/Mdh5OKX87Rc2mLXffOVuRI7zEAxWHZLdlZxi2/vJZ3tRKB1Msj
-         36uQ==
-X-Gm-Message-State: AOAM533bjIF86936gWKF0SMDV4tvuQeT2w3rOcg1yLqkouomHk6+o6az
-        PIOZMn6s+e9T4H+oltRz1TRu/Q==
-X-Google-Smtp-Source: ABdhPJwz3MILTFTzWsw6JFNbmAnxbzNG2cgSRXVHlPFwKXyKDZuqS3fiLINQaBtKfebJ6/AT25pPWg==
-X-Received: by 2002:a17:902:8a8a:b029:ec:857a:4d51 with SMTP id p10-20020a1709028a8ab02900ec857a4d51mr25612392plo.68.1619552034009;
-        Tue, 27 Apr 2021 12:33:54 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id o5sm460461pgq.58.2021.04.27.12.33.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Apr 2021 12:33:53 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1lbTSx-00Dgwh-Mo; Tue, 27 Apr 2021 16:33:51 -0300
-Date:   Tue, 27 Apr 2021 16:33:51 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 09/16] dma-direct: Support PCI P2PDMA pages in dma-direct
- map_sg
-Message-ID: <20210427193351.GR2047089@ziepe.ca>
-References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-10-logang@deltatee.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZMPrTbpcRPZqLLWfJUV6/8gKwil/V2GxAivfmlOoGDU=;
+        b=XLeMtTirLBbpEXXwzvHkKEzpedoWQhFXEam4/l3hisbvtHSfw8KTo6DGpLQnDjRL3r
+         n0CN7QhIrm0Uo0r7mbNNUhsbIdZytsoWFQW3COI70Xo5W4qTrMtiLr0qZOGYgD2nojPE
+         pzT0y6QiHyXG9/maZxsLGTxqwDt1l3dsaXpYo/XwJ3sIp3hYiHb6qDDQcNdk5EWupZdj
+         zxrZYwCEHiiHyA47clIS8IBxwNOu42QaJZc+ZixBQu4HYyzUSn2AqcWsjHR/1r07sGUq
+         I2Bbb7fIUvZnHw54Ldma9oj3AXcB1Q0YnIYL7RgNUvFdO2NYghYHh3gxN0f4eFrAXbN5
+         E/pw==
+X-Gm-Message-State: AOAM530Bb/WzFqMj1mBt/u8XmoQo/lXjWXHzQDPMbb82a605pD7HZEig
+        qZWcZHEE9HEycN7EII6t90TwXYjZMg0=
+X-Google-Smtp-Source: ABdhPJxOyxXu3eWopTKSKy1TEPelHm7VC8hk6tUk0rppNeruFZfSxf9pW4kyeSEpztKiG08TcD1RHw==
+X-Received: by 2002:a65:6216:: with SMTP id d22mr22642011pgv.87.1619552137521;
+        Tue, 27 Apr 2021 12:35:37 -0700 (PDT)
+Received: from [10.230.29.202] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id o127sm3292967pfd.147.2021.04.27.12.35.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Apr 2021 12:35:36 -0700 (PDT)
+Subject: Re: [PATCH v1 4/4] PCI: brcmstb: add shutdown call to driver
+To:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20210427175140.17800-1-jim2101024@gmail.com>
+ <20210427175140.17800-5-jim2101024@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <3a5a67e0-4554-f581-91b2-a8098814a9e9@gmail.com>
+Date:   Tue, 27 Apr 2021 12:35:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210408170123.8788-10-logang@deltatee.com>
+In-Reply-To: <20210427175140.17800-5-jim2101024@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 11:01:16AM -0600, Logan Gunthorpe wrote:
-> Add PCI P2PDMA support for dma_direct_map_sg() so that it can map
-> PCI P2PDMA pages directly without a hack in the callers. This allows
-> for heterogeneous SGLs that contain both P2PDMA and regular pages.
-> 
-> SGL segments that contain PCI bus addresses are marked with
-> sg_mark_pci_p2pdma() and are ignored when unmapped.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->  kernel/dma/direct.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 002268262c9a..108dfb4ecbd5 100644
-> +++ b/kernel/dma/direct.c
-> @@ -13,6 +13,7 @@
->  #include <linux/vmalloc.h>
->  #include <linux/set_memory.h>
->  #include <linux/slab.h>
-> +#include <linux/pci-p2pdma.h>
->  #include "direct.h"
->  
->  /*
-> @@ -387,19 +388,37 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
->  	struct scatterlist *sg;
->  	int i;
->  
-> -	for_each_sg(sgl, sg, nents, i)
-> +	for_each_sg(sgl, sg, nents, i) {
-> +		if (sg_is_pci_p2pdma(sg)) {
-> +			sg_unmark_pci_p2pdma(sg);
 
-This doesn't seem nice, the DMA layer should only alter the DMA
-portion of the SG, not the other portions. Is it necessary?
 
-Jason
+On 4/27/2021 10:51 AM, Jim Quinlan wrote:
+> The shutdown() call is similar to the remove() call except the former does
+> not need to invoke pci_{stop,remove}_root_bus(), and besides, errors occur
+> if it does.
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
