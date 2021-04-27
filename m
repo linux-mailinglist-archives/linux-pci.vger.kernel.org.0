@@ -2,65 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E611F36CBFC
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 21:47:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A83736CC3E
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Apr 2021 22:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236459AbhD0Tsl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Apr 2021 15:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235661AbhD0Tsk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Apr 2021 15:48:40 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87365C06175F
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:47:56 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id d19so25535502qkk.12
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 12:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AjrAoCiFehNYhoJcuGAEBZrhhpGrqdOWIeMvT8fZfQE=;
-        b=graEdUl6h9bRI6879DOV+jpvit1zfjy1sguqq286DV1F/2+gigtoCBWC3FM8vofgQl
-         frU5tmA5Yo5liP+gMHQyrmUq7cN1npCBY2bA3DqaAxH06CuLnP0NWeNuc8kjlvuN1iJn
-         RdKbTcJWt7HM17bR6iMbdLR+Jh0BXdc3dZvBEz4QmXJ6kQmenIxZg2f5iyAHzEGw5iRb
-         rqTOz8C5voOg+HeAyWzUJQcZ/iGz5ZMG+AB4pgyf8vAxm5rXA349KgOhQxhfMCafKqsg
-         8i7gUoB/5zWgVNo8NelgGibkEKBeWRzNqnyj5N71rIYwMTksaYGDH0BittbK3OmOjGkd
-         CYWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AjrAoCiFehNYhoJcuGAEBZrhhpGrqdOWIeMvT8fZfQE=;
-        b=oEFzDRyEgx9obX1glHiTHLLneqJxW5Qr3HA/dorZT6UMZKsmRxiMzmeuJEaWzczApn
-         ZOW9+ZMWegxq20rGohZEq8RrIbuRIcAllLeMP8bbuq7e0D7SqgYx6kXd154hdNNn2kDm
-         SC0EMVh0jJK/2JyKPnVwcNJKL2+2jpHxohuIcGkFxF1h7LMXoA7DNPBI2BPKUGFP/8ag
-         UAnI0QF/hpetfqIF0c9RSKL7Ke4QktLpdMXGLOAfvOI5DWXfMBpmoziUhERVnUVcJmuG
-         Oe1AB+O8J3wMuqO1DPRtLhfDJuc/bKblgybWhubJEUpgQCn+hhXR2+wvu/LtXL3QQqwx
-         xl4w==
-X-Gm-Message-State: AOAM532BYx1Y0uouZeW+6wVZzCzS+Aee3fy1cbTeyAEWTYhQ6IOL6raq
-        KPV5OC5yuOV81rA4yCe/hkZZNA==
-X-Google-Smtp-Source: ABdhPJw/yRbsqLsGFNvUPkPPJ1aCygnt+iyVESC5mkhFcaOFoCh8V5g49hIvCNxFvRyeXQBLFWfZKw==
-X-Received: by 2002:a37:41ce:: with SMTP id o197mr25280932qka.122.1619552875839;
-        Tue, 27 Apr 2021 12:47:55 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id d19sm625708qtd.29.2021.04.27.12.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Apr 2021 12:47:55 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1lbTgX-00DhBD-OP; Tue, 27 Apr 2021 16:47:53 -0300
-Date:   Tue, 27 Apr 2021 16:47:53 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        id S235440AbhD0UWi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Apr 2021 16:22:38 -0400
+Received: from mail-eopbgr700071.outbound.protection.outlook.com ([40.107.70.71]:22113
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235401AbhD0UWi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Apr 2021 16:22:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PZBJ/MAcBHZhEP8a6pLGpLWA4Hsva+6tNEzoK0v1m7HvxKXRogS0tzlrq9hbeWuiOXT6E05aRFN+Ian1FjUWsBeGDX9+LnqdafU3q9kl6+bVoHGOmNuq5n7K+9YwHkvJKgxQ8xP1VaewKxvQ5+uyhTB9eHmpBCg6v6OYvhk8HcXjUdGLXiNN0j4i/eDLXQzV09XUTw+vOeZwSWa2K3ZU2qtadTXcbiRY01ESgdOuoZYt6K6tEneUou5Ye+hNZg8MEpMnC7dUnI8PqOsJ+SuqG6vUed1PVH79CcTtwFI+IxP2jx4CvsVp+HHH6ZTCPyIP5Q4AOCiTDkFlJmDgiUFMtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fiaYlcoLb3O9H9MAJq8qvDAm+vShn4NgsspG8l0T0SE=;
+ b=WUCAWc7eklT0N+HHN2liR14NwEUisDaRtUzn/rZxL8vc9tfiD9a3SEX/d2MyI53dFqYMJjqTYzKL9zPjmur4Yh5as8pKvx67PfuvBWwFe8G5y/Y8m/IR5qE6Pe7OgFo0UjkZ4fVEwXbgrZEHNYsv9s1NDFy4jOAxWDVK8TCqF/D+UKSVfwdHG6mYjC3i/oFpJDYeBxw+5i7H1LmF6oWHwRapVmnrqg0Mdt6sGmTHeQcz+jgHRfF/CW9rxcfByHuI4QkLORC1zhpsyvdCy9+rVTooDTSNniAvBtFRfLPoNQ2hzAMp7qceG8vjx6nNZI6WVc3szPDlNV7X65aSFGMMEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=lists.linux-foundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fiaYlcoLb3O9H9MAJq8qvDAm+vShn4NgsspG8l0T0SE=;
+ b=f1cLjDgUlJbPee3oc1owW4qJzOYw2drYOVLgBGG7CgWCfOlcbV6dojR9oa6/GZYYq3CSjd2v8qsNwQ1VJMXIj6M2FM3Q+9puzdrAmLhIMKaWc9oNv++w6be/wv2H8/OOL2Dnd6oEHnrUwqsFm3to5GEAYgY/wz6+eIvHCZSsRDUlfzkhsPrkYw5EEog3VOhME2loK1fVBnMyimEQQRW8rIvQaYbpzquVkd1I24R+d2T3uDkUaF6B1MEA68mty5Jsp0KPIdsGvn9ma750ibjFMNBSj3aoBSLJV/7+GE43y9FovhtYSGntCbuThGlSxQChmU1e1U8AxRGB318wOLbPHA==
+Received: from MWHPR14CA0037.namprd14.prod.outlook.com (2603:10b6:300:12b::23)
+ by MN2PR12MB4814.namprd12.prod.outlook.com (2603:10b6:208:1b6::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.20; Tue, 27 Apr
+ 2021 20:21:52 +0000
+Received: from CO1NAM11FT036.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:12b:cafe::2e) by MWHPR14CA0037.outlook.office365.com
+ (2603:10b6:300:12b::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21 via Frontend
+ Transport; Tue, 27 Apr 2021 20:21:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; lists.linux-foundation.org; dkim=none (message not
+ signed) header.d=none;lists.linux-foundation.org; dmarc=pass action=none
+ header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT036.mail.protection.outlook.com (10.13.174.124) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4065.21 via Frontend Transport; Tue, 27 Apr 2021 20:21:51 +0000
+Received: from [10.2.60.58] (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 27 Apr
+ 2021 20:21:51 +0000
+Subject: Re: [PATCH 00/16] Add new DMA mapping operation for P2PDMA
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-mm@kvack.org>, <iommu@lists.linux-foundation.org>,
         Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
@@ -72,42 +73,74 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 14/16] nvme-rdma: Ensure dma support when using p2pdma
-Message-ID: <20210427194753.GU2047089@ziepe.ca>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-15-logang@deltatee.com>
+ <20210427192838.GP2047089@ziepe.ca>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <52f14602-94bc-fa98-0b97-5f4084d808a0@nvidia.com>
+Date:   Tue, 27 Apr 2021 13:21:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210408170123.8788-15-logang@deltatee.com>
+In-Reply-To: <20210427192838.GP2047089@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 594ef245-3cb7-44f5-5081-08d909ba17f2
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4814:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB481497BFED71E349C1972892A8419@MN2PR12MB4814.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LdEM32LL+68YQ/yivUq8issFecE2lGG4Tk4FXqIzbX2qmLvmDqzOx1LDDEjAB5pAT9RuzvCb95J9bhN2Z6cJQ+PD9Q3J9A0sAE5XMDSyWHo2QuNEgVEusZrLjje9JbJtgBW8rLbVQGUJet77NmgadXx+DKdECITVEtsccbVDWhY8su0dC2+Pa7hjf6Y1vXzxjCQB6kFzskVUClQxamW5ACJ1Y8FqNOxXz2Lq3/Z4K2fBevP5y8ljuqg7jTM8ksax9bf/BdSMQzCdNTooc8bHRZMiovfNWeT1jB04ZgljfJKkIEQeWYR5MD5bsQ9Lh4g17HYrl/14jtvY0TYvJdHoZ7ZkOkqgSqMKvhKjnLNyhalXY+EeE4m2Ry1ywgZYstl81k98gOCOvJDJKyjbidj5k1WwHtG5ZEGpPPg0PHHbEUv2HlQ/RpBUAQz6+XFIoIkqU6RswmYfPJyFDcKfxBugAAvUBiwkaM7nrUcmQ6Jc+2yWC+cmebNs015pf4dxnjKNsb7PvZ2dMoO/0f0M7ruEgNWT97ySnnjCshC1DmBBjvbibRLVD06uP8LLQ1eL8FG61n9bSIWjww4fx7qtly+chduVXkHrJ1RE3UAYz5rkTSuEskDTa+ZoWwQt1THigT9uH0TUmS1rmfy2yzLO9CuSawkIg8vonoDzg8J7qrm1sd2r33ZUVgEkdcPZjXATNiPE
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(46966006)(36840700001)(2906002)(31686004)(31696002)(4326008)(54906003)(70206006)(426003)(2616005)(53546011)(82310400003)(83380400001)(478600001)(336012)(7416002)(47076005)(36860700001)(82740400003)(356005)(7636003)(5660300002)(8676002)(8936002)(36756003)(70586007)(86362001)(16526019)(26005)(316002)(110136005)(16576012)(186003)(36906005)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2021 20:21:51.8999
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 594ef245-3cb7-44f5-5081-08d909ba17f2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT036.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4814
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 11:01:21AM -0600, Logan Gunthorpe wrote:
-> Ensure the dma operations support p2pdma before using the RDMA
-> device for P2PDMA. This allows switching the RDMA driver from
-> pci_p2pdma_map_sg() to dma_map_sg_p2pdma().
+On 4/27/21 12:28 PM, Jason Gunthorpe wrote:
+> On Thu, Apr 08, 2021 at 11:01:07AM -0600, Logan Gunthorpe wrote:
+>> Hi,
+>>
+>> This patchset continues my work to to add P2PDMA support to the common
+>> dma map operations. This allows for creating SGLs that have both P2PDMA
+>> and regular pages which is a necessary step to allowing P2PDMA pages in
+>> userspace.
+>>
+>> The earlier RFC[1] generated a lot of great feedback and I heard no show
+>> stopping objections. Thus, I've incorporated all the feedback and have
+>> decided to post this as a proper patch series with hopes of eventually
+>> getting it in mainline.
+>>
+>> I'm happy to do a few more passes if anyone has any further feedback
+>> or better ideas.
 > 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->  drivers/nvme/target/rdma.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> For the user of the DMA API the idea seems reasonable enough, the next
+> steps to integrate with pin_user_pages() seem fairly straightfoward
+> too
 > 
-> diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-> index 6c1f3ab7649c..3ec7e77e5416 100644
-> +++ b/drivers/nvme/target/rdma.c
-> @@ -414,7 +414,8 @@ static int nvmet_rdma_alloc_rsp(struct nvmet_rdma_device *ndev,
->  	if (ib_dma_mapping_error(ndev->device, r->send_sge.addr))
->  		goto out_free_rsp;
->  
-> -	if (!ib_uses_virt_dma(ndev->device))
-> +	if (!ib_uses_virt_dma(ndev->device) &&
-> +	    dma_pci_p2pdma_supported(&ndev->device->dev))
+> Was there no feedback on this at all?
+> 
 
-ib_uses_virt_dma() should not be called by nvme and this is using the
-wrong device pointer to query for DMA related properties.
+oops, I meant to review this a lot sooner, because this whole p2pdma thing is
+actually very interesting and important...somehow it slipped but I'll take
+a look now.
 
-I suspect this wants a ib_dma_pci_p2p_dma_supported() wrapper like
-everything else.
-
-Jason
+thanks,
+-- 
+John Hubbard
+NVIDIA
