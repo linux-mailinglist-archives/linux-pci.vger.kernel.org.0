@@ -2,202 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0247E36DE1D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 19:21:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D326236DE2D
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 19:24:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241549AbhD1RWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Apr 2021 13:22:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31875 "EHLO mga14.intel.com"
+        id S241581AbhD1RYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Apr 2021 13:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229931AbhD1RWD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Apr 2021 13:22:03 -0400
-IronPort-SDR: XWMHNS+wPjLie1H7hBz2NfTsDEJbeLaQDEl6YlivxlsW5VAmlKjLVIZty42WlftZQ1UmtT+gAe
- fdAkZRfcBULg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9968"; a="196358545"
-X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
-   d="scan'208";a="196358545"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2021 10:21:17 -0700
-IronPort-SDR: cEvlCi3kOBH3dTkRN8SBpGaWOVoi90VfEqm9CSV9CtLns7T37tsTWnyFaetDwLqTl6FVw2AxIQ
- M7f0fLuWrMfQ==
-X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
-   d="scan'208";a="425680637"
-Received: from turnerrx-desk.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.37.37])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2021 10:21:14 -0700
-Subject: Re: [RFC PATCH] PCI/APCI: Move acpi_pci_osc_support() check to
- negotiation phase
-To:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-References: <20210428081857.10322-1-joro@8bytes.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <d24893db-2c9e-dbb1-75d2-53b96760c80e@linux.intel.com>
-Date:   Wed, 28 Apr 2021 10:21:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S241580AbhD1RYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Apr 2021 13:24:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C3C06143A;
+        Wed, 28 Apr 2021 17:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619630638;
+        bh=kYk8tSr7GIr6TlUOGk3attbXyhbPQUViB/mzOqZB+UQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EyJbEFLQ9OSeQbwlXPv2F80PPfv6zG/lT1t4bbW/jw0OhA7QLxBTrzpkOeyaNWLMq
+         hiy6mymgU8HjSJugOWgI6FwwDRoPPuW3Gq3hhbC6MyvjAN314HQ+lmjQciWQayN4Vi
+         azJ86Fhwq+EE7b/06ySeLATkTcqlloPB2GblpSe92wv65Ii7uAKEYO1yGp0R7dJAOs
+         LkuV/lCWzEsAVh4HaZNL9lFTa7bM4DiQSy/rbtWi/2NmkcLYFVb0CUym2yQ4UdWH68
+         VwqRgpTwHtTKhoBVYQjA83egIP64aP+2/XD9d5ZkjRuir/QBq1mU5bGxL6tdvoqNQq
+         OG+0uOijWxx+g==
+Date:   Wed, 28 Apr 2021 12:23:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
+        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com,
+        ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, Felix.Kuehling@amd.com
+Subject: Re: [PATCH v5 09/27] dmr/amdgpu: Move some sysfs attrs creation to
+ default_attr
+Message-ID: <20210428172357.GA241173@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210428081857.10322-1-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210428151207.1212258-10-andrey.grodzovsky@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+In subject,
 
+s/dmr/drm/
+s/Move some/Move/ ("some" consumes space without adding meaning)
 
-On 4/28/21 1:18 AM, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The acpi_pci_osc_support() does an _OSC query with _OSC supported set
-> to what the OS supports but a zero _OSC control value. This is
-> problematic on some platforms where the firmware allows to configure
-> whether DPC is under OS or Firmware control.
+Or maybe something like: 
 
-Do we run acpi_pci_osc_support() only to check whether _OSC is
-supported ? Or does it serve any other purpose.
+  drm/amdgpu: Convert driver sysfs attributes to static attributes
 
+On Wed, Apr 28, 2021 at 11:11:49AM -0400, Andrey Grodzovsky wrote:
+> This allows to remove explicit creation and destruction
+> of those attrs and by this avoids warnings on device
+> finilizing post physical device extraction.
 
-> 
-> When DPC is configured to be under OS control these platforms will
-> issue a warning in the firmware log that the OS does not support DPC.
+s/finilizing/finalizing/
 
-Also, is there any other benefit from this patch other than fixing
-a warning message in firmware?
+> v5: Use newly added pci_driver.dev_groups directly
 
-> 
-> Avoid an _OSC query with _OSC control set to zero by moving the
-> supported check into the acpi_pci_osc_control_set() path. This is
-> still early enough to fail as nothing before that depends on the
-> results of acpi_pci_osc_support().
-> 
-> As a result the acpi_pci_osc_support() function can be removed and
-> acpi_pci_query_osc() be simplified because it no longer called with a
-> NULL pointer for *control.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+I don't know the DRM convention, but IMO, change notes like "v5: Use
+..." can go after "---" so they don't go in the git log.  To me,
+they're useful during review, but not after being merged.
+
+I love the patch!  Much cleaner than creating/removing all these
+attributes explicitly.
+
+> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
 > ---
->   drivers/acpi/pci_root.c | 50 ++++++++++++++++-------------------------
->   1 file changed, 19 insertions(+), 31 deletions(-)
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 17 ++++++-------
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c      | 13 ++++++++++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c  | 25 ++++++++------------
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 14 ++++-------
+>  4 files changed, 37 insertions(+), 32 deletions(-)
 > 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index dcd593766a64..530ecf4970b1 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -199,16 +199,11 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
->   
->   	support &= OSC_PCI_SUPPORT_MASKS;
->   	support |= root->osc_support_set;
-> +	*control &= OSC_PCI_CONTROL_MASKS;
->   
->   	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
->   	capbuf[OSC_SUPPORT_DWORD] = support;
-> -	if (control) {
-> -		*control &= OSC_PCI_CONTROL_MASKS;
-> -		capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
-> -	} else {
-> -		/* Run _OSC query only with existing controls. */
-> -		capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+> index 86add0f4ea4d..0346e124ab8c 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+> @@ -1953,6 +1953,15 @@ static ssize_t amdgpu_atombios_get_vbios_version(struct device *dev,
+>  static DEVICE_ATTR(vbios_version, 0444, amdgpu_atombios_get_vbios_version,
+>  		   NULL);
+>  
+> +static struct attribute *amdgpu_vbios_version_attrs[] = {
+> +	&dev_attr_vbios_version.attr,
+> +	NULL
+> +};
+> +
+> +const struct attribute_group amdgpu_vbios_version_attr_group = {
+> +	.attrs = amdgpu_vbios_version_attrs
+> +};
+> +
+>  /**
+>   * amdgpu_atombios_fini - free the driver info and callbacks for atombios
+>   *
+> @@ -1972,7 +1981,6 @@ void amdgpu_atombios_fini(struct amdgpu_device *adev)
+>  	adev->mode_info.atom_context = NULL;
+>  	kfree(adev->mode_info.atom_card_info);
+>  	adev->mode_info.atom_card_info = NULL;
+> -	device_remove_file(adev->dev, &dev_attr_vbios_version);
+>  }
+>  
+>  /**
+> @@ -1989,7 +1997,6 @@ int amdgpu_atombios_init(struct amdgpu_device *adev)
+>  {
+>  	struct card_info *atom_card_info =
+>  	    kzalloc(sizeof(struct card_info), GFP_KERNEL);
+> -	int ret;
+>  
+>  	if (!atom_card_info)
+>  		return -ENOMEM;
+> @@ -2027,12 +2034,6 @@ int amdgpu_atombios_init(struct amdgpu_device *adev)
+>  		amdgpu_atombios_allocate_fb_scratch(adev);
+>  	}
+>  
+> -	ret = device_create_file(adev->dev, &dev_attr_vbios_version);
+> -	if (ret) {
+> -		DRM_ERROR("Failed to create device file for VBIOS version\n");
+> -		return ret;
 > -	}
-> +	capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
->   
->   	status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
->   	if (ACPI_SUCCESS(status)) {
-> @@ -219,11 +214,6 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
->   	return status;
->   }
->   
-> -static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
-> -{
-> -	return acpi_pci_query_osc(root, flags, NULL);
-> -}
 > -
->   struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
->   {
->   	struct acpi_pci_root *root;
-> @@ -346,7 +336,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->    * _OSC bits the BIOS has granted control of, but its contents are meaningless
->    * on failure.
->    **/
-> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
-> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
-> +					    *mask, u32 req, u32 support)
->   {
->   	struct acpi_pci_root *root;
->   	acpi_status status;
-> @@ -370,7 +361,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
->   
->   	/* Need to check the available controls bits before requesting them. */
->   	while (*mask) {
-> -		status = acpi_pci_query_osc(root, root->osc_support_set, mask);
-> +		status = acpi_pci_query_osc(root, support, mask);
->   		if (ACPI_FAILURE(status))
->   			return status;
->   		if (ctrl == *mask)
-> @@ -433,18 +424,6 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->   		support |= OSC_PCI_EDR_SUPPORT;
->   
->   	decode_osc_support(root, "OS supports", support);
-> -	status = acpi_pci_osc_support(root, support);
-> -	if (ACPI_FAILURE(status)) {
-> -		*no_aspm = 1;
-> -
-> -		/* _OSC is optional for PCI host bridges */
-> -		if ((status == AE_NOT_FOUND) && !is_pcie)
-> -			return;
-> -
-> -		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-> -			 acpi_format_exception(status));
-> -		return;
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> index 54cb5ee2f563..f799c40d7e72 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> @@ -1605,6 +1605,18 @@ static struct pci_error_handlers amdgpu_pci_err_handler = {
+>  	.resume		= amdgpu_pci_resume,
+>  };
+>  
+> +extern const struct attribute_group amdgpu_vram_mgr_attr_group;
+> +extern const struct attribute_group amdgpu_gtt_mgr_attr_group;
+> +extern const struct attribute_group amdgpu_vbios_version_attr_group;
+> +
+> +static const struct attribute_group *amdgpu_sysfs_groups[] = {
+> +	&amdgpu_vram_mgr_attr_group,
+> +	&amdgpu_gtt_mgr_attr_group,
+> +	&amdgpu_vbios_version_attr_group,
+> +	NULL,
+> +};
+> +
+> +
+>  static struct pci_driver amdgpu_kms_pci_driver = {
+>  	.name = DRIVER_NAME,
+>  	.id_table = pciidlist,
+> @@ -1613,6 +1625,7 @@ static struct pci_driver amdgpu_kms_pci_driver = {
+>  	.shutdown = amdgpu_pci_shutdown,
+>  	.driver.pm = &amdgpu_pm_ops,
+>  	.err_handler = &amdgpu_pci_err_handler,
+> +	.dev_groups = amdgpu_sysfs_groups,
+>  };
+>  
+>  static int __init amdgpu_init(void)
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
+> index 8980329cded0..3b7150e1c5ed 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
+> @@ -77,6 +77,16 @@ static DEVICE_ATTR(mem_info_gtt_total, S_IRUGO,
+>  static DEVICE_ATTR(mem_info_gtt_used, S_IRUGO,
+>  	           amdgpu_mem_info_gtt_used_show, NULL);
+>  
+> +static struct attribute *amdgpu_gtt_mgr_attributes[] = {
+> +	&dev_attr_mem_info_gtt_total.attr,
+> +	&dev_attr_mem_info_gtt_used.attr,
+> +	NULL
+> +};
+> +
+> +const struct attribute_group amdgpu_gtt_mgr_attr_group = {
+> +	.attrs = amdgpu_gtt_mgr_attributes
+> +};
+> +
+>  static const struct ttm_resource_manager_func amdgpu_gtt_mgr_func;
+>  /**
+>   * amdgpu_gtt_mgr_init - init GTT manager and DRM MM
+> @@ -91,7 +101,6 @@ int amdgpu_gtt_mgr_init(struct amdgpu_device *adev, uint64_t gtt_size)
+>  	struct amdgpu_gtt_mgr *mgr = &adev->mman.gtt_mgr;
+>  	struct ttm_resource_manager *man = &mgr->manager;
+>  	uint64_t start, size;
+> -	int ret;
+>  
+>  	man->use_tt = true;
+>  	man->func = &amdgpu_gtt_mgr_func;
+> @@ -104,17 +113,6 @@ int amdgpu_gtt_mgr_init(struct amdgpu_device *adev, uint64_t gtt_size)
+>  	spin_lock_init(&mgr->lock);
+>  	atomic64_set(&mgr->available, gtt_size >> PAGE_SHIFT);
+>  
+> -	ret = device_create_file(adev->dev, &dev_attr_mem_info_gtt_total);
+> -	if (ret) {
+> -		DRM_ERROR("Failed to create device file mem_info_gtt_total\n");
+> -		return ret;
 > -	}
->   
->   	if (pcie_ports_disabled) {
->   		dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
-> @@ -483,7 +462,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->   
->   	requested = control;
->   	status = acpi_pci_osc_control_set(handle, &control,
-> -					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
-> +					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL,
-> +					  support);
->   	if (ACPI_SUCCESS(status)) {
->   		decode_osc_control(root, "OS now controls", control);
->   		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
-> @@ -496,10 +476,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->   			*no_aspm = 1;
->   		}
->   	} else {
-> -		decode_osc_control(root, "OS requested", requested);
-> -		decode_osc_control(root, "platform willing to grant", control);
-> -		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-> -			acpi_format_exception(status));
-> +		/* Platform wants to control PCIe features */
-> +		root->osc_support_set = 0;
->   
->   		/*
->   		 * We want to disable ASPM here, but aspm_disabled
-> @@ -509,6 +487,16 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->   		 * root scan.
->   		 */
->   		*no_aspm = 1;
+> -	ret = device_create_file(adev->dev, &dev_attr_mem_info_gtt_used);
+> -	if (ret) {
+> -		DRM_ERROR("Failed to create device file mem_info_gtt_used\n");
+> -		return ret;
+> -	}
+> -
+>  	ttm_set_driver_manager(&adev->mman.bdev, TTM_PL_TT, &mgr->manager);
+>  	ttm_resource_manager_set_used(man, true);
+>  	return 0;
+> @@ -144,9 +142,6 @@ void amdgpu_gtt_mgr_fini(struct amdgpu_device *adev)
+>  	drm_mm_takedown(&mgr->mm);
+>  	spin_unlock(&mgr->lock);
+>  
+> -	device_remove_file(adev->dev, &dev_attr_mem_info_gtt_total);
+> -	device_remove_file(adev->dev, &dev_attr_mem_info_gtt_used);
+> -
+>  	ttm_resource_manager_cleanup(man);
+>  	ttm_set_driver_manager(&adev->mman.bdev, TTM_PL_TT, NULL);
+>  }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+> index c89b66bb70e2..68369b38aebb 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+> @@ -154,7 +154,7 @@ static DEVICE_ATTR(mem_info_vis_vram_used, S_IRUGO,
+>  static DEVICE_ATTR(mem_info_vram_vendor, S_IRUGO,
+>  		   amdgpu_mem_info_vram_vendor, NULL);
+>  
+> -static const struct attribute *amdgpu_vram_mgr_attributes[] = {
+> +static struct attribute *amdgpu_vram_mgr_attributes[] = {
+>  	&dev_attr_mem_info_vram_total.attr,
+>  	&dev_attr_mem_info_vis_vram_total.attr,
+>  	&dev_attr_mem_info_vram_used.attr,
+> @@ -163,6 +163,10 @@ static const struct attribute *amdgpu_vram_mgr_attributes[] = {
+>  	NULL
+>  };
+>  
+> +const struct attribute_group amdgpu_vram_mgr_attr_group = {
+> +	.attrs = amdgpu_vram_mgr_attributes
+> +};
 > +
-> +		/* _OSC is optional for PCI host bridges */
-> +		if ((status == AE_NOT_FOUND) && !is_pcie)
-> +			return;
-> +
-> +		decode_osc_control(root, "OS requested", requested);
-> +		decode_osc_control(root, "platform willing to grant", control);
-> +		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-> +			acpi_format_exception(status));
-> +
->   	}
->   }
->   
+>  static const struct ttm_resource_manager_func amdgpu_vram_mgr_func;
+>  
+>  /**
+> @@ -176,7 +180,6 @@ int amdgpu_vram_mgr_init(struct amdgpu_device *adev)
+>  {
+>  	struct amdgpu_vram_mgr *mgr = &adev->mman.vram_mgr;
+>  	struct ttm_resource_manager *man = &mgr->manager;
+> -	int ret;
+>  
+>  	ttm_resource_manager_init(man, adev->gmc.real_vram_size >> PAGE_SHIFT);
+>  
+> @@ -187,11 +190,6 @@ int amdgpu_vram_mgr_init(struct amdgpu_device *adev)
+>  	INIT_LIST_HEAD(&mgr->reservations_pending);
+>  	INIT_LIST_HEAD(&mgr->reserved_pages);
+>  
+> -	/* Add the two VRAM-related sysfs files */
+> -	ret = sysfs_create_files(&adev->dev->kobj, amdgpu_vram_mgr_attributes);
+> -	if (ret)
+> -		DRM_ERROR("Failed to register sysfs\n");
+> -
+>  	ttm_set_driver_manager(&adev->mman.bdev, TTM_PL_VRAM, &mgr->manager);
+>  	ttm_resource_manager_set_used(man, true);
+>  	return 0;
+> @@ -229,8 +227,6 @@ void amdgpu_vram_mgr_fini(struct amdgpu_device *adev)
+>  	drm_mm_takedown(&mgr->mm);
+>  	spin_unlock(&mgr->lock);
+>  
+> -	sysfs_remove_files(&adev->dev->kobj, amdgpu_vram_mgr_attributes);
+> -
+>  	ttm_resource_manager_cleanup(man);
+>  	ttm_set_driver_manager(&adev->mman.bdev, TTM_PL_VRAM, NULL);
+>  }
+> -- 
+> 2.25.1
 > 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
