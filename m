@@ -2,68 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5741036D238
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 08:31:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90ECD36D2A6
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 08:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235087AbhD1Gc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Apr 2021 02:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbhD1GcZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Apr 2021 02:32:25 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6416DC06175F
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 23:31:37 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id n2so8557686wrm.0
-        for <linux-pci@vger.kernel.org>; Tue, 27 Apr 2021 23:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=7SDMaC9XvR83tRRodvSiYPiz4SET1TDhhehTgcHEZd4=;
-        b=j/a9UBH3t0i5hrLc5an7n6VP9/wKyQJCzLVlhJhmCUzCPZX0IxWSOyX8/vtX5HoUJe
-         ruZWRFBZKlM5ScAfl2p8gcDEYSs4Hh/KfJDME6FXdiy0n/HhNf4tlVB+weQoG/FWoBbR
-         8QbWKrab3LkiePTGaKbhFX9U5uAvnhmJC5Qeo+uybjehMc7cK7tL9TkbQgeVtWawYD0l
-         L77QsXULwS4nMzlgZqu0E/DPs7rlgT9wGSxX6qKuWp1o4q3X16VJS55cfVXlqqJVVgoi
-         8Ix2xAiKD2/z3E0l/TZjiUyKzQOyg+WJm2qMUAHtFqKNCpq/FL/5W29EGCe1qirA+MNh
-         3Gaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=7SDMaC9XvR83tRRodvSiYPiz4SET1TDhhehTgcHEZd4=;
-        b=eJR815ZhEFhdyjtMzxb+p8+jo3tDXD2Yk7wfPXIjOIWGzL+drir/DlmLY5mKV9tB3x
-         D1Gheh4BMNuiBfdHo/27CTWKLssdtWVSDaKiTaOfCB664To3Nu0VqcsJQAe5QovgSiGb
-         DfnMtZM6RHh7gLqRR7UHI+JvqstO4mJre6Mzgffr+vTwYkVxrCAmgPfaaQglwQBoRHy/
-         D22UVA5rYQ3u1t4RpEXiHuFk4ORPCYT7wsD25Fsnre5JWMNC9OLEmH4kTaLoSBoWPu1z
-         24QsXGePcbrRFaw/ka06H3Z+IJ20+IhJRmAgxCfepax4SlutRxoMGpR38ztpSIAg8Fbn
-         I9KQ==
-X-Gm-Message-State: AOAM532SNBofVQP0R+b8womBuiU2pn4LXVJHItntOaOoSIsOQFEmGmlw
-        Sdshx33HezfY9mackFpEoR8=
-X-Google-Smtp-Source: ABdhPJwhPLG/+63td455dPL2+Te97Ih1Ce+TYQl/qKlP0bICyo1O89y9M1Ax1A8it3bTJded+be0Dw==
-X-Received: by 2002:adf:e783:: with SMTP id n3mr6414495wrm.154.1619591496161;
-        Tue, 27 Apr 2021 23:31:36 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f38:4600:d5ac:19ba:952b:8e67? (p200300ea8f384600d5ac19ba952b8e67.dip0.t-ipconnect.de. [2003:ea:8f38:4600:d5ac:19ba:952b:8e67])
-        by smtp.googlemail.com with ESMTPSA id l14sm7026204wrv.94.2021.04.27.23.31.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Apr 2021 23:31:35 -0700 (PDT)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Conflicting commits changing VPD sysfs attribute to static
-Message-ID: <96350860-b9d2-b278-860a-a0e886723b3a@gmail.com>
-Date:   Wed, 28 Apr 2021 08:31:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S230145AbhD1G5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Apr 2021 02:57:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58864 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229643AbhD1G5o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Apr 2021 02:57:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1619593019; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+Tsc59MqetNg6ashY2X2omdPgZEqSVZURb8MsEroGqQ=;
+        b=ftjvMGNejqEHuMTmVZMGZhaGOvvbuv9KDapKN0EEL32JIcbP0tREQkmv6yhKetZdVQS5em
+        /istegquIOtIWaa/P0/6PKQWR7iwnaxApC1VxBE49eOgdKCw5aWG3NL2Sc/I9gJ0g9bz9R
+        PHOIsT3Fj8DezC2f/pHWpgbUwnarNKE=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1A7F1AF38;
+        Wed, 28 Apr 2021 06:56:59 +0000 (UTC)
+Message-ID: <0601e45130495b152bec04eee4a50e302db4cfd2.camel@suse.com>
+Subject: Re: [PATCH v2 2/2] pci: Support "removable" attribute for PCI
+ devices
+From:   Oliver Neukum <oneukum@suse.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Rafael J. Wysocki'" <rafael@kernel.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Dmitry Torokhov <dtor@google.com>
+Date:   Wed, 28 Apr 2021 08:56:52 +0200
+In-Reply-To: <b5e031652f144ab6accbe553566676c9@AcuMS.aculab.com>
+References: <20210424021631.1972022-1-rajatja@google.com>
+         <20210424021631.1972022-2-rajatja@google.com>
+         <d53c72949d81db9f092a9aecb49bf56b47727738.camel@suse.com>
+         <CAJZ5v0iNrSFjhmTE8K-JrO07kJon3ikhatbg0Jg2hs+x-frDJg@mail.gmail.com>
+         <79b994f2476249498797e1784f735fd7@AcuMS.aculab.com>
+         <21c6b5002c5ad36cd7fe0bb849f5eba12a614bca.camel@suse.com>
+         <b5e031652f144ab6accbe553566676c9@AcuMS.aculab.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-85725825c10a ("PCI/sysfs: Convert "vpd" to static attribute") duplicates
-what 1e3b0fb5e4d1 ("PCI/VPD: Convert sysfs file to static attribute") did
-already. So this will conflict once you merge pci/sysfs.
+Am Dienstag, den 27.04.2021, 12:59 +0000 schrieb David Laight:
+> From: Oliver Neukum
+> > Sent: 27 April 2021 13:00
+
+> > that is true for those options, but not for the style
+> > of PCI hotplug which requires you to push a button and wait
+> > for the blinking light.
+> 
+> True, I remember some of those PCI hotplug chassis from 25 years ago.
+> ISTR we did get the removal events working (SVR4/Unixware) but I
+> don't remember the relevant chassis ever being sold.
+> In spite of the marketing hype I suspect it was only ever possible
+> to remove a completely working board and replace it with an
+> exactly equivalent one.
+> 
+> In any case those chassis are not 'surprise removal'.
+> 
+> More modern drivers are less likely to crash (and burn?) when
+> a PCI read returns ~0u.
+> But I suspect an awful lot really don't handle surprise removal
+> very well at all.
+
+So you are saying that these systems are so rare that it should be
+handled  as special cases if at all?
+
+	Regards
+		Oliver
+
+
