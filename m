@@ -2,235 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E2D636DDDD
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 19:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0247E36DE1D
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 19:21:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241466AbhD1RIp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Apr 2021 13:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
+        id S241549AbhD1RWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Apr 2021 13:22:03 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31875 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241464AbhD1RIo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Apr 2021 13:08:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5AEBC613B4;
-        Wed, 28 Apr 2021 17:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619629679;
-        bh=2WlyTpJhOK8+t2ttrlHtaM9093vyRXwgOV8boRvkLUg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mFOXupRKqAdNV6IMJMsESi0bHn/cHvJDz10bhnQHmlWoPO1fyEB6oad7EyF/Ruowt
-         gO0EbhYyvz3THC2JG1lDn9O5LQn6D/TC/yL3cZVUfeRYzl3w3dZ6iv8V7ofDljsPFW
-         ZPqSntNyf8li5s/U0L5OvJubEEJo7q8WykY880mRcKmCZW0s4hQLlT1QaIZ/vhcP7w
-         OsfjhBw5m2rXi9AmcDw1k5whb17kPWuO/GR/IvWryIE8vYTvCEh89nC6h/cmgLoPr2
-         NB+EeeynBRvf/D7KL5GO0PTbe1X9wuLSr8+p7+smdmCg7D6xokBJHMFS0WW6hYPbEm
-         MAjFU6BKrTYRg==
-Date:   Wed, 28 Apr 2021 12:07:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
-        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com,
-        ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, Felix.Kuehling@amd.com
-Subject: Re: [PATCH v5 00/27] RFC Support hot device unplug in amdgpu
-Message-ID: <20210428170757.GA239840@bjorn-Precision-5520>
+        id S229931AbhD1RWD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Apr 2021 13:22:03 -0400
+IronPort-SDR: XWMHNS+wPjLie1H7hBz2NfTsDEJbeLaQDEl6YlivxlsW5VAmlKjLVIZty42WlftZQ1UmtT+gAe
+ fdAkZRfcBULg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9968"; a="196358545"
+X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
+   d="scan'208";a="196358545"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2021 10:21:17 -0700
+IronPort-SDR: cEvlCi3kOBH3dTkRN8SBpGaWOVoi90VfEqm9CSV9CtLns7T37tsTWnyFaetDwLqTl6FVw2AxIQ
+ M7f0fLuWrMfQ==
+X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
+   d="scan'208";a="425680637"
+Received: from turnerrx-desk.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.37.37])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2021 10:21:14 -0700
+Subject: Re: [RFC PATCH] PCI/APCI: Move acpi_pci_osc_support() check to
+ negotiation phase
+To:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+References: <20210428081857.10322-1-joro@8bytes.org>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <d24893db-2c9e-dbb1-75d2-53b96760c80e@linux.intel.com>
+Date:   Wed, 28 Apr 2021 10:21:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
+In-Reply-To: <20210428081857.10322-1-joro@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 28, 2021 at 11:11:40AM -0400, Andrey Grodzovsky wrote:
-> Until now extracting a card either by physical extraction (e.g. eGPU with 
-> thunderbolt connection or by emulation through  syfs -> /sys/bus/pci/devices/device_id/remove) 
-> would cause random crashes in user apps. The random crashes in apps were 
-> mostly due to the app having mapped a device backed BO into its address 
-> space was still trying to access the BO while the backing device was gone.
-> To answer this first problem Christian suggested to fix the handling of mapped 
-> memory in the clients when the device goes away by forcibly unmap all buffers the 
-> user processes has by clearing their respective VMAs mapping the device BOs. 
-> Then when the VMAs try to fill in the page tables again we check in the fault 
-> handlerif the device is removed and if so, return an error. This will generate a 
-> SIGBUS to the application which can then cleanly terminate.This indeed was done 
-> but this in turn created a problem of kernel OOPs were the OOPSes were due to the 
-> fact that while the app was terminating because of the SIGBUSit would trigger use 
-> after free in the driver by calling to accesses device structures that were already 
-> released from the pci remove sequence.This was handled by introducing a 'flush' 
-> sequence during device removal were we wait for drm file reference to drop to 0 
-> meaning all user clients directly using this device terminated.
 
-If DRM includes cover letters in merges, maybe fix the below.  If they
-also include the v2, v3, etc below, also consider picking a line
-width and sticking to it.  It seems to be creeping wider every rev.
 
-BO?
-s/syfs/sysfs/
-s/forcibly unmap/forcibly unmapping/
-s/handlerif/handler if/
-s/processes has/processes have/
-s/terminate.This/terminate. This/
-s/were the/where the/
-s/SIGBUSit/SIGBUS it/
-s/to accesses/to access/
-s/sequence.This/sequence. This/
-s/were we/where we/
+On 4/28/21 1:18 AM, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> The acpi_pci_osc_support() does an _OSC query with _OSC supported set
+> to what the OS supports but a zero _OSC control value. This is
+> problematic on some platforms where the firmware allows to configure
+> whether DPC is under OS or Firmware control.
 
-> v2:
-> Based on discussions in the mailing list with Daniel and Pekka [1] and based on the document 
-> produced by Pekka from those discussions [2] the whole approach with returning SIGBUS and 
-> waiting for all user clients having CPU mapping of device BOs to die was dropped. 
-> Instead as per the document suggestion the device structures are kept alive until 
-> the last reference to the device is dropped by user client and in the meanwhile all existing and new CPU mappings of the BOs 
-> belonging to the device directly or by dma-buf import are rerouted to per user 
-> process dummy rw page.Also, I skipped the 'Requirements for KMS UAPI' section of [2] 
-> since i am trying to get the minimal set of requirements that still give useful solution 
-> to work and this is the'Requirements for Render and Cross-Device UAPI' section and so my 
-> test case is removing a secondary device, which is render only and is not involved 
-> in KMS.
+Do we run acpi_pci_osc_support() only to check whether _OSC is
+supported ? Or does it serve any other purpose.
+
+
 > 
-> v3:
-> More updates following comments from v2 such as removing loop to find DRM file when rerouting 
-> page faults to dummy page,getting rid of unnecessary sysfs handling refactoring and moving 
-> prevention of GPU recovery post device unplug from amdgpu to scheduler layer. 
-> On top of that added unplug support for the IOMMU enabled system.
+> When DPC is configured to be under OS control these platforms will
+> issue a warning in the firmware log that the OS does not support DPC.
+
+Also, is there any other benefit from this patch other than fixing
+a warning message in firmware?
+
 > 
-> v4:
-> Drop last sysfs hack and use sysfs default attribute.
-> Guard against write accesses after device removal to avoid modifying released memory.
-> Update dummy pages handling to on demand allocation and release through drm managed framework.
-> Add return value to scheduler job TO handler (by Luben Tuikov) and use this in amdgpu for prevention 
-> of GPU recovery post device unplug
-> Also rebase on top of drm-misc-mext instead of amd-staging-drm-next
+> Avoid an _OSC query with _OSC control set to zero by moving the
+> supported check into the acpi_pci_osc_control_set() path. This is
+> still early enough to fail as nothing before that depends on the
+> results of acpi_pci_osc_support().
 > 
-> v5:
-> The most significant in this series is the improved protection from kernel driver accessing MMIO ranges that were allocated
-> for the device once the device is gone. To do this, first a patch 'drm/amdgpu: Unmap all MMIO mappings' is introduced.
-> This patch unamps all MMIO mapped into the kernel address space in the form of BARs and kernel BOs with CPU visible VRAM mappings.
-> This way it helped to discover multiple such access points because a page fault would be immediately generated on access. Most of them
-> were solved by moving HW fini code into pci_remove stage (patch drm/amdgpu: Add early fini callback) and for some who 
-> were harder to unwind drm_dev_enter/exit scoping was used. In addition all the IOCTLs and all background work and timers 
-> are now protected with drm_dev_enter/exit at their root in an attempt that after drm_dev_unplug is finished none of them 
-> run anymore and the pci_remove thread is the only thread executing which might touch the HW. To prevent deadlocks in such 
-> case against threads stuck on various HW or SW fences patches 'drm/amdgpu: Finalise device fences on device remove'  
-> and drm/amdgpu: Add rw_sem to pushing job into sched queue' take care of force signaling all such existing fences 
-> and rejecting any newly added ones.
+> As a result the acpi_pci_osc_support() function can be removed and
+> acpi_pci_query_osc() be simplified because it no longer called with a
+> NULL pointer for *control.
 > 
-> With these patches I am able to gracefully remove the secondary card using sysfs remove hook while glxgears is running off of secondary 
-> card (DRI_PRIME=1) without kernel oopses or hangs and keep working with the primary card or soft reset the device without hangs or oopses.
-> Also as per Daniel's comment I added 3 tests to IGT [4] to core_hotunplug test suite - remove device while commands are submitted, 
-> exported BO and exported fence (not pushed yet).
-> Also now it's possible to plug back the device after unplug 
-> Also some users now can successfully use those patches with eGPU boxes[3].
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>   drivers/acpi/pci_root.c | 50 ++++++++++++++++-------------------------
+>   1 file changed, 19 insertions(+), 31 deletions(-)
 > 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index dcd593766a64..530ecf4970b1 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -199,16 +199,11 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>   
+>   	support &= OSC_PCI_SUPPORT_MASKS;
+>   	support |= root->osc_support_set;
+> +	*control &= OSC_PCI_CONTROL_MASKS;
+>   
+>   	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+>   	capbuf[OSC_SUPPORT_DWORD] = support;
+> -	if (control) {
+> -		*control &= OSC_PCI_CONTROL_MASKS;
+> -		capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+> -	} else {
+> -		/* Run _OSC query only with existing controls. */
+> -		capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
+> -	}
+> +	capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+>   
+>   	status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+>   	if (ACPI_SUCCESS(status)) {
+> @@ -219,11 +214,6 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>   	return status;
+>   }
+>   
+> -static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
+> -{
+> -	return acpi_pci_query_osc(root, flags, NULL);
+> -}
+> -
+>   struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
+>   {
+>   	struct acpi_pci_root *root;
+> @@ -346,7 +336,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+>    * _OSC bits the BIOS has granted control of, but its contents are meaningless
+>    * on failure.
+>    **/
+> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
+> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
+> +					    *mask, u32 req, u32 support)
+>   {
+>   	struct acpi_pci_root *root;
+>   	acpi_status status;
+> @@ -370,7 +361,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+>   
+>   	/* Need to check the available controls bits before requesting them. */
+>   	while (*mask) {
+> -		status = acpi_pci_query_osc(root, root->osc_support_set, mask);
+> +		status = acpi_pci_query_osc(root, support, mask);
+>   		if (ACPI_FAILURE(status))
+>   			return status;
+>   		if (ctrl == *mask)
+> @@ -433,18 +424,6 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>   		support |= OSC_PCI_EDR_SUPPORT;
+>   
+>   	decode_osc_support(root, "OS supports", support);
+> -	status = acpi_pci_osc_support(root, support);
+> -	if (ACPI_FAILURE(status)) {
+> -		*no_aspm = 1;
+> -
+> -		/* _OSC is optional for PCI host bridges */
+> -		if ((status == AE_NOT_FOUND) && !is_pcie)
+> -			return;
+> -
+> -		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> -			 acpi_format_exception(status));
+> -		return;
+> -	}
+>   
+>   	if (pcie_ports_disabled) {
+>   		dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
+> @@ -483,7 +462,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>   
+>   	requested = control;
+>   	status = acpi_pci_osc_control_set(handle, &control,
+> -					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+> +					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL,
+> +					  support);
+>   	if (ACPI_SUCCESS(status)) {
+>   		decode_osc_control(root, "OS now controls", control);
+>   		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
+> @@ -496,10 +476,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>   			*no_aspm = 1;
+>   		}
+>   	} else {
+> -		decode_osc_control(root, "OS requested", requested);
+> -		decode_osc_control(root, "platform willing to grant", control);
+> -		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> -			acpi_format_exception(status));
+> +		/* Platform wants to control PCIe features */
+> +		root->osc_support_set = 0;
+>   
+>   		/*
+>   		 * We want to disable ASPM here, but aspm_disabled
+> @@ -509,6 +487,16 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>   		 * root scan.
+>   		 */
+>   		*no_aspm = 1;
+> +
+> +		/* _OSC is optional for PCI host bridges */
+> +		if ((status == AE_NOT_FOUND) && !is_pcie)
+> +			return;
+> +
+> +		decode_osc_control(root, "OS requested", requested);
+> +		decode_osc_control(root, "platform willing to grant", control);
+> +		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> +			acpi_format_exception(status));
+> +
+>   	}
+>   }
+>   
 > 
-> 
-> 
-> TODOs for followup work:
-> Convert AMDGPU code to use devm (for hw stuff) and drmm (for sw stuff and allocations) (Daniel)
-> Add support for 'Requirements for KMS UAPI' section of [2] - unplugging primary, display connected card.
-> 
-> [1] - Discussions during v4 of the patchset https://lists.freedesktop.org/archives/amd-gfx/2021-January/058595.html
-> [2] - drm/doc: device hot-unplug for userspace https://www.spinics.net/lists/dri-devel/msg259755.html
-> [3] - Related gitlab ticket https://gitlab.freedesktop.org/drm/amd/-/issues/1081
-> [4] - https://gitlab.freedesktop.org/agrodzov/igt-gpu-tools/-/commits/master
-> 
-> Andrey Grodzovsky (27):
->   drm/ttm: Remap all page faults to per process dummy page.
->   drm/ttm: Expose ttm_tt_unpopulate for driver use
->   drm/amdgpu: Split amdgpu_device_fini into early and late
->   drm/amdkfd: Split kfd suspend from devie exit
->   drm/amdgpu: Add early fini callback
->   drm/amdgpu: Handle IOMMU enabled case.
->   drm/amdgpu: Remap all page faults to per process dummy page.
->   PCI: add support for dev_groups to struct pci_device_driver
->   dmr/amdgpu: Move some sysfs attrs creation to default_attr
->   drm/amdgpu: Guard against write accesses after device removal
->   drm/sched: Make timeout timer rearm conditional.
->   drm/amdgpu: Prevent any job recoveries after device is unplugged.
->   drm/amdgpu: When filizing the fence driver. stop scheduler first.
->   drm/amdgpu: Fix hang on device removal.
->   drm/scheduler: Fix hang when sched_entity released
->   drm/amdgpu: Unmap all MMIO mappings
->   drm/amdgpu: Add rw_sem to pushing job into sched queue
->   drm/sched: Expose drm_sched_entity_kill_jobs
->   drm/amdgpu: Finilise device fences on device remove.
->   drm: Scope all DRM IOCTLs  with drm_dev_enter/exit
->   drm/amdgpu: Add support for hot-unplug feature at DRM level.
->   drm/amd/display: Scope all DM queued work with drm_dev_enter/exit
->   drm/amd/powerplay: Scope all PM queued work with drm_dev_enter/exit
->   drm/amdkfd: Scope all KFD queued work with drm_dev_enter/exit
->   drm/amdgpu: Scope all amdgpu queued work with drm_dev_enter/exit
->   drm/amd/display: Remove superflous drm_mode_config_cleanup
->   drm/amdgpu: Verify DMA opearations from device are done
-> 
->  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |  18 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c    |  13 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h    |   2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c  |  17 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c        |  13 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c    | 353 ++++++++++++++----
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |  34 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c     |  34 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c      |   3 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h      |   1 +
->  drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c       |   9 +
->  drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c   |  25 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c        | 228 +++++------
->  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c       |  61 ++-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.h       |   3 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_job.c       |  33 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_jpeg.c      |  28 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c       |  12 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_object.c    |  41 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_object.h    |   7 +
->  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c       | 115 +++---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.h       |   3 +
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c       |  56 ++-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c      |  70 ++++
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ring.h      |  52 +--
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       |  21 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_uvd.c       |  74 ++--
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c       |  45 ++-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c       |  83 ++--
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        |   7 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c  |  14 +-
->  drivers/gpu/drm/amd/amdgpu/cik_ih.c           |   3 +-
->  drivers/gpu/drm/amd/amdgpu/cz_ih.c            |   3 +-
->  drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c         |  10 +-
->  drivers/gpu/drm/amd/amdgpu/iceland_ih.c       |   3 +-
->  drivers/gpu/drm/amd/amdgpu/navi10_ih.c        |   5 +-
->  drivers/gpu/drm/amd/amdgpu/psp_v11_0.c        |  44 +--
->  drivers/gpu/drm/amd/amdgpu/psp_v12_0.c        |   8 +-
->  drivers/gpu/drm/amd/amdgpu/psp_v3_1.c         |   8 +-
->  drivers/gpu/drm/amd/amdgpu/si_ih.c            |   3 +-
->  drivers/gpu/drm/amd/amdgpu/tonga_ih.c         |   3 +-
->  drivers/gpu/drm/amd/amdgpu/vce_v4_0.c         |  26 +-
->  drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c         |  22 +-
->  drivers/gpu/drm/amd/amdgpu/vega10_ih.c        |   5 +-
->  drivers/gpu/drm/amd/amdgpu/vega20_ih.c        |   2 +-
->  drivers/gpu/drm/amd/amdkfd/kfd_device.c       |   3 +-
->  drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c    |  14 +-
->  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  13 +-
->  .../amd/display/amdgpu_dm/amdgpu_dm_hdcp.c    | 124 +++---
->  .../drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c |  24 +-
->  drivers/gpu/drm/amd/include/amd_shared.h      |   2 +
->  drivers/gpu/drm/amd/pm/amdgpu_dpm.c           |  44 ++-
->  .../drm/amd/pm/powerplay/smumgr/smu7_smumgr.c |   2 +
->  drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c     |  26 +-
->  drivers/gpu/drm/drm_ioctl.c                   |  15 +-
->  drivers/gpu/drm/scheduler/sched_entity.c      |   6 +-
->  drivers/gpu/drm/scheduler/sched_main.c        |  35 +-
->  drivers/gpu/drm/ttm/ttm_bo_vm.c               |  79 +++-
->  drivers/gpu/drm/ttm/ttm_tt.c                  |   1 +
->  drivers/pci/pci-driver.c                      |   1 +
->  include/drm/drm_drv.h                         |   6 +
->  include/drm/gpu_scheduler.h                   |   1 +
->  include/drm/ttm/ttm_bo_api.h                  |   2 +
->  include/linux/pci.h                           |   3 +
->  64 files changed, 1388 insertions(+), 633 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
