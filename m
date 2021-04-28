@@ -2,91 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E79E36D72A
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 14:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC0436D9B9
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 16:41:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234435AbhD1MW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Apr 2021 08:22:26 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:39462 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234356AbhD1MWZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Apr 2021 08:22:25 -0400
-Received: by mail-oi1-f171.google.com with SMTP id i81so62846338oif.6;
-        Wed, 28 Apr 2021 05:21:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GRxkUo+PRbe+x5wLLv3keLeEPMkJ2hxH1SQXgu1ocjk=;
-        b=Tvfv2ymW+DV6C/paqY38g+8stelqtlDmdpxOFAMTLj9ElU6eUEzjceL6i82YjTlAfb
-         aloQ8n5YkyWdiyGTjJYsJJQc+zMbKT4vHoHp18Ro3EMT8fodkgQeSroGi3lua9adC9aC
-         FnfqCGazJWKqDKNIU/v+GH06YDdHvXGhLxuPbLeOcSHQi4ioUPQsQrbPK5X9xbBGGs0D
-         9PcS/al0gxmdXFSe1ARIRi7GFsg+dCpBgp/EnacobG33yU/1s81858BifPL/IO1Wgo70
-         267erXTpmEydZM3V4jgFbkBec7L4j6S4yXjpk2c1IcyeHI3Xt5aE9D8SJLAuBcci5OZg
-         0ahA==
-X-Gm-Message-State: AOAM530KlMoJP6byqnL98IN/B+50zvcWT+OjuDMlzKYP/1knvNv5BVFQ
-        nuDrqDAXr5r+6KPIaJdWYfjV9LFIzcV1OBqMo4I=
-X-Google-Smtp-Source: ABdhPJxOhMz6a0QlMskPlWjNHUPGrH1Vn78FLKH0qxpCwG0EW2c/SIcnZsKBhMYvQD1e2UvBb9Jr9em/bmGCLMLK8jk=
-X-Received: by 2002:aca:bc89:: with SMTP id m131mr20193642oif.71.1619612500595;
- Wed, 28 Apr 2021 05:21:40 -0700 (PDT)
+        id S239667AbhD1Ol3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Apr 2021 10:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229794AbhD1Ol2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Apr 2021 10:41:28 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC1CC061573
+        for <linux-pci@vger.kernel.org>; Wed, 28 Apr 2021 07:40:43 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 751403000064C;
+        Wed, 28 Apr 2021 16:40:41 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 691D92DC693; Wed, 28 Apr 2021 16:40:41 +0200 (CEST)
+Date:   Wed, 28 Apr 2021 16:40:41 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ethan Zhao <haifeng.zhao@intel.com>,
+        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH] PCI: pciehp: Ignore Link Down/Up caused by DPC
+Message-ID: <20210428144041.GA27967@wunner.de>
+References: <b70e19324bbdded90b728a5687aa78dc17c20306.1616921228.git.lukas@wunner.de>
+ <4177f0be-5859-9a71-da06-2e67641568d7@hisilicon.com>
 MIME-Version: 1.0
-References: <20210424021631.1972022-1-rajatja@google.com> <20210424021631.1972022-2-rajatja@google.com>
- <d53c72949d81db9f092a9aecb49bf56b47727738.camel@suse.com> <CAJZ5v0iNrSFjhmTE8K-JrO07kJon3ikhatbg0Jg2hs+x-frDJg@mail.gmail.com>
- <79b994f2476249498797e1784f735fd7@AcuMS.aculab.com> <21c6b5002c5ad36cd7fe0bb849f5eba12a614bca.camel@suse.com>
- <b5e031652f144ab6accbe553566676c9@AcuMS.aculab.com> <0601e45130495b152bec04eee4a50e302db4cfd2.camel@suse.com>
-In-Reply-To: <0601e45130495b152bec04eee4a50e302db4cfd2.camel@suse.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 28 Apr 2021 14:21:27 +0200
-Message-ID: <CAJZ5v0jEbjRSGPdfwvegawin5_N=m-UoP+Wa99EQ-QmkusiBCg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pci: Support "removable" attribute for PCI devices
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4177f0be-5859-9a71-da06-2e67641568d7@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 28, 2021 at 8:57 AM Oliver Neukum <oneukum@suse.com> wrote:
->
-> Am Dienstag, den 27.04.2021, 12:59 +0000 schrieb David Laight:
-> > From: Oliver Neukum
-> > > Sent: 27 April 2021 13:00
->
-> > > that is true for those options, but not for the style
-> > > of PCI hotplug which requires you to push a button and wait
-> > > for the blinking light.
-> >
-> > True, I remember some of those PCI hotplug chassis from 25 years ago.
-> > ISTR we did get the removal events working (SVR4/Unixware) but I
-> > don't remember the relevant chassis ever being sold.
-> > In spite of the marketing hype I suspect it was only ever possible
-> > to remove a completely working board and replace it with an
-> > exactly equivalent one.
-> >
-> > In any case those chassis are not 'surprise removal'.
-> >
-> > More modern drivers are less likely to crash (and burn?) when
-> > a PCI read returns ~0u.
-> > But I suspect an awful lot really don't handle surprise removal
-> > very well at all.
->
-> So you are saying that these systems are so rare that it should be
-> handled  as special cases if at all?
+On Wed, Apr 28, 2021 at 06:08:02PM +0800, Yicong Yang wrote:
+> I've tested the patch on our board, but the hotplug will still be
+> triggered sometimes.
+> seems the hotplug doesn't find the link down event is caused by dpc.
+> Any further test I can do?
+> 
+> mestuary:/$ [12508.408576] pcieport 0000:00:10.0: DPC: containment event, status:0x1f21 source:0x0000
+> [12508.423016] pcieport 0000:00:10.0: DPC: unmasked uncorrectable error detected
+> [12508.434277] pcieport 0000:00:10.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
+> [12508.447651] pcieport 0000:00:10.0:   device [19e5:a130] error status/mask=00008000/04400000
+> [12508.458279] pcieport 0000:00:10.0:    [15] CmpltAbrt              (First)
+> [12508.467094] pcieport 0000:00:10.0: AER:   TLP Header: 00000000 00000000 00000000 00000000
+> [12511.152329] pcieport 0000:00:10.0: pciehp: Slot(0): Link Down
 
-In principle, in the wake of Thunderbolt every PCI driver handling
-PCIe devices needs to be able to deal with a device that's gone away
-without notice, because in principle any PCIe device can be included
-into a Thunderbolt docking station which may go away as a whole
-without notice.
+Note that about 3 seconds pass between DPC trigger and hotplug link down
+(12508 -> 12511).  That's most likely the 3 second timeout in my patch:
+
++	/*
++	 * Need a timeout in case DPC never completes due to failure of
++	 * dpc_wait_rp_inactive().
++	 */
++	wait_event_timeout(dpc_completed_waitqueue, dpc_completed(pdev),
++			   msecs_to_jiffies(3000));
+
+If DPC doesn't recover within 3 seconds, pciehp will consider the
+error unrecoverable and bring down the slot, no matter what.
+
+I can't tell you why DPC is unable to recover.  Does it help if you
+raise the timeout to, say, 5000 msec?
+
+Thanks,
+
+Lukas
