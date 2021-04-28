@@ -2,88 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90ECD36D2A6
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 08:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D18C636D3CC
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Apr 2021 10:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbhD1G5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Apr 2021 02:57:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58864 "EHLO mx2.suse.de"
+        id S230456AbhD1IT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Apr 2021 04:19:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:36524 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229643AbhD1G5o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Apr 2021 02:57:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1619593019; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+Tsc59MqetNg6ashY2X2omdPgZEqSVZURb8MsEroGqQ=;
-        b=ftjvMGNejqEHuMTmVZMGZhaGOvvbuv9KDapKN0EEL32JIcbP0tREQkmv6yhKetZdVQS5em
-        /istegquIOtIWaa/P0/6PKQWR7iwnaxApC1VxBE49eOgdKCw5aWG3NL2Sc/I9gJ0g9bz9R
-        PHOIsT3Fj8DezC2f/pHWpgbUwnarNKE=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1A7F1AF38;
-        Wed, 28 Apr 2021 06:56:59 +0000 (UTC)
-Message-ID: <0601e45130495b152bec04eee4a50e302db4cfd2.camel@suse.com>
-Subject: Re: [PATCH v2 2/2] pci: Support "removable" attribute for PCI
- devices
-From:   Oliver Neukum <oneukum@suse.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "'Rafael J. Wysocki'" <rafael@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Dmitry Torokhov <dtor@google.com>
-Date:   Wed, 28 Apr 2021 08:56:52 +0200
-In-Reply-To: <b5e031652f144ab6accbe553566676c9@AcuMS.aculab.com>
-References: <20210424021631.1972022-1-rajatja@google.com>
-         <20210424021631.1972022-2-rajatja@google.com>
-         <d53c72949d81db9f092a9aecb49bf56b47727738.camel@suse.com>
-         <CAJZ5v0iNrSFjhmTE8K-JrO07kJon3ikhatbg0Jg2hs+x-frDJg@mail.gmail.com>
-         <79b994f2476249498797e1784f735fd7@AcuMS.aculab.com>
-         <21c6b5002c5ad36cd7fe0bb849f5eba12a614bca.camel@suse.com>
-         <b5e031652f144ab6accbe553566676c9@AcuMS.aculab.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 
+        id S237166AbhD1IT7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Apr 2021 04:19:59 -0400
+Received: from cap.home.8bytes.org (p5b0069de.dip0.t-ipconnect.de [91.0.105.222])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 6287C295;
+        Wed, 28 Apr 2021 10:18:59 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        Len Brown <lenb@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [RFC PATCH] PCI/APCI: Move acpi_pci_osc_support() check to negotiation phase
+Date:   Wed, 28 Apr 2021 10:18:57 +0200
+Message-Id: <20210428081857.10322-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Dienstag, den 27.04.2021, 12:59 +0000 schrieb David Laight:
-> From: Oliver Neukum
-> > Sent: 27 April 2021 13:00
+From: Joerg Roedel <jroedel@suse.de>
 
-> > that is true for those options, but not for the style
-> > of PCI hotplug which requires you to push a button and wait
-> > for the blinking light.
-> 
-> True, I remember some of those PCI hotplug chassis from 25 years ago.
-> ISTR we did get the removal events working (SVR4/Unixware) but I
-> don't remember the relevant chassis ever being sold.
-> In spite of the marketing hype I suspect it was only ever possible
-> to remove a completely working board and replace it with an
-> exactly equivalent one.
-> 
-> In any case those chassis are not 'surprise removal'.
-> 
-> More modern drivers are less likely to crash (and burn?) when
-> a PCI read returns ~0u.
-> But I suspect an awful lot really don't handle surprise removal
-> very well at all.
+The acpi_pci_osc_support() does an _OSC query with _OSC supported set
+to what the OS supports but a zero _OSC control value. This is
+problematic on some platforms where the firmware allows to configure
+whether DPC is under OS or Firmware control.
 
-So you are saying that these systems are so rare that it should be
-handled  as special cases if at all?
+When DPC is configured to be under OS control these platforms will
+issue a warning in the firmware log that the OS does not support DPC.
 
-	Regards
-		Oliver
+Avoid an _OSC query with _OSC control set to zero by moving the
+supported check into the acpi_pci_osc_control_set() path. This is
+still early enough to fail as nothing before that depends on the
+results of acpi_pci_osc_support().
 
+As a result the acpi_pci_osc_support() function can be removed and
+acpi_pci_query_osc() be simplified because it no longer called with a
+NULL pointer for *control.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/acpi/pci_root.c | 50 ++++++++++++++++-------------------------
+ 1 file changed, 19 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index dcd593766a64..530ecf4970b1 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -199,16 +199,11 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+ 
+ 	support &= OSC_PCI_SUPPORT_MASKS;
+ 	support |= root->osc_support_set;
++	*control &= OSC_PCI_CONTROL_MASKS;
+ 
+ 	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+ 	capbuf[OSC_SUPPORT_DWORD] = support;
+-	if (control) {
+-		*control &= OSC_PCI_CONTROL_MASKS;
+-		capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+-	} else {
+-		/* Run _OSC query only with existing controls. */
+-		capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
+-	}
++	capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+ 
+ 	status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+ 	if (ACPI_SUCCESS(status)) {
+@@ -219,11 +214,6 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+ 	return status;
+ }
+ 
+-static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
+-{
+-	return acpi_pci_query_osc(root, flags, NULL);
+-}
+-
+ struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
+ {
+ 	struct acpi_pci_root *root;
+@@ -346,7 +336,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+  * _OSC bits the BIOS has granted control of, but its contents are meaningless
+  * on failure.
+  **/
+-static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
++static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
++					    *mask, u32 req, u32 support)
+ {
+ 	struct acpi_pci_root *root;
+ 	acpi_status status;
+@@ -370,7 +361,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+ 
+ 	/* Need to check the available controls bits before requesting them. */
+ 	while (*mask) {
+-		status = acpi_pci_query_osc(root, root->osc_support_set, mask);
++		status = acpi_pci_query_osc(root, support, mask);
+ 		if (ACPI_FAILURE(status))
+ 			return status;
+ 		if (ctrl == *mask)
+@@ -433,18 +424,6 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 		support |= OSC_PCI_EDR_SUPPORT;
+ 
+ 	decode_osc_support(root, "OS supports", support);
+-	status = acpi_pci_osc_support(root, support);
+-	if (ACPI_FAILURE(status)) {
+-		*no_aspm = 1;
+-
+-		/* _OSC is optional for PCI host bridges */
+-		if ((status == AE_NOT_FOUND) && !is_pcie)
+-			return;
+-
+-		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+-			 acpi_format_exception(status));
+-		return;
+-	}
+ 
+ 	if (pcie_ports_disabled) {
+ 		dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
+@@ -483,7 +462,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 
+ 	requested = control;
+ 	status = acpi_pci_osc_control_set(handle, &control,
+-					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
++					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL,
++					  support);
+ 	if (ACPI_SUCCESS(status)) {
+ 		decode_osc_control(root, "OS now controls", control);
+ 		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
+@@ -496,10 +476,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 			*no_aspm = 1;
+ 		}
+ 	} else {
+-		decode_osc_control(root, "OS requested", requested);
+-		decode_osc_control(root, "platform willing to grant", control);
+-		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+-			acpi_format_exception(status));
++		/* Platform wants to control PCIe features */
++		root->osc_support_set = 0;
+ 
+ 		/*
+ 		 * We want to disable ASPM here, but aspm_disabled
+@@ -509,6 +487,16 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 		 * root scan.
+ 		 */
+ 		*no_aspm = 1;
++
++		/* _OSC is optional for PCI host bridges */
++		if ((status == AE_NOT_FOUND) && !is_pcie)
++			return;
++
++		decode_osc_control(root, "OS requested", requested);
++		decode_osc_control(root, "platform willing to grant", control);
++		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
++			acpi_format_exception(status));
++
+ 	}
+ }
+ 
+-- 
+2.31.1
 
