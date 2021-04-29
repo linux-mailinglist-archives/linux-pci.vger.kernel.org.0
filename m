@@ -2,125 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FFC936E992
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 13:30:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D9EF36E99F
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 13:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231135AbhD2La4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Apr 2021 07:30:56 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3971 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230148AbhD2Laz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 07:30:55 -0400
-Received: from dggeml711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4FWCsb6TQ3zRflp;
-        Thu, 29 Apr 2021 19:27:47 +0800 (CST)
-Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- dggeml711-chm.china.huawei.com (10.3.17.122) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Thu, 29 Apr 2021 19:30:05 +0800
-Received: from [127.0.0.1] (10.69.38.196) by dggema772-chm.china.huawei.com
- (10.1.198.214) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 29
- Apr 2021 19:29:59 +0800
-Subject: Re: [PATCH] PCI: pciehp: Ignore Link Down/Up caused by DPC
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ethan Zhao <haifeng.zhao@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>, <linux-pci@vger.kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>
-References: <b70e19324bbdded90b728a5687aa78dc17c20306.1616921228.git.lukas@wunner.de>
- <4177f0be-5859-9a71-da06-2e67641568d7@hisilicon.com>
- <20210428144041.GA27967@wunner.de>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <c7932c4e-81b1-279d-48df-5d621efff757@hisilicon.com>
-Date:   Thu, 29 Apr 2021 19:29:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S231168AbhD2Ldo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Apr 2021 07:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230148AbhD2Ldn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 07:33:43 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45D1C06138B
+        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 04:32:56 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id p6-20020a05600c3586b029014131bbe5c7so7843837wmq.3
+        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 04:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MHVvBdX5yruZNuaE6au3mmpWmkpoYnyq1LRiMVUzyEs=;
+        b=i6TqpaqwZIaTAklta46eRDAvyvsRvTWw7hhqFDWaP2OQ4TmLVFWxv3ZtA2QYnC5AP5
+         1t1ohca7oAD7FIgbIn4ZE0Lj9ChX5ctebQ0hrydD21BhpPvDXo8DI59OtgD8imrwHgw7
+         ABYSeruiRE+HCbHgwoGJ/kt/q4ouXEr4vfEr4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MHVvBdX5yruZNuaE6au3mmpWmkpoYnyq1LRiMVUzyEs=;
+        b=DSbQqHTvWUyrDdNCGm0ElaOWFjMzJv0FHZR++3NgQdumVO/ays9aP/jv4yUYnfP/Bm
+         OGcmHOLKzJ9jLNyzp/vhBpNkoX3I2hcVBM+uuEWKERQfWfaHEex3xt34Z+jeqFLGa+l3
+         3+xL/sVHIf/pt8f+dDjsQ3VOHFN6SW8z83eXu8A6j7kMYZ9CrgQ1nf1x8aDj9dzyNz/s
+         mTC0WZnOoLHMfB7WiSG1zRouPXO7erw1hqH51Bs3R6HmbOJLJFPaoMQSpIyrlQfxLqZR
+         xGA2SP8y7vZXLRtjtVs/nlsE44OYVGShtCQO1udjBrzdKJJJesCSqcTq1Nb6bSLxVMQs
+         ZuVw==
+X-Gm-Message-State: AOAM533zjFOFTsJ+novkH6Ul4WDE+HnaG4vLqIr8dNjV5TzFIQHompeQ
+        GfW7pl6pd3WTLFVvCxu+fLOf1g==
+X-Google-Smtp-Source: ABdhPJwmPDSU2R2T2gFQK0GFek3qSa8MyzcXyXewBZob9l1eoq+OGIfRwULnAPSgltMO1QmTvugW0w==
+X-Received: by 2002:a05:600c:221a:: with SMTP id z26mr2176067wml.93.1619695975670;
+        Thu, 29 Apr 2021 04:32:55 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id f11sm10503457wmc.6.2021.04.29.04.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Apr 2021 04:32:55 -0700 (PDT)
+Date:   Thu, 29 Apr 2021 13:32:53 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
+        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com,
+        ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, helgaas@kernel.org,
+        Felix.Kuehling@amd.com
+Subject: Re: [PATCH v5 20/27] drm: Scope all DRM IOCTLs  with
+ drm_dev_enter/exit
+Message-ID: <YIqZZW9iFyGCyOmU@phenom.ffwll.local>
+References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
+ <20210428151207.1212258-21-andrey.grodzovsky@amd.com>
+ <YIqXJ5LA6wKl/yzZ@phenom.ffwll.local>
 MIME-Version: 1.0
-In-Reply-To: <20210428144041.GA27967@wunner.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.69.38.196]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggema772-chm.china.huawei.com (10.1.198.214)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YIqXJ5LA6wKl/yzZ@phenom.ffwll.local>
+X-Operating-System: Linux phenom 5.10.32scarlett+ 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/4/28 22:40, Lukas Wunner wrote:
-> On Wed, Apr 28, 2021 at 06:08:02PM +0800, Yicong Yang wrote:
->> I've tested the patch on our board, but the hotplug will still be
->> triggered sometimes.
->> seems the hotplug doesn't find the link down event is caused by dpc.
->> Any further test I can do?
->>
->> mestuary:/$ [12508.408576] pcieport 0000:00:10.0: DPC: containment event, status:0x1f21 source:0x0000
->> [12508.423016] pcieport 0000:00:10.0: DPC: unmasked uncorrectable error detected
->> [12508.434277] pcieport 0000:00:10.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
->> [12508.447651] pcieport 0000:00:10.0:   device [19e5:a130] error status/mask=00008000/04400000
->> [12508.458279] pcieport 0000:00:10.0:    [15] CmpltAbrt              (First)
->> [12508.467094] pcieport 0000:00:10.0: AER:   TLP Header: 00000000 00000000 00000000 00000000
->> [12511.152329] pcieport 0000:00:10.0: pciehp: Slot(0): Link Down
+On Thu, Apr 29, 2021 at 01:23:19PM +0200, Daniel Vetter wrote:
+> On Wed, Apr 28, 2021 at 11:12:00AM -0400, Andrey Grodzovsky wrote:
+> > With this calling drm_dev_unplug will flush and block
+> > all in flight IOCTLs
+> > 
+> > Also, add feature such that if device supports graceful unplug
+> > we enclose entire IOCTL in SRCU critical section.
+> > 
+> > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
 > 
-> Note that about 3 seconds pass between DPC trigger and hotplug link down
-> (12508 -> 12511).  That's most likely the 3 second timeout in my patch:
+> Nope.
 > 
-> +	/*
-> +	 * Need a timeout in case DPC never completes due to failure of
-> +	 * dpc_wait_rp_inactive().
-> +	 */
-> +	wait_event_timeout(dpc_completed_waitqueue, dpc_completed(pdev),
-> +			   msecs_to_jiffies(3000));
+> The idea of drm_dev_enter/exit is to mark up hw access. Not entire ioctl.
 > 
-> If DPC doesn't recover within 3 seconds, pciehp will consider the
-> error unrecoverable and bring down the slot, no matter what.
+> Especially not with an opt-in flag so that it could be shrugged of as a
+> driver hack. Most of these ioctls should have absolutely no problem
+> working after hotunplug.
 > 
-> I can't tell you why DPC is unable to recover.  Does it help if you
-> raise the timeout to, say, 5000 msec?
+> Also, doing this defeats the point since it pretty much guarantees
+> userspace will die in assert()s and stuff. E.g. on i915 the rough contract
+> is that only execbuf (and even that only when userspace has indicated
+> support for non-recoverable hw ctx) is allowed to fail. Anything else
+> might crash userspace.
 > 
-
-I raise the timeout to 4s and it works well. I dump the remained jiffies in
-the log and find sometimes the recovery will take a bit more than 3s:
-
-[  826.564141] pcieport 0000:00:10.0: DPC: containment event, status:0x1f01 source:0x0000
-[  826.579790] pcieport 0000:00:10.0: DPC: unmasked uncorrectable error detected
-[  826.591881] pcieport 0000:00:10.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
-[  826.608137] pcieport 0000:00:10.0:   device [19e5:a130] error status/mask=00008000/04400000
-[  826.620888] pcieport 0000:00:10.0:    [15] CmpltAbrt              (First)
-[  826.638742] pcieport 0000:00:10.0: AER:   TLP Header: 00000000 00000000 00000000 00000000
-[  828.955313] pcieport 0000:00:10.0: DPC: dpc_reset_link: begin reset
-[  829.719875] pcieport 0000:00:10.0: DPC: DPC reset has been finished.
-[  829.731449] pcieport 0000:00:10.0: DPC: remaining time for waiting dpc compelete: 0xd0 <-------- 208 jiffies remained
-[  829.732459] ixgbe 0000:01:00.0: enabling device (0000 -> 0002)
-[  829.744535] pcieport 0000:00:10.0: pciehp: Slot(0): Link Down/Up ignored (recovered by DPC)
-[  829.993188] ixgbe 0000:01:00.1: enabling device (0000 -> 0002)
-[  830.760190] pcieport 0000:00:10.0: AER: device recovery successful
-[  831.013197] ixgbe 0000:01:00.0 eth0: detected SFP+: 5
-[  831.164242] ixgbe 0000:01:00.0 eth0: NIC Link is Up 10 Gbps, Flow Control: RX/TX
-[  831.827845] ixgbe 0000:01:00.0 eth0: NIC Link is Down
-[  833.381018] ixgbe 0000:01:00.0 eth0: NIC Link is Up 10 Gbps, Flow Control: RX/TX
-
-
-CONFIG_HZ=250 so remaining jiffies should larger than 250 if the recovery finished in 3s.
-Is there a reference to the 3s timeout? and does it make sense to raise it a little bit?
-
-Thanks,
-Yicong
-
-
-> Thanks,
+> You probably need similar (and very precisely defined) rules for amdgpu.
+> And those must definitely exclude any shard ioctls from randomly failing
+> with EIO, because that just kills the box and defeats the point of trying
+> to gracefully handling hotunplug and making sure userspace has a chance of
+> survival. E.g. for atomic everything should continue, including flip
+> completion, but we set all outputs to "disconnected" and send out the
+> uevent. Maybe crtc enabling can fail too, but that can also be handled
+> through the async status we're using to signal DP link failures to
+> userspace.
 > 
-> Lukas
-> 
-> .
-> 
+> I guess we should clarify this in the hotunplug doc?
 
+To clarify: I'm not against throwing an ENODEV at userspace for ioctl that
+really make no sense, and where we're rather confident that all properly
+implemented userspace will gracefully handle failures. Like a modeset, or
+opening a device, or trying to import a dma-buf or stuff like that which
+can already fail in normal operation for any kind of reason.
+
+But stuff that never fails, like GETRESOURCES ioctl, really shouldn't fail
+after hotunplug.
+
+And then there's the middle ground, like doing a pageflip or buffer flush,
+which I guess some userspace might handle, but risky to inflict those
+consequences on them. atomic modeset is especially fun since depending
+what you're doing it can be both "failures expected" and "failures not
+really expected in normal operation".
+
+Also, this really should be consistent across drivers, not solved with a
+driver flag for every possible combination.
+
+If you look at the current hotunplug kms drivers, they have
+drm_dev_enter/exit sprinkled in specific hw callback functions because of
+the above problems. But maybe it makes sense to change things in a few
+cases. But then we should do it across the board.
+
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
