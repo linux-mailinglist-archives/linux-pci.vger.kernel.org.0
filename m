@@ -2,163 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A72E736F112
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 22:36:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B05736F1CB
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 23:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233563AbhD2Uhk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Apr 2021 16:37:40 -0400
-Received: from mail-bn7nam10on2077.outbound.protection.outlook.com ([40.107.92.77]:56986
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233176AbhD2Uhj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Apr 2021 16:37:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D1KyteKDrnIeqY7Oqyx0dZdYCGOXSvogqmJ7HsMJyY6LTaNajc2+d+6PXXtpYZQqshjtywfBkmJ0Qut7DGxAlIRPwpJ4cASUHwXWEXXxq8sG5WBBNkevP5TC0KOjuGSSCJdODWx7wz6D3Vek9fqcoNGRW8dUUD6+d55ywTjqrmqrDHva5PvbcIsPrV3u8PqetFeCDyeKl7k7baWqCQbGSNYVVDaEbJOxUFCMhcJxtKmBi42uzv+wW8uPImOw2C5IvLHr1H0g/PeQkXaQbteovdBV9Fwi3pG1n/ZRsnrQNx1Mp1yHXhSIvp9wwdm2s/RTqeG5t/MIKivLnkVFBWeZ0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ba8bByW6fxSFhUO7QsLX8+WosYRa6kiMw1tWYLTCbxU=;
- b=BswxO0IJjnMEakAb9mx0EHenDmH2Z7O+aEs84r4hYaA3OMIvRjN3ds8P5IofELxQbV6ych8NnWbm1LSgi59N+0r/Q+ftCgHCktTQWs+IsZMZZVuntw1dqI0Uz0X/EETn0ysLrMbLU5wHFkWE9DB8AtRLgOclJZlbHZfrsD+OIFDa9hb+OnSW1nhNMZtLPnfYLE+V2zMz1brQY0eVfTXah9qPbLZ5k0wZ+dxo5pnRu75eieskkYPmiGyMDVMo/WfmYHmRlNEunwBKD/Fn8iF1xq8Hl+OCp49VY4gCpmTQeNfj3SHfTRDwOm+STyxZouuzMEUVg1O9WS05IMEoCy+5KQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ba8bByW6fxSFhUO7QsLX8+WosYRa6kiMw1tWYLTCbxU=;
- b=AcJ+Dasx60HOHsr5wkSEudWjzAVufVQKGo5/1rKXxtA5ibaE0gSE+oCVT4wAOITUtczhC1dlww4xjNEqMMoyM0u/rLuCuiXe5Hzlc+Aim5LV9n7IcVi7DkIzP/u7pevFijm8vG7wS9LQV4q5ZysS5I98fDZcDXgE0VIFWGZa5OQ=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN6PR12MB2703.namprd12.prod.outlook.com (2603:10b6:805:75::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.23; Thu, 29 Apr
- 2021 20:36:51 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4065.026; Thu, 29 Apr 2021
- 20:36:50 +0000
-Subject: Re: [PATCH v5 08/27] PCI: add support for dev_groups to struct
- pci_device_driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     ckoenig.leichtzumerken@gmail.com, gregkh@linuxfoundation.org,
-        daniel.vetter@ffwll.ch, Felix.Kuehling@amd.com,
-        amd-gfx@lists.freedesktop.org, ppaalanen@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Alexander.Deucher@amd.com, Harry.Wentland@amd.com
-References: <20210429192308.GA510492@bjorn-Precision-5520>
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Message-ID: <d95139ed-ac2f-6006-c5db-78e67bb7edc3@amd.com>
-Date:   Thu, 29 Apr 2021 16:36:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-In-Reply-To: <20210429192308.GA510492@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [2607:fea8:3edf:49b0:497:888:9bb9:54f1]
-X-ClientProxiedBy: YT1PR01CA0119.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2c::28) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+        id S237331AbhD2VRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Apr 2021 17:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237285AbhD2VRf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Apr 2021 17:17:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C156360FD9;
+        Thu, 29 Apr 2021 21:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619731008;
+        bh=iI1Cr2GzIf7YA7GumpZkFW/2VbvFnoFLnzC8z8mRNKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VnchjAA6GziUnzoBeNHpUlEcohzDVs2nTAFnHhLu28eybm0NEtjlH0pw7X1mk0Pyo
+         oWiTS9gTTXvieqXhe716ZRqzYeKqMv3BRbeSjKDF8fK9bW285EUxkPgBd7Z7Qmfoe2
+         tsHRtD0VcOb3ZnJs+PHEMlkCjfuCIb/345m5SORnuNuQy8/RgkNRvzik7LYNu9/xal
+         TkUs3LT4sCMRFhJaChszPvnkPJLJTyQAMx7cLCrP5OAqmHlWV6C5owFZy4bgSW3gTS
+         yw0BSeuAPw930+zPEVqBHK4qDj3xNWkbyNcCX4sxxhHtiTCVNzy97LklysfiwZ8Mbc
+         v5OufhKesSyvA==
+Date:   Fri, 30 Apr 2021 06:16:41 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ethan Zhao <haifeng.zhao@intel.com>,
+        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] PCI: pciehp: Ignore Link Down/Up caused by DPC
+Message-ID: <20210429211641.GB26517@redsun51.ssa.fujisawa.hgst.com>
+References: <b70e19324bbdded90b728a5687aa78dc17c20306.1616921228.git.lukas@wunner.de>
+ <20210429193648.GA26517@redsun51.ssa.fujisawa.hgst.com>
+ <20210429201603.GA18851@wunner.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:497:888:9bb9:54f1] (2607:fea8:3edf:49b0:497:888:9bb9:54f1) by YT1PR01CA0119.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2c::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.25 via Frontend Transport; Thu, 29 Apr 2021 20:36:49 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 741795f4-6d90-44b9-a98c-08d90b4e8460
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2703:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB27030D99312FFAAF1A6C07E7EA5F9@SN6PR12MB2703.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:549;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: z7EmnEStXTXSytvgs4dKI6uqd2Tv8+/E+u2HaWE9GRdo9Q3fUZtmIT8q5a46JuzFLVkMTECsaxFyLGDyNI5L28JKaSunAcBj+C6KCKclTcm0QhbC3zk/egCEN/cMzvy9iWbiRtoi+YAVa3250vQegyslWaq+RBG1hj6vWobxIbLcYSIyImM3U3f3oPJGdFGXeEGbdU18qtRnwuwKEvwjvOooXOeK4GeoXIIKTXRxHL9f3JvEcJsUUvgwXoAeyk5NehLhh+Tbx8IDT+mL7EhjKUPFc/3x57MLZe/URpihNafkqooVg9EaQMndB5Qs6sKqVyFgJBuO0X737I3NueyGAMojFK1kAggxAKGhS2PiovjptZecJXd4+JugpXHB1LANJ/KE0fH62tky3nWtKJo3yFQqcxFY1GIuMQ2w3sPe6VAREL6b0vjpJiihisyQpjnLjkgwxQo+7diV3Go5uiXsvtbQI2qbXeV3Svg3Ug6UF/cVBg1NPAWVK59DUXpO6B63ns/2ZIEVSIuyS8nnxZuL4CQv+6egIRib8PggcZ0EZ8sOSOG9M5l+WGFGKyBvZeN6w2oMOmlvm11XU8sJqtQpS1e54U0ye2/sA/g3fB5cBYbyF3GS6BRnFMafhMZ8dJeIj2BzMU7DSKVXB4nBgUSirhdEsNEernT/jdoJbL2vOFFWrHFM1OYk17yFDWKTnLhUhROtRNv+AaZfRS1rjqj1PHixLikJIAYy6lsoWNuRLdE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(66476007)(45080400002)(316002)(38100700002)(2906002)(2616005)(966005)(66556008)(66946007)(83380400001)(8936002)(6916009)(31696002)(53546011)(478600001)(52116002)(4326008)(6486002)(8676002)(16526019)(44832011)(86362001)(31686004)(36756003)(186003)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?MEU3RVdIMzF5NVJDbHRpYzh3MWU5S1Z4MjB6YTNwK0RVYmFJRWN4bzBIQVlB?=
- =?utf-8?B?TGlPWTZjbHdEZXdUSG9kd3NuSGVpb0ZBTXlLVXJ0NStVV3BFM0xHYnFlSSs5?=
- =?utf-8?B?Zm1WcGxqWmtFdzBWUm4vcDhuRlJaSnl2VDFCT1RwclgxVUFUeVJ3MW5CM0Y2?=
- =?utf-8?B?YUV3azBLRFRDYnhPZU9Lc3BMeUFsSGpXME5DaFg2WUpMWTk5eG9JWnN6STFB?=
- =?utf-8?B?UzRTZ1R4dDVDay83UnB1UHNGOTl0a0dKT29LcDRncWdpM1ZPTzlHU01DSXYx?=
- =?utf-8?B?SGRkZERsNCtGaFR6OEFtMHEzNDYrTDF1dkhPQmlVcnZCbW4wZTdkZEpGN040?=
- =?utf-8?B?WWhVTmwyTHVIOTB3MG5MU3FKMW9aYXlxZXpjcWI1MHp2LzFYWUdLU3BZd2tO?=
- =?utf-8?B?cFJkRkJpdmRNMHZSRHUva1lsTUYxRDIyRndsV0plS3FMMmNnYnliQUtpUGRL?=
- =?utf-8?B?cTF0L3A0MHp1R2krU3dYY2ZjbUhnNnl6MWI0SmdHZ2loUldtNmNuZHpBRjhv?=
- =?utf-8?B?RWc5ZGVnbmNDNCs4UEw0NVY4bU5vdWdSS3N2M3RMakRuQmt5bFNvaGxJQmdK?=
- =?utf-8?B?YkgzR2xMM3htWXR6UmVTMEF5TTgvSEtTVmJqMnNOd0tZOUxjMTJocWxzVDRp?=
- =?utf-8?B?OUluSVAxcTlXdW1aUHpody9wNWRtZjIrTXBmVXBReDJxRWNYSEZqVkdYNzdm?=
- =?utf-8?B?RUYydjVBQm5hclQzWGovNWRKZ0N2bjdhVGR3dXdzRGxOM2FydUdIaU1QQytz?=
- =?utf-8?B?MklLOVJNejZoVVJiT3lkNWtBcjR6WHNsT2pSc29YNGFFdWowK0FnY3hZWGd0?=
- =?utf-8?B?TStqSHBRYWFBRXFJcFpuU3o0UE8vYnFxa0NqbU1IOXBpbkhYdm9PRGl1MHFC?=
- =?utf-8?B?VXNtNTRRMDErdE1kMnNMY0licHBEcHpqRWsrSVM5S09ZeDR5R25udHRLd2pP?=
- =?utf-8?B?VkU3Vkp3N1Q1RkpCZXl1dnV0RmJRTVZRdW9VVkpTNUkxSkxLV0o5WjZIZ0ND?=
- =?utf-8?B?cEVZYXVpMFgzaGQxNXFPM2FlMFRsbThtL0xTd1JobkRRZER6ZUk1ckpGVVRi?=
- =?utf-8?B?Vk9QeEFCRUpZdVNWblYwWTJPNFBpYUZTQm01blBpa1Nlb01RMTFmNDNKVEhU?=
- =?utf-8?B?QUNodjNxM2lwajU0SHN2b01xM1Y4UTJpc3N5cjhMOHF0L3dIejdpaXV0OFNx?=
- =?utf-8?B?ZnFiSlN3b213a2NYeHkxSGJiTHVXU0ttSitmMFlLempqdmNaRXg4TnF4SDNh?=
- =?utf-8?B?STNKRDc4bUcwL0JhUHJYd01rSEZ4SmxtY0pqY01kVDRxRURselVaenpIRDZx?=
- =?utf-8?B?ZnB3ZnZIbVVvb3JNVEZxcTgyZCtKSWIrek43V1NnaXRsRTdBaHBFOEIrWWpC?=
- =?utf-8?B?eXp2Rm5XRzJRclZMRUJhM0F1QTJPUGV5UHErZnBybzNjQ09FU3NXdGFJZ240?=
- =?utf-8?B?Q2pXbG14MlZpejExNWRIeUFaVkRSR3p6MWRER0YyNnpjRG5DZ002NHhKTTZO?=
- =?utf-8?B?ejUzOFVFTDdDbDdacG5PWDJ2ZkJMeFRtVjhyd0Fvd05UVG9EcnF4T05CeHQ2?=
- =?utf-8?B?VVpDWTZtWUo4VkNINmlLS0NuUUJiQkFWVDJPd1hvT0x0S0lqSW9XVWJCbnNt?=
- =?utf-8?B?aDdpT2ROUVR2eFFGekd4OVdzVnNBL0VWR3VDUzR2RjY1TzBKNDBYa3Fhc1Bz?=
- =?utf-8?B?WSttN2pZSTVCVHVyeE9oNmt6dDFJOHlxTXdHc2c1UzdJVzhSS2dpWmNZeEFt?=
- =?utf-8?B?ejRHbngyUkFtcFZsTm1LemxTQ3R2VW9ycHRjaW9UdVkyZlFLc2F4dnloaWkx?=
- =?utf-8?B?VjNtaytKelI4Q2xSa2FObnBkbEt4UXVnVzdLK1VBNWhHMFJncDlTS3NLWVoy?=
- =?utf-8?Q?OTfXhjCmdiCJ9?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 741795f4-6d90-44b9-a98c-08d90b4e8460
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2021 20:36:50.8566
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8GQXA5vDDP9z7+5twHHrgd11C6Z+VK8oAmfhD6t2EmTC252pWm3peBuVLpqKLMveUr42tTfNOJaBn3v0eAGHZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2703
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210429201603.GA18851@wunner.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-04-29 3:23 p.m., Bjorn Helgaas wrote:
-> On Thu, Apr 29, 2021 at 12:53:15PM -0400, Andrey Grodzovsky wrote:
->> On 2021-04-28 12:53 p.m., Bjorn Helgaas wrote:
->>> On Wed, Apr 28, 2021 at 11:11:48AM -0400, Andrey Grodzovsky wrote:
->>>> This is exact copy of 'USB: add support for dev_groups to
->>>> struct usb_device_driver' patch by Greg but just for
->>>> the PCI case.
+On Thu, Apr 29, 2021 at 10:16:03PM +0200, Lukas Wunner wrote:
+> On Fri, Apr 30, 2021 at 04:36:48AM +0900, Keith Busch wrote:
+> > On Sun, Mar 28, 2021 at 10:52:00AM +0200, Lukas Wunner wrote:
+> > > Downstream Port Containment (PCIe Base Spec, sec. 6.2.10) disables the
+> > > link upon an error and attempts to re-enable it when instructed by the
+> > > DPC driver.
+> > > 
+> > > A slot which is both DPC- and hotplug-capable is currently brought down
+> > > by pciehp once DPC is triggered (due to the link change) and brought up
+> > > on successful recovery.  That's undesirable, the slot should remain up
+> > > so that the hotplugged device remains bound to its driver.  DPC notifies
+> > > the driver of the error and of successful recovery in pcie_do_recovery()
+> > > and the driver may then restore the device to working state.
+> > 
+> > This is a bit strange. The PCIe spec says DPC capable ports suppress
+> > Link Down events specifically because it will confuse hot-plug
+> > surprise ports if you don't do that. I'm specifically looking at the
+> > "Implementation Note" in PCIe Base Spec 5.0 section 6.10.2.4.
 > 
->>> ...
->>> The usual commit citation format is 7d9c1d2f7aca ("USB: add support
->>> for dev_groups to struct usb_device_driver") so it's easier to locate
->>> the commit.
->>>
->>> I see there is also b71b283e3d6d ("USB: add support for dev_groups to
->>> struct usb_driver").  I don't know enough about USB to know whether
->>> 7d9c1d2f7aca or b71b283e3d6d is a closer analogue to what you're doing
->>> here, but I do see that struct usb_driver is far more common than
->>> struct usb_device_driver.
->>>
->>> PCI has struct pci_driver, but doesn't have the concept of a struct
->>> pci_device_driver.
->>
->> Since we don't have pci_device_driver then pci_driver is the best place
->> for it then, no ?
-> 
-> Of course.  My point was just that maybe you should say this is
-> similar to b71b283e3d6d ("USB: add support for dev_groups to struct
-> usb_driver"), not similar to 7d9c1d2f7aca ("USB: add support for
-> dev_groups to struct usb_device_driver").
+> I suppose you mean 6.2.10.4?
 
-Got it.
-
-Andrey
-
+Oops, yes.
+ 
+>    "Similarly, it is recommended that a Port that supports DPC not
+>     Set the Hot-Plug Surprise bit in the Slot Capabilities register.
+>     Having this bit Set blocks the reporting of Surprise Down errors,
+>     preventing DPC from being triggered by this important error,
+>     greatly reducing the benefit of DPC."
 > 
-> Bjorn
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Famd-gfx&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7C9778eea1c3164f9fbc5f08d90b443ba6%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637553209952825202%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=tkycS4EST1Q%2BkEWlmzocPjCxaONVk5sPzPnWmrmbfcg%3D&amp;reserved=0
+> The way I understand this, DPC isn't triggered on Surprise Down if
+> the port supports surprise removal.
+
+Hm, that might be correct, but not sure. I thought the intention was
+surprise down doesn't trigger on link down if it was because of DPC.
+
+> However what this patch aims to fix is the Link Down seen by pciehp
+> which is caused by DPC containing (other) errors.
+
+AER will take links down through the Secondary Bus Reset too, but that's
+not a problem there. The pciehp_reset_slot() suppresses the event. Can
+DPC use that?
+
+> It seems despite the above-quoted recommendation against it, vendors
+> do ship ports which support both DPC and surprise removal.
 > 
+> 
+> > Do these ports have out-of-band Precense Detect capabilities? If so, we
+> > can ignore Link Down events on DPC capable ports as long as PCIe Slot
+> > Status PDC isn't set.
+> 
+> Hm, and what about ports with in-band Presence Detect?
+
+That can't be distinguishable from an actual device swap in that case.
+Suppressing the removal could theoretically bring-up a completely
+different device as if it were the same one. The NVMe driver replays
+known device's security keys on initialization. Hot-swap attack?
