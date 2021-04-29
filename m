@@ -2,38 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F369636E766
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 10:54:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B56436E767
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 10:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240082AbhD2Iw4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S239885AbhD2Iw4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 29 Apr 2021 04:52:56 -0400
 Received: from mga07.intel.com ([134.134.136.100]:41863 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239885AbhD2Iw4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S240068AbhD2Iw4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 29 Apr 2021 04:52:56 -0400
-IronPort-SDR: H+UHhwYV2gd9P8oEMYhkc4G08TmKEjU4vYQoUW6i7NVaedyWddiGkm2fklbmF/EZFxkPbi8nKg
- SeWEJz0LYpIQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9968"; a="260910010"
+IronPort-SDR: BkDJw8Zasg3Y8O7yJNblqwj2qHBzlJF62NW6aMfmJC7L6boAeuNiXiXWMVpwXxrv96Hd5zW6mL
+ INUiXTb2wDtw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9968"; a="260910011"
 X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
-   d="scan'208";a="260910010"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2021 01:52:09 -0700
-IronPort-SDR: gmnBqbZv0haBy4PvAyC7rA0Ok4yxqWuIS0wlHVwe4wx9nZnLN3XxQqI0ieTA+3m2PTJ4hkskEp
- FGXvpD9rTI6g==
+   d="scan'208";a="260910011"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2021 01:52:10 -0700
+IronPort-SDR: aZk7wKN7jXC8J3q4btLTT1JsvSxSub2QxTUmcICit/hKriF/Zaz7j9FaWb9PovW/5Xjq+GMN9H
+ SO+wemBRcJAw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
-   d="scan'208";a="466275007"
+   d="scan'208";a="386869391"
 Received: from lkp-server01.sh.intel.com (HELO a48ff7ddd223) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 29 Apr 2021 01:52:08 -0700
+  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2021 01:52:08 -0700
 Received: from kbuild by a48ff7ddd223 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lc2P1-0007Yy-Iq; Thu, 29 Apr 2021 08:52:07 +0000
-Date:   Thu, 29 Apr 2021 16:51:29 +0800
+        id 1lc2P1-0007Z0-JW; Thu, 29 Apr 2021 08:52:07 +0000
+Date:   Thu, 29 Apr 2021 16:51:31 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 26622d60c18f97c92e3bc2c6a7b96c49744ea544
-Message-ID: <608a7391.4wWZaoy3ayFrYR5g%lkp@intel.com>
+Subject: [pci:pci/sysfs] BUILD SUCCESS
+ 7de2d3cd6f64ea0deb2b136692d49b2c9bb2fed6
+Message-ID: <608a7393.YZ09pb9L5V+05giX%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -42,8 +43,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 26622d60c18f97c92e3bc2c6a7b96c49744ea544  Merge branch 'pci/tegra'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/sysfs
+branch HEAD: 7de2d3cd6f64ea0deb2b136692d49b2c9bb2fed6  PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions
 
 elapsed time: 720m
 
