@@ -2,176 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 879EE36EEA2
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 19:13:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8344436F031
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 21:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233329AbhD2RNr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Apr 2021 13:13:47 -0400
-Received: from mail-dm6nam10on2054.outbound.protection.outlook.com ([40.107.93.54]:34401
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233302AbhD2RNq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Apr 2021 13:13:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=koHHn4I0T5q202tsoPCYArVGsbqLYhiDu1D+5jAO1a8V4FqBrd6exaHI4KI/Qj42C6yg2HvmoQdSVo/gNbrVAlp9S1fnDa/HGzWdn4zrT12yIByZ85HU4aJrfNOiCIIibTKuL+qPfp4EJdrEHlueL0505jyidfXh6zjWnl1bbAJAunC0j9OLJDlLz9RGZwNWUF1Pmtt6wNAAI8B9uZsRMWRFOiIDLz7AvfO2E6dl4P0YJBC1wCOyUUG327Hzk1dpPMUxbXTNlaVwrNt74g2rhRLymYYFuwFYeG3oFcNsZXSDv/Bi4Yoj5LfO+yn8uPG5nukK+RZmvXP439qJ8Yxyrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ryLv2AcH2FiW1e4rfnRgFjKOIjiH0I1sXeStmMW0yGI=;
- b=M/p7lr0VfgtMu2/CCVCKWUVPoCyl8gfcxQ1FoM9MREltAA3OFHaFpq5cbNFWVkgDPuZdNaO+v6YOmv3W4ZcrOEhEo+zmVVglSlM7DM/UqctkG1dIUTHZSzyIh0jvtQJP5UmGBCbPgHVTCaM21t3Nlsy0bnxKuNNL2kkVXKBm4dHOsKr9m8H0vULSO3obEr3EoQcL10rWEEbJ/C2bISst3S5lMB3628iqRklld8zS5j09ikJMmdmEnOdzIs7hs0hnxOR0yYT15bj/Kdd79tAEpQYhJnRk0U2Bn9SwRO9/Kxj3QYgaiYLsokKojOY5Tl/thIkFdhQwnJGit0GDCiRqIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ryLv2AcH2FiW1e4rfnRgFjKOIjiH0I1sXeStmMW0yGI=;
- b=GqQ/9lKKukrNRS12hNJ8THxu4SSncztPkS7lUhW5UK91Lu4GlSmY4CTAdZ0Fz185ib62Eghkyl7le+cgCAe2fPV2If1+ZWgET7Ht2gkTfF07UrA1OWeDJnIKAFWsEowNEq72EA4mtKRGYGS0BoC2jKYs2nhMewL4XMOf45XfcjY=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN6PR12MB4717.namprd12.prod.outlook.com (2603:10b6:805:e2::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.20; Thu, 29 Apr
- 2021 17:12:57 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4065.026; Thu, 29 Apr 2021
- 17:12:57 +0000
-Subject: Re: [PATCH v5 13/27] drm/amdgpu: When filizing the fence driver. stop
- scheduler first.
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, daniel.vetter@ffwll.ch,
-        Harry.Wentland@amd.com
-Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, helgaas@kernel.org,
-        Felix.Kuehling@amd.com
+        id S239570AbhD2TMQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Apr 2021 15:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235725AbhD2TFw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 15:05:52 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7F2C06138B
+        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 12:05:05 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id z6so6708253wrm.4
+        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 12:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pFNa8DXNOTRwI0q0kqi1H3IoccMGxWweupDE/jx4l44=;
+        b=lqQK4b4ZEYaPpj/if1uYjE3EBlBia+XQKYSbavESxEPbhgmxpmplkKQoSBAFjDQKxm
+         BAjDK6xnAGx0C4CFF7A2oWUn5KFHOYmehsZpZ6hkL8H/qEkmR5d+OwjhMcVRUaYe5wUP
+         WhyN6Q9Gp0xnRYLKT+rs1alOf/YxdcXgSauBs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pFNa8DXNOTRwI0q0kqi1H3IoccMGxWweupDE/jx4l44=;
+        b=swX5KVlx7Kc2ONEsm4AAYkpymIFjBQTp8hnec/zJBMXdS26pBBA25YBorkyl7Od9VI
+         QgmaLX6tNo9MS33mfUU4bI5Pc8oaXFbxnKGlSZj1AKVKKBlK212VGng6GHDByGeOzPlW
+         7FPC+npVLYKtanPKLCR4tKssCJcrpGQnEUaN049ZCawVsyP1VIWHoarP+mWewboZ3N0D
+         Jby8GUjBJKz7i0bAW9rR99sTv5wJSplh1oflpaQaZbHAQ83ivrR8fLZQ7Lg35UKXjddz
+         NP4IidXwxMWBh1AOxDqip/pz7Br2GW8GH1Jn24XSTDkloRn9ZJsXDs5KYcM5/NFZ9NoQ
+         UeRA==
+X-Gm-Message-State: AOAM532tJ0AlSFoBA3iV6lIjwdy3EcS4jS67jLmfSCWKt2Gb6VqZcDDu
+        ikGOhYsqWAbtpI8j5RhqNHvNOQ==
+X-Google-Smtp-Source: ABdhPJzc5PIOUKnuRM85hXu9tyRpgsayL+dt3hWjkxSkGODDwr8h8aWOQselQ2K5Cghq/9E9oXWxiQ==
+X-Received: by 2002:a5d:4acf:: with SMTP id y15mr1427195wrs.245.1619723103936;
+        Thu, 29 Apr 2021 12:05:03 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id q20sm18333656wmq.2.2021.04.29.12.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Apr 2021 12:05:03 -0700 (PDT)
+Date:   Thu, 29 Apr 2021 21:05:01 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        ckoenig.leichtzumerken@gmail.com, daniel.vetter@ffwll.ch,
+        Harry.Wentland@amd.com, ppaalanen@gmail.com,
+        Alexander.Deucher@amd.com, gregkh@linuxfoundation.org,
+        helgaas@kernel.org, Felix.Kuehling@amd.com
+Subject: Re: [PATCH v5 20/27] drm: Scope all DRM IOCTLs with
+ drm_dev_enter/exit
+Message-ID: <YIsDXWMYkMeNhBYk@phenom.ffwll.local>
 References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
- <20210428151207.1212258-14-andrey.grodzovsky@amd.com>
- <f6bbd803-202c-7514-082b-18efa5296520@gmail.com>
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Message-ID: <eca718d6-249a-166f-d44b-7bc2dce462a8@amd.com>
-Date:   Thu, 29 Apr 2021 13:12:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-In-Reply-To: <f6bbd803-202c-7514-082b-18efa5296520@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [2607:fea8:3edf:49b0:497:888:9bb9:54f1]
-X-ClientProxiedBy: YTBPR01CA0012.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::25) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+ <20210428151207.1212258-21-andrey.grodzovsky@amd.com>
+ <YIqXJ5LA6wKl/yzZ@phenom.ffwll.local>
+ <YIqZZW9iFyGCyOmU@phenom.ffwll.local>
+ <95935e46-408b-4fee-a7b4-691e9db4f455@amd.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:497:888:9bb9:54f1] (2607:fea8:3edf:49b0:497:888:9bb9:54f1) by YTBPR01CA0012.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.25 via Frontend Transport; Thu, 29 Apr 2021 17:12:56 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fcf6ca25-6828-4093-5514-08d90b3208af
-X-MS-TrafficTypeDiagnostic: SN6PR12MB4717:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB47170C055C12A51FFD32C487EA5F9@SN6PR12MB4717.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TrkTY/9sbdMCpTWijNPXvcsPJfHRE1Q+Spmw7058isxPgewYb74f1vBYsejkEt/UXAfLVYbVx4YC/Suz2EBaeC1B4Ng/LX9h0kw/fD/QFF/whptbadCtkrkD67J1KKzgPV3PYY3V1NpITZgE/P6kVbtiykWVoCRpgPZZZnEryAcdeS/RnEkpzALyT7tyEUL3q0l4qAj1XFpDI0f0NJyhZU+IMyZqBoVLHvxc4irhILCUdfofs1fsFFBUDf6H/irD/9J87yKXne0OMQh0QDd/QaeL/L6u4aCE9I7rL1U6wRnO7S/kIrVxGiulfLKhBpiqxsJRQCPtAadOPMNoaBSBY4qRwOZIOJUusVFsw/x0wN91SkjgK33pQWciIIxIkYh4BnGhkzzTn/6gQHbpkyuI9TlqmyHVeZw8gLv9I6uT5fmI1cQP0GAVy0H4Cw2JarDgzpOmY5BAPF5Wdzz+tG36edPN4X+1Neug70tmj3li4T/EEQzifvMLQCpK9URmms4CkmjYo3N5Gz+yZj28lidAyPvNvY+jQoW3GkIY9HJHj6o9NZLJwH6TlrYKsZp9Vn6y9miN84D+goecQSdMPuvyNg5hJeTh8r0EAM54UtmNUS/mMZx6A82g1dJqnu87uC7c8zRs4KUZiBT6NKM61TJ53wPrOdXuyqhayNl1nVVIg0tYotc8HlIq/BsttnXBaIK6
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(36756003)(6636002)(16526019)(66556008)(66946007)(53546011)(86362001)(186003)(5660300002)(52116002)(2906002)(83380400001)(38100700002)(66476007)(44832011)(4326008)(8676002)(8936002)(31686004)(6486002)(2616005)(478600001)(316002)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?eFF1TjFIQVVHbE1yU0NjZ2xKQXZJT2JGZWcxMEZ0d0xwbVN2bmVoRnVZVFAz?=
- =?utf-8?B?WXYvLzhOWldhL21UWTZzOXhSdTZNMk9LQVZmN3dHSldJVStVbXNPK3pqRHUx?=
- =?utf-8?B?Ynh5dUMyUzJaUnZBL2JFb1JMSVRiZG04NlpqS2tpN3NFeWhPcjV4Umc4VEQ3?=
- =?utf-8?B?SmI1NkNXVWE1WnhHNWlhT3luVi92WDUwTWlKTnBnYjhOVURhc3hpeEVTUll3?=
- =?utf-8?B?b1RIVHFQNjNVMlU4S3ZqRXFGc2NCQmwrQlBYeWVDSTdpanIxbXk1MWl6cHNJ?=
- =?utf-8?B?cjlZcTVmVVQ5SVc4WHYxa09uTUl0M0pOSzNodFMraExkenY5RlNtaXhMRUFl?=
- =?utf-8?B?M0dEalkzdnJEUlhzdGh2RXBUOTVaZ3BINDZFOG5wYUprMXdienplV0MzNVlo?=
- =?utf-8?B?dFFueTloTUNZWnVScllQMkgvNUoxczJlMjI4cjRmRUJWSnZHOU1uM0lpaStT?=
- =?utf-8?B?bkJxVTdLSndjelpPc3lEOFpiVEVacGxiSWh5NEJyZkJTamx4a0tIVWhYOXhk?=
- =?utf-8?B?ZmRtZllTTEpMaFJpS0FFQnZZaitMeDFVb0xOL0MvU0ZZemcxWHNxWm5Pam16?=
- =?utf-8?B?NUxKNlJqbUVIUXFEbm53ZnI3RC93dE1TL2swdXhpUWtGSUk2blNFczVTMTJy?=
- =?utf-8?B?UlI2SFlwRTlBV3pmbjQ3VEVqOXlETHJFa0VEeGtTTWR0YzV6NkZpWk5oZHVi?=
- =?utf-8?B?bzFScDhLQ0JVWWNXRUluT2RRS0RCaG45N2phZkNEZ01uQTNsS0NUY2FoYW5h?=
- =?utf-8?B?UVVyY2ZWakNxMHBQTVNBdHZyUWdUeHY4MUpxR1QvRWEwMHVnNk5jRE1hWE1J?=
- =?utf-8?B?WXBNQ1BOUStLSzZTWTM5elFLdG4yMWEyR2x5Z1g5WGFxNnhqUC9CbjYzQlVD?=
- =?utf-8?B?WkpYTWRiOXJGaHFWbWVnL2NQZ3gzZ2JtTnc0c2orYW5tcnlHY3BRbmY0R0E3?=
- =?utf-8?B?M1B1REs0emlUQ1hESjU4YVB0V3o3cU9VU0NFRlJwNTJQZEFHL0pTWG1MSEc0?=
- =?utf-8?B?a09TVitiR2YrVG9DalhENVlRSUNvZnR5cGhoVk95ZHp5RHRlR2tJbkkzWWE4?=
- =?utf-8?B?RTR3Q05qb0FQdXFJQmpBb3BXTzVGODJEMGpjY3VrTndEc2xsWmtlQTROYlpM?=
- =?utf-8?B?MGRFeVpTWDJhZG1Ld3FjV1F0T0RMRTNKUlBjYkZKbDdzMUhNSElEVjc5Rklk?=
- =?utf-8?B?V0dENjRUMnlMOXdZeG1QUkNBWWg2MHVGTDUwdmdYaWJZSnJDbUsrSUE3c09J?=
- =?utf-8?B?M3Y5cVorTGlHQ0dzSDl4dVR5eDc2d1RHUnpNQ1AyOEt4NS9ERzhES0FNZ2Vq?=
- =?utf-8?B?VEpwT1VZYjVNZktCZzZpaXRGMmx1MEhUaWJIekE3NnJ6Y3FmNFJIQ0U4N3N1?=
- =?utf-8?B?Z3piZ1NxRlUwZ3pOWFpEQ0JNcEQ4YzRlNE9Jclk4b1hGa1dKYVQ3RW51NTdM?=
- =?utf-8?B?SWViSW1rNmtoOWczOWNWSHBuNWZ3TDFvWFV3cUdIWVN0c3dpaXl2Um5vNEhv?=
- =?utf-8?B?Uk9kU2FsNTZqVThXTFN5YjlSR3BCZk1STEorYkZpdFhXNFREZys1YzcwejV2?=
- =?utf-8?B?bWxxRXUvTzhiM294RGY0YjY2YVphVHBhaXZRUG9GS0xJVS9va0VubjdzN3R0?=
- =?utf-8?B?S0lMQVYzb0tNeGk0aTRBTmZlRXZiclRPRUpzYndDdzV6YThEUHFuT3J2Yzc3?=
- =?utf-8?B?UWYwQWRTZStvZkdLWDVGeEZ2Yno2R3JJajlOS25yN3FTVlBmaXM3dmR3SERU?=
- =?utf-8?B?V1cxblBMN1ZpeVNOd21QT1BxRHpvN3N6R1c3alAxeHk2MDd5WmVyYnVzTTcy?=
- =?utf-8?B?RzllYVhHSWNzOTFDTFhNem5GamJBWUJMRDNKeFRwbGI4cmhuTC90cHFYY01a?=
- =?utf-8?Q?2oOqQ1C/YfD4k?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcf6ca25-6828-4093-5514-08d90b3208af
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2021 17:12:57.4063
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xPkItgDr7Xws1Dn3cYwbMsDnIX1lBOaFp34oqBZ8605bPcSHhA9KTE9Gzc/c+Qw432sNd8ZsAQmRcg2nloSv4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4717
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95935e46-408b-4fee-a7b4-691e9db4f455@amd.com>
+X-Operating-System: Linux phenom 5.10.32scarlett+ 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-04-29 3:15 a.m., Christian König wrote:
+On Thu, Apr 29, 2021 at 12:04:33PM -0400, Andrey Grodzovsky wrote:
 > 
-> Filizing the fences? You mean finishing the fences, don't you? :)
+> 
+> On 2021-04-29 7:32 a.m., Daniel Vetter wrote:
+> > On Thu, Apr 29, 2021 at 01:23:19PM +0200, Daniel Vetter wrote:
+> > > On Wed, Apr 28, 2021 at 11:12:00AM -0400, Andrey Grodzovsky wrote:
+> > > > With this calling drm_dev_unplug will flush and block
+> > > > all in flight IOCTLs
+> > > > 
+> > > > Also, add feature such that if device supports graceful unplug
+> > > > we enclose entire IOCTL in SRCU critical section.
+> > > > 
+> > > > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+> > > 
+> > > Nope.
+> > > 
+> > > The idea of drm_dev_enter/exit is to mark up hw access. Not entire ioctl.
+> 
+> Then I am confused why we have https://elixir.bootlin.com/linux/v5.12/source/drivers/gpu/drm/drm_ioctl.c#L826
+> currently in code ?
 
-Yes, my bad.
+I forgot about this one, again. Thanks for reminding.
 
-Andrey
+> > > Especially not with an opt-in flag so that it could be shrugged of as a
+> > > driver hack. Most of these ioctls should have absolutely no problem
+> > > working after hotunplug.
+> > > 
+> > > Also, doing this defeats the point since it pretty much guarantees
+> > > userspace will die in assert()s and stuff. E.g. on i915 the rough contract
+> > > is that only execbuf (and even that only when userspace has indicated
+> > > support for non-recoverable hw ctx) is allowed to fail. Anything else
+> > > might crash userspace.
+> 
+> Given that as I pointed above we already fail any IOCTls with -ENODEV
+> when device is unplugged, it seems those crashes don't happen that
+> often ? Also, in all my testing I don't think I saw a user space crash
+> I could attribute to this.
+
+I guess it should be ok.
+
+My reasons for making this work is both less trouble for userspace (did
+you test with various wayland compositors out there, not just amdgpu x86
+driver?), but also testing.
+
+We still need a bunch of these checks in various places or you'll wait a
+very long time for a pending modeset or similar to complete. Being able to
+run that code easily after hotunplug has completed should help a lot with
+testing.
+
+Plus various drivers already acquired drm_dev_enter/exit and now I wonder
+whether that was properly tested or not ...
+
+I guess maybe we need a drm module option to disable this check, so that
+we can exercise the code as if the ioctl has raced with hotunplug at the
+worst possible moment.
+
+Also atomic is really tricky here: I assume your testing has just done
+normal synchronous commits, but anything that goes through atomic can be
+done nonblocking in a separate thread. Which the ioctl catch-all here wont
+capture.
+
+> > > You probably need similar (and very precisely defined) rules for amdgpu.
+> > > And those must definitely exclude any shard ioctls from randomly failing
+> > > with EIO, because that just kills the box and defeats the point of trying
+> > > to gracefully handling hotunplug and making sure userspace has a chance of
+> > > survival. E.g. for atomic everything should continue, including flip
+> > > completion, but we set all outputs to "disconnected" and send out the
+> > > uevent. Maybe crtc enabling can fail too, but that can also be handled
+> > > through the async status we're using to signal DP link failures to
+> > > userspace.
+> 
+> As I pointed before, because of the complexity of the topic I prefer to
+> take it step by step and solve first for secondary device use case, not
+> for primary, display attached device.
+
+Yeah makes sense. But then I think the right patch is to roll this out for
+all drivers, properly justified with existing code. Not behind a driver
+flag, because with all these different compositors the last thing we want
+is a proliferation of driver-specific behaviour. That's imo the worst
+option of all of them and needs to be avoided.
+
+Cheers, Daniel
+
 
 > 
-> Am 28.04.21 um 17:11 schrieb Andrey Grodzovsky:
->> No point calling amdgpu_fence_wait_empty before stopping the
->> SW scheduler otherwise there is always a chance another job sneaked
->> in after the wait.
->>
->> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
->> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c 
->> b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
->> index 34d51e962799..fd9282637549 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
->> @@ -533,6 +533,12 @@ void amdgpu_fence_driver_fini_hw(struct 
->> amdgpu_device *adev)
->>           if (!ring || !ring->fence_drv.initialized)
->>               continue;
->> +
->> +        /* Stop any new job submissions from sched before flushing 
->> the ring */
->> +        /* TODO Handle amdgpu_job_submit_direct and 
->> amdgpu_amdkfd_submit_ib */
->> +        if (!ring->no_scheduler)
->> +            drm_sched_fini(&ring->sched);
->> +
->>           r = amdgpu_fence_wait_empty(ring);
->>           if (r) {
->>               /* no need to trigger GPU reset as we are unloading */
->> @@ -541,8 +547,7 @@ void amdgpu_fence_driver_fini_hw(struct 
->> amdgpu_device *adev)
->>           if (ring->fence_drv.irq_src)
->>               amdgpu_irq_put(adev, ring->fence_drv.irq_src,
->>                          ring->fence_drv.irq_type);
->> -        if (!ring->no_scheduler)
->> -            drm_sched_fini(&ring->sched);
->> +
->>           del_timer_sync(&ring->fence_drv.fallback_timer);
->>       }
->>   }
+> > > 
+> > > I guess we should clarify this in the hotunplug doc?
 > 
+> Agree
+> 
+> > 
+> > To clarify: I'm not against throwing an ENODEV at userspace for ioctl that
+> > really make no sense, and where we're rather confident that all properly
+> > implemented userspace will gracefully handle failures. Like a modeset, or
+> > opening a device, or trying to import a dma-buf or stuff like that which
+> > can already fail in normal operation for any kind of reason.
+> > 
+> > But stuff that never fails, like GETRESOURCES ioctl, really shouldn't fail
+> > after hotunplug.
+> 
+> As I pointed above, this a bit confuses me given that we already do
+> blanker rejection of IOCTLs if device is unplugged.
+
+Well I'm confused about this too :-/
+
+> > And then there's the middle ground, like doing a pageflip or buffer flush,
+> > which I guess some userspace might handle, but risky to inflict those
+> > consequences on them. atomic modeset is especially fun since depending
+> > what you're doing it can be both "failures expected" and "failures not
+> > really expected in normal operation".
+> > 
+> > Also, this really should be consistent across drivers, not solved with a
+> > driver flag for every possible combination.
+> > 
+> > If you look at the current hotunplug kms drivers, they have
+> > drm_dev_enter/exit sprinkled in specific hw callback functions because of
+> > the above problems. But maybe it makes sense to change things in a few
+> > cases. But then we should do it across the board.
+> 
+> So as I understand your preferred approach is that I scope any back_end, HW
+> specific function with drm_dev_enter/exit because that where MMIO
+> access takes place. But besides explicit MMIO access thorough
+> register accessors in the HW back-end there is also indirect MMIO access
+> taking place throughout the code in the driver because of various VRAM
+> BOs which provide CPU access to VRAM through the VRAM BAR. This kind of
+> access is spread all over in the driver and even in mid-layers such as
+> TTM and not limited to HW back-end functions. It means it's much harder
+> to spot such places to surgically scope them with drm_dev_enter/exit and
+> also that any new such code introduced will immediately break hot unplug
+> because the developers can't be expected to remember making their code
+> robust to this specific use case. That why when we discussed internally
+> what approach to take to protecting code with drm_dev_enter/exit we
+> opted for using the widest available scope.
+
+The thing is, you kinda have to anyway. There's enormous amounts of
+asynchronous processing going on. E.g. nonblocking atomic commits also do
+ttm unpinning and fun stuff like that, which if you sync things wrong can
+happen way late. So the door for bad fallout is wide open :-(
+
+I'm not sure where the right tradeoff is to make sure we catch them all,
+and can make sure with testing that we've indeed caught them all.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
