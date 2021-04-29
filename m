@@ -2,109 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C7FE36E796
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 11:07:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73A7836E844
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 11:58:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233264AbhD2JG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Apr 2021 05:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240322AbhD2JGZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 05:06:25 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7DFC06138B;
-        Thu, 29 Apr 2021 02:05:38 -0700 (PDT)
-Received: from mwalle01.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:fa59:71ff:fe9b:b851])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id BC47D22249;
-        Thu, 29 Apr 2021 11:05:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1619687134;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QGlBK//hIFViSV+qyHZn068w4JR3qL4cxAnd+11uHFk=;
-        b=kAaxmuhNpJejecjCHqTyLe/l5gZaCeCVDnjvGr+ZyLwHWs5PpM6zLNyQ2bAaq5D/oYYna0
-        zDglfQyMiECfZlryFGZb8xhdcE4Tx20OQO8BLJxWF5LTjpn5PSuW30ymZPuGKVSDY9ptxE
-        2d2JIclBCHK2t+Y6pApo46V8PirBmmo=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>, Michael Walle <michael@walle.cc>
-Subject: [PATCH net v2 2/2] MAINTAINERS: move Murali Karicheri to credits
-Date:   Thu, 29 Apr 2021 11:05:21 +0200
-Message-Id: <20210429090521.554-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210429090521.554-1-michael@walle.cc>
-References: <20210429090521.554-1-michael@walle.cc>
+        id S232258AbhD2J6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Apr 2021 05:58:53 -0400
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:45706 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231543AbhD2J6w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 05:58:52 -0400
+Received: by mail-oi1-f177.google.com with SMTP id n184so39938716oia.12;
+        Thu, 29 Apr 2021 02:58:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aDU1vjC7awl7J2VdVrVA0TsppuCw6q3A0r6e1Mo7KBM=;
+        b=UNliPv+TGN6PqJkZ85UxE6gO5k8Q21f/pMgDUDFGzTTNkXL5j/9NnGe+gVPKTfdJ6e
+         I1mUYwx6lVAgxgTrHBr7D0AmFgSC+FHA61lkQjZSVFXL1EvpYl81L7pMvOUYwbahw5i2
+         oYg/MoIvruB5yN+twVyYAFS1kavfoT2oX5G8g+WWCc/S74RE3laR1zGwQbqrxmqXHY2K
+         239/fU5VaUdhXKc9om6AZ3dXau/ERTxB41e+1EAr9HWxuIuqcN0HuaiSW+LaCmf7bZsp
+         HRa0Y+e80CRq/xb9MQx/1H9RnxtfjVHyEyK2hPJlojr/LAQ6lR+kmhW/KUyZeCgE5y70
+         wNtQ==
+X-Gm-Message-State: AOAM531h1MMCp9iYCmvw3ziAYblJ/Gqt6PkRJzK0lflbhCf13Zs2siB/
+        /Xb6J+1N5lQeVJumWicsgGVp9wLMm5z8n4MWFKA=
+X-Google-Smtp-Source: ABdhPJxWEbVseQppmpJicDpiqwHMSTnWWvJIlFsvpacjdcnVQHMd38UiTLhkwV5bzRx2vlWJPTgrUnsLeR/b5vqipFI=
+X-Received: by 2002:aca:5fc3:: with SMTP id t186mr22966501oib.69.1619690284872;
+ Thu, 29 Apr 2021 02:58:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210424021631.1972022-1-rajatja@google.com> <20210424021631.1972022-2-rajatja@google.com>
+ <d53c72949d81db9f092a9aecb49bf56b47727738.camel@suse.com> <CAJZ5v0iNrSFjhmTE8K-JrO07kJon3ikhatbg0Jg2hs+x-frDJg@mail.gmail.com>
+ <79b994f2476249498797e1784f735fd7@AcuMS.aculab.com> <21c6b5002c5ad36cd7fe0bb849f5eba12a614bca.camel@suse.com>
+ <b5e031652f144ab6accbe553566676c9@AcuMS.aculab.com> <0601e45130495b152bec04eee4a50e302db4cfd2.camel@suse.com>
+ <CAJZ5v0jEbjRSGPdfwvegawin5_N=m-UoP+Wa99EQ-QmkusiBCg@mail.gmail.com> <5ac7634acbe7569879234ad541879c79918f3e00.camel@suse.com>
+In-Reply-To: <5ac7634acbe7569879234ad541879c79918f3e00.camel@suse.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 29 Apr 2021 11:57:52 +0200
+Message-ID: <CAJZ5v0jF1M95MJO+gGL2rmk=rmt5u0sYR-DCJW4+Bb5WP+3W7w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pci: Support "removable" attribute for PCI devices
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Rajat Jain <rajatja@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Dmitry Torokhov <dtor@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-His email bounces with permanent error "550 Invalid recipient". His last
-email was from 2020-09-09 on the LKML and he seems to have left TI.
+On Thu, Apr 29, 2021 at 11:03 AM Oliver Neukum <oneukum@suse.com> wrote:
+>
+> Am Mittwoch, den 28.04.2021, 14:21 +0200 schrieb Rafael J. Wysocki:
+>
+> > In principle, in the wake of Thunderbolt every PCI driver handling
+> > PCIe devices needs to be able to deal with a device that's gone away
+> > without notice, because in principle any PCIe device can be included
+> > into a Thunderbolt docking station which may go away as a whole
+> > without notice.
+>
+> Yes, but we are dealing with what we export to user space, don't we?
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-changes since v1:
- - rebased to net
-
- CREDITS     |  5 +++++
- MAINTAINERS | 13 -------------
- 2 files changed, 5 insertions(+), 13 deletions(-)
-
-diff --git a/CREDITS b/CREDITS
-index cef83b958cbe..80d096dbf262 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -1874,6 +1874,11 @@ S: Krosenska' 543
- S: 181 00 Praha 8
- S: Czech Republic
- 
-+N: Murali Karicheri
-+E: m-karicheri2@ti.com
-+D: Keystone NetCP driver
-+D: Keystone PCIe host controller driver
-+
- N: Jan "Yenya" Kasprzak
- E: kas@fi.muni.cz
- D: Author of the COSA/SRP sync serial board driver.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 04f4a2116b35..e264e63f09c0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13780,13 +13780,6 @@ F:	Documentation/devicetree/bindings/pci/ti-pci.txt
- F:	drivers/pci/controller/cadence/pci-j721e.c
- F:	drivers/pci/controller/dwc/pci-dra7xx.c
- 
--PCI DRIVER FOR TI KEYSTONE
--M:	Murali Karicheri <m-karicheri2@ti.com>
--L:	linux-pci@vger.kernel.org
--L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--S:	Maintained
--F:	drivers/pci/controller/dwc/pci-keystone.c
--
- PCI DRIVER FOR V3 SEMICONDUCTOR V360EPC
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-pci@vger.kernel.org
-@@ -17974,12 +17967,6 @@ F:	drivers/power/supply/lp8788-charger.c
- F:	drivers/regulator/lp8788-*.c
- F:	include/linux/mfd/lp8788*.h
- 
--TI NETCP ETHERNET DRIVER
--M:	Murali Karicheri <m-karicheri2@ti.com>
--L:	netdev@vger.kernel.org
--S:	Maintained
--F:	drivers/net/ethernet/ti/netcp*
--
- TI PCM3060 ASoC CODEC DRIVER
- M:	Kirill Marinushkin <kmarinushkin@birdec.com>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
--- 
-2.20.1
-
+Right, so it would be good to know why exporting this information to
+user space is desired.
