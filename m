@@ -2,249 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C15CF36E5CF
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 09:20:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0BFD36E6FD
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Apr 2021 10:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237423AbhD2HVH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Apr 2021 03:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239374AbhD2HVG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 03:21:06 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F27C06138B
-        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 00:19:42 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id c22so13655378edn.7
-        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 00:19:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=EhxLWRP/GuSFjAg4apJtx2QRUn4D0rnHK/YL0ISOyZM=;
-        b=q09BOxPepbeaMBRp596xIsWs2g3HTr9dUDBZOpQ6NZALJjqjLw/9fOEMmqJoOv/s4X
-         fqs3y//DDV4fQ1JYfZIL9q+0fo9rRXD0GlKPOs6h7FcYNLPInzQ/ij5ZuySEtCAVQ/cM
-         BhwZisgp9RwlKq1fZ4VtkdycHH/JEYMEa/p/DjA/p8GugjX40TZ+bl3KlbuQY6EcAhda
-         OTK5k0Wq+fiIEXbLs7aOEpf2/OeTz+71joWxHbI0B5TcELZ4JlH0y5t9d4dTjWhX1plp
-         EQywJSrmG0RDD3mnf3BrRBlFDaSNJ49yaT28oGMLeeIt8twEGtel3c9XTsN3SL41yuJS
-         8dnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=EhxLWRP/GuSFjAg4apJtx2QRUn4D0rnHK/YL0ISOyZM=;
-        b=pcTLS4whv7iMaGkjVEkJ+Q670MAa33UszkmxhNX19qAnt8WEKUP9GvIVUb6EMKESZg
-         +Vl1jnLssFGNqRPZy+D/VVCzqT93LKXKKqvvBPysT28uYvcS4Xa7dsK59NWbYHnrhzmQ
-         lP52twM10H9+sIi5kr1tnZY/hMrkTykPOifuu7cEScBJXpW29KlvG2ajfmepavKJgAP1
-         nHqlWI8ihjyAUcSwdCB77UZku9oyjyd9E4jU9ZJLTQXubKxEoy+j8F0KCvocQitv+A2Z
-         AWi7f5lo1Pfd+I98TDAXPq5a9l5ScD4eMIYEHx/HA10cCDUn8PN1z86TGoTcuCCu2oAs
-         MYnw==
-X-Gm-Message-State: AOAM532ZT8uBIOrb3V3Q8LhMxIay/IO/l4V7jAJ6sml0q/4SqjGuNAbA
-        LLTDcA0od1w3ommwhX+mJUU=
-X-Google-Smtp-Source: ABdhPJyEVvr7AG4/Hg5dZ3Fd2bkoJAbD3E+70uD1k2r2mar5HZQnKd+hKUR8fxM9mX/JRCbKcRezPA==
-X-Received: by 2002:a05:6402:781:: with SMTP id d1mr16882766edy.32.1619680781302;
-        Thu, 29 Apr 2021 00:19:41 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:49f7:8b5a:d7ab:5e3e? ([2a02:908:1252:fb60:49f7:8b5a:d7ab:5e3e])
-        by smtp.gmail.com with ESMTPSA id bu20sm1286842ejb.76.2021.04.29.00.19.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Apr 2021 00:19:40 -0700 (PDT)
-Subject: Re: [PATCH v5 16/27] drm/amdgpu: Unmap all MMIO mappings
-To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, daniel.vetter@ffwll.ch,
-        Harry.Wentland@amd.com
-Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, helgaas@kernel.org,
-        Felix.Kuehling@amd.com
-References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
- <20210428151207.1212258-17-andrey.grodzovsky@amd.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <ac2bb28e-141a-ef05-328a-af398455c8b2@gmail.com>
-Date:   Thu, 29 Apr 2021 09:19:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S231405AbhD2IZx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Apr 2021 04:25:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:5460 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230071AbhD2IZx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Apr 2021 04:25:53 -0400
+IronPort-SDR: E1P9VmRpcrsKb+xNWsHnSl3V7IgyXmZigCBGBdyh7EH/64lPVgouZswaduOrtktAlHI6Vu4P5A
+ OIsYmyD+yjaw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9968"; a="196510409"
+X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
+   d="scan'208";a="196510409"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2021 01:25:06 -0700
+IronPort-SDR: LyVKjgZp947BxdxlIZHr9rfzZ93QAzdA3ds40zPjRhWYWmLdBaThBkYdsT/eJ2jkUJTuSwvM8N
+ p3LfbaPvTBXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,258,1613462400"; 
+   d="scan'208";a="526845386"
+Received: from lkp-server01.sh.intel.com (HELO a48ff7ddd223) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Apr 2021 01:25:04 -0700
+Received: from kbuild by a48ff7ddd223 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lc1yp-0007Yc-DJ; Thu, 29 Apr 2021 08:25:03 +0000
+Date:   Thu, 29 Apr 2021 16:24:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/vpd] BUILD SUCCESS
+ f89b5783f139269a16e8821b203ac2a6f1ad965c
+Message-ID: <608a6d35.QT6Wf5ceobqgyh52%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20210428151207.1212258-17-andrey.grodzovsky@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 28.04.21 um 17:11 schrieb Andrey Grodzovsky:
-> Access to those must be prevented post pci_remove
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
+branch HEAD: f89b5783f139269a16e8821b203ac2a6f1ad965c  PCI: Allow VPD access for QLogic ISP2722
 
-That is certainly a no-go. We want to get rid of the kernel pointers in 
-BOs, not add another one.
+elapsed time: 722m
 
-Christian.
+configs tested: 131
+configs skipped: 2
 
->
-> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-> ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  5 +++
->   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 38 ++++++++++++++++++++--
->   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 28 ++++++++++++++--
->   drivers/gpu/drm/amd/amdgpu/amdgpu_object.h |  5 +++
->   4 files changed, 71 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-> index 30a24db5f4d1..3e4755fc10c8 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-> @@ -1056,6 +1056,11 @@ struct amdgpu_device {
->   	struct pci_saved_state          *pci_state;
->   
->   	struct list_head                device_bo_list;
-> +
-> +	/* List of all MMIO BOs */
-> +	struct list_head                mmio_list;
-> +	struct mutex                    mmio_list_lock;
-> +
->   };
->   
->   static inline struct amdgpu_device *drm_to_adev(struct drm_device *ddev)
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 22b09c4db255..3ddad6cba62d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -3320,6 +3320,9 @@ int amdgpu_device_init(struct amdgpu_device *adev,
->   	INIT_LIST_HEAD(&adev->shadow_list);
->   	mutex_init(&adev->shadow_list_lock);
->   
-> +	INIT_LIST_HEAD(&adev->mmio_list);
-> +	mutex_init(&adev->mmio_list_lock);
-> +
->   	INIT_DELAYED_WORK(&adev->delayed_init_work,
->   			  amdgpu_device_delayed_init_work_handler);
->   	INIT_DELAYED_WORK(&adev->gfx.gfx_off_delay_work,
-> @@ -3636,6 +3639,36 @@ static void amdgpu_clear_dma_mappings(struct amdgpu_device *adev)
->   	spin_unlock(&adev->mman.bdev.lru_lock);
->   }
->   
-> +static void amdgpu_device_unmap_mmio(struct amdgpu_device *adev)
-> +{
-> +	struct amdgpu_bo *bo;
-> +
-> +	/* Clear all CPU mappings pointing to this device */
-> +	unmap_mapping_range(adev->ddev.anon_inode->i_mapping, 0, 0, 1);
-> +
-> +	/* Unmap all MMIO mapped kernel BOs */
-> +	mutex_lock(&adev->mmio_list_lock);
-> +	list_for_each_entry(bo, &adev->mmio_list, mmio_list) {
-> +		amdgpu_bo_kunmap(bo);
-> +		if (*bo->kmap_ptr)
-> +			*bo->kmap_ptr = NULL;
-> +	}
-> +	mutex_unlock(&adev->mmio_list_lock);
-> +
-> +	/* Unmap all mapped bars - Doorbell, registers and VRAM */
-> +	amdgpu_device_doorbell_fini(adev);
-> +
-> +	iounmap(adev->rmmio);
-> +	adev->rmmio = NULL;
-> +	if (adev->mman.aper_base_kaddr)
-> +		iounmap(adev->mman.aper_base_kaddr);
-> +	adev->mman.aper_base_kaddr = NULL;
-> +
-> +	/* Memory manager related */
-> +	arch_phys_wc_del(adev->gmc.vram_mtrr);
-> +	arch_io_free_memtype_wc(adev->gmc.aper_base, adev->gmc.aper_size);
-> +}
-> +
->   /**
->    * amdgpu_device_fini - tear down the driver
->    *
-> @@ -3683,6 +3716,8 @@ void amdgpu_device_fini_hw(struct amdgpu_device *adev)
->   	amdgpu_clear_dma_mappings(adev);
->   
->   	amdgpu_gart_dummy_page_fini(adev);
-> +
-> +	amdgpu_device_unmap_mmio(adev);
->   }
->   
->   void amdgpu_device_fini_sw(struct amdgpu_device *adev)
-> @@ -3713,9 +3748,6 @@ void amdgpu_device_fini_sw(struct amdgpu_device *adev)
->   	if (adev->rio_mem)
->   		pci_iounmap(adev->pdev, adev->rio_mem);
->   	adev->rio_mem = NULL;
-> -	iounmap(adev->rmmio);
-> -	adev->rmmio = NULL;
-> -	amdgpu_device_doorbell_fini(adev);
->   
->   	if (IS_ENABLED(CONFIG_PERF_EVENTS))
->   		amdgpu_pmu_fini(adev);
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-> index 62d829f5e62c..9b05e3b96fa0 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-> @@ -531,6 +531,9 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
->   		return -ENOMEM;
->   	drm_gem_private_object_init(adev_to_drm(adev), &bo->tbo.base, size);
->   	INIT_LIST_HEAD(&bo->shadow_list);
-> +
-> +	INIT_LIST_HEAD(&bo->mmio_list);
-> +
->   	bo->vm_bo = NULL;
->   	bo->preferred_domains = bp->preferred_domain ? bp->preferred_domain :
->   		bp->domain;
-> @@ -774,9 +777,21 @@ int amdgpu_bo_kmap(struct amdgpu_bo *bo, void **ptr)
->   	if (r)
->   		return r;
->   
-> -	if (ptr)
-> +	if (bo->kmap.bo_kmap_type == ttm_bo_map_iomap) {
-> +		struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
-> +
-> +		mutex_lock(&adev->mmio_list_lock);
-> +		list_add_tail(&bo->mmio_list, &adev->mmio_list);
-> +		mutex_unlock(&adev->mmio_list_lock);
-> +	}
-> +
-> +	if (ptr) {
->   		*ptr = amdgpu_bo_kptr(bo);
->   
-> +		if (bo->kmap.bo_kmap_type == ttm_bo_map_iomap)
-> +			bo->kmap_ptr = ptr;
-> +	}
-> +
->   	return 0;
->   }
->   
-> @@ -804,8 +819,17 @@ void *amdgpu_bo_kptr(struct amdgpu_bo *bo)
->    */
->   void amdgpu_bo_kunmap(struct amdgpu_bo *bo)
->   {
-> -	if (bo->kmap.bo)
-> +	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
-> +
-> +	if (bo->kmap.bo) {
-> +		if (bo->kmap.bo_kmap_type == ttm_bo_map_iomap) {
-> +			mutex_lock(&adev->mmio_list_lock);
-> +			list_del_init(&bo->mmio_list);
-> +			mutex_unlock(&adev->mmio_list_lock);
-> +		}
-> +
->   		ttm_bo_kunmap(&bo->kmap);
-> +	}
->   }
->   
->   /**
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-> index 5ae8555ef275..3129d9bbfa22 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-> @@ -112,6 +112,11 @@ struct amdgpu_bo {
->   	struct kgd_mem                  *kfd_bo;
->   
->   	struct list_head		bo;
-> +
-> +	struct list_head                mmio_list;
-> +	/* Address of kernel VA pointer to MMIO so they can be updated post remap */
-> +	void				**kmap_ptr;
-> +
->   };
->   
->   static inline struct amdgpu_bo *ttm_to_amdgpu_bo(struct ttm_buffer_object *tbo)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+riscv                            allmodconfig
+x86_64                           allyesconfig
+i386                             allyesconfig
+riscv                            allyesconfig
+arm                         hackkit_defconfig
+arm                        shmobile_defconfig
+mips                           mtx1_defconfig
+arm                       netwinder_defconfig
+arm                          ep93xx_defconfig
+powerpc                         wii_defconfig
+powerpc                    adder875_defconfig
+sh                        dreamcast_defconfig
+mips                      loongson3_defconfig
+xtensa                  cadence_csp_defconfig
+mips                  maltasmvp_eva_defconfig
+arc                           tb10x_defconfig
+arm                      jornada720_defconfig
+powerpc                 mpc837x_rdb_defconfig
+openrisc                  or1klitex_defconfig
+um                           x86_64_defconfig
+powerpc                     tqm8540_defconfig
+mips                         tb0287_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                   bluestone_defconfig
+arm                        clps711x_defconfig
+arm                             rpc_defconfig
+mips                           ip27_defconfig
+arc                      axs103_smp_defconfig
+mips                malta_qemu_32r6_defconfig
+powerpc                      arches_defconfig
+powerpc                     taishan_defconfig
+arm                          imote2_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                         ap325rxa_defconfig
+powerpc                     redwood_defconfig
+mips                        omega2p_defconfig
+s390                             alldefconfig
+openrisc                 simple_smp_defconfig
+arm                    vt8500_v6_v7_defconfig
+m68k                             alldefconfig
+sh                         microdev_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                         nhk8815_defconfig
+ia64                                defconfig
+arm                          gemini_defconfig
+sh                           se7724_defconfig
+sh                           se7712_defconfig
+ia64                          tiger_defconfig
+sparc64                          alldefconfig
+mips                      malta_kvm_defconfig
+powerpc                  storcenter_defconfig
+powerpc                     tqm8555_defconfig
+mips                           ip32_defconfig
+arm                       mainstone_defconfig
+mips                      pic32mzda_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                  decstation_64_defconfig
+arm                        multi_v7_defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20210428
+i386                 randconfig-a002-20210428
+i386                 randconfig-a001-20210428
+i386                 randconfig-a006-20210428
+i386                 randconfig-a003-20210428
+i386                 randconfig-a004-20210428
+x86_64               randconfig-a015-20210428
+x86_64               randconfig-a016-20210428
+x86_64               randconfig-a011-20210428
+x86_64               randconfig-a014-20210428
+x86_64               randconfig-a013-20210428
+x86_64               randconfig-a012-20210428
+i386                 randconfig-a012-20210428
+i386                 randconfig-a014-20210428
+i386                 randconfig-a013-20210428
+i386                 randconfig-a011-20210428
+i386                 randconfig-a015-20210428
+i386                 randconfig-a016-20210428
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a004-20210428
+x86_64               randconfig-a002-20210428
+x86_64               randconfig-a005-20210428
+x86_64               randconfig-a006-20210428
+x86_64               randconfig-a001-20210428
+x86_64               randconfig-a003-20210428
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
