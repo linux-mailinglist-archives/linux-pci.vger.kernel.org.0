@@ -2,541 +2,381 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22F4C36F43D
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 05:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F7B636F44D
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 05:14:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbhD3DLh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Apr 2021 23:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39016 "EHLO
+        id S229591AbhD3DO4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Apr 2021 23:14:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbhD3DLh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 23:11:37 -0400
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCDEC06138B
-        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 20:10:49 -0700 (PDT)
-Received: by mail-oo1-xc32.google.com with SMTP id k26-20020a4adfba0000b02901f992c7ec7bso1729031ook.13
-        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 20:10:49 -0700 (PDT)
+        with ESMTP id S229577AbhD3DO4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Apr 2021 23:14:56 -0400
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55739C06138B
+        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 20:14:07 -0700 (PDT)
+Received: by mail-ot1-x32f.google.com with SMTP id d3-20020a9d29030000b029027e8019067fso61406445otb.13
+        for <linux-pci@vger.kernel.org>; Thu, 29 Apr 2021 20:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UF/lSvUut0wTX/5Q3Ag04kXxOsjZz8sIbrC77QnXiwE=;
-        b=teMUdHYMmdPpw8azIPWS4FU9BtwUqtUIiXyoJVoKrzmyr2z3YhziaHwiKo9mKY8R8u
-         WZBb4ZUUHOkRQ/mLb3ZLxdMUUW/b8TYJVi5wg/jgoMiL/VGAhTJKV8rzGcY7cHAckyiI
-         4h8CEpsPvCuPn4XPjWDZUoFToFGaGINzogD4+BB2a5NxWHdSAgU1sat5QS57SoSC+k6x
-         vSfkA3p8ZCdljSKmBX7Ba056kKZZUb+Vrg3czi8OEjG70p+i5p1axxYhS1j5WINsyZ7h
-         bLVZyVWWEZeV1JjeEyZ8s1OC4gyzQePnZiGliUtZac/MpwUJU7/SEPec2PYjUN0ED1B5
-         ORoA==
+         :cc;
+        bh=QGKDqICWZ3hx8jj1ErYY72RQJQjrjjkd8N0N9mVq3ts=;
+        b=S3hxMAUJ3J8gJ8cd7+cUESDWHn9xkflACC2b87KpeJDiybzjgJirlF96UTnikqsgJz
+         wBNE/l3I15+2M8k+NnKuu8KJWMECZTO2zcBomIynMVsXAuPoNY5Dm1FQL5TzHwZa2P5O
+         aHHLmLOtHc6et2eKsHvGB1p56OgQbFLClXOZA4lwieS2Yywd0T8W/YDI8vfxuvyQdRAL
+         fD40kl8nwEDpi0p+Coqfdr3trIDLKkpXS87JWmt2Vog4ZUUxcRt8x6t6OE+UxfCoUb3H
+         lby1x7/Efi5pMZjLbDt4kNc0DAPkVIpbxta0amuuSuJJ4VxXZvCEiLgEK4sth1e+mQMf
+         WkMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UF/lSvUut0wTX/5Q3Ag04kXxOsjZz8sIbrC77QnXiwE=;
-        b=NxqqCypK6q4Q5LlEx6oea2hBhLpCKiDeJfavdBM05QdtKsrSB1YrutohLWXj/ISM1d
-         jlQUbv8mnpI8s39qExJQhPDXLnGwVVLwlONRM7SjA9yHUMJOcvS4/EPasIMyV7CgWjyt
-         gICKjoNcyCdd45HTsu3DCEH42zA6fpiO+00zt95iVBDColfnEu2lwT6zMxDbeJfkhu6V
-         ih9jIJLb2MMSDKrGZMzbYwcmt8KwWvGo7Fahqwu5K3hObje3viPzFgsrty78P1LvYXhE
-         2XzqzSHnY4UFW1z6WgqQ5sjpCnLwsyS85YWDQo4s1SjdzfVSmEOWcZRG/Mb2vsUSGijX
-         jH/w==
-X-Gm-Message-State: AOAM5300uunWClctVfmKRrQGv60RxQ/CR0k70FRn+rXMh+S6pmeVFb/9
-        wtNMmHLvjmOTZsZdXICwbckb6J9eB1D5Aip0uv0=
-X-Google-Smtp-Source: ABdhPJxNnelQ1tEIWLZ1EC2n1y47RUx6vgv9vOBSaaly27xdeVZrp7mmMrdJ8UulxkOF0vh6bUvlDtKtpq1+vttCOis=
-X-Received: by 2002:a4a:d02a:: with SMTP id w10mr2598985oor.72.1619752248990;
- Thu, 29 Apr 2021 20:10:48 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=QGKDqICWZ3hx8jj1ErYY72RQJQjrjjkd8N0N9mVq3ts=;
+        b=l8iXSmbKMQID4eSVo/ZxUgEo7WF+aTuL6z4i9w78+g4OINYqpkVMDFigys70vEt/uG
+         C996g0j3qgMikljUfsDUeQe6HRjc+Tkzb30L2ajnIbe8oe4PjJVZ+tPj6xvDFzJRbFi/
+         +tJrabEwaCn4GGIUr1khW1Y+l1iMTmoCKAe86XkjLFPFs6h0Wua1D6I6mQ6n6FGC6+7u
+         g/En/uq0MBxxHYmJ922wIb7v7Bmxx/Aaej98vIyeMBjXkhjg9x6W/ZIBHXIgfO+TDBuW
+         xqSYabJMNwPqMxvxmSotVkAlCUuV4Rt25W1dPcpcfr2BWpqjqLGtmM+crp+pVKZzyPUd
+         5WpQ==
+X-Gm-Message-State: AOAM53020bu7nk9cDRkmJFB+5mggM6EyzdvZe3ANhUo+gEwLaHpk7Rs5
+        0wlS2qmTrpEqE4NDeDXVcb5H6u+ueNtGh4LXu4HwRnOAHX8=
+X-Google-Smtp-Source: ABdhPJw1yGl7Ru2ixItWs6qs5kFNXuZFp5zWncR2EEmnky3sJHNEDp9f5kjzCDB6W88sTtaYpz3nK8FQ/2i/7SJt3+U=
+X-Received: by 2002:a9d:8d1:: with SMTP id 75mr2025799otf.23.1619752446695;
+ Thu, 29 Apr 2021 20:14:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
- <20210428151207.1212258-4-andrey.grodzovsky@amd.com> <9276d340-261a-c96d-fe18-2d6b71ecd738@gmail.com>
-In-Reply-To: <9276d340-261a-c96d-fe18-2d6b71ecd738@gmail.com>
+References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com> <20210428151207.1212258-7-andrey.grodzovsky@amd.com>
+In-Reply-To: <20210428151207.1212258-7-andrey.grodzovsky@amd.com>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 29 Apr 2021 23:10:38 -0400
-Message-ID: <CADnq5_MOHbn+09XBi9jVM4J5t-18Piyt47TUPmQ0Hh=rGGSOZA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/27] drm/amdgpu: Split amdgpu_device_fini into early
- and late
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-Cc:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
+Date:   Thu, 29 Apr 2021 23:13:55 -0400
+Message-ID: <CADnq5_NtyLBon0Tk_BHh=XOprMPrAcKf8LN8b-bdmy1-D1Uzhg@mail.gmail.com>
+Subject: Re: [PATCH v5 06/27] drm/amdgpu: Handle IOMMU enabled case.
+To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
         amd-gfx list <amd-gfx@lists.freedesktop.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
         Greg KH <gregkh@linuxfoundation.org>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
         Pekka Paalanen <ppaalanen@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 29, 2021 at 3:04 AM Christian K=C3=B6nig
-<ckoenig.leichtzumerken@gmail.com> wrote:
+On Wed, Apr 28, 2021 at 11:13 AM Andrey Grodzovsky
+<andrey.grodzovsky@amd.com> wrote:
 >
+> Handle all DMA IOMMU gropup related dependencies before the
+> group is removed.
 >
+> v5: Drop IOMMU notifier and switch to lockless call to ttm_tt_unpopulate
 >
-> Am 28.04.21 um 17:11 schrieb Andrey Grodzovsky:
-> > Some of the stuff in amdgpu_device_fini such as HW interrupts
-> > disable and pending fences finilization must be done right away on
-> > pci_remove while most of the stuff which relates to finilizing and
-> > releasing driver data structures can be kept until
-> > drm_driver.release hook is called, i.e. when the last device
-> > reference is dropped.
-> >
-> > v4: Change functions prefix early->hw and late->sw
-> >
-> > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  2 ++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 31 ++++++++++++++++++++--
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c   |  3 +--
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h   |  1 +
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c    |  9 +++++++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 13 ++++++++-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_object.h |  2 ++
+>  drivers/gpu/drm/amd/amdgpu/cik_ih.c        |  1 -
+>  drivers/gpu/drm/amd/amdgpu/cz_ih.c         |  1 -
+>  drivers/gpu/drm/amd/amdgpu/iceland_ih.c    |  1 -
+>  drivers/gpu/drm/amd/amdgpu/navi10_ih.c     |  3 ---
+>  drivers/gpu/drm/amd/amdgpu/si_ih.c         |  1 -
+>  drivers/gpu/drm/amd/amdgpu/tonga_ih.c      |  1 -
+>  drivers/gpu/drm/amd/amdgpu/vega10_ih.c     |  3 ---
+>  14 files changed, 56 insertions(+), 16 deletions(-)
 >
-> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> index fddb82897e5d..30a24db5f4d1 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> @@ -1054,6 +1054,8 @@ struct amdgpu_device {
 >
-> But Alex should acknowledge this as well since it is general driver desig=
-n.
+>         bool                            in_pci_err_recovery;
+>         struct pci_saved_state          *pci_state;
+> +
+> +       struct list_head                device_bo_list;
+>  };
+>
+>  static inline struct amdgpu_device *drm_to_adev(struct drm_device *ddev)
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> index 46d646c40338..91594ddc2459 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -70,6 +70,7 @@
+>  #include <drm/task_barrier.h>
+>  #include <linux/pm_runtime.h>
+>
+> +
+>  MODULE_FIRMWARE("amdgpu/vega10_gpu_info.bin");
+>  MODULE_FIRMWARE("amdgpu/vega12_gpu_info.bin");
+>  MODULE_FIRMWARE("amdgpu/raven_gpu_info.bin");
+> @@ -3211,7 +3212,6 @@ static const struct attribute *amdgpu_dev_attributes[] = {
+>         NULL
+>  };
+>
+> -
+>  /**
+>   * amdgpu_device_init - initialize the driver
+>   *
+> @@ -3316,6 +3316,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>
+>         INIT_WORK(&adev->xgmi_reset_work, amdgpu_device_xgmi_reset_func);
+>
+> +       INIT_LIST_HEAD(&adev->device_bo_list);
+> +
+>         adev->gfx.gfx_off_req_count = 1;
+>         adev->pm.ac_power = power_supply_is_system_supplied() > 0;
+>
+> @@ -3601,6 +3603,28 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>         return r;
+>  }
+>
+> +static void amdgpu_clear_dma_mappings(struct amdgpu_device *adev)
 
-Looks good to me as well.
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Prefix this with amdgpu_device for consistency.  E.g.,
+amdgpu_device_clear_dma_mappings()
 
+> +{
+> +       struct amdgpu_bo *bo = NULL;
+> +
+> +       /*
+> +        * Unmaps all DMA mappings before device will be removed from it's
+> +        * IOMMU group otherwise in case of IOMMU enabled system a crash
+> +        * will happen.
+> +        */
+> +
+> +       spin_lock(&adev->mman.bdev.lru_lock);
+> +       while (!list_empty(&adev->device_bo_list)) {
+> +               bo = list_first_entry(&adev->device_bo_list, struct amdgpu_bo, bo);
+> +               list_del_init(&bo->bo);
+> +               spin_unlock(&adev->mman.bdev.lru_lock);
+> +               if (bo->tbo.ttm)
+> +                       ttm_tt_unpopulate(bo->tbo.bdev, bo->tbo.ttm);
+> +               spin_lock(&adev->mman.bdev.lru_lock);
+> +       }
+> +       spin_unlock(&adev->mman.bdev.lru_lock);
+> +}
+> +
+>  /**
+>   * amdgpu_device_fini - tear down the driver
+>   *
+> @@ -3639,12 +3663,15 @@ void amdgpu_device_fini_hw(struct amdgpu_device *adev)
+>                 amdgpu_ucode_sysfs_fini(adev);
+>         sysfs_remove_files(&adev->dev->kobj, amdgpu_dev_attributes);
 >
-> Christian.
+> -
+>         amdgpu_fbdev_fini(adev);
 >
-> > ---
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  6 ++++-
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 26 +++++++++++++++------=
--
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  7 ++----
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c  | 15 ++++++++++++-
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c    | 26 +++++++++++++--------=
--
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.h    |  3 ++-
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    | 12 +++++++++-
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c    |  1 +
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_ring.h   |  3 ++-
-> >   drivers/gpu/drm/amd/amdgpu/cik_ih.c        |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/cz_ih.c         |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/iceland_ih.c    |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/navi10_ih.c     |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/si_ih.c         |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/tonga_ih.c      |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/vega10_ih.c     |  2 +-
-> >   drivers/gpu/drm/amd/amdgpu/vega20_ih.c     |  2 +-
-> >   17 files changed, 79 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/=
-amdgpu/amdgpu.h
-> > index 1af2fa1591fd..fddb82897e5d 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-> > @@ -1073,7 +1073,9 @@ static inline struct amdgpu_device *amdgpu_ttm_ad=
-ev(struct ttm_device *bdev)
-> >
-> >   int amdgpu_device_init(struct amdgpu_device *adev,
-> >                      uint32_t flags);
-> > -void amdgpu_device_fini(struct amdgpu_device *adev);
-> > +void amdgpu_device_fini_hw(struct amdgpu_device *adev);
-> > +void amdgpu_device_fini_sw(struct amdgpu_device *adev);
-> > +
-> >   int amdgpu_gpu_wait_for_idle(struct amdgpu_device *adev);
-> >
-> >   void amdgpu_device_vram_access(struct amdgpu_device *adev, loff_t pos=
-,
-> > @@ -1289,6 +1291,8 @@ void amdgpu_driver_lastclose_kms(struct drm_devic=
-e *dev);
-> >   int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *f=
-ile_priv);
-> >   void amdgpu_driver_postclose_kms(struct drm_device *dev,
-> >                                struct drm_file *file_priv);
-> > +void amdgpu_driver_release_kms(struct drm_device *dev);
-> > +
-> >   int amdgpu_device_ip_suspend(struct amdgpu_device *adev);
-> >   int amdgpu_device_suspend(struct drm_device *dev, bool fbcon);
-> >   int amdgpu_device_resume(struct drm_device *dev, bool fbcon);
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/d=
-rm/amd/amdgpu/amdgpu_device.c
-> > index 6447cd6ca5a8..8d22b79fc1cd 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> > @@ -3590,14 +3590,12 @@ int amdgpu_device_init(struct amdgpu_device *ad=
-ev,
-> >    * Tear down the driver info (all asics).
-> >    * Called at driver shutdown.
-> >    */
-> > -void amdgpu_device_fini(struct amdgpu_device *adev)
-> > +void amdgpu_device_fini_hw(struct amdgpu_device *adev)
-> >   {
-> >       dev_info(adev->dev, "amdgpu: finishing device.\n");
-> >       flush_delayed_work(&adev->delayed_init_work);
-> >       adev->shutdown =3D true;
-> >
-> > -     kfree(adev->pci_state);
-> > -
-> >       /* make sure IB test finished before entering exclusive mode
-> >        * to avoid preemption on IB test
-> >        * */
-> > @@ -3614,11 +3612,24 @@ void amdgpu_device_fini(struct amdgpu_device *a=
-dev)
-> >               else
-> >                       drm_atomic_helper_shutdown(adev_to_drm(adev));
-> >       }
-> > -     amdgpu_fence_driver_fini(adev);
-> > +     amdgpu_fence_driver_fini_hw(adev);
-> > +
-> >       if (adev->pm_sysfs_en)
-> >               amdgpu_pm_sysfs_fini(adev);
-> > +     if (adev->ucode_sysfs_en)
-> > +             amdgpu_ucode_sysfs_fini(adev);
-> > +     sysfs_remove_files(&adev->dev->kobj, amdgpu_dev_attributes);
-> > +
-> > +
-> >       amdgpu_fbdev_fini(adev);
-> > +
-> > +     amdgpu_irq_fini_hw(adev);
-> > +}
-> > +
-> > +void amdgpu_device_fini_sw(struct amdgpu_device *adev)
-> > +{
-> >       amdgpu_device_ip_fini(adev);
-> > +     amdgpu_fence_driver_fini_sw(adev);
-> >       release_firmware(adev->firmware.gpu_info_fw);
-> >       adev->firmware.gpu_info_fw =3D NULL;
-> >       adev->accel_working =3D false;
-> > @@ -3647,14 +3658,13 @@ void amdgpu_device_fini(struct amdgpu_device *a=
-dev)
-> >       adev->rmmio =3D NULL;
-> >       amdgpu_device_doorbell_fini(adev);
-> >
-> > -     if (adev->ucode_sysfs_en)
-> > -             amdgpu_ucode_sysfs_fini(adev);
-> > -
-> > -     sysfs_remove_files(&adev->dev->kobj, amdgpu_dev_attributes);
-> >       if (IS_ENABLED(CONFIG_PERF_EVENTS))
-> >               amdgpu_pmu_fini(adev);
-> >       if (adev->mman.discovery_bin)
-> >               amdgpu_discovery_fini(adev);
-> > +
-> > +     kfree(adev->pci_state);
-> > +
-> >   }
-> >
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/=
-amd/amdgpu/amdgpu_drv.c
-> > index 671ec1002230..54cb5ee2f563 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> > @@ -1249,14 +1249,10 @@ amdgpu_pci_remove(struct pci_dev *pdev)
-> >   {
-> >       struct drm_device *dev =3D pci_get_drvdata(pdev);
-> >
-> > -#ifdef MODULE
-> > -     if (THIS_MODULE->state !=3D MODULE_STATE_GOING)
-> > -#endif
-> > -             DRM_ERROR("Hotplug removal is not supported\n");
-> >       drm_dev_unplug(dev);
-> >       amdgpu_driver_unload_kms(dev);
-> > +
-> >       pci_disable_device(pdev);
-> > -     pci_set_drvdata(pdev, NULL);
-> >   }
-> >
-> >   static void
-> > @@ -1587,6 +1583,7 @@ static const struct drm_driver amdgpu_kms_driver =
-=3D {
-> >       .dumb_create =3D amdgpu_mode_dumb_create,
-> >       .dumb_map_offset =3D amdgpu_mode_dumb_mmap,
-> >       .fops =3D &amdgpu_driver_kms_fops,
-> > +     .release =3D &amdgpu_driver_release_kms,
-> >
-> >       .prime_handle_to_fd =3D drm_gem_prime_handle_to_fd,
-> >       .prime_fd_to_handle =3D drm_gem_prime_fd_to_handle,
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/dr=
-m/amd/amdgpu/amdgpu_fence.c
-> > index 8e0a5650d383..34d51e962799 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> > @@ -523,7 +523,7 @@ int amdgpu_fence_driver_init(struct amdgpu_device *=
-adev)
-> >    *
-> >    * Tear down the fence driver for all possible rings (all asics).
-> >    */
-> > -void amdgpu_fence_driver_fini(struct amdgpu_device *adev)
-> > +void amdgpu_fence_driver_fini_hw(struct amdgpu_device *adev)
-> >   {
-> >       unsigned i, j;
-> >       int r;
-> > @@ -544,6 +544,19 @@ void amdgpu_fence_driver_fini(struct amdgpu_device=
- *adev)
-> >               if (!ring->no_scheduler)
-> >                       drm_sched_fini(&ring->sched);
-> >               del_timer_sync(&ring->fence_drv.fallback_timer);
-> > +     }
-> > +}
-> > +
-> > +void amdgpu_fence_driver_fini_sw(struct amdgpu_device *adev)
-> > +{
-> > +     unsigned int i, j;
-> > +
-> > +     for (i =3D 0; i < AMDGPU_MAX_RINGS; i++) {
-> > +             struct amdgpu_ring *ring =3D adev->rings[i];
-> > +
-> > +             if (!ring || !ring->fence_drv.initialized)
-> > +                     continue;
-> > +
-> >               for (j =3D 0; j <=3D ring->fence_drv.num_fences_mask; ++j=
-)
-> >                       dma_fence_put(ring->fence_drv.fences[j]);
-> >               kfree(ring->fence_drv.fences);
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/=
-amd/amdgpu/amdgpu_irq.c
-> > index afbbec82a289..63e815c27585 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> > @@ -49,6 +49,7 @@
-> >   #include <drm/drm_irq.h>
-> >   #include <drm/drm_vblank.h>
-> >   #include <drm/amdgpu_drm.h>
-> > +#include <drm/drm_drv.h>
-> >   #include "amdgpu.h"
-> >   #include "amdgpu_ih.h"
-> >   #include "atom.h"
-> > @@ -313,6 +314,20 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
-> >       return 0;
-> >   }
-> >
-> > +
-> > +void amdgpu_irq_fini_hw(struct amdgpu_device *adev)
-> > +{
-> > +     if (adev->irq.installed) {
-> > +             drm_irq_uninstall(&adev->ddev);
-> > +             adev->irq.installed =3D false;
-> > +             if (adev->irq.msi_enabled)
-> > +                     pci_free_irq_vectors(adev->pdev);
-> > +
-> > +             if (!amdgpu_device_has_dc_support(adev))
-> > +                     flush_work(&adev->hotplug_work);
-> > +     }
-> > +}
-> > +
-> >   /**
-> >    * amdgpu_irq_fini - shut down interrupt handling
-> >    *
-> > @@ -322,19 +337,10 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
-> >    * functionality, shuts down vblank, hotplug and reset interrupt hand=
-ling,
-> >    * turns off interrupts from all sources (all ASICs).
-> >    */
-> > -void amdgpu_irq_fini(struct amdgpu_device *adev)
-> > +void amdgpu_irq_fini_sw(struct amdgpu_device *adev)
-> >   {
-> >       unsigned i, j;
-> >
-> > -     if (adev->irq.installed) {
-> > -             drm_irq_uninstall(adev_to_drm(adev));
-> > -             adev->irq.installed =3D false;
-> > -             if (adev->irq.msi_enabled)
-> > -                     pci_free_irq_vectors(adev->pdev);
-> > -             if (!amdgpu_device_has_dc_support(adev))
-> > -                     flush_work(&adev->hotplug_work);
-> > -     }
-> > -
-> >       for (i =3D 0; i < AMDGPU_IRQ_CLIENTID_MAX; ++i) {
-> >               if (!adev->irq.client[i].sources)
-> >                       continue;
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.h b/drivers/gpu/drm/=
-amd/amdgpu/amdgpu_irq.h
-> > index ac527e5deae6..392a7324e2b1 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.h
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.h
-> > @@ -104,7 +104,8 @@ void amdgpu_irq_disable_all(struct amdgpu_device *a=
-dev);
-> >   irqreturn_t amdgpu_irq_handler(int irq, void *arg);
-> >
-> >   int amdgpu_irq_init(struct amdgpu_device *adev);
-> > -void amdgpu_irq_fini(struct amdgpu_device *adev);
-> > +void amdgpu_irq_fini_sw(struct amdgpu_device *adev);
-> > +void amdgpu_irq_fini_hw(struct amdgpu_device *adev);
-> >   int amdgpu_irq_add_id(struct amdgpu_device *adev,
-> >                     unsigned client_id, unsigned src_id,
-> >                     struct amdgpu_irq_src *source);
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/=
-amd/amdgpu/amdgpu_kms.c
-> > index 64beb3399604..1af3fba7bfd4 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-> > @@ -29,6 +29,7 @@
-> >   #include "amdgpu.h"
-> >   #include <drm/drm_debugfs.h>
-> >   #include <drm/amdgpu_drm.h>
-> > +#include <drm/drm_drv.h>
-> >   #include "amdgpu_uvd.h"
-> >   #include "amdgpu_vce.h"
-> >   #include "atom.h"
-> > @@ -93,7 +94,7 @@ void amdgpu_driver_unload_kms(struct drm_device *dev)
-> >       }
-> >
-> >       amdgpu_acpi_fini(adev);
-> > -     amdgpu_device_fini(adev);
-> > +     amdgpu_device_fini_hw(adev);
-> >   }
-> >
-> >   void amdgpu_register_gpu_instance(struct amdgpu_device *adev)
-> > @@ -1151,6 +1152,15 @@ void amdgpu_driver_postclose_kms(struct drm_devi=
-ce *dev,
-> >       pm_runtime_put_autosuspend(dev->dev);
-> >   }
-> >
-> > +
-> > +void amdgpu_driver_release_kms(struct drm_device *dev)
-> > +{
-> > +     struct amdgpu_device *adev =3D drm_to_adev(dev);
-> > +
-> > +     amdgpu_device_fini_sw(adev);
-> > +     pci_set_drvdata(adev->pdev, NULL);
-> > +}
-> > +
-> >   /*
-> >    * VBlank related functions.
-> >    */
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/=
-amd/amdgpu/amdgpu_ras.c
-> > index 1fb2a91ad30a..c0a16eac4923 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-> > @@ -2142,6 +2142,7 @@ int amdgpu_ras_pre_fini(struct amdgpu_device *ade=
-v)
-> >       if (!con)
-> >               return 0;
-> >
-> > +
-> >       /* Need disable ras on all IPs here before ip [hw/sw]fini */
-> >       amdgpu_ras_disable_all_features(adev, 0);
-> >       amdgpu_ras_recovery_fini(adev);
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.h b/drivers/gpu/drm=
-/amd/amdgpu/amdgpu_ring.h
-> > index 56acec1075ac..0f195f7bf797 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.h
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.h
-> > @@ -107,7 +107,8 @@ struct amdgpu_fence_driver {
-> >   };
-> >
-> >   int amdgpu_fence_driver_init(struct amdgpu_device *adev);
-> > -void amdgpu_fence_driver_fini(struct amdgpu_device *adev);
-> > +void amdgpu_fence_driver_fini_hw(struct amdgpu_device *adev);
-> > +void amdgpu_fence_driver_fini_sw(struct amdgpu_device *adev);
-> >   void amdgpu_fence_driver_force_completion(struct amdgpu_ring *ring);
-> >
-> >   int amdgpu_fence_driver_init_ring(struct amdgpu_ring *ring,
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/cik_ih.c b/drivers/gpu/drm/amd/=
-amdgpu/cik_ih.c
-> > index d3745711d55f..183d44a6583c 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/cik_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
-> > @@ -309,7 +309,7 @@ static int cik_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
-> >       amdgpu_irq_remove_domain(adev);
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/cz_ih.c b/drivers/gpu/drm/amd/a=
-mdgpu/cz_ih.c
-> > index 307c01301c87..d32743949003 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/cz_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
-> > @@ -301,7 +301,7 @@ static int cz_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
-> >       amdgpu_irq_remove_domain(adev);
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c b/drivers/gpu/drm/=
-amd/amdgpu/iceland_ih.c
-> > index cc957471f31e..da96c6013477 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
-> > @@ -300,7 +300,7 @@ static int iceland_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
-> >       amdgpu_irq_remove_domain(adev);
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/a=
-md/amdgpu/navi10_ih.c
-> > index f4e4040bbd25..5eea4550b856 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
-> > @@ -569,7 +569,7 @@ static int navi10_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/a=
-mdgpu/si_ih.c
-> > index 51880f6ef634..751307f3252c 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
-> > @@ -175,7 +175,7 @@ static int si_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
-> >
-> >       return 0;
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c b/drivers/gpu/drm/am=
-d/amdgpu/tonga_ih.c
-> > index 249fcbee7871..973d80ec7f6c 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
-> > @@ -312,7 +312,7 @@ static int tonga_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
-> >       amdgpu_irq_remove_domain(adev);
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/a=
-md/amdgpu/vega10_ih.c
-> > index 88626d83e07b..2d0094c276ca 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-> > @@ -523,7 +523,7 @@ static int vega10_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/a=
-md/amdgpu/vega20_ih.c
-> > index 5a3c867d5881..9059b21b079f 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-> > @@ -558,7 +558,7 @@ static int vega20_ih_sw_fini(void *handle)
-> >   {
-> >       struct amdgpu_device *adev =3D (struct amdgpu_device *)handle;
-> >
-> > -     amdgpu_irq_fini(adev);
-> > +     amdgpu_irq_fini_sw(adev);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
-> >       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+>         amdgpu_irq_fini_hw(adev);
+>
+>         amdgpu_device_ip_fini_early(adev);
+> +
+> +       amdgpu_clear_dma_mappings(adev);
+> +
+> +       amdgpu_gart_dummy_page_fini(adev);
+>  }
+>
+>  void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+> index fde2d899b2c4..49cdcaf8512d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+> @@ -92,7 +92,7 @@ static int amdgpu_gart_dummy_page_init(struct amdgpu_device *adev)
+>   *
+>   * Frees the dummy page used by the driver (all asics).
+>   */
+> -static void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
+> +void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
+>  {
+>         if (!adev->dummy_page_addr)
+>                 return;
+> @@ -397,5 +397,4 @@ void amdgpu_gart_fini(struct amdgpu_device *adev)
+>         vfree(adev->gart.pages);
+>         adev->gart.pages = NULL;
+>  #endif
+> -       amdgpu_gart_dummy_page_fini(adev);
+>  }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+> index afa2e2877d87..5678d9c105ab 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+> @@ -61,6 +61,7 @@ int amdgpu_gart_table_vram_pin(struct amdgpu_device *adev);
+>  void amdgpu_gart_table_vram_unpin(struct amdgpu_device *adev);
+>  int amdgpu_gart_init(struct amdgpu_device *adev);
+>  void amdgpu_gart_fini(struct amdgpu_device *adev);
+> +void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev);
+>  int amdgpu_gart_unbind(struct amdgpu_device *adev, uint64_t offset,
+>                        int pages);
+>  int amdgpu_gart_map(struct amdgpu_device *adev, uint64_t offset,
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> index 63e815c27585..a922154953a7 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> @@ -326,6 +326,15 @@ void amdgpu_irq_fini_hw(struct amdgpu_device *adev)
+>                 if (!amdgpu_device_has_dc_support(adev))
+>                         flush_work(&adev->hotplug_work);
+>         }
+> +
+> +       if (adev->irq.ih_soft.ring)
+> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+> +       if (adev->irq.ih.ring)
+> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+> +       if (adev->irq.ih1.ring)
+> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+> +       if (adev->irq.ih2.ring)
+> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+>  }
+>
+>  /**
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+> index 485f249d063a..62d829f5e62c 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+> @@ -68,8 +68,13 @@ static void amdgpu_bo_destroy(struct ttm_buffer_object *tbo)
+>                 list_del_init(&bo->shadow_list);
+>                 mutex_unlock(&adev->shadow_list_lock);
+>         }
+> -       amdgpu_bo_unref(&bo->parent);
+>
+> +
+> +       spin_lock(&adev->mman.bdev.lru_lock);
+> +       list_del(&bo->bo);
+> +       spin_unlock(&adev->mman.bdev.lru_lock);
+> +
+> +       amdgpu_bo_unref(&bo->parent);
+>         kfree(bo->metadata);
+>         kfree(bo);
+>  }
+> @@ -585,6 +590,12 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
+>         if (bp->type == ttm_bo_type_device)
+>                 bo->flags &= ~AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
+>
+> +       INIT_LIST_HEAD(&bo->bo);
+> +
+> +       spin_lock(&adev->mman.bdev.lru_lock);
+> +       list_add_tail(&bo->bo, &adev->device_bo_list);
+> +       spin_unlock(&adev->mman.bdev.lru_lock);
+> +
+>         return 0;
+>
+>  fail_unreserve:
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+> index 9ac37569823f..5ae8555ef275 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+> @@ -110,6 +110,8 @@ struct amdgpu_bo {
+>         struct list_head                shadow_list;
+>
+>         struct kgd_mem                  *kfd_bo;
+> +
+> +       struct list_head                bo;
+>  };
+>
+>  static inline struct amdgpu_bo *ttm_to_amdgpu_bo(struct ttm_buffer_object *tbo)
+> diff --git a/drivers/gpu/drm/amd/amdgpu/cik_ih.c b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+> index 183d44a6583c..df385ffc9768 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+> @@ -310,7 +310,6 @@ static int cik_ih_sw_fini(void *handle)
+>         struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>
+>         amdgpu_irq_fini_sw(adev);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>         amdgpu_irq_remove_domain(adev);
+>
+>         return 0;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/cz_ih.c b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+> index d32743949003..b8c47e0cf37a 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+> @@ -302,7 +302,6 @@ static int cz_ih_sw_fini(void *handle)
+>         struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>
+>         amdgpu_irq_fini_sw(adev);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>         amdgpu_irq_remove_domain(adev);
+>
+>         return 0;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+> index da96c6013477..ddfe4eaeea05 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+> @@ -301,7 +301,6 @@ static int iceland_ih_sw_fini(void *handle)
+>         struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>
+>         amdgpu_irq_fini_sw(adev);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>         amdgpu_irq_remove_domain(adev);
+>
+>         return 0;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+> index 5eea4550b856..e171a9e78544 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+> @@ -571,9 +571,6 @@ static int navi10_ih_sw_fini(void *handle)
+>
+>         amdgpu_irq_fini_sw(adev);
+>         amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+
+Shouldn't the soft ring be removed as well?
+
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+> index 751307f3252c..9a24f17a5750 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+> @@ -176,7 +176,6 @@ static int si_ih_sw_fini(void *handle)
+>         struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>
+>         amdgpu_irq_fini_sw(adev);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+> index 973d80ec7f6c..b08905d1c00f 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+> @@ -313,7 +313,6 @@ static int tonga_ih_sw_fini(void *handle)
+>         struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>
+>         amdgpu_irq_fini_sw(adev);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>         amdgpu_irq_remove_domain(adev);
+>
+>         return 0;
+> diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> index 2d0094c276ca..8c8abc00f710 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> @@ -525,9 +525,6 @@ static int vega10_ih_sw_fini(void *handle)
+>
+>         amdgpu_irq_fini_sw(adev);
+>         amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+
+Same here?
+
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>
+>         return 0;
+>  }
+> --
+> 2.25.1
 >
 > _______________________________________________
 > amd-gfx mailing list
