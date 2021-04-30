@@ -2,165 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C606136FDA8
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 17:22:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1E3236FDCA
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 17:32:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbhD3PXF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Apr 2021 11:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231318AbhD3PXB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Apr 2021 11:23:01 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56BDC06174A;
-        Fri, 30 Apr 2021 08:22:12 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id j189so2623506pgd.13;
-        Fri, 30 Apr 2021 08:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=S1RYFyHGpmuSBGVIKtF2cRB9Rxzfh1Zoo7ktedPdj8k=;
-        b=ijh00j9ZNOdICIFEeE+Blmg5hYFoxcaZjUS7BVCRANVXzftCwMyg1l2wjuJn6FSKxN
-         mtKQFNFrLUIQkI+79cfkoryy6c+jjXYziq7uN31OnEZELbSRLhG7gvulAeAJH2uVz9Bs
-         t20A6nUKrPZfc2IoNcFc9mG+/Zi+bL1FlEetVfY63TZjlfHkYWKToijLxuzK9WC4K6kV
-         SEC3QENjgaG+mqDhc2d/+AKaShFGrOgsyvBB5s7+3FlXcPItQnUouaEt6hsAUYPBen8F
-         UMTGrtzk1kq3MRb+KfWYkdWPq3whQSwyqbZfjXUjR4BzHW9FujJ0+QNGlqoICJKFHIga
-         hUOg==
+        id S229877AbhD3PdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Apr 2021 11:33:18 -0400
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:38655 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229821AbhD3PdR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Apr 2021 11:33:17 -0400
+Received: by mail-ot1-f46.google.com with SMTP id v23-20020a9d60570000b02902a53bac99a3so9973793otj.5;
+        Fri, 30 Apr 2021 08:32:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=S1RYFyHGpmuSBGVIKtF2cRB9Rxzfh1Zoo7ktedPdj8k=;
-        b=I4snRSZzaqET7KD02UDR1MflmXPa/0ea+c28aEES7u3pJF69fE8cV70GbIb6ItgYYG
-         xWdBib+WZknCZWyHFHMu9F6Gl3J7y1CBK1RTxAB9hTFRGAn1dHbVzASFatyikHC2Ru4N
-         1LKqvaCrXBxD7Km/89cvs+Tz+w60WrIXAvVq1g6PnlgiVfZhtafzAASkl5QPqMa4PoE6
-         WEpBq3uE90Im+cNrqXRUsITUIJY+OMW8VWfaW5ZA9wOulRLcr2P+i8qukd51i9WIwsHP
-         w4rjbsoqwzTV9ZfwaaLXKCeMro4sGRmmy8VVTS8LWilWRcKdO+fRWlsNIRr7xZv0E57T
-         Rthg==
-X-Gm-Message-State: AOAM533gpgfrmfN5DeQTTe3cp91yTmKAqx/WjjXAp8VBQqgR6AwntwAJ
-        oMomjCl80rUW7u1DZakGP8Y=
-X-Google-Smtp-Source: ABdhPJx21aO2czAx4J1Wd952RkDiotpIsu+3OxvKIr7dWfLKb4o/OwejjnrGvx2h0udaMDO/3pHcBw==
-X-Received: by 2002:a63:4442:: with SMTP id t2mr5220942pgk.232.1619796132567;
-        Fri, 30 Apr 2021 08:22:12 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id q128sm2543034pfb.67.2021.04.30.08.22.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FCLS1GLyQlkGp3zu1BU9RazGdGYYmfQhtwc4wI/aLgg=;
+        b=h8WWQONUWlWcfq0FNnxp3nNMiq/PN62EFCfaYzF8uCs4CysqopJmWSNq8etjk6TgPk
+         kj0hJg4o9pSXdbCG4CHVJT1KtXgaA2Ni1mxw+dyHBcdANQ3XnALzqwOybJYaA6Y4DBbn
+         1J9XrqGrXJQGJiYvUgURcI3erOmNmZLXFOYU2UI5GhIlwU1RJddrMZzqWd8E40odeY+Q
+         vuy+sx623N0DYH+moc1jKCPt8B2OadfN+RBHwJh4oIsdkyEh6szePTySZfum593BAHHl
+         S1rE4jRDFLQWQHxjpWgopYYuBLdu7lN2HFFF5R1EW7OsV4G9l37tLqIfhGYTlTgVp5w0
+         OdHQ==
+X-Gm-Message-State: AOAM533l61+vl8NXR4mLbp6EYLjBjUbjRWA6YCca6Ww/L7hgdGRE0Ohu
+        uhodIl3WciUbB9vAAcvY4uvuhccIwQ==
+X-Google-Smtp-Source: ABdhPJxspi8koawi87rDZP8S4ambTTkmJXTP/reXKGk5kGoiZqXjRxtH1DFAiLza5teOv/WVW/j/Wg==
+X-Received: by 2002:a9d:d0f:: with SMTP id 15mr564205oti.255.1619796747191;
+        Fri, 30 Apr 2021 08:32:27 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id j22sm757610otr.0.2021.04.30.08.32.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Apr 2021 08:22:12 -0700 (PDT)
-From:   Jim Quinlan <jim2101024@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        jim2101024@gmail.com
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        Fri, 30 Apr 2021 08:32:26 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 3/3] PCI: brcmstb: Use reset/rearm instead of deassert/assert
-Date:   Fri, 30 Apr 2021 11:21:56 -0400
-Message-Id: <20210430152156.21162-4-jim2101024@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210430152156.21162-1-jim2101024@gmail.com>
-References: <20210430152156.21162-1-jim2101024@gmail.com>
+        linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: [PATCH] dt-bindings: Remove unused Sigma Designs Tango bindings
+Date:   Fri, 30 Apr 2021 10:32:25 -0500
+Message-Id: <20210430153225.3366000-1-robh@kernel.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Broadcom STB PCIe RC uses a reset control "rescal" for certain chips.
-The "rescal" implements a "pulse reset" so using assert/deassert is wrong
-for this device.  Instead, we use reset/rearm.  We need to use rearm so
-that we can reset it after a suspend/resume cycle; w/o using "rearm", the
-"rescal" device will only ever fire once.
+The Sigma Designs Tango support has been removed, but 2 binding docs
+for NAND and PCIe were missed. Remove them.
 
-Of course for suspend/resume to work we also need to put the reset/rearm
-calls in the suspend and resume routines.
-
-Fixes: 740d6c3708a9 ("PCI: brcmstb: Add control of rescal reset")
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/mtd/tango-nand.txt    | 38 -------------------
+ .../devicetree/bindings/pci/tango-pcie.txt    | 29 --------------
+ 2 files changed, 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/tango-nand.txt
+ delete mode 100644 Documentation/devicetree/bindings/pci/tango-pcie.txt
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index e330e6811f0b..3b35d629035e 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1148,6 +1148,7 @@ static int brcm_pcie_suspend(struct device *dev)
- 
- 	brcm_pcie_turn_off(pcie);
- 	ret = brcm_phy_stop(pcie);
-+	reset_control_rearm(pcie->rescal);
- 	clk_disable_unprepare(pcie->clk);
- 
- 	return ret;
-@@ -1163,9 +1164,13 @@ static int brcm_pcie_resume(struct device *dev)
- 	base = pcie->base;
- 	clk_prepare_enable(pcie->clk);
- 
-+	ret = reset_control_reset(pcie->rescal);
-+	if (ret)
-+		goto err_disable_clk;
-+
- 	ret = brcm_phy_start(pcie);
- 	if (ret)
--		goto err;
-+		goto err_reset;
- 
- 	/* Take bridge out of reset so we can access the SERDES reg */
- 	pcie->bridge_sw_init_set(pcie, 0);
-@@ -1180,14 +1185,16 @@ static int brcm_pcie_resume(struct device *dev)
- 
- 	ret = brcm_pcie_setup(pcie);
- 	if (ret)
--		goto err;
-+		goto err_reset;
- 
- 	if (pcie->msi)
- 		brcm_msi_set_regs(pcie->msi);
- 
- 	return 0;
- 
--err:
-+err_reset:
-+	reset_control_rearm(pcie->rescal);
-+err_disable_clk:
- 	clk_disable_unprepare(pcie->clk);
- 	return ret;
- }
-@@ -1197,7 +1204,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
- 	brcm_msi_remove(pcie);
- 	brcm_pcie_turn_off(pcie);
- 	brcm_phy_stop(pcie);
--	reset_control_assert(pcie->rescal);
-+	reset_control_rearm(pcie->rescal);
- 	clk_disable_unprepare(pcie->clk);
- }
- 
-@@ -1278,13 +1285,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		return PTR_ERR(pcie->perst_reset);
- 	}
- 
--	ret = reset_control_deassert(pcie->rescal);
-+	ret = reset_control_reset(pcie->rescal);
- 	if (ret)
- 		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
- 
- 	ret = brcm_phy_start(pcie);
- 	if (ret) {
--		reset_control_assert(pcie->rescal);
-+		reset_control_rearm(pcie->rescal);
- 		clk_disable_unprepare(pcie->clk);
- 		return ret;
- 	}
+diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+deleted file mode 100644
+index 91c8420241af..000000000000
+--- a/Documentation/devicetree/bindings/mtd/tango-nand.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-Sigma Designs Tango4 NAND Flash Controller (NFC)
+-
+-Required properties:
+-
+-- compatible: "sigma,smp8758-nand"
+-- reg: address/size of nfc_reg, nfc_mem, and pbus_reg
+-- dmas: reference to the DMA channel used by the controller
+-- dma-names: "rxtx"
+-- clocks: reference to the system clock
+-- #address-cells: <1>
+-- #size-cells: <0>
+-
+-Children nodes represent the available NAND chips.
+-See Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
+-
+-Example:
+-
+-	nandc: nand-controller@2c000 {
+-		compatible = "sigma,smp8758-nand";
+-		reg = <0x2c000 0x30>, <0x2d000 0x800>, <0x20000 0x1000>;
+-		dmas = <&dma0 3>;
+-		dma-names = "rxtx";
+-		clocks = <&clkgen SYS_CLK>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		nand@0 {
+-			reg = <0>; /* CS0 */
+-			nand-ecc-strength = <14>;
+-			nand-ecc-step-size = <1024>;
+-		};
+-
+-		nand@1 {
+-			reg = <1>; /* CS1 */
+-			nand-ecc-strength = <14>;
+-			nand-ecc-step-size = <1024>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/tango-pcie.txt b/Documentation/devicetree/bindings/pci/tango-pcie.txt
+deleted file mode 100644
+index 244683836a79..000000000000
+--- a/Documentation/devicetree/bindings/pci/tango-pcie.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-Sigma Designs Tango PCIe controller
+-
+-Required properties:
+-
+-- compatible: "sigma,smp8759-pcie"
+-- reg: address/size of PCI configuration space, address/size of register area
+-- bus-range: defined by size of PCI configuration space
+-- device_type: "pci"
+-- #size-cells: <2>
+-- #address-cells: <3>
+-- msi-controller
+-- ranges: translation from system to bus addresses
+-- interrupts: spec for misc interrupts, spec for MSI
+-
+-Example:
+-
+-	pcie@2e000 {
+-		compatible = "sigma,smp8759-pcie";
+-		reg = <0x50000000 0x400000>, <0x2e000 0x100>;
+-		bus-range = <0 3>;
+-		device_type = "pci";
+-		#size-cells = <2>;
+-		#address-cells = <3>;
+-		msi-controller;
+-		ranges = <0x02000000 0x0 0x00400000  0x50400000  0x0 0x3c00000>;
+-		interrupts =
+-			<54 IRQ_TYPE_LEVEL_HIGH>, /* misc interrupts */
+-			<55 IRQ_TYPE_LEVEL_HIGH>; /* MSI */
+-	};
 -- 
-2.17.1
+2.27.0
 
