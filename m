@@ -2,85 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2487037000C
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 19:57:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED48370060
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 20:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229990AbhD3R6O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Apr 2021 13:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229954AbhD3R6N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 30 Apr 2021 13:58:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CE6B161458;
-        Fri, 30 Apr 2021 17:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619805445;
-        bh=8YXfNjJ7588UGJ+nN1d9RL6GvR7HNPZ2oTdqIiPqTY8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WtA4Eu579NK4WcKptJrnzD4VmwL6U9+GtBi6UNnkn7Yh9UvA3JY/4rvyNR6dkOt44
-         ds1PEwUm17+TS75J1sLIoEMkPW5FLLjymGLpEbkHeAfH+wS7agT9eMSX34msbRJ4Og
-         m4CMJIFEUmQTEFSCgkr8gK1fcu+KcjDL1m5H9BqS2I3qAMc/opm0VbLCUdH5+fP7Bd
-         Eiqx2fW/hPyLTFAuwkOJ543CI7KYI/9ZTrx5IBJpSUSWEiyQgXmGTxvcrwPsFm6+EI
-         qEeIs0PK4J57wzdksPkKhV1nQs/qZg7b96C9es5Sx1GcXCytFMgOTVfSXwXwQ1K5br
-         XcscIoyJfDO0g==
-Date:   Fri, 30 Apr 2021 12:57:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Prike Liang <Prike.Liang@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rajat Jain <rajatja@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme: fix unused variable warning
-Message-ID: <20210430175723.GA664165@bjorn-Precision-5520>
+        id S231204AbhD3SW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Apr 2021 14:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229750AbhD3SWZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Apr 2021 14:22:25 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC67C06174A;
+        Fri, 30 Apr 2021 11:21:37 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1619806893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=As7DtcWhMuF7h0TJSZIn85h3WNKtXg9d7v6tEvOH+qs=;
+        b=Hf0zeuoMznsXlwihwhVMhTEAKd/4k0Ku0M8qkgHH8iMN7iFVDrrBrlgDLNn/uPoy1iKACk
+        iV7CRZB9Ietru5dVJrPzai9l+ANGERnoM8JgXjnkJPawpmserZobzznAl4wU8HbP20NjTi
+        gRqE9n6dM5ioAwOCZzVGZkF7OsPPc/k3SqU4YMn9gzpCgcbhffPUGSRy5PXGDSRcu5/oUG
+        wMHNT2SxUnZSEpx3ujEh29oxbC6yg30BKCWoswhigidBvafirSYlgeZ/dMOPKhz0vEmMTg
+        dznmUDpTXBgikHUhP3rSy7pyiXwMs922CziEhTbkikOCwWL8a0FjSqJ788N/7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1619806893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=As7DtcWhMuF7h0TJSZIn85h3WNKtXg9d7v6tEvOH+qs=;
+        b=FfdE0kUFkRqEf4ebx700jPou/iScTJY9te1G3qeOnRcZC57twD9Fxky/GZRsh+TKE1KvJx
+        INh75Tmvp3C5AmBA==
+To:     Nitesh Lal <nilal@redhat.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "frederic\@kernel.org" <frederic@kernel.org>,
+        "juri.lelli\@redhat.com" <juri.lelli@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>, abelits@marvell.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt\@goodmis.org" <rostedt@goodmis.org>,
+        "mingo\@kernel.org" <mingo@kernel.org>,
+        "peterz\@infradead.org" <peterz@infradead.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "akpm\@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr\@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "stephen\@networkplumber.org" <stephen@networkplumber.org>,
+        "rppt\@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "jinyuqi\@huawei.com" <jinyuqi@huawei.com>,
+        "zhangshaokun\@hisilicon.com" <zhangshaokun@hisilicon.com>,
+        netdev@vger.kernel.org, chris.friesen@windriver.com
+Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping CPUs
+In-Reply-To: <CAFki+LmmRyvOkWoNNLk5JCwtaTnabyaRUKxnS+wyAk_kj8wzyw@mail.gmail.com>
+References: <20200625223443.2684-1-nitesh@redhat.com> <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com> <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de> <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de> <20210204181546.GA30113@fuller.cnet> <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com> <20210204190647.GA32868@fuller.cnet> <d8884413-84b4-b204-85c5-810342807d21@redhat.com> <87y2g26tnt.fsf@nanos.tec.linutronix.de> <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com> <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com> <07c04bc7-27f0-9c07-9f9e-2d1a450714ef@redhat.com> <20210406102207.0000485c@intel.com> <1a044a14-0884-eedb-5d30-28b4bec24b23@redhat.com> <20210414091100.000033cf@intel.com> <54ecc470-b205-ea86-1fc3-849c5b144b3b@redhat.com> <CAFki+Lm0W_brLu31epqD3gAV+WNKOJfVDfX2M8ZM__aj3nv9uA@mail.gmail.com> <87czucfdtf.ffs@nanos.tec.linutronix.de> <CAFki+LmmRyvOkWoNNLk5JCwtaTnabyaRUKxnS+wyAk_kj8wzyw@mail.gmail.com>
+Date:   Fri, 30 Apr 2021 20:21:33 +0200
+Message-ID: <87sg37eiqa.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210421140436.3882411-1-arnd@kernel.org>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 04:04:20PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The function was introduced with a variable that is never referenced:
-> 
-> drivers/pci/quirks.c: In function 'quirk_amd_nvme_fixup':
-> drivers/pci/quirks.c:312:25: warning: unused variable 'rdev' [-Wunused-variable]
-> 
-> Fixes: 9597624ef606 ("nvme: put some AMD PCIE downstream NVME device to simple suspend/resume path")
+Nitesh,
 
-I guess this refers to https://lore.kernel.org/linux-nvme/1618458725-17164-1-git-send-email-Prike.Liang@amd.com/
+On Fri, Apr 30 2021 at 12:14, Nitesh Lal wrote:
+> Based on this analysis and the fact that with your re-work the interrupts
+> seems to be naturally spread across the CPUs, will it be safe to revert
+> Jesse's patch
+>
+> e2e64a932 genirq: Set initial affinity in irq_set_affinity_hint()
+>
+> as it overwrites the previously set IRQ affinity mask for some of the
+> devices?
 
-But I don't know what the SHA1 means; I can't find it in linux-next or
-my tree.
+That's a good question. My gut feeling says yes.
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/pci/quirks.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 2e24dced699a..c86ede081534 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -309,8 +309,6 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD,	PCI_DEVICE_ID_AMD_8151_0,	quirk_nopci
->  
->  static void quirk_amd_nvme_fixup(struct pci_dev *dev)
->  {
-> -	struct pci_dev *rdev;
-> -
->  	dev->dev_flags |= PCI_DEV_FLAGS_AMD_NVME_SIMPLE_SUSPEND;
->  	pci_info(dev, "AMD simple suspend opt enabled\n");
->  
-> -- 
-> 2.29.2
-> 
+> IMHO if we think that this patch is still solving some issue other than
+> what Jesse has mentioned then perhaps we should reproduce that and fix it
+> directly from the request_irq code path.
+
+Makes sense.
+
+Thanks,
+
+        tglx
