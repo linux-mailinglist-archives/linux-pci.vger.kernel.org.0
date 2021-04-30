@@ -2,111 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9DAF36F9D4
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 14:15:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A5CC36FB38
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Apr 2021 15:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbhD3MQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Apr 2021 08:16:41 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:57325 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbhD3MQk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Apr 2021 08:16:40 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 82EB11031F24D;
-        Fri, 30 Apr 2021 14:15:49 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 47E6F28CBA; Fri, 30 Apr 2021 14:15:49 +0200 (CEST)
-Date:   Fri, 30 Apr 2021 14:15:49 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ethan Zhao <haifeng.zhao@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH] PCI: pciehp: Ignore Link Down/Up caused by DPC
-Message-ID: <20210430121549.GA10784@wunner.de>
-References: <b70e19324bbdded90b728a5687aa78dc17c20306.1616921228.git.lukas@wunner.de>
- <4177f0be-5859-9a71-da06-2e67641568d7@hisilicon.com>
- <20210428144041.GA27967@wunner.de>
- <c7932c4e-81b1-279d-48df-5d621efff757@hisilicon.com>
- <20210429194214.GA22639@wunner.de>
- <98afb95c-2735-b1fd-3261-7d701b6a0801@hisilicon.com>
+        id S232209AbhD3NLr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Apr 2021 09:11:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40797 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230020AbhD3NLq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Apr 2021 09:11:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1619788258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eFmN7GXhyvWoD/0hmIYm1FOaJDGHK8SDles6jaDUx50=;
+        b=MB4iQSeoEVIQTO9+zBQN3ZLteGwcmlzd5MkZCkM4+1nOLdxWaLbYIXAuADCZU3k/+DGIRx
+        Ch9WuFWbz4KvXyZ54WgoUbP3FQElM3uRhUmN7iT0HDEhTuAnvGb0IhbOh3XPMIYBZ0DMEt
+        Syer9NBP93VX9c/pUghNUdpZ3W3APaI=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-GBB6TbJaO26Tf94a519zvA-1; Fri, 30 Apr 2021 09:10:56 -0400
+X-MC-Unique: GBB6TbJaO26Tf94a519zvA-1
+Received: by mail-lf1-f70.google.com with SMTP id w21-20020a0565120b15b02901ab3c1d6169so20167418lfu.2
+        for <linux-pci@vger.kernel.org>; Fri, 30 Apr 2021 06:10:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eFmN7GXhyvWoD/0hmIYm1FOaJDGHK8SDles6jaDUx50=;
+        b=QHlhAz0q6l5MurdqhQkRGCvkYfSDxbQDRz1gqwwxbuU3qt8CDsc6gyO5H1ljiLO9gU
+         9CspYYZUkO6DfHkFEWYHm77a0KgJ/T8mOgnzUW2J+cl7phzoNrmbkVoJk9/qEUrMenFW
+         IIA2ngd4AM3aLfeCwKjnyoleWXBv7d19qFKwFQp6nMnCdj1W4LSQt4R0BKEozQ96XICF
+         Bj7EZYvXyF9YDLX78WSVEO0GlGlJWd5kcewzZ8+IP0sQ7ZtG5xqzIRnAUU9h5SvOLDi7
+         OBdxO90uAd4akjm10jNh2sldztv1N82M+5h7kdx/shBFZOu/hup8K6+bbjbDDieKdeab
+         O/Jg==
+X-Gm-Message-State: AOAM532kNqss9uopWdzKHaIahedaDtoys+qgcCLlrGon77S4Zkt6cEBv
+        gh/GgeiN2r14/frXckND3oS24RctdPnbG2Cxw3AT96bNlLNWcnVxrO9mPvwkW9uvsKfK0sggOYD
+        CPNBcJyaSYqO8rBnaOPigCB9DxbcyrWT9vrnc
+X-Received: by 2002:a2e:a71e:: with SMTP id s30mr3619798lje.137.1619788255089;
+        Fri, 30 Apr 2021 06:10:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJqc1hlP2rkr8JKdzvyVvOdVHZomdQvDwhT1frYVIrIzVVBNex0m3GwjpZjhRo3TTecIKglydEAUtmkI34+Ic=
+X-Received: by 2002:a2e:a71e:: with SMTP id s30mr3619779lje.137.1619788254917;
+ Fri, 30 Apr 2021 06:10:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98afb95c-2735-b1fd-3261-7d701b6a0801@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200625223443.2684-1-nitesh@redhat.com> <20200625223443.2684-2-nitesh@redhat.com>
+ <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com> <20210127121939.GA54725@fuller.cnet>
+ <87r1m5can2.fsf@nanos.tec.linutronix.de> <20210128165903.GB38339@fuller.cnet>
+ <87h7n0de5a.fsf@nanos.tec.linutronix.de> <20210204181546.GA30113@fuller.cnet>
+ <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com> <20210204190647.GA32868@fuller.cnet>
+ <d8884413-84b4-b204-85c5-810342807d21@redhat.com> <87y2g26tnt.fsf@nanos.tec.linutronix.de>
+ <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com> <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
+ <07c04bc7-27f0-9c07-9f9e-2d1a450714ef@redhat.com> <20210406102207.0000485c@intel.com>
+ <1a044a14-0884-eedb-5d30-28b4bec24b23@redhat.com> <20210414091100.000033cf@intel.com>
+ <54ecc470-b205-ea86-1fc3-849c5b144b3b@redhat.com> <CAFki+Lm0W_brLu31epqD3gAV+WNKOJfVDfX2M8ZM__aj3nv9uA@mail.gmail.com>
+ <20210429184802.0000641e@intel.com>
+In-Reply-To: <20210429184802.0000641e@intel.com>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Fri, 30 Apr 2021 09:10:40 -0400
+Message-ID: <CAFki+LnbX6bJPh18iowxSsC=W8A3D5PXSN4xBab0Qbxm-JjBew@mail.gmail.com>
+Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping CPUs
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>, abelits@marvell.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
+        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
+        netdev@vger.kernel.org, chris.friesen@windriver.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 04:47:54PM +0800, Yicong Yang wrote:
-> On 2021/4/30 3:42, Lukas Wunner wrote:
-> > The 3000 msec were chosen arbitrarily.  I couldn't imagine that
-> > it would ever take longer than that.  The spec does not seem to
-> > mandate a time limit for DPC recovery.  But we do need a timeout
-> > because the DPC Trigger Status bit may never clear and then pciehp
-> > would wait indefinitely.  This can happen if dpc_wait_rp_inactive()
-> > fails or perhaps because the hardware is buggy.
-> 
-> The DPC recovery process will not be blocked indefinitely. What about
-> wait until the DPC process is finished or until the dpc_reset_link()
-> is finished? We can try to up the link if the DPC recovery failed.
+On Thu, Apr 29, 2021 at 9:48 PM Jesse Brandeburg
+<jesse.brandeburg@intel.com> wrote:
+>
+> Nitesh Lal wrote:
+>
+> > @Jesse do you think the Part-1 findings explain the behavior that you have
+> > observed in the past?
+> >
+> > Also, let me know if there are any suggestions or experiments to try here.
+>
+> Wow Nitesh, nice work! That's quite a bit of spelunking you had to do
+> there!
+>
+> Your results that show the older kernels with ranged affinity issues is
+> consistent with what I remember from that time, and the original
+> problem.
 
-As I've indicated above, there's a condition when DPC never completes:
+That's nice.
 
-According to the PCIe Base Spec, sec. 6.2.10,
+>
+> I'm glad to see that a) Thomas fixed the kernel to even do better than
+> ranged affinity masks, and that b) if you revert my patch, the new
+> behavior is better and still maintains the fix from a).
 
-   "After DPC has been triggered in a Root Port that supports RP Extensions
-    for DPC, the Root Port may require some time to quiesce and clean up
-    its internal activities, such as those associated with DMA read Requests.
-    When the DPC Trigger Status bit is Set and the DPC RP Busy bit is Set,
-    software must leave the Root Port in DPC until the DPC RP Busy bit
-    reads 0b."
+Right, the interrupts are naturally spread now.
 
-The spec does not mandate a time limit until DPC RP Busy clears:
+>
+> For me this explains the whole picture and makes me feel comfortable
+> with the patch that reverts the initial affinity mask (that also
+> introduces a subtle bug with the reserved CPUs that I believe you've
+> noted already).
+>
 
-   "The DPC RP Busy bit is a means for hardware to indicate to software
-    that the RP needs to remain in DPC containment while the RP does
-    some internal cleanup and quiescing activities. While the details
-    of these activities are implementation specific, the activities will
-    typically complete within a few microseconds or less. However, under
-    worst-case conditions such as those that might occur with certain
-    internal errors in large systems, the busy period might extend
-    substantially, possibly into multiple seconds."
+Thank you for confirming!
 
-Thus, dpc_wait_rp_inactive() polls every 10 msec (for up to HZ, i.e. 1 sec)
-whether PCI_EXP_DPC_RP_BUSY has been cleared.  If it does not clear
-within 1 sec, the function returns -EBUSY to its caller dpc_reset_link().
-Note that according to the spec, we're not allowed to clear the
-Trigger Status bit as long as the DPC RP Busy bit is set, hence
-dpc_reset_link() errors out without clearing PCI_EXP_DPC_STATUS_TRIGGER.
+--
+Nitesh
 
-Because pciehp waits for that bit to clear, it may end up waiting
-indefinitely for DPC to complete.  That's not acceptable, so we do
-need a timeout to allow pciehp to progress.
-
-
-> I noticed the hotplug interrupt arrives prior to the DPC and then the
-> wait begins. DPC will clear the Trigger Status in its irq thread.
-> So not all the time is elapsed by the hardware recovery, but also by
-> the software process. Considering it's in the irq thread, if we are
-> preempted and clear the status slower, then we may be timed out.
-
-That is correct.  If the system is super busy then there's a chance
-that pciehp may time out because the DPC IRQ thread wasn't scheduled.
-So the timeout needs to be long enough to accommodate for that.
-
-Thanks,
-
-Lukas
