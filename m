@@ -2,210 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D72DF3706C0
-	for <lists+linux-pci@lfdr.de>; Sat,  1 May 2021 12:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03643370771
+	for <lists+linux-pci@lfdr.de>; Sat,  1 May 2021 15:43:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231278AbhEAKFq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 May 2021 06:05:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:26340 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231252AbhEAKFq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 1 May 2021 06:05:46 -0400
-IronPort-SDR: 0yvnjs0273pDgIQYwgc5zVc1d0ecwvC77u7xXaVeritcLSgugZyz4CNzEP3jKKpDO4PklSHYcH
- 1piHN88SHAFA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9970"; a="177614864"
-X-IronPort-AV: E=Sophos;i="5.82,264,1613462400"; 
-   d="scan'208";a="177614864"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2021 03:04:56 -0700
-IronPort-SDR: ohP+uqSrhVFGvygwCP90MwN7nnYTuU34kpKljFNobk11oZhq3LFUIL/nfZTWHcKPyDZ2aBdvTW
- 0Gi5xsXYGnsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,264,1613462400"; 
-   d="scan'208";a="431861456"
-Received: from lkp-server01.sh.intel.com (HELO a48ff7ddd223) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 01 May 2021 03:04:54 -0700
-Received: from kbuild by a48ff7ddd223 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lcmUY-0008WH-7d; Sat, 01 May 2021 10:04:54 +0000
-Date:   Sat, 01 May 2021 18:04:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 191f214ad36a21cf5e88a90ca849ff29fef27d39
-Message-ID: <608d27bf.yd6q7lOfSvupZCBk%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S231876AbhEANoR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 May 2021 09:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232131AbhEANoP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 May 2021 09:44:15 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45414C06174A
+        for <linux-pci@vger.kernel.org>; Sat,  1 May 2021 06:43:24 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 4-20020a05600c26c4b0290146e1feccd8so804330wmv.1
+        for <linux-pci@vger.kernel.org>; Sat, 01 May 2021 06:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=1q+tmNEi+/p/jX9Zo9gmqbdVRaBJ6gVM369VI6F33Rw=;
+        b=HwOAc3sqNhOZ06cDxu/9ZCCSyfzVjRard8b1HD8KT+uOl0zCx51X/56SJ9gymqi3xF
+         eafpKxKuDeUaGLezMoc3RARWmmVv7bXOmQo0m5Iv2A4St6YI7DWyzfTdHc7gaW7HxXlr
+         eHAVfbvWtLr799538SWMY52RsStjYR3U0MTic96kK/7TEsWg0uansFHz5MTQwYIzGe4c
+         vrbwEdPem35A1chYF5pFILlJ5zDZZyl9LfYDE0F9G11Paqkl4ob6tiYpgRp5zIy0D838
+         ctXNLFvM3Z+xH2OneDGoEbdivcrOWYE4qxdu4N8CZ8K/J5tvYYA8yuLRAU3TVSqOATN4
+         rUeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=1q+tmNEi+/p/jX9Zo9gmqbdVRaBJ6gVM369VI6F33Rw=;
+        b=a+T3QZIswMPG/qAJhid5Hhu6wdTzuGkWjI2yg2hYVdgY8nSZYoB0m9vXfqB0T1dtmW
+         Z4mEphE+ulajZUdoB/5EQHLJze+P51zFEXVo690OOfCGQn7+B9y84hYIIslxfuH8WX5E
+         wF5BXtTMe4qG/5NtLhQ3IqQjofqlGxY/HmV7NEhsZH3CmsziQoUnsCiHisnHujC8T8KC
+         gk6MqkoZt1xkEhZymJyNJtozSjGmsGqyL91AmNwl8AxH/n53YMukQszRsKi7g9KO1QXB
+         oWwvG33YFE0lcYYJuOvfaoN1VHgUBX4YPWbeAjEwHAMURh/WHogxR1GjA/YOvW9AZUi2
+         eeyA==
+X-Gm-Message-State: AOAM532OFOl56P68Qy3AVrBLrYJh3jymu9V0SvbNeEGc+ybr+sCKZCQn
+        Sl6hCuhW2g64RdDEg/ayKS3+iiE7kVJtfw==
+X-Google-Smtp-Source: ABdhPJwurq2qEgfEwdPpxEsMljWjGqYC1aEE7X92e1a00So1j7cSfy1CnUd132iEzlfaILVRGsn/GQ==
+X-Received: by 2002:a1c:f715:: with SMTP id v21mr11872161wmh.187.1619876602977;
+        Sat, 01 May 2021 06:43:22 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f38:4600:85cf:5643:a9e6:8be4? (p200300ea8f38460085cf5643a9e68be4.dip0.t-ipconnect.de. [2003:ea:8f38:4600:85cf:5643:a9e6:8be4])
+        by smtp.googlemail.com with ESMTPSA id j13sm7870780wrd.81.2021.05.01.06.43.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 May 2021 06:43:22 -0700 (PDT)
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI/VPD: Use unaligned access helpers in pci_vpd_read
+Message-ID: <6edebb53-b714-3205-6266-d02416fd3cfe@gmail.com>
+Date:   Sat, 1 May 2021 15:43:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 191f214ad36a21cf5e88a90ca849ff29fef27d39  Merge branch 'pci/tegra'
+With this patch we avoid some unnecessary looping and make the code
+better readable.
 
-elapsed time: 723m
-
-configs tested: 149
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-x86_64                           allyesconfig
-riscv                            allmodconfig
-i386                             allyesconfig
-riscv                            allyesconfig
-arm                          gemini_defconfig
-powerpc                 mpc832x_mds_defconfig
-arm                         palmz72_defconfig
-powerpc                     tqm8560_defconfig
-mips                     loongson1b_defconfig
-powerpc                     rainier_defconfig
-mips                       capcella_defconfig
-arm                  colibri_pxa270_defconfig
-arm                        shmobile_defconfig
-mips                malta_qemu_32r6_defconfig
-m68k                          multi_defconfig
-sh                           se7780_defconfig
-sh                           se7712_defconfig
-powerpc                      ppc40x_defconfig
-m68k                        m5407c3_defconfig
-sh                      rts7751r2d1_defconfig
-m68k                       m5208evb_defconfig
-powerpc                          g5_defconfig
-i386                                defconfig
-s390                             alldefconfig
-sh                           se7750_defconfig
-powerpc                    ge_imp3a_defconfig
-ia64                        generic_defconfig
-powerpc                      bamboo_defconfig
-arm                        oxnas_v6_defconfig
-mips                         rt305x_defconfig
-powerpc                      katmai_defconfig
-powerpc                     pseries_defconfig
-mips                      loongson3_defconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc                         ps3_defconfig
-powerpc                     tqm8541_defconfig
-arm                         axm55xx_defconfig
-mips                     decstation_defconfig
-arm                        trizeps4_defconfig
-arm                         cm_x300_defconfig
-m68k                          hp300_defconfig
-xtensa                         virt_defconfig
-arm                           sunxi_defconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-mips                        jmr3927_defconfig
-mips                          ath79_defconfig
-m68k                        stmark2_defconfig
-nds32                            alldefconfig
-arm                       mainstone_defconfig
-powerpc                     mpc83xx_defconfig
-h8300                               defconfig
-sh                           se7619_defconfig
-arm                       spear13xx_defconfig
-mips                           gcw0_defconfig
-powerpc                   lite5200b_defconfig
-xtensa                    smp_lx200_defconfig
-powerpc                  storcenter_defconfig
-sparc                       sparc32_defconfig
-arm                          pxa168_defconfig
-parisc                           alldefconfig
-powerpc                      mgcoge_defconfig
-arc                 nsimosci_hs_smp_defconfig
-powerpc                        fsp2_defconfig
-h8300                    h8300h-sim_defconfig
-sh                     magicpanelr2_defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a003-20210430
-x86_64               randconfig-a004-20210430
-x86_64               randconfig-a002-20210430
-x86_64               randconfig-a006-20210430
-x86_64               randconfig-a001-20210430
-x86_64               randconfig-a005-20210430
-i386                 randconfig-a004-20210430
-i386                 randconfig-a001-20210430
-i386                 randconfig-a003-20210430
-i386                 randconfig-a002-20210430
-i386                 randconfig-a005-20210430
-i386                 randconfig-a006-20210430
-i386                 randconfig-a003-20210501
-i386                 randconfig-a006-20210501
-i386                 randconfig-a001-20210501
-i386                 randconfig-a005-20210501
-i386                 randconfig-a004-20210501
-i386                 randconfig-a002-20210501
-i386                 randconfig-a013-20210430
-i386                 randconfig-a011-20210430
-i386                 randconfig-a016-20210430
-i386                 randconfig-a015-20210430
-i386                 randconfig-a012-20210430
-i386                 randconfig-a014-20210430
-i386                 randconfig-a013-20210501
-i386                 randconfig-a015-20210501
-i386                 randconfig-a016-20210501
-i386                 randconfig-a014-20210501
-i386                 randconfig-a011-20210501
-i386                 randconfig-a012-20210501
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a011-20210430
-x86_64               randconfig-a016-20210430
-x86_64               randconfig-a013-20210430
-x86_64               randconfig-a014-20210430
-x86_64               randconfig-a012-20210430
-x86_64               randconfig-a015-20210430
-
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/pci/vpd.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 741e7a505..0752505d7 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -163,12 +163,11 @@ static int pci_vpd_wait(struct pci_dev *dev)
+ }
+ 
+ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+-			    void *arg)
++			    void *buf)
+ {
+ 	struct pci_vpd *vpd = dev->vpd;
+ 	int ret;
+ 	loff_t end = pos + count;
+-	u8 *buf = arg;
+ 
+ 	if (pos < 0)
+ 		return -EINVAL;
+@@ -197,8 +196,8 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 		goto out;
+ 
+ 	while (pos < end) {
++		unsigned int len, skip;
+ 		u32 val;
+-		unsigned int i, skip;
+ 
+ 		ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
+ 						 pos & ~3);
+@@ -215,14 +214,19 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 			break;
+ 
+ 		skip = pos & 3;
+-		for (i = 0;  i < sizeof(u32); i++) {
+-			if (i >= skip) {
+-				*buf++ = val;
+-				if (++pos == end)
+-					break;
+-			}
+-			val >>= 8;
++		len = min_t(unsigned int, 4 - skip, end - pos);
++
++		if (len == 4)  {
++			put_unaligned_le32(val, buf);
++		} else {
++			u8 tmpbuf[4];
++
++			put_unaligned_le32(val, tmpbuf);
++			memcpy(buf, tmpbuf + skip, len);
+ 		}
++
++		buf += len;
++		pos += len;
+ 	}
+ out:
+ 	mutex_unlock(&vpd->lock);
+-- 
+2.31.1
+
