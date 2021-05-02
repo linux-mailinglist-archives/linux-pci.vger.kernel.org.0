@@ -2,187 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A3C93708D8
-	for <lists+linux-pci@lfdr.de>; Sat,  1 May 2021 21:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40021370986
+	for <lists+linux-pci@lfdr.de>; Sun,  2 May 2021 03:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231603AbhEATyG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 May 2021 15:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231629AbhEATyG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 May 2021 15:54:06 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E34C06174A
-        for <linux-pci@vger.kernel.org>; Sat,  1 May 2021 12:53:14 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id p6-20020a05600c3586b029014131bbe5c7so3473247wmq.3
-        for <linux-pci@vger.kernel.org>; Sat, 01 May 2021 12:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C7dBD4oct0Dk9pEr7PM70Vrp3waHV0G6nXeHs3MJYK0=;
-        b=jBer/R1SLBpuPWk4VLJ0OwAh98t8CQklmAphssDvTz5H6L4+0gYXSv6lO+KL8RqkUG
-         MyxwtbhOct0JoWmkG7n6EghhSEQRHNr3Ehy6xKOv/FWBQSdQgy48J5q8/AqUh5ZqQLYA
-         ik5yR7vqGm+AELTo/DCbBSC3t6Xo1Ypth8KfpSQsKDsY2gi1kYgVuqyVH9mhEHx9ijzW
-         Xr4TTs3LgtWWVX4UKCcam5dFx9ZMjreFihvKh80U7+2c0U6I1e7FEbvLh+k5z2rwo3em
-         0gSKIg2nqcXOaIjvQdGahxg+hkWUsCYPu0wqNA60bbaM/Dvg/7KAso8TRvDpeialxCcE
-         8FcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C7dBD4oct0Dk9pEr7PM70Vrp3waHV0G6nXeHs3MJYK0=;
-        b=txlRzWjEcRGaZM/71NEEmPgmSrA481zuocCQT95JJ3fK8hO+UlQzL5P14hjzQag2N3
-         xiVTwef+IUk/bJIWFw+aH5827vEJ95y0xuNfqF/zyfPpKiHMnSB/bgDAcnhdalbD426Q
-         b0Oica8nRnJ23ES63gUImwE7NU6hXazqrLC3TdDn6LmBWd+YsAPO/iwEMAAPQoiGy2y0
-         jmN8SXtuEwszi3xsD/b2b6S1gCiLGq6dPqV7SO7ZAMo92gJFBnLFIZ/7IpSjlmuv/G/U
-         0s6O/SgsUNMTKBWXis33EN8YC7PDGC/D3mHm0iYsJgnuhczrUBN8VlqLqODhhqBAv+df
-         QqBw==
-X-Gm-Message-State: AOAM530f7/90CNxcevkj3wNGKEMutm80QkopcwA5UttkTIIIvRhR6Q4F
-        2xTE41JfWO3fkhalBNtAnHwkMhv1U4E2/A==
-X-Google-Smtp-Source: ABdhPJyt5hYcwhvfcsH4AeA1eE3ZwY0YDdqbOzfOvAKO3scPQI0kT415t7r7WFG5uKsVerKQF0HrIA==
-X-Received: by 2002:a05:600c:4f14:: with SMTP id l20mr13091379wmq.150.1619898792467;
-        Sat, 01 May 2021 12:53:12 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f38:4600:85cf:5643:a9e6:8be4? (p200300ea8f38460085cf5643a9e68be4.dip0.t-ipconnect.de. [2003:ea:8f38:4600:85cf:5643:a9e6:8be4])
-        by smtp.googlemail.com with ESMTPSA id q16sm6437350wmj.24.2021.05.01.12.53.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 May 2021 12:53:11 -0700 (PDT)
-Subject: Re: [PATCH] PCI/VPD: Use unaligned access helpers in pci_vpd_read
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <6edebb53-b714-3205-6266-d02416fd3cfe@gmail.com>
- <202105020008.4NAsuaZ4-lkp@intel.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <2dc873e5-a9b5-459c-1176-16640fb146c3@gmail.com>
-Date:   Sat, 1 May 2021 21:53:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+        id S231593AbhEBBXh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 May 2021 21:23:37 -0400
+Received: from mail-mw2nam12on2080.outbound.protection.outlook.com ([40.107.244.80]:42464
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231266AbhEBBXh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 1 May 2021 21:23:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SIHJv5ULzGB9BTKM3THgKK/44bPOV2bIjALZ1Lo5zhiDsVGLhYCBSNRkMKZGAi/fpkR6N6sg2cR1ehpN5KwnsOCJE+O5XZxLL/p2jU2943wG4D3mhhrL2Shk2TUxCyoKL7AX9FQC6b7BKbMabyGO6a4fTmHe60+sMX70i4PWqx8b8GdCC+31Jo3Ax5/1LfYFU9/Lbs28MbF1deFXsHe6Zd0nuvhSQ5bGwmUxx1rDwEBUZMh8DTO1rPFBz/Y0AXFSKs2ZrWpWJU7BGabxLdgCjTBLSqeSSuFp1dnuDLKc9RVnkvq02ujMleGpAoMndaD3p/geQkhMU5lJIuSKixwLSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ej3WlTKIg/JVEtkdlMBgeu0l5FwaFcyahxQlMRcA+ck=;
+ b=Kd5FzTw6WgluwvaQ2bSQbTQbJV7duJNCIWTKHVOfi9xOT8g/mIYCKONIAKCkyDezs4INxCsA2cOYzYYjMswW0z0ya7NBkNGbpe5cG5S80u/TgvcUU7MeKwMJTxyHSOPRJFh2yjM7qZlQP41XX3YGftC/KTnK9c/+SVlizY8Q/T7A25bn9gLB0XHKjysTHIcfYI1hwj4tpCCIe36iIg4GRwJfdyQHFdIvJ8VWvZ0mDrXmcwZuLRExLpfR0lxYvoKpFw0EsoN33zFw8qK76U6OGX+xmUFeuSDtAcfN7K5Rs8OvvEbDTsVCJ/CyTd9NpNV7hqo1nYMEcyUxRbhUgAiQvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=raithlin.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ej3WlTKIg/JVEtkdlMBgeu0l5FwaFcyahxQlMRcA+ck=;
+ b=K2otKTPQuoWRdI4Bcd5q9ChCMpI1P9wDm7UW/tReWDEajVuSOPwtnSyI0fMrwpRr+S0X9C4makC2BFD6pw4OfhYJlwphAHv0nM4IHFVfiHSm4NZXpqYujrIhKWvbvhV0s4JYD6i3Uebc1JMY8bhvW++fr3YV7p1CtP/UrklHQEjoMj97aYTUIsheozShM/Mt6wjsdb1jfiU96rA4p2K23Od32AKVsgMI4iGFZL9ZZfUSPC/dgjPg9XLbs2FiHMsLlOyvK4BTRWk5PNjH/Kf+6nYN1ig68PVXgp28O5npQvNqbSSdcIJ9/bd9Z7gA9/e5WC5XtjCHB/bVvrRU71xnMA==
+Received: from MWHPR04CA0030.namprd04.prod.outlook.com (2603:10b6:300:ee::16)
+ by MWHPR12MB1341.namprd12.prod.outlook.com (2603:10b6:300:11::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21; Sun, 2 May
+ 2021 01:22:44 +0000
+Received: from CO1NAM11FT066.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:ee:cafe::b7) by MWHPR04CA0030.outlook.office365.com
+ (2603:10b6:300:ee::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.39 via Frontend
+ Transport; Sun, 2 May 2021 01:22:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; raithlin.com; dkim=none (message not signed)
+ header.d=none;raithlin.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT066.mail.protection.outlook.com (10.13.175.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4087.27 via Frontend Transport; Sun, 2 May 2021 01:22:44 +0000
+Received: from [10.2.50.162] (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 2 May
+ 2021 01:22:43 +0000
+Subject: Re: [PATCH 00/16] Add new DMA mapping operation for P2PDMA
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-mm@kvack.org>, <iommu@lists.linux-foundation.org>
+CC:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20210408170123.8788-1-logang@deltatee.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <5f15dc88-fefd-e2db-8c0b-6f7b84826749@nvidia.com>
+Date:   Sat, 1 May 2021 18:22:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <202105020008.4NAsuaZ4-lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20210408170123.8788-1-logang@deltatee.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2b919ff-3ce4-4c4c-ab09-08d90d08c980
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1341:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB13418FE188FBC589AD584400A85C9@MWHPR12MB1341.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i6Wujbml4zBaa6I8AEn4PNCVoI278xZIicYiMG+7DvzbZ+XdrrM22xYRuunMsqwnmefHN0QogsIYoXRsblJxtXP5Q/8qf4IdA2Ko/I0bDFSXNwSf9VzmMWKo5CEPP86gQUUlSeE546oIkRIs0Tc7B7c4nbZjKHHaODxrGilaZessd2Bmw9KAXlDHVpDDetkQ23i7ImNMh7/e/TX+TvbcuABFLug2TqJHN/7RQhr8Mgl2FNSSAyLOS+2kXhvsQmuzMLnGlAKp3m2WQx1gga8PWXdQWcgKa7InBJ3wPtKvOhjbvZV1ntgVr5cb6B1dUbDh5WthSecR64A8cEdIdHpGY8Qh/dhDE3e2gfHwh9O+gV0ewViZbPDOSdbYwjhAAmPUYs0tDXSIOd4EoYStxE3kzLBZglXyqhg7bhaDWDnS2fWh1Au7jA6/YsAiTfDcywfya2fDmOsBHf3yZ9fSF8XGbt+EsX8a1Et+oB0ZHcj1clIJAozXDyjcK4GnfqYvsCszsHlpU5PjDT48LIVeT1UYzjSsnxl/7WLo9rIPkHcgJQflHzFJLm5WBXLjIYqRRLrcGd2B6EgDcSkL9eqt226//WojDeDyidWmgI81o9it1vCz9HWs29qb4S30WsN71L1rhrFc5xZAYOu9PD6esY2uaXbH6C346zVLSOcV1O0I/3Pn5FJQZ68+ZlkFBLQ89yDnIlnjZNvMREvBfS82nqakKA==
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(376002)(39860400002)(36840700001)(46966006)(31696002)(2616005)(31686004)(4744005)(356005)(47076005)(186003)(16526019)(426003)(36860700001)(336012)(26005)(36756003)(82740400003)(8936002)(7636003)(8676002)(110136005)(316002)(54906003)(16576012)(4326008)(86362001)(5660300002)(70206006)(7416002)(70586007)(53546011)(2906002)(36906005)(82310400003)(478600001)(43740500002)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2021 01:22:44.0148
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2b919ff-3ce4-4c4c-ab09-08d90d08c980
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT066.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1341
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 01.05.2021 18:52, kernel test robot wrote:
-> Hi Heiner,
+On 4/8/21 10:01 AM, Logan Gunthorpe wrote:
+> Hi,
 > 
-> I love your patch! Yet something to improve:
+> This patchset continues my work to to add P2PDMA support to the common
+> dma map operations. This allows for creating SGLs that have both P2PDMA
+> and regular pages which is a necessary step to allowing P2PDMA pages in
+> userspace.
 > 
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on v5.12 next-20210430]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
+> The earlier RFC[1] generated a lot of great feedback and I heard no show
+> stopping objections. Thus, I've incorporated all the feedback and have
+> decided to post this as a proper patch series with hopes of eventually
+> getting it in mainline.
 > 
-> url:    https://github.com/0day-ci/linux/commits/Heiner-Kallweit/PCI-VPD-Use-unaligned-access-helpers-in-pci_vpd_read/20210501-214553
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: i386-randconfig-s002-20210501 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.3-341-g8af24329-dirty
->         # https://github.com/0day-ci/linux/commit/3115b0380e42b10762f7eee96f10b5a02cb4d2d5
->         git remote add linux-review https://github.com/0day-ci/linux
->         git fetch --no-tags linux-review Heiner-Kallweit/PCI-VPD-Use-unaligned-access-helpers-in-pci_vpd_read/20210501-214553
->         git checkout 3115b0380e42b10762f7eee96f10b5a02cb4d2d5
->         # save the attached .config to linux build tree
->         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' W=1 ARCH=i386 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/pci/vpd.c: In function 'pci_vpd_read':
->>> drivers/pci/vpd.c:224:4: error: implicit declaration of function 'put_unaligned_le32' [-Werror=implicit-function-declaration]
->      224 |    put_unaligned_le32(val, buf);
->          |    ^~~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
-> 
-> 
-> vim +/put_unaligned_le32 +224 drivers/pci/vpd.c
-> 
->    168	
->    169	static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
->    170				    void *buf)
->    171	{
->    172		struct pci_vpd *vpd = dev->vpd;
->    173		int ret;
->    174		loff_t end = pos + count;
->    175	
->    176		if (pos < 0)
->    177			return -EINVAL;
->    178	
->    179		if (!vpd->valid) {
->    180			vpd->valid = 1;
->    181			vpd->len = pci_vpd_size(dev, vpd->len);
->    182		}
->    183	
->    184		if (vpd->len == 0)
->    185			return -EIO;
->    186	
->    187		if (pos > vpd->len)
->    188			return 0;
->    189	
->    190		if (end > vpd->len) {
->    191			end = vpd->len;
->    192			count = end - pos;
->    193		}
->    194	
->    195		if (mutex_lock_killable(&vpd->lock))
->    196			return -EINTR;
->    197	
->    198		ret = pci_vpd_wait(dev);
->    199		if (ret < 0)
->    200			goto out;
->    201	
->    202		while (pos < end) {
->    203			unsigned int len, skip;
->    204			u32 val;
->    205	
->    206			ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
->    207							 pos & ~3);
->    208			if (ret < 0)
->    209				break;
->    210			vpd->busy = 1;
->    211			vpd->flag = PCI_VPD_ADDR_F;
->    212			ret = pci_vpd_wait(dev);
->    213			if (ret < 0)
->    214				break;
->    215	
->    216			ret = pci_user_read_config_dword(dev, vpd->cap + PCI_VPD_DATA, &val);
->    217			if (ret < 0)
->    218				break;
->    219	
->    220			skip = pos & 3;
->    221			len = min_t(unsigned int, 4 - skip, end - pos);
->    222	
->    223			if (len == 4)  {
->  > 224				put_unaligned_le32(val, buf);
->    225			} else {
->    226				u8 tmpbuf[4];
->    227	
->    228				put_unaligned_le32(val, tmpbuf);
->    229				memcpy(buf, tmpbuf + skip, len);
->    230			}
->    231	
->    232			buf += len;
->    233			pos += len;
->    234		}
->    235	out:
->    236		mutex_unlock(&vpd->lock);
->    237		return ret ? ret : count;
->    238	}
->    239	
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> I'm happy to do a few more passes if anyone has any further feedback
+> or better ideas.
 > 
 
-It depends on "PCI/VPD: Use unaligned access helper in pci_vpd_write"
-which takes care of including asm/unaligned.h
+After an initial pass through these, I think I like the approach. And I
+don't have any huge structural comments or new ideas, just smaller comments
+and notes.
+
+I'll respond to each patch, but just wanted to say up front that this is
+looking promising, in my opinion.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
