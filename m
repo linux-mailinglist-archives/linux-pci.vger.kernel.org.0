@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AEA7370C64
-	for <lists+linux-pci@lfdr.de>; Sun,  2 May 2021 16:05:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B6BF370CAE
+	for <lists+linux-pci@lfdr.de>; Sun,  2 May 2021 16:06:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232988AbhEBOGK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 May 2021 10:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
+        id S233433AbhEBOHL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 May 2021 10:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233002AbhEBOFn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 2 May 2021 10:05:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 64D4D61446;
-        Sun,  2 May 2021 14:04:51 +0000 (UTC)
+        id S233126AbhEBOG0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 2 May 2021 10:06:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A2CF261408;
+        Sun,  2 May 2021 14:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619964292;
-        bh=YDlg5KDB7MXGQvMnQvkD4Vzdj4c2+NFSVw41cvKCM0g=;
+        s=k20201202; t=1619964328;
+        bh=X+U3jmsc3JchLrx7Po9Va7Mgwqc+hK41B8X1jL8ccyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+RjDp9zJ2wRysGNA0t1uJlwD5jZBk47/cx3c5nf7paNH/tpmWpJnNQW1XXYWYO28
-         zE3d8Bh49569nAc+dmRcM0zuGWIZi+7V+TcC7ZUPopKaCzjWwRSERN8qEmiRw/7aUK
-         /gn8balCU1pXOOBHDOV8T8Q8aqX8SFg2B7ZFfnueHDMwJ+BgmANTckhgRwcyKyLKNs
-         EkyzHFHyWu8kUm8/sxrH9qZprDslPqlu83SbPym4Rtvx+hwBfUyjCbQlZNGNO3fC70
-         ePQ2U0pPaO7CtBqqyousJgVjP4GO/uJv+RmM43nVsTrakgS1IC2ANm7HTeVSIXiMy2
-         ntuEm8l7ocA1g==
+        b=NJEouYy3/fv90DohFxi8e5YBW0O8i9UoabYmtsMabxppPw2dJ8ISc8/yD+H4kDqC1
+         JKyj1ag+imkU0mzHi2R9QDFcldAaykRdTIROHL8jbhOzIY1UG8XFe19vHxDtXH57Fn
+         0fnC1/j1N5BDxLCWd5gHJziR5HzpH3Sg8IWard+4mYST2Vmx9z5T1pfmJKwMSlQb+f
+         UGZxZR1BvWJtEgpj8eDvpRMg54uXWvI6r1c18CMAo4gr8sTtbk9BCN7ZxcAU+nonhN
+         br7MyUKyHsPWd2/rrawgIt7rOG3k7KDplnvH6nJFrPTHhdZnk1NI9VYc1bA4EVJj0x
+         yzKAwnpgTKVRQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/34] PCI: PM: Do not read power state in pci_enable_device_flags()
-Date:   Sun,  2 May 2021 10:04:14 -0400
-Message-Id: <20210502140434.2719553-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/21] PCI: PM: Do not read power state in pci_enable_device_flags()
+Date:   Sun,  2 May 2021 10:05:04 -0400
+Message-Id: <20210502140517.2719912-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210502140434.2719553-1-sashal@kernel.org>
-References: <20210502140434.2719553-1-sashal@kernel.org>
+In-Reply-To: <20210502140517.2719912-1-sashal@kernel.org>
+References: <20210502140517.2719912-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -80,10 +80,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 3c3bc9f58498..34a06e89e176 100644
+index 9ebf32de8575..3d59bbe4a5d5 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1666,20 +1666,10 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+@@ -1585,20 +1585,10 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
  	int err;
  	int i, bars = 0;
  
