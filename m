@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDBB1370F80
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 00:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D514370FC8
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 01:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232458AbhEBWxJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 May 2021 18:53:09 -0400
-Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:9516
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S232367AbhEBX3G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 May 2021 19:29:06 -0400
+Received: from mail-dm6nam12on2073.outbound.protection.outlook.com ([40.107.243.73]:34400
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230036AbhEBWxI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 2 May 2021 18:53:08 -0400
+        id S232118AbhEBX3F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 2 May 2021 19:29:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D/3S7AnZnqXN/uUCuPy+6l5+WlSUXgn8zE2sXtubMKGyTZFxyp1KZgKB9vjL90+JXn6eKbWojhSkGqZ52/mNqPsC35A+b0Lw3R9s9badke+2C8kCOo6x2ssgzrqz8Y9l+S9xRKDpn0D2PV/yHivoAZADlcd4ZQa3ZJk3j+75Qv4cZ+xw0uO+tssefwu0pajCmeMOJgPTWUn1Hy6OlLiC0ULrdhIvIcmjz1LEUNj2iI6jRCOYPzytBbb7qofAuxR3MNtQE3GONWgYj3ZorbBIFIBcGCJByIm01lO7WzYU28vd0fbGjl8B5OMzUZWEv9Ee0lZDsY3mLPZe5s+RUWkedw==
+ b=WJma0NhP2/oHwug2Xw1O4AmnzQMPI+NWndBH8dJTNC9Y1jsONu397i4kKJnBIfibVTfWAwytx9cSgIcwUHwvuY7GK1i2f06ncbhjBQmpxYXypzDxFYbOtv1rKuJYsenHgNZ5+Cej8RJMkMEiJU4L4gaj2Zd3T2uIS3OaXVnEjd6ubXByT8kXT5kUzNquS4PnTZ4Qua2KDLLRj4zaqFgrZVo0AJDlPITbKlb2YaDykqqRPvrKnZHkC6eVawb5nIEhvNoHebccP4ZKj3ZwFlTkubkAOVtl1c45HFWyjtgjf1Ng9qm1cpicMPTWVHTYlGdm5Md1LIFK4FrgW7m7Ufn5qw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MonRR6ANVoTh06vS780zLQdfVLria4UHCRKqtcEpuwA=;
- b=UXavXehpHQNGNdfyLZLZ92DXuQUufJwrYQqXUjBqTrQPQKbz3xiWEWHd5yGcoWWWOEoXGq6yt2Ti5EJqtB19SmPpR3zzhxk3o1XLGQeCaxCfJE8N7I005X9QSmNiB1X5WGIdhH+4TQjU8NZsFkdongHzsu4guf8MkqkOqpD9+Ad1NU7Jj1LEUifSV2TTHmr9cqPTN75ibGa6tIOFicqppWG1oCTnjil1LsHPHRf9TCBF9bGlvkcPvku14Fugom1vgkiffZJKbk+u4jTG8q8vufYGGJQtK5GZBujnF1ML7eAGIX0+limsfb6uEfggkWa6iomlBy4DZFfejRackj9fag==
+ bh=UFgbQCQ/CmM2Gb5Gpb1i9CYRTPb53P/T4+rEC6ZqPkc=;
+ b=FkiEqAtA02CCJN/oPXxvbvHNgYEc5E/2stvq/pDwria9EhXqi8n+q4zRa4Ljzb8ok2CBkThyRv8S8+pOYgzliMbPfK1SCCUwP7lExb5dDTVftlyIGvsyPssB1ncek5cs7w7l78PR8yyYrc3+MuPYcRK/lihaiv72lO6oFpLdI4VGK4HEBy4g5FFKawoQWwNW5V5aG4Kw4RXU3YqugW6wSpSf2ZDTvlIaOV8DxRM/gHJBZwKrCK8GWekStw4Q3SoogHuHhRau2SC7PARKn+Lp9S2dzAPUWxWnaw3d9ev+vC3ezLPqWPa/x9UkCf0BX+oOb+KzzDHnScKoy9OvrrqyVA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.112.34) smtp.rcpttodomain=raithlin.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MonRR6ANVoTh06vS780zLQdfVLria4UHCRKqtcEpuwA=;
- b=uH0agEqEFEMh+7jQDvqOVb5D+LXmdQZlwEVHH01VurAiHzwcT5NxpcWFFQDwsaIEYl2/UxfR5DUckfgTbC7kHiKQBgxuZbhaxwiLDbu3FegJO/914YQTMS4Sdn0E5lIO1FL7pxu+ALcDuluTIbyP2iXC+H5vAxZZbB52XUIvpcbyzOXwycgYpuXuSRYaUJ92JTxv2ZK+FrhgiO+MbDH+b12fh6DXZaEb/x9+04YwHsMIBc4h1VKMzEjlnFNWB0fX8/1Z/du213ZaHBun/gEKrTvB5o8MG4PCqcSqY4bekpbiZIFz9WVeh6ApyA9C+vWg0oOIbjH8J+4zzGurOTTe0A==
-Received: from MWHPR12CA0052.namprd12.prod.outlook.com (2603:10b6:300:103::14)
- by BN9PR12MB5083.namprd12.prod.outlook.com (2603:10b6:408:134::18) with
+ bh=UFgbQCQ/CmM2Gb5Gpb1i9CYRTPb53P/T4+rEC6ZqPkc=;
+ b=BdHkouwqwfcJFXyALyUuQlhXYtBJm4sf4cQFVuIHTa3zykExdtfNamYprhdc0idRkx8/rnP8h7ckjCmW5/ws5/MBSsc8zvTh4dLFLbRDhqirKJnQay7qJO8Dl/dR8/wi1si8+RsTxd/RajzJS+HeiBjK2pW3f4RyFrya6xIJ6A5Y/GlWcGSv0aJxDY82Ze1TtXNYemSsaHb2F4f+kXf/9SOuiSSmt6KkSTNiZyLcM7I36sP8UfXTOE7fnhkPeKJ3XeUlJ49jWFdjlSl5qVQzRDaYUJ3QnvTS751cLZ6NkTI3yVZFoyOcm3BQaufIDU/zM/gnyaAvkJ+1rRMUGWJjmw==
+Received: from BN9PR03CA0327.namprd03.prod.outlook.com (2603:10b6:408:112::32)
+ by BL0PR12MB5010.namprd12.prod.outlook.com (2603:10b6:208:17c::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.41; Sun, 2 May
- 2021 22:52:14 +0000
-Received: from CO1NAM11FT065.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:103:cafe::ec) by MWHPR12CA0052.outlook.office365.com
- (2603:10b6:300:103::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.27 via Frontend
- Transport; Sun, 2 May 2021 22:52:14 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.26; Sun, 2 May
+ 2021 23:28:11 +0000
+Received: from BN8NAM11FT008.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:112:cafe::f3) by BN9PR03CA0327.outlook.office365.com
+ (2603:10b6:408:112::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.25 via Frontend
+ Transport; Sun, 2 May 2021 23:28:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
  smtp.mailfrom=nvidia.com; raithlin.com; dkim=none (message not signed)
  header.d=none;raithlin.com; dmarc=pass action=none header.from=nvidia.com;
@@ -45,14 +45,14 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.112.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.112.34; helo=mail.nvidia.com;
 Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT065.mail.protection.outlook.com (10.13.174.62) with Microsoft SMTP
+ BN8NAM11FT008.mail.protection.outlook.com (10.13.177.95) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4087.27 via Frontend Transport; Sun, 2 May 2021 22:52:13 +0000
+ 15.20.4087.32 via Frontend Transport; Sun, 2 May 2021 23:28:10 +0000
 Received: from [10.2.50.162] (172.20.145.6) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 2 May
- 2021 22:52:13 +0000
-Subject: Re: [PATCH 08/16] PCI/P2PDMA: Introduce helpers for dma_map_sg
- implementations
+ 2021 23:28:09 +0000
+Subject: Re: [PATCH 09/16] dma-direct: Support PCI P2PDMA pages in dma-direct
+ map_sg
 To:     Logan Gunthorpe <logang@deltatee.com>,
         <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
         <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
@@ -74,14 +74,14 @@ CC:     Stephen Bates <sbates@raithlin.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-9-logang@deltatee.com>
+ <20210408170123.8788-10-logang@deltatee.com>
 From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <090c9792-bddd-e99e-92b0-724a6fbbef03@nvidia.com>
-Date:   Sun, 2 May 2021 15:52:12 -0700
+Message-ID: <37fa46c7-2c24-1808-16e9-e543f4601279@nvidia.com>
+Date:   Sun, 2 May 2021 16:28:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210408170123.8788-9-logang@deltatee.com>
+In-Reply-To: <20210408170123.8788-10-logang@deltatee.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,189 +90,187 @@ X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b4df4d96-db96-481b-69e1-08d90dbced8a
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5083:
-X-Microsoft-Antispam-PRVS: <BN9PR12MB5083718B11588F592B224088A85C9@BN9PR12MB5083.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: f60ec66a-bc5c-43cd-60b9-08d90dc1f344
+X-MS-TrafficTypeDiagnostic: BL0PR12MB5010:
+X-Microsoft-Antispam-PRVS: <BL0PR12MB5010617BD45D420E4C740268A85C9@BL0PR12MB5010.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yUQ/2ty3W8SWSzVOcol1P+iG8WAjYfnS0/2ST1b/pDjPViW1Yts/zFvzpBptvc7oVLxC6rMRuWFALLiHp1356SghvfnmjBYh8KV2uZLzZ+xMBJQX/vMQjgd7ZFgY2yMeDeZpNJEgyf9CW2C9tMISAH9FpcLB3bHzwU9jIEfspa9P04NPD0PFoUEM81IuBnBhmLj/9Ghj2AL5BXVUE/dHhNYYuOjPEmejgch2F3AuAQoDvuraP3KirgZBMgEaylDnfm37h5JRgJw5AEM3r8hpTLi6mZoORrX5iYcSLxAAHWoFqFPniUY8eHQCSlw9KsO/GExqGI38z3t2xB+Pl9X8ZpSv9kKAQOtXdEZRDejBR+zoUVSG1nl2ZMNphdxrCavIpsaZcwX4pTyC7I9VYsazKtIvOf0AorfmVPJoCQtopePa0cwNPdjUjXFPpGHtseG96nKLDjAILTqEyb9Kiu7KmhQ95DpVvKmbMxYvoomd7RqJXEQwm1btZHuIa7/+z9KCxzhCbQ8SvSBLI1+tN/BSWJKGFZ77mS9kacVw4RfxyaJJ8W60NIQg0d3aa+gEb4hFpw+Afwk3HQMQcg5Y/VfLIMkeoaTb1OF7HMhALSTucTB3GzHv+FLl7QSzcCZmjQngNtO4gGX7xqfwNhw9v8SsV+JmhYDE5vZfTExsu40he80xVm1k3ChfYeRvjWpBFXH8/7CRLgsRcdJ9HZju5/sYyg==
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(396003)(346002)(46966006)(36840700001)(4326008)(70206006)(70586007)(2616005)(336012)(186003)(31686004)(426003)(5660300002)(82740400003)(16526019)(26005)(2906002)(316002)(16576012)(36906005)(7416002)(7636003)(36756003)(86362001)(8676002)(31696002)(54906003)(82310400003)(8936002)(83380400001)(356005)(36860700001)(53546011)(47076005)(478600001)(110136005)(43740500002)(2101003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: uD2uq+E4ZORkD2HW9/ItHvlVey8s8ypwvcgiRNJ2lnNjcYR1BQv0REIp/DQBs8aVcz+MDnBi2q92C1YupHhOY7VsYqZ1jM/2Suj8bSGfrSdU61B3QZeb7PaCZvTAtvxVazmbhBu6vYkn3gKAairDMtz1E7Pm+oRqU1XnDWX0IoHhWlo+Ar5ZnXjBhnot7CFrIZ3xHBRURbFxdZiaqia6KZ3vbN8TxT2rQZOLPyRZ21rC0y8Qlse5qt6m5WqVkYD+PRc73mxhgf9EqbwM9iwnMwnhuBQ2wJ3OtEIecK6Sq6kMi7VqtYeZxDwLCFjuxtRWMB2+bvabzMw8KCKrMDROJb1llmoqa8od+ftKddt55oG1gN/gbGi5QBYLLguRIQEuzQou2E/IoQJtV89rvO5HeruSALNkhQXNmZ1cGU85QjpMxSv4IpcNVulAA6NKAP+9eAa6E8k6eKMuXiWwrYicgC/cIMUO7CFywQkF7nOJMTaAHJbrmb0RDbfys4xtvi4R0qPHO0n1vYJKNKEwf1eK9tQZR+6XPusYRC1ZEUhOodLfljjJLotuOYqFiuVehivAsb+y22bOt7H98S6BfJoxvtuubeCSgdblkW/BFtNUYKIuZ28oTbKoP4rCbs2Tpfv5hp8t7g9ZGwFokrFkb7Le7DJomzJZeJqdlXcGc2NuOFsfFSAoQ/rotBei0viRVdk/J35syOstQkC1EgdzXIADiw==
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(46966006)(36840700001)(54906003)(8676002)(5660300002)(2616005)(336012)(31686004)(31696002)(70586007)(70206006)(7636003)(426003)(16526019)(26005)(186003)(82740400003)(7416002)(316002)(2906002)(53546011)(82310400003)(356005)(86362001)(47076005)(83380400001)(16576012)(8936002)(478600001)(4326008)(110136005)(36906005)(36756003)(36860700001)(43740500002)(2101003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2021 22:52:13.8110
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2021 23:28:10.8920
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4df4d96-db96-481b-69e1-08d90dbced8a
+X-MS-Exchange-CrossTenant-Network-Message-Id: f60ec66a-bc5c-43cd-60b9-08d90dc1f344
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT065.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT008.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5083
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB5010
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 4/8/21 10:01 AM, Logan Gunthorpe wrote:
-> Add pci_p2pdma_map_segment() as a helper for simple dma_map_sg()
-> implementations. It takes an scatterlist segment that must point to a
-> pci_p2pdma struct page and will map it if the mapping requires a bus
-> address.
+> Add PCI P2PDMA support for dma_direct_map_sg() so that it can map
+> PCI P2PDMA pages directly without a hack in the callers. This allows
+> for heterogeneous SGLs that contain both P2PDMA and regular pages.
 > 
-> The return value indicates whether the mapping required a bus address
-> or whether the caller still needs to map the segment normally. If the
-> segment should not be mapped, -EREMOTEIO is returned.
+> SGL segments that contain PCI bus addresses are marked with
+> sg_mark_pci_p2pdma() and are ignored when unmapped.
 > 
-> This helper uses a state structure to track the changes to the
-> pgmap across calls and avoid needing to lookup into the xarray for
-> every page.
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>   kernel/dma/direct.c | 25 ++++++++++++++++++++++---
+>   1 file changed, 22 insertions(+), 3 deletions(-)
 > 
-> Also add pci_p2pdma_map_bus_segment() which is useful for IOMMU
-> dma_map_sg() implementations where the sg segment containing the page
-> differs from the sg segment containing the DMA address.
-> 
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 002268262c9a..108dfb4ecbd5 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/vmalloc.h>
+>   #include <linux/set_memory.h>
+>   #include <linux/slab.h>
+> +#include <linux/pci-p2pdma.h>
+>   #include "direct.h"
+>   
+>   /*
+> @@ -387,19 +388,37 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
 
-Hard to properly review this patch by itself, because it doesn't show
-any callers of the new routine. If you end up shuffling patches and/or
-refactoring for other reasons, it would be nice if the next version of
-the series included a caller here. In particular, the new
-pci_p2pdma_map_state concept is something I want to double-check, to
-see if it hits any common pitfalls. I'm sure it doesn't, but still. :)
+This routine now deserves a little bit of commenting, now that it is
+doing less obvious things. How about something like this:
 
-Meanwhile, I'll keep working through the series, and come back to this
-one when I have seen the callers.
+/*
+  * Unmaps pages, except for PCI_P2PDMA pages, which were never mapped in the
+  * first place. Instead of unmapping PCI_P2PDMA entries, simply remove the
+  * SG_PCI_P2PDMA mark
+  */
+void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+		int nents, enum dma_data_direction dir, unsigned long attrs)
+{
+
+
+>   	struct scatterlist *sg;
+>   	int i;
+>   
+> -	for_each_sg(sgl, sg, nents, i)
+> +	for_each_sg(sgl, sg, nents, i) {
+> +		if (sg_is_pci_p2pdma(sg)) {
+> +			sg_unmark_pci_p2pdma(sg);
+> +			continue;
+> +		}
+> +
+>   		dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
+>   			     attrs);
+> +	}
+
+The same thing can be achieved with fewer lines and a bit more clarity.
+Can we please do it like this instead:
+
+	for_each_sg(sgl, sg, nents, i) {
+		if (sg_is_pci_p2pdma(sg))
+			sg_unmark_pci_p2pdma(sg);
+		else
+			dma_direct_unmap_page(dev, sg->dma_address,
+					      sg_dma_len(sg), dir, attrs);
+	}
+
+
+>   }
+>   #endif
+>   
+
+Also here, a block comment for the function would be nice. How about
+approximately this:
+
+/*
+  * Maps each SG segment. Returns the number of entries mapped, or 0 upon
+  * failure. If any entry could not be mapped, then no entries are mapped.
+  */
+
+I'll stop complaining about the pre-existing return code conventions,
+since by now you know what I was thinking of saying. :)
+
+>   int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+>   		enum dma_data_direction dir, unsigned long attrs)
+>   {
+> -	int i;
+> +	struct pci_p2pdma_map_state p2pdma_state = {};
+
+Is it worth putting this stuff on the stack--is there a noticeable
+performance improvement from caching the state? Because if it's
+invisible, then simplicity is better. I suspect you're right, and that
+it *is* worth it, but it's good to know for real.
+
+>   	struct scatterlist *sg;
+> +	int i, ret = 0;
+>   
+>   	for_each_sg(sgl, sg, nents, i) {
+> +		if (is_pci_p2pdma_page(sg_page(sg))) {
+> +			ret = pci_p2pdma_map_segment(&p2pdma_state, dev, sg,
+> +						     attrs);
+> +			if (ret < 0) {
+> +				goto out_unmap;
+> +			} else if (ret) {
+> +				ret = 0;
+> +				continue;
+
+Is this a bug? If neither of those "if" branches fires (ret == 0), then
+the code (probably unintentionally) falls through and continues on to
+attempt to call dma_direct_map_page()--despite being a PCI_P2PDMA page!
+
+See below for suggestions:
+
+> +			}
+> +		}
+> +
+>   		sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+>   				sg->offset, sg->length, dir, attrs);
+>   		if (sg->dma_address == DMA_MAPPING_ERROR)
+
+This is another case in which "continue" is misleading and not as good
+as "else". Because unless I'm wrong above, you really only want to take
+one path *or* the other.
+
+Also, the "else if (ret)" can be simplified to just setting ret = 0
+unconditionally.
+
+Given all that, here's a suggested alternative, which is both shorter
+and clearer, IMHO:
+
+	for_each_sg(sgl, sg, nents, i) {
+		if (is_pci_p2pdma_page(sg_page(sg))) {
+			ret = pci_p2pdma_map_segment(&p2pdma_state, dev, sg,
+						     attrs);
+			if (ret < 0)
+				goto out_unmap;
+			else
+				ret = 0;
+		} else {
+			sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+					sg->offset, sg->length, dir, attrs);
+			if (sg->dma_address == DMA_MAPPING_ERROR)
+				goto out_unmap;
+			sg_dma_len(sg) = sg->length;
+		}
+	}
 
 thanks,
 -- 
 John Hubbard
 NVIDIA
 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->   drivers/pci/p2pdma.c       | 65 ++++++++++++++++++++++++++++++++++++++
->   include/linux/pci-p2pdma.h | 21 ++++++++++++
->   2 files changed, 86 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 38c93f57a941..44ad7664e875 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -923,6 +923,71 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+> @@ -411,7 +430,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+>   
+>   out_unmap:
+>   	dma_direct_unmap_sg(dev, sgl, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
+> -	return 0;
+> +	return ret;
 >   }
->   EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
 >   
-> +/**
-> + * pci_p2pdma_map_segment - map an sg segment determining the mapping type
-> + * @state: State structure that should be declared on the stack outside of
-> + *	the for_each_sg() loop and initialized to zero.
-> + * @dev: DMA device that's doing the mapping operation
-> + * @sg: scatterlist segment to map
-> + * @attrs: dma mapping attributes
-> + *
-> + * This is a helper to be used by non-iommu dma_map_sg() implementations where
-> + * the sg segment is the same for the page_link and the dma_address.
-> + *
-> + * Attempt to map a single segment in an SGL with the PCI bus address.
-> + * The segment must point to a PCI P2PDMA page and thus must be
-> + * wrapped in a is_pci_p2pdma_page(sg_page(sg)) check.
-> + *
-> + * Returns 1 if the segment was mapped, 0 if the segment should be mapped
-> + * directly (or through the IOMMU) and -EREMOTEIO if the segment should not
-> + * be mapped at all.
-> + */
-> +int pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state,
-> +			   struct device *dev, struct scatterlist *sg,
-> +			   unsigned long dma_attrs)
-> +{
-> +	if (state->pgmap != sg_page(sg)->pgmap) {
-> +		state->pgmap = sg_page(sg)->pgmap;
-> +		state->map = pci_p2pdma_map_type(state->pgmap, dev, dma_attrs);
-> +		state->bus_off = to_p2p_pgmap(state->pgmap)->bus_offset;
-> +	}
-> +
-> +	switch (state->map) {
-> +	case PCI_P2PDMA_MAP_BUS_ADDR:
-> +		sg->dma_address = sg_phys(sg) + state->bus_off;
-> +		sg_dma_len(sg) = sg->length;
-> +		sg_mark_pci_p2pdma(sg);
-> +		return 1;
-> +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> +		return 0;
-> +	default:
-> +		return -EREMOTEIO;
-> +	}
-> +}
-> +
-> +/**
-> + * pci_p2pdma_map_bus_segment - map an sg segment pre determined to
-> + *	be mapped with PCI_P2PDMA_MAP_BUS_ADDR
-> + * @pg_sg: scatterlist segment with the page to map
-> + * @dma_sg: scatterlist segment to assign a dma address to
-> + *
-> + * This is a helper for iommu dma_map_sg() implementations when the
-> + * segment for the dma address differs from the segment containing the
-> + * source page.
-> + *
-> + * pci_p2pdma_map_type() must have already been called on the pg_sg and
-> + * returned PCI_P2PDMA_MAP_BUS_ADDR.
-> + */
-> +void pci_p2pdma_map_bus_segment(struct scatterlist *pg_sg,
-> +				struct scatterlist *dma_sg)
-> +{
-> +	struct pci_p2pdma_pagemap *pgmap = to_p2p_pgmap(sg_page(pg_sg)->pgmap);
-> +
-> +	dma_sg->dma_address = sg_phys(pg_sg) + pgmap->bus_offset;
-> +	sg_dma_len(dma_sg) = pg_sg->length;
-> +	sg_mark_pci_p2pdma(dma_sg);
-> +}
-> +
->   /**
->    * pci_p2pdma_enable_store - parse a configfs/sysfs attribute store
->    *		to enable p2pdma
-> diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
-> index a06072ac3a52..49e7679403cf 100644
-> --- a/include/linux/pci-p2pdma.h
-> +++ b/include/linux/pci-p2pdma.h
-> @@ -13,6 +13,12 @@
->   
->   #include <linux/pci.h>
->   
-> +struct pci_p2pdma_map_state {
-> +	struct dev_pagemap *pgmap;
-> +	int map;
-> +	u64 bus_off;
-> +};
-> +
->   struct block_device;
->   struct scatterlist;
->   
-> @@ -43,6 +49,11 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
->   		int nents, enum dma_data_direction dir, unsigned long attrs);
->   void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
->   		int nents, enum dma_data_direction dir, unsigned long attrs);
-> +int pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state,
-> +		struct device *dev, struct scatterlist *sg,
-> +		unsigned long dma_attrs);
-> +void pci_p2pdma_map_bus_segment(struct scatterlist *pg_sg,
-> +				struct scatterlist *dma_sg);
->   int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
->   			    bool *use_p2pdma);
->   ssize_t pci_p2pdma_enable_show(char *page, struct pci_dev *p2p_dev,
-> @@ -109,6 +120,16 @@ static inline void pci_p2pdma_unmap_sg_attrs(struct device *dev,
->   		unsigned long attrs)
->   {
->   }
-> +static inline int pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state,
-> +		struct device *dev, struct scatterlist *sg,
-> +		unsigned long dma_attrs)
-> +{
-> +	return 0;
-> +}
-> +static inline void pci_p2pdma_map_bus_segment(struct scatterlist *pg_sg,
-> +					      struct scatterlist *dma_sg)
-> +{
-> +}
->   static inline int pci_p2pdma_enable_store(const char *page,
->   		struct pci_dev **p2p_dev, bool *use_p2pdma)
->   {
+>   dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
 > 
+
 
