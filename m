@@ -2,126 +2,223 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7F63371C60
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 18:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4302A371D65
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 19:01:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232876AbhECQwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 12:52:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233843AbhECQtc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 May 2021 12:49:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F1AD06191F;
-        Mon,  3 May 2021 16:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620060025;
-        bh=tHYHD0jT1jG1itD5UPajDk4y8ocfKR79gQ2CjG/pTbE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JLcFn19J2apAX5K6ef/KUYrOmvgNsunQdt63eKOmDkGhDnGLgDFdRB28ot7D5pyH1
-         h7FjPDwLxcv/lBZoRCqschRbNQJyuaUlQEvu6LAdC3EPK6IB3XuPpz/haaWUPJoqRA
-         178OmpJBsTkGhHwdI7FrX7de02BLp77vbKCE4zWBQBHUaTZ0T+UfPOnhSEXca2f50h
-         VFgjuxVEQafjC+uGCmls8vfTGrwMsu4HVWLvww0OzwbF4wsLh4+NBwIIg+WMwqGw9r
-         Ao/8VK+gu4mPYmjitl2EcyaxWahhfbK+p7wOpx881wxfeiSp1TOv+tMN1sGNYOhwxj
-         JWfD4/WsFmLiQ==
-Date:   Mon, 3 May 2021 11:40:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     paul.walmsley@sifive.com, hes@sifive.com, erik.danie@sifive.com,
-        zong.li@sifive.com, bhelgaas@google.com, robh+dt@kernel.org,
-        aou@eecs.berkeley.edu, mturquette@baylibre.com, sboyd@kernel.org,
-        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
-        alex.dewar90@gmail.com, khilman@baylibre.com,
-        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
-        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 0/6] Add SiFive FU740 PCIe host controller driver
- support
-Message-ID: <20210503164023.GA919777@bjorn-Precision-5520>
+        id S234745AbhECQ6v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 May 2021 12:58:51 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:57990 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235329AbhECQ4M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 12:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=h9d5zovbtXKtO9TZYvlu4xL+neDJxYxd4FL4V4x+RQk=; b=XA3VMJFHu22LiuYRgV7sx4Rs8c
+        3591aoMHNv/NjUeysIvMIemFNGQvvxhSeVFLCIfBFEcN01AnLU0454DR7x9i5+KbkpS9wQvmvTDlB
+        wmDUyJnbQ8AY0II0FjrcE9U2lfVByEIa3k4pk83kSjB2pgdejDq3f35QdxYnU45zXwOvnAdMTmYRD
+        sEhVGLAwVXWpBZYAFJ1g4iWMaNWdT8a2zstO8bergFsL7t06RcmqF22XWsu1q8nTiQZBV3QbpBlvX
+        aEpoRPohuyyWFgct68cZTIlU40n9PYIaNeseQ9Io2WJOjCS7wWDIUSo6hGwSJE0qOa2JxxSZtGHpi
+        RmunKpRw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1ldbqc-0004SZ-Bi; Mon, 03 May 2021 10:55:07 -0600
+To:     John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20210408170123.8788-1-logang@deltatee.com>
+ <20210408170123.8788-10-logang@deltatee.com>
+ <37fa46c7-2c24-1808-16e9-e543f4601279@nvidia.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <aa0698ba-abad-8c07-2962-d66b6a7affd9@deltatee.com>
+Date:   Mon, 3 May 2021 10:55:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210406092634.50465-1-greentime.hu@sifive.com>
+In-Reply-To: <37fa46c7-2c24-1808-16e9-e543f4601279@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jhubbard@nvidia.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH 09/16] dma-direct: Support PCI P2PDMA pages in dma-direct
+ map_sg
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 05:26:28PM +0800, Greentime Hu wrote:
-> This patchset includes SiFive FU740 PCIe host controller driver. We also
-> add pcie_aux clock and pcie_power_on_reset controller to prci driver for
-> PCIe driver to use it.
 
-I dropped this series because of the build problem I mentioned [1].
-It will not be included in v5.13 unless the build problem is fixed
-ASAP.
 
-[1] https://lore.kernel.org/r/20210428194713.GA314975@bjorn-Precision-5520
+On 2021-05-02 5:28 p.m., John Hubbard wrote:
+>> @@ -387,19 +388,37 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+> 
+> This routine now deserves a little bit of commenting, now that it is
+> doing less obvious things. How about something like this:
+> 
+> /*
+>   * Unmaps pages, except for PCI_P2PDMA pages, which were never mapped in the
+>   * first place. Instead of unmapping PCI_P2PDMA entries, simply remove the
+>   * SG_PCI_P2PDMA mark
+>   */
+> void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+> 		int nents, enum dma_data_direction dir, unsigned long attrs)
+> {
+> 
 
-> This is tested with e1000e: Intel(R) PRO/1000 Network Card, AMD Radeon R5
-> 230 graphics card and SP M.2 PCIe Gen 3 SSD in SiFive Unmatched based on
-> v5.11 Linux kernel.
+Ok.
+
+>>   	struct scatterlist *sg;
+>>   	int i;
+>>   
+>> -	for_each_sg(sgl, sg, nents, i)
+>> +	for_each_sg(sgl, sg, nents, i) {
+>> +		if (sg_is_pci_p2pdma(sg)) {
+>> +			sg_unmark_pci_p2pdma(sg);
+>> +			continue;
+>> +		}
+>> +
+>>   		dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
+>>   			     attrs);
+>> +	}
 > 
-> Changes in v5:
->  - Fix typo in comments
->  - Keep comments style consistent
->  - Refine some error handling codes
->  - Remove unneeded header file including
->  - Merge fu740_pcie_ltssm_enable implementation to fu740_pcie_start_link
+> The same thing can be achieved with fewer lines and a bit more clarity.
+> Can we please do it like this instead:
 > 
-> Changes in v4:
->  - Fix Wunused-but-set-variable warning in prci driver
+> 	for_each_sg(sgl, sg, nents, i) {
+> 		if (sg_is_pci_p2pdma(sg))
+> 			sg_unmark_pci_p2pdma(sg);
+> 		else
+> 			dma_direct_unmap_page(dev, sg->dma_address,
+> 					      sg_dma_len(sg), dir, attrs);
+> 	}
 > 
-> Changes in v3:
->  - Remove items that has been defined
->  - Refine format of sifive,fu740-pcie.yaml
->  - Replace perstn-gpios with the common one
->  - Change DBI mapping space to 2GB from 4GB
->  - Refine drivers/reset/Kconfig
 > 
-> Changes in v2:
->  - Refine codes based on reviewers' feedback
->  - Remove define and use the common one
->  - Replace __raw_writel with writel_relaxed
->  - Split fu740_phyregreadwrite to write function
->  - Use readl_poll_timeout in stead of while loop checking
->  - Use dwc common codes
->  - Use gpio descriptors and the gpiod_* api.
->  - Replace devm_ioremap_resource with devm_platform_ioremap_resource_byname
->  - Replace devm_reset_control_get with devm_reset_control_get_exclusive
->  - Add more comments for delay and sleep
->  - Remove "phy ? x : y" expressions
->  - Refine code logic to remove possible infinite loop
->  - Replace magic number with meaningful define
->  - Remove fu740_pcie_pm_ops
->  - Use builtin_platform_driver
+
+That's debatable (the way I did it emphasizes the common case). But I'll
+consider changing it.
+
 > 
-> Greentime Hu (5):
->   clk: sifive: Add pcie_aux clock in prci driver for PCIe driver
->   clk: sifive: Use reset-simple in prci driver for PCIe driver
->   MAINTAINERS: Add maintainers for SiFive FU740 PCIe driver
->   dt-bindings: PCI: Add SiFive FU740 PCIe host controller
->   riscv: dts: Add PCIe support for the SiFive FU740-C000 SoC
+> Also here, a block comment for the function would be nice. How about
+> approximately this:
 > 
-> Paul Walmsley (1):
->   PCI: fu740: Add SiFive FU740 PCIe host controller driver
+> /*
+>   * Maps each SG segment. Returns the number of entries mapped, or 0 upon
+>   * failure. If any entry could not be mapped, then no entries are mapped.
+>   */
 > 
->  .../bindings/pci/sifive,fu740-pcie.yaml       | 113 +++++++
->  MAINTAINERS                                   |   8 +
->  arch/riscv/boot/dts/sifive/fu740-c000.dtsi    |  33 ++
->  drivers/clk/sifive/Kconfig                    |   2 +
->  drivers/clk/sifive/fu740-prci.c               |  11 +
->  drivers/clk/sifive/fu740-prci.h               |   2 +-
->  drivers/clk/sifive/sifive-prci.c              |  54 +++
->  drivers/clk/sifive/sifive-prci.h              |  13 +
->  drivers/pci/controller/dwc/Kconfig            |   9 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-fu740.c       | 308 ++++++++++++++++++
->  drivers/reset/Kconfig                         |   1 +
->  include/dt-bindings/clock/sifive-fu740-prci.h |   1 +
->  13 files changed, 555 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
->  create mode 100644 drivers/pci/controller/dwc/pcie-fu740.c
+> I'll stop complaining about the pre-existing return code conventions,
+> since by now you know what I was thinking of saying. :)
+
+Not really part of this patchset... Seems like if you think there should
+be a comment like that here, you should send a patch. But this patch
+starts returning a negative value here.
+
+>>   int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+>>   		enum dma_data_direction dir, unsigned long attrs)
+>>   {
+>> -	int i;
+>> +	struct pci_p2pdma_map_state p2pdma_state = {};
 > 
-> -- 
-> 2.30.2
+> Is it worth putting this stuff on the stack--is there a noticeable
+> performance improvement from caching the state? Because if it's
+> invisible, then simplicity is better. I suspect you're right, and that
+> it *is* worth it, but it's good to know for real.
 > 
+>>   	struct scatterlist *sg;
+>> +	int i, ret = 0;
+>>   
+>>   	for_each_sg(sgl, sg, nents, i) {
+>> +		if (is_pci_p2pdma_page(sg_page(sg))) {
+>> +			ret = pci_p2pdma_map_segment(&p2pdma_state, dev, sg,
+>> +						     attrs);
+>> +			if (ret < 0) {
+>> +				goto out_unmap;
+>> +			} else if (ret) {
+>> +				ret = 0;
+>> +				continue;
+> 
+> Is this a bug? If neither of those "if" branches fires (ret == 0), then
+> the code (probably unintentionally) falls through and continues on to
+> attempt to call dma_direct_map_page()--despite being a PCI_P2PDMA page!
+
+No, it's not a bug. Per the documentation of pci_p2pdma_map_segment(),
+if it returns zero the segment should be mapped normally. P2PDMA pages
+must be mapped with physical addresses (or IOVA addresses) if the TLPS
+for the transaction will go through the host bridge.
+
+> See below for suggestions:
+> 
+>> +			}
+>> +		}
+>> +
+>>   		sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+>>   				sg->offset, sg->length, dir, attrs);
+>>   		if (sg->dma_address == DMA_MAPPING_ERROR)
+> 
+> This is another case in which "continue" is misleading and not as good
+> as "else". Because unless I'm wrong above, you really only want to take
+> one path *or* the other.
+
+No, per above, it's not one path or the other. If it's a P2PDMA page it
+may still need to be mapped normally.
+
+> Also, the "else if (ret)" can be simplified to just setting ret = 0
+> unconditionally.
+
+I don't follow. If ret is set, we need to unset it before the end of the
+loop.
+
+> Given all that, here's a suggested alternative, which is both shorter
+> and clearer, IMHO:
+> 
+> 	for_each_sg(sgl, sg, nents, i) {
+> 		if (is_pci_p2pdma_page(sg_page(sg))) {
+> 			ret = pci_p2pdma_map_segment(&p2pdma_state, dev, sg,
+> 						     attrs);
+> 			if (ret < 0)
+> 				goto out_unmap;
+> 			else
+> 				ret = 0;
+> 		} else {
+> 			sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+> 					sg->offset, sg->length, dir, attrs);
+> 			if (sg->dma_address == DMA_MAPPING_ERROR)
+> 				goto out_unmap;
+> 			sg_dma_len(sg) = sg->length;
+> 		}
+> 	}
+
+No, per the comments above, this does not accomplish the same thing and
+is not correct.
+
+I'll try to add a comment to the code to make it more clearer. But the
+kernel doc on pci_p2pdma_map_segment() does mention what must be done
+for different return values explicitly.
+
+Logan
