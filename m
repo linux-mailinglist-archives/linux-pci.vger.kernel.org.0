@@ -2,155 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0684371704
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 16:48:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3AF371740
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 16:57:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229951AbhECOsz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 10:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbhECOst (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 10:48:49 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F167C061343;
-        Mon,  3 May 2021 07:47:53 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id 76so3413939qkn.13;
-        Mon, 03 May 2021 07:47:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WmxD0ZZWyLDmbUI7WJl5Chz/U5d4iCfhGGuYidByI1Y=;
-        b=c/7Dh3OQepXd3Gk7+Ktnjc/Q1371ta4WGDJVxAkXb0L72Joe3A+fNs0b5ySNu/jZoD
-         vinJS+TmbfjEYKiAEX4R9lq6tDPkYOlWnfW54p6wLHRr16yh3U1nPH5k8cw29O2XuN5k
-         vAgrU/G3YbZF6jq8+W/77AmS/QUqQxehMoC6oWYfDJgT9B+ih0/CTwM5oXYYkg9hzn9C
-         2/zxwc8VAuPm2b+ki/jnLscwtksaMRdc10Lek3dsjl+SYRhwAS6OlUjtFBRxb1pPCRNS
-         ZRvP6/1CemSsV4rUkXoJhE4rNVLeT2q6wdJPPc0vcgkcq3gL/3jdWjNCpoQ0GlrKVTxf
-         FbWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WmxD0ZZWyLDmbUI7WJl5Chz/U5d4iCfhGGuYidByI1Y=;
-        b=VLVmEFfedjjofQdF4YLfMTC0aQd7GCpH/Y7OQft17FAuJtx/fMiqVtq/xBkM6UVreo
-         sVQXle+cYD4iXvmFt2NEci04fS6e9abXEosaq+0+Dl1TnyDoc+5ifd9pol/zLa0hBy92
-         IykLge47BB11lWZyWx5uq9D7dR4Cxu9dmqMQYA4HHuS1E8Cpe+lD8A+BQE2Kuav6K7jF
-         pfgXEYxWR+9bsjanB1CxQBC5BkY3CnXxWJuiC20TUkPabycfdjbRKwJ9aZTt2Y/yABNQ
-         +VbTOoojMrwPrK0YSUxkagjUy4MzMPq4lhV2POZ07NRmDLlwqX+Q5oozZIn+BHDlkkmO
-         lKNA==
-X-Gm-Message-State: AOAM530f7d0lJdmP4Aji7M6sXTCiElZs81iMY4JDikF1LxLyAlwmlOiy
-        RHRWYo9P2N3B4MHIfigM+faPZ2d9u1gd2w==
-X-Google-Smtp-Source: ABdhPJwJQTQ+i5t7XI+bNqjB0PUR0SiUXldDNi1Jbkj/jxzJyLKY99BDP7WgJCH0Jv+QngE01hMA2g==
-X-Received: by 2002:a37:7004:: with SMTP id l4mr19996241qkc.476.1620053272797;
-        Mon, 03 May 2021 07:47:52 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id w4sm7801qti.6.2021.05.03.07.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 May 2021 07:47:52 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7B8A627C0054;
-        Mon,  3 May 2021 10:47:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 03 May 2021 10:47:51 -0400
-X-ME-Sender: <xms:Fw2QYKAMV2YY3e9DWQM9hC5fPMX8x2pWfqhVkZrGe6YODq8l71YDgw>
-    <xme:Fw2QYEg83nOj3kLAjTv4Kb_hezeg7H9lkzll_1yU5Os59Zw_wJpej5DHu94357xVq
-    ZC64Jg9R0qn3vOsyA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdefgedgkedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
-    ueelnecukfhppedufedurddutdejrddurddvheegnecuvehluhhsthgvrhfuihiivgepvd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:Fw2QYNmyiPkrIgDUleqv7SkxfCgmvSitHf5xSRZ2Mz0vNiTSnNaIqA>
-    <xmx:Fw2QYIyI0mIwPN1bIem3JVuOKawnd5OS4IJ7jM8IP-c0GVeA_gWxDQ>
-    <xmx:Fw2QYPSvpb8OYowgS3MjofiRg47N0KZo5tbD1Y4MkBG8bd-D8JGhGw>
-    <xmx:Fw2QYHpEvU4s0FC5c9z1u-rgMTlP-JWr8gqllXXg4QF1NNnpwm5_HBNTZS1smiVm>
-Received: from localhost (unknown [131.107.1.254])
-        by mail.messagingengine.com (Postfix) with ESMTPA;
-        Mon,  3 May 2021 10:47:50 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [RFC v2 7/7] PCI: hv: Turn on the host bridge probing on ARM64
-Date:   Mon,  3 May 2021 22:46:35 +0800
-Message-Id: <20210503144635.2297386-8-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210503144635.2297386-1-boqun.feng@gmail.com>
-References: <20210503144635.2297386-1-boqun.feng@gmail.com>
+        id S229687AbhECO56 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 May 2021 10:57:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229650AbhECO56 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 May 2021 10:57:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4286361166;
+        Mon,  3 May 2021 14:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620053825;
+        bh=p0BJIJlzuPFaUslj6JNmj+oFyieoiT8v0bTQp2hvdN0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L/UA0eyb+02UVZvNL8dDB23AVLWxGfiIjVubVS91qQzH6+tajahryxunpFMfhIbui
+         Acspei0n4phlFOCUnWGJw3q1INAIl4/P4IQWDhRo2J41PQdKqD+2apsUZL3GA4/XbV
+         IZWmL91YTlF9BdOD5TNihSEoqUZMhEWxlTR/FD99x+rKQakfFQpKDvkB6a0oijZV3m
+         2RgDy1te17WFVO1HDGtnX29ULWu2truKh3T19Lo2iH/XxInRtNwr1cIUsCgTjDymNA
+         8Xba/zT3COeJssiYrYXNII3loceZHWT1ptbZ/ztCbP6pLVdRGnsN/TFViHuu0ISRb+
+         ww02CEda5Nbpg==
+Date:   Mon, 3 May 2021 07:57:02 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Prike Liang <Prike.Liang@amd.com>,
+        linux-nvme@lists.infradead.org, Chaitanya.Kulkarni@wdc.com,
+        gregkh@linuxfoundation.org, stable@vger.kernel.org,
+        Alexander.Deucher@amd.com,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 1/2] PCI: add AMD PCIe quirk for nvme shutdown opt
+Message-ID: <20210503145702.GC910137@dhcp-10-100-145-180.wdc.com>
+References: <1618458725-17164-1-git-send-email-Prike.Liang@amd.com>
+ <20210430175049.GA664888@bjorn-Precision-5520>
+ <20210503071407.GA3521294@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210503071407.GA3521294@infradead.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now we have everything we need, just provide a proper sysdata type for
-the bus to use on ARM64 and everything else works.
+On Mon, May 03, 2021 at 08:14:07AM +0100, Christoph Hellwig wrote:
+> On Fri, Apr 30, 2021 at 12:50:49PM -0500, Bjorn Helgaas wrote:
+> > Patch 2/2 only uses PCI_DEV_FLAGS_AMD_NVME_SIMPLE_SUSPEND in the nvme
+> > driver, so AFAICT there is no reason for the PCI core to keep track of
+> > the flag for you.
+> > 
+> > I see below that Christoph suggests it needs to be in the PCI core,
+> > but the reason needs to be explained in the commit log.
+> 
+> As far as I can tell this has nothing to do with NVMe except for the
+> fact that right now it mostly hits NVMe as the nvme drivers is one of
+> the few drivers not always doing a full device shutdown when the
+> system goes into the S3 power state.  But various x86 platforms now
+> randomly power done the link in that case.
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 4ec7839d0adf..75ff47bedf2a 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -40,6 +40,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/delay.h>
- #include <linux/semaphore.h>
- #include <linux/irqdomain.h>
-@@ -449,7 +450,11 @@ enum hv_pcibus_state {
- };
- 
- struct hv_pcibus_device {
-+#ifdef CONFIG_X86
- 	struct pci_sysdata sysdata;
-+#elif defined(CONFIG_ARM64)
-+	struct pci_config_window sysdata;
-+#endif
- 	struct pci_host_bridge *bridge;
- 	struct fwnode_handle *fwnode;
- 	/* Protocol version negotiated with the host */
-@@ -3102,7 +3107,9 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			 dom_req, dom);
- 
- 	hbus->bridge->domain_nr = dom;
-+#ifdef CONFIG_X86
- 	hbus->sysdata.domain = dom;
-+#endif
- 
- 	hbus->hdev = hdev;
- 	refcount_set(&hbus->remove_lock, 1);
--- 
-2.30.2
-
+Right, and the v5 of this series uses a generic name for the PCI quirk
+without mentioning "NVME".
