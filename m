@@ -2,137 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30F603711D3
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 09:04:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C8343711E8
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 09:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbhECHF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 03:05:27 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:43430 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbhECHF0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 03:05:26 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1436jSSO125386;
-        Mon, 3 May 2021 07:04:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=A2LUi98bQEsBLs6+EHyBIVyeTOOCSHH3hPDWNj+yY6c=;
- b=Bi4VLwxwlYpvLUg5nYwEXFoLf9b1AbGySJ/WjfihKqE9kJlVg5bFWkFtVIaSTGch+n/D
- VeDURr3lKTWlZZtRdai6UcdsmIlqVqnVb0ow10CkQyBTtpKosxtB16aBHzontgI56pdx
- EZC2baxfpORkyfFFv9a8YTdHuGDFpDSKh8GOZywnEHsYowFfqG/SyC84GGB9JeJw+mb0
- c+9NxwTwZdXWM1R4/YIKBICPXaHzkW88pJqUCZfmTM4owdRMj4uX/IWSHHw9JAfxY4eN
- OKN6gTA9XDqL7hPsTk26sb91j88eGe6dhbzJsyYwM03K0magBKNsM4NO2uouisbL23Lr KA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 388vgbjs15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 May 2021 07:04:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1436jDfw072686;
-        Mon, 3 May 2021 07:04:08 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 389grqau13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 May 2021 07:04:08 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 143747Bk155347;
-        Mon, 3 May 2021 07:04:07 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 389grqau0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 May 2021 07:04:07 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 143741qO029906;
-        Mon, 3 May 2021 07:04:04 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 May 2021 07:04:01 +0000
-Date:   Mon, 3 May 2021 10:03:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
+        id S230137AbhECHQA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 May 2021 03:16:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229817AbhECHP7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 03:15:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADF4C06174A;
+        Mon,  3 May 2021 00:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=r3+bWFuh6BpobiX0nzWuylFbflLXDf37EtMjaGp93GE=; b=TLNC+76DerQfr/NL+2m7X/GSER
+        uNvBpEDWThVt7XndOm7XxJHHjrELSCVyxrDDCIgHtY+U44JkKEk6s1/hX9mc0GO85CncaylbYfapK
+        PzncFH7m2X8m+rx4bGhLefPDykOQM35bXTwQh0AXYIhBS74AUF9okmR29HxdR+imqnFU5+NV0wJXb
+        dGYX6LzrgT67gSMyVQvtZid7xH5nv9H4w4WTkpWbV/aDxJ603s74JY3P52KKyMf5Gh1u7LlBmXtRy
+        YyrXFXEe54aCiIlMAtU0H+974rld9xfgr4oUGdPN/dh37bb3RLrb7bV8CZ3AMMIEHATJOOdls386r
+        Tu1bP3Jg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1ldSmN-00EmJz-7Q; Mon, 03 May 2021 07:14:14 +0000
+Date:   Mon, 3 May 2021 08:14:07 +0100
+From:   Christoph Hellwig <hch@infradead.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Colin King <colin.king@canonical.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: mediatek-gen3: Add missing null pointer check
-Message-ID: <20210503070351.GJ1981@kadam>
-References: <7a512e3a-2897-ac12-ac6e-06be28735279@wanadoo.fr>
- <20210430163450.GA657994@bjorn-Precision-5520>
+Cc:     Prike Liang <Prike.Liang@amd.com>, linux-nvme@lists.infradead.org,
+        Chaitanya.Kulkarni@wdc.com, gregkh@linuxfoundation.org,
+        hch@infradead.org, stable@vger.kernel.org,
+        Alexander.Deucher@amd.com,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 1/2] PCI: add AMD PCIe quirk for nvme shutdown opt
+Message-ID: <20210503071407.GA3521294@infradead.org>
+References: <1618458725-17164-1-git-send-email-Prike.Liang@amd.com>
+ <20210430175049.GA664888@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210430163450.GA657994@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-GUID: -HUAwuDF2LXDw3bFyBbGcmZlTdgK708b
-X-Proofpoint-ORIG-GUID: -HUAwuDF2LXDw3bFyBbGcmZlTdgK708b
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9972 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- impostorscore=0 clxscore=1011 bulkscore=0 spamscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2105030046
+In-Reply-To: <20210430175049.GA664888@bjorn-Precision-5520>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 11:34:50AM -0500, Bjorn Helgaas wrote:
-> On Fri, Apr 30, 2021 at 09:47:06AM +0200, Christophe JAILLET wrote:
-> > Le 29/04/2021 à 13:00, Colin King a écrit :
-> > > From: Colin Ian King <colin.king@canonical.com>
-> > > 
-> > > The call to platform_get_resource_byname can potentially return null, so
-> > > add a null pointer check to avoid a null pointer dereference issue.
-> > > 
-> > > Addresses-Coverity: ("Dereference null return")
-> > > Fixes: 441903d9e8f0 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
-> > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > > ---
-> > >   drivers/pci/controller/pcie-mediatek-gen3.c | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > index 20165e4a75b2..3c5b97716d40 100644
-> > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > @@ -721,6 +721,8 @@ static int mtk_pcie_parse_port(struct mtk_pcie_port *port)
-> > >   	int ret;
-> > >   	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcie-mac");
-> > > +	if (!regs)
-> > > +		return -EINVAL;
-> > >   	port->base = devm_ioremap_resource(dev, regs);
-> > >   	if (IS_ERR(port->base)) {
-> > >   		dev_err(dev, "failed to map register base\n");
-> > > 
-> > 
-> > Nitpick:
-> >    Using 'devm_platform_ioremap_resource_byname' is slightly less verbose
-> > and should please Coverity.
-> 
-> Not a nitpick at all.  Jianjun is correct that devm_ioremap_resource()
-> does check "regs" for NULL and it fails gracefully before trying to
-> dereference it, so the extra check shouldn't be needed.  And most
-> cases in drivers/pci/ look like this, without the extra check:
-> 
->   res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
->   base = devm_ioremap_resource(dev, res);
->   if (IS_ERR(base))
->     ...
-> 
-> If devm_platform_ioremap_resource_byname() keeps Coverity happy, I
-> think that's what we should be doing across drivers/pci/.  Coverity
-> false positives are a hassle.
+On Fri, Apr 30, 2021 at 12:50:49PM -0500, Bjorn Helgaas wrote:
+> This needs to be cc'd to linux-pci (I did it for you this time).
 
-Smatch knows that devm_ioremap_resource() will return ERR_PTR(-EINVAL)
-when we pass it a NULL.  ;)
+I did ask for that before.
 
-regards,
-dan carpenter
+> Sorry, I can't make any sense out of the commit log.  Is this a Root
+> Port defect or an NVMe device defect?
 
+It is a root port quirk, although it appears to be intentional as Intel
+is doing the same thing on some platforms.
+
+> Patch 2/2 only uses PCI_DEV_FLAGS_AMD_NVME_SIMPLE_SUSPEND in the nvme
+> driver, so AFAICT there is no reason for the PCI core to keep track of
+> the flag for you.
+> 
+> I see below that Christoph suggests it needs to be in the PCI core,
+> but the reason needs to be explained in the commit log.
+
+As far as I can tell this has nothing to do with NVMe except for the
+fact that right now it mostly hits NVMe as the nvme drivers is one of
+the few drivers not always doing a full device shutdown when the
+system goes into the S3 power state.  But various x86 platforms now
+randomly power done the link in that case.
+
+> 
+> I have not acked this patch.  Please don't merge it before clearing
+> these things up.
+
+I would never merge PCI core changes that haven't been reviewd by the
+maintainer.
