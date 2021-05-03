@@ -2,99 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D7E5372008
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 20:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9779C37210A
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 22:01:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbhECS6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 14:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229522AbhECS6v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 May 2021 14:58:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D812461153;
-        Mon,  3 May 2021 18:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620068278;
-        bh=cQ75rdudKQ/QAGQKDKaMh2yRb48TX9KsOBfAfYu9N7E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sJZy4fWaeT/ZWrSgcd57XTlmRT2guB3g7nFyaLh3Kpz/Ky20f9h7KZbGwMNf46S7u
-         GKObapn7TwMpwbqXKm+dtXFzVY2ECL0edaxcq2qo3/3Gd7vkje81KU2TxcvDx+jI5H
-         IsCxTuGcrTHt3zwHGDDFLKxwPjthmth0bcNVQj1NmudaJ2UbCfepGpU80AK4dEfoig
-         vo8U6LS18a7PQIOHk/rngm8juav6OHXhibxHheW64HAo4uQJT++O4S5Nr1JECdsiay
-         meD5lbXc+UkqeGFP85RrsRetmZ2UkUbbc6fPWIgNn3cvIHe94PUq5tVHAKECle03i1
-         r5E8EQS2+F3oA==
-Date:   Mon, 3 May 2021 13:57:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
+        id S229615AbhECUCB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 May 2021 16:02:01 -0400
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:45660 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229499AbhECUCA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 16:02:00 -0400
+Received: by mail-oi1-f169.google.com with SMTP id n184so6537975oia.12;
+        Mon, 03 May 2021 13:01:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=X4KlkqE3016HoNlp0LRojABlkrGtR4P8b0/UN4z4Wws=;
+        b=WQe8S8gFdatf+c9SuwP4GO1FlqylxGWN/GDG+t+y7iXax5dWe1vhFQ0FFweui31xl3
+         SjLhTvLiomSPLuNaKfrj4BAYpjMpQN6M9aThQoj0l2k0rZ0343uWGPfb1oDt6mmXSgfW
+         YlhMrxJ6SEdvzxKBI4lOs1j0AEg5b/G9MUBVKRKcytgphUIlqFFQsFJNl5izp5UFUJGC
+         hAAumypXPon4qCtzofx8Cfwi7/PYTE/WLFCPOVqfZchGFDTsrmMuRQX+neOJr6zjXCHr
+         nYOzK9+aXBiFmYuXas7jtfD+criT/3bOke0I5UT4OKiO2poajR9MQr5GIk8V/VJGC9Y0
+         MFlw==
+X-Gm-Message-State: AOAM532vBxe2V+wCJ2NHgbDENuJM4itjneQuGcDbrha0QWFPsxtOcOhJ
+        pmnsPz+KIwv4969bEeKQSQ==
+X-Google-Smtp-Source: ABdhPJw/z/Vth2Mtu621HryVgzw1JKr612CTsqcBJJAY8Yx4T9tFrlIVUWKKxSx4SxYC3g+Bx2HX+w==
+X-Received: by 2002:a54:4184:: with SMTP id 4mr199285oiy.72.1620072066668;
+        Mon, 03 May 2021 13:01:06 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a4sm204369oib.17.2021.05.03.13.01.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 May 2021 13:01:05 -0700 (PDT)
+Received: (nullmailer pid 2295442 invoked by uid 1000);
+        Mon, 03 May 2021 20:01:04 -0000
+Date:   Mon, 3 May 2021 15:01:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 0/3] ata: ahci_brcm: Fix use of BCM7216 reset
- controller
-Message-ID: <20210503185756.GA993240@bjorn-Precision-5520>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH] dt-bindings: PCI: rcar-pci-host: Document missing R-Car
+ H1 support
+Message-ID: <20210503200104.GA2295387@robh.at.kernel.org>
+References: <fb0bb969cd0e5872ab5eac70e070242c0d8a5b81.1619700202.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210430152156.21162-1-jim2101024@gmail.com>
+In-Reply-To: <fb0bb969cd0e5872ab5eac70e070242c0d8a5b81.1619700202.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 11:21:53AM -0400, Jim Quinlan wrote:
-> v6 -- Added new commit which adds a missing function to the reset API.
->       This fixes 557acb3d2cd9 and should be destined for linux stable.
+On Thu, 29 Apr 2021 14:44:09 +0200, Geert Uytterhoeven wrote:
+> scripts/checkpatch.pl -f drivers/pci/controller/pcie-rcar-host.c:
 > 
-> v5 -- Improved (I hope) commit description (Bjorn).
->    -- Rnamed error labels (Krzyszt).
->    -- Fixed typos.
+>     WARNING: DT compatible string "renesas,pcie-r8a7779" appears un-documented -- check ./Documentation/devicetree/bindings/
+>     #853: FILE: drivers/pci/controller/pcie-rcar-host.c:853:
+>     +	{ .compatible = "renesas,pcie-r8a7779",
 > 
-> v4 -- does not rely on a pending commit, unlike v3.
+> Re-add the compatible value for R-Car H1, which was lost during the
+> json-schema conversion.  Make the "resets" property optional on R-Car
+> H1, as it is not present yet on R-Car Gen1 SoCs.
 > 
-> v3 -- discard commit from v2; instead rely on the new function
->       reset_control_rearm provided in a recent commit [1] applied
->       to reset/next.
->    -- New commit to correct pcie-brcmstb.c usage of a reset controller
->       to use reset/rearm verses deassert/assert.
+> Fixes: 0d69ce3c2c63d4db ("dt-bindings: PCI: rcar-pci-host: Convert bindings to json-schema")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This was never enabled in the upstream r8a7779.dtsi, but the Linux
+> driver does support it.
+> ---
+>  .../devicetree/bindings/pci/rcar-pci-host.yaml       | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 > 
-> v2 -- refactor rescal-reset driver to implement assert/deassert rather than
->       reset because the reset call only fires once per lifetime and we need
->       to reset after every resume from S2 or S3.
->    -- Split the use of "ahci" and "rescal" controllers in separate fields
->       to keep things simple.
-> 
-> v1 -- original
-> 
-> Jim Quinlan (3):
->   reset: add missing empty function reset_control_rearm()
->   ata: ahci_brcm: Fix use of BCM7216 reset controller
->   PCI: brcmstb: Use reset/rearm instead of deassert/assert
-> 
->  drivers/ata/ahci_brcm.c               | 46 +++++++++++++--------------
->  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++----
->  include/linux/reset.h                 |  5 +++
->  3 files changed, 41 insertions(+), 29 deletions(-)
 
-I provisionally applied these to my pci/brcmstb branch for v5.13.
-
-I carried forward Jens' ack on "ata: ahci_brcm: Fix use of BCM7216
-reset controller" since the patch is identical to the v5 version that
-he acked.
-
-I'm hoping to get an ack from Philipp for the reset.h change.
-
-Bjorn
+Applied, thanks!
