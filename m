@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9051371053
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 03:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC005371059
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 03:34:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232830AbhECBa0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 May 2021 21:30:26 -0400
-Received: from mail-eopbgr770080.outbound.protection.outlook.com ([40.107.77.80]:29316
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        id S232812AbhECBfg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 May 2021 21:35:36 -0400
+Received: from mail-bn1nam07on2089.outbound.protection.outlook.com ([40.107.212.89]:14925
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232822AbhECBa0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 2 May 2021 21:30:26 -0400
+        id S230368AbhECBff (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 2 May 2021 21:35:35 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gCL/lO0jUUHuol6goA0YgtXIvcFtDX7e5D00ofXEMwUROtHKhyG17bvegfUp72pQzfNV2zA973GQ7ky5Na2fHMC2VEbAMP4/rjYDnO/sok7SKTZa/qmF3jTB9928FxauvKBTrRTSE/ZrA963OJzR5MJMvpZ3WPb2hYhN+kSKrLtor+dd3Q0vZXB0U+C++F9KZXkCU83lVWGLR0q8NVgqGBi+dlwzU1kc8F86n4W88c9yEMj7WP68p0ZSz/JNEFK/4fiLtTzj14kMfhEvXvqglFjC2lLorWAXsz1qAFr77s30950JnNB+IctmccpcVhOlxndxnRzVdfdyGep/8bkzPA==
+ b=jZXPADSvts+KVOa/h56iPblrfqYaV/jTDJE/i6uqzuUzG+isNh8VOFImluUJBRcu62zitzokQDOSt2Dcpb/BwI1lFvXrSgAlMbTkuZFmJcFooAFjxXRxHCBnDuuug2F06EIzKOgFxa6WVN3QhH8C1jV+HVkeTz/Vfsbmu7RWqWybK/XEqk5+smKJ99LLSmeeao2DRb6F7MZMsek9AAzYC0YoS2D6zTjOBbcwbt2DDKqBd0Rst3wqiDZaDfUfFrpTpultxd+z2Zw8z6zkCQRqlNRWbscCaSnLwInEffKD5JAyWZX3nupgE6LM0Pme2858ziP1idTBAT74t4i+Rc93zw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YyavnRE3Ox1ihMSwbw9mkeQeDET3W5clQ5FHuVhcTV8=;
- b=ilRiUR9lhADkC25aMVkI76koF7QZN8YQU5a4PbwsJ7b+i9Qbl6bkjTuQuU/ZKNobRA3veLLbSkywSVXBLZSoyOasRsvG4IKvwlnqWxaVTTlkNLXJd2dTtj8cmmAVAvHpAq35xf4kerybtz8jES8LA6wFIggVcDvPDvtaO2KA8RbfLYdX2n/N+gA7f31MBmC7SjdM9u7vReHM0Kw5FE9S1u3IGtmvBvWz2d0gk7zVZu+4YmGRYtxyGPNeiTGYgozXsUfJTuYX1ioMN8X3YviXFUxZLYlijOtNOGzPnf4km/8zozx2xneGo2MuO1rZpqWaXgi0Yh2LP4F8KgVGC9pUdQ==
+ bh=hPaaXZktY2cFnw1P7z+m+ZmwSYuzdqwLrQD4QtpwOd0=;
+ b=J96+VaUXwlvqSRyOAe58twv0/11JB+OlSCN4UJ5uO2jMU/THttBJq4OB4uKzXGOHkGzkraFv+BI11/0bYo2sUqBOaxT9xI/xVZTpaAhSC35ZJOCgtpiQrisIeabWIpJnHoy7M1HrfiSKmyZbgRR5FcrFkKWDC6h3/IVdWJAAe35CKaCFKEq4mqbdiRL8uXkWEY/2YApidUvWijd7T7HcJzErVOLeXtkG9iOuY6yING8oZWDafmte8E5w0/YrXoNNf9SwtnOAm4oDbnx+31C99ml7Oo8jxWAllhCfyfzZYNxD3SeWLZhyZw/hz2yODSyPmeiMA5YYpDjaEgkgRekXmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.112.34) smtp.rcpttodomain=raithlin.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YyavnRE3Ox1ihMSwbw9mkeQeDET3W5clQ5FHuVhcTV8=;
- b=OPEAjJnRM4x4FwIBocyNAcxTpUNMJmpwdjxKTangMauSn6yyl6eN4DPhU1uQCgi8olPpKYUJGROWgXQAVthWST+4li/4m/YSBN/Em+MbSYoM+Oi6BIINMuPLGUMNKJYZqUya5F9IYJT5O/+pABENj99XEn/8EWXOfm5W2cjIuop8WJ2GcXMtYXrYpzdFQKmsKO76OKarG2RQSjZ+NqjiR5W/gZrXhvEdzmCysS/SUr8CCXWy3WI6Xrw6E4mPmYw0gZhe7d9qLWOuyCdGdn3v6Rj0lR90ilCv9HuuTs8fDFhmLPAUzYQOLCCjRDrmwX+zFvrrExQpNQfUMnFvs/MdAA==
-Received: from MW3PR05CA0010.namprd05.prod.outlook.com (2603:10b6:303:2b::15)
- by BL1PR12MB5205.namprd12.prod.outlook.com (2603:10b6:208:308::17) with
+ bh=hPaaXZktY2cFnw1P7z+m+ZmwSYuzdqwLrQD4QtpwOd0=;
+ b=adt7UUTyanIZoWiF86i6bJbhnsffW4SN+1i0TVwQmmECX9COL8F6cDGEDtSdepIIzYN4nd8as8yqpePKdwHPkQW1sWX7wF3ZNoqP1glRoTXkxRYKuvf6ZYdRTcVEKzeJqY4xxGJd/anH6p5BDFtwyU2Ov8YAy1ZQz7iK6YRHO49NCyZnuCvsBAD8Lzow0eDattGSA7XhNvxB7yTuAM5f8kE7PoHs+y6dEb3zUVPvk6w4fbbcuCt35d+kUYdZCT0ikRYGBbPk+WVr+X993tO10BbfYlqtdUMY+uZqRY1W7c87VwzocNqaja2XB4/Lb641tfAPK77KnwoucL9etMnT5A==
+Received: from BN1PR14CA0009.namprd14.prod.outlook.com (2603:10b6:408:e3::14)
+ by DM5PR12MB2519.namprd12.prod.outlook.com (2603:10b6:4:b5::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.35; Mon, 3 May
- 2021 01:29:31 +0000
-Received: from CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:2b:cafe::47) by MW3PR05CA0010.outlook.office365.com
- (2603:10b6:303:2b::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.8 via Frontend
- Transport; Mon, 3 May 2021 01:29:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.38; Mon, 3 May
+ 2021 01:34:41 +0000
+Received: from BN8NAM11FT062.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e3:cafe::3a) by BN1PR14CA0009.outlook.office365.com
+ (2603:10b6:408:e3::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.27 via Frontend
+ Transport; Mon, 3 May 2021 01:34:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
  smtp.mailfrom=nvidia.com; raithlin.com; dkim=none (message not signed)
  header.d=none;raithlin.com; dmarc=pass action=none header.from=nvidia.com;
@@ -45,14 +45,14 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.112.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.112.34; helo=mail.nvidia.com;
 Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT041.mail.protection.outlook.com (10.13.174.217) with Microsoft SMTP
+ BN8NAM11FT062.mail.protection.outlook.com (10.13.177.34) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4087.27 via Frontend Transport; Mon, 3 May 2021 01:29:30 +0000
+ 15.20.4087.27 via Frontend Transport; Mon, 3 May 2021 01:34:40 +0000
 Received: from [10.2.50.162] (172.20.145.6) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 3 May
- 2021 01:29:30 +0000
-Subject: Re: [PATCH 12/16] nvme-pci: Check DMA ops when indicating support for
- PCI P2PDMA
+ 2021 01:34:40 +0000
+Subject: Re: [PATCH 13/16] nvme-pci: Convert to using dma_map_sg_p2pdma for
+ p2pdma pages
 To:     Logan Gunthorpe <logang@deltatee.com>,
         <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
         <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
@@ -74,14 +74,14 @@ CC:     Stephen Bates <sbates@raithlin.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-13-logang@deltatee.com>
+ <20210408170123.8788-14-logang@deltatee.com>
 From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f8bdf85c-2302-890e-7f77-e11fe6f29d6e@nvidia.com>
-Date:   Sun, 2 May 2021 18:29:29 -0700
+Message-ID: <78a165e1-657b-c284-d31a-adc8c9ded55d@nvidia.com>
+Date:   Sun, 2 May 2021 18:34:39 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210408170123.8788-13-logang@deltatee.com>
+In-Reply-To: <20210408170123.8788-14-logang@deltatee.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,126 +90,114 @@ X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a01d090d-0336-4080-9763-08d90dd2e647
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5205:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5205A85CBD986CF9F3BF562EA85B9@BL1PR12MB5205.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-MS-Office365-Filtering-Correlation-Id: 18d47ce8-ca5e-4948-a5ee-08d90dd39f37
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2519:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB251910DC88936F994FA68C04A85B9@DM5PR12MB2519.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2TnRenD0MBbZZTZHt/sDgGqDYrN69ewZbD3RlpBe5wmqMcA4vYkoigcHzR7xc77h9rXX17RHoASYYC3SMHLC8ULS8iZ+AUZhny7UQqSp8Bkptx0rU34/91aODlgf84LQFbAgsDN3powGzDht1hgOgTQqfBpqPal+WItxxmttNGMaNP6uFKGU3I0hvwtH4xUCBEEh7zXK18+LP9z0Gbi0PCysnPjBwl4I7OFr4craDXpQr7XbC57LGwRVWH7W7BLzG07bn8Vh5usMP2H+RalIWL/lVjd98JPjeQkQ7Ks40WrIVnrOqngGrh0P3cpbDXB2PHlRGBZdiokOyvZoUJxWuNV5xt8UYzihnbGiKb/pVQRshPxYxru3WTyO3jwGqOe6lBZONoua0GYvYkqTvx+ki0QidJ2nq13NyIdBNMbZ4tnsiHjiaPmyx7WBgp/i7lAn5oI1B7xIu/1B6jJzQkfn+Jf12Qxr+l/jJU1Zct7YP7HFRANXozrwW2kvuwqHLnmUKT/j4BmZIFE9GcKfgnaQX1tt9BXHzGSJUplxZ9/QyTAX7dIqMT9fokgN6g8RkoDCtzW0T+2NkznksFLgPO+/qeTF9zGAsH4gKC8WcXyyoDHPmrLdId2cTnYkduncoAuIsICOdEJGnRja7jGR91OBWc5zh7P8/bTNBa0pOWKQNmtV/14p/wxfLBq9iTx7g44VPDZJrfd/HEeBQWV8cpZnhg==
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(396003)(39860400002)(346002)(136003)(36840700001)(46966006)(83380400001)(2906002)(36906005)(8936002)(316002)(82740400003)(4326008)(70206006)(70586007)(31696002)(8676002)(47076005)(7416002)(426003)(7636003)(16576012)(53546011)(36860700001)(5660300002)(16526019)(186003)(36756003)(82310400003)(110136005)(86362001)(54906003)(478600001)(336012)(26005)(2616005)(356005)(31686004)(2101003)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: dWW56g6cN4bTUpBCZm4W+NYYzvUqB8Z4iBzqEIEMLSWrSD5H4fnsipYkW+sR6ur2l/6yzdgpsTys2WVHaIdVSkm57g3UbppJ1ejfSKurbFmY8NXV5HhwAXytV6domKoaH1iPUTq7YCQDJht/92HnR8/YiVIP3waNDlWH30XPP9JCgGhHNlgEjz+7RyH8+k/L2uk6DwFQOh3UYNQVwutzbCfhURq+Vau/egtMlRy3PaIKfsZeKSnjLhV5KH7P49j2GcRoEyXf7qPgOCpGW5JT3wIkk6BOTAWXCLFEoOP1pu0UM6G6VQpLWGzE19YTz0u7iwTg6vc9q79d7lZpv/rMqVVzZwoTVaVM2JuAs990cLUW7ltLKdanN/FEztQGyaM+GBsolDHzNW+Nk0l+357sZA+gc4XpM8VM8wxSK8OMQNZxR8WaFSr5CzVKpM7VLWEtjsrMR8WUh6XMTs/S2JDV4MiG4lTA/50c19Ma7UXESZqaGybeZmGKpcqEsKpdL3fYD9Js3rIvuSZpa74iGr8wbyxBJSLR9vjWL2sZdkpMVhtQb1emwePRMPskTY1EW4z3Inki1bGcRG7xBbIfxhCzBTA83ilO+N6JVVJyxGzcUY0V5QTR2QiQ+NLYmDfjwe/RnK6ACocLOS8ak8qpyage2nJbfZEM7wRL89prnutxd7A6ivaFEvQ/rWjBxEy5kYf+nk+sWE09jG1Ujo1vlU6EOA==
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(136003)(396003)(39860400002)(376002)(36840700001)(46966006)(54906003)(36906005)(86362001)(82740400003)(2616005)(7416002)(356005)(2906002)(16576012)(316002)(16526019)(5660300002)(7636003)(36756003)(8936002)(83380400001)(70586007)(70206006)(426003)(336012)(47076005)(82310400003)(186003)(8676002)(36860700001)(110136005)(31696002)(31686004)(4326008)(26005)(478600001)(53546011)(2101003)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2021 01:29:30.6331
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2021 01:34:40.8361
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a01d090d-0336-4080-9763-08d90dd2e647
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18d47ce8-ca5e-4948-a5ee-08d90dd39f37
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT062.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5205
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2519
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 4/8/21 10:01 AM, Logan Gunthorpe wrote:
-> Introduce a supports_pci_p2pdma() operation in nvme_ctrl_ops to
-> replace the fixed NVME_F_PCI_P2PDMA flag such that the dma_map_ops
-> flags can be checked for PCI P2PDMA support.
+> Convert to using dma_map_sg_p2pdma() for PCI p2pdma pages.
+> 
+> This should be equivalent but allows for heterogeneous scatterlists
+> with both P2PDMA and regular pages. However, P2PDMA support will be
+> slightly more restricted (only dma-direct and dma-iommu are currently
+> supported).
 > 
 > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 > ---
->   drivers/nvme/host/core.c |  3 ++-
->   drivers/nvme/host/nvme.h |  2 +-
->   drivers/nvme/host/pci.c  | 11 +++++++++--
->   3 files changed, 12 insertions(+), 4 deletions(-)
+>   drivers/nvme/host/pci.c | 28 ++++++++--------------------
+>   1 file changed, 8 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index 0896e21642be..223419454516 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -3907,7 +3907,8 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid,
->   		blk_queue_flag_set(QUEUE_FLAG_STABLE_WRITES, ns->queue);
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 14f092973792..a1ed07ff38b7 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -577,17 +577,6 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
 >   
->   	blk_queue_flag_set(QUEUE_FLAG_NONROT, ns->queue);
-> -	if (ctrl->ops->flags & NVME_F_PCI_P2PDMA)
-> +	if (ctrl->ops->supports_pci_p2pdma &&
-> +	    ctrl->ops->supports_pci_p2pdma(ctrl))
+>   }
+>   
+> -static void nvme_unmap_sg(struct nvme_dev *dev, struct request *req)
+> -{
+> -	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+> -
+> -	if (is_pci_p2pdma_page(sg_page(iod->sg)))
+> -		pci_p2pdma_unmap_sg(dev->dev, iod->sg, iod->nents,
+> -				    rq_dma_dir(req));
+> -	else
+> -		dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+> -}
+> -
+>   static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
+>   {
+>   	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+> @@ -600,7 +589,7 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
+>   
+>   	WARN_ON_ONCE(!iod->nents);
+>   
+> -	nvme_unmap_sg(dev, req);
+> +	dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
 
-This is a little excessive, as I suspected. How about providing a
-default .supports_pci_p2pdma routine that returns false, so that
-the op is always available (non-null)? By "default", maybe that
-means either requiring an init_the_ops_struct() routine to be
-used, and/or checking all the users of struct nvme_ctrl_ops.
 
-Another idea: maybe you don't really need a bool .supports_pci_p2pdma()
-routine at all, because the existing .flags really is about right.
-You just need the flags to be filled in dynamically. So, do that
-during nvme_pci setup/init time: that's when this module would call
-dma_pci_p2pdma_supported().
+Nice simplification!
 
-Actually, I think that second idea simplifies things quite a
-bit, but only if it's possible. I haven't worked through the
-startup order of calls in nvme_pci.
+
+>   	if (iod->npages == 0)
+>   		dma_pool_free(dev->prp_small_pool, nvme_pci_iod_list(req)[0],
+>   			      iod->first_dma);
+> @@ -868,14 +857,13 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+>   	if (!iod->nents)
+>   		goto out_free_sg;
+>   
+> -	if (is_pci_p2pdma_page(sg_page(iod->sg)))
+> -		nr_mapped = pci_p2pdma_map_sg_attrs(dev->dev, iod->sg,
+> -				iod->nents, rq_dma_dir(req), DMA_ATTR_NO_WARN);
+> -	else
+> -		nr_mapped = dma_map_sg_attrs(dev->dev, iod->sg, iod->nents,
+> -					     rq_dma_dir(req), DMA_ATTR_NO_WARN);
+> -	if (!nr_mapped)
+> +	nr_mapped = dma_map_sg_p2pdma_attrs(dev->dev, iod->sg, iod->nents,
+> +				     rq_dma_dir(req), DMA_ATTR_NO_WARN);
+> +	if (nr_mapped < 0) {
+> +		if (nr_mapped != -ENOMEM)
+> +			ret = BLK_STS_TARGET;
+>   		goto out_free_sg;
+> +	}
+
+But now the "nr_mapped == 0" case is no longer doing an early out_free_sg.
+Is that OK?
+
+>   
+>   	iod->use_sgl = nvme_pci_use_sgls(dev, req);
+>   	if (iod->use_sgl)
+> @@ -887,7 +875,7 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+>   	return BLK_STS_OK;
+>   
+>   out_unmap_sg:
+> -	nvme_unmap_sg(dev, req);
+> +	dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+>   out_free_sg:
+>   	mempool_free(iod->sg, dev->iod_mempool);
+>   	return ret;
+> 
 
 thanks,
 -- 
 John Hubbard
 NVIDIA
-
->   		blk_queue_flag_set(QUEUE_FLAG_PCI_P2PDMA, ns->queue);
->   
->   	ns->queue->queuedata = ns;
-> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-> index 07b34175c6ce..9c04df982d2c 100644
-> --- a/drivers/nvme/host/nvme.h
-> +++ b/drivers/nvme/host/nvme.h
-> @@ -473,7 +473,6 @@ struct nvme_ctrl_ops {
->   	unsigned int flags;
->   #define NVME_F_FABRICS			(1 << 0)
->   #define NVME_F_METADATA_SUPPORTED	(1 << 1)
-> -#define NVME_F_PCI_P2PDMA		(1 << 2)
->   	int (*reg_read32)(struct nvme_ctrl *ctrl, u32 off, u32 *val);
->   	int (*reg_write32)(struct nvme_ctrl *ctrl, u32 off, u32 val);
->   	int (*reg_read64)(struct nvme_ctrl *ctrl, u32 off, u64 *val);
-> @@ -481,6 +480,7 @@ struct nvme_ctrl_ops {
->   	void (*submit_async_event)(struct nvme_ctrl *ctrl);
->   	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
->   	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
-> +	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
->   };
->   
->   #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 7249ae74f71f..14f092973792 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -2759,17 +2759,24 @@ static int nvme_pci_get_address(struct nvme_ctrl *ctrl, char *buf, int size)
->   	return snprintf(buf, size, "%s\n", dev_name(&pdev->dev));
->   }
->   
-> +static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
-> +{
-> +	struct nvme_dev *dev = to_nvme_dev(ctrl);
-> +
-> +	return dma_pci_p2pdma_supported(dev->dev);
-> +}
-> +
->   static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
->   	.name			= "pcie",
->   	.module			= THIS_MODULE,
-> -	.flags			= NVME_F_METADATA_SUPPORTED |
-> -				  NVME_F_PCI_P2PDMA,
-> +	.flags			= NVME_F_METADATA_SUPPORTED,
->   	.reg_read32		= nvme_pci_reg_read32,
->   	.reg_write32		= nvme_pci_reg_write32,
->   	.reg_read64		= nvme_pci_reg_read64,
->   	.free_ctrl		= nvme_pci_free_ctrl,
->   	.submit_async_event	= nvme_pci_submit_async_event,
->   	.get_address		= nvme_pci_get_address,
-> +	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
->   };
->   
->   static int nvme_dev_map(struct nvme_dev *dev)
-> 
-
