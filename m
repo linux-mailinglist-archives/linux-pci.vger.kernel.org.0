@@ -2,60 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7327B371F70
-	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 20:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88378371F74
+	for <lists+linux-pci@lfdr.de>; Mon,  3 May 2021 20:21:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbhECSV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 14:21:28 -0400
-Received: from mail-co1nam11on2068.outbound.protection.outlook.com ([40.107.220.68]:49761
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229472AbhECSV0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 May 2021 14:21:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZF9nU+IugYIVFLlgtD28vBVXzUoN8dsHFrObRnGqM0fCMSPxyco6OzJ95xoerqmq0A1oX6Kyr7viPhY6Z3BtYX1lgcgoINLq5ArdnGGazB6TCKNpoRFXeZCVPiuz4LPNg7gLDgh0CjDyfEDomG6emzefERV0jDq+2C41hlB/GBRqsovSI1aIf7D1Zcyapjk85qDdwzmSm7BgtGj853aLreAH6ExTv4GRhByUhKAdbzP56NkfuAoLFeOiszF2EybIr0BzIbOi/t3jvMW0kvX2995ZDBQuCS0GGBCoY7VPj8GdSs+zQfRyetkWQ1KfGXT30FEA0vdaZFpdLbdZ2hbrKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t9xqhPQxRINPKBEM2wIQ3yUt/apZa8lcpKVrgcDF22o=;
- b=ivR5gnpFPDuaexspjhaJIVY+rSmqlcLKHJFJkMfRYZTcDa3IoX4zTRo9tPemaYzqFhsU2CCS6/RpN0wJrSWdK0b576RBaPnm9nIT8UEMEUtagKqCYA5XZ38PyQpB58iZqL1NGxVM+hf820dIfA+33AnhVTD37nil6dOXoD9MkMqb4sA29zli2aGZBFKY0GnQsa3v+hsJOvWOK11m49CezEcM8snDfhemFNGnOyMIqHiZkzADEw0fKuxRL6I+Jo1igQaRonVxBavpsenibouWiV3H2EeUpV7UUHgiql9u3ncvbooCs6T+JZlHCFWLszw626kBK2bVkljOTmQzZUcepQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=raithlin.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t9xqhPQxRINPKBEM2wIQ3yUt/apZa8lcpKVrgcDF22o=;
- b=P6gvU381ZpCZO1MVINQkrJruOoSMIHDqYBFmzb3zvFwNDx0ip46hRfeRwufAZ5VBGJUm91lonZby9BkR/c+VLaxtRz1yNe631O49OfYtdOqRhvV4fyylufsuiShpy1eYh76xuFYntG7E/amsfdP6kMnASnsY6voDMtlLciOxl9lJegAEjpnOzJtgY000+EKiFjj8qvvAgHL+ZG2wc6LTQarjpIo4o+3vmanCtPcKTiRw+MDhf2fKvg1fGUD2rPoiOQ63doxE7AJ3EyHc0vKHlkk2sS3rRYYtokckrxzTn4bP8lIUZTyHY5kNvjs2JjMVru67Z/ukb7fEQGksQTItPA==
-Received: from DM3PR12CA0135.namprd12.prod.outlook.com (2603:10b6:0:51::31) by
- BYAPR12MB3589.namprd12.prod.outlook.com (2603:10b6:a03:df::29) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4087.41; Mon, 3 May 2021 18:20:31 +0000
-Received: from DM6NAM11FT044.eop-nam11.prod.protection.outlook.com
- (2603:10b6:0:51:cafe::f6) by DM3PR12CA0135.outlook.office365.com
- (2603:10b6:0:51::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.27 via Frontend
- Transport; Mon, 3 May 2021 18:20:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; raithlin.com; dkim=none (message not signed)
- header.d=none;raithlin.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT044.mail.protection.outlook.com (10.13.173.185) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4087.27 via Frontend Transport; Mon, 3 May 2021 18:20:31 +0000
-Received: from [10.2.50.162] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 3 May
- 2021 18:20:30 +0000
-Subject: Re: [PATCH 02/16] PCI/P2PDMA: Avoid pci_get_slot() which sleeps
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-mm@kvack.org>, <iommu@lists.linux-foundation.org>
-CC:     Stephen Bates <sbates@raithlin.com>,
+        id S229637AbhECSV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 May 2021 14:21:56 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:60390 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229472AbhECSVy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 14:21:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=btAG4Vr3f5GLEzhmHmHkox49Ultu4PcxMLcQ9c/IbGg=; b=Kok6u9aTNQ/DTtp1uHx6mPrNjx
+        K8OjtI9P0WjkLvmrMoggQoeKvdKKIN8gAf//ZoorpRZxjiWc12WO+bWHaVjJOoXdbmJdZIAIUUL1x
+        Q6vPsiblyYvlCii5btWVUafaskZ5yfaz9cDn/nnSxzVz+4JYypdaPqNwwnVcKoWo4Sne+INjhTfrV
+        ZW3hhWBsn8zY0B97HLikca3VnzSWWlgwewCA8CA6MeLf174EE1h8BrpH8TB/RtRDj7O61YRad/Djs
+        j0PGayIK3T4fD/uzv3Z6XaDwcSoaqpjnxy6wGL2mD+pDdVcJztSQdxhWIFsh1Ipo3mp/N2GlM7zPU
+        EFmnDZ6w==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lddBX-0000Z1-P0; Mon, 03 May 2021 12:20:49 -0600
+To:     John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
@@ -70,127 +43,80 @@ CC:     Stephen Bates <sbates@raithlin.com>,
         Xiong Jianxin <jianxin.xiong@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-3-logang@deltatee.com>
- <d6220bff-83fc-6c03-76f7-32e9e00e40fd@nvidia.com>
- <d4091d87-7d9e-8cde-4e1c-01b877b6785f@deltatee.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b40529f9-03d8-ab61-4f4d-8f5bd8f860c9@nvidia.com>
-Date:   Mon, 3 May 2021 11:20:30 -0700
+ <20210408170123.8788-2-logang@deltatee.com>
+ <d8ac4c84-1e69-d5d6-991a-7de87c569acc@nvidia.com>
+ <8ea5b5b3-e10f-121a-bd2a-07db83c6da01@deltatee.com>
+ <3bced3a4-b826-46ab-3d98-d2dc6871bfe1@nvidia.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <8402ca0b-f147-fb99-bab4-71f047d2ba46@deltatee.com>
+Date:   Mon, 3 May 2021 12:20:38 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <d4091d87-7d9e-8cde-4e1c-01b877b6785f@deltatee.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <3bced3a4-b826-46ab-3d98-d2dc6871bfe1@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 79acc9a7-e96c-4828-413d-08d90e6022ed
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3589:
-X-Microsoft-Antispam-PRVS: <BYAPR12MB3589AC00CA3BE922C965B720A85B9@BYAPR12MB3589.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +cZ24FGZKHLksu0NEJGiydLlzlEoVZyR+qQUcjxfwwo/R9FfmGCPQPEm04G3yQ5CtYS5jUNGFIQK4WjeuONpGPcNFR4DPPgOyoLPm3NXAFPBDDoWJ10Qe9eu6oxPyp04tvKXCxaYzNlEkqINrbk/j8rPubJ016SFdhphBck7/fKjij6aiakot0hOphAJOxN4AU8QtIZEs7X8rKG6EiG99xQyDczUSV9XS0cxL81vKoNkl4PgZOQmVHu9rtlnbIhMQWGTu7ZJSSM94l/iqhL7CuUobcmfn766DqxJxckvUiCP2mDsPQ3nzKsHb1Vs8/IRSMeyT3gFmNVHUtbj0JImpc9AJ7uOXq8JgMHSEVIEahdWHHgkml7FlnKVBQOoyoABo4M2kqJIwaDLl7hqzC83oIXGxil5uac6C34Frqgxpu3UYjp5MfC6T+iBV24fgCPRcrdxePXky72VO2942kLAnl7hWx0Np7h25ft5w5jkkvK1YbsQj2NYyCnlgcRa2NE2Ulyjj/6S4npXxsVK6hQ2vhh5tEiaf6/hAvP4/+3EqSsZ7zbk/9B/Axp0xpVW68ZKzJpqOQ7kHg9KqcnicA79Z8uW4o5gpm1Mf4VWuKQY8ikmu2ZvguMvDS/JCA898QTP5c9U88k4DYGrha6E9Ei464pm4Uvemv12/YyEaYKF/aGVezMUnU2Nwf9Ylyf7uKZDkNfusq1isAvlaAjj5n11zQ==
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(396003)(376002)(136003)(39860400002)(46966006)(36840700001)(110136005)(16526019)(16576012)(36906005)(5660300002)(70206006)(7416002)(186003)(426003)(86362001)(54906003)(70586007)(316002)(4326008)(2616005)(8676002)(336012)(53546011)(8936002)(26005)(36860700001)(356005)(47076005)(478600001)(31686004)(31696002)(2906002)(82740400003)(83380400001)(36756003)(7636003)(82310400003)(2101003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2021 18:20:31.4299
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79acc9a7-e96c-4828-413d-08d90e6022ed
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT044.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3589
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: bhelgaas@google.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jhubbard@nvidia.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH 01/16] PCI/P2PDMA: Pass gfp_mask flags to
+ upstream_bridge_distance_warn()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/3/21 9:08 AM, Logan Gunthorpe wrote:
-...
->> By the way, pre-existing code comment: pci_p2pdma_whitelist[] seems
->> really short. From a naive point of view, I'd expect that there must be
->> a lot more CPUs/chipsets that can do pci p2p, what do you think? I
->> wonder if we have to be so super strict, anyway. It just seems extremely
->> limited, and I suspect there will be some additions to the list as soon
->> as we start to use this.
-> 
-> Yes, well unfortunately we have no other way to determine what host
-> bridges can communicate with P2P. We settled on a whitelist when the
-> series was first patch. Nobody likes that situation, but nobody has
-> found anything better. We've been hoping standards bodies would give us
-> a flag but I haven't heard anything about that. At least AMD has been
-> able to guarantee us that all CPUs newer than Zen will support so that
-> covers a large swath. It would be nice if we could say something similar
-> for Intel.
-
-Thanks for explaining the situation!
-
-> 
->> OK, yes this avoids taking the pci_bus_sem, but it's kind of cheating.
->> Why is it OK to avoid taking any locks in order to retrieve the
->> first entry from the list, but in order to retrieve any other entry, you
->> have to aquire the pci_bus_sem, and get a reference as well? Something
->> is inconsistent there.
->>
->> The new version here also no longer takes a reference on the device,
->> which is also cheating. But I'm guessing that the unstated assumption
->> here is that there is always at least one entry in the list. But if
->> that's true, then it's better to show clearly that assumption, instead
->> of hiding it in an implicit call that skips both locking and reference
->> counting.
-> 
-> Because we hold a reference to a child device of the bus. So the host
-> bus device can't go away until the child device has been released. An
-> earlier version of the P2PDMA patchset had a lot more extraneous get
-> device calls until someone else pointed this out.
-> 
->> You could add a new function, which is a cut-down version of pci_get_slot(),
->> like this, and call this from __host_bridge_whitelist():
->>
->> /*
->>    * A special purpose variant of pci_get_slot() that doesn't take the pci_bus_sem
->>    * lock, and only looks for the 00.0 bus-device-function. Once the PCI bus is
->>    * up, it is safe to call this, because there will always be a top-level PCI
->>    * root device.
->>    *
->>    * Other assumptions: the root device is the first device in the list, and the
->>    * root device is numbered 00.0.
->>    */
->> struct pci_dev *pci_get_root_slot(struct pci_bus *bus)
->> {
->> 	struct pci_dev *root;
->> 	unsigned devfn = PCI_DEVFN(0, 0);
->>
->> 	root = list_first_entry_or_null(&bus->devices, struct pci_dev,
->> 					bus_list);
->> 	if (root->devfn == devfn)
->> 		goto out;
->>
->> 	root = NULL;
->>    out:
->> 	pci_dev_get(root);
->> 	return root;
->> }
->> EXPORT_SYMBOL(pci_get_root_slot);
->>
->> ...I think that's a lot clearer to the reader, about what's going on here.
-> 
-> Per above, I think the reference count is unnecessary. But I could wrap
-> it in a static function for clarity. (There's no reason to export this
-> function).
-> 
-
-Yes, please.
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+On 2021-05-03 12:17 p.m., John Hubbard wrote:
+> On 5/3/21 8:57 AM, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2021-05-01 9:58 p.m., John Hubbard wrote:
+>>> Another odd thing: this used to check for memory failure and just give
+>>> up, and now it doesn't. Yes, I realize that it all still works at the
+>>> moment, but this is quirky and we shouldn't stop here.
+>>>
+>>> Instead, a cleaner approach would be to push the memory allocation
+>>> slightly higher up the call stack, out to the
+>>> pci_p2pdma_distance_many(). So pci_p2pdma_distance_many() should make
+>>> the kmalloc() call, and fail out if it can't get a page for the seq_buf
+>>> buffer. Then you don't have to do all this odd stuff.
+>>
+>> I don't really agree with this assessment. If kmalloc fails to
+>> initialize the seq_buf() (which should be very rare), the only thing
+>> that is lost is the one warning print that tells the user the command
+>> line parameter needed disable the ACS. Everything else works fine,
+>> nothing else can fail. I don't see the need to add extra complexity just
+>> so the code errors out in no-mem instead of just skipping the one,
+>> slightly more informative, warning line.
+> 
+> That's the thing: memory failure should be exceedingly rare for this.
+> Therefore, just fail out entirely (which I don't expect we'll likely
+> ever see), instead of doing all this weird stuff to try to continue
+> on if you cannot allocate a single page. If you are in that case, the
+> system is not in a state that is going to run your dma p2p setup well
+> anyway.
+> 
+> I think it's *less* complexity to allocate up front, fail early if
+> allocation fails, and then not have to deal with these really odd
+> quirks at the lower levels.
+>
+
+I don't see how it's all that weird. We're skipping a warning if we
+can't allocate memory to calculate part of the message. It's really not
+necessary. If the memory really can't be allocated then something else
+will fail, but we really don't need to fail here because we couldn't
+print a verbose warning message.
+
+Logan
