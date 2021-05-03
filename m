@@ -2,80 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0990372323
-	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 00:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98F2237234F
+	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 00:57:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbhECWnP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 18:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229570AbhECWnP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 May 2021 18:43:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 47B5E61185;
-        Mon,  3 May 2021 22:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620081741;
-        bh=cfPGy931uKudM1etaqx236gFfd6SiYQnL01wqHKEi38=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Dy4yUdOetcAC5ROSwPGbLaRUo1nQvSbfEWnTUEwXDXH+pOkRDoGukIYGCF8s2JO2S
-         wHTq3KSdqlh9SNeqEDdr91W4H+9vnkLh65iQTwO7uU8INuCp4VksAYqNNK6blIDd/K
-         OKpv7OZOquDB+OFAAx8w9Iy1jSDEL0JGvhj+pr/Z+psVu2WXx9djqaKeoWcIXL6N9C
-         gvKRaFZq2hdWGjoStJ6W8hutIEXIqawLedeFISuJzoiiOdVmhKTMxkJxQKsXIQHWse
-         TmaJut0/o/8mScR7YjIp3jTGBuILVVqOD2Qi8mP2jvSjfQtP32/T5J9re4k2jxi+Ze
-         ngTgRA3bPKDUw==
-Date:   Mon, 3 May 2021 17:42:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shanker R Donthineni <sdonthineni@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
-        Vikram Sethi <vsethi@nvidia.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: Re: [PATCH v4 2/2] PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
-Message-ID: <20210503224220.GA999955@bjorn-Precision-5520>
+        id S229889AbhECW6C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 May 2021 18:58:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229879AbhECW6B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 May 2021 18:58:01 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76232C06174A
+        for <linux-pci@vger.kernel.org>; Mon,  3 May 2021 15:57:07 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id v20so6848670qkv.5
+        for <linux-pci@vger.kernel.org>; Mon, 03 May 2021 15:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xZZm+3MFuedFCkj1MfVgDeM954nHR/3fXds6exXmQfs=;
+        b=ouRSQEEjT38vBUuV862SeUlllVCT6eH9A/DLELLKUUCUzA1ShVzuWVXQ1MBHwfUp52
+         o2iY2zmGF5v6LzhQq+GBDBerKVAePtFNVbGHvM38jkoESd9bfzmAI5TW5EmfL78E08Qn
+         KIGOFGei7/yO8yCpBYVzXmS09DZEEm+pTY6CGCqEpqr9/YKTEYQHHgmnMtxfiJhxhwEM
+         PI6Kaqk2dLQBbp3lySC34PVTv8PJZyC4fg+IILviuxHg1B8L5kSFMxjKrsIeWCcV13AT
+         K2K+mR+5wr9SajVl5e5SOe9bFPiH9IuQFOm4a7VNUrSG+YlFkkc7yhkY+MYykwPRCxJe
+         dU1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xZZm+3MFuedFCkj1MfVgDeM954nHR/3fXds6exXmQfs=;
+        b=plLRWhj91enL4w0dkZYiA/twCrWwZY9xScTXKRieGXFFDBoT7fsXQ0/4QKBEE9dDlR
+         3+1YlRO499Jle+zCcWU0sgyO3dTHqN7LsmW710VBRnCj+lXMKoRFVbnyvt7ANJfbpHqd
+         ikKXhFo26ZcNQU4VXU3/TesyOjfpzCURMgJ1/6yWja6PckcovXKqYePnh+nxmIRN2O/W
+         zEcW4kcuTd/tAgs5CDWOw5Rc0v4C+p99i2e0akEz0rSz3cbTALVw/3HURe4w2x72kgCX
+         DbNxMtEE0GhvI48yFrRFaa0mauuza+VZrjZII9vtMf0KsRECPQKVu/Xxe63SJ7d7gZl6
+         PCEg==
+X-Gm-Message-State: AOAM533oRb9M53gq9nN+y785UEvCJQs8ZTZLL8ROE97WyDpVrdFwr9nW
+        zoyjNOtKcWMpJsQOrILEgQBKxA==
+X-Google-Smtp-Source: ABdhPJwB6nytiC0oDMbKJRBwSIes/jqgsePpJ+MXFQRNiesNGamVx4ATl+XqEZHAz4GA6Yzrb48bvQ==
+X-Received: by 2002:a37:a9c8:: with SMTP id s191mr6160737qke.430.1620082626750;
+        Mon, 03 May 2021 15:57:06 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id c17sm897865qtd.71.2021.05.03.15.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 May 2021 15:57:06 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ldhUv-00H3QZ-2z; Mon, 03 May 2021 19:57:05 -0300
+Date:   Mon, 3 May 2021 19:57:05 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 04/16] PCI/P2PDMA: Refactor pci_p2pdma_map_type() to take
+ pagmap and device
+Message-ID: <20210503225705.GA2047089@ziepe.ca>
+References: <20210408170123.8788-1-logang@deltatee.com>
+ <20210408170123.8788-5-logang@deltatee.com>
+ <ce04d398-e4a1-b3aa-2a4e-b1b868470144@nvidia.com>
+ <f719ba91-07ba-c703-2dc9-32cb1214e9c0@deltatee.com>
+ <f07f0ca7-9772-5b3b-4cea-9defcefaaf8b@nvidia.com>
+ <ab0e4256-79c9-c181-5aec-f6869a92a80c@deltatee.com>
+ <d4f19947-d4c1-451b-311f-9e31a4ded6fc@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <52c89d4e-6b26-6c56-d71e-508a715394ab@nvidia.com>
+In-Reply-To: <d4f19947-d4c1-451b-311f-9e31a4ded6fc@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 05:11:23PM -0500, Shanker R Donthineni wrote:
-> Thanks Bjorn for reviewing patch.
-> 
-> On 4/30/21 12:01 PM, Bjorn Helgaas wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > On Wed, Apr 28, 2021 at 07:49:07PM -0500, Shanker Donthineni wrote:
-> >> On select platforms, some Nvidia GPU devices do not work with SBR.
-> >> Triggering SBR would leave the device inoperable for the current
-> >> system boot. It requires a system hard-reboot to get the GPU device
-> >> back to normal operating condition post-SBR. For the affected
-> >> devices, enable NO_BUS_RESET quirk to fix the issue.
-> > Since 1/2 adds _RST support, should I infer that _RST works on these
-> > Nvidia GPUs even though SBR does not?  If so, how does _RST do the
-> > reset?
-> Yes, _RST method works but not SBR. The _RST method in DSDT-AML uses
-> platform-specific initialization steps outside of the GPU BARs for resetting
-> the GPU device.
+On Mon, May 03, 2021 at 02:54:26PM -0700, John Hubbard wrote:
 
-Obviously _RST only works for built-in devices, since there's no AML
-for plug-in devices, right?  So if there's a plug-in card with this
-GPU, neither SBR nor _RST will work?
+> I guess my main concern here is that there are these pci*() functions
+> that somehow want to pass around struct device.
 
-> > Do you have a root cause for why SBR doesn't work?  
-> It is a hardware implementation specific issue. GPU end-point device
-> is inoperative after receiving SBR from the RP/SwitchPort. This quirk is
-> to prevent SBR.
+Well, this is the main issue - helpers being used inside IOMMU code
+should not be called pci* functions. This is some generic device p2p
+interface that happens to only support PCI to PCI transfers today.
 
-That's not a root cause; it's basically still "it doesn't work."  But
-OK.
-
-I'm wondering if we should log something to dmesg in
-quirk_no_bus_reset(), quirk_no_pm_reset(), quirk_no_flr(), etc., just
-so we have a hint about the fact that resets won't work quite as
-expected on these devices.
-
-Bjorn
+Jason
