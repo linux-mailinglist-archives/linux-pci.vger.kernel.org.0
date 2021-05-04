@@ -2,126 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A94DC372C05
-	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 16:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20EBB372C18
+	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 16:35:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231570AbhEDOaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 May 2021 10:30:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:37276 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230434AbhEDOaT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 May 2021 10:30:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620138564;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/C/wTNOTCb+yGfszfpaIVYIq+8oCD0tOIWtXOH684UQ=;
-        b=OyYxFR1j4KehwpRmCFywOBvwaMw7Wjd+nQjQMIkoj9XLuyv8ZWbNmAJJgLM3MiaLrIfNGE
-        kqciXjRUoEWLoKb+m9Pe2/74WvEVCg1V49XSXt/Jhx+drdOTe7EYCwKHM0pBwDmdAGsrMy
-        h8pzs4ltdFGoaXhUGRbCXmM0cv1Qkag=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-586-uf-ywe71OLeBmrqq6n0tbQ-1; Tue, 04 May 2021 10:29:22 -0400
-X-MC-Unique: uf-ywe71OLeBmrqq6n0tbQ-1
-Received: by mail-ej1-f71.google.com with SMTP id ne22-20020a1709077b96b02903803a047edeso3183148ejc.3
-        for <linux-pci@vger.kernel.org>; Tue, 04 May 2021 07:29:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/C/wTNOTCb+yGfszfpaIVYIq+8oCD0tOIWtXOH684UQ=;
-        b=IsNjZ3rp4tDasGP9u7xUWUVps0DcD5uzxs8smXlZTX0mXsz6ZpbSCPB5krqBkoaeqZ
-         pRpW24mxor3fLX2AmpLkFp/8jbLWf+AC7EQ/ULCt2m+u+QE57lF46OzrJMcPooQpvwqG
-         DOlEu1SBeCEj9438kpv0TarT9JMdND92uFSFTYcuQAlTSmv5HRSOK351JpCbt4sfwm0L
-         bP3o1Uf61qaMoo/gJl0VAlAzL0RlkGTlTUU2C/Q5OQU/gR+JOxKS7tIuMOOi4GH4CF3X
-         +iuXbZudc/5q1hS7/jy18/m7RQEDPdFv3UtZLhpg9GdHgLel1NSTd6ElSRjWHVmQDKte
-         slyw==
-X-Gm-Message-State: AOAM5331CkkAb+eTGYc+/oreheqbnUZcWkJOPOj+o4jmfs9yiUy0EAZJ
-        OJJS4NhVz4I86GhMNiT1yJwRul58PPiG1s9vkBIwZ73hXb3sagBmExbRfkIev6JQJ6mmJiI9XdY
-        C7st8E96+I75kKNk0BeNQPaoY6MU06vHq1daQ
-X-Received: by 2002:a17:906:9a02:: with SMTP id ai2mr22704481ejc.279.1620138561161;
-        Tue, 04 May 2021 07:29:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyBQGqUZtw6piWjtshZQhonbqeKOMWr75L9XDey1rFpJCXv1AQK+Jw5/m9KuadTFtTp9gtXISJlA+uPKf1wTjE=
-X-Received: by 2002:a17:906:9a02:: with SMTP id ai2mr22704467ejc.279.1620138560926;
- Tue, 04 May 2021 07:29:20 -0700 (PDT)
+        id S231135AbhEDOgN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 May 2021 10:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231126AbhEDOgN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 May 2021 10:36:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0369B613CC;
+        Tue,  4 May 2021 14:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620138918;
+        bh=9ZtBEC0XYgFjUhKlLdRO0G8aZQVeAPm5gU3FvbURgNI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h0KOgursxmzw4sVUAVaDfHBs66qmCEIiCjxswvd6kqY3cj2hsRNSF3WvAwJTO286S
+         qW+XBOWKnJrcwGa20y7JomKYpbrwSzEKeku4IVjJ7edBkbRDFACKjJsWE1lq1YNURh
+         jD7exZS37Q3/EbbTz6RnB+MRoGkRdcKuf/dfUoNEqQ5WBeAFOrlkpuoo4n11V80bF0
+         CV5XGbUnfdXR+3IZ5BLSQvh6IqAmsDyB3ADLYtI81EeGYXlKWHVBmSJ1VfDjjp3XAt
+         lLoSp/muYSrSTE1u++/VRVj6rAlGteww6J6cJcSTizuKaqRyDJKV1LXSHg48RVzJih
+         tJhpXKaJwm52Q==
+Received: by mail-ej1-f46.google.com with SMTP id y7so13501590ejj.9;
+        Tue, 04 May 2021 07:35:17 -0700 (PDT)
+X-Gm-Message-State: AOAM5308EBpE77TPt44FmX4dNHQVYFikal7YzAvJFeOnuRIv+aZdye0K
+        cCytKyWczM55CGnnHLuSGmAVn1+LlF1nIUP9Qw==
+X-Google-Smtp-Source: ABdhPJwrXSHJlK+c9A8BGCApjGExqZKLfC0iqptDV3LyvQikAcUut5OrhYKxptbz6VWBzAfQFR/aPczv/DY3nVrYeYY=
+X-Received: by 2002:a17:907:161e:: with SMTP id hb30mr21030769ejc.360.1620138916277;
+ Tue, 04 May 2021 07:35:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210501021832.743094-1-jesse.brandeburg@intel.com> <16d8ca67-30c6-bb4b-8946-79de8629156e@arm.com>
-In-Reply-To: <16d8ca67-30c6-bb4b-8946-79de8629156e@arm.com>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Tue, 4 May 2021 10:29:09 -0400
-Message-ID: <CAFki+L=D8aS_jub0KHAkfsnvvJ_w8_mMYbaHeZ-GkQF1s_0WDQ@mail.gmail.com>
-Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when
- setting the hint
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+References: <20210503144635.2297386-1-boqun.feng@gmail.com>
+ <20210503144635.2297386-2-boqun.feng@gmail.com> <YJDYrn7Nt+xyHbyr@kernel.org>
+In-Reply-To: <YJDYrn7Nt+xyHbyr@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 4 May 2021 09:34:54 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLMAyUEZgLjiKmNL2ioTYJwj-TbTWFJmEi7pynKZHXmoQ@mail.gmail.com>
+Message-ID: <CAL_JsqLMAyUEZgLjiKmNL2ioTYJwj-TbTWFJmEi7pynKZHXmoQ@mail.gmail.com>
+Subject: Re: [RFC v2 1/7] PCI: Introduce pci_host_bridge::domain_nr
+To:     Mike Rapoport <rppt@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>, abelits@marvell.com,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        netdev@vger.kernel.org, chris.friesen@windriver.com,
-        Marc Zyngier <maz@kernel.org>
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 4, 2021 at 8:15 AM Robin Murphy <robin.murphy@arm.com> wrote:
+On Tue, May 4, 2021 at 12:16 AM Mike Rapoport <rppt@kernel.org> wrote:
 >
-> On 2021-05-01 03:18, Jesse Brandeburg wrote:
-> > It was pointed out by Nitesh that the original work I did in 2014
-> > to automatically set the interrupt affinity when requesting a
-> > mask is no longer necessary. The kernel has moved on and no
-> > longer has the original problem, BUT the original patch
-> > introduced a subtle bug when booting a system with reserved or
-> > excluded CPUs. Drivers calling this function with a mask value
-> > that included a CPU that was currently or in the future
-> > unavailable would generally not update the hint.
+> On Mon, May 03, 2021 at 10:46:29PM +0800, Boqun Feng wrote:
+> > Currently we retrieve the PCI domain number of the host bridge from the
+> > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
+> > we have the information at PCI host bridge probing time, and it makes
+> > sense that we store it into pci_host_bridge. One benefit of doing so is
+> > the requirement for supporting PCI on Hyper-V for ARM64, because the
+> > host bridge of Hyper-V doesnt' have pci_config_window, whereas ARM64 is
+> > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
+> > number from pci_config_window on ARM64 Hyper-V guest.
 > >
-> > I'm sure there are a million ways to solve this, but the simplest
-> > one is to just remove a little code that tries to force the
-> > affinity, as Nitesh has shown it fixes the bug and doesn't seem
-> > to introduce immediate side effects.
+> > As the preparation for ARM64 Hyper-V PCI support, we introduce the
+> > domain_nr in pci_host_bridge, and set it properly at probing time, then
+> > for PCI_DOMAINS_GENERIC=y archs, bus domain numbers are set by the
+> > bridge domain_nr.
+> >
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  arch/arm/kernel/bios32.c              |  2 ++
+> >  arch/arm/mach-dove/pcie.c             |  2 ++
+> >  arch/arm/mach-mv78xx0/pcie.c          |  2 ++
+> >  arch/arm/mach-orion5x/pci.c           |  2 ++
+> >  arch/arm64/kernel/pci.c               |  3 +--
+> >  arch/mips/pci/pci-legacy.c            |  2 ++
+> >  arch/mips/pci/pci-xtalk-bridge.c      |  2 ++
+> >  drivers/pci/controller/pci-ftpci100.c |  2 ++
+> >  drivers/pci/controller/pci-mvebu.c    |  2 ++
+> >  drivers/pci/pci.c                     |  4 ++--
+> >  drivers/pci/probe.c                   |  7 ++++++-
+> >  include/linux/pci.h                   | 11 ++++++++---
+> >  12 files changed, 33 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> > index e7ef2b5bea9c..4942cd681e41 100644
+> > --- a/arch/arm/kernel/bios32.c
+> > +++ b/arch/arm/kernel/bios32.c
+> > @@ -471,6 +471,8 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+> >                               bridge->sysdata = sys;
+> >                               bridge->busnr = sys->busnr;
+> >                               bridge->ops = hw->ops;
+> > +                             if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> > +                                     bridge->domain_nr = pci_bus_find_domain_nr(sys, parent);
+> >
+> >                               ret = pci_scan_root_bus_bridge(bridge);
+> >                       }
+> > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
+> > index ee91ac6b5ebf..92eb8484b49b 100644
+> > --- a/arch/arm/mach-dove/pcie.c
+> > +++ b/arch/arm/mach-dove/pcie.c
+> > @@ -167,6 +167,8 @@ dove_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
+> >       bridge->sysdata = sys;
+> >       bridge->busnr = sys->busnr;
+> >       bridge->ops = &pcie_ops;
+> > +     if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> > +             bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
 >
-> Unfortunately, I think there are quite a few other drivers now relying
-> on this behaviour, since they are really using irq_set_affinity_hint()
-> as a proxy for irq_set_affinity().
+> The check for CONFIG_PCI_DOMAINS_GENERIC is excessive because there is a
+> stub for pci_bus_find_domain_nr().
+>
+> I'm not an expert in PCI, but maybe the repeated assignment of
+> bridge->domain_nr can live in the generic code, say, in
+> pci_scan_root_bus_bridge(). E.g. it will set the domain_nr when it is zero.
 
-That's true.
+Yes. There's zero reason h/w drivers should care what the domain_nr is.
 
-> Partly since the latter isn't
-> exported to modules, but also I have a vague memory of it being said
-> that it's nice to update the user-visible hint to match when the
-> affinity does have to be forced to something specific.
+There's another issue with domains you should be aware of:
 
-If you see the downside of it we are forcing the affinity to match the hint
-mask without considering the default SMP affinity mask.
+https://lore.kernel.org/linux-pci/20210425152155.mstuxndsoqdbdape@pali/
 
-Also, we are repeating things here. First, we set certain mask for a device
-IRQ via request_irq code path which does consider the default SMP mask but
-then we are letting the driver over-write it.
+That may need to be fixed first because deferred probing could cause
+the domain to increment each time you retry probe.
 
-If we want to set the IRQ mask in a certain way then it should be done at
-the time of initial setup itself.
-
-Do you know about a workload/use case that can show the benefit of
-this behavior? As then we can try fixing it in the right way.
-
---
-Thanks
-Nitesh
-
+Rob
