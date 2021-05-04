@@ -2,120 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA75137265E
-	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 09:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF239372677
+	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 09:20:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbhEDHOk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 May 2021 03:14:40 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:54269 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229904AbhEDHO2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 May 2021 03:14:28 -0400
-Received: from mail-wr1-f52.google.com ([209.85.221.52]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1N1whr-1lXGbR297Z-012KL5 for <linux-pci@vger.kernel.org>; Tue, 04 May 2021
- 09:12:48 +0200
-Received: by mail-wr1-f52.google.com with SMTP id m9so8147139wrx.3
-        for <linux-pci@vger.kernel.org>; Tue, 04 May 2021 00:12:48 -0700 (PDT)
-X-Gm-Message-State: AOAM532xXWDcHMDcvE3DDQCgO4CnxPsxSRNSFx2ox6b+gBomp+2NLWU1
-        yqcRHYPhxe/Wrv2O3RpG9AQaohVamXo+QOEfBbw=
-X-Google-Smtp-Source: ABdhPJz5HU14mByJukXWCMOOS2t6aRfpKc+4A0Ev9evW4LjsUK2GCXkjYcTHwTfZO8Mws19ZSvnH9zDFTktxM6HDX9Q=
-X-Received: by 2002:a5d:6a52:: with SMTP id t18mr12224493wrw.361.1620112368246;
- Tue, 04 May 2021 00:12:48 -0700 (PDT)
+        id S229996AbhEDHVI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 May 2021 03:21:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229904AbhEDHVH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 May 2021 03:21:07 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9FBC061761
+        for <linux-pci@vger.kernel.org>; Tue,  4 May 2021 00:20:13 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id o27so7631821qkj.9
+        for <linux-pci@vger.kernel.org>; Tue, 04 May 2021 00:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JggnRH2z+C5c6q5fwkNF9u7IZivIlxcnTgChvJQFvSA=;
+        b=csBKU8aJUh6TfQKqWkRRJuwzqfCx/gxbV1DQ6d4id1eoGXBhg76xsbhY2fA34UDX22
+         sZhPa7vaekhSABqSq3q7znGNkTGTxRXlf8Kiac//bM/Z3oVYKoZXXB9zyWWTH7tsAue2
+         1B3yweWVmqGH2oSfzokpJ9flNMRRfs9Ch/TZUvIWlFbtChX6zJmSSKrgWOdoAyamxI4t
+         MWCSaYfX4b6HMUDdhbJ98JhjtDEInNQGjQWG3kd5N5U5xZzC2NZbKSwi8I2ED9rQfmrz
+         7UAGrCn8PAB1iTBuS+TzkQAplICSN9l3apNNyz3X/NdhP+azrqtYr3WMCOS/YtBXCUbQ
+         fB6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JggnRH2z+C5c6q5fwkNF9u7IZivIlxcnTgChvJQFvSA=;
+        b=N4l+Ji7DWESOgGPTJ2k0qNHYKIfzrrwwD0AY+pZ/BGKw1Jg8sg74wsVgGmm7im/9vQ
+         cCDa9m75EiXIm9dvX07dJe8E0guYVw28mTaK+Na3j1maU0fX1EfY7Bm3glJvRVsQGATL
+         rnmt3twrNfx73t8fpYQVPJRHwLQqYUSrkztJIbvYEJLaHhM7rU6nWJDvWs9ZlpxO1WOB
+         KPps5RW2uXT/XV//8UimPQSXrWSawxjoCuN5Gz8Z2KRjSAiwoGUTgufuW8WUO/Aazblf
+         fQkTBuIPkvNfLmBATSt3ZJk3mpecSU2kUmmTjrKnR2j1dS79faay8YGII/N1iSBHvgdz
+         xitg==
+X-Gm-Message-State: AOAM532om4DG++YIsvg3H5SzeB25VANzdVqmmjau89kT/RJLFy8QQgpd
+        05EBqLFSjomLItJG4t5nQQ27/29T53H+4fxYrSyMgw==
+X-Google-Smtp-Source: ABdhPJwSV0cJLUMNNy0lL94PwJnsWKOoPmVIkjaGTOqFfwKqrXom5YgkvcZWXnSt5nztkk0zIFsVQOCkdjO4/mVSk1Q=
+X-Received: by 2002:a05:620a:29c4:: with SMTP id s4mr20672337qkp.401.1620112812489;
+ Tue, 04 May 2021 00:20:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210503211649.4109334-1-linus.walleij@linaro.org> <20210503211649.4109334-5-linus.walleij@linaro.org>
-In-Reply-To: <20210503211649.4109334-5-linus.walleij@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 4 May 2021 09:12:07 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1XtmYAfstfhRzv-y73od3u+fYkvED5LuJ5TNMOS19zZg@mail.gmail.com>
-Message-ID: <CAK8P3a1XtmYAfstfhRzv-y73od3u+fYkvED5LuJ5TNMOS19zZg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] PCI: ixp4xx: Add a new driver for IXP4xx
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        Zoltan HERPAI <wigyori@uid0.hu>,
-        Raylynn Knight <rayknight@me.com>
+References: <20210406092634.50465-1-greentime.hu@sifive.com> <20210503164023.GA919777@bjorn-Precision-5520>
+In-Reply-To: <20210503164023.GA919777@bjorn-Precision-5520>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Tue, 4 May 2021 15:20:00 +0800
+Message-ID: <CAHCEeh+cMrEnHNG3W3ZNzdgT-m7BMorDawF6D8qkFYGg=RJMOw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Add SiFive FU740 PCIe host controller driver support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>, hes@sifive.com,
+        Erik Danie <erik.danie@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, robh+dt@kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>, alex.dewar90@gmail.com,
+        khilman@baylibre.com, hayashi.kunihiko@socionext.com,
+        vidyas@nvidia.com, jh80.chung@samsung.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+6iJx1oGJGRDtAd2RPXM49e7mGFmFvea0zQTj/VWgR7ypR7dLSV
- stVh1NkkDniXbElhqzUFKcF/3JzdZogyaLWoxyEHBjCvecPwQ5/5TOFS6GQUN9qdSzpx9q3
- VW4xyshJqU1pCK3xoLaHo3JIZoSIv7go3X5CG2AYtjNSRB5ww3IBUehUxesyIJwUMzKLdQo
- uIovIEx5WLfBwCR0yLbUQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bH+CoWnA1AQ=:LJVeSAsGgwmr2DSND3zJLj
- Ch7YLBK5QLjFlFVt2xj39qZSV2zX9csIQ+NKyRi0fhF8U0UM5L/znmF2u9cK13oliUR9CaSIM
- nXVoyZ5WLczTCm6qqXjhKZ3e8NPT1nwNAE5YHjc+speUtm1GATwykfeaey7BfQzYjP8il3crq
- yw+o4muLh1/L16dUgowzIk+YYG96kAtmIOEERPccN/MjpLuTy2PLfQO3FbMuMo9OplukzM4Ux
- o1g94c/7So9I10Kd3WWy+cApTFdsXuDfU2R1RF1hIL9DZzTK+DXJGcHrN1CTChkQO2vI4Kheu
- 7Vvya6GELHGtUpqRg4JJM3FKVyhrdpIsi6Qp0UCV1MRQeDZoGNyhqzGnqxj/xj8gEkVPNSTdP
- EvaMS8jFtmyHVCiwu0jwhowNTviJE1lbRTF3kS0bzuCiMxsy5ag9H1PbOxH9rX4AYzo8/jD/N
- j+XJ+L12VLX7vkIa1t2EFIP2t7YuVN0bLw5I4fwWPg+zePYKd8v2uYUy+dCUfiJXF3C2lpQ20
- T6iA9VthFRdRcbvKSONlsJKE3wq5rtSyFIvqfpv9jXqYu6gZWY/fsoHUjelJT9WlOLXM6ttqK
- vE4jf0uZ8Vl8aAE8pYvgFYd1RzYVQ60XIrBsiNrlRMyn/3+zV+WYono71+iKvh9EtwQJdhOyz
- gUe0=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 3, 2021 at 11:16 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2021=E5=B9=B45=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8812:40=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> This adds a new PCI controller driver for the Intel IXP4xx
-> (IX425, IXP435 etc), based on the XScale microarchitecture.
+> On Tue, Apr 06, 2021 at 05:26:28PM +0800, Greentime Hu wrote:
+> > This patchset includes SiFive FU740 PCIe host controller driver. We als=
+o
+> > add pcie_aux clock and pcie_power_on_reset controller to prci driver fo=
+r
+> > PCIe driver to use it.
 >
-> This replaces the old driver in arch/arm/mach-ixp4xx/common-pci.c
-> which utilized the ARM-specific BIOS32 PCI framework,
-> and all parameterization for such things as memory and
-> IO space as well as interrupt swizzling is done from the
-> device tree.
+> I dropped this series because of the build problem I mentioned [1].
+> It will not be included in v5.13 unless the build problem is fixed
+> ASAP.
+>
+> [1] https://lore.kernel.org/r/20210428194713.GA314975@bjorn-Precision-552=
+0
+>
 
-Nice work!
+Hi all,
 
-> The __raw_writel() and __raw_readl() are used for accessing
-> the PCI controller for the same reason that these accessors
-> are used in the timer, IRQ and GPIO drivers: the platform
-> will alter its address bus pattern based on whether the
-> system is booted in big- or little-endian mode. For this
-> reason all register on IXP4xx must always be accessed in
-> native (CPU) endianness.
+This build failed in x86_64 is because CONFIG_GPIOLIB is disabled in
+the testing config.
 
-Can you add a pair of inline function that wraps these into
-a driver specific helper with a comment?
+diff --git a/drivers/pci/controller/dwc/Kconfig
+b/drivers/pci/controller/dwc/Kconfig
+index 0a37d21ed64e..56b66e1fed53 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -323,6 +323,7 @@ config PCIE_FU740
+        depends on PCI_MSI_IRQ_DOMAIN
+        depends on SOC_SIFIVE || COMPILE_TEST
+        select PCIE_DW_HOST
++       select GPIOLIB
+        help
+          Say Y here if you want PCIe controller support for the SiFive
+          FU740.
 
-> This driver supports 64MB of PCI memory space, but not the
-> indirect access of 1GB that is available in the old driver.
-> We can address that later if and only if there are users
-> that need all 1GB of PCI address space.
+After applying this change, it can build pass.
 
-> +
-> +       ret = pci_scan_root_bus_bridge(host);
-> +       if (ret) {
-> +               dev_err(dev, "failed to scan host: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       p->bus = host->bus;
-
-I don't think you need to store the bus separately, just use
-host->bus everywhere.
-
-> +       pci_bus_assign_resources(p->bus);
-> +       pci_bus_add_devices(p->bus);
-
-Can you call pci_host_probe() instead of open-coding it here?
-
-> +
-> +static struct platform_driver ixp4xx_pci_driver = {
-> +       .driver = {
-> +               .name = "ixp4xx-pci",
-> +               .of_match_table = of_match_ptr(ixp4xx_pci_of_match),
-> +               .suppress_bind_attrs = true,
-> +       },
-> +       .probe  = ixp4xx_pci_probe,
-> +};
-> +builtin_platform_driver(ixp4xx_pci_driver);
-
-It should be possible to make it a loadable module, after Rob Herring
-fixed some of the bugs around that.
-
-        Arnd
+> > This is tested with e1000e: Intel(R) PRO/1000 Network Card, AMD Radeon =
+R5
+> > 230 graphics card and SP M.2 PCIe Gen 3 SSD in SiFive Unmatched based o=
+n
+> > v5.11 Linux kernel.
+> >
+> > Changes in v5:
+> >  - Fix typo in comments
+> >  - Keep comments style consistent
+> >  - Refine some error handling codes
+> >  - Remove unneeded header file including
+> >  - Merge fu740_pcie_ltssm_enable implementation to fu740_pcie_start_lin=
+k
+> >
+> > Changes in v4:
+> >  - Fix Wunused-but-set-variable warning in prci driver
+> >
+> > Changes in v3:
+> >  - Remove items that has been defined
+> >  - Refine format of sifive,fu740-pcie.yaml
+> >  - Replace perstn-gpios with the common one
+> >  - Change DBI mapping space to 2GB from 4GB
+> >  - Refine drivers/reset/Kconfig
+> >
+> > Changes in v2:
+> >  - Refine codes based on reviewers' feedback
+> >  - Remove define and use the common one
+> >  - Replace __raw_writel with writel_relaxed
+> >  - Split fu740_phyregreadwrite to write function
+> >  - Use readl_poll_timeout in stead of while loop checking
+> >  - Use dwc common codes
+> >  - Use gpio descriptors and the gpiod_* api.
+> >  - Replace devm_ioremap_resource with devm_platform_ioremap_resource_by=
+name
+> >  - Replace devm_reset_control_get with devm_reset_control_get_exclusive
+> >  - Add more comments for delay and sleep
+> >  - Remove "phy ? x : y" expressions
+> >  - Refine code logic to remove possible infinite loop
+> >  - Replace magic number with meaningful define
+> >  - Remove fu740_pcie_pm_ops
+> >  - Use builtin_platform_driver
+> >
+> > Greentime Hu (5):
+> >   clk: sifive: Add pcie_aux clock in prci driver for PCIe driver
+> >   clk: sifive: Use reset-simple in prci driver for PCIe driver
+> >   MAINTAINERS: Add maintainers for SiFive FU740 PCIe driver
+> >   dt-bindings: PCI: Add SiFive FU740 PCIe host controller
+> >   riscv: dts: Add PCIe support for the SiFive FU740-C000 SoC
+> >
+> > Paul Walmsley (1):
+> >   PCI: fu740: Add SiFive FU740 PCIe host controller driver
+> >
+> >  .../bindings/pci/sifive,fu740-pcie.yaml       | 113 +++++++
+> >  MAINTAINERS                                   |   8 +
+> >  arch/riscv/boot/dts/sifive/fu740-c000.dtsi    |  33 ++
+> >  drivers/clk/sifive/Kconfig                    |   2 +
+> >  drivers/clk/sifive/fu740-prci.c               |  11 +
+> >  drivers/clk/sifive/fu740-prci.h               |   2 +-
+> >  drivers/clk/sifive/sifive-prci.c              |  54 +++
+> >  drivers/clk/sifive/sifive-prci.h              |  13 +
+> >  drivers/pci/controller/dwc/Kconfig            |   9 +
+> >  drivers/pci/controller/dwc/Makefile           |   1 +
+> >  drivers/pci/controller/dwc/pcie-fu740.c       | 308 ++++++++++++++++++
+> >  drivers/reset/Kconfig                         |   1 +
+> >  include/dt-bindings/clock/sifive-fu740-prci.h |   1 +
+> >  13 files changed, 555 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/sifive,fu740-=
+pcie.yaml
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-fu740.c
+> >
+> > --
+> > 2.30.2
+> >
