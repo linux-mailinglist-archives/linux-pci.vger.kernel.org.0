@@ -2,177 +2,309 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEBA637245D
-	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 04:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D32C2372567
+	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 07:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbhEDCIM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 May 2021 22:08:12 -0400
-Received: from mail-bn8nam12on2048.outbound.protection.outlook.com ([40.107.237.48]:34593
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229634AbhEDCIL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 May 2021 22:08:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XoAj93iEMONgW6qdwb0jyxlaHJxclDi2rg3TzEJOA5bU2aKsfSBeNOF4rg+DU7wiWmSN7zgcgJ/9BOIg0bof51/Vk0Izmsb/otD4m6xPkgUhx0PiVC0OahTU/yXTJYwZ9TYWxHReTFzdtKEUsBr0isSltCpR525H6gMUfo+fTGkq6Gl+FcKYIx3kNU0o9KoRNNd5PhzlcfbCDhbZXW4uIf6pXx15bsaFd2Yr1CXLGIRFQT2/+eXpv+Ui7nK3nPtnz26PLQ4t3la//JqPjj/+iHsjhHeFbDpB/JVGdesYEKunjlZdWn+dDPOKMbVyKkNgOni8ZQRR+P85BtnEFMmAYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hIVQKM6/hDfStmdWnAq8BfkndcnXKSJ7wWSCZrvFDqk=;
- b=lH7/RxJYHITcR4WnDJ5ZPK34JC3zBFJc8k5kNsxxsK9y86CXf1vXS51cqqmpKao47ZmnuQudDeN9fl/z07gjNPGtrDPd5vKq7st8pb/mzO/y4dbgVhrR2+oSjF6gVYEYh3pUpx+ZiDFC4waooQRaHq4fBa7Df2BPfW+6EXw3nfcUI+e3lgW9LDC4ToR320nFMiZ5w7S3QwDcm/zTjurjx1TJt9Uc8C0+O8A4G4pif94z58vp5Dn76P+W1hzySWLgbjElfWxcyxExBfExdbP73REbS8eqyHP2748k1X1x83wNnhfFRwFG6viZ648Lp5Ys1xqwUx4GKAHLgrdQ7bAwrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hIVQKM6/hDfStmdWnAq8BfkndcnXKSJ7wWSCZrvFDqk=;
- b=LB1tNXgLV44crvi+ynEODEC7k7D5cC/B43YROKrHUSeQ17mBpTnp954tQa4r0m8e58LwbOtU9HiXrpXHwI5+IknrNaIMK2JCFEQif258ViZWogY1Ux3ZgaLMej5tALKQX4YOKqEUVZA4IVw+z5kuVBTOUHX8qn6BQEZu0fvQgQi5iUPCiWtUTsUpxkSigaF6k2hC7NI7dJvFZ2vN5A6kvI9bB/GFzJKeqg1NKzd4P0pXmisjSwwNFIV5vVEd87bbRF8KCMoCAGUIAhxmG3Sg68NtLQqVcbh/S7LmrGmj5ipqe9/5BJI6F1xyJo0nLT4Rm4qb5RtOU1IWFJ/cpBMqcQ==
-Received: from DM5PR07CA0033.namprd07.prod.outlook.com (2603:10b6:3:16::19) by
- MWHPR12MB1808.namprd12.prod.outlook.com (2603:10b6:300:114::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.40; Tue, 4 May
- 2021 02:07:15 +0000
-Received: from DM6NAM11FT003.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:16:cafe::fb) by DM5PR07CA0033.outlook.office365.com
- (2603:10b6:3:16::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.27 via Frontend
- Transport; Tue, 4 May 2021 02:07:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT003.mail.protection.outlook.com (10.13.173.162) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4087.32 via Frontend Transport; Tue, 4 May 2021 02:07:14 +0000
-Received: from [10.20.23.38] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 4 May
- 2021 02:07:13 +0000
-Subject: Re: [PATCH v4 2/2] PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        Vikram Sethi <vsethi@nvidia.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-References: <20210503224220.GA999955@bjorn-Precision-5520>
-From:   Shanker R Donthineni <sdonthineni@nvidia.com>
-Message-ID: <478efe56-fb64-6987-f64c-f3d930a3b330@nvidia.com>
-Date:   Mon, 3 May 2021 21:07:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S229721AbhEDFRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 May 2021 01:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229499AbhEDFRh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 4 May 2021 01:17:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DEB0A6103E;
+        Tue,  4 May 2021 05:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620105403;
+        bh=urK9tC404nMnqBhYCMWCz0e6HylWZMJLaJqYtkyTfHE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YBTTk+8zKz/SqyLXrtQSR+TZLRE2ldlnM3WZ/2EAJSQ5SRDR/ag33MO2+nDvCW3HT
+         MJgQa6e0cOD8ODXd+emyjK9FyivtDpqpmkY0WCprtrUcqUEX0pIelWRgKxQbsrHAe4
+         aXtHRg5SU4G6FWeXMLx7PhCpKWfyYLMUPLB6+oqfy/3OChcpSEDbvBMAWaGA6419Ee
+         dmIwMvpdp5wHDm3OUKaKGAU1Wl4qYHujCs/MqBcnnUGIVhS4B6slRidQL9WgvECmdv
+         QbrVozr+5FHan6jqF8VcKakho8z2Sqf8FvbdtL+oSnvuEyTAFmDdoYjL+RdAtVytZh
+         EORvVcLvauKZA==
+Date:   Tue, 4 May 2021 08:16:30 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [RFC v2 1/7] PCI: Introduce pci_host_bridge::domain_nr
+Message-ID: <YJDYrn7Nt+xyHbyr@kernel.org>
+References: <20210503144635.2297386-1-boqun.feng@gmail.com>
+ <20210503144635.2297386-2-boqun.feng@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210503224220.GA999955@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b1eed71a-49ff-48eb-5585-08d90ea1562b
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1808:
-X-Microsoft-Antispam-PRVS: <MWHPR12MB18080A7A541A92E462EF00A5C75A9@MWHPR12MB1808.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +eY2VmJLm3psR0uYwZI/MGS3yahqH2lsqpPi/rSC4yDCxk1s9DZRgFd0FsDyhfdenE2FmwE1z0kKv5G+PyLQpxbXYSInsy5l0MIKErb6SG4dAXQF9dpPAxcyPMSfIogUXdqSJXyJ8Ua4VVtYidhthYBoOBsc+KxGecOxe5gEoqexqeLprWQgR4fQk6xDVMzw28ujfoJHjoDm5VevXxgYp1XRk2FB3phMVICaNM8hRlV6NkoselvaKvoDUTNdgZdMtRedNuLrLMnHuOpcLWcOm03Eu9spC+sFdZAzOt0EslT8HtkhR19r7H6MP334tV9CdoNGdOmCsfqbtS+sPGcfvEDGlE0k93h7pkVBqnyvtUiCTDLYAwulsNAMSG6ivEkHw9lkJja3tgh7qgoeJ5XsgwVy0R7r9q8lichqluYk49RVI66nXx6sSJbRi/iHsHuLEXc4OQj2wjwCjJvtsx2BmQKA18LATQCKGPOEQVCoGyntHUzhqkQKz6G5LYkrE4HberkokNPfbldyYs5f4LaYASTdWqS/NubQYmVJL+RT5pQi9C0Nyp+2Lg2okN5T4b1gn53p0lvGleEdH4ljcAlXWbfXss0k7s3X0AT2TzzU3Su9glZ4Xdj4zCmEwy091Y5uZ8zXOoFkWBaTcALb0Kb77JgmxvmF+K3W2MxTF7POmeV4fh1OO277/0hnw6/Yl00w
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(376002)(39860400002)(46966006)(36840700001)(478600001)(356005)(54906003)(8676002)(6916009)(53546011)(8936002)(5660300002)(36906005)(316002)(36756003)(426003)(26005)(47076005)(82740400003)(336012)(16576012)(2616005)(186003)(7636003)(16526019)(70206006)(2906002)(31696002)(70586007)(4326008)(31686004)(83380400001)(36860700001)(86362001)(82310400003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2021 02:07:14.6810
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1eed71a-49ff-48eb-5585-08d90ea1562b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT003.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1808
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210503144635.2297386-2-boqun.feng@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, May 03, 2021 at 10:46:29PM +0800, Boqun Feng wrote:
+> Currently we retrieve the PCI domain number of the host bridge from the
+> bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
+> we have the information at PCI host bridge probing time, and it makes
+> sense that we store it into pci_host_bridge. One benefit of doing so is
+> the requirement for supporting PCI on Hyper-V for ARM64, because the
+> host bridge of Hyper-V doesnt' have pci_config_window, whereas ARM64 is
+> a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
+> number from pci_config_window on ARM64 Hyper-V guest.
+> 
+> As the preparation for ARM64 Hyper-V PCI support, we introduce the
+> domain_nr in pci_host_bridge, and set it properly at probing time, then
+> for PCI_DOMAINS_GENERIC=y archs, bus domain numbers are set by the
+> bridge domain_nr.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  arch/arm/kernel/bios32.c              |  2 ++
+>  arch/arm/mach-dove/pcie.c             |  2 ++
+>  arch/arm/mach-mv78xx0/pcie.c          |  2 ++
+>  arch/arm/mach-orion5x/pci.c           |  2 ++
+>  arch/arm64/kernel/pci.c               |  3 +--
+>  arch/mips/pci/pci-legacy.c            |  2 ++
+>  arch/mips/pci/pci-xtalk-bridge.c      |  2 ++
+>  drivers/pci/controller/pci-ftpci100.c |  2 ++
+>  drivers/pci/controller/pci-mvebu.c    |  2 ++
+>  drivers/pci/pci.c                     |  4 ++--
+>  drivers/pci/probe.c                   |  7 ++++++-
+>  include/linux/pci.h                   | 11 ++++++++---
+>  12 files changed, 33 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> index e7ef2b5bea9c..4942cd681e41 100644
+> --- a/arch/arm/kernel/bios32.c
+> +++ b/arch/arm/kernel/bios32.c
+> @@ -471,6 +471,8 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+>  				bridge->sysdata = sys;
+>  				bridge->busnr = sys->busnr;
+>  				bridge->ops = hw->ops;
+> +				if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +					bridge->domain_nr = pci_bus_find_domain_nr(sys, parent);
+>  
+>  				ret = pci_scan_root_bus_bridge(bridge);
+>  			}
+> diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
+> index ee91ac6b5ebf..92eb8484b49b 100644
+> --- a/arch/arm/mach-dove/pcie.c
+> +++ b/arch/arm/mach-dove/pcie.c
+> @@ -167,6 +167,8 @@ dove_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
+>  	bridge->sysdata = sys;
+>  	bridge->busnr = sys->busnr;
+>  	bridge->ops = &pcie_ops;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
 
+The check for CONFIG_PCI_DOMAINS_GENERIC is excessive because there is a
+stub for pci_bus_find_domain_nr().
 
-On 5/3/21 5:42 PM, Bjorn Helgaas wrote:
-> Obviously _RST only works for built-in devices, since there's no AML
-> for plug-in devices, right?  So if there's a plug-in card with this
-> GPU, neither SBR nor _RST will work?
-These are not plug-in PCIe GPU cards, will exist on upcoming server
-baseboards. ACPI-reset should wok for plug-in devices as well as long
-as firmware has _RST method defined in ACPI-device associated with
-the PCIe hot-plug slot.
+I'm not an expert in PCI, but maybe the repeated assignment of
+bridge->domain_nr can live in the generic code, say, in
+pci_scan_root_bus_bridge(). E.g. it will set the domain_nr when it is zero.
 
-I've verified PCIe plug-in feature using SYSFS interface.
+>  
+>  	return pci_scan_root_bus_bridge(bridge);
+>  }
+> diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
+> index 636d84b40466..6703d394bcde 100644
+> --- a/arch/arm/mach-mv78xx0/pcie.c
+> +++ b/arch/arm/mach-mv78xx0/pcie.c
+> @@ -208,6 +208,8 @@ static int __init mv78xx0_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
+>  	bridge->sysdata = sys;
+>  	bridge->busnr = sys->busnr;
+>  	bridge->ops = &pcie_ops;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
+>  
+>  	return pci_scan_root_bus_bridge(bridge);
+>  }
+> diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
+> index 76951bfbacf5..6257fbd4e705 100644
+> --- a/arch/arm/mach-orion5x/pci.c
+> +++ b/arch/arm/mach-orion5x/pci.c
+> @@ -563,6 +563,8 @@ int __init orion5x_pci_sys_scan_bus(int nr, struct pci_host_bridge *bridge)
+>  	bridge->dev.parent = NULL;
+>  	bridge->sysdata = sys;
+>  	bridge->busnr = sys->busnr;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
+>  
+>  	if (nr == 0) {
+>  		bridge->ops = &pcie_ops;
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index 1006ed2d7c60..e9a6eeb6a694 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -71,9 +71,8 @@ struct acpi_pci_generic_root_info {
+>  	struct pci_config_window	*cfg;	/* config space mapping */
+>  };
+>  
+> -int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
+> +int acpi_pci_bus_find_domain_nr(struct pci_config_window *cfg)
+>  {
+> -	struct pci_config_window *cfg = bus->sysdata;
+>  	struct acpi_device *adev = to_acpi_device(cfg->parent);
+>  	struct acpi_pci_root *root = acpi_driver_data(adev);
+>  
+> diff --git a/arch/mips/pci/pci-legacy.c b/arch/mips/pci/pci-legacy.c
+> index 39052de915f3..84ad482be22d 100644
+> --- a/arch/mips/pci/pci-legacy.c
+> +++ b/arch/mips/pci/pci-legacy.c
+> @@ -97,6 +97,8 @@ static void pcibios_scanbus(struct pci_controller *hose)
+>  	bridge->ops = hose->pci_ops;
+>  	bridge->swizzle_irq = pci_common_swizzle;
+>  	bridge->map_irq = pcibios_map_irq;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(hose, NULL);
+>  	ret = pci_scan_root_bus_bridge(bridge);
+>  	if (ret) {
+>  		pci_free_host_bridge(bridge);
+> diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
+> index 50f7d42cca5a..23355ab720be 100644
+> --- a/arch/mips/pci/pci-xtalk-bridge.c
+> +++ b/arch/mips/pci/pci-xtalk-bridge.c
+> @@ -712,6 +712,8 @@ static int bridge_probe(struct platform_device *pdev)
+>  	host->ops = &bridge_pci_ops;
+>  	host->map_irq = bridge_map_irq;
+>  	host->swizzle_irq = pci_common_swizzle;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		host->domain_nr = pci_bus_find_domain_nr(bc, dev);
+>  
+>  	err = pci_scan_root_bus_bridge(host);
+>  	if (err < 0)
+> diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+> index da3cd216da00..cf6eec7f90e1 100644
+> --- a/drivers/pci/controller/pci-ftpci100.c
+> +++ b/drivers/pci/controller/pci-ftpci100.c
+> @@ -439,6 +439,8 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>  	host->ops = &faraday_pci_ops;
+>  	p = pci_host_bridge_priv(host);
+>  	host->sysdata = p;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		host->domain_nr = pci_bus_find_domain_nr(p, dev);
+>  	p->dev = dev;
+>  
+>  	/* Retrieve and enable optional clocks */
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index ed13e81cd691..b329ed2f0956 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -1122,6 +1122,8 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+>  	bridge->sysdata = pcie;
+>  	bridge->ops = &mvebu_pcie_ops;
+>  	bridge->align_resource = mvebu_pcie_align_resource;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(pcie, dev);
+>  
+>  	return mvebu_pci_host_probe(bridge);
+>  }
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 16a17215f633..a249dbf78c34 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6505,10 +6505,10 @@ static int of_pci_bus_find_domain_nr(struct device *parent)
+>  	return domain;
+>  }
+>  
+> -int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent)
+> +int pci_bus_find_domain_nr(void *sysdata, struct device *parent)
+>  {
+>  	return acpi_disabled ? of_pci_bus_find_domain_nr(parent) :
+> -			       acpi_pci_bus_find_domain_nr(bus);
+> +			       acpi_pci_bus_find_domain_nr(sysdata);
+>  }
+>  #endif
+>  
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 953f15abc850..5e71cc5e1b6c 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -899,7 +899,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  	bus->ops = bridge->ops;
+>  	bus->number = bus->busn_res.start = bridge->busnr;
+>  #ifdef CONFIG_PCI_DOMAINS_GENERIC
+> -	bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
+> +	bus->domain_nr = bridge->domain_nr;
+>  #endif
+>  
+>  	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
+> @@ -2974,6 +2974,8 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  	bridge->sysdata = sysdata;
+>  	bridge->busnr = bus;
+>  	bridge->ops = ops;
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(sysdata, parent);
+>  
+>  	error = pci_register_host_bridge(bridge);
+>  	if (error < 0)
+> @@ -2992,6 +2994,9 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+>  	struct pci_bus *bus, *child;
+>  	int ret;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		bridge->domain_nr = pci_bus_find_domain_nr(bridge->sysdata, bridge->dev.parent);
+> +
+>  	ret = pci_scan_root_bus_bridge(bridge);
+>  	if (ret < 0) {
+>  		dev_err(bridge->dev.parent, "Scanning root bridge failed");
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 86c799c97b77..5bbd8417d219 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -534,6 +534,7 @@ struct pci_host_bridge {
+>  	struct pci_ops	*child_ops;
+>  	void		*sysdata;
+>  	int		busnr;
+> +	int		domain_nr;
+>  	struct list_head windows;	/* resource_entry */
+>  	struct list_head dma_ranges;	/* dma ranges resource list */
+>  	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
+> @@ -1637,13 +1638,17 @@ static inline int pci_domain_nr(struct pci_bus *bus)
+>  {
+>  	return bus->domain_nr;
+>  }
+> +struct pci_config_window;
+>  #ifdef CONFIG_ACPI
+> -int acpi_pci_bus_find_domain_nr(struct pci_bus *bus);
+> +int acpi_pci_bus_find_domain_nr(struct pci_config_window *cfg);
+>  #else
+> -static inline int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
+> +static inline int acpi_pci_bus_find_domain_nr(struct pci_config_window *cfg)
+>  { return 0; }
+>  #endif
+> -int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent);
+> +int pci_bus_find_domain_nr(void *sysdata, struct device *parent);
+> +#else
+> +static inline int pci_bus_find_domain_nr(void *sysdata, struct device *parent)
+> +{ return 0; }
+>  #endif
+>  
+>  /* Some architectures require additional setup to direct VGA traffic */
+> -- 
+> 2.30.2
+> 
 
-1) Remove device using sysfs interface
-  root@test:/sys/bus/pci# echo 1 > devices/0005:01:00.0/remove
-  root@test:/sys/bus/pci# lspci -s 0005:01:00.0
- 
-2) Rescan PCI bus using sysfs interface
-  root@test:/sys/bus/pci# echo 1 > devices/0005:00:00.0/rescan
-  root@test:/sys/bus/pci# lspci -s 0005:01:00.0
-  0005:01:00.0 3D controller: NVIDIA Corporation Device 2341 (rev a1)
-
-3) List current reset methods
-  root@jetson:/sys/bus/pci# cat devices/0005:01:00.0/reset_method
-  acpi,flr
-
-Example AML code:
- // Device definition for slot/devfn
-  Device(GPU0) {
-     Name(_ADR,0x00000000)
-     Method (_RST, 0)
-     {
-        printf("Entering ACPI _RST method")
-        // RESET code
-        printf("Exiting ACPI _RST method")
-     }
-  }
-
-4) Issue device reset from the userspace
- root@test:/sys/bus/pci# echo 1 > devices/0005:01:00.0/reset
-
-dmesg:
- [ 6156.426303] ACPI Debug:  "Entering PCI9 _RST method"
- [ 6156.427007] ACPI Debug:  "Exiting PCI9 _RST method"
-
-> I'm wondering if we should log something to dmesg in
-> quirk_no_bus_reset(), quirk_no_pm_reset(), quirk_no_flr(), etc., just
-> so we have a hint about the fact that resets won't work quite as
-> expected on these devices.
-Yes, it would be very useful to know what PCI quirks were applied during boot.
-Should I create a separate patch for adding pci_info() or include as part of this
-patch?
- 
- --- a/drivers/pci/quirks.c
- +++ b/drivers/pci/quirks.c
- @@ -3556,6 +3556,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_ANY_ID,
-  static void quirk_no_bus_reset(struct pci_dev *dev)
-  {
-         dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-       +pci_info(dev, "Applied NO_BUS_RESET quirk\n");
-  }
-
-  /*
- @@ -3598,6 +3599,7 @@ static void quirk_no_pm_reset(struct pci_dev *dev)
-          */
-         if (!pci_is_root_bus(dev->bus))
-                 dev->dev_flags |= PCI_DEV_FLAGS_NO_PM_RESET;
-        +pci_info(dev, "Applied NO_PM_RESET quirk\n");
-  }
-
-  /*
- @@ -5138,6 +5140,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  static void quirk_no_flr(struct pci_dev *dev)
-  {
-         dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
-        +pci_info(dev, "Applied NO_FLR_RESET quirk\n");
-  }
-
-
+-- 
+Sincerely yours,
+Mike.
