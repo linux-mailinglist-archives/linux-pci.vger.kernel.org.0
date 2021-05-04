@@ -2,108 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4A34372A04
-	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 14:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BA8F372A76
+	for <lists+linux-pci@lfdr.de>; Tue,  4 May 2021 14:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbhEDMZT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 May 2021 08:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230110AbhEDMZS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 May 2021 08:25:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 54735613B4;
-        Tue,  4 May 2021 12:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620131064;
-        bh=vArYzEMEwRqDbMRFkfiHNa4Cgeb/07wrYgojfXEM6ig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f8ApvRPhpj1ghZ3GYlONwF21yByVn6tOlm5gExHU9CgVbE38i4gVlkktgw2fcqEBT
-         2BI1Kc+8aoqMzhiK+LgMM/mkS/TOu4WchUA47NAZFl56Od8RreTRfQOpguR2XoJgc2
-         0ojolL9ZtF/h6+OfVzabe/ChOlHh35FJ8K09aqkFtpcDgj6RQm88Axlyp5z1fqHelY
-         S7CNTilkyJ2Cgs79Vz8LRogTJt2ixK1EkztsdanK089ZE6wdtQB/Kj5eplasCOxeGc
-         y7osxn+gPLsTO5KkTVn073nXPICN6pUipqsNZOOte8gfA4ULES81Kz9N2FB/7R1JP/
-         bHMrKkSRsKxBw==
-Date:   Tue, 4 May 2021 15:24:19 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     paul.walmsley@sifive.com, hes@sifive.com, erik.danie@sifive.com,
-        zong.li@sifive.com, bhelgaas@google.com, robh+dt@kernel.org,
-        aou@eecs.berkeley.edu, mturquette@baylibre.com, sboyd@kernel.org,
-        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
-        alex.dewar90@gmail.com, khilman@baylibre.com,
-        hayashi.kunihiko@socionext.com, vidyas@nvidia.com,
-        jh80.chung@samsung.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        helgaas@kernel.org
-Subject: Re: [PATCH v6 1/6] clk: sifive: Add pcie_aux clock in prci driver
- for PCIe driver
-Message-ID: <YJE886bhppqes5LQ@unreal>
-References: <20210504105940.100004-1-greentime.hu@sifive.com>
- <20210504105940.100004-2-greentime.hu@sifive.com>
+        id S230361AbhEDM4K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 May 2021 08:56:10 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:46005 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230306AbhEDM4J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 May 2021 08:56:09 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M6DOg-1lbjmi21H6-006cEz; Tue, 04 May 2021 14:55:12 +0200
+Received: by mail-wr1-f51.google.com with SMTP id z6so9318390wrm.4;
+        Tue, 04 May 2021 05:55:12 -0700 (PDT)
+X-Gm-Message-State: AOAM531W48nm3Ag8t7cdjl4rPgchf1eG25G2SGR1gfA11KwOksbc5xpF
+        sC9Ad0/R1d/TWzpn9P8rIpin6eO1LZ7f62zi5Ic=
+X-Google-Smtp-Source: ABdhPJxZqrTi9G2DXSNUfIOmCmqJfGfd4U+7J/GInsToAaauVBZoyXZWPBq5UxAt5OfgD6M4yd2UFfVUQfIwtkHJa48=
+X-Received: by 2002:adf:d223:: with SMTP id k3mr31387435wrh.99.1620132912222;
+ Tue, 04 May 2021 05:55:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210504105940.100004-2-greentime.hu@sifive.com>
+References: <20210503211649.4109334-1-linus.walleij@linaro.org> <20210503211649.4109334-4-linus.walleij@linaro.org>
+In-Reply-To: <20210503211649.4109334-4-linus.walleij@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 4 May 2021 14:54:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1ab_hvW_9_vBawhgsV3-W1F-qWm5KJ_ycuHmpVGzzz+Q@mail.gmail.com>
+Message-ID: <CAK8P3a1ab_hvW_9_vBawhgsV3-W1F-qWm5KJ_ycuHmpVGzzz+Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] PCI: ixp4xx: Add device tree bindings for IXP4xx
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        Zoltan HERPAI <wigyori@uid0.hu>,
+        Raylynn Knight <rayknight@me.com>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:qzArCmDTMSjnriEqWDBFGeByWFbMJePOggUBTIjjF3Oa6HFTh8y
+ MKZ6yJ14LLY5bz1jUJzEQ4T5/kVlgv8JngSViPEXql0I9vU8EHXgTeDXpvfad8yb/A6Ty4Z
+ cKJ8PaKSNAQT/+DO/awEX4lvBT7I+Fk3Khgl0QmrJavpxPcYtvvC5KCkjR0b8H59mjodX7M
+ lo3oTG6DAt6Vs9wf+gkCw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:O1HcbgqJuS0=:54abwUlheZv/aDfkIBcz+D
+ LeW4s22XP8PvFRlv49sd0VPD9zs+zrGvM7/lcKGSh5mebesL4X6FuZYD8E+n+P9qpVxEhQa+a
+ PRymUUfjjTOAT+cPyuD/01mD1DVC9kcgQFCadypFuQRxbQPHARWUt5ssA7c2tfGrpEJrW/JyJ
+ QC4dS/inexyCvectwEWlEJyCl4uO2J3EPE1uioo9pNwCUb2ZPzufG3wILDiatJvQIkvFtFK0t
+ kVS5mJlZFt5JW15/QhPldM5yq3stobasBQKY0ZZivQrCmboC2JvJzncFRqDEu8LGzadulJh2w
+ RQEQUp4d3xzHIP+zdU/YrVFR8HQf3S3XLogxYovBywi4Cbokr3EPmcTBNjnnNkb/eazZPNWmi
+ RSMZAoGB47F41rVzs26NLOznGanfHHAN9u0k34YVVydz0MWCAHOaRPVJzRHgnOrFhCp1b9Jav
+ 8/3+A7mQV239EiOsDxYDfOG2YsV+9bDij79VLpjQbpDrkqvgeHdiK4DflX0iq8Z+9cFXD8Ejz
+ Dpny9rg6/maohsbYUeaF0eOWgS26K1DJg3NCcfBKFD4+ojwR/DzYuUIPRERud4rZpjhjDE2Tn
+ BmOu7XXVehI3jR0gXnDZM4eB3jHHCmxb9oZIyaWZrEPHkcT0QZRmX49gHWOtDERCX7hc8vHBr
+ smPU=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 04, 2021 at 06:59:35PM +0800, Greentime Hu wrote:
-> We add pcie_aux clock in this patch so that pcie driver can use
-> clk_prepare_enable() and clk_disable_unprepare() to enable and disable
-> pcie_aux clock.
-> 
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/clk/sifive/fu740-prci.c               | 11 +++++
->  drivers/clk/sifive/fu740-prci.h               |  2 +-
->  drivers/clk/sifive/sifive-prci.c              | 41 +++++++++++++++++++
->  drivers/clk/sifive/sifive-prci.h              |  9 ++++
->  include/dt-bindings/clock/sifive-fu740-prci.h |  1 +
->  5 files changed, 63 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/sifive/fu740-prci.c b/drivers/clk/sifive/fu740-prci.c
-> index 764d1097aa51..53f6e00a03b9 100644
-> --- a/drivers/clk/sifive/fu740-prci.c
-> +++ b/drivers/clk/sifive/fu740-prci.c
-> @@ -72,6 +72,12 @@ static const struct clk_ops sifive_fu740_prci_hfpclkplldiv_clk_ops = {
->  	.recalc_rate = sifive_prci_hfpclkplldiv_recalc_rate,
+On Mon, May 3, 2021 at 11:16 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-<...>
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - intel,ixp42x-pci
+> +          - intel,ixp43x-pci
+> +    description: The two supported variants are ixp42x and ixp43x,
+> +      though more variants may exist.
 
-> +/* PCIE AUX clock APIs for enable, disable. */
-> +int sifive_prci_pcie_aux_clock_is_enabled(struct clk_hw *hw)
+These are still wildcard names, better pick a real soc identifier
+such as "ixp425" instead of "ixp42x" in case there are differences
+after all.
 
-It should be bool
+> +        <0x0800 0 0 1 &gpio0 11 3>, /* INT A on slot 1 is irq 11 */
+> +        <0x0800 0 0 2 &gpio0 10 3>, /* INT B on slot 1 is irq 10 */
+> +        <0x0800 0 0 3 &gpio0 9  3>, /* INT C on slot 1 is irq 9 */
+> +        <0x0800 0 0 4 &gpio0 8  3>, /* INT D on slot 1 is irq 8 */
+> +        <0x1000 0 0 1 &gpio0 10 3>, /* INT A on slot 2 is irq 10 */
+> +        <0x1000 0 0 2 &gpio0 9  3>, /* INT B on slot 2 is irq 9 */
+> +        <0x1000 0 0 3 &gpio0 8  3>, /* INT C on slot 2 is irq 8 */
+> +        <0x1000 0 0 4 &gpio0 11 3>, /* INT D on slot 2 is irq 11 */
+> +        <0x1800 0 0 1 &gpio0 9  3>, /* INT A on slot 3 is irq 9 */
+> +        <0x1800 0 0 2 &gpio0 8  3>, /* INT B on slot 3 is irq 8 */
+> +        <0x1800 0 0 3 &gpio0 11 3>, /* INT C on slot 3 is irq 11 */
+> +        <0x1800 0 0 4 &gpio0 10 3>; /* INT D on slot 3 is irq 10 */
 
-> +{
-> +	struct __prci_clock *pc = clk_hw_to_prci_clock(hw);
-> +	struct __prci_data *pd = pc->pd;
-> +	u32 r;
-> +
-> +	r = __prci_readl(pd, PRCI_PCIE_AUX_OFFSET);
-> +
-> +	if (r & PRCI_PCIE_AUX_EN_MASK)
-> +		return 1;
-> +	else
-> +		return 0;
-> +}
+Is this different from the default swizzling rules? You normally
+only have to provide the irqs for the bus once.
 
-and here simple "return r & PRCI_PCIE_AUX_EN_MASK;"
-
-> +
-> +int sifive_prci_pcie_aux_clock_enable(struct clk_hw *hw)
-> +{
-> +	struct __prci_clock *pc = clk_hw_to_prci_clock(hw);
-> +	struct __prci_data *pd = pc->pd;
-> +	u32 r __maybe_unused;
-> +
-> +	if (sifive_prci_pcie_aux_clock_is_enabled(hw))
-> +		return 0;
-
-You actually call to this new function only once, put your
-__prci_readl() here.
-
-Thanks
+       Arnd
