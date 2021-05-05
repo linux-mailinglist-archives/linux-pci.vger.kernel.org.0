@@ -2,89 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C70E737340E
-	for <lists+linux-pci@lfdr.de>; Wed,  5 May 2021 05:57:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9822373466
+	for <lists+linux-pci@lfdr.de>; Wed,  5 May 2021 06:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbhEED54 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 May 2021 23:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39482 "EHLO
+        id S231494AbhEEE2d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 May 2021 00:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbhEED5z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 May 2021 23:57:55 -0400
+        with ESMTP id S230515AbhEEE22 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 May 2021 00:28:28 -0400
 Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C83C061574;
-        Tue,  4 May 2021 20:56:58 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id i67so381853qkc.4;
-        Tue, 04 May 2021 20:56:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4004BC061763
+        for <linux-pci@vger.kernel.org>; Tue,  4 May 2021 21:26:44 -0700 (PDT)
+Received: by mail-qk1-x72c.google.com with SMTP id x8so433845qkl.2
+        for <linux-pci@vger.kernel.org>; Tue, 04 May 2021 21:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=raPVEE+POqvqWKpHqKk8/hWTNW82CsKc6mZrTESP9RA=;
-        b=nqvka04ZEshde8nXMTIxfIWvfnA6uVudEOMtY3I4YKFK6XvnBssv50LTuD4k5ezOLd
-         +fl5ozLjvA7y8JD87TR/9pQ62JWWsVKkqzaIxPDYfM/4AxEByHEW2B58wM3Zm2ExKjdN
-         L0Cj5sw1tmKXCbZw09RI2eBQ/QRvQllhr3Ukwa0ltbo712Kj7kSDx2+mBa0pSA6yH3v0
-         mf/Xlejx31L9sCdRrtRk4sCZEKmnfCDl4RTG3A4QC2pHjhvuzbfCPWV62Pz0SOoFUjRb
-         l5+13gERX5Fcc+Fe9iKmi+NTizOSvpFDrAILyHupx4XQpaSiydXSLbnliiLX/aRvomY0
-         2T/w==
+         :cc:content-transfer-encoding;
+        bh=MWSpjxBHV1vRQCEcIIgUFYsW0arewhxrx2qqTW/rPlY=;
+        b=eG4DO5aZCjdAptZWJyANSIWrnjQfoI+YnXphlXLmQkVHW2OlYy15msNEav3uhLMHv+
+         9MC/49Ilp4ZUGHTZ91k1Ztq8VXZ2uQSVkHGeyblBNhtAfJ/YyYKFdWPXBjBocTAWnRIM
+         xNsyfLfBo83J+sPbjEojQCHGGi8NYXE4aDpKBLoaqOjgQDifZaLk5OyDBgE2i0d3vGh8
+         SK9AnSO5usHR4SWn950rRy8EzLZraCq90VeDCdzstYUKx4Yh0W1qka2UuaQlmaLu7agB
+         IvNIuhwuWm/QYlxp+BzrW6JNQs30u2smfSWsYf4m6c8GnnrGfiAFwEHjRcHArXFI6tsu
+         XDTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=raPVEE+POqvqWKpHqKk8/hWTNW82CsKc6mZrTESP9RA=;
-        b=mFLa3+6xPyX+oV/ApFxPNRyZ0krpSW58oUKGW/eyXj6drK2iByaN4PndlwdJOt/74v
-         SlcVJbOitQfbE7PqPj76lNXokO/3KCOmRccZC8LOKcgv5OrMB7XYUrXqlJ0+H7TspoLp
-         YJ5MHejOAue7l+LHwqj/arMx7GCCGIrQXi66W5w3GgEYuAypJ6lCsLQELqIsMDQAQMZp
-         k3p9FWvUvOu/ZVuYkJ12vxq+jRV1392ovy1jdtAl1wBRlTzwpuei5yE5GeazOgHW34s0
-         5V7g5XsHK3vDVsM5ZRc1F6QuQN2LU3yIbe4VYD4V8ZV4XIJZA15qKR/qqqYj2VJB0DPQ
-         9Ksw==
-X-Gm-Message-State: AOAM530pSdtOgPaQ2ackjjNxZmC7Cpe3QUWSL6zeYlqVbVP1S7XyaxL0
-        fipyhT89iP9aELOR3S/0xOUWUPtG0Vtyx3IOQy8=
-X-Google-Smtp-Source: ABdhPJykhQF7VHwuFZxf/QqbGBYjzbeMEW7pELCetcVAtZgzLt0ddOxMMeRCAWlrdd2paWS+4VsROWSCNQq2dplopTs=
-X-Received: by 2002:a37:de14:: with SMTP id h20mr28014944qkj.34.1620187018114;
- Tue, 04 May 2021 20:56:58 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MWSpjxBHV1vRQCEcIIgUFYsW0arewhxrx2qqTW/rPlY=;
+        b=owtxnOLBE09RV0Z1zOuuRQ0An5ZvzqRvGeUhFxgntR7FXLGEh6uUs/MXzpixA10Y+E
+         8VDizLkWd1PM3NvbQYeTOMczV5BE43wIHX5ja4CRhPt+Lwt7qgGDyLs0fHL26rrFzyMN
+         t9Bc4NrHClARZ4cSZ0bxGdd1hIzwhLUcMZtTXdWjXOF5DFAgr83PTTlMZ123EqFiOW57
+         d+fwOuVOiQ5CtsG4KNZIXE6Tv20Tla9yW1e0+QPM+e+4mAUfU7o4yr+Vi9VHQxkY5BjC
+         LAm4rxox1AtqnfXT9j2SPCLkoSDShAKkuRYSYeAgC1wpc7xaIqioq1DDTFolzRD4wi+W
+         1fEg==
+X-Gm-Message-State: AOAM5311xDqz4quapQzDcnLJK4XvXr9A/VPHqWsAcja+yfnbXbE9NIHf
+        Gc6+xMa+QGbHgYSNh4XbiQkpbPRD62u+LltpvHL0uA==
+X-Google-Smtp-Source: ABdhPJyyjim3sI4ReEhGXSHiHPSliwht/DIqCZWGZeFpAExlyKtWwB5fVEGkkFBLw60H7cFK5hOmWGBArsLX6P7qFAk=
+X-Received: by 2002:a05:620a:29c4:: with SMTP id s4mr25568588qkp.401.1620188803215;
+ Tue, 04 May 2021 21:26:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <478efe56-fb64-6987-f64c-f3d930a3b330@nvidia.com> <20210505021236.GA1244944@bjorn-Precision-5520>
-In-Reply-To: <20210505021236.GA1244944@bjorn-Precision-5520>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 5 May 2021 13:56:47 +1000
-Message-ID: <CAOSf1CFACC5V1OdA9i9APipTUE3GmXu487vt-btXWk5rP97UAQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
+References: <20210504105940.100004-6-greentime.hu@sifive.com> <20210504134632.GA1088165@bjorn-Precision-5520>
+In-Reply-To: <20210504134632.GA1088165@bjorn-Precision-5520>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Wed, 5 May 2021 12:26:31 +0800
+Message-ID: <CAHCEehL21cFLp+JWMhKP8rAVtGunMv2fmfo6C6tbTGpgL9q2RA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] PCI: fu740: Add SiFive FU740 PCIe host controller driver
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Shanker R Donthineni <sdonthineni@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>, hes@sifive.com,
+        Erik Danie <erik.danie@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, robh+dt@kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>, alex.dewar90@gmail.com,
+        khilman@baylibre.com, hayashi.kunihiko@socionext.com,
+        vidyas@nvidia.com, jh80.chung@samsung.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        Vikram Sethi <vsethi@nvidia.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
+        linux-clk@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 5, 2021 at 12:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2021=E5=B9=B45=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=889:46=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Mon, May 03, 2021 at 09:07:11PM -0500, Shanker R Donthineni wrote:
-> > On 5/3/21 5:42 PM, Bjorn Helgaas wrote:
-> > > Obviously _RST only works for built-in devices, since there's no AML
-> > > for plug-in devices, right?  So if there's a plug-in card with this
-> > > GPU, neither SBR nor _RST will work?
-> > These are not plug-in PCIe GPU cards, will exist on upcoming server
-> > baseboards. ACPI-reset should wok for plug-in devices as well as long
-> > as firmware has _RST method defined in ACPI-device associated with
-> > the PCIe hot-plug slot.
+> On Tue, May 04, 2021 at 06:59:39PM +0800, Greentime Hu wrote:
+> > From: Paul Walmsley <paul.walmsley@sifive.com>
+> >
+> > Add driver for the SiFive FU740 PCIe host controller.
+> > This controller is based on the DesignWare PCIe core.
+> >
+> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > Co-developed-by: Henry Styles <hes@sifive.com>
+> > Signed-off-by: Henry Styles <hes@sifive.com>
+> > Co-developed-by: Erik Danie <erik.danie@sifive.com>
+> > Signed-off-by: Erik Danie <erik.danie@sifive.com>
+> > Co-developed-by: Greentime Hu <greentime.hu@sifive.com>
+> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > ---
+> >  drivers/pci/controller/dwc/Kconfig      |  10 +
+> >  drivers/pci/controller/dwc/Makefile     |   1 +
+> >  drivers/pci/controller/dwc/pcie-fu740.c | 309 ++++++++++++++++++++++++
+> >  3 files changed, 320 insertions(+)
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-fu740.c
+> >
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controlle=
+r/dwc/Kconfig
+> > index 22c5529e9a65..255d43b1661b 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -318,4 +318,14 @@ config PCIE_AL
+> >         required only for DT-based platforms. ACPI platforms with the
+> >         Annapurna Labs PCIe controller don't need to enable this.
+> >
+> > +config PCIE_FU740
+> > +     bool "SiFive FU740 PCIe host controller"
+> > +     depends on PCI_MSI_IRQ_DOMAIN
+> > +     depends on SOC_SIFIVE || COMPILE_TEST
+> > +     depends on GPIOLIB
 >
-> Maybe I'm missing something, but I don't see how _RST can work for
-> plug-in devices.  _RST is part of the system firmware, and that
-> firmware knows nothing about what will be plugged into the slot.  So
-> if system firmware supplies _RST that knows how to reset the Nvidia
-> GPU, it's not going to do the right thing if you plug in an NVMe
-> device instead.
+> 1) I'm a little disappointed that I reported the build issue 6 days
+>    ago when we were already in the merge window, and it's taken until
+>    now to make some progress.
 >
-> Can you elaborate on how _RST would work for plug-in devices?
+> 2) I would prefer not to depend on GPIOLIB because it reduces
+>    compile-test coverage.  For example, the x86_64 defconfig does not
+>    enable GPIOLIB, so one must manually enable it to even be able to
+>    enable PCIE_FU740.
+>
+>    Many other PCI controller drivers use GPIO, but no others depend on
+>    GPIOLIB, so I infer that in the !GPIOLIB case, gpio/consumer.h
+>    provides the stubs required for compile testing.
+>
+>    We could have a conversation about whether it's better to
+>    explicitly depend on GPIOLIB here, or whether building a working
+>    FU740 driver implicitly depends on GPIOLIB being selected
+>    elsewhere.  That implicit dependency *is* a little obscure, but I
+>    think that's what other drivers currently do, and I'd like to do
+>    this consistently unless there's a good reason otherwise.
+>
+>    Here are some examples of other drivers:
+>
+>    dwc/pci-dra7xx.c:
+>      config PCI_DRA7XX_HOST
+>        depends on SOC_DRA7XX || COMPILE_TEST
+>
+>      config SOC_DRA7XX
+>        select ARCH_OMAP2PLUS
+>
+>      config ARCH_OMAP2PLUS
+>        select GPIOLIB
+>
+>    dwc/pci-meson.c:
+>      config PCI_MESON
+>        # doesn't, but probably *should* depend on "ARCH_MESON || COMPILE_=
+TEST"
+>
+>      menuconfig ARCH_MESON
+>        select GPIOLIB
+>
+>    dwc/pcie-qcom.c:
+>      config PCIE_QCOM
+>        depends on OF && (ARCH_QCOM || COMPILE_TEST)
+>
+>      config ARCH_QCOM
+>        select GPIOLIB
+>
+>    pcie-rockchip.c:
+>      config PCIE_ROCKCHIP_HOST
+>        depends on ARCH_ROCKCHIP || COMPILE_TEST
+>
+>      config ARCH_ROCKCHIP
+>        select GPIOLIB
+>
+> > +     select PCIE_DW_HOST
+> > +     help
+> > +       Say Y here if you want PCIe controller support for the SiFive
+> > +       FU740.
+> > +
+> >  endmenu
 
-Power cycling the slot or just re-asserting #PERST probably. IBM has
-been doing that on Power boxes since forever and it mostly works.
-Mostly.
+Hi,
+
+Sorry for late to debug this case. I was working on other works and
+just missed the email.
+How about this?
+
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index e1b2690b6e45..66f57f2db49d 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -7,6 +7,7 @@ config SOC_SIFIVE
+        select CLK_SIFIVE
+        select CLK_SIFIVE_PRCI
+        select SIFIVE_PLIC
++       select GPIOLIB if PCIE_FU740
+        help
+          This enables support for SiFive SoC platform hardware.
+
+diff --git a/drivers/pci/controller/dwc/Kconfig
+b/drivers/pci/controller/dwc/Kconfig
+index 255d43b1661b..0a37d21ed64e 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -322,7 +322,6 @@ config PCIE_FU740
+        bool "SiFive FU740 PCIe host controller"
+        depends on PCI_MSI_IRQ_DOMAIN
+        depends on SOC_SIFIVE || COMPILE_TEST
+-       depends on GPIOLIB
+        select PCIE_DW_HOST
+        help
+          Say Y here if you want PCIe controller support for the SiFive
