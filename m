@@ -2,271 +2,497 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D01E93742A2
-	for <lists+linux-pci@lfdr.de>; Wed,  5 May 2021 18:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 585603742D4
+	for <lists+linux-pci@lfdr.de>; Wed,  5 May 2021 18:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236089AbhEEQrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 May 2021 12:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
+        id S235503AbhEEQsm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 May 2021 12:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235175AbhEEQn0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 May 2021 12:43:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7196361879;
-        Wed,  5 May 2021 16:35:00 +0000 (UTC)
+        id S235994AbhEEQpZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 May 2021 12:45:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 573D761931;
+        Wed,  5 May 2021 16:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620232500;
-        bh=fPfmCTyAQD8PT6TZkO8THxra9rEY81AdAkfBo+IZ5tU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGQEKTJt6sQkhGf+9veu8zkPNAFhEHpim85V7tVqJPqB4sraqNoIP0BWX1keInmv1
-         ZKmmiJG5OUg5J9Es8W0iw0yQNPVmz34gbFy4b/BRUc7EKu46CVXeOvY7+dX1ivCaHW
-         ikKmjPxAXiMqLH3vRNqoFgDWvRRAhatZ2B9XuscrV7BPfXufja4ykhb29irvNL2akj
-         Hc4a6H7NHXnuVMvnnogfrZDleFUOYf/BVnamTiRmKRbnoBOWJPt6XCS+yoB5gVy3H7
-         /pzDotZdZ51NWdc/HzZfBT+40TkFWyD6fV5hW9V0Yi5BVVD/2LZDvbLecJkOQJfTqD
-         +rF2SH3dN0A9Q==
-Received: by pali.im (Postfix)
-        id 09BEF79D; Wed,  5 May 2021 18:34:57 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] PCI: Disallow retraining link for Atheros chips on non-Gen1 PCIe bridges
-Date:   Wed,  5 May 2021 18:33:57 +0200
-Message-Id: <20210505163357.16012-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210326124326.21163-1-pali@kernel.org>
-References: <20210326124326.21163-1-pali@kernel.org>
+        s=k20201202; t=1620232573;
+        bh=GNE46FwybbDNoekacRkSMORa/S/s/o84e+64lGvXz1A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M2LioRnDCM2y+tEV9PdN3gOS35V0P/z+9xWRBZMyYQ+z0qAGzAt5/14Mv0uPwQoWK
+         NX8Z08+nXZwizFUFqzmqAyGPOhB+kNKfNc1SBeX0iUiOd/g3+Bxzq0vxdlMUW+Bntg
+         EesOXyxtpe/tWAOvid2oa27FyrlQgkBwsA2ZeJ7PFC8+GOSLIgkP5DIZnl1gRpNS60
+         SkNMMOGezct6iQKdG8EFQmNqwn038v+06zl1zLbDo/feASPENm+P8K8HwLXSejIYJs
+         jyLP5BUILHJf4XB02c99iHOxSNKx2Ao0oX4RfygfN2Ygsqj9kaGEygAQuJWHPPKro2
+         ALVPEJRvFsRhA==
+Date:   Wed, 5 May 2021 11:36:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [GIT PULL] PCI changes for v5.13
+Message-ID: <20210505163611.GA1310028@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Atheros AR9xxx and QCA9xxx chips have behaviour issues not only after a
-bus reset, but also after doing retrain link, if PCIe bridge is not in
-GEN1 mode (at 2.5 GT/s speed):
+The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
 
-- QCA9880 and QCA9890 chips throw a Link Down event and completely
-  disappear from the bus and their config space is not accessible
-  afterwards.
+  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
 
-- QCA9377 chip throws a Link Down event followed by Link Up event, the
-  config space is accessible and PCI device ID is correct. But trying to
-  access chip's I/O space causes Uncorrected (Non-Fatal) AER error,
-  followed by Synchronous external abort 96000210 and Segmentation fault
-  of insmod while loading ath10k_pci.ko module.
+are available in the Git repository at:
 
-- AR9390 chip throws a Link Down event followed by Link Up event, config
-  space is accessible, but contains nonsense values. PCI device ID is
-  0xABCD which indicates HW bug that chip itself was not able to read
-  values from internal EEPROM/OTP.
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.13-changes
 
-- AR9287 chip throws also Link Down and Link Up events, also has
-  accessible config space containing correct values. But ath9k driver
-  fails to initialize card from this state as it is unable to access HW
-  registers. This also indicates that the chip iself is not able to read
-  values from internal EEPROM/OTP.
+for you to fetch changes up to 882862aaacefcb9f723b0f7817ddafc154465d8f:
 
-These issues related to PCI device ID 0xABCD and to reading internal
-EEPROM/OTP were previously discussed at ath9k-devel mailing list in
-following thread:
+  Merge branch 'pci/tegra' (2021-05-04 10:43:32 -0500)
 
-  https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
+----------------------------------------------------------------
 
-After experiments we've come up with a solution: it seems that Retrain
-link can be called only when using GEN1 PCIe bridge or when PCIe bridge
-link speed is forced to 2.5 GT/s. Applying this workaround fixes all
-mentioned cards.
+Enumeration:
+  - Release OF node when pci_scan_device() fails (Dmitry Baryshkov)
+  - Add pci_disable_parity() (Bjorn Helgaas)
+  - Disable Mellanox Tavor parity reporting (Heiner Kallweit)
+  - Disable N2100 r8169 parity reporting (Heiner Kallweit)
+  - Fix RCiEP device to RCEC association (Qiuxu Zhuo)
+  - Convert sysfs "config", "rom", "reset", "label", "index", "acpi_index" to
+    static attributes to help fix races in device enumeration (Krzysztof
+    Wilczyński)
+  - Convert sysfs "vpd" to static attribute (Heiner Kallweit, Krzysztof
+    Wilczyński)
+  - Use sysfs_emit() in "show" functions (Krzysztof Wilczyński)
+  - Remove unused alloc_pci_root_info() return value (Krzysztof Wilczyński)
 
-This issue was reproduced with more cards:
-- Compex WLE900VX (QCA9880 based / device ID 0x003c)
-- QCNFA435 (QCA9377 based / device ID 0x0042)
-- Compex WLE200NX (AR9287 based / device ID 0x002e)
-- "noname" card (QCA9890 based / device ID 0x003c)
-- Wistron NKR-DNXAH1 (AR9390 based / device ID 0x0030)
-on Armada 385 with pci-mvebu.c driver and also on Armada 3720 with
-pci-aardvark.c driver.
+PCI device hotplug:
+  - Fix acpiphp reference count leak (Feilong Lin)
 
-To workaround this issue, this change introduces a new PCI quirk called
-PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1, which is enabled for all
-Atheros chips with PCI_DEV_FLAGS_NO_BUS_RESET quirk, and also for Atheros
-chip AR9287.
+Power management:
+  - Fix acpi_pci_set_power_state() debug message (Rafael J. Wysocki)
+  - Fix runtime PM imbalance (Dinghao Liu)
 
-When this quirk is set, kernel disallows triggering PCI_EXP_LNKCTL_RL
-bit in config space of PCIe Bridge in the case when PCIe Bridge is
-capable of higher speed than 2.5 GT/s and this higher speed is already
-allowed. When PCIe Bridge has accessible LNKCTL2 register, we try to
-force target link speed to 2.5 GT/s. After this change it is possible
-to trigger PCI_EXP_LNKCTL_RL bit without issues.
+Virtualization:
+  - Increase delay after FLR to work around Intel DC P4510 NVMe erratum
+    (Raphael Norwitz)
 
-Currently only PCIe ASPM kernel code triggers this PCI_EXP_LNKCTL_RL bit,
-so quirk check is added only into pcie/aspm.c file.
+MSI:
+  - Convert rcar, tegra, xilinx to MSI domains (Marc Zyngier)
+  - For rcar, xilinx, use controller address as MSI doorbell (Marc Zyngier)
+  - Remove unused hv msi_controller struct (Marc Zyngier)
+  - Remove unused PCI core msi_controller support (Marc Zyngier)
+  - Remove struct msi_controller altogether (Marc Zyngier)
+  - Remove unused default_teardown_msi_irqs() (Marc Zyngier)
+  - Let host bridges declare their reliance on MSI domains (Marc Zyngier)
+  - Make pci_host_common_probe() declare its reliance on MSI domains (Marc
+    Zyngier)
+  - Advertise mediatek lack of built-in MSI handling (Thomas Gleixner)
+  - Document ways of ending up with NO_MSI (Marc Zyngier)
+  - Refactor HT advertising of NO_MSI flag (Marc Zyngier)
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reported-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Tested-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Tested-by: Marek Behún <kabel@kernel.org>
-BugLink: https://lore.kernel.org/linux-pci/87h7l8axqp.fsf@toke.dk/
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=84821
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=192441
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209833
-Cc: stable@vger.kernel.org # c80851f6ce63a ("PCI: Add PCI_EXP_LNKCTL2_TLS* macros")
+VPD:
+  - Remove obsolete Broadcom NIC VPD length-limiting quirk (Heiner Kallweit)
+  - Remove sysfs VPD size checking dead code (Heiner Kallweit)
+  - Convert VPF sysfs file to static attribute (Heiner Kallweit)
+  - Remove unnecessary pci_set_vpd_size() (Heiner Kallweit)
+  - Tone down "missing VPD" message (Heiner Kallweit)
 
----
-Changes since v1:
-* Move whole quirk code into pcie_downgrade_link_to_gen1() function
-* Reformat to 80 chars per line where possible
-* Add quirk also for cards with AR9287 chip (PCI ID 0x002e)
-* Extend commit message description and add information about 0xABCD
+Endpoint framework:
+  - Fix NULL pointer dereference when epc_features not implemented (Shradha
+    Todi)
+  - Add missing destroy_workqueue() in endpoint test (Yang Yingliang)
 
-Changes since v2:
-* Add quirk also for Atheros QCA9377 chip
----
- drivers/pci/pcie/aspm.c | 44 +++++++++++++++++++++++++++++++++++++++++
- drivers/pci/quirks.c    | 39 ++++++++++++++++++++++++++++--------
- include/linux/pci.h     |  2 ++
- 3 files changed, 77 insertions(+), 8 deletions(-)
+Amazon Annapurna Labs PCIe controller driver:
+  - Fix compile testing without CONFIG_PCI_ECAM (Arnd Bergmann)
+  - Fix "no symbols" warnings when compile testing with
+    CONFIG_TRIM_UNUSED_KSYMS (Arnd Bergmann)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index ac0557a305af..729b0389562b 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -192,12 +192,56 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- 	link->clkpm_disable = blacklist ? 1 : 0;
- }
- 
-+static int pcie_downgrade_link_to_gen1(struct pci_dev *parent)
-+{
-+	u16 reg16;
-+	u32 reg32;
-+	int ret;
-+
-+	/* Check if link is capable of higher speed than 2.5 GT/s */
-+	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &reg32);
-+	if ((reg32 & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-+		return 0;
-+
-+	/* Check if link speed can be downgraded to 2.5 GT/s */
-+	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &reg32);
-+	if (!(reg32 & PCI_EXP_LNKCAP2_SLS_2_5GB)) {
-+		pci_err(parent, "ASPM: Bridge does not support changing Link Speed to 2.5 GT/s\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	/* Force link speed to 2.5 GT/s */
-+	ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
-+						 PCI_EXP_LNKCTL2_TLS,
-+						 PCI_EXP_LNKCTL2_TLS_2_5GT);
-+	if (!ret) {
-+		/* Verify that new value was really set */
-+		pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &reg16);
-+		if ((reg16 & PCI_EXP_LNKCTL2_TLS) != PCI_EXP_LNKCTL2_TLS_2_5GT)
-+			ret = -EINVAL;
-+	}
-+
-+	if (ret) {
-+		pci_err(parent, "ASPM: Changing Target Link Speed to 2.5 GT/s failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pci_info(parent, "ASPM: Target Link Speed changed to 2.5 GT/s due to quirk\n");
-+	return 0;
-+}
-+
- static bool pcie_retrain_link(struct pcie_link_state *link)
- {
- 	struct pci_dev *parent = link->pdev;
- 	unsigned long end_jiffies;
- 	u16 reg16;
- 
-+	if ((link->downstream->dev_flags & PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1) &&
-+	    pcie_downgrade_link_to_gen1(parent)) {
-+		pci_err(parent, "ASPM: Retrain Link at higher speed is disallowed by quirk\n");
-+		return false;
-+	}
-+
- 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
- 	reg16 |= PCI_EXP_LNKCTL_RL;
- 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..4999ad9d08b8 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3553,23 +3553,46 @@ static void mellanox_check_broken_intx_masking(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_ANY_ID,
- 			mellanox_check_broken_intx_masking);
- 
--static void quirk_no_bus_reset(struct pci_dev *dev)
-+static void quirk_no_bus_reset_and_no_retrain_link(struct pci_dev *dev)
- {
--	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-+	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET |
-+			  PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1;
- }
- 
- /*
-- * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
-+ * Atheros AR9xxx and QCA9xxx chips do not behave after a bus reset and also
-+ * after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
-  * The device will throw a Link Down error on AER-capable systems and
-  * regardless of AER, config space of the device is never accessible again
-  * and typically causes the system to hang or reset when access is attempted.
-+ * Or if config space is accessible again then it contains only dummy values
-+ * like fixed PCI device ID 0xABCD or values not initialized at all.
-+ * Retrain link can be called only when using GEN1 PCIe bridge or when
-+ * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
-+ * To reset these cards it is required to do PCIe Warm Reset via PERST# pin.
-  * https://lore.kernel.org/r/20140923210318.498dacbd@dualc.maya.org/
-+ * https://lore.kernel.org/r/87h7l8axqp.fsf@toke.dk/
-+ * https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
-  */
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0042,
-+			 quirk_no_bus_reset_and_no_retrain_link);
-+
-+static void quirk_no_bus_reset(struct pci_dev *dev)
-+{
-+	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-+}
- 
- /*
-  * Root port on some Cavium CN8xxx chips do not successfully complete a bus
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97b77..fdbf7254e4ab 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -227,6 +227,8 @@ enum pci_dev_flags {
- 	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
- 	/* Don't use Relaxed Ordering for TLPs directed at this device */
- 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-+	/* Don't Retrain Link for device when bridge is not in GEN1 mode */
-+	PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 = (__force pci_dev_flags_t) (1 << 12),
- };
- 
- enum pci_irq_reroute_variant {
--- 
-2.20.1
+APM X-Gene PCIe controller driver:
+  - Fix cfg resource mapping regression (Dejin Zheng)
 
+Broadcom iProc PCIe controller driver:
+  - Return zero for success of iproc_msi_irq_domain_alloc() (Pali Rohár)
+
+Broadcom STB PCIe controller driver:
+  - Add reset_control_rearm() stub for !CONFIG_RESET_CONTROLLER (Jim Quinlan)
+  - Fix use of BCM7216 reset controller (Jim Quinlan)
+  - Use reset/rearm for Broadcom STB pulse reset instead of deassert/assert
+    (Jim Quinlan)
+  - Fix brcm_pcie_probe() error return for unsupported revision (Wei Yongjun)
+
+Cavium ThunderX PCIe controller driver:
+  - Fix compile testing (Arnd Bergmann)
+  - Fix "no symbols" warnings when compile testing with
+    CONFIG_TRIM_UNUSED_KSYMS (Arnd Bergmann)
+
+Freescale Layerscape PCIe controller driver:
+  - Fix ls_pcie_ep_probe() syntax error (comma for semicolon) (Krzysztof
+    Wilczyński)
+  - Remove layerscape-gen4 dependencies on OF and ARM64, add dependency on
+    ARCH_LAYERSCAPE (Geert Uytterhoeven)
+
+HiSilicon HIP PCIe controller driver:
+  - Remove obsolete HiSilicon PCIe DT description (Dongdong Liu)
+
+Intel Gateway PCIe controller driver:
+  - Remove unused pcie_app_rd() (Jiapeng Chong)
+
+Intel VMD host bridge driver:
+  - Program IRTE with Requester ID of VMD endpoint, not child device (Jon
+    Derrick)
+  - Disable VMD MSI-X remapping when possible so children can use more MSI-X
+    vectors (Jon Derrick)
+
+MediaTek PCIe controller driver:
+  - Configure FC and FTS for functions other than 0 (Ryder Lee)
+  - Add YAML schema for MediaTek (Jianjun Wang)
+  - Export pci_pio_to_address() for module use (Jianjun Wang)
+  - Add MediaTek MT8192 PCIe controller driver (Jianjun Wang)
+  - Add MediaTek MT8192 INTx support (Jianjun Wang)
+  - Add MediaTek MT8192 MSI support (Jianjun Wang)
+  - Add MediaTek MT8192 system power management support (Jianjun Wang)
+  - Add missing MODULE_DEVICE_TABLE (Qiheng Lin)
+
+Microchip PolarFlare PCIe controller driver:
+  - Make several symbols static (Wei Yongjun)
+
+NVIDIA Tegra PCIe controller driver:
+  - Add MCFG quirks for Tegra194 ECAM errata (Vidya Sagar)
+  - Make several symbols const (Rikard Falkeborn)
+  - Fix Kconfig host/endpoint typo (Wesley Sheng)
+
+SiFive FU740 PCIe controller driver:
+  - Add pcie_aux clock to prci driver (Greentime Hu)
+  - Use reset-simple in prci driver for PCIe (Greentime Hu)
+  - Add SiFive FU740 PCIe host controller driver and DT binding (Paul
+    Walmsley, Greentime Hu)
+
+Synopsys DesignWare PCIe controller driver:
+  - Move MSI Receiver init to dw_pcie_host_init() so it is re-initialized
+    along with the RC in resume (Jisheng Zhang)
+  - Move iATU detection earlier to fix regression (Hou Zhiqiang)
+
+TI J721E PCIe driver:
+  - Add DT binding and TI j721e support for refclk to PCIe connector (Kishon
+    Vijay Abraham I)
+  - Add host mode and endpoint mode DT bindings for TI AM64 SoC (Kishon Vijay
+    Abraham I)
+
+TI Keystone PCIe controller driver:
+  - Use generic config accessors for TI AM65x (K3) to fix regression (Kishon
+    Vijay Abraham I)
+
+Xilinx NWL PCIe controller driver:
+  - Add support for coherent PCIe DMA traffic using CCI (Bharat Kumar Gogada)
+  - Add optional "dma-coherent" DT property (Bharat Kumar Gogada)
+
+Miscellaneous:
+  - Fix kernel-doc warnings (Krzysztof Wilczyński)
+  - Remove unused MicroGate SyncLink device IDs (Jiri Slaby)
+  - Remove redundant dev_err() for devm_ioremap_resource() failure (Chen Hui)
+  - Remove redundant initialization (Colin Ian King)
+  - Drop redundant dev_err() for platform_get_irq() errors (Krzysztof
+    Wilczyński)
+
+----------------------------------------------------------------
+Arnd Bergmann (3):
+      PCI: al: Select CONFIG_PCI_ECAM
+      PCI: thunder: Fix compile testing
+      PCI: Avoid building empty drivers
+
+Arun Easi (1):
+      PCI: Allow VPD access for QLogic ISP2722
+
+Bharat Kumar Gogada (2):
+      PCI: xilinx-nwl: Enable coherent PCIe DMA traffic using CCI
+      PCI: xilinx-nwl: Add optional "dma-coherent" property
+
+Bjorn Helgaas (29):
+      PCI: Add pci_disable_parity()
+      PCI/sysfs: Rename "vpd" attribute accessors
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/error'
+      Merge branch 'pci/hotplug'
+      Merge branch 'pci/pm'
+      Merge branch 'pci/vpd'
+      Merge branch 'pci/sysfs'
+      Merge branch 'pci/kernel-doc'
+      Merge branch 'pci/virtualization'
+      Merge branch 'pci/misc'
+      Merge branch 'remotes/lorenzo/pci/altera-msi'
+      Merge branch 'remotes/lorenzo/pci/brcmstb'
+      Merge branch 'remotes/lorenzo/pci/cadence'
+      Merge branch 'remotes/lorenzo/pci/dwc'
+      Merge branch 'remotes/lorenzo/pci/endpoint'
+      Merge branch 'remotes/lorenzo/pci/iproc'
+      Merge branch 'remotes/lorenzo/pci/layerscape'
+      Merge branch 'remotes/lorenzo/pci/mediatek'
+      Merge branch 'remotes/lorenzo/pci/microchip'
+      Merge branch 'remotes/lorenzo/pci/risc-v'
+      Merge branch 'remotes/lorenzo/pci/tegra'
+      Merge branch 'remotes/lorenzo/pci/vmd'
+      Merge branch 'remotes/lorenzo/pci/xgene'
+      Merge branch 'remotes/lorenzo/pci/xilinx'
+      Merge branch 'remotes/lorenzo/pci/msi'
+      Merge branch 'remotes/lorenzo/pci/misc'
+      Merge branch 'pci/brcmstb'
+      Merge branch 'pci/tegra'
+
+Chen Hui (1):
+      PCI: altera-msi: Remove redundant dev_err call in altera_msi_probe()
+
+Colin Ian King (1):
+      PCI: endpoint: Remove redundant initialization of pointer dev
+
+Dejin Zheng (1):
+      PCI: xgene: Fix cfg resource mapping
+
+Dinghao Liu (1):
+      PCI: tegra: Fix runtime PM imbalance in pex_ep_event_pex_rst_deassert()
+
+Dmitry Baryshkov (1):
+      PCI: Release OF node in pci_scan_device()'s error path
+
+Dongdong Liu (1):
+      dt-bindings: PCI: hisi: Delete the obsolete HiSilicon PCIe file
+
+Feilong Lin (1):
+      ACPI / hotplug / PCI: Fix reference count leak in enable_slot()
+
+Geert Uytterhoeven (1):
+      PCI: mobiveil: Improve PCIE_LAYERSCAPE_GEN4 dependencies
+
+Greentime Hu (5):
+      clk: sifive: Add pcie_aux clock in prci driver for PCIe driver
+      clk: sifive: Use reset-simple in prci driver for PCIe driver
+      MAINTAINERS: Add maintainers for SiFive FU740 PCIe driver
+      dt-bindings: PCI: Add SiFive FU740 PCIe host controller
+      riscv: dts: Add PCIe support for the SiFive FU740-C000 SoC
+
+Guobin Huang (1):
+      PCI: cpqphp: Use DEFINE_SPINLOCK() for int15_lock
+
+Heiner Kallweit (10):
+      PCI/VPD: Remove obsolete Broadcom NIC quirk
+      PCI/VPD: Remove sysfs accessor size checking dead code
+      IB/mthca: Disable parity reporting
+      ARM: iop32x: disable N2100 PCI parity reporting
+      PCI/VPD: Remove pci_set_vpd_size()
+      PCI/VPD: Make missing VPD message less alarming
+      PCI/VPD: Change pci_vpd_init() return type to void
+      PCI/VPD: Remove pci_vpd_find_tag() 'offset' argument
+      PCI/VPD: Remove pci_vpd_find_tag() SRDT handling
+      PCI/VPD: Add helper pci_get_func0_dev()
+
+Hou Zhiqiang (1):
+      PCI: dwc: Move iATU detection earlier
+
+Jianjun Wang (7):
+      dt-bindings: PCI: mediatek-gen3: Add YAML schema
+      PCI: Export pci_pio_to_address() for module use
+      PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+      PCI: mediatek-gen3: Add INTx support
+      PCI: mediatek-gen3: Add MSI support
+      PCI: mediatek-gen3: Add system PM support
+      MAINTAINERS: Add Jianjun Wang as MediaTek PCI co-maintainer
+
+Jiapeng Chong (2):
+      PCI: shpchp: Remove unused shpc_writeb()
+      PCI: dwc/intel-gw: Remove unused function
+
+Jim Quinlan (3):
+      reset: add missing empty function reset_control_rearm()
+      ata: ahci_brcm: Fix use of BCM7216 reset controller
+      PCI: brcmstb: Use reset/rearm instead of deassert/assert
+
+Jiri Slaby (1):
+      PCI: Remove MicroGate SyncLink device IDs
+
+Jisheng Zhang (1):
+      PCI: dwc: Move dw_pcie_msi_init() to dw_pcie_setup_rc()
+
+Jon Derrick (2):
+      iommu/vt-d: Use Real PCI DMA device for IRTE
+      PCI: vmd: Disable MSI-X remapping when possible
+
+Kishon Vijay Abraham I (5):
+      PCI: keystone: Let AM65 use the pci_ops defined in pcie-designware-host.c
+      dt-bindings: PCI: ti,j721e: Add binding to represent refclk to the connector
+      dt-bindings: PCI: ti,j721e: Add host mode dt-bindings for TI's AM64 SoC
+      dt-bindings: PCI: ti,j721e: Add endpoint mode dt-bindings for TI's AM64 SoC
+      PCI: j721e: Add support to provide refclk to PCIe connector
+
+Krzysztof Wilczyński (15):
+      PCI: Fix kernel-doc errors
+      PCI: microchip: Remove dev_err() when handing an error from platform_get_irq()
+      PCI: layerscape: Correct syntax by changing comma to semicolon
+      PCI/sysfs: Convert "config" to static attribute
+      PCI/sysfs: Convert "rom" to static attribute
+      PCI/sysfs: Convert "reset" to static attribute
+      PCI/sysfs: Convert "vpd" to static attribute
+      PCI/sysfs: Rename device_has_dsm() to device_has_acpi_name()
+      PCI/sysfs: Define ACPI label attributes with DEVICE_ATTR*()
+      PCI/sysfs: Define SMBIOS label attributes with DEVICE_ATTR*()
+      PCI/sysfs: Convert "index", "acpi_index", "label" to static attributes
+      PCI/sysfs: Tidy SMBIOS & ACPI label attributes
+      PCI/sysfs: Rearrange smbios_attr_group and acpi_attr_group
+      PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+      x86/PCI: Remove unused alloc_pci_root_info() return value
+
+Marc Zyngier (13):
+      PCI: tegra: Convert to MSI domains
+      PCI: rcar: Don't allocate extra memory for the MSI capture address
+      PCI: rcar: Convert to MSI domains
+      PCI: xilinx: Don't allocate extra memory for the MSI capture address
+      PCI: xilinx: Convert to MSI domains
+      PCI: hv: Drop msi_controller structure
+      PCI/MSI: Drop use of msi_controller from core code
+      PCI/MSI: Kill msi_controller structure
+      PCI/MSI: Kill default_teardown_msi_irqs()
+      PCI/MSI: Let PCI host bridges declare their reliance on MSI domains
+      PCI/MSI: Make pci_host_common_probe() declare its reliance on MSI domains
+      PCI/MSI: Document the various ways of ending up with NO_MSI
+      PCI: Refactor HT advertising of NO_MSI flag
+
+Pali Rohár (1):
+      PCI: iproc: Fix return value of iproc_msi_irq_domain_alloc()
+
+Paul Walmsley (1):
+      PCI: fu740: Add SiFive FU740 PCIe host controller driver
+
+Qiheng Lin (1):
+      PCI: mediatek: Add missing MODULE_DEVICE_TABLE
+
+Qiuxu Zhuo (1):
+      PCI/RCEC: Fix RCiEP device to RCEC association
+
+Rafael J. Wysocki (1):
+      PCI/ACPI: Fix acpi_pci_set_power_state() debug message
+
+Raphael Norwitz (1):
+      PCI: Delay after FLR of Intel DC P4510 NVMe
+
+Rikard Falkeborn (1):
+      PCI: tegra: Constify static structs
+
+Ryder Lee (1):
+      PCI: mediatek: Configure FC and FTS for functions other than 0
+
+Shradha Todi (1):
+      PCI: endpoint: Fix NULL pointer dereference for ->get_features()
+
+Thomas Gleixner (1):
+      PCI: mediatek: Advertise lack of built-in MSI handling
+
+Vidya Sagar (1):
+      PCI: tegra: Add Tegra194 MCFG quirks for ECAM errata
+
+Wei Yongjun (2):
+      PCI: microchip: Make some symbols static
+      PCI: brcmstb: Fix error return code in brcm_pcie_probe()
+
+Wesley Sheng (1):
+      PCI: tegra: Fix typo for PCIe endpoint mode in Tegra194
+
+Yang Yingliang (1):
+      PCI: endpoint: Fix missing destroy_workqueue()
+
+chakravarthikulkarni (1):
+      PCI: acpiphp: Fix whitespace issue
+
+ .../devicetree/bindings/pci/hisilicon-pcie.txt     |   43 -
+ .../bindings/pci/mediatek-pcie-gen3.yaml           |  181 ++++
+ .../devicetree/bindings/pci/sifive,fu740-pcie.yaml |  113 +++
+ .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml   |    9 +-
+ .../devicetree/bindings/pci/ti,j721e-pci-host.yaml |   20 +-
+ .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |    2 +
+ MAINTAINERS                                        |   10 +-
+ arch/arm/mach-iop32x/n2100.c                       |    8 +-
+ arch/riscv/boot/dts/sifive/fu740-c000.dtsi         |   33 +
+ arch/x86/pci/amd_bus.c                             |    2 +-
+ drivers/acpi/pci_mcfg.c                            |    7 +
+ drivers/ata/ahci_brcm.c                            |   46 +-
+ drivers/clk/sifive/Kconfig                         |    2 +
+ drivers/clk/sifive/fu740-prci.c                    |   11 +
+ drivers/clk/sifive/fu740-prci.h                    |    2 +-
+ drivers/clk/sifive/sifive-prci.c                   |   54 +
+ drivers/clk/sifive/sifive-prci.h                   |   13 +
+ drivers/iommu/intel/irq_remapping.c                |    3 +-
+ drivers/net/ethernet/broadcom/bnx2.c               |    2 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |    3 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          |    2 +-
+ drivers/net/ethernet/broadcom/tg3.c                |    4 +-
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c         |    2 +-
+ drivers/net/ethernet/realtek/r8169_main.c          |   14 -
+ drivers/net/ethernet/sfc/efx.c                     |    2 +-
+ drivers/net/ethernet/sfc/falcon/efx.c              |    2 +-
+ drivers/pci/ats.c                                  |    2 +-
+ drivers/pci/controller/Kconfig                     |   17 +-
+ drivers/pci/controller/Makefile                    |    8 +-
+ drivers/pci/controller/cadence/pci-j721e.c         |   24 +-
+ drivers/pci/controller/dwc/Kconfig                 |   12 +-
+ drivers/pci/controller/dwc/Makefile                |   10 +-
+ drivers/pci/controller/dwc/pci-keystone.c          |   14 +-
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     |    2 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |    2 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |    4 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |   11 +-
+ drivers/pci/controller/dwc/pcie-designware.h       |    1 +
+ drivers/pci/controller/dwc/pcie-fu740.c            |  309 ++++++
+ drivers/pci/controller/dwc/pcie-intel-gw.c         |    5 -
+ drivers/pci/controller/dwc/pcie-tegra194.c         |  108 +-
+ drivers/pci/controller/mobiveil/Kconfig            |    3 +-
+ drivers/pci/controller/pci-host-common.c           |    1 +
+ drivers/pci/controller/pci-hyperv.c                |    4 -
+ drivers/pci/controller/pci-tegra.c                 |  371 +++----
+ drivers/pci/controller/pci-thunder-ecam.c          |    2 +-
+ drivers/pci/controller/pci-thunder-pem.c           |   13 +-
+ drivers/pci/controller/pci-xgene.c                 |    3 +-
+ drivers/pci/controller/pcie-altera-msi.c           |    4 +-
+ drivers/pci/controller/pcie-brcmstb.c              |   20 +-
+ drivers/pci/controller/pcie-iproc-msi.c            |    2 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c        | 1027 ++++++++++++++++++++
+ drivers/pci/controller/pcie-mediatek.c             |    7 +-
+ drivers/pci/controller/pcie-microchip-host.c       |   12 +-
+ drivers/pci/controller/pcie-rcar-host.c            |  359 ++++---
+ drivers/pci/controller/pcie-xilinx-nwl.c           |    7 +
+ drivers/pci/controller/pcie-xilinx.c               |  248 ++---
+ drivers/pci/controller/vmd.c                       |   63 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c       |   16 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c      |   22 +-
+ drivers/pci/endpoint/pci-epc-core.c                |    2 +
+ drivers/pci/endpoint/pci-epf-core.c                |    2 +-
+ drivers/pci/hotplug/acpi_pcihp.c                   |    2 +-
+ drivers/pci/hotplug/acpiphp.h                      |    3 +-
+ drivers/pci/hotplug/acpiphp_glue.c                 |    1 +
+ drivers/pci/hotplug/cpqphp_nvram.c                 |    5 +-
+ drivers/pci/hotplug/shpchp_hpc.c                   |    5 -
+ drivers/pci/msi.c                                  |   57 +-
+ drivers/pci/of.c                                   |   22 +-
+ drivers/pci/pci-acpi.c                             |    2 +-
+ drivers/pci/pci-label.c                            |  232 ++---
+ drivers/pci/pci-sysfs.c                            |  260 +++--
+ drivers/pci/pci.c                                  |   18 +
+ drivers/pci/pci.h                                  |   24 +-
+ drivers/pci/pcie/aer.c                             |    6 +-
+ drivers/pci/pcie/pme.c                             |    2 +-
+ drivers/pci/pcie/rcec.c                            |    2 +-
+ drivers/pci/probe.c                                |    5 +-
+ drivers/pci/quirks.c                               |   29 +-
+ drivers/pci/remove.c                               |    2 +
+ drivers/pci/vpd.c                                  |  232 ++---
+ drivers/reset/Kconfig                              |    1 +
+ drivers/scsi/cxlflash/main.c                       |    3 +-
+ include/dt-bindings/clock/sifive-fu740-prci.h      |    1 +
+ include/linux/msi.h                                |   17 +-
+ include/linux/pci-ecam.h                           |    1 +
+ include/linux/pci.h                                |    9 +-
+ include/linux/pci_ids.h                            |    2 -
+ include/linux/reset.h                              |    5 +
+ 89 files changed, 2957 insertions(+), 1298 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-fu740.c
+ create mode 100644 drivers/pci/controller/pcie-mediatek-gen3.c
