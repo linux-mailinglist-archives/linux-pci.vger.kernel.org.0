@@ -2,445 +2,443 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F432373CC8
-	for <lists+linux-pci@lfdr.de>; Wed,  5 May 2021 15:57:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51625373CFD
+	for <lists+linux-pci@lfdr.de>; Wed,  5 May 2021 16:05:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233178AbhEEN6b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 May 2021 09:58:31 -0400
-Received: from mail-bn7nam10on2049.outbound.protection.outlook.com ([40.107.92.49]:16225
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        id S233505AbhEEOGJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 May 2021 10:06:09 -0400
+Received: from mail-bn8nam12on2086.outbound.protection.outlook.com ([40.107.237.86]:18354
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232558AbhEEN6a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 May 2021 09:58:30 -0400
+        id S232569AbhEEOGH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 May 2021 10:06:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V9R7mWf7VdjPtC2UOMjn+CXZW7nb4s1S6uNgGt37HJJsisRXAIY3oUCz9WOhj6Kzq97C18DPmthaOSuJ8v/eYwT+MwfziR0ASZtgGfEAzaMJMXp0tNMqwz4vs0NKGhTnJUdebLgj5MFg6OY1qLS6ezj4dPTQFeRfMsbeWST3mms3Ujqdm5IlinIyyGBD97Wysf3fPDsx9mQYbSsOUl1UtHm67xQ0B7SiOhbdbG0pxjOGYPb/+bLUXuAbqxWlCxVoMGaldYQ9YonDWP/So2zUe3d1EVMbAFcb4IAJQ/pOyxUa/+bZQDeNvY3QphVQH/D0/hZmtVz+I6yYnSNRoTG+lg==
+ b=KcuDH5/4RnrWYbcKK6cqev8+iRpivy5X0SZGpDsLX2kHmcLSt7D02jh6eIS1eMwLUa7UnjtsP8PtKnAI4Y9BOiN3AGLjcA/LhNPbydpRcX8rk4K7T266wPYFyjPK8t2XO1TcVq36EfHN3TxyTTqKI1Nu/S8Awm6BTy5ZUv7Iaxe/z75VSQDFD1WB1bewog75F6oBcZxAssTTqfWuObQAuKzKc5DTxU/P+5Wyz1sirsJze8Zd49Qym4iYLAgsS4Dm+29+AINtoZU+abUyVlw4JAO/dwRGw/JpuupbR5kr8jzqHT6wkolq/M2HO4KCTE1LkWDktkdk3m5sunIzIowh6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9I0tucZjO/YXMGY0z2MelcI3tajhyUDKT92gLgJx280=;
- b=QuMGBMIB/ZCPK5LUfkRBhY5HBd9rUSCXkHOh9uQBP8hLCLZh1DTnJedCA2yD3aOEgaiUYGODPpfekQqwEXmOnnl9JIBUQQPvEfnDfk8vNpVi6bIWZbYui/nqVNjmGcUOQvjYabQfu9L8NuWtVjPfOJ+gfAjnmsGLQlz2rv7fir59jzS7lxU1WEc89oMblZpHNqDI/NGcHka57oL9faGIOompiZjP4ors0SXtNDhyVus/SldmQHWlMS91vRP9XiYv/4bEefFF4Pv5XxwKp3AZ3cPGjr8im+5y9dV52rEZoLYpl8iag8OU7CGskKzzbhY/VoVHW+BKmCIv9gjsJHeURA==
+ bh=VCXg4kCCyP+Z5BeZLBskgjprVRWyqJWBPRABEv+FyLA=;
+ b=MwOmnMThsl479eQ9ZgCxapB7zwYXA7Uf2sMSHY2ZfqvCsgwYM0GGOcs2hoahDNWE8QxOM379jNaJ3jKtN9XOjY7nDNNyPwInAnAW56Bn1viN5x4ojThNF543iNuwLPICYAyZKj+GhdrOrH2w/23tJSdWkEwMx/Kd7m8++tL9zCud/J/9fgiJufjVmhaWRj5J+atXqmb667aFaJYpCQb7unJ5/w4rEGpX9ribXL/7qoKeb2hXj49eFv53RKgkaZg98tftJTwlOY3lWQy9jgSUILRHrkIRpUYPQE+Chk2E/LlYHRMB9lElrixX+7PmhpK2emMIQEGbWH6FaEZqzH7ZQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9I0tucZjO/YXMGY0z2MelcI3tajhyUDKT92gLgJx280=;
- b=0V/UIvbRMfQfKKlD3qhedLEL2cDBb3tVplryWMAgmIHLPNEihuHjjrMHYnsJV5Ie+ZdrZljLpBMgrZ4wdgcPbOsZ3eAAnOfDyu1QRmSgvyfOsmR/AUd1lRId9DJUi2SZfKmf2J9rbQdOvU8LrRyGgdXmpHgdb7S4zjvN5u28aIk=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+ bh=VCXg4kCCyP+Z5BeZLBskgjprVRWyqJWBPRABEv+FyLA=;
+ b=ajmErjcrvoaitWIqmItIwoht471c+0ZA/eoWTb3rpRhrZQFUjhYAjJSTsBdlJ1BANzj1b52epQE55Il62yup+jEMPSaYPEZOfjzfOaQvZrH/7UcI4xB2xctMSiuAC9SUNOk9+brM9yKbX5BsBWrBc/C6kkHECyiZU+CbK+3QKZU=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
 Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN1PR12MB2400.namprd12.prod.outlook.com (2603:10b6:802:2f::25) with
+ by SN6PR12MB2814.namprd12.prod.outlook.com (2603:10b6:805:72::33) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.40; Wed, 5 May
- 2021 13:57:32 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Wed, 5 May
+ 2021 14:05:08 +0000
 Received: from SN6PR12MB4623.namprd12.prod.outlook.com
  ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
  ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4108.026; Wed, 5 May 2021
- 13:57:32 +0000
-Subject: Re: [PATCH v5 20/27] drm: Scope all DRM IOCTLs with
- drm_dev_enter/exit
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+ 14:05:08 +0000
+Subject: Re: [PATCH v5 06/27] drm/amdgpu: Handle IOMMU enabled case.
+To:     Felix Kuehling <felix.kuehling@amd.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
-        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com,
-        ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, helgaas@kernel.org,
-        Felix.Kuehling@amd.com
+        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com
+Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, helgaas@kernel.org
 References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
- <20210428151207.1212258-21-andrey.grodzovsky@amd.com>
- <YIqXJ5LA6wKl/yzZ@phenom.ffwll.local> <YIqZZW9iFyGCyOmU@phenom.ffwll.local>
- <95935e46-408b-4fee-a7b4-691e9db4f455@amd.com>
- <YIsDXWMYkMeNhBYk@phenom.ffwll.local>
- <342ab668-554c-637b-b67b-bd8e6013b4c3@amd.com>
- <YIvbAI4PjFlZw+z9@phenom.ffwll.local>
- <b6d0c32c-cf90-6118-5c60-238b6f4a0aaa@amd.com>
-Message-ID: <de7ecf08-b2e5-48de-710a-217b4bfde6ca@amd.com>
-Date:   Wed, 5 May 2021 09:57:28 -0400
+ <20210428151207.1212258-7-andrey.grodzovsky@amd.com>
+ <4f752f79-2541-d62d-5279-17992e4161d7@amd.com>
+From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Message-ID: <8810235e-7394-5c6c-b074-fe97bc2fb044@amd.com>
+Date:   Wed, 5 May 2021 10:05:05 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
-In-Reply-To: <b6d0c32c-cf90-6118-5c60-238b6f4a0aaa@amd.com>
+In-Reply-To: <4f752f79-2541-d62d-5279-17992e4161d7@amd.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [2607:fea8:3edf:49b0:7d63:ab2e:d405:e927]
-X-ClientProxiedBy: YT1PR01CA0044.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2e::13) To SN6PR12MB4623.namprd12.prod.outlook.com
+X-ClientProxiedBy: YT1PR01CA0155.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2f::34) To SN6PR12MB4623.namprd12.prod.outlook.com
  (2603:10b6:805:e9::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:7d63:ab2e:d405:e927] (2607:fea8:3edf:49b0:7d63:ab2e:d405:e927) by YT1PR01CA0044.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.40 via Frontend Transport; Wed, 5 May 2021 13:57:30 +0000
+Received: from [IPv6:2607:fea8:3edf:49b0:7d63:ab2e:d405:e927] (2607:fea8:3edf:49b0:7d63:ab2e:d405:e927) by YT1PR01CA0155.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.38 via Frontend Transport; Wed, 5 May 2021 14:05:07 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 278c4905-8bfb-4275-0eb7-08d90fcdba42
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2400:
+X-MS-Office365-Filtering-Correlation-Id: 2d79d950-2229-40e0-8be1-08d90fceca32
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2814:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2400B88E75475EA8C37DCACFEA599@SN1PR12MB2400.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2814EE44EB08ACFC34FE6DECEA599@SN6PR12MB2814.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aGXpzCKgw49dkwSpLu92PsCKOlxvTTuar4ZT3PIFQG837QoAznj0mwg0XDHnBLeKqMpFAq0HWjGmDI6R9vwhOEE1xmax4LJl3BLs0i4xq3ZyVj14zJYXPguUnqgbe15TBazQs0rsDvmSg/DwNpjHVqAcaIbzXX2ecQFQOmfjoHFC/8vYpvxLU5k5PUaoL5L9PF/4xrZ9v1242844jhsCdKMKUClzAMf4oAbtxOVMumt0rCVRfM9jvfQ7MvYS++TH+wlOIzdLEEW0DBZ6GGWCX5bX3nZYMU+BlnG4GAAZpOvjA2Gk/bgSFVaRtuK48DYmiTzQfaJc4umdUojYrvn2JHnqz0Deg6NgEmgaXV28VzgEsYlJXljJft+ezgGNOuSHj8AqmGlZi6t0Hkj37EkzDh7uzUdz1BoVFClbe32H/Qg99hAsDis3lqOFG5ldKZP+cHpPEdYYoEEawDMJf+2xIH8n8CDipRPtNzZY3tTdIiYxdqkq5WfYnHBm5LURksXgm56UN8sMMBbbQxB5UOxhGqUZN+8NafgxOA3E6h1+bRqaQIpcAvNz/oZs5o0bFeaNLfoFAzPPMoMcYqBsXGsbX8ii3dZYPCMKNQc5srsrvI6Sr40z/bp14dtC3vZvF0qq5SpALRYDppbpmx/zZ3i3td1MNO4/zCTEGs42172uC19ZZblWOMRM8xMVKhEuloHhXS8Jk5Z62uMUtYbZIm9EMnSg2jaTXKlKkbhd1rOoQTibH2dscCFAIRrQpmA4Z2qObN9bl5RoJvHmBXEZAdJCHw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(346002)(366004)(136003)(36756003)(86362001)(8936002)(45080400002)(4326008)(2906002)(83380400001)(31686004)(6486002)(66476007)(52116002)(2616005)(53546011)(66556008)(316002)(8676002)(186003)(38100700002)(66946007)(16526019)(478600001)(5660300002)(31696002)(966005)(30864003)(6916009)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?azdhanBaRzlFS3o5YVhZYmh6WDJhQUw3YnRlejJ4WGxSaWs5SVd4TUdwazVO?=
- =?utf-8?B?TEFTVWlHNHdIeUx5NVoxS1Y3VlQ4V0tHVEJQTkFON0tINCtqTnFRV2NhZzBr?=
- =?utf-8?B?Y1BmT0FzVDFvNU1DZFJhdFBCa0NZcnF2T0xnbE0yRnYrc1lnOWc4MWxHbmFH?=
- =?utf-8?B?a2ZBVjZ3U1hJbTRhdnZHSWNNa1dpL1VzQzB0d0d3MWVZNEZueHhPNmdVM1dP?=
- =?utf-8?B?ZkV4T0pKZ2dINUxDbWRydTdVTldFMTU5ak04Ty9mbmdMNmd1eWF4RXVERkkr?=
- =?utf-8?B?VE5vcVJkaSs3NDF5Tjgvb1dxckpqT3dwTFhHMlJNa1FmMkxldmNEQVNxdlli?=
- =?utf-8?B?c3ZQRUhFSUVMQzczdGZrOHlCVk12aHpuMjN3MEFMNHRFWXNCTXU0QmIwWEU5?=
- =?utf-8?B?cVNDcklKQ21kV1EwNUZzYVJCQW1vQi9nczBmN09zMnBLOXlCSG1yRWE0UzJ3?=
- =?utf-8?B?UTF2aG5NeDQ1NTdqUXByL3RMUjI4VVNMSXRMdkVQSDJVakhvNVhVSWttemk4?=
- =?utf-8?B?QU9SQ3pGZ0RKcnpRc0tRNTBvZUJJeFVqQWpmRytXMWNIVFdsRlVyZ1ZwaEwr?=
- =?utf-8?B?azNmUjRiTHZLYkJ5R0RpK0RvQnpwcHFBaENCSXplQTdDMkx0SUdhMEJDbUox?=
- =?utf-8?B?MWwzWFdQdGJNNUloU1hnRnhDZEYwTi9pQUNIS1pXbXBSdUE0WkFtVEs5aXdj?=
- =?utf-8?B?R2gxYW9VSHpNQ3NJN3ZTT25ZSHZNald1WWpCWmErZ1laNElEaE5ZMjN3YWkr?=
- =?utf-8?B?OENML3o1QjhnSzFRVm1KMHUrL1hibzNsV3gySVpZTDNRaWhIaWRqbjNvZFll?=
- =?utf-8?B?V0JXSVlGOFBJR0tUdEdzSFkzdEloWmNtVy9jQ0phSzEwN0Jta0tZc1UzN2hS?=
- =?utf-8?B?cHJuV2ZnR1BoTjhZRURUTXlPMVd0WnFwSFVJb3NGcU91Z0lFOTlYbVBhZzcy?=
- =?utf-8?B?WWFSYzE4VDQ3MEdyclY0MjRlSmhjUG55c0ZIUnB5bmszU1FMNHdwQUR1SXg0?=
- =?utf-8?B?UE0rNjJpL1RLc2pHWHRTaHM2c0wxcmpMNjhqM0xDc0syZERXTXNadnRtYkd2?=
- =?utf-8?B?RUJhNjQzSC9iVG1TQVFPU2FMdHU5bk5PR0FTQkhYZkd2NGIxTlhEUktSWEln?=
- =?utf-8?B?UHd2RS9pL2IzeXZiaEJiWU9YdHZweXZNTEZ5dVVxaytCTmRQQWxxTnhEd0pF?=
- =?utf-8?B?UkJOdk9CWEhQalRnajQxWW1Wc3U0a1NYZTU2Vld0dUdyN2NJNHV1ZTlQNWkz?=
- =?utf-8?B?cFFSZWJQVzV0MFN2alEvaE1WSWQ0eG9HenIzKzNTeW9LMWJ3OUZhdFhBMGhI?=
- =?utf-8?B?bGpDQTFVVDJhb2dRSXlhcXpBSnV1UXk5c09HbVNsSldWL0Z3V2VmbVBhd1JI?=
- =?utf-8?B?M1crMFpPRnZGcWVqand1MzdpQWVtR1lrUHhnOUl4RGZJSnZTV3VlbEc0VEV6?=
- =?utf-8?B?eWZpa1pNZFRhbG1uQVg2TXRIcFd2L2JDQjd1YXJINzg1cDFFeHhHb21vMUVO?=
- =?utf-8?B?QURUazFiNW9GU1FvVU83SkgwalBjbDBGdGgwR1BqMzVJUUxLdVNNVzFFRE1J?=
- =?utf-8?B?aUkwZStxK21SRHlzOVQ3ckdiY09pMnhlcithaWFVLzdaNTU4YWtOQWJvR1VL?=
- =?utf-8?B?NlpLOTgyZ3Nld3NsMURheHhjL3BpZisrK3VVcHZsc2wyWnoyK1dqSHF4QXpE?=
- =?utf-8?B?N2tRajF1YmFvOXRpZkNnUngvem5EMXo2V3p1cXNqTklNYTN1YWVRbCtad1J2?=
- =?utf-8?B?WlMvaXZuL2g4Y0JXcmVTMW5hUXk0a3dOdndhTWptOVR1L0plak9DMUw4bGFo?=
- =?utf-8?B?VVVyMzlqTFhKSUl6RGxMOXZsR1dQK2FrZU41dFNTM2tvTVJHNlR5UDlMMENQ?=
- =?utf-8?Q?SqiX1sJrZ9tbW?=
+X-Microsoft-Antispam-Message-Info: BJ3hSdpBBs0R40m4u1r5IBv5M7PUIUa17rk83FE0lsq1c3EPoA+3W+wo6SnBBrh6Xj5lwq5TVxKomdEJocfzUn0AG0Am1uFLUrcA+mmccy8/s7VAU7kAEGvBq0eZAv+FhArTOnTYtDXJdkgOjuFaAsKH98wc4kwRW3eWwAbk7dylfehqksGRv5iOKLeReA4pqxMMziSKzdGEH7rkwx3Sn9U0VDAcILW1ft9hlJYylXCtxP+IoMchwsvjktyb1utcrtlcwN1Ml3Zs1iA6d2StqPX1WU2p7rbaCguQ0cs2xGyXmYAqWvKyRIdsQDHkGuuTFrSFwyB/uzHwYHqHoDHFdcZetGou8ZcCC8A7g+FYsmDjEtgeJs7qBrq/r3t+IVPQYT8LqFTwqA8xS1xpawc0CQ10XLcbYGGXREWjtZYdXoI/cZZjvfcPWsNKDPW5uwxuLGksCOSsgXCDU3ee6joHm/h21OFbG0O3XYdKA5hT/zr/OQYQsuLsw1ovkE0hMxcPIt/nexnyAYNoU+MCVBUFTLsvMcdUD1l+brX41DlCSlicscx6S0TPLqfrzwXTjuFA7nxnuCSlm5AUo9x4yt/7KPC5rarrj+HA8QHvN7IZxYy0L0dJvw73xsVK5ys0LWqdDSvUdZdKyD8HLnfkb/yQDLZpOGE4VGeBLV7jpF4kwIUz5OLOmCL33YeLbK9VuZxU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(136003)(396003)(376002)(366004)(52116002)(38100700002)(44832011)(478600001)(316002)(36756003)(4326008)(2906002)(186003)(53546011)(6636002)(86362001)(66556008)(31696002)(66946007)(66476007)(31686004)(30864003)(8676002)(8936002)(2616005)(16526019)(6486002)(5660300002)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?c251dFdrWG5SNEN2L2lPNXFNVXptSVlxcVY1d1dRZUlQa3NBSWExUm1RYVpT?=
+ =?utf-8?B?M3BZdEZyWUtMSExQMThnRG1TTWlxMnlmeGx1UU90N3ljU1YzdmVLWHpCR1FQ?=
+ =?utf-8?B?eWU1VldEK0RzUWdMOFdOdTVTcGdXSTVEQ2FHbnNDVUsxbVpiN1R3NGlLYkho?=
+ =?utf-8?B?YU5hNHg1ZURLV3RpVVVnUnhNUjZxRWF4VXZxOHAxVG5wWXkxQ01lVzFWcVpZ?=
+ =?utf-8?B?VUdLWHhzQTN3b0FMakV6QzZ0cUJVZzBJODJVcXZXRHFPUmE0Y1QrZENycVg3?=
+ =?utf-8?B?WWpNN0tqdWRicm1kV0xjV1ByRXYrR2Y0WWE4T3JSMUxGUHhqMXc2aW83MXhT?=
+ =?utf-8?B?N1BVbXJKd1U4NFNnaTBqZkZPUndxdE5nR0tpVGhlQS9ySC9hVVZOZFFlbURV?=
+ =?utf-8?B?eElFY0ZTaEIyRjduSjR2M3JsM0xOcGFsbDN0d2RJVjh1cHVKWVN4UW9odldh?=
+ =?utf-8?B?Nm1pRmNFV0dkcEpkdVJIYVhJMVpaVERtRVFXMDY5YlBNZGtYc1E5MlAyNFNY?=
+ =?utf-8?B?dEFjVXJIUnJISnFlTzdsS0RHeG5NOElLS0J3OENiNkZtL0QyRDE5RURKWXV5?=
+ =?utf-8?B?YWJ0OVVIUFZZWEVNQzdQcTFzWi9mV0p6TldiZFdOS3FsOE9kZGJ1RU1NNWVl?=
+ =?utf-8?B?MVNmaW1naWpHU29XYVdadmk0bFBSdVRxeW1SblcvcTM4ekFJNytwc1RrU3dZ?=
+ =?utf-8?B?K2RmODlrVjRMUTRPcFdGVytPS0NzYlhOVHBVcDUybkxIdkFCd21UZnRsMVlo?=
+ =?utf-8?B?TWhKTHFCQW5GYVNENXJYQWtCeTBkWFIzZmJxOStPdSt5cFR2dVV6S29rSEZ0?=
+ =?utf-8?B?MEdLcDR3ckcrMW1iaVREWlArQWZNVnd4OVdCYXl5RzRaMWpxZ3JST1Vya2N5?=
+ =?utf-8?B?Y2JJR1Z1bk9TdTc1NzEzWG45VWFIYU5aZmZxaDZxRDdEVkRmakFIaXg1NUs1?=
+ =?utf-8?B?V0FDeUNmMXRHUUtkanpzZXh3aGczM01xNkRrY3dUZGpMRjN0NGljcUVYenFF?=
+ =?utf-8?B?dWNUb2gyU1RRczFwZEdHeExzUTNTazdrT1ZGbVlaQU16OVU0aCtPV1FqTk1z?=
+ =?utf-8?B?Zno3TmJuQ2d1RTN3S01uZmxYWDNqbGxHVjdRbUxOQzRIQkt4WE12MHBBRGZq?=
+ =?utf-8?B?VEtqVm12NlJ5ckFWVEhldlRrclpndFhzVzduUkg0Q3NTUDZYY2djOFN0UTlP?=
+ =?utf-8?B?VG5xenBLR3RMTlFNaXlabzUrZEo3Z1F2VVV6a1N4UmFOeEdYRkxsZnJrejZ6?=
+ =?utf-8?B?NmJPRVRwZkh4SHhRK1Nmb2c0eFhuWWJsOVljUU5BZm5ndGY1NGFJYitKK3dU?=
+ =?utf-8?B?amdvdDJ2T3dKTVY4WDcwaW5qa2l6aU13a09ucExIKzIyUngrWWhvUlUwTzJX?=
+ =?utf-8?B?WVpKWjRJUTdDaWdkazc3c2dRb3F2VmR1RHhYc2RiTkxZLytvaGZYVEgzUG5X?=
+ =?utf-8?B?dVEvNHk0UTFLeUUwNUtJVHhNclQrU3FZM2ltQ3FVQTVGTGhRMGhReUhCUFFu?=
+ =?utf-8?B?amhTaUZVVVo1ZGpyUW9tTGNoeXpRU1BDQUVqcHNhUVBVNXdzQjF4amE3d2lV?=
+ =?utf-8?B?KzF4akRZMStnT2VOZENEczh2OFJjaWxZdWwvUW9taElRaVBTMHNWRWFzRXoy?=
+ =?utf-8?B?aktQb3F6UGtwOTRNLzVXY28yNkxkNnBTbHdydTg0YnN3SHBnQ0JhWDMwYlpZ?=
+ =?utf-8?B?UXZXSkR5RC8yUzVldzU2eWkvS0F6SUs5dGZ5YVlvM1hNajdPN2hkNmpYcEla?=
+ =?utf-8?B?ZzJMZmx6bzBmV3VQUDhmenVHb3hvSnJGNG9IUE1xalgwYmVUek0rQlJBQkI5?=
+ =?utf-8?B?SjlIY1ZKZXVRTkFZb0Fudm1MLzkyRExtcjFiY3dzSlpNYkRWWEIxTG5NMU01?=
+ =?utf-8?Q?0q1oP6ikAxitg?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 278c4905-8bfb-4275-0eb7-08d90fcdba42
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d79d950-2229-40e0-8be1-08d90fceca32
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2021 13:57:31.9538
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2021 14:05:08.2164
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xNTT02yzwDeuJ3uGOCKM6dLEHfUEG6sMwWnq8JOb0GthPQC0ZOQ7LLhP6HM4djqx10egb5LmUnisTrHYFdQm8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2400
+X-MS-Exchange-CrossTenant-UserPrincipalName: bXFxqXLmKqz7rA8Hm3jyqg9N3DwCE9g4hW0csKCIwbCdX8qfDAU83Se9qb2JdYsNX8RdIyUQwNr+3fertn4ZPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2814
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ping
+
+
+On 2021-05-04 1:05 p.m., Felix Kuehling wrote:
+> 
+> Am 2021-04-28 um 11:11 a.m. schrieb Andrey Grodzovsky:
+>> Handle all DMA IOMMU gropup related dependencies before the
+>> group is removed.
+>>
+>> v5: Drop IOMMU notifier and switch to lockless call to ttm_tt_unpopulate
+>>
+>> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+>> ---
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  2 ++
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 31 ++++++++++++++++++++--
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c   |  3 +--
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h   |  1 +
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c    |  9 +++++++
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 13 ++++++++-
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.h |  2 ++
+>>   drivers/gpu/drm/amd/amdgpu/cik_ih.c        |  1 -
+>>   drivers/gpu/drm/amd/amdgpu/cz_ih.c         |  1 -
+>>   drivers/gpu/drm/amd/amdgpu/iceland_ih.c    |  1 -
+>>   drivers/gpu/drm/amd/amdgpu/navi10_ih.c     |  3 ---
+>>   drivers/gpu/drm/amd/amdgpu/si_ih.c         |  1 -
+>>   drivers/gpu/drm/amd/amdgpu/tonga_ih.c      |  1 -
+>>   drivers/gpu/drm/amd/amdgpu/vega10_ih.c     |  3 ---
+>>   14 files changed, 56 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+>> index fddb82897e5d..30a24db5f4d1 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+>> @@ -1054,6 +1054,8 @@ struct amdgpu_device {
+>>   
+>>   	bool                            in_pci_err_recovery;
+>>   	struct pci_saved_state          *pci_state;
+>> +
+>> +	struct list_head                device_bo_list;
+>>   };
+>>   
+>>   static inline struct amdgpu_device *drm_to_adev(struct drm_device *ddev)
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> index 46d646c40338..91594ddc2459 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> @@ -70,6 +70,7 @@
+>>   #include <drm/task_barrier.h>
+>>   #include <linux/pm_runtime.h>
+>>   
+>> +
+>>   MODULE_FIRMWARE("amdgpu/vega10_gpu_info.bin");
+>>   MODULE_FIRMWARE("amdgpu/vega12_gpu_info.bin");
+>>   MODULE_FIRMWARE("amdgpu/raven_gpu_info.bin");
+>> @@ -3211,7 +3212,6 @@ static const struct attribute *amdgpu_dev_attributes[] = {
+>>   	NULL
+>>   };
+>>   
+>> -
+>>   /**
+>>    * amdgpu_device_init - initialize the driver
+>>    *
+>> @@ -3316,6 +3316,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>>   
+>>   	INIT_WORK(&adev->xgmi_reset_work, amdgpu_device_xgmi_reset_func);
+>>   
+>> +	INIT_LIST_HEAD(&adev->device_bo_list);
+>> +
+>>   	adev->gfx.gfx_off_req_count = 1;
+>>   	adev->pm.ac_power = power_supply_is_system_supplied() > 0;
+>>   
+>> @@ -3601,6 +3603,28 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>>   	return r;
+>>   }
+>>   
+>> +static void amdgpu_clear_dma_mappings(struct amdgpu_device *adev)
+>> +{
+>> +	struct amdgpu_bo *bo = NULL;
+>> +
+>> +	/*
+>> +	 * Unmaps all DMA mappings before device will be removed from it's
+>> +	 * IOMMU group otherwise in case of IOMMU enabled system a crash
+>> +	 * will happen.
+>> +	 */
+>> +
+>> +	spin_lock(&adev->mman.bdev.lru_lock);
+>> +	while (!list_empty(&adev->device_bo_list)) {
+>> +		bo = list_first_entry(&adev->device_bo_list, struct amdgpu_bo, bo);
+>> +		list_del_init(&bo->bo);
+>> +		spin_unlock(&adev->mman.bdev.lru_lock);
+>> +		if (bo->tbo.ttm)
+>> +			ttm_tt_unpopulate(bo->tbo.bdev, bo->tbo.ttm);
+> 
+> I have a patch pending (reviewed by Christian) that moves the
+> dma-unmapping to amdgpu_ttm_backend_unbind. With that patch,
+> ttm_tt_unpopulate would no longer be the right way to remove the DMA
+> mapping.
+> 
+> Maybe I'd need to add a check in ttm_tt_unpopulate to call
+> backend_unbind first, if necessary. Or is there some other mechanism
+> that moves the BO to the CPU domain before unpopulating it?
+> 
+> Regards,
+>    Felix
+
+At least in the context of this patch we don't move the BO to system
+domain but rather preemptively remove DMA mappings before IOMMU grpoup
+is gone post pci_remove. So yes, I would say yes, we need to check here
+for backend_unbind first.
 
 Andrey
 
-On 2021-04-30 1:27 p.m., Andrey Grodzovsky wrote:
 > 
 > 
-> On 2021-04-30 6:25 a.m., Daniel Vetter wrote:
->> On Thu, Apr 29, 2021 at 04:34:55PM -0400, Andrey Grodzovsky wrote:
->>>
->>>
->>> On 2021-04-29 3:05 p.m., Daniel Vetter wrote:
->>>> On Thu, Apr 29, 2021 at 12:04:33PM -0400, Andrey Grodzovsky wrote:
->>>>>
->>>>>
->>>>> On 2021-04-29 7:32 a.m., Daniel Vetter wrote:
->>>>>> On Thu, Apr 29, 2021 at 01:23:19PM +0200, Daniel Vetter wrote:
->>>>>>> On Wed, Apr 28, 2021 at 11:12:00AM -0400, Andrey Grodzovsky wrote:
->>>>>>>> With this calling drm_dev_unplug will flush and block
->>>>>>>> all in flight IOCTLs
->>>>>>>>
->>>>>>>> Also, add feature such that if device supports graceful unplug
->>>>>>>> we enclose entire IOCTL in SRCU critical section.
->>>>>>>>
->>>>>>>> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
->>>>>>>
->>>>>>> Nope.
->>>>>>>
->>>>>>> The idea of drm_dev_enter/exit is to mark up hw access. Not 
->>>>>>> entire ioctl.
->>>>>
->>>>> Then I am confused why we have 
->>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Felixir.bootlin.com%2Flinux%2Fv5.12%2Fsource%2Fdrivers%2Fgpu%2Fdrm%2Fdrm_ioctl.c%23L826&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cf4c0568093cc462f625808d90bc23a3c%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637553751106596888%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=PPKrQYBrgRMjpwlL0r8n5zenIhQMFWc6gniHgUTxTAY%3D&amp;reserved=0 
->>>>>
->>>>> currently in code ?
->>>>
->>>> I forgot about this one, again. Thanks for reminding.
->>>>
->>>>>>> Especially not with an opt-in flag so that it could be shrugged 
->>>>>>> of as a
->>>>>>> driver hack. Most of these ioctls should have absolutely no problem
->>>>>>> working after hotunplug.
->>>>>>>
->>>>>>> Also, doing this defeats the point since it pretty much guarantees
->>>>>>> userspace will die in assert()s and stuff. E.g. on i915 the rough 
->>>>>>> contract
->>>>>>> is that only execbuf (and even that only when userspace has 
->>>>>>> indicated
->>>>>>> support for non-recoverable hw ctx) is allowed to fail. Anything 
->>>>>>> else
->>>>>>> might crash userspace.
->>>>>
->>>>> Given that as I pointed above we already fail any IOCTls with -ENODEV
->>>>> when device is unplugged, it seems those crashes don't happen that
->>>>> often ? Also, in all my testing I don't think I saw a user space crash
->>>>> I could attribute to this.
->>>>
->>>> I guess it should be ok.
->>>
->>> What should be ok ?
->>
->> Your approach, but not your patch. If we go with this let's just lift it
->> to drm_ioctl() as the default behavior. No driver opt-in flag, because
->> that's definitely worse than any other approach because we really need to
->> get rid of driver specific behaviour for generic ioctls, especially
->> anything a compositor will use directly.
->>
->>>> My reasons for making this work is both less trouble for userspace (did
->>>> you test with various wayland compositors out there, not just amdgpu 
->>>> x86
->>>
->>> I didn't - will give it a try.
-> 
-> Weston worked without crashes, run the egl tester cube there.
-> 
->>>
->>>> driver?), but also testing.
->>>>
->>>> We still need a bunch of these checks in various places or you'll 
->>>> wait a
->>>> very long time for a pending modeset or similar to complete. Being 
->>>> able to
->>>> run that code easily after hotunplug has completed should help a lot 
->>>> with
->>>> testing.
->>>>
->>>> Plus various drivers already acquired drm_dev_enter/exit and now I 
->>>> wonder
->>>> whether that was properly tested or not ...
->>>>
->>>> I guess maybe we need a drm module option to disable this check, so 
->>>> that
->>>> we can exercise the code as if the ioctl has raced with hotunplug at 
->>>> the
->>>> worst possible moment.
->>>>
->>>> Also atomic is really tricky here: I assume your testing has just done
->>>> normal synchronous commits, but anything that goes through atomic 
->>>> can be
->>>> done nonblocking in a separate thread. Which the ioctl catch-all 
->>>> here wont
->>>> capture.
->>>
->>> Yes, async commit was on my mind and thanks for reminding me. Indeed
->>> I forgot this but i planned to scope the entire amdgpu_dm_atomic_tail in
->>> drm_dev_enter/exit. Note that i have a bunch of patches, all name's
->>> starting with 'Scope....' that just methodically put all the background
->>> work items and timers the drivers schedules in drm_dev_enter/exit scope.
->>> This was supposed to be part of the 'Scope Display code' patch.
->>
->> That's too much. You still have to arrange that the flip completion event
->> gets sent out. So it's a bit tricky.
->>
->> In other places the same problem applies, e.g. probe functions need to
->> make sure they report "disconnected".
-> 
-> I see, well, this is all part of KMS support which I defer for now
-> anyway. Will tackle it then.
-> 
->>
->>>>>>> You probably need similar (and very precisely defined) rules for 
->>>>>>> amdgpu.
->>>>>>> And those must definitely exclude any shard ioctls from randomly 
->>>>>>> failing
->>>>>>> with EIO, because that just kills the box and defeats the point 
->>>>>>> of trying
->>>>>>> to gracefully handling hotunplug and making sure userspace has a 
->>>>>>> chance of
->>>>>>> survival. E.g. for atomic everything should continue, including flip
->>>>>>> completion, but we set all outputs to "disconnected" and send out 
->>>>>>> the
->>>>>>> uevent. Maybe crtc enabling can fail too, but that can also be 
->>>>>>> handled
->>>>>>> through the async status we're using to signal DP link failures to
->>>>>>> userspace.
->>>>>
->>>>> As I pointed before, because of the complexity of the topic I 
->>>>> prefer to
->>>>> take it step by step and solve first for secondary device use case, 
->>>>> not
->>>>> for primary, display attached device.
->>>>
->>>> Yeah makes sense. But then I think the right patch is to roll this 
->>>> out for
->>>> all drivers, properly justified with existing code. Not behind a driver
->>>> flag, because with all these different compositors the last thing we 
->>>> want
->>>> is a proliferation of driver-specific behaviour. That's imo the worst
->>>> option of all of them and needs to be avoided.
->>>
->>> So this kind of patch would be acceptable to you if I unconditionally
->>> scope the drm_ioctl with drm_dev_enter/exit without the driver flag ?
->>> I am worried to break other drivers with this, see patch 
->>> https://nam11.safelinks.protection.outlook.com/?url=https:%2F%2Fcgit.freedesktop.org%2F~agrodzov%2Flinux%2Fcommit%2F%3Fh%3Ddrm-misc-next%26id%3Df0c593f35b22ca5bf60ed9e7ce2bf2b80e6c68c6&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cf4c0568093cc462f625808d90bc23a3c%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637553751106596888%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=%2F3Jq6SvTm%2BZX7AVpaxEepfOj0C3O7%2Bo2Wm3y0gxrmKI%3D&amp;reserved=0 
->>>
->>> Before setting drm_dev_unplug I go through a whole process of signalling
->>> all possible fences in the system which some one some where might be
->>> waiting on. My concern is that in the absence of HW those fences won't
->>> signal and so unless I signal them myself srcu_synchrionize in
->>> drm_dev_unplug will hang waiting for any such code scoped by
->>> drm_dev_enter/exit.
->>
->> Uh right. I forgot about this.
->>
->> Which would kinda mean the top level scope is maybe not the best idea, 
->> and
->> perhaps we should indeed drill it down. But then the testing issue
->> definitely gets a lot worse.
->>
->> So what if we'd push that drm_dev_is_unplugged check down into ioctls?
->> Then we can make a case-by case decision whether it should be 
->> converted to
->> drm_dev_enter/exit, needs to be pushed down further into drivers (due to
->> fence wait issues) or other concerns?
->>
->> Also I guess we need to have a subsystem wide rule on whether you need to
->> force complete all fences before you call drm_dev_unplug, or afterwards.
-> 
-> I don't see how you can handle it afterwards. If a thread is stuck in
-> dma_fence_wait in non interruptible wait (any kernel thread) and with no
-> timeout there is nothing you can do to stop the wait. Any such code
-> scopped with drm_dev_enter/exit will cause a hang in drm_dev_unplug.
-> The only way then is to preemptively force signal all such fences before
-> calling drm_dev_unplug - as I do in the above mentioned patch.
-> 
->> If we have mixed behaviour on this there will be disappointment. And 
->> since
->> hotunplug and dma_fence completion are both userspace visible that
->> inconsistency might have bigger impact.
->>
->> This is all very tricky indeed :-/
->>
->> btw for the "gradual pushing drm_dev_enter into ioctl" approach, if we go
->> with that: We could do the same trick we've done for DRM_UNLOCKED:
->> - drm_dev_enter/exit is called for any ioctl that has not set the
->>    DRM_HOTUNPLUG_SAFE flag
->> - for drm core ioctls we push them into all ioctls and decide how to
->>    handle/where (with the aim to have the least amount of code flow
->>    different during hotunplug vs after hotunplug has finished, to reduce
->>    testing scope)
->> - then we make DRM_HOTUNPLUG_SAFE the implied default
->>
->> This would have us left with render ioctls, and I think the defensive
->> assumption there is that they're all hotunplug safe. We might hang on a
->> fence wait, but that's fixable, and it's better than blowing up on a
->> use-after-free security bug.
->>
->> Thoughts?
-> 
-> I don't fully see a difference between the approach described above and
-> the full drill down to each driver and even within the driver, to the HW
-> back-ends - what criteria I would use to decide if for a given IOCTL i
-> scope with drm_dev_enter/exit at the highest level while for another
-> i go all the way down ? If we would agree that signaling the fences
-> preemptively before engaging drm_dev_unplug is generically the right
-> approach maybe we can then scope drm_ioctl unconditionally with
-> drm_dev_enter/exit and then for each driver go through the same process
-> I do for amdgpu - writing driver specific function which takes care of
-> all the fences. We could then just create a drm callback which would
-> be called from drm_ioctl before drm_dev_unplug is called.
-> 
-> Andrey
-> 
->>
->> It is unfortunately even more work until we've reached the goal, but I
->> think it's safest and most flexible approach overall.
->>
->> Cheers, Daniel
->>
->>>
->>> Andrey
->>>
->>>>
->>>> Cheers, Daniel
->>>>
->>>>
->>>>>
->>>>>>>
->>>>>>> I guess we should clarify this in the hotunplug doc?
->>>>>
->>>>> Agree
->>>>>
->>>>>>
->>>>>> To clarify: I'm not against throwing an ENODEV at userspace for 
->>>>>> ioctl that
->>>>>> really make no sense, and where we're rather confident that all 
->>>>>> properly
->>>>>> implemented userspace will gracefully handle failures. Like a 
->>>>>> modeset, or
->>>>>> opening a device, or trying to import a dma-buf or stuff like that 
->>>>>> which
->>>>>> can already fail in normal operation for any kind of reason.
->>>>>>
->>>>>> But stuff that never fails, like GETRESOURCES ioctl, really 
->>>>>> shouldn't fail
->>>>>> after hotunplug.
->>>>>
->>>>> As I pointed above, this a bit confuses me given that we already do
->>>>> blanker rejection of IOCTLs if device is unplugged.
->>>>
->>>> Well I'm confused about this too :-/
->>>>
->>>>>> And then there's the middle ground, like doing a pageflip or 
->>>>>> buffer flush,
->>>>>> which I guess some userspace might handle, but risky to inflict those
->>>>>> consequences on them. atomic modeset is especially fun since 
->>>>>> depending
->>>>>> what you're doing it can be both "failures expected" and "failures 
->>>>>> not
->>>>>> really expected in normal operation".
->>>>>>
->>>>>> Also, this really should be consistent across drivers, not solved 
->>>>>> with a
->>>>>> driver flag for every possible combination.
->>>>>>
->>>>>> If you look at the current hotunplug kms drivers, they have
->>>>>> drm_dev_enter/exit sprinkled in specific hw callback functions 
->>>>>> because of
->>>>>> the above problems. But maybe it makes sense to change things in a 
->>>>>> few
->>>>>> cases. But then we should do it across the board.
->>>>>
->>>>> So as I understand your preferred approach is that I scope any 
->>>>> back_end, HW
->>>>> specific function with drm_dev_enter/exit because that where MMIO
->>>>> access takes place. But besides explicit MMIO access thorough
->>>>> register accessors in the HW back-end there is also indirect MMIO 
->>>>> access
->>>>> taking place throughout the code in the driver because of various VRAM
->>>>> BOs which provide CPU access to VRAM through the VRAM BAR. This 
->>>>> kind of
->>>>> access is spread all over in the driver and even in mid-layers such as
->>>>> TTM and not limited to HW back-end functions. It means it's much 
->>>>> harder
->>>>> to spot such places to surgically scope them with 
->>>>> drm_dev_enter/exit and
->>>>> also that any new such code introduced will immediately break hot 
->>>>> unplug
->>>>> because the developers can't be expected to remember making their code
->>>>> robust to this specific use case. That why when we discussed 
->>>>> internally
->>>>> what approach to take to protecting code with drm_dev_enter/exit we
->>>>> opted for using the widest available scope.
->>>>
->>>> The thing is, you kinda have to anyway. There's enormous amounts of
->>>> asynchronous processing going on. E.g. nonblocking atomic commits 
->>>> also do
->>>> ttm unpinning and fun stuff like that, which if you sync things 
->>>> wrong can
->>>> happen way late. So the door for bad fallout is wide open :-(
->>>>
->>>> I'm not sure where the right tradeoff is to make sure we catch them 
->>>> all,
->>>> and can make sure with testing that we've indeed caught them all.
->>>> -Daniel
->>>>
->>
+>> +		spin_lock(&adev->mman.bdev.lru_lock);
+>> +	}
+>> +	spin_unlock(&adev->mman.bdev.lru_lock);
+>> +}
+>> +
+>>   /**
+>>    * amdgpu_device_fini - tear down the driver
+>>    *
+>> @@ -3639,12 +3663,15 @@ void amdgpu_device_fini_hw(struct amdgpu_device *adev)
+>>   		amdgpu_ucode_sysfs_fini(adev);
+>>   	sysfs_remove_files(&adev->dev->kobj, amdgpu_dev_attributes);
+>>   
+>> -
+>>   	amdgpu_fbdev_fini(adev);
+>>   
+>>   	amdgpu_irq_fini_hw(adev);
+>>   
+>>   	amdgpu_device_ip_fini_early(adev);
+>> +
+>> +	amdgpu_clear_dma_mappings(adev);
+>> +
+>> +	amdgpu_gart_dummy_page_fini(adev);
+>>   }
+>>   
+>>   void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+>> index fde2d899b2c4..49cdcaf8512d 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+>> @@ -92,7 +92,7 @@ static int amdgpu_gart_dummy_page_init(struct amdgpu_device *adev)
+>>    *
+>>    * Frees the dummy page used by the driver (all asics).
+>>    */
+>> -static void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
+>> +void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
+>>   {
+>>   	if (!adev->dummy_page_addr)
+>>   		return;
+>> @@ -397,5 +397,4 @@ void amdgpu_gart_fini(struct amdgpu_device *adev)
+>>   	vfree(adev->gart.pages);
+>>   	adev->gart.pages = NULL;
+>>   #endif
+>> -	amdgpu_gart_dummy_page_fini(adev);
+>>   }
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+>> index afa2e2877d87..5678d9c105ab 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+>> @@ -61,6 +61,7 @@ int amdgpu_gart_table_vram_pin(struct amdgpu_device *adev);
+>>   void amdgpu_gart_table_vram_unpin(struct amdgpu_device *adev);
+>>   int amdgpu_gart_init(struct amdgpu_device *adev);
+>>   void amdgpu_gart_fini(struct amdgpu_device *adev);
+>> +void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev);
+>>   int amdgpu_gart_unbind(struct amdgpu_device *adev, uint64_t offset,
+>>   		       int pages);
+>>   int amdgpu_gart_map(struct amdgpu_device *adev, uint64_t offset,
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>> index 63e815c27585..a922154953a7 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>> @@ -326,6 +326,15 @@ void amdgpu_irq_fini_hw(struct amdgpu_device *adev)
+>>   		if (!amdgpu_device_has_dc_support(adev))
+>>   			flush_work(&adev->hotplug_work);
+>>   	}
+>> +
+>> +	if (adev->irq.ih_soft.ring)
+>> +		amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+>> +	if (adev->irq.ih.ring)
+>> +		amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>> +	if (adev->irq.ih1.ring)
+>> +		amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+>> +	if (adev->irq.ih2.ring)
+>> +		amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+>>   }
+>>   
+>>   /**
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>> index 485f249d063a..62d829f5e62c 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>> @@ -68,8 +68,13 @@ static void amdgpu_bo_destroy(struct ttm_buffer_object *tbo)
+>>   		list_del_init(&bo->shadow_list);
+>>   		mutex_unlock(&adev->shadow_list_lock);
+>>   	}
+>> -	amdgpu_bo_unref(&bo->parent);
+>>   
+>> +
+>> +	spin_lock(&adev->mman.bdev.lru_lock);
+>> +	list_del(&bo->bo);
+>> +	spin_unlock(&adev->mman.bdev.lru_lock);
+>> +
+>> +	amdgpu_bo_unref(&bo->parent);
+>>   	kfree(bo->metadata);
+>>   	kfree(bo);
+>>   }
+>> @@ -585,6 +590,12 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
+>>   	if (bp->type == ttm_bo_type_device)
+>>   		bo->flags &= ~AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
+>>   
+>> +	INIT_LIST_HEAD(&bo->bo);
+>> +
+>> +	spin_lock(&adev->mman.bdev.lru_lock);
+>> +	list_add_tail(&bo->bo, &adev->device_bo_list);
+>> +	spin_unlock(&adev->mman.bdev.lru_lock);
+>> +
+>>   	return 0;
+>>   
+>>   fail_unreserve:
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+>> index 9ac37569823f..5ae8555ef275 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+>> @@ -110,6 +110,8 @@ struct amdgpu_bo {
+>>   	struct list_head		shadow_list;
+>>   
+>>   	struct kgd_mem                  *kfd_bo;
+>> +
+>> +	struct list_head		bo;
+>>   };
+>>   
+>>   static inline struct amdgpu_bo *ttm_to_amdgpu_bo(struct ttm_buffer_object *tbo)
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/cik_ih.c b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+>> index 183d44a6583c..df385ffc9768 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+>> @@ -310,7 +310,6 @@ static int cik_ih_sw_fini(void *handle)
+>>   	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   	amdgpu_irq_remove_domain(adev);
+>>   
+>>   	return 0;
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/cz_ih.c b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+>> index d32743949003..b8c47e0cf37a 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+>> @@ -302,7 +302,6 @@ static int cz_ih_sw_fini(void *handle)
+>>   	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   	amdgpu_irq_remove_domain(adev);
+>>   
+>>   	return 0;
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+>> index da96c6013477..ddfe4eaeea05 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+>> @@ -301,7 +301,6 @@ static int iceland_ih_sw_fini(void *handle)
+>>   	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   	amdgpu_irq_remove_domain(adev);
+>>   
+>>   	return 0;
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+>> index 5eea4550b856..e171a9e78544 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+>> @@ -571,9 +571,6 @@ static int navi10_ih_sw_fini(void *handle)
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>>   	amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   
+>>   	return 0;
+>>   }
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+>> index 751307f3252c..9a24f17a5750 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+>> @@ -176,7 +176,6 @@ static int si_ih_sw_fini(void *handle)
+>>   	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   
+>>   	return 0;
+>>   }
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+>> index 973d80ec7f6c..b08905d1c00f 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+>> @@ -313,7 +313,6 @@ static int tonga_ih_sw_fini(void *handle)
+>>   	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   	amdgpu_irq_remove_domain(adev);
+>>   
+>>   	return 0;
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+>> index 2d0094c276ca..8c8abc00f710 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+>> @@ -525,9 +525,6 @@ static int vega10_ih_sw_fini(void *handle)
+>>   
+>>   	amdgpu_irq_fini_sw(adev);
+>>   	amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+>> -	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+>>   
+>>   	return 0;
+>>   }
