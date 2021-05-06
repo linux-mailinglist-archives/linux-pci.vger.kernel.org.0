@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E968375750
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76638375751
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235562AbhEFPeE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 11:34:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
+        id S235782AbhEFPeH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 11:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235527AbhEFPds (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 May 2021 11:33:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4E8C461434;
+        id S235561AbhEFPdt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 May 2021 11:33:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9EF3D6141A;
         Thu,  6 May 2021 15:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620315170;
-        bh=1sKdRSDWZQDgd5KUeWJnyAld8807tC29lRbcEtY4HEA=;
+        s=k20201202; t=1620315171;
+        bh=yxzpn2O/vp9ZZpPVLIJ+HQxJFsDjVUX2z2EPhOuwt1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UtD+5ok6KQaP3oZRK5I7CcxMyHMmBrBNWE1KRjfI+AKAaCu6riOACR2lQSooforV2
-         gU9Y7z2NUCjHFzIFvO2Xg+y697IoSWcxnLQZmSxeL1G5JBIG5W1FsH+afh4EzZc35x
-         cJfVjZfzhbCL/VEvws1f9eG/vI6wycpWFbogUWxE+ErHS5BP7mqYy1WbeWppOlrrU2
-         cHDXRZpllZUTLswV6VuPVLeXQe3qBvEMdKpExhmZwrG2y7Lp7xJ05zGvsHkvrrZzzY
-         SIrSLnqlsiSSHfd/VQTv79uYzRfEWLxpjbzpxC8+nmufhEE5AQIKTWnCnZVbzmS39o
-         QseH1/RE0B01A==
+        b=KEyqYxHdE7ZKmqjuMa/tEldb+IFNCvdsnbMTcFJDpDGF7POsd9s6fhKcJUwDgPT/C
+         3f0Z+T0MNS32RTBEk0NTQvVoHdkQloqQxVrw05z3izZJJENXMswtI+eUYPmcgduWNS
+         QywErnFwoTp2UfCkgt0j2HApyfl+hDCBrh3gqnwNbgAyQ/m3Wb+YSUO5HiWGd1YPtH
+         oi+4BaBU1AKU3EISacHwGauI0j3g8fUx9d+C/AjaUBbUJRDKnu8jnwHpD/N48j6uWT
+         usMapfP502CQ3KBtQyqsxnP4N/7Q1w3DhggOMHQxw70zNll/qekFxqJ2zeidVorYDL
+         KlHt+MTfZ2q1g==
 Received: by pali.im (Postfix)
-        id 083448A1; Thu,  6 May 2021 17:32:50 +0200 (CEST)
+        id 56A2A89A; Thu,  6 May 2021 17:32:50 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Tomasz Maciej Nowak <tmn505@gmail.com>,
         Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 20/42] PCI: aardvark: Add support for more than 32 MSI interrupts
-Date:   Thu,  6 May 2021 17:31:31 +0200
-Message-Id: <20210506153153.30454-21-pali@kernel.org>
+Subject: [PATCH 21/42] PCI: aardvark: Add support for masking MSI interrupts
+Date:   Thu,  6 May 2021 17:31:32 +0200
+Message-Id: <20210506153153.30454-22-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210506153153.30454-1-pali@kernel.org>
 References: <20210506153153.30454-1-pali@kernel.org>
@@ -49,173 +49,152 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Aardvark HW can handle MSI interrupt with any 16-bit number. Received MSI
-interrupt number is visible in PCIE_MSI_PAYLOAD_REG register after clearing
-corresponding bit in PCIE_MSI_STATUS_REG register.
+Aardvark HW does not support masking individual MSI interrupts. It supports
+masking only whole equivalence classes which consist of MSI interrupts with
+same lower 5 bits. So mask a whole equivalence class only if all interrupts
+in this class are masked.
 
-The first 32 interrupt numbers are currently stored in linear map in MSI
-inner domain. Store the rest in dynamic radix tree for space efficiency.
-
-Free interrupt numbers (available for MSI inner domain allocation) for the
-first 32 interrupts are currently stored in a bitmap. For the rest,
-introduce a linked list of allocated regions.
-
-In the most common scenario there is only one PCIe card connected on boards
-with Armada 3720 SoC. Since in Multi-MSI mode the PCIe device can use at
-most 32 interrupts, all these interrupts are allocated in the linear map of
-MSI inner domain and marked as used in the bitmap.
-
-For less common scenarios with PCIe devices with multiple functions or with
-a PCIe Bridge with packet switches with more connected PCIe devices more
-than 32 interrupts are requested. In this case, store each interrupt range
-from each interrupt request into the linked list as one node. In the worst
-case every PCIe function will occupy one node in this linked list.
-
-This change allows to use all 32 Multi-MSI interrupts on every connected
-PCIe card on the Turris Mox router with Mox G module.
+For each equivalence class store a reference counter to indicate how many
+unmasked interrupts are in this class. Use this counter to decide when this
+class of MSI interrupts can be masked.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <kabel@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 71 ++++++++++++++++++++++++---
- 1 file changed, 64 insertions(+), 7 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 77 ++++++++++++++++++++++++---
+ 1 file changed, 69 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 199015215779..d74e84b0e689 100644
+index d74e84b0e689..376f0666becc 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -178,11 +178,18 @@
- #define RETRAIN_WAIT_MAX_RETRIES	10
- #define RETRAIN_WAIT_USLEEP_US		2000
- 
--#define MSI_IRQ_NUM			32
-+#define MSI_IRQ_LINEAR_COUNT		32
-+#define MSI_IRQ_TOTAL_COUNT		65536
- 
- #define CFG_RD_UR_VAL			0xffffffff
- #define CFG_RD_CRS_VAL			0xffff0001
- 
-+struct advk_msi_range {
-+	struct list_head list;
-+	u16 first;
-+	u16 count;
-+};
-+
- struct advk_pcie {
- 	struct platform_device *pdev;
- 	void __iomem *base;
-@@ -193,7 +200,8 @@ struct advk_pcie {
- 	struct irq_chip msi_bottom_irq_chip;
- 	struct irq_chip msi_irq_chip;
+@@ -202,6 +202,7 @@ struct advk_pcie {
  	struct msi_domain_info msi_domain_info;
--	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
-+	DECLARE_BITMAP(msi_used_linear, MSI_IRQ_LINEAR_COUNT);
-+	struct list_head msi_used_radix;
+ 	DECLARE_BITMAP(msi_used_linear, MSI_IRQ_LINEAR_COUNT);
+ 	struct list_head msi_used_radix;
++	u16 msi_used_ec_refcnt[32];
  	struct mutex msi_used_lock;
  	int link_gen;
  	struct pci_bridge_emul bridge;
-@@ -885,12 +893,44 @@ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
- 				     unsigned int nr_irqs, void *args)
- {
- 	struct advk_pcie *pcie = domain->host_data;
-+	struct advk_msi_range *msi_range, *msi_range_prev, *msi_range_next;
-+	unsigned int first, count, last;
- 	int hwirq, i;
+@@ -405,12 +406,10 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
+ 	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
  
- 	mutex_lock(&pcie->msi_used_lock);
--	hwirq = bitmap_find_free_region(pcie->msi_used, MSI_IRQ_NUM,
-+
-+	/* First few used interrupt numbers are marked in bitmap (the most common) */
-+	hwirq = bitmap_find_free_region(pcie->msi_used_linear, MSI_IRQ_LINEAR_COUNT,
- 					order_base_2(nr_irqs));
-+
-+	/* And rest used interrupt numbers are stored in linked list as ranges */
-+	if (hwirq < 0) {
-+		count = 1 << order_base_2(nr_irqs);
-+		msi_range_prev = list_entry(&pcie->msi_used_radix, typeof(*msi_range), list);
-+		do {
-+			msi_range_next = list_next_entry(msi_range_prev, list);
-+			last = list_entry_is_head(msi_range_next, &pcie->msi_used_radix, list)
-+				? MSI_IRQ_TOTAL_COUNT : msi_range_next->first;
-+			first = list_entry_is_head(msi_range_prev, &pcie->msi_used_radix, list)
-+				? MSI_IRQ_LINEAR_COUNT : round_up(msi_range_prev->first +
-+								  msi_range_prev->count, count);
-+			if (first + count > last) {
-+				msi_range_prev = msi_range_next;
-+				continue;
-+			}
-+			msi_range = kzalloc(sizeof(*msi_range), GFP_KERNEL);
-+			if (msi_range) {
-+				hwirq = first;
-+				msi_range->first = first;
-+				msi_range->count = count;
-+				list_add(&msi_range->list, &msi_range_prev->list);
-+			}
-+			break;
-+		} while (!list_entry_is_head(msi_range_next, &pcie->msi_used_radix, list));
-+	}
-+
- 	mutex_unlock(&pcie->msi_used_lock);
-+
- 	if (hwirq < 0)
- 		return -ENOSPC;
+-	/* Disable All ISR0/1 Sources */
++	/* Disable All ISR0/1 and MSI Sources */
+ 	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_MASK_REG);
+ 	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
+-
+-	/* Unmask all MSIs */
+-	advk_writel(pcie, ~(u32)PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
++	advk_writel(pcie, PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
  
-@@ -908,9 +948,20 @@ static void advk_msi_irq_domain_free(struct irq_domain *domain,
- {
- 	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
- 	struct advk_pcie *pcie = domain->host_data;
-+	struct advk_msi_range *msi_range;
- 
- 	mutex_lock(&pcie->msi_used_lock);
--	bitmap_release_region(pcie->msi_used, d->hwirq, order_base_2(nr_irqs));
-+	if (d->hwirq < MSI_IRQ_LINEAR_COUNT) {
-+		bitmap_release_region(pcie->msi_used_linear, d->hwirq, order_base_2(nr_irqs));
-+	} else {
-+		list_for_each_entry(msi_range, &pcie->msi_used_radix, list) {
-+			if (msi_range->first != d->hwirq)
-+				continue;
-+			list_del(&msi_range->list);
-+			kfree(msi_range);
-+			break;
-+		}
-+	}
- 	mutex_unlock(&pcie->msi_used_lock);
+ 	/* Unmask summary MSI interrupt */
+ 	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+@@ -888,6 +887,54 @@ static int advk_msi_set_affinity(struct irq_data *irq_data,
+ 	return -EINVAL;
  }
  
-@@ -967,6 +1018,7 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
- 	struct msi_domain_info *msi_di;
- 
- 	mutex_init(&pcie->msi_used_lock);
-+	INIT_LIST_HEAD(&pcie->msi_used_radix);
- 
- 	bottom_ic = &pcie->msi_bottom_irq_chip;
- 
-@@ -982,9 +1034,14 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
- 		MSI_FLAG_MULTI_PCI_MSI;
- 	msi_di->chip = msi_ic;
- 
++static void advk_msi_irq_mask(struct irq_data *d)
++{
++	struct advk_pcie *pcie = d->domain->host_data;
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
++	u8 idx = hwirq & 31;
++	u32 mask;
++
 +	/*
-+	 * Aardvark HW can handle MSI interrupt with any 16bit number.
-+	 * For optimization first few interrupts are allocated in linear map
-+	 * (which is common scenario) and rest are allocated in radix tree.
++	 * Aardvark HW does not support masking individual MSI interrupts. It
++	 * supports masking only whole equivalence class idx which consist of
++	 * MSI interrupts with same low 5 bits. So mask equivalence class idx
++	 * only in case there is no used (unmasked) interrupt in this class.
 +	 */
- 	pcie->msi_inner_domain =
--		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
--				      &advk_msi_domain_ops, pcie);
-+		__irq_domain_add(NULL, MSI_IRQ_LINEAR_COUNT, MSI_IRQ_TOTAL_COUNT, 0,
-+				 &advk_msi_domain_ops, pcie);
- 	if (!pcie->msi_inner_domain)
- 		return -ENOMEM;
++
++	if (--pcie->msi_used_ec_refcnt[idx] > 0)
++		return;
++
++	mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
++	mask |= BIT(idx);
++	advk_writel(pcie, mask, PCIE_MSI_MASK_REG);
++}
++
++static void advk_msi_irq_unmask(struct irq_data *d)
++{
++	struct advk_pcie *pcie = d->domain->host_data;
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
++	u8 idx = hwirq & 31;
++	u32 mask;
++
++	pcie->msi_used_ec_refcnt[idx]++;
++
++	mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
++	mask &= ~BIT(idx);
++	advk_writel(pcie, mask, PCIE_MSI_MASK_REG);
++}
++
++static void advk_msi_top_irq_mask(struct irq_data *d)
++{
++	pci_msi_mask_irq(d);
++	irq_chip_mask_parent(d);
++}
++
++static void advk_msi_top_irq_unmask(struct irq_data *d)
++{
++	pci_msi_unmask_irq(d);
++	irq_chip_unmask_parent(d);
++}
++
+ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
+ 				     unsigned int virq,
+ 				     unsigned int nr_irqs, void *args)
+@@ -1025,9 +1072,13 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+ 	bottom_ic->name = "MSI";
+ 	bottom_ic->irq_compose_msi_msg = advk_msi_irq_compose_msi_msg;
+ 	bottom_ic->irq_set_affinity = advk_msi_set_affinity;
++	bottom_ic->irq_mask = advk_msi_irq_mask;
++	bottom_ic->irq_unmask = advk_msi_irq_unmask;
  
-@@ -1052,7 +1109,7 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
- 	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
- 	msi_status = msi_val & ((~msi_mask) & PCIE_MSI_ALL_MASK);
+ 	msi_ic = &pcie->msi_irq_chip;
+ 	msi_ic->name = "advk-MSI";
++	msi_ic->irq_mask = advk_msi_top_irq_mask;
++	msi_ic->irq_unmask = advk_msi_top_irq_unmask;
  
--	for (msi_idx = 0; msi_idx < MSI_IRQ_NUM; msi_idx++) {
-+	for (msi_idx = 0; msi_idx < BITS_PER_TYPE(msi_status); msi_idx++) {
- 		if (!(BIT(msi_idx) & msi_status))
- 			continue;
+ 	msi_di = &pcie->msi_domain_info;
+ 	msi_di->flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+@@ -1101,8 +1152,10 @@ static void advk_pcie_remove_irq_domain(struct advk_pcie *pcie)
  
+ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+ {
+-	u32 msi_val, msi_mask, msi_status, msi_idx;
++	struct irq_data *irq_data;
++	u32 msi_val, msi_mask, msi_status;
+ 	u16 msi_data;
++	u8 msi_idx;
+ 	int virq;
+ 
+ 	msi_mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
+@@ -1119,11 +1172,19 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+ 		 */
+ 		advk_writel(pcie, BIT(msi_idx), PCIE_MSI_STATUS_REG);
+ 		msi_data = advk_readl(pcie, PCIE_MSI_PAYLOAD_REG) & PCIE_MSI_DATA_MASK;
++
++		/*
++		 * Aardvark HW does not support masking individual MSI interrupts.
++		 * So call generic_handle_irq() only in case kernel has not masked
++		 * received MSI interrupt.
++		 */
+ 		virq = irq_find_mapping(pcie->msi_inner_domain, msi_data);
+-		if (virq)
+-			generic_handle_irq(virq);
+-		else
++		irq_data = virq ? irq_get_irq_data(virq) : NULL;
++
++		if (!irq_data)
+ 			dev_err(&pcie->pdev->dev, "unexpected MSI 0x%04hx\n", msi_data);
++		else if (!irqd_irq_masked(irq_data))
++			generic_handle_irq(virq);
+ 	}
+ 
+ 	advk_writel(pcie, PCIE_ISR0_MSI_INT_PENDING,
 -- 
 2.20.1
 
