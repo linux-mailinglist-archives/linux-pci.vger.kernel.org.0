@@ -2,83 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA71C374D92
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 04:34:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CB00374D9B
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 04:35:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231545AbhEFCfD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 May 2021 22:35:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231370AbhEFCfD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 May 2021 22:35:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BB232613B5;
-        Thu,  6 May 2021 02:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620268446;
-        bh=6euE7plfLogA6Ce8dtdEE2r1lNhAqCx4K/hLCH1gwlg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o50JsoOhxl62kGhcrKIH3+Zb5IRf3f/vrNPOstLYAVlXr62PiRlxfGn9VBrPJ9y1t
-         5RQD+WC61RaR8cgqSoF+pyAAU75zqivONa0nqYEsFbYaIVvxZnDeCWw7vMKxfgl1fk
-         rm+OzjbSAz3Zk+8GKtR8+1kcurOWlGP7b2rNDOSq/4g1gZLD6ilyetp50c6m5ZBHkn
-         cJ1s+PqbyvjFF0BLhSNnaP4hVxpglE9sumu3zo8OX2QF8LWL1OlXWSs82eRZPqQ7dm
-         8j9pA71V1oyvhv9rrsZfglfVI99IbNMCVklZC+bUFW/aS2DaTYHct1lVu7mnc/zXvn
-         flWOiXSK0GUBQ==
-Date:   Wed, 5 May 2021 19:34:03 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] Add support for PCIe SSD status LED management
-Message-ID: <20210506023403.GB1187168@dhcp-10-100-145-180.wdc.com>
-References: <20210416192010.3197-1-stuart.w.hayes@gmail.com>
- <20210506014827.GA175453@rocinante.localdomain>
+        id S231720AbhEFCga (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 May 2021 22:36:30 -0400
+Received: from lucky1.263xmail.com ([211.157.147.134]:36370 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231370AbhEFCga (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 May 2021 22:36:30 -0400
+Received: from localhost (unknown [192.168.167.13])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 5B154C8509;
+        Thu,  6 May 2021 10:35:17 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from xxm-vm.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P1748T140588877858560S1620268508813762_;
+        Thu, 06 May 2021 10:35:12 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <47f6b110dbf9d5eff25f50d57dd5deb1>
+X-RL-SENDER: xxm@rock-chips.com
+X-SENDER: xxm@rock-chips.com
+X-LOGIN-NAME: xxm@rock-chips.com
+X-FST-TO: bhelgaas@google.com
+X-RCPT-COUNT: 11
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+From:   Simon Xue <xxm@rock-chips.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Simon Xue <xxm@rock-chips.com>, Rob Herring <robh@kernel.org>,
+        Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH v9 1/2] dt-bindings: rockchip: Add DesignWare based PCIe controller
+Date:   Thu,  6 May 2021 10:34:48 +0800
+Message-Id: <20210506023448.169146-1-xxm@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210506014827.GA175453@rocinante.localdomain>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 06, 2021 at 03:48:27AM +0200, Krzysztof Wilczyński wrote:
-> > >cat /sys/class/leds/0000:88:00.0::pcie_ssd_status/supported_states
-> > ok                              0x0004 [ ]
-> > locate                          0x0008 [*]
-> > fail                            0x0010 [ ]
-> > rebuild                         0x0020 [ ]
-> > pfa                             0x0040 [ ]
-> > hotspare                        0x0080 [ ]
-> > criticalarray                   0x0100 [ ]
-> > failedarray                     0x0200 [ ]
-> > invaliddevice                   0x0400 [ ]
-> > disabled                        0x0800 [ ]
-> > --
-> > supported_states = 0x0008
-> > 
-> > >cat /sys/class/leds/0000:88:00.0::pcie_ssd_status/current_states
-> > locate                          0x0008 [ ]
-> 
-> As per what Keith already noted, this is a very elaborate output as far
-> as sysfs goes - very human-readable, but it would be complex to parse
-> should some software would be interested in showing this values in a way
-> or another.
-> 
-> I would propose output similar to this one:
-> 
->   $ cat /sys/block/sda/queue/scheduler
->   mq-deadline-nodefault [bfq] none
-> 
-> If you prefer to show the end-user a string, rather than a numeric
-> value.  This approach could support both the supported and current
-> states (similarly to how it works for the I/O scheduler), thus there
-> would be no need to duplicate the code between the two attributes.
-> 
-> What do you think?
+Document DT bindings for PCIe controller found on Rockchip SoC.
 
-Some enclosures may support just one blinky state at a time. Other
-implementations might have multiple LEDs and colors, so you could, for
-example, "locate" something that is also "failed", with both states
-visible simultaneously. You could capture the current states with the
-"scheduler" type display, but setting new states may be more
-complicated.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+Signed-off-by: Simon Xue <xxm@rock-chips.com>
+---
+ .../bindings/pci/rockchip-dw-pcie.yaml        | 141 ++++++++++++++++++
+ 1 file changed, 141 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+new file mode 100644
+index 000000000000..142bbe577763
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -0,0 +1,141 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: DesignWare based PCIe controller on Rockchip SoCs
++
++maintainers:
++  - Shawn Lin <shawn.lin@rock-chips.com>
++  - Simon Xue <xxm@rock-chips.com>
++  - Heiko Stuebner <heiko@sntech.de>
++
++description: |+
++  RK3568 SoC PCIe host controller is based on the Synopsys DesignWare
++  PCIe IP and thus inherits all the common properties defined in
++  designware-pcie.txt.
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++# We need a select here so we don't match all nodes with 'snps,dw-pcie'
++select:
++  properties:
++    compatible:
++      contains:
++        const: rockchip,rk3568-pcie
++  required:
++    - compatible
++
++properties:
++  compatible:
++    items:
++      - const: rockchip,rk3568-pcie
++      - const: snps,dw-pcie
++
++  reg:
++    items:
++      - description: Data Bus Interface (DBI) registers
++      - description: Rockchip designed configuration registers
++      - description: Config registers
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: apb
++      - const: config
++
++  clocks:
++    items:
++      - description: AHB clock for PCIe master
++      - description: AHB clock for PCIe slave
++      - description: AHB clock for PCIe dbi
++      - description: APB clock for PCIe
++      - description: Auxiliary clock for PCIe
++
++  clock-names:
++    items:
++      - const: aclk_mst
++      - const: aclk_slv
++      - const: aclk_dbi
++      - const: pclk
++      - const: aux
++
++  msi-map: true
++
++  num-lanes: true
++
++  phys:
++    maxItems: 1
++
++  phy-names:
++    const: pcie-phy
++
++  power-domains:
++    maxItems: 1
++
++  ranges:
++    maxItems: 2
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: pipe
++
++  vpcie3v3-supply: true
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - msi-map
++  - num-lanes
++  - phys
++  - phy-names
++  - power-domains
++  - resets
++  - reset-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie3x2: pcie@fe280000 {
++            compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
++            reg = <0x3 0xc0800000 0x0 0x390000>,
++                  <0x0 0xfe280000 0x0 0x10000>,
++                  <0x3 0x80000000 0x0 0x100000>;
++            reg-names = "dbi", "apb", "config";
++            bus-range = <0x20 0x2f>;
++            clocks = <&cru 143>, <&cru 144>,
++                     <&cru 145>, <&cru 146>,
++                     <&cru 147>;
++            clock-names = "aclk_mst", "aclk_slv",
++                          "aclk_dbi", "pclk",
++                          "aux";
++            device_type = "pci";
++            linux,pci-domain = <2>;
++            max-link-speed = <2>;
++            msi-map = <0x2000 &its 0x2000 0x1000>;
++            num-lanes = <2>;
++            phys = <&pcie30phy>;
++            phy-names = "pcie-phy";
++            power-domains = <&power 15>;
++            ranges = <0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000>,
++                     <0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
++            resets = <&cru 193>;
++            reset-names = "pipe";
++            #address-cells = <3>;
++            #size-cells = <2>;
++        };
++    };
++...
+-- 
+2.25.1
+
+
+
