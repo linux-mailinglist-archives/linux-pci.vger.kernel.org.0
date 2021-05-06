@@ -2,124 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0823E375CA0
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 23:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB89C375CFB
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 23:48:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbhEFVKT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 17:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57066 "EHLO mail.kernel.org"
+        id S229894AbhEFVtm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 17:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229650AbhEFVKQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 May 2021 17:10:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2BD9861078;
-        Thu,  6 May 2021 21:09:17 +0000 (UTC)
+        id S229572AbhEFVtm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 May 2021 17:49:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9730C61289;
+        Thu,  6 May 2021 21:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620335357;
-        bh=hnID+oqdKuoXeIuC+ZQ/vA9tFJT3nrrv8j6EW6wcrgM=;
+        s=k20201202; t=1620337723;
+        bh=/xnbyNHiGvABXLOh4nGkPg4FBu6sR2mO28PZbtLlye4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=U497THrNaayZIFo6sDELoSwla3A5aSfztpF5ZckTVSb3pgKZdCYGGBHISat7IoBvZ
-         a56eb/lGs1HJbc6q3R5KB79jVIhyS40St+VO5fjp/y4q7Szbx1ELc7FItweB0MwnmB
-         BMtz2UZTQNabRCZhdQ6U9RTXSJWX64nScvxS3UqZiPUdCxcSL2AuT6Ya0SPmqGOkSN
-         nduey/6vzL8oOw4asLoprrwt/sOcuN2XJqDIrEPMiJxTM+ets7mX18C1j9Wdro1OWB
-         sL7GFQmPbu6Y12eCtbT5ouTu4wMvE8CzXdPLojXblsd5/heLYCyllyQJ2rDOD0Ug0D
-         lCOw/e7SXEwLw==
-Date:   Thu, 6 May 2021 16:09:15 -0500
+        b=u9E7QSXlH3EbybDAE2tV6zPEqGCM9WIPV/6pK9OJanj+RFO9OFa839lIezM2c61Bh
+         Gow5KNWIKd28enuGA/z7K2IvnqckfEofDBa7dTi0mvaIevNOgpeFJJ4Swi0tJWUZoU
+         m25ZaZUODDkTiXwAbxYZa9fgD1Gcr49RSN52fb3fCk4GjPaB8+Qq8jOD/LXQ2lnFSP
+         vyZi5/7co9MaOTh5XBiMsxfsqoLmRr7VCX+IxvY6IUBMHyZ3amGHig6H7nciL9QW1v
+         bWlzXNnqICKqXpG4SGNxiJ73B0sauunBOmCyenR6Ol5ZtxA8EqqWaBVIMcXsHVo8WE
+         J9fxbUAtqF7zQ==
+Date:   Thu, 6 May 2021 16:48:42 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
-        shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
-        stefan@agner.ch, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [RESEND v4 2/2] PCI: imx: clear vreg bypass when pcie vph
- voltage is 3v3
-Message-ID: <20210506210915.GA1435377@bjorn-Precision-5520>
+To:     Konstantin Kharlamov <Hi-Angel@yandex.ru>
+Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
+ s2idle
+Message-ID: <20210506214842.GA1436993@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1617091701-6444-3-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <20210506173820.21876-1-Hi-Angel@yandex.ru>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 30, 2021 at 04:08:21PM +0800, Richard Zhu wrote:
-> Both 1.8v and 3.3v power supplies can be used by i.MX8MQ PCIe PHY.
-> In default, the PCIE_VPH voltage is suggested to be 1.8v refer to data
-> sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic design,
-> the VREG_BYPASS bits of GPR registers should be cleared from default
-> value 1b'1 to 1b'0. Thus, the internal 3v3 to 1v8 translator would be
-> turned on.
+[+cc Rafael, Andreas, linux-pm]
 
-Maybe something like this?
-
-  PCI: imx6: Enable PHY internal regulator when supplied >3V
-
-  The i.MX8MQ PCIe PHY needs 1.8V but can by supplied by either a 1.8V
-  or a 3.3V regulator.  
-
-  The "vph-supply" DT property tells us which external regulator
-  supplies the PHY.  If that regulator supplies anything over 3V,
-  enable the PHY's internal 3.3V-to-1.8V regulator.
-
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
+> On Macbook 2013 resuming from s2idle results in external monitor no
+> longer being detected, and dmesg having errors like:
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 853ea8e82952..94b43b4ecca1 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -37,6 +37,7 @@
->  #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
->  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
->  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-> +#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
->  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
->  #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
->  
-> @@ -80,6 +81,7 @@ struct imx6_pcie {
->  	u32			tx_swing_full;
->  	u32			tx_swing_low;
->  	struct regulator	*vpcie;
-> +	struct regulator	*vph;
->  	void __iomem		*phy_base;
->  
->  	/* power domain for pcie */
-> @@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->  				   imx6_pcie_grp_offset(imx6_pcie),
->  				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
->  				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
-> +		/*
-> +		 * Regarding the datasheet, the PCIE_VPH is suggested
-> +		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
-> +		 * VREG_BYPASS should be cleared to zero.
-> +		 */
-> +		if (imx6_pcie->vph &&
-> +		    regulator_get_voltage(imx6_pcie->vph) > 3000000)
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +					   imx6_pcie_grp_offset(imx6_pcie),
-> +					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
-> +					   0);
->  		break;
->  	case IMX7D:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> @@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		imx6_pcie->vpcie = NULL;
->  	}
->  
-> +	imx6_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
-> +	if (IS_ERR(imx6_pcie->vph)) {
-> +		if (PTR_ERR(imx6_pcie->vph) != -ENODEV)
-> +			return PTR_ERR(imx6_pcie->vph);
-> +		imx6_pcie->vph = NULL;
-> +	}
+>     pcieport 0000:06:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+> 
+> and a stacktrace. The reason turned out that the hw that the quirk
+> powers off does not get powered on back on resume.
+
+quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
+("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
+"power is automatically restored before resume," so there must be
+something special about s2idle that prevents the power-on.
+
+IIUC this change will reduce the s2idle power savings.  I would feel
+better about this if we understood what the difference was.  
+
+> Thus, add a check for s2idle to the quirk, and do nothing if the suspend
+> mode is s2idle.
+
+Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
+something that wasn't tested back then, or is this problem connected
+to an s2idle change since then?  Can we identify a commit that
+introduced this problem?  That would help with backporting or stable
+tags.
+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212767
+
+Thanks for this!  Would you mind attaching the output of
+"sudo lspci -vvv"?  If you attach any other dmesg, could you
+use "dmesg --color=never" so the log doesn't include all the
+escape characters?
+
+> Signed-off-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
+> ---
+>  drivers/pci/quirks.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e3ba9e..86fedcec37e2 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/nvme.h>
+>  #include <linux/platform_data/x86/apple.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/suspend.h>
+>  #include <linux/switchtec.h>
+>  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
+>  #include "pci.h"
+> @@ -3646,6 +3647,13 @@ static void quirk_apple_poweroff_thunderbolt(struct pci_dev *dev)
+>  		return;
+>  	if (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM)
+>  		return;
 > +
->  	platform_set_drvdata(pdev, imx6_pcie);
->  
->  	ret = imx6_pcie_attach_pd(dev);
+> +	/*
+> +	 * If suspend mode is s2idle, power won't get restored on resume.
+> +	 */
+> +	if (!pm_suspend_via_firmware())
+> +		return;
+> +
+>  	bridge = ACPI_HANDLE(&dev->dev);
+>  	if (!bridge)
+>  		return;
 > -- 
-> 2.17.1
+> 2.31.1
 > 
