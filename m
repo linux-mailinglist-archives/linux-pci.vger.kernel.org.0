@@ -2,166 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC75E37576D
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:34:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F61037580A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:59:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235911AbhEFPfr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 11:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235770AbhEFPeC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 May 2021 11:34:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6ABBD613C2;
-        Thu,  6 May 2021 15:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620315176;
-        bh=YnX8Fz29kf60K0H0Lln7W4fAoz60MdG7mey2fziRxCc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pGwE/af0ZzxIt4YljcqEMGH5eX1G4XH0FH/wq+Wu6hGOXOHP5EeITwkQfvf51FGeC
-         GCnpT701QVw8HwwEhHZFk1AaUsuuL8itj9fzS7YYndCijD17qAmaHdoKM3H1gGA+wu
-         U0G3bzUuH3WT1bEes0ympfcQVARGKDmnkDuKV0tYxjJenwtxklvC4nBlL3+TwcpbPg
-         XYLMT3gN3RovN8opGcjvQtwWdbSRUIQyV8irPJLXRtL1ZDC7gSt63FHQ+J65Nhxxx9
-         jyBmvDS/SwzxblHuMWGp4e5Wigf/8tMtSQy85leCb1ECXTDpXX6joQ3eOe6sgkJeoM
-         yJzLTerKqCSjQ==
-Received: by pali.im (Postfix)
-        id 249398A1; Thu,  6 May 2021 17:32:56 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 42/42] PCI: aardvark: Add support for Advanced Error Reporting registers on emulated bridge
-Date:   Thu,  6 May 2021 17:31:53 +0200
-Message-Id: <20210506153153.30454-43-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210506153153.30454-1-pali@kernel.org>
-References: <20210506153153.30454-1-pali@kernel.org>
+        id S235287AbhEFQAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 12:00:40 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:57199 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S235285AbhEFQAi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 May 2021 12:00:38 -0400
+Received: (qmail 741677 invoked by uid 1000); 6 May 2021 11:59:39 -0400
+Date:   Thu, 6 May 2021 11:59:39 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>, linux-usb@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: `quirk_usb_handoff_xhci` takes 60 ms with ASM1042
+Message-ID: <20210506155939.GA738638@rowland.harvard.edu>
+References: <YJK/bkJpCC+INPo3@kroah.com>
+ <20210506152300.GA1405893@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210506152300.GA1405893@bjorn-Precision-5520>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI aardvark hardware supports access to Advanced Error Reporting
-configuration registers of PCIe core via PCIE_CORE_PCIERR_CAP.
+On Thu, May 06, 2021 at 10:23:00AM -0500, Bjorn Helgaas wrote:
+> On Wed, May 05, 2021 at 05:53:18PM +0200, Greg Kroah-Hartman wrote:
+> > I think, if we don't do the handoff, then the BIOS/firmware tries to
+> > send the OS fake keyboard/mouse commands, and Linux isn't ready for that
+> > as we didn't allow hotplug PS/2 stuff.  But I could be wrong, it's been
+> > a long time since we did that logic.
+> 
+> I have no idea what "BIOS/firmware sending OS fake keyboard/mouse
+> commands" means.  From the OS point of view, does that look like USB
+> events that cause PCI interrupts?  PS/2 interrupts?  Are these
+> commands caused by the user typing or moving the mouse?  Or does BIOS
+> fabricate commands for other reasons?
 
-Export them via emulated software root bridge through the new .read_ext and
-.write_ext emulated bridge callbacks.
+Think of an old MSDOS operating system without USB support.  The BIOS 
+tries to be helpful by translating mouse and keyboard input it receives 
+over USB into PS/2 events that the operating system can handle.  
+Originally this was done using SMI; now it presumably is still a legacy 
+part of UEFI.
 
-Note that in Advanced Error Reporting Capability header, the offset to the
-next Extended Capability header is set, but it is not documented in Armada
-3700 Functional Specification. As this change adds support only for
-Advanced Error Reporting, explicitly clear PCI_EXT_CAP_NEXT bits in AER
-capability header.
+> The way you describe it, this *sounds* like a race, where Linux
+> mishandles commands that happen before the handoff quirk.  Do you
+> remember what happens if BIOS sends a fake command before Linux is
+> ready for it?  Unexpected interrupt?
 
-After this change, pcieport driver correctly detects AER support and allows
-PCIe AER driver to start receiving ERR interrupts. It prints into dmesg:
+I would be surprised if anybody still knows.  :-)
 
-    [    4.358401] pcieport 0000:00:00.0: AER: enabled with IRQ 52
+Perhaps a reasonable experiment would be to boot a kernel with PS/2 
+support but not USB support (or at least, without CONFIG_USB_PCI) and 
+see what happens when you type on the USB keyboard or move the USB 
+mouse.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <kabel@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 74 +++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+It might very well turn out that the handoff operation can safely be 
+delayed until driver probe time.
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index ac3ee48e69d7..8914af62ccc3 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -683,11 +683,85 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 	}
- }
- 
-+static pci_bridge_emul_read_status_t
-+advk_pci_bridge_emul_ext_conf_read(struct pci_bridge_emul *bridge,
-+				   int reg, u32 *value)
-+{
-+	struct advk_pcie *pcie = bridge->data;
-+
-+	switch (reg) {
-+	case 0:
-+		*value = advk_readl(pcie, PCIE_CORE_PCIERR_CAP + reg);
-+		/*
-+		 * Clear PCI_EXT_CAP_NEXT bits as they are set to 0x150 offset.
-+		 * Armada 3700 Functional Specification does not contain any
-+		 * documentation about registers at that address, so explicitly
-+		 * mark Advanced Error Reporting Capability header as the end of
-+		 * Extended Capabilities.
-+		 */
-+		*value &= 0x000fffff;
-+		return PCI_BRIDGE_EMUL_HANDLED;
-+
-+	case PCI_ERR_UNCOR_STATUS:
-+	case PCI_ERR_UNCOR_MASK:
-+	case PCI_ERR_UNCOR_SEVER:
-+	case PCI_ERR_COR_STATUS:
-+	case PCI_ERR_COR_MASK:
-+	case PCI_ERR_CAP:
-+	case PCI_ERR_HEADER_LOG+0:
-+	case PCI_ERR_HEADER_LOG+4:
-+	case PCI_ERR_HEADER_LOG+8:
-+	case PCI_ERR_HEADER_LOG+12:
-+	case PCI_ERR_ROOT_COMMAND:
-+	case PCI_ERR_ROOT_STATUS:
-+	case PCI_ERR_ROOT_ERR_SRC:
-+		*value = advk_readl(pcie, PCIE_CORE_PCIERR_CAP + reg);
-+		return PCI_BRIDGE_EMUL_HANDLED;
-+
-+	default:
-+		return PCI_BRIDGE_EMUL_NOT_HANDLED;
-+	}
-+}
-+
-+static void
-+advk_pci_bridge_emul_ext_conf_write(struct pci_bridge_emul *bridge,
-+				    int reg, u32 old, u32 new, u32 mask)
-+{
-+	struct advk_pcie *pcie = bridge->data;
-+
-+	switch (reg) {
-+	/* These are W1C registers, so clear other bits */
-+	case PCI_ERR_UNCOR_STATUS:
-+	case PCI_ERR_COR_STATUS:
-+	case PCI_ERR_ROOT_STATUS:
-+		new &= mask;
-+		fallthrough;
-+
-+	case PCI_ERR_UNCOR_MASK:
-+	case PCI_ERR_UNCOR_SEVER:
-+	case PCI_ERR_COR_MASK:
-+	case PCI_ERR_CAP:
-+	case PCI_ERR_HEADER_LOG+0:
-+	case PCI_ERR_HEADER_LOG+4:
-+	case PCI_ERR_HEADER_LOG+8:
-+	case PCI_ERR_HEADER_LOG+12:
-+	case PCI_ERR_ROOT_COMMAND:
-+	case PCI_ERR_ROOT_ERR_SRC:
-+		advk_writel(pcie, new, PCIE_CORE_PCIERR_CAP + reg);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+}
-+
- static struct pci_bridge_emul_ops advk_pci_bridge_emul_ops = {
- 	.read_base = advk_pci_bridge_emul_base_conf_read,
- 	.write_base = advk_pci_bridge_emul_base_conf_write,
- 	.read_pcie = advk_pci_bridge_emul_pcie_conf_read,
- 	.write_pcie = advk_pci_bridge_emul_pcie_conf_write,
-+	.read_ext = advk_pci_bridge_emul_ext_conf_read,
-+	.write_ext = advk_pci_bridge_emul_ext_conf_write,
- };
- 
- /*
--- 
-2.20.1
-
+Alan Stern
