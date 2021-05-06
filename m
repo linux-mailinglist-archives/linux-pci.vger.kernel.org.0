@@ -2,164 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62CA9375C8A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 23:04:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0823E375CA0
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 23:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbhEFVFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 17:05:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbhEFVFr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 May 2021 17:05:47 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DEF7C061574
-        for <linux-pci@vger.kernel.org>; Thu,  6 May 2021 14:04:49 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id c8-20020a9d78480000b0290289e9d1b7bcso6134871otm.4
-        for <linux-pci@vger.kernel.org>; Thu, 06 May 2021 14:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=r7TvV40KUHm8NNUM7lUs+s+4x/azKf5sp+ALJojB1H0=;
-        b=lwf3I/SqPMAsOlmQjp8DrCW/0vXIGJLYcYOGQprReLwtZOAV6YNneCmv2RWkObZ/u9
-         X/lOlZWgTVWI+HIbU0mXWJ32fezx5nKE4s+CJkgzyO7vpnhlxJ2Niw5nBA9qf5IghDj0
-         t37pLgRx5BAXWHoAOgVhP8/uJRnDxFC6febmPnTedZylygAFBmRJiuDI51K89Nu9dbz7
-         5U4/7kJg5xCGpasFN7xJcHxyZcujEYblp98t+uf6icug9yAXJRxaqdIwB48KEcUS6Hxl
-         HMeKE9mPRHO3bFl7Kq3UxY+6TiwYo2B+UwjXqtUxP2saVl5etJicd+a1Ibldf0e8qQHW
-         zaQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=r7TvV40KUHm8NNUM7lUs+s+4x/azKf5sp+ALJojB1H0=;
-        b=IMkZtn7Z6/TAfoYoXVzN/c7I5PsLUDcE21cKFcml6x37atJVJeDPCwu1CegcpZ+eHi
-         Sknd0mHRpHcsHrl+i/A/2M6KsWFcZaade61/vfVZeO7zYMdKPk2/F0R2TO9tIwFrmmwB
-         fA4YBF+Qf61fA0cYmGROf7oQooQXKcCaRB7vBVkGhqXDrMxbRP69/exctDfAMNt2kYJh
-         P8DVHz4UaviIUkY2JKB7ViBi/CM6V1wOLmcUggWIMEvmWQigYAM/VOzNI2yfIoFY77uA
-         hkU/Z9cIitAKv0ZFD/0MymZy0PpL17FncQWS6z8dZwO5G1/q5Nj7iNWWpJOtgoW/aDZE
-         2PPQ==
-X-Gm-Message-State: AOAM530+/BSoQDu7aK9hMgm+rAhodyuJapW7QCB+KcXdGN4zm0vLExpj
-        do/PR1b0sf7RZkOjbsP1Uoc0dCE9VWc=
-X-Google-Smtp-Source: ABdhPJyuFz7lY3Rdbxg1fsVHGg4jDumHnBxj8ctMIdw3QWAxpJcf7NX+OAdkStMKUfY+cllj2R8sDw==
-X-Received: by 2002:a05:6830:2255:: with SMTP id t21mr5235399otd.271.1620335087719;
-        Thu, 06 May 2021 14:04:47 -0700 (PDT)
-Received: from ?IPv6:2603:8081:2802:9dfb:49b3:8e2:3d6d:26c8? (2603-8081-2802-9dfb-49b3-08e2-3d6d-26c8.res6.spectrum.com. [2603:8081:2802:9dfb:49b3:8e2:3d6d:26c8])
-        by smtp.gmail.com with ESMTPSA id p15sm788236otl.23.2021.05.06.14.04.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 May 2021 14:04:47 -0700 (PDT)
-Subject: Re: [PATCH] Add support for PCIe SSD status LED management
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Keith Busch <kbusch@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20210416192010.3197-1-stuart.w.hayes@gmail.com>
- <20210506014827.GA175453@rocinante.localdomain>
- <20210506023403.GB1187168@dhcp-10-100-145-180.wdc.com>
- <20210506024624.GA182840@rocinante.localdomain>
-From:   stuart hayes <stuart.w.hayes@gmail.com>
-Message-ID: <bd7fdd27-e2c9-9a45-918f-a434db2dab69@gmail.com>
-Date:   Thu, 6 May 2021 16:04:45 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
+        id S229544AbhEFVKT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 17:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229650AbhEFVKQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 May 2021 17:10:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2BD9861078;
+        Thu,  6 May 2021 21:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620335357;
+        bh=hnID+oqdKuoXeIuC+ZQ/vA9tFJT3nrrv8j6EW6wcrgM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=U497THrNaayZIFo6sDELoSwla3A5aSfztpF5ZckTVSb3pgKZdCYGGBHISat7IoBvZ
+         a56eb/lGs1HJbc6q3R5KB79jVIhyS40St+VO5fjp/y4q7Szbx1ELc7FItweB0MwnmB
+         BMtz2UZTQNabRCZhdQ6U9RTXSJWX64nScvxS3UqZiPUdCxcSL2AuT6Ya0SPmqGOkSN
+         nduey/6vzL8oOw4asLoprrwt/sOcuN2XJqDIrEPMiJxTM+ets7mX18C1j9Wdro1OWB
+         sL7GFQmPbu6Y12eCtbT5ouTu4wMvE8CzXdPLojXblsd5/heLYCyllyQJ2rDOD0Ug0D
+         lCOw/e7SXEwLw==
+Date:   Thu, 6 May 2021 16:09:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
+        shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
+        stefan@agner.ch, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [RESEND v4 2/2] PCI: imx: clear vreg bypass when pcie vph
+ voltage is 3v3
+Message-ID: <20210506210915.GA1435377@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210506024624.GA182840@rocinante.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1617091701-6444-3-git-send-email-hongxing.zhu@nxp.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Mar 30, 2021 at 04:08:21PM +0800, Richard Zhu wrote:
+> Both 1.8v and 3.3v power supplies can be used by i.MX8MQ PCIe PHY.
+> In default, the PCIE_VPH voltage is suggested to be 1.8v refer to data
+> sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic design,
+> the VREG_BYPASS bits of GPR registers should be cleared from default
+> value 1b'1 to 1b'0. Thus, the internal 3v3 to 1v8 translator would be
+> turned on.
 
-On 5/5/2021 11:12 AM, Keith Busch wrote:
-> On Fri, Apr 16, 2021 at 03:20:10PM -0400, Stuart Hayes wrote:
->> This patch adds support for the PCIe SSD Status LED Management
->> interface, as described in the "_DSM Additions for PCIe SSD Status LED
->> Management" ECN to the PCI Firmware Specification revision 3.2.
->>
->> It will add a single (led_classdev) LED for any PCIe device that has the
->> relevant _DSM. The ten possible status states are exposed using
->> attributes current_states and supported_states. Reading current_states
->> (and supported_states) will show the definition and value of each bit:
+Maybe something like this?
+
+  PCI: imx6: Enable PHY internal regulator when supplied >3V
+
+  The i.MX8MQ PCIe PHY needs 1.8V but can by supplied by either a 1.8V
+  or a 3.3V regulator.  
+
+  The "vph-supply" DT property tells us which external regulator
+  supplies the PHY.  If that regulator supplies anything over 3V,
+  enable the PHY's internal 3.3V-to-1.8V regulator.
+
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> There is significant overlap in this ECN with the PCIe native enclosure
-> management (NPEM) capability. Would it be possible for the sysfs
-> interface to provide an abstraction such that both these implementations
-> could subscribe to?
->   
-
-It wouldn't be too hard to check for the NPEM capability here and 
-provide access to it as well using the same LED interface, especially 
-since the state bits are the same.  The module could just check for NPEM 
-capability at the same time it is checking for the _DSM.  I guess that 
-could be added on later without too much trouble, too... I don't think 
-anything about the interface would have to change to add support for NPEM.
-
-FWIW, it looks like NPEM support is already supported in user space in 
-ledmon.  (I only wrote a kernel module for this, because it uses a _DSM 
-which can't readily be accessed in user space.)
-
-
-On 5/5/2021 9:46 PM, Krzysztof Wilczyński wrote:
-> Hi Keith,
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 853ea8e82952..94b43b4ecca1 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -37,6 +37,7 @@
+>  #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
+>  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
+>  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
+> +#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
+>  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
+>  #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
+>  
+> @@ -80,6 +81,7 @@ struct imx6_pcie {
+>  	u32			tx_swing_full;
+>  	u32			tx_swing_low;
+>  	struct regulator	*vpcie;
+> +	struct regulator	*vph;
+>  	void __iomem		*phy_base;
+>  
+>  	/* power domain for pcie */
+> @@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  				   imx6_pcie_grp_offset(imx6_pcie),
+>  				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
+>  				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
+> +		/*
+> +		 * Regarding the datasheet, the PCIE_VPH is suggested
+> +		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
+> +		 * VREG_BYPASS should be cleared to zero.
+> +		 */
+> +		if (imx6_pcie->vph &&
+> +		    regulator_get_voltage(imx6_pcie->vph) > 3000000)
+> +			regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> +					   imx6_pcie_grp_offset(imx6_pcie),
+> +					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
+> +					   0);
+>  		break;
+>  	case IMX7D:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> @@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  		imx6_pcie->vpcie = NULL;
+>  	}
+>  
+> +	imx6_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
+> +	if (IS_ERR(imx6_pcie->vph)) {
+> +		if (PTR_ERR(imx6_pcie->vph) != -ENODEV)
+> +			return PTR_ERR(imx6_pcie->vph);
+> +		imx6_pcie->vph = NULL;
+> +	}
+> +
+>  	platform_set_drvdata(pdev, imx6_pcie);
+>  
+>  	ret = imx6_pcie_attach_pd(dev);
+> -- 
+> 2.17.1
 > 
->>>>> cat /sys/class/leds/0000:88:00.0::pcie_ssd_status/supported_states
->>>> ok                              0x0004 [ ]
->>>> locate                          0x0008 [*]
->>>> fail                            0x0010 [ ]
->>>> rebuild                         0x0020 [ ]
->>>> pfa                             0x0040 [ ]
->>>> hotspare                        0x0080 [ ]
->>>> criticalarray                   0x0100 [ ]
->>>> failedarray                     0x0200 [ ]
->>>> invaliddevice                   0x0400 [ ]
->>>> disabled                        0x0800 [ ]
->>>> --
->>>> supported_states = 0x0008
->>>>
->>>>> cat /sys/class/leds/0000:88:00.0::pcie_ssd_status/current_states
->>>> locate                          0x0008 [ ]
->>>
->>> As per what Keith already noted, this is a very elaborate output as far
->>> as sysfs goes - very human-readable, but it would be complex to parse
->>> should some software would be interested in showing this values in a way
->>> or another.
->>>
->>> I would propose output similar to this one:
->>>
->>>    $ cat /sys/block/sda/queue/scheduler
->>>    mq-deadline-nodefault [bfq] none
->>>
->>> If you prefer to show the end-user a string, rather than a numeric
->>> value.  This approach could support both the supported and current
->>> states (similarly to how it works for the I/O scheduler), thus there
->>> would be no need to duplicate the code between the two attributes.
->>>
->>> What do you think?
->>
->> Some enclosures may support just one blinky state at a time. Other
->> implementations might have multiple LEDs and colors, so you could, for
->> example, "locate" something that is also "failed", with both states
->> visible simultaneously. You could capture the current states with the
->> "scheduler" type display, but setting new states may be more
->> complicated.
-> 
-> Ah, excellent point.  I didn't think about this - the use-case you
-> provided.  This would, indeed, be far more complex to deal with when
-> accepting a write.  I can see why Stuart did it the way he did
-> currently.
-> 
-> Krzysztof
-> 
-
-I copied the format of this output from acpi_debug_level / 
-acpi_debug_layer in drivers/acpi/sysfs.c.  I thought it might be 
-reasonably easy enough for a machine to parse this for the number, since 
-it is always on the last line and always immediately following the only "=".
-
-I don't object to using just a number, but I submitted an earlier 
-version of this some months ago (which didn't use the LED subsystem) 
-which only had the number, and Bjorn commented that decoding that was a 
-bit of a pain, and that the PCI specs (which contain the bit 
-definitions) isn't public.  I guess I could just add the definitions in 
-the documentation if this is too verbose for sysfs.
