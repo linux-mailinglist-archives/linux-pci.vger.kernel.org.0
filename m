@@ -2,110 +2,263 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB89C375CFB
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 23:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2FF9375D09
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 23:59:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbhEFVtm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 17:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
+        id S230220AbhEFWAe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 18:00:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54248 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229572AbhEFVtm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 May 2021 17:49:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9730C61289;
-        Thu,  6 May 2021 21:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620337723;
-        bh=/xnbyNHiGvABXLOh4nGkPg4FBu6sR2mO28PZbtLlye4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=u9E7QSXlH3EbybDAE2tV6zPEqGCM9WIPV/6pK9OJanj+RFO9OFa839lIezM2c61Bh
-         Gow5KNWIKd28enuGA/z7K2IvnqckfEofDBa7dTi0mvaIevNOgpeFJJ4Swi0tJWUZoU
-         m25ZaZUODDkTiXwAbxYZa9fgD1Gcr49RSN52fb3fCk4GjPaB8+Qq8jOD/LXQ2lnFSP
-         vyZi5/7co9MaOTh5XBiMsxfsqoLmRr7VCX+IxvY6IUBMHyZ3amGHig6H7nciL9QW1v
-         bWlzXNnqICKqXpG4SGNxiJ73B0sauunBOmCyenR6Ol5ZtxA8EqqWaBVIMcXsHVo8WE
-         J9fxbUAtqF7zQ==
-Date:   Thu, 6 May 2021 16:48:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Konstantin Kharlamov <Hi-Angel@yandex.ru>
-Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
- s2idle
-Message-ID: <20210506214842.GA1436993@bjorn-Precision-5520>
+        id S229894AbhEFWAd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 May 2021 18:00:33 -0400
+IronPort-SDR: dWO6Edr+qrmtgvEybk2Pm74c8JiJr3NopPUwZAvpWjHdLrYABL6YUVcEaRdqvF1+SGGxBT595L
+ hSxgee0bcXjQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9976"; a="219478071"
+X-IronPort-AV: E=Sophos;i="5.82,279,1613462400"; 
+   d="scan'208";a="219478071"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2021 14:59:34 -0700
+IronPort-SDR: 8YyvleQwpQmBmS5PbD+A1+kfPx3sWCxKlrBGBXuua/6KQvOSjTpnMiLE364l2QxvaMz9Bsjf2l
+ rZzPeMJW792A==
+X-IronPort-AV: E=Sophos;i="5.82,279,1613462400"; 
+   d="scan'208";a="434594966"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2021 14:59:34 -0700
+Date:   Thu, 6 May 2021 14:59:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        linux-acpi@vger.kernel.org, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, linuxarm@huawei.com,
+        Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+ <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210506173820.21876-1-Hi-Angel@yandex.ru>
+In-Reply-To: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, Andreas, linux-pm]
-
-On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
-> On Macbook 2013 resuming from s2idle results in external monitor no
-> longer being detected, and dmesg having errors like:
-> 
->     pcieport 0000:06:00.0: can't change power state from D3hot to D0 (config space inaccessible)
-> 
-> and a stacktrace. The reason turned out that the hw that the quirk
-> powers off does not get powered on back on resume.
-
-quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
-("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
-"power is automatically restored before resume," so there must be
-something special about s2idle that prevents the power-on.
-
-IIUC this change will reduce the s2idle power savings.  I would feel
-better about this if we understood what the difference was.  
-
-> Thus, add a check for s2idle to the quirk, and do nothing if the suspend
-> mode is s2idle.
-
-Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
-something that wasn't tested back then, or is this problem connected
-to an s2idle change since then?  Can we identify a commit that
-introduced this problem?  That would help with backporting or stable
-tags.
-
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212767
-
-Thanks for this!  Would you mind attaching the output of
-"sudo lspci -vvv"?  If you attach any other dmesg, could you
-use "dmesg --color=never" so the log doesn't include all the
-escape characters?
-
-> Signed-off-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
-> ---
->  drivers/pci/quirks.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 653660e3ba9e..86fedcec37e2 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -27,6 +27,7 @@
->  #include <linux/nvme.h>
->  #include <linux/platform_data/x86/apple.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/suspend.h>
->  #include <linux/switchtec.h>
->  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
->  #include "pci.h"
-> @@ -3646,6 +3647,13 @@ static void quirk_apple_poweroff_thunderbolt(struct pci_dev *dev)
->  		return;
->  	if (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM)
->  		return;
+On Tue, Apr 20, 2021 at 12:54:49AM +0800, Jonathan Cameron wrote:
+> +
+> +static int pci_doe_send_req(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	u32 val;
+> +	int i;
 > +
 > +	/*
-> +	 * If suspend mode is s2idle, power won't get restored on resume.
+> +	 * Check the DOE busy bit is not set. If it is set, this could indicate
+> +	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
+> +	 * it is expected that firmware and OS will negotiate access rights via
+> +	 * an, as yet to be defined method.
 > +	 */
-> +	if (!pm_suspend_via_firmware())
-> +		return;
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> +	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+> +		return -EBUSY;
+
+In discussion with Dan we believe that user space could also be issuing
+commands and would potentially cause us to be locked out.
+
+We agree that firmware should be out of the way here and if it is blocking
+the OS there is not much we can do about it.
+
+However, if user space is using the mailbox we need to synchronize with them
+via pci_cfg_access_[try]lock().  This should avoid this EBUSY condition.
+
+[snip]
+
 > +
->  	bridge = ACPI_HANDLE(&dev->dev);
->  	if (!bridge)
->  		return;
-> -- 
-> 2.31.1
-> 
+> +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	size_t length;
+> +	u32 val;
+> +	int i;
+> +
+> +	/* Read the first two dwords to get the length and protocol */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->vid) ||
+> +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->protocol)) {
+> +		pci_err(pdev,
+> +			"Expected [VID, Protocol] = [%x, %x], got [%x, %x]\n",
+> +			ex->vid, ex->protocol,
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+> +		return -EIO;
+> +	}
+> +
+> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+
+I'm quite unfamiliar with the spec here: but it seems like this needs to be
+done before the above if statement indicate we got the value?
+
+[snip]
+
+> +
+> +static void doe_statemachine_work(struct work_struct *work)
+> +{
+> +	struct delayed_work *w = to_delayed_work(work);
+> +	struct pci_doe *doe = container_of(w, struct pci_doe, statemachine);
+> +	struct pci_dev *pdev = doe->pdev;
+> +	struct pci_doe_task *task;
+> +	bool abort;
+> +	u32 val;
+> +	int rc;
+> +
+> +	mutex_lock(&doe->tasks_lock);
+> +	task = list_first_entry_or_null(&doe->tasks, struct pci_doe_task, h);
+> +	abort = doe->abort;
+> +	doe->abort = false;
+> +	mutex_unlock(&doe->tasks_lock);
+> +
+> +	if (abort) {
+> +		/*
+> +		 * Currently only used during init - care needed if we want to
+> +		 * generally expose pci_doe_abort() as it would impact queries
+> +		 * in flight.
+> +		 */
+> +		WARN_ON(task);
+> +		doe->state = DOE_WAIT_ABORT;
+> +		pci_doe_abort_start(doe);
+> +		return;
+> +	}
+> +
+> +	switch (doe->state) {
+> +	case DOE_IDLE:
+> +		if (task == NULL)
+> +			return;
+> +
+> +		/* Nothing currently in flight so queue a task */
+> +		rc = pci_doe_send_req(doe, task->ex);
+> +		/*
+> +		 * The specification does not provide any guidance on how long
+> +		 * some other entity could keep the DOE busy, so try for 1
+> +		 * second then fail. Busy handling is best effort only, because
+> +		 * there is no way of avoiding racing against another user of
+> +		 * the DOE.
+> +		 */
+> +		if (rc == -EBUSY) {
+> +			doe->busy_retries++;
+> +			if (doe->busy_retries == PCI_DOE_BUSY_MAX_RETRIES) {
+> +				/* Long enough, fail this request */
+> +				doe->busy_retries = 0;
+> +				goto err_busy;
+
+With the addition of pci_cfg_access_[try]lock():
+
+Should we have some sort of WARN_ON() here to indicate that the system is
+behaving badly?
+
+[snip]
+
+> +	case DOE_WAIT_ABORT:
+> +	case DOE_WAIT_ABORT_ON_ERR:
+> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> +
+> +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
+> +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
+> +			/* Back to normal state - carry on */
+> +			mutex_lock(&doe->tasks_lock);
+> +			if (!list_empty(&doe->tasks))
+> +				schedule_delayed_work(w, 0);
+> +			mutex_unlock(&doe->tasks_lock);
+> +
+> +			/*
+> +			 * For deliberately triggered abort, someone is
+> +			 * waiting.
+> +			 */
+> +			if (doe->state == DOE_WAIT_ABORT)
+> +				complete(&doe->abort_c);
+> +			doe->state = DOE_IDLE;
+> +
+> +			return;
+> +		}
+> +		if (time_after(jiffies, doe->timeout_jiffies)) {
+> +			struct pci_doe_task *t, *n;
+> +
+> +			/* We are dead - abort all queued tasks */
+> +			pci_err(pdev, "DOE ABORT timed out\n");
+> +			mutex_lock(&doe->tasks_lock);
+> +			doe->dead = true;
+> +			list_for_each_entry_safe(t, n, &doe->tasks, h) {
+> +				t->rv = -EIO;
+> +				t->cb(t->private);
+> +				list_del(&t->h);
+> +			}
+> +
+> +			mutex_unlock(&doe->tasks_lock);
+> +			if (doe->state == DOE_WAIT_ABORT)
+> +				complete(&doe->abort_c);
+> +		}
+> +		return;
+> +	}
+> +
+> +err_abort:
+> +	pci_doe_abort_start(doe);
+> +	doe->state = DOE_WAIT_ABORT_ON_ERR;
+
+Should this be before pci_doe_abort_start() to ensure that state is set when
+the statemachine runs?
+
+[snip]
+
+> +
+> +/**
+> + * struct pci_doe - State to support use of DOE mailbox
+> + * @cap: Config space offset to base of DOE capability.
+> + * @pdev: PCI device that hosts this DOE.
+> + * @abort_c: Completion used for initial abort handling.
+> + * @irq: Interrupt used for signaling DOE ready or abort.
+> + * @prots: Cache of identifiers for protocols supported.
+> + * @num_prots: Size of prots cache.
+> + * @h: Used for DOE instance lifetime management.
+> + * @wq: Workqueue used to handle state machine and polling / timeouts.
+> + * @tasks: List of task in flight + pending.
+> + * @tasks_lock: Protect the tasks list.
+
+This protects more than just the task list.  It appears to protect abort and
+dead as well.  I'm not sure if it is worth mentioning but...
+
+> + * @statemachine: Work item for the DOE state machine.
+> + * @state: Current state of this DOE.
+> + * @timeout_jiffies: 1 second after GO set.
+> + * @busy_retries: Count of retry attempts.
+> + * @abort: Request a manual abort (e.g. on init).
+> + * @dead: Used to mark a DOE for which an ABORT has timed out. Further messages
+> + *        will immediately be aborted with error.
+> + */
+> +struct pci_doe {
+> +	int cap;
+> +	struct pci_dev *pdev;
+> +	struct completion abort_c;
+> +	int irq;
+> +	struct pci_doe_prot *prots;
+> +	int num_prots;
+> +	struct list_head h;
+> +
+> +	struct workqueue_struct *wq;
+> +	struct list_head tasks;
+> +	struct mutex tasks_lock;
+> +	struct delayed_work statemachine;
+> +	enum pci_doe_state state;
+> +	unsigned long timeout_jiffies;
+> +	unsigned int busy_retries;
+> +	unsigned int abort:1;
+> +	unsigned int dead:1;
+> +};
+
+[snip]
+
+Ira
+
