@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D948D375765
+	by mail.lfdr.de (Postfix) with ESMTP id 6BBFA375764
 	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:34:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235745AbhEFPfi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 11:35:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45974 "EHLO mail.kernel.org"
+        id S235178AbhEFPfh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 11:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235702AbhEFPdy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S235564AbhEFPdy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 6 May 2021 11:33:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 97FDC61625;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DCD8161926;
         Thu,  6 May 2021 15:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620315174;
-        bh=0YkTEBWISevDvHgokN8XUsGMwtVKvfnG9KGkSIjT5Co=;
+        s=k20201202; t=1620315175;
+        bh=75Ia8fDMMjN9738pBwL6dSeC+rSyhLtGbCVaSNAnl5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OMXkbHyayU7EJ06iuIZVStBfcPs+TIdvxPzRYPg8sKF16YEUQphEicjVbabUnZ6we
-         zAsro4QRH2vBWa45bDxXDGF8qn3RmOoKKofVmkL1CO1n1i9FIUeMaGEVca5rVP1V1V
-         R124NrK+EXSGLJDgSlFbliWaAJzrvsyuKjgHA+F8yYMmOVtkeAn+DnKZy5NUnjyKJZ
-         DT4AMkYg7Pun4Jz5Bln0vhpx1XjEOIhQqV75+fGsZUITSupwc8uY++tv8j1gJBlM5X
-         8RA2AW+hhHx8xJ+BtgdO18m9vakQXjItJtF6f2Rd9RI9Zpqpo2SB3w/26Bt7AH+cqe
-         aRxXLoC6NVivw==
+        b=V7oZZZvz8KrPf3MxbDZcnpDiHlR3yQJiWXA7OBbCD8ij4wLxeJYntqob3tH3S8LIX
+         h/e6DaMEKIb3ov5GmP2FT6mrXCQXDvjzLZf6p61LeAqhBuVC0FtVbNJfeZIRe9uXPD
+         vyqgR6Mulfk4+fWddU0mnzDk1KYYyaZ56PwP+j8X7en+sg7GSCa5hLSbjWBJrzf8CL
+         9wbVeKuWz0+iP4FzOyMT7mdGOHf5EziHK9zAgvexO9wIerOp22dg33hISIBo8vZWs5
+         2bB7OniF2FMB8UVSUMf21LstrYByFi/HDk0uMEno+B7PLJDQz7mcW4wNd/n6SH505g
+         l54NAeaBeX+HA==
 Received: by pali.im (Postfix)
-        id 535E389A; Thu,  6 May 2021 17:32:54 +0200 (CEST)
+        id 95D418A1; Thu,  6 May 2021 17:32:54 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Tomasz Maciej Nowak <tmn505@gmail.com>,
         Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 34/42] PCI: aardvark: Add support for DEVCAP2, DEVCTL2, LNKCAP2 and LNKCTL2 registers on emulated bridge
-Date:   Thu,  6 May 2021 17:31:45 +0200
-Message-Id: <20210506153153.30454-35-pali@kernel.org>
+Subject: [PATCH 35/42] PCI: aardvark: Add support for PCI_BRIDGE_CTL_BUS_RESET on emulated bridge
+Date:   Thu,  6 May 2021 17:31:46 +0200
+Message-Id: <20210506153153.30454-36-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210506153153.30454-1-pali@kernel.org>
 References: <20210506153153.30454-1-pali@kernel.org>
@@ -49,53 +49,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI aardvark hardware supports access to DEVCAP2, DEVCTL2, LNKCAP2 and
-LNKCTL2 configuration registers of PCIe core via PCIE_CORE_PCIEXP_CAP.
-Export them via emulated software root bridge.
+PCI aardvark hardware supports PCIe Hot Reset via PCIE_CORE_CTRL1_REG
+register. Use it for implementing PCI_BRIDGE_CTL_BUS_RESET bit of
+PCI_BRIDGE_CONTROL register on emulated bridge.
+
+With this change the function pci_reset_secondary_bus() starts working and
+can reset connected PCIe card. Also custom userspace script [1] which uses
+setpci can trigger PCIe Hot Reset and reset the card manually.
+
+[1] - https://alexforencich.com/wiki/en/pcie/hot-reset-linux
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <kabel@kernel.org>
 Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
 ---
- drivers/pci/controller/pci-aardvark.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index e724d05a61a8..13bbc0b5134d 100644
+index 13bbc0b5134d..d8fb43604154 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -610,8 +610,13 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 	case PCI_EXP_DEVCAP:
- 	case PCI_EXP_DEVCTL:
- 	case PCI_EXP_LNKCAP:
-+	case PCI_EXP_DEVCAP2:
-+	case PCI_EXP_DEVCTL2:
-+	case PCI_EXP_LNKCAP2:
-+	case PCI_EXP_LNKCTL2:
- 		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+@@ -558,6 +558,22 @@ advk_pci_bridge_emul_base_conf_read(struct pci_bridge_emul *bridge,
+ 		*value = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
  		return PCI_BRIDGE_EMUL_HANDLED;
+ 
++	case PCI_INTERRUPT_LINE: {
++		/*
++		 * From the whole 32bit register we support propagating to HW
++		 * only one bit: PCI_BRIDGE_CTL_BUS_RESET. Other bits are
++		 * retrieved only from emulated config space buffer.
++		 */
++		__le32 *cfgspace = (__le32 *)&bridge->conf;
++		u32 val = le32_to_cpu(cfgspace[PCI_INTERRUPT_LINE / 4]);
++		if (advk_readl(pcie, PCIE_CORE_CTRL1_REG) & HOT_RESET_GEN)
++			val |= PCI_BRIDGE_CTL_BUS_RESET << 16;
++		else
++			val &= ~(PCI_BRIDGE_CTL_BUS_RESET << 16);
++		*value = val;
++		return PCI_BRIDGE_EMUL_HANDLED;
++	}
 +
  	default:
  		return PCI_BRIDGE_EMUL_NOT_HANDLED;
  	}
-@@ -631,16 +636,18 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 	 */
- 
- 	switch (reg) {
--	case PCI_EXP_DEVCTL:
--		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
--		break;
--
- 	case PCI_EXP_LNKCTL:
- 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
- 		if (new & PCI_EXP_LNKCTL_RL)
- 			advk_pcie_wait_for_retrain(pcie);
+@@ -574,6 +590,17 @@ advk_pci_bridge_emul_base_conf_write(struct pci_bridge_emul *bridge,
+ 		advk_writel(pcie, new, PCIE_CORE_CMD_STATUS_REG);
  		break;
  
-+	case PCI_EXP_DEVCTL:
-+	case PCI_EXP_DEVCTL2:
-+	case PCI_EXP_LNKCTL2:
-+		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
++	case PCI_INTERRUPT_LINE:
++		if (mask & (PCI_BRIDGE_CTL_BUS_RESET << 16)) {
++			u32 val = advk_readl(pcie, PCIE_CORE_CTRL1_REG);
++			if (new & (PCI_BRIDGE_CTL_BUS_RESET << 16))
++				val |= HOT_RESET_GEN;
++			else
++				val &= ~HOT_RESET_GEN;
++			advk_writel(pcie, val, PCIE_CORE_CTRL1_REG);
++		}
 +		break;
 +
  	default:
