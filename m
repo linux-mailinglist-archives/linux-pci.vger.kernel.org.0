@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A07E737573E
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2419C37573A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:32:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235415AbhEFPdq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S235370AbhEFPdq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 6 May 2021 11:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45862 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:45828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235207AbhEFPdp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S235147AbhEFPdp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 6 May 2021 11:33:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 22EC66101A;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 28B1761104;
         Thu,  6 May 2021 15:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1620315167;
-        bh=s/YJwMrqvoOsPJSEvD5WAEweomBui7Dy2w8ikfwL2rE=;
+        bh=ticgXE7CjNhWfVymrLf5bGBpQYvv4IhRaSX2oXSsd1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMcfh4hFHod7LXZBOUUtvmvy4wKrI7+Jptr9J5rR2eVvG5FFNHPHSOEEb6liiPu8s
-         ne7QsyByM7KFV6dkVidzC6nn0oLthCWzodUR0UaW0zmSs+bGLH6IUkw4g9Qvr9maQ9
-         gLYST0fQlC+n9u2zAgGDodvZY4OjNlkaeMpRrsgLHZrlGacTTn2odt2/k4WEAigRow
-         g447gIpekZ5d9Mf5ju7AbcR3h4pLGUkjpAMjRy3j6jDlY10CUqm7EtYRgfx1FKvmcv
-         lL402eKQINe/Rdi2kYIKPgrEi2CdHF5NqIegO7TwoWYoEfNMmAQj8aa4uGrHUo+Y4z
-         bz5q802AXJzWA==
+        b=M7KJ+oKkDugqW1SIubabh+zVXWcvfilXeQofjOvulJH5lqSyxMlYCXZqKJGZftFch
+         tQgvE47XG8DnWi+gpTZyv6uOvnSVyVmLA7Dg9wOGHxdC8J/8+gEN5Q+bivDBT1qXrK
+         6FHe5MX1xciUQFjZdGKjOKDw2dvqmsAPUt54bp/idv22QxVN2PyBQVGC5LefR2twWS
+         m2eKpXwvT6v6AZgH6opcZnT+Kpqt27R5V5SMWNRvH9bLg0RQbIlyBcvqD3QNMqlDBN
+         U/cEMW9uB64eXFYDlamrhzD25hdjIMb7OryPDz+aZkXcp6pt/AmnTkqu3/232lYgvS
+         YRaf3iHQ/wyOQ==
 Received: by pali.im (Postfix)
-        id 32F3D89A; Thu,  6 May 2021 17:32:44 +0200 (CEST)
+        id 938538A1; Thu,  6 May 2021 17:32:44 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Tomasz Maciej Nowak <tmn505@gmail.com>,
         Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/42] PCI: aardvark: Fix kernel panic during PIO transfer
-Date:   Thu,  6 May 2021 17:31:12 +0200
-Message-Id: <20210506153153.30454-2-pali@kernel.org>
+Subject: [PATCH 02/42] PCI: aardvark: Fix checking for PIO Non-posted Request
+Date:   Thu,  6 May 2021 17:31:13 +0200
+Message-Id: <20210506153153.30454-3-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210506153153.30454-1-pali@kernel.org>
 References: <20210506153153.30454-1-pali@kernel.org>
@@ -49,142 +49,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Trying to start a new PIO transfer by writing value 0 in PIO_START register
-when previous transfer has not yet completed (which is indicated by value 1
-in PIO_START) causes an External Abort on CPU, which results in kernel
-panic:
-
-    SError Interrupt on CPU0, code 0xbf000002 -- SError
-    Kernel panic - not syncing: Asynchronous SError Interrupt
-
-To prevent kernel panic, it is required to reject a new PIO transfer when
-previous one has not finished yet.
-
-If previous PIO transfer is not finished yet, the kernel may issue a new
-PIO request only if the previous PIO transfer timed out.
-
-In the past the root cause of this issue was incorrectly identified (as it
-often happens during link retraining or after link down event) and special
-hack was implemented in Trusted Firmware to catch all SError events in EL3,
-to ignore errors with code 0xbf000002 and not forwarding any other errors
-to kernel and instead throw panic from EL3 Trusted Firmware handler.
-
-Links to discussion and patches about this issue:
-https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/commit/?id=3c7dcdac5c50
-https://lore.kernel.org/linux-pci/20190316161243.29517-1-repk@triplefau.lt/
-https://lore.kernel.org/linux-pci/971be151d24312cc533989a64bd454b4@www.loen.fr/
-https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/1541
-
-But the real cause was the fact that during link retraning or after link
-down event the PIO transfer may take longer time, up to the 1.44s until it
-times out. This increased probability that a new PIO transfer would be
-issued by kernel while previous one has not finished yet.
-
-After applying this change into the kernel, it is possible to revert the
-mentioned TF-A hack and SError events do not have to be caught in TF-A EL3.
+PIO_NON_POSTED_REQ for PIO_STAT register is incorrectly defined. Bit 10 in
+register PIO_STAT indicates the response is to a non-posted request.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <kabel@kernel.org>
-Cc: stable@vger.kernel.org # 7fbcb5da811b ("PCI: aardvark: Don't rely on jiffies while holding spinlock")
+Cc: stable@vger.kernel.org
 ---
- drivers/pci/controller/pci-aardvark.c | 49 ++++++++++++++++++++++-----
- 1 file changed, 40 insertions(+), 9 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 051b48bd7985..e3f5e7ab7606 100644
+index e3f5e7ab7606..2f8380a1f84f 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -514,7 +514,7 @@ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
- 		udelay(PIO_RETRY_DELAY);
- 	}
- 
--	dev_err(dev, "config read/write timed out\n");
-+	dev_err(dev, "PIO read/write transfer time out\n");
- 	return -ETIMEDOUT;
- }
- 
-@@ -657,6 +657,35 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
- 	return true;
- }
- 
-+static bool advk_pcie_pio_is_running(struct advk_pcie *pcie)
-+{
-+	struct device *dev = &pcie->pdev->dev;
-+
-+	/*
-+	 * Trying to start a new PIO transfer when previous has not completed
-+	 * cause External Abort on CPU which results in kernel panic:
-+	 *
-+	 *     SError Interrupt on CPU0, code 0xbf000002 -- SError
-+	 *     Kernel panic - not syncing: Asynchronous SError Interrupt
-+	 *
-+	 * Functions advk_pcie_rd_conf() and advk_pcie_wr_conf() are protected
-+	 * by raw_spin_lock_irqsave() at pci_lock_config() level to prevent
-+	 * concurrent calls at the same time. But because PIO transfer may take
-+	 * about 1.5s when link is down or card is disconnected, it means that
-+	 * advk_pcie_wait_pio() does not always have to wait for completion.
-+	 *
-+	 * Some versions of ARM Trusted Firmware handles this External Abort at
-+	 * EL3 level and mask it to prevent kernel panic. Relevant TF-A commit:
-+	 * https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/commit/?id=3c7dcdac5c50
-+	 */
-+	if (advk_readl(pcie, PIO_START)) {
-+		dev_err(dev, "Previous PIO read/write transfer is still running\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
- 			     int where, int size, u32 *val)
- {
-@@ -673,9 +702,10 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
- 		return pci_bridge_emul_conf_read(&pcie->bridge, where,
- 						 size, val);
- 
--	/* Start PIO */
--	advk_writel(pcie, 0, PIO_START);
--	advk_writel(pcie, 1, PIO_ISR);
-+	if (advk_pcie_pio_is_running(pcie)) {
-+		*val = 0xffffffff;
-+		return PCIBIOS_SET_FAILED;
-+	}
- 
- 	/* Program the control register */
- 	reg = advk_readl(pcie, PIO_CTRL);
-@@ -694,7 +724,8 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
- 	/* Program the data strobe */
- 	advk_writel(pcie, 0xf, PIO_WR_DATA_STRB);
- 
--	/* Start the transfer */
-+	/* Clear PIO DONE ISR and start the transfer */
-+	advk_writel(pcie, 1, PIO_ISR);
- 	advk_writel(pcie, 1, PIO_START);
- 
- 	ret = advk_pcie_wait_pio(pcie);
-@@ -734,9 +765,8 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 	if (where % size)
- 		return PCIBIOS_SET_FAILED;
- 
--	/* Start PIO */
--	advk_writel(pcie, 0, PIO_START);
--	advk_writel(pcie, 1, PIO_ISR);
-+	if (advk_pcie_pio_is_running(pcie))
-+		return PCIBIOS_SET_FAILED;
- 
- 	/* Program the control register */
- 	reg = advk_readl(pcie, PIO_CTRL);
-@@ -763,7 +793,8 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 	/* Program the data strobe */
- 	advk_writel(pcie, data_strobe, PIO_WR_DATA_STRB);
- 
--	/* Start the transfer */
-+	/* Clear PIO DONE ISR and start the transfer */
-+	advk_writel(pcie, 1, PIO_ISR);
- 	advk_writel(pcie, 1, PIO_START);
- 
- 	ret = advk_pcie_wait_pio(pcie);
+@@ -57,7 +57,7 @@
+ #define   PIO_COMPLETION_STATUS_UR		1
+ #define   PIO_COMPLETION_STATUS_CRS		2
+ #define   PIO_COMPLETION_STATUS_CA		4
+-#define   PIO_NON_POSTED_REQ			BIT(0)
++#define   PIO_NON_POSTED_REQ			BIT(10)
+ #define PIO_ADDR_LS				(PIO_BASE_ADDR + 0x8)
+ #define PIO_ADDR_MS				(PIO_BASE_ADDR + 0xc)
+ #define PIO_WR_DATA				(PIO_BASE_ADDR + 0x10)
 -- 
 2.20.1
 
