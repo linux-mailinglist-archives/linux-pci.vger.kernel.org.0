@@ -2,383 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 440433751AE
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 11:40:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1AC23751C6
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 11:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232512AbhEFJld (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 05:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233365AbhEFJlb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 May 2021 05:41:31 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1934C061574
-        for <linux-pci@vger.kernel.org>; Thu,  6 May 2021 02:40:32 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id l14so4881832wrx.5
-        for <linux-pci@vger.kernel.org>; Thu, 06 May 2021 02:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PVM3n4MiQ0ppcJJxaAXsKAQRG4FhEGHOWnGID6VnrQg=;
-        b=RIQhYmj5oZhZJYdw4EgObUYJ3V+4uWjOpoDuTXO/YCq4Sl+yhxanTgaqSSO7Ayes6q
-         lkMeCQnrpYMt5qlZarzF0J9Sqhbqw05XGSz7uNckasIXmCHqM8XXs1xoCj7SvoScYzAs
-         20+YQHh5WOSPLAqSlqZrVvlUChRXcPhB4FeYE=
+        id S234149AbhEFJrn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 05:47:43 -0400
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:35446 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231194AbhEFJrn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 May 2021 05:47:43 -0400
+Received: by mail-ot1-f50.google.com with SMTP id b5-20020a9d5d050000b02902a5883b0f4bso4381101oti.2;
+        Thu, 06 May 2021 02:46:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PVM3n4MiQ0ppcJJxaAXsKAQRG4FhEGHOWnGID6VnrQg=;
-        b=tHijf4akVkmk8DJhAEagjx2UUxYCilrWX9XZUU/VWhcDWKOB1mrnwKbmAmhQw/e8By
-         zVBaS6gXo6s8oATqqQOvskiN0x8npc2gfvKRG9JwZvOnnt5bUapk/ETON4eeCwIq/T/5
-         RHVd4/+uzYjK1QlIIjb/W4O/d9HoqotPBJ37gwv9YxKeJaN/OqjkBuO6IZiKOvAtIGX6
-         6zH4peZcdux7izVz9JWrV2OYMks9U5VesKuVZKY+c6LM+/pVE4K7TT16PLaNhvnhLxs5
-         ZxkNoX+nLeG6tHM1vwrGjCOMj9uTmo49ASJTXMihIJq9Nz8LlbqEeOYom57MkmwdRxpv
-         mj/A==
-X-Gm-Message-State: AOAM533G9dd4rdooWw8rJhywH0JIHy/uMkdYXxo/DcwR6n7Ycl4HyGDz
-        iVi/DStOpW/a+JrKm3QytLcd0Q==
-X-Google-Smtp-Source: ABdhPJyz7xB8rgcs1MmVi94Rg97OEYBHgU3oHN4/RKWaeHeblxUv1EPuHJju56qgrHc5WICjzeuFvg==
-X-Received: by 2002:a5d:6682:: with SMTP id l2mr3950561wru.15.1620294031368;
-        Thu, 06 May 2021 02:40:31 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id z14sm3757949wrt.54.2021.05.06.02.40.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 May 2021 02:40:30 -0700 (PDT)
-Date:   Thu, 6 May 2021 11:40:28 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        ckoenig.leichtzumerken@gmail.com, daniel.vetter@ffwll.ch,
-        Harry.Wentland@amd.com, ppaalanen@gmail.com,
-        Alexander.Deucher@amd.com, gregkh@linuxfoundation.org,
-        helgaas@kernel.org, Felix.Kuehling@amd.com
-Subject: Re: [PATCH v5 20/27] drm: Scope all DRM IOCTLs with
- drm_dev_enter/exit
-Message-ID: <YJO5jBaNj1XCTFXE@phenom.ffwll.local>
-References: <20210428151207.1212258-1-andrey.grodzovsky@amd.com>
- <20210428151207.1212258-21-andrey.grodzovsky@amd.com>
- <YIqXJ5LA6wKl/yzZ@phenom.ffwll.local>
- <YIqZZW9iFyGCyOmU@phenom.ffwll.local>
- <95935e46-408b-4fee-a7b4-691e9db4f455@amd.com>
- <YIsDXWMYkMeNhBYk@phenom.ffwll.local>
- <342ab668-554c-637b-b67b-bd8e6013b4c3@amd.com>
- <YIvbAI4PjFlZw+z9@phenom.ffwll.local>
- <b6d0c32c-cf90-6118-5c60-238b6f4a0aaa@amd.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WLw6wpF1SpPaYf9GjIKaoxywxvbZeYQGn/3BsI8vClk=;
+        b=loBktZabexdFTcahOcl+/W9lK4YUyX5dUOxX0exuwMfm9WsdwjxoQaqHmVHd48iBZ2
+         7UbbzpECNE3uBgrqVa05JObzdRnKFohBxwP8SV9ePNIyNOwutMivZCKPTYn8wiBj2MEz
+         rEIy5F67c1tpExq0X/lXO5qiO0UggllooRKqB+PsXSroofHibEhFdE0CoZ4eOG9u5H9K
+         OXWPbpA8uasOJaQMjgUiTwybteHJaAnkearX/3UILAR+G5zjM+VT48O/PoAFQYYwetBl
+         UUzNlqr5tCF925f7Jy5cDrsgQRIYPcFGGqWU+SNgrBID4gkiGX3lbMNy8XMTWdOZsrVC
+         GyDg==
+X-Gm-Message-State: AOAM532V8m8J9FuVz+P2buJ6kw+tZMqRreTuhNS/H89HCqShOE95vsAz
+        YMkZadHq3LnwzEL1UcelSIS2iup8Ek0sHc911Aw=
+X-Google-Smtp-Source: ABdhPJyAsuVo6svOMDODs74V1AcY7zQZ8HNwrp/WdernvPw059EjB7XBOZVJ1YRHznkASCdNNtLe7vGRDXaOLBJfzZI=
+X-Received: by 2002:a05:6830:55b:: with SMTP id l27mr2800612otb.260.1620294404422;
+ Thu, 06 May 2021 02:46:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6d0c32c-cf90-6118-5c60-238b6f4a0aaa@amd.com>
-X-Operating-System: Linux phenom 5.10.32scarlett+ 
+References: <CABTNMG0Y5iAD4E8XFkOwrNTBHNDcNKRt=+BLPHs4tw5O2eVBDA@mail.gmail.com>
+In-Reply-To: <CABTNMG0Y5iAD4E8XFkOwrNTBHNDcNKRt=+BLPHs4tw5O2eVBDA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 6 May 2021 11:46:33 +0200
+Message-ID: <CAJZ5v0hqU4xc8oCWXPBYhdGdG__=15+M67QWVSfFeUR3DN4Evw@mail.gmail.com>
+Subject: Re: NVIDIA GPU fallen off the bus after exiting s2idle
+To:     Chris Chiu <chris.chiu@canonical.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 01:27:37PM -0400, Andrey Grodzovsky wrote:
-> 
-> 
-> On 2021-04-30 6:25 a.m., Daniel Vetter wrote:
-> > On Thu, Apr 29, 2021 at 04:34:55PM -0400, Andrey Grodzovsky wrote:
-> > > 
-> > > 
-> > > On 2021-04-29 3:05 p.m., Daniel Vetter wrote:
-> > > > On Thu, Apr 29, 2021 at 12:04:33PM -0400, Andrey Grodzovsky wrote:
-> > > > > 
-> > > > > 
-> > > > > On 2021-04-29 7:32 a.m., Daniel Vetter wrote:
-> > > > > > On Thu, Apr 29, 2021 at 01:23:19PM +0200, Daniel Vetter wrote:
-> > > > > > > On Wed, Apr 28, 2021 at 11:12:00AM -0400, Andrey Grodzovsky wrote:
-> > > > > > > > With this calling drm_dev_unplug will flush and block
-> > > > > > > > all in flight IOCTLs
-> > > > > > > > 
-> > > > > > > > Also, add feature such that if device supports graceful unplug
-> > > > > > > > we enclose entire IOCTL in SRCU critical section.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-> > > > > > > 
-> > > > > > > Nope.
-> > > > > > > 
-> > > > > > > The idea of drm_dev_enter/exit is to mark up hw access. Not entire ioctl.
-> > > > > 
-> > > > > Then I am confused why we have https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Felixir.bootlin.com%2Flinux%2Fv5.12%2Fsource%2Fdrivers%2Fgpu%2Fdrm%2Fdrm_ioctl.c%23L826&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cf4c0568093cc462f625808d90bc23a3c%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637553751106596888%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=PPKrQYBrgRMjpwlL0r8n5zenIhQMFWc6gniHgUTxTAY%3D&amp;reserved=0
-> > > > > currently in code ?
-> > > > 
-> > > > I forgot about this one, again. Thanks for reminding.
-> > > > 
-> > > > > > > Especially not with an opt-in flag so that it could be shrugged of as a
-> > > > > > > driver hack. Most of these ioctls should have absolutely no problem
-> > > > > > > working after hotunplug.
-> > > > > > > 
-> > > > > > > Also, doing this defeats the point since it pretty much guarantees
-> > > > > > > userspace will die in assert()s and stuff. E.g. on i915 the rough contract
-> > > > > > > is that only execbuf (and even that only when userspace has indicated
-> > > > > > > support for non-recoverable hw ctx) is allowed to fail. Anything else
-> > > > > > > might crash userspace.
-> > > > > 
-> > > > > Given that as I pointed above we already fail any IOCTls with -ENODEV
-> > > > > when device is unplugged, it seems those crashes don't happen that
-> > > > > often ? Also, in all my testing I don't think I saw a user space crash
-> > > > > I could attribute to this.
-> > > > 
-> > > > I guess it should be ok.
-> > > 
-> > > What should be ok ?
-> > 
-> > Your approach, but not your patch. If we go with this let's just lift it
-> > to drm_ioctl() as the default behavior. No driver opt-in flag, because
-> > that's definitely worse than any other approach because we really need to
-> > get rid of driver specific behaviour for generic ioctls, especially
-> > anything a compositor will use directly.
-> > 
-> > > > My reasons for making this work is both less trouble for userspace (did
-> > > > you test with various wayland compositors out there, not just amdgpu x86
-> > > 
-> > > I didn't - will give it a try.
-> 
-> Weston worked without crashes, run the egl tester cube there.
-> 
-> > > 
-> > > > driver?), but also testing.
-> > > > 
-> > > > We still need a bunch of these checks in various places or you'll wait a
-> > > > very long time for a pending modeset or similar to complete. Being able to
-> > > > run that code easily after hotunplug has completed should help a lot with
-> > > > testing.
-> > > > 
-> > > > Plus various drivers already acquired drm_dev_enter/exit and now I wonder
-> > > > whether that was properly tested or not ...
-> > > > 
-> > > > I guess maybe we need a drm module option to disable this check, so that
-> > > > we can exercise the code as if the ioctl has raced with hotunplug at the
-> > > > worst possible moment.
-> > > > 
-> > > > Also atomic is really tricky here: I assume your testing has just done
-> > > > normal synchronous commits, but anything that goes through atomic can be
-> > > > done nonblocking in a separate thread. Which the ioctl catch-all here wont
-> > > > capture.
-> > > 
-> > > Yes, async commit was on my mind and thanks for reminding me. Indeed
-> > > I forgot this but i planned to scope the entire amdgpu_dm_atomic_tail in
-> > > drm_dev_enter/exit. Note that i have a bunch of patches, all name's
-> > > starting with 'Scope....' that just methodically put all the background
-> > > work items and timers the drivers schedules in drm_dev_enter/exit scope.
-> > > This was supposed to be part of the 'Scope Display code' patch.
-> > 
-> > That's too much. You still have to arrange that the flip completion event
-> > gets sent out. So it's a bit tricky.
-> > 
-> > In other places the same problem applies, e.g. probe functions need to
-> > make sure they report "disconnected".
-> 
-> I see, well, this is all part of KMS support which I defer for now
-> anyway. Will tackle it then.
-> 
-> > 
-> > > > > > > You probably need similar (and very precisely defined) rules for amdgpu.
-> > > > > > > And those must definitely exclude any shard ioctls from randomly failing
-> > > > > > > with EIO, because that just kills the box and defeats the point of trying
-> > > > > > > to gracefully handling hotunplug and making sure userspace has a chance of
-> > > > > > > survival. E.g. for atomic everything should continue, including flip
-> > > > > > > completion, but we set all outputs to "disconnected" and send out the
-> > > > > > > uevent. Maybe crtc enabling can fail too, but that can also be handled
-> > > > > > > through the async status we're using to signal DP link failures to
-> > > > > > > userspace.
-> > > > > 
-> > > > > As I pointed before, because of the complexity of the topic I prefer to
-> > > > > take it step by step and solve first for secondary device use case, not
-> > > > > for primary, display attached device.
-> > > > 
-> > > > Yeah makes sense. But then I think the right patch is to roll this out for
-> > > > all drivers, properly justified with existing code. Not behind a driver
-> > > > flag, because with all these different compositors the last thing we want
-> > > > is a proliferation of driver-specific behaviour. That's imo the worst
-> > > > option of all of them and needs to be avoided.
-> > > 
-> > > So this kind of patch would be acceptable to you if I unconditionally
-> > > scope the drm_ioctl with drm_dev_enter/exit without the driver flag ?
-> > > I am worried to break other drivers with this, see patch https://nam11.safelinks.protection.outlook.com/?url=https:%2F%2Fcgit.freedesktop.org%2F~agrodzov%2Flinux%2Fcommit%2F%3Fh%3Ddrm-misc-next%26id%3Df0c593f35b22ca5bf60ed9e7ce2bf2b80e6c68c6&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cf4c0568093cc462f625808d90bc23a3c%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637553751106596888%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=%2F3Jq6SvTm%2BZX7AVpaxEepfOj0C3O7%2Bo2Wm3y0gxrmKI%3D&amp;reserved=0
-> > > Before setting drm_dev_unplug I go through a whole process of signalling
-> > > all possible fences in the system which some one some where might be
-> > > waiting on. My concern is that in the absence of HW those fences won't
-> > > signal and so unless I signal them myself srcu_synchrionize in
-> > > drm_dev_unplug will hang waiting for any such code scoped by
-> > > drm_dev_enter/exit.
-> > 
-> > Uh right. I forgot about this.
-> > 
-> > Which would kinda mean the top level scope is maybe not the best idea, and
-> > perhaps we should indeed drill it down. But then the testing issue
-> > definitely gets a lot worse.
-> > 
-> > So what if we'd push that drm_dev_is_unplugged check down into ioctls?
-> > Then we can make a case-by case decision whether it should be converted to
-> > drm_dev_enter/exit, needs to be pushed down further into drivers (due to
-> > fence wait issues) or other concerns?
-> > 
-> > Also I guess we need to have a subsystem wide rule on whether you need to
-> > force complete all fences before you call drm_dev_unplug, or afterwards.
-> 
-> I don't see how you can handle it afterwards. If a thread is stuck in
-> dma_fence_wait in non interruptible wait (any kernel thread) and with no
-> timeout there is nothing you can do to stop the wait. Any such code
-> scopped with drm_dev_enter/exit will cause a hang in drm_dev_unplug.
-> The only way then is to preemptively force signal all such fences before
-> calling drm_dev_unplug - as I do in the above mentioned patch.
+On Tue, May 4, 2021 at 10:08 AM Chris Chiu <chris.chiu@canonical.com> wrote:
+>
+> Hi,
+>     We have some Intel laptops (11th generation CPU) with NVIDIA GPU
+> suffering the same GPU falling off the bus problem while exiting
+> s2idle with external display connected. These laptops connect the
+> external display via the HDMI/DisplayPort on a USB Type-C interfaced
+> dock. If we enter and exit s2idle with the dock connected, the NVIDIA
+> GPU (confirmed on 10de:24b6 and 10de:25b8) and the PCIe port can come
+> back to D0 w/o problem. If we enter the s2idle, disconnect the dock,
+> then exit the s2idle, both external display and the panel will remain
+> with no output. The dmesg as follows shows the "nvidia 0000:01:00.0:
+> can't change power state from D3cold to D0 (config space
+> inaccessible)" due to the following ACPI error
+> [ 154.446781]
+> [ 154.446783]
+> [ 154.446783] Initialized Local Variables for Method [IPCS]:
+> [ 154.446784] Local0: 000000009863e365 <Obj> Integer 00000000000009C5
+> [ 154.446790]
+> [ 154.446791] Initialized Arguments for Method [IPCS]: (7 arguments
+> defined for method invocation)
+> [ 154.446792] Arg0: 0000000025568fbd <Obj> Integer 00000000000000AC
+> [ 154.446795] Arg1: 000000009ef30e76 <Obj> Integer 0000000000000000
+> [ 154.446798] Arg2: 00000000fdf820f0 <Obj> Integer 0000000000000010
+> [ 154.446801] Arg3: 000000009fc2a088 <Obj> Integer 0000000000000001
+> [ 154.446804] Arg4: 000000003a3418f7 <Obj> Integer 0000000000000001
+> [ 154.446807] Arg5: 0000000020c4b87c <Obj> Integer 0000000000000000
+> [ 154.446810] Arg6: 000000008b965a8a <Obj> Integer 0000000000000000
+> [ 154.446813]
+> [ 154.446815] ACPI Error: Aborting method \IPCS due to previous error
+> (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446824] ACPI Error: Aborting method \MCUI due to previous error
+> (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446829] ACPI Error: Aborting method \SPCX due to previous error
+> (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446835] ACPI Error: Aborting method \_SB.PC00.PGSC due to
+> previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446841] ACPI Error: Aborting method \_SB.PC00.PGON due to
+> previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446846] ACPI Error: Aborting method \_SB.PC00.PEG1.NPON due to
+> previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446852] ACPI Error: Aborting method \_SB.PC00.PEG1.PG01._ON due
+> to previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> [ 154.446860] acpi device:02: Failed to change power state to D0
+> [ 154.690760] video LNXVIDEO:00: Cannot transition to power state D0
+> for parent in (unknown)
 
-Yeah, which is why I don't think top-level drm_dev_enter/exit is a good
-idea.
+If I were to guess, I would say that AML tries to access memory that
+is not accessible while suspended, probably PCI config space.
 
-> > If we have mixed behaviour on this there will be disappointment. And since
-> > hotunplug and dma_fence completion are both userspace visible that
-> > inconsistency might have bigger impact.
-> > 
-> > This is all very tricky indeed :-/
-> > 
-> > btw for the "gradual pushing drm_dev_enter into ioctl" approach, if we go
-> > with that: We could do the same trick we've done for DRM_UNLOCKED:
-> > - drm_dev_enter/exit is called for any ioctl that has not set the
-> >    DRM_HOTUNPLUG_SAFE flag
-> > - for drm core ioctls we push them into all ioctls and decide how to
-> >    handle/where (with the aim to have the least amount of code flow
-> >    different during hotunplug vs after hotunplug has finished, to reduce
-> >    testing scope)
-> > - then we make DRM_HOTUNPLUG_SAFE the implied default
-> > 
-> > This would have us left with render ioctls, and I think the defensive
-> > assumption there is that they're all hotunplug safe. We might hang on a
-> > fence wait, but that's fixable, and it's better than blowing up on a
-> > use-after-free security bug.
-> > 
-> > Thoughts?
-> 
-> I don't fully see a difference between the approach described above and
-> the full drill down to each driver and even within the driver, to the HW
-> back-ends - what criteria I would use to decide if for a given IOCTL i
-> scope with drm_dev_enter/exit at the highest level while for another
-> i go all the way down ? If we would agree that signaling the fences
-> preemptively before engaging drm_dev_unplug is generically the right
-> approach maybe we can then scope drm_ioctl unconditionally with
-> drm_dev_enter/exit and then for each driver go through the same process
-> I do for amdgpu - writing driver specific function which takes care of
-> all the fences. We could then just create a drm callback which would
-> be called from drm_ioctl before drm_dev_unplug is called.
+> The IPCS is the last function called from \_SB.PC00.PEG1.PG01._ON
+> which we expect it to prepare everything before bringing back the
+> NVIDIA GPU but it's stuck in the infinite loop as described below.
+> Please refer to
+> https://gist.github.com/mschiu77/fa4f5a97297749d0d66fe60c1d421c44 for
+> the full DSDT.dsl.
 
-So I see the appeal of just nuking all the fences, but I'm not sure that's
-a good plan. We've done this in the old i915 gpu reset code too, and the
-issue is it's defacto inverting the locking. But also the hw is truly
-gone, so it also makes sense.
+The DSDT alone may not be sufficient.
 
-The problem is a bit roll-out, if we state that dma_fence_wait is allowed
-with a drm_dev_enter/exit, then all drivers need to force-retire their
-fences.
+Can you please create a bug entry at bugzilla.kernel.org for this
+issue and attach the full output of acpidump from one of the affected
+machines to it?  And please let me know the number of the bug.
 
-The other option would be that we require that dma_fence_wait is _not_
-allowed in drm_dev_enter/exit, and that therefore these areas must be
-marked up more fine-grained to avoid deadlocks. I like this more from the
-testing aspect (it makes it easier to be reasonable sure your code handles
-concurrent hotunplug), but also it's pretty easy to validate with the
-dma_fence lockdep annotations we have I think.
+Also please attach the output of dmesg including a suspend-resume
+cycle including dock disconnection while suspended and the ACPI
+messages quoted below.
 
-A third reasons for not requiring force-retiring of dma_fence before
-drm_dev_unplug is the races: Before drm_dev_unplug you haven't stopped new
-fences from happening, but until you've stopped new fences it's hard to
-guarantee they're all retired. How do you solve this currently.
+>            While (One)
+>             {
+>                 If ((!IBSY || (IERR == One)))
+>                 {
+>                     Break
+>                 }
+>
+>                 If ((Local0 > TMOV))
+>                 {
+>                     RPKG [Zero] = 0x03
+>                     Return (RPKG) /* \IPCS.RPKG */
+>                 }
+>
+>                 Sleep (One)
+>                 Local0++
+>             }
+>
+> And the upstream PCIe port of NVIDIA seems to become inaccessible due
+> to the messages as follows.
+> [ 292.746508] pcieport 0000:00:01.0: waiting 100 ms for downstream
+> link, after activation
+> [ 292.882296] pci 0000:01:00.0: waiting additional 100 ms to become accessible
+> [ 316.876997] pci 0000:01:00.0: can't change power state from D3cold
+> to D0 (config space inaccessible)
+>
+> Since the IPCS is the Intel Reference Code and we don't really know
+> why the never-end loop happens just because we unplug the dock while
+> the system still stays in s2idle. Can anyone from Intel suggest what
+> happens here?
 
-Finally there's still hangcheck and all that, so if we go with forbidding
-dma_fence_wait from within drm_dev_enter/exit sections, then drivers don't
-need to have additional tricky code to force-retire fences. TDR will take
-care already (albeit with maybe a slightly annoying long timeout, which
-we can shorten to "time out everything immediately" after drm_dev_unplug).
+This list is not the right channel for inquiries related to Intel
+support, we can only help you as Linux kernel developers in this
+venue.
 
-What we definitely can't have is half the drivers doing it one way, and
-the other half the other way. So your driver flag to wrap the ioctl
-optionally in a drm_dev_enter/exit path is a no-go still I think.
+> And one thing also worth mentioning, if we unplug the display cable
+> from the dock before entering the s2idle, NVIDIA GPU can come back w/o
+> problem even if we disconnect the dock before exiting s2idle. Here's
+> the lspci information
+> https://gist.github.com/mschiu77/0bfc439d15d52d20de0129b1b2a86dc4 and
+> the dmesg log with ACPI trace_state enabled and dynamic debug on for
+> drivers/pci/pci.c, drivers/acpi/device_pm.c for the whole s2idle
+> enter/exit with IPCS timeout.
+>
+> Any suggestion would be appreciated. Thanks.
 
-I guess my tldr; is: I definitely see how your current approach gives
-quicker results for amdgpu right now, but long term I'm seeing more
-positives on the other one. At least I expect less special cases due to
-hotunplug with that.
+First, please use proper Intel support channels for BIOS-related inquiries.
 
-Cheers, Daniel
+Second, please open a bug as suggested above and let's use it for
+further communication regarding this issue as far as Linux is
+concerned.
 
-> 
-> Andrey
-> 
-> > 
-> > It is unfortunately even more work until we've reached the goal, but I
-> > think it's safest and most flexible approach overall.
-> > 
-> > Cheers, Daniel
-> > 
-> > > 
-> > > Andrey
-> > > 
-> > > > 
-> > > > Cheers, Daniel
-> > > > 
-> > > > 
-> > > > > 
-> > > > > > > 
-> > > > > > > I guess we should clarify this in the hotunplug doc?
-> > > > > 
-> > > > > Agree
-> > > > > 
-> > > > > > 
-> > > > > > To clarify: I'm not against throwing an ENODEV at userspace for ioctl that
-> > > > > > really make no sense, and where we're rather confident that all properly
-> > > > > > implemented userspace will gracefully handle failures. Like a modeset, or
-> > > > > > opening a device, or trying to import a dma-buf or stuff like that which
-> > > > > > can already fail in normal operation for any kind of reason.
-> > > > > > 
-> > > > > > But stuff that never fails, like GETRESOURCES ioctl, really shouldn't fail
-> > > > > > after hotunplug.
-> > > > > 
-> > > > > As I pointed above, this a bit confuses me given that we already do
-> > > > > blanker rejection of IOCTLs if device is unplugged.
-> > > > 
-> > > > Well I'm confused about this too :-/
-> > > > 
-> > > > > > And then there's the middle ground, like doing a pageflip or buffer flush,
-> > > > > > which I guess some userspace might handle, but risky to inflict those
-> > > > > > consequences on them. atomic modeset is especially fun since depending
-> > > > > > what you're doing it can be both "failures expected" and "failures not
-> > > > > > really expected in normal operation".
-> > > > > > 
-> > > > > > Also, this really should be consistent across drivers, not solved with a
-> > > > > > driver flag for every possible combination.
-> > > > > > 
-> > > > > > If you look at the current hotunplug kms drivers, they have
-> > > > > > drm_dev_enter/exit sprinkled in specific hw callback functions because of
-> > > > > > the above problems. But maybe it makes sense to change things in a few
-> > > > > > cases. But then we should do it across the board.
-> > > > > 
-> > > > > So as I understand your preferred approach is that I scope any back_end, HW
-> > > > > specific function with drm_dev_enter/exit because that where MMIO
-> > > > > access takes place. But besides explicit MMIO access thorough
-> > > > > register accessors in the HW back-end there is also indirect MMIO access
-> > > > > taking place throughout the code in the driver because of various VRAM
-> > > > > BOs which provide CPU access to VRAM through the VRAM BAR. This kind of
-> > > > > access is spread all over in the driver and even in mid-layers such as
-> > > > > TTM and not limited to HW back-end functions. It means it's much harder
-> > > > > to spot such places to surgically scope them with drm_dev_enter/exit and
-> > > > > also that any new such code introduced will immediately break hot unplug
-> > > > > because the developers can't be expected to remember making their code
-> > > > > robust to this specific use case. That why when we discussed internally
-> > > > > what approach to take to protecting code with drm_dev_enter/exit we
-> > > > > opted for using the widest available scope.
-> > > > 
-> > > > The thing is, you kinda have to anyway. There's enormous amounts of
-> > > > asynchronous processing going on. E.g. nonblocking atomic commits also do
-> > > > ttm unpinning and fun stuff like that, which if you sync things wrong can
-> > > > happen way late. So the door for bad fallout is wide open :-(
-> > > > 
-> > > > I'm not sure where the right tradeoff is to make sure we catch them all,
-> > > > and can make sure with testing that we've indeed caught them all.
-> > > > -Daniel
-> > > > 
-> > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thanks!
