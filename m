@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD0A237574C
-	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE04375741
+	for <lists+linux-pci@lfdr.de>; Thu,  6 May 2021 17:32:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235749AbhEFPeA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 May 2021 11:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
+        id S235147AbhEFPdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 May 2021 11:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235506AbhEFPds (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 May 2021 11:33:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BD95361432;
-        Thu,  6 May 2021 15:32:49 +0000 (UTC)
+        id S235404AbhEFPdq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 May 2021 11:33:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5090E6140C;
+        Thu,  6 May 2021 15:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620315169;
-        bh=KvLt43DnzadPpOqnRUdrwzI2CtNEyAwAsOi6GeKBWRI=;
+        s=k20201202; t=1620315168;
+        bh=MTTPn1JuU+d3/eQ+Q7Ef/sfL+sWMGgOEsQXP78mZRIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WU2IKx3lHHR8r6UTGjfQHnZIfj7luYJDfEbfeuvSbQdMku7iYZMM/+feR26Wp2Nox
-         W8Q0rAK3DLiHWr6Kf17dKe10z4NuezdTK16Cz4d2ij3I8M+B/VsL+UE31ZJ+UyyJax
-         AQxL5VjaYeB9TYdmSWvSHxa6UpyBjZxSYv8HiW465hYI8dltXgWQGE2fLViAJtVC+N
-         Fym7Uq+SYDhtbzhL7MGy+PUXdNoLOOZBn/4asHNb4YG3o+H/Wr8+lA3pK4Eh07ejz4
-         IU5EcWTCI4XKJvwbdOZTVEEPka3J0AesHrqv9agNAG3yfdla8W0R+kr+2l/KlLd3Bb
-         qGTCqi1NeK8BQ==
+        b=kslpnpwNQOUTAzurn5Gss4CnU3SYYP2rwxKtVz9ioqugqtuiH4OXS6sIpxE+JI/xf
+         LMd1ClbrzJlXfcBZYlNaJT0aZlYZSHqjj2X0d2yP9u7/ZF6IL8snkqS76vrVf1fPR+
+         A5+D8ByYQDrCxORx+Zh22+kxRZzHVGvUhJJv+69M/fjDBpGJk1eFGEwQribgq00DDc
+         vNcuaf3WCZTK4+OskzWUWLSnQiD6tTuGrz4y0U1NgR80opzxy6/HPeATRo4SYTazDW
+         NoFjAcNtH5oYDkBXP35FvAzMFcGCDDCKCwI3mloPLkd2dUeWnUBnCoqknAxPJgjKZ4
+         bvuh+Ckpfi5fA==
 Received: by pali.im (Postfix)
-        id 1D0971250; Thu,  6 May 2021 17:32:47 +0200 (CEST)
+        id 57DF8129A; Thu,  6 May 2021 17:32:47 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Tomasz Maciej Nowak <tmn505@gmail.com>,
         Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/42] PCI: aardvark: Do not touch status bits of masked interrupts in interrupt handler
-Date:   Thu,  6 May 2021 17:31:22 +0200
-Message-Id: <20210506153153.30454-12-pali@kernel.org>
+Subject: [PATCH 12/42] PCI: aardvark: Check for virq mapping when processing INTx IRQ
+Date:   Thu,  6 May 2021 17:31:23 +0200
+Message-Id: <20210506153153.30454-13-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210506153153.30454-1-pali@kernel.org>
 References: <20210506153153.30454-1-pali@kernel.org>
@@ -49,36 +49,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It is incorrect to clear status bits of masked interrupts.
-
-The aardvark driver clears all status interrupt bits when no unmasked
-status bit was set. When some unmasked bit was set then masked bits were
-not cleared. Fix this so that masked bits are never cleared.
+It is possible that we receive spurious INTx interrupt. So add needed check
+before calling generic_handle_irq() function.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <kabel@kernel.org>
 Cc: stable@vger.kernel.org
 ---
- drivers/pci/controller/pci-aardvark.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index cd4b427d7692..362faddae935 100644
+index 362faddae935..e7089db11f79 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1090,11 +1090,8 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
- 	isr1_mask = advk_readl(pcie, PCIE_ISR1_MASK_REG);
- 	isr1_status = isr1_val & ((~isr1_mask) & PCIE_ISR1_ALL_MASK);
+@@ -1106,7 +1106,10 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
+ 			    PCIE_ISR1_REG);
  
--	if (!isr0_status && !isr1_status) {
--		advk_writel(pcie, isr0_val, PCIE_ISR0_REG);
--		advk_writel(pcie, isr1_val, PCIE_ISR1_REG);
-+	if (!isr0_status && !isr1_status)
- 		return;
--	}
+ 		virq = irq_find_mapping(pcie->irq_domain, i);
+-		generic_handle_irq(virq);
++		if (virq)
++			generic_handle_irq(virq);
++		else
++			dev_err(&pcie->pdev->dev, "unexpected INT%c IRQ\n", (char)i+'A');
+ 	}
+ }
  
- 	/* Process MSI interrupts */
- 	if (isr0_status & PCIE_ISR0_MSI_INT_PENDING)
 -- 
 2.20.1
 
