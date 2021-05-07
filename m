@@ -2,118 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57D273766D6
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 16:08:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5798D37671C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 16:40:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237489AbhEGOJs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 10:09:48 -0400
-Received: from forward102o.mail.yandex.net ([37.140.190.182]:47061 "EHLO
-        forward102o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237472AbhEGOJr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 10:09:47 -0400
-X-Greylist: delayed 137366 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 10:09:46 EDT
-Received: from iva8-40f91c705526.qloud-c.yandex.net (iva8-40f91c705526.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:b9a7:0:640:40f9:1c70])
-        by forward102o.mail.yandex.net (Yandex) with ESMTP id 06A4D6681587;
-        Fri,  7 May 2021 17:08:44 +0300 (MSK)
-Received: from iva4-b3ebd202b141.qloud-c.yandex.net (iva4-b3ebd202b141.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:b3eb:d202])
-        by iva8-40f91c705526.qloud-c.yandex.net (mxback/Yandex) with ESMTP id yqqh9tsziP-8hJ88GnJ;
-        Fri, 07 May 2021 17:08:43 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1620396523;
-        bh=Wjo2qz/8YCegT85xIzcqzukiWE9Tlzf6xqbzZ2W9SL8=;
-        h=In-Reply-To:Cc:To:From:Subject:Message-ID:References:Date;
-        b=v5raDlGJJjLZQDjAdCphNDcN3r/so/Hoc60q0H3uvi0DOiTYRiEim+Bad6nLyzDzL
-         b/K+B9pcDnbX+dQVflvK3QSBg1v5VUVXN9G2R4wRMIUxsyLwi+5XImBAE5C2ToLUCo
-         wQv4ycCuvh6MPPl5yVxG5Yk1yZrQxRduIjIp8I08=
-Authentication-Results: iva8-40f91c705526.qloud-c.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by iva4-b3ebd202b141.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id Ms6CozTIaZ-8hKGAhE1;
-        Fri, 07 May 2021 17:08:43 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Message-ID: <8ddea02fc6d37f7c444a1e90c9f03d7656ffe957.camel@yandex.ru>
-Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
- s2idle
-From:   Konstantin Kharlamov <hi-angel@yandex.ru>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-pm@vger.kernel.org
-Date:   Fri, 07 May 2021 17:08:42 +0300
-In-Reply-To: <20210507133002.GA1499665@bjorn-Precision-5520>
-References: <20210507133002.GA1499665@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.0 
+        id S236109AbhEGOlT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 10:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233545AbhEGOlS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 May 2021 10:41:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 322E0610F7;
+        Fri,  7 May 2021 14:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620398418;
+        bh=KToNCzZXzXdchEQsEBlcFIELZRGxK0NDfDbS3vEU1zU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UWBF9Sa2APLDTc4h69FihPS3COm5y/y5+453SRjoKq1z2orGhlz/IPBmosvduHEEk
+         OcgtmPo/uy76a8MtMEgpYJrDm7h856eqV4kMsPYFIg54dbmV72K5v4hY4BekkZNvli
+         1m0ZKnt6lDbN5TBiMQLOxKK0d+Hle7Wtnuk04qlgWa8t2qLILOQoo9ZDDMZ7k+4XEg
+         00tsYPTVI58Jm6G2wbgM1kMqv61nY3CFhBnHzFPbmpjGNMpgUq3ZEv80I2GRyFjuM1
+         H2wPu8csrdzJAdD2gN7TXJLkRX4aBmsNKiaNriZbOLLKrCM5QIBTiYFu4UPLJ3JfrB
+         J8e/NLp77VU+g==
+Received: by pali.im (Postfix)
+        id 500C07E0; Fri,  7 May 2021 16:40:15 +0200 (CEST)
+Date:   Fri, 7 May 2021 16:40:15 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/42] PCI: pci-bridge-emul: Add PCIe Root Capabilities
+ Register
+Message-ID: <20210507144015.bol3qeqsdoo7nmju@pali>
+References: <20210506153153.30454-6-pali@kernel.org>
+ <20210506231009.GA1444269@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210506231009.GA1444269@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2021-05-07 at 08:30 -0500, Bjorn Helgaas wrote:
-> On Fri, May 07, 2021 at 12:07:38AM +0200, Lukas Wunner wrote:
-> > On Thu, May 06, 2021 at 04:48:42PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
-> > > > On Macbook 2013 resuming from s2idle results in external monitor no
-> > > > longer being detected, and dmesg having errors like:
-> > > > 
-> > > >     pcieport 0000:06:00.0: can't change power state from D3hot to D0
-> > > > (config space inaccessible)
-> > > > 
-> > > > and a stacktrace. The reason turned out that the hw that the quirk
-> > > > powers off does not get powered on back on resume.
-> > > 
-> > > quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
-> > > ("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
-> > > "power is automatically restored before resume," so there must be
-> > > something special about s2idle that prevents the power-on.
-> > 
-> > With s2idle, the machine isn't suspended via ACPI, so the AML code
-> > which powers the controller off isn't executed.  The dance to prepare
-> > the controller for power-off consequently isn't necessary but rather
-> > harmful.
-> > 
-> > To get the same power savings as with ACPI suspend, the controller
-> > needs to be powered off via runtime suspend.  I posted patches for
-> > that back in 2016.  I'm using them on my laptop, they need some
-> > polishing and rebasing before I can repost them due to massive
-> > changes that have happened in the thunderbolt driver in the meantime.
-> > Without these patches, the controller sucks 1.5W of power in s2idle.
-> > 
-> > > Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
-> > > something that wasn't tested back then, or is this problem connected
-> > > to an s2idle change since then?  Can we identify a commit that
-> > > introduced this problem?  That would help with backporting or stable
-> > > tags.
-> > 
-> > Yes I believe the quirk predates the introduction of s2idle by a couple
-> > of years.
+On Thursday 06 May 2021 18:10:09 Bjorn Helgaas wrote:
+> On Thu, May 06, 2021 at 05:31:16PM +0200, Pali Rohár wrote:
+> > This is 16-bit register at offset 0x1E. Rename current 'rsvd' struct member
+> > to 'rootcap'.
 > 
-> In an ideal world, we would know which commit introduced s2idle and
-> hence the possibility of hitting this bug, and we would add a Fixes:
-> tag for that commit so we could connect this fix with it.
+> "The 16-bit Root Capabilities register is at offset 0x1e in the PCIe
+> Capability."
 > 
-> Apart from that, what I don't like about this (and about the original
-> 1df5172c5c25) is that there's no connection to a spec or to documented
-> behavior of the device or of suspend/resume.
-
-I did some research, and found that s2idle was first introduced in 2013 in
-commit 7e73c5ae6e799 (except it wasn't called "s2idle", by that name it goes
-since around 2016 as Lukas mentioned. In 7e73c5ae6e799 it is called "freeze").
-This is before 1df5172c5c25 which was added in 2014, so I guess we can add a:
-
-	Fixes: 1df5172c5c25 ("PCI: Suspend/resume quirks for Apple
-thunderbolt")
-
-> For example, "With s2idle, the machine isn't suspended via ACPI, so
-> the AML code which powers the controller off isn't executed."  AFAICT
-> that isn't actually a required, documented property of s2idle, but
-> rather it reaches into the internal implementation.
+> Please make the commit log complete in itself.  In some contexts, the
+> subject line is not visible at the same time.  It's fine to repeat the
+> subject in the commit log.
 > 
-> The code comment "If suspend mode is s2idle, power won't get restored
-> on resume" is similar.  !pm_suspend_via_firmware() tells us that
-> platform firmware won't be invoked.  But the connection between *that*
-> and "power won't get restored" is unexplained.
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > Reviewed-by: Marek Behún <kabel@kernel.org>
+> > Fixes: 23a5fba4d941 ("PCI: Introduce PCI bridge emulated config space common logic")
+> > Cc: stable@vger.kernel.org # e0d9d30b7354 ("PCI: pci-bridge-emul: Fix big-endian support")
+> 
+> I'm not sure how people would deal with *two* SHA1s.
 
-Sorry, I can't comment anything regarding AML and power management in general since I am really new to all of this. However, regarding the usage of the `pm_suspend_via_firmware()`: yeah, I also think it is unclear what this does, and I was thinking about adding a wrapper function something like `is_s2idle()` to the suspend.h, which would simply call `pm_suspend_via_firmware` internally. I didn't do that because I thought that usage of pm_suspend_via_firmware() for that task is just something people working with power management are supposed to know, but if someone else questions it too, I can make such wrapper, it's just a 3 lines-of-code change.
+I guess that this is fine per stable document as it mention such example:
+https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
 
-FWIW, originally I found out that pm_suspend_via_firmware() can be used for detecting s2idle by simply asking about it on linux-pm: https://marc.info/?l=linux-pm&m=162029296108775&w=2
+I have already in past sent patches with Fixes:hash1 and CC:stable/hash2
+and were taken correctly.
 
+> This patch adds functionality, so it's not really fixing a bug in
+> 23a5fba4d941.
+
+I'm not sure what is the correct meaning of Fixes tag. I included it to
+easily determinate in which commit was introduced member name "rsvd"
+which should have been named "rootcap".
+
+Submitting patches document is not fully clear for me as I understood it
+that Fixes and CC:stable are two different things. E.g. it mention
+"Attaching a Fixes: tag does not subvert ... the requirement to Cc:
+stable@vger.kernel.org on all stable patch candidates." which I
+understood that patch for backporting needs to have Cc:stable:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+But I will change it as needed. Just I did not know what is "the correct
+way".
+
+> I see that e0d9d30b7354 came along later and did
+> "s/u16 rsvd/__le16 rsvd/".
+> 
+> But it seems like a lot to expect for distros and stable kernel
+> maintainers to interpret this.
+> 
+> Personally I think I would omit both Fixes: and the stable tag since
+> these two patches (05 and 06) are just adding functionality.
+> 
+> > ---
+> >  drivers/pci/pci-bridge-emul.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/pci-bridge-emul.h b/drivers/pci/pci-bridge-emul.h
+> > index b31883022a8e..49bbd37ee318 100644
+> > --- a/drivers/pci/pci-bridge-emul.h
+> > +++ b/drivers/pci/pci-bridge-emul.h
+> > @@ -54,7 +54,7 @@ struct pci_bridge_emul_pcie_conf {
+> >  	__le16 slotctl;
+> >  	__le16 slotsta;
+> >  	__le16 rootctl;
+> > -	__le16 rsvd;
+> > +	__le16 rootcap;
+> >  	__le32 rootsta;
+> >  	__le32 devcap2;
+> >  	__le16 devctl2;
+> > -- 
+> > 2.20.1
+> > 
