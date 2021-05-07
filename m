@@ -2,103 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 621D537631E
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA4F376330
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233662AbhEGJwb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 05:52:31 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:36805 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233300AbhEGJwb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 05:52:31 -0400
-Received: by mail-ot1-f41.google.com with SMTP id n32-20020a9d1ea30000b02902a53d6ad4bdso7438757otn.3;
-        Fri, 07 May 2021 02:51:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PPQjQYzUmoFE08W4EXjrEIBArsoeb4wImA4z3QOLJK4=;
-        b=a8rRioHVL402rz3kp7WibCDnTRVMD8kWCgz/NbsB9GBvbfEwZ9PjXSYmbODRcKael6
-         IeaiyeRbaPl2kOjVcSDnOJhyxS4gaRX33ESfKZo+/l50+laM70k3D2SGqeaL3omuCd60
-         MzVecu8HoQWGAUgNHl3B2TVuUc2MEVg+3sovrt4KvBmQX+B4WfQcxBYDhmEOGW9PkMUT
-         /u+204zWUYcxYE28WMgZFIWdgFY1pdK4F2RsVe5JdZa+mIdFdYBSnpTqi/eTpApn8Izi
-         Ik8ndxRZkjM256b7pVtoD0c55XLYcwqclVhSUSFGb271dNZ55MUkW/lyhxQQzC0BfR89
-         nmJA==
-X-Gm-Message-State: AOAM532xIZClBuVFBs9idmAYdgCnnl+POEy4ZtAFVYY2ubXaXd8yqFJf
-        QW9AOsuT7f1LG482bCno5DTdEoTmOPEqIqtttDE=
-X-Google-Smtp-Source: ABdhPJww/5gpmoprCGqfcImztgA/YFJ/Fn+PdS1VXroC+v07U330yHEV6eizGFwWYJAY79T+mRD5ir7LpZGheLqjs3E=
-X-Received: by 2002:a05:6830:55b:: with SMTP id l27mr7360464otb.260.1620381091931;
- Fri, 07 May 2021 02:51:31 -0700 (PDT)
+        id S234406AbhEGJ7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 05:59:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17474 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234366AbhEGJ7e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 05:59:34 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Fc5Rw5QgTzkX9h;
+        Fri,  7 May 2021 17:55:56 +0800 (CST)
+Received: from [10.67.77.175] (10.67.77.175) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.498.0; Fri, 7 May 2021
+ 17:58:23 +0800
+Subject: Re: Question on guest enable msi fail when using GICv4/4.1
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>, <kvm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Nianyao Tang <tangnianyao@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <3a2c66d6-6ca0-8478-d24b-61e8e3241b20@hisilicon.com>
+ <87k0oaq5jf.wl-maz@kernel.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <cf870bcf-1173-a70b-2b55-4209abcbcbc3@hisilicon.com>
+Date:   Fri, 7 May 2021 17:58:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-References: <20210506173820.21876-1-Hi-Angel@yandex.ru> <20210506214842.GA1436993@bjorn-Precision-5520>
- <20210506220738.GA2150@wunner.de>
-In-Reply-To: <20210506220738.GA2150@wunner.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 7 May 2021 11:51:20 +0200
-Message-ID: <CAJZ5v0hFEX3doAPbDDix3oGpfCbSkWLgjPzNdvNLXyNRN+uqzQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on s2idle
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Konstantin Kharlamov <Hi-Angel@yandex.ru>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87k0oaq5jf.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.77.175]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 7, 2021 at 12:07 AM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Thu, May 06, 2021 at 04:48:42PM -0500, Bjorn Helgaas wrote:
-> > On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
-> > > On Macbook 2013 resuming from s2idle results in external monitor no
-> > > longer being detected, and dmesg having errors like:
-> > >
-> > >     pcieport 0000:06:00.0: can't change power state from D3hot to D0 (config space inaccessible)
-> > >
-> > > and a stacktrace. The reason turned out that the hw that the quirk
-> > > powers off does not get powered on back on resume.
-> >
-> > quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
-> > ("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
-> > "power is automatically restored before resume," so there must be
-> > something special about s2idle that prevents the power-on.
->
-> With s2idle, the machine isn't suspended via ACPI, so the AML code
-> which powers the controller off isn't executed.  The dance to prepare
-> the controller for power-off consequently isn't necessary but rather
-> harmful.
->
-> To get the same power savings as with ACPI suspend, the controller
-> needs to be powered off via runtime suspend.
+Hi Marc,
 
-I'm not quite sure why runtime PM needs to be involved.
+Thanks for your quick reply.
 
-The controller suspend can happen in the system-wide suspend code path directly.
+On 2021/5/7 17:03, Marc Zyngier wrote:
+> On Fri, 07 May 2021 06:57:04 +0100,
+> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+>>
+>> [This letter comes from Nianyao Tang]
+>>
+>> Hi,
+>>
+>> Using GICv4/4.1 and msi capability, guest vf driver requires 3
+>> vectors and enable msi, will lead to guest stuck.
+> 
+> Stuck how?
 
-> I posted patches for
-> that back in 2016.  I'm using them on my laptop, they need some
-> polishing and rebasing before I can repost them due to massive
-> changes that have happened in the thunderbolt driver in the meantime.
-> Without these patches, the controller sucks 1.5W of power in s2idle.
->
-> > Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
-> > something that wasn't tested back then, or is this problem connected
-> > to an s2idle change since then?  Can we identify a commit that
-> > introduced this problem?  That would help with backporting or stable
-> > tags.
->
-> Yes I believe the quirk predates the introduction of s2idle by a couple
-> of years.
->
-> > > Signed-off-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
->
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
->
-> The patch looks fine to me.
->
+Guest serial does not response anymore and guest network shutdown.
+
+> 
+>> Qemu gets number of interrupts from Multiple Message Capable field
+>> set by guest. This field is aligned to a power of 2(if a function
+>> requires 3 vectors, it initializes it to 2).
+> 
+> So I guess this is a MultiMSI device with 4 vectors, right?
+> 
+
+Yes, it can support maximum of 32 msi interrupts, and vf driver only use 3 msi.
+
+>> However, guest driver just sends 3 mapi-cmd to vits and 3 ite
+>> entries is recorded in host.  Vfio initializes msi interrupts using
+>> the number of interrupts 4 provide by qemu.  When it comes to the
+>> 4th msi without ite in vits, in irq_bypass_register_producer,
+>> producer and consumer will __connect fail, due to find_ite fail, and
+>> do not resume guest.
+> 
+> Let me rephrase this to check that I understand it:
+> - The device has 4 vectors
+> - The guest only create mappings for 3 of them
+> - VFIO calls kvm_vgic_v4_set_forwarding() for each vector
+> - KVM doesn't have a mapping for the 4th vector and returns an error
+> - VFIO disable this 4th vector
+> 
+> Is that correct? If yes, I don't understand why that impacts the guest
+> at all. From what I can see, vfio_msi_set_vector_signal() just prints
+> a message on the console and carries on.
+> 
+
+function calls:
+--> vfio_msi_set_vector_signal
+   --> irq_bypass_register_producer
+      -->__connect
+
+in __connect, add_producer finally calls kvm_vgic_v4_set_forwarding and fails to
+get the 4th mapping. When add_producer fail, it does not call cons->start, calls
+kvm_arch_irq_bypass_start and then kvm_arm_resume_guest.
+
+Thanks,
+Shaokun
+
+>> Do we support this case, Guest function using msi interrupts number
+>> not aligned to a power of 2?  Or qemu should provide correct msi
+>> interrupts number?
+> 
+> QEMU cannot know how many vectors are in use, and the guest is free to
+> issue mappings for the exact number of vectors it wants to service.
+> 
+> Please describe what breaks the guest here.
+> 
 > Thanks,
->
-> Lukas
+> 
+> 	M.
+> 
