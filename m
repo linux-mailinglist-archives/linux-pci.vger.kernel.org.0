@@ -2,101 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8ECE3762D1
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:27:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B79C3762F1
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236023AbhEGJ2a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 05:28:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236161AbhEGJ2a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 May 2021 05:28:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5512D61458;
-        Fri,  7 May 2021 09:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620379650;
-        bh=csddv0C3kpCopbm0HPZCluNx22VYvpHDPZOkOnBwaCA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k0QqSVCduhRhkQ6kBFwsukaidpe2bkA3lQnDV3S55gDyFAvF0qnykR1hc9r6xPzt0
-         tNSEYj1/LIb74hbd9Bq0d093i4C+gs2ov5S5RA19iauJ+Bi/PczsJ6MCdQKSkc6GtG
-         tCLCZaZx2LUkXsnSK7QC3z5ubdfIeDwC+dxe2JFpNVuG8psYmMfeF2P5vyoqDr0CDy
-         W7pklW//gUNs2wZzXCOA6XI+b4TbptTq3GwFMqX/ceRkjLH47f6cn5K1VmwIl0Yic2
-         oCMuEwsdveCfrYuDojtxA7l2Bydm/VBifT5tPRt5z9cKGcg9OgOUAaXRpr5SodHWdf
-         WjuSyDBX1gQuQ==
-Received: by pali.im (Postfix)
-        id 8C88C7E0; Fri,  7 May 2021 11:27:27 +0200 (CEST)
-Date:   Fri, 7 May 2021 11:27:27 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/42] PCI: aardvark: Don't mask irq when mapping
-Message-ID: <20210507092727.mavcwkwu3qcgzyw5@pali>
-References: <20210506153153.30454-1-pali@kernel.org>
- <20210506153153.30454-15-pali@kernel.org>
- <87eeeiq4rc.wl-maz@kernel.org>
+        id S236392AbhEGJie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 05:38:34 -0400
+Received: from forward101o.mail.yandex.net ([37.140.190.181]:46726 "EHLO
+        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234536AbhEGJie (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 05:38:34 -0400
+X-Greylist: delayed 307 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 05:38:33 EDT
+Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
+        by forward101o.mail.yandex.net (Yandex) with ESMTP id E0C7E3C01CF3;
+        Fri,  7 May 2021 12:32:21 +0300 (MSK)
+Received: from vla5-04352cd868be.qloud-c.yandex.net (vla5-04352cd868be.qloud-c.yandex.net [IPv6:2a02:6b8:c18:3411:0:640:435:2cd8])
+        by forward101q.mail.yandex.net (Yandex) with ESMTP id DC664CF40023;
+        Fri,  7 May 2021 12:32:21 +0300 (MSK)
+Received: from vla1-62318bfe5573.qloud-c.yandex.net (vla1-62318bfe5573.qloud-c.yandex.net [2a02:6b8:c0d:3819:0:640:6231:8bfe])
+        by vla5-04352cd868be.qloud-c.yandex.net (mxback/Yandex) with ESMTP id c3xWZ66Tmq-WLIep920;
+        Fri, 07 May 2021 12:32:21 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1620379941;
+        bh=cK6I76Yoos3rjd1DiTpMFrQ2xKCG7ieKKp7kVmltyzU=;
+        h=In-Reply-To:Cc:To:From:Subject:Message-ID:References:Date;
+        b=ifU95PoP1+SXeUtbz4MCszXgGcpc8wS4pH7WWx3DRRlOloffQgl+DP4cPbCdK2RyL
+         PmewvT1vFDLvoMnlI3N368cgY5OTPDZx0sTeZNS2/ynm8z/UyNnBjwXQ47q24Ae+M9
+         BBhOs42udbmhaduiHNO+UOzgneUjASqjGkvXec7I=
+Authentication-Results: vla5-04352cd868be.qloud-c.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by vla1-62318bfe5573.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ZzQpaJLAY4-WLLGC7X4;
+        Fri, 07 May 2021 12:32:21 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Message-ID: <eb09cf4f31ea2833b6f6cdc309f256f7ad105b26.camel@yandex.ru>
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
+ s2idle
+From:   Konstantin Kharlamov <hi-angel@yandex.ru>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-pm@vger.kernel.org
+Date:   Fri, 07 May 2021 12:32:20 +0300
+In-Reply-To: <20210506214842.GA1436993@bjorn-Precision-5520>
+References: <20210506214842.GA1436993@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.0 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87eeeiq4rc.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 07 May 2021 10:20:39 Marc Zyngier wrote:
-> On Thu, 06 May 2021 16:31:25 +0100,
-> Pali Rohár <pali@kernel.org> wrote:
-> > 
-> > By default, all Legacy INTx interrupts are masked, so there is no need to
-> > mask this interrupt during irq_map callback.
+On Thu, 2021-05-06 at 16:48 -0500, Bjorn Helgaas wrote:
+> [+cc Rafael, Andreas, linux-pm]
 > 
-> What guarantees that they are actually masked? I would actually assume
-> that the HW is in an unknown state at boot time.
-
-Function advk_pcie_setup_hw() during driver probing mask all INTx interrupts:
-
-    advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
-
-Individual INTx interrupts can be unmasked by PCIE_ISR1_INTX_ASSERT(val).
-Macro PCIE_ISR1_ALL_MASK contains all bits from PCIE_ISR1_INTX_ASSERT(val).
-
-> Thanks,
+> On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
+> > On Macbook 2013 resuming from s2idle results in external monitor no
+> > longer being detected, and dmesg having errors like:
+> > 
+> >     pcieport 0000:06:00.0: can't change power state from D3hot to D0 (config
+> > space inaccessible)
+> > 
+> > and a stacktrace. The reason turned out that the hw that the quirk
+> > powers off does not get powered on back on resume.
 > 
-> 	M.
+> quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
+> ("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
+> "power is automatically restored before resume," so there must be
+> something special about s2idle that prevents the power-on.
 > 
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Reviewed-by: Marek Behún <kabel@kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 2aced8c9ae9f..08f1157e1c5e 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -940,7 +940,6 @@ static int advk_pcie_irq_map(struct irq_domain *h,
-> >  {
-> >  	struct advk_pcie *pcie = h->host_data;
-> >  
-> > -	advk_pcie_irq_mask(irq_get_irq_data(virq));
-> >  	irq_set_status_flags(virq, IRQ_LEVEL);
-> >  	irq_set_chip_and_handler(virq, &pcie->irq_chip,
-> >  				 handle_level_irq);
-> > -- 
-> > 2.20.1
-> > 
-> > 
+> IIUC this change will reduce the s2idle power savings.  I would feel
+> better about this if we understood what the difference was.  
 > 
-> -- 
-> Without deviation from the norm, progress is not possible.
+> > Thus, add a check for s2idle to the quirk, and do nothing if the suspend
+> > mode is s2idle.
+> 
+> Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
+> something that wasn't tested back then, or is this problem connected
+> to an s2idle change since then?  Can we identify a commit that
+> introduced this problem?  That would help with backporting or stable
+> tags.
+> 
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212767
+> 
+> Thanks for this!  Would you mind attaching the output of
+> "sudo lspci -vvv"?  If you attach any other dmesg, could you
+> use "dmesg --color=never" so the log doesn't include all the
+> escape characters?
+
+Thank you! So, just to be clear: in lieu of Lukas Wunner's reply, do you still want `lspci` and `dmesg` outputs, or are you okay with the information Lukas provided?
+
+And while on it, an unrelated question to you as a maintainer: I never contributed to the kernel before: in case you are okay with the patch, what happens now that I got R-b, should I resend a v2 of it with the R-b added?
+
