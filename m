@@ -2,168 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98F9B376D07
-	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 00:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1DA376D2F
+	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 01:10:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230152AbhEGWxF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 18:53:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:33183 "EHLO mga05.intel.com"
+        id S230106AbhEGXLR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 19:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230099AbhEGWxE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 May 2021 18:53:04 -0400
-IronPort-SDR: 7RDnDXHSQcdh0tofuQsEkU/IN5kxPnej1jCVYWxv0/RDTWo/Jf6A+YpwMDaY8wSwM24eT/1G8Q
- mYZBmyjBLaHw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9977"; a="284290023"
-X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
-   d="scan'208";a="284290023"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 15:52:04 -0700
-IronPort-SDR: FeJlpeY3CRjRO5ViQBB6nJ6Cd1Q2PdnSs3BBGVDNM0nOq006Aw8R3EpHvIiX9aRpl2zFD4+Nrl
- vRd4ZPVTICBg==
-X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
-   d="scan'208";a="459953572"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 15:52:04 -0700
-Subject: [PATCH 8/8] cxl/acpi: Add module parameters to stand in for ACPI
- tables
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Date:   Fri, 07 May 2021 15:52:03 -0700
-Message-ID: <162042792370.1202325.11876776878497740843.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S230083AbhEGXLP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 May 2021 19:11:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1F8ED6147F;
+        Fri,  7 May 2021 23:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620429015;
+        bh=lQ/DXz8whGATwK5S38i5+uNShDs0+C7PD1gQbx0Ub7I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eXsu2wjhuksxMlgmYmCkI/j1g7AIEGu1KzfpawvrCh6KjI1rSkTIZvmSCaU07ajnm
+         S/XKuJY8FptPs4qRdrfmBjA0YKYq/HiFIB5RG+7kNagsh61Kv1AmsenI8JmDvga5hD
+         S5S7ObtoBStaOowdq9wIPUf4JBFNShDUA7DJkK8z4H5mTqVYi//hDLBBXiCD+peis7
+         0yGvUXQIpB0fKQ0EsK8Jj7ECoJfLdp7IfHPna6PPzLliphxhybrWMpScEuiIamKxbh
+         jI6wHDhbD4fylwtZ+VJhrNPZiP+LBKiOl6Ww7Quj/J8dKm4R3JuoncbBGHR+tS8Ss3
+         OM2/mGl6vSp5A==
+Date:   Fri, 7 May 2021 18:10:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        linux-acpi@vger.kernel.org, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, linuxarm@huawei.com,
+        Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210507231013.GA1548806@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[debug / to-be-replaced / not-for-upstream]
+s/doe/DOE/ in subject.
 
-Given ACPICA support is needed before drivers can integrate ACPI
-functionality add some module parameters as proxies.
----
- drivers/cxl/acpi.c |   81 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 79 insertions(+), 2 deletions(-)
+On Tue, Apr 20, 2021 at 12:54:49AM +0800, Jonathan Cameron wrote:
+> Introduced in a PCI ECN [1], DOE provides a config space
+> based mailbox with standard protocol discovery.  Each mailbox
+> is accessed through a DOE Extended Capability.
+> 
+> A device may have 1 or more DOE mailboxes, each of which is allowed
+> to support any number of protocols (some DOE protocol
+> specifications apply additional restrictions).  A given protocol
+> may be supported on more than one DOE mailbox on a given function.
+> 
+> If a driver wishes to access any number of DOE instances / protocols
+> it makes a single call to pcie_doe_register_all() which will find
+> available DOEs, create the required infrastructure and cache the
+> protocols they support.  pcie_doe_find() can then retrieve a
+> pointer to an appropriate DOE instance.
+> 
+> A synchronous interface is provided in pcie_doe_exchange_sync() to
+> perform a single query / response exchange.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index bc2a35ae880b..2a48a728f3e0 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -4,10 +4,84 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-+#include <linux/range.h>
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include "cxl.h"
- 
-+/*
-+ * TODO: Replace all of the below module parameters with ACPI CXL
-+ * resource descriptions once ACPICA makes them available.
-+ */
-+static unsigned long chbcr[4];
-+module_param_named(chbcr0, chbcr[0], ulong, 0400);
-+module_param_named(chbcr1, chbcr[1], ulong, 0400);
-+module_param_named(chbcr2, chbcr[2], ulong, 0400);
-+module_param_named(chbcr3, chbcr[3], ulong, 0400);
-+
-+/* TODO: cross-bridge interleave */
-+static struct cxl_address_space cxl_space[] = {
-+	[0] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[1] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[2] = { .range = { 0, -1 }, .targets = 0x1, },
-+	[3] = { .range = { 0, -1 }, .targets = 0x1, },
-+};
-+
-+static int set_range(const char *val, const struct kernel_param *kp)
-+{
-+	unsigned long long size, base;
-+	struct cxl_address_space *space;
-+	unsigned long flags;
-+	char *p;
-+	int rc;
-+
-+	size = memparse(val, &p);
-+	if (*p != '@')
-+		return -EINVAL;
-+
-+	base = memparse(p + 1, &p);
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	rc = kstrtoul(p + 1, 0, &flags);
-+	if (rc)
-+		return rc;
-+	if (!flags || flags > CXL_ADDRSPACE_MASK)
-+		return rc;
-+
-+	space = kp->arg;
-+	*space = (struct cxl_address_space) {
-+		.range = {
-+			.start = base,
-+			.end = base + size - 1,
-+		},
-+		.flags = flags,
-+	};
-+
-+	return 0;
-+}
-+
-+static int get_range(char *buf, const struct kernel_param *kp)
-+{
-+	struct cxl_address_space *space = kp->arg;
-+
-+	if (!range_len(&space->range))
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%#llx@%#llx :%s%s%s%s\n",
-+			  (unsigned long long)range_len(&space->range),
-+			  (unsigned long long)space->range.start,
-+			  space->flags & CXL_ADDRSPACE_RAM ? " ram" : "",
-+			  space->flags & CXL_ADDRSPACE_PMEM ? " pmem" : "",
-+			  space->flags & CXL_ADDRSPACE_TYPE2 ? " type2" : "",
-+			  space->flags & CXL_ADDRSPACE_TYPE3 ? " type3" : "");
-+}
-+
-+module_param_call(range0, set_range, get_range, &cxl_space[0], 0400);
-+module_param_call(range1, set_range, get_range, &cxl_space[1], 0400);
-+module_param_call(range2, set_range, get_range, &cxl_space[2], 0400);
-+module_param_call(range3, set_range, get_range, &cxl_space[3], 0400);
-+
- static int match_ACPI0016(struct device *dev, const void *host)
- {
- 	struct acpi_device *adev = to_acpi_device(dev);
-@@ -67,13 +141,16 @@ static int cxl_acpi_register_ports(struct device *dev, struct acpi_device *root,
- 				   struct cxl_port *port, int idx)
- {
- 	struct acpi_pci_root *pci_root = acpi_pci_find_root(root->handle);
-+	resource_size_t chbcr_base = ~0ULL;
- 	struct cxl_walk_context ctx;
- 
- 	if (!pci_root)
- 		return -ENXIO;
- 
- 	/* TODO: fold in CEDT.CHBS retrieval */
--	port = devm_cxl_add_port(dev, port, &root->dev, idx, ~0ULL);
-+	if (idx < ARRAY_SIZE(chbcr))
-+		chbcr_base = chbcr[idx];
-+	port = devm_cxl_add_port(dev, port, &root->dev, idx, chbcr_base);
- 	if (IS_ERR(port))
- 		return PTR_ERR(port);
- 	dev_dbg(dev, "%s: register: %s\n", dev_name(&root->dev),
-@@ -99,7 +176,7 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	struct cxl_root *cxl_root;
- 	int rc, i = 0;
- 
--	cxl_root = devm_cxl_add_root(dev, NULL, 0);
-+	cxl_root = devm_cxl_add_root(dev, cxl_space, ARRAY_SIZE(cxl_space));
- 	if (IS_ERR(cxl_root))
- 		return PTR_ERR(cxl_root);
- 	dev_dbg(dev, "register: %s\n", dev_name(&cxl_root->port.dev));
+Re-wrap above (and commit logs of other patches) to fill 75 columns.
 
+s/pcie_doe_register_all/pci_doe_register_all/
+s/pcie_doe_find/pci_doe_find/
+s/pcie_doe_exchange_sync/pci_doe_exchange_sync/
+
+> +config PCI_DOE
+> +	bool
+> +	help
+> +	  This enables library support for the PCI Data Object Exchange
+> +	  capability. DOE provides a simple mailbox in PCI config space that is
+> +	  used by a number of different protocols.
+> +	  DOE is defined in the Data Object Exchange ECN to PCI 5.0.
+
+"ECN to the PCIe r5.0 spec."
+
+"PCI 5.0" sounds like a conventional PCI spec.
+
+> + * pci_doe_exchange_sync() - Send a request, then wait for and receive response.
+> + * @doe: DOE mailbox state structure.
+> + * @ex: Description of the buffers and Vendor ID + type used in this
+> + *      request/response pair,
+
+s/,/./
+
+(Or omit the periods altogether on these function and parameter
+one-liners, as most of drivers/pci does.  Most of these descriptions
+aren't sentences anyway, I think it's fine that they're unterminated.)
+
+> +static void pci_doe_init(struct pci_doe *doe, struct pci_dev *pdev, int doe_offset)
+
+Indent to fit in 80 columns like the rest of drivers/pci/.
+
+> +static int pci_doe_register(struct pci_doe *doe)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	bool poll = !pci_dev_msi_enabled(pdev);
+> +	int rc, irq;
+> +	u32 val;
+> +
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_CAP, &val);
+> +
+> +	if (!poll && FIELD_GET(PCI_DOE_CAP_INT, val)) {
+> +		irq = pci_irq_vector(pdev, FIELD_GET(PCI_DOE_CAP_IRQ, val));
+> +		if (irq < 0)
+> +			return irq;
+> +
+> +		rc = request_irq(irq, pci_doe_irq, 0, "DOE", doe);
+
+I expect there may be many devices with DOE.  Do you want some
+device identification here?  E.g., on my system I see things like this
+in /proc/interrupts:
+
+  dmar0
+  nvme0q0
+  snd_hda_intel:card0
+  ahci[0000:00:17.0]
+
+> +++ b/include/linux/pci-doe.h
+> @@ -0,0 +1,85 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Data Object Exchange was added to the PCI spec as an ECN to 5.0.
+
+"... was added as an ECN to the PCIe r5.0 spec."
