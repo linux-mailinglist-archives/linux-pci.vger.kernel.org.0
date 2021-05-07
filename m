@@ -2,196 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D5A437672C
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 16:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94996376777
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 17:03:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236321AbhEGOpY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 10:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234601AbhEGOpY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 May 2021 10:45:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B30456142D;
-        Fri,  7 May 2021 14:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620398664;
-        bh=tOyYubD20B7eSiiEeDtUIxasKweAQTKTmGLHTG6n28M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bTDHStB+vPLGERkhLdyIeeSfXe2aOzj0sA1Xt+ov72eEyDK9GeWjuDGMdMkWWC2+K
-         JXpGNybsSk+Cp/MmgiX42/aW1meYbHC4xJes+WupnGImdLf7c58sOmHTYhnhwT5cND
-         MYRCkZNr4NsfEdcwnWizNlvUNrY/wVvIkRUcgfeBkPXQxM36V9IpXGDECcHRPQ5ahw
-         aPb4f+BrQ2sicgGIhAllMIlMc1cvJ7BAVAyvUWDG75UeLJ3zKS0VqT+97oR9OhlNmD
-         MRj8gfu2ZfBnhI4DacOHnHakGxAFFExpOUVSDBcZFp/ltCzzWscMF5mFvyRK2+z7L8
-         qGkwgpU31i+5w==
-Received: by pali.im (Postfix)
-        id 258357E0; Fri,  7 May 2021 16:44:21 +0200 (CEST)
-Date:   Fri, 7 May 2021 16:44:20 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 17/42] PCI: aardvark: Fix support for MSI interrupts
-Message-ID: <20210507144420.24aess56cc7ie2x2@pali>
-References: <20210506153153.30454-1-pali@kernel.org>
- <20210506153153.30454-18-pali@kernel.org>
- <87czu2q25h.wl-maz@kernel.org>
+        id S237754AbhEGPEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 11:04:16 -0400
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:43999 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237741AbhEGPEK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 11:04:10 -0400
+Received: by mail-oi1-f170.google.com with SMTP id j75so8939995oih.10;
+        Fri, 07 May 2021 08:03:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eMaqx0oP6vyp7kPXJFjX296lhoj8BNRa90P+Kbk4H/o=;
+        b=kShqSKG//zCp6v/I3pLyw0n32QqVXjIR7zvuUBIp/bww4L8CI94ERIHwUQDI1uVO8S
+         fFjhws+oCxfNZV0+503alY4W/J8gmzj8C88yFC1QYQnph4ZspGuKUOH/w19ILsEUFts0
+         pLyuuwbVGyoIWRo7Up4tg8Oa78sNTcrcD9WEP99KUgXsV5vfSzt6hbghxUqla6KuH/8K
+         C3eIj0rq7Zu/S35/Hhr6J9dlzeNt4ikMqjzQ2vOo+/Hu+ntZDB+kjf67jz525IC5bUKw
+         +zDeAQRNQAld0WbSS1bNlYxk01V0CWQuGua+l7YR3IoRZHU0kDZAKUA+bg12Lclw+KrU
+         iALg==
+X-Gm-Message-State: AOAM533KTecpYX3qmLRiR2ic38M79ympF+DciHarAJha75AjwpAn6eTP
+        g/nGOntIjhIAZaIMaco+JHWMq2oWGXCuPPnIv3c=
+X-Google-Smtp-Source: ABdhPJyDOu90WOgTcRpBZND1O+fG9lDinkphjgOzTwQC0SK6h7jsNW54F6BOHWTdxGeAPNbojrWzpt1Jtz151uFecMI=
+X-Received: by 2002:aca:5fc3:: with SMTP id t186mr7139531oib.69.1620399785223;
+ Fri, 07 May 2021 08:03:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87czu2q25h.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <20210506220738.GA2150@wunner.de> <20210507133002.GA1499665@bjorn-Precision-5520>
+In-Reply-To: <20210507133002.GA1499665@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 7 May 2021 17:02:53 +0200
+Message-ID: <CAJZ5v0hvjkiTExHo9=FZMTQCwuDeWgKoYwg9dU_mhBuF-6ifuQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on s2idle
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Konstantin Kharlamov <Hi-Angel@yandex.ru>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 07 May 2021 11:16:58 Marc Zyngier wrote:
-> On Thu, 06 May 2021 16:31:28 +0100,
-> Pali Rohár <pali@kernel.org> wrote:
-> > 
-> > MSI domain callback .alloc (implemented by advk_msi_irq_domain_alloc()
-> > function) should return zero on success. Returning non-zero value indicates
-> > failure. Fix return value of this function as in many cases it now returns
-> > failure while allocating IRQs.
-> > 
-> > Aardvark hardware supports Multi-MSI and MSI_FLAG_MULTI_PCI_MSI is already
-> > set. But when allocating MSI interrupt numbers for Multi-MSI, they need to
-> > be properly aligned, otherwise endpoint devices send MSI interrupt with
-> > incorrect numbers. Fix this issue by using function bitmap_find_free_region()
-> > instead of bitmap_find_next_zero_area().
-> > 
-> > To ensure that aligned MSI interrupt numbers are used by endpoint devices,
-> > we cannot use Linux virtual irq numbers (as they are random and not
-> > properly aligned). So use hwirq numbers allocated by the function
-> > bitmap_find_free_region(), which are aligned. This needs an update in
-> > advk_msi_irq_compose_msi_msg() and advk_pcie_handle_msi() functions to do
-> > proper mapping between Linux virtual irq numbers and hwirq MSI inner domain
-> > numbers.
-> > 
-> > Also the whole 16-bit MSI number is stored in the PCIE_MSI_PAYLOAD_REG
-> > register, not only lower 8 bits. Fix reading content of this register.
-> > 
-> > This change fixes receiving MSI interrupts on Armada 3720 boards and allows
-> > using NVMe disks which use Multi-MSI feature with 3 interrupts.
-> > 
-> > Without this change, NVMe disks just freeze booting Linux on Armada 3720
-> > boards as linux nvme-core.c driver is waiting 60s for an interrupt.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Reviewed-by: Marek Behún <kabel@kernel.org>
-> > Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 32 ++++++++++++++++-----------
-> >  1 file changed, 19 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 366d7480bc1b..498810c00b6d 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -118,6 +118,7 @@
-> >  #define PCIE_MSI_STATUS_REG			(CONTROL_BASE_ADDR + 0x58)
-> >  #define PCIE_MSI_MASK_REG			(CONTROL_BASE_ADDR + 0x5C)
-> >  #define PCIE_MSI_PAYLOAD_REG			(CONTROL_BASE_ADDR + 0x9C)
-> > +#define     PCIE_MSI_DATA_MASK			GENMASK(15, 0)
-> 
-> See my comment below about this addition.
-> 
-> >  /* LMI registers base address and register offsets */
-> >  #define LMI_BASE_ADDR				0x6000
-> > @@ -861,7 +862,7 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
-> >  
-> >  	msg->address_lo = lower_32_bits(msi_msg);
-> >  	msg->address_hi = upper_32_bits(msi_msg);
-> > -	msg->data = data->irq;
-> > +	msg->data = data->hwirq;
-> >  }
-> >  
-> >  static int advk_msi_set_affinity(struct irq_data *irq_data,
-> > @@ -878,15 +879,11 @@ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
-> >  	int hwirq, i;
-> >  
-> >  	mutex_lock(&pcie->msi_used_lock);
-> > -	hwirq = bitmap_find_next_zero_area(pcie->msi_used, MSI_IRQ_NUM,
-> > -					   0, nr_irqs, 0);
-> > -	if (hwirq >= MSI_IRQ_NUM) {
-> > -		mutex_unlock(&pcie->msi_used_lock);
-> > -		return -ENOSPC;
-> > -	}
-> > -
-> > -	bitmap_set(pcie->msi_used, hwirq, nr_irqs);
-> > +	hwirq = bitmap_find_free_region(pcie->msi_used, MSI_IRQ_NUM,
-> > +					order_base_2(nr_irqs));
-> >  	mutex_unlock(&pcie->msi_used_lock);
-> > +	if (hwirq < 0)
-> > +		return -ENOSPC;
-> >  
-> >  	for (i = 0; i < nr_irqs; i++)
-> >  		irq_domain_set_info(domain, virq + i, hwirq + i,
-> > @@ -894,7 +891,7 @@ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
-> >  				    domain->host_data, handle_simple_irq,
-> >  				    NULL, NULL);
-> >  
-> > -	return hwirq;
-> > +	return 0;
-> >  }
-> >  
-> >  static void advk_msi_irq_domain_free(struct irq_domain *domain,
-> > @@ -904,7 +901,7 @@ static void advk_msi_irq_domain_free(struct irq_domain *domain,
-> >  	struct advk_pcie *pcie = domain->host_data;
-> >  
-> >  	mutex_lock(&pcie->msi_used_lock);
-> > -	bitmap_clear(pcie->msi_used, d->hwirq, nr_irqs);
-> > +	bitmap_release_region(pcie->msi_used, d->hwirq, order_base_2(nr_irqs));
-> >  	mutex_unlock(&pcie->msi_used_lock);
-> >  }
-> >  
-> > @@ -1048,6 +1045,7 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
-> >  {
-> >  	u32 msi_val, msi_mask, msi_status, msi_idx;
-> >  	u16 msi_data;
-> > +	int virq;
-> >  
-> >  	msi_mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
-> >  	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
-> > @@ -1057,9 +1055,17 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
-> >  		if (!(BIT(msi_idx) & msi_status))
-> >  			continue;
-> >  
-> > +		/*
-> > +		 * msi_idx contains bits [4:0] of the msi_data and msi_data
-> > +		 * contains 16bit MSI interrupt number from MSI inner domain
-> > +		 */
-> >  		advk_writel(pcie, BIT(msi_idx), PCIE_MSI_STATUS_REG);
-> > -		msi_data = advk_readl(pcie, PCIE_MSI_PAYLOAD_REG) & 0xFF;
-> > -		generic_handle_irq(msi_data);
-> > +		msi_data = advk_readl(pcie, PCIE_MSI_PAYLOAD_REG) & PCIE_MSI_DATA_MASK;
-> 
-> Can this be moved to a separate patch? It seems like this patch should
-> only focus on correctly dealing with the irq/hwirq issues.
+On Fri, May 7, 2021 at 3:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, May 07, 2021 at 12:07:38AM +0200, Lukas Wunner wrote:
+> > On Thu, May 06, 2021 at 04:48:42PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
+> > > > On Macbook 2013 resuming from s2idle results in external monitor no
+> > > > longer being detected, and dmesg having errors like:
+> > > >
+> > > >     pcieport 0000:06:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+> > > >
+> > > > and a stacktrace. The reason turned out that the hw that the quirk
+> > > > powers off does not get powered on back on resume.
+> > >
+> > > quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
+> > > ("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
+> > > "power is automatically restored before resume," so there must be
+> > > something special about s2idle that prevents the power-on.
+> >
+> > With s2idle, the machine isn't suspended via ACPI, so the AML code
+> > which powers the controller off isn't executed.  The dance to prepare
+> > the controller for power-off consequently isn't necessary but rather
+> > harmful.
+> >
+> > To get the same power savings as with ACPI suspend, the controller
+> > needs to be powered off via runtime suspend.  I posted patches for
+> > that back in 2016.  I'm using them on my laptop, they need some
+> > polishing and rebasing before I can repost them due to massive
+> > changes that have happened in the thunderbolt driver in the meantime.
+> > Without these patches, the controller sucks 1.5W of power in s2idle.
+> >
+> > > Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
+> > > something that wasn't tested back then, or is this problem connected
+> > > to an s2idle change since then?  Can we identify a commit that
+> > > introduced this problem?  That would help with backporting or stable
+> > > tags.
+> >
+> > Yes I believe the quirk predates the introduction of s2idle by a couple
+> > of years.
+>
+> In an ideal world, we would know which commit introduced s2idle and
+> hence the possibility of hitting this bug, and we would add a Fixes:
+> tag for that commit so we could connect this fix with it.
+>
+> Apart from that, what I don't like about this (and about the original
+> 1df5172c5c25) is that there's no connection to a spec or to documented
+> behavior of the device or of suspend/resume.
+>
+> For example, "With s2idle, the machine isn't suspended via ACPI, so
+> the AML code which powers the controller off isn't executed."  AFAICT
+> that isn't actually a required, documented property of s2idle, but
+> rather it reaches into the internal implementation.
 
-Well, hwirq is read from PCIE_MSI_PAYLOAD_REG register and it is 16-bit.
-That is why I included this change in this patch, to fix also reading
-IRQ number, not only setting IRQ number.
+I tend to agree, but not completely.
 
-> > +		virq = irq_find_mapping(pcie->msi_inner_domain, msi_data);
-> > +		if (virq)
-> > +			generic_handle_irq(virq);
-> > +		else
-> > +			dev_err(&pcie->pdev->dev, "unexpected MSI 0x%04hx\n", msi_data);
-> 
-> Same concern about the unmitigated screaming.
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
+The substantial difference between s2idle and S2RAM is that with the
+latter control is passed to the platform firmware at the end of the
+suspend transition, but that part of the platform firmware is SMM
+rather than AML and so this has no bearing on whether or not power is
+removed from the controller by any AML code.
+
+That said, the platform firmware code completing the S2RAM suspend
+transition does remove power from various system components which may
+(and probably does) include the Thunderbolt controller.
+
+IOW, the s2idle path needs to actively power manage the controller in
+order to achieve desirable results, whereas in the S2RAM case that
+isn't strictly necessary due to the fundamental difference between the
+two variants of system-wide suspend.
+
+> The code comment "If suspend mode is s2idle, power won't get restored
+> on resume" is similar.  !pm_suspend_via_firmware() tells us that
+> platform firmware won't be invoked.  But the connection between *that*
+> and "power won't get restored" is unexplained.
+
+Right.
