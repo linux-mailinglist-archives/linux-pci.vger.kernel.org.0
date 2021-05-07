@@ -2,93 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B79C3762F1
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C336B3762F6
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236392AbhEGJie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 05:38:34 -0400
-Received: from forward101o.mail.yandex.net ([37.140.190.181]:46726 "EHLO
-        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234536AbhEGJie (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 05:38:34 -0400
-X-Greylist: delayed 307 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 05:38:33 EDT
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward101o.mail.yandex.net (Yandex) with ESMTP id E0C7E3C01CF3;
-        Fri,  7 May 2021 12:32:21 +0300 (MSK)
-Received: from vla5-04352cd868be.qloud-c.yandex.net (vla5-04352cd868be.qloud-c.yandex.net [IPv6:2a02:6b8:c18:3411:0:640:435:2cd8])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id DC664CF40023;
-        Fri,  7 May 2021 12:32:21 +0300 (MSK)
-Received: from vla1-62318bfe5573.qloud-c.yandex.net (vla1-62318bfe5573.qloud-c.yandex.net [2a02:6b8:c0d:3819:0:640:6231:8bfe])
-        by vla5-04352cd868be.qloud-c.yandex.net (mxback/Yandex) with ESMTP id c3xWZ66Tmq-WLIep920;
-        Fri, 07 May 2021 12:32:21 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1620379941;
-        bh=cK6I76Yoos3rjd1DiTpMFrQ2xKCG7ieKKp7kVmltyzU=;
-        h=In-Reply-To:Cc:To:From:Subject:Message-ID:References:Date;
-        b=ifU95PoP1+SXeUtbz4MCszXgGcpc8wS4pH7WWx3DRRlOloffQgl+DP4cPbCdK2RyL
-         PmewvT1vFDLvoMnlI3N368cgY5OTPDZx0sTeZNS2/ynm8z/UyNnBjwXQ47q24Ae+M9
-         BBhOs42udbmhaduiHNO+UOzgneUjASqjGkvXec7I=
-Authentication-Results: vla5-04352cd868be.qloud-c.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by vla1-62318bfe5573.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ZzQpaJLAY4-WLLGC7X4;
-        Fri, 07 May 2021 12:32:21 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Message-ID: <eb09cf4f31ea2833b6f6cdc309f256f7ad105b26.camel@yandex.ru>
-Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
- s2idle
-From:   Konstantin Kharlamov <hi-angel@yandex.ru>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-pm@vger.kernel.org
-Date:   Fri, 07 May 2021 12:32:20 +0300
-In-Reply-To: <20210506214842.GA1436993@bjorn-Precision-5520>
-References: <20210506214842.GA1436993@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.0 
+        id S236766AbhEGJjZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 05:39:25 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3038 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236764AbhEGJjZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 05:39:25 -0400
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Fc4wv0h6Lz6rn00;
+        Fri,  7 May 2021 17:32:31 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Fri, 7 May 2021 11:38:22 +0200
+Received: from localhost (10.52.124.175) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 7 May 2021
+ 10:38:21 +0100
+Date:   Fri, 7 May 2021 10:36:38 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>
+CC:     Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        <linux-acpi@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210507103638.00006c89@Huawei.com>
+In-Reply-To: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.124.175]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2021-05-06 at 16:48 -0500, Bjorn Helgaas wrote:
-> [+cc Rafael, Andreas, linux-pm]
-> 
-> On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
-> > On Macbook 2013 resuming from s2idle results in external monitor no
-> > longer being detected, and dmesg having errors like:
-> > 
-> >     pcieport 0000:06:00.0: can't change power state from D3hot to D0 (config
-> > space inaccessible)
-> > 
-> > and a stacktrace. The reason turned out that the hw that the quirk
-> > powers off does not get powered on back on resume.
-> 
-> quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
-> ("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
-> "power is automatically restored before resume," so there must be
-> something special about s2idle that prevents the power-on.
-> 
-> IIUC this change will reduce the s2idle power savings.  I would feel
-> better about this if we understood what the difference was.  
-> 
-> > Thus, add a check for s2idle to the quirk, and do nothing if the suspend
-> > mode is s2idle.
-> 
-> Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
-> something that wasn't tested back then, or is this problem connected
-> to an s2idle change since then?  Can we identify a commit that
-> introduced this problem?  That would help with backporting or stable
-> tags.
-> 
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212767
-> 
-> Thanks for this!  Would you mind attaching the output of
-> "sudo lspci -vvv"?  If you attach any other dmesg, could you
-> use "dmesg --color=never" so the log doesn't include all the
-> escape characters?
+On Tue, 20 Apr 2021 00:54:49 +0800
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Thank you! So, just to be clear: in lieu of Lukas Wunner's reply, do you still want `lspci` and `dmesg` outputs, or are you okay with the information Lukas provided?
+> Introduced in a PCI ECN [1], DOE provides a config space
+> based mailbox with standard protocol discovery.  Each mailbox
+> is accessed through a DOE Extended Capability.
+> 
+> A device may have 1 or more DOE mailboxes, each of which is allowed
+> to support any number of protocols (some DOE protocol
+> specifications apply additional restrictions).  A given protocol
+> may be supported on more than one DOE mailbox on a given function.
+> 
+> If a driver wishes to access any number of DOE instances / protocols
+> it makes a single call to pcie_doe_register_all() which will find
+> available DOEs, create the required infrastructure and cache the
+> protocols they support.  pcie_doe_find() can then retrieve a
+> pointer to an appropriate DOE instance.
+> 
+> A synchronous interface is provided in pcie_doe_exchange_sync() to
+> perform a single query / response exchange.
+> 
+> Testing conducted against QEMU using:
+> 
+> https://lore.kernel.org/qemu-devel/1612900760-7361-1-git-send-email-cbrowy@avery-design.com/
+> + fix for interrupt flag mentioned in that thread and a whole load
+> of hacks to exercise error paths etc.
+> 
+> [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
+>     Data Object Exchange (DOE) - Approved 12 March 2020
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
-And while on it, an unrelated question to you as a maintainer: I never contributed to the kernel before: in case you are okay with the patch, what happens now that I got R-b, should I resend a v2 of it with the R-b added?
+...
 
+> +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
+> +{
+> +	struct pci_dev *pdev = doe->pdev;
+> +	size_t length;
+> +	u32 val;
+> +	int i;
+> +
+> +	/* Read the first two dwords to get the length and protocol */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->vid) ||
+> +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->protocol)) {
+> +		pci_err(pdev,
+> +			"Expected [VID, Protocol] = [%x, %x], got [%x, %x]\n",
+> +			ex->vid, ex->protocol,
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+> +		return -EIO;
+> +	}
+> +
+> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +	pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +
+> +	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
+> +	if (length > SZ_1M)
+> +		return -EIO;
+> +
+> +	/* Read the rest of the response payload */
+> +	for (i = 0; i < min(length, ex->response_pl_sz / sizeof(u32)); i++) {
+
+Note for anyone testing these that there is a bug here which leads to
+a buffer underflow triggered reset with the latest QEMU patches
+(I've not figured out yet why this didn't trigger a problem with the earlier
+QEMU patch versions).
+
+This needs to take into account that length includes the two header DW, but
+the response_pl_sz does not.
+ 
+
+> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ,
+> +				      &ex->response_pl[i]);
+> +		pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +	}
+> +
+> +	/* Flush excess length */
+> +	for (; i < length; i++) {
+> +		pci_read_config_dword(pdev, doe->cap + PCI_DOE_READ, &val);
+> +		pci_write_config_dword(pdev, doe->cap + PCI_DOE_READ, 0);
+> +	}
+> +	/* Final error check to pick up on any since Data Object Ready */
+> +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_STATUS, &val);
+> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
+> +		return -EIO;
+> +
+> +	return min(length, ex->response_pl_sz / sizeof(u32)) * sizeof(u32);
+> +}
+> +
