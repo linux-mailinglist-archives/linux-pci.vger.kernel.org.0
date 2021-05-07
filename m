@@ -2,100 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14057376416
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 12:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8959C376433
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 13:03:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235738AbhEGKxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 06:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230455AbhEGKxA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 06:53:00 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CD9C061574
-        for <linux-pci@vger.kernel.org>; Fri,  7 May 2021 03:51:51 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id j10so12103139lfb.12
-        for <linux-pci@vger.kernel.org>; Fri, 07 May 2021 03:51:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F33BGz4iH8dPjpEmF0N7tnuxayq0qldcPL97YnVagyw=;
-        b=RW/8+dN/lpgFSZ0df5MNc6Ki5DdxPUebMDu4kK08MUuv4ZBMgn5O8CE/YrnA80N/8s
-         45V4fPucN7eRvI+L50Th5xeDl+tyFXdyOnolupEH5Dm3j6KN2E0T/YbhCbFmf3ggqnJc
-         uFkGqxpYaDIbIvmOmaUzIDHY/QVK0BX/qEbFIr3KtWFSt4JTzpdyOKSRFozudL1LIxhv
-         wDULJGZVK9BEkc3y5wVQawO6Dl1IN1sxHz8xk8YjrplLAkzhkUig4p2M79yY8OZNz54X
-         OrSffwbh4RRupTQnpWIAc65q2iK2wIxfXIV45cV7/OW/VgvqrZ0GxYp+tJ+srqSg6UDA
-         tq8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F33BGz4iH8dPjpEmF0N7tnuxayq0qldcPL97YnVagyw=;
-        b=LIxpPZFgKfRBoZKO/G7fYYCy2ssZ8pUJ4S4JBT+1qcM1sw9rdDS06bQQGu7sDTeXyC
-         7t6m5z/tjHbeLlo9a4EwyTypg/79XMz/eskMDaItWTTAMM6RGwNagtUBynwOgVHZN1qP
-         xShcyvfHhJ6hAqJ2IJyrRIfgMtTzunUHmxDLg8bmrOQoGe+QGO8QXGF3uhCwTU6tUZqt
-         PVGBBaZ7XGdrMMZg/s8Q40zmb/ujrvlR09jNSxH16Rmu7UuSenUs9crc+D4aFQ5Dj6VF
-         Ff9p8ZOWX3n4WSaVOS65dDUYcn2DrdLZ9GsEhgGlpaqnOajTmcyh0vfCraB6goawaPJD
-         gXJw==
-X-Gm-Message-State: AOAM530pW05KqsA3Pey4lPe5Kg5y3ZiF6kYYlaPa+IP2Jz//MPEmKEA4
-        y7az7l8MSq1uYANahsinik3HKkjkh/7RYmYKzDj0SQ==
-X-Google-Smtp-Source: ABdhPJzx7ls/vpMj3eUwiEfOSMkqTyuxko9P8MpdbiNR+6cpzIryOVSHbQTMGPND9R4/vV0DqWX1U8fhYfBfJ4XpTqg=
-X-Received: by 2002:a19:a418:: with SMTP id q24mr5846648lfc.649.1620384709817;
- Fri, 07 May 2021 03:51:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210503185228.1518131-1-clabbe@baylibre.com> <20210506203435.GA1432800@bjorn-Precision-5520>
-In-Reply-To: <20210506203435.GA1432800@bjorn-Precision-5520>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 May 2021 12:51:39 +0200
-Message-ID: <CACRpkdbQvvcyrXP9fFwvppDRiJOxxESRVkodqSKc7CoO3Bm00Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: convert faraday,ftpci100 to yaml
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Corentin Labbe <clabbe@baylibre.com>,
+        id S233366AbhEGLEC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 07:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232796AbhEGLEB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 May 2021 07:04:01 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6C03613CD;
+        Fri,  7 May 2021 11:03:01 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1leyG3-00BRue-78; Fri, 07 May 2021 12:02:59 +0100
+Date:   Fri, 07 May 2021 12:02:57 +0100
+Message-ID: <878s4qq00u.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>, <kvm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Nianyao Tang <tangnianyao@huawei.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: Question on guest enable msi fail when using GICv4/4.1
+In-Reply-To: <cf870bcf-1173-a70b-2b55-4209abcbcbc3@hisilicon.com>
+References: <3a2c66d6-6ca0-8478-d24b-61e8e3241b20@hisilicon.com>
+        <87k0oaq5jf.wl-maz@kernel.org>
+        <cf870bcf-1173-a70b-2b55-4209abcbcbc3@hisilicon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: zhangshaokun@hisilicon.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, linux-pci@vger.kernel.org, alex.williamson@redhat.com, cohuck@redhat.com, tangnianyao@huawei.com, bhelgaas@google.com, eric.auger@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 6, 2021 at 10:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, 07 May 2021 10:58:23 +0100,
+Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+> 
+> Hi Marc,
+> 
+> Thanks for your quick reply.
+> 
+> On 2021/5/7 17:03, Marc Zyngier wrote:
+> > On Fri, 07 May 2021 06:57:04 +0100,
+> > Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+> >>
+> >> [This letter comes from Nianyao Tang]
+> >>
+> >> Hi,
+> >>
+> >> Using GICv4/4.1 and msi capability, guest vf driver requires 3
+> >> vectors and enable msi, will lead to guest stuck.
+> > 
+> > Stuck how?
+> 
+> Guest serial does not response anymore and guest network shutdown.
+> 
+> > 
+> >> Qemu gets number of interrupts from Multiple Message Capable field
+> >> set by guest. This field is aligned to a power of 2(if a function
+> >> requires 3 vectors, it initializes it to 2).
+> > 
+> > So I guess this is a MultiMSI device with 4 vectors, right?
+> > 
+> 
+> Yes, it can support maximum of 32 msi interrupts, and vf driver only use 3 msi.
+> 
+> >> However, guest driver just sends 3 mapi-cmd to vits and 3 ite
+> >> entries is recorded in host.  Vfio initializes msi interrupts using
+> >> the number of interrupts 4 provide by qemu.  When it comes to the
+> >> 4th msi without ite in vits, in irq_bypass_register_producer,
+> >> producer and consumer will __connect fail, due to find_ite fail, and
+> >> do not resume guest.
+> > 
+> > Let me rephrase this to check that I understand it:
+> > - The device has 4 vectors
+> > - The guest only create mappings for 3 of them
+> > - VFIO calls kvm_vgic_v4_set_forwarding() for each vector
+> > - KVM doesn't have a mapping for the 4th vector and returns an error
+> > - VFIO disable this 4th vector
+> > 
+> > Is that correct? If yes, I don't understand why that impacts the guest
+> > at all. From what I can see, vfio_msi_set_vector_signal() just prints
+> > a message on the console and carries on.
+> > 
+> 
+> function calls:
+> --> vfio_msi_set_vector_signal
+>    --> irq_bypass_register_producer
+>       -->__connect
+> 
+> in __connect, add_producer finally calls kvm_vgic_v4_set_forwarding
+> and fails to get the 4th mapping. When add_producer fail, it does
+> not call cons->start, calls kvm_arch_irq_bypass_start and then
+> kvm_arm_resume_guest.
 
-> I think it's nicer when content changes are in a separate patch from
-> format conversion patches.  Otherwise it's really hard to see the
-> content changes in the patch.
->
-> Maybe a preliminary patch could fix whatever is actually broken?
->
-> Rob suggested a bunch of things that could be dropped.  Maybe those
-> could be removed in a second preliminary patch before the conversion?
-> Or maybe the removals are only possible *because* of the conversion?
-> I'm not a yaml expert.
+[+Eric, who wrote the irq_bypass infrastructure.]
 
-A bit of taste is involved. The old .txt bindings are for processing
-by human brain power. Those lack regular syntax and strictness
-because brains are designed for evolved natural languages.
+Ah, so the guest is actually paused, not in a livelock situation
+(which is how I interpreted "stuck").
 
-The YAML on the other hand is a chomsky type-3 strict regular
-language and the .yaml file (and includes) defines this strict regular
-grammar and as such admits less mistakes. The upside is that
-it enforces some order.
+I think we should handle this case gracefully, as there should be no
+expectation that the guest will be using this interrupt. Given that
+VFIO seems to be pretty unfazed when a producer fails, I'm temped to
+do the same thing and restart the guest.
 
-In the process of moving to YAML we often discover a slew of
-mistakes and the initiative often comes with the ambition to add
-or modernize something.
+Also, __disconnect doesn't care about errors, so why should __connect
+have this odd behaviour?
 
-In this case I wouldn't care with stepwise fixing because the
-platform is modernized by a handful of people who all know
-what is going on, so there is noone to confuse other than the
-subsystem maintainer and the result will end up in the same
-kernel release anyway.
+Can you please try this? It is completely untested (and I think the
+del_consumer call is odd, which is why I've also dropped it).
 
-Yours,
-Linus Walleij
+Eric, what do you think?
+
+Thanks,
+
+	M.
+
+diff --git a/virt/lib/irqbypass.c b/virt/lib/irqbypass.c
+index c9bb3957f58a..7e1865e15668 100644
+--- a/virt/lib/irqbypass.c
++++ b/virt/lib/irqbypass.c
+@@ -40,21 +40,14 @@ static int __connect(struct irq_bypass_producer *prod,
+ 	if (prod->add_consumer)
+ 		ret = prod->add_consumer(prod, cons);
+ 
+-	if (ret)
+-		goto err_add_consumer;
+-
+-	ret = cons->add_producer(cons, prod);
+-	if (ret)
+-		goto err_add_producer;
++	if (!ret)
++		ret = cons->add_producer(cons, prod);
+ 
+ 	if (cons->start)
+ 		cons->start(cons);
+ 	if (prod->start)
+ 		prod->start(prod);
+-err_add_producer:
+-	if (prod->del_consumer)
+-		prod->del_consumer(prod, cons);
+-err_add_consumer:
++
+ 	return ret;
+ }
+ 
+
+-- 
+Without deviation from the norm, progress is not possible.
