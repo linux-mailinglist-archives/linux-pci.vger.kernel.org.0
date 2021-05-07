@@ -2,81 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62F9B376CBD
-	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 00:26:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E89376C07
+	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 00:07:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbhEGW1k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 18:27:40 -0400
-Received: from bosmailout01.eigbox.net ([66.96.190.1]:36027 "EHLO
-        bosmailout01.eigbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbhEGW1h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 18:27:37 -0400
-X-Greylist: delayed 1929 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 18:27:30 EDT
-Received: from bosmailscan09.eigbox.net ([10.20.15.9])
-        by bosmailout01.eigbox.net with esmtp (Exim)
-        id 1lf8QO-00068o-JJ; Fri, 07 May 2021 17:54:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=godsofu4.com; s=dkim; h=Sender:Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aM9bUFGSTpfnep8zAVAJMnojqhcwpuHDFPgQnPqW4M4=; b=bjgKomV6NO5Eg5D3qsCBps1llx
-        tj4k2teSfIdfo/duBtOSoC/FW1+C1nXiYJbrvf2JDobx8fDCsgnxHFoPWOCb5eI+OJOIgvnnfKlpl
-        ZqidIuDnjEPTMao1vFwrg6M9FUKU/cz6TT5/KN4ccsk+aQli3Wgs3G1cQz5vdbC1Y2SXULFY8Mu2t
-        1PShwmiDRn71EPzgUHUVu0GG39z6uSTEuRgOXhiNl9ekuZ5QXUAEykoocvC5/DkORRmERAA91o1HY
-        Sl76pPWw9UBVGbuFbfdVPfVcFxJM5xZDrmgt6uCf9J+dn/n7LFOSOxBaL9svxxYdhOkJwdz4uh075
-        2gI+xJSw==;
-Received: from [10.115.3.32] (helo=bosimpout12)
-        by bosmailscan09.eigbox.net with esmtp (Exim)
-        id 1lf8QO-0003aD-AI; Fri, 07 May 2021 17:54:20 -0400
-Received: from boswebmail06.eigbox.net ([10.20.16.6])
-        by bosimpout12 with 
-        id 1xuH2500407qujN01xuLVi; Fri, 07 May 2021 17:54:20 -0400
-X-EN-SP-DIR: OUT
-X-EN-SP-SQ: 1
-Received: from [127.0.0.1] (helo=homestead)
-        by boswebmail06.eigbox.net with esmtp (Exim)
-        id 1lf8QL-0006fx-UG; Fri, 07 May 2021 17:54:17 -0400
-Received: from [197.239.81.229]
- by emailmg.homestead.com
- with HTTP (HTTP/1.1 POST); Fri, 07 May 2021 17:54:17 -0400
+        id S229524AbhEGWIT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 18:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229470AbhEGWIT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 May 2021 18:08:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9761961104;
+        Fri,  7 May 2021 22:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620425236;
+        bh=dfgH+cjku37KYRPxBOOlBSrwJex2J+/wzs8DzOvi/Hg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eVef4mRRvtmcN5u/FaON1rR3yIQZoRAwNP9choLNcoJme05d04IWhkzme0May/1He
+         1SWpKPiRa0Fr9UzplHmZLUsri9l9nQJyWV0BIUXSQUs4WOP9Jv7rg88AN9hVPGaKF1
+         OHxwlh6alwGWWCVcPhZQxn0QjPqUvvxdYdhSoPjvSauo2A1zFGH3Er6v0AOJsJJG4/
+         jI2SBvOPZMBi+Y66mufw+16T3f/Ej90/P4wexSYVBagtBolsD5d/Y4ha/LqFGiuTm7
+         LNNcufq06iR6dw3VZAqlbOt1P6UwyOYKfLFj30ecsVnpKtdBPvbD0QyKZURXSlQqsm
+         C6c5XQ26K4/wg==
+Date:   Fri, 7 May 2021 17:07:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Danijel Slivka <danijel.slivka@amd.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fix accessing freed memory in
+ pci_remove_resource_files
+Message-ID: <20210507220715.GA1545217@bjorn-Precision-5520>
 MIME-Version: 1.0
-Date:   Fri, 07 May 2021 21:54:17 +0000
-From:   Mrs Suzara Maling Wan <fast65@godsofu4.com>
-To:     undisclosed-recipients:;
-Subject: URGENT REPLY NEEDED
-Reply-To: suzara2017malingwan@gmail.com
-Mail-Reply-To: suzara2017malingwan@gmail.com
-Message-ID: <36acfe805efde59f3f399df1324ce6b9@godsofu4.com>
-X-Sender: fast65@godsofu4.com
-User-Agent: Roundcube Webmail/1.3.14
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-EN-AuthUser: fast65@godsofu4.com
-Sender:  Mrs Suzara Maling Wan <fast65@godsofu4.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210507102706.7658-1-danijel.slivka@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Danijel,
 
+Thanks for the patch.
 
-My names are Mrs Suzara Maling Wan, I am a Nationality of the Republic
-of the Philippine presently base in West Africa B/F, dealing with
-exportation of Gold, I was diagnose of blood Causal decease, and my
-doctor have announce to me that I have few days to leave due to the
-condition of my sickness.
+On Fri, May 07, 2021 at 06:27:06PM +0800, Danijel Slivka wrote:
+> This patch fixes segmentation fault during accessing already freed
+> pci device resource files, as after freeing res_attr and res_attr_wc
+> elements, in pci_remove_resource_files function, they are left as
+> dangling pointers.
+> 
+> Signed-off-by: Danijel Slivka <danijel.slivka@amd.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index f8afd54ca3e1..bbdf6c57fcda 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1130,12 +1130,14 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
+>  		if (res_attr) {
+>  			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
+>  			kfree(res_attr);
+> +			pdev->res_attr[i] = NULL;
+>  		}
+>  
+>  		res_attr = pdev->res_attr_wc[i];
+>  		if (res_attr) {
+>  			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
+>  			kfree(res_attr);
+> +			pdev->res_attr_wc[i] = NULL;
 
-I have a desire to build an orphanage home in your country of which i
-cannot execute the project myself due to my present health condition,
-I am willing to hand over the project under your care for you to help
-me fulfill my dreams and desire of building an orphanage home in your
-country.
+If this patch fixes something, I would expect to see a test like this
+somewhere:
 
-Reply in you are will to help so that I can direct you to my bank for
-the urgent transfer of the fund/money require for the project to your
-account as I have already made the fund/money available.
+  if (pdev->res_attr[i])
+    pdev->res_attr[i]->size = 0;
 
-With kind regards
-Mrs Suzara Maling Wan
+But I don't see anything like that, so I can't figure out where we
+actually use res_attr[i] or res_attr_wc[i], except in
+pci_remove_resource_files() itself.
+
+Did you actually see a segmentation fault?  If so, where?
+
+>  		}
+>  	}
+>  }
+> -- 
+> 2.20.1
+> 
