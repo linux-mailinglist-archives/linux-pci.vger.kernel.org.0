@@ -2,89 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59E89376C07
-	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 00:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E096376CD9
+	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 00:29:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbhEGWIT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 May 2021 18:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229470AbhEGWIT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 May 2021 18:08:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9761961104;
-        Fri,  7 May 2021 22:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620425236;
-        bh=dfgH+cjku37KYRPxBOOlBSrwJex2J+/wzs8DzOvi/Hg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eVef4mRRvtmcN5u/FaON1rR3yIQZoRAwNP9choLNcoJme05d04IWhkzme0May/1He
-         1SWpKPiRa0Fr9UzplHmZLUsri9l9nQJyWV0BIUXSQUs4WOP9Jv7rg88AN9hVPGaKF1
-         OHxwlh6alwGWWCVcPhZQxn0QjPqUvvxdYdhSoPjvSauo2A1zFGH3Er6v0AOJsJJG4/
-         jI2SBvOPZMBi+Y66mufw+16T3f/Ej90/P4wexSYVBagtBolsD5d/Y4ha/LqFGiuTm7
-         LNNcufq06iR6dw3VZAqlbOt1P6UwyOYKfLFj30ecsVnpKtdBPvbD0QyKZURXSlQqsm
-         C6c5XQ26K4/wg==
-Date:   Fri, 7 May 2021 17:07:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Danijel Slivka <danijel.slivka@amd.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix accessing freed memory in
- pci_remove_resource_files
-Message-ID: <20210507220715.GA1545217@bjorn-Precision-5520>
+        id S229713AbhEGWaY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 May 2021 18:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229542AbhEGWaY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 May 2021 18:30:24 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFF5C061574
+        for <linux-pci@vger.kernel.org>; Fri,  7 May 2021 15:29:22 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id w3so15795497ejc.4
+        for <linux-pci@vger.kernel.org>; Fri, 07 May 2021 15:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=D8CMSysmCUq6T7qxreBvmApNBU5N6Ri6bP9BoVDgxvY=;
+        b=T1io0telvVrROkAXEm2mI2YCDBbIeGFrLVTkMO+LcefmOIq3KJWrt/8zAynDUsntkp
+         LmD3Ck2qgzJBdyQziv1lI10eS6We0xM4fjqajdKLk5s7hCOjZ6D2Z7JcgsyCXMdJRZGT
+         1tqjLsoY2+dJ6/0Trfk/OLo17FS4W3qx5VgKLEv+Yb3pT5l/r1C7ucIBIXGSv0zhvRpY
+         gx1yrwA4mQOQIINfFtS4J3NUnYtrB31yvMvEjrl/gbXoO+rQb4lV0ZdJN2rHJLWhQXQy
+         jcPnl2Hm6C1XMEGUn/fdG55id18ff9xw0eE2ESlXMPLfnQ/7UnVecshHq5tJGSNGBd5i
+         24AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=D8CMSysmCUq6T7qxreBvmApNBU5N6Ri6bP9BoVDgxvY=;
+        b=sXzkIJV6qtWn/bu8Ct9k5Oxmpv9bQXsM8r9nDhT6htEKxPG2f7iQck6N8pWVHVFNSg
+         wm5Uo2YmHpNRbJKGudR0kQUaFoWFEX3LI4dCCmtr5j3z/XpZfGmfsb0G0tN3b/hhpUNl
+         6b6YZPeLU2TvGPcW8ULPRuNz7qYBYVo43SoOE9x0Ps50MtLurfOfCtHTgr9eePbsfZHo
+         HjNZkRxz5V+5LYQ9SZIpWA1HLNE001EzXnd5Crr0WXDLiJrouTmLiETGK1PEdSxxk9LK
+         uOzuvawGUTC+MpSOTxBPXETsfLLZZ1aoWe2W2aTbJWV5AYH9PAZHrh7odCLpP2jpfjA5
+         L/Aw==
+X-Gm-Message-State: AOAM533+5zXMRjO+biin9U8JP/zo94BHeFTQf/kX8PV0TQqKsS0Kr9ow
+        x/7XGcD48D4ookv/nmywixGiupw7gsINKw==
+X-Google-Smtp-Source: ABdhPJxjQWkdE0WkAzuyftHk+7FBfH0dhio/sX8O7PnZMeUrCpFuG1uxwaisri034Ka9REKClBUINg==
+X-Received: by 2002:a17:906:9381:: with SMTP id l1mr12375497ejx.45.1620426561348;
+        Fri, 07 May 2021 15:29:21 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f38:4600:b4c6:4571:e0db:c0d3? (p200300ea8f384600b4c64571e0dbc0d3.dip0.t-ipconnect.de. [2003:ea:8f38:4600:b4c6:4571:e0db:c0d3])
+        by smtp.googlemail.com with ESMTPSA id u11sm4979567edr.13.2021.05.07.15.29.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 May 2021 15:29:20 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH v2] PCI/VPD: Use unaligned access helpers in pci_vpd_read
+Message-ID: <5719b91c-9f91-0029-0a28-386f1cb29d31@gmail.com>
+Date:   Sat, 8 May 2021 00:29:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210507102706.7658-1-danijel.slivka@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Danijel,
+With this patch we avoid some unnecessary looping if the platform defines
+HAVE_EFFICIENT_UNALIGNED_ACCESS and we make the code better readable.
+No functional change intended.
 
-Thanks for the patch.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2: remove not needed tmpbuf variable
+---
+ drivers/pci/vpd.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-On Fri, May 07, 2021 at 06:27:06PM +0800, Danijel Slivka wrote:
-> This patch fixes segmentation fault during accessing already freed
-> pci device resource files, as after freeing res_attr and res_attr_wc
-> elements, in pci_remove_resource_files function, they are left as
-> dangling pointers.
-> 
-> Signed-off-by: Danijel Slivka <danijel.slivka@amd.com>
-> ---
->  drivers/pci/pci-sysfs.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index f8afd54ca3e1..bbdf6c57fcda 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1130,12 +1130,14 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
->  		if (res_attr) {
->  			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
->  			kfree(res_attr);
-> +			pdev->res_attr[i] = NULL;
->  		}
->  
->  		res_attr = pdev->res_attr_wc[i];
->  		if (res_attr) {
->  			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
->  			kfree(res_attr);
-> +			pdev->res_attr_wc[i] = NULL;
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 741e7a505..ab886e5f4 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -163,12 +163,11 @@ static int pci_vpd_wait(struct pci_dev *dev)
+ }
+ 
+ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+-			    void *arg)
++			    void *buf)
+ {
+ 	struct pci_vpd *vpd = dev->vpd;
+ 	int ret;
+ 	loff_t end = pos + count;
+-	u8 *buf = arg;
+ 
+ 	if (pos < 0)
+ 		return -EINVAL;
+@@ -197,8 +196,8 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 		goto out;
+ 
+ 	while (pos < end) {
++		unsigned int len, skip;
+ 		u32 val;
+-		unsigned int i, skip;
+ 
+ 		ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
+ 						 pos & ~3);
+@@ -215,14 +214,17 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 			break;
+ 
+ 		skip = pos & 3;
+-		for (i = 0;  i < sizeof(u32); i++) {
+-			if (i >= skip) {
+-				*buf++ = val;
+-				if (++pos == end)
+-					break;
+-			}
+-			val >>= 8;
++		len = min_t(unsigned int, 4 - skip, end - pos);
++
++		if (len == 4)  {
++			put_unaligned_le32(val, buf);
++		} else {
++			cpu_to_le32s(&val);
++			memcpy(buf, (u8 *)&val + skip, len);
+ 		}
++
++		buf += len;
++		pos += len;
+ 	}
+ out:
+ 	mutex_unlock(&vpd->lock);
+-- 
+2.31.1
 
-If this patch fixes something, I would expect to see a test like this
-somewhere:
-
-  if (pdev->res_attr[i])
-    pdev->res_attr[i]->size = 0;
-
-But I don't see anything like that, so I can't figure out where we
-actually use res_attr[i] or res_attr_wc[i], except in
-pci_remove_resource_files() itself.
-
-Did you actually see a segmentation fault?  If so, where?
-
->  		}
->  	}
->  }
-> -- 
-> 2.20.1
-> 
