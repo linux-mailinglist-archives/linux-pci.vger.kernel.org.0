@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A60CE3762B4
-	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:22:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 122693762B8
+	for <lists+linux-pci@lfdr.de>; Fri,  7 May 2021 11:22:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbhEGJRH convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 7 May 2021 05:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39486 "EHLO mail.kernel.org"
+        id S235821AbhEGJRT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 7 May 2021 05:17:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235829AbhEGJQm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 May 2021 05:16:42 -0400
+        id S235202AbhEGJRN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 May 2021 05:17:13 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F3ED61426;
-        Fri,  7 May 2021 09:15:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F8061458;
+        Fri,  7 May 2021 09:16:14 +0000 (UTC)
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1lewaC-00BQn9-4H; Fri, 07 May 2021 10:15:40 +0100
-Date:   Fri, 07 May 2021 10:15:39 +0100
-Message-ID: <87h7jeq4zo.wl-maz@kernel.org>
+        id 1lewai-00BQnK-83; Fri, 07 May 2021 10:16:12 +0100
+Date:   Fri, 07 May 2021 10:16:11 +0100
+Message-ID: <87fsyyq4ys.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -35,10 +35,10 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Tomasz Maciej Nowak <tmn505@gmail.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/42] PCI: aardvark: Check for virq mapping when processing INTx IRQ
-In-Reply-To: <20210506153153.30454-13-pali@kernel.org>
+Subject: Re: [PATCH 13/42] PCI: aardvark: Remove irq_mask_ack callback for INTx interrupts
+In-Reply-To: <20210506153153.30454-14-pali@kernel.org>
 References: <20210506153153.30454-1-pali@kernel.org>
-        <20210506153153.30454-13-pali@kernel.org>
+        <20210506153153.30454-14-pali@kernel.org>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -53,36 +53,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 06 May 2021 16:31:23 +0100,
+On Thu, 06 May 2021 16:31:24 +0100,
 Pali Rohár <pali@kernel.org> wrote:
 > 
-> It is possible that we receive spurious INTx interrupt. So add needed check
-> before calling generic_handle_irq() function.
+> Callback for irq_mask_ack is the same as for irq_mask. As there is no
+> special handling for irq_ack, there is no need to define irq_mask_ack too.
 > 
 > Signed-off-by: Pali Rohár <pali@kernel.org>
 > Reviewed-by: Marek Behún <kabel@kernel.org>
-> Cc: stable@vger.kernel.org
 > ---
->  drivers/pci/controller/pci-aardvark.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/pci-aardvark.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
 > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 362faddae935..e7089db11f79 100644
+> index e7089db11f79..2aced8c9ae9f 100644
 > --- a/drivers/pci/controller/pci-aardvark.c
 > +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -1106,7 +1106,10 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
->  			    PCIE_ISR1_REG);
+> @@ -1032,7 +1032,6 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
+>  	}
 >  
->  		virq = irq_find_mapping(pcie->irq_domain, i);
-> -		generic_handle_irq(virq);
-> +		if (virq)
-> +			generic_handle_irq(virq);
-> +		else
-> +			dev_err(&pcie->pdev->dev, "unexpected INT%c IRQ\n", (char)i+'A');
+>  	irq_chip->irq_mask = advk_pcie_irq_mask;
+> -	irq_chip->irq_mask_ack = advk_pcie_irq_mask;
+>  	irq_chip->irq_unmask = advk_pcie_irq_unmask;
+>  
+>  	pcie->irq_domain =
 
-Please don't scream like this. This is the best way to get into a DoS
-situation if you interrupt rate is high enough. At least rate-limit
-it.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
 	M.
 
