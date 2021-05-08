@@ -2,183 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45224377034
-	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 08:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 653873770A3
+	for <lists+linux-pci@lfdr.de>; Sat,  8 May 2021 10:20:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229760AbhEHG6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 May 2021 02:58:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31055 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229701AbhEHG6S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 8 May 2021 02:58:18 -0400
-IronPort-SDR: e3374fKmBfJI6clEZh3NVKXf8tyVdEjRr85TPLza+mc8J7i9XTgbGekIygZndhiAaNWFOfVjGg
- vG2cem+tBaYA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9977"; a="284342962"
-X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
-   d="scan'208";a="284342962"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 23:57:17 -0700
-IronPort-SDR: zS4QOPadBzcAxJpEIR004ULpAonv9OaBt4d9Hfs0piQ51u0zXRSpAbLsa0LmW5WvY0rMNl+A/g
- R8ub7TQ6FLPQ==
-X-IronPort-AV: E=Sophos;i="5.82,282,1613462400"; 
-   d="scan'208";a="470153866"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.254.209.3]) ([10.254.209.3])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2021 23:57:02 -0700
-Subject: Re: Question on guest enable msi fail when using GICv4/4.1
-To:     Jason Wang <jasowang@redhat.com>, Marc Zyngier <maz@kernel.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Nianyao Tang <tangnianyao@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-References: <3a2c66d6-6ca0-8478-d24b-61e8e3241b20@hisilicon.com>
- <87k0oaq5jf.wl-maz@kernel.org>
- <cf870bcf-1173-a70b-2b55-4209abcbcbc3@hisilicon.com>
- <878s4qq00u.wl-maz@kernel.org> <874kfepht4.wl-maz@kernel.org>
- <373c70d3-eda3-8e84-d138-2f90d4e55217@redhat.com>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <4695fd66-7832-5070-627a-74dd254f7456@intel.com>
-Date:   Sat, 8 May 2021 14:56:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S229701AbhEHIVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 May 2021 04:21:46 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:49533 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229583AbhEHIVp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 May 2021 04:21:45 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 219C72800B3D2;
+        Sat,  8 May 2021 10:20:43 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 0408D57556; Sat,  8 May 2021 10:20:42 +0200 (CEST)
+Date:   Sat, 8 May 2021 10:20:42 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Konstantin Kharlamov <Hi-Angel@yandex.ru>,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
+ s2idle
+Message-ID: <20210508082042.GA18309@wunner.de>
+References: <20210506220738.GA2150@wunner.de>
+ <20210507133002.GA1499665@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <373c70d3-eda3-8e84-d138-2f90d4e55217@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210507133002.GA1499665@bjorn-Precision-5520>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, May 07, 2021 at 08:30:02AM -0500, Bjorn Helgaas wrote:
+> Apart from that, what I don't like about this (and about the original
+> 1df5172c5c25) is that there's no connection to a spec or to documented
+> behavior of the device or of suspend/resume.
+> 
+> For example, "With s2idle, the machine isn't suspended via ACPI, so
+> the AML code which powers the controller off isn't executed."  AFAICT
+> that isn't actually a required, documented property of s2idle, but
+> rather it reaches into the internal implementation.
 
+Actually I'm not sure whether AML code is involved here, I may have mixed
+up terms.  To the best of my knowledge, macOS doesn't use s2idle, at least
+not on such older MacBooks.  It either puts the machine into ACPI S3
+(S2RAM) or S4 (hibernate, suspend to disk).  The Thunderbolt controller's
+power rail is off in ACPI S3 and S4.
 
-On 5/8/2021 9:51 AM, Jason Wang wrote:
->
-> 在 2021/5/8 上午1:36, Marc Zyngier 写道:
->> On Fri, 07 May 2021 12:02:57 +0100,
->> Marc Zyngier <maz@kernel.org> wrote:
->>> On Fri, 07 May 2021 10:58:23 +0100,
->>> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
->>>> Hi Marc,
->>>>
->>>> Thanks for your quick reply.
->>>>
->>>> On 2021/5/7 17:03, Marc Zyngier wrote:
->>>>> On Fri, 07 May 2021 06:57:04 +0100,
->>>>> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
->>>>>> [This letter comes from Nianyao Tang]
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> Using GICv4/4.1 and msi capability, guest vf driver requires 3
->>>>>> vectors and enable msi, will lead to guest stuck.
->>>>> Stuck how?
->>>> Guest serial does not response anymore and guest network shutdown.
->>>>
->>>>>> Qemu gets number of interrupts from Multiple Message Capable field
->>>>>> set by guest. This field is aligned to a power of 2(if a function
->>>>>> requires 3 vectors, it initializes it to 2).
->>>>> So I guess this is a MultiMSI device with 4 vectors, right?
->>>>>
->>>> Yes, it can support maximum of 32 msi interrupts, and vf driver 
->>>> only use 3 msi.
->>>>
->>>>>> However, guest driver just sends 3 mapi-cmd to vits and 3 ite
->>>>>> entries is recorded in host.  Vfio initializes msi interrupts using
->>>>>> the number of interrupts 4 provide by qemu.  When it comes to the
->>>>>> 4th msi without ite in vits, in irq_bypass_register_producer,
->>>>>> producer and consumer will __connect fail, due to find_ite fail, and
->>>>>> do not resume guest.
->>>>> Let me rephrase this to check that I understand it:
->>>>> - The device has 4 vectors
->>>>> - The guest only create mappings for 3 of them
->>>>> - VFIO calls kvm_vgic_v4_set_forwarding() for each vector
->>>>> - KVM doesn't have a mapping for the 4th vector and returns an error
->>>>> - VFIO disable this 4th vector
->>>>>
->>>>> Is that correct? If yes, I don't understand why that impacts the 
->>>>> guest
->>>>> at all. From what I can see, vfio_msi_set_vector_signal() just prints
->>>>> a message on the console and carries on.
->>>>>
->>>> function calls:
->>>> --> vfio_msi_set_vector_signal
->>>>     --> irq_bypass_register_producer
->>>>        -->__connect
->>>>
->>>> in __connect, add_producer finally calls kvm_vgic_v4_set_forwarding
->>>> and fails to get the 4th mapping. When add_producer fail, it does
->>>> not call cons->start, calls kvm_arch_irq_bypass_start and then
->>>> kvm_arm_resume_guest.
->>> [+Eric, who wrote the irq_bypass infrastructure.]
->>>
->>> Ah, so the guest is actually paused, not in a livelock situation
->>> (which is how I interpreted "stuck").
->>>
->>> I think we should handle this case gracefully, as there should be no
->>> expectation that the guest will be using this interrupt. Given that
->>> VFIO seems to be pretty unfazed when a producer fails, I'm temped to
->>> do the same thing and restart the guest.
->>>
->>> Also, __disconnect doesn't care about errors, so why should __connect
->>> have this odd behaviour?
->>>
->>> Can you please try this? It is completely untested (and I think the
->>> del_consumer call is odd, which is why I've also dropped it).
->>>
->>> Eric, what do you think?
->> Adding Zhu, Jason, MST to the party. It all seems to be caused by this
->> commit:
->>
->> commit a979a6aa009f3c99689432e0cdb5402a4463fb88
->> Author: Zhu Lingshan <lingshan.zhu@intel.com>
->> Date:   Fri Jul 31 14:55:33 2020 +0800
->>
->>      irqbypass: do not start cons/prod when failed connect
->>           If failed to connect, there is no need to start consumer nor
->>      producer.
->>           Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>      Suggested-by: Jason Wang <jasowang@redhat.com>
->>      Link: 
->> https://lore.kernel.org/r/20200731065533.4144-7-lingshan.zhu@intel.com
->>      Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>
->>
->> Zhu, I'd really like to understand why you think it is OK not to
->> restart consumer and producers when a connection has failed to be
->> established between the two?
->
->
-> My bad, I didn't check ARM code but it's not easy to infer that the 
-> cons->start/stop is not a per consumer specific operation but a global 
-> one like VM halting/resuming.
-Hi Marc,
+A peculiarity of the "Cactus Ridge" Thunderbolt 1 controller built into
+2012/2013 era MacBooks is that it requires execution of the ACPI methods
+in quirk_apple_poweroff_thunderbolt() before power is cut.  Otherwise
+the controller is dead when power is reinstated and a cold reboot is
+required to resurrect it.  At least that's my understanding, I don't
+own a machine with such a chip.  Neither older controllers (such as the
+2011 era "Light Ridge") nor newer controllers (such as 2013/2014
+"Falcon Ridge") need the quirk.
 
-I will send out a patch to revert this commit as Jason suggested.
+The ACPI methods seem to fiddle with GPIOs which are connected to
+the Force Power, Go2Sx and Ok2Go2Sx pins of the Cactus Ridge controller.
+The meaning of the ACPI methods and the pins isn't documented publicly,
+it's all reverse-engineered from the macOS driver and leaked schematics.
+Some educated guesses as to their meaning are contained in my Thunderbolt
+runtime PM patches of 2016:
 
-Thanks
->
->
->>
->> In the case of KVM/arm64, this results in the guest being forever
->> suspended and never resumed. That's obviously not an acceptable
->> regression, as there is a number of benign reasons for a connect to
->> fail.
->
->
-> Let's revert this commit.
->
-> Thanks
->
->
->>
->> Thanks,
->>
->>     M.
->>
->
+https://github.com/l1k/linux/commit/65f56e6c8446
 
+ * * On Macs with Thunderbolt 1 Gen 2 controllers (Cactus Ridge 4C):
+[...]
+ *   * Additional SXFP method ("Force Power"), accepts only argument 0,
+ *     switches the controller off. This carries out just the raw power change,
+ *     unlike XRPE which disables the link on the PCIe Root Port in an orderly
+ *     fashion before switching off the controller.
+ *   * Additional SXLV, SXIO, SXIL methods to utilize the Go2Sx and Ok2Go2Sx
+ *     pins (see background below). Apparently SXLV toggles the value given to
+ *     the POC via Go2Sx (0 or 1), SXIO changes the direction (0 or 1) and SXIL
+ *     returns the value received from the POC via Ok2Go2Sx.
+[...]
+ * * On gen 2 controllers (Cactus Ridge 4C), Intel integrated the MCU into the
+ *   controller and called it POC. This caused a change of semantics for XRIN
+ *   and XRIL. The POC is powered by a separate 3.3V rail which is active even
+ *   in sleep state S4. It only draws a very small current. The regular 3.3V
+ *   and 1.05V power rails are no longer controlled by the southbridge but by
+ *   the POC. In other words the controller powers *itself* up and down! It is
+ *   instructed to do so with the Go2Sx pin. Another pin, Ok2Go2Sx, allows the
+ *   controller to indicate if it is ready to power itself down. Apple wires
+ *   Go2Sx and Ok2Go2Sx to the same GPIO pin on the southbridge, hence the pin
+ *   is used bidirectionally. A third pin, Force Power, is intended by Intel
+ *   for debug only but Apple abuses it for XRPE/TRPE and SXFP. Perhaps it
+ *   leads to larger power saving gains. They utilize Go2Sx and Ok2Go2Sx only
+ *   on Cactus Ridge, presumably because the controller somehow requires that.
+ *   On Falcon Ridge they forego these pins and rely solely on Force Power.
+
+With s2idle, the machine never transitions to ACPI S3 or S4.  Consequently,
+power to the controller isn't cut, but the quirk prepares it for the
+S3/S4 transition.  When the system is woken from s2idle, the chip is
+apparently inaccessible.  Solution is to either not execute the PCI quirk
+at all (as is done by the present patch) or to undo the quirk when waking
+from s2idle.  We don't know how to do the latter, it would have to be
+reverse-engineered.  Maybe it can't be done at all with the available
+ACPI methods.
+
+Thanks,
+
+Lukas
