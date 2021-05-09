@@ -2,337 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 723903774E0
-	for <lists+linux-pci@lfdr.de>; Sun,  9 May 2021 03:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B2103774FF
+	for <lists+linux-pci@lfdr.de>; Sun,  9 May 2021 04:37:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbhEIBvb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 May 2021 21:51:31 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:36716 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbhEIBva (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 May 2021 21:51:30 -0400
-Received: by mail-lf1-f44.google.com with SMTP id m11so1812933lfg.3
-        for <linux-pci@vger.kernel.org>; Sat, 08 May 2021 18:50:28 -0700 (PDT)
+        id S229739AbhEICg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 May 2021 22:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229620AbhEICgy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 May 2021 22:36:54 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3ED8C061760
+        for <linux-pci@vger.kernel.org>; Sat,  8 May 2021 19:35:51 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id v22so7713147oic.2
+        for <linux-pci@vger.kernel.org>; Sat, 08 May 2021 19:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r9Ua8oWrlaXnevwp1qRBCTYfaP2Kxy6kKlxQ7g9TNto=;
+        b=aRah5HVhSQD2lY7Xysyz+2AAdfczQP8Cm3324TGvJUGJI/x+4x2lqCvG4Ty1CKpdwh
+         TQfIf5fon4xgumYNce3vmWzt2iuX5B/Al88wm/2e4sE5u0TGjfx+Esua0zUzMPtGv+oA
+         JVB0gx/ThQiaNav1FYRkqZ9Fg5XcW/Ue83SFtKJj+cvnd89PrlUfigCwR7AMo2VD3yse
+         1++MuCy/qtJIPrVMxvv8oMVVbwHQETO4Uu0AtyHUaXbsFIVc70dBOYDMUsAVc/utvpKC
+         QfswuKwRK0qfPXYLLLuUqJzQz+qPr5WRo9kneZsEJQKB9k1VtdnBTAz49lxzPVGmvEez
+         oAOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JizPpvtUqd63OZJksM9rNF6XkoKh9kJ3ZcXnErFKZfo=;
-        b=Ol+garheZSTs/h3fGpvJYSjl4B5DI5ugnLV3LPX5hq/bgUBmr+doMwRB2q+39tiJs8
-         AEBRCdyObjBeKinx0kgQ/BCUmjaBgqNTWY+9GRdB4Am7I33HU5BP6Qfu1KvhqZOxwS00
-         RqHirB50KpFiWFq/OcpNCLkzoYyB+2Y7NoFBkrjZ4mF2IRh+/lnC0fGgCCdTl6vaplDq
-         V9a2O1szTY+BTGs5Ek8Gvh3DtiJ4fu/uOOljBTm1yphHj6k9pk/n1v1Wj/9Tzk+QyVuh
-         NkpBLT5SDPyFyhjQeObS6C8mivzzrp1WkmamAnRZKg6o0En1cWY+vh/nf/y9J1s3Ae9N
-         H9EA==
-X-Gm-Message-State: AOAM532cMfZuIi161iixxhM/f4FZIeeO7yT6VQzaNIBuNAPQFSySzB8Q
-        zWqXoieq9KVTri1lk+kdI4o=
-X-Google-Smtp-Source: ABdhPJxdrbEf0785uR7fkSYhW0E/0LKH2eQERcZjToI3Q6XFZZ249+YvRquR2DDMfuwIiX+wVaLrNA==
-X-Received: by 2002:ac2:5ec6:: with SMTP id d6mr11547495lfq.365.1620525026782;
-        Sat, 08 May 2021 18:50:26 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id z10sm1776462lfq.45.2021.05.08.18.50.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r9Ua8oWrlaXnevwp1qRBCTYfaP2Kxy6kKlxQ7g9TNto=;
+        b=nyTd41YYZkubF7BgCft/pmZ4zSdJ0s9HotnQavXFVsRSeuscstQ69eSgHvvuVHvm5k
+         2cxQR8tNgosNKsZ0bY0IKKMkUCpvM1TY0oz+PhOYVhP8zw91DRG4ByPfpetBj6sEAQIR
+         wreGQxFUxkYeltWg5lM31Bb1zdZvE231oE5fONSE9JriWR98OeVwhofqeyEdefNPgEiB
+         46Ez6pdX6pVKyLo836Vm4DxjHmxDAvhppLFUFAE3CNNqGzwqiGgXVqJn7umnPgQtPPGe
+         48DtjCTJTeKgYQLdO+rdkMgyz+aqGpLY3q+4k9XfkeJZbzuhnbaw5I9cZ/Xy0AjJeo0M
+         es9g==
+X-Gm-Message-State: AOAM530NwMP6E729o6k6zRZ3yDghXzCJtN5d+/Ht8VI87qReWt0NppYl
+        4UMchKbXex7y2YuEpBznhnHOEQ==
+X-Google-Smtp-Source: ABdhPJyVHEOsinNeIS1NO9xmznO1ZsHBCrMXt2BUBxRe+9jUIF88nrsAk0L02sHsbDYILGyL7tND8g==
+X-Received: by 2002:aca:d493:: with SMTP id l141mr7303636oig.51.1620527750843;
+        Sat, 08 May 2021 19:35:50 -0700 (PDT)
+Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id x65sm848344otb.59.2021.05.08.19.35.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 May 2021 18:50:26 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/sysfs: Move to kstrtobool() to handle user input
-Date:   Sun,  9 May 2021 01:50:25 +0000
-Message-Id: <20210509015025.175053-1-kw@linux.com>
-X-Mailer: git-send-email 2.31.1
+        Sat, 08 May 2021 19:35:50 -0700 (PDT)
+Date:   Sat, 8 May 2021 21:35:47 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Prasad Malisetty <pmaliset@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mgautam@codeaurora.org, swboyd@chromium.org, dianders@chromium.org,
+        mka@chromium.org
+Subject: Re: [PATCH] PCIe: qcom: Add support to control pipe clk mux
+Message-ID: <20210509023547.GJ2484@yoga>
+References: <1620520860-8589-1-git-send-email-pmaliset@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1620520860-8589-1-git-send-email-pmaliset@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A common use case for many PCI sysfs objects is to either enable some
-functionality or trigger an action following a write to a given
-attribute where the value is written would be simply either "1" or "0"
-synonymous with either disabling or enabling something.
+On Sat 08 May 19:41 CDT 2021, Prasad Malisetty wrote:
 
-Parsing and validation of the input values are currently done using the
-kstrtoul() function to convert anything in the string buffer into an
-integer value - anything non-zero would be accepted as "enable" and zero
-simply as "disable".
+> PCIe driver needs to toggle between bi_tcxo and phy pipe
+> clock as part of its LPM sequence. This is done by setting
+> pipe_clk/ref_clk_src as parent of pipe_clk_src after phy init
+> 
+> Dependent on below change:
+> 
+> 	https://lore.kernel.org/patchwork/patch/1422499/
 
-For a while now, the kernel offers another function called kstrtobool()
-which was created to parse common user inputs into a boolean value, so
-that a range of values such as "y", "n", "1", "0", "on" and "off"
-handled in a case-insensitive manner would yield a boolean true or false
-result accordingly after the input string has been parsed.
+In what way is this change to the driver dependent on the addition of
+the node to DT?
 
-Thus, move to kstrtobool() over kstrtoul() as it's a better fit for
-parsing user input, and it also implicitly offers a range check as only
-a finite amount of possible input values will be considered as valid.
+> 
+> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 8a7a300..a9f69e8 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -9,6 +9,7 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
 
-Where appropriate, move the user input parsing after checking for
-whether the "CAP_SYS_ADMIN" flag is set, as it makes more sense to first
-check whether the current user has the right permissions before
-accepting any input from such user.
+Can you help me see why this is needed?
 
-Related:
+>  #include <linux/crc8.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio/consumer.h>
+> @@ -166,6 +167,9 @@ struct qcom_pcie_resources_2_7_0 {
+>  	struct regulator_bulk_data supplies[2];
+>  	struct reset_control *pci_reset;
+>  	struct clk *pipe_clk;
+> +	struct clk *pipe_clk_src;
+> +	struct clk *pipe_ext_src;
+> +	struct clk *ref_clk_src;
+>  };
+>  
+>  union qcom_pcie_resources {
+> @@ -1168,7 +1172,19 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+>  		return ret;
+>  
+>  	res->pipe_clk = devm_clk_get(dev, "pipe");
+> -	return PTR_ERR_OR_ZERO(res->pipe_clk);
+> +	if (IS_ERR(res->pipe_clk))
+> +		return PTR_ERR(res->pipe_clk);
+> +
+> +	res->pipe_clk_src = devm_clk_get(dev, "pipe_src");
+> +	if (IS_ERR(res->pipe_clk_src))
 
-  commit d0f1fed29e6e ("Add a strtobool function matching semantics of existing in kernel equivalents")
-  commit ef951599074b ("lib: move strtobool() to kstrtobool()")
-  commit a81a5a17d44b ("lib: add "on"/"off" support to kstrtobool")
-  commit 1404297ebf76 ("lib: update single-char callers of strtobool()")
+How does this not fail on existing targets?
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/pci-sysfs.c | 105 +++++++++++++++++++---------------------
- 1 file changed, 51 insertions(+), 54 deletions(-)
+> +		return PTR_ERR(res->pipe_clk_src);
+> +
+> +	res->pipe_ext_src = devm_clk_get(dev, "pipe_ext");
+> +	if (IS_ERR(res->pipe_ext_src))
+> +		return PTR_ERR(res->pipe_ext_src);
+> +
+> +	res->ref_clk_src = devm_clk_get(dev, "ref");
+> +	return PTR_ERR_OR_ZERO(res->ref_clk_src);
+>  }
+>  
+>  static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> @@ -1255,6 +1271,11 @@ static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
+>  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +
+> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sc7280"))
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index beb8d1f4fafe..f777f358a177 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -63,13 +63,13 @@ static ssize_t broken_parity_status_store(struct device *dev,
- 					  struct device_attribute *attr,
- 					  const char *buf, size_t count)
- {
-+	bool enable;
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	unsigned long val;
- 
--	if (kstrtoul(buf, 0, &val) < 0)
-+	if (kstrtobool(buf, &enable) < 0)
- 		return -EINVAL;
- 
--	pdev->broken_parity_status = !!val;
-+	pdev->broken_parity_status = enable;
- 
- 	return count;
- }
-@@ -271,21 +271,21 @@ static DEVICE_ATTR_RO(modalias);
- static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
- 			     const char *buf, size_t count)
- {
-+	bool enable;
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	unsigned long val;
--	ssize_t result = kstrtoul(buf, 0, &val);
-+	ssize_t result = 0;
- 
--	if (result < 0)
--		return result;
--
--	/* this can crash the machine when done on the "wrong" device */
-+	/* This can crash the machine when done on the "wrong" device. */
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-+	if (kstrtobool(buf, &enable) < 0)
-+		return -EINVAL;
-+
- 	device_lock(dev);
- 	if (dev->driver)
- 		result = -EBUSY;
--	else if (val)
-+	else if (enable)
- 		result = pci_enable_device(pdev);
- 	else if (pci_is_enabled(pdev))
- 		pci_disable_device(pdev);
-@@ -311,15 +311,14 @@ static ssize_t numa_node_store(struct device *dev,
- 			       struct device_attribute *attr, const char *buf,
- 			       size_t count)
- {
-+	int node;
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	int node, ret;
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	ret = kstrtoint(buf, 0, &node);
--	if (ret)
--		return ret;
-+	if (kstrtoint(buf, 0, &node) < 0)
-+		return -EINVAL;
- 
- 	if ((node < 0 && node != NUMA_NO_NODE) || node >= MAX_NUMNODES)
- 		return -EINVAL;
-@@ -374,48 +373,48 @@ static ssize_t msi_bus_show(struct device *dev, struct device_attribute *attr,
- static ssize_t msi_bus_store(struct device *dev, struct device_attribute *attr,
- 			     const char *buf, size_t count)
- {
-+	bool enable;
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct pci_bus *subordinate = pdev->subordinate;
--	unsigned long val;
--
--	if (kstrtoul(buf, 0, &val) < 0)
--		return -EINVAL;
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-+	if (kstrtobool(buf, &enable) < 0)
-+		return -EINVAL;
-+
- 	/*
- 	 * "no_msi" and "bus_flags" only affect what happens when a driver
- 	 * requests MSI or MSI-X.  They don't affect any drivers that have
- 	 * already requested MSI or MSI-X.
- 	 */
- 	if (!subordinate) {
--		pdev->no_msi = !val;
-+		pdev->no_msi = !enable;
- 		pci_info(pdev, "MSI/MSI-X %s for future drivers\n",
--			 val ? "allowed" : "disallowed");
-+			 enable ? "allowed" : "disallowed");
- 		return count;
- 	}
- 
--	if (val)
-+	if (enable)
- 		subordinate->bus_flags &= ~PCI_BUS_FLAGS_NO_MSI;
- 	else
- 		subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
- 
- 	dev_info(&subordinate->dev, "MSI/MSI-X %s for future drivers of devices on this bus\n",
--		 val ? "allowed" : "disallowed");
-+		 enable ? "allowed" : "disallowed");
- 	return count;
- }
- static DEVICE_ATTR_RW(msi_bus);
- 
- static ssize_t rescan_store(struct bus_type *bus, const char *buf, size_t count)
- {
--	unsigned long val;
-+	bool rescan;
- 	struct pci_bus *b = NULL;
- 
--	if (kstrtoul(buf, 0, &val) < 0)
-+	if (kstrtobool(buf, &rescan) < 0)
- 		return -EINVAL;
- 
--	if (val) {
-+	if (rescan) {
- 		pci_lock_rescan_remove();
- 		while ((b = pci_find_next_bus(b)) != NULL)
- 			pci_rescan_bus(b);
-@@ -443,13 +442,13 @@ static ssize_t dev_rescan_store(struct device *dev,
- 				struct device_attribute *attr, const char *buf,
- 				size_t count)
- {
--	unsigned long val;
-+	bool rescan;
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	if (kstrtoul(buf, 0, &val) < 0)
-+	if (kstrtobool(buf, &rescan) < 0)
- 		return -EINVAL;
- 
--	if (val) {
-+	if (rescan) {
- 		pci_lock_rescan_remove();
- 		pci_rescan_bus(pdev->bus);
- 		pci_unlock_rescan_remove();
-@@ -462,12 +461,12 @@ static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
- {
--	unsigned long val;
-+	bool remove;
- 
--	if (kstrtoul(buf, 0, &val) < 0)
-+	if (kstrtobool(buf, &remove) < 0)
- 		return -EINVAL;
- 
--	if (val && device_remove_file_self(dev, attr))
-+	if (remove && device_remove_file_self(dev, attr))
- 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
- 	return count;
- }
-@@ -478,13 +477,13 @@ static ssize_t bus_rescan_store(struct device *dev,
- 				struct device_attribute *attr,
- 				const char *buf, size_t count)
- {
--	unsigned long val;
-+	bool rescan;
- 	struct pci_bus *bus = to_pci_bus(dev);
- 
--	if (kstrtoul(buf, 0, &val) < 0)
-+	if (kstrtobool(buf, &rescan) < 0)
- 		return -EINVAL;
- 
--	if (val) {
-+	if (rescan) {
- 		pci_lock_rescan_remove();
- 		if (!pci_is_root_bus(bus) && list_empty(&bus->devices))
- 			pci_rescan_bus_bridge_resize(bus->self);
-@@ -502,14 +501,14 @@ static ssize_t d3cold_allowed_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	bool allowed;
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	unsigned long val;
- 
--	if (kstrtoul(buf, 0, &val) < 0)
-+	if (kstrtobool(buf, &allowed) < 0)
- 		return -EINVAL;
- 
--	pdev->d3cold_allowed = !!val;
--	if (pdev->d3cold_allowed)
-+	pdev->d3cold_allowed = allowed;
-+	if (allowed)
- 		pci_d3cold_enable(pdev);
- 	else
- 		pci_d3cold_disable(pdev);
-@@ -1257,12 +1256,13 @@ static ssize_t pci_write_rom(struct file *filp, struct kobject *kobj,
- 			     struct bin_attribute *bin_attr, char *buf,
- 			     loff_t off, size_t count)
- {
-+	bool enable;
- 	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
- 
--	if ((off ==  0) && (*buf == '0') && (count == 2))
--		pdev->rom_attr_enabled = 0;
--	else
--		pdev->rom_attr_enabled = 1;
-+	if (kstrtobool(buf, &enable) < 0)
-+		return -EINVAL;
-+
-+	pdev->rom_attr_enabled = enable;
- 
- 	return count;
- }
-@@ -1337,23 +1337,20 @@ static const struct attribute_group pci_dev_rom_attr_group = {
- static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
- 			   const char *buf, size_t count)
- {
-+	bool reset;
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	unsigned long val;
--	ssize_t result = kstrtoul(buf, 0, &val);
-+	ssize_t result = 0;
- 
--	if (result < 0)
--		return result;
--
--	if (val != 1)
-+	if (kstrtobool(buf, &reset) < 0)
- 		return -EINVAL;
- 
--	pm_runtime_get_sync(dev);
--	result = pci_reset_function(pdev);
--	pm_runtime_put(dev);
--	if (result < 0)
--		return result;
-+	if (reset) {
-+		pm_runtime_get_sync(dev);
-+		result = pci_reset_function(pdev);
-+		pm_runtime_put(dev);
-+	}
- 
--	return count;
-+	return result < 0 ? result : count;
- }
- static DEVICE_ATTR_WO(reset);
- 
--- 
-2.31.1
+Why is this specific to sc7280?
 
+> +		clk_set_parent(res->pipe_clk_src, res->pipe_ext_src);
+
+The naming here is not obvious to me, but I think you're going to use
+this to set parent of gcc_pcie_0_pipe_clk_src to pcie_0_pipe_clk?
+
+But in the commit message you're talking about switching back and forth
+between the pipe clock and tcxo, can you please help me understand where
+this is happening?
+
+
+PS. The new clocks should be mentioned in the binding.
+
+Regards,
+Bjorn
+
+>  
+>  	return clk_prepare_enable(res->pipe_clk);
+>  }
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
