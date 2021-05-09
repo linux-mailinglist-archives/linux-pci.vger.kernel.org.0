@@ -2,199 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E683777AB
-	for <lists+linux-pci@lfdr.de>; Sun,  9 May 2021 19:00:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77CD13778B3
+	for <lists+linux-pci@lfdr.de>; Sun,  9 May 2021 23:31:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbhEIRBV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 May 2021 13:01:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39798 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229815AbhEIRBV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 13:01:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620579617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nvRrwIvL//wqR4eXLZSclNxQvYlBf9vfJ7b18pGt9jI=;
-        b=eC19RytsHQ3sa96o2sO3LJhr08cU8izUyiC5c3CoLu4HkuCiHViScDUrPIZQxp1TqUxAWe
-        Cy+7pzJwlrsjDfdcruXpAe+zlbuatsrj8XUmusZFtl7DUyHQIWegxovcq0W8Fc44eBbJcd
-        9Gl4tqD8OMnIV1P7CwVIwY73SLQK++U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-mo1rzEFOPWmzXXIL-DVA0w-1; Sun, 09 May 2021 13:00:14 -0400
-X-MC-Unique: mo1rzEFOPWmzXXIL-DVA0w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 562DE8015A8;
-        Sun,  9 May 2021 17:00:13 +0000 (UTC)
-Received: from [10.36.113.168] (ovpn-113-168.ams2.redhat.com [10.36.113.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5E856249C;
-        Sun,  9 May 2021 17:00:06 +0000 (UTC)
-Subject: Re: Question on guest enable msi fail when using GICv4/4.1
-To:     Marc Zyngier <maz@kernel.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Nianyao Tang <tangnianyao@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <3a2c66d6-6ca0-8478-d24b-61e8e3241b20@hisilicon.com>
- <87k0oaq5jf.wl-maz@kernel.org>
- <cf870bcf-1173-a70b-2b55-4209abcbcbc3@hisilicon.com>
- <878s4qq00u.wl-maz@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d6481eee-4318-1a56-a5a4-daf467070d22@redhat.com>
-Date:   Sun, 9 May 2021 19:00:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S229815AbhEIVdB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 May 2021 17:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229699AbhEIVdA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 17:33:00 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82529C061573
+        for <linux-pci@vger.kernel.org>; Sun,  9 May 2021 14:31:50 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id p12so18392029ljg.1
+        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 14:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qoXosc9+XwGG0DnYOKcmTBKa/Wh4sBv4A+cqg6uStcg=;
+        b=cHKmZp27GIV6lvtgp+mIkhssli14Aj1rYa8NofrGhkrgYd/9ZKIOGkB/nvAE8dzReb
+         G4XN87hF/bwnqIBUkJnQwza4CADN9k4WSAMJvtPyTtjxXaLg+F4RiGq4EtlOZYwTSPZJ
+         w1fnyEVYDzcl+1/E7v7/WIhSCcDtNO7KMd3B2RQ03B0da9SM1lLUxP67VWoj/WwxVsdp
+         HfZz+9TXkRjKOTagR8u08sHpz1Is9hYgQGplaQHTMjjcDkAAlUuQGydStYU33p9u7/5A
+         jZsUHtZANQx8BCGSiR9Jf1DIqix3SiltA4dBm3GgphlqqAoDe7vV2WiYxwVCUd9OY8qI
+         Z0KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qoXosc9+XwGG0DnYOKcmTBKa/Wh4sBv4A+cqg6uStcg=;
+        b=fmYFPYWbKXhYkLd89C6lVccsfQPjBvVsOu1E9SFglOllmZ+s5J7oPmv22WqM2N379K
+         TN4+QJKE+gMLTjpcVVsmZzBnkSXd+RciPv2sMQE14i9vmq0KgNWYpoHokCfOtADcx8/g
+         wiPKptIGtllk73LePP2Us6ZlcT8ERmn3+qAMiwNhA3rljnpbgJwwa1ZdV+mJm6gK4pNl
+         /r8Khdxm01O7RjZyRnvA3bo0Q7HFR5Z7YEqAumo8k6AY0ipls0Nc1FUuodGOubSjjnOz
+         YxQ0sJ6+3DW4UuQjVojeSsFFq7syHwHDxNGnWnTdYFLes8n8Wv0/eO0RwOBNd6PW0Wts
+         r6Cg==
+X-Gm-Message-State: AOAM532BhRVIm8q61FoQj3HGn+58HvoTEepyVMHBG9FUPybg8wtu4T4m
+        bnYtq+B8n4SySOWLWGXOUJIquJSgA+W6+q2HFOo/4Q==
+X-Google-Smtp-Source: ABdhPJxv2Khh03qPjoVKn6TmaQ38/XVuKElIbxEctXxRSU+AmHrnIyUaPHrlwc6nNd48Am4ufY98TTKQJnKfzVIwz6M=
+X-Received: by 2002:a2e:814d:: with SMTP id t13mr16973194ljg.467.1620595909066;
+ Sun, 09 May 2021 14:31:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <878s4qq00u.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20210503211649.4109334-1-linus.walleij@linaro.org>
+ <20210503211649.4109334-4-linus.walleij@linaro.org> <CAK8P3a1ab_hvW_9_vBawhgsV3-W1F-qWm5KJ_ycuHmpVGzzz+Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a1ab_hvW_9_vBawhgsV3-W1F-qWm5KJ_ycuHmpVGzzz+Q@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 9 May 2021 23:31:37 +0200
+Message-ID: <CACRpkdZstp7Yi6Lke16yFGSkFMfb12LC=cqY5T3=YGd_bO-mcQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] PCI: ixp4xx: Add device tree bindings for IXP4xx
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        Zoltan HERPAI <wigyori@uid0.hu>,
+        Raylynn Knight <rayknight@me.com>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-On 5/7/21 1:02 PM, Marc Zyngier wrote:
-> On Fri, 07 May 2021 10:58:23 +0100,
-> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
->>
->> Hi Marc,
->>
->> Thanks for your quick reply.
->>
->> On 2021/5/7 17:03, Marc Zyngier wrote:
->>> On Fri, 07 May 2021 06:57:04 +0100,
->>> Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
->>>>
->>>> [This letter comes from Nianyao Tang]
->>>>
->>>> Hi,
->>>>
->>>> Using GICv4/4.1 and msi capability, guest vf driver requires 3
->>>> vectors and enable msi, will lead to guest stuck.
->>>
->>> Stuck how?
->>
->> Guest serial does not response anymore and guest network shutdown.
->>
->>>
->>>> Qemu gets number of interrupts from Multiple Message Capable field
->>>> set by guest. This field is aligned to a power of 2(if a function
->>>> requires 3 vectors, it initializes it to 2).
->>>
->>> So I guess this is a MultiMSI device with 4 vectors, right?
->>>
->>
->> Yes, it can support maximum of 32 msi interrupts, and vf driver only use 3 msi.
->>
->>>> However, guest driver just sends 3 mapi-cmd to vits and 3 ite
->>>> entries is recorded in host.  Vfio initializes msi interrupts using
->>>> the number of interrupts 4 provide by qemu.  When it comes to the
->>>> 4th msi without ite in vits, in irq_bypass_register_producer,
->>>> producer and consumer will __connect fail, due to find_ite fail, and
->>>> do not resume guest.
->>>
->>> Let me rephrase this to check that I understand it:
->>> - The device has 4 vectors
->>> - The guest only create mappings for 3 of them
->>> - VFIO calls kvm_vgic_v4_set_forwarding() for each vector
->>> - KVM doesn't have a mapping for the 4th vector and returns an error
->>> - VFIO disable this 4th vector
->>>
->>> Is that correct? If yes, I don't understand why that impacts the guest
->>> at all. From what I can see, vfio_msi_set_vector_signal() just prints
->>> a message on the console and carries on.
->>>
->>
->> function calls:
->> --> vfio_msi_set_vector_signal
->>    --> irq_bypass_register_producer
->>       -->__connect
->>
->> in __connect, add_producer finally calls kvm_vgic_v4_set_forwarding
->> and fails to get the 4th mapping. When add_producer fail, it does
->> not call cons->start, calls kvm_arch_irq_bypass_start and then
->> kvm_arm_resume_guest.
-> 
-> [+Eric, who wrote the irq_bypass infrastructure.]
-> 
-> Ah, so the guest is actually paused, not in a livelock situation
-> (which is how I interpreted "stuck").
-> 
-> I think we should handle this case gracefully, as there should be no
-> expectation that the guest will be using this interrupt. Given that
-> VFIO seems to be pretty unfazed when a producer fails, I'm temped to
-> do the same thing and restart the guest.
-> 
-> Also, __disconnect doesn't care about errors, so why should __connect
-> have this odd behaviour?
+On Tue, May 4, 2021 at 2:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, May 3, 2021 at 11:16 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - intel,ixp42x-pci
+> > +          - intel,ixp43x-pci
+> > +    description: The two supported variants are ixp42x and ixp43x,
+> > +      though more variants may exist.
+>
+> These are still wildcard names, better pick a real soc identifier
+> such as "ixp425" instead of "ixp42x" in case there are differences
+> after all.
 
-_disconnect() does not care as we should always succeed tearing off
-things. del_* ops are void functions. On the opposite we can fail
-setting up the bypass.
+In general I agree. But when not even the vendor think they should
+be held apart that is another thing. Even the official Intel
+documentation uses these names:
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/ixp42x-product-line-network-processors-datasheet.pdf
+https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/ixp43x-product-line-network-processors-datasheet.pdf
 
-Effectively
-a979a6aa009f ("irqbypass: do not start cons/prod when failed connect")
-needs to be reverted.
+The differences seem to be very small and related to the NPE
+and page 23 in the 42x documentation makes no difference
+between them.
 
-I agree the kerneldoc comments in linux/irqbypass.h may be improved to
-better explain the role of stop/start cbs and warn about their potential
-global impact.
+I guess I will change it if you insist, but none of the other
+drivers have this fine-grained compatible strings.
 
-wrt the case above, "in __connect, add_producer finally calls
-kvm_vgic_v4_set_forwarding and fails to get the 4th mapping", shouldn't
-we succeed in that case?
+> > +        <0x0800 0 0 1 &gpio0 11 3>, /* INT A on slot 1 is irq 11 */
+> > +        <0x0800 0 0 2 &gpio0 10 3>, /* INT B on slot 1 is irq 10 */
+> > +        <0x0800 0 0 3 &gpio0 9  3>, /* INT C on slot 1 is irq 9 */
+> > +        <0x0800 0 0 4 &gpio0 8  3>, /* INT D on slot 1 is irq 8 */
+> > +        <0x1000 0 0 1 &gpio0 10 3>, /* INT A on slot 2 is irq 10 */
+> > +        <0x1000 0 0 2 &gpio0 9  3>, /* INT B on slot 2 is irq 9 */
+> > +        <0x1000 0 0 3 &gpio0 8  3>, /* INT C on slot 2 is irq 8 */
+> > +        <0x1000 0 0 4 &gpio0 11 3>, /* INT D on slot 2 is irq 11 */
+> > +        <0x1800 0 0 1 &gpio0 9  3>, /* INT A on slot 3 is irq 9 */
+> > +        <0x1800 0 0 2 &gpio0 8  3>, /* INT B on slot 3 is irq 8 */
+> > +        <0x1800 0 0 3 &gpio0 11 3>, /* INT C on slot 3 is irq 11 */
+> > +        <0x1800 0 0 4 &gpio0 10 3>; /* INT D on slot 3 is irq 10 */
+>
+> Is this different from the default swizzling rules? You normally
+> only have to provide the irqs for the bus once.
 
-Thanks
+The different board files for ixp4xx does the swizzling in different
+ways.
 
-Eric
+The NSLU2 rotates only the top 3 IRQs and looks like this:
 
-> 
-> Can you please try this? It is completely untested (and I think the
-> del_consumer call is odd, which is why I've also dropped it).
-> 
-> Eric, what do you think?
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> diff --git a/virt/lib/irqbypass.c b/virt/lib/irqbypass.c
-> index c9bb3957f58a..7e1865e15668 100644
-> --- a/virt/lib/irqbypass.c
-> +++ b/virt/lib/irqbypass.c
-> @@ -40,21 +40,14 @@ static int __connect(struct irq_bypass_producer *prod,
->  	if (prod->add_consumer)
->  		ret = prod->add_consumer(prod, cons);
->  
-> -	if (ret)
-> -		goto err_add_consumer;
-> -
-> -	ret = cons->add_producer(cons, prod);
-> -	if (ret)
-> -		goto err_add_producer;
-> +	if (!ret)
-> +		ret = cons->add_producer(cons, prod);
->  
->  	if (cons->start)
->  		cons->start(cons);
->  	if (prod->start)
->  		prod->start(prod);
-> -err_add_producer:
-> -	if (prod->del_consumer)
-> -		prod->del_consumer(prod, cons);
-> -err_add_consumer:
-> +
->  	return ret;
->  }
->  
-> 
++                       /*
++                        * Taken from NSLU2 PCI boardfile, INT A, B, C
+swizzled D constant
++                        * We have slots (IDSEL) 1, 2 and 3.
++                        */
++                       interrupt-map =
++                       /* IDSEL 1 */
++                       <0x0800 0 0 1 &gpio0 11 3>, /* INT A on slot 1
+is irq 11 */
++                       <0x0800 0 0 2 &gpio0 10 3>, /* INT B on slot 1
+is irq 10 */
++                       <0x0800 0 0 3 &gpio0 9  3>, /* INT C on slot 1
+is irq 9 */
++                       <0x0800 0 0 4 &gpio0 8  3>, /* INT D on slot 1
+is irq 8 */
++                       /* IDSEL 2 */
++                       <0x1000 0 0 1 &gpio0 10 3>, /* INT A on slot 2
+is irq 10 */
++                       <0x1000 0 0 2 &gpio0 9  3>, /* INT B on slot 2
+is irq 9 */
++                       <0x1000 0 0 3 &gpio0 11 3>, /* INT C on slot 2
+is irq 11 */
++                       <0x1000 0 0 4 &gpio0 8  3>, /* INT D on slot 2
+is irq 8 */
++                       /* IDSEL 3 */
++                       <0x1800 0 0 1 &gpio0 9  3>, /* INT A on slot 3
+is irq 9 */
++                       <0x1800 0 0 2 &gpio0 11 3>, /* INT B on slot 3
+is irq 11 */
++                       <0x1800 0 0 3 &gpio0 10 3>, /* INT C on slot 3
+is irq 10 */
++                       <0x1800 0 0 4 &gpio0 8  3>; /* INT D on slot 3
+is irq 8 */
 
+Yours,
+Linus Walleij
