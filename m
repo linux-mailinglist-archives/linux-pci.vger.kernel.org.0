@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1504E3778FC
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 00:21:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB0A3778FD
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 00:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbhEIWWI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 May 2021 18:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
+        id S229933AbhEIWWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 May 2021 18:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbhEIWWI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 18:22:08 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A138AC061573
-        for <linux-pci@vger.kernel.org>; Sun,  9 May 2021 15:21:03 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id i9so13944168lfe.13
-        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 15:21:03 -0700 (PDT)
+        with ESMTP id S229973AbhEIWWJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 18:22:09 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA24C061573
+        for <linux-pci@vger.kernel.org>; Sun,  9 May 2021 15:21:05 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id c3so20502850lfs.7
+        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 15:21:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gNke3Wg2Ntk9EmsCen3APo/ovEtU9o2zaCxzSbnHEjc=;
-        b=E/riOnsyi0z1LVj74roTINvavou0wy/aH+tbOcLOWKnNl52bsoqcZY0xvpiMktv/xI
-         5A69KJogEoICmslVDQxGNcmoDP67ec3mVcUBA8xxRYR9REsd0Ht4iaODg/B7CGdwna+6
-         /IkxbUE5wOkjx8zmltpMRmt15a1pg2TIm8XxszspCuyftJnCZZXqfIEX9ZSlwDv0KtEv
-         I7U4XZjHFrW4SENTQ48qVXZKbQpRbK2aTqbRx/sw7pQBA0T0QfNwuDFBowXsY333Iwnm
-         McHw7WiVLXuiB2CucJhrMN7KSHfZGqLxYtrvFHmynWnIHFP04CvJcx98CJzurvf7xFKp
-         DWHw==
+        bh=zf+S7hvXyl8k4/OTCUtnv5DVgW50Qe9kDD2QLo75Eic=;
+        b=N5ug85ebB91Ju07EvncOpKAYdBT1sOVqmHUdsUsgsrOoJuEvxnJRiIDNV/Y8s9Bvm5
+         VVL7HRX+537AbZ6w1RAzREwmyBTh8rYUbL2f1MJ44NmBGHU9DjVjljIL96et25XIxj67
+         u9fH4cX3Fb5h8DOSSXPBYvx0YNewx5q6wA8sD7/Y0lYTEmO7/G0lyoDI4RNqdgBfCYdw
+         1H6Z5G3MfB8HgOh6ztH2tD0gLHwD0rV/RUL96YWPCdwdIbeQnzNo2KNzVYgmiLQRKzDN
+         HIXjQic8B9MMn6rMnBqwuAcK4JVQI7AO3HvTQvhAUmG5pELC4Ey8LUVmcyCBXomxfhFr
+         s8nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gNke3Wg2Ntk9EmsCen3APo/ovEtU9o2zaCxzSbnHEjc=;
-        b=gQGZUxhIfdOO0fV0Xr7yBX2ZK+Ly67R1HIS6dxJTF6JbGOaROWc025cnbYcNN7EekA
-         4v9iJbHa2cO3N103hqRi+KVZeJ9aMX8ltcQDJWHwPpjrPVrC9zBR1umx/r6RxP/7Q7qP
-         94OVIBzMbnLVzcZtf7yMyjHXEeROUBxtTBSe3lxreqiubxlyfrbvNZfRROJSoMjgEc5P
-         DylF6lgoGgX4RcUHaxY6fTk52BNDDu9x4CO8z9pvbu7U7VZF7BNXYlj7UDt4QXE8km3k
-         71nIJ5Ov6TZy8prbWcvHltiYX4w+gJGoJdhT7ZbXOuNqk4ozTKp7Q4Eej8y5wgYXRmwg
-         sPtw==
-X-Gm-Message-State: AOAM530kYdWDP7TzhIg7am/8LSXFf2MfdgoYncXdrLr7cZQqNVUKH9lK
-        unbrMSsk3sagwTxVAAlauuvTQux0J76qvg==
-X-Google-Smtp-Source: ABdhPJxWl2X24W0gh7u2BYDaANrXtvvx7rcfVGg85va5f0PByl5HL9ebofT8nhpAYJ9sk+10RCHTjA==
-X-Received: by 2002:a05:6512:3d0f:: with SMTP id d15mr14937066lfv.639.1620598862132;
-        Sun, 09 May 2021 15:21:02 -0700 (PDT)
+        bh=zf+S7hvXyl8k4/OTCUtnv5DVgW50Qe9kDD2QLo75Eic=;
+        b=ODkBlC9ARXGLWzrsUK1q2U9tZ9H2C/HXiG79lJBZ52kvH4qRKj9opOFobqwCpRPOUb
+         eKdvxZkdIGlXPB4G52PuARuquLtUEj6v8t8NfF3THjDlNLymO6bz2rqeOMwJEORe/Obj
+         8HZZVM2+wtP4Z9GDxKV/YMq9MEENiq2AZEyK9/IT25u/i/71pIJPXJWDM6JwhR/ODrYl
+         Z1NXdsdC3+u4DDwW1pGadU1t7WsWlF3SR6UEaDPi8UkJslm5iWUu5MD0jEJaivZ4NnhC
+         kjMNYK6//ettPbJ86awcZ0AHov6klD8m8WNLULagoF7h7jA11bPydSOEUoQ/IlC0YSZg
+         k8kA==
+X-Gm-Message-State: AOAM531uOKv/GEXmQTZdvjGDPQlBFdnU9sLW7eTB83j24nvy2gr/SzWN
+        JrgK6jV6FZipJKPniX0yjkT50g==
+X-Google-Smtp-Source: ABdhPJygLiDXDZtYmq8f0GFbVIJ8L9U7adTeiB5wUhFzMFYjEzXyvieC46iqA5iRNgU8NEkBfFOpfw==
+X-Received: by 2002:a05:6512:12d0:: with SMTP id p16mr14832876lfg.232.1620598863857;
+        Sun, 09 May 2021 15:21:03 -0700 (PDT)
 Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id u12sm2978012ljo.82.2021.05.09.15.21.01
+        by smtp.gmail.com with ESMTPSA id u12sm2978012ljo.82.2021.05.09.15.21.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 May 2021 15:21:01 -0700 (PDT)
+        Sun, 09 May 2021 15:21:03 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
@@ -55,9 +55,9 @@ Cc:     linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Zoltan HERPAI <wigyori@uid0.hu>,
         Raylynn Knight <rayknight@me.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/4 v3] ARM/ixp4xx: Move the virtual IObases
-Date:   Mon, 10 May 2021 00:20:52 +0200
-Message-Id: <20210509222055.341945-2-linus.walleij@linaro.org>
+Subject: [PATCH 2/4 v3] ARM/ixp4xx: Make NEED_MACH_IO_H optional
+Date:   Mon, 10 May 2021 00:20:53 +0200
+Message-Id: <20210509222055.341945-3-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210509222055.341945-1-linus.walleij@linaro.org>
 References: <20210509222055.341945-1-linus.walleij@linaro.org>
@@ -67,24 +67,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UART1, UART2 and the expansion bus config registers
-are the only registers mapped in a fixed location
-when using device tree.
+In order to create a proper PCI driver for the IXP4xx
+we need to make the old PCI driver and its reliance
+on <mach/io.h> optional.
 
-For device tree we also want to get rid of the custom
-<mach/io.h> for IXP4xx. So we need to undefine
-CONFIG_NEED_MACH_IO_H. Doing that activates the fixed
-mapping of the PCI IO space to PCI_IO_VIRT_BASE which
-is hardcoded to 0xFEE00000 and this would collide with
-the old fixed mappings.
+Create a new Kconfig symbol for the legacy PCI driver
+IXP4XX_PCI_LEGACY and only activate NEED_MACH_IO_H
+for this driver.
 
-Move the fixed virtual IO base address from 0xFEF00000
-to 0xFEC00000 in order to avoid the collision.
+A few files need to be adjusted to explicitly include
+the <mach/hardware.h> and <mach/cpu.h> headers that
+they previously obtained implicitly using <linux/io.h>
+that would include <mach/io.h> and in turn include
+these two headers.
 
-For the OF-only boot path let's even cut the reliance
-on <mach/io.h> and just hardcode the one single virtbase
-we need apart from the UART, which is hardcoded in
-Kconfig.debug.
+This breaks our reliance on the old PCI and indirect
+PCI support so we can reimplement a proper purely
+DT-based driver in the PCI subsystem.
 
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Imre Kaloz <kaloz@openwrt.org>
@@ -95,92 +94,271 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 ChangeLog v2->v3:
 - No changes, resend with the rest of the patches.
-ChangeLog v1->v2:
-- Instead of handling the UART and expansion ports
-  separately just move all peripherals from 0xfef00000
-  to 0xfec00000.
-- Stay out of the fixmap area, that area has special
-  uses.
 
 PCI maintainers: this patch is mostly FYI, will be
 merged through ARM SoC
 ---
- arch/arm/Kconfig.debug                          | 4 ++--
- arch/arm/mach-ixp4xx/include/mach/ixp4xx-regs.h | 7 ++++---
- arch/arm/mach-ixp4xx/ixp4xx-of.c                | 8 ++++++--
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ arch/arm/Kconfig                         |  3 ++-
+ arch/arm/mach-ixp4xx/Kconfig             | 33 +++++++++++++++---------
+ arch/arm/mach-ixp4xx/common.c            |  1 -
+ arch/arm/mach-ixp4xx/fsg-setup.c         |  1 +
+ arch/arm/mach-ixp4xx/nas100d-setup.c     |  1 +
+ arch/arm/mach-ixp4xx/nslu2-setup.c       |  1 +
+ drivers/ata/pata_ixp4xx_cf.c             |  1 +
+ drivers/net/ethernet/xscale/ixp4xx_eth.c |  1 +
+ drivers/soc/ixp4xx/ixp4xx-npe.c          |  2 ++
+ drivers/soc/ixp4xx/ixp4xx-qmgr.c         |  2 ++
+ 10 files changed, 32 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 9e0b5e7f12af..f672b23301e6 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1803,8 +1803,8 @@ config DEBUG_UART_VIRT
- 	default 0xfedc0000 if DEBUG_EP93XX
- 	default 0xfee003f8 if DEBUG_FOOTBRIDGE_COM1
- 	default 0xfee20000 if DEBUG_NSPIRE_CLASSIC_UART || DEBUG_NSPIRE_CX_UART
--	default 0xfef00000 if ARCH_IXP4XX && !CPU_BIG_ENDIAN
--	default 0xfef00003 if ARCH_IXP4XX && CPU_BIG_ENDIAN
-+	default 0xfec00000 if ARCH_IXP4XX && !CPU_BIG_ENDIAN
-+	default 0xfec00003 if ARCH_IXP4XX && CPU_BIG_ENDIAN
- 	default 0xfef36000 if DEBUG_HIGHBANK_UART
- 	default 0xfefb0000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
- 	default 0xfefb0800 if DEBUG_OMAP1UART2 || DEBUG_OMAP7XXUART2
-diff --git a/arch/arm/mach-ixp4xx/include/mach/ixp4xx-regs.h b/arch/arm/mach-ixp4xx/include/mach/ixp4xx-regs.h
-index 708d085ce39f..f375c1c005d4 100644
---- a/arch/arm/mach-ixp4xx/include/mach/ixp4xx-regs.h
-+++ b/arch/arm/mach-ixp4xx/include/mach/ixp4xx-regs.h
-@@ -45,21 +45,21 @@
-  * it can be used with the low-level debug code.
-  */
- #define IXP4XX_PERIPHERAL_BASE_PHYS	0xC8000000
--#define IXP4XX_PERIPHERAL_BASE_VIRT	IOMEM(0xFEF00000)
-+#define IXP4XX_PERIPHERAL_BASE_VIRT	IOMEM(0xFEC00000)
- #define IXP4XX_PERIPHERAL_REGION_SIZE	0x00013000
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 853aab5ab327..4ca2ab19d265 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -394,7 +394,8 @@ config ARCH_IXP4XX
+ 	select HAVE_PCI
+ 	select IXP4XX_IRQ
+ 	select IXP4XX_TIMER
+-	select NEED_MACH_IO_H
++	# With the new PCI driver this is not needed
++	select NEED_MACH_IO_H if PCI_IXP4XX_LEGACY
+ 	select USB_EHCI_BIG_ENDIAN_DESC
+ 	select USB_EHCI_BIG_ENDIAN_MMIO
+ 	help
+diff --git a/arch/arm/mach-ixp4xx/Kconfig b/arch/arm/mach-ixp4xx/Kconfig
+index 165c184801e1..cabb37232704 100644
+--- a/arch/arm/mach-ixp4xx/Kconfig
++++ b/arch/arm/mach-ixp4xx/Kconfig
+@@ -20,7 +20,7 @@ config MACH_IXP4XX_OF
+ config MACH_NSLU2
+ 	bool
+ 	prompt "Linksys NSLU2"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Linksys's
+ 	  NSLU2 NAS device. For more information on this platform,
+@@ -28,7 +28,7 @@ config MACH_NSLU2
  
- /*
-  * PCI Config registers
-  */
- #define IXP4XX_PCI_CFG_BASE_PHYS	0xC0000000
--#define IXP4XX_PCI_CFG_BASE_VIRT	IOMEM(0xFEF13000)
-+#define IXP4XX_PCI_CFG_BASE_VIRT	IOMEM(0xFEC13000)
- #define IXP4XX_PCI_CFG_REGION_SIZE	0x00001000
+ config MACH_AVILA
+ 	bool "Avila"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support the Gateworks
+ 	  Avila Network Platform. For more information on this platform,
+@@ -44,7 +44,7 @@ config MACH_LOFT
  
- /*
-  * Expansion BUS Configuration registers
-  */
- #define IXP4XX_EXP_CFG_BASE_PHYS	0xC4000000
--#define IXP4XX_EXP_CFG_BASE_VIRT	0xFEF14000
-+#define IXP4XX_EXP_CFG_BASE_VIRT	0xFEC14000
- #define IXP4XX_EXP_CFG_REGION_SIZE	0x00001000
+ config ARCH_ADI_COYOTE
+ 	bool "Coyote"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support the ADI 
+ 	  Engineering Coyote Gateway Reference Platform. For more
+@@ -52,7 +52,7 @@ config ARCH_ADI_COYOTE
  
- #define IXP4XX_EXP_CS0_OFFSET	0x00
-@@ -120,6 +120,7 @@
- #define IXP4XX_SSP_BASE_PHYS		(IXP4XX_PERIPHERAL_BASE_PHYS + 0x12000)
+ config MACH_GATEWAY7001
+ 	bool "Gateway 7001"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Gateway's
+ 	  7001 Access Point. For more information on this platform,
+@@ -60,7 +60,7 @@ config MACH_GATEWAY7001
  
+ config MACH_WG302V2
+ 	bool "Netgear WG302 v2 / WAG302 v2"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Netgear's
+ 	  WG302 v2 or WAG302 v2 Access Points. For more information
+@@ -68,6 +68,7 @@ config MACH_WG302V2
  
-+/* The UART is explicitly put in the beginning of fixmap */
- #define IXP4XX_UART1_BASE_VIRT		(IXP4XX_PERIPHERAL_BASE_VIRT + 0x0000)
- #define IXP4XX_UART2_BASE_VIRT		(IXP4XX_PERIPHERAL_BASE_VIRT + 0x1000)
- #define IXP4XX_PMU_BASE_VIRT		(IXP4XX_PERIPHERAL_BASE_VIRT + 0x2000)
-diff --git a/arch/arm/mach-ixp4xx/ixp4xx-of.c b/arch/arm/mach-ixp4xx/ixp4xx-of.c
-index 7449b8319c8a..f9904716ec7f 100644
---- a/arch/arm/mach-ixp4xx/ixp4xx-of.c
-+++ b/arch/arm/mach-ixp4xx/ixp4xx-of.c
-@@ -9,8 +9,12 @@
+ config ARCH_IXDP425
+ 	bool "IXDP425"
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Intel's 
+ 	  IXDP425 Development Platform (Also known as Richfield).  
+@@ -75,6 +76,7 @@ config ARCH_IXDP425
+ 
+ config MACH_IXDPG425
+ 	bool "IXDPG425"
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Intel's
+ 	  IXDPG425 Development Platform (Also known as Montajade).
+@@ -120,7 +122,7 @@ config ARCH_PRPMC1100
+ config MACH_NAS100D
+ 	bool
+ 	prompt "NAS100D"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Iomega's
+ 	  NAS 100d device. For more information on this platform,
+@@ -129,7 +131,7 @@ config MACH_NAS100D
+ config MACH_DSMG600
+ 	bool
+ 	prompt "D-Link DSM-G600 RevA"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support D-Link's
+ 	  DSM-G600 RevA device. For more information on this platform,
+@@ -143,7 +145,7 @@ config	ARCH_IXDP4XX
+ config MACH_FSG
+ 	bool
+ 	prompt "Freecom FSG-3"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Freecom's
+ 	  FSG-3 device. For more information on this platform,
+@@ -152,7 +154,7 @@ config MACH_FSG
+ config MACH_ARCOM_VULCAN
+ 	bool
+ 	prompt "Arcom/Eurotech Vulcan"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support Arcom's
+ 	  Vulcan board.
+@@ -173,7 +175,7 @@ config CPU_IXP43X
+ config MACH_GTWX5715
+ 	bool "Gemtek WX5715 (Linksys WRV54G)"
+ 	depends on ARCH_IXP4XX
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 		This board is currently inside the Linksys WRV54G Gateways.
+ 
+@@ -196,7 +198,7 @@ config MACH_DEVIXP
+ 
+ config MACH_MICCPT
+ 	bool "Omicron MICCPT"
+-	select FORCE_PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+ 	  Say 'Y' here if you want your kernel to support the MICCPT
+ 	  board from OMICRON electronics GmbH.
+@@ -209,9 +211,16 @@ config MACH_MIC256
+ 
+ comment "IXP4xx Options"
+ 
++config IXP4XX_PCI_LEGACY
++	bool "IXP4xx legacy PCI driver support"
++	depends on PCI
++	help
++	  Selects legacy PCI driver.
++	  Not recommended for new development.
++
+ config IXP4XX_INDIRECT_PCI
+ 	bool "Use indirect PCI memory access"
+-	depends on PCI
++	depends on IXP4XX_PCI_LEGACY
+ 	help
+           IXP4xx provides two methods of accessing PCI memory space:
+ 
+diff --git a/arch/arm/mach-ixp4xx/common.c b/arch/arm/mach-ixp4xx/common.c
+index 000f672a94c9..431da1b4f6bd 100644
+--- a/arch/arm/mach-ixp4xx/common.c
++++ b/arch/arm/mach-ixp4xx/common.c
+@@ -32,7 +32,6 @@
+ #include <linux/dma-map-ops.h>
+ #include <mach/udc.h>
+ #include <mach/hardware.h>
+-#include <mach/io.h>
+ #include <linux/uaccess.h>
+ #include <asm/page.h>
+ #include <asm/exception.h>
+diff --git a/arch/arm/mach-ixp4xx/fsg-setup.c b/arch/arm/mach-ixp4xx/fsg-setup.c
+index 507ee3878769..844329c5610d 100644
+--- a/arch/arm/mach-ixp4xx/fsg-setup.c
++++ b/arch/arm/mach-ixp4xx/fsg-setup.c
+@@ -28,6 +28,7 @@
+ #include <asm/mach-types.h>
  #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
+ #include <asm/mach/flash.h>
++#include <mach/hardware.h>
  
--#include <mach/hardware.h>
--#include <mach/ixp4xx-regs.h>
-+/*
-+ * These are the only fixed phys to virt mappings we ever need
-+ * we put it right after the UART mapping at 0xffc80000-0xffc81fff
-+ */
-+#define IXP4XX_EXP_CFG_BASE_PHYS	0xC4000000
-+#define IXP4XX_EXP_CFG_BASE_VIRT	0xFEC14000
+ #include "irqs.h"
  
- static struct map_desc ixp4xx_of_io_desc[] __initdata = {
- 	/*
+diff --git a/arch/arm/mach-ixp4xx/nas100d-setup.c b/arch/arm/mach-ixp4xx/nas100d-setup.c
+index 6959ad2e3aec..6133cf01cbe4 100644
+--- a/arch/arm/mach-ixp4xx/nas100d-setup.c
++++ b/arch/arm/mach-ixp4xx/nas100d-setup.c
+@@ -33,6 +33,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/flash.h>
++#include <mach/hardware.h>
+ 
+ #include "irqs.h"
+ 
+diff --git a/arch/arm/mach-ixp4xx/nslu2-setup.c b/arch/arm/mach-ixp4xx/nslu2-setup.c
+index a428bb918703..8526a70e401b 100644
+--- a/arch/arm/mach-ixp4xx/nslu2-setup.c
++++ b/arch/arm/mach-ixp4xx/nslu2-setup.c
+@@ -31,6 +31,7 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/flash.h>
+ #include <asm/mach/time.h>
++#include <mach/hardware.h>
+ 
+ #include "irqs.h"
+ 
+diff --git a/drivers/ata/pata_ixp4xx_cf.c b/drivers/ata/pata_ixp4xx_cf.c
+index d1644a8ef9fa..9929d0150141 100644
+--- a/drivers/ata/pata_ixp4xx_cf.c
++++ b/drivers/ata/pata_ixp4xx_cf.c
+@@ -18,6 +18,7 @@
+ #include <linux/irq.h>
+ #include <linux/platform_device.h>
+ #include <scsi/scsi_host.h>
++#include <mach/hardware.h>
+ 
+ #define DRV_NAME	"pata_ixp4xx_cf"
+ #define DRV_VERSION	"0.2"
+diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+index 0152f1e70783..88ad1639a7da 100644
+--- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
++++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+@@ -36,6 +36,7 @@
+ #include <linux/module.h>
+ #include <linux/soc/ixp4xx/npe.h>
+ #include <linux/soc/ixp4xx/qmgr.h>
++#include <mach/hardware.h>
+ 
+ #include "ixp46x_ts.h"
+ 
+diff --git a/drivers/soc/ixp4xx/ixp4xx-npe.c b/drivers/soc/ixp4xx/ixp4xx-npe.c
+index ec90b44fa0cd..0a16ac46ab59 100644
+--- a/drivers/soc/ixp4xx/ixp4xx-npe.c
++++ b/drivers/soc/ixp4xx/ixp4xx-npe.c
+@@ -20,6 +20,8 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/soc/ixp4xx/npe.h>
++#include <mach/hardware.h>
++#include <mach/cpu.h>
+ 
+ #define DEBUG_MSG			0
+ #define DEBUG_FW			0
+diff --git a/drivers/soc/ixp4xx/ixp4xx-qmgr.c b/drivers/soc/ixp4xx/ixp4xx-qmgr.c
+index 8c968382cea7..1b1631ac0438 100644
+--- a/drivers/soc/ixp4xx/ixp4xx-qmgr.c
++++ b/drivers/soc/ixp4xx/ixp4xx-qmgr.c
+@@ -12,6 +12,8 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/soc/ixp4xx/qmgr.h>
++#include <mach/hardware.h>
++#include <mach/cpu.h>
+ 
+ static struct qmgr_regs __iomem *qmgr_regs;
+ static int qmgr_irq_1;
 -- 
 2.30.2
 
