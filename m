@@ -2,147 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD15F3794F6
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 19:05:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48742379571
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 19:24:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232091AbhEJRG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 13:06:26 -0400
-Received: from mail-oo1-f48.google.com ([209.85.161.48]:44929 "EHLO
-        mail-oo1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232128AbhEJRGT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 13:06:19 -0400
-Received: by mail-oo1-f48.google.com with SMTP id s24-20020a4aead80000b02901fec6deb28aso3606392ooh.11;
-        Mon, 10 May 2021 10:05:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4vmuG3TVld/HqXLmDM7EiJT6pCpebq7PEW64VGifnmg=;
-        b=jRXH3VDdnrudIMiuXmpAp4p8aIiAp/wKPb26gm0T1+dXTW5edbmmmp2fx9vUswbE/9
-         5bjk93R0agr1PQRoicWHSoadqjxMgZU9RAgWueQuROesj3I9pcGr/bVS2ckHDa4ET/te
-         1BVSYs3meGBxFqP6IruSgmRjze5KRgGS836+/LuyddCvbj5U0uykJUGOqxNxVwx0W+86
-         wXY9Rap7vW0R4x2U1tMSbw8REpqrmgXVS6z2tm73AMpah15vKoQRhYG2JcveUMizFUHf
-         MSAJUIAwN0CL36jd8WpjhyAGIkOx+kVD4NZq238LVz1CeUBKp+akWIROmRHYBJGPQAaA
-         R/8A==
-X-Gm-Message-State: AOAM5320feCFCZvpkdT/Mf/3H5XSDuVwN9Dk35aBpOjt0fVSCyVUADOO
-        ZaKC8R4mdEoIxISoo19qIg==
-X-Google-Smtp-Source: ABdhPJw/nT6sjSzKzwv88KMnQo/mWzaQwDDuSjMhRXlzZCCmwEMQzv++NmsjnZLeeuakNSfAV9yaog==
-X-Received: by 2002:a4a:9c8c:: with SMTP id z12mr19809507ooj.3.1620666313343;
-        Mon, 10 May 2021 10:05:13 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a14sm3222496otl.52.2021.05.10.10.05.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 10:05:12 -0700 (PDT)
-Received: (nullmailer pid 287298 invoked by uid 1000);
-        Mon, 10 May 2021 17:05:10 -0000
-Date:   Mon, 10 May 2021 12:05:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, patchwork-lst@pengutronix.de
-Subject: Re: [PATCH 3/7] PCI: imx6: Rework PHY search and mapping
-Message-ID: <20210510170510.GA276768@robh.at.kernel.org>
-References: <20210510141509.929120-1-l.stach@pengutronix.de>
- <20210510141509.929120-3-l.stach@pengutronix.de>
+        id S232323AbhEJRZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 13:25:40 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3054 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231670AbhEJRZj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 13:25:39 -0400
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ff74g16Zmz6sp42;
+        Tue, 11 May 2021 01:16:19 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Mon, 10 May 2021 19:24:32 +0200
+Received: from localhost (10.52.123.16) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 10 May
+ 2021 18:24:31 +0100
+Date:   Mon, 10 May 2021 18:22:49 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3 0/8] CXL Port Enumeration and Plans for v5.14
+Message-ID: <20210510182249.0000267f@Huawei.com>
+In-Reply-To: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210510141509.929120-3-l.stach@pengutronix.de>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.123.16]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 04:15:05PM +0200, Lucas Stach wrote:
-> We don't need to have a phandle of the PHY, as we know the compatible
-> of the node we are looking for. This will make it easier to put add
-> more PHY handling for new generations later on, where the
-> "fsl,imx7d-pcie-phy" phandle would be a misnomer.
+On Fri, 7 May 2021 15:51:14 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Changes since v2 [1]:
+> - Add some rationale for moving definitions out of mem.c into mem.h
+>   (Jonathan)
 > 
-> Also we can use a helper function to get the resource for us,
-> simplifying out driver code a bit.
+> - Fixup CXL_DEVICE_REGS kernel doc and declare the fixup for the
+>   struct cxl_mem kernel-doc in the changelog (Jonathan)
+> 
+> - Fixup cxl_setup_device_regs() kernel-doc (Jonathan)
+> 
+> - Cleanup comment in cxl_root_alloc() (Jonathan)
+> 
+> - [not changed] refactor device creation into alloc_and_add()
+>   anti-pattern.
+> 
+> - Add kernel doc to cxl_address_space_dev_add() to clarify why @host is
+>   needed as an arg. (Jonathan)
+> 
+> - Describe what the port devices are representing in "cxl/port:
+>   Introduce cxl_port objects" (Jonathan)
+> 
+> - Explain the rationale for /sys/bus/cxl (Bjorn)
+> 
+> [1]: http://lore.kernel.org/r/161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com
 
-Better yes, but really all the phy handling should be split out to 
-its own driver even in the older h/w with shared phy registers.
+Hi Dan,
 
-Soon as there's a chip with 2 PCI hosts, you're going to need the phy 
-binding.
+What's the base for this series?  Given it was nearly ready to go
+(as far as I'm concerned anyway), I thought I'd give it a spin but
+seems it doesn't have some changes from fixes that have gone upstream.
 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Thanks,
+
+Jonathan
+
+> 
 > ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt  |  5 ++---
->  drivers/pci/controller/dwc/pci-imx6.c           | 17 +++++------------
->  2 files changed, 7 insertions(+), 15 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index de4b2baf91e8..308540df99ef 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -54,7 +54,6 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
->  	       - "pciephy"
->  	       - "apps"
->  	       - "turnoff"
-> -- fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
->  
->  Additional required properties for imx8mq-pcie:
->  - clock-names: Must include the following additional entries:
-> @@ -88,8 +87,8 @@ Example:
->  
->  * Freescale i.MX7d PCIe PHY
->  
-> -This is the PHY associated with the IMX7d PCIe controller.  It's used by the
-> -PCI-e controller via the fsl,imx7d-pcie-phy phandle.
-> +This is the PHY associated with the IMX7d PCIe controller.  It's looked up by
-> +the PCI-e controller via the fsl,imx7d-pcie-phy compatible.
->  
->  Required properties:
->  - compatible:
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 922c14361cd3..5e13758222e8 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -555,7 +555,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  			writel(PCIE_PHY_CMN_REG26_ATT_MODE,
->  			       imx6_pcie->phy_base + PCIE_PHY_CMN_REG26);
->  		} else {
-> -			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy phandle ?\n");
-> +			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy node?\n");
->  		}
->  
->  		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
-> @@ -970,7 +970,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct imx6_pcie *imx6_pcie;
-> -	struct device_node *np;
-> +	struct device_node *np = NULL;
->  	struct resource *dbi_base;
->  	struct device_node *node = dev->of_node;
->  	int ret;
-> @@ -991,17 +991,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  	imx6_pcie->pci = pci;
->  	imx6_pcie->drvdata = of_device_get_match_data(dev);
->  
-> -	/* Find the PHY if one is defined, only imx7d uses it */
-> -	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
-> +	/* Find the PHY if one is present in DT, only imx7d uses it */
-> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-pcie-phy");
->  	if (np) {
-> -		struct resource res;
-> -
-> -		ret = of_address_to_resource(np, 0, &res);
-> -		if (ret) {
-> -			dev_err(dev, "Unable to map PCIe PHY\n");
-> -			return ret;
-> -		}
-> -		imx6_pcie->phy_base = devm_ioremap_resource(dev, &res);
-> +		imx6_pcie->phy_base = devm_of_iomap(dev, np, 0, NULL);
->  		if (IS_ERR(imx6_pcie->phy_base)) {
->  			dev_err(dev, "Unable to map PCIe PHY\n");
->  			return PTR_ERR(imx6_pcie->phy_base);
-> -- 
-> 2.29.2
+> Plans for v5.14:
 > 
+> This series is a starting point for the persistent memory and dynamic
+> HDM decoder manipulation support targeting the v5.14 kernel. Among the
+> tasks to complete in that timeframe are:
+> 
+> - Region creation including CXL label support
+> - LIBNVDIMM integration for surfacing /dev/pmemX and /dev/daxX.Y devices
+>   on CXL resources
+> - HDM decoder enumeration and programming for setting up PMEM mappings
+>   alongside any "System RAM" mappings established by platform firmware
+> - CDAT-DOE support in support of dynamically created NUMA nodes
+> - CXL PMEM Shutdown semantics (global persistence flush coordination)
+> 
+> Contributions to cxl.git targeting the next merge window require a
+> non-author Reviewed-by. A patch with a Reviewed-by, no outstanding
+> objections, and a 3-5 day quiet period on the list is subject to be
+> applied to a non-rebasing cxl.git branch and merged into cxl.git/next.
+> Contributions targeting a current -rc (fixes) may go in on an expedited
+> schedule with only an Acked-by.
+> 
+> ---
+> 
+> CXL Port Topology:
+> 
+> The enumeration starts with the ACPI0017 driver registering a 'struct
+> cxl_root' object to establish the top of a cxl_port topology. It then
+> scans the ACPI bus looking for ACPI0016 instances. The cxl_root object
+> is a singleton* anchor to hang "address-space" objects and be a parent
+> device for the downstream 'struct cxl_port' instances. An address-space
+> has a 1:1 relationship with a platform defined memory resource range,
+> like _CRS for PCIE Host Bridges. Use module parameters to model a
+> root-level HDM decoder that all downstream ports further decode, to be
+> replaced with a Code First ECN to do the same.
+> 
+> Each address space is modeled as a sysfs object that also shows up in
+> /proc/iomem as "CXL Address Space". That iomem resource is functionally
+> equivalent to the root-level 'PCI Bus' resources for PCIE.mmio while
+> 'CXL Address Space' indicates space for CXL.mem to be mapped. "System
+> RAM" and "Persistent Memory", when mapped by HDM decoders, will appear
+> as child CXL.mem resources.
+> 
+> Once a 'struct cxl_root' is established the host bridge is modeled as 1
+> upstream 'struct cxl_port' and N downstream 'struct cxl_port' instances
+> (one per Root Port), just like a PCIE switch. The host-bridge upstream
+> port optionally has the HDM decoder registers from the CHBCR if the
+> host-bridge has multiple PCIE/CXL root ports. Single-ported host bridges
+> will not have HDM decoders in the CHBCR space (see CHBCR note in
+> 8.2.5.12 CXL HDM Decoder Capability Structure), but the 'struct
+> cxl_port' object is still needed to represent other CXL capabilities and
+> access port-specific component registers outside of HDM decoders.
+> 
+> Each 'struct cxl_port' has a 'target_id' attribute that answers the
+> question "what port am I in my upstream port's HDM decoder target
+> list?". For the host-bridge struct cxl_port, the first tier of ports
+> below cxl_root.port, the id is derived from the ordinal mapping of the
+> ACPI0016 id (instance id, _UID, or other handle TBD), for all other
+> ports the id is the PCIE Root Port ID from the Link Capabilities
+> register [1]. The mapping of ordinal port identifiers relative to their
+> parent may change once libcxl and cxl-cli prove out region creation, or
+> a better option is found to establish a static device path / persistent
+> naming scheme. System software must not assume that 'struct cxl_port'
+> device names will be static from one boot to the next.
+> 
+> See patch7 for a tree(1) topology picture of what QEMU is producing
+> today with this enabling.
+> 
+> * cxl_root is singleton only by convention. A given cxl_root could
+>   represent 1 to N address spaces, this patch set chooses to implement 1
+>   cxl_root for all address spaces.
+> 
+> [1]: CXL 2.0 8.2.5.12.8 CXL HDM Decoder 0 Target List Low Register
+>      (Offset 24h) ...The Target Port Identifier for a given Downstream Port
+>      is reported via Port Number field in Link Capabilities Register. (See
+>      PCI Express Base Specification).
+> 
+> ---
+> 
+> Dan Williams (8):
+>       cxl/mem: Move some definitions to mem.h
+>       cxl/mem: Introduce 'struct cxl_regs' for "composable" CXL devices
+>       cxl/core: Rename bus.c to core.c
+>       cxl/core: Refactor CXL register lookup for bridge reuse
+>       cxl/acpi: Introduce ACPI0017 driver and cxl_root
+>       cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+>       cxl/port: Introduce cxl_port objects
+>       cxl/acpi: Add module parameters to stand in for ACPI tables
+> 
+> 
+>  Documentation/driver-api/cxl/memory-devices.rst |    6 
+>  drivers/cxl/Kconfig                             |   16 +
+>  drivers/cxl/Makefile                            |    6 
+>  drivers/cxl/acpi.c                              |  215 +++++++++
+>  drivers/cxl/bus.c                               |   29 -
+>  drivers/cxl/core.c                              |  561 +++++++++++++++++++++++
+>  drivers/cxl/cxl.h                               |  148 ++++--
+>  drivers/cxl/mem.c                               |   97 +---
+>  drivers/cxl/mem.h                               |   82 +++
+>  9 files changed, 999 insertions(+), 161 deletions(-)
+>  create mode 100644 drivers/cxl/acpi.c
+>  delete mode 100644 drivers/cxl/bus.c
+>  create mode 100644 drivers/cxl/core.c
+>  create mode 100644 drivers/cxl/mem.h
+> 
+> base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+
