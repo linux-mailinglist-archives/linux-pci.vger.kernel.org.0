@@ -2,43 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAFBA377A35
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 04:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0BBD377AE1
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 06:14:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbhEJCqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 May 2021 22:46:40 -0400
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:45827 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbhEJCqg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 22:46:36 -0400
-Received: by mail-ed1-f43.google.com with SMTP id s7so12233248edq.12
-        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 19:45:31 -0700 (PDT)
+        id S229716AbhEJEPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 00:15:31 -0400
+Received: from mail-ej1-f42.google.com ([209.85.218.42]:46023 "EHLO
+        mail-ej1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229569AbhEJEPa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 00:15:30 -0400
+Received: by mail-ej1-f42.google.com with SMTP id u3so22359114eja.12
+        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 21:14:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kbQg4+9brtIpQyB367XuQ54IAM6gOiPLjgHbH6iKbI4=;
-        b=mIMkM+d+sxAKAQoMHkWjDdMKvglAmUUSPvWHTOCKx2ORsErYoEYIT2BpEmCaz3NmSF
-         yXXkprLb6NR9WZSW24CxN14mqIO/PrvaAcGNdNZ2UkRUGOXjtfOg7kZiNtkgT8Uh45qy
-         h2MO39d8gbjlKsmBVDBwveYBc5WzltC3x8eX64X6YTKwXY8ftbb9oVPbgggcmXjixuRS
-         cBVUfxImFGjhmAEbt6AObfDKOPKDnQhAm3uAkklkMBSpcwP4PlitQerzWNDQcz8YoomT
-         MgOX9d3qP7RGUPl1IzHt4UiwZE+V0QT3pQNfz1YdnKegcb+rxi4DiSQYH3aRazYoH9BB
-         kSsw==
-X-Gm-Message-State: AOAM530CZHpaO8FM7HWKdVbDhMr/UM2ei6H+WpQoCmB5CY8DIdEYDSel
-        5w8ctQ2UiF8ksHylp1Q2G3xuLPt5W+I=
-X-Google-Smtp-Source: ABdhPJxUnwdQGG4/VBjRb+GsfCokeEepj6rGrwAeoHyLRgvmnv3bfrDdVEPeeEH3CO8oDBwbIZd9tw==
-X-Received: by 2002:a05:6402:683:: with SMTP id f3mr26041287edy.22.1620614731235;
-        Sun, 09 May 2021 19:45:31 -0700 (PDT)
+        bh=yG00XpORYp9fWIwYNYumtIx0DbQmOEgAaM8O8RiTCBg=;
+        b=CTeo8yihqPBKptTIS4VrnFCam1mQrl36s83kUffXVhXgjXX4d2+4oZswdBq6ZZb2Jk
+         6yCz2w1Nfu4ZfpSMuA/uuuqL3ZxPRbYQqpyTaA37iRr1ICsom13m91T586eRhASd8PXB
+         cxQ/4tkScLyTtd3hQQ43NUChTGLS8PptNPI4t3+oqEQOxPn3CszLqccETnvqy10Bpsnf
+         x2EutTwbQnSg/m3wLvka3pdbUac+rCongE7OAouWGiAvN96LAcqYYlIMfYOXtjmO9nMh
+         WE7Y0wIh8ES142Sl594fbGPkDfgDrU8lw0fjpnVgyAdAuuAQz87sVQI/iqKZoPmjHS0t
+         gw3Q==
+X-Gm-Message-State: AOAM5338sy4wMibbrZhV4yuhcOlG7YQytpjbocOTG8D0100vKgkoZLKo
+        +fFZG1B5fhMD6OwZxvHM0/M=
+X-Google-Smtp-Source: ABdhPJyJeQPSRJV9jJWYAjEQGkNIBh1uh1Jil7dgPsc1o2RkXPUJpNn61pvdKGmYpGTBlGGSR+C90w==
+X-Received: by 2002:a17:907:7216:: with SMTP id dr22mr23759582ejc.185.1620620065913;
+        Sun, 09 May 2021 21:14:25 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id j20sm8100733ejc.110.2021.05.09.19.45.30
+        by smtp.gmail.com with ESMTPSA id e4sm8165006ejh.98.2021.05.09.21.14.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 May 2021 19:45:30 -0700 (PDT)
+        Sun, 09 May 2021 21:14:25 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Scott Murray <scott@spiteful.org>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: cpcihp: Move declaration of cpci_debug to the header file
-Date:   Mon, 10 May 2021 02:45:29 +0000
-Message-Id: <20210510024529.3221347-1-kw@linux.com>
+Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 01/11] PCI: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+Date:   Mon, 10 May 2021 04:14:14 +0000
+Message-Id: <20210510041424.233565-1-kw@linux.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -47,61 +55,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-At the moment, the global variable cpci_debug is declared in the
-cpci_hotplug_core.c file.  Since this variable has users outside of this
-file and uses the extern keyword to change its visibility, move the
-variable declaration to the header file.
+The sysfs_emit() and sysfs_emit_at() functions were introduced to make
+it less ambiguous which function is preferred when writing to the output
+buffer in a device attribute's "show" callback [1].
 
-This resolves the following sparse warning:
+Convert the PCI sysfs object "show" functions from sprintf(), snprintf()
+and scnprintf() to sysfs_emit() and sysfs_emit_at() accordingly, as the
+latter is aware of the PAGE_SIZE buffer and correctly returns the number
+of bytes written into the buffer.
 
-  drivers/pci/hotplug/cpci_hotplug_core.c:47:5: warning: symbol 'cpci_debug' was not declared. Should it be static?
+No functional change intended.
+
+[1] Documentation/filesystems/sysfs.rst
+
+Related to:
+  commit ad025f8e46f3 ("PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions")
 
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/hotplug/cpci_hotplug.h      | 3 +++
- drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
- drivers/pci/hotplug/cpci_hotplug_pci.c  | 2 --
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-index f33ff2bca414..3fdd1b9bd8c3 100644
---- a/drivers/pci/hotplug/cpci_hotplug.h
-+++ b/drivers/pci/hotplug/cpci_hotplug.h
-@@ -75,6 +75,9 @@ int cpci_hp_unregister_bus(struct pci_bus *bus);
- int cpci_hp_start(void);
- int cpci_hp_stop(void);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b717680377a9..5ed316ea5831 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6439,7 +6439,7 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
  
-+/* Global variables */
-+extern int cpci_debug;
-+
- /*
-  * Internal function prototypes, these functions should not be used by
-  * board/chassis drivers.
-diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-index d0559d2faf50..7a78e6340291 100644
---- a/drivers/pci/hotplug/cpci_hotplug_core.c
-+++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-@@ -44,7 +44,6 @@ static DECLARE_RWSEM(list_rwsem);
- static LIST_HEAD(slot_list);
- static int slots;
- static atomic_t extracting;
--int cpci_debug;
- static struct cpci_hp_controller *controller;
- static struct task_struct *cpci_thread;
- static int thread_finished;
-diff --git a/drivers/pci/hotplug/cpci_hotplug_pci.c b/drivers/pci/hotplug/cpci_hotplug_pci.c
-index 2c16adb7f4ec..6c48066acb44 100644
---- a/drivers/pci/hotplug/cpci_hotplug_pci.c
-+++ b/drivers/pci/hotplug/cpci_hotplug_pci.c
-@@ -19,8 +19,6 @@
+ 	spin_lock(&resource_alignment_lock);
+ 	if (resource_alignment_param)
+-		count = scnprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
++		count = sysfs_emit(buf, "%s", resource_alignment_param);
+ 	spin_unlock(&resource_alignment_lock);
  
- #define MY_NAME	"cpci_hotplug"
- 
--extern int cpci_debug;
--
- #define dbg(format, arg...)					\
- 	do {							\
- 		if (cpci_debug)					\
+ 	/*
 -- 
 2.31.1
 
