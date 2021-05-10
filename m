@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0301B3791C0
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 16:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63BD93791C2
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 16:59:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236404AbhEJPAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 11:00:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:60310 "EHLO verein.lst.de"
+        id S236978AbhEJPAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 11:00:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:60346 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237177AbhEJO7l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 10:59:41 -0400
+        id S240251AbhEJPAI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 May 2021 11:00:08 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7F6AC67373; Mon, 10 May 2021 16:58:23 +0200 (CEST)
-Date:   Mon, 10 May 2021 16:58:23 +0200
+        id 621D667373; Mon, 10 May 2021 16:59:00 +0200 (CEST)
+Date:   Mon, 10 May 2021 16:59:00 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Claire Chang <tientzu@chromium.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
@@ -49,13 +49,13 @@ Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
         matthew.auld@intel.com, nouveau@lists.freedesktop.org,
         rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v6 01/15] swiotlb: Refactor swiotlb init functions
-Message-ID: <20210510145823.GA28066@lst.de>
-References: <20210510095026.3477496-1-tientzu@chromium.org> <20210510095026.3477496-2-tientzu@chromium.org>
+Subject: Re: [PATCH v6 02/15] swiotlb: Refactor swiotlb_create_debugfs
+Message-ID: <20210510145900.GB28066@lst.de>
+References: <20210510095026.3477496-1-tientzu@chromium.org> <20210510095026.3477496-3-tientzu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210510095026.3477496-2-tientzu@chromium.org>
+In-Reply-To: <20210510095026.3477496-3-tientzu@chromium.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
