@@ -2,85 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BB74378237
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 12:32:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 956483782FF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 12:40:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbhEJKdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 06:33:21 -0400
-Received: from mail-lf1-f50.google.com ([209.85.167.50]:43743 "EHLO
-        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231956AbhEJKbU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 06:31:20 -0400
-Received: by mail-lf1-f50.google.com with SMTP id x2so22563705lff.10
-        for <linux-pci@vger.kernel.org>; Mon, 10 May 2021 03:30:14 -0700 (PDT)
+        id S231797AbhEJKl0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 06:41:26 -0400
+Received: from mail-ej1-f54.google.com ([209.85.218.54]:41695 "EHLO
+        mail-ej1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231131AbhEJKiT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 06:38:19 -0400
+Received: by mail-ej1-f54.google.com with SMTP id zg3so23759697ejb.8;
+        Mon, 10 May 2021 03:37:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C1bGqFoAr3Dm/nAsPYbR3i3yRqydV4li4lsV6x+0ahU=;
-        b=suHvE6T1jtar2wDNXujCmvlusvPzz29xXPqNk3nnZMSZ+Jlu/cLuGC0hAcypGmwnDy
-         xM9ztLI8eSvYEUkN5urhfPYBzV47mtZXKbHRrVcJP8SHTpuic4JZbq1QqgWPpGIy2sb8
-         DR8MdHn2anSiAdviNSGWydEh/tIoMlxx5mjHsQXipPVxYZmZp+jEfkd+fH5Ln4smKlve
-         lkgNZS148ANOxSOcxZqt3kMMOcoNWAQ4vBO9c3QeUdwCe/EreDlozaIjk2VgHFNXvFzy
-         ja5J7TPdfQS7X68vL40LeqF9QXSUA3SmXN0NQJCJP1tYu42ihQ5l2XRmGSWfR+qgtTAG
-         AkvQ==
-X-Gm-Message-State: AOAM531Txmfuv4SCLqr2D9ww/ZzG5G7p86vvaebrsZbgR5hcxZg9/4Oy
-        fKktb4/vJe05z7SmQfJXfZc=
-X-Google-Smtp-Source: ABdhPJy6GbuSSAPp2pAx8zY67AVdFL8jT0JHBy6DiCzbVrHD4aswUk/VpnHqkQU4/IOS2CMNUPWApw==
-X-Received: by 2002:a19:385c:: with SMTP id d28mr16254059lfj.13.1620642614189;
-        Mon, 10 May 2021 03:30:14 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ug3AdZaoLVVLJj8pY6BgmKmKBqKVZuDXwrXQ2bHIYQk=;
+        b=I+guoFS/CRxoHM56MzrgM04TJN0qy+dyqeba5vsKolKO76uIeu+H/wjv/g9j+56J2X
+         WH33fLOswEEg0OkZrARHUNtH4Yw8Pk1rAh4MX1d0nDDWWpUwSWpdmKuqPRDSUQj1gEst
+         Qv4Q9oxxwkYwg+QQRSni/abUpMAmwQ2EYQej9u06vXxAF4nyatydhKgsVAQOQXQ9aFZx
+         IRGAt9WeiWlfpF5B0iHuTXGUfhpzFf188Rpc+3VvJM7MsRqkGoUB8gUWOKmgWP9IMgUq
+         Z1lksygQiYgemn/819O47Y3UzS1Y8c1ygQZXvystUmWAi+FWEPy10TUB5x4+2afp4Xwl
+         0WcQ==
+X-Gm-Message-State: AOAM531qdk0FnbJyGr9nDpSEfuM8rytLq55GTl+MqYJ3ICcKD/912IO9
+        3S3yUPLsp/L/WVXw+cKFh1k=
+X-Google-Smtp-Source: ABdhPJwtTa+7TiMBjoanT3utg/RL+UohXwsw3xleowEgWhc46mReRiEDwgVERzqp0fg8UXgoBnU2eg==
+X-Received: by 2002:a17:906:f909:: with SMTP id lc9mr24259532ejb.164.1620643033381;
+        Mon, 10 May 2021 03:37:13 -0700 (PDT)
 Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id w4sm3201658ljo.1.2021.05.10.03.30.13
+        by smtp.gmail.com with ESMTPSA id d9sm10980851eds.68.2021.05.10.03.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 03:30:13 -0700 (PDT)
-Date:   Mon, 10 May 2021 12:30:12 +0200
+        Mon, 10 May 2021 03:37:13 -0700 (PDT)
+Date:   Mon, 10 May 2021 12:37:11 +0200
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Joe Perches <joe@perches.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 01/11] PCI: Use sysfs_emit() and sysfs_emit_at() in
- "show" functions
-Message-ID: <20210510103012.GA76437@rocinante.localdomain>
-References: <20210510041424.233565-1-kw@linux.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 43/53] docs: PCI: acpi-info.rst: avoid using UTF-8 chars
+Message-ID: <20210510103711.GA78809@rocinante.localdomain>
+References: <cover.1620641727.git.mchehab+huawei@kernel.org>
+ <94842f2c0062c71b53144e55c648ec18fdde8eca.1620641727.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210510041424.233565-1-kw@linux.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <94842f2c0062c71b53144e55c648ec18fdde8eca.1620641727.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Joe for visibility]
+Hi Mauro,
 
+> While UTF-8 characters can be used at the Linux documentation,
+> the best is to use them only when ASCII doesn't offer a good replacement.
+> So, replace the occurences of the following UTF-8 characters:
+> 
+> 	- U+00a0 (' '): NO-BREAK SPACE
+> 	- U+2013 ('–'): EN DASH
+> 	- U+2019 ('’'): RIGHT SINGLE QUOTATION MARK
 [...]
->  	spin_lock(&resource_alignment_lock);
->  	if (resource_alignment_param)
-> -		count = scnprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
-> +		count = sysfs_emit(buf, "%s", resource_alignment_param);
->  	spin_unlock(&resource_alignment_lock);
 
-Following the work that Joe did recently, see:
+Thank you!
 
-  https://lore.kernel.org/lkml/aa1819fa5faf786573df298e5e2e7d357ba7d4ad.camel@perches.com/
-
-I think we ought to also add the missing newline to our sysfs_emit() and
-sysfs_emit_at() users, like the one above and the following:
-
-  drivers/pci/pci-sysfs.c
-  540:	return sysfs_emit(buf, "%pOF", np);
-
-To keep things correct and consistent.
-
-Bjorn, I can follow-up with a small patch after this one, or send a v2,
-or, if that would be OK with you, then you could fix it during merging,
-provided you decide to merge things as-is.
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
 Krzysztof
