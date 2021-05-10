@@ -2,155 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7B00379711
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 20:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26A40379717
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 20:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231564AbhEJSd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 14:33:57 -0400
-Received: from mail-dm6nam11on2069.outbound.protection.outlook.com ([40.107.223.69]:64964
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230186AbhEJSd4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 14:33:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YoaC3w6RlzuFeIhw3tsgyjEox0V2nzNF+lnclrcaEwCNJ7az9FtrC02U4NAI0R0pGwvpAx6HKEY+FIk4Ki1i0VHfINcEmX+cg9zTESqEnMxf0/0VGL6T+HCiSmTPoI73k+kLB52hwW99PzmM881mvePydxUH2q7V1khkttFypajP3ZZf6wsS+aexxakS7O2QKAxabKkac025Qc+jj3mHrmbhCrIG3Tb/wBRYkPboadWVZgsCr+wHE0yGzyeyWHPzeAfcBderFudjGAvNOJue/gPi4qTiX8Ha9OevRgHvjTEwwn+8uo+N32ub/YCIXGp1XgOrC80PgfWD/NVVCQEyig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gwCWEekW3vaHNB1XBI/BmYizQz2MiIi3CsqPJgzq0LY=;
- b=kQVhNPZRUNzsi4L6FrsPo9MhUi5knKeR3RXtXPq3xdkUZGX1zj2K4/K10sc9oVL32ZATtKIGSe4qj0BEhd37oYpv8QWicihzFSEzvKS1EEgApdp1Xqg/ZZi0DBxYGBZU3gf7Aa4o5jhEFPKlFLTso+og4RRwsoUbpYZ9xZ5Nzc+LlJFylc5H+t4KYHFszICW6+Sb02GLtU774WuCcSuBhqobtuhGGZ7TDGeh+1xDPc5b813NfH8lQ/w2cPdvcYu/RggjoYAO/MBlYDS9jmUghk0u1Jb3xoVgeJCPX2QUun9cFai2erRBZtqrxWIpI1x0m/jpjFlvbgBXiFP7pm+tdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gwCWEekW3vaHNB1XBI/BmYizQz2MiIi3CsqPJgzq0LY=;
- b=DN24Yn6vKGAoLMgXMKE3JrvutgaOK/AIBfSSoqDqZoXpGddogFPh9n/IMx1ilNCR9f3dHKj/iGZRYSl9+oEPIu7ghhqAOpPOELcv9r2cFFhhaJZUjIzGx9rMr7D2enTvJ0rNhCvLeL/JEQXXWmYswzcw/c9A28/w/raF4grNfOU=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN6PR12MB4720.namprd12.prod.outlook.com (2603:10b6:805:e6::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Mon, 10 May
- 2021 18:32:49 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4108.031; Mon, 10 May 2021
- 18:32:49 +0000
-Subject: Re: [PATCH v6 02/16] drm/ttm: Expose ttm_tt_unpopulate for driver use
-To:     Felix Kuehling <felix.kuehling@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
-        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com
-Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, helgaas@kernel.org
-References: <20210510163625.407105-1-andrey.grodzovsky@amd.com>
- <20210510163625.407105-3-andrey.grodzovsky@amd.com>
- <01afeedb-179b-d105-4e96-139c9bc654ef@amd.com>
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Message-ID: <ce713da1-b993-8ca0-5adb-6916380bf0d5@amd.com>
-Date:   Mon, 10 May 2021 14:32:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-In-Reply-To: <01afeedb-179b-d105-4e96-139c9bc654ef@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3]
-X-ClientProxiedBy: YTOPR0101CA0063.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::40) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+        id S232596AbhEJSgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 14:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230186AbhEJSgl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 May 2021 14:36:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF75D61483;
+        Mon, 10 May 2021 18:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620671736;
+        bh=B9SXyeC+hysLQ0q10lFZazvUoImWnEYseqN99FaOPq4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=G+UO8N2jvQH03gPeXoaM3Qsqo1k+W0p0ZTu4enq4CfX60YFMGXMtYHhgg7ZedukxU
+         JvLD4na+1Z7SrnUOZOQQgo9K3OYPOitN6v+gk7gt0ZBBRiEf9NM1TO5+QvAlLkqfH6
+         MPr6rzTcZH7npPdpGjjXx9AJ9eQnNCLlGG6AYwAcmFLTmp7yEvfT4nO7mFAhhLJZzD
+         RAGKmo50zoZuzd8OAGGPBTKkiwg5022DcP0gXvgMOSpF/4m0gb1ypyAzNTL9oWCCNs
+         LZG9pRTFT7+00duB5kvlxLN9ltw4T7rEEBP46ueZW3zFRWgt/Th+i4egTjJGEus81R
+         wqByp652Fdi0Q==
+Date:   Mon, 10 May 2021 13:35:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Corentin Labbe <clabbe@baylibre.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: convert faraday,ftpci100 to yaml
+Message-ID: <20210510183529.GA2289311@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3] (2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3) by YTOPR0101CA0063.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.30 via Frontend Transport; Mon, 10 May 2021 18:32:48 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b134fe74-cc71-439f-1c9b-08d913e20392
-X-MS-TrafficTypeDiagnostic: SN6PR12MB4720:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB472053961B737ED4143DC3EAEA549@SN6PR12MB4720.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TfpVjicjYPLokRiIDQQm6WJzdVi96tC+4IVTrsk3m8SvB7Q00DBQCqNkwMF5XkHbjtk6dC9VElP8U2rHE3fWHXglG/VHR3CgfHD2gFsBqREo0j6mvRg2eaO6ip+tndp0svouGS8Q/FMtq2JKyauKrpkoovSnXjZAI/e3mOtlzeamJozFQMgFDyPTzO1yI/XCYC2Mof9QDVl+a2bC4dHeNUbgIniaKBDsoRr3xAz62SlhIqn2ykNleTO8k+wfiYWeHMdyJuOv0EvYndN3tR0M1bhraIDHAxq5WkEpoYhC4A2SSGLnFBGHAlVOvm7cXvO/2aHL6S1LS9CMHC0ODREqXMdIRekgicPnHhB4iJSawpxEg60/3bOo2PtuE+Ov2gxdFlYT0qc00QDp138KcXOmZ+Lq2fFvhxHJ/yTylIqeOdS41Q0EO0zmwClJkY3R1NuHpdyYb/krmyyAsYDRA57Twz+BxGcpLSSqhPg2Yb56PKlDh2lAfQbwcBc7H+mk7j24EhjE/n5ZTmRJNIA/+wmu7lpmVo19jbAXg4xf+P/zCUpdER7rmYjAmA8723s6NecdK37gyO1+FxdFGMDipyLPfkN5cE9lBWfKrsF6mwZDuRm345G5mYJPFtKbSYnXwZyZTuecIlubJI/KPG2leJUE+3ZVrSjy22v40sOYJ+yCvg+wWsgCnqdTOp5ZzcUj+nMo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(86362001)(478600001)(186003)(5660300002)(53546011)(83380400001)(66556008)(31696002)(66946007)(4326008)(66476007)(6486002)(8676002)(44832011)(316002)(8936002)(52116002)(38100700002)(36756003)(2616005)(2906002)(16526019)(6636002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?WUJSbW5hL05ZMnhhY1JuRlpzdW15b1NCdEF3RWwwbnZLclJnd1c5cHpqRkgv?=
- =?utf-8?B?T2JLbEYwazdxMzB4WjgycHFGaWUySURPbTFkOG1FR3VLVHQ4SlNwZTRZMW1W?=
- =?utf-8?B?M0JpSFRRL3FISDFheHk3SUtPT0QrWWdsT1VmaVV2M1lqK3lmMk1jeG04cnZs?=
- =?utf-8?B?MzJkdWtoOVpUK0FYUVoxNzFINVA5Unc2c3IvZXVuUmVjZzZCaERFSHZvWi9W?=
- =?utf-8?B?LzA1eDdXY0xFY3hnWVUxTjg4bjNJc3RXWW45TFhMU3ZWRlNlTHpGRnJseUYz?=
- =?utf-8?B?Vk5uWjFRWHNMaTVVc2lVWEZIY1RZWEt3Mml5YnJtU0VjaEN5ODAwdTBZTmN4?=
- =?utf-8?B?N0tMU1I5ek5IZ0JVQTN6UjNRT0tIZ0Vta25LZk5DdTdZQnppbnlxSDhTUVl0?=
- =?utf-8?B?YjI0bm1ndENaK2IzOThMVW8zQlByL2VjbiswVjBCeVRuWGtzVFBDQ3pKQ2N4?=
- =?utf-8?B?VjJRNUkyb0IyWmt0WC9CMWlVNmhJbktOd0tHcEFqT3o3RmVoTG9jdEI1a1Yw?=
- =?utf-8?B?TEE4QVFkelFpVzNzMjkzVDZJUDJrK3VFcXk2d2pSRUJadS9ET3lPMnZzRHJw?=
- =?utf-8?B?RTdSblRid0NMc2NpcjRpelR3bVFJbTZHSFVmcUxxSTFIbkxmSld4Q3UwdTVr?=
- =?utf-8?B?TEtOckpYaHAwMlcvRC8rV3ZaQXFWcFF3RzNBTXZuVmNnYVJhWXp0L2pTMVZS?=
- =?utf-8?B?ZGJvcGtBK01FY25ydGJGWUZwSGxzOXduVmxhYjVIMUhPYVNUZlRHWGtOa2NN?=
- =?utf-8?B?WlhPb2VWblNLeXJDaEJadCtPOWUwQVVkdm56NlZXNEVTdmZsNC95ZDlyQmZa?=
- =?utf-8?B?OW1aZUx3aUdoQ0ZsNVh5NmlzdWp0MmE2OUVMM2VkY0I5aXJ1TkFSV2pseUQ1?=
- =?utf-8?B?NGU1ZWtFT1lqTVRjdXRyMVB3VmNzdzFlVmxUMk1ZeSs5ODd6ZmlUQjA2NWhy?=
- =?utf-8?B?bnhvcEp2aXRuWFA0QzY3aXhqNWozZ1lRa043K2g2VEZFbzBSNUhCTlloUEdv?=
- =?utf-8?B?OVF6MjY1cU96TkcxK3hnOU9kbWh5cmhHcUNPRXNWd203dlBCMkJpeWthN3F2?=
- =?utf-8?B?aldaOTl4WHBTRTJDREZaY1krRDJFOFMxdHMvTEtvSVdrU2hGd0tKeVFwVGUr?=
- =?utf-8?B?Nk5uR3k3RVliVlpzRWhnQ2h2dEpDZWRHSmNEaUpoRi9NMVg0QVYwaFJxeDA2?=
- =?utf-8?B?OTJ4Z3dKSjVQdVFobUxqaEdLMUorTFk1ZGk3Z243Z3NFVDJRMTZFcnM4Z0ZB?=
- =?utf-8?B?bGpTUm54Qys1S3VGWStDZWExZG0wbkhOeC9yVTJwMFFFYVZ4SHhXNXhNYnRK?=
- =?utf-8?B?ZWhYd1R0NkNIR2JsMmxLdUlrMUZsRXAyMi93Z0RyTUFNYkpkSVZlLzZxNFdC?=
- =?utf-8?B?dFJMZDB4bUw5K1ZsanA5NDMyWUlHQWUrZmw1c1dkWlQrbDFTMDV2WjFMWS9J?=
- =?utf-8?B?VkVFdEwwOHgwaHdmeXBOSG91SUhXRXQ4bWVPbi80MFBmc3AzcWNDL3pqd1Bp?=
- =?utf-8?B?dm9RMW1sTVorQ2FsSG1FQ0VNMDg5Q3RnMkowa0VkUC94ZXhJemFHUVM5aUNJ?=
- =?utf-8?B?RDJHNDF0eEdMYjN1aElqNmdSZDlpelRncllYZllKR3JNZDN2RENnRmtBSUp3?=
- =?utf-8?B?VHF3b2FrWFpzRmVSMSswdWlmeXhGRFVtc0pGOWxObnNvZXBxSkt6THpxbmd5?=
- =?utf-8?B?bnNFZEJGUkd4TGRTV1g3R0RmTngvRXdtWWhDRlZ5QmdrUFk4akdVOXNGZmNo?=
- =?utf-8?B?Z05lalZROWRTMGRlK0ltbzZJaURENkI5cnZPTlpXS3h4aEtHczlQN1Y0U3FU?=
- =?utf-8?B?ZSsvK1VBbGhGUTZqdStQdzhuZmdCNkcxb3Nqb1RGM2FSR2psTkk1QlJESnh2?=
- =?utf-8?Q?o6LVq96OxP8RT?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b134fe74-cc71-439f-1c9b-08d913e20392
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2021 18:32:49.4269
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qktSrQ/EM3q545yVBT3m45vly0o1ECbpdVVveA2hZ4NcCA9zco9q8Xk+rubZAHVLHTfSaz5dOH2Zd6qwPFLHCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4720
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbQvvcyrXP9fFwvppDRiJOxxESRVkodqSKc7CoO3Bm00Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, May 07, 2021 at 12:51:39PM +0200, Linus Walleij wrote:
+> On Thu, May 6, 2021 at 10:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > I think it's nicer when content changes are in a separate patch from
+> > format conversion patches.  Otherwise it's really hard to see the
+> > content changes in the patch.
+> >
+> > Maybe a preliminary patch could fix whatever is actually broken?
+> >
+> > Rob suggested a bunch of things that could be dropped.  Maybe those
+> > could be removed in a second preliminary patch before the conversion?
+> > Or maybe the removals are only possible *because* of the conversion?
+> > I'm not a yaml expert.
+> 
+> A bit of taste is involved. The old .txt bindings are for processing
+> by human brain power. Those lack regular syntax and strictness
+> because brains are designed for evolved natural languages.
+> 
+> The YAML on the other hand is a chomsky type-3 strict regular
+> language and the .yaml file (and includes) defines this strict regular
+> grammar and as such admits less mistakes. The upside is that
+> it enforces some order.
+> 
+> In the process of moving to YAML we often discover a slew of
+> mistakes and the initiative often comes with the ambition to add
+> or modernize something.
+> 
+> In this case I wouldn't care with stepwise fixing because the
+> platform is modernized by a handful of people who all know
+> what is going on, so there is noone to confuse other than the
+> subsystem maintainer and the result will end up in the same
+> kernel release anyway.
 
-On 2021-05-10 2:27 p.m., Felix Kuehling wrote:
-> Am 2021-05-10 um 12:36 p.m. schrieb Andrey Grodzovsky:
->> It's needed to drop iommu backed pages on device unplug
->> before device's IOMMU group is released.
-> I don't see any calls to ttm_tt_unpopulate in the rest of the series
-> now. Is that an accident, or can this patch be dropped?
->
-> Regards,
->    Felix
+Haha, I'm in that large majority of people who lack deep knowledge
+of what's going on, so it definitely confuses me :)
 
+I think the stepwise fix would be helpful in making the patches more
+accessible to us non-experts, and I know it would save me time in
+reviewing.
 
-You are right, it can be dropped because it's not required post 5.11 
-kernel (at least
-not in the use cases I tested).
+It may also be useful to people converting other bindings to YAML
+because it's more obvious what mistakes need to be fixed in the
+process.
 
-Andrey
+Also helpful: changing the subject line to match the existing
+convention, e.g.,
 
->
->
->> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
->> ---
->>   drivers/gpu/drm/ttm/ttm_tt.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpu/drm/ttm/ttm_tt.c b/drivers/gpu/drm/ttm/ttm_tt.c
->> index 539e0232cb3b..dfbe1ea8763f 100644
->> --- a/drivers/gpu/drm/ttm/ttm_tt.c
->> +++ b/drivers/gpu/drm/ttm/ttm_tt.c
->> @@ -433,3 +433,4 @@ void ttm_tt_mgr_init(unsigned long num_pages, unsigned long num_dma32_pages)
->>   	if (!ttm_dma32_pages_limit)
->>   		ttm_dma32_pages_limit = num_dma32_pages;
->>   }
->> +EXPORT_SYMBOL(ttm_tt_unpopulate);
+  dt-bindings: PCI: ftpci100: Convert faraday,ftpci100 to YAML
+
+Bjorn
