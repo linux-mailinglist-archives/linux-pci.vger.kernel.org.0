@@ -2,90 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7AF2379338
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:57:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18C46379394
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 18:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230152AbhEJP7D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 11:59:03 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:34532 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230271AbhEJP7B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 11:59:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=PJ2TGMvunRgbLOMNaLpECMSQ7u+Yoj2zFlT7elV+KXg=; b=iF95FesFen2c6YLjciyAoIBsi5
-        J7XzAI4MZig/8h2TwJXt0gy3lQhhWVfjR28C4e5crYdi9FcxISSMCGWbl5L8wXf3Fn0UHJ77IVaTu
-        tUtVsHZlHpGL2HlrpG3ucLy4CeMXt73BP+DV3oPeUxEyN0dxckYtGN54nvTn0Jl4unXTe5lMvMGhd
-        lzFGNzUnRlDk89iujq2AosZ6G6pJMNPR655ee9POyI/IJnRDrT80+RuhtdIZXhwWmtuwt3Spg1Ej4
-        34cacB/8bgwuc7M5wCmk4QxoCe/yB40DFMWSl0ig5TowVG+B6rvWWD9nXSDlaBP6GbV7DZZ5H3faF
-        GqnPNBkA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lg8I5-0001nE-Ql; Mon, 10 May 2021 09:57:54 -0600
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20210510041424.233565-1-kw@linux.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <4557364b-76ce-3555-e97d-14f39eda27b8@deltatee.com>
-Date:   Mon, 10 May 2021 09:57:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S230512AbhEJQTx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 12:19:53 -0400
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:36529 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230254AbhEJQTw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 12:19:52 -0400
+Received: by mail-oi1-f182.google.com with SMTP id w16so8108776oiv.3;
+        Mon, 10 May 2021 09:18:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rjgUKuG+YlSVTFg9T2gQ4kFFZjfdjSbPmFmHMX4O3uE=;
+        b=QkQTIPZsnxiJbMNnFFunOdnSDKeGRxy+ZAycdVSxO9uNFwp/ry31d83doJMouJWx4o
+         xSW1EE5TTphhbyuGwY0NNVTsxxMDp1J+/86tiYHN3baoUspe51lbxyfmCjM8SM38Gt5x
+         5JPIqnSkAqGwgQp/pbtJIsRtwGnth+R+XiIcbjorxQbAKuEhRjEK7mPMX28lNmGGfBHC
+         u73/zW+VT2qY+tuC2cjcrZ3zVPvz/foIukaoqFrUJSAQX8w6Eefd3tlzj8EiaV+MO75q
+         Oohl3TxHoUuXaPflH0mSgCF+HjnI/him12iT1FKZfU2cNCoAz5hQ4vX6MDrCy2Ycms+o
+         h5Lw==
+X-Gm-Message-State: AOAM531tgNu0754SEcaJm5BqH4aVLn/Ip0l7eyUCiNVJZihT2Fwjoxyi
+        vEYslLfParjKdRaDkrS9bw==
+X-Google-Smtp-Source: ABdhPJxteZF9VrOoMPyekriMcR/pdiIErnDw3W2RUlI8UyhDBiR0//H0CPV1giVPDqCjkjST2vckLA==
+X-Received: by 2002:aca:47ca:: with SMTP id u193mr26060937oia.69.1620663526817;
+        Mon, 10 May 2021 09:18:46 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 16sm3200858otu.79.2021.05.10.09.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 May 2021 09:18:46 -0700 (PDT)
+Received: (nullmailer pid 225492 invoked by uid 1000);
+        Mon, 10 May 2021 16:18:44 -0000
+Date:   Mon, 10 May 2021 11:18:44 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Imre Kaloz <kaloz@openwrt.org>, devicetree@vger.kernel.org,
+        Zoltan HERPAI <wigyori@uid0.hu>,
+        Raylynn Knight <rayknight@me.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        Krzysztof Halasa <khalasa@piap.pl>
+Subject: Re: [PATCH 3/4 v3] PCI: ixp4xx: Add device tree bindings for IXP4xx
+Message-ID: <20210510161844.GA225439@robh.at.kernel.org>
+References: <20210509222055.341945-1-linus.walleij@linaro.org>
+ <20210509222055.341945-4-linus.walleij@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20210510041424.233565-1-kw@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, kurt.schwemmer@microsemi.com, ruscur@russell.cc, tyreld@linux.ibm.com, paulus@samba.org, benh@kernel.crashing.org, mpe@ellerman.id.au, oohall@gmail.com, bhelgaas@google.com, kw@linux.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH 01/11] PCI: Use sysfs_emit() and sysfs_emit_at() in "show"
- functions
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210509222055.341945-4-linus.walleij@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-05-09 10:14 p.m., Krzysztof Wilczyński wrote:
-> The sysfs_emit() and sysfs_emit_at() functions were introduced to make
-> it less ambiguous which function is preferred when writing to the output
-> buffer in a device attribute's "show" callback [1].
+On Mon, 10 May 2021 00:20:54 +0200, Linus Walleij wrote:
+> This adds device tree bindings for the Intel IXP4xx
+> PCI controller which can be used as both host and
+> option.
 > 
-> Convert the PCI sysfs object "show" functions from sprintf(), snprintf()
-> and scnprintf() to sysfs_emit() and sysfs_emit_at() accordingly, as the
-> latter is aware of the PAGE_SIZE buffer and correctly returns the number
-> of bytes written into the buffer.
+> Cc: devicetree@vger.kernel.org
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Imre Kaloz <kaloz@openwrt.org>
+> Cc: Krzysztof Halasa <khalasa@piap.pl>
+> Cc: Zoltan HERPAI <wigyori@uid0.hu>
+> Cc: Raylynn Knight <rayknight@me.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v2->v3:
+> - Drop ranges, these are part of pci-bus.yaml
+> - Drop status = "disabled" on the node
+> ChangeLog v1->v2:
+> - Add the three controller interrupts to the binding.
 > 
-> No functional change intended.
+> PCI maintainers: mainly looking for a review and ACK (if
+> you care about DT bindings) the patch will be merged
+> through ARM SoC.
+> ---
+>  .../bindings/pci/intel,ixp4xx-pci.yaml        | 100 ++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
 > 
-> [1] Documentation/filesystems/sysfs.rst
-> 
-> Related to:
->   commit ad025f8e46f3 ("PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions")
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 
-Thanks, this is a great cleanup. I've reviewed the entire series.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-I agree that the new lines that are missing should be added.
-
-Logan
+Reviewed-by: Rob Herring <robh@kernel.org>
