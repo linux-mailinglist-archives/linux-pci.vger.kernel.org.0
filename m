@@ -2,65 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63BD93791C2
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 16:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CB8379224
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236978AbhEJPAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 11:00:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:60346 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240251AbhEJPAI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 11:00:08 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 621D667373; Mon, 10 May 2021 16:59:00 +0200 (CEST)
-Date:   Mon, 10 May 2021 16:59:00 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Claire Chang <tientzu@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
-        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
-        jxgao@google.com, joonas.lahtinen@linux.intel.com,
-        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        matthew.auld@intel.com, nouveau@lists.freedesktop.org,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v6 02/15] swiotlb: Refactor swiotlb_create_debugfs
-Message-ID: <20210510145900.GB28066@lst.de>
-References: <20210510095026.3477496-1-tientzu@chromium.org> <20210510095026.3477496-3-tientzu@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210510095026.3477496-3-tientzu@chromium.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S233419AbhEJPLJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 11:11:09 -0400
+Received: from flippiebeckerswealth.xyz ([62.173.147.206]:59722 "EHLO
+        host.flippiebeckerswealth.xyz" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233516AbhEJPKt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 11:10:49 -0400
+X-Greylist: delayed 3194 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 May 2021 11:10:49 EDT
+Received: from flippiebeckerswealth.xyz (ec2-3-142-218-249.us-east-2.compute.amazonaws.com [3.142.218.249])
+        by host.flippiebeckerswealth.xyz (Postfix) with ESMTPA id 0496516AF3A
+        for <linux-pci@vger.kernel.org>; Mon, 10 May 2021 17:06:50 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippiebeckerswealth.xyz 0496516AF3A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flippiebeckerswealth.xyz; s=default; t=1620655612;
+        bh=Lxx5rGQCX/MQzrwE9epz1Mb5yPYRqDyEupWj6GReobo=;
+        h=Reply-To:From:To:Subject:Date:From;
+        b=BLKn9JBdU844XCzO4/CKs5/b+jbbd0zIYIHphgSV8xCzWY66HqT3dpJuQOIZotx91
+         qSw9PR9I0QHkiwRjq4kN0wkk670XJ3o03L5+zwO62AXFh0M02/OVadYE8qKqR3WAz8
+         Ri9IwM5Bzfs73anECV+s+LruSCUGqxX+0IqTWx5g=
+DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippiebeckerswealth.xyz 0496516AF3A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flippiebeckerswealth.xyz; s=default; t=1620655612;
+        bh=Lxx5rGQCX/MQzrwE9epz1Mb5yPYRqDyEupWj6GReobo=;
+        h=Reply-To:From:To:Subject:Date:From;
+        b=BLKn9JBdU844XCzO4/CKs5/b+jbbd0zIYIHphgSV8xCzWY66HqT3dpJuQOIZotx91
+         qSw9PR9I0QHkiwRjq4kN0wkk670XJ3o03L5+zwO62AXFh0M02/OVadYE8qKqR3WAz8
+         Ri9IwM5Bzfs73anECV+s+LruSCUGqxX+0IqTWx5g=
+Reply-To: cpavlides@flippiebeckerwealthservices.com
+From:   Chris Pavlides <cpavlides@flippiebeckerswealth.xyz>
+To:     linux-pci@vger.kernel.org
+Subject: Personal
+Date:   10 May 2021 14:06:50 +0000
+Message-ID: <20210510140650.F16C96604549D11A@flippiebeckerswealth.xyz>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Looks good,
+Hello there,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+I hope this message finds you in good spirits especially during=20
+this challenging time of coronavirus pandemic. I hope you and=20
+your family are well and keeping safe. Anyway, I am Chris=20
+Pavlides, a broker working with Flippiebecker Wealth. I got your=20
+contact (along with few other contacts) through an online=20
+business directory and I thought I should contact you to see if=20
+you are interested in this opportunity. I am contacting you=20
+because one of my high profile clients is interested in investing=20
+abroad and has asked me to look for individuals and companies=20
+with interesting business ideas and projects that he can invest=20
+in. He wants to invest a substantial amount of asset abroad.
+
+Please kindly respond back to this email if you are interested in=20
+this opportunity. Once I receive your response, I will give you=20
+more details and we can plan a strategy that will be beneficial=20
+to all parties.
+
+Best regards
+
+C Pavlides
+Flippiebecker Wealth
