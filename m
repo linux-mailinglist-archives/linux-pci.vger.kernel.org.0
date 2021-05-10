@@ -2,141 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3749379430
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 18:37:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD15F3794F6
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 19:05:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231601AbhEJQia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 12:38:30 -0400
-Received: from mail-mw2nam08on2054.outbound.protection.outlook.com ([40.107.101.54]:41376
-        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231667AbhEJQiT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 12:38:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ObCBA/iEVVokAklFfgiqo5mEDQqpuCAWZ8mKNVwZpGaFN/g8xY6aUZW+m/s9gyvJ9Jk7rfA/J+rB7Xikd7OLzWA6OETHanJrnAnxOkRbriZOd14Kl5ql29ByGXIyQNOQuSWTNbDDPtwJbwuZHNd1vOmbo0NRKQYqZNGMfDsmgT/NHrRJ819cULumkUSCzHrNSO4LlAQBFVUT3URxfIVwukYGhiH17BBXmjdZGQ0oNZ/olCYTHK2jOIYQLo1joJsOBaFdePhGykpbQ48H2TxGRID9yAGjDlRjrdAtI8IZTxF9OV5IUwBaGNglG3UWo/oPZ2jbdRHfECvgEItdktIxEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TW/TKpFRu1X4rRTXhKdo8M0et9MXFShEHfYdvlK6R68=;
- b=Hj1bOzu3i9NlOs5NAyRV71Aa3fwe7eKZ6YJu/9rQZd8FbZNMnrRfecoh9O9ZvrHWd0kkeBp9U8dY7iKvjXzdhxgmz04+9Xqcx3Xi1XnMt0z7x60VyXBOpGiVxwEk5sbQr/x6MTJUAowC0AO9NqnsF2zwzHwJS+DyIZnmrRylmWB4Zm8eZgGmraOkwnczfLPV1ETnG+i3ONN508fi5MNk3QUpUu2pxE2PN5fi1owE5TmzocVP6YY4hGaZylWzwRj7knWi2Qb4HInKyoMSSNyFI18F8NSIRQqsfmBinHztMy3lw7FwF+0TssVJkSdJeaPp+aGgcDzetSQo6GydpWZRVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TW/TKpFRu1X4rRTXhKdo8M0et9MXFShEHfYdvlK6R68=;
- b=EOriBtda1zGRrKxlaTjyVau2EXODh1ZYQUJguN0aQK7K3eoo/qNVOQjRvPJMJbUuubR/JZPbJXe8rJJLho72Oam4kRrGhT54lMTjtlhPxaFELSuPrB6WRM36/u4QhDur/nV+NIH2MzwEXhb/oIKWdaIt0a++Gt5rB5z5P1zE1yA=
-Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=none action=none
- header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN6PR12MB4717.namprd12.prod.outlook.com (2603:10b6:805:e2::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24; Mon, 10 May
- 2021 16:37:13 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4108.031; Mon, 10 May 2021
- 16:37:13 +0000
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-To:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
-        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com
-Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, helgaas@kernel.org,
-        Felix.Kuehling@amd.com,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Subject: [PATCH v6 16/16] drm/amdgpu: Verify DMA opearations from device are done
-Date:   Mon, 10 May 2021 12:36:25 -0400
-Message-Id: <20210510163625.407105-17-andrey.grodzovsky@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210510163625.407105-1-andrey.grodzovsky@amd.com>
-References: <20210510163625.407105-1-andrey.grodzovsky@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3]
-X-ClientProxiedBy: YT2PR01CA0020.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:38::25) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+        id S232091AbhEJRG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 13:06:26 -0400
+Received: from mail-oo1-f48.google.com ([209.85.161.48]:44929 "EHLO
+        mail-oo1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232128AbhEJRGT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 13:06:19 -0400
+Received: by mail-oo1-f48.google.com with SMTP id s24-20020a4aead80000b02901fec6deb28aso3606392ooh.11;
+        Mon, 10 May 2021 10:05:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4vmuG3TVld/HqXLmDM7EiJT6pCpebq7PEW64VGifnmg=;
+        b=jRXH3VDdnrudIMiuXmpAp4p8aIiAp/wKPb26gm0T1+dXTW5edbmmmp2fx9vUswbE/9
+         5bjk93R0agr1PQRoicWHSoadqjxMgZU9RAgWueQuROesj3I9pcGr/bVS2ckHDa4ET/te
+         1BVSYs3meGBxFqP6IruSgmRjze5KRgGS836+/LuyddCvbj5U0uykJUGOqxNxVwx0W+86
+         wXY9Rap7vW0R4x2U1tMSbw8REpqrmgXVS6z2tm73AMpah15vKoQRhYG2JcveUMizFUHf
+         MSAJUIAwN0CL36jd8WpjhyAGIkOx+kVD4NZq238LVz1CeUBKp+akWIROmRHYBJGPQAaA
+         R/8A==
+X-Gm-Message-State: AOAM5320feCFCZvpkdT/Mf/3H5XSDuVwN9Dk35aBpOjt0fVSCyVUADOO
+        ZaKC8R4mdEoIxISoo19qIg==
+X-Google-Smtp-Source: ABdhPJw/nT6sjSzKzwv88KMnQo/mWzaQwDDuSjMhRXlzZCCmwEMQzv++NmsjnZLeeuakNSfAV9yaog==
+X-Received: by 2002:a4a:9c8c:: with SMTP id z12mr19809507ooj.3.1620666313343;
+        Mon, 10 May 2021 10:05:13 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a14sm3222496otl.52.2021.05.10.10.05.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 May 2021 10:05:12 -0700 (PDT)
+Received: (nullmailer pid 287298 invoked by uid 1000);
+        Mon, 10 May 2021 17:05:10 -0000
+Date:   Mon, 10 May 2021 12:05:10 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, patchwork-lst@pengutronix.de
+Subject: Re: [PATCH 3/7] PCI: imx6: Rework PHY search and mapping
+Message-ID: <20210510170510.GA276768@robh.at.kernel.org>
+References: <20210510141509.929120-1-l.stach@pengutronix.de>
+ <20210510141509.929120-3-l.stach@pengutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from agrodzovsky-All-Series.hitronhub.home (2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3) by YT2PR01CA0020.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:38::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.31 via Frontend Transport; Mon, 10 May 2021 16:37:12 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 511bbdbc-0f0e-4b6b-2529-08d913d1dd34
-X-MS-TrafficTypeDiagnostic: SN6PR12MB4717:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB4717D199FA60DBC3B533C3D0EA549@SN6PR12MB4717.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /L9CmCspkysqpaQBheakBvPIM26S+qtk+vh0d+N+6DbkQtKNIsDCxUJN3YilM3t+nbBa6c3w40Kh7kSknxhr/Dwkjo55D0Gzv2jzwu/ANJMcq1r35vNOcYEUBD9Uz3j4P3c6sSBHXGim2fBPCk2mQlT/satTSL4YAjP45kIjKcEVOoxbZrtWz8Y/TYYzkh7XqPeNvMRrOolg7VbY7Ikt+PJACuNYiIaUrtS+RzzRdJcXMU04BK8H/+f/ysWft9H3H6FjhJz+zXXcTchEo7e2ys5loLDq695grqluW5uzBixtEg+xAbZgFpm8dGIYVHO1b8QgpkWqA5wshFR/vVTJCAlXipF6U/5TiqQXzbR3T6CC5dhIe3lDYg6WNT35NgBlKDvhs5RXRwKMx7Du/BTwIdu9mN/aC1MVTMRXuvdM/zT5Oda6wG6bDkmv7rC9rjNNm3ai462E39j9Vu52+3ByhUTpR5CUrCFKUybhGvM2/sfi+t2ZnGsOds5KZotivLSvD3jMXHJFySUtMh4ggA/FvgZ0mUN9ts+Zah1BiaweIWyoEzEQOo6FOMOZ5aBp1+kaXFdUMcJ8/MZVIBWTCURF2LFceSt5qUrrHyKajwOh7DU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(396003)(136003)(366004)(6486002)(44832011)(83380400001)(5660300002)(2616005)(8676002)(1076003)(86362001)(6506007)(478600001)(186003)(16526019)(8936002)(6512007)(6666004)(38100700002)(36756003)(4744005)(15650500001)(52116002)(2906002)(316002)(4326008)(66946007)(6636002)(66476007)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?ENnE1pL4eiFcR5j57zgoDX9ao6yk8PB+wJbFBSAR1ve1rab4skd3QnSBRlcw?=
- =?us-ascii?Q?IFPUMqLw2uPMFCz+XfXPyfHYeUCBX46kb9ZLb27KsSoPirSFdMio/d4fQ5JR?=
- =?us-ascii?Q?7dIZjsRVOxYr+QaiK3OC3d43msyndGONX0icAOel0NM0faIUHjtylRNQZjwI?=
- =?us-ascii?Q?Lv4LI7mfaWCnUKtUQRYSflV1GpRECxCHLUT+DzTzXFe6s/aR5ek3uOv3d6eu?=
- =?us-ascii?Q?vjvrAXMOLpXLfWYvC+mQjp3keNBtLFoCK9ihRBhcmynKkxxc5v70sHaByVEV?=
- =?us-ascii?Q?71gqvq8U6Wq1Q8L9rdo3b3g4XcrFX9ZLZuschnt4fbJLGh4/blFrwfB3qgT8?=
- =?us-ascii?Q?gtKKQMUFuvUz304+TD5hTlAnepLNgagXC66Sm+TcQIXtQa7AafQ4jE8UuAoe?=
- =?us-ascii?Q?ZqyWrppqvG5Kw2nqPYgN/r/Ux98BlKxZImhn6MUuo+rEK3IugsFK9aYWeVKi?=
- =?us-ascii?Q?9VJIDFU0yhPvXJXpd3yikZV/ph2AnrPN6eDeRhn6KoNzTvoX00aKKTuj4w5n?=
- =?us-ascii?Q?UZegWorDm1+RoMEHHTPM5M3w9BU4kgCsiwzuIXrPjQXSoCzOiqEQvaJXcoeV?=
- =?us-ascii?Q?Z/rssoS6Hcg8SFuAlqa5I/uVWj2T2lC3yH0eBJnGdgQd2lbZhkqOfB/G7AJj?=
- =?us-ascii?Q?VrogD+WFF4hVZiyBPckCb+4FU/7yW3Y4kX5YawYjq3B6IAffdNkZYz0XY3sx?=
- =?us-ascii?Q?qqlLiLTMpFuXOSwGfCthDJ4FoGcBGQnvAMDD4NNaFFlZgrO86+E7qrpW+Lof?=
- =?us-ascii?Q?PUX/JPVhfleeUN2es6FvklAaybVDx6FMgG7zLPFK4QivpwMfEK3sJmgOa+rV?=
- =?us-ascii?Q?VoK+JXREBZz2MVJuEfG2ffqHLhAO/mTzpDUEi6rnxmP1aJMcd+18Cakjz/l1?=
- =?us-ascii?Q?7dJZySDBze+ExBRPDYzNQgtGY6jkqd2XJNUawGu1ZIBJnzgNC1A1DGnjATGq?=
- =?us-ascii?Q?quBtjPF/w5VWSomz3xek4Tb7EbWfwKC5FY0wNekrxAK4v1hatgKcoxDeuR38?=
- =?us-ascii?Q?ZHtbulSxP6vMK14E28CoRORmG77x+HHOv/+6DrvL86qbHvK7+8hTfZFA6+Sk?=
- =?us-ascii?Q?1KAQMT26IVahdFTzzaj/7Nuiyt1TmatjoyIimmKaphGs1H6LsdODCTaBhhDu?=
- =?us-ascii?Q?IRB/OAMh2PeYDfLr9xBc2SmsOYxNqUlm69EoNSybfxFteQd0C+PT3SJI/U02?=
- =?us-ascii?Q?8DArIjlDKXF79I3mC6QgGpSOUl+JMzeMDPr3XOGWRQvnJpRy5vdVTZYoP0qb?=
- =?us-ascii?Q?nfCdJheyKhRMmhVZDEHPm2JrisqN9hOEDs0vFFy207EMKVT/yKpuXmpMKzNF?=
- =?us-ascii?Q?UaBLAfGH573YtIdEqeSDz+WDPS9Jf5zwECV3vEpdJmOX3YD9eJqozYPmFzH/?=
- =?us-ascii?Q?90HpSVNq8ZtJKKHFX4YBEIo1ek5s?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 511bbdbc-0f0e-4b6b-2529-08d913d1dd34
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2021 16:37:13.2089
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8pDQbXBjLz/JM3DU7CAZO4gsYsS9X8xJkbIFcM5o06SMbK1ULnUTyWUuFy80rk83tMc+smPDQh7ganAC4hI9gQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4717
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210510141509.929120-3-l.stach@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In case device remove is just simualted by sysfs then verify
-device doesn't keep doing DMA to the released memory after
-pci_remove is done.
+On Mon, May 10, 2021 at 04:15:05PM +0200, Lucas Stach wrote:
+> We don't need to have a phandle of the PHY, as we know the compatible
+> of the node we are looking for. This will make it easier to put add
+> more PHY handling for new generations later on, where the
+> "fsl,imx7d-pcie-phy" phandle would be a misnomer.
+> 
+> Also we can use a helper function to get the resource for us,
+> simplifying out driver code a bit.
 
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Better yes, but really all the phy handling should be split out to 
+its own driver even in the older h/w with shared phy registers.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index 83006f45b10b..5e6af9e0b7bf 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -1314,7 +1314,13 @@ amdgpu_pci_remove(struct pci_dev *pdev)
- 	drm_dev_unplug(dev);
- 	amdgpu_driver_unload_kms(dev);
- 
-+	/*
-+	 * Flush any in flight DMA operations from device.
-+	 * Clear the Bus Master Enable bit and then wait on the PCIe Device
-+	 * StatusTransactions Pending bit.
-+	 */
- 	pci_disable_device(pdev);
-+	pci_wait_for_pending_transaction(pdev);
- }
- 
- static void
--- 
-2.25.1
+Soon as there's a chip with 2 PCI hosts, you're going to need the phy 
+binding.
 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt  |  5 ++---
+>  drivers/pci/controller/dwc/pci-imx6.c           | 17 +++++------------
+>  2 files changed, 7 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index de4b2baf91e8..308540df99ef 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -54,7 +54,6 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
+>  	       - "pciephy"
+>  	       - "apps"
+>  	       - "turnoff"
+> -- fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
+>  
+>  Additional required properties for imx8mq-pcie:
+>  - clock-names: Must include the following additional entries:
+> @@ -88,8 +87,8 @@ Example:
+>  
+>  * Freescale i.MX7d PCIe PHY
+>  
+> -This is the PHY associated with the IMX7d PCIe controller.  It's used by the
+> -PCI-e controller via the fsl,imx7d-pcie-phy phandle.
+> +This is the PHY associated with the IMX7d PCIe controller.  It's looked up by
+> +the PCI-e controller via the fsl,imx7d-pcie-phy compatible.
+>  
+>  Required properties:
+>  - compatible:
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 922c14361cd3..5e13758222e8 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -555,7 +555,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  			writel(PCIE_PHY_CMN_REG26_ATT_MODE,
+>  			       imx6_pcie->phy_base + PCIE_PHY_CMN_REG26);
+>  		} else {
+> -			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy phandle ?\n");
+> +			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy node?\n");
+>  		}
+>  
+>  		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
+> @@ -970,7 +970,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct imx6_pcie *imx6_pcie;
+> -	struct device_node *np;
+> +	struct device_node *np = NULL;
+>  	struct resource *dbi_base;
+>  	struct device_node *node = dev->of_node;
+>  	int ret;
+> @@ -991,17 +991,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  	imx6_pcie->pci = pci;
+>  	imx6_pcie->drvdata = of_device_get_match_data(dev);
+>  
+> -	/* Find the PHY if one is defined, only imx7d uses it */
+> -	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
+> +	/* Find the PHY if one is present in DT, only imx7d uses it */
+> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-pcie-phy");
+>  	if (np) {
+> -		struct resource res;
+> -
+> -		ret = of_address_to_resource(np, 0, &res);
+> -		if (ret) {
+> -			dev_err(dev, "Unable to map PCIe PHY\n");
+> -			return ret;
+> -		}
+> -		imx6_pcie->phy_base = devm_ioremap_resource(dev, &res);
+> +		imx6_pcie->phy_base = devm_of_iomap(dev, np, 0, NULL);
+>  		if (IS_ERR(imx6_pcie->phy_base)) {
+>  			dev_err(dev, "Unable to map PCIe PHY\n");
+>  			return PTR_ERR(imx6_pcie->phy_base);
+> -- 
+> 2.29.2
+> 
