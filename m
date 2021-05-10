@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6518C3791F9
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E04D6379211
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:06:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241598AbhEJPGt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 11:06:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:60437 "EHLO verein.lst.de"
+        id S234246AbhEJPHE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 11:07:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:60477 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234892AbhEJPEx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 11:04:53 -0400
+        id S240600AbhEJPGl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 May 2021 11:06:41 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3764D68AFE; Mon, 10 May 2021 17:03:43 +0200 (CEST)
-Date:   Mon, 10 May 2021 17:03:42 +0200
+        id 2DAB567373; Mon, 10 May 2021 17:05:17 +0200 (CEST)
+Date:   Mon, 10 May 2021 17:05:16 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Claire Chang <tientzu@chromium.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
@@ -49,27 +49,37 @@ Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
         matthew.auld@intel.com, nouveau@lists.freedesktop.org,
         rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v6 05/15] swiotlb: Add a new get_io_tlb_mem getter
-Message-ID: <20210510150342.GD28066@lst.de>
-References: <20210510095026.3477496-1-tientzu@chromium.org> <20210510095026.3477496-6-tientzu@chromium.org>
+Subject: Re: [PATCH v6 08/15] swiotlb: Bounce data from/to restricted DMA
+ pool if available
+Message-ID: <20210510150516.GE28066@lst.de>
+References: <20210510095026.3477496-1-tientzu@chromium.org> <20210510095026.3477496-9-tientzu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210510095026.3477496-6-tientzu@chromium.org>
+In-Reply-To: <20210510095026.3477496-9-tientzu@chromium.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +static inline struct io_tlb_mem *get_io_tlb_mem(struct device *dev)
+> +static inline bool is_dev_swiotlb_force(struct device *dev)
 > +{
 > +#ifdef CONFIG_DMA_RESTRICTED_POOL
-> +	if (dev && dev->dma_io_tlb_mem)
-> +		return dev->dma_io_tlb_mem;
+> +	if (dev->dma_io_tlb_mem)
+> +		return true;
 > +#endif /* CONFIG_DMA_RESTRICTED_POOL */
+> +	return false;
+> +}
 > +
-> +	return io_tlb_default_mem;
 
-Given that we're also looking into a not addressing restricted pool
-I'd rather always assign the active pool to dev->dma_io_tlb_mem and
-do away with this helper.
+>  	/* If SWIOTLB is active, use its maximum mapping size */
+>  	if (is_swiotlb_active(dev) &&
+> -	    (dma_addressing_limited(dev) || swiotlb_force == SWIOTLB_FORCE))
+> +	    (dma_addressing_limited(dev) || swiotlb_force == SWIOTLB_FORCE ||
+> +	     is_dev_swiotlb_force(dev)))
+
+This is a mess.  I think the right way is to have an always_bounce flag
+in the io_tlb_mem structure instead.  Then the global swiotlb_force can
+go away and be replace with this and the fact that having no
+io_tlb_mem structure at all means forced no buffering (after a little
+refactoring).
