@@ -2,81 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 131A83797A3
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 21:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F7463797AF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 21:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233336AbhEJTXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 15:23:54 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47815 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233208AbhEJTXt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 15:23:49 -0400
-Received: from cwcc.thunk.org (pool-72-74-133-215.bstnma.fios.verizon.net [72.74.133.215])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 14AJM3dI013584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 May 2021 15:22:05 -0400
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-        id F267215C3CD9; Mon, 10 May 2021 15:22:02 -0400 (EDT)
-Date:   Mon, 10 May 2021 15:22:02 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        alsa-devel@alsa-project.org, coresight@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
-        kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-fpga@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-sgx@vger.kernel.org, linux-usb@vger.kernel.org,
-        mjpeg-users@lists.sourceforge.net, netdev@vger.kernel.org,
-        rcu@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/53] Get rid of UTF-8 chars that can be mapped as ASCII
-Message-ID: <YJmH2irxoRsyNudb@mit.edu>
-References: <cover.1620641727.git.mchehab+huawei@kernel.org>
- <2ae366fdff4bd5910a2270823e8da70521c859af.camel@infradead.org>
- <20210510135518.305cc03d@coco.lan>
- <de6d1fa5b7934f4afd61370d9c58502bef588466.camel@infradead.org>
+        id S231909AbhEJT1z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 15:27:55 -0400
+Received: from antares.kleine-koenig.org ([94.130.110.236]:37202 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231601AbhEJT1y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 15:27:54 -0400
+Received: from antares.kleine-koenig.org (localhost [127.0.0.1])
+        by antares.kleine-koenig.org (Postfix) with ESMTP id 5E5EDB92AB4;
+        Mon, 10 May 2021 21:26:48 +0200 (CEST)
+Received: from antares.kleine-koenig.org ([94.130.110.236])
+        by antares.kleine-koenig.org (antares.kleine-koenig.org [94.130.110.236]) (amavisd-new, port 10024)
+        with ESMTP id zKva0nhGS63X; Mon, 10 May 2021 21:26:47 +0200 (CEST)
+Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b5c8:7bfc:751d:682d:7359:e261])
+        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
+        Mon, 10 May 2021 21:26:47 +0200 (CEST)
+Subject: Re: [PATCH] PCI: endpoint: Make struct pci_epf_driver::remove return
+ void
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        kernel@pengutronix.de
+References: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
+From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Message-ID: <1195e3d6-e2ca-f54b-aa09-289dbebd85d7@kleine-koenig.org>
+Date:   Mon, 10 May 2021 21:26:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <de6d1fa5b7934f4afd61370d9c58502bef588466.camel@infradead.org>
+In-Reply-To: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="eKmgG8MDQl3zCTFoDfMWmRbzl3FI1fGxv"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 02:49:44PM +0100, David Woodhouse wrote:
-> On Mon, 2021-05-10 at 13:55 +0200, Mauro Carvalho Chehab wrote:
-> > This patch series is doing conversion only when using ASCII makes
-> > more sense than using UTF-8. 
-> > 
-> > See, a number of converted documents ended with weird characters
-> > like ZERO WIDTH NO-BREAK SPACE (U+FEFF) character. This specific
-> > character doesn't do any good.
-> > 
-> > Others use NO-BREAK SPACE (U+A0) instead of 0x20. Harmless, until
-> > someone tries to use grep[1].
-> 
-> Replacing those makes sense. But replacing emdashes — which are a
-> distinct character that has no direct replacement in ASCII and which
-> people do *deliberately* use instead of hyphen-minus — does not.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--eKmgG8MDQl3zCTFoDfMWmRbzl3FI1fGxv
+Content-Type: multipart/mixed; boundary="lG9miLKDPwfCV9NdH4OaVuAYE7nZsIgr5";
+ protected-headers="v1"
+From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ kernel@pengutronix.de
+Message-ID: <1195e3d6-e2ca-f54b-aa09-289dbebd85d7@kleine-koenig.org>
+Subject: Re: [PATCH] PCI: endpoint: Make struct pci_epf_driver::remove return
+ void
+References: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
 
-I regularly use --- for em-dashes and -- for en-dashes.  Markdown will
-automatically translate 3 ASCII hypens to em-dashes, and 2 ASCII
-hyphens to en-dashes.  It's much, much easier for me to type 2 or 3
-hypens into my text editor of choice than trying to enter the UTF-8
-characters.  If we can make sphinx do this translation, maybe that's
-the best way of dealing with these two characters?
+--lG9miLKDPwfCV9NdH4OaVuAYE7nZsIgr5
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
+On 2/23/21 10:07 AM, Uwe Kleine-K=C3=B6nig wrote:
+> The driver core ignores the return value of pci_epf_device_remove()
+> (because there is only little it can do when a device disappears) and
+> there are no pci_epf_drivers with a remove callback.
+>=20
+> So make it impossible for future drivers to return an unused error code=
 
-					- Ted
+> by changing the remove prototype to return void.
+>=20
+> The real motivation for this change is the quest to make struct
+> bus_type::remove return void, too.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+
+Ping! This patch now waits for more than 2 months on feedback (or=20
+application). The 5.13 merge window just closed, this is a great=20
+opportunity to apply this patch for next.
+
+Thanks for consideration,
+Uwe
+
+> ---
+>   drivers/pci/endpoint/pci-epf-core.c | 5 ++---
+>   include/linux/pci-epf.h             | 2 +-
+>   2 files changed, 3 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint=
+/pci-epf-core.c
+> index 7646c8660d42..a19c375f9ec9 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -389,15 +389,14 @@ static int pci_epf_device_probe(struct device *de=
+v)
+>  =20
+>   static int pci_epf_device_remove(struct device *dev)
+>   {
+> -	int ret =3D 0;
+>   	struct pci_epf *epf =3D to_pci_epf(dev);
+>   	struct pci_epf_driver *driver =3D to_pci_epf_driver(dev->driver);
+>  =20
+>   	if (driver->remove)
+> -		ret =3D driver->remove(epf);
+> +		driver->remove(epf);
+>   	epf->driver =3D NULL;
+>  =20
+> -	return ret;
+> +	return 0;
+>   }
+>  =20
+>   static struct bus_type pci_epf_bus_type =3D {
+> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> index 6833e2160ef1..f8a17b6b1d31 100644
+> --- a/include/linux/pci-epf.h
+> +++ b/include/linux/pci-epf.h
+> @@ -85,7 +85,7 @@ struct pci_epf_ops {
+>    */
+>   struct pci_epf_driver {
+>   	int	(*probe)(struct pci_epf *epf);
+> -	int	(*remove)(struct pci_epf *epf);
+> +	void	(*remove)(struct pci_epf *epf);
+>  =20
+>   	struct device_driver	driver;
+>   	struct pci_epf_ops	*ops;
+>=20
+
+
+
+--lG9miLKDPwfCV9NdH4OaVuAYE7nZsIgr5--
+
+--eKmgG8MDQl3zCTFoDfMWmRbzl3FI1fGxv
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmCZiO0ACgkQwfwUeK3K
+7AndhQf/ZY+A9Tjf8UanAXIZC1kmpC4JjBPrhtPKxV3as6RUspWYkJZk+zsE7YOb
+SgqoZNVyMBmErL9OZ52u8eR5uxHcGAgvipRJkUS6jVUrhF0lLnELMs0AAbcOQ43x
+Lml8Dc72rQ1nPqUsZmDzJKLTzcc2pOOU9HsuJb3gC0J6ysU0HchgDRoUlTGCzZjc
+91gu+rpTuKrmPOWVWmBw3eZrSDjI/9dYktFqSdnE/6CCqXRMeaveXCuNdAFR6TUF
+SR5NrYC9giqgW/ko+QpH8VSXb17eGhduIlMMlDi7a0GyWYK8OZIGsDVutJYejM7o
+zmHQeyJaMhojhMHmyRM2PoGGv4g4zQ==
+=lplD
+-----END PGP SIGNATURE-----
+
+--eKmgG8MDQl3zCTFoDfMWmRbzl3FI1fGxv--
