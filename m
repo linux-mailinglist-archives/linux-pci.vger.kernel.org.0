@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49186379273
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:20:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73C82379277
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235985AbhEJPVg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 11:21:36 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3048 "EHLO
+        id S236653AbhEJPWE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 11:22:04 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3049 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236682AbhEJPUf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 11:20:35 -0400
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ff4Ds44Gtz70gDT;
-        Mon, 10 May 2021 23:08:13 +0800 (CST)
+        with ESMTP id S235514AbhEJPVE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 11:21:04 -0400
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ff4Jv1p9Cz6wjnc;
+        Mon, 10 May 2021 23:11:43 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 10 May 2021 17:19:26 +0200
+ 15.1.2176.2; Mon, 10 May 2021 17:19:56 +0200
 Received: from localhost (10.52.123.16) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 10 May
- 2021 16:19:26 +0100
-Date:   Mon, 10 May 2021 16:17:44 +0100
+ 2021 16:19:56 +0100
+Date:   Mon, 10 May 2021 16:18:14 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 3/8] cxl/core: Rename bus.c to core.c
-Message-ID: <20210510161744.00007404@Huawei.com>
-In-Reply-To: <162042789118.1202325.17252779312531377335.stgit@dwillia2-desk3.amr.corp.intel.com>
+Subject: Re: [PATCH 6/8] cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+Message-ID: <20210510161814.00007e99@Huawei.com>
+In-Reply-To: <162042791307.1202325.2513845748708305095.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <162042789118.1202325.17252779312531377335.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <162042791307.1202325.2513845748708305095.stgit@dwillia2-desk3.amr.corp.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -46,131 +46,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 7 May 2021 15:51:31 -0700
+On Fri, 7 May 2021 15:51:53 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> In preparation for more generic shared functionality across endpoint
-> consumers of core cxl resources, and platform-firmware producers of
-> those resources, rename bus.c to core.c. In addition to the central
-> rendezvous for interleave coordination, the core will also define common
-> routines like CXL register block mapping.
+> CONFIG_CXL_BUS is default 'n' as expected for new functionality. When
+> that is enabled do not make the end user hunt for all the expected
+> sub-options to enable. For example CONFIG_CXL_BUS without CONFIG_CXL_MEM
+> is an odd/expert configuration, so is CONFIG_CXL_MEM without
+> CONFIG_CXL_ACPI (on ACPI capable platforms). Default CONFIG_CXL_MEM and
+> CONFIG_CXL_ACPI to CONFIG_CXL_BUS.
 > 
 > Acked-by: Ben Widawsky <ben.widawsky@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  Documentation/driver-api/cxl/memory-devices.rst |    6 ++---
->  drivers/cxl/Makefile                            |    4 ++-
->  drivers/cxl/bus.c                               |   29 ----------------------
->  drivers/cxl/core.c                              |   30 +++++++++++++++++++++++
->  4 files changed, 35 insertions(+), 34 deletions(-)
->  delete mode 100644 drivers/cxl/bus.c
->  create mode 100644 drivers/cxl/core.c
+>  drivers/cxl/Kconfig |    2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> index 1bad466f9167..71495ed77069 100644
-> --- a/Documentation/driver-api/cxl/memory-devices.rst
-> +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> @@ -28,10 +28,10 @@ CXL Memory Device
->  .. kernel-doc:: drivers/cxl/mem.c
->     :internal:
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index fb282af84afd..1da7970a5e55 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -15,6 +15,7 @@ if CXL_BUS
 >  
-> -CXL Bus
-> +CXL Core
->  -------
-> -.. kernel-doc:: drivers/cxl/bus.c
-> -   :doc: cxl bus
-> +.. kernel-doc:: drivers/cxl/core.c
-> +   :doc: cxl core
->  
->  External Interfaces
->  ===================
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index a314a1891f4d..3808e39dd31f 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_CXL_BUS) += cxl_bus.o
-> +obj-$(CONFIG_CXL_BUS) += cxl_core.o
->  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
->  
->  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-> -cxl_bus-y := bus.o
-> +cxl_core-y := core.o
->  cxl_mem-y := mem.o
-> diff --git a/drivers/cxl/bus.c b/drivers/cxl/bus.c
-> deleted file mode 100644
-> index 58f74796d525..000000000000
-> --- a/drivers/cxl/bus.c
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> -#include <linux/device.h>
-> -#include <linux/module.h>
-> -
-> -/**
-> - * DOC: cxl bus
-> - *
-> - * The CXL bus provides namespace for control devices and a rendezvous
-> - * point for cross-device interleave coordination.
-> - */
-> -struct bus_type cxl_bus_type = {
-> -	.name = "cxl",
-> -};
-> -EXPORT_SYMBOL_GPL(cxl_bus_type);
-> -
-> -static __init int cxl_bus_init(void)
-> -{
-> -	return bus_register(&cxl_bus_type);
-> -}
-> -
-> -static void cxl_bus_exit(void)
-> -{
-> -	bus_unregister(&cxl_bus_type);
-> -}
-> -
-> -module_init(cxl_bus_init);
-> -module_exit(cxl_bus_exit);
-> -MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> new file mode 100644
-> index 000000000000..7f8d2034038a
-> --- /dev/null
-> +++ b/drivers/cxl/core.c
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +
-> +/**
-> + * DOC: cxl core
-> + *
-> + * The CXL core provides a sysfs hierarchy for control devices and a rendezvous
-> + * point for cross-device interleave coordination through cxl ports.
-> + */
-> +
-> +struct bus_type cxl_bus_type = {
-> +	.name = "cxl",
-> +};
-> +EXPORT_SYMBOL_GPL(cxl_bus_type);
-> +
-> +static __init int cxl_core_init(void)
-> +{
-> +	return bus_register(&cxl_bus_type);
-> +}
-> +
-> +static void cxl_core_exit(void)
-> +{
-> +	bus_unregister(&cxl_bus_type);
-> +}
-> +
-> +module_init(cxl_core_init);
-> +module_exit(cxl_core_exit);
-> +MODULE_LICENSE("GPL v2");
+>  config CXL_MEM
+>  	tristate "CXL.mem: Memory Devices"
+> +	default CXL_BUS
+>  	help
+>  	  The CXL.mem protocol allows a device to act as a provider of
+>  	  "System RAM" and/or "Persistent Memory" that is fully coherent
+> @@ -54,6 +55,7 @@ config CXL_MEM_RAW_COMMANDS
+>  config CXL_ACPI
+>  	tristate "CXL ACPI: Platform Support"
+>  	depends on ACPI
+> +	default CXL_BUS
+>  	help
+>  	  Enable support for host managed device memory (HDM) resources
+>  	  published by a platform's ACPI CXL memory layout description.
 > 
 
