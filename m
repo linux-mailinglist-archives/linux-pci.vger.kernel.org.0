@@ -2,69 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67987379301
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7AF2379338
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 17:57:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231512AbhEJPuD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 11:50:03 -0400
-Received: from mail-ot1-f50.google.com ([209.85.210.50]:36863 "EHLO
-        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbhEJPuA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 11:50:00 -0400
-Received: by mail-ot1-f50.google.com with SMTP id n32-20020a9d1ea30000b02902a53d6ad4bdso14825391otn.3;
-        Mon, 10 May 2021 08:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0s9YigQUJ/LXiQfPGifCK11/lOC8QzwiEINdkGwd2X4=;
-        b=oAdPb6Y/DzphItXce6znA5q3d3Lf63o3uLhEW9UMY4GSvPy1RWH/prb3c2lU5TLORO
-         U44dNGka+xQQs/VrhRTBBF44jPMvorauUUd79pmC+1zhnpXOy52Juz7mbWZIfKleQiW0
-         rZqa8FQBAuVLtZy3ALWS8CCPsyOKpnOzv3IvB4QmlikvU1xU4UCXz9DEY1SsUB3ith0c
-         MlFbQ+b+QjhAm/+YUpwBMMCt4e2JfLEYOgc8Or80iJmqe/BcMaDoYiFCnjIvJq8pn5Rp
-         ogRa0wxdUTRj1D7l4aqBXMmQMPGD9zDyqGGNWfkP+HwxV9hOC5frdMrbBQcZ05lJgzuS
-         GUfA==
-X-Gm-Message-State: AOAM533UAfCO0VmjvQbe3nFbgVOy1ANmzhsxmZ6ySfsUHZOy+M7w+OQB
-        bQy6ZLidRAb4HqWzKCxUZQ==
-X-Google-Smtp-Source: ABdhPJxnAsMxt2AYbuf0Wn5S6hv3hi6bMg9NcLNa7hEDJKYFK+24dzi7MZHl2PtrRRsPpVxcSqUKJw==
-X-Received: by 2002:a9d:6b84:: with SMTP id b4mr13021392otq.152.1620661735051;
-        Mon, 10 May 2021 08:48:55 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y191sm1765230oia.50.2021.05.10.08.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 08:48:53 -0700 (PDT)
-Received: (nullmailer pid 185091 invoked by uid 1000);
-        Mon, 10 May 2021 15:48:52 -0000
-Date:   Mon, 10 May 2021 10:48:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Prasad Malisetty <pmaliset@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
-        Bjorn Helgaas <bhelgaas@google.com>, swboyd@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-pci@vger.kernel.org, mgautam@codeaurora.org,
-        dianders@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: pci: qcom: Document PCIe bindings for
- SC720
-Message-ID: <20210510154852.GA185045@robh.at.kernel.org>
-References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
- <1620382648-17395-2-git-send-email-pmaliset@codeaurora.org>
+        id S230152AbhEJP7D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 11:59:03 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:34532 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230271AbhEJP7B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 11:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=PJ2TGMvunRgbLOMNaLpECMSQ7u+Yoj2zFlT7elV+KXg=; b=iF95FesFen2c6YLjciyAoIBsi5
+        J7XzAI4MZig/8h2TwJXt0gy3lQhhWVfjR28C4e5crYdi9FcxISSMCGWbl5L8wXf3Fn0UHJ77IVaTu
+        tUtVsHZlHpGL2HlrpG3ucLy4CeMXt73BP+DV3oPeUxEyN0dxckYtGN54nvTn0Jl4unXTe5lMvMGhd
+        lzFGNzUnRlDk89iujq2AosZ6G6pJMNPR655ee9POyI/IJnRDrT80+RuhtdIZXhwWmtuwt3Spg1Ej4
+        34cacB/8bgwuc7M5wCmk4QxoCe/yB40DFMWSl0ig5TowVG+B6rvWWD9nXSDlaBP6GbV7DZZ5H3faF
+        GqnPNBkA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lg8I5-0001nE-Ql; Mon, 10 May 2021 09:57:54 -0600
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20210510041424.233565-1-kw@linux.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <4557364b-76ce-3555-e97d-14f39eda27b8@deltatee.com>
+Date:   Mon, 10 May 2021 09:57:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1620382648-17395-2-git-send-email-pmaliset@codeaurora.org>
+In-Reply-To: <20210510041424.233565-1-kw@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, kurt.schwemmer@microsemi.com, ruscur@russell.cc, tyreld@linux.ibm.com, paulus@samba.org, benh@kernel.crashing.org, mpe@ellerman.id.au, oohall@gmail.com, bhelgaas@google.com, kw@linux.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH 01/11] PCI: Use sysfs_emit() and sysfs_emit_at() in "show"
+ functions
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 07 May 2021 15:47:26 +0530, Prasad Malisetty wrote:
-> Document the PCIe DT bindings for SC7280 SoC.The PCIe IP is similar
-> to the one used on SM8250. Add the compatible for SC7280.
-> 
-> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+On 2021-05-09 10:14 p.m., Krzysztof Wilczyński wrote:
+> The sysfs_emit() and sysfs_emit_at() functions were introduced to make
+> it less ambiguous which function is preferred when writing to the output
+> buffer in a device attribute's "show" callback [1].
+> 
+> Convert the PCI sysfs object "show" functions from sprintf(), snprintf()
+> and scnprintf() to sysfs_emit() and sysfs_emit_at() accordingly, as the
+> latter is aware of the PAGE_SIZE buffer and correctly returns the number
+> of bytes written into the buffer.
+> 
+> No functional change intended.
+> 
+> [1] Documentation/filesystems/sysfs.rst
+> 
+> Related to:
+>   commit ad025f8e46f3 ("PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions")
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+
+Thanks, this is a great cleanup. I've reviewed the entire series.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+I agree that the new lines that are missing should be added.
+
+Logan
