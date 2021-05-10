@@ -2,101 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81244379613
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 19:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C81913796F4
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 20:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232965AbhEJRhm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 13:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232290AbhEJRha (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 13:37:30 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A19C06135C
-        for <linux-pci@vger.kernel.org>; Mon, 10 May 2021 10:32:07 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id f24so25736276ejc.6
-        for <linux-pci@vger.kernel.org>; Mon, 10 May 2021 10:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fTRKZAFvqeeymDKM/r/UzLZvx5eNijO38qr4B7yUecU=;
-        b=WG2cArXg2kBcywMKLErBIWqdK6ViZ+A43yHnNzCeEKDwl8ef6OOBCGGPsCNIhnwtgq
-         OKnbg1pUoFa5NkOxx7p+eavNpuKHLmDTkGe52xEmPiPqZabIeotnZ8bVgdB8r/5A8p8z
-         mbBqa7euwAldecqynHP+UET9zwKx/5FY7p4v4fR//02KPL5IbhAdR3a8NT6KJeHxRjdt
-         IWDLz+xGWr7JetBx8yhlj2CMfGxO0XQZTFYvu52XIW5Nq8I5zEKidHQ2DCyVWKAqPpDg
-         VuypFQIec2SfyXj0TN7fAr0ov+EjwMQgY+VWosh3M4NidaItw3pY91ciRmZPdX/O40vD
-         q5QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fTRKZAFvqeeymDKM/r/UzLZvx5eNijO38qr4B7yUecU=;
-        b=ErgPLu1qStVEUTNOLR7rWO3eZ+SW4e5gr2Sydjm6O9GJzz4NFxgj4E+e0L0UxxdWD8
-         yaBiWOJNj6RRlKfw1OQZ+jGsIP5TA6sot4vfeu1ht7tbGxgvI4xf55pWvuKOSck7/F/f
-         ei4Bw8bX1brdk1Su4+uJbn+vIX1x8FAZYJ2n0epaYiI119LwA2icYkJpFYWNH4qAZjOx
-         5kqCyzg2kJMnbfs0YuKOMGNAbQC1YCZfH1PQ3mUTbYz9kj9LQ36qcNKEaw1QikSwJNv0
-         FlfapZTFtQbgm5W6zu2Gp+UtPJ24dA1ptblZhPMC2yO8/wCWbYm/EDIrEDE4vWjeYrtj
-         qZ0A==
-X-Gm-Message-State: AOAM530q1S9Sq5kKjvl9SHk2damU69ZobS9uxbjpCPTDZN7wtisndyMx
-        l+gwvBvkAwHKsBQ7ETcJr+iy0IqZ/WOfN6CyrlKypQ==
-X-Google-Smtp-Source: ABdhPJyHSjhlDK3zc/WiT+90p68knPbG/a4ZpLabkTJDhyCAwwOZ7p745kEgDnK2io0XqAhOvv5HP88IY4460qmOo88=
-X-Received: by 2002:a17:906:33da:: with SMTP id w26mr27425953eja.472.1620667925736;
- Mon, 10 May 2021 10:32:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <162042787450.1202325.5718541949681409566.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210510182249.0000267f@Huawei.com>
-In-Reply-To: <20210510182249.0000267f@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 10 May 2021 10:31:54 -0700
-Message-ID: <CAPcyv4iMSvq17_0nLYgeKFKGWberEyG9HHK=+k+Zy9UQG+4iuw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] CXL Port Enumeration and Plans for v5.14
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S231585AbhEJSYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 14:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231538AbhEJSYW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 May 2021 14:24:22 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14DC761359;
+        Mon, 10 May 2021 18:23:17 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1lgAYk-000WgL-W1; Mon, 10 May 2021 19:23:15 +0100
+Date:   Mon, 10 May 2021 19:23:14 +0100
+Message-ID: <87r1ieo3cd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/MSI: Fix MSIs for generic hosts that use device-tree's "msi-map"
+In-Reply-To: <20210510173129.750496-1-jean-philippe@linaro.org>
+References: <20210510173129.750496-1-jean-philippe@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jean-philippe@linaro.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 10:24 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Fri, 7 May 2021 15:51:14 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > Changes since v2 [1]:
-> > - Add some rationale for moving definitions out of mem.c into mem.h
-> >   (Jonathan)
-> >
-> > - Fixup CXL_DEVICE_REGS kernel doc and declare the fixup for the
-> >   struct cxl_mem kernel-doc in the changelog (Jonathan)
-> >
-> > - Fixup cxl_setup_device_regs() kernel-doc (Jonathan)
-> >
-> > - Cleanup comment in cxl_root_alloc() (Jonathan)
-> >
-> > - [not changed] refactor device creation into alloc_and_add()
-> >   anti-pattern.
-> >
-> > - Add kernel doc to cxl_address_space_dev_add() to clarify why @host is
-> >   needed as an arg. (Jonathan)
-> >
-> > - Describe what the port devices are representing in "cxl/port:
-> >   Introduce cxl_port objects" (Jonathan)
-> >
-> > - Explain the rationale for /sys/bus/cxl (Bjorn)
-> >
-> > [1]: http://lore.kernel.org/r/161728744224.2474040.12854720917440712854.stgit@dwillia2-desk3.amr.corp.intel.com
->
-> Hi Dan,
->
-> What's the base for this series?  Given it was nearly ready to go
-> (as far as I'm concerned anyway), I thought I'd give it a spin but
-> seems it doesn't have some changes from fixes that have gone upstream.
+Hi Jean-Philippe,
 
-I did fail to rebase, will rectify, but I did not fail to include a
-base-commit entry at the bottom of this cover letter. Will resend
-based on -rc1 now that it is out.
+On Mon, 10 May 2021 18:31:30 +0100,
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+> 
+> Since commit 9ec37efb8783 ("PCI/MSI: Make pci_host_common_probe()
+> declare its reliance on MSI domains"), platforms that rely on the
+> "msi-map" device-tree property don't get MSIs anymore.
+> 
+> On the Arm Fast Model for example [1], the host bridge doesn't have a
+> "msi-parent" property since it doesn't itself generate MSIs, and so
+> doesn't get a MSI domain. It has an "msi-map" property instead to
+> describe MSI controllers of child devices. As a result, due to the new
+> msi_domain check in pci_register_host_bridge(), the whole bus gets
+> PCI_BUS_FLAGS_NO_MSI.
+
+Urgh... I knew I was going to break something... :-( Thanks for
+picking this up.
+
+> Check whether the root complex has an "msi-map" property before giving
+> up on MSIs.
+> 
+> [1] arch/arm64/boot/dts/arm/fvp-base-revc.dts
+> 
+> Fixes: 9ec37efb8783 ("PCI/MSI: Make pci_host_common_probe() declare its reliance on MSI domains")
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  include/linux/pci.h | 2 ++
+>  drivers/pci/of.c    | 7 +++++++
+>  drivers/pci/probe.c | 3 ++-
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c20211e59a57..24306504226a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2344,6 +2344,7 @@ int pci_vpd_find_info_keyword(const u8 *buf, unsigned int off,
+>  struct device_node;
+>  struct irq_domain;
+>  struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus);
+> +bool pci_host_of_has_msi_map(struct device *dev);
+>  
+>  /* Arch may override this (weak) */
+>  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
+> @@ -2351,6 +2352,7 @@ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
+>  #else	/* CONFIG_OF */
+>  static inline struct irq_domain *
+>  pci_host_bridge_of_msi_domain(struct pci_bus *bus) { return NULL; }
+> +static inline bool pci_host_of_has_msi_map(struct device *dev) { return false; }
+>  #endif  /* CONFIG_OF */
+>  
+>  static inline struct device_node *
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index da5b414d585a..85dcb7097da4 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -103,6 +103,13 @@ struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus)
+>  #endif
+>  }
+>  
+> +bool pci_host_of_has_msi_map(struct device *dev)
+> +{
+> +	if (dev && dev->of_node)
+> +		return of_get_property(dev->of_node, "msi-map", NULL);
+> +	return false;
+> +}
+> +
+>  static inline int __of_pci_pci_compare(struct device_node *node,
+>  				       unsigned int data)
+>  {
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 3a62d09b8869..275204646c68 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -925,7 +925,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  	device_enable_async_suspend(bus->bridge);
+>  	pci_set_bus_of_node(bus);
+>  	pci_set_bus_msi_domain(bus);
+> -	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev))
+> +	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev) &&
+> +	    !pci_host_of_has_msi_map(parent))
+>  		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+>  
+>  	if (!parent)
+
+Do we need something similar for IORT, which implements a similar
+functionality to "msi-map"? My ACPI boxes seem to get their MSIs just
+fine though...
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
