@@ -2,888 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 159A3377900
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 00:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E043F3779A8
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 03:14:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbhEIWWO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 May 2021 18:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbhEIWWN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 18:22:13 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76657C061573
-        for <linux-pci@vger.kernel.org>; Sun,  9 May 2021 15:21:08 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id x20so20529051lfu.6
-        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 15:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6FxZJIZJKsIXSdwmLwW0dcAjXO7AU+sUjkMzDxOe2zQ=;
-        b=dNbB4YJOWtRNhJm2wJweaJu9aYxZOM2fQ7lxGl8DC5V8DlItGRk2z+ApMZpVuyVVyr
-         aQWR+wrYP96QuP4elWugjIGZ7F/T0VuhSxIMEZLArr4D4+rL90s+GIRCZuA7iE8qSVCw
-         6kNNUznDcB5FUIPajM7zM938PMVIlfI1r39GZK7MHpFnXEo51h53r8hbPnFmGN06XhpI
-         ccPVmXVL9G43jlFzEQQg0Q6vZOW8XqlJwILw3cQLu6A5kYmPIMAgy2wtlE4SgeKv5obp
-         vN39K9uKdPqwS9SDsg+rWmCFSk4YKLBadKW8gOXn0ob7wWnuoayB8G2m/4wYLajt4c9o
-         GFEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6FxZJIZJKsIXSdwmLwW0dcAjXO7AU+sUjkMzDxOe2zQ=;
-        b=l5ul/r0sOjlR/8YAxEbdFyFTEBMweKk74SPObV43bMdfHGidfoi9cRqeYKWHp9I+Yu
-         Pg7jTajBGOXAxYAjMGoTUF9XbqxPUixJEVQ6DG9mLlamxpeqnQkDqpmFzArsc6xZMeM/
-         iQuaI7vOiqrPaWyFjFHgQJwBBYCqBnqRJoG5s2wCezNv6DkMp+l31EPZr8KV6DsXL+0Q
-         gzOBZW7rjmVxpDRimUIlVInQZOlA2vCf5VKWkvdn9HF4ZJcMnKS5x/NisQQwstxPgqtP
-         SRahIfGTyjQFCpUsGvlUuJFbf7/9bdfK5sw7b1S2YBcKqC5ggltF87XnFdDjjrkpD1om
-         t/ZQ==
-X-Gm-Message-State: AOAM532pLFO1Euiz1u0BRgooHgFfEUG8sQqvfSZFWCMMg/c4DbFTF9YV
-        f1cXo0YvCu8VyEDFR7VaXRo6B9TBxftrig==
-X-Google-Smtp-Source: ABdhPJwsZG5hhkYgAVVyr3BgGn68+GmnJz5Nc0ymbw0PwuCzcgUHcQuJAhfrtNNK8UQUZHvpOfAQaA==
-X-Received: by 2002:ac2:528f:: with SMTP id q15mr15401765lfm.145.1620598866907;
-        Sun, 09 May 2021 15:21:06 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id u12sm2978012ljo.82.2021.05.09.15.21.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 May 2021 15:21:06 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        Zoltan HERPAI <wigyori@uid0.hu>,
-        Raylynn Knight <rayknight@me.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4/4 v3] PCI: ixp4xx: Add a new driver for IXP4xx
-Date:   Mon, 10 May 2021 00:20:55 +0200
-Message-Id: <20210509222055.341945-5-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210509222055.341945-1-linus.walleij@linaro.org>
-References: <20210509222055.341945-1-linus.walleij@linaro.org>
+        id S230019AbhEJBPP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 May 2021 21:15:15 -0400
+Received: from mail-eopbgr140040.outbound.protection.outlook.com ([40.107.14.40]:53989
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229941AbhEJBPP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 9 May 2021 21:15:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ULp2cGaE9XHOg1P5h0jOzDiGoajVLZsLUUMGH4WvlbgMhG4CiboN7BtJo+wOzc8+Gc5tbKO+xMhvpUHayKKzPSo4MwdfJTXCX8waip4BtKm4AZ+30F5cwtODUXq7eQidGZzJ+0pgfvaq08vE99F0gmo3p9Zp7I3Zx1R9YbOoaRa5CjmwXQoSw5OTR8WP8KzJO42jO5Nc9l5Jo5mQmPd/gD4ydXOaVRHNLZ3W2YR8gb5VHbxJxghDBUlS9tEcld64kO7rbrQCgr/Aj7pixBSOA8xEjmEiF9ezMWmnl8z9yauJCsBeCWlxgAzJpjMWRmfv1QMNuvmD12Zg8tlKX8ewrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=elFx6qtLNoUXuk3ebwbyiQ8nL+iU8kE5OezSOH3pWws=;
+ b=Cf8DpljtelTXqUQXr1fXNU2Mnhmku/QIvvn7RJAquXNccQ6tkhcZhllj7aSaJhmbh36ZZ2x8l4gMQiujGP9FI6VYfgiyxbho+Xwa/LOJmrGEy1k8AstQ5+usvlVmIKxMwYuFvc90e0+zY6PqPTmJf8toBWfs7SNHV5XzSkk91y9Z1EaftjKKqnS22h/wx2G0Z1lM/xx6v7orbW8SCiWGifBvL8A1jAbmhf5JXrGtezuFz7NBrTbUm4vAiqw36veaLLZTdFH8+GbIq1SNc3pxUIsaFVq0RygeomCVDLqwVoKHk7qlFOCFVTwUj+WWgxGDv7ki5H2MK8bl3t5575491g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=elFx6qtLNoUXuk3ebwbyiQ8nL+iU8kE5OezSOH3pWws=;
+ b=GMxmAZSyl12EjqFX4sIoyBcbnDhSNMYLK/G3+ppph2C0Jxe1LyrrJflLJUEoGS0w6eh66M/vd4l1U6aevjzgQGLkW/sCY5FeGsPvyEpUYtZlfW76x2Pv37yPZyYvGOJwbx8fDDdRQLXM6nmCPzJ3pQ3irxm02So8LjX49m38UzI=
+Received: from VI1PR04MB5853.eurprd04.prod.outlook.com (2603:10a6:803:e3::25)
+ by VI1PR0402MB3550.eurprd04.prod.outlook.com (2603:10a6:803:3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.27; Mon, 10 May
+ 2021 01:14:08 +0000
+Received: from VI1PR04MB5853.eurprd04.prod.outlook.com
+ ([fe80::c830:a7cb:c125:2fb7]) by VI1PR04MB5853.eurprd04.prod.outlook.com
+ ([fe80::c830:a7cb:c125:2fb7%6]) with mapi id 15.20.4108.031; Mon, 10 May 2021
+ 01:14:08 +0000
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "stefan@agner.ch" <stefan@agner.ch>
+Subject: RE: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one regulator
+ used to power up pcie phy
+Thread-Topic: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one regulator
+ used to power up pcie phy
+Thread-Index: AddDBHDZpAHyzF/RSbu9bRln4UIDkACNTaWQ
+Date:   Mon, 10 May 2021 01:14:08 +0000
+Message-ID: <VI1PR04MB585382D3D4EE9264A6C987138C549@VI1PR04MB5853.eurprd04.prod.outlook.com>
+References: <VI1PR04MB585323D08A483C47E7DDE93E8C579@VI1PR04MB5853.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB585323D08A483C47E7DDE93E8C579@VI1PR04MB5853.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6af5628a-767f-4d5b-dc06-08d91350e991
+x-ms-traffictypediagnostic: VI1PR0402MB3550:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3550347458AD447E4AE1C9698C549@VI1PR0402MB3550.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IPi6x8Z0t8FRWEygsTc+gwOfeE3JByjZ7i9yN1lxzSBBiwGNjAxUbBD5u1t+0/hJCcNtsHXP+BVAI3StoxFQargyIdIsjVmY6kWKCfx+VQaWZHQA/U1OufXDKpg2h+vbxgVS6RD+sDivaAAU7M7G9Q2Ro8x7AMkQcetZeVKhf0ZoHaR96isK0IGeZ8Ld1mtP5WmWO4wzyhP3QlDpgFxF3mH2Nyuh3OkNyMVU3remeIEDtPnX8QZkVhG1fXxVf+G6SmEBDzgqDY0aHNyx1H6p30Sq7NlibbAHqxBLV3u+PFLuWa8rW1WPF58Z5UDMvfsG2kV4LsIad0pA31Uwzq6tv/D3733Lj8O0056UPZcO55XRBV76Q1Ikqq0HtX9NJKC0QsauwpUBVLgkGk0uJWwyx+gVpMPLMCAVvo2nJoysf3fS8DHhpa6KvJqatz+e5cVMpLarRwLwjoeK1wvaFjBNBQe4cSK1KS07H6r4vMbxUdmnoyKFPWXd6Jqq0hk7U4INBlOFDHYp73WMrV0rXreK77zyrpgD6mWoFGtyrvBQe2AiThK/u6a/6qaAaNZNywpXZZFuCfQLmkNMjsl2Tu913T7hN31Bhy6oc20yoq8NT3tVwqOa9sW2gY9wNrmnLD321HWowVLyG0GbW/l3azER/w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5853.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39850400004)(366004)(136003)(396003)(346002)(4326008)(8936002)(9686003)(38100700002)(33656002)(52536014)(122000001)(7696005)(76116006)(83380400001)(55016002)(316002)(71200400001)(6506007)(186003)(66476007)(2906002)(478600001)(66446008)(26005)(86362001)(8676002)(66556008)(64756008)(66946007)(5660300002)(110136005)(7416002)(54906003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?AYE5OLyQJeELCuU5bpS1g118k4P0GZ3qfyQhpvqWSJI6vezo97064XbkFPq1?=
+ =?us-ascii?Q?Yi8MIjk9kD7bJVSO/zCCshoS0GHFJisTuc+KELuEu2eIzW2brF0fVCQT9SUw?=
+ =?us-ascii?Q?mU6rKSbwvPxIYdR37Ucddd9WWH+wZT6MxUpva+/TM5767juMNK5LvaL/ZNPa?=
+ =?us-ascii?Q?3t9pNszy+/hYgU4zYlIoV84YX3L3qj1bMqzIoXEdmswrcwxhVJFjQa90o3FE?=
+ =?us-ascii?Q?vVE2y+QmZCW8oTfBfL1AYy4DKHb11K+TpSi0kvWh3yZCauXb7x1Gq+dtPI3h?=
+ =?us-ascii?Q?AZOwT+OO35MY0XZ0GqqQTEHKJaoEIkGcjrg3wLa3tzwkQWOmp5QYl1oKghlF?=
+ =?us-ascii?Q?CO9RojpCYDXAL9sKGKmmihFBpsB4axaM+EYMTD/t+FGR7JlTQrBMPnUZQDJ4?=
+ =?us-ascii?Q?MSmQ7RQC7/MsOYkzuQsXKcmirN8nGhfMd62hUL229uW6i3KT/JXMPs95MmJd?=
+ =?us-ascii?Q?mAomuTegVoOlpD++FXiU1LUgDFvD4M7pstI0rS3SjyUreLknamPyblHDCBvm?=
+ =?us-ascii?Q?UW1OAcZBs4SdWhaPLgBeRNE6GWqwuhJ9PX4qIaOkGXYNe1MSM5Vo7B40fvLM?=
+ =?us-ascii?Q?L5mxOKN5tEaOnQzo61z5g4Cgwk6hCUQaqhNOo5utBhaJFBur1OHQ8n7w4Z9W?=
+ =?us-ascii?Q?jJDVLa9ExB5DZb/X3Hc11escIF+rlJKUmlirACH2eB3gtGux88T51Z5N3x2q?=
+ =?us-ascii?Q?Jh1zTmEy6m3RKHc+bKg/KUD80fO9tgkpMB0fpWO7CHNuZIpt3rg+oHQWJGhr?=
+ =?us-ascii?Q?6MY9Gn3SPd5MFnYU+BUcSST8eoduT8N3G1quA2vfmaJnjtUizm0GJtYJCGXm?=
+ =?us-ascii?Q?MKRuaXhO9nZOIU9OutUtWIVgj2FtW5sbkHKS+tnG2lL2F9VvhejH/KSekoKF?=
+ =?us-ascii?Q?euuMmNMhJlQz86iLmfzB9J0rkjCXGf7Vq5PqKk5FImz0Sm8Y4giBzE/6RGuF?=
+ =?us-ascii?Q?wf/b5Ui0iLdo5cqbbjPUNXVwH7JOGPM38Zj9IZy7phHZAz2bwAMsDYPOsVDT?=
+ =?us-ascii?Q?YCmdGt+Gl/AmKJenqBgn0528OwjebuUVMp8ro8oNZ/yFcpKbg9COjihlaEcG?=
+ =?us-ascii?Q?PyI8PBoPvZedfEhiK1uhvftCyK1TVxA3xlWEy2bISn3624vFPbGNDEZurxYy?=
+ =?us-ascii?Q?9kJw/yOFifxjYba5NtpCcQKy1VoEu9lazIZILSPIE+8WMiDn8bZ/SLYAjATl?=
+ =?us-ascii?Q?ArmkwV5kIdodEZZRFBo5fbknSnxnp8fVUpzI1uvMIa5x8DkG20jQQw1O7JDb?=
+ =?us-ascii?Q?BWo0IJskJ2n/cWBnyOi1f0AnpJCB8g36erkTkWzBOxLc8jkfsdyBGrPGUGH5?=
+ =?us-ascii?Q?llWWSEm2xEXBQZNOoh0b+CBV?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5853.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6af5628a-767f-4d5b-dc06-08d91350e991
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2021 01:14:08.5208
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JkddcRtzz0UXuBYzq8OClKD5jFsUjUBWlhtxld5H1cJQrZyzSNDfUx07QzXXefaidEPV88IB1ehLdgZ6H2cKcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3550
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This adds a new PCI controller driver for the Intel IXP4xx
-(IX425, IXP435 etc), based on the XScale microarchitecture.
+Re-send again.
 
-This replaces the old driver in arch/arm/mach-ixp4xx/common-pci.c
-which utilized the ARM-specific BIOS32 PCI framework,
-and all parameterization for such things as memory and
-IO space as well as interrupt swizzling is done from the
-device tree.
+Best Regards
+Richard Zhu
 
-The __raw_writel() and __raw_readl() are used for accessing
-the PCI controller for the same reason that these accessors
-are used in the timer, IRQ and GPIO drivers: the platform
-will alter its address bus pattern based on whether the
-system is booted in big- or little-endian mode. For this
-reason all register on IXP4xx must always be accessed in
-native (CPU) endianness.
-
-This driver supports 64MB of PCI memory space, but not the
-indirect access of 1GB that is available in the old driver.
-We can address that later if and only if there are users
-that need all 1GB of PCI address space.
-
-Tested by booting the NSLU2, attaching a USB stick, mounting
-and browsing the drive.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Imre Kaloz <kaloz@openwrt.org>
-Cc: Krzysztof Halasa <khalasa@piap.pl>
-Cc: Zoltan HERPAI <wigyori@uid0.hu>
-Cc: Raylynn Knight <rayknight@me.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v2->v3:
-- Fix a double assignment of .suppress_bind_attrs
-ChangeLog v1->v2:
-- Add dependencies on ARM to Kconfig since we are regisering
-  and ARM only abort handler.
-- Create ixp4xx_readl() and ixp4xx_writel() static inline
-  wrappers around the __raw_readl() and __raw_writel() calls
-  with a big comment block explaining what is going on.
-- Drop bus pointer from state container, it is only used in
-  probe()
-- Use pci_host_probe() and get rid of a lot of boilerplate.
-- Use builtin_driver_probe() and explain why this is
-  necessary with comments in the code.
-
-PCI maintainers: looking for review or ACK to take this
-driver throght ARM SoC since it is dependent on the first
-patches in the series in order not to cause build
-problems.
----
- MAINTAINERS                         |   6 +
- drivers/pci/controller/Kconfig      |   8 +
- drivers/pci/controller/Makefile     |   1 +
- drivers/pci/controller/pci-ixp4xx.c | 705 ++++++++++++++++++++++++++++
- 4 files changed, 720 insertions(+)
- create mode 100644 drivers/pci/controller/pci-ixp4xx.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d92f85ca831d..ae220d52a6d7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13692,6 +13692,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
- F:	drivers/pci/controller/dwc/*imx6*
- 
-+PCI DRIVER FOR INTEL IXP4XX
-+M:	Linus Walleij <linus.walleij@linaro.org>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
-+F:	drivers/pci/controller/pci-ixp4xx.c
-+
- PCI DRIVER FOR INTEL VOLUME MANAGEMENT DEVICE (VMD)
- M:	Jonathan Derrick <jonathan.derrick@intel.com>
- L:	linux-pci@vger.kernel.org
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 5aa8977d7b0f..b9a9a05be0e7 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -37,6 +37,14 @@ config PCI_FTPCI100
- 	depends on OF
- 	default ARCH_GEMINI
- 
-+config PCI_IXP4XX
-+	bool "Intel IXP4xx PCI controller"
-+	depends on ARM && OF
-+	default ARCH_IXP4XX
-+	help
-+	  Say Y here if you want support for the PCI host controller found
-+	  in the Intel IXP4xx XScale-based network processor SoC.
-+
- config PCI_TEGRA
- 	bool "NVIDIA Tegra PCIe controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index e4559f2182f2..f81f3fd7a9e0 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PCIE_CADENCE) += cadence/
- obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
-+obj-$(CONFIG_PCI_IXP4XX) += pci-ixp4xx.o
- obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
- obj-$(CONFIG_PCI_HYPERV_INTERFACE) += pci-hyperv-intf.o
- obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
-diff --git a/drivers/pci/controller/pci-ixp4xx.c b/drivers/pci/controller/pci-ixp4xx.c
-new file mode 100644
-index 000000000000..c6912fd630b4
---- /dev/null
-+++ b/drivers/pci/controller/pci-ixp4xx.c
-@@ -0,0 +1,705 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Support for Intel IXP4xx PCI host controller
-+ *
-+ * Copyright (C) 2017 Linus Walleij <linus.walleij@linaro.org>
-+ *
-+ * Based on the IXP4xx arch/arm/mach-ixp4xx/common-pci.c driver
-+ * Copyright (C) 2002 Intel Corporation
-+ * Copyright (C) 2003 Greg Ungerer <gerg@linux-m68k.org>
-+ * Copyright (C) 2003-2004 MontaVista Software, Inc.
-+ * Copyright (C) 2005 Deepak Saxena <dsaxena@plexity.net>
-+ * Copyright (C) 2005 Alessandro Zummo <a.zummo@towertech.it>
-+ *
-+ * TODO:
-+ * - Test IO-space access
-+ * - DMA support
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/bits.h>
-+
-+/* Register offsets */
-+#define IXP4XX_PCI_NP_AD		0x00
-+#define IXP4XX_PCI_NP_CBE		0x04
-+#define IXP4XX_PCI_NP_WDATA		0x08
-+#define IXP4XX_PCI_NP_RDATA		0x0c
-+#define IXP4XX_PCI_CRP_AD_CBE		0x10
-+#define IXP4XX_PCI_CRP_WDATA		0x14
-+#define IXP4XX_PCI_CRP_RDATA		0x18
-+#define IXP4XX_PCI_CSR			0x1c
-+#define IXP4XX_PCI_ISR			0x20
-+#define IXP4XX_PCI_INTEN		0x24
-+#define IXP4XX_PCI_DMACTRL		0x28
-+#define IXP4XX_PCI_AHBMEMBASE		0x2c
-+#define IXP4XX_PCI_AHBIOBASE		0x30
-+#define IXP4XX_PCI_PCIMEMBASE		0x34
-+#define IXP4XX_PCI_AHBDOORBELL		0x38
-+#define IXP4XX_PCI_PCIDOORBELL		0x3C
-+#define IXP4XX_PCI_ATPDMA0_AHBADDR	0x40
-+#define IXP4XX_PCI_ATPDMA0_PCIADDR	0x44
-+#define IXP4XX_PCI_ATPDMA0_LENADDR	0x48
-+#define IXP4XX_PCI_ATPDMA1_AHBADDR	0x4C
-+#define IXP4XX_PCI_ATPDMA1_PCIADDR	0x50
-+#define IXP4XX_PCI_ATPDMA1_LENADDR	0x54
-+
-+/* CSR bit definitions */
-+#define IXP4XX_PCI_CSR_HOST		BIT(0)
-+#define IXP4XX_PCI_CSR_ARBEN		BIT(1)
-+#define IXP4XX_PCI_CSR_ADS		BIT(2)
-+#define IXP4XX_PCI_CSR_PDS		BIT(3)
-+#define IXP4XX_PCI_CSR_ABE		BIT(4)
-+#define IXP4XX_PCI_CSR_DBT		BIT(5)
-+#define IXP4XX_PCI_CSR_ASE		BIT(8)
-+#define IXP4XX_PCI_CSR_IC		BIT(15)
-+#define IXP4XX_PCI_CSR_PRST		BIT(16)
-+
-+/* ISR (Interrupt status) Register bit definitions */
-+#define IXP4XX_PCI_ISR_PSE		BIT(0)
-+#define IXP4XX_PCI_ISR_PFE		BIT(1)
-+#define IXP4XX_PCI_ISR_PPE		BIT(2)
-+#define IXP4XX_PCI_ISR_AHBE		BIT(3)
-+#define IXP4XX_PCI_ISR_APDC		BIT(4)
-+#define IXP4XX_PCI_ISR_PADC		BIT(5)
-+#define IXP4XX_PCI_ISR_ADB		BIT(6)
-+#define IXP4XX_PCI_ISR_PDB		BIT(7)
-+
-+/* INTEN (Interrupt Enable) Register bit definitions */
-+#define IXP4XX_PCI_INTEN_PSE		BIT(0)
-+#define IXP4XX_PCI_INTEN_PFE		BIT(1)
-+#define IXP4XX_PCI_INTEN_PPE		BIT(2)
-+#define IXP4XX_PCI_INTEN_AHBE		BIT(3)
-+#define IXP4XX_PCI_INTEN_APDC		BIT(4)
-+#define IXP4XX_PCI_INTEN_PADC		BIT(5)
-+#define IXP4XX_PCI_INTEN_ADB		BIT(6)
-+#define IXP4XX_PCI_INTEN_PDB		BIT(7)
-+
-+/* Shift value for byte enable on NP cmd/byte enable register */
-+#define IXP4XX_PCI_NP_CBE_BESL		4
-+
-+/* PCI commands supported by NP access unit */
-+#define NP_CMD_IOREAD			0x2
-+#define NP_CMD_IOWRITE			0x3
-+#define NP_CMD_CONFIGREAD		0xa
-+#define NP_CMD_CONFIGWRITE		0xb
-+#define NP_CMD_MEMREAD			0x6
-+#define	NP_CMD_MEMWRITE			0x7
-+
-+/* Constants for CRP access into local config space */
-+#define CRP_AD_CBE_BESL         20
-+#define CRP_AD_CBE_WRITE	0x00010000
-+
-+/* Special PCI configuration space registers for this controller */
-+#define IXP4XX_PCI_RTOTTO		0x40
-+
-+struct ixp4xx_pci {
-+	struct device *dev;
-+	void __iomem *base;
-+	raw_spinlock_t lock; /* Protects bus writes */
-+	bool errata_hammer;
-+	bool host_mode;
-+};
-+
-+/*
-+ * The IXP4xx has a peculiar address bus that will change the
-+ * byte order on SoC peripherals depending on whether the device
-+ * operates in big endian or little endian mode. That means that
-+ * readl() and writel() that always use little-endian access
-+ * will not work for SoC peripherals such as the PCI controller
-+ * when used in big endian mode. The accesses to the individual
-+ * PCI devices on the other hand, are always little-endian and
-+ * can use readl() and writel().
-+ *
-+ * For local AHB bus access we need to use __raw_[readl|writel]()
-+ * to make sure that we access the SoC devices in the CPU native
-+ * endianness.
-+ */
-+static inline u32 ixp4xx_readl(struct ixp4xx_pci *p, u32 reg)
-+{
-+	return __raw_readl(p->base + reg);
-+}
-+
-+static inline void ixp4xx_writel(struct ixp4xx_pci *p, u32 reg, u32 val)
-+{
-+	__raw_writel(val, p->base + reg);
-+}
-+
-+static int ixp4xx_pci_check_master_abort(struct ixp4xx_pci *p)
-+{
-+	u32 isr = ixp4xx_readl(p, IXP4XX_PCI_ISR);
-+
-+	if (isr & IXP4XX_PCI_ISR_PFE) {
-+		/* Make sure the master abort bit is reset */
-+		ixp4xx_writel(p, IXP4XX_PCI_ISR, IXP4XX_PCI_ISR_PFE);
-+		dev_dbg(p->dev, "master abort detected\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ixp4xx_pci_read(struct ixp4xx_pci *p, u32 addr, u32 cmd, u32 *data)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	raw_spin_lock_irqsave(&p->lock, flags);
-+
-+	ixp4xx_writel(p, IXP4XX_PCI_NP_AD, addr);
-+
-+	if (p->errata_hammer) {
-+		int i;
-+
-+		/*
-+		 * PCI workaround - only works if NP PCI space reads have
-+		 * no side effects. Hammer the register and read twice 8
-+		 * times. last one will be good.
-+		 */
-+		for (i = 0; i < 8; i++) {
-+			ixp4xx_writel(p, IXP4XX_PCI_NP_CBE, cmd);
-+			*data = ixp4xx_readl(p, IXP4XX_PCI_NP_RDATA);
-+			*data = ixp4xx_readl(p, IXP4XX_PCI_NP_RDATA);
-+		}
-+	} else {
-+		ixp4xx_writel(p, IXP4XX_PCI_NP_CBE, cmd);
-+		*data = ixp4xx_readl(p, IXP4XX_PCI_NP_RDATA);
-+	}
-+
-+	/* Check for master abort */
-+	ret = ixp4xx_pci_check_master_abort(p);
-+
-+	raw_spin_unlock_irqrestore(&p->lock, flags);
-+	return ret;
-+}
-+
-+static int ixp4xx_pci_write(struct ixp4xx_pci *p, u32 addr, u32 cmd, u32 data)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	raw_spin_lock_irqsave(&p->lock, flags);
-+
-+	ixp4xx_writel(p, IXP4XX_PCI_NP_AD, addr);
-+
-+	/* Set up the write */
-+	ixp4xx_writel(p, IXP4XX_PCI_NP_CBE, cmd);
-+
-+	/* Execute the write by writing to NP_WDATA */
-+	ixp4xx_writel(p, IXP4XX_PCI_NP_WDATA, data);
-+
-+	/* Check for master abort */
-+	ret = ixp4xx_pci_check_master_abort(p);
-+
-+	raw_spin_unlock_irqrestore(&p->lock, flags);
-+	return ret;
-+}
-+
-+static u32 ixp4xx_config_addr(u8 bus_num, u16 devfn, int where)
-+{
-+	u32 addr;
-+
-+	if (!bus_num) {
-+		/* type 0 */
-+		addr = BIT(32-PCI_SLOT(devfn)) | ((PCI_FUNC(devfn)) << 8) |
-+			(where & ~3);
-+	} else {
-+		/* type 1 */
-+		addr = (bus_num << 16) | ((PCI_SLOT(devfn)) << 11) |
-+			((PCI_FUNC(devfn)) << 8) | (where & ~3) | 1;
-+	}
-+	return addr;
-+}
-+
-+/*
-+ * CRP functions are "Controller Configuration Port" accesses
-+ * initiated from within this driver itself to read/write PCI
-+ * control information in the config space.
-+ */
-+static u32 ixp4xx_crp_byte_lane_enable_bits(u32 n, int size)
-+{
-+	if (size == 1)
-+		return (0xf & ~BIT(n)) << CRP_AD_CBE_BESL;
-+	if (size == 2)
-+		return (0xf & ~(BIT(n) | BIT(n+1))) << CRP_AD_CBE_BESL;
-+	if (size == 4)
-+		return 0;
-+	return 0xffffffff;
-+}
-+
-+static int ixp4xx_crp_read_config(struct ixp4xx_pci *p, int where, int size,
-+				  u32 *value)
-+{
-+	unsigned long flags;
-+	u32 n, cmd, val;
-+
-+	n = where % 4;
-+	cmd = where & ~3;
-+
-+	dev_dbg(p->dev, "%s from %d size %d cmd %08x\n",
-+		__func__, where, size, cmd);
-+
-+	raw_spin_lock_irqsave(&p->lock, flags);
-+	ixp4xx_writel(p, IXP4XX_PCI_CRP_AD_CBE, cmd);
-+	val = ixp4xx_readl(p, IXP4XX_PCI_CRP_RDATA);
-+	raw_spin_unlock_irqrestore(&p->lock, flags);
-+
-+	val >>= (8*n);
-+	switch (size) {
-+	case 1:
-+		val &= U8_MAX;
-+		dev_dbg(p->dev, "%s read byte %02x\n", __func__, val);
-+		break;
-+	case 2:
-+		val &= U16_MAX;
-+		dev_dbg(p->dev, "%s read word %04x\n", __func__, val);
-+		break;
-+	case 4:
-+		val &= U32_MAX;
-+		dev_dbg(p->dev, "%s read long %08x\n", __func__, val);
-+		break;
-+	default:
-+		/* Should not happen */
-+		dev_err(p->dev, "%s illegal size\n", __func__);
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+	*value = val;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int ixp4xx_crp_write_config(struct ixp4xx_pci *p, int where, int size,
-+				   u32 value)
-+{
-+	unsigned long flags;
-+	u32 n, cmd, val;
-+
-+	n = where % 4;
-+	cmd = ixp4xx_crp_byte_lane_enable_bits(n, size);
-+	if (cmd == 0xffffffff)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+	cmd |= where & ~3;
-+	cmd |= CRP_AD_CBE_WRITE;
-+
-+	val = value << (8*n);
-+
-+	dev_dbg(p->dev, "%s to %d size %d cmd %08x val %08x\n",
-+		__func__, where, size, cmd, val);
-+
-+	raw_spin_lock_irqsave(&p->lock, flags);
-+	ixp4xx_writel(p, IXP4XX_PCI_CRP_AD_CBE, cmd);
-+	ixp4xx_writel(p, IXP4XX_PCI_CRP_WDATA, val);
-+	raw_spin_unlock_irqrestore(&p->lock, flags);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+/*
-+ * Then follows the functions that read and write from the common
-+ * PCI configuration space.
-+ */
-+
-+static u32 ixp4xx_byte_lane_enable_bits(u32 n, int size)
-+{
-+	if (size == 1)
-+		return (0xf & ~BIT(n)) << 4;
-+	if (size == 2)
-+		return (0xf & ~(BIT(n) | BIT(n+1))) << 4;
-+	if (size == 4)
-+		return 0;
-+	return 0xffffffff;
-+}
-+
-+static int ixp4xx_pci_read_config(struct pci_bus *bus, unsigned int devfn,
-+				  int where, int size, u32 *value)
-+{
-+	struct ixp4xx_pci *p = bus->sysdata;
-+	u32 n, addr, val, cmd;
-+	u8 bus_num = bus->number;
-+	int ret;
-+
-+	*value = 0xffffffff;
-+	n = where % 4;
-+	cmd = ixp4xx_byte_lane_enable_bits(n, size);
-+	if (cmd == 0xffffffff)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	addr = ixp4xx_config_addr(bus_num, devfn, where);
-+	cmd |= NP_CMD_CONFIGREAD;
-+	dev_dbg(p->dev, "read_config from %d size %d dev %d:%d:%d address: %08x cmd: %08x\n",
-+		where, size, bus_num, PCI_SLOT(devfn), PCI_FUNC(devfn), addr, cmd);
-+
-+	ret = ixp4xx_pci_read(p, addr, cmd, &val);
-+	if (ret)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	val >>= (8*n);
-+	switch (size) {
-+	case 1:
-+		val &= U8_MAX;
-+		dev_dbg(p->dev, "%s read byte %02x\n", __func__, val);
-+		break;
-+	case 2:
-+		val &= U16_MAX;
-+		dev_dbg(p->dev, "%s read word %04x\n", __func__, val);
-+		break;
-+	case 4:
-+		val &= U32_MAX;
-+		dev_dbg(p->dev, "%s read long %08x\n", __func__, val);
-+		break;
-+	default:
-+		/* Should not happen */
-+		dev_err(p->dev, "%s illegal size\n", __func__);
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+	*value = val;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int ixp4xx_pci_write_config(struct pci_bus *bus,  unsigned int devfn,
-+				   int where, int size, u32 value)
-+{
-+	struct ixp4xx_pci *p = bus->sysdata;
-+	u32 n, addr, val, cmd;
-+	u8 bus_num = bus->number;
-+	int ret;
-+
-+	n = where % 4;
-+	cmd = ixp4xx_byte_lane_enable_bits(n, size);
-+	if (cmd == 0xffffffff)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	addr = ixp4xx_config_addr(bus_num, devfn, where);
-+	cmd |= NP_CMD_CONFIGWRITE;
-+	val = value << (8*n);
-+
-+	dev_dbg(p->dev, "write_config_byte %#x to %d size %d dev %d:%d:%d addr: %08x cmd %08x\n",
-+		value, where, size, bus_num, PCI_SLOT(devfn), PCI_FUNC(devfn), addr, cmd);
-+
-+	ret = ixp4xx_pci_write(p, addr, cmd, val);
-+	if (ret)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static struct pci_ops ixp4xx_pci_ops = {
-+	.read = ixp4xx_pci_read_config,
-+	.write = ixp4xx_pci_write_config,
-+};
-+
-+static u32 ixp4xx_pci_addr_to_64mconf(phys_addr_t addr)
-+{
-+	u8 base;
-+
-+	base = ((addr & 0xff000000) >> 24);
-+	return (base << 24) | ((base + 1) << 16)
-+		| ((base + 2) << 8) | (base + 3);
-+}
-+
-+static int ixp4xx_pci_parse_map_ranges(struct ixp4xx_pci *p)
-+{
-+	struct device *dev = p->dev;
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(p);
-+	struct resource_entry *win;
-+	struct resource *res;
-+	phys_addr_t addr;
-+
-+	win = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
-+	if (win) {
-+		u32 pcimembase;
-+
-+		res = win->res;
-+		addr = res->start - win->offset;
-+
-+		if (res->flags & IORESOURCE_PREFETCH)
-+			res->name = "IXP4xx PCI PRE-MEM";
-+		else
-+			res->name = "IXP4xx PCI NON-PRE-MEM";
-+
-+		dev_dbg(dev, "%s window %pR, bus addr %pa\n",
-+			res->name, res, &addr);
-+		if (resource_size(res) != SZ_64M) {
-+			dev_err(dev, "memory range is not 64MB\n");
-+			return -EINVAL;
-+		}
-+
-+		pcimembase = ixp4xx_pci_addr_to_64mconf(addr);
-+		/* Commit configuration */
-+		ixp4xx_writel(p, IXP4XX_PCI_PCIMEMBASE, pcimembase);
-+	} else {
-+		dev_err(dev, "no AHB memory mapping defined\n");
-+	}
-+
-+	win = resource_list_first_type(&bridge->windows, IORESOURCE_IO);
-+	if (win) {
-+		res = win->res;
-+
-+		addr = pci_pio_to_address(res->start);
-+		if (addr & 0xff) {
-+			dev_err(dev, "IO mem at uneven address: %pa\n", &addr);
-+			return -EINVAL;
-+		}
-+
-+		res->name = "IXP4xx PCI IO MEM";
-+		/*
-+		 * Setup I/O space location for PCI->AHB access, the
-+		 * upper 24 bits of the address goes into the lower
-+		 * 24 bits of this register.
-+		 */
-+		ixp4xx_writel(p, IXP4XX_PCI_AHBIOBASE, (addr >> 8));
-+	} else {
-+		dev_info(dev, "no IO space AHB memory mapping defined\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int ixp4xx_pci_parse_map_dma_ranges(struct ixp4xx_pci *p)
-+{
-+	struct device *dev = p->dev;
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(p);
-+	struct resource_entry *win;
-+	struct resource *res;
-+	phys_addr_t addr;
-+	u32 ahbmembase;
-+
-+	win = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
-+	if (win) {
-+		res = win->res;
-+		addr = res->start - win->offset;
-+
-+		if (resource_size(res) != SZ_64M) {
-+			dev_err(dev, "DMA memory range is not 64MB\n");
-+			return -EINVAL;
-+		}
-+
-+		dev_dbg(dev, "DMA MEM BASE: %pa\n", &addr);
-+		/*
-+		 * 4 PCI-to-AHB windows of 16 MB each, write the 8 high bits
-+		 * into each byte of the PCI_AHBMEMBASE register.
-+		 */
-+		ahbmembase = ixp4xx_pci_addr_to_64mconf(addr);
-+		/* Commit AHB membase */
-+		ixp4xx_writel(p, IXP4XX_PCI_AHBMEMBASE, ahbmembase);
-+	} else {
-+		dev_err(dev, "no DMA memory range defined\n");
-+	}
-+
-+	return 0;
-+}
-+
-+/* Only used to get context for abort handling */
-+static struct ixp4xx_pci *ixp4xx_pci_abort_singleton;
-+
-+static int ixp4xx_pci_abort_handler(unsigned long addr, unsigned int fsr,
-+				    struct pt_regs *regs)
-+{
-+	struct ixp4xx_pci *p = ixp4xx_pci_abort_singleton;
-+	u32 isr, status;
-+	int ret;
-+
-+	isr = ixp4xx_readl(p, IXP4XX_PCI_ISR);
-+	ret = ixp4xx_crp_read_config(p, PCI_STATUS, 2, &status);
-+	if (ret) {
-+		dev_err(p->dev, "unable to read abort status\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_err(p->dev,
-+		"PCI: abort_handler addr = %#lx, isr = %#x, status = %#x\n",
-+		addr, isr, status);
-+
-+	/* Make sure the Master Abort bit is reset */
-+	ixp4xx_writel(p, IXP4XX_PCI_ISR, IXP4XX_PCI_ISR_PFE);
-+	status |= PCI_STATUS_REC_MASTER_ABORT;
-+	ret = ixp4xx_crp_write_config(p, PCI_STATUS, 2, status);
-+	if (ret)
-+		dev_err(p->dev, "unable to clear abort status bit\n");
-+
-+	/*
-+	 * If it was an imprecise abort, then we need to correct the
-+	 * return address to be _after_ the instruction.
-+	 */
-+	if (fsr & (1 << 10)) {
-+		dev_err(p->dev, "imprecise abort\n");
-+		regs->ARM_pc += 4;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init ixp4xx_pci_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct ixp4xx_pci *p;
-+	struct pci_host_bridge *host;
-+	int ret;
-+	u32 val;
-+	phys_addr_t addr;
-+	u32 basereg[4] = {
-+		PCI_BASE_ADDRESS_0,
-+		PCI_BASE_ADDRESS_1,
-+		PCI_BASE_ADDRESS_2,
-+		PCI_BASE_ADDRESS_3,
-+	};
-+	int i;
-+
-+	host = devm_pci_alloc_host_bridge(dev, sizeof(*p));
-+	if (!host)
-+		return -ENOMEM;
-+
-+	host->ops = &ixp4xx_pci_ops;
-+	p = pci_host_bridge_priv(host);
-+	host->sysdata = p;
-+	p->dev = dev;
-+	raw_spin_lock_init(&p->lock);
-+	dev_set_drvdata(dev, p);
-+
-+	/*
-+	 * Set up quirk for erratic behaviour in the 42x variant
-+	 * when accessing config space.
-+	 */
-+	if (of_device_is_compatible(np, "intel,ixp42x-pci")) {
-+		p->errata_hammer = true;
-+		dev_info(dev, "activate hammering errata\n");
-+	}
-+
-+	p->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(p->base))
-+		return PTR_ERR(p->base);
-+
-+	val = ixp4xx_readl(p, IXP4XX_PCI_CSR);
-+	p->host_mode = !!(val & IXP4XX_PCI_CSR_HOST);
-+	dev_info(dev, "controller is in %s mode\n",
-+		 p->host_mode ? "host" : "option");
-+
-+	/* Hook in our fault handler for PCI errors */
-+	ixp4xx_pci_abort_singleton = p;
-+	hook_fault_code(16+6, ixp4xx_pci_abort_handler, SIGBUS, 0,
-+			"imprecise external abort");
-+
-+	ret = ixp4xx_pci_parse_map_ranges(p);
-+	if (ret)
-+		return ret;
-+
-+	ret = ixp4xx_pci_parse_map_dma_ranges(p);
-+	if (ret)
-+		return ret;
-+
-+	/* This is only configured in host mode */
-+	if (p->host_mode) {
-+		addr = __pa(PAGE_OFFSET);
-+		/* This is a noop (0x00) but explains what is going on */
-+		addr |= PCI_BASE_ADDRESS_SPACE_MEMORY;
-+
-+		for (i = 0; i < 4; i++) {
-+			/* Write this directly into the config space */
-+			ret = ixp4xx_crp_write_config(p, basereg[i], 4, addr);
-+			if (ret)
-+				dev_err(dev, "failed to set up PCI_BASE_ADDRESS_%d\n", i);
-+			else
-+				dev_info(dev, "set PCI_BASE_ADDR_%d to %pa\n", i, &addr);
-+			addr += SZ_16M;
-+		}
-+
-+		/*
-+		 * Enable CSR window at 64 MiB to allow PCI masters to continue
-+		 * prefetching past the 64 MiB boundary, if all AHB to PCI windows
-+		 * are consecutive.
-+		 */
-+		ret = ixp4xx_crp_write_config(p, PCI_BASE_ADDRESS_4, 4, addr);
-+		if (ret)
-+			dev_err(dev, "failed to set up PCI_BASE_ADDRESS_4\n");
-+		else
-+			dev_info(dev, "set PCI_BASE_ADDR_4 to %pa\n", &addr);
-+
-+		/*
-+		 * Put the IO memory at the very end of physical memory at
-+		 * 0xfffffc00. This is when the PCI is trying to access IO
-+		 * memory over AHB.
-+		 */
-+		addr = 0xfffffc00;
-+		addr |= PCI_BASE_ADDRESS_SPACE_IO;
-+		ret = ixp4xx_crp_write_config(p, PCI_BASE_ADDRESS_5, 4, addr);
-+		if (ret)
-+			dev_err(dev, "failed to set up PCI_BASE_ADDRESS_5\n");
-+		else
-+			dev_info(dev, "set PCI_BASE_ADDR_5 to %pa\n", &addr);
-+
-+		/*
-+		 * Retry timeout to 0x80
-+		 * Transfer ready timeout to 0xff
-+		 */
-+		ret = ixp4xx_crp_write_config(p, IXP4XX_PCI_RTOTTO, 4,
-+					      0x000080ff);
-+		if (ret)
-+			dev_err(dev, "failed to set up TRDY limit\n");
-+		else
-+			dev_info(dev, "set TRDY limit to 0x80ff\n");
-+	}
-+
-+	/* Clear interrupts */
-+	val = IXP4XX_PCI_ISR_PSE | IXP4XX_PCI_ISR_PFE | IXP4XX_PCI_ISR_PPE | IXP4XX_PCI_ISR_AHBE;
-+	ixp4xx_writel(p, IXP4XX_PCI_ISR, val);
-+
-+	/*
-+	 * Set Initialize Complete in PCI Control Register: allow IXP4XX to
-+	 * respond to PCI configuration cycles. Specify that the AHB bus is
-+	 * operating in big endian mode. Set up byte lane swapping between
-+	 * little-endian PCI and the big-endian AHB bus.
-+	 */
-+	val = IXP4XX_PCI_CSR_IC | IXP4XX_PCI_CSR_ABE;
-+#ifdef __ARMEB__
-+	val |= (IXP4XX_PCI_CSR_PDS | IXP4XX_PCI_CSR_ADS);
-+#endif
-+	ixp4xx_writel(p, IXP4XX_PCI_CSR, val);
-+
-+	ret = ixp4xx_crp_write_config(p, PCI_COMMAND, 2, PCI_COMMAND_MASTER | PCI_COMMAND_MEMORY);
-+	if (ret)
-+		dev_err(dev, "unable to initialize master and command memory\n");
-+	else
-+		dev_info(dev, "initialized as master\n");
-+
-+	pci_host_probe(host);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ixp4xx_pci_of_match[] = {
-+	{
-+		.compatible = "intel,ixp42x-pci",
-+	},
-+	{
-+		.compatible = "intel,ixp43x-pci",
-+	},
-+	{},
-+};
-+
-+/*
-+ * This driver needs to be a builtin module with suppressed bind
-+ * attributes since the probe() is initializing a hard exception
-+ * handler and this can only be done from __init-tagged code
-+ * sections. This module cannot be removed and inserted at all.
-+ */
-+static struct platform_driver ixp4xx_pci_driver = {
-+	.driver = {
-+		.name = "ixp4xx-pci",
-+		.suppress_bind_attrs = true,
-+		.of_match_table = of_match_ptr(ixp4xx_pci_of_match),
-+	},
-+};
-+/*
-+ * This is the only way to have an __init tagged probe that does
-+ * not cause link errors.
-+ */
-+builtin_platform_driver_probe(ixp4xx_pci_driver, ixp4xx_pci_probe);
--- 
-2.30.2
-
+> -----Original Message-----
+> From: Richard Zhu
+> Subject: RE: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one regulat=
+or
+> used to power up pcie phy
+>=20
+>=20
+> > Subject: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one
+> > regulator used to power up pcie phy On Thu, May 06, 2021 at 06:08:24PM
+> > +0200, Lucas Stach wrote:
+> > > Hi Lorenzo,
+> > >
+> > > have those two patches fallen through some crack? AFAICS they are
+> > > gone from patchwork, but I also can't find them in any branch in the
+> > > usual git repos.
+> >
+> > They were marked "accepted" in patchwork but must have fallen through
+> > the cracks.  I reset them to "new" and assigned to Lorenzo.
+> [Richard Zhu] Thanks for your help.
+>=20
+> >
+> > Neither one follows the subject line capitalization conventions.
+> >
+> > The subject line of this patch (1/2) doesn't really make sense.  I
+> > *think* this adds a property ("vph-supply") to indicate which
+> > regulator supplys power to the PHY.
+> >
+> > > Am Dienstag, dem 30.03.2021 um 16:08 +0800 schrieb Richard Zhu:
+> > > > Both 1.8v and 3.3v power supplies can be used by i.MX8MQ PCIe PHY.
+> > > > In default, the PCIE_VPH voltage is suggested to be 1.8v refer to
+> > > > data sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic
+> > > > design, the VREG_BYPASS bits of GPR registers should be cleared
+> > > > from default value 1b'1 to 1b'0. Thus, the internal 3v3 to 1v8
+> > > > translator would be turned on.
+> >
+> > This commit log doesn't describe the patch, either.  Maybe something
+> > like
+> > this:
+> >
+> >   dt-bindings: imx6q-pcie: Add "vph-supply" for PHY supply voltage
+> >
+> >   The i.MX8MQ PCIe PHY can use either a 1.8V or a 3.3V power supply.
+> >   Add a "vph-supply" property to indicate which regulator supplies
+> >   power for the PHY.
+> >
+> [Richard Zhu] Okay, will be changed as this way.
+>=20
+> > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > > index de4b2baf91e8..d8971ab99274 100644
+> > > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > > > @@ -38,6 +38,9 @@ Optional properties:
+> > > >    The regulator will be enabled when initializing the PCIe host an=
+d
+> > > >    disabled either as part of the init process or when shutting dow=
+n the
+> > > >    host.
+> > > > +- vph-supply: Should specify the regulator in charge of VPH one
+> > > > +of the three
+> > > > +  PCIe PHY powers. This regulator can be supplied by both 1.8v
+> > > > +and 3.3v voltage
+> > > > +  supplies.
+> >
+> > Just going by examples for other drivers, I think this should say
+> > something like
+> > this:
+> >
+> >   - vph-supply: Regulator for i.MX8MQ PCIe PHY.  May supply either
+> >     1.8V or 3.3V.
+> >
+> > You mentioned "one of the three PCIe PHY powers"; I don't know what
+> > that means, so I don't know whether it's important to include.
+> >
+> > I also don't know what "vph" means; if the "ph" is part of "phy", it'd
+> > be nicer to include the "y", so it would be "vphy-supply".
+> [Richard Zhu] There are three power supplies in total required by the PHY=
+.
+> - vp: PHY analog and digital supply
+> - vptxN: PHY transmit supply
+> -vph: High-voltage power supply.
+> Only vph is handled by SW here.
+>=20
+> BR
+> Richard
+> >
+> > > >  Additional required properties for imx6sx-pcie:
+> > > >  - clock names: Must include the following additional entries:
