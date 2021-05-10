@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7192F379ACF
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 01:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3921379ADD
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 01:40:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbhEJXh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 19:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        id S229973AbhEJXlq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 19:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229958AbhEJXhY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 19:37:24 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B88C061574;
-        Mon, 10 May 2021 16:36:18 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id v6so22872321ljj.5;
-        Mon, 10 May 2021 16:36:18 -0700 (PDT)
+        with ESMTP id S229561AbhEJXlp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 May 2021 19:41:45 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247E0C061574;
+        Mon, 10 May 2021 16:40:40 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id w15so22856105ljo.10;
+        Mon, 10 May 2021 16:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZKKW+K0dIdsjUJHAnndSYglrw3/aTncWjvYhS3w4Trg=;
-        b=IaARyqKetclXdh5XbI4ONYrT/JVdndL0jie0/m3ZlTyGKmtDzmEM0h0R6kJ5rmT+cI
-         DvC5O1jbjeRg34VPKlblUDymxwrJlEkSFtOPYBf8/nyhiwcrDC3b9MoRi7N3/MhciKnu
-         NRwXpVd/abtzxEO1wnYfDXEAdNSL4Lxz9lqBGqqQCvyVov+P51abf7jU0KE4WBmZ0Z30
-         kTaqJylnwhn2/W0isEwM/aHv+Zh01xxTQteKes0PGv87zXOoLDRo7xtQWATSA5Pp/BCA
-         n3jm5Rp0CCAWkom+Cgf5Ut91RvEFWZYR6Ai9pCJGukij+P2MpOHBeJ66iPTzattI6Hks
-         Nr9g==
+        bh=4x0vN9DJqs7gJDwDfxyEg064VHqNhSWYWI838BdyA6Y=;
+        b=bv+qY0q2mO9tHNg79PZMj8hkZ9C8rxnsgQTKmo/G7H1nlKCoAMKWz7Bw0X25Cou4jU
+         IknSAu6Jq8pZ0M5/91i+w6wG4XX8btm6dMQ4QFmGR0GTRhQmZhLliRXUAc68CBtoLBMI
+         ZLLX7kJV2Ld+if87BOnwOGqel6FQy3k1Knai6gSjVXUWyvNVwKauZp1dvovV0JEEoyP4
+         mhjO8CFhNjZcmPzwVRv/e7dLqnoxbrqGKHCwXpJQFAX+vMR6ajjmjV5EVsLMhxyVDc+d
+         5LxZ/932j4mszXXmeMlynvNsST6XOZQer9Fkk/r4ycNUG4aa4q957Zd9eyp6g63OCS/C
+         6LoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZKKW+K0dIdsjUJHAnndSYglrw3/aTncWjvYhS3w4Trg=;
-        b=NzPExFOF5mbzaBHhor3UUVajRg3DnbORqR+S8R350cm/5RsCxRk5WizSrvdzAZfzhg
-         vk5infRMK3p6HgzS30vkdxJywzBnRaD/y8JigGylPxwuhSEdPvEy5SDruMhtbAozihoR
-         N7f5WZMfnfN8uTUubSx2Ffj4JP+skylmpdiZSznTBgrK4YiM7jLEMuO90f0Wc8ij980m
-         HkTDyTDeY04oi/2S/vL90Evw6mnyfEBtOwMbp9dP3n39EtQo0C3UGjsIUrM2LTsffQNt
-         hyz59QgTXC9uXuWovcv4Rlw9dQWc5LifnPkz0IkcrrmM4Kf508y8RvfZv1h3JUcgNDvW
-         WYGw==
-X-Gm-Message-State: AOAM530LkCWEUmIjexhyBh9MajohZBLTsDyvkT24dldu+0aojibMkj5T
-        1FNubJwvgDUYoUL8BRp1uBs=
-X-Google-Smtp-Source: ABdhPJwwFZdsy+kgOUzcZ0jND70n4Tg4BvLOOt7Fhi+No+nuR4qT7zrwEb/nnFNWv9ZPmOL2LYp3Tg==
-X-Received: by 2002:a2e:9782:: with SMTP id y2mr21349914lji.303.1620689777422;
-        Mon, 10 May 2021 16:36:17 -0700 (PDT)
+        bh=4x0vN9DJqs7gJDwDfxyEg064VHqNhSWYWI838BdyA6Y=;
+        b=QcPkAQMYd7tM5t30Mda+qYjjFvq3l7UqPnG37y7pb4+Eymz7FpSfglS08tCGMybkvx
+         XsqPGT+3ktnhAwVrxnb0VDh4EwoteapVa4+DtjeI6dE2+rSDfy16z0Gp1PVSCg1Qgo0P
+         /8tKn55X7csDXxx7BzacxhXrz7RzSANu6IoSVOkhxkbUcI0oYL0gUp9lvRZNf0WiVnIC
+         t1sYzv3FOPeI14tJzuPvDJjJDzBe0R7SrAVGpyeFMBAC3O1LQVHe6pzHfr5YiE3thdjd
+         CvWg2JQyQSq8gvHg0ZYQpAp/MNOuDTZ2dnFjH8Jihv9T3gLoZXDCpzsnYsd0eLq5ijsR
+         y9eQ==
+X-Gm-Message-State: AOAM532a11OoF5pjN2dar8Mjhw0p1yhD08FYCI0CBjH4ST0DgPYiFIrh
+        uqFOrVC1Gv15drRpeNeuOqU=
+X-Google-Smtp-Source: ABdhPJzQrUm5bDZEPSU5ieS3hk7r8BouKV4qqzcZDrrRCosV82J5oK0C5TjXP9oalqSbpSSxLWqE+Q==
+X-Received: by 2002:a2e:9b82:: with SMTP id z2mr19980857lji.366.1620690038713;
+        Mon, 10 May 2021 16:40:38 -0700 (PDT)
 Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id w21sm349247lfu.174.2021.05.10.16.36.15
+        by smtp.gmail.com with ESMTPSA id z12sm2398926lfe.195.2021.05.10.16.40.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 May 2021 16:36:16 -0700 (PDT)
+        Mon, 10 May 2021 16:40:38 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
@@ -56,18 +56,15 @@ Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Will Deacon <will@kernel.org>, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: 
-Date:   Tue, 11 May 2021 01:35:49 +0200
-Message-Id: <20210510233549.1329706-1-luzmaximilian@gmail.com>
+Subject: [RFC PATCH] Revert "arm64: PCI: Exclude ACPI "consumer" resources from host bridge windows"
+Date:   Tue, 11 May 2021 01:40:20 +0200
+Message-Id: <20210510234020.1330087-1-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
-
-Subject: [PATCH] Revert "arm64: PCI: Exclude ACPI "consumer" resources from
- host bridge windows"
 
 The Microsoft Surface Pro X has host bridges defined as
 
@@ -118,6 +115,9 @@ Please note: I am not sure if this is the right way to fix that, e.g. I
 don't know if any additional checks like on IA64 or x86 might be
 required instead, or if this might break things on other devices. So
 please consider this more as a bug report rather than a fix.
+
+Apologies for the re-send, I seem to have unintentionally added a blank
+line before the subject.
 
 ---
  arch/arm64/kernel/pci.c | 14 --------------
