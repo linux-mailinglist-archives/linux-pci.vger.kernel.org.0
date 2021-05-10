@@ -2,85 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED04379890
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 22:49:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 533383798AA
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 22:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232053AbhEJUuf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 16:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
+        id S233010AbhEJU6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 16:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231672AbhEJUuf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 16:50:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 74E7D61469;
-        Mon, 10 May 2021 20:49:29 +0000 (UTC)
+        id S232816AbhEJU6D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 May 2021 16:58:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DA08B61183;
+        Mon, 10 May 2021 20:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620679769;
-        bh=XF65myxk1R6rOg5TYwVWxf8E6nFqE+GuICaIhKIyTog=;
+        s=k20201202; t=1620680218;
+        bh=Eybd5Prm8MecsrOo0CDKgicCBzQ5UXTLu9q5Wu9ESqk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UspqD4CbBTKGiecvztlrhHTjyY3LdvOoM1sn035adapkriaaOEu5mQUViPdRN5f2H
-         DWVamS6jnyXPA68W4SAni6LBuK6r6PhY4WdYz9fwxOInHjWlHU+3eZtw0NCaLXXsJn
-         Za7Xb96U6hO7Xfrz8Rmp784Lhnq2w35HLxJ9MLX3frLcvPLASWrxK6JyA11YasEfR9
-         AThLYbn1CA/RGCJ6bbrJMnNbR9/EgZk9qw8cCV4B/9BRQGkhyRzQ9pbkPW2s4ZB1QH
-         EpqDIlVsUSiIe3BUX9u7UfygdpaE1FFe5OtfjOUlWFZRlTHt5i7QtFaIzROvYJZS61
-         ZuLHnxnCLxD9Q==
-Date:   Mon, 10 May 2021 15:49:28 -0500
+        b=I2mBwzTPjLFM1PneoaeJIakqQX9qza9nmvbL3uTEEQ+bBE/Ev+fYCJ+n9Npn2qHlR
+         w5nxF+2puek1aDXHITJNoKp0DYAaNR69udJLrRzzM/fP62/RsAYkwNrOPy25E87w5R
+         GmfgclC0xb1T1v5/PAKUAHV03e/6BNmupsNj0qLfAwvBZbsiP1zQEI73N+6m28EA4t
+         UsdWvac/YoSlOFVPWa8dbM+IEf5/r1Wh9G6EVviB57xzGDH2k0P+lptJ2rRHFF78td
+         dd8xgP6QKcn4l7TmbdSd9AYP1T0Um0qWrpDWSbvuEs8lkqGkll+KV/96Y/Z6CEw+wj
+         zOj6DA6pZpeDw==
+Date:   Mon, 10 May 2021 15:56:56 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] PCI: dwc: Visconti: PCIe RC controller driver
-Message-ID: <20210510204928.GA2299570@bjorn-Precision-5520>
+To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
+        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com,
+        ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, Felix.Kuehling@amd.com
+Subject: Re: [PATCH v6 08/16] PCI: Add support for dev_groups to struct
+ pci_device_driver
+Message-ID: <20210510205656.GA2301233@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210510074736.jlxq44o3duwlmylo@toshiba.co.jp>
+In-Reply-To: <20210510163625.407105-9-andrey.grodzovsky@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 04:47:36PM +0900, Nobuhiro Iwamatsu wrote:
-> On Thu, Apr 29, 2021 at 06:10:40PM -0500, Bjorn Helgaas wrote:
+In subject:
 
-> > > +#define  PCIE_UL_EDMA_INT3		BIT(5)
-> > > +#define  PCIE_UL_S_INT_EVENT_MASK1_ALL  (PCIE_UL_CFG_PME_INT | PCIE_UL_CFG_LINK_EQ_REQ_INT | \
-> > > +					 PCIE_UL_EDMA_INT0 | PCIE_UL_EDMA_INT1 | \
-> > > +					 PCIE_UL_EDMA_INT2 | PCIE_UL_EDMA_INT3)
-> > > +
-> > 
-> > Please wrap the code here and below so it fits nicely in 80 columns.
+  PCI: Add support for dev_groups to struct pci_driver
+
+(not "struct pci_device_driver," which does not exist)
+
+On Mon, May 10, 2021 at 12:36:17PM -0400, Andrey Grodzovsky wrote:
+> This helps converting PCI drivers sysfs attributes to static.
 > 
-> checkpatch.pl allows up to 100 characters, is this a PCI driver rule?
-
-The general rule is "match what's around you."  So I guess that makes
-it a drivers/pci/ rule.
-
-> > > +	pp->irq = platform_get_irq_byname(pdev, "intr");
-> > > +	if (pp->irq < 0) {
-> > > +		dev_err(dev, "interrupt intr is missing");
-> > 
-> > Make your error messages consistently capitalized (or consistently not
-> > capitalized).
+> Analogous to b71b283e3d6d ("USB: add support for dev_groups to
+> struct usb_driver")
 > 
-> Sorry, I didn't understand this point correctly.
-> Does this mean capitalize the first letter of the message?
+> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Some of your messages are capitalized and others are not:
+With the subject change above,
 
-  dev_info(pci->dev, "Link failure\n"
-  dev_err(dev, "Failed to get refclk clock: %ld\n"
-  dev_err(dev, "Failed to get sysclk clock: %ld\n"
-  dev_err(dev, "Failed to get auxclk clock: %ld\n"
-  dev_err(dev, "interrupt intr is missing"
-  dev_dbg(dev, "Applied default link speed\n"
-  dev_dbg(dev, "link speed Gen %d"
-  dev_err(dev, "Failed to initialize host\n"
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-I don't really care whether they're all capitalized or none are
-capitalized, but they should all be the same.  Otherwise it just looks
-sloppy.
-
-Bjorn
+> ---
+>  drivers/pci/pci-driver.c | 1 +
+>  include/linux/pci.h      | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index ec44a79e951a..3a72352aa5cf 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1385,6 +1385,7 @@ int __pci_register_driver(struct pci_driver *drv, struct module *owner,
+>  	drv->driver.owner = owner;
+>  	drv->driver.mod_name = mod_name;
+>  	drv->driver.groups = drv->groups;
+> +	drv->driver.dev_groups = drv->dev_groups;
+>  
+>  	spin_lock_init(&drv->dynids.lock);
+>  	INIT_LIST_HEAD(&drv->dynids.list);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 86c799c97b77..b57755b03009 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -858,6 +858,8 @@ struct module;
+>   *		number of VFs to enable via sysfs "sriov_numvfs" file.
+>   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
+>   * @groups:	Sysfs attribute groups.
+> + * @dev_groups: Attributes attached to the device that will be
+> + *              created once it is bound to the driver.
+>   * @driver:	Driver model structure.
+>   * @dynids:	List of dynamically added device IDs.
+>   */
+> @@ -873,6 +875,7 @@ struct pci_driver {
+>  	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
+>  	const struct pci_error_handlers *err_handler;
+>  	const struct attribute_group **groups;
+> +	const struct attribute_group **dev_groups;
+>  	struct device_driver	driver;
+>  	struct pci_dynids	dynids;
+>  };
+> -- 
+> 2.25.1
+> 
