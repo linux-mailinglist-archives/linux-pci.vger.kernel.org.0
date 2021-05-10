@@ -2,46 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7315377A22
-	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 04:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAFBA377A35
+	for <lists+linux-pci@lfdr.de>; Mon, 10 May 2021 04:45:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbhEJCbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 May 2021 22:31:40 -0400
-Received: from mail-ed1-f47.google.com ([209.85.208.47]:36754 "EHLO
-        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230038AbhEJCbj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 22:31:39 -0400
-Received: by mail-ed1-f47.google.com with SMTP id u13so16895361edd.3
-        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 19:30:34 -0700 (PDT)
+        id S230119AbhEJCqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 May 2021 22:46:40 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:45827 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229987AbhEJCqg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 May 2021 22:46:36 -0400
+Received: by mail-ed1-f43.google.com with SMTP id s7so12233248edq.12
+        for <linux-pci@vger.kernel.org>; Sun, 09 May 2021 19:45:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qgH58BAOymX/GqbeUamZa2hFOuXJqDwbXTCnQb9+5EM=;
-        b=ZUOxoC81xktmfgGiiTNomd6ZW1mjGkpg0KFkcBRXnEEUkWdSsciFUN8vtwe4nuhEdX
-         EjM8yPpChNhc6lZ+b/+XSkBKyRRmiW3O1ToPEGGr6Iyw39sTytY2VwBXICspgdAcj0PS
-         5YfPrtEX7g8vY1DUaaUw8+4yH7EOvUygCHbOsii7jycj8/vRNO2DuRDSpbqKo2GdWWaX
-         QgNmc5goph9GLuHursGCFeWW5u1BiTCyAGzDG7UY0vJ35HWSSuSuAZ0A/KHbrHcj0JjV
-         xK1/2ztktHKp6NFIxe/fnC2Q2zHn2e3pBKdhmKb6k4nUbBhJaE6+MlKIx3ZuWzGJzyjQ
-         rEIA==
-X-Gm-Message-State: AOAM530jtwi8n/ZOy03wkyD413uh4PuPMqUSiQBIzSZt7BnwBnQ2Ku+8
-        BKWxFDFZpehRyWRcpe79Xu0=
-X-Google-Smtp-Source: ABdhPJxoipCH5UocZZt+ENwCy+aLiX58y4aHPPfgTjQ/s7QNDUSvVzbHBdwa1Sdmm3aOVg19/kAYBg==
-X-Received: by 2002:a05:6402:120c:: with SMTP id c12mr26504611edw.98.1620613834203;
-        Sun, 09 May 2021 19:30:34 -0700 (PDT)
+        bh=kbQg4+9brtIpQyB367XuQ54IAM6gOiPLjgHbH6iKbI4=;
+        b=mIMkM+d+sxAKAQoMHkWjDdMKvglAmUUSPvWHTOCKx2ORsErYoEYIT2BpEmCaz3NmSF
+         yXXkprLb6NR9WZSW24CxN14mqIO/PrvaAcGNdNZ2UkRUGOXjtfOg7kZiNtkgT8Uh45qy
+         h2MO39d8gbjlKsmBVDBwveYBc5WzltC3x8eX64X6YTKwXY8ftbb9oVPbgggcmXjixuRS
+         cBVUfxImFGjhmAEbt6AObfDKOPKDnQhAm3uAkklkMBSpcwP4PlitQerzWNDQcz8YoomT
+         MgOX9d3qP7RGUPl1IzHt4UiwZE+V0QT3pQNfz1YdnKegcb+rxi4DiSQYH3aRazYoH9BB
+         kSsw==
+X-Gm-Message-State: AOAM530CZHpaO8FM7HWKdVbDhMr/UM2ei6H+WpQoCmB5CY8DIdEYDSel
+        5w8ctQ2UiF8ksHylp1Q2G3xuLPt5W+I=
+X-Google-Smtp-Source: ABdhPJxUnwdQGG4/VBjRb+GsfCokeEepj6rGrwAeoHyLRgvmnv3bfrDdVEPeeEH3CO8oDBwbIZd9tw==
+X-Received: by 2002:a05:6402:683:: with SMTP id f3mr26041287edy.22.1620614731235;
+        Sun, 09 May 2021 19:45:31 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id x18sm8261172eju.45.2021.05.09.19.30.32
+        by smtp.gmail.com with ESMTPSA id j20sm8100733ejc.110.2021.05.09.19.45.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 May 2021 19:30:33 -0700 (PDT)
+        Sun, 09 May 2021 19:45:30 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] PCI: mobiveil: Remove unused readl and writel functions
-Date:   Mon, 10 May 2021 02:30:32 +0000
-Message-Id: <20210510023032.3063932-1-kw@linux.com>
+Cc:     Scott Murray <scott@spiteful.org>, linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: cpcihp: Move declaration of cpci_debug to the header file
+Date:   Mon, 10 May 2021 02:45:29 +0000
+Message-Id: <20210510024529.3221347-1-kw@linux.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,46 +47,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCIe host controller driver for Layerscape 4th generation SoC was
-added in the commit d29ad70a813b ("PCI: mobiveil: Add PCIe Gen4 RC
-driver for Layerscape SoCs").
+At the moment, the global variable cpci_debug is declared in the
+cpci_hotplug_core.c file.  Since this variable has users outside of this
+file and uses the extern keyword to change its visibility, move the
+variable declaration to the header file.
 
-At this time two static functions were introduced that appear to
-currently have no users.  Since nothing is using neither of these
-functions at the moment they can be safely removed.
+This resolves the following sparse warning:
 
-This resolves the following build time warnings:
-
-  drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c:45:19: warning: unused function 'ls_pcie_g4_lut_readl' [-Wunused-function]
-  drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c:50:20: warning: unused function 'ls_pcie_g4_lut_writel' [-Wunused-function]
+  drivers/pci/hotplug/cpci_hotplug_core.c:47:5: warning: symbol 'cpci_debug' was not declared. Should it be static?
 
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- .../pci/controller/mobiveil/pcie-layerscape-gen4.c    | 11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/pci/hotplug/cpci_hotplug.h      | 3 +++
+ drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
+ drivers/pci/hotplug/cpci_hotplug_pci.c  | 2 --
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-index ee0156921ebc..306950272fd6 100644
---- a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-+++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-@@ -42,17 +42,6 @@ struct ls_pcie_g4 {
- 	int irq;
- };
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index f33ff2bca414..3fdd1b9bd8c3 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -75,6 +75,9 @@ int cpci_hp_unregister_bus(struct pci_bus *bus);
+ int cpci_hp_start(void);
+ int cpci_hp_stop(void);
  
--static inline u32 ls_pcie_g4_lut_readl(struct ls_pcie_g4 *pcie, u32 off)
--{
--	return ioread32(pcie->pci.csr_axi_slave_base + PCIE_LUT_OFF + off);
--}
++/* Global variables */
++extern int cpci_debug;
++
+ /*
+  * Internal function prototypes, these functions should not be used by
+  * board/chassis drivers.
+diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+index d0559d2faf50..7a78e6340291 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_core.c
++++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+@@ -44,7 +44,6 @@ static DECLARE_RWSEM(list_rwsem);
+ static LIST_HEAD(slot_list);
+ static int slots;
+ static atomic_t extracting;
+-int cpci_debug;
+ static struct cpci_hp_controller *controller;
+ static struct task_struct *cpci_thread;
+ static int thread_finished;
+diff --git a/drivers/pci/hotplug/cpci_hotplug_pci.c b/drivers/pci/hotplug/cpci_hotplug_pci.c
+index 2c16adb7f4ec..6c48066acb44 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_pci.c
++++ b/drivers/pci/hotplug/cpci_hotplug_pci.c
+@@ -19,8 +19,6 @@
+ 
+ #define MY_NAME	"cpci_hotplug"
+ 
+-extern int cpci_debug;
 -
--static inline void ls_pcie_g4_lut_writel(struct ls_pcie_g4 *pcie,
--					 u32 off, u32 val)
--{
--	iowrite32(val, pcie->pci.csr_axi_slave_base + PCIE_LUT_OFF + off);
--}
--
- static inline u32 ls_pcie_g4_pf_readl(struct ls_pcie_g4 *pcie, u32 off)
- {
- 	return ioread32(pcie->pci.csr_axi_slave_base + PCIE_PF_OFF + off);
+ #define dbg(format, arg...)					\
+ 	do {							\
+ 		if (cpci_debug)					\
 -- 
 2.31.1
 
