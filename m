@@ -2,153 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A230B37A16B
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 10:11:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D30337A25F
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 10:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbhEKIMz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 04:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230130AbhEKIMz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 04:12:55 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC0EC061574
-        for <linux-pci@vger.kernel.org>; Tue, 11 May 2021 01:11:49 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1lgNUV-0001xi-Cn; Tue, 11 May 2021 10:11:43 +0200
-Message-ID: <854ec10d9a32df97d1f53a784dffca4e5036b059.camel@pengutronix.de>
-Subject: Re: [PATCH 3/7] PCI: imx6: Rework PHY search and mapping
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, patchwork-lst@pengutronix.de
-Date:   Tue, 11 May 2021 10:11:42 +0200
-In-Reply-To: <20210510170510.GA276768@robh.at.kernel.org>
-References: <20210510141509.929120-1-l.stach@pengutronix.de>
-         <20210510141509.929120-3-l.stach@pengutronix.de>
-         <20210510170510.GA276768@robh.at.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
+        id S230497AbhEKInr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 04:43:47 -0400
+Received: from mail-vs1-f50.google.com ([209.85.217.50]:45644 "EHLO
+        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231126AbhEKInj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 04:43:39 -0400
+Received: by mail-vs1-f50.google.com with SMTP id x188so4225007vsx.12;
+        Tue, 11 May 2021 01:42:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yzRdx62Sq3AaDnhd51+rCUJyJIfzNZKgNx2jthkjD/E=;
+        b=UmzsMKflBIc0YxXMZLC4EpFQPhAbEb6MOQ0fP5lK/n5NvPeqgRETZ0Vji7njkaI8Pr
+         v3JIfJcBPiLOXLdT7CITzCpxVGvGyUUY4lvtD6tplcNp9tY1ocI0hcZyuLCpVXX3JmdM
+         hgDpSJw6ltlajJ2iYIJX8mbtBiWZ2v+ihtWr/bbJkyZ9WzyIrpFweNuwPiSLyiWb6jB6
+         tio0JhRBLbKj33+ErYtJPDfAqqEuAL95wLyBCSyYR2gjMFmPgXMSYqtgmn1Pe7JbiQ40
+         sn4G2HvkDJRxJQEyEEPfn6aS1T9Jj9iyCsziWBknvkbAmAF03bj2YW7pY62q9nsvrnZw
+         JLpQ==
+X-Gm-Message-State: AOAM533lZVGZqGkhGkqG5E2EKagCZE7/hRWdWX87dqg3gI/75wR0v/Js
+        XEG1gRyBDzy3EqDq0tXP1QAtjf/RZfwWx3yY2L4=
+X-Google-Smtp-Source: ABdhPJxidzMgN+SIFQ8O4Pmyfgrc3FjU9fVcUqfJeBTcd/MTQvdGjLXfxIWnE3wqGu11LDO+cBZsOZvFeZQ6Fc7RGVA=
+X-Received: by 2002:a67:8745:: with SMTP id j66mr24922894vsd.18.1620722552807;
+ Tue, 11 May 2021 01:42:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+References: <cover.1617016509.git.gustavo.pimentel@synopsys.com> <daa1efe23850e77d6807dc3f371728fc0b7548b8.1617016509.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <daa1efe23850e77d6807dc3f371728fc0b7548b8.1617016509.git.gustavo.pimentel@synopsys.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 11 May 2021 10:42:21 +0200
+Message-ID: <CAMuHMdWvMpZ35Y-8k1ZOJeD53HyUoWLbzgZa_OMGCq3FOCf19w@mail.gmail.com>
+Subject: Re: [PATCH v10 1/4] misc: Add Synopsys DesignWare xData IP driver
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Montag, dem 10.05.2021 um 12:05 -0500 schrieb Rob Herring:
-> On Mon, May 10, 2021 at 04:15:05PM +0200, Lucas Stach wrote:
-> > We don't need to have a phandle of the PHY, as we know the compatible
-> > of the node we are looking for. This will make it easier to put add
-> > more PHY handling for new generations later on, where the
-> > "fsl,imx7d-pcie-phy" phandle would be a misnomer.
-> > 
-> > Also we can use a helper function to get the resource for us,
-> > simplifying out driver code a bit.
-> 
-> Better yes, but really all the phy handling should be split out to 
-> its own driver even in the older h/w with shared phy registers.
-> 
-That would be a quite massive DT binding changing break, possibly even
-a separate driver. Maybe it's time to do this for i.MX8MM, as the
-current driver just kept piling on special cases for "almost the same"
-hardware that by now looks quite different to the original i.MX6 PCIe
-integration this driver was supposed to handle.
+Hi Gustavo,
 
-> Soon as there's a chip with 2 PCI hosts, you're going to need the phy 
-> binding.
+On Mon, Mar 29, 2021 at 1:19 PM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+> Add Synopsys DesignWare xData IP driver. This driver enables/disables
+> the PCI traffic generator module pertain to the Synopsys DesignWare
+> prototype.
+>
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-Uh, there even is a chip like that already (i.MX8MQ), it just happened
-to not require any handling of the PHY registers. Don't know why I
-didn't think of this. :/
+Thanks for your patch, which is now commit e8a30eef6ef6da49 ("misc: Add
+Synopsys DesignWare xData IP driver") in v5.13-rc1.
 
-Regards,
-Lucas
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index f532c59..e6af9ff 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -402,6 +402,16 @@ config SRAM
+>  config SRAM_EXEC
+>         bool
+>
+> +config DW_XDATA_PCIE
+> +       depends on PCI
+> +       tristate "Synopsys DesignWare xData PCIe driver"
+> +       help
+> +         This driver allows controlling Synopsys DesignWare PCIe traffic
+> +         generator IP also known as xData, present in Synopsys DesignWare
+> +         PCIe Endpoint prototype.
 
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt  |  5 ++---
-> >  drivers/pci/controller/dwc/pci-imx6.c           | 17 +++++------------
-> >  2 files changed, 7 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > index de4b2baf91e8..308540df99ef 100644
-> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > @@ -54,7 +54,6 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
-> >  	       - "pciephy"
-> >  	       - "apps"
-> >  	       - "turnoff"
-> > -- fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
-> >  
-> >  Additional required properties for imx8mq-pcie:
-> >  - clock-names: Must include the following additional entries:
-> > @@ -88,8 +87,8 @@ Example:
-> >  
-> >  * Freescale i.MX7d PCIe PHY
-> >  
-> > -This is the PHY associated with the IMX7d PCIe controller.  It's used by the
-> > -PCI-e controller via the fsl,imx7d-pcie-phy phandle.
-> > +This is the PHY associated with the IMX7d PCIe controller.  It's looked up by
-> > +the PCI-e controller via the fsl,imx7d-pcie-phy compatible.
-> >  
-> >  Required properties:
-> >  - compatible:
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> > index 922c14361cd3..5e13758222e8 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -555,7 +555,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
-> >  			writel(PCIE_PHY_CMN_REG26_ATT_MODE,
-> >  			       imx6_pcie->phy_base + PCIE_PHY_CMN_REG26);
-> >  		} else {
-> > -			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy phandle ?\n");
-> > +			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy node?\n");
-> >  		}
-> >  
-> >  		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
-> > @@ -970,7 +970,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> >  	struct device *dev = &pdev->dev;
-> >  	struct dw_pcie *pci;
-> >  	struct imx6_pcie *imx6_pcie;
-> > -	struct device_node *np;
-> > +	struct device_node *np = NULL;
-> >  	struct resource *dbi_base;
-> >  	struct device_node *node = dev->of_node;
-> >  	int ret;
-> > @@ -991,17 +991,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> >  	imx6_pcie->pci = pci;
-> >  	imx6_pcie->drvdata = of_device_get_match_data(dev);
-> >  
-> > -	/* Find the PHY if one is defined, only imx7d uses it */
-> > -	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
-> > +	/* Find the PHY if one is present in DT, only imx7d uses it */
-> > +	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-pcie-phy");
-> >  	if (np) {
-> > -		struct resource res;
-> > -
-> > -		ret = of_address_to_resource(np, 0, &res);
-> > -		if (ret) {
-> > -			dev_err(dev, "Unable to map PCIe PHY\n");
-> > -			return ret;
-> > -		}
-> > -		imx6_pcie->phy_base = devm_ioremap_resource(dev, &res);
-> > +		imx6_pcie->phy_base = devm_of_iomap(dev, np, 0, NULL);
-> >  		if (IS_ERR(imx6_pcie->phy_base)) {
-> >  			dev_err(dev, "Unable to map PCIe PHY\n");
-> >  			return PTR_ERR(imx6_pcie->phy_base);
-> > -- 
-> > 2.29.2
-> > 
+Hence shouldn't this depend on PCIE_DW_EP, and perhaps be moved to
+drivers/pcie/?
+Or is that a driver for a different Synopsys DesignWare PCIe Endpoint?
 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
