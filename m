@@ -2,180 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F03F837A2D0
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 11:00:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B8F237A34E
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 11:19:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbhEKJBX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 05:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230439AbhEKJBU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 May 2021 05:01:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E709E611F1;
-        Tue, 11 May 2021 09:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620723613;
-        bh=ETvFtPpZWz6DN3iWb3G2WAPhojmYo6ps7EuchaChQ+E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PLGy/1LSbmraLJz9I+ZFpgkDxkCfvpVNiHxpQ06jZIl8i8GhyxDYM7Gy1/DkHiCt5
-         klo7h/HCiZCdE58jLyhFWvaAVP5oc9x+G/BoSRcOX7C3Tl/sTRBZmSPn8j1vcyPJNt
-         mRJS0yxqm/yCxF+CPVj6SxA/ae6jVWIEkJrXhN8oiyzJkjvRZFRVAZch9kSHP1iP93
-         oW7IG29Utyoqz+QwiX4h4Rg5Qegv470eEj7pH0f2MN9paDsUyx4y03dGzSMfb4uf2a
-         FDLqKCDGwM78HAqr/sdfeYExPB7ah8JOeYwd9qD22mRbJt8d7NaYnvORLTCVIJ25K4
-         6sDaroZmf8XGQ==
-Date:   Tue, 11 May 2021 11:00:02 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Edward Cree <ecree.xilinx@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        alsa-devel@alsa-project.org, coresight@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
-        kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-fpga@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-sgx@vger.kernel.org, linux-usb@vger.kernel.org,
-        mjpeg-users@lists.sourceforge.net, netdev@vger.kernel.org,
-        rcu@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/53] Get rid of UTF-8 chars that can be mapped as
- ASCII
-Message-ID: <20210511110002.2f187f01@coco.lan>
-In-Reply-To: <ed65025c-1087-9672-7451-6d28e7ab8f92@gmail.com>
-References: <cover.1620641727.git.mchehab+huawei@kernel.org>
-        <2ae366fdff4bd5910a2270823e8da70521c859af.camel@infradead.org>
-        <20210510135518.305cc03d@coco.lan>
-        <df6b4567-030c-a480-c5a6-fe579830e8c0@gmail.com>
-        <YJk8LMFViV7Z3Uu7@casper.infradead.org>
-        <ed65025c-1087-9672-7451-6d28e7ab8f92@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230466AbhEKJUv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 05:20:51 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53642 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230427AbhEKJUu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 05:20:50 -0400
+Received: from mailhost.synopsys.com (badc-mailhost4.synopsys.com [10.192.0.82])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A0A4240382;
+        Tue, 11 May 2021 09:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1620724784; bh=MIbo1BANMNdW9PDUn9z/YkXvOGpmP8qK7+kJeG5C1XI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=NIJj45FeZvcquEB9pUHDhCVi/hnJ3R9STHsGzeZ7gCnuz6/LK3dnWpQbAhhJ7gwHd
+         lbOXBw3vq9Lc29lyV/7VxZKViuPGZjIlc12lYvWsULylqgKRaY/4WZ7uWMwTo6j58P
+         XmpoEFcXmDL6u7Pexrs7pNbF6JztyL9gw8P/E0Qjw/42udCLmv/Ow7TX4AZQmtqcf5
+         4wDDEjGjnpsu4Qtaw9/p8qU7yBpfev9iNNzKu0qIwfxK1tFn9dboGWccC2IkiKAbQ6
+         X3YcN8K91gX0uB/CqaTL3y1K68zAa0cnGQlPBTPHqLd7MR1xqXlkuxOMZ25JsenGYk
+         DlIndv1e7d85g==
+Received: from o365relay-in.synopsys.com (us03-o365relay3.synopsys.com [10.4.161.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 4EB37A005E;
+        Tue, 11 May 2021 09:19:41 +0000 (UTC)
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08lp2169.outbound.protection.outlook.com [104.47.73.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id DA5EE8012B;
+        Tue, 11 May 2021 09:19:39 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="KvmNmCOB";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tp/FjZNMLqJXb1HMU/Q6ncCIlFw7S2qq7xIJ3Mmr4Z9FR/XAX2yScGADNg/AJtMAqxIAEW4qCSdXRXEppksK+Pgqki9bm/mPE9duNi6Lp6dLh0zlKrVA1nByKIcBmjdT4dftWZAFyk/zCFta5ZxoUFIz4ZSorWUHGIQo5PI2zfekQ46wzpDjnEatuRbzKcfYQeZsdC3O9RE3/9arcaNP3b0exdukQEDoUrz4dtxBo+Ek56xz6qMzgE2K59ZmannyJwkD+SpmExXV2DkIFs0kScJOhRRAYKokgs3gKK9F4tYVJGzqE5j1tjykhBK9o2j/tpxSwiICTXyWHkiKjX3BNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MIbo1BANMNdW9PDUn9z/YkXvOGpmP8qK7+kJeG5C1XI=;
+ b=SP8Z4gbFkdOT44+GXpHeCCz9OVImam6OUo5gQ/MvS6NUs0L/A4I+xG4pnvJnPmBR3Vh3iMoy8izxpKBgNT7zDDQxOxKrW6M2hFl7lI+H5ctf4NSXW91BM3a90xLkkRPijFtPNXnbqQ2jnmtw2IAsSWskbrrg8w5GR+A1ypBpioMGBzfgBnGipN3b6nRTArpMNMwNdLG0Mtb9jH0f6PhJqUJLzzYaYaWcRpTugJ5b81ThXrKCqn5Lrfx1yuVUeTR5qMZBhEoHylFuwkoflq9hFOeeIaK8wYpkcZBmx+5kRFgXiWhbM2uHTDhk8O4O942hwEJH3K7mfbfx68Q5fS1K7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MIbo1BANMNdW9PDUn9z/YkXvOGpmP8qK7+kJeG5C1XI=;
+ b=KvmNmCOB9AGIH92WuA7Yk3ARGtV7pDS4Bbq4iTGWhampVZdZj1Cx6ILEUM+0LoUdFz8qH8Lwqfq1LE/kJ78eG1QNZb7t9e3bfHxwv7Oz1ZP+1dFk6lEDqytI/sK1cUN+QUXVCJYTOC0P8F0lAG1Hb1YbK1AAVopMCbpA0deoYao=
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
+ DM5PR1201MB2505.namprd12.prod.outlook.com (2603:10b6:3:ea::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4108.30; Tue, 11 May 2021 09:19:38 +0000
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::5e:b693:6935:78cb]) by DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::5e:b693:6935:78cb%12]) with mapi id 15.20.4108.031; Tue, 11 May 2021
+ 09:19:38 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>
+Subject: RE: [PATCH v10 1/4] misc: Add Synopsys DesignWare xData IP driver
+Thread-Topic: [PATCH v10 1/4] misc: Add Synopsys DesignWare xData IP driver
+Thread-Index: AQHXJI0uGQ/Q91BK00qOgKdQPq6/n6reOgKAgAAE/dA=
+Date:   Tue, 11 May 2021 09:19:37 +0000
+Message-ID: <DM5PR12MB18355935B0712FA5900A17A4DA539@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <cover.1617016509.git.gustavo.pimentel@synopsys.com>
+ <daa1efe23850e77d6807dc3f371728fc0b7548b8.1617016509.git.gustavo.pimentel@synopsys.com>
+ <CAMuHMdWvMpZ35Y-8k1ZOJeD53HyUoWLbzgZa_OMGCq3FOCf19w@mail.gmail.com>
+In-Reply-To: <CAMuHMdWvMpZ35Y-8k1ZOJeD53HyUoWLbzgZa_OMGCq3FOCf19w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MV1V6WkRkbU5ESXpMV0l5TXprdE1URmxZaTA1T0dZd0xUQXdNV0Uz?=
+ =?utf-8?B?WkdSaE56RXhOVnhoYldVdGRHVnpkRnhsTTJRM1pqUXlOQzFpTWpNNUxURXha?=
+ =?utf-8?B?V0l0T1RobU1DMHdNREZoTjJSa1lUY3hNVFZpYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?RTVOekFpSUhROUlqRXpNalkxTVRrNE16TXpPVFV3TWpRek1DSWdhRDBpY1dS?=
+ =?utf-8?B?NlVtOWtaM2gxY0ZGSkswOUVaVGRsU2s1V2NGSkpZMmRCUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlNGbEpRVUZDWlhVM1QzQlNhMkpZUVZwd1JFNVJVelUwZGtacmJX?=
+ =?utf-8?B?dE5NVUpNYm1rNFYxRk9RVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUVVkRFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRFF6RnNRMmRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRblJCUjJ0QldYZEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVoUlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVVVRmpkMEowUVVkTlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRkZD?=
+ =?utf-8?B?ZEVGSFRVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjJOQlpFRkNl?=
+ =?utf-8?B?a0ZHT0VGalFVSjVRVWM0UVZwQlFqRkJSMDFCWkVGQ1prRklVVUZqWjBKb1FV?=
+ =?utf-8?B?ZHJRV0puUW5CQlJ6UkJXbmRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFXTjNRbWhCUjNkQldsRkNla0ZHT0VGWlVVSnFRVWROUVdKM1FqRkJSelJC?=
+ =?utf-8?B?WkVGQ1prRklRVUZpUVVKb1FVYzBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENlRUZJVlVGaWQw?=
+ =?utf-8?B?SXdRVWRWUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRmlaMEozUVVoTlFWaDNRbk5C?=
+ =?utf-8?B?UjJ0QldYZENiRUZITkVGamQwSnNRVVk0UVdSQlFteEJTRWxCWWxGQ1prRkVS?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCWTNkQ01FRklWVUZhUVVKc1FVYzBRV1JCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UWpKQlIyTkJXSGRDY2tGSFZVRmxVVUl6UVVjNFFXTm5RbXRCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?Q?FBQUEiLz48L21ldGE+?=
+authentication-results: linux-m68k.org; dkim=none (message not signed)
+ header.d=none;linux-m68k.org; dmarc=none action=none
+ header.from=synopsys.com;
+x-originating-ip: [89.155.14.32]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8afcd2cc-eb20-4717-5ecc-08d9145de67c
+x-ms-traffictypediagnostic: DM5PR1201MB2505:
+x-microsoft-antispam-prvs: <DM5PR1201MB25051F185CCF2547EFA464FADA539@DM5PR1201MB2505.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3jjW5WK/hmgHDTcX1W7ztegZcmtccS8L3NooV/uqpq5mO7Zb9cJa30IrdDFHHqz5hu1tNnFWry4CfCIysf8Z9YHX/OSIfViyxLrYcLTe68FwkHIZooEHMsw/75Eoqr1VQh9IlBzBbi6BF7frWagvokFvCAqGMlxeQ2Q9+4SDxLbjlBDv2Hcyca7CGzELHbxaytrkDNciRw97ado7TZMeufM0KWp66oqj5MklV00xgUKR9HI5nxNf9lQQJjg5h4GEXs/dSrPpfj+/+UBrk9o8ablXDht8jGkwniAi3xCD4GsKWTuX3n/8SAOjV1gKm5J9t2VbZfp1jAGThMh/F9MDwXe8aeO7ujfd5YzdlWgEQXAjCP+2U6F8zpUuS8szpDsygQZCby2dqlw/F1MQLrLuwkNu9kf3o3/i2K6wlHoG/4Ni1oDHIoGSzQU2j6ux5ZyC5TXPynmTonRcfimF65xfrKOYMnCanWhFKihqd1Joq3/YpvrqJBa9w2kno07TndzJ6yioSWw0NDE0J361L3R+TrtzTHr6rYR/KMN6jmzT34eJzxoeUIwve8SZAyrHB3yAIVeyXY//b0fLv/v7A91VLyLVG8b03PdhCi/7lnE9Be0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(346002)(396003)(39860400002)(136003)(8936002)(26005)(316002)(478600001)(122000001)(2906002)(55016002)(86362001)(76116006)(71200400001)(38100700002)(186003)(66446008)(66556008)(64756008)(66946007)(66476007)(6916009)(7416002)(4326008)(53546011)(8676002)(54906003)(9686003)(33656002)(6506007)(52536014)(5660300002)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?cTVhRi94ZmlSSlI0NXpJb0s3SkM1dURlNlZicFdOeXg3Qy9DQVJuQ0pSM1ow?=
+ =?utf-8?B?enZocjdIelVGUXp1TlA3Y1JZSU5PcVBYMFQ2clRPczFXZUZzRWxKM3lmV1pC?=
+ =?utf-8?B?dHpwU2IxendvMzRzdDFPcXREZElsMTNFOXAvMHNqaEZsMU1yeXBrU0VGQmVv?=
+ =?utf-8?B?SWVCUmI1VloxczBZRmZRWVZWNDF5MmpTNFU2V2VVaURDWDBoV2pkRURETmxC?=
+ =?utf-8?B?TnpObUZ0Y0xZdCtXT1I4T05NQlJOQVZiMklrK1kzeEJlUkNVNWFSR1plTXpY?=
+ =?utf-8?B?V29DSkhwR2tMMkZVZ2c5eEtibC9lWDM5NU5GYU9la0xXaW44cDIwR1c5Vkh4?=
+ =?utf-8?B?TytyTzNheFo5TnBYc1Vzdm5pcmxPR2VwYktxbHNXREtZbkl0eXZ3b1hZZXpo?=
+ =?utf-8?B?R2dZc2RnQTIxQXFBbC9ubi9VdEY2TTJVejBRQWFpa3ZxbEprcEIxdDUySlFr?=
+ =?utf-8?B?d0ovaUFGWlFGT25HQXliN0lyQS9SVG4wRUgwVnlsZEFKVnNtTEc0L3MwR0N5?=
+ =?utf-8?B?THhrZU9XNzRlT3pVTTMwWTNORWwwVTN0ZW5BQW80RExRVkdCc3VPbDFKK3dn?=
+ =?utf-8?B?bFRYQXlUcDRsSHM2RVhRQWRlZGlGWEdHOVA0aXFEZWU3bGJUcHIvZkhTcFBv?=
+ =?utf-8?B?Nm1ubEE2RkhJdHhmTTAyQ2tLZS81SkdVTHNIVDVBemRYOHZRa1FrWk9kMk1v?=
+ =?utf-8?B?WUVFd291Zmc2VmFLVEh2OE5reHhEekNpU2Y5dWRRL015WUlVVVpRNVg4Sits?=
+ =?utf-8?B?UTVFOG8rTWFIdnN2SEFndjB3OExKVDgyS3djV2ZoL05ReWUyUm9lLzFjVXg4?=
+ =?utf-8?B?elBKdjJPZVAway9LUDcyQi8vdXlXZjc4WlBCREd2R3psZDFneHE5emRZM1hS?=
+ =?utf-8?B?MkxNdzZFMDBhdFByQkZqeUIwdHpWQjNCalhlYWMrMWwzekYvWkNZRENaN0s4?=
+ =?utf-8?B?N1ZXeUlzc0FUTHd2NktPczJJOElxM0Y1dzNoSjZqSkx5cStYTXhzdTRNSThW?=
+ =?utf-8?B?VlVXSkFEbkRTd2o0Q2NYMnZBTXA1eDZ1VGhWaUxhVFErNDlvRFpLQWdhOXZF?=
+ =?utf-8?B?TUZKOFY4ZFpkMEVuWGk4ZnB1OTVmRWdoUjBkS29SZ011RCtLd0lTeXhJU2t0?=
+ =?utf-8?B?cldETU16OTdaSU9Td01JTEJ3R05OVldEZEJPdEhZT2pKRjlqN1ZNeWQrWW9P?=
+ =?utf-8?B?WS9oUS9rdjJDeTRRMStST0lRV3lGVWhQbXhFSWRjOHhSbFF3dkdIdmRaNUZQ?=
+ =?utf-8?B?dzEvNXpTdy92MEZrR0l2SXFVajZqdUtscnBuc0JNWHY4M09oNVBzZkZQdkRF?=
+ =?utf-8?B?YlNXR09USkpJcnQraTIvd1BRemdJVTFnUHFhL0w3dERsbXVUL2tMRXhqSXRj?=
+ =?utf-8?B?TktKdnAyNUR4cUpvTlAxdEUycjdsVURyL2xBNzlSaVprWjIvQnhDL25zV3cr?=
+ =?utf-8?B?aDZ3UEpZMHRUK2RTdlJNOVRGZVJ3SmxLZUV6bXBRWHVzZGRDbTh6cFNuYXV3?=
+ =?utf-8?B?S2k5eFdZek4xd3FaVEt4c1FRMVNQRTNVUVdoRmViTlVEcEFLbU9Yc2lMMmJR?=
+ =?utf-8?B?R3B2TTNjem9KQVBJWGpVUmI1RG5WM2JiQnhaekN1WVRzSkQrY2NPaTRqUlpy?=
+ =?utf-8?B?NC9OWkFRQ011TW44WWxLazkxbCtjcmNVTE42eHdwdVJkU1RKcE5DMDVNWlF1?=
+ =?utf-8?B?WU00aVB3V00wcGhYRjR5ck5jc09RUlljZWYyZENhNzdFQ1BZSTkrbHhnc01V?=
+ =?utf-8?Q?hjeJxMjkvKtcGT2trR28rnObn1Op9/pe768kTsM?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8afcd2cc-eb20-4717-5ecc-08d9145de67c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2021 09:19:37.9600
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jAbtXFYEbaaSOyX4DGJDoy6YgpsOGglJGBAtHhjRxolQ2D6KYF/zWH263GJuhE1ePEOViRp73ojL8vtKQ7Vnug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB2505
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Mon, 10 May 2021 15:33:47 +0100
-Edward Cree <ecree.xilinx@gmail.com> escreveu:
-
-> On 10/05/2021 14:59, Matthew Wilcox wrote:
-> > Most of these
-> > UTF-8 characters come from latex conversions and really aren't
-> > necessary (and are being used incorrectly). =20
-> I fully agree with fixing those.
-> The cover-letter, however, gave the impression that that was not the
->  main purpose of this series; just, perhaps, a happy side-effect.
-
-Sorry for the mess. The main reason why I wrote this series is because
-there are lots of UTF-8 left-over chars from the ReST conversion.
-See:
-  - https://lore.kernel.org/linux-doc/20210507100435.3095f924@coco.lan/
-
-A large set of the UTF-8 letf-over chars were due to my conversion work,
-so I feel personally responsible to fix those ;-)
-
-Yet, this series has two positive side effects:
-
- - it helps people needing to touch the documents using non-utf8 locales[1];
- - it makes easier to grep for a text;
-
-[1] There are still some widely used distros nowadays (LTS ones?) that
-    don't set UTF-8 as default. Last time I installed a Debian machine
-    I had to explicitly set UTF-8 charset after install as the default
-    were using ASCII encoding (can't remember if it was Debian 10 or an
-    older version).
-
-Unintentionally, I ended by giving emphasis to the non-utf8 instead of
-giving emphasis to the conversion left-overs.
-
-FYI, this patch series originated from a discussion at linux-doc,
-reporting that Sphinx breaks when LANG is not set to utf-8[2]. That's
-why I probably ended giving the wrong emphasis at the cover letter.
-
-[2] See https://lore.kernel.org/linux-doc/20210506103913.GE6564@kitsune.sus=
-e.cz/
-    for the original report. I strongly suspect that the VM set by Michal=20
-    to build the docs was using a distro that doesn't set UTF-8 as default.
-
-    PS.:=20
-      I intend to prepare afterwards a separate fix to avoid Sphinx
-      logger to crash during Kernel doc builds when the locale charset
-      is not UTF-8, but I'm not too fluent in python. So, I need some
-      time to check if are there a way to just avoid python log crashes
-      without touching Sphinx code and without needing to trick it to=20
-      think that the machine's locale is UTF-8.
-
-See: while there was just a single document originally stored at the
-Kernel tree as a LaTeX document during the time we did the conversion
-(cdrom-standard.tex), there are several other documents stored as=20
-text that seemed to be generated by some tool like LaTeX, whose the
-original version were not preserved.=20
-
-Also, there were other documents using different markdown dialects=20
-that were converted via pandoc (and/or other similar tools). That's=20
-not to mention the ones that were converted from DocBook. Such
-tools tend to use some logic to use "neat" versions of some ASCII
-characters, like what this tool does:
-
-	https://daringfireball.net/projects/smartypants/
-
-(Sphinx itself seemed to use this tool on its early versions)
-
-All tool-converted documents can carry UTF-8 on unexpected places. See,
-on this series, a large amount of patches deal with U+A0 (NO-BREAK SPACE)
-chars. I can't see why someone writing a plain text document (or a ReST
-one) would type a NO-BREAK SPACE instead of a normal white space.
-
-The same applies, up to some sort, to curly commas: usually people just=20
-write ASCII "commas" on their documents, and use some tool like LaTeX
-or a text editor like libreoffice in order to convert them into
- =E2=80=9Cutf-8 curly commas=E2=80=9D[3].
-
-[3] Sphinx will do such things at the produced output, doing something=20
-    similar to what smartypants does, nowadays using this:
-
-	https://docutils.sourceforge.io/docs/user/smartquotes.html
-
-    E. g.:
-      - Straight quotes (" and ') turned into "curly" quote characters;
-      - dashes (-- and ---) turned into en- and em-dash entities;
-      - three consecutive dots (... or . . .) turned into an ellipsis char.
-
-> > You seem quite knowedgeable about the various differences.  Perhaps
-> > you'd be willing to write a document for Documentation/doc-guide/
-> > that provides guidance for when to use which kinds of horizontal
-> > line?
-> I have Opinions about the proper usage of punctuation, but I also know =20
->  that other people have differing opinions.  For instance, I place
->  spaces around an em dash, which is nonstandard according to most
->  style guides.  Really this is an individual enough thing that I'm not
->  sure we could have a "kernel style guide" that would be more useful
->  than general-purpose guidance like the page you linked.
-
-> Moreover, such a guide could make non-native speakers needlessly self-
->  conscious about their writing and discourage them from contributing
->  documentation at all.
-
-I don't think so. In a matter of fact, as a non-native speaker, I guess
-this can actually help people willing to write documents.
-
->  I'm not advocating here for trying to push
->  kernel developers towards an eats-shoots-and-leaves level of
->  linguistic pedantry; rather, I merely think that existing correct
->  usages should be left intact (and therefore, excising incorrect usage
->  should only be attempted by someone with both the expertise and time
->  to check each case).
->=20
-> But if you really want such a doc I wouldn't mind contributing to it.
-
-IMO, a document like that can be helpful. I can help reviewing it.
-
-Thanks,
-Mauro
+T24gVHVlLCBNYXkgMTEsIDIwMjEgYXQgOTo0MjoyMSwgR2VlcnQgVXl0dGVyaG9ldmVuIA0KPGdl
+ZXJ0QGxpbnV4LW02OGsub3JnPiB3cm90ZToNCg0KPiBIaSBHdXN0YXZvLA0KPiANCj4gT24gTW9u
+LCBNYXIgMjksIDIwMjEgYXQgMToxOSBQTSBHdXN0YXZvIFBpbWVudGVsDQo+IDxHdXN0YXZvLlBp
+bWVudGVsQHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIFN5bm9wc3lzIERlc2lnbldhcmUg
+eERhdGEgSVAgZHJpdmVyLiBUaGlzIGRyaXZlciBlbmFibGVzL2Rpc2FibGVzDQo+ID4gdGhlIFBD
+SSB0cmFmZmljIGdlbmVyYXRvciBtb2R1bGUgcGVydGFpbiB0byB0aGUgU3lub3BzeXMgRGVzaWdu
+V2FyZQ0KPiA+IHByb3RvdHlwZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEd1c3Rhdm8gUGlt
+ZW50ZWwgPGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tPg0KPiANCj4gVGhhbmtzIGZvciB5
+b3VyIHBhdGNoLCB3aGljaCBpcyBub3cgY29tbWl0IGU4YTMwZWVmNmVmNmRhNDkgKCJtaXNjOiBB
+ZGQNCj4gU3lub3BzeXMgRGVzaWduV2FyZSB4RGF0YSBJUCBkcml2ZXIiKSBpbiB2NS4xMy1yYzEu
+DQo+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvS2NvbmZpZyBiL2RyaXZlcnMvbWlz
+Yy9LY29uZmlnDQo+ID4gaW5kZXggZjUzMmM1OS4uZTZhZjlmZiAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL21pc2MvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvbWlzYy9LY29uZmlnDQo+ID4g
+QEAgLTQwMiw2ICs0MDIsMTYgQEAgY29uZmlnIFNSQU0NCj4gPiAgY29uZmlnIFNSQU1fRVhFQw0K
+PiA+ICAgICAgICAgYm9vbA0KPiA+DQo+ID4gK2NvbmZpZyBEV19YREFUQV9QQ0lFDQo+ID4gKyAg
+ICAgICBkZXBlbmRzIG9uIFBDSQ0KPiA+ICsgICAgICAgdHJpc3RhdGUgIlN5bm9wc3lzIERlc2ln
+bldhcmUgeERhdGEgUENJZSBkcml2ZXIiDQo+ID4gKyAgICAgICBoZWxwDQo+ID4gKyAgICAgICAg
+IFRoaXMgZHJpdmVyIGFsbG93cyBjb250cm9sbGluZyBTeW5vcHN5cyBEZXNpZ25XYXJlIFBDSWUg
+dHJhZmZpYw0KPiA+ICsgICAgICAgICBnZW5lcmF0b3IgSVAgYWxzbyBrbm93biBhcyB4RGF0YSwg
+cHJlc2VudCBpbiBTeW5vcHN5cyBEZXNpZ25XYXJlDQo+ID4gKyAgICAgICAgIFBDSWUgRW5kcG9p
+bnQgcHJvdG90eXBlLg0KPiANCj4gSGVuY2Ugc2hvdWxkbid0IHRoaXMgZGVwZW5kIG9uIFBDSUVf
+RFdfRVAsIGFuZCBwZXJoYXBzIGJlIG1vdmVkIHRvDQo+IGRyaXZlcnMvcGNpZS8/DQo+IE9yIGlz
+IHRoYXQgYSBkcml2ZXIgZm9yIGEgZGlmZmVyZW50IFN5bm9wc3lzIERlc2lnbldhcmUgUENJZSBF
+bmRwb2ludD8NCg0KSGkgR2VlcnQsDQoNCnRoZSBTeW5vcHN5cyBEZXNpZ25XYXJlIFBDSWUgRW5k
+cG9pbnQgaXMgYSBkaWZmZXJlbnQgdGhpbmcsIGFsdGhvdWdoIGl0IA0KaGFzIHRoZSBFbmRwb2lu
+dCBvbiB0aGUgbmFtZSwgaXQncyBub3QgcXVpdGUgbGlrZSBvdGhlcnMgRVAgZHJpdmVycy4NCg0K
+LUd1c3Rhdm8NCg0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICBHZWVydA0KPiANCj4gLS0gDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVy
+ZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4g
+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNh
+bGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0
+cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQoNCg0K
