@@ -2,38 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D6D437ABB6
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:19:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D6C37ABD7
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbhEKQUT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 12:20:19 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:53854 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230401AbhEKQUR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:20:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=KRREYiID4nTLAcd30iCtMu5qS4tYGdizddy6etGFynA=; b=QX2vn+ZSnkNIea3oIqxWCrg9tp
-        n1sCb9KHpJoIaRXdY0nYk+A55R5+bJzf7lAUrmRIP+9tYXPMAY9zVdmvTrY8Zi4CN+nP4mJCwlXNi
-        9EpP4/ubF7Zt56WkMmsltDxbS59EjBO3rKE9BgbNkI4JufYuR4lLRmoNsuerG4uBi5CFZyekeuaGh
-        adS2eOEVb6LeYpnv785vjeHILX6oPibI9iYigpRsbyKCGjWpq95W7BYMUn3Ez26qYJDbXa8bQ4t+g
-        9GEhUUbscgDYfAy9KDF7uFUAETOgR5Z55BuzayN3e/GMBH3ziI+KwOOahICDS35fDS9iJbAZ4bRN1
-        OGZR8Z+g==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lgV65-0006go-Tm; Tue, 11 May 2021 10:19:02 -0600
-To:     Don Dutile <ddutile@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org
+        id S231204AbhEKQYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 12:24:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25032 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231437AbhEKQYj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:24:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620750212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3M6tTHlyFNKQwbGOtrLH1dHnpAA9L/D3mvAYYkgV538=;
+        b=HFdExlKg8EqxzBOOaH7hRhKKJ9DSZNzMVgfNvJS94XYqqMloJL86ko7miWWLcqJWSYch8P
+        jNu+yi36iC6c9p0IC7lhnf8B16chhJ5CIeLUDVmHj+8ufmUNWWhoC3iCED13fxia6BZckc
+        FEggNvQI8/8ZGxh+rnq73EG+Z3xqDws=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-e2fb4B8yPWyJlQzkc_nNww-1; Tue, 11 May 2021 12:23:16 -0400
+X-MC-Unique: e2fb4B8yPWyJlQzkc_nNww-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 687B38015D0;
+        Tue, 11 May 2021 16:23:13 +0000 (UTC)
+Received: from [10.3.115.19] (ovpn-115-19.phx2.redhat.com [10.3.115.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 968105DEAD;
+        Tue, 11 May 2021 16:23:10 +0000 (UTC)
+Subject: Re: [PATCH 01/16] PCI/P2PDMA: Pass gfp_mask flags to
+ upstream_bridge_distance_warn()
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc:     Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
         Matthew Wilcox <willy@infradead.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Jakowski Andrzej <andrzej.jakowski@intel.com>,
@@ -43,76 +54,69 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Xiong Jianxin <jianxin.xiong@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-11-logang@deltatee.com>
- <92704199-4cee-3811-3902-08ccf6cc1f5f@redhat.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <185f39c0-d71c-5d24-9d87-951a72c3532d@deltatee.com>
-Date:   Tue, 11 May 2021 10:19:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ <20210408170123.8788-2-logang@deltatee.com>
+ <d8ac4c84-1e69-d5d6-991a-7de87c569acc@nvidia.com>
+ <a23fdb9c-f653-e766-89e1-98550658724c@redhat.com>
+ <36b86579-da30-0671-26e9-75977a265742@deltatee.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <c078b970-7531-8834-e26f-e653e7db4c20@redhat.com>
+Date:   Tue, 11 May 2021 12:23:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <92704199-4cee-3811-3902-08ccf6cc1f5f@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, ddutile@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH 10/16] dma-mapping: Add flags to dma_map_ops to indicate
- PCI P2PDMA support
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <36b86579-da30-0671-26e9-75977a265742@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 5/11/21 12:12 PM, Logan Gunthorpe wrote:
+>
+> On 2021-05-11 10:05 a.m., Don Dutile wrote:
+>> On 5/1/21 11:58 PM, John Hubbard wrote:
+>>> On 4/8/21 10:01 AM, Logan Gunthorpe wrote:
+>>>> In order to call upstream_bridge_distance_warn() from a dma_map function,
+>>>> it must not sleep. The only reason it does sleep is to allocate the seqbuf
+>>>> to print which devices are within the ACS path.
+>>>>
+>>>> Switch the kmalloc call to use a passed in gfp_mask and don't print that
+>>>> message if the buffer fails to be allocated.
+>>>>
+>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>> ---
+>>>>    drivers/pci/p2pdma.c | 21 +++++++++++----------
+>>>>    1 file changed, 11 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+>>>> index 196382630363..bd89437faf06 100644
+>>>> --- a/drivers/pci/p2pdma.c
+>>>> +++ b/drivers/pci/p2pdma.c
+>>>> @@ -267,7 +267,7 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
+>>>>      static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
+>>>>    {
+>>>> -    if (!buf)
+>>>> +    if (!buf || !buf->buffer)
+>>> This is not great, sort of from an overall design point of view, even though
+>>> it makes the rest of the patch work. See below for other ideas, that will
+>>> avoid the need for this sort of odd point fix.
+>>>
+>> +1.
+>> In fact, I didn't see how the kmalloc was changed... you refactored the code to pass-in the
+>> GFP_KERNEL that was originally hard-coded into upstream_bridge_distance_warn();
+>> I don't see how that avoided the kmalloc() call.
+>> in fact, I also see you lost a failed kmalloc() check, so it seems to have taken a step back.
+> I've changed this in v2 to just use some memory allocated on the stack.
+> Avoids this argument all together.
+>
+> Logan
+>
+Looking fwd to the v2; again, my apologies for the delay, and the redundancy it's adding to your feedback review & changes.
+-Don
 
-
-On 2021-05-11 10:06 a.m., Don Dutile wrote:
-> On 4/8/21 1:01 PM, Logan Gunthorpe wrote:
->> Add a flags member to the dma_map_ops structure with one flag to
->> indicate support for PCI P2PDMA.
->>
->> Also, add a helper to check if a device supports PCI P2PDMA.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> ---
->>   include/linux/dma-map-ops.h |  3 +++
->>   include/linux/dma-mapping.h |  5 +++++
->>   kernel/dma/mapping.c        | 18 ++++++++++++++++++
->>   3 files changed, 26 insertions(+)
->>
->> diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
->> index 51872e736e7b..481892822104 100644
->> --- a/include/linux/dma-map-ops.h
->> +++ b/include/linux/dma-map-ops.h
->> @@ -12,6 +12,9 @@
->>   struct cma;
->>   
->>   struct dma_map_ops {
->> +	unsigned int flags;
->> +#define DMA_F_PCI_P2PDMA_SUPPORTED     (1 << 0)
->> +
-> I'm not a fan of in-line define's; if we're going to add a flags field to the dma-ops
-> -- and logically it'd be good to have p2pdma go through the dma-ops struct --
-> then let's move this up in front of the dma-ops description.
-
-Already changed for v2.
-
-> And now that the dma-ops struct is being 'opened' for p2pdma, should p2pdma ops be added
-> to this struct, so all this work can be mimic'd/reflected/leveraged/refactored for CXL, GenZ, etc. p2pdma in (the near?) future?
-
-v2 no longer has a specific op for p2pdma. We are now using
-dma_map_sgtable() which already has the error return we need.
-
-I think any work to support CXL, GenZ, etc will need to be done when
-they add their own support. I can't and shouldn't guess at their needs now.
-
-Logan
