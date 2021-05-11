@@ -2,38 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF07937AB62
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2A937AB64
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:06:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbhEKQG5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 12:06:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42488 "EHLO
+        id S231745AbhEKQHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 12:07:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38231 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231549AbhEKQG4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:06:56 -0400
+        by vger.kernel.org with ESMTP id S231608AbhEKQHI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:07:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620749149;
+        s=mimecast20190719; t=1620749161;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hrrdEBLqCOmDZJ+zOkXaPF7O/7nbLIRMtWhGOzsY1Zc=;
-        b=VWa2s+HwWpIWWJZ/Mxn6LNjjw07GiLIJOYVupnNLLEZQ3UmkJvF6f8N3ZyqQib/44gGkUG
-        59OEIonBN6Ch9KGHK0T9kDhtEri7CuFUY4xxZqWiLQ1g8cJsPXiIgje77i273RiR4hQc4M
-        IJn9MECMDwER/zy6vbOwi5mbJMjYmFI=
+        bh=7EwSkK3tCLzSwRdZ/4L1eSG5xJr+ckvT0VIiRU+l0cU=;
+        b=RRvRHbmbxET52B94rLfyLWA8VI/sj7BAiVOkiqleREuLvTpvjb9d0RvALNxo7okcxPLnuQ
+        jJ60IvnCQpEYcPmFAKPicN3qrQSkbR7CpP8tLkPh0Y+eJC3cVYCG+Ty9DQZ44KgUq2Wv1g
+        cFScQ1npht2uChqH5Qo8kMNr2eDqdxs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-IY58VNbdOuCPlC-_betBlg-1; Tue, 11 May 2021 12:05:47 -0400
-X-MC-Unique: IY58VNbdOuCPlC-_betBlg-1
+ us-mta-563-FaCNBf4dPAaCfsJb1OSVVQ-1; Tue, 11 May 2021 12:05:57 -0400
+X-MC-Unique: FaCNBf4dPAaCfsJb1OSVVQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE848186E1;
-        Tue, 11 May 2021 16:05:44 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B92A21854E27;
+        Tue, 11 May 2021 16:05:52 +0000 (UTC)
 Received: from [10.3.115.19] (ovpn-115-19.phx2.redhat.com [10.3.115.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AD745D9F2;
-        Tue, 11 May 2021 16:05:40 +0000 (UTC)
-Subject: Re: [PATCH 02/16] PCI/P2PDMA: Avoid pci_get_slot() which sleeps
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 717785D9F2;
+        Tue, 11 May 2021 16:05:50 +0000 (UTC)
+Subject: Re: [PATCH 03/16] PCI/P2PDMA: Attempt to set map_type if it has not
+ been set
 To:     John Hubbard <jhubbard@nvidia.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -55,15 +56,15 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-3-logang@deltatee.com>
- <d6220bff-83fc-6c03-76f7-32e9e00e40fd@nvidia.com>
+ <20210408170123.8788-4-logang@deltatee.com>
+ <3834be62-3d1b-fc98-d793-e7dcb0a74624@nvidia.com>
 From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <a6830332-c866-451f-3c6a-585cbf295ff8@redhat.com>
-Date:   Tue, 11 May 2021 12:05:40 -0400
+Message-ID: <87a2b8e9-f0ef-ec23-8427-3022a86b0ec5@redhat.com>
+Date:   Tue, 11 May 2021 12:05:49 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <d6220bff-83fc-6c03-76f7-32e9e00e40fd@nvidia.com>
+In-Reply-To: <3834be62-3d1b-fc98-d793-e7dcb0a74624@nvidia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -72,126 +73,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/2/21 1:35 AM, John Hubbard wrote:
+On 5/2/21 3:58 PM, John Hubbard wrote:
 > On 4/8/21 10:01 AM, Logan Gunthorpe wrote:
->> In order to use upstream_bridge_distance_warn() from a dma_map function,
->> it must not sleep. However, pci_get_slot() takes the pci_bus_sem so it
->> might sleep.
+>> Attempt to find the mapping type for P2PDMA pages on the first
+>> DMA map attempt if it has not been done ahead of time.
 >>
->> In order to avoid this, try to get the host bridge's device from
->> bus->self, and if that is not set, just get the first element in the
->> device list. It should be impossible for the host bridge's device to
->> go away while references are held on child devices, so the first element
->> should not be able to change and, thus, this should be safe.
+>> Previously, the mapping type was expected to be calculated ahead of
+>> time, but if pages are to come from userspace then there's no
+>> way to ensure the path was checked ahead of time.
 >>
 >> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 >> ---
->>   drivers/pci/p2pdma.c | 14 ++++++++++++--
->>   1 file changed, 12 insertions(+), 2 deletions(-)
+>>   drivers/pci/p2pdma.c | 12 +++++++++---
+>>   1 file changed, 9 insertions(+), 3 deletions(-)
 >>
 >> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index bd89437faf06..473a08940fbc 100644
+>> index 473a08940fbc..2574a062a255 100644
 >> --- a/drivers/pci/p2pdma.c
 >> +++ b/drivers/pci/p2pdma.c
->> @@ -311,16 +311,26 @@ static const struct pci_p2pdma_whitelist_entry {
->>   static bool __host_bridge_whitelist(struct pci_host_bridge *host,
->>                       bool same_host_bridge)
+>> @@ -825,11 +825,18 @@ EXPORT_SYMBOL_GPL(pci_p2pmem_publish);
+>>   static enum pci_p2pdma_map_type pci_p2pdma_map_type(struct pci_dev *provider,
+>>                               struct pci_dev *client)
 >>   {
->> -    struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
->>       const struct pci_p2pdma_whitelist_entry *entry;
->> +    struct pci_dev *root = host->bus->self;
->>       unsigned short vendor, device;
->>   +    /*
->> +     * This makes the assumption that the first device on the bus is the
->> +     * bridge itself and it has the devfn of 00.0. This assumption should
->> +     * hold for the devices in the white list above, and if there are cases
->> +     * where this isn't true they will have to be dealt with when such a
->> +     * case is added to the whitelist.
->
-> Actually, it makes the assumption that the first device *in the list*
-> (the host->bus-devices list) is 00.0.  The previous code made the
-> assumption that you wrote.
->
-> By the way, pre-existing code comment: pci_p2pdma_whitelist[] seems
-> really short. From a naive point of view, I'd expect that there must be
-> a lot more CPUs/chipsets that can do pci p2p, what do you think? I
-> wonder if we have to be so super strict, anyway. It just seems extremely
-> limited, and I suspect there will be some additions to the list as soon
-> as we start to use this.
->
->
->> +     */
->>       if (!root)
->> +        root = list_first_entry_or_null(&host->bus->devices,
->> +                        struct pci_dev, bus_list);
->
-> OK, yes this avoids taking the pci_bus_sem, but it's kind of cheating.
-> Why is it OK to avoid taking any locks in order to retrieve the
-> first entry from the list, but in order to retrieve any other entry, you
-> have to aquire the pci_bus_sem, and get a reference as well? Something
-> is inconsistent there.
->
-> The new version here also no longer takes a reference on the device,
-> which is also cheating. But I'm guessing that the unstated assumption
-> here is that there is always at least one entry in the list. But if
-> that's true, then it's better to show clearly that assumption, instead
-> of hiding it in an implicit call that skips both locking and reference
-> counting.
->
-> You could add a new function, which is a cut-down version of pci_get_slot(),
-> like this, and call this from __host_bridge_whitelist():
->
-> /*
->  * A special purpose variant of pci_get_slot() that doesn't take the pci_bus_sem
->  * lock, and only looks for the 00.0 bus-device-function. Once the PCI bus is
->  * up, it is safe to call this, because there will always be a top-level PCI
->  * root device.
->  *
->  * Other assumptions: the root device is the first device in the list, and the
->  * root device is numbered 00.0.
->  */
-> struct pci_dev *pci_get_root_slot(struct pci_bus *bus)
-> {
->     struct pci_dev *root;
->     unsigned devfn = PCI_DEVFN(0, 0);
->
->     root = list_first_entry_or_null(&bus->devices, struct pci_dev,
->                     bus_list);
->     if (root->devfn == devfn)
->         goto out;
->
-... add a flag (set for p2pdma use)  to the function to print out what the root->devfn is, and what
-the device is so the needed quirk &/or modification can added to handle when this assumption fails;
-or make it a prdebug that can be flipped on for this failing situation, again, to add needed change to accomodate.
-
->     root = NULL;
->  out:
->     pci_dev_get(root);
->     return root;
-> }
-> EXPORT_SYMBOL(pci_get_root_slot);
->
-> ...I think that's a lot clearer to the reader, about what's going on here.
->
-> Note that I'm not really sure if it *is* safe, I would need to ask other
-> PCIe subsystem developers with more experience. But I don't think anyone
-> is trying to make p2pdma calls so early that PCIe buses are uninitialized.
->
->
+>> +    enum pci_p2pdma_map_type ret;
 >> +
->> +    if (!root || root->devfn)
->>           return false;
->>         vendor = root->vendor;
->>       device = root->device;
->> -    pci_dev_put(root);
-and the reason to remove the dev_put is b/c it can sleep as well?
-is that ok, given the dev_get that John put into the new pci_get_root_slot()?
-... seems like a locking version with no get/put's is needed, or, fix the host-bridge setups so no !NULL self pointers.
+>>       if (!provider->p2pdma)
+>>           return PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>>   -    return xa_to_value(xa_load(&provider->p2pdma->map_types,
+>> -                   map_types_idx(client)));
+>> +    ret = xa_to_value(xa_load(&provider->p2pdma->map_types,
+>> +                  map_types_idx(client)));
+>> +    if (ret != PCI_P2PDMA_MAP_UNKNOWN)
+>> +        return ret;
+>> +
+>> +    return upstream_bridge_distance_warn(provider, client, NULL,
+>> +                         GFP_ATOMIC);
+>
+> Returning a "bridge distance" from a "get map type" routine is jarring,
+> and I think it is because of a pre-existing problem: the above function
+> is severely misnamed. Let's try renaming it (and the other one) to
+> approximately:
+>
+>     upstream_bridge_map_type_warn()
+>     upstream_bridge_map_type()
+>
+> ...and that should fix that. Well, that, plus tweaking the kernel doc
+> comments, which are also confused. I think someone started off thinking
+> about distances through PCIe, but in the end, the routine boils down to
+> just a few situations that are not distances at all.
+>
++1. didn't like the 'distance' check  for a 'connection check" in the beginning, and looks like this is the time to clean it out.
+:)
 
-
->>         for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
->>           if (vendor != entry->vendor || device != entry->device)
->>
+> Also, the above will read a little better if it is written like this:
+>
+>     ret = xa_to_value(xa_load(&provider->p2pdma->map_types,
+>                   map_types_idx(client)));
+>
+>     if (ret == PCI_P2PDMA_MAP_UNKNOWN)
+>         ret = upstream_bridge_map_type_warn(provider, client, NULL,
+>                             GFP_ATOMIC);
+>
+>     return ret;
+>
+>
+>>   }
+>>     static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
+>> @@ -877,7 +884,6 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+>>       case PCI_P2PDMA_MAP_BUS_ADDR:
+>>           return __pci_p2pdma_map_sg(p2p_pgmap, dev, sg, nents);
+>>       default:
+>> -        WARN_ON_ONCE(1);
+>
+> Why? Or at least, why, in this patch? It looks like an accidental
+> leftover from something, seeing as how it is not directly related to the
+> patch, and is not mentioned at all.
+>
 >
 > thanks,
 
