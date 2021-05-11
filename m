@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10346379C2E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 03:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C1B9379C33
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 03:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbhEKBlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 May 2021 21:41:44 -0400
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:63073
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        id S230176AbhEKBoK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 May 2021 21:44:10 -0400
+Received: from mail-vi1eur05on2076.outbound.protection.outlook.com ([40.107.21.76]:54497
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230383AbhEKBln (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 May 2021 21:41:43 -0400
+        id S230422AbhEKBoJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 May 2021 21:44:09 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Op2DaCzEQMoFrcMLomBuUihu1x7lAQf/Qv/JKAzXOWgxYQSD4QvntOiBKz6sNWP4wgsTRzkDvrbJup/cBOwlgpCypMtNc8j4At0H3kiCoPIt6WRjZr1WbzW7zCW830D+T3xt9tiBQV3iCnK6nIXD18A5MxLTQqa3z7xWr3rjig9UGOwk7UxKleWJ+ftFkOAipLXl2X44SZc8CthbngsRB72rghcdGJMrN09GZMyIY4Q+qdWs/zY1P3s89NESwo3eBBw+DCwbamqos1Z339z2vTw0KSfHgEJRhIeMPtkXM1FFPc+Un0nXrNmKEJSBm9H0p8YErAw7KaAS+YYEQxuBug==
+ b=AZIbWqwWjrJFtbp6Mcl/s1garVz1A8kROmlyKTEHX5nzz5/x7/RLjXeHuIFQ4qTF8CiL+f8iOAPRJDQxtXEt4PUDdUhZKwzVUfP7kJy1mXOyb6C+KRNgOnwuN+f63KimhnqBTf4vLh1eBJF7boyWoDPFCGSSqsMWXF2qlGlZJlfMKhFAu6M/TH1GEV7bcNUm08B1bbOFP7pJNxK8xNfAjnm6gp2EX94IACmrELj2BZOSy4M0M4eMI1ZiHtMjHCdrGfIpLaicw43dQbOgNVJ7u7L971Nox0FhwJ7oaQXWeKd7fIk0U7reEN1Nc3bECfErrGr5YuML4Xc3I6dGy2Ryvg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OzwmHyYQJKxXE+WifBudjxwOLX/ynfv7E8Sb1007aT8=;
- b=m1S1WDWCIT6Ot4487L6Qlw/X6zQ3jnuuhn1e6cD2VJfXK0mOeygNgRiKTKVZUbZAs7IhSyF776DkTCyjXDgaaOALRBQVrt6Tt7RtZgIOObBt3JMecuZw5taQ+0bbk4t5sXj/80Ve2pa1U8AWUqGOEyPSY4wm4W45+3brAOLyu5h8vS5f9b54KlAAv1coZFbeDtQb1WyMaeSgMRv0zuwLxtpIsha6N2tHcuBnDyC1VqG/UzFzosp7oa78f8IsgmsP5OajWQrG9RynFwunhDZFR6DD8Gwh+fDInvAismX80k62U3Yuy+1T1puDg5zbWkCWgUStYGZRmO64kPxz5cCNrA==
+ bh=voBiJkojl7diEVf2SeU27/mVR5TTY4geXjj9ge+G41I=;
+ b=oIgPzS7h5irfVt502+jKTWunovmMcvfcoy7IdCVmCt9v3jr/U5KH0fSzRHjUz8uY+0HzP3kKxsMoYJ5jweG+rt/O+YSyzQYGxamXnu/CzTx2X20BqaxIF6/SrLMx/CCOlZ6rwQvW+uHmEX1hxm1PfLecIkzfZCk9Pj6GONof7x5l8zgebi+xc47KLJiSBUj/6fnni2wS2//yT484qTcOgv/b3peVkEnsQOoeJwVkFxy67q+1Gu0ttFoZ3nSQN4YqSws0a2LxDLmSyPII49pEPGq2xlYrlvLodKJY+NxLJVZsx5Xi9m8/k0rS+tJZu9euXDs7Dl07qXA7jNPdi844hg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OzwmHyYQJKxXE+WifBudjxwOLX/ynfv7E8Sb1007aT8=;
- b=WGmnacCxn90NPEn9JHUdJcRYPjFBGYgOPw7yFAOAskrJSRSjHxJ6M38wOOlp1wykgySdPkRg+c67RSdakAuCkDDCyzIgn6sOw1JhjDmJ4FayMC49Jow7L99EP5S3j/lupZ9KJl/RIyL+aLb3iK4VnYmp66mECbn8F090d5F52Zk=
+ bh=voBiJkojl7diEVf2SeU27/mVR5TTY4geXjj9ge+G41I=;
+ b=Bz/syoQnLulcnKpqyWUUIGGapN3x5Znmib6VSK9LupG3FncLLmthKwSUmVoOluC9g0vDyQ28Im+45U1VxH7Un7ntRf38r5sx5kF6LOcHnmGdZLKyQyzZzeunrUY0HNEk27ItEefCv710UIFa8Pys6IUWY9fKjtWNqUwTJXG8I4Y=
 Received: from VI1PR04MB5853.eurprd04.prod.outlook.com (2603:10a6:803:e3::25)
- by VI1PR04MB5502.eurprd04.prod.outlook.com (2603:10a6:803:c9::23) with
+ by VE1PR04MB7343.eurprd04.prod.outlook.com (2603:10a6:800:1a2::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.27; Tue, 11 May
- 2021 01:40:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Tue, 11 May
+ 2021 01:43:01 +0000
 Received: from VI1PR04MB5853.eurprd04.prod.outlook.com
  ([fe80::c830:a7cb:c125:2fb7]) by VI1PR04MB5853.eurprd04.prod.outlook.com
  ([fe80::c830:a7cb:c125:2fb7%6]) with mapi id 15.20.4108.031; Tue, 11 May 2021
- 01:40:33 +0000
+ 01:43:01 +0000
 From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "stefan@agner.ch" <stefan@agner.ch>
-Subject: RE: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one regulator
- used to power up pcie phy
-Thread-Topic: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one regulator
- used to power up pcie phy
-Thread-Index: AddGBh+rBT7zQRgnQbipbiJmCWzw2Q==
-Date:   Tue, 11 May 2021 01:40:33 +0000
-Message-ID: <VI1PR04MB5853847BC25015AFA47073B38C539@VI1PR04MB5853.eurprd04.prod.outlook.com>
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE:  Re: [RESEND v4 2/2] PCI: imx: clear vreg bypass when pcie vph
+ voltage is 3v3
+Thread-Topic: Re: [RESEND v4 2/2] PCI: imx: clear vreg bypass when pcie vph
+ voltage is 3v3
+Thread-Index: AddGBtI0mvenQ67aQuSaGp0K+HXk/w==
+Date:   Tue, 11 May 2021 01:43:00 +0000
+Message-ID: <VI1PR04MB5853DE4B5F394ED486FCD08B8C539@VI1PR04MB5853.eurprd04.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -65,52 +65,52 @@ authentication-results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
 x-originating-ip: [119.31.174.67]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ccf02cd4-02b3-489e-09c8-08d9141dc49d
-x-ms-traffictypediagnostic: VI1PR04MB5502:
+x-ms-office365-filtering-correlation-id: 707f5510-4f66-4825-4e77-08d9141e1c98
+x-ms-traffictypediagnostic: VE1PR04MB7343:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5502C571F4C0BC202ADD0ACF8C539@VI1PR04MB5502.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <VE1PR04MB7343169B773810E1A4DE2D218C539@VE1PR04MB7343.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yUtKlrq/F2/WUcmkJxo32AaJbkIcwILEbUcdexxHp7OEcm/t6RXcGB/YhuzgvFE709ARCB0LKExCJ03K2D9/ftEmaKMYVQR4JBGgs0POibgYsY8O7w78LkxrQ9Oob6DRmuf5LWuILG1Il3xbR8iMFI+pNm195SfhYtvIMooL79St5ffXaRCmLk+Pr0MHI7fOkDUqvaQ1thfoCC6Pqkw4uAFMrTsmcrKBoo0SZk+AiTPPRmDGXMNgoTBFWnTqxxD5oVZO9MiMOqYRRuR98ouaPHlUTv2eGhgmUETLkV4H2yMAZkxR2z6JvSaZG+tBzVZjXJVDhqUv2XEZ8BvHx0ofVAJF3skCu77JMEMe7QCHrHzm6/rKstJK2Z+dC86plTE1eCRfmAigzKiBbu5X4fS+43RvEF5wXAvKFXqmK8I0moyKG+9iDrZuzRrYZL1ofz6Cuczi14+NOIcjmArRIqLZr+5REvrtosh0Jf1283BGa1luuZ2XuNl/kA/4OhjanoMm2op+QWaxBp1WpyODU4oYXWJ8EI690jUJFPBrAEbg4DsqtsFBkSZQ4rfFsKgUCU5l9BiTI675q2JD18hqZeZyTegjteW80we0ZbrIxEXEA9nJC3kUO27uxCP7eL+W+/AEPNHsi1KPm7tnLqluT8XcQQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5853.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(366004)(136003)(39860400002)(122000001)(76116006)(64756008)(33656002)(9686003)(66946007)(38100700002)(8676002)(478600001)(66556008)(186003)(66446008)(66476007)(110136005)(8936002)(54906003)(4326008)(6506007)(7696005)(7416002)(26005)(316002)(71200400001)(52536014)(83380400001)(55016002)(86362001)(5660300002)(2906002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?FoX9ix5D/SD2OxfL0N5M0RYBwWVlG3LttYXjWLM9XDq4WjTejjTccV1erkfV?=
- =?us-ascii?Q?/Gmb8ZiLicngDWJv4Y5mVbDnwMlIDX+GW36CeJmhcyg0Io5h2Sob+Dfk8q9u?=
- =?us-ascii?Q?Y4IykGYByQUFOrB4fMnQ5y3y1FfPVYND6ZHB5A+TwHBHvT+fzdXfW5svTYg9?=
- =?us-ascii?Q?rBWO3fMEqsMK/uFAxwR72Okji5cnCysSFeOUI94Yn9OEsILIcjUmh1CAOAGj?=
- =?us-ascii?Q?ZbiVCuedJfOf8vAH+XzrMNI3/0/UcHSKdhs5NOUgHiIdkRWLEIFqknkyrhvA?=
- =?us-ascii?Q?wj7CH+rNk6/XxuNKJ7PBJ3l8ny9wUTuMPkilFbm4Pj3f6Dz7jXrcWS/ZYV2o?=
- =?us-ascii?Q?h7LBpayDGYZFKQKzDVxckT4dOI6fX8ITWAJby+AgcB1u4q9kTPzoqcfRFLCp?=
- =?us-ascii?Q?z5HY9KpAVuHMCMFlCDiTrba7nqSisfwvV4U/DxjQSA9Wyt97RY16v1YHVU9A?=
- =?us-ascii?Q?jhc39BBWarHNhQ+euL48jm/2oWCkii+tiJPGo2rQXbwxeSC6GiBsCyzRoHUK?=
- =?us-ascii?Q?uXkQO3GZ3i1LXOFUHp6JKLwGIMDgCelDAPenWFf3QBetT2EAPQdWAQjuqIVw?=
- =?us-ascii?Q?rS/lFp3eUk4QUahGYEA/29x+3b5lihMxdO8JeqKrXFx1NDDjBN+1UgF5AhGQ?=
- =?us-ascii?Q?qwIPJCd35yxw0ujpn1NhmPxSbk74ERrigfOQWhfAFu3pKp9hGZN2F3hmE3CA?=
- =?us-ascii?Q?xvOUdn8JEsiA4Ri36p9y6VVG3CsHL6sYZPgspItXbNjvoTXGdZWw/GSUbGmQ?=
- =?us-ascii?Q?80CebkHvxHjJlnkzkZOoXXBUxkfOxDq+2LlKqYNw5ZPNDE3r7ZtTqXqtOR1K?=
- =?us-ascii?Q?8t1jD+TzIEA0i5yBAc4CMoV3cvWhovIS4UZ+uGR7gOw6f6Jpf2LlFovfUpPs?=
- =?us-ascii?Q?DJQgmYqSmMUllFthET2LVyPSBFW4aDFxt+J3MooDds7rQ496SQmQCpaNVw40?=
- =?us-ascii?Q?D7WI6PGQ9WoRgjZrSX3OQrv8nzIyeoZzsNP6xk6THvJoeIBG3uVwKfGjU8Ln?=
- =?us-ascii?Q?nGWkv4I0hLhQ+6+swbywdkoNiKuhsJSXzQCzAxjDBz5uwK1h/fcC+0bvfBoI?=
- =?us-ascii?Q?tEHVoPMHtZCn2meB9Xzu3TUAY10DveyJ9OMvb3md1X1JRSMUAiLFbhspqwd4?=
- =?us-ascii?Q?oLysGpKZJM4htF2OQxN2+gYI6/Rg4DdODhjOAQRef4S5swpjnzHfly8MVJr2?=
- =?us-ascii?Q?JB6mmkc2WdNB9LGD1m3jQhXWwjUrNPOcPjtSOWathxn0AcSFJbZT+f5a6o3V?=
- =?us-ascii?Q?xr+SDXa57MHJ/erMoQ34EzhfZBYb9rk+z0A0wRftYKV2FJ0c9zTpJ22BJY/Y?=
- =?us-ascii?Q?RnY+r/4Ff7HwMQ1VkNPA32ah?=
+x-microsoft-antispam-message-info: hAxIGe6b2J6LyIB67dVr0PHqyUDNh+8tHi0ikFjxYrXlQCA9tpOgtt84LvK4Qx6HqHmd4UMpk54JaLyjatG0MPXUGcz9F40VlK7k6Y+qs4SHc+JrGd7jxbPMNw/ED494JiRU5iko3xLJhD2Z8NxAQNMXq1Jo+FaBOcWhGv0lu9KLiKiABHO0BSARPE6jKrWOtwNVq7y9sVviuTkgaO28GTuiCwXt9E3hpV0W5GZNUYrWsTF/d1YjrRYpKBGlazHgv4hsEwPN4Zyn6DfZxNuUiB7c3KWIJRi7Cuu9tINznxd3SxfN7WB/eLwPsOvDhIYMQbUWlQalXdxgGybvWhtq4ZN3CCWHgrMv2+mzRd7oBS3yIHkvO91N+ynPML+TIul9T7unrBfcWWkHvev/8NvyLtl5V3cqkSlFxXJukam2+c+1yQtEokEBYYxFi8rLUD6ngYWCmxmj97xKd/QwkoYyWWcJcgLe2RZOT7LubGbbPQmCiusESh12Sy90O3EBJneeOu9W/vSVFWvK504oH7FxL9qBfrKyrAm7eAdDloAPlm/guiDPf6QS4l+Cj5AwzquXPJ3qgGcybNsuIQQkjWrhcxC1F9fVRHVHo4ya5U1CmBY=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5853.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(136003)(376002)(39830400003)(366004)(66946007)(9686003)(76116006)(26005)(316002)(7416002)(4326008)(8676002)(54906003)(33656002)(478600001)(52536014)(64756008)(55016002)(66556008)(66446008)(83380400001)(8936002)(6916009)(6506007)(2906002)(71200400001)(66476007)(122000001)(86362001)(38100700002)(5660300002)(7696005)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?a2iynWHAdCcw222COk3MIhd7Ozyfu2E5p3HuR/QptGp0Y6u+Pd4y1Ohcbt3N?=
+ =?us-ascii?Q?2MTrspzbKiFYFtPmTpI/IqRwV9yetff2OmVb5HwKY9txmBHtdoavE+XCRCHR?=
+ =?us-ascii?Q?gawSzX3vkzxfsw+BSsaSkDDn18bghr5L5KMnTPkj749MqoOrkT+VFVFV+KLG?=
+ =?us-ascii?Q?PK+Sy+jwDM0c69XwFpfKxRoL3sW0LvWZc8GkfGoE1wiQZiB8QzJTsFkRvYiW?=
+ =?us-ascii?Q?+KLq4KR/Klxj8vMHmA++onSVmssS/zDQJnI1CKPjI50i15DkwWUx1EbW+/oP?=
+ =?us-ascii?Q?QtG8J60RtVXbXRKvfQne8NUPXRGvcejPYTnh97uykPwC1gELxl8AfMA5OY8k?=
+ =?us-ascii?Q?XNLX70GBfRiRRR5q5Lm1F9e97t4ZhFMJqxxbQxiijPCTsT7oiTky9zInoQQk?=
+ =?us-ascii?Q?GaS2ybOhVqHTHsaFPiwCII3R9xb0dmfXA56hcuvdsJdBI47DxIsJ24dDbnwJ?=
+ =?us-ascii?Q?0UtuMhAPQHez6yw7IaxZ184WjkiVeLQ2d9L5vCGVDdccVQhjPrmxBw5mmHsp?=
+ =?us-ascii?Q?MZ89arXyu7uzREzONHADa77MwRxj58BYe8YBxlONON5YnIUSXE6WpiI1WoDi?=
+ =?us-ascii?Q?gGaHdEYtmF9PysNVUtlM/dTadhHywgWGb7W6hbYZaR7L7dxsPfJzfmhCNdYO?=
+ =?us-ascii?Q?g8jzQrl5GEjuFmBBGsOXiMpewH6gdk4gY0exm32XLsBe/OUQXCiREQy5qDZf?=
+ =?us-ascii?Q?XNC+nF6fYE+obdnRyBQMAebhtXsQ7m/gpa1GgtDvSm5VRYPa0NTdQHxY2omA?=
+ =?us-ascii?Q?aGbZWgukyYOPrdXMcEHMlbVQdM3BUwWK1e0NOze32ZCzTKYnOtWlSyXiuB+U?=
+ =?us-ascii?Q?jfcDyccSGsC1WFz+306DiKn+y+bZHhVpYaM/frKSyhzmJpsWsAHT0hZ6Oc7B?=
+ =?us-ascii?Q?tVT1lnqlXvKa9ppK+mNBOrHtF9Xrq3DbetfTBKVKTAEchnE7ZH/eY3WCLL9h?=
+ =?us-ascii?Q?0V9IXHTpzAxWBxtMR1pIxYa4m0eWWAoq4BBs7gwJbpqIJnamD3Q94hSGQGn9?=
+ =?us-ascii?Q?6hYOSK6ISnkGbb+j3YORtf0ac02wOB2t0c/AFtpOCzTf5yXRQmqopM9oEZOg?=
+ =?us-ascii?Q?dKTewKf+8q/YNNeB3JPsh5r3oWpH84gk2HBd+cqrYuDgKYV41M7seLnC52wo?=
+ =?us-ascii?Q?YPeHKEhwfnEkBrkDlsbYpkoGH7lkvJQZBja0BWcYt7oMFSoqHPF4TF6YiMwN?=
+ =?us-ascii?Q?I6MSITU8FEmM//Zb4SyNqXrS6TiK+EzhqsDZQdaPrgXSWK/abyFJUE5NOz4b?=
+ =?us-ascii?Q?Nw5dMuTGKQ7J5N1Yn1cMrPj299cI+2Dn5U0sobu0d1opPa0KsUg77E/ImWB9?=
+ =?us-ascii?Q?64OG3Z+BFgB1AwjWD5Pyu0Ho?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5853.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccf02cd4-02b3-489e-09c8-08d9141dc49d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2021 01:40:33.2850
+X-MS-Exchange-CrossTenant-Network-Message-Id: 707f5510-4f66-4825-4e77-08d9141e1c98
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2021 01:43:00.9614
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yZyK3Tjvf2DM2QxyIPjuNwkxY4KSyoypkAMUjM27f5wLkL/wTSGOj35L/XNU9B1HbFsKDPYhH8aqGf37wx5IOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5502
+X-MS-Exchange-CrossTenant-userprincipalname: EpiZAORpf8QjSTx7IIpReunqyE0tVB5a1wQaYdzNenfDcu9xNs1b5uZwO1uC32iBIeO+g5V9jAo8gLU4/DTKAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7343
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -121,92 +121,114 @@ Re-send it.
 
 Best Regards
 Richard Zhu
+
 > -----Original Message-----
 <...>
-> Subject: Re: [RESEND v4 1/2] dt-bindings: imx6q-pcie: add one
-> regulator used to power up pcie phy
-> On Thu, May 06, 2021 at 06:08:24PM +0200, Lucas Stach wrote:
-> > Hi Lorenzo,
-> >
-> > have those two patches fallen through some crack? AFAICS they are gone
-> > from patchwork, but I also can't find them in any branch in the usual
-> > git repos.
+> Subject:  Re: [RESEND v4 2/2] PCI: imx: clear vreg bypass when pcie vph
+> voltage is 3v3
+> On Tue, Mar 30, 2021 at 04:08:21PM +0800, Richard Zhu wrote:
+> > Both 1.8v and 3.3v power supplies can be used by i.MX8MQ PCIe PHY.
+> > In default, the PCIE_VPH voltage is suggested to be 1.8v refer to data
+> > sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic design,
+> > the VREG_BYPASS bits of GPR registers should be cleared from default
+> > value 1b'1 to 1b'0. Thus, the internal 3v3 to 1v8 translator would be
+> > turned on.
 >=20
-> They were marked "accepted" in patchwork but must have fallen through the
-> cracks.  I reset them to "new" and assigned to Lorenzo.
-[Richard Zhu] Thanks for your help.
+> Maybe something like this?
 >=20
-> Neither one follows the subject line capitalization conventions.
+>   PCI: imx6: Enable PHY internal regulator when supplied >3V
 >=20
-> The subject line of this patch (1/2) doesn't really make sense.  I
-> *think* this adds a property ("vph-supply") to indicate which regulator s=
-upplys
-> power to the PHY.
+>   The i.MX8MQ PCIe PHY needs 1.8V but can by supplied by either a 1.8V
+>   or a 3.3V regulator.
 >=20
-> > Am Dienstag, dem 30.03.2021 um 16:08 +0800 schrieb Richard Zhu:
-> > > Both 1.8v and 3.3v power supplies can be used by i.MX8MQ PCIe PHY.
-> > > In default, the PCIE_VPH voltage is suggested to be 1.8v refer to
-> > > data sheet. When PCIE_VPH is supplied by 3.3v in the HW schematic
-> > > design, the VREG_BYPASS bits of GPR registers should be cleared from
-> > > default value 1b'1 to 1b'0. Thus, the internal 3v3 to 1v8 translator
-> > > would be turned on.
+>   The "vph-supply" DT property tells us which external regulator
+>   supplies the PHY.  If that regulator supplies anything over 3V,
+>   enable the PHY's internal 3.3V-to-1.8V regulator.
 >=20
-> This commit log doesn't describe the patch, either.  Maybe something like
-> this:
->=20
->   dt-bindings: imx6q-pcie: Add "vph-supply" for PHY supply voltage
->=20
->   The i.MX8MQ PCIe PHY can use either a 1.8V or a 3.3V power supply.
->   Add a "vph-supply" property to indicate which regulator supplies
->   power for the PHY.
->=20
-[Richard Zhu] Okay, will be changed as this way.
+ [Richard Zhu] Hi Bjorn:
+Thanks for your comments.
+vph is the "high-voltage power supply" of the PHY.
+How do you think with the following one with some minor updates?
 
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> > > ---
-> > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > > index de4b2baf91e8..d8971ab99274 100644
-> > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > > @@ -38,6 +38,9 @@ Optional properties:
-> > >    The regulator will be enabled when initializing the PCIe host and
-> > >    disabled either as part of the init process or when shutting down =
-the
-> > >    host.
-> > > +- vph-supply: Should specify the regulator in charge of VPH one of
-> > > +the three
-> > > +  PCIe PHY powers. This regulator can be supplied by both 1.8v and
-> > > +3.3v voltage
-> > > +  supplies.
->=20
-> Just going by examples for other drivers, I think this should say somethi=
-ng like
-> this:
->=20
->   - vph-supply: Regulator for i.MX8MQ PCIe PHY.  May supply either
->     1.8V or 3.3V.
->=20
-> You mentioned "one of the three PCIe PHY powers"; I don't know what that
-> means, so I don't know whether it's important to include.
->=20
-> I also don't know what "vph" means; if the "ph" is part of "phy", it'd be=
- nicer
-> to include the "y", so it would be "vphy-supply".
->=20
-[Richard Zhu] There are three power supplies in total required by the PHY.
-- vp: PHY analog and digital supply
-- vptxN: PHY transmit supply
--vph: High-voltage power supply.
-Only vph is handled by SW here.
+   PCI: imx6: Enable PHY internal regulator when supplied >3V
 
+   The i.MX8MQ PCIe PHY needs 1.8V in default but can be supplied by
+   either a 1.8V or a 3.3V regulator.
+
+   The "vph-supply" DT property tells us which external regulator
+   supplies the PHY. If that regulator supplies anything over 3V,
+   enable the PHY's internal 3.3V-to-1.8V regulator.
 BR
 Richard
 
-> > >  Additional required properties for imx6sx-pcie:
-> > >  - clock names: Must include the following additional entries:
+> > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > ---
+> >  drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
+> > b/drivers/pci/controller/dwc/pci-imx6.c
+> > index 853ea8e82952..94b43b4ecca1 100644
+> > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > @@ -37,6 +37,7 @@
+> >  #define IMX8MQ_GPR_PCIE_REF_USE_PAD          BIT(9)
+> >  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN  BIT(10)
+> >  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE     BIT(11)
+> > +#define IMX8MQ_GPR_PCIE_VREG_BYPASS          BIT(12)
+> >  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE  GENMASK(11, 8)
+> >  #define IMX8MQ_PCIE2_BASE_ADDR
+> 0x33c00000
+> >
+> > @@ -80,6 +81,7 @@ struct imx6_pcie {
+> >       u32                     tx_swing_full;
+> >       u32                     tx_swing_low;
+> >       struct regulator        *vpcie;
+> > +     struct regulator        *vph;
+> >       void __iomem            *phy_base;
+> >
+> >       /* power domain for pcie */
+> > @@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie
+> *imx6_pcie)
+> >                                  imx6_pcie_grp_offset(imx6_pcie),
+> >
+> IMX8MQ_GPR_PCIE_REF_USE_PAD,
+> >
+> IMX8MQ_GPR_PCIE_REF_USE_PAD);
+> > +             /*
+> > +              * Regarding the datasheet, the PCIE_VPH is suggested
+> > +              * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
+> > +              * VREG_BYPASS should be cleared to zero.
+> > +              */
+> > +             if (imx6_pcie->vph &&
+> > +                 regulator_get_voltage(imx6_pcie->vph) > 3000000)
+> > +                     regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> > +
+> imx6_pcie_grp_offset(imx6_pcie),
+> > +
+> IMX8MQ_GPR_PCIE_VREG_BYPASS,
+> > +                                        0);
+> >               break;
+> >       case IMX7D:
+> >               regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> IOMUXC_GPR12,
+> > @@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct
+> platform_device *pdev)
+> >               imx6_pcie->vpcie =3D NULL;
+> >       }
+> >
+> > +     imx6_pcie->vph =3D devm_regulator_get_optional(&pdev->dev,
+> "vph");
+> > +     if (IS_ERR(imx6_pcie->vph)) {
+> > +             if (PTR_ERR(imx6_pcie->vph) !=3D -ENODEV)
+> > +                     return PTR_ERR(imx6_pcie->vph);
+> > +             imx6_pcie->vph =3D NULL;
+> > +     }
+> > +
+> >       platform_set_drvdata(pdev, imx6_pcie);
+> >
+> >       ret =3D imx6_pcie_attach_pd(dev);
+> > --
+> > 2.17.1
+> >
