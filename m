@@ -2,336 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9902137AB3C
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 17:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3624E37AB4E
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:05:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231844AbhEKQAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 12:00:37 -0400
-Received: from mail-dm3nam07on2056.outbound.protection.outlook.com ([40.107.95.56]:9889
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231561AbhEKQAg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 May 2021 12:00:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KR4rQ99Jktqcsj6FnHTQhVRtv94wY3rE9IipzRS3slAVTLjS8V5IZ+LtGe+omp139GWs6F5yT0JyI8Kj6C0SY1VgebfZHA5EZKuPxa4/dIrnxvXL78PaqklwYmiiI79Ydef3jhWID/I96d9hqdcPfdswn0cyFON+ZjlH4JtZ3RfvSuKBtN4XM69UBaqGt19MDkRFqNjhLlIZoQNL1wxtatLcUR+F9rnmnGkySn7lQPBu5HSfdaWRzAQqs3k9Q387gOhNH9JgJ9tXK56yPBdHgTiZWqGdo3UkG4eW1zGkJJ8j3g8c9qyWc+j1TCdUYuhY2ytzeZFb/grMnfzf7i4u3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NE7ZOdn95letbVWqTDWEglb3oMGBl7ZgC7QXk1h39Og=;
- b=kTy7Um65yn/6T/wtQ7Bi3S/J6/FMT12e2fgKUniw9YsYEXiPcTTSt6zWLCB/73sEiHB8tERet4eHdFAGJgkB3rbhGMF2RZyeJLSBpHa9t2HWjg/jUabjeOc3XI3PyRZIYyML2WMuhadpsRz87el5zDWODM1TOQcUa7ltZv9VtLNqdD6Nm2tGaPzXh1toAJRtA/bpeM0VDqfV97R1Jkc04H9m8dIsHsPbM+bLyVid49UehmOZgM25/+UOvhdI7G6xHn8Nf7g7IxB5nFI5D58sh0HrIlxW3z3F53EiRXzYioZEVZVtsG43N2fJ47DDwVz5X2YVsYLdil6IlftP949M1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NE7ZOdn95letbVWqTDWEglb3oMGBl7ZgC7QXk1h39Og=;
- b=tJYtLAzhxA4pXqfrXhW/eX7K20Ua/UxtizkN/KtuR3btgWPEY7NJUP8Pm23kvz+I8l/HLqnEbl+aOHgnfN7RFi+1KE3FZUJmo4IuaTQT+oVT7irIUwCFm4pdLf1B20TJbWpWavI2JDhmO79oNHwsMacHnEp7u9I+p0XJtKlOSTI=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SA0PR12MB4397.namprd12.prod.outlook.com (2603:10b6:806:93::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.26; Tue, 11 May
- 2021 15:59:28 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4108.031; Tue, 11 May 2021
- 15:59:28 +0000
-Subject: Re: [PATCH v6 06/16] drm/amdgpu: Handle IOMMU enabled case.
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        id S231269AbhEKQGh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 12:06:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34538 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231263AbhEKQGg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:06:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620749129;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=te4j0CaO/GGwAePTvy9qf9MhnS54BQnLL/PFFRuQ1v8=;
+        b=Tjk9GDoFHru0zETY1y/uUNd80eyvddrw2EVs95oEQiiaC3nbuHPK0vqllPhRsmepEzkju4
+        btGthwNWgOObN2YXrkWRnDy/1rbcd1GeSK+eSZ/33en/ybgP15Qix+5cZhH102c0dXcPUM
+        ++cSGMN5NG1bB0N127Nldh/rmPprTNE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-36MVrBJfO1-KLhYh32wKtA-1; Tue, 11 May 2021 12:05:25 -0400
+X-MC-Unique: 36MVrBJfO1-KLhYh32wKtA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2629D805F03;
+        Tue, 11 May 2021 16:05:22 +0000 (UTC)
+Received: from [10.3.115.19] (ovpn-115-19.phx2.redhat.com [10.3.115.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 895785D9F2;
+        Tue, 11 May 2021 16:05:17 +0000 (UTC)
+Subject: Re: [PATCH 00/16] Add new DMA mapping operation for P2PDMA
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Matthew Wilcox <willy@infradead.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>
-References: <20210510163625.407105-1-andrey.grodzovsky@amd.com>
- <20210510163625.407105-7-andrey.grodzovsky@amd.com>
- <CADnq5_MNd+2BLV-v9EJPR-zwW_qT4UVLMRowyY2_tEvsQRYvew@mail.gmail.com>
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Message-ID: <951d4db9-87c3-66eb-370a-01ab14deec42@amd.com>
-Date:   Tue, 11 May 2021 11:59:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-In-Reply-To: <CADnq5_MNd+2BLV-v9EJPR-zwW_qT4UVLMRowyY2_tEvsQRYvew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3]
-X-ClientProxiedBy: YTOPR0101CA0044.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::21) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20210408170123.8788-1-logang@deltatee.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <cc7eab6b-2189-7b6a-d119-d653211cd1fb@redhat.com>
+Date:   Tue, 11 May 2021 12:05:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3] (2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3) by YTOPR0101CA0044.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.30 via Frontend Transport; Tue, 11 May 2021 15:59:27 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a255761f-cbbf-440c-ec32-08d91495c1c7
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4397:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB43970247FC5BBBDF9D624913EA539@SA0PR12MB4397.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2sCcjVyGE8Y2NiaVExiRAizzkOZqWNyWl13j222Flgjum7qXebkhGNaT9UMGhXn3IReEBXpseVucNV2rya+z2F06dR7QeJmwmUSv92K+1kYjzEemtJo6kSi1OrvEvIF3mFwb3gSg2KnXfwzlH7ZiLSuXQ9b6NtaOrOrFP9L5s3rHfeXtRc9alDd9+s80ht4aPoMM67aYuSL2DLU9K6foBaClXnRxqvkTqH9woKI7Bqxz/e/9dzodhlue3f3X3rXOsUjk/wLGJYfrbQN/wPg0x4XScdhjgnAWxlJCdoBpO1PCENGzlNgjmvo3s8Urm1c+oKCzRHrRO8sqsWjPvI4w9wlkG30jw6YXWJONX5joF1iPuK3RCwOIk90xITCm34WhouN8/ZqyKAtmWeRBapOvoAHfM6WoGble+C7oY11sC3d821or/lxZTbbCpf07rXocNW/MpfjdNIAvrpQf+iKwOSQJcKnKJutv6MLiOfKhqPJ37+YiL+/J066DV/snr0m3EdEPs2XA03+ztuN5k4OtwjcCahaNvpTFdi7MncG8J4wG7xGiU9TMTym6y6NXfqECMUT9TdI3QxjuC21t+x9Y8zRQZs5nvJpJfrvBflBZravxz5UP364a+x9lzCtxO1yomWW9EivF7eeG/lP/eFeEwpLKWxFHaU0SHbO4a3kwPXPJIwT+5Ds54fz63bLn9Za6Zg6El4RTWH9YoOCkFcsrhh8jMuQo0mweNqYHpCBxmwM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(44832011)(31696002)(966005)(54906003)(83380400001)(478600001)(45080400002)(38100700002)(16526019)(5660300002)(2906002)(316002)(53546011)(36756003)(66556008)(4326008)(8676002)(66476007)(31686004)(8936002)(2616005)(66946007)(6916009)(52116002)(186003)(6486002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Qmo1WU1iQ2ZxZm4vWWdBMWI4QUwwdUdMLzBNOU1tYXhLZGZ3YjhOcnRwSXpQ?=
- =?utf-8?B?L2VIbXlidjRYVWR5QXozaG9scVVaV09WekhaVXpSck91KzcrSG95RUoxNzZR?=
- =?utf-8?B?a1JRK3pUdHFTQ3lmQVFLNDZ0L1FUY2htUW1YWDFtL1F5SUhlTnBmZTd2clhJ?=
- =?utf-8?B?QTl3aGpqSzQ5dUV5THljblJTemlaR2JZL0tzaHU5cmJ4V3A4QndySzlScWdx?=
- =?utf-8?B?MmVOcTRYWVlRVHphVzdsOVRlRm5sRzkyVXdYa1BQZERPeDFGSGZ1d0pSRUZu?=
- =?utf-8?B?M3p5ZUhpb0RwbG9aWEc5MUZ4YUdUMUl2WkRSVHZZRXNZU3ZlNmE3WkdMQkFv?=
- =?utf-8?B?WnhKaTRsRitqajFqWFphMm5tQjkvOXlwZ21hSzg3d0tiNUdqSkZ2dXBEZUlX?=
- =?utf-8?B?eVRzVkZaUndDbEJseURlMS9ObE9SVWRzbXF4V2tnb0dDRnBzTUtQSzFpUm51?=
- =?utf-8?B?cGFZRHB4Ynl6eG9CcmZzK3ZkZkwyUWQ1czVHUnE3Qi9EK1daM2hNZ0lXZlRM?=
- =?utf-8?B?ZmdKOVBoYkpKUjhYYUkxZE1mc0ZScWkxU2lmV3hUQTZQUjhnY2grUWoyVHdF?=
- =?utf-8?B?NWNWZGtDZVYvMVNPM2Z6aVdIUVdOVndwU2k1Q2ZReE5waVhYVVJTejJ2OTcz?=
- =?utf-8?B?cTA1ek54S21WdFR0cHNIUWl3ME9OQ0NVWDE4VzA5NVdnYkhLaUpnaWlYL2sx?=
- =?utf-8?B?eVhRTTJha2dJZnRrSkxRdEM1NDNlK2Ztd29vcFhvbWtLV1B6TERQR3ZKRzRa?=
- =?utf-8?B?dStKa1dLcTBFRWxQcGVITjlIUWw1STgzVUZEQjA4cjk1U2RDdnA1RUVXdVZ6?=
- =?utf-8?B?UWgvaGNZL2l5MlVySkFBeWswaXRFVHZoTnVQSkR6TmIybWN2bEVNRnpDeVM1?=
- =?utf-8?B?elBVMStpa0xvR3U3N2prZkRYbVByR0twcW1YQ2ZJMW9VMlk1aGpNS1dOR2RX?=
- =?utf-8?B?Vk1VTzN1aklpQXczSFhOZE5XaUxXZUMzTkRoQnF6SzRVL1Q3NHdQY1VXMFVH?=
- =?utf-8?B?YTZFUVpjTk5BbWFwQ0FET1lPNllkUFZDYXp2RVZoWi91Rkd2ZWxTQlRNOUo4?=
- =?utf-8?B?dHFvcm9JUWo5Q05raUR4eGY2OFNGV0FtQVJLanAzSzY4cm1HV1pRNjVsK2N5?=
- =?utf-8?B?WUR5Z0sxZ1pLQWNnb3gwd1JUOWVnZ0NmZmFzMzlHR2M4Si9ndWN4Uy9kcitF?=
- =?utf-8?B?MzlhYWxTaUc3anYvb1JzVUkzUkdZSEVZamxRekV1a2swVDNzNzNyWTlxcFpn?=
- =?utf-8?B?eGF6dUxVbFJVUlNaRHowQ0RDSEFrN0xUR3RRcG13RitVVVFyM2JPRWM1K2lF?=
- =?utf-8?B?R1EycGcxZUFSUEtDL1Y5VmFxeE1GUFZtWHYrQm9Od3dRTEhSQVlpRkFUcXpF?=
- =?utf-8?B?dTlxZlhzWW5UUW0wVDVWNUI2aFFSN0RaYVZOQU8rQW5DdFRmRU43c0dVZm5O?=
- =?utf-8?B?U3JNd3ByYlNmVzNUTWpKOFhkUjhVbi9GcThRbjFpOTZ3YVJlSTB6RkNXYVIv?=
- =?utf-8?B?ZC93c3BMdTd3SVhWdlAzMnFjZU9tRklZazNhWXhseCtLQ29oWnRUOHhpcm8r?=
- =?utf-8?B?eDZ3eWl4UmtmdjdtczZjZGU2TjR0VmdqZUVvQlU4ZTJvMlI2dUN3Z0J2eFUr?=
- =?utf-8?B?ZnJUQjBRU2lYZXJZQXhJenBUWSttYlhkeExKbTFsZERPakdwdXQyd21CZ0p0?=
- =?utf-8?B?TjhDck9Vc1ArcEVWUTRBZTZnallTQjg2emwzNjdwZTNCVmh1blhkTlB5WUcz?=
- =?utf-8?B?YnBFZ0gzQ0FzdEwxaCszYmVQNDhwU1VIdFNGY2RDUDd4Ymt6MnFrcDZwSmhv?=
- =?utf-8?B?TkdoLzB4dUxNb2ZteXVzQ3lUR0xHZkl2SkZWTElDajlEYjcrRFVhWWNvelJ5?=
- =?utf-8?Q?5MaSH77YfcdOL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a255761f-cbbf-440c-ec32-08d91495c1c7
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2021 15:59:28.4742
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5TK2M+lZ2cMjqq9JoGt4Caps5jz1alufDPTBjvIBHTZfzmHs+56saoqG5aQz7JoNP92Rjrgtk7tVZ1VUGJ73yg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4397
+In-Reply-To: <20210408170123.8788-1-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 4/8/21 1:01 PM, Logan Gunthorpe wrote:
+> Hi,
+>
+> This patchset continues my work to to add P2PDMA support to the common
+> dma map operations. This allows for creating SGLs that have both P2PDMA
+> and regular pages which is a necessary step to allowing P2PDMA pages in
+> userspace.
+>
+> The earlier RFC[1] generated a lot of great feedback and I heard no show
+> stopping objections. Thus, I've incorporated all the feedback and have
+> decided to post this as a proper patch series with hopes of eventually
+> getting it in mainline.
+>
+> I'm happy to do a few more passes if anyone has any further feedback
+> or better ideas.
+>
+> This series is based on v5.12-rc6 and a git branch can be found here:
+>
+>    https://github.com/sbates130272/linux-p2pmem/  p2pdma_map_ops_v1
+>
+> Thanks,
+>
+> Logan
+>
+> [1] https://lore.kernel.org/linux-block/20210311233142.7900-1-logang@deltatee.com/
+>
+>
+> Changes since the RFC:
+>   * Added comment and fixed up the pci_get_slot patch. (per Bjorn)
+>   * Fixed glaring sg_phys() double offset bug. (per Robin)
+>   * Created a new map operation (dma_map_sg_p2pdma()) with a new calling
+>     convention instead of modifying the calling convention of
+>     dma_map_sg(). (per Robin)
+>   * Integrated the two similar pci_p2pdma_dma_map_type() and
+>     pci_p2pdma_map_type() functions into one (per Ira)
+>   * Reworked some of the logic in the map_sg() implementations into
+>     helpers in the p2pdma code. (per Christoph)
+>   * Dropped a bunch of unnecessary symbol exports (per Christoph)
+>   * Expanded the code in dma_pci_p2pdma_supported() for clarity. (per
+>     Ira and Christoph)
+>   * Finished off using the new dma_map_sg_p2pdma() call in rdma_rw
+>     and removed the old pci_p2pdma_[un]map_sg(). (per Jason)
+>
+> --
+>
+> Logan Gunthorpe (16):
+>    PCI/P2PDMA: Pass gfp_mask flags to upstream_bridge_distance_warn()
+>    PCI/P2PDMA: Avoid pci_get_slot() which sleeps
+>    PCI/P2PDMA: Attempt to set map_type if it has not been set
+>    PCI/P2PDMA: Refactor pci_p2pdma_map_type() to take pagmap and device
+>    dma-mapping: Introduce dma_map_sg_p2pdma()
+>    lib/scatterlist: Add flag for indicating P2PDMA segments in an SGL
+>    PCI/P2PDMA: Make pci_p2pdma_map_type() non-static
+>    PCI/P2PDMA: Introduce helpers for dma_map_sg implementations
+>    dma-direct: Support PCI P2PDMA pages in dma-direct map_sg
+>    dma-mapping: Add flags to dma_map_ops to indicate PCI P2PDMA support
+>    iommu/dma: Support PCI P2PDMA pages in dma-iommu map_sg
+>    nvme-pci: Check DMA ops when indicating support for PCI P2PDMA
+>    nvme-pci: Convert to using dma_map_sg_p2pdma for p2pdma pages
+>    nvme-rdma: Ensure dma support when using p2pdma
+>    RDMA/rw: use dma_map_sg_p2pdma()
+>    PCI/P2PDMA: Remove pci_p2pdma_[un]map_sg()
+>
+>   drivers/infiniband/core/rw.c |  50 +++-------
+>   drivers/iommu/dma-iommu.c    |  66 ++++++++++--
+>   drivers/nvme/host/core.c     |   3 +-
+>   drivers/nvme/host/nvme.h     |   2 +-
+>   drivers/nvme/host/pci.c      |  39 ++++----
+>   drivers/nvme/target/rdma.c   |   3 +-
+>   drivers/pci/Kconfig          |   2 +-
+>   drivers/pci/p2pdma.c         | 188 +++++++++++++++++++----------------
+>   include/linux/dma-map-ops.h  |   3 +
+>   include/linux/dma-mapping.h  |  20 ++++
+>   include/linux/pci-p2pdma.h   |  53 ++++++----
+>   include/linux/scatterlist.h  |  49 ++++++++-
+>   include/rdma/ib_verbs.h      |  32 ++++++
+>   kernel/dma/direct.c          |  25 ++++-
+>   kernel/dma/mapping.c         |  70 +++++++++++--
+>   15 files changed, 416 insertions(+), 189 deletions(-)
+>
+>
+> base-commit: e49d033bddf5b565044e2abe4241353959bc9120
+> --
+> 2.20.1
+>
+Apologies in the delay to provide feedback; climbing out of several deep trenches at the mother ship :-/
 
+Replying to some directly, and indirectly (mostly through JohH's reply's).
 
-On 2021-05-11 11:56 a.m., Alex Deucher wrote:
-> On Mon, May 10, 2021 at 12:37 PM Andrey Grodzovsky
-> <andrey.grodzovsky@amd.com> wrote:
->>
->> Handle all DMA IOMMU gropup related dependencies before the
->> group is removed.
->>
->> v5: Drop IOMMU notifier and switch to lockless call to ttm_tt_unpopulate
->> v6: Drop the BO unamp list
->>
->> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
->> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++--
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c   | 3 +--
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h   | 1 +
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c    | 9 +++++++++
->>   drivers/gpu/drm/amd/amdgpu/cik_ih.c        | 1 -
->>   drivers/gpu/drm/amd/amdgpu/cz_ih.c         | 1 -
->>   drivers/gpu/drm/amd/amdgpu/iceland_ih.c    | 1 -
->>   drivers/gpu/drm/amd/amdgpu/navi10_ih.c     | 3 ---
->>   drivers/gpu/drm/amd/amdgpu/si_ih.c         | 1 -
->>   drivers/gpu/drm/amd/amdgpu/tonga_ih.c      | 1 -
->>   drivers/gpu/drm/amd/amdgpu/vega10_ih.c     | 3 ---
->>   11 files changed, 13 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> index 18598eda18f6..a0bff4713672 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> @@ -3256,7 +3256,6 @@ static const struct attribute *amdgpu_dev_attributes[] = {
->>          NULL
->>   };
->>
->> -
->>   /**
->>    * amdgpu_device_init - initialize the driver
->>    *
->> @@ -3698,12 +3697,13 @@ void amdgpu_device_fini_hw(struct amdgpu_device *adev)
->>                  amdgpu_ucode_sysfs_fini(adev);
->>          sysfs_remove_files(&adev->dev->kobj, amdgpu_dev_attributes);
->>
->> -
->>          amdgpu_fbdev_fini(adev);
->>
->>          amdgpu_irq_fini_hw(adev);
->>
->>          amdgpu_device_ip_fini_early(adev);
->> +
->> +       amdgpu_gart_dummy_page_fini(adev);
->>   }
->>
->>   void amdgpu_device_fini_sw(struct amdgpu_device *adev)
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
->> index c5a9a4fb10d2..354e68081b53 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
->> @@ -92,7 +92,7 @@ static int amdgpu_gart_dummy_page_init(struct amdgpu_device *adev)
->>    *
->>    * Frees the dummy page used by the driver (all asics).
->>    */
->> -static void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
->> +void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
->>   {
->>          if (!adev->dummy_page_addr)
->>                  return;
->> @@ -375,5 +375,4 @@ int amdgpu_gart_init(struct amdgpu_device *adev)
->>    */
->>   void amdgpu_gart_fini(struct amdgpu_device *adev)
->>   {
->> -       amdgpu_gart_dummy_page_fini(adev);
->>   }
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
->> index a25fe97b0196..78dc7a23da56 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
->> @@ -58,6 +58,7 @@ int amdgpu_gart_table_vram_pin(struct amdgpu_device *adev);
->>   void amdgpu_gart_table_vram_unpin(struct amdgpu_device *adev);
->>   int amdgpu_gart_init(struct amdgpu_device *adev);
->>   void amdgpu_gart_fini(struct amdgpu_device *adev);
->> +void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev);
->>   int amdgpu_gart_unbind(struct amdgpu_device *adev, uint64_t offset,
->>                         int pages);
->>   int amdgpu_gart_map(struct amdgpu_device *adev, uint64_t offset,
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->> index 233b64dab94b..a14973a7a9c9 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->> @@ -361,6 +361,15 @@ void amdgpu_irq_fini_hw(struct amdgpu_device *adev)
->>                  if (!amdgpu_device_has_dc_support(adev))
->>                          flush_work(&adev->hotplug_work);
->>          }
->> +
->> +       if (adev->irq.ih_soft.ring)
->> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
-> 
-> Why is the ih_soft handled here and in the various ih sw_fini functions?
+General comments:
+1) nits in 1,2,3,5;
+    4: I agree w/JohnH & JasonG -- seems like it needs a device-layer that gets to a bus-layer, but I'm wearing my 'broader then PCI' hat in this review; I see a (classic) ChristophH refactoring and cleanup in this area, and wondering if we ought to clean it up now, since CH has done so much to clean it up and make the dma-mapping system so much easier to add/modify/review due to the broad arch (& bus) cleanup that has been done.  If that delays it too much, then add a TODO to do so.
+2) 6: yes! let's not worry or even both supporting 32-bit anything wrt p2pdma.
+3) 7:nit
+4) 8: ok;
+5) 9: ditto to JohnH's feedback on added / clearer comment & code flow (if-else).
+6) 10: nits; q: should p2pdma mapping go through dma-ops so it is generalized for future interconnects (CXL, GenZ)?
+7) 11: It says it is supporting p2pdma in dma-iommu's map_sg, but it seems like it is just leveraging shared code and short-circuiting IOMMU use.
+8) 12-14: didn't review; letting the block/nvme/direct-io folks cover this space
+9) 15: Looking to JasonG to sanitize
+10) 16: cleanup; a-ok.
 
-Post last rebase new ASICs i think were added which i missed.
-Taking care of this with prev. comment by Christian together right now.
+- DonD
 
-Andrey
-
-> 
->> +       if (adev->irq.ih.ring)
->> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->> +       if (adev->irq.ih1.ring)
->> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
->> +       if (adev->irq.ih2.ring)
->> +               amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
->>   }
->>
->>   /**
->> diff --git a/drivers/gpu/drm/amd/amdgpu/cik_ih.c b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
->> index 183d44a6583c..df385ffc9768 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/cik_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
->> @@ -310,7 +310,6 @@ static int cik_ih_sw_fini(void *handle)
->>          struct amdgpu_device *adev = (struct amdgpu_device *)handle;
->>
->>          amdgpu_irq_fini_sw(adev);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>          amdgpu_irq_remove_domain(adev);
->>
->>          return 0;
->> diff --git a/drivers/gpu/drm/amd/amdgpu/cz_ih.c b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
->> index d32743949003..b8c47e0cf37a 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/cz_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
->> @@ -302,7 +302,6 @@ static int cz_ih_sw_fini(void *handle)
->>          struct amdgpu_device *adev = (struct amdgpu_device *)handle;
->>
->>          amdgpu_irq_fini_sw(adev);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>          amdgpu_irq_remove_domain(adev);
->>
->>          return 0;
->> diff --git a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
->> index da96c6013477..ddfe4eaeea05 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
->> @@ -301,7 +301,6 @@ static int iceland_ih_sw_fini(void *handle)
->>          struct amdgpu_device *adev = (struct amdgpu_device *)handle;
->>
->>          amdgpu_irq_fini_sw(adev);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>          amdgpu_irq_remove_domain(adev);
->>
->>          return 0;
->> diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
->> index 5eea4550b856..e171a9e78544 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
->> @@ -571,9 +571,6 @@ static int navi10_ih_sw_fini(void *handle)
->>
->>          amdgpu_irq_fini_sw(adev);
->>          amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>
->>          return 0;
->>   }
->> diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
->> index 751307f3252c..9a24f17a5750 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
->> @@ -176,7 +176,6 @@ static int si_ih_sw_fini(void *handle)
->>          struct amdgpu_device *adev = (struct amdgpu_device *)handle;
->>
->>          amdgpu_irq_fini_sw(adev);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>
->>          return 0;
->>   }
->> diff --git a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
->> index 973d80ec7f6c..b08905d1c00f 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
->> @@ -313,7 +313,6 @@ static int tonga_ih_sw_fini(void *handle)
->>          struct amdgpu_device *adev = (struct amdgpu_device *)handle;
->>
->>          amdgpu_irq_fini_sw(adev);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>          amdgpu_irq_remove_domain(adev);
->>
->>          return 0;
->> diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
->> index dead9c2fbd4c..d78b8abe993a 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
->> @@ -515,9 +515,6 @@ static int vega10_ih_sw_fini(void *handle)
->>
->>          amdgpu_irq_fini_sw(adev);
->>          amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
->> -       amdgpu_ih_ring_fini(adev, &adev->irq.ih);
->>
->>          return 0;
->>   }
->> --
->> 2.25.1
->>
->> _______________________________________________
->> amd-gfx mailing list
->> amd-gfx@lists.freedesktop.org
->> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Famd-gfx&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cb45a1bb9b62c47513d8a08d914955fb0%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637563454058642697%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=lKXHkne%2FTx7abQcPBaINBt769zrJzEvcHwQ7KfxG1ZY%3D&amp;reserved=0
