@@ -2,76 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0427F37A683
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 14:25:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DFAC37A863
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 16:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbhEKM0P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 08:26:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2697 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbhEKM0P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 08:26:15 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FfcW73mDnz1BLKg;
-        Tue, 11 May 2021 20:22:27 +0800 (CST)
-Received: from thunder-town.china.huawei.com (10.174.177.72) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.498.0; Tue, 11 May 2021 20:24:58 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-mediatek <linux-mediatek@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] PCI: mediatek: Remove redundant error printing in mtk_pcie_subsys_powerup()
-Date:   Tue, 11 May 2021 20:24:53 +0800
-Message-ID: <20210511122453.6052-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        id S231488AbhEKOFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 10:05:47 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2487 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231305AbhEKOFr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 10:05:47 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4FffkC3KCjzYjg0;
+        Tue, 11 May 2021 22:02:11 +0800 (CST)
+Received: from SZX1000464847.huawei.com (10.21.59.169) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 11 May 2021 22:04:38 +0800
+From:   Dongdong Liu <liudongdong3@huawei.com>
+To:     <helgaas@kernel.org>, <hch@infradead.org>,
+        <linux-pci@vger.kernel.org>
+CC:     Dongdong Liu <liudongdong3@huawei.com>
+Subject: [PATCH V2 0/5] PCI: Enable 10-Bit tag support for PCIe devices
+Date:   Tue, 11 May 2021 21:59:40 +0800
+Message-ID: <1620741585-53304-1-git-send-email-liudongdong3@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.72]
+Content-Type: text/plain
+X-Originating-IP: [10.21.59.169]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When devm_ioremap_resource() fails, a clear enough error message will be
-printed by its subfunction __devm_ioremap_resource(). The error
-information contains the device name, failure cause, and possibly resource
-information.
+10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+field size from 8 bits to 10 bits.
 
-Therefore, remove the error printing here to simplify code and reduce the
-binary size.
+This patchset is to enable 10-Bit tag for PCIe EP devices (include VF) and
+RP devices.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/pci/controller/pcie-mediatek.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+V1->V2: Fix some comments by Christoph.
+- Store the devcap2 value in the pci_dev instead of reading it multiple
+  times.
+- Change pci_info to pci_dbg to avoid the noisy log.
+- Rename ext_10bit_tag_comp_path to ext_10bit_tag.
+- Fix the compile error.
+- Rebased on v5.13-rc1.
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 62a042e75d9a2f4..25bee693834f95e 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -991,10 +991,8 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "subsys");
- 	if (regs) {
- 		pcie->base = devm_ioremap_resource(dev, regs);
--		if (IS_ERR(pcie->base)) {
--			dev_err(dev, "failed to map shared register\n");
-+		if (IS_ERR(pcie->base))
- 			return PTR_ERR(pcie->base);
--		}
- 	}
- 
- 	pcie->free_ck = devm_clk_get(dev, "free_ck");
--- 
-2.26.0.106.g9fadedd
+Dongdong Liu (5):
+  PCI: Use cached Device Capabilities 2 Register
+  PCI: Add 10-Bit Tag register definitions
+  PCI: Enable 10-Bit tag support for PCIe Endpoint devices
+  PCI/IOV: Enable 10-Bit tag support for PCIe VF devices
+  PCI: Enable 10-Bit tag support for PCIe RP devices
 
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c |  4 +-
+ drivers/pci/iov.c                               |  8 +++
+ drivers/pci/pci.c                               |  8 +--
+ drivers/pci/pcie/portdrv_pci.c                  | 76 +++++++++++++++++++++++++
+ drivers/pci/probe.c                             | 54 ++++++++++++++++--
+ include/linux/pci.h                             |  3 +
+ include/uapi/linux/pci_regs.h                   |  5 ++
+ 7 files changed, 144 insertions(+), 14 deletions(-)
+
+--
+2.7.4
 
