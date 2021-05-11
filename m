@@ -2,41 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C605D37AB53
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:05:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAE7037AB59
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 18:05:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231259AbhEKQGo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 12:06:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58510 "EHLO
+        id S231459AbhEKQGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 12:06:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53057 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231355AbhEKQGn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:06:43 -0400
+        by vger.kernel.org with ESMTP id S231437AbhEKQGw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 12:06:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620749136;
+        s=mimecast20190719; t=1620749145;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+Z2k7kEMuOxvMNfv9wyuet8mFypiPJLma4wFOmFQFhU=;
-        b=UgAv0poP5eOdNcZI7JJQNujJzdA6qJNVrrSoWKPdcary+JlmutyrggXX/TkD1G1ARdDk/Q
-        w6HoEuWy1pEovUbpbn0dZoJV9H7KfDHQkU81wMjXYSqxdLGi8E6+iyHljkb++fhuowA30V
-        WcfQjKKS45nJrvQx2Fuc30Y6sOlGkhs=
+        bh=VZKhZh9rreTRPd4zpdyIwtNRUh5ttKTpBqZ0LlHmIQ0=;
+        b=WsW3jFQoJG2aTEkICNi6n+7ai10mZ4p+J810RUKNpD4qQs3ZlceVNswGuqoA3ax71N9LdX
+        jE21BRw1xqjvn/Zys1xPfTfiEFDO2/d9DJ5BxKXZv2gaIm7LrWPNg7UUW2Ysj8IuxeuRFl
+        T9chFw2l8ml6TlgmzX/djqjCWUbNUbY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-Z7LXlEqAMSavyp-h4tVVsA-1; Tue, 11 May 2021 12:05:32 -0400
-X-MC-Unique: Z7LXlEqAMSavyp-h4tVVsA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-122-bChFT7ESMtyqf2dZFYH_2g-1; Tue, 11 May 2021 12:05:40 -0400
+X-MC-Unique: bChFT7ESMtyqf2dZFYH_2g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73FD4107ACED;
-        Tue, 11 May 2021 16:05:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC08F80EDB9;
+        Tue, 11 May 2021 16:05:37 +0000 (UTC)
 Received: from [10.3.115.19] (ovpn-115-19.phx2.redhat.com [10.3.115.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B81FA5C232;
-        Tue, 11 May 2021 16:05:26 +0000 (UTC)
-Subject: Re: [PATCH 01/16] PCI/P2PDMA: Pass gfp_mask flags to
- upstream_bridge_distance_warn()
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 471751037F29;
+        Tue, 11 May 2021 16:05:35 +0000 (UTC)
+Subject: Re: [PATCH 02/16] PCI/P2PDMA: Avoid pci_get_slot() which sleeps
+To:     Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org
@@ -45,6 +43,7 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
         Matthew Wilcox <willy@infradead.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Jakowski Andrzej <andrzej.jakowski@intel.com>,
@@ -54,133 +53,76 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Xiong Jianxin <jianxin.xiong@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
+        Robin Murphy <robin.murphy@arm.com>
 References: <20210408170123.8788-1-logang@deltatee.com>
- <20210408170123.8788-2-logang@deltatee.com>
- <d8ac4c84-1e69-d5d6-991a-7de87c569acc@nvidia.com>
+ <20210408170123.8788-3-logang@deltatee.com>
 From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <a23fdb9c-f653-e766-89e1-98550658724c@redhat.com>
-Date:   Tue, 11 May 2021 12:05:26 -0400
+Message-ID: <09f6c713-5ae6-035c-c0ab-a8bd0fac7a79@redhat.com>
+Date:   Tue, 11 May 2021 12:05:34 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <d8ac4c84-1e69-d5d6-991a-7de87c569acc@nvidia.com>
+In-Reply-To: <20210408170123.8788-3-logang@deltatee.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/1/21 11:58 PM, John Hubbard wrote:
-> On 4/8/21 10:01 AM, Logan Gunthorpe wrote:
->> In order to call upstream_bridge_distance_warn() from a dma_map function,
->> it must not sleep. The only reason it does sleep is to allocate the seqbuf
->> to print which devices are within the ACS path.
->>
->> Switch the kmalloc call to use a passed in gfp_mask and don't print that
->> message if the buffer fails to be allocated.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> ---
->>   drivers/pci/p2pdma.c | 21 +++++++++++----------
->>   1 file changed, 11 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index 196382630363..bd89437faf06 100644
->> --- a/drivers/pci/p2pdma.c
->> +++ b/drivers/pci/p2pdma.c
->> @@ -267,7 +267,7 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
->>     static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
->>   {
->> -    if (!buf)
->> +    if (!buf || !buf->buffer)
+On 4/8/21 1:01 PM, Logan Gunthorpe wrote:
+> In order to use upstream_bridge_distance_warn() from a dma_map function,
+> it must not sleep. However, pci_get_slot() takes the pci_bus_sem so it
+> might sleep.
 >
-> This is not great, sort of from an overall design point of view, even though
-> it makes the rest of the patch work. See below for other ideas, that will
-> avoid the need for this sort of odd point fix.
->
-+1.
-In fact, I didn't see how the kmalloc was changed... you refactored the code to pass-in the
-GFP_KERNEL that was originally hard-coded into upstream_bridge_distance_warn();
-I don't see how that avoided the kmalloc() call.
-in fact, I also see you lost a failed kmalloc() check, so it seems to have taken a step back.
+> In order to avoid this, try to get the host bridge's device from
+> bus->self, and if that is not set, just get the first element in the
+> device list. It should be impossible for the host bridge's device to
+> go away while references are held on child devices, so the first element
+> should not be able to change and, thus, this should be safe.
+Bjorn:
+Why wouldn't (shouldn't?) the bus->self field be set for a host bridge device?
+Should this situation be repaired in the host-brige config/setup code elsewhere in the kernel.
+... and here, a check-and-fail with info of what doesn't have it setup (another new pci function to do the check & prinfo), so it can point to the offending host-bridge, and thus, the code that needs to be updated?
 
->>           return;
->>         seq_buf_printf(buf, "%s;", pci_name(pdev));
->> @@ -495,25 +495,26 @@ upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
->>     static enum pci_p2pdma_map_type
->>   upstream_bridge_distance_warn(struct pci_dev *provider, struct pci_dev *client,
->> -                  int *dist)
->> +                  int *dist, gfp_t gfp_mask)
->>   {
->>       struct seq_buf acs_list;
->>       bool acs_redirects;
->>       int ret;
->>   -    seq_buf_init(&acs_list, kmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
->> -    if (!acs_list.buffer)
->> -        return -ENOMEM;
->
-> Another odd thing: this used to check for memory failure and just give
-> up, and now it doesn't. Yes, I realize that it all still works at the
-> moment, but this is quirky and we shouldn't stop here.
->
-> Instead, a cleaner approach would be to push the memory allocation
-> slightly higher up the call stack, out to the
-> pci_p2pdma_distance_many(). So pci_p2pdma_distance_many() should make
-> the kmalloc() call, and fail out if it can't get a page for the seq_buf
-> buffer. Then you don't have to do all this odd stuff.
->
-> Furthermore, the call sites can then decide for themselves which GFP
-> flags, GFP_ATOMIC or GFP_KERNEL or whatever they want for kmalloc().
->
-agree, good proposal to avoid a sleep due to kmalloc().
 
-> A related thing: this whole exercise would go better if there were a
-> preparatory patch or two that changed the return codes in this file to
-> something less crazy. There are too many functions that can fail, but
-> are treated as if they sort-of-mostly-would-never-fail, in the hopes of
-> using the return value directly for counting and such. This is badly
-> mistaken, and it leads developers to try to avoid returning -ENOMEM
-> (which is what we need here).
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>   drivers/pci/p2pdma.c | 14 ++++++++++++--
+>   1 file changed, 12 insertions(+), 2 deletions(-)
 >
-> Really, these functions should all be doing "0 for success, -ERRNO for
-> failure, and pass other values, including results, in the arg list".
->
-WFM!
-
->
->> +    seq_buf_init(&acs_list, kmalloc(PAGE_SIZE, gfp_mask), PAGE_SIZE);
->>         ret = upstream_bridge_distance(provider, client, dist, &acs_redirects,
->>                          &acs_list);
->>       if (acs_redirects) {
->>           pci_warn(client, "ACS redirect is set between the client and provider (%s)\n",
->>                pci_name(provider));
->> -        /* Drop final semicolon */
->> -        acs_list.buffer[acs_list.len-1] = 0;
->> -        pci_warn(client, "to disable ACS redirect for this path, add the kernel parameter: pci=disable_acs_redir=%s\n",
->> -             acs_list.buffer);
->> +
->> +        if (acs_list.buffer) {
->> +            /* Drop final semicolon */
->> +            acs_list.buffer[acs_list.len - 1] = 0;
->> +            pci_warn(client, "to disable ACS redirect for this path, add the kernel parameter: pci=disable_acs_redir=%s\n",
->> +                 acs_list.buffer);
->> +        }
->>       }
->>         if (ret == PCI_P2PDMA_MAP_NOT_SUPPORTED) {
->> @@ -566,7 +567,7 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
->>             if (verbose)
->>               ret = upstream_bridge_distance_warn(provider,
->> -                    pci_client, &distance);
->> +                    pci_client, &distance, GFP_KERNEL);
->>           else
->>               ret = upstream_bridge_distance(provider, pci_client,
->>                                  &distance, NULL, NULL);
->>
->
-> thanks,
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index bd89437faf06..473a08940fbc 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -311,16 +311,26 @@ static const struct pci_p2pdma_whitelist_entry {
+>   static bool __host_bridge_whitelist(struct pci_host_bridge *host,
+>   				    bool same_host_bridge)
+>   {
+> -	struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
+>   	const struct pci_p2pdma_whitelist_entry *entry;
+> +	struct pci_dev *root = host->bus->self;
+>   	unsigned short vendor, device;
+>   
+> +	/*
+> +	 * This makes the assumption that the first device on the bus is the
+> +	 * bridge itself and it has the devfn of 00.0. This assumption should
+> +	 * hold for the devices in the white list above, and if there are cases
+> +	 * where this isn't true they will have to be dealt with when such a
+> +	 * case is added to the whitelist.
+> +	 */
+>   	if (!root)
+> +		root = list_first_entry_or_null(&host->bus->devices,
+> +						struct pci_dev, bus_list);
+> +
+> +	if (!root || root->devfn)
+>   		return false;
+>   
+>   	vendor = root->vendor;
+>   	device = root->device;
+> -	pci_dev_put(root);
+>   
+>   	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
+>   		if (vendor != entry->vendor || device != entry->device)
 
