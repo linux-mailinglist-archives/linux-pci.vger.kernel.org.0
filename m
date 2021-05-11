@@ -2,53 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF3037AABE
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 17:31:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E9B237AAF4
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 17:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231827AbhEKPc6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 11:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231826AbhEKPc6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 May 2021 11:32:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EEADC061574
-        for <linux-pci@vger.kernel.org>; Tue, 11 May 2021 08:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qd89Yq1zI8Ot5Kn7d3v2k37syKK+PdFa0qHgTzuWIkw=; b=JnXXtZ01Rbput6L/7z4BeWdccK
-        cODLrMVbyrTU20bm0m/xzw8cvxRlBtRxjCgRnHeEO9l6Tk0ENdnA5kdrLka/OUVCaC8R47zeEKKrV
-        xncq4DW4RKy3pJVmUdY1oDuY1Jmm9jhOLvhev4kDSb/LwsuxKO6zR52sLtjbCweUSh9sm5uXvUTRO
-        T4n5rAF6m4DOLorKq9x2Cp6lKWKAEO3TscfNim+4CvZHVoTvkBqvxcyJ54fzcMM2YFBL/M5nQO3Sm
-        x45SdEDnHgcnzsz8BRFBGenIV86+Zv1fbGrVFF/JFXO7pPuPeuJLGbiZnBkXxtpG131jRO0oAvhQM
-        4fb+Bl5A==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lgULt-007PRF-AB; Tue, 11 May 2021 15:31:19 +0000
-Date:   Tue, 11 May 2021 16:31:17 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     helgaas@kernel.org, hch@infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V2 5/5] PCI: Enable 10-Bit tag support for PCIe RP devices
-Message-ID: <YJqjReTXy5+xaTfN@infradead.org>
-References: <1620745965-91535-1-git-send-email-liudongdong3@huawei.com>
- <791a5af6-bcbb-a824-ecd7-504abe7194e2@huawei.com>
+        id S231665AbhEKPmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 11:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231561AbhEKPmj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 May 2021 11:42:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4E16E60C3D;
+        Tue, 11 May 2021 15:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620747692;
+        bh=/EPbcYfji1lEHhTEH1Bcafubtr2dJNCMyzbjwXE3Z9A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=T+KUSYpr/3SdAc4eDxgD611IL580M2UtrGzNDnTe6NbJCFTwAvnRtUA6Jhn/jT3V9
+         nw6XL9xkdvxmpKFM0G68+NLNkCcYdIuEQsqjXCPSO7YeQunEAI/1BMYd4nL1Kzxvzs
+         VPvRSKDLTDpiU7lyxVXhfDPHEzsy3WHaavoacIXI8N3UXQDeuOGrj6/gQsqeA8uyyi
+         s2CrOFVYAB436oaRrL/NgCecY6rXQGFK/l+QQGUJ9s9G1DXV2m2RIvMxuF9SzCqPry
+         FofHJ5tzf/s+6dr4OKgbZIVOsL7EBzbHLg7lRQrrcnEjwzIMD2HgwWdMCAjpOondyp
+         tkKlyJG/JHQGQ==
+Date:   Tue, 11 May 2021 10:41:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] MAINTAINERS: Add Krzysztof as PCI host/endpoint
+ controllers reviewer
+Message-ID: <20210511154130.GA2379240@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <791a5af6-bcbb-a824-ecd7-504abe7194e2@huawei.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210511150003.1592-1-lorenzo.pieralisi@arm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 11, 2021 at 11:24:16PM +0800, Dongdong Liu wrote:
-> This patch is based on the patchset [PATCH V2 0/5] PCI: Enable 10-Bit tag
-> support for PCIe devices.
+On Tue, May 11, 2021 at 04:00:03PM +0100, Lorenzo Pieralisi wrote:
+> Krzysztof has been carrying out PCI patches review for a long time and
+> he has been instrumental in driving PCI host/endpoint controller drivers
+> improvements.
 > 
-> I use "git send-email" report "4.4.2 Message submission rate for this client
-> has exceeded the configured limit" lead missed [PATCH V2 5/5].
+> Make his role official.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> CC: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Krzysztof Wilczyński <kw@linux.com>
 
-That is a message from your mail server. Try tweaking the
-sendemail.smtpBatchSize option in your .gitconfig
+Great, thanks for all your work, Krzysztof!
+
+Love how your subject contains all the relevant information,
+Lorenzo :)
+
+Applied to for-linus for v5.13, thanks!
+
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bd7aff0c120f..9755bf97658d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14110,6 +14110,7 @@ F:	drivers/pci/controller/pci-v3-semi.c
+>  PCI ENDPOINT SUBSYSTEM
+>  M:	Kishon Vijay Abraham I <kishon@ti.com>
+>  M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> +R:	Krzysztof Wilczyński <kw@linux.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/PCI/endpoint/*
+> @@ -14158,6 +14159,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
+>  PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+>  M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>  R:	Rob Herring <robh@kernel.org>
+> +R:	Krzysztof Wilczyński <kw@linux.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
+> -- 
+> 2.26.1
+> 
