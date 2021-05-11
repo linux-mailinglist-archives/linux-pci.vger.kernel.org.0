@@ -2,85 +2,274 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA40337A900
-	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 16:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C54B237A9CC
+	for <lists+linux-pci@lfdr.de>; Tue, 11 May 2021 16:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231807AbhEKOWl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 May 2021 10:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231154AbhEKOWj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 May 2021 10:22:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 443B0611CC;
-        Tue, 11 May 2021 14:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620742892;
-        bh=754tmoCujVq6lcUy8BeWkfA3aUF0gZ2lG5aHBKFhZ3w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tQIEz3IwTFUbXijv/Wx2YlxtAGBXUQfAW+URx78HUJvoivQS9TfrOKYIC0BKBgy4x
-         gD8gar4U/unzs6QO4CJtsAMBTTVw2yCiPHdM+czxxV0ONyPDI9irklHQmqStfYXNWO
-         X2JI+YHdqSJ6Hz4JzWnPg5EyNt3DDN0ys/mn6nO3i7d9LiLz5kCN9VRYrdB30KE14s
-         SrVzJssgH9JFdXZv8ALK72yytJrSou+o1ZBFkEF+jmJiie1/+t3F5Dl5Qdi6XBpE4o
-         j7LNZ/DolKP6A8W6Xcnagdi5jF0n0SsXG7bi76q4sUUj3KfoLFTFlANmNGlFIBQ+ym
-         +YqeHlYvLEAUg==
-Received: by mail-ed1-f43.google.com with SMTP id s6so23054227edu.10;
-        Tue, 11 May 2021 07:21:32 -0700 (PDT)
-X-Gm-Message-State: AOAM531uuhGC6Wk8yfP4Sa0A8AFtFTNH+5HtukWmP6mhk0zNuToFJV1n
-        htb90R/zTF0njaJzOdFKyaxF/YzKVHnymPRo0A==
-X-Google-Smtp-Source: ABdhPJz6YEH4sg1aBHVhiGqT0sRQACzH0OtRLw5u2iOJhPP/q+aSP4ABZ5LhSBxOqn6ObbdH+LmLAfnUs2+wn8l27b4=
-X-Received: by 2002:a05:6402:c9b:: with SMTP id cm27mr30368188edb.258.1620742890641;
- Tue, 11 May 2021 07:21:30 -0700 (PDT)
+        id S231823AbhEKOpq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 May 2021 10:45:46 -0400
+Received: from mail-eopbgr770085.outbound.protection.outlook.com ([40.107.77.85]:46318
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231154AbhEKOpq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 May 2021 10:45:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U7Y10rab/sp4G/TQPy1F7SRMvk8g+8PvtzkGp9Ej7VOsSXyNfU7oIxgflh5AdukMWfI6Yn0MdyTRiVyUM/e/sf6eKk/nB0xmrc09Pq+UlBXNdDrO+9xQyyd7137MltBuU6bA5dRyfNHlQ0lv5KkGyKSQlfqKrhxGN8SJKovpTrMo0YfZ8xTkWWZEkEbDQdmz/L7LwOVmzZ+49KVhJeWsHLWuQdIU20DIHBx8SqDR+kY5uG3PsQUqvbnvo6ffkpy8JupqQzwJE4WthKyNrGgBPYX0fsoueUkv30J5wF7BcrU3IdVJFH8KGUV16jBFSyuXHrGNAU5AylXKbmjsKhT+zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCI9deZayktKRRS+2BGIoi+lzJrd8kXzLp/9qZGNbjI=;
+ b=IgXZDFywi19pCHYTBjgNzRi+TjM5dbf8+rjcfCTT6NtA2OhznZ5MjVsu/vSjhmqTNluDnDMLjZtgv1O+WRY1CRcPrM89ekPbwhU80anNng80XjVMaB1K+NJEtxKz5AvldKNv96aOSM0RxBvL2Hz9AiCmQQRfMPXavBeSzVv2Brw6H9jbddlblhZXPDNs76e9NIK31Jm/aALfoN3P1Z6NtSxt1yfEMGriVQKbbJYKKaBfYYtjeHNicHL5OBFEecBKIacFEnXFBCYqzMRJ7wAbsjvYShxGidBsA7nFrCxh5WqT3LQAWJYhGSaGVTm6czAX/oAkEju3EdIrqWBs/rrptQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCI9deZayktKRRS+2BGIoi+lzJrd8kXzLp/9qZGNbjI=;
+ b=XJsFuoW9Q9Nbd+paqXtIqMXb1cKmwVl+qA0tS474H5gOxI9XX8Jjsov7jLPxSTDXeviAzHqvp1niTHTUHTAubKB7YuqPVz9WVIPQ7O80rA/BXJpP8ZTw3r/H8oQSBGIhyUMh7a9fuZDH2iuP3Od6UXoB9bWkAPUYbyw/EvDFyHw=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
+ by SN6PR12MB4765.namprd12.prod.outlook.com (2603:10b6:805:e4::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24; Tue, 11 May
+ 2021 14:44:38 +0000
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4108.031; Tue, 11 May 2021
+ 14:44:38 +0000
+Subject: Re: [PATCH v6 01/16] drm/ttm: Remap all page faults to per process
+ dummy page.
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, daniel.vetter@ffwll.ch,
+        Harry.Wentland@amd.com
+Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, helgaas@kernel.org,
+        Felix.Kuehling@amd.com
+References: <20210510163625.407105-1-andrey.grodzovsky@amd.com>
+ <20210510163625.407105-2-andrey.grodzovsky@amd.com>
+ <e4bb49b1-393d-10aa-7e18-f445d7e71ef7@gmail.com>
+From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Message-ID: <897f1ca4-9e78-1136-961e-18e6c2cbab50@amd.com>
+Date:   Tue, 11 May 2021 10:44:35 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
+In-Reply-To: <e4bb49b1-393d-10aa-7e18-f445d7e71ef7@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3]
+X-ClientProxiedBy: YTOPR0101CA0060.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::37) To SN6PR12MB4623.namprd12.prod.outlook.com
+ (2603:10b6:805:e9::17)
 MIME-Version: 1.0
-References: <20210510141509.929120-1-l.stach@pengutronix.de>
- <20210510141509.929120-3-l.stach@pengutronix.de> <20210510170510.GA276768@robh.at.kernel.org>
- <854ec10d9a32df97d1f53a784dffca4e5036b059.camel@pengutronix.de>
-In-Reply-To: <854ec10d9a32df97d1f53a784dffca4e5036b059.camel@pengutronix.de>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 May 2021 09:21:13 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+dkJ+bbuQDQieHdocjLoNKN2vib8scJsdGnCnffSGAcA@mail.gmail.com>
-Message-ID: <CAL_Jsq+dkJ+bbuQDQieHdocjLoNKN2vib8scJsdGnCnffSGAcA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] PCI: imx6: Rework PHY search and mapping
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        patchwork-lst@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3] (2607:fea8:3edf:49b0:6a5:47b8:e610:f6a3) by YTOPR0101CA0060.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.30 via Frontend Transport; Tue, 11 May 2021 14:44:36 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1c18ffd6-b6e0-495c-d44e-08d9148b4d44
+X-MS-TrafficTypeDiagnostic: SN6PR12MB4765:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB4765CC9B2CAF6C2F6EDF0258EA539@SN6PR12MB4765.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rFEVGxLP+nKxV5SHhCcaxgPRdn5/hLLAXl572o+ImeowvNokItdRTqC8N6BJskO35I6fZxWMyOT97LHfuSRn6njs4ZlSSidAHUWSHnyEIc6CaTE7ZxNrQrI/hn0LceMMsqewBoAkZIbVtDfMbvV1VawzTOZv0gUV5mNSfzyernCfBTPTCCRY999S5to7fMjMoPquRXz3cdZytrb8MLF6b8uCgA7pGDJOUlwbhbRFX6dkE+524baVbPY6c5qM1tNIA1GDGHs5Tlbp+iavs2OV5Bo4SjsBtjv909iuzh1/rFvltm/04DSWLn7Wn6GnRzNRYx5I8RScaiqLcXIxBnLBY+MWTmp8mLj0bt2huvMB29FvPX2c+0qFOSBegG70ZstBLX82YnnEUMCekVoDXsZTkQPzOE68OUKrG0ytxLQZVOuZYPZq6GQfnkgIMvxhFzZ4ID2SUpkdd/TO7DibcGbY/cB6DCE5o8FtMyFkIA4avELMAv4M7/hQdajgF9S2Q+4vRCcNN2F8SbcjhZ1bi8rb+WELm6FTJ0UW7VQdn0XdGXoAzcKxKur6WEIB0XrWJhXGktahrJUcCjtdxI6hB5wSL4hj7SCHi4eg3UiAscGg8pzP221ywsyDMCzlprq7JuavIjfzIkG0ZVaygOFXujqHL2hSXRHA7CnnkEbdheXHPeFSZ+OmgYcc5axJ/G/O7r5c
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(31696002)(66574015)(66556008)(44832011)(2906002)(6486002)(186003)(36756003)(83380400001)(8676002)(8936002)(66476007)(2616005)(6636002)(38100700002)(53546011)(16526019)(86362001)(316002)(4326008)(478600001)(66946007)(5660300002)(31686004)(52116002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Qlk1NjEyU25qdW9ocWltU0pUaW1SUWhIbDlaY3d1Sjk5YTl3VjNWbE9uM25y?=
+ =?utf-8?B?dTZ1dDNEbVFqbWRZM3R4QWFlem0yY1dUR21JMHk4ZWQwMS96TnU5b0hoa0dC?=
+ =?utf-8?B?ZXUvSTVqZjNUNkQvWmxKR3dXbTdIU0xoRzBBU05rcndzUUNNNnEwVi9HOTFl?=
+ =?utf-8?B?TFgyc1VLK3RXNTZxTzQ5cnFiemxJSzJRYU1nTng4cytqTWYzaXlFL0N3NmY3?=
+ =?utf-8?B?bzhaTGJVYndyNCtRMENweEhVblJkeWVWRkIzOVR3OUlSclNERkU3Z0trWlpL?=
+ =?utf-8?B?K25ZbXhlbS9Pd1djSHJWRnd1UnhacUVSSlh3R1BIWmQrMWpCRm96QlY4OFNr?=
+ =?utf-8?B?VEpKM1Aza1Nxc2s4bmdxWnBMcnhJUWw0UzhucWg1cWZreDc2RWs0VUZtbDNI?=
+ =?utf-8?B?NFhvU082TFNsOHpXRGtVYUhDcUdTY25mTmRRREtBUzZ5Wm1FTlgxRzBHM1Ey?=
+ =?utf-8?B?eVpZLzQ5N2lFWUxERW1IVk5RWWlheGJPS1Z0UEJpYW42dGJxclRpZ0M4TGRl?=
+ =?utf-8?B?YjJMNWFlUFZjV3B1clBkNFRmY1BrL1hybStHMnJteVJHTkdLZ3cxeTA2elEw?=
+ =?utf-8?B?ZVpBNmZrcW50cWxNamNhc0NDQllqT0VtYStSNlljMTdJQ3NNY0MwbUtXamNE?=
+ =?utf-8?B?Q1UyemtDRUEvSzNiNGJkcE9kRGZ0Y2I0ZVl5YUlWOTJOZUt3YWNVMEtkNGhQ?=
+ =?utf-8?B?Qzk5QXJDZEhGWlp6R1FDc2dYK0kyMGFuNG9JWlZ2b2dtbDJsVWUwMjZ0OTdG?=
+ =?utf-8?B?M1RqbVpuTXJFWDFaeEkwWW9NMEVwRC9YUitsOFRGeEtkZU5MV0h4S3lUdmU0?=
+ =?utf-8?B?RlZZRFJwQW4vcllNYXhZdnZxY010OVc3TEVqRTh3MlpmMzk1T3F3RHVSaDBC?=
+ =?utf-8?B?L0R6YmdUeHdLZTZ3bktmR2pVM1B1NXNzZWpHRXVzRlE0TlptaFMzSXVGUVNI?=
+ =?utf-8?B?T3NvL1R2QzQwSDA2azJXMWlxVUQ0NmtXN2U4ZmwrT3psR1Y5N0xuSEhmUmcx?=
+ =?utf-8?B?VEhzOFkzZEN1Q2NreG0ycS96NFhZdnpEdXdtTm83S0p0ZmwycC85YzBQQjNr?=
+ =?utf-8?B?WktURFFkdUIzcy83UFpYeWlFbDhQTjI5QlF0Q290L3h4cUVJSG03YzJuMVNI?=
+ =?utf-8?B?RE10K0NxTTRWYW1GcFRkeklqeW45UlR0K2I5T0R0c2JiektyOXdQLzErdWti?=
+ =?utf-8?B?YmxGWEo1V3ZwRWJJeUhpb253Vjk4MzRnaUtMRnFJcVBRWm9BT2U5ZVVHQVI4?=
+ =?utf-8?B?aGdyRFAvd21FcEhUMzBBQUhWQThNWnJOc0FSYzJFcW9seEY5b0lSbTFpRmk0?=
+ =?utf-8?B?Vm45NTlRNmpzNUNBRURXM3JnSjhzUytwMlE1U0ZkV2FYSEYxUldjR0dBRGdN?=
+ =?utf-8?B?cEM1eER2RDJPRDQ0R2dNT2dHbHBFYmJQcVFlSzRCSExvamdTWHplOFhQSkRm?=
+ =?utf-8?B?NFhtcEFEUGJwdER3Mms0a292WG1sdWpMY1JlU3hhbTAxWlFZeGZ0d285OEpX?=
+ =?utf-8?B?MXRzOXJyQnl1eGxLMnFaREdBbVFxaWdYN01MV3JabXVOMHFxQjZVazFKSHg1?=
+ =?utf-8?B?Z2JSRWRUS3Z6ZlI5bFhHVnpWVHkrL0o0S1pmT2VmRFVVV1hTbkw3T0hTUTky?=
+ =?utf-8?B?QzZOU1h6YWtnL0h5Vk9VK1ZsSmdGNEkyb1JLaTgzWFdZcFRNMjA0YmwvWjMy?=
+ =?utf-8?B?SmR5eWY1Z0gzWEVMQkNHWTdET2xuaTRqT3BjZlhOc2sxSnA2WjlRSzBsU04r?=
+ =?utf-8?B?U2srQW9zSnlMMk9MYzMwUjhuUTlUS0s4NXc1VzZXM21zYnB4TCtuN0x1a2Ey?=
+ =?utf-8?B?MnhXOHIyYnlZdFlNRmUwMU93dk5Zc1VFUEh2SUVyQkkyNGxVQ1FsbFFuckRi?=
+ =?utf-8?Q?ZQGao5E6WjbrJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c18ffd6-b6e0-495c-d44e-08d9148b4d44
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2021 14:44:38.1340
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L/lVtaRPpMwGqtPqt5TJ+FIS1UNQkJVsTXhGXXfDuNuFwrEaNTXj+GP4CwZ4WfS283QYi5c6/UuhwdvK77nw+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4765
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 11, 2021 at 3:11 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+
+On 2021-05-11 2:38 a.m., Christian König wrote:
+> Am 10.05.21 um 18:36 schrieb Andrey Grodzovsky:
+>> On device removal reroute all CPU mappings to dummy page.
+>>
+>> v3:
+>> Remove loop to find DRM file and instead access it
+>> by vma->vm_file->private_data. Move dummy page installation
+>> into a separate function.
+>>
+>> v4:
+>> Map the entire BOs VA space into on demand allocated dummy page
+>> on the first fault for that BO.
+>>
+>> v5: Remove duplicate return.
+>>
+>> v6: Polish ttm_bo_vm_dummy_page, remove superflous code.
+>>
+>> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+>> ---
+>>   drivers/gpu/drm/ttm/ttm_bo_vm.c | 57 ++++++++++++++++++++++++++++++++-
+>>   include/drm/ttm/ttm_bo_api.h    |  2 ++
+>>   2 files changed, 58 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c 
+>> b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+>> index b31b18058965..e5a9615519d1 100644
+>> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
+>> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+>> @@ -34,6 +34,8 @@
+>>   #include <drm/ttm/ttm_bo_driver.h>
+>>   #include <drm/ttm/ttm_placement.h>
+>>   #include <drm/drm_vma_manager.h>
+>> +#include <drm/drm_drv.h>
+>> +#include <drm/drm_managed.h>
+>>   #include <linux/mm.h>
+>>   #include <linux/pfn_t.h>
+>>   #include <linux/rbtree.h>
+>> @@ -380,19 +382,72 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct 
+>> vm_fault *vmf,
+>>   }
+>>   EXPORT_SYMBOL(ttm_bo_vm_fault_reserved);
+>>   +static void ttm_bo_release_dummy_page(struct drm_device *dev, void 
+>> *res)
+>> +{
+>> +    struct page *dummy_page = (struct page *)res;
+>> +
+>> +    __free_page(dummy_page);
+>> +}
+>> +
+>> +vm_fault_t ttm_bo_vm_dummy_page(struct vm_fault *vmf, pgprot_t prot)
+>> +{
+>> +    struct vm_area_struct *vma = vmf->vma;
+>> +    struct ttm_buffer_object *bo = vma->vm_private_data;
+>> +    struct drm_device *ddev = bo->base.dev;
+>> +    vm_fault_t ret = VM_FAULT_NOPAGE;
+>> +    unsigned long address;
+>> +    unsigned long pfn;
+>> +    struct page *page;
+>> +
+>> +    /* Allocate new dummy page to map all the VA range in this VMA 
+>> to it*/
+>> +    page = alloc_page(GFP_KERNEL | __GFP_ZERO);
+>> +    if (!page)
+>> +        return VM_FAULT_OOM;
+>> +
+>> +    pfn = page_to_pfn(page);
+>> +
+>> +    /* Prefault the entire VMA range right away to avoid further 
+>> faults */
+>> +    for (address = vma->vm_start; address < vma->vm_end; address += 
+>> PAGE_SIZE) {
+>> +
 >
-> Am Montag, dem 10.05.2021 um 12:05 -0500 schrieb Rob Herring:
-> > On Mon, May 10, 2021 at 04:15:05PM +0200, Lucas Stach wrote:
-> > > We don't need to have a phandle of the PHY, as we know the compatible
-> > > of the node we are looking for. This will make it easier to put add
-> > > more PHY handling for new generations later on, where the
-> > > "fsl,imx7d-pcie-phy" phandle would be a misnomer.
-> > >
-> > > Also we can use a helper function to get the resource for us,
-> > > simplifying out driver code a bit.
-> >
-> > Better yes, but really all the phy handling should be split out to
-> > its own driver even in the older h/w with shared phy registers.
-> >
-> That would be a quite massive DT binding changing break, possibly even
-> a separate driver. Maybe it's time to do this for i.MX8MM, as the
-> current driver just kept piling on special cases for "almost the same"
-> hardware that by now looks quite different to the original i.MX6 PCIe
-> integration this driver was supposed to handle.
+>> +        if (unlikely(address >= vma->vm_end))
+>> +            break;
+>
+> That extra check can be removed as far as I can see.
+>
+>
+>> +
+>> +        if (vma->vm_flags & VM_MIXEDMAP)
+>> +            ret = vmf_insert_mixed_prot(vma, address,
+>> +                            __pfn_to_pfn_t(pfn, PFN_DEV),
+>> +                            prot);
+>> +        else
+>> +            ret = vmf_insert_pfn_prot(vma, address, pfn, prot);
+>> +    }
+>> +
+>
+>> +    /* Set the page to be freed using drmm release action */
+>> +    if (drmm_add_action_or_reset(ddev, ttm_bo_release_dummy_page, 
+>> page))
+>> +        return VM_FAULT_OOM;
+>
+> You should probably move that before inserting the page into the VMA 
+> and also free the allocated page if it goes wrong.
 
-No, you don't need to change DT, and a DT change adding a phy node
-wouldn't even be correct modeling of the h/w IMO. For the i.MX6 phy, a
-separate PHY driver would have to create its own platform device in
-its initcall (if the iMX6 PCI compatible is found). Then the PCI
-driver would need to use a non-DT based phy_get() lookup. For the
-cases with a phandle to the phy, I'd assume a phy driver could be
-instantiated for that node. You'll again need a non-DT phy_get() if
-not using the phy binding.
 
-Rob
+drmm_add_action_or_reset will automatically release the page if the add 
+action fails, that the 'reset' part of the function.
+
+Andrey
+
+
+>
+> Apart from that patch looks good to me,
+> Christian.
+>
+>> +
+>> +    return ret;
+>> +}
+>> +EXPORT_SYMBOL(ttm_bo_vm_dummy_page);
+>> +
+>>   vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+>>   {
+>>       struct vm_area_struct *vma = vmf->vma;
+>>       pgprot_t prot;
+>>       struct ttm_buffer_object *bo = vma->vm_private_data;
+>> +    struct drm_device *ddev = bo->base.dev;
+>>       vm_fault_t ret;
+>> +    int idx;
+>>         ret = ttm_bo_vm_reserve(bo, vmf);
+>>       if (ret)
+>>           return ret;
+>>         prot = vma->vm_page_prot;
+>> -    ret = ttm_bo_vm_fault_reserved(vmf, prot, 
+>> TTM_BO_VM_NUM_PREFAULT, 1);
+>> +    if (drm_dev_enter(ddev, &idx)) {
+>> +        ret = ttm_bo_vm_fault_reserved(vmf, prot, 
+>> TTM_BO_VM_NUM_PREFAULT, 1);
+>> +        drm_dev_exit(idx);
+>> +    } else {
+>> +        ret = ttm_bo_vm_dummy_page(vmf, prot);
+>> +    }
+>>       if (ret == VM_FAULT_RETRY && !(vmf->flags & 
+>> FAULT_FLAG_RETRY_NOWAIT))
+>>           return ret;
+>>   diff --git a/include/drm/ttm/ttm_bo_api.h 
+>> b/include/drm/ttm/ttm_bo_api.h
+>> index 639521880c29..254ede97f8e3 100644
+>> --- a/include/drm/ttm/ttm_bo_api.h
+>> +++ b/include/drm/ttm/ttm_bo_api.h
+>> @@ -620,4 +620,6 @@ int ttm_bo_vm_access(struct vm_area_struct *vma, 
+>> unsigned long addr,
+>>                void *buf, int len, int write);
+>>   bool ttm_bo_delayed_delete(struct ttm_device *bdev, bool remove_all);
+>>   +vm_fault_t ttm_bo_vm_dummy_page(struct vm_fault *vmf, pgprot_t prot);
+>> +
+>>   #endif
+>
