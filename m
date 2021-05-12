@@ -2,284 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D53037B77F
-	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 10:07:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF0537BCC5
+	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 14:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230154AbhELIIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 May 2021 04:08:22 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51404 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbhELIIW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 May 2021 04:08:22 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id C18F020B7178; Wed, 12 May 2021 01:07:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C18F020B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1620806834;
-        bh=ONMUm9lGQb0L+PrjIyabqO4fxeAhk5qGinvEBfGFW50=;
-        h=From:To:Cc:Subject:Date:From;
-        b=V8O3IdMmNHNOqBI7ZYNB9Gp6GBaxst/A9k6HOUoYKz0QZOkrdJ3CjglMrYocF8LGr
-         3b0qKQrCEsX+Akyjd7idsv+oJF2w8n0RMRP0VvE60Br6JpdHR+9/mzDAxjAImjdudf
-         AkMYKifl3pDBTAOaXrP8TXOiChUP6g8nflX060gE=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
+        id S233296AbhELMrq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 May 2021 08:47:46 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3066 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233299AbhELMrp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 May 2021 08:47:45 -0400
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FgDsc0fVPz6cvjj;
+        Wed, 12 May 2021 20:40:36 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 12 May 2021 14:46:35 +0200
+Received: from localhost (10.52.125.138) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 12 May
+ 2021 13:46:34 +0100
+Date:   Wed, 12 May 2021 13:44:51 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH] PCI: hv: Move completion variable from stack to heap in hv_compose_msi_msg()
-Date:   Wed, 12 May 2021 01:07:04 -0700
-Message-Id: <1620806824-31151-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        <linux-acpi@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+Message-ID: <20210512134451.000070c5@Huawei.com>
+In-Reply-To: <20210507231013.GA1548806@bjorn-Precision-5520>
+References: <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
+        <20210507231013.GA1548806@bjorn-Precision-5520>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.125.138]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On Fri, 7 May 2021 18:10:13 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-hv_compose_msi_msg() may be called with interrupt disabled. It calls
-wait_for_completion() in a loop and may exit the loop earlier if the device is
-being ejected or it's hitting other errors. However the VSP may send
-completion packet after the loop exit and the completion variable is no
-longer valid on the stack. This results in a kernel oops.
+Thanks. All updates as per your comments.
 
-Fix this by relocating completion variable from stack to heap, and use hbus
-to maintain a list of leftover completions for future cleanup if necessary.
+> > +static int pci_doe_register(struct pci_doe *doe)
+> > +{
+> > +	struct pci_dev *pdev = doe->pdev;
+> > +	bool poll = !pci_dev_msi_enabled(pdev);
+> > +	int rc, irq;
+> > +	u32 val;
+> > +
+> > +	pci_read_config_dword(pdev, doe->cap + PCI_DOE_CAP, &val);
+> > +
+> > +	if (!poll && FIELD_GET(PCI_DOE_CAP_INT, val)) {
+> > +		irq = pci_irq_vector(pdev, FIELD_GET(PCI_DOE_CAP_IRQ, val));
+> > +		if (irq < 0)
+> > +			return irq;
+> > +
+> > +		rc = request_irq(irq, pci_doe_irq, 0, "DOE", doe);  
+> 
+> I expect there may be many devices with DOE.  Do you want some
+> device identification here?  E.g., on my system I see things like this
+> in /proc/interrupts:
+> 
+>   dmar0
+>   nvme0q0
+>   snd_hda_intel:card0
+>   ahci[0000:00:17.0]
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- drivers/pci/controller/pci-hyperv.c | 97 +++++++++++++++++++----------
- 1 file changed, 65 insertions(+), 32 deletions(-)
+Good point.  For this I've currently gone with
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9499ae3275fe..29fe26e2193c 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -473,6 +473,9 @@ struct hv_pcibus_device {
- 	struct msi_controller msi_chip;
- 	struct irq_domain *irq_domain;
- 
-+	struct list_head compose_msi_msg_ctxt_list;
-+	spinlock_t compose_msi_msg_ctxt_list_lock;
-+
- 	spinlock_t retarget_msi_interrupt_lock;
- 
- 	struct workqueue_struct *wq;
-@@ -552,6 +555,17 @@ struct hv_pci_compl {
- 	s32 completion_status;
- };
- 
-+struct compose_comp_ctxt {
-+	struct hv_pci_compl comp_pkt;
-+	struct tran_int_desc int_desc;
-+};
-+
-+struct compose_msi_msg_ctxt {
-+	struct list_head list;
-+	struct pci_packet pci_pkt;
-+	struct compose_comp_ctxt comp;
-+};
-+
- static void hv_pci_onchannelcallback(void *context);
- 
- /**
-@@ -1293,11 +1307,6 @@ static void hv_irq_unmask(struct irq_data *data)
- 	pci_msi_unmask_irq(data);
- }
- 
--struct compose_comp_ctxt {
--	struct hv_pci_compl comp_pkt;
--	struct tran_int_desc int_desc;
--};
--
- static void hv_pci_compose_compl(void *context, struct pci_response *resp,
- 				 int resp_packet_size)
- {
-@@ -1373,16 +1382,12 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	struct pci_bus *pbus;
- 	struct pci_dev *pdev;
- 	struct cpumask *dest;
--	struct compose_comp_ctxt comp;
- 	struct tran_int_desc *int_desc;
--	struct {
--		struct pci_packet pci_pkt;
--		union {
--			struct pci_create_interrupt v1;
--			struct pci_create_interrupt2 v2;
--		} int_pkts;
--	} __packed ctxt;
--
-+	struct compose_msi_msg_ctxt *ctxt;
-+	union {
-+		struct pci_create_interrupt v1;
-+		struct pci_create_interrupt2 v2;
-+	} int_pkts;
- 	u32 size;
- 	int ret;
- 
-@@ -1402,18 +1407,24 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		hv_int_desc_free(hpdev, int_desc);
- 	}
- 
-+	ctxt = kzalloc(sizeof(*ctxt), GFP_ATOMIC);
-+	if (!ctxt)
-+		goto drop_reference;
-+
- 	int_desc = kzalloc(sizeof(*int_desc), GFP_ATOMIC);
--	if (!int_desc)
-+	if (!int_desc) {
-+		kfree(ctxt);
- 		goto drop_reference;
-+	}
- 
--	memset(&ctxt, 0, sizeof(ctxt));
--	init_completion(&comp.comp_pkt.host_event);
--	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
--	ctxt.pci_pkt.compl_ctxt = &comp;
-+	memset(ctxt, 0, sizeof(*ctxt));
-+	init_completion(&ctxt->comp.comp_pkt.host_event);
-+	ctxt->pci_pkt.completion_func = hv_pci_compose_compl;
-+	ctxt->pci_pkt.compl_ctxt = &ctxt->comp;
- 
- 	switch (hbus->protocol_version) {
- 	case PCI_PROTOCOL_VERSION_1_1:
--		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
-+		size = hv_compose_msi_req_v1(&int_pkts.v1,
- 					dest,
- 					hpdev->desc.win_slot.slot,
- 					cfg->vector);
-@@ -1421,7 +1432,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
- 	case PCI_PROTOCOL_VERSION_1_3:
--		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
-+		size = hv_compose_msi_req_v2(&int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
- 					cfg->vector);
-@@ -1434,17 +1445,18 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		 */
- 		dev_err(&hbus->hdev->device,
- 			"Unexpected vPCI protocol, update driver.");
-+		kfree(ctxt);
- 		goto free_int_desc;
- 	}
- 
--	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
--			       size, (unsigned long)&ctxt.pci_pkt,
-+	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &int_pkts,
-+			       size, (unsigned long)&ctxt->pci_pkt,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret) {
- 		dev_err(&hbus->hdev->device,
--			"Sending request for interrupt failed: 0x%x",
--			comp.comp_pkt.completion_status);
-+			"Sending request for interrupt failed: 0x%x", ret);
-+		kfree(ctxt);
- 		goto free_int_desc;
- 	}
- 
-@@ -1458,7 +1470,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	 * Since this function is called with IRQ locks held, can't
- 	 * do normal wait for completion; instead poll.
- 	 */
--	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
-+	while (!try_wait_for_completion(&ctxt->comp.comp_pkt.host_event)) {
- 		unsigned long flags;
- 
- 		/* 0xFFFF means an invalid PCI VENDOR ID. */
-@@ -1494,10 +1506,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- 	tasklet_enable(&channel->callback_event);
- 
--	if (comp.comp_pkt.completion_status < 0) {
-+	if (ctxt->comp.comp_pkt.completion_status < 0) {
- 		dev_err(&hbus->hdev->device,
- 			"Request for interrupt failed: 0x%x",
--			comp.comp_pkt.completion_status);
-+			ctxt->comp.comp_pkt.completion_status);
-+		kfree(ctxt);
- 		goto free_int_desc;
- 	}
- 
-@@ -1506,23 +1519,36 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	 * irq_set_chip_data() here would be appropriate, but the lock it takes
- 	 * is already held.
- 	 */
--	*int_desc = comp.int_desc;
-+	*int_desc = ctxt->comp.int_desc;
- 	data->chip_data = int_desc;
- 
- 	/* Pass up the result. */
--	msg->address_hi = comp.int_desc.address >> 32;
--	msg->address_lo = comp.int_desc.address & 0xffffffff;
--	msg->data = comp.int_desc.data;
-+	msg->address_hi = ctxt->comp.int_desc.address >> 32;
-+	msg->address_lo = ctxt->comp.int_desc.address & 0xffffffff;
-+	msg->data = ctxt->comp.int_desc.data;
- 
- 	put_pcichild(hpdev);
-+	kfree(ctxt);
- 	return;
- 
- enable_tasklet:
- 	tasklet_enable(&channel->callback_event);
-+
-+	/*
-+	 * Move uncompleted context to the leftover list.
-+	 * The host may send completion at a later time, and we ignore this
-+	 * completion but keep the memory reference valid.
-+	 */
-+	spin_lock(&hbus->compose_msi_msg_ctxt_list_lock);
-+	list_add_tail(&ctxt->list, &hbus->compose_msi_msg_ctxt_list);
-+	spin_unlock(&hbus->compose_msi_msg_ctxt_list_lock);
-+
- free_int_desc:
- 	kfree(int_desc);
-+
- drop_reference:
- 	put_pcichild(hpdev);
-+
- return_null_message:
- 	msg->address_hi = 0;
- 	msg->address_lo = 0;
-@@ -3076,9 +3102,11 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	INIT_LIST_HEAD(&hbus->children);
- 	INIT_LIST_HEAD(&hbus->dr_list);
- 	INIT_LIST_HEAD(&hbus->resources_for_children);
-+	INIT_LIST_HEAD(&hbus->compose_msi_msg_ctxt_list);
- 	spin_lock_init(&hbus->config_lock);
- 	spin_lock_init(&hbus->device_list_lock);
- 	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
-+	spin_lock_init(&hbus->compose_msi_msg_ctxt_list_lock);
- 	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
- 					   hbus->sysdata.domain);
- 	if (!hbus->wq) {
-@@ -3282,6 +3310,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- static int hv_pci_remove(struct hv_device *hdev)
- {
- 	struct hv_pcibus_device *hbus;
-+	struct compose_msi_msg_ctxt *ctxt, *tmp;
- 	int ret;
- 
- 	hbus = hv_get_drvdata(hdev);
-@@ -3318,6 +3347,10 @@ static int hv_pci_remove(struct hv_device *hdev)
- 
- 	hv_put_dom_num(hbus->sysdata.domain);
- 
-+	list_for_each_entry_safe(ctxt, tmp, &hbus->compose_msi_msg_ctxt_list, list) {
-+		list_del(&ctxt->list);
-+		kfree(ctxt);
-+	}
- 	kfree(hbus);
- 	return ret;
- }
--- 
-2.27.0
+DOE[0000:00:81.0]_160
+DOE[0000:00:81.0]_190
+
+etc as a single function can have multiple DOE instances
+and the easiest way to distinguish them is the offset at
+which the capability is found in config space of the device.
+
+I'm open to other suggestions.
+
+Jonathan
+
 
