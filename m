@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C3537D48C
-	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 23:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 560DC37D48E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 23:43:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245213AbhELSYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 May 2021 14:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60218 "EHLO mail.kernel.org"
+        id S245233AbhELSYj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 May 2021 14:24:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353211AbhELSK7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 May 2021 14:10:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8F3661948;
-        Wed, 12 May 2021 18:05:48 +0000 (UTC)
+        id S1353347AbhELSLV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 May 2021 14:11:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 553226143B;
+        Wed, 12 May 2021 18:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842750;
-        bh=LBUiWkUiNLs9ar18JzgmZtwMR793r1nSTlH0UvyhSQ4=;
+        s=k20201202; t=1620842769;
+        bh=GHNW1VEkKb55FmHjQlxYLF5p1T+n36T/oqo5B8UjFYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8hJTEt1KTgYqqQ1MxNr/pa5f30+52DhWoUQh+bTsoNrbTSCJjTdS1CbHFLBW2oFb
-         0zUvzgwgN42KuDeebcJRbcVBVr4+cLu2zsvPWPFqRE8Ci2wTh6MS4M13dpCoOxVAvd
-         LltMDUWFS3UJwPrrPtROvyRPnkDTeSWca1f+cCOWkdyTRpvIs17+PSqo7nrMwwfnMj
-         UcUoQc91ycK8OIeQ5Kv2Rnl9h2KBlWdGAbnbPplHyA0UYxVZ6lXu1hsbtemnakreVN
-         JzvdTpiajVLxzFClC0WKBiC08uTKLBAeWKSWensc8AbNi3zRgk5M1WzsZGWX8Jnmew
-         kMMCbc3wkUHEw==
+        b=J3iKl31njHXPjxv/kAGnQtpBeBR1TI1oR7Gz8wFqMBrD0bCnFTacuA3w457F8NQHZ
+         UiXhbBzFjnBGqGxRpvkcrXG3eaBMmjz0/D67NVlXB+DEAEfV3Y1g4RbCIuzi4Kd11y
+         a0Wb/XgkqHSrbL56YoLKSJGHAt9oPkZIDo/eRgNIMDGmqCTKonpelCJdJ/9gQ/Ur7+
+         JXYUkLju5j9XO1yiZPM3st+y84hwAJg7i+iSA9GpqTy02SEXAiV06ZSwTbWT3HWaBr
+         qLc6kHXXC7ASocjxukJKHavIEmligBJETZyUbkHQtpWvNetFyjXlZdOMxpt46plYIP
+         eMaQkgOkhG61w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Feilong Lin <linfeilong@huawei.com>,
@@ -31,12 +31,12 @@ Cc:     Feilong Lin <linfeilong@huawei.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 2/7] ACPI / hotplug / PCI: Fix reference count leak in enable_slot()
-Date:   Wed, 12 May 2021 14:05:39 -0400
-Message-Id: <20210512180545.665946-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 2/4] ACPI / hotplug / PCI: Fix reference count leak in enable_slot()
+Date:   Wed, 12 May 2021 14:06:01 -0400
+Message-Id: <20210512180604.666144-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512180545.665946-1-sashal@kernel.org>
-References: <20210512180545.665946-1-sashal@kernel.org>
+In-Reply-To: <20210512180604.666144-1-sashal@kernel.org>
+References: <20210512180604.666144-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-index 7f2b9ef185e4..f154b05f467f 100644
+index 6727471ea5b4..d0f5c526c8e6 100644
 --- a/drivers/pci/hotplug/acpiphp_glue.c
 +++ b/drivers/pci/hotplug/acpiphp_glue.c
 @@ -538,6 +538,7 @@ static void enable_slot(struct acpiphp_slot *slot)
