@@ -2,146 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D69FC37C05C
-	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 16:38:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ECE237C684
+	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 17:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231352AbhELOjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 May 2021 10:39:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3736 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbhELOjK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 May 2021 10:39:10 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FgHP83hMMzqTY6;
-        Wed, 12 May 2021 22:34:36 +0800 (CST)
-Received: from SZX1000464847.huawei.com (10.21.59.169) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 12 May 2021 22:37:56 +0800
-From:   Dongdong Liu <liudongdong3@huawei.com>
-To:     <helgaas@kernel.org>, <hch@infradead.org>,
-        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
-        <verkuil-cisco@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH V3 6/6] PCI: Enable 10-Bit tag support for PCIe RP devices
-Date:   Wed, 12 May 2021 22:37:37 +0800
-Message-ID: <20210512143737.42352-7-liudongdong3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210512143737.42352-1-liudongdong3@huawei.com>
-References: <20210512143737.42352-1-liudongdong3@huawei.com>
+        id S234630AbhELPv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 May 2021 11:51:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235091AbhELPfS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 May 2021 11:35:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 455F961C3E;
+        Wed, 12 May 2021 15:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620832672;
+        bh=zB2G4t5ozyJ72g68BGRplKf2lQRTS6CtRvJ7FVX3NWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DBjrvZcbfODq6o/u3ovhcKp34o3mQ/2g2kqOKbw7rqi0UbJcuDmNkgLMMy0M05dFs
+         mwfV7fdqIvkaHvs5FkFIxP3pQ5mW2wuelKsM0Zg1XI928MZ1g6hDtwlC/lZ6mTYtDn
+         L0yXyxJPdKzjgMXD6Vs/vdQOXuvQV+DBBKSwRDhM/LlZ9x9/DV6Qnq7MjBym4Ue3He
+         LklNFflnfSaW1SCikrvqRJriPDliUiNhIaGm2pb/3nXItDzT/4/obeOPpO0NPN/v0m
+         Pwish5sD0axq4vDEIuCSUJZyKrnPcy3P6Nd30IKN+fHXybC5E+QSyK+xdLgaNeWw/l
+         +EUyGcBOd8VUw==
+Date:   Wed, 12 May 2021 17:17:41 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mali DP Maintainers <malidp@foss.arm.com>,
+        alsa-devel@alsa-project.org, coresight@lists.linaro.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-usb@vger.kernel.org,
+        mjpeg-users@lists.sourceforge.net, netdev@vger.kernel.org,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH v2 00/40] Use ASCII subset instead of UTF-8 alternate
+ symbols
+Message-ID: <20210512171741.2870bcbc@coco.lan>
+In-Reply-To: <YJvi1L2ss5Tfi+My@mit.edu>
+References: <cover.1620823573.git.mchehab+huawei@kernel.org>
+        <YJvi1L2ss5Tfi+My@mit.edu>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.21.59.169]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe spec 5.0r1.0 section 2.2.6.2 implementation note, In configurations
-where a Requester with 10-Bit Tag Requester capability needs to target
-multiple Completers, one needs to ensure that the Requester sends 10-Bit
-Tag Requests only to Completers that have 10-Bit Tag Completer capability.
-So we enable 10-Bit Tag Requester for root port only when the devices
-under the root port support 10-Bit Tag Completer.
+Em Wed, 12 May 2021 10:14:44 -0400
+"Theodore Ts'o" <tytso@mit.edu> escreveu:
 
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
----
- drivers/pci/pcie/portdrv_pci.c | 75 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+> On Wed, May 12, 2021 at 02:50:04PM +0200, Mauro Carvalho Chehab wrote:
+> > v2:
+> > - removed EM/EN DASH conversion from this patchset; =20
+>=20
+> Are you still thinking about doing the
+>=20
+> EN DASH --> "--"
+> EM DASH --> "---"
+>=20
+> conversion? =20
 
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index c7ff1ee..baf413f 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -90,6 +90,78 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
- #define PCIE_PORTDRV_PM_OPS	NULL
- #endif /* !PM */
- 
-+static int pci_10bit_tag_comp_support(struct pci_dev *dev, void *data)
-+{
-+	u8 *support = data;
-+
-+	if (*support == 0)
-+		return 0;
-+
-+	if (!pci_is_pcie(dev)) {
-+		*support = 0;
-+		return 0;
-+	}
-+
-+	/*
-+	 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note.
-+	 * For configurations where a Requester with 10-Bit Tag Requester
-+	 * capability targets Completers where some do and some do not have
-+	 * 10-Bit Tag Completer capability, how the Requester determines which
-+	 * NPRs include 10-Bit Tags is outside the scope of this specification.
-+	 * So we do not consider hotplug scenario.
-+	 */
-+	if (dev->is_hotplug_bridge) {
-+		*support = 0;
-+		return 0;
-+	}
-+
-+	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP)) {
-+		*support = 0;
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static void pci_configure_rp_10bit_tag(struct pci_dev *dev)
-+{
-+	u8 support = 1;
-+	struct pci_dev *pchild;
-+
-+	if (dev->subordinate == NULL)
-+		return;
-+
-+	/* If no devices under the root port, no need to enable 10-Bit Tag. */
-+	pchild = list_first_entry_or_null(&dev->subordinate->devices,
-+					  struct pci_dev, bus_list);
-+	if (pchild == NULL)
-+		return;
-+
-+	pci_10bit_tag_comp_support(dev, &support);
-+	if (!support)
-+		return;
-+
-+	/*
-+	 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note.
-+	 * In configurations where a Requester with 10-Bit Tag Requester
-+	 * capability needs to target multiple Completers, one needs to ensure
-+	 * that the Requester sends 10-Bit Tag Requests only to Completers
-+	 * that have 10-Bit Tag Completer capability. So we enable 10-Bit Tag
-+	 * Requester for root port only when the devices under the root port
-+	 * support 10-Bit Tag Completer.
-+	 */
-+	pci_walk_bus(dev->subordinate, pci_10bit_tag_comp_support, &support);
-+	if (!support)
-+		return;
-+
-+	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ))
-+		return;
-+
-+	pci_dbg(dev, "enabling 10-Bit Tag Requester\n");
-+	pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
-+				 PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-+}
-+
- /*
-  * pcie_portdrv_probe - Probe PCI-Express port devices
-  * @dev: PCI-Express port device being probed
-@@ -111,6 +183,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
- 	     (type != PCI_EXP_TYPE_RC_EC)))
- 		return -ENODEV;
- 
-+	if (type == PCI_EXP_TYPE_ROOT_PORT)
-+		pci_configure_rp_10bit_tag(dev);
-+
- 	if (type == PCI_EXP_TYPE_RC_EC)
- 		pcie_link_rcec(dev);
- 
--- 
-2.7.4
+Yes, but I intend to submit it on a separate patch series, probably after
+having this one merged. Let's first cleanup the large part of the=20
+conversion-generated UTF-8 char noise ;-)
 
+> That's not going to change what the documentation will
+> look like in the HTML and PDF output forms, and I think it would make
+> life easier for people are reading and editing the Documentation/*
+> files in text form.
+
+Agreed. I'm also considering to add a couple of cases of this char:
+
+	- U+2026 ('=E2=80=A6'): HORIZONTAL ELLIPSIS
+
+As Sphinx also replaces "..." into HORIZONTAL ELLIPSIS.
+
+-
+
+Anyway, I'm opting to submitting those in separate because it seems
+that at least some maintainers added EM/EN DASH intentionally.
+
+So, it may generate case-per-case discussions.
+
+Also, IMO, at least a couple of EN/EM DASH cases would be better served=20
+with a single hyphen.
+
+Thanks,
+Mauro
