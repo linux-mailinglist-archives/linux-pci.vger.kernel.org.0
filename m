@@ -2,55 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6814037B6C9
-	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 09:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FCB237B6DC
+	for <lists+linux-pci@lfdr.de>; Wed, 12 May 2021 09:29:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbhELHYQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 May 2021 03:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbhELHYP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 May 2021 03:24:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27E7C061574
-        for <linux-pci@vger.kernel.org>; Wed, 12 May 2021 00:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=w0OefE2cE/yG1n3YZPo1nGxYNb+j7j3fnzGbjcZwh6Y=; b=q4dDhh6pDneFL9E7Pov/vCfoA4
-        +kxxGO51T++BlaAdFpDU1kvBAmnzIQ3GpTrKOxjr0bjrM9I3uVUmr809TPvwA3WZ3hsKACwe6rFml
-        Bdj7g3srgUpA3Tcu2harofHBu9JmXwomrqCeYoanvwH6XPTInp0iJWKy3c7gUP5bONQoLZKIj/O54
-        B+4klvBLUZchiYkyu0PcF9t7akoi61lxVWK4RKUJI6CsLC4wVfM0UCt+Sxho5m6Dw30uOOIp1HVo+
-        ZHbltWv5Danz3mySX2xDWZGytlOmLNzt0E+trgA/oc4DZaCpFOzZ2NFGLXC9x5LAHG/WPvZVFn95H
-        0cU/2tsg==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lgjBn-0083Oy-0s; Wed, 12 May 2021 07:21:58 +0000
-Date:   Wed, 12 May 2021 08:21:51 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI/VPD: Use unaligned access helpers in pci_vpd_read
-Message-ID: <YJuCD9WCpV+rViys@infradead.org>
-References: <5719b91c-9f91-0029-0a28-386f1cb29d31@gmail.com>
- <YJjUWulw8vkscdwg@infradead.org>
- <26a9b3ec-07dc-c474-25ad-d7082060d305@gmail.com>
+        id S229996AbhELHaP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 May 2021 03:30:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2636 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229850AbhELHaP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 May 2021 03:30:15 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Fg5tH6RkVzQlRn;
+        Wed, 12 May 2021 15:25:43 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.498.0; Wed, 12 May 2021 15:29:03 +0800
+Subject: Re: [PATCH V2 1/5] PCI: Use cached Device Capabilities 2 Register
+To:     Christoph Hellwig <hch@infradead.org>
+References: <1620745744-91316-1-git-send-email-liudongdong3@huawei.com>
+ <1620745744-91316-2-git-send-email-liudongdong3@huawei.com>
+ <YJqiEAoxcCkVAEsK@infradead.org>
+CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <9119e466-e153-52b2-051a-bdb17081872b@huawei.com>
+Date:   Wed, 12 May 2021 15:29:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26a9b3ec-07dc-c474-25ad-d7082060d305@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <YJqiEAoxcCkVAEsK@infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.235]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 09:09:02AM +0200, Heiner Kallweit wrote:
-> len can have any value 1 .. 4. Also the proposal doesn't consider
-> the skip value.
+Hi Christoph
+Many thanks for your review.
+On 2021/5/11 23:26, Christoph Hellwig wrote:
+> On Tue, May 11, 2021 at 11:09:00PM +0800, Dongdong Liu wrote:
+>> It will make sense to store the devcap2 value in the pci_dev structure
+>> instead of reading Device Capabilities 2 Register multiple times.
+>> So we add pci_init_devcap2() to get the value of devcap2, then use
+>> cached devcap2 in the needed place.
+>
+> This looks sensible.  Should the devcap field maybe grow a pcie_
+> prefix?
+Yes, It will be good to use pcie_prefix.
+> What about caching PCI_EXP_DEVCAP as well while you're at it?
+Make sense, will do.
 
-So what about just keeping the code as-is then?  The existing version
-is much easier to read than the new one, has less branching and doesn't
-use an obscure API thast should not generally be used in driver code.
+Thanks,
+Dongdong
+>
