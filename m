@@ -2,181 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59E6537EE25
-	for <lists+linux-pci@lfdr.de>; Thu, 13 May 2021 00:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62EE537EE28
+	for <lists+linux-pci@lfdr.de>; Thu, 13 May 2021 00:55:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345788AbhELVLF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 May 2021 17:11:05 -0400
-Received: from mail-sn1anam02on2042.outbound.protection.outlook.com ([40.107.96.42]:61830
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1387436AbhELUe4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 May 2021 16:34:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LDSz0qLDcvImzpKjk1qjbDmljDBdua6+8j1TwZHaQYYYHM73ZMCIte7Uvu7FZNsZURbWYgJCzoOVHfDi6+X9qo7R7461dkzROiO1np2y5sC+kih4hKCxjiNKPfb8k3p+6gGoW00A313+X8LZF2a19XPhQWmaYfUnxCO7kDNvROgjXBEvHSqO71NqSTjGx78Y0ezt3H0JgtPQS+5CVcFHNxxexs++Myhbx1JEfSKsw3CnhzTIm06+GEaef3uckvXmmGCvzoDMhIXadTRpUc51nvMLq3Eh84oHzf2CnPYF3LfHyrGYmZWNoaCrwRY9FEBsaOjuiDTEIkqK2qpCpGb0eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kHWszVmICqQue5ptWOYTNg3n20cvS3Ha0LMXWPNgxkc=;
- b=LqK/h3vX5ELrZJkuanv7GXyqA2mIKrqo4asKpX1JzSP5hZGx/JebfnSfPdzijfySPuGdPuDXktMO7tawqisvvkFCGNYanDlvSqpQu8jKkH1/V2G+erx7B4JFG1GagpWMMEHIbDMACHJKbeXVR8L2F7AV3kQgP+jKJTZUgy6itxgcRpfJWwzvSVHwOb5mHXw1bhRIKB6xZp3sVdgBXdAkFxy8cAmlNnQKh/mM5+YFyQJ2mjSrGHmsEETrogzpphKps9xhSNSyv/nfCHF9hdfE0d5IpaZPUF2Qd5pXsp7L4E7xMWcODLEEEld/WxY43laIZ24cbdFcJmgY75CBP7NXag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kHWszVmICqQue5ptWOYTNg3n20cvS3Ha0LMXWPNgxkc=;
- b=sbXyZ3YmgGJvkbV2CzT8ZhPcSRHfagHgCCU+AM456D5FhOIi9lcxqyfSN/na8LVKzDyZ0jjmJxxydr6DK3dRU1JjM4uqgok/5iLHlnurORHlXYqQNoJte7YTT5PPbGPnQPVBz6DCSMhOTJzq4j/IfthePgk6AJOSMFurMfk/q7E=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from BN9PR12MB5129.namprd12.prod.outlook.com (2603:10b6:408:136::12)
- by BN9PR12MB5257.namprd12.prod.outlook.com (2603:10b6:408:11e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.28; Wed, 12 May
- 2021 20:33:46 +0000
-Received: from BN9PR12MB5129.namprd12.prod.outlook.com
- ([fe80::3c78:e58b:fba7:b8dd]) by BN9PR12MB5129.namprd12.prod.outlook.com
- ([fe80::3c78:e58b:fba7:b8dd%6]) with mapi id 15.20.4129.025; Wed, 12 May 2021
- 20:33:46 +0000
-Subject: Re: [PATCH v7 03/16] drm/amdkfd: Split kfd suspend from device exit
-To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
-        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com
-Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
-        gregkh@linuxfoundation.org, helgaas@kernel.org
-References: <20210512142648.666476-1-andrey.grodzovsky@amd.com>
- <20210512142648.666476-4-andrey.grodzovsky@amd.com>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <d17c82ae-ce00-9496-b2ed-8761814f51fe@amd.com>
-Date:   Wed, 12 May 2021 16:33:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-In-Reply-To: <20210512142648.666476-4-andrey.grodzovsky@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [142.116.138.207]
-X-ClientProxiedBy: YT1PR01CA0083.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2d::22) To BN9PR12MB5129.namprd12.prod.outlook.com
- (2603:10b6:408:136::12)
+        id S1346115AbhELVLl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 May 2021 17:11:41 -0400
+Received: from forward100o.mail.yandex.net ([37.140.190.180]:50247 "EHLO
+        forward100o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1382753AbhELUiP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 May 2021 16:38:15 -0400
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward100o.mail.yandex.net (Yandex) with ESMTP id 5C9C44AC0389;
+        Wed, 12 May 2021 23:36:48 +0300 (MSK)
+Received: from vla1-b67ee7b88a11.qloud-c.yandex.net (vla1-b67ee7b88a11.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:3789:0:640:b67e:e7b8])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id 56BE57080002;
+        Wed, 12 May 2021 23:36:48 +0300 (MSK)
+Received: from vla5-47b3f4751bc4.qloud-c.yandex.net (vla5-47b3f4751bc4.qloud-c.yandex.net [2a02:6b8:c18:3508:0:640:47b3:f475])
+        by vla1-b67ee7b88a11.qloud-c.yandex.net (mxback/Yandex) with ESMTP id Gjmc3gmvNr-amI0TsCL;
+        Wed, 12 May 2021 23:36:48 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1620851808;
+        bh=V8Ux2fmBLrUWCWlnYdbeVm97FFnT4+x+mBhC/t21xis=;
+        h=In-Reply-To:Cc:To:From:Subject:Message-ID:References:Date;
+        b=mp5RrhKFvF945voP4e1Ob4bQ6fY7jxnYX8Yy6JJniQKxi3bw4k7lVQf4MjLRVdmhV
+         OJHMqpJXsbLbFcm9Xkm2f72u1TdoHZ6gjcrAA5390ObZuhiCxGHgVDa/Ub2mz/Pjp5
+         ooOpYMummOxLJS7uhkaMVDfZ0YjD9h6ekxx/cs38=
+Authentication-Results: vla1-b67ee7b88a11.qloud-c.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by vla5-47b3f4751bc4.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ZoulYOWW3x-alMqeaZd;
+        Wed, 12 May 2021 23:36:47 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Message-ID: <949ea2de32241807b781f119fb14390e92845081.camel@yandex.ru>
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
+ s2idle
+From:   Konstantin Kharlamov <hi-angel@yandex.ru>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-pm@vger.kernel.org
+Date:   Wed, 12 May 2021 23:36:47 +0300
+In-Reply-To: <8ddea02fc6d37f7c444a1e90c9f03d7656ffe957.camel@yandex.ru>
+References: <20210507133002.GA1499665@bjorn-Precision-5520>
+         <8ddea02fc6d37f7c444a1e90c9f03d7656ffe957.camel@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.1 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.2.100] (142.116.138.207) by YT1PR01CA0083.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2d::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.30 via Frontend Transport; Wed, 12 May 2021 20:33:45 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 36b10551-d1e0-4450-e5f1-08d915853dd1
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5257:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN9PR12MB52573AAE1F4D4FDCBE1500D292529@BN9PR12MB5257.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zD3tN95r/V9FB4vwSm933sdU4ZhdWqKXy23sCFzd6Un2VhYr5WHDMxkAlP5QxkcRzfs7bC7QRQK7/e8tXB0I1ZAOag4IrZT6ZnhTGb2pQia2yFLvtqgMWLYfHKMW9UFib2s2cbFVLcg8N0crYTFh9PQRAz+koca8fXjGqykWpkCib4ryJcDcCWPmFZr5AD0WivcatbhmfqxFWfFdve3EqD9pNR4Atp3/jn3FZiTfPoQYh9E3MeWQFxc3A9vcpZs2EteEkjiKoeO+/tnVz35jbwNEH2HM9NLMLg+tQ+OZRnThPR5+9S1/GkdlBvOj9OOv+iq2YqhdK/aqYxYjP2jU2+D7A6i9ReTfY6+mxgrRgZK9RT46FW9z/cxRRK2KI8p9AZ6RRbRmqKIABQV6Sc03C+khlMmZwn6Z8j2pTI5BliX5YQZ5w3eyA0TVaatJD6t//KXZtkNP/DK8IaDHYspAIVql29uKfK8H51JA8S0qJNox/VDO2/8JS8XoSOalvx3OdEK2adz9vQ3+o/fgeZnaWttKEXwfN11H2WPvAFH6XFGL6IZYwxsP6ieC5PqFfZB1YmtsCNP6fgTWUAyWHPwZMs81Dd6AN+po6ejhy8waHxIlo2Ko0GP/y7W1u5wnyF4uhVwYLjLrCmA63JCPogQe8+aYTaSTz2JvkeucghFXNjw+bPGEO35y9+fxzDsp6GO5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5129.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(66946007)(66476007)(66556008)(186003)(26005)(38100700002)(86362001)(6486002)(316002)(6636002)(44832011)(16576012)(16526019)(956004)(2906002)(478600001)(31696002)(31686004)(5660300002)(83380400001)(2616005)(4326008)(36756003)(8676002)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?RFNoQVZnU0k2SlZoTzZGRkNUVUtCZkFwYXNPOTlOV2YwdkQ2b1JqTFpoSHc3?=
- =?utf-8?B?bGNlQzZmamRtUlB2RnpaVnFISFlWUGFzbGVXSVFlYXNxNzE3ZFgydml6YWtx?=
- =?utf-8?B?UldBakFaZXRubEdtUlFHVUQ2bnRadEJ2M0ZNWTFaWDFIbzF5ZnVrcVhwamU3?=
- =?utf-8?B?QmFwd0dhZkdEVWttcFRSMjBPZ2VaNlY5ZDBnM0M1amNKNndSeTFxL0h4TVVt?=
- =?utf-8?B?UDhMNzdFY0FkUkdJV2NWWDJrNlVONjk1QjE3RmhwVmJPTVpvVEFxcitRZkNN?=
- =?utf-8?B?ZFVHSU5COE1DUFlRdDVFWExRTzdjU1pEQ2RCdm83bU51QkJ3SWRlclRBS3Bs?=
- =?utf-8?B?Zy95dzJOdjMwWEpEMFZaMnIxTlZqRXU0dDhhWXQxWHFwLzFXL2NCREtncmd2?=
- =?utf-8?B?T2dVNUdpVHRneUZVemFoWU1jNTNxRUlrVkRaSFh3TlhiUFYxa1dDSlFpS2Ew?=
- =?utf-8?B?ZEYrZEhhWW1vNVFYQkNOdlh4a0FoWWM1T25GbmVtWVhmU2hTZmhRMVNIeHhQ?=
- =?utf-8?B?aWVqOE96dHVaT1J0SUxpVTY4bEd5OUZOQ1ZKUXNnV1dldjRkQjdHaUxqaTdy?=
- =?utf-8?B?akhMNlJlUmtOTTcrbHlEZ1VONlF0dGhXazFKcG1RbHhQVmFveldTSWNnUzZK?=
- =?utf-8?B?MDBxOW1XR0kzOGRQVnNmQXkxc3BzelJ6ejFuODlReFEzdGtKb2twQVVDZVd3?=
- =?utf-8?B?V0FJWDhiTEtnR2VzaEtnN1k5WWpyMzM4VC9EOEpoUmxRZHU2dndVdEhTcmlw?=
- =?utf-8?B?TnJIU3NSVzMreVVZbFRMSU05WVVoelk3U1dNS3BSUkN6WGZIR3U0ZVRacjda?=
- =?utf-8?B?YlZZeDlRTzY2d2NUUlR2MUhuOTlmdTdCai81ZkNVTkxkL0pRVnJFczhqbUVD?=
- =?utf-8?B?MUhQcUUvZ1d1TXlpVFhVMEFoSTRmVTI5WHBzN1gzUDE1VE9VT3BTQkRDSGJw?=
- =?utf-8?B?eTVXQWJEVkEzeXNmYVpWQ28vbjh1aDhDVjFFZkNURGk3YjFzNEJYNDROWXBR?=
- =?utf-8?B?THJOaEtYTTZ2eWJ1MjdqMmd0aDNlMlVLUDhxamNUV0s1OWZoSDg4Q09ZQnRX?=
- =?utf-8?B?SnpCWm5ZNGdFbEc0aFAxUSt1d3VkTElQc0QxRDJ0NDB0VkRKdzh1RWo1R3FE?=
- =?utf-8?B?K1h2Ny9OT0E2NUVYYVFNNlpkazlabkJVa045WExHeFZVbmh5RFh1VkdIbWhL?=
- =?utf-8?B?OGFTTU5QemJGcVlUek5FNGo3dHdGdUF6NjAyT3RVN2ZwL2kwRGVqczJtYjVO?=
- =?utf-8?B?akdiT2R4aWZqWTd3NHRZaHBSOEkvRmQ5S3ZBL01LRGdQT2h0YVgxY1ZHNUlT?=
- =?utf-8?B?aFBMNlNsenhHOXpYYW9XQTQ3akFLV3J3clQzTGVITG1BL1lRNFQ4L2NDVnVr?=
- =?utf-8?B?d25SNVV2akdlZ1hxQ3I5RFN0Nm1HdnBuWFFUZGdEdVhvYTN0YnFYdnRKdXN1?=
- =?utf-8?B?R0U4aUdpcGxud0NGMVJETUkwcWZCTzdqbzZSZHBTYURvNG56TW9USGJKYldi?=
- =?utf-8?B?cEU3ZXpqempZWndTY2ZtcTl1Z3NDQWFaeWFxcWgrRVUxZmFKcTFvcHVtNitQ?=
- =?utf-8?B?T3lWRmdMeGJEdThiUGhIczVCZG5LMDJvdHBqMnhsSkJTQldqL1p5OGxHOVcy?=
- =?utf-8?B?THhEemJJRCtpWFpKeGN5eWwwV0kzbi9McWdib29abjRPNldUT2dzaTB4ZTJT?=
- =?utf-8?B?RG8xL2JwWVlyVFkvd0tuVkhoelZwWjJqcGVjZ3dtbW5kaUg4TE90NklENUZq?=
- =?utf-8?Q?LvSGmARPbPjK2CgT3D4Vib7yQEda002HPzSOEf4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36b10551-d1e0-4450-e5f1-08d915853dd1
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5129.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2021 20:33:46.3377
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iaKI98/KeBwuPKkEnPMGqdxKKcY37Y/LzxMk/cEYONLjndYAiVzv2r3zkd9/TC8rd210hbaENDsCaqyrZ/WWuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5257
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 2021-05-12 um 10:26 a.m. schrieb Andrey Grodzovsky:
-> Helps to expdite HW related stuff to amdgpu_pci_remove
->
-> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c | 2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h | 2 +-
->  drivers/gpu/drm/amd/amdkfd/kfd_device.c    | 3 ++-
->  3 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
-> index 5f6696a3c778..2b06dee9a0ce 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
-> @@ -170,7 +170,7 @@ void amdgpu_amdkfd_device_init(struct amdgpu_device *adev)
->  	}
->  }
->  
-> -void amdgpu_amdkfd_device_fini(struct amdgpu_device *adev)
-> +void amdgpu_amdkfd_device_fini_sw(struct amdgpu_device *adev)
+Bjorn: so, given this and other comments, what's the decision on this patch? Any
+particular changes I should do for it to be accepted?
 
-You're renaming this function, but I don't see you fixing up any of the
-callers. Looks like you do that in the next patch. So this patch breaks
-the build, the next one fixes it. Maybe you need to refactor this or
-just squash the two patches.
+On Fri, 2021-05-07 at 17:08 +0300, Konstantin Kharlamov wrote:
+> On Fri, 2021-05-07 at 08:30 -0500, Bjorn Helgaas wrote:
+> > On Fri, May 07, 2021 at 12:07:38AM +0200, Lukas Wunner wrote:
+> > > On Thu, May 06, 2021 at 04:48:42PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
+> > > > > On Macbook 2013 resuming from s2idle results in external monitor no
+> > > > > longer being detected, and dmesg having errors like:
+> > > > > 
+> > > > >     pcieport 0000:06:00.0: can't change power state from D3hot to D0
+> > > > > (config space inaccessible)
+> > > > > 
+> > > > > and a stacktrace. The reason turned out that the hw that the quirk
+> > > > > powers off does not get powered on back on resume.
+> > > > 
+> > > > quirk_apple_poweroff_thunderbolt() was added in 2014 by 1df5172c5c25
+> > > > ("PCI: Suspend/resume quirks for Apple thunderbolt").  It claims
+> > > > "power is automatically restored before resume," so there must be
+> > > > something special about s2idle that prevents the power-on.
+> > > 
+> > > With s2idle, the machine isn't suspended via ACPI, so the AML code
+> > > which powers the controller off isn't executed.  The dance to prepare
+> > > the controller for power-off consequently isn't necessary but rather
+> > > harmful.
+> > > 
+> > > To get the same power savings as with ACPI suspend, the controller
+> > > needs to be powered off via runtime suspend.  I posted patches for
+> > > that back in 2016.  I'm using them on my laptop, they need some
+> > > polishing and rebasing before I can repost them due to massive
+> > > changes that have happened in the thunderbolt driver in the meantime.
+> > > Without these patches, the controller sucks 1.5W of power in s2idle.
+> > > 
+> > > > Obviously the *hardware* hasn't changed since 1df5172c5c25.  Is s2idle
+> > > > something that wasn't tested back then, or is this problem connected
+> > > > to an s2idle change since then?  Can we identify a commit that
+> > > > introduced this problem?  That would help with backporting or stable
+> > > > tags.
+> > > 
+> > > Yes I believe the quirk predates the introduction of s2idle by a couple
+> > > of years.
+> > 
+> > In an ideal world, we would know which commit introduced s2idle and
+> > hence the possibility of hitting this bug, and we would add a Fixes:
+> > tag for that commit so we could connect this fix with it.
+> > 
+> > Apart from that, what I don't like about this (and about the original
+> > 1df5172c5c25) is that there's no connection to a spec or to documented
+> > behavior of the device or of suspend/resume.
+> 
+> I did some research, and found that s2idle was first introduced in 2013 in
+> commit 7e73c5ae6e799 (except it wasn't called "s2idle", by that name it goes
+> since around 2016 as Lukas mentioned. In 7e73c5ae6e799 it is called "freeze").
+> This is before 1df5172c5c25 which was added in 2014, so I guess we can add a:
+> 
+>         Fixes: 1df5172c5c25 ("PCI: Suspend/resume quirks for Apple
+> thunderbolt")
+> 
+> > For example, "With s2idle, the machine isn't suspended via ACPI, so
+> > the AML code which powers the controller off isn't executed."  AFAICT
+> > that isn't actually a required, documented property of s2idle, but
+> > rather it reaches into the internal implementation.
+> > 
+> > The code comment "If suspend mode is s2idle, power won't get restored
+> > on resume" is similar.  !pm_suspend_via_firmware() tells us that
+> > platform firmware won't be invoked.  But the connection between *that*
+> > and "power won't get restored" is unexplained.
+> 
+> Sorry, I can't comment anything regarding AML and power management in general
+> since I am really new to all of this. However, regarding the usage of the
+> `pm_suspend_via_firmware()`: yeah, I also think it is unclear what this does,
+> and I was thinking about adding a wrapper function something like
+> `is_s2idle()` to the suspend.h, which would simply call
+> `pm_suspend_via_firmware` internally. I didn't do that because I thought that
+> usage of pm_suspend_via_firmware() for that task is just something people
+> working with power management are supposed to know, but if someone else
+> questions it too, I can make such wrapper, it's just a 3 lines-of-code change.
+> 
+> FWIW, originally I found out that pm_suspend_via_firmware() can be used for
+> detecting s2idle by simply asking about it on linux-pm:
+> https://marc.info/?l=linux-pm&m=162029296108775&w=2
+> 
 
-Regards,
-  Felix
 
-
->  {
->  	if (adev->kfd.dev) {
->  		kgd2kfd_device_exit(adev->kfd.dev);
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> index 14f68c028126..f8e10af99c28 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> @@ -127,7 +127,7 @@ void amdgpu_amdkfd_interrupt(struct amdgpu_device *adev,
->  			const void *ih_ring_entry);
->  void amdgpu_amdkfd_device_probe(struct amdgpu_device *adev);
->  void amdgpu_amdkfd_device_init(struct amdgpu_device *adev);
-> -void amdgpu_amdkfd_device_fini(struct amdgpu_device *adev);
-> +void amdgpu_amdkfd_device_fini_sw(struct amdgpu_device *adev);
->  int amdgpu_amdkfd_submit_ib(struct kgd_dev *kgd, enum kgd_engine_type engine,
->  				uint32_t vmid, uint64_t gpu_addr,
->  				uint32_t *ib_cmd, uint32_t ib_len);
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-> index 357b9bf62a1c..ab6d2a43c9a3 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-> @@ -858,10 +858,11 @@ bool kgd2kfd_device_init(struct kfd_dev *kfd,
->  	return kfd->init_complete;
->  }
->  
-> +
-> +
->  void kgd2kfd_device_exit(struct kfd_dev *kfd)
->  {
->  	if (kfd->init_complete) {
-> -		kgd2kfd_suspend(kfd, false);
->  		device_queue_manager_uninit(kfd->dqm);
->  		kfd_interrupt_exit(kfd);
->  		kfd_topology_remove_device(kfd);
