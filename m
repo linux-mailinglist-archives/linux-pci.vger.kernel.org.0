@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34C0537FF89
-	for <lists+linux-pci@lfdr.de>; Thu, 13 May 2021 22:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CE9A37FF8A
+	for <lists+linux-pci@lfdr.de>; Thu, 13 May 2021 22:59:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbhEMVAM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 May 2021 17:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45866 "EHLO
+        id S233223AbhEMVAQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 May 2021 17:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233223AbhEMVAL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 May 2021 17:00:11 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B09C06174A
-        for <linux-pci@vger.kernel.org>; Thu, 13 May 2021 13:59:01 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id o6-20020a05600c4fc6b029015ec06d5269so496217wmq.0
-        for <linux-pci@vger.kernel.org>; Thu, 13 May 2021 13:59:01 -0700 (PDT)
+        with ESMTP id S233203AbhEMVAQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 May 2021 17:00:16 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA373C061574
+        for <linux-pci@vger.kernel.org>; Thu, 13 May 2021 13:59:04 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 8so839498wmc.5
+        for <linux-pci@vger.kernel.org>; Thu, 13 May 2021 13:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Rhe9xzTsUM7XOWGRiaEe44S1N02oZhvUJrE4FQ7so2w=;
-        b=F9xrnnCIdiqD3byyObLpI7r1GSZTS9jL9BQk9jHs6BzkYewxqsyNpkEqZnzklH53V4
-         luo003Esmict7q4YFgXqGZLy+SGYA6zqNiLnr0fYwxAicYhFVOkZXn53b1KZEifTFUME
-         5YgZh1o5uBW3CH8ndWCBBFsy7jym7fYkWzi7vMTMwxDt5RPGevrqQb6HgEiITotDYGvt
-         iJuf+aLQ5EZqFgokXS//x6VBF9YyxWHMZeN4oyVsLFWHMWwt6ShuNfV/9fGBJ17NoYz3
-         mSdgBUocKJzLiIlUCGqOcQIxhZZbA68jgNjLKrXVGUNbPCNd7V4+ahHbuzmOxn5vuRd5
-         7EEg==
+        bh=Ta99OcHaPrzvQEEzZKq7Wr4h68NLduJIqHZlGn9OJ9M=;
+        b=DkUtse0CZY3ebLOAq+Bodgq1ZB8Uq4Jdu6f7xaPuVXMxbDaIikFdOZiDgVR3FJfTqI
+         tApky8g+JqLteXQe9AJkucPB9W01c23jxU+GJQqoblPglO+syxufMjfHgFPI3VxV//CU
+         bj6rxEfl3Pgy2TAM1F8h1/Pc1GjsfNxn8/lLCiTn1qXT5HQblIRycLzohYpde4EVxEDA
+         Jf13MKfxPpYs6mJC4WBDzTT4wEWUHtrjbBoO2Dyr8s8frtm5L09wnzepvdNK9gutgBst
+         YtHuogpDSgsQ/xg1RJsfEq+sK3JL+ok29XVuuyF/4AgIxtEAK13NMsC4Y8b8NAIKZdQ4
+         yyiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Rhe9xzTsUM7XOWGRiaEe44S1N02oZhvUJrE4FQ7so2w=;
-        b=CRcqA3iPc+z5MPk2/wAz/7LZkiqHhYtaywzWpvV6REj3dlsyWeTxO23LadjO/fwS51
-         B0ac4CniExA9KfRaYxd0aSSqx+J/gFORJkpbds9j8bbMKUlIa81BsyrPB6fgZtmjSVw+
-         hb95RQ3JGu2zYDM4+fn8olPdXd6xW7DlGiQSKwSwgfJCJ18eYThORyZeEAWy5LfphooR
-         I/S6jnOhKB1SMepzywXVAnd0Tcj6nYPcQwqBuvF30L7RfMpXrOUQw+d98QlsYmiSkpKL
-         AenYOoGraKVKuy9qI0fWnZeNmKzhbTttSLzitLGqvOFMtH8+cNtO6MiWyu6AnnMrAPNU
-         jb0w==
-X-Gm-Message-State: AOAM531iMPB8Boq9syuS06i5bBR1d43T+DdzRnvQn/T1w8F7LESsHDvp
-        tQtVhjEI9nDkVOQoXC3xVJivOVR7YjMqDA==
-X-Google-Smtp-Source: ABdhPJzhQnQyc1kJs9Ez314fzB6i2dL77qgPngWkUqyk4sPacW0kXD/Y8PR+XrM4y6lEbRCVqWkImg==
-X-Received: by 2002:a05:600c:19c8:: with SMTP id u8mr5864793wmq.50.1620939540072;
-        Thu, 13 May 2021 13:59:00 -0700 (PDT)
+        bh=Ta99OcHaPrzvQEEzZKq7Wr4h68NLduJIqHZlGn9OJ9M=;
+        b=NG4p45sOssBvOOg95pUV6mQDA4eh4O8KcVtvmACzZc3BbA2uBI4Ckaa0GYhw4e7Eaw
+         3s6RWswm/nTavgnERobOjIBdAMLL3y0H+IlEFfVXKEYPFoAoNURn/Zru8K2H+BZyCi1a
+         uArqzHM+k1Pnok2A3qG96YMi8FeKjZcRoW3L9QU484MJotY7RPdgWUYPDYHHBgnkhgb6
+         VzRJYEZtbxrOewbM5jIf0rKXGAPTKvxXrjGbVPKf4WAgMNUMpTsE6rObDybHHeR6b4/A
+         x+/42GG/rsS4JDZSVITj0l0uFcjPZsZM6CQi8iAzT9wuEgSSD1V7d8Tp6n8v4cMVnqot
+         MjBA==
+X-Gm-Message-State: AOAM5315wf3Csmy/941KpWwhpx1E5rO1RWCPNYSKq0B2ArNbWOVltDdJ
+        fPcn8XEY35crz3PhskgdO2mhoNv1p12Qkg==
+X-Google-Smtp-Source: ABdhPJxHTVGu6j5jS0dFt9mG6pmeLn2H/XAibFnVegvd3t0NpV6tfu9elG6GuwHpmqwxzkhC/p33cA==
+X-Received: by 2002:a05:600c:4fd6:: with SMTP id o22mr23984811wmq.83.1620939543333;
+        Thu, 13 May 2021 13:59:03 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f38:4600:dc15:2d50:47c3:384f? (p200300ea8f384600dc152d5047c3384f.dip0.t-ipconnect.de. [2003:ea:8f38:4600:dc15:2d50:47c3:384f])
-        by smtp.googlemail.com with ESMTPSA id n5sm4080091wrx.31.2021.05.13.13.58.57
+        by smtp.googlemail.com with ESMTPSA id k10sm10374422wmf.0.2021.05.13.13.59.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 May 2021 13:58:59 -0700 (PDT)
-Subject: [PATCH 3/5] PCI/VPD: Remove old_size argument from pci_vpd_size
+        Thu, 13 May 2021 13:59:03 -0700 (PDT)
+Subject: [PATCH 4/5] PCI/VPD: Make pci_vpd_wait uninterruptible
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 References: <dc566e6c-4c9b-bcd5-1f33-edba94cedd00@gmail.com>
-Message-ID: <ede36c16-5335-6867-43a1-293641348430@gmail.com>
-Date:   Thu, 13 May 2021 22:56:09 +0200
+Message-ID: <258bf994-bc2a-2907-9181-2c7a562986d5@gmail.com>
+Date:   Thu, 13 May 2021 22:56:41 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
@@ -66,63 +66,132 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-vpd->len is initialized to PCI_VPD_MAX_SIZE, and if a quirk is used to
-set a specific VPD size, then pci_vpd_set_size() sets vpd->valid,
-resulting in pci_vpd_size() not being called. Therefore we can remove
-the old_size argument. Note that we don't have to check
-off < PCI_VPD_MAX_SIZE because that's implicitly done by pci_read_vpd().
+Reading/writing 4 bytes should be fast enough even on a slow bus,
+therefore pci_vpd_wait() doesn't have to be interruptible.
+Making it uninterruptible allows to simplify the code.
+In addition make VPD writes uninterruptible in general.
+It's about vital data, and allowing writes to be interruptible may
+leave the VPD in an inconsistent state.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/vpd.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/vpd.c | 33 +++++++++------------------------
+ 1 file changed, 9 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index ff537371c..e73a3a55f 100644
+index e73a3a55f..76b20a13a 100644
 --- a/drivers/pci/vpd.c
 +++ b/drivers/pci/vpd.c
-@@ -75,14 +75,13 @@ EXPORT_SYMBOL(pci_write_vpd);
- /**
-  * pci_vpd_size - determine actual size of Vital Product Data
-  * @dev:	pci device struct
-- * @old_size:	current assumed size, also maximum allowed size
-  */
--static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
-+static size_t pci_vpd_size(struct pci_dev *dev)
- {
- 	size_t off = 0;
- 	u8 header[3];	/* 1 byte tag, 2 bytes length */
+@@ -31,7 +31,6 @@ struct pci_vpd {
+ 	unsigned int	len;
+ 	u16		flag;
+ 	u8		cap;
+-	unsigned int	busy:1;
+ 	unsigned int	valid:1;
+ };
  
--	while (off < old_size && pci_read_vpd(dev, off, 1, header) == 1) {
-+	while (pci_read_vpd(dev, off, 1, header) == 1) {
- 		if (!header[0] && !off) {
- 			pci_info(dev, "Invalid VPD tag 00, assume missing optional VPD EPROM\n");
+@@ -121,22 +120,14 @@ static int pci_vpd_wait(struct pci_dev *dev)
+ 	u16 status;
+ 	int ret;
+ 
+-	if (!vpd->busy)
+-		return 0;
+-
+ 	do {
+ 		ret = pci_user_read_config_word(dev, vpd->cap + PCI_VPD_ADDR,
+ 						&status);
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		if ((status & PCI_VPD_ADDR_F) == vpd->flag) {
+-			vpd->busy = 0;
++		if ((status & PCI_VPD_ADDR_F) == vpd->flag)
  			return 0;
-@@ -164,7 +163,7 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+-		}
+-
+-		if (fatal_signal_pending(current))
+-			return -EINTR;
  
- 	if (!vpd->valid) {
- 		vpd->valid = 1;
--		vpd->len = pci_vpd_size(dev, vpd->len);
-+		vpd->len = pci_vpd_size(dev);
- 	}
- 
- 	if (vpd->len == 0)
-@@ -231,7 +230,7 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 
- 	if (!vpd->valid) {
- 		vpd->valid = 1;
--		vpd->len = pci_vpd_size(dev, vpd->len);
-+		vpd->len = pci_vpd_size(dev);
- 	}
- 
- 	if (vpd->len == 0)
-@@ -455,6 +454,7 @@ static void quirk_blacklist_vpd(struct pci_dev *dev)
+ 		if (time_after(jiffies, timeout))
+ 			break;
+@@ -154,7 +145,7 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 			    void *arg)
  {
- 	if (dev->vpd) {
- 		dev->vpd->len = 0;
-+		dev->vpd->valid = 1;
- 		pci_warn(dev, FW_BUG "disabling VPD access (can't determine size of non-standard VPD format)\n");
+ 	struct pci_vpd *vpd = dev->vpd;
+-	int ret;
++	int ret = 0;
+ 	loff_t end = pos + count;
+ 	u8 *buf = arg;
+ 
+@@ -180,19 +171,19 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 	if (mutex_lock_killable(&vpd->lock))
+ 		return -EINTR;
+ 
+-	ret = pci_vpd_wait(dev);
+-	if (ret < 0)
+-		goto out;
+-
+ 	while (pos < end) {
+ 		u32 val;
+ 		unsigned int i, skip;
+ 
++		if (fatal_signal_pending(current)) {
++			ret = -EINTR;
++			break;
++		}
++
+ 		ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
+ 						 pos & ~3);
+ 		if (ret < 0)
+ 			break;
+-		vpd->busy = 1;
+ 		vpd->flag = PCI_VPD_ADDR_F;
+ 		ret = pci_vpd_wait(dev);
+ 		if (ret < 0)
+@@ -212,7 +203,7 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 			val >>= 8;
+ 		}
  	}
+-out:
++
+ 	mutex_unlock(&vpd->lock);
+ 	return ret ? ret : count;
+ }
+@@ -242,10 +233,6 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 	if (mutex_lock_killable(&vpd->lock))
+ 		return -EINTR;
+ 
+-	ret = pci_vpd_wait(dev);
+-	if (ret < 0)
+-		goto out;
+-
+ 	while (pos < end) {
+ 		u32 val;
+ 
+@@ -262,7 +249,6 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 		if (ret < 0)
+ 			break;
+ 
+-		vpd->busy = 1;
+ 		vpd->flag = 0;
+ 		ret = pci_vpd_wait(dev);
+ 		if (ret < 0)
+@@ -270,7 +256,7 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 
+ 		pos += sizeof(u32);
+ 	}
+-out:
++
+ 	mutex_unlock(&vpd->lock);
+ 	return ret ? ret : count;
+ }
+@@ -333,7 +319,6 @@ void pci_vpd_init(struct pci_dev *dev)
+ 		vpd->ops = &pci_vpd_ops;
+ 	mutex_init(&vpd->lock);
+ 	vpd->cap = cap;
+-	vpd->busy = 0;
+ 	vpd->valid = 0;
+ 	dev->vpd = vpd;
  }
 -- 
 2.31.1
