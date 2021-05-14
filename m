@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E94E3808C4
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 13:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 856543808C9
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 13:44:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231920AbhENLpB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 07:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
+        id S231367AbhENLpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 07:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230525AbhENLpA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 May 2021 07:45:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 454AB6145A;
-        Fri, 14 May 2021 11:43:47 +0000 (UTC)
+        id S230525AbhENLpN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 07:45:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC1FC6145A;
+        Fri, 14 May 2021 11:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620992629;
-        bh=DEEn9u4JI/4C8qoAzzUOFfbfbwR5u1R3Df6cNGtTaoA=;
+        s=k20201202; t=1620992641;
+        bh=bqDabLQz7zSI4wyPaor5mwgm9M0kgOlikayGU/L67Y8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uRXvrns4KL4up+D0gVwsTVoGHiP2V+JSFcgAVEdNrb91oeb7gVzADVZi44e3Uqj/Q
-         pmHkkT/E5C4n+qlb1G0XegfO0nD8AI6EyJG5aJlr+jde9VEQ4AVPpXdW4NPiy5afhZ
-         4vNtCEmbNBN2g/a7iKjcf7jBJh549zmh/SmvX1ynSsCWtKlhAEazOlDl9YrlGgkWhf
-         N7s4c/WsDVMxJ1a1Oz5Th58J7A3mMaYQMpHJ8ERrKY7gWYbiFihI9JMW15Nlt8O4/U
-         eOwIR5qSntpyFIYkHjL2BkfvYqKO64hQwbuHvukYDStjNfqfiVTCImSkBRZ+kFZeij
-         6uGee/o/Vs2Sw==
-Date:   Fri, 14 May 2021 17:13:45 +0530
+        b=XPVBS1D/Ye5CbTqCebil9ND2oS4IIbTkJVk0xKJF6pHdzk0w2HLbcQIdiUwaHaAmd
+         SiP+Qif7iQmgsf1XJijkmhwncnI9b7rfNWfrVcYOslWTWyahEkynbgSnlMIopBtN4E
+         ayU61F79nMMDM2KVYZyiNbGeqaxSrz0tB690paWoqkGLge1Q63SXAADSfC4ENvUIxq
+         MDpbNMZLgP7n2JXaooGuWvEWOR1N6sLo3a4UtxSx+X2tkoBJ0c7iEteghsLG7DeOgK
+         3cd1CBWmX/mu9vvSTEkMsBVE/KRYoZI5h+pvZ01IwDAytJGba2H+Qs+4h9+T216jqb
+         jtbxjd+gzDFIg==
+Date:   Fri, 14 May 2021 17:13:57 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Baruch Siach <baruch@tkos.co.il>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -42,22 +42,22 @@ Cc:     Andy Gross <agross@kernel.org>,
         devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dt-bindings: phy: qcom,qmp: Add IPQ60xx PCIe PHY
- bindings
-Message-ID: <YJ5icVahK6aOGoig@vkoul-mobl.Dlink>
+Subject: Re: [PATCH v2 6/6] dt-bindings: pci: qcom: Document PCIe bindings
+ for IPQ6018 SoC
+Message-ID: <YJ5ifaRnHO4k2dgw@vkoul-mobl.Dlink>
 References: <cover.1620203062.git.baruch@tkos.co.il>
- <be83d8580942ab9d141dffff4e4f33f34a4c9ed9.1620203062.git.baruch@tkos.co.il>
+ <fd732635f4ad64263e361ce98af2944bfbd513ef.1620203062.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be83d8580942ab9d141dffff4e4f33f34a4c9ed9.1620203062.git.baruch@tkos.co.il>
+In-Reply-To: <fd732635f4ad64263e361ce98af2944bfbd513ef.1620203062.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 05-05-21, 12:18, Baruch Siach wrote:
-> Add ipq6018 qmp phy device for the single PCIe serdes lane on IPQ60xx
-> SoCs.
+> Document qcom,pcie-ipq6018. This is similar to the ipq8074 with a few
+> different clock sources, and one additional reset.
 
 Applied, thanks
 
