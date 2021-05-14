@@ -2,263 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5C12381160
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 22:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 314373811D2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 22:29:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231726AbhENUHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 16:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        id S230518AbhENUa5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 16:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231841AbhENUHS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 16:07:18 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76685C061574;
-        Fri, 14 May 2021 13:06:05 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id df21so8740830edb.3;
-        Fri, 14 May 2021 13:06:05 -0700 (PDT)
+        with ESMTP id S229524AbhENUa4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 16:30:56 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914B5C061574
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 13:29:44 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id n25so36057668edr.5
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 13:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BiGIBtdVws30LoLfAG6IIDlptJZEWM6VqDfkKAesSQM=;
-        b=WfAkctE+foUXBOJs/LBNeZkpmxWOr8ArhpFjN2qN2gzTQas2GUJzltv90oivb7Bg0p
-         HY4risKbU/SXZrdRODfSE7nA128Jx9jv802eDeqRQcRmopcNwYDwbAmzL4deSxQC4zeq
-         kzss8o/7BrHpTVOCoeABiWpi2JHQ+LxXGhP4oQucuFgl/DgQ8ojQRJveOEtzrj//rOz+
-         KjaLHtEhqaxQ9c2zIWreiDq3Vx2wtxPpXCk8/YlOCpGPfU9bRtyQUkQaSgTf50yUsllH
-         CZjgRtRzouKiJ52qJBf3gC3j8bMf4bcpSfGs+3R6YjDBUQXM0qAxyl6O9W+M5EW4zaZb
-         i3dA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5yLL40jnp/JyochnQZGNB1kpm63b4ANhjiGt5dp8TwM=;
+        b=EgFraUSBIbTQFFJbEIeB6T/26SFYGJlZBeS4e/DmQRBg6Jw2BQ37gymJBPeVX1ynng
+         gLsbaKnm39XSGjgjcsOBrClWV9P2towyHWblzwNVlQ5dSUJxsf/jrcHUhk9MXKI9aUnP
+         JOOFtbsCLXmzDvH70ekrNT7i7O87hx19FvLtC/dcHBQ4UON2Po//U6OZQha99KSVmVys
+         Bs4ECRfRkRaYYKC/8sjpwUGc6BxWndaakM2RlpCKAkf12+Kms37etfKiOLo1r5Rv08Rn
+         DeKNSXZj3Px380vwYPhSzVfDA0eI75tyQygSFJHLeyGRqV0WVM8ygu1y5XhhD22agMYF
+         J05w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BiGIBtdVws30LoLfAG6IIDlptJZEWM6VqDfkKAesSQM=;
-        b=mrBOrIEZs5h7ELFCaJJ5aoJ0ZPF3Kyxk9ipcKjdHgHkTB4UVDfEtEReq+GLSWWfgmx
-         q9YgoLA+yEUNEE5yOsb61gpPe/iUHj2wcCflWRmFI0oS1Iqqt/3ZfbbPjh4+j2YNbgQ5
-         MUw1AJoV8Pc+UTGdsnNOpqStlEqsHW1oR0SumyDdvyKpVxsR7BfDDHcLlaHHoAAK61Uk
-         XOaSnOYrTasGAhG0tNXe/xFf/Tg4YvqHBhPZEUB7hCj/6xR/kH2gBK+yfNaETiyuvIGk
-         BLx/UA5gAgj6bqxBji5vJlMTwTJ0wHFq36o1YVa3DQvyA/yGFG3c2mjNSdTP9XsEbjyx
-         s2tA==
-X-Gm-Message-State: AOAM53370p77aZkkL1MwbVg1gZu9iwzmkG1vsvRBAXOPeJSAYwSqWOLa
-        LOkVldFsEJxOfuyvYSnjmCr+93vFEzs=
-X-Google-Smtp-Source: ABdhPJyGqdpU8scKEWNlwo5xC12pJf1WI8qgudSG+5uXpnvE/qYeRYAeJW2e8Jvn8iMNVJ/n7suDTQ==
-X-Received: by 2002:a05:6402:31b1:: with SMTP id dj17mr57609575edb.7.1621022764259;
-        Fri, 14 May 2021 13:06:04 -0700 (PDT)
-Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id o8sm4068556ejm.18.2021.05.14.13.06.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 13:06:03 -0700 (PDT)
-From:   marek.vasut@gmail.com
-To:     linux-pci@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-Date:   Fri, 14 May 2021 22:05:49 +0200
-Message-Id: <20210514200549.431275-1-marek.vasut@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5yLL40jnp/JyochnQZGNB1kpm63b4ANhjiGt5dp8TwM=;
+        b=t3+wKTRd/b8M3RaYYIww9Q5abwI2VZdG3BuujO323KwhjEjWFO7XUnm/WB0pia0SrK
+         Wx4goNG9tCEupXc8g0Y0gKvX0JZYdBqpx+idiNkP58AHV8x86Sv4QXJuxoHaHSLBK/it
+         pI20zkRcDqWm6iUSBfwGKTTRkyQElRGxDqy/dlTSmSh3k5ciyOUsbC6P18QwUs+i0S8n
+         O/hGe2kHGQPqdv3ZFwYXJEWi7U0g2vtsK67xOSbXfAwOMb3axfgpWwIZwvUtNbidHgYG
+         HQEVOGa4Y2fuFeNOPN/mEw5JhnEQkzcvFM0MWtWsdvGTwBft5kz2Rtg/Rvx3OYd3GuVR
+         lGXQ==
+X-Gm-Message-State: AOAM530KzLPt4RS3aPTctLR7+oVR7mYhBelB06yRIDvefQKX32t8RWdD
+        qiWa3TEl1l7mgrxNy4gAzQHVZ8/9ay1mnmAY1CFFhA==
+X-Google-Smtp-Source: ABdhPJwjzR90EU3j4VM/TAeOVfah6Sp56DGhezKrSqeaGKYeBzA45aUC74juyu0klKi5Wj1G+W3dP6rGWk4obKEa6RE=
+X-Received: by 2002:a05:6402:128f:: with SMTP id w15mr12334574edv.354.1621024183325;
+ Fri, 14 May 2021 13:29:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <162096973052.1865304.12885652112595883151.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210514101700.00004fbc@Huawei.com>
+In-Reply-To: <20210514101700.00004fbc@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 14 May 2021 13:29:32 -0700
+Message-ID: <CAPcyv4jodAKZjAPQf6Q87o3JQ2sSJLmCTS1PdQ_oKyCRuVJqEg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] cxl/acpi: Introduce ACPI0017 driver and cxl_root
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Fri, May 14, 2021 at 2:19 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Thu, 13 May 2021 22:22:10 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > While CXL builds upon the PCI software model for dynamic enumeration and
+> > control, a static platform component is required to bootstrap the CXL
+> > memory layout. In addition to identifying the host bridges ACPI is
+> > responsible for enumerating the CXL memory space that can be addressed
+> > by decoders. This is similar to the requirement for ACPI to publish
+> > resources reported by _CRS for PCI host bridges.
+> >
+> > Introduce the cxl_root object as an abstract "port" into the CXL.mem
+> > address space described by HDM decoders identified by the ACPI
+> > CEDT.CHBS.
+> >
+> > For now just establish the initial boilerplate and sysfs attributes, to
+> > be followed by enumeration of the ports within the host bridge.
+> >
+> > Note the allocation of CXL core device objects is split into separate
+> > alloc and add steps in order to separate the alloc error path (kfree())
+> > from the device add error path (put_device()).
+> >
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> A few really minor editorial things in the docs that need tidying up.
 
-The R-Car PCIe controller is capable of handling L0s/L1 link states.
-While the controller can enter and exit L0s link state, and exit L1
-link state, without any additional action from the driver, to enter
-L1 link state, the driver must complete the link state transition by
-issuing additional commands to the controller.
+Sure, I'm going to see if b4 can follow a v5 reply to just this one
+patch, or otherwise hack it to support that flow so I don't need to
+resend the full series.
 
-The problem is, this transition is not atomic. The controller sets
-PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
-the PCIe card, but then the controller enters some sort of inbetween
-state. The driver must detect this condition and complete the link
-state transition, by setting L1IATN bit in PMCTLR and waiting for
-the link state transition to complete.
+> With that done
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> I'll make the bold assumption that this is going to get applied
+> before the DOE series and base that on top of this one.
 
-If a PCIe access happens inside this window, where the controller
-is between L0 and L1 link states, the access generates a fault and
-the ARM 'imprecise external abort' handler is invoked.
+Yes, the plan is to make the 'next' branch of:
 
-Just like other PCI controller drivers, here we hook the fault handler,
-perform the fixup to help the controller enter L1 link state, and then
-restart the instruction which triggered the fault. Since the controller
-is in L1 link state now, the link can exit from L1 link state to L0 and
-successfully complete the access.
+git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
 
-While it was suggested to disable L1 link state support completely on
-the controller level, this would not prevent the L1 link state entry
-initiated by the link partner. This happens e.g. in case a PCIe card
-enters D3Hot state, which could be initiated from pci_set_power_state()
-if the card indicates D3Hot support, which in turn means link must enter
-L1 state. So instead, fix up the L1 link state after all.
+...the stable non-rebasing development branch for contributions. bf gntcbttttt
 
-Note that this fixup is applicable only to Aarch32 R-Car controllers,
-the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
-0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
-[1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
+>
+> Thanks,
+>
+> Jonathan
+>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-cxl |   78 +++++++
+> >  drivers/cxl/Kconfig                     |   14 +
+> >  drivers/cxl/Makefile                    |    2
+> >  drivers/cxl/acpi.c                      |   39 +++
+> >  drivers/cxl/core.c                      |  360 +++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl.h                       |   65 ++++++
+> >  6 files changed, 558 insertions(+)
+> >  create mode 100644 drivers/cxl/acpi.c
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > index 2fe7490ad6a8..d21469e2bf8b 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > @@ -24,3 +24,81 @@ Description:
+> >               (RO) "Persistent Only Capacity" as bytes. Represents the
+> >               identically named field in the Identify Memory Device Output
+> >               Payload in the CXL-2.0 specification.
+> > +
+> > +What:           /sys/bus/cxl/devices/address_spaceX/start
+> > +Date:           May, 2021
+> > +KernelVersion:  v5.14
+> > +Contact:        linux-cxl@vger.kernel.org
+> > +Description:
+>
+> I'm not that fussy about this, but others may comment on wrapping lines around 70 chars
+> whereas can at least go to 80 for docs.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: - Update commit message, add link to TFA repository commit
-    - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
-    - Cache clock and check whether they are enabled before register
-      access
-V3: - Fix commit message according to spellchecker
-    - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
-      (in case the kernel is multiplatform)
-V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
-V5: - Add mutex around rcar_pcie_aarch32_abort_handler()
-    - Update commit message again to point out issues with L1/D3Hot states
-V6: - Return 1 only if condition cannot be fixed
----
- drivers/pci/controller/pcie-rcar-host.c | 84 +++++++++++++++++++++++++
- drivers/pci/controller/pcie-rcar.h      |  7 +++
- 2 files changed, 91 insertions(+)
+Sure I can reflow.
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index 765cf2b45e24..0d3f8dc5ff8a 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -41,6 +42,21 @@ struct rcar_msi {
- 	int irq2;
- };
- 
-+#ifdef CONFIG_ARM
-+/*
-+ * Here we keep a static copy of the remapped PCIe controller address.
-+ * This is only used on aarch32 systems, all of which have one single
-+ * PCIe controller, to provide quick access to the PCIe controller in
-+ * the L1 link state fixup function, called from the ARM fault handler.
-+ */
-+static void __iomem *pcie_base;
-+/*
-+ * Static copy of bus clock pointer, so we can check whether the clock
-+ * is enabled or not.
-+ */
-+static struct clk *pcie_bus_clk;
-+#endif
-+
- /* Structure representing the PCIe interface */
- struct rcar_pcie_host {
- 	struct rcar_pcie	pcie;
-@@ -776,6 +792,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
- 	}
- 	host->msi.irq2 = i;
- 
-+#ifdef CONFIG_ARM
-+	/* Cache static copy for L1 link state fixup hook on aarch32 */
-+	pcie_base = pcie->base;
-+	pcie_bus_clk = host->bus_clk;
-+#endif
-+
- 	return 0;
- 
- err_irq2:
-@@ -1031,4 +1053,66 @@ static struct platform_driver rcar_pcie_driver = {
- 	},
- 	.probe = rcar_pcie_probe,
- };
-+
-+#ifdef CONFIG_ARM
-+static DEFINE_SPINLOCK(pmsr_lock);
-+static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-+		unsigned int fsr, struct pt_regs *regs)
-+{
-+	unsigned long flags;
-+	int ret = 0;
-+	u32 pmsr;
-+
-+	spin_lock_irqsave(&pmsr_lock, flags);
-+
-+	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
-+		ret = 1;
-+		goto unlock_exit;
-+	}
-+
-+	pmsr = readl(pcie_base + PMSR);
-+
-+	/*
-+	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
-+	 * the PCIe controller is not in L1 link state. If true, apply
-+	 * fix, which will put the controller into L1 link state, from
-+	 * which it can return to L0s/L0 on its own.
-+	 */
-+	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
-+		writel(L1IATN, pcie_base + PMCTLR);
-+		while (!(readl(pcie_base + PMSR) & L1FAEG))
-+			;
-+		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
-+	}
-+
-+unlock_exit:
-+	spin_unlock_irqrestore(&pmsr_lock, flags);
-+	return ret;
-+}
-+
-+static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
-+	{ .compatible = "renesas,pcie-r8a7779" },
-+	{ .compatible = "renesas,pcie-r8a7790" },
-+	{ .compatible = "renesas,pcie-r8a7791" },
-+	{ .compatible = "renesas,pcie-rcar-gen2" },
-+	{},
-+};
-+
-+static int __init rcar_pcie_init(void)
-+{
-+	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-+#ifdef CONFIG_ARM_LPAE
-+		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-+				"asynchronous external abort");
-+#else
-+		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-+				"imprecise external abort");
-+#endif
-+	}
-+
-+	return platform_driver_register(&rcar_pcie_driver);
-+}
-+device_initcall(rcar_pcie_init);
-+#else
- builtin_platform_driver(rcar_pcie_driver);
-+#endif
-diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-index d4c698b5f821..9bb125db85c6 100644
---- a/drivers/pci/controller/pcie-rcar.h
-+++ b/drivers/pci/controller/pcie-rcar.h
-@@ -85,6 +85,13 @@
- #define  LTSMDIS		BIT(31)
- #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
- #define PMSR			0x01105c
-+#define  L1FAEG			BIT(31)
-+#define  PMEL1RX		BIT(23)
-+#define  PMSTATE		GENMASK(18, 16)
-+#define  PMSTATE_L1		(3 << 16)
-+#define PMCTLR			0x011060
-+#define  L1IATN			BIT(31)
-+
- #define MACS2R			0x011078
- #define MACCGSPSETR		0x011084
- #define  SPCNGRSN		BIT(31)
--- 
-2.30.2
+>
+> > +             (RO) System-physical base address for an address range
+> > +             that supports CXL.mem targets. A CXL address space can
+> > +             be optionally populated with endpoints that decode that
+> > +             range, similar to how devices behind a PCI bridge can
+> > +             decode a portion of the bridge's secondary bus address
+> > +             space.
+> > +
+> > +What:           /sys/bus/cxl/devices/address_spaceX/end
+> > +Date:           May, 2021
+> > +KernelVersion:  v5.14
+> > +Contact:        linux-cxl@vger.kernel.org
+> > +Description:
+> > +             (RO) System-physical end address for an address range
+> > +             that supports CXL.mem targets. A CXL address space can
+> > +             be optionally populated with endpoints that decode that
+> > +             range, similar to how devices behind a PCI bridge can
+> > +             decode a portion of the bridge's secondary bus address
+> > +             space.
+> > +
+> > +What:                /sys/bus/cxl/devices/address_spaceX/supports_ram
+>
+> Inconsistent tabs vs spaces.
 
+ok.
