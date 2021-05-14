@@ -2,66 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C5B03804C5
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 10:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1DDD3804CA
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 10:00:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233340AbhENIBR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 04:01:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
+        id S233367AbhENIBk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 04:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233325AbhENIBQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 May 2021 04:01:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7892261446;
-        Fri, 14 May 2021 08:00:03 +0000 (UTC)
+        id S233325AbhENIBj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 04:01:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E97D5610EA;
+        Fri, 14 May 2021 08:00:26 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Jingfeng Sui <suijingfeng@loongson.cn>
-Subject: [PATCH 0/5] PCI: Loongson-related pci quirks
-Date:   Fri, 14 May 2021 16:00:20 +0800
-Message-Id: <20210514080025.1828197-1-chenhuacai@loongson.cn>
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 1/5] PCI/portdrv: Don't disable pci device during shutdown
+Date:   Fri, 14 May 2021 16:00:21 +0800
+Message-Id: <20210514080025.1828197-2-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210514080025.1828197-1-chenhuacai@loongson.cn>
+References: <20210514080025.1828197-1-chenhuacai@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patchset resolve some Loongson-related pci problems (however, some
-of them affect not only Loongon platform). The first patch has been sent
-before, and nearly all reviewers' questions had been answered at that
-time [1]. The second patch move some LS7A quirks to quirks.c, where can
-be shared by multi architectures. The third patch improve the mrrs quirk
-for LS7A chipset, and the fourth patch add a new quirk for LS7A chipset.
-The last patch fix a problem of ASpeed AST2500, which is used as BMC by
-some Loongson-based server boards.
+Use separate remove()/shutdown() callback, and don't disable pci device
+during shutdown. This can avoid some poweroff/reboot failures.
 
-[1] http://patchwork.ozlabs.org/project/linux-pci/patch/1600680138-10949-1-git-send-email-chenhc@lemote.com/
+The poweroff/reboot failures can easily reproduce on Loongson platforms.
+I think this is not a Loongson-specific problem, instead, is a problem
+related to some specific PCI hosts. On some x86 platforms, radeon/amdgpu
+devices can cause the same problem, and commit faefba95c9e8ca3a523831c2e
+("drm/amdgpu: just suspend the hw on pci shutdown") can resolve it.
 
-Huacai Chen, Tiezhu Yang, Jianmin Lv and Jingfeng Sui(5):
- PCI/portdrv: Don't disable pci device during shutdown.
- PCI: Move loongson pci quirks to quirks.c.
- PCI: Improve the mrrs quirk for LS7A.
- PCI: Add quirk for multifunction devices of LS7A.
- PCI: Support ASpeed VGA cards behind a misbehaving bridge.
+As Tiezhu said, this occasionally shutdown or reboot failure is due to
+clear PCI_COMMAND_MASTER on the device in do_pci_disable_device().
+
+drivers/pci/pci.c
+static void do_pci_disable_device(struct pci_dev *dev)
+{
+        u16 pci_command;
+
+        pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+        if (pci_command & PCI_COMMAND_MASTER) {
+                pci_command &= ~PCI_COMMAND_MASTER;
+                pci_write_config_word(dev, PCI_COMMAND, pci_command);
+        }
+
+        pcibios_disable_device(dev);
+}
+
+When remove "pci_command &= ~PCI_COMMAND_MASTER;", it can work well when
+shutdown or reboot. This may implies that there are DMA activities on the
+device while shutdown.
+
+Radeon driver is more difficult than amdgpu due to its confusing symbol
+names, and I have maintained an out-of-tree patch for a long time [1].
+Recently, we found more and more devices can cause the same problem, and
+it is very difficult to modify all problematic drivers as radeon/amdgpu
+does (the .shutdown callback should make sure there is no DMA activity).
+So, I think modify the PCIe port driver is a simple and effective way.
+And as early discussed, kexec can still work after this patch.
+
+[1] https://github.com/chenhuacai/linux/commit/8da06f9b669831829416a3e9f4d1c57f217a42f0
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn> 
-Signed-off-by: Jingfeng Sui <suijingfeng@loongson.cn> 
 ---
- drivers/pci/controller/pci-loongson.c |  69 -----------------
- drivers/pci/pci.c                     |   5 ++
- drivers/pci/pcie/portdrv.h            |   2 +-
- drivers/pci/pcie/portdrv_core.c       |   6 +-
- drivers/pci/pcie/portdrv_pci.c        |  15 +++-
- drivers/pci/quirks.c                  | 139 ++++++++++++++++++++++++++++++++++
- include/linux/pci.h                   |   2 +
- 7 files changed, 164 insertions(+), 74 deletions(-)
---
+ drivers/pci/pcie/portdrv.h      |  2 +-
+ drivers/pci/pcie/portdrv_core.c |  6 ++++--
+ drivers/pci/pcie/portdrv_pci.c  | 15 +++++++++++++--
+ 3 files changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index 2ff5724b8f13..358d7281f6e8 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -117,7 +117,7 @@ int pcie_port_device_resume(struct device *dev);
+ int pcie_port_device_runtime_suspend(struct device *dev);
+ int pcie_port_device_runtime_resume(struct device *dev);
+ #endif
+-void pcie_port_device_remove(struct pci_dev *dev);
++void pcie_port_device_remove(struct pci_dev *dev, bool disable);
+ int __must_check pcie_port_bus_register(void);
+ void pcie_port_bus_unregister(void);
+ 
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index e1fed6649c41..98c0a99a41d6 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -484,11 +484,13 @@ EXPORT_SYMBOL_GPL(pcie_port_find_device);
+  * Remove PCI Express port service devices associated with given port and
+  * disable MSI-X or MSI for the port.
+  */
+-void pcie_port_device_remove(struct pci_dev *dev)
++void pcie_port_device_remove(struct pci_dev *dev, bool disable)
+ {
+ 	device_for_each_child(&dev->dev, NULL, remove_iter);
+ 	pci_free_irq_vectors(dev);
+-	pci_disable_device(dev);
++
++	if (disable)
++		pci_disable_device(dev);
+ }
+ 
+ /**
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index c7ff1eea225a..562fbf3c1ea9 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -147,7 +147,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+ 		pm_runtime_dont_use_autosuspend(&dev->dev);
+ 	}
+ 
+-	pcie_port_device_remove(dev);
++	pcie_port_device_remove(dev, true);
++}
++
++static void pcie_portdrv_shutdown(struct pci_dev *dev)
++{
++	if (pci_bridge_d3_possible(dev)) {
++		pm_runtime_forbid(&dev->dev);
++		pm_runtime_get_noresume(&dev->dev);
++		pm_runtime_dont_use_autosuspend(&dev->dev);
++	}
++
++	pcie_port_device_remove(dev, false);
+ }
+ 
+ static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+@@ -219,7 +230,7 @@ static struct pci_driver pcie_portdriver = {
+ 
+ 	.probe		= pcie_portdrv_probe,
+ 	.remove		= pcie_portdrv_remove,
+-	.shutdown	= pcie_portdrv_remove,
++	.shutdown	= pcie_portdrv_shutdown,
+ 
+ 	.err_handler	= &pcie_portdrv_err_handler,
+ 
+-- 
 2.27.0
 
