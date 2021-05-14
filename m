@@ -2,101 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78FE4380C4F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 16:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33255380C8F
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 17:10:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234316AbhENOyH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 10:54:07 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38033 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234604AbhENOyG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 10:54:06 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 177045C08CD;
-        Fri, 14 May 2021 10:52:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 14 May 2021 10:52:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=G
-        RZ34JbeiaYiaTG5LS+UHZ1sxnV9iyAnujZBzbjf1cM=; b=PAK1was+pXGI0oDP+
-        9FWsBtWsBJANMG75FbH6UyiJpkcl4D8HkkSVgJvQD7C7ZZS5qGf+yozYe96dzA98
-        +4/5hLfb6EdAXDKfcnnQnxZ4Ct6csI/LzV1RZnnoH9b11/RIb7lXGo7yP4qcdBpc
-        pnKBkmIwE9VDZf7r+1kyRmC8jmQJdqn2qUtMOnxX/DoyEwwt/jKuIXPznb8aZDYf
-        K1Ps/ZhfeCEFdbvPw+eBLD1xBfeXzB82j9mkXatGB37vUiedLDRAQ0ICBdEDafJl
-        5D5/Z8cHlD+OHLUfy1dnhDkkCM9BTa/oyyWbkH0VvEkWB0von3ZDco0mqm3rMSGR
-        qZbAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=GRZ34JbeiaYiaTG5LS+UHZ1sxnV9iyAnujZBzbjf1
-        cM=; b=DM0BVOf9J/zmz2mUS0ht1pZiJDU3A9v70PC1gCrickUp7mDr9hPWssacL
-        70NBDHMmc3pwu60OquRS+2bIgaq8Iog1DOZuq9Pbyt5hO/pkmU4XkO+t6SIhM1pE
-        poCm2Vu+PQ6nEr7yM1xUptbsaIpCliU+/rqcXlWItwlFKmLfTaJAPJ9VrE2F4Xgs
-        2rCMZ/0f9jkXBK7Jp/LOD8kWuHqYeP9IjgoqegrRvFAo+2V5l9U66X4nZriSr2jv
-        T2RmSHcUTIdUnAeIDM8W3TNXUqPUp1h028Xmi9bIFf8Oo9gZKLorkOLDwk8DOMJG
-        yrRAlADWeA3RVTfPVM11RBiJ99tYw==
-X-ME-Sender: <xms:xo6eYPGXZJmDLYio3-6c1E5go4kB61Dr4rS2_MtC6Uq8YcGZ3u3Phg>
-    <xme:xo6eYMVTeQgXTxB3z_gdsKJz0vfNQ5yJi_ac4NVC8Al9w7zSdxutOMTk1zLF6bANz
-    OOseig-NE7KXqHpaNs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdehjedgudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdeftfenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeefleduiedtvdekffeggfeukeejgeeffeetlefghfekffeuteei
-    jeeghefhueffvdenucfkphepudekfedrudehiedrfeelrdeltdenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehf
-    lhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:xo6eYBIB6KP-zh2XS1XGd3Emb2icjWh_zPb4sLm55C1I0bvwUz7egw>
-    <xmx:xo6eYNEMOhgJNRjNBqOJ_pVxRYwmwz9zCLcNXQ0S4TnhnXxbA4d8jg>
-    <xmx:xo6eYFX_KsNu2wuBfs1h9RkvTXznr-lpCJ7_Z2wxc-wO-SYKjxopiA>
-    <xmx:x46eYCjCNEw29RFKsJ20hiZZEmuQVSMcnj3obVWAsTWirHyk6U-tYA>
-Received: from [192.168.1.200] (unknown [183.156.39.90])
-        by mail.messagingengine.com (Postfix) with ESMTPA;
-        Fri, 14 May 2021 10:52:51 -0400 (EDT)
-Subject: Re: [PATCH 4/5] PCI: Add quirk for multifunction devices of LS7A
-To:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>
-References: <20210514080025.1828197-1-chenhuacai@loongson.cn>
- <20210514080025.1828197-5-chenhuacai@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <c3de05bd-91c9-dcd7-5b9a-87de91e480bf@flygoat.com>
-Date:   Fri, 14 May 2021 22:52:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S230384AbhENPLs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 11:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229524AbhENPLs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 11:11:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 47E7761350;
+        Fri, 14 May 2021 15:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621005036;
+        bh=sqIUVE17wY0syd+Dj7WFOoITeL+puoY14vmGlaLRpNc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eWMWADisHM94UXXfqbvvJrS71clY9wtexOZ4yYVbISukxOb953gfJgwrwV3CxKb7u
+         EacUdy6lDm8mWBcB+4o9rnKOiEiWNumb9O51lN0OSaadkvKvwh7GJngORtH9GdXn2c
+         dGtfMSXq2Y8sj1ak0o1w9rM6Qvk94JOSKsYT8xNlY88cciv9AIp1LscMq/u1nBQJTd
+         hGYLkO8h2fVzCITXcwAWnR+2I6ZuFqfUHIb/SBN91uI4Lv77/bKolLhiMcRpzylw1X
+         UsXCgUAK2euJozR+oNeYSO9FMO5HIwWVuiH7kW0l0IU/KHTjjJjt2zIHn9J4iRU+WO
+         fm198i/dHsWgQ==
+Date:   Fri, 14 May 2021 10:10:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
+ bridge
+Message-ID: <20210514151034.GA2759806@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210514080025.1828197-5-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210514080025.1828197-6-chenhuacai@loongson.cn>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> VGA Enable bit which modifies the response to VGA compatible addresses.
 
+The bridge spec is pretty old, and most of the content has been
+incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+7.5.1.3.13" here instead.
 
-ÔÚ 2021/5/14 16:00, Huacai Chen Ð´µÀ:
-> From: Jianmin Lv <lvjianmin@loongson.cn>
->
-> In LS7A, multifunction device use same pci PIN and different
-> irq for different function, so fix it for standard pci PIN
-> usage.
+> If the VGA Enable bit is set, the bridge will decode and forward the
+> following accesses on the primary interface to the secondary interface.
 
-Hmm, I'm unsure about this change.
-The PCIe port, or PCI-to-PCI bridge on LS7A only have a single
-upstream interrupt specified in DeviceTree, how can this quirk
-work?
+*Which* following accesses?  The structure of English requires that if
+you say "the following accesses," you must continue by *listing* the
+accesses.
 
-Thanks.
+> The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> bridge control register, which causes vgaarb subsystem don't think the
+> VGA card behind the bridge as a valid boot vga device.
 
-- Jiaxun
+s/hardward/bridge/
+s/vga/VGA/ (also in code comments and dmesg strings below)
 
->
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+since it apparently has a VGA class code.  But here you say the
+AST2500 has a Bridge Control register, which suggests that it's a
+bridge.  If AST2500 is some sort of combination that includes both a
+bridge and a VGA device, please outline that topology.
+
+But the hardware defect is that some bridges forward VGA accesses even
+though their VGA Enable bit is not set?  The quirk should be attached
+to broken *bridges*, not to VGA devices.
+
+If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+is set, that means VGA arbitration (in vgaarb.c) cannot work
+correctly, so merely setting the default VGA device once in a quirk is
+not sufficient.  You would have to somehow disable any future attempts
+to use other VGA devices.  Only the VGA device below this defective
+bridge is usable.  Any other VGA devices in the system would be
+useless.
+
+> So we provide a quirk to fix Xorg auto-detection.
+> 
+> See similar bug:
+> 
+> https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+
+This patch was never merged.  If we merged a revised version, please
+cite the SHA1 instead.
+
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Jingfeng Sui <suijingfeng@loongson.cn>
 > ---
+>  drivers/pci/quirks.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 6ab4b3bba36b..adf5490706ad 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/platform_data/x86/apple.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/switchtec.h>
+> +#include <linux/vgaarb.h>
+>  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
+>  #include "pci.h"
+>  
+> @@ -297,6 +298,52 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+>  }
+>  DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+>  
+> +
+> +static void aspeed_fixup_vgaarb(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *bridge;
+> +	struct pci_bus *bus;
+> +	struct pci_dev *vdevp = NULL;
+> +	u16 config;
+> +
+> +	bus = pdev->bus;
+> +	bridge = bus->self;
+> +
+> +	/* Is VGA routed to us? */
+> +	if (bridge && (pci_is_bridge(bridge))) {
+> +		pci_read_config_word(bridge, PCI_BRIDGE_CONTROL, &config);
+> +
+> +		/* Yes, this bridge is PCI bridge-to-bridge spec compliant,
+> +		 *  just return!
+> +		 */
+> +		if (config & PCI_BRIDGE_CTL_VGA)
+> +			return;
+> +
+> +		dev_warn(&pdev->dev, "VGA bridge control is not enabled\n");
+> +	}
 
+You cannot assume that a bridge is defective just because
+PCI_BRIDGE_CTL_VGA is not set.
+
+> +	/* Just return if the system already have a default device */
+> +	if (vga_default_device())
+> +		return;
+> +
+> +	/* No default vga device */
+> +	while ((vdevp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, vdevp))) {
+> +		if (vdevp->vendor != 0x1a03) {
+> +			/* Have other vga devcie in the system, do nothing */
+> +			dev_info(&pdev->dev, "Another boot vga device: 0x%x:0x%x\n",
+> +				vdevp->vendor, vdevp->device);
+> +			return;
+> +		}
+> +	}
+> +
+> +	vga_set_default_device(pdev);
+> +
+> +	dev_info(&pdev->dev, "Boot vga device set as 0x%x:0x%x\n",
+> +			pdev->vendor, pdev->device);
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(0x1a03, 0x2000, PCI_CLASS_DISPLAY_VGA, 8, aspeed_fixup_vgaarb);
+> +
+> +
+>  /*
+>   * The Mellanox Tavor device gives false positive parity errors.  Disable
+>   * parity error reporting.
+> -- 
+> 2.27.0
+> 
