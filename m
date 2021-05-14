@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5008B380AD0
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 15:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E77D3380AEA
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 16:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231709AbhENN62 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 09:58:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:50629 "EHLO verein.lst.de"
+        id S232440AbhENOB0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 10:01:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:50658 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229889AbhENN62 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 May 2021 09:58:28 -0400
+        id S232103AbhENOBY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 10:01:24 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 176846736F; Fri, 14 May 2021 15:57:13 +0200 (CEST)
-Date:   Fri, 14 May 2021 15:57:12 +0200
+        id 062446736F; Fri, 14 May 2021 16:00:08 +0200 (CEST)
+Date:   Fri, 14 May 2021 16:00:07 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -36,69 +36,20 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 15/22] dma-direct: Support PCI P2PDMA pages in
- dma-direct map_sg
-Message-ID: <20210514135712.GD4715@lst.de>
-References: <20210513223203.5542-1-logang@deltatee.com> <20210513223203.5542-16-logang@deltatee.com>
+Subject: Re: [PATCH v2 00/22] Add new DMA mapping operation for P2PDMA
+Message-ID: <20210514140007.GE4715@lst.de>
+References: <20210513223203.5542-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210513223203.5542-16-logang@deltatee.com>
+In-Reply-To: <20210513223203.5542-1-logang@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +	for_each_sg(sgl, sg, nents, i) {
-> +		if (sg_is_dma_pci_p2pdma(sg)) {
-> +			sg_dma_unmark_pci_p2pdma(sg);
-> +		} else  {
+On Thu, May 13, 2021 at 04:31:41PM -0600, Logan Gunthorpe wrote:
+>  17 files changed, 570 insertions(+), 290 deletions(-)
 
-Double space here.  We also don't really need the curly braces to start
-with.
-
-> +	struct pci_p2pdma_map_state p2pdma_state = {};
-> +	enum pci_p2pdma_map_type map;
->  	struct scatterlist *sg;
-> +	int i, ret;
->  
->  	for_each_sg(sgl, sg, nents, i) {
-> +		if (is_pci_p2pdma_page(sg_page(sg))) {
-> +			map = pci_p2pdma_map_segment(&p2pdma_state, dev, sg);
-> +			switch (map) {
-
-Why not just:
-
-			switch (pci_p2pdma_map_segment(&p2pdma_state, dev,
-					sg)) {
-
-(even better with a shorter name for p2pdma_state so that it all fits on
-a single line)?
-
-> +			case PCI_P2PDMA_MAP_BUS_ADDR:
-> +				continue;
-> +			case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> +				/*
-> +				 * Mapping through host bridge should be
-> +				 * mapped normally, thus we do nothing
-> +				 * and continue below.
-> +				 */
-
-I have a bit of a hard time parsing this comment.
-
-> +		if (sg->dma_address == DMA_MAPPING_ERROR) {
-> +			ret = -EINVAL;
->  			goto out_unmap;
-> +		}
->  		sg_dma_len(sg) = sg->length;
->  	}
->  
-> @@ -411,7 +443,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
->  
->  out_unmap:
->  	dma_direct_unmap_sg(dev, sgl, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
-> -	return -EINVAL;
-> +	return ret;
-
-Maybe just initialize ret to -EINVAL at declaration time to simplify this
-a bit?
+I'm a little worried about all this extra code for no new functionality
+at all.
