@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB944380ABA
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 15:51:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AF9F380AC1
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 15:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbhENNwl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 09:52:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:50586 "EHLO verein.lst.de"
+        id S231593AbhENNys (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 09:54:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:50606 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229927AbhENNwl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 May 2021 09:52:41 -0400
+        id S229927AbhENNyr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 09:54:47 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2C7076736F; Fri, 14 May 2021 15:51:26 +0200 (CEST)
-Date:   Fri, 14 May 2021 15:51:26 +0200
+        id 07B676736F; Fri, 14 May 2021 15:53:31 +0200 (CEST)
+Date:   Fri, 14 May 2021 15:53:31 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -36,22 +36,19 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 08/22] dma-mapping: Allow map_sg() ops to return
- negative error codes
-Message-ID: <20210514135126.GB4715@lst.de>
-References: <20210513223203.5542-1-logang@deltatee.com> <20210513223203.5542-9-logang@deltatee.com>
+Subject: Re: [PATCH v2 14/22] PCI/P2PDMA: Introduce helpers for dma_map_sg
+ implementations
+Message-ID: <20210514135331.GC4715@lst.de>
+References: <20210513223203.5542-1-logang@deltatee.com> <20210513223203.5542-15-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210513223203.5542-9-logang@deltatee.com>
+In-Reply-To: <20210513223203.5542-15-logang@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +int __dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
->  		enum dma_data_direction dir, unsigned long attrs);
-
-I don't think it makes sense to expose this __dma_map_sg_attrs helper.
-Just keep it static and move the sgtable helper to kernel/dma/mapping.c
-as well.
+I think helpers for the dma mapping implementation should probably
+go into dma-map-ops.h so that the header for the public API doesn't get
+polluted with them.
