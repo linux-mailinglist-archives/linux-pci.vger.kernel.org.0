@@ -2,88 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E2C380B9E
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 16:18:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2972D380BAF
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 16:21:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234278AbhENOTv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 10:19:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230097AbhENOTu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 May 2021 10:19:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C73C61408;
-        Fri, 14 May 2021 14:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621001918;
-        bh=c7dfcDSUedN/VQoQv/XM8fRZG2HhOOW57vq4i3XI37w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OQ+w8jq41p/pK8QPzt383K43rnWDvG9IebEZzoZj7WKu0EgpEM3a4OB9pZnDV5/lC
-         MxVWpkmQpp2inFtKTGn6bM1fAR+gA+04aBXFsHrR34k+VM9wQUFTEenWCHNxw8mV5S
-         Rr3kzMIGVT+KJ8CgQJfj5jt0KJvZQg0gfBfD7ImGjDrz6TXEWqjpD0nn1NC8t6bBSV
-         Y2m7PBzQCXheFvsYF9jZqx3chr66nJXcElBiHfvACPcxjY0VNJoiSeft4M6sPjRp9i
-         /15Ta8qfh6z3LjSIBpnNeZl0hFKEsFjvWWGKfF/qxDT0jcgdTLCyifuXI2D1S1QhIL
-         whK9i7cORQs2g==
-Date:   Fri, 14 May 2021 16:18:25 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Edward Cree <ecree.xilinx@gmail.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Mali DP Maintainers <malidp@foss.arm.com>,
-        alsa-devel@alsa-project.org, coresight@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
-        kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-sgx@vger.kernel.org, linux-usb@vger.kernel.org,
-        mjpeg-users@lists.sourceforge.net, netdev@vger.kernel.org,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH v2 00/40] Use ASCII subset instead of UTF-8 alternate
- symbols
-Message-ID: <20210514161825.4e4c0d3e@coco.lan>
-In-Reply-To: <8b8bc929-2f07-049d-f24c-cb1f1d85bbaa@gmail.com>
-References: <cover.1620823573.git.mchehab+huawei@kernel.org>
-        <d2fed242fbe200706b8d23a53512f0311d900297.camel@infradead.org>
-        <20210514102118.1b71bec3@coco.lan>
-        <61c286b7afd6c4acf71418feee4eecca2e6c80c8.camel@infradead.org>
-        <8b8bc929-2f07-049d-f24c-cb1f1d85bbaa@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230097AbhENOWN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 10:22:13 -0400
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:40739 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233465AbhENOWM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 10:22:12 -0400
+Received: by mail-wm1-f45.google.com with SMTP id y124-20020a1c32820000b029010c93864955so1501138wmy.5
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 07:21:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l+Xsqgz8r2dyXtTsZX/G/2EHUi9zCFNcdvOGh/UOwmE=;
+        b=nTq87SZOMK2M/ul8Ee6q2T0TvOF1FSEuFrc03YAwevGvltma78SWWGs/xSsbpcv0+A
+         za4s72I0k76erKN48vk/PoYzK2rw2wUUdCnhfrnmk2m2xBh2FwAX5l8zTICEqWD9xm1A
+         OL9TruaJy9tQmWfG26wRDuMb38PGP6l+3yGfHYMNH6bnRWN7jlQybsHyUPb3fs9qXLOR
+         kT5Xl6BzddaSr7QXw1HGTcbS+HhgGaVlJnOLnRLq40qPhVzp4pdvdnBI57Iziz/9rFxG
+         6p12m4EobHr2ysGY7DhyG4N0iPBxwRwaMBfBn3qo0wLWaMXBW/pgkn9eqyKBVma4ux5V
+         B1hQ==
+X-Gm-Message-State: AOAM530rznqwNTQ9uYNt1rcFn5+vU5F9JcZNiVBLMlwnNTi8WpWVL2aS
+        EyIwSamswP6StYxNzMGxXbI=
+X-Google-Smtp-Source: ABdhPJyLOTP5fdl/PeF4IX553/dJDdmFQroEltUfOXsoZ4DfxDkzN/fhSjJ1+6/JPVx/8ivpYkOfyw==
+X-Received: by 2002:a05:600c:354b:: with SMTP id i11mr18480191wmq.102.1621002060660;
+        Fri, 14 May 2021 07:21:00 -0700 (PDT)
+Received: from rocinante.localdomain ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c15sm6752956wrd.49.2021.05.14.07.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 May 2021 07:21:00 -0700 (PDT)
+Date:   Fri, 14 May 2021 16:20:59 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH 1/5] PCI/portdrv: Don't disable pci device during shutdown
+Message-ID: <20210514142059.GI9537@rocinante.localdomain>
+References: <20210514080025.1828197-1-chenhuacai@loongson.cn>
+ <20210514080025.1828197-2-chenhuacai@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210514080025.1828197-2-chenhuacai@loongson.cn>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Fri, 14 May 2021 12:08:36 +0100
-Edward Cree <ecree.xilinx@gmail.com> escreveu:
+Hi Huacai,
 
-> For anyone who doesn't know about it: X has this wonderful thing called
->  the Compose key[1].  For instance, type =E2=8E=84--- to get =E2=80=94, o=
-r =E2=8E=84<" for =E2=80=9C.
-> Much more mnemonic than Unicode codepoints; and you can extend it with
->  user-defined sequences in your ~/.XCompose file.
+> Use separate remove()/shutdown() callback, and don't disable pci device
 
-Good tip. I haven't use composite for years, as US-intl with dead keys is
-enough for 99.999% of my needs.=20
+It would be "PCI" here in the above sentence and in the subject line.
 
-Btw, at least on Fedora with Mate, Composite is disabled by default. It has
-to be enabled first using the same tool that allows changing the Keyboard
-layout[1].
+> during shutdown. This can avoid some poweroff/reboot failures.
 
-Yet, typing an EN DASH for example, would be "<composite>--.", with is 4
-keystrokes instead of just two ('--'). It means twice the effort ;-)
+> The poweroff/reboot failures can easily reproduce on Loongson platforms.
 
-[1] KDE, GNome, Mate, ... have different ways to enable it and to=20
-    select what key would be considered <composite>:
+Could be better as "can easily be reproduced" in the above.
 
-	https://dry.sailingissues.com/us-international-keyboard-layout.html
-	https://help.ubuntu.com/community/ComposeKey
+> I think this is not a Loongson-specific problem, instead, is a problem
+> related to some specific PCI hosts. On some x86 platforms, radeon/amdgpu
+> devices can cause the same problem, and commit faefba95c9e8ca3a523831c2e
+> ("drm/amdgpu: just suspend the hw on pci shutdown") can resolve it.
 
-Thanks,
-Mauro
+You might want to change the language to be more imperative in here, as
+at the moment I am not sure if you actually have a solution to the
+problem here, or you think you have one. :)
+ 
+> As Tiezhu said, this occasionally shutdown or reboot failure is due to
+> clear PCI_COMMAND_MASTER on the device in do_pci_disable_device().
+> 
+> drivers/pci/pci.c
+> static void do_pci_disable_device(struct pci_dev *dev)
+> {
+>         u16 pci_command;
+> 
+>         pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+>         if (pci_command & PCI_COMMAND_MASTER) {
+>                 pci_command &= ~PCI_COMMAND_MASTER;
+>                 pci_write_config_word(dev, PCI_COMMAND, pci_command);
+>         }
+> 
+>         pcibios_disable_device(dev);
+> }
+> 
+> When remove "pci_command &= ~PCI_COMMAND_MASTER;", it can work well when
+> shutdown or reboot. This may implies that there are DMA activities on the
+> device while shutdown.
+> 
+> Radeon driver is more difficult than amdgpu due to its confusing symbol
+> names, and I have maintained an out-of-tree patch for a long time [1].
+> Recently, we found more and more devices can cause the same problem, and
+> it is very difficult to modify all problematic drivers as radeon/amdgpu
+> does (the .shutdown callback should make sure there is no DMA activity).
+> So, I think modify the PCIe port driver is a simple and effective way.
+> And as early discussed, kexec can still work after this patch.
+> 
+> [1] https://github.com/chenhuacai/linux/commit/8da06f9b669831829416a3e9f4d1c57f217a42f0
+[...]
+
+The above explanation and entire backstory is very helpful, but it might
+be better to include it in the cover letter, and keep the commit message
+here concise and only focused on what is being done here and why.
+
+Krzysztof
