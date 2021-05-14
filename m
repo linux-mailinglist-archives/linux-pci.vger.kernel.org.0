@@ -2,71 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B97F3380A59
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 15:22:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 565D4380AAE
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 15:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbhENNXj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 09:23:39 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:45984 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbhENNXj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 09:23:39 -0400
-Received: by mail-wr1-f54.google.com with SMTP id h4so30009038wrt.12
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 06:22:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aTq0oe3Fv2QJnIG0k4arwy1DcjhikT+/71Nk8lxk+JA=;
-        b=fKaaEhkVVJdhnipWAenpOjsJAqvjlPPxYYVh0kIzW2W9Fuw5jrk7o/bixCqZqFc0RX
-         3Vf3AufWMLsjYh5SLhcea7cljQTQuEAFLDwjSTarsVqoHzPTh4VH/bNs9dCi2EfV0fX+
-         G6YpLPzfi/bVkLr6Kve4YLws7tMwe6mDj2U71Fswv2eWdXfKGWoz6TgsZ+X0FHoN2KA6
-         frd4h3Q/NheNmqJPKS89Wx2tVv1d41+Jd/6EEbR3YKwAAaLmwZPIXDttWZVjVb8wK7NC
-         bZheg0tNFFy42QPwy7f0zhpR7KlNWz7b1sn3iahBMvQ2dG9zywFD8xKymmJdN4aEO+9D
-         0XWw==
-X-Gm-Message-State: AOAM532D4nbNxNglwxLyj7LR5hO4JgIWM0iDe8H8zBpKRQFW6RYSz1JU
-        TP3/0GjjkEZmy/GuIaLUbK8=
-X-Google-Smtp-Source: ABdhPJyv3JdQaSeOo8V+8fVog8VENgrBGwojvm6y/oxx1Sqv6sM6xNwuYB6RRnshWnV+2BQfuyTJ5g==
-X-Received: by 2002:a5d:64eb:: with SMTP id g11mr59612053wri.260.1620998547465;
-        Fri, 14 May 2021 06:22:27 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id f4sm6738009wrz.33.2021.05.14.06.22.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 06:22:26 -0700 (PDT)
-Date:   Fri, 14 May 2021 15:22:26 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH 4/5] PCI: Add quirk for multifunction devices of LS7A
-Message-ID: <20210514132226.GF9537@rocinante.localdomain>
-References: <20210514080025.1828197-1-chenhuacai@loongson.cn>
- <20210514080025.1828197-5-chenhuacai@loongson.cn>
+        id S231569AbhENNub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 09:50:31 -0400
+Received: from verein.lst.de ([213.95.11.211]:50558 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231492AbhENNuS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 09:50:18 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2A43F6736F; Fri, 14 May 2021 15:49:01 +0200 (CEST)
+Date:   Fri, 14 May 2021 15:49:00 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 06/22] PCI/P2PDMA: Attempt to set map_type if it has
+ not been set
+Message-ID: <20210514134900.GA4715@lst.de>
+References: <20210513223203.5542-1-logang@deltatee.com> <20210513223203.5542-7-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210514080025.1828197-5-chenhuacai@loongson.cn>
+In-Reply-To: <20210513223203.5542-7-logang@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jianmin,
+On Thu, May 13, 2021 at 04:31:47PM -0600, Logan Gunthorpe wrote:
+> Attempt to find the mapping type for P2PDMA pages on the first
+> DMA map attempt if it has not been done ahead of time.
+> 
+> Previously, the mapping type was expected to be calculated ahead of
+> time, but if pages are to come from userspace then there's no
+> way to ensure the path was checked ahead of time.
+> 
+> With this change it's no longer invalid to call pci_p2pdma_map_sg()
+> before the mapping type is calculated so drop the WARN_ON when that
+> is the case.
 
-[...]
-> In LS7A, multifunction device use same pci PIN and different
-> irq for different function, so fix it for standard pci PIN
-> usage.
-
-It would be "PCI" instead of "pci" and "IRQ" instead of "irq" in the
-commit message.  This would also be true in the other patches in this
-series.
-
-[...]
-> +	if (pci_match_id(devids, dev)) {
-> +		u8 fun = dev->devfn & 7;
-
-You could use the PCI_FUNC() macro here.
-
-Krzysztof
+Why?
