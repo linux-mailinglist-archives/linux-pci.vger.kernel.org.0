@@ -2,156 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E4DD3800D1
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 01:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2420F38033B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 07:21:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231584AbhEMX2W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 May 2021 19:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231544AbhEMX2U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 May 2021 19:28:20 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 190C8C06174A
-        for <linux-pci@vger.kernel.org>; Thu, 13 May 2021 16:27:10 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id s4-20020a3790040000b02902fa7aa987e8so7563786qkd.14
-        for <linux-pci@vger.kernel.org>; Thu, 13 May 2021 16:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=+KbOaFytJGmeVohVDEIu5JposTZYrKluPZGiqJdiK3k=;
-        b=O6IUFO/UDzEhMp6UQLRu5ZYFrOg61wl/gjt0b8epRd7qPBv6SDrxprjfGPbzVqSYHe
-         1bik0kNhpU3/81H03PIctZwVXB9iUchOS82Y3eiHEdAUFp3IAqBeVbblNTsrxIYTJRVM
-         mtvn9gStOIQJbfvzykTgxZW6YKFHeDYpn4zhPafvxTYU5kLPuQA0esWDgb1nyEapqdUo
-         TQljnQnJt9itX6BUHQ62DY9gWr/F/tdpPDIURxQ3oA2PjVrAa4bLa4eOBHNdt7POQXAx
-         5Ay4ME2f4rBNiKULVV7/ea8ZXvolWcv4X0zP9DN8Nef09Yqdz+PzWV8Pco68sZwJ9Avi
-         yEZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+KbOaFytJGmeVohVDEIu5JposTZYrKluPZGiqJdiK3k=;
-        b=BEwBt947w8sfLTT5tUaVtsTWEumC4MkZOYay2iDIx4pl9APVqsfXw7ap3KD0cK9R/J
-         rLEIydAdmmjQrkiVptHNEIDIQBOYuR5k/DJ+vhCbLcXskzHjxGStZHoR6zQYmVbrROeq
-         W6jh66UjPBYwDW7VDrBN01mNxjXONT9wYS+00W6nFmmISVqEvwDmxIyZXqkWF0ZFDfQ4
-         fcIq5tdN935t2pJw7xTKdGDD4I1M3N+0x4cNXvY1hIp6eMd0JYqBPp9IldLqBEMqPn2u
-         grtuaB4xn/bpGRSZZbI0fBKIsfWARIEgUJ90oy5guk/gIGtatvlSrp3I4IOzszEL9wf8
-         SN7g==
-X-Gm-Message-State: AOAM532fe0SLgwbMgoWav50hGeHbh1DASAHgNEXMY9n19rXEkdt87eUc
-        qF0qAAXE5dLzJ0aZC619nhIsvYXWjYkI
-X-Google-Smtp-Source: ABdhPJwLAZGSj+LMGCsjuEKKTdeGSWf/qY+BNlUVa2V285NHbR/Iqw5WsYFG/rWe+mGHhHjoUplKlZGhvyxs
-X-Received: from rajat2.mtv.corp.google.com ([2620:15c:202:201:d1cc:8ac5:2f45:7909])
- (user=rajatja job=sendgmr) by 2002:ad4:55ca:: with SMTP id
- bt10mr43230140qvb.6.1620948429274; Thu, 13 May 2021 16:27:09 -0700 (PDT)
-Date:   Thu, 13 May 2021 16:27:01 -0700
-In-Reply-To: <20210513232701.411773-1-rajatja@google.com>
-Message-Id: <20210513232701.411773-2-rajatja@google.com>
-Mime-Version: 1.0
-References: <20210513232701.411773-1-rajatja@google.com>
-X-Mailer: git-send-email 2.31.1.751.gd2f1c929bd-goog
-Subject: [PATCH v4 2/2] PCI: Add sysfs "removable" attribute
-From:   Rajat Jain <rajatja@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Rajat Jain <rajatja@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        helgaas@kernel.org, Oliver Neukum <oneukum@suse.com>,
-        David Laight <David.Laight@aculab.com>,
-        "=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>
-Cc:     rajatxjain@gmail.com, jsbarnes@google.com, dtor@google.com
-Content-Type: text/plain; charset="UTF-8"
+        id S232373AbhENFW4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 01:22:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33955 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229477AbhENFW4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 May 2021 01:22:56 -0400
+IronPort-SDR: NtRuEKUFppOSMwQAtyF4PCcIfGNFZ1Mvwoa5ueZEFVFIFAqtrLH7EwpeiSozSA6TZDI7TcdNfe
+ YepCIbA+G4KQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9983"; a="264039909"
+X-IronPort-AV: E=Sophos;i="5.82,299,1613462400"; 
+   d="scan'208";a="264039909"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2021 22:21:44 -0700
+IronPort-SDR: f7Fxsio2P7V0Ar0lhxMBwmcsZ/Ixp2Eb3Vy+anagkjsAXzowoC8vkJr3+8VitvtA1hsl3h0eZb
+ /m6ykdOphP9Q==
+X-IronPort-AV: E=Sophos;i="5.82,299,1613462400"; 
+   d="scan'208";a="456984554"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2021 22:21:43 -0700
+Subject: [PATCH v4 0/8] CXL Port Enumeration and Plans for v5.14
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        kernel test robot <lkp@intel.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 13 May 2021 22:21:43 -0700
+Message-ID: <162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A PCI device is "external_facing" if it's a Root Port with the ACPI
-"ExternalFacingPort" property or if it has the DT "external-facing"
-property.  We consider everything downstream from such a device to
-be removable by user.
+Changes since v3 [1]:
+- Rebase to v5.13-rc1
 
-We're mainly concerned with consumer platforms with user accessible
-Thunderbolt ports that are vulnerable to DMA attacks, and we expect those
-ports to be identified by firmware as "ExternalFacingPort". Devices in
-traditional hotplug slots can technically be removed, but the expectation
-is that unless the port is marked with "ExternalFacingPort", such devices
-are less accessible to user / may not be removed by end user, and thus not
-exposed as "removable" to userspace.
+- Fix some compile warnings (0day robot)
 
-This can be used to implement userspace policies tailored for
-user removable devices. Eg usage:
-https://chromium-review.googlesource.com/c/chromiumos/platform2/+/2591812
-https://chromium-review.googlesource.com/c/chromiumos/platform2/+/2795038
-(code uses such an attribute to remove external PCI devices or disable
-features on them as needed by the policy desired)
+- Clarify that the address_spaceX/support* attributes either return
+  "0\n" on read when not supported, or the attribute is not published /
+  visible to indicate the same. (Jonathan)
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
+- Add ABI documentation for address_spaceX and portX objects (Jonathan)
+
+- Collect some reviewed-by tags, thanks Jonathan!
+
 ---
-v4: - code comments, commit log updates
-    - Make "removable" attribute show up only under devices that are
-      really removable.
-v3: - commit log updated
-    - Rename set_pci_dev_removable() -> pci_set_removable()
-    - Call it after applying early PCI quirks.
-v2: Add documentation
 
- .../ABI/testing/sysfs-devices-removable       |  3 ++-
- drivers/pci/probe.c                           | 22 +++++++++++++++++++
- 2 files changed, 24 insertions(+), 1 deletion(-)
+Plans for v5.14:
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-removable b/Documentation/ABI/testing/sysfs-devices-removable
-index acf7766e800b..bda6c320c8d3 100644
---- a/Documentation/ABI/testing/sysfs-devices-removable
-+++ b/Documentation/ABI/testing/sysfs-devices-removable
-@@ -14,4 +14,5 @@ Description:
- 
- 		Currently this is only supported by USB (which infers the
- 		information from a combination of hub descriptor bits and
--		platform-specific data such as ACPI).
-+		platform-specific data such as ACPI) and PCI (which gets this
-+		from ACPI / device tree).
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 3a62d09b8869..812e0d7fd7a7 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1575,6 +1575,26 @@ static void set_pcie_untrusted(struct pci_dev *dev)
- 		dev->untrusted = true;
- }
- 
-+static void pci_set_removable(struct pci_dev *dev)
-+{
-+	struct pci_dev *parent = pci_upstream_bridge(dev);
-+
-+	/*
-+	 * We (only) consider everything downstream from an external_facing
-+	 * device to be removable by the user. We're mainly concerned with
-+	 * consumer platforms with user accessible thunderbolt ports that are
-+	 * vulnerable to DMA attacks, and we expect those ports to be marked by
-+	 * the firmware as external_facing. Devices in traditional hotplug
-+	 * slots can technically be removed, but the expectation is that unless
-+	 * the port is marked with external_facing, such devices are less
-+	 * accessible to user / may not be removed by end user, and thus not
-+	 * exposed as "removable" to userspace.
-+	 */
-+	if (parent &&
-+	    (parent->external_facing || dev_is_removable(&parent->dev)))
-+		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
-+}
-+
- /**
-  * pci_ext_cfg_is_aliased - Is ext config space just an alias of std config?
-  * @dev: PCI device
-@@ -1822,6 +1842,8 @@ int pci_setup_device(struct pci_dev *dev)
- 	/* Early fixups, before probing the BARs */
- 	pci_fixup_device(pci_fixup_early, dev);
- 
-+	pci_set_removable(dev);
-+
- 	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
- 		 dev->vendor, dev->device, dev->hdr_type, dev->class);
- 
--- 
-2.31.1.751.gd2f1c929bd-goog
+This series is a starting point for the persistent memory and dynamic
+HDM decoder manipulation support targeting the v5.14 kernel. Among the
+tasks to complete in that timeframe are:
 
+- Region creation including CXL label support
+- LIBNVDIMM integration for surfacing /dev/pmemX and /dev/daxX.Y devices
+  on CXL resources
+- HDM decoder enumeration and programming for setting up PMEM mappings
+  alongside any "System RAM" mappings established by platform firmware
+- CDAT-DOE support in support of dynamically created NUMA nodes
+- CXL PMEM Shutdown semantics (global persistence flush coordination)
+
+Contributions to cxl.git targeting the next merge window require a
+non-author Reviewed-by. A patch with a Reviewed-by, no outstanding
+objections, and a 3-5 day quiet period on the list is subject to be
+applied to a non-rebasing cxl.git branch and merged into cxl.git/next.
+Contributions targeting a current -rc (fixes) may go in on an expedited
+schedule with only an Acked-by.
+
+---
+
+CXL Port Topology:
+
+The enumeration starts with the ACPI0017 driver registering a 'struct
+cxl_root' object to establish the top of a cxl_port topology. It then
+scans the ACPI bus looking for ACPI0016 instances. The cxl_root object
+is a singleton* anchor to hang "address-space" objects and be a parent
+device for the downstream 'struct cxl_port' instances. An address-space
+has a 1:1 relationship with a platform defined memory resource range,
+like _CRS for PCIE Host Bridges. Use module parameters to model a
+root-level HDM decoder that all downstream ports further decode, to be
+replaced with a Code First ECN to do the same.
+
+Each address space is modeled as a sysfs object that also shows up in
+/proc/iomem as "CXL Address Space". That iomem resource is functionally
+equivalent to the root-level 'PCI Bus' resources for PCIE.mmio while
+'CXL Address Space' indicates space for CXL.mem to be mapped. "System
+RAM" and "Persistent Memory", when mapped by HDM decoders, will appear
+as child CXL.mem resources.
+
+Once a 'struct cxl_root' is established the host bridge is modeled as 1
+upstream 'struct cxl_port' and N downstream 'struct cxl_port' instances
+(one per Root Port), just like a PCIE switch. The host-bridge upstream
+port optionally has the HDM decoder registers from the CHBCR if the
+host-bridge has multiple PCIE/CXL root ports. Single-ported host bridges
+will not have HDM decoders in the CHBCR space (see CHBCR note in
+8.2.5.12 CXL HDM Decoder Capability Structure), but the 'struct
+cxl_port' object is still needed to represent other CXL capabilities and
+access port-specific component registers outside of HDM decoders.
+
+Each 'struct cxl_port' has a 'target_id' attribute that answers the
+question "what port am I in my upstream port's HDM decoder target
+list?". For the host-bridge struct cxl_port, the first tier of ports
+below cxl_root.port, the id is derived from the ordinal mapping of the
+ACPI0016 id (instance id, _UID, or other handle TBD), for all other
+ports the id is the PCIE Root Port ID from the Link Capabilities
+register [1]. The mapping of ordinal port identifiers relative to their
+parent may change once libcxl and cxl-cli prove out region creation, or
+a better option is found to establish a static device path / persistent
+naming scheme. System software must not assume that 'struct cxl_port'
+device names will be static from one boot to the next.
+
+See patch7 for a tree(1) topology picture of what QEMU is producing
+today with this enabling.
+
+* cxl_root is singleton only by convention. A given cxl_root could
+  represent 1 to N address spaces, this patch set chooses to implement 1
+  cxl_root for all address spaces.
+
+[1]: CXL 2.0 8.2.5.12.8 CXL HDM Decoder 0 Target List Low Register
+     (Offset 24h) ...The Target Port Identifier for a given Downstream Port
+     is reported via Port Number field in Link Capabilities Register. (See
+     PCI Express Base Specification).
+
+---
+
+Dan Williams (8):
+      cxl/mem: Move some definitions to mem.h
+      cxl/mem: Introduce 'struct cxl_regs' for "composable" CXL devices
+      cxl/core: Rename bus.c to core.c
+      cxl/core: Refactor CXL register lookup for bridge reuse
+      cxl/acpi: Introduce ACPI0017 driver and cxl_root
+      cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+      cxl/port: Introduce cxl_port objects
+      cxl/acpi: Add module parameters to stand in for ACPI tables
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl         |   89 ++++
+ Documentation/driver-api/cxl/memory-devices.rst |    6
+ drivers/cxl/Kconfig                             |   16 +
+ drivers/cxl/Makefile                            |    6
+ drivers/cxl/acpi.c                              |  215 +++++++++
+ drivers/cxl/bus.c                               |   29 -
+ drivers/cxl/core.c                              |  566 +++++++++++++++++++++++
+ drivers/cxl/cxl.h                               |  148 ++++--
+ drivers/cxl/mem.c                               |   93 +---
+ drivers/cxl/mem.h                               |   78 +++
+ 10 files changed, 1089 insertions(+), 157 deletions(-)
+ create mode 100644 drivers/cxl/acpi.c
+ delete mode 100644 drivers/cxl/bus.c
+ create mode 100644 drivers/cxl/core.c
+ create mode 100644 drivers/cxl/mem.h
+
+base-commit: 6efb943b8616ec53a5e444193dccf1af9ad627b5
