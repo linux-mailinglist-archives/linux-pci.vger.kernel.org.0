@@ -2,92 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB37F380E38
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 18:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78858380FDB
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 20:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233117AbhENQbs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 12:31:48 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:33070 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230009AbhENQbs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 12:31:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=xV6ltS4lNS3Jm/f8TEnktWg1U1xW+UrFzR8b6RAQyww=; b=s//zBlCpwgQ1lLSn3XKJEQOaWd
-        rI8rRBGrF3aoC3g+QuDXDug4GzbnkaS6nBtWhDM3pUOjQYKZYx/6iqfRigkJyI290iga8e7o+co0E
-        QbXpFJsOWAQw7fOVJWNVDxDk/PaOaE0YGfRnol4IiEjPWjENwy9CRw8DjR6tZ+WmbEC0OTj1tjMV/
-        /DRMXbA8j4LTuFwWSHMlTxZaa7XowzY/YiYS5R+3nywlL9wmmsoR+uFEzvV5+oIlKCVP0Tyx8aJlM
-        CWWYGc4JPwElN6+U10s+whCtXjoZyIVemlp2K/nOQSPMyhE1NnQR98UkoaVAkuMTzmLnP7RlAicuB
-        8O/5DBLg==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lhahm-0006Ih-Qz; Fri, 14 May 2021 10:30:27 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20210513223203.5542-1-logang@deltatee.com>
- <20210514140007.GE4715@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <91ce86db-e2f9-85ac-12db-91df72ac4648@deltatee.com>
-Date:   Fri, 14 May 2021 10:30:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S230491AbhENSih (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 14:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230122AbhENSig (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 14:38:36 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EA7C061756
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 11:37:24 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id i13so5795204edb.9
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 11:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=02LxdjsgVQUzSiAH2KRvI2SnT3V/EPoHS2xbtXtqU2g=;
+        b=Nq4AIGmDxvCN38wn3yZRBD67IcSVsSt7TWWB1P+liR27OwjbgoNhOrIPmOghWAyPIW
+         QpL9JNaYyc7DE/Xjw/pKb6909dUYUvrjXLGLc4kEBQPdoihaaZbpxBLEZcfKmQZtIivA
+         DrU0GVGlHtS/byT8pa8wmHMFRuwCWEOWGfHtB2u0vmBB2jwa8f/jzshVRNYD6PJPoISC
+         zvgx38/qoY6SVync+Te4uR2jYgeF3CnSLLpq1nN+CYyXQeb6BQiJOs+085Ks9pUa3qFJ
+         qVxyxFm3jX1IXk2JcCS7CsInTPVgN4CnRD2z2rQPhdToCCxYQ8qD+FvUnp9WOgYrDpOf
+         mnJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=02LxdjsgVQUzSiAH2KRvI2SnT3V/EPoHS2xbtXtqU2g=;
+        b=MBFRzCiE9t7CR0R7bmVmRwMI04hi2DdVgNmwUnYK/DWYgz3ciBZKeW1+ozfWO1qbAi
+         j3KQWEIsuMkkPe6VdZopnmJ42i04bPLCYouKt9k8q5u9c3wjoQnmJSU0+0C0RsUxVlNf
+         8IMCOGFAUpsnvim9xd29StgSea1+eAkPq/RHfynua7DJy3O9z2F2oCG5L1X9vaOXAYJK
+         pzTz2O6BuAMutXvjysSOFQ6DvHX3iBeESCS3SnQpol6K9XmqYoztKxyHq9JrlqdVG9YS
+         cdyiKx116kVaaSh+YziCWy6/f9Fe4tg08FGMRT3TUBzJPt6rY39aykVz86h0JxcCsQCJ
+         GNSQ==
+X-Gm-Message-State: AOAM532o2lrX7DZ8UitZBo704d8uensdSxFWleqQMaiHyZxy14aZb/cL
+        OnVg5VxRtV7n02sVW9qPPb3nbo2GuQrN2Sa2P7JwKA==
+X-Google-Smtp-Source: ABdhPJz8vCIzsAYA1fh7/O9J0MXCNdSlpbUWm6Al/0crTgIeWRfdboiI2YKdirtbIUuWaRdWfeKglSMA8J5lJq0OmmA=
+X-Received: by 2002:a05:6402:13c3:: with SMTP id a3mr21131702edx.18.1621017443439;
+ Fri, 14 May 2021 11:37:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210514140007.GE4715@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH v2 00/22] Add new DMA mapping operation for P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+ <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
+ <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
+ <20210514094755.00002081@Huawei.com>
+In-Reply-To: <20210514094755.00002081@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 14 May 2021 11:37:12 -0700
+Message-ID: <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+[..]
+> > If it simplifies the kernel implementation to assume single
+> > kernel-initiator then I think that's more than enough reason to block
+> > out userspace, and/or provide userspace a method to get into the
+> > kernel's queue for service.
+>
+> This last suggestion makes sense to me. Let's provide a 'right' way
+> to access the DOE from user space. I like the idea if it being possible
+> to run CXL compliance tests from userspace whilst the driver is loaded.
 
+Ah, and I like your observation that once the kernel provides a
+"right" way to access DOE then userspace direct-access of DOE is
+indeed a "you get to keep the pieces" event like any other unwanted
+userspace config-write.
 
-On 2021-05-14 8:00 a.m., Christoph Hellwig wrote:
-> On Thu, May 13, 2021 at 04:31:41PM -0600, Logan Gunthorpe wrote:
->>  17 files changed, 570 insertions(+), 290 deletions(-)
-> 
-> I'm a little worried about all this extra code for no new functionality
-> at all.
+> Bjorn, given this would be a generic PCI thing, any preference for what
+> this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
+> to those for the BAR based CXL mailboxes?
 
-Yes, this series is really just prep work for allowing new
-functionality. And a bunch of cleanup has been tacked onto it. It should
-make adding P2PDMA in userspace a lot easier and I expect other P2PDMA
-use cases will be better enabled by it.
+(warning, anti-ioctl bias incoming...)
 
-A lot of people don't like the pci_p2pdma_map_sg() special case and
-can't use it in their use case because it only accepts homogenous SGLs.
-This series gets rid of the special case and allows it to be used more
-generally.
+Hmm, DOE has an enumeration capability, could the DOE driver use a
+scheme to have a sysfs bin_attr per discovered object type? This would
+make it simliar to the pci-vpd sysfs interface.
 
-Logan
+Then the kernel could cache objects like CDAT that don't change
+outside of some invalidation event.
