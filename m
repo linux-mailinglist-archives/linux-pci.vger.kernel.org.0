@@ -2,173 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A0DF38060B
-	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 11:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5757380822
+	for <lists+linux-pci@lfdr.de>; Fri, 14 May 2021 13:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231513AbhENJVD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 05:21:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:45432 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230000AbhENJVD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 May 2021 05:21:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F09BA1480;
-        Fri, 14 May 2021 02:19:51 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C13FB3F719;
-        Fri, 14 May 2021 02:19:48 -0700 (PDT)
-Date:   Fri, 14 May 2021 10:19:43 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [RFC v2 1/7] PCI: Introduce pci_host_bridge::domain_nr
-Message-ID: <20210514091943.GA13309@lpieralisi>
-References: <20210503144635.2297386-1-boqun.feng@gmail.com>
- <20210503144635.2297386-2-boqun.feng@gmail.com>
- <YJDYrn7Nt+xyHbyr@kernel.org>
- <20210506105245.GA26351@lpieralisi>
- <YJk4vdJnOxHvlFLT@boqun-archlinux>
+        id S231645AbhENLJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 07:09:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229445AbhENLJu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 07:09:50 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39449C061574;
+        Fri, 14 May 2021 04:08:39 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id n17-20020a7bc5d10000b0290169edfadac9so1248684wmk.1;
+        Fri, 14 May 2021 04:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DnsDrIqkWnYf7da8HpIWFBQQt2XImu+6ZyHWBvjrfcE=;
+        b=sDX/4vOZ59ic93Kj1k7EQHH5H75TwRxFQdfU97NsB2/Y+xVttZgCu6VcmdiZBbTXV4
+         Yd9dS94Y1asR2VIYZN7NEerfwgmtEUFK3NZSUIzeY6J/4AmyVofgnwxiuO5puvulkCHX
+         zAH+iCNJUU2yLFhQkplxklOlcyZUbrmQbTIThNq4BukYbZy9X610Bla24hpoPnMCKKtF
+         HaX7GWwtAjZyjiNuvWcCoIBPkXTf9xY5aCFfjMGcrbRCdRoMLY/c+VX1+t1XGHSYNqtQ
+         /vEAS8jymBn+QTD3oR/5dtU3nH62pPJpzKh6iPn38AjBb8Fr8EpkCArPsjTRrMSNZ8n3
+         9CtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DnsDrIqkWnYf7da8HpIWFBQQt2XImu+6ZyHWBvjrfcE=;
+        b=TD856n5ZaQSeJHGEx9lBl3DYJwSrmzWVHV1McUmXOwhUBLbSBNiZ/6VlNVh199g9Ri
+         9ldmsRKsgTpW0jJKu8wKKq9vTGxH8oYk1RYzr0pjjLyUXEWToFutGV6NHvDxrr3dRNcd
+         xpI6drJa0q8KxQI7Q383NhY5taZvAWG0bu4SH+Vv8KsL8GmXv+26WjLv17OjGJIsC9KP
+         zFk3FPiWWaCXwZzHBuEalGXketW02Jwpz/pzIJrrM7hhmVXx0ONOcWgQH31a0goO2DN0
+         0t4ahJ7da1+KepMU+CFz4Dgi5zZsjD3BtWZd2x/DzFYx57euWgcPya3+ADCpQXiDX1a0
+         9KEw==
+X-Gm-Message-State: AOAM530kBEY1aeTl7/fqP01xjKBxsG+XUhMJjIAC3GW4JTFpOAA74x2o
+        06yceDCYnkP+PZ9QsYvx+4mADfV1+btBCg==
+X-Google-Smtp-Source: ABdhPJwViz0BDPUuVH349RqXP0p4zCVFhrVjXNorTYnm55dAjMiaqH0FajvtM+sJwCYcinjBh5k1qQ==
+X-Received: by 2002:a7b:c005:: with SMTP id c5mr21007074wmb.113.1620990517974;
+        Fri, 14 May 2021 04:08:37 -0700 (PDT)
+Received: from [192.168.1.122] (cpc159425-cmbg20-2-0-cust403.5-4.cable.virginm.net. [86.7.189.148])
+        by smtp.gmail.com with ESMTPSA id b10sm7116349wrr.27.2021.05.14.04.08.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 May 2021 04:08:37 -0700 (PDT)
+Subject: Re: [PATCH v2 00/40] Use ASCII subset instead of UTF-8 alternate
+ symbols
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mali DP Maintainers <malidp@foss.arm.com>,
+        alsa-devel@alsa-project.org, coresight@lists.linaro.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, keyrings@vger.kernel.org,
+        kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-usb@vger.kernel.org,
+        mjpeg-users@lists.sourceforge.net, netdev@vger.kernel.org,
+        rcu@vger.kernel.org
+References: <cover.1620823573.git.mchehab+huawei@kernel.org>
+ <d2fed242fbe200706b8d23a53512f0311d900297.camel@infradead.org>
+ <20210514102118.1b71bec3@coco.lan>
+ <61c286b7afd6c4acf71418feee4eecca2e6c80c8.camel@infradead.org>
+From:   Edward Cree <ecree.xilinx@gmail.com>
+Message-ID: <8b8bc929-2f07-049d-f24c-cb1f1d85bbaa@gmail.com>
+Date:   Fri, 14 May 2021 12:08:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YJk4vdJnOxHvlFLT@boqun-archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <61c286b7afd6c4acf71418feee4eecca2e6c80c8.camel@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 09:44:29PM +0800, Boqun Feng wrote:
-> [Copy Rob]
-> 
-> On Thu, May 06, 2021 at 11:52:45AM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, May 04, 2021 at 08:16:30AM +0300, Mike Rapoport wrote:
-> > > On Mon, May 03, 2021 at 10:46:29PM +0800, Boqun Feng wrote:
-> > > > Currently we retrieve the PCI domain number of the host bridge from the
-> > > > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
-> > > > we have the information at PCI host bridge probing time, and it makes
-> > > > sense that we store it into pci_host_bridge. One benefit of doing so is
-> > > > the requirement for supporting PCI on Hyper-V for ARM64, because the
-> > > > host bridge of Hyper-V doesnt' have pci_config_window, whereas ARM64 is
-> > > > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
-> > > > number from pci_config_window on ARM64 Hyper-V guest.
-> > > > 
-> > > > As the preparation for ARM64 Hyper-V PCI support, we introduce the
-> > > > domain_nr in pci_host_bridge, and set it properly at probing time, then
-> > > > for PCI_DOMAINS_GENERIC=y archs, bus domain numbers are set by the
-> > > > bridge domain_nr.
-> > > > 
-> > > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > > > ---
-> > > >  arch/arm/kernel/bios32.c              |  2 ++
-> > > >  arch/arm/mach-dove/pcie.c             |  2 ++
-> > > >  arch/arm/mach-mv78xx0/pcie.c          |  2 ++
-> > > >  arch/arm/mach-orion5x/pci.c           |  2 ++
-> > > >  arch/arm64/kernel/pci.c               |  3 +--
-> > > >  arch/mips/pci/pci-legacy.c            |  2 ++
-> > > >  arch/mips/pci/pci-xtalk-bridge.c      |  2 ++
-> > > >  drivers/pci/controller/pci-ftpci100.c |  2 ++
-> > > >  drivers/pci/controller/pci-mvebu.c    |  2 ++
-> > > >  drivers/pci/pci.c                     |  4 ++--
-> > > >  drivers/pci/probe.c                   |  7 ++++++-
-> > > >  include/linux/pci.h                   | 11 ++++++++---
-> > > >  12 files changed, 33 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> > > > index e7ef2b5bea9c..4942cd681e41 100644
-> > > > --- a/arch/arm/kernel/bios32.c
-> > > > +++ b/arch/arm/kernel/bios32.c
-> > > > @@ -471,6 +471,8 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
-> > > >  				bridge->sysdata = sys;
-> > > >  				bridge->busnr = sys->busnr;
-> > > >  				bridge->ops = hw->ops;
-> > > > +				if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> > > > +					bridge->domain_nr = pci_bus_find_domain_nr(sys, parent);
-> > > >  
-> > > >  				ret = pci_scan_root_bus_bridge(bridge);
-> > > >  			}
-> > > > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-> > > > index ee91ac6b5ebf..92eb8484b49b 100644
-> > > > --- a/arch/arm/mach-dove/pcie.c
-> > > > +++ b/arch/arm/mach-dove/pcie.c
-> > > > @@ -167,6 +167,8 @@ dove_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
-> > > >  	bridge->sysdata = sys;
-> > > >  	bridge->busnr = sys->busnr;
-> > > >  	bridge->ops = &pcie_ops;
-> > > > +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> > > > +		bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
-> > > 
-> > > The check for CONFIG_PCI_DOMAINS_GENERIC is excessive because there is a
-> > > stub for pci_bus_find_domain_nr().
-> > > 
-> > > I'm not an expert in PCI, but maybe the repeated assignment of
-> > > bridge->domain_nr can live in the generic code, say, in
-> > > pci_scan_root_bus_bridge(). E.g. it will set the domain_nr when it is zero.
-> > > 
-> > > >  
-> > 
-> > Yes, this churn should be avoided. We need a sentinel value to detect
-> > whether the domain_nr is invalid (0 is a valid domain) so generic code
-> > (ie pci_scan_root_bus_bridge() and friends) has to call generic
-> > functions to get it (pci_bus_find_domain_nr()).
-> > 
-> 
-> Agreed. Thank you all for the inputs.
-> 
-> According to [1], "PCI Conventional" has at most 256 PCI bus segments
-> and "PCI Express" has at most 65536 "PCI Segments Groups", so any value
-> outside [0, 65536] can be used as a sentinel. I'm planning to use -1
-> like:
-> 
-> 	#define PCI_DOMAIN_NR_NOT_SET (-1)
-> 
-> 	(in pci_alloc_host_bridge())
-> 	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
-> 
-> 	(in pci_register_host_bridge())
-> 	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
-> 		bridge->domain_nr = pci_bus_find_domain_nr(...);
+> On Fri, 2021-05-14 at 10:21 +0200, Mauro Carvalho Chehab wrote:
+>> I do use a lot of UTF-8 here, as I type texts in Portuguese, but I rely
+>> on the US-intl keyboard settings, that allow me to type as "'a" for á.
+>> However, there's no shortcut for non-Latin UTF-codes, as far as I know.
+>>
+>> So, if would need to type a curly comma on the text editors I normally 
+>> use for development (vim, nano, kate), I would need to cut-and-paste
+>> it from somewhere
 
-It should be fine. I'd move the check
+For anyone who doesn't know about it: X has this wonderful thing called
+ the Compose key[1].  For instance, type ⎄--- to get —, or ⎄<" for “.
+Much more mnemonic than Unicode codepoints; and you can extend it with
+ user-defined sequences in your ~/.XCompose file.
+(I assume Wayland supports all this too, but don't know the details.)
 
-if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
+On 14/05/2021 10:06, David Woodhouse wrote:
+> Again, if you want to make specific fixes like removing non-breaking
+> spaces and byte order marks, with specific reasons, then those make
+> sense. But it's got very little to do with UTF-8 and how easy it is to
+> type them. And the excuse you've put in the commit comment for your
+> patches is utterly bogus.
 
-in pci_bus_find_domain_nr()
++1
 
-to make the logic contained in there but that's a nit.
+-ed
 
-Lorenzo
-
-> Thoughts?
-> 
-> Regards,
-> Boqun
-> 
-> [1]: https://wiki.osdev.org/PCI_Express
-> 
-> > We can implement it as a flag or function pointer in the struct
-> > pci_host_bridge, if the flag or function pointer is not set the
-> > generic pci_bus_find_domain_nr() should be called.
-> > 
-> > Lorenzo
+[1] https://en.wikipedia.org/wiki/Compose_key
