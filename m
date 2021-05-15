@@ -2,42 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F66838162E
-	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 07:36:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BD1D381637
+	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 07:51:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234368AbhEOFhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 May 2021 01:37:22 -0400
-Received: from mail-ej1-f48.google.com ([209.85.218.48]:36545 "EHLO
-        mail-ej1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232792AbhEOFhW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 May 2021 01:37:22 -0400
-Received: by mail-ej1-f48.google.com with SMTP id c20so1636644ejm.3
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 22:36:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SDyLyYKMOMM01yAnQWwaEmsDx06DfWwmC9jVMwC267g=;
-        b=jdAnJe+2CTFcblQHrJGmjN2vkzOS5lgueM8vFX6DGAXRrCcMj9Fr+BfU6vQ5XtM/FR
-         482jkXNOPD0gMYl/lSuloEwpyl3r0giZqykpn/rnak7wUxu+yutDstI6c2+tlyKjwHgo
-         RyTkOZo28xtanurn+Lh6TLDVzlJBLkLHXO5aA0JveffGOiIVrV2hgGYw1mh7EVkOcuSE
-         J5AXtPMQBCwCwrnRM1RMlT9fV4UlJh8vmGAvOFpbBcFSvj0oHAAP9+v6MQWTC/Uu/MTL
-         1s24OxMf4G2B8UzdcYniD5ru3h99K6NCRGg0ExJri4rQLYjY/75smUNNJyCQIwjBG34t
-         wisg==
-X-Gm-Message-State: AOAM533ggVZZtXDMT4UtnJ9zrU5HTq+Ji2GQIqnG/tGYTT8VLmUvgOEf
-        YJxBZkBSRgifU/6tXtEnnZY=
-X-Google-Smtp-Source: ABdhPJwbr3Y/1auLCBpHvfjMGdiIbyXL5GfmX9Da+zC0OU0n75U9zQufvL5vkiUJg6bJsXEvC0LMeA==
-X-Received: by 2002:a17:906:27c3:: with SMTP id k3mr51691905ejc.519.1621056967989;
-        Fri, 14 May 2021 22:36:07 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id y10sm4730405ejh.105.2021.05.14.22.36.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 22:36:07 -0700 (PDT)
-Date:   Sat, 15 May 2021 07:36:06 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
+        id S234382AbhEOFwk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 May 2021 01:52:40 -0400
+Received: from smtprelay0034.hostedemail.com ([216.40.44.34]:35258 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234371AbhEOFw3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 May 2021 01:52:29 -0400
+X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Sat, 15 May 2021 01:52:29 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id 2237118026C30
+        for <linux-pci@vger.kernel.org>; Sat, 15 May 2021 05:43:40 +0000 (UTC)
+Received: from omf15.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 38C29182CED28;
+        Sat, 15 May 2021 05:43:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf15.hostedemail.com (Postfix) with ESMTPA id 737E2C4171;
+        Sat, 15 May 2021 05:43:36 +0000 (UTC)
+Message-ID: <985813cafbbe58cd899737ee49b44798210a69f6.camel@perches.com>
+Subject: Re: [PATCH v2 01/14] PCI: Use sysfs_emit() and sysfs_emit_at() in
+ "show" functions
+From:   Joe Perches <joe@perches.com>
+To:     Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Joe Perches <joe@perches.com>,
         Oliver O'Halloran <oohall@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -48,26 +37,57 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 01/14] PCI: Use sysfs_emit() and sysfs_emit_at() in
- "show" functions
-Message-ID: <20210515053606.GA72086@rocinante.localdomain>
-References: <20210515052434.1413236-1-kw@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Date:   Fri, 14 May 2021 22:43:35 -0700
 In-Reply-To: <20210515052434.1413236-1-kw@linux.com>
+References: <20210515052434.1413236-1-kw@linux.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.1-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.90
+X-Stat-Signature: sktyye3trus7rah3tcedpkwhqfm6xq1a
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 737E2C4171
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19iS+XLPvw0DQLZl4lLIJgMwROnMeU+SbY=
+X-HE-Tag: 1621057416-840459
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+On Sat, 2021-05-15 at 05:24 +0000, Krzysztof Wilczyński wrote:
+> The sysfs_emit() and sysfs_emit_at() functions were introduced to make
+> it less ambiguous which function is preferred when writing to the output
+> buffer in a device attribute's "show" callback [1].
+> 
+> Convert the PCI sysfs object "show" functions from sprintf(), snprintf()
+> and scnprintf() to sysfs_emit() and sysfs_emit_at() accordingly, as the
+> latter is aware of the PAGE_SIZE buffer and correctly returns the number
+> of bytes written into the buffer.
+[]
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+[]
+> @@ -6439,7 +6439,7 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+>  
+> 
+>  	spin_lock(&resource_alignment_lock);
+>  	if (resource_alignment_param)
+> -		count = scnprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
+> +		count = sysfs_emit(buf, "%s", resource_alignment_param);
+>  	spin_unlock(&resource_alignment_lock);
 
-[...]
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Ideally, the additional newline check below this would use sysfs_emit_at
 
-Please disregard this "Reviewed-by" from Logan for this version, as I've
-forgotten to remove it before sending v2 after pulling patches using b4.
+drivers/pci/pci.c-      /*
+drivers/pci/pci.c:       * When set by the command line, resource_alignment_param will not
+drivers/pci/pci.c-       * have a trailing line feed, which is ugly. So conditionally add
+drivers/pci/pci.c-       * it here.
+drivers/pci/pci.c-       */
+drivers/pci/pci.c-      if (count >= 2 && buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
+drivers/pci/pci.c-              buf[count - 1] = '\n';
+drivers/pci/pci.c-              buf[count++] = 0;
+drivers/pci/pci.c-      }
+drivers/pci/pci.c-
+drivers/pci/pci.c-      return count;
+	
 
-Apologies.
-
-Krzysztof
