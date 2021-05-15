@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7345381603
-	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 07:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08BC2381604
+	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 07:24:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbhEOFZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S232787AbhEOFZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 15 May 2021 01:25:58 -0400
-Received: from mail-ed1-f46.google.com ([209.85.208.46]:43655 "EHLO
-        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232432AbhEOFZ6 (ORCPT
+Received: from mail-ed1-f48.google.com ([209.85.208.48]:34491 "EHLO
+        mail-ed1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232714AbhEOFZ6 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Sat, 15 May 2021 01:25:58 -0400
-Received: by mail-ed1-f46.google.com with SMTP id s6so830313edu.10
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 22:24:44 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id l7so874933edb.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 22:24:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9Gp2LJL1lW12f9o9B/z7t/PXSY/mDvHIuRVwQfasUic=;
-        b=uhDq1yDKpt08bswdcWli0d7GN/fXd5kPr9OVYqF0tDeShSJ/n42nY1GiQnJCFZ6oUe
-         gQScMu+8/4FwcpWcI3LZOcwg9RvCW8DVmv+QJLwShCZaTKYyHYTfwN8wkN/ABx/p+5T1
-         GHAYoVg1pd0hi7llsFOLlwMB1qQ0dzy6/695Fo3qbwkCDGzGgJLdIvv5Du0gNi9JUxNT
-         BAwBjSySN5eM6VYi+ZkrFJR7tSJSt6yOA2AR1/OWLRwtZ3zE8LwnuQK+mOjtXQ3sCzG0
-         7dcetYbtDkyaKMBQd902ZIJgj4AUg5d0yHsgbau6M/GUvW6Fxsnssr5zq6aMpnWv6itO
-         /w0w==
-X-Gm-Message-State: AOAM533FnqyDMYVjQZOsitXC0f8Q+H/TIEifgU5toEbe5rUfnp8bjlzW
-        k9vEvV7SZBZrNncbi80pbM8=
-X-Google-Smtp-Source: ABdhPJygjYsZin7lnJ61Xk7tN8Ajfd+LkXB3aIY5KrQ/tbUiVN1ghVgMxSTrTAGQmmN8ZvQkot3ULQ==
-X-Received: by 2002:a50:ec89:: with SMTP id e9mr59801846edr.347.1621056283909;
-        Fri, 14 May 2021 22:24:43 -0700 (PDT)
+        bh=JeL2FUARGxszhpfrtswg3uTFL3yp7K/KDjvHQpNvygA=;
+        b=MpOHcu6+X96PDBYf3RHuK8iZqE5riPmBskBF/ZM8juOWQ72y7szNniKe206+RW6c+J
+         5g86iFTjXPt7p/1mLlMtnaMYMlHLL0dlUcd7HTjssY9RpKK2GssTI2aVEyF6/3jKKzQp
+         fvtF9/3ZLxLs1TCrVvAHU02zFpVBLq6tcLuix/HvE8iVnMlDg+aLKpiSuoE8TiIuPhMv
+         GOzKpNqpJyqcthn9GK0efaMXTidNmnrV6st/4x5wItAmjcFg98X2+56Yr8prXvPEiTup
+         eiZOyL/w5wuL/pJL1rvt0hYDU49+lYaVxpO8YEFxmRkHBQ4WFRWETWcCJgkdZDmaZU6W
+         ZYEA==
+X-Gm-Message-State: AOAM53086Sub3WhPVAG9sST3rG1DN05tupxh7avjEBEdSAMI81N6sy1x
+        P1WE0ECi180mck9WgjPyzww=
+X-Google-Smtp-Source: ABdhPJx+4BP4JtYzZtC8In7d/GJnnFuTFXS/SOuG81dzRIapdNn/ATBw6N6OxyoSxAEY6QITNhVGvw==
+X-Received: by 2002:aa7:cc10:: with SMTP id q16mr39814486edt.53.1621056284880;
+        Fri, 14 May 2021 22:24:44 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id kt21sm4821487ejb.5.2021.05.14.22.24.42
+        by smtp.gmail.com with ESMTPSA id kt21sm4821487ejb.5.2021.05.14.22.24.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 22:24:43 -0700 (PDT)
+        Fri, 14 May 2021 22:24:44 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
@@ -47,9 +47,9 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 08/14] PCI: switchtec: Use sysfs_emit() and sysfs_emit_at() in "show" functions
-Date:   Sat, 15 May 2021 05:24:28 +0000
-Message-Id: <20210515052434.1413236-8-kw@linux.com>
+Subject: [PATCH v2 09/14] PCI: rpadlpar: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+Date:   Sat, 15 May 2021 05:24:29 +0000
+Message-Id: <20210515052434.1413236-9-kw@linux.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210515052434.1413236-1-kw@linux.com>
 References: <20210515052434.1413236-1-kw@linux.com>
@@ -78,82 +78,31 @@ Related to:
 
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/switch/switchtec.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/pci/hotplug/rpadlpar_sysfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index ba52459928f7..0b301f8be9ed 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -280,7 +280,7 @@ static ssize_t device_version_show(struct device *dev,
- 
- 	ver = ioread32(&stdev->mmio_sys_info->device_version);
- 
--	return sprintf(buf, "%x\n", ver);
-+	return sysfs_emit(buf, "%x\n", ver);
- }
- static DEVICE_ATTR_RO(device_version);
- 
-@@ -292,7 +292,7 @@ static ssize_t fw_version_show(struct device *dev,
- 
- 	ver = ioread32(&stdev->mmio_sys_info->firmware_version);
- 
--	return sprintf(buf, "%08x\n", ver);
-+	return sysfs_emit(buf, "%08x\n", ver);
- }
- static DEVICE_ATTR_RO(fw_version);
- 
-@@ -344,7 +344,7 @@ static ssize_t component_vendor_show(struct device *dev,
- 
- 	/* component_vendor field not supported after gen3 */
- 	if (stdev->gen != SWITCHTEC_GEN3)
--		return sprintf(buf, "none\n");
-+		return sysfs_emit(buf, "none\n");
- 
- 	return io_string_show(buf, &si->gen3.component_vendor,
- 			      sizeof(si->gen3.component_vendor));
-@@ -359,9 +359,9 @@ static ssize_t component_id_show(struct device *dev,
- 
- 	/* component_id field not supported after gen3 */
- 	if (stdev->gen != SWITCHTEC_GEN3)
--		return sprintf(buf, "none\n");
-+		return sysfs_emit(buf, "none\n");
- 
--	return sprintf(buf, "PM%04X\n", id);
-+	return sysfs_emit(buf, "PM%04X\n", id);
- }
- static DEVICE_ATTR_RO(component_id);
- 
-@@ -373,9 +373,9 @@ static ssize_t component_revision_show(struct device *dev,
- 
- 	/* component_revision field not supported after gen3 */
- 	if (stdev->gen != SWITCHTEC_GEN3)
--		return sprintf(buf, "255\n");
-+		return sysfs_emit(buf, "255\n");
- 
--	return sprintf(buf, "%d\n", rev);
-+	return sysfs_emit(buf, "%d\n", rev);
- }
- static DEVICE_ATTR_RO(component_revision);
- 
-@@ -384,7 +384,7 @@ static ssize_t partition_show(struct device *dev,
+diff --git a/drivers/pci/hotplug/rpadlpar_sysfs.c b/drivers/pci/hotplug/rpadlpar_sysfs.c
+index dbfa0b55d31a..068b7810a574 100644
+--- a/drivers/pci/hotplug/rpadlpar_sysfs.c
++++ b/drivers/pci/hotplug/rpadlpar_sysfs.c
+@@ -50,7 +50,7 @@ static ssize_t add_slot_store(struct kobject *kobj, struct kobj_attribute *attr,
+ static ssize_t add_slot_show(struct kobject *kobj,
+ 			     struct kobj_attribute *attr, char *buf)
  {
- 	struct switchtec_dev *stdev = to_stdev(dev);
- 
--	return sprintf(buf, "%d\n", stdev->partition);
-+	return sysfs_emit(buf, "%d\n", stdev->partition);
+-	return sprintf(buf, "0\n");
++	return sysfs_emit(buf, "0\n");
  }
- static DEVICE_ATTR_RO(partition);
  
-@@ -393,7 +393,7 @@ static ssize_t partition_count_show(struct device *dev,
+ static ssize_t remove_slot_store(struct kobject *kobj,
+@@ -80,7 +80,7 @@ static ssize_t remove_slot_store(struct kobject *kobj,
+ static ssize_t remove_slot_show(struct kobject *kobj,
+ 				struct kobj_attribute *attr, char *buf)
  {
- 	struct switchtec_dev *stdev = to_stdev(dev);
- 
--	return sprintf(buf, "%d\n", stdev->partition_count);
-+	return sysfs_emit(buf, "%d\n", stdev->partition_count);
+-	return sprintf(buf, "0\n");
++	return sysfs_emit(buf, "0\n");
  }
- static DEVICE_ATTR_RO(partition_count);
  
+ static struct kobj_attribute add_slot_attr =
 -- 
 2.31.1
 
