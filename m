@@ -2,60 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 437C9381586
-	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 05:38:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77615381599
+	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 05:49:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233556AbhEODkJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 23:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58026 "EHLO
+        id S234256AbhEODvI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 May 2021 23:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbhEODkI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 23:40:08 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BFFFC06174A
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 20:38:56 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id i7so685561ioa.12
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 20:38:56 -0700 (PDT)
+        with ESMTP id S229898AbhEODvI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 23:51:08 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22666C06174A
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 20:49:55 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id z24so743407ioi.3
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 20:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WM3riELsvMBY+8fzmLdrtKANY5j/sQQLmpAWKAKdzU4=;
-        b=l4OVviaUi7kyBGps6rXDgaj1Aa7xIbah5i8m7jtDHxORA7AV4PyaTZJVyDZfgXwnTU
-         xtbLqY3SjU83HMuX5y9bagTqIqpGBzrLzM2qPj/KKWbCJsIPwIMRQayVd8e+MCSrEJQ8
-         I7zq+DbgbdOsnXq5wJ5rHpdzeIcDeTCRKMI2WH4j7EAxodCLW0GL6ugfgjokXdwnBP0R
-         PlVRgq/23NofJy75f9XfsUk9iIUPn7onBsSA9v5RUwUI/6tSo8L8/BoBPVhkZGzhX9YN
-         KHx7DYRDNSXe8d/gPs7rYRy9CqTzB8FcpCGw1fi1K0AMszw5zY25ekXNklEKrViUDgn1
-         9J6Q==
+        bh=Y3PK4jbKqiW+XVFcq3JRydzq2tY3j6GhXoQ+R5OrsJU=;
+        b=bErGrZfNSiBIanLeJOH8IYsN7n4ZrI88uz71I5DcfSACNwIYTUYMGeYo7KO3xl1+FR
+         O7pPgxGsak+z+LAhuNaYhlyvCm2/nNa/OYrDH1kr2WAebbiL1nKzfAht7Q88mSRjUSpK
+         +f9a1gVrv7dNeJMheIYvNy4NX2B7GY3NeJGwZgMS0KYZ71DYZZ7fPvEeUwOyAHFfZ/2M
+         5CUyK51uV9Fweef7+aVJN+RSpS3h6jjAGS24Fskvzk7Y1g1F3xf9hWfAgy+w7HEBoC5U
+         4GWor/R81rxXmKrptGG5Hjagx1nNVQKcUF0vjpW7M69MpdI+wpvGv8O4BkpBMaS4R6iM
+         1xNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WM3riELsvMBY+8fzmLdrtKANY5j/sQQLmpAWKAKdzU4=;
-        b=GIaPch7x7O5uTIGpcvR77gEZ1sGEBXYVDTTsdkIKOVbfwt0rCiSf2nxCuXjN9JEfXE
-         BtNAMicpBSwyToaomRLZpR2FUZo5wE8sBdDfd4MkM3b1Ki8uczEliUhsN8jlBx/uvQ/1
-         eLl4438pEYxwPIVHhKGd6zOLIDx2KnZqg9IJ0dp15CH/2X2beQE5r6GwZRTyZ+jOspSP
-         CgEr+yUnkmECXjg1/eDBfmhfYdClo+x9L45nSr6jQrm9t2jl3MQ9HNAVpwquezTF9VvF
-         5FLef6McUCPII7NOCtWMB2T3UMjyq8y2abSnHg/dgJ0aPjyGxJ1HEkeGniu5JmgUdYlE
-         E9qA==
-X-Gm-Message-State: AOAM533W55VT4fPEDrMSdrCG6tASdmw0AFPBYYOc0NHVbA4prYfMaDfh
-        OXDuVWf/nXTVsgcFcmtf2VUFA2fzs1+0GcIcWCU=
-X-Google-Smtp-Source: ABdhPJxotTtYBk6X8AFabJfw17tpdiRNMnCHec+buXUU1Le7Y0TE4XIfrw0v/A8/L8pRCFqIlCqkbSMTl2JOqN8X83w=
-X-Received: by 2002:a05:6638:a48:: with SMTP id 8mr26558922jap.38.1621049935892;
- Fri, 14 May 2021 20:38:55 -0700 (PDT)
+        bh=Y3PK4jbKqiW+XVFcq3JRydzq2tY3j6GhXoQ+R5OrsJU=;
+        b=Ir5YFeMcWPUGtMIgKeLH6iNYEIMXUBZG1o6eP0QHC0DrorMjPSYfbfD8g/gfn+70ze
+         WzR/7vdqnadbT70K127q1Ysnmtjv8aFOhE7+bb6BubgyN5ugTO9ULEW+Okx6lLHe5OZ5
+         zpMY8XXRFbsdQzJfDRVyOVnQRYjizRtW+wPNnl+7yRCoUNanBhBCn0/51LtjuZjrVUZD
+         2KPkYK3BjaOsAI+A1GPMffvlkxdPf/JrSsNDLSQGlz6ZIvzLnIIBtOXr3yja0rkVM9TH
+         sYSecR3pJRzo8Xr/aJiPb7o7VAzrvvbUVKFQ1f3zDDiEjvHdCFCuLyfQxB5Pg8eaApKI
+         Yu/w==
+X-Gm-Message-State: AOAM531lp6Dp65nZIG9ARZbOGOBCtbunCiYqewNSQW4UHyxhWYUDYiqp
+        YllJtgdAqhuJyrDnMhVfQ1yMiTZSwF5oMIzOQlpdY9s/0jI=
+X-Google-Smtp-Source: ABdhPJzsLFwp9VltRuN2fx/xkH1GaAehQPHnFn00RiBEb9oYpZtwJ2y4CSxuOBU8bzRsVlAvwgamZH9eUjrODxaTU0E=
+X-Received: by 2002:a5d:8843:: with SMTP id t3mr7558340ios.148.1621050594616;
+ Fri, 14 May 2021 20:49:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210514080025.1828197-2-chenhuacai@loongson.cn> <20210514160956.GA2765772@bjorn-Precision-5520>
-In-Reply-To: <20210514160956.GA2765772@bjorn-Precision-5520>
+References: <20210514080025.1828197-4-chenhuacai@loongson.cn> <20210514153959.GA2762101@bjorn-Precision-5520>
+In-Reply-To: <20210514153959.GA2762101@bjorn-Precision-5520>
 From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 15 May 2021 11:38:44 +0800
-Message-ID: <CAAhV-H4P4X49fyhYTe=Eq5YA1BU824xyaT3mLAQZXmhFovUBjA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] PCI/portdrv: Don't disable pci device during shutdown
+Date:   Sat, 15 May 2021 11:49:43 +0800
+Message-ID: <CAAhV-H4cH40d++SQ+sNXtjh_arC1ASPfRCdLsGtBoTnTWwB6aQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: Improve the mrrs quirk for LS7A
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>, huangshuai@loongson.cn
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -63,146 +62,113 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi, Krzysztof and Bjorn
 
-On Sat, May 15, 2021 at 12:09 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> In subject, s/pci device/device/.  We already know this is PCI.
->
-> On Fri, May 14, 2021 at 04:00:21PM +0800, Huacai Chen wrote:
-> > Use separate remove()/shutdown() callback, and don't disable pci device
-> > during shutdown. This can avoid some poweroff/reboot failures.
->
-> s/pci/PCI/
->
-> > The poweroff/reboot failures can easily reproduce on Loongson platforms.
-> > I think this is not a Loongson-specific problem, instead, is a problem
-> > related to some specific PCI hosts. On some x86 platforms, radeon/amdgpu
-> > devices can cause the same problem, and commit faefba95c9e8ca3a523831c2e
-> > ("drm/amdgpu: just suspend the hw on pci shutdown") can resolve it.
->
-> Please explain exactly what these failures are and include URLs for
-> relevant reports, bugzillas, etc.
->
-> Conventional citation format is
->
->   faefba95c9e8 ("drm/amdgpu: just suspend the hw on pci shutdown")
-Thank you very much, I will send a new version with more information attached.
+I will improve my spelling, and others see below.
 
+On Fri, May 14, 2021 at 11:40 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> > As Tiezhu said, this occasionally shutdown or reboot failure is due to
-> > clear PCI_COMMAND_MASTER on the device in do_pci_disable_device().
+> On Fri, May 14, 2021 at 04:00:23PM +0800, Huacai Chen wrote:
+> > In new revision of LS7A, some pcie ports support larger value than 256,
+> > but their mrrs values are not dectectable. And moreover, the current
+> > loongson_mrrs_quirk() cannot avoid devices increasing its mrrs after
+> > pci_enable_device(). So the only possible way is configure mrrs of all
+> > devices in BIOS, and add a pci dev flag (PCI_DEV_FLAGS_NO_INCREASE_MRRS)
+> > to stop the increasing mrrs operations.
 >
-> Where did Tiezhu say this?  Please link to this conversation.
+> s/mrrs/MRRS/
+> s/dectectable/detectable/
 >
-> > drivers/pci/pci.c
+> This doesn't make sense to me.  MRRS "sets the maximum Read Request
+> size for the Function as a Requester" (PCIe r5.0, sec 7.5.3.4).
 >
-> Unnecessary; we can use cscope/tags/grep/etc to find this.
+> The MRRS in the Device Control register is a 3-bit RW field (or a RO
+> field with value 000b).  If it's RW, software is allowed to write any
+> 3-bit value to it.  There is no "maximum allowed value" for software
+> to detect.
 >
-> > static void do_pci_disable_device(struct pci_dev *dev)
-> > {
-> >         u16 pci_command;
-> >
-> >         pci_read_config_word(dev, PCI_COMMAND, &pci_command);
-> >         if (pci_command & PCI_COMMAND_MASTER) {
-> >                 pci_command &= ~PCI_COMMAND_MASTER;
-> >                 pci_write_config_word(dev, PCI_COMMAND, pci_command);
-> >         }
-> >
-> >         pcibios_disable_device(dev);
-> > }
-> >
-> > When remove "pci_command &= ~PCI_COMMAND_MASTER;", it can work well when
-> > shutdown or reboot. This may implies that there are DMA activities on the
-> > device while shutdown.
-> >
-> > Radeon driver is more difficult than amdgpu due to its confusing symbol
-> > names, and I have maintained an out-of-tree patch for a long time [1].
-> > Recently, we found more and more devices can cause the same problem, and
-> > it is very difficult to modify all problematic drivers as radeon/amdgpu
-> > does (the .shutdown callback should make sure there is no DMA activity).
-> > So, I think modify the PCIe port driver is a simple and effective way.
-> > And as early discussed, kexec can still work after this patch.
+> The value software writes is only a *limit* on the Read Request size.
+> The hardware is never obligated to generate Read Requests of that max
+> size.  If software writes 101b (4096 byte max size), and the hardware
+> only supports generating 128-byte Read Requests, there's no issue.
+> It's perfectly fine for the hardware to generate 128-byte requests.
 >
-> Link to this discussion as well?
+> Apparently something bad happens if software writes something "too
+> large" to MRRS?  What actually happens?
 >
-> This commit log does not contain a clear description of the problem
-> and how the patch fixes it.
+> If the problem is that the device generates a large Read Request and
+> in response, it receives a data TLP that is larger than it can handle,
+> that sounds like an MPS issue, not an MRRS issue.
 >
-> > [1] https://github.com/chenhuacai/linux/commit/8da06f9b669831829416a3e9f4d1c57f217a42f0
-> >
+> Based on the existing loongson_mrrs_quirk(), it looks like this is a
+> long-standing issue.  I'm sorry I missed this when reviewing the
+> driver in the first place.  This all needs a much better explanation
+> of what the real problem is.  The "h/w limitation of 256 bytes maximum
+> read request size" comment just doesn't make sense from the spec point
+> of view.
+>
+> I do know that Linux uses MRRS and MPS in ... highly unusual ways, and
+> maybe we're tripping over that somehow.  If so, we need to figure out
+> exactly how so we can make Linux's use of MPS and MRRS better overall.
+I have discussed with Shuai Huang (the main designer of LS7A), he said
+that some devices (such as Realtek 8169) usually write a large value
+to MRRS in its driver. And that usually larger than LS7A bridge can
+handle, the quirk in this patch is avoid device driver to increase
+MRRS (and BIOS initialize a reasonable value at power on stage).
+
+Huacai
+>
 > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > > ---
-> >  drivers/pci/pcie/portdrv.h      |  2 +-
-> >  drivers/pci/pcie/portdrv_core.c |  6 ++++--
-> >  drivers/pci/pcie/portdrv_pci.c  | 15 +++++++++++++--
-> >  3 files changed, 18 insertions(+), 5 deletions(-)
+> >  drivers/pci/pci.c    | 5 +++++
+> >  drivers/pci/quirks.c | 6 ++++++
+> >  include/linux/pci.h  | 2 ++
+> >  3 files changed, 13 insertions(+)
 > >
-> > diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> > index 2ff5724b8f13..358d7281f6e8 100644
-> > --- a/drivers/pci/pcie/portdrv.h
-> > +++ b/drivers/pci/pcie/portdrv.h
-> > @@ -117,7 +117,7 @@ int pcie_port_device_resume(struct device *dev);
-> >  int pcie_port_device_runtime_suspend(struct device *dev);
-> >  int pcie_port_device_runtime_resume(struct device *dev);
-> >  #endif
-> > -void pcie_port_device_remove(struct pci_dev *dev);
-> > +void pcie_port_device_remove(struct pci_dev *dev, bool disable);
-> >  int __must_check pcie_port_bus_register(void);
-> >  void pcie_port_bus_unregister(void);
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index b717680377a9..6f0d2f5b6f30 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5802,6 +5802,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
 > >
-> > diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> > index e1fed6649c41..98c0a99a41d6 100644
-> > --- a/drivers/pci/pcie/portdrv_core.c
-> > +++ b/drivers/pci/pcie/portdrv_core.c
-> > @@ -484,11 +484,13 @@ EXPORT_SYMBOL_GPL(pcie_port_find_device);
-> >   * Remove PCI Express port service devices associated with given port and
-> >   * disable MSI-X or MSI for the port.
-> >   */
-> > -void pcie_port_device_remove(struct pci_dev *dev)
-> > +void pcie_port_device_remove(struct pci_dev *dev, bool disable)
-> >  {
-> >       device_for_each_child(&dev->dev, NULL, remove_iter);
-> >       pci_free_irq_vectors(dev);
-> > -     pci_disable_device(dev);
-> > +
-> > +     if (disable)
-> > +             pci_disable_device(dev);
-> >  }
+> >       v = (ffs(rq) - 8) << 12;
 > >
-> >  /**
-> > diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> > index c7ff1eea225a..562fbf3c1ea9 100644
-> > --- a/drivers/pci/pcie/portdrv_pci.c
-> > +++ b/drivers/pci/pcie/portdrv_pci.c
-> > @@ -147,7 +147,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
-> >               pm_runtime_dont_use_autosuspend(&dev->dev);
-> >       }
-> >
-> > -     pcie_port_device_remove(dev);
-> > +     pcie_port_device_remove(dev, true);
-> > +}
-> > +
-> > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> > +{
-> > +     if (pci_bridge_d3_possible(dev)) {
-> > +             pm_runtime_forbid(&dev->dev);
-> > +             pm_runtime_get_noresume(&dev->dev);
-> > +             pm_runtime_dont_use_autosuspend(&dev->dev);
+> > +     if (dev->dev_flags & PCI_DEV_FLAGS_NO_INCREASE_MRRS) {
+> > +             if (rq > pcie_get_readrq(dev))
+> > +                     return -EINVAL;
 > > +     }
 > > +
-> > +     pcie_port_device_remove(dev, false);
-> >  }
+> >       ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+> >                                                 PCI_EXP_DEVCTL_READRQ, v);
 > >
-> >  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-> > @@ -219,7 +230,7 @@ static struct pci_driver pcie_portdriver = {
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 66e4bea69431..10b3b2057940 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -264,6 +264,12 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+> >                * any devices attached under these ports.
+> >                */
+> >               if (pci_match_id(bridge_devids, bridge)) {
+> > +                     dev->dev_flags |= PCI_DEV_FLAGS_NO_INCREASE_MRRS;
+> > +
+> > +                     if (pcie_bus_config == PCIE_BUS_DEFAULT ||
+> > +                         pcie_bus_config == PCIE_BUS_TUNE_OFF)
+> > +                             break;
+> > +
+> >                       if (pcie_get_readrq(dev) > 256) {
+> >                               pci_info(dev, "limiting MRRS to 256\n");
+> >                               pcie_set_readrq(dev, 256);
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index c20211e59a57..7fb2072a83b8 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -227,6 +227,8 @@ enum pci_dev_flags {
+> >       PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+> >       /* Don't use Relaxed Ordering for TLPs directed at this device */
+> >       PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> > +     /* Don't increase BIOS's MRRS configuration */
+> > +     PCI_DEV_FLAGS_NO_INCREASE_MRRS = (__force pci_dev_flags_t) (1 << 12),
+> >  };
 > >
-> >       .probe          = pcie_portdrv_probe,
-> >       .remove         = pcie_portdrv_remove,
-> > -     .shutdown       = pcie_portdrv_remove,
-> > +     .shutdown       = pcie_portdrv_shutdown,
-> >
-> >       .err_handler    = &pcie_portdrv_err_handler,
-> >
+> >  enum pci_irq_reroute_variant {
 > > --
 > > 2.27.0
 > >
