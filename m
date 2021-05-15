@@ -2,132 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0E3738159E
-	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 05:56:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E3EC3815FC
+	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 07:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbhEOD5y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 May 2021 23:57:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbhEOD5x (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 May 2021 23:57:53 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918F6C06174A
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 20:56:40 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id o9so1481126ilh.6
-        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 20:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YqCHjI5DLPc7hpafqWtiME2iwfumNyvs/GPlMFwGAxA=;
-        b=Y2+asGc5vGG00M8XtynmVZRpQ2XM3cNop4rjHPPPRSztbXQ7L7flj8VLszKNGlyQJC
-         +6NfXnNUhs1yYkI4Ztm6RoJkbziduvE2LrQZo66tWfi2IlopVJ3QfXtvDkZXCIFJl1Jg
-         gK7qj3S/W58//WBTdI0eFEviMOVyvJGkmXLbLdkPCQ8RaFg4x+lvvo2s6YjF7xkLDdFP
-         s6VKmvo55UzYNBh9y319aizB5HeDHX42SA8q86o47CT98ODmEBhE4LMTlEemws8jDRLP
-         iG7CR71OPFlSihQFnRtfmv1quOU64DeTabfg5+bVw/oGb6782bao/IEbl7nzgE7ijj2Z
-         Pcjg==
+        id S231175AbhEOFZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 May 2021 01:25:51 -0400
+Received: from mail-ej1-f45.google.com ([209.85.218.45]:43759 "EHLO
+        mail-ej1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230104AbhEOFZu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 May 2021 01:25:50 -0400
+Received: by mail-ej1-f45.google.com with SMTP id l4so1553733ejc.10
+        for <linux-pci@vger.kernel.org>; Fri, 14 May 2021 22:24:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YqCHjI5DLPc7hpafqWtiME2iwfumNyvs/GPlMFwGAxA=;
-        b=jK0CQK79Cium4dWdiq6brz7igZVdc23VVno+Y1wOF9gFm9CB8F6PCPdy79wT2HHSnM
-         jI6bWKjanHl7elj0uNMzs5MgGhWoI40h0O7oFr6dsz2/bs8rwN9I0498Bo+q3T6XIO7v
-         S/A8cd407m3pjhyohDQMBmN45kqs5dasRSrQ3kvC9La0vK5SE9xxwIJPssPdp9MV1NIc
-         h4gjHTXkBizc4OE4/as4HfHRpX30DSmYKm7YbR8XWZM9CKTm1JLJ5KzPf4B1cNr2rub/
-         zS0k1wO5EU2FxnDQAjIrY1n5ZxdBd7Ak4W+01yoA5V1MTpPzxqEsYIVpCkX796qP0sWc
-         EmoQ==
-X-Gm-Message-State: AOAM530LDwM2RjDjV/+8o7TR9291doT6AU4c922LbOQKARYwshTPsjvn
-        Pc6e5um7zXHedMWFS+hS5nSbCdf/uphF9Nd8BsTYrWKta5g=
-X-Google-Smtp-Source: ABdhPJxFqiY5KqKgu+B1cLG2b3+EkNX2dbgW7+c6NthSjUavveDnI9vjOUXPM0m+xUIhW7K0sG1Zu7PyQY2NDj8fj2w=
-X-Received: by 2002:a05:6e02:d51:: with SMTP id h17mr43092394ilj.134.1621050999976;
- Fri, 14 May 2021 20:56:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f/Vo3vzWm4D00TYgfRuuEzVZKXz3CRt/yuqfwwH8YIU=;
+        b=Yy7KfhuZbBHQULcj9oe3N/un0FFiS0hLa0XYNhjbbAoexUPwqogCXKjJPb/bZsq80E
+         fqUsREn0X7VJLhyQ/BNdDL/kSiggrUPENH2wG7XpgrDs/MjcUu8U9Re0eBsoMHwHB1a2
+         /gxeHDPMC/VhmqedIVdFAMzWOZ5tzpdDIeG1yqSCIfpkK3MCgmexPMscbVc3zHrAG2XC
+         5dY/aFqFVKLMQ+zgcAcy/vVehQpZE5v6c89DmhGDtw2xr7bG8cedQN3JModG2NlXRmz9
+         R5G+W1yIata97q7U0cKQgfC0R55xFCcj35S76kgSJQrWY3lT7HYidSpGlDw0ajATu4Ne
+         3J4g==
+X-Gm-Message-State: AOAM533AUFgijxoszQ1W6f95h93KiKmPSEINGoTwjUtUMCVedUd4RTSU
+        o+y+uSY0+5WtOfNVAQzhPLg=
+X-Google-Smtp-Source: ABdhPJwvfP1drkhLOi+o1WZL+eJ9323MVgRNp8o3OCPnzYBWrwDvAHI0LcagZhbnOoFcGoXpLrERxQ==
+X-Received: by 2002:a17:906:b0d:: with SMTP id u13mr8097847ejg.159.1621056276491;
+        Fri, 14 May 2021 22:24:36 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id kt21sm4821487ejb.5.2021.05.14.22.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 May 2021 22:24:35 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Joe Perches <joe@perches.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 01/14] PCI: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+Date:   Sat, 15 May 2021 05:24:21 +0000
+Message-Id: <20210515052434.1413236-1-kw@linux.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210514080025.1828197-5-chenhuacai@loongson.cn> <20210514155110.GA2764013@bjorn-Precision-5520>
-In-Reply-To: <20210514155110.GA2764013@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 15 May 2021 11:56:28 +0800
-Message-ID: <CAAhV-H4ubahHxOvTyTng9bUhrVNXmC0K+cvG1Saco=xaQMs=hA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] PCI: Add quirk for multifunction devices of LS7A
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Krzysztof and Bjorn
+The sysfs_emit() and sysfs_emit_at() functions were introduced to make
+it less ambiguous which function is preferred when writing to the output
+buffer in a device attribute's "show" callback [1].
 
-I will improve my spelling, others see below please.
+Convert the PCI sysfs object "show" functions from sprintf(), snprintf()
+and scnprintf() to sysfs_emit() and sysfs_emit_at() accordingly, as the
+latter is aware of the PAGE_SIZE buffer and correctly returns the number
+of bytes written into the buffer.
 
-On Fri, May 14, 2021 at 11:51 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, May 14, 2021 at 04:00:24PM +0800, Huacai Chen wrote:
-> > From: Jianmin Lv <lvjianmin@loongson.cn>
-> >
-> > In LS7A, multifunction device use same pci PIN and different
-> > irq for different function, so fix it for standard pci PIN
-> > usage.
->
-> Apparently the defect here is that the Interrupt Pin register reports
-> the wrong INTx values?
-In LS7A, the Pin register is hardcoded to the same value for all
-functions in multi-function devices, so we need this.
->
-> Will this be fixed in future hardware so we don't have to add more
-> devices to the quirk?
-This will be fixed in future hardware.
+No functional change intended.
 
-Huacai
->
-> > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/pci/quirks.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 10b3b2057940..6ab4b3bba36b 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -242,6 +242,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >                       DEV_LS7A_LPC, loongson_system_bus_quirk);
-> >
-> > +static void loongson_pci_pin_quirk(struct pci_dev *dev)
-> > +{
-> > +     static const struct pci_device_id devids[] = {
-> > +             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> > +             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> > +             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> > +             { 0, },
-> > +     };
-> > +
-> > +     if (pci_match_id(devids, dev)) {
-> > +             u8 fun = dev->devfn & 7;
->
-> Use PCI_FUNC().
->
-> > +             dev->pin = 1 + (fun & 3);
-> > +     }
-> > +}
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_ANY_ID, loongson_pci_pin_quirk);
->
-> The usual pattern is to list each device here instead of using
-> pci_match_id() in the quirk, e.g.,
->
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, 0x7a09, loongson_pci_pin_quirk);
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, 0x7a19, loongson_pci_pin_quirk);
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, 0x7a29, loongson_pci_pin_quirk);
->
-> >  static void loongson_mrrs_quirk(struct pci_dev *dev)
-> >  {
-> >       struct pci_bus *bus = dev->bus;
-> > --
-> > 2.27.0
-> >
+[1] Documentation/filesystems/sysfs.rst
+
+Related to:
+  commit ad025f8e46f3 ("PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions")
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b717680377a9..5ed316ea5831 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6439,7 +6439,7 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+ 
+ 	spin_lock(&resource_alignment_lock);
+ 	if (resource_alignment_param)
+-		count = scnprintf(buf, PAGE_SIZE, "%s", resource_alignment_param);
++		count = sysfs_emit(buf, "%s", resource_alignment_param);
+ 	spin_unlock(&resource_alignment_lock);
+ 
+ 	/*
+-- 
+2.31.1
+
