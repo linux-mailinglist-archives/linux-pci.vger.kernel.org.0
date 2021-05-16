@@ -2,114 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 353FB381A2D
-	for <lists+linux-pci@lfdr.de>; Sat, 15 May 2021 19:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15BE7381DFC
+	for <lists+linux-pci@lfdr.de>; Sun, 16 May 2021 12:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234137AbhEORgs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 May 2021 13:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234135AbhEORgr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 May 2021 13:36:47 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B97C061573
-        for <linux-pci@vger.kernel.org>; Sat, 15 May 2021 10:35:33 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id z1so2542520ils.0
-        for <linux-pci@vger.kernel.org>; Sat, 15 May 2021 10:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fatalsyntax-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:content-transfer-encoding:cc:subject:from:to:date
-         :message-id:in-reply-to;
-        bh=ECsAuXqf15dWO568NVSzYv1EWPK7FJKl+lqtYqv4WjM=;
-        b=GhrWtqA8WDo7J3ALnnGSbuE/f12hP55xaLn6+j7nn3Cg7IRHFEqAYOsTrqlIOL3B+A
-         BW4WGTmXPEVTBMcFU/8bqMkk2k1K8d36JYEXQLhG3dMGP24RhvVxjNmjpCGW8Iix59qK
-         sXHJM/9vDWIp72wcVfzgiEy6KypVswQI8jmrsQxbIytWWLGsUGhRMiqg14eWYaL1tLKf
-         VttMt9bT8uCw4W9ekKVHwAlHyqCCST6FuNHoHno4eUoMhOsL+DboOk77UQs/uaRWOUfQ
-         rFiIgzrgTTMynVSlAF9f/ECILVazpAIYu9ITUCxODQhUmeUDgXKUNRj4gDkNyjfeFyfI
-         u9Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding:cc
-         :subject:from:to:date:message-id:in-reply-to;
-        bh=ECsAuXqf15dWO568NVSzYv1EWPK7FJKl+lqtYqv4WjM=;
-        b=DWzXiP9CWPly0KM/C5d6127a3zyERPT8SYmFAiyO24KRby8iUpYFmbTaZo9v8ywWHe
-         vlpBy+28z9UrI1AZX2j1qlZ9X9kOgvqDa5o83r7ocp+DZe5leQteqO4eRedwgavbuG++
-         pwh+SQApQ9n9OD8WEowg3YcBjrmxo7tN6Fl1ZhRlDEdmrJTAk3HO66CNV+tWU1R3PF7V
-         xClyf0E1tlnhg39wrygDPYouNYzIJEmjFVUYsWQ4gamSSQh4/v1no0voC34OxQBasQ2K
-         d4M79Y/NndF83E1KCs9ENl+B5+a+AlLSEWgZj3NZbcFMH7UY0/MjQ02JcLiVKxbg0jPm
-         Hyhg==
-X-Gm-Message-State: AOAM531fGWLap5MPnbe1Cp7ftNLbn4N3FFlMt5hh+iSWf7o/CLUmxkB7
-        c8sdRoAmoxYXP0Tu6ppu9/6fXLuPWKe/cSwnDVSeXA==
-X-Google-Smtp-Source: ABdhPJy/rRDwwTjfwk0ae19NzmdLr9zilL3sOKeRp8K5fwv74zFSxDNvdqMJmKJktvMAonHm7jH03Q==
-X-Received: by 2002:a05:6e02:168f:: with SMTP id f15mr48359921ila.264.1621100133041;
-        Sat, 15 May 2021 10:35:33 -0700 (PDT)
-Received: from localhost (2603-6000-ca08-f320-6401-a7ff-fe72-256d.res6.spectrum.com. [2603:6000:ca08:f320:6401:a7ff:fe72:256d])
-        by smtp.gmail.com with ESMTPSA id x13sm4977602ilv.88.2021.05.15.10.35.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 May 2021 10:35:32 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        id S235164AbhEPKUI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 16 May 2021 06:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231386AbhEPKTx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 16 May 2021 06:19:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 768AD611CA;
+        Sun, 16 May 2021 10:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621160317;
+        bh=uz12JEUkFl1zk0MKhwqoy7Swq0yIqwlg559U5vqLb64=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NZoYuL4T8pZP0XVsuqpo1xaXga3djUflecwXx5LGut8qbhlW3Y9NzBmiQJpti66iQ
+         XEctA9a/tkYn6eIfMFOD23iU2NVyAWENwzAu5GTKImts+lpuYv0eNqgw/CUZ2ZkWss
+         fllyfJ2EOkHcmxftZ1iXvAx83SROwJwSmenZXooYhJTuiuJxIyQ+zDnL2KcckWJO3l
+         HXjHP9OcKsGcnNSkEPNKSqumMlW9xOUSyWQbW7rfHCgaVLEVCKAvIaHdwvFlEJ1a7n
+         T0Jc41mYwmUESpLNWcMxWdQoD+Yw7News+EAAT/i+fb8vmW0PjoNLGp13h2ptdOtyU
+         rkJ7P+/53g9gg==
+Received: by mail.kernel.org with local (Exim 4.94.2)
+        (envelope-from <mchehab@kernel.org>)
+        id 1liDr1-003o89-5Z; Sun, 16 May 2021 12:18:35 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jean Delvare <jdelvare@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        alsa-devel@alsa-project.org, coresight@lists.linaro.org,
+        intel-wired-lan@lists.osuosl.org, kvm@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ext4@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, mjpeg-users@lists.sourceforge.net,
+        netdev@vger.kernel.org, rcu@vger.kernel.org
+Subject: [PATCH v3 00/16] Replace some bad characters on documents
+Date:   Sun, 16 May 2021 12:18:17 +0200
+Message-Id: <cover.1621159997.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Cc:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>
-Subject: Re: [PATCH] pci: add NVMe FLR quirk to the SM951 SSD
-From:   "Robert Straw" <drbawb@fatalsyntax.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Date:   Sat, 15 May 2021 12:20:05 -0500
-Message-Id: <CBDZPI1DXKMS.88UVUXVIGC5V@nagato>
-In-Reply-To: <20210430205105.GA683965@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri Apr 30, 2021 at 3:51 PM CDT, Bjorn Helgaas wrote:
+The conversion tools used during DocBook/LaTeX/html/Markdown->ReST 
+conversion and some cut-and-pasted text contain some characters that
+aren't easily reachable on standard keyboards and/or could cause 
+troubles when parsed by the documentation build system.
 
-> Please make your subject line match ffb0863426eb ("PCI: Disable
-> Samsung SM961/PM961 NVMe before FLR")
+Replace the occurences of the following characters:
 
-I had done this in a V2 of this patch, but after some additional
-research I'm thinking the behavior of this quirk might be in-line=20
-w/ the NVMe specification more generally, I'll elaborate more below.
+            - U+00a0 (' '): NO-BREAK SPACE
+            - U+00ad ('­'): SOFT HYPHEN
+            - U+2010 ('‐'): HYPHEN
+            - U+2217 ('∗'): ASTERISK OPERATOR
+            - U+feff ('﻿'): BOM
 
-> I don't see anything in the PCIe spec about software being required to
-> do something special before initiating an FLR, so I assume this is a
-> hardware defect in the Samsung 950 PRO? Has Samsung published an
-> erratum or at least acknowledged it?
->
-> There's always the possibility that we are doing something wrong in
-> Linux *after* the FLR, e.g., not waiting long enough, not
-> reinitializing something correctly, etc.
+I'll submit in separate another series to address other character occurrences.
 
-I did some dumping of registers both with and without this patch, and
-determined the following to be true in my use-case:
-
-1. My guest VM leaves the device in a state where SHN (shutdown
-notification) is set to 0b01 (normal shutdown)
-
-2. The guest also leaves CC.EN (controller enable) set to 0b1
-
-3. vfio-pci attempts to issue an FLR while the device is in this state.
+v3:
+  - removed curly commas and changed the patch descriptions.
+v2:
+  - removed EM/EN dashes and changed the patch descriptions.
 
 
-On page 40, sec 3.1.6 of the NVMe 1.1 spec, the documentation on SHST=20
-states the following:
+Mauro Carvalho Chehab (16):
+  docs: hwmon: ir36021.rst: replace some characters
+  docs: admin-guide: reporting-issues.rst: replace some characters
+  docs: trace: coresight: coresight-etm4x-reference.rst: replace some
+    characters
+  docs: driver-api: ioctl.rst: replace some characters
+  docs: driver-api: media: drivers: zoran.rst: replace some characters
+  docs: usb: replace some characters
+  docs: userspace-api: media: v4l: dev-decoder.rst: replace some
+    characters
+  docs: userspace-api: media: dvb: intro.rst: replace some characters
+  docs: vm: zswap.rst: replace some characters
+  docs: filesystems: ext4: blockgroup.rst: replace some characters
+  docs: networking: device_drivers: replace some characters
+  docs: PCI: acpi-info.rst: replace some characters
+  docs: sound: kernel-api: writing-an-alsa-driver.rst: replace some
+    characters
+  docs: firmware-guide: acpi: dsd: graph.rst: replace some characters
+  docs: virt: kvm: api.rst: replace some characters
+  docs: RCU: replace some characters
 
-> To start executing commands on the controller after a shutdown=20
-> operation (CSTS.SHST set to 10b), a reset (CC.EN cleared to =E2=80=980=E2=
-=80=99)=20
-> is required. If host software submits commands to the controller=20
-> without issuing a reset, the behavior is undefined.
+ Documentation/PCI/acpi-info.rst               | 18 ++---
+ .../Data-Structures/Data-Structures.rst       | 46 ++++++------
+ .../Expedited-Grace-Periods.rst               | 36 +++++-----
+ .../Tree-RCU-Memory-Ordering.rst              |  2 +-
+ .../RCU/Design/Requirements/Requirements.rst  | 70 +++++++++----------
+ .../admin-guide/reporting-issues.rst          |  2 +-
+ Documentation/driver-api/ioctl.rst            |  8 +--
+ .../driver-api/media/drivers/zoran.rst        |  2 +-
+ Documentation/filesystems/ext4/blockgroup.rst |  2 +-
+ .../firmware-guide/acpi/dsd/graph.rst         |  2 +-
+ Documentation/hwmon/ir36021.rst               |  2 +-
+ .../device_drivers/ethernet/intel/i40e.rst    |  6 +-
+ .../device_drivers/ethernet/intel/iavf.rst    |  2 +-
+ .../kernel-api/writing-an-alsa-driver.rst     |  2 +-
+ .../coresight/coresight-etm4x-reference.rst   |  2 +-
+ Documentation/usb/ehci.rst                    |  2 +-
+ Documentation/usb/gadget_printer.rst          |  2 +-
+ .../userspace-api/media/dvb/intro.rst         |  4 +-
+ .../userspace-api/media/v4l/dev-decoder.rst   |  2 +-
+ Documentation/virt/kvm/api.rst                | 28 ++++----
+ Documentation/vm/zswap.rst                    |  4 +-
+ 21 files changed, 122 insertions(+), 122 deletions(-)
 
-In the case of the SM951/SM961 it appears the undefined behavior is that
-they stop responding to attempts to change their configuration if you do
-an FLR while the device is in this state. The reason this patch
-resolved the issue I was seeing is because the toggle of the CC.EN flag=20
-puts the drive in a known-good state after the guest's shutdown=20
-notification.
+-- 
+2.31.1
 
-Knowing this I would suspect we'd actually want to treat most NVMe
-drives in this manner *if the kernel sees the SHN/SHST has been set
-prior.* Perhaps other NVMe devices are more tolerant of not doing this?
 
-~ robert straw
