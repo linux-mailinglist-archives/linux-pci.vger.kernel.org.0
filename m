@@ -2,205 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92816383C39
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 20:28:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71BEB383CA5
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 20:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233592AbhEQS3b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 14:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235243AbhEQS33 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 May 2021 14:29:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BEF7A61261;
-        Mon, 17 May 2021 18:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621276092;
-        bh=xr4By+o4TUcYhY8fMdG2qW3F/z04dvfGfYWvO2UuXis=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZGkZwfNGKfPAGRf7t4YDIiybc0B2ozc79Tb5PyfccEIzEER/S56tEvysv9VOQs6rk
-         C+tdl114Ly0SfxT612kT5T6PnKmEGAukVad0SAlmtKCE3S0WpSsX/LTN3ssQF1RDTH
-         vWxWAWUw0/0Ue0SjHgZ7Kn0NeexBkOC967TVR8238npJxmDCghNf6AV1f+acOy0wye
-         XoInqx4FW5E18DvneeFu/75r+8jsTMsZhUdKNoqf/xa1iNqYUvbgEq1L4ODIm+b/hM
-         D6M2wDycEU2m8avLYeteiakr207jc3ay6wbla0tTqeD0yYJMUhH1gGxtK0769bViey
-         EEw/EO4YYYcQw==
-Date:   Mon, 17 May 2021 13:28:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@gmail.com>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jingfeng Sui <suijingfeng@loongson.cn>
-Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
- bridge
-Message-ID: <20210517182810.GA29638@bjorn-Precision-5520>
+        id S235220AbhEQSsE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 14:48:04 -0400
+Received: from mail-dm6nam12on2087.outbound.protection.outlook.com ([40.107.243.87]:48865
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235486AbhEQSsE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 14:48:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bkkHzXU1otiAG6jz5N20CmbWeptRRwt2Oqsw6K6djq81oXlDZA4RVrZ81yPkf6ML8bPcTlfvXY5Jf3UZ9Q5qOjQZIp8VdFuaCMfc5uwR/nJWKS0K7zWKT2zpTli9BcLnAawDsTSI1m5jqyomAt0RJt00579pONc9ULbeSVZyUOt6ZugE+1rS2LLNAdleExHQz1f2cyc6vQVScuLE1rJmxjv3qiEre67RtEHSQIsJIAF/b7y9naJQiC8oYjrXdpR7gUVydxZkjVmmPLtwYbpHdMesEd9PB4PiDQQO2cA0xWUgDUGUkC1aHH8a57CPUR3cZy+Z3deSUN7kqWV6jBqi9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ue+j3q2jG2N7JN9E7a9HpSbz9+Vg97uzVyVv+vnObXc=;
+ b=KX0JTyx+cHmVXLXXIeHdvhmmAw2HwrOO3BY2hROslAkg2epQXrF90/89ZjqNoufdyx2m2EnK9kAbtz2ffHq7KWRqMkVre4L5dWosAe0BgekLeRDu+0+tS7NGeGA1ntVSxHhEPnc+ZOvg74MBB7Ui1DtRS47DNjcQkATJDOPbM4hrUzjXS7XP4NX1OkSkb/5WZsKqtbHDq2hifz1zB0UAWXNoM9r6u4uMA0bqU4oiSxi2P3FUCrsfq2fGLuxGlvVowZudHSQutYKjpTk6aSL8uFgZTlOPc44jo2cfdAcPQuoLIw39I/UuugiTJCPn9vcrv+68ftFzVnX7NXiN10RwAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ue+j3q2jG2N7JN9E7a9HpSbz9+Vg97uzVyVv+vnObXc=;
+ b=q7hdFtCKa4KB9gEyM7PnXq+bo0lnoXw9Ov5Luk5+bdaYVsvo/Y3zwkIFmpNhAd/Hrs/xKgJMMkrADNErQK4m8ebG1l/daDw0jK9FD1PUZmRAYUxgUOP03rOpw7Kq55YS77l72oZRcVFZsjRI6M+vR4j6fZnl72oeb7JFAtqkRa4=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
+ by SA0PR12MB4400.namprd12.prod.outlook.com (2603:10b6:806:95::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.27; Mon, 17 May
+ 2021 18:46:46 +0000
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4129.031; Mon, 17 May 2021
+ 18:46:46 +0000
+Subject: Re: [PATCH v7 16/16] drm/amdgpu: Unmap all MMIO mappings
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+References: <20210512142648.666476-1-andrey.grodzovsky@amd.com>
+ <20210512142648.666476-17-andrey.grodzovsky@amd.com>
+ <CADnq5_M-Sy3cF762044Ub9J=N_U6uQ2h2j40Y=fof04dXL5h7w@mail.gmail.com>
+From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Message-ID: <1882dd85-7ac6-8e54-b66d-fe09718d0262@amd.com>
+Date:   Mon, 17 May 2021 14:46:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
+In-Reply-To: <CADnq5_M-Sy3cF762044Ub9J=N_U6uQ2h2j40Y=fof04dXL5h7w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [2607:fea8:3edf:49b0:19e2:b915:59c1:4860]
+X-ClientProxiedBy: YTXPR0101CA0069.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::46) To SN6PR12MB4623.namprd12.prod.outlook.com
+ (2603:10b6:805:e9::17)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H6E3vh9+SZg5qOmVbfjENRPi0=UbLqK-YHcCA0mzcx9aw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2607:fea8:3edf:49b0:19e2:b915:59c1:4860] (2607:fea8:3edf:49b0:19e2:b915:59c1:4860) by YTXPR0101CA0069.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:1::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.31 via Frontend Transport; Mon, 17 May 2021 18:46:44 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6bf0426a-c57b-4fb6-3222-08d919641efa
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4400:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4400EC635C56EB3CCFB3DC22EA2D9@SA0PR12MB4400.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Tvc4GUEd+8xzimQzY9EQClvoHQFSpuV0psM5DWuTQFwFtbXxUv//6i1ugeZud+qGkDhLlzcKfjtM4kLSP9N3CJbYrEakeEavOY1JI/guhMaJnCsbJz9WP4+oiOi3kQ9kNjtEvdUtihhyjbEi3LSwf5o8x+eAmH8VM7eG+Gn/iY7ghtMdxQD/ix0S2Tskj2uskR5KmO7RZRLiciYjjwSyFmwP7TfZJe2XUNxaakTBych80Iok0HUM4tYsl31vR5jmIrpO6Bx3fx1rfQObmSdUjRc999ZOO1RKv+F4aA98eSLNzC/5mx2QCdJq+zUdSZhb5U8VveKQJzf8Tj671bavWPqnalzoQH0JMeS9cxtbbpLDy5PuIK6C1Xd55AKoDRvY9ZCk75FNLydg0STSTHFiNzsznBnKHtUcVPNHrBsMS0+YizLVBNpDm/HzTzFIZ1ESowRCjF00wf6fj+siCLggkqWaxE4Uk5n5jcT7wXE0IYPNqHBnSwPVkmvoiJ1Uv1rPvkv79plGyP1C2Tb+hXTgW9hQ24tjHkHn4RF49yzv2+k/MoCU6ecoYepxYTqY0VZtpWiTCbTJOz7lFnLQqQ8gRuNtBtJ9hWRz0ra1RZT3ikdlBWIVs3wjDqGfX/kRXu5ys7Lk/A1d5EDU19w5QnJYI51pZzdyygGWOItPNOwFBbWKu5vkoC4sxkJ1iadjunQ3
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(53546011)(83380400001)(6916009)(52116002)(8936002)(66556008)(66476007)(4326008)(31696002)(36756003)(316002)(6486002)(54906003)(2906002)(38100700002)(8676002)(86362001)(2616005)(66946007)(16526019)(44832011)(186003)(478600001)(5660300002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Z3NSSzlHN0FyZlQrZzhsNlNuaisxVVRSNEdDeHJsZll1cEtRRFBTa21ZdHJ3?=
+ =?utf-8?B?YVJtelR1bW5seU5XSkxFTTcwMHliOHczb1NNTWxBeGxPeE8xODV5YUJQM2pw?=
+ =?utf-8?B?REJjR3VrY05qZ1B5MzNqOEo2T0JJREwvNmUwcW10YU1BSnZva2ZDeGN3Y2Er?=
+ =?utf-8?B?ak0yNDZxMHpUY0hOSG12SXoxVUUxYVFZbDBZcnE3cURUQU5lNFh4ejd3UUNX?=
+ =?utf-8?B?Q3Z4OFQ5ekJrNk1zVW1DZzQ5QjRYVjFBRzdZeDVFV0FoSmNHNGNIaVdzbGNj?=
+ =?utf-8?B?cTdpL2huelpNOG44UXhYTlFQdFhtMFN0VjhpMW9tTnl2d0NkeVJaQ093RVB0?=
+ =?utf-8?B?UEN2N3dwcm9lYUorQjlEN1pqOE5GcXpvVG5MWjErZXoyazNNa2x3cnIzT21Z?=
+ =?utf-8?B?Wi8yWWJKS2J2bEEwMzh4ZHBrL1JWblhTa1VMNitPU04yK2JLYlNpS2gzTVB3?=
+ =?utf-8?B?aUNCeGJHUHZwL1R5ZlpKQzF2cTUrb25BcW93V0ZNYXJBWUpHcS9mNUw4MUt6?=
+ =?utf-8?B?WlFsSmszSjJLQkF2SU9KYmtxMEFvMGpSTVV2Q0NwN1lQTkVaMFRsMmV1TExn?=
+ =?utf-8?B?N1hya0o0dGMrQ3g0eC9ZU1Rwc2ZtWUw5aHA3UkY3cHdWaHdPdVZRaldHWkJn?=
+ =?utf-8?B?K1VTeGtWcys1Wnk1UDVvSWJBSHJrbzFacVRFdU5ld29mMXBFMnA0d0lWK3Yz?=
+ =?utf-8?B?bkVoYXZiSWVBdUU3Q2IxY1krd1hkdnJMS3k4UmcvUG5jcXdkTW1aYUF1dHJ1?=
+ =?utf-8?B?SkZGdHEzc1lwR3BpL0JwS1V5YUVDZFRtQXcrSzZzVzQwNHRRNmtxYzVKK3dj?=
+ =?utf-8?B?bnFYNjBBMFYrYm0zMTMvdnFuSk82cjhqMVpzL3NHUjltRG9SbFEvdHRmYjdI?=
+ =?utf-8?B?TjU4TUo1UlN0SkdyamRpbjNFMVpEdlRkbkIyRWgzM1Jocm5rQlBiUGo3cDVD?=
+ =?utf-8?B?SXE1V3RweS9DUFg4aEJ3TGZKSUxvRng3NDcrWjBFeENiN2g2S0NySHQrbFpD?=
+ =?utf-8?B?bDNkSy9IZXNWRkRzc2hqdStNaDFONmlNQU1GSnNab0MydndhWU52TjdmVyti?=
+ =?utf-8?B?eWxNM0hDZXpaa05TcTkwaStxeHJQTyszRmhpZmtnRGJjUDdkZW5oZmRFK3ZO?=
+ =?utf-8?B?RjhSeGRvLzVscjcvc1RKbkpKMDV1T0RMR0NVc1V3OHg3dlRxdVA5WWsvclhN?=
+ =?utf-8?B?V0tncG9GMzA1cGx3ZnNBeFFlRHVVQllEd042K3BCbEhNMFBCQytZYkdPaHhY?=
+ =?utf-8?B?VzhHK1AvdXFYNC9wSFRMVTZ5aVRicW1uQjhSSFlKSmR0REk5QmJxVVFPZFNp?=
+ =?utf-8?B?UDdkMHl5V2JSbUNnSGFWenk2V1FYTVdaSXBqYmRIYlBSWE40TGR2SlMxK0I5?=
+ =?utf-8?B?UjQyUFN5QS9objRBVmx3QnlrM21zQ0lyYktEQ2J3Z0cySjBMNlBTbVVmNCt0?=
+ =?utf-8?B?aWxZbWR4cTlRUG5RTWludEZTMzM2ODQ1QUQ5aElMWXNoZ2NOd3dSbHNOQThk?=
+ =?utf-8?B?YmVLQ0xSRjg1NjZiSHVIWnkzNithWkFDRVk3NHhvUWZQZ1pmY2V6L3lYWElY?=
+ =?utf-8?B?OXZzci84alBCem9nRTZuajNFaXJMVVFoc1JCS2tqUUNGamNrNzVaZ0w4OWcw?=
+ =?utf-8?B?NzJGV3ZucEtkRy80c25DeUErYUI1R2JxZ0hjWFptRk5ScGg1MlZYMUc0SWV3?=
+ =?utf-8?B?eTdCYkJBMU1YSHVVTzBIOFR0NHQzdzVvek1PRUNKSVdKVnpVNnNzc0ZvM1J6?=
+ =?utf-8?B?RFRIQVl3a3FTYlgwVTVqMlYyeEtOV3ZGeXpLR3BEd2U2UjVUd0hyMnN2dTVw?=
+ =?utf-8?B?aVkvcWlOVHVpUVlUTnlQb21peXhrN3ZuS0diZWdRSjFZd3pBTTFsYUlZREwr?=
+ =?utf-8?Q?Ytgd5QoASycbg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf0426a-c57b-4fb6-3222-08d919641efa
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2021 18:46:45.9071
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XevQQ86vIbpZZIo9Zf8ob4KaV6jiCB3UcLIpjYVt8fUoZNgmJdBQCgVHd9BwJt8+4nM4cvHTxJq4ooLWlMQasw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4400
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
-> On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
-> > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
-> > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
-> > > > VGA Enable bit which modifies the response to VGA compatible addresses.
-> > >
-> > > The bridge spec is pretty old, and most of the content has been
-> > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
-> > > 7.5.1.3.13" here instead.
-> > >
-> > > > If the VGA Enable bit is set, the bridge will decode and forward the
-> > > > following accesses on the primary interface to the secondary interface.
-> > >
-> > > *Which* following accesses?  The structure of English requires that if
-> > > you say "the following accesses," you must continue by *listing* the
-> > > accesses.
-> > >
-> > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
-> > > > bridge control register, which causes vgaarb subsystem don't think the
-> > > > VGA card behind the bridge as a valid boot vga device.
-> > >
-> > > s/hardward/bridge/
-> > > s/vga/VGA/ (also in code comments and dmesg strings below)
-> > >
-> > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
-> > > since it apparently has a VGA class code.  But here you say the
-> > > AST2500 has a Bridge Control register, which suggests that it's a
-> > > bridge.  If AST2500 is some sort of combination that includes both a
-> > > bridge and a VGA device, please outline that topology.
-> > >
-> > > But the hardware defect is that some bridges forward VGA accesses even
-> > > though their VGA Enable bit is not set?  The quirk should be attached
-> > > to broken *bridges*, not to VGA devices.
-> > >
-> > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
-> > > is set, that means VGA arbitration (in vgaarb.c) cannot work
-> > > correctly, so merely setting the default VGA device once in a quirk is
-> > > not sufficient.  You would have to somehow disable any future attempts
-> > > to use other VGA devices.  Only the VGA device below this defective
-> > > bridge is usable.  Any other VGA devices in the system would be
-> > > useless.
-> > >
-> > > > So we provide a quirk to fix Xorg auto-detection.
-> > > >
-> > > > See similar bug:
-> > > >
-> > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
-> > >
-> > > This patch was never merged.  If we merged a revised version, please
-> > > cite the SHA1 instead.
-> >
-> > This patch has never merged, and I found that it is unnecessary after
-> > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
-> > even if there's no legacy VGA"). Maybe this ASpeed patch is also
-> > unnecessary. If it is still needed, I'll investigate the root cause.
->
-> I found that vga_arb_device_init() and pcibios_init() are both wrapped
-> by subsys_initcall(), which means their sequence is unpredictable. And
-> unfortunately, in our platform vga_arb_device_init() is called before
-> pcibios_init(), which makes vga_arb_device_init() fail to set a
-> default vga device. This is the root cause why we thought that we
-> still need a quirk for AST2500.
 
-Does this mean there is no hardware defect here?  The VGA Enable bit
-works correctly?
 
-> I think the best solution is make vga_arb_device_init() be wrapped by
-> subsys_initcall_sync(), do you think so?
+On 2021-05-17 1:43 p.m., Alex Deucher wrote:
+> On Wed, May 12, 2021 at 10:27 AM Andrey Grodzovsky
+> <andrey.grodzovsky@amd.com> wrote:
+>>
+>> Access to those must be prevented post pci_remove
+>>
+>> v6: Drop BOs list, unampping VRAM BAR is enough.
+>>
+>> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+>> ---
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 24 +++++++++++++++++++---
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c |  1 +
+>>   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c    |  4 ----
+>>   3 files changed, 22 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> index f7cca25c0fa0..73cbc3c7453f 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> @@ -3666,6 +3666,25 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>>          return r;
+>>   }
+>>
+>> +static void amdgpu_device_unmap_mmio(struct amdgpu_device *adev)
+>> +{
+>> +       /* Clear all CPU mappings pointing to this device */
+>> +       unmap_mapping_range(adev->ddev.anon_inode->i_mapping, 0, 0, 1);
+>> +
+>> +       /* Unmap all mapped bars - Doorbell, registers and VRAM */
+>> +       amdgpu_device_doorbell_fini(adev);
+>> +
+>> +       iounmap(adev->rmmio);
+>> +       adev->rmmio = NULL;
+>> +       if (adev->mman.aper_base_kaddr)
+>> +               iounmap(adev->mman.aper_base_kaddr);
+>> +       adev->mman.aper_base_kaddr = NULL;
+>> +
+>> +       /* Memory manager related */
+> 
+> I think we need:
+> if (!adev->gmc.xgmi.connected_to_cpu) {
+> around these two to mirror amdgpu_bo_fini().
+> 
+> Alex
 
-Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
-documented, so I'm not sure exactly *why* such a change would work and
-whether we could rely on it to continue working.
+I am working of off drm-misc-next and here amdgpu_xgmi
+doesn't have connected_to_cpu yet.
 
-pcibios_init() isn't very consistent across arches.  On some,
-including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
-enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
-basically nothing.  That makes life a little difficult.
+Andrey
 
-vga_arb_device_init() is a subsys_initcall() and wants to look through
-all the PCI devices.  That's a little problematic for arches where
-pcibios_init() is also a subsys_initcall() and enumerates PCI devices.
-
-Sorry, that's no answer for you.  Just more questions :)
-
-> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > Signed-off-by: Jingfeng Sui <suijingfeng@loongson.cn>
-> > > > ---
-> > > >  drivers/pci/quirks.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 47 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > > index 6ab4b3bba36b..adf5490706ad 100644
-> > > > --- a/drivers/pci/quirks.c
-> > > > +++ b/drivers/pci/quirks.c
-> > > > @@ -28,6 +28,7 @@
-> > > >  #include <linux/platform_data/x86/apple.h>
-> > > >  #include <linux/pm_runtime.h>
-> > > >  #include <linux/switchtec.h>
-> > > > +#include <linux/vgaarb.h>
-> > > >  #include <asm/dma.h> /* isa_dma_bridge_buggy */
-> > > >  #include "pci.h"
-> > > >
-> > > > @@ -297,6 +298,52 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
-> > > >  }
-> > > >  DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> > > >
-> > > > +
-> > > > +static void aspeed_fixup_vgaarb(struct pci_dev *pdev)
-> > > > +{
-> > > > +     struct pci_dev *bridge;
-> > > > +     struct pci_bus *bus;
-> > > > +     struct pci_dev *vdevp = NULL;
-> > > > +     u16 config;
-> > > > +
-> > > > +     bus = pdev->bus;
-> > > > +     bridge = bus->self;
-> > > > +
-> > > > +     /* Is VGA routed to us? */
-> > > > +     if (bridge && (pci_is_bridge(bridge))) {
-> > > > +             pci_read_config_word(bridge, PCI_BRIDGE_CONTROL, &config);
-> > > > +
-> > > > +             /* Yes, this bridge is PCI bridge-to-bridge spec compliant,
-> > > > +              *  just return!
-> > > > +              */
-> > > > +             if (config & PCI_BRIDGE_CTL_VGA)
-> > > > +                     return;
-> > > > +
-> > > > +             dev_warn(&pdev->dev, "VGA bridge control is not enabled\n");
-> > > > +     }
-> > >
-> > > You cannot assume that a bridge is defective just because
-> > > PCI_BRIDGE_CTL_VGA is not set.
-> > >
-> > > > +     /* Just return if the system already have a default device */
-> > > > +     if (vga_default_device())
-> > > > +             return;
-> > > > +
-> > > > +     /* No default vga device */
-> > > > +     while ((vdevp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, vdevp))) {
-> > > > +             if (vdevp->vendor != 0x1a03) {
-> > > > +                     /* Have other vga devcie in the system, do nothing */
-> > > > +                     dev_info(&pdev->dev, "Another boot vga device: 0x%x:0x%x\n",
-> > > > +                             vdevp->vendor, vdevp->device);
-> > > > +                     return;
-> > > > +             }
-> > > > +     }
-> > > > +
-> > > > +     vga_set_default_device(pdev);
-> > > > +
-> > > > +     dev_info(&pdev->dev, "Boot vga device set as 0x%x:0x%x\n",
-> > > > +                     pdev->vendor, pdev->device);
-> > > > +}
-> > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(0x1a03, 0x2000, PCI_CLASS_DISPLAY_VGA, 8, aspeed_fixup_vgaarb);
-> > > > +
-> > > > +
-> > > >  /*
-> > > >   * The Mellanox Tavor device gives false positive parity errors.  Disable
-> > > >   * parity error reporting.
-> > > > --
-> > > > 2.27.0
-> > > >
+> 
+>> +       arch_phys_wc_del(adev->gmc.vram_mtrr);
+>> +       arch_io_free_memtype_wc(adev->gmc.aper_base, adev->gmc.aper_size);
+>> +}
+>> +
+>>   /**
+>>    * amdgpu_device_fini - tear down the driver
+>>    *
+>> @@ -3712,6 +3731,8 @@ void amdgpu_device_fini_hw(struct amdgpu_device *adev)
+>>          amdgpu_device_ip_fini_early(adev);
+>>
+>>          amdgpu_gart_dummy_page_fini(adev);
+>> +
+>> +       amdgpu_device_unmap_mmio(adev);
+>>   }
+>>
+>>   void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+>> @@ -3739,9 +3760,6 @@ void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+>>          }
+>>          if ((adev->pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA)
+>>                  vga_client_register(adev->pdev, NULL, NULL, NULL);
+>> -       iounmap(adev->rmmio);
+>> -       adev->rmmio = NULL;
+>> -       amdgpu_device_doorbell_fini(adev);
+>>
+>>          if (IS_ENABLED(CONFIG_PERF_EVENTS))
+>>                  amdgpu_pmu_fini(adev);
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>> index 0adffcace326..882fb49f3c41 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>> @@ -533,6 +533,7 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
+>>                  return -ENOMEM;
+>>          drm_gem_private_object_init(adev_to_drm(adev), &bo->tbo.base, size);
+>>          INIT_LIST_HEAD(&bo->shadow_list);
+>> +
+>>          bo->vm_bo = NULL;
+>>          bo->preferred_domains = bp->preferred_domain ? bp->preferred_domain :
+>>                  bp->domain;
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+>> index 0d54e70278ca..58ad2fecc9e3 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+>> @@ -1841,10 +1841,6 @@ void amdgpu_ttm_fini(struct amdgpu_device *adev)
+>>          amdgpu_bo_free_kernel(&adev->mman.discovery_memory, NULL, NULL);
+>>          amdgpu_ttm_fw_reserve_vram_fini(adev);
+>>
+>> -       if (adev->mman.aper_base_kaddr)
+>> -               iounmap(adev->mman.aper_base_kaddr);
+>> -       adev->mman.aper_base_kaddr = NULL;
+>> -
+>>          amdgpu_vram_mgr_fini(adev);
+>>          amdgpu_gtt_mgr_fini(adev);
+>>          ttm_range_man_fini(&adev->mman.bdev, AMDGPU_PL_GDS);
+>> --
+>> 2.25.1
+>>
