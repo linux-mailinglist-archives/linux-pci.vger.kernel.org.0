@@ -2,118 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 848A6382576
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 09:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D6EA3825A9
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 09:48:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234930AbhEQHlG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 03:41:06 -0400
-Received: from mail-ua1-f42.google.com ([209.85.222.42]:37723 "EHLO
-        mail-ua1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234721AbhEQHlG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 03:41:06 -0400
-Received: by mail-ua1-f42.google.com with SMTP id p17so260531uaw.4;
-        Mon, 17 May 2021 00:39:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R4yBJ8X5FzXC0L+P0xFONg6tye0r9DGB5bUdiN73N88=;
-        b=QpltYpQfcMW0upSY6hShSeAPsh9ocxY2CnOV3173HH3DU5CRkAZS5tSBTIszUppPPg
-         tDD/OPDjVQuxLO9dpCBXHBrPAHAElvk5g7Jv5Kn8r4mVssUiycFncxfmarGlU6jDc+cm
-         2cAYa3+IlSd/Q3vr7zYgVi7T6mpozo6YlI3Mch9LPNqXSAkI8x58rQti8LuAiy0OCjM8
-         9PC6Gj3GLi8Oflste6zp9SykFVK20BOlExtYer4hUw2akv5yQzf37D5Ri+Wv55tb0rP2
-         vXgIZYti9pldWoyloqXx3gHKJVTrUKS26Y1KT8iuj49EwHZHszI2xIr19n0nn89WluaN
-         mSag==
-X-Gm-Message-State: AOAM532Vp3owcHKMcZTKXupCS1DKb3D5qoJz8LxT5cn5e8Dc3lvqnaU0
-        WLa5w4ekqsYF5mZr87oENSjti1dsInzmmZusjtU=
-X-Google-Smtp-Source: ABdhPJwPWi5U2BrEuaNLB5vm/oEutLU4an+1Qd5zBejcB2eglX6gcgSRgw0P58su8+n1DikhgFemngdH4qoOCgsBPBQ=
-X-Received: by 2002:ab0:2a8b:: with SMTP id h11mr28582202uar.4.1621237185486;
- Mon, 17 May 2021 00:39:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210514200549.431275-1-marek.vasut@gmail.com>
-In-Reply-To: <20210514200549.431275-1-marek.vasut@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 May 2021 09:39:33 +0200
-Message-ID: <CAMuHMdXPjDav1_isZsufYFRvPj-JJA2yz2UQxXbqvCPzUzK3-g@mail.gmail.com>
-Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        id S234381AbhEQHtU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 03:49:20 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46672 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229954AbhEQHtT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 03:49:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14H7lZNW073954;
+        Mon, 17 May 2021 02:47:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1621237655;
+        bh=j+ZeXQcB8mN0+OKJ9KdzAe0z9u/uPSAJpZLz8NLNtkE=;
+        h=From:To:CC:Subject:Date;
+        b=j2ZpsBcvschS91tTM6rl3nsfQX1nXCtsreE+J3n5qYPlYq8oroxaqdodAMyJCjKhS
+         3n69sDRIDP0mcMPVUmScXSzEQlCD1sy3HtLa3EwfqGTcDWz0RcnkIqqddHWVLLS/Rm
+         laCNtWC/0YUAVCMnk9YYyPOfokcQEXSaLw3qI2NE=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14H7lZfr007907
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 May 2021 02:47:35 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 17
+ May 2021 02:47:35 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Mon, 17 May 2021 02:47:35 -0500
+Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14H7lOcd007607;
+        Mon, 17 May 2021 02:47:26 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v6 0/7] Add SR-IOV support in PCIe Endpoint Core
+Date:   Mon, 17 May 2021 13:17:16 +0530
+Message-ID: <20210517074723.10212-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 14, 2021 at 10:06 PM <marek.vasut@gmail.com> wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->
-> The R-Car PCIe controller is capable of handling L0s/L1 link states.
-> While the controller can enter and exit L0s link state, and exit L1
-> link state, without any additional action from the driver, to enter
-> L1 link state, the driver must complete the link state transition by
-> issuing additional commands to the controller.
->
-> The problem is, this transition is not atomic. The controller sets
-> PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
-> the PCIe card, but then the controller enters some sort of inbetween
-> state. The driver must detect this condition and complete the link
-> state transition, by setting L1IATN bit in PMCTLR and waiting for
-> the link state transition to complete.
->
-> If a PCIe access happens inside this window, where the controller
-> is between L0 and L1 link states, the access generates a fault and
-> the ARM 'imprecise external abort' handler is invoked.
->
-> Just like other PCI controller drivers, here we hook the fault handler,
-> perform the fixup to help the controller enter L1 link state, and then
-> restart the instruction which triggered the fault. Since the controller
-> is in L1 link state now, the link can exit from L1 link state to L0 and
-> successfully complete the access.
->
-> While it was suggested to disable L1 link state support completely on
-> the controller level, this would not prevent the L1 link state entry
-> initiated by the link partner. This happens e.g. in case a PCIe card
-> enters D3Hot state, which could be initiated from pci_set_power_state()
-> if the card indicates D3Hot support, which in turn means link must enter
-> L1 state. So instead, fix up the L1 link state after all.
->
-> Note that this fixup is applicable only to Aarch32 R-Car controllers,
-> the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
-> 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
-> [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Patch series
+*) Adds support to add virtual functions to enable endpoint controller
+   which supports SR-IOV capability
+*) Add support in Cadence endpoint driver to configure virtual functions
+*) Enable pci_endpoint_test driver to create pci_device for virtual
+   functions
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+v1 of the patch series can be found at [1]
+v2 of the patch series can be found at [2]
+v3 of the patch series can be found at [3]
+v4 of the patch series can be found at [4]
+v5 of the patch series can be found at [5]
 
-> ---
-> V2: - Update commit message, add link to TFA repository commit
->     - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
->     - Cache clock and check whether they are enabled before register
->       access
-> V3: - Fix commit message according to spellchecker
->     - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
->       (in case the kernel is multiplatform)
-> V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
-> V5: - Add mutex around rcar_pcie_aarch32_abort_handler()
+Here both physical functions and virtual functions use the same
+pci_endpoint_test driver and existing pcitest utility can be used
+to test virtual functions as well.
 
-[from my v5 comments] spinlock (used as a mutex ;-)
+Changes from v5:
+*) Rebased to 5.13-rc1
 
->     - Update commit message again to point out issues with L1/D3Hot states
-> V6: - Return 1 only if condition cannot be fixed
+Changes from v4:
+*) Added a fix in Cadence driver which was overwriting BAR configuration
+   of physical function.
+*) Didn't include Tom's Acked-by since Cadence driver is modified in
+   this revision.
 
-Gr{oetje,eeting}s,
+Changes from v3:
+*) Fixed Rob's comment and added his Reviewed-by as suggested by him.
 
-                        Geert
+Changes from v2:
+*) Fixed DT binding documentation comment by Rob
+*) Fixed the error check in pci-epc-core.c
+
+Changes from v1:
+*) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
+   binding for EP)
+
+[1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
+[2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
+[3] -> https://lore.kernel.org/r/20210305050410.9201-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20210310160943.7606-1-kishon@ti.com
+[5] -> https://lore.kernel.org/r/20210419083401.31628-1-kishon@ti.com
+
+Kishon Vijay Abraham I (7):
+  dt-bindings: PCI: pci-ep: Add binding to specify virtual function
+  PCI: endpoint: Add support to add virtual function in endpoint core
+  PCI: endpoint: Add support to link a physical function to a virtual
+    function
+  PCI: endpoint: Add virtual function number in pci_epc ops
+  PCI: cadence: Add support to configure virtual functions
+  misc: pci_endpoint_test: Populate sriov_configure ops to configure
+    SR-IOV device
+  Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
+
+ .../PCI/endpoint/pci-endpoint-cfs.rst         |  12 +-
+ .../devicetree/bindings/pci/pci-ep.yaml       |   7 +
+ drivers/misc/pci_endpoint_test.c              |   1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 285 ++++++++++++++----
+ drivers/pci/controller/cadence/pcie-cadence.h |   7 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |  36 +--
+ drivers/pci/controller/pcie-rcar-ep.c         |  19 +-
+ drivers/pci/controller/pcie-rockchip-ep.c     |  18 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |  79 +++--
+ drivers/pci/endpoint/functions/pci-epf-test.c |  66 ++--
+ drivers/pci/endpoint/pci-ep-cfs.c             |  24 ++
+ drivers/pci/endpoint/pci-epc-core.c           | 130 +++++---
+ drivers/pci/endpoint/pci-epf-core.c           | 144 ++++++++-
+ include/linux/pci-epc.h                       |  57 ++--
+ include/linux/pci-epf.h                       |  16 +-
+ 15 files changed, 684 insertions(+), 217 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
