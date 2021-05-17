@@ -2,103 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BDED383A14
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 18:36:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22C6B383A59
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 18:47:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245361AbhEQQhx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 12:37:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55942 "EHLO mail.kernel.org"
+        id S239933AbhEQQs5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 12:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245137AbhEQQhl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 May 2021 12:37:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 648FF611BD;
-        Mon, 17 May 2021 16:36:24 +0000 (UTC)
+        id S235874AbhEQQsw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 12:48:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 133D161028;
+        Mon, 17 May 2021 16:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621269384;
-        bh=+X4+bVfzpXfIBWRjakB4ifMEjfwf5eB74K2ooB0BvKs=;
+        s=k20201202; t=1621270055;
+        bh=X9VzPoSNITbIIcT8AyahccEJh1UTsUwx2wk0Kx+CyBg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mrYMtv1M6tHlqyA6CqYBWaIneywFJ8hwyUoaWmJWO1aBoBlYRnCcmyhZMKC0yLyaR
-         L7mvWpGdybVWGaENMBE6mq9gjH0sfYPnaY1+eRq8R+ZOHeLGqZceQDDNgUAU0f4Jvq
-         MmibiOMYL5cSc1+YOUeDBcM1IQIsyMe4+riNcK3g3bdQyJCSbq3WIx37g6RM4islnV
-         tptmI49809/uRmboehthxjM3H/6kET4bnLxDOynWRLSYv7o0+atkGxN/ZW5CMwwhYq
-         3vMKLyMt36Uaghsjc+qHPKSjyJnedWRE4+zCKZq6d1L1tfMgKtHkfBDF39YZXot178
-         zFp+kV+EOkf3A==
-Date:   Mon, 17 May 2021 11:36:23 -0500
+        b=K3uFebAz0W8lwnYqM/Y2y41M0PQGFireBX6NU8tjYjmIFmAX0exRgntZg2Ca1yYQm
+         ebHLqk/wtH7eFVKLr/00j4kY9lShwmdvxZ++KM61nSXyD39vUTGECNQTYo9GAVKSBB
+         shmqvqipq6UPOOepgXLFWxG8yJC061X0Wo93l6/PXfYqoVDnbWDLNbYcot3ierqmSo
+         XaQRVibSXXk64ne90pgumZJ/BIwPhVjuPijR3n3O+DpcDV22FtoaQgeAT3hB/lFaLe
+         ryJ4tjMVAHwra4bS7rnZlABEAtkZrPUki5X+U0v1M+iieyqUmZn6XWE9JRsEPPwqts
+         fITJeFytpcEGg==
+Date:   Mon, 17 May 2021 11:47:33 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: Re: [PATCH 0/5] PCI: dwc: pci-dra7xx: miscellaneous improvements
-Message-ID: <20210517163623.GA21579@bjorn-Precision-5520>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+        robh@kernel.org, bhelgaas@google.com, thierry.reding@gmail.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: tegra: Fix host initialization during resume
+Message-ID: <20210517164733.GA22939@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210517154122.430544-1-luca@lucaceresoli.net>
+In-Reply-To: <20210517161835.GA9796@lpieralisi>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 05:41:17PM +0200, Luca Ceresoli wrote:
-> This is an series of mixed improvements to the DRA7 PCI controller driver:
-> allow building as a loadabel module, allow to get and enable a clock and a
-> small cleanup.
+On Mon, May 17, 2021 at 05:18:36PM +0100, Lorenzo Pieralisi wrote:
+> On Mon, May 17, 2021 at 03:11:00PM +0100, Jon Hunter wrote:
+> > Hi Lorenzo, Bjorn,
+> > 
+> > On 06/05/2021 09:49, Jon Hunter wrote:
+> > > 
+> > > On 04/05/2021 18:21, Vidya Sagar wrote:
+> > >> Commit 275e88b06a27 ("PCI: tegra: Fix host link initialization") broke
+> > >> host initialization during resume as it misses out calling the API
+> > >> dw_pcie_setup_rc() which is required for host and MSI initialization.
+> > >>
+> > >> Fixes: 275e88b06a27 ("PCI: tegra: Fix host link initialization")
+> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > >> ---
+> > >>  drivers/pci/controller/dwc/pcie-tegra194.c | 2 ++
+> > >>  1 file changed, 2 insertions(+)
+> > >>
+> > >> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > >> index 6fa216e52d14..4c3c0738f2e6 100644
+> > >> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > >> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > >> @@ -2214,6 +2214,8 @@ static int tegra_pcie_dw_resume_noirq(struct device *dev)
+> > >>  		goto fail_host_init;
+> > >>  	}
+> > >>  
+> > >> +	dw_pcie_setup_rc(&pcie->pci.pp);
+> > >> +
+> > >>  	ret = tegra_pcie_dw_start_link(&pcie->pci);
+> > >>  	if (ret < 0)
+> > >>  		goto fail_host_init;
+> > > 
+> > > Thanks for fixing!
+> > > 
+> > > Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> > > 
+> > > We should also mark this for stable so that this gets back-ported.
+> > 
+> > Can we queue this as a fix for v5.13 and tag for stable?
 > 
-> Luca
+> We usually send fixes for -rc* when the patches they are fixing
+> were merged in the current cycle (ie merged for v5.13).
+
+Looks like this has been broken since v5.11-rc1 (December 27, 2020),
+when 275e88b06a27 was merged.  Probably would be worth an occasional
+boot test to make sure things stay working.
+
+> This is not the case so I shall send it for v5.14.
 > 
-> Luca Ceresoli (5):
->   PCI: dwc: export more symbols to allow modular drivers
->   PCI: dwc: pci-dra7xx: make it a kernel module
->   PCI: dwc: pci-dra7xx: allow to build as a loadable module
->   PCI: dwc: pci-dra7xx: remove unused include
->   PCI: dwc: pci-dra7xx: get an optional clock
-
-This driver has a poor record of subject lines:
-
-  PCI: pci-dra7xx: Prepare for deferred probe with module_platform_driver
-  PCI: dwc: Move dw_pcie_setup_rc() to DWC common code
-  PCI: dwc/dra7xx: Use the common MSI irq_chip
-  PCI: dwc: pci-dra7xx: Fix runtime PM imbalance on error
-
-The "PCI: dwc:" ones are fine -- they apply to the shared dwc core,
-not specifically to dra7xx.
-
-The driver-specific ones:
-
-  PCI: pci-dra7xx:
-  PCI: dwc/dra7xx:
-  PCI: dwc: pci-dra7xx:
-
-are redundant and waste space.  There's no need to mention "dwc" for
-dra7xx-specific things, and no need to mention "PCI" twice.
-
-We should use the "PCI: dra7xx:" prefix for things specific to this
-driver.
-
-The rest of the subject line should start with a capital letter.  The
-subject line should contain specific information when practical.  For
-example,
-
-  PCI: dwc: Export dw_pcie_link_up(), dw_pcie_ep_reset_bar() for modular drivers
-  PCI: dra7xx: Allow building as module
-  PCI: dra7xx: Remove unused linux/init.h include
-  PCI: dra7xx: Get optional external clock
-
-I would squash 2/5 and 3/5, similar to a98d2187efd9 ("PCI: meson:
-Build as module by default") and 526a76991b7b ("PCI: aardvark:
-Implement driver 'remove' function and allow to build it as module").
-
->  drivers/pci/controller/dwc/Kconfig            |  6 +++---
->  drivers/pci/controller/dwc/pci-dra7xx.c       | 21 +++++++++++++++++--
->  .../pci/controller/dwc/pcie-designware-ep.c   |  1 +
->  drivers/pci/controller/dwc/pcie-designware.c  |  1 +
->  4 files changed, 24 insertions(+), 5 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
+> Lorenzo
