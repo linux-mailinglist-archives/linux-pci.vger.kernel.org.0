@@ -2,80 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2E0238227A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 03:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26B5E3822BA
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 04:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbhEQBNw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 16 May 2021 21:13:52 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:2992 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbhEQBNw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 16 May 2021 21:13:52 -0400
-Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.60])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Fk1Jr24TFzmWtX;
-        Mon, 17 May 2021 09:10:20 +0800 (CST)
-Received: from dggeme759-chm.china.huawei.com (10.3.19.105) by
- dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Mon, 17 May 2021 09:12:34 +0800
-Received: from localhost.localdomain (10.69.192.56) by
- dggeme759-chm.china.huawei.com (10.3.19.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Mon, 17 May 2021 09:12:34 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <p.zabel@pengutronix.de>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Tian Tao <tiantao6@hisilicon.com>
-Subject: [PATCH v2] PCI: tegra: move to use request_irq by IRQF_NO_AUTOEN flag
-Date:   Mon, 17 May 2021 09:12:33 +0800
-Message-ID: <1621213953-54030-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggeme759-chm.china.huawei.com (10.3.19.105)
-X-CFilter-Loop: Reflected
+        id S233405AbhEQC20 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 16 May 2021 22:28:26 -0400
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:39498 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233622AbhEQC2Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 16 May 2021 22:28:25 -0400
+Received: by mail-oi1-f171.google.com with SMTP id u144so5179400oie.6;
+        Sun, 16 May 2021 19:27:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=/er4zuQ6xSk4AaBj/SRaF6wzt3GkbqgHN4aInie/C9E=;
+        b=FlajzLquCiLCntu4KKDgSB4t2/pcfRoswna8rxeEW2Wnwgb9eZnCt0ZEJsyBVpbHse
+         5QRdgxBekB4DlJRYzdGJFnSKiTjluF/m5vnB2pxWcsC2XUB7U2hOykKjrjWA0vKlfhba
+         jjOGfNr8SmtoUAWSjdHFTYf9XtNc96G6Nv9xxI98BPD8PlL+FXpzhc+/UAMxletx5ZK1
+         znoHQpOBgcMOs7qjzRNMFSzcX4WySITbtU2vHcApWTBFJQ1pXEYAG4tobqCb+FkYC/tl
+         XNBVuQLbXe7mpzNfDQoPGR6BRTaTZ8Q+ud6U8Uj+hM0fp2+6g5P5BxFY3jU9xJBc/+95
+         e9aQ==
+X-Gm-Message-State: AOAM533Xg/HLfouO9VPRaEUtWotocF5Px+tQPHsqSdbJhiOho/pl/DCO
+        6tiplos85IAEI8V5AZdLEg==
+X-Google-Smtp-Source: ABdhPJy/WI+eQ7PJfec0G3DnBFz4Sy2zaFeQyoeIuGLhRHAHHIR9uOxlxhf1sV4ePoZJBKe4ZJMlWA==
+X-Received: by 2002:a54:4f0d:: with SMTP id e13mr41925650oiy.156.1621218428456;
+        Sun, 16 May 2021 19:27:08 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y11sm2520759oiv.19.2021.05.16.19.27.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 May 2021 19:27:07 -0700 (PDT)
+Received: (nullmailer pid 1315836 invoked by uid 1000);
+        Mon, 17 May 2021 02:27:03 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc:     arnd@arndb.de, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Hector Martin <marcan@marcan.st>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, Mark Kettenis <kettenis@openbsd.org>
+In-Reply-To: <20210516211851.74921-2-mark.kettenis@xs4all.nl>
+References: <20210516211851.74921-1-mark.kettenis@xs4all.nl> <20210516211851.74921-2-mark.kettenis@xs4all.nl>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
+Date:   Sun, 16 May 2021 21:27:03 -0500
+Message-Id: <1621218423.820656.1315835.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-request_irq() after setting IRQ_NOAUTOEN as below
-irq_set_status_flags(irq, IRQ_NOAUTOEN);
-request_irq(dev, irq...);
-can be replaced by request_irq() with IRQF_NO_AUTOEN flag.
+On Sun, 16 May 2021 23:18:46 +0200, Mark Kettenis wrote:
+> From: Mark Kettenis <kettenis@openbsd.org>
+> 
+> The Apple PCIe host controller is a PCIe host controller with
+> multiple root ports present in Apple ARM SoC platforms, including
+> various iPhone and iPad devices and the "Apple Silicon" Macs.
+> 
+> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> ---
+>  .../devicetree/bindings/pci/apple,pcie.yaml   | 150 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> 
 
-this change is just to simplify the code, no actual functional changes.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
+yamllint warnings/errors:
 
-v2: update the commit message.
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pci/apple,pcie.example.dts:20:18: fatal error: dt-bindings/pinctrl/apple.h: No such file or directory
+   20 |         #include <dt-bindings/pinctrl/apple.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pci/apple,pcie.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1416: dt_binding_check] Error 2
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index bafd2c6..7349926 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -2021,14 +2021,13 @@ static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
- 		return -ENOMEM;
- 	}
- 
--	irq_set_status_flags(pcie->pex_rst_irq, IRQ_NOAUTOEN);
--
- 	pcie->ep_state = EP_STATE_DISABLED;
- 
- 	ret = devm_request_threaded_irq(dev, pcie->pex_rst_irq, NULL,
- 					tegra_pcie_ep_pex_rst_irq,
- 					IRQF_TRIGGER_RISING |
--					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					IRQF_TRIGGER_FALLING |
-+					IRQF_ONESHOT | IRQF_NO_AUTOEN
- 					name, (void *)pcie);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to request IRQ for PERST: %d\n", ret);
--- 
-2.7.4
+See https://patchwork.ozlabs.org/patch/1479170
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
