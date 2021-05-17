@@ -2,143 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7BA6382F3A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 16:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD3A938318A
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 16:42:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238717AbhEQOO4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 10:14:56 -0400
-Received: from mail-bn8nam12on2063.outbound.protection.outlook.com ([40.107.237.63]:58846
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238756AbhEQOMX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 May 2021 10:12:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mXdKubOLI9QR+Yy3bLd2a2f3NxXs5utlM0FBKNC3AW/mND1wJNARHM8+k5wQks7jkAFW4Ft8p3RwevBVf3VrAgndSZyudsa8NU6YVm1IT5QUPwEKqqsH9lkftSEpx1DN4Q9BsX1LE7K4utsAQUVA+3rLPi2i0PtE8Z/ti2no24vvYWSeKZDNlhATKHpqB8mzlGzuNca4ys9qWOD7eEK/AaUVKm366xFedpIMjg3UewQvVMHxBpJDwVK8Rk3xCu1gZ4hun4o/tKLhFU23wghXkv+Qoa9VCSXUfhjNesOWRi3Q8pWR/zvzmboNcpREsgpnijdULsIJkgerGoVX83r6rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZgilUNrIXEfRjcKgvViJczoO5z42F8Z8QCENXr1Ypw=;
- b=XpXJy/UqY5MDT0K8xiZ+3ismrJDA0Ti8YK5jsKFTZJPgH65LvGX+lNQlh0m2dTYKMMxSSFutfNzckS096La7qvuSAkfYu84SLihsiUKkIMwDjaLrUh925E7p6QyaPY+f14DLnc7RfoUq7MvigrnrAvfxErXJ/M4ozHZiI754M7ehlSg54j6MSXKIDBBuPdwiL4fcrMYv2UTCr2N1Q4IYCse0AZ2hpwaRZmJYv5Vy1s0arg7sH+RTClgohTDDHoWs9ROlINrCgKsADMdSF7sdIMYwWkCVcIu2jalP+1jq/ymM715Erz8MCrlxJOqpV/68XNnVdG+GAgtfcwpC2ZfVqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sZgilUNrIXEfRjcKgvViJczoO5z42F8Z8QCENXr1Ypw=;
- b=RilI0UoT91mNUx8LeU+DnwQTf0LFW7EOSjv/HQvE204PMRKuyh2qo3grbcNBs990wxx3hNTv8+cbUzpppRVkjCOCiVQ0RyPtRuVz1tJXzKb/Jkuqsth3ixkSvXKpVNi74NeXcoSRtqAoBNnqGnozUKuhrpegYWpcFmrnQ4IS8M4jApixiR3gfvFYMtpwM8W/Ykd+47zoP0/LygAUgk9tfAaBP5bVp86QZmBMsgdGzR4wcUFdXWlAmE1/NwuBlrT1kl3MZjLotfLaAZhr2AGCjacTfsQkQOvWunPPRuX398NO5HWSpDDB8FJLXd0QuBlcoVy0MjwOYDtnokB2rhqDVA==
-Received: from DM5PR16CA0019.namprd16.prod.outlook.com (2603:10b6:3:c0::29) by
- SN6PR12MB2829.namprd12.prod.outlook.com (2603:10b6:805:e8::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4129.28; Mon, 17 May 2021 14:11:05 +0000
-Received: from DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:c0:cafe::69) by DM5PR16CA0019.outlook.office365.com
- (2603:10b6:3:c0::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
- Transport; Mon, 17 May 2021 14:11:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT049.mail.protection.outlook.com (10.13.172.188) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4129.25 via Frontend Transport; Mon, 17 May 2021 14:11:05 +0000
-Received: from [10.26.49.10] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 17 May
- 2021 14:11:02 +0000
-Subject: Re: [PATCH] PCI: tegra: Fix host initialization during resume
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Vidya Sagar <vidyas@nvidia.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20210504172157.29712-1-vidyas@nvidia.com>
- <fecc2899-06ef-f91f-4a39-bb4ee664c800@nvidia.com>
-Message-ID: <7dbc7daf-5512-c938-3aee-3c1994b50d07@nvidia.com>
-Date:   Mon, 17 May 2021 15:11:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S238379AbhEQOhV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 10:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240855AbhEQOfU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 10:35:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EB6A26192E;
+        Mon, 17 May 2021 14:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621261023;
+        bh=/Fke8gIzwbqA8x/UokWi0atigFQr973AI+PeWKSYjRU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=txRW5cq5TjoJfqLcL/h1JgCdmDTnx2hI7zmshAZiXPlCKzJyT+wfq3NZX15wBMKTT
+         hXD6WWxOjx5bVMEw0UJXAz0gi1z0AZGsczmjtKzoUyyxTL9Qd774vglKgAm93krL8E
+         zxQ0xqLy1b5gVJTSqLDQtb4u+EW/hDGQhB23MsnNz6mu7T728FxBXrVAnxVEsY95bD
+         3bQThlTsuFQyKart6GcSHucSBDCrFhL+lFUZCe9+M39PdjKV5k9muXGRVK3onrBaFC
+         kU9hCSPZbKu8jlSfabX6b9xdcfhx46kn+bXbwe44zptKsbe+Qxw8GwguA8gFF4LPcZ
+         YTj2QK12Oxvhw==
+Received: by mail-ed1-f52.google.com with SMTP id df21so7115603edb.3;
+        Mon, 17 May 2021 07:17:02 -0700 (PDT)
+X-Gm-Message-State: AOAM531Z9DxFCHzYj9higWkjANLuPDUr8PBzMiqhZJcxHmkal5WWOhBV
+        nWVmemsE0zeXlWIMxfPdSnksD8baCRK9NpHihA==
+X-Google-Smtp-Source: ABdhPJxDHyxbIZt279+m6/FlAXXLWN1Rl7kcX6dLAQjtZ8ouXZ0JBZhiFEebN8nnhBCaqIyvmA4grUT0xvv4rmv4zHI=
+X-Received: by 2002:aa7:d893:: with SMTP id u19mr301411edq.258.1621261021464;
+ Mon, 17 May 2021 07:17:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fecc2899-06ef-f91f-4a39-bb4ee664c800@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d229e493-739c-49e2-7e15-08d9193d9c39
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2829:
-X-Microsoft-Antispam-PRVS: <SN6PR12MB28293B18F31475C36BB805D8D92D9@SN6PR12MB2829.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WBWfqRUAHmmqcO3rCM6/v49RFcqHSzTuxyXddGThzy3Q+F1CJ2t3PK4vv7c3cthFst4VPDhv03qRdqnD2FvhI872e5CKPlZPDS+1ExyxTNc4JAt8CrGk+LSrUGoYR7Tongu42Y43MAkvyhc0h35vx1kYfmVT2dolaeNp3MAyTjDpHO4TeZni6fOZPDXx85lSbdPvfTZWpTkQxo6HcBNcF2o5hO2gyP/YKVgusKhq7TsoA+ntKTR/R6/ipeqlMyNzYkFrVlu2lcIQRt6BNs04eWu+Lsfgwav+eNG82abjF8HvMUoctJp07IzV0aLkPvxL2E1CUcIWUXmBtx9kC1BbiDRelhwC6FuSaq3JdgAy8pd4q7Td7B5fN5pX078Zqz8BtJS7KS/WeEB1sBXOph4JyAg9aeVizK5UXGvlW2szLJr5IwxFC7F9YIhiL+bh9JTTCbImQLc5eLuxa4CV5AlEQXOowx0BTmFDZQinrFWRHfE4rGXXOzGSKIdAo+iFZF1xVo0pZ86xRiNLP52tkwY1vwabDga91sTYjLMLBoP07nFgOMlM+sZbXZN0ZNLKPCf9Xu/svI4JXW9W6cEr/l8pwUefALEeCSiPwG+TMLeZ6TAcRMC8vSgFY9/uguFhedWFEfWYiDikuAuCgayVOeueHhbZpUdldblAsFh0zZW4wLrpu8QLWXrr68uxDwVCYuAN
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(39860400002)(396003)(36840700001)(46966006)(31686004)(2906002)(5660300002)(426003)(16576012)(36860700001)(336012)(478600001)(70206006)(7636003)(36756003)(2616005)(86362001)(186003)(16526019)(4326008)(82740400003)(7416002)(70586007)(8936002)(54906003)(53546011)(8676002)(82310400003)(26005)(356005)(36906005)(110136005)(316002)(47076005)(31696002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2021 14:11:05.3349
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d229e493-739c-49e2-7e15-08d9193d9c39
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2829
+References: <20210516211851.74921-1-mark.kettenis@xs4all.nl> <20210516211851.74921-2-mark.kettenis@xs4all.nl>
+In-Reply-To: <20210516211851.74921-2-mark.kettenis@xs4all.nl>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 17 May 2021 09:16:49 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+k5Bp6_BY2UD6HbKVXv=mzcqg9f_H4w=GWMm2rThxJbQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+k5Bp6_BY2UD6HbKVXv=mzcqg9f_H4w=GWMm2rThxJbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
+To:     Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc:     devicetree@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Hector Martin <marcan@marcan.st>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo, Bjorn,
+On Sun, May 16, 2021 at 4:19 PM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
+>
+> From: Mark Kettenis <kettenis@openbsd.org>
+>
+> The Apple PCIe host controller is a PCIe host controller with
+> multiple root ports present in Apple ARM SoC platforms, including
+> various iPhone and iPad devices and the "Apple Silicon" Macs.
 
-On 06/05/2021 09:49, Jon Hunter wrote:
-> 
-> On 04/05/2021 18:21, Vidya Sagar wrote:
->> Commit 275e88b06a27 ("PCI: tegra: Fix host link initialization") broke
->> host initialization during resume as it misses out calling the API
->> dw_pcie_setup_rc() which is required for host and MSI initialization.
->>
->> Fixes: 275e88b06a27 ("PCI: tegra: Fix host link initialization")
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>  drivers/pci/controller/dwc/pcie-tegra194.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index 6fa216e52d14..4c3c0738f2e6 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -2214,6 +2214,8 @@ static int tegra_pcie_dw_resume_noirq(struct device *dev)
->>  		goto fail_host_init;
->>  	}
->>  
->> +	dw_pcie_setup_rc(&pcie->pci.pp);
->> +
->>  	ret = tegra_pcie_dw_start_link(&pcie->pci);
->>  	if (ret < 0)
->>  		goto fail_host_init;
->>
-> 
-> 
-> Thanks for fixing!
-> 
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> 
-> We should also mark this for stable so that this gets back-ported.
+All the cover letter will be lost in the git history. Please mention
+some details like this is a DWC controller here. I disagree that you
+can't use the DWC binding. You can use it and extend it with what's
+needed here. And that way, we could move from generic ECAM to an
+actual driver in the OS if needed (hopefully not). More below.
 
+> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> ---
+>  .../devicetree/bindings/pci/apple,pcie.yaml   | 150 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> new file mode 100644
+> index 000000000000..af3c9f64e380
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Apple PCIe host controller
+> +
+> +maintainers:
+> +  - Mark Kettenis <kettenis@openbsd.org>
+> +
+> +description: |
+> +  The Apple PCIe host controller is a PCIe host controller with
+> +  multiple root ports present in Apple ARM SoC platforms, including
+> +  various iPhone and iPad devices and the "Apple Silicon" Macs.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: apple,t8103-pcie
+> +      - const: apple,pcie
+> +
+> +  reg:
+> +    minItems: 4
+> +    maxItems: 6
 
-Can we queue this as a fix for v5.13 and tag for stable?
+6 or...
 
-Thanks!
-Jon
+> +  reg-names:
+> +    minItems: 4
+> +    maxItems: 7
 
--- 
-nvpublic
+7?
+
+> +    items:
+> +      - const: ecam
+
+'config'
+
+The difference between ECAM or not in existing devices is really just
+the size. If you look at the addresses on other DWC bindings, the
+config region is just an iATU window within the host's PCI address
+range.
+
+> +      - const: rc
+
+This would be 'dbi'?
+
+Also check if we need 'atu' (only if it's not at the default offset)?
+
+> +      - const: phy
+
+Should there be a separate phy node?
+
+> +      - const: port0
+> +      - const: port1
+> +      - const: port2
+
+What's in these registers?
+
+> +
+> +  ranges:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    minItems: 3
+> +    maxItems: 3
+
+Need to define what each one is.
+
+> +
+> +  msi-ranges:
+> +    description:
+> +      A list of pairs <intid span>, where "intid" is the first
+> +      interrupt number that can be used as an MSI, and "span" the size
+> +      of that range.
+
+Hopefully, Marc Z will comment on the MSI bits. msi-map doesn't work
+here? If we need something else, then it should be added to
+pci-msi.txt.
+
+One problem with this is it assumes 'intid' is one cell. It's really 2
+for the AIC if we ignore flags (which would be another assumption that
+we can ignore the last cell). Or maybe this belongs in the AIC
+binding?
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      minItems: 2
+> +      maxItems: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - bus-range
+> +  - interrupts
+> +  - msi-controller
+> +  - msi-parent
+> +  - msi-ranges
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/apple-aic.h>
+> +    #include <dt-bindings/pinctrl/apple.h>
+> +
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      pcie0: pcie@690000000 {
+> +        compatible = "apple,t8103-pcie", "apple,pcie";
+> +        device_type = "pci";
+> +
+> +        reg = <0x6 0x90000000 0x0 0x1000000>,
+> +              <0x6 0x80000000 0x0 0x4000>,
+> +              <0x6 0x8c000000 0x0 0x4000>,
+> +              <0x6 0x81000000 0x0 0x8000>,
+> +              <0x6 0x82000000 0x0 0x8000>,
+> +              <0x6 0x83000000 0x0 0x8000>;
+> +        reg-names = "ecam", "rc", "phy", "port0", "port1", "port2";
+> +
+> +        interrupt-parent = <&aic>;
+> +        interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        msi-controller;
+> +        msi-parent = <&pcie0>;
+> +        msi-ranges = <704 32>;
+> +
+> +        iommu-map = <0x0 &dart0 0x8000 0x100>,
+> +                    <0x100 &dart0 0x100 0x100>,
+> +                    <0x200 &dart1 0x200 0x100>,
+> +                    <0x300 &dart2 0x300 0x100>;
+> +        iommu-map-mask = <0xff00>;
+
+These need to be documented. You can assume they have a type already,
+so just 'true' or any constraints.
+
+> +
+> +        bus-range = <0 7>;
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
+> +                 <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
+> +
+> +        clocks = <&pcie_core_clk>, <&pcie_aux_clk>, <&pcie_ref_clk>;
+> +        pinctrl-0 = <&pcie_pins>;
+> +        pinctrl-names = "default";
+> +
+> +        pci@0,0 {
+> +          device_type = "pci";
+> +          reg = <0x0 0x0 0x0 0x0 0x0>;
+> +          reset-gpios = <&pinctrl_ap 152 0>;
+> +          max-link-speed = <2>;
+> +
+> +          #address-cells = <3>;
+> +          #size-cells = <2>;
+> +          ranges;
+> +        };
+> +
+> +        pci@1,0 {
+> +          device_type = "pci";
+> +          reg = <0x800 0x0 0x0 0x0 0x0>;
+> +          reset-gpios = <&pinctrl_ap 153 0>;
+> +          max-link-speed = <2>;
+> +
+> +          #address-cells = <3>;
+> +          #size-cells = <2>;
+> +          ranges;
+> +        };
+> +
+> +        pci@2,0 {
+> +          device_type = "pci";
+> +          reg = <0x1000 0x0 0x0 0x0 0x0>;
+> +          reset-gpios = <&pinctrl_ap 33 0>;
+> +          max-link-speed = <1>;
+> +
+> +          #address-cells = <3>;
+> +          #size-cells = <2>;
+> +          ranges;
+> +        };
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7327c9b778f1..789d79315485 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1654,6 +1654,7 @@ C:        irc://chat.freenode.net/asahi-dev
+>  T:     git https://github.com/AsahiLinux/linux.git
+>  F:     Documentation/devicetree/bindings/arm/apple.yaml
+>  F:     Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
+> +F:     Documentation/devicetree/bindings/pci/apple,pcie.yaml
+>  F:     Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+>  F:     arch/arm64/boot/dts/apple/
+>  F:     drivers/irqchip/irq-apple-aic.c
+> --
+> 2.31.1
+>
