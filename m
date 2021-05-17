@@ -2,124 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D14AB382D16
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 15:15:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F647382D22
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 15:17:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235417AbhEQNQ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 09:16:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230312AbhEQNQ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 09:16:58 -0400
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F000C061573;
-        Mon, 17 May 2021 06:15:42 -0700 (PDT)
-Received: by mail-vs1-xe35.google.com with SMTP id x13so3081901vsh.1;
-        Mon, 17 May 2021 06:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=64iLNFarXR/0X5C3MD+uhPh/ufsHsIi9Z+svs3XdY94=;
-        b=QICmOlfDKxH8Rl5tqpmIV1hlkb/+dVXIS9wyOj94ugM7StLFfX9YH4g0VmGLMwsE1O
-         DIa2EnfMlPB2ngrcWJJNcbov3bjPCyjXsSCzoYRAy3AirCW6CXsV0HcFv6b807UsyEdB
-         LhoijPsZxApRRgFAUt8hxfB5iPd0n/F/jxFBMdpmIgjRNN7gAUbDrpNBrqILEK/fZowF
-         +8oOkMjYEaLydRCJc4QnRc3SGOAcYPP1ldabJR13fVcdXzvNYZ6Z6v+YwwXYypUlF2FI
-         y4WFvbbuUwMMjYnCpewLkBqhAQkp20ZVEt0D27/gHFm9mC9Y5/TpAO2OIJ5xxxL0sT5N
-         YTtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=64iLNFarXR/0X5C3MD+uhPh/ufsHsIi9Z+svs3XdY94=;
-        b=g0jFUYZks5l/qyQbOMtdHjzx86Z+Tv3TGL4/6BBnEMuY+NYc+fK86T4JE3W8Bh+ZI+
-         sHcc8Erl+LoDYZpGLFOf76Tb+DpvmVi/z+1dWlJXbQegcxEZl1MCghL9zI5UNkx9E4xn
-         V3Mrpl/pQu8TJHi7qtq16mJDOkSuq0Ot1JOkr1PSnwAVHgsG0MMrjLHhS1W0MBiSCJ1F
-         U7+HMiE6cbWoGSNOpFbd4GUqfKtj9m8cHq0bGBZFyIGbz8b7RVcVnkuihLqiYjscbdqG
-         WVdYwqyn2ZLLb+hiMOQlBTXMaTluzxEXbEvyIw+jBXcA9BHPaJYpf1RCeSEq3lpLhQD8
-         tXjg==
-X-Gm-Message-State: AOAM530EhQT3bHzNPoBuLKhx0JnonHCRdpOigdTBb+qhPEykBU70Si5L
-        8Vs6G66MYtiwfneNAStMzbQVVWLVlAt46bbNEso=
-X-Google-Smtp-Source: ABdhPJwhS9/DrVSwXKUJZOZ1dipQaZqv7hS1icQ2AOlYxQVS4mCjURvnh6C0qj12mpT6F5LCux65SjidjOhm+UZQCgY=
-X-Received: by 2002:a67:cb15:: with SMTP id b21mr52611553vsl.29.1621257341885;
- Mon, 17 May 2021 06:15:41 -0700 (PDT)
+        id S235683AbhEQNSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 09:18:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2999 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235470AbhEQNSb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 09:18:31 -0400
+Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FkKMY25FrzQnvD;
+        Mon, 17 May 2021 21:13:45 +0800 (CST)
+Received: from dggpemm500009.china.huawei.com (7.185.36.225) by
+ dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 17 May 2021 21:17:13 +0800
+Received: from huawei.com (10.174.185.226) by dggpemm500009.china.huawei.com
+ (7.185.36.225) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 17 May
+ 2021 21:17:12 +0800
+From:   Wang Xingang <wangxingang5@huawei.com>
+To:     <will@kernel.org>, <joro@8bytes.org>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>
+CC:     <helgaas@kernel.org>, <gregkh@linuxfoundation.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <xieyingtai@huawei.com>, <wangxingang5@huawei.com>
+Subject: [PATCH v2] iommu/of: Fix pci_request_acs() before enumerating PCI devices
+Date:   Mon, 17 May 2021 13:17:05 +0000
+Message-ID: <1621257425-37856-1-git-send-email-wangxingang5@huawei.com>
+X-Mailer: git-send-email 2.6.4.windows.1
 MIME-Version: 1.0
-References: <20210325090026.8843-1-kishon@ti.com>
-In-Reply-To: <20210325090026.8843-1-kishon@ti.com>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Mon, 17 May 2021 15:15:31 +0200
-Message-ID: <CAH9NwWeOysq9yLheFAXgX0c7bOZAAX7ZuQHXM9Rmb1an_Z5ZYg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] PCI: Add legacy interrupt support in Keystone
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.174.185.226]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500009.china.huawei.com (7.185.36.225)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
+From: Xingang Wang <wangxingang5@huawei.com>
 
-Am Do., 25. M=C3=A4rz 2021 um 10:04 Uhr schrieb Kishon Vijay Abraham I
-<kishon@ti.com>:
->
-> Keystone driver is used by K2G and AM65 and the interrupt handling of
-> both of them is different. Add support to handle legacy interrupt for
-> both K2G and AM65 here.
->
-> Some discussions regarding this was already done here [1] and it was
-> around having pulse interrupt for legacy interrupt.
->
-> The HW interrupt line connected to GIC is a pulse interrupt whereas
-> the legacy interrupts by definition is level interrupt. In order to
-> provide level interrupt functionality to edge interrupt line, PCIe
-> in AM654 has provided IRQ_EOI register. When the SW writes to IRQ_EOI
-> register after handling the interrupt, the IP checks the state of
-> legacy interrupt and re-triggers pulse interrupt invoking the handler
-> again.
->
-> Patch series also includes converting AM65 binding to YAML and an
-> errata applicable for i2037.
->
-> [1] -> https://lore.kernel.org/linux-arm-kernel/20190221101518.22604-4-ki=
-shon@ti.com/
->
-> Kishon Vijay Abraham I (6):
->   dt-bindings: PCI: ti,am65: Add PCIe host mode dt-bindings for TI's
->     AM65 SoC
->   dt-bindings: PCI: ti,am65: Add PCIe endpoint mode dt-bindings for TI's
->     AM65 SoC
->   irqdomain: Export of_phandle_args_to_fwspec()
->   PCI: keystone: Convert to using hierarchy domain for legacy interrupts
->   PCI: keystone: Add PCI legacy interrupt support for AM654
->   PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
->
->  .../bindings/pci/ti,am65-pci-ep.yaml          |  80 ++++
->  .../bindings/pci/ti,am65-pci-host.yaml        | 111 ++++++
->  drivers/pci/controller/dwc/pci-keystone.c     | 343 +++++++++++++-----
->  include/linux/irqdomain.h                     |   2 +
->  kernel/irq/irqdomain.c                        |   6 +-
->  5 files changed, 440 insertions(+), 102 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,am65-pci-ep.=
-yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,am65-pci-hos=
-t.yaml
->
-> --
-> 2.17.1
->
+When booting with devicetree, the pci_request_acs() is called after the
+enumeration and initialization of PCI devices, thus the ACS is not
+enabled. This patch add check for IOMMU in of_core_init(), and call
+pci_request_acs() when iommu is detected, making sure that the ACS will
+be enabled.
 
-Is there somewhere an updated version of this patch series?
+Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
+configuring IOMMU linkage")
+Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+---
+ drivers/iommu/of_iommu.c | 1 -
+ drivers/of/base.c        | 9 ++++++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
---=20
-greets
---
-Christian Gmeiner, MSc
+Change log:
+v1->v2:
+ - remove pci_request_acs() in of_iommu_configure
+ - check and call pci_request_acs() in of_core_init()
 
-https://christian-gmeiner.info/privacypolicy
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index a9d2df001149..54a14da242cc 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 			.np = master_np,
+ 		};
+ 
+-		pci_request_acs();
+ 		err = pci_for_each_dma_alias(to_pci_dev(dev),
+ 					     of_pci_iommu_init, &info);
+ 	} else {
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 48e941f99558..95cd8f0e5435 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -24,6 +24,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/of_graph.h>
++#include <linux/pci.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+@@ -166,7 +167,7 @@ void __of_phandle_cache_inv_entry(phandle handle)
+ void __init of_core_init(void)
+ {
+ 	struct device_node *np;
+-
++	bool of_iommu_detect = false;
+ 
+ 	/* Create the kset, and register existing nodes */
+ 	mutex_lock(&of_mutex);
+@@ -180,6 +181,12 @@ void __init of_core_init(void)
+ 		__of_attach_node_sysfs(np);
+ 		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
+ 			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
++
++		/* Detect IOMMU and make sure ACS will be enabled */
++		if (!of_iommu_detect && of_get_property(np, "iommu-map", NULL)) {
++			of_iommu_detect = true;
++			pci_request_acs();
++		}
+ 	}
+ 	mutex_unlock(&of_mutex);
+ 
+-- 
+2.19.1
+
