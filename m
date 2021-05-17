@@ -2,159 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DBEC383B2A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 19:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 937DA383B3C
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 19:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242811AbhEQRWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 13:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242794AbhEQRWn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 13:22:43 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FEA3C061756
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 10:21:26 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id b25so10363958eju.5
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 10:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KSak/9y8LWCPIDO3G6CswSdOFb8LMwY6kG8ALECOcQ4=;
-        b=FAoQU13gvykSeVPaT8SD0dcXsm4yCutPyV3HXGbrkMqJURqJJ1TpCC2N9Sby2v9Quu
-         SxEDs9LDJrwAQ7+xPzYiZmHAFww2P6PNBPs5s2nkSPuZp+MTzuMyyZ5beiPs+5UfN2mT
-         xGKwFWY4bNQ2WSd4YF6rlGmI5eoa++Lymx2PKTFoCA2kXd33AOOPsMGvM+KJzM90Skwn
-         5DNpXxhL0Iras7qtd/gCMDz9CGnp2/wSFPpmt4GoEVGvWKxYmlsaSE1cjNQSje8OFsiE
-         ++BQ+plVjguBvcA0RzBTh+3tH0tiGrNYLkZ2uh0afF6wM6z2X+T9p0fmruHcfs/C/ekM
-         EYiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KSak/9y8LWCPIDO3G6CswSdOFb8LMwY6kG8ALECOcQ4=;
-        b=WKNWEM9QH0nUaqmEwhEkQkNMMy06TD5YVKf7xP4VkniX/QPtHVHGKpw9/lPuo3twaE
-         hB7j5RzYqZ/k6rMqOuBrNkoTTLV4dHlTHiiiHNbK7sTZeeVqP+3Cq0wUkQia+r2/aTeB
-         FVuCvvyYGg3DbAyYPQ9mVmglkRmGgEgamObd7P4Nsp0Bbo91ehye/qCgtPjQtJWuKMe5
-         zHhiMThQ+tyfGEZPOEjma7SEBuQ0+cUMXdn+1eqJmhdW6+lFjNqYNXkkO7lk+we5CJN6
-         QaJaFnkpjatrOcRMs0hOGuK4KQuQL/yjXkNAurCk62bkojpEuenPdhWtlUA2mIV4MLvz
-         uh4Q==
-X-Gm-Message-State: AOAM532h00tHzUqous3RdY3nbMDJKrXFvR3Clk10e5hIp1P0hk5gXQ98
-        ci6FzI00UjxI1Zim0IJ2b5Lb9PNBrBZsmiWj0bshvg==
-X-Google-Smtp-Source: ABdhPJwDSuY1Ew65cNeQBqF/NU4BCq0/RPemhz48ePAYjbpwvuGcrf2z9Kf9uaXqxeWBtzA0bGQ4GodiWR5b72do9Cs=
-X-Received: by 2002:a17:907:3e28:: with SMTP id hp40mr1001966ejc.523.1621272085131;
- Mon, 17 May 2021 10:21:25 -0700 (PDT)
+        id S239307AbhEQR1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 13:27:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:58812 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230408AbhEQR1q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 13:27:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B66891FB;
+        Mon, 17 May 2021 10:26:27 -0700 (PDT)
+Received: from [10.57.66.179] (unknown [10.57.66.179])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8DCA3F73D;
+        Mon, 17 May 2021 10:26:23 -0700 (PDT)
+Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when
+ setting the hint
+To:     Nitesh Lal <nilal@redhat.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
+        Alex Belits <abelits@marvell.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
+        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
+        netdev@vger.kernel.org, chris.friesen@windriver.com,
+        Marc Zyngier <maz@kernel.org>
+References: <20210501021832.743094-1-jesse.brandeburg@intel.com>
+ <16d8ca67-30c6-bb4b-8946-79de8629156e@arm.com>
+ <20210504092340.00006c61@intel.com>
+ <CAFki+LmR-o+Fng21ggy48FUX7RhjjpjO87dn3Ld+L4BK2pSRZg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bf1d4892-0639-0bbf-443e-ba284a8ed457@arm.com>
+Date:   Mon, 17 May 2021 18:26:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
- <20210514094755.00002081@Huawei.com> <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
- <20210517094045.00004d58@Huawei.com>
-In-Reply-To: <20210517094045.00004d58@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 17 May 2021 10:21:14 -0700
-Message-ID: <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFki+LmR-o+Fng21ggy48FUX7RhjjpjO87dn3Ld+L4BK2pSRZg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 1:42 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Fri, 14 May 2021 11:37:12 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > [..]
-> > > > If it simplifies the kernel implementation to assume single
-> > > > kernel-initiator then I think that's more than enough reason to block
-> > > > out userspace, and/or provide userspace a method to get into the
-> > > > kernel's queue for service.
-> > >
-> > > This last suggestion makes sense to me. Let's provide a 'right' way
-> > > to access the DOE from user space. I like the idea if it being possible
-> > > to run CXL compliance tests from userspace whilst the driver is loaded.
-> >
-> > Ah, and I like your observation that once the kernel provides a
-> > "right" way to access DOE then userspace direct-access of DOE is
-> > indeed a "you get to keep the pieces" event like any other unwanted
-> > userspace config-write.
-> >
-> > > Bjorn, given this would be a generic PCI thing, any preference for what
-> > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
-> > > to those for the BAR based CXL mailboxes?
-> >
-> > (warning, anti-ioctl bias incoming...)
->
-> I feel very similar about ioctls - my immediate thought was to shove this in
-> debugfs, but that feels the wrong choice if we are trying to persuade people
-> to use it instead of writing code that directly accesses the config space.
->
-> >
-> > Hmm, DOE has an enumeration capability, could the DOE driver use a
-> > scheme to have a sysfs bin_attr per discovered object type? This would
-> > make it simliar to the pci-vpd sysfs interface.
->
-> We can discover the protocols, but anything beyond that is protocol
-> specific.  I don't think there is a enough info available by any standards
-> defined method. Also part of the reason to allow a safe userspace interface
-> would be to provide a generic interface for vendor protocols and things like
-> CXL compliance tests where we will almost certainly never provide a more
-> specific kernel interface.
->
-> Whilst sysfs would work for CDAT, some protocols are challenge response rather
-> than simple read back and that really doesn't fit well for sysfs model.
-> If we get other protocols that are simple data read back, then I would
-> advocate giving them a simple sysfs interface much like proposed for CDAT
-> as it will always be simpler to use + self describing.
->
-> On a lesser note it might be helpful to provide sysfs attrs for
-> what protocols are supported.  The alternative is to let userspace run
-> the discovery protocol. Perhaps we can do this as a later phase.
->
-> >
-> > Then the kernel could cache objects like CDAT that don't change
-> > outside of some invalidation event.
->
-> It's been a while since I last saw any conversation on sysfs bin_attrs
-> but mostly I thought the feeling was pretty strongly against them for anything
-> but a few niche usecases.
->
-> Feels to me like it would break most of the usual rules in a way vpd does
-> not (IIRC VPD is supposed to be a simple in the sense that if you write a value
-> to a writable part, you will read back the same value).
->
-> +CC Greg who is a fount of knowledge in this area (and regularly + correctly
-> screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
-> suggesting implementing response / request directly, but I think that is
-> all we could do given DOE protocols can be vendor specific and the standard
-> discovery protocol doesn't let us know the fine grained support (what commands
-> within a given protocol).
+On 2021-05-17 17:57, Nitesh Lal wrote:
+> On Tue, May 4, 2021 at 12:25 PM Jesse Brandeburg
+> <jesse.brandeburg@intel.com> wrote:
+>>
+>> Robin Murphy wrote:
+>>
+>>> On 2021-05-01 03:18, Jesse Brandeburg wrote:
+>>>> It was pointed out by Nitesh that the original work I did in 2014
+>>>> to automatically set the interrupt affinity when requesting a
+>>>> mask is no longer necessary. The kernel has moved on and no
+>>>> longer has the original problem, BUT the original patch
+>>>> introduced a subtle bug when booting a system with reserved or
+>>>> excluded CPUs. Drivers calling this function with a mask value
+>>>> that included a CPU that was currently or in the future
+>>>> unavailable would generally not update the hint.
+>>>>
+>>>> I'm sure there are a million ways to solve this, but the simplest
+>>>> one is to just remove a little code that tries to force the
+>>>> affinity, as Nitesh has shown it fixes the bug and doesn't seem
+>>>> to introduce immediate side effects.
+>>>
+>>> Unfortunately, I think there are quite a few other drivers now relying
+>>> on this behaviour, since they are really using irq_set_affinity_hint()
+>>> as a proxy for irq_set_affinity(). Partly since the latter isn't
+>>> exported to modules, but also I have a vague memory of it being said
+>>> that it's nice to update the user-visible hint to match when the
+>>> affinity does have to be forced to something specific.
+>>>
+>>> Robin.
+>>
+>> Thanks for your feedback Robin, but there is definitely a bug here that
+>> is being exposed by this code. The fact that people are using this
+>> function means they're all exposed to this bug.
+>>
+>> Not sure if you saw, but this analysis from Nitesh explains what
+>> happened chronologically to the kernel w.r.t this code, it's a useful
+>> analysis! [1]
+>>
+>> I'd add in addition that irqbalance daemon *stopped* paying attention
+>> to hints quite a while ago, so I'm not quite sure what purpose they
+>> serve.
+>>
+>> [1]
+>> https://lore.kernel.org/lkml/CAFki+Lm0W_brLu31epqD3gAV+WNKOJfVDfX2M8ZM__aj3nv9uA@mail.gmail.com/
+>>
+> 
+> Wanted to follow up to see if there are any more objections or even
+> suggestions to take this forward?
 
-I'm not all that interested in supporting vendor defined DOE
-shenanigans. There's more than enough published DOE protocols that the
-kernel could limit its support to the known set. This is similar to
-how ACPI DSMs are not generically supported, but when they appear in a
-published specification the kernel may then grow the support. The
-supported protocols could be limited to: CDAT, PCIe IDE, CXL
-Compliance, etc...
+Oops, sorry, seems I got distracted before getting round to actually 
+typing up my response :)
 
-Vendor specific DOE is in the same class as unfettered /dev/mem
-access, first you need to disable the kernel's integrity and
-confidentiality protections, and then you can do whatever you want. If
-a vendor wants a DOE protocol supported in the "trusted" set they can
-simply publish the specification and send the proper support patches.
+I'm not implying that there isn't a bug, or that this code ever made 
+sense in the first place, just that fixing it will unfortunately be a 
+bit more involved than a simple revert. This patch as-is *will* subtly 
+break at least the system PMU drivers currently using 
+irq_set_affinity_hint() - those I know require the IRQ affinity to 
+follow whichever CPU the PMU context is bound to, in order to meet perf 
+core's assumptions about mutual exclusion.
+
+As far as the consistency argument goes, maybe that's just backwards and 
+it should be irq_set_affinity() that also sets the hint, to indicate to 
+userspace that the affinity has been forced by the kernel? Either way 
+we'll need to do a little more diligence to figure out which callers 
+actually care about more than just the hint, and sort them out first.
+
+Robin.
