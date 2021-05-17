@@ -2,162 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8460C386CFF
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 00:34:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E371386D25
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 00:44:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343861AbhEQWfw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 18:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236978AbhEQWfw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 18:35:52 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83ABFC061573
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 15:34:34 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id i9so11074505lfe.13
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 15:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZgpuCsOSUBV3Eod5u/L5h9ty2mrWMwDC6F3vhbFSf60=;
-        b=wAOQIczqkDdlETvak5EvYYQnQISdpoDFDrNw3w4KVj9a73RgMotcrBBjvvch69IarY
-         xuVnSSBpiJmKeCJpJVH2DVY2MSzsNWyF226gSXZ7UdC9sInM6ChijBL68lqlhD9B1eS+
-         QM8+WaV899sFOPSXg0Rg2cvc5Jl6CQBgwAU1kefg803u5Dh3t/ycxn//RFSB3MPM/B7e
-         MxtOeEHjNAzJLU9zzU1jdVquDfyVGYeYi+YT56mS4nIxu983RpP2iDcrVL7dnFXgMwXY
-         /lra8zKQZGKb1k10GNkrKdklomg7fpFrmNxgSQGIKxBnjJBbpUct786CS+emv3jdK2Ay
-         iLng==
+        id S1344079AbhEQWqE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 18:46:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25106 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1343991AbhEQWqB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 18:46:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621291484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PzeDuFKqOdq6XOChkUVF1K14DQOzccWrFoItEVYjLtI=;
+        b=L61zr0Cbj4Y9P2kE99SUkfC+/y0NdNkYcIj6JnBKPhgTvNuWaZPBdMtBJAZh3lA5uHgTdJ
+        xj10Qsut4VP4/2jGDeJZQF8oyYFLDuxJc60oNviAtgy4az5YdtjHvNF1oXDfvJVRE0q70F
+        afwEpmafhNA+/gapO1loPirKNCSxNqE=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-x15PMK1cOlS0VqHyondw5g-1; Mon, 17 May 2021 18:44:42 -0400
+X-MC-Unique: x15PMK1cOlS0VqHyondw5g-1
+Received: by mail-lj1-f200.google.com with SMTP id v4-20020a2e96040000b02900ce9d1504b5so3750449ljh.16
+        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 15:44:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZgpuCsOSUBV3Eod5u/L5h9ty2mrWMwDC6F3vhbFSf60=;
-        b=P7RQ8aaZfD16uedzUVY7UOhIeBAdZBxEuO7VXaPfVz5Cioste3VYhBycCMZc9zadQa
-         evz/6pKHuLTZ9momsoKVsEyI08RAmM4+2vGjt/fcBQRmcGUI9qqKP8GBXKGBwhnru1dT
-         QF8aN6AMIYHaoKnCbJtI/XTVlM1t/71mar3W1d66GqR6u3gd2qBexQgNCIZgMgAJfsBE
-         ijIupyla4QuXwdoighs3S3ugeGitD8Yr9AU1bHBQZPUfmABfNWSB5kG+EdaoCzwgcFJA
-         vYL7HPzj+WwIYmwZoZ+jE1+fe5OKbRz5HtujgwIg0qG2/DbDwVpVFmgi36MRWVQdCyb1
-         M0iQ==
-X-Gm-Message-State: AOAM5318TH2G5oa8MzeMEZ/wxujzlOsRZKQxSfAvx8rgEj3zjqXuB/Kj
-        s8MEJAcyat67JQjyHiXXl/WTGzfmjn43Dkrw+hM9SA==
-X-Google-Smtp-Source: ABdhPJycOgSIygCCsQ9RTP7He8agC6DS3w5rteb8NWwZS9A6rEdre2eCc+7lN8owTCOFDHwtTlOCaoky3MX+7QZB5Zg=
-X-Received: by 2002:a19:ca15:: with SMTP id a21mr1432826lfg.487.1621290872794;
- Mon, 17 May 2021 15:34:32 -0700 (PDT)
+        bh=PzeDuFKqOdq6XOChkUVF1K14DQOzccWrFoItEVYjLtI=;
+        b=pp44zSBOsjiCCX4ShQ2WOkhmQhlMya558VJwFWh5W74Ljb1nbxdOHi/9tmFZ2wESK7
+         bBKDgROOfiITG539ylBId92uVkTzLv8HUesAFyqUGpaOQnnZzD5wPOt3tQL79uQsqw1X
+         vb/aq8H6A0tgNbZPwmXlqQ2YNyvfaDewKhprXQZ5SQmRC/Yn/Qq2v9Y2IxQd1GVuyegu
+         RRdQhpko7MXhsWccgxC4YXjm6B8xiVbmQL39LtL/nNnRiIh4qGJtWkk46ezOFSMayNnR
+         KOR2Gn+UJf7GKmoNsOsNDBLV0qdgzmfGSkumHuk93swXuhNSob7FobE9qz1+1OEndkCN
+         OCKg==
+X-Gm-Message-State: AOAM532G4y/T6F1AdbpaFOSwZIcZnI6Qw0GKzsvsqIB+paPmB4nYKG1z
+        SMcRuec/cscaxSFSV1M1rM6vnAQ0v37o+5mtfDS6Ms+28oD1f8SPRrW3pW/el1VfKluq2MT+6pL
+        n5PSfuBXQcwPV9r8kyzH2zlKPlwnOsccjQU5I
+X-Received: by 2002:a05:6512:3da1:: with SMTP id k33mr1581767lfv.114.1621291480843;
+        Mon, 17 May 2021 15:44:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJybam1+aZWd8ZoxqggTlhbg2Te1/mPCVDQmAynvHsV1tsF6N/JdmZVJTtQ8LuKC3UoE52OmVHe8fTZ2XXqBun0=
+X-Received: by 2002:a05:6512:3da1:: with SMTP id k33mr1581740lfv.114.1621291480634;
+ Mon, 17 May 2021 15:44:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210510102647.40322-1-mika.westerberg@linux.intel.com>
-In-Reply-To: <20210510102647.40322-1-mika.westerberg@linux.intel.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 17 May 2021 15:33:56 -0700
-Message-ID: <CACK8Z6E=4Eeo-hAdXOxJLxUr57hGZbAf-YL6e6XZmoyfj2XGfQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI/PM: Target PM state is D3cold if the upstream bridge
- is power manageable
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Koba Ko <koba.ko@canonical.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
+In-Reply-To: <87pmxpdr32.ffs@nanos.tec.linutronix.de>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Mon, 17 May 2021 18:44:29 -0400
+Message-ID: <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
+Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when
+ setting the hint
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
+        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
+        netdev@vger.kernel.org, chris.friesen@windriver.com,
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Kai]
-
-Hi,
-
-I don't understand the power management very well, so pardon my
-ignorance but I have a question.
-
-On Mon, May 10, 2021 at 3:30 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+On Mon, May 17, 2021 at 4:48 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> ASMedia xHCI controller only supports PME from D3cold:
+> On Tue, May 04 2021 at 09:23, Jesse Brandeburg wrote:
+> > I'd add in addition that irqbalance daemon *stopped* paying attention
+> > to hints quite a while ago, so I'm not quite sure what purpose they
+> > serve.
 >
-> 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
->   ...
->   Capabilities: [78] Power Management version 3
->           Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
->           Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> The hint was added so that userspace has a better understanding where it
+> should place the interrupt. So if irqbalanced ignores it anyway, then
+> what's the point of the hint? IOW, why is it still used drivers?
 >
-> Now, if the controller is part of a Thunderbolt device for instance, it
-> is connected to a PCIe switch downstream port. When the hierarchy then
-> enters D3cold as a result of s2idle cycle pci_target_state() returns D0
-> because the device does not support PME from the default target_state
-> (D3hot). So what happens is that the whole hierarchy is left into D0
-> breaking power management.at suspend time or resume time
 
-Can you please provide a small call stack, when this issue is seen?
-(I'm primarily trying to understand whether the issue is breaking
-suspend, or the suspend is fine, but resume is broken?)
+Took a quick look at the irqbalance repo and saw the following commit:
 
+dcc411e7bf    remove affinity_hint infrastructure
+
+The commit message mentions that "PJ is redesiging how affinity hinting
+works in the kernel, the future model will just tell us to ignore an IRQ,
+and the kernel will handle placement for us.  As such we can remove the
+affinity_hint recognition entirely".
+
+This does indicate that apparently, irqbalance moved away from the usage of
+affinity_hint. However, the next question is what was this future model?
+I don't know but I can surely look into it if that helps or maybe someone
+here already knows about it?
+
+> Now there is another aspect to that. What happens if irqbalanced does
+> not run at all and a driver relies on the side effect of the hint
+> setting the initial affinity. Bah...
 >
-> For this reason choose target_state to be D3cold if there is a upstream
-> bridge that is power manageable.
 
-It seems to me that the goal of pci_target_state() is to find the
-lowest power state that a device can be put into, from which device
-can still generate PME (if needed). So I'm curious why it starts with
-target_state = PCI_D3hot in the first place? Wouldn't starting with
-PCI_D3cold will always be better (regardless of parent bridge
-capabilities)?
+Right, but if they only rely on this API so that the IRQs are spread across
+all the CPUs then that issue is already resolved and these other drivers
+should not regress because of changing this behavior. Isn't it?
 
-And then I came across the commit 8feaec33b986 ("PCI / PM: Always
-check PME wakeup capability for runtime wakeup support"), which
-addresses the same device that this patch addresses, and 1 excerpt
-from the commit log that stood out:
-============================================================
-    In addition, change wakeup flag passed to pci_target_state() from false
-    to true, because we want to find the deepest state *different from D3cold*
-    that the device can still generate PME#. In this case, it's D0 for the
-    device in question.
-============================================================
-
-So, does returning D3Cold from this function break any other
-assumption somewhere?
-
-Thanks,
-Rajat
-
-
-> The reasoning here is that the upstream
-> bridge will be also placed into D3 making the effective power state of
-> the device in question to be D3cold.
+> While none of the drivers (except the perf muck) actually prevents
+> userspace from fiddling with the affinity (via IRQF_NOBALANCING) a
+> deeper inspection shows that they actually might rely on the current
+> behaviour if irqbalanced is disabled. Of course every driver has its own
+> convoluted way to do that and all of those functions are well
+> documented. What a mess.
 >
-> Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-> Reported-by: Koba Ko <koba.ko@canonical.com>
-> Tested-by: Koba Ko <koba.ko@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/pci/pci.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> If the hint still serves a purpose then we can provide a variant which
+> solely applies the hint and does not fiddle with the actual affinity,
+> but if the hint is useless anyway then we have a way better option to
+> clean that up.
 >
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b717680377a9..e3f3b9010762 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2578,8 +2578,19 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
->                 return target_state;
->         }
->
-> -       if (!dev->pm_cap)
-> +       if (!dev->pm_cap) {
->                 target_state = PCI_D0;
-> +       } else {
-> +               struct pci_dev *bridge;
-> +
-> +               /*
-> +                * If the upstream bridge can be put to D3 then it means
-> +                * that our target state is D3cold instead of D3hot.
-> +                */
-> +               bridge = pci_upstream_bridge(dev);
-> +               if (bridge && pci_bridge_d3_possible(bridge))
-> +                       target_state = PCI_D3cold;
-> +       }
->
->         /*
->          * If the device is in D3cold even though it's not power-manageable by
-> --
-> 2.30.2
->
+
++1
+
+
+
+-- 
+Thanks
+Nitesh
+
