@@ -2,186 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E586D383C28
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 20:22:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92816383C39
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 20:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234784AbhEQSXU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 14:23:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48466 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234489AbhEQSXT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 14:23:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621275722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0Ohvz0veaN5YV4OnEyJTkyNbce7kLNQOfav9z5UAAmk=;
-        b=DJ/fNjnO4+bRJXuyaTn10Ml8NJvlql17Xr0kijfoiKNmGtQmqXFUq/TMwy6dsbfQzqx0us
-        0HDmQVrzOLzJ6UXkCHpmQgwjZc55u6MkwEF864GVIxb3EI2ZVw4RP6TA7n5uasPBivQY/n
-        lH7RY6uSxIyxDORHevneLUsviY+S8aI=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-502uNU0bOoa6uYGlpA6KkQ-1; Mon, 17 May 2021 14:22:00 -0400
-X-MC-Unique: 502uNU0bOoa6uYGlpA6KkQ-1
-Received: by mail-lj1-f198.google.com with SMTP id b35-20020a2ebc230000b02900e586a5ceaeso3452489ljf.13
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 11:22:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Ohvz0veaN5YV4OnEyJTkyNbce7kLNQOfav9z5UAAmk=;
-        b=uRKgIlZpB3S9URoXV1dklYpwrhWUAkXjBPBAzjz7hTYte+uCjpqE80+CDGvXSbsAU6
-         6dzZhlOWVVt+Tup2FbuTo7F+2kpo7yBMTs4uQyW39SkZIvDi7Y+21kJWYjLraEm2W+Tu
-         UwoZWy52w4rZjjvJRhRDHhod0JFw099cgsGAgxKMHcTwUgSm9CDwJlcCHZGbeFlEJKLi
-         Np+9qR/aoGggUOTIqV7uOn/vYki+rjM5tARl/S18EErk87Kbz9nAVzSaP2ZJoReIl0R+
-         TvYRtSNA4XXHfolLTpUIVA7aNkMdNvuKU5M6BZNPtLcjxumhhFQOE44IUnMp2EK1nbQB
-         R3/w==
-X-Gm-Message-State: AOAM533bNjMmD3gguiYRFmg56LJbvpXsZE582GrtRDhZTKGeCgADmCmV
-        McSIdYKq5GJPgGdX6kJK/Xif4ruPj24wxBCfVsPWkuQKGkohU7xdoOZz0ToigH9HQaafexteCvd
-        HMjXrlnT4tOvTW0a4uj6LS08MsxTWEk8DW2QB
-X-Received: by 2002:a05:6512:2302:: with SMTP id o2mr773401lfu.647.1621275719241;
-        Mon, 17 May 2021 11:21:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwrzOCPhmlYUdV7MidYS7zax5+JMdj0yOGQTWafj9uEJx26idggzqb+1uILAInTM0kZZW7u6CfEAVSGwFUPCng=
-X-Received: by 2002:a05:6512:2302:: with SMTP id o2mr773377lfu.647.1621275718883;
- Mon, 17 May 2021 11:21:58 -0700 (PDT)
+        id S233592AbhEQS3b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 14:29:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235243AbhEQS33 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 14:29:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BEF7A61261;
+        Mon, 17 May 2021 18:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621276092;
+        bh=xr4By+o4TUcYhY8fMdG2qW3F/z04dvfGfYWvO2UuXis=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZGkZwfNGKfPAGRf7t4YDIiybc0B2ozc79Tb5PyfccEIzEER/S56tEvysv9VOQs6rk
+         C+tdl114Ly0SfxT612kT5T6PnKmEGAukVad0SAlmtKCE3S0WpSsX/LTN3ssQF1RDTH
+         vWxWAWUw0/0Ue0SjHgZ7Kn0NeexBkOC967TVR8238npJxmDCghNf6AV1f+acOy0wye
+         XoInqx4FW5E18DvneeFu/75r+8jsTMsZhUdKNoqf/xa1iNqYUvbgEq1L4ODIm+b/hM
+         D6M2wDycEU2m8avLYeteiakr207jc3ay6wbla0tTqeD0yYJMUhH1gGxtK0769bViey
+         EEw/EO4YYYcQw==
+Date:   Mon, 17 May 2021 13:28:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
+ bridge
+Message-ID: <20210517182810.GA29638@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210501021832.743094-1-jesse.brandeburg@intel.com>
- <16d8ca67-30c6-bb4b-8946-79de8629156e@arm.com> <20210504092340.00006c61@intel.com>
- <CAFki+LmR-o+Fng21ggy48FUX7RhjjpjO87dn3Ld+L4BK2pSRZg@mail.gmail.com> <bf1d4892-0639-0bbf-443e-ba284a8ed457@arm.com>
-In-Reply-To: <bf1d4892-0639-0bbf-443e-ba284a8ed457@arm.com>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Mon, 17 May 2021 14:21:47 -0400
-Message-ID: <CAFki+L=LDizBJmFUieMDg9J=U6mn6XxTPPkAaWiyppTouTzaqw@mail.gmail.com>
-Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when
- setting the hint
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
-        Alex Belits <abelits@marvell.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        netdev@vger.kernel.org, chris.friesen@windriver.com,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H6E3vh9+SZg5qOmVbfjENRPi0=UbLqK-YHcCA0mzcx9aw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 1:26 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2021-05-17 17:57, Nitesh Lal wrote:
-> > On Tue, May 4, 2021 at 12:25 PM Jesse Brandeburg
-> > <jesse.brandeburg@intel.com> wrote:
-> >>
-> >> Robin Murphy wrote:
-> >>
-> >>> On 2021-05-01 03:18, Jesse Brandeburg wrote:
-> >>>> It was pointed out by Nitesh that the original work I did in 2014
-> >>>> to automatically set the interrupt affinity when requesting a
-> >>>> mask is no longer necessary. The kernel has moved on and no
-> >>>> longer has the original problem, BUT the original patch
-> >>>> introduced a subtle bug when booting a system with reserved or
-> >>>> excluded CPUs. Drivers calling this function with a mask value
-> >>>> that included a CPU that was currently or in the future
-> >>>> unavailable would generally not update the hint.
-> >>>>
-> >>>> I'm sure there are a million ways to solve this, but the simplest
-> >>>> one is to just remove a little code that tries to force the
-> >>>> affinity, as Nitesh has shown it fixes the bug and doesn't seem
-> >>>> to introduce immediate side effects.
-> >>>
-> >>> Unfortunately, I think there are quite a few other drivers now relying
-> >>> on this behaviour, since they are really using irq_set_affinity_hint()
-> >>> as a proxy for irq_set_affinity(). Partly since the latter isn't
-> >>> exported to modules, but also I have a vague memory of it being said
-> >>> that it's nice to update the user-visible hint to match when the
-> >>> affinity does have to be forced to something specific.
-> >>>
-> >>> Robin.
-> >>
-> >> Thanks for your feedback Robin, but there is definitely a bug here that
-> >> is being exposed by this code. The fact that people are using this
-> >> function means they're all exposed to this bug.
-> >>
-> >> Not sure if you saw, but this analysis from Nitesh explains what
-> >> happened chronologically to the kernel w.r.t this code, it's a useful
-> >> analysis! [1]
-> >>
-> >> I'd add in addition that irqbalance daemon *stopped* paying attention
-> >> to hints quite a while ago, so I'm not quite sure what purpose they
-> >> serve.
-> >>
-> >> [1]
-> >> https://lore.kernel.org/lkml/CAFki+Lm0W_brLu31epqD3gAV+WNKOJfVDfX2M8ZM__aj3nv9uA@mail.gmail.com/
-> >>
+On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> > > > VGA Enable bit which modifies the response to VGA compatible addresses.
+> > >
+> > > The bridge spec is pretty old, and most of the content has been
+> > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> > > 7.5.1.3.13" here instead.
+> > >
+> > > > If the VGA Enable bit is set, the bridge will decode and forward the
+> > > > following accesses on the primary interface to the secondary interface.
+> > >
+> > > *Which* following accesses?  The structure of English requires that if
+> > > you say "the following accesses," you must continue by *listing* the
+> > > accesses.
+> > >
+> > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> > > > bridge control register, which causes vgaarb subsystem don't think the
+> > > > VGA card behind the bridge as a valid boot vga device.
+> > >
+> > > s/hardward/bridge/
+> > > s/vga/VGA/ (also in code comments and dmesg strings below)
+> > >
+> > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> > > since it apparently has a VGA class code.  But here you say the
+> > > AST2500 has a Bridge Control register, which suggests that it's a
+> > > bridge.  If AST2500 is some sort of combination that includes both a
+> > > bridge and a VGA device, please outline that topology.
+> > >
+> > > But the hardware defect is that some bridges forward VGA accesses even
+> > > though their VGA Enable bit is not set?  The quirk should be attached
+> > > to broken *bridges*, not to VGA devices.
+> > >
+> > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> > > is set, that means VGA arbitration (in vgaarb.c) cannot work
+> > > correctly, so merely setting the default VGA device once in a quirk is
+> > > not sufficient.  You would have to somehow disable any future attempts
+> > > to use other VGA devices.  Only the VGA device below this defective
+> > > bridge is usable.  Any other VGA devices in the system would be
+> > > useless.
+> > >
+> > > > So we provide a quirk to fix Xorg auto-detection.
+> > > >
+> > > > See similar bug:
+> > > >
+> > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> > >
+> > > This patch was never merged.  If we merged a revised version, please
+> > > cite the SHA1 instead.
 > >
-> > Wanted to follow up to see if there are any more objections or even
-> > suggestions to take this forward?
+> > This patch has never merged, and I found that it is unnecessary after
+> > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> > even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> > unnecessary. If it is still needed, I'll investigate the root cause.
 >
-> Oops, sorry, seems I got distracted before getting round to actually
-> typing up my response :)
+> I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> by subsys_initcall(), which means their sequence is unpredictable. And
+> unfortunately, in our platform vga_arb_device_init() is called before
+> pcibios_init(), which makes vga_arb_device_init() fail to set a
+> default vga device. This is the root cause why we thought that we
+> still need a quirk for AST2500.
 
-No worries.
+Does this mean there is no hardware defect here?  The VGA Enable bit
+works correctly?
 
->
-> I'm not implying that there isn't a bug, or that this code ever made
-> sense in the first place, just that fixing it will unfortunately be a
-> bit more involved than a simple revert.
+> I think the best solution is make vga_arb_device_init() be wrapped by
+> subsys_initcall_sync(), do you think so?
 
-Fair point.
+Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
+documented, so I'm not sure exactly *why* such a change would work and
+whether we could rely on it to continue working.
 
-> This patch as-is *will* subtly
-> break at least the system PMU drivers currently using
-> irq_set_affinity_hint() - those I know require the IRQ affinity to
-> follow whichever CPU the PMU context is bound to, in order to meet perf
-> core's assumptions about mutual exclusion.
+pcibios_init() isn't very consistent across arches.  On some,
+including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
+enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
+basically nothing.  That makes life a little difficult.
 
-Thanks for bringing this up.
-Please correct me if I am wrong, so the PMU driver(s) is/are written
-in a way that
-it uses the hint API to overwrite the previously set affinity mask with a
-CPU to which the PMU context is bound to?
+vga_arb_device_init() is a subsys_initcall() and wants to look through
+all the PCI devices.  That's a little problematic for arches where
+pcibios_init() is also a subsys_initcall() and enumerates PCI devices.
 
-Is this context information exposed in the userspace and can we modify the
-IRQ affinity mask from the userspace based on that?
-I do understand that this is a behavior change from the PMU drivers
-perspective.
+Sorry, that's no answer for you.  Just more questions :)
 
->
-> As far as the consistency argument goes, maybe that's just backwards and
-> it should be irq_set_affinity() that also sets the hint, to indicate to
-> userspace that the affinity has been forced by the kernel? Either way
-> we'll need to do a little more diligence to figure out which callers
-> actually care about more than just the hint, and sort them out first.
->
-
-We can use irq_set_affinity() to set the hint mask as well, however, maybe
-there is a specific reason behind separating those two in the
-first place (maybe not?).
-But even in this case, we have to either modify the PMU drivers' IRQs
-affinity from the userspace or we will have to make changes in the existing
-request_irq code path.
-I am not sure about the latter because we already have the required controls
-to adjust the device IRQ mask (by using default_smp_affinity or by modifying
-them manually).
-
--- 
-Thanks
-Nitesh
-
+> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > Signed-off-by: Jingfeng Sui <suijingfeng@loongson.cn>
+> > > > ---
+> > > >  drivers/pci/quirks.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 47 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > index 6ab4b3bba36b..adf5490706ad 100644
+> > > > --- a/drivers/pci/quirks.c
+> > > > +++ b/drivers/pci/quirks.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #include <linux/platform_data/x86/apple.h>
+> > > >  #include <linux/pm_runtime.h>
+> > > >  #include <linux/switchtec.h>
+> > > > +#include <linux/vgaarb.h>
+> > > >  #include <asm/dma.h> /* isa_dma_bridge_buggy */
+> > > >  #include "pci.h"
+> > > >
+> > > > @@ -297,6 +298,52 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+> > > >  }
+> > > >  DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> > > >
+> > > > +
+> > > > +static void aspeed_fixup_vgaarb(struct pci_dev *pdev)
+> > > > +{
+> > > > +     struct pci_dev *bridge;
+> > > > +     struct pci_bus *bus;
+> > > > +     struct pci_dev *vdevp = NULL;
+> > > > +     u16 config;
+> > > > +
+> > > > +     bus = pdev->bus;
+> > > > +     bridge = bus->self;
+> > > > +
+> > > > +     /* Is VGA routed to us? */
+> > > > +     if (bridge && (pci_is_bridge(bridge))) {
+> > > > +             pci_read_config_word(bridge, PCI_BRIDGE_CONTROL, &config);
+> > > > +
+> > > > +             /* Yes, this bridge is PCI bridge-to-bridge spec compliant,
+> > > > +              *  just return!
+> > > > +              */
+> > > > +             if (config & PCI_BRIDGE_CTL_VGA)
+> > > > +                     return;
+> > > > +
+> > > > +             dev_warn(&pdev->dev, "VGA bridge control is not enabled\n");
+> > > > +     }
+> > >
+> > > You cannot assume that a bridge is defective just because
+> > > PCI_BRIDGE_CTL_VGA is not set.
+> > >
+> > > > +     /* Just return if the system already have a default device */
+> > > > +     if (vga_default_device())
+> > > > +             return;
+> > > > +
+> > > > +     /* No default vga device */
+> > > > +     while ((vdevp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, vdevp))) {
+> > > > +             if (vdevp->vendor != 0x1a03) {
+> > > > +                     /* Have other vga devcie in the system, do nothing */
+> > > > +                     dev_info(&pdev->dev, "Another boot vga device: 0x%x:0x%x\n",
+> > > > +                             vdevp->vendor, vdevp->device);
+> > > > +                     return;
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     vga_set_default_device(pdev);
+> > > > +
+> > > > +     dev_info(&pdev->dev, "Boot vga device set as 0x%x:0x%x\n",
+> > > > +                     pdev->vendor, pdev->device);
+> > > > +}
+> > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(0x1a03, 0x2000, PCI_CLASS_DISPLAY_VGA, 8, aspeed_fixup_vgaarb);
+> > > > +
+> > > > +
+> > > >  /*
+> > > >   * The Mellanox Tavor device gives false positive parity errors.  Disable
+> > > >   * parity error reporting.
+> > > > --
+> > > > 2.27.0
+> > > >
