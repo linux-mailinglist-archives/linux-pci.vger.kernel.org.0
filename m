@@ -2,135 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25EFD382786
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 10:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB33538289C
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 11:42:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235760AbhEQIwm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 04:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235665AbhEQIwl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 May 2021 04:52:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3351760249;
-        Mon, 17 May 2021 08:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1621241485;
-        bh=hId7nAD1Ib/EPcQ9/xuwnmsWXuP+XKVtIbsyoM0HVYw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bo2dUW/9HGLHTgF9GUO4zynDg4h7qtCsvUXy+KErhoHJgOeNyfzh+xVDQqphhewsu
-         Z5gervQcuSdypUUDzUpTXjsdXi2nVimF3TVIALV6M8VN6v+RY3tT9nH+8T2E1C1FHs
-         Pfrdf+fu+cQ9FpUfaKSm709qVOlO4FXs8xEIIGTc=
-Date:   Mon, 17 May 2021 10:51:23 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-Message-ID: <YKIui/XSLtmQ1azU@kroah.com>
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
- <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com>
- <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
- <20210514094755.00002081@Huawei.com>
- <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
- <20210517094045.00004d58@Huawei.com>
+        id S236078AbhEQJoH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 05:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236068AbhEQJoH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 05:44:07 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BE9C061573
+        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 02:42:51 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id e2so71565ljk.4
+        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 02:42:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UP+upDmCTGGCkv2e936LXUsatKVc2MHLH3tDuqtJj/M=;
+        b=Dqrp6jfbFk3R9kBr5Ll75CW043kOk4QfSQLDAuIfUakNlQ8C4sgDrKJw8LQEu3AM1w
+         +u+/9BobbgZIHK9EwBD9phy/kxkflFLJ1hxAHMMZBZRrL2tQ2ZSiwEO/tyCVCiFs9qck
+         YDYFDeMl/IoPBpUyUgvqnnHNR/60akKfddwikYAay/HTyECO0dvmXp35Wwy8v4JQFmA/
+         M+/brzeagfSoL2rez2taFYhHuDMzYxm8W4qcgWdoAO3+UcFJ00xvEjglCrC7cVvxfxau
+         ogatNeDQaW0+NxdQSzC17qbMHKSlw+3GhHcsdkJsHzRicunL7mweD9Tx2l3xM+DnaC1T
+         yt1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UP+upDmCTGGCkv2e936LXUsatKVc2MHLH3tDuqtJj/M=;
+        b=VuyzfxeuNdZg/yKiCYqA2Pfa6iDKxMWPD6MP2JjDLk+ACCv/YwO+MsYVealnsV2CCj
+         HZKjeVqItiCBwDcgdzLSqi9vufC+VaeqUTLXfHQAi+NpfnZFGPWzhktz2CiOxNzww1E3
+         s6Wo2Ah/pj6xjOvG1djr9g/+WqnGg0/KIlzmUYsNmEOuvch4Mvz7crCSZm7yggvsVXBE
+         RpV54N7qi5whBmNfGBJPON60QCrWjtL9axKnq8uDFjYYhpASXTqTs/0mMLhzw9ilR/BV
+         y2A6L97cWoCyDzzkJu+kxKrP4JZPfqaVC3T2YE1nb8D2ayRfs4h1eCJK4DCWwqfMV4II
+         Mbcg==
+X-Gm-Message-State: AOAM532cMX836D52l7bWz/JcxhnX2PwLlVxkSFmYTknH55wGSKBnqkn4
+        Ju4i1b35vK+QZlEdO26zwRjOot/H8iNclgj2urtm/g==
+X-Google-Smtp-Source: ABdhPJybQP1mQr+EEA7PrMERD5Mc5cP/cYS07TFL8gdGCvACGBJu3hS9pEvqnIlAP0pimXhfEg3pQLIODHMUBxFSV+c=
+X-Received: by 2002:a2e:2e12:: with SMTP id u18mr48345997lju.200.1621244569712;
+ Mon, 17 May 2021 02:42:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210517094045.00004d58@Huawei.com>
+References: <20210516190014.25664-1-rdunlap@infradead.org>
+In-Reply-To: <20210516190014.25664-1-rdunlap@infradead.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 17 May 2021 11:42:38 +0200
+Message-ID: <CACRpkdbcN4d2sdCDjqqW7txDm7--_B2MX10CDA6z8FOq4mQ7=g@mail.gmail.com>
+Subject: Re: [PATCH] PCI: ftpci100: rename macro name collision
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 09:40:45AM +0100, Jonathan Cameron wrote:
-> On Fri, 14 May 2021 11:37:12 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > [..]
-> > > > If it simplifies the kernel implementation to assume single
-> > > > kernel-initiator then I think that's more than enough reason to block
-> > > > out userspace, and/or provide userspace a method to get into the
-> > > > kernel's queue for service.  
-> > >
-> > > This last suggestion makes sense to me. Let's provide a 'right' way
-> > > to access the DOE from user space. I like the idea if it being possible
-> > > to run CXL compliance tests from userspace whilst the driver is loaded.  
-> > 
-> > Ah, and I like your observation that once the kernel provides a
-> > "right" way to access DOE then userspace direct-access of DOE is
-> > indeed a "you get to keep the pieces" event like any other unwanted
-> > userspace config-write.
-> > 
-> > > Bjorn, given this would be a generic PCI thing, any preference for what
-> > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
-> > > to those for the BAR based CXL mailboxes?  
-> > 
-> > (warning, anti-ioctl bias incoming...)
-> 
-> I feel very similar about ioctls - my immediate thought was to shove this in
-> debugfs, but that feels the wrong choice if we are trying to persuade people
-> to use it instead of writing code that directly accesses the config space.
-> 
-> > 
-> > Hmm, DOE has an enumeration capability, could the DOE driver use a
-> > scheme to have a sysfs bin_attr per discovered object type? This would
-> > make it simliar to the pci-vpd sysfs interface.
-> 
-> We can discover the protocols, but anything beyond that is protocol
-> specific.  I don't think there is a enough info available by any standards
-> defined method. Also part of the reason to allow a safe userspace interface
-> would be to provide a generic interface for vendor protocols and things like
-> CXL compliance tests where we will almost certainly never provide a more
-> specific kernel interface.
-> 
-> Whilst sysfs would work for CDAT, some protocols are challenge response rather
-> than simple read back and that really doesn't fit well for sysfs model.
-> If we get other protocols that are simple data read back, then I would
-> advocate giving them a simple sysfs interface much like proposed for CDAT
-> as it will always be simpler to use + self describing.
-> 
-> On a lesser note it might be helpful to provide sysfs attrs for
-> what protocols are supported.  The alternative is to let userspace run
-> the discovery protocol. Perhaps we can do this as a later phase.
-> 
-> > 
-> > Then the kernel could cache objects like CDAT that don't change
-> > outside of some invalidation event.
-> 
-> It's been a while since I last saw any conversation on sysfs bin_attrs
-> but mostly I thought the feeling was pretty strongly against them for anything
-> but a few niche usecases.
-> 
-> Feels to me like it would break most of the usual rules in a way vpd does
-> not (IIRC VPD is supposed to be a simple in the sense that if you write a value
-> to a writable part, you will read back the same value).
-> 
-> +CC Greg who is a fount of knowledge in this area (and regularly + correctly
-> screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
-> suggesting implementing response / request directly, but I think that is
-> all we could do given DOE protocols can be vendor specific and the standard
-> discovery protocol doesn't let us know the fine grained support (what commands
-> within a given protocol).
+On Sun, May 16, 2021 at 9:00 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 
-sysfs binary files are ONLY for pass-through things that go to/from
-userspace/hardware without the kernel touching them at all.  Like raw
-PCI config descriptors.
+> PCI_IOSIZE is defined in mach-loongson64/spaces.h, so change the name
+> of this macro in pci-ftpci100.c.
+>
+> ../drivers/pci/controller/pci-ftpci100.c:37: warning: "PCI_IOSIZE" redefined
+>    37 | #define PCI_IOSIZE 0x00
+>       |
+> In file included from ../arch/mips/include/asm/addrspace.h:13,
+> ...              from ../drivers/pci/controller/pci-ftpci100.c:15:
+> arch/mips/include/asm/mach-loongson64/spaces.h:11: note: this is the location of the previous definition
+>    11 | #define PCI_IOSIZE SZ_16M
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: linux-mips@vger.kernel.org
 
-challenge/response type stuff, really does still fit the ioctl model, so
-that is a viable solution if needed.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-thanks,
+Though I suspect the real solution is to prefix all macros with FTPCI_*?
 
-greg k-h
+Yours,
+Linus Walleij
