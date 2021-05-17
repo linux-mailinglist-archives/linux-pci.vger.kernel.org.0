@@ -2,286 +2,423 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD3A938318A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 16:42:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A06CE383229
+	for <lists+linux-pci@lfdr.de>; Mon, 17 May 2021 16:49:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238379AbhEQOhV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 10:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240855AbhEQOfU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 May 2021 10:35:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EB6A26192E;
-        Mon, 17 May 2021 14:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621261023;
-        bh=/Fke8gIzwbqA8x/UokWi0atigFQr973AI+PeWKSYjRU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=txRW5cq5TjoJfqLcL/h1JgCdmDTnx2hI7zmshAZiXPlCKzJyT+wfq3NZX15wBMKTT
-         hXD6WWxOjx5bVMEw0UJXAz0gi1z0AZGsczmjtKzoUyyxTL9Qd774vglKgAm93krL8E
-         zxQ0xqLy1b5gVJTSqLDQtb4u+EW/hDGQhB23MsnNz6mu7T728FxBXrVAnxVEsY95bD
-         3bQThlTsuFQyKart6GcSHucSBDCrFhL+lFUZCe9+M39PdjKV5k9muXGRVK3onrBaFC
-         kU9hCSPZbKu8jlSfabX6b9xdcfhx46kn+bXbwe44zptKsbe+Qxw8GwguA8gFF4LPcZ
-         YTj2QK12Oxvhw==
-Received: by mail-ed1-f52.google.com with SMTP id df21so7115603edb.3;
-        Mon, 17 May 2021 07:17:02 -0700 (PDT)
-X-Gm-Message-State: AOAM531Z9DxFCHzYj9higWkjANLuPDUr8PBzMiqhZJcxHmkal5WWOhBV
-        nWVmemsE0zeXlWIMxfPdSnksD8baCRK9NpHihA==
-X-Google-Smtp-Source: ABdhPJxDHyxbIZt279+m6/FlAXXLWN1Rl7kcX6dLAQjtZ8ouXZ0JBZhiFEebN8nnhBCaqIyvmA4grUT0xvv4rmv4zHI=
-X-Received: by 2002:aa7:d893:: with SMTP id u19mr301411edq.258.1621261021464;
- Mon, 17 May 2021 07:17:01 -0700 (PDT)
+        id S239901AbhEQOqW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 10:46:22 -0400
+Received: from mail-dm3nam07on2072.outbound.protection.outlook.com ([40.107.95.72]:20065
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237927AbhEQOla (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 10:41:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bZiiicoryJRYv/P7WjRuBkMt9u/z6JJAhD0BF9gMvk0i4ELebH7PZl/VHpRox6rg3zWIp9ie7+MoEqV520p1tXlyDOM2N3g1rT7eBeMKh2Wnsblf082H89g9FHqy/OdvXNir0BYjzmdvUp8ZIAsUzb2/j5NG/M052xpINSccfrEwHDZCepLz0iif1Im/7kE20fFrJuk8sPCEzCPOxYOFp8K/7CkvaRk1g7PhuZYo8iP5HJWSvkPxV+WlZO9TclR/pxomZCu6mRL2nvGypClFiWa+Znz2/6IKjQE0FvIvpUUAk1LigJayp+cXPelKqnijXj0J8Ino6HJIamOFk1/Bbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R2+ciSyqGaKQsw6atyxM6OXfwpWjw87YBch7BoXb6K0=;
+ b=CJHSvYf4/9Y89yyhGkGPXT+dO7KCeLR9v5bK3rffALV1hlVxgUmBy/xwDbyGQOok3DGGQZZ8z1doUMVGb2YfMdghaETexd+hDobskBq3DGXwMPxffgF/HI93Wd/op4re/n5T3uVItDma24uWPYUSHNaS7Sccydm1ArD5qXisLtbIa6lzJjJE0rBzrF8xBRg1cMAETMKxEgTiWrX3W6udHV1XV6wxJmM68Us18yVWYb5fAZiP+YTgKGgoehr0miiwjGrLPw9DoStFa1UEyZJJ5OPQWvmcdAofme0iZNVgazpufIU2IIDECTC1mEx3xuNjdbem5JNO5hlZGFf0NOMGtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R2+ciSyqGaKQsw6atyxM6OXfwpWjw87YBch7BoXb6K0=;
+ b=znpGbNOduGBbv6lZSmFcTN/WUgxbl3afxziLMAm0HCfzd5hUegRTXcwmqyDV4u7uUSAO/8PnzoyoEGUcDKIWZyChC9sthmb2nZWSdooYI+Z7Omo+sEzC1ZhJJxKLq1vi7KV/490arExyAmdVKi0bR6bty8VH1l5wJpA0qMvXwpk=
+Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
+ by SN6PR12MB2800.namprd12.prod.outlook.com (2603:10b6:805:6c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.28; Mon, 17 May
+ 2021 14:40:12 +0000
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4129.031; Mon, 17 May 2021
+ 14:40:12 +0000
+From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+To:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
+        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com
+Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, helgaas@kernel.org,
+        Felix.Kuehling@amd.com,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Subject: [PATCH] drm/amdgpu: Handle IOMMU enabled case.
+Date:   Mon, 17 May 2021 10:38:51 -0400
+Message-Id: <20210517143851.475058-1-andrey.grodzovsky@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <32b61077-f760-8fe0-c00f-256a97d2977e@amd.com>
+References: <32b61077-f760-8fe0-c00f-256a97d2977e@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [2607:fea8:3edf:49b0:e3b1:83be:2b02:85cb]
+X-ClientProxiedBy: YT2PR01CA0015.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:38::20) To SN6PR12MB4623.namprd12.prod.outlook.com
+ (2603:10b6:805:e9::17)
 MIME-Version: 1.0
-References: <20210516211851.74921-1-mark.kettenis@xs4all.nl> <20210516211851.74921-2-mark.kettenis@xs4all.nl>
-In-Reply-To: <20210516211851.74921-2-mark.kettenis@xs4all.nl>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 17 May 2021 09:16:49 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+k5Bp6_BY2UD6HbKVXv=mzcqg9f_H4w=GWMm2rThxJbQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+k5Bp6_BY2UD6HbKVXv=mzcqg9f_H4w=GWMm2rThxJbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
-To:     Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     devicetree@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Hector Martin <marcan@marcan.st>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from agrodzovsky-All-Series.hitronhub.home (2607:fea8:3edf:49b0:e3b1:83be:2b02:85cb) by YT2PR01CA0015.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:38::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.54 via Frontend Transport; Mon, 17 May 2021 14:40:09 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6fa32c85-f2af-4a63-f4d6-08d91941ac3f
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2800:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2800244256D3D3A224E4F2ECEA2D9@SN6PR12MB2800.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rTiYyOzu1Xl9l23mUknil75JegIoafk1Tg5o96QFCnhKqLILBqY0Pl95N+HaRk45KrOIqBaRY4ILjNhnggC0dnZMu2OCmnLGr7DXfPjQRQdukE3COMy5DKcn787reejCRKhOliHJZsk2QieBksT2zSNTwGlFu4S1EUDMs0GkbS4Sl5pxjP9VF/eHsM/QYmH5ib8+9/E3Lt9JjZOyXQM4Spo+Wt+LT9+JkQgrGizhEAtgOo9xtfI4KralG2Ggz5OkTjeWiZSNAGse1TFkxZD3d2KNph1RTY8M2KJZ/Sbb4dbnRshzbfhyFEWR+IiMuaCHkDs1Ickr1jqzCX7hp+TOzfifLdNIKOuzBydLajCAFgwWQmvqsd6hOyWu/FqPpV0EuJUFHg8wEvDvQeOuaRdrRRzua5RNM8hX4CYPq7i15rhRu6hjX4qH3ej1sE+iwgyLnqD7PxE/9U3944Ox1H1t59Nchz4wm5ba0JTYoCMZNApMmqPpH2HOxyjkfDLqmsQzC0lYVEp+E8RyIFUKzAEaGZ26+ne5/gACILGCh0/5JGp2ne5qxBSE8h09qjB3qpGQePnr84iY97XeMqmrgFyqqCG+WTbQFKFtr6NvPw5uvGY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(376002)(136003)(39850400004)(346002)(6636002)(36756003)(6486002)(2616005)(44832011)(38100700002)(478600001)(30864003)(8936002)(66476007)(6666004)(1076003)(6512007)(83380400001)(16526019)(66556008)(186003)(316002)(86362001)(52116002)(5660300002)(2906002)(8676002)(6506007)(66946007)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?GnB4sk/kVVR9agdW1miKEXfDSOwBJY3l6jO6uJk6xKGOJ8WLet1+ujn8wFel?=
+ =?us-ascii?Q?uHLysuCZeLJWG9DQev+vnRfvxk6U/Z9EWBmDHVgxulPOekBV5VEouftPsuEr?=
+ =?us-ascii?Q?lStRZSwydp/JRkXXua/had0WYbzCjED+6JHzcwwZBydpasqLexH0wU5hA7IS?=
+ =?us-ascii?Q?ymFcXao6qeqiXjc/wibTFk3iztV23UqXuZGWS6Xz1lJxqguF4i08Qs4OofSc?=
+ =?us-ascii?Q?0hBOhnMh1tJ2IAFFwDfooonRNf9pRy/oLbfKRF25rNUDH4+7q9t+q+vELHJk?=
+ =?us-ascii?Q?6nV4KawlSzSNOuimLBmRvPT2aziV2Sb08CplsjcnpAAQm2Dzvgju9SI+dsw4?=
+ =?us-ascii?Q?vxv8FFqRz78oFQHbr9YSh+1MoZqlW+5032GeAxneLBk+Y2swU5WcTk/tapqT?=
+ =?us-ascii?Q?30npqycttQ+wXpHOTGtJXkbmhDaaaWinhKRibBP2wwIfpOzA45HQxTuv8k1S?=
+ =?us-ascii?Q?mU8n3tcVFT5PopfM6Ea/KYzlsIvdsT0ZPSseDKwnlczg0Wt7Z01tJ9ClYzZY?=
+ =?us-ascii?Q?hw1ymLW5ijo3wNvH054rO26m4WIuxoSXkdevbHoEWt9hb4FEhbzfp2lbTHNj?=
+ =?us-ascii?Q?DSCCcF+UXK5mAW8KWMvuxPL34rP0LsU4vO3PVBd5YrsWRq04SgpO4DdGQzLE?=
+ =?us-ascii?Q?9rhDb2CTb0yVsfe7WUSB3zBjASqvg0wKqGlOvf7ohqR7IsOnFeFnsmeV+Bw0?=
+ =?us-ascii?Q?6sbgNKN3GeZgZ/OQlDzwGZQrW+SUWW0M/XgeWpZZQZWGaXkappEO+WQmpf1j?=
+ =?us-ascii?Q?qvR3E+D3zOzHC7QsCowHzt6twQh/6AWgwEvHJb4T1BN4ZO5xevja+gbUPrPn?=
+ =?us-ascii?Q?qZdKj0FCY4XndOKA233jVxeV3DQWY4WVxBC2OeKnp5Vb+IzzFNG0TCFczyZ2?=
+ =?us-ascii?Q?giYqbmGMADiE73fwG25mBVVjJ1jnNNdH1tPXd0ttP6geyxYijLSYAMdbD9fU?=
+ =?us-ascii?Q?fz/SWpG0ebgwRHfy+r0GxWtdQC7XBh8UZeeYUaBzhnGC15Vj53Nwtj3fy1FT?=
+ =?us-ascii?Q?YN6v8IxTrPRXaJgicB+l0AlC2Rulk4vnSeQnoQYH8LYpv7KgwBYrurcg8vBk?=
+ =?us-ascii?Q?7rWsC56zuqDtrzY3cuEQv83bsTTfOWKMykHKVDbsWK9jy3M2Ym59DZr9+v9x?=
+ =?us-ascii?Q?firpeE6K6uWstLa7i/t46pWfc7WINvVz6IvTQXnIbMetPD6HM9ey74roKfUy?=
+ =?us-ascii?Q?lPhpdO+fZe60CtXe3/5v6o/XNCNkmInFYXMn3lehTAUUqNZYjHnQvEkC0Dj1?=
+ =?us-ascii?Q?Wus8rk8soSfy7IfdqGT9nsHvs03x25n56ztxlRiF8CtpydSh3CdPfQnOFltM?=
+ =?us-ascii?Q?rXCP5cwNftNgSF69EwWDX8jCIwS8affAFW2gz2Atm6Pz1nWfZpwsXDBKI9Q9?=
+ =?us-ascii?Q?GSBZtKsXl7MtkJeOdm2gB47JkBCu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fa32c85-f2af-4a63-f4d6-08d91941ac3f
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2021 14:40:11.9927
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cTpPJtgsb3bUSwRG1vujJ7HxKPzPsPtKbezcoRrZeyB6gTlKvrQNim2Q5FWJ2V20sxOsvh5E6NUyjpJAPWW1Hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2800
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 16, 2021 at 4:19 PM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
->
-> From: Mark Kettenis <kettenis@openbsd.org>
->
-> The Apple PCIe host controller is a PCIe host controller with
-> multiple root ports present in Apple ARM SoC platforms, including
-> various iPhone and iPad devices and the "Apple Silicon" Macs.
+Problem:
+Handle all DMA IOMMU group related dependencies before the
+group is removed. Those manifest themself in that when IOMMU
+enabled DMA map/unmap is dependent on the presence of IOMMU
+group the device belongs to but, this group is released once
+the device is removed from PCI topology.
 
-All the cover letter will be lost in the git history. Please mention
-some details like this is a DWC controller here. I disagree that you
-can't use the DWC binding. You can use it and extend it with what's
-needed here. And that way, we could move from generic ECAM to an
-actual driver in the OS if needed (hopefully not). More below.
+Fix:
+Expedite all such unmap operations to pci remove driver callback.
 
-> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> ---
->  .../devicetree/bindings/pci/apple,pcie.yaml   | 150 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 151 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> new file mode 100644
-> index 000000000000..af3c9f64e380
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Apple PCIe host controller
-> +
-> +maintainers:
-> +  - Mark Kettenis <kettenis@openbsd.org>
-> +
-> +description: |
-> +  The Apple PCIe host controller is a PCIe host controller with
-> +  multiple root ports present in Apple ARM SoC platforms, including
-> +  various iPhone and iPad devices and the "Apple Silicon" Macs.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: apple,t8103-pcie
-> +      - const: apple,pcie
-> +
-> +  reg:
-> +    minItems: 4
-> +    maxItems: 6
+v5: Drop IOMMU notifier and switch to lockless call to ttm_tt_unpopulate
+v6: Drop the BO unamp list
+v7:
+Drop amdgpu_gart_fini
+In amdgpu_ih_ring_fini do uncinditional  check (!ih->ring)
+to avoid freeing uniniitalized rings.
+Call amdgpu_ih_ring_fini unconditionally.
+v8: Add deatiled explanation
 
-6 or...
+Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c   | 14 +-------------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h   |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c     |  6 ++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c    |  5 +++++
+ drivers/gpu/drm/amd/amdgpu/cik_ih.c        |  1 -
+ drivers/gpu/drm/amd/amdgpu/cz_ih.c         |  1 -
+ drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c     |  1 -
+ drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c      |  1 -
+ drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c      |  1 -
+ drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c      |  1 -
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c      |  1 -
+ drivers/gpu/drm/amd/amdgpu/iceland_ih.c    |  1 -
+ drivers/gpu/drm/amd/amdgpu/navi10_ih.c     |  4 ----
+ drivers/gpu/drm/amd/amdgpu/si_ih.c         |  1 -
+ drivers/gpu/drm/amd/amdgpu/tonga_ih.c      |  1 -
+ drivers/gpu/drm/amd/amdgpu/vega10_ih.c     |  4 ----
+ drivers/gpu/drm/amd/amdgpu/vega20_ih.c     |  4 ----
+ 18 files changed, 13 insertions(+), 40 deletions(-)
 
-> +  reg-names:
-> +    minItems: 4
-> +    maxItems: 7
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 18598eda18f6..a0bff4713672 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3256,7 +3256,6 @@ static const struct attribute *amdgpu_dev_attributes[] = {
+ 	NULL
+ };
+ 
+-
+ /**
+  * amdgpu_device_init - initialize the driver
+  *
+@@ -3698,12 +3697,13 @@ void amdgpu_device_fini_hw(struct amdgpu_device *adev)
+ 		amdgpu_ucode_sysfs_fini(adev);
+ 	sysfs_remove_files(&adev->dev->kobj, amdgpu_dev_attributes);
+ 
+-
+ 	amdgpu_fbdev_fini(adev);
+ 
+ 	amdgpu_irq_fini_hw(adev);
+ 
+ 	amdgpu_device_ip_fini_early(adev);
++
++	amdgpu_gart_dummy_page_fini(adev);
+ }
+ 
+ void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+index c5a9a4fb10d2..6460cf723f0a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.c
+@@ -92,7 +92,7 @@ static int amdgpu_gart_dummy_page_init(struct amdgpu_device *adev)
+  *
+  * Frees the dummy page used by the driver (all asics).
+  */
+-static void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
++void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev)
+ {
+ 	if (!adev->dummy_page_addr)
+ 		return;
+@@ -365,15 +365,3 @@ int amdgpu_gart_init(struct amdgpu_device *adev)
+ 
+ 	return 0;
+ }
+-
+-/**
+- * amdgpu_gart_fini - tear down the driver info for managing the gart
+- *
+- * @adev: amdgpu_device pointer
+- *
+- * Tear down the gart driver info and free the dummy page (all asics).
+- */
+-void amdgpu_gart_fini(struct amdgpu_device *adev)
+-{
+-	amdgpu_gart_dummy_page_fini(adev);
+-}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+index a25fe97b0196..030b9d4c736a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gart.h
+@@ -57,7 +57,7 @@ void amdgpu_gart_table_vram_free(struct amdgpu_device *adev);
+ int amdgpu_gart_table_vram_pin(struct amdgpu_device *adev);
+ void amdgpu_gart_table_vram_unpin(struct amdgpu_device *adev);
+ int amdgpu_gart_init(struct amdgpu_device *adev);
+-void amdgpu_gart_fini(struct amdgpu_device *adev);
++void amdgpu_gart_dummy_page_fini(struct amdgpu_device *adev);
+ int amdgpu_gart_unbind(struct amdgpu_device *adev, uint64_t offset,
+ 		       int pages);
+ int amdgpu_gart_map(struct amdgpu_device *adev, uint64_t offset,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c
+index faaa6aa2faaf..433469ace6f4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c
+@@ -115,9 +115,11 @@ int amdgpu_ih_ring_init(struct amdgpu_device *adev, struct amdgpu_ih_ring *ih,
+  */
+ void amdgpu_ih_ring_fini(struct amdgpu_device *adev, struct amdgpu_ih_ring *ih)
+ {
++
++	if (!ih->ring)
++		return;
++
+ 	if (ih->use_bus_addr) {
+-		if (!ih->ring)
+-			return;
+ 
+ 		/* add 8 bytes for the rptr/wptr shadows and
+ 		 * add them to the end of the ring allocation.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+index 233b64dab94b..32ce0e679dc7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+@@ -361,6 +361,11 @@ void amdgpu_irq_fini_hw(struct amdgpu_device *adev)
+ 		if (!amdgpu_device_has_dc_support(adev))
+ 			flush_work(&adev->hotplug_work);
+ 	}
++
++	amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
++	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
++	amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
++	amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+ }
+ 
+ /**
+diff --git a/drivers/gpu/drm/amd/amdgpu/cik_ih.c b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+index 183d44a6583c..df385ffc9768 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cik_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+@@ -310,7 +310,6 @@ static int cik_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 	amdgpu_irq_remove_domain(adev);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/cz_ih.c b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+index d32743949003..b8c47e0cf37a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cz_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+@@ -302,7 +302,6 @@ static int cz_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 	amdgpu_irq_remove_domain(adev);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+index 2bfd620576f2..5e8bfcdd422e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+@@ -954,7 +954,6 @@ static int gmc_v10_0_sw_init(void *handle)
+ static void gmc_v10_0_gart_fini(struct amdgpu_device *adev)
+ {
+ 	amdgpu_gart_table_vram_free(adev);
+-	amdgpu_gart_fini(adev);
+ }
+ 
+ static int gmc_v10_0_sw_fini(void *handle)
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+index 405d6ad09022..0e81e03e9b49 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
+@@ -898,7 +898,6 @@ static int gmc_v6_0_sw_fini(void *handle)
+ 	amdgpu_vm_manager_fini(adev);
+ 	amdgpu_gart_table_vram_free(adev);
+ 	amdgpu_bo_fini(adev);
+-	amdgpu_gart_fini(adev);
+ 	release_firmware(adev->gmc.fw);
+ 	adev->gmc.fw = NULL;
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+index 210ada2289ec..0795ea736573 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+@@ -1085,7 +1085,6 @@ static int gmc_v7_0_sw_fini(void *handle)
+ 	kfree(adev->gmc.vm_fault_info);
+ 	amdgpu_gart_table_vram_free(adev);
+ 	amdgpu_bo_fini(adev);
+-	amdgpu_gart_fini(adev);
+ 	release_firmware(adev->gmc.fw);
+ 	adev->gmc.fw = NULL;
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+index c1bd190841f8..dbf2e5472069 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+@@ -1194,7 +1194,6 @@ static int gmc_v8_0_sw_fini(void *handle)
+ 	kfree(adev->gmc.vm_fault_info);
+ 	amdgpu_gart_table_vram_free(adev);
+ 	amdgpu_bo_fini(adev);
+-	amdgpu_gart_fini(adev);
+ 	release_firmware(adev->gmc.fw);
+ 	adev->gmc.fw = NULL;
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index c82d82da2c73..5ed0adae05cf 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -1601,7 +1601,6 @@ static int gmc_v9_0_sw_fini(void *handle)
+ 	amdgpu_gart_table_vram_free(adev);
+ 	amdgpu_bo_unref(&adev->gmc.pdb0_bo);
+ 	amdgpu_bo_fini(adev);
+-	amdgpu_gart_fini(adev);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+index da96c6013477..ddfe4eaeea05 100644
+--- a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+@@ -301,7 +301,6 @@ static int iceland_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 	amdgpu_irq_remove_domain(adev);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+index 5eea4550b856..941d464a2b47 100644
+--- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+@@ -570,10 +570,6 @@ static int navi10_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+index 751307f3252c..9a24f17a5750 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+@@ -176,7 +176,6 @@ static int si_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+index 973d80ec7f6c..b08905d1c00f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+@@ -313,7 +313,6 @@ static int tonga_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 	amdgpu_irq_remove_domain(adev);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+index dead9c2fbd4c..32ec4b8e806a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+@@ -514,10 +514,6 @@ static int vega10_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+index 58993ae1fe11..f51dfc38ac65 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+@@ -566,10 +566,6 @@ static int vega20_ih_sw_fini(void *handle)
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	amdgpu_irq_fini_sw(adev);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih_soft);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih2);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih1);
+-	amdgpu_ih_ring_fini(adev, &adev->irq.ih);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-7?
-
-> +    items:
-> +      - const: ecam
-
-'config'
-
-The difference between ECAM or not in existing devices is really just
-the size. If you look at the addresses on other DWC bindings, the
-config region is just an iATU window within the host's PCI address
-range.
-
-> +      - const: rc
-
-This would be 'dbi'?
-
-Also check if we need 'atu' (only if it's not at the default offset)?
-
-> +      - const: phy
-
-Should there be a separate phy node?
-
-> +      - const: port0
-> +      - const: port1
-> +      - const: port2
-
-What's in these registers?
-
-> +
-> +  ranges:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  interrupts:
-> +    minItems: 3
-> +    maxItems: 3
-
-Need to define what each one is.
-
-> +
-> +  msi-ranges:
-> +    description:
-> +      A list of pairs <intid span>, where "intid" is the first
-> +      interrupt number that can be used as an MSI, and "span" the size
-> +      of that range.
-
-Hopefully, Marc Z will comment on the MSI bits. msi-map doesn't work
-here? If we need something else, then it should be added to
-pci-msi.txt.
-
-One problem with this is it assumes 'intid' is one cell. It's really 2
-for the AIC if we ignore flags (which would be another assumption that
-we can ignore the last cell). Or maybe this belongs in the AIC
-binding?
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +    items:
-> +      minItems: 2
-> +      maxItems: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - bus-range
-> +  - interrupts
-> +  - msi-controller
-> +  - msi-parent
-> +  - msi-ranges
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/apple-aic.h>
-> +    #include <dt-bindings/pinctrl/apple.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pcie0: pcie@690000000 {
-> +        compatible = "apple,t8103-pcie", "apple,pcie";
-> +        device_type = "pci";
-> +
-> +        reg = <0x6 0x90000000 0x0 0x1000000>,
-> +              <0x6 0x80000000 0x0 0x4000>,
-> +              <0x6 0x8c000000 0x0 0x4000>,
-> +              <0x6 0x81000000 0x0 0x8000>,
-> +              <0x6 0x82000000 0x0 0x8000>,
-> +              <0x6 0x83000000 0x0 0x8000>;
-> +        reg-names = "ecam", "rc", "phy", "port0", "port1", "port2";
-> +
-> +        interrupt-parent = <&aic>;
-> +        interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        msi-controller;
-> +        msi-parent = <&pcie0>;
-> +        msi-ranges = <704 32>;
-> +
-> +        iommu-map = <0x0 &dart0 0x8000 0x100>,
-> +                    <0x100 &dart0 0x100 0x100>,
-> +                    <0x200 &dart1 0x200 0x100>,
-> +                    <0x300 &dart2 0x300 0x100>;
-> +        iommu-map-mask = <0xff00>;
-
-These need to be documented. You can assume they have a type already,
-so just 'true' or any constraints.
-
-> +
-> +        bus-range = <0 7>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
-> +                 <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
-> +
-> +        clocks = <&pcie_core_clk>, <&pcie_aux_clk>, <&pcie_ref_clk>;
-> +        pinctrl-0 = <&pcie_pins>;
-> +        pinctrl-names = "default";
-> +
-> +        pci@0,0 {
-> +          device_type = "pci";
-> +          reg = <0x0 0x0 0x0 0x0 0x0>;
-> +          reset-gpios = <&pinctrl_ap 152 0>;
-> +          max-link-speed = <2>;
-> +
-> +          #address-cells = <3>;
-> +          #size-cells = <2>;
-> +          ranges;
-> +        };
-> +
-> +        pci@1,0 {
-> +          device_type = "pci";
-> +          reg = <0x800 0x0 0x0 0x0 0x0>;
-> +          reset-gpios = <&pinctrl_ap 153 0>;
-> +          max-link-speed = <2>;
-> +
-> +          #address-cells = <3>;
-> +          #size-cells = <2>;
-> +          ranges;
-> +        };
-> +
-> +        pci@2,0 {
-> +          device_type = "pci";
-> +          reg = <0x1000 0x0 0x0 0x0 0x0>;
-> +          reset-gpios = <&pinctrl_ap 33 0>;
-> +          max-link-speed = <1>;
-> +
-> +          #address-cells = <3>;
-> +          #size-cells = <2>;
-> +          ranges;
-> +        };
-> +      };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7327c9b778f1..789d79315485 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1654,6 +1654,7 @@ C:        irc://chat.freenode.net/asahi-dev
->  T:     git https://github.com/AsahiLinux/linux.git
->  F:     Documentation/devicetree/bindings/arm/apple.yaml
->  F:     Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
-> +F:     Documentation/devicetree/bindings/pci/apple,pcie.yaml
->  F:     Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
->  F:     arch/arm64/boot/dts/apple/
->  F:     drivers/irqchip/irq-apple-aic.c
-> --
-> 2.31.1
->
