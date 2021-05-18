@@ -2,116 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A69E3870E6
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 07:09:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94F4838720C
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 08:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239983AbhEREaQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 May 2021 00:30:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:40698 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235926AbhEREaQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 18 May 2021 00:30:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AECA31B;
-        Mon, 17 May 2021 21:28:58 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185D53F73D;
-        Mon, 17 May 2021 21:28:57 -0700 (PDT)
-Subject: Re: [PATCH v3 13/14] PCI/MSI: Document the various ways of ending up
- with NO_MSI
-To:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-References: <20210330151145.997953-1-maz@kernel.org>
- <20210330151145.997953-14-maz@kernel.org>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <b5a5a6d8-6ffc-8c5c-c5b1-fb4f5616069f@arm.com>
-Date:   Mon, 17 May 2021 23:28:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S1343531AbhERGns (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 May 2021 02:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241251AbhERGnr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 May 2021 02:43:47 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539F8C061756
+        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 23:42:30 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id g24so4969679pji.4
+        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 23:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PDyrwk3dKvoxKjer/W/nKoHZ25xkHMzcXLNqNVSjI98=;
+        b=VtOmdjwVV5WinnYM8kjIEP+f3T2dP4qhZew2qo2b8rOixnhhoKqE73hDfXFYiPhVG+
+         U6BAIa1KXGyc+Nw/pBnyzHhaT1tIpO8FD1D5RuU3Fbq8THMadmNoknnSwKB9hGOx3JSo
+         9OgCVPZ0ChLJsVYfXDyAbZmg8Bo+ncPHVka+o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PDyrwk3dKvoxKjer/W/nKoHZ25xkHMzcXLNqNVSjI98=;
+        b=MNrH6J7RAHf9RJf1m5lualIICRCssFanmulYhDgycI/e7n+E1ZeL0nHBsXtoJSSlVn
+         cFsJEUm2yLT43w+Yr+GLV6fxJpLasUUfclBwvWQRXyfZFQkYSOaVJt6HuIPPZ5Oy/rhH
+         SwYUVx7otDmF7fxzcPeCqxRE/P4bycNjn4WV4GGQ5CEEq5s3624RWZFbdcwRmklnD0hA
+         Jus64hKwQ2sRrwm8I7CT2SR9TnphRq/PvnFQboSWn7Cili+e/IbQmSYDr/K0fotKJfVC
+         zrlnE2WlSAkdvr68RnLorqsbA3UDjla+84iOdXUpiKHQJ9gr4QsvJjFxATc2TSUN9iVw
+         DkeA==
+X-Gm-Message-State: AOAM531f6tm2h7tjVkw/A6G//CmLcywth9fGMsQQ6xz0FYM+0k3QNt/G
+        cGqnLHEvlxqQJkQN2eu7AkAOCA==
+X-Google-Smtp-Source: ABdhPJw/3HNuoTaSGjywqAr2hcme1ypfuSgw3ugqZ0Om4CEwcZ/8hmi6P3tglXLSkIpe+RJxzArq6w==
+X-Received: by 2002:a17:902:b408:b029:ec:e879:bbd8 with SMTP id x8-20020a170902b408b02900ece879bbd8mr2877299plr.65.1621320149869;
+        Mon, 17 May 2021 23:42:29 -0700 (PDT)
+Received: from localhost ([2401:fa00:95:205:f284:b819:54ca:c198])
+        by smtp.gmail.com with UTF8SMTPSA id f21sm7240386pjt.11.2021.05.17.23.42.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 May 2021 23:42:29 -0700 (PDT)
+From:   Claire Chang <tientzu@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        tientzu@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, jxgao@google.com,
+        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
+        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
+Subject: [PATCH v7 00/15] Restricted DMA 
+Date:   Tue, 18 May 2021 14:42:00 +0800
+Message-Id: <20210518064215.2856977-1-tientzu@chromium.org>
+X-Mailer: git-send-email 2.31.1.751.gd2f1c929bd-goog
 MIME-Version: 1.0
-In-Reply-To: <20210330151145.997953-14-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+This series implements mitigations for lack of DMA access control on
+systems without an IOMMU, which could result in the DMA accessing the
+system memory at unexpected times and/or unexpected addresses, possibly
+leading to data leakage or corruption.
 
+For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
+not behind an IOMMU. As PCI-e, by design, gives the device full access to
+system memory, a vulnerability in the Wi-Fi firmware could easily escalate
+to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
+full chain of exploits; [2], [3]).
 
-On 3/30/21 10:11 AM, Marc Zyngier wrote:
-> We have now three ways of ending up with NO_MSI being set.
-> Document them.
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   drivers/pci/msi.c | 11 +++++++++--
->   1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index d9c73c173c14..217dc9f0231f 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -871,8 +871,15 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
->   	 * Any bridge which does NOT route MSI transactions from its
->   	 * secondary bus to its primary bus must set NO_MSI flag on
->   	 * the secondary pci_bus.
-> -	 * We expect only arch-specific PCI host bus controller driver
-> -	 * or quirks for specific PCI bridges to be setting NO_MSI.
-> +	 *
-> +	 * The NO_MSI flag can either be set directly by:
-> +	 * - arch-specific PCI host bus controller drivers (deprecated)
-> +	 * - quirks for specific PCI bridges
-> +	 *
-> +	 * or indirectly by platform-specific PCI host bridge drivers by
-> +	 * advertising the 'msi_domain' property, which results in
-> +	 * the NO_MSI flag when no MSI domain is found for this bridge
-> +	 * at probe time.
+To mitigate the security concerns, we introduce restricted DMA. Restricted
+DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
+specially allocated region and does memory allocation from the same region.
+The feature on its own provides a basic level of protection against the DMA
+overwriting buffer contents at unexpected times. However, to protect
+against general data leakage and system memory corruption, the system needs
+to provide a way to restrict the DMA to a predefined memory region (this is
+usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
 
-I have an ACPI machine with a gicv2 (no m), and a MSI region that isn't 
-described by ACPI because its non-standard. In the past this tended to 
-work because PCIe device drivers would fall back to legacy pci intx 
-silently. But, with 5.13, it seems this series now triggers the 
-WARN_ON_ONCE() in arch_setup_msi_irq, because duh, no MSI support.
+[1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+[1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+[2] https://blade.tencent.com/en/advisories/qualpwn/
+[3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+[4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
 
-Everything of course continues to work, it just gets this ugly splat on 
-bootup telling me basically the machine doesn't support MSIs. So, I 
-considered a few patches, including just basically setting nomsi if 
-gicv2 && acpi, or eek a host bridge quirk.
+v7:
+Fix debugfs, PageHighMem and comment style in rmem_swiotlb_device_init
 
-None of these seem great, so how can this be fixed?
+v6:
+Address the comments in v5
+https://lore.kernel.org/patchwork/cover/1423201/
 
-Thanks,
+v5:
+Rebase on latest linux-next
+https://lore.kernel.org/patchwork/cover/1416899/
 
+v4:
+- Fix spinlock bad magic
+- Use rmem->name for debugfs entry
+- Address the comments in v3
+https://lore.kernel.org/patchwork/cover/1378113/
 
+v3:
+Using only one reserved memory region for both streaming DMA and memory
+allocation.
+https://lore.kernel.org/patchwork/cover/1360992/
 
+v2:
+Building on top of swiotlb.
+https://lore.kernel.org/patchwork/cover/1280705/
 
->   	 */
->   	for (bus = dev->bus; bus; bus = bus->parent)
->   		if (bus->bus_flags & PCI_BUS_FLAGS_NO_MSI)
-> 
+v1:
+Using dma_map_ops.
+https://lore.kernel.org/patchwork/cover/1271660/
+
+Claire Chang (15):
+  swiotlb: Refactor swiotlb init functions
+  swiotlb: Refactor swiotlb_create_debugfs
+  swiotlb: Add DMA_RESTRICTED_POOL
+  swiotlb: Add restricted DMA pool initialization
+  swiotlb: Add a new get_io_tlb_mem getter
+  swiotlb: Update is_swiotlb_buffer to add a struct device argument
+  swiotlb: Update is_swiotlb_active to add a struct device argument
+  swiotlb: Bounce data from/to restricted DMA pool if available
+  swiotlb: Move alloc_size to find_slots
+  swiotlb: Refactor swiotlb_tbl_unmap_single
+  dma-direct: Add a new wrapper __dma_direct_free_pages()
+  swiotlb: Add restricted DMA alloc/free support.
+  dma-direct: Allocate memory from restricted DMA pool if available
+  dt-bindings: of: Add restricted DMA pool
+  of: Add plumbing for restricted DMA pool
+
+ .../reserved-memory/reserved-memory.txt       |  27 ++
+ drivers/gpu/drm/i915/gem/i915_gem_internal.c  |   2 +-
+ drivers/gpu/drm/nouveau/nouveau_ttm.c         |   2 +-
+ drivers/iommu/dma-iommu.c                     |  12 +-
+ drivers/of/address.c                          |  25 ++
+ drivers/of/device.c                           |   3 +
+ drivers/of/of_private.h                       |   5 +
+ drivers/pci/xen-pcifront.c                    |   2 +-
+ drivers/xen/swiotlb-xen.c                     |   2 +-
+ include/linux/device.h                        |   4 +
+ include/linux/swiotlb.h                       |  41 ++-
+ kernel/dma/Kconfig                            |  14 +
+ kernel/dma/direct.c                           |  63 +++--
+ kernel/dma/direct.h                           |   9 +-
+ kernel/dma/swiotlb.c                          | 242 +++++++++++++-----
+ 15 files changed, 356 insertions(+), 97 deletions(-)
+
+-- 
+2.31.1.751.gd2f1c929bd-goog
 
