@@ -2,194 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1381B3872C6
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 09:02:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F923872EB
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 09:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239234AbhERHDT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 May 2021 03:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
+        id S1346113AbhERHPQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 May 2021 03:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237944AbhERHDS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 May 2021 03:03:18 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4947DC061573
-        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 00:02:01 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id c20so8366163qkm.3
-        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 00:02:01 -0700 (PDT)
+        with ESMTP id S244514AbhERHPP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 May 2021 03:15:15 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9634C061573
+        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 00:13:56 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id g11so4252427ilq.3
+        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 00:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XgyF0OvHzw8KTyadFBcEzsCamkUD+/ukWzei3hnGvkc=;
-        b=VO0BvOlWIIiGkUdtOb1VSOWiBrk2KLMr0fiDCPwaBrvrf/j2/7hCX1JlEDcxzMqFmv
-         42I6m34flwgfsu+jKFLERtm6bjzporQ7M0BTCF240tpdoJChz4PcESq3XpYvN81Vfxez
-         ZW4CMor3EwZRISv4nvwP/XJ/8ZZ+MrGyZniYE=
+        bh=UMofkkhtzjxlDv1Oycbxs7kw2w9YacQFaftAekwJhW0=;
+        b=nF+oXyU4QswaoU7mI/dhEwwA7ORTu3SkTxnOqKwrHAtDR+0oDcJPGX78fKeTdhEFQF
+         5gI/o+Pvl0377OmCQ1uGImJXacNXZx2/Zow83oaWgwTsJJIWEoXvi0DH83KOxn3FR6AF
+         WTUZQX3rZNDAy9iNj510hTrtd6o3Aea1NHLFoZag1jpDEZauikdxOOGclv4a+QQgZXEN
+         cfqWePC+2FTxW2rZLSgsG2QKnfnuNDbEZg0Dt7O5NT/SeI58XIrGT/UWnJ1iRtEeI/Gf
+         C26JSIoCvp0WA/XzD0x4DMglE36OFNl/oA5mxKgTNy2jrMws8XN4xzBdy8tQCdMTrVMK
+         OVrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XgyF0OvHzw8KTyadFBcEzsCamkUD+/ukWzei3hnGvkc=;
-        b=ni6oLJUtRDkSSXlSW4AAlaz59nH6R5LtReikrTNgSHt6oP/e+FeYxspIfjFNWSiDHK
-         Go498Z8FhP1ew5/h7tLVzHkpK86/9KInmocdtyO/rNsIBKVuuTmS4h5SxIuo9aKdTo++
-         viXKDCF/LR0UrlM/WNB6jnPNuw5d5NBxIzq6sNdpEmJ9xyy4tiWMZGrmP/NrST8JAbXs
-         i4A/ur/TTtBr5h8fs2Kp3wL6ecCsWfNsNnbUAfb0CqjJ0u6fsuwfZfogPy7aWymVscGs
-         3Riuliw/Vp2hqhI6JG2L7XHBcVoYeVL/J0uqlx4eYCZCkTO6a7PRwTV3bcPCGsh3io65
-         fVzw==
-X-Gm-Message-State: AOAM530J5NHcDski1Zt3j/hjx3kYRK3tmwOoCBmnx7T6YjA8o4ytR348
-        94XOgFoAaVMijVBYN+6k8oGoY0Sm2CaW0A==
-X-Google-Smtp-Source: ABdhPJxqKW+U8Y5tu83YKrPl/sj+gUmUHgMklKInuB46OSevbXLFcOBLhWkoIZaVk2fiHqweZeDMvQ==
-X-Received: by 2002:ae9:ebc6:: with SMTP id b189mr3895190qkg.251.1621321320254;
-        Tue, 18 May 2021 00:02:00 -0700 (PDT)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com. [209.85.160.171])
-        by smtp.gmail.com with ESMTPSA id h12sm12115250qkj.52.2021.05.18.00.01.59
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 May 2021 00:02:00 -0700 (PDT)
-Received: by mail-qt1-f171.google.com with SMTP id t20so6744393qtx.8
-        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 00:01:59 -0700 (PDT)
-X-Received: by 2002:a05:6638:10e4:: with SMTP id g4mr3960623jae.90.1621320877050;
- Mon, 17 May 2021 23:54:37 -0700 (PDT)
+        bh=UMofkkhtzjxlDv1Oycbxs7kw2w9YacQFaftAekwJhW0=;
+        b=g7HeWN8jx2ZpqklJaRdAM71sGnv3PAz6GT7s0YQ1Emar/3pcNraYeXqVl2S1bTsECV
+         NMKqkjcJheLu9VLdbGx9hrATnVLUbE6NpYJVabp5RlcjpCMp1uu56Wf61Wjn/67YBM0v
+         waYWllgjduLRCP8egaauQIQesD6Dk8FhzqIF+RR4QcRZAU2y8+TO3vsiV+NnMcWdMth5
+         GIZxJYNM8b0UgO/g5h9LOiS3W/BOrwRAmKcsJxdPT+tbXLXL5EJvncdyjrzZHcgBibyy
+         oLTLgQD4e5Q1H+IZoO4kTWAYRMypPJHbPRqgxGt20yxaHmtO72Z05HjPYsgrSZgZjHyV
+         htJg==
+X-Gm-Message-State: AOAM531Pe2XxZrELIeH5u7phTBct8FK6kmQmG6Svx+a5r4WhkQKNFYJ1
+        h8CMAgzc0rC4TnV5t0gQgWns1yvz/qD0MUmCUqk=
+X-Google-Smtp-Source: ABdhPJx1PfPXBEnBgBYDuZnry2oyZLlNWw49Z9lYBDuj5ATQuJfMwkkTXy6Iwmyl2m/yKazOEPyKbUPUgEzp1xQG+Pg=
+X-Received: by 2002:a05:6e02:1e05:: with SMTP id g5mr3029420ila.134.1621322035728;
+ Tue, 18 May 2021 00:13:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210510095026.3477496-1-tientzu@chromium.org>
-In-Reply-To: <20210510095026.3477496-1-tientzu@chromium.org>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Tue, 18 May 2021 14:54:26 +0800
-X-Gmail-Original-Message-ID: <CALiNf2-LhQqAX3kJSETOxG4ipu9Nhs97yYiGm0XZKG7vBQ_hNQ@mail.gmail.com>
-Message-ID: <CALiNf2-LhQqAX3kJSETOxG4ipu9Nhs97yYiGm0XZKG7vBQ_hNQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/15] Restricted DMA
-To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        nouveau@lists.freedesktop.org, rodrigo.vivi@intel.com,
-        thomas.hellstrom@linux.intel.com
+References: <CAAhV-H6E3vh9+SZg5qOmVbfjENRPi0=UbLqK-YHcCA0mzcx9aw@mail.gmail.com>
+ <20210517182810.GA29638@bjorn-Precision-5520>
+In-Reply-To: <20210517182810.GA29638@bjorn-Precision-5520>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Tue, 18 May 2021 15:13:43 +0800
+Message-ID: <CAAhV-H6T4+qZktfEZ-6eKO5SBp_o3Okbu+aBnH+h7Hy6L-PaXA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving bridge
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-v7: https://lore.kernel.org/patchwork/cover/1431031/
+Hi, Bjorn,
 
-On Mon, May 10, 2021 at 5:50 PM Claire Chang <tientzu@chromium.org> wrote:
+On Tue, May 18, 2021 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> From: Claire Chang <tientzu@google.com>
+> On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> > On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> > > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> > > > > VGA Enable bit which modifies the response to VGA compatible addresses.
+> > > >
+> > > > The bridge spec is pretty old, and most of the content has been
+> > > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> > > > 7.5.1.3.13" here instead.
+> > > >
+> > > > > If the VGA Enable bit is set, the bridge will decode and forward the
+> > > > > following accesses on the primary interface to the secondary interface.
+> > > >
+> > > > *Which* following accesses?  The structure of English requires that if
+> > > > you say "the following accesses," you must continue by *listing* the
+> > > > accesses.
+> > > >
+> > > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> > > > > bridge control register, which causes vgaarb subsystem don't think the
+> > > > > VGA card behind the bridge as a valid boot vga device.
+> > > >
+> > > > s/hardward/bridge/
+> > > > s/vga/VGA/ (also in code comments and dmesg strings below)
+> > > >
+> > > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> > > > since it apparently has a VGA class code.  But here you say the
+> > > > AST2500 has a Bridge Control register, which suggests that it's a
+> > > > bridge.  If AST2500 is some sort of combination that includes both a
+> > > > bridge and a VGA device, please outline that topology.
+> > > >
+> > > > But the hardware defect is that some bridges forward VGA accesses even
+> > > > though their VGA Enable bit is not set?  The quirk should be attached
+> > > > to broken *bridges*, not to VGA devices.
+> > > >
+> > > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> > > > is set, that means VGA arbitration (in vgaarb.c) cannot work
+> > > > correctly, so merely setting the default VGA device once in a quirk is
+> > > > not sufficient.  You would have to somehow disable any future attempts
+> > > > to use other VGA devices.  Only the VGA device below this defective
+> > > > bridge is usable.  Any other VGA devices in the system would be
+> > > > useless.
+> > > >
+> > > > > So we provide a quirk to fix Xorg auto-detection.
+> > > > >
+> > > > > See similar bug:
+> > > > >
+> > > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> > > >
+> > > > This patch was never merged.  If we merged a revised version, please
+> > > > cite the SHA1 instead.
+> > >
+> > > This patch has never merged, and I found that it is unnecessary after
+> > > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> > > even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> > > unnecessary. If it is still needed, I'll investigate the root cause.
+> >
+> > I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> > by subsys_initcall(), which means their sequence is unpredictable. And
+> > unfortunately, in our platform vga_arb_device_init() is called before
+> > pcibios_init(), which makes vga_arb_device_init() fail to set a
+> > default vga device. This is the root cause why we thought that we
+> > still need a quirk for AST2500.
 >
-> This series implements mitigations for lack of DMA access control on
-> systems without an IOMMU, which could result in the DMA accessing the
-> system memory at unexpected times and/or unexpected addresses, possibly
-> leading to data leakage or corruption.
+> Does this mean there is no hardware defect here?  The VGA Enable bit
+> works correctly?
 >
-> For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
-> not behind an IOMMU. As PCI-e, by design, gives the device full access to
-> system memory, a vulnerability in the Wi-Fi firmware could easily escalate
-> to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
-> full chain of exploits; [2], [3]).
+No, VGA Enable bit still doesn't set, but with commit
+a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device even if
+there's no legacy VGA") we no longer depend on VGA Enable.
+
+> > I think the best solution is make vga_arb_device_init() be wrapped by
+> > subsys_initcall_sync(), do you think so?
 >
-> To mitigate the security concerns, we introduce restricted DMA. Restricted
-> DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
-> specially allocated region and does memory allocation from the same region.
-> The feature on its own provides a basic level of protection against the DMA
-> overwriting buffer contents at unexpected times. However, to protect
-> against general data leakage and system memory corruption, the system needs
-> to provide a way to restrict the DMA to a predefined memory region (this is
-> usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
+> Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
+> documented, so I'm not sure exactly *why* such a change would work and
+> whether we could rely on it to continue working.
 >
-> [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
-> [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
-> [2] https://blade.tencent.com/en/advisories/qualpwn/
-> [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
-> [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
+> pcibios_init() isn't very consistent across arches.  On some,
+> including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
+> enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
+> basically nothing.  That makes life a little difficult.
+subsys_initcall_sync() is ensured after all subsys_initcall()
+functions, so at least it can solve the problem on platforms which use
+pcibios_init() to enumerate PCI devices (x86 and other ACPI-based
+platforms are also OK, because they use acpi_init()
+-->acpi_scan_init() -->pci_acpi_scan_root() to enumerate devices).
+
+Huacai
 >
-> v6:
-> Address the comments in v5
+> vga_arb_device_init() is a subsys_initcall() and wants to look through
+> all the PCI devices.  That's a little problematic for arches where
+> pcibios_init() is also a subsys_initcall() and enumerates PCI devices.
 >
-> v5:
-> Rebase on latest linux-next
-> https://lore.kernel.org/patchwork/cover/1416899/
+> Sorry, that's no answer for you.  Just more questions :)
 >
-> v4:
-> - Fix spinlock bad magic
-> - Use rmem->name for debugfs entry
-> - Address the comments in v3
-> https://lore.kernel.org/patchwork/cover/1378113/
->
-> v3:
-> Using only one reserved memory region for both streaming DMA and memory
-> allocation.
-> https://lore.kernel.org/patchwork/cover/1360992/
->
-> v2:
-> Building on top of swiotlb.
-> https://lore.kernel.org/patchwork/cover/1280705/
->
-> v1:
-> Using dma_map_ops.
-> https://lore.kernel.org/patchwork/cover/1271660/
-> *** BLURB HERE ***
->
-> Claire Chang (15):
->   swiotlb: Refactor swiotlb init functions
->   swiotlb: Refactor swiotlb_create_debugfs
->   swiotlb: Add DMA_RESTRICTED_POOL
->   swiotlb: Add restricted DMA pool initialization
->   swiotlb: Add a new get_io_tlb_mem getter
->   swiotlb: Update is_swiotlb_buffer to add a struct device argument
->   swiotlb: Update is_swiotlb_active to add a struct device argument
->   swiotlb: Bounce data from/to restricted DMA pool if available
->   swiotlb: Move alloc_size to find_slots
->   swiotlb: Refactor swiotlb_tbl_unmap_single
->   dma-direct: Add a new wrapper __dma_direct_free_pages()
->   swiotlb: Add restricted DMA alloc/free support.
->   dma-direct: Allocate memory from restricted DMA pool if available
->   dt-bindings: of: Add restricted DMA pool
->   of: Add plumbing for restricted DMA pool
->
->  .../reserved-memory/reserved-memory.txt       |  27 ++
->  drivers/gpu/drm/i915/gem/i915_gem_internal.c  |   2 +-
->  drivers/gpu/drm/nouveau/nouveau_ttm.c         |   2 +-
->  drivers/iommu/dma-iommu.c                     |  12 +-
->  drivers/of/address.c                          |  25 ++
->  drivers/of/device.c                           |   3 +
->  drivers/of/of_private.h                       |   5 +
->  drivers/pci/xen-pcifront.c                    |   2 +-
->  drivers/xen/swiotlb-xen.c                     |   2 +-
->  include/linux/device.h                        |   4 +
->  include/linux/swiotlb.h                       |  41 ++-
->  kernel/dma/Kconfig                            |  14 +
->  kernel/dma/direct.c                           |  63 +++--
->  kernel/dma/direct.h                           |   9 +-
->  kernel/dma/swiotlb.c                          | 242 +++++++++++++-----
->  15 files changed, 356 insertions(+), 97 deletions(-)
->
-> --
-> 2.31.1.607.g51e8a6a459-goog
->
+> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > Signed-off-by: Jingfeng Sui <suijingfeng@loongson.cn>
+> > > > > ---
+> > > > >  drivers/pci/quirks.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 47 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > > index 6ab4b3bba36b..adf5490706ad 100644
+> > > > > --- a/drivers/pci/quirks.c
+> > > > > +++ b/drivers/pci/quirks.c
+> > > > > @@ -28,6 +28,7 @@
+> > > > >  #include <linux/platform_data/x86/apple.h>
+> > > > >  #include <linux/pm_runtime.h>
+> > > > >  #include <linux/switchtec.h>
+> > > > > +#include <linux/vgaarb.h>
+> > > > >  #include <asm/dma.h> /* isa_dma_bridge_buggy */
+> > > > >  #include "pci.h"
+> > > > >
+> > > > > @@ -297,6 +298,52 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+> > > > >  }
+> > > > >  DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> > > > >
+> > > > > +
+> > > > > +static void aspeed_fixup_vgaarb(struct pci_dev *pdev)
+> > > > > +{
+> > > > > +     struct pci_dev *bridge;
+> > > > > +     struct pci_bus *bus;
+> > > > > +     struct pci_dev *vdevp = NULL;
+> > > > > +     u16 config;
+> > > > > +
+> > > > > +     bus = pdev->bus;
+> > > > > +     bridge = bus->self;
+> > > > > +
+> > > > > +     /* Is VGA routed to us? */
+> > > > > +     if (bridge && (pci_is_bridge(bridge))) {
+> > > > > +             pci_read_config_word(bridge, PCI_BRIDGE_CONTROL, &config);
+> > > > > +
+> > > > > +             /* Yes, this bridge is PCI bridge-to-bridge spec compliant,
+> > > > > +              *  just return!
+> > > > > +              */
+> > > > > +             if (config & PCI_BRIDGE_CTL_VGA)
+> > > > > +                     return;
+> > > > > +
+> > > > > +             dev_warn(&pdev->dev, "VGA bridge control is not enabled\n");
+> > > > > +     }
+> > > >
+> > > > You cannot assume that a bridge is defective just because
+> > > > PCI_BRIDGE_CTL_VGA is not set.
+> > > >
+> > > > > +     /* Just return if the system already have a default device */
+> > > > > +     if (vga_default_device())
+> > > > > +             return;
+> > > > > +
+> > > > > +     /* No default vga device */
+> > > > > +     while ((vdevp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, vdevp))) {
+> > > > > +             if (vdevp->vendor != 0x1a03) {
+> > > > > +                     /* Have other vga devcie in the system, do nothing */
+> > > > > +                     dev_info(&pdev->dev, "Another boot vga device: 0x%x:0x%x\n",
+> > > > > +                             vdevp->vendor, vdevp->device);
+> > > > > +                     return;
+> > > > > +             }
+> > > > > +     }
+> > > > > +
+> > > > > +     vga_set_default_device(pdev);
+> > > > > +
+> > > > > +     dev_info(&pdev->dev, "Boot vga device set as 0x%x:0x%x\n",
+> > > > > +                     pdev->vendor, pdev->device);
+> > > > > +}
+> > > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(0x1a03, 0x2000, PCI_CLASS_DISPLAY_VGA, 8, aspeed_fixup_vgaarb);
+> > > > > +
+> > > > > +
+> > > > >  /*
+> > > > >   * The Mellanox Tavor device gives false positive parity errors.  Disable
+> > > > >   * parity error reporting.
+> > > > > --
+> > > > > 2.27.0
+> > > > >
