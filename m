@@ -2,96 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6FE38704F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 05:42:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A69E3870E6
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 07:09:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346289AbhERDmn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 23:42:43 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:33549 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243059AbhERDmm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 23:42:42 -0400
-Received: by mail-lj1-f181.google.com with SMTP id o8so9845822ljp.0
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 20:41:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1spWpjRWutJF00hdbYEaMffPbCAUG6R0mq8npz/96kI=;
-        b=fGhD77hE3zJP7hV0Geq6eRApEYSSD96LO98qrvJq+8oc8wgGjoTJ+dlFany18tTeKo
-         SFtABYAc+juiXxS1oWlveZk1I28jb6mvRii0IXefpWbm3ize31csJTLKOCnvLKVOd8Td
-         SUTE/F4gSKUFkWAWXDZtfFIwyYk8qRDPfW4bF58mpV5FB+cJMIRHiik9s/Y0XbSTP5qQ
-         9G+fhBX6+iDoU1DMsuCAY7e6y7y60B4tEaIVqCc+4t8k9rfjD4ZatHyVTlRG6w5OSs7U
-         jktjDntr5ZNmO/BDxVLdqWkuaz8d9vPXthBO/JKJWgOXbHZfrWuOCFHgznWLJ38cWi9k
-         08+w==
-X-Gm-Message-State: AOAM530Dz91duFx+YbU6nkXeYj7PAcvuac+nzzpY2iV3BBZ5yvHOS9TM
-        D4RohELfDUOeIRTmwAWRMIU=
-X-Google-Smtp-Source: ABdhPJyrkgkyMrT192aKsBz4oMBf4c0Uhp47zRxsn2+8r17eCcuJjO48OxADQ9++6BEpOfEcMaBiSQ==
-X-Received: by 2002:a05:651c:119c:: with SMTP id w28mr2308078ljo.164.1621309284703;
-        Mon, 17 May 2021 20:41:24 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id j23sm419112lfm.276.2021.05.17.20.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 May 2021 20:41:24 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Joe Perches <joe@perches.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3 14/14] PCI/sysfs: Only show value when driver_override is not NULL
-Date:   Tue, 18 May 2021 03:41:09 +0000
-Message-Id: <20210518034109.158450-14-kw@linux.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210518034109.158450-1-kw@linux.com>
-References: <20210518034109.158450-1-kw@linux.com>
+        id S239983AbhEREaQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 May 2021 00:30:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:40698 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235926AbhEREaQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 May 2021 00:30:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AECA31B;
+        Mon, 17 May 2021 21:28:58 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185D53F73D;
+        Mon, 17 May 2021 21:28:57 -0700 (PDT)
+Subject: Re: [PATCH v3 13/14] PCI/MSI: Document the various ways of ending up
+ with NO_MSI
+To:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bharat Kumar Gogada <bharatku@xilinx.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
+References: <20210330151145.997953-1-maz@kernel.org>
+ <20210330151145.997953-14-maz@kernel.org>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <b5a5a6d8-6ffc-8c5c-c5b1-fb4f5616069f@arm.com>
+Date:   Mon, 17 May 2021 23:28:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210330151145.997953-14-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Only expose the value of the "driver_override" variable through the
-corresponding sysfs object when a value is actually set.
+Hi,
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
-Changes in v2:
-  None.
-Changes in v3:
-  Added Logan Gunthorpe's "Reviewed-by".
 
- drivers/pci/pci-sysfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On 3/30/21 10:11 AM, Marc Zyngier wrote:
+> We have now three ways of ending up with NO_MSI being set.
+> Document them.
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>   drivers/pci/msi.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index d9c73c173c14..217dc9f0231f 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -871,8 +871,15 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
+>   	 * Any bridge which does NOT route MSI transactions from its
+>   	 * secondary bus to its primary bus must set NO_MSI flag on
+>   	 * the secondary pci_bus.
+> -	 * We expect only arch-specific PCI host bus controller driver
+> -	 * or quirks for specific PCI bridges to be setting NO_MSI.
+> +	 *
+> +	 * The NO_MSI flag can either be set directly by:
+> +	 * - arch-specific PCI host bus controller drivers (deprecated)
+> +	 * - quirks for specific PCI bridges
+> +	 *
+> +	 * or indirectly by platform-specific PCI host bridge drivers by
+> +	 * advertising the 'msi_domain' property, which results in
+> +	 * the NO_MSI flag when no MSI domain is found for this bridge
+> +	 * at probe time.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 5d63df7c1820..4e9f582ca10f 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -580,10 +580,11 @@ static ssize_t driver_override_show(struct device *dev,
- 				    struct device_attribute *attr, char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	ssize_t len;
-+	ssize_t len = 0;
- 
- 	device_lock(dev);
--	len = sysfs_emit(buf, "%s\n", pdev->driver_override);
-+	if (pdev->driver_override)
-+		len = sysfs_emit(buf, "%s\n", pdev->driver_override);
- 	device_unlock(dev);
- 	return len;
- }
--- 
-2.31.1
+I have an ACPI machine with a gicv2 (no m), and a MSI region that isn't 
+described by ACPI because its non-standard. In the past this tended to 
+work because PCIe device drivers would fall back to legacy pci intx 
+silently. But, with 5.13, it seems this series now triggers the 
+WARN_ON_ONCE() in arch_setup_msi_irq, because duh, no MSI support.
+
+Everything of course continues to work, it just gets this ugly splat on 
+bootup telling me basically the machine doesn't support MSIs. So, I 
+considered a few patches, including just basically setting nomsi if 
+gicv2 && acpi, or eek a host bridge quirk.
+
+None of these seem great, so how can this be fixed?
+
+Thanks,
+
+
+
+
+>   	 */
+>   	for (bus = dev->bus; bus; bus = bus->parent)
+>   		if (bus->bus_flags & PCI_BUS_FLAGS_NO_MSI)
+> 
 
