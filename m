@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A03E38704C
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 05:41:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10D5138704D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 05:41:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344971AbhERDmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 23:42:40 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:34710 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343901AbhERDmk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 23:42:40 -0400
-Received: by mail-lf1-f46.google.com with SMTP id z13so11959026lft.1
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 20:41:22 -0700 (PDT)
+        id S1344073AbhERDml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 23:42:41 -0400
+Received: from mail-lf1-f47.google.com ([209.85.167.47]:45717 "EHLO
+        mail-lf1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243301AbhERDml (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 23:42:41 -0400
+Received: by mail-lf1-f47.google.com with SMTP id j10so11904199lfb.12
+        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 20:41:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RYiVudpZEsIvY1SAQVRkZoG3SY2AtLnP2gPfuroRoOM=;
-        b=Ryrcsh3vyIjxZ3xlL8CRnEEDFRekvJpdM4wlJQKiZJ0aYsBeGC1SuJnhgAooyjaUuG
-         bWjozE2eow8U11/GlSBaslBk3E89W6MhTxyn/Yj4OkfcShNIM1x29TbMvnow5ABd4vwh
-         NzzHZNyurHzquRvJ9hJoaXkBn+c8brIxxd+7poRxaG9nT9YAwGJI9JyInRdwfYT2RJRb
-         bFp+x7R824FZuOY/o8LHPz9mwvwpL+Tu6TxD3KzfbzHWoW6HelrkZ4fQROBfPz7dCrwD
-         YVceC1y5XiGkufy/6PB+VdIjSQKO962QPcl+IuVo2wFGiLZdE4G0HGJlgzKNJvoMzGpJ
-         DEfA==
-X-Gm-Message-State: AOAM530Adi5dnnpWtY06j1mmwR0pc2NFR+eXg5+Zfyb3wdg+nGsG2iMQ
-        +ev70EtiGqvnUDNQxpCj60Y=
-X-Google-Smtp-Source: ABdhPJyr0If6/isZrT2WhjemvEmfJqibs1APcEz/Lxtw2XWUE9Ibs5RmL1HQL7EbOCWQpt/UyHLmpg==
-X-Received: by 2002:a19:354:: with SMTP id 81mr2569583lfd.174.1621309281745;
-        Mon, 17 May 2021 20:41:21 -0700 (PDT)
+        bh=bFxWTz4RawfMY7EO22L+kcfgeoSi7PKwliMf+ys+Dig=;
+        b=ZYp4jF4D3JlpEWi70yXI7ncnd9gxVdeiPMleGGt78fiXnQQIwp5AeEJ9ETjTIc7OCP
+         bMTElfGdmpBk+b8KvmOumnTT2mqINMIBxDlAM4XFKM4sePLMDuA0C4w41NHPX6ZnPg0G
+         BVupcl5gUZ0Gk3ObXttpJR3quM3JWd6bxFdUbxEJgqcxbzs2cCPVdD2/q1Sb7S3YJELl
+         yh7IwC0nNBdgd+mGHy53dtYQ+ia3qsnuS2E8ZaDMEAoBnG2asKtEmhHLkew//EnXY4d6
+         IVd95I+R00g5d+RnTTsCUYc3Dr0T7VwtfAUdIjQqFAP07MnyPGHPp5+gh7yaOcZpziNk
+         KntA==
+X-Gm-Message-State: AOAM5329/OpLQJ2EtdsNsZaCZcYVscCfmbs59eV9cW7MCKCf4Wk1gZ++
+        2MA1Mf/1XMAdbYevKjvLJjA=
+X-Google-Smtp-Source: ABdhPJxH/0FQMxEtSAUyp7JXQx01kDi7SBRLSXhr9jMXiJ+fIHyzqgZJ2623S7E0PKu0HQo9OTe9jg==
+X-Received: by 2002:a05:6512:3185:: with SMTP id i5mr2668771lfe.67.1621309282742;
+        Mon, 17 May 2021 20:41:22 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id j23sm419112lfm.276.2021.05.17.20.41.20
+        by smtp.gmail.com with ESMTPSA id j23sm419112lfm.276.2021.05.17.20.41.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 May 2021 20:41:21 -0700 (PDT)
+        Mon, 17 May 2021 20:41:22 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
@@ -47,9 +47,9 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         linux-pci@vger.kernel.org
-Subject: [PATCH v3 11/14] PCI: shpchp: Use sysfs_emit() and sysfs_emit_at() in "show" functions
-Date:   Tue, 18 May 2021 03:41:06 +0000
-Message-Id: <20210518034109.158450-11-kw@linux.com>
+Subject: [PATCH v3 12/14] PCI: Fix trailing newline handling of resource_alignment_param
+Date:   Tue, 18 May 2021 03:41:07 +0000
+Message-Id: <20210518034109.158450-12-kw@linux.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210518034109.158450-1-kw@linux.com>
 References: <20210518034109.158450-1-kw@linux.com>
@@ -60,22 +60,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The sysfs_emit() and sysfs_emit_at() functions were introduced to make
-it less ambiguous which function is preferred when writing to the output
-buffer in a device attribute's "show" callback [1].
+The value of the "resource_alignment" can be specified using a kernel
+command-line argument (using the "pci=resource_alignment=") or through
+the corresponding sysfs object under the /sys/bus/pci path.
 
-Convert the PCI sysfs object "show" functions from sprintf(), snprintf()
-and scnprintf() to sysfs_emit() and sysfs_emit_at() accordingly, as the
-latter is aware of the PAGE_SIZE buffer and correctly returns the number
-of bytes written into the buffer.
+Currently, when the value is set via the kernel command-line argument,
+and then subsequently accessed through sysfs object, the value read back
+will not be correct, as per:
 
-No functional change intended.
+  # grep -oE 'pci=resource_alignment.+' /proc/cmdline
+  pci=resource_alignment=20@00:1f.2
+  # cat /sys/bus/pci/resource_alignment
+  20@00:1f.
 
-[1] Documentation/filesystems/sysfs.rst
+This is also true when the value is set through the sysfs object, but
+the trailing newline has not been included, as per:
 
-Related to:
-  commit ad025f8e46f3 ("PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions")
+  # echo -n 20@00:1f.2 > /sys/bus/pci/resource_alignment
+  # cat /sys/bus/pci/resource_alignment
+  20@00:1f.
 
+When the value set through the sysfs object includes the trailing
+newline, then reading it back will work as intended, as per:
+
+  # echo 20@00:1f.2 > /sys/bus/pci/resource_alignment
+  # cat /sys/bus/pci/resource_alignment
+  20@00:1f.2
+
+To fix this inconsistency, append a trailing newline in the show()
+function and strip the trailing line in the store() function if one is
+present.
+
+Also, allow for the value previously set using either a command-line
+argument or through the sysfs object to be cleared at run-time.
+
+Fixes: e499081da1a2 ("PCI: Force trailing new line to resource_alignment_param in sysfs")
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 ---
@@ -84,84 +103,64 @@ Changes in v2:
 Changes in v3:
   Added Logan Gunthorpe's "Reviewed-by".
 
- drivers/pci/hotplug/shpchp_sysfs.c | 38 +++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+ drivers/pci/pci.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/hotplug/shpchp_sysfs.c b/drivers/pci/hotplug/shpchp_sysfs.c
-index 45658bb5c554..64beed7a26be 100644
---- a/drivers/pci/hotplug/shpchp_sysfs.c
-+++ b/drivers/pci/hotplug/shpchp_sysfs.c
-@@ -24,50 +24,54 @@
- static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct pci_dev *pdev;
--	char *out = buf;
- 	int index, busnr;
- 	struct resource *res;
- 	struct pci_bus *bus;
-+	size_t len = 0;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 5ed316ea5831..7cde86bdcc8e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6439,34 +6439,37 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
  
- 	pdev = to_pci_dev(dev);
- 	bus = pdev->subordinate;
+ 	spin_lock(&resource_alignment_lock);
+ 	if (resource_alignment_param)
+-		count = sysfs_emit(buf, "%s", resource_alignment_param);
++		count = sysfs_emit(buf, "%s\n", resource_alignment_param);
+ 	spin_unlock(&resource_alignment_lock);
  
--	out += sprintf(buf, "Free resources: memory\n");
-+	len += sysfs_emit_at(buf, len, "Free resources: memory\n");
- 	pci_bus_for_each_resource(bus, res, index) {
- 		if (res && (res->flags & IORESOURCE_MEM) &&
- 				!(res->flags & IORESOURCE_PREFETCH)) {
--			out += sprintf(out, "start = %8.8llx, length = %8.8llx\n",
--				       (unsigned long long)res->start,
--				       (unsigned long long)resource_size(res));
-+			len += sysfs_emit_at(buf, len,
-+					     "start = %8.8llx, length = %8.8llx\n",
-+					     (unsigned long long)res->start,
-+					     (unsigned long long)resource_size(res));
- 		}
- 	}
--	out += sprintf(out, "Free resources: prefetchable memory\n");
-+	len += sysfs_emit_at(buf, len, "Free resources: prefetchable memory\n");
- 	pci_bus_for_each_resource(bus, res, index) {
- 		if (res && (res->flags & IORESOURCE_MEM) &&
- 			       (res->flags & IORESOURCE_PREFETCH)) {
--			out += sprintf(out, "start = %8.8llx, length = %8.8llx\n",
--				       (unsigned long long)res->start,
--				       (unsigned long long)resource_size(res));
-+			len += sysfs_emit_at(buf, len,
-+					     "start = %8.8llx, length = %8.8llx\n",
-+					     (unsigned long long)res->start,
-+					     (unsigned long long)resource_size(res));
- 		}
- 	}
--	out += sprintf(out, "Free resources: IO\n");
-+	len += sysfs_emit_at(buf, len, "Free resources: IO\n");
- 	pci_bus_for_each_resource(bus, res, index) {
- 		if (res && (res->flags & IORESOURCE_IO)) {
--			out += sprintf(out, "start = %8.8llx, length = %8.8llx\n",
--				       (unsigned long long)res->start,
--				       (unsigned long long)resource_size(res));
-+			len += sysfs_emit_at(buf, len,
-+					     "start = %8.8llx, length = %8.8llx\n",
-+					     (unsigned long long)res->start,
-+					     (unsigned long long)resource_size(res));
- 		}
- 	}
--	out += sprintf(out, "Free resources: bus numbers\n");
-+	len += sysfs_emit_at(buf, len, "Free resources: bus numbers\n");
- 	for (busnr = bus->busn_res.start; busnr <= bus->busn_res.end; busnr++) {
- 		if (!pci_find_bus(pci_domain_nr(bus), busnr))
- 			break;
- 	}
- 	if (busnr < bus->busn_res.end)
--		out += sprintf(out, "start = %8.8x, length = %8.8x\n",
--				busnr, (int)(bus->busn_res.end - busnr));
-+		len += sysfs_emit_at(buf, len,
-+				     "start = %8.8x, length = %8.8x\n",
-+				     busnr, (int)(bus->busn_res.end - busnr));
- 
--	return out - buf;
-+	return len;
+-	/*
+-	 * When set by the command line, resource_alignment_param will not
+-	 * have a trailing line feed, which is ugly. So conditionally add
+-	 * it here.
+-	 */
+-	if (count >= 2 && buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
+-		buf[count - 1] = '\n';
+-		buf[count++] = 0;
+-	}
+-
+ 	return count;
  }
- static DEVICE_ATTR(ctrl, S_IRUGO, show_ctrl, NULL);
+ 
+ static ssize_t resource_alignment_store(struct bus_type *bus,
+ 					const char *buf, size_t count)
+ {
+-	char *param = kstrndup(buf, count, GFP_KERNEL);
++	char *param, *old, *end;
+ 
++	param = kstrndup(buf, count, GFP_KERNEL);
+ 	if (!param)
+ 		return -ENOMEM;
+ 
++	end = strchr(param, '\n');
++	if (end)
++		*end = '\0';
++
+ 	spin_lock(&resource_alignment_lock);
+-	kfree(resource_alignment_param);
+-	resource_alignment_param = param;
++	old = resource_alignment_param;
++	if (strlen(param)) {
++		resource_alignment_param = param;
++	} else {
++		kfree(resource_alignment_param);
++		resource_alignment_param = NULL;
++	}
+ 	spin_unlock(&resource_alignment_lock);
++
++	kfree(old);
++
+ 	return count;
+ }
  
 -- 
 2.31.1
