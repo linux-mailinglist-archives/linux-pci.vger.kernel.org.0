@@ -2,282 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83123386FF1
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 04:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A56A138702A
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 05:09:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234963AbhERCdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 22:33:21 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43196 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230228AbhERCdU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 May 2021 22:33:20 -0400
-Received: by ajax-webmail-mail.loongson.cn (Coremail) ; Tue, 18 May 2021
- 10:31:56 +0800 (GMT+08:00)
-X-Originating-IP: [10.20.41.56]
-Date:   Tue, 18 May 2021 10:31:56 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   =?UTF-8?B?6ZqL5pmv5bOw?= <suijingfeng@loongson.cn>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Huacai Chen" <chenhuacai@gmail.com>,
-        "Huacai Chen" <chenhuacai@loongson.cn>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
+        id S240169AbhERDKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 23:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231625AbhERDKg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 23:10:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7542561019;
+        Tue, 18 May 2021 03:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621307358;
+        bh=Zro/v7Ix/DVDYetwpk7YQX5hdFcxqrh7zn2RZ8YBaM0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aM3nz+O2pWFnpEG1ptEzP5u5srtX9573NGkxOC9U+l3prkSrXymsWayQ0zxF5WHiJ
+         ufvXpCIfXhYj8qzJ+h7dBS9flgIewwlfowH1BM/fpuat3WudgmTR9vS1ZiiTCDl35w
+         +e4aM7W9PWU33TRAJdLK727qzUz/LgakY9wGqQyAwSWb9yHb+mUQiR4dXFhpTm7mFi
+         T6K9votddxLbxJpYt6DYOfM8fpS01zp+WGIehZHJQ4YLPJfdbP2LYuZg26iPdd69w9
+         pRSSMIWNLYEjtTSLtrEVMLLR5F2tT3p/3OwHNeXJDpsXQOoV7/C6b/tcsXusit/y/B
+         iw98bHEr0D2Uw==
+Date:   Mon, 17 May 2021 22:09:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     =?utf-8?B?6ZqL5pmv5bOw?= <suijingfeng@loongson.cn>
+Cc:     Huacai Chen <chenhuacai@gmail.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
-        "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
 Subject: Re: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a
  misbehaving bridge
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10a build 20191018(4c4f6d15)
- Copyright (c) 2002-2021 www.mailtech.cn .loongson.cn
-In-Reply-To: <20210517182810.GA29638@bjorn-Precision-5520>
-References: <20210517182810.GA29638@bjorn-Precision-5520>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <20210518030917.GA72161@bjorn-Precision-5520>
 MIME-Version: 1.0
-Message-ID: <e82843c.42a4.1797d50c753.Coremail.suijingfeng@loongson.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID: AQAAf9CxI+AcJ6NgJaYYAA--.12529W
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/1tbiAQAFC13QvNTaEwAAsj
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-        daVFxhVjvjDU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e82843c.42a4.1797d50c753.Coremail.suijingfeng@loongson.cn>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CgoKJmd0OyAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KJmd0OyBGcm9tOiAiQmpvcm4gSGVs
-Z2FhcyIgPGhlbGdhYXNAa2VybmVsLm9yZz4KJmd0OyBTZW50IFRpbWU6IDIwMjEtMDUtMTggMDI6
-Mjg6MTAgKFR1ZXNkYXkpCiZndDsgVG86ICJIdWFjYWkgQ2hlbiIgPGNoZW5odWFjYWlAZ21haWwu
-Y29tPgomZ3Q7IENjOiAiSHVhY2FpIENoZW4iIDxjaGVuaHVhY2FpQGxvb25nc29uLmNuPiwgIkJq
-b3JuIEhlbGdhYXMiIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPiwgbGludXgtcGNpIDxsaW51eC1wY2lA
-dmdlci5rZXJuZWwub3JnPiwgIkppYXh1biBZYW5nIiA8amlheHVuLnlhbmdAZmx5Z29hdC5jb20+
-LCAiSmluZ2ZlbmcgU3VpIiA8c3VpamluZ2ZlbmdAbG9vbmdzb24uY24+CiZndDsgU3ViamVjdDog
-UmU6IFtQQVRDSCA1LzVdIFBDSTogU3VwcG9ydCBBU3BlZWQgVkdBIGNhcmRzIGJlaGluZCBhIG1p
-c2JlaGF2aW5nIGJyaWRnZQomZ3Q7IAomZ3Q7IE9uIE1vbiwgTWF5IDE3LCAyMDIxIGF0IDA4OjUz
-OjQzUE0gKzA4MDAsIEh1YWNhaSBDaGVuIHdyb3RlOgomZ3Q7ICZndDsgT24gU2F0LCBNYXkgMTUs
-IDIwMjEgYXQgNTowOSBQTSBIdWFjYWkgQ2hlbiA8Y2hlbmh1YWNhaUBnbWFpbC5jb20+IHdyb3Rl
-OgomZ3Q7ICZndDsgJmd0OyBPbiBGcmksIE1heSAxNCwgMjAyMSBhdCAxMToxMCBQTSBCam9ybiBI
-ZWxnYWFzIDxoZWxnYWFzQGtlcm5lbC5vcmc+IHdyb3RlOgomZ3Q7ICZndDsgJmd0OyAmZ3Q7IE9u
-IEZyaSwgTWF5IDE0LCAyMDIxIGF0IDA0OjAwOjI1UE0gKzA4MDAsIEh1YWNhaSBDaGVuIHdyb3Rl
-OgomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgQWNjb3JkaW5nIHRvIFBDSS10by1QQ0kgYnJpZGdl
-IHNwZWMsIGJpdCAzIG9mIEJyaWRnZSBDb250cm9sIFJlZ2lzdGVyIGlzCiZndDsgJmd0OyAmZ3Q7
-ICZndDsgJmd0OyBWR0EgRW5hYmxlIGJpdCB3aGljaCBtb2RpZmllcyB0aGUgcmVzcG9uc2UgdG8g
-VkdBIGNvbXBhdGlibGUgYWRkcmVzc2VzLgomZ3Q7ICZndDsgJmd0OyAmZ3Q7CiZndDsgJmd0OyAm
-Z3Q7ICZndDsgVGhlIGJyaWRnZSBzcGVjIGlzIHByZXR0eSBvbGQsIGFuZCBtb3N0IG9mIHRoZSBj
-b250ZW50IGhhcyBiZWVuCiZndDsgJmd0OyAmZ3Q7ICZndDsgaW5jb3Jwb3JhdGVkIGludG8gdGhl
-IFBDSWUgc3BlYy4gIEkgdGhpbmsgeW91IGNhbiBjaXRlICJQQ0llIHI1LjAsIHNlYwomZ3Q7ICZn
-dDsgJmd0OyAmZ3Q7IDcuNS4xLjMuMTMiIGhlcmUgaW5zdGVhZC4KJmd0OyAmZ3Q7ICZndDsgJmd0
-OwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgSWYgdGhlIFZHQSBFbmFibGUgYml0IGlzIHNldCwg
-dGhlIGJyaWRnZSB3aWxsIGRlY29kZSBhbmQgZm9yd2FyZCB0aGUKJmd0OyAmZ3Q7ICZndDsgJmd0
-OyAmZ3Q7IGZvbGxvd2luZyBhY2Nlc3NlcyBvbiB0aGUgcHJpbWFyeSBpbnRlcmZhY2UgdG8gdGhl
-IHNlY29uZGFyeSBpbnRlcmZhY2UuCiZndDsgJmd0OyAmZ3Q7ICZndDsKJmd0OyAmZ3Q7ICZndDsg
-Jmd0OyAqV2hpY2gqIGZvbGxvd2luZyBhY2Nlc3Nlcz8gIFRoZSBzdHJ1Y3R1cmUgb2YgRW5nbGlz
-aCByZXF1aXJlcyB0aGF0IGlmCiZndDsgJmd0OyAmZ3Q7ICZndDsgeW91IHNheSAidGhlIGZvbGxv
-d2luZyBhY2Nlc3NlcywiIHlvdSBtdXN0IGNvbnRpbnVlIGJ5ICpsaXN0aW5nKiB0aGUKJmd0OyAm
-Z3Q7ICZndDsgJmd0OyBhY2Nlc3Nlcy4KJmd0OyAmZ3Q7ICZndDsgJmd0OwomZ3Q7ICZndDsgJmd0
-OyAmZ3Q7ICZndDsgVGhlIEFTcGVlZCBBU1QyNTAwIGhhcmR3YXJkIGRvZXMgbm90IHNldCB0aGUg
-VkdBIEVuYWJsZSBiaXQgb24gaXRzCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyBicmlkZ2UgY29u
-dHJvbCByZWdpc3Rlciwgd2hpY2ggY2F1c2VzIHZnYWFyYiBzdWJzeXN0ZW0gZG9uJ3QgdGhpbmsg
-dGhlCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyBWR0EgY2FyZCBiZWhpbmQgdGhlIGJyaWRnZSBh
-cyBhIHZhbGlkIGJvb3QgdmdhIGRldmljZS4KJmd0OyAmZ3Q7ICZndDsgJmd0OwomZ3Q7ICZndDsg
-Jmd0OyAmZ3Q7IHMvaGFyZHdhcmQvYnJpZGdlLwomZ3Q7ICZndDsgJmd0OyAmZ3Q7IHMvdmdhL1ZH
-QS8gKGFsc28gaW4gY29kZSBjb21tZW50cyBhbmQgZG1lc2cgc3RyaW5ncyBiZWxvdykKJmd0OyAm
-Z3Q7ICZndDsgJmd0OwomZ3Q7ICZndDsgJmd0OyAmZ3Q7IEZyb20gdGhlIGNvZGUsIGl0IGxvb2tz
-IGxpa2UgQVNUMjUwMCAoWzFhMDM6MjAwMF0pIGlzIGEgVkdBIGRldmljZSwKJmd0OyAmZ3Q7ICZn
-dDsgJmd0OyBzaW5jZSBpdCBhcHBhcmVudGx5IGhhcyBhIFZHQSBjbGFzcyBjb2RlLiAgQnV0IGhl
-cmUgeW91IHNheSB0aGUKJmd0OyAmZ3Q7ICZndDsgJmd0OyBBU1QyNTAwIGhhcyBhIEJyaWRnZSBD
-b250cm9sIHJlZ2lzdGVyLCB3aGljaCBzdWdnZXN0cyB0aGF0IGl0J3MgYQomZ3Q7ICZndDsgJmd0
-OyAmZ3Q7IGJyaWRnZS4gIElmIEFTVDI1MDAgaXMgc29tZSBzb3J0IG9mIGNvbWJpbmF0aW9uIHRo
-YXQgaW5jbHVkZXMgYm90aCBhCiZndDsgJmd0OyAmZ3Q7ICZndDsgYnJpZGdlIGFuZCBhIFZHQSBk
-ZXZpY2UsIHBsZWFzZSBvdXRsaW5lIHRoYXQgdG9wb2xvZ3kuCiZndDsgJmd0OyAmZ3Q7ICZndDsK
-Jmd0OyAmZ3Q7ICZndDsgJmd0OyBCdXQgdGhlIGhhcmR3YXJlIGRlZmVjdCBpcyB0aGF0IHNvbWUg
-YnJpZGdlcyBmb3J3YXJkIFZHQSBhY2Nlc3NlcyBldmVuCiZndDsgJmd0OyAmZ3Q7ICZndDsgdGhv
-dWdoIHRoZWlyIFZHQSBFbmFibGUgYml0IGlzIG5vdCBzZXQ/ICBUaGUgcXVpcmsgc2hvdWxkIGJl
-IGF0dGFjaGVkCiZndDsgJmd0OyAmZ3Q7ICZndDsgdG8gYnJva2VuICpicmlkZ2VzKiwgbm90IHRv
-IFZHQSBkZXZpY2VzLgomZ3Q7ICZndDsgJmd0OyAmZ3Q7CiZndDsgJmd0OyAmZ3Q7ICZndDsgSWYg
-YSBicmlkZ2UgZm9yd2FyZHMgVkdBIGFjY2Vzc2VzIHJlZ2FyZGxlc3Mgb2YgaG93IGl0cyBWR0Eg
-RW5hYmxlIGJpdAomZ3Q7ICZndDsgJmd0OyAmZ3Q7IGlzIHNldCwgdGhhdCBtZWFucyBWR0EgYXJi
-aXRyYXRpb24gKGluIHZnYWFyYi5jKSBjYW5ub3Qgd29yawomZ3Q7ICZndDsgJmd0OyAmZ3Q7IGNv
-cnJlY3RseSwgc28gbWVyZWx5IHNldHRpbmcgdGhlIGRlZmF1bHQgVkdBIGRldmljZSBvbmNlIGlu
-IGEgcXVpcmsgaXMKJmd0OyAmZ3Q7ICZndDsgJmd0OyBub3Qgc3VmZmljaWVudC4gIFlvdSB3b3Vs
-ZCBoYXZlIHRvIHNvbWVob3cgZGlzYWJsZSBhbnkgZnV0dXJlIGF0dGVtcHRzCiZndDsgJmd0OyAm
-Z3Q7ICZndDsgdG8gdXNlIG90aGVyIFZHQSBkZXZpY2VzLiAgT25seSB0aGUgVkdBIGRldmljZSBi
-ZWxvdyB0aGlzIGRlZmVjdGl2ZQomZ3Q7ICZndDsgJmd0OyAmZ3Q7IGJyaWRnZSBpcyB1c2FibGUu
-ICBBbnkgb3RoZXIgVkdBIGRldmljZXMgaW4gdGhlIHN5c3RlbSB3b3VsZCBiZQomZ3Q7ICZndDsg
-Jmd0OyAmZ3Q7IHVzZWxlc3MuCiZndDsgJmd0OyAmZ3Q7ICZndDsKJmd0OyAmZ3Q7ICZndDsgJmd0
-OyAmZ3Q7IFNvIHdlIHByb3ZpZGUgYSBxdWlyayB0byBmaXggWG9yZyBhdXRvLWRldGVjdGlvbi4K
-Jmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyBTZWUgc2lt
-aWxhciBidWc6CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZn
-dDsgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LXBjaS9wYXRjaC8y
-MDE3MDYxOTAyMzUyOC4xMTUzMi0xLWRqYUBheHRlbnMubmV0LwomZ3Q7ICZndDsgJmd0OyAmZ3Q7
-CiZndDsgJmd0OyAmZ3Q7ICZndDsgVGhpcyBwYXRjaCB3YXMgbmV2ZXIgbWVyZ2VkLiAgSWYgd2Ug
-bWVyZ2VkIGEgcmV2aXNlZCB2ZXJzaW9uLCBwbGVhc2UKJmd0OyAmZ3Q7ICZndDsgJmd0OyBjaXRl
-IHRoZSBTSEExIGluc3RlYWQuCiZndDsgJmd0OyAmZ3Q7CiZndDsgJmd0OyAmZ3Q7IFRoaXMgcGF0
-Y2ggaGFzIG5ldmVyIG1lcmdlZCwgYW5kIEkgZm91bmQgdGhhdCBpdCBpcyB1bm5lY2Vzc2FyeSBh
-ZnRlcgomZ3Q7ICZndDsgJmd0OyBjb21taXQgYTM3YzBmNDg5NTBiNTZmNmVmMmVlNjM3ICgidmdh
-YXJiOiBTZWxlY3QgYSBkZWZhdWx0IFZHQSBkZXZpY2UKJmd0OyAmZ3Q7ICZndDsgZXZlbiBpZiB0
-aGVyZSdzIG5vIGxlZ2FjeSBWR0EiKS4gTWF5YmUgdGhpcyBBU3BlZWQgcGF0Y2ggaXMgYWxzbwom
-Z3Q7ICZndDsgJmd0OyB1bm5lY2Vzc2FyeS4gSWYgaXQgaXMgc3RpbGwgbmVlZGVkLCBJJ2xsIGlu
-dmVzdGlnYXRlIHRoZSByb290IGNhdXNlLgomZ3Q7ICZndDsKJmd0OyAmZ3Q7IEkgZm91bmQgdGhh
-dCB2Z2FfYXJiX2RldmljZV9pbml0KCkgYW5kIHBjaWJpb3NfaW5pdCgpIGFyZSBib3RoIHdyYXBw
-ZWQKJmd0OyAmZ3Q7IGJ5IHN1YnN5c19pbml0Y2FsbCgpLCB3aGljaCBtZWFucyB0aGVpciBzZXF1
-ZW5jZSBpcyB1bnByZWRpY3RhYmxlLiBBbmQKJmd0OyAmZ3Q7IHVuZm9ydHVuYXRlbHksIGluIG91
-ciBwbGF0Zm9ybSB2Z2FfYXJiX2RldmljZV9pbml0KCkgaXMgY2FsbGVkIGJlZm9yZQomZ3Q7ICZn
-dDsgcGNpYmlvc19pbml0KCksIHdoaWNoIG1ha2VzIHZnYV9hcmJfZGV2aWNlX2luaXQoKSBmYWls
-IHRvIHNldCBhCiZndDsgJmd0OyBkZWZhdWx0IHZnYSBkZXZpY2UuIFRoaXMgaXMgdGhlIHJvb3Qg
-Y2F1c2Ugd2h5IHdlIHRob3VnaHQgdGhhdCB3ZQomZ3Q7ICZndDsgc3RpbGwgbmVlZCBhIHF1aXJr
-IGZvciBBU1QyNTAwLgomZ3Q7IAomZ3Q7IERvZXMgdGhpcyBtZWFuIHRoZXJlIGlzIG5vIGhhcmR3
-YXJlIGRlZmVjdCBoZXJlPyAgVGhlIFZHQSBFbmFibGUgYml0CiZndDsgd29ya3MgY29ycmVjdGx5
-PwoKClRoZSBBU1QyNTAwIEJNQyBjYXJkIHdlIGFyZSB1c2luZyBjb25zaXN0IG9mIGEgUENJLXRv
-LVBDSSBCcmlkZ2UgKDFhMDM6MTE1MCkKYW5kIGEgUENJIFZHQSBkZXZpY2UgKDFhMDM6MjAwMCku
-IFRoZSB2YWx1ZSBvZiB0aGUgQnJpZGdlIENvbnRyb2wgcmVnaXN0ZXIKaW4gaXRzIFBDSS10by1Q
-Q0kgQnJpZGdlIENvbmZpZ3VyYXRpb24gUmVnaXN0ZXJzIGlzIDB4MDAwMC4gVGh1cywgdGhlIFZH
-QQpFbmFibGUgYml0IGluIHRoZSBCcmlkZ2UgQ29udHJvbCByZWdpc3RlciBkbyBub3Qgc2V0LCBh
-bmQgdGhlIFZHQQpFbmFibGUgYml0IGlzIG5vdCB3cml0YWJsZS4gCgpUaGUgdG9wb2xvZ3kgb2Yg
-dGhpcyBCTUMgY2FyZCBpcyBpbGx1c3RyYXRlZCBhcyBmb2xsb3dpbmc6CgogICAgIC9zeXMvZGV2
-aWNlcy9wY2kwMDAwOjAwCiAgICAgfC0tIDAwMDA6MDA6MGMuMAogICAgIHwgICB8LS0gY2xhc3Mg
-KDB4MDYwNDAwKQogICAgIHwgICB8LS0gdmVuZG9yICgweDAwMTQpCiAgICAgfCAgIHwtLSBkZXZp
-Y2UgKDB4N2EwOSkKICAgICB8ICAgfC0tIC4uLgogICAgIHwgICB8LS0gMDAwMDowNDowMC4wCiAg
-ICAgfCAgIHwgICB8IC0tIGNsYXNzICgweDA2MDQwMCkKICAgICB8ICAgfCAgIHwgLS0gZGV2aWNl
-ICgweDExNTApCiAgICAgfCAgIHwgICB8IC0tIHZlbmRvciAoMHgxYTAzKQogICAgIHwgICB8ICAg
-fCAtLSByZXZpc2lvbiAoMHgwNCkKICAgICB8ICAgfCAgIHwgLS0gLi4uCiAgICAgfCAgIHwgICB8
-IC0tIDAwMDA6MDU6MDAuMCAKICAgICB8ICAgfCAgIHwgICAgfCAtLSBjbGFzcyAgKDB4MDMwMDAw
-KQogICAgIHwgICB8ICAgfCAgICB8IC0tIGRldmljZSAoMHgyMDAwKQogICAgIHwgICB8ICAgfCAg
-ICB8IC0tIHZlbmRvciAoMHgxYTAzKQogICAgIHwgICB8ICAgfCAgICB8IC0tIGlycSAoNTEpCiAg
-ICAgfCAgIHwgICB8ICAgIHwgLS0gaTJjLTYKICAgICB8ICAgfCAgIHwgICAgfCAtLSBkcm0KICAg
-ICB8ICAgfCAgIHwgICAgfCAtLSBncmFwaGljcyAKICAgICB8ICAgfCAgIHwgICAgfCAtLSAuLi4K
-ICAgICB8ICAgYC0tIHVldmVudAogICAgIGAtLSAuLi4KClRoZSBmb2xsb3dpbmcgaW5mb3JtYXRp
-b24gaXMgZ2V0dGVkIGZyb20gbHNwY2kgLXZ2eHg6CgoKMDQ6MDAuMCBQQ0kgYnJpZGdlOiBBU1BF
-RUQgVGVjaG5vbG9neSwgSW5jLiBBU1QxMTUwIFBDSS10by1QQ0kgQnJpZGdlIChyZXYgMDQpIChw
-cm9nLWlmIDAwIFtOb3JtYWwgZGVjb2RlXSkKCUNvbnRyb2w6IEkvTysgTWVtKyBCdXNNYXN0ZXIr
-IFNwZWNDeWNsZS0gTWVtV0lOVi0gVkdBU25vb3AtIFBhckVyci0gU3RlcHBpbmctIFNFUlItIEZh
-c3RCMkItIERpc0lOVHgtCglTdGF0dXM6IENhcCsgNjZNSHotIFVERi0gRmFzdEIyQi0gUGFyRXJy
-LSBERVZTRUw9ZmFzdCAmZ3Q7VEFib3J0LSA8dGFib3J0LSA8bWFib3J0LT0iIj5TRVJSLSA8cGVy
-ci0gaW50eC09IiIgbGF0ZW5jeTo9IiIgMD0iIiBpbnRlcnJ1cHQ6PSIiIHBpbj0iIiBhPSIiIHJv
-dXRlZD0iIiB0bz0iIiBpcnE9IiIgNTE9IiIgbnVtYT0iIiBub2RlOj0iIiBidXM6PSIiIHByaW1h
-cnk9IjA0LCIgc2Vjb25kYXJ5PSIwNSwiIHN1Ym9yZGluYXRlPSIwNSwiIHNlYy1sYXRlbmN5PSIw
-IiBpPSIiIG89IiIgYmVoaW5kPSIiIGJyaWRnZTo9IiIgMDAwMDQwMDAtMDAwMDRmZmY9IiIgbWVt
-b3J5PSIiIDQxMDAwMDAwLTQyN2ZmZmZmPSIiIHN0YXR1czo9IiIgNjZtaHorPSIiIGZhc3RiMmIt
-PSIiIHBhcmVyci09IiIgZGV2c2VsPSJtZWRpdW0iPlRBYm9ydC0gPHRhYm9ydC0gPG1hYm9ydC09
-IiIgPHNlcnItPSIiIDxwZXJyLT0iIiBicmlkZ2VjdGw6PSIiIHBhcml0eS09IiIgc2Vyci09IiIg
-bm9pc2EtPSIiIHZnYS09IiIgbWFib3J0LT0iIj5SZXNldC0gRmFzdEIyQi0KCQlQcmlEaXNjVG1y
-LSBTZWNEaXNjVG1yLSBEaXNjVG1yU3RhdC0gRGlzY1RtclNFUlJFbi0KCUNhcGFiaWxpdGllczog
-PGFjY2VzcyBkZW5pZWQ9IiI+CjAwOiAwMyAxYSA1MCAxMSAwNyAwMCAxMCAwMCAwNCAwMCAwNCAw
-NiAwMCAwMCAwMSAwMAoxMDogMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDQgMDUgMDUgMDAgNDEg
-NDEgMjAgMDIKMjA6IDAwIDQxIDcwIDQyIGYxIGZmIDAxIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAw
-IDAwCjMwOiAwMCAwMCAwMCAwMCA1MCAwMCAwMCAwMCAwMCAwMCAwMCAwMCA2MyAwMSAwMCAwMAoK
-MDU6MDAuMCBWR0EgY29tcGF0aWJsZSBjb250cm9sbGVyOiBBU1BFRUQgVGVjaG5vbG9neSwgSW5j
-LiBBU1BFRUQgR3JhcGhpY3MgRmFtaWx5IChyZXYgNDEpIChwcm9nLWlmIDAwIFtWR0EgY29udHJv
-bGxlcl0pCglTdWJzeXN0ZW06IEFTUEVFRCBUZWNobm9sb2d5LCBJbmMuIEFTUEVFRCBHcmFwaGlj
-cyBGYW1pbHkKCUNvbnRyb2w6IEkvTysgTWVtKyBCdXNNYXN0ZXIrIFNwZWNDeWNsZS0gTWVtV0lO
-Vi0gVkdBU25vb3ArIFBhckVyci0gU3RlcHBpbmctIFNFUlItIEZhc3RCMkItIERpc0lOVHgtCglT
-dGF0dXM6IENhcCsgNjZNSHotIFVERi0gRmFzdEIyQi0gUGFyRXJyLSBERVZTRUw9bWVkaXVtICZn
-dDtUQWJvcnQtIDx0YWJvcnQtIDxtYWJvcnQtPSIiPlNFUlItIDxwZXJyLSBpbnR4LT0iIiBsYXRl
-bmN5Oj0iIiAwPSIiIGludGVycnVwdDo9IiIgcGluPSIiIGE9IiIgcm91dGVkPSIiIHRvPSIiIGly
-cT0iIiA1MT0iIiBudW1hPSIiIG5vZGU6PSIiIHJlZ2lvbj0iIiAwOj0iIiBtZW1vcnk9IiIgYXQ9
-IiIgNDEwMDAwMDA9IiIgKDMyLWJpdCw9IiIgbm9uLXByZWZldGNoYWJsZSk9IiIgW3NpemU9IjE2
-TV0iIDE6PSIiIDQyMDAwMDAwPSIiIDI6PSIiIGk9IiIgbz0iIiBwb3J0cz0iIiA0MDAwPSIiIGNh
-cGFiaWxpdGllczo9IiIgPGFjY2Vzcz0iIiBkZW5pZWQ9IiI+CglLZXJuZWwgZHJpdmVyIGluIHVz
-ZTogYXN0CjAwOiAwMyAxYSAwMCAyMCAyNyAwMCAxMCAwMiA0MSAwMCAwMCAwMyAwMCAwMCAwMCAw
-MAoxMDogMDAgMDAgMDAgNDEgMDAgMDAgMDAgNDIgMDEgNDAgMDAgMDAgMDAgMDAgMDAgMDAKMjA6
-IDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAzIDFhIDAwIDIwCjMwOiAwMCAw
-MCAwMCAwMCA0MCAwMCAwMCAwMCAwMCAwMCAwMCAwMCA2MyAwMSAwMCAwMAoKCiZndDsgCiZndDsg
-Jmd0OyBJIHRoaW5rIHRoZSBiZXN0IHNvbHV0aW9uIGlzIG1ha2UgdmdhX2FyYl9kZXZpY2VfaW5p
-dCgpIGJlIHdyYXBwZWQgYnkKJmd0OyAmZ3Q7IHN1YnN5c19pbml0Y2FsbF9zeW5jKCksIGRvIHlv
-dSB0aGluayBzbz8KJmd0OyAKJmd0OyBIbW0uICBVbmZvcnR1bmF0ZWx5IHRoZSBzZW1hbnRpY3Mg
-b2Ygc3Vic3lzX2luaXRjYWxsX3N5bmMoKSBhcmUgbm90CiZndDsgZG9jdW1lbnRlZCwgc28gSSdt
-IG5vdCBzdXJlIGV4YWN0bHkgKndoeSogc3VjaCBhIGNoYW5nZSB3b3VsZCB3b3JrIGFuZAomZ3Q7
-IHdoZXRoZXIgd2UgY291bGQgcmVseSBvbiBpdCB0byBjb250aW51ZSB3b3JraW5nLgomZ3Q7IAom
-Z3Q7IHBjaWJpb3NfaW5pdCgpIGlzbid0IHZlcnkgY29uc2lzdGVudCBhY3Jvc3MgYXJjaGVzLiAg
-T24gc29tZSwKJmd0OyBpbmNsdWRpbmcgYWxwaGEsIG1pY3JvYmxhemUsIHNvbWUgTUlQUyBwbGF0
-Zm9ybXMsIHBvd2VycGMsIGFuZCBzaCwgaXQKJmd0OyBlbnVtZXJhdGVzIFBDSSBkZXZpY2VzLiAg
-T24gb3RoZXJzIChpYTY0LCBwYXJpc2MsIHNwYXJjLCB4ODYpLCBpdCBkb2VzCiZndDsgYmFzaWNh
-bGx5IG5vdGhpbmcuICBUaGF0IG1ha2VzIGxpZmUgYSBsaXR0bGUgZGlmZmljdWx0LgomZ3Q7IAom
-Z3Q7IHZnYV9hcmJfZGV2aWNlX2luaXQoKSBpcyBhIHN1YnN5c19pbml0Y2FsbCgpIGFuZCB3YW50
-cyB0byBsb29rIHRocm91Z2gKJmd0OyBhbGwgdGhlIFBDSSBkZXZpY2VzLiAgVGhhdCdzIGEgbGl0
-dGxlIHByb2JsZW1hdGljIGZvciBhcmNoZXMgd2hlcmUKJmd0OyBwY2liaW9zX2luaXQoKSBpcyBh
-bHNvIGEgc3Vic3lzX2luaXRjYWxsKCkgYW5kIGVudW1lcmF0ZXMgUENJIGRldmljZXMuCiZndDsg
-CiZndDsgU29ycnksIHRoYXQncyBubyBhbnN3ZXIgZm9yIHlvdS4gIEp1c3QgbW9yZSBxdWVzdGlv
-bnMgOikKJmd0OyAKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7IFNpZ25lZC1vZmYtYnk6IEh1YWNh
-aSBDaGVuIDxjaGVuaHVhY2FpQGxvb25nc29uLmNuPgomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsg
-U2lnbmVkLW9mZi1ieTogSmluZ2ZlbmcgU3VpIDxzdWlqaW5nZmVuZ0Bsb29uZ3Nvbi5jbj4KJmd0
-OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7IC0tLQomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgIGRyaXZl
-cnMvcGNpL3F1aXJrcy5jIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICAxIGZpbGUgY2hhbmdlZCwgNDcgaW5z
-ZXJ0aW9ucygrKQomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAm
-Z3Q7IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJr
-cy5jCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyBpbmRleCA2YWI0YjNiYmEzNmIuLmFkZjU0OTA3
-MDZhZCAxMDA2NDQKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7IC0tLSBhL2RyaXZlcnMvcGNpL3F1
-aXJrcy5jCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArKysgYi9kcml2ZXJzL3BjaS9xdWlya3Mu
-YwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgQEAgLTI4LDYgKzI4LDcgQEAKJmd0OyAmZ3Q7ICZn
-dDsgJmd0OyAmZ3Q7ICAjaW5jbHVkZSA8bGludXggcGxhdGZvcm1fZGF0YT0iIiB4ODY9IiIgYXBw
-bGUuaD0iIj4KJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICAjaW5jbHVkZSA8bGludXggcG1fcnVu
-dGltZS5oPSIiPgomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgICNpbmNsdWRlIDxsaW51eCBzd2l0
-Y2h0ZWMuaD0iIj4KJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsjaW5jbHVkZSA8bGludXggdmdh
-YXJiLmg9IiI+CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyAgI2luY2x1ZGUgPGFzbSBkbWEuaD0i
-Ij4gLyogaXNhX2RtYV9icmlkZ2VfYnVnZ3kgKi8KJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICAj
-aW5jbHVkZSAicGNpLmgiCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OwomZ3Q7ICZndDsgJmd0OyAm
-Z3Q7ICZndDsgQEAgLTI5Nyw2ICsyOTgsNTIgQEAgc3RhdGljIHZvaWQgbG9vbmdzb25fbXJyc19x
-dWlyayhzdHJ1Y3QgcGNpX2RldiAqZGV2KQomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgIH0KJmd0
-OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICBERUNMQVJFX1BDSV9GSVhVUF9FTkFCTEUoUENJX0FOWV9J
-RCwgUENJX0FOWV9JRCwgbG9vbmdzb25fbXJyc19xdWlyayk7CiZndDsgJmd0OyAmZ3Q7ICZndDsg
-Jmd0OwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsg
-K3N0YXRpYyB2b2lkIGFzcGVlZF9maXh1cF92Z2FhcmIoc3RydWN0IHBjaV9kZXYgKnBkZXYpCiZn
-dDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArewomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAg
-c3RydWN0IHBjaV9kZXYgKmJyaWRnZTsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgICAgIHN0
-cnVjdCBwY2lfYnVzICpidXM7CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAgICBzdHJ1Y3Qg
-cGNpX2RldiAqdmRldnAgPSBOVUxMOwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgdTE2
-IGNvbmZpZzsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAm
-Z3Q7ICsgICAgIGJ1cyA9IHBkZXYtJmd0O2J1czsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsg
-ICAgIGJyaWRnZSA9IGJ1cy0mZ3Q7c2VsZjsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsKJmd0
-OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgICAgIC8qIElzIFZHQSByb3V0ZWQgdG8gdXM/ICovCiZn
-dDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAgICBpZiAoYnJpZGdlICZhbXA7JmFtcDsgKHBjaV9p
-c19icmlkZ2UoYnJpZGdlKSkpIHsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgICAgICAgICAg
-ICAgcGNpX3JlYWRfY29uZmlnX3dvcmQoYnJpZGdlLCBQQ0lfQlJJREdFX0NPTlRST0wsICZhbXA7
-Y29uZmlnKTsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsKJmd0OyAmZ3Q7ICZndDsgJmd0OyAm
-Z3Q7ICsgICAgICAgICAgICAgLyogWWVzLCB0aGlzIGJyaWRnZSBpcyBQQ0kgYnJpZGdlLXRvLWJy
-aWRnZSBzcGVjIGNvbXBsaWFudCwKJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgICAgICAgICAg
-ICAgICogIGp1c3QgcmV0dXJuIQomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgICAgICAg
-ICAgKi8KJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgICAgICAgICAgICAgaWYgKGNvbmZpZyAm
-YW1wOyBQQ0lfQlJJREdFX0NUTF9WR0EpCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAgICAg
-ICAgICAgICAgICAgICAgcmV0dXJuOwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKwomZ3Q7ICZn
-dDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgICAgICAgICBkZXZfd2FybigmYW1wO3BkZXYtJmd0O2Rl
-diwgIlZHQSBicmlkZ2UgY29udHJvbCBpcyBub3QgZW5hYmxlZFxuIik7CiZndDsgJmd0OyAmZ3Q7
-ICZndDsgJmd0OyArICAgICB9CiZndDsgJmd0OyAmZ3Q7ICZndDsKJmd0OyAmZ3Q7ICZndDsgJmd0
-OyBZb3UgY2Fubm90IGFzc3VtZSB0aGF0IGEgYnJpZGdlIGlzIGRlZmVjdGl2ZSBqdXN0IGJlY2F1
-c2UKJmd0OyAmZ3Q7ICZndDsgJmd0OyBQQ0lfQlJJREdFX0NUTF9WR0EgaXMgbm90IHNldC4KJmd0
-OyAmZ3Q7ICZndDsgJmd0OwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgLyogSnVzdCBy
-ZXR1cm4gaWYgdGhlIHN5c3RlbSBhbHJlYWR5IGhhdmUgYSBkZWZhdWx0IGRldmljZSAqLwomZ3Q7
-ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgaWYgKHZnYV9kZWZhdWx0X2RldmljZSgpKQomZ3Q7
-ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgICAgICAgICByZXR1cm47CiZndDsgJmd0OyAmZ3Q7
-ICZndDsgJmd0OyArCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAgICAvKiBObyBkZWZhdWx0
-IHZnYSBkZXZpY2UgKi8KJmd0OyAmZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgICAgIHdoaWxlICgodmRl
-dnAgPSBwY2lfZ2V0X2NsYXNzKFBDSV9DTEFTU19ESVNQTEFZX1ZHQSAmbHQ7Jmx0OyA4LCB2ZGV2
-cCkpKSB7CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAgICAgICAgICAgIGlmICh2ZGV2cC0m
-Z3Q7dmVuZG9yICE9IDB4MWEwMykgewomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgICAg
-ICAgICAgICAgICAgIC8qIEhhdmUgb3RoZXIgdmdhIGRldmNpZSBpbiB0aGUgc3lzdGVtLCBkbyBu
-b3RoaW5nICovCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAgICAgICAgICAgICAgICAgICAg
-ZGV2X2luZm8oJmFtcDtwZGV2LSZndDtkZXYsICJBbm90aGVyIGJvb3QgdmdhIGRldmljZTogMHgl
-eDoweCV4XG4iLAomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgdmRldnAtJmd0O3ZlbmRvciwgdmRldnAtJmd0O2RldmljZSk7CiZndDsgJmd0OyAm
-Z3Q7ICZndDsgJmd0OyArICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOwomZ3Q7ICZndDsgJmd0
-OyAmZ3Q7ICZndDsgKyAgICAgICAgICAgICB9CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArICAg
-ICB9CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyAr
-ICAgICB2Z2Ffc2V0X2RlZmF1bHRfZGV2aWNlKHBkZXYpOwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZn
-dDsgKwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKyAgICAgZGV2X2luZm8oJmFtcDtwZGV2LSZn
-dDtkZXYsICJCb290IHZnYSBkZXZpY2Ugc2V0IGFzIDB4JXg6MHgleFxuIiwKJmd0OyAmZ3Q7ICZn
-dDsgJmd0OyAmZ3Q7ICsgICAgICAgICAgICAgICAgICAgICBwZGV2LSZndDt2ZW5kb3IsIHBkZXYt
-Jmd0O2RldmljZSk7CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyArfQomZ3Q7ICZndDsgJmd0OyAm
-Z3Q7ICZndDsgK0RFQ0xBUkVfUENJX0ZJWFVQX0NMQVNTX0ZJTkFMKDB4MWEwMywgMHgyMDAwLCBQ
-Q0lfQ0xBU1NfRElTUExBWV9WR0EsIDgsIGFzcGVlZF9maXh1cF92Z2FhcmIpOwomZ3Q7ICZndDsg
-Jmd0OyAmZ3Q7ICZndDsgKwomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgKwomZ3Q7ICZndDsgJmd0
-OyAmZ3Q7ICZndDsgIC8qCiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyAgICogVGhlIE1lbGxhbm94
-IFRhdm9yIGRldmljZSBnaXZlcyBmYWxzZSBwb3NpdGl2ZSBwYXJpdHkgZXJyb3JzLiAgRGlzYWJs
-ZQomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgICAqIHBhcml0eSBlcnJvciByZXBvcnRpbmcuCiZn
-dDsgJmd0OyAmZ3Q7ICZndDsgJmd0OyAtLQomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICZndDsgMi4yNy4w
-CiZndDsgJmd0OyAmZ3Q7ICZndDsgJmd0Owo8L2FzbT48L2xpbnV4PjwvbGludXg+PC9saW51eD48
-L2xpbnV4Pjwvc3VpamluZ2ZlbmdAbG9vbmdzb24uY24+PC9jaGVuaHVhY2FpQGxvb25nc29uLmNu
-PjwvcGVyci0+PC90YWJvcnQtPjwvYWNjZXNzPjwvdGFib3J0LT48L3BlcnItPjwvdGFib3J0LT48
-L2hlbGdhYXNAa2VybmVsLm9yZz48L2NoZW5odWFjYWlAZ21haWwuY29tPjwvc3VpamluZ2ZlbmdA
-bG9vbmdzb24uY24+PC9qaWF4dW4ueWFuZ0BmbHlnb2F0LmNvbT48L2xpbnV4LXBjaUB2Z2VyLmtl
-cm5lbC5vcmc+PC9iaGVsZ2Fhc0Bnb29nbGUuY29tPjwvY2hlbmh1YWNhaUBsb29uZ3Nvbi5jbj48
-L2NoZW5odWFjYWlAZ21haWwuY29tPjwvaGVsZ2Fhc0BrZXJuZWwub3JnPg==
+On Tue, May 18, 2021 at 10:31:56AM +0800, 隋景峰 wrote:
+> &gt; -----Original Messages-----
+
+Wow, this is ugly (the "&gt;" instead of ">").  Can you figure out
+how to respond in the usual plain-text way?
+
+> &gt; From: "Bjorn Helgaas" <helgaas@kernel.org>
+> &gt; Sent Time: 2021-05-18 02:28:10 (Tuesday)
+> &gt; To: "Huacai Chen" <chenhuacai@gmail.com>
+> &gt; Cc: "Huacai Chen" <chenhuacai@loongson.cn>, "Bjorn Helgaas" <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>, "Jingfeng Sui" <suijingfeng@loongson.cn>
+> &gt; Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving bridge
+> &gt; 
+> &gt; On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> &gt; &gt; On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> &gt; &gt; &gt; On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> &gt; &gt; &gt; &gt; On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> &gt; &gt; &gt; &gt; &gt; According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> &gt; &gt; &gt; &gt; &gt; VGA Enable bit which modifies the response to VGA compatible addresses.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; The bridge spec is pretty old, and most of the content has been
+> &gt; &gt; &gt; &gt; incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> &gt; &gt; &gt; &gt; 7.5.1.3.13" here instead.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; &gt; If the VGA Enable bit is set, the bridge will decode and forward the
+> &gt; &gt; &gt; &gt; &gt; following accesses on the primary interface to the secondary interface.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; *Which* following accesses?  The structure of English requires that if
+> &gt; &gt; &gt; &gt; you say "the following accesses," you must continue by *listing* the
+> &gt; &gt; &gt; &gt; accesses.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; &gt; The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> &gt; &gt; &gt; &gt; &gt; bridge control register, which causes vgaarb subsystem don't think the
+> &gt; &gt; &gt; &gt; &gt; VGA card behind the bridge as a valid boot vga device.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; s/hardward/bridge/
+> &gt; &gt; &gt; &gt; s/vga/VGA/ (also in code comments and dmesg strings below)
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> &gt; &gt; &gt; &gt; since it apparently has a VGA class code.  But here you say the
+> &gt; &gt; &gt; &gt; AST2500 has a Bridge Control register, which suggests that it's a
+> &gt; &gt; &gt; &gt; bridge.  If AST2500 is some sort of combination that includes both a
+> &gt; &gt; &gt; &gt; bridge and a VGA device, please outline that topology.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; But the hardware defect is that some bridges forward VGA accesses even
+> &gt; &gt; &gt; &gt; though their VGA Enable bit is not set?  The quirk should be attached
+> &gt; &gt; &gt; &gt; to broken *bridges*, not to VGA devices.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> &gt; &gt; &gt; &gt; is set, that means VGA arbitration (in vgaarb.c) cannot work
+> &gt; &gt; &gt; &gt; correctly, so merely setting the default VGA device once in a quirk is
+> &gt; &gt; &gt; &gt; not sufficient.  You would have to somehow disable any future attempts
+> &gt; &gt; &gt; &gt; to use other VGA devices.  Only the VGA device below this defective
+> &gt; &gt; &gt; &gt; bridge is usable.  Any other VGA devices in the system would be
+> &gt; &gt; &gt; &gt; useless.
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; &gt; So we provide a quirk to fix Xorg auto-detection.
+> &gt; &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; &gt; See similar bug:
+> &gt; &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; &gt; https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> &gt; &gt; &gt; &gt;
+> &gt; &gt; &gt; &gt; This patch was never merged.  If we merged a revised version, please
+> &gt; &gt; &gt; &gt; cite the SHA1 instead.
+> &gt; &gt; &gt;
+> &gt; &gt; &gt; This patch has never merged, and I found that it is unnecessary after
+> &gt; &gt; &gt; commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> &gt; &gt; &gt; even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> &gt; &gt; &gt; unnecessary. If it is still needed, I'll investigate the root cause.
+> &gt; &gt;
+> &gt; &gt; I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> &gt; &gt; by subsys_initcall(), which means their sequence is unpredictable. And
+> &gt; &gt; unfortunately, in our platform vga_arb_device_init() is called before
+> &gt; &gt; pcibios_init(), which makes vga_arb_device_init() fail to set a
+> &gt; &gt; default vga device. This is the root cause why we thought that we
+> &gt; &gt; still need a quirk for AST2500.
+> &gt; 
+> &gt; Does this mean there is no hardware defect here?  The VGA Enable bit
+> &gt; works correctly?
+> 
+> 
+> The AST2500 BMC card we are using consist of a PCI-to-PCI Bridge (1a03:1150)
+> and a PCI VGA device (1a03:2000). The value of the Bridge Control register
+> in its PCI-to-PCI Bridge Configuration Registers is 0x0000. Thus, the VGA
+> Enable bit in the Bridge Control register do not set, and the VGA
+> Enable bit is not writable. 
+
+If VGA Enable is 0 and cannot be set to 1, the bridge should *never*
+forward VGA accesses to its secondary bus.  The generic VGA driver
+that uses the legacy [mem 0xa0000-0xbffff] range should not work with
+the VGA device at 05:00.0, and that device cannot participate in the
+VGA arbitration scheme, which relies on the VGA Enable bit.
+
+If you have a driver for 05:00.0 that doesn't need the legacy memory
+range, it's possible that it may work.  But VGA arbitration will be
+broken, and if 05:00.0 needs to be initialized by an option ROM, that
+probably won't work either.
+
+If the 04:00.0 bridge *always* forwards VGA accesses, even though its
+VGA Enable bit is always zero, then the bridge is broken.  In that
+case, the generic VGA driver should work with the 05:00.0 device, but
+VGA arbitration will be limited.  I'm not sure, but the arbiter
+*might* be able to use the VGA Enable bit in the 00:0c.0 bridge to
+control VGA access to 05:00.0.  You wouldn't be able to have more than
+one VGA device below 00:0c.0, and you may not be able have more than
+one in the entire system.
+
+> The topology of this BMC card is illustrated as following:
+> 
+>      /sys/devices/pci0000:00
+>      |-- 0000:00:0c.0
+>      |   |-- class (0x060400)
+>      |   |-- vendor (0x0014)
+>      |   |-- device (0x7a09)
+>      |   |-- ...
+>      |   |-- 0000:04:00.0
+>      |   |   | -- class (0x060400)
+>      |   |   | -- device (0x1150)
+>      |   |   | -- vendor (0x1a03)
+>      |   |   | -- revision (0x04)
+>      |   |   | -- ...
+>      |   |   | -- 0000:05:00.0 
+>      |   |   |    | -- class  (0x030000)
+>      |   |   |    | -- device (0x2000)
+>      |   |   |    | -- vendor (0x1a03)
+>      |   |   |    | -- irq (51)
+>      |   |   |    | -- i2c-6
+>      |   |   |    | -- drm
+>      |   |   |    | -- graphics 
+>      |   |   |    | -- ...
+>      |   `-- uevent
+>      `-- ...
+> 
+> The following information is getted from lspci -vvxx:
+
+Generally it's better to use "sudo lspci -vvxx" so you decode all the
+capabilities, too.  But in this case, all we care about is the Bridge
+Control register ("bridgectl"), which *is* included (and apparently is
+set to 0, since it's decoded as "vga-").
+
+> 04:00.0 PCI bridge: ASPEED Technology, Inc. AST1150 PCI-to-PCI Bridge (rev 04) (prog-if 00 [Normal decode])
+> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- <tabort- <mabort-="">SERR- <perr- intx-="" latency:="" 0="" interrupt:="" pin="" a="" routed="" to="" irq="" 51="" numa="" node:="" bus:="" primary="04," secondary="05," subordinate="05," sec-latency="0" i="" o="" behind="" bridge:="" 00004000-00004fff="" memory="" 41000000-427fffff="" status:="" 66mhz+="" fastb2b-="" parerr-="" devsel="medium">TAbort- <tabort- <mabort-="" <serr-="" <perr-="" bridgectl:="" parity-="" serr-="" noisa-="" vga-="" mabort-="">Reset- FastB2B-
+> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> 	Capabilities: <access denied="">
+> 00: 03 1a 50 11 07 00 10 00 04 00 04 06 00 00 01 00
+> 10: 00 00 00 00 00 00 00 00 04 05 05 00 41 41 20 02
+> 20: 00 41 70 42 f1 ff 01 00 00 00 00 00 00 00 00 00
+> 30: 00 00 00 00 50 00 00 00 00 00 00 00 63 01 00 00
+> 
+> 05:00.0 VGA compatible controller: ASPEED Technology, Inc. ASPEED Graphics Family (rev 41) (prog-if 00 [VGA controller])
+> 	Subsystem: ASPEED Technology, Inc. ASPEED Graphics Family
+> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop+ ParErr- Stepping- SERR- FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium &gt;TAbort- <tabort- <mabort-="">SERR- <perr- intx-="" latency:="" 0="" interrupt:="" pin="" a="" routed="" to="" irq="" 51="" numa="" node:="" region="" 0:="" memory="" at="" 41000000="" (32-bit,="" non-prefetchable)="" [size="16M]" 1:="" 42000000="" 2:="" i="" o="" ports="" 4000="" capabilities:="" <access="" denied="">
+> 	Kernel driver in use: ast
+> 00: 03 1a 00 20 27 00 10 02 41 00 00 03 00 00 00 00
+> 10: 00 00 00 41 00 00 00 42 01 40 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 03 1a 00 20
+> 30: 00 00 00 00 40 00 00 00 00 00 00 00 63 01 00 00
