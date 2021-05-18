@@ -2,182 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B701B387603
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 12:05:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4ECB3876D4
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 12:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243039AbhERKHN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 May 2021 06:07:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:3018 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239454AbhERKHN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 May 2021 06:07:13 -0400
-Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.59])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Fks5j1TxDzlgBY;
-        Tue, 18 May 2021 18:03:37 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 18 May 2021 18:05:50 +0800
-Received: from localhost (10.52.121.12) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 18 May
- 2021 11:05:48 +0100
-Date:   Tue, 18 May 2021 11:04:03 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-Message-ID: <20210518110403.000013e6@Huawei.com>
-In-Reply-To: <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
-        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
-        <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
-        <20210511175006.00007861@Huawei.com>
-        <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
-        <20210514094755.00002081@Huawei.com>
-        <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
-        <20210517094045.00004d58@Huawei.com>
-        <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S241483AbhERKpv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 May 2021 06:45:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31560 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231177AbhERKpv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 May 2021 06:45:51 -0400
+IronPort-SDR: 193v1hvtmGJq0DV4ywdvw4DKn5KyuZUwRtwCVbdcmqvwDDR0RcZBH0YNJV13PK08Dn1UMlq74H
+ rUx9PQVzRNyA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9987"; a="180283154"
+X-IronPort-AV: E=Sophos;i="5.82,309,1613462400"; 
+   d="scan'208";a="180283154"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 03:44:32 -0700
+IronPort-SDR: hjIGpdXi3LMZc7zURqkTHxre7gM5jYWhE8080X2d4e/JZak5C5Tqt8pyYFFWbHrVqgyNpNvnR7
+ QjEYt5f1bDBQ==
+X-IronPort-AV: E=Sophos;i="5.82,309,1613462400"; 
+   d="scan'208";a="411211843"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 03:44:28 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 18 May 2021 13:44:25 +0300
+Date:   Tue, 18 May 2021 13:44:25 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] PCI/PM: Target PM state is D3cold if the upstream bridge
+ is power manageable
+Message-ID: <20210518104425.GA290141@lahna.fi.intel.com>
+References: <20210510102647.40322-1-mika.westerberg@linux.intel.com>
+ <CACK8Z6E=4Eeo-hAdXOxJLxUr57hGZbAf-YL6e6XZmoyfj2XGfQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.12]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6E=4Eeo-hAdXOxJLxUr57hGZbAf-YL6e6XZmoyfj2XGfQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 17 May 2021 10:21:14 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hi,
 
-> On Mon, May 17, 2021 at 1:42 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Fri, 14 May 2021 11:37:12 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
-> > > <Jonathan.Cameron@huawei.com> wrote:
-> > > [..]  
-> > > > > If it simplifies the kernel implementation to assume single
-> > > > > kernel-initiator then I think that's more than enough reason to block
-> > > > > out userspace, and/or provide userspace a method to get into the
-> > > > > kernel's queue for service.  
-> > > >
-> > > > This last suggestion makes sense to me. Let's provide a 'right' way
-> > > > to access the DOE from user space. I like the idea if it being possible
-> > > > to run CXL compliance tests from userspace whilst the driver is loaded.  
-> > >
-> > > Ah, and I like your observation that once the kernel provides a
-> > > "right" way to access DOE then userspace direct-access of DOE is
-> > > indeed a "you get to keep the pieces" event like any other unwanted
-> > > userspace config-write.
-> > >  
-> > > > Bjorn, given this would be a generic PCI thing, any preference for what
-> > > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
-> > > > to those for the BAR based CXL mailboxes?  
-> > >
-> > > (warning, anti-ioctl bias incoming...)  
-> >
-> > I feel very similar about ioctls - my immediate thought was to shove this in
-> > debugfs, but that feels the wrong choice if we are trying to persuade people
-> > to use it instead of writing code that directly accesses the config space.
-> >  
-> > >
-> > > Hmm, DOE has an enumeration capability, could the DOE driver use a
-> > > scheme to have a sysfs bin_attr per discovered object type? This would
-> > > make it simliar to the pci-vpd sysfs interface.  
-> >
-> > We can discover the protocols, but anything beyond that is protocol
-> > specific.  I don't think there is a enough info available by any standards
-> > defined method. Also part of the reason to allow a safe userspace interface
-> > would be to provide a generic interface for vendor protocols and things like
-> > CXL compliance tests where we will almost certainly never provide a more
-> > specific kernel interface.
-> >
-> > Whilst sysfs would work for CDAT, some protocols are challenge response rather
-> > than simple read back and that really doesn't fit well for sysfs model.
-> > If we get other protocols that are simple data read back, then I would
-> > advocate giving them a simple sysfs interface much like proposed for CDAT
-> > as it will always be simpler to use + self describing.
-> >
-> > On a lesser note it might be helpful to provide sysfs attrs for
-> > what protocols are supported.  The alternative is to let userspace run
-> > the discovery protocol. Perhaps we can do this as a later phase.
-> >  
-> > >
-> > > Then the kernel could cache objects like CDAT that don't change
-> > > outside of some invalidation event.  
-> >
-> > It's been a while since I last saw any conversation on sysfs bin_attrs
-> > but mostly I thought the feeling was pretty strongly against them for anything
-> > but a few niche usecases.
-> >
-> > Feels to me like it would break most of the usual rules in a way vpd does
-> > not (IIRC VPD is supposed to be a simple in the sense that if you write a value
-> > to a writable part, you will read back the same value).
-> >
-> > +CC Greg who is a fount of knowledge in this area (and regularly + correctly
-> > screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
-> > suggesting implementing response / request directly, but I think that is
-> > all we could do given DOE protocols can be vendor specific and the standard
-> > discovery protocol doesn't let us know the fine grained support (what commands
-> > within a given protocol).  
+On Mon, May 17, 2021 at 03:33:56PM -0700, Rajat Jain wrote:
+> [+Kai]
 > 
-> I'm not all that interested in supporting vendor defined DOE
-> shenanigans. There's more than enough published DOE protocols that the
-> kernel could limit its support to the known set. This is similar to
-> how ACPI DSMs are not generically supported, but when they appear in a
-> published specification the kernel may then grow the support. The
-> supported protocols could be limited to: CDAT, PCIe IDE, CXL
-> Compliance, etc...
+> Hi,
 > 
-> Vendor specific DOE is in the same class as unfettered /dev/mem
-> access, first you need to disable the kernel's integrity and
-> confidentiality protections, and then you can do whatever you want. If
-> a vendor wants a DOE protocol supported in the "trusted" set they can
-> simply publish the specification and send the proper support patches.
+> I don't understand the power management very well, so pardon my
+> ignorance but I have a question.
+> 
+> On Mon, May 10, 2021 at 3:30 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > ASMedia xHCI controller only supports PME from D3cold:
+> >
+> > 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
+> >   ...
+> >   Capabilities: [78] Power Management version 3
+> >           Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+> >           Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> >
+> > Now, if the controller is part of a Thunderbolt device for instance, it
+> > is connected to a PCIe switch downstream port. When the hierarchy then
+> > enters D3cold as a result of s2idle cycle pci_target_state() returns D0
+> > because the device does not support PME from the default target_state
+> > (D3hot). So what happens is that the whole hierarchy is left into D0
+> > breaking power management.at suspend time or resume time
+> 
+> Can you please provide a small call stack, when this issue is seen?
+> (I'm primarily trying to understand whether the issue is breaking
+> suspend, or the suspend is fine, but resume is broken?)
 
-Fair enough, though the interface should be root only, so a vendor shooting
-themselves in the foot this way would be no different to using pcitools
-to access the device directly (we are just providing safety from concurrency
-point of view).
+It is on suspend path. I added WARN_ON() to log the whole chain:
 
-Anyway, I can see two options for how to do this.
+[   37.820164] RIP: 0010:pci_target_state+0x7f/0x100
+[   37.820172] Code: 9d 00 00 00 01 19 c0 f7 d0 83 e0 03 83 bb 98 00 00 00 04 74 1b 40 84 ed 74 e1 0f b6 93 9e 00 00 00 f6 c2 1f 74 3d 85 c0 75 1c <0f> 0b 31 c0 eb cb b8 04 00 00 00 40 84 ed 74 c1 0f b6 93 9e 00 00
+[   37.820180] RSP: 0018:ffff9e6bc037bd40 EFLAGS: 00010246
+[   37.820188] RAX: 0000000000000000 RBX: ffff8a5984da4000 RCX: 0000000000000000
+[   37.820194] RDX: 0000000000000010 RSI: 0000000000000001 RDI: 0000000000000000
+[   37.820199] RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+[   37.820203] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[   37.820208] R13: 0000000000000001 R14: 0000000000000002 R15: 0000000000000000
+[   37.820213] FS:  0000000000000000(0000) GS:ffff8a5d1f600000(0000) knlGS:0000000000000000
+[   37.820221] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   37.820243] CR2: 00007fe0fc96e1c8 CR3: 00000002a3012001 CR4: 0000000000770ee0
+[   37.820249] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   37.820253] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   37.820256] PKRU: 55555554
+[   37.820260] Call Trace:
+[   37.820265]  pci_prepare_to_sleep+0x2e/0xc0
+[   37.820275]  hcd_pci_suspend_noirq+0x58/0x130
+[   37.820281]  ? find_held_lock+0x32/0x90
+[   37.820289]  pci_pm_suspend_noirq+0x6d/0x290
+[   37.820297]  ? lock_release+0x14f/0x430
+[   37.820306]  ? pci_pm_suspend_late+0x30/0x30
+[   37.820315]  dpm_run_callback+0x61/0x1d0
+[   37.820330]  __device_suspend_noirq+0x84/0x270
+[   37.820340]  async_suspend_noirq+0x16/0x90
+[   37.820348]  async_run_entry_fn+0x2e/0x120
+[   37.820360]  process_one_work+0x27c/0x540
+[   37.820378]  worker_thread+0x4d/0x3f0
+[   37.820387]  ? rescuer_thread+0x390/0x390
+[   37.820396]  kthread+0x14c/0x170
+[   37.820403]  ? __kthread_bind_mask+0x60/0x60
+[   37.820413]  ret_from_fork+0x1f/0x30
 
-1) Per protocol interface. Would not be generic, as these work in entirely
-   different ways (some are simple read back of tables, some require complex
-   cycles of operations in the right order with data flowing in both directions)
-2) White list those protocols we are going to let through a generic interface
-   Not including CXL compliance for instance as that has nasty side effects!
 
-If we want to enable userspace DOE access, I prefer option 2.
+> > For this reason choose target_state to be D3cold if there is a upstream
+> > bridge that is power manageable.
+> 
+> It seems to me that the goal of pci_target_state() is to find the
+> lowest power state that a device can be put into, from which device
+> can still generate PME (if needed). So I'm curious why it starts with
+> target_state = PCI_D3hot in the first place? Wouldn't starting with
+> PCI_D3cold will always be better (regardless of parent bridge
+> capabilities)?
 
-Note that I wasn't that keen on a userspace interface in the first place as
-in my view these should all be handled in kernel.
-Ultimately we should have case 1 if userspace access make sense.
-However, if we do this we shouldn't pretend we are providing userspace
-access to the DOE at all.  We are providing interfaces to things that just
-happen to be implemented using DOE under the hood.
+That one is not my code but I suspect that for two reasons: one is historic
+(older devices did not have proper D3cold support), the other is that typically
+with S3/S4 it is the BIOS that in the end configures wakes (which of course
+does not work with s2idle and especially devices that are not-onboard to begin
+with).
 
-I have a prototype of a trivial ioctl based interface. I'll send it out
-as an RFC later this week.  Might add a white list, depending on where
-this discussion goes.
+I may be wrong too.
 
-Jonathan
+> And then I came across the commit 8feaec33b986 ("PCI / PM: Always
+> check PME wakeup capability for runtime wakeup support"), which
+> addresses the same device that this patch addresses, and 1 excerpt
+> from the commit log that stood out:
+> ============================================================
+>     In addition, change wakeup flag passed to pci_target_state() from false
+>     to true, because we want to find the deepest state *different from D3cold*
+>     that the device can still generate PME#. In this case, it's D0 for the
+>     device in question.
+> ============================================================
+> 
+> So, does returning D3Cold from this function break any other
+> assumption somewhere?
 
-
+I can't be 100% sure but effectively the device is in D3cold once the parent
+bridge is in D3hot as the device config space is not accessible anymore.
