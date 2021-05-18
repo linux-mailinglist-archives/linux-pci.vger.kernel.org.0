@@ -2,136 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4AE5386E45
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 02:23:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CFA8386FE9
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 04:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235539AbhERAYl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 20:24:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36648 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244329AbhERAYj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 20:24:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621297401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1CFhwAdeADWfjY+TeEUXI0dttR2qRWxmhTMkaKMBCuk=;
-        b=QCkR1k9lR/70CJKPoAFt9x5QQS+GMehcmBzYCi9u0Dlg5Ob+SCooPjB7WnwC/c3DrSarOY
-        YV300nEhEodxRtiZOi03dM1Lzw0YL93zz07I8BCb9qYUxWI5fM2bxxOehLL165LOfVO5Px
-        l/ZPEqZ1bQwT/hK3VZT+OsRngPAY+aY=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-8UC_-8F_Mdy5MlkDa8FANw-1; Mon, 17 May 2021 20:23:18 -0400
-X-MC-Unique: 8UC_-8F_Mdy5MlkDa8FANw-1
-Received: by mail-lj1-f197.google.com with SMTP id k1-20020a2e88810000b02900c00f378c5cso3856017lji.7
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 17:23:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1CFhwAdeADWfjY+TeEUXI0dttR2qRWxmhTMkaKMBCuk=;
-        b=UEYPKYAajgLqgPONurlxsv7FZwEFgqPAst9vsVQDRyUXGtuE8DSdO5qkh7k5cTqris
-         yv51wa0tvG9QDMOyFCzIXkXahbgRWeDICEyz4Wgfhh4h9VL1FVq0g13H3wZ6thpPuvQ/
-         4U13N4OCBcpCTLOYqHzgv7M6QQy43QND8vZ+1A++IWD6e6VhjjI4y1sK0kQH/duwRDgW
-         H7Yh9/QWWVfI2nz+HwS6x99cXEM5ryCUPhwVcRC9uRFU8/yT4AetbI08870q4hRLxuRS
-         YntySGvFjeY8OsldGydDQwAThQsE6wNrJHAZeAgn01ScZZcWt/14ZWzfqTZI4dG/FZ7k
-         spFw==
-X-Gm-Message-State: AOAM533ZPSK23WuHmbgG8p4Q/Bn/tzLwWewG9RRi6CbdGqHZ1wDRHW70
-        oioIOWP9S2fjnmHxyEKjv6HbxWISAUrCfHA4ZNyYKe7A6ogLfWD6QJhsuz/QQ+GCyCrRJl2v+Gi
-        xOR/QIUx1RwXS4YqxO1VbuDNT20tRdi+hNyPd
-X-Received: by 2002:a05:6512:3da1:: with SMTP id k33mr1954932lfv.114.1621297396826;
-        Mon, 17 May 2021 17:23:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhOM/aeHK0aO1U0IXX7Bz97GQL+BiXI9gjCeNpT1VQx45C+gwAHC4wQS/KVuaPU2Um6MqyAaMyIDDi2YeTCBA=
-X-Received: by 2002:a05:6512:3da1:: with SMTP id k33mr1954902lfv.114.1621297396624;
- Mon, 17 May 2021 17:23:16 -0700 (PDT)
+        id S1344966AbhERC0f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 22:26:35 -0400
+Received: from mail-dm6nam11on2076.outbound.protection.outlook.com ([40.107.223.76]:20643
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237658AbhERC0f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 May 2021 22:26:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ndMOxB8T4Z0a68Dc6ZAQLt0v7M26HFbm5Bxoyy4XQs5mK08VkST9xa2aJLxTk7K+/nI8deUHCzBbjM9cas4VbLiMZ+bP84fMmCOG8zjmMWprtnS1QjCKZ7Rv8Tbv5s8P5MMDXRFPG9qx98HNcOISH1ywkkVBnNTdAOg6awgBSids8zrUDaLr2iTLneOftAHQH1VsDWGYD1Jk+tZPwhtlVFaidN1hjP8oAeCp+UyuCc/bYPWYe87mQF7uK84DcUa47+fligPRmbqpR56Uf+0AC678XemUW9dKP2xJ7AmQQQTPnBgI9x9lgQiOg5AKQMKN2VK0BfPP8+USVxV+prFA7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9u/R+9fCwV6UYMJ2Q6MN/RpoFkfMaKjxceHzfGu6xaU=;
+ b=fMI/ep2sO9F7lYG+veUgQtMK3p6yLysDf4ZgJv4BjTZgfjZ9nJg1sEz0fyAf01LOfmUwyolxUAkcC00UL1Kc5RCCzlJzhY/H7z555M8tcOdGiExd9vVKZ24an7mkpcU0ufLNQ5ehkyZHwdTIhrXNWbHoxKKd3F7Nb7WYFo7Dl+1eSmGQxvsQXfAII63WUc4lVK4DcUHrBl6Er3As7m1cO1FF3e0Qeopjhr5w1pcLeSrpOKY3pBhum5BzlS7HcqNqbV6RL+znxopSX5medhSVtCf2wSJ0bFxgneHxFSlCR0xIQzfOmuL3zmfdRrgvlvtTh8EB0tGkqcg58rODOMwZkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=amd.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9u/R+9fCwV6UYMJ2Q6MN/RpoFkfMaKjxceHzfGu6xaU=;
+ b=FNI3qmKbDn8SMNjB7OKFK4r/A/DoKygwe5gDqIvfgIdNY/4y1/bXchzuHyUbJOl+RkrjMmtHXn2ne9aieTsKCB7h07ik7FJTGqRVLBclCpSMHkO7TzDHjVrAdcox8o302dausak3PEmDfMIjbl4JnHiO8IbBE3MeZGXX9Y5ezAw=
+Received: from DS7PR03CA0262.namprd03.prod.outlook.com (2603:10b6:5:3b3::27)
+ by BYAPR12MB2662.namprd12.prod.outlook.com (2603:10b6:a03:61::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.28; Tue, 18 May
+ 2021 02:25:14 +0000
+Received: from DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b3:cafe::e7) by DS7PR03CA0262.outlook.office365.com
+ (2603:10b6:5:3b3::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
+ Transport; Tue, 18 May 2021 02:25:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT024.mail.protection.outlook.com (10.13.172.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4129.25 via Frontend Transport; Tue, 18 May 2021 02:25:13 +0000
+Received: from prike.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 17 May
+ 2021 21:25:10 -0500
+From:   Prike Liang <Prike.Liang@amd.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
+        <sagi@grimberg.me>, <linux-nvme@lists.infradead.org>
+CC:     <Alexander.Deucher@amd.com>, <stable@vger.kernel.org>,
+        <Shyam-sundar.S-k@amd.com>, Prike Liang <Prike.Liang@amd.com>
+Subject: [PATCH v5 0/2] nvme-pci: add AMD PCIe quirk for NVMe simple suspend/resume
+Date:   Tue, 18 May 2021 10:24:33 +0800
+Message-ID: <1621304675-17874-1-git-send-email-Prike.Liang@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
- <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com> <87im3gewlu.ffs@nanos.tec.linutronix.de>
-In-Reply-To: <87im3gewlu.ffs@nanos.tec.linutronix.de>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Mon, 17 May 2021 20:23:05 -0400
-Message-ID: <CAFki+L=gp10W1ygv7zdsee=BUGpx9yPAckKr7pyo=tkFJPciEg@mail.gmail.com>
-Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when
- setting the hint
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        netdev@vger.kernel.org, chris.friesen@windriver.com,
-        Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 329a0c94-e22f-4d80-5085-08d919a42b2e
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2662:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB2662C7C6632CEDFBB9CCC8BCFB2C9@BYAPR12MB2662.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2a2eCVsONubZKaAZXX6+92YomlU/xB7ypirlDjB8qzF0yns+0pACa362HY8lTzzz4hXRB/zkMeNTx40T0/jtal30jGIzBEEwZ5ijjnDBygADRM6ajopHA9rKTc/aegxXS6mi8NNX611uKLj1DTPjtoYTtaIag3ar/OAE49Z8RFZPiq1swtW0CDX+CYLd7bmcSYbcCu+KiWC0PYTQXQUjTdxEU3aKSqL/8hx1eEbMLOwKkkv6GjMWMSftLi9PVNYiy24dEdLbgahVtN1vx7sJlRC/yvSdxs8+uGdohI+ZBPCHwZMO1KxH0+uKu30baje+HlSiSBfeOio4d2jhiJ1gi2RAdQc4gvua2tyn0vYyACtPiXMyE+/P71hRLazUfb7BOSnW1wbjFrC0qr1gVU6qdYEmvh0xx4ToNMQcAb4G3hlJf009d/rrPGvxXDYOoxEFk3fBZLUkCsV+nlafdYinTwhqZL6/Yehf7hKWFPRmjIxtPFBcLcfY6IZzQbXgHyUzEVOwcFmFpFVUwGGKfqSvpcRszEgCP2v/FJ1taiKXnaAoYUkk4OvjXLMLGvfmjvo60iV5peRimagsZg8F274IcnoTa2hO7Oa3bKS3v9d5NynWbeGVWilfXa6YJtXF41hDbhSSUkepj6l9OTd9z3suAF1dIzFC4hnGij/snBu+A5wTX6pHcs1esA+eswuE7Qs8
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(46966006)(36840700001)(2616005)(356005)(2906002)(336012)(54906003)(316002)(83380400001)(4326008)(15650500001)(8936002)(86362001)(5660300002)(36860700001)(82740400003)(26005)(82310400003)(36756003)(7696005)(426003)(16526019)(186003)(478600001)(6666004)(70206006)(8676002)(70586007)(81166007)(110136005)(47076005)(4744005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2021 02:25:13.8392
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 329a0c94-e22f-4d80-5085-08d919a42b2e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2662
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 8:04 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Mon, May 17 2021 at 18:44, Nitesh Lal wrote:
-> > On Mon, May 17, 2021 at 4:48 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> The hint was added so that userspace has a better understanding where it
-> >> should place the interrupt. So if irqbalanced ignores it anyway, then
-> >> what's the point of the hint? IOW, why is it still used drivers?
-> >>
-> > Took a quick look at the irqbalance repo and saw the following commit:
-> >
-> > dcc411e7bf    remove affinity_hint infrastructure
-> >
-> > The commit message mentions that "PJ is redesiging how affinity hinting
-> > works in the kernel, the future model will just tell us to ignore an IRQ,
-> > and the kernel will handle placement for us.  As such we can remove the
-> > affinity_hint recognition entirely".
->
-> No idea who PJ is. I really love useful commit messages. Maybe Neil can
-> shed some light on that.
->
-> > This does indicate that apparently, irqbalance moved away from the usage of
-> > affinity_hint. However, the next question is what was this future
-> > model?
->
-> I might have missed something in the last 5 years, but that's the first
-> time I hear about someone trying to cleanup that thing.
->
-> > I don't know but I can surely look into it if that helps or maybe someone
-> > here already knows about it?
->
-> I CC'ed Neil :)
+Those patch series can handle NVMe can't suspend to D3 during s2idle
+entry on some AMD platform. In this case, can be settld by assigning and
+passing a PCIe bus flag to the armed device which need NVMe shutdown opt
+in s2idle suspend and then use PCIe power setting to put the NVMe device
+to D3.
 
-Thanks, I have added PJ Waskiewicz as well who I think was referred in
-that commit message as PJ.
+Prike Liang (2):
+  PCI: add AMD PCIe quirk for nvme shutdown opt
+  nvme-pci: add AMD PCIe quirk for simple suspend/resume
 
->
-> >> Now there is another aspect to that. What happens if irqbalanced does
-> >> not run at all and a driver relies on the side effect of the hint
-> >> setting the initial affinity. Bah...
-> >>
-> >
-> > Right, but if they only rely on this API so that the IRQs are spread across
-> > all the CPUs then that issue is already resolved and these other drivers
-> > should not regress because of changing this behavior. Isn't it?
->
-> Is that true for all architectures?
+ drivers/nvme/host/pci.c | 2 ++
+ drivers/pci/probe.c     | 5 ++++-
+ drivers/pci/quirks.c    | 7 +++++++
+ include/linux/pci.h     | 2 ++
+ 4 files changed, 15 insertions(+), 1 deletion(-)
 
-Unfortunately, I don't know and that's probably why we have to be careful.
-
---
-Nitesh
+-- 
+2.7.4
 
