@@ -2,97 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5CA8386DFB
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 01:57:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92F12386E08
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 02:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344611AbhEQX6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 May 2021 19:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239176AbhEQX6w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 19:58:52 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD1FC061573
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 16:57:32 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id f12so9357505ljp.2
-        for <linux-pci@vger.kernel.org>; Mon, 17 May 2021 16:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z0qUZGfT26ITfIbWe5iIQjL/DVVaqMgfxDEgws9kkSk=;
-        b=Ah/L26KR2XPquHyuahWpR873usJ1ASZQo3dbOp0U9G424EAniTpdty05hu28QHrHKO
-         hiHx8RdVGCFJ5V3KJeXMh3vVxqiGhov9zN0/X0lk/FhR+jPDqXx/VsrtNUt5/yF2l5ow
-         DmVtm33Qk1dra3kupQQaB6J/DR8CtuOkXcA/uQpLsoo2F/mt2cGE6rOcylfudD4hHiaQ
-         i24Fg5zOEcVi6qZSCE0Yh9ahdpGP/7AZlNpJ7PXVxjDbwy0xTDhhLrJOjXE6AHDoCNNs
-         5HGk0JtSqmPPfkwcuNaLVaWcUNHd33HXSVI+RsNw+9CAGZH2ZVBMY0aAlOTq7pSWPoYf
-         bj2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z0qUZGfT26ITfIbWe5iIQjL/DVVaqMgfxDEgws9kkSk=;
-        b=mZLTZNMxbBKQlAJCegucVAxYsz0352fbJfpLtbcO6H80Pqz8cL90JoAme8Jntud2wA
-         JnCTOwLCg+ZIufn/UZChIUqZ8DpqGBKFWEiJJwBTggFzIhZnm7Coaa6kpfdxet0atyyE
-         Fi1Iu2vFLOhAOoA4a4//VwHq2qeuQQC4iqBwGruACUlTxrIfYpwc7L9fhlli29Mu+zAA
-         X1GsG9f8LqV8uHO6gN1fOg3gZqqxD2myhlzsiF4uIKlXuIpAHiht9DHb+4TNn2HLI6gA
-         pUWdZSNfWJ14hs9LC6DFEkJcoeBMQa5xeOjKaTClLu+TuMILSy5gMvuU5PFqo8zX4hIy
-         Idqg==
-X-Gm-Message-State: AOAM533CpOlx8vJGiqdruDhY1yOUfrWNYwollOPTPxTb/KwYdyuh2wW/
-        6tlPwUvaN05ouBNyNE4bYk7vfgssTR12CIeAK2RH8g==
-X-Google-Smtp-Source: ABdhPJy+6bXS2bIIKWnuU1MLzKml8LidyaBLX/xVVZdX+UIT/sHYVGWk2dH/bkRSf45nwwwObsfzXCXzDOUn3cDLOBA=
-X-Received: by 2002:a2e:814d:: with SMTP id t13mr1598888ljg.467.1621295851449;
- Mon, 17 May 2021 16:57:31 -0700 (PDT)
+        id S234883AbhERAFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 May 2021 20:05:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56162 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231430AbhERAFQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 May 2021 20:05:16 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1621296237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GHW7rXkDeIGk/f09UxCJTS97zy7h+pIJUZoYLG1bdJY=;
+        b=azzdYFzdrDBd1cHZb+nfIEb6gPXpuJVbIecZfpj1yx84NpBZx8TdlCkKaP40YGn77M9c9A
+        tl7fXGZS8t9aOWPi3BrzQ+stk8LUxYpV4RMvOEU/B7Z1KpeBRaHwi5xAbJQ4ZAzD+0Yr3i
+        fVh9qavYuNAAna0Ds5WMaCuChBhsW6qpQ4FOLsUW8+JrvdWjeB07XMATzIf2gAnB7cUt3G
+        ZaTNGxYBY91bdtLlaGiQldTD3YGcS7ll5EDzakY1Vi2y4XGcKhfBjL1QmWOVmyl15GKDG6
+        fPcFCJkCABqpd7Tf3nM9P8mltnChwshTp/sMYJxCUpHPAD5iNP4JLWbAhalZWg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1621296237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GHW7rXkDeIGk/f09UxCJTS97zy7h+pIJUZoYLG1bdJY=;
+        b=aKXRsDXe8OZvqv/EJLQWaYBETlUl0og14+GClrJNmh8MKDKm1XxVvecVbCeN1DyMaI0GdQ
+        oI+7KyfNIXqLTACg==
+To:     Nitesh Lal <nilal@redhat.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
+        "frederic\@kernel.org" <frederic@kernel.org>,
+        "juri.lelli\@redhat.com" <juri.lelli@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt\@goodmis.org" <rostedt@goodmis.org>,
+        "peterz\@infradead.org" <peterz@infradead.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "akpm\@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr\@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "stephen\@networkplumber.org" <stephen@networkplumber.org>,
+        "rppt\@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "jinyuqi\@huawei.com" <jinyuqi@huawei.com>,
+        "zhangshaokun\@hisilicon.com" <zhangshaokun@hisilicon.com>,
+        netdev@vger.kernel.org, chris.friesen@windriver.com,
+        Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when setting the hint
+In-Reply-To: <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
+References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de> <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
+Date:   Tue, 18 May 2021 02:03:57 +0200
+Message-ID: <87im3gewlu.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20210517234117.3660-1-rdunlap@infradead.org>
-In-Reply-To: <20210517234117.3660-1-rdunlap@infradead.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 May 2021 01:57:20 +0200
-Message-ID: <CACRpkdaMaNAUTVu9r7dY0=NHUS0KJ-9Hs252iPbACbs6Qnn7Wg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: ftpci100: rename macro name collision
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 18, 2021 at 1:41 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-
-> PCI_IOSIZE is defined in mach-loongson64/spaces.h, so change the name
-> of the PCI_* macros in pci-ftpci100.c to use FTPCI_* so that they are
-> more localized and won't conflict with other drivers or arches.
+On Mon, May 17 2021 at 18:44, Nitesh Lal wrote:
+> On Mon, May 17, 2021 at 4:48 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> The hint was added so that userspace has a better understanding where it
+>> should place the interrupt. So if irqbalanced ignores it anyway, then
+>> what's the point of the hint? IOW, why is it still used drivers?
+>>
+> Took a quick look at the irqbalance repo and saw the following commit:
 >
-> ../drivers/pci/controller/pci-ftpci100.c:37: warning: "PCI_IOSIZE" redefi=
-ned
->    37 | #define PCI_IOSIZE 0x00
->       |
-> In file included from ../arch/mips/include/asm/addrspace.h:13,
-> ...              from ../drivers/pci/controller/pci-ftpci100.c:15:
-> arch/mips/include/asm/mach-loongson64/spaces.h:11: note: this is the loca=
-tion of the previous definition
->    11 | #define PCI_IOSIZE SZ_16M
+> dcc411e7bf    remove affinity_hint infrastructure
 >
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Krzysztof Wilczy=C5=84ski <kw@linux.com>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: linux-mips@vger.kernel.org
-> ---
-> v2: prefix PCI_ macro names with "FT", thus use FTPCI_ for these macro na=
-mes.
->     (suggested by Linus Walleij)
+> The commit message mentions that "PJ is redesiging how affinity hinting
+> works in the kernel, the future model will just tell us to ignore an IRQ,
+> and the kernel will handle placement for us.  As such we can remove the
+> affinity_hint recognition entirely".
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+No idea who PJ is. I really love useful commit messages. Maybe Neil can
+shed some light on that.
 
-Yours,
-Linus Walleij
+> This does indicate that apparently, irqbalance moved away from the usage of
+> affinity_hint. However, the next question is what was this future
+> model?
+
+I might have missed something in the last 5 years, but that's the first
+time I hear about someone trying to cleanup that thing.
+
+> I don't know but I can surely look into it if that helps or maybe someone
+> here already knows about it?
+
+I CC'ed Neil :)
+
+>> Now there is another aspect to that. What happens if irqbalanced does
+>> not run at all and a driver relies on the side effect of the hint
+>> setting the initial affinity. Bah...
+>>
+>
+> Right, but if they only rely on this API so that the IRQs are spread across
+> all the CPUs then that issue is already resolved and these other drivers
+> should not regress because of changing this behavior. Isn't it?
+
+Is that true for all architectures?
+
+>> While none of the drivers (except the perf muck) actually prevents
+>> userspace from fiddling with the affinity (via IRQF_NOBALANCING) a
+>> deeper inspection shows that they actually might rely on the current
+>> behaviour if irqbalanced is disabled. Of course every driver has its own
+>> convoluted way to do that and all of those functions are well
+>> documented. What a mess.
+>>
+>> If the hint still serves a purpose then we can provide a variant which
+>> solely applies the hint and does not fiddle with the actual affinity,
+>> but if the hint is useless anyway then we have a way better option to
+>> clean that up.
+>>
+>
+> +1
+
+= 1
+
+Thanks,
+
+        tglx
