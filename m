@@ -2,157 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55B3B388087
-	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 21:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72FBD38808E
+	for <lists+linux-pci@lfdr.de>; Tue, 18 May 2021 21:35:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351854AbhERTcV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 May 2021 15:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60592 "EHLO mail.kernel.org"
+        id S1351844AbhERTgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 May 2021 15:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229813AbhERTcU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 18 May 2021 15:32:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D89766112F;
-        Tue, 18 May 2021 19:31:01 +0000 (UTC)
+        id S229813AbhERTgl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 May 2021 15:36:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9795A60FE7;
+        Tue, 18 May 2021 19:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621366262;
-        bh=qy3dri+EEdFWcNhF1NsI/oEWt0469pxCFejX2pAgwPM=;
+        s=k20201202; t=1621366522;
+        bh=8KOBawNhLkuA1r+CMebCDDsP1hDph3sC3ZIg/eaUa2M=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uml5If0LH6RWhlKMQeQi+vm6236bmCIcgI7i5h1FhvCr4HUc6Eg8jCpHd3VwMOMi/
-         DHDHf0ppzaNE66urbCp8u3RpSlLXaCUwUawC8w5xBGYnXvTcLBAYFRxIylPTLu6yB5
-         GA99rcumLUi3BGtoZ7e9rJJ56oouqGR4/Sw8zO8xLmNdZiUWofHyyYIF6uLk/jynw2
-         yPopMvoKALWbRE6Ze8j8NU/Zxgj5y8TrEyXiYhMYh2V5r5ZW+TY9+5fKBIaFCvcSHA
-         e28O0/49XQ4YrxU8CNhXvZZ5WwrWib8E9Tt3BLml6T3dkMvL+hL3j6gwa3fSvqbxXF
-         ds7aM5s6EkmjA==
-Date:   Tue, 18 May 2021 14:31:00 -0500
+        b=WeP6xyDB2OQV473TN2IhFNKm6OqBkRvfHHGwgUdSGsiYARc9l6J/nhW4OOECv/8UK
+         1NCBImNXg8vQQ/T04XGhP/jdwhqdpyoc5R914hs20c2QhQrMXQUKUlonxaK9Fghcoa
+         +8QdaNat30wCQK9heffry04dX6Fr/OLNsH3zlNvXuscGdVNTyXEqtK2R5+pbahALTp
+         mJ4R0mrYV4qDYRSDTEW45kimGM45rSm2LqEYFstvCU+9AM4JkHscxWjPkEOHEMVlJ6
+         /zIio2U2kbWnuMtmFV1PBri1fXy9Krpv/9Z0BIJOUSsq0I8gPZGUloS8suhLtamblY
+         9j0rLHAE8mgRA==
+Date:   Tue, 18 May 2021 14:35:21 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     suijingfeng <suijingfeng@loongson.cn>
-Cc:     Huacai Chen <chenhuacai@gmail.com>,
-        Huacai Chen <chenhuacai@loongson.cn>,
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
 Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
  bridge
-Message-ID: <20210518193100.GA148462@bjorn-Precision-5520>
+Message-ID: <20210518193521.GA145968@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ebc8c3d-f5dd-55fb-22a3-15fd0449d149@loongson.cn>
+In-Reply-To: <CAAhV-H6T4+qZktfEZ-6eKO5SBp_o3Okbu+aBnH+h7Hy6L-PaXA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 18, 2021 at 05:30:38PM +0800, suijingfeng wrote:
-> On 2021/5/18 上午11:09, Bjorn Helgaas wrote:
-> 
-> > If VGA Enable is 0 and cannot be set to 1, the bridge should *never*
-> > forward VGA accesses to its secondary bus.  The generic VGA driver
-> > that uses the legacy [mem 0xa0000-0xbffff] range should not work with
-> > the VGA device at 05:00.0, and that device cannot participate in the
-> > VGA arbitration scheme, which relies on the VGA Enable bit.
-> > 
-> > If you have a driver for 05:00.0 that doesn't need the legacy memory
-> > range, it's possible that it may work.  But VGA arbitration will be
-> > broken, and if 05:00.0 needs to be initialized by an option ROM, that
-> > probably won't work either.
-> 
-> We are not using a "generic VGA driver", in user space, we are using the
-> modesetting driver come with X server, and it seems work normally. The real
-> problems is VGA arbitration will not set 05:00.0 as the default VGA which
-> means that when X server read
-> /sys/devices/pci0000:00/0000:00:0c.0/0000:04:00.0/0000:05:00.0/boot_vga will
-> get a "0". This break Xorg auto-detection. We want the boot_vga sysfs file
-> be "1".
+On Tue, May 18, 2021 at 03:13:43PM +0800, Huacai Chen wrote:
+> On Tue, May 18, 2021 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> > > On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > > > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> > > > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> > > > > > VGA Enable bit which modifies the response to VGA compatible addresses.
+> > > > >
+> > > > > The bridge spec is pretty old, and most of the content has been
+> > > > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> > > > > 7.5.1.3.13" here instead.
+> > > > >
+> > > > > > If the VGA Enable bit is set, the bridge will decode and forward the
+> > > > > > following accesses on the primary interface to the secondary interface.
+> > > > >
+> > > > > *Which* following accesses?  The structure of English requires that if
+> > > > > you say "the following accesses," you must continue by *listing* the
+> > > > > accesses.
+> > > > >
+> > > > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> > > > > > bridge control register, which causes vgaarb subsystem don't think the
+> > > > > > VGA card behind the bridge as a valid boot vga device.
+> > > > >
+> > > > > s/hardward/bridge/
+> > > > > s/vga/VGA/ (also in code comments and dmesg strings below)
+> > > > >
+> > > > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> > > > > since it apparently has a VGA class code.  But here you say the
+> > > > > AST2500 has a Bridge Control register, which suggests that it's a
+> > > > > bridge.  If AST2500 is some sort of combination that includes both a
+> > > > > bridge and a VGA device, please outline that topology.
+> > > > >
+> > > > > But the hardware defect is that some bridges forward VGA accesses even
+> > > > > though their VGA Enable bit is not set?  The quirk should be attached
+> > > > > to broken *bridges*, not to VGA devices.
+> > > > >
+> > > > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> > > > > is set, that means VGA arbitration (in vgaarb.c) cannot work
+> > > > > correctly, so merely setting the default VGA device once in a quirk is
+> > > > > not sufficient.  You would have to somehow disable any future attempts
+> > > > > to use other VGA devices.  Only the VGA device below this defective
+> > > > > bridge is usable.  Any other VGA devices in the system would be
+> > > > > useless.
+> > > > >
+> > > > > > So we provide a quirk to fix Xorg auto-detection.
+> > > > > >
+> > > > > > See similar bug:
+> > > > > >
+> > > > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> > > > >
+> > > > > This patch was never merged.  If we merged a revised version, please
+> > > > > cite the SHA1 instead.
+> > > >
+> > > > This patch has never merged, and I found that it is unnecessary after
+> > > > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> > > > even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> > > > unnecessary. If it is still needed, I'll investigate the root cause.
+> > >
+> > > I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> > > by subsys_initcall(), which means their sequence is unpredictable. And
+> > > unfortunately, in our platform vga_arb_device_init() is called before
+> > > pcibios_init(), which makes vga_arb_device_init() fail to set a
+> > > default vga device. This is the root cause why we thought that we
+> > > still need a quirk for AST2500.
+> >
+> > Does this mean there is no hardware defect here?  The VGA Enable bit
+> > works correctly?
+> >
+> No, VGA Enable bit still doesn't set, but with commit
+> a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device even if
+> there's no legacy VGA") we no longer depend on VGA Enable.
 
-I don't think it's true; I think VGA arbitration *will* set 05:00.0 as
-the default VGA, as long as 05:00.0 has been enumerated before
-vga_arb_device_init().
+Correct me if I'm wrong:
 
-As far as I can tell, the problem is not that the bridge is broken or
-that vga_arb_device_init() is broken.  The problem is that on your
-system, vga_arb_device_init() runs before 05:00.0 has been enumerated,
-so it *can't* set 05:00.0 as the default VGA because it doesn't know
-about 05:00.0 at all.
+  - On the AST2500 bridge [1a03:1150], the VGA Enable bit is
+    read-only 0.
 
-> > If the 04:00.0 bridge *always* forwards VGA accesses, even though its
-> > VGA Enable bit is always zero, then the bridge is broken.  In that
-> > case, the generic VGA driver should work with the 05:00.0 device, but
-> > VGA arbitration will be limited.  I'm not sure, but the arbiter
-> > *might* be able to use the VGA Enable bit in the 00:0c.0 bridge to
-> > control VGA access to 05:00.0.  You wouldn't be able to have more than
-> > one VGA device below 00:0c.0, and you may not be able have more than
-> > one in the entire system.
-> 
-> We have only one VGA device(05:00.0) below 00:0c.0, but we do able to have
-> more than one in the entire system. We could even mount a AMDGPU
-> on this server. But in reality, there is a render only GPU and a
-> self-designed display controller integrated in LS7A1000 bridge. Both the
-> render only GPU and the display controller is PCI device, they are located
-> at PCI root bus directly without a PCI-to-PCI bridge in the middle. The
-> display controller is blocked by the firmware if ASPEED BMC card is present,
-> it can't be accessed under linux kernel. Let me show you a updated version
-> of the PCI topology of our server(machine):
-> 
->        /sys/devices/pci0000:00
->        |-- 0000:00:06.0
->        |   | -- class (0x040000)
->        |   | -- vendor (0x0014)
->        |   | -- device (0x7a15)
->        |   | -- drm
->        |   | -- ...
->        |-- 0000:00:0c.0
->        |   |-- class (0x060400)
->        |   |-- vendor (0x0014)
->        |   |-- device (0x7a09)
->        |   |-- ...
->        |   |-- 0000:04:00.0
->        |   |   | -- class (0x060400)
->        |   |   | -- device (0x1150)
->        |   |   | -- vendor (0x1a03)
->        |   |   | -- revision (0x04)
->        |   |   | -- ...
->        |   |   | -- 0000:05:00.0
->        |   |   |    | -- class  (0x030000)
->        |   |   |    | -- device (0x2000)
->        |   |   |    | -- vendor (0x1a03)
->        |   |   |    | -- boot_vga
->        |   |   |    | -- i2c-6
->        |   |   |    | -- drm
->        |   |   |    | -- graphics
->        |   |   |    | -- ...
->        |   `-- uevent
->        `-- ...
-> 
-> Even through the render only GPU(00:06.0) is not a VGA device, it still can
-> disturb X server choose a primary device to use. But the root cause is the
-> kernel side does not set 05:00.0 as default VGA. In this case X server will
-> fallback to the first device found to use. and 00:06.0 is always found
-> before 05:00.0. If kernel side set 05:00.0 as default VGA,
-> all other problems is secondary.
+  - The AST2500 bridge never forwards VGA accesses ([mem
+    0xa0000-0xbffff], [io 0x3b0-0x3bb], [io 0x3c0-0x3df]) to its
+    secondary bus.
 
-The fact that X selects 00:06.0 is a user-level thing and I don't know
-what's involved.  Its class code (0x0400) looks like
-PCI_CLASS_MULTIMEDIA_VIDEO, so vga_arb_device_init() should completely
-ignore it.
+The VGA Enable bit is optional, and if both the above are true, the
+bridge is working correctly per spec, and the quirk below is not the
+right solution, and whatever solution we come up with should not
+claim that the bridge is misbehaving.
 
-vga_arb_device_init() should set 05:00.0 as the *kernel's* default
-device as long as 05:00.0 has already been enumerated.
+> > > I think the best solution is make vga_arb_device_init() be wrapped by
+> > > subsys_initcall_sync(), do you think so?
+> >
+> > Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
+> > documented, so I'm not sure exactly *why* such a change would work and
+> > whether we could rely on it to continue working.
+> >
+> > pcibios_init() isn't very consistent across arches.  On some,
+> > including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
+> > enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
+> > basically nothing.  That makes life a little difficult.
+>
+> subsys_initcall_sync() is ensured after all subsys_initcall()
+> functions, so at least it can solve the problem on platforms which use
+> pcibios_init() to enumerate PCI devices (x86 and other ACPI-based
+> platforms are also OK, because they use acpi_init()
+> -->acpi_scan_init() -->pci_acpi_scan_root() to enumerate devices).
 
-Even if vga_arb_device_init() runs before 05:00.0 has been enumerated,
-it looks like vga_arbiter_add_pci_device() should notice when 05:00.0
-is enumerated, and you should see the "VGA device added:" message for
-it.
+More details in my response to suijingfeng:
+https://lore.kernel.org/r/20210518193100.GA148462@bjorn-Precision-5520
 
-vga_arbiter_add_pci_device() looks like it *would* set 05:00.0 as the
-default device in that case, except for the fact that 04:00.0 doesn't
-support PCI_BRIDGE_CTL_VGA.  That's probably a bug in a37c0f48950b
-("vgaarb: Select a default VGA device even if there's no legacy VGA").
-I think the logic added by a37c0f48950b probably should be shared
-between the vga_arb_device_init() initcall path and the
-vga_arbiter_add_pci_device() device-add path.
+I'd rather not fiddle with the initcall ordering.  That mechanism is
+fragile and I'd prefer something more robust.
 
-Can you collect your dmesg output, so we can see the enumeration order
-and what vgaarb does with it?
+I'm wondering whether it's practical to do something in the normal PCI
+enumeration path, e.g., in pci_init_capabilities().  Maybe we can
+detect the default VGA device as we enumerate it.  Then we wouldn't
+have this weird process of "find all PCI devices first, then scan for
+the default VGA device, and oh, by the way, also check for VGA devices
+hot-added later."
 
 Bjorn
