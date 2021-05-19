@@ -2,66 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74A9F3889A4
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 10:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9BE3388B0E
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 11:49:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343652AbhESIqU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 04:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343625AbhESIqT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 04:46:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBC2C06175F;
-        Wed, 19 May 2021 01:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=i4kTadda4oBt3afddYxcQHXtH210DToQIegrKDmu7Qs=; b=KayoCEogTLKFg5jrVgTEnTOVfZ
-        hb8/pRDvfaaqQHvTUh4wopMGPdhivz06WHgnbV72RvjsaXV+6cm6cFH9oW+SDqiZl4ZWVxv4T1lj0
-        CGk0x5+2pozw6bB+QbibCPFBLp9JSsxfVtUTv/EfK2GQdpAPkA/iYAjFGnKCeJQuUVJeZCJmDXa30
-        NLfXWuByzbVnzcOHnp5UqctgfTHdBHG2jOvp2H1gBpF96nPXsXh2RZKqj/coj841wT7xsNEel7S3m
-        nZ29e8D7ZPJNlG1996IoXbZc+8PU17eJvSUGAxKGrkljO99EBmA2NPiA31SK9awmPEjSoai5TU7YL
-        3d52UGgQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1ljHoG-00Em7l-Ci; Wed, 19 May 2021 08:44:21 +0000
-Date:   Wed, 19 May 2021 09:44:08 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Robert Straw <drbawb@fatalsyntax.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] pci: add NVMe FLR quirk to the SM951 SSD
-Message-ID: <YKTP2GQkLz5jma/q@infradead.org>
-References: <20210430205105.GA683965@bjorn-Precision-5520>
- <CBDZPI1DXKMS.88UVUXVIGC5V@nagato>
+        id S232918AbhESJvL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 05:51:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4746 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232373AbhESJvK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 05:51:10 -0400
+Received: from dggems701-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FlSgF5bJfzpfPd;
+        Wed, 19 May 2021 17:46:17 +0800 (CST)
+Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
+ dggems701-chm.china.huawei.com (10.3.19.178) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Wed, 19 May 2021 17:49:47 +0800
+Received: from localhost.localdomain (10.69.192.56) by
+ dggema757-chm.china.huawei.com (10.1.198.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Wed, 19 May 2021 17:49:46 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <zhangshaokun@hisilicon.com>
+Subject: [PATCH v4 0/2] drivers/perf: hisi: Add support for PCIe PMU
+Date:   Wed, 19 May 2021 17:48:59 +0800
+Message-ID: <1621417741-5229-1-git-send-email-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CBDZPI1DXKMS.88UVUXVIGC5V@nagato>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggema757-chm.china.huawei.com (10.1.198.199)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 15, 2021 at 12:20:05PM -0500, Robert Straw wrote:
-> On page 40, sec 3.1.6 of the NVMe 1.1 spec, the documentation on SHST 
-> states the following:
+This patchset adds support for HiSilicon PCIe Performance Monitoring
+Unit(PMU). It is a PCIe Root Complex integrated End Point(RCiEP) device
+added on Hip09. Each PCIe Core has a PMU RCiEP to monitor multi root
+ports and all Endpoints downstream these root ports.
 
-While it doesn't matter here, NVMe 1.1 is very much out of data, being
-a more than 8 year old specification.  The current version is 1.4b,
-with NVMe 2.0 about to be released.
+HiSilicon PCIe PMU is supported to collect performance data of PCIe bus,
+such as: bandwidth, latency etc.
 
-> Knowing this I would suspect we'd actually want to treat most NVMe
-> drives in this manner *if the kernel sees the SHN/SHST has been set
-> prior.* Perhaps other NVMe devices are more tolerant of not doing this?
+This patchset is based on 5.13-rc1. 
 
-No, we don't.  This is a bug particular to a specific implementation.
-In fact the whole existing NVMe shutdown before reset quirk is rather
-broken and dangerous, as it concurrently accesses the NVMe registers
-with the actual driver, which could be trivially triggered through the
-sysfs reset attribute.
+Changes since v3:
+- Fix some warnings when build under 32bits architecture.
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1618490885-44612-1-git-send-email-liuqi115@huawei.com/
 
-I'd much rather quirk these broken Samsung drivers to not allow
-assigning them to VFIO.
+Changes since v2:
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617959157-22956-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v1:
+- Drop the internal Reviewed-by tag.
+- Fix some build warnings when W=1.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617788943-52722-1-git-send-email-liuqi115@huawei.com/
+
+Qi Liu (2):
+  docs: perf: Add description for HiSilicon PCIe PMU driver
+  drivers/perf: hisi: Add driver for HiSilicon PCIe PMU
+
+ Documentation/admin-guide/perf/hisi-pcie-pmu.rst |  104 +++
+ MAINTAINERS                                      |    6 +
+ drivers/perf/Kconfig                             |    2 +
+ drivers/perf/Makefile                            |    1 +
+ drivers/perf/pci/Kconfig                         |   16 +
+ drivers/perf/pci/Makefile                        |    2 +
+ drivers/perf/pci/hisilicon/Makefile              |    3 +
+ drivers/perf/pci/hisilicon/hisi_pcie_pmu.c       | 1016 ++++++++++++++++++++++
+ include/linux/cpuhotplug.h                       |    1 +
+ 9 files changed, 1151 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+ create mode 100644 drivers/perf/pci/Kconfig
+ create mode 100644 drivers/perf/pci/Makefile
+ create mode 100644 drivers/perf/pci/hisilicon/Makefile
+ create mode 100644 drivers/perf/pci/hisilicon/hisi_pcie_pmu.c
+
+-- 
+2.7.4
+
