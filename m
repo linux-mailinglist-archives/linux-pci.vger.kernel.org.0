@@ -2,185 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B60AF389A19
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 01:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E05A8389A1E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 01:54:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbhESXxJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 19:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
+        id S229556AbhESXz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 19:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbhESXxI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 19:53:08 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BA3C06175F
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 16:51:48 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id i7so4620917ejc.5
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 16:51:48 -0700 (PDT)
+        with ESMTP id S229498AbhESXz6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 19:55:58 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACB4C061574;
+        Wed, 19 May 2021 16:54:36 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id y32so10567657pga.11;
+        Wed, 19 May 2021 16:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LVoBMaI0GwGtaYoKzmIr4922Id3E65a6BTx3LFwZWRk=;
-        b=ReJ1N3XK2j0uu0sd75SJlG4JrRwVcqiVWKKAm6uHfUSmLas6m3qmqn0w1/1hVKQA1L
-         AdYJNSfVnHxInu48wHMa0+V+xu8wExeljZY297Kd/tRzEY3J/C+z3jNUdAYzUVPFjO2F
-         PFD3qjLT1Uz3XsU78atT6FQaDct5hSQwmy1gDHGKbZgf4Hzr+KVdQjRJSabipL12N5y1
-         sDentQn5/UquLp1ZbxaRxPJXutOtww8gYnYOqcj0GPmWB4Q4HR+/9PdBjBUBh1aXped1
-         pJ7p4ev5yeM33ljgmn9SBmcl69JorvsAnCUE51ICNF+cCGU17HuXhf/iXQZm7uB1CZxS
-         pOCg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XQYnKbmkAJ17UumIFNVxhYNqul1vSRER6KQdYAbNXM4=;
+        b=r1UjLR406j5LcmougKSL1oU0msLMYnWRhV1QC5RbfYs8GJHxJ4NDnGZztfe/UOTXDo
+         ELqUXNuDyV57AW6MOkrHLzR6MxYK+RGK0dMNRTeMVDjKh0XcbjnhfSOfEvt53uBx0BAb
+         wcyaCueCVApfmUwk8VH2yraXqWPHcbH/xXY489n1LoOYYw67/0bJ2TDZDe3dlcAef/0f
+         D+mi7GOG5btEAlI52Frps3gve4AzgUxCozXlDpBxL+7QZ31GnFRjoZFSEwm0Bx0vZJGM
+         T1MXxrr2xsEQeBgT+smDGmwKRC4uCKteVSjgGA0TxflAsVTpGzRpv1OGuvOTc9eYsXKw
+         FqVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LVoBMaI0GwGtaYoKzmIr4922Id3E65a6BTx3LFwZWRk=;
-        b=GeMi3voHkj+YWybOzQidQmDJDdbtOl56K15HytuMf2EQUmCpW5APF7QLKExCZgRSBD
-         tosK7Uf3/R1nBUrZfOMeDoWHql2JJZ3bpC7REVBffN1S7s+Sj4wMb+DNfmfCkAfgviWi
-         h57hOQznpLZ3dV5c2hxfyad3P8NfQRxM01rNfabOFh0BJ6v59YoDZ/0TV4K2NCH1/o9X
-         SixK9YyzXvZbso6sv7n+jDHCq+PVGkOHvJUuSSnm+67JzCpX/+QS7yzLp7u4cyua/h5/
-         hiki1NZuG60h0xnGgc8nvf0XynMCCy3CmTltY/cRMwvsjmsqEFxg9ctdXIGN7efNIryd
-         pY4A==
-X-Gm-Message-State: AOAM533JKdXEcoRV08LwT/L/z4As4kRmgCACkhehjWy46i7e/zwJaHuJ
-        qdlk09V+V3QFXKHqOy0xNzMbGL4d4VYrE9rwmcS60w==
-X-Google-Smtp-Source: ABdhPJx8ix2K1zcTT1uwJnnqS4H4ljqDrqiR5i5DDmY5S8ZVeMmy2N9u/STSoeX+SRfH/K/NJX8MQSaVyGX/N02Y22M=
-X-Received: by 2002:a17:906:d285:: with SMTP id ay5mr1687691ejb.418.1621468306605;
- Wed, 19 May 2021 16:51:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XQYnKbmkAJ17UumIFNVxhYNqul1vSRER6KQdYAbNXM4=;
+        b=E4lconkiRlAi7qRgOkvFseJpEs6g6ZvyokoBr2DXpcogdk5ane7k9tGGbUfBIMLtWP
+         pvJG8drfKTkC1yK9t2c9ot6QfVLArM3TalhwTo4aq3nCIfM/AupB1GH0oo9zD6u/MowS
+         VrK3rv0oqpZDXXlalbgFx1Rzp5eKki+PINOLq05N24eMdg1Ru5R1yF3G4N19Te4F0G1D
+         2OEeq+THdArapgdT8P9MmrrRL09iQfs27cOIJqWLFHYkov8/VESvBg0A+SUCqEmVx+Gg
+         YI5YTrnMENlR21W+AFXVVbeihNZ+LdPvkXJxPNavTztr4HcugU640vuHFYrWumbBuS3z
+         faFw==
+X-Gm-Message-State: AOAM530rSQlJT5dJe550uYZdUcuybAaBxG7Q9XC/URV63uKBawO6ZEcz
+        Z/wNsz3RmKyfkrBsjyjkfsk=
+X-Google-Smtp-Source: ABdhPJyYcukJAoyiWW3voXMlBY2qdbP/75/pU71nhmMWyYClDJNEVx4WOuW9OgnKUraiS/f9dMwGXw==
+X-Received: by 2002:aa7:97ad:0:b029:2e0:26a8:8da5 with SMTP id d13-20020aa797ad0000b02902e026a88da5mr1560913pfq.37.1621468476262;
+        Wed, 19 May 2021 16:54:36 -0700 (PDT)
+Received: from localhost.localdomain ([94.140.8.39])
+        by smtp.googlemail.com with ESMTPSA id z12sm397670pfk.45.2021.05.19.16.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 16:54:35 -0700 (PDT)
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     alex.williamson@redhat.com, raphael.norwitz@nutanix.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Amey Narkhede <ameynarkhede03@gmail.com>
+Subject: [PATCH RESEND v2 0/7] Expose and manage PCI device reset
+Date:   Thu, 20 May 2021 05:24:19 +0530
+Message-Id: <20210519235426.99728-1-ameynarkhede03@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
- <20210514094755.00002081@Huawei.com> <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
- <20210517094045.00004d58@Huawei.com> <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
- <20210518110403.000013e6@Huawei.com> <CAPcyv4g3JPtAHzemKdQiM44ZkZ_0u+U-UJ5mfeU3fKzRWuaDyQ@mail.gmail.com>
- <20210519161156.00003bf9@Huawei.com> <CAPcyv4j_oEWG1NG1wYryVt3-Gx8q2WwzP7_xhchsDARDR0zBEA@mail.gmail.com>
- <20210519172052.00002124@Huawei.com> <20210519173352.000026fe@Huawei.com>
- <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com>
- <20210519180057.00002ac3@Huawei.com> <CAPcyv4ii3KC6MBBxJrnCUCm_JGS7ugL+JTFUu9QTBnPUhQFtfQ@mail.gmail.com>
- <20210519211818.00002acf@Huawei.com>
-In-Reply-To: <20210519211818.00002acf@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 May 2021 16:51:36 -0700
-Message-ID: <CAPcyv4hCCqEPzGKh4hyjHEBE3jDn9iTA_WUOZMFptHKrX-2J_A@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 19, 2021 at 1:20 PM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 19 May 2021 12:20:17 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Wed, May 19, 2021 at 10:03 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > [..]
-> > > > > "The DOE Busy bit can be used to indicate that the DOE responder is
-> > > > >  temporarily unable to accept a data object. It is necessary for a
-> > > > >  DOE requester to ensure that individual data object transfers are
-> > > > >  completed, and that a request/response contract is completed, for
-> > > > >  example using a mutex mechanism to block other conflicting traffic
-> > > > >  for cases where such conflicts are possible."
-> > > >
-> > > > I read that as the specification mandating my proposal to disallow
-> > > > multi-initiator access. My only mistake was making the exclusion apply
-> > > > to reads and not limiting it to the minimum of config write exclusion.
-> > >
-> > > Key thing is even that isn't enough.   The mutex isn't about stopping
-> > > temporary access, it's about ensuring "request/response contract is completed".
-> > > So you would need userspace to be able to take a lock to stop the kernel
-> > > from using the DOE whilst it completes it's request/response pair and
-> > > userspace to guarantee it doesn't do anything stupid.
-> >
-> > A userspace lockout of the kernel is not needed if userspace is
-> > outright forbidden from corrupting the kernel's state machine. I.e.
-> > kernel enforced full disable of user initiated config-write to DOE
-> > registers, not the ephemeral pci_cfg_access_lock() proposal.
->
-> That would work but I thought was ruled out as an approach.
-> @Bjorn would this be acceptable?
->
+[RESEND with Shanker's patches as those depend on this series]
 
-It sounded like Bjorn needed more convincing:
+PCI and PCIe devices may support a number of possible reset mechanisms
+for example Function Level Reset (FLR) provided via Advanced Feature or
+PCIe capabilities, Power Management reset, bus reset, or device specific reset.
+Currently the PCI subsystem creates a policy prioritizing these reset methods
+which provides neither visibility nor control to userspace.
 
-    "I don't know how hard we should work to protect against that."
+Expose the reset methods available per device to userspace, via sysfs
+and allow an administrative user or device owner to have ability to
+manage per device reset method priorities or exclusions.
+This feature aims to allow greater control of a device for use cases
+as device assignment, where specific device or platform issues may
+interact poorly with a given reset method, and for which device specific
+quirks have not been developed.
 
-...and I'm advocating that yes, DOE config-writes are in a different
-class than other critical register writes, and that class is analogous
-to what Linux does for driver managed MMIO exclusion.
+Changes in v2:
+	- Use byte array instead of bitmap to keep track of
+	  ordering of reset methods
+	- Fix incorrect use of reset_fn field in octeon driver
+	- Allow writing comma separated list of names of supported reset
+	  methods to reset_method sysfs attribute
+	- Writing empty string instead of "none" to reset_method attribute
+	  disables ability of reset the device
 
-> >
-> > > Easiest way to do that is provide proper interfaces that allows the
-> > > kernel to fully mediate the access + don't support direct userspace access
-> > > for normal operation. (treat it the same as an other config space write)
-> >
-> > Again, it's the parenthetical at issue. I struggle to see this as just
-> > another errant / unwanted config-write when there is legitimate reason
-> > for userspace to expect that touching the DOE is not destructive to
-> > device operation as opposed to writes to other critical registers.
->
-> True for specific protocols (CDAT). I'm fairly sure, with IDE you can take down
-> the link encryption to the device, potentially (worst case?) resulting a memory
-> access failure and a machine reboot or corruption of persistent memory.
+Sending Raphael's patch again as this series depends on it.
 
-No, that does not sound right. My reading of the PCI IDE spec
-highlights a few exclusions that apply here:
 
-1/ A DOE instance that implements the CMA/SPDM protocol will support
-"no other data object protocol(s)".
+Amey Narkhede (4):
+  PCI: Add pcie_reset_flr to follow calling convention of other reset
+    methods
+  PCI: Add new array for keeping track of ordering of reset methods
+  PCI: Remove reset_fn field from pci_dev
+  PCI/sysfs: Allow userspace to query and set device reset mechanism
 
-2/ An SPDM session once established arranges for "requests that are
-received through a different secure [SPDM] session must be discarded
-by the Responder, and must not result in a response"
+Raphael Norwitz (1):
+  PCI: merge slot and bus reset implementations
 
->
-> > Where the kernel's legitimate-access and userspace's legitimate-access
-> > to a resource collide, the kernel provides a mediation interface that
-> > precludes conflicts. Otherwise, I don't understand why the kernel is
-> > going through the trouble of /dev/mem and pci-mmap restrictions if it
-> > is not supposed to be concerned about userspace corrupting driver
-> > state.
->
-> The short answer is that lock requirement, in the above note, rules
-> out safe direct userspace use of the DOE (unless we can tell the kernel
-> is not going to ever use it).
+Shanker Donthineni (2):
+  PCI: Add support for a function level reset based on _RST method
+  PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
 
-Linux has the mitigation for that situation defined already. It's the
-mechanism for /dev/mem and pci-mmap exclusion: disable the driver to
-enable unfettered userspace access (modulo kernel-lockdown is
-disabled).
+ Documentation/ABI/testing/sysfs-bus-pci       |  16 ++
+ drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
+ .../ethernet/cavium/liquidio/lio_vf_main.c    |   2 +-
+ drivers/pci/pci-sysfs.c                       |  93 +++++++-
+ drivers/pci/pci.c                             | 206 +++++++++++-------
+ drivers/pci/pci.h                             |  10 +-
+ drivers/pci/pcie/aer.c                        |  12 +-
+ drivers/pci/probe.c                           |   4 +-
+ drivers/pci/quirks.c                          |  23 +-
+ include/linux/pci.h                           |  11 +-
+ 10 files changed, 278 insertions(+), 103 deletions(-)
 
-> Mediation must be done. Even if we safely
-> protect the kernel side via aborts, userspace transactions can be
-> interrupted in a fashion that is invisible to userspace (beyond maybe
-> a timeout if the userspace code is hardened against this).
-
-Right, ephemeral per-transaction lockout is more complicated to handle
-than coarse lockout bounded to driver attach lifetime.
-
-> So there is no
-> legitimate use that is not fully mediated by the kernel. So ioctl
-> or defined per protocol interfaces are the way forwards.
-
-Agree, and Linux has historically tried to wrap specific protocols
-around capabilities like this rather than defining raw passthroughs.
-I.e. I'm equating DOE enabling policy to ACPI DSM enabling policy. So
-per-protocol enabling is my expectation regardless of sysfs or ioctl.
-In fact. for SPDM and IDE key establishment that is probably neither
-ioctl nor sysfs, but instead a cooperation with the Linux keys api.
-
-> Perhaps that's putting it rather strongly :)
-
-No major disagreement on the big picture... just quibbling with
-details at this point.
+--
+2.31.1
