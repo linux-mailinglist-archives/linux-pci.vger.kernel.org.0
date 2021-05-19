@@ -2,110 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E35F83884BE
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 04:26:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0DB538851D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 05:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230257AbhESC1r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 May 2021 22:27:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbhESC1r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 May 2021 22:27:47 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A58C06175F
-        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 19:26:28 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id z24so11511343ioi.3
-        for <linux-pci@vger.kernel.org>; Tue, 18 May 2021 19:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dZRU34TEa7zPnYOaDO4MbeWNvIE7RWLVNwNVARHpVOo=;
-        b=agc80B6RGq4CteuFeUrl/CufCW1qKXRoR6I60rShQk3WMSfrF4dIuCyW8gitdx+Rkp
-         Pg9ZzpSaJulqlz7FdUX5VF/iry4SLbGhmHrTJ5Lacf5/SemoL73Enb4umYUukD+qjjMi
-         FfeKMkBA2sC/vD0/EbNjM5qKdUpcxP/q9ERocvCk1spqx0ao4P939woJn3DlvLV0olDq
-         +zNHRsdhCnlwoGaBTSA9SjJ76vVssaYokXR5Ott3C4K8zOgcJJqngj10Y6dWTJJos5vC
-         54jU+o4g6AIDpx+C38qqBTCnppLhLc9U64jRSrO9hNL6C1pImMPBIm43fef73E1i9XTO
-         +yEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dZRU34TEa7zPnYOaDO4MbeWNvIE7RWLVNwNVARHpVOo=;
-        b=C4z8eV0vl/NXFIx31XQclNUVvQDa/QqkXckk3MT9OB2FgvWYujd+u3/kBqfQV1M7Xr
-         wumBSC9oFuoiZCvaYo2L9oiRquzEMLrqn5DxMGXvI1ZzBn60SDdchD+AwqEll4aJJx7h
-         UxEg1XAHIzpGGimVy5lhsw0SDyvsjxY19kp0NNlXKgYMBNPUS7SlniURzYOQOn3ADjZ8
-         dXZJQMPeZX4ygYwwhBFNAt3F6li7V5KNl9OQOFkNJEw/eoioLYM3tNcN2CQ6mTCkn+bR
-         IXH1HYrZ4wAwAvIMNkgTIP+a/MEnphiMaSJ+JaCJa8g1ID/Jsna2p2Y1CCo/ZZHOJjf5
-         u1Uw==
-X-Gm-Message-State: AOAM532Xwp29BkbL1p6Bhee9zTbuqUB24B7+GRlwb3ouEW9ljE4kwaNE
-        bsJOmMFb8UxiFggP8iG7x3CTL/OtHdaFuUg3cD9/aJf5Rb0=
-X-Google-Smtp-Source: ABdhPJyuWCMhHBNA4h9Xzz3A9envR8YpIDpTB/ZPbgJ2NXdqdzmLyvTQ9J9gw72pyfwm2Ivs9TPJrCrHxRC3EOZpdO4=
-X-Received: by 2002:a05:6638:3827:: with SMTP id i39mr9722974jav.96.1621391187790;
- Tue, 18 May 2021 19:26:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAhV-H61Uc5D7+1pMR5xSJeBVXHwPttTtaPg6_gwJoYBywHjPA@mail.gmail.com>
- <20210518135925.GA116106@bjorn-Precision-5520>
-In-Reply-To: <20210518135925.GA116106@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Wed, 19 May 2021 10:26:16 +0800
-Message-ID: <CAAhV-H7DfZffubU_rxoMXdbk_j9p0LwA5S7wF7qvAPOJn=YEdw@mail.gmail.com>
+        id S237498AbhESDGy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 May 2021 23:06:54 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:47755 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237253AbhESDGy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 May 2021 23:06:54 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id A21A31714;
+        Tue, 18 May 2021 23:05:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 18 May 2021 23:05:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=T
+        BZbIeiXei48R2ujZlKNovHhDr0fOQIvpPQ4YZ4PyCI=; b=WNV25eFhdJOZLe7Xf
+        UNh6vUtdjgazMlEBBi6WonPwlx5Yvm5QHBBopB1OQCkCNAZFo5yF0gH12O/38SjZ
+        CqKJb4PDvXEESQ4LKq99v8Pb1gaqARVsSzSVS4jnL7lOsRE35kdDsbDES+kd+cCv
+        LH8Yn91qTmXbES2fSeVbGnY8IfKOu37qxMeASCX7bs8hGgQXRUUf+aCDfxpsbfO8
+        MOoUxDGMDdQVcfw7XOju60MGxAt7Hmn6ZIT/3mA1FH9SN3xPMPWj+UJg0vgGuM3Z
+        r+bigHTwXpUZUdLCRr3Fzbv61mOIIVYScFbQ1Pc4ZH9gbB9KD51McX/Izj1clkA7
+        Xh51w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=TBZbIeiXei48R2ujZlKNovHhDr0fOQIvpPQ4YZ4Py
+        CI=; b=Y577nCH5Q8XImRA2Hg0E3kF0FgPGcktyhKGX/eyxgeqPYJdZ5aOtMAkKh
+        1t5TgTNSmXYabIo4MZcLuaVGQLIwzYKNJX2J7R/6++3ecgNqyMcvy6x6wmVzoCsr
+        U33Dr4Xw8SPHifFzNpfxcXy1Dw6ySM2OvEbzQximMRZ7SqHk8UpuWmwfhA3z1PFh
+        nfXHZN/0U5EPFxuclDwQlqv/NXr0SCaYfl2RgOxQ4wuMrUwF7WUzdg3OiXm+mU6n
+        /9R89joP5nNEn9aZwP1ADLHpWbPmejcO+g6jeA7S0WfsF/jF0GGhP6XZiMjWlzzI
+        UBmmj1UjPh0sdjaydIwORwOZ/kwUA==
+X-ME-Sender: <xms:eoCkYKYhTwakHMAFnjxjniNFTy4XGub9w1rqbsiBkbwLUD1Re0J_RQ>
+    <xme:eoCkYNaT6gh0J2cjQWlc_1s6VTRhfxntY3cPvWF7k-ABbe6Dbt1HLqJ8tv-Ws5fJ2
+    -2c7xEfEwFRRRWgGek>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdeikedgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpedtudffieefhffhiedujeehhfelgfeihfduueehjeehhfdvudev
+    hffhgfeijeeludenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedutddurd
+    ekgedrudejtddrheehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:eoCkYE-OW2HI-sms-uq7FGNzykrEx0E1MmguXhFTrYtHVcdMNaw4qA>
+    <xmx:eoCkYMr9ja2W8Dyl8m0JvygMLTzS7odsr673ElR_0fN0kiDt2cqkLA>
+    <xmx:eoCkYFpP9NVTrdLGIMVq3iV540qtSabt8suPHX1jtksIgD8ec7y0yA>
+    <xmx:e4CkYGnccEeAUSok4ryHPiQxdGceoeGAIp147zHuyDYkZl0Fmx7fXA>
+Received: from [192.168.22.245] (unknown [101.84.170.55])
+        by mail.messagingengine.com (Postfix) with ESMTPA;
+        Tue, 18 May 2021 23:05:27 -0400 (EDT)
 Subject: Re: [PATCH 4/5] PCI: Add quirk for multifunction devices of LS7A
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhuacai@loongson.cn>,
+To:     Huacai Chen <chenhuacai@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
         Jianmin Lv <lvjianmin@loongson.cn>,
         Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <CAAhV-H61Uc5D7+1pMR5xSJeBVXHwPttTtaPg6_gwJoYBywHjPA@mail.gmail.com>
+ <20210518135925.GA116106@bjorn-Precision-5520>
+ <CAAhV-H7DfZffubU_rxoMXdbk_j9p0LwA5S7wF7qvAPOJn=YEdw@mail.gmail.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <933330cb-9d86-2b22-9bed-64becefbe2d1@flygoat.com>
+Date:   Wed, 19 May 2021 11:05:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
+MIME-Version: 1.0
+In-Reply-To: <CAAhV-H7DfZffubU_rxoMXdbk_j9p0LwA5S7wF7qvAPOJn=YEdw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
 
-On Tue, May 18, 2021 at 9:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+在 2021/5/19 10:26, Huacai Chen 写道:
+> Hi, Bjorn,
 >
-> [+cc Rob, beginning of thread
-> https://lore.kernel.org/r/20210514080025.1828197-5-chenhuacai@loongson.cn=
-]
+> On Tue, May 18, 2021 at 9:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> [+cc Rob, beginning of thread
+>> https://lore.kernel.org/r/20210514080025.1828197-5-chenhuacai@loongson.cn]
+>>
+>> On Sat, May 15, 2021 at 11:52:53AM +0800, Huacai Chen wrote:
+>>> On Fri, May 14, 2021 at 10:52 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>>>> 在 2021/5/14 16:00, Huacai Chen 写道:
+>>>>> From: Jianmin Lv <lvjianmin@loongson.cn>
+>>>>>
+>>>>> In LS7A, multifunction device use same pci PIN and different
+>>>>> irq for different function, so fix it for standard pci PIN
+>>>>> usage.
+>>>> Hmm, I'm unsure about this change.
+>>>> The PCIe port, or PCI-to-PCI bridge on LS7A only have a single
+>>>> upstream interrupt specified in DeviceTree, how can this quirk
+>>>> work?
+>>> LS7A will be shared by MIPS-based Loongson and LoongArch-based
+>>> Loongson, LoongArch use ACPI rather than FDT, so this quirk is needed.
+>> Can you expand on this a little bit?
+>>
+>> Which DT binding are you referring to?  Is it in the Linux source
+>> tree?
+> I referring to arch/mips/boot/dts/loongson/ls7a-pch.dtsi, it is
+> already in Linux source tree.
 >
-> On Sat, May 15, 2021 at 11:52:53AM +0800, Huacai Chen wrote:
-> > On Fri, May 14, 2021 at 10:52 PM Jiaxun Yang <jiaxun.yang@flygoat.com> =
-wrote:
-> > > =E5=9C=A8 2021/5/14 16:00, Huacai Chen =E5=86=99=E9=81=93:
-> > > > From: Jianmin Lv <lvjianmin@loongson.cn>
-> > > >
-> > > > In LS7A, multifunction device use same pci PIN and different
-> > > > irq for different function, so fix it for standard pci PIN
-> > > > usage.
-> > >
-> > > Hmm, I'm unsure about this change.
-> > > The PCIe port, or PCI-to-PCI bridge on LS7A only have a single
-> > > upstream interrupt specified in DeviceTree, how can this quirk
-> > > work?
-> >
-> > LS7A will be shared by MIPS-based Loongson and LoongArch-based
-> > Loongson, LoongArch use ACPI rather than FDT, so this quirk is needed.
->
-> Can you expand on this a little bit?
->
-> Which DT binding are you referring to?  Is it in the Linux source
-> tree?
-I referring to arch/mips/boot/dts/loongson/ls7a-pch.dtsi, it is
-already in Linux source tree.
+>> I think Linux reads Interrupt Pin for both FDT and ACPI systems, and
+>> apparently that register contains the same value for all functions of
+>> this multi-function device.
+>>
+>> The quirk will be applied for both FDT and ACPI systems, but it sounds
+>> like you're saying this is needed *because* LoongArch uses ACPI.
+> Jiaxun said that FDT system doesn't need this quirk, maybe he know more.
+
+For FDT system, the IRQ routine of PCI ports looks like:
+
+                 interrupt-map-mask = <0 0 0 0>;
+                 interrupt-map = <0 0 0 0 &pic 41 IRQ_TYPE_LEVEL_HIGH>;
+
+It means they are all going to the same parent IRQ no matter what we read
+from pin register. And it's the actual hardware behavior AFAIK.
+
+Thanks.
+
+- Jiaxun
 
 >
-> I think Linux reads Interrupt Pin for both FDT and ACPI systems, and
-> apparently that register contains the same value for all functions of
-> this multi-function device.
->
-> The quirk will be applied for both FDT and ACPI systems, but it sounds
-> like you're saying this is needed *because* LoongArch uses ACPI.
-Jiaxun said that FDT system doesn't need this quirk, maybe he know more.
+> Huacai
+>> Bjorn
 
-Huacai
->
-> Bjorn
