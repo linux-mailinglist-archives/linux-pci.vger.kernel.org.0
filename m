@@ -2,119 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E05A8389A1E
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 01:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 215ED389A20
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 01:54:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbhESXz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 19:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57278 "EHLO
+        id S230053AbhESX4B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 19:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbhESXz6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 19:55:58 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACB4C061574;
-        Wed, 19 May 2021 16:54:36 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id y32so10567657pga.11;
-        Wed, 19 May 2021 16:54:36 -0700 (PDT)
+        with ESMTP id S229498AbhESX4B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 19:56:01 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 046FEC061574;
+        Wed, 19 May 2021 16:54:41 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id 10so11052294pfl.1;
+        Wed, 19 May 2021 16:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XQYnKbmkAJ17UumIFNVxhYNqul1vSRER6KQdYAbNXM4=;
-        b=r1UjLR406j5LcmougKSL1oU0msLMYnWRhV1QC5RbfYs8GJHxJ4NDnGZztfe/UOTXDo
-         ELqUXNuDyV57AW6MOkrHLzR6MxYK+RGK0dMNRTeMVDjKh0XcbjnhfSOfEvt53uBx0BAb
-         wcyaCueCVApfmUwk8VH2yraXqWPHcbH/xXY489n1LoOYYw67/0bJ2TDZDe3dlcAef/0f
-         D+mi7GOG5btEAlI52Frps3gve4AzgUxCozXlDpBxL+7QZ31GnFRjoZFSEwm0Bx0vZJGM
-         T1MXxrr2xsEQeBgT+smDGmwKRC4uCKteVSjgGA0TxflAsVTpGzRpv1OGuvOTc9eYsXKw
-         FqVQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=saGJ8MOGoMsUyv5kls1YdVGYFyRu0m+lWIn5KG+KbKE=;
+        b=AuJP2W4sui0Jz23E73840AgKtN5T4+Ui1HltUsoW6gcogkb5i4/wgaiHvFNu19xHzg
+         +KgRxMPWNUUYuAndR8X4SGFjPiwWUuMcvZaI61aQnjb3FU5WbqavR/N2hmF/Ao8nO+oW
+         XkUi4Cik7zckY+9XizE6WCLhvvhnQLd4ID1rBz/VuSsnVndH37VBcFF7tFWVno+Tyu64
+         zNYnulegzNkTk30DGC1Ca+4iui/Gyo+pbDTz5rBhzPKZ9rjNmDdQDPavpmN13Y+ILu3z
+         1Bn5FEbKl0zQCPCFnI3HOEczQbTrlQYiZbWp4RaKS/t+9fnJ9AOmPfEKCLkN3GBhuC3x
+         pLaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XQYnKbmkAJ17UumIFNVxhYNqul1vSRER6KQdYAbNXM4=;
-        b=E4lconkiRlAi7qRgOkvFseJpEs6g6ZvyokoBr2DXpcogdk5ane7k9tGGbUfBIMLtWP
-         pvJG8drfKTkC1yK9t2c9ot6QfVLArM3TalhwTo4aq3nCIfM/AupB1GH0oo9zD6u/MowS
-         VrK3rv0oqpZDXXlalbgFx1Rzp5eKki+PINOLq05N24eMdg1Ru5R1yF3G4N19Te4F0G1D
-         2OEeq+THdArapgdT8P9MmrrRL09iQfs27cOIJqWLFHYkov8/VESvBg0A+SUCqEmVx+Gg
-         YI5YTrnMENlR21W+AFXVVbeihNZ+LdPvkXJxPNavTztr4HcugU640vuHFYrWumbBuS3z
-         faFw==
-X-Gm-Message-State: AOAM530rSQlJT5dJe550uYZdUcuybAaBxG7Q9XC/URV63uKBawO6ZEcz
-        Z/wNsz3RmKyfkrBsjyjkfsk=
-X-Google-Smtp-Source: ABdhPJyYcukJAoyiWW3voXMlBY2qdbP/75/pU71nhmMWyYClDJNEVx4WOuW9OgnKUraiS/f9dMwGXw==
-X-Received: by 2002:aa7:97ad:0:b029:2e0:26a8:8da5 with SMTP id d13-20020aa797ad0000b02902e026a88da5mr1560913pfq.37.1621468476262;
-        Wed, 19 May 2021 16:54:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=saGJ8MOGoMsUyv5kls1YdVGYFyRu0m+lWIn5KG+KbKE=;
+        b=tfbUeK6kuFGO/vv+3Pnr7E9iAgBU0Ixys5gfmg9or+qoakwYIB1/Nq0zwWTW045IhQ
+         6/Xkwdb7VHWySk3S6RwtkXWN7liiAA65xsOauF/uJ4bG8nNUbl0JE09bEqoRgJv8j1WE
+         ULLkO+bYJpRPEEsh5s4+Kgw9KOsEvnNdkX1lQUv8Mzg9s63PSCJNnf2h7w54amCd+/8V
+         9b4UUyHmBzo7XI6Wfpf1OtzydIC/8HCtIc30BIIloM7NpEa/qubJD1NfY/5fgny/73eZ
+         eEC8v69cNAhe/B/NDmujKUl6mEn2MQKiG40BrV4KuN6hw925+Lw467exS422t89vfLSm
+         Cl+A==
+X-Gm-Message-State: AOAM530L4QONb66dFeCYpJCoex2l7xv6w9ZSWae6qeKL88GYujUiqNMH
+        Tr7UVldOD5lxBhZdBSCF/0U=
+X-Google-Smtp-Source: ABdhPJxXfQSxitBWipKKPmKnPeu94pbmbr+c/34GKq1ITLPe4jMUtzYHuy2lCcaUrX7xWD8UX6Cmsw==
+X-Received: by 2002:a65:53c8:: with SMTP id z8mr1692570pgr.192.1621468480580;
+        Wed, 19 May 2021 16:54:40 -0700 (PDT)
 Received: from localhost.localdomain ([94.140.8.39])
-        by smtp.googlemail.com with ESMTPSA id z12sm397670pfk.45.2021.05.19.16.54.32
+        by smtp.googlemail.com with ESMTPSA id z12sm397670pfk.45.2021.05.19.16.54.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 16:54:35 -0700 (PDT)
+        Wed, 19 May 2021 16:54:40 -0700 (PDT)
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     alex.williamson@redhat.com, raphael.norwitz@nutanix.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kw@linux.com, Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: [PATCH RESEND v2 0/7] Expose and manage PCI device reset
-Date:   Thu, 20 May 2021 05:24:19 +0530
-Message-Id: <20210519235426.99728-1-ameynarkhede03@gmail.com>
+Subject: [PATCH RESEND v2 1/7] PCI: merge slot and bus reset implementations
+Date:   Thu, 20 May 2021 05:24:20 +0530
+Message-Id: <20210519235426.99728-2-ameynarkhede03@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210519235426.99728-1-ameynarkhede03@gmail.com>
+References: <20210519235426.99728-1-ameynarkhede03@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[RESEND with Shanker's patches as those depend on this series]
+From: Raphael Norwitz <raphael.norwitz@nutanix.com>
 
-PCI and PCIe devices may support a number of possible reset mechanisms
-for example Function Level Reset (FLR) provided via Advanced Feature or
-PCIe capabilities, Power Management reset, bus reset, or device specific reset.
-Currently the PCI subsystem creates a policy prioritizing these reset methods
-which provides neither visibility nor control to userspace.
+Slot resets are bus resets with additional logic to prevent a device
+from being removed during the reset. Currently slot and bus resets have
+separate implementations in pci.c, complicating higher level logic. As
+discussed on the mailing list, they should be combined into a generic
+function which performs an SBR. This change adds a function,
+pci_reset_bus_function(), which first attempts a slot reset and then
+attempts a bus reset if -ENOTTY is returned, such that there is now a
+single device agnostic function to perform an SBR.
 
-Expose the reset methods available per device to userspace, via sysfs
-and allow an administrative user or device owner to have ability to
-manage per device reset method priorities or exclusions.
-This feature aims to allow greater control of a device for use cases
-as device assignment, where specific device or platform issues may
-interact poorly with a given reset method, and for which device specific
-quirks have not been developed.
+This new function is also needed to add SBR reset quirks and therefore
+is exposed in pci.h.
 
-Changes in v2:
-	- Use byte array instead of bitmap to keep track of
-	  ordering of reset methods
-	- Fix incorrect use of reset_fn field in octeon driver
-	- Allow writing comma separated list of names of supported reset
-	  methods to reset_method sysfs attribute
-	- Writing empty string instead of "none" to reset_method attribute
-	  disables ability of reset the device
+Link: https://lkml.org/lkml/2021/3/23/911
 
-Sending Raphael's patch again as this series depends on it.
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+---
+ drivers/pci/pci.c   | 19 +++++++++++--------
+ include/linux/pci.h |  1 +
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-
-Amey Narkhede (4):
-  PCI: Add pcie_reset_flr to follow calling convention of other reset
-    methods
-  PCI: Add new array for keeping track of ordering of reset methods
-  PCI: Remove reset_fn field from pci_dev
-  PCI/sysfs: Allow userspace to query and set device reset mechanism
-
-Raphael Norwitz (1):
-  PCI: merge slot and bus reset implementations
-
-Shanker Donthineni (2):
-  PCI: Add support for a function level reset based on _RST method
-  PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
-
- Documentation/ABI/testing/sysfs-bus-pci       |  16 ++
- drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
- .../ethernet/cavium/liquidio/lio_vf_main.c    |   2 +-
- drivers/pci/pci-sysfs.c                       |  93 +++++++-
- drivers/pci/pci.c                             | 206 +++++++++++-------
- drivers/pci/pci.h                             |  10 +-
- drivers/pci/pcie/aer.c                        |  12 +-
- drivers/pci/probe.c                           |   4 +-
- drivers/pci/quirks.c                          |  23 +-
- include/linux/pci.h                           |  11 +-
- 10 files changed, 278 insertions(+), 103 deletions(-)
-
---
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 16a17215f..a8f8dd588 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4982,6 +4982,15 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
+ 	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+ }
+ 
++int pci_reset_bus_function(struct pci_dev *dev, int probe)
++{
++	int rc = pci_dev_reset_slot_function(dev, probe);
++
++	if (rc != -ENOTTY)
++		return rc;
++	return pci_parent_bus_reset(dev, probe);
++}
++
+ static void pci_dev_lock(struct pci_dev *dev)
+ {
+ 	pci_cfg_access_lock(dev);
+@@ -5102,10 +5111,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+ 	rc = pci_pm_reset(dev, 0);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	rc = pci_dev_reset_slot_function(dev, 0);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	return pci_parent_bus_reset(dev, 0);
++	return pci_reset_bus_function(dev, 0);
+ }
+ EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+ 
+@@ -5135,13 +5141,10 @@ int pci_probe_reset_function(struct pci_dev *dev)
+ 	if (rc != -ENOTTY)
+ 		return rc;
+ 	rc = pci_pm_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_dev_reset_slot_function(dev, 1);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+ 
+-	return pci_parent_bus_reset(dev, 1);
++	return pci_reset_bus_function(dev, 1);
+ }
+ 
+ /**
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 86c799c97..979d54335 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1228,6 +1228,7 @@ int pci_probe_reset_bus(struct pci_bus *bus);
+ int pci_reset_bus(struct pci_dev *dev);
+ void pci_reset_secondary_bus(struct pci_dev *dev);
+ void pcibios_reset_secondary_bus(struct pci_dev *dev);
++int pci_reset_bus_function(struct pci_dev *dev, int probe);
+ void pci_update_resource(struct pci_dev *dev, int resno);
+ int __must_check pci_assign_resource(struct pci_dev *dev, int i);
+ int __must_check pci_reassign_resource(struct pci_dev *dev, int i, resource_size_t add_size, resource_size_t align);
+-- 
 2.31.1
+
