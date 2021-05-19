@@ -2,159 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE37A388D52
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 13:56:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9E9A388ECE
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 15:17:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240448AbhESL5q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 07:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
+        id S1346691AbhESNSt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 09:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352823AbhESL5o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 07:57:44 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD82C06175F
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 04:56:23 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id r11so14964810edt.13
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 04:56:23 -0700 (PDT)
+        with ESMTP id S1346669AbhESNSs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 09:18:48 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0112C06175F;
+        Wed, 19 May 2021 06:17:27 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id i4so18067013ybe.2;
+        Wed, 19 May 2021 06:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=kMwtQn6dV3yt3Ot507gI7+kLTeD78TGfI26lLWSJ/c4=;
-        b=OPRSudK29E1xqPKA4nzwRHZmiy8tPSCdaTH2oQIa4jgyGW7GROLeGAWFha4fTXBRQv
-         f12rebmAxnRqfoav2+mPoI2oJfxwPqOtlvuaSm/wYvzWe30STVRwMb0/8Hl34cv8QlLl
-         svuSp4yMqsuAUL1g/eYEe0QbKNERq5P4Sw8r1PNSB0Iu2y/Cc5aeEIKZd/YmPr8xXd7Z
-         U2t9GiiVk2Fj5wQYMygbAlw4V7qp+pCShHnx1E52JLoJI+z9I/eVwvXFzwMfbutGOAUV
-         HiUjDEaa61Yx+s2T/hcg1qWK0QOFbkMSbC068iPmFLJ7gG+BndP1OU42pGBILTTxe2QN
-         jvPg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A6Jfch/p94re7yclpHhujTruAgxqnQLQ1mCUzKRd7q4=;
+        b=HhG/A45dQa4qIzMfTz89p780PIxvUCDkdamKN59vDz4tkA+G44oUzKWb2+QcYLJbg/
+         YXgUbRkWR86EFKC85C1FiB2wZ+SAXAw+B91ZQT6UvbPpWGRVO929S+JWC1apqX4DhMv2
+         WmkW4q0/OKhmvgv4cGBBpzmNZT93+9x06jr5K1DrKXNdYOgi9YQcvaI3KqfRJ5K2sp6B
+         bDrwFliBuh8SHOmklFnX+0R9CVA4gDNoUG1YR0do25XTGiM/LpAxuPkm8Ygy9tL1h6GC
+         Ltapb7DcGuenr+mgI5OPXK7f21C3XFyfNePcfPbFfiHChbQ5YqM2CCvmZDQNhN5nxBr/
+         HoUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=kMwtQn6dV3yt3Ot507gI7+kLTeD78TGfI26lLWSJ/c4=;
-        b=JcUwUeB7Py7cUI7BoFitO7AltIIICZC4DhmHqyqMyhdg+PLJAsDX1dMR1w0FEAAr2R
-         qAclxzhEZfDIFQY7Ch9iRzQ67JnoQHDG7QIwCYzzbBq9RpOxa49Qit3rdHlPJc/qJw9Q
-         ocoLZmIqPiv28uZVSbPoRnTKj7sn1wQL0gBw5V5yGVHLB0Y45ms5vz5zbVGR0AmLAEmi
-         AaC8JsrVTlj9UuONTB7FkgBwyprOfiHix19gku/C674GjkfSAWCssJv1DsktOuUPlEDx
-         OZMYx70DKs3aESwq+fERU/sRdUGA9JN7olzIOFmIiab3u0c5ajq2oVKEpqC9HP1C0na5
-         xfhA==
-X-Gm-Message-State: AOAM532NFXU7FM0T85QlYdi8SGh5KyeaQN3UEQxFKzQZed1rvNVtB95S
-        aom6Ke+DEjIG/3VsT025B6s=
-X-Google-Smtp-Source: ABdhPJwtcTnsX9qzeGwPKZ/RMedIxGukbaLl5MGcU5rIZW83uBy37Pu5ENlyzkncBPUylzWbAksKhg==
-X-Received: by 2002:aa7:de8b:: with SMTP id j11mr14010358edv.363.1621425382249;
-        Wed, 19 May 2021 04:56:22 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:8e28:1d3:41f3:e15a? ([2a02:908:1252:fb60:8e28:1d3:41f3:e15a])
-        by smtp.gmail.com with ESMTPSA id u11sm15608540edr.13.2021.05.19.04.56.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 May 2021 04:56:21 -0700 (PDT)
-Subject: Re: [PATCH v7 13/16] drm/scheduler: Fix hang when sched_entity
- released
-To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, daniel.vetter@ffwll.ch,
-        Harry.Wentland@amd.com
-Cc:     Alexander.Deucher@amd.com, gregkh@linuxfoundation.org,
-        ppaalanen@gmail.com, helgaas@kernel.org, Felix.Kuehling@amd.com
-References: <20210512142648.666476-1-andrey.grodzovsky@amd.com>
- <20210512142648.666476-14-andrey.grodzovsky@amd.com>
- <9e1270bf-ab62-5d76-b1de-e6cd49dc4841@amd.com>
- <f0c5dea7-af35-9ea5-028e-6286e57a469a@amd.com>
- <34d4e4a8-c577-dfe6-3190-28a5c63a2d23@amd.com>
- <da1f9706-d918-cff8-2807-25da0c01fcde@amd.com>
- <8228ea6b-4faf-bb7e-aaf4-8949932e869a@amd.com>
- <ec157a35-85fb-11e5-226a-c25d699102c6@amd.com>
- <53f281cc-e4c0-ea5d-9415-4413c85a6a16@amd.com>
- <0b49fc7b-ca0b-58c4-3f76-c4a5fab97bdc@amd.com>
- <31febf08-e9c9-77fa-932d-a50505866ec4@amd.com>
- <cd6bbe33-cbc5-43cb-80f7-1cb82a81e65d@amd.com>
- <77efa177-f313-5f1e-e273-6672ed46a90a@gmail.com>
- <4a9af53a-564d-62ae-25e1-06ca4129857f@amd.com>
- <1622338a-d95a-fe13-e4a4-c99cb4a31f6c@amd.com>
- <bc94fbc3-8e02-c860-fc58-6301219b84e5@amd.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <fa81de6a-e272-66cf-61d8-5bb2d0ebcb03@gmail.com>
-Date:   Wed, 19 May 2021 13:56:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A6Jfch/p94re7yclpHhujTruAgxqnQLQ1mCUzKRd7q4=;
+        b=PFSVEqnVvptx+QsMnX1K24M0PyFTxupRLv0jVABV7VfBna1UrOkQwzl9piPwA358fp
+         IUr9ckTXHMtHuLb1p1QpniLaPhNVLivBXR9FlGfQ+N99krxGSnzGnx7m/hBbMG+VVlno
+         zvGyJdq6H5s4dKk9N8FZe0fxIIcjmEC2odPOcrHDUEh19jCA94T/WJ0bherNY6BaTOlt
+         DuDF9DxiOV/Z75wyvO+7pzYQ3O28Wt61JT26QTxPpZER6ESJWOJ/NptdGTIsMkKn44x5
+         LH6HXofY2IdQjdV3F8WJ4KwBdmpW3npwnYL1IWFlGl1IM85B1pPGp897gC+/wHcdaZig
+         ekeQ==
+X-Gm-Message-State: AOAM531Vk3+2ohvdH1OWKJPCnnfZ/SPx1rtQW/N5J0m97saH8p5vBDgT
+        kaSAtDoCOotqNCvmYAO0GYzQePHFapuemwen5Zw=
+X-Google-Smtp-Source: ABdhPJw8eM94VwtsxsUoGMX8et3EviMo7wG2qk+v7/vGsxDSGV2nDfyBFH2F4v7F6ZUCNeTy/TLZOQAMYVwIibchX0c=
+X-Received: by 2002:a5b:303:: with SMTP id j3mr14122782ybp.433.1621430247082;
+ Wed, 19 May 2021 06:17:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bc94fbc3-8e02-c860-fc58-6301219b84e5@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com> <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
+In-Reply-To: <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Wed, 19 May 2021 09:17:16 -0400
+Message-ID: <CAMdYzYpc4JeGEu6uJt5OnPRBGFzYhZB3UAQf4+TZuDGgA7OaAg@mail.gmail.com>
+Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
+ 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
+ memory addresses")
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Alexandru Elisei <alexandru.elisei@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        heiko.stuebner@theobroma-systems.com,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 19.05.21 um 13:51 schrieb Andrey Grodzovsky:
+On Wed, May 19, 2021 at 9:04 AM Robin Murphy <robin.murphy@arm.com> wrote:
 >
+> [ +linux-pci for visibility ]
 >
-> On 2021-05-19 7:46 a.m., Christian König wrote:
->> Am 19.05.21 um 13:03 schrieb Andrey Grodzovsky:
->>>
->>>
->>> On 2021-05-19 6:57 a.m., Christian König wrote:
->>>> Am 18.05.21 um 20:48 schrieb Andrey Grodzovsky:
->>>>> [SNIP]
->>>>>>>
->>>>>>> Would this be the right way to do it ?
->>>>>>
->>>>>> Yes, it is at least a start. Question is if we can wait blocking 
->>>>>> here or not.
->>>>>>
->>>>>> We install a callback a bit lower to avoid blocking, so I'm 
->>>>>> pretty sure that won't work as expected.
->>>>>>
->>>>>> Christian.
->>>>>
->>>>> I can't see why this would create problems, as long as the 
->>>>> dependencies
->>>>> complete or force competed if they are from same device 
->>>>> (extracted) but
->>>>> on a different ring then looks to me it should work. I will give it
->>>>> a try.
->>>>
->>>> Ok, but please also test the case for a killed process.
->>>>
->>>> Christian.
->>>
->>> You mean something like run glxgears and then simply
->>> terminate it ? Because I done that. Or something more ?
->>
->> Well glxgears is a bit to lightweight for that.
->>
->> You need at least some test which is limited by the rendering pipeline.
->>
->> Christian.
+> On 2021-05-18 10:09, Alexandru Elisei wrote:
+> > After doing a git bisect I was able to trace the following error when booting my
+> > rockpro64 v2 (rk3399 SoC) with a PCIE NVME expansion card:
+> >
+> > [..]
+> > [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+> > [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
+> > 0x00fa000000
+> > [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
+> > 0x00fbe00000
+> > [    0.306201] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
+> > regulator
+> > [    0.306334] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
+> > regulator
+> > [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
+> > [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
+> > [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
+> > [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
+> > address [0xfbe00000-0xfbefffff])
+> > [    0.373839] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
+> > [    0.373973] pci 0000:00:00.0: supports D1
+> > [    0.373992] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+> > [    0.378518] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
+> > reconfiguring
+> > [    0.378765] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
+> > [    0.378869] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+> > [    0.379051] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
+> > [    0.379661] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+> > 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+> > x4 link)
+> > [    0.393269] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+> > [    0.393311] pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
+> > [    0.393333] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
+> > [    0.393356] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
+> > [    0.393375] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
+> > [    0.393397] pci 0000:00:00.0: PCI bridge to [bus 01]
+> > [    0.393839] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
+> > [    0.394165] pcieport 0000:00:00.0: AER: enabled with IRQ 78
+> > [..]
+> >
+> > to the commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for
+> > 64-bit memory addresses").
 >
-> You mean something that fill the entity queue faster then sched thread
-> empties it so when we kill the process we actually need to explicitly go
-> through remaining jobs termination ? I done that too by inserting
-> artificial delay in drm_sched_main.
+> FWFW, my hunch is that the host bridge advertising no 32-bit memory
+> resource, only only a single 64-bit non-prefetchable one (even though
+> it's entirely below 4GB) might be a bit weird and tripping something up
+> in the resource assignment code. It certainly seems like the thing most
+> directly related to the offending commit.
+>
+> I'd be tempted to try fiddling with that in the DT (i.e. changing
+> 0x83000000 to 0x82000000 in the PCIe node's "ranges" property) to see if
+> it makes any difference. Note that even if it helps, though, I don't
+> know whether that's the correct fix or just a bodge around a corner-case
+> bug somewhere in the resource code.
+>
+> Robin.
 
-Yeah, something like that.
+Good Morning Robin,
 
-Ok in that case I would say that this should work then.
+It seems we meet again for PCIe issues.
+I think you might be onto something about the resource assignment code
+doing weird things.
+I'm doing early bringup on the rk3566, which has a 1GB address space
+at 0x3 0x00000000 for the PCIe controller.
+I started with the recent linux-next, so this patch was already applied.
+Since it has a large enough address space, I decided to try and get a
+DGPU to work with it.
+I kept hitting strange issues such as it wouldn't allocate 32bit BARs
+in the 64bit space randomly.
+I tried messing with the ranges to force it as 32bit, but it would
+still be flagged as a 64bit space when finally allocated (I thought
+this might be due to the location of the memory).
 
-Christian.
+Here are the ranges that I eventually got to allocate correctly (once).
+
+ranges = <0x01000000 0x0 0x00800000 0x3 0x00800000 0x0 0x00100000
+  0x02000000 0x0 0x00900000 0x3 0x00900000 0x0 0x30000000
+  0x43000000 0x0 0x30900000 0x3 0x30900000 0x0 0x0f700000>;
+
+It did weird things when I'd change that 0x02000000 to a 0x03000000,
+even though the final allocation was flagged as 64bit.
+
+Thanks for everything!
+Peter
 
 >
-> Andrey
+> > For reference, here is the dmesg output when BAR
+> > reassignment works:
+> >
+> > [..]
+> > [    0.307381] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+> > [    0.307445] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
+> > 0x00fa000000
+> > [    0.307481] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
+> > 0x00fbe00000
+> > [    0.308406] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
+> > regulator
+> > [    0.308534] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
+> > regulator
+> > [    0.374676] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
+> > [    0.374701] pci_bus 0000:00: root bus resource [bus 00-1f]
+> > [    0.374723] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
+> > [    0.374746] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
+> > address [0xfbe00000-0xfbefffff])
+> > [    0.374808] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
+> > [    0.374943] pci 0000:00:00.0: supports D1
+> > [    0.374961] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+> > [    0.379473] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
+> > reconfiguring
+> > [    0.379712] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
+> > [    0.379815] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+> > [    0.379997] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
+> > [    0.380607] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+> > 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+> > x4 link)
+> > [    0.394239] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+> > [    0.394285] pci 0000:00:00.0: BAR 14: assigned [mem 0xfa000000-0xfa0fffff]
+> > [    0.394312] pci 0000:01:00.0: BAR 0: assigned [mem 0xfa000000-0xfa003fff 64bit]
+> > [    0.394374] pci 0000:00:00.0: PCI bridge to [bus 01]
+> > [    0.394395] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0fffff]
+> > [    0.394569] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+> > [    0.394845] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
+> > [    0.395153] pcieport 0000:00:00.0: AER: enabled with IRQ 78
+> > [..]
+> >
+> > And here is the output of lspci when BAR reassignment works:
+> >
+> > # lspci -v
+> > 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd RK3399 PCI Express Root
+> > Port (prog-if 00 [Normal decode])
+> >      Flags: bus master, fast devsel, latency 0, IRQ 78
+> >      Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+> >      I/O behind bridge: 00000000-00000fff [size=4K]
+> >      Memory behind bridge: fa000000-fa0fffff [size=1M]
+> >      Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+> >      Capabilities: [80] Power Management version 3
+> >      Capabilities: [90] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+> >      Capabilities: [b0] MSI-X: Enable- Count=1 Masked-
+> >      Capabilities: [c0] Express Root Port (Slot+), MSI 00
+> >      Capabilities: [100] Advanced Error Reporting
+> >      Capabilities: [274] Transaction Processing Hints
+> >      Kernel driver in use: pcieport
+> > lspci: Unable to load libkmod resources: error -2
+> >
+> > 01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD
+> > Controller SM981/PM981/PM983 (prog-if 02 [NVM Express])
+> >      Subsystem: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983
+> >      Flags: bus master, fast devsel, latency 0, IRQ 77, NUMA node 0
+> >      Memory at fa000000 (64-bit, non-prefetchable) [size=16K]
+> >      Capabilities: [40] Power Management version 3
+> >      Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+> >      Capabilities: [70] Express Endpoint, MSI 00
+> >      Capabilities: [b0] MSI-X: Enable+ Count=33 Masked-
+> >      Capabilities: [100] Advanced Error Reporting
+> >      Capabilities: [148] Device Serial Number 00-00-00-00-00-00-00-00
+> >      Capabilities: [158] Power Budgeting <?>
+> >      Capabilities: [168] Secondary PCI Express
+> >      Capabilities: [188] Latency Tolerance Reporting
+> >      Capabilities: [190] L1 PM Substates
+> >      Kernel driver in use: nvme
+> >
+> > I can provide more information if needed (the board is sitting on my desk) and I
+> > can help with testing the fix.
+> >
+> > Thanks,
+> >
+> > Alex
+> >
+> >
+> > _______________________________________________
+> > Linux-rockchip mailing list
+> > Linux-rockchip@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> >
 >
->>
->>>
->>> Andrey
->>>
->>>
->>>>
->>>>>
->>>>> Andrey
->>>>
->>>> _______________________________________________
->>>> amd-gfx mailing list
->>>> amd-gfx@lists.freedesktop.org
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Famd-gfx&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cce1252e55fae4338710d08d91ab4de01%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637570186393107071%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=vGqxY5sxpEIiQGFBNn2PWkKqVjviM29r34Yjv0wujf4%3D&amp;reserved=0 
->>>>
->>
-
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
