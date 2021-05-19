@@ -2,111 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAAE8388FBC
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 16:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7534938905F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 16:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346771AbhESODQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 10:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240179AbhESODP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 10:03:15 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26433C061760
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 07:01:56 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id o10so11332906ilm.13
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 07:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fatalsyntax-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:content-transfer-encoding:cc:subject:from:to:date
-         :message-id:in-reply-to;
-        bh=l0qnOBDAqFxbAl4A/tgruJXdRSPfyXeqpxkVnrjpsLU=;
-        b=BCE33qPApN0PgECWGnTxif8soc0GJNwskBzJc2K+CfySp9KdVw+UmXMVjPygm2rZhM
-         Re+pomhsghUP0srqeVuGY7acL1TKrvkHdrjBNTVKpjCHzdYdFk6e3J1r/7KzIra98cE3
-         Fw/sZdGmTeH04OeqHDJDdybGLBPujMVL12Erac1vWa3kut1MsqhQlaIBbakHUTpUwhym
-         Oh9hwaF5ZTCYygHxsLxT1U4WQI0LrPGJdzAVfAboM8jaySEkr6t2kYgO+3l0Qt43CV6H
-         RPX/EkPXpjOLs/B/c6NkQHtCIt6alzO6DZ96iiBbbBbCZ8NBi0JyXMSt5D0tdd5LEovM
-         /d7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding:cc
-         :subject:from:to:date:message-id:in-reply-to;
-        bh=l0qnOBDAqFxbAl4A/tgruJXdRSPfyXeqpxkVnrjpsLU=;
-        b=hA2q8mHix/uuJQWpK+5rmujsPjkFdQHUJ4uo7JhMLsayn3BZLU46U979rXsUobJO4x
-         TIIMSL2pYGhtibW/5F2BOO+yUSQ7FksgLOWgf37DFDTQEfDYC/xrbPAvz+/FhMGh0Kdt
-         c55QQdt2WkCMLqlo/Z0ZZtOrPrvr2hAvHswYnd3DOrkDx1yTHO9HuUErazndKyHYfjBO
-         nt6tgAhiGSRMD5KmLh06YyWYfvdA7xShOgLuEckCN+eZa90j+oyFP/SRi+Aiqc+F0HGB
-         wELB4rdf5QKLtS/BHTkz0czNd1H1Osk6sktpcTwLSVKagPj8gPMnKhuZuEslgEsi0/yx
-         RoMA==
-X-Gm-Message-State: AOAM530ja5XfcXUcPq3EE0wddWxo/+hB6tpnhwYg6dRBgmOqUjFwVH+H
-        ZjUaLXC40HQFqdAZMWA2Sqoq/w==
-X-Google-Smtp-Source: ABdhPJwfg75GDFB7soifn4UuZUdaLr9R5CyiL2hi51XRrKD29gZA64BPkkDQZlRlbFKjUG2kcnswRw==
-X-Received: by 2002:a05:6e02:2149:: with SMTP id d9mr10978074ilv.162.1621432915377;
-        Wed, 19 May 2021 07:01:55 -0700 (PDT)
-Received: from localhost (2603-6000-ca08-f320-6401-a7ff-fe72-256d.res6.spectrum.com. [2603:6000:ca08:f320:6401:a7ff:fe72:256d])
-        by smtp.gmail.com with ESMTPSA id a6sm6121262ili.21.2021.05.19.07.01.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 May 2021 07:01:54 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Cc:     "Bjorn Helgaas" <helgaas@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>
-Subject: Re: [PATCH] pci: add NVMe FLR quirk to the SM951 SSD
-From:   "Robert Straw" <drbawb@fatalsyntax.com>
-To:     "Christoph Hellwig" <hch@infradead.org>
-Date:   Wed, 19 May 2021 07:54:19 -0500
-Message-Id: <CBH8K74TF8IQ.2KUOIGFJ7K8XP@nagato>
-In-Reply-To: <YKTP2GQkLz5jma/q@infradead.org>
+        id S1354294AbhESOQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 10:16:54 -0400
+Received: from mail-bn8nam11on2041.outbound.protection.outlook.com ([40.107.236.41]:24384
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1353952AbhESOPq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 May 2021 10:15:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SuDomIHy+stGE6+OCgbP6SKSOKBc2l+lRtecskJxi2XZEBrZDSTzrQZEl2Dn1lfzI6zZAVZWrKkoA+wufPYPXFET6rEMbc0ARTx9fRJXzI/6A+2xO/huug+XW9/W8eRGn5r1uCca8uQS+HMBFcpJL1acKjck8gdJ75yts/b4npPkyD+2ODVYkmgPGPFZ5yGRmWMw2rRH0mS4kRjWsKe9OUlhs34s7b9+aS46cZo4XJeqVSvCUdNse4w5Q26fMPtDvSSuSfU+RZDLtUrVt6t5WA99JRynkqvU9s0hS3HgqmHk7MJTaT9XyseAAFJ4WAqDdV9+TR2KcUkF9p8ALLPOHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vkh8YAcd47I8/ykU3HWoHlkx3BeqtckaqVnP1KalAew=;
+ b=cDC/rW7K96CR+TwXz18lBQd7WNBvnKL1SGz1hEQL9/H1Isgv8ZVK0GapOrwRNR4XBvidKvby1E8RvqMHFsAQzBPMi6cwqTdDkjdPtP4E2uBfaniNtP4d6hmp2UHwh39wx/w1/j3ojP3kb+yWPoXDvnXQbY6lcvOeAXWDcA8ZDB6RrZuqSZshJaB1zX/RZNPjyhP+K/jedDCk1yUUtl77yppHKU/5B4bsnz28szhpI8bfl0NUahxSsZm9XQLAznYmuuyq8RMC9tZij//hfdpA40f94/Fb7cAIjo6WunVhU9CPgW6MOxILCw8rGBQ/rkyY0955tAcX076eNjJ5gdFGeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vkh8YAcd47I8/ykU3HWoHlkx3BeqtckaqVnP1KalAew=;
+ b=zt62TUdNh26+V5V/f/t+XS3Zv0//J1YhGMx58eKm5Z+eKIx5ouj0bUuDoK/cCE8hMU3HdO8CVpORKLqWzsReUvz2E7yrsolvvIwM1xy5YSWidaKR9aABNgSetrQoog7ZDv7d7eEJfVR6Au2kN1JjBrO11tmsfZMxE+PCng2rbM8=
+Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
+ by SA0PR12MB4351.namprd12.prod.outlook.com (2603:10b6:806:71::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.25; Wed, 19 May
+ 2021 14:14:23 +0000
+Received: from SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
+ ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4129.033; Wed, 19 May 2021
+ 14:14:23 +0000
+From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+To:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, ckoenig.leichtzumerken@gmail.com,
+        daniel.vetter@ffwll.ch, Harry.Wentland@amd.com
+Cc:     ppaalanen@gmail.com, Alexander.Deucher@amd.com,
+        gregkh@linuxfoundation.org, helgaas@kernel.org,
+        Felix.Kuehling@amd.com,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Subject: [PATCH] drm/sched: Avoid data corruptions
+Date:   Wed, 19 May 2021 10:14:07 -0400
+Message-Id: <20210519141407.88444-1-andrey.grodzovsky@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <fa81de6a-e272-66cf-61d8-5bb2d0ebcb03@gmail.com>
+References: <fa81de6a-e272-66cf-61d8-5bb2d0ebcb03@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [2607:fea8:3edf:49b0:1069:60ba:d67c:3ab3]
+X-ClientProxiedBy: YT2PR01CA0011.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:38::16) To SN6PR12MB4623.namprd12.prod.outlook.com
+ (2603:10b6:805:e9::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from agrodzovsky-All-Series.hitronhub.home (2607:fea8:3edf:49b0:1069:60ba:d67c:3ab3) by YT2PR01CA0011.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:38::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.31 via Frontend Transport; Wed, 19 May 2021 14:14:22 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 65c53822-b51a-4d0f-8e5b-08d91ad06703
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4351:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4351D0840792EA87FDF0C17FEA2B9@SA0PR12MB4351.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:37;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zqZlqC7EhqN/w+WwhcDCLmgShc+IYjXvYKKGkhzPZLIpe0Wdns6msVTZuAmiW9buMElMN3W7BC8NoR6VswyemZeTLL5b+8yTvWkaOYiPRGyhJaMUL2iPsDiwVGfo5mHguRf77O/BuuX9G/GvSSzGr+0V0sku0L7Z64Ed13S0l1t2azGVnY/TQ2rQdyFXBsb8Z/kobXHiLaWKuMVWfLJXt4WhwqhNAi2UDjr2CyFIxWIfPJj4sQfxpRoZ/nVKUvGcB9SFRhg3eAfDBohem35TTtfHFzxYpHDAOtE3qz50tj5/yXV4nd5VDOi5ii0LuwjF3qpxY7IivuEm/uOQ0g7OB5pcsYj2gloEp4brMRuEEFzzzlttLyIEaft88EFKDNX3uv1igEa1FPKW2nNbufcHgUpE7KjQik5Lhfv/kGEwJfdwOVen0oTtngA5spmnn+at3qs/gBb9wZ871dnYvLxCfHotlqWaaCG4EvPrpq/8xyZFqc8a+1M5KznauiyUAO1vtmuihpIQxQPtVOrBB6DjfJHx+5dO48e8CQuzprcaVaN8VEdteT8K57XfUrA2u7qVPpuHO38ebru373Yb4yltOx32EuFODdjiz5JI/YeyeDs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(346002)(376002)(39860400002)(16526019)(4326008)(2906002)(1076003)(2616005)(66556008)(6512007)(6636002)(478600001)(8936002)(8676002)(5660300002)(66476007)(316002)(66946007)(6486002)(36756003)(38100700002)(86362001)(6666004)(186003)(52116002)(44832011)(6506007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Y/hw76OSjfMhbzWFmmg31g+6B/5NNPU/kHA2n5ctZ0usND+GcpEHhPqzBEft?=
+ =?us-ascii?Q?shUQGhXFZrsOrLki1XG0AtXtNEBwcs1hACrjf1N3xZeLoU4xlQoTIVcw3EyE?=
+ =?us-ascii?Q?NytqKFYz2AGwEImnX9kopq+LPivXCwXJyVy5k+4ik+Y+ISYHNAomtjIbTqwS?=
+ =?us-ascii?Q?y19/EKxtWsamXHrM5nqx+q+Dapa9H4fztasnU18KrH7csj0N74ZkmvVAMulm?=
+ =?us-ascii?Q?oyalHghLKrTW4SW+K7VbYXcdsf0RF1cyzwm4JmeW4EteubpFrxH2cAyzj+1J?=
+ =?us-ascii?Q?0dpMj9hxRKuhhV0GEPUa8Dqh7wMLZr7CDHD2xXLP9LXqfssiVnxhdFa5az/i?=
+ =?us-ascii?Q?V/wuNpXRoNfqfnvKmYW4zJ8Ak5GCu77a9CYgto7Ofr02okDw8ujRXosI983F?=
+ =?us-ascii?Q?puB3qIiqMbZbLuozE6zlta1wh4nvkUiKf/CZyUIhX7lqGVEczx2B6SrsfMwn?=
+ =?us-ascii?Q?qNfxJwM3wciG+nA5B6+ViqwWhPnbGni23hmluA5JpoeTEKDP97BntcYThmrs?=
+ =?us-ascii?Q?G3wD7mHgRXFJwLkSdsFIprjBftH5jp2cX0Gix3VwWZaGT834K5AEWQIVd0AH?=
+ =?us-ascii?Q?WGqxub0c/60NLKfCP9hinQWoieIjqv1QFErp8mS2aDoGFxY+Nlyu0/yUPqdc?=
+ =?us-ascii?Q?3ca/gt0x46Sk3Xgor4Tasum6D9mQErNIYZWy0GgGsiQAra/nK43BuDzVl7il?=
+ =?us-ascii?Q?q5Adobo1y31Nm8HD5UbnjDX5AgKZay4/3JOn4PmblY3JEHFZF8kgm7zWr8mc?=
+ =?us-ascii?Q?R8Va26+J6hMIoXdlPzlJLGpGoDZpEGO7ZPPBYCMHNOMBZ1kJ05nFVfPIRKSx?=
+ =?us-ascii?Q?20UFcW/yyVSHYFpEm2r7sGgNSHWhMbR2sVAogcPC4DrjqSHBSSqddN7Sfb2X?=
+ =?us-ascii?Q?S/JTqjm7lKQ18sl/TzaZ7GJyYNGpIUAGivn5vZaQfNXp6X124WBbG13+Jq6O?=
+ =?us-ascii?Q?I1CVlxY9fkMwPWypZK9lkC5GGSsS+RyoxsoD/t6Zj7/t4pjRcLdLSNwUJczW?=
+ =?us-ascii?Q?UFncs8hAnAm1SXEv2rkhCV8jzNh1iZypgFNUXZQ2jUW+idaq69AFKWIAjbG8?=
+ =?us-ascii?Q?lKDiwV116okmDZ8/GQhDxTiVIg2xa0eABbioR1HEhaG/TYYTPDPFt1ByfJcB?=
+ =?us-ascii?Q?FbD/3V50RiDyXXb8CfYsSwuVLjAG3M+dWFVDy69RWYSTxyWzt7fufU71CI+H?=
+ =?us-ascii?Q?6coklYl9xaEpLgJ3Kcdf21LIhp//9xzGOn5YjAOzdDfYeJnBkXfRc7+e0S5l?=
+ =?us-ascii?Q?hhBXtk5o09rUTvconFp5eXcKF02Dx3HomvF8Vueekh438n9CK3JUS/XnUpSy?=
+ =?us-ascii?Q?dOvUoYSUZ2ZUKjR6WCD3VDO6biAXPG01zpMXz2V0dSmTfcSKO/Y/r7400Z6v?=
+ =?us-ascii?Q?Ff/In94LCnv9P3JcF+yzXGykSqyX?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65c53822-b51a-4d0f-8e5b-08d91ad06703
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2021 14:14:23.5700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XpbLoE8MgE7zbDLLIhNc+9K+TK0OdXHxantp3WzgM591rUCjov2Dp8dLWoJOjduW/CYP4D0o0FE6IkWaqClULg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4351
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed May 19, 2021 at 3:44 AM CDT, Christoph Hellwig wrote:
-> On Sat, May 15, 2021 at 12:20:05PM -0500, Robert Straw wrote:
-> While it doesn't matter here, NVMe 1.1 is very much out of data, being
-> a more than 8 year old specification. The current version is 1.4b,
-> with NVMe 2.0 about to be released.
+Wait for all dependencies of a job  to complete before
+killing it to avoid data corruptions.
 
-I can't comment on 2.0, but yes 1.4b has the same aside regarding undefined
-behavior on the SHST field (on p. 50). The only reason I was looking at
-1.1a is because it's specifically listed on the datasheet for the SM951.
-(The device under test.)
+Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+---
+ drivers/gpu/drm/scheduler/sched_entity.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> No, we don't. This is a bug particular to a specific implementation.
-> In fact the whole existing NVMe shutdown before reset quirk is rather
-> broken and dangerous, as it concurrently accesses the NVMe registers
-> with the actual driver, which could be trivially triggered through the
-> sysfs reset attribute.
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index 2e93e881b65f..d5cf61972558 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -222,11 +222,16 @@ static void drm_sched_entity_kill_jobs_cb(struct dma_fence *f,
+ static void drm_sched_entity_kill_jobs(struct drm_sched_entity *entity)
+ {
+ 	struct drm_sched_job *job;
++	struct dma_fence *f;
+ 	int r;
+ 
+ 	while ((job = to_drm_sched_job(spsc_queue_pop(&entity->job_queue)))) {
+ 		struct drm_sched_fence *s_fence = job->s_fence;
+ 
++		/* Wait for all dependencies to avoid data corruptions */
++		while ((f = job->sched->ops->dependency(job, entity)))
++			dma_fence_wait(f);
++
+ 		drm_sched_fence_scheduled(s_fence);
+ 		dma_fence_set_error(&s_fence->finished, -ESRCH);
+ 
+-- 
+2.25.1
 
-I'm not exactly clear in what way the nvme driver would  be racing against=
-=20
-vfio-pci here. (a) vfio-pci is the driver bound in this scenario, and (b)
-the vfio-pci driver triggers this quirk by issuing an FLR, which is done=20
-with the device locked. (e.g: vfio_pci.c:499.)
-
-In my testing *without this patch* vfio-pci is still bound to the device=20
-for at least 60s after guest shutdown, at which point the FLR times out.
-After this FLR the device is useless w/o a full reboot of the host.=20
-Rebinding it to *either* another guest w/ vfio-pci, or the Linux nvme=20
-driver doesn't matter: as the device can no longer be reconfigured.
-
-As I understand it: vfio-pci should not blindly issue an FLR to an NVMe cla=
-ss=20
-device w/o obeying the protocol. The protocol seems clear that after a=20
-shutdown CC->EN must transition from 1 to 0. (I would argue the guest OS=20
-leaving the device in this state is the actual violation of the spec. As=20
-I'm unable to change that behavior: having vfio-pci clean up the mess w/=20
-this quirk seems to be an adequate workaround.)
-
-I am currently testing  a version of this patch that only disables the
-controller if the device has been previously shutdown. I am trying to
-gauge whether this would be preferable to just blanket-disabling these=20
-bugged devices before relinquishing control of them back to the host.
-
-> I'd much rather quirk these broken Samsung drivers to not allow
-> assigning them to VFIO.
-
-I'd much rather keep using my storage devices. I will leave the=20
-quirk limited to these known-bugged devices.
