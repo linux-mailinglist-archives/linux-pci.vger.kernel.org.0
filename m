@@ -2,255 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88365389453
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 19:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 351BC3894A2
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 19:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355495AbhESREJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 13:04:09 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4540 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355505AbhESREJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 13:04:09 -0400
-Received: from dggems702-chm.china.huawei.com (unknown [172.30.72.58])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FlfHg6NV2zsSdP;
-        Thu, 20 May 2021 00:59:59 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- dggems702-chm.china.huawei.com (10.3.19.179) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 20 May 2021 01:02:45 +0800
-Received: from localhost (10.52.121.81) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 19 May
- 2021 18:02:42 +0100
-Date:   Wed, 19 May 2021 18:00:57 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-Message-ID: <20210519180057.00002ac3@Huawei.com>
-In-Reply-To: <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com>
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
-        <20210419165451.2176200-3-Jonathan.Cameron@huawei.com>
-        <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
-        <20210511175006.00007861@Huawei.com>
-        <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
-        <20210514094755.00002081@Huawei.com>
-        <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
-        <20210517094045.00004d58@Huawei.com>
-        <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
-        <20210518110403.000013e6@Huawei.com>
-        <CAPcyv4g3JPtAHzemKdQiM44ZkZ_0u+U-UJ5mfeU3fKzRWuaDyQ@mail.gmail.com>
-        <20210519161156.00003bf9@Huawei.com>
-        <CAPcyv4j_oEWG1NG1wYryVt3-Gx8q2WwzP7_xhchsDARDR0zBEA@mail.gmail.com>
-        <20210519172052.00002124@Huawei.com>
-        <20210519173352.000026fe@Huawei.com>
-        <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S1347692AbhESR3k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 13:29:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242522AbhESR3k (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 May 2021 13:29:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 91299610A2;
+        Wed, 19 May 2021 17:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621445299;
+        bh=bA4Stah1HCjZh88A5SXnso641+/xsmALqMYhpYKD3qM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WeXbmHC18+7nhK1KF+FWohkdeV4cRRsBClb+aYV2QfPVRzyhcCIGYK0wsSVezAe2B
+         T0rOj2xydvj9fkaIHYquiKq+4XgBlwIMHedZ3rlPg2Xi4jIUFCVYoq+WXsXO7u4k/E
+         6JhO9ePxCl7odsL5b9m6+4hcoKWQx+AGbfm5e6RHVSsRuaz3u0Ixgb/UssovjKpaFA
+         dT9fXhZByvi4NxhpVczoZpl/8ILumjsoVBqvcQMk0In+9uvHoYTiK0hRErc86tYGVM
+         wMzR6APU+TZ8j3lGlUWVQgCmt1qb44UO2cDPWOhyLasPy/6N0dpfdm8oHXg6TukC9/
+         nyfNQU0x8ebXg==
+Date:   Wed, 19 May 2021 12:28:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Konstantin Kharlamov <hi-angel@yandex.ru>
+Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on
+ s2idle
+Message-ID: <20210519172818.GA46184@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.81]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ddea02fc6d37f7c444a1e90c9f03d7656ffe957.camel@yandex.ru>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 19 May 2021 09:53:33 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, May 07, 2021 at 05:08:42PM +0300, Konstantin Kharlamov wrote:
+> On Fri, 2021-05-07 at 08:30 -0500, Bjorn Helgaas wrote:
+> > On Fri, May 07, 2021 at 12:07:38AM +0200, Lukas Wunner wrote:
+> > > On Thu, May 06, 2021 at 04:48:42PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
+> > > > > On Macbook 2013 resuming from s2idle results in external monitor no
+> > > > > longer being detected, and dmesg having errors like:
+> > > > > 
+> > > > >     pcieport 0000:06:00.0: can't change power state from D3hot to D0
+> > > > > (config space inaccessible)
+> > > > > 
+> > > > > and a stacktrace. The reason turned out that the hw that the quirk
+> > > > > powers off does not get powered on back on resume.
 
-> On Wed, May 19, 2021 at 9:35 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Wed, 19 May 2021 17:20:52 +0100
-> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> >  
-> > > On Wed, 19 May 2021 08:29:58 -0700
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >  
-> > > > On Wed, May 19, 2021 at 8:14 AM Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > >
-> > > > > On Wed, 19 May 2021 07:18:28 -0700
-> > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >  
-> > > > > > On Tue, May 18, 2021 at 3:06 AM Jonathan Cameron
-> > > > > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > > > >
-> > > > > > > On Mon, 17 May 2021 10:21:14 -0700
-> > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > > >  
-> > > > > > > > On Mon, May 17, 2021 at 1:42 AM Jonathan Cameron
-> > > > > > > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > > > > > >
-> > > > > > > > > On Fri, 14 May 2021 11:37:12 -0700
-> > > > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > > > > >  
-> > > > > > > > > > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
-> > > > > > > > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > > > > > > > [..]  
-> > > > > > > > > > > > If it simplifies the kernel implementation to assume single
-> > > > > > > > > > > > kernel-initiator then I think that's more than enough reason to block
-> > > > > > > > > > > > out userspace, and/or provide userspace a method to get into the
-> > > > > > > > > > > > kernel's queue for service.  
-> > > > > > > > > > >
-> > > > > > > > > > > This last suggestion makes sense to me. Let's provide a 'right' way
-> > > > > > > > > > > to access the DOE from user space. I like the idea if it being possible
-> > > > > > > > > > > to run CXL compliance tests from userspace whilst the driver is loaded.  
-> > > > > > > > > >
-> > > > > > > > > > Ah, and I like your observation that once the kernel provides a
-> > > > > > > > > > "right" way to access DOE then userspace direct-access of DOE is
-> > > > > > > > > > indeed a "you get to keep the pieces" event like any other unwanted
-> > > > > > > > > > userspace config-write.
-> > > > > > > > > >  
-> > > > > > > > > > > Bjorn, given this would be a generic PCI thing, any preference for what
-> > > > > > > > > > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
-> > > > > > > > > > > to those for the BAR based CXL mailboxes?  
-> > > > > > > > > >
-> > > > > > > > > > (warning, anti-ioctl bias incoming...)  
-> > > > > > > > >
-> > > > > > > > > I feel very similar about ioctls - my immediate thought was to shove this in
-> > > > > > > > > debugfs, but that feels the wrong choice if we are trying to persuade people
-> > > > > > > > > to use it instead of writing code that directly accesses the config space.
-> > > > > > > > >  
-> > > > > > > > > >
-> > > > > > > > > > Hmm, DOE has an enumeration capability, could the DOE driver use a
-> > > > > > > > > > scheme to have a sysfs bin_attr per discovered object type? This would
-> > > > > > > > > > make it simliar to the pci-vpd sysfs interface.  
-> > > > > > > > >
-> > > > > > > > > We can discover the protocols, but anything beyond that is protocol
-> > > > > > > > > specific.  I don't think there is a enough info available by any standards
-> > > > > > > > > defined method. Also part of the reason to allow a safe userspace interface
-> > > > > > > > > would be to provide a generic interface for vendor protocols and things like
-> > > > > > > > > CXL compliance tests where we will almost certainly never provide a more
-> > > > > > > > > specific kernel interface.
-> > > > > > > > >
-> > > > > > > > > Whilst sysfs would work for CDAT, some protocols are challenge response rather
-> > > > > > > > > than simple read back and that really doesn't fit well for sysfs model.
-> > > > > > > > > If we get other protocols that are simple data read back, then I would
-> > > > > > > > > advocate giving them a simple sysfs interface much like proposed for CDAT
-> > > > > > > > > as it will always be simpler to use + self describing.
-> > > > > > > > >
-> > > > > > > > > On a lesser note it might be helpful to provide sysfs attrs for
-> > > > > > > > > what protocols are supported.  The alternative is to let userspace run
-> > > > > > > > > the discovery protocol. Perhaps we can do this as a later phase.
-> > > > > > > > >  
-> > > > > > > > > >
-> > > > > > > > > > Then the kernel could cache objects like CDAT that don't change
-> > > > > > > > > > outside of some invalidation event.  
-> > > > > > > > >
-> > > > > > > > > It's been a while since I last saw any conversation on sysfs bin_attrs
-> > > > > > > > > but mostly I thought the feeling was pretty strongly against them for anything
-> > > > > > > > > but a few niche usecases.
-> > > > > > > > >
-> > > > > > > > > Feels to me like it would break most of the usual rules in a way vpd does
-> > > > > > > > > not (IIRC VPD is supposed to be a simple in the sense that if you write a value
-> > > > > > > > > to a writable part, you will read back the same value).
-> > > > > > > > >
-> > > > > > > > > +CC Greg who is a fount of knowledge in this area (and regularly + correctly
-> > > > > > > > > screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
-> > > > > > > > > suggesting implementing response / request directly, but I think that is
-> > > > > > > > > all we could do given DOE protocols can be vendor specific and the standard
-> > > > > > > > > discovery protocol doesn't let us know the fine grained support (what commands
-> > > > > > > > > within a given protocol).  
-> > > > > > > >
-> > > > > > > > I'm not all that interested in supporting vendor defined DOE
-> > > > > > > > shenanigans. There's more than enough published DOE protocols that the
-> > > > > > > > kernel could limit its support to the known set. This is similar to
-> > > > > > > > how ACPI DSMs are not generically supported, but when they appear in a
-> > > > > > > > published specification the kernel may then grow the support. The
-> > > > > > > > supported protocols could be limited to: CDAT, PCIe IDE, CXL
-> > > > > > > > Compliance, etc...
-> > > > > > > >
-> > > > > > > > Vendor specific DOE is in the same class as unfettered /dev/mem
-> > > > > > > > access, first you need to disable the kernel's integrity and
-> > > > > > > > confidentiality protections, and then you can do whatever you want. If
-> > > > > > > > a vendor wants a DOE protocol supported in the "trusted" set they can
-> > > > > > > > simply publish the specification and send the proper support patches.  
-> > > > > > >
-> > > > > > > Fair enough, though the interface should be root only, so a vendor shooting
-> > > > > > > themselves in the foot this way would be no different to using pcitools
-> > > > > > > to access the device directly (we are just providing safety from concurrency
-> > > > > > > point of view).
-> > > > > > >
-> > > > > > > Anyway, I can see two options for how to do this.
-> > > > > > >
-> > > > > > > 1) Per protocol interface. Would not be generic, as these work in entirely
-> > > > > > >    different ways (some are simple read back of tables, some require complex
-> > > > > > >    cycles of operations in the right order with data flowing in both directions)
-> > > > > > > 2) White list those protocols we are going to let through a generic interface
-> > > > > > >    Not including CXL compliance for instance as that has nasty side effects!
-> > > > > > >
-> > > > > > > If we want to enable userspace DOE access, I prefer option 2.
-> > > > > > >
-> > > > > > > Note that I wasn't that keen on a userspace interface in the first place as
-> > > > > > > in my view these should all be handled in kernel.
-> > > > > > > Ultimately we should have case 1 if userspace access make sense.
-> > > > > > > However, if we do this we shouldn't pretend we are providing userspace
-> > > > > > > access to the DOE at all.  We are providing interfaces to things that just
-> > > > > > > happen to be implemented using DOE under the hood.
-> > > > > > >
-> > > > > > > I have a prototype of a trivial ioctl based interface. I'll send it out
-> > > > > > > as an RFC later this week.  Might add a white list, depending on where
-> > > > > > > this discussion goes.
-> > > > > > >  
-> > > > > >
-> > > > > > I'd say let's do this in typical Linux fashion and not solve future
-> > > > > > problems before they need to be solved. I.e. start small and build
-> > > > > > incrementally. To me that looks like a sysfs interface to convey a
-> > > > > > cached copy of a CDAT with an internal interface for a driver to
-> > > > > > trigger invalidations and re-reads on the next access. This would
-> > > > > > assume that userspace may have left the DOE in an indeterminate state
-> > > > > > and an abort cycle may be needed. A 1 second delay for the rare case
-> > > > > > where a collision is detected seems reasonable for just CDAT
-> > > > > > retrieval.  
-> > > > >
-> > > > > The problem is you can not detect a collision.  
-> > > >
-> > > > This discussion started because Ira questioned the handling of the
-> > > > busy status. If the DOE is busy and the kernel did not make it busy
-> > > > then there was a collision, no?  
-> > >
-> > > True, but not complete. Not having busy set does not mean there
-> > > wasn't a collision. Busy is an indication that the EP can't recieve
-> > > a new request (no space in buffer or similar), not that there is a response
-> > > still to be sent back.  We have no way to tell if there is a response
-> > > going to come back in the future. There is no 'exchange in flight' flag.  
-> >
-> > Perhaps useful to add a quote from the DOE ECN here.
-> > This is in an implementation note on Page 6.
-> >
-> > "The DOE Busy bit can be used to indicate that the DOE responder is
-> >  temporarily unable to accept a data object. It is necessary for a
-> >  DOE requester to ensure that individual data object transfers are
-> >  completed, and that a request/response contract is completed, for
-> >  example using a mutex mechanism to block other conflicting traffic
-> >  for cases where such conflicts are possible."  
+> > For example, "With s2idle, the machine isn't suspended via ACPI, so
+> > the AML code which powers the controller off isn't executed."  AFAICT
+> > that isn't actually a required, documented property of s2idle, but
+> > rather it reaches into the internal implementation.
+
+> > The code comment "If suspend mode is s2idle, power won't get restored
+> > on resume" is similar.  !pm_suspend_via_firmware() tells us that
+> > platform firmware won't be invoked.  But the connection between *that*
+> > and "power won't get restored" is unexplained.
 > 
-> I read that as the specification mandating my proposal to disallow
-> multi-initiator access. My only mistake was making the exclusion apply
-> to reads and not limiting it to the minimum of config write exclusion.
+> Sorry, I can't comment anything regarding AML and power management
+> in general since I am really new to all of this. However, regarding
+> the usage of the `pm_suspend_via_firmware()`: yeah, I also think it
+> is unclear what this does, and I was thinking about adding a wrapper
+> function something like `is_s2idle()` to the suspend.h, which would
+> simply call `pm_suspend_via_firmware` internally.
 
-Key thing is even that isn't enough.   The mutex isn't about stopping
-temporary access, it's about ensuring "request/response contract is completed".
-So you would need userspace to be able to take a lock to stop the kernel
-from using the DOE whilst it completes it's request/response pair and
-userspace to guarantee it doesn't do anything stupid.
+No, that's not my point at all.  I don't really care whether the
+interface is called pm_suspend_via_firmware() or is_s2idle().
 
-Easiest way to do that is provide proper interfaces that allows the
-kernel to fully mediate the access + don't support direct userspace access
-for normal operation. (treat it the same as an other config space write)
+What I don't like about this is that it's all just unexplained magic,
+as was the original quirk.
 
-Jonathan
+IIUC, the quirk is applied by pci_pm_suspend_noirq() *after* it puts
+the device in a low-power state.  Here's my uninformed speculation
+about what happens:
+
+  - On suspend, pci_pm_suspend_noirq() puts device in low-power state.
+    My *guess* is this means D0 or D3hot for s2idle, and D3cold for
+    everything else.  [Do we have sufficient debug to find out what
+    these states are?]
+
+  - pci_pm_suspend_noirq() does pci_fixup_suspend_late fixups,
+    including quirk_apple_poweroff_thunderbolt().
+
+  - quirk_apple_poweroff_thunderbolt() runs the magic SXIO/SXFP/SXLF
+    methods, which apparently turn off more power.
+
+  - On resume, pci_pm_resume_noirq() brings the device back to D0.
+
+    If we're resuming from standby, S2RAM, or STD, I speculate the
+    device is in D3cold, so this involves running AML that seems to
+    undo whatever SXIO/SXFP/SXLF did.
+
+    If we're resuming from s2idle, I speculate the device is in D0 or
+    D3hot, and we run different AML (or maybe no AML at all), and we
+    *don't* undo the effects of SXIO/SXFP/SXLF, so the device doesn't
+    work.
+
+If the above is anything like what's happening, we should be able to
+skip SXIO/SXFP/SXLF based on the current power state of the device.
+E.g., if the device is in D0 or D3hot, we should not use
+SXIO/SXFP/SXLF to yank power.
+
+That would seem more connected to the observable state of the device
+than using pm_suspend_via_firmware(), which relies on the connection
+between s2idle and PM_SUSPEND_FLAG_FW_SUSPEND (which is not at all
+obvious) and the power state of the device while in s2idle (also not
+obvious).
+
+Bjorn
