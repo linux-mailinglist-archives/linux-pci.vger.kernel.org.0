@@ -2,145 +2,246 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74ED63893D5
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 18:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B6F038942D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 18:53:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355207AbhESQfg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 12:35:36 -0400
-Received: from mail-dm6nam11on2071.outbound.protection.outlook.com ([40.107.223.71]:11265
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1347677AbhESQff (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 May 2021 12:35:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TbsL+XaHQi9Ay5Aqfh+AUDK2Sc+36wM873ueMnU4sZzaCddHJVdh02ZGYDVCU8RGiakBZRxrjOlf2jJtDx/MrcVVe+mk5aKmUHlGz8MHv2/8zlAt4BC6pnRGp0PLurQTgMHxO1x4DpynCA+hWsLo0QRbLxbMh5WCFQXKkxIcWUmdmb05YzgNap8SWXmNiPsFKUeQ+5mg2RryCQOQUWGFQYL71laQNiAp6YN/1T7MH7HmoihLhihKBh8g3kYLqo/0poNjigCC562AAKLhAo7UlidxB+nkMXOruuPf3XnfgSJx9Dfi30bR7ts+5vg9PGs+ady8JTz/aTbyZUS+WBSmDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tBR0Z+nF//0JJ+cbwbGGei2dDHOWZSIPf68BYWkGiPg=;
- b=j5OvjYD+GcPJaRRA4AQciTlmcjide7g9BmgKdplnOQ4DCk3LK+V8NvzUPrIIiOtuMx4c5lIqr/SVFRasiuaLA6I1n/5GoMdF2fyhw+1fxFEtxzSOE26/J/7r87VW9F+3r+jhQEeSs1cHRXUsHaId7XRWrPEAaNY60Rx/0HYHdee7Sre/TO7fe3xhl4C67Gm7Ya/j3fNa4WXor+L+5wllH/pMPyGiC5PD6uc9/vnnfHjBrBKzpPI22xtcD222pMkXoBh+zK+WaKT73A1tAW/Os+3pV/Z1B/JbRUumIIG5grGSxDFyk6KRWc7Zcl7bwbo8ghbXi2MZC/3/+qRNAholBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tBR0Z+nF//0JJ+cbwbGGei2dDHOWZSIPf68BYWkGiPg=;
- b=QK9g1PhF9Wq+2H1qbMDAL1/jfMWTgHoZFfSSxXadIm/BcEfgxM3kd9RVaAD3YLUnDZbyq23Nyx1L1SAFADEQq/qysyrSE86x5SpP+qUapCD8F3AF6Kd8tOZgrXzkOE5Ym6q0DPsz0OGaxNPWEHF5CpgVe1bFcmBE7gQKUhYjXCJnvoYehBHMSUmGIPNTh7IERTSdWJ2w3HhmJbIiIGALFgj+h3usO+XO1NMoVOoSBpeXS8D2HuXjPyx4R/NoJ89T9xetTnReAonpGcsJFAfvDyp0E8zOLHR/lWbbnAhHZFFpSuB06ZYPDPZoyTpY+WaYC5yv5wQ5rl4ooAjusvpDUw==
-Received: from CO2PR05CA0093.namprd05.prod.outlook.com (2603:10b6:104:1::19)
- by BL1PR12MB5319.namprd12.prod.outlook.com (2603:10b6:208:317::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.26; Wed, 19 May
- 2021 16:34:14 +0000
-Received: from CO1NAM11FT034.eop-nam11.prod.protection.outlook.com
- (2603:10b6:104:1:cafe::cd) by CO2PR05CA0093.outlook.office365.com
- (2603:10b6:104:1::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.12 via Frontend
- Transport; Wed, 19 May 2021 16:34:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT034.mail.protection.outlook.com (10.13.174.248) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4129.25 via Frontend Transport; Wed, 19 May 2021 16:34:13 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 May
- 2021 16:34:13 +0000
-Received: from moonraker.nvidia.com (172.20.145.6) by mail.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 May 2021 09:34:11 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] PCI: tegra: Fix building Tegra194 PCIe driver
-Date:   Wed, 19 May 2021 17:34:03 +0100
-Message-ID: <20210519163403.212362-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.25.1
+        id S1355456AbhESQzG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 12:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355419AbhESQzF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 12:55:05 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87447C06175F
+        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 09:53:45 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id lz27so20936569ejb.11
+        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 09:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=04vBsvgzwJmNWrKLQOH5nqEeWnOvYgjO6FGm4pBn+uo=;
+        b=VyeHwMDvuK2etG/NWBM3NDFl4nv+9jy8nsu15UP6NxXw7o2xEGwyRGawIys+EpQBnK
+         QGhozrGOymmPpR/cYpf8T1yl8aH0IvUnm+wAMEuzFev4V0jD+zycQhfKsDhgZKxNfoSY
+         FBvfvlWxOxammqjQbbIN2wXzgXDtGlx4rFsgRPqsFxovQowgh6h7X0/ZT+FJzjVLc8p1
+         H/8RDVPzrG6q+l9ltYKonTTQcPAeEhS4h5Ad0u7LK7xtVwFHMKNN7nr7sEEuiHRaDslo
+         6TK3mEFM4UiU0S614a3tfzeeFKdE9mLWO/84KbqxXhsmcUXAhYbCGvA2SHuyY3RlJek5
+         K+ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=04vBsvgzwJmNWrKLQOH5nqEeWnOvYgjO6FGm4pBn+uo=;
+        b=acgr84Gh7Y9V9S4W1Z8uPDrJtDXyqLRcoLIvJFxIQig67N+LkfWmowZ3KxtG1R2pxa
+         SKEzR4HpAMer/n6/UcYDx2mvsYgXAVA691AeMhYYtCFV897mg87yGGsP1M9dul4+ABzE
+         ApL82usULRe9YV7JRT+J8lsHsXsnTuomLYOKxtUx54JcMFPYESmF822dJFt2iE0clzO/
+         H1qotrph1dsd2y0HJEaKS4LkELWCIhxokKRxLD2+pLmrGJrL0M/5YZCdnWvjR3J7UDxn
+         NHb9xfbBJUbmEbdhHQSaNXsC0gGMzVhOqymu92iVEHkq5ugDS5DsHICFc/ZlQ888zDy0
+         L28g==
+X-Gm-Message-State: AOAM531U6oTdlSv87dbS2q3c62OQggC7bAXQ34h3H47xJaizpJFGxTWw
+        xOISw6WzNj41Wxv2tJKONuoDFN3w7dVDwkSVyFmH+w==
+X-Google-Smtp-Source: ABdhPJyxn++r2kWJKKA3mp7cPqmfc0yLb9InKilGvqhwl3CU88R8VsaLnYO+iZRlZx1sa80vJg95tsiFTWXYo9RcuvA=
+X-Received: by 2002:a17:906:fb89:: with SMTP id lr9mr63740ejb.523.1621443223969;
+ Wed, 19 May 2021 09:53:43 -0700 (PDT)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1d241c94-95d5-47a6-de38-08d91ae3f026
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5319:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB53198DC513D5029B69C386FFD92B9@BL1PR12MB5319.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0Ug/26Y9ScGHu9i6epYHsrEyPJNTFSdYLM7mLdia7ZwX9CmeaDPk6rTGgwe77dJn8JnXqVNGAPFWxsMoSSlhMbM0wYZQNHBddMm+tqLk+vmLCBRQpszwSGu+ipTLKCyYuAFVIaCgsX1uoBSPF3P9i6QIXh/MSyw8WGqRZpErpKLGtGtJP5n5jg0ELx7Glg8e9hcbUuq6Lhn4SeXbQpAY8+p5apIF6Bujar1zfdKMmgW9f53ahc91aWXt0bSujRidzZ7548JTYXMzTAQ/s7opsTvZ9DNue4dlr+mAViOg1EwktMQlw2hmd+nnzN/iw7Cz3VGsJ33TaAW/Hyx86HGl/dGyMBkfeNk9rhuUG512G1sB0MKg8DaqctWA8TP1tTxwIIZj519xmEL5iYPKAtco5LHNnd0nmMTf23g717pf6WbD2m2uti1vABJ2xuq6j0JetCf0QMxTknhxiGmuCbZ1rocenlx/LzfRp1A0hK3He44w7MAfCxqkS7TpzSqFduV61+hTADDnkFi6CuM7VBqoGEatd5iMqpwbQbTQKuiLPNLQ9Mu6z0N3Ch6Zgb2MKL8ArzqX9wHeKsymRZt27BAXlZDwpujpJfIEE53IRcCk4wkYhp1MS+FClxT0ST8m55VEhNsgE1oq5HYAgc1hKuGnttTMWLtLZVYHyxpQUPesPbs=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(136003)(376002)(346002)(39860400002)(36840700001)(46966006)(316002)(54906003)(7636003)(8676002)(356005)(26005)(5660300002)(83380400001)(36860700001)(36906005)(82310400003)(8936002)(7696005)(107886003)(6636002)(110136005)(82740400003)(47076005)(2616005)(478600001)(336012)(426003)(186003)(70206006)(2906002)(6666004)(70586007)(1076003)(4326008)(86362001)(36756003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2021 16:34:13.6374
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d241c94-95d5-47a6-de38-08d91ae3f026
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT034.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5319
+References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
+ <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
+ <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
+ <20210514094755.00002081@Huawei.com> <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
+ <20210517094045.00004d58@Huawei.com> <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
+ <20210518110403.000013e6@Huawei.com> <CAPcyv4g3JPtAHzemKdQiM44ZkZ_0u+U-UJ5mfeU3fKzRWuaDyQ@mail.gmail.com>
+ <20210519161156.00003bf9@Huawei.com> <CAPcyv4j_oEWG1NG1wYryVt3-Gx8q2WwzP7_xhchsDARDR0zBEA@mail.gmail.com>
+ <20210519172052.00002124@Huawei.com> <20210519173352.000026fe@Huawei.com>
+In-Reply-To: <20210519173352.000026fe@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 19 May 2021 09:53:33 -0700
+Message-ID: <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
-errata") caused a couple build regressions for the Tegra194 PCIe driver
-which are:
+On Wed, May 19, 2021 at 9:35 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Wed, 19 May 2021 17:20:52 +0100
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+>
+> > On Wed, 19 May 2021 08:29:58 -0700
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > > On Wed, May 19, 2021 at 8:14 AM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:
+> > > >
+> > > > On Wed, 19 May 2021 07:18:28 -0700
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > > On Tue, May 18, 2021 at 3:06 AM Jonathan Cameron
+> > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > >
+> > > > > > On Mon, 17 May 2021 10:21:14 -0700
+> > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > >
+> > > > > > > On Mon, May 17, 2021 at 1:42 AM Jonathan Cameron
+> > > > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > > > >
+> > > > > > > > On Fri, 14 May 2021 11:37:12 -0700
+> > > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > > > >
+> > > > > > > > > On Fri, May 14, 2021 at 1:50 AM Jonathan Cameron
+> > > > > > > > > <Jonathan.Cameron@huawei.com> wrote:
+> > > > > > > > > [..]
+> > > > > > > > > > > If it simplifies the kernel implementation to assume single
+> > > > > > > > > > > kernel-initiator then I think that's more than enough reason to block
+> > > > > > > > > > > out userspace, and/or provide userspace a method to get into the
+> > > > > > > > > > > kernel's queue for service.
+> > > > > > > > > >
+> > > > > > > > > > This last suggestion makes sense to me. Let's provide a 'right' way
+> > > > > > > > > > to access the DOE from user space. I like the idea if it being possible
+> > > > > > > > > > to run CXL compliance tests from userspace whilst the driver is loaded.
+> > > > > > > > >
+> > > > > > > > > Ah, and I like your observation that once the kernel provides a
+> > > > > > > > > "right" way to access DOE then userspace direct-access of DOE is
+> > > > > > > > > indeed a "you get to keep the pieces" event like any other unwanted
+> > > > > > > > > userspace config-write.
+> > > > > > > > >
+> > > > > > > > > > Bjorn, given this would be a generic PCI thing, any preference for what
+> > > > > > > > > > this interface might look like?   /dev/pcidoe[xxxxxx].i with ioctls similar
+> > > > > > > > > > to those for the BAR based CXL mailboxes?
+> > > > > > > > >
+> > > > > > > > > (warning, anti-ioctl bias incoming...)
+> > > > > > > >
+> > > > > > > > I feel very similar about ioctls - my immediate thought was to shove this in
+> > > > > > > > debugfs, but that feels the wrong choice if we are trying to persuade people
+> > > > > > > > to use it instead of writing code that directly accesses the config space.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Hmm, DOE has an enumeration capability, could the DOE driver use a
+> > > > > > > > > scheme to have a sysfs bin_attr per discovered object type? This would
+> > > > > > > > > make it simliar to the pci-vpd sysfs interface.
+> > > > > > > >
+> > > > > > > > We can discover the protocols, but anything beyond that is protocol
+> > > > > > > > specific.  I don't think there is a enough info available by any standards
+> > > > > > > > defined method. Also part of the reason to allow a safe userspace interface
+> > > > > > > > would be to provide a generic interface for vendor protocols and things like
+> > > > > > > > CXL compliance tests where we will almost certainly never provide a more
+> > > > > > > > specific kernel interface.
+> > > > > > > >
+> > > > > > > > Whilst sysfs would work for CDAT, some protocols are challenge response rather
+> > > > > > > > than simple read back and that really doesn't fit well for sysfs model.
+> > > > > > > > If we get other protocols that are simple data read back, then I would
+> > > > > > > > advocate giving them a simple sysfs interface much like proposed for CDAT
+> > > > > > > > as it will always be simpler to use + self describing.
+> > > > > > > >
+> > > > > > > > On a lesser note it might be helpful to provide sysfs attrs for
+> > > > > > > > what protocols are supported.  The alternative is to let userspace run
+> > > > > > > > the discovery protocol. Perhaps we can do this as a later phase.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Then the kernel could cache objects like CDAT that don't change
+> > > > > > > > > outside of some invalidation event.
+> > > > > > > >
+> > > > > > > > It's been a while since I last saw any conversation on sysfs bin_attrs
+> > > > > > > > but mostly I thought the feeling was pretty strongly against them for anything
+> > > > > > > > but a few niche usecases.
+> > > > > > > >
+> > > > > > > > Feels to me like it would break most of the usual rules in a way vpd does
+> > > > > > > > not (IIRC VPD is supposed to be a simple in the sense that if you write a value
+> > > > > > > > to a writable part, you will read back the same value).
+> > > > > > > >
+> > > > > > > > +CC Greg who is a fount of knowledge in this area (and regularly + correctly
+> > > > > > > > screams at the ways I try to abuse sysfs :)  Note I don't think Dan was
+> > > > > > > > suggesting implementing response / request directly, but I think that is
+> > > > > > > > all we could do given DOE protocols can be vendor specific and the standard
+> > > > > > > > discovery protocol doesn't let us know the fine grained support (what commands
+> > > > > > > > within a given protocol).
+> > > > > > >
+> > > > > > > I'm not all that interested in supporting vendor defined DOE
+> > > > > > > shenanigans. There's more than enough published DOE protocols that the
+> > > > > > > kernel could limit its support to the known set. This is similar to
+> > > > > > > how ACPI DSMs are not generically supported, but when they appear in a
+> > > > > > > published specification the kernel may then grow the support. The
+> > > > > > > supported protocols could be limited to: CDAT, PCIe IDE, CXL
+> > > > > > > Compliance, etc...
+> > > > > > >
+> > > > > > > Vendor specific DOE is in the same class as unfettered /dev/mem
+> > > > > > > access, first you need to disable the kernel's integrity and
+> > > > > > > confidentiality protections, and then you can do whatever you want. If
+> > > > > > > a vendor wants a DOE protocol supported in the "trusted" set they can
+> > > > > > > simply publish the specification and send the proper support patches.
+> > > > > >
+> > > > > > Fair enough, though the interface should be root only, so a vendor shooting
+> > > > > > themselves in the foot this way would be no different to using pcitools
+> > > > > > to access the device directly (we are just providing safety from concurrency
+> > > > > > point of view).
+> > > > > >
+> > > > > > Anyway, I can see two options for how to do this.
+> > > > > >
+> > > > > > 1) Per protocol interface. Would not be generic, as these work in entirely
+> > > > > >    different ways (some are simple read back of tables, some require complex
+> > > > > >    cycles of operations in the right order with data flowing in both directions)
+> > > > > > 2) White list those protocols we are going to let through a generic interface
+> > > > > >    Not including CXL compliance for instance as that has nasty side effects!
+> > > > > >
+> > > > > > If we want to enable userspace DOE access, I prefer option 2.
+> > > > > >
+> > > > > > Note that I wasn't that keen on a userspace interface in the first place as
+> > > > > > in my view these should all be handled in kernel.
+> > > > > > Ultimately we should have case 1 if userspace access make sense.
+> > > > > > However, if we do this we shouldn't pretend we are providing userspace
+> > > > > > access to the DOE at all.  We are providing interfaces to things that just
+> > > > > > happen to be implemented using DOE under the hood.
+> > > > > >
+> > > > > > I have a prototype of a trivial ioctl based interface. I'll send it out
+> > > > > > as an RFC later this week.  Might add a white list, depending on where
+> > > > > > this discussion goes.
+> > > > > >
+> > > > >
+> > > > > I'd say let's do this in typical Linux fashion and not solve future
+> > > > > problems before they need to be solved. I.e. start small and build
+> > > > > incrementally. To me that looks like a sysfs interface to convey a
+> > > > > cached copy of a CDAT with an internal interface for a driver to
+> > > > > trigger invalidations and re-reads on the next access. This would
+> > > > > assume that userspace may have left the DOE in an indeterminate state
+> > > > > and an abort cycle may be needed. A 1 second delay for the rare case
+> > > > > where a collision is detected seems reasonable for just CDAT
+> > > > > retrieval.
+> > > >
+> > > > The problem is you can not detect a collision.
+> > >
+> > > This discussion started because Ira questioned the handling of the
+> > > busy status. If the DOE is busy and the kernel did not make it busy
+> > > then there was a collision, no?
+> >
+> > True, but not complete. Not having busy set does not mean there
+> > wasn't a collision. Busy is an indication that the EP can't recieve
+> > a new request (no space in buffer or similar), not that there is a response
+> > still to be sent back.  We have no way to tell if there is a response
+> > going to come back in the future. There is no 'exchange in flight' flag.
+>
+> Perhaps useful to add a quote from the DOE ECN here.
+> This is in an implementation note on Page 6.
+>
+> "The DOE Busy bit can be used to indicate that the DOE responder is
+>  temporarily unable to accept a data object. It is necessary for a
+>  DOE requester to ensure that individual data object transfers are
+>  completed, and that a request/response contract is completed, for
+>  example using a mutex mechanism to block other conflicting traffic
+>  for cases where such conflicts are possible."
 
-1. The Tegra194 PCIe driver can no longer be built as a module. This
-   was caused by removing the Makefile entry to build the pcie-tegra.c
-   based upon the CONFIG_PCIE_TEGRA194 option. Therefore, restore this
-   so that we can build the driver as a module if ACPI support is not
-   enabled in the kernel.
-2. If CONFIG_PCIE_TEGRA194 is configured to build the driver as a
-   module, at the same time that CONFIG_ACPI and CONFIG_PCI_QUIRKS are
-   selected to build the driver into the kernel, then the necessary
-   functions in the driver to probe and remove the device when booting
-   with device-tree and not compiled into to the driver. This prevents
-   the PCIe devices being probed when booting with device-tree. Fix this
-   by using the IS_ENABLED() macro.
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/pci/controller/dwc/Makefile        | 1 +
- drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index eca805c1a023..f0d1e2d8c022 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- # depending on whether ACPI, the DT driver, or both are enabled.
- 
- obj-$(CONFIG_PCIE_AL) += pcie-al.o
-+obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
- obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
- 
- ifdef CONFIG_ACPI
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index b19775ab134e..8bda1485d0c2 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -409,7 +409,7 @@ const struct pci_ecam_ops tegra194_pcie_ops = {
- };
- #endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
- 
--#ifdef CONFIG_PCIE_TEGRA194
-+#if IS_ENABLED(CONFIG_PCIE_TEGRA194)
- 
- static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
- {
--- 
-2.25.1
-
+I read that as the specification mandating my proposal to disallow
+multi-initiator access. My only mistake was making the exclusion apply
+to reads and not limiting it to the minimum of config write exclusion.
