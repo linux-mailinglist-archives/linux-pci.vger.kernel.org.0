@@ -2,115 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FDE389682
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 21:20:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E17D389697
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 21:24:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231932AbhESTVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 15:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51404 "EHLO
+        id S230486AbhESTZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 15:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231910AbhESTVt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 15:21:49 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C12BC06175F
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 12:20:29 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id u21so21514622ejo.13
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 12:20:29 -0700 (PDT)
+        with ESMTP id S231642AbhESTZi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 15:25:38 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C901AC06175F;
+        Wed, 19 May 2021 12:24:18 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id 10so10615338pfl.1;
+        Wed, 19 May 2021 12:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yZTVmwpnlwJk3q+dqnl1uoJR23ZTrquT34/lklTUmQM=;
-        b=oa95qayqJeznuxVvd7slQCeIUqrYjiIZts2NsfJaYIVvuK6xYGVwhshMMF6JMFdxK9
-         dPWrKavPKXSO1qJWw1dwqcIvlrazCPnvTCAienQE0n6+2JO2c7QU50HU0qVQXHeBT3W1
-         RN5uIXr6+Pyybomrr/CigZmjB6LCqt4JiU+A82of7XwBql99QOlTQu9dqPMRy3OGGWMi
-         +Mfy8/wP+UdHimuz3gJG9JUXlw55bAX64wL/RFxhzyZ5E7rnkDtk6pbm9cCGpBrh/6fP
-         hRH5wbXxFNFwAIUl0p7GbAUDzjnziuLTYDHFxrO6/Yo0DM8AeohT3TNJ1U/w5gxQRoYQ
-         63yg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=47JQ73C0NJdLVL+El8Yu9LZib8r+sSTJ+nf9zBKe9o0=;
+        b=CToMN5sVOeaSvxsFwh30mnX1cEfbujdvLOsJoVGXyNK5xIClhHeY9+5gjOfAEdXX3G
+         eU6qVJByg68kQ/w6JlnavFgIe+nfjuKKhbAsZxJHLIoUmLJC+FNQXwfuXltAASilweQx
+         t+08hp5u1PLu1TqToQLVPh129PwSHFiJcf7M+I2aRakLaRJ2reqCHrxjRIjxuLTiBnzU
+         obYFCXVysXAW0hEOj/ZFRzKi1W/0ELgGhGTgBKGpo2iX5m/PP/BptzsrBt+DoXhRmi5/
+         WDDfuoHSDbRwV59E2nqJbeAwXtBih5h7WjHhxwWGM7Qsk3IgYQx+mCus3GhZ5jZ2T7eK
+         2tug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yZTVmwpnlwJk3q+dqnl1uoJR23ZTrquT34/lklTUmQM=;
-        b=cXZNVRFMcrFtugXrROcoOITyReIROVLi0TlcpVKBqFnCM3wkcUR6NgxLPz2Or700ns
-         QhlmODAFZTXV+m3DtKfXu0WEhkogXsH3qx7N8mBIjXCfJjJpPqQzaa8nJrmDgiszggFr
-         vsYLGb10vZj2/IL4xrWDFNwHcP3v+xXGmA521AxQi6d2Yearra7AnZmLtYij5PWnw7Qk
-         0Wx+WkcE1lZDQQH0Oco/AeTKR8a+iaq1xK7ZoCr19gAv8ZX/OeU/m48iajpGOUp1NIhL
-         g4xhV5aVY/L4NFHs+HtbC8h/8D3/mvdrBa2ebpXk7jdogA4mcI+trNJ6YrnYluBF8fQR
-         ipkw==
-X-Gm-Message-State: AOAM533XnnkvQg1U6teZbuNb11ht/lKIuGdlLdYoP6GM7DkDBxQG5+Eb
-        FL9UXkBqIV9Ut4A0QUTOYgSM/JLV1q5i4XU9AsA3+w==
-X-Google-Smtp-Source: ABdhPJwqOQrlCZg0awAR1a1BUWi3Y4xD0KvYxlxX0nXEhyIT8srkTX+UW1Arz5DDuf25QNzn3NZm4fmbgtr6+/UcLE4=
-X-Received: by 2002:a17:906:110d:: with SMTP id h13mr697747eja.45.1621452028040;
- Wed, 19 May 2021 12:20:28 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=47JQ73C0NJdLVL+El8Yu9LZib8r+sSTJ+nf9zBKe9o0=;
+        b=TKo7nIav/nqB6mXQ/T9bwuNvs1/SJVrqXkxETd4rwbjYPcgnNJSxr2AAKz+Nkey+Kd
+         WIZj+8KlP9k3FCBx8ENQc3hJ8CU9SxelAwkdxov8wAimf2BK6nmuKqp35IkM+mkPthCs
+         Rv0xA2tW1Ekb9KMAU79zsQ/efg7LL8GO9ZbbRrkwfErjnvdepMXZSGfbfeuS4NZqwMck
+         HfkQ2bjv6VgQt6mQKB9G28/aeFhTf9DkoQA8bH22XWUJH+UpEHRGlaVPcxQJJxJiaPRU
+         NOeY1w+VOIg5VZQ39O+w5sN6BRLEQUxkRL57ZaMAXz0jkTGQqm1assGyoDiHLla9syGY
+         PsVA==
+X-Gm-Message-State: AOAM532rt81gqcW0VIoVKqZ1wYJxWO/PhBPLWzH32xXcrX1siYa2teEs
+        IapKJqfnqSlBatDzZkrDAIQ=
+X-Google-Smtp-Source: ABdhPJzJyhu29XiaIUqubYuVceyIJwVsMCRuIXu8+2duk9EuCth6A3fkL6TVyZT/YsIkYQB5Otc01Q==
+X-Received: by 2002:a62:1d52:0:b029:2dd:ee:1439 with SMTP id d79-20020a621d520000b02902dd00ee1439mr573310pfd.57.1621452258195;
+        Wed, 19 May 2021 12:24:18 -0700 (PDT)
+Received: from [10.230.29.202] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id gj21sm4690007pjb.49.2021.05.19.12.24.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 May 2021 12:24:17 -0700 (PDT)
+Subject: Re: [PATCH v7 02/15] swiotlb: Refactor swiotlb_create_debugfs
+To:     Claire Chang <tientzu@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com
+References: <20210518064215.2856977-1-tientzu@chromium.org>
+ <20210518064215.2856977-3-tientzu@chromium.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d4a3ee6d-55be-1a60-9092-66b444dc9dda@gmail.com>
+Date:   Wed, 19 May 2021 12:24:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.10.2
 MIME-Version: 1.0
-References: <20210419165451.2176200-1-Jonathan.Cameron@huawei.com>
- <20210419165451.2176200-3-Jonathan.Cameron@huawei.com> <20210506215934.GJ1904484@iweiny-DESK2.sc.intel.com>
- <20210511175006.00007861@Huawei.com> <CAPcyv4j=uww+85b4AbWmoPNPry_+JLEpEnuywpdC8PonXmRmEg@mail.gmail.com>
- <20210514094755.00002081@Huawei.com> <CAPcyv4h_qSZq+sTAOTKDNsO3xPmq=65j8oO1iw0WdVFj8+XrOA@mail.gmail.com>
- <20210517094045.00004d58@Huawei.com> <CAPcyv4iQcV_U1qmQhXKM0RG9v-sAEPwtTxnv=P86yJrCH25k+w@mail.gmail.com>
- <20210518110403.000013e6@Huawei.com> <CAPcyv4g3JPtAHzemKdQiM44ZkZ_0u+U-UJ5mfeU3fKzRWuaDyQ@mail.gmail.com>
- <20210519161156.00003bf9@Huawei.com> <CAPcyv4j_oEWG1NG1wYryVt3-Gx8q2WwzP7_xhchsDARDR0zBEA@mail.gmail.com>
- <20210519172052.00002124@Huawei.com> <20210519173352.000026fe@Huawei.com>
- <CAPcyv4gUy0nNh-3y2wWVwM4AtO4F8OOJCtWz_ZH7Eu0H=oymuw@mail.gmail.com> <20210519180057.00002ac3@Huawei.com>
-In-Reply-To: <20210519180057.00002ac3@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 May 2021 12:20:17 -0700
-Message-ID: <CAPcyv4ii3KC6MBBxJrnCUCm_JGS7ugL+JTFUu9QTBnPUhQFtfQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/4] PCI/doe: Add Data Object Exchange support
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210518064215.2856977-3-tientzu@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 19, 2021 at 10:03 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
-[..]
-> > > "The DOE Busy bit can be used to indicate that the DOE responder is
-> > >  temporarily unable to accept a data object. It is necessary for a
-> > >  DOE requester to ensure that individual data object transfers are
-> > >  completed, and that a request/response contract is completed, for
-> > >  example using a mutex mechanism to block other conflicting traffic
-> > >  for cases where such conflicts are possible."
-> >
-> > I read that as the specification mandating my proposal to disallow
-> > multi-initiator access. My only mistake was making the exclusion apply
-> > to reads and not limiting it to the minimum of config write exclusion.
->
-> Key thing is even that isn't enough.   The mutex isn't about stopping
-> temporary access, it's about ensuring "request/response contract is completed".
-> So you would need userspace to be able to take a lock to stop the kernel
-> from using the DOE whilst it completes it's request/response pair and
-> userspace to guarantee it doesn't do anything stupid.
 
-A userspace lockout of the kernel is not needed if userspace is
-outright forbidden from corrupting the kernel's state machine. I.e.
-kernel enforced full disable of user initiated config-write to DOE
-registers, not the ephemeral pci_cfg_access_lock() proposal.
 
-> Easiest way to do that is provide proper interfaces that allows the
-> kernel to fully mediate the access + don't support direct userspace access
-> for normal operation. (treat it the same as an other config space write)
+On 5/17/2021 11:42 PM, Claire Chang wrote:
+> Split the debugfs creation to make the code reusable for supporting
+> different bounce buffer pools, e.g. restricted DMA pool.
+> 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
 
-Again, it's the parenthetical at issue. I struggle to see this as just
-another errant / unwanted config-write when there is legitimate reason
-for userspace to expect that touching the DOE is not destructive to
-device operation as opposed to writes to other critical registers.
-Where the kernel's legitimate-access and userspace's legitimate-access
-to a resource collide, the kernel provides a mediation interface that
-precludes conflicts. Otherwise, I don't understand why the kernel is
-going through the trouble of /dev/mem and pci-mmap restrictions if it
-is not supposed to be concerned about userspace corrupting driver
-state.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
