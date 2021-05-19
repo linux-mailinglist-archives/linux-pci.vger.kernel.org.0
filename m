@@ -2,111 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E17D389697
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 21:24:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 291503896CB
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 21:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230486AbhESTZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 15:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231642AbhESTZi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 15:25:38 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C901AC06175F;
-        Wed, 19 May 2021 12:24:18 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id 10so10615338pfl.1;
-        Wed, 19 May 2021 12:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=47JQ73C0NJdLVL+El8Yu9LZib8r+sSTJ+nf9zBKe9o0=;
-        b=CToMN5sVOeaSvxsFwh30mnX1cEfbujdvLOsJoVGXyNK5xIClhHeY9+5gjOfAEdXX3G
-         eU6qVJByg68kQ/w6JlnavFgIe+nfjuKKhbAsZxJHLIoUmLJC+FNQXwfuXltAASilweQx
-         t+08hp5u1PLu1TqToQLVPh129PwSHFiJcf7M+I2aRakLaRJ2reqCHrxjRIjxuLTiBnzU
-         obYFCXVysXAW0hEOj/ZFRzKi1W/0ELgGhGTgBKGpo2iX5m/PP/BptzsrBt+DoXhRmi5/
-         WDDfuoHSDbRwV59E2nqJbeAwXtBih5h7WjHhxwWGM7Qsk3IgYQx+mCus3GhZ5jZ2T7eK
-         2tug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=47JQ73C0NJdLVL+El8Yu9LZib8r+sSTJ+nf9zBKe9o0=;
-        b=TKo7nIav/nqB6mXQ/T9bwuNvs1/SJVrqXkxETd4rwbjYPcgnNJSxr2AAKz+Nkey+Kd
-         WIZj+8KlP9k3FCBx8ENQc3hJ8CU9SxelAwkdxov8wAimf2BK6nmuKqp35IkM+mkPthCs
-         Rv0xA2tW1Ekb9KMAU79zsQ/efg7LL8GO9ZbbRrkwfErjnvdepMXZSGfbfeuS4NZqwMck
-         HfkQ2bjv6VgQt6mQKB9G28/aeFhTf9DkoQA8bH22XWUJH+UpEHRGlaVPcxQJJxJiaPRU
-         NOeY1w+VOIg5VZQ39O+w5sN6BRLEQUxkRL57ZaMAXz0jkTGQqm1assGyoDiHLla9syGY
-         PsVA==
-X-Gm-Message-State: AOAM532rt81gqcW0VIoVKqZ1wYJxWO/PhBPLWzH32xXcrX1siYa2teEs
-        IapKJqfnqSlBatDzZkrDAIQ=
-X-Google-Smtp-Source: ABdhPJzJyhu29XiaIUqubYuVceyIJwVsMCRuIXu8+2duk9EuCth6A3fkL6TVyZT/YsIkYQB5Otc01Q==
-X-Received: by 2002:a62:1d52:0:b029:2dd:ee:1439 with SMTP id d79-20020a621d520000b02902dd00ee1439mr573310pfd.57.1621452258195;
-        Wed, 19 May 2021 12:24:18 -0700 (PDT)
-Received: from [10.230.29.202] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id gj21sm4690007pjb.49.2021.05.19.12.24.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 May 2021 12:24:17 -0700 (PDT)
-Subject: Re: [PATCH v7 02/15] swiotlb: Refactor swiotlb_create_debugfs
-To:     Claire Chang <tientzu@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
-        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
-        jxgao@google.com, joonas.lahtinen@linux.intel.com,
-        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        matthew.auld@intel.com, rodrigo.vivi@intel.com,
-        thomas.hellstrom@linux.intel.com
-References: <20210518064215.2856977-1-tientzu@chromium.org>
- <20210518064215.2856977-3-tientzu@chromium.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d4a3ee6d-55be-1a60-9092-66b444dc9dda@gmail.com>
-Date:   Wed, 19 May 2021 12:24:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.10.2
+        id S230423AbhESTeu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 15:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230177AbhESTet (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 May 2021 15:34:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F6F36112F;
+        Wed, 19 May 2021 19:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621452809;
+        bh=WIwUNlRmeznB7tnBdKC5kmDSVNN/E6Mor/RPbHK64aw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gnvmOrHyiYunzamNQKg8WknMNyuB+f34ZjYia3ctsgRjf5GvJtTpFCb4vRMwGcXlM
+         JPV4Z3S3N3h5+n6gIVe44SsK4JCdF1KpIbzsrzzhBzH4pTYvqrS6Ed0ZqQKtI99/2v
+         9jtVs8uXj15DFmnXWO2PNagedRvtdZMdkGIfBiOgC9RYIQ08IvL28/awJrrZ1rW49J
+         sDsiY8eSY9rjQoy7ZNbUEFXCYnvw1JukMdVzm1MZKS8XaQhvREy3nMePitRA9LpiX+
+         ucdhD6VO2ecoCAQc3IEernDU19z0XOmNHV7peDdQo1GTC/ajYXMtP9O1eLSWOFBAm1
+         +DHtS1uIsibLg==
+Date:   Wed, 19 May 2021 14:33:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
+ bridge
+Message-ID: <20210519193327.GA248667@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210518064215.2856977-3-tientzu@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H4pn53XC7qVvwM792ppkQRnjWpPDwmrhBv8twgQu0eabQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 5/17/2021 11:42 PM, Claire Chang wrote:
-> Split the debugfs creation to make the code reusable for supporting
-> different bounce buffer pools, e.g. restricted DMA pool.
+On Wed, May 19, 2021 at 10:17:14AM +0800, Huacai Chen wrote:
+> On Wed, May 19, 2021 at 3:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, May 18, 2021 at 03:13:43PM +0800, Huacai Chen wrote:
+> > > On Tue, May 18, 2021 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> > > > > On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > > > > > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> > > > > > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> > > > > > > > VGA Enable bit which modifies the response to VGA compatible addresses.
+> > > > > > >
+> > > > > > > The bridge spec is pretty old, and most of the content has been
+> > > > > > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> > > > > > > 7.5.1.3.13" here instead.
+> > > > > > >
+> > > > > > > > If the VGA Enable bit is set, the bridge will decode and forward the
+> > > > > > > > following accesses on the primary interface to the secondary interface.
+> > > > > > >
+> > > > > > > *Which* following accesses?  The structure of English requires that if
+> > > > > > > you say "the following accesses," you must continue by *listing* the
+> > > > > > > accesses.
+> > > > > > >
+> > > > > > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> > > > > > > > bridge control register, which causes vgaarb subsystem don't think the
+> > > > > > > > VGA card behind the bridge as a valid boot vga device.
+> > > > > > >
+> > > > > > > s/hardward/bridge/
+> > > > > > > s/vga/VGA/ (also in code comments and dmesg strings below)
+> > > > > > >
+> > > > > > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> > > > > > > since it apparently has a VGA class code.  But here you say the
+> > > > > > > AST2500 has a Bridge Control register, which suggests that it's a
+> > > > > > > bridge.  If AST2500 is some sort of combination that includes both a
+> > > > > > > bridge and a VGA device, please outline that topology.
+> > > > > > >
+> > > > > > > But the hardware defect is that some bridges forward VGA accesses even
+> > > > > > > though their VGA Enable bit is not set?  The quirk should be attached
+> > > > > > > to broken *bridges*, not to VGA devices.
+> > > > > > >
+> > > > > > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> > > > > > > is set, that means VGA arbitration (in vgaarb.c) cannot work
+> > > > > > > correctly, so merely setting the default VGA device once in a quirk is
+> > > > > > > not sufficient.  You would have to somehow disable any future attempts
+> > > > > > > to use other VGA devices.  Only the VGA device below this defective
+> > > > > > > bridge is usable.  Any other VGA devices in the system would be
+> > > > > > > useless.
+> > > > > > >
+> > > > > > > > So we provide a quirk to fix Xorg auto-detection.
+> > > > > > > >
+> > > > > > > > See similar bug:
+> > > > > > > >
+> > > > > > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> > > > > > >
+> > > > > > > This patch was never merged.  If we merged a revised version, please
+> > > > > > > cite the SHA1 instead.
+> > > > > >
+> > > > > > This patch has never merged, and I found that it is unnecessary after
+> > > > > > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> > > > > > even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> > > > > > unnecessary. If it is still needed, I'll investigate the root cause.
+> > > > >
+> > > > > I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> > > > > by subsys_initcall(), which means their sequence is unpredictable. And
+> > > > > unfortunately, in our platform vga_arb_device_init() is called before
+> > > > > pcibios_init(), which makes vga_arb_device_init() fail to set a
+> > > > > default vga device. This is the root cause why we thought that we
+> > > > > still need a quirk for AST2500.
+> > > >
+> > > > Does this mean there is no hardware defect here?  The VGA Enable bit
+> > > > works correctly?
+> > > >
+> > > No, VGA Enable bit still doesn't set, but with commit
+> > > a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device even if
+> > > there's no legacy VGA") we no longer depend on VGA Enable.
+> >
+> > Correct me if I'm wrong:
+> >
+> >   - On the AST2500 bridge [1a03:1150], the VGA Enable bit is
+> >     read-only 0.
+> >
+> >   - The AST2500 bridge never forwards VGA accesses ([mem
+> >     0xa0000-0xbffff], [io 0x3b0-0x3bb], [io 0x3c0-0x3df]) to its
+> >     secondary bus.
+> >
+> > The VGA Enable bit is optional, and if both the above are true, the
+> > bridge is working correctly per spec, and the quirk below is not the
+> > right solution, and whatever solution we come up with should not
+> > claim that the bridge is misbehaving.
+> Yes, you are right, the bridge is working correctly, which is similar
+> to HiSilicon D05.
 > 
-> Signed-off-by: Claire Chang <tientzu@chromium.org>
+> 
+> >
+> > > > > I think the best solution is make vga_arb_device_init() be wrapped by
+> > > > > subsys_initcall_sync(), do you think so?
+> > > >
+> > > > Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
+> > > > documented, so I'm not sure exactly *why* such a change would work and
+> > > > whether we could rely on it to continue working.
+> > > >
+> > > > pcibios_init() isn't very consistent across arches.  On some,
+> > > > including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
+> > > > enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
+> > > > basically nothing.  That makes life a little difficult.
+> > >
+> > > subsys_initcall_sync() is ensured after all subsys_initcall()
+> > > functions, so at least it can solve the problem on platforms which use
+> > > pcibios_init() to enumerate PCI devices (x86 and other ACPI-based
+> > > platforms are also OK, because they use acpi_init()
+> > > -->acpi_scan_init() -->pci_acpi_scan_root() to enumerate devices).
+> >
+> > More details in my response to suijingfeng:
+> > https://lore.kernel.org/r/20210518193100.GA148462@bjorn-Precision-5520
+> >
+> > I'd rather not fiddle with the initcall ordering.  That mechanism is
+> > fragile and I'd prefer something more robust.
+> >
+> > I'm wondering whether it's practical to do something in the normal PCI
+> > enumeration path, e.g., in pci_init_capabilities().  Maybe we can
+> > detect the default VGA device as we enumerate it.  Then we wouldn't
+> > have this weird process of "find all PCI devices first, then scan for
+> > the default VGA device, and oh, by the way, also check for VGA devices
+> > hot-added later."
+>
+> If we don't want to rely on initcall order, and want to solve the
+> hot-added case, then can we add vga_arb_select_default_device() in
+> pci_notify() when (action == BUS_NOTIFY_ADD_DEVICE &&
+> !vga_default_device())?
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I think I would see if it's possible to call
+vga_arb_select_default_device() from vga_arbiter_add_pci_device()
+instead of from vga_arb_device_init().
+
+I would also (as a separate patch) try to get rid of this loop in
+vga_arb_device_init():
+
+        list_for_each_entry(vgadev, &vga_list, list) {
+                struct device *dev = &vgadev->pdev->dev;
+
+                if (vgadev->bridge_has_one_vga)
+                        vgaarb_info(dev, "bridge control possible\n");
+                else
+                        vgaarb_info(dev, "no bridge control possible\n");
+        }
+
+and do the vgaarb_info() in vga_arbiter_check_bridge_sharing(), where
+the loop would not be needed.
+
+Bjorn
