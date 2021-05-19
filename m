@@ -2,137 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC1038965D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 21:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF14389668
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 21:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231492AbhESTQN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 15:16:13 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:38750 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229990AbhESTQN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 15:16:13 -0400
-Received: by mail-ot1-f46.google.com with SMTP id i14-20020a9d624e0000b029033683c71999so1546940otk.5;
-        Wed, 19 May 2021 12:14:53 -0700 (PDT)
+        id S229786AbhESTTm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 15:19:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229535AbhESTTl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 15:19:41 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F70C06175F;
+        Wed, 19 May 2021 12:18:20 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id q2so10564680pfh.13;
+        Wed, 19 May 2021 12:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qkzCD1nWkBURpBrpJXY23W3vLoZSck6AY/wcT/olSRk=;
+        b=Jr32Uvht2cSrNILgfPTD5ViC6pT8b+8Rv+juxOSQTQwrJ1CAD0MBJHubcHjyOKsUbI
+         JfDjb6IlvhZ8t3+ym7sOQ4a9U6dHEsOXxzesVMPv6UDrlo59kYq82tWRbs9w2uqU+yYo
+         8oA/biTXJEGtIK7ZUbiBmZQYbJzsutIezjLCjW+be0py6uPVuz9vfS/rc828YcCt+zVs
+         WRnXVlWSjrk7BMwlJdqMQwTvyoJQltUeu2a7CMQB207kX6rGqLkbNNdIKCNuEPYfxlj8
+         c8CbGpi6xXQEr0VSmTVe/i1v9YaB96qj2/4NW8B/lTGCTjbb7h0/a34Yz4Z5jXjVRuz+
+         oRyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=izYVo1pODY59TvGRJ6tr5HWEWAw6nNqCoxBw5MFLCwg=;
-        b=YOrQ7IsW2jrS+QQRREwD4S2IhTgK8UBHRo9p4/ucyuETFcigaZ5sQmczersT/nPYWK
-         r3O2mKDxmWii3FiB5I30MSm26EKCp1++iwrtDsut2YhsnbyeEk/UjKCNKgMjej+d3cZ+
-         H0QdzhgXvKJ9aFxjQFBrNazcOhlTGR12cidx8i4ukVPcnUbve59FgGuq0wds2v1+THEM
-         giGXUMXRyOoRJEcgbFgGcZEfTlMdb9/mc+1vK2d7JMnRzHQ/mLYSs0oAKPuGgXt6iWi9
-         WIRpgevcXV00PjcufzyMkJY/sL6U0MJ5TvYp2onQCp/ZjvJ/LqNqyJUxM6Ng9FGuHZFx
-         vvBg==
-X-Gm-Message-State: AOAM532YGueJfQtegwdPcqKkEqmFsw/KKhaJP+XfFKoh1Wg/O2M373jX
-        0hC0RMR8ktFb6eLkTEp8Cg==
-X-Google-Smtp-Source: ABdhPJzJMP2S9PPrAcuHOCF1RfGVRc+VX3tuXr42FGFEFyyuPTnPSurDFrey1rgenAPAQXKp9XlYaw==
-X-Received: by 2002:a9d:7f1a:: with SMTP id j26mr810672otq.244.1621451692875;
-        Wed, 19 May 2021 12:14:52 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h9sm53703oor.16.2021.05.19.12.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 12:14:51 -0700 (PDT)
-Received: (nullmailer pid 3479665 invoked by uid 1000);
-        Wed, 19 May 2021 19:14:50 -0000
-Date:   Wed, 19 May 2021 14:14:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Wang Xingang <wangxingang5@huawei.com>
-Cc:     will@kernel.org, joro@8bytes.org, frowand.list@gmail.com,
-        helgaas@kernel.org, gregkh@linuxfoundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        xieyingtai@huawei.com
-Subject: Re: [PATCH v2] iommu/of: Fix pci_request_acs() before enumerating
- PCI devices
-Message-ID: <20210519191450.GA3469078@robh.at.kernel.org>
-References: <1621257425-37856-1-git-send-email-wangxingang5@huawei.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qkzCD1nWkBURpBrpJXY23W3vLoZSck6AY/wcT/olSRk=;
+        b=Khc2XaRWNqgDbdgm3Nn2SqFJ09OSaaICwhw6j52vX+rZdQQLDq6SZf3f+8QKhj71QG
+         daRm7KeN2vUsnT2SijkJotWz/OgXi019lLqVdlFCR1LprDkyPzWqbsDoBFe3+nby93KK
+         FydyihlzAsQjpJ9bsG4fJHCeswf7RUjxboZ9OC9zMib3d+ydueFuEHDNcjZ410rWqCDG
+         Ju2Y+QMbc2fNw9OaTbxSN8CgPA3R0kP3uCT5L2w6ZXnlsMrQvM7E58YBJEXyK7bfppKN
+         2Ez9mzOsqwkSKjpKUj3Yc8myyunjdW1EAh5/Ev+PgijJOz9tmDO0/6OUmo/F3Zg7HJ61
+         jXRQ==
+X-Gm-Message-State: AOAM533Cu7xev0GFCinyjcgArWFAF7XOTcQLhJRjJvlkiTfz+c081MWK
+        rnB07vPued00DzHN2lzT4TuX4McJLes=
+X-Google-Smtp-Source: ABdhPJyun5zEd3qUDcE/GtFSWzJiED1dVWEJkkT2Lvnwoihmboc879WuDVAjjHLr8vtaHKK8YVFCpg==
+X-Received: by 2002:a65:4286:: with SMTP id j6mr636207pgp.261.1621451900054;
+        Wed, 19 May 2021 12:18:20 -0700 (PDT)
+Received: from [10.230.29.202] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d131sm147671pfd.176.2021.05.19.12.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 May 2021 12:18:19 -0700 (PDT)
+Subject: Re: [PATCH v7 05/15] swiotlb: Add a new get_io_tlb_mem getter
+To:     Claire Chang <tientzu@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com
+References: <20210518064215.2856977-1-tientzu@chromium.org>
+ <20210518064215.2856977-6-tientzu@chromium.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <52714d95-3562-97fc-0dee-761adfc364cb@gmail.com>
+Date:   Wed, 19 May 2021 12:18:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1621257425-37856-1-git-send-email-wangxingang5@huawei.com>
+In-Reply-To: <20210518064215.2856977-6-tientzu@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 17, 2021 at 01:17:05PM +0000, Wang Xingang wrote:
-> From: Xingang Wang <wangxingang5@huawei.com>
-> 
-> When booting with devicetree, the pci_request_acs() is called after the
-> enumeration and initialization of PCI devices, thus the ACS is not
-> enabled. This patch add check for IOMMU in of_core_init(), and call
-> pci_request_acs() when iommu is detected, making sure that the ACS will
-> be enabled.
-> 
-> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
-> configuring IOMMU linkage")
-> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
-> ---
->  drivers/iommu/of_iommu.c | 1 -
->  drivers/of/base.c        | 9 ++++++++-
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> Change log:
-> v1->v2:
->  - remove pci_request_acs() in of_iommu_configure
->  - check and call pci_request_acs() in of_core_init()
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index a9d2df001149..54a14da242cc 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->  			.np = master_np,
->  		};
->  
-> -		pci_request_acs();
->  		err = pci_for_each_dma_alias(to_pci_dev(dev),
->  					     of_pci_iommu_init, &info);
->  	} else {
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 48e941f99558..95cd8f0e5435 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -24,6 +24,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pci.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> @@ -166,7 +167,7 @@ void __of_phandle_cache_inv_entry(phandle handle)
->  void __init of_core_init(void)
->  {
->  	struct device_node *np;
-> -
-> +	bool of_iommu_detect = false;
->  
->  	/* Create the kset, and register existing nodes */
->  	mutex_lock(&of_mutex);
-> @@ -180,6 +181,12 @@ void __init of_core_init(void)
->  		__of_attach_node_sysfs(np);
->  		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
->  			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
-> +
-> +		/* Detect IOMMU and make sure ACS will be enabled */
-> +		if (!of_iommu_detect && of_get_property(np, "iommu-map", NULL)) {
-> +			of_iommu_detect = true;
-> +			pci_request_acs();
-> +		}
 
-Private DT internal init code doesn't seem like the right place for 
-this. If this needs to be ordered WRT PCI device enumeration, then 
-somewhere in the PCI host bridge or bus init code seems like the right 
-place to me.
 
-Also, shouldn't this be conditional on 'iommu-map' being in the host 
-bridge or a parent or ??? rather than just any iommu-map anywhere in the 
-DT.
-
->  	}
->  	mutex_unlock(&of_mutex);
->  
-> -- 
-> 2.19.1
+On 5/17/2021 11:42 PM, Claire Chang wrote:
+> Add a new getter, get_io_tlb_mem, to help select the io_tlb_mem struct.
+> The restricted DMA pool is preferred if available.
 > 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
