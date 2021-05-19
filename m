@@ -2,67 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 156E238951D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 20:13:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1F7B389594
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 20:38:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbhESSOa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 14:14:30 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:35433 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230218AbhESSO3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 14:14:29 -0400
-Received: by mail-lj1-f174.google.com with SMTP id f12so16704521ljp.2
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 11:13:09 -0700 (PDT)
+        id S231504AbhESSjw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 14:39:52 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:46066 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230248AbhESSjv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 14:39:51 -0400
+Received: by mail-wr1-f41.google.com with SMTP id h4so15019878wrt.12
+        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 11:38:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Izc/tRRcUSggujOOu4QqDIfPNIqokvI/WDQ0Ssknjoo=;
-        b=C9LrNugiX5lFiCS82loMUMkQggyZWJMXM1XFLkc8QzleIoOlZTF5te/zfWtUf6oAMe
-         nfsgbCapa74ojYQf0Jd4zPxMJdh+NCESK4JpNzqVouw2f0qlLILqBNx7R4O2AQijH4Wx
-         xweEaItkax+BAdQFHZZdReJLFZeNTPxrwFylvfmFZAv/xzAs3kW1rYHTDowY9daSNRVO
-         eGcfRSp8pC+mFxSKI4enmyKD0SsOks6HIlAP9OUvl7F+W3wutG8sPdTs2jTnMFi2O6R9
-         jwf8a1UHWUtF9yh5SrUz/wSvp+kbrvqkVRxtdMahGi8wz67mBRh0l5ctrqycmhFk+GyK
-         LF/w==
-X-Gm-Message-State: AOAM531noZnZbJn9jMka66b9YkI/fHzCr8iivx2XfbiEcFfbPihioXdj
-        7DwsHBs1s3haougUZQsT7PY=
-X-Google-Smtp-Source: ABdhPJwTvv1iqFSs2byDp7oikpdQmJhKTcNcbkNX2ZzErjrG5KggDeRlJunDyYjxXPR0Od0em3h9+Q==
-X-Received: by 2002:a2e:9896:: with SMTP id b22mr289552ljj.329.1621447988387;
-        Wed, 19 May 2021 11:13:08 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id n7sm44574lft.65.2021.05.19.11.13.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L8t4NT32QukReqRKb3NsCwROkTdHScpGYLxCsr2Y3rQ=;
+        b=io4n6Al4m5JKhBVVuZ6kahCJn+5RX+G21HJI28cQfSjpW38tKFQHRmff8rnfiUqAwr
+         StezugG4Ijqmnx8gH3/TW/5yqSAGe06uDJO6XuSiDk6EydhDGsreSsNRd+9q+XFklkZx
+         V1i2bUoHihBjs/kmde+9H4vK/k+EKF//RLPTCR220nYLG7rIwtbDl5JWJkam1ttcHMoG
+         WRi+a+fySMGd4VQ479dy/4jTlFq1yoSd+aovUSRhXOQyJOswIyQHBCSeh2uqlSGEE0ny
+         u+CHqqJZexRfLOHoFPffAf6jRMqoipd/9b4qj3reWIT2Z5TFJkNa+YEr0uPfRTFwXLAY
+         NxBg==
+X-Gm-Message-State: AOAM531uHtmuvCbBBQ0cGzlCS8SgLuzbrXpWUUc1J3tnaS5Ap8TIx2sX
+        Bleq7dBqwz0EOg8GM+dr05E=
+X-Google-Smtp-Source: ABdhPJwEIt9r+mxQPzuJWnsQwidF6so1M8PzWXWewsx4a1G+n+xzx6I9b4pWr8SEpnQbZHZDgloGoA==
+X-Received: by 2002:a5d:63c1:: with SMTP id c1mr310922wrw.71.1621449510610;
+        Wed, 19 May 2021 11:38:30 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id q1sm6583457wmq.48.2021.05.19.11.38.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 11:13:07 -0700 (PDT)
-Date:   Wed, 19 May 2021 20:13:06 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Wed, 19 May 2021 11:38:30 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Ray Jui <rjui@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Scott Branden <sbranden@broadcom.com>,
         bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: iproc: Fix a non-compliant kernel-doc
-Message-ID: <20210519181306.GA603045@rocinante.localdomain>
-References: <20210519173556.163360-1-kw@linux.com>
- <c1c2de58-64bf-75b7-0976-fba906c58273@infradead.org>
+Subject: [PATCH v2] PCI: iproc: Fix a non-compliant kernel-doc
+Date:   Wed, 19 May 2021 18:38:29 +0000
+Message-Id: <20210519183829.165982-1-kw@linux.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c1c2de58-64bf-75b7-0976-fba906c58273@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Randy,
+Correct a non-compliant kernel-doc used to describe struct and enum
+types and functions in the pcie-iproc.c and pcie-iproc-msi.c files, and
+resolve the following build time warning related to kernel-doc:
 
-[...]
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Thanks.
+  drivers/pci/controller/pcie-iproc.c:92: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:139: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:153: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:441: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:623: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:901: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
 
-Thank you for the review!  I am going to send v2 as I have noticed a few
-other places where the kernel-doc is not formatted correctly, so that we
-can resolve all of these at once, hopefully.
+  drivers/pci/controller/pcie-iproc-msi.c:52: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc-msi.c:68: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
 
-Krzysztof
+No change to functionality intended.
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pcie-iproc-msi.c | 16 ++++++++--------
+ drivers/pci/controller/pcie-iproc.c     | 14 ++++++++------
+ 2 files changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+index eede4e8f3f75..65ea83d2abfa 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -49,14 +49,14 @@ enum iproc_msi_reg {
+ struct iproc_msi;
+ 
+ /**
+- * iProc MSI group
+- *
+- * One MSI group is allocated per GIC interrupt, serviced by one iProc MSI
+- * event queue.
++ * struct iproc_msi_grp - iProc MSI group
+  *
+  * @msi: pointer to iProc MSI data
+  * @gic_irq: GIC interrupt
+  * @eq: Event queue number
++ *
++ * One MSI group is allocated per GIC interrupt, serviced by one iProc MSI
++ * event queue.
+  */
+ struct iproc_msi_grp {
+ 	struct iproc_msi *msi;
+@@ -65,10 +65,7 @@ struct iproc_msi_grp {
+ };
+ 
+ /**
+- * iProc event queue based MSI
+- *
+- * Only meant to be used on platforms without MSI support integrated into the
+- * GIC.
++ * struct iproc_msi - iProc event queue based MSI
+  *
+  * @pcie: pointer to iProc PCIe data
+  * @reg_offsets: MSI register offsets
+@@ -89,6 +86,9 @@ struct iproc_msi_grp {
+  * @eq_cpu: pointer to allocated memory region for MSI event queues
+  * @eq_dma: DMA address of MSI event queues
+  * @msi_addr: MSI address
++ *
++ * Only meant to be used on platforms without MSI support integrated into the
++ * GIC.
+  */
+ struct iproc_msi {
+ 	struct iproc_pcie *pcie;
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index 02e52f698eeb..8e45288c9abc 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -89,7 +89,8 @@
+ #define IPROC_PCIE_REG_INVALID		0xffff
+ 
+ /**
+- * iProc PCIe outbound mapping controller specific parameters
++ * struct iproc_pcie_ob_map - iProc PCIe outbound mapping controller specific
++ *			      parameters.
+  *
+  * @window_sizes: list of supported outbound mapping window sizes in MB
+  * @nr_sizes: number of supported outbound mapping window sizes
+@@ -136,7 +137,7 @@ static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
+ };
+ 
+ /**
+- * iProc PCIe inbound mapping type
++ * enum iproc_pcie_ib_map_type - iProc PCIe inbound mapping type.
+  */
+ enum iproc_pcie_ib_map_type {
+ 	/* for DDR memory */
+@@ -150,7 +151,8 @@ enum iproc_pcie_ib_map_type {
+ };
+ 
+ /**
+- * iProc PCIe inbound mapping controller specific parameters
++ * struct iproc_pcie_ib_map - iProc PCIe inbound mapping controller specific
++ *			      parameters.
+  *
+  * @type: inbound mapping region type
+  * @size_unit: inbound mapping region size unit, could be SZ_1K, SZ_1M, or
+@@ -437,7 +439,7 @@ static inline void iproc_pcie_write_reg(struct iproc_pcie *pcie,
+ 	writel(val, pcie->base + offset);
+ }
+ 
+-/**
++/*
+  * APB error forwarding can be disabled during access of configuration
+  * registers of the endpoint device, to prevent unsupported requests
+  * (typically seen during enumeration with multi-function devices) from
+@@ -619,7 +621,7 @@ static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
+-/**
++/*
+  * Note access to the configuration registers are protected at the higher layer
+  * by 'pci_lock' in drivers/pci/access.c
+  */
+@@ -897,7 +899,7 @@ static inline int iproc_pcie_ob_write(struct iproc_pcie *pcie, int window_idx,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * Some iProc SoCs require the SW to configure the outbound address mapping
+  *
+  * Outbound address translation:
+-- 
+2.31.1
+
