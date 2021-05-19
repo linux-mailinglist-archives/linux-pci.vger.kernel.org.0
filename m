@@ -2,119 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4C6438994A
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 00:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE06389978
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 00:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbhESW3z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 18:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbhESW3z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 18:29:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF928C061574
-        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 15:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=DennC/wwIRjHkYwhduExeoUmNn4x0McdEgmjFsstdGM=; b=KP000V+5R0FBjW9Gm5AtlaGck5
-        RXOdg9oi1Ia+V0QLfdBal35ETsB00NYbv2D1pZFh/IneAUwPY9JTiPCYcsG+aQpEBm88eP/hNAOQj
-        w+2Kn8cBOFcHfrTKR5fKbbEw1XayQ7nAET3qdNWaza7zb/hiUFX3nbBLvQMpvh9XwGpA/QdP9yUG0
-        FnwR7T4y1WGdosIu7HGCIY0eN9PaQQ7y9EAlGVOnbThzuhXcDRbGpXCKN1nwGducgNgCAwW0zGJDi
-        DY5zc/OonT1cFBfVGhRKxXmEfjDl+PrGypSsVsBxeza9whBj9g7erLtEODj3mUpefEo3Uo5lFmJBO
-        n2xW2l5Q==;
-Received: from [2601:1c0:6280:3f0::7376]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1ljUg5-00Foxd-69; Wed, 19 May 2021 22:28:33 +0000
-Subject: Re: [PATCH v2] PCI: iproc: Fix a non-compliant kernel-doc
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Ray Jui <rjui@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S229955AbhESWuc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 18:50:32 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:37744 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229508AbhESWub (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 May 2021 18:50:31 -0400
+Received: by mail-wm1-f41.google.com with SMTP id f19-20020a05600c1553b02901794fafcfefso3637264wmg.2
+        for <linux-pci@vger.kernel.org>; Wed, 19 May 2021 15:49:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0CaTOf83E6W/vr9C4g97RwC3pF79Es1qTa32MdRuStU=;
+        b=fwIB8yA/BVvO7oLn+wKB78WIo+9TN7I5PXMWYzbkMeNXFCtlDCEoCeccp1eyYUzj3m
+         kemc+UihTkObBYskzxbWZ6dTiUTH0l0+MzoFkZQX53qxNYQlM5N2WJvI1GwPLrkxyDfl
+         xThmDgaHQ+VNp7vetSPM0vmzCTnR8w0OJHvRgAI8lWAKSg+O5Whjuzox3EZlxvnwOaxr
+         MakyOX5b43k/9Zltepto8U+YfmwG1ZCLY8ERiVeP/0J1sTCONWcpP1Z8INgtCDnD2Bex
+         3VgqXdo+7jVq757RJf+uXJ919ZFZSvoCEC/8GGtS3VJnbW0210ap+wFVO4eubDsqLC85
+         +NgQ==
+X-Gm-Message-State: AOAM5321dXCfUAHDG65NVcBasAsQoPZIKp5XYFRwamIZfsOwrE39luJF
+        s0lV2gyPKGBbzKmCn+m3S2M=
+X-Google-Smtp-Source: ABdhPJyaKtqHMsyyydxX5QGXFWs6pOh3vu3JdJ3ws0X10kgDQ/p7egAXlEfaz9h2vdL0hTuOnSFuAg==
+X-Received: by 2002:a1c:b6d5:: with SMTP id g204mr1269426wmf.106.1621464550755;
+        Wed, 19 May 2021 15:49:10 -0700 (PDT)
+Received: from rocinante.localdomain ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id f20sm780379wmh.41.2021.05.19.15.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 15:49:10 -0700 (PDT)
+Date:   Thu, 20 May 2021 00:49:08 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Scott Branden <sbranden@broadcom.com>,
         bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: iproc: Fix a non-compliant kernel-doc
+Message-ID: <20210519224908.GA616654@rocinante.localdomain>
 References: <20210519183829.165982-1-kw@linux.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3623373c-b95c-344f-63c3-3eeeda623e90@infradead.org>
-Date:   Wed, 19 May 2021 15:28:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ <3623373c-b95c-344f-63c3-3eeeda623e90@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20210519183829.165982-1-kw@linux.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <3623373c-b95c-344f-63c3-3eeeda623e90@infradead.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi,
 
-This is a really good cleanup, but there is still one kernel-doc
-warning remaining after this patch is applied. Please see below.
-
-
-On 5/19/21 11:38 AM, Krzysztof Wilczyński wrote:
-> Correct a non-compliant kernel-doc used to describe struct and enum
-> types and functions in the pcie-iproc.c and pcie-iproc-msi.c files, and
-> resolve the following build time warning related to kernel-doc:
+> This is a really good cleanup, but there is still one kernel-doc
+> warning remaining after this patch is applied. Please see below.
+[...]
+> > - * iProc PCIe inbound mapping type
+> > + * enum iproc_pcie_ib_map_type - iProc PCIe inbound mapping type.
+[...]
 > 
->   drivers/pci/controller/pcie-iproc.c:92: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   drivers/pci/controller/pcie-iproc.c:139: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   drivers/pci/controller/pcie-iproc.c:153: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   drivers/pci/controller/pcie-iproc.c:441: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   drivers/pci/controller/pcie-iproc.c:623: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   drivers/pci/controller/pcie-iproc.c:901: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+> The above gives me this:
 > 
->   drivers/pci/controller/pcie-iproc-msi.c:52: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
->   drivers/pci/controller/pcie-iproc-msi.c:68: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+> pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_MEM' not described in enum 'iproc_pcie_ib_map_type'
+> pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_IO' not described in enum 'iproc_pcie_ib_map_type'
+> pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_INVALID' not described in enum 'iproc_pcie_ib_map_type'
 > 
-> No change to functionality intended.
 > 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> ---
->  drivers/pci/controller/pcie-iproc-msi.c | 16 ++++++++--------
->  drivers/pci/controller/pcie-iproc.c     | 14 ++++++++------
->  2 files changed, 16 insertions(+), 14 deletions(-)
+> If you could fix that, it would be Nice. :)
 > 
-> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> index eede4e8f3f75..65ea83d2abfa 100644
-> --- a/drivers/pci/controller/pcie-iproc-msi.c
-> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> Even if not, it's a good cleanup. Thanks.
 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index 02e52f698eeb..8e45288c9abc 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
+Doh!  Apologies!  This is my bad - correcting the format of the
+kernel-doc made the parser go and check for the fields to be properly
+documented, thus this new warning.  I need to also take care about this
+too, a very good point!
 
-> @@ -136,7 +137,7 @@ static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
->  };
->  
->  /**
-> - * iProc PCIe inbound mapping type
-> + * enum iproc_pcie_ib_map_type - iProc PCIe inbound mapping type.
->   */
->  enum iproc_pcie_ib_map_type {
->  	/* for DDR memory */
+Thank you for catching this!  I will update everything accordingly.
 
-The above gives me this:
-
-pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_MEM' not described in enum 'iproc_pcie_ib_map_type'
-pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_IO' not described in enum 'iproc_pcie_ib_map_type'
-pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_INVALID' not described in enum 'iproc_pcie_ib_map_type'
-
-
-If you could fix that, it would be Nice. :)
-
-Even if not, it's a good cleanup. Thanks.
-
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
--- 
-~Randy
-
+Krzysztof
