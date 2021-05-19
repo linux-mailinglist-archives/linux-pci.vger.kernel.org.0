@@ -2,173 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6836B388C4C
-	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 13:03:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84376388CC7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 May 2021 13:28:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241199AbhESLE4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 May 2021 07:04:56 -0400
-Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:58176
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S242675AbhESLEz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 May 2021 07:04:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LvHWT9bMP9f0YcZfGHauv1D9jZIxTNGcHShCbrJVm8MI1b1joZ1TFyVAb95roNw9GEA2uG0v9ORssguTxu0Z1kmUxNrRZqOXjFPSD3/sJrh90Of7UHgC2bv64lzvamVngA6xubNSgMKEsgepou9/biTZSyTT0YOdwDWwOZBlMmA/1XuFToNv/3ZHRXCi3LFtAfvYKYy4kpMc7GYO//F0JtZsNmEcDaNn5klDwjXao9rCotkQvNDxrzAhPZAcSZ6WnTCiho7KrXi3HLm2FbkjA+v22o+50Qdew2q81+6CCfJMo4vjnpxivCMT7IF9NPl4Y7bN4Gp2u5IeeQVDBFbHeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwU1chr3/bPHERdfidrWDrI85usjTMvWIp/EBR1Fb3Y=;
- b=f0dnFGy90KrkEVTPNTM4ErQ6R1v3OGYBFA7KI86OPkUEQetFXV7CxwGyzZ65u9q0ZeklTs6mUaB1VQt98EV/kR54UN8QCRuYpyZNc6DAhmMUsh6vLZHv0mLZr9Q8oGFLBWlkwVdJbn0G1jwIDHJGlbHE+Zf/n7b0ymBnvt9tNPmgaFDbvojDyCBh1ttr76duh+3F8mtXcF8MZAyyfG6SJtJ/970GW9coUd3EfMjrBdXjOeU1zRn4qAP7Q4Y2EBgeIHX9qJccTztS+juczcRNWaIf5Wb23A3QXadlutDpi/tOZZKVj6l54DTB8qD9zT+j/+lvdrrNsrdQqBiwdsa4Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwU1chr3/bPHERdfidrWDrI85usjTMvWIp/EBR1Fb3Y=;
- b=LKc7b7h4OtH1YJimJ6EuvNiKhLdDZOMUmcIjUwmnpaCzlAzqaKpU5NMbfSrefJrpMDqGnNMI1ipuCo68SWCpBrFmACgaTe03t7/xy4Lj3eS3h01mCfpm2vHEfpcJWawgOp/lhQ3dHPfhwEBBbUbSd+pAQSqCGg9lWuD0KDj3KME=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN6PR12MB2703.namprd12.prod.outlook.com (2603:10b6:805:75::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4129.28; Wed, 19 May
- 2021 11:03:34 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::ad51:8c49:b171:856c%7]) with mapi id 15.20.4129.033; Wed, 19 May 2021
- 11:03:34 +0000
-Subject: Re: [PATCH v7 13/16] drm/scheduler: Fix hang when sched_entity
- released
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, daniel.vetter@ffwll.ch,
-        Harry.Wentland@amd.com
-Cc:     Alexander.Deucher@amd.com, gregkh@linuxfoundation.org,
-        ppaalanen@gmail.com, helgaas@kernel.org, Felix.Kuehling@amd.com
-References: <20210512142648.666476-1-andrey.grodzovsky@amd.com>
- <20210512142648.666476-14-andrey.grodzovsky@amd.com>
- <9e1270bf-ab62-5d76-b1de-e6cd49dc4841@amd.com>
- <f0c5dea7-af35-9ea5-028e-6286e57a469a@amd.com>
- <34d4e4a8-c577-dfe6-3190-28a5c63a2d23@amd.com>
- <da1f9706-d918-cff8-2807-25da0c01fcde@amd.com>
- <8228ea6b-4faf-bb7e-aaf4-8949932e869a@amd.com>
- <ec157a35-85fb-11e5-226a-c25d699102c6@amd.com>
- <53f281cc-e4c0-ea5d-9415-4413c85a6a16@amd.com>
- <0b49fc7b-ca0b-58c4-3f76-c4a5fab97bdc@amd.com>
- <31febf08-e9c9-77fa-932d-a50505866ec4@amd.com>
- <cd6bbe33-cbc5-43cb-80f7-1cb82a81e65d@amd.com>
- <77efa177-f313-5f1e-e273-6672ed46a90a@gmail.com>
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Message-ID: <4a9af53a-564d-62ae-25e1-06ca4129857f@amd.com>
-Date:   Wed, 19 May 2021 07:03:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-In-Reply-To: <77efa177-f313-5f1e-e273-6672ed46a90a@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [2607:fea8:3edf:49b0:1069:60ba:d67c:3ab3]
-X-ClientProxiedBy: YTOPR0101CA0062.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::39) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+        id S1351014AbhESL3X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 May 2021 07:29:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:33236 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350681AbhESL3Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 May 2021 07:29:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DBF3101E;
+        Wed, 19 May 2021 04:27:56 -0700 (PDT)
+Received: from [10.57.66.179] (unknown [10.57.66.179])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBDA53F719;
+        Wed, 19 May 2021 04:27:54 -0700 (PDT)
+Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
+ 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
+ memory addresses")
+To:     Alexandru Elisei <alexandru.elisei@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        heiko.stuebner@theobroma-systems.com, leobras.c@gmail.com,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
+Date:   Wed, 19 May 2021 12:27:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:1069:60ba:d67c:3ab3] (2607:fea8:3edf:49b0:1069:60ba:d67c:3ab3) by YTOPR0101CA0062.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.30 via Frontend Transport; Wed, 19 May 2021 11:03:33 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6313ecf1-24fa-4497-e7c0-08d91ab5be9b
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2703:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB27034F61A81C0A054D398CD0EA2B9@SN6PR12MB2703.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aem5QTFgf/G5aHFz8o7aWiXvAPwtChB7zmV+yIMzIna6jKme0OmasXAhXMNssMzbFIcHh3gz76skaVJbrSDO5xKJ+PcdSnLQz/ujelz+/FEkt8vkW4IDNFFkAA8X4ZDAYe4gTZnCAJYUp21+dW7yClFQ43qcKFk8q10TVebiB9o8bMOPO6j3fWJHc9ZTqZjdg/Fo5QKNJDPcvY3XHQyHWI2ADRKNX+6VHOALm9i2u76ByFBxwSRfuKQxDE/TON9wCKrkIEo2RZgXWqbVQ2XqDvSrsMAmAtXezdVnbBwyUapLKuOW6AU9fyljmwnvdEZ/BdKUzn3RoYITqMnbgj4W7Unwd8S/lvP0Abeorl51/lYpmS3CrrOC518rJMsq3YwekFdFGQAIZ7aWErCI+we7vCR3gHit/UGZ041xaQ4VbP9KnMwm9zTyYCx9NGd4k0s4aNpj1mjRgAXbLMLtjlPneIf0BwVvHXg8GkTaU1BdBXdG0VIjaClwRqFbSaQwEO0K9nqPh2jaW+3aYam/8cUSxtjDEnpQg8rv7Q4KgDTdnZwE2R5PB39pqUSnG1lJnWjUyj5szn0I753WAg/3uwLu/mKfsfLB126drwTWfe9z7hiO/XJeG+281OmyiJKcfpKxyvpV46ebDsS/lmZ07oSFU5wyaDvH0QaT8IyoEk0uFNfhNjm6vTdoeXD6wpjig11YsnH3+FkScjQLIBlWMi6cGw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(16526019)(45080400002)(4326008)(66946007)(83380400001)(6636002)(36756003)(6486002)(2616005)(5660300002)(31686004)(66476007)(186003)(8676002)(38100700002)(86362001)(44832011)(966005)(316002)(478600001)(8936002)(52116002)(110136005)(53546011)(2906002)(31696002)(66574015)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?VnQ3K00rSjRHM0VLVExpRWl3ZG82elVtSUFxM3BEZk54RHlZYngxbExIdm9Z?=
- =?utf-8?B?WjNYeHpSb3dRYlBLNHhFQnNiek1COGZwaCtYMGVLdE1YRHZHVkIzMUo0QXND?=
- =?utf-8?B?Z1kyR0Yvc0RqT2JiWTlqMjA5OENLQkVhQkVOZlpVUWQ2VjlLemI2TnE4elBa?=
- =?utf-8?B?cHo0anN2K0cyR0JzUE9Fb2diR1FaWXlSdEVtajRlOVdCenNWSjNtMUl6azE0?=
- =?utf-8?B?UUhJMWhBZmFiMGIvaytFdjU5bVExUDh6ejNGSTUxS3F0Qm5TcStxVkhLQjQw?=
- =?utf-8?B?ZmJGMmJBcS9iRDczU0tRMGd0N3d2MjJVWVFqZmsyOEk5dnIvdlgwT2VoTmEv?=
- =?utf-8?B?NFBhNGJFck9tNC81VTNDeEthQlBrbTFQNjBXd0V1WC9JaHZiWmowY2c2bGxI?=
- =?utf-8?B?OXFKd01QbUY4WXVsdGJUUUIySjEwUlRueGtSVzdaOGJ5aTZXZXUwV21Ec1A4?=
- =?utf-8?B?THlucXpkdzczQnBpYkJXMi9taGFncm9ienlGUGN4dE1LbFN0dTNyRmFwcWZo?=
- =?utf-8?B?UmpGTHI3RFJzT21QeHl2WkxWWGJENzV3UHJrYnMxdkw4TjQ3T2VUQmV4ejJS?=
- =?utf-8?B?QWNIRzg4ejNCWklFYUpPeGJlQnJWeDdodWRNL1FiZTJvSnVxU0FuKzNZV1gy?=
- =?utf-8?B?dDk4dnF6QjZMdDh3ZEpsYXpkQ1pHY29SM0xuY1ZsQzNaUXhFYmdRVnhoRHdk?=
- =?utf-8?B?VVIzRmh3dUE3cUlwNVdnUVVPWWowZTZ1YjF1T0NhSWJBcXVrUW9LSytZelRh?=
- =?utf-8?B?c2RWeVlZdFE1ZUo3Tmp5dCtSYTQ5d2dUTldmWHBwSGRBQi80UjNOT0hBTU1K?=
- =?utf-8?B?cTdzNTB1WnpMSGE0Y0ZFZDBjYlBOZE1lcTBuVmVodUJGdm5VeVZiczByU3do?=
- =?utf-8?B?NTJEcnFocVF5R0FOanBtYW5RTUZaTFd6YUJ5S3J1ZVU5WDJJeVJTem0vb21k?=
- =?utf-8?B?QWZrTWZGRTZMaFY2YUdFaHd3dkNKRjRyUXU4dHB4alBBUzZzdUpHOUEvRllK?=
- =?utf-8?B?UUJ1Q2F1ODVpTmoyVzY4UWNhL3RhSGFpYzAwRXBtbVRuREFDMWVQOWhWbTM4?=
- =?utf-8?B?NWJiKzFFOFZFK1RPc1hra2ttbllCcGxiQTR3dFhuY09scUluc2xsM3pISVNP?=
- =?utf-8?B?Sk9kU0FRSHlIQTM3R1FPV2FiQ2hpNFlVbVFTblpSZnVVZElZWFl4Z3NKZzk5?=
- =?utf-8?B?Qm9ZN2VwNXJLVGQ1My83bmZFemdqS2QvK3U5NWdYVU1zbTROOU83aittZW1w?=
- =?utf-8?B?UnNUUE5rRC9Vb0I4TXkzemphNmdwUHhnQXRnV0JYeS9JbGVKQWNadVJRZENr?=
- =?utf-8?B?eUVodTYwZlNtbE5lbUVhZVdiUURJQTVtc0hkN0JKelZKZXdORFdsanE4WG4z?=
- =?utf-8?B?RzN1YnYrT0lNRjR0dXFxV2c1QlkxOHh4TEJYU2pJRFpnTGFXRUpQd3FKeXFF?=
- =?utf-8?B?bzBTZ3phSUR0V1c4djUvRVUzc3pKSXFOa2V0RENIcC9YWHBzQUd5dzVYNXNu?=
- =?utf-8?B?ZGFtRndpRjdWOVhhdVRRUkFJQTFQUDd6ZHYrbGNWUjBjVmt5WFo1YlpQWXNs?=
- =?utf-8?B?bnB1QXpKc21yYXNvbTBKSWxxTW9LdmM4NnEvU2RJZVBuSkZWMDE4aG5paVlh?=
- =?utf-8?B?L2UwdXN5L1hjUUlkMCs2UTZvRmRrVHJvVDhZTjVKWUhHYnh0VGpucW9DSkc4?=
- =?utf-8?B?SHQ0Vkk2NkNtQ1o4SVkzVnJMRmFpTk1YKzZJVDZBTGI2WUM5MVprK0NjcXRT?=
- =?utf-8?B?OFFEZzZGUkl2NE1CT2JCcnJxUWZCM2EwUTdDV0ZPTHNSM0VXT1NBc0F4OHBu?=
- =?utf-8?B?RytEQW43RmMvOWZ1TUtmaFpRZmxEZlVSbU8xNEJ4N25kazNBb0Nia250SXBF?=
- =?utf-8?Q?7LJu2EWmJ0FcG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6313ecf1-24fa-4497-e7c0-08d91ab5be9b
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2021 11:03:34.0286
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7nA/LKq/3kNIwrFqH7SP23M9yTBK6lTaxZZcEWO+bz0KOnWo57o+z8h3CGBLu7cAYxxTRfVRA0DaOu6TiQaa7A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2703
+In-Reply-To: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[ +linux-pci for visibility ]
 
-
-On 2021-05-19 6:57 a.m., Christian König wrote:
-> Am 18.05.21 um 20:48 schrieb Andrey Grodzovsky:
->> [SNIP]
->>>>
->>>> Would this be the right way to do it ?
->>>
->>> Yes, it is at least a start. Question is if we can wait blocking here 
->>> or not.
->>>
->>> We install a callback a bit lower to avoid blocking, so I'm pretty 
->>> sure that won't work as expected.
->>>
->>> Christian.
->>
->> I can't see why this would create problems, as long as the dependencies
->> complete or force competed if they are from same device (extracted) but
->> on a different ring then looks to me it should work. I will give it
->> a try.
+On 2021-05-18 10:09, Alexandru Elisei wrote:
+> After doing a git bisect I was able to trace the following error when booting my
+> rockpro64 v2 (rk3399 SoC) with a PCIE NVME expansion card:
 > 
-> Ok, but please also test the case for a killed process.
+> [..]
+> [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+> [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
+> 0x00fa000000
+> [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
+> 0x00fbe00000
+> [    0.306201] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
+> regulator
+> [    0.306334] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
+> regulator
+> [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
+> [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
+> [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
+> [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
+> address [0xfbe00000-0xfbefffff])
+> [    0.373839] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
+> [    0.373973] pci 0000:00:00.0: supports D1
+> [    0.373992] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+> [    0.378518] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
+> reconfiguring
+> [    0.378765] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
+> [    0.378869] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+> [    0.379051] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
+> [    0.379661] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+> x4 link)
+> [    0.393269] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+> [    0.393311] pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
+> [    0.393333] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
+> [    0.393356] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
+> [    0.393375] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
+> [    0.393397] pci 0000:00:00.0: PCI bridge to [bus 01]
+> [    0.393839] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
+> [    0.394165] pcieport 0000:00:00.0: AER: enabled with IRQ 78
+> [..]
 > 
-> Christian.
+> to the commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for
+> 64-bit memory addresses").
 
-You mean something like run glxgears and then simply
-terminate it ? Because I done that. Or something more ?
+FWFW, my hunch is that the host bridge advertising no 32-bit memory 
+resource, only only a single 64-bit non-prefetchable one (even though 
+it's entirely below 4GB) might be a bit weird and tripping something up 
+in the resource assignment code. It certainly seems like the thing most 
+directly related to the offending commit.
 
-Andrey
+I'd be tempted to try fiddling with that in the DT (i.e. changing 
+0x83000000 to 0x82000000 in the PCIe node's "ranges" property) to see if 
+it makes any difference. Note that even if it helps, though, I don't 
+know whether that's the correct fix or just a bodge around a corner-case 
+bug somewhere in the resource code.
 
+Robin.
 
+> For reference, here is the dmesg output when BAR
+> reassignment works:
 > 
->>
->> Andrey
+> [..]
+> [    0.307381] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+> [    0.307445] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
+> 0x00fa000000
+> [    0.307481] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
+> 0x00fbe00000
+> [    0.308406] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
+> regulator
+> [    0.308534] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
+> regulator
+> [    0.374676] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
+> [    0.374701] pci_bus 0000:00: root bus resource [bus 00-1f]
+> [    0.374723] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
+> [    0.374746] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
+> address [0xfbe00000-0xfbefffff])
+> [    0.374808] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
+> [    0.374943] pci 0000:00:00.0: supports D1
+> [    0.374961] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+> [    0.379473] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
+> reconfiguring
+> [    0.379712] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
+> [    0.379815] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+> [    0.379997] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
+> [    0.380607] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+> x4 link)
+> [    0.394239] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+> [    0.394285] pci 0000:00:00.0: BAR 14: assigned [mem 0xfa000000-0xfa0fffff]
+> [    0.394312] pci 0000:01:00.0: BAR 0: assigned [mem 0xfa000000-0xfa003fff 64bit]
+> [    0.394374] pci 0000:00:00.0: PCI bridge to [bus 01]
+> [    0.394395] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0fffff]
+> [    0.394569] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+> [    0.394845] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
+> [    0.395153] pcieport 0000:00:00.0: AER: enabled with IRQ 78
+> [..]
+> 
+> And here is the output of lspci when BAR reassignment works:
+> 
+> # lspci -v
+> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd RK3399 PCI Express Root
+> Port (prog-if 00 [Normal decode])
+>      Flags: bus master, fast devsel, latency 0, IRQ 78
+>      Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+>      I/O behind bridge: 00000000-00000fff [size=4K]
+>      Memory behind bridge: fa000000-fa0fffff [size=1M]
+>      Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+>      Capabilities: [80] Power Management version 3
+>      Capabilities: [90] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+>      Capabilities: [b0] MSI-X: Enable- Count=1 Masked-
+>      Capabilities: [c0] Express Root Port (Slot+), MSI 00
+>      Capabilities: [100] Advanced Error Reporting
+>      Capabilities: [274] Transaction Processing Hints
+>      Kernel driver in use: pcieport
+> lspci: Unable to load libkmod resources: error -2
+> 
+> 01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD
+> Controller SM981/PM981/PM983 (prog-if 02 [NVM Express])
+>      Subsystem: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983
+>      Flags: bus master, fast devsel, latency 0, IRQ 77, NUMA node 0
+>      Memory at fa000000 (64-bit, non-prefetchable) [size=16K]
+>      Capabilities: [40] Power Management version 3
+>      Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+>      Capabilities: [70] Express Endpoint, MSI 00
+>      Capabilities: [b0] MSI-X: Enable+ Count=33 Masked-
+>      Capabilities: [100] Advanced Error Reporting
+>      Capabilities: [148] Device Serial Number 00-00-00-00-00-00-00-00
+>      Capabilities: [158] Power Budgeting <?>
+>      Capabilities: [168] Secondary PCI Express
+>      Capabilities: [188] Latency Tolerance Reporting
+>      Capabilities: [190] L1 PM Substates
+>      Kernel driver in use: nvme
+> 
+> I can provide more information if needed (the board is sitting on my desk) and I
+> can help with testing the fix.
+> 
+> Thanks,
+> 
+> Alex
+> 
 > 
 > _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Famd-gfx&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7Cce1252e55fae4338710d08d91ab4de01%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637570186393107071%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=vGqxY5sxpEIiQGFBNn2PWkKqVjviM29r34Yjv0wujf4%3D&amp;reserved=0 
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 > 
