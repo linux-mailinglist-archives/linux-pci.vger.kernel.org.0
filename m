@@ -2,186 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F107538A5B4
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 12:20:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89E0B38ABF8
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 13:32:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235744AbhETKSy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 06:18:54 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:46678 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235731AbhETKQt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 May 2021 06:16:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1621505723; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=RimnFyHnEwmSSWhM/3E14U80346pavoF8LlaOtDcD8Y=;
- b=vhv+PBlG1RPb70r4A0xQ3h1IHdnFyYS3Ex/NgPeWmqV0AvCAwhRDIh4nmKVmw/Hui8RfCjM2
- OvdFofxhOekc0fxcTi+YAyUy4li+0yfN0iRMk2RJRTjYtoMupCXZlaZYApSUXwagqQ0VWo9f
- NVBblzVDnBDN4l37g87sn5g1vlI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 60a636b8c4456bc0f1d46044 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 May 2021 10:15:20
- GMT
-Sender: pmaliset=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 550CFC00914; Thu, 20 May 2021 10:15:19 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmaliset)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12116C4314A;
-        Thu, 20 May 2021 10:15:15 +0000 (UTC)
+        id S240066AbhETLbF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 May 2021 07:31:05 -0400
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:40892 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241026AbhETL25 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 07:28:57 -0400
+Received: by mail-oi1-f179.google.com with SMTP id s19so16057668oic.7;
+        Thu, 20 May 2021 04:27:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aLoQytCJZNTbKWVT/noma+z4gVb6x1ofyGWkY0jypdE=;
+        b=MQTU4BHUKr2c1qcxYDJpAp3Xsd5zOEKGTmz96f7Y1cIIdQj0fglzg1tzNngAl2fYO1
+         fIJgJ6+ov9L7AiovECnwliKfdJlhjn0y0QMhQIEiEsNNgRF2k5g0vqeAIGLGi7eTtkCB
+         5Z42VJ4eYmigKhdMdLIlFwacLI5AXhginzrxjUh1kH0yMXlVWyINuJjjMfvcZjg5uOec
+         oBTNQtWl01ZNRjrMVF+yLCtnmA9XZnwatqLIfDHS2+JLR5+6p62lH2BaHixpS+Sy43F8
+         MYDEhXq/PTKYm8gYEM94QQ8QwXA/qdFY6CN2wTHRdQYNX+tONMnHRHLDdXUyPB+rGEAc
+         Shgg==
+X-Gm-Message-State: AOAM530QZLHdbZL6hTkHK6InRMQ1qATnClQX+5UWN2edx9V0FZMyNjFY
+        zv7y+VjfbDslMeCxYM3/YbBLLcSmQvD1MasyXPE=
+X-Google-Smtp-Source: ABdhPJwsK5oAALz+Yl9V0yZC1sDcs57BYz4D/QSVlWlrK7QvHg1CW1tIBSOYquLiNWztZ0YToTiur+mssnGf0r3VFgA=
+X-Received: by 2002:aca:4758:: with SMTP id u85mr2920409oia.71.1621510054801;
+ Thu, 20 May 2021 04:27:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 May 2021 15:45:15 +0530
-From:   Prasad Malisetty <pmaliset@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        mgautam@codeaurora.org, swboyd@chromium.org, dianders@chromium.org,
-        mka@chromium.org
-Subject: Re: [PATCH] PCIe: qcom: Add support to control pipe clk mux
-In-Reply-To: <20210509023547.GJ2484@yoga>
-References: <1620520860-8589-1-git-send-email-pmaliset@codeaurora.org>
- <20210509023547.GJ2484@yoga>
-Message-ID: <3447606ba9ade9d578c609838e63dbb3@codeaurora.org>
-X-Sender: pmaliset@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <CAJZ5v0ijqL0ZpdwBvwY=Y9Ubuvd-Kr2s-NfUOKX_Ev3GB+pHww@mail.gmail.com>
+ <20210519194853.GA249712@bjorn-Precision-5520>
+In-Reply-To: <20210519194853.GA249712@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 May 2021 13:27:23 +0200
+Message-ID: <CAJZ5v0i+s7Ru5J5Um0tExMGCnK0JGTnc76BYyd58EiYkt6dghQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on s2idle
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Konstantin Kharlamov <hi-angel@yandex.ru>,
+        Lukas Wunner <lukas@wunner.de>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-05-09 08:05, Bjorn Andersson wrote:
-> On Sat 08 May 19:41 CDT 2021, Prasad Malisetty wrote:
-> 
->> PCIe driver needs to toggle between bi_tcxo and phy pipe
->> clock as part of its LPM sequence. This is done by setting
->> pipe_clk/ref_clk_src as parent of pipe_clk_src after phy init
->> 
->> Dependent on below change:
->> 
->> 	https://lore.kernel.org/patchwork/patch/1422499/
-> 
-> In what way is this change to the driver dependent on the addition of
-> the node to DT?
-> 
-I will move this patch to DT series patches in next version.
->> 
->> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
->> ---
->>  drivers/pci/controller/dwc/pcie-qcom.c | 23 ++++++++++++++++++++++-
->>  1 file changed, 22 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c 
->> b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 8a7a300..a9f69e8 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -9,6 +9,7 @@
->>   */
->> 
->>  #include <linux/clk.h>
->> +#include <linux/clk-provider.h>
-> 
-> Can you help me see why this is needed?
-> 
-Its needed for set_parent function prototype.
->>  #include <linux/crc8.h>
->>  #include <linux/delay.h>
->>  #include <linux/gpio/consumer.h>
->> @@ -166,6 +167,9 @@ struct qcom_pcie_resources_2_7_0 {
->>  	struct regulator_bulk_data supplies[2];
->>  	struct reset_control *pci_reset;
->>  	struct clk *pipe_clk;
->> +	struct clk *pipe_clk_src;
->> +	struct clk *pipe_ext_src;
->> +	struct clk *ref_clk_src;
->>  };
->> 
->>  union qcom_pcie_resources {
->> @@ -1168,7 +1172,19 @@ static int qcom_pcie_get_resources_2_7_0(struct 
->> qcom_pcie *pcie)
->>  		return ret;
->> 
->>  	res->pipe_clk = devm_clk_get(dev, "pipe");
->> -	return PTR_ERR_OR_ZERO(res->pipe_clk);
->> +	if (IS_ERR(res->pipe_clk))
->> +		return PTR_ERR(res->pipe_clk);
->> +
->> +	res->pipe_clk_src = devm_clk_get(dev, "pipe_src");
->> +	if (IS_ERR(res->pipe_clk_src))
-> 
-> How does this not fail on existing targets?
-I will add platform check in next version.
-> 
->> +		return PTR_ERR(res->pipe_clk_src);
->> +
->> +	res->pipe_ext_src = devm_clk_get(dev, "pipe_ext");
->> +	if (IS_ERR(res->pipe_ext_src))
->> +		return PTR_ERR(res->pipe_ext_src);
->> +
->> +	res->ref_clk_src = devm_clk_get(dev, "ref");
->> +	return PTR_ERR_OR_ZERO(res->ref_clk_src);
->>  }
->> 
->>  static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->> @@ -1255,6 +1271,11 @@ static void qcom_pcie_deinit_2_7_0(struct 
->> qcom_pcie *pcie)
->>  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->>  {
->>  	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
->> +	struct dw_pcie *pci = pcie->pci;
->> +	struct device *dev = pci->dev;
->> +
->> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sc7280"))
-> 
-> Why is this specific to sc7280?
-> 
-Newer targets including sc7280 require changing pipe-clk mux to switch 
-between pipe_clk and XO for GDSC enable.
+On Wed, May 19, 2021 at 9:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, May 19, 2021 at 09:12:26PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, May 19, 2021 at 7:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, May 07, 2021 at 05:08:42PM +0300, Konstantin Kharlamov wrote:
+> > > > On Fri, 2021-05-07 at 08:30 -0500, Bjorn Helgaas wrote:
+> > > > > On Fri, May 07, 2021 at 12:07:38AM +0200, Lukas Wunner wrote:
+> > > > > > On Thu, May 06, 2021 at 04:48:42PM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Thu, May 06, 2021 at 08:38:20PM +0300, Konstantin Kharlamov wrote:
+> > > > > > > > On Macbook 2013 resuming from s2idle results in external monitor no
+> > > > > > > > longer being detected, and dmesg having errors like:
+> > > > > > > >
+> > > > > > > >     pcieport 0000:06:00.0: can't change power state from D3hot to D0
+> > > > > > > > (config space inaccessible)
+> > > > > > > >
+> > > > > > > > and a stacktrace. The reason turned out that the hw that the quirk
+> > > > > > > > powers off does not get powered on back on resume.
+> > >
+> > > > > For example, "With s2idle, the machine isn't suspended via ACPI, so
+> > > > > the AML code which powers the controller off isn't executed."  AFAICT
+> > > > > that isn't actually a required, documented property of s2idle, but
+> > > > > rather it reaches into the internal implementation.
+> > >
+> > > > > The code comment "If suspend mode is s2idle, power won't get restored
+> > > > > on resume" is similar.  !pm_suspend_via_firmware() tells us that
+> > > > > platform firmware won't be invoked.  But the connection between *that*
+> > > > > and "power won't get restored" is unexplained.
+> > > >
+> > > > Sorry, I can't comment anything regarding AML and power management
+> > > > in general since I am really new to all of this. However, regarding
+> > > > the usage of the `pm_suspend_via_firmware()`: yeah, I also think it
+> > > > is unclear what this does, and I was thinking about adding a wrapper
+> > > > function something like `is_s2idle()` to the suspend.h, which would
+> > > > simply call `pm_suspend_via_firmware` internally.
+> > >
+> > > No, that's not my point at all.  I don't really care whether the
+> > > interface is called pm_suspend_via_firmware() or is_s2idle().
+> > >
+> > > What I don't like about this is that it's all just unexplained magic,
+> > > as was the original quirk.
+> > >
+> > > IIUC, the quirk is applied by pci_pm_suspend_noirq() *after* it puts
+> > > the device in a low-power state.  Here's my uninformed speculation
+> > > about what happens:
+> > >
+> > >   - On suspend, pci_pm_suspend_noirq() puts device in low-power state.
+> >
+> > Right.
+> >
+> > >     My *guess* is this means D0 or D3hot for s2idle, and D3cold for
+> > >     everything else.
+> >
+> > This really depends on the ACPI methods involved, but as a rule (and
+> > I'm not aware of any exceptions) the target power state of the device
+> > for s2idle and "everything else" is the same.  If D3cold is possible,
+> > it will be D3cold.  If not, that will be D3hot etc.
+> >
+> > The only difference (from the individual device perspective) is that
+> > in the ACPI S3 (or S4 if this matters here) case the platform firmware
+> > (and that's not AML but something like SMM) may cut power off from it
+> > later.
+> >
+> > >  [Do we have sufficient debug to find out what these states are?]
+> >
+> > I'm not sure what you mean.  What states are supported or something else?
+>
+> I was curious about what states we actually put this device in for
+> s2idle/standby/s2ram/std because I was hoping we could decide based
+> on what state s2idle used.  But if they all use the same target state,
+> that idea won't work.
+>
+> > >   - pci_pm_suspend_noirq() does pci_fixup_suspend_late fixups,
+> > >     including quirk_apple_poweroff_thunderbolt().
+> > >
+> > >   - quirk_apple_poweroff_thunderbolt() runs the magic SXIO/SXFP/SXLF
+> > >     methods, which apparently turn off more power.
+> > >
+> > >   - On resume, pci_pm_resume_noirq() brings the device back to D0.
+> > >
+> > >     If we're resuming from standby, S2RAM, or STD, I speculate the
+> > >     device is in D3cold, so this involves running AML that seems to
+> > >     undo whatever SXIO/SXFP/SXLF did.
+> >
+> > The standby, S2RAM and STD cases are actually different in that respect.
+> >
+> > In the STD case we get the device from the restore kernel and it most
+> > likely has been enumerated by it, so it is in whatever power state the
+> > restore kernel puts it into.
+> >
+> > For standby that most likely is the state in which the device was left
+> > during suspend.
+> >
+> > For S2RAM, it most likely will be something like D0-uninitialized,
+> > because the platform firmware initiating the resume transition (which
+> > is not AML, but again something like SMM) restores power to the
+> > platform (including the majority of devices), but doesn't initialize
+> > them as a rule.
+> >
+> > The STD and S2RAM resume will undo the "magic", standby resume may not.
+> >
+> > >     If we're resuming from s2idle, I speculate the device is in D0 or
+> > >     D3hot, and we run different AML (or maybe no AML at all), and we
+> >
+> > It is in whatever power state it was left in during suspend and we run
+> > the same AML as in the other cases, modulo the possible power state
+> > difference (with respect to the other cases).
+> >
+> > >     *don't* undo the effects of SXIO/SXFP/SXLF, so the device doesn't
+> > >     work.
+> >
+> > This is correct.
+> >
+> > > If the above is anything like what's happening, we should be able to
+> > > skip SXIO/SXFP/SXLF based on the current power state of the device.
+> >
+> > Not really.
+> >
+> > > E.g., if the device is in D0 or D3hot, we should not use
+> > > SXIO/SXFP/SXLF to yank power.
+> > >
+> > > That would seem more connected to the observable state of the device
+> > > than using pm_suspend_via_firmware(), which relies on the connection
+> > > between s2idle and PM_SUSPEND_FLAG_FW_SUSPEND (which is not at all
+> > > obvious) and the power state of the device while in s2idle (also not
+> > > obvious).
+> >
+> > The problem is related to the fact that in s2idle the platform
+> > firmware does not finalize the suspend transition and, consequently,
+> > it doesn't initiate the resume transition.  Therefore whatever power
+> > state the device was left in during suspend must be dealt with during
+> > the subsequent resume.  Hence, if whatever is done by SXIO/SXFP/SXLF
+> > in the suspend path cannot be reversed in the resume path by the
+> > kernel (because there is no known method to do that), they should not
+> > be invoked.  And that's exactly because the platform firmware will not
+> > finalize the suspend transition which is indicated by
+> > PM_SUSPEND_FLAG_FW_SUSPEND being unset.
+>
+> How can we connect "if (!pm_suspend_via_firmware())" in this patch
+> with the fact that firmware doesn't finalize suspend (and consequently
+> does not reverse things in resume)?
+>
+> I don't see any use of pm_suspend_via_firmware() or
+> PM_SUSPEND_FLAG_FW_SUSPEND that looks relevant.
 
->> +		clk_set_parent(res->pipe_clk_src, res->pipe_ext_src);
-> 
-> The naming here is not obvious to me, but I think you're going to use
-> this to set parent of gcc_pcie_0_pipe_clk_src to pcie_0_pipe_clk?
-> 
-> But in the commit message you're talking about switching back and forth
-> between the pipe clock and tcxo, can you please help me understand 
-> where
-> this is happening?
-> 
-Shall I add the naming convention for above clocks "pipe_clk_mux and 
-pcie_0_pipe_clk_src" .
-Switching between pipe clk and tcxo are added in suspend/resume 
-callbacks. I will update the commit message
-in next version.
-> 
-> PS. The new clocks should be mentioned in the binding.
-> 
-> Regards,
-> Bjorn
-> 
->> 
->>  	return clk_prepare_enable(res->pipe_clk);
->>  }
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+First of all, there is a kerneldoc comment next to
+pm_suspend_via_firmware() which is relevant.  Especially the last
+paragraph of that comment applies directly to the case at hand IMV.
+
+Next, if you see how pm_suspend_global_flags get populated, you'll
+notice that pm_suspend_clear_flags() is called early in both the
+system-wide suspend and hibernation paths and then the ACPI platform
+callbacks invoke pm_set_suspend_via_firmware() when the platform is
+going to finalize the suspend transition.  [In particular, notice the
+acpi_state > ACPI_STATE_S1 condition in acpi_suspend_begin(), which is
+related to the difference between ACPI S3/S4 and standby that I was
+talking about before.]  This means that, on a system with ACPI,
+PM_SUSPEND_FLAG_FW_SUSPEND is set only if the target system state is
+above S1 and in those cases the firmware finalizes the suspend
+transition.
+
+Of course, s2idle callbacks don't invoke pm_set_suspend_via_firmware()
+at all, because the target ACPI system state for s2idle is S0 (the
+working state from the ACPI perspective).
+
+> That makes it really hard to figure out how this patch works and how to avoid breaking it
+> in the future.
+
+Well, if you don't trust kerneldoc comments, you get to figure out
+things yourself which may not be straightforward ...
+
+> Thanks for your patience in explaining all this!
+
+YW
+
+Cheers!
