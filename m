@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB6CB38B337
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 17:26:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2664C38B45E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 18:37:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232119AbhETP2A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 11:28:00 -0400
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:47083 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232073AbhETP14 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 11:27:56 -0400
-Received: by mail-lj1-f178.google.com with SMTP id e11so20203490ljn.13;
-        Thu, 20 May 2021 08:26:34 -0700 (PDT)
+        id S232049AbhETQjD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 May 2021 12:39:03 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:37517 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231616AbhETQjD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 12:39:03 -0400
+Received: by mail-ed1-f43.google.com with SMTP id g7so7993358edm.4;
+        Thu, 20 May 2021 09:37:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kc33j5rybEcJBbwaVSn/MKbn2ie8ghQMdP8M0Psq8wk=;
-        b=PAXXKAxQZL8MgVTPG3wd/ik7ROof50zC6pBok7aZEp1Xk5lBvyyVEUQluC4Icyh91A
-         z33RFFRJ3uw+27i1Uh4GN24wmdkHIsWsiWf0eN0oozGqYKWACbQys+x6e30b17O9YN/1
-         h57CL0NjzxR9S7Fry0DKmF7egeDnH8jms96oSWlWMToXNeHSQpZcBZiUyuxuxcYtEKHS
-         TDxTC3oec7ucfSrT0me6mZdXmHtJWj+KfMqJ3VdVdBR0z63kBWjQbDzbJGr2necHTJXG
-         vDpGYwDdWVJiANSyQvngEwnuwb8tCc0HdOj7sJ83r8naEBrxBTMVS95UA6ZHVCpuybq/
-         4viA==
-X-Gm-Message-State: AOAM532OauOBIT8vTLH/QzQIzf76AIKeDG+uQ2DzM6OzfzIG882KnftN
-        dWq8phAY4BhC9P7VFYrCnui1CVpFEhMPuCJy
-X-Google-Smtp-Source: ABdhPJzLKjnWJGPgefuPGvfAqGJD6/I7WNJ+GdpiINjv+0jV4gYUiaoQS+UwM24HNEemR+2jO1znhw==
-X-Received: by 2002:a2e:9d09:: with SMTP id t9mr841682lji.213.1621524393713;
-        Thu, 20 May 2021 08:26:33 -0700 (PDT)
+        bh=OhFIRCkOs81fMaxAYpodGS2wjOUuiCI5qY37aZo8prk=;
+        b=paJHBuC02DD1NaG4qLKCqcv72RyFINn1psRzIrhztJX0jZgRc9221S4KXC8B8gePS8
+         XSW0wESRC8WD+j+gN9ICCoeDbssF8gJ+pn7wHLXHWmPicYT0JDp7xoECB7dsLc9BiZAn
+         KQutSv7Gf2HpBjrxLrNGlFZ5DXxSzgiNKoXdE9OGkKYKJXZcI0FeJqrJGoTiTBrL7GO1
+         mUAd/ncKU1ZZRCyTSHvNGQKdMId2l/xJnhfms7bQgSxKsNol9WWOPXL2ET3xNay8udxo
+         MXszzUwiks9a0dx0XlmREBp1Ca3MznegDYj5Fy0mWT3YiBDvZegRsmFFNf2WXGk9vhyw
+         yhUg==
+X-Gm-Message-State: AOAM533bGLFPdGwZCsHe0q7RsHURQW2yIKShSQlv3WAfN1n/yJVrcBW8
+        vmJTs42BC22ZqtJcBcRPtcQ=
+X-Google-Smtp-Source: ABdhPJySjueqwJ0nBVt1XTqdBV3okGQINyLQJzKQhWyXJq0b4JIe47S0Tagq+MjF1Mg8c2q1nBmycA==
+X-Received: by 2002:aa7:cb90:: with SMTP id r16mr5935263edt.247.1621528659444;
+        Thu, 20 May 2021 09:37:39 -0700 (PDT)
 Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id j1sm328967lfg.166.2021.05.20.08.26.32
+        by smtp.gmail.com with ESMTPSA id e12sm1675053ejk.99.2021.05.20.09.37.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 08:26:33 -0700 (PDT)
-Date:   Thu, 20 May 2021 17:26:32 +0200
+        Thu, 20 May 2021 09:37:38 -0700 (PDT)
+Date:   Thu, 20 May 2021 18:37:37 +0200
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To:     Amey Narkhede <ameynarkhede03@gmail.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
         raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 3/7] PCI: Add new array for keeping track of
- ordering of reset methods
-Message-ID: <20210520152632.GC641812@rocinante.localdomain>
+Subject: Re: [PATCH RESEND v2 5/7] PCI/sysfs: Allow userspace to query and
+ set device reset mechanism
+Message-ID: <20210520163737.GD641812@rocinante.localdomain>
 References: <20210519235426.99728-1-ameynarkhede03@gmail.com>
- <20210519235426.99728-4-ameynarkhede03@gmail.com>
+ <20210519235426.99728-6-ameynarkhede03@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210519235426.99728-4-ameynarkhede03@gmail.com>
+In-Reply-To: <20210519235426.99728-6-ameynarkhede03@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -55,60 +55,34 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Hi Amey,
 
 [...]
-> +/*
-> + * The ordering for functions in pci_reset_fn_methods
-> + * is required for reset_methods byte array defined
-> + * in struct pci_dev
-> + */
+> +	if (sysfs_streq(buf, "")) {
+> +		pci_warn(pdev, "All device reset methods disabled by user");
+> +		goto set_reset_methods;
+> +	}
 
-A small nitpick: missing period at the end of the sentence in the
-comment above, and in other comments too.  Might add for completeness
-and consistency.
+The sysfs_streq() is nice, indeed.
 
-[...]
-> +typedef int (*pci_reset_fn_t)(struct pci_dev *, int);
-> +
-> +struct pci_reset_fn_method {
-> +	pci_reset_fn_t reset_fn;
-> +	char *name;
-> +};
+> +	while ((name = strsep((char **)&buf, ",")) != NULL) {
 
-Question about the custom type definition above: would it be really
-needed?  It there is only potentially a limited use for it, then perhaps
-it would not be useful to have one?
+I believe we could make this parsing a little bit more resilient,
+especially since we are handling user input and this cannot ever be
+really fully trusted, so for example:
 
-Linus also has some preference on usage of custom types, as per:
+  while ((name = strsep((char **)&buf, ","))) {
+	if !(strlen(name))  <--- sysfs_streq() could be used here too.
+		continue;
 
-  https://yarchive.net/comp/linux/typedefs.html
-
-But, in the end, this really boils down to a matter of style and/or
-preference.
+	name = strim(name); <--- remove leading and trailing whitespaces, if any.
+	(...)
 
 [...]
-> +#define PCI_RESET_FN_METHODS 5
+> +	if (reset_methods[0] &&
+> +	    reset_methods[0] != PCI_RESET_FN_METHODS)
+> +		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
 
-Not sure if worth changing name of this constant, but what about the
-following:
-
-  #define PCI_RESET_FN_METHODS_NUM 5
-
-Or even perhaps:
-
-  #define PCI_RESET_METHODS_NUM 5
-
-So it's a little bit more self-explanatory.  This would be in the
-similar notion, as per:
-
-  https://elixir.bootlin.com/linux/v5.13-rc2/source/include/linux/pci.h#L115
-
-[...]
-> +	u8 reset_methods[PCI_RESET_FN_METHODS];	/* Array for storing ordering of reset methods */
-
-This comment reads somewhat awkward - we know that an array would be
-used, most likely, for storing things, thus what about the following:
-
-  /* Reset methods ordered by priority */
-
-Just a suggestion, though.
+What would be difference between disabling and de-prioritizing, is there
+be a way for us to distinguish between the two?  I was wondering if we
+could, notify the user when the device specific reset is disable or when
+it has been de-prioritized?
 
 Krzysztof
