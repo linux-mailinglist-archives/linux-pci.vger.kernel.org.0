@@ -2,56 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ABAC38AD4D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 14:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0858738B00E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 15:33:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242351AbhETMCm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 08:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242232AbhETMCU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 May 2021 08:02:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B1F4E610A1;
-        Thu, 20 May 2021 12:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621512058;
-        bh=prar2rBH142PrkdxhYZD4TusZ6jznHF0Nu4EwNz/rGE=;
-        h=Date:From:To:Subject:From;
-        b=qWBJT4i+qYwYND96ATM9k+kNSSmtyy6h8EV6goslkmV7l086vgYxAZOHuambhCqCi
-         YXEQNbEfXs8Y28ptGgh3lrJjJ3B+P+wXVaNSKQstM6bJDSWdDFszRQY/vs8r5rS4e8
-         VHmSbQgQ1bmyf3Nhl+DCmgNs6OS+ZG3JrHK3xOBPMIeUGX9VBrEZ5gjaQisnZhe3YS
-         1tPMki5UFOeB6J7Uw9I9fSgiJUopjDpg3pO2FvL7cSq9lLhqbODiXBQre8ytdy7xLc
-         ZiAIEWIdz8LqEDlG4k12F2VipmraJbzbnBWdyYguxbf0WatKWU44jg3EUrMBF6x7zZ
-         C5As4sI/rT/aw==
-Received: by pali.im (Postfix)
-        id 0774A9D1; Thu, 20 May 2021 14:00:55 +0200 (CEST)
-Date:   Thu, 20 May 2021 14:00:55 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Subject: pcie-iproc-msi.c: Bug in Multi-MSI support?
-Message-ID: <20210520120055.jl7vkqanv7wzeipq@pali>
+        id S239093AbhETNem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 May 2021 09:34:42 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4560 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239828AbhETNeT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 09:34:19 -0400
+Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.59])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Fm9b51bzVzqTQW;
+        Thu, 20 May 2021 21:30:09 +0800 (CST)
+Received: from dggeml759-chm.china.huawei.com (10.1.199.138) by
+ dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Thu, 20 May 2021 21:32:55 +0800
+Received: from localhost.localdomain (10.175.102.38) by
+ dggeml759-chm.china.huawei.com (10.1.199.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 20 May 2021 21:32:55 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     <weiyongjun1@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] PCI: tegra: Fix build warnings when CONFIG_PCIEASPM is not set
+Date:   Thu, 20 May 2021 13:42:09 +0000
+Message-ID: <20210520134209.1667244-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.102.38]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeml759-chm.china.huawei.com (10.1.199.138)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+Fix build warning when CONFIG_PCIEASPM is not set:
 
-I think there is a bug in pcie-iproc-msi.c driver. It declares
-Multi MSI support via MSI_FLAG_MULTI_PCI_MSI flag, see:
+drivers/pci/controller/dwc/pcie-tegra194.c:259:18: warning:
+ 'event_cntr_data_offset' defined but not used [-Wunused-const-variable=]
+  259 | static const u32 event_cntr_data_offset[] = {
+      |                  ^~~~~~~~~~~~~~~~~~~~~~
+drivers/pci/controller/dwc/pcie-tegra194.c:250:18: warning:
+ 'event_cntr_ctrl_offset' defined but not used [-Wunused-const-variable=]
+  250 | static const u32 event_cntr_ctrl_offset[] = {
+      |                  ^~~~~~~~~~~~~~~~~~~~~~
+drivers/pci/controller/dwc/pcie-tegra194.c:243:27: warning:
+ 'pcie_gen_freq' defined but not used [-Wunused-const-variable=]
+  243 | static const unsigned int pcie_gen_freq[] = {
+      |                           ^~~~~~~~~~~~~
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-iproc-msi.c?h=v5.12#n174
+Fix it by only define then when CONFIG_PCIEASPM is set.
 
-but its iproc_msi_irq_domain_alloc() function completely ignores nr_irqs
-argument when allocating interrupt numbers from bitmap, see:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-iproc-msi.c?h=v5.12#n246
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index bafd2c6ab3c2..b80dd071e90d 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -240,6 +240,7 @@
+ #define EP_STATE_DISABLED	0
+ #define EP_STATE_ENABLED	1
+ 
++#if defined(CONFIG_PCIEASPM)
+ static const unsigned int pcie_gen_freq[] = {
+ 	GEN1_CORE_CLK_FREQ,
+ 	GEN2_CORE_CLK_FREQ,
+@@ -264,6 +265,7 @@ static const u32 event_cntr_data_offset[] = {
+ 	0x1c8,
+ 	0x1dc
+ };
++#endif
+ 
+ struct tegra_pcie_dw {
+ 	struct device *dev;
 
-I think this this is incorrect as alloc callback should allocate nr_irqs
-multi interrupts as caller requested. All other drivers with Multi MSI
-support are doing it.
-
-Could you look at it?
