@@ -2,136 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C90BD38B0E3
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 16:03:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 019C238B0FF
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 16:07:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239159AbhETOEy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 10:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
+        id S235069AbhETOIc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 May 2021 10:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243642AbhETOCg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 May 2021 10:02:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B68D1613C7;
-        Thu, 20 May 2021 14:01:14 +0000 (UTC)
+        id S236494AbhETOGy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 May 2021 10:06:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BE39B6109F;
+        Thu, 20 May 2021 14:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621519274;
-        bh=Ge7XZxLDW+zMOSFfG3zNBpDQtYmYLTcf7b+kJArHktY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kcfbk3PTJlyH3WsFAtlj2mZ4X9aUQ3iCidACFlNhz/CMFskrQzHU0QjNbP+B6xoVA
-         SVQiCf63t4AIf/BH4O9jahKeIwLF0M/e/RarR9tHFULAIuv+ICmhY4g9OR0cK6D65p
-         RlorI0oyxNAEYM/8RsOiUiWhuMHLzBvTnj5krvHVOG+0GW9OGMhSYe1QojtsoQeZ+U
-         lsMB7ojn0Xl0PnDFEpbOcRIMurodzyxQzbFj7TPdGfSOyITKfRIP0AgfP2KwVW6gTs
-         3Y9HJIsB+NMPqv9OFSXW2uZRG8r1BkbwIROIckf2PQX6vYRSZm1MCLmFXkBNYBxOfY
-         zTtv6qhw8Ve8w==
-Received: by mail-ed1-f44.google.com with SMTP id g7so7357370edm.4;
-        Thu, 20 May 2021 07:01:14 -0700 (PDT)
-X-Gm-Message-State: AOAM531whB+v9QO20A3X61OkuMTYPsJbksqUEfq/dkymqOwttA6LrSGv
-        YVUEtNrY+oL6tLUwEd+a2n/UweD+gBhQvYt1aA==
-X-Google-Smtp-Source: ABdhPJygU39SIGejwYFMYlAUxTlCuIit4tLdWH8lb/SAqwmEiZrm2Uy7YrF+M/9NQti0/RvkcjX4BV5Aa30TfpucGfQ=
-X-Received: by 2002:a05:6402:c7:: with SMTP id i7mr5293139edu.194.1621519273257;
- Thu, 20 May 2021 07:01:13 -0700 (PDT)
+        s=k20201202; t=1621519533;
+        bh=jdo1Eh8m/liGd7cXoNawISzRkt+xVPjLMvGAq33h6fk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tZmOwklZrnAez5fSefENa/zyVwCYwW5cfwQqOoFKs0K3g82kll9KqFR7b6syQMRVR
+         FcVzLuoJ3EItb7V2oyg+BlqTv95GGCCLWyxmv2rfdZVbTGreoNNWT9xkY4nYYqc3az
+         c4/AipxylDwHlp02TDBdR9ZuPT65nH0DLiJDqFBk8zX5meu4b2qPbm9pGhzTEZRs0C
+         TT0YyBHEGyanibEYBAF815V3F+SLpdY58Rged4789CRgmJbk6ntoSAh5kHt65mIx0F
+         HVS1b6nZTmaPIQCpB79n7uQdBQTUzq1McBekm2KGetv2UXB1saI/msYKikueM0iEPp
+         hjAK1IfaS8DDQ==
+Received: by pali.im (Postfix)
+        id 1AE649D1; Thu, 20 May 2021 16:05:30 +0200 (CEST)
+Date:   Thu, 20 May 2021 16:05:29 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Sandor Bodo-Merle <sbodomerle@gmail.com>
+Cc:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
+Message-ID: <20210520140529.rczoz3npjoadzfqc@pali>
+References: <20210520120055.jl7vkqanv7wzeipq@pali>
+ <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
 MIME-Version: 1.0
-References: <1621495708-40364-1-git-send-email-wangxingang5@huawei.com>
-In-Reply-To: <1621495708-40364-1-git-send-email-wangxingang5@huawei.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 20 May 2021 09:00:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKUjUN2c8XzCoL7xepb5xZHLQktqTSekYva6bGEZ5Sx2g@mail.gmail.com>
-Message-ID: <CAL_JsqKUjUN2c8XzCoL7xepb5xZHLQktqTSekYva6bGEZ5Sx2g@mail.gmail.com>
-Subject: Re: [PATCH v3] iommu/of: Fix pci_request_acs() before enumerating PCI devices
-To:     Wang Xingang <wangxingang5@huawei.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        xieyingtai@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 20, 2021 at 2:28 AM Wang Xingang <wangxingang5@huawei.com> wrote:
->
-> From: Xingang Wang <wangxingang5@huawei.com>
->
-> When booting with devicetree, the pci_request_acs() is called after the
-> enumeration and initialization of PCI devices, thus the ACS is not
-> enabled. And ACS should be enabled when IOMMU is detected for the
-> PCI host bridge, so add check for IOMMU before probe of PCI host and call
-> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
-> devices.
->
-> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
-> configuring IOMMU linkage")
-> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+Hello!
+
+On Thursday 20 May 2021 15:47:46 Sandor Bodo-Merle wrote:
+> Hi Pali,
+> 
+> thanks for catching this - i dig up the followup fixup commit we have
+> for the iproc multi MSI (it was sent to Broadcom - but unfortunately
+> we missed upstreaming it).
+> 
+> Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> failed to reserve the proper number of bits from the inner domain.
+> We need to allocate the proper amount of bits otherwise the domains for
+> multiple PCIe endpoints may overlap and freeing one of them will result
+> in freeing unrelated MSI vectors.
+> 
+> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
 > ---
->  drivers/iommu/of_iommu.c                 |  1 -
->  drivers/pci/controller/pci-host-common.c | 17 +++++++++++++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index a9d2df001149..54a14da242cc 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->                         .np = master_np,
->                 };
->
-> -               pci_request_acs();
->                 err = pci_for_each_dma_alias(to_pci_dev(dev),
->                                              of_pci_iommu_init, &info);
+>  drivers/pci/host/pcie-iproc-msi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git drivers/pci/host/pcie-iproc-msi.c drivers/pci/host/pcie-iproc-msi.c
+> index 708fdb1065f8..a00492dccb74 100644
+> --- drivers/pci/host/pcie-iproc-msi.c
+> +++ drivers/pci/host/pcie-iproc-msi.c
+> @@ -260,11 +260,11 @@ static int iproc_msi_irq_domain_alloc(struct
+> irq_domain *domain,
+> 
+>         mutex_lock(&msi->bitmap_lock);
+> 
+> -       /* Allocate 'nr_cpus' number of MSI vectors each time */
+> +       /* Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI
+> vectors each time */
+>         hwirq = bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vecs, 0,
+> -                                          msi->nr_cpus, 0);
+> +                                          msi->nr_cpus * nr_irqs, 0);
+
+I'm not sure if this construction is correct. Multi-MSI interrupts needs
+to be aligned to number of requested interrupts. So if wifi driver asks
+for 32 Multi-MSI interrupts then first allocated interrupt number must
+be dividable by 32.
+
+>         if (hwirq < msi->nr_msi_vecs) {
+> -               bitmap_set(msi->bitmap, hwirq, msi->nr_cpus);
+> +               bitmap_set(msi->bitmap, hwirq, msi->nr_cpus * nr_irqs);
+
+And another issue is that only power of 2 interrupts for Multi-MSI can
+be allocated. Otherwise one number may be allocated to more devices.
+
+But I'm not sure how number of CPUs affects it as other PCIe controller
+drivers do not use number of CPUs.
+
+Other drivers are using bitmap_find_free_region() function with
+order_base_2(nr_irqs) as argument.
+
+I hope that somebody else more skilled with MSI interrupts look at these
+constructions if are correct or needs more rework.
+
 >         } else {
-> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-> index d3924a44db02..5904ad0bd9ae 100644
-> --- a/drivers/pci/controller/pci-host-common.c
-> +++ b/drivers/pci/controller/pci-host-common.c
-
-This file is generally only for ECAM compliant hosts. Are those the
-only hosts we need to support this? From the looks of dts files with
-iommu-map, that would be dropping support in lots of cases.
-
-Perhaps in devm_of_pci_bridge_init() or one of the functions it calls
-is the better place.
-
-> @@ -49,6 +49,21 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
->         return cfg;
->  }
->
-> +static void pci_host_enable_acs(struct pci_host_bridge *bridge)
-> +{
-> +       struct device_node *np = bridge->dev.parent->of_node;
-> +       static bool acs_enabled;
-> +
-> +       if (!np || acs_enabled)
-> +               return;
-> +
-> +       /* Detect IOMMU and make sure ACS will be enabled */
-> +       if (of_property_read_bool(np, "iommu-map")) {
-> +               acs_enabled = true;
-> +               pci_request_acs();
-
-Given this function just sets a variable, I don't think you need the
-static acs_enabled here.
-
-> +       }
-> +}
-> +
->  int pci_host_common_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -81,6 +96,8 @@ int pci_host_common_probe(struct platform_device *pdev)
->         bridge->ops = (struct pci_ops *)&ops->pci_ops;
->         bridge->msi_domain = true;
->
-> +       pci_host_enable_acs(bridge);
-> +
->         return pci_host_probe(bridge);
->  }
->  EXPORT_SYMBOL_GPL(pci_host_common_probe);
-> --
-> 2.19.1
->
+>                 mutex_unlock(&msi->bitmap_lock);
+>                 return -ENOSPC;
+> @@ -292,7 +292,7 @@ static void iproc_msi_irq_domain_free(struct
+> irq_domain *domain,
+>         mutex_lock(&msi->bitmap_lock);
+> 
+>         hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq);
+> -       bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
+> +       bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus * nr_irqs);
+> 
+>         mutex_unlock(&msi->bitmap_lock);
+> 
+> 
+> On Thu, May 20, 2021 at 2:04 PM Pali Rohár <pali@kernel.org> wrote:
+> >
+> > Hello!
+> >
+> > I think there is a bug in pcie-iproc-msi.c driver. It declares
+> > Multi MSI support via MSI_FLAG_MULTI_PCI_MSI flag, see:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-iproc-msi.c?h=v5.12#n174
+> >
+> > but its iproc_msi_irq_domain_alloc() function completely ignores nr_irqs
+> > argument when allocating interrupt numbers from bitmap, see:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-iproc-msi.c?h=v5.12#n246
+> >
+> > I think this this is incorrect as alloc callback should allocate nr_irqs
+> > multi interrupts as caller requested. All other drivers with Multi MSI
+> > support are doing it.
+> >
+> > Could you look at it?
