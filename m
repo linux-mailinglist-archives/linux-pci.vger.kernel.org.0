@@ -2,136 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E429A38B076
-	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 15:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C90BD38B0E3
+	for <lists+linux-pci@lfdr.de>; Thu, 20 May 2021 16:03:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242468AbhETNwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 09:52:30 -0400
-Received: from mail-bn1nam07on2062.outbound.protection.outlook.com ([40.107.212.62]:3973
-        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S241427AbhETNwU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 May 2021 09:52:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gtMAzIvaisOKbH0+AEXAz4pvqqvDyodSGQyAqcQ3fNqhRezN1plHuSW68AgbL8zKfu1HM49MYgpRqYrQ2v1eyMwVcTjgCIeSX/IbQt5P1oK9iMfv9ywK+8BpxL6wNGU2MLFacFgOll1+uZHsJvfZOQ4vfUWlSNrWnhU1bRSN4OcHUOEFgn6qYZAXQeQT47/DlWsAenTAlt9rv9AGfAtbfyxcKKuggNM5jTqsx+9QWMw23vy74T0SHqYN/9QB8s3JNGBrA82y8c3aJplfKaxPQjLuF9T1ed/acaxMitUTNe/l468cg+v+eIOhyV5sHODqnTaShBMsSP0EgInBqWrk0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R/IEGHhtmItuoKlAraksHKqlJ83vJZxxZAqbLjBTz0w=;
- b=ogUyUY0fquzrmJT/pTUdkGRorvIccNRLBCVkHsez/XhxNBg8MLtJ+KKIkyIhSa8Osa86QpPfvUHdkq8a/w3hyawK1mM9zNoI7KN9i4TleV4PPWVWuFqA0tojLBblE8CPf3CpSSgkc+Kbt3GimyNeSC4eAbFX968xZ2V6Mr3/ckg5Z2XDBKSRazYDlJp12a15k6w+T31iejRWGUnM2l0HL89skqUeLbibqOsRZlEzncT4GWD2g51Hb/3YqXfByIE3ok244Nr8SziYaqFpJrnExNGZQOsFce0PsIcu/pFDcoySQeAwE4qtZmwO8vCuSxvxobOXWMtFdKFVTF5nDXZm0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R/IEGHhtmItuoKlAraksHKqlJ83vJZxxZAqbLjBTz0w=;
- b=tnEpli4WFSbPhqWJtxv7ilKimkQW5asEuChzVUo+dB+90NU7Z0V6qJI4yq45Rp8SAFzM83Io1SI2RMgZPGZEdyo10Z9U6GR5u4H1XL9Mx5G6nyiKZmwh00AZojhDjd7jv437XqDJjWh1rMWDlPdxASXnbgDicrt9tIlOjpnUXJa52oKPF+kadhN1KPo70uktyz+EysXuh6VKdCwzwZeGK1uQwIF9z0GsOGtKd1GZOfZTqjL7n1zDbJP7eONP2jDYSUEdQVb6n0Spb5cLOZ6IKgG7W7iuFyCYtgvaROtvWFIdGZ6sbvqcNPaLS5LYUb6FbihwMLorRuzbxLYYnGWrCg==
-Received: from DM6PR10CA0006.namprd10.prod.outlook.com (2603:10b6:5:60::19) by
- BN6PR12MB1251.namprd12.prod.outlook.com (2603:10b6:404:1a::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4129.31; Thu, 20 May 2021 13:50:57 +0000
-Received: from DM6NAM11FT047.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:60:cafe::c5) by DM6PR10CA0006.outlook.office365.com
- (2603:10b6:5:60::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.23 via Frontend
- Transport; Thu, 20 May 2021 13:50:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT047.mail.protection.outlook.com (10.13.172.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4129.25 via Frontend Transport; Thu, 20 May 2021 13:50:57 +0000
-Received: from [10.26.49.10] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 20 May
- 2021 13:50:53 +0000
-Subject: Re: [PATCH -next] PCI: tegra: Fix build warnings when CONFIG_PCIEASPM
- is not set
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rob Herring" <robh@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-References: <20210520134209.1667244-1-weiyongjun1@huawei.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <152ea963-1a3f-eba6-93d9-95161b8f7b7d@nvidia.com>
-Date:   Thu, 20 May 2021 14:50:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S239159AbhETOEy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 May 2021 10:04:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243642AbhETOCg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 May 2021 10:02:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B68D1613C7;
+        Thu, 20 May 2021 14:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621519274;
+        bh=Ge7XZxLDW+zMOSFfG3zNBpDQtYmYLTcf7b+kJArHktY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kcfbk3PTJlyH3WsFAtlj2mZ4X9aUQ3iCidACFlNhz/CMFskrQzHU0QjNbP+B6xoVA
+         SVQiCf63t4AIf/BH4O9jahKeIwLF0M/e/RarR9tHFULAIuv+ICmhY4g9OR0cK6D65p
+         RlorI0oyxNAEYM/8RsOiUiWhuMHLzBvTnj5krvHVOG+0GW9OGMhSYe1QojtsoQeZ+U
+         lsMB7ojn0Xl0PnDFEpbOcRIMurodzyxQzbFj7TPdGfSOyITKfRIP0AgfP2KwVW6gTs
+         3Y9HJIsB+NMPqv9OFSXW2uZRG8r1BkbwIROIckf2PQX6vYRSZm1MCLmFXkBNYBxOfY
+         zTtv6qhw8Ve8w==
+Received: by mail-ed1-f44.google.com with SMTP id g7so7357370edm.4;
+        Thu, 20 May 2021 07:01:14 -0700 (PDT)
+X-Gm-Message-State: AOAM531whB+v9QO20A3X61OkuMTYPsJbksqUEfq/dkymqOwttA6LrSGv
+        YVUEtNrY+oL6tLUwEd+a2n/UweD+gBhQvYt1aA==
+X-Google-Smtp-Source: ABdhPJygU39SIGejwYFMYlAUxTlCuIit4tLdWH8lb/SAqwmEiZrm2Uy7YrF+M/9NQti0/RvkcjX4BV5Aa30TfpucGfQ=
+X-Received: by 2002:a05:6402:c7:: with SMTP id i7mr5293139edu.194.1621519273257;
+ Thu, 20 May 2021 07:01:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210520134209.1667244-1-weiyongjun1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0129770b-1f39-416a-da79-08d91b964b71
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1251:
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1251E494ADD317B1E1D0867ED92A9@BN6PR12MB1251.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:94;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +7mKJw0v/a4Tw9OChvO14Abc9S2V9yhHLB451Vu+HO3UxHnzvNFyNDrt1C4G8mtXUDk08uEx7ME0owH1L3g5eGJj65b2+1TwtQ4T0idx6nWzRmwCJFsuKv/oXuBdzNanDaOfBVZc2Abw9pncaBnCNbcZQf5MxjRrQDVjeP8XsaD1xFyNAADVUKRuT/aVJ8X1mIVxAIkExD3PK8oD8E9OsenAugyslfia7ovj7nbTkSS4SKVMGQbKFzWFhhtVW71ZqFem2cblgU25RpUWq0LfqsFrBnv7dIGcr73nXIB7ikd13kinlV4lTC8M12USdb3P8o8nOOyxMVdO0sDNBfOWkZHR3BXDn70xHkr0GhgT8ys5AGDJeOggIWnmDywWpPstpwAoLDJbsm3cVTw2exwn+Exb2bs/bX7PIXeOzqTkJx8eukA2i2BwL81mOyJbmhoB4ctTerP8ES7MUpjigExENwR0jF29/6CLOm6kJMBVmljywnWH8RolWBw0sc8EYD1narX5r75yYh1QTBs8G4bBzGFNwfqHkMaM0P9Jgi7x1CkxOOIe/2oVjqkJA6Q8vQs3zS9yjAZeDcIU74KAOBOSYOSqpWQWm9gd8veoyZhRSDYRvWTa8GGod7MMpGx+B+eHDfNnNpCXxKLGe51sQ+q4znTYPPHJPrSV4AGam/PnFv4bgZq37OLYxm14JBMCao+zN6GP3BtZ/GBxqm5O8XKy+xgAJ+CWA1Wz4wnZ+ChoWq5UaUB4JFDx6tIwahHP7j6HN05Jv/oVioGVUj1boPnqt8HGCeHDZlsXc9J/QErB1HM=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(396003)(39860400002)(36840700001)(46966006)(47076005)(2906002)(31686004)(7636003)(356005)(53546011)(82740400003)(966005)(8936002)(70206006)(70586007)(83380400001)(8676002)(26005)(36756003)(5660300002)(82310400003)(478600001)(54906003)(426003)(110136005)(4326008)(336012)(921005)(186003)(16576012)(36860700001)(36906005)(316002)(16526019)(31696002)(2616005)(7416002)(86362001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2021 13:50:57.3303
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0129770b-1f39-416a-da79-08d91b964b71
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT047.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1251
+References: <1621495708-40364-1-git-send-email-wangxingang5@huawei.com>
+In-Reply-To: <1621495708-40364-1-git-send-email-wangxingang5@huawei.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 20 May 2021 09:00:59 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKUjUN2c8XzCoL7xepb5xZHLQktqTSekYva6bGEZ5Sx2g@mail.gmail.com>
+Message-ID: <CAL_JsqKUjUN2c8XzCoL7xepb5xZHLQktqTSekYva6bGEZ5Sx2g@mail.gmail.com>
+Subject: Re: [PATCH v3] iommu/of: Fix pci_request_acs() before enumerating PCI devices
+To:     Wang Xingang <wangxingang5@huawei.com>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        xieyingtai@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, May 20, 2021 at 2:28 AM Wang Xingang <wangxingang5@huawei.com> wrote:
+>
+> From: Xingang Wang <wangxingang5@huawei.com>
+>
+> When booting with devicetree, the pci_request_acs() is called after the
+> enumeration and initialization of PCI devices, thus the ACS is not
+> enabled. And ACS should be enabled when IOMMU is detected for the
+> PCI host bridge, so add check for IOMMU before probe of PCI host and call
+> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
+> devices.
+>
+> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
+> configuring IOMMU linkage")
+> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+> ---
+>  drivers/iommu/of_iommu.c                 |  1 -
+>  drivers/pci/controller/pci-host-common.c | 17 +++++++++++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index a9d2df001149..54a14da242cc 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>                         .np = master_np,
+>                 };
+>
+> -               pci_request_acs();
+>                 err = pci_for_each_dma_alias(to_pci_dev(dev),
+>                                              of_pci_iommu_init, &info);
+>         } else {
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index d3924a44db02..5904ad0bd9ae 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
 
-On 20/05/2021 14:42, Wei Yongjun wrote:
-> Fix build warning when CONFIG_PCIEASPM is not set:
-> 
-> drivers/pci/controller/dwc/pcie-tegra194.c:259:18: warning:
->  'event_cntr_data_offset' defined but not used [-Wunused-const-variable=]
->   259 | static const u32 event_cntr_data_offset[] = {
->       |                  ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/pci/controller/dwc/pcie-tegra194.c:250:18: warning:
->  'event_cntr_ctrl_offset' defined but not used [-Wunused-const-variable=]
->   250 | static const u32 event_cntr_ctrl_offset[] = {
->       |                  ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/pci/controller/dwc/pcie-tegra194.c:243:27: warning:
->  'pcie_gen_freq' defined but not used [-Wunused-const-variable=]
->   243 | static const unsigned int pcie_gen_freq[] = {
->       |                           ^~~~~~~~~~~~~
-> 
-> Fix it by only define then when CONFIG_PCIEASPM is set.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+This file is generally only for ECAM compliant hosts. Are those the
+only hosts we need to support this? From the looks of dts files with
+iommu-map, that would be dropping support in lots of cases.
 
+Perhaps in devm_of_pci_bridge_init() or one of the functions it calls
+is the better place.
 
-Thanks but this has already been reported and there is a fix available [0].
+> @@ -49,6 +49,21 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
+>         return cfg;
+>  }
+>
+> +static void pci_host_enable_acs(struct pci_host_bridge *bridge)
+> +{
+> +       struct device_node *np = bridge->dev.parent->of_node;
+> +       static bool acs_enabled;
+> +
+> +       if (!np || acs_enabled)
+> +               return;
+> +
+> +       /* Detect IOMMU and make sure ACS will be enabled */
+> +       if (of_property_read_bool(np, "iommu-map")) {
+> +               acs_enabled = true;
+> +               pci_request_acs();
 
-Jon
+Given this function just sets a variable, I don't think you need the
+static acs_enabled here.
 
-[0]
-https://patchwork.ozlabs.org/project/linux-tegra/patch/20210520090123.11814-1-jonathanh@nvidia.com/
-
--- 
-nvpublic
+> +       }
+> +}
+> +
+>  int pci_host_common_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> @@ -81,6 +96,8 @@ int pci_host_common_probe(struct platform_device *pdev)
+>         bridge->ops = (struct pci_ops *)&ops->pci_ops;
+>         bridge->msi_domain = true;
+>
+> +       pci_host_enable_acs(bridge);
+> +
+>         return pci_host_probe(bridge);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_host_common_probe);
+> --
+> 2.19.1
+>
