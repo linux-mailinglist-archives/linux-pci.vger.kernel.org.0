@@ -2,81 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA08A38CE89
-	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 22:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A915038CEA7
+	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 22:10:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbhEUUGC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 May 2021 16:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48160 "EHLO mail.kernel.org"
+        id S229555AbhEUULm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 May 2021 16:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229780AbhEUUGC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 May 2021 16:06:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7173D61164;
-        Fri, 21 May 2021 20:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621627478;
-        bh=1k38VJ4yVR9TldPkGo+zwNbR5qRSBtFCx86R1WrERWE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qln9b65tKongqy/tNdm70AHKB7X7CcgcmCRp0PidnAZoR8s0hQPGCLml0bzPGlbvj
-         zuKnyTSdCO7Obu992YFIvrz+wKjphvRo+qx5HwlhU2u7+MEFQ7l5o6jrTPYqEcSYKj
-         llnf6/XNqwnNQJ6IO56Xk+5Lqog5sfy777gCE1r/BOIltfF8vxTSiz3XwiDY3RKAei
-         Px2+0uuBFSpwPisPzcsjQNP+5MMBPK0gKTIfhHXqEXki+Fsejpsl8eYwocfLLg3dVb
-         jzeyxSYuNx5xsg7rwAC53JOgT+3XSVxBkWPyGfRXry9vtGM02I+FPEKMWrCdT8JLJm
-         yZGo01sRWP48Q==
-Date:   Fri, 21 May 2021 15:04:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shradha Todi <shradha.t@samsung.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        pankaj.dubey@samsung.com, p.rajanbabu@samsung.com,
-        hari.tv@samsung.com, niyas.ahmed@samsung.com, l.mehra@samsung.com
-Subject: Re: [PATCH 3/3] PCI: dwc: Create debugfs files in DWC driver
-Message-ID: <20210521200437.GA441141@bjorn-Precision-5520>
+        id S229547AbhEUULl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 May 2021 16:11:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AAC936101B;
+        Fri, 21 May 2021 20:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1621627818;
+        bh=XA1ABq8YonEMJwPvBO1DQSpN/DaawZg01skDnn4XKy0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nk8p/uRVoQkyXFgDNR3qCjnQE3Bc3RDtc44yobAR7eEX26P3DvPkcprq7rX6f9sSz
+         9dmXDru2OE3+EFy8xhMU8Q4q6SPqn+CpFGE7RuBE9tjbDg53+shoN/sNU7g/n5T7j/
+         tpUiBSQV6ZZwXOerVMQULr9rIlbBmwl685ScmC90=
+Date:   Fri, 21 May 2021 22:10:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, helgaas@kernel.org,
+        Oliver Neukum <oneukum@suse.com>,
+        David Laight <David.Laight@aculab.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        rajatxjain@gmail.com, jsbarnes@google.com, dtor@google.com
+Subject: Re: [PATCH v4 1/2] driver core: Move the "removable" attribute from
+ USB to core
+Message-ID: <YKgTp00l1pRI4DTd@kroah.com>
+References: <20210513232701.411773-1-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210518174618.42089-4-shradha.t@samsung.com>
+In-Reply-To: <20210513232701.411773-1-rajatja@google.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 18, 2021 at 11:16:18PM +0530, Shradha Todi wrote:
-> Add call to create_debugfs_files() from DWC driver to create the RASDES
-> debugfs structure for each platform driver. Since it can be used for both
-> DW HOST controller as well as DW EP controller, let's add it in the common
-> setup function.
+On Thu, May 13, 2021 at 04:27:00PM -0700, Rajat Jain wrote:
+> Move the "removable" attribute from USB to core in order to allow it to be
+> supported by other subsystem / buses. Individual buses that want to support
+> this attribute can populate the removable property of the device while
+> enumerating it with the 3 possible values -
+>  - "unknown"
+>  - "fixed"
+>  - "removable"
+> Leaving the field unchanged (i.e. "not supported") would mean that the
+> attribute would not show up in sysfs for that device. The UAPI (location,
+> symantics etc) for the attribute remains unchanged.
 > 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 348f6f696976..c054f8ba1cf4 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -15,6 +15,7 @@
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> +#include "pcie-designware-debugfs.h"
->  
->  /*
->   * These interfaces resemble the pci_find_*capability() interfaces, but these
-> @@ -793,4 +794,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		       PCIE_PL_CHK_REG_CHK_REG_START;
->  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
->  	}
-> +
-> +	ret = create_debugfs_files(pci);
-> +	if (ret)
-> +		dev_err(pci->dev, "Couldn't create debugfs files\n");
+> v4: - instead of devicce_type->supports_removable, add 1 more value in
+>       device_removable_enum
+>     - documentation update.
+>     - Remove "Acked-by" and "Reviewed-by" tags from previous versions.
+> v3: - Minor commit log / comments updated.
+>     - use sysfs_emit()
+>     - Rename local variable name (state -> loc)
+>     - change supports_removable flag from bool to bitfield.
+> v2: Add documentation
 
-Was there supposed to be a corresponding remove_debugfs_files() call?
-On module unload?
+This looks good to me, I have no further objection to it at all, nice
+cleanups.
 
->  }
-> -- 
-> 2.17.1
-> 
+I can take this in my driver-core tree, so that other busses can use it
+(and can create a tag to pull from if needed), or I can also take the
+PCI patch (patch 2/2 here), if Bjorn gives his reviewed-by: for it.
+
+Are there other busses besides PCI that you want to enable this soon
+(i.e. before 5.14-rc1)?
+
+thanks,
+
+greg k-h
