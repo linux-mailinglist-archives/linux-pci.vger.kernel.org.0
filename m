@@ -2,97 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 783F438BCD1
-	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 05:03:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0437838BD21
+	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 06:02:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238789AbhEUDE5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 23:04:57 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:3637 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238785AbhEUDE4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 23:04:56 -0400
-Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.58])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4FmWZy32CnzmWcc;
-        Fri, 21 May 2021 11:01:14 +0800 (CST)
-Received: from dggpemm500009.china.huawei.com (7.185.36.225) by
- dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Fri, 21 May 2021 11:03:31 +0800
-Received: from huawei.com (10.174.185.226) by dggpemm500009.china.huawei.com
- (7.185.36.225) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 21 May
- 2021 11:03:30 +0800
-From:   Wang Xingang <wangxingang5@huawei.com>
-To:     <robh@kernel.org>, <will@kernel.org>, <joro@8bytes.org>,
-        <helgaas@kernel.org>
-CC:     <robh+dt@kernel.org>, <gregkh@linuxfoundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <xieyingtai@huawei.com>,
-        <wangxingang5@huawei.com>
-Subject: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating PCI devices
-Date:   Fri, 21 May 2021 03:03:24 +0000
-Message-ID: <1621566204-37456-1-git-send-email-wangxingang5@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
+        id S229472AbhEUED7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 May 2021 00:03:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57825 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229451AbhEUED7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 May 2021 00:03:59 -0400
+Received: from mail-oi1-f197.google.com ([209.85.167.197])
+        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <chris.chiu@canonical.com>)
+        id 1ljwMt-0002lN-Iu
+        for linux-pci@vger.kernel.org; Fri, 21 May 2021 04:02:35 +0000
+Received: by mail-oi1-f197.google.com with SMTP id p5-20020acabf050000b02901eed1481b82so3267873oif.20
+        for <linux-pci@vger.kernel.org>; Thu, 20 May 2021 21:02:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BkxUPctLlMYTanG/NbpSu5XniOih0RSQFTbMnTWQYJM=;
+        b=q79N3BHDVc9xeVLvGYCF0xHGYJuIGvLJMc3U/dxVVpJRNWjroO1xVXZUo2vhTsvVdM
+         jcaghzZuF91Whs+0gG06fuZYwtgo0vRhcvCYRycLoP53Qr/ZczG1rqMSt1AuT3gnltgi
+         aLe6MMqT921Ap4LzNzxmpuGxr8Wsw+QbDYcppPRVBUCj7udhCgqhaJOFeeb8LzkFguQv
+         DHF5wqkCo98/yzLvKSYdO1vV6iN6i/G16WIIsqoLFEAITCe2dBjSCaRcpIXQyFaDooP4
+         hrlO4dm5TPqQBYA9ZXO/Xxs6bVBhV3bMgRncHg2x2uR0gLaBGd82I6t6MnHKdvUEUhAF
+         /mrw==
+X-Gm-Message-State: AOAM532LCw3x5ErQ0425LYE0Ll+ulNsRK1bZpCnZdVa4+51g+DbRJ/QE
+        SZtLmoHXPtOkDN+7tt4sU64HK54ckvYYtIzZo5MzaQBtjsPz4dCUDkDmEJlOFj6corJ255IMzeV
+        nbTXgh+CJKC8mhs4s4Vxj2pFQV5adNV9Am7rWKXcutCg9POimnPlEPA==
+X-Received: by 2002:a4a:c1:: with SMTP id 184mr6397285ooh.25.1621569753984;
+        Thu, 20 May 2021 21:02:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzN8oKjol1achG45QUkmKxb4AL9fVw2ETq9jSXQdBZuFnWj3B3G19NBSti3JEmAoGlQnBW6NHSRu31xIqEnv1U=
+X-Received: by 2002:a4a:c1:: with SMTP id 184mr6397260ooh.25.1621569753749;
+ Thu, 20 May 2021 21:02:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.185.226]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500009.china.huawei.com (7.185.36.225)
-X-CFilter-Loop: Reflected
+References: <CABTNMG0Y5iAD4E8XFkOwrNTBHNDcNKRt=+BLPHs4tw5O2eVBDA@mail.gmail.com>
+ <CAJZ5v0hqU4xc8oCWXPBYhdGdG__=15+M67QWVSfFeUR3DN4Evw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hqU4xc8oCWXPBYhdGdG__=15+M67QWVSfFeUR3DN4Evw@mail.gmail.com>
+From:   Chris Chiu <chris.chiu@canonical.com>
+Date:   Fri, 21 May 2021 12:02:23 +0800
+Message-ID: <CABTNMG12A5qJ5ygtFTa7Sk-5W=fmMxt0L90=04H5qRDD4vWGRQ@mail.gmail.com>
+Subject: Re: NVIDIA GPU fallen off the bus after exiting s2idle
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Xingang Wang <wangxingang5@huawei.com>
+On Thu, May 6, 2021 at 5:46 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, May 4, 2021 at 10:08 AM Chris Chiu <chris.chiu@canonical.com> wrote:
+> >
+> > Hi,
+> >     We have some Intel laptops (11th generation CPU) with NVIDIA GPU
+> > suffering the same GPU falling off the bus problem while exiting
+> > s2idle with external display connected. These laptops connect the
+> > external display via the HDMI/DisplayPort on a USB Type-C interfaced
+> > dock. If we enter and exit s2idle with the dock connected, the NVIDIA
+> > GPU (confirmed on 10de:24b6 and 10de:25b8) and the PCIe port can come
+> > back to D0 w/o problem. If we enter the s2idle, disconnect the dock,
+> > then exit the s2idle, both external display and the panel will remain
+> > with no output. The dmesg as follows shows the "nvidia 0000:01:00.0:
+> > can't change power state from D3cold to D0 (config space
+> > inaccessible)" due to the following ACPI error
+> > [ 154.446781]
+> > [ 154.446783]
+> > [ 154.446783] Initialized Local Variables for Method [IPCS]:
+> > [ 154.446784] Local0: 000000009863e365 <Obj> Integer 00000000000009C5
+> > [ 154.446790]
+> > [ 154.446791] Initialized Arguments for Method [IPCS]: (7 arguments
+> > defined for method invocation)
+> > [ 154.446792] Arg0: 0000000025568fbd <Obj> Integer 00000000000000AC
+> > [ 154.446795] Arg1: 000000009ef30e76 <Obj> Integer 0000000000000000
+> > [ 154.446798] Arg2: 00000000fdf820f0 <Obj> Integer 0000000000000010
+> > [ 154.446801] Arg3: 000000009fc2a088 <Obj> Integer 0000000000000001
+> > [ 154.446804] Arg4: 000000003a3418f7 <Obj> Integer 0000000000000001
+> > [ 154.446807] Arg5: 0000000020c4b87c <Obj> Integer 0000000000000000
+> > [ 154.446810] Arg6: 000000008b965a8a <Obj> Integer 0000000000000000
+> > [ 154.446813]
+> > [ 154.446815] ACPI Error: Aborting method \IPCS due to previous error
+> > (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446824] ACPI Error: Aborting method \MCUI due to previous error
+> > (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446829] ACPI Error: Aborting method \SPCX due to previous error
+> > (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446835] ACPI Error: Aborting method \_SB.PC00.PGSC due to
+> > previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446841] ACPI Error: Aborting method \_SB.PC00.PGON due to
+> > previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446846] ACPI Error: Aborting method \_SB.PC00.PEG1.NPON due to
+> > previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446852] ACPI Error: Aborting method \_SB.PC00.PEG1.PG01._ON due
+> > to previous error (AE_AML_LOOP_TIMEOUT) (20200925/psparse-529)
+> > [ 154.446860] acpi device:02: Failed to change power state to D0
+> > [ 154.690760] video LNXVIDEO:00: Cannot transition to power state D0
+> > for parent in (unknown)
+>
+> If I were to guess, I would say that AML tries to access memory that
+> is not accessible while suspended, probably PCI config space.
+>
+> > The IPCS is the last function called from \_SB.PC00.PEG1.PG01._ON
+> > which we expect it to prepare everything before bringing back the
+> > NVIDIA GPU but it's stuck in the infinite loop as described below.
+> > Please refer to
+> > https://gist.github.com/mschiu77/fa4f5a97297749d0d66fe60c1d421c44 for
+> > the full DSDT.dsl.
+>
+> The DSDT alone may not be sufficient.
+>
+> Can you please create a bug entry at bugzilla.kernel.org for this
+> issue and attach the full output of acpidump from one of the affected
+> machines to it?  And please let me know the number of the bug.
+>
+> Also please attach the output of dmesg including a suspend-resume
+> cycle including dock disconnection while suspended and the ACPI
+> messages quoted below.
+>
+> >            While (One)
+> >             {
+> >                 If ((!IBSY || (IERR == One)))
+> >                 {
+> >                     Break
+> >                 }
+> >
+> >                 If ((Local0 > TMOV))
+> >                 {
+> >                     RPKG [Zero] = 0x03
+> >                     Return (RPKG) /* \IPCS.RPKG */
+> >                 }
+> >
+> >                 Sleep (One)
+> >                 Local0++
+> >             }
+> >
+> > And the upstream PCIe port of NVIDIA seems to become inaccessible due
+> > to the messages as follows.
+> > [ 292.746508] pcieport 0000:00:01.0: waiting 100 ms for downstream
+> > link, after activation
+> > [ 292.882296] pci 0000:01:00.0: waiting additional 100 ms to become accessible
+> > [ 316.876997] pci 0000:01:00.0: can't change power state from D3cold
+> > to D0 (config space inaccessible)
+> >
+> > Since the IPCS is the Intel Reference Code and we don't really know
+> > why the never-end loop happens just because we unplug the dock while
+> > the system still stays in s2idle. Can anyone from Intel suggest what
+> > happens here?
+>
+> This list is not the right channel for inquiries related to Intel
+> support, we can only help you as Linux kernel developers in this
+> venue.
+>
+> > And one thing also worth mentioning, if we unplug the display cable
+> > from the dock before entering the s2idle, NVIDIA GPU can come back w/o
+> > problem even if we disconnect the dock before exiting s2idle. Here's
+> > the lspci information
+> > https://gist.github.com/mschiu77/0bfc439d15d52d20de0129b1b2a86dc4 and
+> > the dmesg log with ACPI trace_state enabled and dynamic debug on for
+> > drivers/pci/pci.c, drivers/acpi/device_pm.c for the whole s2idle
+> > enter/exit with IPCS timeout.
+> >
+> > Any suggestion would be appreciated. Thanks.
+>
+> First, please use proper Intel support channels for BIOS-related inquiries.
+>
+> Second, please open a bug as suggested above and let's use it for
+> further communication regarding this issue as far as Linux is
+> concerned.
+>
+> Thanks!
 
-When booting with devicetree, the pci_request_acs() is called after the
-enumeration and initialization of PCI devices, thus the ACS is not
-enabled. And ACS should be enabled when IOMMU is detected for the
-PCI host bridge, so add check for IOMMU before probe of PCI host and call
-pci_request_acs() to make sure ACS will be enabled when enumerating PCI
-devices.
+Thanks for the suggestion. I opened
+https://bugzilla.kernel.org/show_bug.cgi?id=212951 and have a new
+finding in https://bugzilla.kernel.org/show_bug.cgi?id=212951#c13. It
+seems that maybe we could do something in the i915 driver during
+resume to handle the hpd (because we unplug the dock/dongle when
+suspended) at the very beginning. Since it involves HPD, PMC and the
+BIOS, I don't know which way I should go to fix this since Windows
+won't hit this problem.
 
-Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
-configuring IOMMU linkage")
-Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
----
- drivers/iommu/of_iommu.c | 1 -
- drivers/pci/of.c         | 8 +++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+Please let me know if there's any information missing in the
+bugzilla.kernel ticket. Any suggestions would be appreciated. Thanks
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index a9d2df001149..54a14da242cc 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
- 			.np = master_np,
- 		};
- 
--		pci_request_acs();
- 		err = pci_for_each_dma_alias(to_pci_dev(dev),
- 					     of_pci_iommu_init, &info);
- 	} else {
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index da5b414d585a..2313c3f848b0 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -581,9 +581,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
- 
- int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
- {
--	if (!dev->of_node)
-+	struct device_node *node = dev->of_node;
-+
-+	if (!node)
- 		return 0;
- 
-+	/* Detect IOMMU and make sure ACS will be enabled */
-+	if (of_property_read_bool(node, "iommu-map"))
-+		pci_request_acs();
-+
- 	bridge->swizzle_irq = pci_common_swizzle;
- 	bridge->map_irq = of_irq_parse_and_map_pci;
- 
--- 
-2.19.1
-
+Chris
