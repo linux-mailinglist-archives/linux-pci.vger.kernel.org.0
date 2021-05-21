@@ -2,47 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACD9E38CA5C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 17:45:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE4938CAB3
+	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 18:13:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbhEUPqu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 May 2021 11:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230221AbhEUPqq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 May 2021 11:46:46 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ACA2C061574;
-        Fri, 21 May 2021 08:45:22 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id x7so1913869wrt.12;
-        Fri, 21 May 2021 08:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ybE+rWOcV+ucwWTe+ve7kEV4gSBl+BX/5ApCrfe90rw=;
-        b=R0cdtin5b3TlkzTvnKrY4wIJquYKE7FxQ2IZWoIHUOTFQofSa3Py54/1W+u37w9e2j
-         yAJ1KR43ibT7DCS9betnCydlo8nYAb96zKmDzkZ0liBPq9hwjRJGnPBmYD/GAWU17w2B
-         8g2ytqYZVwJYpw2wnV6gP59VmhHERtvCeq7UVOX5r31wHPovxgXCJ2WrkYXdSrQlAe3G
-         9LghIMKdTJzU8aOIJVJsWXF0yU8tuo2bxYBf95igLaVUpVfd2Dfo+Lx5h/3WBoUXT59E
-         8Aw1fPHPvBhWEDZcGX2S7KgX/mtlx9iACWrmOmsvuyJUTXxLQqms6byXqwwJA7lPsjub
-         d3+Q==
+        id S232773AbhEUQOx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 May 2021 12:14:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51545 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231773AbhEUQOx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 May 2021 12:14:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621613609;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0dYw+1ty9M4F1TS3R0pdrlfe9TmD8aidnu0vhpgiO6k=;
+        b=ColLrhaayxqwBLjuYZ2gTDqQJ9ptqMg/Qt0IWGdZVs35Lik1rHyvjIrpspsw3mUR9ewAeO
+        c2worbt+sL2GF4LoXIwo9Jh+ME2O4AHTWxD4DOvgcHW1td/h43MyrSNuzhhlA8kYWzen+S
+        2TSYEebo8Yx/rFoOhra6N/nuifpLIqQ=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-566-WBwVQR2sNzen1FhpgYO6Ow-1; Fri, 21 May 2021 12:13:28 -0400
+X-MC-Unique: WBwVQR2sNzen1FhpgYO6Ow-1
+Received: by mail-lf1-f72.google.com with SMTP id q14-20020a19f20e0000b02901daf8ea9b7aso5383019lfh.2
+        for <linux-pci@vger.kernel.org>; Fri, 21 May 2021 09:13:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ybE+rWOcV+ucwWTe+ve7kEV4gSBl+BX/5ApCrfe90rw=;
-        b=Hm0+wz+6T0oWt/UblsQmXONvaiknhsfD8cs4uqlbqUeFPXZPqZ8FMRJtRVcHK2tuNB
-         MrUvCEPjfuP6qZa5vE+nvtbyZRubYtBcugQHBJmT577IC7OaS8x61tz0u2H+6Yyu28uA
-         oC+9/peZDPI2RMV8apwNOYKkmgSxfeBINQ5YJqLNxjzwJ/QyZjhN8akI2u5j4RGM0mfW
-         81pXdj2af4mYRjlHJRfaCwS91qibcv0Qi4EJlBTgWlE77aBzFYqbr8bqnQhoBLKMMp+3
-         QWhFDro/mzNJNgrK79ZuacKmchcqjpbpibwqkAibw1iKmQjVzO3yNKwe6llIDf9jmbnO
-         TzrA==
-X-Gm-Message-State: AOAM531HdlrJBa9FSgRhlLK2wSyzL8/LLnpQ6+rQ7M3V/rPVaxUCvAOA
-        rqCjeW4p6YKwhX2JRnpvEqRizcVCEzBT6r0mEH4=
-X-Google-Smtp-Source: ABdhPJwX8i7+MYjmGGiRjn3DkGFHKrVi9DpwDhwPrRzu+8kI06Xp/CAKAIptKAGpPm1PVaraIDaGHqTtuaSUSZ3It9w=
-X-Received: by 2002:a5d:64e4:: with SMTP id g4mr10271859wri.366.1621611920951;
- Fri, 21 May 2021 08:45:20 -0700 (PDT)
+        bh=0dYw+1ty9M4F1TS3R0pdrlfe9TmD8aidnu0vhpgiO6k=;
+        b=X89l6jjB5GG/T6WP18T0miyC7lLZCcQxTSxnekYJNUeahTb9k+oOVNKqR3XGFpTXbp
+         U3H3o2j6U0znRc8mHDSdqm+sYjqeraVxoeaE8KaXti+DpPetSPPVjlvXvEnA0t5dCm7B
+         3veca8E+SarHapqAL9hzGmKqRpXwCW1y0YtH7nmTkThwk6kBxrwGaE0zpy1qpmbiEQTo
+         1A215a65FPRc1StU9YChySVLp/zqb5QUEynKyEIQpwztNd8aL+nFjxdFYHY0LH2q5fQ6
+         tvGrWiUlq+ge7+jE1GbHOWWtxGHWs1fEtuBoTmMBdzSzLfC9NWN2Oz/Y/GwCwpDggGFf
+         6f8Q==
+X-Gm-Message-State: AOAM5303k8Ivslz7fMQwOZcMgfFBcNNIOb4n2Y2B+9LQlyPm7NuYCps9
+        TiBNSkcFqk68WGsAjqsRsunzK7KYOQt3xDPQKDWNbphOsHKMjPIUxpiHn00z2wZrKZAHOnmYGRh
+        C2WvBmO2dZgvhiXDnomvXgrOGeSx4MxpUWsAc
+X-Received: by 2002:a19:6a13:: with SMTP id u19mr2632859lfu.252.1621613606477;
+        Fri, 21 May 2021 09:13:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxcQ1NWe596jnGhcNjYe2J09TkPUM7blmWDbIf1NVN1FdeURq8gjDCG56i3qI32jqqzyZ4Ad08J+veH32YL/kw=
+X-Received: by 2002:a19:6a13:: with SMTP id u19mr2632844lfu.252.1621613606258;
+ Fri, 21 May 2021 09:13:26 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
  <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
@@ -51,13 +53,12 @@ References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutr
  <CAFki+LkB1sk3mOv4dd1D-SoPWHOs28ZwN-PqL_6xBk=Qkm40Lw@mail.gmail.com>
  <87zgwo9u79.ffs@nanos.tec.linutronix.de> <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
 In-Reply-To: <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
-From:   Lijun Pan <lijunp213@gmail.com>
-Date:   Fri, 21 May 2021 10:45:10 -0500
-Message-ID: <CAOhMmr6p2a=Dgz3Q=cbEoXJjbBjBdJm1Vwt60Si+JDCdbOEVaw@mail.gmail.com>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Fri, 21 May 2021 12:13:15 -0400
+Message-ID: <CAFki+LkqBHnVYB5VBx_8Ch0u8RfXrJsRzxyuDfHhbR-dCeN3Lg@mail.gmail.com>
 Subject: Re: [PATCH] genirq: Provide new interfaces for affinity hints
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nitesh Lal <nilal@redhat.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
@@ -85,7 +86,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 21, 2021 at 7:48 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Fri, May 21, 2021 at 8:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
 > The discussion about removing the side effect of irq_set_affinity_hint() of
 > actually applying the cpumask (if not NULL) as affinity to the interrupt,
@@ -109,8 +110,23 @@ On Fri, May 21, 2021 at 7:48 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >   irq_apply_affinity_hint()  - Set the pointer and apply the affinity to
 >                                the interrupt
 >
+
+Any reason why you ruled out the usage of irq_set_affinity_and_hint()?
+IMHO the latter makes it very clear what the function is meant to do.
+
+
 > Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
 > document it to be phased out.
+
+Right, so eventually we will be only left with the following APIs that
+the driver will use:
+irq_set_affinity()- for drivers that only wants to set the affinity mask
+irq_apply_affinity_hint/irq_set_affinity_and_hint() - for drivers that
+wants to set same affinity and hint mask
+irq_update_affinity_hint() - for drivers that only wants to update the hint mask
+
+Thanks for clearing this.
+
 >
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
@@ -144,11 +160,6 @@ On Fri, May 21, 2021 at 7:48 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 > +{
 > +       return __irq_apply_affinity_hint(irq, m, true);
 > +}
-
-Should it be:
-return __irq_apply_affinity_hint(irq, m, false);
-here?
-
 > +
 > +/**
 > + * irq_apply_affinity_hint - Update the affinity hint and apply the provided
@@ -204,3 +215,9 @@ here?
 >
 >  static void irq_affinity_notify(struct work_struct *work)
 >  {
+>
+
+
+--
+Nitesh
+
