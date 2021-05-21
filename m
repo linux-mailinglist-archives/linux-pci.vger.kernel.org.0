@@ -2,173 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC03D38BAA0
-	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 02:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 783F438BCD1
+	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 05:03:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234681AbhEUAFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 May 2021 20:05:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51712 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233104AbhEUAFQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 20:05:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621555433;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yY5C4rKyGeidFpZPaRAHZm77aYdXwBLOJbXSDp6aeQo=;
-        b=IrF0hc4kWrKQ0HfMBePMYtrv1LzTPUzpMXaTAaM9UgunaJOVidXYLwFdHiXsIbo2cnV5Zc
-        4A7N6jrR0lN3sBpg66gThLjuicMSzrwCLIrMp2SMChKvKcH4CFMFi/nB0RXPNpoC6CB5cb
-        4W/UKf+3RFix6/cU2dyGIFOASk9EFgI=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-aU-SC864NB-1GEuJCxkJ6Q-1; Thu, 20 May 2021 20:03:52 -0400
-X-MC-Unique: aU-SC864NB-1GEuJCxkJ6Q-1
-Received: by mail-lf1-f70.google.com with SMTP id u17-20020a19ab110000b02901d01348aba8so4535405lfe.20
-        for <linux-pci@vger.kernel.org>; Thu, 20 May 2021 17:03:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yY5C4rKyGeidFpZPaRAHZm77aYdXwBLOJbXSDp6aeQo=;
-        b=XCbGmrxZ16fCxu6t3MPOatHM64Xtp+YBGJtHjGjnf5pbYN/BYypI6RzBznk/NXZhUr
-         XPxLce71EBCvnIvwbvwGKocj6PuBZIBLVIzULfeWw2UH0kyuapx2YVRfxJqpfOuH2+VO
-         PyGxkshg2OjSiVbL24aFYZazvzpAodlRa3QY+116G85K7Q1xWxpNY8sA2PiKqFW2OFN5
-         fItQxIbGaPAXOMi8XmieIEuc+TGNoc5i+323F/iByYI7TjRdIOW17b9SnnRPhRGUhtvd
-         X5S/NGLVHtwcWWMudY5aPk4ZuCA2JbmzAIqOq5LvG0gyIJCnpX5IrpYUxJlBlSdiu91d
-         X8JA==
-X-Gm-Message-State: AOAM531TegWlKgCCts1VAdJc+ADth1OB1f0h69PLMHy5++frfnb95Dxd
-        sdVIoD0qI63LajvNYO91k86l8fGTPRy4ARurP/h3fgMktofFDT7BOYQ0yCdOeZgmu5P8Vg6+/U0
-        E0Yw1k1/T54et2/5dJuSw1HVf48AHs38F0e8O
-X-Received: by 2002:a2e:1405:: with SMTP id u5mr4619208ljd.137.1621555430613;
-        Thu, 20 May 2021 17:03:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzPZc4H2Y4hAkVPTqEKOh1WdHXnKldKsyeMgCwEjITdNxHORoiwVToMhx6cyuK2hIWrTSLfeJEl7lCMqoeGy/c=
-X-Received: by 2002:a2e:1405:: with SMTP id u5mr4619179ljd.137.1621555430294;
- Thu, 20 May 2021 17:03:50 -0700 (PDT)
+        id S238789AbhEUDE5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 May 2021 23:04:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:3637 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238785AbhEUDE4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 May 2021 23:04:56 -0400
+Received: from dggems706-chm.china.huawei.com (unknown [172.30.72.58])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4FmWZy32CnzmWcc;
+        Fri, 21 May 2021 11:01:14 +0800 (CST)
+Received: from dggpemm500009.china.huawei.com (7.185.36.225) by
+ dggems706-chm.china.huawei.com (10.3.19.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Fri, 21 May 2021 11:03:31 +0800
+Received: from huawei.com (10.174.185.226) by dggpemm500009.china.huawei.com
+ (7.185.36.225) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 21 May
+ 2021 11:03:30 +0800
+From:   Wang Xingang <wangxingang5@huawei.com>
+To:     <robh@kernel.org>, <will@kernel.org>, <joro@8bytes.org>,
+        <helgaas@kernel.org>
+CC:     <robh+dt@kernel.org>, <gregkh@linuxfoundation.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <xieyingtai@huawei.com>,
+        <wangxingang5@huawei.com>
+Subject: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating PCI devices
+Date:   Fri, 21 May 2021 03:03:24 +0000
+Message-ID: <1621566204-37456-1-git-send-email-wangxingang5@huawei.com>
+X-Mailer: git-send-email 2.6.4.windows.1
 MIME-Version: 1.0
-References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
- <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
- <87im3gewlu.ffs@nanos.tec.linutronix.de> <CAFki+L=gp10W1ygv7zdsee=BUGpx9yPAckKr7pyo=tkFJPciEg@mail.gmail.com>
- <CAFki+L=eQoMq+mWhw_jVT-biyuDXpxbXY5nO+F6HvCtpbG9V2w@mail.gmail.com>
-In-Reply-To: <CAFki+L=eQoMq+mWhw_jVT-biyuDXpxbXY5nO+F6HvCtpbG9V2w@mail.gmail.com>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Thu, 20 May 2021 20:03:38 -0400
-Message-ID: <CAFki+LkB1sk3mOv4dd1D-SoPWHOs28ZwN-PqL_6xBk=Qkm40Lw@mail.gmail.com>
-Subject: Re: [PATCH tip:irq/core v1] genirq: remove auto-set of the mask when
- setting the hint
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        netdev@vger.kernel.org, chris.friesen@windriver.com,
-        Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.174.185.226]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500009.china.huawei.com (7.185.36.225)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 20, 2021 at 5:57 PM Nitesh Lal <nilal@redhat.com> wrote:
->
-> On Mon, May 17, 2021 at 8:23 PM Nitesh Lal <nilal@redhat.com> wrote:
-> >
-> > On Mon, May 17, 2021 at 8:04 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > On Mon, May 17 2021 at 18:44, Nitesh Lal wrote:
-> > > > On Mon, May 17, 2021 at 4:48 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > >> The hint was added so that userspace has a better understanding where it
-> > > >> should place the interrupt. So if irqbalanced ignores it anyway, then
-> > > >> what's the point of the hint? IOW, why is it still used drivers?
-> > > >>
-> > > > Took a quick look at the irqbalance repo and saw the following commit:
-> > > >
-> > > > dcc411e7bf    remove affinity_hint infrastructure
-> > > >
-> > > > The commit message mentions that "PJ is redesiging how affinity hinting
-> > > > works in the kernel, the future model will just tell us to ignore an IRQ,
-> > > > and the kernel will handle placement for us.  As such we can remove the
-> > > > affinity_hint recognition entirely".
-> > >
-> > > No idea who PJ is. I really love useful commit messages. Maybe Neil can
-> > > shed some light on that.
-> > >
-> > > > This does indicate that apparently, irqbalance moved away from the usage of
-> > > > affinity_hint. However, the next question is what was this future
-> > > > model?
-> > >
-> > > I might have missed something in the last 5 years, but that's the first
-> > > time I hear about someone trying to cleanup that thing.
-> > >
-> > > > I don't know but I can surely look into it if that helps or maybe someone
-> > > > here already knows about it?
-> > >
-> > > I CC'ed Neil :)
-> >
-> > Thanks, I have added PJ Waskiewicz as well who I think was referred in
-> > that commit message as PJ.
-> >
-> > >
-> > > >> Now there is another aspect to that. What happens if irqbalanced does
-> > > >> not run at all and a driver relies on the side effect of the hint
-> > > >> setting the initial affinity. Bah...
-> > > >>
-> > > >
-> > > > Right, but if they only rely on this API so that the IRQs are spread across
-> > > > all the CPUs then that issue is already resolved and these other drivers
-> > > > should not regress because of changing this behavior. Isn't it?
-> > >
-> > > Is that true for all architectures?
-> >
-> > Unfortunately, I don't know and that's probably why we have to be careful.
->
-> I think here to ensure that we are not breaking any of the drivers we have
-> to first analyze all the existing drivers and understand how they are using
-> this API.
-> AFAIK there are three possible scenarios:
->
-> - A driver use this API to spread the IRQs
->   + For this case we should be safe considering the spreading is naturally
->     done from the IRQ subsystem itself.
+From: Xingang Wang <wangxingang5@huawei.com>
 
-Forgot to mention another thing in the above case is to determine whether
-it is true for all architectures or not as Thomas mentioned.
+When booting with devicetree, the pci_request_acs() is called after the
+enumeration and initialization of PCI devices, thus the ACS is not
+enabled. And ACS should be enabled when IOMMU is detected for the
+PCI host bridge, so add check for IOMMU before probe of PCI host and call
+pci_request_acs() to make sure ACS will be enabled when enumerating PCI
+devices.
 
->
-> - A driver use this API to actually set the hint
->   + These drivers should have no functional impact because of this revert
->
-> - Driver use this API to force a certain affinity mask
->   + In this case we have to replace the API with the irq_force_affinity()
->
-> I can start looking into the individual drivers, however, testing them will
-> be a challenge.
->
-> Any thoughts?
->
-> --
-> Thanks
-> Nitesh
+Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
+configuring IOMMU linkage")
+Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+---
+ drivers/iommu/of_iommu.c | 1 -
+ drivers/pci/of.c         | 8 +++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-
-
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index a9d2df001149..54a14da242cc 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 			.np = master_np,
+ 		};
+ 
+-		pci_request_acs();
+ 		err = pci_for_each_dma_alias(to_pci_dev(dev),
+ 					     of_pci_iommu_init, &info);
+ 	} else {
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index da5b414d585a..2313c3f848b0 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -581,9 +581,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+ 
+ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
+ {
+-	if (!dev->of_node)
++	struct device_node *node = dev->of_node;
++
++	if (!node)
+ 		return 0;
+ 
++	/* Detect IOMMU and make sure ACS will be enabled */
++	if (of_property_read_bool(node, "iommu-map"))
++		pci_request_acs();
++
+ 	bridge->swizzle_irq = pci_common_swizzle;
+ 	bridge->map_irq = of_irq_parse_and_map_pci;
+ 
 -- 
-Thanks
-Nitesh
+2.19.1
 
