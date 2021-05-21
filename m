@@ -2,162 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F379B38C3BF
-	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 11:47:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BA9E38C438
+	for <lists+linux-pci@lfdr.de>; Fri, 21 May 2021 11:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230505AbhEUJtC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 May 2021 05:49:02 -0400
-Received: from mail-oo1-f49.google.com ([209.85.161.49]:34404 "EHLO
-        mail-oo1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbhEUJtB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 May 2021 05:49:01 -0400
-Received: by mail-oo1-f49.google.com with SMTP id i8-20020a4aa1080000b0290201edd785e7so4442134ool.1;
-        Fri, 21 May 2021 02:47:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8F85ALMx/ALzOG6W8AbyB4WWD6UFDnaExkKp/IYQypY=;
-        b=JTJIrHHFbwysGoM4u1F0OxLZiEwBX1TZty4owzfkK9IsnMou1SU2zbVSdz0otmqusf
-         iA3/iSveng6QsDMoxmrbxawY1SxewLFnVt4HjDlerqbany+f1b4EYeyEeQqWEXbcgxro
-         H0MQzTLVeQmDXsQprPEKjcbX6AI1y31ARc9y3wqLjrnt7fSdmyp6BE3v8pX/jygnqfuo
-         6ZbFDlJEFfr4uP0ZqnanDVKMSwAlxGvk+NvP+h4FldoL+2yPec+G4h90KT7aBT6B06aZ
-         Ct7YGsARoEBeHYzMcgD/Xwnoss/Qk0qM6YJq46X48PK3BEyKyNHzFWmqCNOg+UQwOcNv
-         rrpQ==
-X-Gm-Message-State: AOAM533UJwjYUW17O5ZKmwmmU0gqmdik6AYVXjDTqwGttox0ZT4OXqad
-        Jx4qBiveOLN3GLOiolOjDYgcTZrYdJKK5SQRH+w=
-X-Google-Smtp-Source: ABdhPJxr7RxX1a8zQ2BlIgKJcvRVZs+Ys46A7SBQePR3Lay2jAJyLUycP9sL1K2dOnaqoWGJQRAnZQRCVg1KJvANc+c=
-X-Received: by 2002:a4a:e5d5:: with SMTP id r21mr7574729oov.1.1621590457234;
- Fri, 21 May 2021 02:47:37 -0700 (PDT)
+        id S231960AbhEUKAO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 May 2021 06:00:14 -0400
+Received: from so254-9.mailgun.net ([198.61.254.9]:10824 "EHLO
+        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232021AbhEUJ6o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 May 2021 05:58:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1621591041; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=N/Af6V6q0Pni5GJnu4A7BBwQUu+JckGgzbmRx6pgO9Q=;
+ b=hyxr0hSlumALd9RLjyHi6DfubqOQDD05A7/WF5VQKYVp3dFKTAl7vynUpE25VRDQqNGsAR70
+ xZsoB5NjqZ9KRgXQWvzy3z8DLepZimfjWYEb3HWZboF/iJyOqnGi718/o6DY9urBuhrfHu4F
+ 5Yf33DF6iBx4tXrr1K2grtO1X0A=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 60a783ee60c53c8c9d0e3119 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 May 2021 09:57:02
+ GMT
+Sender: pmaliset=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 931F1C43145; Fri, 21 May 2021 09:57:01 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmaliset)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25B5CC4360C;
+        Fri, 21 May 2021 09:57:00 +0000 (UTC)
 MIME-Version: 1.0
-References: <CAJZ5v0hLkEDgPstGkigMztUpiDyPzgjraaqtYs=SPzg8JWgVow@mail.gmail.com>
- <20210520194935.GA348608@bjorn-Precision-5520>
-In-Reply-To: <20210520194935.GA348608@bjorn-Precision-5520>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 21 May 2021 11:47:25 +0200
-Message-ID: <CAJZ5v0jr459rYezo6qmU+AnwT2ZWLbR0GGoM=NCTiznvpPSfzg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: don't power-off apple thunderbolt controller on s2idle
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Konstantin Kharlamov <hi-angel@yandex.ru>,
-        Lukas Wunner <lukas@wunner.de>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 21 May 2021 15:27:00 +0530
+From:   Prasad Malisetty <pmaliset@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mgautam@codeaurora.org, dianders@chromium.org, mka@chromium.org
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc7280: Add PCIe and PHY related
+ nodes
+In-Reply-To: <CAE-0n530bSPupOHVDzwpd_JVVN0tOfrAOm9dAt1ZGj7zaXOZ6A@mail.gmail.com>
+References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
+ <1620382648-17395-3-git-send-email-pmaliset@codeaurora.org>
+ <CAE-0n530bSPupOHVDzwpd_JVVN0tOfrAOm9dAt1ZGj7zaXOZ6A@mail.gmail.com>
+Message-ID: <3b3701bb1e23dec88f2231722872fc40@codeaurora.org>
+X-Sender: pmaliset@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 20, 2021 at 9:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, May 20, 2021 at 01:54:05PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, May 20, 2021 at 1:27 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > On Wed, May 19, 2021 at 9:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, May 19, 2021 at 09:12:26PM +0200, Rafael J. Wysocki wrote:
->
-> > > > > The problem is related to the fact that in s2idle the platform
-> > > > > firmware does not finalize the suspend transition and, consequently,
-> > > > > it doesn't initiate the resume transition.  Therefore whatever power
-> > > > > state the device was left in during suspend must be dealt with during
-> > > > > the subsequent resume.  Hence, if whatever is done by SXIO/SXFP/SXLF
-> > > > > in the suspend path cannot be reversed in the resume path by the
-> > > > > kernel (because there is no known method to do that), they should not
-> > > > > be invoked.  And that's exactly because the platform firmware will not
-> > > > > finalize the suspend transition which is indicated by
-> > > > > PM_SUSPEND_FLAG_FW_SUSPEND being unset.
-> > > >
-> > > > How can we connect "if (!pm_suspend_via_firmware())" in this patch
-> > > > with the fact that firmware doesn't finalize suspend (and consequently
-> > > > does not reverse things in resume)?
-> > > >
-> > > > I don't see any use of pm_suspend_via_firmware() or
-> > > > PM_SUSPEND_FLAG_FW_SUSPEND that looks relevant.
-> > >
-> > > First of all, there is a kerneldoc comment next to
-> > > pm_suspend_via_firmware() which is relevant.  Especially the last
-> > > paragraph of that comment applies directly to the case at hand IMV.
->
-> I do read kerneldoc, but I *rely* on the code, and it's nice when I
-> can match up the kerneldoc with what the code is doing :)
+On 2021-05-08 01:36, Stephen Boyd wrote:
+> Quoting Prasad Malisetty (2021-05-07 03:17:27)
+>> Add PCIe controller and PHY nodes for sc7280 SOC.
+>> 
+>> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 138 
+>> +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 138 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> index 2cc4785..a9f25fc1 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> @@ -12,6 +12,7 @@
+>>  #include <dt-bindings/power/qcom-aoss-qmp.h>
+>>  #include <dt-bindings/power/qcom-rpmpd.h>
+>>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>> 
+>>  / {
+>>         interrupt-parent = <&intc>;
+>> @@ -316,6 +317,118 @@
+>>                         };
+>>                 };
+>> 
+> [...]
+>> +
+>> +               pcie1_phy: phy@1c0e000 {
+>> +                       compatible = 
+>> "qcom,sm8250-qmp-gen3x2-pcie-phy";
+>> +                       reg = <0 0x01c0e000 0 0x1c0>;
+>> +                       #address-cells = <2>;
+>> +                       #size-cells = <2>;
+>> +                       ranges;
+>> +                       clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+>> +                                <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+>> +                                <&gcc GCC_PCIE_CLKREF_EN>,
+>> +                                <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
+>> +                       clock-names = "aux", "cfg_ahb", "ref", 
+>> "refgen";
+>> +
+>> +                       resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+>> +                       reset-names = "phy";
+>> +
+>> +                       assigned-clocks = <&gcc 
+>> GCC_PCIE1_PHY_RCHNG_CLK>;
+>> +                       assigned-clock-rates = <100000000>;
+>> +
+>> +                       status = "disabled";
+> 
+> I think the style is to put status disabled close to the compatible?
 
-Fair enough.
+Generally I have added status disabled in end as like many nodes. just 
+curious to ask is there any specific reason to put close to compatible.
+> 
+>> +
+>> +                       pcie1_lane: lanes@1c0e200 {
+>> +                               reg = <0 0x1c0e200 0 0x170>, /* tx0 */
+> 
+> Please pad reg addresses to 8 characters.
 
-> Part of my confusion is that "passing control to platform firmware"
-> isn't particularly useful in itself because it doesn't give a clue
-> about what firmware is *doing*.  Without knowing what it does, we
-> can't reason about how kernel's actions interact with firmware's
-> actions.
+Done
+> 
+>> +                                     <0 0x1c0e400 0 0x200>, /* rx0 */
+>> +                                     <0 0x1c0ea00 0 0x1f0>, /* pcs */
+>> +                                     <0 0x1c0e600 0 0x170>, /* tx1 */
+>> +                                     <0 0x1c0e800 0 0x200>, /* rx1 */
+>> +                                     <0 0x1c0ee00 0 0xf4>; /* 
+>> "pcs_com" same as pcs_misc? */
+> 
+> Is this a TODO? I'd prefer all the comments on the reg properties to be
+> removed.
+> 
+Done
+>> +                               clocks = <&rpmhcc RPMH_CXO_CLK>;
+>> +                               clock-names = "pipe0";
+>> +
+>> +                               #phy-cells = <0>;
+>> +                               #clock-cells = <1>;
+>> +                               clock-output-names = 
+>> "pcie_1_pipe_clk";
+>> +                       };
+>> +               };
+>> +
+>>                 stm@6002000 {
+>>                         compatible = "arm,coresight-stm", 
+>> "arm,primecell";
+>>                         reg = <0 0x06002000 0 0x1000>,
+>> @@ -871,6 +984,31 @@
+>>                                 pins = "gpio46", "gpio47";
+>>                                 function = "qup13";
+>>                         };
+>> +
+>> +                       pcie1_default_state: pcie1-default {
+>> +                               clkreq {
+>> +                                       pins = "gpio79";
+>> +                                       function = "pcie1_clkreqn";
+>> +                                       bias-pull-up;
+> 
+> Move this bias-pull-up to the idp file?
 
-While we don't know exactly what happens when the platform firmware is
-running, we can reasonably expect that devices will get reset as a
-result of that.
-
-It's kind of like heating up things in a microwave oven: you don't
-need to know exactly what happens when it is working, but nevertheless
-you can predict with quite high confidence what the outcome of that
-will be.
-
-> > BTW, the problem at hand is not that s2idle in particular needs to be
-> > treated in a special way (this appears to be the source of all
-> > confusion here).  The problem is that the kernel cannot undo the
-> > SXIO/SXFP/SXLF magic without passing control to the platform firmware.
->
-> I assume this is really a case of "the kernel doesn't know *what* to
-> do, but platform firmware does," so in principle the kernel *could*
-> undo the SXIO/SXFP/SXLF magic if it knew what to do.
-
-In general, that may or may not be the case.
-
-I guess it is the case here, because Lukas seems to know how to make
-this work, but the AML in question might be prepared with the
-assumption that the firmware code finalizing the transition will run
-after it.
-
-> > And "passing control to the platform firmware" doesn't mean "executing
-> > some AML" here, because control remains in the kernel when AML is
-> > executed.  "Passing control to the platform firmware" means letting
-> > some native firmware code (like SMM code) run which happens at the end
-> > of S2/S3/S4 suspend transitions and it does not happen during S1
-> > (standby) and s2idle suspend transitions.
-> >
-> > That's why using SXIO/SXFP/SXLF is only valid during S2/S3/S4 suspend
-> > transitions and it is not valid during s2idle and S1 suspend
-> > transitions (and yes, S1 is also affected, so s2idle is not special in
-> > that respect at all).
-> >
-> > IMO the changelog of the patch needs to be rewritten, but the code
-> > change made by it is reasonable.
->
-> So IIUC the comment should say something like:
->
->   SXIO/SXFP/SXLF turns off power to the Thunderbolt controller.  We
->   don't know how to turn it back on again, but firmware does, so we
->   can only use SXIO/SXFP/SXLF if we're suspending via firmware.
->
-> Actually, it sounds like the important thing is that we rely on the
-> firmware *resume* path to turn on the power again.
-
-Actually both the suspend and resume paths in it together, but the
-important piece is that if the firmware runs at the end of suspend, it
-will also run at the beginning of resume.
-
-> pm_resume_via_firmware() *sounds* like it would be appropriate, but
-> the kerneldoc says that's for use after resume,
-
-That's right.
-
-The rule of thumb is to use pm_suspend_via_firmware() in the
-system-wide suspend code paths and pm_resume_via_firmware() in the
-resume ones.  They are simply complementary.
-
-And because in this particular case a decision needs to be made
-whether or not to do something in a suspend path, the former is the
-right one to use.
-
-> and it tells us whether firmware has *already* handled the wakeup event.  And
-> PM_SUSPEND_FLAG_FW_RESUME isn't set until after we've run these
-> suspend_late fixups, so it wouldn't work here.
-
-Right.
+Done
+> 
+>> +                               };
+>> +
+>> +                               reset-n {
+>> +                                       pins = "gpio2";
+>> +                                       function = "gpio";
+>> +
+>> +                                       drive-strength = <16>;
+>> +                                       output-low;
+>> +                                       bias-disable;
+>> +                               };
+>> +
+>> +                               wake-n {
+>> +                                       pins = "gpio3";
+>> +                                       function = "gpio";
+>> +
+>> +                                       drive-strength = <2>;
+>> +                                       bias-pull-up;
+>> +                               };
+> 
+> These last two nodes with the pull-up and drive-strength settings 
+> should
+> be in the board files, like the idp one, instead of here in the SoC
+> file. That way board designers can take the SoC and connect the pcie to
+> an external device using these pins and set the configuration they want
+> on these pins, or choose not to connect them to the SoC at all and use
+> those pins for something else.
+> 
+> In addition, it looks like the reset could be a reset-gpios property
+> instead of an output-low config.
+> 
+we are using reset property as perst gpio in pcie node.
+>> +                       };
+>>                 };
+>> 
