@@ -2,260 +2,296 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77CF238D614
-	for <lists+linux-pci@lfdr.de>; Sat, 22 May 2021 15:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F134938D703
+	for <lists+linux-pci@lfdr.de>; Sat, 22 May 2021 20:44:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231393AbhEVN7G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 May 2021 09:59:06 -0400
-Received: from sibelius.xs4all.nl ([83.163.83.176]:51824 "EHLO
-        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231325AbhEVN6z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 May 2021 09:58:55 -0400
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id c4a205f5;
-        Sat, 22 May 2021 15:57:27 +0200 (CEST)
-Date:   Sat, 22 May 2021 15:57:27 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Robin Murphy <robin.murphy@arm.com>, sven@svenpeter.dev
-Cc:     devicetree@vger.kernel.org, maz@kernel.org, arnd@arndb.de,
-        kettenis@openbsd.org, marcan@marcan.st, bhelgaas@google.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <be890747-5f6d-8a7d-3e20-db58463028b1@arm.com> (message from
-        Robin Murphy on Tue, 18 May 2021 15:10:01 +0100)
-Subject: Re: [PATCH 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
-References: <20210516211851.74921-1-mark.kettenis@xs4all.nl>
- <20210516211851.74921-2-mark.kettenis@xs4all.nl> <be890747-5f6d-8a7d-3e20-db58463028b1@arm.com>
-Message-ID: <5612ef8f8dd80e4d@bloch.sibelius.xs4all.nl>
+        id S231316AbhEVSpq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 May 2021 14:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231252AbhEVSpp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 May 2021 14:45:45 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE9BC061574;
+        Sat, 22 May 2021 11:44:19 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id 10so17465274pfl.1;
+        Sat, 22 May 2021 11:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Uxzv+tkPUSkhvvyy+QrV1P1guBh5uBCx9x/nilcRSmI=;
+        b=S83fk1r9ACA/cULbUNYylNjUHIJlnytEuABy0ehV89YwsWwFauTgkyl4MK66TCkY90
+         E72GcQ8DrzIgwXJrIgQvnZSHBU3b3gQAQ8/vHnQjFYs0P+d/PDlxaAzRpfaWDFA4MMUl
+         PqsVcCx2lTpaf/8jT3SE7mc0PjuvOqDwU1sMtEHxtu93DU362mJTkD+mEAVltmYhZHuJ
+         Ng5EbgCMEK32/INI4EMGXeoQ/TxSPz2KYUDVS/Q92FQk0ULm9k7KpVnZuYifEfWjmQe9
+         hIbIzOhNE87Wl7VcVzFWE9Ywy+V8PupPn7lMn8q5E+ko4c53IAj98k+U5jXL/7RXv5Eq
+         lfHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Uxzv+tkPUSkhvvyy+QrV1P1guBh5uBCx9x/nilcRSmI=;
+        b=rAzFo3VvxQMMK698DvTqFbqdWBk5T9eNoqnV6hsNPPut2VZWiZ4qWNC1xeJKqau1/n
+         7OJDk+PXB0xt5gkWbWySm90Iy3qv+H8X4+eNSekb5dv9iId1g1Aezu6RM8/Eb2n9Ljdz
+         r4IP0JxerNpFbLozsn/Lt/TxWYbg00HXAs4l4Qh13KL51Lzluy7eQ2Lgk6MbLBA/orGd
+         3lOIVZixYSQF4unS4zvejVzTyoMaxDYWQg2YT2pFfU28Q2fJXGfJO0qVHO8QMidoQiZs
+         SVubN4xA1VbH1tQiIHpcxC0GOYJfwFU3kRbJFraqVRqNuVLXaulQqzXDU8Jw4Nbhw2i4
+         4wnQ==
+X-Gm-Message-State: AOAM531FthDm7z7dY5oOO4Yk+/Su/Tewv7iDta5j8Un2qFo9Dx/lv0k5
+        CJR0xGNOcy0wKJDeiQy5wbE=
+X-Google-Smtp-Source: ABdhPJwdkBJLZBJkzvDB3jnaf9ZiOixZ5rNYFTkoUWb2WQ86RnN+LIc36O+ygIg7woSSC/nljsXyAw==
+X-Received: by 2002:a62:7e86:0:b029:28e:5a88:5cfa with SMTP id z128-20020a627e860000b029028e5a885cfamr16265763pfc.70.1621709059279;
+        Sat, 22 May 2021 11:44:19 -0700 (PDT)
+Received: from localhost ([139.5.31.183])
+        by smtp.gmail.com with ESMTPSA id j9sm3245718pfc.220.2021.05.22.11.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 May 2021 11:44:18 -0700 (PDT)
+Date:   Sun, 23 May 2021 00:14:16 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [RFC PATCH 2/3] mwifiex: pcie: add reset_d3cold quirk for
+ Surface gen4+ devices
+Message-ID: <20210522184416.mscbmay27jciy2hv@archlinux>
+References: <20210522131827.67551-1-verdre@v0yd.nl>
+ <20210522131827.67551-3-verdre@v0yd.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210522131827.67551-3-verdre@v0yd.nl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Robin Murphy <robin.murphy@arm.com>
-> Date: Tue, 18 May 2021 15:10:01 +0100
+On 21/05/22 03:18PM, Jonas Dreﬂler wrote:
+> From: Tsuchiya Yuto <kitakar@gmail.com>
+>
+> To reset mwifiex on Surface gen4+ (Pro 4 or later gen) devices, it
+> seems that putting the wifi device into D3cold is required according
+> to errata.inf file on Windows installation (Windows/INF/errata.inf).
+>
+> This patch adds a function that performs power-cycle (put into D3cold
+> then D0) and call the function at the end of reset_prepare().
+>
+> Note: Need to also reset the parent device (bridge) of wifi on SB1;
+> it might be because the bridge of wifi always reports it's in D3hot.
+> When I tried to reset only the wifi device (not touching parent), it gave
+> the following error and the reset failed:
+>
+>     acpi device:4b: Cannot transition to power state D0 for parent in D3hot
+>     mwifiex_pcie 0000:03:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>
+May I know how did you reset only the wifi device when you encountered
+this error?
 
-Hi Robin,
+> Signed-off-by: Tsuchiya Yuto <kitakar@gmail.com>
+> Signed-off-by: Jonas Dreﬂler <verdre@v0yd.nl>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/pcie.c   |   7 +
+>  .../wireless/marvell/mwifiex/pcie_quirks.c    | 123 ++++++++++++++++++
+>  .../wireless/marvell/mwifiex/pcie_quirks.h    |   3 +
+>  3 files changed, 133 insertions(+)
+>
+> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> index 02fdce926de5..d9acfea395ad 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> @@ -528,6 +528,13 @@ static void mwifiex_pcie_reset_prepare(struct pci_dev *pdev)
+>  	mwifiex_shutdown_sw(adapter);
+>  	clear_bit(MWIFIEX_IFACE_WORK_DEVICE_DUMP, &card->work_flags);
+>  	clear_bit(MWIFIEX_IFACE_WORK_CARD_RESET, &card->work_flags);
+> +
+> +	/* For Surface gen4+ devices, we need to put wifi into D3cold right
+> +	 * before performing FLR
+> +	 */
+> +	if (card->quirks & QUIRK_FW_RST_D3COLD)
+> +		mwifiex_pcie_reset_d3cold_quirk(pdev);
+> +
+>  	mwifiex_dbg(adapter, INFO, "%s, successful\n", __func__);
+>
+>  	card->pci_reset_ongoing = true;
+> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+> index 4064f99b36ba..b5f214fc1212 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+> @@ -15,6 +15,72 @@
+>
+>  /* quirk table based on DMI matching */
+>  static const struct dmi_system_id mwifiex_quirk_table[] = {
+> +	{
+> +		.ident = "Surface Pro 4",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 4"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Pro 5",
+> +		.matches = {
+> +			/* match for SKU here due to generic product name "Surface Pro" */
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1796"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Pro 5 (LTE)",
+> +		.matches = {
+> +			/* match for SKU here due to generic product name "Surface Pro" */
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1807"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Pro 6",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 6"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Book 1",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Book 2",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book 2"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Laptop 1",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+> +	{
+> +		.ident = "Surface Laptop 2",
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop 2"),
+> +		},
+> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+> +	},
+>  	{}
+>  };
+>
+> @@ -29,4 +95,61 @@ void mwifiex_initialize_quirks(struct pcie_service_card *card)
+>
+>  	if (!card->quirks)
+>  		dev_info(&pdev->dev, "no quirks enabled\n");
+> +	if (card->quirks & QUIRK_FW_RST_D3COLD)
+> +		dev_info(&pdev->dev, "quirk reset_d3cold enabled\n");
+> +}
+> +
+> +static void mwifiex_pcie_set_power_d3cold(struct pci_dev *pdev)
+> +{
+> +	dev_info(&pdev->dev, "putting into D3cold...\n");
+> +
+> +	pci_save_state(pdev);
+> +	if (pci_is_enabled(pdev))
+> +		pci_disable_device(pdev);
+> +	pci_set_power_state(pdev, PCI_D3cold);
+> +}
+pci_set_power_state with PCI_D3cold state calls
+pci_bus_set_current_state(dev->subordinate, PCI_D3cold).
+Maybe this was the reason for the earlier problem you had?
+Not 100% sure about this though CCing: Alex
 
-> On 2021-05-16 22:18, Mark Kettenis wrote:
-> > From: Mark Kettenis <kettenis@openbsd.org>
-> > 
-> > The Apple PCIe host controller is a PCIe host controller with
-> > multiple root ports present in Apple ARM SoC platforms, including
-> > various iPhone and iPad devices and the "Apple Silicon" Macs.
-> > 
-> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> > ---
-> >   .../devicetree/bindings/pci/apple,pcie.yaml   | 150 ++++++++++++++++++
-> >   MAINTAINERS                                   |   1 +
-> >   2 files changed, 151 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > new file mode 100644
-> > index 000000000000..af3c9f64e380
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > @@ -0,0 +1,150 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Apple PCIe host controller
-> > +
-> > +maintainers:
-> > +  - Mark Kettenis <kettenis@openbsd.org>
-> > +
-> > +description: |
-> > +  The Apple PCIe host controller is a PCIe host controller with
-> > +  multiple root ports present in Apple ARM SoC platforms, including
-> > +  various iPhone and iPad devices and the "Apple Silicon" Macs.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: apple,t8103-pcie
-> > +      - const: apple,pcie
-> > +
-> > +  reg:
-> > +    minItems: 4
-> > +    maxItems: 6
-> > +
-> > +  reg-names:
-> > +    minItems: 4
-> > +    maxItems: 7
-> > +    items:
-> > +      - const: ecam
-> > +      - const: rc
-> > +      - const: phy
-> > +      - const: port0
-> > +      - const: port1
-> > +      - const: port2
-> > +
-> > +  ranges:
-> > +    minItems: 2
-> > +    maxItems: 2
-> > +
-> > +  interrupts:
-> > +    minItems: 3
-> > +    maxItems: 3
-> > +
-> > +  msi-ranges:
-> > +    description:
-> > +      A list of pairs <intid span>, where "intid" is the first
-> > +      interrupt number that can be used as an MSI, and "span" the size
-> > +      of that range.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > +    items:
-> > +      minItems: 2
-> > +      maxItems: 2
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - bus-range
-> > +  - interrupts
-> > +  - msi-controller
-> > +  - msi-parent
-> > +  - msi-ranges
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/apple-aic.h>
-> > +    #include <dt-bindings/pinctrl/apple.h>
-> > +
-> > +    soc {
-> > +      #address-cells = <2>;
-> > +      #size-cells = <2>;
-> > +
-> > +      pcie0: pcie@690000000 {
-> > +        compatible = "apple,t8103-pcie", "apple,pcie";
-> > +        device_type = "pci";
-> > +
-> > +        reg = <0x6 0x90000000 0x0 0x1000000>,
-> > +              <0x6 0x80000000 0x0 0x4000>,
-> > +              <0x6 0x8c000000 0x0 0x4000>,
-> > +              <0x6 0x81000000 0x0 0x8000>,
-> > +              <0x6 0x82000000 0x0 0x8000>,
-> > +              <0x6 0x83000000 0x0 0x8000>;
-> > +        reg-names = "ecam", "rc", "phy", "port0", "port1", "port2";
-> > +
-> > +        interrupt-parent = <&aic>;
-> > +        interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +        msi-controller;
-> > +        msi-parent = <&pcie0>;
-> > +        msi-ranges = <704 32>;
-> > +
-> > +        iommu-map = <0x0 &dart0 0x8000 0x100>,
-> > +                    <0x100 &dart0 0x100 0x100>,
-> > +                    <0x200 &dart1 0x200 0x100>,
-> > +                    <0x300 &dart2 0x300 0x100>;
-> > +        iommu-map-mask = <0xff00>;
-> 
-> This doesn't quite add up - if the mask is ignoring the bottom 8 bits, 
-> then each of those map entries is describing one single ID mapping, not 256.
-> 
-> > +        bus-range = <0 7>;
-> 
-> Given that the iommu-map only covers buses 0-3, what happens to traffic 
-> from buses 4-7?
-
-Yes, that probably needs a little bit of thought.
-
-The hardware is somewhat "interesting".  The PCIe host bridge has (up
-to) three ports.  Each port is associated with its own IOMMU/DART.
-Each port provides mapping logic that maps the RID to an SID.  There
-are 16 mapping registers for the PCIe host bridge that connects the
-onboard devices and 64 mapping registers for the PCIe host bridges
-that are asociated with the Thunderbolt ports.
-
-If no mappings are enabled, it seems that all RIDs get mapped to SID
-0.  The Apple firmware doesn't enable any mappings and my U-Boot code
-doesn't change it either.
-
-The Corellium folks in their port chose a 1:1 mapping from bus number
-to SID and that is what the example above came from.  Both my U-Boot
-driver and my OpenBSD actually ignore the SID and install the same
-IOMMU translation table for all the SIDs.  That's probably good enough
-for U-Boot as long as we don't enable the Thunderbolt ports.  But for
-the OS itself a bit more control is certainly desirable.
-
-Would it be reasonable to allow the device tree some flexibility in
-specifying the desired iommu mapping and let the OS PCIe host bride
-driver program the RID to SID mappings to match what's specified in
-the "iommu-map" and "iommu-map-mask" properties?
-
-Or is it better to just pick a mapping scheme like Corellium did and
-make that part of the DT binding?
+> +
+> +static int mwifiex_pcie_set_power_d0(struct pci_dev *pdev)
+> +{
+> +	int ret;
+> +
+> +	dev_info(&pdev->dev, "putting into D0...\n");
+> +
+> +	pci_set_power_state(pdev, PCI_D0);
+> +	ret = pci_enable_device(pdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "pci_enable_device failed\n");
+> +		return ret;
+> +	}
+> +	pci_restore_state(pdev);
+On the side note just save and restore is enough in this case?
+What would be the device <-> driver state after the reset as you
+are calling this on parent_pdev below so that affects other
+devices on bus?
 
 Thanks,
+Amey
 
-Mark
-
-> > +        #address-cells = <3>;
-> > +        #size-cells = <2>;
-> > +        ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
-> > +                 <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
-> > +
-> > +        clocks = <&pcie_core_clk>, <&pcie_aux_clk>, <&pcie_ref_clk>;
-> > +        pinctrl-0 = <&pcie_pins>;
-> > +        pinctrl-names = "default";
-> > +
-> > +        pci@0,0 {
-> > +          device_type = "pci";
-> > +          reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +          reset-gpios = <&pinctrl_ap 152 0>;
-> > +          max-link-speed = <2>;
-> > +
-> > +          #address-cells = <3>;
-> > +          #size-cells = <2>;
-> > +          ranges;
-> > +        };
-> > +
-> > +        pci@1,0 {
-> > +          device_type = "pci";
-> > +          reg = <0x800 0x0 0x0 0x0 0x0>;
-> > +          reset-gpios = <&pinctrl_ap 153 0>;
-> > +          max-link-speed = <2>;
-> > +
-> > +          #address-cells = <3>;
-> > +          #size-cells = <2>;
-> > +          ranges;
-> > +        };
-> > +
-> > +        pci@2,0 {
-> > +          device_type = "pci";
-> > +          reg = <0x1000 0x0 0x0 0x0 0x0>;
-> > +          reset-gpios = <&pinctrl_ap 33 0>;
-> > +          max-link-speed = <1>;
-> > +
-> > +          #address-cells = <3>;
-> > +          #size-cells = <2>;
-> > +          ranges;
-> > +        };
-> > +      };
-> > +    };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 7327c9b778f1..789d79315485 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1654,6 +1654,7 @@ C:	irc://chat.freenode.net/asahi-dev
-> >   T:	git https://github.com/AsahiLinux/linux.git
-> >   F:	Documentation/devicetree/bindings/arm/apple.yaml
-> >   F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
-> > +F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> >   F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-> >   F:	arch/arm64/boot/dts/apple/
-> >   F:	drivers/irqchip/irq-apple-aic.c
-> > 
-> 
+> +
+> +	return 0;
+> +}
+> +
+> +int mwifiex_pcie_reset_d3cold_quirk(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *parent_pdev = pci_upstream_bridge(pdev);
+> +	int ret;
+> +
+> +	/* Power-cycle (put into D3cold then D0) */
+> +	dev_info(&pdev->dev, "Using reset_d3cold quirk to perform FW reset\n");
+> +
+> +	/* We need to perform power-cycle also for bridge of wifi because
+> +	 * on some devices (e.g. Surface Book 1), the OS for some reasons
+> +	 * can't know the real power state of the bridge.
+> +	 * When tried to power-cycle only wifi, the reset failed with the
+> +	 * following dmesg log:
+> +	 * "Cannot transition to power state D0 for parent in D3hot".
+> +	 */
+> +	mwifiex_pcie_set_power_d3cold(pdev);
+> +	mwifiex_pcie_set_power_d3cold(parent_pdev);
+> +
+> +	ret = mwifiex_pcie_set_power_d0(parent_pdev);
+> +	if (ret)
+> +		return ret;
+> +	ret = mwifiex_pcie_set_power_d0(pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+>  }
+> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+> index 7a1fe3b3a61a..549093067813 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+> @@ -5,4 +5,7 @@
+>
+>  #include "pcie.h"
+>
+> +#define QUIRK_FW_RST_D3COLD	BIT(0)
+> +
+>  void mwifiex_initialize_quirks(struct pcie_service_card *card);
+> +int mwifiex_pcie_reset_d3cold_quirk(struct pci_dev *pdev);
+> --
+> 2.31.1
+>
