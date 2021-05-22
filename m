@@ -2,84 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE3C938D4F1
-	for <lists+linux-pci@lfdr.de>; Sat, 22 May 2021 11:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 786D538D5FE
+	for <lists+linux-pci@lfdr.de>; Sat, 22 May 2021 15:20:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbhEVJxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 May 2021 05:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45628 "EHLO
+        id S230477AbhEVNV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 May 2021 09:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230117AbhEVJxU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 May 2021 05:53:20 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240C6C061574
-        for <linux-pci@vger.kernel.org>; Sat, 22 May 2021 02:51:55 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id q7so31963853lfr.6
-        for <linux-pci@vger.kernel.org>; Sat, 22 May 2021 02:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Om/I1sVk1q3S0lDclruJw2xquLaj7Ph8H8jWODqmq90=;
-        b=NihEhfB1HbjdxrO7OBIkOQPFNcPS15ycgWEHqw6mwpfg5lBUSutPmjk4iNYvU7hO56
-         7PQ2Ig2c00z9gWxW5AcLBEGYrgRUklqtsdzFTgDsEqYyCqEOxeuxWnov5uLj6A/6ogK1
-         xw3n7J4kd/QLLNV952Jw3rVDI4CL3AU/7zb1pHubNnLp4XYHXyedM/3NzUWb2+hGg4Yv
-         nNC24XFFKflKotg/lc+90wU+exGnUf5MWKZZyy+0JDcvKCD9WaA06lD7lMCv6xUp7R2V
-         tUADgu9tAuTtIHi/VC+bJDvcPE2GOHKWGTaVfZM+JLYVhM+3MynB4kktNUpUk11ltOGM
-         lubw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Om/I1sVk1q3S0lDclruJw2xquLaj7Ph8H8jWODqmq90=;
-        b=fI3bJgzltNUiOtugXDhR6tIEvXlnwQeqYRl3TrPeJ1nQYNbVVB1UdXtGljEuDvdzv8
-         GB0WYVctEwSSi+/tlB5hjO7H7a3N+959Im45/bNL4z6Rfb/0CpBes023XLxVyKxixTLP
-         cO9HLMw6oP3WyDv+D6mmN1tpxFWb7lrAamyF6nZzcPk6ygC9P8hkjkfCW3g5gpv8hLK3
-         F67eCL8zHgxuHVHJos8eeDlp1vNdXiMuEif6dfh90ilM57UMW/ue1Upv7Ohbtv/9JtRQ
-         bJjLewF+030ikbPUaUqQI9oCKgYVKCrrOHUJyrXfS1xnGbtiLLJBW1Kg9vL/EGnsJ5z2
-         mHjA==
-X-Gm-Message-State: AOAM5309ARjbBYxoOprNbOTnEyxr6BrQsRnWJld3N28iFqfJdG2hvorf
-        dNH0454aew2yTFffpFeVhemKI0KZzwkrx/gpXO1xPw==
-X-Google-Smtp-Source: ABdhPJzrHIPNsKG/fgPwvoFPQL4Sz/uqW13yfiIBe261bdsfM6/6hS7dOECg18YTgCUDnKPHCxyIRJRmtNCwoJdIkpM=
-X-Received: by 2002:ac2:5145:: with SMTP id q5mr5070586lfd.529.1621677113471;
- Sat, 22 May 2021 02:51:53 -0700 (PDT)
+        with ESMTP id S230470AbhEVNVz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 May 2021 09:21:55 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FFAC061574;
+        Sat, 22 May 2021 06:20:30 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4FnPGy2yvJzQjmk;
+        Sat, 22 May 2021 15:20:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id 21ryPJUcxS0H; Sat, 22 May 2021 15:20:21 +0200 (CEST)
+From:   =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [RFC PATCH 0/3] mwifiex: Add quirks for MS Surface devices
+Date:   Sat, 22 May 2021 15:18:24 +0200
+Message-Id: <20210522131827.67551-1-verdre@v0yd.nl>
 MIME-Version: 1.0
-References: <20210509222055.341945-1-linus.walleij@linaro.org> <20210509222055.341945-5-linus.walleij@linaro.org>
-In-Reply-To: <20210509222055.341945-5-linus.walleij@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 22 May 2021 11:51:42 +0200
-Message-ID: <CACRpkdaC1XG1sFQK8L2DrHA2KD-BDZihWJfz+GpgH2H8_-FJoA@mail.gmail.com>
-Subject: Re: [PATCH 4/4 v3] PCI: ixp4xx: Add a new driver for IXP4xx
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        Zoltan HERPAI <wigyori@uid0.hu>,
-        Raylynn Knight <rayknight@me.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: ***
+X-Rspamd-Score: 3.22 / 15.00 / 15.00
+X-Rspamd-Queue-Id: C6B3D17FF
+X-Rspamd-UID: d74d50
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 12:21 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> This adds a new PCI controller driver for the Intel IXP4xx
-> (IX425, IXP435 etc), based on the XScale microarchitecture.
+This series is based on the patches from Tsuchiya Yuto which have been
+submitted previously already, where it was suggested to cc linux-pci and
+Bjorn to ask if there's a better way of doing those quirks.
 
-Bjorn, how do you feel about this driver? I want to get it into
-ARM SoC along with the other refactorings soon, so if it needs
-rewrites it'd be great to know. (Or to get an ACK.)
+Original series sent in by Tsuchiya: https://lore.kernel.org/linux-wireless/20201028142753.18855-1-kitakar@gmail.com/
 
-I changed one thing since v3:
+Here's the summary written by Tsuchiya:
 
-> +#ifdef __ARMEB__
-> +       val |= (IXP4XX_PCI_CSR_PDS | IXP4XX_PCI_CSR_ADS);
-> +#endif
+This series adds firmware reset quirks for Microsoft Surface devices
+(PCIe-88W8897). Surface devices somehow requires quirks to reset the
+firmware. Otherwise, current mwifiex driver can reset only software level.
+This is not enough to recover from a bad state.
 
-This now looks like this:
+To do so, in the first patch, I added a DMI-based quirk implementation
+for Surface devices that use mwifiex chip.
 
-+       if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
-+               val |= (IXP4XX_PCI_CSR_PDS | IXP4XX_PCI_CSR_ADS);
+The required quirk is different by generation. Surface gen3 devices
+(Surface 3 and Surface Pro 3) require a quirk that calls _DSM method
+(the third patch).
+Note that Surface Pro 3 is not yet supported because of the difference
+between Surface 3. On Surface 3, the wifi card will be immediately
+removed/reprobed after the _DSM call. On the other hand, Surface Pro 3
+doesn't. Need to remove/reprobe wifi card ourselves. This behavior makes
+the support difficult.
 
-Yours,
-Linus Walleij
+Surface gen4+ devices (Surface Pro 4 and later) require a quirk that
+puts wifi into D3cold before FLR.
+
+While here, created new files for quirks (mwifiex/pcie_quirks.c and
+mwifiex/pcie_quirks.h) because the changes are a little bit too big to
+add into pcie.c.
+
+Jonas Dreßler (1):
+  mwifiex: pcie: add DMI-based quirk implementation for Surface devices
+
+Tsuchiya Yuto (2):
+  mwifiex: pcie: add reset_d3cold quirk for Surface gen4+ devices
+  mwifiex: pcie: add reset_wsid quirk for Surface 3
+
+ drivers/net/wireless/marvell/mwifiex/Makefile |   1 +
+ drivers/net/wireless/marvell/mwifiex/pcie.c   |  21 ++
+ drivers/net/wireless/marvell/mwifiex/pcie.h   |   1 +
+ .../wireless/marvell/mwifiex/pcie_quirks.c    | 246 ++++++++++++++++++
+ .../wireless/marvell/mwifiex/pcie_quirks.h    |  17 ++
+ 5 files changed, 286 insertions(+)
+ create mode 100644 drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+ create mode 100644 drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+
+-- 
+2.31.1
+
