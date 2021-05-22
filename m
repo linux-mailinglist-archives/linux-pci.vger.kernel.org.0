@@ -2,72 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC9338D2C5
-	for <lists+linux-pci@lfdr.de>; Sat, 22 May 2021 03:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFF6438D4E7
+	for <lists+linux-pci@lfdr.de>; Sat, 22 May 2021 11:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230369AbhEVBWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 May 2021 21:22:09 -0400
-Received: from saphodev.broadcom.com ([192.19.11.229]:44752 "EHLO
-        relay.smtp-ext.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230293AbhEVBWI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 May 2021 21:22:08 -0400
-X-Greylist: delayed 445 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 May 2021 21:22:08 EDT
-Received: from localhost.swdvt.lab.broadcom.net (dhcp-10-13-253-90.swdvt.lab.broadcom.net [10.13.253.90])
-        by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 98FE63CB64;
-        Fri, 21 May 2021 18:13:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 98FE63CB64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1621645998;
-        bh=wPZLx3MQrAZArrUbmLngfB+9yd6dimqsMD8FD5CdPys=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XD3KO1Mx7Xd2KMtuLcnMGnA/S6FcG1sMEw9jrTTAS5JvTp5xNhMcOOze416kgHhjQ
-         /b+ilUVx2uXMVyylogsUSD0fbCPDoKKFfEOXVU3suFszJjP79lhszDNeHVrRnmuPcu
-         Y3XH54xhnOcPSdVTDoSLkhKDO1YlIqKuq+bT72zQ=
-From:   Michael Chan <michael.chan@broadcom.com>
-To:     davem@davemloft.net, bhelgaas@google.com
-Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org, kuba@kernel.org,
-        gospo@broadcom.com,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Subject: [PATCH] pci: Add ACS quirk for Broadcom NIC.
-Date:   Fri, 21 May 2021 21:13:17 -0400
-Message-Id: <1621645997-16251-1-git-send-email-michael.chan@broadcom.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S230164AbhEVJpL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 May 2021 05:45:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5665 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230117AbhEVJpL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 May 2021 05:45:11 -0400
+Received: from dggems704-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FnJPf3jwNz1BQ0c;
+        Sat, 22 May 2021 17:40:54 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ dggems704-chm.china.huawei.com (10.3.19.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Sat, 22 May 2021 17:43:42 +0800
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Sat, 22 May 2021 17:43:42 +0800
+Subject: Re: [PATCH V2 0/2] lspci: Decode VF 10-Bit Tag Requester
+To:     <mj@ucw.cz>, <helgaas@kernel.org>, <kw@linux.com>,
+        <linux-pci@vger.kernel.org>
+References: <1615296919-76476-1-git-send-email-liudongdong3@huawei.com>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <a2aaa86f-8ed7-12a5-9910-751496a6bc68@huawei.com>
+Date:   Sat, 22 May 2021 17:43:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <1615296919-76476-1-git-send-email-liudongdong3@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
 
-Some Broadcom NICs such as the BCM57414 do not advertise PCI-ACS
-capability. All functions on such devices are placed under the same
-IOMMU group. Attaching a single PF to a userspace application like
-OVS-DPDK using VFIO is not possible, since not all functions in the
-IOMMU group are bound to VFIO.
+kindly ping...
 
-Since peer-to-peer transactions are not possible between PFs on these
-devices, it is safe to treat them as fully isolated even though the ACS
-capability is not advertised. Fix this issue by adding a PCI quirk for
-this chip.
-
-Signed-off-by: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
----
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index dcb229de1acb..cb1628e222df 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4753,6 +4753,8 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-+	/* Broadcom multi-function device */
-+	{ PCI_VENDOR_ID_BROADCOM, 0x16D7, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	/* Amazon Annapurna Labs */
- 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
--- 
-2.18.1
-
+On 2021/3/9 21:35, Dongdong Liu wrote:
+> The patchset is to decode VF 10-Bit Tag Requester and
+> update the tests files.
+>
+> V1->V2: Fix comments suggested by Krzysztof Wilczyński.
+>
+> Dongdong Liu (2):
+>   lspci: Decode VF 10-Bit Tag Requester
+>   lspci: Update tests files with VF 10-Bit Tag Requester
+>
+>  lib/header.h        | 2 ++
+>  ls-ecaps.c          | 8 ++++----
+>  tests/cap-dvsec-cxl | 4 ++--
+>  tests/cap-ea-1      | 4 ++--
+>  tests/cap-pcie-2    | 4 ++--
+>  5 files changed, 12 insertions(+), 10 deletions(-)
+>
+> --
+> 1.9.1
+>
+> .
+>
