@@ -2,88 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9A7238F5BE
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 00:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E64938F670
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 01:43:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbhEXWnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 May 2021 18:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
+        id S230091AbhEXXpL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 May 2021 19:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229503AbhEXWns (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 May 2021 18:43:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BDA3661378;
-        Mon, 24 May 2021 22:42:19 +0000 (UTC)
+        id S230033AbhEXXov (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 May 2021 19:44:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E90176140F;
+        Mon, 24 May 2021 23:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621896140;
-        bh=RykgrwMEOKoXEcrJsVff10yzaTjy+pjAbuhxu7UAis0=;
+        s=k20201202; t=1621899803;
+        bh=bzWATNTPaYHTgas/Ru4ikVqAuF22p6QgBAnd0xCRvlM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NwYOZ0gEU/E7F6JX2g3NE1JLJm4BJcmUPe+DU/dXH/hhlGlZcNF4KFji7qWJ6QrbB
-         hphFDuxM6PbgXdmMG9zQq3Y0pubYrd2j5L7HcFZGDr+6MnhHBKJFBGbabc7OtIosst
-         UvlHDoilGHQYFMRyHKKOMHRBgTqH3iU0N45WZz/4BzQS6egiBNL/je+9Ajs0jJi0h8
-         IuVBVtxsknSU65oidsTiiIfgmQdPhpmEd50obo17y3TBL0qL8kk/967Mt3MSnUOg5R
-         Fh5wwA0brB8h7AicJwYxKU4yuzU7t2T1yT05wC5tDgJcos927xy7S3pkWTXF5jkUEm
-         Szb0qHkt0UWTg==
-Date:   Mon, 24 May 2021 17:42:18 -0500
+        b=U0ndxR7l73gsZ4FDhlPe62bGK9fQ6j+qvxlo1GuEKzYiC68TVizE/HT2E9Upsfh5N
+         QeEH2jnkKAN+9Vkr55FoBr6E53fCF7Yg/7SwvnnyfHhY+Zzimvk3wfzmadG9negzuf
+         AeKvIR7/vABzouc/W3ofMYHw0GsU1sIZdvL6d5dB4TVe0UmKNhxGGd6+tYlLOE4McX
+         dj4J2kg6jmqOy+rKvmVyf7RKH5YccwjdNzTcYG2vlIWFw0nIa3WoFtTHPzTUfHHZ06
+         XeC3sany43hxiV02zxV3ssbD7NKOcG2VhmM+4cuCdm3Fz1JEaxvLvXv8swhbJxBkTX
+         FbQrGFvEYzRsQ==
+Date:   Mon, 24 May 2021 18:43:21 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
-Subject: Re: [PATCH] PCI: pciehp: Ignore spurious link inactive change when
- off
-Message-ID: <20210524224218.GA1135242@bjorn-Precision-5520>
+To:     Chiqijun <chiqijun@huawei.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
+        yin.yinshi@huawei.com, cloud.wangxiaoyun@huawei.com,
+        zengweiliang.zengweiliang@huawei.com, chenlizhong@huawei.com
+Subject: Re: [v6] PCI: Add reset quirk for Huawei Intelligent NIC virtual
+ function
+Message-ID: <20210524234321.GA1141045@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210409205935.41881-1-jonathan.derrick@intel.com>
+In-Reply-To: <20210414132301.1793-1-chiqijun@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 02:59:35PM -0600, Jon Derrick wrote:
-> When a specific x8 CEM card is bifurcated into x4x4 mode, and the
-> upstream ports both support hotplugging on each respective x4 device, a
-> slot management system for the CEM card requires both x4 devices to be
-> sysfs removed from the OS before it can safely turn-off physical power.
-> The implications are that Slot Control will display Powered Off status
-> for the device where the device is actually powered until both ports
-> have powered off.
+On Wed, Apr 14, 2021 at 09:23:01PM +0800, Chiqijun wrote:
+> When we do an FLR on several VFs at the same time, the Huawei
+> Intelligent NIC processes them serially, resulting in some VF
+> FLRs being delayed more than 100ms, when the virtual machine
+> restarts and the device driver is loaded, the firmware is doing
+> the corresponding VF FLR, causing the driver to fail to load.
+> Link: https://support.huawei.com/enterprise/en/doc/EDOC1100063073/87950645/vm-oss-occasionally-fail-to-load-the-in200-driver-when-the-vf-performs-flr
 > 
-> When power is removed from the first half, the link remains active to
-> provide clocking while waiting for the second half to have power
-> removed. When power is then removed from the second half, the first half
-> starts shutdown sequence and will trigger a link status change event.
-> This is misinterpreted as an enabling event due to positive presence
-> detect and causes the first half to be re-enabled.
+> To solve this problem, add host and firmware status synchronization
+> during FLR.
 > 
-> The spurious enable can be resolved by ignoring link status change
-> events when no link is active when in the off state.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> Signed-off-by: Chiqijun <chiqijun@huawei.com>
 
-Applied to pci/hotplug for v5.14, thanks!
+Applied to pci/reset for v5.14 with subject
+"PCI: Work around Huawei Intelligent NIC VF FLR erratum" and the
+following commit log:
+
+  pcie_flr() starts a Function Level Reset (FLR), waits 100ms (the maximum
+  time allowed for FLR completion by PCIe r5.0, sec 6.6.2), and waits for the
+  FLR to complete.  It assumes the FLR is complete when a config read returns
+  valid data.
+
+  When we do an FLR on several Huawei Intelligent NIC VFs at the same time,
+  firmware on the NIC processes them serially.  The VF may respond to config
+  reads before the firmware has completed its reset processing.  If we bind a
+  driver to the VF (e.g., by assigning the VF to a virtual machine) in the
+  interval between the successful config read and completion of the firmware
+  reset processing, the NIC VF driver may fail to load.
+
+  Prevent this driver failure by waiting for the NIC firmware to complete its
+  reset processing.  Not all NIC firmware supports this feature.
+
+Let me know if that's not accurate.
+
+I applied Alex's Reviewed-by (from v3) because the patch is basically
+identical except for cosmetic changes.
 
 > ---
->  drivers/pci/hotplug/pciehp_ctrl.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> v6:
+>  - Addressed Bjorn's review comments
 > 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 529c34808440..a2c5eef03e7d 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -265,6 +265,11 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  		cancel_delayed_work(&ctrl->button_work);
->  		fallthrough;
->  	case OFF_STATE:
-> +		if ((events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
-> +			mutex_unlock(&ctrl->state_lock);
-> +			break;
-> +		}
+> v5:
+>  - Fix build warning reported by kernel test robot
+> 
+> v4:
+>  - Addressed Bjorn's review comments
+> 
+> v3:
+>  - The MSE bit in the VF configuration space is hardwired to zero,
+>    remove the setting of PCI_COMMAND_MEMORY bit. Add comment for
+>    set PCI_COMMAND register.
+> 
+> v2:
+>  - Update comments
+>  - Use the HINIC_VF_FLR_CAP_BIT_SHIFT and HINIC_VF_FLR_PROC_BIT_SHIFT
+>    macro instead of the magic number
+> ---
+>  drivers/pci/quirks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e3ba9e..6677b7220442 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3913,6 +3913,73 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+>  	return 0;
+>  }
+>  
+> +#define PCI_DEVICE_ID_HINIC_VF      0x375E
+> +#define HINIC_VF_FLR_TYPE           0x1000
+> +#define HINIC_VF_FLR_CAP_BIT        (1UL << 30)
+> +#define HINIC_VF_OP                 0xE80
+> +#define HINIC_VF_FLR_PROC_BIT       (1UL << 18)
+> +#define HINIC_OPERATION_TIMEOUT     15000	/* 15 seconds */
 > +
->  		ctrl->state = POWERON_STATE;
->  		mutex_unlock(&ctrl->state_lock);
->  		if (present)
+> +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
+> +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
+> +{
+> +	unsigned long timeout;
+> +	void __iomem *bar;
+> +	u32 val;
+> +
+> +	if (probe)
+> +		return 0;
+> +
+> +	bar = pci_iomap(pdev, 0, 0);
+> +	if (!bar)
+> +		return -ENOTTY;
+> +
+> +	/* Get and check firmware capabilities. */
+> +	val = ioread32be(bar + HINIC_VF_FLR_TYPE);
+> +	if (!(val & HINIC_VF_FLR_CAP_BIT)) {
+> +		pci_iounmap(pdev, bar);
+> +		return -ENOTTY;
+> +	}
+> +
+> +	/*
+> +	 * Set the processing bit for the start of FLR, which will be cleared
+> +	 * by the firmware after FLR is completed.
+> +	 */
+> +	val = ioread32be(bar + HINIC_VF_OP);
+> +	val = val | HINIC_VF_FLR_PROC_BIT;
+> +	iowrite32be(val, bar + HINIC_VF_OP);
+> +
+> +	/* Perform the actual device function reset */
+> +	pcie_flr(pdev);
+> +
+> +	/*
+> +	 * The device must learn BDF after FLR in order to respond to BAR's
+> +	 * read request, therefore, we issue a configure write request to let
+> +	 * the device capture BDF.
+> +	 */
+> +	pci_write_config_word(pdev, PCI_VENDOR_ID, 0);
+> +
+> +	/* Waiting for device reset complete */
+> +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
+> +	do {
+> +		val = ioread32be(bar + HINIC_VF_OP);
+> +		if (!(val & HINIC_VF_FLR_PROC_BIT))
+> +			goto reset_complete;
+> +		msleep(20);
+> +	} while (time_before(jiffies, timeout));
+> +
+> +	val = ioread32be(bar + HINIC_VF_OP);
+> +	if (!(val & HINIC_VF_FLR_PROC_BIT))
+> +		goto reset_complete;
+> +
+> +	pci_warn(pdev, "Reset dev timeout, FLR ack reg: %#010x\n", val);
+> +
+> +reset_complete:
+> +	pci_iounmap(pdev, bar);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+>  		 reset_intel_82599_sfp_virtfn },
+> @@ -3924,6 +3991,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+>  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+>  		reset_chelsio_generic_dev },
+> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+> +		reset_hinic_vf_dev },
+>  	{ 0 }
+>  };
+>  
 > -- 
-> 2.26.2
+> 2.17.1
 > 
