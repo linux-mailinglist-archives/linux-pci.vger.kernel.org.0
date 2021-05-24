@@ -2,86 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7A4238E8D3
-	for <lists+linux-pci@lfdr.de>; Mon, 24 May 2021 16:36:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BD4338EAF6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 May 2021 16:58:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232844AbhEXOi0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 May 2021 10:38:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232662AbhEXOi0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 May 2021 10:38:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0AFDE6113B;
-        Mon, 24 May 2021 14:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867018;
-        bh=7T5VX2eQcaYMrUtpjWz5Rw7UAowD4vaCkcvMGSv9CLY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lYQYVFCL8VKYYj+I7P5lXR/fEWcKfESZSYswCk6cBqi2dVqV4FDeJ01CaPmYR0c5p
-         475s+QM2SYE06LeHVprIlr/bmRwkPz55tk9npPU3WcKSezVxcl7/Xezyia8NEt5tVB
-         +Xne0S/GIk+n0H7BgpVU83wrUMObmMXOvDCJBHtSO7SB7Ui9+nLP0M35+fQH/iSQBI
-         SO2UvJ8/ljhSqTYKyaTeo9o63VBErtNr/azqKvzXoq0S7m0Bfe1mUwPI4uSwkbh9ze
-         FmUGXl80AU48ijvowJbmCAxSmUlC/1cromjnyX0bSVuLuHDlRnXMiUUeqEv/FUjmMc
-         Va3JCe1EynV2g==
-Date:   Mon, 24 May 2021 16:36:51 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S233955AbhEXO7D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 May 2021 10:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234156AbhEXO47 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 May 2021 10:56:59 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC4DC061248;
+        Mon, 24 May 2021 07:48:17 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id ep16-20020a17090ae650b029015d00f578a8so11271561pjb.2;
+        Mon, 24 May 2021 07:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=/E/GBFdOj5M6LsY2db/Ym7zO7WOVjl/+cOln0wcJzT4=;
+        b=l0Ijf3GN8zzspFB/KjYUO1CbD5kmnXPNH/rU1F3wRmOvMo7hwu/wusEipB/hGn8oPy
+         8/tp3WJ2aRiyENiNvREV/0LMtp9DAcPVhyclEGS5kHHkW8w2AeXd24X+8PBgk8qP8Jax
+         17+NUx0ARBwfjz0e5SUpn65TyM0zgTyEqvYXXrBAV5bwz4QaWoSQoW5gDsQFTtLiy4en
+         s6sY3lZCUqbpjaUhymlMszvQSO49/5fi6rm65Mw/L+DmO1RGYR6n5kWTILbvNbfLEyJs
+         h7vZD/WtydR4oHpLFxfH0l4RQFXQyZ49AoAWMeqJMzRlaRnjvT5tHnVJRn/3t6Z3W4Ms
+         ZoGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/E/GBFdOj5M6LsY2db/Ym7zO7WOVjl/+cOln0wcJzT4=;
+        b=RZ0JLC3iRptrR8E3SLFLQJprnUzm35qCEw8PLeVWa7cjsVqf+8Fj6B6w9UgkMEYKCj
+         c9reo9We6F6VUvR3Z/eOvDkVD+COtGG13fM4f9AfRzbKxLfGH8C1mM/3tg2SlNd2ZOZL
+         GNpdjbUUgW9MrF1ekuVOe38vVutdNJBd81WhT/ZlWh3ju5goEWT/SrWTydELn0C6VSGw
+         4s/0boneHLRsk8AoN1QtsX58SoMDCm7H7cxhb6yHv0vqZ/oHF8d7sk/M2X/4Q9VRCuaD
+         6pMpvdXo7aVZ+Z3E1NygBXdSgrfriXQJZpUM5fcARKdKDv+hpqHn4dRcDaNjMzCRbIid
+         M48A==
+X-Gm-Message-State: AOAM53160hU0Cm5ZX+FXmdsGaIhyPyTW2xnYe7sSpFR3g/KaRFFg0nQI
+        cj67BWY+wG825QyA5l9iyF4CZP8GkxqWwpJY
+X-Google-Smtp-Source: ABdhPJwGZbqaQqjFdK+2r5hBrX8jT3al1xVDK24K12DtXJ+z+JzQLfYhDiQiJ2JEHwuJ8/UbwfaY2A==
+X-Received: by 2002:a17:90a:dc82:: with SMTP id j2mr25686023pjv.138.1621867696948;
+        Mon, 24 May 2021 07:48:16 -0700 (PDT)
+Received: from localhost ([103.248.31.164])
+        by smtp.gmail.com with ESMTPSA id j16sm11953309pfi.92.2021.05.24.07.48.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 May 2021 07:48:16 -0700 (PDT)
+Date:   Mon, 24 May 2021 20:18:14 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
+        raphael.norwitz@nutanix.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/42] PCI: aardvark: Change name of INTx irq_chip to
- advk-INT
-Message-ID: <20210524163651.430e5497@thinkpad>
-In-Reply-To: <87im3uq5bx.wl-maz@kernel.org>
-References: <20210506153153.30454-1-pali@kernel.org>
-        <20210506153153.30454-16-pali@kernel.org>
-        <87im3uq5bx.wl-maz@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH RESEND v2 2/7] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210524144814.rqgvbaawdxbdwio4@archlinux>
+References: <20210519235426.99728-1-ameynarkhede03@gmail.com>
+ <20210519235426.99728-3-ameynarkhede03@gmail.com>
+ <20210520150526.GB641812@rocinante.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210520150526.GB641812@rocinante.localdomain>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 07 May 2021 10:08:18 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+On 21/05/20 05:05PM, Krzysztof Wilczyński wrote:
+> Hi Amey,
+>
+> [...]
+> > +int pcie_reset_flr(struct pci_dev *dev, int probe)
+> > +{
+> > +	u32 cap;
+> > +
+> > +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+> > +		return -ENOTTY;
+> > +
+> > +	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> > +	if (!(cap & PCI_EXP_DEVCAP_FLR))
+> > +		return -ENOTTY;
+> > +
+> > +	if (probe)
+> > +		return 0;
+> > +
+> > +	return pcie_flr(dev);
+> > +}
+>
+> Similarly to my suggestion in the first patch in the series, perhaps
+> using a boolean here would be an option.
+>
+> Having said that, the following existing functions aren't doing it, so
+> for the sake of keeping things consistent it might not be the best
+> option, as per:
+>
+>  static int pci_af_flr(struct pci_dev *dev, int probe)
+>  int nvme_disable_and_flr(struct pci_dev *dev, int probe)
+>
+> Krzysztof
+All the functions which implement different types of resets including
+quirks have ...reset(struct pci_dev *dev, int probe) signature.
+Should I modify all of them?
 
-> On Thu, 06 May 2021 16:31:26 +0100,
-> Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> >=20
-> > This name is visible in /proc/interrupts file and for better reading it
-> > should have at most 8 characters. Also there is no need to allocate this
-> > name dynamically, since there is only one PCIe controller on Armada 37x=
-x.
-> > This aligns with how the MSI irq_chip in this driver names it's interru=
-pt
-> > ("advk-MSI"). =20
->=20
-> And *because* the name is visible in /proc/interrupts, it has become
-> an ABI, and cannot be changed anymore.
->=20
-> We had the exact same issue with Tegra this merge window as I
-> accidentally changed "Tegra" to "tegra", resulting in userspace
-> programs failing find stuff in /proc/interrupts.
->=20
-> Please keep the name as is, no matter how ugly it is.
-
-Hmm, I am 99% sure that for the A3720 platform this ABI change would not
-affect anybody. And it does make the driver's irq names confusing.
-Can't we really do anything here?
-
-Note that there were suggestions from some people to completely remove
-this driver due to the many problems it has which Pali is trying to
-solve. But if the driver was removed and then later introduced again
-without these problems, the new version would use the "advk-INT" IRQ
-name...
-
-Marek
+Thanks,
+Amey
