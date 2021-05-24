@@ -2,78 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 928B038E409
-	for <lists+linux-pci@lfdr.de>; Mon, 24 May 2021 12:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F292738E42F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 May 2021 12:37:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232433AbhEXKb7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 May 2021 06:31:59 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:38775 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232422AbhEXKb6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 May 2021 06:31:58 -0400
-Received: by mail-lf1-f41.google.com with SMTP id r5so39939436lfr.5;
-        Mon, 24 May 2021 03:30:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dJqbGZncdUtMbiGujp4GmS4YaN0i9wYrT+dXaGWSBI4=;
-        b=mFwuvCFPlkovGwCHWeNueiAh3tdL8BI1O01xRhMc1llw2BKBntohLnUlQPpwqivXX7
-         tqXCk/s3XsaGDb8zzogGM7FxlIKJ/YzXYIhTJ5iKjb3hmaKDvs8St3wXfPOxYFV8c7kh
-         475u6X/toTIRfcr8uGudc4zY3e09+8JxG+NuHOTxP2vAFwXk0nTpR1JKFZ8gQPOkRLt+
-         SDNBFogNURDFybz0SRo3CmTOn6qLLqexMxdpLqJ8qavIT9fOF2hCIvgBhbSGpP6MGMUV
-         tnUcpc3S2Q+rg8YlTTMzapqC3H6lOrrcef5V3yPqUK1ydLPYlBOh/9EYpUbgmvSQ/vfA
-         5ZyQ==
-X-Gm-Message-State: AOAM532qrpYU/ZjTVZFeDpufXCHk/i6g27MV+aRcWhcIHn8EB21cBmvO
-        CZx+VvkosfDFqS3NPotQPtI=
-X-Google-Smtp-Source: ABdhPJzVY5SY+gr7Xng2BHQIAdlNrQ0z5glCZPpbg8Me/fA0DjkletG1BetDhQ/u9B452+4BX5KSNg==
-X-Received: by 2002:a05:6512:10d4:: with SMTP id k20mr9883515lfg.210.1621852228419;
-        Mon, 24 May 2021 03:30:28 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id x11sm1110485ljc.87.2021.05.24.03.30.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 May 2021 03:30:27 -0700 (PDT)
-Date:   Mon, 24 May 2021 12:30:27 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     srikanth.thokala@intel.com
-Cc:     robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com,
-        mallikarjunappa.sangannavar@intel.com
-Subject: Re: [PATCH v9 2/2] PCI: keembay: Add support for Intel Keem Bay
-Message-ID: <20210524103027.GA244904@rocinante.localdomain>
-References: <20210518150050.7427-1-srikanth.thokala@intel.com>
- <20210518150050.7427-3-srikanth.thokala@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210518150050.7427-3-srikanth.thokala@intel.com>
+        id S232640AbhEXKiw convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 24 May 2021 06:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232642AbhEXKiq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 May 2021 06:38:46 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41270610A5;
+        Mon, 24 May 2021 10:37:18 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1ll7xT-003BrG-W2; Mon, 24 May 2021 11:37:16 +0100
+Date:   Mon, 24 May 2021 11:37:15 +0100
+Message-ID: <87pmxgwh7o.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Sandor Bodo-Merle <sbodomerle@gmail.com>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
+In-Reply-To: <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com>
+References: <20210520120055.jl7vkqanv7wzeipq@pali>
+        <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
+        <20210520140529.rczoz3npjoadzfqc@pali>
+        <CABLWAfSct8Kn1etyJtZhFc5A33thE-s6=Cz-Gd6+j04S4pfD_A@mail.gmail.com>
+        <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ray.jui@broadcom.com, sbodomerle@gmail.com, pali@kernel.org, linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Srikanth,
+On Thu, 20 May 2021 18:11:32 +0100,
+Ray Jui <ray.jui@broadcom.com> wrote:
+>
+> On 5/20/2021 7:22 AM, Sandor Bodo-Merle wrote:
+> > On Thu, May 20, 2021 at 4:05 PM Pali Rohár <pali@kernel.org> wrote:
+> >>
+> >> Hello!
+> >>
+> >> On Thursday 20 May 2021 15:47:46 Sandor Bodo-Merle wrote:
+> >>> Hi Pali,
+> >>>
+> >>> thanks for catching this - i dig up the followup fixup commit we have
+> >>> for the iproc multi MSI (it was sent to Broadcom - but unfortunately
+> >>> we missed upstreaming it).
+> >>>
+> >>> Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> >>> failed to reserve the proper number of bits from the inner domain.
+> >>> We need to allocate the proper amount of bits otherwise the domains for
+> >>> multiple PCIe endpoints may overlap and freeing one of them will result
+> >>> in freeing unrelated MSI vectors.
+> >>>
+> >>> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> >>> ---
+> >>>  drivers/pci/host/pcie-iproc-msi.c | 8 ++++----
+> >>>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git drivers/pci/host/pcie-iproc-msi.c drivers/pci/host/pcie-iproc-msi.c
+> >>> index 708fdb1065f8..a00492dccb74 100644
+> >>> --- drivers/pci/host/pcie-iproc-msi.c
+> >>> +++ drivers/pci/host/pcie-iproc-msi.c
+> >>> @@ -260,11 +260,11 @@ static int iproc_msi_irq_domain_alloc(struct
+> >>> irq_domain *domain,
+> >>>
+> >>>         mutex_lock(&msi->bitmap_lock);
+> >>>
+> >>> -       /* Allocate 'nr_cpus' number of MSI vectors each time */
+> >>> +       /* Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI
+> >>> vectors each time */
+> >>>         hwirq = bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vecs, 0,
+> >>> -                                          msi->nr_cpus, 0);
+> >>> +                                          msi->nr_cpus * nr_irqs, 0);
+> >>
+> >> I'm not sure if this construction is correct. Multi-MSI interrupts needs
+> >> to be aligned to number of requested interrupts. So if wifi driver asks
+> >> for 32 Multi-MSI interrupts then first allocated interrupt number must
+> >> be dividable by 32.
+> >>
+> > 
+> > Ahh - i guess you are right. In our internal engineering we always
+> > request 32 vectors.
+> > IIRC the multiply by "nr_irqs" was added for iqr affinity to work correctly.
+> > 
+> 
+> May I ask which platforms are you guys running this driver on? Cygnus or
+> Northstar? Not that it matters, but just out of curiosity.
+> 
+> Let me start by explaining how MSI support works in this driver, or more
+> precisely, for all platforms that support this iProc based event queue
+> MSI scheme:
+> 
+> In iProc PCIe core, each MSI group is serviced by a GIC interrupt
+> (hwirq) and a dedicated event queue (event queue is paired up with
+> hwirq).  Each MSI group can support up to 64 MSI vectors. Note 64 is the
+> depth of the event queue.
+> 
+> The number of MSI groups varies between different iProc SoCs. The total
+> number of CPU cores also varies. To support MSI IRQ affinity, we
+> distribute GIC interrupts across all available CPUs.  MSI vector is
+> moved from one GIC interrupt to another to steer to the target CPU.
+> 
+> Assuming:
+> The number of MSI groups (the number of total hwirq for this PCIe
+> controller) is M
+> The number of CPU cores is N
+> M is always a multiple of N (we ensured that in the setup function)
+> 
+> Therefore:
+> Total number of raw MSI vectors = M * 64
+> Total number of supported MSI vectors = (M * 64) / N
+> 
+> I guess I'm not too clear on what you mean by "multi-MSI interrupts
+> needs to be aligned to number of requested interrupts.". Would you be
+> able to plug this into the above explanation so we can have a more clear
+> understanding of what you mean here?
 
-Everything looks very good!
+That's a generic PCI requirement: if you are providing a Multi-MSI
+configuration, the base vector number has to be size-aligned
+(2-aligned for 2 MSIs, 4 aligned for 4, up to 32), and the end-point
+supplies up to 5 bits that are orr-ed into the base vector number,
+with a *single* doorbell address. You effectively provide a single MSI
+number and a single address, and the device knows how to drive 2^n MSIs.
 
-[...]
-> +	ret = devm_add_action_or_reset(dev,
-> +				       (void(*)(void *))clk_disable_unprepare,
-> +				       clk);
-[...]
+This is different from MSI-X, which defines multiple individual
+vectors, each with their own doorbell address.
 
-Just a small note (no need to change anything) about the above.  Some
-drivers add a small wrapper function around the clk_disable_unprepare()
-to avoid having to do this case above which is also easier to read as
-a result.  But, this is just a matter of whether it's needed (e.g., some
-extra steps would be needed to disable clocks, etc.) and personal
-preference.
+The main problem you have here (other than the broken allocation
+mechanism) is that moving an interrupt from one core to another
+implies moving the doorbell address to that of another MSI
+group. This isn't possible for Multi-MSI, as all the MSIs must have
+the same doorbell address. As far as I can see, there is no way to
+support Multi-MSI together with affinity change on this HW, and you
+should stop advertising support for this feature.
 
-Thank you for working on this!
+There is also a more general problem here, which is the atomicity of
+the update on affinity change. If you are moving an interrupt from one
+CPU to the other, it seems you change both the vector number and the
+target address. If that is the case, this isn't atomic, and you may
+end-up with the device generating a message based on a half-applied
+update.
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+Thanks,
 
-	Krzysztof
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
