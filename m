@@ -2,210 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19A1F38F5A9
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 00:31:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A7238F5BE
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 00:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbhEXWcm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 May 2021 18:32:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36208 "EHLO mail.kernel.org"
+        id S229541AbhEXWnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 May 2021 18:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229532AbhEXWcl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 May 2021 18:32:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 148BA61400;
-        Mon, 24 May 2021 22:31:11 +0000 (UTC)
+        id S229503AbhEXWns (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 May 2021 18:43:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BDA3661378;
+        Mon, 24 May 2021 22:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621895472;
-        bh=BgaJ6bBhVMSkPpMM7ztBqXvDF9jcSK5FB4nnN1qd4Yo=;
+        s=k20201202; t=1621896140;
+        bh=RykgrwMEOKoXEcrJsVff10yzaTjy+pjAbuhxu7UAis0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AgHsVEFBenklmyX1hvqgZjknjAn7LHOxyMuGLVu9LNmAYDAtNUj9iKdnYmzFLuiDw
-         Q85vCAkBIAjFjk0VVo8CDUcTKGq04HyBtZwESvE+TrueP/hR0x7H4CRb9SHUQ1Imrj
-         XNrVu9bgAYXShzr/ANMuBCyYck8YKrEJVAkoB3zmPaWIDvH1vbWcS09kBrL3gOouhP
-         nq+5qZLUV/4qYb348My/vhdzv9IYZOsOSiiC+nwavxEUEfAQc8y7qht5WMs8BgTy5+
-         NDiyRLebtUYPsqnNFFT0EaG3MQPi2R17goboHHtzfyhEx1XjpqlS5AykKG4l4Luy6H
-         S340JNQNSaX4g==
-Date:   Mon, 24 May 2021 17:31:10 -0500
+        b=NwYOZ0gEU/E7F6JX2g3NE1JLJm4BJcmUPe+DU/dXH/hhlGlZcNF4KFji7qWJ6QrbB
+         hphFDuxM6PbgXdmMG9zQq3Y0pubYrd2j5L7HcFZGDr+6MnhHBKJFBGbabc7OtIosst
+         UvlHDoilGHQYFMRyHKKOMHRBgTqH3iU0N45WZz/4BzQS6egiBNL/je+9Ajs0jJi0h8
+         IuVBVtxsknSU65oidsTiiIfgmQdPhpmEd50obo17y3TBL0qL8kk/967Mt3MSnUOg5R
+         Fh5wwA0brB8h7AicJwYxKU4yuzU7t2T1yT05wC5tDgJcos927xy7S3pkWTXF5jkUEm
+         Szb0qHkt0UWTg==
+Date:   Mon, 24 May 2021 17:42:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Raphael Norwitz <raphael.norwitz@nutanix.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ameynarkhede03@gmail.com" <ameynarkhede03@gmail.com>
-Subject: Re: [PATCH v2] PCI: merge slot and bus reset implementations
-Message-ID: <20210524223110.GA1127348@bjorn-Precision-5520>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
+Subject: Re: [PATCH] PCI: pciehp: Ignore spurious link inactive change when
+ off
+Message-ID: <20210524224218.GA1135242@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210408182328.12323-1-raphael.norwitz@nutanix.com>
+In-Reply-To: <20210409205935.41881-1-jonathan.derrick@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 08, 2021 at 06:23:40PM +0000, Raphael Norwitz wrote:
-> Slot resets are bus resets with additional logic to prevent a device
-> from being removed during the reset. Currently slot and bus resets have
-> separate implementations in pci.c, complicating higher level logic. As
-> discussed on the mailing list, they should be combined into a generic
-> function which performs an SBR. This change adds a function,
-> pci_reset_bus_function(), which first attempts a slot reset and then
-> attempts a bus reset if -ENOTTY is returned, such that there is now a
-> single device agnostic function to perform an SBR.
->
-> This new function is also needed to add SBR reset quirks and therefore
-> is exposed in pci.h.
+On Fri, Apr 09, 2021 at 02:59:35PM -0600, Jon Derrick wrote:
+> When a specific x8 CEM card is bifurcated into x4x4 mode, and the
+> upstream ports both support hotplugging on each respective x4 device, a
+> slot management system for the CEM card requires both x4 devices to be
+> sysfs removed from the OS before it can safely turn-off physical power.
+> The implications are that Slot Control will display Powered Off status
+> for the device where the device is actually powered until both ports
+> have powered off.
+> 
+> When power is removed from the first half, the link remains active to
+> provide clocking while waiting for the second half to have power
+> removed. When power is then removed from the second half, the first half
+> starts shutdown sequence and will trigger a link status change event.
+> This is misinterpreted as an enabling event due to positive presence
+> detect and causes the first half to be re-enabled.
+> 
+> The spurious enable can be resolved by ignoring link status change
+> events when no link is active when in the off state.
+> 
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
 
-I dropped this exposure in pci.h because there's no user yet.  We can
-expose it when we add the user.
-
-> Link: https://lkml.org/lkml/2021/3/23/911
->
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-
-Applied to pci/reset for v5.14 with subject
-"PCI: Add pci_reset_bus_function() Secondary Bus Reset interface"
-
-I attached the patch as applied.
+Applied to pci/hotplug for v5.14, thanks!
 
 > ---
->  drivers/pci/pci.c   | 19 +++++++++++--------
->  include/linux/pci.h |  1 +
->  2 files changed, 12 insertions(+), 8 deletions(-)
+>  drivers/pci/hotplug/pciehp_ctrl.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 16a17215f633..a8f8dd588d15 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4982,6 +4982,15 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
->  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
->  }
->  
-> +int pci_reset_bus_function(struct pci_dev *dev, int probe)
-> +{
-> +	int rc = pci_dev_reset_slot_function(dev, probe);
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index 529c34808440..a2c5eef03e7d 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -265,6 +265,11 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  		cancel_delayed_work(&ctrl->button_work);
+>  		fallthrough;
+>  	case OFF_STATE:
+> +		if ((events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
+> +			mutex_unlock(&ctrl->state_lock);
+> +			break;
+> +		}
 > +
-> +	if (rc != -ENOTTY)
-> +		return rc;
-> +	return pci_parent_bus_reset(dev, probe);
-> +}
-> +
->  static void pci_dev_lock(struct pci_dev *dev)
->  {
->  	pci_cfg_access_lock(dev);
-> @@ -5102,10 +5111,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
->  	rc = pci_pm_reset(dev, 0);
->  	if (rc != -ENOTTY)
->  		return rc;
-> -	rc = pci_dev_reset_slot_function(dev, 0);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	return pci_parent_bus_reset(dev, 0);
-> +	return pci_reset_bus_function(dev, 0);
->  }
->  EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
->  
-> @@ -5135,13 +5141,10 @@ int pci_probe_reset_function(struct pci_dev *dev)
->  	if (rc != -ENOTTY)
->  		return rc;
->  	rc = pci_pm_reset(dev, 1);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pci_dev_reset_slot_function(dev, 1);
->  	if (rc != -ENOTTY)
->  		return rc;
->  
-> -	return pci_parent_bus_reset(dev, 1);
-> +	return pci_reset_bus_function(dev, 1);
->  }
->  
->  /**
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 86c799c97b77..979d54335ac1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1228,6 +1228,7 @@ int pci_probe_reset_bus(struct pci_bus *bus);
->  int pci_reset_bus(struct pci_dev *dev);
->  void pci_reset_secondary_bus(struct pci_dev *dev);
->  void pcibios_reset_secondary_bus(struct pci_dev *dev);
-> +int pci_reset_bus_function(struct pci_dev *dev, int probe);
->  void pci_update_resource(struct pci_dev *dev, int resno);
->  int __must_check pci_assign_resource(struct pci_dev *dev, int i);
->  int __must_check pci_reassign_resource(struct pci_dev *dev, int i, resource_size_t add_size, resource_size_t align);
+>  		ctrl->state = POWERON_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+>  		if (present)
 > -- 
-> 2.20.1
-
-commit 0dad3ce523c2 ("PCI: Add pci_reset_bus_function() Secondary Bus Reset interface")
-Author: Raphael Norwitz <raphael.norwitz@nutanix.com>
-Date:   Thu Apr 8 18:23:40 2021 +0000
-
-    PCI: Add pci_reset_bus_function() Secondary Bus Reset interface
-    
-    pci_parent_bus_reset() resets a device by performing a Secondary Bus Reset
-    on a PCI-to-PCI bridge leading to the device.
-    
-    pci_dev_reset_slot_function() does the same, except that it uses a hotplug
-    driver to keep the reset from looking like a hot-remove followed by a
-    hot-add.
-    
-    Add a pci_reset_bus_function() wrapper, which attempts the hotplug driver
-    slot reset and falls back to the parent bus reset if that fails.  This
-    provides a single interface for performing a Secondary Bus Reset.
-    
-    [bhelgaas: commit log, don't expose yet]
-    Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-    Link: https://lore.kernel.org/r/20210323100625.0021a943@omen.home.shazbot.org/
-    Link: https://lore.kernel.org/r/20210408182328.12323-1-raphael.norwitz@nutanix.com
-    Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-    Signed-off-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b717680377a9..452351025a09 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5020,6 +5020,16 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
- 	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
- }
- 
-+static int pci_reset_bus_function(struct pci_dev *dev, int probe)
-+{
-+	int rc;
-+
-+	rc = pci_dev_reset_slot_function(dev, probe);
-+	if (rc != -ENOTTY)
-+		return rc;
-+	return pci_parent_bus_reset(dev, probe);
-+}
-+
- static void pci_dev_lock(struct pci_dev *dev)
- {
- 	pci_cfg_access_lock(dev);
-@@ -5140,10 +5150,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
- 	rc = pci_pm_reset(dev, 0);
- 	if (rc != -ENOTTY)
- 		return rc;
--	rc = pci_dev_reset_slot_function(dev, 0);
--	if (rc != -ENOTTY)
--		return rc;
--	return pci_parent_bus_reset(dev, 0);
-+	return pci_reset_bus_function(dev, 0);
- }
- EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
- 
-@@ -5173,13 +5180,10 @@ int pci_probe_reset_function(struct pci_dev *dev)
- 	if (rc != -ENOTTY)
- 		return rc;
- 	rc = pci_pm_reset(dev, 1);
--	if (rc != -ENOTTY)
--		return rc;
--	rc = pci_dev_reset_slot_function(dev, 1);
- 	if (rc != -ENOTTY)
- 		return rc;
- 
--	return pci_parent_bus_reset(dev, 1);
-+	return pci_reset_bus_function(dev, 1);
- }
- 
- /**
+> 2.26.2
+> 
