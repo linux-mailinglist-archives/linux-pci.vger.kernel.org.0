@@ -2,160 +2,248 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F19838DB1E
-	for <lists+linux-pci@lfdr.de>; Sun, 23 May 2021 14:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D3FD38E0BA
+	for <lists+linux-pci@lfdr.de>; Mon, 24 May 2021 07:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231744AbhEWMMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 May 2021 08:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50810 "EHLO mail.kernel.org"
+        id S232120AbhEXFz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 May 2021 01:55:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:29927 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231735AbhEWMMX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 23 May 2021 08:12:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0090F61159;
-        Sun, 23 May 2021 12:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621771857;
-        bh=5JO2LxhXrOK58oNJTJ20myWP78aa+/40qU7LRR21u1o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t5SuI4C1bEbMv5JvVzfnEYnO4A4hNJmbF6OjzZ0HF70nwmDoSNhIcn1NYWFaKoQa9
-         nc333Ar/y/LYf/ZE5IWkO1db4E083oBtG+7UVNY0AObaWHtt5Z/gTeEbmobImYawJt
-         15VlMFQKXq1SoTh2c296tNHR71iPN5sC1Gfjue3p5P9yVEy8CsI7/Bj7HmFgFN98Nm
-         GQOWeXG74JwAgxegTMoFLd7Z0GICP9PS1NMJOu5ytYAJVSWz50XzU9pM9Lz+LzoJXL
-         x+BIbamcJnxb/DDBbnuoGSin19QHuOFUgWGffbKfqWvQf1jDvLYCNDvo2MUkECTq28
-         BwNZLj7+DVX6A==
-Received: by mail-oi1-f177.google.com with SMTP id y76so15230456oia.6;
-        Sun, 23 May 2021 05:10:56 -0700 (PDT)
-X-Gm-Message-State: AOAM533BePgDWy1dffVURe8Y0S40oqN7CQE2e1KGMQHlbDC1gJItypZb
-        W/L5LRxxcljqFoabt8podYuTAPA67OqYiRDDS2k=
-X-Google-Smtp-Source: ABdhPJyfGAivPerflxqvZ8zeNDpNrnjqzjt21e5mLIM4h6jZ0wAmIa8bbwUDuprzQ4LGeui46DP466uXci66TZQNUYw=
-X-Received: by 2002:aca:4343:: with SMTP id q64mr7777331oia.33.1621771856367;
- Sun, 23 May 2021 05:10:56 -0700 (PDT)
+        id S229733AbhEXFzZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 May 2021 01:55:25 -0400
+IronPort-SDR: 9TCWjB8KZFYWhze5U5mkXV80qqyazTFlQ0mBqS5Fs/ls9/C/XBMT0//x7sRzgQSuizDgPjZ/Mn
+ DhQmbu8IY+cQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9993"; a="198802377"
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="198802377"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2021 22:53:57 -0700
+IronPort-SDR: UQqBmGPCtX1sc0hK9TlqtvG3tmZyoEbWIYQLTa48GnYzSxNniOXLM9Ffw8uA7D/JHShuAfNLK/
+ Ek/9wRzESmDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="632508884"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga005.fm.intel.com with ESMTP; 23 May 2021 22:53:57 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Sun, 23 May 2021 22:53:55 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4
+ via Frontend Transport; Sun, 23 May 2021 22:53:55 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.4; Sun, 23 May 2021 22:53:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GS5Am2WTTUM45DKU/gCBiHZVhQkj7tQd29Zm7VWfgoE6blvUdJAt/bI/guInlkKl3TXOoJABAsLpMHHa9IPQgPrCRNRz+faG0NayGTNqHKY3eu/QGxZM/dPpDAYUpG21MPcpDp92BCSqt+QTpN6enq929g7FQMwhPpqDXSH6zUqXF5ns5OD4s3A+Pl5a3togiCcp6+GTRfzs/gDUICZKi2ugjihxVW1WMIRXKkxXM4/UaQ3HAxzvDAnxseS3ydW4GqblbBkUR87qCrbJRDIgs8MnlJgIjORcShp42sJZ0hzMSpdOv9zlXPStAVJ9dfToRMMLqm4AwebTNZpGVnKWww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RxuTmd0RzAT9ueF1VtCEs1nhULx6OCMVyX2n/WzPYis=;
+ b=cS1hEPoPjJa3FkPs34vJy2i7bdpVVp2+4M43GMTzoCubzLcnTIG9VqukAAUa3Hsz9NfeQCJU9X5c07poTBajVMBneVYbX8nQvKrG+rBX6TJKadNNBrqEDhhfzw4i/OEtXO8kBXC4jkqLQlOnISXtLLNYQgL4OVvmLlTgjDp3M2KsG5QQrmQbpQVcHS+N1YRVq0ZcHyNQMgGEv3MauLjXKFYROYJGKzX9LdFA7nJMoqHMJdMoJuANzvMQHNT/1XYviSTRDHA3vx6PkAhImq2wUuVo/45gzf1GYtTGUFoFi7tc/g0kcVroKHVmEO8nb+xPaphR6CWEQAg/uX84717uOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RxuTmd0RzAT9ueF1VtCEs1nhULx6OCMVyX2n/WzPYis=;
+ b=utlU6FLiDk36uOrX5vgi3Aiz4gaEoge71xubA19FkXXm47/nU2jL4REXiK9KStsrC3GKthk6y1MBnAvtc5VgXBaYFOBkXNsb/IWMb2MjXGBgAvWk/DdTGOFVXzWv/r0/9ciyC4i01hiLj6g1W6noiQG3hWFrMMtuQ7y0nQnFAAE=
+Received: from PH0PR11MB5595.namprd11.prod.outlook.com (2603:10b6:510:e5::16)
+ by PH0PR11MB5675.namprd11.prod.outlook.com (2603:10b6:510:d4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.25; Mon, 24 May
+ 2021 05:53:54 +0000
+Received: from PH0PR11MB5595.namprd11.prod.outlook.com
+ ([fe80::e07a:5095:a1a3:2667]) by PH0PR11MB5595.namprd11.prod.outlook.com
+ ([fe80::e07a:5095:a1a3:2667%4]) with mapi id 15.20.4150.027; Mon, 24 May 2021
+ 05:53:53 +0000
+From:   "Thokala, Srikanth" <srikanth.thokala@intel.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "kw@linux.com" <kw@linux.com>
+Subject: RE: [PATCH v9 0/2] PCI: keembay: Add support for Intel Keem Bay
+Thread-Topic: [PATCH v9 0/2] PCI: keembay: Add support for Intel Keem Bay
+Thread-Index: AQHXS7Ry6Yi/5DLcvEyVHY65Q1dIJ6ryKrNw
+Date:   Mon, 24 May 2021 05:53:53 +0000
+Message-ID: <PH0PR11MB559577104A13F8DCA429B4D485269@PH0PR11MB5595.namprd11.prod.outlook.com>
+References: <20210518150050.7427-1-srikanth.thokala@intel.com>
+In-Reply-To: <20210518150050.7427-1-srikanth.thokala@intel.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [136.185.183.223]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e06c8383-0098-4410-dfb4-08d91e785030
+x-ms-traffictypediagnostic: PH0PR11MB5675:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PH0PR11MB567541C3B6BD39ECD877123885269@PH0PR11MB5675.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kNlkZfb6IEjmy3Cb2MNLdIesGmKGKEUxtQjCny2+GdRWFQHjNCaa192uCOZRF08StuvjkW7gKpdWHeH+EigExgtWjA0KFa9wPM/8lx2uo+tWMIGlwnIlXpO6o0RX84FOyd0Xe64YZdXVb56gN/vAVqPx2gcM4TgpQ8+X7cB5Vt7gvdVjZCcmJHfeSh10BVtsbpWjlrh0b3siv3/Uj6DxhODEUopJtwIB2AeEf3TyF0SwLWFmGnfjMP9q4ApsXTUB7lZsW1Lq9G9I4QJPE7bk3a6yX2uBcsw1/mTBbDocBvRkVeNEiCyACIWS25wU0VldmZjEf8yhVwHOhLo/nisVeyj/X9Xg+EGRdyeUcweAGl2uxwVIVVjnljwmr0Fi9us9IhaFgbPUJm+wSxCVpEzMs30aE9hfrXoABkfQcVwIbGXkBIJOk9bB9lVqJI5qDnBLeqkV6nbhq57DgsEAfRZWvLbjKI2zg8UekPcLYcgWE4fpatcqId0bQAp+rlfjrMYqn8FBpNu9RVJ+h8FoeCvDMl/wk3vmpaJJLqB3+APZtcV6XgSszApTX0gz4bZxsvSjZ41cvBplFd/h8Pz06xXLqS6qSJHLY5Y0p9hHR0Ldi14bbb4DC7+DdKLc/w3wdKt4i5p3jQtDtc1byk+DOl+ErswyDJil92HlYHuD3SC+4VJ/JLFdCQdx14e7WDYW+6n4/LuZwNX/qw68e3qtOU88XQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5595.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(136003)(376002)(39860400002)(366004)(346002)(966005)(76116006)(66476007)(33656002)(186003)(8936002)(9686003)(66556008)(66446008)(7696005)(110136005)(478600001)(83380400001)(54906003)(66946007)(64756008)(38100700002)(26005)(122000001)(316002)(66574015)(2906002)(6506007)(4326008)(86362001)(52536014)(55016002)(71200400001)(5660300002)(53546011)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?UWhJYzNuSEl1RkE0Q1RxR2R6MkFrUUltMFFkclpzTEI0SDhkVWJOT1VxRjdx?=
+ =?utf-8?B?VTNEMlh3OVIxMWtZMGVNa1Vmcnplc0JOYUIvY05xajBJSkJNT0ZGcGY2Titx?=
+ =?utf-8?B?S0YwZC9wbmlQL0xhb2xzZkJFeTNoLzNZS2oyMS83enFTLzFmQVROd2hLZ2tZ?=
+ =?utf-8?B?bHRmSXZXamYvQ0tFNGNEM25laXloOHZmTGwvNWFkTCtyVkpaVVQzcWd5RXg5?=
+ =?utf-8?B?NnJjcUx5WHdQRTFIUE9NMkVyQ2g2KzlnbTNrN2MwYkVTeTNnVlFWZy83MEZL?=
+ =?utf-8?B?a20rQVUxSlVsYXptUUs1YUdWRXdrZmJhdUhhM0lkRHlUbUNOVEQ2c1lHMjFP?=
+ =?utf-8?B?ZHo0NC9BVUhpVnBqVlFacWpub3Npc0crNjV2elBRRkN4aEhPT2tZYTJrQVdH?=
+ =?utf-8?B?REx5ODF5TFhtR3FhcXRoVGxDSzhlb3BlcEFGcDd2ei9kUVdpS2F0RmZFK293?=
+ =?utf-8?B?aU45ZnJJZVJ4Q3dJVzhWUURmUHVISlYwMGE1VWxkeUFZem5kRTVCWnVkaHBP?=
+ =?utf-8?B?cFNFSnZ0dFhFNFp0S1lidzJLYVU1VE1hbmIvR3M1Vko4Z1VmWXBoQktkRXEy?=
+ =?utf-8?B?Q0hobnVLNnlIY1YyVTNKUEF4Lzd3Si82dm93K29IWGFQM3lXNGljSTNkOWIv?=
+ =?utf-8?B?bzlsaGpCRmtwYXY5VFU2Wm5SZWVJMCtvVWo3RXdFSzUwMnJsaVE2REpoTXV5?=
+ =?utf-8?B?VnNkeG1Jc0YvemQxY3FnbzdVeHpSQi83WlNSNFdYNVpoWXAvRmhZNXNzM1BM?=
+ =?utf-8?B?QWQ3eGx3cmNDN3VWVHZFTmlKUTY4TGk5ZmE1WjdpbmN5dkxXUjVLNlM2WVky?=
+ =?utf-8?B?UC93S3NLeW5wL1g3RjA3ekp4RklrZE9hS0lKdERaRVhaSytYYjJUMTkzY3du?=
+ =?utf-8?B?ZFVkOGk2NFR3YTU3Zk5UMHZiaWtJRGk3M0VaUzVXam1jVGNqS1lQaDBpaEFh?=
+ =?utf-8?B?Z2l6cGpyci9zY1llaTVVR3dJRjExdVBuckpkOS9BWVhZeHA4MFZqS0hzZGNM?=
+ =?utf-8?B?TnVpcGNBK2xDUU1BQWVad2hvQjNHRUFtZ0hXZ25pdE1adXNDbStzTmdsRHI4?=
+ =?utf-8?B?bVIwVGlqczZZTk8zOUdrWGo3NmFQemdja2ZHaHB2K2FoeS9scHBMbi9lRVAz?=
+ =?utf-8?B?eWlQZmxISi9DNEVxUGp3YlV4VlBsc20xSXZSYmgxajBUM3NRQytQRW5YeXZ4?=
+ =?utf-8?B?RzF2S01ZN0poUjVueTEza0xMaUdjOXhiNnFhVnpYNGFRNDUvYVo5K2ZoeXVB?=
+ =?utf-8?B?NlRFQk1CSFRJNDkzeWdQYXR0UEZaOWtiRTdpLzZVL3VEdi9keEQzVmx1NnAx?=
+ =?utf-8?B?b1c5OGR0SkYvSjgwejNsZ2ZvMjRuZHdrMFhYWWdkdWRLRUxtWVhyWG1PeG9L?=
+ =?utf-8?B?SXl2YitCMjhWcnQ0Y2VSdTJCWXh3dC8rTHoyYUlKWVdZb2VkRzFBK1N1RHhT?=
+ =?utf-8?B?Nk1NRDFVRU5BckVnVTMrd25BQjZOOXhEcVlqblBBZWg3R3dsNWFMNXh5RGxW?=
+ =?utf-8?B?cFZFaEgvYWtjVDBZekhlM3d1ZDFjcE5Eb05pY0ZqZnNYR3FaeHoyekdiZkg2?=
+ =?utf-8?B?VFk4ZlBWdHZxTU5qMDVTTFVPQ29Dd3pocG5RNTV3Und2U0gyR01qMm1QWWp0?=
+ =?utf-8?B?azY5eG5LWFhrM0ZKcEFCNG50WE5mRDFuRW5nRjZWNzE1QW1iZmt5Q3pvaGlw?=
+ =?utf-8?B?K0FFQWhuMnM0enA5Um1FRHdpL1FyMXRKamNLWEo0UjA2Yk51Zm5PVmRlNW4r?=
+ =?utf-8?Q?VMiu+Ez+omNyNswI3QFTCGMGwJi0HWU4uHLnTVL?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com> <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
- <87eedxbtkn.fsf@stealth>
-In-Reply-To: <87eedxbtkn.fsf@stealth>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 23 May 2021 14:10:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE3U+16A6bO0UHG8=sx45DE6u0FtdSnoLDvfGnFJYTDrg@mail.gmail.com>
-Message-ID: <CAMj1kXE3U+16A6bO0UHG8=sx45DE6u0FtdSnoLDvfGnFJYTDrg@mail.gmail.com>
-Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
- 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
- memory addresses")
-To:     Punit Agrawal <punitagrawal@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        leobras.c@gmail.com, Rob Herring <robh@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5595.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e06c8383-0098-4410-dfb4-08d91e785030
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2021 05:53:53.8600
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RU6nisilG//p1aamM2Ma/Z+aAm0EF7QMj1Y6tdqYQ6a0Q0K5LPiMobVdggQFlAgtuxhiuQ9PKH617TJQEzfLBPTlSwyiYPtDe/vCOZhMJKQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5675
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 23 May 2021 at 13:06, Punit Agrawal <punitagrawal@gmail.com> wrote:
->
-> Robin Murphy <robin.murphy@arm.com> writes:
->
-> > [ +linux-pci for visibility ]
-> >
-> > On 2021-05-18 10:09, Alexandru Elisei wrote:
-> >> After doing a git bisect I was able to trace the following error when booting my
-> >> rockpro64 v2 (rk3399 SoC) with a PCIE NVME expansion card:
-> >> [..]
-> >> [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
-> >> [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
-> >> 0x00fa000000
-> >> [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
-> >> 0x00fbe00000
-> >> [    0.306201] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
-> >> regulator
-> >> [    0.306334] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
-> >> regulator
-> >> [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
-> >> [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
-> >> [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
-> >> [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
-> >> address [0xfbe00000-0xfbefffff])
-> >> [    0.373839] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
-> >> [    0.373973] pci 0000:00:00.0: supports D1
-> >> [    0.373992] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
-> >> [    0.378518] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
-> >> reconfiguring
-> >> [    0.378765] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
-> >> [    0.378869] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
-> >> [    0.379051] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
-> >> [    0.379661] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
-> >> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
-> >> x4 link)
-> >> [    0.393269] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
-> >> [    0.393311] pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
-> >> [    0.393333] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
-> >> [    0.393356] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
-> >> [    0.393375] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
-> >> [    0.393397] pci 0000:00:00.0: PCI bridge to [bus 01]
-> >> [    0.393839] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
-> >> [    0.394165] pcieport 0000:00:00.0: AER: enabled with IRQ 78
-> >> [..]
-> >> to the commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to
-> >> resource flags for
-> >> 64-bit memory addresses").
-> >
-> > FWFW, my hunch is that the host bridge advertising no 32-bit memory
-> > resource, only only a single 64-bit non-prefetchable one (even though
-> > it's entirely below 4GB) might be a bit weird and tripping something
-> > up in the resource assignment code. It certainly seems like the thing
-> > most directly related to the offending commit.
-> >
-> > I'd be tempted to try fiddling with that in the DT (i.e. changing
-> > 0x83000000 to 0x82000000 in the PCIe node's "ranges" property) to see
-> > if it makes any difference. Note that even if it helps, though, I
-> > don't know whether that's the correct fix or just a bodge around a
-> > corner-case bug somewhere in the resource code.
->
-> From digging into this further the failure seems to be due to a mismatch
-> of flags when allocating resources in pci_bus_alloc_from_region() -
->
->     if ((res->flags ^ r->flags) & type_mask)
->             continue;
->
-> Though I am also not sure why the failure is only being reported on
-> RK3399 - does a single 64-bit window have anything to do with it?
->
-
-The NVMe in the example exposes a single 64-bit non-prefetchable BAR.
-Such BARs can not be allocated in a prefetchable host bridge window
-(unlike the converse, i.e., allocating a prefetchable BAR in a
-non-prefetchable host bridge window is fine)
-
-64-bit non-prefetchable host bridge windows cannot be forwarded by PCI
-to PCI bridges, they simply lack the BAR registers to describe them.
-Therefore, non-prefetchable endpoint BARs (even 64-bit ones) need to
-be carved out of a host bridge's non-prefetchable 32-bit window if
-they need to pass through a bridge.
-
-So the error seems to be here that the host bridge's 32-bit
-non-prefetchable window has the 64-bit attribute set, even though it
-resides below 4 GB entirely. I suppose that the resource allocation
-could be made more forgiving (and it was in the past, before commit
-9d57e61bf723 was applied). However, I would strongly recommend not
-deviating from common practice, and just describe the 32-bit
-addressable non-prefetchable resource window as such.
-
-
-
-> Also, I don't understand the motivation for the original commit. It is
-> not clear what problem it is solving and the discussion thread seems to
-> suggest that things work fine without it[0].
->
-> [0] https://lore.kernel.org/linux-devicetree/CAL_JsqJXKVUFh9KrJjobn-jE-PFKN0w-V_i3qkfBrpTah4g8Xw@mail.gmail.com/
->
-> [...]
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+SGkgYWxsLA0KDQpHZW50bGUgcmVtaW5kZXIhDQpLaW5kbHkgcmV2aWV3IHRoZSBwYXRjaCBhbmQg
+Y29tbWVudCwgaWYgYW55Lg0KDQpUaGFua3MhDQpTcmlrYW50aA0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFRob2thbGEsIFNyaWthbnRoIDxzcmlrYW50aC50aG9rYWxh
+QGludGVsLmNvbT4NCj4gU2VudDogVHVlc2RheSwgTWF5IDE4LCAyMDIxIDg6MzEgUE0NCj4gVG86
+IHJvYmgrZHRAa2VybmVsLm9yZzsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbQ0KPiBDYzogbGlu
+dXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGFu
+ZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbTsgbWdyb3NzQGxpbnV4LmludGVsLmNvbTsg
+UmFqYQ0KPiBTdWJyYW1hbmlhbiwgTGFrc2htaSBCYWkgPGxha3NobWkuYmFpLnJhamEuc3VicmFt
+YW5pYW5AaW50ZWwuY29tPjsNCj4gU2FuZ2FubmF2YXIsIE1hbGxpa2FyanVuYXBwYSA8bWFsbGlr
+YXJqdW5hcHBhLnNhbmdhbm5hdmFyQGludGVsLmNvbT47DQo+IGt3QGxpbnV4LmNvbTsgVGhva2Fs
+YSwgU3Jpa2FudGggPHNyaWthbnRoLnRob2thbGFAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBbUEFU
+Q0ggdjkgMC8yXSBQQ0k6IGtlZW1iYXk6IEFkZCBzdXBwb3J0IGZvciBJbnRlbCBLZWVtIEJheQ0K
+PiANCj4gRnJvbTogU3Jpa2FudGggVGhva2FsYSA8c3Jpa2FudGgudGhva2FsYUBpbnRlbC5jb20+
+DQo+IA0KPiBIaSwNCj4gDQo+IFRoZSBmaXJzdCBwYXRjaCBpcyB0byBkb2N1bWVudCBEVCBiaW5k
+aW5ncyBmb3IgS2VlbSBCYXkgUENJZSBjb250cm9sbGVyDQo+IGZvciBib3RoIFJvb3QgQ29tcGxl
+eCBhbmQgRW5kcG9pbnQgbW9kZXMuDQo+IA0KPiBUaGUgc2Vjb25kIHBhdGNoIGlzIHRoZSBkcml2
+ZXIgZmlsZSwgYSBnbHVlIGRyaXZlci4gS2VlbSBCYXkgUENJZQ0KPiBjb250cm9sbGVyIGlzIGJh
+c2VkIG9uIERlc2lnbldhcmUgUENJZSBJUC4NCj4gDQo+IFRoZSBwYXRjaCB3YXMgdGVzdGVkIHdp
+dGggS2VlbSBCYXkgZXZhbHVhdGlvbiBtb2R1bGUgYm9hcmQsIHdpdGggQjANCj4gc3RlcHBpbmcu
+DQo+IA0KPiBLaW5kbHkgcmV2aWV3Lg0KPiANCj4gVGhhbmtzIQ0KPiBTcmlrYW50aA0KPiANCj4g
+Q2hhbmdlcyBzaW5jZSB2ODoNCj4gLSBVc2UgY2hhaW5lZCBJUlEgdG8gaGFuZGxlIE1TSXMsIGFz
+IHN1Z2dlc3RlZCBieSBMb3JlbnpvIFBpZXJhbGlzaS4NCj4gLSBSZW5hbWUgKl9zZXR1cF9pcnEo
+KSB0byAqX3NldHVwX21zaV9pcnEoKSB0byBiZSBtb3JlIG1lYW5pbmdmdWwuDQo+IC0gTW92ZSAq
+X3NldHVwX21zaV9pcnEoKSBjYWxsIHRvICpfYWRkX3BjaWVfcG9ydCgpIHRvIG1ha2UgaXQgaW52
+b2tlDQo+ICAgb25seSB3aGVuIGNvbnRyb2xsZXIgaXMgaW4gUm9vdCBDb21wbGV4IG1vZGUuIElu
+IEVuZHBvaW50IG1vZGUsDQo+ICAgSVJRIHdpbGwgYmUgc2V0dXAgYnkgdGhlIHJlc3BlY3RpdmUg
+ZHJpdmVyIHdoaWNoIHdpbGwgYmUgYmFzZWQgb24NCj4gICBQQ0llIEVuZCBQb2ludCBGcmFtZXdv
+cmsuDQo+IA0KPiBDaGFuZ2VzIHNpbmNlIHY3Og0KPiAtIFJlbmFtZSBrZWVtYmF5X3BjaWVfbHRz
+c21fZW5hYmxlKCkgdG8gYWxpZ24gdG8gaXRzIGZ1bmN0aW9uYWxpdHkuDQo+IC0gRml4IG90aGVy
+IG1pbm9yIGNvbW1lbnRzIGZyb20gIktyenlzenRvZiBXaWxjennFhHNraSA8a3dAbGludXguY29t
+PiINCj4gDQo+IENoYW5nZXMgc2luY2UgdjY6DQo+IC0gQXJyYW5nZSBTb0IgaW4gY2hyb25vbG9n
+aWNhbCBvcmRlci4NCj4gLSBBbHBoYWJldGl6ZWQgYW5kIG1vZGlmaWVkIHN0YXR1cyBvZiBlbnRy
+eSBpbiBNQUlOVEFJTkVSUy4NCj4gLSBBZGRlZCBhIGNvbW1lbnQgdG8gc3BlY2lmeSB0aGUgUENJ
+ZSBzcGVjIHNlY3Rpb24gYWJvdXQgdGhlIGRlbGF5Lg0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2NToN
+Cj4gLSBSZWJhc2VkIHRvIHY1LjExLXJjNC4NCj4gLSBVcGRhdGVkIG1haW50YWluZXJzIHRvIGFk
+ZCBteXNlbGYgaW4gRFQgYmluZGluZyBkb2N1bWVudHMuDQo+IC0gRml4IGNoZWNrcGF0Y2ggaXNz
+dWVzLg0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2NDoNCj4gLSBSZWJhc2VkIHRvIHY1LjExLXJjMSBh
+bmQgcmV0ZXN0Lg0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2MzoNCj4gLSBBZGQgUmV2aWV3ZWQtYnk6
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHRhZyBpbiBkdC1iaW5kaW5ncw0KPiAgIHBh
+dGNoLg0KPiAtIFJlbW92ZSB0aGUga2VlbWJheV9wY2llX3tyZWFkbCx3cml0ZWx9IHdyYXBwZXJz
+LiBBbmQgcmVwbGFjZSB0aGVtIHdpdGgNCj4gICByZWFkbCgpIGFuZCB3cml0ZWwoKS4NCj4gLSBS
+ZW1vdmUgdGhlIGRlYWQgY29kZSByZWxhdGVkIHRvIHVudXNlZCBpcnFzLg0KPiAtIFJlbW92ZSB1
+bnVzZWQgZGVmaW5pdGlvbiBmb3IgdW51c2VkIGlycXMuDQo+IC0gSW4ga2VlbWJheV9wY2llX2Vw
+X2luaXQoKSwgaW5pdGlhbGl6ZSBlbmFibGVkIGludGVycnVwdHMgdG8ga25vd24gc3RhdGUuDQo+
+IC0gUmViYXNlZCB0byBuZXh0LTIwMjAxMjE1Lg0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2MjoNCj4g
+LSBJbiBrZWVtYmF5X3BjaWVfcHJvYmUoKSwgdXNlIHJldHVybiBrZWVtYmF5X3BjaWVfYWRkX3Bj
+aWVfcG9ydChwY2llLA0KPiAgIHBkZXYpOyBzdGF0ZW1lbnQgYW5kIHJlbW92ZSByZXR1cm4gMDsg
+YXQgdGhlIGVuZCBvZiB0aGUgZnVuY3Rpb24uDQo+IA0KPiBDaGFuZ2VzIHNpbmNlIHYxOg0KPiAt
+IEluIGR0LWJpbmRpbmdzIHBhdGNoLg0KPiAgIC0gRml4ZWQgaW5kZW50IHdhcm5pbmcgZm9yIGNv
+bXBhdGlibGUgcHJvcGVydHkuDQo+ICAgLSBSZW5hbWUgaW50ZXJydXB0LW5hbWVzIHRvIHBjaWUs
+IHBjaWVfZXYsIHBjaWVfZXJyIGFuZA0KPiAgICAgcGNpZV9tZW1fYWNjZXNzLCBzaW1pbGFyIHRv
+IHRoZSBuYW1lIHVzZWQgaW4gZGF0YXNoZWV0Lg0KPiAgIC0gUmVtb3ZlIGRldmljZV90eXBlLCAj
+YWRkcmVzcy1jZWxscyBhbmQgI3NpemUtY2VsbHMgcHJvcGVydHkuDQo+ICAgLSBSZW1vdmUgbnVt
+LXZpZXdwb3J0LCBudW0taWItd2luZG93cyBhbmQgbnVtLW9iLXdpbmRvd3MgcHJvcGVydHkuDQo+
+ICAgLSBSZXBsYWNlIGFkZGl0aW9uYWxQcm9wZXJ0aWVzIHdpdGggdW5ldmFsdWF0ZWRQcm9wZXJ0
+aWVzLCBmb3IgUkMNCj4gICAgIG9ubHkuDQo+ICAgLSBBZGQgZGJpMiBhbmQgYXR1IHByb3BlcnR5
+Lg0KPiAgIC0gUmVtb3ZlIGRlc2NyaXB0aW9uIGZvciByZWdzIGFuZCBpbnRlcnJ1cHRzIHByb3Bl
+cnR5Lg0KPiAgIC0gQ2hhbmdlIGVudW0gdmFsdWUgZm9yIG51bS1sYW5lcyB0byAxIGFuZCAyIG9u
+bHkuDQo+IC0gSW4gZHJpdmVyIHBhdGNoLg0KPiAgIC0gSW4gS2NvbmZpZyBmaWxlLCByZW1vdmUg
+ZGVwZW5kZW5jeSBvbiBBUk02NC4NCj4gICAtIEFkZCBuZXcgZGVmaW5lLCBQQ0lFX1JFR1NfUENJ
+RV9TSUlfTElOS19VUC4NCj4gICAtIFJlbW92ZSBQQ0lFX0RCSTJfTUFTSy4NCj4gICAtIEluIHN0
+cnVjdCBrZWVtYmF5X3BjaWUsIGRlY2xhcmUgcGNpIG1lbWJlciBhcyBzdHJ1Y3QsIG5vdCBwb2lu
+dGVyLg0KPiAgICAgQW5kIHJlbW92ZSBpcnEgbnVtYmVyIG1lbWJlcnMuDQo+ICAgLSBSZW5hbWUg
+YW5kIHJld29yayBrZWVtYmF5X3BjaWVfZXN0YWJsaXNoX2xpbmsoKSwgdG8NCj4gICAgIGtlZW1i
+YXlfcGNpZV9zdGFydF9saW5rKCkuDQo+ICAgLSBSZW1vdmUgdW5uZWVkZWQgQkFSIGRpc2FibGUg
+c3RlcHMuDQo+ICAgLSBSZW1vdmUgdW51c2VkIGludGVycnVwdCBoYW5kbGVyczsga2VlbWJheV9w
+Y2llX2V2X2lycV9oYW5kbGVyKCksDQo+ICAgICBrZWVtYmF5X3BjaWVfZXJyX2lycV9oYW5kbGVy
+KCkuDQo+ICAgLSBSZW1vdmUga2VlbWJheV9wY2llX2VuYWJsZV9pbnRlcnJ1cHRzKCkuDQo+ICAg
+LSBSZXdvcmsga2VlbWJheV9wY2llX3NldHVwX2lycSgpIGFuZCBjYWxsIGl0IGZyb20NCj4gICAg
+IGtlZW1iYXlfcGNpZV9wcm9iZSgpLg0KPiAgIC0gUmVtb3ZlIGtlZW1iYXlfcGNpZV9ob3N0X2lu
+aXQoKSBhbmQgbWFrZSBrZWVtYmF5X3BjaWVfaG9zdF9vcHMNCj4gICAgIGVtcHR5Lg0KPiAgIC0g
+S2VlcCBhbmQgcmV3b3JrIGtlZW1iYXlfcGNpZV9hZGRfcGNpZV9wb3J0KCkgYSBsaXR0bGUuDQo+
+ICAgLSBSZW1vdmUga2VlbWJheV9wY2llX2FkZF9wY2llX2VwKCkgYW5kIGNhbGwgZHdfcGNpZV9l
+cF9pbml0KCkgZnJvbQ0KPiAgICAga2VlbWJheV9wY2llX3Byb2JlKCkuDQo+ICAgLSBJbiBrZWVt
+YmF5X3BjaWVfcHJvYmUoKSwgcmVtb3ZlIGRiaSBzZXR1cCBhcyBpdCB3aWxsIGJlIGhhbmRsZWQg
+aW4NCj4gICAgIGR3YyBjb21tb24gY29kZS4NCj4gICAtIEluIGtlZW1iYXlfcGNpZV9saW5rX3Vw
+KCksIHVzZSByZXR1cm4gKHZhbCAmDQo+ICAgICBQQ0lFX1JFR1NfUENJRV9TSUlfTElOS19VUCkg
+PT0gUENJRV9SRUdTX1BDSUVfU0lJX0xJTktfVVAuDQo+ICAgLSBJbiBrZWVtYmF5X3BjaWVfZXBf
+cmFpc2VfaXJxKCksIHJld29yayBlcnJvciBtZXNzYWdlIGZvcg0KPiAgICAgUENJX0VQQ19JUlFf
+TEVHQUNZIGFuZCBkZWZhdWx0IGNhc2VzLg0KPiAtIFJlYmFzZWQgdG8gbmV4dC0yMDIwMTEyNCwg
+dGhhdCBoYXMgZHdjIHBjaSByZWZhY3RvcmluZywNCj4gICBodHRwczovL2xvcmUua2VybmVsLm9y
+Zy9saW51eC1wY2kvMjAyMDExMDUyMTExNTkuMTgxNDQ4NS0xLQ0KPiByb2JoQGtlcm5lbC5vcmcv
+Lg0KPiANCj4gU3Jpa2FudGggVGhva2FsYSAoMik6DQo+ICAgZHQtYmluZGluZ3M6IFBDSTogQWRk
+IEludGVsIEtlZW0gQmF5IFBDSWUgY29udHJvbGxlcg0KPiAgIFBDSToga2VlbWJheTogQWRkIHN1
+cHBvcnQgZm9yIEludGVsIEtlZW0gQmF5DQo+IA0KPiAgLi4uL2JpbmRpbmdzL3BjaS9pbnRlbCxr
+ZWVtYmF5LXBjaWUtZXAueWFtbCAgIHwgIDY5ICsrKw0KPiAgLi4uL2JpbmRpbmdzL3BjaS9pbnRl
+bCxrZWVtYmF5LXBjaWUueWFtbCAgICAgIHwgIDk3ICsrKysNCj4gIE1BSU5UQUlORVJTICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArDQo+ICBkcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9LY29uZmlnICAgICAgICAgICAgfCAgMjggKysNCj4gIGRyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL01ha2VmaWxlICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3BjaS9j
+b250cm9sbGVyL2R3Yy9wY2llLWtlZW1iYXkuYyAgICAgfCA0NTEgKysrKysrKysrKysrKysrKysr
+DQo+ICA2IGZpbGVzIGNoYW5nZWQsIDY1MyBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9pbnRlbCxrZWVtYmF5
+LQ0KPiBwY2llLWVwLnlhbWwNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcGNpL2ludGVsLGtlZW1iYXktDQo+IHBjaWUueWFtbA0KPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUta2VlbWJheS5j
+DQo+IA0KPiANCj4gYmFzZS1jb21taXQ6IDg4YjA2Mzk5YzljNzY2YzI4M2UwNzBiMDIyYjVjZWFm
+YTRmNjNmMTkNCj4gLS0NCj4gMi4xNy4xDQoNCg==
