@@ -2,63 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B359F38F894
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 05:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5754238F880
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 05:09:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbhEYDPi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 May 2021 23:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
+        id S229551AbhEYDK1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 May 2021 23:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbhEYDPh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 May 2021 23:15:37 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6720C061574
-        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:14:07 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id 76so29077350qkn.13
-        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:14:07 -0700 (PDT)
+        with ESMTP id S230014AbhEYDK0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 May 2021 23:10:26 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A557C061574
+        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:08:57 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id q6so16001240pjj.2
+        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:08:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UUICKcc/sKdAjzKNgq2l5eqYx+k5eTShYrWAkwN1nE8=;
-        b=TELw0+2UEzjgBQgY3N9cHf7cvJQg4x1GF5jHbOj/Xhbu2EVYn5hJJdXJJYpk6Mpk8G
-         l2k+90bOTlHqSiuws+ej9C6F14blJi9bSItZInf5oUYtu07o9RuIUrgGf8YFYR9loGpy
-         S0ow3K1ouDjzn61e3PW37PZcm998eK6VcTTFc=
+        bh=ibLnJElvlxlVpclpJPUNJ2cC/oiUOQSOujwiFR/Tp+s=;
+        b=UieisilkjhqvCv5TM4Uhta7TWRN2Fo+qizEnyHuJxA4va8bXfSD+rLVykfuHhWprMs
+         LshPVy4dFsoXIkmd56qov4ggYtlL759ArIJ4nJdiIlOu+d8oU3Tdh/1w/BJ1fDxfpbcA
+         V3s9TTUmNV6cOGqUjcXpB0nmY9PGjsUH8vbqY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UUICKcc/sKdAjzKNgq2l5eqYx+k5eTShYrWAkwN1nE8=;
-        b=DLMa2IFGQi78E9gDJXAjHgqyGXIjrZw0vof0gAPm5du/R7kiPzaNFVcoptg153xanN
-         HPvmywb4y/irOgpJdpWIgG6jbPzeYpJhDnYLp23xtbBH2sR0rjJF7PGz5XtivBwETjpB
-         9TjrXBc6CyX1cBqhr21EvF9i3eMBzQ6kasD1kVUyqhjBDJDN+lCkwGD8CUArRITxFzEK
-         nXl5gM5KtnnEPsYZ7g7/u4ZYj9+DjovejUOE/PmDkWl8flvaeF0F1zBQY4zF0WuR7KPy
-         VZXzeq2wvIbxBcyr2dtPaELaLEdReZsNIzPw9N5UL87osUX7IJ9e94zrlh7fo55jsLtB
-         eKLg==
-X-Gm-Message-State: AOAM533eWNsR/6OtKWknpVYOkitCyqB/ItrjX38BEg+GARsgwwsceN34
-        GviBv9VCk5eGlKRKQ2mjj4Fzsm5v4fgFpQ==
-X-Google-Smtp-Source: ABdhPJy7bdADH+hIzmEtRzzSEkXYuGuEYFTRq6OITvCxZMmawZyFy4DhMiRtVLrBIOKwUdAHjsYn4w==
-X-Received: by 2002:a05:620a:56a:: with SMTP id p10mr31402227qkp.238.1621912446912;
-        Mon, 24 May 2021 20:14:06 -0700 (PDT)
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
-        by smtp.gmail.com with ESMTPSA id q185sm12221758qkd.69.2021.05.24.20.14.06
+        bh=ibLnJElvlxlVpclpJPUNJ2cC/oiUOQSOujwiFR/Tp+s=;
+        b=Hp7E5+5HRlp+JLp2KRSqEvz7cx3J8+rvBt/bzJjS2hZ0jzLTCdEFcDo8qc5vyuvMdb
+         h65G+pfGB3fY0bS2dTS0DkZ318aBUEjh9QSTZ1wio+/z7Ne6ZvE3q4VfDp3VTAG7o5hh
+         KtbpTkoNijqxnllssm9qmYBs6Yp5gAGTSb+ijuX4ln87E4xI5HGRD5QB75utAAJXP8d7
+         MUTAwjW/0MnUMxSuJ22hOvZESeRmi23a7SomqMZSKlNUq+qQjF6TQ0f/Z6xbRAbT2mvZ
+         mct2oi/BvuUtapT2x1vLbUmAQM65/oGLLjlMh8aLvIBoCK8EdOmmRoWvXISgbl3lJ67T
+         PgVg==
+X-Gm-Message-State: AOAM530ZiuzCGipoNvrwfipgAqT1jy0K2WWrzNukJMMC5okXyQmC5C+2
+        rFqsY8TBhbvXwRpBJUqZ6eycXP5Rgw6Viw==
+X-Google-Smtp-Source: ABdhPJzACSWc/Zx0xnn4t5kfAguUnMO+Q0wcPmejp8njqRFeR6MXci8F5meC0vtbq/45J3U8Z0w2Jw==
+X-Received: by 2002:a17:902:b20a:b029:f4:8b9a:5bf8 with SMTP id t10-20020a170902b20ab02900f48b9a5bf8mr28266522plr.37.1621912136401;
+        Mon, 24 May 2021 20:08:56 -0700 (PDT)
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com. [209.85.210.169])
+        by smtp.gmail.com with ESMTPSA id u1sm12715687pfc.63.2021.05.24.20.08.55
         for <linux-pci@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 May 2021 20:14:06 -0700 (PDT)
-Received: by mail-qt1-f173.google.com with SMTP id t17so4433656qta.11
-        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:14:06 -0700 (PDT)
-X-Received: by 2002:a05:6638:22b4:: with SMTP id z20mr26846805jas.128.1621912112776;
- Mon, 24 May 2021 20:08:32 -0700 (PDT)
+        Mon, 24 May 2021 20:08:55 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id e17so11876795pfl.5
+        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:08:55 -0700 (PDT)
+X-Received: by 2002:a05:6e02:b:: with SMTP id h11mr18955732ilr.18.1621912124990;
+ Mon, 24 May 2021 20:08:44 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210518064215.2856977-1-tientzu@chromium.org>
- <20210518064215.2856977-5-tientzu@chromium.org> <CALiNf2_AWsnGqCnh02ZAGt+B-Ypzs1=-iOG2owm4GZHz2JAc4A@mail.gmail.com>
- <YKvLDlnns3TWEZ5l@0xbeefdead.lan>
-In-Reply-To: <YKvLDlnns3TWEZ5l@0xbeefdead.lan>
+ <20210518064215.2856977-6-tientzu@chromium.org> <CALiNf28ke3c91Y7xaHUgvJePKXqYA7UmsYJV9yaeZc3-4Lzs8Q@mail.gmail.com>
+ <YKvLc9onyqdsINP7@0xbeefdead.lan>
+In-Reply-To: <YKvLc9onyqdsINP7@0xbeefdead.lan>
 From:   Claire Chang <tientzu@chromium.org>
-Date:   Tue, 25 May 2021 11:08:21 +0800
-X-Gmail-Original-Message-ID: <CALiNf2-M-CQdQaHiFTMfOkON6PEd0Yu_TvaCXKx9vXJ-7o5ffg@mail.gmail.com>
-Message-ID: <CALiNf2-M-CQdQaHiFTMfOkON6PEd0Yu_TvaCXKx9vXJ-7o5ffg@mail.gmail.com>
-Subject: Re: [PATCH v7 04/15] swiotlb: Add restricted DMA pool initialization
+Date:   Tue, 25 May 2021 11:08:34 +0800
+X-Gmail-Original-Message-ID: <CALiNf28=fn5r_O8ET0TNM6cS7WO0mwXiMzR5z=eJXmNKFWKdzA@mail.gmail.com>
+Message-ID: <CALiNf28=fn5r_O8ET0TNM6cS7WO0mwXiMzR5z=eJXmNKFWKdzA@mail.gmail.com>
+Subject: Re: [PATCH v7 05/15] swiotlb: Add a new get_io_tlb_mem getter
 To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
@@ -98,38 +98,17 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 24, 2021 at 11:49 PM Konrad Rzeszutek Wilk
+On Mon, May 24, 2021 at 11:51 PM Konrad Rzeszutek Wilk
 <konrad.wilk@oracle.com> wrote:
 >
-> On Tue, May 18, 2021 at 02:48:35PM +0800, Claire Chang wrote:
-> > I didn't move this to a separate file because I feel it might be
-> > confusing for swiotlb_alloc/free (and need more functions to be
-> > non-static).
-> > Maybe instead of moving to a separate file, we can try to come up with
-> > a better naming?
+> On Tue, May 18, 2021 at 02:51:52PM +0800, Claire Chang wrote:
+> > Still keep this function because directly using dev->dma_io_tlb_mem
+> > will cause issues for memory allocation for existing devices. The pool
+> > can't support atomic coherent allocation so we need to distinguish the
+> > per device pool and the default pool in swiotlb_alloc.
 >
-> I think you are referring to:
+> This above should really be rolled in the commit. You can prefix it by
+> "The reason it was done this way was because directly using .."
 >
-> rmem_swiotlb_setup
->
-> ?
 
-Yes, and the following swiotlb_alloc/free.
-
->
-> Which is ARM specific and inside the generic code?
->
-> <sigh>
->
-> Christopher wants to unify it in all the code so there is one single
-> source, but the "you seperate arch code out from generic" saying
-> makes me want to move it out.
->
-> I agree that if you move it out from generic to arch-specific we have to
-> expose more of the swiotlb functions, which will undo's Christopher
-> cleanup code.
->
-> How about this - lets leave it as is now, and when there are more
-> use-cases we can revisit it and then if need to move the code?
->
-Ok! Sounds good!
+Will add it.
