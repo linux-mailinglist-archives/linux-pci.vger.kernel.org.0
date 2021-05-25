@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC41C3900E7
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 14:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFF63900E8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 14:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232506AbhEYM0D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 08:26:03 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:38616 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232598AbhEYM0B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 08:26:01 -0400
-Received: by mail-pl1-f176.google.com with SMTP id 69so16269592plc.5
-        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 05:24:32 -0700 (PDT)
+        id S232230AbhEYM0K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 08:26:10 -0400
+Received: from mail-pf1-f177.google.com ([209.85.210.177]:35790 "EHLO
+        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232518AbhEYM0J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 08:26:09 -0400
+Received: by mail-pf1-f177.google.com with SMTP id g18so21811366pfr.2
+        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 05:24:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=q0qIU0oiMxpyzvJd2lGzSmEaG/RIL/dlUB0R2VxtIxo=;
-        b=jUQR+IgMkk+eNNihYu/eMAIL+z+9+rJCZBk6JJRNQ+LXKd2nqDHLkhrfY8jL5c/sNl
-         g5NGfOentvu5hvhA1+eVx9RkDHou1FPEX/HvGQ1ESaoLc5hLVbop3PdC6MJ1Xz2Ojv0A
-         k0xAzBPIemKhnP78xNI4t2PbZOH4jSFBIfjC77N4TM6HIx5eK19CSMJbSBMAH7BKZAZI
-         4Uqa4EIayiH1mz/jWKKuK8qSz/ThnqcOb2w/kzGEcRUDxqktfAJrDmA0XxmfUPkEdsR/
-         CPyHbjvoQ0DZfOWRPYZlbZR0mbrvHCppemw3rmUdENoVP7vF728jem/1gCSrIOTLZ+Qf
-         Xj6g==
-X-Gm-Message-State: AOAM533S0RSLYcmjyDePxJCpgDq+l4E+RenHoKCKH5L0Ec1/d6LiGCN9
-        QjH6h4nARPTAGC7my6HJpBg=
-X-Google-Smtp-Source: ABdhPJzfPcQlcQbtoycP+3gBQmg91gdjk4gv86svlxHRgRk6Zn8Pz+ttvyglbgdrH4TYXX7CHt1h/A==
-X-Received: by 2002:a17:90b:4b0f:: with SMTP id lx15mr29295636pjb.184.1621945471982;
-        Tue, 25 May 2021 05:24:31 -0700 (PDT)
+        bh=gTzsrXViPTWjnX/pI+VkTtQrGiMMsRJfFisasSRful4=;
+        b=nXl6Pz0HN3Gl14aK6NTXQ5Nf/m2ncQyOKuA3rqbGooRv5xr3Nx5FMKmN0o8pIcnUHd
+         x/016v3vWwCYHki1LWVpdCFWTVeFJJyIan1NJwCErEGiA272TRHHzr5fBq58rBWlvq0/
+         AIm2T8wgcxKFEqnMpBJ6YsD2V6ylYvQyb7Eng+gjAhGp9RKZ+X00PkO72N/7H4QEbDPN
+         lpiaUaJRMK4Ga8ob0ldiIyr/LlY3ANpZNBkiZ9t4oTZq/uxd8/VI28MzeEzNGRD/HEVx
+         PuQtGbrbWb8qdyorL7bkrsKwJG7QcDUaU2Lw9P42l7hn9vLwyx9Yo4UDBsHXI2VpcwvX
+         IIxw==
+X-Gm-Message-State: AOAM530n0/R4s/kj1I+dPeKakPHNQrqJ5hV3JMF7NASXi1fqhuayDSbF
+        73d05CxLxgK6RItAaegNw8w=
+X-Google-Smtp-Source: ABdhPJyqYRfJWniGgiedWT5TOYKvtUMhbWdrEkDIspDmSmZzgOenCcrCjWJhXh97Brb4v7cG9hmFLA==
+X-Received: by 2002:a63:2307:: with SMTP id j7mr11207277pgj.20.1621945480189;
+        Tue, 25 May 2021 05:24:40 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id u1sm14220258pfc.63.2021.05.25.05.24.24
+        by smtp.gmail.com with ESMTPSA id u1sm14220258pfc.63.2021.05.25.05.24.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 05:24:31 -0700 (PDT)
+        Tue, 25 May 2021 05:24:39 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
@@ -47,9 +47,9 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 3/5] PCI/sysfs: Fix trailing newline handling of resource_alignment_param
-Date:   Tue, 25 May 2021 12:23:59 +0000
-Message-Id: <20210525122401.206136-3-kw@linux.com>
+Subject: [PATCH v4 4/5] PCI/sysfs: Add missing trailing newline to devspec_show()
+Date:   Tue, 25 May 2021 12:24:00 +0000
+Message-Id: <20210525122401.206136-4-kw@linux.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210525122401.206136-1-kw@linux.com>
 References: <20210525122401.206136-1-kw@linux.com>
@@ -60,41 +60,13 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The value of the "resource_alignment" can be specified using a kernel
-command-line argument (using the "pci=resource_alignment=") or through
-the corresponding sysfs object under the /sys/bus/pci path.
+At the moment, when the value of the "devspec" sysfs object is read from
+the user space there will be no newline present, and the utilities such
+as the "cat" command won't display the result of the read correctly in
+a shell, as the trailing newline is currently missing.
 
-Currently, when the value is set via the kernel command-line argument,
-and then subsequently accessed through sysfs object, the value read back
-will not be correct, as per:
+To fix this, append a newline character in the show() function.
 
-  # grep -oE 'pci=resource_alignment.+' /proc/cmdline
-  pci=resource_alignment=20@00:1f.2
-  # cat /sys/bus/pci/resource_alignment
-  20@00:1f.
-
-This is also true when the value is set through the sysfs object, but
-the trailing newline has not been included, as per:
-
-  # echo -n 20@00:1f.2 > /sys/bus/pci/resource_alignment
-  # cat /sys/bus/pci/resource_alignment
-  20@00:1f.
-
-When the value set through the sysfs object includes the trailing
-newline, then reading it back will work as intended, as per:
-
-  # echo 20@00:1f.2 > /sys/bus/pci/resource_alignment
-  # cat /sys/bus/pci/resource_alignment
-  20@00:1f.2
-
-To fix this inconsistency, append a trailing newline in the show()
-function and strip the trailing line in the store() function if one is
-present.
-
-Also, allow for the value previously set using either a command-line
-argument or through the sysfs object to be cleared at run-time.
-
-Fixes: e499081da1a2 ("PCI: Force trailing new line to resource_alignment_param in sysfs")
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 ---
@@ -105,65 +77,22 @@ Changes in v3:
 Changes in v4:
   None.
 
- drivers/pci/pci.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 5ed316ea5831..7cde86bdcc8e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6439,34 +6439,37 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index beb8d1f4fafe..5d63df7c1820 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -537,7 +537,7 @@ static ssize_t devspec_show(struct device *dev,
  
- 	spin_lock(&resource_alignment_lock);
- 	if (resource_alignment_param)
--		count = sysfs_emit(buf, "%s", resource_alignment_param);
-+		count = sysfs_emit(buf, "%s\n", resource_alignment_param);
- 	spin_unlock(&resource_alignment_lock);
- 
--	/*
--	 * When set by the command line, resource_alignment_param will not
--	 * have a trailing line feed, which is ugly. So conditionally add
--	 * it here.
--	 */
--	if (count >= 2 && buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
--		buf[count - 1] = '\n';
--		buf[count++] = 0;
--	}
--
- 	return count;
+ 	if (np == NULL)
+ 		return 0;
+-	return sysfs_emit(buf, "%pOF", np);
++	return sysfs_emit(buf, "%pOF\n", np);
  }
- 
- static ssize_t resource_alignment_store(struct bus_type *bus,
- 					const char *buf, size_t count)
- {
--	char *param = kstrndup(buf, count, GFP_KERNEL);
-+	char *param, *old, *end;
- 
-+	param = kstrndup(buf, count, GFP_KERNEL);
- 	if (!param)
- 		return -ENOMEM;
- 
-+	end = strchr(param, '\n');
-+	if (end)
-+		*end = '\0';
-+
- 	spin_lock(&resource_alignment_lock);
--	kfree(resource_alignment_param);
--	resource_alignment_param = param;
-+	old = resource_alignment_param;
-+	if (strlen(param)) {
-+		resource_alignment_param = param;
-+	} else {
-+		kfree(resource_alignment_param);
-+		resource_alignment_param = NULL;
-+	}
- 	spin_unlock(&resource_alignment_lock);
-+
-+	kfree(old);
-+
- 	return count;
- }
- 
+ static DEVICE_ATTR_RO(devspec);
+ #endif
 -- 
 2.31.1
 
