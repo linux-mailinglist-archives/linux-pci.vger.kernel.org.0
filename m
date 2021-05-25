@@ -2,143 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05246390C7F
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 00:54:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E29E6390CE4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 01:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbhEYW40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 18:56:26 -0400
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:38808 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbhEYW40 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 18:56:26 -0400
-Received: by mail-pf1-f180.google.com with SMTP id e17so14163855pfl.5
-        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 15:54:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hz+p+DEmTbVhwYalwH2/EzkvyaTFJcEXfrL+lCUIu3M=;
-        b=cx8R+eOBpbJpMYJmf2F2cJr1Ly+7Q4ksa42tXlylu9nW9jdu+yllIwBYIa8U/MEJPS
-         LT8ZjVzmoHDEQmDnOaJMBH/L392VDtdjb0Cj/jIrUiGN4jappwtmqYHAPzLD/wcjYvhn
-         MDthyfefNuLaMN1AOSg0q5/OUXOKCdeXJZVNZmKAp9r923MvOGfvajHQ+YPkUzv1Wg1u
-         MmGJQTm7vEj/Uc0MJ7jhly8UkVuiKcRAkRxVMDzV49JCpW+hzgBhF9HnvqIXUszBNdqY
-         F0+AIhgrupnL5eifo6xzA2xyC3MBvjjeEAJu68WsJ3SdgXf5Y7KciPKEcjhtDxIgXtJO
-         go7Q==
-X-Gm-Message-State: AOAM531P2NMiqzGNG1PzcTp0bjbrGtyXJ+eLIaTIF/JaD+fSn6wpuGyw
-        NZQNcbelMYLejhyH/czyrd8=
-X-Google-Smtp-Source: ABdhPJxO6t9AT12xiQgLu5NjxDZQB32yH127yu39+ABjvhAt33e6CeyLz03RToqUhMvVerI3luQwAw==
-X-Received: by 2002:a63:fd44:: with SMTP id m4mr21932966pgj.396.1621983295002;
-        Tue, 25 May 2021 15:54:55 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id p6sm13223581pfh.166.2021.05.25.15.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 15:54:54 -0700 (PDT)
-Date:   Wed, 26 May 2021 00:54:45 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Slivka, Danijel" <Danijel.Slivka@amd.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Fix accessing freed memory in
- pci_remove_resource_files
-Message-ID: <20210525225445.GA108348@rocinante.localdomain>
-References: <5d5f4f33c3f34830b37cbd70e421023b@amd.com>
- <20210510225733.GA2307664@bjorn-Precision-5520>
+        id S230253AbhEYXUl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 19:20:41 -0400
+Received: from mail-dm3nam07on2130.outbound.protection.outlook.com ([40.107.95.130]:31713
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229898AbhEYXUk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 May 2021 19:20:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nWfobxOBCqs9xwUWD+r08PTptHY5jweYsnxJ5MuE1Z2+lpiWtf5Nmnu86OHzAR9W6NwUv+kfujY7iAneqmZ/Jtb1e0KLcE0RFl4iYnAv25AumuRE/tSct1XeAcrBqLYMUEaTp/HqDQVRQaWjogcq4omMbpx7V96p9m9qkN/Dc9kZsF5tG1f6gtTkr1qcgiuOGimpRpXTTO2YqBAyYV0NOqAMu9q4JoAu3iws6oRgq50onBNDa/QaaRRNH6OA4uF4luNm/rydF7L/U78qfKl8x/FhrYmiZEYi2wefgfEfugdzcaDtDHMaxuNcfiz+N0+tHLYc5/ro9/Uq//NcBBqVXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=svjoeYaBhHsXP0Li7OBgbi31w+7emAFmit6UsEZE7oY=;
+ b=I7CSx1SquRW7XppRvTWIbhox05DNftN7xz+JI6CNaNkama30EjmocedPiXLk1fiHOBXR6GD5T3PQsTDeNVf+T447ZaNvX4IiYFI8WT/6C7T3T1cVVr09vjzxoN/2JWyBPT+DFtbO3p/4l43HTlNPnpuGycWBk+cTXLBxh6l62jxB2N4af6mnDMRxb1AL4qCgQX5LJ1v7Uib2SdKiL65Wz9asVy4/hWb9APDtwjYWlIC/Zy3yHj5eVnjcaEDalt6RFY5ZWGwjRSk0s7qCnusJgIUbphAD+Vs4+iWlPeJGT1kA9Rs89Qt4YQOgtFxNBmzKS1Z8XmI/Bj1gx1T6NoZN/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=svjoeYaBhHsXP0Li7OBgbi31w+7emAFmit6UsEZE7oY=;
+ b=CMGzMTTAaYFNAhK75tVHiCv4EX+msfhOOr650Fc3b2hHeZnk/q72BJtqLymgrOGnMZSQLZjN+H0OKJ5cq4X6Sw+HcT/DTZft6MN03Gz930zkHpvgoc2JhsOT/PLioNwwmkjoDOIu70gKQUhi1/T52nrRD/22InLKS/e+zYYyAUA=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
+ by DM5PR2101MB1110.namprd21.prod.outlook.com (2603:10b6:4:a5::39) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.15; Tue, 25 May
+ 2021 23:19:08 +0000
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::6410:fb1:42e6:a795]) by DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::6410:fb1:42e6:a795%9]) with mapi id 15.20.4195.008; Tue, 25 May 2021
+ 23:19:03 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, olaf@aepfle.de,
+        vkuznets@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] pci-hyperv: Add check for hyperv_initialized in init_hv_pci_drv()
+Date:   Tue, 25 May 2021 16:17:33 -0700
+Message-Id: <1621984653-1210-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-Originating-IP: [13.77.154.182]
+X-ClientProxiedBy: MW4PR03CA0127.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::12) To DM6PR21MB1340.namprd21.prod.outlook.com
+ (2603:10b6:5:175::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210510225733.GA2307664@bjorn-Precision-5520>
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MW4PR03CA0127.namprd03.prod.outlook.com (2603:10b6:303:8c::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend Transport; Tue, 25 May 2021 23:19:02 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d556ac6d-c25b-4138-2f18-08d91fd37bec
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB1110FF713D6DB9BC74F39621AC259@DM5PR2101MB1110.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6FIXMLDEAaXD4Fj3B+RReAOBjMcwE+7jb1kl+qUqIWFsXR52VeC8+v4XXAc9+VyjMEN+ZHFppIT8mLhFk3WvX3yeEW0kOk9SbvNzkNr/zBt3jDxRaT9groSJPuHAeT7zapNgC8PRMkTUri6AVhAvWix71jYN+TSqpKoFg/SBfMwIXJT7kIOrFkV6GHu3mIkwx+tztT6cx35kLWeBIhS9iqieenIIh5Hfd2AVNZzPFl51IEZeHZQfMaqnLoc5sccImyXpRrLH1XkX3JBQAcja+HeZWTn9UHDgqvdPMWERkjU6sUa9mvGz5UFcIP9TDOVShtoJPFZ/jnqzi0mqnHFax3aEZ/MF0AvcN7OfTLtu29Xm3ORee4YynH9yjl95HG5TbQXhcHgpkmKYrPLcjv+DHfZO6k3lmy9TusLdW2ASyPIUcZ/QRtGqcozM335oim8vSQnDsj1Lls+fO+yZbDjV+rIB2EJm2pc6gOxjpKe0EwzICOncimx6zwQdTRso8yH2YScCMTj+sTw0d2falDaMBaCr2zaNN3kdfw3+Jb1ZuYh3pgCSI6OIcZLO+zAnEQeM7a61Vcr0FLGH1CnXGna/6NMJYRp5GOO8pQN7FNAnF3BmkwdSOvyZsoKt/MlkJs1gxzGNQJpp7C/blXVZiCLZIQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1340.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(52116002)(16526019)(36756003)(26005)(7846003)(6666004)(6512007)(2906002)(316002)(4744005)(6486002)(956004)(6506007)(186003)(2616005)(4326008)(38100700002)(5660300002)(66556008)(8676002)(66946007)(8936002)(10290500003)(82960400001)(82950400001)(83380400001)(66476007)(38350700002)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sSkPGNzCk8Zb/dPIlk9uj2uB03yxVhvXKNObk5QCi2OQa+fq3hqOWQ75tILX?=
+ =?us-ascii?Q?nt3infQnHTIW6cpXqdO1C5dsGcJBlw1rzRaHpiKb0qI4k6WPxYzhwoPwLLGk?=
+ =?us-ascii?Q?yxJy2gtmsGXsbLOaKFzvUweR5MbQsNB6+gk8N/fB/ojqpMT0T86NhKD+kgqH?=
+ =?us-ascii?Q?E7fqO65nZicX2X/MDVpRB2zg36Gq53kxsB7ylN3cgqCu+BJzmt9TTAbog61x?=
+ =?us-ascii?Q?evbZEuoVYo1Au+iPXNgpxEXwPt/UL/mIN/ldjHl8uNankKy8Bn5Kss80SCS2?=
+ =?us-ascii?Q?wzaBzfT21oDBB/djNzA9i3GqBBsUrQsNWgOZXMtwpa4evDSWZv+YuuqmAK0a?=
+ =?us-ascii?Q?l6QkcquxKDJDaQkpN7cZbb8E3hhkoG5PFSoDdlMlCuCwrefTYnkSAJVZmU5E?=
+ =?us-ascii?Q?DakG3LRx0d1F+6r5U1oaKQkTLA2y+Ud/jLsLI3AfG2jgyhSwMuuBHYSzEPc0?=
+ =?us-ascii?Q?DeHMQdd/37ftgr9MuKJcuEdwYPjF/rXKSOPQpKkVWdGi1dZHI+qbc7aHSMVr?=
+ =?us-ascii?Q?HruxwS19QfQhFoTftUF5hY9o/pvc0yMOKocf2IB6Zmaoozn7kU17yxLmbT4z?=
+ =?us-ascii?Q?FayqJI3IeHxs632CILW/o3NZ69/XcO2RKJyPoV4OWMyFva7EwlBbxZ34zdcM?=
+ =?us-ascii?Q?IR3tt23+oD/XnjL4InGrWspmZRnb1MVeMvu2dLC0veYnEd9+FxoBsLh67nPf?=
+ =?us-ascii?Q?F6uAy5e6MH9u0i46UfSX+zhW378oojJbQ9yuSLcXT3nRJ5OvzfHMt1KjA8+n?=
+ =?us-ascii?Q?xSRNAMqMOyVbSXm6nxJ55tNiGlSHTRwNR3GoJGUT2tBhBWCeLTIDD7JwbPNS?=
+ =?us-ascii?Q?VuZJzQcadL7gl1c3V0+vgWULMtZosrao5TFfe1WvpjdLjphHwxg/mA9HWJOr?=
+ =?us-ascii?Q?w5bdWJ/fY8KydznhzZPEorqVAJveC9d7MZsAq9ks/lwyo98r797w38jFC5j3?=
+ =?us-ascii?Q?dVl/50TDWQ7q/JysAaLgqjbm4ez469DAM98bbb1s?=
+X-MS-Exchange-AntiSpam-MessageData-1: 4dColPZ6ExoNReQz/AIWBff79JOxMODl0HuYnQAI3FA0lR2d7DZH+wzp660kxi9HADyg/WDczIKbOyb6WnJlR1n/iSP72i5+aQGlhSj/MsC+jDifwzVpzedKgm+SVCiJGS0naGJFO9m9Y4jgO12fa0wQRd6d3n8D9kMVH5ayelupeLb1q5Guj90iixNJ92W0vKWT7+5i80w830q/ScvIJU4QgG9m0P4Q7gkeupDBdtOcP8YQO9TfjyOrGPDDFjnY9WvIsbtnZzbx2bD15rPfOI15IMfQY58Qdrb26OTj8v3UFlrf3hiPSZMeEv9zbAyOxXjDCD1SRaxLf2CM8SfqrZRu
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d556ac6d-c25b-4138-2f18-08d91fd37bec
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1340.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2021 23:19:03.2011
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kgOVIWsB18oXdAFR0QcXIk9oXaBXudF5+s1HhV7yauwfP9nepq9Lu1L3efDyxSf/k0FjD1E5HbbSgSjxWkS2gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1110
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn and Danijel,
+Add check for hv_is_hyperv_initialized() at the top of init_hv_pci_drv(),
+so if the pci-hyperv driver is force-loaded on non Hyper-V platforms, the
+init_hv_pci_drv() will exit immediately, without any side effects, like
+assignments to hvpci_block_ops, etc.
 
-Sorry for late reply!
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reported-and-tested-by: Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-[...]
-> Krzysztof did some really nice work in v5.13-rc1 that removes a lot of
-> the explicit sysfs file management.  I think he's planning similar
-> work for pdev->res_attr[], and I suspect that will solve this problem
-> nicely.  But there are some wrinkles to work out before that's ready.
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 6511648271b2..bebe3eeebc4e 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3476,6 +3476,9 @@ static void __exit exit_hv_pci_drv(void)
+ 
+ static int __init init_hv_pci_drv(void)
+ {
++	if (!hv_is_hyperv_initialized())
++		return -ENODEV;
++
+ 	/* Set the invalid domain number's bit, so it will not be used */
+ 	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+ 
+-- 
+2.25.1
 
-Yes, the idea is to completely retire the late_initcall() and in the
-process the pci_create_resource_files() and pci_create_legacy_files()
-that are currently called from the pci_sysfs_init() function.
-
-This will in turn allow for the removal of the "sysfs_initialized"
-global variable that was, and most likely still is, responsible for the
-race condition we have seen on some platforms, see:
-
-  https://lore.kernel.org/linux-pci/20200716110423.xtfyb3n6tn5ixedh@pali/
-
-> Any ideas here, Krzysztof?  IIRC some of the wrinkles have to do with
-> Alpha, which has its own pci_create_resource_files() implementation.
-
-Correct, Alpha support is something we have to address as one of the
-outstanding problems to resolve.
-
-To be more precise, there are two problems left to solve before we can
-finally retire the late_initcall, and these would be:
-
-  - pci_create_resource_files()
-  - pci_create_legacy_files() 
-
-The pci_create_resource_files() can be overridden on certain platforms
-through a weak linkage which then allows for alternative implementations
-to be provided - and this is true for Alpha as it provides a complete
-implementation of the original function with all the platform-specific
-changes it requires.
-
-Similarly, an auxiliary function called pci_adjust_legacy_attr() can
-also be overridden on some platforms again through a weak linkage
-offering a way to adjust properties of some of the sysfs objects to be
-added, and Alpha is also the platform that uses this for some custom
-adjustments.
-
-Having said that, aside of some dependency Alpha has on the functions we
-are trying to retire, both of them have a larger challenge to overcome,
-and which is related to the following commits:
-
-- 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims the region")
-- 636b21b50152 ("PCI: Revoke mappings like devmem")
-
-Following these two changes, functions pci_create_attr() (called internally
-from the pci_create_resource_files()) and pci_create_legacy_files() have
-since a dependency on the iomem_get_mapping() function - which in turn also
-creates an implicit dependency on the VFS and fs_initcall.
-
-This dependency on iomem_get_mapping() stops us from retiring the
-late_initcall at the moment as when we convert dynamically added sysfs
-objects (that are primarily added in the pci_create_resource_files() and
-pci_create_legacy_files() functions), these attributes are added before
-the VFS completes its initialisation, and since most of the PCI devices
-are typically enumerated in subsys_initcall this leads to a failure and
-an Oops related to iomem_get_mapping() access.
-
-See relevant conversations:
-
-  https://lore.kernel.org/linux-pci/20210204165831.2703772-1-daniel.vetter@ffwll.ch/
-  https://lore.kernel.org/linux-pci/20210313215747.GA2394467@bjorn-Precision-5520/
-
-After some deliberation on a potential solution, we have settled on
-changing the order when PCI sub-system and relevant device drivers are
-initialised so that PCI will come after the VFS but before ACPI, thus
-allowing for the iomem_get_mapping() to work without issues.
-
-And this initialisation order change is what I am currently working on
-towards.
-
-Hopefully once this is done, and nothing breaks, we would be able to
-retire the late_initcall and pci_sysfs_init(), and move everything to
-static sysfs object.  This in turn would definitely solve the problem
-Danijel stumbled upon in regards to module unloading.
-
-> If you have any work-in-progress that works on x86, I'd be curious to
-> see if it would solve Danijel's problem.
-[...]
-
-Nothing as of yet.  But I will focus on this now, so that we can finish
-this work a lot sooner.
-
-	Krzysztof
