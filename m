@@ -2,177 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AABB4390BF9
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 00:12:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 511C7390C54
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 00:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232097AbhEYWNr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 18:13:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231784AbhEYWNr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 May 2021 18:13:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AC38961019;
-        Tue, 25 May 2021 22:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621980737;
-        bh=I/ycyZ90rRszI8yESk7fg27g9cFtQMUjGFBXIWw3AMc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jAqObq0JhfuNmNYPsLLWmZCkHrCS1lQ79pppTTdyR/xYcbPv1lUb/XzAEQsm4XLvr
-         Jwfa4BARrcFOkPQxsNpueSf0h9sAfgDxPl23LI4cd2STfk28DxCBwDpC3sdPt4Udyd
-         qBl1Ox8aExjLL2g4keTjq7UV0yoDzA4kwHlEtAGg+2LIrAUGhSPwI4JejW9wuIKNGH
-         YfXdqOtPtlklwa92VXZJTFR9KDT3F9Ss9aCd00hU3VRhw/hpSyUrsyclS05usorAwP
-         9IN30qJL6OfUrrSv9EFl8AvDEqaiumV2bztvfvr7ZeQPv6OaXt4BPZx+VLqT4bbSez
-         w+Ldr2rlbrHZQ==
-Date:   Tue, 25 May 2021 17:12:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Ingmar Klein <ingmar_klein@web.de>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: QCA6174 pcie wifi: Add pci quirks
-Message-ID: <20210525221215.GA1235899@bjorn-Precision-5520>
+        id S230123AbhEYWh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 18:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230075AbhEYWh5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 18:37:57 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9923BC061574;
+        Tue, 25 May 2021 15:36:25 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 29so12814925pgu.11;
+        Tue, 25 May 2021 15:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=wn3EG8k3M8Vjrn0xAqTbjN7lE2HqWDMtOWHhAlz2oY0=;
+        b=YUOtOr1AVPer3RmRfek2VbOYVLoUuADSgpiS6RErYIwnz5sVKtwCflo6KEXtRSUEes
+         obeWF2Rq6vwPsTXrlQYdl+MKtwmhAXQYukJrtn4q+pXNJNoQWVFbs+W4Wasvvus2hky5
+         yCZtIxsv6D2xJhTvoX7A4beRiJaYjppiWk0WMQ67un7TyOe8mNelkSi8Wb9poYAEKqeh
+         ejyyGZUJxVPcbNPSQALlx8LXEGQeY5YVNDXubq2ZKSdYThHUMY3VJBz4gSfAYEo0bHFs
+         YzhSL4xNlpZPL2nLyBhzBJ7hccukBgi0xgygdtylVKLZkC2AHm5TmMbFNaLWUDcCPU01
+         K5kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=wn3EG8k3M8Vjrn0xAqTbjN7lE2HqWDMtOWHhAlz2oY0=;
+        b=lM8PFSZ/Or3pBBnJ8ej/E234czJ1PR5WvSDgh7Qx+ajbqUOvv9RkAvEccJdZRcuZSF
+         B3hl2WkGGuYiby8YgAvTno0Z6tUMWu20HxzQ0UniemMB160UpL72lKgLZjIlzWnd8rM3
+         rUgnMq+dElGi6fjvcHxzUKxd0piBuVltJynSaPk7LFkgK7o62f9xEGqMpoz1khJDh0tu
+         ER4ie7s3H5BLXGDN3D7lFde6wiOaLokr/qofHD8MU0HRdbHOWATqJAAQeEyTFtV94Jzi
+         0AKnGfQzbIt1YfwnGnrjQyCIZp7Fk3fPGXzv9T6brF8i1lQ1URVYpIbPicuznmozZ8pL
+         VIxA==
+X-Gm-Message-State: AOAM531Jy5eGecK+hKnbhBPkLXcgxtGNIuH0OchQG5Z4v4hOweb1OFkF
+        gDzpF116DGCFxURz5G7AhzE=
+X-Google-Smtp-Source: ABdhPJxEkUIBK++KdU+m8mTCWuHu8vAKSq5jd6yKuxNNuc8NGoqmD03GaMJQGv+1pId9Z2BLZCGdkA==
+X-Received: by 2002:a63:aa48:: with SMTP id x8mr21127327pgo.359.1621982184997;
+        Tue, 25 May 2021 15:36:24 -0700 (PDT)
+Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
+        by smtp.gmail.com with ESMTPSA id o186sm14260694pfg.170.2021.05.25.15.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 May 2021 15:36:24 -0700 (PDT)
+From:   Punit Agrawal <punitagrawal@gmail.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        leobras.c@gmail.com, Rob Herring <robh@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
+Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
+ 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
+ memory addresses")
+References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com>
+        <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
+        <87eedxbtkn.fsf@stealth>
+        <CAMj1kXE3U+16A6bO0UHG8=sx45DE6u0FtdSnoLDvfGnFJYTDrg@mail.gmail.com>
+        <877djnaq11.fsf@stealth>
+        <CAMj1kXFk2u=tbTYpa6Vqz5ihATFq61pCDiEbfRgXL_Rw+q_9Fg@mail.gmail.com>
+Date:   Wed, 26 May 2021 07:36:21 +0900
+In-Reply-To: <CAMj1kXFk2u=tbTYpa6Vqz5ihATFq61pCDiEbfRgXL_Rw+q_9Fg@mail.gmail.com>
+        (Ard Biesheuvel's message of "Tue, 25 May 2021 15:54:30 +0200")
+Message-ID: <871r9ubfve.fsf@stealth>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210415195338.icpo5644bo76rzuc@pali>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 15, 2021 at 09:53:38PM +0200, Pali Rohár wrote:
-> Hello!
-> 
-> On Thursday 15 April 2021 13:01:19 Alex Williamson wrote:
-> > [cc +Pali]
-> > 
-> > On Thu, 15 Apr 2021 20:02:23 +0200
-> > Ingmar Klein <ingmar_klein@web.de> wrote:
-> > 
-> > > First thanks to you both, Alex and Bjorn!
-> > > I am in no way an expert on this topic, so I have to fully rely on your
-> > > feedback, concerning this issue.
-> > > 
-> > > If you should have any other solution approach, in form of patch-set, I
-> > > would be glad to test it out. Just let me know, what you think might
-> > > make sense.
-> > > I will wait for your further feedback on the issue. In the meantime I
-> > > have my current workaround via quirk entry.
-> > > 
-> > > By the way, my layman's question:
-> > > Do you think, that the following topic might also apply for the QCA6174?
-> > > https://www.spinics.net/lists/linux-pci/msg106395.html
-> 
-> I have been testing more ath cards and I'm going to send a new version
-> of this patch with including more PCI ids.
+Ard Biesheuvel <ardb@kernel.org> writes:
 
-Dropping this patch in favor of Pali's new version.
+> On Tue, 25 May 2021 at 15:42, Punit Agrawal <punitagrawal@gmail.com> wrote:
+>>
+>> Hi Ard,
+>>
+>> Ard Biesheuvel <ardb@kernel.org> writes:
+>>
+>> > On Sun, 23 May 2021 at 13:06, Punit Agrawal <punitagrawal@gmail.com> wrote:
+>> >>
+>> >> Robin Murphy <robin.murphy@arm.com> writes:
+>> >>
+>> >> > [ +linux-pci for visibility ]
+>> >> >
+>> >> > On 2021-05-18 10:09, Alexandru Elisei wrote:
+>> >> >> After doing a git bisect I was able to trace the following error when booting my
+>> >> >> rockpro64 v2 (rk3399 SoC) with a PCIE NVME expansion card:
+>> >> >> [..]
+>> >> >> [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+>> >> >> [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
+>> >> >> 0x00fa000000
+>> >> >> [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
+>> >> >> 0x00fbe00000
+>> >> >> [    0.306201] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
+>> >> >> regulator
+>> >> >> [    0.306334] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
+>> >> >> regulator
+>> >> >> [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
+>> >> >> [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
+>> >> >> [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
+>> >> >> [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
+>> >> >> address [0xfbe00000-0xfbefffff])
+>> >> >> [    0.373839] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
+>> >> >> [    0.373973] pci 0000:00:00.0: supports D1
+>> >> >> [    0.373992] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+>> >> >> [    0.378518] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
+>> >> >> reconfiguring
+>> >> >> [    0.378765] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
+>> >> >> [    0.378869] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+>> >> >> [    0.379051] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
+>> >> >> [    0.379661] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+>> >> >> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+>> >> >> x4 link)
+>> >> >> [    0.393269] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+>> >> >> [    0.393311] pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
+>> >> >> [    0.393333] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
+>> >> >> [    0.393356] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
+>> >> >> [    0.393375] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
+>> >> >> [    0.393397] pci 0000:00:00.0: PCI bridge to [bus 01]
+>> >> >> [    0.393839] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
+>> >> >> [    0.394165] pcieport 0000:00:00.0: AER: enabled with IRQ 78
+>> >> >> [..]
+>> >> >> to the commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to
+>> >> >> resource flags for
+>> >> >> 64-bit memory addresses").
+>> >> >
+>> >> > FWFW, my hunch is that the host bridge advertising no 32-bit memory
+>> >> > resource, only only a single 64-bit non-prefetchable one (even though
+>> >> > it's entirely below 4GB) might be a bit weird and tripping something
+>> >> > up in the resource assignment code. It certainly seems like the thing
+>> >> > most directly related to the offending commit.
+>> >> >
+>> >> > I'd be tempted to try fiddling with that in the DT (i.e. changing
+>> >> > 0x83000000 to 0x82000000 in the PCIe node's "ranges" property) to see
+>> >> > if it makes any difference. Note that even if it helps, though, I
+>> >> > don't know whether that's the correct fix or just a bodge around a
+>> >> > corner-case bug somewhere in the resource code.
+>> >>
+>> >> From digging into this further the failure seems to be due to a mismatch
+>> >> of flags when allocating resources in pci_bus_alloc_from_region() -
+>> >>
+>> >>     if ((res->flags ^ r->flags) & type_mask)
+>> >>             continue;
+>> >>
+>> >> Though I am also not sure why the failure is only being reported on
+>> >> RK3399 - does a single 64-bit window have anything to do with it?
+>> >>
+>> >
+>> > The NVMe in the example exposes a single 64-bit non-prefetchable BAR.
+>> > Such BARs can not be allocated in a prefetchable host bridge window
+>> > (unlike the converse, i.e., allocating a prefetchable BAR in a
+>> > non-prefetchable host bridge window is fine)
+>> >
+>> > 64-bit non-prefetchable host bridge windows cannot be forwarded by PCI
+>> > to PCI bridges, they simply lack the BAR registers to describe them.
+>> > Therefore, non-prefetchable endpoint BARs (even 64-bit ones) need to
+>> > be carved out of a host bridge's non-prefetchable 32-bit window if
+>> > they need to pass through a bridge.
+>>
+>> Thank you for the explanation. I also looked at the PCI-to-PCI Bridge
+>> spec to understand where some of the limitations are coming from.
+>>
+>> > So the error seems to be here that the host bridge's 32-bit
+>> > non-prefetchable window has the 64-bit attribute set, even though it
+>> > resides below 4 GB entirely. I suppose that the resource allocation
+>> > could be made more forgiving (and it was in the past, before commit
+>> > 9d57e61bf723 was applied). However, I would strongly recommend not
+>> > deviating from common practice, and just describe the 32-bit
+>> > addressable non-prefetchable resource window as such.
+>>
+>> IIUC, the host bridge's configuration (64-bit on non-prefetchable
+>> window) is based on what the hardware advertises.
+>>
+>
+> What do you mean by 'what the hardware advertises'? The host bridge is
+> apparently configured to decode a 32-bit addressable window as MMIO,
+> and the question is why this window has the 64-bit attribute set in
+> the DT description.
 
-> > > Or in other words, should a similar approach be tried for the QCA6174
-> > > and if yes, would it bring any benefit at all?
-> > > I hope you can excuse me, in case the questions should not make too much
-> > > sense.
-> > 
-> > If you run lspci -vvv on your device, what do LnkCap and LnkSta report
-> > under the express capability?  I wonder if your device even supports
-> > >Gen1 speeds, mine does not.
-> > 
-> > I would not expect that patch to be relevant to you based on your
-> > report.  I understand it to resolve an issue during link retraining to a
-> > higher speed on boot, not during a bus reset.  Pali can correct if I'm
-> > wrong.  Thanks,
-> 
-> These two issues are are related. Both operations (PCIe Hot Reset and
-> PCIe Link Retraining) cause reset of ath chips. Seems that they cause
-> double reset. After reset these chips reads configuration from internal
-> EEPROM/OTP and if another reset is triggered prior chip finishes
-> internal configuration read then it stops working. My testing showed
-> that ath10k chips completely disappear from the PCIe bus, some ath9k
-> chips works fine but starts reporting incorrect PCI ID (0xABCD) and some
-> other ath9k chips reports correct PCI ID but does not work. I had
-> discussion with Adrian Chadd who knows probably everything about ath9k
-> and confirmed me that this issue is there with ath9k and ath10k chips.
-> 
-> He wrote me that workaround to turn card back from this "broken" state
-> is to do PCIe Cold Reset of the card, which means turning power supply
-> off for particular PCIe slot. Such thing is not supported on many
-> low-end boards, so workaround cannot be applied.
-> 
-> I was able to recover my testing cards from this "broken" state by PCIe
-> Warm Reset (= reset via PERST# pin).
-> 
-> I have tried many other reset methods (PCIe PM reset, Link Down, PCIe
-> Hot Reset with bigger internal, ...) but nothing worked. So seems that
-> the only workaround is to do PCIe Cold Reset or PCIe Warm Reset.
-> 
-> I will send V2 of my patch with details and explanation.
-> 
-> As kernel does not have API for doing PCIe Warm Reset, I think is
-> another argument why kernel really needs it.
-> 
-> I do not have any QCA6174 card for testing, but based on the fact I
-> reproduced this issue with more ath9k and ath10 cards and Adrian
-> confirmed that above reset issue is there, I think that it affects all
-> AR9xxx and QCAxxxx cards handled by ath9k and ath10 drivers.
-> 
-> I was told that AMI BIOS was patching their BIOSes found in notebooks to
-> avoid triggering this issue on notebooks ath9k cards.
-> 
-> > Alex
-> > 
-> > > Am 15.04.2021 um 04:36 schrieb Alex Williamson:
-> > > > On Wed, 14 Apr 2021 16:03:50 -0500
-> > > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >  
-> > > >> [+cc Alex]
-> > > >>
-> > > >> On Fri, Apr 09, 2021 at 11:26:33AM +0200, Ingmar Klein wrote:  
-> > > >>> Edit: Retry, as I did not consider, that my mail-client would make this
-> > > >>> party html.
-> > > >>>
-> > > >>> Dear maintainers,
-> > > >>> I recently encountered an issue on my Proxmox server system, that
-> > > >>> includes a Qualcomm QCA6174 m.2 PCIe wifi module.
-> > > >>> https://deviwiki.com/wiki/AIRETOS_AFX-QCA6174-NX
-> > > >>>
-> > > >>> On system boot and subsequent virtual machine start (with passed-through
-> > > >>> QCA6174), the VM would just freeze/hang, at the point where the ath10k
-> > > >>> driver loads.
-> > > >>> Quick search in the proxmox related topics, brought me to the following
-> > > >>> discussion, which suggested a PCI quirk entry for the QCA6174 in the kernel:
-> > > >>> https://forum.proxmox.com/threads/pcie-passthrough-freezes-proxmox.27513/
-> > > >>>
-> > > >>> I then went ahead, got the Proxmox kernel source (v5.4.106) and applied
-> > > >>> the attached patch.
-> > > >>> Effect was as hoped, that the VM hangs are now gone. System boots and
-> > > >>> runs as intended.
-> > > >>>
-> > > >>> Judging by the existing quirk entries for Atheros, I would think, that
-> > > >>> my proposed "fix" could be included in the vanilla kernel.
-> > > >>> As far as I saw, there is no entry yet, even in the latest kernel sources.  
-> > > >> This would need a signed-off-by; see
-> > > >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.11#n361
-> > > >>
-> > > >> This is an old issue, and likely we'll end up just applying this as
-> > > >> yet another quirk.  But looking at c3e59ee4e766 ("PCI: Mark Atheros
-> > > >> AR93xx to avoid bus reset"), where it started, it seems to be
-> > > >> connected to 425c1b223dac ("PCI: Add Virtual Channel to save/restore
-> > > >> support").
-> > > >>
-> > > >> I'd like to dig into that a bit more to see if there are any clues.
-> > > >> AFAIK Linux itself still doesn't use VC at all, and 425c1b223dac added
-> > > >> a fair bit of code.  I wonder if we're restoring something out of
-> > > >> order or making some simple mistake in the way to restore VC config.  
-> > > > I don't really have any faith in that bisect report in commit
-> > > > c3e59ee4e766.  To double check I dug out the card from that commit,
-> > > > installed an old Fedora release so I could build kernel v3.13,
-> > > > pre-dating 425c1b223dac and tested triggering a bus reset both via
-> > > > setpci and by masking PM reset so that sysfs can trigger the bus reset
-> > > > path with the kernel save/restore code.  Both result in the system
-> > > > hanging when the device is accessed either restoring from the kernel
-> > > > bus reset or reading from the device after the setpci reset.  Thanks,
-> > > >
-> > > > Alex
-> > > >  
-> > > 
-> > 
+Right - I completely missed the fact that the ranges property is also
+encoding the window attributes. Thanks for setting me straight.
+
+git archaeology doesn't provide any explanation - I am wondering if it
+is just an oversight.
+
+>> Can you elaborate on what you have in mind to correct the
+>> non-prefetchable resource window? Are you thinking of adding a quirk
+>> somewhere to address this?
+>>
+>
+> No. Just fix the DT.
+
+After updating the DT to mark the non-prefetchable window as 32-bit
+things work as expected.
+
+Let me send a patch to update the DT - I'll include previous authors
+who've touched that DT fragment. Hopefully somebody will jump in to
+explain the reason it was done that way.
+
+Thanks,
+Punit
+
+[...]
+
