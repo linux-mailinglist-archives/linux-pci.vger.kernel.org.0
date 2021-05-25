@@ -2,179 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DADD0390327
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 15:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F27E439032A
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 15:55:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233339AbhEYN4M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 09:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
+        id S233435AbhEYN47 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 09:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232370AbhEYN4M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 May 2021 09:56:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B869610CE;
-        Tue, 25 May 2021 13:54:42 +0000 (UTC)
+        id S233473AbhEYN4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 May 2021 09:56:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0060561420;
+        Tue, 25 May 2021 13:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621950882;
-        bh=6+OOCS9/FVUngfNrY9DQFsy33J0t64Gk5QDDkvoyc/k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Mukg6E0CnlUp7ZrKD84EhWpwgWdyxScssvs1Msm9G8BQ5bvuB28InjrO+YS+/s/qW
-         u2MASZVHCA/Doh6T3iVaujsek5+KQJGgz0nHe/J3pAKQdL5YgoDmyg+6UoTMWEH6yn
-         BtsWYHYoUHSB5pH3OE/UqY/g1qL7+TOwm94EUTIdsM0ukCaSfliYrUEjVf7MC1OZoS
-         bN8rvaSsFea4B+j9c+mF4s9FcRm07MQOne+zbEZ2k81qsu9/OUZ9c65mszxua4HVkG
-         Yzadj4M4MsFbEGDv4uX9PXaKFo1Q0myW1JziiVbqBntbA/kQewWoX3zrhA5rNkc2Ww
-         X4PQxIQBKL+vQ==
-Received: by mail-ot1-f51.google.com with SMTP id t10-20020a05683022eab0290304ed8bc759so28632871otc.12;
-        Tue, 25 May 2021 06:54:42 -0700 (PDT)
-X-Gm-Message-State: AOAM530CqhjUwFVu8JNRJehrJqR4WFr/5Q/0e/xhJxX2cEE4/2CaxUB2
-        Bzjhp3uSdG6K37bP9/PbbCA5asLoiIqFvzyUkZ4=
-X-Google-Smtp-Source: ABdhPJxNQNHEVxXEnKV/+Q0uEZsr1aBEb4OZUGVwpST6TfxxtSNW2dO1sQ8H4CBWOV1b6vx9Ynlzwvg03MMcNf6Z43Q=
-X-Received: by 2002:a9d:7cd8:: with SMTP id r24mr23409093otn.90.1621950881849;
- Tue, 25 May 2021 06:54:41 -0700 (PDT)
+        s=k20201202; t=1621950925;
+        bh=L+YICd2+EmWxfni9jnYhZnU7inin5GvhaA36hEnU9oQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Z/p5Yx7sAZwd11SC6esiTkFloXrJr2oeAlO/+05pyAT7OJo5ZIZ9MXmgbhtqdUmLa
+         FTf82oW5nsbpuZe5438aM+pt4YXuKMXbNyvUDDdN615n+XukcRFwXc4sOgtPtzk4LP
+         2ubq27dD7voeiM1KL90pEOX0GFC7kJCusY/6xW4AD1sbkbcMNPSOzkQ3alW2ZTeLiC
+         1CFn8UPxZjGL7GSdMShkfBfpykFoIei7t9pFURxGiKLlQ4NGMcb8e5MTrRD7+cKNZS
+         txNA53BEqqJLaQAXCS+L301+zguhnjglFEoh3pCAkCPM5BLC6FHLarnEGAhAHaURVs
+         9a4E7kTKfElmA==
+Date:   Tue, 25 May 2021 08:55:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
+ bridge
+Message-ID: <20210525135523.GA1185972@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com> <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
- <87eedxbtkn.fsf@stealth> <CAMj1kXE3U+16A6bO0UHG8=sx45DE6u0FtdSnoLDvfGnFJYTDrg@mail.gmail.com>
- <877djnaq11.fsf@stealth>
-In-Reply-To: <877djnaq11.fsf@stealth>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 25 May 2021 15:54:30 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFk2u=tbTYpa6Vqz5ihATFq61pCDiEbfRgXL_Rw+q_9Fg@mail.gmail.com>
-Message-ID: <CAMj1kXFk2u=tbTYpa6Vqz5ihATFq61pCDiEbfRgXL_Rw+q_9Fg@mail.gmail.com>
-Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
- 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
- memory addresses")
-To:     Punit Agrawal <punitagrawal@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        leobras.c@gmail.com, Rob Herring <robh@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H7D-drrEaDskQhVx0c8_VAy--n3mbsQN_ijfWrRQGVQ=A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 25 May 2021 at 15:42, Punit Agrawal <punitagrawal@gmail.com> wrote:
->
-> Hi Ard,
->
-> Ard Biesheuvel <ardb@kernel.org> writes:
->
-> > On Sun, 23 May 2021 at 13:06, Punit Agrawal <punitagrawal@gmail.com> wrote:
-> >>
-> >> Robin Murphy <robin.murphy@arm.com> writes:
-> >>
-> >> > [ +linux-pci for visibility ]
-> >> >
-> >> > On 2021-05-18 10:09, Alexandru Elisei wrote:
-> >> >> After doing a git bisect I was able to trace the following error when booting my
-> >> >> rockpro64 v2 (rk3399 SoC) with a PCIE NVME expansion card:
-> >> >> [..]
-> >> >> [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
-> >> >> [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff ->
-> >> >> 0x00fa000000
-> >> >> [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff ->
-> >> >> 0x00fbe00000
-> >> >> [    0.306201] rockchip-pcie f8000000.pcie: supply vpcie1v8 not found, using dummy
-> >> >> regulator
-> >> >> [    0.306334] rockchip-pcie f8000000.pcie: supply vpcie0v9 not found, using dummy
-> >> >> regulator
-> >> >> [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
-> >> >> [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
-> >> >> [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
-> >> >> [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus
-> >> >> address [0xfbe00000-0xfbefffff])
-> >> >> [    0.373839] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
-> >> >> [    0.373973] pci 0000:00:00.0: supports D1
-> >> >> [    0.373992] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
-> >> >> [    0.378518] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
-> >> >> reconfiguring
-> >> >> [    0.378765] pci 0000:01:00.0: [144d:a808] type 00 class 0x010802
-> >> >> [    0.378869] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
-> >> >> [    0.379051] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
-> >> >> [    0.379661] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
-> >> >> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
-> >> >> x4 link)
-> >> >> [    0.393269] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
-> >> >> [    0.393311] pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
-> >> >> [    0.393333] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
-> >> >> [    0.393356] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
-> >> >> [    0.393375] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
-> >> >> [    0.393397] pci 0000:00:00.0: PCI bridge to [bus 01]
-> >> >> [    0.393839] pcieport 0000:00:00.0: PME: Signaling with IRQ 78
-> >> >> [    0.394165] pcieport 0000:00:00.0: AER: enabled with IRQ 78
-> >> >> [..]
-> >> >> to the commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to
-> >> >> resource flags for
-> >> >> 64-bit memory addresses").
-> >> >
-> >> > FWFW, my hunch is that the host bridge advertising no 32-bit memory
-> >> > resource, only only a single 64-bit non-prefetchable one (even though
-> >> > it's entirely below 4GB) might be a bit weird and tripping something
-> >> > up in the resource assignment code. It certainly seems like the thing
-> >> > most directly related to the offending commit.
-> >> >
-> >> > I'd be tempted to try fiddling with that in the DT (i.e. changing
-> >> > 0x83000000 to 0x82000000 in the PCIe node's "ranges" property) to see
-> >> > if it makes any difference. Note that even if it helps, though, I
-> >> > don't know whether that's the correct fix or just a bodge around a
-> >> > corner-case bug somewhere in the resource code.
-> >>
-> >> From digging into this further the failure seems to be due to a mismatch
-> >> of flags when allocating resources in pci_bus_alloc_from_region() -
-> >>
-> >>     if ((res->flags ^ r->flags) & type_mask)
-> >>             continue;
-> >>
-> >> Though I am also not sure why the failure is only being reported on
-> >> RK3399 - does a single 64-bit window have anything to do with it?
-> >>
+On Tue, May 25, 2021 at 07:03:05PM +0800, Huacai Chen wrote:
+> On Thu, May 20, 2021 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, May 19, 2021 at 10:17:14AM +0800, Huacai Chen wrote:
+> > > On Wed, May 19, 2021 at 3:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Tue, May 18, 2021 at 03:13:43PM +0800, Huacai Chen wrote:
+> > > > > On Tue, May 18, 2021 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> > > > > > > On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > > > > > > > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> > > > > > > > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> > > > > > > > > > VGA Enable bit which modifies the response to VGA compatible addresses.
+> > > > > > > > >
+> > > > > > > > > The bridge spec is pretty old, and most of the content has been
+> > > > > > > > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> > > > > > > > > 7.5.1.3.13" here instead.
+> > > > > > > > >
+> > > > > > > > > > If the VGA Enable bit is set, the bridge will decode and forward the
+> > > > > > > > > > following accesses on the primary interface to the secondary interface.
+> > > > > > > > >
+> > > > > > > > > *Which* following accesses?  The structure of English requires that if
+> > > > > > > > > you say "the following accesses," you must continue by *listing* the
+> > > > > > > > > accesses.
+> > > > > > > > >
+> > > > > > > > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> > > > > > > > > > bridge control register, which causes vgaarb subsystem don't think the
+> > > > > > > > > > VGA card behind the bridge as a valid boot vga device.
+> > > > > > > > >
+> > > > > > > > > s/hardward/bridge/
+> > > > > > > > > s/vga/VGA/ (also in code comments and dmesg strings below)
+> > > > > > > > >
+> > > > > > > > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> > > > > > > > > since it apparently has a VGA class code.  But here you say the
+> > > > > > > > > AST2500 has a Bridge Control register, which suggests that it's a
+> > > > > > > > > bridge.  If AST2500 is some sort of combination that includes both a
+> > > > > > > > > bridge and a VGA device, please outline that topology.
+> > > > > > > > >
+> > > > > > > > > But the hardware defect is that some bridges forward VGA accesses even
+> > > > > > > > > though their VGA Enable bit is not set?  The quirk should be attached
+> > > > > > > > > to broken *bridges*, not to VGA devices.
+> > > > > > > > >
+> > > > > > > > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> > > > > > > > > is set, that means VGA arbitration (in vgaarb.c) cannot work
+> > > > > > > > > correctly, so merely setting the default VGA device once in a quirk is
+> > > > > > > > > not sufficient.  You would have to somehow disable any future attempts
+> > > > > > > > > to use other VGA devices.  Only the VGA device below this defective
+> > > > > > > > > bridge is usable.  Any other VGA devices in the system would be
+> > > > > > > > > useless.
+> > > > > > > > >
+> > > > > > > > > > So we provide a quirk to fix Xorg auto-detection.
+> > > > > > > > > >
+> > > > > > > > > > See similar bug:
+> > > > > > > > > >
+> > > > > > > > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> > > > > > > > >
+> > > > > > > > > This patch was never merged.  If we merged a revised version, please
+> > > > > > > > > cite the SHA1 instead.
+> > > > > > > >
+> > > > > > > > This patch has never merged, and I found that it is unnecessary after
+> > > > > > > > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> > > > > > > > even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> > > > > > > > unnecessary. If it is still needed, I'll investigate the root cause.
+> > > > > > >
+> > > > > > > I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> > > > > > > by subsys_initcall(), which means their sequence is unpredictable. And
+> > > > > > > unfortunately, in our platform vga_arb_device_init() is called before
+> > > > > > > pcibios_init(), which makes vga_arb_device_init() fail to set a
+> > > > > > > default vga device. This is the root cause why we thought that we
+> > > > > > > still need a quirk for AST2500.
+> > > > > >
+> > > > > > Does this mean there is no hardware defect here?  The VGA Enable bit
+> > > > > > works correctly?
+> > > > > >
+> > > > > No, VGA Enable bit still doesn't set, but with commit
+> > > > > a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device even if
+> > > > > there's no legacy VGA") we no longer depend on VGA Enable.
+> > > >
+> > > > Correct me if I'm wrong:
+> > > >
+> > > >   - On the AST2500 bridge [1a03:1150], the VGA Enable bit is
+> > > >     read-only 0.
+> > > >
+> > > >   - The AST2500 bridge never forwards VGA accesses ([mem
+> > > >     0xa0000-0xbffff], [io 0x3b0-0x3bb], [io 0x3c0-0x3df]) to its
+> > > >     secondary bus.
+> > > >
+> > > > The VGA Enable bit is optional, and if both the above are true, the
+> > > > bridge is working correctly per spec, and the quirk below is not the
+> > > > right solution, and whatever solution we come up with should not
+> > > > claim that the bridge is misbehaving.
+> > > Yes, you are right, the bridge is working correctly, which is similar
+> > > to HiSilicon D05.
+> > >
+> > >
+> > > >
+> > > > > > > I think the best solution is make vga_arb_device_init() be wrapped by
+> > > > > > > subsys_initcall_sync(), do you think so?
+> > > > > >
+> > > > > > Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
+> > > > > > documented, so I'm not sure exactly *why* such a change would work and
+> > > > > > whether we could rely on it to continue working.
+> > > > > >
+> > > > > > pcibios_init() isn't very consistent across arches.  On some,
+> > > > > > including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
+> > > > > > enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
+> > > > > > basically nothing.  That makes life a little difficult.
+> > > > >
+> > > > > subsys_initcall_sync() is ensured after all subsys_initcall()
+> > > > > functions, so at least it can solve the problem on platforms which use
+> > > > > pcibios_init() to enumerate PCI devices (x86 and other ACPI-based
+> > > > > platforms are also OK, because they use acpi_init()
+> > > > > -->acpi_scan_init() -->pci_acpi_scan_root() to enumerate devices).
+> > > >
+> > > > More details in my response to suijingfeng:
+> > > > https://lore.kernel.org/r/20210518193100.GA148462@bjorn-Precision-5520
+> > > >
+> > > > I'd rather not fiddle with the initcall ordering.  That mechanism is
+> > > > fragile and I'd prefer something more robust.
+> > > >
+> > > > I'm wondering whether it's practical to do something in the normal PCI
+> > > > enumeration path, e.g., in pci_init_capabilities().  Maybe we can
+> > > > detect the default VGA device as we enumerate it.  Then we wouldn't
+> > > > have this weird process of "find all PCI devices first, then scan for
+> > > > the default VGA device, and oh, by the way, also check for VGA devices
+> > > > hot-added later."
+> > >
+> > > If we don't want to rely on initcall order, and want to solve the
+> > > hot-added case, then can we add vga_arb_select_default_device() in
+> > > pci_notify() when (action == BUS_NOTIFY_ADD_DEVICE &&
+> > > !vga_default_device())?
 > >
-> > The NVMe in the example exposes a single 64-bit non-prefetchable BAR.
-> > Such BARs can not be allocated in a prefetchable host bridge window
-> > (unlike the converse, i.e., allocating a prefetchable BAR in a
-> > non-prefetchable host bridge window is fine)
+> > I think I would see if it's possible to call
+> > vga_arb_select_default_device() from vga_arbiter_add_pci_device()
+> > instead of from vga_arb_device_init().
 > >
-> > 64-bit non-prefetchable host bridge windows cannot be forwarded by PCI
-> > to PCI bridges, they simply lack the BAR registers to describe them.
-> > Therefore, non-prefetchable endpoint BARs (even 64-bit ones) need to
-> > be carved out of a host bridge's non-prefetchable 32-bit window if
-> > they need to pass through a bridge.
+> > I would also (as a separate patch) try to get rid of this loop in
+> > vga_arb_device_init():
+> >
+> >         list_for_each_entry(vgadev, &vga_list, list) {
+> >                 struct device *dev = &vgadev->pdev->dev;
+> >
+> >                 if (vgadev->bridge_has_one_vga)
+> >                         vgaarb_info(dev, "bridge control possible\n");
+> >                 else
+> >                         vgaarb_info(dev, "no bridge control possible\n");
+> >         }
+> >
+> > and do the vgaarb_info() in vga_arbiter_check_bridge_sharing(), where
+> > the loop would not be needed.
 >
-> Thank you for the explanation. I also looked at the PCI-to-PCI Bridge
-> spec to understand where some of the limitations are coming from.
->
-> > So the error seems to be here that the host bridge's 32-bit
-> > non-prefetchable window has the 64-bit attribute set, even though it
-> > resides below 4 GB entirely. I suppose that the resource allocation
-> > could be made more forgiving (and it was in the past, before commit
-> > 9d57e61bf723 was applied). However, I would strongly recommend not
-> > deviating from common practice, and just describe the 32-bit
-> > addressable non-prefetchable resource window as such.
->
-> IIUC, the host bridge's configuration (64-bit on non-prefetchable
-> window) is based on what the hardware advertises.
->
+> Any updates?
 
-What do you mean by 'what the hardware advertises'? The host bridge is
-apparently configured to decode a 32-bit addressable window as MMIO,
-and the question is why this window has the 64-bit attribute set in
-the DT description.
+Are you waiting for me to do something else?
 
-> Can you elaborate on what you have in mind to correct the
-> non-prefetchable resource window? Are you thinking of adding a quirk
-> somewhere to address this?
->
+I suggested an approach above, but I don't have time to actually do
+the work for you.  
 
-No. Just fix the DT.
-
-> I am happy to put something together once I understand the preferred way
-> to go about it.
->
-> Thanks,
-> Punit
->
-> [...]
->
+Bjorn
