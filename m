@@ -2,201 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F27E439032A
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 15:55:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDEDC390382
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 16:09:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233435AbhEYN47 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 09:56:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        id S233445AbhEYOK0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 10:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233473AbhEYN4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 May 2021 09:56:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0060561420;
-        Tue, 25 May 2021 13:55:24 +0000 (UTC)
+        id S233481AbhEYOKZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 May 2021 10:10:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BB20B613FA;
+        Tue, 25 May 2021 14:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621950925;
-        bh=L+YICd2+EmWxfni9jnYhZnU7inin5GvhaA36hEnU9oQ=;
+        s=k20201202; t=1621951736;
+        bh=aMMB0gEk8E62F5boqfs8140RGMKlplKXhaRe8dOpOKY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Z/p5Yx7sAZwd11SC6esiTkFloXrJr2oeAlO/+05pyAT7OJo5ZIZ9MXmgbhtqdUmLa
-         FTf82oW5nsbpuZe5438aM+pt4YXuKMXbNyvUDDdN615n+XukcRFwXc4sOgtPtzk4LP
-         2ubq27dD7voeiM1KL90pEOX0GFC7kJCusY/6xW4AD1sbkbcMNPSOzkQ3alW2ZTeLiC
-         1CFn8UPxZjGL7GSdMShkfBfpykFoIei7t9pFURxGiKLlQ4NGMcb8e5MTrRD7+cKNZS
-         txNA53BEqqJLaQAXCS+L301+zguhnjglFEoh3pCAkCPM5BLC6FHLarnEGAhAHaURVs
-         9a4E7kTKfElmA==
-Date:   Tue, 25 May 2021 08:55:23 -0500
+        b=IwllkaIUpahGj0N/ZBcKcqrA374GsC+KsdtcgLBMY5BWkfNVDbaoXHxtuvx+fhKtz
+         oKfXVizm/coSPuhGA1z5cPOJw6SXPenhnF4JOgIU/erSohPCeEYyTrW3qzHMPSe+g8
+         xsKYvlhvRisHDPkfUNkke+wjpCqBAxnXTt5IB6CAdAMLOyMWXO7AppQTuLt4Tba/M6
+         6Q86Fle/qGrOuDfu7ReUxQrnADXhsRVGuyjrX1TGCpngcygoQlUjpy8N+6UXbGQAPy
+         s2yeRoPVbTM70hyEA0aWKtta1yDeo52QjBxt2WAuTvb6nj+YNtcJroj6HSjTB3/dp0
+         iM9ks9n/rLqPQ==
+Date:   Tue, 25 May 2021 09:08:54 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jingfeng Sui <suijingfeng@loongson.cn>
-Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving
- bridge
-Message-ID: <20210525135523.GA1185972@bjorn-Precision-5520>
+To:     Lambert Wang <lambert.q.wang@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] pci: add pci_dev_is_alive API
+Message-ID: <20210525140854.GA1186411@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H7D-drrEaDskQhVx0c8_VAy--n3mbsQN_ijfWrRQGVQ=A@mail.gmail.com>
+In-Reply-To: <20210525125925.112306-1-lambert.q.wang@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 25, 2021 at 07:03:05PM +0800, Huacai Chen wrote:
-> On Thu, May 20, 2021 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, May 19, 2021 at 10:17:14AM +0800, Huacai Chen wrote:
-> > > On Wed, May 19, 2021 at 3:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Tue, May 18, 2021 at 03:13:43PM +0800, Huacai Chen wrote:
-> > > > > On Tue, May 18, 2021 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
-> > > > > > > On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
-> > > > > > > > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
-> > > > > > > > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
-> > > > > > > > > > VGA Enable bit which modifies the response to VGA compatible addresses.
-> > > > > > > > >
-> > > > > > > > > The bridge spec is pretty old, and most of the content has been
-> > > > > > > > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
-> > > > > > > > > 7.5.1.3.13" here instead.
-> > > > > > > > >
-> > > > > > > > > > If the VGA Enable bit is set, the bridge will decode and forward the
-> > > > > > > > > > following accesses on the primary interface to the secondary interface.
-> > > > > > > > >
-> > > > > > > > > *Which* following accesses?  The structure of English requires that if
-> > > > > > > > > you say "the following accesses," you must continue by *listing* the
-> > > > > > > > > accesses.
-> > > > > > > > >
-> > > > > > > > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
-> > > > > > > > > > bridge control register, which causes vgaarb subsystem don't think the
-> > > > > > > > > > VGA card behind the bridge as a valid boot vga device.
-> > > > > > > > >
-> > > > > > > > > s/hardward/bridge/
-> > > > > > > > > s/vga/VGA/ (also in code comments and dmesg strings below)
-> > > > > > > > >
-> > > > > > > > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
-> > > > > > > > > since it apparently has a VGA class code.  But here you say the
-> > > > > > > > > AST2500 has a Bridge Control register, which suggests that it's a
-> > > > > > > > > bridge.  If AST2500 is some sort of combination that includes both a
-> > > > > > > > > bridge and a VGA device, please outline that topology.
-> > > > > > > > >
-> > > > > > > > > But the hardware defect is that some bridges forward VGA accesses even
-> > > > > > > > > though their VGA Enable bit is not set?  The quirk should be attached
-> > > > > > > > > to broken *bridges*, not to VGA devices.
-> > > > > > > > >
-> > > > > > > > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
-> > > > > > > > > is set, that means VGA arbitration (in vgaarb.c) cannot work
-> > > > > > > > > correctly, so merely setting the default VGA device once in a quirk is
-> > > > > > > > > not sufficient.  You would have to somehow disable any future attempts
-> > > > > > > > > to use other VGA devices.  Only the VGA device below this defective
-> > > > > > > > > bridge is usable.  Any other VGA devices in the system would be
-> > > > > > > > > useless.
-> > > > > > > > >
-> > > > > > > > > > So we provide a quirk to fix Xorg auto-detection.
-> > > > > > > > > >
-> > > > > > > > > > See similar bug:
-> > > > > > > > > >
-> > > > > > > > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
-> > > > > > > > >
-> > > > > > > > > This patch was never merged.  If we merged a revised version, please
-> > > > > > > > > cite the SHA1 instead.
-> > > > > > > >
-> > > > > > > > This patch has never merged, and I found that it is unnecessary after
-> > > > > > > > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
-> > > > > > > > even if there's no legacy VGA"). Maybe this ASpeed patch is also
-> > > > > > > > unnecessary. If it is still needed, I'll investigate the root cause.
-> > > > > > >
-> > > > > > > I found that vga_arb_device_init() and pcibios_init() are both wrapped
-> > > > > > > by subsys_initcall(), which means their sequence is unpredictable. And
-> > > > > > > unfortunately, in our platform vga_arb_device_init() is called before
-> > > > > > > pcibios_init(), which makes vga_arb_device_init() fail to set a
-> > > > > > > default vga device. This is the root cause why we thought that we
-> > > > > > > still need a quirk for AST2500.
-> > > > > >
-> > > > > > Does this mean there is no hardware defect here?  The VGA Enable bit
-> > > > > > works correctly?
-> > > > > >
-> > > > > No, VGA Enable bit still doesn't set, but with commit
-> > > > > a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device even if
-> > > > > there's no legacy VGA") we no longer depend on VGA Enable.
-> > > >
-> > > > Correct me if I'm wrong:
-> > > >
-> > > >   - On the AST2500 bridge [1a03:1150], the VGA Enable bit is
-> > > >     read-only 0.
-> > > >
-> > > >   - The AST2500 bridge never forwards VGA accesses ([mem
-> > > >     0xa0000-0xbffff], [io 0x3b0-0x3bb], [io 0x3c0-0x3df]) to its
-> > > >     secondary bus.
-> > > >
-> > > > The VGA Enable bit is optional, and if both the above are true, the
-> > > > bridge is working correctly per spec, and the quirk below is not the
-> > > > right solution, and whatever solution we come up with should not
-> > > > claim that the bridge is misbehaving.
-> > > Yes, you are right, the bridge is working correctly, which is similar
-> > > to HiSilicon D05.
-> > >
-> > >
-> > > >
-> > > > > > > I think the best solution is make vga_arb_device_init() be wrapped by
-> > > > > > > subsys_initcall_sync(), do you think so?
-> > > > > >
-> > > > > > Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
-> > > > > > documented, so I'm not sure exactly *why* such a change would work and
-> > > > > > whether we could rely on it to continue working.
-> > > > > >
-> > > > > > pcibios_init() isn't very consistent across arches.  On some,
-> > > > > > including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
-> > > > > > enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
-> > > > > > basically nothing.  That makes life a little difficult.
-> > > > >
-> > > > > subsys_initcall_sync() is ensured after all subsys_initcall()
-> > > > > functions, so at least it can solve the problem on platforms which use
-> > > > > pcibios_init() to enumerate PCI devices (x86 and other ACPI-based
-> > > > > platforms are also OK, because they use acpi_init()
-> > > > > -->acpi_scan_init() -->pci_acpi_scan_root() to enumerate devices).
-> > > >
-> > > > More details in my response to suijingfeng:
-> > > > https://lore.kernel.org/r/20210518193100.GA148462@bjorn-Precision-5520
-> > > >
-> > > > I'd rather not fiddle with the initcall ordering.  That mechanism is
-> > > > fragile and I'd prefer something more robust.
-> > > >
-> > > > I'm wondering whether it's practical to do something in the normal PCI
-> > > > enumeration path, e.g., in pci_init_capabilities().  Maybe we can
-> > > > detect the default VGA device as we enumerate it.  Then we wouldn't
-> > > > have this weird process of "find all PCI devices first, then scan for
-> > > > the default VGA device, and oh, by the way, also check for VGA devices
-> > > > hot-added later."
-> > >
-> > > If we don't want to rely on initcall order, and want to solve the
-> > > hot-added case, then can we add vga_arb_select_default_device() in
-> > > pci_notify() when (action == BUS_NOTIFY_ADD_DEVICE &&
-> > > !vga_default_device())?
-> >
-> > I think I would see if it's possible to call
-> > vga_arb_select_default_device() from vga_arbiter_add_pci_device()
-> > instead of from vga_arb_device_init().
-> >
-> > I would also (as a separate patch) try to get rid of this loop in
-> > vga_arb_device_init():
-> >
-> >         list_for_each_entry(vgadev, &vga_list, list) {
-> >                 struct device *dev = &vgadev->pdev->dev;
-> >
-> >                 if (vgadev->bridge_has_one_vga)
-> >                         vgaarb_info(dev, "bridge control possible\n");
-> >                 else
-> >                         vgaarb_info(dev, "no bridge control possible\n");
-> >         }
-> >
-> > and do the vgaarb_info() in vga_arbiter_check_bridge_sharing(), where
-> > the loop would not be needed.
->
-> Any updates?
+[+cc Krzysztof]
 
-Are you waiting for me to do something else?
+On Tue, May 25, 2021 at 08:59:25PM +0800, Lambert Wang wrote:
+> Device drivers use this API to proactively check if the device
+> is alive or not. It is helpful for some PCI devices to detect
+> surprise removal and do recovery when Hotplug function is disabled.
+> 
+> Note: Device in power states larger than D0 is also treated not alive
+> by this function.
+> 
+> Signed-off-by: Lambert Wang <lambert.q.wang@gmail.com>
+> ---
+>  drivers/pci/pci.c   | 23 +++++++++++++++++++++++
+>  include/linux/pci.h |  1 +
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b717680377a9..8a7c039b1cd5 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4659,6 +4659,29 @@ int pcie_flr(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pcie_flr);
+>  
+> +/**
+> + * pci_dev_is_alive - check the pci device is alive or not
+> + * @pdev: the PCI device
+> + *
+> + * Device drivers use this API to proactively check if the device
+> + * is alive or not. It is helpful for some PCI devices to detect
+> + * surprise removal and do recovery when Hotplug function is disabled.
+> + *
+> + * Note: Device in power state larger than D0 is also treated not alive
+> + * by this function.
+> + *
+> + * Returns true if the device is alive.
+> + */
+> +bool pci_dev_is_alive(struct pci_dev *pdev)
+> +{
+> +	u16 vendor;
+> +
+> +	pci_read_config_word(pdev, PCI_VENDOR_ID, &vendor);
+> +
+> +	return vendor == pdev->vendor;
+> +}
+> +EXPORT_SYMBOL(pci_dev_is_alive);
 
-I suggested an approach above, but I don't have time to actually do
-the work for you.  
+This is quite similar to pci_device_is_present().  Does that not do
+what you need?
 
-Bjorn
+I'm not a big fan of either pci_device_is_present() or
+pci_dev_is_alive() because they are racy.  You must assume that even
+if they return "true," the device may disappear because of a surprise
+removal before you can act on that information.
+
+>  static int pci_af_flr(struct pci_dev *dev, int probe)
+>  {
+>  	int pos;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c20211e59a57..2a3ba06a7347 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1227,6 +1227,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
+>  void pcie_print_link_status(struct pci_dev *dev);
+>  bool pcie_has_flr(struct pci_dev *dev);
+>  int pcie_flr(struct pci_dev *dev);
+> +bool pci_dev_is_alive(struct pci_dev *pdev);
+>  int __pci_reset_function_locked(struct pci_dev *dev);
+>  int pci_reset_function(struct pci_dev *dev);
+>  int pci_reset_function_locked(struct pci_dev *dev);
+> -- 
+> 2.30.2
+> 
