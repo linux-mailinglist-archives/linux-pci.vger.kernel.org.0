@@ -2,124 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C3739017A
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 15:00:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12401390208
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 15:20:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232972AbhEYNCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 09:02:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232720AbhEYNCB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 09:02:01 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3506C061574;
-        Tue, 25 May 2021 06:00:27 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id r1so7825172pgk.8;
-        Tue, 25 May 2021 06:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yvBY3kzaXW/pomhMTbrI9u3YqExiwHEKyhJg+OVmgg4=;
-        b=Zfdvo9oKuESll8d9CiLcmhqF5KPhtrgDedQEMYiD4KJxoBADOeH9cxU9OENDpSP1o3
-         BSpTScAqkSwcAlvpA9zHYqOzle8OP0VTmen2YB+vgwTl6OfmDSxBMtAL8E3vm7HSqcKm
-         XrQI8wz7e6iTad6F8mXuncoWPmt0z/MfN9dQOnSmzvr/8kDpNzHiNELenfOhImhJ8y+H
-         5P6KCWUIQ7ggXlLQ5dXRo2eZ2fR1vxQblAvc9LVy+zKnIWWby19GbWoccQhDegHDKOFE
-         JoVGiy706RYHXgVghfwYkIWgb3Mi4byz0ZEt50Y3Czf9Bl1PC2IwKYRNiob0LIYvYVA1
-         VoBg==
+        id S233113AbhEYNWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 09:22:09 -0400
+Received: from mail-ej1-f50.google.com ([209.85.218.50]:44998 "EHLO
+        mail-ej1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233070AbhEYNWJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 09:22:09 -0400
+Received: by mail-ej1-f50.google.com with SMTP id lz27so47288497ejb.11;
+        Tue, 25 May 2021 06:20:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yvBY3kzaXW/pomhMTbrI9u3YqExiwHEKyhJg+OVmgg4=;
-        b=eIpdlM1sMDK/bMq9B6yT+E4ahwlkxCybMAefUUa3L2CCmYgnzmc5X2vwwA7vaRNdOY
-         jGAK6LM9vD5ThSR1/HGZtBEgOlAjw4fA62GR0lETu/kEreWLrDFY5G01We30KNyahFMo
-         0bog9NeKC8p6NPKc9f+iGnzBSz5L4bP6dxWL72LeznY7uTJSMFuy1IlosRzULZSTRuyL
-         Uq1XJIQAflYzdUHL6tw9Aihhl23wpPPcViqtGjlFmfQwKR35XyTK/+EHgsra8ohyFVtR
-         8yZ0S8VudTQEBuvhhPvUgMGZ4xjZRrGFMUP1oF/KDwQg+UlFYgtrHbgbWGrh2bWGohb4
-         Dd7A==
-X-Gm-Message-State: AOAM533Nf5Yw8XKcrEb6tiInPS2l3XPo25zpQGLA3PxIyHQLZxAP3eG5
-        TQEDXgwN9Cyw9SVGDXXnNDU=
-X-Google-Smtp-Source: ABdhPJx9gb8y70S1Mi9oL3RZuLF/ZulxiHumxSc0FdoFHO/Co5n/+IwDqfU0B3T9+32h8In0MkI92A==
-X-Received: by 2002:a63:f557:: with SMTP id e23mr8724111pgk.55.1621947627439;
-        Tue, 25 May 2021 06:00:27 -0700 (PDT)
-Received: from lambert.lan ([171.223.192.10])
-        by smtp.gmail.com with ESMTPSA id p17sm2168850pjg.54.2021.05.25.06.00.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0m3RCAXahdUBRecbZdgKCTWuOHPg5vuE0WA5DSFNEuc=;
+        b=oElrAF+IsJ6+8vqxWH2pp7cP8yfSoH0g+JCXd+wBPDyG3QaNr0fTgP6uCtpAGp/jAz
+         BAgSemkLDZQUtezSEvOYvezFp0HpJO0VCbhrV9DcMiXgZPGT04Gi1PJazVL3Ax+K5+vG
+         F2xEe4JwcrtI7rKjLpCb+KjzznAc+XxVIdrMrvTRA+4xA+IozhSDKO69wbv9PnMDJpP3
+         qFwBewpUsV6nOCDANPr/Jowm2SHxA3spyy+ZzfLtMEMPuK5KkvCRyoGhVv/+5+tV6kzs
+         qeX2YgFvTRr/LS5ZrrrFKumTdMgwwG2XdXc/9LpG8F5bo2VBjxLnppte+hMrnaktPmbQ
+         T4zA==
+X-Gm-Message-State: AOAM530GQ89BtHACi+9wG6/pmVn7TmGGFy6Vg+QZNgEFrSP4zsgAReX+
+        mHqR8JSkRUhAwpIgZtmG7snGCdcuEr6LJw==
+X-Google-Smtp-Source: ABdhPJx5aVn41DNMK5gv9dunAXVDJ/Xo7i7sbPDWRgE/jgacGLLtKQpJvClJGUHIRUYo16+aqq8kug==
+X-Received: by 2002:a17:906:2b8c:: with SMTP id m12mr25091741ejg.358.1621948837922;
+        Tue, 25 May 2021 06:20:37 -0700 (PDT)
+Received: from rocinante.localdomain ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id s21sm10759721edy.23.2021.05.25.06.20.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 06:00:26 -0700 (PDT)
-From:   Lambert Wang <lambert.q.wang@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lambert Wang <lambert.q.wang@gmail.com>
-Subject: [PATCH] pci: add pci_dev_is_alive API
-Date:   Tue, 25 May 2021 20:59:25 +0800
-Message-Id: <20210525125925.112306-1-lambert.q.wang@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        Tue, 25 May 2021 06:20:37 -0700 (PDT)
+Date:   Tue, 25 May 2021 15:20:35 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Lambert Wang <lambert.q.wang@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci: add pci_dev_is_alive API
+Message-ID: <20210525132035.GA66609@rocinante.localdomain>
+References: <20210525125925.112306-1-lambert.q.wang@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210525125925.112306-1-lambert.q.wang@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Device drivers use this API to proactively check if the device
-is alive or not. It is helpful for some PCI devices to detect
-surprise removal and do recovery when Hotplug function is disabled.
+Hi Lambert,
 
-Note: Device in power states larger than D0 is also treated not alive
-by this function.
+Thank you for sending the patch over!
 
-Signed-off-by: Lambert Wang <lambert.q.wang@gmail.com>
----
- drivers/pci/pci.c   | 23 +++++++++++++++++++++++
- include/linux/pci.h |  1 +
- 2 files changed, 24 insertions(+)
+To match the style of other patches you'd need to capitalise "PCI" in
+the subject, see the following for some examples:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b717680377a9..8a7c039b1cd5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4659,6 +4659,29 @@ int pcie_flr(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_GPL(pcie_flr);
- 
-+/**
-+ * pci_dev_is_alive - check the pci device is alive or not
-+ * @pdev: the PCI device
-+ *
-+ * Device drivers use this API to proactively check if the device
-+ * is alive or not. It is helpful for some PCI devices to detect
-+ * surprise removal and do recovery when Hotplug function is disabled.
-+ *
-+ * Note: Device in power state larger than D0 is also treated not alive
-+ * by this function.
-+ *
-+ * Returns true if the device is alive.
-+ */
-+bool pci_dev_is_alive(struct pci_dev *pdev)
-+{
-+	u16 vendor;
-+
-+	pci_read_config_word(pdev, PCI_VENDOR_ID, &vendor);
-+
-+	return vendor == pdev->vendor;
-+}
-+EXPORT_SYMBOL(pci_dev_is_alive);
-+
- static int pci_af_flr(struct pci_dev *dev, int probe)
- {
- 	int pos;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c20211e59a57..2a3ba06a7347 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1227,6 +1227,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- void pcie_print_link_status(struct pci_dev *dev);
- bool pcie_has_flr(struct pci_dev *dev);
- int pcie_flr(struct pci_dev *dev);
-+bool pci_dev_is_alive(struct pci_dev *pdev);
- int __pci_reset_function_locked(struct pci_dev *dev);
- int pci_reset_function(struct pci_dev *dev);
- int pci_reset_function_locked(struct pci_dev *dev);
--- 
-2.30.2
+ $ git log --oneline drivers/pci/pci.c 
 
+Also, it might be worth mentioning in the subject that this is a new API
+that will be added.
+
+> Device drivers use this API to proactively check if the device
+> is alive or not. It is helpful for some PCI devices to detect
+> surprise removal and do recovery when Hotplug function is disabled.
+> 
+> Note: Device in power states larger than D0 is also treated not alive
+> by this function.
+[...]
+
+Question to you: do you have any particular users of this new API in
+mind?  Or is this solving some problem you've seen and/or reported via
+the kernel Bugzilla?
+
+> +/**
+> + * pci_dev_is_alive - check the pci device is alive or not
+> + * @pdev: the PCI device
+
+That would be "PCI" in the function brief above.  Also, try to be
+consistent and capitalise everything plus add missing periods, see the
+following for an example on how to write kernel-doc:
+
+  https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#function-documentation
+
+> + * Device drivers use this API to proactively check if the device
+> + * is alive or not. It is helpful for some PCI devices to detect
+> + * surprise removal and do recovery when Hotplug function is disabled.
+
+As per my question above - what users of this new API do you have in
+mind?  Are they any other patches pending adding users of this API?
+
+> + * Note: Device in power state larger than D0 is also treated not alive
+> + * by this function.
+> + *
+> + * Returns true if the device is alive.
+> + */
+> +bool pci_dev_is_alive(struct pci_dev *pdev)
+> +{
+> +	u16 vendor;
+> +
+> +	pci_read_config_word(pdev, PCI_VENDOR_ID, &vendor);
+> +
+> +	return vendor == pdev->vendor;
+> +}
+> +EXPORT_SYMBOL(pci_dev_is_alive);
+
+Why not use the EXPORT_SYMBOL_GPL()?
+
+	Krzysztof
