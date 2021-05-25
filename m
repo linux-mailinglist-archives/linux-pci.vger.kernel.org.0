@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2FC03900E6
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 14:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC41C3900E7
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 14:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232272AbhEYMZy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 08:25:54 -0400
-Received: from mail-pf1-f178.google.com ([209.85.210.178]:39603 "EHLO
-        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232230AbhEYMZy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 08:25:54 -0400
-Received: by mail-pf1-f178.google.com with SMTP id y202so119087pfc.6
-        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 05:24:24 -0700 (PDT)
+        id S232506AbhEYM0D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 08:26:03 -0400
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:38616 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232598AbhEYM0B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 08:26:01 -0400
+Received: by mail-pl1-f176.google.com with SMTP id 69so16269592plc.5
+        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 05:24:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ITXWenoYZWuip8MkTjQ9AZjx1eyORN/WT4yzP4rw0YU=;
-        b=MPTOAQayHHBbbBtj1LNVI8sY9aI6oZf2OIVXTxs/1RsjTVRRz18E/Oz3kwqwbpguw6
-         89SiJ5DJbqEZbYgql46m4Sf51EOqvqo7qL9ZDrR1qJuGjFu6klGzqT9d+vupvOIc8s6o
-         GvKgBAZktRRDwil848pB8ao2Th4LUVmUNoEeB2AqhAaqlL/5Ji9CaoxfoxAF3DbwNJm0
-         2aiRPnOHhuYq1KB2ek24EVDIltjTn8PHedvQBgilEAeIo+OnCCnVJMJBZZozt7zOxXV/
-         CepHcW2L2S8GJxtX9+SOtW5qz4okORLu4IOFqgyROPgbgav665uaZcMiWoxeLuRvwnrK
-         EV8g==
-X-Gm-Message-State: AOAM530oCHe0jxeUKFg9gXljEZu2CQGzaul/iMfg+/yil7YcZNavdmGS
-        /IXVJjMypoZ2gTD9wKo3/pw=
-X-Google-Smtp-Source: ABdhPJwMdvGDg6HQPRHUsMWoLsNnU45tDID2NnxcJGvIhazLkA9+ppgL5GZZ5rGu5TUVLx5SOz9Rdw==
-X-Received: by 2002:a63:f50:: with SMTP id 16mr10789615pgp.373.1621945463849;
-        Tue, 25 May 2021 05:24:23 -0700 (PDT)
+        bh=q0qIU0oiMxpyzvJd2lGzSmEaG/RIL/dlUB0R2VxtIxo=;
+        b=jUQR+IgMkk+eNNihYu/eMAIL+z+9+rJCZBk6JJRNQ+LXKd2nqDHLkhrfY8jL5c/sNl
+         g5NGfOentvu5hvhA1+eVx9RkDHou1FPEX/HvGQ1ESaoLc5hLVbop3PdC6MJ1Xz2Ojv0A
+         k0xAzBPIemKhnP78xNI4t2PbZOH4jSFBIfjC77N4TM6HIx5eK19CSMJbSBMAH7BKZAZI
+         4Uqa4EIayiH1mz/jWKKuK8qSz/ThnqcOb2w/kzGEcRUDxqktfAJrDmA0XxmfUPkEdsR/
+         CPyHbjvoQ0DZfOWRPYZlbZR0mbrvHCppemw3rmUdENoVP7vF728jem/1gCSrIOTLZ+Qf
+         Xj6g==
+X-Gm-Message-State: AOAM533S0RSLYcmjyDePxJCpgDq+l4E+RenHoKCKH5L0Ec1/d6LiGCN9
+        QjH6h4nARPTAGC7my6HJpBg=
+X-Google-Smtp-Source: ABdhPJzfPcQlcQbtoycP+3gBQmg91gdjk4gv86svlxHRgRk6Zn8Pz+ttvyglbgdrH4TYXX7CHt1h/A==
+X-Received: by 2002:a17:90b:4b0f:: with SMTP id lx15mr29295636pjb.184.1621945471982;
+        Tue, 25 May 2021 05:24:31 -0700 (PDT)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id u1sm14220258pfc.63.2021.05.25.05.24.16
+        by smtp.gmail.com with ESMTPSA id u1sm14220258pfc.63.2021.05.25.05.24.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 May 2021 05:24:23 -0700 (PDT)
+        Tue, 25 May 2021 05:24:31 -0700 (PDT)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
@@ -47,9 +47,9 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 2/5] PCI/sysfs: Use return value from dsm_label_utf16s_to_utf8s() directly
-Date:   Tue, 25 May 2021 12:23:58 +0000
-Message-Id: <20210525122401.206136-2-kw@linux.com>
+Subject: [PATCH v4 3/5] PCI/sysfs: Fix trailing newline handling of resource_alignment_param
+Date:   Tue, 25 May 2021 12:23:59 +0000
+Message-Id: <20210525122401.206136-3-kw@linux.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210525122401.206136-1-kw@linux.com>
 References: <20210525122401.206136-1-kw@linux.com>
@@ -60,86 +60,110 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Modify the function dsm_label_utf16s_to_utf8s() to directly return the
-number of bytes written into the buffer so that the strlen() used later
-to calculate the length of the buffer can be removed as it would no
-longer be needed.
+The value of the "resource_alignment" can be specified using a kernel
+command-line argument (using the "pci=resource_alignment=") or through
+the corresponding sysfs object under the /sys/bus/pci path.
 
-No functional change intended.
+Currently, when the value is set via the kernel command-line argument,
+and then subsequently accessed through sysfs object, the value read back
+will not be correct, as per:
 
+  # grep -oE 'pci=resource_alignment.+' /proc/cmdline
+  pci=resource_alignment=20@00:1f.2
+  # cat /sys/bus/pci/resource_alignment
+  20@00:1f.
+
+This is also true when the value is set through the sysfs object, but
+the trailing newline has not been included, as per:
+
+  # echo -n 20@00:1f.2 > /sys/bus/pci/resource_alignment
+  # cat /sys/bus/pci/resource_alignment
+  20@00:1f.
+
+When the value set through the sysfs object includes the trailing
+newline, then reading it back will work as intended, as per:
+
+  # echo 20@00:1f.2 > /sys/bus/pci/resource_alignment
+  # cat /sys/bus/pci/resource_alignment
+  20@00:1f.2
+
+To fix this inconsistency, append a trailing newline in the show()
+function and strip the trailing line in the store() function if one is
+present.
+
+Also, allow for the value previously set using either a command-line
+argument or through the sysfs object to be cleared at run-time.
+
+Fixes: e499081da1a2 ("PCI: Force trailing new line to resource_alignment_param in sysfs")
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 ---
 Changes in v2:
   None.
 Changes in v3:
-  None.
-Changes in v4:
-  Separated this patch from other trivial sysfs_emit()/sysfs_emit_at()
-  patches into a separate patch as per Bjorn Helgaas' request.
   Added Logan Gunthorpe's "Reviewed-by".
+Changes in v4:
+  None.
 
- drivers/pci/pci-label.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/pci/pci.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/pci-label.c b/drivers/pci/pci-label.c
-index 311dd48e2881..000e169c7197 100644
---- a/drivers/pci/pci-label.c
-+++ b/drivers/pci/pci-label.c
-@@ -139,14 +139,17 @@ enum acpi_attr_enum {
- 	ACPI_ATTR_INDEX_SHOW,
- };
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 5ed316ea5831..7cde86bdcc8e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6439,34 +6439,37 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
  
--static void dsm_label_utf16s_to_utf8s(union acpi_object *obj, char *buf)
-+static int dsm_label_utf16s_to_utf8s(union acpi_object *obj, char *buf)
- {
- 	int len;
-+
- 	len = utf16s_to_utf8s((const wchar_t *)obj->buffer.pointer,
- 			      obj->buffer.length,
- 			      UTF16_LITTLE_ENDIAN,
- 			      buf, PAGE_SIZE);
- 	buf[len] = '\n';
-+
-+	return len;
+ 	spin_lock(&resource_alignment_lock);
+ 	if (resource_alignment_param)
+-		count = sysfs_emit(buf, "%s", resource_alignment_param);
++		count = sysfs_emit(buf, "%s\n", resource_alignment_param);
+ 	spin_unlock(&resource_alignment_lock);
+ 
+-	/*
+-	 * When set by the command line, resource_alignment_param will not
+-	 * have a trailing line feed, which is ugly. So conditionally add
+-	 * it here.
+-	 */
+-	if (count >= 2 && buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
+-		buf[count - 1] = '\n';
+-		buf[count++] = 0;
+-	}
+-
+ 	return count;
  }
  
- static int dsm_get_label(struct device *dev, char *buf,
-@@ -154,7 +157,7 @@ static int dsm_get_label(struct device *dev, char *buf,
+ static ssize_t resource_alignment_store(struct bus_type *bus,
+ 					const char *buf, size_t count)
  {
- 	acpi_handle handle = ACPI_HANDLE(dev);
- 	union acpi_object *obj, *tmp;
--	int len = -1;
-+	int len = 0;
+-	char *param = kstrndup(buf, count, GFP_KERNEL);
++	char *param, *old, *end;
  
- 	if (!handle)
- 		return -1;
-@@ -175,20 +178,19 @@ static int dsm_get_label(struct device *dev, char *buf,
- 		 * this entry must return a null string.
- 		 */
- 		if (attr == ACPI_ATTR_INDEX_SHOW) {
--			sysfs_emit(buf, "%llu\n", tmp->integer.value);
-+			len = sysfs_emit(buf, "%llu\n", tmp->integer.value);
- 		} else if (attr == ACPI_ATTR_LABEL_SHOW) {
- 			if (tmp[1].type == ACPI_TYPE_STRING)
--				sysfs_emit(buf, "%s\n",
--					   tmp[1].string.pointer);
-+				len = sysfs_emit(buf, "%s\n",
-+						 tmp[1].string.pointer);
- 			else if (tmp[1].type == ACPI_TYPE_BUFFER)
--				dsm_label_utf16s_to_utf8s(tmp + 1, buf);
-+				len = dsm_label_utf16s_to_utf8s(tmp + 1, buf);
- 		}
--		len = strlen(buf) > 0 ? strlen(buf) : -1;
- 	}
++	param = kstrndup(buf, count, GFP_KERNEL);
+ 	if (!param)
+ 		return -ENOMEM;
  
- 	ACPI_FREE(obj);
- 
--	return len;
-+	return len > 0 ? len : -1;
++	end = strchr(param, '\n');
++	if (end)
++		*end = '\0';
++
+ 	spin_lock(&resource_alignment_lock);
+-	kfree(resource_alignment_param);
+-	resource_alignment_param = param;
++	old = resource_alignment_param;
++	if (strlen(param)) {
++		resource_alignment_param = param;
++	} else {
++		kfree(resource_alignment_param);
++		resource_alignment_param = NULL;
++	}
+ 	spin_unlock(&resource_alignment_lock);
++
++	kfree(old);
++
+ 	return count;
  }
  
- static ssize_t label_show(struct device *dev, struct device_attribute *attr,
 -- 
 2.31.1
 
