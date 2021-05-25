@@ -2,192 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E64938F670
-	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 01:43:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EDF538F87B
+	for <lists+linux-pci@lfdr.de>; Tue, 25 May 2021 05:08:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbhEXXpL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 May 2021 19:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230033AbhEXXov (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 May 2021 19:44:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E90176140F;
-        Mon, 24 May 2021 23:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621899803;
-        bh=bzWATNTPaYHTgas/Ru4ikVqAuF22p6QgBAnd0xCRvlM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=U0ndxR7l73gsZ4FDhlPe62bGK9fQ6j+qvxlo1GuEKzYiC68TVizE/HT2E9Upsfh5N
-         QeEH2jnkKAN+9Vkr55FoBr6E53fCF7Yg/7SwvnnyfHhY+Zzimvk3wfzmadG9negzuf
-         AeKvIR7/vABzouc/W3ofMYHw0GsU1sIZdvL6d5dB4TVe0UmKNhxGGd6+tYlLOE4McX
-         dj4J2kg6jmqOy+rKvmVyf7RKH5YccwjdNzTcYG2vlIWFw0nIa3WoFtTHPzTUfHHZ06
-         XeC3sany43hxiV02zxV3ssbD7NKOcG2VhmM+4cuCdm3Fz1JEaxvLvXv8swhbJxBkTX
-         FbQrGFvEYzRsQ==
-Date:   Mon, 24 May 2021 18:43:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chiqijun <chiqijun@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
-        yin.yinshi@huawei.com, cloud.wangxiaoyun@huawei.com,
-        zengweiliang.zengweiliang@huawei.com, chenlizhong@huawei.com
-Subject: Re: [v6] PCI: Add reset quirk for Huawei Intelligent NIC virtual
- function
-Message-ID: <20210524234321.GA1141045@bjorn-Precision-5520>
+        id S229575AbhEYDJ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 May 2021 23:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229551AbhEYDJ5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 May 2021 23:09:57 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 911ACC061574
+        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:08:27 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id e10so25253536ilu.11
+        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:08:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VHDFyefEfXv2T1h/kXDPOn5vVw8tSm/6FW05x+E2j40=;
+        b=merHIeKNi5Uu6C9TAUujDNIN9FxrI34YUx7aW4WyFELIyYppIt99C4UwGvzWaArcmu
+         9EaYZFbnrmtDjrMZ7c8349ke6DKJjWiZDCUD5epOu2PqMIr5kYM1CoXZ0XNE1vQ3QFiu
+         bvf2bDyHaIMES3MNNrHcengJbyjgwpDl3VY20=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VHDFyefEfXv2T1h/kXDPOn5vVw8tSm/6FW05x+E2j40=;
+        b=IwkcWzfV7t2nD0+DmsXmBxoLqUgtG0md55EfYVf41lahMtNXwMI61qZ3cqL+ocX9QW
+         LpUELr0IsP2ovlQA7r2+y3bavb1SIVy66N7y076bIUt/Ss9iIjyxpLBHcgzlgAdA/k6o
+         C9G08MsVYWz8RuWPCmhZ8lUkroQBYbbkECMkx7Sp0OVwNwnSYd37gmjm9kDzznJXH+Fw
+         Y6hOd1wxNf67aD49i0KtOfz5pfWE7HXKtaoBVNFUW6aSh7t0lEbrEntDlSZgeIrciIAF
+         u6XhP5mnPfsA7XZABevIoyqBYUQef7UzJ/tagAFMVMAAg4qxaHxGmqFCgxRjZa/1uA7Z
+         8g6g==
+X-Gm-Message-State: AOAM533MQZuaXjKaYTDUxE6g4NxwX3qQTq13cTrgTNygzrS5MYQeoTYq
+        tQ7nKjQ1VXJIcgFqco19PpwY15jFLGPWAw==
+X-Google-Smtp-Source: ABdhPJymLNBa0bZuNCjQL/l63QEI51+vTlTPYOKmXaHUMj8m2tXO+rc/qsscj8CeKN76n6jKMIrHuw==
+X-Received: by 2002:a05:6e02:d:: with SMTP id h13mr17418888ilr.112.1621912106353;
+        Mon, 24 May 2021 20:08:26 -0700 (PDT)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id j4sm12381230iom.28.2021.05.24.20.08.25
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 May 2021 20:08:25 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id h11so26847526ili.9
+        for <linux-pci@vger.kernel.org>; Mon, 24 May 2021 20:08:25 -0700 (PDT)
+X-Received: by 2002:a6b:7b08:: with SMTP id l8mr16990516iop.50.1621912094090;
+ Mon, 24 May 2021 20:08:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210414132301.1793-1-chiqijun@huawei.com>
+References: <20210518064215.2856977-1-tientzu@chromium.org>
+ <20210518064215.2856977-2-tientzu@chromium.org> <170a54f2-be20-ec29-1d7f-3388e5f928c6@gmail.com>
+ <CALiNf2-9fRbH3Xs=fA+N1iRztFxeC0iTsyOSZFe=F42uwXS0Sg@mail.gmail.com> <YKvL865kutnHqkVc@0xbeefdead.lan>
+In-Reply-To: <YKvL865kutnHqkVc@0xbeefdead.lan>
+From:   Claire Chang <tientzu@chromium.org>
+Date:   Tue, 25 May 2021 11:08:03 +0800
+X-Gmail-Original-Message-ID: <CALiNf2_iq3OS+95as4fj+AOMDVYgGL71A1811QLaZ=5T7TRjww@mail.gmail.com>
+Message-ID: <CALiNf2_iq3OS+95as4fj+AOMDVYgGL71A1811QLaZ=5T7TRjww@mail.gmail.com>
+Subject: Re: [PATCH v7 01/15] swiotlb: Refactor swiotlb init functions
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
+        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
+        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
+        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 14, 2021 at 09:23:01PM +0800, Chiqijun wrote:
-> When we do an FLR on several VFs at the same time, the Huawei
-> Intelligent NIC processes them serially, resulting in some VF
-> FLRs being delayed more than 100ms, when the virtual machine
-> restarts and the device driver is loaded, the firmware is doing
-> the corresponding VF FLR, causing the driver to fail to load.
-> Link: https://support.huawei.com/enterprise/en/doc/EDOC1100063073/87950645/vm-oss-occasionally-fail-to-load-the-in200-driver-when-the-vf-performs-flr
-> 
-> To solve this problem, add host and firmware status synchronization
-> during FLR.
-> 
-> Signed-off-by: Chiqijun <chiqijun@huawei.com>
+On Mon, May 24, 2021 at 11:53 PM Konrad Rzeszutek Wilk
+<konrad.wilk@oracle.com> wrote:
+>
+> > > do the set_memory_decrypted()+memset(). Is this okay or should
+> > > swiotlb_init_io_tlb_mem() add an additional argument to do this
+> > > conditionally?
+> >
+> > I'm actually not sure if this it okay. If not, will add an additional
+> > argument for it.
+>
+> Any observations discovered? (Want to make sure my memory-cache has the
+> correct semantics for set_memory_decrypted in mind).
 
-Applied to pci/reset for v5.14 with subject
-"PCI: Work around Huawei Intelligent NIC VF FLR erratum" and the
-following commit log:
+It works fine on my arm64 device.
 
-  pcie_flr() starts a Function Level Reset (FLR), waits 100ms (the maximum
-  time allowed for FLR completion by PCIe r5.0, sec 6.6.2), and waits for the
-  FLR to complete.  It assumes the FLR is complete when a config read returns
-  valid data.
-
-  When we do an FLR on several Huawei Intelligent NIC VFs at the same time,
-  firmware on the NIC processes them serially.  The VF may respond to config
-  reads before the firmware has completed its reset processing.  If we bind a
-  driver to the VF (e.g., by assigning the VF to a virtual machine) in the
-  interval between the successful config read and completion of the firmware
-  reset processing, the NIC VF driver may fail to load.
-
-  Prevent this driver failure by waiting for the NIC firmware to complete its
-  reset processing.  Not all NIC firmware supports this feature.
-
-Let me know if that's not accurate.
-
-I applied Alex's Reviewed-by (from v3) because the patch is basically
-identical except for cosmetic changes.
-
-> ---
-> v6:
->  - Addressed Bjorn's review comments
-> 
-> v5:
->  - Fix build warning reported by kernel test robot
-> 
-> v4:
->  - Addressed Bjorn's review comments
-> 
-> v3:
->  - The MSE bit in the VF configuration space is hardwired to zero,
->    remove the setting of PCI_COMMAND_MEMORY bit. Add comment for
->    set PCI_COMMAND register.
-> 
-> v2:
->  - Update comments
->  - Use the HINIC_VF_FLR_CAP_BIT_SHIFT and HINIC_VF_FLR_PROC_BIT_SHIFT
->    macro instead of the magic number
-> ---
->  drivers/pci/quirks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 653660e3ba9e..6677b7220442 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3913,6 +3913,73 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
->  	return 0;
->  }
->  
-> +#define PCI_DEVICE_ID_HINIC_VF      0x375E
-> +#define HINIC_VF_FLR_TYPE           0x1000
-> +#define HINIC_VF_FLR_CAP_BIT        (1UL << 30)
-> +#define HINIC_VF_OP                 0xE80
-> +#define HINIC_VF_FLR_PROC_BIT       (1UL << 18)
-> +#define HINIC_OPERATION_TIMEOUT     15000	/* 15 seconds */
-> +
-> +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
-> +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
-> +{
-> +	unsigned long timeout;
-> +	void __iomem *bar;
-> +	u32 val;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	bar = pci_iomap(pdev, 0, 0);
-> +	if (!bar)
-> +		return -ENOTTY;
-> +
-> +	/* Get and check firmware capabilities. */
-> +	val = ioread32be(bar + HINIC_VF_FLR_TYPE);
-> +	if (!(val & HINIC_VF_FLR_CAP_BIT)) {
-> +		pci_iounmap(pdev, bar);
-> +		return -ENOTTY;
-> +	}
-> +
-> +	/*
-> +	 * Set the processing bit for the start of FLR, which will be cleared
-> +	 * by the firmware after FLR is completed.
-> +	 */
-> +	val = ioread32be(bar + HINIC_VF_OP);
-> +	val = val | HINIC_VF_FLR_PROC_BIT;
-> +	iowrite32be(val, bar + HINIC_VF_OP);
-> +
-> +	/* Perform the actual device function reset */
-> +	pcie_flr(pdev);
-> +
-> +	/*
-> +	 * The device must learn BDF after FLR in order to respond to BAR's
-> +	 * read request, therefore, we issue a configure write request to let
-> +	 * the device capture BDF.
-> +	 */
-> +	pci_write_config_word(pdev, PCI_VENDOR_ID, 0);
-> +
-> +	/* Waiting for device reset complete */
-> +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
-> +	do {
-> +		val = ioread32be(bar + HINIC_VF_OP);
-> +		if (!(val & HINIC_VF_FLR_PROC_BIT))
-> +			goto reset_complete;
-> +		msleep(20);
-> +	} while (time_before(jiffies, timeout));
-> +
-> +	val = ioread32be(bar + HINIC_VF_OP);
-> +	if (!(val & HINIC_VF_FLR_PROC_BIT))
-> +		goto reset_complete;
-> +
-> +	pci_warn(pdev, "Reset dev timeout, FLR ack reg: %#010x\n", val);
-> +
-> +reset_complete:
-> +	pci_iounmap(pdev, bar);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
->  		 reset_intel_82599_sfp_virtfn },
-> @@ -3924,6 +3991,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
->  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->  		reset_chelsio_generic_dev },
-> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-> +		reset_hinic_vf_dev },
->  	{ 0 }
->  };
->  
-> -- 
-> 2.17.1
-> 
+> >
+> > > --
+> > > Florian
