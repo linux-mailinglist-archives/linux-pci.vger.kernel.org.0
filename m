@@ -2,127 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6C4391179
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 09:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D30733911AD
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 09:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232975AbhEZHqT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 03:46:19 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:19153 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232617AbhEZHqT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 03:46:19 -0400
-X-UUID: b1893dfb59e64b41aa1cf71a7b9f6fa6-20210526
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rhis7ZdFLWANZ7b2DBYk1HWn5k7BbGfIhqdHKsjdI6c=;
-        b=i/t8UBBc5C2q4VCptCrrBxH1Q9wSJzuJfy55+XzthiGljpfe9EEBAoWyLQILmGUSrkZVWD4bbLO143bMCyVHElwGA9pKBKtiH+CFOtASIKENwIi3j7o0id5dRSW/Fyjnk4NfR0Y+PpYrTOgiNavtnIvjs1CHpktYXZmDwHW4N2o=;
-X-UUID: b1893dfb59e64b41aa1cf71a7b9f6fa6-20210526
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1411923585; Wed, 26 May 2021 15:44:41 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 26 May
- 2021 15:44:35 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 26 May 2021 15:44:34 +0800
-Message-ID: <1622015074.22554.7.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] PCI: mediatek-gen3: Add support for disable dvfsrc
- voltage request
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
-        <sin_jieyang@mediatek.com>, <drinkcat@chromium.org>,
-        <Rex-BC.Chen@mediatek.com>, Krzysztof Wilczyski <kw@linux.com>,
-        <Ryan-JH.Yu@mediatek.com>
-Date:   Wed, 26 May 2021 15:44:34 +0800
-In-Reply-To: <20210514065927.20774-3-jianjun.wang@mediatek.com>
-References: <20210514065927.20774-1-jianjun.wang@mediatek.com>
-         <20210514065927.20774-3-jianjun.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: AA820A6B0B6D8B6EB8E0F75C994FDD6EAA37103BB9F953B2506EA02435B992782000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        id S231843AbhEZH6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 03:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231185AbhEZH6z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 May 2021 03:58:55 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2929611BE;
+        Wed, 26 May 2021 07:57:24 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1lloPq-003gBC-KB; Wed, 26 May 2021 08:57:22 +0100
+Date:   Wed, 26 May 2021 08:57:21 +0100
+Message-ID: <874keqvsf2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Sandor Bodo-Merle <sbodomerle@gmail.com>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
+In-Reply-To: <13a7e409-646d-40a7-17a0-4e4be011efb2@broadcom.com>
+References: <20210520120055.jl7vkqanv7wzeipq@pali>
+        <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
+        <20210520140529.rczoz3npjoadzfqc@pali>
+        <CABLWAfSct8Kn1etyJtZhFc5A33thE-s6=Cz-Gd6+j04S4pfD_A@mail.gmail.com>
+        <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com>
+        <87pmxgwh7o.wl-maz@kernel.org>
+        <13a7e409-646d-40a7-17a0-4e4be011efb2@broadcom.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ray.jui@broadcom.com, sbodomerle@gmail.com, pali@kernel.org, linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQmpvcm4sIFJvYiwgTG9yZW56bywNCg0KQ291bGQgeW91IHBsZWFzZSBoZWxwIHRvIHRha2Ug
-YSBsb29rIGF0IHRoaXMgcGF0Y2gsIEknbSBub3Qgc3VyZSBpZiB0aGlzDQppcyBhIGdvb2Qgc29s
-dXRpb24sIGFuZCBJIHJlYWxseSBuZWVkIHlvdXIgc3VnZ2VzdGlvbnMuDQoNClRoYW5rcy4NCg0K
-T24gRnJpLCAyMDIxLTA1LTE0IGF0IDE0OjU5ICswODAwLCBKaWFuanVuIFdhbmcgd3JvdGU6DQo+
-IFBDSWUgR2VuMyBQSFkgbGF5ZXIgY2Fubm90IHdvcmsgcHJvcGVybHkgd2hlbiB0aGUgcmVxdWVz
-dGVkIHZvbHRhZ2UNCj4gaXMgbG93ZXIgdGhhbiBhIHNwZWNpZmljIGxldmVsKGUuZy4gMC41NVYs
-IGl0J3MgZGVwZW5kcyBvbg0KPiB0aGUgY2hpcCBtYW51ZmFjdHVyaW5nIHByb2Nlc3MpLg0KPiAN
-Cj4gV2hlbiB0aGUgZHZmc3JjIGZlYXR1cmUgaXMgaW1wbGVtZW50ZWQsIHRoZSByZXF1ZXN0ZWQg
-dm9sdGFnZQ0KPiBtYXkgYmUgcmVkdWNlZCB0byBhIGxvd2VyIGxldmVsIGluIHN1c3BlbmQgbW9k
-ZSwgaGVuY2UgdGhhdA0KPiB0aGUgTUFDIGxheWVyIHdpbGwgYXNzZXJ0IGEgSFcgc2lnbmFsIHRv
-IHJlcXVlc3QgdGhlIGR2ZnNyYw0KPiB0byByYWlzZSB2b2x0YWdlIHRvIG5vcm1hbCBtb2RlLCBh
-bmQgaXQgd2lsbCB3YWl0IHRoZSB2b2x0YWdlDQo+IHJlYWR5IHNpZ25hbCB3aGljaCBpcyBkZXJp
-dmVkIGZyb20gZHZmc3JjIHRvIGRldGVybWluZSB3aGV0aGVyDQo+IHRoZSBMVFNTTSBjYW4gc3Rh
-cnQgbm9ybWFsbHkuDQo+IA0KPiBXaGVuIHRoZSBkdmZzcmMgZmVhdHVyZSBpcyBub3QgaW1wbGVt
-ZW50ZWQsIHRoZSBNQUMgbGF5ZXIgc3RpbGwNCj4gYXNzZXJ0IHRoZSB2b2x0YWdlIHJlcXVlc3Qg
-dG8gZHZmc3JjIHdoZW4gZXhpdCBzdXNwZW5kIG1vZGUsDQo+IGJ1dCB3aWxsIG5vdCByZWNlaXZl
-IHRoZSB2b2x0YWdlIHJlYWR5IHNpZ25hbCwgaW4gdGhpcyBjYXNlLA0KPiB0aGUgTFRTU00gY2Fu
-bm90IHN0YXJ0IG5vcm1hbGx5LCBhbmQgdGhlIFBDSWUgbGluayB3aWxsIGJlIGZhaWxlZC4NCj4g
-DQo+IEFkZCBzdXBwb3J0IGZvciBkaXNhYmxlIGR2ZnNyYyB2b2x0YWdlIHJlcXVlc3QuIElmIHRo
-ZSBwcm9wZXJ0eSBvZg0KPiAiZGlzYWJsZS1kdmZzcmMtdmx0LXJlcSIgaXMgcHJlc2VudGVkIGlu
-IGRldmljZSBub2RlLCB3ZSBhc3N1bWUgdGhhdA0KPiB0aGUgcmVxdWVzdGVkIHZvbHRhZ2UgaXMg
-YWx3YXlzIGhpZ2hlciBlbm91Z2ggdG8ga2VlcCB0aGUgUENJZSBHZW4zDQo+IFBIWSBhY3RpdmUs
-IGFuZCB0aGUgdm9sdGFnZSByZXF1ZXN0IHRvIGR2ZnNyYyBzaG91bGQgYmUgZGlzYWJsZWQuDQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBKaWFuanVuIFdhbmcgPGppYW5qdW4ud2FuZ0BtZWRpYXRlay5j
-b20+DQo+IC0tLQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLWdlbjMu
-YyB8IDMyICsrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDMyIGluc2Vy
-dGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUt
-bWVkaWF0ZWstZ2VuMy5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLWdl
-bjMuYw0KPiBpbmRleCAyMDE2NWU0YTc1YjIuLmQxODY0MzAzMjE3ZSAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLWdlbjMuYw0KPiArKysgYi9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWstZ2VuMy5jDQo+IEBAIC02OCw2ICs2OCw5
-IEBADQo+ICAjZGVmaW5lIFBDSUVfTVNJX1NFVF9FTkFCTEVfUkVHCQkweDE5MA0KPiAgI2RlZmlu
-ZSBQQ0lFX01TSV9TRVRfRU5BQkxFCQlHRU5NQVNLKFBDSUVfTVNJX1NFVF9OVU0gLSAxLCAwKQ0K
-PiAgDQo+ICsjZGVmaW5lIFBDSUVfTUlTQ19DVFJMX1JFRwkJMHgzNDgNCj4gKyNkZWZpbmUgUENJ
-RV9ESVNBQkxFX0RWRlNSQ19WTFRfUkVRCUJJVCgxKQ0KPiArDQo+ICAjZGVmaW5lIFBDSUVfTVNJ
-X1NFVF9CQVNFX1JFRwkJMHhjMDANCj4gICNkZWZpbmUgUENJRV9NU0lfU0VUX09GRlNFVAkJMHgx
-MA0KPiAgI2RlZmluZSBQQ0lFX01TSV9TRVRfU1RBVFVTX09GRlNFVAkweDA0DQo+IEBAIC0yOTcs
-NiArMzAwLDM1IEBAIHN0YXRpYyBpbnQgbXRrX3BjaWVfc3RhcnR1cF9wb3J0KHN0cnVjdCBtdGtf
-cGNpZV9wb3J0ICpwb3J0KQ0KPiAgCXZhbCAmPSB+UENJRV9JTlRYX0VOQUJMRTsNCj4gIAl3cml0
-ZWxfcmVsYXhlZCh2YWwsIHBvcnQtPmJhc2UgKyBQQ0lFX0lOVF9FTkFCTEVfUkVHKTsNCj4gIA0K
-PiArCS8qDQo+ICsJICogUENJZSBHZW4zIFBIWSBsYXllciBjYW4gbm90IHdvcmsgcHJvcGVybHkg
-d2hlbiB0aGUgcmVxdWVzdGVkIHZvbHRhZ2UNCj4gKwkgKiBpcyBsb3dlciB0aGFuIGEgc3BlY2lm
-aWMgbGV2ZWwoZS5nLiAwLjU1ViwgaXQncyBkZXBlbmRzIG9uDQo+ICsJICogdGhlIGNoaXAgbWFu
-dWZhY3R1cmluZyBwcm9jZXNzKS4NCj4gKwkgKg0KPiArCSAqIFdoZW4gdGhlIGR2ZnNyYyBmZWF0
-dXJlIGlzIGltcGxlbWVudGVkLCB0aGUgcmVxdWVzdGVkIHZvbHRhZ2UNCj4gKwkgKiBtYXkgYmUg
-cmVkdWNlZCB0byBhIGxvd2VyIGxldmVsIGluIHN1c3BlbmQgbW9kZSwgaGVuY2UgdGhhdA0KPiAr
-CSAqIHRoZSBNQUMgbGF5ZXIgd2lsbCBhc3NlcnQgYSBIVyBzaWduYWwgdG8gcmVxdWVzdCB0aGUg
-ZHZmc3JjDQo+ICsJICogdG8gcmFpc2Ugdm9sdGFnZSB0byBub3JtYWwgbW9kZSwgYW5kIGl0IHdp
-bGwgd2FpdCB0aGUgdm9sdGFnZQ0KPiArCSAqIHJlYWR5IHNpZ25hbCB3aGljaCBpcyBkZXJpdmVk
-IGZyb20gZHZmc3JjIHRvIGRldGVybWluZSB3aGV0aGVyDQo+ICsJICogdGhlIExUU1NNIGNhbiBz
-dGFydCBub3JtYWxseS4NCj4gKwkgKg0KPiArCSAqIFdoZW4gdGhlIGR2ZnNyYyBmZWF0dXJlIGlz
-IG5vdCBpbXBsZW1lbnRlZCwgdGhlIE1BQyBsYXllciBzdGlsbA0KPiArCSAqIGFzc2VydCB0aGUg
-dm9sdGFnZSByZXF1ZXN0IHRvIGR2ZnNyYyB3aGVuIGV4aXQgc3VzcGVuZCBtb2RlLA0KPiArCSAq
-IGJ1dCB3aWxsIG5vdCByZWNlaXZlIHRoZSB2b2x0YWdlIHJlYWR5IHNpZ25hbCwgaW4gdGhpcyBj
-YXNlLA0KPiArCSAqIHRoZSBMVFNTTSBjYW5ub3Qgc3RhcnQgbm9ybWFsbHksIGFuZCB0aGUgUENJ
-ZSBsaW5rIHdpbGwgYmUgZmFpbGVkLg0KPiArCSAqDQo+ICsJICogSWYgdGhlIHByb3BlcnR5IG9m
-ICJkaXNhYmxlLWR2ZnNyYy12bHQtcmVxIiBpcyBwcmVzZW50ZWQNCj4gKwkgKiBpbiBkZXZpY2Ug
-bm9kZSwgd2UgYXNzdW1lIHRoYXQgdGhlIHJlcXVlc3RlZCB2b2x0YWdlIGlzIGFsd2F5cw0KPiAr
-CSAqIGhpZ2hlciBlbm91Z2ggdG8ga2VlcCB0aGUgUENJZSBHZW4zIFBIWSBhY3RpdmUsIGFuZCB0
-aGUgdm9sdGFnZQ0KPiArCSAqIHJlcXVlc3QgdG8gZHZmc3JjIHNob3VsZCBiZSBkaXNhYmxlZC4N
-Cj4gKwkgKi8NCj4gKwl2YWwgPSByZWFkbF9yZWxheGVkKHBvcnQtPmJhc2UgKyBQQ0lFX01JU0Nf
-Q1RSTF9SRUcpOw0KPiArCXZhbCAmPSB+UENJRV9ESVNBQkxFX0RWRlNSQ19WTFRfUkVROw0KPiAr
-CWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wocG9ydC0+ZGV2LT5vZl9ub2RlLCAiZGlzYWJsZS1k
-dmZzcmMtdmx0LXJlcSIpKQ0KPiArCQl2YWwgfD0gUENJRV9ESVNBQkxFX0RWRlNSQ19WTFRfUkVR
-Ow0KPiArDQo+ICsJd3JpdGVsKHZhbCwgcG9ydC0+YmFzZSArIFBDSUVfTUlTQ19DVFJMX1JFRyk7
-DQo+ICsNCj4gIAkvKiBBc3NlcnQgYWxsIHJlc2V0IHNpZ25hbHMgKi8NCj4gIAl2YWwgPSByZWFk
-bF9yZWxheGVkKHBvcnQtPmJhc2UgKyBQQ0lFX1JTVF9DVFJMX1JFRyk7DQo+ICAJdmFsIHw9IFBD
-SUVfTUFDX1JTVEIgfCBQQ0lFX1BIWV9SU1RCIHwgUENJRV9CUkdfUlNUQiB8IFBDSUVfUEVfUlNU
-QjsNCg0K
+On Tue, 25 May 2021 18:27:54 +0100,
+Ray Jui <ray.jui@broadcom.com> wrote:
+>
+> On 5/24/2021 3:37 AM, Marc Zyngier wrote:
+> > On Thu, 20 May 2021 18:11:32 +0100,
+> > Ray Jui <ray.jui@broadcom.com> wrote:
+> >>
+> >> On 5/20/2021 7:22 AM, Sandor Bodo-Merle wrote:
 
+[...]
+
+> >> I guess I'm not too clear on what you mean by "multi-MSI interrupts
+> >> needs to be aligned to number of requested interrupts.". Would you be
+> >> able to plug this into the above explanation so we can have a more clear
+> >> understanding of what you mean here?
+> > 
+> > That's a generic PCI requirement: if you are providing a Multi-MSI
+> > configuration, the base vector number has to be size-aligned
+> > (2-aligned for 2 MSIs, 4 aligned for 4, up to 32), and the end-point
+> > supplies up to 5 bits that are orr-ed into the base vector number,
+> > with a *single* doorbell address. You effectively provide a single MSI
+> > number and a single address, and the device knows how to drive 2^n MSIs.
+> > 
+> > This is different from MSI-X, which defines multiple individual
+> > vectors, each with their own doorbell address.
+> > 
+> > The main problem you have here (other than the broken allocation
+> > mechanism) is that moving an interrupt from one core to another
+> > implies moving the doorbell address to that of another MSI
+> > group. This isn't possible for Multi-MSI, as all the MSIs must have
+> > the same doorbell address. As far as I can see, there is no way to
+> > support Multi-MSI together with affinity change on this HW, and you
+> > should stop advertising support for this feature.
+> > 
+> 
+> I was not aware of the fact that multi-MSI needs to use the same
+> doorbell address (aka MSI posted write address?). Thank you for helping
+> to point it out. In this case, yes, like you said, we cannot possibly
+> support both multi-MSI and affinity at the same time, since supporting
+> affinity requires us to move from one to another event queue (and irq)
+> that will have different doorbell address.
+> 
+> Do you think it makes sense to do the following by only advertising
+> multi-MSI capability in the single CPU core case (detected runtime via
+> 'num_possible_cpus')? This will at least allow multi-MSI to work in
+> platforms with single CPU core that Sandor and Pali use?
+
+I don't think this makes much sense. Single-CPU machines are an oddity
+these days, and I'd rather you simplify this (already pretty
+complicated) driver.
+
+> > There is also a more general problem here, which is the atomicity of
+> > the update on affinity change. If you are moving an interrupt from one
+> > CPU to the other, it seems you change both the vector number and the
+> > target address. If that is the case, this isn't atomic, and you may
+> > end-up with the device generating a message based on a half-applied
+> > update.
+> 
+> Are you referring to the callback in 'irq_set_addinity" and
+> 'irq_compose_msi_msg'? In such case, can you help to recommend a
+> solution for it (or there's no solution based on such architecture)? It
+> does not appear such atomy can be enforced from the irq framework level.
+
+irq_compose_msi_msg() is only one part of the problem. The core of the
+issue is that the programming of the end-point is not atomic (you need
+to update a 32bit payload *and* a 64bit address).
+
+A solution to workaround it would be to rework the way you allocate
+the vectors, making them constant across all CPUs so that only the
+address changes when changing the affinity.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
