@@ -2,136 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 141C539213F
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 22:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99758392156
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 22:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234635AbhEZUHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 16:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53696 "EHLO
+        id S233416AbhEZUUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 16:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234459AbhEZUHb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 16:07:31 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39255C061574;
-        Wed, 26 May 2021 13:06:00 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id n6-20020a17090ac686b029015d2f7aeea8so974555pjt.1;
-        Wed, 26 May 2021 13:06:00 -0700 (PDT)
+        with ESMTP id S233376AbhEZUUc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 16:20:32 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA91C061574
+        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 13:18:59 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id f9so3865317ybo.6
+        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 13:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=HaQh1xHx0RKGFHhlfN+UdbNk8CmfpFB9XcWgnBNU2wY=;
-        b=j+k3BZxmWGcIJp3uMrDVeZpXlhd/668NmKohHu1S+pqRfF9FdvMynGxm076WastzKy
-         yy8MsJ3t4k/XZXY6x+dSwfa+6xPu1mOpeBfzGWNyklnChG8fWpaX0be6CD7LS/jyZ6Su
-         Q1NhShyUnjxb92Ae0oyLmkh0vtdaY6OpkFuqrwzjbK7sOsPF62AK04YMMrbnyEx6F/r/
-         c2K3jdmRG2MZmqfoCpOXd910lPT5fGOuNu2Psef0if9UnXexCvo0+Wa5wljAi2wf1t5r
-         xcgQLgzFQpmGqQ+xmTZq0Xy+J2Pri732eqM1sKE2EFPT4Ivoc6GNM8KmHEbxz0Vvj7mb
-         22zw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O0Ka4vBpdAyBWG8p8PcO/rjMwhjvUsXlTA1ts+xUeXQ=;
+        b=lhiT/wAQpaU17DcX8sLxSf/H5gZKylSp3iz+OTJw4vaXVWrk/85EubveBZ1o/mm+Mr
+         nDIR2Iw3BhSER8FZSPs3TkAsSpgEqlB+cVc6RqDBXxy3njg4zKZFYqMpWs2hp31QJ/KN
+         h7VhDOBKS88RgJwl63pJ8iZX/SefPscfvaCd71FaL3cew/moQefAKPO1ArmR/eozDiOG
+         htR8oTVk3bMHutK2ec3QkPkzipkgDmK6PvyMQH3M/ey1JsmKJA988dqj83iPcdjfTzGR
+         e3qvB74G8K89jYNbts3iGBR13uo+gwm8ex46n63lijPkTE0aQFeh8hEUBrjuz8MfWoLr
+         Kohw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HaQh1xHx0RKGFHhlfN+UdbNk8CmfpFB9XcWgnBNU2wY=;
-        b=oCwTMv3ZC7FLuzoZ8gNLPQGV/bTDVmh3UO7qhWuwhhv0glyOR8/8OGxg2zg1j69Kwl
-         FhIPyHP5eAopR5BQrJ+ta/M+1yQ5fQFI+X1DVSg+5LUi+mc14NPlTeixkV1K7RZtbYvn
-         ft/rCKbHYMgmYNyu+o+uK745Poqs+ombSO1E2A1x+OKrEUqqlM0/5vHImgTWeaSUZIMN
-         yQK+kPo1lL5hibM1UInnjU3p0wnVNAaeEPKRpFE8JxO+ohF2kkA7aOFM1f4PkaM5Guuz
-         1UO8hUWvHfCJReha9QWb0LlOoW4FtDpLF3PioPx8BKSsPTjEyMOu0dB5MLM8IIMgS28s
-         uxqw==
-X-Gm-Message-State: AOAM531fDVUxxP4kWjKBSif7RM5vBfa3W+MPhJltBmGng7zvf9yHvWzZ
-        KWqw1XdkGlOfx3qUASTFf+M=
-X-Google-Smtp-Source: ABdhPJxFa+ezs2PwsZaqDch9NcqAST8MFI1eicLBlGIuP6oAP5C6/DWWB6sWCCcu2hK7upYMUMhKEA==
-X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr5562485pjp.155.1622059559820;
-        Wed, 26 May 2021 13:05:59 -0700 (PDT)
-Received: from localhost ([103.248.31.164])
-        by smtp.gmail.com with ESMTPSA id c1sm52629pfo.181.2021.05.26.13.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 13:05:59 -0700 (PDT)
-Date:   Thu, 27 May 2021 01:35:57 +0530
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v3 7/7] PCI: Change the type of probe argument in reset
- functions
-Message-ID: <20210526200557.5wrrmflygfmdzd6b@archlinux>
-References: <20210526101403.108721-1-ameynarkhede03@gmail.com>
- <20210526101403.108721-8-ameynarkhede03@gmail.com>
- <20210526135230.2ecd94d3.alex.williamson@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O0Ka4vBpdAyBWG8p8PcO/rjMwhjvUsXlTA1ts+xUeXQ=;
+        b=KJ0K9YGYrjtRwW7y2bV5Ov4pCxaKBsfMsaQURJRmYuxCL2KDHV1P5F6vBxLy15azl7
+         J53LDkhF7ioauAh89I0mEsAh5U1t/AU86YRDu8z6ETSVRepf13j6EjxxbxtYEkB5mpC8
+         Ccfuv9WrY7ME4O7FoZNYWK9ASzNzzQAHzkpw91CC7dbODc+qlRyMrgs1WSswfFjKAnLe
+         Ok2szMW/lqv1cIkUouNl1ywFE5BxzncaPNmevwWhk37LZSpyJQNypO/TKAYbVIDPmIbB
+         U0IXCZYCaSz/MhrDyWXHlTg2c/r1Ll7EHZiFM9YKe5qBU0n5hu2yoji30X/1m0e2MXR+
+         3p1Q==
+X-Gm-Message-State: AOAM530Lxr4J9kLgQu2xvCxND45Ow32nD5yrJFxgc2V7BqciZ/HwJBVe
+        QldEWzxGxcma594Rnycy6RUdRrUoTK3e1055gCUxzwNBIwo=
+X-Google-Smtp-Source: ABdhPJxIy7DPGux6JC6GejgNMpeDZZc1iQbKluGiAvpRAxutBjFV8k2r7A1KKToWGiwXMexs4JZU34/D7kpN87m4ld4=
+X-Received: by 2002:a25:4f05:: with SMTP id d5mr51533969ybb.473.1622060339198;
+ Wed, 26 May 2021 13:18:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210526135230.2ecd94d3.alex.williamson@redhat.com>
+References: <20210520120055.jl7vkqanv7wzeipq@pali> <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
+ <20210520140529.rczoz3npjoadzfqc@pali> <CABLWAfSct8Kn1etyJtZhFc5A33thE-s6=Cz-Gd6+j04S4pfD_A@mail.gmail.com>
+ <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com> <87pmxgwh7o.wl-maz@kernel.org>
+ <13a7e409-646d-40a7-17a0-4e4be011efb2@broadcom.com> <874keqvsf2.wl-maz@kernel.org>
+ <964cc65e-5c44-8d29-9c08-013a64a5c6fd@broadcom.com>
+In-Reply-To: <964cc65e-5c44-8d29-9c08-013a64a5c6fd@broadcom.com>
+From:   Sandor Bodo-Merle <sbodomerle@gmail.com>
+Date:   Wed, 26 May 2021 22:18:47 +0200
+Message-ID: <CABLWAfR1SFoDUWQtvSOohvT36YeDQLpJ-B40cE_4vMbWKsarFw@mail.gmail.com>
+Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/05/26 01:52PM, Alex Williamson wrote:
-> On Wed, 26 May 2021 15:44:03 +0530
-> Amey Narkhede <ameynarkhede03@gmail.com> wrote:
+On Wed, May 26, 2021 at 7:34 PM Ray Jui <ray.jui@broadcom.com> wrote:
 >
-> > Introduce a new enum pci_reset_mode_t to make the context
-> > of probe argument in reset functions clear and the code
-> > easier to read.
-> > Change the type of probe argument in functions which implement
-> > reset methods from int to pci_reset_mode_t to make the intent clear.
-> > Add a new line in return statement of pci_reset_bus_function.
-> >
-> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > Suggested-by: Krzysztof Wilczyński <kw@linux.com>
-> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> > ---
-[...]
-> >   */
-> > -int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, int probe)
-> > +int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, enum pci_reset_mode probe)
 >
-> This should use your typedef, pci_reset_mode_t.  Is "probe" still the
-> best name for this arg?  The enum name suggests a "mode", the MAX entry
-> suggests an "action", "probe" is but one mode/action.
+> Here's the thing. All Broadcom ARMv8 based SoCs have migrated to use
+> either gicv2m or gicv3-its for MSI/MSIX support. The platforms that
+> still use iProc event queue based MSI are only legacy ARMv7 based
+> platforms. Out of them:
 >
-My bad I missed this. Which sounds more intuitive to you
-"mode" or "action"? I update this in v4 to use consistent terminology
-once we everybody agrees on name.
-[...]
-> > @@ -3910,11 +3922,16 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
-> >   * device too soon after FLR.  A 250ms delay after FLR has heuristically
-> >   * proven to produce reliably working results for device assignment cases.
-> >   */
-> > -static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
-> > +static int delay_250ms_after_flr(struct pci_dev *dev, pci_reset_mode_t probe)
-> >  {
-> > -	int ret = pcie_reset_flr(dev, probe);
-> > +	int ret;
-> > +
-> > +	if (probe >= PCI_RESET_ACTION_MAX)
-> > +		return -EINVAL;
+> NSP - dual core
+> Cygnus - single core
+> HR2 - single core
 >
-> pcie_reset_flr() handles this case, we could simply test (ret || probe
-> == PCI_RESET_PROBE) below.  In fact, that's probably what the code flow
-> should have been regardless of this series.
->
-[...]
-> > -int pci_dev_specific_reset(struct pci_dev *dev, int probe)
-> > +int pci_dev_specific_reset(struct pci_dev *dev, pci_reset_mode_t probe)
-> >  {
-> >  	const struct pci_dev_reset_methods *i;
-> >
-> > +	if (probe >= PCI_RESET_ACTION_MAX)
-> > +		return -EINVAL;
->
-> If we test this here, none of the device specific resets modified above
-> need a duplicate check.  Thanks,
->
-> Alex
->
-I went ahead with excessive error checking in this patch.
-Will update in v4.
+> So based on this, it seems to me that it still makes sense to allow
+> multi-msi to be supported on single core platforms, and Sandor's company
+> seems to need such support in their particular use case. Sandor, can you
+> confirm?
 
-Thanks,
-Amey
+Right - we are using it in production on legacy ARMv7 SOCs.
+
+>
+>
+> Thanks. This makes sense. And it looks like this can be addressed
+> separately from the above issue. I'll have to allocate time to work on
+> this. In addition, I'd also need someone else with the NSP dual-core
+> platform to test it for me since we don't have these legacy platforms in
+> our office anymore.
+>
+
+I will be able to test patches on the XGS Katana2 SOC - which is dual core.
