@@ -2,63 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78562390E7D
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 04:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC7C4390E97
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 05:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230499AbhEZCvI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 22:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230250AbhEZCvI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 May 2021 22:51:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B281561090;
-        Wed, 26 May 2021 02:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621997377;
-        bh=SfbOqGxm7X5NXp//WakdnkTjJ211zswh8Q9jf4zImwM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hBkCtj5oeFMQdGLiiql6K5nxAJf/2GbOcEwMXlkxOpHuG/0vYdRRE6+YDuRTLYuhe
-         qcbWOv27/Vz/RsHDdeI2Vkzw8hdtDZ55sN0jBz3DXFNMSwCXBRwtThP134XNf8ZB0M
-         bmf+ViKxg5PujFcgiQMIbz93FjKrJQpVwoKW+B66wfU3sIUf/vVqLRVx7e+0HmJJ9x
-         JPc+oStU4FFT0pUd/Bh372QnzIkLejEx7JfY3MYABzKH+kS53nNmxiD/h1fv9Y0Rr4
-         xllWKT2DDMDkIEIf67H8KILgIDpri4d1O8/gDuJ0VfUOuMHcZ44R0pGB/TtcMUjNnr
-         DAQhbpbVzNcGQ==
-Date:   Tue, 25 May 2021 19:49:34 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Koba Ko <koba.ko@canonical.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Henrik Juul Hansen <hjhansen2020@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] nvme-pci: Avoid to go into d3cold if device can't use
- npss.
-Message-ID: <20210526024934.GB3704949@dhcp-10-100-145-180.wdc.com>
-References: <20210520033315.490584-1-koba.ko@canonical.com>
- <20210525074426.GA14916@lst.de>
- <CAJB-X+UFi-iAkRBZQUsd6B_P+Bi-TAa_sQjnhJagD0S91WoFUQ@mail.gmail.com>
+        id S230106AbhEZDCS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 23:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229685AbhEZDCR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 23:02:17 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7DAC061574
+        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 20:00:45 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id o5so29702038edc.5
+        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 20:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tx7mJxthlffjoZpgjkFTXSaY88IRMpEte4AbFaFhDDA=;
+        b=LQMc6jfHFUJ6cTkvDVHOCnxWuNzo16DGJs3OtEEpUupISct4abFfTiemFMdmsRVDOk
+         WSzfveed9bz7UpEmGfM3wEmNXmEoANOAvHvdMu2P49Yu03eh6zvEMC0CB0X0yFU54+5l
+         uW9pvbq5RVf2E166cW2W77O1tOnJiuZSS9U6D7+WMP1BEanXSFCWE5Es+wvCmh9tmwSo
+         npUVRqwUFB+pkZ6rxaKae5sGrdbnDkLdLAehln7p7ogfqk1VQzu3uiTpx33PIqSCj1Na
+         7h2c28oIhbXd7KQQWISDfEl0qhJk1QpMt7Eh/X/R/gkCElj/Pw2wS8YhLAB6J2htwvBZ
+         RM/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tx7mJxthlffjoZpgjkFTXSaY88IRMpEte4AbFaFhDDA=;
+        b=mVikG7xLyJP5th8EOR5qufiEqSXXaKRzVpvSI1krj5JWQu/Fm+ADz86Lq4cGCaZnwN
+         z5q/k5DuYprQCx4nlUkXuiNCZNg03VukosQjjoFk201IafZfqFvf0Ky6zzkXwauQU+r7
+         bAksvPR8RVlxMYv50o0+SaAHaq8v/Td6nWb2WzwC5pjKfiDjIFHwUPJYPAzmGkID2DWk
+         sORKAyGW6RnR6YPLlSwpxsGOEBz7ZnmEHdZfSCcdJQwHFoTbhrk6uJsULC6p+tHx/Ej+
+         1hz0hbBJSHQjo8KWN3sNrJ+Og5QUHmm2e8shL9i76OevIrA2eE8ylhvmhpdc0bOYxlmt
+         8wMQ==
+X-Gm-Message-State: AOAM530AWSAkGj4YZV3BKd2QgvMVxCdphYr3ms3eKsHmtm4FYIK7Z4fb
+        Vz42azlRIa+ebr/2tqrLHdNeLGDNi3JWZF80Ws+hU38U
+X-Google-Smtp-Source: ABdhPJzfPNPa3BkvnbzOTwwzXc9lkuymDCMxZdd6Ir3d0h3K+GkWMHGVGMTmey077lpEfDACNwQoicUOlqrT6Zn5bOQ=
+X-Received: by 2002:a05:6402:1601:: with SMTP id f1mr8485886edv.383.1621998044377;
+ Tue, 25 May 2021 20:00:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJB-X+UFi-iAkRBZQUsd6B_P+Bi-TAa_sQjnhJagD0S91WoFUQ@mail.gmail.com>
+References: <CAAhV-H7D-drrEaDskQhVx0c8_VAy--n3mbsQN_ijfWrRQGVQ=A@mail.gmail.com>
+ <20210525135523.GA1185972@bjorn-Precision-5520> <CAAhV-H4Ayg9QyPBsXRqBbsn8OTEmN2yw7Bf3on63UVM950rARA@mail.gmail.com>
+In-Reply-To: <CAAhV-H4Ayg9QyPBsXRqBbsn8OTEmN2yw7Bf3on63UVM950rARA@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Wed, 26 May 2021 13:00:33 +1000
+Message-ID: <CAPM=9tx0kr7xdA8eB2+u6Xg0C7FSMbZEKGVKOTZEkdA7Kay42A@mail.gmail.com>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving bridge
+To:     Huacai Chen <chenhuacai@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jingfeng Sui <suijingfeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 26, 2021 at 10:02:27AM +0800, Koba Ko wrote:
-> On Tue, May 25, 2021 at 3:44 PM Christoph Hellwig <hch@lst.de> wrote:
+> > > > I think I would see if it's possible to call
+> > > > vga_arb_select_default_device() from vga_arbiter_add_pci_device()
+> > > > instead of from vga_arb_device_init().
+> > > >
+> > > > I would also (as a separate patch) try to get rid of this loop in
+> > > > vga_arb_device_init():
+> > > >
+> > > >         list_for_each_entry(vgadev, &vga_list, list) {
+> > > >                 struct device *dev = &vgadev->pdev->dev;
+> > > >
+> > > >                 if (vgadev->bridge_has_one_vga)
+> > > >                         vgaarb_info(dev, "bridge control possible\n");
+> > > >                 else
+> > > >                         vgaarb_info(dev, "no bridge control possible\n");
+> > > >         }
+> > > >
+> > > > and do the vgaarb_info() in vga_arbiter_check_bridge_sharing(), where
+> > > > the loop would not be needed.
+> > >
+> > > Any updates?
 > >
-> > On Thu, May 20, 2021 at 11:33:15AM +0800, Koba Ko wrote:
-> > > After resume, host can't change power state of the closed controller
-> > > from D3cold to D0.
+> > Are you waiting for me to do something else?
 > >
-> > Why?
-> As per Kai-Heng said, it's a regression introduced by commit
-> b97120b15ebd ("nvme-pci:
-> use simple suspend when a HMB is enabled"). The affected NVMe is using HMB.
+> > I suggested an approach above, but I don't have time to actually do
+> > the work for you.
+> Yes, I am really waiting... but I am also investigating history and thinking.
+>
+> If I haven't missed something (correct me if I'm wrong). For the
+> original HiSilicon problem, the first attempt is to modify
+> vga_arbiter_add_pci_device() and remove the VGA_RSRC_LEGACY_MASK
+> check. But vga_arbiter_add_pci_device() is called for each PCI device,
+> so removing that check will cause the first VGA device to be the
+> default VGA device. This breaks some x86 platforms, so after that you
+> don't touch vga_arbiter_add_pci_device(), but add
+> vga_arb_select_default_device() in vga_arb_device_init().
+>
+> If the above history is correct, then we cannot add
+> vga_arb_select_default_device() in vga_arbiter_add_pci_device()
+> directly. So it seems we can only add vga_arb_select_default_device()
+> in pci_notify(). And if we don't care about hotplug, we can simply use
+> subsys_initcall_sync() to wrap vga_arb_device_init().
+>
+> And DRM developers, please let me know what do you think about?
 
-That really doesn't add up. The mentioned commit restores the driver
-behavior for HMB drives that existed prior to d916b1be94b6d from kernel
-5.3. Is that NVMe device broken in pre-5.3 kernels, too?
+I'm not 100% following what is going on here.
+
+Do you need call vga_arb_select_default_device after hotplug for some
+reason, or it this just a race with subsys_init?
+
+I think just adding subsys_initcall_sync should be fine
+
+I don't see why you'd want to care about making a hotplug VGA device
+the default at this point.
+
+Dave.
