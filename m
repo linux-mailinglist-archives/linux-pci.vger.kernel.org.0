@@ -2,124 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB2F8390D00
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 01:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D6A390E1E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 04:02:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbhEYXlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 19:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231356AbhEYXll (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 May 2021 19:41:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DE07D61402;
-        Tue, 25 May 2021 23:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621986011;
-        bh=d9t4GCdLUZ0RmVXyDwtszyEPaUZjSQM6gFXZJsMIRQM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=r1WDTSTszj3Gd4YuG6XMbWLSptU8naD7mSHWp9bpNLrj7w365RjKn3/tKyuMHYCm2
-         liISS1yJkwz5TegTylYhaGK0q7juB2ZoMwIk9Q7dQ4v7rvKgXh22cvYEQEGm6GPuRG
-         xAJLAJFkU9Te8AVU/nlfwvEwBGC6cQln/PJk2VsmSsqXhYOP599biMmE5/Rsprh+Q2
-         BjZVGPgt0PKMsSFX46o3524c9SWNNvTuOc7PRBMb42/ZkXrasvMvUb/EhMvoMz5rU3
-         g/Dr9b5lQXyZYdks0Pvl/4gT4rHAmJPrNPy4I54/labWwrotW6hyrBpEk3N9ky8EAP
-         /KrIxH4pFe+SQ==
-Date:   Tue, 25 May 2021 18:40:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     bhelgaas@google.com, maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/MSI: Fix MSIs for generic hosts that use
- device-tree's "msi-map"
-Message-ID: <20210525234009.GA1242540@bjorn-Precision-5520>
+        id S232026AbhEZCEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 22:04:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40543 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230194AbhEZCEQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 22:04:16 -0400
+Received: from mail-oo1-f69.google.com ([209.85.161.69])
+        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <koba.ko@canonical.com>)
+        id 1llisf-0007Ql-3T
+        for linux-pci@vger.kernel.org; Wed, 26 May 2021 02:02:45 +0000
+Received: by mail-oo1-f69.google.com with SMTP id o28-20020a4a385c0000b029023ec5d3d5ccso1697367oof.8
+        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 19:02:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=80Q9luL+LwQCDuf3BgkOvtEc2OIfkbeDzIrwJ3hVNYg=;
+        b=MRra8dBUCEpOOUj+pL38ZuPSmufPCMAkcPFUz9fT8eob6cNKQSwfKXFWxiqGn275Pl
+         jWWBgzT7YS+kD2Nm8+JAMtUMOu4QaN0BLKFdXJzNjYCJIVqLpb1KrXS06zJqj+Ovu9T8
+         1cDbjFFs+Ulf1XmNZDF4vemgxyhGOU6amQhItEUXVk4QWYtg1H9xdtkTfG7ZPatyWC4h
+         iD/+FkWUn4JHYRUaik3aeZu9MsgJtMl4LZWjt1bt22m3zOGfZmO9H6YkzPlb5B4Go7/Q
+         Olaz+OZgA1JBNyw1FsiB18AnAxD1D1W46OEavQm0oeFF8C/Emx5nCcooPhvbfj4OH9sC
+         jP4w==
+X-Gm-Message-State: AOAM533g1OM4XO2O2IELwt4msbgT9Rrn6vgzuN+C/LrhqQHZyu3qOOn/
+        2jDh2MQ8Kh2gnnT67RM+ZOYtGCFLdc4QqKnZLwTwqIdsXsGPTJznx2Brby+m94Yh0Y1TXbxdv9P
+        dA8m/DqWtTCTYuIGZcnP5Ab9Mlso/nqUvtFXSDieDf0t6lSsALkhsvw==
+X-Received: by 2002:aca:b3d5:: with SMTP id c204mr353841oif.17.1621994559114;
+        Tue, 25 May 2021 19:02:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwVyQJj1wQcjhyCbkjhZWLHzSkdMbj1UW7fzQW9m2Wo4G/waP+Gb8xrdYJnlCIdJUeKJb5TO7XDHgGKxBL1qrs=
+X-Received: by 2002:aca:b3d5:: with SMTP id c204mr353825oif.17.1621994558803;
+ Tue, 25 May 2021 19:02:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210510173129.750496-1-jean-philippe@linaro.org>
+References: <20210520033315.490584-1-koba.ko@canonical.com> <20210525074426.GA14916@lst.de>
+In-Reply-To: <20210525074426.GA14916@lst.de>
+From:   Koba Ko <koba.ko@canonical.com>
+Date:   Wed, 26 May 2021 10:02:27 +0800
+Message-ID: <CAJB-X+UFi-iAkRBZQUsd6B_P+Bi-TAa_sQjnhJagD0S91WoFUQ@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Avoid to go into d3cold if device can't use npss.
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Henrik Juul Hansen <hjhansen2020@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 07:31:30PM +0200, Jean-Philippe Brucker wrote:
-> Since commit 9ec37efb8783 ("PCI/MSI: Make pci_host_common_probe()
-> declare its reliance on MSI domains"), platforms that rely on the
-> "msi-map" device-tree property don't get MSIs anymore.
-> 
-> On the Arm Fast Model for example [1], the host bridge doesn't have a
-> "msi-parent" property since it doesn't itself generate MSIs, and so
-> doesn't get a MSI domain. It has an "msi-map" property instead to
-> describe MSI controllers of child devices. As a result, due to the new
-> msi_domain check in pci_register_host_bridge(), the whole bus gets
-> PCI_BUS_FLAGS_NO_MSI.
-> 
-> Check whether the root complex has an "msi-map" property before giving
-> up on MSIs.
-> 
-> [1] arch/arm64/boot/dts/arm/fvp-base-revc.dts
-> 
-> Fixes: 9ec37efb8783 ("PCI/MSI: Make pci_host_common_probe() declare its reliance on MSI domains")
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+On Tue, May 25, 2021 at 3:44 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Thu, May 20, 2021 at 11:33:15AM +0800, Koba Ko wrote:
+> > After resume, host can't change power state of the closed controller
+> > from D3cold to D0.
+>
+> Why?
+As per Kai-Heng said, it's a regression introduced by commit
+b97120b15ebd ("nvme-pci:
+use simple suspend when a HMB is enabled"). The affected NVMe is using HMB.
+the target nvme ssd uses HMB and the target machine would put nvme to d3cold.
+During suspend, nvme driver would shutdown the nvme controller caused by
+commit b97120b15ebd ("nvme-pci: use simple suspend when a HMB is enabled").
+During resuming, the nvme controller can't change the power state from
+d3cold to d0.
+    # nvme 0000:58:00.0: can't change power state from D3cold to D0
+(config space inaccessible)
+Tried some machines, they only put nvme to d3hot so even if nvme is
+forced to shutdown,
+it could be resumed correctly.
 
-Applied to for-linus for v5.13, since we merged 9ec37efb8783 for
-v5.13-rc1.  Thanks!
+As per commit b97120b15ebd , the TP spec would allow nvme to access
+the host memory in any power state in S3.
+but the Host would fail to manage. I agree with Kai-Heng's suggestion
+but this TP would be broken.
 
-> ---
->  include/linux/pci.h | 2 ++
->  drivers/pci/of.c    | 7 +++++++
->  drivers/pci/probe.c | 3 ++-
->  3 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c20211e59a57..24306504226a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2344,6 +2344,7 @@ int pci_vpd_find_info_keyword(const u8 *buf, unsigned int off,
->  struct device_node;
->  struct irq_domain;
->  struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus);
-> +bool pci_host_of_has_msi_map(struct device *dev);
->  
->  /* Arch may override this (weak) */
->  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
-> @@ -2351,6 +2352,7 @@ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
->  #else	/* CONFIG_OF */
->  static inline struct irq_domain *
->  pci_host_bridge_of_msi_domain(struct pci_bus *bus) { return NULL; }
-> +static inline bool pci_host_of_has_msi_map(struct device *dev) { return false; }
->  #endif  /* CONFIG_OF */
->  
->  static inline struct device_node *
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index da5b414d585a..85dcb7097da4 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -103,6 +103,13 @@ struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus)
->  #endif
->  }
->  
-> +bool pci_host_of_has_msi_map(struct device *dev)
-> +{
-> +	if (dev && dev->of_node)
-> +		return of_get_property(dev->of_node, "msi-map", NULL);
-> +	return false;
-> +}
-> +
->  static inline int __of_pci_pci_compare(struct device_node *node,
->  				       unsigned int data)
->  {
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 3a62d09b8869..275204646c68 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -925,7 +925,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	device_enable_async_suspend(bus->bridge);
->  	pci_set_bus_of_node(bus);
->  	pci_set_bus_msi_domain(bus);
-> -	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev))
-> +	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev) &&
-> +	    !pci_host_of_has_msi_map(parent))
->  		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
->  
->  	if (!parent)
-> -- 
-> 2.31.1
-> 
+>
+> > For these devices, just avoid to go deeper than d3hot.
+>
+> What are "these devices"?
+
+It's a Samsung ssd using HMB.
+
+> > @@ -2958,6 +2959,15 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >
+> >       dev_info(dev->ctrl.device, "pci function %s\n", dev_name(&pdev->dev));
+> >
+> > +     if (pm_suspend_via_firmware() || !dev->ctrl.npss ||
+> > +         !pcie_aspm_enabled(pdev) ||
+> > +         dev->nr_host_mem_descs ||
+> > +         (dev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND)) {
+>
+> Before we start open coding this in even more places we really want a
+> little helper function for these checks, which should be accomodated with
+> the comment near the existing copy of the checks.
+
+Thanks, I will refine this.
+
+>
+> > +             pdev->d3cold_allowed = false;
+> > +             pci_d3cold_disable(pdev);
+> > +             pm_runtime_resume(&pdev->dev);
+>
+> Why do we need to both set d3cold_allowed and call pci_d3cold_disable?
+>
+> What is the pm_runtime_resume doing here?
+I referenced the codes of d3cold_allowed_store@d3cold_allowed_store fun,
+As per Bjorn and search in multiple drivers, only pci_d3cold_disable is enough.
