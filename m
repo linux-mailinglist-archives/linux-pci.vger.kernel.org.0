@@ -2,93 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99758392156
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 22:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DCDB3921B4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 22:58:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbhEZUUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 16:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233376AbhEZUUc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 16:20:32 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA91C061574
-        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 13:18:59 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id f9so3865317ybo.6
-        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 13:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O0Ka4vBpdAyBWG8p8PcO/rjMwhjvUsXlTA1ts+xUeXQ=;
-        b=lhiT/wAQpaU17DcX8sLxSf/H5gZKylSp3iz+OTJw4vaXVWrk/85EubveBZ1o/mm+Mr
-         nDIR2Iw3BhSER8FZSPs3TkAsSpgEqlB+cVc6RqDBXxy3njg4zKZFYqMpWs2hp31QJ/KN
-         h7VhDOBKS88RgJwl63pJ8iZX/SefPscfvaCd71FaL3cew/moQefAKPO1ArmR/eozDiOG
-         htR8oTVk3bMHutK2ec3QkPkzipkgDmK6PvyMQH3M/ey1JsmKJA988dqj83iPcdjfTzGR
-         e3qvB74G8K89jYNbts3iGBR13uo+gwm8ex46n63lijPkTE0aQFeh8hEUBrjuz8MfWoLr
-         Kohw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O0Ka4vBpdAyBWG8p8PcO/rjMwhjvUsXlTA1ts+xUeXQ=;
-        b=KJ0K9YGYrjtRwW7y2bV5Ov4pCxaKBsfMsaQURJRmYuxCL2KDHV1P5F6vBxLy15azl7
-         J53LDkhF7ioauAh89I0mEsAh5U1t/AU86YRDu8z6ETSVRepf13j6EjxxbxtYEkB5mpC8
-         Ccfuv9WrY7ME4O7FoZNYWK9ASzNzzQAHzkpw91CC7dbODc+qlRyMrgs1WSswfFjKAnLe
-         Ok2szMW/lqv1cIkUouNl1ywFE5BxzncaPNmevwWhk37LZSpyJQNypO/TKAYbVIDPmIbB
-         U0IXCZYCaSz/MhrDyWXHlTg2c/r1Ll7EHZiFM9YKe5qBU0n5hu2yoji30X/1m0e2MXR+
-         3p1Q==
-X-Gm-Message-State: AOAM530Lxr4J9kLgQu2xvCxND45Ow32nD5yrJFxgc2V7BqciZ/HwJBVe
-        QldEWzxGxcma594Rnycy6RUdRrUoTK3e1055gCUxzwNBIwo=
-X-Google-Smtp-Source: ABdhPJxIy7DPGux6JC6GejgNMpeDZZc1iQbKluGiAvpRAxutBjFV8k2r7A1KKToWGiwXMexs4JZU34/D7kpN87m4ld4=
-X-Received: by 2002:a25:4f05:: with SMTP id d5mr51533969ybb.473.1622060339198;
- Wed, 26 May 2021 13:18:59 -0700 (PDT)
+        id S233794AbhEZVAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 17:00:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233717AbhEZVAN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 May 2021 17:00:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0BAD6613D3;
+        Wed, 26 May 2021 20:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622062721;
+        bh=tca5jhJa+R66QtoXGvrvfr4L4lN/+LgPF3bkHUwVN64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IqpaWP4hrBZQWfPpeX+KY4vXPCZN4tFfh2wix4raRcP8uhvW1JskteRVnDJSFw7w7
+         G9xVgaP4FSmFqG5AzxQdN7m1WapB4MVocpqD9PgP83oprYedT7dSjX4lqPk12UX3OR
+         wFY20EHtmSxlfSY6/VWO5V8qW4dtBYoO2/87TwPR2V/UrKQiFsFJVRuviPLDI+jsH3
+         AjYcAjb5auWc8GWImmHjpS0i+JCr7ioJNd6vImI1LqVbdUrKRFhOlnSwYuQrTkj7yv
+         dvp6lHMd3gT+RPmXAo8D5Md+hspw2yEPNoPLUvDeA+WLbMybmPv4H4p5ZY5+fA605/
+         EmL8gZwpaIeTw==
+Date:   Wed, 26 May 2021 21:58:36 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, lorenzo.pieralisi@arm.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] Revert "arm64: PCI: Exclude ACPI "consumer"
+ resources from host bridge windows"
+Message-ID: <20210526205836.GA20320@willie-the-truck>
+References: <20210510234020.1330087-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
-References: <20210520120055.jl7vkqanv7wzeipq@pali> <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
- <20210520140529.rczoz3npjoadzfqc@pali> <CABLWAfSct8Kn1etyJtZhFc5A33thE-s6=Cz-Gd6+j04S4pfD_A@mail.gmail.com>
- <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com> <87pmxgwh7o.wl-maz@kernel.org>
- <13a7e409-646d-40a7-17a0-4e4be011efb2@broadcom.com> <874keqvsf2.wl-maz@kernel.org>
- <964cc65e-5c44-8d29-9c08-013a64a5c6fd@broadcom.com>
-In-Reply-To: <964cc65e-5c44-8d29-9c08-013a64a5c6fd@broadcom.com>
-From:   Sandor Bodo-Merle <sbodomerle@gmail.com>
-Date:   Wed, 26 May 2021 22:18:47 +0200
-Message-ID: <CABLWAfR1SFoDUWQtvSOohvT36YeDQLpJ-B40cE_4vMbWKsarFw@mail.gmail.com>
-Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210510234020.1330087-1-luzmaximilian@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 26, 2021 at 7:34 PM Ray Jui <ray.jui@broadcom.com> wrote:
->
->
-> Here's the thing. All Broadcom ARMv8 based SoCs have migrated to use
-> either gicv2m or gicv3-its for MSI/MSIX support. The platforms that
-> still use iProc event queue based MSI are only legacy ARMv7 based
-> platforms. Out of them:
->
-> NSP - dual core
-> Cygnus - single core
-> HR2 - single core
->
-> So based on this, it seems to me that it still makes sense to allow
-> multi-msi to be supported on single core platforms, and Sandor's company
-> seems to need such support in their particular use case. Sandor, can you
-> confirm?
+On Tue, May 11, 2021 at 01:40:20AM +0200, Maximilian Luz wrote:
+> The Microsoft Surface Pro X has host bridges defined as
+> 
+>     Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
+>     Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
+> 
+>     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>     {
+>         Name (RBUF, ResourceTemplate ()
+>         {
+>             Memory32Fixed (ReadWrite,
+>                 0x60200000,         // Address Base
+>                 0x01DF0000,         // Address Length
+>                 )
+>             WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
+>                 0x0000,             // Granularity
+>                 0x0000,             // Range Minimum
+>                 0x0001,             // Range Maximum
+>                 0x0000,             // Translation Offset
+>                 0x0002,             // Length
+>                 ,, )
+>         })
+>         Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
+>     }
+> 
+> meaning that the memory resources aren't (explicitly) defined as
+> "producers", i.e. host bridge windows.
+> 
+> Commit 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from
+> host bridge windows") introduced a check that removes such resources,
+> causing BAR allocation failures later on:
+> 
+>     [ 0.150731] pci 0002:00:00.0: BAR 14: no space for [mem size 0x00100000]
+>     [ 0.150744] pci 0002:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
+>     [ 0.150758] pci 0002:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
+>     [ 0.150769] pci 0002:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
+> 
+> This eventually prevents the PCIe NVME drive from being accessible.
+> 
+> On x86 we already skip the check for producer/window due to some history
+> with negligent firmware. It seems that Microsoft is intent on continuing
+> that history on their ARM devices, so let's drop that check here too.
+> 
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> ---
+> 
+> Please note: I am not sure if this is the right way to fix that, e.g. I
+> don't know if any additional checks like on IA64 or x86 might be
+> required instead, or if this might break things on other devices. So
+> please consider this more as a bug report rather than a fix.
+> 
+> Apologies for the re-send, I seem to have unintentionally added a blank
+> line before the subject.
+> 
+> ---
+>  arch/arm64/kernel/pci.c | 14 --------------
+>  1 file changed, 14 deletions(-)
 
-Right - we are using it in production on legacy ARMv7 SOCs.
+Adding Lorenzo to cc, as he'll have a much better idea about this than me.
 
->
->
-> Thanks. This makes sense. And it looks like this can be addressed
-> separately from the above issue. I'll have to allocate time to work on
-> this. In addition, I'd also need someone else with the NSP dual-core
-> platform to test it for me since we don't have these legacy platforms in
-> our office anymore.
->
+This is:
 
-I will be able to test patches on the XGS Katana2 SOC - which is dual core.
+https://lore.kernel.org/r/20210510234020.1330087-1-luzmaximilian@gmail.com
+
+Will
