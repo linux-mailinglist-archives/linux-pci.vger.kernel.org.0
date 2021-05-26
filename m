@@ -2,308 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA0C39198C
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 16:09:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AE8F3919A5
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 16:15:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234295AbhEZOKl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 10:10:41 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34448 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232948AbhEZOKl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 10:10:41 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14QE93ss043533;
-        Wed, 26 May 2021 09:09:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1622038143;
-        bh=vEBga0t3qzngzYqUbWJAGuom3PVx+7aw7ixeVFU50RQ=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=uA9+Nj7SUYepheLee3Z6eeliDqCHW3dIG9ss7BAc/fZhFiWPwfIKk0hRo3gCEI8h2
-         fOhntTV0xyzP31qxJhgZi3+SisV9Bv+CwudnY3hVx9/eI8SW+SfR9Kpo8YIjPZ1TQP
-         9PX9PXVM7akV9A9GKGcJROhVts6Wua8K4Xo8hi58=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14QE92TP119995
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 May 2021 09:09:03 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 26
- May 2021 09:09:02 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 26 May 2021 09:09:02 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14QE92Mf055817;
-        Wed, 26 May 2021 09:09:02 -0500
-Date:   Wed, 26 May 2021 09:09:02 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH] dt-bindings: PCI: ti,am65: Convert PCIe host/endpoint
- mode dt-bindings to YAML
-Message-ID: <20210526140902.lnk5du5k3b4sny3m@handheld>
-References: <20210526134708.27887-1-kishon@ti.com>
+        id S233770AbhEZOQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 10:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233484AbhEZOQo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 May 2021 10:16:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B57E613D7;
+        Wed, 26 May 2021 14:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622038513;
+        bh=V9yfVGz48znBhoLYjEcvRlIp+daisCyNDfH0CN868s4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dvLySTxEZiqHBU8DH6u3hrzj/0VudX+Pm4o9KGnIC8axkD+9PaZiv2F7PbCAMhuXl
+         ZeeO7mNhyyyXa9eue79WEGTCXLOOHL4gm432bZz7BcvKQV38DZvaX+GPQIxzETcm8T
+         mD24awDK8Uz+0BUmBoOAbktmxDwSqKnRjK9wiYEzrSANcvvsqFHEbpWBWST4A8FTx3
+         HclZI2Quz0gpF21n72viLd14SRFeky5BDhX4phZGE3Y7QzuEgUlbhAQtBrD12xLRls
+         AOb2wzA2NOhnENSybyHuEQ+jbJa4Oslqju8HYAuZs9c/n3g2MwlPkKXBHIIfMYWBoL
+         fbBwjsDcOveFg==
+Received: by mail-ot1-f54.google.com with SMTP id u25-20020a0568302319b02902ac3d54c25eso1149846ote.1;
+        Wed, 26 May 2021 07:15:13 -0700 (PDT)
+X-Gm-Message-State: AOAM530RRriy6jUaRfONF7+ScC6ggAqCZsfXm3OGM4K8y8Lnu70YsqiW
+        j27hVzaX+Fvl6ABV0aWZjwQqXiXMBaZumJfrRRY=
+X-Google-Smtp-Source: ABdhPJwW8Rk3emRD0hkgXQcN7xcSCM6FPDi3/JYZuHbFrFSjxpSMXx/i0GLgZamflQJyw1kM6Iit6JpDO+OpdpVyfzw=
+X-Received: by 2002:a05:6830:4da:: with SMTP id s26mr2542142otd.77.1622038512765;
+ Wed, 26 May 2021 07:15:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20210526134708.27887-1-kishon@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com> <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
+ <87eedxbtkn.fsf@stealth> <CAMj1kXE3U+16A6bO0UHG8=sx45DE6u0FtdSnoLDvfGnFJYTDrg@mail.gmail.com>
+ <877djnaq11.fsf@stealth> <CAMj1kXFk2u=tbTYpa6Vqz5ihATFq61pCDiEbfRgXL_Rw+q_9Fg@mail.gmail.com>
+ <CAMdYzYo-vdJvT_MPNTYvdveG3W8na7qMVEZFL4AjyQWqcLZi=Q@mail.gmail.com>
+ <CAMj1kXEBePfKDOc6eo9yjZPnVeFimX-zxR+R3As+2pP9XnZkuQ@mail.gmail.com>
+ <CAMdYzYrH_M92Pc6AqTgagtATr1TPq7Pdm57hadZeAmMBF2f0nA@mail.gmail.com>
+ <CAMj1kXHsGgFedbhW2CiS5gveK3=ZxhXQ5siDeHJyttkOVKBQrQ@mail.gmail.com>
+ <CAMdYzYruNYtJ8hwKPBUHPed1-=tV=CWDd_oSQtRmr4BJHp=YxA@mail.gmail.com>
+ <CAMj1kXHLCJbzRpic-kkdWh5wKTE=6fqkesYbB6XoeJELKn93tw@mail.gmail.com> <9b99d520-e4b1-ae44-44eb-93c2e3d0c0cb@gmail.com>
+In-Reply-To: <9b99d520-e4b1-ae44-44eb-93c2e3d0c0cb@gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 May 2021 16:15:01 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGBEuV=OUeCWUj5iUbFmko549uKCt5eHFM_j2KW-_FNdw@mail.gmail.com>
+Message-ID: <CAMj1kXGBEuV=OUeCWUj5iUbFmko549uKCt5eHFM_j2KW-_FNdw@mail.gmail.com>
+Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
+ 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
+ memory addresses")
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+Cc:     Peter Geis <pgwipeout@gmail.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Rob Herring <robh@kernel.org>, PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19:17-20210526, Kishon Vijay Abraham I wrote:
-> Convert PCIe host/endpoint mode dt-bindings for TI's AM65/Keystone SoC
-> to YAML binding.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+On Wed, 26 May 2021 at 15:55, Christian K=C3=B6nig
+<ckoenig.leichtzumerken@gmail.com> wrote:
+>
+> Hi Ard,
+>
+> Am 25.05.21 um 19:18 schrieb Ard Biesheuvel:
+> > [SNIP]
+> >>> I seriously doubt that this is what is going on here.
+> >>>
+> >>> lspci -x will give you the bare BAR values - I suspect that those are
+> >>> probably fine.
+> >> lspci -x
+> >> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 3566 (=
+rev 01)
+> >> 00: 87 1d 66 35 07 05 10 40 01 00 04 06 00 00 01 00
+> >> 10: 00 00 00 00 00 00 00 00 00 01 ff 00 10 10 00 20
+> >> 20: 00 10 00 10 01 00 f1 0f 00 00 00 00 00 00 00 00
+> >> 30: 00 00 00 00 40 00 00 00 00 00 00 00 5f 01 02 00
+> >>
+> >> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> >> [AMD/ATI] Turks PRO [Radeon HD 7570]
+> >> 00: 02 10 5d 67 07 00 10 20 00 00 00 03 00 00 80 00
+> >> 10: 0c 00 00 00 00 00 00 00
+> > This is a 64-bit prefetchable BAR programmed with bus address 0x0
+> >
+> >> 04 00 00 10 00 00 00 00
+> > This is a 64-bit non-prefetchable BAR programmed with bus address 0x100=
+0_0000
+> >
+> > (https://en.wikipedia.org/wiki/PCI_configuration_space describes the
+> > meaning of the low order BAR bits)
+>
+> Sorry for jumping into the middle of the discussion and to be honest I
+> haven't fully read it.
+>
+> This looks a bit odd since on AMD VGA hardware the non-prefetchable BAR
+> is usually only 32bit, not 64bit.
+>
+> But this hardware generation is rather old and I'm not sure what the BAR
+> assignment for that generation was. I would need to dig up the register
+> description in our archives as well.
+>
 
-[...]
-> diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..419d48528105
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/ti,am65-pci-ep.yaml#"
+I have another museum piece in my AMD Seattle:
 
-drop the '"'?
+02:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+[AMD/ATI] Oland XT [Radeon HD 8670 / R7 250/350] (rev 81) (prog-if 00
+[VGA controller])
+  Subsystem: Dell Oland XT [Radeon HD 8670 / R7 250/350]
+  Flags: bus master, fast devsel, latency 0, IRQ 255
+  Memory at 100000000 (64-bit, prefetchable) [size=3D4G]
+  Memory at 40000000 (64-bit, non-prefetchable) [size=3D256K]
+  I/O ports at 1000 [disabled] [size=3D256]
+  Expansion ROM at 40060000 [disabled] [size=3D128K]
+  Capabilities: <access denied>
+  Kernel modules: radeon, amdgpu
 
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+So AMD/ATI ASICs definitely exist that expose a 64-bit pref and a
+64-bit non-pref BAR.
 
-drop the '"'?
-> +
-> +title: TI AM65 PCI Endpoint
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +allOf:
-> +  - $ref: "pci-ep.yaml#"
-
-drop the '"' ?
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,am654-pcie-ep
-> +
-> +  reg:
-> +    maxItems: 4
-> +
-> +  reg-names:
-> +    items:
-> +      - const: app
-> +      - const: dbics
-> +      - const: addr_space
-> +      - const: atu
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  ti,syscon-pcie-mode:
-> +    description: Phandle to the SYSCON entry required for configuring PCIe in RC or EP mode.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  interrupts:
-> +    minItems: 1
-> +
-> +  dma-coherent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - max-link-speed
-> +  - power-domains
-> +  - ti,syscon-pcie-mode
-> +  - dma-coherent
-> +
-> +unevaluatedProperties: false
-
-Is it possible to lock this down further with additionalProperties: false?
-
-I could add some ridiculous property like system-controller; to the
-example and the checks wont catch it.
-
-same with the host as well.
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-you could drop this (unused)
-> +
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-We dont really need this, right? this is an example.. see below
-
-> +
-> +        pcie0_ep: pcie-ep@5500000 {
-> +                compatible = "ti,am654-pcie-ep";
-> +                reg =  <0x0 0x5500000 0x0 0x1000>,
-> +                       <0x0 0x5501000 0x0 0x1000>,
-> +                       <0x0 0x10000000 0x0 0x8000000>,
-> +                       <0x0 0x5506000 0x0 0x1000>;
-^^ just change this to
-reg =  <0x5500000 0x1000>,
-       <0x5501000 0x1000>,
-       <0x10000000 0x8000000>
-       <0x5506000 0x1000>;
-> +                reg-names = "app", "dbics", "addr_space", "atu";
-> +                power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
-> +                ti,syscon-pcie-mode = <&pcie0_mode>;
-> +                num-ib-windows = <16>;
-> +                num-ob-windows = <16>;
-> +                max-link-speed = <2>;
-> +                dma-coherent;
-> +                interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-> new file mode 100644
-> index 000000000000..3764ce01ee5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/ti,am65-pci-host.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-
-Drop the '"' ?
-> +
-> +title: TI AM65 PCI Host
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: ti,am654-pcie-rc
-> +      - description: PCIe controller in Keystone
-> +        items:
-> +          - const: ti,keystone-pcie
-> +          - const: snps,dw-pcie
-> +
-> +  reg:
-> +    maxItems: 4
-> +
-> +  reg-names:
-> +    items:
-> +      - const: app
-> +      - const: dbics
-> +      - const: config
-> +      - const: atu
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  ti,syscon-pcie-id:
-> +    description: Phandle to the SYSCON entry required for getting PCIe device/vendor ID
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  ti,syscon-pcie-mode:
-> +    description: Phandle to the SYSCON entry required for configuring PCIe in RC or EP mode.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  msi-map: true
-> +
-> +  dma-coherent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - max-link-speed
-> +  - ti,syscon-pcie-id
-> +  - ti,syscon-pcie-mode
-> +  - ranges
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      enum:
-> +        - ti,am654-pcie-rc
-> +then:
-> +  required:
-> +    - dma-coherent
-> +    - power-domains
-> +    - msi-map
-> +
-> +unevaluatedProperties: false
-
-Is it possible to lock this down further with additionalProperties: false?
-
-Same rationale as above.
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-
-We dont really need this, right? this is an example.. see below
-> +
-> +        pcie0_rc: pcie@5500000 {
-> +                compatible = "ti,am654-pcie-rc";
-> +                reg =  <0x0 0x5500000 0x0 0x1000>,
-> +                       <0x0 0x5501000 0x0 0x1000>,
-> +                       <0x0 0x10000000 0x0 0x2000>,
-> +                       <0x0 0x5506000 0x0 0x1000>;
-^^ just change this to
-reg =  <0x5500000 0x1000>,
-       <0x5501000 0x1000>,
-       <0x10000000 0x8000000>
-       <0x5506000 0x1000>;
-> +                reg-names = "app", "dbics", "config", "atu";
-> +                power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
-> +                #address-cells = <3>;
-> +                #size-cells = <2>;
-> +                ranges = <0x81000000 0 0          0x0 0x10020000 0 0x00010000>,
-> +                         <0x82000000 0 0x10030000 0x0 0x10030000 0 0x07FD0000>;
-> +                ti,syscon-pcie-id = <&pcie_devid>;
-> +                ti,syscon-pcie-mode = <&pcie0_mode>;
-> +                bus-range = <0x0 0xff>;
-> +                num-viewport = <16>;
-> +                max-link-speed = <2>;
-> +                dma-coherent;
-> +                interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-> +                msi-map = <0x0 &gic_its 0x0 0x10000>;
-> +                device_type = "pci";
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+--=20
+Ard.
