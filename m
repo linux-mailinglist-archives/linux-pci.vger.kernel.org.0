@@ -2,117 +2,238 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D6A390E1E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 04:02:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D39AD390E54
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 04:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232026AbhEZCEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 May 2021 22:04:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40543 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbhEZCEQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 May 2021 22:04:16 -0400
-Received: from mail-oo1-f69.google.com ([209.85.161.69])
-        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <koba.ko@canonical.com>)
-        id 1llisf-0007Ql-3T
-        for linux-pci@vger.kernel.org; Wed, 26 May 2021 02:02:45 +0000
-Received: by mail-oo1-f69.google.com with SMTP id o28-20020a4a385c0000b029023ec5d3d5ccso1697367oof.8
-        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 19:02:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=80Q9luL+LwQCDuf3BgkOvtEc2OIfkbeDzIrwJ3hVNYg=;
-        b=MRra8dBUCEpOOUj+pL38ZuPSmufPCMAkcPFUz9fT8eob6cNKQSwfKXFWxiqGn275Pl
-         jWWBgzT7YS+kD2Nm8+JAMtUMOu4QaN0BLKFdXJzNjYCJIVqLpb1KrXS06zJqj+Ovu9T8
-         1cDbjFFs+Ulf1XmNZDF4vemgxyhGOU6amQhItEUXVk4QWYtg1H9xdtkTfG7ZPatyWC4h
-         iD/+FkWUn4JHYRUaik3aeZu9MsgJtMl4LZWjt1bt22m3zOGfZmO9H6YkzPlb5B4Go7/Q
-         Olaz+OZgA1JBNyw1FsiB18AnAxD1D1W46OEavQm0oeFF8C/Emx5nCcooPhvbfj4OH9sC
-         jP4w==
-X-Gm-Message-State: AOAM533g1OM4XO2O2IELwt4msbgT9Rrn6vgzuN+C/LrhqQHZyu3qOOn/
-        2jDh2MQ8Kh2gnnT67RM+ZOYtGCFLdc4QqKnZLwTwqIdsXsGPTJznx2Brby+m94Yh0Y1TXbxdv9P
-        dA8m/DqWtTCTYuIGZcnP5Ab9Mlso/nqUvtFXSDieDf0t6lSsALkhsvw==
-X-Received: by 2002:aca:b3d5:: with SMTP id c204mr353841oif.17.1621994559114;
-        Tue, 25 May 2021 19:02:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwVyQJj1wQcjhyCbkjhZWLHzSkdMbj1UW7fzQW9m2Wo4G/waP+Gb8xrdYJnlCIdJUeKJb5TO7XDHgGKxBL1qrs=
-X-Received: by 2002:aca:b3d5:: with SMTP id c204mr353825oif.17.1621994558803;
- Tue, 25 May 2021 19:02:38 -0700 (PDT)
+        id S231497AbhEZCet (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 May 2021 22:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231961AbhEZCet (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 May 2021 22:34:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 15AB161429
+        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 02:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621996399;
+        bh=wKfINeG7VRmsh8MALQOBucDaw4lYbXUVhfcrQe7WQH0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FMsFuycbmdTuAXfSQSABUeJPp5BY96XQ+A80WJgGPMXC0/2pUQxQ29X6gd1d8ETzH
+         E8INcb4BZFlKJb1MW+4sZBJ3UplUZ6LOYiUF95eagCdnI7f5Kfzd2ROO/h0l9mksS1
+         cmIBvrae8/Y6wmXOHuoXAAQfLuEZ+S1P7vm35acwHNk7equtPt9HrKkHrC2flCYFJM
+         nNcThpr4QkYhflm8pifuItYDRD/etdns5kbqHV8/u7ddVyZG+XJFpq2Xh4a0Fe6h0C
+         zsHE+M+wLCgmgWiUz6X/G53mKUT8NiszfeigSX0YT4GwJa3O7d9NqZcQDs+/49O0ve
+         gHB9gG4XzFTOQ==
+Received: by mail-il1-f173.google.com with SMTP id o10so29080317ilm.13
+        for <linux-pci@vger.kernel.org>; Tue, 25 May 2021 19:33:19 -0700 (PDT)
+X-Gm-Message-State: AOAM533uEgC777pe5TXcazp4FlqW7HZEFFI5vV2j90x0q/jKSzF++ExS
+        fESukL8hI8UyfqlpwzbDrE+8K85Pw35yTbaDmGU=
+X-Google-Smtp-Source: ABdhPJw0XPKAy6Nuhr+BA2/FRskCAhS00Ptc9Q0ob6BiDmgYm6F/FTH4Q+ai+Q94WuSH/YGdK4sQ6hVFQQSvYfcH890=
+X-Received: by 2002:a92:c987:: with SMTP id y7mr27608674iln.173.1621996398468;
+ Tue, 25 May 2021 19:33:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210520033315.490584-1-koba.ko@canonical.com> <20210525074426.GA14916@lst.de>
-In-Reply-To: <20210525074426.GA14916@lst.de>
-From:   Koba Ko <koba.ko@canonical.com>
-Date:   Wed, 26 May 2021 10:02:27 +0800
-Message-ID: <CAJB-X+UFi-iAkRBZQUsd6B_P+Bi-TAa_sQjnhJagD0S91WoFUQ@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Avoid to go into d3cold if device can't use npss.
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Henrik Juul Hansen <hjhansen2020@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <CAAhV-H7D-drrEaDskQhVx0c8_VAy--n3mbsQN_ijfWrRQGVQ=A@mail.gmail.com>
+ <20210525135523.GA1185972@bjorn-Precision-5520>
+In-Reply-To: <20210525135523.GA1185972@bjorn-Precision-5520>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Wed, 26 May 2021 10:33:06 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Ayg9QyPBsXRqBbsn8OTEmN2yw7Bf3on63UVM950rARA@mail.gmail.com>
+Message-ID: <CAAhV-H4Ayg9QyPBsXRqBbsn8OTEmN2yw7Bf3on63UVM950rARA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] PCI: Support ASpeed VGA cards behind a misbehaving bridge
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jingfeng Sui <suijingfeng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 25, 2021 at 3:44 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Thu, May 20, 2021 at 11:33:15AM +0800, Koba Ko wrote:
-> > After resume, host can't change power state of the closed controller
-> > from D3cold to D0.
->
-> Why?
-As per Kai-Heng said, it's a regression introduced by commit
-b97120b15ebd ("nvme-pci:
-use simple suspend when a HMB is enabled"). The affected NVMe is using HMB.
-the target nvme ssd uses HMB and the target machine would put nvme to d3cold.
-During suspend, nvme driver would shutdown the nvme controller caused by
-commit b97120b15ebd ("nvme-pci: use simple suspend when a HMB is enabled").
-During resuming, the nvme controller can't change the power state from
-d3cold to d0.
-    # nvme 0000:58:00.0: can't change power state from D3cold to D0
-(config space inaccessible)
-Tried some machines, they only put nvme to d3hot so even if nvme is
-forced to shutdown,
-it could be resumed correctly.
+Hi, Bjorn,
 
-As per commit b97120b15ebd , the TP spec would allow nvme to access
-the host memory in any power state in S3.
-but the Host would fail to manage. I agree with Kai-Heng's suggestion
-but this TP would be broken.
-
+On Tue, May 25, 2021 at 9:55 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> > For these devices, just avoid to go deeper than d3hot.
->
-> What are "these devices"?
-
-It's a Samsung ssd using HMB.
-
-> > @@ -2958,6 +2959,15 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> On Tue, May 25, 2021 at 07:03:05PM +0800, Huacai Chen wrote:
+> > On Thu, May 20, 2021 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Wed, May 19, 2021 at 10:17:14AM +0800, Huacai Chen wrote:
+> > > > On Wed, May 19, 2021 at 3:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Tue, May 18, 2021 at 03:13:43PM +0800, Huacai Chen wrote:
+> > > > > > On Tue, May 18, 2021 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > On Mon, May 17, 2021 at 08:53:43PM +0800, Huacai Chen wrote:
+> > > > > > > > On Sat, May 15, 2021 at 5:09 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > > > > > > > > On Fri, May 14, 2021 at 11:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > > > On Fri, May 14, 2021 at 04:00:25PM +0800, Huacai Chen wrote:
+> > > > > > > > > > > According to PCI-to-PCI bridge spec, bit 3 of Bridge Control Register is
+> > > > > > > > > > > VGA Enable bit which modifies the response to VGA compatible addresses.
+> > > > > > > > > >
+> > > > > > > > > > The bridge spec is pretty old, and most of the content has been
+> > > > > > > > > > incorporated into the PCIe spec.  I think you can cite "PCIe r5.0, sec
+> > > > > > > > > > 7.5.1.3.13" here instead.
+> > > > > > > > > >
+> > > > > > > > > > > If the VGA Enable bit is set, the bridge will decode and forward the
+> > > > > > > > > > > following accesses on the primary interface to the secondary interface.
+> > > > > > > > > >
+> > > > > > > > > > *Which* following accesses?  The structure of English requires that if
+> > > > > > > > > > you say "the following accesses," you must continue by *listing* the
+> > > > > > > > > > accesses.
+> > > > > > > > > >
+> > > > > > > > > > > The ASpeed AST2500 hardward does not set the VGA Enable bit on its
+> > > > > > > > > > > bridge control register, which causes vgaarb subsystem don't think the
+> > > > > > > > > > > VGA card behind the bridge as a valid boot vga device.
+> > > > > > > > > >
+> > > > > > > > > > s/hardward/bridge/
+> > > > > > > > > > s/vga/VGA/ (also in code comments and dmesg strings below)
+> > > > > > > > > >
+> > > > > > > > > > From the code, it looks like AST2500 ([1a03:2000]) is a VGA device,
+> > > > > > > > > > since it apparently has a VGA class code.  But here you say the
+> > > > > > > > > > AST2500 has a Bridge Control register, which suggests that it's a
+> > > > > > > > > > bridge.  If AST2500 is some sort of combination that includes both a
+> > > > > > > > > > bridge and a VGA device, please outline that topology.
+> > > > > > > > > >
+> > > > > > > > > > But the hardware defect is that some bridges forward VGA accesses even
+> > > > > > > > > > though their VGA Enable bit is not set?  The quirk should be attached
+> > > > > > > > > > to broken *bridges*, not to VGA devices.
+> > > > > > > > > >
+> > > > > > > > > > If a bridge forwards VGA accesses regardless of how its VGA Enable bit
+> > > > > > > > > > is set, that means VGA arbitration (in vgaarb.c) cannot work
+> > > > > > > > > > correctly, so merely setting the default VGA device once in a quirk is
+> > > > > > > > > > not sufficient.  You would have to somehow disable any future attempts
+> > > > > > > > > > to use other VGA devices.  Only the VGA device below this defective
+> > > > > > > > > > bridge is usable.  Any other VGA devices in the system would be
+> > > > > > > > > > useless.
+> > > > > > > > > >
+> > > > > > > > > > > So we provide a quirk to fix Xorg auto-detection.
+> > > > > > > > > > >
+> > > > > > > > > > > See similar bug:
+> > > > > > > > > > >
+> > > > > > > > > > > https://patchwork.kernel.org/project/linux-pci/patch/20170619023528.11532-1-dja@axtens.net/
+> > > > > > > > > >
+> > > > > > > > > > This patch was never merged.  If we merged a revised version, please
+> > > > > > > > > > cite the SHA1 instead.
+> > > > > > > > >
+> > > > > > > > > This patch has never merged, and I found that it is unnecessary after
+> > > > > > > > > commit a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device
+> > > > > > > > > even if there's no legacy VGA"). Maybe this ASpeed patch is also
+> > > > > > > > > unnecessary. If it is still needed, I'll investigate the root cause.
+> > > > > > > >
+> > > > > > > > I found that vga_arb_device_init() and pcibios_init() are both wrapped
+> > > > > > > > by subsys_initcall(), which means their sequence is unpredictable. And
+> > > > > > > > unfortunately, in our platform vga_arb_device_init() is called before
+> > > > > > > > pcibios_init(), which makes vga_arb_device_init() fail to set a
+> > > > > > > > default vga device. This is the root cause why we thought that we
+> > > > > > > > still need a quirk for AST2500.
+> > > > > > >
+> > > > > > > Does this mean there is no hardware defect here?  The VGA Enable bit
+> > > > > > > works correctly?
+> > > > > > >
+> > > > > > No, VGA Enable bit still doesn't set, but with commit
+> > > > > > a37c0f48950b56f6ef2ee637 ("vgaarb: Select a default VGA device even if
+> > > > > > there's no legacy VGA") we no longer depend on VGA Enable.
+> > > > >
+> > > > > Correct me if I'm wrong:
+> > > > >
+> > > > >   - On the AST2500 bridge [1a03:1150], the VGA Enable bit is
+> > > > >     read-only 0.
+> > > > >
+> > > > >   - The AST2500 bridge never forwards VGA accesses ([mem
+> > > > >     0xa0000-0xbffff], [io 0x3b0-0x3bb], [io 0x3c0-0x3df]) to its
+> > > > >     secondary bus.
+> > > > >
+> > > > > The VGA Enable bit is optional, and if both the above are true, the
+> > > > > bridge is working correctly per spec, and the quirk below is not the
+> > > > > right solution, and whatever solution we come up with should not
+> > > > > claim that the bridge is misbehaving.
+> > > > Yes, you are right, the bridge is working correctly, which is similar
+> > > > to HiSilicon D05.
+> > > >
+> > > >
+> > > > >
+> > > > > > > > I think the best solution is make vga_arb_device_init() be wrapped by
+> > > > > > > > subsys_initcall_sync(), do you think so?
+> > > > > > >
+> > > > > > > Hmm.  Unfortunately the semantics of subsys_initcall_sync() are not
+> > > > > > > documented, so I'm not sure exactly *why* such a change would work and
+> > > > > > > whether we could rely on it to continue working.
+> > > > > > >
+> > > > > > > pcibios_init() isn't very consistent across arches.  On some,
+> > > > > > > including alpha, microblaze, some MIPS platforms, powerpc, and sh, it
+> > > > > > > enumerates PCI devices.  On others (ia64, parisc, sparc, x86), it does
+> > > > > > > basically nothing.  That makes life a little difficult.
+> > > > > >
+> > > > > > subsys_initcall_sync() is ensured after all subsys_initcall()
+> > > > > > functions, so at least it can solve the problem on platforms which use
+> > > > > > pcibios_init() to enumerate PCI devices (x86 and other ACPI-based
+> > > > > > platforms are also OK, because they use acpi_init()
+> > > > > > -->acpi_scan_init() -->pci_acpi_scan_root() to enumerate devices).
+> > > > >
+> > > > > More details in my response to suijingfeng:
+> > > > > https://lore.kernel.org/r/20210518193100.GA148462@bjorn-Precision-5520
+> > > > >
+> > > > > I'd rather not fiddle with the initcall ordering.  That mechanism is
+> > > > > fragile and I'd prefer something more robust.
+> > > > >
+> > > > > I'm wondering whether it's practical to do something in the normal PCI
+> > > > > enumeration path, e.g., in pci_init_capabilities().  Maybe we can
+> > > > > detect the default VGA device as we enumerate it.  Then we wouldn't
+> > > > > have this weird process of "find all PCI devices first, then scan for
+> > > > > the default VGA device, and oh, by the way, also check for VGA devices
+> > > > > hot-added later."
+> > > >
+> > > > If we don't want to rely on initcall order, and want to solve the
+> > > > hot-added case, then can we add vga_arb_select_default_device() in
+> > > > pci_notify() when (action == BUS_NOTIFY_ADD_DEVICE &&
+> > > > !vga_default_device())?
+> > >
+> > > I think I would see if it's possible to call
+> > > vga_arb_select_default_device() from vga_arbiter_add_pci_device()
+> > > instead of from vga_arb_device_init().
+> > >
+> > > I would also (as a separate patch) try to get rid of this loop in
+> > > vga_arb_device_init():
+> > >
+> > >         list_for_each_entry(vgadev, &vga_list, list) {
+> > >                 struct device *dev = &vgadev->pdev->dev;
+> > >
+> > >                 if (vgadev->bridge_has_one_vga)
+> > >                         vgaarb_info(dev, "bridge control possible\n");
+> > >                 else
+> > >                         vgaarb_info(dev, "no bridge control possible\n");
+> > >         }
+> > >
+> > > and do the vgaarb_info() in vga_arbiter_check_bridge_sharing(), where
+> > > the loop would not be needed.
 > >
-> >       dev_info(dev->ctrl.device, "pci function %s\n", dev_name(&pdev->dev));
-> >
-> > +     if (pm_suspend_via_firmware() || !dev->ctrl.npss ||
-> > +         !pcie_aspm_enabled(pdev) ||
-> > +         dev->nr_host_mem_descs ||
-> > +         (dev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND)) {
+> > Any updates?
 >
-> Before we start open coding this in even more places we really want a
-> little helper function for these checks, which should be accomodated with
-> the comment near the existing copy of the checks.
+> Are you waiting for me to do something else?
+>
+> I suggested an approach above, but I don't have time to actually do
+> the work for you.
+Yes, I am really waiting... but I am also investigating history and thinking.
 
-Thanks, I will refine this.
+If I haven't missed something (correct me if I'm wrong). For the
+original HiSilicon problem, the first attempt is to modify
+vga_arbiter_add_pci_device() and remove the VGA_RSRC_LEGACY_MASK
+check. But vga_arbiter_add_pci_device() is called for each PCI device,
+so removing that check will cause the first VGA device to be the
+default VGA device. This breaks some x86 platforms, so after that you
+don't touch vga_arbiter_add_pci_device(), but add
+vga_arb_select_default_device() in vga_arb_device_init().
+
+If the above history is correct, then we cannot add
+vga_arb_select_default_device() in vga_arbiter_add_pci_device()
+directly. So it seems we can only add vga_arb_select_default_device()
+in pci_notify(). And if we don't care about hotplug, we can simply use
+subsys_initcall_sync() to wrap vga_arb_device_init().
+
+And DRM developers, please let me know what do you think about?
+
+Huacai
 
 >
-> > +             pdev->d3cold_allowed = false;
-> > +             pci_d3cold_disable(pdev);
-> > +             pm_runtime_resume(&pdev->dev);
->
-> Why do we need to both set d3cold_allowed and call pci_d3cold_disable?
->
-> What is the pm_runtime_resume doing here?
-I referenced the codes of d3cold_allowed_store@d3cold_allowed_store fun,
-As per Bjorn and search in multiple drivers, only pci_d3cold_disable is enough.
+> Bjorn
