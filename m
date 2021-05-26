@@ -2,196 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0171391538
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 12:42:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D779391582
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 12:54:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233953AbhEZKo1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 06:44:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49232 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234083AbhEZKoY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 May 2021 06:44:24 -0400
-IronPort-SDR: qQkcY2xXSkWW8h/1QpUITYGcRz/Od1JOTD0ZHuCatZytLhcdSXj//3tLbCPEhNOqnNSYZsdcli
- QbwxL7M0XYyQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9995"; a="266329583"
-X-IronPort-AV: E=Sophos;i="5.82,331,1613462400"; 
-   d="scan'208";a="266329583"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 03:42:48 -0700
-IronPort-SDR: roehaz2kwBxDRGnqcDF28RuFQa1/Ls5i+Y4NuZlmi+Gqt7RZ87l2WH7Akp3S6zD6m1iXYGw5uK
- x9f5yuUzr3qA==
-X-IronPort-AV: E=Sophos;i="5.82,331,1613462400"; 
-   d="scan'208";a="397247961"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 03:42:45 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 26 May 2021 13:42:43 +0300
-Date:   Wed, 26 May 2021 13:42:43 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Target PM state is D3cold if the upstream bridge
- is power manageable
-Message-ID: <20210526104243.GC291593@lahna.fi.intel.com>
-References: <20210510102647.40322-1-mika.westerberg@linux.intel.com>
- <20210525233604.GA1236347@bjorn-Precision-5520>
+        id S234319AbhEZK4O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 06:56:14 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:33085 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234228AbhEZKzr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 06:55:47 -0400
+X-Greylist: delayed 431 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 May 2021 06:55:46 EDT
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id lr3wlSo2AWkKblr40lCjKn; Wed, 26 May 2021 12:47:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
+        t=1622026020; bh=i3YFUAbeRpgtR5w8IcoIAuRWN20XFA+ykFnFhUAN4qE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=NNwNFzC+QaN5biEQBZT9esQ0ObcSsIaS7r8O0XZECcNai6wu26n8jik+pNmLnt4ug
+         Fq4nYiKtE9xMug2tBNjW1Otl9y9++lkEaOYJqRGr+Vo0M0dT4kn1t0+L+83BByOg12
+         i0qujg5tqkyxrlvIyzAond0n4PRzYgnn9S1YLjlrtrYvWgw15bFpCwFziWFWX3lmi4
+         gh3NTbZJPBqbg+SY+gBv1NbzL7kMo/tKGzVHBFSa5lhWv/+u7Z/T/MKGgBncMkBl8/
+         HBgSYsA9QvA8cuekXscHr8epA84quesap4DlrDEQvt8M88PvBd/5G1xXedjF+5KUo9
+         v6IdUz3L1RLYg==
+Subject: Re: [PATCH V3 1/6] PCI: Use cached Device Capabilities Register
+To:     Dongdong Liu <liudongdong3@huawei.com>, helgaas@kernel.org,
+        hch@infradead.org, linux-pci@vger.kernel.org, rajur@chelsio.com
+Cc:     linux-media@vger.kernel.org, netdev@vger.kernel.org
+References: <20210512143737.42352-1-liudongdong3@huawei.com>
+ <20210512143737.42352-2-liudongdong3@huawei.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <2030c1c1-6060-2b5f-74d9-f53f89e442e6@xs4all.nl>
+Date:   Wed, 26 May 2021 12:46:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210525233604.GA1236347@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20210512143737.42352-2-liudongdong3@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfLq7nGd6H/vP7IpWMLlg9Zd2nt3WmaFvnfVkhO8OysaMrGg5pvsCT8yfJ2DSvIWJNWEyhEJCMlYmnBKjINHYi4TxCCF73bImnhGxpp8X0GjWuTmhpsc3
+ KN+AmbKq4IOAeglg42+CYraJNNFr+QBnc5WedtvgzVdhDvanfx4Cx/0by7ynlrVDurq3OkE2hXjjl3uO1m7PCmSDHckttRmWQsGxFZGXTnb/xPcoXTiXYH9F
+ R2bEq47YRXHY7U0SD7+qNzZnAcMCxGfyduqwXTulkUeFCcnlhHFyNZZ1KckKk2dQjwoB66jtm6aUx5CrOJYJ8Tj5FLrPlrypkfBJ8OCrhMZZTbVgVQqDaWxW
+ gDMvZrK+Cu2nJYaAhTfR1UFXPUzcDCylNeg+kbYYdYPWHm+KZdA=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Tue, May 25, 2021 at 06:36:04PM -0500, Bjorn Helgaas wrote:
-> On Mon, May 10, 2021 at 01:26:47PM +0300, Mika Westerberg wrote:
-> > ASMedia xHCI controller only supports PME from D3cold:
-> > 
-> > 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
-> >   ...
-> >   Capabilities: [78] Power Management version 3
-> >   	  Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
-> > 	  Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> > 
-> > Now, if the controller is part of a Thunderbolt device for instance, it
-> > is connected to a PCIe switch downstream port. When the hierarchy then
-> > enters D3cold as a result of s2idle cycle pci_target_state() returns D0
-> > because the device does not support PME from the default target_state
-> > (D3hot). So what happens is that the whole hierarchy is left into D0
-> > breaking power management.
-> > 
-> > For this reason choose target_state to be D3cold if there is a upstream
-> > bridge that is power manageable. The reasoning here is that the upstream
-> > bridge will be also placed into D3 making the effective power state of
-> > the device in question to be D3cold.
+On 12/05/2021 16:37, Dongdong Liu wrote:
+> It will make sense to store the pcie_devcap value in the pci_dev
+> structure instead of reading Device Capabilities Register multiple
+> times. The fisrt place to use pcie_devcap is in set_pcie_port_type(),
+> get the pcie_devcap value here, then use cached pcie_devcap in the
+> needed place.
 > 
-> I'm having a hard time understanding this in a generic way and
-> relating it to anything in the specs.  This isn't written as a quirk,
-> so I assume this is not specific to the ASM1042A or to Thunderbolt.
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> ---
+>  drivers/media/pci/cobalt/cobalt-driver.c |  4 ++--
 
-Right. Sorry about that. I tried to explain this as well as I can.
+For the cobalt driver:
 
-> The same considerations apparently should apply to *any* device that
-> is below a power-manageable bridge and doesn't support PME from D3hot.
-> If so, let's lead off the commit log with that, and use ASM1042A
-> merely as an example instead of as the motivation.
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-OK, got it.
+Regards,
 
-> "When the hierarchy enters D3cold" -- I guess you mean the bridge and
-> all downstream devices are in D3cold?  Does a bridge being in D3cold
-> actually force all downstream devices to be in D3cold as well?  I
-> guess not, because it seems that the bridge is in D3 but the whole
-> point of this is to change the target_state of the device from D0 to
-> D3cold, right?
+	Hans
 
-Right but the upstream bridge must not be in higher power state than the
-children so if the brige is in D3cold so are its children. Otherwise it
-is against the PCIe spec.
-
-> Is s2idle relevant in itself?  My impression is that the important
-> things are the PME capabilities and the D0/D3hot/D3cold states of the
-> bridge and the device, and "s2idle" is just a distraction.
-
-It is not relevant. Only an example of a situation we observe the issue.
-
-> "Breaking power management" -- I assume this just means we don't save
-> as much power as we'd like?
-
-Yes, it means we leave one root port and the connected devices fully
-powered, and in case of Intel hardware it means the system does not
-enter low power idle states either.
-
-> "For this reason" -- I missed the actual reason.  Is the reason "the
-> whole hierarchy is in D0 and wastes more power"?  I guess we don't
-> really need a *reason*; saving power is good enough.  What we *do*
-> need is justification for why it is safe, and I can't connect the dots
-> yet.
+>  drivers/pci/pci.c                        |  5 +----
+>  drivers/pci/pcie/aspm.c                  | 11 ++++-------
+>  drivers/pci/probe.c                      | 11 +++--------
+>  drivers/pci/quirks.c                     |  3 +--
+>  include/linux/pci.h                      |  1 +
+>  6 files changed, 12 insertions(+), 23 deletions(-)
 > 
-> You mention putting the bridge in D3.  Does that mean D3hot or D3cold?
-> If it can be either, say that.  If it means only one, be specific.
-> I'd like to eradicate "D3" from PCI because the ambiguity just makes
-> things hard.
-
-It means D3hot but later on D3cold once the ACPI power resource has been
-turned off. That's why I said only D3. But sure.
-
-> What does "the effective power state of the device is D3cold" mean?
-> Does that mean the device is *actually* in D3cold, so it has no power
-> and will need complete re-initialization?  Or does it simply mean that
-> the device is unreachable because the bridge is not in D0, and the OS
-> can't directly wake it?
-
-It means the upstream bridge is in D3hot and thus not forward
-configuration requests to the device below it. In addition once all the
-devices under the root port are in D3hot the ACPI powre resource is
-turned off, the links go to L2 (or L3) and the device is actually in
-D3cold and need to go through reset and complete re-initialization
-before it can be functional again.
-
-> These are all questions I'd like to see answered in the commit log,
-> not just in the email thread.
-
-Sure.
-
-In a nutshell what happens here is that the one device prevents all the
-devices above it (up to the root port) to enter low power states thus
-wasting energy.
-
-I will add all these to the commit log in next version.
-
-> > Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-> > Reported-by: Koba Ko <koba.ko@canonical.com>
-> > Tested-by: Koba Ko <koba.ko@canonical.com>
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  drivers/pci/pci.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index b717680377a9..e3f3b9010762 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -2578,8 +2578,19 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-> >  		return target_state;
-> >  	}
-> >  
-> > -	if (!dev->pm_cap)
-> > +	if (!dev->pm_cap) {
-> >  		target_state = PCI_D0;
-> > +	} else {
-> > +		struct pci_dev *bridge;
-> > +
-> > +		/*
-> > +		 * If the upstream bridge can be put to D3 then it means
-> > +		 * that our target state is D3cold instead of D3hot.
+> diff --git a/drivers/media/pci/cobalt/cobalt-driver.c b/drivers/media/pci/cobalt/cobalt-driver.c
+> index 839503e..04e735f 100644
+> --- a/drivers/media/pci/cobalt/cobalt-driver.c
+> +++ b/drivers/media/pci/cobalt/cobalt-driver.c
+> @@ -193,11 +193,11 @@ void cobalt_pcie_status_show(struct cobalt *cobalt)
+>  		return;
 > 
-> Can you expand on this a bit?  Expand "D3" to be specific, and more
-> importantly, say something about *why* the target state is D3cold.
-
-OK.
-
-> > +		 */
-> > +		bridge = pci_upstream_bridge(dev);
-> > +		if (bridge && pci_bridge_d3_possible(bridge))
-> > +			target_state = PCI_D3cold;
+>  	/* Device */
+> -	pcie_capability_read_dword(pci_dev, PCI_EXP_DEVCAP, &capa);
+>  	pcie_capability_read_word(pci_dev, PCI_EXP_DEVCTL, &ctrl);
+>  	pcie_capability_read_word(pci_dev, PCI_EXP_DEVSTA, &stat);
+>  	cobalt_info("PCIe device capability 0x%08x: Max payload %d\n",
+> -		    capa, get_payload_size(capa & PCI_EXP_DEVCAP_PAYLOAD));
+> +		    capa,
+> +		    get_payload_size(pci_dev->pcie_devcap & PCI_EXP_DEVCAP_PAYLOAD));
+>  	cobalt_info("PCIe device control 0x%04x: Max payload %d. Max read request %d\n",
+>  		    ctrl,
+>  		    get_payload_size((ctrl & PCI_EXP_DEVCTL_PAYLOAD) >> 5),
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b717680..68ccd77 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4620,13 +4620,10 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+>   */
+>  bool pcie_has_flr(struct pci_dev *dev)
+>  {
+> -	u32 cap;
+> -
+>  	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>  		return false;
 > 
-> I guess we don't or can't do this for the
-> platform_pci_power_manageable() case?
-
-No because this may be a bridge that has no ACPI description (e.g
-further down the hierarchy).
-
+> -	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> -	return cap & PCI_EXP_DEVCAP_FLR;
+> +	return dev->pcie_devcap & PCI_EXP_DEVCAP_FLR;
+>  }
+>  EXPORT_SYMBOL_GPL(pcie_has_flr);
 > 
-> > +	}
-> >  
-> >  	/*
-> >  	 * If the device is in D3cold even though it's not power-manageable by
-> > -- 
-> > 2.30.2
-> > 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index ac0557a..d637564 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -660,7 +660,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> 
+>  	/* Get and check endpoint acceptable latencies */
+>  	list_for_each_entry(child, &linkbus->devices, bus_list) {
+> -		u32 reg32, encoding;
+> +		u32 encoding;
+>  		struct aspm_latency *acceptable =
+>  			&link->acceptable[PCI_FUNC(child->devfn)];
+> 
+> @@ -668,12 +668,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>  		    pci_pcie_type(child) != PCI_EXP_TYPE_LEG_END)
+>  			continue;
+> 
+> -		pcie_capability_read_dword(child, PCI_EXP_DEVCAP, &reg32);
+>  		/* Calculate endpoint L0s acceptable latency */
+> -		encoding = (reg32 & PCI_EXP_DEVCAP_L0S) >> 6;
+> +		encoding = (child->pcie_devcap & PCI_EXP_DEVCAP_L0S) >> 6;
+>  		acceptable->l0s = calc_l0s_acceptable(encoding);
+>  		/* Calculate endpoint L1 acceptable latency */
+> -		encoding = (reg32 & PCI_EXP_DEVCAP_L1) >> 9;
+> +		encoding = (child->pcie_devcap & PCI_EXP_DEVCAP_L1) >> 9;
+>  		acceptable->l1 = calc_l1_acceptable(encoding);
+> 
+>  		pcie_aspm_check_latency(child);
+> @@ -808,7 +807,6 @@ static void free_link_state(struct pcie_link_state *link)
+>  static int pcie_aspm_sanity_check(struct pci_dev *pdev)
+>  {
+>  	struct pci_dev *child;
+> -	u32 reg32;
+> 
+>  	/*
+>  	 * Some functions in a slot might not all be PCIe functions,
+> @@ -831,8 +829,7 @@ static int pcie_aspm_sanity_check(struct pci_dev *pdev)
+>  		 * Disable ASPM for pre-1.1 PCIe device, we follow MS to use
+>  		 * RBER bit to determine if a function is 1.1 version device
+>  		 */
+> -		pcie_capability_read_dword(child, PCI_EXP_DEVCAP, &reg32);
+> -		if (!(reg32 & PCI_EXP_DEVCAP_RBER) && !aspm_force) {
+> +		if (!(child->pcie_devcap & PCI_EXP_DEVCAP_RBER) && !aspm_force) {
+>  			pci_info(child, "disabling ASPM on pre-1.1 PCIe device.  You can enable it with 'pcie_aspm=force'\n");
+>  			return -EINVAL;
+>  		}
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 3a62d09..7963ab2 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1497,8 +1497,8 @@ void set_pcie_port_type(struct pci_dev *pdev)
+>  	pdev->pcie_cap = pos;
+>  	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+>  	pdev->pcie_flags_reg = reg16;
+> -	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+> -	pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
+> +	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->pcie_devcap);
+> +	pdev->pcie_mpss = pdev->pcie_devcap & PCI_EXP_DEVCAP_PAYLOAD;
+> 
+>  	parent = pci_upstream_bridge(pdev);
+>  	if (!parent)
+> @@ -2008,18 +2008,13 @@ static void pci_configure_mps(struct pci_dev *dev)
+>  int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
+>  {
+>  	struct pci_host_bridge *host;
+> -	u32 cap;
+>  	u16 ctl;
+>  	int ret;
+> 
+>  	if (!pci_is_pcie(dev))
+>  		return 0;
+> 
+> -	ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> -	if (ret)
+> -		return 0;
+> -
+> -	if (!(cap & PCI_EXP_DEVCAP_EXT_TAG))
+> +	if (!(dev->pcie_devcap & PCI_EXP_DEVCAP_EXT_TAG))
+>  		return 0;
+> 
+>  	ret = pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &ctl);
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index dcb229d..b89b438 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5073,8 +5073,7 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+>  		pdev->pcie_cap = pos;
+>  		pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+>  		pdev->pcie_flags_reg = reg16;
+> -		pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+> -		pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
+> +		pdev->pcie_mpss = pdev->pcie_devcap & PCI_EXP_DEVCAP_PAYLOAD;
+> 
+>  		pdev->cfg_size = PCI_CFG_SPACE_EXP_SIZE;
+>  		if (pci_read_config_dword(pdev, PCI_CFG_SPACE_SIZE, &status) !=
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c20211e..555a3ac 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -340,6 +340,7 @@ struct pci_dev {
+>  	u8		rom_base_reg;	/* Config register controlling ROM */
+>  	u8		pin;		/* Interrupt pin this device uses */
+>  	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
+> +	u32		pcie_devcap;	/* Cached Device Capabilities Register */
+>  	unsigned long	*dma_alias_mask;/* Mask of enabled devfn aliases */
+> 
+>  	struct pci_driver *driver;	/* Driver bound to this device */
+> --
+> 2.7.4
+> 
+
