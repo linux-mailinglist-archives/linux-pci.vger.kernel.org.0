@@ -2,89 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C4D9391CBA
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 18:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F66D391CF4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 18:23:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235159AbhEZQNh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 12:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60780 "EHLO mail.kernel.org"
+        id S232721AbhEZQYk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 12:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232197AbhEZQNh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 May 2021 12:13:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A47EA613EC;
-        Wed, 26 May 2021 16:12:05 +0000 (UTC)
+        id S232363AbhEZQYj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 May 2021 12:24:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1C9CE613CA;
+        Wed, 26 May 2021 16:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622045525;
-        bh=plkzmqFfNAQzIDwAmha6TrfSbLQm+saf1V+MFBd4Y4w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kh6hEPyJbcPHLy+T6gIzgL6WDxQHtT4q0hlJfdrJRBNJ7GX9CpPQov5XxZXoNjZVb
-         RghzrXklpnY1izJOLdaSbNMn5uM8Wk80rxswOoSdV/cxXX5AmkhrLrRuBcG5mykrzt
-         XqIWuL0gnycpFMa8BhmkruiADUxXLRmqo4Nj2HBtSb9gLZgZtYwsPSFCj1jtC5fmSs
-         1iVfjrVWTryXyJ91gd9bqHsSB6ZeuIxSBHcJO0UN5sabynl0YvopR7QMFjgp5wpHkS
-         GXoZdShHj/hOJfxZKdlOrGg6HvUqfWj4CXOj0cF49M70RDo/rwtyw40CpuUedQi3gE
-         4XuhfPx7qYSig==
-Received: by mail-ej1-f53.google.com with SMTP id z16so2699302ejr.4;
-        Wed, 26 May 2021 09:12:05 -0700 (PDT)
-X-Gm-Message-State: AOAM533M3Ieg4PxVuni481n3tTedHM4kSZLL5CcCtdUupyuGWei4CLHe
-        874TCtbNvf2Z24us3ikBfvMqLBpVfrMjD6uXMQ==
-X-Google-Smtp-Source: ABdhPJzsgwTde9AZHJs0192mQAo9uL9cmKMD6PA8pgpxX/B3veY0O4k7ZEw9pBw7r3WOrLTwX1ttlgOxOL5RsICjZ0k=
-X-Received: by 2002:a17:907:76e8:: with SMTP id kg8mr32336386ejc.130.1622045524118;
- Wed, 26 May 2021 09:12:04 -0700 (PDT)
+        s=k20201202; t=1622046188;
+        bh=EC/2FajTeQPvMVJu8QFCw8CA3KxI3R6E2U7b7VFhw7Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OqFvy1CCupJA3GVoDKXRFZa5F85ZK0/mtdmFp+AuVxA4KFOyM4zzHqw+lr5giCimC
+         tES7XtjSLd0dN3sxeObEe9RBjpCXsOrTFXZBT+Eq5B9NJraDOQN20shmb8BwlVkdIQ
+         EIw5/YTcJ9LBhtdKlaImPW3eDG7qitX0zHlKbBXyqtKTyr/c+9VHkODEoc+AZxdkGM
+         ZWzaoAiTGBJ/FCn6IDMu6UPuWQeixt5zyvCGYE2FojXsiVXU/vT5WXj7L84SQdVlQi
+         AZ+EbHHGqFHZCES9TmpCoIZvKLZBGpbbcLPwdBAQWw4A2o0U+m6rQkVQSdvP6oo3lp
+         tkEF+EjLZDxqw==
+Date:   Wed, 26 May 2021 11:23:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lambert Wang <lambert.q.wang@gmail.com>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci: add pci_dev_is_alive API
+Message-ID: <20210526162306.GA1299430@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210427175140.17800-5-jim2101024@gmail.com> <20210525211804.GA1228022@bjorn-Precision-5520>
-In-Reply-To: <20210525211804.GA1228022@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 26 May 2021 11:11:52 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq++cfNM8sEygMn45Ue8BPPX+8P=ag=bURKvuUuLPvvtUQ@mail.gmail.com>
-Message-ID: <CAL_Jsq++cfNM8sEygMn45Ue8BPPX+8P=ag=bURKvuUuLPvvtUQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] PCI: brcmstb: add shutdown call to driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAATamay8WTiJnB=5OLYdFTqVUcRF9LarN6_1Eej3QUgFzWRnkA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 25, 2021 at 4:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> Capitalize "Add" in the subject.
->
-> On Tue, Apr 27, 2021 at 01:51:39PM -0400, Jim Quinlan wrote:
-> > The shutdown() call is similar to the remove() call except the former does
-> > not need to invoke pci_{stop,remove}_root_bus(), and besides, errors occur
-> > if it does.
->
-> This doesn't explain why shutdown() is necessary.  "errors occur"
-> might be a hint, except that AFAICT, many similar drivers do invoke
-> pci_stop_root_bus() and pci_remove_root_bus() (several of them while
-> holding pci_lock_rescan_remove()), without implementing .shutdown().
->
-> It is ... unfortunate that there's such a variety of implementations
-> here.  I don't believe these driver differences are all necessary
-> consequences of hardware differences.
+On Wed, May 26, 2021 at 02:12:38PM +0800, Lambert Wang wrote:
+> ...
+> The user is our new PCI driver under development for WWAN devices .
+> Surprise removal could happen under multiple circumstances.
+> e.g. Exception, Link Failure, etc.
+> 
+> We wanted this API to detect surprise removal or check device recovery
+> when AER and Hotplug are disabled.
+> 
+> I thought the API could be commonly used for many similar devices.
 
-What's correct here?
+Be careful with this.  pci_device_is_present() is not a good way to
+detect surprise removal.  Surprise removal can happen at any time, for
+example, it can occur after you call pci_device_is_present() but
+before you use the result:
 
-This was on my radar and something we should get in front of. It's
-only a matter of time until everyone is converting their drivers to
-modules since that is now the Android WayTM. My plan here was to
-register a devm hook to call pci_stop_root_bus() and
-pci_remove_root_bus(). That way every driver doesn't have to implement
-a remove() hook. Though maybe they all need to quiesce themselves
-anyways.
+  present = pci_device_is_present(pdev);
+  /* present == true */
+  /* device may be removed here */
+  if (present)
+    xxx; /* this operation may fail */
 
-Rob
+You have to assume that *any* operation on the device can fail because
+the device has been removed.  In general, there's no response for a
+PCIe write to the device, so you can't really check whether a write
+has failed.
+
+There *are* responses for reads, of course, if the device has been
+removed, a read will cause a failure response.  Most PCIe controllers
+turn that response into ~0 data to satisfy the read.  So the only
+reliable way to detect surprise removal is to check for ~0 data when
+doing an MMIO read from the device.  Of course, ~0 may be either valid
+data or a symptom of a failure response, so you may have to do
+additional work to distinguish those two cases.
+
+Bjorn
