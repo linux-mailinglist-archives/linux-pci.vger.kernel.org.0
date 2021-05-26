@@ -2,177 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB353919CC
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 16:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 551AD391A0A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 16:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234279AbhEZOTt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 10:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233656AbhEZOTr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 May 2021 10:19:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5232613EC;
-        Wed, 26 May 2021 14:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622038694;
-        bh=/mrMnRJMtVpcPfaQNOqXW592yaxmSLc2ufg5spt3+VQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MX/ygqxAFw2J+DjyYoVo6pjCineqLtwJKliO4HCjGylTv21K9Mo9xcREh/RNn7GAt
-         /jKTogqPHyC5ww7mV6oI9SQRjkI+LHaRU7m9kQRwFJAVPNwwBNyrlCqgxOBgFUkMQ0
-         ooyXlRYvUKzAC9qmS7oRfssCJPw+Yt0YCulSBOj7KqsEbAVFKC50Sc5qkcN5o2VNut
-         QgQ3gQG8OtQj/6eYNwBdm7YKQPL/3LbDa75WpKQzigNegqk6wgenNGQjKkJ9IKdvRw
-         tHQ2+28jdl1YVq3UNKbHyTam+57+NJddXP/Y+1zHsf2vAgCSo2+3EEbinZj5oQJ/1G
-         vcAy6f35I6J9A==
-Received: by mail-oo1-f48.google.com with SMTP id j26-20020a4adf5a0000b029020eac899f76so320225oou.7;
-        Wed, 26 May 2021 07:18:14 -0700 (PDT)
-X-Gm-Message-State: AOAM533olJj1QPzR6tiFSnNQ6AMJFrfQl+SkJxkiGstolPIykesCKTdX
-        UD9NWO/o9t90wD3fs9zW34jok3RN4qVaAo0x8e8=
-X-Google-Smtp-Source: ABdhPJzuXaQfBghkHVGIgesa2CXDpQU1Sx4OrMSZo9IeDeyVGaz4cU9Kh2fedoUg7wOW8h8mDqEOQqF+bO1JgM2k7UQ=
-X-Received: by 2002:a4a:8706:: with SMTP id z6mr2482481ooh.41.1622038694029;
- Wed, 26 May 2021 07:18:14 -0700 (PDT)
+        id S234554AbhEZOXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 10:23:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59828 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234657AbhEZOXp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 10:23:45 -0400
+Received: from mail-lj1-f198.google.com ([209.85.208.198])
+        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1lluQH-00082p-Aq
+        for linux-pci@vger.kernel.org; Wed, 26 May 2021 14:22:13 +0000
+Received: by mail-lj1-f198.google.com with SMTP id t1-20020a2e9d010000b02900f5b2b52da7so557082lji.8
+        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 07:22:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KRO+7j/5yLVMVQTeKppilXzCeyP1PjLQ0t5VspLhv9A=;
+        b=N9nvlCl+E8sDkQVoVfmoIYGV2uLrgUH0w70uPyE0WHFBToauMzIyOgpqu7DpZbPNJc
+         3LkbQaetwtZfdphe1wipAu/z4HfVcdFQEabVHkXh0dY/5xODpjnRzXekXLQPPkLSi6ue
+         q3ysfDlB4UhbIRY8yVK9F5QOahhHXM//ltHLYOW6uRseM4k72HezxyTO3BjxpBc3DN6u
+         TGCluCjmfQ3UhhSWjdnP4Ek1tkUae1mSADhjykLDh2NiSryJVEVDsnzI6nsLHqPGVUGC
+         L3qzsfkmP/176Zrq5vlYbcVfAkfFuvnDG/WLqFFiw/h1bI4Sufkg8dNl0QFhdWbfO+gx
+         +fJQ==
+X-Gm-Message-State: AOAM532VC9xZopz+Bf/PRgNPMCOdEdF+eFYYJ8pCNmE5XS4RQokHAgvo
+        0up09CR7pvqONSEx4Ab1ndSnEYEANsyz3HNTr26ovwxcjxXI2DTCh66KDU6eWKhx7V2oZibzmOk
+        vbDeF8xtX1EvLztLPa8WjeJHoFOMI5nxpAn7JLK7ZK2NaKoFZ9bfh4Q==
+X-Received: by 2002:a05:6512:3488:: with SMTP id v8mr2271801lfr.622.1622038932739;
+        Wed, 26 May 2021 07:22:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy9Ncbz7tk+afIZiBiaVQaJ7SPjwGt7E11q4JRhgLfAPg8wtMkeKE7zuYtCMaSiZwT2FQxkbslAA1z6L4dgG5o=
+X-Received: by 2002:a05:6512:3488:: with SMTP id v8mr2271787lfr.622.1622038932348;
+ Wed, 26 May 2021 07:22:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMj1kXEBePfKDOc6eo9yjZPnVeFimX-zxR+R3As+2pP9XnZkuQ@mail.gmail.com>
- <20210525191556.GA1220872@bjorn-Precision-5520> <CAMj1kXG=dDwhNGe1tdHZH65KfcFzRHJKy6OwhWzYryZD9K9q_A@mail.gmail.com>
- <CAMdYzYptcAyb3U3ZZvNL8GwdcP-a2X8MX+rji2z0nEuiw0Br5A@mail.gmail.com>
-In-Reply-To: <CAMdYzYptcAyb3U3ZZvNL8GwdcP-a2X8MX+rji2z0nEuiw0Br5A@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 26 May 2021 16:18:02 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF0Gh+CNJ+Y=Xv_1Z1gRpubBQLL81pUHgZ0DXNUO-MYqQ@mail.gmail.com>
-Message-ID: <CAMj1kXF0Gh+CNJ+Y=Xv_1Z1gRpubBQLL81pUHgZ0DXNUO-MYqQ@mail.gmail.com>
-Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
- 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
- memory addresses")
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
+References: <20210520033315.490584-1-koba.ko@canonical.com>
+ <20210525074426.GA14916@lst.de> <CAJB-X+UFi-iAkRBZQUsd6B_P+Bi-TAa_sQjnhJagD0S91WoFUQ@mail.gmail.com>
+ <20210526024934.GB3704949@dhcp-10-100-145-180.wdc.com> <CAAd53p7xabD2t__=t67uRLrrFOB7YGgr_GMhi6L48PFGhNe80w@mail.gmail.com>
+ <20210526125942.GA25080@lst.de>
+In-Reply-To: <20210526125942.GA25080@lst.de>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed, 26 May 2021 22:21:59 +0800
+Message-ID: <CAAd53p4f2ZFsVRv-Q9maPBSD_uGjj7FoYKYy9MGjBPc6chk_1Q@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Avoid to go into d3cold if device can't use npss.
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Keith Busch <kbusch@kernel.org>, Koba Ko <koba.ko@canonical.com>,
+        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        Rob Herring <robh@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+        Henrik Juul Hansen <hjhansen2020@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 25 May 2021 at 22:03, Peter Geis <pgwipeout@gmail.com> wrote:
+On Wed, May 26, 2021 at 8:59 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On Tue, May 25, 2021 at 3:43 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Tue, 25 May 2021 at 21:15, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Wed, May 26, 2021 at 08:11:41PM +0800, Kai-Heng Feng wrote:
+> > On Wed, May 26, 2021 at 10:49 AM Keith Busch <kbusch@kernel.org> wrote:
 > > >
-> > > On Tue, May 25, 2021 at 05:54:56PM +0200, Ard Biesheuvel wrote:
-> > > > On Tue, 25 May 2021 at 17:34, Peter Geis <pgwipeout@gmail.com> wrote:
+> > > On Wed, May 26, 2021 at 10:02:27AM +0800, Koba Ko wrote:
+> > > > On Tue, May 25, 2021 at 3:44 PM Christoph Hellwig <hch@lst.de> wrote:
+> > > > >
+> > > > > On Thu, May 20, 2021 at 11:33:15AM +0800, Koba Ko wrote:
+> > > > > > After resume, host can't change power state of the closed controller
+> > > > > > from D3cold to D0.
+> > > > >
+> > > > > Why?
+> > > > As per Kai-Heng said, it's a regression introduced by commit
+> > > > b97120b15ebd ("nvme-pci:
+> > > > use simple suspend when a HMB is enabled"). The affected NVMe is using HMB.
 > > >
-> > > > > > > >> > On 2021-05-18 10:09, Alexandru Elisei wrote:
-> > > > > > > >> >> [..]
-> > > > > > > >> >> [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
-> > > > > > > >> >> [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff -> 0x00fa000000
-> > > > > > > >> >> [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff -> 0x00fbe00000
-> > > > > > > >> >> [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
-> > > > > > > >> >> [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
-> > > > > > > >> >> [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
-> > > > > > > >> >> [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus address [0xfbe00000-0xfbefffff])
-> > >
-> > > > ... For some reason, lspci translates the BAR values to CPU
-> > > > addresses, but the PCI side addresses are within 32-bits.
-> > >
-> > > lspci shows BARs as CPU physical addresses by default.  These are the
-> > > same addresses you would see in pdev->resource[n] and the same as BAR
-> > > values you would see in dmesg.
-> > >
-> > > A 64-bit CPU physical address can certainly be translated by the host
-> > > bridge to a 32-bit PCI address.  But that's not happening here because
-> > > this host bridge applies no translation (CPU physical 0xfa000000 maps
-> > > to bus address 0xfa000000).
-> > >
-> > > "lspci -b" shows the PCI bus addresses.
+> > > That really doesn't add up. The mentioned commit restores the driver
+> > > behavior for HMB drives that existed prior to d916b1be94b6d from kernel
+> > > 5.3. Is that NVMe device broken in pre-5.3 kernels, too?
 > >
-> > Ah, thanks.
-> >
-> > It does seem, though, that the information overload in this thread is
-> > causing confusion now. Peter shared some log output where there is
-> > definitely MMIO translation being applied.
+> > Quite likely. The system in question is a late 2020 Ice Lake laptop,
+> > so it was released after 5.3 kernel.
 >
-> Yes, I've done work on the rk3399 pcie controller which is why this
-> caught my attention.
-> The original issue still seems to exist:
-> For some reason:
-> commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for
-> 64-bit memory addresses")
-> causes allocation issues now.
-> The original description of the issue aligned with issues I was having
-> bringing up the rk356x pcie controller.
->
-> >
-> > > > [    6.673497] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff]
-> > > > (bus address [0x3f700000-0x3f7fffff])
-> > > > [    6.674642] pci_bus 0000:00: root bus resource [mem
-> > > > 0x300000000-0x33f6fffff] (bus address [0x00000000-0x3f6fffff])
-> >
-> > In this case, the I/O translation definitely looks wrong. On a typical
-> > ARM DT system, you will see something like
-> >
-> > [    1.500324] Remapped I/O 0x0000000067f00000 to [io  0x0000-0xffff window]
-> > [    1.500522] pci_bus 0000:00: root bus resource [io  0x0000-0xffff window]
-> >
-> > The MMIO window looks correct, but I suspect that both 0x82000000 and
-> > 0x83000000 in the DT ranges are describing the resource window as
-> > prefetchable, preventing the allocation of non-prefetchable BARs in
-> > this window.
->
-> I checked with lspci -vvvbxxxxnn:
->
-> Before your changes:
-> 00:00.0 PCI bridge [0604]: Fuzhou Rockchip Electronics Co., Ltd Device
-> [1d87:3566] (rev 01) (prog-if 00 [Normal decode])
->         I/O behind bridge: 00001000-00001fff [size=4K]
->         Memory behind bridge: 50000000-500fffff [size=1M]
->         Prefetchable memory behind bridge:
-> 0000000040000000-000000004fffffff [size=256M]
-> 01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc.
-> [AMD/ATI] Turks PRO [Radeon HD 7570] [1002:675d] (prog-if 00 [VGA
-> controller])
->         Region 0: Memory at 40000000 (64-bit, prefetchable)
->         Region 2: Memory at 50000000 (64-bit, non-prefetchable)
->         Region 4: I/O ports at 7f701000
->         Expansion ROM at 50020000 [disabled]
->
-> After your changes:
-> lspci -vvvbxxxxnn
-> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 3566
-> (rev 01) (prog-if 00 [Normal decode])
->         I/O behind bridge: 00001000-00001fff [size=4K]
->         Memory behind bridge: 10000000-100fffff [size=1M]
->         Prefetchable memory behind bridge:
-> 0000000000000000-000000000fffffff [size=256M]
-> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> [AMD/ATI] Turks PRO [Radeon HD 7570] (prog-if 00 [VGA controller])
->         Region 0: Memory at <unassigned> (64-bit, prefetchable) [virtual]
->         Region 2: Memory at 10000000 (64-bit, non-prefetchable) [virtual]
->         Region 4: I/O ports at 1000 [virtual]
->         Expansion ROM at 10020000 [disabled]
->
-> >
-> > Peter, for the configuration listed here, could you try something like
-> >
-> > ranges = <0x1000000 0x0 0x0 [IO base in the CPU address map] [IO size]>,
-> >          <0x2000000 0x0 0x0 [MMIO base in the CPU address map] [MMIO size]>;
->
-> That was similar to what I already had, removing the relocatable flag
-> and setting both addresses to 0x0 are the changes.
->
-> Here is the result:
+> This is just a mess.  We had to disable the sensible power state based
+> suspend on these systems because Intel broke it by just cutting the power
+> off.  And now the shutdown based one doesn't work either because it can't
+> handle d3cold.  Someone we need to stop Intel and the integrators from
+> doing stupid things, and I'm not sure how.
 
-<snip>
+To be fair, resuming the NVMe from D3hot is much slower than keep it
+at D0, which gives us a faster s2idle resume time. And now AMD also
+requires s2idle on their latest laptops.
 
-I'm not sure which conclusion I am supposed to draw from that output.
+And it's more like NVMe controllers don't respect PCI D3hot.
 
-Are you saying the output looks ok but the GPU card does not work?
+>
+> But degrading all systems even more is just a bad idea, so I fear we'll
+> need a quirk again.  Can you figure out by switching the cards if this
+> is the fault of the platform or the nvme device?
 
-Is your system DMA coherent? I would not be very optimistic about
-these drivers working out of the box on non-coherent systems.
+Here's the original bug report:
+https://bugs.launchpad.net/bugs/1912057
+
+Because the NVMe continues to work after s2idle and the symbol is
+rather subtle, so I suspect this is not platform or vendor specific.
+Is it possible to disable DMA for HMB NVMe on suspend?
+
+Kai-Heng
+
+>
+> >
+> > Kai-Heng
+> ---end quoted text---
