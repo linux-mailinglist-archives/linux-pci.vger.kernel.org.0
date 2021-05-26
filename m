@@ -2,54 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE8F3919A5
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 16:15:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABB353919CC
+	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 16:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233770AbhEZOQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 10:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42252 "EHLO mail.kernel.org"
+        id S234279AbhEZOTt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 10:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233484AbhEZOQo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 May 2021 10:16:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B57E613D7;
-        Wed, 26 May 2021 14:15:13 +0000 (UTC)
+        id S233656AbhEZOTr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 May 2021 10:19:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B5232613EC;
+        Wed, 26 May 2021 14:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622038513;
-        bh=V9yfVGz48znBhoLYjEcvRlIp+daisCyNDfH0CN868s4=;
+        s=k20201202; t=1622038694;
+        bh=/mrMnRJMtVpcPfaQNOqXW592yaxmSLc2ufg5spt3+VQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dvLySTxEZiqHBU8DH6u3hrzj/0VudX+Pm4o9KGnIC8axkD+9PaZiv2F7PbCAMhuXl
-         ZeeO7mNhyyyXa9eue79WEGTCXLOOHL4gm432bZz7BcvKQV38DZvaX+GPQIxzETcm8T
-         mD24awDK8Uz+0BUmBoOAbktmxDwSqKnRjK9wiYEzrSANcvvsqFHEbpWBWST4A8FTx3
-         HclZI2Quz0gpF21n72viLd14SRFeky5BDhX4phZGE3Y7QzuEgUlbhAQtBrD12xLRls
-         AOb2wzA2NOhnENSybyHuEQ+jbJa4Oslqju8HYAuZs9c/n3g2MwlPkKXBHIIfMYWBoL
-         fbBwjsDcOveFg==
-Received: by mail-ot1-f54.google.com with SMTP id u25-20020a0568302319b02902ac3d54c25eso1149846ote.1;
-        Wed, 26 May 2021 07:15:13 -0700 (PDT)
-X-Gm-Message-State: AOAM530RRriy6jUaRfONF7+ScC6ggAqCZsfXm3OGM4K8y8Lnu70YsqiW
-        j27hVzaX+Fvl6ABV0aWZjwQqXiXMBaZumJfrRRY=
-X-Google-Smtp-Source: ABdhPJwW8Rk3emRD0hkgXQcN7xcSCM6FPDi3/JYZuHbFrFSjxpSMXx/i0GLgZamflQJyw1kM6Iit6JpDO+OpdpVyfzw=
-X-Received: by 2002:a05:6830:4da:: with SMTP id s26mr2542142otd.77.1622038512765;
- Wed, 26 May 2021 07:15:12 -0700 (PDT)
+        b=MX/ygqxAFw2J+DjyYoVo6pjCineqLtwJKliO4HCjGylTv21K9Mo9xcREh/RNn7GAt
+         /jKTogqPHyC5ww7mV6oI9SQRjkI+LHaRU7m9kQRwFJAVPNwwBNyrlCqgxOBgFUkMQ0
+         ooyXlRYvUKzAC9qmS7oRfssCJPw+Yt0YCulSBOj7KqsEbAVFKC50Sc5qkcN5o2VNut
+         QgQ3gQG8OtQj/6eYNwBdm7YKQPL/3LbDa75WpKQzigNegqk6wgenNGQjKkJ9IKdvRw
+         tHQ2+28jdl1YVq3UNKbHyTam+57+NJddXP/Y+1zHsf2vAgCSo2+3EEbinZj5oQJ/1G
+         vcAy6f35I6J9A==
+Received: by mail-oo1-f48.google.com with SMTP id j26-20020a4adf5a0000b029020eac899f76so320225oou.7;
+        Wed, 26 May 2021 07:18:14 -0700 (PDT)
+X-Gm-Message-State: AOAM533olJj1QPzR6tiFSnNQ6AMJFrfQl+SkJxkiGstolPIykesCKTdX
+        UD9NWO/o9t90wD3fs9zW34jok3RN4qVaAo0x8e8=
+X-Google-Smtp-Source: ABdhPJzuXaQfBghkHVGIgesa2CXDpQU1Sx4OrMSZo9IeDeyVGaz4cU9Kh2fedoUg7wOW8h8mDqEOQqF+bO1JgM2k7UQ=
+X-Received: by 2002:a4a:8706:: with SMTP id z6mr2482481ooh.41.1622038694029;
+ Wed, 26 May 2021 07:18:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com> <01efd004-1c50-25ca-05e4-7e4ef96232e2@arm.com>
- <87eedxbtkn.fsf@stealth> <CAMj1kXE3U+16A6bO0UHG8=sx45DE6u0FtdSnoLDvfGnFJYTDrg@mail.gmail.com>
- <877djnaq11.fsf@stealth> <CAMj1kXFk2u=tbTYpa6Vqz5ihATFq61pCDiEbfRgXL_Rw+q_9Fg@mail.gmail.com>
- <CAMdYzYo-vdJvT_MPNTYvdveG3W8na7qMVEZFL4AjyQWqcLZi=Q@mail.gmail.com>
- <CAMj1kXEBePfKDOc6eo9yjZPnVeFimX-zxR+R3As+2pP9XnZkuQ@mail.gmail.com>
- <CAMdYzYrH_M92Pc6AqTgagtATr1TPq7Pdm57hadZeAmMBF2f0nA@mail.gmail.com>
- <CAMj1kXHsGgFedbhW2CiS5gveK3=ZxhXQ5siDeHJyttkOVKBQrQ@mail.gmail.com>
- <CAMdYzYruNYtJ8hwKPBUHPed1-=tV=CWDd_oSQtRmr4BJHp=YxA@mail.gmail.com>
- <CAMj1kXHLCJbzRpic-kkdWh5wKTE=6fqkesYbB6XoeJELKn93tw@mail.gmail.com> <9b99d520-e4b1-ae44-44eb-93c2e3d0c0cb@gmail.com>
-In-Reply-To: <9b99d520-e4b1-ae44-44eb-93c2e3d0c0cb@gmail.com>
+References: <CAMj1kXEBePfKDOc6eo9yjZPnVeFimX-zxR+R3As+2pP9XnZkuQ@mail.gmail.com>
+ <20210525191556.GA1220872@bjorn-Precision-5520> <CAMj1kXG=dDwhNGe1tdHZH65KfcFzRHJKy6OwhWzYryZD9K9q_A@mail.gmail.com>
+ <CAMdYzYptcAyb3U3ZZvNL8GwdcP-a2X8MX+rji2z0nEuiw0Br5A@mail.gmail.com>
+In-Reply-To: <CAMdYzYptcAyb3U3ZZvNL8GwdcP-a2X8MX+rji2z0nEuiw0Br5A@mail.gmail.com>
 From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 26 May 2021 16:15:01 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGBEuV=OUeCWUj5iUbFmko549uKCt5eHFM_j2KW-_FNdw@mail.gmail.com>
-Message-ID: <CAMj1kXGBEuV=OUeCWUj5iUbFmko549uKCt5eHFM_j2KW-_FNdw@mail.gmail.com>
+Date:   Wed, 26 May 2021 16:18:02 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF0Gh+CNJ+Y=Xv_1Z1gRpubBQLL81pUHgZ0DXNUO-MYqQ@mail.gmail.com>
+Message-ID: <CAMj1kXF0Gh+CNJ+Y=Xv_1Z1gRpubBQLL81pUHgZ0DXNUO-MYqQ@mail.gmail.com>
 Subject: Re: [BUG] rockpro64: PCI BAR reassignment broken by commit
  9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit
  memory addresses")
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-Cc:     Peter Geis <pgwipeout@gmail.com>,
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Punit Agrawal <punitagrawal@gmail.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Alexandru Elisei <alexandru.elisei@arm.com>,
@@ -58,72 +52,127 @@ Cc:     Peter Geis <pgwipeout@gmail.com>,
         arm-mail-list <linux-arm-kernel@lists.infradead.org>,
         Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
         Leonardo Bras <leobras.c@gmail.com>,
-        Rob Herring <robh@kernel.org>, PCI <linux-pci@vger.kernel.org>
+        Rob Herring <robh@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 26 May 2021 at 15:55, Christian K=C3=B6nig
-<ckoenig.leichtzumerken@gmail.com> wrote:
+On Tue, 25 May 2021 at 22:03, Peter Geis <pgwipeout@gmail.com> wrote:
 >
-> Hi Ard,
->
-> Am 25.05.21 um 19:18 schrieb Ard Biesheuvel:
-> > [SNIP]
-> >>> I seriously doubt that this is what is going on here.
-> >>>
-> >>> lspci -x will give you the bare BAR values - I suspect that those are
-> >>> probably fine.
-> >> lspci -x
-> >> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 3566 (=
-rev 01)
-> >> 00: 87 1d 66 35 07 05 10 40 01 00 04 06 00 00 01 00
-> >> 10: 00 00 00 00 00 00 00 00 00 01 ff 00 10 10 00 20
-> >> 20: 00 10 00 10 01 00 f1 0f 00 00 00 00 00 00 00 00
-> >> 30: 00 00 00 00 40 00 00 00 00 00 00 00 5f 01 02 00
-> >>
-> >> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> >> [AMD/ATI] Turks PRO [Radeon HD 7570]
-> >> 00: 02 10 5d 67 07 00 10 20 00 00 00 03 00 00 80 00
-> >> 10: 0c 00 00 00 00 00 00 00
-> > This is a 64-bit prefetchable BAR programmed with bus address 0x0
+> On Tue, May 25, 2021 at 3:43 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > >
-> >> 04 00 00 10 00 00 00 00
-> > This is a 64-bit non-prefetchable BAR programmed with bus address 0x100=
-0_0000
+> > On Tue, 25 May 2021 at 21:15, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Tue, May 25, 2021 at 05:54:56PM +0200, Ard Biesheuvel wrote:
+> > > > On Tue, 25 May 2021 at 17:34, Peter Geis <pgwipeout@gmail.com> wrote:
+> > >
+> > > > > > > >> > On 2021-05-18 10:09, Alexandru Elisei wrote:
+> > > > > > > >> >> [..]
+> > > > > > > >> >> [    0.305183] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
+> > > > > > > >> >> [    0.305248] rockchip-pcie f8000000.pcie:      MEM 0x00fa000000..0x00fbdfffff -> 0x00fa000000
+> > > > > > > >> >> [    0.305285] rockchip-pcie f8000000.pcie:       IO 0x00fbe00000..0x00fbefffff -> 0x00fbe00000
+> > > > > > > >> >> [    0.373705] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
+> > > > > > > >> >> [    0.373730] pci_bus 0000:00: root bus resource [bus 00-1f]
+> > > > > > > >> >> [    0.373751] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
+> > > > > > > >> >> [    0.373777] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus address [0xfbe00000-0xfbefffff])
+> > >
+> > > > ... For some reason, lspci translates the BAR values to CPU
+> > > > addresses, but the PCI side addresses are within 32-bits.
+> > >
+> > > lspci shows BARs as CPU physical addresses by default.  These are the
+> > > same addresses you would see in pdev->resource[n] and the same as BAR
+> > > values you would see in dmesg.
+> > >
+> > > A 64-bit CPU physical address can certainly be translated by the host
+> > > bridge to a 32-bit PCI address.  But that's not happening here because
+> > > this host bridge applies no translation (CPU physical 0xfa000000 maps
+> > > to bus address 0xfa000000).
+> > >
+> > > "lspci -b" shows the PCI bus addresses.
 > >
-> > (https://en.wikipedia.org/wiki/PCI_configuration_space describes the
-> > meaning of the low order BAR bits)
+> > Ah, thanks.
+> >
+> > It does seem, though, that the information overload in this thread is
+> > causing confusion now. Peter shared some log output where there is
+> > definitely MMIO translation being applied.
 >
-> Sorry for jumping into the middle of the discussion and to be honest I
-> haven't fully read it.
+> Yes, I've done work on the rk3399 pcie controller which is why this
+> caught my attention.
+> The original issue still seems to exist:
+> For some reason:
+> commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for
+> 64-bit memory addresses")
+> causes allocation issues now.
+> The original description of the issue aligned with issues I was having
+> bringing up the rk356x pcie controller.
 >
-> This looks a bit odd since on AMD VGA hardware the non-prefetchable BAR
-> is usually only 32bit, not 64bit.
+> >
+> > > > [    6.673497] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff]
+> > > > (bus address [0x3f700000-0x3f7fffff])
+> > > > [    6.674642] pci_bus 0000:00: root bus resource [mem
+> > > > 0x300000000-0x33f6fffff] (bus address [0x00000000-0x3f6fffff])
+> >
+> > In this case, the I/O translation definitely looks wrong. On a typical
+> > ARM DT system, you will see something like
+> >
+> > [    1.500324] Remapped I/O 0x0000000067f00000 to [io  0x0000-0xffff window]
+> > [    1.500522] pci_bus 0000:00: root bus resource [io  0x0000-0xffff window]
+> >
+> > The MMIO window looks correct, but I suspect that both 0x82000000 and
+> > 0x83000000 in the DT ranges are describing the resource window as
+> > prefetchable, preventing the allocation of non-prefetchable BARs in
+> > this window.
 >
-> But this hardware generation is rather old and I'm not sure what the BAR
-> assignment for that generation was. I would need to dig up the register
-> description in our archives as well.
+> I checked with lspci -vvvbxxxxnn:
 >
+> Before your changes:
+> 00:00.0 PCI bridge [0604]: Fuzhou Rockchip Electronics Co., Ltd Device
+> [1d87:3566] (rev 01) (prog-if 00 [Normal decode])
+>         I/O behind bridge: 00001000-00001fff [size=4K]
+>         Memory behind bridge: 50000000-500fffff [size=1M]
+>         Prefetchable memory behind bridge:
+> 0000000040000000-000000004fffffff [size=256M]
+> 01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc.
+> [AMD/ATI] Turks PRO [Radeon HD 7570] [1002:675d] (prog-if 00 [VGA
+> controller])
+>         Region 0: Memory at 40000000 (64-bit, prefetchable)
+>         Region 2: Memory at 50000000 (64-bit, non-prefetchable)
+>         Region 4: I/O ports at 7f701000
+>         Expansion ROM at 50020000 [disabled]
+>
+> After your changes:
+> lspci -vvvbxxxxnn
+> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 3566
+> (rev 01) (prog-if 00 [Normal decode])
+>         I/O behind bridge: 00001000-00001fff [size=4K]
+>         Memory behind bridge: 10000000-100fffff [size=1M]
+>         Prefetchable memory behind bridge:
+> 0000000000000000-000000000fffffff [size=256M]
+> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> [AMD/ATI] Turks PRO [Radeon HD 7570] (prog-if 00 [VGA controller])
+>         Region 0: Memory at <unassigned> (64-bit, prefetchable) [virtual]
+>         Region 2: Memory at 10000000 (64-bit, non-prefetchable) [virtual]
+>         Region 4: I/O ports at 1000 [virtual]
+>         Expansion ROM at 10020000 [disabled]
+>
+> >
+> > Peter, for the configuration listed here, could you try something like
+> >
+> > ranges = <0x1000000 0x0 0x0 [IO base in the CPU address map] [IO size]>,
+> >          <0x2000000 0x0 0x0 [MMIO base in the CPU address map] [MMIO size]>;
+>
+> That was similar to what I already had, removing the relocatable flag
+> and setting both addresses to 0x0 are the changes.
+>
+> Here is the result:
 
-I have another museum piece in my AMD Seattle:
+<snip>
 
-02:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
-[AMD/ATI] Oland XT [Radeon HD 8670 / R7 250/350] (rev 81) (prog-if 00
-[VGA controller])
-  Subsystem: Dell Oland XT [Radeon HD 8670 / R7 250/350]
-  Flags: bus master, fast devsel, latency 0, IRQ 255
-  Memory at 100000000 (64-bit, prefetchable) [size=3D4G]
-  Memory at 40000000 (64-bit, non-prefetchable) [size=3D256K]
-  I/O ports at 1000 [disabled] [size=3D256]
-  Expansion ROM at 40060000 [disabled] [size=3D128K]
-  Capabilities: <access denied>
-  Kernel modules: radeon, amdgpu
+I'm not sure which conclusion I am supposed to draw from that output.
 
-So AMD/ATI ASICs definitely exist that expose a 64-bit pref and a
-64-bit non-pref BAR.
+Are you saying the output looks ok but the GPU card does not work?
 
---=20
-Ard.
+Is your system DMA coherent? I would not be very optimistic about
+these drivers working out of the box on non-coherent systems.
