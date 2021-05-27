@@ -2,96 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13D08393805
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 23:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F14F39386E
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 23:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234668AbhE0Vfn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 17:35:43 -0400
-Received: from mail-ej1-f45.google.com ([209.85.218.45]:40764 "EHLO
-        mail-ej1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229822AbhE0Vfm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 17:35:42 -0400
-Received: by mail-ej1-f45.google.com with SMTP id jt22so2288483ejb.7
-        for <linux-pci@vger.kernel.org>; Thu, 27 May 2021 14:34:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mpgakV4m2DjOjxZ42IA2Grlnogqg/U74DCIUAaWI7nE=;
-        b=scOCl/GfdCWyKJG6TZvozdmRyVy7oQqoWvbFMHupyADCnmGuY95ki2175MWX8GjLKo
-         ASbt6xS4nVJYG2KaJQiw9Tc970YirqL+Exdo9Xx7InuRfgE7O0tNvL10mKG+2e3oQ+yM
-         HvUeUn1ygN39auQ8AqIy4s30SowDiDKygjjybPwjS4/nuw5sWVCPVKHqPg4j50Waim2N
-         sXJQitgeIp42+0igq4SaNLBxFyB25ooJqF8fRKeM3hkFzPdEzbAb/j9IcjG+BNF8ALZn
-         Yue0BWWfmNDJ34E4rpJiKsW5SIY2ptnnQsiT05GMkj4W/M8JTObY1v0bAdeGExHGknmh
-         hVKA==
-X-Gm-Message-State: AOAM5322dzUlsJi8cRHZcXaUU/cTrI8LyIjqwgX2EwOA6ir0E/m+qDbm
-        D+9s4sR/qkt1p9ozcYMB6cI=
-X-Google-Smtp-Source: ABdhPJyp3eGDzA4LRmhaGbVptDp22Y1oj4v+EUTt27d5+WBtE5/ZkbomHMlp7INhcPX2aD0x5Ln0wA==
-X-Received: by 2002:a17:906:f84d:: with SMTP id ks13mr5960374ejb.103.1622151246681;
-        Thu, 27 May 2021 14:34:06 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id k2sm1492332ejx.98.2021.05.27.14.34.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 May 2021 14:34:06 -0700 (PDT)
-Date:   Thu, 27 May 2021 23:34:04 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] PCI/sysfs: Use return value from
- dsm_label_utf16s_to_utf8s() directly
-Message-ID: <20210527213404.GA37266@rocinante.localdomain>
-References: <20210527201650.221944-1-kw@linux.com>
- <20210527201650.221944-2-kw@linux.com>
- <b6f3d949ca5c1723001494a371d1a74ef0ff72ed.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6f3d949ca5c1723001494a371d1a74ef0ff72ed.camel@perches.com>
+        id S235028AbhE0Vyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 17:54:52 -0400
+Received: from yyz.mikelr.com ([170.75.163.43]:33776 "EHLO yyz.mikelr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229822AbhE0Vyv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 17:54:51 -0400
+X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 May 2021 17:54:50 EDT
+Received: from glidewell.ykf.mikelr.com (198-84-194-208.cpe.teksavvy.com [198.84.194.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by yyz.mikelr.com (Postfix) with ESMTPSA id 57D2F4EA21;
+        Thu, 27 May 2021 17:45:26 -0400 (EDT)
+From:   Mikel Rychliski <mikel@mikelr.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Mikel Rychliski <mikel@mikelr.com>
+Subject: [PATCH] PCI: Add quirk for 64-bit DMA on RS690 chipset
+Date:   Thu, 27 May 2021 17:45:21 -0400
+Message-Id: <20210527214521.23923-1-mikel@mikelr.com>
+X-Mailer: git-send-email 2.13.7
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Joe,
+Although the AMD RS690 chipset has 64-bit DMA support, BIOS implementations
+sometimes fail to configure the memory limit registers correctly.
+Currently, the ahci driver has quirks to enable or disable 64-bit DMA
+depending on the BIOS version (see ahci_sb600_enable_64bit() in ahci.c).
+snd_hda_intel always disables 64-bit DMA with the paired SB600 chipset.
 
-[...]
-> > -static void dsm_label_utf16s_to_utf8s(union acpi_object *obj, char *buf)
-> > +static int dsm_label_utf16s_to_utf8s(union acpi_object *obj, char *buf)
-> >  {
-> >  	int len;
-> > +
-> >  	len = utf16s_to_utf8s((const wchar_t *)obj->buffer.pointer,
-> >  			      obj->buffer.length,
-> >  			      UTF16_LITTLE_ENDIAN,
-> >  			      buf, PAGE_SIZE);
-> 
-> This should be PAGE_SIZE - 1 no?
-> 
-> >  	buf[len] = '\n';
-> > +
-> > +	return len;
-> 
-> return len + 1 ?
+The Acer F690GVM mainboard uses this chipset and a Marvell 88E8056 NIC. The
+sky2 driver attempts to use 64-bit DMA the NIC, which will not work:
 
-Good catch!
+	sky2 0000:02:00.0: error interrupt status=0x8
+	sky2 0000:02:00.0 eth0: tx timeout
+	sky2 0000:02:00.0 eth0: transmit ring 0 .. 22 report=0 done=0
 
-I left the original code as-is, and this old latent bug would remain
-there.  I am glad you had a moment to review this new version.  Thank
-you!
+Avoid the issue by configuring the memory limit registers correctly if the
+BIOS failed to. If the kernel is aware of physical memory above 4GB, but
+the BIOS never configured the PCI host with this information, update the
+register with our value.
 
-I will send v6 later and include this as separate patch per Bjorn's
-request.
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+---
+ drivers/pci/quirks.c    | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci_ids.h |  1 +
+ 2 files changed, 45 insertions(+)
 
-	Krzysztof
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index dcb229de1acb..cd98a01de908 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5601,3 +5601,47 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+ 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
++
++#define RS690_LOWER_TOP_OF_DRAM2	0x30
++#define RS690_LOWER_TOP_OF_DRAM2_VALID	0x1
++#define RS690_UPPER_TOP_OF_DRAM2	0x31
++#define RS690_HTIU_NB_INDEX		0xA8
++#define RS690_HTIU_NB_INDEX_WR_ENABLE	0x100
++#define RS690_HTIU_NB_DATA		0xAC
++
++/*
++ * Some BIOS implementations support RAM above 4GB, but do not configure the
++ * PCI host to respond to bus master accesses for these addresses. These
++ * implementations set the TOP_OF_DRAM_SLOT1 register correctly, so PCI DMA
++ * works as expected for addresses below 4GB.
++ *
++ * Reference: "AMD RS690 ASIC Family Register Reference Guide" (public)
++ */
++static void rs690_fix_64bit_dma(struct pci_dev *pdev)
++{
++	u32 val = 0;
++	phys_addr_t top_of_dram = __pa(high_memory - 1) + 1;
++
++	if (top_of_dram <= (1ULL << 32))
++		return;
++
++	pci_write_config_dword(pdev, RS690_HTIU_NB_INDEX,
++				RS690_LOWER_TOP_OF_DRAM2);
++	pci_read_config_dword(pdev, RS690_HTIU_NB_DATA, &val);
++
++	if (val)
++		return;
++
++	pci_info(pdev, "Adjusting top of DRAM to support 64-bit DMA\n");
++
++	pci_write_config_dword(pdev, RS690_HTIU_NB_INDEX,
++		RS690_UPPER_TOP_OF_DRAM2 | RS690_HTIU_NB_INDEX_WR_ENABLE);
++	pci_write_config_dword(pdev, RS690_HTIU_NB_DATA, top_of_dram >> 32);
++
++	pci_write_config_dword(pdev, RS690_HTIU_NB_INDEX,
++		RS690_LOWER_TOP_OF_DRAM2 | RS690_HTIU_NB_INDEX_WR_ENABLE);
++	pci_write_config_dword(pdev, RS690_HTIU_NB_DATA,
++		top_of_dram | RS690_LOWER_TOP_OF_DRAM2_VALID);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_RS690,
++			rs690_fix_64bit_dma);
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 4c3fa5293d76..0a7fe2ed520b 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -381,6 +381,7 @@
+ #define PCI_DEVICE_ID_ATI_RS400_166     0x5a32
+ #define PCI_DEVICE_ID_ATI_RS400_200     0x5a33
+ #define PCI_DEVICE_ID_ATI_RS480         0x5950
++#define PCI_DEVICE_ID_ATI_RS690         0x7910
+ /* ATI IXP Chipset */
+ #define PCI_DEVICE_ID_ATI_IXP200_IDE	0x4349
+ #define PCI_DEVICE_ID_ATI_IXP200_SMBUS	0x4353
+-- 
+2.13.7
+
