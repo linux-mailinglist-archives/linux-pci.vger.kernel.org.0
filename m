@@ -2,140 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63821393411
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 18:34:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 230B9393423
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 18:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236189AbhE0Qg2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 12:36:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        id S235803AbhE0Qkf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 12:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235001AbhE0Qg1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 May 2021 12:36:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 82F8A61077;
-        Thu, 27 May 2021 16:34:53 +0000 (UTC)
+        id S234278AbhE0Qke (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 12:40:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 61DF1613AF;
+        Thu, 27 May 2021 16:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622133293;
-        bh=IsdX7aBRh7T+5Cs2YQCUr1eculVqE7cgTlmKcUzghtw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pW8dEcGvcslftdvA+7SeEV3shWhIBt1vMtAdU2jrFJ0oB5h3Fvh5hmWpF8MoKf70L
-         7xEivnA7j+jZ0t57MfE3t7gn5fRR/95frbZ61OqucjNanqwlFuEU9xh/Ru3gq2PXpp
-         jb6jcIRF325vcvmXuRiawNXjQ8UUqHrNY5cmMC4k8HWEBvN1PsQFCmf8cLkjqRvzJ0
-         bDY5FQQqOJn/te1373BWCf4GrJd29C9XwbGWZ+4JC9K8E+8zcvWkag2ipyw717PfrW
-         6s9nyyZi9JTX09x4j+ngJX1f3aJY/RdG/gre9KEfPDBPHW1LJroW4FzPNLwNYvjpPE
-         IEmcX21+d414A==
-Date:   Thu, 27 May 2021 11:34:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] Revert "arm64: PCI: Exclude ACPI "consumer"
- resources from host bridge windows"
-Message-ID: <20210527163452.GA1402454@bjorn-Precision-5520>
+        s=k20201202; t=1622133540;
+        bh=5DJuW/bnBtUHJd7Q3Q7OZvGhMJUl8t5p1TVaOTuL/hg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HueSznr3Fu2IQEOByfQwL7tX83bW8Ryg5HdBSrz++Tm7FjPH2ctScG/Nq/RkVZ8D5
+         izO8mIqcIQ3S2LskbH0lCj+XnyXDzyK93cCQ9qYXTP8shcACOUu/pu7Hhe4QeeUBB3
+         80wews3XswhJMcUoKzBslppBq/q5nShlMtWl6FjODW26b0T2k6Ed1lHcIJm4r516Ex
+         VfHUrt1LLnz6vmoZ5Khy2Q8jIoSMELpGLm1XnfkvDBp+kxyp2KWTYttvfRnUfdVThD
+         LQRipXdRu+kqtOOAU1KrKb6QnvuHlpx1MwNn0C882gXjQVdHsfekWSoesWJzolbrrk
+         rc+t2T80Ksovw==
+Received: by mail-ej1-f42.google.com with SMTP id z12so1194444ejw.0;
+        Thu, 27 May 2021 09:39:00 -0700 (PDT)
+X-Gm-Message-State: AOAM532B52BVM57GUQrKsPIKunkLQ+SRw57DGVY0u1k0pPmWQ9TM9HWO
+        TRkCRCPP+ZQMewhQc0cnlv29qzsLY3boeg1x2A==
+X-Google-Smtp-Source: ABdhPJzgsTYwg11aYC8HyZsYl9T+SDJSXVaYrpuLFWrhDtEG2Ds1o4OjLE8O10QD1Y9g+T4o7fNzuzbsW094AbY1T8M=
+X-Received: by 2002:a17:906:7b88:: with SMTP id s8mr365002ejo.525.1622133538969;
+ Thu, 27 May 2021 09:38:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210527093200.GA16444@lpieralisi>
+References: <20210527150541.3130505-1-punitagrawal@gmail.com> <20210527150541.3130505-2-punitagrawal@gmail.com>
+In-Reply-To: <20210527150541.3130505-2-punitagrawal@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 27 May 2021 11:38:46 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+Sp_Owe4V4WNh4jnuNJZ5jXxA+j4fW7564oPCy5Lu3ew@mail.gmail.com>
+Message-ID: <CAL_Jsq+Sp_Owe4V4WNh4jnuNJZ5jXxA+j4fW7564oPCy5Lu3ew@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: of: Override 64-bit flag for non-prefetchable
+ memory below 4GB
+To:     Punit Agrawal <punitagrawal@gmail.com>
+Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>, wqu@suse.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 27, 2021 at 10:32:00AM +0100, Lorenzo Pieralisi wrote:
-> On Wed, May 26, 2021 at 09:58:36PM +0100, Will Deacon wrote:
-> > On Tue, May 11, 2021 at 01:40:20AM +0200, Maximilian Luz wrote:
-> > > The Microsoft Surface Pro X has host bridges defined as
-> > > 
-> > >     Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
-> > >     Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
-> > > 
-> > >     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-> > >     {
-> > >         Name (RBUF, ResourceTemplate ()
-> > >         {
-> > >             Memory32Fixed (ReadWrite,
-> > >                 0x60200000,         // Address Base
-> > >                 0x01DF0000,         // Address Length
-> > >                 )
-> > >             WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
-> > >                 0x0000,             // Granularity
-> > >                 0x0000,             // Range Minimum
-> > >                 0x0001,             // Range Maximum
-> > >                 0x0000,             // Translation Offset
-> > >                 0x0002,             // Length
-> > >                 ,, )
-> > >         })
-> > >         Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
-> > >     }
-> > > 
-> > > meaning that the memory resources aren't (explicitly) defined as
-> > > "producers", i.e. host bridge windows.
-> > > 
-> > > Commit 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from
-> > > host bridge windows") introduced a check that removes such resources,
-> > > causing BAR allocation failures later on:
-> > > 
-> > >     [ 0.150731] pci 0002:00:00.0: BAR 14: no space for [mem size 0x00100000]
-> > >     [ 0.150744] pci 0002:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
-> > >     [ 0.150758] pci 0002:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
-> > >     [ 0.150769] pci 0002:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
-> > > 
-> > > This eventually prevents the PCIe NVME drive from being accessible.
-> > > 
-> > > On x86 we already skip the check for producer/window due to some history
-> > > with negligent firmware. It seems that Microsoft is intent on continuing
-> > > that history on their ARM devices, so let's drop that check here too.
-> > > 
-> > > Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> > > ---
-> > > 
-> > > Please note: I am not sure if this is the right way to fix that, e.g. I
-> > > don't know if any additional checks like on IA64 or x86 might be
-> > > required instead, or if this might break things on other devices. So
-> > > please consider this more as a bug report rather than a fix.
-> > > 
-> > > Apologies for the re-send, I seem to have unintentionally added a blank
-> > > line before the subject.
-> > > 
-> > > ---
-> > >  arch/arm64/kernel/pci.c | 14 --------------
-> > >  1 file changed, 14 deletions(-)
-> > 
-> > Adding Lorenzo to cc, as he'll have a much better idea about this than me.
-> > 
-> > This is:
-> > 
-> > https://lore.kernel.org/r/20210510234020.1330087-1-luzmaximilian@gmail.com
-> 
-> Sigh. We can't apply this patch since it would trigger regressions on
-> other platforms (IIUC the root complex registers would end up in the
-> host bridge memory windows).
-> 
-> I am not keen on reverting commit 8fd4391ee717 because it does the
-> right thing.
-> 
-> I think this requires a quirk and immediate reporting to Microsoft.
-> 
-> Bjorn, what are your thoughts on this ?
+On Thu, May 27, 2021 at 10:06 AM Punit Agrawal <punitagrawal@gmail.com> wrote:
+>
+> Some host bridges advertise non-prefetable memory windows that are
+> entirely located below 4GB but are marked as 64-bit address memory.
+>
+> Since commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
+> flags for 64-bit memory addresses"), the OF PCI range parser takes a
+> stricter view and treats 64-bit address ranges as advertised while
+> before such ranges were treated as 32-bit.
+>
+> A PCI-to-PCI bridges cannot forward 64-bit non-prefetchable memory
+> ranges. As a result, the change in behaviour due to the commit causes
+> allocation failure for devices that are connected behind PCI host
+> bridges modelled as PCI-to-PCI bridge and require non-prefetchable bus
+> addresses.
+>
+> In order to not break platforms, override the 64-bit flag for
+> non-prefetchable memory ranges that lie entirely below 4GB.
+>
+> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+> Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
+> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> ---
+>  drivers/pci/of.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index da5b414d585a..b9d0bee5a088 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -565,10 +565,14 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+>                 case IORESOURCE_MEM:
+>                         res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+>
+> -                       if (!(res->flags & IORESOURCE_PREFETCH))
+> +                       if (!(res->flags & IORESOURCE_PREFETCH)) {
+>                                 if (upper_32_bits(resource_size(res)))
+>                                         dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
 
-In retrospect, I think 8fd4391ee717 (which I wrote), was probably a
-mistake.
+Based on Ard's explanation, doesn't this need to also check for
+!IORESOURCE_MEM_64?
 
-Sure, it's a nice idea to have PNP0A03 _CRS methods that work nicely
-as designed, by describing host bridge registers as "consumer"
-resources and host bridge windows as "producer" registers, instead of
-having the bridge registers in _CRS of an unrelated PNP0C02 device.
+> -
+> +                               if ((res->flags & IORESOURCE_MEM_64) && !upper_32_bits(res->end)) {
 
-But realistically, the PNP0A03/PNP0C02 issue is a solved problem, even
-though it's ugly, and I'm not sure why I thought Microsoft would see
-value in doing this differently on arm64 than on x86 and ia64.
+res->end is the CPU address space. Isn't it the PCI address space we care about?
 
-What would break if we reverted 8fd4391ee717?  I guess any arm64
-platforms that described host bridge register space in PNP0A03 _CRS
-"consumer" resources?  And Windows probably doesn't work or isn't
-supported on those platforms?
-
-Bjorn
+> +                                       dev_warn(dev, "Overriding 64-bit flag for non-prefetchable memory below 4GB\n");
+> +                                       res->flags &= ~IORESOURCE_MEM_64;
+> +                               }
+> +                       }
+>                         break;
+>                 }
+>         }
+> --
+> 2.30.2
+>
