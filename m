@@ -2,97 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C35392427
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 03:12:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20CA39258A
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 05:43:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234392AbhE0BN5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 21:13:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
+        id S234744AbhE0DpK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 23:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234099AbhE0BNr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 21:13:47 -0400
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF18BC061761
-        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 18:12:13 -0700 (PDT)
-Received: by mail-oi1-x234.google.com with SMTP id u11so3490067oiv.1
-        for <linux-pci@vger.kernel.org>; Wed, 26 May 2021 18:12:13 -0700 (PDT)
+        with ESMTP id S233656AbhE0DpK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 23:45:10 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C97DC061574;
+        Wed, 26 May 2021 20:43:37 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id a25so4007297edr.12;
+        Wed, 26 May 2021 20:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=exJYV0NRFjRQ5VrBRJOpFxRRj/qcZmNhjCFXtwj2b6E=;
-        b=Icw3wJ5UXgBm3MmeI9k3ltrfs2V1sytWyQvXRDHJXysgPbWUT9IwPcR1F5ttv5CN6V
-         vBVs8hyZhKM997l6WB2joFWsJUXlKJOiojgziv1Ajnj9Q2Y4dd+wuV73X3/ETiwq7HDU
-         s0hHaj6kppHH5Nz6KjMhSQfp9UYXiBAlNCuJZunMg7a7C+RKL7cwCGYe7ipJcCse/sDL
-         4Do7yF/SDdT6qQdt6jCgLxAqFXKul1dlt9io8Db+Zugp2beO30qquBaxtZC4SZmJrpUF
-         MNwfIgzU+RUud7Gm1APLNVBpDpxEyMgdfz76qx2Cn5deb+BKqXT4d79HAW+KHkyUBbs3
-         tZzw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HnZq+n+gp23G19nG+lOoSxanxr/9NKSMMQJp+1JiGZg=;
+        b=Zkw0EaT+4+Aq1hEEXu7KywR45D4+dOXE6EIiVjlfCpy2F5BS81MKUCKOmfUWs7YusB
+         RhuRzR/qtFGMZ2ao8NXhLY3XETukK8DbKA1lJkvlLZ7NfYN8Zl6GzYF9BObEE1P/OHcR
+         hDt6oqISKG336THMkogyOWb5ISZpAJHt16mHkWGJki9jqQPIJqbPy+Pho5yTTiE6/Ujl
+         IqWwd/w4YltWmAuKLpmbe9wC1nzGto4FaWr0LBn6LljDuEX6zEuuvuMzWNE8NLiw3Nim
+         ZN8HkPLbLPETxBO9NRpq1pgt6YhGr12zCpybCcR+3M7/UumOf/7x36WAw0Bbghe0M3iB
+         uZvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=exJYV0NRFjRQ5VrBRJOpFxRRj/qcZmNhjCFXtwj2b6E=;
-        b=ey3vupd8mzqHmfa59kf37WNithpYwUtstwVB3HCwBlItEY+fbKHE9fVAdB02P7HVKV
-         iw6NPniC0+xXIh6YOxCOVKBmchkb4oaIlq3EOOCbw41fcjXxtY73L8Qk4Q0xiwkDDX4C
-         CkEX5JyPaXTQkZ0peY2WRQc241/RLeljCiGgqjULCqT2bZeoz+t1DQdDLU3pFqiKls9Y
-         bz422JDmgrZC7h2uxA2j7fnkKFoqNKQyYBvTEQkxwXWODAwzMk7nKi3WwIPy4wKp+SkX
-         GsPfh52qTD/P5uEHQk3av/2RLpRJxCHzElL8yX5NKZzy1qxh+esWHdvneUpC3f1WfA0X
-         xGjQ==
-X-Gm-Message-State: AOAM533cK/fGRi0c9u0r35JwfTdZ1fVaoXMtxBZ+d3exKeCUZ20XPjTP
-        NmHqo46SRer6vtB0gM+bv/90Fk/3rr0=
-X-Google-Smtp-Source: ABdhPJxrecfCFR889sRCZxHPd82piHPq3SQP5CK+NN0eeVdXDUS+0pCmpPTrtrE11H9Aavnai7rMdQ==
-X-Received: by 2002:aca:3197:: with SMTP id x145mr647941oix.23.1622077932675;
-        Wed, 26 May 2021 18:12:12 -0700 (PDT)
-Received: from ?IPv6:2603:8081:2802:9dfb:49b3:8e2:3d6d:26c8? (2603-8081-2802-9dfb-49b3-08e2-3d6d-26c8.res6.spectrum.com. [2603:8081:2802:9dfb:49b3:8e2:3d6d:26c8])
-        by smtp.gmail.com with ESMTPSA id n11sm201786otf.26.2021.05.26.18.12.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 May 2021 18:12:12 -0700 (PDT)
-Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
- capability bit
-To:     Krzysztof Wilczy??ski <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20210512213314.7778-1-stuart.w.hayes@gmail.com>
- <20210514130303.GD9537@rocinante.localdomain>
- <20210514130845.GA26314@wunner.de>
- <20210514131701.GE9537@rocinante.localdomain>
-From:   stuart hayes <stuart.w.hayes@gmail.com>
-Message-ID: <53c92c86-5fd9-5db4-eacf-954f1f07cecb@gmail.com>
-Date:   Wed, 26 May 2021 20:12:04 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HnZq+n+gp23G19nG+lOoSxanxr/9NKSMMQJp+1JiGZg=;
+        b=J2FIts5HLOBBe+359+ptL7yPnkVDJqqDXWwpiCqc7WO94mLC3+b8VJOCN2vNkYo4a1
+         FzUslKlSsW4otZJHSYHM/VFptBlFxKYRip1IvQVwmW+2ZDspAg1btq3i8Rj4AerDy7cO
+         pCEWWqJ26bgHaz3F+lyqH8ULahhSoYhP3GOmB7PcTiXenIes8cYg5rMyotLSwpH4VngP
+         wPKhAen0+cMRhiHJv9E7gwOKOHT31gd13cvr2zKBAneH4zPqVbMTRjFOC9owFk00MqIv
+         yq9EUSBg0tQmS/NazJJ385NfM7WMkP8C5MGHA3sRfuTCrOuQx3MyXoK/Dq7UR/hyY4D4
+         oDVA==
+X-Gm-Message-State: AOAM533IB6nc8MDmlahTtFlWJPvaDKuSzCIEcXZdj1oGMvRu69FB0v5D
+        C9sFBK0LwuDlgkEbCw+tC+nexrGszuIqnaI8dmo=
+X-Google-Smtp-Source: ABdhPJz3m1xWvxLhojfoUpwC4+hwhiYwDbNnEhI/KtnbEkJVDgWtcCDD3bPJrI53FI/xKkI0NraEkIyurMncPtHujY4=
+X-Received: by 2002:aa7:c441:: with SMTP id n1mr1748739edr.6.1622087016202;
+ Wed, 26 May 2021 20:43:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210514131701.GE9537@rocinante.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAATamay8WTiJnB=5OLYdFTqVUcRF9LarN6_1Eej3QUgFzWRnkA@mail.gmail.com>
+ <20210526162306.GA1299430@bjorn-Precision-5520>
+In-Reply-To: <20210526162306.GA1299430@bjorn-Precision-5520>
+From:   Lambert Wang <lambert.q.wang@gmail.com>
+Date:   Thu, 27 May 2021 11:43:24 +0800
+Message-ID: <CAATamawK53+XvZ+FV_1-Td9iFZwHeLX1O+PzCh01twzNAyRZHw@mail.gmail.com>
+Subject: Re: [PATCH] pci: add pci_dev_is_alive API
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, May 27, 2021 at 12:23 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, May 26, 2021 at 02:12:38PM +0800, Lambert Wang wrote:
+> > ...
+> > The user is our new PCI driver under development for WWAN devices .
+> > Surprise removal could happen under multiple circumstances.
+> > e.g. Exception, Link Failure, etc.
+> >
+> > We wanted this API to detect surprise removal or check device recovery
+> > when AER and Hotplug are disabled.
+> >
+> > I thought the API could be commonly used for many similar devices.
+>
+> Be careful with this.  pci_device_is_present() is not a good way to
+> detect surprise removal.  Surprise removal can happen at any time, for
+> example, it can occur after you call pci_device_is_present() but
+> before you use the result:
+>
+>   present = pci_device_is_present(pdev);
+>   /* present == true */
+>   /* device may be removed here */
+>   if (present)
+>     xxx; /* this operation may fail */
+>
+> You have to assume that *any* operation on the device can fail because
+> the device has been removed.  In general, there's no response for a
+> PCIe write to the device, so you can't really check whether a write
+> has failed.
+>
+> There *are* responses for reads, of course, if the device has been
+> removed, a read will cause a failure response.  Most PCIe controllers
+> turn that response into ~0 data to satisfy the read.  So the only
+> reliable way to detect surprise removal is to check for ~0 data when
+> doing an MMIO read from the device.  Of course, ~0 may be either valid
+> data or a symptom of a failure response, so you may have to do
+> additional work to distinguish those two cases.
 
+Thanks for reminding.  :)
 
-On 5/14/2021 8:17 AM, Krzysztof Wilczy??ski wrote:
-> Hi Lukas,
-> 
-> [...]
->>> I was wondering - is this fix connected to an issue filled in Bugzilla
->>> or does it fix a known commit that introduced this problem?  Basically,
->>> I am trying to see whether a "Fixes:" would be in order.
->>
->> The fix is for a driver which has been removed from the tree (for now),
->> including in stable kernels.  The fix will prevent an issue that will
->> occur once the driver is re-introduced (once we've found a way to
->> overcome the issues that led to its removal).  A Fixes tag is thus
->> uncalled for.
-> 
-> Thank you for adding more details.  Much appreciated.
-> 
-> Krzysztof
-> 
+Yes the check has race conditions. When the driver is doing recovery detection,
+the check result is not reliable.
 
-I made the patch because it was causing the config space for a 
-downstream port to not get restored when a DPC event occurred, and all 
-the NVMe drives under it disappeared.  I found that myself, though--I'm 
-not aware of anyone else reporting the issue.
+It is pretty useful when the driver wants to confirm if the device is
+absent *after*
+the driver finds it's not working as expected.
+
+>
+> Bjorn
