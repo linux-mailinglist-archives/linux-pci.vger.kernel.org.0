@@ -2,140 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32DD7392D11
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 13:49:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 516B7392D31
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 13:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234010AbhE0Lup (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 07:50:45 -0400
-Received: from mail-mw2nam10on2041.outbound.protection.outlook.com ([40.107.94.41]:56545
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S234224AbhE0Lya (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 07:54:30 -0400
+Received: from mail-co1nam11on2048.outbound.protection.outlook.com ([40.107.220.48]:55264
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233270AbhE0Lup (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 May 2021 07:50:45 -0400
+        id S234215AbhE0Ly3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 07:54:29 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ah7uCvV/Ue2W3W2HG+evFfCn4NaBwgm94lGI/aYHg8qOtqYx9RuIRS87lB6ARJ71lutaVwpmnqebzvtwsGBU6cmvAxuUNt9emrU89h73TcSB4bBcNIZUEUJDbxcXcwSQZpLvNYTj//aUfeixnhiWDFvBRluLxha7SRqJoV2nETBba6bK2nmWAxJ1ZyvdS1kVURIjybIvYbmT2rx04xa4/ex7z0ZgWvYhrkq5I6pNOuuEAA2ZMMRhh/3zFqe9pkLlS0CgUEQPxysg2Q2Y1RDugiwfZFxv+ZBZd3YtgtnBVSC7LdfCaJHeUQi1Tk0vbUPNrS+BeP8Sr4EQJwXs0MXSvA==
+ b=kSoQ1nfaxNys+Y6Y492/T+isBt2OcpLpAaANOjbAKKq2HNl82LT2goOKLFaf1r2K7I94ELgo5DSp7lAJhKRpqb5ZeI7dd++96GmWo321gKXmDnfz5UeoW+RKvaUVxFza1CuEKS1oQBVVZQkoAUI6uR05A/1/arxasMqsgqzYMZmcTvIeebiEaEV9/K78Vnn7Q3+UD5+NkKIImVY2SNNv110O4orlqKjGNw3MkDn/Q3GIuGjkJPAxTGXElK8tj2vaj0lJOXrDsX9sCem+MqPmpKdM9tGzq7a6On7KnPC+nxW1ksGCGyo09CRYqvQnKNu1XFeqUh8jeigiWIN57ZBePQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Kd1KAruIYJUgQuRyY63bCYKfidisj+NtBR/JkAV6dQ=;
- b=mMTyWPE6n+fC3e7Qnz9eJSMCeZlIcxxN1jZbsRiTEWr0QJo7Xw/Xip/uB0XGakUWbNk32/EjxWEivhuunKSdFD5MMlE/2Qy37Ao5z5G+Nsl9WSNmdI4BNwdGtWe5ohIipIPR5aBiRHH4b81nCuUTCDf9t+lqTsMZwPeRB3OVeDbVE/4wCdB5Y5mRGUHj+qa6a2fBxVfU7Eewc8C64KgrEpkod7RB0p1EoROiYKTMhQVOqpf3iAZLCPT452uiDk/bUf/ZPYSZLnyabc8E4NiuaYey6CL6oLkyqnWKMEjqOXTPCYTeAFfn07ZMEduEeQ2KCpGraFW6/O5Xy0vTz6pdGw==
+ bh=nRWFIYLGIERz8anqg0F03cPoWlEMyVb62xjE4alU+Yg=;
+ b=oO1VpHPuYyN65/JfpL6xEpQNM+LVadgB+obg90elcC+5zeMYqhqYlpROGltb2c+oT3q3d+G56jegDFU5Lkwazd3XwbXFC5hAwGTYEsHB5/MKxrBiKXIfswdDdum8bNoDjWXp7k0R+T2mq8vBTqdk59CpAhZ3mSbZBBTv/FYq0Z4/A3szC0JwmnmLKWFi99H1m7PXzdb2+HNUO5sOKtQhdaGUXW4b6XdDtwFlupm2bZx3BIsk/SfZtoMVU9CgLbx5pRm5KPJ09ocbOPdqyKgKFzRSkraR5C1NBxIf29llFHwOqXo1+6KnLo7bbEFQvisRLiLdPguOZJDXfpse/gxCeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ 216.228.112.36) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Kd1KAruIYJUgQuRyY63bCYKfidisj+NtBR/JkAV6dQ=;
- b=SVRrZTK/4bCq8g7RmWw6XmAfXNyK1EuPLt5ZVIDrwZ+H6CFZJxVgoKsnrxOUkJtG6SN4m++oH6YdZUbwwTGraeu7oHH1kbT7mNG//3yrdNZNfJGa5kjLNartfoVRQWuK3oyekC4VoaWGxwLHrY3aKYJnj/w1tLCZhWc6hO1OxE72wmzJO1cmicwtvDgEoLHSB90HryAKY5j6memFG5JqwJN54PeSubZi+4VzOgmR2DZDI1VUEaZN0psLP2OtWDnw7l50X4+9O8ESvVK1aaYKjyXRXJyYG8hRpXE2zGjtNonrQVGF+fA3ojq//PBPbIu44uDcAI00UO7wYt/9VbKOpg==
-Received: from DM6PR02CA0089.namprd02.prod.outlook.com (2603:10b6:5:1f4::30)
- by DM5PR1201MB0092.namprd12.prod.outlook.com (2603:10b6:4:54::22) with
+ bh=nRWFIYLGIERz8anqg0F03cPoWlEMyVb62xjE4alU+Yg=;
+ b=CQL5KdLNQUaYs1V1vlsq5ueM2NgPNB0uZDGImnc2t91uj7YicfeTBC/WwYlQRJTv/+8k+VyZPKzcyKPVUFj/jz9oL17PoK0kuUMK8iugqSL+viAQjAsE6zu/T4FM2Jg9Vnl/w8wY4/s9EQ10Vgmocrw+eOQAI0xpge7ctQxkCQTY8OBgmrf7n1emGax/cwXAVUKG7Fx7Ayymw0z8OmhcNzDRxYjf17e3DI4/Ct+Tp+B/h6tWYn8ujm/TA9EaugAEhOO1ClD4SZouaP8Kgdv3UO94br5TQaQ5i+rg2DFhbZ6j4/KAkXue2ptVh9yTEshZCxBW/xC088m/zxT7yOLInQ==
+Received: from DM5PR1101CA0002.namprd11.prod.outlook.com (2603:10b6:4:4c::12)
+ by CY4PR12MB1397.namprd12.prod.outlook.com (2603:10b6:903:41::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20; Thu, 27 May
- 2021 11:49:10 +0000
-Received: from DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1f4:cafe::8f) by DM6PR02CA0089.outlook.office365.com
- (2603:10b6:5:1f4::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.27; Thu, 27 May
+ 2021 11:52:55 +0000
+Received: from DM6NAM11FT028.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:4c:cafe::77) by DM5PR1101CA0002.outlook.office365.com
+ (2603:10b6:4:4c::12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
- Transport; Thu, 27 May 2021 11:49:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=pass action=none header.from=nvidia.com;
+ Transport; Thu, 27 May 2021 11:52:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT024.mail.protection.outlook.com (10.13.172.159) with Microsoft SMTP
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ DM6NAM11FT028.mail.protection.outlook.com (10.13.173.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4129.25 via Frontend Transport; Thu, 27 May 2021 11:49:10 +0000
-Received: from [10.25.75.220] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 27 May
- 2021 11:49:05 +0000
-Subject: Re: [PATCH 1/3] PCI: dwc: Add support for vendor specific capability
- search
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Shradha Todi <shradha.t@samsung.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <pankaj.dubey@samsung.com>,
-        <p.rajanbabu@samsung.com>, <hari.tv@samsung.com>,
-        <niyas.ahmed@samsung.com>, <l.mehra@samsung.com>
-References: <20210518174618.42089-1-shradha.t@samsung.com>
- <CGME20210518173819epcas5p1ea10c2748b4bb0687184ff04a7a76796@epcas5p1.samsung.com>
- <20210518174618.42089-2-shradha.t@samsung.com>
- <20210521233100.GB79835@rocinante.localdomain>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <0e6f5671-1d24-c43f-828a-4002562ec4ef@nvidia.com>
-Date:   Thu, 27 May 2021 17:19:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+ 15.20.4129.25 via Frontend Transport; Thu, 27 May 2021 11:52:55 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 27 May
+ 2021 11:52:54 +0000
+Received: from buildserver-hdc-comms.nvidia.com (172.20.145.6) by
+ mail.nvidia.com (172.20.187.15) with Microsoft SMTP Server id 15.0.1497.2 via
+ Frontend Transport; Thu, 27 May 2021 04:52:51 -0700
+From:   Om Prakash Singh <omp@nvidia.com>
+To:     <vidyas@nvidia.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, Om Prakash Singh <omp@nvidia.com>
+Subject: [RESEND PATCH V1 0/5] Update pcie-tegra194 driver
+Date:   Thu, 27 May 2021 17:22:41 +0530
+Message-ID: <20210527115246.20509-1-omp@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20210521233100.GB79835@rocinante.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2976e525-4513-4928-eb17-08d921057102
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0092:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0092E9FBED930C3C96947900B8239@DM5PR1201MB0092.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Office365-Filtering-Correlation-Id: a31a6a81-8a96-4566-3c63-08d92105f6fe
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1397:
+X-Microsoft-Antispam-PRVS: <CY4PR12MB13978144B30240D0C8885DC5DA239@CY4PR12MB1397.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0fP9wVSWjpXFUWhDIEBLstisxS9RZp1qKHelnRQToljkbcgGNLr2Xp2T/WE5zeZB525zOkegvL8s4CvyW0npshOSFRcUc6rhr3l6fASbh5zqJGh6SsvhKHWctM2xSXcC3ZX1tyy5fwb26nDRjh6HzbvYMIOa6/9GnXVPslTzjVely1lsuM6jaOXFXpw8tLeIT377a4p0wKi7AYNRPf3Zfi9q2Up0mCbzQugRy5OKT0E4yHKD/8AkdM0mZJE3HtnwWHeLfCWL/ub98TKjHXiyG2I6BHqJRFB5ehVM1xkTmJbfJhWBep1GIgkRTPA/eVkdfN3rEcHZCa9ud+haqUFsaQl6vnSvxNok0sjPikbqU2VCYXQPu/bNKbQA+cXAn+9TY4r27hDBM6uNuGpV8Ypg8MY1kUFLM18/B64kkFUZJ/p757zHD0/Xmy8EyIwD7fTLfDRRXAEN2YDS5KbBoKcshBFZVKJpEZXKg7iyi0TTzmmeaQzm4zJjrdtlIjVDV4X8eoCDIh8Aan3k8ZxP0bmIUJKJ9iL7wDwG8wb84/uHN7i+KJR23YaQMGwN012RY6CZlcX/kSgh2c1c/3DlBv/26hKRsWMmV6vUvZOuM+y0H4TUYYQAf/fF9PeX8r9gDFX7NSOZxeSkEUGuJHzsDEhm2qwN9+pJoT+AsADMCtVVTSZY91dI/gjzhsrGKe+EB6yJ
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(396003)(39860400002)(36840700001)(46966006)(53546011)(2616005)(70206006)(26005)(36906005)(82740400003)(356005)(6666004)(16576012)(70586007)(316002)(31696002)(4326008)(110136005)(8936002)(86362001)(54906003)(8676002)(31686004)(36860700001)(2906002)(36756003)(5660300002)(82310400003)(478600001)(7636003)(7416002)(336012)(16526019)(426003)(186003)(47076005)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: w/QRxt3V1MNoqw8Z8Z3MloHhSoSW+gk48JOw8AQ0vb8hV1BkeuitxoTDJyfAb5Iu06bgF8aVm1FWOBe0oyQ3n6w1pX2kToDTzQIciTh5LSXTvEH5GwwV7jNLzile1wEqQ7uCwq/xUXZ54+84IH1PHCstYcOyfiwalJqclAfWwduK9Kg1sjtswyPVpg2cBYdxL1D2AuL+bsYonXQ0rTQmfpPoV7GksF5pN1n2c4aybOAJ0DU/XzLdjZnTJaomb15PmGuaRJ1uXcZpjUBq7omYwr8YwSa/MLZKJO+Tycu5rHXstsMd0NoLQhHUpa8SKbifbpWnwqAGRbwtFyJ/0K11B9PEnYopcG6ML+skDQKhofM7r/nziyjUCbTWXQCb2kioeRToj0S6YlEuJ0DkCBN4tmE2fYKA2Dexg0kUt0iHP5giAubl8awmpCMJTAf0cgnX8scIkIrucWHCN0FbDM+tLmnR2pjeoR9hYSYKSf89C5OeeqAWqbHakVteeTcfPCP0744pNims857tZBwExhHzDVFwivtIKXaxawlZdrGOHl33MvSBOfWDdvAYNdb2BSJW5s+P9mO6FA/Q3YOUmiyaApxVtaAZPzMmG8B/K3hTIndh+MAIU4xa5K1oVBStpPZq/jhG2t/+RnMwFsVU22CUl0QTxv8HoXHUB6OypGDJZR0=
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(346002)(136003)(376002)(36840700001)(46966006)(8676002)(70586007)(15650500001)(36906005)(186003)(336012)(26005)(356005)(70206006)(426003)(86362001)(107886003)(36860700001)(47076005)(5660300002)(478600001)(8936002)(7696005)(82740400003)(2616005)(6636002)(54906003)(7636003)(2906002)(1076003)(36756003)(6666004)(110136005)(83380400001)(82310400003)(4744005)(316002)(4326008);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2021 11:49:10.3066
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2021 11:52:55.0986
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2976e525-4513-4928-eb17-08d921057102
+X-MS-Exchange-CrossTenant-Network-Message-Id: a31a6a81-8a96-4566-3c63-08d92105f6fe
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT028.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0092
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1397
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Update pcie-tegra194 driver with bug fixing and cleanup
 
+Om Prakash Singh (5):
+  PCI: tegra: Fix handling BME_CHGED event
+  PCI: tegra: Fix MSI-X programming
+  PCI: tegra: Disable interrupts before entering L2
+  PCI: tegra: Don't allow suspend when Tegra PCIe is in EP mode
+  PCI: tegra: Cleanup unused code
 
-On 5/22/2021 5:01 AM, Krzysztof Wilczyński wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> Hi Shradha,
-> 
-> [...]
->> +u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap)
->> +{
->> +     u16 vsec = 0;
->> +     u32 header;
->> +
->> +     while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
->> +                                     PCI_EXT_CAP_ID_VNDR))) {
->> +             header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
->> +             if (PCI_VNDR_HEADER_ID(header) == vsec_cap)
->> +                     return vsec;
->> +     }
->> +
->> +     return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_vsec_capability);
-> 
-> A small question as I am curious: why not use pci_find_vsec_capability()
-> here?  The implementation looks very similar, which is why I am asking,
-> but it might be that I am missing something, and for that I apologise in
-> advance.
-pci_find_vsec_capability() expects struct pci_dev * which we get only 
-after enumeration is done. In the current scenario, we are still in 
-pre-link up phase and don't have struct pci_dev * yet, hence this 
-implementation, right Shradha??
+ drivers/pci/controller/dwc/pcie-tegra194.c | 36 +++++++++++++---------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-> 
->          Krzysztof
-> 
+-- 
+2.17.1
+
