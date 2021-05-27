@@ -2,160 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90F2E392CC1
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 13:31:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82547392CCD
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 13:35:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233054AbhE0Lcz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 07:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbhE0Lcy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 07:32:54 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8733C061574;
-        Thu, 27 May 2021 04:31:20 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id l18-20020a1ced120000b029014c1adff1edso2381547wmh.4;
-        Thu, 27 May 2021 04:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KATMEEULbArdKg71v5u/QUDQiIEPhSKpklwnDwdn0qU=;
-        b=plVpYTQiKgnHx+Nxz1Ixlr285XcJe75rG/mDA0AFTqI+sZrTrC848CnhTyTb9fEiSn
-         7yJ5zgfwf6ALO37QjuqM/Y7cJ6sIBfM2k8kGb+/lPt6gK/VIVfDMwXJ0b6oNnk1e1HuD
-         vAExsNAXyfaLlaa8LteEjtM7EDvM0hI5Dk2iFPdlweiU6QS/xWLfjM8gCQqNH0Ds9ef1
-         5v1HvxpjIeaHcfLbe9tEktgZNEOz3S09UrRdrjY54pahpdR+BE47wq/pRav5f/rtv2lB
-         G+KSha+BrIFKisz6hmyBJrAP3Wu99iD/JXWS1h2mVY7NUcXHbtv0HFFqiE3Xf1a/FGDe
-         Vl5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KATMEEULbArdKg71v5u/QUDQiIEPhSKpklwnDwdn0qU=;
-        b=Hl9f9fYQVy65kTJo2OjthoE7sg6zU/JmEuOswxjwzJqDb1FG74qlaDWmY0gFTMne7u
-         gja0RLIMsY66vjnXuKv4TuoSnQVwaD2fWZ49Aou3D/5Gop0+83pLVBecByM2Nz0E6Ie8
-         EW741784K7aNk/h41T38SIHl/6Ye0875I5Km2VIJihU5nN7aWFD4j1IkFfza77ht4puk
-         6YaRdA7o3Y1d9z9Fl5B+cBjsdIn4ueau9ge2WJ6md3nGHQ1kfUf/ybgCTztN19y/swWa
-         rV8DljMAAIoir5NMCiahgvq8x5sOf5rFX62l/rb1v7YNBQSTQzvXW32VctNZYupcOAoj
-         3u9Q==
-X-Gm-Message-State: AOAM5334CQkKVLXgTrZ7Rw/hbsts9yAydBUt1R4diu9dZS92598OgWxF
-        hw9nuT7XXas+WJX2XO/ba+Viy8PpqQw=
-X-Google-Smtp-Source: ABdhPJxckNo2cCoxb0942vCm1JKgR8GRKEysnugWK/PPZeg8n9i4HjJDoX4d9u+MZqOsEFADEzBP8A==
-X-Received: by 2002:a1c:8016:: with SMTP id b22mr2921485wmd.43.1622115078937;
-        Thu, 27 May 2021 04:31:18 -0700 (PDT)
-Received: from [192.168.2.202] (pd9e5a576.dip0.t-ipconnect.de. [217.229.165.118])
-        by smtp.gmail.com with ESMTPSA id m11sm2288979wmq.33.2021.05.27.04.31.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 May 2021 04:31:18 -0700 (PDT)
-Subject: Re: [RFC PATCH] Revert "arm64: PCI: Exclude ACPI "consumer" resources
- from host bridge windows"
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210510234020.1330087-1-luzmaximilian@gmail.com>
- <20210526205836.GA20320@willie-the-truck> <20210527093200.GA16444@lpieralisi>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <e90401dc-e146-743d-93c7-8525ac0f639e@gmail.com>
-Date:   Thu, 27 May 2021 13:31:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S233753AbhE0Lgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 07:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233646AbhE0Lgk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 07:36:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2886A6113B;
+        Thu, 27 May 2021 11:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622115307;
+        bh=awWFyuDtGzTSFYuKnqnAwD8I2u8LvxPLkIedgwXpacY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p4bPfFCD5PrcmECQ/JmYfkoIQvGIdlvd3Xmt5WsLHiji5zjF5hUpY/7jV/AEVHJHW
+         CB6f9oBS2X3aNGgQ3+WcdNwOGV1gPRmBycO/zJJUoapgziqu+7IL5STMx1dAhYz3+T
+         0bM7UEMZILv76zqCaWO+pWXqjNmfb4VQ6CH4Qz9dn7I0OepvY2P5/VxhAaiFsn1JPd
+         ce1hSAg7oNQpoYW+JbRsJjBqIARt3uf0TgyQ8bjr7saHdzXTBfM/jxaDHBHbhfTQ4Z
+         nDFzJaE8tdL5MVg6406RffF7r/1Of9XzA/MNxWJkmUtb6zscbeJZBFAuG32Qt3uWbG
+         DCkceG/OoqRLg==
+Date:   Thu, 27 May 2021 12:34:57 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Claire Chang <tientzu@chromium.org>
+Cc:     heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
+        peterz@infradead.org, benh@kernel.crashing.org,
+        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
+        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
+        Frank Rowand <frowand.list@gmail.com>, mingo@kernel.org,
+        sstabellini@kernel.org, Saravana Kannan <saravanak@google.com>,
+        mpe@ellerman.id.au,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        bskeggs@redhat.com, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Thierry Reding <treding@nvidia.com>,
+        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Jianxiong Gao <jxgao@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        maarten.lankhorst@linux.intel.com, airlied@linux.ie,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
+        Rob Herring <robh+dt@kernel.org>, rodrigo.vivi@intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        boris.ostrovsky@oracle.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jgross@suse.com, Nicolas Boichat <drinkcat@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, xypron.glpk@gmx.de,
+        Robin Murphy <robin.murphy@arm.com>, bauerman@linux.ibm.com
+Subject: Re: [PATCH v7 14/15] dt-bindings: of: Add restricted DMA pool
+Message-ID: <20210527113456.GA22019@willie-the-truck>
+References: <20210518064215.2856977-1-tientzu@chromium.org>
+ <20210518064215.2856977-15-tientzu@chromium.org>
+ <20210526121322.GA19313@willie-the-truck>
+ <20210526155321.GA19633@willie-the-truck>
+ <CALiNf2_sVXnb97++yWusB5PWz8Pzfn9bCKZc6z3tY4bx6-nW8w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210527093200.GA16444@lpieralisi>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALiNf2_sVXnb97++yWusB5PWz8Pzfn9bCKZc6z3tY4bx6-nW8w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/27/21 11:32 AM, Lorenzo Pieralisi wrote:
-> On Wed, May 26, 2021 at 09:58:36PM +0100, Will Deacon wrote:
->> On Tue, May 11, 2021 at 01:40:20AM +0200, Maximilian Luz wrote:
->>> The Microsoft Surface Pro X has host bridges defined as
->>>
->>>      Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
->>>      Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
->>>
->>>      Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->>>      {
->>>          Name (RBUF, ResourceTemplate ()
->>>          {
->>>              Memory32Fixed (ReadWrite,
->>>                  0x60200000,         // Address Base
->>>                  0x01DF0000,         // Address Length
->>>                  )
->>>              WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
->>>                  0x0000,             // Granularity
->>>                  0x0000,             // Range Minimum
->>>                  0x0001,             // Range Maximum
->>>                  0x0000,             // Translation Offset
->>>                  0x0002,             // Length
->>>                  ,, )
->>>          })
->>>          Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
->>>      }
->>>
->>> meaning that the memory resources aren't (explicitly) defined as
->>> "producers", i.e. host bridge windows.
->>>
->>> Commit 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from
->>> host bridge windows") introduced a check that removes such resources,
->>> causing BAR allocation failures later on:
->>>
->>>      [ 0.150731] pci 0002:00:00.0: BAR 14: no space for [mem size 0x00100000]
->>>      [ 0.150744] pci 0002:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
->>>      [ 0.150758] pci 0002:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
->>>      [ 0.150769] pci 0002:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
->>>
->>> This eventually prevents the PCIe NVME drive from being accessible.
->>>
->>> On x86 we already skip the check for producer/window due to some history
->>> with negligent firmware. It seems that Microsoft is intent on continuing
->>> that history on their ARM devices, so let's drop that check here too.
->>>
->>> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
->>> ---
->>>
->>> Please note: I am not sure if this is the right way to fix that, e.g. I
->>> don't know if any additional checks like on IA64 or x86 might be
->>> required instead, or if this might break things on other devices. So
->>> please consider this more as a bug report rather than a fix.
->>>
->>> Apologies for the re-send, I seem to have unintentionally added a blank
->>> line before the subject.
->>>
->>> ---
->>>   arch/arm64/kernel/pci.c | 14 --------------
->>>   1 file changed, 14 deletions(-)
->>
->> Adding Lorenzo to cc, as he'll have a much better idea about this than me.
->>
->> This is:
->>
->> https://lore.kernel.org/r/20210510234020.1330087-1-luzmaximilian@gmail.com
+On Thu, May 27, 2021 at 07:29:20PM +0800, Claire Chang wrote:
+> On Wed, May 26, 2021 at 11:53 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Wed, May 26, 2021 at 01:13:22PM +0100, Will Deacon wrote:
+> > > On Tue, May 18, 2021 at 02:42:14PM +0800, Claire Chang wrote:
+> > > > @@ -138,4 +160,9 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+> > > >             memory-region = <&multimedia_reserved>;
+> > > >             /* ... */
+> > > >     };
+> > > > +
+> > > > +   pcie_device: pcie_device@0,0 {
+> > > > +           memory-region = <&restricted_dma_mem_reserved>;
+> > > > +           /* ... */
+> > > > +   };
+> > >
+> > > I still don't understand how this works for individual PCIe devices -- how
+> > > is dev->of_node set to point at the node you have above?
+> > >
+> > > I tried adding the memory-region to the host controller instead, and then
+> > > I see it crop up in dmesg:
+> > >
+> > >   | pci-host-generic 40000000.pci: assigned reserved memory node restricted_dma_mem_reserved
+> > >
+> > > but none of the actual PCI devices end up with 'dma_io_tlb_mem' set, and
+> > > so the restricted DMA area is not used. In fact, swiotlb isn't used at all.
+> > >
+> > > What am I missing to make this work with PCIe devices?
+> >
+> > Aha, looks like we're just missing the logic to inherit the DMA
+> > configuration. The diff below gets things working for me.
 > 
-> Sigh. We can't apply this patch since it would trigger regressions on
-> other platforms (IIUC the root complex registers would end up in the
-> host bridge memory windows).
-> 
-> I am not keen on reverting commit 8fd4391ee717 because it does the
-> right thing.
-> 
-> I think this requires a quirk and immediate reporting to Microsoft.
+> I guess what was missing is the reg property in the pcie_device node.
+> Will update the example dts.
 
-Since I wrote this I have found other arm64 devices with the same
-problem. I don't think that this is Microsoft exclusive anymore, but
-rather that this is a Qualcomm problem (Qualcomm SoC seems to be the
-common thread). See e.g. DSDTs in [1]. So it should probably be reported
-to them.
+Thanks. I still think something like my diff makes sense, if you wouldn't mind including
+it, as it allows restricted DMA to be used for situations where the PCIe
+topology is not static.
 
-Regards,
-Max
+Perhaps we should prefer dev->of_node if it exists, but then use the node
+of the host bridge's parent node otherwise?
 
-[1]: https://github.com/aarch64-laptops/build/tree/dfce25bc12655713c7e1e0422b191e9c944e4fb2/misc
+Will
