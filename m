@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7B1A393691
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 21:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D33393694
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 21:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235580AbhE0Trg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 15:47:36 -0400
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:39758 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235602AbhE0Trd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 15:47:33 -0400
-Received: by mail-ot1-f45.google.com with SMTP id d25-20020a0568300459b02902f886f7dd43so1325313otc.6;
-        Thu, 27 May 2021 12:45:58 -0700 (PDT)
+        id S235753AbhE0Trj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 15:47:39 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:35463 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235710AbhE0Trf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 15:47:35 -0400
+Received: by mail-ot1-f54.google.com with SMTP id 69-20020a9d0a4b0000b02902ed42f141e1so1345185otg.2;
+        Thu, 27 May 2021 12:46:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ymrb9ey0Xq/bAo/fEanTrmIhj8wD4Qny297we0IGR+o=;
-        b=dc8ibMbJwNkiRj0CPbUNvuLH5I2khZUGb2VXMSOVlijYN4yVwzcVxs2PliL0aByEPR
-         YJLE08snnArf6qXLeKRkR7Ll//lkOt8bdBhAx++3L7AFPI+7M+yUY1ndNXqZz+ehxfXF
-         6A2Ou5GPkJhwkhvTgNMhjI7boey5BYcOUfYjuv81CteCH1y3VbAne6+Fo3zymAWEvTrX
-         XSgm5pQgFyWvtfIPnY2FPFgmZqFOn3Yi9ZQRFH9Uk5NooN31QDQFZZOCQqdJLKw7uDEw
-         MMedoM8RxABrqAGItyuUv1GWp8JnzPgmkwdC12+9ofnnkE5nUXylTodbXgCrdnc/jnoo
-         z95Q==
-X-Gm-Message-State: AOAM531S+admJZOxcSoFe2bCEHNdf1LKH5mAYO4IJ6anUFJxDhi16E7r
-        MlJ6QQZe/MMucuRzmIhUpzu1Y5mDvg==
-X-Google-Smtp-Source: ABdhPJw4oeb+tN2H6lYx9/h31oeKD5pF9Jfu3cVA44eH0KolP67ge4kWoHArhWwmYTk9lwET2Fqx8g==
-X-Received: by 2002:a9d:4b9c:: with SMTP id k28mr4269155otf.183.1622144757056;
-        Thu, 27 May 2021 12:45:57 -0700 (PDT)
+        bh=aaVILIIQRpAt4fcQqCQzkC7Wo1WpArLqF54tXrfeHEk=;
+        b=iA38o8+DaGlZxZIptoJ4OEV7oS9tMKSdQmoE7mYbptLt+EXcqusE/C8WrvDLfOBBMq
+         O8DZygsI1p7R2drzwalspn2vsjCWHoQxazf4SYkg3/weC0dybRAYXDtUr4mmd5shdYz0
+         sA+CbA6ImLGYCQ9w6uUPzYShJkeUoVQTXUnUgSMhHsc0S5JPBsWfFtx1/1q1roYqVITA
+         LVzCoiwhzNPeb1d0EydOG5Grag27YfUzJY0jEMtM8iKrk6Ii0zndBwZegmxH2QJb32Qb
+         vlwPPd1lMdv1GVYS38U4A2TghVR/5OjPrVl5Jwjqy8g/8qYsUy3aoQNMn/SJrrbYQqd+
+         YimA==
+X-Gm-Message-State: AOAM532U8rt1TKiveEwl6zRh94NiwmV6luE+G2MEJQG/ttkKTRo0Ykh5
+        bVAYSOFlW0rM+cC5pVrQayHpuvYPxw==
+X-Google-Smtp-Source: ABdhPJxsAV9DnsZkTkzog9FHmjg+bEejEyf9p9gCoy4QJ0+VWzhuApSAzpE0JKzM+T7GVe6yF2qOIg==
+X-Received: by 2002:a05:6830:1013:: with SMTP id a19mr4045932otp.21.1622144759587;
+        Thu, 27 May 2021 12:45:59 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id m74sm665162oig.33.2021.05.27.12.45.54
+        by smtp.googlemail.com with ESMTPSA id m74sm665162oig.33.2021.05.27.12.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 May 2021 12:45:55 -0700 (PDT)
+        Thu, 27 May 2021 12:45:58 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 3/4] of: address: Use IS_ENABLED() for !CONFIG_PCI
-Date:   Thu, 27 May 2021 14:45:46 -0500
-Message-Id: <20210527194547.1287934-4-robh@kernel.org>
+Subject: [PATCH 4/4] of: Merge of_address_to_resource() and of_pci_address_to_resource() implementations
+Date:   Thu, 27 May 2021 14:45:47 -0500
+Message-Id: <20210527194547.1287934-5-robh@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210527194547.1287934-1-robh@kernel.org>
 References: <20210527194547.1287934-1-robh@kernel.org>
@@ -49,120 +49,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert address.c to use IS_ENABLED() instead of ifdefs for the
-public PCI functions. This simplifies the ifdefs in of_address.h.
+of_address_to_resource() and of_pci_address_to_resource() are almost the
+same except the former takes an index and the latter takes a BAR number.
+Now that __of_get_address() can take either one, refactor the functions
+to use a common implementation.
 
 Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c       |  8 +++++++-
- include/linux/of_address.h | 39 ++++++++++++++++++--------------------
- 2 files changed, 25 insertions(+), 22 deletions(-)
+ drivers/of/address.c | 44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index aa766437995c..e643f999743a 100644
+index e643f999743a..3b2acca7e363 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -198,6 +198,7 @@ static int of_bus_pci_translate(__be32 *addr, u64 offset, int na)
- {
- 	return of_bus_default_translate(addr + 1, offset, na - 1);
- }
-+#endif /* CONFIG_PCI */
+@@ -23,9 +23,8 @@
+ #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
  
+ static struct of_bus *of_match_bus(struct device_node *np);
+-static int __of_address_to_resource(struct device_node *dev,
+-		const __be32 *addrp, u64 size, unsigned int flags,
+-		const char *name, struct resource *r);
++static int __of_address_to_resource(struct device_node *dev, int index,
++		int bar_no, struct resource *r);
+ static bool of_mmio_is_nonposted(struct device_node *np);
+ 
+ /* Debug utility */
+@@ -203,17 +202,11 @@ static int of_bus_pci_translate(__be32 *addr, u64 offset, int na)
  int of_pci_address_to_resource(struct device_node *dev, int bar,
  			       struct resource *r)
-@@ -206,6 +207,9 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
- 	u64		size;
- 	unsigned int	flags;
+ {
+-	const __be32	*addrp;
+-	u64		size;
+-	unsigned int	flags;
  
-+	if (!IS_ENABLED(CONFIG_PCI))
-+		return -ENOSYS;
-+
- 	addrp = of_get_pci_address(dev, bar, &size, &flags);
- 	if (addrp == NULL)
- 		return -EINVAL;
-@@ -236,6 +240,9 @@ int of_pci_range_to_resource(struct of_pci_range *range,
- 	res->parent = res->child = res->sibling = NULL;
- 	res->name = np->full_name;
+ 	if (!IS_ENABLED(CONFIG_PCI))
+ 		return -ENOSYS;
  
-+	if (!IS_ENABLED(CONFIG_PCI))
-+		return -ENOSYS;
-+
- 	if (res->flags & IORESOURCE_IO) {
- 		unsigned long port;
- 		err = pci_register_io_range(&np->fwnode, range->cpu_addr,
-@@ -266,7 +273,6 @@ int of_pci_range_to_resource(struct of_pci_range *range,
- 	return err;
+-	addrp = of_get_pci_address(dev, bar, &size, &flags);
+-	if (addrp == NULL)
+-		return -EINVAL;
+-	return __of_address_to_resource(dev, addrp, size, flags, NULL, r);
++	return __of_address_to_resource(dev, -1, bar, r);
  }
- EXPORT_SYMBOL(of_pci_range_to_resource);
--#endif /* CONFIG_PCI */
+ EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
  
- /*
-  * ISA bus specific translator
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index b72807faf037..45598dbec269 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -61,6 +61,11 @@ extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
- extern struct of_pci_range *of_pci_range_parser_one(
- 					struct of_pci_range_parser *parser,
- 					struct of_pci_range *range);
-+extern int of_pci_address_to_resource(struct device_node *dev, int bar,
-+				      struct resource *r);
-+extern int of_pci_range_to_resource(struct of_pci_range *range,
-+				    struct device_node *np,
-+				    struct resource *res);
- extern bool of_dma_is_coherent(struct device_node *np);
- #else /* CONFIG_OF_ADDRESS */
- static inline void __iomem *of_io_request_and_map(struct device_node *device,
-@@ -100,6 +105,19 @@ static inline struct of_pci_range *of_pci_range_parser_one(
- 	return NULL;
+@@ -804,11 +797,22 @@ static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
+ 	return port;
  }
  
-+static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
-+				             struct resource *r)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_pci_range_to_resource(struct of_pci_range *range,
-+					   struct device_node *np,
-+					   struct resource *res)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline bool of_dma_is_coherent(struct device_node *np)
+-static int __of_address_to_resource(struct device_node *dev,
+-		const __be32 *addrp, u64 size, unsigned int flags,
+-		const char *name, struct resource *r)
++static int __of_address_to_resource(struct device_node *dev, int index, int bar_no,
++		struct resource *r)
  {
- 	return false;
-@@ -124,27 +142,6 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
- #endif
- #define of_range_parser_init of_pci_range_parser_init
+ 	u64 taddr;
++	const __be32	*addrp;
++	u64		size;
++	unsigned int	flags;
++	const char	*name = NULL;
++
++	addrp = __of_get_address(dev, index, bar_no, &size, &flags);
++	if (addrp == NULL)
++		return -EINVAL;
++
++	/* Get optional "reg-names" property to add a name to a resource */
++	if (index >= 0)
++		of_property_read_string_index(dev, "reg-names",	index, &name);
  
--#if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
--extern int of_pci_address_to_resource(struct device_node *dev, int bar,
--				      struct resource *r);
--extern int of_pci_range_to_resource(struct of_pci_range *range,
--				    struct device_node *np,
--				    struct resource *res);
--#else /* CONFIG_OF_ADDRESS && CONFIG_PCI */
--static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
--				             struct resource *r)
--{
--	return -ENOSYS;
--}
--
--static inline int of_pci_range_to_resource(struct of_pci_range *range,
--					   struct device_node *np,
--					   struct resource *res)
--{
--	return -ENOSYS;
--}
--#endif /* CONFIG_OF_ADDRESS && CONFIG_PCI */
--
- static inline const __be32 *of_get_address(struct device_node *dev, int index,
- 					   u64 *size, unsigned int *flags)
+ 	if (flags & IORESOURCE_MEM)
+ 		taddr = of_translate_address(dev, addrp);
+@@ -846,19 +850,7 @@ static int __of_address_to_resource(struct device_node *dev,
+ int of_address_to_resource(struct device_node *dev, int index,
+ 			   struct resource *r)
  {
+-	const __be32	*addrp;
+-	u64		size;
+-	unsigned int	flags;
+-	const char	*name = NULL;
+-
+-	addrp = of_get_address(dev, index, &size, &flags);
+-	if (addrp == NULL)
+-		return -EINVAL;
+-
+-	/* Get optional "reg-names" property to add a name to a resource */
+-	of_property_read_string_index(dev, "reg-names",	index, &name);
+-
+-	return __of_address_to_resource(dev, addrp, size, flags, name, r);
++	return __of_address_to_resource(dev, index, -1, r);
+ }
+ EXPORT_SYMBOL_GPL(of_address_to_resource);
+ 
 -- 
 2.27.0
 
