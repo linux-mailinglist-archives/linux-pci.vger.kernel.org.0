@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 235A4392D47
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 13:54:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4CBE392D4E
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 13:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234215AbhE0Lzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 07:55:36 -0400
-Received: from mail-co1nam11on2051.outbound.protection.outlook.com ([40.107.220.51]:17761
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S233633AbhE0L4K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 07:56:10 -0400
+Received: from mail-mw2nam10on2046.outbound.protection.outlook.com ([40.107.94.46]:30018
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233633AbhE0Lzg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 May 2021 07:55:36 -0400
+        id S233950AbhE0L4J (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 07:56:09 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TwGsziMk4ez9uX4BHLUY23KZgcSr6b09urGlORspuik3wVaC1K0obGYgmG00lENwqeWeffRnzQcIGJMjqEU7yakRrm3sRoH2Kg3ALaqUCykdHv1ddpcpYv8im7ojLAQ9LjP2yeweAdbsHBTBNhQB1Zir6vmfcS0BBNWzWDXsgtI1loIcTi+QJz74d0swjy53Knvbsrh/lvbxu22HFlldZSbu3/J4WirJA9BlzTuklnwN53CCK2ckExHO4Vlb4+amPJGz/WA9ybGSwKvPrRFrRHW5aAblsXybV99B0loVvCEs1evP/Ce0Psk1/JdsnfqVWPPFL1+cLkXewVksnacRgg==
+ b=NkPTsJIZ/C38pytofDWSy6DQP0xkaRluP7DHk5/uKgQUXrn7a1qj5mXztWUzE7/XJlTyNk8mJAlGQsJQ74xyAuYUPVcD8bXakHx3H+pI8iZD3p6rh3psXONVG+3630K9jABBg935jULXim2vpF4wbe1+44HyGeZEhBajDfQ0OSv4A/lFtnl2+SasHhJYTPotcNNg4jeBREyI+Esi+tBmQ2hxKQLWX6OFMfTJ4TS9m49J9wkw1Th+m0f8yJJ2b7loqyPOV0/JjnrEakEtpzk7a9J6+csDPdy13VB17xCoPIEd6tl7/zi+m7dRJlhIF5Pg/qiyFXVm9MOduvcAGmsEtw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4iMtqJZxaQ09eq+cBlFwVRGk2FDk4OKfgzdOeVx3QM=;
- b=IcL/FOQXTiKKCEOXPLG7tCuBflQYYVPKPE3Htx00ZKYIDlvImpl14HgRkZ+XdBwofpcCkHOK7YGaPHcCzlcfjEM3M5qhk1C7q1HAoWvZ9RMgRI056UMdwYyvlhVUjWI67BQBjHEmn267YjSqksrgKCaXNXlP34HdOZ7xeuWmjhCfG6hhmn3AuvE54DFjOgkJ0tqV3H0l9ZmvY/0RntgQtXbHWshWtjwqXcoyiRCyzeGSsS02dsi7Rd6q3F9csUwxKJDyv2fQm3I+5/PDzddYYFxTx5mnblwkw6SGwqCWRMA2+fH8IGzCgDG8YPXGqv1JE/qqCjQvckT8ialOn9EcZg==
+ bh=V4o6yTsHB2EJz2BrQnO5+dTJq61u8wT3ifwe/dRadok=;
+ b=JWaxDm7A6WaZJoAZwq7GucA3NNuT4B0KZYFWTL/CNMQqPzl0KuFcxzaKN7YRWOtVfO57FM7J3pOZExAX3svN06bIFvjI+UCIT6gUPTJOghhpjrFqEXMcpCaJqCIW2ydkaZHQjdpbin2S2lsUy89S7H5dhJI8zIQChZ2nGxnZboxEHGq9uq3r7jIJj2dFe4R/l8zMwYoSrXE/xzAWhozkuig5NwbFRUQzI+tOdJ3lU+s84Xdrf81jkb5dINnfAu4YKVlEng0S3jQ/VMlsDnOvTeBGXh+m6Xh+39kI/uRKWiAf5g49OmZXZia18ffB3EcQrEF+SJK07TymPto7wcRNpg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.112.34) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
@@ -26,17 +26,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4iMtqJZxaQ09eq+cBlFwVRGk2FDk4OKfgzdOeVx3QM=;
- b=DDWRsDJeYk4jRZszusr3KKKbVvZ0lHskAcPzwhRht83CMJoAnXZYULc6migXIdmPfU4LwGumYi1VQvQJQdQkMOPcEpibQZqeC5lOvOyKpHvfbGzPkcNB5oq+6K+OUoy/bOCvsoRP1v90qx0xmqjRpG6OQqyHr9SeoLlEzlDacHYpppdHzWg94CoSK814PTlAkewpoOj8J6Mj3zHYRDOqqaIJLNEo5RuLpb6BXPhg2iUJa8oHtN1hjJfVPHkM54EqSSArEKdOid5sPKs+wAa5gNvPjzqusMFpZMBSdIX05q4jCpN9bKgCNyDNEH92hDVMdrkYi2icotfL7qg8+fDU9w==
-Received: from DM5PR06CA0062.namprd06.prod.outlook.com (2603:10b6:3:37::24) by
- DM5PR1201MB0156.namprd12.prod.outlook.com (2603:10b6:4:59::9) with Microsoft
+ bh=V4o6yTsHB2EJz2BrQnO5+dTJq61u8wT3ifwe/dRadok=;
+ b=npouLL3NPyydVarrUeDTJ87DTVbiC82Nk/yVbVb533cRAQat+vUoznA4KmUtLY7I6GwY3S4vb5QrVo1BUh0gI9cSFZSAmVb272ybn2bpmLIpmiINJbAgJfQjjXjV2vYftc23tekUi0z6pBn+TU/oJXbGVyi7SzZIyPVMlSbRrHTO2oGcszKTzXPmWnR07kJWtmmmqy9L2fG8NNxGa8EmZYAuARRaiQGc4aSmmwWURZhI9LnBzfJjLArV0ecVPq2kEqJXoiMV1nxZEFY793IBxT3UJUojCO1fM9kkSxiH23Yo+il2ikybHtTBQuFDbQbn71ndigHr4RYe3Urh/BPBzg==
+Received: from DM3PR03CA0011.namprd03.prod.outlook.com (2603:10b6:0:50::21) by
+ DM6PR12MB4986.namprd12.prod.outlook.com (2603:10b6:5:16f::13) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4173.22; Thu, 27 May 2021 11:54:01 +0000
-Received: from DM6NAM11FT053.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:37:cafe::a3) by DM5PR06CA0062.outlook.office365.com
- (2603:10b6:3:37::24) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.4150.26; Thu, 27 May 2021 11:54:35 +0000
+Received: from DM6NAM11FT054.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:0:50:cafe::a1) by DM3PR03CA0011.outlook.office365.com
+ (2603:10b6:0:50::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
- Transport; Thu, 27 May 2021 11:54:01 +0000
+ Transport; Thu, 27 May 2021 11:54:35 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
  smtp.mailfrom=nvidia.com; gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=pass action=none header.from=nvidia.com;
@@ -44,13 +44,14 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.112.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.112.34; helo=mail.nvidia.com;
 Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT053.mail.protection.outlook.com (10.13.173.74) with Microsoft SMTP
+ DM6NAM11FT054.mail.protection.outlook.com (10.13.173.95) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4129.25 via Frontend Transport; Thu, 27 May 2021 11:54:01 +0000
+ 15.20.4129.25 via Frontend Transport; Thu, 27 May 2021 11:54:34 +0000
 Received: from [10.25.75.220] (172.20.145.6) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 27 May
- 2021 11:53:57 +0000
-Subject: Re: [PATCH 3/3] PCI: dwc: Create debugfs files in DWC driver
+ 2021 11:54:15 +0000
+Subject: Re: [PATCH 1/3] PCI: dwc: Add support for vendor specific capability
+ search
 To:     Shradha Todi <shradha.t@samsung.com>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
@@ -59,15 +60,15 @@ CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
         <p.rajanbabu@samsung.com>, <hari.tv@samsung.com>,
         <niyas.ahmed@samsung.com>, <l.mehra@samsung.com>
 References: <20210518174618.42089-1-shradha.t@samsung.com>
- <CGME20210518173826epcas5p32f6b141c9ab4b33e88638cf90a502ef1@epcas5p3.samsung.com>
- <20210518174618.42089-4-shradha.t@samsung.com>
+ <CGME20210518173819epcas5p1ea10c2748b4bb0687184ff04a7a76796@epcas5p1.samsung.com>
+ <20210518174618.42089-2-shradha.t@samsung.com>
 From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <8766f746-4688-996a-8368-3fe0f608546c@nvidia.com>
-Date:   Thu, 27 May 2021 17:23:54 +0530
+Message-ID: <4feba4f0-e6e7-f5ec-6857-6d0779e24318@nvidia.com>
+Date:   Thu, 27 May 2021 17:24:12 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210518174618.42089-4-shradha.t@samsung.com>
+In-Reply-To: <20210518174618.42089-2-shradha.t@samsung.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -76,24 +77,24 @@ X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 91cabd21-8623-487e-025d-08d921061eb9
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0156:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0156EA810302A610747DB086B8239@DM5PR1201MB0156.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: cf48ca13-9a00-4a15-7eb2-08d92106327f
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4986:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB498676DD2EF620B6FB47CB63B8239@DM6PR12MB4986.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i4tDZQandPXAtZjqNDmIbalf+J68U7x832eqIpwyki0PNXqoDIQ0mJphjR7BRi+yjstOhV2ZDRpzz0XyqGpImF4f79YhQXggpn3Iex72RS4YTi2XWuMLrrB5lrgF3zTYITYkuspjIKSsRZlDHAlFfmL4DBwSOsiemm1cwOSUYImv/4Epnqv+pvTfFh/QKZDbHRs/8u9Om5YPnur/rlH6e/940reNcryKviOuz4f5kXiZLhRVpZwMwEAZ0hJcXJszJxMRm9yX6qQQek/eMceY81bWTxrRsHOqs0jjuS3sbM6vj+UVvFFaWJ1At65SLzF+eYpNA12bqWOpg4OOVX5x24zr0rKLlaqpRqPi+BkwdAVGsy6SIWNpOmgSEs/dkvtb2HciF529PSbqNXjApeOOOfaj4J683SHUD+Qsfz8ibg+Io0qs/zTxDht3dXe31ajkIdwWXM6372XZuTXESsv29wzaJ1Cp0y0N2CVJyTZLFP6RYt44zkWsqygi9noewekry/WaycKPRzRjiNSmogGrZXFkohr+vUX4c8pY7NJ8z6VvcnaBn14lDWc8zqoxQ5Vm21J1X9YdYbo38j3k3idTUI9qqSuvseRRAz+bR12S+mUH/gRCWKIXS0wkEKLOsAuatHEqtCfcQFVWuICxD3UXEjMydBnjU9W6N/DZLToTtdTdOvVpBfzix3sCxHRHwQcB
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(36840700001)(46966006)(4326008)(2616005)(31696002)(6666004)(8676002)(336012)(426003)(36860700001)(356005)(82740400003)(70586007)(70206006)(47076005)(7636003)(86362001)(82310400003)(478600001)(5660300002)(36756003)(7416002)(186003)(16526019)(31686004)(2906002)(26005)(53546011)(8936002)(54906003)(110136005)(16576012)(316002)(36906005)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: N3eJ3BvIbymb957s2Y4i6jjAgVsJfM5FaHNxY6Wp632Q1nOJERYuPxG4fnlbcFYZFRQfjg4v/ZOi7h5DkBHZQAi5YzAlpP/h0VAEzP6MmalgDBRyQtJy89hfWFLvLjqI8fGLwkZWfEa5RuvlxdgGAsqZSK/kODm7Moi9j9Jk3IJtKSv/RJl3BmDDU9e+xKSktF3ykuMcbRmkEUegAUiWQBQAE0HiwZ3J82FMvPy/2iaozH96z16cJxcxhAH01NbF/RPjOz5n5jF7rE77HT4ErVlLUzpplqkt+gVLkz3NhcsN3m1/jlL7X/rvVlEhvy59XHxP1S+sScl0eiIcCieHhXKyhFRsV+rihxILcrLuGpmcoJMGkwDLaJEKXnb7Fy5u518Gx7ePziqQ8hCMaVFhpj1GuAr6LOLk3i4oh9JYNd2is8B7UAjCsRHBfKFKMbW9kZGJXqCePNhVwsxpCzFOHbYG+rPQlV1GDSLTXjkTTi7Y3h27gLgTKbQi9Q9Nj2ShCuSITt4vEFeLBbyCOqq9mJdRdu6pFtHgDG90M+MRac1RpeLjQUZHcmY8NJGPrc0r4o52NmuyHNlb1PIP8eudHoWQJimH2aF4rJ3Bp0ahB0VabZ+jE5v2UcBCDT1dSIcoCR+RwdTndLb71LsqbtHrTcJ2Y2a1MrPfJABcVeLy6YKhse+K6PT3f84DwuUowIh0
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(376002)(39860400002)(346002)(396003)(36840700001)(46966006)(8936002)(36756003)(7416002)(356005)(54906003)(110136005)(4326008)(31686004)(16576012)(336012)(316002)(2906002)(70586007)(186003)(6666004)(82310400003)(5660300002)(8676002)(26005)(36860700001)(86362001)(47076005)(82740400003)(7636003)(31696002)(36906005)(16526019)(478600001)(70206006)(2616005)(53546011)(426003)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2021 11:54:01.6808
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2021 11:54:34.9243
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91cabd21-8623-487e-025d-08d921061eb9
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf48ca13-9a00-4a15-7eb2-08d92106327f
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT053.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT054.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0156
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4986
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -104,39 +105,67 @@ On 5/18/2021 11:16 PM, Shradha Todi wrote:
 > External email: Use caution opening links or attachments
 > 
 > 
-> Add call to create_debugfs_files() from DWC driver to create the RASDES
-> debugfs structure for each platform driver. Since it can be used for both
-> DW HOST controller as well as DW EP controller, let's add it in the common
-> setup function.
+> Add vendor specific extended configuration space capability search API
+> using struct dw_pcie pointer for DW controllers.
 > 
 > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 > ---
->   drivers/pci/controller/dwc/pcie-designware.c | 5 +++++
->   1 file changed, 5 insertions(+)
+>   drivers/pci/controller/dwc/pcie-designware.c | 16 ++++++++++++++++
+>   drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
+>   2 files changed, 20 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 348f6f696976..c054f8ba1cf4 100644
+> index a945f0c0e73d..348f6f696976 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.c
 > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -15,6 +15,7 @@
-> 
->   #include "../../pci.h"
->   #include "pcie-designware.h"
-> +#include "pcie-designware-debugfs.h"
-> 
->   /*
->    * These interfaces resemble the pci_find_*capability() interfaces, but these
-> @@ -793,4 +794,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
->                         PCIE_PL_CHK_REG_CHK_REG_START;
->                  dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
->          }
-> +
-> +       ret = create_debugfs_files(pci);
-> +       if (ret)
-> +               dev_err(pci->dev, "Couldn't create debugfs files\n");
-'ret' is undeclared in this function . (for reference, I applied this 
-patch on top of 'next-20210526')
+> @@ -90,6 +90,22 @@ static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+>          return 0;
 >   }
+> 
+> +u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap)
+> +{
+> +       u16 vsec = 0;
+> +       u32 header;
+> +
+> +       while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
+> +                                       PCI_EXT_CAP_ID_VNDR))) {
+> +               header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
+> +               if (PCI_VNDR_HEADER_ID(header) == vsec_cap)
+> +                       return vsec;
+> +       }
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_find_vsec_capability);
+> +
+>   u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+>   {
+>          return dw_pcie_find_next_ext_capability(pci, 0, cap);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 7d6e9b7576be..307525aaa063 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -155,6 +155,9 @@
+>   #define MAX_IATU_IN                    256
+>   #define MAX_IATU_OUT                   256
+> 
+> +/* Synopsys Vendor specific data */
+> +#define DW_PCIE_RAS_CAP_ID             0x2
+This is not used in this patch. Better to move it to the second patch in 
+this series where it is used.
+
+> +
+>   struct pcie_port;
+>   struct dw_pcie;
+>   struct dw_pcie_ep;
+> @@ -284,6 +287,7 @@ struct dw_pcie {
+> 
+>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>   u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+> +u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci, u8 vsec_cap);
+> 
+>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
 > --
 > 2.17.1
 > 
