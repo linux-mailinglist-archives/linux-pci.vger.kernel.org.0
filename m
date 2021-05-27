@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2622D3931D7
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 17:08:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C7D73931DA
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 17:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236767AbhE0PKN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 11:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
+        id S236943AbhE0PKP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 11:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236873AbhE0PJX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 11:09:23 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F4AC06134C;
-        Thu, 27 May 2021 08:06:58 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id v14so148151pgi.6;
-        Thu, 27 May 2021 08:06:58 -0700 (PDT)
+        with ESMTP id S236876AbhE0PJc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 11:09:32 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E60C06138B;
+        Thu, 27 May 2021 08:07:07 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id g24so616207pji.4;
+        Thu, 27 May 2021 08:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iACzWLVmLzVGbDObuCyVoRniRyVY+AS4XvWtkzM+TCA=;
-        b=I2De53zHx9sUeH8xO92FDmgThOftuNThtNqV5rWNq1pHXmfUN4/RLRt2WmCja/ggqV
-         T3UOSnxCHHYvO11KVWPHsJaUuSK6Qp+y+MZN6ylxeSKetTvJ+kQk9v38scgP8SX40RB1
-         qEIfEmnMXvWOXxPLHdr9RAUATZolBfGHEkN1jd2JlgF/PnI58EW1Afqd61Pwmkj32o/W
-         qen5UBx6G0SCdSJ98kuukoVQ0ukfFmRVMv/jjHcxzYC5hzyyeEzzdUBip5kUCTnRYAXB
-         Uet5pYz1KkCmoTnB+vMkX00OHqZ33+hm4Y8gMkpbNtS3xuNmbZeWwR8iCeE/Xjv+CMFR
-         7VNw==
+        bh=A93D3Jz/qTgixftb1ASsD8T5vX2ZHOxs7SEr20+q3E4=;
+        b=MMSdCu4bncyrpLvqO7+fLJ6ChGKSZ5Ya1+Xd4ofCq3UiwKYE+KO+bOl9v8i84CLqC9
+         TbLSMWZLbSjywtbwyd37YAUmEn08KrG5xBOS0+P+9r9TrEpulg4E44QJ/XeQ98e0wNoM
+         SThgxcuVH5J0CUUz/QKg/8AQ15DK5HiRNZz7EGYH5KcoCF7EV+XicDXTZmHGbs3NWOrY
+         3sULIZxK/fnlEV8zdDiTt3r/lIj/z8m4/v02Jj6Q45sp4aWMr599psEF3y5La/XElZ7k
+         X4j5yel/B4Vk9rYcViRqDf5QzMc4fWPK095yJXuPRsptKJ9jw65w7AYQgJdf2goMpURa
+         NRAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iACzWLVmLzVGbDObuCyVoRniRyVY+AS4XvWtkzM+TCA=;
-        b=rkf6x9Eui0RqqITFA+atzApRUGpvH9YWuLecZV6gzqRUFRiiRvSAgLJ29llj4L65Ao
-         emXUB4ivfnxW5hQl3DURU9aIN5lwC6DriTBvNsM09UI6A72hPeAjFizK1ao13v1zJCjC
-         pRWnMM/ItFmUX12+ZtrKNP+w0PlikHmmhzLJYvujjvzEGt1Jxv/77RyTUxyPwXLkF15L
-         RzB3DKvUL0vS9ZK7lvkcdPlw6qH5TemcSE9PWmPRfU/jbn+caxPuvi15KQAo9d33LhDa
-         l8fXmANE4+sMMy0xLJQ6R8Iq5slWJlcA2u0Zr/Q3SmNP9hwQw7P0nvTPSlKcBXIrq2Xy
-         vfPg==
-X-Gm-Message-State: AOAM532x/h4/LgvTZ+4AS9fCmXkkBZCmtudRU/Hfhwd3qTu+UOMwzDHm
-        cLWRmlhhFG5+qv8DBkcxqIqgFd8wAfI8Ug==
-X-Google-Smtp-Source: ABdhPJyt2y6yo8Mr4sui/jdnkdSlmaGceJ+XDZGMAA0LUyLXGITxqn+34JTAuCKZr9wZptUBvqo/rA==
-X-Received: by 2002:a65:6a44:: with SMTP id o4mr4078506pgu.145.1622128017670;
-        Thu, 27 May 2021 08:06:57 -0700 (PDT)
+        bh=A93D3Jz/qTgixftb1ASsD8T5vX2ZHOxs7SEr20+q3E4=;
+        b=TcH7Y1x4m/QbnCOyxuXfEEQ1lkTHntLHg3NmT1HMde8RZftlM1MFbmDxnWaJ/qKGpu
+         50rAs6eIKyC9eMKtkTmAr6Qt23H7LG/0joNuGL/tTyznmMERCc3S0VK/B0+8lYYOC1kG
+         YcgvrI5GAud9kI2Kwj8kvzWFlHGv0Z1s5LwumF4xSwGHIVaqFkVdk9vZc2TbwAlM7jvo
+         8g7kEK68sNJUTzUUX6reuDhf76YgYz1CoA4gZ32XRlUcbMhDmQ6jX8W6kzWFnZ8MeQ/3
+         3wZUl6AtIn2ZyP4Pe2FZJe1O5dINPTi3q92CYLLJDRx8bUVdQXFnDR77imN/JD1rP+Tj
+         QAPQ==
+X-Gm-Message-State: AOAM533rzPtI/4niHm7g/o+K7de5wfb60kW4l2YxKLdYtBi/rwRg8xiP
+        +2iLuPGqf8Xj/4BFyoSmc2Y=
+X-Google-Smtp-Source: ABdhPJy0RolUbT16u5ASs6Qv4vTKJXckg5XvCboep7q0O8magnGUidJHGWe4kmXXIVxjYqFf+MFpPw==
+X-Received: by 2002:a17:90a:ac12:: with SMTP id o18mr9969025pjq.65.1622128027426;
+        Thu, 27 May 2021 08:07:07 -0700 (PDT)
 Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
-        by smtp.gmail.com with ESMTPSA id mp21sm2315194pjb.50.2021.05.27.08.06.56
+        by smtp.gmail.com with ESMTPSA id t12sm2255790pjw.57.2021.05.27.08.07.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 May 2021 08:06:57 -0700 (PDT)
+        Thu, 27 May 2021 08:07:06 -0700 (PDT)
 From:   Punit Agrawal <punitagrawal@gmail.com>
 To:     linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org
 Cc:     Punit Agrawal <punitagrawal@gmail.com>,
@@ -54,10 +54,10 @@ Cc:     Punit Agrawal <punitagrawal@gmail.com>,
         alexandru.elisei@arm.com, wqu@suse.com, robin.murphy@arm.com,
         pgwipeout@gmail.com, ardb@kernel.org, briannorris@chromium.org,
         shawn.lin@rock-chips.com, helgaas@kernel.org, robh+dt@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/2] PCI: of: Override 64-bit flag for non-prefetchable memory below 4GB
-Date:   Fri, 28 May 2021 00:05:41 +0900
-Message-Id: <20210527150541.3130505-2-punitagrawal@gmail.com>
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 2/2] arm64: dts: rockchip: Update PCI host bridge window to 32-bit address memory
+Date:   Fri, 28 May 2021 00:05:42 +0900
+Message-Id: <20210527150541.3130505-3-punitagrawal@gmail.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210527150541.3130505-1-punitagrawal@gmail.com>
 References: <20210527150541.3130505-1-punitagrawal@gmail.com>
@@ -67,53 +67,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some host bridges advertise non-prefetable memory windows that are
-entirely located below 4GB but are marked as 64-bit address memory.
+The PCIe host bridge on RK3399 advertises a single 64-bit memory
+address range even though it lies entirely below 4GB.
 
-Since commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
-flags for 64-bit memory addresses"), the OF PCI range parser takes a
-stricter view and treats 64-bit address ranges as advertised while
-before such ranges were treated as 32-bit.
+Previously the OF PCI range parser treated 64-bit ranges more
+leniently (i.e., as 32-bit), but since commit 9d57e61bf723 ("of/pci:
+Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+the code takes a stricter view and treats the ranges as advertised in
+the device tree (i.e, as 64-bit).
 
-A PCI-to-PCI bridges cannot forward 64-bit non-prefetchable memory
-ranges. As a result, the change in behaviour due to the commit causes
-allocation failure for devices that are connected behind PCI host
-bridges modelled as PCI-to-PCI bridge and require non-prefetchable bus
-addresses.
+The change in behaviour causes failure when allocating bus addresses
+to devices connected behind a PCI-to-PCI bridge that require
+non-prefetchable memory ranges. The allocation failure was observed
+for certain Samsung NVMe drives connected to RockPro64 boards.
 
-In order to not break platforms, override the 64-bit flag for
-non-prefetchable memory ranges that lie entirely below 4GB.
+Update the host bridge window attributes to treat it as 32-bit address
+memory. This fixes the allocation failure observed since commit
+9d57e61bf723.
 
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
 Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
 Cc: Rob Herring <robh+dt@kernel.org>
 ---
- drivers/pci/of.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index da5b414d585a..b9d0bee5a088 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -565,10 +565,14 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
- 		case IORESOURCE_MEM:
- 			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
- 
--			if (!(res->flags & IORESOURCE_PREFETCH))
-+			if (!(res->flags & IORESOURCE_PREFETCH)) {
- 				if (upper_32_bits(resource_size(res)))
- 					dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
--
-+				if ((res->flags & IORESOURCE_MEM_64) && !upper_32_bits(res->end)) {
-+					dev_warn(dev, "Overriding 64-bit flag for non-prefetchable memory below 4GB\n");
-+					res->flags &= ~IORESOURCE_MEM_64;
-+				}
-+			}
- 			break;
- 		}
- 	}
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 634a91af8e83..4b854eb21f72 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -227,7 +227,7 @@ pcie0: pcie@f8000000 {
+ 		       <&pcie_phy 2>, <&pcie_phy 3>;
+ 		phy-names = "pcie-phy-0", "pcie-phy-1",
+ 			    "pcie-phy-2", "pcie-phy-3";
+-		ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000>,
++		ranges = <0x82000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000>,
+ 			 <0x81000000 0x0 0xfbe00000 0x0 0xfbe00000 0x0 0x100000>;
+ 		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+ 			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>,
 -- 
 2.30.2
 
