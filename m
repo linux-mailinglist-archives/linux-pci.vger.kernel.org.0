@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01B90392B5D
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 12:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 520D3392BA5
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 12:22:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235873AbhE0KFX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 06:05:23 -0400
-Received: from de-smtp-delivery-102.mimecast.com ([194.104.109.102]:57714 "EHLO
+        id S236008AbhE0KXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 06:23:54 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:40363 "EHLO
         de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235938AbhE0KFW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 06:05:22 -0400
+        by vger.kernel.org with ESMTP id S236087AbhE0KXw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 06:23:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1622109829;
+        t=1622110937;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=XelYueJaFOpdty88fV1FJfjnXyg6CFX9/Q++gr8VD0E=;
-        b=OopulgxXm2sJ4Jz0YIyCszhSIriV0tjs0s+/ISnt4wlYs+gyFeC5ASIjWAgaJ7QFBR4nig
-        RVq6q/q1J+Zcji38DBPLa/JVjce14pCm82UiLQM2D7VzCDxudxTM4IHTKwG0XuMs+ZYKMw
-        g977D4dRnkk987g2XgEGs0Sklw2O8Hw=
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur01lp2054.outbound.protection.outlook.com [104.47.0.54]) (Using
+        bh=dDJT6X4zSDczVsL85ePLb2edlKxANz9DzYCuH+VrkBU=;
+        b=Bea2V7SgcH15q7HGNTvJD0Al4JF+EyCkN17dq+BkRllStwM/Ll8GMGFXb0APahRrZ4P/DL
+        pU1n37y6OgdmmWIm7Sh3I6mQVj+r8Rez1RhpDjV7VDAHOWVFBge+u73ITLx6Nxxzh9GiQc
+        gnjyVkHYaCjDAXVbzJNrr8O1qN5hgNA=
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur02lp2050.outbound.protection.outlook.com [104.47.5.50]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- de-mta-35-2Pgl_GATPgmUV8oII5b3vw-1; Thu, 27 May 2021 12:03:46 +0200
-X-MC-Unique: 2Pgl_GATPgmUV8oII5b3vw-1
+ de-mta-40-WzIlkBHxPHKuom-AeqfSXg-1; Thu, 27 May 2021 12:22:16 +0200
+X-MC-Unique: WzIlkBHxPHKuom-AeqfSXg-1
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LBZATecgc3oXICXa4gXR23kHM1JeW17sPvM5woyWUz2nZWmuk8bZLK1iQVB9rfcOqzIJVzdhrCBGfRiIrP3oPTUj7dndSVjnsnwS5jLhh4cUts/d1ZTX76Mlw0V/CQ/CP3OrShoALr45r9kBZrjwLysD++Lx81/ymLpmQg0V0ml9r1RTApg0AWL9tbxmQTY4G8yIMvTOaTVF8CSvPfd+RJiT+BnPsXMtSE5gASd7cNijDM/t421HS8FISxgUj7nI+J/45BMUu7OVtkd/1eiYzMIo4tIX1dt+L5Y0VjA9Uv1bXIf+OPgjjpW7fgNvngBFTjrXdCmG8SZummLCe+zsMg==
+ b=OEFAL7/fLHGpH/Hj+UsjkOZtSk3nyW6G7d9Wsb90r3laD585mCdpaP46GFzLJS0SDADb+H/Z08K465lz9mMtFfc2KC3Gbyz1dvyKP+Q/vrQTM4XIX86yTyCzODK8TywrrK8hjAbgY01A96JB6HHGB0yvlwEONJW78qhf/70ZJGMtWp1KlB+lv1HyLG95ADvoCGjET9o1HpHuQUyeamv9IxoIR+C5GDGtJnRP1tRCnBr0SjC09heGu+sHne/nNvZMicVQSZyek7eiYEisCemBovJbnbADtKEZlK3dCDchD+Cn0i5AE8XaD1LqSpAnhjPNP0XgwF7e109TgtjQjyuGLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XelYueJaFOpdty88fV1FJfjnXyg6CFX9/Q++gr8VD0E=;
- b=L9rFy3jyXpemNK2dBs/gH5PTLjKPbuP/SR/QAnJTUB2sJjC67l9HGZNbfgFnKlrNRi67nBl+WFPkHSMgJFR5j1G+UA4QncMVs3A2RbGk/j+XKFMsEobNA9T6uSBrnZ4847sv+oUnmCC1b5RYlS5/ZOnO3T5NZvQAKzy3w2wGCfMcbrEvZbXcFVCHTHnzKNFt2on1ZpBDEaukexLoWvKp6uxNe97gS1wyZTUhrKaMTuAjLWQcOFkej53HDkuxVlYQ8ujiA5kTiTfb7mTwp+YTlfF5bg3h/ozFgJGMLIqheLV7u5Xg7bdpcdueBrl+E5Ng6d40QMGR8ACEq7TgqUMbPQ==
+ bh=dDJT6X4zSDczVsL85ePLb2edlKxANz9DzYCuH+VrkBU=;
+ b=bxYG9rLeOTkwBH/ZAVktqdtPtxgEF/r6y11gGV8k1DvmMg0TVnz6Y+A7LaisonbW7p+DS2VOFx9dKb2cafuhxQVjui2zEAxIuMpBQ9NUyBMSYtrsrIKPUifwKxG1UCBAv1mXmoTw+b5u8xJfadLDt988hcpVEjf0orpuLIxVAkQ9VcPNfiO2LmkhbaZ5VO0x1tPAJVTYvyjOzv2buezBK8k8dMiXKIO/h3r2zR9plcD9Jp1OPrT3xZyVLhNLvetw0VUnUDghcU1AECLJCRmOvF/S10lV0RqtrJdnPXmcG/aubcPcQ7wAkfjBB1zQlD36FOiqZslpzk01LYNw+yqAAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 Authentication-Results: linutronix.de; dkim=none (message not signed)
  header.d=none;linutronix.de; dmarc=none action=none header.from=suse.com;
 Received: from DB7PR04MB5177.eurprd04.prod.outlook.com (2603:10a6:10:20::21)
- by DB6PR04MB3240.eurprd04.prod.outlook.com (2603:10a6:6:11::10) with
+ by DBBPR04MB8059.eurprd04.prod.outlook.com (2603:10a6:10:1e9::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.25; Thu, 27 May
- 2021 10:03:43 +0000
+ 2021 10:22:12 +0000
 Received: from DB7PR04MB5177.eurprd04.prod.outlook.com
  ([fe80::790f:c865:4660:1565]) by DB7PR04MB5177.eurprd04.prod.outlook.com
  ([fe80::790f:c865:4660:1565%7]) with mapi id 15.20.4173.021; Thu, 27 May 2021
- 10:03:43 +0000
-Date:   Thu, 27 May 2021 18:03:29 +0800
+ 10:22:12 +0000
+Date:   Thu, 27 May 2021 18:21:57 +0800
 From:   Shung-Hsi Yu <shung-hsi.yu@suse.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Nitesh Lal <nilal@redhat.com>,
@@ -74,7 +74,7 @@ Cc:     Nitesh Lal <nilal@redhat.com>,
         Marc Zyngier <maz@kernel.org>,
         Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com
 Subject: Re: [PATCH] genirq: Provide new interfaces for affinity hints
-Message-ID: <YK9ucRrjq+eck/G7@syu-laptop>
+Message-ID: <YK9yxQoBPeUfQG05@syu-laptop>
 References: <20210504092340.00006c61@intel.com>
  <87pmxpdr32.ffs@nanos.tec.linutronix.de>
  <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
@@ -84,208 +84,221 @@ References: <20210504092340.00006c61@intel.com>
  <CAFki+LkB1sk3mOv4dd1D-SoPWHOs28ZwN-PqL_6xBk=Qkm40Lw@mail.gmail.com>
  <87zgwo9u79.ffs@nanos.tec.linutronix.de>
  <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
+ <YK9ucRrjq+eck/G7@syu-laptop>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
+In-Reply-To: <YK9ucRrjq+eck/G7@syu-laptop>
 X-Originating-IP: [27.242.200.212]
-X-ClientProxiedBy: FR3P281CA0061.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:4b::9) To DB7PR04MB5177.eurprd04.prod.outlook.com
+X-ClientProxiedBy: PR3P189CA0040.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:102:53::15) To DB7PR04MB5177.eurprd04.prod.outlook.com
  (2603:10a6:10:20::21)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from syu-laptop (27.242.200.212) by FR3P281CA0061.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:4b::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.10 via Frontend Transport; Thu, 27 May 2021 10:03:34 +0000
+Received: from syu-laptop (27.242.200.212) by PR3P189CA0040.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:53::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend Transport; Thu, 27 May 2021 10:22:03 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f94e762c-4038-4324-1568-08d920f6b583
-X-MS-TrafficTypeDiagnostic: DB6PR04MB3240:
-X-Microsoft-Antispam-PRVS: <DB6PR04MB32405A27BC08163C6D87CEB4BF239@DB6PR04MB3240.eurprd04.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 69c3169f-7bc4-4362-6cd7-08d920f94a39
+X-MS-TrafficTypeDiagnostic: DBBPR04MB8059:
+X-Microsoft-Antispam-PRVS: <DBBPR04MB8059E3B7D3E61BD47316F47EBF239@DBBPR04MB8059.eurprd04.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BgUl4mnVN5FMwt00/0Z83UtqGt/5lTFWTEsRJmjJAwyTKc/f24byACqfwvYQdfIrB8Le08zpwCwcEp65gkCaQXIasKMrHyt+hcfiv/f7UJl6mim9I+A0HzYtnV+3av70/uMplEmuzqpATA/cl4DsNCI+AI92+7Lmpbw8g9YH3DGI1YnP+l2RlkVslNx0/pfKKZhUlHLKRq1t7yGKmuVAzlgiKtFienVhQwKtqzg+JaOcAx41GhTwFlQZJ7gNwHcgk6Yd6/eptDJJC3gj37RZ2Ygkk3gj1LKweHAnNCslNRpCadtxRnlDfPUCwWk8/JcrBQ0pTG789p4sF6dHzqPkSX62BX8F6qBNkt8VfEveOR6EDohJPQim1uDRdbzAS6fMVsTZLEJjClt5aQR0rXPfXFDhbyu81N7sGPOfPfCDL8sPCQcHHWGQNAXtXbM2k2b2nHuws+ZC8raaoxMwNtJcibvyjS0i72UidestrxQJBQaPd8UgWspgDV4wzvRqMzPtg9wZ9Fr9DH+aaePYqqJC0ODusAJymmOp5izx4BzxIbVpuCwfI3Qg/b3+E079H4aFkus7QVQ1qOsKdKCWpgS7e3OcI+GzXmCRBAP1C5Owgz1ioqYoTvlJRRfk5WMgybS3WtIL+h7WNT70afxXnaJ/4x0Bua9Nz951cHulbsmkNC9mHSAh3kPXqAe/FrAuC9rf5DznWgaGNpI9alWKSCLtHw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5177.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(5660300002)(26005)(6496006)(55016002)(966005)(38100700002)(86362001)(54906003)(66556008)(66946007)(66476007)(498600001)(6666004)(7416002)(33716001)(6916009)(956004)(4326008)(9686003)(8676002)(16526019)(2906002)(8936002)(186003)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?M1JlK0ZzdmNXbVFGN042YnlqQURYZ1lqYXR6RDZ2WlpBTmpPNEVQUStLNGpT?=
- =?utf-8?B?RlZWaERSeFJZQ3o5N2ZwSnR2VEF1N0Qxa0NEam1wMTVMaFpYMm9Kc2l1MzM2?=
- =?utf-8?B?dXd1U0V5cnZBanlWL1MwZlBPOUN5Mm8zSHJYemJVVE15Z0RTcG1RbW9TWHVa?=
- =?utf-8?B?c3ArNEw2SVpydXVucEoxQWw1WWhGTkdDTXV5ektIaGtWMUw5Uml2amQwSE83?=
- =?utf-8?B?M1JpL2ZwL2NzRzd0SVBaWTFpMFFjOG1lRUFGakZDMnZ4RzFCYW9IUXBXY2Q2?=
- =?utf-8?B?RUdrcmh4RUpJR2t2RjhrOFdRUDgxNVJNUHp2V0FKRlI1T0U0YTVjNEpnOE5z?=
- =?utf-8?B?RWNnSEpFK3RKRGZ3SzFyakF5amdabEdzYno0d3BRU3JCa2FCUThBTGkxV0N1?=
- =?utf-8?B?N28xVFVGWnk5WWNKWDBkOVVzWmdUcjhBWTRsRjAreC83bzdRWkJyZVhIWmVl?=
- =?utf-8?B?MS91M1NzUFpTd0V5YnZaRklZQUtBaElpOHZEV1d4VjlsOEh5Z0Uwa2hsYngw?=
- =?utf-8?B?bW5jNXkrcjlCSFdsUTk3ZmQzUUFWMzkvNEhXdVpMVlhUYTBsMXdjbzdhVEoz?=
- =?utf-8?B?THdHbUdkejFHY0lKWEVTNFBpajhvUU1BRzZnVklLNjFBWUVXZXZDN1RXM0xU?=
- =?utf-8?B?anhyT3pjaE91emRlaXREcFVudWZaNFNuemVjT2lvK3RhUkdqM29SOFI1RzBH?=
- =?utf-8?B?RTRmellPWSsrWHc0N0dETjNranh2Z2VyYkRYUENIU1JERjkyRTFEeGJWUEJi?=
- =?utf-8?B?eTMvRmxwTE9uaFFFNTFxeEtNd29td3Rvdm5CWVl0RlAvTWplbXkyU2RZT3Fj?=
- =?utf-8?B?eHBtdWhFTHpyT2Z6V0R2R3hEem1qS1JWSTRLTjEwcVFSd1dlUG1sM0UzK05G?=
- =?utf-8?B?QnVhNXd1V0JITFdUSVNwa0daK2ZwWlZzK0RJRm4wbVUwQktBb2I0T2grRStl?=
- =?utf-8?B?ZFcxYTlSdlNVYW5HNDVVd2ZqOWVrTS9xamdNZ0NmVFNiYkZEYmVYSk4rNTRv?=
- =?utf-8?B?bVcyRWN4c0JEQjV6cXBPQ2VkLy9COUw4MExabitjOEpQMzJOZGxRZWt3bUxE?=
- =?utf-8?B?OWs4RlNXODhkMGttMHFDcUdpbDBBYkNLOUNtYXlpK2pkQS9tdjV4dkJiTk1I?=
- =?utf-8?B?d1BiSm0ybTlrNUNEekNrK1JvK2hUL3J1VGFjQ2FzZCt4VWgvSUdBdUxJeGJ3?=
- =?utf-8?B?WUUwOEtldFJVQ2cwais5eTZ1c0FxS0Yzdm94Ry9tR2ZVdXhIS0JuWjRtWi92?=
- =?utf-8?B?WnM1TWo3STg1ZGJGQ2hEaVNESmlWVGlCWkxCVUxBNzljaHptNVVFTUFieFQw?=
- =?utf-8?B?OW9CSkg0aFViSW1YcXBtVGJWVzh2a0FqUnVtQjRBWFVENlp5eGhiR3VybFhH?=
- =?utf-8?B?ZXI0Q21zeGRYNGtxMTFoY00vYmduSUsvOXZEZVFRcHZyWllRZ2VWT2RqbTNB?=
- =?utf-8?B?T2hlWnNjWkNxeFgyaUx3d2s2R0o0aUlyVGlrSExEVy8rMDJ4Qk54STJOa2o2?=
- =?utf-8?B?cDU0bWdXNzU4RXRMcG5XdnRWNjhSazFtaFdkY0dSYWN6OUdKbG1ndTkzcGFK?=
- =?utf-8?B?dVViNGx1eVUxczkrdE5PWllEVk1wQXROOFFxZjZ0allWN1NtNmMwRldMNFlt?=
- =?utf-8?B?THZrV1RURThNL2d4Y0oxbkZ1V05vQlRrWWVwTlpveWUvWDdQZk1ycG5jL3pL?=
- =?utf-8?B?QndYTndIdjBvZ3EwMmlJaUdSb3phTVZXUXdCL2UxeGNMUnRENGNYaDVKbzVR?=
- =?utf-8?Q?m1uU8MLdF0bibdIDOh5lTMWkIOKMWBsBPuEwpFn?=
+X-Microsoft-Antispam-Message-Info: HB4GEiW1mioq+juFay0vOhwywXNlI/ZLEvuPDqzkhZ61XuOkaez90uwtCEOIEgr3+EW/EoY7DZgl9o3P/yLbWT0bflgllxMQeum3t254WpXjxTNMh1QGSJ3EzT4CZqqAf/25zX/hcTEUhfhtK7dTwHqIAq8Dk/tq5/E+qsyFknyYEJqAP+Wnfdzv2UcmiXSZy0vvYQr3tBsKZnIzvAk/nXtzAsEiCW/k250PUyWREwP/oZmFoHKIgK3lOqYEUe1o4X3npYm0xiAPjQTydj6cXbATL/EGhkFpy7ROOvI040Xj6oPEE4pM65FSBQYlXkj2u3v93w7O6e8HNXSR7fUAyPyv8O8VX06pLdTxR9g16xFNRniM2b04bHQwrf0pfiOuywROgbrLRhKczmsy9zPnpnsNBMuTtYpKZhHeqDWhdwodw1WX/NfamvKqSELNK8kM5hqBxnZAU8aUMa8BYN16WvqmbNbfIn6DU5ajLTgjVMoCLsAsu7FSfZaxdL7FZq9qkJ1aMYybJJnNMujtb/T7BKnF1DRcSE3CtfxKHOzopiIzGtZT0pUnioeOeQM5KppXa8rerM7bsRxrCWpL+ojzHaQBsLV1724vPxl3C+G+8+lBJ3Q3edYzP9Wm5Hs3Ct6Y1rzRhmduHp56B1FKZVO2iHgXpCMNDRK5mKB+t5HBoeEEuKLIXGEqp9ybgELd+KayIYQCHPna+PwKTdmRvl+l8vRW/kcvzArgfhvFBQtosBY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5177.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(4326008)(9686003)(8676002)(6496006)(66476007)(966005)(66946007)(55016002)(54906003)(66556008)(38100700002)(33716001)(5660300002)(6666004)(2906002)(498600001)(6916009)(186003)(26005)(16526019)(83380400001)(8936002)(86362001)(956004)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?dWNNc3JjdnBNZ3N3bVplMWRIWjM1S0F1MGpUWW1TSzBxRW4yTHg5NWpCUTdz?=
+ =?utf-8?B?RS9VdkJNaXNxWWV2YkZVbmIyNG5PTmw0dVZTQ0RIbjVWVllYMm5YTTJqaWpr?=
+ =?utf-8?B?d3YzenBOLzVaN0NOQThEbmxwalduZ3hpSzJUKzI4RnBjZTVYc0lGNkJNQWpP?=
+ =?utf-8?B?MnBlR0xiQWYwSWVKS3lkcU1rN2FkU3VDclhHNGFJZld0OVhiazB6d0ZnWVhv?=
+ =?utf-8?B?OVc5Y3ZOWVRYSVg0QW1DeHhkOUdTN0t4RW1BNit4UWdnWmJVVnc2NzRvR0RR?=
+ =?utf-8?B?bS91cTNyYWxJdnY5TWdSano0NHNQUW5sUjlEYzF2T1VzMTZCVkZVVXVLSUFB?=
+ =?utf-8?B?VGlnaVdkQ2QvNmJnekg5ZU9zY1BraFdOY0hEeEhISWdOOG5rQnhVdFA0TGlG?=
+ =?utf-8?B?TGdpYzNCZDBTL1Z4eGdDRGNJZEFSb3IzSWNhM1dZakRpbmdPejVXd3RjT2Zz?=
+ =?utf-8?B?OVM3bEd5UG9rRkFzS24zUkkwajlreTVKbVZ0enp4aVZKWFB5T3hBSXpqTkpT?=
+ =?utf-8?B?dktGdENzOU5Sb2taWFBXaGJrTDk4eTZTMk1YRkpwWDI3VXhlaGhFUHREOHNj?=
+ =?utf-8?B?VnplWEtPQ3dvRURXYkg2bExxUnB0NXp3MHhFaVZlLytrZDI1Z0V3Wm5aU2d5?=
+ =?utf-8?B?Ui9rcEwxRkVOSG4rRlVaVlZVYzgxdExYdmhCQ2hQZStMSEV1akd0K21tRFB2?=
+ =?utf-8?B?bGo5a3Z2djZyVmo3VTIxejB5ZUM0MW1RdzJSSkd0Y1h3YlpEY1A5OWIrQjd1?=
+ =?utf-8?B?Zkh0YUk4ZERacm1ONVR4RGdKaWdyb0V3UzByQ3l5aGQ1YVE4SWFicTVvckpD?=
+ =?utf-8?B?aDF4QVJPS0UwYUo3YlRENTYrVjErZWpZMEFIRzFJRDV2d1grZ0xyL0tnSmow?=
+ =?utf-8?B?TG90ZzFKb0lrdFhwaW91TUI2SUtMSG5qaGliUndhdkpZaG1wYm1rWllaaFdz?=
+ =?utf-8?B?ZElhUnhpa1h6R0FpUXNDRjZBbXptN2tyMjlPb01YTk1zazZvSzV2ZTY0OHZ3?=
+ =?utf-8?B?S0hPYVQ5RUIxL1k2a2kwNlp0TjBHOFZTYlVmSFQrclUwOWpNRGFLMkRFY1dF?=
+ =?utf-8?B?dlp6K2VNWTFNYm1oZjNRdk84MW1EOFl1c3Q3U3lmR0FKUWRRaWxuZXR2QW42?=
+ =?utf-8?B?Rkx1Skl0dzZrNVdzWC9VMG9EaGhtQ0pTMWNPQVMvdDFyUTcybDQyejFCSU5u?=
+ =?utf-8?B?SXh3TlR5L0x3bDhCT25KTWZFTlNPUFZJbW9OTSttQk5zdTJ4Z0Zyc2pncXhE?=
+ =?utf-8?B?VytNTjNTLzFXOGhmNWFJaUdDYWxIS01YMzB1eEtWZVpBTWwvaUFXa2dvbmdN?=
+ =?utf-8?B?REF5eEZLYzNOZVVQY1RIZ0c0SXhraCtRaFNnZjRRNGJyRmlTcGNUSTdma25x?=
+ =?utf-8?B?ZU9HQWpaNjZudnBxeGtiZnFrVkpkL1VZTEpVTXppRmZrZWIxZWpXTHZETHlO?=
+ =?utf-8?B?Ty9tV2VCZFZFTlVlUDdWa3ltMFBVMHVYb0xILzZuZXgwWUluNkdhZFZ5c1Q0?=
+ =?utf-8?B?TVNxTTVuMGp1TGJtUlFDU04vcnZPR2EwRTUzSFc3Sno1blk4MExFWGNMTEo4?=
+ =?utf-8?B?R1BGbVRlOUhJMExaR1B5alFPK2pPTUlPMXVOZkw5T2pTWEZpSGIydldRVitx?=
+ =?utf-8?B?cjVZdDQzdTdhbS9NcHRHVkRLblByMWV4WWJpV1ptSzNHeTJwQU1vdDRjM3pk?=
+ =?utf-8?B?V1dxMktxQndMbmlpc3lyV0RzRUx1VVBmU3ZqWGlxYjJaRDhoM1dVNjcxbjNG?=
+ =?utf-8?Q?zabl/bgvFYILwcdvzh2u5PJAkouZK5w3JJYtw11?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f94e762c-4038-4324-1568-08d920f6b583
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69c3169f-7bc4-4362-6cd7-08d920f94a39
 X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5177.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2021 10:03:43.3323
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2021 10:22:11.7546
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FYYNe78FqVK+IZF8ap9hk9LpsQ8OzWlabzFs0l4Rrnptg0SFbY3KEYp/1luCMf+Y6wOwlANcTWZ2Ips9cR+cIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR04MB3240
+X-MS-Exchange-CrossTenant-UserPrincipalName: GAGPz0YnXXcLvFRKt0ziasUuCImVFmSSvommnGC1opvsUFo+aV8JZaMXd+HQjWp/lN9ex7Z4zkESty7iAU/MZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB8059
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Fri, May 21, 2021 at 02:03:06PM +0200, Thomas Gleixner wrote:
-> The discussion about removing the side effect of irq_set_affinity_hint() of
-> actually applying the cpumask (if not NULL) as affinity to the interrupt,
-> unearthed a few unpleasantries:
+On Thu, May 27, 2021 at 06:03:29PM +0800, Shung-Hsi Yu wrote:
+> Hi,
 > 
->   1) The modular perf drivers rely on the current behaviour for the very
->      wrong reasons.
+> On Fri, May 21, 2021 at 02:03:06PM +0200, Thomas Gleixner wrote:
+> > The discussion about removing the side effect of irq_set_affinity_hint() of
+> > actually applying the cpumask (if not NULL) as affinity to the interrupt,
+> > unearthed a few unpleasantries:
+> > 
+> >   1) The modular perf drivers rely on the current behaviour for the very
+> >      wrong reasons.
+> > 
+> >   2) While none of the other drivers prevents user space from changing
+> >      the affinity, a cursorily inspection shows that there are at least
+> >      expectations in some drivers.
+> > 
+> > #1 needs to be cleaned up anyway, so that's not a problem
+> > 
+> > #2 might result in subtle regressions especially when irqbalanced (which
+> >    nowadays ignores the affinity hint) is disabled.
+> > 
+> > Provide new interfaces:
+> > 
+> >   irq_update_affinity_hint() - Only sets the affinity hint pointer
+> >   irq_apply_affinity_hint()  - Set the pointer and apply the affinity to
+> >   			       the interrupt
+> > 
+> > Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
+> > document it to be phased out.
 > 
->   2) While none of the other drivers prevents user space from changing
->      the affinity, a cursorily inspection shows that there are at least
->      expectations in some drivers.
+> Is there recommended way to retrieve the CPU number that the interrupt has
+> affinity?
 > 
-> #1 needs to be cleaned up anyway, so that's not a problem
+> Previously a driver (I'm looking at drivers/net/ethernet/amazon/ena) that
+> uses irq_set_affinity_hint() to spread out IRQ knows the corresponding CPU
+> number since they're using their own spreading scheme. Now, phasing out
+> irq_set_affinity_hint(), and thus relying on request_irq() to spread the
+> load instead, there don't seem to be a easy way to get the CPU number.
+
+I should add that the main use-case for retrieving CPU number seems to be
+ensuring memory is allocated on the same NUMA node that serves the interrupt
+(again, looking at ena driver only, haven't check others yet).
+
+    int cpu = i % num_online_cpu();
+    cpumask_set_cpu(cpu, &affinity_hint_mask);
+    request_irq(irq, ...);
+    irq_set_affinity_hint(irq, &affinity_hint_mask);
+    int node = cpu_to_node(cpu);
+    buffer = vzalloc(node);
+
+> In theory the following could work, but including irq.h does not look like a
+> good idea given that the comment in its explicitly ask not to be included in
+> generic code.
 > 
-> #2 might result in subtle regressions especially when irqbalanced (which
->    nowadays ignores the affinity hint) is disabled.
+>     #include <linux/irq.h>
+>     int irq = request_irq(...);
+>     struct irq_data *data = irq_get_irq_data(irq);
+>     struct cpumask *mask = irq_data_get_effective_affinity_mask(data);
+>     int cpu = cpumask_first(mask);
 > 
-> Provide new interfaces:
+> Any suggestions?
 > 
->   irq_update_affinity_hint() - Only sets the affinity hint pointer
->   irq_apply_affinity_hint()  - Set the pointer and apply the affinity to
->   			       the interrupt
 > 
-> Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
-> document it to be phased out.
-
-Is there recommended way to retrieve the CPU number that the interrupt has
-affinity?
-
-Previously a driver (I'm looking at drivers/net/ethernet/amazon/ena) that
-uses irq_set_affinity_hint() to spread out IRQ knows the corresponding CPU
-number since they're using their own spreading scheme. Now, phasing out
-irq_set_affinity_hint(), and thus relying on request_irq() to spread the
-load instead, there don't seem to be a easy way to get the CPU number.
-
-In theory the following could work, but including irq.h does not look like a
-good idea given that the comment in its explicitly ask not to be included in
-generic code.
-
-    #include <linux/irq.h>
-    int irq = request_irq(...);
-    struct irq_data *data = irq_get_irq_data(irq);
-    struct cpumask *mask = irq_data_get_effective_affinity_mask(data);
-    int cpu = cpumask_first(mask);
-
-Any suggestions?
-
-
-Thanks,
-Shung-Hsi
-
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
-> ---
-> Applies on:
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-> ---
->  include/linux/interrupt.h |   41 ++++++++++++++++++++++++++++++++++++++++-
->  kernel/irq/manage.c       |    8 ++++----
->  2 files changed, 44 insertions(+), 5 deletions(-)
+> Thanks,
+> Shung-Hsi
 > 
-> --- a/include/linux/interrupt.h
-> +++ b/include/linux/interrupt.h
-> @@ -328,7 +328,46 @@ extern int irq_force_affinity(unsigned i
->  extern int irq_can_set_affinity(unsigned int irq);
->  extern int irq_select_affinity(unsigned int irq);
->  
-> -extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
-> +extern int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
-> +				     bool setaffinity);
-> +
-> +/**
-> + * irq_update_affinity_hint - Update the affinity hint
-> + * @irq:	Interrupt to update
-> + * @cpumask:	cpumask pointer (NULL to clear the hint)
-> + *
-> + * Updates the affinity hint, but does not change the affinity of the interrupt.
-> + */
-> +static inline int
-> +irq_update_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +{
-> +	return __irq_apply_affinity_hint(irq, m, true);
-> +}
-> +
-> +/**
-> + * irq_apply_affinity_hint - Update the affinity hint and apply the provided
-> + *			     cpumask to the interrupt
-> + * @irq:	Interrupt to update
-> + * @cpumask:	cpumask pointer (NULL to clear the hint)
-> + *
-> + * Updates the affinity hint and if @cpumask is not NULL it applies it as
-> + * the affinity of that interrupt.
-> + */
-> +static inline int
-> +irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +{
-> +	return __irq_apply_affinity_hint(irq, m, true);
-> +}
-> +
-> +/*
-> + * Deprecated. Use irq_update_affinity_hint() or irq_apply_affinity_hint()
-> + * instead.
-> + */
-> +static inline int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +{
-> +	return irq_apply_affinity_hint(irq, cpumask);
-> +}
-> +
->  extern int irq_update_affinity_desc(unsigned int irq,
->  				    struct irq_affinity_desc *affinity);
->  
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -487,7 +487,8 @@ int irq_force_affinity(unsigned int irq,
->  }
->  EXPORT_SYMBOL_GPL(irq_force_affinity);
->  
-> -int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
-> +			      bool setaffinity)
->  {
->  	unsigned long flags;
->  	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
-> @@ -496,12 +497,11 @@ int irq_set_affinity_hint(unsigned int i
->  		return -EINVAL;
->  	desc->affinity_hint = m;
->  	irq_put_desc_unlock(desc, flags);
-> -	/* set the initial affinity to prevent every interrupt being on CPU0 */
-> -	if (m)
-> +	if (m && setaffinity)
->  		__irq_set_affinity(irq, m, false);
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(irq_set_affinity_hint);
-> +EXPORT_SYMBOL_GPL(__irq_apply_affinity_hint);
->  
->  static void irq_affinity_notify(struct work_struct *work)
->  {
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
+> > ---
+> > Applies on:
+> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+> > ---
+> >  include/linux/interrupt.h |   41 ++++++++++++++++++++++++++++++++++++++++-
+> >  kernel/irq/manage.c       |    8 ++++----
+> >  2 files changed, 44 insertions(+), 5 deletions(-)
+> > 
+> > --- a/include/linux/interrupt.h
+> > +++ b/include/linux/interrupt.h
+> > @@ -328,7 +328,46 @@ extern int irq_force_affinity(unsigned i
+> >  extern int irq_can_set_affinity(unsigned int irq);
+> >  extern int irq_select_affinity(unsigned int irq);
+> >  
+> > -extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
+> > +extern int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
+> > +				     bool setaffinity);
+> > +
+> > +/**
+> > + * irq_update_affinity_hint - Update the affinity hint
+> > + * @irq:	Interrupt to update
+> > + * @cpumask:	cpumask pointer (NULL to clear the hint)
+> > + *
+> > + * Updates the affinity hint, but does not change the affinity of the interrupt.
+> > + */
+> > +static inline int
+> > +irq_update_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +{
+> > +	return __irq_apply_affinity_hint(irq, m, true);
+> > +}
+> > +
+> > +/**
+> > + * irq_apply_affinity_hint - Update the affinity hint and apply the provided
+> > + *			     cpumask to the interrupt
+> > + * @irq:	Interrupt to update
+> > + * @cpumask:	cpumask pointer (NULL to clear the hint)
+> > + *
+> > + * Updates the affinity hint and if @cpumask is not NULL it applies it as
+> > + * the affinity of that interrupt.
+> > + */
+> > +static inline int
+> > +irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +{
+> > +	return __irq_apply_affinity_hint(irq, m, true);
+> > +}
+> > +
+> > +/*
+> > + * Deprecated. Use irq_update_affinity_hint() or irq_apply_affinity_hint()
+> > + * instead.
+> > + */
+> > +static inline int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +{
+> > +	return irq_apply_affinity_hint(irq, cpumask);
+> > +}
+> > +
+> >  extern int irq_update_affinity_desc(unsigned int irq,
+> >  				    struct irq_affinity_desc *affinity);
+> >  
+> > --- a/kernel/irq/manage.c
+> > +++ b/kernel/irq/manage.c
+> > @@ -487,7 +487,8 @@ int irq_force_affinity(unsigned int irq,
+> >  }
+> >  EXPORT_SYMBOL_GPL(irq_force_affinity);
+> >  
+> > -int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
+> > +			      bool setaffinity)
+> >  {
+> >  	unsigned long flags;
+> >  	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
+> > @@ -496,12 +497,11 @@ int irq_set_affinity_hint(unsigned int i
+> >  		return -EINVAL;
+> >  	desc->affinity_hint = m;
+> >  	irq_put_desc_unlock(desc, flags);
+> > -	/* set the initial affinity to prevent every interrupt being on CPU0 */
+> > -	if (m)
+> > +	if (m && setaffinity)
+> >  		__irq_set_affinity(irq, m, false);
+> >  	return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(irq_set_affinity_hint);
+> > +EXPORT_SYMBOL_GPL(__irq_apply_affinity_hint);
+> >  
+> >  static void irq_affinity_notify(struct work_struct *work)
+> >  {
 
