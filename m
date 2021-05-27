@@ -2,64 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE8E392FC6
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 15:32:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 602BB392FCF
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 15:33:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236379AbhE0Ndt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 09:33:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:39183 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236007AbhE0Nds (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 May 2021 09:33:48 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9130268AFE; Thu, 27 May 2021 15:32:12 +0200 (CEST)
-Date:   Thu, 27 May 2021 15:32:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Claire Chang <tientzu@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
-        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
-        jxgao@google.com, joonas.lahtinen@linux.intel.com,
-        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        matthew.auld@intel.com, rodrigo.vivi@intel.com,
-        thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v8 00/15] Restricted DMA
-Message-ID: <20210527133212.GA27432@lst.de>
-References: <20210527125845.1852284-1-tientzu@chromium.org>
+        id S236007AbhE0NfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 09:35:17 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:2317 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235947AbhE0NfP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 09:35:15 -0400
+Received: from dggeml701-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4FrTDc6D4sz1BFVX;
+        Thu, 27 May 2021 21:29:04 +0800 (CST)
+Received: from dggema766-chm.china.huawei.com (10.1.198.208) by
+ dggeml701-chm.china.huawei.com (10.3.17.134) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 27 May 2021 21:33:39 +0800
+Received: from [10.174.177.210] (10.174.177.210) by
+ dggema766-chm.china.huawei.com (10.1.198.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 27 May 2021 21:33:39 +0800
+Subject: Re: [PATCH v2] PCI: xgene-msi: Remove redundant dev_err call in
+ xgene_msi_probe()
+To:     <toan@os.amperecomputing.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <yukuai3@huawei.com>
+References: <20210408132751.1198171-1-yangerkun@huawei.com>
+From:   yangerkun <yangerkun@huawei.com>
+Message-ID: <b91f0b24-07c4-094c-4f9e-04d9530136b6@huawei.com>
+Date:   Thu, 27 May 2021 21:33:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210527125845.1852284-1-tientzu@chromium.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20210408132751.1198171-1-yangerkun@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.210]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggema766-chm.china.huawei.com (10.1.198.208)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I just finished reviewing v7, sorry.  Let me find some time to see what
-difference this version makes.
+Ping...
+
+在 2021/4/8 21:27, ErKun Yang 写道:
+> devm_ioremap_resource() internally calls __devm_ioremap_resource() which
+> is where error checking and handling is actually having place. So the
+> dev_err in xgene_msi_probe() seems redundant and remove it.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> Signed-off-by: ErKun Yang <yangerkun@huawei.com>
+> ---
+>   drivers/pci/controller/pci-xgene-msi.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
+> index 1c34c897a7e2..369b50f626fd 100644
+> --- a/drivers/pci/controller/pci-xgene-msi.c
+> +++ b/drivers/pci/controller/pci-xgene-msi.c
+> @@ -451,7 +451,6 @@ static int xgene_msi_probe(struct platform_device *pdev)
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	xgene_msi->msi_regs = devm_ioremap_resource(&pdev->dev, res);
+>   	if (IS_ERR(xgene_msi->msi_regs)) {
+> -		dev_err(&pdev->dev, "no reg space\n");
+>   		rc = PTR_ERR(xgene_msi->msi_regs);
+>   		goto error;
+>   	}
+> 
