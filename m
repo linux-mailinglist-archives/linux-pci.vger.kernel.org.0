@@ -2,91 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C8B239259F
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 05:52:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 604F73928B6
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 09:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233037AbhE0DyQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 23:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233008AbhE0DyP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 23:54:15 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA524C061574;
-        Wed, 26 May 2021 20:52:42 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id gb17so5771686ejc.8;
-        Wed, 26 May 2021 20:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BspH1HZcZITcxF0rmbgmhpFuqnFljD02VxCFnbohkfI=;
-        b=vY1zXogmOP0GIzyh/iHbgLk/GxpMTSu+9llO/2m960FTS8sqW3bj713Mhd7P2a1bPU
-         BxMufd7w4LdnLm9i00eMCb23g4j74KDyGIm0wc7ueJghhhNOYCmsMyPCT+Zd/0tsAL1j
-         vSbfu6CxS4sMTEU4rBuefmNE7rIFSiDYDrPbemk8T4FWzuNoKRDVGozUaLaCPGl9v0SG
-         k9atr42HXSgWVGxncZ7Mv2rMk152UvBxgJKeV0uTofuvBKXcabeWf8jO+ltP9qx48QjH
-         UBqtbArSbSQDpN1cpjsitr2bIJmIIeDt7pLQ4M9I5Z73dfErXCXurCIMWTbnrz8q1WNS
-         sS0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BspH1HZcZITcxF0rmbgmhpFuqnFljD02VxCFnbohkfI=;
-        b=A3pTFynxScBt6ngEPyDdYuPhKwYoBBU2sTp3QeN+gm7Ig596MrX8D3ydvKYGq8ZnYq
-         rPusdHgpsQL7NC4GrepKF5ubWJqv2Lr3ScUZOM8unbOy01GDR5nMqz9hxPJPG/bBhOmo
-         eXo3SCin6tCzQokBd1WekoPAwjRwL5ilAWz/FypTtGy/5uM6OYoq9IQDXmOADMmL+TGN
-         SX+ZyhqWlXlHH227s/qN0BG62uuRtCcnRwL+JcVwtah0a/i+Um094QS9zN8gMb6ccxQc
-         /18l3XOS0pTUp2aw1zMEulXUoOvDPN9L+cB/ItWHb9vCdgXhyoXHE4cUyrSB7u6FBfB6
-         OmnA==
-X-Gm-Message-State: AOAM530Lw7c50cG4Y92KwVPT9QvJjcpSbvZ6uHuOK03ZvvJslbBRIl9l
-        yZRvv980qOFUPD3szMDU0PLt75xvC62AyKniTr0=
-X-Google-Smtp-Source: ABdhPJzmavZLEvwaFRAllGRc7d81w9sfgMiF8hYavyCuCd2nlJI0HCiYwD0IsiV6LPy/zGQE2bx/WPQm1FPnVON71sY=
-X-Received: by 2002:a17:906:4714:: with SMTP id y20mr1659206ejq.235.1622087561499;
- Wed, 26 May 2021 20:52:41 -0700 (PDT)
+        id S234964AbhE0HmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 03:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234318AbhE0HmR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 03:42:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 36A27610A6;
+        Thu, 27 May 2021 07:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1622101243;
+        bh=Irlo7mGbJ+1ThfdROf+4QLN6ktaoyaBx/mf73kvLs4I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jV1mzuY7JTsHFcNoKiKjyj1zAbzNaoUurjWnPVFZ9QxzBTKgbsAkxYfAPq/F3ggwr
+         cpPprcqhwkwTxtlGARNEMfh0T1U9hzr6Wy6RKQOdGYqnNWJjqA9t128hbhvoBUpPX3
+         SGnCohFgM117oI9CmIe/4hWNs9Nlg1oaTOhnp+98=
+Date:   Thu, 27 May 2021 09:40:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, helgaas@kernel.org,
+        Oliver Neukum <oneukum@suse.com>,
+        David Laight <David.Laight@aculab.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        rajatxjain@gmail.com, jsbarnes@google.com, dtor@google.com
+Subject: Re: [PATCH v5 1/2] driver core: Move the "removable" attribute from
+ USB to core
+Message-ID: <YK9M+OQ33+A5PFVB@kroah.com>
+References: <20210524171812.18095-1-rajatja@google.com>
 MIME-Version: 1.0
-References: <20210525125925.112306-1-lambert.q.wang@gmail.com>
- <20210525132035.GA66609@rocinante.localdomain> <CAATamay8WTiJnB=5OLYdFTqVUcRF9LarN6_1Eej3QUgFzWRnkA@mail.gmail.com>
- <20210526181810.GA13052@wunner.de>
-In-Reply-To: <20210526181810.GA13052@wunner.de>
-From:   Lambert Wang <lambert.q.wang@gmail.com>
-Date:   Thu, 27 May 2021 11:52:30 +0800
-Message-ID: <CAATamazbYRnTJuPKVt_ypu_PVPXN407dSmo1EyExXHH0aHeyaQ@mail.gmail.com>
-Subject: Re: [PATCH] pci: add pci_dev_is_alive API
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     "Krzysztof Wilczy??ski" <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210524171812.18095-1-rajatja@google.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 27, 2021 at 2:18 AM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Wed, May 26, 2021 at 02:12:38PM +0800, Lambert Wang wrote:
-> > The user is our new PCI driver under development for WWAN devices .
-> > Surprise removal could happen under multiple circumstances.
-> > e.g. Exception, Link Failure, etc.
-> >
-> > We wanted this API to detect surprise removal or check device recovery
-> > when AER and Hotplug are disabled.
->
-> You may want to take a look at pci_dev_is_disconnected().
->
-> Be aware of its limitations, which Bjorn has already pointed out
-> and which are discussed in more detail under the following link
-> in the "Surprise removal" section:
->
-> https://lwn.net/Articles/767885/
->
+On Mon, May 24, 2021 at 10:18:11AM -0700, Rajat Jain wrote:
+> Move the "removable" attribute from USB to core in order to allow it to be
+> supported by other subsystem / buses. Individual buses that want to support
+> this attribute can populate the removable property of the device while
+> enumerating it with the 3 possible values -
+>  - "unknown"
+>  - "fixed"
+>  - "removable"
+> Leaving the field unchanged (i.e. "not supported") would mean that the
+> attribute would not show up in sysfs for that device. The UAPI (location,
+> symantics etc) for the attribute remains unchanged.
+> 
+> Move the "removable" attribute from USB to the device core so it can be
+> used by other subsystems / buses.
+> 
+> By default, devices do not have a "removable" attribute in sysfs.
+> 
+> If a subsystem or bus driver wants to support a "removable" attribute, it
+> should call device_set_removable() before calling device_register() or
+> device_add(), e.g.:
+> 
+>     device_set_removable(dev, DEVICE_REMOVABLE);
+>     device_register(dev);
+> 
+> The possible values and the resulting sysfs attribute contents are:
+> 
+>     DEVICE_REMOVABLE_UNKNOWN  ->  "unknown"
+>     DEVICE_REMOVABLE          ->  "removable"
+>     DEVICE_FIXED              ->  "fixed"
+> 
+> Convert the USB "removable" attribute to use this new device core
+> functionality.  There should be no user-visible change in the location or
+> semantics of attribute for USB devices.
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+> v5: - Update commit log per Bjorn's suggestion, and add "Reviewed by".
+>     - don't check for dev!=NULL    
 
-Thanks for the suggestion and the article. Currently I prefer
-pci_device_is_present() for my scenario.
+I've applied this series to my USB tree now, thanks for reworking it so
+many times.
 
-e.g. pci_dev_is_disconnected() seems to use a cached value. If the
-driver wants to check the device's absence
-after it *senses* something abnormal, pci_device_is_present() is more suitable.
-
-> Thanks,
->
-> Lukas
+greg k-h
