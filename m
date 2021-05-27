@@ -2,111 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DCDB3921B4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 May 2021 22:58:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D7DF3923A3
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 02:13:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233794AbhEZVAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 May 2021 17:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233717AbhEZVAN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 May 2021 17:00:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0BAD6613D3;
-        Wed, 26 May 2021 20:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622062721;
-        bh=tca5jhJa+R66QtoXGvrvfr4L4lN/+LgPF3bkHUwVN64=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IqpaWP4hrBZQWfPpeX+KY4vXPCZN4tFfh2wix4raRcP8uhvW1JskteRVnDJSFw7w7
-         G9xVgaP4FSmFqG5AzxQdN7m1WapB4MVocpqD9PgP83oprYedT7dSjX4lqPk12UX3OR
-         wFY20EHtmSxlfSY6/VWO5V8qW4dtBYoO2/87TwPR2V/UrKQiFsFJVRuviPLDI+jsH3
-         AjYcAjb5auWc8GWImmHjpS0i+JCr7ioJNd6vImI1LqVbdUrKRFhOlnSwYuQrTkj7yv
-         dvp6lHMd3gT+RPmXAo8D5Md+hspw2yEPNoPLUvDeA+WLbMybmPv4H4p5ZY5+fA605/
-         EmL8gZwpaIeTw==
-Date:   Wed, 26 May 2021 21:58:36 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, lorenzo.pieralisi@arm.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] Revert "arm64: PCI: Exclude ACPI "consumer"
- resources from host bridge windows"
-Message-ID: <20210526205836.GA20320@willie-the-truck>
-References: <20210510234020.1330087-1-luzmaximilian@gmail.com>
+        id S232829AbhE0AOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 May 2021 20:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229497AbhE0AOw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 May 2021 20:14:52 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8393FC061574;
+        Wed, 26 May 2021 17:13:20 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id lr4-20020a17090b4b84b02901600455effdso145973pjb.5;
+        Wed, 26 May 2021 17:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=MK8a+wfYbMpZQpkMTO0OrrMNbE1xthA2KsqFjKZmXxY=;
+        b=lcjllHOuDcrH69QG2w9thgwDkpvfPP8QjTCtnCNQF+bzTG3yyrew7geBnk32udsm7y
+         qN3qkJdKXsmlkpFpF1axvZxCHwQeltQDNtiYuQaYiPctTfJpHI/p1PUuyzwePPmBBXpi
+         57KHnXuCc5ThYYrDV4T76wFViiGwRo0SDwfpUzHXc0QdN2iqqAWboqMi8RSRhKMsFJnB
+         4jia+ZmeAg7tFS+h5LWRV3ApWjRGMt+Bh0nc9oQSlpmPFv5bk9nyuzQ0bCy7tTohgn0f
+         34wcaGpfPYENnBvO2rKU/+gF308QNHL+NOyvQsPKutJHTLceYufM2B9VB6YMwrPooeDM
+         WRoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=MK8a+wfYbMpZQpkMTO0OrrMNbE1xthA2KsqFjKZmXxY=;
+        b=sGrvPmLide6aJHp8qUQPhwc+sOi1Nn6UYVGgV3uxwyMc7u7vmnU2Gw7YCm+RFn0Viy
+         MI4xiHQafNpZr13hkxkMLEtMOOk0l4vYvcWGU3+pZdkzlYUfEY1wBk5W9FQtuOAP5UAO
+         +YJ1X4P4U7m9H99fNTMiaFrXGwQvvatDGjTOvwpV2cVPgwSppOy9Lns3jncQkwzCJeNw
+         Z9U5ujTJKwBf6+IsHVZJZWWgog1QATQk4mooP0obaglg+pkHqcDH/WtMy98NScuFuZgP
+         0xPakHtuzQGjpCsGppbXcKVWQ7pS2BApmicukTrddJkAcsAips79C44N5owmBWktVpZe
+         DbEQ==
+X-Gm-Message-State: AOAM533Vteb/eZOzs6HIoExQVzz5rSUCpJWgRNuceDXKEcus0xml5WUf
+        F7c6Ufg9IN9fbohUEe77GZA=
+X-Google-Smtp-Source: ABdhPJzUL5NJM4VTL7cocKg5ZVC2mJ+Wumyfgb51EzO/Yhg59dNUggwYPSJgoIzZDQ/TMAzaGigE1A==
+X-Received: by 2002:a17:90a:8581:: with SMTP id m1mr774224pjn.47.1622074399842;
+        Wed, 26 May 2021 17:13:19 -0700 (PDT)
+Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
+        by smtp.gmail.com with ESMTPSA id c71sm282310pfc.148.2021.05.26.17.13.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 May 2021 17:13:18 -0700 (PDT)
+From:   Punit Agrawal <punitagrawal@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>, wqu@suse.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        PCI <linux-pci@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Update PCI host bridge window to
+ 32-bit address memory
+References: <20210526133457.3102393-1-punitagrawal@gmail.com>
+        <CAL_JsqLYdXFG11oSmrAfcRoCkSPQYY-VvTr=QVOn8DDmDjm-dQ@mail.gmail.com>
+Date:   Thu, 27 May 2021 09:13:15 +0900
+In-Reply-To: <CAL_JsqLYdXFG11oSmrAfcRoCkSPQYY-VvTr=QVOn8DDmDjm-dQ@mail.gmail.com>
+        (Rob Herring's message of "Wed, 26 May 2021 09:00:51 -0500")
+Message-ID: <87a6ohniec.fsf@stealth>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210510234020.1330087-1-luzmaximilian@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 11, 2021 at 01:40:20AM +0200, Maximilian Luz wrote:
-> The Microsoft Surface Pro X has host bridges defined as
-> 
->     Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
->     Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
-> 
->     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->     {
->         Name (RBUF, ResourceTemplate ()
->         {
->             Memory32Fixed (ReadWrite,
->                 0x60200000,         // Address Base
->                 0x01DF0000,         // Address Length
->                 )
->             WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
->                 0x0000,             // Granularity
->                 0x0000,             // Range Minimum
->                 0x0001,             // Range Maximum
->                 0x0000,             // Translation Offset
->                 0x0002,             // Length
->                 ,, )
->         })
->         Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
->     }
-> 
-> meaning that the memory resources aren't (explicitly) defined as
-> "producers", i.e. host bridge windows.
-> 
-> Commit 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from
-> host bridge windows") introduced a check that removes such resources,
-> causing BAR allocation failures later on:
-> 
->     [ 0.150731] pci 0002:00:00.0: BAR 14: no space for [mem size 0x00100000]
->     [ 0.150744] pci 0002:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
->     [ 0.150758] pci 0002:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
->     [ 0.150769] pci 0002:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
-> 
-> This eventually prevents the PCIe NVME drive from being accessible.
-> 
-> On x86 we already skip the check for producer/window due to some history
-> with negligent firmware. It seems that Microsoft is intent on continuing
-> that history on their ARM devices, so let's drop that check here too.
-> 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
-> 
-> Please note: I am not sure if this is the right way to fix that, e.g. I
-> don't know if any additional checks like on IA64 or x86 might be
-> required instead, or if this might break things on other devices. So
-> please consider this more as a bug report rather than a fix.
-> 
-> Apologies for the re-send, I seem to have unintentionally added a blank
-> line before the subject.
-> 
-> ---
->  arch/arm64/kernel/pci.c | 14 --------------
->  1 file changed, 14 deletions(-)
+Hi Rob,
 
-Adding Lorenzo to cc, as he'll have a much better idea about this than me.
+Thanks for taking a look.
 
-This is:
+Rob Herring <robh+dt@kernel.org> writes:
 
-https://lore.kernel.org/r/20210510234020.1330087-1-luzmaximilian@gmail.com
+> On Wed, May 26, 2021 at 8:35 AM Punit Agrawal <punitagrawal@gmail.com> wrote:
+>>
+>> The PCIe host bridge on RK3399 advertises a single address range
+>> marked as 64-bit memory even though it lies entirely below 4GB. While
+>> previously, the OF PCI range parser treated 64-bit ranges more
+>> leniently (i.e., as 32-bit), since commit 9d57e61bf723 ("of/pci: Add
+>> IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses") the
+>> code takes a stricter view and treats the ranges as advertised in the
+>> device tree (i.e, as 64-bit).
+>>
+>> The change in behaviour causes failure when allocating bus addresses
+>> to devices connected behind a PCI-to-PCI bridge that require
+>> non-prefetchable memory ranges. The allocation failure was observed
+>> for certain Samsung NVMe drives connected to RockPro64 boards.
+>>
+>> Update the host bridge window attributes to treat it as 32-bit address
+>> memory. This fixes the allocation failure observed since commit
+>> 9d57e61bf723.
+>>
+>> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
+>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+>> Cc: Heiko Stuebner <heiko@sntech.de>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> ---
+>> Hi,
+>>
+>> The patch fixes the failure observed with detecting certain Samsung
+>> NVMe drives on RK3399 based boards.
+>>
+>> Hopefully, the folks on this thread can provide some input on the
+>> reason the host bridge window was originally marked as 64-bit or if
+>> there are any downsides to applying the patch.
+>
+> We can't require *only* a DT update to fix this. Ideally, the Rockchip
+> PCI driver should clear the 64-bit flag in the resources though I'm
+> not sure if the bridge driver would have access early enough.
 
-Will
+Following the discussion in the other thread, I tested the following
+changes to fixup 64-bit flag for non-prefetchable memory resources that
+fit below 4GB.
+
+If the changes look good, I'll send it out as a proper patch later
+today.
+
+---->8----
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index da5b414d585a..b9d0bee5a088 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -565,10 +565,14 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+                case IORESOURCE_MEM:
+                        res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+
+-                       if (!(res->flags & IORESOURCE_PREFETCH))
++                       if (!(res->flags & IORESOURCE_PREFETCH)) {
+                                if (upper_32_bits(resource_size(res)))
+                                        dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
+-
++                               if ((res->flags & IORESOURCE_MEM_64) && !upper_32_bits(res->end)) {
++                                       dev_warn(dev, "Overriding 64-bit flag for non-prefetchable memory below 4GB\n");
++                                       res->flags &= ~IORESOURCE_MEM_64;
++                               }
++                       }
+                        break;
+                }
+        }
