@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27C4A392F77
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 15:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2184B392F80
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 15:25:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236429AbhE0N00 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 09:26:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:38952 "EHLO verein.lst.de"
+        id S236448AbhE0N0p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 09:26:45 -0400
+Received: from verein.lst.de ([213.95.11.211]:38989 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236306AbhE0N0W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 May 2021 09:26:22 -0400
+        id S236470AbhE0N0m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 May 2021 09:26:42 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id A8FB568AFE; Thu, 27 May 2021 15:24:42 +0200 (CEST)
-Date:   Thu, 27 May 2021 15:24:42 +0200
+        id 0E5A268BFE; Thu, 27 May 2021 15:25:05 +0200 (CEST)
+Date:   Thu, 27 May 2021 15:25:04 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Claire Chang <tientzu@chromium.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
@@ -49,76 +49,19 @@ Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
         matthew.auld@intel.com, rodrigo.vivi@intel.com,
         thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v7 02/15] swiotlb: Refactor swiotlb_create_debugfs
-Message-ID: <20210527132442.GA26160@lst.de>
-References: <20210518064215.2856977-1-tientzu@chromium.org> <20210518064215.2856977-3-tientzu@chromium.org>
+Subject: Re: [PATCH v7 03/15] swiotlb: Add DMA_RESTRICTED_POOL
+Message-ID: <20210527132504.GB26160@lst.de>
+References: <20210518064215.2856977-1-tientzu@chromium.org> <20210518064215.2856977-4-tientzu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210518064215.2856977-3-tientzu@chromium.org>
+In-Reply-To: <20210518064215.2856977-4-tientzu@chromium.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 18, 2021 at 02:42:02PM +0800, Claire Chang wrote:
->  struct io_tlb_mem *io_tlb_default_mem;
-> +static struct dentry *debugfs_dir;
->  
->  /*
->   * Max segment that we can provide which (if pages are contingous) will
-> @@ -662,18 +663,30 @@ EXPORT_SYMBOL_GPL(is_swiotlb_active);
->  
->  #ifdef CONFIG_DEBUG_FS
->  
-> +static void swiotlb_create_debugfs(struct io_tlb_mem *mem, const char *name)
->  {
->  	if (!mem)
-> +		return;
+On Tue, May 18, 2021 at 02:42:03PM +0800, Claire Chang wrote:
+> Add a new kconfig symbol, DMA_RESTRICTED_POOL, for restricted DMA pool.
 
-I don't think this check makes much sense here.
-
-> +}
-> +
-> +static int __init swiotlb_create_default_debugfs(void)
-> +{
-> +	struct io_tlb_mem *mem = io_tlb_default_mem;
-> +
-> +	if (mem) {
-> +		swiotlb_create_debugfs(mem, "swiotlb");
-> +		debugfs_dir = mem->debugfs;
-> +	} else {
-> +		debugfs_dir = debugfs_create_dir("swiotlb", NULL);
-> +	}
-
-This also looks rather strange.  I'd much rather create move the
-directory creation of out swiotlb_create_debugfs.  E.g. something like:
-
-static void swiotlb_create_debugfs_file(struct io_tlb_mem *mem)
-{
-	debugfs_create_ulong("io_tlb_nslabs", 0400, mem->debugfs, &mem->nslabs);
-	debugfs_create_ulong("io_tlb_used", 0400, mem->debugfs, &mem->used);
-}
-
-static int __init swiotlb_init_debugfs(void)
-{
-	debugfs_dir = debugfs_create_dir("swiotlb", NULL);
-	if (io_tlb_default_mem) {
-		io_tlb_default_mem->debugfs = debugfs_dir;
-		swiotlb_create_debugfs_files(io_tlb_default_mem);
-	}
-	return 0;
-}
-late_initcall(swiotlb_init_debugfs);
-
-...
-
-static int rmem_swiotlb_device_init(struct reserved_mem *rmem,
-                                    struct device *dev)
-{
-	...
-		mem->debugfs = debugfs_create_dir(rmem->name, debugfs_dir);
-		swiotlb_create_debugfs_files(mem->debugfs);
-
-			
-}
+Please merge this with the actual code that is getting added.
