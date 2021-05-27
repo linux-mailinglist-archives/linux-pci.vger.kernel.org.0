@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2948392EF7
-	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 15:04:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C69392EFE
+	for <lists+linux-pci@lfdr.de>; Thu, 27 May 2021 15:04:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236255AbhE0NF4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 May 2021 09:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57340 "EHLO
+        id S236303AbhE0NGF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 May 2021 09:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236261AbhE0NFv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 09:05:51 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131FEC061342
-        for <linux-pci@vger.kernel.org>; Thu, 27 May 2021 06:04:12 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id r1so3644326pgk.8
-        for <linux-pci@vger.kernel.org>; Thu, 27 May 2021 06:04:12 -0700 (PDT)
+        with ESMTP id S236252AbhE0NF4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 May 2021 09:05:56 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 969C4C061761
+        for <linux-pci@vger.kernel.org>; Thu, 27 May 2021 06:04:20 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id i5so3680149pgm.0
+        for <linux-pci@vger.kernel.org>; Thu, 27 May 2021 06:04:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=t98IQ0DRt9rdYTgtaruQg3/PAS3qE8eaMmCBaIqRh14=;
-        b=GAjg2iwD8z4KXC0wmxl+b72WGOgo3axuh1N2ckUZTa0L2t7lEjUG/rd9vUciIgjM6/
-         BBoe8qhQS9McLcHa3Vql2S8tpN9ukDLaEDnz4WKO3KFwq/co1Y7IP35DmK8g86ONb0cC
-         2QkhzvjQas2dIg52wH3GUtMDzBV3jAGcZRtko=
+        bh=g9sAWaw9/Ru404/gNZK/9yCFJ+COY6ShgEN5yl9rius=;
+        b=RU9c38RKOmRl8qLPe9nfaNayIMAo/KhsxRPQb+p1I2/vkq857xJH1yHb2hsJr/oLI5
+         OzLGwV9+GOm93mot3oVKzRPIFGItH+esVlARoN4qqQuH+rUWPo604KbT7KtsniJEDbEo
+         HQFJYd6CK0U3jnTgrILmcYyxGPhhzyPRwcTRo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=t98IQ0DRt9rdYTgtaruQg3/PAS3qE8eaMmCBaIqRh14=;
-        b=Megs+b8nVIcR9/Jh2hDbwNO/DC3SFfNF/tGOcbWxs+r+59IhgaWyDUsiYlaOMS/oWQ
-         iHL0K/8WLD5mjoCzlVqjuhzKKYVAIwypJP8x64ctJgW0vw4uv/hWvMRuMhFiP5GJnZcb
-         HyG3BeaCIIZ0aN+59HJiDTUO/lHjGV5w2pMAa11mfL8/xOXASm7kGruseCFQ2mYfmL98
-         NPt+D1+M05UdlskYqe/kG+tBcWyJMgghxa9kanbUxVelIwPAjqCENmeBMACnQtnl7kEH
-         4WJIxfBwaDgSZqpBwlzwocusbFMhnAYGJ4BlZC7aqGLeChMS4JCZ2HAiSo6NXLWNBzU1
-         w/9A==
-X-Gm-Message-State: AOAM530aJt201w1MtJu/azjPd2lJoFV8tifCY3Gt/t5MOqxq+uhRCK86
-        yIb845kNTMXUkriOQny5MOEC4g==
-X-Google-Smtp-Source: ABdhPJz5SQWTqZi0xc7pup6EKCV3Dg34qwCaD2h6fUXISa0uHIOvWKamMjceM9SgliQmqLBbNqrp+Q==
-X-Received: by 2002:a62:cd49:0:b029:2d8:ae8d:6a9f with SMTP id o70-20020a62cd490000b02902d8ae8d6a9fmr3674431pfg.50.1622120651592;
-        Thu, 27 May 2021 06:04:11 -0700 (PDT)
+        bh=g9sAWaw9/Ru404/gNZK/9yCFJ+COY6ShgEN5yl9rius=;
+        b=MowfSAHndqxmCR+M/D2p77FFeT3otRc5be57+kmmKLYH/na3X54Wer9zOZKb3PdEkC
+         mU4NXTiMBX+s0HBF6basWGlQYaP0Y+mRizXkGTrdEbpYUaMwSMqafJzRkjVc9FvjztBo
+         yTs68usHQnXWxQZzNNbHjJNQ6eXQszxOIjlYsj7ZJVwOBcoQ4a/CrTHtwEg/3Zljdaue
+         08mpN3SoN3X2rxzSbnP9/RFr+WVJfAtx1DGmeuvcW2Zi5JAlS0BrvZoBu8pP8zV0MlMq
+         9KRERU6gij9RMu/ktS7qLLAXju6vrQsMXRrVnBYHpvE/BRLQZF8E6GJseTAhkarcLtHy
+         E3WA==
+X-Gm-Message-State: AOAM530ANpjCBl6r6zvSS8vsfjQevAI+NKRibfB4WdqyddToVqjUXc0/
+        WBOHr1riD5X8GMvQpyNfk6tFBg==
+X-Google-Smtp-Source: ABdhPJw+tNdufRtYdRKBadLokBr1RMenJ8TRt7icb84uhhJq7TwV1n1jRizQR2Rn5o3HccoeyQdcjw==
+X-Received: by 2002:aa7:9438:0:b029:2df:258e:7f10 with SMTP id y24-20020aa794380000b02902df258e7f10mr3229291pfo.79.1622120660147;
+        Thu, 27 May 2021 06:04:20 -0700 (PDT)
 Received: from localhost ([2401:fa00:95:205:a93:378d:9a9e:3b70])
-        by smtp.gmail.com with UTF8SMTPSA id w197sm1969835pfc.5.2021.05.27.06.04.04
+        by smtp.gmail.com with UTF8SMTPSA id o3sm1937619pgh.22.2021.05.27.06.04.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 May 2021 06:04:11 -0700 (PDT)
+        Thu, 27 May 2021 06:04:19 -0700 (PDT)
 From:   Claire Chang <tientzu@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
@@ -78,9 +78,9 @@ Cc:     benh@kernel.crashing.org, paulus@samba.org,
         joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
         maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
         rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: [PATCH v8 14/15] dt-bindings: of: Add restricted DMA pool
-Date:   Thu, 27 May 2021 21:03:28 +0800
-Message-Id: <20210527130329.1853588-4-tientzu@chromium.org>
+Subject: [PATCH v8 15/15] of: Add plumbing for restricted DMA pool
+Date:   Thu, 27 May 2021 21:03:29 +0800
+Message-Id: <20210527130329.1853588-5-tientzu@chromium.org>
 X-Mailer: git-send-email 2.31.1.818.g46aad6cb9e-goog
 In-Reply-To: <20210527130329.1853588-1-tientzu@chromium.org>
 References: <20210527130329.1853588-1-tientzu@chromium.org>
@@ -90,82 +90,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduce the new compatible string, restricted-dma-pool, for restricted
-DMA. One can specify the address and length of the restricted DMA memory
-region by restricted-dma-pool in the reserved-memory node.
+If a device is not behind an IOMMU, we look up the device node and set
+up the restricted DMA when the restricted-dma-pool is presented.
 
 Signed-off-by: Claire Chang <tientzu@chromium.org>
 ---
- .../reserved-memory/reserved-memory.txt       | 36 +++++++++++++++++--
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ drivers/of/address.c    | 33 +++++++++++++++++++++++++++++++++
+ drivers/of/device.c     |  3 +++
+ drivers/of/of_private.h |  6 ++++++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-index e8d3096d922c..46804f24df05 100644
---- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-@@ -51,6 +51,23 @@ compatible (optional) - standard definition
-           used as a shared pool of DMA buffers for a set of devices. It can
-           be used by an operating system to instantiate the necessary pool
-           management subsystem if necessary.
-+        - restricted-dma-pool: This indicates a region of memory meant to be
-+          used as a pool of restricted DMA buffers for a set of devices. The
-+          memory region would be the only region accessible to those devices.
-+          When using this, the no-map and reusable properties must not be set,
-+          so the operating system can create a virtual mapping that will be used
-+          for synchronization. The main purpose for restricted DMA is to
-+          mitigate the lack of DMA access control on systems without an IOMMU,
-+          which could result in the DMA accessing the system memory at
-+          unexpected times and/or unexpected addresses, possibly leading to data
-+          leakage or corruption. The feature on its own provides a basic level
-+          of protection against the DMA overwriting buffer contents at
-+          unexpected times. However, to protect against general data leakage and
-+          system memory corruption, the system needs to provide way to lock down
-+          the memory access, e.g., MPU. Note that since coherent allocation
-+          needs remapping, one must set up another device coherent pool by
-+          shared-dma-pool and use dma_alloc_from_dev_coherent instead for atomic
-+          coherent allocation.
-         - vendor specific string in the form <vendor>,[<device>-]<usage>
- no-map (optional) - empty property
-     - Indicates the operating system must not create a virtual mapping
-@@ -85,10 +102,11 @@ memory-region-names (optional) - a list of names, one for each corresponding
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index aca94c348bd4..6cc7eaaf7e11 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -8,6 +8,7 @@
+ #include <linux/logic_pio.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/pci.h>
+ #include <linux/pci_regs.h>
+ #include <linux/sizes.h>
+@@ -1112,6 +1113,38 @@ bool of_dma_is_coherent(struct device_node *np)
+ }
+ EXPORT_SYMBOL_GPL(of_dma_is_coherent);
  
- Example
- -------
--This example defines 3 contiguous regions are defined for Linux kernel:
-+This example defines 4 contiguous regions for Linux kernel:
- one default of all device drivers (named linux,cma@72000000 and 64MiB in size),
--one dedicated to the framebuffer device (named framebuffer@78000000, 8MiB), and
--one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-+one dedicated to the framebuffer device (named framebuffer@78000000, 8MiB),
-+one for multimedia processing (named multimedia-memory@77000000, 64MiB), and
-+one for restricted dma pool (named restricted_dma_reserved@0x50000000, 64MiB).
- 
- / {
- 	#address-cells = <1>;
-@@ -120,6 +138,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
- 			compatible = "acme,multimedia-memory";
- 			reg = <0x77000000 0x4000000>;
- 		};
++int of_dma_set_restricted_buffer(struct device *dev, struct device_node *np)
++{
++	struct device_node *node, *of_node = dev->of_node;
++	int count, i;
 +
-+		restricted_dma_reserved: restricted_dma_reserved {
-+			compatible = "restricted-dma-pool";
-+			reg = <0x50000000 0x4000000>;
-+		};
- 	};
- 
- 	/* ... */
-@@ -138,4 +161,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
- 		memory-region = <&multimedia_reserved>;
- 		/* ... */
- 	};
++	count = of_property_count_elems_of_size(of_node, "memory-region",
++						sizeof(u32));
++	/*
++	 * If dev->of_node doesn't exist or doesn't contain memory-region, try
++	 * the OF node having DMA configuration.
++	 */
++	if (count <= 0) {
++		of_node = np;
++		count = of_property_count_elems_of_size(
++			of_node, "memory-region", sizeof(u32));
++	}
 +
-+	pcie_device: pcie_device@0,0 {
-+		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
-+		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
-+		memory-region = <&restricted_dma_mem_reserved>;
-+		/* ... */
-+	};
- };
++	for (i = 0; i < count; i++) {
++		node = of_parse_phandle(of_node, "memory-region", i);
++		/*
++		 * There might be multiple memory regions, but only one
++		 * restricted-dma-pool region is allowed.
++		 */
++		if (of_device_is_compatible(node, "restricted-dma-pool") &&
++		    of_device_is_available(node))
++			return of_reserved_mem_device_init_by_idx(dev, of_node,
++								  i);
++	}
++
++	return 0;
++}
++
+ /**
+  * of_mmio_is_nonposted - Check if device uses non-posted MMIO
+  * @np:	device node
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index c5a9473a5fb1..2defdca418ec 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -165,6 +165,9 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
+ 
+ 	arch_setup_dma_ops(dev, dma_start, size, iommu, coherent);
+ 
++	if (!iommu)
++		return of_dma_set_restricted_buffer(dev, np);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(of_dma_configure_id);
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index d717efbd637d..8fde97565d11 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -163,12 +163,18 @@ struct bus_dma_region;
+ #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_HAS_DMA)
+ int of_dma_get_range(struct device_node *np,
+ 		const struct bus_dma_region **map);
++int of_dma_set_restricted_buffer(struct device *dev, struct device_node *np);
+ #else
+ static inline int of_dma_get_range(struct device_node *np,
+ 		const struct bus_dma_region **map)
+ {
+ 	return -ENODEV;
+ }
++static inline int of_dma_set_restricted_buffer(struct device *dev,
++					       struct device_node *np)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ #endif /* _LINUX_OF_PRIVATE_H */
 -- 
 2.31.1.818.g46aad6cb9e-goog
 
