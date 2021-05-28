@@ -2,657 +2,297 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABFC23943DC
-	for <lists+linux-pci@lfdr.de>; Fri, 28 May 2021 16:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 832953945A8
+	for <lists+linux-pci@lfdr.de>; Fri, 28 May 2021 18:06:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236542AbhE1OKM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 May 2021 10:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236547AbhE1OKC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 May 2021 10:10:02 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4595AC06174A;
-        Fri, 28 May 2021 07:08:27 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d16so3297693pfn.12;
-        Fri, 28 May 2021 07:08:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=isJ9z6ugfRoVnDfFAPww9F4VNE0zuJxBi+y99gFCu4c=;
-        b=HguWFbmsBEX+rj18bK0k0ZsLmV5FWg4Q3qMOq4smXmBXRT9WTFff+hwOVnEMg3i42M
-         +UwR2Dl3C9WhVhK3G5avLHtQGQ1V3VpoblhxZBcTabqV379Ya63Y7bywdzCSMH2oV371
-         GpMZMWDZ4fDwv/+5yKuUgORH7qWvrwSjf2Zl0hWqxiI+8TogRiIdptU+mnPOyktNmK59
-         EObEYa8bQ8a4+zbGMYmG49tFNpZ8KZw2p8sGyFQb+O60+nuyOxH+E8M7dbQ9kJ41VQsr
-         ILaJPUJtMhEQzPNG5bdzUGZS5yAlELgdIE/elr+u0nrw/j+Eg76oL2pJN/o2S6p2MN4V
-         oqWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=isJ9z6ugfRoVnDfFAPww9F4VNE0zuJxBi+y99gFCu4c=;
-        b=ieaU7QTrmDe/wotZ8m6VLqxlnzX3WLdcxaG91Wtx5jVF15NzjhzrsJcS/JZTIkrDXd
-         iDYAunKszFT555iCU+INc9yK7exc4FNSnKDTR6+UgfpQlXE00n0gBF25ATJCrYuBpo1G
-         DdhCRUeidP6hFsIQeCvDXjzcIZgmgIwpUTR6zzWmSHbfB9DnzvUgWgvZdreg4yINMiU+
-         u9odnNK3Or6xiQdm/kUf03HbB+B9M1Mx5h0r6WFbkdkHDmF8bFReNoQNK462ddEZJ9Oi
-         rIpQnRL2flrsl1gQDY2x53TpyS0gKyRyevcD4+CVAbdBwddR9awEuYtX0ANJFYjlETj1
-         9mkw==
-X-Gm-Message-State: AOAM5334BDXPy+ZdXxNDDD1+cIKOy89MfSGZFpFPypEPAAsD6gFzo5Jg
-        8SGE9l6s0vitjCm1lE93pYQ=
-X-Google-Smtp-Source: ABdhPJyhgHI201e6yYuLKf5q8lOuZT02z3I0W9nXrJrb9Tbzoysbj1MLjpiOOAuaRiPXdNoUitZbfw==
-X-Received: by 2002:a63:e20b:: with SMTP id q11mr9073404pgh.307.1622210906682;
-        Fri, 28 May 2021 07:08:26 -0700 (PDT)
-Received: from localhost.localdomain ([103.248.31.164])
-        by smtp.googlemail.com with ESMTPSA id j3sm4607841pfe.98.2021.05.28.07.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 May 2021 07:08:26 -0700 (PDT)
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: [PATCH v4 7/7] PCI: Change the type of probe argument in reset functions
-Date:   Fri, 28 May 2021 19:37:55 +0530
-Message-Id: <20210528140755.7044-8-ameynarkhede03@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210528140755.7044-1-ameynarkhede03@gmail.com>
-References: <20210528140755.7044-1-ameynarkhede03@gmail.com>
+        id S234486AbhE1QI3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 May 2021 12:08:29 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:7028 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234961AbhE1QI2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 May 2021 12:08:28 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14SG2j2o005736;
+        Fri, 28 May 2021 09:06:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=gHZ9Iu3ccEMmn30HuEQAEKVkFL74/b4lMa4yUG+YYpk=;
+ b=KZSnyRVr9srjCi89eXUKB8z7ZEsc7+s9d9gaZ8sxsRdt9xyxSN7fe2f29JbzxE7m1boh
+ wVi5/2vWIoGwLctjnaf5eJZ/PECAkd/SZRmAhjwSMUksiwJ1wkn4IhCVlxSr9W8OFZI3
+ IwNpPLzIjYu4gUiUB3kXMJm76qWm141m4Je2wOrh7eZky7z+9ci5k5Fwzm1WB+HcwlJs
+ q9PE6PVLim1JnQle3NkZKd37dnqnEjJsMRaugkIrEgyq27nAjJ360/0MMhCM/JXySSSu
+ qSAvc/PTuDcbkm+VaijNmQ97g93cdZwYG9e1FR1GE7SbwYcC5N5lgU6pSv9ZwxDGDESf yA== 
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam07lp2042.outbound.protection.outlook.com [104.47.51.42])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 38tvr5s9r3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 May 2021 09:06:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ijmibxsY5QiMMrIBq8dQL99WTrW3i6j+kKXZydva3J9Gbm5+JRlY1azAx/4Tj43Zz/BYoztb/5VoGmaT8EyCs7neI8Afhv6OE4zArNC2bvujxak2xlF4VrgTHupFAL0mIHl5f+4AnO9KCE6sfz5iFdXsLbdFsnlc7hFCOZ8BeN2KYR+A5Y+9Cif9SEOIemMHqMWMfciqp+UOZdug3MhRcouXfKfuEhmwVe4+4Egw8DLi94PDb7B2EqrUNk8psJlsyuxmz8gNvJRfHNEcCKg+aiCqSKKFbVlrpAI/GYp9tS+bd+8vGwszStfvqIfyAejw+jwLzKCqVD27iqaef08wOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gHZ9Iu3ccEMmn30HuEQAEKVkFL74/b4lMa4yUG+YYpk=;
+ b=BREs9fzLFE2cjMQevwNmCIveOXuSQ/uobAMo+nI/wxJ/3h43Ygcm27OsVaIKhBsRP/YgtEjbHpPW475GWcpQKK2nu71VWZhPJWmvM+Wyl0mTbL4nSIXEOzNJx15QwzivpEpvZ+ujK64N7Wbt6a769vOea5mVaca1So5Hy2P12yR6cJuE3EwtDZCGvTPcqbDjf7GyhQ0ak40jwLX3EuTNPeHIV/mc+ta4IQ3kF2oBWs6c91sZU0QvjNQEJaZMTdg//WOuhDZJTEBOEMc+9JkbvGu6NjWszrWU4f6Y6TkLVBUCzDpfRy0LJuKy8PC4tD5LvjM5oZk+Jip8BBgJr+76yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.23) smtp.rcpttodomain=google.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gHZ9Iu3ccEMmn30HuEQAEKVkFL74/b4lMa4yUG+YYpk=;
+ b=2evannYjRz9PGGJy/TPKd2sytfjk1iDDGvvcJsDgS43fDRfUWdxeh41KLa+SF6CrNyRLIqS6kILiDtA+FQ9+r4LOFuhMskjeOcHbuukenugUNnS9SXXBdjjUEHH77lR5TTo8ckOQcyh5sE4ke+XX/CKVX//gwoNLOpMihsO924E=
+Received: from DM6PR08CA0020.namprd08.prod.outlook.com (2603:10b6:5:80::33) by
+ BY5PR07MB7201.namprd07.prod.outlook.com (2603:10b6:a03:205::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.22; Fri, 28 May
+ 2021 16:06:38 +0000
+Received: from DM6NAM12FT004.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:5:80:cafe::b2) by DM6PR08CA0020.outlook.office365.com
+ (2603:10b6:5:80::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
+ Transport; Fri, 28 May 2021 16:06:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
+ smtp.mailfrom=cadence.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.23) by
+ DM6NAM12FT004.mail.protection.outlook.com (10.13.178.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4195.10 via Frontend Transport; Fri, 28 May 2021 16:06:38 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 14SG6ZtH024608
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 May 2021 12:06:36 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 28 May 2021 17:56:33 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Fri, 28 May 2021 17:56:33 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 14SFuXhK021841;
+        Fri, 28 May 2021 17:56:33 +0200
+Received: (from nadeem@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 14SFuXV3021840;
+        Fri, 28 May 2021 17:56:33 +0200
+From:   Nadeem Athani <nadeem@cadence.com>
+To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>, <kishon@ti.com>
+CC:     <nadeem@cadence.com>, <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <pthombar@cadence.com>
+Subject: [PATCH] [v2] PCI: cadence: Set LTSSM Detect Quiet state minimum delay as workaround for training defect.
+Date:   Fri, 28 May 2021 17:56:26 +0200
+Message-ID: <20210528155626.21793-1-nadeem@cadence.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8fe31b47-4e81-463f-8239-08d921f29301
+X-MS-TrafficTypeDiagnostic: BY5PR07MB7201:
+X-Microsoft-Antispam-PRVS: <BY5PR07MB72010AD6B8045356409F8497D8229@BY5PR07MB7201.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i7Qxd6fbQfk8Anlk4VO8FiTRi1rn+jq4dFs6xNpl9RmANth1O+y9ZsbYRbSh23c40+Cu4b5XlvAc+9Sw6baH233LluZZsr6UoQd58BiWUxpoaxPsKmHDk9w1dm1BdzKeXu2uZPKlvZ4LWVrPTrt0KfIt3am+5SPeC18h6rUnJApMoRm/hshHPmSiPNieJj/g8dEBhf4MrDFNGpo/1vLOLvtIifIXNxuo3fGQ4SEeu9Kt39I5c0eBtj+1NkY4HkyIdrnnGPYismTtvRAddF8MKWpZaPyLg3wkttbrQlL4g3RhX4KHiaLdrQxXLGIQRIwo5I3Kr3RtA53DmHaQVW9ue0u4gPLh5BuHhiKM675MdgvT/vrjhPOhuDjzZ5t4d9R1hYAFqC9CyMJA/xw4TdCBTG0mtCLESLHvw/r8jzmgnhEUURxa8alhrB7Zs/lVPLvH3vVSbNau71tHc/1/JViktSNkt24jaQtLFM2cR/3WCCY2EloWmVt5KZ58NrLmJWwl/v6wvWAOF7V3vYgYqb9QVcfGg/MzFeGZ0QkkH+S2sHPMhwkMONdZ8ddeN8I//66Nk4Pm/DLKTn9v/ImCoJ9ziFHr/DWnzfXDhPfU35HZp1NqHDIlyS4+aeA0F+AhWt50Bl2bhm3YD3q/hg6j083XARHyA6ZluIomPaeZcWT3c7S0lcSrh48sLOdje/Bt5S1ii1Uk9WVV9SwV3e3WsPsKkLFCGnkS/5LXZ9GdgUfIPPk=
+X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(36092001)(36840700001)(46966006)(54906003)(36860700001)(86362001)(81166007)(110136005)(82310400003)(83380400001)(42186006)(107886003)(8936002)(36906005)(478600001)(6666004)(8676002)(316002)(4326008)(82740400003)(2616005)(336012)(186003)(26005)(47076005)(426003)(2906002)(70206006)(356005)(36756003)(1076003)(5660300002)(70586007)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2021 16:06:38.0978
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fe31b47-4e81-463f-8239-08d921f29301
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT004.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB7201
+X-Proofpoint-ORIG-GUID: e2VP9pdL97n3F1KRf40RjjZApdOlerMD
+X-Proofpoint-GUID: e2VP9pdL97n3F1KRf40RjjZApdOlerMD
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-28_05:2021-05-27,2021-05-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1011 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105280108
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduce a new enum pci_reset_mode_t to make the context
-of probe argument in reset functions clear and the code
-easier to read.
-Change the type of probe argument in functions which implement
-reset methods from int to pci_reset_mode_t to make the intent clear.
-Add a new line in return statement of pci_reset_bus_function.
+PCIe fails to link up if SERDES lanes not used by PCIe are assigned to
+another protocol. For example, link training fails if lanes 2 and 3 are
+assigned to another protocol while lanes 0 and 1 are used for PCIe to
+form a two lane link. This failure is due to an incorrect tie-off on an
+internal status signal indicating electrical idle.
 
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-Suggested-by: Krzysztof Wilczyński <kw@linux.com>
-Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+Status signals going from SERDES to PCIe Controller are tied-off when a
+lane is not assigned to PCIe. Signal indicating electrical idle is
+incorrectly tied-off to a state that indicates non-idle. As a result,
+PCIe sees unused lanes to be out of electrical idle and this causes
+LTSSM to exit Detect.Quiet state without waiting for 12ms timeout to
+occur. If a receiver is not detected on the first receiver detection
+attempt in Detect.Active state, LTSSM goes back to Detect.Quiet and
+again moves forward to Detect.Active state without waiting for 12ms as
+required by PCIe base specification. Since wait time in Detect.Quiet is
+skipped, multiple receiver detect operations are performed back-to-back
+without allowing time for capacitance on the transmit lines to
+discharge. This causes subsequent receiver detection to always fail even
+if a receiver gets connected eventually.
+
+Adding a quirk flag "quirk_detect_quiet_flag" to program the minimum
+time that LTSSM waits on entering Detect.Quiet state.
+Setting this to 2ms for specific TI j7200 SOC as a workaround to resolve
+a link training issue in IP.
+In future revisions this setting will not be required.
+
+As per PCIe specification, all Receivers must meet the Z-RX-DC
+specification for 2.5 GT/s within 1ms of entering Detect.Quiet LTSSM
+substate. The LTSSM must stay in this substate until the ZRXDC
+specification for 2.5 GT/s is met.
+
+00 : 0 minimum wait time in Detect.Quiet state.
+01 : 100us minimum wait time in Detect.Quiet state.
+10 : 1ms minimum wait time in Detect.Quiet state.
+11 : 2ms minimum wait time in Detect.Quiet state.
+
+Changes in v2:
+1. Adding the function cdns_pcie_detect_quiet_min_delay_set in
+pcie-cadence.c and invoking it from host and endpoint driver file.
+
+Signed-off-by: Nadeem Athani <nadeem@cadence.com>
 ---
- drivers/crypto/cavium/nitrox/nitrox_main.c    |  2 +-
- .../ethernet/cavium/liquidio/lio_vf_main.c    |  2 +-
- drivers/pci/hotplug/pciehp.h                  |  2 +-
- drivers/pci/hotplug/pciehp_hpc.c              |  7 +-
- drivers/pci/pci.c                             | 95 ++++++++++++-------
- drivers/pci/pci.h                             |  8 +-
- drivers/pci/pcie/aer.c                        |  2 +-
- drivers/pci/quirks.c                          | 33 ++++---
- include/linux/pci.h                           |  8 +-
- include/linux/pci_hotplug.h                   |  2 +-
- 10 files changed, 103 insertions(+), 58 deletions(-)
+ drivers/pci/controller/cadence/pcie-cadence-ep.c   |  4 ++++
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  3 +++
+ drivers/pci/controller/cadence/pcie-cadence.c      | 17 +++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h      | 15 +++++++++++++++
+ 4 files changed, 39 insertions(+)
 
-diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
-index 15d6c8452..f97fa8e99 100644
---- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-+++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-@@ -306,7 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
- 		return -ENOMEM;
- 	}
-
--	pcie_reset_flr(pdev, 0);
-+	pcie_reset_flr(pdev, PCI_RESET_DO_RESET);
-
- 	pci_restore_state(pdev);
-
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-index 336d149ee..6e666be69 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-@@ -526,7 +526,7 @@ static void octeon_destroy_resources(struct octeon_device *oct)
- 			oct->irq_name_storage = NULL;
- 		}
- 		/* Soft reset the octeon device before exiting */
--		if (!pcie_reset_flr(oct->pci_dev, 1))
-+		if (!pcie_reset_flr(oct->pci_dev, PCI_RESET_PROBE))
- 			octeon_pci_flr(oct);
- 		else
- 			cn23xx_vf_ask_pf_to_do_flr(oct);
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 4fd200d8b..87da03adc 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -181,7 +181,7 @@ void pciehp_release_ctrl(struct controller *ctrl);
-
- int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
- int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot);
--int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, int probe);
-+int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, pci_reset_mode_t mode);
- int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status);
- int pciehp_set_raw_indicator_status(struct hotplug_slot *h_slot, u8 status);
- int pciehp_get_raw_indicator_status(struct hotplug_slot *h_slot, u8 *status);
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index fb3840e22..a99b828ae 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -834,14 +834,17 @@ void pcie_disable_interrupt(struct controller *ctrl)
-  * momentarily, if we see that they could interfere. Also, clear any spurious
-  * events after.
-  */
--int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, int probe)
-+int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, pci_reset_mode_t mode)
- {
- 	struct controller *ctrl = to_ctrl(hotplug_slot);
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	u16 stat_mask = 0, ctrl_mask = 0;
- 	int rc;
-
--	if (probe)
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 897cdde02bd8..dd7df1ac7fda 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -623,6 +623,10 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+ 	ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE;
+ 	/* Reserve region 0 for IRQs */
+ 	set_bit(0, &ep->ob_region_map);
 +
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	down_write(&ctrl->reset_lock);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1d859b100..c6fef081c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4616,10 +4616,13 @@ EXPORT_SYMBOL_GPL(pcie_flr);
-  *
-  * Initiate a function level reset on @dev.
-  */
--int pcie_reset_flr(struct pci_dev *dev, int probe)
-+int pcie_reset_flr(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	u32 cap;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
++	if (ep->quirk_detect_quiet_flag)
++		cdns_pcie_detect_quiet_min_delay_set(&ep->pcie);
 +
- 	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
- 		return -ENOTTY;
-
-@@ -4627,18 +4630,21 @@ int pcie_reset_flr(struct pci_dev *dev, int probe)
- 	if (!(cap & PCI_EXP_DEVCAP_FLR))
- 		return -ENOTTY;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	return pcie_flr(dev);
- }
- EXPORT_SYMBOL_GPL(pcie_reset_flr);
-
--static int pci_af_flr(struct pci_dev *dev, int probe)
-+static int pci_af_flr(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	int pos;
- 	u8 cap;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	pos = pci_find_capability(dev, PCI_CAP_ID_AF);
- 	if (!pos)
- 		return -ENOTTY;
-@@ -4650,7 +4656,7 @@ static int pci_af_flr(struct pci_dev *dev, int probe)
- 	if (!(cap & PCI_AF_CAP_TP) || !(cap & PCI_AF_CAP_FLR))
- 		return -ENOTTY;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	/*
-@@ -4693,10 +4699,13 @@ static int pci_af_flr(struct pci_dev *dev, int probe)
-  * by default (i.e. unless the @dev's d3hot_delay field has a different value).
-  * Moreover, only devices in D0 can be reset by this function.
-  */
--static int pci_pm_reset(struct pci_dev *dev, int probe)
-+static int pci_pm_reset(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	u16 csr;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	if (!dev->pm_cap || dev->dev_flags & PCI_DEV_FLAGS_NO_PM_RESET)
- 		return -ENOTTY;
-
-@@ -4704,7 +4713,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
- 	if (csr & PCI_PM_CTRL_NO_SOFT_RESET)
- 		return -ENOTTY;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	if (dev->current_state != PCI_D0)
-@@ -4953,10 +4962,13 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
-
--static int pci_parent_bus_reset(struct pci_dev *dev, int probe)
-+static int pci_parent_bus_reset(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	struct pci_dev *pdev;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	if (pci_is_root_bus(dev->bus) || dev->subordinate ||
- 	    !dev->bus->self || dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
- 		return -ENOTTY;
-@@ -4965,43 +4977,53 @@ static int pci_parent_bus_reset(struct pci_dev *dev, int probe)
- 		if (pdev != dev)
- 			return -ENOTTY;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	return pci_bridge_secondary_bus_reset(dev->bus->self);
- }
-
--static int pci_reset_hotplug_slot(struct hotplug_slot *hotplug, int probe)
-+static int pci_reset_hotplug_slot(struct hotplug_slot *hotplug, pci_reset_mode_t mode)
- {
- 	int rc = -ENOTTY;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	if (!hotplug || !try_module_get(hotplug->owner))
- 		return rc;
-
- 	if (hotplug->ops->reset_slot)
--		rc = hotplug->ops->reset_slot(hotplug, probe);
-+		rc = hotplug->ops->reset_slot(hotplug, mode);
-
- 	module_put(hotplug->owner);
-
- 	return rc;
- }
-
--static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
-+static int pci_dev_reset_slot_function(struct pci_dev *dev, pci_reset_mode_t mode)
- {
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	if (dev->multifunction || dev->subordinate || !dev->slot ||
- 	    dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
- 		return -ENOTTY;
-
--	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
-+	return pci_reset_hotplug_slot(dev->slot->hotplug, mode);
- }
-
--static int pci_reset_bus_function(struct pci_dev *dev, int probe)
-+static int pci_reset_bus_function(struct pci_dev *dev, pci_reset_mode_t mode)
- {
--	int rc = pci_dev_reset_slot_function(dev, probe);
-+	int rc = pci_dev_reset_slot_function(dev, mode);
-+
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-
- 	if (rc != -ENOTTY)
- 		return rc;
--	return pci_parent_bus_reset(dev, probe);
-+
-+	return pci_parent_bus_reset(dev, mode);
- }
-
- static void pci_dev_lock(struct pci_dev *dev)
-@@ -5081,17 +5103,20 @@ static void pci_dev_restore(struct pci_dev *dev)
-  * @dev: device to reset
-  * @probe: check if _RST method is included in the acpi_device context.
-  */
--static int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
-+static int pci_dev_acpi_reset(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- #ifdef CONFIG_ACPI
- 	acpi_handle handle = ACPI_HANDLE(&dev->dev);
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	/* Return -ENOTTY if _RST method is not included in the dev context */
- 	if (!handle || !acpi_has_method(handle, "_RST"))
- 		return -ENOTTY;
-
- 	/* Return 0 for probe phase indicating that we can reset this device */
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	/* Invoke _RST() method to perform a function level reset */
-@@ -5157,7 +5182,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
- 				 * other error, we're also finished: this indicates that further
- 				 * reset mechanisms might be broken on the device.
- 				 */
--				rc = pci_reset_fn_methods[i].reset_fn(dev, 0);
-+				rc = pci_reset_fn_methods[i].reset_fn(dev, PCI_RESET_DO_RESET);
- 				if (rc != -ENOTTY)
- 					return rc;
- 				break;
-@@ -5193,7 +5218,7 @@ void pci_init_reset_methods(struct pci_dev *dev)
- 	might_sleep();
-
- 	for (i = 0; i < PCI_RESET_METHODS_NUM; i++) {
--		rc = pci_reset_fn_methods[i].reset_fn(dev, 1);
-+		rc = pci_reset_fn_methods[i].reset_fn(dev, PCI_RESET_PROBE);
- 		if (!rc)
- 			reset_methods[i] = prio--;
- 		else if (rc != -ENOTTY)
-@@ -5509,21 +5534,24 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
- 	}
- }
-
--static int pci_slot_reset(struct pci_slot *slot, int probe)
-+static int pci_slot_reset(struct pci_slot *slot, pci_reset_mode_t mode)
- {
- 	int rc;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	if (!slot || !pci_slot_resetable(slot))
- 		return -ENOTTY;
-
--	if (!probe)
-+	if (mode == PCI_RESET_DO_RESET)
- 		pci_slot_lock(slot);
-
- 	might_sleep();
-
--	rc = pci_reset_hotplug_slot(slot->hotplug, probe);
-+	rc = pci_reset_hotplug_slot(slot->hotplug, mode);
-
--	if (!probe)
-+	if (mode == PCI_RESET_DO_RESET)
- 		pci_slot_unlock(slot);
-
- 	return rc;
-@@ -5537,7 +5565,7 @@ static int pci_slot_reset(struct pci_slot *slot, int probe)
-  */
- int pci_probe_reset_slot(struct pci_slot *slot)
- {
--	return pci_slot_reset(slot, 1);
-+	return pci_slot_reset(slot, PCI_RESET_PROBE);
- }
- EXPORT_SYMBOL_GPL(pci_probe_reset_slot);
-
-@@ -5560,14 +5588,14 @@ static int __pci_reset_slot(struct pci_slot *slot)
- {
- 	int rc;
-
--	rc = pci_slot_reset(slot, 1);
-+	rc = pci_slot_reset(slot, PCI_RESET_PROBE);
- 	if (rc)
- 		return rc;
-
- 	if (pci_slot_trylock(slot)) {
- 		pci_slot_save_and_disable_locked(slot);
- 		might_sleep();
--		rc = pci_reset_hotplug_slot(slot->hotplug, 0);
-+		rc = pci_reset_hotplug_slot(slot->hotplug, PCI_RESET_DO_RESET);
- 		pci_slot_restore_locked(slot);
- 		pci_slot_unlock(slot);
- 	} else
-@@ -5576,14 +5604,17 @@ static int __pci_reset_slot(struct pci_slot *slot)
- 	return rc;
- }
-
--static int pci_bus_reset(struct pci_bus *bus, int probe)
-+static int pci_bus_reset(struct pci_bus *bus, pci_reset_mode_t mode)
- {
- 	int ret;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
-+
- 	if (!bus->self || !pci_bus_resetable(bus))
- 		return -ENOTTY;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	pci_bus_lock(bus);
-@@ -5622,14 +5653,14 @@ int pci_bus_error_reset(struct pci_dev *bridge)
- 			goto bus_reset;
-
- 	list_for_each_entry(slot, &bus->slots, list)
--		if (pci_slot_reset(slot, 0))
-+		if (pci_slot_reset(slot, PCI_RESET_DO_RESET))
- 			goto bus_reset;
-
- 	mutex_unlock(&pci_slot_mutex);
+ 	spin_lock_init(&ep->lock);
+ 
  	return 0;
- bus_reset:
- 	mutex_unlock(&pci_slot_mutex);
--	return pci_bus_reset(bridge->subordinate, 0);
-+	return pci_bus_reset(bridge->subordinate, PCI_RESET_DO_RESET);
- }
-
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index ae1c55503513..fb96d37a135c 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -498,6 +498,9 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 		return PTR_ERR(rc->cfg_base);
+ 	rc->cfg_res = res;
+ 
++	if (rc->quirk_detect_quiet_flag)
++		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
++
+ 	ret = cdns_pcie_start_link(pcie);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to start link\n");
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 3c3646502d05..65b6c8bed0d4 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -7,6 +7,23 @@
+ 
+ #include "pcie-cadence.h"
+ 
++void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
++{
++	u32 delay = 0x3;
++	u32 ltssm_control_cap;
++
++	/*
++	 * Set the LTSSM Detect Quiet state min. delay to 2ms.
++	 */
++
++	ltssm_control_cap = cdns_pcie_readl(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP);
++	ltssm_control_cap = ((ltssm_control_cap &
++			    ~CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK) |
++			    CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay));
++
++	cdns_pcie_writel(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP, ltssm_control_cap);
++}
++
+ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+ 				   u32 r, bool is_io,
+ 				   u64 cpu_addr, u64 pci_addr, size_t size)
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 254d2570f8c9..ccdf9cee9dde 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -189,6 +189,14 @@
+ /* AXI link down register */
+ #define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
+ 
++/* LTSSM Capabilities register */
++#define CDNS_PCIE_LTSSM_CONTROL_CAP             (CDNS_PCIE_LM_BASE + 0x0054)
++#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK  GENMASK(2, 1)
++#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT 1
++#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay) \
++	 (((delay) << CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT) & \
++	 CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK)
++
+ enum cdns_pcie_rp_bar {
+ 	RP_BAR_UNDEFINED = -1,
+ 	RP_BAR0,
+@@ -292,6 +300,7 @@ struct cdns_pcie {
+  * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
+  *                available
+  * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
++ * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
+  */
+ struct cdns_pcie_rc {
+ 	struct cdns_pcie	pcie;
+@@ -301,6 +310,7 @@ struct cdns_pcie_rc {
+ 	u32			device_id;
+ 	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
+ 	bool                    quirk_retrain_flag;
++	bool                    quirk_detect_quiet_flag;
+ };
+ 
  /**
-@@ -5640,7 +5671,7 @@ int pci_bus_error_reset(struct pci_dev *bridge)
+@@ -331,6 +341,7 @@ struct cdns_pcie_epf {
+  *        registers fields (RMW) accessible by both remote RC and EP to
+  *        minimize time between read and write
+  * @epf: Structure to hold info about endpoint function
++ * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
   */
- int pci_probe_reset_bus(struct pci_bus *bus)
- {
--	return pci_bus_reset(bus, 1);
-+	return pci_bus_reset(bus, PCI_RESET_PROBE);
- }
- EXPORT_SYMBOL_GPL(pci_probe_reset_bus);
-
-@@ -5654,7 +5685,7 @@ static int __pci_reset_bus(struct pci_bus *bus)
- {
- 	int rc;
-
--	rc = pci_bus_reset(bus, 1);
-+	rc = pci_bus_reset(bus, PCI_RESET_PROBE);
- 	if (rc)
- 		return rc;
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 1b3ba3116..4d482965d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -609,19 +609,19 @@ static inline int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
- struct pci_dev_reset_methods {
- 	u16 vendor;
- 	u16 device;
--	int (*reset)(struct pci_dev *dev, int probe);
-+	int (*reset)(struct pci_dev *dev, pci_reset_mode_t mode);
+ struct cdns_pcie_ep {
+ 	struct cdns_pcie	pcie;
+@@ -345,6 +356,7 @@ struct cdns_pcie_ep {
+ 	/* protect writing to PCI_STATUS while raising legacy interrupts */
+ 	spinlock_t		lock;
+ 	struct cdns_pcie_epf	*epf;
++	bool                    quirk_detect_quiet_flag;
  };
-
- struct pci_reset_fn_method {
--	int (*reset_fn)(struct pci_dev *, int probe);
-+	int (*reset_fn)(struct pci_dev *, pci_reset_mode_t mode);
- 	char *name;
- };
-
- extern const struct pci_reset_fn_method pci_reset_fn_methods[];
- #ifdef CONFIG_PCI_QUIRKS
--int pci_dev_specific_reset(struct pci_dev *dev, int probe);
-+int pci_dev_specific_reset(struct pci_dev *dev, pci_reset_mode_t mode);
- #else
--static inline int pci_dev_specific_reset(struct pci_dev *dev, int probe)
-+static inline int pci_dev_specific_reset(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	return -ENOTTY;
- }
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f4e891bd5..1259f1cdb 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1405,7 +1405,7 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
- 	}
-
- 	if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
--		rc = pcie_reset_flr(dev, 0);
-+		rc = pcie_reset_flr(dev, PCI_RESET_DO_RESET);
- 		if (!rc)
- 			pci_info(dev, "has been reset\n");
- 		else
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ceec67342..5dccf14c8 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3693,7 +3693,7 @@ DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
-  * reset a single function if other methods (e.g. FLR, PM D0->D3) are
-  * not available.
-  */
--static int reset_intel_82599_sfp_virtfn(struct pci_dev *dev, int probe)
-+static int reset_intel_82599_sfp_virtfn(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	/*
- 	 * http://www.intel.com/content/dam/doc/datasheet/82599-10-gbe-controller-datasheet.pdf
-@@ -3703,7 +3703,7 @@ static int reset_intel_82599_sfp_virtfn(struct pci_dev *dev, int probe)
- 	 * Thus we must call pcie_flr() directly without first checking if it is
- 	 * supported.
- 	 */
--	if (!probe)
-+	if (mode == PCI_RESET_DO_RESET)
- 		pcie_flr(dev);
+ 
+ 
+@@ -505,6 +517,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
  	return 0;
  }
-@@ -3715,13 +3715,13 @@ static int reset_intel_82599_sfp_virtfn(struct pci_dev *dev, int probe)
- #define NSDE_PWR_STATE		0xd0100
- #define IGD_OPERATION_TIMEOUT	10000     /* set timeout 10 seconds */
-
--static int reset_ivb_igd(struct pci_dev *dev, int probe)
-+static int reset_ivb_igd(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	void __iomem *mmio_base;
- 	unsigned long timeout;
- 	u32 val;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	mmio_base = pci_iomap(dev, 0, 0);
-@@ -3758,7 +3758,7 @@ static int reset_ivb_igd(struct pci_dev *dev, int probe)
- }
-
- /* Device-specific reset method for Chelsio T4-based adapters */
--static int reset_chelsio_generic_dev(struct pci_dev *dev, int probe)
-+static int reset_chelsio_generic_dev(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	u16 old_command;
- 	u16 msix_flags;
-@@ -3774,7 +3774,7 @@ static int reset_chelsio_generic_dev(struct pci_dev *dev, int probe)
- 	 * If this is the "probe" phase, return 0 indicating that we can
- 	 * reset this device.
- 	 */
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	/*
-@@ -3836,17 +3836,17 @@ static int reset_chelsio_generic_dev(struct pci_dev *dev, int probe)
-  *    Chapter 3: NVMe control registers
-  *    Chapter 7.3: Reset behavior
-  */
--static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
-+static int nvme_disable_and_flr(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	void __iomem *bar;
- 	u16 cmd;
- 	u32 cfg;
-
- 	if (dev->class != PCI_CLASS_STORAGE_EXPRESS ||
--	    pcie_reset_flr(dev, 1) || !pci_resource_start(dev, 0))
-+	    pcie_reset_flr(dev, PCI_RESET_PROBE) || !pci_resource_start(dev, 0))
- 		return -ENOTTY;
-
--	if (probe)
-+	if (mode == PCI_RESET_PROBE)
- 		return 0;
-
- 	bar = pci_iomap(dev, 0, NVME_REG_CC + sizeof(cfg));
-@@ -3910,11 +3910,13 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
-  * device too soon after FLR.  A 250ms delay after FLR has heuristically
-  * proven to produce reliably working results for device assignment cases.
-  */
--static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
-+static int delay_250ms_after_flr(struct pci_dev *dev, pci_reset_mode_t mode)
- {
--	int ret = pcie_reset_flr(dev, probe);
-+	int ret;
+ #endif
 +
-+	ret = pcie_reset_flr(dev, mode);
-
--	if (probe)
-+	if (ret || mode == PCI_RESET_PROBE)
- 		return ret;
-
- 	msleep(250);
-@@ -3941,16 +3943,19 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
-  * because when a host assigns a device to a guest VM, the host may need
-  * to reset the device but probably doesn't have a driver for it.
-  */
--int pci_dev_specific_reset(struct pci_dev *dev, int probe)
-+int pci_dev_specific_reset(struct pci_dev *dev, pci_reset_mode_t mode)
- {
- 	const struct pci_dev_reset_methods *i;
-
-+	if (mode >= PCI_RESET_MODE_MAX)
-+		return -EINVAL;
++void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
 +
- 	for (i = pci_dev_reset_methods; i->reset; i++) {
- 		if ((i->vendor == dev->vendor ||
- 		     i->vendor == (u16)PCI_ANY_ID) &&
- 		    (i->device == dev->device ||
- 		     i->device == (u16)PCI_ANY_ID))
--			return i->reset(dev, probe);
-+			return i->reset(dev, mode);
- 	}
+ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+ 				   u32 r, bool is_io,
+ 				   u64 cpu_addr, u64 pci_addr, size_t size);
+-- 
+2.15.0
 
- 	return -ENOTTY;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 9bec3c616..2a35ec1f3 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -51,6 +51,12 @@
-
- #define PCI_RESET_METHODS_NUM 6
-
-+typedef enum pci_reset_mode {
-+	PCI_RESET_DO_RESET,
-+	PCI_RESET_PROBE,
-+	PCI_RESET_MODE_MAX,
-+} pci_reset_mode_t;
-+
- /*
-  * The PCI interface treats multi-function devices as independent
-  * devices.  The slot/function address of each device is encoded
-@@ -1222,7 +1228,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- 			     enum pci_bus_speed *speed,
- 			     enum pcie_link_width *width);
- void pcie_print_link_status(struct pci_dev *dev);
--int pcie_reset_flr(struct pci_dev *dev, int probe);
-+int pcie_reset_flr(struct pci_dev *dev, pci_reset_mode_t mode);
- int pcie_flr(struct pci_dev *dev);
- bool pci_reset_supported(struct pci_dev *dev);
- int __pci_reset_function_locked(struct pci_dev *dev);
-diff --git a/include/linux/pci_hotplug.h b/include/linux/pci_hotplug.h
-index b482e42d7..9e8da46e7 100644
---- a/include/linux/pci_hotplug.h
-+++ b/include/linux/pci_hotplug.h
-@@ -44,7 +44,7 @@ struct hotplug_slot_ops {
- 	int (*get_attention_status)	(struct hotplug_slot *slot, u8 *value);
- 	int (*get_latch_status)		(struct hotplug_slot *slot, u8 *value);
- 	int (*get_adapter_status)	(struct hotplug_slot *slot, u8 *value);
--	int (*reset_slot)		(struct hotplug_slot *slot, int probe);
-+	int (*reset_slot)		(struct hotplug_slot *slot, pci_reset_mode_t mode);
- };
-
- /**
---
-2.31.1
