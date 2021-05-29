@@ -2,201 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FA16394CCA
-	for <lists+linux-pci@lfdr.de>; Sat, 29 May 2021 17:18:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ECFC394DDB
+	for <lists+linux-pci@lfdr.de>; Sat, 29 May 2021 21:25:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229796AbhE2PTu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 May 2021 11:19:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229693AbhE2PTt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 29 May 2021 11:19:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E1759611ED;
-        Sat, 29 May 2021 15:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622301493;
-        bh=8FZAeBSWYNo1uOPripW3vsWibTqtzIx9nusBwNbW5qk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y4jsFM52uPatr2qbrBGe7FELUMHXEyrMQS7O1g5kyhd9IDj1PkFF98rDUMZM/iQJY
-         yerwdeJWmqm7nbRzrfkI4kDQTHvqHqntwbNbJ51/P2wq0j1uPJmzPk6AENIqoclwRK
-         sJ+99l2ahBos2ghPFa9sPHXzSF1WeJCE0BebymdZKi44hVKEDwhnhm5wp0ZUnwE3wr
-         c2ZroN2VRUcfqqXBNT4sFYZTU0JRTT1KK6j2LJbpPsDXiWZQO1gtW/j+wuGHA80vpp
-         yw0sIkFKpakhYh6P/ZQv/vpJ8cJ/vGUVpJcdFFPN0DXVJzmIP5e0jNBz/yRqpoe7gP
-         kNeuxeHaGyjmA==
-Received: by pali.im (Postfix)
-        id 52F23DEA; Sat, 29 May 2021 17:18:10 +0200 (CEST)
-Date:   Sat, 29 May 2021 17:18:10 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "pawel.moll@arm.com" <pawel.moll@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>,
-        "galak@codeaurora.org" <galak@codeaurora.org>,
-        Michal Simek <michals@xilinx.com>,
-        Soren Brinkmann <sorenb@xilinx.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "tinamdar@apm.com" <tinamdar@apm.com>,
-        "treding@nvidia.com" <treding@nvidia.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>,
-        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
-        "hauke@hauke-m.de" <hauke@hauke-m.de>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "dhdang@apm.com" <dhdang@apm.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Subject: Re: [PATCH v12] [PATCH] PCI: Xilinx-NWL-PCIe: Adding support for
- Xilinx NWL PCIe Host Controller
-Message-ID: <20210529151810.lloziy67bq35phdx@pali>
-References: <1457281934-32068-1-git-send-email-bharatku@xilinx.com>
- <20160311215819.GB16257@localhost>
- <8520D5D51A55D047800579B09414719825889095@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160314170437.GA16729@localhost>
+        id S229827AbhE2T1M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 May 2021 15:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229795AbhE2T1M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 May 2021 15:27:12 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C53F3C061574;
+        Sat, 29 May 2021 12:25:35 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id j12so5164401pgh.7;
+        Sat, 29 May 2021 12:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7+Pi6aUWQk8YnBWt2s1qh+0Rx8QcWNf32gFFaODjRD0=;
+        b=q9jtcPS7F5rGOd6ROvnbCLLYwjKf1XLja+Wzi1NP+CwtbYldfDojtQv/Mptp/0IV96
+         FxhFctcxHSHyjrBBkdhZY9JWknZvBVqVevdeO/hUS4zxDDJlrNaS8YF+otD9dezIYIbh
+         icSWDLEzg+0BKjEwyejVusvbDu9B1YCryJISLymq0zb0+gSyc5vzsYVivnqo3wOVLeHd
+         j+IUaz/WYNi1b1ypzXP9vSxVAL7AgFYSxVYSPbJ5wSt1rOAMsWSzOU2shV2OAjj1vPEc
+         VzsA0TFlujmiRQliqmoxSvBn527YliCblCmoXi3rFLmp7ClBYnxac3+ILn0hvMNpQgTr
+         C8zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7+Pi6aUWQk8YnBWt2s1qh+0Rx8QcWNf32gFFaODjRD0=;
+        b=KkS8FZdTF2O8hhOe0QRNWolVWlSks/DLjQlH6+99Xts2Qsr6HkCHrfjH9hkh3n7yCJ
+         fKJmmz/VSu/WK+lsgmTBzzz4QSGMFJnejH810oORfxdzDnXKlXfDurxJ9RR59o5/m8MP
+         3vipfsyOST/svSPEN4vjybzS+sMWpsXch5DWX3IKvRL9Mjjk3EA3QA7/w4FMn065Jdgz
+         c/hXHn7q0Y3kTPlXSB1v7I6veYwF1WYdmEaLkrzHXWZaa8tMTtc7IJMjcy58moiOTI6/
+         KPCJS7ho4h8flmDMWSUMeAadjGwIfiAZD8yuQ68dBmxe6cBuGZCRGDIz9R310GoEwfka
+         jVzw==
+X-Gm-Message-State: AOAM531zRVdYYf2NWB8ivvC3hdQIEFxcNiuXP7kJX2ZOp42uNh7ElLI8
+        Df7JzLi2AOJ5MRwgWQTOIWY=
+X-Google-Smtp-Source: ABdhPJy/WN+mRTiIeGVtE0FhcGgReHVHYYbdQnLBYSlFqWNd8YwDqFGLHKKek17vmtF9WRRyzyn3Yg==
+X-Received: by 2002:a63:2254:: with SMTP id t20mr4888580pgm.322.1622316335299;
+        Sat, 29 May 2021 12:25:35 -0700 (PDT)
+Received: from localhost.localdomain ([103.248.31.172])
+        by smtp.googlemail.com with ESMTPSA id ge5sm7286754pjb.45.2021.05.29.12.25.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 May 2021 12:25:34 -0700 (PDT)
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Amey Narkhede <ameynarkhede03@gmail.com>
+Subject: [PATCH v5 0/7] Expose and manage PCI device reset
+Date:   Sun, 30 May 2021 00:55:20 +0530
+Message-Id: <20210529192527.2708-1-ameynarkhede03@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20160314170437.GA16729@localhost>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 14 March 2016 12:04:37 Bjorn Helgaas wrote:
-> On Mon, Mar 14, 2016 at 03:51:01PM +0000, Bharat Kumar Gogada wrote:
-> > > On Sun, Mar 06, 2016 at 10:02:14PM +0530, Bharat Kumar Gogada wrote:
-> > > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> > > 
-> > > > +static bool nwl_pcie_valid_device(struct pci_bus *bus, unsigned int
-> > > > +devfn) {
-> > > > +	struct nwl_pcie *pcie = bus->sysdata;
-> > > > +
-> > > > +	/* Check link,before accessing downstream ports */
-> > > > +	if (bus->number != pcie->root_busno) {
-> > > > +		if (!nwl_pcie_link_up(pcie))
-> > > > +			return false;
-> > > > +	}
-> > > 
-> > > This seems racy.  What if we check, and the link is up, but the
-> > > link goes down before we actually complete the config access?
-> > > 
-> > > I'm suggesting that this check for the link being up might be
-> > > superfluous.
-> 
-> > Without the above check and also if there is no EP then we are getting kernel stack as follows,
+PCI and PCIe devices may support a number of possible reset mechanisms
+for example Function Level Reset (FLR) provided via Advanced Feature or
+PCIe capabilities, Power Management reset, bus reset, or device specific reset.
+Currently the PCI subsystem creates a policy prioritizing these reset methods
+which provides neither visibility nor control to userspace.
 
-Hello! Now I found this old thread... And I would like to ask, have you
-solved this issue somehow? Because very similar problem I observe with
-pci-aardvark.c, just it cause Synchronous External Abort on CPU.
+Expose the reset methods available per device to userspace, via sysfs
+and allow an administrative user or device owner to have ability to
+manage per device reset method priorities or exclusions.
+This feature aims to allow greater control of a device for use cases
+as device assignment, where specific device or platform issues may
+interact poorly with a given reset method, and for which device specific
+quirks have not been developed.
 
-> > [    2.654105] PCI host bridge /amba/pcie@fd0e0000 ranges:
-> > [    2.659268]   No bus range found for /amba/pcie@fd0e0000, using [bus 00-ff]
-> > [    2.666195]   MEM 0xe1000000..0xefffffff -> 0xe1000000
-> > [    2.671410] nwl-pcie fd0e0000.pcie: PCI host bridge to bus 0000:00
-> > [    2.677436] pci_bus 0000:00: root bus resource [bus 00-ff]
-> > [    2.682883] pci_bus 0000:00: root bus resource [mem 0xe1000000-0xefffffff]
-> > [    2.690031] Unhandled fault: synchronous external abort (0x96000210) at 0xffffff8000200000
-> > [    2.690036] nwl-pcie fd0e0000.pcie: Slave error
-> > [    2.702582] Internal error: : 96000210 [#1] SMP
-> > [    2.707078] Modules linked in:
-> > [    2.710108] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 4.5.0-rc6+ #5
-> > [    2.716332] Hardware name: ZynqMP (DT)
-> > [    2.720659] task: ffffffc0798bed00 ti: ffffffc0798c0000 task.ti: ffffffc0798c0000
-> > [    2.728102] PC is at pci_generic_config_read+0x38/0x9c
-> > [    2.733202] LR is at pci_generic_config_read+0x1c/0x9c
-> > .......
-> > [    3.322701] [<ffffffc000498b1c>] pci_generic_config_read+0x38/0x9c
-> > [    3.328842] [<ffffffc000498f54>] pci_bus_read_config_dword+0x80/0xb0
-> > [    3.335156] [<ffffffc00049abd4>] pci_bus_read_dev_vendor_id+0x30/0x104
-> > [    3.341643] [<ffffffc00049c5b0>] pci_scan_single_device+0x50/0xc4
-> > [    3.347698] [<ffffffc00049c674>] pci_scan_slot+0x50/0xe8
-> > [    3.352974] [<ffffffc00049d530>] pci_scan_child_bus+0x30/0xd8
-> > [    3.358683] [<ffffffc00049d210>] pci_scan_bridge+0x1fc/0x4ec
-> > [    3.364306] [<ffffffc00049d58c>] pci_scan_child_bus+0x8c/0xd8
-> > [    3.370016] [<ffffffc0004b2d9c>] nwl_pcie_probe+0x6c4/0x8e0
-> > .....
-> > 
-> > > The hardware should do something reasonable with the config access if it
-> > > can't send it down the link.
-> >
-> > When Link is down and H/W gets a ECAM access request for downstream
-> > ports, hardware responds by DECERR (decode error) status on AXI
-> > Interface.
-> 
-> DECERR isn't a PCIe concept, so I assume it's something specific to
-> Xilinx.  In the general case of a PCIe switch, a config access that
-> targets a device where the link is down should cause an Unsupported
-> Request completion (see PCIe spec r3.0, section 2.9.1, quoted below).
-> Possibly your Root Complex turns Unsupported Request completions into
-> DECERR.
+Changes in v5:
+	- Rebase the series over pci/reset branch of
+	  Bjorn's pci tree to avoid merge conflicts
+	  caused by recent changes in existing reset
+	  sysfs attribute
 
-This looks like same design as with pci aardvark hw. PCIe Unsupported
-Request or Completion Abort is converted to AXI DECERR (or SLVERR)
-which is then reported to CPU. In my case AXI DECERR/SLVERR cause
-Synchronous External Abort on CPU.
+Changes in v4:
+	- Change the order or strlen and strim in reset_method_store
+	  function to avoid extra strlen call.
+	- Use consistent terminology in new
+	  pci_reset_mode enum and rename the probe argument
+	  of reset functions.
 
->   2.9 Link Status Dependencies
->   2.9.1 Transaction Layer Behavior in DL_Down Status
-> 
->   DL_Down status indicates that there is no connection with another
->   component on the Link, or that the connection with the other
->   component has been lost and is not recoverable by the Physical or
->   Data Link Layers.
-> 
->   For a Downstream Port, DL_Down status is handled by:
->   
->    for Non-Posted Requests, forming completions for any Requests
->    submitted by the device core for Transmission, returning
->    Unsupported Request Completion Status, then discarding the Requests
-> 
-> Linux expects reads with Unsupported Request completion status to
-> return all 1's data to the CPU as in section 2.3.2:
-> 
->   2.3.2 Completion Handling Rules
-> 
->   Read Data Values with UR Completion Status
-> 
->   Some system configuration software depends on reading a data value
->   of all 1’s when a Configuration Read Request is terminated as an
->   Unsupported Request, particularly when probing to determine the
->   existence of a device in the system.  A Root Complex intended for
->   use with software that depends on a read-data value of all 1’s must
->   synthesize this value when UR Completion Status is returned for a
->   Configuration Read Request.
-> 
-> > So without any EP and without this condition, Linux kernel cannot
-> > determine above response from H/W. So the above condition is useful
-> > only when no EP is connected.
-> > 
-> > Now even if the link is up initially, but the link goes down before
-> > we actually complete the config access, then H/W responds by DECERR,
-> > then Linux kernel might throw similar stack. (We haven't observed
-> > this condition yet)
-> 
-> It'd be hard to hit this race unless you added delay in
-> nwl_pcie_map_bus() after nwl_pcie_valid_device(), then removed the
-> device during that delay.
-> 
-> > It looks like we need a different type of hardware response to get
-> > rid of this situation, but it's not easy way.  Have you come across
-> > this/similar kind of problem anywhere else?  Can you suggest if
-> > there is any other way to handle this.
-> 
-> I'm not a hardware designer, so I don't know what to suggest here.
-> The current design does seem like a robustness issue: surprise removal
-> of a device may cause this external abort in rare cases.
+Changes in v3:
+	- Dropped "PCI: merge slot and bus reset implementations" which was
+	  already accepted separately
+	- Grammar fixes
+	- Added Shanker's patches which were rebased on v2 of this series
+	- Added "PCI: Change the type of probe argument in reset functions"
+	  and additional user input sanitization code in reset_method_store
+	  function per review feedback from Krzysztof
 
-With pci aardvark I'm able to reproduce this issue with surprise removal
-of device.
+Changes in v2:
+	- Use byte array instead of bitmap to keep track of
+	  ordering of reset methods
+	- Fix incorrect use of reset_fn field in octeon driver
+	- Allow writing comma separated list of names of supported reset
+	  methods to reset_method sysfs attribute
+	- Writing empty string instead of "none" to reset_method attribute
+	  disables ability of reset the device
 
-Bharat, have you somehow resolved this issue? Seems that this kind of HW
-design is not rare.
+Amey Narkhede (5):
+  PCI: Add pcie_reset_flr to follow calling convention of other reset
+    methods
+  PCI: Add new array for keeping track of ordering of reset methods
+  PCI: Remove reset_fn field from pci_dev
+  PCI/sysfs: Allow userspace to query and set device reset mechanism
+  PCI: Change the type of probe argument in reset functions
+
+Shanker Donthineni (2):
+  PCI: Add support for a function level reset based on _RST method
+  PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
+
+ Documentation/ABI/testing/sysfs-bus-pci       |  16 ++
+ drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
+ .../ethernet/cavium/liquidio/lio_vf_main.c    |   2 +-
+ drivers/pci/hotplug/pciehp.h                  |   2 +-
+ drivers/pci/hotplug/pciehp_hpc.c              |   4 +-
+ drivers/pci/pci-sysfs.c                       | 128 ++++++++-
+ drivers/pci/pci.c                             | 269 +++++++++++-------
+ drivers/pci/pci.h                             |  14 +-
+ drivers/pci/pcie/aer.c                        |  12 +-
+ drivers/pci/probe.c                           |   4 +-
+ drivers/pci/quirks.c                          |  54 ++--
+ drivers/pci/remove.c                          |   1 -
+ include/linux/pci.h                           |  16 +-
+ include/linux/pci_hotplug.h                   |   2 +-
+ 14 files changed, 385 insertions(+), 143 deletions(-)
+
+--
+2.31.1
