@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6990D395340
-	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 00:44:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 613A7395343
+	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 00:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbhE3WqE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 30 May 2021 18:46:04 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:43667 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229887AbhE3WqE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 30 May 2021 18:46:04 -0400
+        id S229988AbhE3WqL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 30 May 2021 18:46:11 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:49319 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229887AbhE3WqK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 30 May 2021 18:46:10 -0400
 Received: from copland.sibelius.xs4all.nl ([83.163.83.176])
         by smtp-cloud8.xs4all.net with ESMTP
-        id nUANlDkLZIpGynUAOlJsHU; Mon, 31 May 2021 00:44:24 +0200
+        id nUANlDkLZIpGynUAYlJsI8; Mon, 31 May 2021 00:44:30 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
-        t=1622414664; bh=i+lntvHcQFtA4WzpzAK2fZ1XNv59rf7ksgwKKNSp1Hc=;
+        t=1622414670; bh=v9Q5Kl1IPoPR/CPYbDRNvSRH30D4ErtWXDUou+JHmZA=;
         h=From:To:Subject:Date:Message-Id:MIME-Version:From:Subject;
-        b=APMaVmSJ8y6a/CeC81LeSYkAbZOI9OhertHrGIi9OR5/orThysYGjt8K47yMNYYtZ
-         e72b0FGi1B4uUZoOzlDaaKTmR7YOOBnW3penTZ+LZ20j29yesP9LHJKl5pLQE9jtGu
-         QAx8jbOZyloYkq+77EvpQ8LHlSUOHexUbPz7McFw3v1SuEc56EzAuSuwAxePHrq/Y+
-         mnXXNromzM0JphmfRs9cRbpnLpNXJIaa6kg8ZBSDIW5yXgHw8trFYqHIB5besj3M2M
-         2CjBHoHZgB13W9rbTgWDH6abrWjweRyC++ciLdGkEdSdcbQk7sRFOdtGthsvyDj6Pu
-         qQW8iA3K2/oWg==
+        b=iTlYLvWGzxsgENk59OlIlDeqov8NK7iJNzryvJo23laTHzemX82SBw2LVQHJSSPj6
+         +uX9W1A+2o4VNawg7yD8e0MJDtO9aT4fSZrGAmAXEkdCT7mtgE6rQkyvBewdiLsAFA
+         jrKpJ4dLru1mr3lykz8rsOfyyBAp9cIdZawpV0mJzWYMmBglFdpiJJhckq4Zon21L2
+         ijS8TxwsRdlbKC61m0yfKSubDAOkN4OqPxh1m43OK9Zb7tRczIaC7TSmzeAOoF0mxw
+         4WidljcKdIP0IjpppA1oOPrvyNHj3prAD/jZ/K/uPTpRdcfHDesVUveUZmIIgljG7R
+         Wk0/3PoOmQYtw==
 From:   Mark Kettenis <mark.kettenis@xs4all.nl>
 To:     devicetree@vger.kernel.org
 Cc:     maz@kernel.org, robin.murphy@arm.com,
@@ -32,75 +32,221 @@ Cc:     maz@kernel.org, robin.murphy@arm.com,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] Apple M1 PCIe DT bindings
-Date:   Mon, 31 May 2021 00:43:59 +0200
-Message-Id: <20210530224404.95917-1-mark.kettenis@xs4all.nl>
+Subject: [PATCH v2 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
+Date:   Mon, 31 May 2021 00:44:00 +0200
+Message-Id: <20210530224404.95917-2-mark.kettenis@xs4all.nl>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210530224404.95917-1-mark.kettenis@xs4all.nl>
+References: <20210530224404.95917-1-mark.kettenis@xs4all.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfCPLUSCSRp08vyYWAg9IyKw+2xNqsbnVOvxxAlmtWSR61EW2uQ+IosWVXLd+JVC4/nWNrGMT8TcZSM7C7uoDIvdwedp3P1Vop6WlTwt4V5CFzyCqN88D
- thKteuSQIRAAgvx6rTCQKb8IUzvfG+uOSIaZydB/e41JB+QNK5nk8QCluMH+W03fvYqyZaaDYd5vexS2yeFA0JEZcUZmoEnsK6rYEoBkxOWEH+SbDW5tq1x4
- Jn4M1gIaaWDClQO2bQKVp+9RJLw1eDAQ+YS/313KRi0MSXaEa/r5/SFrhIV1lPkAVfqgjPZW+y/tn9C7hdVnv8DNHvfhdNBCqjIs2zt3UZV8EyVVS8NS/1JO
- 2ElaMTAKCYmWeMc0qTd/KryzZK+jna2NzOwNCXKB5wBRnz2N8uXV95hoftlIQ4hQjJtaUOd80uG58yvAQNGgZZ0MTZjxrYPBXdp1+csummTz7ADzlfNxPxk9
- o4HY0s0dxwSC5aNyTpFp3l+vq7gJ+R2pQpEjPNeVC7z1Z9dA40VofCIPi5k=
+X-CMAE-Envelope: MS4xfDlxk29GONAd/wEOZXSyfcsNUDOTD2ItYv+fnlBWfUwrOtd4qdGOpTM7dlDMflBg0S2276Ppb5TcCo/GdAFqipq6vWxG6qrWkkbjnk57XvXcCRFyufi4
+ 0QOdjXUAyu/6LpEkAUvgoXeVHRHUwv1zGk9Y3vLKTvn6aaJYjI3IEHQWT4ub3k/NdS8jNDFj2ZzHgG8HPQv3jgS34o0CfMuGzZPrLBZKo4xP4CnyEVlNB49w
+ oZkEsrfMgOjxhzLTjXCO/TiB2yEu01bo3sYv20zIp5CLiYRnG2+GniXJGC4nlBL0rbJ/vRAjrftrdtS2RF5DxFr+h6Kl2ETodJZGkVz74dJgfSmhBCmS1o4U
+ Maaq4G96fZAHv8D3B53G0daIcmkeWwkHt72nZNT/+mJ0EjKOvjnIZDxakKp35wdbhXfNesyQVrYsZBTZi1TUnAC6U9l036fuXXFfNR6+Nfm7JVrQToufNfSw
+ FuPXVOd/+JbvOcP7CYiXp4jtg3niRj9d/g9FeD9XuaE31W09LmO64K/WOTU=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Mark Kettenis <kettenis@openbsd.org>
 
-This small series adds bindings for the PCIe controller found on the
-Apple M1 SoC.
+The Apple PCIe host controller is a PCIe host controller with
+multiple root ports present in Apple ARM SoC platforms, including
+various iPhone and iPad devices and the "Apple Silicon" Macs.
 
-At this point, the primary consumer for these bindings is U-Boot.
-With these bindings U-Boot can bring up the links for the root ports
-of the PCIe root complex.  A simple OS driver can then provide
-standard ECAM access and manage MSI interrupts to provide access
-to the built-in Ethernet and XHCI controllers of the Mac mini.
-
-The Apple controller incorporates Synopsys Designware PCIe logic
-to implement its root port.  But unlike other hardware currently
-supported by U-Boot and the Linux kernel the Apple hardware
-integrates multiple root ports.  As such the existing bindings
-for the DWC PCIe interface can't be used.  There is a single ECAM
-space for all root space, but separate GPIOs to take the PCI devices
-on those ports out of reset.  Therefore the standard "reset-gpio" and
-"max-link-speed" properties appear on the child nodes representing
-the PCI devices that correspond to the individual root ports.
-
-MSIs are handled by the PCIe controller and translated into "regular
-interrupts".  A range of 32 MSIs is provided.  These 32 MSIs can be
-distributed over the root ports as the OS sees fit by programming the
-PCIe controller port registers.
-
-I still hope to hear from Marc Zyngier on the way MSIs are represented
-in this binding.
-
-Patch 2/2 of this series depends on the pinctrl series I sent earlier.
-
-
-Changelog:
-
-v2: - Adjust name for ECAM in "reg-names"
-    - Drop "phy" registers
-    - Expand description
-    - Add description for "interrupts"
-    - Fix incorrect minItems for "interrupts"
-    - Fix incorrect MaxItems for "reg-names"
-    - Document the use of "msi-controller", "msi-parent", "iommu-map" and
-      "iommu-map-mask"
-    - Fix "bus-range" and "iommu-map" properties in the example
-
-Mark Kettenis (2):
-  dt-bindings: pci: Add DT bindings for apple,pcie
-  arm64: apple: Add PCIe node
-
+Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+---
  .../devicetree/bindings/pci/apple,pcie.yaml   | 167 ++++++++++++++++++
  MAINTAINERS                                   |   1 +
- arch/arm64/boot/dts/apple/t8103.dtsi          |  63 +++++++
- 3 files changed, 231 insertions(+)
+ 2 files changed, 168 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
 
+diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+new file mode 100644
+index 000000000000..62ba3a735140
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+@@ -0,0 +1,167 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple PCIe host controller
++
++maintainers:
++  - Mark Kettenis <kettenis@openbsd.org>
++
++description: |
++  The Apple PCIe host controller is a PCIe host controller with
++  multiple root ports present in Apple ARM SoC platforms, including
++  various iPhone and iPad devices and the "Apple Silicon" Macs.
++  The controller incorporates Synopsys DesigWare PCIe logic to
++  implements its root ports.  But the ATU found on most DesignWare
++  PCIe host bridges is absent.
++  All root ports share a single ECAM space, but separate GPIOs are
++  used to take the PCI devices on those ports out of reset.  Therefore
++  the standard "reset-gpio" and "max-link-speed" properties appear on
++  the child nodes that represent the PCI bridges that correspond to
++  the individual root ports.
++  MSIs are handled by the PCIe controller and translated into regular
++  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
++  distributed over the root ports as the OS sees fit by programming
++  the PCIe controller's port registers.
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: apple,t8103-pcie
++      - const: apple,pcie
++
++  reg:
++    minItems: 3
++    maxItems: 5
++
++  reg-names:
++    minItems: 3
++    maxItems: 5
++    items:
++      - const: config
++      - const: rc
++      - const: port0
++      - const: port1
++      - const: port2
++
++  ranges:
++    minItems: 2
++    maxItems: 2
++
++  interrupts:
++    description:
++      Interrupt specifiers, one for each root port.
++    minItems: 1
++    maxItems: 3
++
++  msi-controller: true
++  msi-parent: true
++
++  msi-ranges:
++    description:
++      A list of pairs <intid span>, where "intid" is the first
++      interrupt number that can be used as an MSI, and "span" the size
++      of that range.
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    items:
++      minItems: 2
++      maxItems: 2
++
++  iommu-map: true
++  iommu-map-mask: true
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - bus-range
++  - interrupts
++  - msi-controller
++  - msi-parent
++  - msi-ranges
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/apple-aic.h>
++    #include <dt-bindings/pinctrl/apple.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      pcie0: pcie@690000000 {
++        compatible = "apple,t8103-pcie", "apple,pcie";
++        device_type = "pci";
++
++        reg = <0x6 0x90000000 0x0 0x1000000>,
++              <0x6 0x80000000 0x0 0x4000>,
++              <0x6 0x81000000 0x0 0x8000>,
++              <0x6 0x82000000 0x0 0x8000>,
++              <0x6 0x83000000 0x0 0x8000>;
++        reg-names = "config", "rc", "port0", "port1", "port2";
++
++        interrupt-parent = <&aic>;
++        interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
++
++        msi-controller;
++        msi-parent = <&pcie0>;
++        msi-ranges = <704 32>;
++
++        iommu-map = <0x100 &dart0 1 1>,
++                    <0x200 &dart1 1 1>,
++                    <0x300 &dart2 1 1>;
++        iommu-map-mask = <0xff00>;
++
++        bus-range = <0 3>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
++                 <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
++
++        clocks = <&pcie_core_clk>, <&pcie_aux_clk>, <&pcie_ref_clk>;
++        pinctrl-0 = <&pcie_pins>;
++        pinctrl-names = "default";
++
++        pci@0,0 {
++          device_type = "pci";
++          reg = <0x0 0x0 0x0 0x0 0x0>;
++          reset-gpios = <&pinctrl_ap 152 0>;
++          max-link-speed = <2>;
++
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges;
++        };
++
++        pci@1,0 {
++          device_type = "pci";
++          reg = <0x800 0x0 0x0 0x0 0x0>;
++          reset-gpios = <&pinctrl_ap 153 0>;
++          max-link-speed = <2>;
++
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges;
++        };
++
++        pci@2,0 {
++          device_type = "pci";
++          reg = <0x1000 0x0 0x0 0x0 0x0>;
++          reset-gpios = <&pinctrl_ap 33 0>;
++          max-link-speed = <1>;
++
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges;
++        };
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7327c9b778f1..789d79315485 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1654,6 +1654,7 @@ C:	irc://chat.freenode.net/asahi-dev
+ T:	git https://github.com/AsahiLinux/linux.git
+ F:	Documentation/devicetree/bindings/arm/apple.yaml
+ F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
++F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ F:	arch/arm64/boot/dts/apple/
+ F:	drivers/irqchip/irq-apple-aic.c
 -- 
 2.31.1
 
