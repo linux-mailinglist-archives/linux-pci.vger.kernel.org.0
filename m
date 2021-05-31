@@ -2,170 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2CAB39612F
-	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 16:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 919C4395E5D
+	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 15:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233122AbhEaOhX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 May 2021 10:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233071AbhEaOfK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 May 2021 10:35:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2EC2361C49;
-        Mon, 31 May 2021 13:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622469044;
-        bh=2hB1FM6ZqXS6rP1wgN1/iBHGjsSsIUt5rITLK+PQftg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EBJSJzAVAAqwPHVXZpQxMRb+PDJc5H8rfzRyAamo/3Fb+2jxnnrwMJfviLoCWSsPj
-         nAe1YvlbFeZ/MqcLd5mK5UeWno51r3CNGyFzlAkpJ1F1wo8Wt/2nVeKUU18VzEyl4O
-         bgb+obacin2M8crnRRger0lHvz2NcvQvbEfeZNPU5upgmaN4/QNlQ8+PgULWX+dj8b
-         YTIOrYiXArammEpBto6ouJS8g/4kbO1wxAkSiBFX0tNbGfAWo5xrGfibD/ofYrYl6G
-         pXUwATwqzwEqjmKnJa5yrEV6n+mkGkr0IBha2NM6LGwNvjLm4uj7Roi8GwI1BgSBjz
-         tX/mgynY6SvGw==
-Received: by pali.im (Postfix)
-        id B7C04B84; Mon, 31 May 2021 15:50:41 +0200 (CEST)
-Date:   Mon, 31 May 2021 15:50:41 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-staging@lists.linux.dev,
-        Greg KH <gregkh@linuxfoundation.org>,
-        NeilBrown <neil@brown.name>,
-        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/4] MIPS: pci: Add driver for MT7621 PCIe controller
-Message-ID: <20210531135041.42ovpmbwuc3yfkaw@pali>
-References: <20210515124055.22225-1-sergio.paracuellos@gmail.com>
- <20210515124055.22225-3-sergio.paracuellos@gmail.com>
- <20210531131431.bzsvmefqdyawmeo2@pali>
- <CAMhs-H80=7jctPT70rOmcwcqPw+9iUF84_ZCgGr-TKwJ4eB2Lg@mail.gmail.com>
+        id S232100AbhEaN55 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 31 May 2021 09:57:57 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:40113 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232433AbhEaNzv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 May 2021 09:55:51 -0400
+Received: from [77.244.183.192] (port=64432 helo=[192.168.178.41])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1lniMp-00018T-UP; Mon, 31 May 2021 15:54:08 +0200
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20210531090540.2663171-1-luca@lucaceresoli.net>
+ <20210531133211.llyiq3jcfy25tmz4@pali>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
+Date:   Mon, 31 May 2021 15:54:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
+In-Reply-To: <20210531133211.llyiq3jcfy25tmz4@pali>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMhs-H80=7jctPT70rOmcwcqPw+9iUF84_ZCgGr-TKwJ4eB2Lg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 31 May 2021 15:39:55 Sergio Paracuellos wrote:
-> Hi Pali,
+Hi Pali,
+
+On 31/05/21 15:32, Pali Rohár wrote:
+> On Monday 31 May 2021 11:05:40 Luca Ceresoli wrote:
+>> The PCIe PERSTn reset pin is active low and should be asserted, then
+>> deasserted.
+>>
+>> The current implementation only drives the pin once in "HIGH" position,
+>> thus presumably it was intended to deassert the pin. This has two problems:
+>>
+>>   1) it assumes the pin was asserted by other means before loading the
+>>      driver
+>>   2) it has the wrong polarity, since "HIGH" means "active", and the pin is
+>>      presumably configured as active low coherently with the PCIe
+>>      convention, thus it is driven physically to 0, keeping the device
+>>      under reset unless the pin is configured as active high.
+>>
+>> Fix both problems by:
+>>
+>>   1) keeping devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH) as is, but
+>>      assuming the pin is correctly configured as "active low" this now
+>>      becomes a reset assertion
+>>   2) adding gpiod_set_value(reset, 0) after a delay to deassert reset
+>>
+>> Fixes: 78bdcad05ea1 ("PCI: dra7xx: Add support to make GPIO drive PERST# line")
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>
+>> ---
+>>
+>> Changes v1 -> v2:
+>>  - No changes to the patch
+>>  - Reword commit message according to suggestions from Bjorn Helgaas (from
+>>    another patchset)
+>>  - Add Fixes: tag
+>> ---
+>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> index cb5d4c245ff6..11f392b7a9a2 100644
+>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> @@ -801,6 +801,8 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+>>  		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
+>>  		goto err_gpio;
+>>  	}
+>> +	usleep_range(1000, 2000);
 > 
-> Thanks for your comments.
+> Hello! Just a note that this is again a new code pattern in another
+> driver for different wait value of PCIe Warm Reset timeout. I sent email
+> about these issues:
+> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
 > 
-> On Mon, May 31, 2021 at 3:14 PM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > On Saturday 15 May 2021 14:40:53 Sergio Paracuellos wrote:
-> > > This patch adds a driver for the PCIe controller of MT7621 SoC.
-> > >
-> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > > ---
-> > >  arch/mips/pci/Makefile     |   1 +
-> > >  arch/mips/pci/pci-mt7621.c | 624 +++++++++++++++++++++++++++++++++++++
-> > >  arch/mips/ralink/Kconfig   |   9 +-
-> > >  3 files changed, 633 insertions(+), 1 deletion(-)
-> > >  create mode 100644 arch/mips/pci/pci-mt7621.c
-> > >
-> > > diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-> > > index f3eecc065e5c..178c550739c4 100644
-> > > --- a/arch/mips/pci/Makefile
-> > > +++ b/arch/mips/pci/Makefile
-> > > @@ -24,6 +24,7 @@ obj-$(CONFIG_PCI_AR2315)    += pci-ar2315.o
-> > >  obj-$(CONFIG_SOC_AR71XX)     += pci-ar71xx.o
-> > >  obj-$(CONFIG_PCI_AR724X)     += pci-ar724x.o
-> > >  obj-$(CONFIG_PCI_XTALK_BRIDGE)       += pci-xtalk-bridge.o
-> > > +obj-$(CONFIG_PCI_MT7621)     += pci-mt7621.o
-> > >  #
-> > >  # These are still pretty much in the old state, watch, go blind.
-> > >  #
-> > > diff --git a/arch/mips/pci/pci-mt7621.c b/arch/mips/pci/pci-mt7621.c
-> > > new file mode 100644
-> > > index 000000000000..fe1945819d25
-> > > --- /dev/null
-> > > +++ b/arch/mips/pci/pci-mt7621.c
-> > ...
-> > > +static int mt7621_pcie_enable_ports(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct device *dev = pcie->dev;
-> > > +     struct mt7621_pcie_port *port;
-> > > +     u8 num_slots_enabled = 0;
-> > > +     u32 slot;
-> > > +     u32 val;
-> > > +     int err;
-> > > +
-> > > +     /* Setup MEMWIN and IOWIN */
-> > > +     pcie_write(pcie, 0xffffffff, RALINK_PCI_MEMBASE);
-> > > +     pcie_write(pcie, pcie->io.start, RALINK_PCI_IOBASE);
-> > > +
-> > > +     list_for_each_entry(port, &pcie->ports, list) {
-> > > +             if (port->enabled) {
-> > > +                     err = clk_prepare_enable(port->clk);
-> > > +                     if (err) {
-> > > +                             dev_err(dev, "enabling clk pcie%d\n", slot);
-> > > +                             return err;
-> > > +                     }
-> > > +
-> > > +                     mt7621_pcie_enable_port(port);
-> > > +                     dev_info(dev, "PCIE%d enabled\n", port->slot);
-> > > +                     num_slots_enabled++;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     for (slot = 0; slot < num_slots_enabled; slot++) {
-> > > +             val = read_config(pcie, slot, PCI_COMMAND);
-> > > +             val |= PCI_COMMAND_MASTER;
-> > > +             write_config(pcie, slot, PCI_COMMAND, val);
-> >
-> > Hello! Is this part of code correct? Because it looks strange if PCIe
-> > controller driver automatically enables PCI bus mastering, prior device
-> > driver initialize itself.
-> >
-> > Moreover kernel has already function pci_set_master() for this purpose
-> > which is used by device drivers.
-> >
-> > So I think this code can confuse some device drivers...
-> 
-> I agree that we have pci_set_master() to be used in pci device driver
-> code. Original controller driver set this bit for enabled slots. Since
-> there is no documentation at all for the PCI in this SoC
+> Luca, how did you choose value 1000-2000 us? Do you have some reference
+> or specification which says that this value needs to be used?
 
-I see... this is really a big problem to do any driver development...
+Sadly I haven't access to the PCIe specification.
 
-> I have
-> maintained the setting in the driver in a cleaner way. See original
-> driver code and the setting here [0]. There is no other reason than
-> that. I am ok with removing this from here and testing with my two
-> devices that everything is still ok if having this setting in the pci
-> controller driver is a real problem.
+I'd be very happy to know what a correct value should be and update my
+patch.
 
-You can run lspci -nnvv with and without PCI_COMMAND_MASTER code and
-then compare outputs.
+-- 
+Luca
 
-Device drivers for sure enable PCI_COMMAND_MASTER at the time when it is
-needed, so it is possible that there would be no difference in lspci
-output.
-
-> [0]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/mt7621-pci/pci-mt7621.c?h=v4.18#n676
-> 
-> Best regards,
->     Sergio Paracuellos
-> >
-> > > +             /* configure RC FTS number to 250 when it leaves L0s */
-> > > +             val = read_config(pcie, slot, PCIE_FTS_NUM);
-> > > +             val &= ~PCIE_FTS_NUM_MASK;
-> > > +             val |= PCIE_FTS_NUM_L0(0x50);
-> > > +             write_config(pcie, slot, PCIE_FTS_NUM, val);
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
