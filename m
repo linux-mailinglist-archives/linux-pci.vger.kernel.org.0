@@ -2,126 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C05143956B1
-	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 10:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ACF03956B4
+	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 10:12:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbhEaIMc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 May 2021 04:12:32 -0400
-Received: from mail-co1nam11on2062.outbound.protection.outlook.com ([40.107.220.62]:38081
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S230303AbhEaIOQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 May 2021 04:14:16 -0400
+Received: from mail-bn8nam11on2084.outbound.protection.outlook.com ([40.107.236.84]:45231
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230070AbhEaIMa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 May 2021 04:12:30 -0400
+        id S230296AbhEaIOJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 31 May 2021 04:14:09 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ktrS1jW/E9QF7GiScuxMCVZv6Pt2LJs57aWalHBhjO52iC39L+HbM49TUNdUmWslyFEKz9DvRUcwSk5klfT2o/2nzne6JVIGATdueT3bv2s3hYp61G4zpa/K/VUZqRvdyopKF3EcCQMZ4UvraDBw3RHgSu2IzawpF7pU6EtdwSLuScZY2rqvpvaU62L65/lP/Br4mArbsnocaHT8ZsaKcQngdY3EX8zgnbO2X3rmG4rKfmVGtHmPbWcDkf/z31BdgLhZwuO6o7ROv4etMR/LVEajdYNPJg075uH281Uz1gXKWZxEMiqxz3SJ/Z8tweECeY3Eczhrv6n46vgbf45iYg==
+ b=V094U0PoGNTiMfB1Uf2iBIUOnVyWi6bEIdxQOTNZ1D0ZMCE9yQ+ub3kf8ehnPkLdMyfFHQbVSVvxqB3i1g7kjeVPAZc84GWG6+V+9T1x55ILDL9W8SLNodGZ1jpOdal1DM5miYc8gobKUvKGxsD2fitwjrF4ZMtIDhJVmaNcUAxp8GadVQRJhEvEbGLDawC6jTgx02xHF2u7hzxrMb7pzDAXkZTF6igeh9Y26IxJQ7dD38MO/tc3GEaZZ1DN/aEt1vf9pui6gXpFvDNaszfK+JKnPVyj5Kk+JzoMzQ6px60GXEuieOf2ufH8G+UgFqywrE68BXsO0H2a1i0z/IZ7hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nxYVkgCoxwb2XJ/Oc6jl/pNYzw9kOnLvr7g7DaHQ2ag=;
- b=kzce0pTKFQlL+u2WAhHg076xWsjKO8o9FTAOb9nl/HB8ver6jepb3zpWbf7iWN2lRinMsPtc5e/PmWruBaL5TBGepFLbs6AMs7rcDUBY27PFnBGWKvW47r2S1FGia87RK/FRaImWukTCQA4tAewwIfmGjwQlk1HYFTfRN0G0Pd8pHsuGEzB4cAaAjhR4BVhZy4F/ChAbVF43zYEWvZmi1diLSgwZSV8fyZPuNCSkVWUwl7aaNATh9ya6dHtnYdbQEFZa+2LzgbMi84LfWKvhh2jRT7jrte0q3RzqtKbKUt85UaHhsIHJQ2L6fGbpZPCpxhjuDfdgWoIZ1QFI3fakWw==
+ bh=XId56xhNNfdRa9xX7oshueAieoYEzbtwOjlk++lG9q4=;
+ b=NvXWn0JrA+m2b5/GRcIisW73EIY+zYOHARb3nO0lcl7yWA732NT+u1srB18sEMiIBfDC561jFjH8pxBY+/dc/qhWDa8hSIuKYVzxbySaoOGdWgeju0wGb+SsYUEcE6M09MXtLirAQyBuVcm/P1UuM1XOaHIOYh9qs0EmBdEtlGGShZh+tvppCZkqA3oGeyQMo2z+3s8+Zp2NGxWBQhz9O8TqR8nD3Bit76cRhRRMWqEOE0iRsTzhQq/1QDYNGWEbc9M2Zgw8KQUfOPNE2Ta9a+H3itre8TdVDrgMxWgTGTc9nayysvIQ9fZrDIh4BNdcOcrGUGxaiGTz4C1YNDjGwg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=amd.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nxYVkgCoxwb2XJ/Oc6jl/pNYzw9kOnLvr7g7DaHQ2ag=;
- b=M7AAuMDVulNbcuXMn8qJpBIy3a/rezZB/vi00bJDr52KlM6Dhsv+Pf13DJUi2Ys9EU//iOOY2JeuFY8KacC5ZOr0vAgdhFWZL1QDnE07l7Bl8hgFnLxawT6yy6jnM3H/GhCkJOttJegFPWZPbbUdcOapErvmvPGlISUm9ILHnUA=
-Received: from BN9PR03CA0738.namprd03.prod.outlook.com (2603:10b6:408:110::23)
- by DM5PR1201MB0092.namprd12.prod.outlook.com (2603:10b6:4:54::22) with
+ bh=XId56xhNNfdRa9xX7oshueAieoYEzbtwOjlk++lG9q4=;
+ b=fz8Hxe0HepbbfoDBVeQA9iyeKEBR2Q2Qaht4vtsQMmzKl02fYrAXLLR0Ice9DFkTpW6OkAadkOv3yXso+qDfZlnLD+ip3IOUO8ieuMR3f+/fNOEUZDtMUwhxwn3OsYIGP1vgEgVDmJvTVBLUlqeKW855d+e/iAP2UhZNk/1HuIA=
+Received: from BN0PR03CA0008.namprd03.prod.outlook.com (2603:10b6:408:e6::13)
+ by DM6PR12MB3738.namprd12.prod.outlook.com (2603:10b6:5:1c7::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20; Mon, 31 May
- 2021 08:10:49 +0000
-Received: from BN8NAM11FT044.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:110:cafe::bd) by BN9PR03CA0738.outlook.office365.com
- (2603:10b6:408:110::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.24; Mon, 31 May
+ 2021 08:12:27 +0000
+Received: from BN8NAM11FT010.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e6:cafe::40) by BN0PR03CA0008.outlook.office365.com
+ (2603:10b6:408:e6::13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
- Transport; Mon, 31 May 2021 08:10:49 +0000
+ Transport; Mon, 31 May 2021 08:12:26 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
+ smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT044.mail.protection.outlook.com (10.13.177.219) with Microsoft SMTP
+ BN8NAM11FT010.mail.protection.outlook.com (10.13.177.53) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4150.30 via Frontend Transport; Mon, 31 May 2021 08:10:49 +0000
-Received: from equan-buildpc.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ 15.20.4150.30 via Frontend Transport; Mon, 31 May 2021 08:12:26 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 31 May
- 2021 03:10:47 -0500
-From:   Evan Quan <evan.quan@amd.com>
-To:     <linux-pci@vger.kernel.org>
-CC:     <Alexander.Deucher@amd.com>, Evan Quan <evan.quan@amd.com>
-Subject: [PATCH] PCI: Mark AMD Navi14 GPU 0x7341 rev 0x00 ATS as broken
-Date:   Mon, 31 May 2021 16:10:31 +0800
-Message-ID: <20210531081031.919611-1-evan.quan@amd.com>
-X-Mailer: git-send-email 2.29.0
+ 2021 03:12:25 -0500
+Received: from weisheng-Pro-E800-G4-WS950T.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2242.4
+ via Frontend Transport; Mon, 31 May 2021 03:12:23 -0500
+From:   Wesley Sheng <wesley.sheng@amd.com>
+To:     <linasvepstas@gmail.com>, <ruscur@russell.cc>, <oohall@gmail.com>,
+        <bhelgaas@google.com>, <corbet@lwn.net>,
+        <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <wesleyshenggit@sina.com>, <wesley.sheng@amd.com>
+Subject: [PATCH] Documentation PCI: Fix typo in pci-error-recovery.rst
+Date:   Mon, 31 May 2021 16:12:15 +0800
+Message-ID: <20210531081215.43507-1-wesley.sheng@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b2e81c64-3a7f-4400-8d2d-08d9240b99a6
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0092:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB00929E63C0F1BE9CB80C4A5EE43F9@DM5PR1201MB0092.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-MS-Office365-Filtering-Correlation-Id: 49086c30-0922-40c6-aa50-08d9240bd3ae
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3738:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3738040D79A3083ADED2AB62953F9@DM6PR12MB3738.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rrGaEIVJq1kvpu233dcSeH67lvy0toVHBw2KrDmmiMAJvJbAyz//Y5W9nMJqWYaeHJwkL0RHSV5uFH34Q77DqdtdnMI2/vjyr73ziOoRe2CXAEOklFz7OaB7FLf1bD92R9+4QA7CpOwGAQNG+KBKKv58DP12eHoHUKkZy7v3dsc6lkMIxY0+IdjzY6vJvqrvChNPOqi4thFOLraW+f2hP0XrBgo4hdgsW2q+kmdq+LkCK1sDjI0BkUdjCpbfjMC8ttpXvPdp7v7LYXVgo4zIU+q9y1mzD4eCzzXuVHXmlF0E5fItTLrjvgkMdL39nGqdHkb4ilEz5fW9XUFUyvAXF2nDyNgl+NxUxUqjhmZ//FxMPX4xX4j7QY4VjNrd9lwbfJO49aaIzaSM2dG3QsDzGXq/F/BFVI1jJuocioZOXr+5Zaadl0gJYyTrOVMUdih1J4EBmSj4v8UFzpX64R1cpVhqgmW5d5ZCwJ0iZEjc75c/NmdUNJ5uFChcr/LOeFK1Qp9N5x4E5eGNOFUGhQlRsHxepn6DRiUTanWivn3W6PjS+VRBir2CaS3SA9fXiFBlStAxScnD9QL0IECUNq608QOh2ov389PIvfvhVrYF0rXYA826d/HbJ7ri3pwiG4s5bBdues6GjUvX+nmEgN99PWtlp8ooJcRAzg8LWn+YwMhJKSFtDdRT4FwutFuXBrG8
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(376002)(46966006)(36840700001)(336012)(6666004)(6916009)(70206006)(186003)(47076005)(2616005)(8676002)(81166007)(82310400003)(8936002)(478600001)(356005)(426003)(5660300002)(82740400003)(7696005)(54906003)(4326008)(26005)(36860700001)(36756003)(1076003)(2906002)(316002)(86362001)(83380400001)(16526019)(44832011)(70586007)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: N8cS27x14Ch6aGqnA4Qx4ZC12BJezeFEvzidOxQk8E7PywIeix4OzUApGqZ0yUwx4qLPmuAjlErR+b9nfqwkMZOALQpTgtQlHj6h17tmZZ2YZM6Z6KtG5/LJU0yNyqJyEwCF4T0T8kCvdPcDKwxYkOl3rdsiXeiXFuHvBDdY8Rp5/OqXmxmnHNlo1ArXDJgwgdpzY6bagNpthu03bJbXd39urHcZeCywKFSDp1OiDw/9fJxQ8JmAHeYOWqRIk+JR7i9Pw+ZkeegErjd4vG/9uQU3uIpyQckIOdKaqEApvil88dtjEcKpHA7duvXv3OTck6WU+3F1RbvL3zAPeekcQPSWAOhweUm4czO1AdLhpHQXp+Nqd5Y7WGXREkE5FgwijB44cjify+0x0AzJYJ1IRCZXFMOtV6SIxLEn7YeV7fMtC7cbs+gmonxjFii+pp/GYTQShZJ0I2vNjwnOeafubkQYRh5eSku1FLsd+M8kK4NRd45Y/219oiN3Hwx0CpAA2979qwtjSh4lj7oRrYYdn+dKFpUhpdln4cq20mwB8F1mR3wTgZPXXKwQZdoaQPD8guObX6LSZP2fUlrNce6tZnID/I4l1c7J3dQveLl+R9hSJ+ZIUQmhhwum6vVHIWf51a/yMVxe9XVh1+yhu3dSistN0aI6xFTqtIKcuV7OZJnz8LgLBff/+NoEUMHvQfo0FIgy2kVAxWJSzKLi0SJPyg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(39860400002)(136003)(46966006)(36840700001)(316002)(2906002)(426003)(2616005)(8676002)(70206006)(36756003)(44832011)(70586007)(7416002)(6666004)(26005)(36860700001)(7696005)(1076003)(82310400003)(82740400003)(8936002)(5660300002)(4326008)(81166007)(356005)(336012)(54906003)(83380400001)(186003)(47076005)(86362001)(110136005)(478600001)(2101003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2021 08:10:49.0265
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2021 08:12:26.3875
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2e81c64-3a7f-4400-8d2d-08d9240b99a6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49086c30-0922-40c6-aa50-08d9240bd3ae
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT044.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT010.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0092
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3738
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Unexpected GPU hang was observed during runpm stress test
-on 0x7341 rev 0x00. Further debugging shows broken ATS is
-related. Thus as a followup of commit 5e89cd303e3a ("PCI:
-Mark AMD Navi14 GPU rev 0xc5 ATS as broken"), we disable
-the ATS for the specific SKU also.
+Replace "It" with "If", since it is a conditional statement.
 
-Change-Id: I3d9d570bd473762e3bfbb251cf8abaf5af38ced9
-Signed-off-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Wesley Sheng <wesley.sheng@amd.com>
 ---
- drivers/pci/quirks.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/PCI/pci-error-recovery.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b7e19bbb901a..70803ad6d2ac 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5176,7 +5176,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
- static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
- {
- 	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
--	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
-+	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
-+	    (pdev->device == 0x7341 && pdev->revision != 0x00))
- 		return;
- 
- 	if (pdev->device == 0x15d8) {
-@@ -5203,6 +5204,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
- /* AMD Navi14 dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
- /* AMD Raven platform iGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
- #endif /* CONFIG_PCI_ATS */
+diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+index 84ceebb08cac..187f43a03200 100644
+--- a/Documentation/PCI/pci-error-recovery.rst
++++ b/Documentation/PCI/pci-error-recovery.rst
+@@ -295,7 +295,7 @@ and let the driver restart normal I/O processing.
+ A driver can still return a critical failure for this function if
+ it can't get the device operational after reset.  If the platform
+ previously tried a soft reset, it might now try a hard reset (power
+-cycle) and then call slot_reset() again.  It the device still can't
++cycle) and then call slot_reset() again.  If the device still can't
+ be recovered, there is nothing more that can be done;  the platform
+ will typically report a "permanent failure" in such a case.  The
+ device will be considered "dead" in this case.
 -- 
-2.29.0
+2.25.1
 
