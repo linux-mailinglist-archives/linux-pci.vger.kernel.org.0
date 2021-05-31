@@ -2,165 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CDBC396576
-	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 18:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEF339649A
+	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 18:03:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233712AbhEaQhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 May 2021 12:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234796AbhEaQfZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 May 2021 12:35:25 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DC74C07E5F8
-        for <linux-pci@vger.kernel.org>; Mon, 31 May 2021 08:00:50 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id g6-20020a17090adac6b029015d1a9a6f1aso71490pjx.1
-        for <linux-pci@vger.kernel.org>; Mon, 31 May 2021 08:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wYKtm4IVSfVTnhnKghH2jNnLIsKH6Y+eNOaILu7ARSY=;
-        b=AqMEgYi53g30HYY0imJtzNViu05fOgAo/xQtrrm9XrM3n3KYgdCy6sM36TaTmgv0v6
-         XvIYBkRFfNiS9tcDp32kkkQRj9L5R+h86b+EJM1hUjC5ImiLdtusiOsddmyVTjrm3mI6
-         HVyluqo0OJwH1PN9FVBpuFPsEkrQe6YRuMK7k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wYKtm4IVSfVTnhnKghH2jNnLIsKH6Y+eNOaILu7ARSY=;
-        b=f+EmJrER4sCfxzTMu9z+W5pwMkWiAl55xlMYp/lamkjM31iucTfdWSbqTk/pvBW0C/
-         VEt6C/G+IGc1r6y4H06T3srpBcso4seRsP8dWs0/dRuPOYMVFxlDYK9aEqsaEeVnC6gf
-         fp7lUEXl0fAsUvH7znA3jFm8juPKqaa7C2QT0xmkj/svXnXZafXeZvDc/UYemCibTUV+
-         /yZb0O2t6svBbl1MVdjku2yBlBaIrvCWFK8wZIkiGxq+OpdqIAGet8EwMEzseX99m4Yp
-         uIRlsBwoQX5xGtSdDZ+mpxAJ4y/XnhWmOFBGwSpmT70UNx5EOZjvodUK9FuRo6GOfhIr
-         UUbA==
-X-Gm-Message-State: AOAM533xkdzY5S28/2fzwpuqIy2YUn8R9MLijWkh5bsg1HkKu6YyG5Ci
-        p8P33TGatR87Lle0yXrTo3CQeANfyo5Fyw==
-X-Google-Smtp-Source: ABdhPJynqma72wsqRCuTSS1dU1oirneaa3z5bvL1sCKjfGP1q4dYs3cJN44mka7ONEACR6FlID/XAg==
-X-Received: by 2002:a17:902:b70f:b029:f4:5445:cd9f with SMTP id d15-20020a170902b70fb02900f45445cd9fmr21494512pls.32.1622473249644;
-        Mon, 31 May 2021 08:00:49 -0700 (PDT)
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com. [209.85.215.172])
-        by smtp.gmail.com with ESMTPSA id p1sm10896484pfp.137.2021.05.31.08.00.48
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 May 2021 08:00:49 -0700 (PDT)
-Received: by mail-pg1-f172.google.com with SMTP id t9so4779457pgn.4
-        for <linux-pci@vger.kernel.org>; Mon, 31 May 2021 08:00:48 -0700 (PDT)
-X-Received: by 2002:a6b:690c:: with SMTP id e12mr17489820ioc.69.1622473237437;
- Mon, 31 May 2021 08:00:37 -0700 (PDT)
+        id S233026AbhEaQFD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 May 2021 12:05:03 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34020 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232200AbhEaQCk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 May 2021 12:02:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14VG0f4L088390;
+        Mon, 31 May 2021 11:00:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1622476841;
+        bh=vnWFPHz+nHDKi1o49MLpJkwWMgq1Vhx/5uo3qsnHzYk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z0ga/5N1RWzO0Tdn5z/gw7bGBlPnQagEKgBnzwVQMIkBo1+Y0kn/xV6RAtWhPezZw
+         Ajt5A6fqV0SuR5/3HFcUxd1h5Ke/HUZyDkoThCLAVEFZIIu2izqfMolxn8Z/+abYX7
+         q5LdizoHTP3DKLJLcKEvL0Uvr/y04lOYOATdI624=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14VG0fcJ092636
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 May 2021 11:00:41 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 31
+ May 2021 11:00:41 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Mon, 31 May 2021 11:00:41 -0500
+Received: from [10.250.233.152] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14VG0YgG008762;
+        Mon, 31 May 2021 11:00:35 -0500
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+To:     Luca Ceresoli <luca@lucaceresoli.net>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20210531090540.2663171-1-luca@lucaceresoli.net>
+ <20210531133211.llyiq3jcfy25tmz4@pali>
+ <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
+Date:   Mon, 31 May 2021 21:30:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20210518064215.2856977-1-tientzu@chromium.org>
- <20210518064215.2856977-2-tientzu@chromium.org> <170a54f2-be20-ec29-1d7f-3388e5f928c6@gmail.com>
- <20210527130211.GA24344@lst.de> <bab261b4-f801-05af-8fd9-c440ed219591@amd.com>
- <e59d4799-a6ff-6d13-0fed-087fc3482587@amd.com>
-In-Reply-To: <e59d4799-a6ff-6d13-0fed-087fc3482587@amd.com>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Mon, 31 May 2021 23:00:26 +0800
-X-Gmail-Original-Message-ID: <CALiNf29=suiQbDL28tBUXt6-E+-JJC_76X9Uxcdk2s+MSXrp2g@mail.gmail.com>
-Message-ID: <CALiNf29=suiQbDL28tBUXt6-E+-JJC_76X9Uxcdk2s+MSXrp2g@mail.gmail.com>
-Subject: Re: [PATCH v7 01/15] swiotlb: Refactor swiotlb init functions
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 28, 2021 at 12:32 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
-> On 5/27/21 9:41 AM, Tom Lendacky wrote:
-> > On 5/27/21 8:02 AM, Christoph Hellwig wrote:
-> >> On Wed, May 19, 2021 at 11:50:07AM -0700, Florian Fainelli wrote:
-> >>> You convert this call site with swiotlb_init_io_tlb_mem() which did not
-> >>> do the set_memory_decrypted()+memset(). Is this okay or should
-> >>> swiotlb_init_io_tlb_mem() add an additional argument to do this
-> >>> conditionally?
-> >>
-> >> The zeroing is useful and was missing before.  I think having a clean
-> >> state here is the right thing.
-> >>
-> >> Not sure about the set_memory_decrypted, swiotlb_update_mem_attributes
-> >> kinda suggests it is too early to set the memory decrupted.
-> >>
-> >> Adding Tom who should now about all this.
-> >
-> > The reason for adding swiotlb_update_mem_attributes() was because having
-> > the call to set_memory_decrypted() in swiotlb_init_with_tbl() triggered a
-> > BUG_ON() related to interrupts not being enabled yet during boot. So that
-> > call had to be delayed until interrupts were enabled.
->
-> I pulled down and tested the patch set and booted with SME enabled. The
-> following was seen during the boot:
->
-> [    0.134184] BUG: Bad page state in process swapper  pfn:108002
-> [    0.134196] page:(____ptrval____) refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0 pfn:0x108002
-> [    0.134201] flags: 0x17ffffc0000000(node=0|zone=2|lastcpupid=0x1fffff)
-> [    0.134208] raw: 0017ffffc0000000 ffff88847f355e28 ffff88847f355e28 0000000000000000
-> [    0.134210] raw: 0000000000000000 0000000000000001 00000000ffffff7f 0000000000000000
-> [    0.134212] page dumped because: nonzero mapcount
-> [    0.134213] Modules linked in:
-> [    0.134218] CPU: 0 PID: 0 Comm: swapper Not tainted 5.13.0-rc2-sos-custom #3
-> [    0.134221] Hardware name: ...
-> [    0.134224] Call Trace:
-> [    0.134233]  dump_stack+0x76/0x94
-> [    0.134244]  bad_page+0xa6/0xf0
-> [    0.134252]  __free_pages_ok+0x331/0x360
-> [    0.134256]  memblock_free_all+0x158/0x1c1
-> [    0.134267]  mem_init+0x1f/0x14c
-> [    0.134273]  start_kernel+0x290/0x574
-> [    0.134279]  secondary_startup_64_no_verify+0xb0/0xbb
->
-> I see this about 40 times during the boot, each with a different PFN. The
-> system boots (which seemed odd), but I don't know if there will be side
-> effects to this (I didn't stress the system).
->
-> I modified the code to add a flag to not do the set_memory_decrypted(), as
-> suggested by Florian, when invoked from swiotlb_init_with_tbl(), and that
-> eliminated the bad page state BUG.
+Hi,
 
-Thanks. Will add a flag to skip set_memory_decrypted() in v9.
+On 31/05/21 7:24 pm, Luca Ceresoli wrote:
+> Hi Pali,
+> 
+> On 31/05/21 15:32, Pali Rohár wrote:
+>> On Monday 31 May 2021 11:05:40 Luca Ceresoli wrote:
+>>> The PCIe PERSTn reset pin is active low and should be asserted, then
+>>> deasserted.
+>>>
+>>> The current implementation only drives the pin once in "HIGH" position,
+>>> thus presumably it was intended to deassert the pin. This has two problems:
+>>>
+>>>   1) it assumes the pin was asserted by other means before loading the
+>>>      driver
+>>>   2) it has the wrong polarity, since "HIGH" means "active", and the pin is
+>>>      presumably configured as active low coherently with the PCIe
+>>>      convention, thus it is driven physically to 0, keeping the device
+>>>      under reset unless the pin is configured as active high.
+>>>
+>>> Fix both problems by:
+>>>
+>>>   1) keeping devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH) as is, but
+>>>      assuming the pin is correctly configured as "active low" this now
+>>>      becomes a reset assertion
+>>>   2) adding gpiod_set_value(reset, 0) after a delay to deassert reset
+>>>
+>>> Fixes: 78bdcad05ea1 ("PCI: dra7xx: Add support to make GPIO drive PERST# line")
+>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>
+>>> ---
+>>>
+>>> Changes v1 -> v2:
+>>>  - No changes to the patch
+>>>  - Reword commit message according to suggestions from Bjorn Helgaas (from
+>>>    another patchset)
+>>>  - Add Fixes: tag
+>>> ---
+>>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+>>> index cb5d4c245ff6..11f392b7a9a2 100644
+>>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+>>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+>>> @@ -801,6 +801,8 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+>>>  		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
+>>>  		goto err_gpio;
+>>>  	}
+>>> +	usleep_range(1000, 2000);
+>>
+>> Hello! Just a note that this is again a new code pattern in another
+>> driver for different wait value of PCIe Warm Reset timeout. I sent email
+>> about these issues:
+>> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+>>
+>> Luca, how did you choose value 1000-2000 us? Do you have some reference
+>> or specification which says that this value needs to be used?
+> 
+> Sadly I haven't access to the PCIe specification.
+> 
+> I'd be very happy to know what a correct value should be and update my
+> patch.
 
->
-> Thanks,
-> Tom
->
-> >
-> > Thanks,
-> > Tom
-> >
-> >>
+I had given the timing mentioned in the specification here
+https://lore.kernel.org/r/023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com
+
+The PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION defines the Power
+Sequencing and Reset Signal Timings in Table 2-4. Please also refer Figure
+2-10: Power Up of the CEM.
+
+╔═════════════╤══════════════════════════════════════╤═════╤═════╤═══════╗
+║ Symbol      │ Parameter                            │ Min │ Max │ Units ║
+╠═════════════╪══════════════════════════════════════╪═════╪═════╪═══════╣
+║ T PVPERL    │ Power stable to PERST# inactive      │ 100 │     │ ms    ║
+╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
+║ T PERST-CLK │ REFCLK stable before PERST# inactive │ 100 │     │ μs    ║
+╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
+║ T PERST     │ PERST# active time                   │ 100 │     │ μs    ║
+╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
+║ T FAIL      │ Power level invalid to PERST# active │     │ 500 │ ns    ║
+╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
+║ T WKRF      │ WAKE# rise – fall time               │     │ 100 │ ns    ║
+╚═════════════╧══════════════════════════════════════╧═════╧═════╧═══════╝
+
+The de-assertion of #PERST is w.r.t both power stable and refclk stable.
+
+I'm yet to validate this patch, but IIRC devm_gpiod_get_optional(dev,
+NULL, GPIOD_OUT_HIGH) will already de-assert the PERST line. Please note
+the board here can have various combinations of NOT gate before the gpio
+line is actually connected to the connector.
+
+Thanks
+Kishon
