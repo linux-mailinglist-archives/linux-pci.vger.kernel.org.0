@@ -2,83 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D367395BA2
-	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 15:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9378E395E06
+	for <lists+linux-pci@lfdr.de>; Mon, 31 May 2021 15:51:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232316AbhEaNWu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 May 2021 09:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
+        id S230289AbhEaNxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 May 2021 09:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231579AbhEaNUo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 May 2021 09:20:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A890613A9;
-        Mon, 31 May 2021 13:18:48 +0000 (UTC)
+        id S232252AbhEaNvF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 31 May 2021 09:51:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6CD49616EA;
+        Mon, 31 May 2021 13:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622467128;
-        bh=9m+RsYSeUlrNwVCa1+L4Xk+683fS4psBxLrB0mG/5kY=;
+        s=k20201202; t=1622467934;
+        bh=+gZ0lcOR49wAN7cN/mgN2LrrDtkYiXcrps9PSlk6+yY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IddtYeAKmYpnWsxBYWjTW17TjFLnwqDmdsAbNhb2MfEH9JJAHsaeNmnob0x5kXu50
-         ULP6hdnTFC3LE9lupvlnBTeyMmoaO7pIzjZcOIgAp/UZ7vZnBONClaklbICM6Psamg
-         ATqs3ORTWNaZrkN9VClKVX/DK8HuqiCW5uoV7SYdtL6TFPor4C7KviTf8rNRPOX0mS
-         N27ytuQ0FVz+r942KzrKpn4MT+sz5PMy2HohMteceDGZptlL+BoNApEcbbbz70Zs9H
-         wQBYuyWazVU2auXvDTH3TifxrgDUcX1qCOeJHIcrR3k6/C8z+8dY0q4fl7W7HelqOK
-         Q8Y23p1D1wAMg==
+        b=kEoH1OaEXx50iPhQ+e0yGSu6o699+IX/RoJ5U7AO6c2B5/MM6ncamBMHEUI6Ss6iC
+         HPskp865yF5EedyaxYCgSbcY1uYCukE+G9VUZhujEmTAV8WA791fPdD0NJT45H7PMt
+         vtlIB1fwdei11lAdtKYup8xTkRo2KHTs0PPkwZ1ytCHumQhMqik28bS0JgYGdPZkkp
+         WpMniS6ZXOCVEeOCqJOqkmZBGCm5/WxKUduAviI7HWs9wargJJ1qVpAWdbysaRvxaK
+         WHx08dV6NcSNd21ZJQ7yRePbjIe8jrWMGDXLhiUp0p6Ik0M58wthAh9ER2oraBkwWK
+         YFMt7uXZntxaA==
 Received: by pali.im (Postfix)
-        id 2D398B84; Mon, 31 May 2021 15:18:46 +0200 (CEST)
-Date:   Mon, 31 May 2021 15:18:45 +0200
+        id E984CB84; Mon, 31 May 2021 15:32:11 +0200 (CEST)
+Date:   Mon, 31 May 2021 15:32:11 +0200
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        lorenzo.pieralisi@arm.com, Bjorn Helgaas <helgaas@kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-staging@lists.linux.dev,
-        Greg KH <gregkh@linuxfoundation.org>,
-        NeilBrown <neil@brown.name>,
-        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/4] MIPS: ralink: pci: driver for Pcie controller in
- MT7621 SoCs
-Message-ID: <20210531131845.ookvz7njj6yrkaeh@pali>
-References: <20210515124055.22225-1-sergio.paracuellos@gmail.com>
- <20210519203628.GA254894@bjorn-Precision-5520>
- <CAMhs-H-7Ocjp6JLKcS9_hMn77H=st8JBdLXgxc+yYiypFTjrvQ@mail.gmail.com>
- <20210521102338.GA6989@alpha.franken.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+Message-ID: <20210531133211.llyiq3jcfy25tmz4@pali>
+References: <20210531090540.2663171-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210521102338.GA6989@alpha.franken.de>
+In-Reply-To: <20210531090540.2663171-1-luca@lucaceresoli.net>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 21 May 2021 12:23:38 Thomas Bogendoerfer wrote:
-> On Wed, May 19, 2021 at 11:18:36PM +0200, Sergio Paracuellos wrote:
-> > On Wed, May 19, 2021 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > But most of the similar drivers are in drivers/pci/controller/, where
-> > > I think it's easier to keep them up to date with changes in the PCI
-> > > core.  Have you considered putting this one there?
-> > 
-> > Most pci drivers in 'arch/mips/pci' are still using PCI_LEGACY stuff.
-> > In contrast mt7621-pci is using current pci generic apis but even most
-> > of the code is generic enough, there is one remaining thing which
-> > depends on mips architecture which is the iocu region configuration
-> > which must be done in the driver itself. This is the only reason to
-> > move this driver into 'arch/mips/pci' instead of
-> > 'drivers/pci/controller/'. So... I am all ears to listen to
-> > suggestions for the proper place for this driver. Thomas, do you have
-> > any thoughts on this?
+On Monday 31 May 2021 11:05:40 Luca Ceresoli wrote:
+> The PCIe PERSTn reset pin is active low and should be asserted, then
+> deasserted.
 > 
-> I tried to put a pci-xtalk driver into drivers/pci/controller, but
-> Lorenzo didn't want it there for being MIPS and not DT based. So this
-> one is DT based, but still MIPS. I'm perfectly fine putting this
-> driver into drivers/pci/controller/
+> The current implementation only drives the pin once in "HIGH" position,
+> thus presumably it was intended to deassert the pin. This has two problems:
+> 
+>   1) it assumes the pin was asserted by other means before loading the
+>      driver
+>   2) it has the wrong polarity, since "HIGH" means "active", and the pin is
+>      presumably configured as active low coherently with the PCIe
+>      convention, thus it is driven physically to 0, keeping the device
+>      under reset unless the pin is configured as active high.
+> 
+> Fix both problems by:
+> 
+>   1) keeping devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH) as is, but
+>      assuming the pin is correctly configured as "active low" this now
+>      becomes a reset assertion
+>   2) adding gpiod_set_value(reset, 0) after a delay to deassert reset
+> 
+> Fixes: 78bdcad05ea1 ("PCI: dra7xx: Add support to make GPIO drive PERST# line")
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> 
+> ---
+> 
+> Changes v1 -> v2:
+>  - No changes to the patch
+>  - Reword commit message according to suggestions from Bjorn Helgaas (from
+>    another patchset)
+>  - Add Fixes: tag
+> ---
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index cb5d4c245ff6..11f392b7a9a2 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -801,6 +801,8 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
+>  		goto err_gpio;
+>  	}
+> +	usleep_range(1000, 2000);
 
-In my personal opinion this driver could go into drivers/pci/controller/
+Hello! Just a note that this is again a new code pattern in another
+driver for different wait value of PCIe Warm Reset timeout. I sent email
+about these issues:
+https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+
+Luca, how did you choose value 1000-2000 us? Do you have some reference
+or specification which says that this value needs to be used?
+
+> +	gpiod_set_value(reset, 0);
+>  
+>  	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
+>  	reg &= ~LTSSM_EN;
+> -- 
+> 2.25.1
+> 
