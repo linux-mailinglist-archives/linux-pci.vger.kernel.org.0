@@ -2,122 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0462396CFB
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 07:49:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 777A9396CFE
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 07:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbhFAFu6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 01:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229477AbhFAFu6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Jun 2021 01:50:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 42CC4613AB;
-        Tue,  1 Jun 2021 05:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622526557;
-        bh=OPxQYwkHb+c8kRPYIMeJZ1NAST5RTo/Lc2MbCJ31+VY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZbBVaFHV/dOaGQ4wh+zmyN2lxHOP0Z/AjIO5zoJoUd2RuzjvOhtS9T96+JUNiNO/n
-         +ojMNCmF2kpgkQgHWADV0M3+XGtH+Fn3yI/ANDSxmbIk4j5HUVS+Y7GpwW7hNVhAp9
-         tCx7VzAoEL1REgTQRv9EqKWSX14UwMjNIMYljUWBZrfd/OY0a4O9gDx8mLEW6w8tUe
-         6NDueNw7IEwmXcrKBoJMhBZVHTlKO5FHFu/cJtPXUTLKgXb6VJwegTxCp+cYDGlWTr
-         WzqrpejvAEF1KyeM5LLrsdH8Ucc9Rs4ieM+b7LWUY6NooBUoNLtTco2zZylLbznxLj
-         mw8MKPyuZJ06Q==
-Received: by mail-oi1-f172.google.com with SMTP id a13so8985979oid.9;
-        Mon, 31 May 2021 22:49:17 -0700 (PDT)
-X-Gm-Message-State: AOAM530eJhDTlNRNDGDgw9OGQiXkSXK1hiRo1a6szNW3OogXAeZjjSgQ
-        TKTMgjj/65WKFsVXzJOxVE9tsm6iXASG3jrWjeA=
-X-Google-Smtp-Source: ABdhPJyIgc6c1QDmrjpCQOdUgQgVOvJONM1ji6QepPdsP8ZlBMN3ZjkhsZ26x+8EVFkB6zxjhv7Ejz8OqJ1I51L65QM=
-X-Received: by 2002:a54:460a:: with SMTP id p10mr1817105oip.47.1622526556632;
- Mon, 31 May 2021 22:49:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210531221057.3406958-1-punitagrawal@gmail.com> <20210531221057.3406958-2-punitagrawal@gmail.com>
-In-Reply-To: <20210531221057.3406958-2-punitagrawal@gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 1 Jun 2021 07:49:05 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHkZhgp3y_1dvKjfiEbwWDooCY0X+0HZutn5ZrsRGk15w@mail.gmail.com>
-Message-ID: <CAMj1kXHkZhgp3y_1dvKjfiEbwWDooCY0X+0HZutn5ZrsRGk15w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] PCI: of: Override 64-bit flag for non-prefetchable
- memory below 4GB
-To:     Punit Agrawal <punitagrawal@gmail.com>
-Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>, wqu@suse.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Peter Geis <pgwipeout@gmail.com>, briannorris@chromium.org,
-        shawn.lin@rock-chips.com, Bjorn Helgaas <helgaas@kernel.org>,
+        id S232869AbhFAFvo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 01:51:44 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:59266 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229477AbhFAFvn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 01:51:43 -0400
+X-UUID: 1cb6a43bf84b4a87878f30a5af8883f2-20210601
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=jiSLFkIn1fEytymJzHWtMUL+9HgJF2xAn74O+cTz5C4=;
+        b=tRm3/ronP2BskDtwbWBhHsaA4mr/GVUFdWPUyT1rt1b8kLk8JDz5LMVtiPUBMqSYsz0QbG3AmxGR5EAS4jiJlJr03hcuqEDfpnP/7VZ0uK9bPJCz+WP1m+peYoP9BBG+nTsHGEuY4YXgEYnJOUwjDGX9/XLHUvCpCpLJWAlFZ/g=;
+X-UUID: 1cb6a43bf84b4a87878f30a5af8883f2-20210601
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 303169635; Tue, 01 Jun 2021 13:50:00 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 1 Jun
+ 2021 13:49:55 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 1 Jun 2021 13:49:54 +0800
+Message-ID: <1622526594.9054.6.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: mediatek-gen3: Add support for
+ MT8195
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Chen-Yu Tsai <wenst@chromium.org>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Randy Wu <Randy.Wu@mediatek.com>, <youlin.pei@mediatek.com>
+Date:   Tue, 1 Jun 2021 13:49:54 +0800
+In-Reply-To: <CAGXv+5G-8+ppafiUnqWm2UeiL+edHJ2zYZvU-S7mz_NdrM3YsA@mail.gmail.com>
+References: <20210601024408.24485-1-jianjun.wang@mediatek.com>
+         <20210601024408.24485-2-jianjun.wang@mediatek.com>
+         <CAGXv+5G-8+ppafiUnqWm2UeiL+edHJ2zYZvU-S7mz_NdrM3YsA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: B186BFA5F6860A0A9441A37F5F3612750236F03574A7631EB87997CBB9D33AC02000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Punit,
+T24gVHVlLCAyMDIxLTA2LTAxIGF0IDExOjUzICswODAwLCBDaGVuLVl1IFRzYWkgd3JvdGU6DQo+
+IEhpLA0KPiANCj4gT24gVHVlLCBKdW4gMSwgMjAyMSBhdCAxMDo1MCBBTSBKaWFuanVuIFdhbmcg
+PGppYW5qdW4ud2FuZ0BtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gTVQ4MTk1IGlzIGFu
+IEFSTSBwbGF0Zm9ybSBTb0Mgd2hpY2ggaGFzIHRoZSBzYW1lIFBDSWUgSVAgd2l0aCBNVDgxOTIu
+DQo+IA0KPiBCYXNlZCBvbiB3aGF0IEknbSBzZWVpbmcgaW50ZXJuYWxseSwgdGhlcmUgc2VlbXMg
+dG8gYmUgc29tZSBpbmNvbnNpc3RlbmN5DQo+IGFjcm9zcyB0aGUgTWVkaWFUZWsgcGxhdGZvcm0g
+b24gd2hldGhlciBuZXcgY29tcGF0aWJsZSBzdHJpbmdzIHNob3VsZCBiZQ0KPiBpbnRyb2R1Y2Vk
+IGZvciAiZnVsbHkgY29tcGF0aWJsZSIgSVAgYmxvY2tzLg0KPiANCj4gSWYgdGhpcyBoYXJkd2Fy
+ZSBibG9jayBpbiBNVDgxOTUgaXMgInRoZSBzYW1lIiBhcyB0aGUgb25lIGluIE1UODE5MiwgZG8g
+d2UNCj4gcmVhbGx5IG5lZWQgdGhlIG5ldyBjb21wYXRpYmxlIHN0cmluZz8gQXJlIHRoZXJlIGFu
+eSBjb25jZXJucz8NCg0KSGkgQ2hlbi1ZdSwNCg0KSXQncyBvayB0byByZXVzZSB0aGUgY29tcGF0
+aWJsZSBzdHJpbmcgd2l0aCBNVDgxOTIsIGJ1dCBJIHRoaW5rIHRoaXMNCndpbGwgYmUgZWFzaWVy
+IHRvIGZpbmQgd2hpY2ggcGxhdGZvcm1zIHRoaXMgZHJpdmVyIGlzIGNvbXBhdGlibGUgd2l0aCwN
+CmVzcGVjaWFsbHkgd2hlbiB3ZSBoYXZlIG1vcmUgYW5kIG1vcmUgcGxhdGZvcm1zIGluIHRoZSBm
+dXR1cmUuDQoNClRoYW5rcy4gDQo+IA0KPiANCj4gVGhhbmtzDQo+IENoZW5ZdQ0KPiANCj4gDQo+
+ID4gU2lnbmVkLW9mZi1ieTogSmlhbmp1biBXYW5nIDxqaWFuanVuLndhbmdAbWVkaWF0ZWsuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21l
+ZGlhdGVrLXBjaWUtZ2VuMy55YW1sIHwgNCArKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
+c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMu
+eWFtbA0KPiA+IGluZGV4IGU3YjFmOTg5MmRhNC4uZDVlNGEzZTYzZDk3IDEwMDY0NA0KPiA+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1n
+ZW4zLnlhbWwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
+L21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sDQo+ID4gQEAgLTQ4LDcgKzQ4LDkgQEAgYWxsT2Y6DQo+
+ID4NCj4gPiAgcHJvcGVydGllczoNCj4gPiAgICBjb21wYXRpYmxlOg0KPiA+IC0gICAgY29uc3Q6
+IG1lZGlhdGVrLG10ODE5Mi1wY2llDQo+ID4gKyAgICBvbmVPZjoNCj4gPiArICAgICAgLSBjb25z
+dDogbWVkaWF0ZWssbXQ4MTkyLXBjaWUNCj4gPiArICAgICAgLSBjb25zdDogbWVkaWF0ZWssbXQ4
+MTk1LXBjaWUNCj4gPg0KPiA+ICAgIHJlZzoNCj4gPiAgICAgIG1heEl0ZW1zOiAxDQo+ID4gLS0N
+Cj4gPiAyLjE4LjANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXw0KPiA+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiA+IExpbnV4LW1lZGlh
+dGVrQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
 
-On Tue, 1 Jun 2021 at 00:11, Punit Agrawal <punitagrawal@gmail.com> wrote:
->
-> Some host bridges advertise non-prefetable memory windows that are
-
-typo ^
-
-> entirely located below 4GB but are marked as 64-bit address memory.
->
-> Since commit 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
-> flags for 64-bit memory addresses"), the OF PCI range parser takes a
-> stricter view and treats 64-bit address ranges as advertised while
-> before such ranges were treated as 32-bit.
->
-> A PCI host bridge that is modelled as PCI-to-PCI bridge cannot forward
-
-It is the root port which is modeled as a P2P bridge. The root port(s)
-together with the host bridge is what makes up the root complex.
-
-
-> 64-bit non-prefetchable memory ranges. As a result, the change in
-> behaviour due to the commit causes allocation failure for devices that
-> require non-prefetchable bus addresses.
->
-
-AIUI, the problem is not that the device requires a non-prefetchable
-bus address, but that it fails to allocate a 32-bit BAR from a 64-bit
-non-prefetchable window.
-
-> In order to not break platforms, override the 64-bit flag for
-> non-prefetchable memory ranges that lie entirely below 4GB.
->
-> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-> Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
-> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
->
-> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
-> ---
->  drivers/pci/of.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index da5b414d585a..e2e64c5c55cb 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -346,6 +346,14 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
->                                 dev_warn(dev, "More than one I/O resource converted for %pOF. CPU base address for old range lost!\n",
->                                          dev_node);
->                         *io_base = range.cpu_addr;
-> +               } else if (resource_type(res) == IORESOURCE_MEM) {
-> +                       if (!(res->flags & IORESOURCE_PREFETCH)) {
-> +                               if (res->flags & IORESOURCE_MEM_64)
-> +                                       if (!upper_32_bits(range.pci_addr + range.size - 1)) {
-> +                                               dev_warn(dev, "Clearing 64-bit flag for non-prefetchable memory below 4GB\n");
-> +                                               res->flags &= ~IORESOURCE_MEM_64;
-> +                                       }
-> +                       }
->                 }
->
->                 pci_add_resource_offset(resources, res, res->start - range.pci_addr);
-> --
-> 2.30.2
->
