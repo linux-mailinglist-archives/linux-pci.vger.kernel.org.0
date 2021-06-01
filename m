@@ -2,92 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CE193973D9
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 15:08:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98B91397453
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 15:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233873AbhFANJ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 09:09:58 -0400
-Received: from mail-wm1-f44.google.com ([209.85.128.44]:34655 "EHLO
-        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233064AbhFANJ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 09:09:58 -0400
-Received: by mail-wm1-f44.google.com with SMTP id u5-20020a7bc0450000b02901480e40338bso1262431wmc.1
-        for <linux-pci@vger.kernel.org>; Tue, 01 Jun 2021 06:08:15 -0700 (PDT)
+        id S234226AbhFANec (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 09:34:32 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:44780 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234173AbhFANeN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 09:34:13 -0400
+Received: by mail-ot1-f53.google.com with SMTP id r26-20020a056830121ab02902a5ff1c9b81so14105469otp.11;
+        Tue, 01 Jun 2021 06:32:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9NHuuiFGViyJ4qvtBgD1WJEDgEC8Ax0IFhiq3JvT9Bw=;
-        b=hSBdLcXMbfywraNNA2HyZ1ZQOMWOJVufiBS0SzdZaK4dxg2JiMQrZD9qzZ/CDXYb4a
-         /zvWwHeL5HpPYTyKbVNhETthbDGt4a09Z4SmSntQy9hc7Hwng3M5rpK4UIuXU3qZfgTT
-         30UIATOWv7jMcx1Ji0PAeMc3TPo/muxSqYFK6jIW2VOKGh4S59ZL7gu6HL01v0OWiHpN
-         Jz3D9yfEYOPAAjvcRogR9utXti808s1MVFvDukjBKJNsdn9hTp3CB5Rlux3JkiiZEURv
-         eJoMPcGhQxD1NIKIiI4bvZQ/BsIqVrETsWwtwMhgIXYTjMjFeZXW7s+z5my5b4QYrxYg
-         VFbQ==
-X-Gm-Message-State: AOAM530cm1Rbjrxn4Co9JtrrothdeTIv0nDHWuadG5UuG/S35hNFAvD2
-        RPzye4vl3eIea1YpXrv6dqA=
-X-Google-Smtp-Source: ABdhPJyYQYxUrC/dpgUc5QK/h+xYrk7iLXsypLvfMcIQFqjVKSWjDlTQnH0qRaIalJ/vcNIqW+j7gA==
-X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr4594187wmg.19.1622552895035;
-        Tue, 01 Jun 2021 06:08:15 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id b15sm2936648wru.64.2021.06.01.06.08.14
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=9tCAXE4nddFK2BiC21CgcfG97csZj4okHM3YUAOIflw=;
+        b=TWmE6CMHWWKFuADqKkhylkWCm9UpIGOZjXhZyJE5ZxmR8xzn0SKU7KQgxup7okfn2b
+         8beQjKyrGp2ukij+gSP0nKsGbjbgV8PULnrCJbAbAOZwV2psFS/iNyDgS2lOfkE+O4/i
+         8MGB2QSKGm39kDQd5mXtI3axIHviL3aWASYMYkJe7AFNNQW8a25rGBREBdso+DG39qi8
+         EKrBrrqYpePtKSP5OLztP4DU725o2u0S1kzi0nT8wcY5XiN7PNjGZeYx9CrKUDXaTNkl
+         1wjDt9+l7WQRwpUD9wJ9feDJEN0YzPt1nzgMhYIXWzG0S6OZJooVxlwPhZSObMvOacJC
+         pplg==
+X-Gm-Message-State: AOAM532uSg2RdZykj0UWFxl4ZzmkW6iFJhb/y288jUyXvX+W4C3IB64o
+        aIhhcGKAUwAjO7xuo4911g==
+X-Google-Smtp-Source: ABdhPJyjdjQCQJXmoGhdiwEVbUBLVuDThJ17J7LSt6xuCmDjOO9EOIYe5Sjw4mCZXxRRwNqcn8BBxw==
+X-Received: by 2002:a9d:71da:: with SMTP id z26mr22095367otj.41.1622554350725;
+        Tue, 01 Jun 2021 06:32:30 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l128sm3436502oif.16.2021.06.01.06.32.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jun 2021 06:08:14 -0700 (PDT)
-Date:   Tue, 1 Jun 2021 15:08:13 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Evan Quan <evan.quan@amd.com>
-Cc:     linux-pci@vger.kernel.org, Alexander.Deucher@amd.com
-Subject: Re: [PATCH] PCI: Add quirk for AMD Navi14 to disable ATS support
-Message-ID: <20210601130813.GB195120@rocinante.localdomain>
-References: <20210601024835.931947-1-evan.quan@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210601024835.931947-1-evan.quan@amd.com>
+        Tue, 01 Jun 2021 06:32:28 -0700 (PDT)
+Received: (nullmailer pid 242361 invoked by uid 1000);
+        Tue, 01 Jun 2021 13:32:10 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Hector Martin <marcan@marcan.st>, robin.murphy@arm.com,
+        devicetree@vger.kernel.org, Mark Kettenis <kettenis@openbsd.org>,
+        maz@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20210530224404.95917-2-mark.kettenis@xs4all.nl>
+References: <20210530224404.95917-1-mark.kettenis@xs4all.nl> <20210530224404.95917-2-mark.kettenis@xs4all.nl>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
+Date:   Tue, 01 Jun 2021 08:32:10 -0500
+Message-Id: <1622554330.029938.242360.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Evan,
+On Mon, 31 May 2021 00:44:00 +0200, Mark Kettenis wrote:
+> From: Mark Kettenis <kettenis@openbsd.org>
+> 
+> The Apple PCIe host controller is a PCIe host controller with
+> multiple root ports present in Apple ARM SoC platforms, including
+> various iPhone and iPad devices and the "Apple Silicon" Macs.
+> 
+> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> ---
+>  .../devicetree/bindings/pci/apple,pcie.yaml   | 167 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 168 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> 
 
-Thank you for sending updated version!
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-[...]
-> V2: cosmetic fix for description part(suggested by Krzysztof)
+yamllint warnings/errors:
 
-For future reference: as this is v2, then remember to update the subject
-link to [PATCH v2] so that everyone looking at incoming patches would be
-immediately made aware that this is a new version (also, some of our
-automation such as Patchwork uses this when parsing subject lines).
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pci/apple,pcie.example.dts:20:18: fatal error: dt-bindings/pinctrl/apple.h: No such file or directory
+   20 |         #include <dt-bindings/pinctrl/apple.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pci/apple,pcie.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1416: dt_binding_check] Error 2
 
-Additionally, the changelog would customary be included under the "---"
-lines so that it would automatically be removed alongside commit related
-details from Git, see the following as an example:
+See https://patchwork.ozlabs.org/patch/1485507
 
-  https://lore.kernel.org/linux-pci/20210601114301.2685875-1-linus.walleij@linaro.org/
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-Having said that, I am not sure if this warrants sending v3, as this
-could be easily fixed here by either Bjorn or Lorenzo when this patch
-will be merged, if they don't mind, of course.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-[...]
-> @@ -5176,7 +5176,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
->  static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
->  {
->  	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-> -	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
-> +	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
-> +	    (pdev->device == 0x7341 && pdev->revision != 0x00))
-[...]
->  /* AMD Navi14 dGPU */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
-[...]
+pip3 install dtschema --upgrade
 
-Thank you!
+Please check and re-submit.
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-
-	Krzysztof
