@@ -2,488 +2,320 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60EEC397AAF
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 21:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 828BB397AFB
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 22:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234654AbhFAT3F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 15:29:05 -0400
-Received: from mail-bn8nam11on2105.outbound.protection.outlook.com ([40.107.236.105]:20736
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233397AbhFAT3E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Jun 2021 15:29:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n76cknTRRNKFz7ic3d9quuzwiOJBIB5TADm0LMItWt0Zr83DH/zG5/fhUSY4C0DR7tPugfmQ4dJVF9aLUWfJ470q2Jwo4Wo88qdvtvKtwxCj37NiR+SXPr5FGwXOCRRJsg1WIxr5AvFY/lMhgGWox3+V2IIjO/xEmpqLAkg4P0py/N/SJnIFkEMsr6eXefvjcCNIMMsGK/PxAIqHOz76I2YgorSNhbUbNdDSQ15bMjn1Hn5cCOpTcDrk7Jw7gSfjaiMzD4wt4RypXLOT5N4Q2sywS6++5PtI8JF13kX83vNKHr2tNnWIBlKlVWGpoGOjqAD7uKd3mSAmQuYYYfS5OA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VexXzwbw6db5Oceumgf9YWfxy4aK+RcB/9rdGjt06sU=;
- b=OOH5Qz4IXL34mcw/I3rsCmjnwIW3qX5ueGeezFhibS7j6QPH/SB9tU3ZkUC/5t+tG/BKJAiVHK5N+6Objytx01OUz8comnjLu2W+K+gvERiBBimrTDSp595R4A7wBZeQ1PCrYmfWj316bLevz1vOe1a6LNvVysuBxSJLLtUYkkCYV+iWGqAZrNqXO2qJPPW2yM+f9+Uh6xhJl6+e7IHN+QK/ufuc1NmUVxaq1DgYfFlZnB++Ul8HIK9fzf2BDki5kPzi1eQaota2Tt8X4XV3fubqZ4z0EmffvJcCbXF3vjtMEaJteZ8XrvcLIGIgPtcshkulSKqqkh4zgJfiqCPoLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VexXzwbw6db5Oceumgf9YWfxy4aK+RcB/9rdGjt06sU=;
- b=cMad3D5NXcSF44MxarDrHt0euNCMxlNqfr9TRvQ94K/LRjlD2cb2cDQRoNGHTQNtB5G+lwJmdZuIzRalP3SArkHadUAOxYM6TIQPJDbcYn/YYnDKq6D/9k+51jTUEAarsRJX8R4BUo0l6ygSxUvV4wFBxv1YjmkGjgi+XSfcdZs=
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12)
- by BYAPR21MB1288.namprd21.prod.outlook.com (2603:10b6:a03:10a::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.5; Tue, 1 Jun
- 2021 19:27:19 +0000
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::fda7:afbd:5f96:a099]) by BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::fda7:afbd:5f96:a099%4]) with mapi id 15.20.4219.008; Tue, 1 Jun 2021
- 19:27:19 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrea Parri <Andrea.Parri@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Move completion variable from stack to heap in
- hv_compose_msi_msg()
-Thread-Topic: [PATCH] PCI: hv: Move completion variable from stack to heap in
- hv_compose_msi_msg()
-Thread-Index: AQHXRwXUcSr7TOzxAkmxOED9A1jUh6r2K36AgAlpMCA=
-Date:   Tue, 1 Jun 2021 19:27:18 +0000
-Message-ID: <BY5PR21MB150673A34B431F9311E6FDC5CE3E9@BY5PR21MB1506.namprd21.prod.outlook.com>
-References: <1620806824-31151-1-git-send-email-longli@linuxonhyperv.com>
- <MWHPR21MB15931F1698FD128C76219F7DD7249@MWHPR21MB1593.namprd21.prod.outlook.com>
-In-Reply-To: <MWHPR21MB15931F1698FD128C76219F7DD7249@MWHPR21MB1593.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f8b069b0-5117-4ef4-9390-7038e23179fe;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-05-26T17:53:24Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [67.168.111.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b1ced2bf-687a-43e5-85c1-08d9253345a5
-x-ms-traffictypediagnostic: BYAPR21MB1288:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR21MB12882DFB3CA60E0B3472C1C7CE3E9@BYAPR21MB1288.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2iYac2jGSBeQFdXjp3VNjdlVoKV8TNZZkKH5nj5MIR6DkB7kNOEJr6idf9tzIyNU9JL/g0eXjrLfpIXIKWUsulDtfAF7+0gpU7UWZj6FT3wLBjh7AxHr6Ev4jRstB3APDaSMERgckmhbmcJH3ofTDtpFx3QPtajmZF4qcRhpLrJCeclh/CLd3i72w7+DO71PPR09nvuFRGVLdJo7SjTfRZHDeCPxgv4MSF6JETkJ89fmFeDgRAXisaYvTjHWjz1mnE871DtJ+SenJNdBOcRiiRKpx6XDH/BTslBPymxbo4gn5nzXmJ9XsBz2xmE0b0pijzrXwk391FKJaL4vb4uiE4ST3Pp0g+Ay6LQxsXjTMFB/uWDVDs9yXL6Bz3GipaQLDkQzLYncpax4xfF9NwLIlq6D58w0U0femgyd0zW6QzK/KA6UN6z/G3Y6BVeZ5PTwrHA5g0fgDqgppbvaSJF+g5hHlMAJQXeO0Odqfi/44f1zLWMmjaggUiHM7AtvEQOZQ8NwUeKgxEJzBQWdJhc+93qjsv2aswXNbjKtLCe2/MPBRXPyrcfy1wSLnj1oxo7ntfQ7ZIDB4jlwIANwevF282EiqouJ4WkKwTuURnp9Y/fGH3+2ibourm3Ir8GgRm12zsOhjS0T7X9k7r1/FpUAmA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1506.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(9686003)(8990500004)(86362001)(2906002)(33656002)(316002)(7696005)(71200400001)(55016002)(83380400001)(30864003)(6636002)(6506007)(110136005)(66946007)(8676002)(76116006)(8936002)(478600001)(186003)(921005)(5660300002)(26005)(66476007)(122000001)(82950400001)(66446008)(66556008)(64756008)(38100700002)(82960400001)(52536014)(10290500003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?P0toSrbcplsX/5nFYgnZCErl+wiN8xS+bi68abIGuTFz9O/UHmUiVp1JrDo/?=
- =?us-ascii?Q?oDS3IOKHUJ3Pp4M5SQJplxGafdD5Zjm20mpGD+IrY3Xbn6OJmGrWTuYYdOLf?=
- =?us-ascii?Q?X1SeCloPk3yb3phoveDfnUm6PVBFMijgP2qmvysRNhxds6VULRSa/8G3XSid?=
- =?us-ascii?Q?mD8WrPSQTp9adxeCTPbgUdIK1C5WIMRuYCPMT0/fNj71i02SJKUjaxZNTGaZ?=
- =?us-ascii?Q?w+KA2jTwogneR54AepyZ8MNjdVr2WAPNdNjhnwwH9jUWY2PADgQSq3JYVv10?=
- =?us-ascii?Q?k9xgKaiOsuYJWGF7FnPGXDKYYbO28P3LtpF6vf2qI8K0V8NYGLz7c1zXocob?=
- =?us-ascii?Q?aPuTOy4mkGCfztI6DkmEsnGEtSBNxp7s9Gja/5hAqjKdc/6kwpZdydR7F8uF?=
- =?us-ascii?Q?ZJQ4t0fIBQDrVAUNvIsushQmCbjy9hBDiXdihLXM9fUrcQYnP+riWGxbLlh9?=
- =?us-ascii?Q?+oNTMy2EMH9HSLtjRhFsgStnHQe0wzPH7A2bhe7xp9V3Jwrm9D4DAGWm/zlF?=
- =?us-ascii?Q?JACBvC2if4dWek5DxRlh3BuPa5YRlhZp39o3EhQBHFtE0F7ojCMJY/1vC6xn?=
- =?us-ascii?Q?DsWkLLqSGg4OC3laIfD2CFnBnOdqO+wAVjeHdi6Xqvs/68fGw/OEQRPt3a5w?=
- =?us-ascii?Q?z482UVKhrzqcQUyrdYqNk6Enf7eqrRCqOHDvWexuq1QhijmxoXiBXaNyUfZu?=
- =?us-ascii?Q?mdkMTM+Wwv2p3U4KXEyxWFiosbySGg+u5j6m1gL33hU2A1LZgB7IxArKHS23?=
- =?us-ascii?Q?tyRNuHsvlFmLm/K2yk7Y96Or+aphXrz/WO/FexvKriPs1SFxnPoVEPxwQsy6?=
- =?us-ascii?Q?uWyNlgSkAF5ZNvn4+sDzeC9Fa42IapC6c/YA4GwoVWp847FLt88DJ4Khl1qk?=
- =?us-ascii?Q?X8E7K6tUGghRXmAMH45Tp+xaQOGYbkf6sAqwPYwwE+/YRJ44oeg6EAuGis3A?=
- =?us-ascii?Q?x53NXKVTDcYse9iT8cmJfqShU8lb4i9zrwF0p5s5?=
-x-ms-exchange-antispam-messagedata-1: +jrfack+i8kz1eagpCvRroFUgghZ6bKkMWNpbxRhdZG4QSnX44/h5cKdR98djfctrjUHA/yakQKMYNlUayQZQe+73v2mVZKOAT8o120zm7kAj4o5xd3NceI0/vszhNz9cUwX9vlFYRs4ArA9JV2ZBzWpypNxpYtiLaycjxg8w9TRE13NVytknrVMQAQKi0MvLVcPSkHrVOtEUTADokSKDiBG9jqc8wdR328RVLHDCP0YfjWTbnQ3C5RZr8Yp18uSvb84gRBehvWXyOXma5j+tOyj+F8azLXOD9fXoM+DhBGaeUVeQr8I71QwjOoMQNKfsv+MQ7HbCyOUyYB1BzEA3g1j
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S234818AbhFAUHd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 16:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234816AbhFAUHd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Jun 2021 16:07:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 370C1613C3;
+        Tue,  1 Jun 2021 20:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622577951;
+        bh=KR8R8Zdxc5/u4M59leRzahXKLRI8a+3iGb05vJUZQP0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HHc9m0JJClL8SS+lv9Clyz0639Zb5EWDNg7+X0TVvsL3Q2NjemD6Wj0e8jkHYTJhe
+         fF84VGyijMMCqZ/iUTYJ+N3dSiDHYozfrRIF5NXK97oDNG3w1J6G7OWJAg+0OialyW
+         aQWc74JEFjqqIsbQZzk6i2sFAKv12fr3PyivT+T7WD+haYdv6eqjpNvOLeECgqhqD0
+         ymhTD2jEncppql0EXK7yFaf3nuoMlbbUQ3wzA98Ft1kLb3npFxBMgbFmUHLdaF1PyZ
+         9vdgTen1Gxe5vEZfIbRHOJJMhnFBWBOHrBR8bWE3OguBTQPTp7weWtBvmManCXk262
+         klY67kGZJEDeA==
+Date:   Tue, 1 Jun 2021 15:05:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Disallow retraining link for Atheros chips on
+ non-Gen1 PCIe bridges
+Message-ID: <20210601200549.GA1965100@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1506.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1ced2bf-687a-43e5-85c1-08d9253345a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2021 19:27:18.9779
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dHZ/1kY5tDtUvtBP2XdOu4O4C8LYiyRvH8nxaPNBvENIcIaqlVEtGs9DJn9vuScwc83HKPWYaIM/gXiASkTFhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1288
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210505163357.16012-1-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Subject: RE: [PATCH] PCI: hv: Move completion variable from stack to heap=
- in
-> hv_compose_msi_msg()
->=20
-> From: longli@linuxonhyperv.com <longli@linuxonhyperv.com> Sent:
-> Wednesday, May 12, 2021 1:07 AM
-> >
-> > hv_compose_msi_msg() may be called with interrupt disabled. It calls
-> > wait_for_completion() in a loop and may exit the loop earlier if the
-> > device is being ejected or it's hitting other errors. However the VSP
-> > may send completion packet after the loop exit and the completion
-> > variable is no longer valid on the stack. This results in a kernel oops=
-.
-> >
-> > Fix this by relocating completion variable from stack to heap, and use
-> > hbus to maintain a list of leftover completions for future cleanup if
-> necessary.
->=20
-> Interesting problem.  I haven't reviewed the details of your implementati=
-on
-> because I'd like to propose an alternate approach to solving the problem.
->=20
-> You have fixed the problem for hv_compose_msi_msg(), but it seems like th=
-e
-> same problem could occur in other places in pci-hyperv.c where a VMbus
-> request is sent, and waiting for the response could be aborted by the dev=
-ice
-> being rescinded.
+On Wed, May 05, 2021 at 06:33:57PM +0200, Pali Rohár wrote:
+> Atheros AR9xxx and QCA9xxx chips have behaviour issues not only after a
+> bus reset, but also after doing retrain link, if PCIe bridge is not in
+> GEN1 mode (at 2.5 GT/s speed):
+> 
+> - QCA9880 and QCA9890 chips throw a Link Down event and completely
+>   disappear from the bus and their config space is not accessible
+>   afterwards.
+> 
+> - QCA9377 chip throws a Link Down event followed by Link Up event, the
+>   config space is accessible and PCI device ID is correct. But trying to
+>   access chip's I/O space causes Uncorrected (Non-Fatal) AER error,
+>   followed by Synchronous external abort 96000210 and Segmentation fault
+>   of insmod while loading ath10k_pci.ko module.
+> 
+> - AR9390 chip throws a Link Down event followed by Link Up event, config
+>   space is accessible, but contains nonsense values. PCI device ID is
+>   0xABCD which indicates HW bug that chip itself was not able to read
+>   values from internal EEPROM/OTP.
+> 
+> - AR9287 chip throws also Link Down and Link Up events, also has
+>   accessible config space containing correct values. But ath9k driver
+>   fails to initialize card from this state as it is unable to access HW
+>   registers. This also indicates that the chip iself is not able to read
+>   values from internal EEPROM/OTP.
+> 
+> These issues related to PCI device ID 0xABCD and to reading internal
+> EEPROM/OTP were previously discussed at ath9k-devel mailing list in
+> following thread:
+> 
+>   https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
+> 
+> After experiments we've come up with a solution: it seems that Retrain
+> link can be called only when using GEN1 PCIe bridge or when PCIe bridge
+> link speed is forced to 2.5 GT/s. Applying this workaround fixes all
+> mentioned cards.
 
-The problem in hv_compose_msi_msg() is different to other places, it's a bu=
-g in the PCI driver that it doesn't handle the case where the device is eje=
-cted (PCI_EJECT). After device is ejected, it's valid that VSP may still se=
-nd back completion on a prior pending request.
+I *assume* this means the device was running at > 2.5 GT/s in the
+first place, and when aspm.c retrains the link to configure the common
+clock, we downgrade to 2.5 GT/s, so the device is now slower than it
+used to be?
 
-On the other hand, if a device is rescinded, it's not possible to get a com=
-pletion on this device afterwards. If we are still getting a completion, it=
-'s a bug in the VSP or it's from a malicious host.
+Is that slower speed acceptable?  Is it better to be slower with ASPM,
+or faster without ASPM?  Or maybe it could be faster *with* ASPM if we
+avoided the common clock config and the retrain?  I think that would
+give up some of the benefit of ASPM, but maybe it would still be
+worthwhile?
 
-I agree if the intent is to deal with a untrusted host, I can follow the sa=
-me principle to add this support to all requests to VSP. But this is a diff=
-erent problem to what this patch intends to address. I can see they may sha=
-re the same design principle and common code. My question on a untrusted ho=
-st is: If a host is untrusted and is misbehaving on purpose, what's the poi=
-nt of keep the VM running and not crashing the PCI driver?
+If the device was running at > 2.5 GT/s to begin with, obviously there
+is *some* way to get there.  This patch implies that the hardware
+automatically trained to a higher rate after power-on (which I think
+is what PCIe hardware is *supposed* to do) and something prevents that
+from succeeding when we retrain, or maybe BIOS did something different
+than what Linux is doing, or ... something else?
 
->=20
-> The current code (and with your patch) passes the guest memory address of
-> the completion packet to Hyper-V as the requestID.  Hyper-V responds and
-> passes back the requestID, whereupon hv_pci_onchannelcallback() treats it=
- as
-> the guest memory address of the completion packet.  This all assumes that
-> Hyper-V is trusted and that it doesn't pass back a bogus value that will =
-be
-> treated as a guest memory address.  But Andrea Parri has been updating
-> other VMbus drivers (like netvsc and storvsc) to *not* pass guest memory
-> addresses as the requestID. The pci-hyperv.c driver has not been fixed in=
- this
-> regard, but I think this patch could take big step in that direction.
->=20
-> My alternate approach is as follows:
-> 1.  For reach PCI VMbus channel, keep a 64-bit counter.  When a VMbus
-> message is to be sent, increment the counter atomically, and send the nex=
-t
-> value as the
-> requestID.   The counter will not wrap-around in any practical time perio=
-d, so
-> the requestIDs are essentially unique.  Or just read a clock value to get=
- a
-> unique requestID.
-> 2.  Also keep a per-channel list of mappings from requestID to the guest
-> memory address of the completion packet.  For PCI channels, there will be
-> very few requests outstanding concurrently, so this can be a simple linke=
-d list,
-> protected by a spin lock.
-> 3. Before sending a new VMbus message that is expecting a response, add t=
-he
-> mapping to the list.  The guest memory address can be for a stack local, =
-like
-> the current code.
-> 4. When the sending function completes, either because the response was
-> received, or because wait_for_response() aborted, remove the mapping from
-> the linked list.
-> 5. hv_pci_onchannelcallback() gets the requestID from Hyper-V and looks i=
-t
-> up in the linked list.  If there's no match in the linked list, the compl=
-etion
-> response from Hyper-V is ignored.  It's either a late response or a compl=
-etely
-> bogus response from Hyper-V.  If there is a match, then the address of th=
-e
-> completion packet is available and valid.  The completion function will n=
-eed to
-> run while the spin lock is held on the linked list, so that the completio=
-n packet
-> address is ensured to remain valid while the completion function executes=
-.
->=20
-> I don't think my proposed approach is any more complicated that what your
-> patch does, and it is a step in the direction of fully hardening the pci-=
-hyperv.c
-> driver.
->=20
-> This approach is a bit different from netvsc and storvsc because those dr=
-ivers
-> must handle lots of in-flight requests, and searching a linked list in th=
-e
-> onchannelcallback function would be too slow.  The overall idea is the sa=
-me,
-> but a different approach is used to generate requestIDs and to map betwee=
-n
-> requestIDs and guest memory addresses.
->=20
-> Thoughts?
->=20
-> Michael
->=20
-> >
-> > Signed-off-by: Long Li <longli@microsoft.com>
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 97
-> > +++++++++++++++++++----------
-> >  1 file changed, 65 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > b/drivers/pci/controller/pci-hyperv.c
-> > index 9499ae3275fe..29fe26e2193c 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -473,6 +473,9 @@ struct hv_pcibus_device {
-> >  	struct msi_controller msi_chip;
-> >  	struct irq_domain *irq_domain;
-> >
-> > +	struct list_head compose_msi_msg_ctxt_list;
-> > +	spinlock_t compose_msi_msg_ctxt_list_lock;
-> > +
-> >  	spinlock_t retarget_msi_interrupt_lock;
-> >
-> >  	struct workqueue_struct *wq;
-> > @@ -552,6 +555,17 @@ struct hv_pci_compl {
-> >  	s32 completion_status;
-> >  };
-> >
-> > +struct compose_comp_ctxt {
-> > +	struct hv_pci_compl comp_pkt;
-> > +	struct tran_int_desc int_desc;
-> > +};
-> > +
-> > +struct compose_msi_msg_ctxt {
-> > +	struct list_head list;
-> > +	struct pci_packet pci_pkt;
-> > +	struct compose_comp_ctxt comp;
-> > +};
-> > +
-> >  static void hv_pci_onchannelcallback(void *context);
-> >
-> >  /**
-> > @@ -1293,11 +1307,6 @@ static void hv_irq_unmask(struct irq_data *data)
-> >  	pci_msi_unmask_irq(data);
-> >  }
-> >
-> > -struct compose_comp_ctxt {
-> > -	struct hv_pci_compl comp_pkt;
-> > -	struct tran_int_desc int_desc;
-> > -};
-> > -
-> >  static void hv_pci_compose_compl(void *context, struct pci_response
-> *resp,
-> >  				 int resp_packet_size)
-> >  {
-> > @@ -1373,16 +1382,12 @@ static void hv_compose_msi_msg(struct
-> irq_data
-> > *data, struct msi_msg *msg)
-> >  	struct pci_bus *pbus;
-> >  	struct pci_dev *pdev;
-> >  	struct cpumask *dest;
-> > -	struct compose_comp_ctxt comp;
-> >  	struct tran_int_desc *int_desc;
-> > -	struct {
-> > -		struct pci_packet pci_pkt;
-> > -		union {
-> > -			struct pci_create_interrupt v1;
-> > -			struct pci_create_interrupt2 v2;
-> > -		} int_pkts;
-> > -	} __packed ctxt;
-> > -
-> > +	struct compose_msi_msg_ctxt *ctxt;
-> > +	union {
-> > +		struct pci_create_interrupt v1;
-> > +		struct pci_create_interrupt2 v2;
-> > +	} int_pkts;
-> >  	u32 size;
-> >  	int ret;
-> >
-> > @@ -1402,18 +1407,24 @@ static void hv_compose_msi_msg(struct
-> irq_data
-> > *data, struct msi_msg *msg)
-> >  		hv_int_desc_free(hpdev, int_desc);
-> >  	}
-> >
-> > +	ctxt =3D kzalloc(sizeof(*ctxt), GFP_ATOMIC);
-> > +	if (!ctxt)
-> > +		goto drop_reference;
-> > +
-> >  	int_desc =3D kzalloc(sizeof(*int_desc), GFP_ATOMIC);
-> > -	if (!int_desc)
-> > +	if (!int_desc) {
-> > +		kfree(ctxt);
-> >  		goto drop_reference;
-> > +	}
-> >
-> > -	memset(&ctxt, 0, sizeof(ctxt));
-> > -	init_completion(&comp.comp_pkt.host_event);
-> > -	ctxt.pci_pkt.completion_func =3D hv_pci_compose_compl;
-> > -	ctxt.pci_pkt.compl_ctxt =3D &comp;
-> > +	memset(ctxt, 0, sizeof(*ctxt));
-> > +	init_completion(&ctxt->comp.comp_pkt.host_event);
-> > +	ctxt->pci_pkt.completion_func =3D hv_pci_compose_compl;
-> > +	ctxt->pci_pkt.compl_ctxt =3D &ctxt->comp;
-> >
-> >  	switch (hbus->protocol_version) {
-> >  	case PCI_PROTOCOL_VERSION_1_1:
-> > -		size =3D hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
-> > +		size =3D hv_compose_msi_req_v1(&int_pkts.v1,
-> >  					dest,
-> >  					hpdev->desc.win_slot.slot,
-> >  					cfg->vector);
-> > @@ -1421,7 +1432,7 @@ static void hv_compose_msi_msg(struct irq_data
-> > *data, struct msi_msg *msg)
-> >
-> >  	case PCI_PROTOCOL_VERSION_1_2:
-> >  	case PCI_PROTOCOL_VERSION_1_3:
-> > -		size =3D hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
-> > +		size =3D hv_compose_msi_req_v2(&int_pkts.v2,
-> >  					dest,
-> >  					hpdev->desc.win_slot.slot,
-> >  					cfg->vector);
-> > @@ -1434,17 +1445,18 @@ static void hv_compose_msi_msg(struct
-> irq_data
-> > *data, struct msi_msg *msg)
-> >  		 */
-> >  		dev_err(&hbus->hdev->device,
-> >  			"Unexpected vPCI protocol, update driver.");
-> > +		kfree(ctxt);
-> >  		goto free_int_desc;
-> >  	}
-> >
-> > -	ret =3D vmbus_sendpacket(hpdev->hbus->hdev->channel,
-> &ctxt.int_pkts,
-> > -			       size, (unsigned long)&ctxt.pci_pkt,
-> > +	ret =3D vmbus_sendpacket(hpdev->hbus->hdev->channel, &int_pkts,
-> > +			       size, (unsigned long)&ctxt->pci_pkt,
-> >  			       VM_PKT_DATA_INBAND,
-> >
-> VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-> >  	if (ret) {
-> >  		dev_err(&hbus->hdev->device,
-> > -			"Sending request for interrupt failed: 0x%x",
-> > -			comp.comp_pkt.completion_status);
-> > +			"Sending request for interrupt failed: 0x%x", ret);
-> > +		kfree(ctxt);
-> >  		goto free_int_desc;
-> >  	}
-> >
-> > @@ -1458,7 +1470,7 @@ static void hv_compose_msi_msg(struct irq_data
-> > *data, struct msi_msg *msg)
-> >  	 * Since this function is called with IRQ locks held, can't
-> >  	 * do normal wait for completion; instead poll.
-> >  	 */
-> > -	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
-> > +	while (!try_wait_for_completion(&ctxt->comp.comp_pkt.host_event))
-> {
-> >  		unsigned long flags;
-> >
-> >  		/* 0xFFFF means an invalid PCI VENDOR ID. */ @@ -1494,10
-> +1506,11
-> > @@ static void hv_compose_msi_msg(struct irq_data *data, struct
-> > msi_msg *msg)
-> >
-> >  	tasklet_enable(&channel->callback_event);
-> >
-> > -	if (comp.comp_pkt.completion_status < 0) {
-> > +	if (ctxt->comp.comp_pkt.completion_status < 0) {
-> >  		dev_err(&hbus->hdev->device,
-> >  			"Request for interrupt failed: 0x%x",
-> > -			comp.comp_pkt.completion_status);
-> > +			ctxt->comp.comp_pkt.completion_status);
-> > +		kfree(ctxt);
-> >  		goto free_int_desc;
-> >  	}
-> >
-> > @@ -1506,23 +1519,36 @@ static void hv_compose_msi_msg(struct
-> irq_data
-> > *data, struct msi_msg *msg)
-> >  	 * irq_set_chip_data() here would be appropriate, but the lock it
-> takes
-> >  	 * is already held.
-> >  	 */
-> > -	*int_desc =3D comp.int_desc;
-> > +	*int_desc =3D ctxt->comp.int_desc;
-> >  	data->chip_data =3D int_desc;
-> >
-> >  	/* Pass up the result. */
-> > -	msg->address_hi =3D comp.int_desc.address >> 32;
-> > -	msg->address_lo =3D comp.int_desc.address & 0xffffffff;
-> > -	msg->data =3D comp.int_desc.data;
-> > +	msg->address_hi =3D ctxt->comp.int_desc.address >> 32;
-> > +	msg->address_lo =3D ctxt->comp.int_desc.address & 0xffffffff;
-> > +	msg->data =3D ctxt->comp.int_desc.data;
-> >
-> >  	put_pcichild(hpdev);
-> > +	kfree(ctxt);
-> >  	return;
-> >
-> >  enable_tasklet:
-> >  	tasklet_enable(&channel->callback_event);
-> > +
-> > +	/*
-> > +	 * Move uncompleted context to the leftover list.
-> > +	 * The host may send completion at a later time, and we ignore this
-> > +	 * completion but keep the memory reference valid.
-> > +	 */
-> > +	spin_lock(&hbus->compose_msi_msg_ctxt_list_lock);
-> > +	list_add_tail(&ctxt->list, &hbus->compose_msi_msg_ctxt_list);
-> > +	spin_unlock(&hbus->compose_msi_msg_ctxt_list_lock);
-> > +
-> >  free_int_desc:
-> >  	kfree(int_desc);
-> > +
-> >  drop_reference:
-> >  	put_pcichild(hpdev);
-> > +
-> >  return_null_message:
-> >  	msg->address_hi =3D 0;
-> >  	msg->address_lo =3D 0;
-> > @@ -3076,9 +3102,11 @@ static int hv_pci_probe(struct hv_device *hdev,
-> >  	INIT_LIST_HEAD(&hbus->children);
-> >  	INIT_LIST_HEAD(&hbus->dr_list);
-> >  	INIT_LIST_HEAD(&hbus->resources_for_children);
-> > +	INIT_LIST_HEAD(&hbus->compose_msi_msg_ctxt_list);
-> >  	spin_lock_init(&hbus->config_lock);
-> >  	spin_lock_init(&hbus->device_list_lock);
-> >  	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
-> > +	spin_lock_init(&hbus->compose_msi_msg_ctxt_list_lock);
-> >  	hbus->wq =3D alloc_ordered_workqueue("hv_pci_%x", 0,
-> >  					   hbus->sysdata.domain);
-> >  	if (!hbus->wq) {
-> > @@ -3282,6 +3310,7 @@ static int hv_pci_bus_exit(struct hv_device
-> > *hdev, bool
-> > keep_devs)
-> >  static int hv_pci_remove(struct hv_device *hdev)  {
-> >  	struct hv_pcibus_device *hbus;
-> > +	struct compose_msi_msg_ctxt *ctxt, *tmp;
-> >  	int ret;
-> >
-> >  	hbus =3D hv_get_drvdata(hdev);
-> > @@ -3318,6 +3347,10 @@ static int hv_pci_remove(struct hv_device
-> > *hdev)
-> >
-> >  	hv_put_dom_num(hbus->sysdata.domain);
-> >
-> > +	list_for_each_entry_safe(ctxt, tmp, &hbus-
-> >compose_msi_msg_ctxt_list, list) {
-> > +		list_del(&ctxt->list);
-> > +		kfree(ctxt);
-> > +	}
-> >  	kfree(hbus);
-> >  	return ret;
-> >  }
-> > --
-> > 2.27.0
+Maybe the device can only retrain to 2.5 GT/s or from the current
+speed to a higher speed.  This sort of experimentation could probably
+be done with setpci.
 
+> This issue was reproduced with more cards:
+> - Compex WLE900VX (QCA9880 based / device ID 0x003c)
+> - QCNFA435 (QCA9377 based / device ID 0x0042)
+> - Compex WLE200NX (AR9287 based / device ID 0x002e)
+> - "noname" card (QCA9890 based / device ID 0x003c)
+> - Wistron NKR-DNXAH1 (AR9390 based / device ID 0x0030)
+> on Armada 385 with pci-mvebu.c driver and also on Armada 3720 with
+> pci-aardvark.c driver.
+> 
+> To workaround this issue, this change introduces a new PCI quirk called
+> PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1, which is enabled for all
+> Atheros chips with PCI_DEV_FLAGS_NO_BUS_RESET quirk, and also for Atheros
+> chip AR9287.
+> 
+> When this quirk is set, kernel disallows triggering PCI_EXP_LNKCTL_RL
+> bit in config space of PCIe Bridge in the case when PCIe Bridge is
+> capable of higher speed than 2.5 GT/s and this higher speed is already
+> allowed. When PCIe Bridge has accessible LNKCTL2 register, we try to
+> force target link speed to 2.5 GT/s. After this change it is possible
+> to trigger PCI_EXP_LNKCTL_RL bit without issues.
+
+This basically feels like a "it hurts when I do X, so stop doing X"
+patch.  We don't really know what's wrong; we've just determined
+experimentally how to avoid it.
+
+> Currently only PCIe ASPM kernel code triggers this PCI_EXP_LNKCTL_RL bit,
+> so quirk check is added only into pcie/aspm.c file.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reported-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Tested-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Tested-by: Marek Behún <kabel@kernel.org>
+> BugLink: https://lore.kernel.org/linux-pci/87h7l8axqp.fsf@toke.dk/
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=84821
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=192441
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209833
+> Cc: stable@vger.kernel.org # c80851f6ce63a ("PCI: Add PCI_EXP_LNKCTL2_TLS* macros")
+> 
+> ---
+> Changes since v1:
+> * Move whole quirk code into pcie_downgrade_link_to_gen1() function
+> * Reformat to 80 chars per line where possible
+> * Add quirk also for cards with AR9287 chip (PCI ID 0x002e)
+> * Extend commit message description and add information about 0xABCD
+> 
+> Changes since v2:
+> * Add quirk also for Atheros QCA9377 chip
+> ---
+>  drivers/pci/pcie/aspm.c | 44 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/quirks.c    | 39 ++++++++++++++++++++++++++++--------
+>  include/linux/pci.h     |  2 ++
+>  3 files changed, 77 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index ac0557a305af..729b0389562b 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -192,12 +192,56 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>  	link->clkpm_disable = blacklist ? 1 : 0;
+>  }
+>  
+> +static int pcie_downgrade_link_to_gen1(struct pci_dev *parent)
+> +{
+> +	u16 reg16;
+> +	u32 reg32;
+> +	int ret;
+> +
+> +	/* Check if link is capable of higher speed than 2.5 GT/s */
+> +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &reg32);
+> +	if ((reg32 & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
+> +		return 0;
+
+I guess this means "if the link is already at 2.5 GT/s, no need to do
+anything."  Right?
+
+> +	/* Check if link speed can be downgraded to 2.5 GT/s */
+> +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &reg32);
+> +	if (!(reg32 & PCI_EXP_LNKCAP2_SLS_2_5GB)) {
+> +		pci_err(parent, "ASPM: Bridge does not support changing Link Speed to 2.5 GT/s\n");
+> +		return -EOPNOTSUPP;
+> +	}
+
+Why is this check needed?  Per PCIe r5.0, sec 8.2.1, all devices must
+support 2.5 GT/s.
+
+> +	/* Force link speed to 2.5 GT/s */
+> +	ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
+> +						 PCI_EXP_LNKCTL2_TLS,
+> +						 PCI_EXP_LNKCTL2_TLS_2_5GT);
+> +	if (!ret) {
+> +		/* Verify that new value was really set */
+> +		pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &reg16);
+> +		if ((reg16 & PCI_EXP_LNKCTL2_TLS) != PCI_EXP_LNKCTL2_TLS_2_5GT)
+> +			ret = -EINVAL;
+> +	}
+> +
+> +	if (ret) {
+> +		pci_err(parent, "ASPM: Changing Target Link Speed to 2.5 GT/s failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	pci_info(parent, "ASPM: Target Link Speed changed to 2.5 GT/s due to quirk\n");
+> +	return 0;
+> +}
+> +
+>  static bool pcie_retrain_link(struct pcie_link_state *link)
+>  {
+>  	struct pci_dev *parent = link->pdev;
+>  	unsigned long end_jiffies;
+>  	u16 reg16;
+>  
+> +	if ((link->downstream->dev_flags & PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1) &&
+> +	    pcie_downgrade_link_to_gen1(parent)) {
+
+I assume (correct me if I'm wrong) that this would work equally well
+if we set the *endpoint's* target link speed to 2.5 GT/s instead of
+the upstream bridge's?  I think the log messages would make more sense
+then, since the problem is really with the endpoint, not the parent.
+
+> +		pci_err(parent, "ASPM: Retrain Link at higher speed is disallowed by quirk\n");
+> +		return false;
+> +	}
+> +
+>  	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+>  	reg16 |= PCI_EXP_LNKCTL_RL;
+>  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e3ba9e..4999ad9d08b8 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3553,23 +3553,46 @@ static void mellanox_check_broken_intx_masking(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_ANY_ID,
+>  			mellanox_check_broken_intx_masking);
+>  
+> -static void quirk_no_bus_reset(struct pci_dev *dev)
+> +static void quirk_no_bus_reset_and_no_retrain_link(struct pci_dev *dev)
+>  {
+> -	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
+> +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET |
+> +			  PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1;
+>  }
+>  
+>  /*
+> - * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
+> + * Atheros AR9xxx and QCA9xxx chips do not behave after a bus reset and also
+> + * after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
+>   * The device will throw a Link Down error on AER-capable systems and
+>   * regardless of AER, config space of the device is never accessible again
+>   * and typically causes the system to hang or reset when access is attempted.
+> + * Or if config space is accessible again then it contains only dummy values
+> + * like fixed PCI device ID 0xABCD or values not initialized at all.
+> + * Retrain link can be called only when using GEN1 PCIe bridge or when
+> + * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
+> + * To reset these cards it is required to do PCIe Warm Reset via PERST# pin.
+>   * https://lore.kernel.org/r/20140923210318.498dacbd@dualc.maya.org/
+> + * https://lore.kernel.org/r/87h7l8axqp.fsf@toke.dk/
+> + * https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
+>   */
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0042,
+> +			 quirk_no_bus_reset_and_no_retrain_link);
+> +
+> +static void quirk_no_bus_reset(struct pci_dev *dev)
+> +{
+> +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
+> +}
+>  
+>  /*
+>   * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 86c799c97b77..fdbf7254e4ab 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -227,6 +227,8 @@ enum pci_dev_flags {
+>  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+>  	/* Don't use Relaxed Ordering for TLPs directed at this device */
+>  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> +	/* Don't Retrain Link for device when bridge is not in GEN1 mode */
+> +	PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 = (__force pci_dev_flags_t) (1 << 12),
+
+I know this is entangled with the existing PCI_DEV_FLAGS_NO_BUS_RESET,
+but unless there's a better reason to use pci_dev_flags, I'd prefer a
+new "unsigned retrain_gen1:1" or similar bit.  
+
+Whatever you do, I'd like to avoid the double negative of "*no*
+retrain when *not* gen1."
+
+It does make me wonder whether the bus reset would work on these
+devices if we set the target link speed back down to 2.5 GT/s.
+
+>  };
+>  
+>  enum pci_irq_reroute_variant {
+> -- 
+> 2.20.1
+> 
