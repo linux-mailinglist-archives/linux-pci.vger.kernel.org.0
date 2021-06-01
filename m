@@ -2,383 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D0A397BA5
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 23:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A43E6397BAB
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 23:20:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234782AbhFAVUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 17:20:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234740AbhFAVUY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Jun 2021 17:20:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DEA8F610CB;
-        Tue,  1 Jun 2021 21:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622582322;
-        bh=5JfgHNm8NdG/r/d4fEfT+EVpiMWzIp0GDqOKc7BpJVQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F9rxCDDOBoRUjRr+nWcA8DBjsq+H24EKDSnIF72LWaWdagAhx5d5nXhEBdU+BduEe
-         462B1rzoOS4ciusYWILQwvLTHtcHjuUEezYPOissbUk4tqGPWDZFil3DvRQWhXVdUP
-         oCV5GosFS7E3S6pDVXijNSJeCalmdsnB9EiyCxFPCPH6ymcbLLj45WwQ1Ho+w5y/+d
-         SG1pk4BiP7wPh6jwq58LnZRWW1Nk2xnjPR5U9Uv7wsWBW0sFDmoF1HLrYIb104r/mf
-         l+y4/NToJz2eDUFpj0MyE/Z6GfnCdGrZ21YSkLhgXoDJhp2T/kLxfhePw1TOUdIZe9
-         rWaoS7a9qQTHw==
-Received: by pali.im (Postfix)
-        id 70854BC7; Tue,  1 Jun 2021 23:18:39 +0200 (CEST)
-Date:   Tue, 1 Jun 2021 23:18:39 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Disallow retraining link for Atheros chips on
- non-Gen1 PCIe bridges
-Message-ID: <20210601211839.b2jlspy3x6lmt4by@pali>
-References: <20210505163357.16012-1-pali@kernel.org>
- <20210601200549.GA1965100@bjorn-Precision-5520>
+        id S234707AbhFAVWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 17:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234513AbhFAVWY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 17:22:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388ADC061574;
+        Tue,  1 Jun 2021 14:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=hOeJi34GwcsU47cutrK507rwIL4vKx9YV3FAWOwyUWs=; b=AF5N4D4Qw3LxcN2Ipk1TxVsTS5
+        b3oKWCnuWEITvVVhlhDCVoUd2D5pKFvGtup1N36oPGXbt1k735+EulD4nDwNCdh/ItBOPRZdqisf4
+        HOpsmR31u+4Tnd/oILkt0H4zBqkuLW7689Uf8keH306XlkyWA8Pi5ibKTVO+NkumCUuhFoyS1yFCP
+        BIrVZh5gx73cuIN8209KOAjSf3FmCSLIxSAJlkHdyoXrSlmFVkEN6IYRy8XEGJeJU8QW6MlaxQwvZ
+        QUve4fyf8wnNPdkDwPcjwkvIGpSLfXuCeGxTaOmFpi7ALzQWK85jVlzFA7phsbV3rscR8Rb6Lritd
+        RFLvO+aQ==;
+Received: from [2601:1c0:6280:3f0::ce7d]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1loBoY-000u0l-QP; Tue, 01 Jun 2021 21:20:42 +0000
+Subject: Re: [PATCH v2] Add support for PCIe SSD status LED management
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Keith Busch <kbusch@kernel.org>, kw@linux.com,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>
+References: <20210601203820.3647-1-stuart.w.hayes@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3d1272b8-4edc-f2b1-85ea-f5cea65b4871@infradead.org>
+Date:   Tue, 1 Jun 2021 14:20:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
+In-Reply-To: <20210601203820.3647-1-stuart.w.hayes@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210601200549.GA1965100@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+Hi,
 
-On Tuesday 01 June 2021 15:05:49 Bjorn Helgaas wrote:
-> On Wed, May 05, 2021 at 06:33:57PM +0200, Pali Rohár wrote:
-> > Atheros AR9xxx and QCA9xxx chips have behaviour issues not only after a
-> > bus reset, but also after doing retrain link, if PCIe bridge is not in
-> > GEN1 mode (at 2.5 GT/s speed):
-> > 
-> > - QCA9880 and QCA9890 chips throw a Link Down event and completely
-> >   disappear from the bus and their config space is not accessible
-> >   afterwards.
-> > 
-> > - QCA9377 chip throws a Link Down event followed by Link Up event, the
-> >   config space is accessible and PCI device ID is correct. But trying to
-> >   access chip's I/O space causes Uncorrected (Non-Fatal) AER error,
-> >   followed by Synchronous external abort 96000210 and Segmentation fault
-> >   of insmod while loading ath10k_pci.ko module.
-> > 
-> > - AR9390 chip throws a Link Down event followed by Link Up event, config
-> >   space is accessible, but contains nonsense values. PCI device ID is
-> >   0xABCD which indicates HW bug that chip itself was not able to read
-> >   values from internal EEPROM/OTP.
-> > 
-> > - AR9287 chip throws also Link Down and Link Up events, also has
-> >   accessible config space containing correct values. But ath9k driver
-> >   fails to initialize card from this state as it is unable to access HW
-> >   registers. This also indicates that the chip iself is not able to read
-> >   values from internal EEPROM/OTP.
-> > 
-> > These issues related to PCI device ID 0xABCD and to reading internal
-> > EEPROM/OTP were previously discussed at ath9k-devel mailing list in
-> > following thread:
-> > 
-> >   https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
-> > 
-> > After experiments we've come up with a solution: it seems that Retrain
-> > link can be called only when using GEN1 PCIe bridge or when PCIe bridge
-> > link speed is forced to 2.5 GT/s. Applying this workaround fixes all
-> > mentioned cards.
+On 6/1/21 1:38 PM, Stuart Hayes wrote:
+> This patch adds support for the PCIe SSD Status LED Management
+> interface, as described in the "_DSM Additions for PCIe SSD Status LED
+> Management" ECN to the PCI Firmware Specification revision 3.2.
 > 
-> I *assume* this means the device was running at > 2.5 GT/s in the
-> first place,
-
-No. All these Atheros chips are 2.5 GT/s only. It looks like that if
-PCIe Bridge has initial value 5 GT/s (or higher) in PCI_EXP_LNKCAP2
-register and link retraining is activated, something happen which cause
-these Atheros chips to "crash". Looks like that Root Bridge tries to
-change link speed from 2.5 GT/s to 5 GT/s (which is not supported by all
-these Atheros chips).
-
-> and when aspm.c retrains the link to configure the common
-> clock, we downgrade to 2.5 GT/s, so the device is now slower than it
-> used to be?
+> It will add a single (led_classdev) LED for any PCIe device that has the
+> relevant _DSM--presumably only drives or drive slots will have this. The
+> available and active status states are exposed using attribute "states"
+> under the LED device. Reading this attribute will show the states supported
+> by the interface, and those states which are currently active are shown
+> in brackets, like this:
 > 
-> Is that slower speed acceptable?  Is it better to be slower with ASPM,
-> or faster without ASPM?  Or maybe it could be faster *with* ASPM if we
-> avoided the common clock config and the retrain?  I think that would
-> give up some of the benefit of ASPM, but maybe it would still be
-> worthwhile?
-
-There is no slow down with these chips as all these which I tested and
-written into description are 2.5 GT/s -only.
-
-> If the device was running at > 2.5 GT/s to begin with, obviously there
-> is *some* way to get there.
-
-Root Bridge in PCI_EXP_LNKSTA reports that they are running at 2.5 GT/s
-even on begin.
-
-> This patch implies that the hardware
-> automatically trained to a higher rate after power-on (which I think
-> is what PCIe hardware is *supposed* to do) and something prevents that
-> from succeeding when we retrain, or maybe BIOS did something different
-> than what Linux is doing, or ... something else?
-
-Tested platforms was also without BIOS and without any other firmware
-which touched PCIe.
-
-> Maybe the device can only retrain to 2.5 GT/s or from the current
-> speed to a higher speed.  This sort of experimentation could probably
-> be done with setpci.
+>  # echo "ok locate" >/sys/class/leds/0000:88:00.0::drive_status/states
+>  # cat /sys/class/leds/0000:88:00.0::drive_status/states
+>  [ok] [locate] failed rebuild pfa hotspare ica ifa invalid disabled
 > 
-> > This issue was reproduced with more cards:
-> > - Compex WLE900VX (QCA9880 based / device ID 0x003c)
-> > - QCNFA435 (QCA9377 based / device ID 0x0042)
-> > - Compex WLE200NX (AR9287 based / device ID 0x002e)
-> > - "noname" card (QCA9890 based / device ID 0x003c)
-> > - Wistron NKR-DNXAH1 (AR9390 based / device ID 0x0030)
-> > on Armada 385 with pci-mvebu.c driver and also on Armada 3720 with
-> > pci-aardvark.c driver.
-> > 
-> > To workaround this issue, this change introduces a new PCI quirk called
-> > PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1, which is enabled for all
-> > Atheros chips with PCI_DEV_FLAGS_NO_BUS_RESET quirk, and also for Atheros
-> > chip AR9287.
-> > 
-> > When this quirk is set, kernel disallows triggering PCI_EXP_LNKCTL_RL
-> > bit in config space of PCIe Bridge in the case when PCIe Bridge is
-> > capable of higher speed than 2.5 GT/s and this higher speed is already
-> > allowed. When PCIe Bridge has accessible LNKCTL2 register, we try to
-> > force target link speed to 2.5 GT/s. After this change it is possible
-> > to trigger PCI_EXP_LNKCTL_RL bit without issues.
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> ---
+> V2:
+> 	* Simplified interface to a single "states" attribute under the LED
+> 	  classdev using only state names
+> 	* Reworked driver to separate _DSM specific code, so support for
+> 	  NPEM (or other methods) could be easily be added
+> 	* Use BIT macro
 > 
-> This basically feels like a "it hurts when I do X, so stop doing X"
-> patch.  We don't really know what's wrong; we've just determined
-> experimentally how to avoid it.
-
-Yes.
-
-> > Currently only PCIe ASPM kernel code triggers this PCI_EXP_LNKCTL_RL bit,
-> > so quirk check is added only into pcie/aspm.c file.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Reported-by: Toke Høiland-Jørgensen <toke@redhat.com>
-> > Tested-by: Toke Høiland-Jørgensen <toke@redhat.com>
-> > Tested-by: Marek Behún <kabel@kernel.org>
-> > BugLink: https://lore.kernel.org/linux-pci/87h7l8axqp.fsf@toke.dk/
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=84821
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=192441
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209833
-> > Cc: stable@vger.kernel.org # c80851f6ce63a ("PCI: Add PCI_EXP_LNKCTL2_TLS* macros")
-> > 
-> > ---
-> > Changes since v1:
-> > * Move whole quirk code into pcie_downgrade_link_to_gen1() function
-> > * Reformat to 80 chars per line where possible
-> > * Add quirk also for cards with AR9287 chip (PCI ID 0x002e)
-> > * Extend commit message description and add information about 0xABCD
-> > 
-> > Changes since v2:
-> > * Add quirk also for Atheros QCA9377 chip
-> > ---
-> >  drivers/pci/pcie/aspm.c | 44 +++++++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/quirks.c    | 39 ++++++++++++++++++++++++++++--------
-> >  include/linux/pci.h     |  2 ++
-> >  3 files changed, 77 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index ac0557a305af..729b0389562b 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -192,12 +192,56 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
-> >  	link->clkpm_disable = blacklist ? 1 : 0;
-> >  }
-> >  
-> > +static int pcie_downgrade_link_to_gen1(struct pci_dev *parent)
-> > +{
-> > +	u16 reg16;
-> > +	u32 reg32;
-> > +	int ret;
-> > +
-> > +	/* Check if link is capable of higher speed than 2.5 GT/s */
-> > +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &reg32);
-> > +	if ((reg32 & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-> > +		return 0;
+>  .../sysfs-class-led-driver-pcie-ssd-leds      |  18 +
+>  drivers/pci/Kconfig                           |  12 +
+>  drivers/pci/Makefile                          |   1 +
+>  drivers/pci/pcie-ssd-leds.c                   | 457 ++++++++++++++++++
+>  4 files changed, 488 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds
+>  create mode 100644 drivers/pci/pcie-ssd-leds.c
 > 
-> I guess this means "if the link is already at 2.5 GT/s, no need to do
-> anything."  Right?
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds b/Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds
+> new file mode 100644
+> index 000000000000..1f07733b6f35
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds
+> @@ -0,0 +1,18 @@
+> +What:		/sys/class/leds/<led>/states
+> +Date:		April 2021
+> +Contact:	linux-pci@vger.kernel.org
+> +Description:
+> +		This attribute indicates the status states supported by a drive
+> +		or drive slot's LEDs, as defined in the "_DSM additions for PCIe
+> +		SSD Status LED Management" ECN to the PCI Firmware Specification
+> +		Revision 3.2, dated 12 February 2020, and in "Native PCIe
+> +		Enclosure Management", section 6.29 of the PCIe Base Spec 5.0.
+> +
+> +		Only supported states will be shown, and the currently active
+> +		states are shown in brackets.  The active state(s) can be written
+> +		by echoing a space or comma separated string of states to this
+> +		attribute.  For example:
+> +
+> +		# echo "ok locate" >/sys/class/leds/0000:88:00.0::drive_status/states
+> +		# cat /sys/class/leds/0000:88:00.0::drive_status/states
+> +		[ok] [locate] failed rebuild pfa hotspare ica ifa invalid disabled
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 0c473d75e625..f4acf1ad0fb5 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -190,6 +190,18 @@ config PCI_HYPERV
+>  	  The PCI device frontend driver allows the kernel to import arbitrary
+>  	  PCI devices from a PCI backend to support PCI driver domains.
+>  
+> +config PCIE_SSD_LEDS
+> +	tristate "PCIe SSD status LED support"
+> +	depends on ACPI && NEW_LEDS
 
-PCI_EXP_LNKCAP_SLS is maximal supported speed by Bridge. So if bridge
-does not support higher speed, we do not have to do anything.
+I expect that should be LEDS_CLASS instead of NEW_LEDS.
+Did you test it with NEW_LEDS=y and LEDS_CLASS not set?
 
-> > +	/* Check if link speed can be downgraded to 2.5 GT/s */
-> > +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &reg32);
-> > +	if (!(reg32 & PCI_EXP_LNKCAP2_SLS_2_5GB)) {
-> > +		pci_err(parent, "ASPM: Bridge does not support changing Link Speed to 2.5 GT/s\n");
-> > +		return -EOPNOTSUPP;
-> > +	}
-> 
-> Why is this check needed?  Per PCIe r5.0, sec 8.2.1, all devices must
-> support 2.5 GT/s.
 
-Because older PCIe devices does not have to support PCI_EXP_LNKCAP2
-register (in which cause they returns zero). And this applies also for
-pci-bridge-emul.c driver. So this check is needed at least for devices
-which use pci-bridge-emul.c driver.
+[adding Pavel and linux-leds m.l. for other review]
 
-> > +	/* Force link speed to 2.5 GT/s */
-> > +	ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
-> > +						 PCI_EXP_LNKCTL2_TLS,
-> > +						 PCI_EXP_LNKCTL2_TLS_2_5GT);
-> > +	if (!ret) {
-> > +		/* Verify that new value was really set */
-> > +		pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &reg16);
-> > +		if ((reg16 & PCI_EXP_LNKCTL2_TLS) != PCI_EXP_LNKCTL2_TLS_2_5GT)
-> > +			ret = -EINVAL;
-> > +	}
-> > +
-> > +	if (ret) {
-> > +		pci_err(parent, "ASPM: Changing Target Link Speed to 2.5 GT/s failed: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	pci_info(parent, "ASPM: Target Link Speed changed to 2.5 GT/s due to quirk\n");
-> > +	return 0;
-> > +}
-> > +
-> >  static bool pcie_retrain_link(struct pcie_link_state *link)
-> >  {
-> >  	struct pci_dev *parent = link->pdev;
-> >  	unsigned long end_jiffies;
-> >  	u16 reg16;
-> >  
-> > +	if ((link->downstream->dev_flags & PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1) &&
-> > +	    pcie_downgrade_link_to_gen1(parent)) {
-> 
-> I assume (correct me if I'm wrong) that this would work equally well
-> if we set the *endpoint's* target link speed to 2.5 GT/s instead of
-> the upstream bridge's?
+> +	help
+> +	  Driver for PCIe SSD status LED management as described in a PCI
+> +	  Firmware Specification, Revision 3.2 ECN.
+> +
+> +	  When enabled, an LED interface will be created for each PCIe device
+> +	  that has the ACPI method described in the referenced specification,
+> +	  to allow the device status LEDs for that PCIe device (presumably a
+> +	  solid state storage device or its slot) to be seen and controlled.
+> +
+>  choice
+>  	prompt "PCI Express hierarchy optimization setting"
+>  	default PCIE_BUS_DEFAULT
 
-I think not. Issue is really when Bridge-end of the link supports higher
-than 2.5 GT/s speed this end tries to increase speed. As device-end of
-the link supports only 2.5 GT/s there is nothing to change to higher
-speed from device-end point of view.
+thanks.
+-- 
+~Randy
 
-> I think the log messages would make more sense
-> then, since the problem is really with the endpoint, not the parent.
-
-So... buggy is device (child) end of the link and only bridge (parent)
-end of the link can workaround it. And if bridge end is not capable
-(e.g. because of pci-bridge-emul.c) then it is problem of bridge
-(parent) end.
-
-> > +		pci_err(parent, "ASPM: Retrain Link at higher speed is disallowed by quirk\n");
-> > +		return false;
-> > +	}
-> > +
-> >  	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-> >  	reg16 |= PCI_EXP_LNKCTL_RL;
-> >  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 653660e3ba9e..4999ad9d08b8 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -3553,23 +3553,46 @@ static void mellanox_check_broken_intx_masking(struct pci_dev *pdev)
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_ANY_ID,
-> >  			mellanox_check_broken_intx_masking);
-> >  
-> > -static void quirk_no_bus_reset(struct pci_dev *dev)
-> > +static void quirk_no_bus_reset_and_no_retrain_link(struct pci_dev *dev)
-> >  {
-> > -	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-> > +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET |
-> > +			  PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1;
-> >  }
-> >  
-> >  /*
-> > - * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
-> > + * Atheros AR9xxx and QCA9xxx chips do not behave after a bus reset and also
-> > + * after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
-> >   * The device will throw a Link Down error on AER-capable systems and
-> >   * regardless of AER, config space of the device is never accessible again
-> >   * and typically causes the system to hang or reset when access is attempted.
-> > + * Or if config space is accessible again then it contains only dummy values
-> > + * like fixed PCI device ID 0xABCD or values not initialized at all.
-> > + * Retrain link can be called only when using GEN1 PCIe bridge or when
-> > + * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
-> > + * To reset these cards it is required to do PCIe Warm Reset via PERST# pin.
-> >   * https://lore.kernel.org/r/20140923210318.498dacbd@dualc.maya.org/
-> > + * https://lore.kernel.org/r/87h7l8axqp.fsf@toke.dk/
-> > + * https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
-> >   */
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
-> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0042,
-> > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > +
-> > +static void quirk_no_bus_reset(struct pci_dev *dev)
-> > +{
-> > +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-> > +}
-> >  
-> >  /*
-> >   * Root port on some Cavium CN8xxx chips do not successfully complete a bus
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 86c799c97b77..fdbf7254e4ab 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> >  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> >  	/* Don't use Relaxed Ordering for TLPs directed at this device */
-> >  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> > +	/* Don't Retrain Link for device when bridge is not in GEN1 mode */
-> > +	PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 = (__force pci_dev_flags_t) (1 << 12),
-> 
-> I know this is entangled with the existing PCI_DEV_FLAGS_NO_BUS_RESET,
-> but unless there's a better reason to use pci_dev_flags, I'd prefer a
-> new "unsigned retrain_gen1:1" or similar bit.  
-
-Ok! I can change patch...
-
-> Whatever you do, I'd like to avoid the double negative of "*no*
-> retrain when *not* gen1."
-
-Do you have a suggestion for this name? Because I do not know how to
-call this "quirk" in English, so it describes "disallow link retrain
-when link is not at gen1 = 2.5GT/s". Somehow I cannot imagine name
-without double negative words.
-
-> It does make me wonder whether the bus reset would work on these
-> devices if we set the target link speed back down to 2.5 GT/s.
-
-Tested and does not work. Secondary bus reset (=Hot Reset) is broken
-also when link is forced to 2.5 GT/s. It looks like that when
-PCI_EXP_LNKCTL2_TLS is not set to 2.5 GT/s when setting
-PCI_EXP_LNKCTL_RL it results in the same effect / issue like calling
-secondary bus reset.
-
-> >  };
-> >  
-> >  enum pci_irq_reroute_variant {
-> > -- 
-> > 2.20.1
-> > 
