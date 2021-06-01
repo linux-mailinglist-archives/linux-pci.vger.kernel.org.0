@@ -2,90 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA4C397CEB
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 01:13:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 039D4397D1B
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 01:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235040AbhFAXPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 19:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
+        id S235170AbhFAXll (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 19:41:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234989AbhFAXPb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 19:15:31 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD60C061574;
-        Tue,  1 Jun 2021 16:13:48 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id l1so939676ejb.6;
-        Tue, 01 Jun 2021 16:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zh1+/6WfqdVuCg7ID+TQV9ppVnJ4x/cqO6OMVZxi09Q=;
-        b=ovTam58e4mYWAmOtX8O9o9KMOV3qEYdvXzOTKSuqXqvtnbYh63J5II9hnT/u/13ODS
-         SRX9mMyD7BdpIGRRxgZz6jdZFfv47vOM42jTscBuBlGkr9G+4kJWMSb0+AGDchOxQRYr
-         8WDaYTIaofSKBBgNNRRQScDTtWwllbH4DTcC/5+KYQ5Cie47fSA0nnp99dhYCpTVWD78
-         BQpKD5Xv6pBVHhCfmRkhr8Jt4yEGlD8VItQChC6WfLn+tF6SaRo25RWGcACAGN8CaJ9z
-         MZ3JT1rdZsMt28zGCaiYte/8w/BO/mYd3TXh/E44OqtWP+ROcqu/rb9kd9uEFVazsjAv
-         1A2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zh1+/6WfqdVuCg7ID+TQV9ppVnJ4x/cqO6OMVZxi09Q=;
-        b=H1XKGjRMvk3G/+ySrvX6u0KGiwnN6HYY84AIsdF//27sqT7/Df69vPy626eGsvNp3G
-         As3wywuwYb0pucpv4DFjkoLjQW164ulCbeIEHbPTI4SDjHA8TeUJvvOhN08WuSGFLXNX
-         WMrHBmsBwsi+3S/DNOc5Al+DZ8bLPRPqeEj5L5og/ezDASvAmZTAGPJStuzlai/B2D8v
-         npscZxsil4S9GAxl3NgC9gigK2wzYjt4QTFI235Jmilwt7G+d7GT1lH5lTKd1vaGXHP9
-         qnBjLxR04PX4OuKbu+OA+Kwi0TxbFn4er4GSGGKUDqnk9IFqiY0mQOWoAS20AubUceQs
-         7Fbw==
-X-Gm-Message-State: AOAM533EuWPwjyQbg1r116he+vgtisOmYFZm25YixYSc3W8yc14wL/+9
-        4qis4uKXdHVQeOgASqEaeRI=
-X-Google-Smtp-Source: ABdhPJyJZZiHu8zdJIZVwUwAJhA75O5Pcldzt4kz1cEG7CswolwKOoxougSP2vOlPjwCEKx5+Qk10w==
-X-Received: by 2002:a17:906:2ec6:: with SMTP id s6mr30948371eji.65.1622589226849;
-        Tue, 01 Jun 2021 16:13:46 -0700 (PDT)
-Received: from anparri (host-95-246-186-31.retail.telecomitalia.it. [95.246.186.31])
-        by smtp.gmail.com with ESMTPSA id m16sm236824edq.56.2021.06.01.16.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jun 2021 16:13:46 -0700 (PDT)
-Date:   Wed, 2 Jun 2021 01:13:39 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Long Li <longli@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrea Parri <Andrea.Parri@microsoft.com>
-Subject: Re: [PATCH] PCI: hv: Move completion variable from stack to heap in
- hv_compose_msi_msg()
-Message-ID: <20210601231339.GA1391@anparri>
-References: <1620806824-31151-1-git-send-email-longli@linuxonhyperv.com>
- <MWHPR21MB15931F1698FD128C76219F7DD7249@MWHPR21MB1593.namprd21.prod.outlook.com>
- <BY5PR21MB150673A34B431F9311E6FDC5CE3E9@BY5PR21MB1506.namprd21.prod.outlook.com>
+        with ESMTP id S234766AbhFAXll (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 19:41:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4B4C061574;
+        Tue,  1 Jun 2021 16:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=9UJf1jj7FP6DA4MoZ2+i8x7SoI+XY+q0lSUWu2+yQAk=; b=2r/lj0FnrzCE8Asrp+xsTs2af7
+        2JzLNBYgyDUwP/2vtP28uOSZEKpixR3LRE4mGp91VyxbHOAKHS8rMwlj0oLx/hx8bjxHbTSfheE0M
+        lmEDGRYb4JiaxL5FmziMlf9ppN4Zc2cv36v+xu5yOzzP5VJ8PEueYd/KyOmKcA2A98KgGb2DamVvN
+        pmR54Oba+2d9MIMAXyB1COIFsQGQe9/SXrjihuX4/uaJbNph+oi15Bj5YCX2hMIk5QGTJ1A4d9H8I
+        Ti9GJte5YzkVJqz+2sGdhPJKzDa039HfMPTDhfhfYOMQMHphyAtUFeokVJzszvl9vk6nW4mvPEWkR
+        bC9wbWsQ==;
+Received: from [2601:1c0:6280:3f0::ce7d]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1loDzK-001GLa-C2; Tue, 01 Jun 2021 23:39:58 +0000
+Subject: Re: [PATCH v2] Add support for PCIe SSD status LED management
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Keith Busch <kbusch@kernel.org>, kw@linux.com,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>
+References: <20210601203820.3647-1-stuart.w.hayes@gmail.com>
+ <3d1272b8-4edc-f2b1-85ea-f5cea65b4871@infradead.org>
+Message-ID: <0a8cf89b-43e0-147f-d9d9-dad17f6b9985@infradead.org>
+Date:   Tue, 1 Jun 2021 16:39:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BY5PR21MB150673A34B431F9311E6FDC5CE3E9@BY5PR21MB1506.namprd21.prod.outlook.com>
+In-Reply-To: <3d1272b8-4edc-f2b1-85ea-f5cea65b4871@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> I agree if the intent is to deal with a untrusted host, I can follow the same principle to add this support to all requests to VSP. But this is a different problem to what this patch intends to address. I can see they may share the same design principle and common code. My question on a untrusted host is: If a host is untrusted and is misbehaving on purpose, what's the point of keep the VM running and not crashing the PCI driver?
+On 6/1/21 2:20 PM, Randy Dunlap wrote:
+> Hi,
+> 
+> On 6/1/21 1:38 PM, Stuart Hayes wrote:
+>> This patch adds support for the PCIe SSD Status LED Management
+>> interface, as described in the "_DSM Additions for PCIe SSD Status LED
+>> Management" ECN to the PCI Firmware Specification revision 3.2.
+>>
+>> It will add a single (led_classdev) LED for any PCIe device that has the
+>> relevant _DSM--presumably only drives or drive slots will have this. The
+>> available and active status states are exposed using attribute "states"
+>> under the LED device. Reading this attribute will show the states supported
+>> by the interface, and those states which are currently active are shown
+>> in brackets, like this:
+>>
+>>  # echo "ok locate" >/sys/class/leds/0000:88:00.0::drive_status/states
+>>  # cat /sys/class/leds/0000:88:00.0::drive_status/states
+>>  [ok] [locate] failed rebuild pfa hotspare ica ifa invalid disabled
+>>
+>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>> ---
+>> V2:
+>> 	* Simplified interface to a single "states" attribute under the LED
+>> 	  classdev using only state names
+>> 	* Reworked driver to separate _DSM specific code, so support for
+>> 	  NPEM (or other methods) could be easily be added
+>> 	* Use BIT macro
+>>
+>>  .../sysfs-class-led-driver-pcie-ssd-leds      |  18 +
+>>  drivers/pci/Kconfig                           |  12 +
+>>  drivers/pci/Makefile                          |   1 +
+>>  drivers/pci/pcie-ssd-leds.c                   | 457 ++++++++++++++++++
+>>  4 files changed, 488 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds
+>>  create mode 100644 drivers/pci/pcie-ssd-leds.c
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds b/Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds
+>> new file mode 100644
+>> index 000000000000..1f07733b6f35
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-driver-pcie-ssd-leds
+>> @@ -0,0 +1,18 @@
+>> +What:		/sys/class/leds/<led>/states
+>> +Date:		April 2021
+>> +Contact:	linux-pci@vger.kernel.org
+>> +Description:
+>> +		This attribute indicates the status states supported by a drive
+>> +		or drive slot's LEDs, as defined in the "_DSM additions for PCIe
+>> +		SSD Status LED Management" ECN to the PCI Firmware Specification
+>> +		Revision 3.2, dated 12 February 2020, and in "Native PCIe
+>> +		Enclosure Management", section 6.29 of the PCIe Base Spec 5.0.
+>> +
+>> +		Only supported states will be shown, and the currently active
+>> +		states are shown in brackets.  The active state(s) can be written
+>> +		by echoing a space or comma separated string of states to this
+>> +		attribute.  For example:
+>> +
+>> +		# echo "ok locate" >/sys/class/leds/0000:88:00.0::drive_status/states
+>> +		# cat /sys/class/leds/0000:88:00.0::drive_status/states
+>> +		[ok] [locate] failed rebuild pfa hotspare ica ifa invalid disabled
+>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+>> index 0c473d75e625..f4acf1ad0fb5 100644
+>> --- a/drivers/pci/Kconfig
+>> +++ b/drivers/pci/Kconfig
+>> @@ -190,6 +190,18 @@ config PCI_HYPERV
+>>  	  The PCI device frontend driver allows the kernel to import arbitrary
+>>  	  PCI devices from a PCI backend to support PCI driver domains.
+>>  
+>> +config PCIE_SSD_LEDS
+>> +	tristate "PCIe SSD status LED support"
+>> +	depends on ACPI && NEW_LEDS
+> 
+> I expect that should be LEDS_CLASS instead of NEW_LEDS.
+> Did you test it with NEW_LEDS=y and LEDS_CLASS not set?
+> 
 
-I think the principle can be summarized with "keep the VM _running, if you can
-handle the misbehaviour (possibly, warning on "something wrong/unexpected just
-happened"); crash, otherwise".
+ERROR: modpost: "led_classdev_register_ext" [drivers/pci/pcie-ssd-leds.ko] undefined!
+ERROR: modpost: "led_classdev_unregister" [drivers/pci/pcie-ssd-leds.ko] undefined!
 
-Of course, this is just a principle: the exact meaning of that 'handle' should
-be leverage case by case (which I admittedly haven't here); I'm thinking, e.g.,
-at corresponding complexity/performance impacts and risks of 'mis-assessments'.
+Yes, just change it to depends on LEDS_CLASS instead.
 
-Thanks,
-  Andrea
+> 
+> [adding Pavel and linux-leds m.l. for other review]
+> 
+>> +	help
+>> +	  Driver for PCIe SSD status LED management as described in a PCI
+>> +	  Firmware Specification, Revision 3.2 ECN.
+>> +
+>> +	  When enabled, an LED interface will be created for each PCIe device
+>> +	  that has the ACPI method described in the referenced specification,
+>> +	  to allow the device status LEDs for that PCIe device (presumably a
+>> +	  solid state storage device or its slot) to be seen and controlled.
+>> +
+>>  choice
+>>  	prompt "PCI Express hierarchy optimization setting"
+>>  	default PCIE_BUS_DEFAULT
+> 
+> thanks.
+> 
+
+
+-- 
+~Randy
+
