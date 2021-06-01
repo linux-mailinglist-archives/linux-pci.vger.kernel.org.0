@@ -2,94 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B91397453
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 15:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F336397486
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 15:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234226AbhFANec (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 09:34:32 -0400
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:44780 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234173AbhFANeN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 09:34:13 -0400
-Received: by mail-ot1-f53.google.com with SMTP id r26-20020a056830121ab02902a5ff1c9b81so14105469otp.11;
-        Tue, 01 Jun 2021 06:32:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=9tCAXE4nddFK2BiC21CgcfG97csZj4okHM3YUAOIflw=;
-        b=TWmE6CMHWWKFuADqKkhylkWCm9UpIGOZjXhZyJE5ZxmR8xzn0SKU7KQgxup7okfn2b
-         8beQjKyrGp2ukij+gSP0nKsGbjbgV8PULnrCJbAbAOZwV2psFS/iNyDgS2lOfkE+O4/i
-         8MGB2QSKGm39kDQd5mXtI3axIHviL3aWASYMYkJe7AFNNQW8a25rGBREBdso+DG39qi8
-         EKrBrrqYpePtKSP5OLztP4DU725o2u0S1kzi0nT8wcY5XiN7PNjGZeYx9CrKUDXaTNkl
-         1wjDt9+l7WQRwpUD9wJ9feDJEN0YzPt1nzgMhYIXWzG0S6OZJooVxlwPhZSObMvOacJC
-         pplg==
-X-Gm-Message-State: AOAM532uSg2RdZykj0UWFxl4ZzmkW6iFJhb/y288jUyXvX+W4C3IB64o
-        aIhhcGKAUwAjO7xuo4911g==
-X-Google-Smtp-Source: ABdhPJyjdjQCQJXmoGhdiwEVbUBLVuDThJ17J7LSt6xuCmDjOO9EOIYe5Sjw4mCZXxRRwNqcn8BBxw==
-X-Received: by 2002:a9d:71da:: with SMTP id z26mr22095367otj.41.1622554350725;
-        Tue, 01 Jun 2021 06:32:30 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l128sm3436502oif.16.2021.06.01.06.32.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jun 2021 06:32:28 -0700 (PDT)
-Received: (nullmailer pid 242361 invoked by uid 1000);
-        Tue, 01 Jun 2021 13:32:10 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Hector Martin <marcan@marcan.st>, robin.murphy@arm.com,
-        devicetree@vger.kernel.org, Mark Kettenis <kettenis@openbsd.org>,
-        maz@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20210530224404.95917-2-mark.kettenis@xs4all.nl>
-References: <20210530224404.95917-1-mark.kettenis@xs4all.nl> <20210530224404.95917-2-mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
-Date:   Tue, 01 Jun 2021 08:32:10 -0500
-Message-Id: <1622554330.029938.242360.nullmailer@robh.at.kernel.org>
+        id S233797AbhFANse (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 09:48:34 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:38333 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233584AbhFANsd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 09:48:33 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]) by
+ mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1McpaE-1lESnR1NXm-00ZxC2 for <linux-pci@vger.kernel.org>; Tue, 01 Jun 2021
+ 15:46:51 +0200
+Received: by mail-wm1-f54.google.com with SMTP id l11-20020a05600c4f0bb029017a7cd488f5so1976064wmq.0
+        for <linux-pci@vger.kernel.org>; Tue, 01 Jun 2021 06:46:51 -0700 (PDT)
+X-Gm-Message-State: AOAM533KQNjQkYF8XJFeak6Porq5CZPHLI8NEP4ItexEw2RNZcpaMUF8
+        gBBUoZ88KqxyvMB7TxdJlYz8mVd0gVWiDuuYM8s=
+X-Google-Smtp-Source: ABdhPJx6u4miI+578Nb8PF2/rgMeGb/TbM4aNfInTgJlC95cjYtIvQpxtS59pDl2y93JkahgF51uukN9/QcUB14Zmi4=
+X-Received: by 2002:a7b:c849:: with SMTP id c9mr5103wml.84.1622555211018; Tue,
+ 01 Jun 2021 06:46:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210601114301.2685875-1-linus.walleij@linaro.org>
+In-Reply-To: <20210601114301.2685875-1-linus.walleij@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Jun 2021 15:45:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a26kU6W_JK6NmQtCPRWrv12-pYtTLUP3xcE5fNqK5oW3Q@mail.gmail.com>
+Message-ID: <CAK8P3a26kU6W_JK6NmQtCPRWrv12-pYtTLUP3xcE5fNqK5oW3Q@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: ixp4xx: Add a new driver for IXP4xx
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        Zoltan HERPAI <wigyori@uid0.hu>,
+        Raylynn Knight <rayknight@me.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:PN2n/OJ1YJe4ntr6iv7QJL2id/xjiKZQAShrZ3mfIzc7QSXDLqA
+ MBnuux89ynXuNCrzeg2MKdO8z7T1PD3eOFbt7Rh8APEhOeA9vrcRG6UW9caHsUa7a2H+TYH
+ FS8FdELQSP51kkYKGJGFdrgjz+s1s9QsyPshT8vEQu3GPA03sSuZ+2AdAxsNSGdP3ZlFB7/
+ NIlRl+pDSdu1zsi1IH5dA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hfiglnce4og=:c1h+Fz9a9yZWT3NlpgPfw6
+ 8hnwmJUHPsm6/FmYszdp27ldyROLKdg5Imk0VrkV3rzp52zGM2nA7htI2R/ohyq6C+Gq8U9jE
+ Kk6Xa/4P45SegZdaK7L8MY34CzT7eVsL26VVNnDuvdIhh0I85zWjloMe0uU1Jgo8TpLWthg8T
+ rPe3u0n8mxTP7mcdcfptUyeDkNtcaxaOPi4Ksq6ecKlVuizwl3OraA4lGEA141KRCwSzrzKOv
+ 1VydYbtX9AGEBT1BqkksINisdaOL5md3jUxM2h2CEQO/kZjeAlReoOHG58XtnLPpeM6VKpmoL
+ xu/hwF1lbfcKjM+wtLSWUbRHGsuvVTJ1uIPJc2ZhDVVFxr+cohAZ04e36eX+CCHdr/BTdYgcr
+ HPaTbOPQPASidEl1Y3OzcUHNGJ5PmI5umFuFNTUTVSOgkgH+rSXSDITskTaMToX0ujuWRdd9b
+ XWXRAOnixbRaC3P6uhNo/09/MVWRRTys76MMJpeJ0ZgQHhLtiZSCOpHHHyTukgn+ErX9g9Ogd
+ yGqouj5KfoHJWjk4mUGfAEgPbPx6//z615z84MzEf9+iOKVgdqHx6QdvvphyJWInWX3UQdoUJ
+ JXLW1DdBpvazmVg9SXIbiCLyMC0QStXplhI+WummzOeCjLPnxVvfPjYEXdIFCoi5Akm72T15u
+ GKiA=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 31 May 2021 00:44:00 +0200, Mark Kettenis wrote:
-> From: Mark Kettenis <kettenis@openbsd.org>
-> 
-> The Apple PCIe host controller is a PCIe host controller with
-> multiple root ports present in Apple ARM SoC platforms, including
-> various iPhone and iPad devices and the "Apple Silicon" Macs.
-> 
-> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> ---
->  .../devicetree/bindings/pci/apple,pcie.yaml   | 167 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 168 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> 
+> +static int ixp4xx_pci_read(struct ixp4xx_pci *p, u32 addr, u32 cmd, u32 *data)
+> +{
+> +       unsigned long flags;
+> +       int ret;
+> +
+> +       raw_spin_lock_irqsave(&p->lock, flags);
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+You should not need an extra spinlock on arm, as CONFIG_PCI_LOCKLESS_CONFIG
+is not set here.
 
-yamllint warnings/errors:
+> +
+> +/*
+> + * This driver needs to be a builtin module with suppressed bind
+> + * attributes since the probe() is initializing a hard exception
+> + * handler and this can only be done from __init-tagged code
+> + * sections. This module cannot be removed and inserted at all.
+> + */
+> +static struct platform_driver ixp4xx_pci_driver = {
+> +       .driver = {
+> +               .name = "ixp4xx-pci",
+> +               .suppress_bind_attrs = true,
+> +               .of_match_table = of_match_ptr(ixp4xx_pci_of_match),
+> +       },
+> +};
+> +/*
+> + * This is the only way to have an __init tagged probe that does
+> + * not cause link errors.
+> + */
+> +builtin_platform_driver_probe(ixp4xx_pci_driver, ixp4xx_pci_probe);
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pci/apple,pcie.example.dts:20:18: fatal error: dt-bindings/pinctrl/apple.h: No such file or directory
-   20 |         #include <dt-bindings/pinctrl/apple.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/pci/apple,pcie.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1416: dt_binding_check] Error 2
+I guess you could install the fault handler from a module init
+function and at least allow unbind, or possibly forced module removal
+(which would leave an invalid pointer in the fault handler until it
+is loaded again).
 
-See https://patchwork.ozlabs.org/patch/1485507
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+         Arnd
