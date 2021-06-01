@@ -2,186 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36AE6396FCB
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 11:03:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AF98397256
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jun 2021 13:28:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233404AbhFAJFS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 1 Jun 2021 05:05:18 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:54700 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232869AbhFAJFR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 05:05:17 -0400
-Received: from [77.244.183.192] (port=62922 helo=[192.168.178.41])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1lo0JD-000FyI-5R; Tue, 01 Jun 2021 11:03:35 +0200
-Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20210531090540.2663171-1-luca@lucaceresoli.net>
- <20210531133211.llyiq3jcfy25tmz4@pali>
- <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
- <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e1e09f57-2504-6e46-ebd6-61947e0a195c@lucaceresoli.net>
-Date:   Tue, 1 Jun 2021 11:03:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S233627AbhFALaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 07:30:06 -0400
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:38678 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230288AbhFALaG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Jun 2021 07:30:06 -0400
+Received: by mail-wr1-f46.google.com with SMTP id j14so13897055wrq.5;
+        Tue, 01 Jun 2021 04:28:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HAFqZJJNfiC2AGdxA4gbkC1Qg+KvNCEqsSjmBVkFjH0=;
+        b=HfuO5MCXgvAbV7MOMZkdWMS1Szy8LhbEfuEh1DvRd/WJXNx07sNayx9K0vU4MJ1ucX
+         GogIsPU0DILCwWAFJD3Mh7Wy9CIgaxm4ozUMk+Yy4HSIgzynnEwQ1H27VhLeOvZrGHXX
+         vTKXIHB8Qj4lI5ILNesXbSHT3QfVMa6RWy/G1VjxX0Ee7LaZUa/KXBXIiu9NQUMZ5NIF
+         7N2nrMVZ9RdOac2PU0sNFMfpjk32+q4GTLJYQVH94wjEOXFJ8zMomMLPn99mi0Aodq7O
+         vuL3xZ5LdPLQrclxohakP7ibUtc0AQiVHYmg3oxmiJM6ufuwYAb/P2RiKsJtUupqtbK9
+         0VYg==
+X-Gm-Message-State: AOAM531TDIMCugzZ8U3fR+l9eztGbSyN5mX7W/k70jhZtasIwrWsJchq
+        UJ2QFVmlWgWrGLXVzPMfwbE=
+X-Google-Smtp-Source: ABdhPJzSJFaWOyQO59mkgqVzre/9t0p9NiapOKwk/5uV6uk+H29hMEjZJWzfGWuZPiUwRs81xnoi4Q==
+X-Received: by 2002:a5d:6382:: with SMTP id p2mr10176931wru.338.1622546903114;
+        Tue, 01 Jun 2021 04:28:23 -0700 (PDT)
+Received: from rocinante.localdomain ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id o3sm2917179wrm.78.2021.06.01.04.28.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jun 2021 04:28:22 -0700 (PDT)
+Date:   Tue, 1 Jun 2021 13:28:20 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Disallow retraining link for Atheros chips on
+ non-Gen1 PCIe bridges
+Message-ID: <20210601112820.GA189305@rocinante.localdomain>
+References: <20210326124326.21163-1-pali@kernel.org>
+ <20210505163357.16012-1-pali@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: it-IT
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210505163357.16012-1-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+Hi Pali,
 
-On 31/05/21 18:00, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 31/05/21 7:24 pm, Luca Ceresoli wrote:
->> Hi Pali,
->>
->> On 31/05/21 15:32, Pali Rohár wrote:
->>> On Monday 31 May 2021 11:05:40 Luca Ceresoli wrote:
->>>> The PCIe PERSTn reset pin is active low and should be asserted, then
->>>> deasserted.
->>>>
->>>> The current implementation only drives the pin once in "HIGH" position,
->>>> thus presumably it was intended to deassert the pin. This has two problems:
->>>>
->>>>   1) it assumes the pin was asserted by other means before loading the
->>>>      driver
->>>>   2) it has the wrong polarity, since "HIGH" means "active", and the pin is
->>>>      presumably configured as active low coherently with the PCIe
->>>>      convention, thus it is driven physically to 0, keeping the device
->>>>      under reset unless the pin is configured as active high.
->>>>
->>>> Fix both problems by:
->>>>
->>>>   1) keeping devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH) as is, but
->>>>      assuming the pin is correctly configured as "active low" this now
->>>>      becomes a reset assertion
->>>>   2) adding gpiod_set_value(reset, 0) after a delay to deassert reset
->>>>
->>>> Fixes: 78bdcad05ea1 ("PCI: dra7xx: Add support to make GPIO drive PERST# line")
->>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>>>
->>>> ---
->>>>
->>>> Changes v1 -> v2:
->>>>  - No changes to the patch
->>>>  - Reword commit message according to suggestions from Bjorn Helgaas (from
->>>>    another patchset)
->>>>  - Add Fixes: tag
->>>> ---
->>>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
->>>>  1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
->>>> index cb5d4c245ff6..11f392b7a9a2 100644
->>>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
->>>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
->>>> @@ -801,6 +801,8 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
->>>>  		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
->>>>  		goto err_gpio;
->>>>  	}
->>>> +	usleep_range(1000, 2000);
->>>
->>> Hello! Just a note that this is again a new code pattern in another
->>> driver for different wait value of PCIe Warm Reset timeout. I sent email
->>> about these issues:
->>> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
->>>
->>> Luca, how did you choose value 1000-2000 us? Do you have some reference
->>> or specification which says that this value needs to be used?
->>
->> Sadly I haven't access to the PCIe specification.
->>
->> I'd be very happy to know what a correct value should be and update my
->> patch.
-> 
-> I had given the timing mentioned in the specification here
-> https://lore.kernel.org/r/023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com
-> 
-> The PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION defines the Power
-> Sequencing and Reset Signal Timings in Table 2-4. Please also refer Figure
-> 2-10: Power Up of the CEM.
-> 
-> ╔═════════════╤══════════════════════════════════════╤═════╤═════╤═══════╗
-> ║ Symbol      │ Parameter                            │ Min │ Max │ Units ║
-> ╠═════════════╪══════════════════════════════════════╪═════╪═════╪═══════╣
-> ║ T PVPERL    │ Power stable to PERST# inactive      │ 100 │     │ ms    ║
-> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-> ║ T PERST-CLK │ REFCLK stable before PERST# inactive │ 100 │     │ μs    ║
-> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-> ║ T PERST     │ PERST# active time                   │ 100 │     │ μs    ║
-> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-> ║ T FAIL      │ Power level invalid to PERST# active │     │ 500 │ ns    ║
-> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
-> ║ T WKRF      │ WAKE# rise – fall time               │     │ 100 │ ns    ║
-> ╚═════════════╧══════════════════════════════════════╧═════╧═════╧═══════╝
-> 
-> The de-assertion of #PERST is w.r.t both power stable and refclk stable.
-> 
-> I'm yet to validate this patch, but IIRC devm_gpiod_get_optional(dev,
-> NULL, GPIOD_OUT_HIGH) will already de-assert the PERST line. 
+Thank you for working on this and fixing the problem, and also thank you
+goes to Marek and Toke for testing!  Much appreciated!
 
-Perhaps in all the cases you faced, but GPIOD_OUT_HIGH [0] really means
-"active", not "electrically high", and here we want reset to be
-deasserted (=deactivated), not asserted (=activated).
+[...]
+> - AR9287 chip throws also Link Down and Link Up events, also has
+>   accessible config space containing correct values. But ath9k driver
+>   fails to initialize card from this state as it is unable to access HW
+>   registers. This also indicates that the chip iself is not able to read
 
-I guess it works when the GPIO drives PERSTn without inversion (no NOT
-gates or an even number of NOT gates) _and_ device tree does specify the
-GPIO as active high (which is incorrect: PERSTn is active low).
+A typo here - it would be "itself" in the above.  But this is not worth
+sending v4, and I am sure that Bjorn or Lorenzo could fix this in-place
+when merging.
 
-> Please note
-> the board here can have various combinations of NOT gate before the
-> gpio
-> line is actually connected to the connector.
+[...]
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reported-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Tested-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Tested-by: Marek Behún <kabel@kernel.org>
+[...]
 
-Exactly for this reason a portable driver must never drive the signal
-"electrically low" or "electrically high". That's why with my patch I
-propose to give the proper interpretation [1] to GPIOD_OUT_HIGH, i.e.
-"active", i.e. "reset asserted". Device tree will describe if active
-means electrically low (no NOT gates between GPIO pin and device PERSTn
-pin) or high (odd number of NOT gates).
+Thank you everyone!
 
-Additionally, as per patch description, even in the cases where the
-driver deasserts the reset, it does not assert it. Should the signal be
-asserted before dra7xx_pcie_probe(), devm_gpiod_get_optional(dev, NULL,
-GPIOD_OUT_HIGH) would not move the line and thus would not reset the device.
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
-The only problem I can imagine with my patch is with existing code. If
-you have a board with the reset GPIO described as active high in DT
-while it is active low (no/even NOR gates on board), then you should
-apply this patch _and_ fix the board device tree.
-
-I hope the intent of the patch is clearer now.
-
-[0]
-https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html#obtaining-and-disposing-gpios
-[1]
-https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html#the-active-low-and-open-drain-semantics
-
--- 
-Luca
-
+	Krzysztof
