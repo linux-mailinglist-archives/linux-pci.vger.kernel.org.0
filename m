@@ -2,66 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9D9A39809C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 07:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77939398295
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 09:05:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbhFBFYb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Jun 2021 01:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229921AbhFBFYb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Jun 2021 01:24:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5BA8E61360;
-        Wed,  2 Jun 2021 05:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622611369;
-        bh=TLTTUMCFST1h+Pt6QF1cF1sMd5HXYkgydjNTAYfDFZw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GZFlyYfkAcioeS3IFO3xH2H5dxyfBUvBgfJm5wTKiT584+47CDPEwfK9PqYXU9dop
-         Rfwnb0842L7AE+v1Mu0wzxSsOTZ6BIux7GJsDjrbght+wd0TcBd1Z9zKyQzGLgBnWb
-         WIzNBu+ZqDnJrHCAXQmZfTFunVF1DGo05kZyYxX2kEMxQGWqCrfnxrS2q7zIUEW/Nt
-         vb6zAomRdLaWBXGK8fEypCgrl5r6MGfTl5I4e/V5cReftP3G4Zdt4vkiNviNXiUtq3
-         e3o0qWx8rLWpUsTwuqEgJwiwhKepkP+gBKgYooBssZSKEp4mdHPG5WyRyYFo0zldEg
-         MQSV5H9n+xfSw==
-Date:   Wed, 2 Jun 2021 08:22:45 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Michael Chan <michael.chan@broadcom.com>
-Cc:     davem@davemloft.net, bhelgaas@google.com, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, kuba@kernel.org, gospo@broadcom.com,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-Subject: Re: [PATCH] pci: Add ACS quirk for Broadcom NIC.
-Message-ID: <YLcVpVXN4LHxCEWt@unreal>
-References: <1621645997-16251-1-git-send-email-michael.chan@broadcom.com>
+        id S230204AbhFBHHW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Jun 2021 03:07:22 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:34981 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230156AbhFBHHW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Jun 2021 03:07:22 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 05A9E102F019C;
+        Wed,  2 Jun 2021 09:05:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id BEF893D1E91; Wed,  2 Jun 2021 09:05:35 +0200 (CEST)
+Date:   Wed, 2 Jun 2021 09:05:35 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>, kw@linux.com
+Subject: Re: [PATCH v2] Add support for PCIe SSD status LED management
+Message-ID: <20210602070535.GA16825@wunner.de>
+References: <20210601203820.3647-1-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1621645997-16251-1-git-send-email-michael.chan@broadcom.com>
+In-Reply-To: <20210601203820.3647-1-stuart.w.hayes@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 21, 2021 at 09:13:17PM -0400, Michael Chan wrote:
-> From: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-> 
-> Some Broadcom NICs such as the BCM57414 do not advertise PCI-ACS
-> capability. All functions on such devices are placed under the same
-> IOMMU group. Attaching a single PF to a userspace application like
-> OVS-DPDK using VFIO is not possible, since not all functions in the
-> IOMMU group are bound to VFIO.
-> 
-> Since peer-to-peer transactions are not possible between PFs on these
-> devices, it is safe to treat them as fully isolated even though the ACS
-> capability is not advertised. Fix this issue by adding a PCI quirk for
-> this chip.
-> 
-> Signed-off-by: Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>
-> Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-> ---
->  drivers/pci/quirks.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Tue, Jun 01, 2021 at 04:38:20PM -0400, Stuart Hayes wrote:
+> --- /dev/null
+> +++ b/drivers/pci/pcie-ssd-leds.c
 
-Small nitpick, please don't put dot in the end of git commit subject.
-[PATCH] pci: Add ACS quirk for Broadcom NIC.
-                                          ^^^^
+Since this is a PCIe-specific feature, it should probably live in the
+pcie/ subdirectory.  Or in drivers/nvme/.
 
-Thanks
+
+> +static bool pdev_has_dsm(struct pci_dev *pdev)
+> +{
+> +	acpi_handle handle;
+> +
+> +	handle = ACPI_HANDLE(&pdev->dev);
+> +	if (!handle)
+> +		return false;
+> +
+> +	return acpi_check_dsm(handle, &pcie_ssdleds_dsm_guid, 0x1,
+> +			      1 << GET_SUPPORTED_STATES_DSM ||
+> +			      1 << GET_STATE_DSM ||
+> +			      1 << SET_STATE_DSM);
+> +}
+
+Would it be possible to bail out early if pdev->class !=
+PCI_CLASS_STORAGE_EXPRESS (or something like that), thus avoiding
+the overhead of an ACPI namespace search for *every* PCI device?
+
+Thanks,
+
+Lukas
