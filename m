@@ -2,91 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50F19398490
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 10:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9DF23984DA
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 11:05:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232845AbhFBIxC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Jun 2021 04:53:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29864 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232840AbhFBIxC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Jun 2021 04:53:02 -0400
-IronPort-SDR: Gq9nV6jLliQbKpXHOxdKqgqhTV9v4+mdayAw9/LBf7OjSWOFVpEN7xKSvFcHPjDT/DTKRE7UxM
- 9J3QIYLp/1xQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10002"; a="201881011"
-X-IronPort-AV: E=Sophos;i="5.83,241,1616482800"; 
-   d="scan'208";a="201881011"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 01:51:18 -0700
-IronPort-SDR: 7O3HAkimY4ZMDtM0oGELnrPG3JJ6fXO1KDNJb2CPEYDECtirmOnx2RVej2XYigb/qgbPgmuRq5
- fuuHuCOm5+JA==
-X-IronPort-AV: E=Sophos;i="5.83,241,1616482800"; 
-   d="scan'208";a="438328450"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 01:51:13 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1loMak-00GfA7-SC; Wed, 02 Jun 2021 11:51:10 +0300
-Date:   Wed, 2 Jun 2021 11:51:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, corbet@lwn.net,
-        jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
-        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
-        linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Gordeev <agordeev@redhat.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v5 1/4] PCI: Introduce pcim_alloc_irq_vectors()
-Message-ID: <YLdGfmrk6+FbTbNN@smile.fi.intel.com>
-References: <20210226155056.1068534-2-zhengdejin5@gmail.com>
- <20210323224710.GA610170@bjorn-Precision-5520>
- <20210505162716.GB1851@nuc8i5>
+        id S230093AbhFBJGt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Jun 2021 05:06:49 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51318 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229754AbhFBJGt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Jun 2021 05:06:49 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4AF621C0B77; Wed,  2 Jun 2021 11:05:05 +0200 (CEST)
+Date:   Wed, 2 Jun 2021 11:05:04 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     stuart hayes <stuart.w.hayes@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>, kw@linux.com,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH v2] Add support for PCIe SSD status LED management
+Message-ID: <20210602090504.GA10900@amd>
+References: <20210601203820.3647-1-stuart.w.hayes@gmail.com>
+ <3d1272b8-4edc-f2b1-85ea-f5cea65b4871@infradead.org>
+ <20210601223812.GA5128@amd>
+ <6ee11975-fad7-1a82-f7f3-279ebd4f67cb@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
 Content-Disposition: inline
-In-Reply-To: <20210505162716.GB1851@nuc8i5>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <6ee11975-fad7-1a82-f7f3-279ebd4f67cb@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 06, 2021 at 12:27:16AM +0800, Dejin Zheng wrote:
-> On Tue, Mar 23, 2021 at 05:47:10PM -0500, Bjorn Helgaas wrote:
-> > [+cc Christoph, Thomas, Alexander, in case you're interested]
-> > [+cc Jonathan, Kurt, Logan: vmd.c and switchtec.c use managed resources
-> > and pci_alloc_irq_vectors()]
 
-> > On Fri, Feb 26, 2021 at 11:50:53PM +0800, Dejin Zheng wrote:
-> > > Introduce pcim_alloc_irq_vectors(), a device-managed version of
-> > > pci_alloc_irq_vectors(). Introducing this function can simplify
-> > > the error handling path in many drivers.
-> > > 
-> > > And use pci_free_irq_vectors() to replace some code in pcim_release(),
-> > > they are equivalent, and no functional change. It is more explicit
-> > > that pcim_alloc_irq_vectors() is a device-managed function.
-> > > 
-> > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > 
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Let me know if you'd like me to take the series.
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> >>>  [ok] [locate] failed rebuild pfa hotspare ica ifa invalid disabled
 > >
-> Hi Bjorn,
-> 
-> These patches are still invisible on the mainline, could you help me to
-> take it? Thanks very much!
+> >So what does this do? Turns the LED on if driver is in "ok" or
+> >"locate" states?
+> >
+>=20
+> This would cause the system to somehow show the user that that this drive
+> (or drive slot) is the one that it wants a person to be able to physically
+> locate (possibly by flashing a blue LED on/near the drive), and also that
+> the drive is OK.  It would presumably do that by lighting the LEDs on/near
+> the drive with certain colors and/or flashing patterns, though it could, =
+in
+> theory, put "OK" in an LCD on the drive slot.  How the states are display=
+ed
+> to the user is beyond the scope of the specs.
+>=20
+> (The _DSM and NPEM specs provide for a way to control status LEDs on a dr=
+ive
+> or drive slot.  Typically drives will have 2 or 3 LEDs that are illuminat=
+ed
+> in different colors or flashing patterns to indicate various states (like
+> those listed in IBPI / SFF-8489), though the _DSM / NPEM specs do not
+> specify how the states are displayed.)
 
-I guess you have to rebase them on top of the latest rc (or PCI for-next) and
-send with a cover letter.
+Well, LED subsystem expects to know how many LEDs are there and what
+the LEDs are, and expects individual control over them.
 
--- 
-With Best Regards,
-Andy Shevchenko
+"2 or 3 LEDs with unknown patterns", or LCD display is outside of scope
+of LED subsystem, so this should be independend.
 
+Best regards,
+								Pavel
+--=20
+http://www.livejournal.com/~pavelmachek
 
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAmC3Sb8ACgkQMOfwapXb+vLO/wCfXD0QnFJOu1pLpdrkK39BvJfO
++ecAnA1cgKwSxSnTJB7nhaGBxQ8O4Ion
+=ZKpO
+-----END PGP SIGNATURE-----
+
+--azLHFNyN32YCQGCU--
