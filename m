@@ -2,361 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 948E1397D69
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 02:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DCEB397E98
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 04:13:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235217AbhFBACV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 20:02:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235200AbhFBACU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Jun 2021 20:02:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3748D61351;
-        Wed,  2 Jun 2021 00:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622592038;
-        bh=rVK3YUCtR0dajL4CU3IwF/FVLtLTy2UCEautu/RPTfo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vHZkH7U2/ZS4zaG1BaZontROp5lFSo4/m2MWu1QhkForJ5d9A5s83AeK3Ss0lDrCH
-         3+5qz6ti7aicunpRYO92CeSs1fenBUVAdK3DKVqPFYcnqYSmjErbWRP4U/UbGb+g77
-         0gIIVLcbWgedd2XPlWmRORzl8S/Xinx9B+6hcYZRlvm0ECXNjtEuJZd++pDPcsOoag
-         4k2cVYKA04DKWuTHBnuFnbyQNh1LJ/OLFd8rhwnSj8PVHNegCXA+S9jHOuZupE1n1Y
-         IYicthTyqgrbe4pUuVajDfaPDJn0GnOti2GIk9O/cx4wQbjeTzCQxEN3DPImnRraa6
-         qEWLfhQLRt4Sw==
-Date:   Tue, 1 Jun 2021 19:00:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Disallow retraining link for Atheros chips on
- non-Gen1 PCIe bridges
-Message-ID: <20210602000036.GA1973950@bjorn-Precision-5520>
+        id S229789AbhFBCO5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 22:14:57 -0400
+Received: from mail-co1nam11on2052.outbound.protection.outlook.com ([40.107.220.52]:15457
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229751AbhFBCO5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Jun 2021 22:14:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ccfxeq0Cr30isF+mJuXfJSAOTbp4gaF5QMft3EFd0tAyNksFBWi0dX1HzlPg2Y6lIimceAcKGyZLgmd+vncEDNB6UQrXbV8+dx8ZOmzAmcl7vVBAA6U+PIOBDawgx/JapYlE2UdNVPb5TRvkdjKzyc+89/APH94Zu9k+jricRauhoEkGiapjjiGaEqemteWz7WBdZp6BgqjmeVHNIn82YhmU/EIXCn0QKDzgNcpMk5t+1/UPT+8DxUrb3jKugtQRkKXFVFhm8uniWX4CsJPhy2VoSoHHGMKgqaj3076rMakhsYBpCOoR/ihwELfj9Eo0MEHmKEV/QeIjwdnVAEsNeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhK9XcppwllcrP/m4FOypTZp0a8RnOOWayCNsecIlOc=;
+ b=nher4WgDtvDKGKpBW+5GQdwLoPlIL7FbOpuEPpZXf1WBa4MM5Q6m8l5ha9DcbkSSgwCXXYBkBy4PO3SeFKtMaWM8MNpf7z19mal8/Bu/1cDU8yAXflMVvnM+amFErpzoVyG7ogI52sAJukV+mV6s5CYsnkxCc/rWm1wgnwWL0ZDc3xNUxpa2lY/K+uXA+lNpeJs78BCOlT4dj1D8+LHdLq/OSQvpTHlZcHSRHiFDsTJtoV9GuF8gzf3eDJMmd7eKF5bpJ7Xt1dYRBPjfur+Xk+unb5PWB0Cv/bmExqQbl2qE3Q38l2Llu1vkSvokfdP+0BXo1umYpEh2Tgb/DfSXyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BhK9XcppwllcrP/m4FOypTZp0a8RnOOWayCNsecIlOc=;
+ b=nHYUMPt4gQcDU3YWmHK62NimNYTIi8Xws4IBQKZFrhd1ZwdN1AgKc3ZESvr03nsZN3QKWaJ0InLxEb1nrPaefE8ps5/GPb/d0TK5H53+yJ+3Db3kQEiuhJZGQWCrsTSDGJ5Z3VLspTom/aJxDLg+dSBvxfS9PLHKtNqp+D4Ugrg=
+Received: from MWHPR22CA0052.namprd22.prod.outlook.com (2603:10b6:300:12a::14)
+ by BN6PR12MB1666.namprd12.prod.outlook.com (2603:10b6:405:3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20; Wed, 2 Jun
+ 2021 02:13:14 +0000
+Received: from CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:12a:cafe::39) by MWHPR22CA0052.outlook.office365.com
+ (2603:10b6:300:12a::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
+ Transport; Wed, 2 Jun 2021 02:13:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT039.mail.protection.outlook.com (10.13.174.110) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4150.30 via Frontend Transport; Wed, 2 Jun 2021 02:13:13 +0000
+Received: from equan-buildpc.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 1 Jun 2021
+ 21:13:11 -0500
+From:   Evan Quan <evan.quan@amd.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     <kw@linux.com>, <Alexander.Deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS support
+Date:   Wed, 2 Jun 2021 10:12:55 +0800
+Message-ID: <20210602021255.939090-1-evan.quan@amd.com>
+X-Mailer: git-send-email 2.29.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210601211839.b2jlspy3x6lmt4by@pali>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 90e9321d-eacc-458e-3ab2-08d9256bfa1e
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1666:
+X-Microsoft-Antispam-PRVS: <BN6PR12MB16669FD6CD82B65A1D2FF634E43D9@BN6PR12MB1666.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JdijxgUH9/R6rGEtRQS7UFwp8Dz7qPaaN+w4MXz+GrRA4MXMyp0yf8Cep4aDWtJ/tNJLVVG2XUbAndMP2+vC7e0JWlEq2OyA6DYebrfiL5mwQakJ3em/T54CE2bVUQmqWPZmvDGT5hfL7K+Cs8/B6e6zFAi7Is/EMqByK1DdzthFgp6u/E29hcILR+mFR6MGYAKy+mUGetweDJbDeC7VrgBH0ThNChCvAqatQaedf/FASUvcPwxGh41Xq6CLOFmNijssL2RtFoF2ruF/N7bkgo9/idYSNGZyr7F4uJ4azU3MVmVQvgaT8WMF4ZzFMOYbHE2BMGEhphD/HoF/hKSosX+EI9dNw1+yqSvIBOI5c8h4voDk1sGf3PYkz2PETNTs1NPPcLForHOmwF2UBZxZh/Ym0Qbfq7+ewGkuy4n+8bYJ9V/iRGf78EqW+idRc3OibAueahsSPINewNpevLABQRPNNKD6lv1fuuOEemqYaFtEa8R4wteE8OEPowTN/EGg1i6OiDIaHaqcGPvHsBKWZ/Xban/4okrDo0fBFjyjANO/xOfR7ZWL4rvpRsXGBeCXkjPV6F/m7HJL7gnLrnjrRSF7xgAiDzEExQi3RxdHsckFUGsavIgbhQaSabijY6Lgn/4AWAdvUZk06tkluFgz0Fi+1JWOQG986moYT7NhC/NnrFA0x7+dhzVg9Gs7e1br
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(46966006)(36840700001)(336012)(6666004)(6916009)(186003)(478600001)(44832011)(70206006)(70586007)(82310400003)(2616005)(8936002)(81166007)(8676002)(66574015)(426003)(47076005)(7696005)(82740400003)(5660300002)(4326008)(26005)(36860700001)(36756003)(2906002)(16526019)(83380400001)(1076003)(86362001)(316002)(356005)(54906003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2021 02:13:13.6120
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90e9321d-eacc-458e-3ab2-08d9256bfa1e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1666
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 01, 2021 at 11:18:39PM +0200, Pali Roh·r wrote:
-> On Tuesday 01 June 2021 15:05:49 Bjorn Helgaas wrote:
-> > On Wed, May 05, 2021 at 06:33:57PM +0200, Pali Roh·r wrote:
-> > > Atheros AR9xxx and QCA9xxx chips have behaviour issues not only after a
-> > > bus reset, but also after doing retrain link, if PCIe bridge is not in
-> > > GEN1 mode (at 2.5 GT/s speed):
-> > > 
-> > > - QCA9880 and QCA9890 chips throw a Link Down event and completely
-> > >   disappear from the bus and their config space is not accessible
-> > >   afterwards.
-> > > 
-> > > - QCA9377 chip throws a Link Down event followed by Link Up event, the
-> > >   config space is accessible and PCI device ID is correct. But trying to
-> > >   access chip's I/O space causes Uncorrected (Non-Fatal) AER error,
-> > >   followed by Synchronous external abort 96000210 and Segmentation fault
-> > >   of insmod while loading ath10k_pci.ko module.
-> > > 
-> > > - AR9390 chip throws a Link Down event followed by Link Up event, config
-> > >   space is accessible, but contains nonsense values. PCI device ID is
-> > >   0xABCD which indicates HW bug that chip itself was not able to read
-> > >   values from internal EEPROM/OTP.
-> > > 
-> > > - AR9287 chip throws also Link Down and Link Up events, also has
-> > >   accessible config space containing correct values. But ath9k driver
-> > >   fails to initialize card from this state as it is unable to access HW
-> > >   registers. This also indicates that the chip iself is not able to read
-> > >   values from internal EEPROM/OTP.
-> > > 
-> > > These issues related to PCI device ID 0xABCD and to reading internal
-> > > EEPROM/OTP were previously discussed at ath9k-devel mailing list in
-> > > following thread:
-> > > 
-> > >   https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
-> > > 
-> > > After experiments we've come up with a solution: it seems that Retrain
-> > > link can be called only when using GEN1 PCIe bridge or when PCIe bridge
-> > > link speed is forced to 2.5 GT/s. Applying this workaround fixes all
-> > > mentioned cards.
-> > 
-> > I *assume* this means the device was running at > 2.5 GT/s in the
-> > first place,
-> 
-> No. All these Atheros chips are 2.5 GT/s only. It looks like that if
-> PCIe Bridge has initial value 5 GT/s (or higher) in PCI_EXP_LNKCAP2
-> register and link retraining is activated, something happen which cause
-> these Atheros chips to "crash". Looks like that Root Bridge tries to
-> change link speed from 2.5 GT/s to 5 GT/s (which is not supported by all
-> these Atheros chips).
+Unexpected GPU hang was observed during runpm stress test
+on 0x7341 rev 0x00. Further debugging shows broken ATS is
+related. Thus as a followup of commit 5e89cd303e3a ("PCI:
+Mark AMD Navi14 GPU rev 0xc5 ATS as broken"), we disable
+the ATS for the specific SKU also.
 
-Oh, perfect.  Then I guess all we need is to restrict these devices to
-2.5 GT/s.  And we can just ignore all my rambling about higher speeds
-below, so I'll elide them.
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
+---
+ChangeLog v2->v3:
+- further update for description part(suggested by Krzysztof)
+ChangeLog v1->v2:
+- cosmetic fix for description part(suggested by Krzysztof)
+---
+ drivers/pci/quirks.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > ...
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b7e19bbb901a..70803ad6d2ac 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5176,7 +5176,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+ static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
+ {
+ 	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
+-	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
++	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
++	    (pdev->device == 0x7341 && pdev->revision != 0x00))
+ 		return;
+ 
+ 	if (pdev->device == 0x15d8) {
+@@ -5203,6 +5204,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
+ /* AMD Navi14 dGPU */
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
+ /* AMD Raven platform iGPU */
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
+ #endif /* CONFIG_PCI_ATS */
+-- 
+2.29.0
 
-Except this:
-
-> > This patch implies that the hardware automatically trained to a
-> > higher rate after power-on (which I think is what PCIe hardware is
-> > *supposed* to do) and something prevents that from succeeding when
-> > we retrain, or maybe BIOS did something different than what Linux
-> > is doing, or ... something else?
-
-> Tested platforms was also without BIOS and without any other firmware
-> which touched PCIe.
-
-The fact that the link came up automatically without any firmware or
-software at all is very interesting.  The retrain path is actually
-different from a hardware point of view: the power-on path through
-LTSSM would normally be Detect, Polling, Configuration, L0; the
-retrain path would be L0, Recovery, L0.  So I guess it isn't *too*
-surprising that the power-on path could work even if the retrain path
-is broken.
-
-I wonder if setting, then clearing, the bridge's Link Disable bit
-would work, since that would start again with the LTSSM Detect state,
-just like power-on.  But I don't think that would help with this
-ASPM/Common Clock issue because I think the link disable would look
-like a hot reset to the endpoint, and it would clear the Common Clock
-Configuration bit.
-
-So backing up a loooong ways, how much value is there in doing this
-retrain at all?  AFAICT the only reason we do it is because we think
-the Common Clock Configuration is inconsistent, and we tried to fix
-something, and we have to retrain the link to get the devices to
-update their L0s and L1 exit latencies.  I guess it's the Slock Clock
-(PCI_EXP_LNKSTA_SLC) bits that determines all this, right?  Do you
-know those?
-
-I wonder if this could be restructured as a generic quirk in quirks.c
-that simply set the bridge's TLS to 2.5 GT/s during enumeration.  Or
-would the retrain fail even in that case?
-
-> > > +static int pcie_downgrade_link_to_gen1(struct pci_dev *parent)
-> > > +{
-> > > +	u16 reg16;
-> > > +	u32 reg32;
-> > > +	int ret;
-> > > +
-> > > +	/* Check if link is capable of higher speed than 2.5 GT/s */
-> > > +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &reg32);
-> > > +	if ((reg32 & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-> > > +		return 0;
-> > 
-> > I guess this means "if the link is already at 2.5 GT/s, no need to do
-> > anything."  Right?
-> 
-> PCI_EXP_LNKCAP_SLS is maximal supported speed by Bridge. So if bridge
-> does not support higher speed, we do not have to do anything.
-> 
-> > > +	/* Check if link speed can be downgraded to 2.5 GT/s */
-> > > +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &reg32);
-> > > +	if (!(reg32 & PCI_EXP_LNKCAP2_SLS_2_5GB)) {
-> > > +		pci_err(parent, "ASPM: Bridge does not support changing Link Speed to 2.5 GT/s\n");
-> > > +		return -EOPNOTSUPP;
-> > > +	}
-> > 
-> > Why is this check needed?  Per PCIe r5.0, sec 8.2.1, all devices must
-> > support 2.5 GT/s.
-> 
-> Because older PCIe devices does not have to support PCI_EXP_LNKCAP2
-> register (in which cause they returns zero). And this applies also for
-> pci-bridge-emul.c driver. So this check is needed at least for devices
-> which use pci-bridge-emul.c driver.
-
-Ugh.  So this depends on the fact that pcie_capability_read_dword()
-sets "*val = 0" if PCI_EXP_LNKCAP2 is not implemented.  I have a
-half-baked idea that we should be doing "*val = ~0" instead because
-that's what we normally get for *hardware* registers that are
-implemented.
-
-> > > +	/* Force link speed to 2.5 GT/s */
-> > > +	ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
-> > > +						 PCI_EXP_LNKCTL2_TLS,
-> > > +						 PCI_EXP_LNKCTL2_TLS_2_5GT);
-> > > +	if (!ret) {
-> > > +		/* Verify that new value was really set */
-> > > +		pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &reg16);
-> > > +		if ((reg16 & PCI_EXP_LNKCTL2_TLS) != PCI_EXP_LNKCTL2_TLS_2_5GT)
-> > > +			ret = -EINVAL;
-> > > +	}
-> > > +
-> > > +	if (ret) {
-> > > +		pci_err(parent, "ASPM: Changing Target Link Speed to 2.5 GT/s failed: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	pci_info(parent, "ASPM: Target Link Speed changed to 2.5 GT/s due to quirk\n");
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static bool pcie_retrain_link(struct pcie_link_state *link)
-> > >  {
-> > >  	struct pci_dev *parent = link->pdev;
-> > >  	unsigned long end_jiffies;
-> > >  	u16 reg16;
-> > >  
-> > > +	if ((link->downstream->dev_flags & PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1) &&
-> > > +	    pcie_downgrade_link_to_gen1(parent)) {
-> > 
-> > I assume (correct me if I'm wrong) that this would work equally well
-> > if we set the *endpoint's* target link speed to 2.5 GT/s instead of
-> > the upstream bridge's?
-> 
-> I think not. Issue is really when Bridge-end of the link supports higher
-> than 2.5 GT/s speed this end tries to increase speed. As device-end of
-> the link supports only 2.5 GT/s there is nothing to change to higher
-> speed from device-end point of view.
-
-Based on PCIe r5.0, sec 4.2.6, when the link is trained, both devices
-start at 2.5 GT/s.  Then they exchange TS Ordered Sets, which
-advertise all the data rates supported by each side.  After the link
-is operating in L0 at 2.5 GT/s, either side can initiate a change to
-the highest supported common data rate.
-
-A device can't initiate a change until it knows the rates supported by
-both sides.  So either:
-
-  - The bridge initiated a change because it knows *it* supports a
-    higher rate and the Atheros device incorrectly advertised a higher
-    rate), or 
-
-  - The Atheros device initiated a change because the bridge
-    advertised a higher rate and the Atheros device incorrectly thinks
-    that *it* supports a higher rate.
-
-Setting Target Link Speed in the bridge should prevent either case
-because it restricts the rates advertised by the bridge in its
-training sequences (per sec 7.5.3.19).
-
-Interesting -- also per 7.5.3.19, Target Link Speed is permitted to
-have no effect for Upstream Ports (like the one in the Atheros
-device).  Probably makes sense since that port is not reachable until
-the link is already operating.
-
-Bottom line, I think you do have to do this with the bridge, not the
-Atheros device.
-
-> > I think the log messages would make more sense
-> > then, since the problem is really with the endpoint, not the parent.
-> 
-> So... buggy is device (child) end of the link and only bridge (parent)
-> end of the link can workaround it. And if bridge end is not capable
-> (e.g. because of pci-bridge-emul.c) then it is problem of bridge
-> (parent) end.
-> 
-> > > +		pci_err(parent, "ASPM: Retrain Link at higher speed is disallowed by quirk\n");
-> > > +		return false;
-> > > +	}
-> > > +
-> > >  	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-> > >  	reg16 |= PCI_EXP_LNKCTL_RL;
-> > >  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 653660e3ba9e..4999ad9d08b8 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -3553,23 +3553,46 @@ static void mellanox_check_broken_intx_masking(struct pci_dev *pdev)
-> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_ANY_ID,
-> > >  			mellanox_check_broken_intx_masking);
-> > >  
-> > > -static void quirk_no_bus_reset(struct pci_dev *dev)
-> > > +static void quirk_no_bus_reset_and_no_retrain_link(struct pci_dev *dev)
-> > >  {
-> > > -	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-> > > +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET |
-> > > +			  PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1;
-> > >  }
-> > >  
-> > >  /*
-> > > - * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
-> > > + * Atheros AR9xxx and QCA9xxx chips do not behave after a bus reset and also
-> > > + * after retrain link when PCIe bridge is not in GEN1 mode at 2.5 GT/s speed.
-> > >   * The device will throw a Link Down error on AER-capable systems and
-> > >   * regardless of AER, config space of the device is never accessible again
-> > >   * and typically causes the system to hang or reset when access is attempted.
-> > > + * Or if config space is accessible again then it contains only dummy values
-> > > + * like fixed PCI device ID 0xABCD or values not initialized at all.
-> > > + * Retrain link can be called only when using GEN1 PCIe bridge or when
-> > > + * PCIe bridge has forced link speed to 2.5 GT/s via PCI_EXP_LNKCTL2 register.
-> > > + * To reset these cards it is required to do PCIe Warm Reset via PERST# pin.
-> > >   * https://lore.kernel.org/r/20140923210318.498dacbd@dualc.maya.org/
-> > > + * https://lore.kernel.org/r/87h7l8axqp.fsf@toke.dk/
-> > > + * https://www.mail-archive.com/ath9k-devel@lists.ath9k.org/msg07529.html
-> > >   */
-> > > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030, quirk_no_bus_reset);
-> > > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
-> > > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
-> > > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
-> > > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x002e,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0030,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0042,
-> > > +			 quirk_no_bus_reset_and_no_retrain_link);
-> > > +
-> > > +static void quirk_no_bus_reset(struct pci_dev *dev)
-> > > +{
-> > > +	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-> > > +}
-> > >  
-> > >  /*
-> > >   * Root port on some Cavium CN8xxx chips do not successfully complete a bus
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 86c799c97b77..fdbf7254e4ab 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> > >  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> > >  	/* Don't use Relaxed Ordering for TLPs directed at this device */
-> > >  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> > > +	/* Don't Retrain Link for device when bridge is not in GEN1 mode */
-> > > +	PCI_DEV_FLAGS_NO_RETRAIN_LINK_WHEN_NOT_GEN1 = (__force pci_dev_flags_t) (1 << 12),
-> > 
-> > I know this is entangled with the existing PCI_DEV_FLAGS_NO_BUS_RESET,
-> > but unless there's a better reason to use pci_dev_flags, I'd prefer a
-> > new "unsigned retrain_gen1:1" or similar bit.  
-> 
-> Ok! I can change patch...
-> 
-> > Whatever you do, I'd like to avoid the double negative of "*no*
-> > retrain when *not* gen1."
-> 
-> Do you have a suggestion for this name? Because I do not know how to
-> call this "quirk" in English, so it describes "disallow link retrain
-> when link is not at gen1 = 2.5GT/s". Somehow I cannot imagine name
-> without double negative words.
-> 
-> > It does make me wonder whether the bus reset would work on these
-> > devices if we set the target link speed back down to 2.5 GT/s.
-> 
-> Tested and does not work. Secondary bus reset (=Hot Reset) is broken
-> also when link is forced to 2.5 GT/s. It looks like that when
-> PCI_EXP_LNKCTL2_TLS is not set to 2.5 GT/s when setting
-> PCI_EXP_LNKCTL_RL it results in the same effect / issue like calling
-> secondary bus reset.
-> 
-> > >  };
-> > >  
-> > >  enum pci_irq_reroute_variant {
-> > > -- 
-> > > 2.20.1
-> > > 
