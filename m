@@ -2,141 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA3D239929C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 20:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57A8339931C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 21:03:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbhFBSeZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Jun 2021 14:34:25 -0400
-Received: from mail-vs1-f51.google.com ([209.85.217.51]:38605 "EHLO
-        mail-vs1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbhFBSeZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Jun 2021 14:34:25 -0400
-Received: by mail-vs1-f51.google.com with SMTP id x8so1632656vso.5
-        for <linux-pci@vger.kernel.org>; Wed, 02 Jun 2021 11:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V+6EpPiKGTbba3D6msEWSqgRwh29B5X0RstzTh8olVo=;
-        b=jxwes4IJ6U0ttJaiH1ijIGfeEr0C/TQYkLyoAGHlATMfw/MBnyPOdLK2zk1saML2Mq
-         qZDNGQLj41RmwISSC2DVyx9MFN1UmpE3yQW04aM7cr9u6VcXZ/cF4VUoqu39b35B5q1R
-         2dZBNu4GhczPPUjoGjelItX+I/ERNwUqNqEPOm0NO4MKUg6kRcaok0nYw4oglucWLhOI
-         55g12daPmYdolLCwn+OUjkndFvV6zzf9u72tlJOSa+jKft5Psv9Mm2WGerUfqGK8l2CS
-         6WU5IkV9lBW+seaQ2TTpyNDf9r9NM4N+oJAQCbTD6mdZgRvza0j1V7viVNxpwPVFnxrP
-         plVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+6EpPiKGTbba3D6msEWSqgRwh29B5X0RstzTh8olVo=;
-        b=qi1RGfoccr0ps0pQn15ELrHTBEN5vq8WWkZJtm7Zh7zQzg1q4SFQMB1Lu6xQ82bMO8
-         u9rg7yfMVNCA9u7A6KeZvaEOoRFQqKYLuXVMbowwazvPbuCMCVtSr4+pWN9Cwsy7WR+c
-         1/QFqXfgwAM9U6BWaghJQM8xEUD3pQNHKfYtNeoXtvy1+t1yDJ+35gVc+vVSGYW3f51L
-         10PjuuJo33wMhC1EsVxcdi55f3LDkcxozWVTVvGHnZH34USwbP8EoiIl5MaSBCeeon13
-         2Ej3fHYWkCKxFAtDBlB3aIiTiopRaTYODwHQsPYsx3qtyXz/u2zMO16hhTSnzCFBl5us
-         P4fg==
-X-Gm-Message-State: AOAM530xl6KDNiHGYz9ws/lDof3uRXJD5iQh6ZywRyq7GXwGImZGx8vY
-        WSWPS9qM2YJ03W8e6dIeFlUlNWfFe6+0gVNgDoZ/
-X-Google-Smtp-Source: ABdhPJxwLwNw9wMdeE6wsbNns02k71FVdh9AIj+Ofqu2MLM0zTHxGQtuSlAXZ0gIg3XSoWsQdSaxURqU43/s4Fm+pOM=
-X-Received: by 2002:a05:6102:227c:: with SMTP id v28mr25855811vsd.52.1622658688177;
- Wed, 02 Jun 2021 11:31:28 -0700 (PDT)
+        id S229746AbhFBTEt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Jun 2021 15:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229755AbhFBTEs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Jun 2021 15:04:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 06146613DE;
+        Wed,  2 Jun 2021 19:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622660585;
+        bh=UmpCat1vUqyqVee399R6xx/T2Sz4LjLr8R8Go7S3p1k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IslsaRMEZqqFu3ZzSgqNdLrDRXTjEsWWBTdbepFtuZAlmqCW7jni6jsPwMosOCRva
+         hVL4+t36l+lWWC9rTXUuGHZZNChuQuVPwsgAcgarySIPQWhv3ySLboMSW6JMAf2YId
+         ToOOtiPdJHHzvzYjHqjjfZEO2eYA4AX3Aljp7kAmGXZVA7L2lL6g56NGyyXCmMhVl1
+         sQBuEtFrWqF1K+sFvakhAFEVFj0EMbQqcXRB118BwCBgCvQ2560yN11nj7Z+69id6J
+         JER6VIjNBqPeimx5Ez/tElO4wGeBBVyTueFWmNTpZMfSZeX2/qtGWJoWzcr8IJn95m
+         meDf8kBhp6UbA==
+Received: by pali.im (Postfix)
+        id 81EBA1534; Wed,  2 Jun 2021 21:03:02 +0200 (CEST)
+Date:   Wed, 2 Jun 2021 21:03:02 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Disallow retraining link for Atheros chips on
+ non-Gen1 PCIe bridges
+Message-ID: <20210602190302.d3ibdtwti4yq57vi@pali>
+References: <20210602120816.axi4dtnyg5gl2h2z@pali>
+ <20210602155559.GA2028037@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210528082607.2015145-1-chenhuacai@loongson.cn>
- <YLZYuM6SepbeLcI7@phenom.ffwll.local> <YLZqe14Lf2+5Lbf3@kroah.com>
- <YLZ2WJlHu0EZT7H9@phenom.ffwll.local> <CAAhV-H5Mt7tmmDVoix6sY3UtfhjxGvHovve2N=5o5xtvmFeQOA@mail.gmail.com>
- <YLewShl3lMyqJ1WZ@phenom.ffwll.local>
-In-Reply-To: <YLewShl3lMyqJ1WZ@phenom.ffwll.local>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed, 2 Jun 2021 13:31:16 -0500
-Message-ID: <CAErSpo4cLp4YHGh0Lp=hZ70=1A4WBEtUhM-KUKk=SnNmTVzmRg@mail.gmail.com>
-Subject: Re: [PATCH] vgaarb: Call vga_arb_device_init() after PCI enumeration
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Huacai Chen <chenhuacai@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210602155559.GA2028037@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-pci]
+On Wednesday 02 June 2021 10:55:59 Bjorn Helgaas wrote:
+> On Wed, Jun 02, 2021 at 02:08:16PM +0200, Pali Rohár wrote:
+> > On Tuesday 01 June 2021 19:00:36 Bjorn Helgaas wrote:
+> 
+> > > I wonder if this could be restructured as a generic quirk in quirks.c
+> > > that simply set the bridge's TLS to 2.5 GT/s during enumeration.  Or
+> > > would the retrain fail even in that case?
+> > 
+> > If I understand it correctly then PCIe link is already up when kernel
+> > starts enumeration. So setting Bridge TLS to 2.5 GT/s does not change
+> > anything here.
+> > 
+> > Moreover it would have side effect that cards which are already set to
+> > 5+ GT/s would be downgraded to 2.5 GT/s during enumeration and for
+> > increasing speed would be needed another round of "enumeration" to set a
+> > new TLS and retrain link again. As TLS affects link only after link goes
+> > into Recovery state.
+> > 
+> > So this would just complicate card enumeration and settings.
+> 
+> The current quirk complicates the ASPM code.  I'm hoping that if we
+> set the bridge's Target Link Speed during enumeration, the link
+> retrain will "just work" without complicating the ASPM code.
+> 
+> An enumeration quirk wouldn't have to set the bridge's TLS to 2.5
+> GT/s; the quirk would be attached to specific endpoint devices and
+> could set the bridge's TLS to whatever the endpoint supports.
 
-On Wed, Jun 2, 2021 at 11:22 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> On Wed, Jun 02, 2021 at 06:36:03PM +0800, Huacai Chen wrote:
-> > On Wed, Jun 2, 2021 at 2:03 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > On Tue, Jun 01, 2021 at 07:12:27PM +0200, Greg KH wrote:
-> > > > On Tue, Jun 01, 2021 at 05:56:40PM +0200, Daniel Vetter wrote:
-> > > > > On Fri, May 28, 2021 at 04:26:07PM +0800, Huacai Chen wrote:
-> > > > > > We should call vga_arb_device_init() after PCI enumeration, otherwise it
-> > > > > > may fail to select the default VGA device. Since vga_arb_device_init()
-> > > > > > and PCI enumeration function (i.e., pcibios_init() or acpi_init()) are
-> > > > > > both wrapped by subsys_initcall(), their sequence is not assured. So, we
-> > > > > > use subsys_initcall_sync() instead of subsys_initcall() to wrap vga_arb_
-> > > > > > device_init().
-> > > >
-> > > > Trying to juggle levels like this always fails if you build the code as
-> > > > a module.
-> > > >
-> > > > Why not fix it properly and handle the out-of-order loading by returning
-> > > > a "deferred" error if you do not have your resources yet?
-> > >
-> > > It's not a driver, it's kinda a bolted-on-the-side subsytem of pci. So not
-> > > something you can -EPROBE_DEFER I think, without potentially upsetting the
-> > > drivers that need this.
-> > >
-> > > Which might mean we should move this into pci subsystem proper perhaps?
-> > > Then adding the init call at the right time becomes trivial since we just
-> > > plug it in at the end of pci init.
-> > >
-> > > Also maybe that's how distros avoid this pain, pci is built-in, vgaarb is
-> > > generally a module, problem solved.
-> > >
-> > > Bjorn, would you take this entire vgaarb.c thing? From a quick look I
-> > > don't think it has a drm-ism in it (unlike vga_switcheroo, but that works
-> > > a bit differently and doesn't have this init order issue).
-> > Emmm, this patch cannot handle the hotplug case and module case, it
-> > just handles the case that vgaarb, drm driver and pci all built-in.
-> > But I think this is enough, because the original problem only happens
-> > on very few BMC-based VGA cards (BMC doesn't set the VGA Enable bit on
-> > the bridge, which breaks vgaarb).
->
-> I'm not talking aout hotplug, just ordering the various pieces correctly.
-> That vgaarb isn't really a driver and also can't really handle hotplug is
-> my point. I guess that got lost a bit?
->
-> Anyway my proposal is essentially to do a
->
-> $ git move drivers/gpu/vga/vgaarb.c drivers/pci
->
-> But I just realized that vgaarb is a bool option, so module isn't possible
-> anyway, and we could fix this by calling vgaarb from pcibios init (with an
-> empty static inline in the header if vgaarb is disabled). That makes the
-> dependency very explicit and guarantees it works correctly.
+Now I see what you mean. Yes, I agree this is a good idea and can
+simplify code. Quirk is not related to ASPM code and basically has
+nothing with it, just I put it into aspm.c because this is the only
+place where link retraining was activated.
 
-pcibios_init() is also an initcall and is implemented by every arch.
-I agree that calling vga_arb_device_init() directly from
-pcibios_init() would probably fix this problem, and it would be really
-nice to have it not be an initcall.  But it's also kind of a pain to
-have to update all those copies of pcibios_init(), and I would be
-looking for a way to unify it since it's not really an arch-specific
-thing.
+But with this proposal there is one issue. Some kernel drivers already
+overwrite PCI_EXP_LNKCTL2_TLS value. So if PCI enumeration code set some
+value into PCI_EXP_LNKCTL2_TLS bits then drivers can change it and once
+ASPM will try to retrain link this may cause this issue.
 
-I think the simplest solution, which I suggested earlier [1], would be
-to explicitly call vga_arbiter_add_pci_device() directly from the PCI
-core when it enumerates a VGA device.  Then there's no initcall and no
-need for the BUS_NOTIFY_ADD/DEL_DEVICE stuff.
-vga_arbiter_add_pci_device() could set the default VGA device when it
-is enumerated, and change the default device if we enumerate a
-"better" one.  And hotplug VGA devices would work automatically.
+> > Moreover here we are dealing with specific OTP/EEPROM bug in Atheros
+> > chips, which was confirmed that exists. As I wrote in previous email, I
+> > was told that semi-official workaround is do Warm Reset or Cold Reset
+> > with turning power off from card. Which on most platforms / boards is
+> > not possible.
+> 
+> If there's a specific bug with a real root-cause analysis, please cite
+> it.  The threads mentioned in the current commit log are basically
+> informed speculation.
 
-> Whether we move vgaarb into drivers/pci or not is then kinda orthogonal.
+I had (private) discussion with Adrian Chadd about ABCD device id issue.
+I hope that nobody is against if I put there summary and important parts
+about secondary bus reset (=hot reset):
 
-I'm fine with moving it to drivers/pci if that makes anything easier.
-It definitely is PCI-related stuff, not GPU-related stuff.
 
-[1] https://lore.kernel.org/r/20210526182940.GA1303599@bjorn-Precision-5520
+The reason for abcd is because:
+* the MAC has hardware that upon cold reset, will read EEPROM/OTP
+  values for things like PCIe and other register defaults, and squirt
+  them into the MAC/PHY/etc registers
+* the default values for the PCIe bus pre-AR9300 were 0x168c:0xff<id>,
+  where <id> is the normal chip ID
+* the default values for the PCIe bus POST-AR9300 were 0x168c:0xabcd,
+  where they're always that regardless of the chip family
+* so yeah, all you know with 0x168c:0xabcd is there's an atheros
+  device there, but not WHICH it is.
+
+* the bug is that the reset line isn't held low for long enough, or it's
+  bounced twice in quick succession, before the MAC has time to program
+  in the defaults from EEPROM/OTP and it doesn't do it a second time.
+
+* the MAC has hardware that upon cold reset, will read EEPROM/OTP
+  values for things like PCIe and other register defaults, and squirt
+  them into the MAC/PHY/etc registers
+
+* need to use the external reset line OR try using D3, not D3hot
+  (I assume that "external reset line" means PERST# - PCIe Warm Reset
+  and "D3, not D3hot" means D3cold)
+
+
+And now my experiments: Disabling and Enabling link via root bridge has
+exactly same syndromes as hot reset on all tested cards. See that
+different chips (pre-AR9300 and post-AR9300) have slightly different
+behavior and it matches all my experiments (I wrote test details in
+commit message). And doing link retrain when root bridge has non-2.5GT/s
+value in PCI_EXP_LNKCTL2_TLS has also same effect as hot reset.
+So based on same results from my experiments all these actions
+(disabling link, hot reset and link retrain) have common issue.
