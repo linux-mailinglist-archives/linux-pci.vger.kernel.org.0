@@ -2,134 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DCEB397E98
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 04:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DEC8397EA3
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 04:15:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbhFBCO5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Jun 2021 22:14:57 -0400
-Received: from mail-co1nam11on2052.outbound.protection.outlook.com ([40.107.220.52]:15457
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S230025AbhFBCQ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Jun 2021 22:16:59 -0400
+Received: from mail-mw2nam10on2063.outbound.protection.outlook.com ([40.107.94.63]:46817
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229751AbhFBCO5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Jun 2021 22:14:57 -0400
+        id S230030AbhFBCQ5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Jun 2021 22:16:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ccfxeq0Cr30isF+mJuXfJSAOTbp4gaF5QMft3EFd0tAyNksFBWi0dX1HzlPg2Y6lIimceAcKGyZLgmd+vncEDNB6UQrXbV8+dx8ZOmzAmcl7vVBAA6U+PIOBDawgx/JapYlE2UdNVPb5TRvkdjKzyc+89/APH94Zu9k+jricRauhoEkGiapjjiGaEqemteWz7WBdZp6BgqjmeVHNIn82YhmU/EIXCn0QKDzgNcpMk5t+1/UPT+8DxUrb3jKugtQRkKXFVFhm8uniWX4CsJPhy2VoSoHHGMKgqaj3076rMakhsYBpCOoR/ihwELfj9Eo0MEHmKEV/QeIjwdnVAEsNeg==
+ b=G/X0IQ+fb6alISUxsOQ05Y4MYJYZgihr3Hcmc5Fv8Tju8Nfdpwy3R2l91hA/21q98K2ThDnu6x2/65natck6Iv6vebFAI+LST8CpSZRJxeSvZ1MvUtpYpYXjnuD/+/J5ljRKHvNAs4UXOJc+uGiYMDi1cMYJMGtaTp8HSOJkXUlvyj3saeZiLNjVa+ZB+uWF38g2SvfvoSdIgKre7kZygEtybI8PCWqTbyzXXpazzc1Em5LaKziGw19zDSmNJdcty6M4KtcikU2/OxtlteLPNTtXykDyigg6hwNddJf88kjjcyoGYbGC7NoewFvanGueKttIwoJ0ul0ZLWAr37qFDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BhK9XcppwllcrP/m4FOypTZp0a8RnOOWayCNsecIlOc=;
- b=nher4WgDtvDKGKpBW+5GQdwLoPlIL7FbOpuEPpZXf1WBa4MM5Q6m8l5ha9DcbkSSgwCXXYBkBy4PO3SeFKtMaWM8MNpf7z19mal8/Bu/1cDU8yAXflMVvnM+amFErpzoVyG7ogI52sAJukV+mV6s5CYsnkxCc/rWm1wgnwWL0ZDc3xNUxpa2lY/K+uXA+lNpeJs78BCOlT4dj1D8+LHdLq/OSQvpTHlZcHSRHiFDsTJtoV9GuF8gzf3eDJMmd7eKF5bpJ7Xt1dYRBPjfur+Xk+unb5PWB0Cv/bmExqQbl2qE3Q38l2Llu1vkSvokfdP+0BXo1umYpEh2Tgb/DfSXyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
+ bh=UHH4eDW516ts0//lnqKsziBdezSS1mA+YHQ+LB/cQHw=;
+ b=m4H5MbRHWFKAswtAt2eMM/N1KRIGhijgmRA4rsXnHVRFeK5j+psjhp3AfhG2lstGz0AcsZmqYtwFZqriVOpCJ5Rjv1jjXEAVjuNO5+r9S9hYWHIfanMIbiHnRfZoDblqZpRzkeyKlF64UU9+qO/i2sd8fH+x+g1IRUlTd8I+0M7lZBS0q2RZQrLgcMKmdiOg7HXnGVD31P6/gySupztqsMRJwa4Xls7BtNdf3dsc0w6LAf3xBrlqsXkvBaYhIpHXcUKfwmef7tKZRdZ/5OWwbL24p+u8gYSHyndZ6hTaWbUu3U/zxYhFlAbhJZswQhBTj8Qcn+bSn3GPSZ7CR9GY6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BhK9XcppwllcrP/m4FOypTZp0a8RnOOWayCNsecIlOc=;
- b=nHYUMPt4gQcDU3YWmHK62NimNYTIi8Xws4IBQKZFrhd1ZwdN1AgKc3ZESvr03nsZN3QKWaJ0InLxEb1nrPaefE8ps5/GPb/d0TK5H53+yJ+3Db3kQEiuhJZGQWCrsTSDGJ5Z3VLspTom/aJxDLg+dSBvxfS9PLHKtNqp+D4Ugrg=
-Received: from MWHPR22CA0052.namprd22.prod.outlook.com (2603:10b6:300:12a::14)
- by BN6PR12MB1666.namprd12.prod.outlook.com (2603:10b6:405:3::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20; Wed, 2 Jun
- 2021 02:13:14 +0000
-Received: from CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:12a:cafe::39) by MWHPR22CA0052.outlook.office365.com
- (2603:10b6:300:12a::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
- Transport; Wed, 2 Jun 2021 02:13:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT039.mail.protection.outlook.com (10.13.174.110) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4150.30 via Frontend Transport; Wed, 2 Jun 2021 02:13:13 +0000
-Received: from equan-buildpc.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 1 Jun 2021
- 21:13:11 -0500
-From:   Evan Quan <evan.quan@amd.com>
-To:     <linux-pci@vger.kernel.org>
-CC:     <kw@linux.com>, <Alexander.Deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS support
-Date:   Wed, 2 Jun 2021 10:12:55 +0800
-Message-ID: <20210602021255.939090-1-evan.quan@amd.com>
-X-Mailer: git-send-email 2.29.0
+ bh=UHH4eDW516ts0//lnqKsziBdezSS1mA+YHQ+LB/cQHw=;
+ b=Bpyufl3aav3A2HpkUfbq3oKyNkNlIGUj8e6WG/6rQCJgqpllIRuYUOuhiHr/LJFKA2+x9DMz6/IxG85LAhXp1lQwmkJwhkuukf7/Q0LL3Gr90cdXGPBzkYsUBcGqmH8Nqe/9QptLsnmcCRea4AhO1V7E4vto0zaJfHCmAeZqCjM=
+Received: from DM6PR12MB2619.namprd12.prod.outlook.com (2603:10b6:5:45::18) by
+ DM6PR12MB4484.namprd12.prod.outlook.com (2603:10b6:5:28f::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4173.21; Wed, 2 Jun 2021 02:15:14 +0000
+Received: from DM6PR12MB2619.namprd12.prod.outlook.com
+ ([fe80::14a7:9460:4e5f:880d]) by DM6PR12MB2619.namprd12.prod.outlook.com
+ ([fe80::14a7:9460:4e5f:880d%5]) with mapi id 15.20.4173.030; Wed, 2 Jun 2021
+ 02:15:14 +0000
+From:   "Quan, Evan" <Evan.Quan@amd.com>
+To:     =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Subject: RE: [PATCH] PCI: Add quirk for AMD Navi14 to disable ATS support
+Thread-Topic: [PATCH] PCI: Add quirk for AMD Navi14 to disable ATS support
+Thread-Index: AQHXVpCwT+4tLdxONEmxJXkhEyfZIqr/ITmAgADbl7A=
+Date:   Wed, 2 Jun 2021 02:15:14 +0000
+Message-ID: <DM6PR12MB261928E4DE8B552FD3172BA6E43D9@DM6PR12MB2619.namprd12.prod.outlook.com>
+References: <20210601024835.931947-1-evan.quan@amd.com>
+ <20210601130813.GB195120@rocinante.localdomain>
+In-Reply-To: <20210601130813.GB195120@rocinante.localdomain>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_Enabled=true;
+ MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_SetDate=2021-06-02T02:15:12Z;
+ MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_Method=Standard;
+ MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_Name=AMD Official Use
+ Only-AIP 2.0;
+ MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_ActionId=bc0fedf6-6a80-42c1-9ab9-23ae794b832e;
+ MSIP_Label_88914ebd-7e6c-4e12-a031-a9906be2db14_ContentBits=1
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [165.204.134.244]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf3f57ae-4dac-4d52-16cc-08d9256c41ed
+x-ms-traffictypediagnostic: DM6PR12MB4484:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB44841A367EBEC391D4047956E43D9@DM6PR12MB4484.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dEwX9i+PlvH/SdqZUH4bGjBN7MHVFveJEmkA3KSq1VNKpqNtacS6+xcjd+mSWb2Ds9GhlHR05cKMqzxd4qwXQfaPFmOvANIDXMJcJY9zoLkrxcMraSw2OwBOaPe01ls8bkitEHhUGLRJQGZBrJBfwqp56OwUPegOXiih5NaIEm6Hy6egR90DULlo+euqH2aTnea7kdefb0Ket27NsZcTDhcVgwVEyR/UOA/MDRXtD3tlA0B2YXqnv07qj8YLqtQkjZ0ug5x7y9RCGrJlRs7C0WHt1SEeYqTprSaAiwmlWzU3OUfHxcP9h9LFjaUQTuC9RDVWNH/QMO5Kx0UKvlLf4uC6e+bCtgmneBo2hLGk4S2BR3GET+qOoba/6Xjb2PbgsrsI1IEhiF+oSaoFvrXq+6YKxs/vr7pLx+t8o4P4pNAphN1zhXDFyAB9M3xluPDH/WLdmL8XSm2UjSAx8/IMRDmQ7EwGttfEM1ohlWG0CP4nveuYgfJCdJvThTzoWurvy7cRsAnNtdwBP7TTp3tPdovpvAOktkjuJUx0MyYOxxlubtaN2zjMhzYu5yhj7O1R3fcovzCaT0m3epCFlh3cgi4joufO2/Vra62jO3UsgUcLaBbEHMlks7s1EV2dALLpXeDiAQaGX0E+/SdJloJHHc3gXx2lW8VeVlA85uKKpE/VmtZa4VC6LOyWiWamgz6Pz67Ptj1a22ayVslV9/Q4eUnMz6U7CRk1y86fRozL/xk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2619.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(45080400002)(966005)(8936002)(53546011)(54906003)(86362001)(478600001)(64756008)(66446008)(66476007)(66556008)(5660300002)(2906002)(76116006)(316002)(6506007)(71200400001)(7696005)(38100700002)(122000001)(4326008)(66946007)(55016002)(26005)(6916009)(9686003)(83380400001)(52536014)(186003)(66574015)(8676002)(33656002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?iso-8859-2?Q?sbEOFfNmo5qzFGcuEhFBeoxLrVD7908umGUrs/XN7k6nIZBxMB8hfmnQJX?=
+ =?iso-8859-2?Q?mWQFwGvK3qYzVdpvo+F0ej7i5yK4BZhPavMFbsebrknWasOaTBGqBWRK+n?=
+ =?iso-8859-2?Q?yojdorlLGiXXdSpUMslOorFaWofELzXtUQqGblGzhGN69VzHgne8V6Z5W0?=
+ =?iso-8859-2?Q?/0o1EGQs7e7syqU7/hDEvdZLDm1ZggISvKh1k1xj+LqPgDW0Rkas04Lkme?=
+ =?iso-8859-2?Q?O20kRzO9R1KyW/hygZqd+hXNFkW7OI8QFFUR6Yy4CY3pBemb1hAeKpeqWd?=
+ =?iso-8859-2?Q?Z014U5RmrRaKm1809yziN+K9MpDwLLd/xRpimCqyIcsczdK5NpkY6w5J7O?=
+ =?iso-8859-2?Q?Sf+IooT0lg2aTSC+k8QIY2kN5Yd9UFkax9RFrI2UvOY0dB4CCTxZnKJeAg?=
+ =?iso-8859-2?Q?T2Atu2TecFZAYJKOSEHagEfpX4904A21xdSvdUc86Rra2yEIWsR9XRDZ/Q?=
+ =?iso-8859-2?Q?Lio6Hth3N+Na2HhQ+GkaU6IxuxPQTLdX6YEdvaB5rPZ/oqFDGhAIfWwjsU?=
+ =?iso-8859-2?Q?lHg8fqrVOMICn1zx0K+WUayJOdrU4ySiQmpIUZGJZ7qF5QGeulVDxJ5ZNY?=
+ =?iso-8859-2?Q?u6r/SVhKzlca32kzDFK9HMGZ4mfEh7dg0i5eyq4+ANNfDDMDYX9EmPFGDo?=
+ =?iso-8859-2?Q?FCl0yF+MkEWpfsr8XiVIDoo/O3nF3dGK+0f64dOvm8ftsAwhPYjNHkbtaC?=
+ =?iso-8859-2?Q?jwcMnLDRrsu3GRWfCxAfLKHJO9oXrvgoLYcWxHw/2FRY8k7iWBQN8R8oVW?=
+ =?iso-8859-2?Q?jEl4dCOsytNnVfYtonFNq7/PJY44GUU5lHjxcjpRmYLRypgoK3cAGTd9di?=
+ =?iso-8859-2?Q?fJQY1ahS0CtY1+oDwCs1c077O4UfBEzQvuNu9YC0KFGcwwRPf+z/mBneKn?=
+ =?iso-8859-2?Q?BVgbzjpKcq6BNWA+m2Zdf6rjznzLk7AWju3QXVe45tYifwzYDMlWTXZr8A?=
+ =?iso-8859-2?Q?FY4H5O9DP1Wf9UvogJBF21U9yO6P4xeANLP+KSOweNSQHh2jQJcYNfCsn3?=
+ =?iso-8859-2?Q?hBFiqBnWLkxmYZ5pZOcoc3WLnsufGlwV9BEGhVT1xqE7pBHkFauSY8qSyf?=
+ =?iso-8859-2?Q?smXy0tl1cDlo7VG+feXXb1dO+sWzyOEUi0fhxwRECHgqiHwyR5Uq4gEqam?=
+ =?iso-8859-2?Q?BhNdOeWCvv5Wn5F8Y7NH4AFvWbE5cew4zoRHNlT5iPfZNnFPynohPyNW9D?=
+ =?iso-8859-2?Q?4lYNxNODQL/Jgm8A86yC4taweSQ60u7ykIKOkdVXtZWW/CNh8zxv4zPpIr?=
+ =?iso-8859-2?Q?EnOKNoLY/iP5yWtBD9xBemeW+ziC1s21Cbub1RYHGPWpqGGhW1dW4krM9j?=
+ =?iso-8859-2?Q?ipDQaPxqNSs9u0XAAIPDRyep9YX/YviHLyPN1nZxT0aLeUatMxIIAhUaAW?=
+ =?iso-8859-2?Q?MD2ZvEBWJN?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 90e9321d-eacc-458e-3ab2-08d9256bfa1e
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1666:
-X-Microsoft-Antispam-PRVS: <BN6PR12MB16669FD6CD82B65A1D2FF634E43D9@BN6PR12MB1666.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:639;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JdijxgUH9/R6rGEtRQS7UFwp8Dz7qPaaN+w4MXz+GrRA4MXMyp0yf8Cep4aDWtJ/tNJLVVG2XUbAndMP2+vC7e0JWlEq2OyA6DYebrfiL5mwQakJ3em/T54CE2bVUQmqWPZmvDGT5hfL7K+Cs8/B6e6zFAi7Is/EMqByK1DdzthFgp6u/E29hcILR+mFR6MGYAKy+mUGetweDJbDeC7VrgBH0ThNChCvAqatQaedf/FASUvcPwxGh41Xq6CLOFmNijssL2RtFoF2ruF/N7bkgo9/idYSNGZyr7F4uJ4azU3MVmVQvgaT8WMF4ZzFMOYbHE2BMGEhphD/HoF/hKSosX+EI9dNw1+yqSvIBOI5c8h4voDk1sGf3PYkz2PETNTs1NPPcLForHOmwF2UBZxZh/Ym0Qbfq7+ewGkuy4n+8bYJ9V/iRGf78EqW+idRc3OibAueahsSPINewNpevLABQRPNNKD6lv1fuuOEemqYaFtEa8R4wteE8OEPowTN/EGg1i6OiDIaHaqcGPvHsBKWZ/Xban/4okrDo0fBFjyjANO/xOfR7ZWL4rvpRsXGBeCXkjPV6F/m7HJL7gnLrnjrRSF7xgAiDzEExQi3RxdHsckFUGsavIgbhQaSabijY6Lgn/4AWAdvUZk06tkluFgz0Fi+1JWOQG986moYT7NhC/NnrFA0x7+dhzVg9Gs7e1br
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(46966006)(36840700001)(336012)(6666004)(6916009)(186003)(478600001)(44832011)(70206006)(70586007)(82310400003)(2616005)(8936002)(81166007)(8676002)(66574015)(426003)(47076005)(7696005)(82740400003)(5660300002)(4326008)(26005)(36860700001)(36756003)(2906002)(16526019)(83380400001)(1076003)(86362001)(316002)(356005)(54906003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2021 02:13:13.6120
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2619.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf3f57ae-4dac-4d52-16cc-08d9256c41ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2021 02:15:14.1458
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90e9321d-eacc-458e-3ab2-08d9256bfa1e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1666
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2DEousO2q+1w7vVaGmLEJJNi7gFlvWfQBGXbHoYVFi8TrbNp9cYw82+5fiwilgnc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4484
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Unexpected GPU hang was observed during runpm stress test
-on 0x7341 rev 0x00. Further debugging shows broken ATS is
-related. Thus as a followup of commit 5e89cd303e3a ("PCI:
-Mark AMD Navi14 GPU rev 0xc5 ATS as broken"), we disable
-the ATS for the specific SKU also.
+[AMD Official Use Only]
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
----
-ChangeLog v2->v3:
-- further update for description part(suggested by Krzysztof)
-ChangeLog v1->v2:
-- cosmetic fix for description part(suggested by Krzysztof)
----
- drivers/pci/quirks.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b7e19bbb901a..70803ad6d2ac 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5176,7 +5176,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
- static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
- {
- 	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
--	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
-+	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
-+	    (pdev->device == 0x7341 && pdev->revision != 0x00))
- 		return;
- 
- 	if (pdev->device == 0x15d8) {
-@@ -5203,6 +5204,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
- /* AMD Navi14 dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
- /* AMD Raven platform iGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
- #endif /* CONFIG_PCI_ATS */
--- 
-2.29.0
 
+> -----Original Message-----
+> From: Krzysztof Wilczy=F1ski <kw@linux.com>
+> Sent: Tuesday, June 1, 2021 9:08 PM
+> To: Quan, Evan <Evan.Quan@amd.com>
+> Cc: linux-pci@vger.kernel.org; Deucher, Alexander
+> <Alexander.Deucher@amd.com>
+> Subject: Re: [PATCH] PCI: Add quirk for AMD Navi14 to disable ATS support
+>=20
+> Hi Evan,
+>=20
+> Thank you for sending updated version!
+>=20
+> [...]
+> > V2: cosmetic fix for description part(suggested by Krzysztof)
+>=20
+> For future reference: as this is v2, then remember to update the subject =
+link
+> to [PATCH v2] so that everyone looking at incoming patches would be
+> immediately made aware that this is a new version (also, some of our
+> automation such as Patchwork uses this when parsing subject lines).
+>=20
+> Additionally, the changelog would customary be included under the "---"
+> lines so that it would automatically be removed alongside commit related
+> details from Git, see the following as an example:
+>=20
+>=20
+> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.
+> kernel.org%2Flinux-pci%2F20210601114301.2685875-1-
+> linus.walleij%40linaro.org%2F&amp;data=3D04%7C01%7Cevan.quan%40amd.co
+> m%7Cc7b07f31831247233f3408d924fe51da%7C3dd8961fe4884e608e11a82d9
+> 94e183d%7C0%7C0%7C637581496992050423%7CUnknown%7CTWFpbGZsb3d
+> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%
+> 3D%7C1000&amp;sdata=3DK0LqWlNS1JhuFxuOmat%2F0f2NYOLJUa8auWybrmi
+> XHXQ%3D&amp;reserved=3D0
+>=20
+> Having said that, I am not sure if this warrants sending v3, as this coul=
+d be
+> easily fixed here by either Bjorn or Lorenzo when this patch will be merg=
+ed, if
+> they don't mind, of course.
+[Quan, Evan] Thanks Krzysztof. Just sent out a V3 with these updated.
+
+BR
+Evan
+>=20
+> [...]
+> > @@ -5176,7 +5176,8 @@
+> > DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422,
+> > quirk_no_ext_tags);  static void quirk_amd_harvest_no_ats(struct pci_de=
+v
+> *pdev)  {
+> >  	if ((pdev->device =3D=3D 0x7312 && pdev->revision !=3D 0x00) ||
+> > -	    (pdev->device =3D=3D 0x7340 && pdev->revision !=3D 0xc5))
+> > +	    (pdev->device =3D=3D 0x7340 && pdev->revision !=3D 0xc5) ||
+> > +	    (pdev->device =3D=3D 0x7341 && pdev->revision !=3D 0x00))
+> [...]
+> >  /* AMD Navi14 dGPU */
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340,
+> > quirk_amd_harvest_no_ats);
+> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341,
+> > +quirk_amd_harvest_no_ats);
+> [...]
+>=20
+> Thank you!
+>=20
+> Reviewed-by: Krzysztof Wilczy=F1ski <kw@linux.com>
+>=20
+> 	Krzysztof
