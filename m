@@ -2,88 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B980398696
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 12:32:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F033B39886D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 13:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232441AbhFBKdx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Jun 2021 06:33:53 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:36717 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232695AbhFBKdx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Jun 2021 06:33:53 -0400
-Received: by mail-wm1-f52.google.com with SMTP id n17-20020a7bc5d10000b0290169edfadac9so3454948wmk.1;
-        Wed, 02 Jun 2021 03:32:09 -0700 (PDT)
+        id S229721AbhFBLe4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Jun 2021 07:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229618AbhFBLez (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Jun 2021 07:34:55 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB98EC061574;
+        Wed,  2 Jun 2021 04:33:11 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id z137-20020a1c7e8f0000b02901774f2a7dc4so1139822wmc.0;
+        Wed, 02 Jun 2021 04:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YpPo5MBLVYvDn/sYz6mEnGVnyd3ShtD58F9/Awc2BpA=;
+        b=kVW6e8YiNo8g5jZzT0Bts2a0UncmcVWmaRW0M7i4O2D8xy+KvvmKD3sAyTGlgTG7kt
+         zw+1i5ixEjtOgD6RVEZzoDp2k/njyKH8jrPuyLIhznfIc7VHdbm7b2UtgWB1YssswsbU
+         ZuIG6NmLFgWN39RK9Ar7QVDrYpjbPUUYabz1oDvms+e9b8+DlXxRFI9wmNh2YngkXUdJ
+         lKbjZZb5/P4fv7UmikpEZgwofHnuLV55T8byBfhsgH8pQXC9ZYV2Vb3cRkrUOE4AYVqL
+         gLrtgaMlJQ6Zn10S60flrArFRJTPtIyhRQzDHlklc3hkveSxrwR+7R5zPjil+GV7TUdC
+         fYeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vf0+jsnxWv3MUeSQuUrF48fJEizrZe94s4fGa0z+Wtc=;
-        b=pSd+V3KFdbCrUfkQEHXvaEMl/9UX8evR0uMSCMfoyTX9KDNOlqnj+Te9TFlXCfuqbU
-         dDAzv1J1s1t4HDhrJPV6fU1LdIhwDMlgOj9uAggQ9Bw5TR9VIc515LF4Ui4sPxOOio8i
-         Utg5e9UN+M7sIOSGt7duqDf1dQalPVUFFmjDBhHBx2bt1PfUKI2sV2schBKA4OPl9+4R
-         OrHSrHleLIwmHGh0TLasLRfHs54wkprWXCCyHfXbqD5hiCdDMrJrEQaZ8j6xhBGascr/
-         Jtl+Tzxs68ncrwSl9CUEJgmwH/txz6z9s9Sh/k7fuznbHxsjmOmW9/xcoofcC457vffY
-         pdbA==
-X-Gm-Message-State: AOAM532rT9y3J1cF7ix489bmkUcdpFVdsB8vw1PNuGPSqt8/DmD/lcYW
-        7zmW6IuMYINUupoVf4eM0sw=
-X-Google-Smtp-Source: ABdhPJz1xElCXT81jXsY6Mk0wZfrxjyd6riYjK7wy2V+QlDi42tA7HW9Cu2FMF41bVNtxJq4S8xZgg==
-X-Received: by 2002:a7b:cd9a:: with SMTP id y26mr4532738wmj.133.1622629928760;
-        Wed, 02 Jun 2021 03:32:08 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id o17sm5874932wrp.47.2021.06.02.03.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 03:32:08 -0700 (PDT)
-Date:   Wed, 2 Jun 2021 10:32:06 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        kys@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci-hyperv: Add check for hyperv_initialized in
- init_hv_pci_drv()
-Message-ID: <20210602103206.4nx55xsl3nxqt6zj@liuwe-devbox-debian-v2>
-References: <1621984653-1210-1-git-send-email-haiyangz@microsoft.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YpPo5MBLVYvDn/sYz6mEnGVnyd3ShtD58F9/Awc2BpA=;
+        b=EQ5srSw1kWPtWDYSGwTu1zlNTwXyL1Fr2qTfirTvLMJeMMy2US4RaifgXpCHnPQlug
+         IPhHqDg+gPeSAmzOj66t3qaJ8CNz1LbKlUsZLPwZXROmk7ybKd8F21dsXqDE0PsUEy1w
+         cN7CFcmJZDeGz4yJ4c74QP4oxB1nPtq64fkekOUdRwtmy+gdfROXA6nRsrvVmiK2xVHv
+         pBpWGPrVopASJvhC1Ft9BJ5IqTa3fGcilH6uBO+pUy1fHmR/ggXC8qzcysyZve9YKdLu
+         KVX47oH3PD3cwDHrnPRc6Eq8q+N4ryvInqq91g7BW+BtKksyP4TO3FiXUbWHsHzC904B
+         ITvw==
+X-Gm-Message-State: AOAM5330sIpbDAkFCIt5WW6nB4X71cHVLyfw57jEWm5NZnbKm6fSXC49
+        ALxDdf88YJ65+xvMNOwHK4I=
+X-Google-Smtp-Source: ABdhPJwCYFHyPJ4mtPKQH6YK0yXLSoUWALZ/L3nQxpyEn8N3GhSJpqhz2Lz5eakMQ6A+sxu6jdDVOg==
+X-Received: by 2002:a7b:c002:: with SMTP id c2mr31535267wmb.118.1622633590311;
+        Wed, 02 Jun 2021 04:33:10 -0700 (PDT)
+Received: from ziggy.stardust ([46.6.149.244])
+        by smtp.gmail.com with ESMTPSA id r7sm3057110wma.9.2021.06.02.04.33.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jun 2021 04:33:09 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: mediatek-gen3: Add support for
+ MT8195
+To:     Chen-Yu Tsai <wenst@chromium.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Randy Wu <Randy.Wu@mediatek.com>, youlin.pei@mediatek.com
+References: <20210601024408.24485-1-jianjun.wang@mediatek.com>
+ <20210601024408.24485-2-jianjun.wang@mediatek.com>
+ <CAGXv+5G-8+ppafiUnqWm2UeiL+edHJ2zYZvU-S7mz_NdrM3YsA@mail.gmail.com>
+ <1622526594.9054.6.camel@mhfsdcap03>
+ <CAGXv+5GMTbC5TTgURhPAvxBEY18S6-T-BZ9CpXsO91Trim7TXw@mail.gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <db62910b-febd-6cba-8a72-2bf718f7b110@gmail.com>
+Date:   Wed, 2 Jun 2021 13:33:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1621984653-1210-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <CAGXv+5GMTbC5TTgURhPAvxBEY18S6-T-BZ9CpXsO91Trim7TXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 25, 2021 at 04:17:33PM -0700, Haiyang Zhang wrote:
-> Add check for hv_is_hyperv_initialized() at the top of init_hv_pci_drv(),
-> so if the pci-hyperv driver is force-loaded on non Hyper-V platforms, the
-> init_hv_pci_drv() will exit immediately, without any side effects, like
-> assignments to hvpci_block_ops, etc.
-> 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Reported-and-tested-by: Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>
 
-Hello PCI subsystem maintainers, are you going to take this patch or
-shall I?
 
-Wei.
+On 01/06/2021 08:07, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> On Tue, Jun 1, 2021 at 1:50 PM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+>>
+>> On Tue, 2021-06-01 at 11:53 +0800, Chen-Yu Tsai wrote:
+>>> Hi,
+>>>
+>>> On Tue, Jun 1, 2021 at 10:50 AM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+>>>>
+>>>> MT8195 is an ARM platform SoC which has the same PCIe IP with MT8192.
+>>>
+>>> Based on what I'm seeing internally, there seems to be some inconsistency
+>>> across the MediaTek platform on whether new compatible strings should be
+>>> introduced for "fully compatible" IP blocks.
+>>>
+>>> If this hardware block in MT8195 is "the same" as the one in MT8192, do we
+>>> really need the new compatible string? Are there any concerns?
+>>
+>> Hi Chen-Yu,
+>>
+>> It's ok to reuse the compatible string with MT8192, but I think this
+>> will be easier to find which platforms this driver is compatible with,
+>> especially when we have more and more platforms in the future.
+> 
+> If it's just for informational purposes, then having the MT8192 compatible
+> as a fallback would work, and we wouldn't need to make changes to the driver.
+> This works better especially if we have to support multiple operating systems
+> that use device tree.
+> 
+> So we would want
+> 
+>     "mediatek,mt8195-pcie", "mediatek,mt8192-pcie"
+> 
+> and
+> 
+>     "mediatek,mt8192-pcie"
+> 
+> be the valid options.
+> 
+> Personally I'm not seeing enough value to justify adding the compatible string
+> just for informational purposes though. One could easily discern which hardware
+> is used by looking at the device tree.
+> 
 
-> ---
->  drivers/pci/controller/pci-hyperv.c | 3 +++
->  1 file changed, 3 insertions(+)
+I agree, if no differences between the two chips are known, adding a binding
+withe new compatible and a fallback is a good thing. If we later on realize that
+mt8195 PCI block has differences, we can add the matching to the driver.
+
+Regards,
+Matthias
+
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 6511648271b2..bebe3eeebc4e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -3476,6 +3476,9 @@ static void __exit exit_hv_pci_drv(void)
->  
->  static int __init init_hv_pci_drv(void)
->  {
-> +	if (!hv_is_hyperv_initialized())
-> +		return -ENODEV;
-> +
->  	/* Set the invalid domain number's bit, so it will not be used */
->  	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
->  
-> -- 
-> 2.25.1
+> Regards
+> ChenYu
 > 
+> 
+>> Thanks.
+>>>
+>>>
+>>> Thanks
+>>> ChenYu
+>>>
+>>>
+>>>> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+>>>> index e7b1f9892da4..d5e4a3e63d97 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+>>>> @@ -48,7 +48,9 @@ allOf:
+>>>>
+>>>>  properties:
+>>>>    compatible:
+>>>> -    const: mediatek,mt8192-pcie
+>>>> +    oneOf:
+>>>> +      - const: mediatek,mt8192-pcie
+>>>> +      - const: mediatek,mt8195-pcie
+>>>>
+>>>>    reg:
+>>>>      maxItems: 1
+>>>> --
+>>>> 2.18.0
+>>>> _______________________________________________
+>>>> Linux-mediatek mailing list
+>>>> Linux-mediatek@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>>
