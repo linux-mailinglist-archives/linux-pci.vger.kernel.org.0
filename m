@@ -2,125 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C9039935A
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 21:14:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D9939937D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 21:27:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229467AbhFBTQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Jun 2021 15:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229558AbhFBTQk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Jun 2021 15:16:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D5A5613EA;
-        Wed,  2 Jun 2021 19:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622661296;
-        bh=9xSLMbvjfOnGtkRnLq693w5O8xbiW95iltXDEXpWTlc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YO1LHbzG0NgS2UidWcUAg85nXU8ZjOoAhkkhnJsAUwlgP/kTNQEEISJbRymp7abj+
-         anfuMAGAXcFOofqS77q/e3HVx13MuJJjzsDFa2g/MkG48Znu9wfwZvicv+Mti54wrT
-         5g0BEA90O6/YMzP6t6K68E00Fk7QfwwH7k9ctR64x/j+dteHjm5o6AkQ3D+trusJIW
-         FPjCFVWUTJyuOBPPr/CKk2b3Kx0sbObJkpAf1H1v9UsUNPJhjLgsbngAEbMKcC2oEk
-         BS4HSNTepNQ7CqrTfRCBXtl6+3eqvgT8cTVedTf+T5aJLdKuS1OKIonigO+CELz15f
-         TGw/q37Q8bO+Q==
-Date:   Wed, 2 Jun 2021 14:14:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Stefan Chulski <stefanc@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Stefan Roese <sr@denx.de>, Phil Sutter <phil@nwl.cc>,
-        Mario Six <mario.six@gdsys.cc>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [EXT] Re: pci mvebu issue (memory controller)
-Message-ID: <20210602191455.GA2038253@bjorn-Precision-5520>
+        id S229724AbhFBT3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Jun 2021 15:29:33 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:36832 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229692AbhFBT3c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Jun 2021 15:29:32 -0400
+Received: by mail-wr1-f50.google.com with SMTP id n4so3416745wrw.3
+        for <linux-pci@vger.kernel.org>; Wed, 02 Jun 2021 12:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KCZuEVHY8PRAMaR2f9HZU/XO764Lhf/TagYEBckEfyk=;
+        b=J1PYEz6797hxcf0mfVCZKMT/kYRL+HZl89cL+q+fU+ZSou/9cWTF2Gd6zK4S/5tHoY
+         4JMbd8ETj3jfQZ5/CerZJAWHFPWfjL3re8PPPmR3XUonT0ucZqYsfShAO0DsVRCYYmqv
+         P1YIkAHwyOVQMhXaaZeOCN32x1GWn80yt4YJg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KCZuEVHY8PRAMaR2f9HZU/XO764Lhf/TagYEBckEfyk=;
+        b=hMmJdCUd8hh5ZwXdun1t6qVKa8f6C8i8z4ELadmvyhZtvcAOwYcKSbXWrL7jiNKDB2
+         6DFKF4y43Mu9CGkaOonAu5QGfF3eLTNessCbhBSWVSfGTuQ8HdsMdhMkCjwLWeJRED/S
+         zkS687uXyWdp8EtFVihlB5chcJelm11Zg0IIh/wFDHT/zOYBiDRJxfNqBa5zKM+0Gmr+
+         Cz6g4eF+9wJ/igm1OhksnxaSMJWw5y6oR0IL8wU0vbmY0X+1Q1XNSbmVtmeQXiWijC/S
+         Zig5Bcg/YDcRbYnjMHfevbXkxRIh/M7b9f55ASok/2goBtcbtnxpgXUDJgbId7krnFR4
+         Pf8Q==
+X-Gm-Message-State: AOAM533+dr5zCHN62/uAdaNuxwUPigD0CFv57W+/EX12pdKlLD7zoz6i
+        MZ8vXYMIKb/eKRwr5gz+py6yDg==
+X-Google-Smtp-Source: ABdhPJyOw8Ogx4gG1a7Z4NEzammiy7JdJWo2SWFLgLrDuqK7vUnEZ6kh2jQpOzRa99LCsglTO+e5Rw==
+X-Received: by 2002:a5d:6082:: with SMTP id w2mr9331686wrt.209.1622662008747;
+        Wed, 02 Jun 2021 12:26:48 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id y2sm4214347wmq.45.2021.06.02.12.26.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jun 2021 12:26:48 -0700 (PDT)
+Date:   Wed, 2 Jun 2021 21:26:46 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] vgaarb: Call vga_arb_device_init() after PCI enumeration
+Message-ID: <YLfbdj8Eb310D/Ps@phenom.ffwll.local>
+References: <20210528082607.2015145-1-chenhuacai@loongson.cn>
+ <YLZYuM6SepbeLcI7@phenom.ffwll.local>
+ <YLZqe14Lf2+5Lbf3@kroah.com>
+ <YLZ2WJlHu0EZT7H9@phenom.ffwll.local>
+ <CAAhV-H5Mt7tmmDVoix6sY3UtfhjxGvHovve2N=5o5xtvmFeQOA@mail.gmail.com>
+ <YLewShl3lMyqJ1WZ@phenom.ffwll.local>
+ <CAErSpo4cLp4YHGh0Lp=hZ70=1A4WBEtUhM-KUKk=SnNmTVzmRg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210602110703.ymdt6nxsjl7e6glk@pali>
+In-Reply-To: <CAErSpo4cLp4YHGh0Lp=hZ70=1A4WBEtUhM-KUKk=SnNmTVzmRg@mail.gmail.com>
+X-Operating-System: Linux phenom 5.10.32scarlett+ 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 01:07:03PM +0200, Pali Rohár wrote:
-
-> In configuration with *bad* suffix is used U-Boot which does not ignore
-> PCIe device Memory controller and configure it when U-Boot initialize.
-> In this configuration loaded kernel is unable to initialize wifi cards.
+On Wed, Jun 02, 2021 at 01:31:16PM -0500, Bjorn Helgaas wrote:
 > 
-> In configuration with *ok* suffix is U-Boot explicitly patched to
-> ignores PCIe device Memory controller and loaded kernel can use wifi
-> cards without any issue.
+> On Wed, Jun 2, 2021 at 11:22 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > On Wed, Jun 02, 2021 at 06:36:03PM +0800, Huacai Chen wrote:
+> > > On Wed, Jun 2, 2021 at 2:03 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > On Tue, Jun 01, 2021 at 07:12:27PM +0200, Greg KH wrote:
+> > > > > On Tue, Jun 01, 2021 at 05:56:40PM +0200, Daniel Vetter wrote:
+> > > > > > On Fri, May 28, 2021 at 04:26:07PM +0800, Huacai Chen wrote:
+> > > > > > > We should call vga_arb_device_init() after PCI enumeration, otherwise it
+> > > > > > > may fail to select the default VGA device. Since vga_arb_device_init()
+> > > > > > > and PCI enumeration function (i.e., pcibios_init() or acpi_init()) are
+> > > > > > > both wrapped by subsys_initcall(), their sequence is not assured. So, we
+> > > > > > > use subsys_initcall_sync() instead of subsys_initcall() to wrap vga_arb_
+> > > > > > > device_init().
+> > > > >
+> > > > > Trying to juggle levels like this always fails if you build the code as
+> > > > > a module.
+> > > > >
+> > > > > Why not fix it properly and handle the out-of-order loading by returning
+> > > > > a "deferred" error if you do not have your resources yet?
+> > > >
+> > > > It's not a driver, it's kinda a bolted-on-the-side subsytem of pci. So not
+> > > > something you can -EPROBE_DEFER I think, without potentially upsetting the
+> > > > drivers that need this.
+> > > >
+> > > > Which might mean we should move this into pci subsystem proper perhaps?
+> > > > Then adding the init call at the right time becomes trivial since we just
+> > > > plug it in at the end of pci init.
+> > > >
+> > > > Also maybe that's how distros avoid this pain, pci is built-in, vgaarb is
+> > > > generally a module, problem solved.
+> > > >
+> > > > Bjorn, would you take this entire vgaarb.c thing? From a quick look I
+> > > > don't think it has a drm-ism in it (unlike vga_switcheroo, but that works
+> > > > a bit differently and doesn't have this init order issue).
+> > > Emmm, this patch cannot handle the hotplug case and module case, it
+> > > just handles the case that vgaarb, drm driver and pci all built-in.
+> > > But I think this is enough, because the original problem only happens
+> > > on very few BMC-based VGA cards (BMC doesn't set the VGA Enable bit on
+> > > the bridge, which breaks vgaarb).
+> >
+> > I'm not talking aout hotplug, just ordering the various pieces correctly.
+> > That vgaarb isn't really a driver and also can't really handle hotplug is
+> > my point. I guess that got lost a bit?
+> >
+> > Anyway my proposal is essentially to do a
+> >
+> > $ git move drivers/gpu/vga/vgaarb.c drivers/pci
+> >
+> > But I just realized that vgaarb is a bool option, so module isn't possible
+> > anyway, and we could fix this by calling vgaarb from pcibios init (with an
+> > empty static inline in the header if vgaarb is disabled). That makes the
+> > dependency very explicit and guarantees it works correctly.
 > 
-> In both configurations is used same kernel version. As I wrote in
-> previous emails kernel already ignores and hides Memory controller PCIe
-> device, so lspci does not see it.
+> pcibios_init() is also an initcall and is implemented by every arch.
+> I agree that calling vga_arb_device_init() directly from
+> pcibios_init() would probably fix this problem, and it would be really
+> nice to have it not be an initcall.  But it's also kind of a pain to
+> have to update all those copies of pcibios_init(), and I would be
+> looking for a way to unify it since it's not really an arch-specific
+> thing.
 > 
-> In attachment I'm sending dmesg and lspci outputs from Linux and pci
-> output from U-Boot.
+> I think the simplest solution, which I suggested earlier [1], would be
+> to explicitly call vga_arbiter_add_pci_device() directly from the PCI
+> core when it enumerates a VGA device.  Then there's no initcall and no
+> need for the BUS_NOTIFY_ADD/DEL_DEVICE stuff.
+> vga_arbiter_add_pci_device() could set the default VGA device when it
+> is enumerated, and change the default device if we enumerate a
+> "better" one.  And hotplug VGA devices would work automatically.
+
+Hm yeah that sounds most reasonable, and if it doesn't work I guess
+unifying the pcibios_init() stuff a bit and adding it there.
+
+And somehow I missed that mail thread, too much stuff going on.
+
+> > Whether we move vgaarb into drivers/pci or not is then kinda orthogonal.
 > 
-> What is suspicious for me is that this Memory controller device is at
-> the same bus as wifi card. PCIe is "point to point", so at the other end
-> of link should be only one device... Therefore I'm not sure if kernel
-> can handle such thing like "two PCIe devices" at other end of PCIe link.
+> I'm fine with moving it to drivers/pci if that makes anything easier.
+> It definitely is PCI-related stuff, not GPU-related stuff.
 > 
-> Could you look at attached logs if you see something suspicious here? Or
-> if you need other logs (either from U-Boot or kernel) please let me
-> know.
-> 
-> Note that U-Boot does not see PCIe Bridge as it is emulated only by
-> kernel. So U-Boot enumerates buses from zero and kernel from one (as
-> kernel's bus zero is for emulated PCIe Bridges).
+> [1] https://lore.kernel.org/r/20210526182940.GA1303599@bjorn-Precision-5520
 
-I've lost track of what the problem is or what patch we're evaluating.
-
-Here's what I see from dmesg/lspci/uboot:
-
-  # dmesg (both bad/ok) and lspci:
-  00:01.0 [11ab:6820] Root Port to [bus 01]
-  00:02.0 [11ab:6820] Root Port to [bus 02]
-  00:03.0 [11ab:6820] Root Port to [bus 03]
-  01:00.0 [168c:002e] Atheros AR9287 NIC
-  02:00.0 [168c:0046] Atheros QCA9984 NIC
-  03:00.0 [168c:003c] Atheros QCA986x/988x NIC
-
-The above looks perfectly reasonable.
-
-  # uboot (bad):
-  00.00.00 [11ab:6820] memory controller
-  00.01.00 [168c:002e] NIC
-  01.00.00 [11ab:6820] memory controller
-  01.01.00 [168c:0046] NIC
-  02.00.00 [11ab:6820] memory controller
-  02.01.00 [168c:003c] NIC
-
-The above looks dubious at best.  Bus 00 clearly must be a root bus
-because bus 00 can never be a bridge's secondary bus.
-
-Either buses 01 and 02 need to also be root buses (e.g., if we had
-three host bridges, one leading to bus 00, another to bus 01, and
-another to bus 02), OR there must be Root Ports that act as bridges
-leading from bus 00 to bus 01 and bus 02.  The "memory controllers"
-are vendor/device ID [11ab:6820], which Linux thinks are Root Ports,
-so I assume they are really Root Ports (or some emulation of them).
-
-It's *possible* to have both a Root Port and a NIC on bus 0, as shown
-here.  However, the NIC would have to be a Root Complex integrated
-Endpoint, and this NIC ([168c:002e]) is not one of those.  It's a
-garden-variety PCIe legacy endpoint connected by a link.  So this NIC
-cannot actually be on bus 00.
-
-All these NICs are PCIe legacy endpoints with links, so they all must
-have a Root Port leading to them.  So this topology is not really
-possible.
-
-  # uboot (ok):
-  00.00.00 [168c:002e] NIC
-  01.00.00 [168c:0046] NIC
-  02.00.00 [168c:003c] NIC
-
-This topology is impossible from a PCI perspective because there's no
-way to get from bus 00 to bus 01 or 02.
+Yeah I think it'd fit in pci better tbh, but not strong opinion I guess.
+If we move it we probably want to keep the entry to Cc: dri-devel still
+since it's really just for gpus.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
