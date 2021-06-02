@@ -2,139 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57A8339931C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 21:03:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C9039935A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jun 2021 21:14:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbhFBTEt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Jun 2021 15:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
+        id S229467AbhFBTQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Jun 2021 15:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229755AbhFBTEs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Jun 2021 15:04:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 06146613DE;
-        Wed,  2 Jun 2021 19:03:05 +0000 (UTC)
+        id S229558AbhFBTQk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Jun 2021 15:16:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D5A5613EA;
+        Wed,  2 Jun 2021 19:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622660585;
-        bh=UmpCat1vUqyqVee399R6xx/T2Sz4LjLr8R8Go7S3p1k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IslsaRMEZqqFu3ZzSgqNdLrDRXTjEsWWBTdbepFtuZAlmqCW7jni6jsPwMosOCRva
-         hVL4+t36l+lWWC9rTXUuGHZZNChuQuVPwsgAcgarySIPQWhv3ySLboMSW6JMAf2YId
-         ToOOtiPdJHHzvzYjHqjjfZEO2eYA4AX3Aljp7kAmGXZVA7L2lL6g56NGyyXCmMhVl1
-         sQBuEtFrWqF1K+sFvakhAFEVFj0EMbQqcXRB118BwCBgCvQ2560yN11nj7Z+69id6J
-         JER6VIjNBqPeimx5Ez/tElO4wGeBBVyTueFWmNTpZMfSZeX2/qtGWJoWzcr8IJn95m
-         meDf8kBhp6UbA==
-Received: by pali.im (Postfix)
-        id 81EBA1534; Wed,  2 Jun 2021 21:03:02 +0200 (CEST)
-Date:   Wed, 2 Jun 2021 21:03:02 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        vtolkm@gmail.com, Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        s=k20201202; t=1622661296;
+        bh=9xSLMbvjfOnGtkRnLq693w5O8xbiW95iltXDEXpWTlc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YO1LHbzG0NgS2UidWcUAg85nXU8ZjOoAhkkhnJsAUwlgP/kTNQEEISJbRymp7abj+
+         anfuMAGAXcFOofqS77q/e3HVx13MuJJjzsDFa2g/MkG48Znu9wfwZvicv+Mti54wrT
+         5g0BEA90O6/YMzP6t6K68E00Fk7QfwwH7k9ctR64x/j+dteHjm5o6AkQ3D+trusJIW
+         FPjCFVWUTJyuOBPPr/CKk2b3Kx0sbObJkpAf1H1v9UsUNPJhjLgsbngAEbMKcC2oEk
+         BS4HSNTepNQ7CqrTfRCBXtl6+3eqvgT8cTVedTf+T5aJLdKuS1OKIonigO+CELz15f
+         TGw/q37Q8bO+Q==
+Date:   Wed, 2 Jun 2021 14:14:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Stefan Chulski <stefanc@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Disallow retraining link for Atheros chips on
- non-Gen1 PCIe bridges
-Message-ID: <20210602190302.d3ibdtwti4yq57vi@pali>
-References: <20210602120816.axi4dtnyg5gl2h2z@pali>
- <20210602155559.GA2028037@bjorn-Precision-5520>
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Stefan Roese <sr@denx.de>, Phil Sutter <phil@nwl.cc>,
+        Mario Six <mario.six@gdsys.cc>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [EXT] Re: pci mvebu issue (memory controller)
+Message-ID: <20210602191455.GA2038253@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210602155559.GA2028037@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20210602110703.ymdt6nxsjl7e6glk@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 02 June 2021 10:55:59 Bjorn Helgaas wrote:
-> On Wed, Jun 02, 2021 at 02:08:16PM +0200, Pali RohÃ¡r wrote:
-> > On Tuesday 01 June 2021 19:00:36 Bjorn Helgaas wrote:
+On Wed, Jun 02, 2021 at 01:07:03PM +0200, Pali Rohár wrote:
+
+> In configuration with *bad* suffix is used U-Boot which does not ignore
+> PCIe device Memory controller and configure it when U-Boot initialize.
+> In this configuration loaded kernel is unable to initialize wifi cards.
 > 
-> > > I wonder if this could be restructured as a generic quirk in quirks.c
-> > > that simply set the bridge's TLS to 2.5 GT/s during enumeration.  Or
-> > > would the retrain fail even in that case?
-> > 
-> > If I understand it correctly then PCIe link is already up when kernel
-> > starts enumeration. So setting Bridge TLS to 2.5 GT/s does not change
-> > anything here.
-> > 
-> > Moreover it would have side effect that cards which are already set to
-> > 5+ GT/s would be downgraded to 2.5 GT/s during enumeration and for
-> > increasing speed would be needed another round of "enumeration" to set a
-> > new TLS and retrain link again. As TLS affects link only after link goes
-> > into Recovery state.
-> > 
-> > So this would just complicate card enumeration and settings.
+> In configuration with *ok* suffix is U-Boot explicitly patched to
+> ignores PCIe device Memory controller and loaded kernel can use wifi
+> cards without any issue.
 > 
-> The current quirk complicates the ASPM code.  I'm hoping that if we
-> set the bridge's Target Link Speed during enumeration, the link
-> retrain will "just work" without complicating the ASPM code.
+> In both configurations is used same kernel version. As I wrote in
+> previous emails kernel already ignores and hides Memory controller PCIe
+> device, so lspci does not see it.
 > 
-> An enumeration quirk wouldn't have to set the bridge's TLS to 2.5
-> GT/s; the quirk would be attached to specific endpoint devices and
-> could set the bridge's TLS to whatever the endpoint supports.
-
-Now I see what you mean. Yes, I agree this is a good idea and can
-simplify code. Quirk is not related to ASPM code and basically has
-nothing with it, just I put it into aspm.c because this is the only
-place where link retraining was activated.
-
-But with this proposal there is one issue. Some kernel drivers already
-overwrite PCI_EXP_LNKCTL2_TLS value. So if PCI enumeration code set some
-value into PCI_EXP_LNKCTL2_TLS bits then drivers can change it and once
-ASPM will try to retrain link this may cause this issue.
-
-> > Moreover here we are dealing with specific OTP/EEPROM bug in Atheros
-> > chips, which was confirmed that exists. As I wrote in previous email, I
-> > was told that semi-official workaround is do Warm Reset or Cold Reset
-> > with turning power off from card. Which on most platforms / boards is
-> > not possible.
+> In attachment I'm sending dmesg and lspci outputs from Linux and pci
+> output from U-Boot.
 > 
-> If there's a specific bug with a real root-cause analysis, please cite
-> it.  The threads mentioned in the current commit log are basically
-> informed speculation.
+> What is suspicious for me is that this Memory controller device is at
+> the same bus as wifi card. PCIe is "point to point", so at the other end
+> of link should be only one device... Therefore I'm not sure if kernel
+> can handle such thing like "two PCIe devices" at other end of PCIe link.
+> 
+> Could you look at attached logs if you see something suspicious here? Or
+> if you need other logs (either from U-Boot or kernel) please let me
+> know.
+> 
+> Note that U-Boot does not see PCIe Bridge as it is emulated only by
+> kernel. So U-Boot enumerates buses from zero and kernel from one (as
+> kernel's bus zero is for emulated PCIe Bridges).
 
-I had (private) discussion with Adrian Chadd about ABCD device id issue.
-I hope that nobody is against if I put there summary and important parts
-about secondary bus reset (=hot reset):
+I've lost track of what the problem is or what patch we're evaluating.
 
+Here's what I see from dmesg/lspci/uboot:
 
-The reason for abcd is because:
-* the MAC has hardware that upon cold reset, will read EEPROM/OTP
-  values for things like PCIe and other register defaults, and squirt
-  them into the MAC/PHY/etc registers
-* the default values for the PCIe bus pre-AR9300 were 0x168c:0xff<id>,
-  where <id> is the normal chip ID
-* the default values for the PCIe bus POST-AR9300 were 0x168c:0xabcd,
-  where they're always that regardless of the chip family
-* so yeah, all you know with 0x168c:0xabcd is there's an atheros
-  device there, but not WHICH it is.
+  # dmesg (both bad/ok) and lspci:
+  00:01.0 [11ab:6820] Root Port to [bus 01]
+  00:02.0 [11ab:6820] Root Port to [bus 02]
+  00:03.0 [11ab:6820] Root Port to [bus 03]
+  01:00.0 [168c:002e] Atheros AR9287 NIC
+  02:00.0 [168c:0046] Atheros QCA9984 NIC
+  03:00.0 [168c:003c] Atheros QCA986x/988x NIC
 
-* the bug is that the reset line isn't held low for long enough, or it's
-  bounced twice in quick succession, before the MAC has time to program
-  in the defaults from EEPROM/OTP and it doesn't do it a second time.
+The above looks perfectly reasonable.
 
-* the MAC has hardware that upon cold reset, will read EEPROM/OTP
-  values for things like PCIe and other register defaults, and squirt
-  them into the MAC/PHY/etc registers
+  # uboot (bad):
+  00.00.00 [11ab:6820] memory controller
+  00.01.00 [168c:002e] NIC
+  01.00.00 [11ab:6820] memory controller
+  01.01.00 [168c:0046] NIC
+  02.00.00 [11ab:6820] memory controller
+  02.01.00 [168c:003c] NIC
 
-* need to use the external reset line OR try using D3, not D3hot
-  (I assume that "external reset line" means PERST# - PCIe Warm Reset
-  and "D3, not D3hot" means D3cold)
+The above looks dubious at best.  Bus 00 clearly must be a root bus
+because bus 00 can never be a bridge's secondary bus.
 
+Either buses 01 and 02 need to also be root buses (e.g., if we had
+three host bridges, one leading to bus 00, another to bus 01, and
+another to bus 02), OR there must be Root Ports that act as bridges
+leading from bus 00 to bus 01 and bus 02.  The "memory controllers"
+are vendor/device ID [11ab:6820], which Linux thinks are Root Ports,
+so I assume they are really Root Ports (or some emulation of them).
 
-And now my experiments: Disabling and Enabling link via root bridge has
-exactly same syndromes as hot reset on all tested cards. See that
-different chips (pre-AR9300 and post-AR9300) have slightly different
-behavior and it matches all my experiments (I wrote test details in
-commit message). And doing link retrain when root bridge has non-2.5GT/s
-value in PCI_EXP_LNKCTL2_TLS has also same effect as hot reset.
-So based on same results from my experiments all these actions
-(disabling link, hot reset and link retrain) have common issue.
+It's *possible* to have both a Root Port and a NIC on bus 0, as shown
+here.  However, the NIC would have to be a Root Complex integrated
+Endpoint, and this NIC ([168c:002e]) is not one of those.  It's a
+garden-variety PCIe legacy endpoint connected by a link.  So this NIC
+cannot actually be on bus 00.
+
+All these NICs are PCIe legacy endpoints with links, so they all must
+have a Root Port leading to them.  So this topology is not really
+possible.
+
+  # uboot (ok):
+  00.00.00 [168c:002e] NIC
+  01.00.00 [168c:0046] NIC
+  02.00.00 [168c:003c] NIC
+
+This topology is impossible from a PCI perspective because there's no
+way to get from bus 00 to bus 01 or 02.
