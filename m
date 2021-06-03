@@ -2,189 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6364B39A926
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jun 2021 19:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D153C39A937
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jun 2021 19:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230037AbhFCR3S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Jun 2021 13:29:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:47042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229791AbhFCR3S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Jun 2021 13:29:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8FD611B3;
-        Thu,  3 Jun 2021 10:27:32 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B6A33F73D;
-        Thu,  3 Jun 2021 10:27:31 -0700 (PDT)
-Date:   Thu, 3 Jun 2021 18:27:22 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Rob Herring <robh@kernel.org>,
+        id S229789AbhFCRc1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Jun 2021 13:32:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230053AbhFCRc0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Jun 2021 13:32:26 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C700C06174A;
+        Thu,  3 Jun 2021 10:30:41 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d16so5388620pfn.12;
+        Thu, 03 Jun 2021 10:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OEEmRrvyAG7HsQxvCTXsvqFaf1IXsLAfiEx1WPpz0iU=;
+        b=Oek/Iyf/BMWcXdZg8AGcTY9vNhugpCgwYyy+YNwqTcbwQB3Lt/+obhcVP4dy+tbdmm
+         4EgKlAWDIx+E6cFh+Jkm4eKDd0Yz+Jgpr/8exVdfBdWFGKWHw1oSGtdm6hUaFt5ksZ7i
+         wr/aOGqWcNo4St3yitpBODuSVq44kqIaxjMPMB14GA/CRIPAMyazqpy6vphSJqlRutMy
+         xUBiY+C6634+Av2cYoIvOw6n4L/puHUArA2TcZTMq9+GAbIgnyBbAH3NpqoC7uOtLjCY
+         25z0skxycK4NJrTT8CgSeg2UcqRoKHL8w+o99tEPJeS1/hzo87OkMhFks9PeSSn6qRkT
+         whwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OEEmRrvyAG7HsQxvCTXsvqFaf1IXsLAfiEx1WPpz0iU=;
+        b=GDwZpdRQI5+3ZIIsGOHhjIi/jPSCbaMGVz7D26sLdt2gi0n/S+ihNUmur5Rg7fxB9i
+         KqH+Srd882lzF15/H14yjgtBtGjCmIpwZqaYqIeUH1wZH8g3yPHWlUM3XUprujYDlaoK
+         eROkZ/a8iasVA0U80HJ2I6be2iB/OXaZ5XsjCwmUMltnHNNXsyzwUXq8ZjjYzg97s7LQ
+         xOEU2idRnYQfKOvPFTIbmxZCvtnJLRpJoPv64Km7il1uCfd2x2OdHCFh1tVo4m88warS
+         Y6EL65SBbLAJ70YXdGuoRzCHq0vIjvYMvuMt0O7zVF0GMghspfhX4dW8ZQA2Vlo9jYUB
+         /tQg==
+X-Gm-Message-State: AOAM533uNDghx+7FbnFOHs3bkZf1Z3VQZ3q8QgqdjGCoACzMjwxGPvvr
+        TdGb1TgxFtmB3YG9UhoIX4UVBYrhLNA=
+X-Google-Smtp-Source: ABdhPJw6cKOan4hAw8pMtRcgDq0oVpE1nVRCul6xqIIl5d2LXMjbe0oR3pa/yaNXUCm52ZUj7TFi8A==
+X-Received: by 2002:a05:6a00:88b:b029:2de:33b3:76c9 with SMTP id q11-20020a056a00088bb02902de33b376c9mr248158pfj.30.1622741440660;
+        Thu, 03 Jun 2021 10:30:40 -0700 (PDT)
+Received: from [10.67.49.104] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id d131sm2788059pfd.176.2021.06.03.10.30.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jun 2021 10:30:40 -0700 (PDT)
+Subject: Re: [PATCH v1 4/4] PCI: brcmstb: add shutdown call to driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [Patch v3 2/2] PCI: hv: Remove unused refcount and supporting
- functions for handling bus device removal
-Message-ID: <20210603172713.GA20531@lpieralisi>
-References: <1620806809-31055-1-git-send-email-longli@linuxonhyperv.com>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20210603172313.GA2123252@bjorn-Precision-5520>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <dbd96bb2-4873-a37c-567d-ffd731beb927@gmail.com>
+Date:   Thu, 3 Jun 2021 10:30:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1620806809-31055-1-git-send-email-longli@linuxonhyperv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210603172313.GA2123252@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 12, 2021 at 01:06:49AM -0700, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
+On 6/3/21 10:23 AM, Bjorn Helgaas wrote:
+> On Wed, May 26, 2021 at 10:03:47AM -0700, Florian Fainelli wrote:
+>> On 5/25/21 2:18 PM, Bjorn Helgaas wrote:
+>>> On Tue, Apr 27, 2021 at 01:51:39PM -0400, Jim Quinlan wrote:
+>>>> The shutdown() call is similar to the remove() call except the former does
+>>>> not need to invoke pci_{stop,remove}_root_bus(), and besides, errors occur
+>>>> if it does.
+>>>
+>>> This doesn't explain why shutdown() is necessary.  "errors occur"
+>>> might be a hint, except that AFAICT, many similar drivers do invoke
+>>> pci_stop_root_bus() and pci_remove_root_bus() (several of them while
+>>> holding pci_lock_rescan_remove()), without implementing .shutdown().
+>>
+>> We have to implement .shutdown() in order to meet a certain power budget
+>> while the chip is being put into S5 (soft off) state and still support
+>> Wake-on-WLAN, for our latest chips this translates into roughly 200mW of
+>> power savings at the wall. We could probably add a word or two in a v2
+>> that indicates this is done for power savings.
 > 
-> With the new method of flushing/stopping the workqueue before doing bus
-> removal, the old mechanism of using refcount and wait for completion
-> is no longer needed. Remove those dead code.
+> "Saving power" is a great reason to do this.  But we still need to
+> connect this to the driver model and the system-level behavior
+> somehow.
 > 
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 34 +++--------------------------
->  1 file changed, 3 insertions(+), 31 deletions(-)
-
-I'd be grateful if in the future you can send threaded patch series so
-that tools like b4 can detect the thread and create the mbox
-accordingly.
-
-No need to resend this one (maybe I need to trim patch(2) Subject).
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index c6122a1b0c46..9499ae3275fe 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -452,7 +452,6 @@ struct hv_pcibus_device {
->  	/* Protocol version negotiated with the host */
->  	enum pci_protocol_version_t protocol_version;
->  	enum hv_pcibus_state state;
-> -	refcount_t remove_lock;
->  	struct hv_device *hdev;
->  	resource_size_t low_mmio_space;
->  	resource_size_t high_mmio_space;
-> @@ -460,7 +459,6 @@ struct hv_pcibus_device {
->  	struct resource *low_mmio_res;
->  	struct resource *high_mmio_res;
->  	struct completion *survey_event;
-> -	struct completion remove_event;
->  	struct pci_bus *pci_bus;
->  	spinlock_t config_lock;	/* Avoid two threads writing index page */
->  	spinlock_t device_list_lock;	/* Protect lists below */
-> @@ -593,9 +591,6 @@ static void put_pcichild(struct hv_pci_dev *hpdev)
->  		kfree(hpdev);
->  }
->  
-> -static void get_hvpcibus(struct hv_pcibus_device *hv_pcibus);
-> -static void put_hvpcibus(struct hv_pcibus_device *hv_pcibus);
-> -
->  /*
->   * There is no good way to get notified from vmbus_onoffer_rescind(),
->   * so let's use polling here, since this is not a hot path.
-> @@ -2067,10 +2062,8 @@ static void pci_devices_present_work(struct work_struct *work)
->  	}
->  	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
->  
-> -	if (!dr) {
-> -		put_hvpcibus(hbus);
-> +	if (!dr)
->  		return;
-> -	}
->  
->  	/* First, mark all existing children as reported missing. */
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
-> @@ -2153,7 +2146,6 @@ static void pci_devices_present_work(struct work_struct *work)
->  		break;
->  	}
->  
-> -	put_hvpcibus(hbus);
->  	kfree(dr);
->  }
->  
-> @@ -2194,12 +2186,10 @@ static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
->  	list_add_tail(&dr->list_entry, &hbus->dr_list);
->  	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
->  
-> -	if (pending_dr) {
-> +	if (pending_dr)
->  		kfree(dr_wrk);
-> -	} else {
-> -		get_hvpcibus(hbus);
-> +	else
->  		queue_work(hbus->wq, &dr_wrk->wrk);
-> -	}
->  
->  	return 0;
->  }
-> @@ -2342,8 +2332,6 @@ static void hv_eject_device_work(struct work_struct *work)
->  	put_pcichild(hpdev);
->  	put_pcichild(hpdev);
->  	/* hpdev has been freed. Do not use it any more. */
-> -
-> -	put_hvpcibus(hbus);
->  }
->  
->  /**
-> @@ -2367,7 +2355,6 @@ static void hv_pci_eject_device(struct hv_pci_dev *hpdev)
->  	hpdev->state = hv_pcichild_ejecting;
->  	get_pcichild(hpdev);
->  	INIT_WORK(&hpdev->wrk, hv_eject_device_work);
-> -	get_hvpcibus(hbus);
->  	queue_work(hbus->wq, &hpdev->wrk);
->  }
->  
-> @@ -2967,17 +2954,6 @@ static int hv_send_resources_released(struct hv_device *hdev)
->  	return 0;
->  }
->  
-> -static void get_hvpcibus(struct hv_pcibus_device *hbus)
-> -{
-> -	refcount_inc(&hbus->remove_lock);
-> -}
-> -
-> -static void put_hvpcibus(struct hv_pcibus_device *hbus)
-> -{
-> -	if (refcount_dec_and_test(&hbus->remove_lock))
-> -		complete(&hbus->remove_event);
-> -}
-> -
->  #define HVPCI_DOM_MAP_SIZE (64 * 1024)
->  static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
->  
-> @@ -3097,14 +3073,12 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus->sysdata.domain = dom;
->  
->  	hbus->hdev = hdev;
-> -	refcount_set(&hbus->remove_lock, 1);
->  	INIT_LIST_HEAD(&hbus->children);
->  	INIT_LIST_HEAD(&hbus->dr_list);
->  	INIT_LIST_HEAD(&hbus->resources_for_children);
->  	spin_lock_init(&hbus->config_lock);
->  	spin_lock_init(&hbus->device_list_lock);
->  	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
-> -	init_completion(&hbus->remove_event);
->  	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
->  					   hbus->sysdata.domain);
->  	if (!hbus->wq) {
-> @@ -3341,8 +3315,6 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	hv_pci_free_bridge_windows(hbus);
->  	irq_domain_remove(hbus->irq_domain);
->  	irq_domain_free_fwnode(hbus->sysdata.fwnode);
-> -	put_hvpcibus(hbus);
-> -	wait_for_completion(&hbus->remove_event);
->  
->  	hv_put_dom_num(hbus->sysdata.domain);
->  
-> -- 
-> 2.27.0
+> The pci_driver comment says @shutdown is to "stop idling DMA
+> operations" and it hooks into reboot_notifier_list in kernel/sys.c.
+> That's incorrect or at least incomplete because reboot_notifier_list
+> isn't mentioned at all in kernel/sys.c, and I don't see the connection
+> between @shutdown and reboot_notifier_list.
 > 
+> AFAICT, @shutdown is currently used in this path:
+> 
+>   kernel_restart_prepare or kernel_shutdown_prepare
+>     device_shutdown
+>       dev->bus->shutdown
+>         pci_device_shutdown                     # pci_bus_type.shutdown
+>           drv->shutdown
+> 
+> so we're going to either reboot or halt/power-off the entire system,
+> and we're not going to use this device again until we're in a
+> brand-new kernel and we re-enumerate the device and re-register the
+> driver.
+> 
+> I'm not quite sure how either of those fits into the power-saving
+> reason.  I guess going to S5 is probably via the kernel_power_off()
+> path and that by itself doesn't turn off as much power to the PCIe
+> controller as it could?  And this new .shutdown() method will get
+> called in that path and will turn off more power, but will still leave
+> enough for wake-on-LAN to work?  And when we *do* wake from S5,
+> obviously that means a complete boot with a new kernel.
+
+Correct, the S5 shutdown is via kernel_power_off() and will turn off all
+that we can in the PCIe root complex and its PHY, drop the PCIe link to
+the end-point which signals that the end-point can enter its own suspend
+logic, too. And yes, when we do wake-up from S5 it means booting a
+completely new kernel. S5 is typically implemented in our chips by
+keeping just a little bit of logic active to service wake-up events
+(infrared remotes, GPIOs, RTC, etc.).
+-- 
+Florian
