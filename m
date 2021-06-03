@@ -2,40 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90F7939ADD8
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 00:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 837AC39AE7A
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 01:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231532AbhFCWV6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Jun 2021 18:21:58 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:36379 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231483AbhFCWV5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Jun 2021 18:21:57 -0400
-Received: by mail-wr1-f51.google.com with SMTP id n4so7347761wrw.3
-        for <linux-pci@vger.kernel.org>; Thu, 03 Jun 2021 15:19:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0Gae9gt4g8VNNlPVaWwPGokam5/UEFDl+uRdvZfNLsk=;
-        b=k4FlX9IfCVolrcW0yIpEWNpyYtAcd3HqHf98vLN/js/dkBEr4azQZZLx/FHGOds9RX
-         E0bBfLsOR/mbo60xt5WYMZtEMHCmHCJWxfpd190zOfes6oxFPnbBr+Zv3/oIcsMfbcrN
-         DhsPnZ50DfNOkIYNKjOb5tcvEz65iwefEzP5ntzw7CvlOu8U3SaHygSl5AfbcLUnPMdK
-         ntUo808JlgulCrWM5deTmCP/lUO3fCqSk3TmSjTBaDKQwvHmTiTdQnegf1w7kTVCtliu
-         EEwCTbvgBsz8c9/aT0FORkW1pvUVaz0z/nJSoz6vzcLO+JFtGTEhZIEQtUqpQ6HTI/ev
-         cf9g==
-X-Gm-Message-State: AOAM531R3GG+IxIFNqPPQTtDVmwi85BSySJTjtlVKh/798EEkwke0o2w
-        w/iFU7AdFpEpZfPz7hCKJR8=
-X-Google-Smtp-Source: ABdhPJwcgDllNQD0ospBtV4S2anlguOXe1fnFpPCiP5wwrRdaFAaAfIMOrvoRQKyrhfggyYuweaV2w==
-X-Received: by 2002:adf:ed03:: with SMTP id a3mr628169wro.166.1622758798731;
-        Thu, 03 Jun 2021 15:19:58 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id p10sm4461011wrr.58.2021.06.03.15.19.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 15:19:58 -0700 (PDT)
-Date:   Fri, 4 Jun 2021 00:19:56 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        id S229697AbhFCXCd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Jun 2021 19:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229695AbhFCXCd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Jun 2021 19:02:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 964E86109F;
+        Thu,  3 Jun 2021 23:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622761247;
+        bh=Mb9/VyDtnH5WnbFYwfm20BZ1qCQ3kVeZ0EyJvln1vzM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CPq8nSLKT/wAoH/M+7W8poK3WO6ajm2wOkTTMLvseGFt3NO+yag8kYUuETBac+yvG
+         3gHvcVTjGX5TZg+/XP0csbd5wIh+z115fdbyyiCf12fA3AjCf0jkXM94TXJUcBSyrt
+         1ubOO+wMMhvv494DvyCsztVtp0Wat3U64CSCfXfoilqJjVS3D+qfnSe1oseCRt2lNV
+         9dyLcfawBlc0mwh9tgbsJrtjP3xeYTEqfR5JUyrM2otRfsGy6RyADm4TPqiJSFVNyc
+         IsdIMeJvlQkItubq1yxPt4XTttQ8y4BHKluGfsEt4b4ns0AQBNr2r0JcWha6XnZxD/
+         Kxi0TtaIElSXA==
+Date:   Thu, 3 Jun 2021 18:00:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Joe Perches <joe@perches.com>,
@@ -48,70 +38,84 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] PCI/sysfs: Only show value when driver_override
- is not NULL
-Message-ID: <20210603221956.GA393910@rocinante.localdomain>
-References: <20210603000112.703037-6-kw@linux.com>
- <20210603211741.GA2141918@bjorn-Precision-5520>
+        linux-pci@vger.kernel.org,
+        Sebastian Ott <sebott@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 4/6] PCI/sysfs: Add missing trailing newline to
+ devspec_show()
+Message-ID: <20210603230046.GA2149598@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210603211741.GA2141918@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210603000112.703037-5-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+[+cc Sebastian]
 
-Thank you for the review!
-
-[...]
-> > Only expose the value of the "driver_override" variable through the
-> > corresponding sysfs object when a value is actually set.
+On Thu, Jun 03, 2021 at 12:01:10AM +0000, Krzysztof Wilczyński wrote:
+> At the moment, when the value of the "devspec" sysfs object is read from
+> the user space there will be no newline present, and the utilities such
+> as the "cat" command won't display the result of the read correctly in
+> a shell, as the trailing newline is currently missing.
 > 
-> What's the reason for this change?  The above tells me what it *does*,
-> but not *why* or whether it affects users.
+> To fix this, append a newline character in the show() function.
 
-Good point!  I am going to update the commit message with more details
-about why this change in the next version.  Sorry about this!
+There are a few other devspec_show() functions:
 
-> Is this to avoid trying to print a NULL pointer as %s?  Do we print
-> "(null)" or something in that case now?  I assume sprintf() doesn't
-> actually oops.  If we change what appears in sysfs, we should mention
-> that here.  And maybe consider whether there's any chance of breaking
-> user code that might know what to do with "(null)" but not with an
-> empty string.
+  arch/powerpc/platforms/pseries/ibmebus.c
+  arch/powerpc/platforms/pseries/vio.c
+  arch/sparc/kernel/vio.c
+  drivers/usb/core/sysfs.c
 
-Yes, sprintf() deals with a NULL pointer and prints "(null)", and
-I personally think that this is not very useful, especially in the case
-of this particular sysfs object - I would also prefer not to expose the
-notion of a NULL-value to the userspace this way, something we ought to
-handle properly, see for example how the "resource_alignment" sysfs
-object behaves when there is no value set, as per:
+and they all include the newline.  So I assume it's not likely that
+this minor user-visible change will break something.
 
-  # wc /sys/bus/pci/resource_alignment
-     0    0    0 /sys/bus/pci/resource_alignment
+I did cc: Sebastian, since his dfc73e7acd99 ("PCI: Move Open Firmware
+devspec attribute to PCI common code") moved this code to pci-sysfs.c
+in the first place (it came from microblaze and powerpc code that
+*also* did not include the newline).
 
-> There are six other driver_override_show() methods.  Five don't check
-> the ->driver_override pointer at all; one (spi.c) checks like this:
+I notice that pci-sysfs.c is the only one that returns 0 if of_node is
+NULL.  Probably makes more sense than what the others do.  I'm
+guessing the others would print "(null)" which doesn't seem quite
+right for a sysfs attribute.
+
+But pci-sysfs.c also goes to a little more work than necessary to look
+up of_node:
+
+  struct pci_dev *pdev = to_pci_dev(dev);
+  struct device_node *np = pci_device_to_OF_node(pdev);
+
+when I think this would be equivalent:
+
+  struct device_node *np = dev->of_node;
+
+Some of the others do a similar dance with struct platform_device.
+
+Why'd I write all the above?  I dunno; this looks good to me, no
+action required for you :)
+
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->   len = snprintf(buf, PAGE_SIZE, "%s\n", spi->driver_override ? : "");
-
-For an empty sysfs object, as per the sysfs recommendations, I believe
-that having 0 bytes might be more appropriate to indicate lack of any
-sensible value.  Using "" (empty string) like in the example above would
-still warrant adding a trailing newline character, which would make it
-empty (technically), but certainly not 0 bytes.  Having said that, some
-drivers opt not to add a particular sysfs object at all should there be
-no value for it.
-
-> Do the others need similar fixes?  Most of them still use sprintf()
-> also.
-[...]
-
-I would like to think that we should handle NULL-value in sysfs objects
-sensibly everywhere, so the other cases you were able to find could be
-updated.
-
-	Krzysztof
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index beb8d1f4fafe..5d63df7c1820 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -537,7 +537,7 @@ static ssize_t devspec_show(struct device *dev,
+>  
+>  	if (np == NULL)
+>  		return 0;
+> -	return sysfs_emit(buf, "%pOF", np);
+> +	return sysfs_emit(buf, "%pOF\n", np);
+>  }
+>  static DEVICE_ATTR_RO(devspec);
+>  #endif
+> -- 
+> 2.31.1
+> 
