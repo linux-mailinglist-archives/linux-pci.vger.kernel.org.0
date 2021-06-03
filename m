@@ -2,94 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A4FD39AA29
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jun 2021 20:38:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCDB39ABFD
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jun 2021 22:50:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbhFCSjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Jun 2021 14:39:44 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:34320 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbhFCSjo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Jun 2021 14:39:44 -0400
-Received: by mail-lf1-f44.google.com with SMTP id f30so10334619lfj.1
-        for <linux-pci@vger.kernel.org>; Thu, 03 Jun 2021 11:37:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=58fHnJjlesXYDlRNDU77IpAesCS0a6K2TRkbfzlmqRw=;
-        b=XX6P2EhkhQMe+hH6meUrSRdt5/zT3tTvHJ+2IkCoIGzXE6ryXElg77zXdG4WITwtFS
-         Qh+NrMlOgQEDwNHDjhc09EXPMB/s2ESvKqGWcT283ILRic9vj2hUKoRLLZmU8XIzYBx0
-         AkXtjeUlb5Q474/AaNKC272OgXkpcnMsyv4t4ChCI0yJO9PfboMZGBIZyi7UMU6iVFUW
-         E07t3eJ5BPGr8FhxnPhpXbcXkqISLAONdfu4hMcI1Fl0kIx3VIQfRjwx7tYtiDs9sjNt
-         fHE4ZzH3fRijDv22YuhqZ868/XRMYvgmP8L8YFn2h0UfdgBGc0sqVZPfe2bpgI6d8Y7l
-         +Z7g==
-X-Gm-Message-State: AOAM53238EY8DHz0YPCj3THlyR5FLz9KnlM3wQbmYf6gzjRXBlEyJiv7
-        9kOXZoA3/6LuR3iYb6K+OwI=
-X-Google-Smtp-Source: ABdhPJxqKerQYkJMTnoxWSPAyolb1UDAewH4U+SuPI5ZyZnhNU76Bi0zsJCWI1Iv0GDOtdGuPI62jQ==
-X-Received: by 2002:ac2:5084:: with SMTP id f4mr204255lfm.466.1622745478772;
-        Thu, 03 Jun 2021 11:37:58 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id x19sm422043lfe.270.2021.06.03.11.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 11:37:58 -0700 (PDT)
-Date:   Thu, 3 Jun 2021 20:37:57 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Slivka, Danijel" <Danijel.Slivka@amd.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Fix accessing freed memory in
- pci_remove_resource_files
-Message-ID: <20210603183757.GB375714@rocinante.localdomain>
-References: <5d5f4f33c3f34830b37cbd70e421023b@amd.com>
- <20210510225733.GA2307664@bjorn-Precision-5520>
- <20210525225445.GA108348@rocinante.localdomain>
+        id S229947AbhFCUwe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Jun 2021 16:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229927AbhFCUwd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Jun 2021 16:52:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 87E34613BF;
+        Thu,  3 Jun 2021 20:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622753448;
+        bh=XhynFkzdeD9GRXeKMAwdZQeHQ/caSAVlAZxGaEI0kEw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pXdpBl14RR3CzXBgDuMFtWvEg9uVo9699udJRyf11QxcTgFnn23FHahdUhKnXm+5Z
+         rear6rNrQ4ilCGDUxjXMFsRsx7PKYpy+RyCrc5n3rtAv/QernJL8CTMHBUkoNp639X
+         iuH8CGjcZ53vmsJc/ClgdcVL46RmV042SweTdOXXywlwr5kZCGoNgyhp+aUpiFBPeM
+         Z0dk2MJdI++4uOT+wKnu+nqiTHfupLi8QsuE8Xq7NnxKKF5iLYNXP9ZXZrG48dV/sP
+         bJwlQlnFEE53UuAzmNw9aQADB7E5Uw0q4IzJ0D2yqXYoVieZMPCP3BTicwvwyzGW0N
+         M7s8/wbt3K+BQ==
+Date:   Thu, 3 Jun 2021 15:50:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jroedel@suse.de
+Subject: Re: [PATCH] PCI/APCI: Move acpi_pci_osc_support() check to
+ negotiation phase
+Message-ID: <20210603205047.GA2135380@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210525225445.GA108348@rocinante.localdomain>
+In-Reply-To: <20210603124814.19654-1-joro@8bytes.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+On Thu, Jun 03, 2021 at 02:48:14PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 
-[...]
-> Having said that, aside of some dependency Alpha has on the functions we
-> are trying to retire, both of them have a larger challenge to overcome,
-> and which is related to the following commits:
-> 
-> - 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims the region")
-> - 636b21b50152 ("PCI: Revoke mappings like devmem")
-> 
-> Following these two changes, functions pci_create_attr() (called internally
-> from the pci_create_resource_files()) and pci_create_legacy_files() have
-> since a dependency on the iomem_get_mapping() function - which in turn also
-> creates an implicit dependency on the VFS and fs_initcall.
-> 
-> This dependency on iomem_get_mapping() stops us from retiring the
-> late_initcall at the moment as when we convert dynamically added sysfs
-> objects (that are primarily added in the pci_create_resource_files() and
-> pci_create_legacy_files() functions), these attributes are added before
-> the VFS completes its initialisation, and since most of the PCI devices
-> are typically enumerated in subsys_initcall this leads to a failure and
-> an Oops related to iomem_get_mapping() access.
-> 
-> See relevant conversations:
-> 
->   https://lore.kernel.org/linux-pci/20210204165831.2703772-1-daniel.vetter@ffwll.ch/
->   https://lore.kernel.org/linux-pci/20210313215747.GA2394467@bjorn-Precision-5520/
-> 
-> After some deliberation on a potential solution, we have settled on
-> changing the order when PCI sub-system and relevant device drivers are
-> initialised so that PCI will come after the VFS but before ACPI, thus
-> allowing for the iomem_get_mapping() to work without issues.
-[...]
+I like this patch a lot and I plan to apply it because you've managed
+to simplify the nasty _OSC path a little bit.  But I'm confused about
+the justification.
 
-The conversation related to the iomem_get_mapping() and the dependency
-on VFS has moved to the following thread:
+> The acpi_pci_osc_support() does an _OSC query with _OSC supported set
+> to what the OS supports but a zero _OSC control value. This is
+> problematic on some platforms where the firmware allows to configure
+> whether DPC is under OS or Firmware control.
+>
+> When DPC is configured to be under OS control these platforms will
+> issue a warning in the firmware log that the OS does not support DPC.
 
-  https://lore.kernel.org/linux-pci/20210527205845.GA1421476@bjorn-Precision-5520/
+My understanding is that DPC is under platform control until the OS
+requests it via _OSC(Request, Control & OSC_PCI_EXPRESS_DPC_CONTROL)
+and the platform grants it.  And after the OS is granted control of
+DPC, it must preserve OSC_PCI_EXPRESS_DPC_CONTROL in all subsequent
+_OSC calls (i.e., there is no way for the OS to relinquish DPC
+control).
 
-	Krzysztof
+So what does it mean for "DPC to be under OS control, but the OS does
+_OSC(Query, Control=0)"?  That doesn't sound like a legal sequence:
+the OS has already been granted DPC control, but it failed to preserve
+OSC_PCI_EXPRESS_DPC_CONTROL?
+
+If instead you mean that the OS has *not* been granted DPC control,
+but does _OSC(Query, SUPPORT=x, CONTROL=0), I think that means the OS
+is telling the platform what it supports but not requesting anything.
+That sounds legal to me, so if firmware complains about it, I would
+say it's a firmware problem.
+
+> Avoid an _OSC query with _OSC control set to zero by moving the
+> supported check into the acpi_pci_osc_control_set() path. This is
+> still early enough to fail as nothing before that depends on the
+> results of acpi_pci_osc_support().
+> 
+> As a result the acpi_pci_osc_support() function can be removed and
+> acpi_pci_query_osc() be simplified because it no longer called with a
+> NULL pointer for *control.
+
+So I think we should do this, but not because it avoids a firmware
+warning, which looks like a firmware bug to me.  We should do it just
+because it simplifies this ugly code.
+
+But please help me out if I'm misunderstanding something above.  I'm
+never confident that I really understand _OSC.
+
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  drivers/acpi/pci_root.c | 50 ++++++++++++++++-------------------------
+>  1 file changed, 19 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index dcd593766a64..530ecf4970b1 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -199,16 +199,11 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>  
+>  	support &= OSC_PCI_SUPPORT_MASKS;
+>  	support |= root->osc_support_set;
+> +	*control &= OSC_PCI_CONTROL_MASKS;
+
+Unrelated to *this* patch, but I don't understand the point of
+OSC_PCI_SUPPORT_MASKS and OSC_PCI_CONTROL_MASKS.  These are all
+internal static functions and it looks like pointless work to apply
+masks here and in acpi_pci_osc_control_set().
+
+I'm happy to make this change, but if you do it, please make it a
+separate patch for bisection purposes.
+
+>  	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+>  	capbuf[OSC_SUPPORT_DWORD] = support;
+> -	if (control) {
+> -		*control &= OSC_PCI_CONTROL_MASKS;
+> -		capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+> -	} else {
+> -		/* Run _OSC query only with existing controls. */
+> -		capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
+> -	}
+> +	capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+>  
+>  	status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+>  	if (ACPI_SUCCESS(status)) {
+
+We can also drop the "if (control)" check inside the ACPI_SUCCESS()
+block, can't we?
+
+> @@ -219,11 +214,6 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>  	return status;
+>  }
+>  
+> -static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
+> -{
+> -	return acpi_pci_query_osc(root, flags, NULL);
+> -}
+> -
+>  struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
+>  {
+>  	struct acpi_pci_root *root;
+> @@ -346,7 +336,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+>   * _OSC bits the BIOS has granted control of, but its contents are meaningless
+>   * on failure.
+>   **/
+> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
+> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
+> +					    *mask, u32 req, u32 support)
+>  {
+>  	struct acpi_pci_root *root;
+>  	acpi_status status;
+> @@ -370,7 +361,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+>  
+>  	/* Need to check the available controls bits before requesting them. */
+>  	while (*mask) {
+> -		status = acpi_pci_query_osc(root, root->osc_support_set, mask);
+> +		status = acpi_pci_query_osc(root, support, mask);
+>  		if (ACPI_FAILURE(status))
+>  			return status;
+>  		if (ctrl == *mask)
+> @@ -433,18 +424,6 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  		support |= OSC_PCI_EDR_SUPPORT;
+>  
+>  	decode_osc_support(root, "OS supports", support);
+> -	status = acpi_pci_osc_support(root, support);
+> -	if (ACPI_FAILURE(status)) {
+> -		*no_aspm = 1;
+> -
+> -		/* _OSC is optional for PCI host bridges */
+> -		if ((status == AE_NOT_FOUND) && !is_pcie)
+> -			return;
+> -
+> -		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> -			 acpi_format_exception(status));
+> -		return;
+> -	}
+>  
+>  	if (pcie_ports_disabled) {
+>  		dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
+
+Also not related to this patch, but it seems pointless to compute and
+decode "support" above when we're not going to use _OSC at all.  I
+think the "pcie_ports_disabled" test should be the very first thing in
+this function (I'm assuming the "pcie_ports=compat" command line
+argument *should* apply even on x86_apple_machine, which it doesn't
+today).
+
+Again, I'm happy to do this if it makes sense to you.
+
+> @@ -483,7 +462,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  
+>  	requested = control;
+>  	status = acpi_pci_osc_control_set(handle, &control,
+> -					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+> +					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL,
+> +					  support);
+>  	if (ACPI_SUCCESS(status)) {
+>  		decode_osc_control(root, "OS now controls", control);
+>  		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
+> @@ -496,10 +476,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  			*no_aspm = 1;
+>  		}
+>  	} else {
+> -		decode_osc_control(root, "OS requested", requested);
+> -		decode_osc_control(root, "platform willing to grant", control);
+> -		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> -			acpi_format_exception(status));
+> +		/* Platform wants to control PCIe features */
+
+Or _OSC just failed because of an OS or firmware defect ;)
+
+> +		root->osc_support_set = 0;
+>  
+>  		/*
+>  		 * We want to disable ASPM here, but aspm_disabled
+> @@ -509,6 +487,16 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  		 * root scan.
+>  		 */
+>  		*no_aspm = 1;
+> +
+> +		/* _OSC is optional for PCI host bridges */
+> +		if ((status == AE_NOT_FOUND) && !is_pcie)
+> +			return;
+> +
+> +		decode_osc_control(root, "OS requested", requested);
+> +		decode_osc_control(root, "platform willing to grant", control);
+> +		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> +			acpi_format_exception(status));
+> +
+>  	}
+>  }
+>  
+> -- 
+> 2.31.1
+> 
