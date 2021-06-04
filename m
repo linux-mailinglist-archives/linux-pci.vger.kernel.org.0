@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2F4839C023
+	by mail.lfdr.de (Postfix) with ESMTP id A94FB39C022
 	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 21:05:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbhFDTHf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 15:07:35 -0400
+        id S230177AbhFDTHe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 15:07:34 -0400
 Received: from mga06.intel.com ([134.134.136.31]:48564 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229880AbhFDTHd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S229823AbhFDTHd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Fri, 4 Jun 2021 15:07:33 -0400
-IronPort-SDR: 9u38mVsjHPuAjHm6nafBo8QIfl+CkupI93rp4XGpXQit/pp5DFl/BI4AxT6zyShcTD95UsXSNy
- al71yLRIn33Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="265513931"
+IronPort-SDR: CmsX79GpxVSyeMlYCK/sCr3EDu0FjoUXLqIUf+u1Bol0ZFcH7UGbWOK4/f39WokFrPWT/01Nj2
+ ZsOTo9dG7sXw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="265513934"
 X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
-   d="scan'208";a="265513931"
+   d="scan'208";a="265513934"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:45 -0700
-IronPort-SDR: 7yIl4I0bHiaT4siA51rao5h+U0gnmmtvQ3xiLjB49ECa9dL0CcJDEnoQTBdtiiUH10oncfTRCd
- sYudfQoggMBg==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:46 -0700
+IronPort-SDR: ZU+5V4L68kbEnP2eDF0yqzS/neR0B0TCPFoQf1eYuDWJYHskWV87S12iQSpL10WqcTuEpHAG+9
+ VPNrq52Wg8kg==
 X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
-   d="scan'208";a="401049101"
+   d="scan'208";a="401049108"
 Received: from abathaly-mobl2.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.37])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:45 -0700
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -29,9 +29,9 @@ To:     linux-pci@vger.kernel.org
 Cc:     =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>
-Subject: [PATCH 1/9] cxl: Rename variable to match other code
-Date:   Fri,  4 Jun 2021 12:05:33 -0700
-Message-Id: <20210604190541.175602-2-ben.widawsky@intel.com>
+Subject: [PATCH 2/9] cxl: Make id check more explicit
+Date:   Fri,  4 Jun 2021 12:05:34 -0700
+Message-Id: <20210604190541.175602-3-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210604190541.175602-1-ben.widawsky@intel.com>
 References: <20210604190541.175602-1-ben.widawsky@intel.com>
@@ -41,54 +41,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The current variable is word sized, and so this makes the CXL code match
-the rest of the code.
+Currently only type 0 DVSEC caps are handled. Moving this check will
+allow more robust type handling in the future.
+
+Should be no functional change.
+
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- ls-ecaps.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ ls-ecaps.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/ls-ecaps.c b/ls-ecaps.c
-index 99c55ff..edb4401 100644
+index edb4401..83ca93e 100644
 --- a/ls-ecaps.c
 +++ b/ls-ecaps.c
-@@ -692,7 +692,7 @@ cap_rcec(struct device *d, int where)
- static void
- cap_dvsec_cxl(struct device *d, int where)
- {
--  u16 l;
-+  u16 w;
- 
-   printf(": CXL\n");
-   if (verbose < 2)
-@@ -701,19 +701,19 @@ cap_dvsec_cxl(struct device *d, int where)
-   if (!config_fetch(d, where + PCI_CXL_CAP, 12))
-     return;
- 
--  l = get_conf_word(d, where + PCI_CXL_CAP);
-+  w = get_conf_word(d, where + PCI_CXL_CAP);
-   printf("\t\tCXLCap:\tCache%c IO%c Mem%c Mem HW Init%c HDMCount %d Viral%c\n",
--    FLAG(l, PCI_CXL_CAP_CACHE), FLAG(l, PCI_CXL_CAP_IO), FLAG(l, PCI_CXL_CAP_MEM),
--    FLAG(l, PCI_CXL_CAP_MEM_HWINIT), PCI_CXL_CAP_HDM_CNT(l), FLAG(l, PCI_CXL_CAP_VIRAL));
-+    FLAG(w, PCI_CXL_CAP_CACHE), FLAG(w, PCI_CXL_CAP_IO), FLAG(w, PCI_CXL_CAP_MEM),
-+    FLAG(w, PCI_CXL_CAP_MEM_HWINIT), PCI_CXL_CAP_HDM_CNT(w), FLAG(w, PCI_CXL_CAP_VIRAL));
- 
--  l = get_conf_word(d, where + PCI_CXL_CTRL);
-+  w = get_conf_word(d, where + PCI_CXL_CTRL);
-   printf("\t\tCXLCtl:\tCache%c IO%c Mem%c Cache SF Cov %d Cache SF Gran %d Cache Clean%c Viral%c\n",
--    FLAG(l, PCI_CXL_CTRL_CACHE), FLAG(l, PCI_CXL_CTRL_IO), FLAG(l, PCI_CXL_CTRL_MEM),
--    PCI_CXL_CTRL_CACHE_SF_COV(l), PCI_CXL_CTRL_CACHE_SF_GRAN(l), FLAG(l, PCI_CXL_CTRL_CACHE_CLN),
--    FLAG(l, PCI_CXL_CTRL_VIRAL));
-+    FLAG(w, PCI_CXL_CTRL_CACHE), FLAG(w, PCI_CXL_CTRL_IO), FLAG(w, PCI_CXL_CTRL_MEM),
-+    PCI_CXL_CTRL_CACHE_SF_COV(w), PCI_CXL_CTRL_CACHE_SF_GRAN(w), FLAG(w, PCI_CXL_CTRL_CACHE_CLN),
-+    FLAG(w, PCI_CXL_CTRL_VIRAL));
- 
--  l = get_conf_word(d, where + PCI_CXL_STATUS);
--  printf("\t\tCXLSta:\tViral%c\n", FLAG(l, PCI_CXL_STATUS_VIRAL));
-+  w = get_conf_word(d, where + PCI_CXL_STATUS);
-+  printf("\t\tCXLSta:\tViral%c\n", FLAG(w, PCI_CXL_STATUS_VIRAL));
+@@ -690,7 +690,7 @@ cap_rcec(struct device *d, int where)
  }
  
  static void
+-cap_dvsec_cxl(struct device *d, int where)
++cap_dvsec_cxl(struct device *d, int id, int where)
+ {
+   u16 w;
+ 
+@@ -698,6 +698,9 @@ cap_dvsec_cxl(struct device *d, int where)
+   if (verbose < 2)
+     return;
+ 
++  if (id != 0)
++    return;
++
+   if (!config_fetch(d, where + PCI_CXL_CAP, 12))
+     return;
+ 
+@@ -734,8 +737,8 @@ cap_dvsec(struct device *d, int where)
+   u16 id = get_conf_long(d, where + PCI_DVSEC_HEADER2);
+ 
+   printf("Vendor=%04x ID=%04x Rev=%d Len=%d", vendor, id, rev, len);
+-  if (vendor == PCI_DVSEC_VENDOR_ID_CXL && id == PCI_DVSEC_ID_CXL && len >= 16)
+-    cap_dvsec_cxl(d, where);
++  if (vendor == PCI_DVSEC_VENDOR_ID_CXL && len >= 16)
++    cap_dvsec_cxl(d, id, where);
+   else
+     printf(" <?>\n");
+ }
 -- 
 2.31.1
 
