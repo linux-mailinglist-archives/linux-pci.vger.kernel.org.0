@@ -2,130 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB03C39B658
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 12:00:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9830939B7D9
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 13:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbhFDKCf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 06:02:35 -0400
-Received: from mail-ed1-f45.google.com ([209.85.208.45]:37603 "EHLO
-        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbhFDKCe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Jun 2021 06:02:34 -0400
-Received: by mail-ed1-f45.google.com with SMTP id b11so10466924edy.4
-        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 03:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FBQD7Un56lN0z2oeN/M8hCljHk3EqA4dP7dm5bjbnEA=;
-        b=Gm4Qo8Dxss2EFKU/uY2o2VlqoGUmp+BC1WRP+YdnUnMl8x7TVjBPTb0k2jPjagtXIp
-         yme5LoGdEhCLezLpp0Ur/tg0uW+tCGqRqQzGPMkGXkKZoex5VV4ajbWeQZ/z/JxRzcrt
-         799ZsuBIlL8OKkhZaDr90MqXpMJI/dWwiW1TR5IO0lQYAa9xJaSHaRR1dOOQH7CQDfaD
-         CfkGj54ymFoQ4eowdymSklmQcfDtENUSjW3+vfNWx2Ai5QKUsWOsyhBU6oMaaED0wVhO
-         1jGMhk+JexIepdscE1eg73szCUEwCCv+S2VZatKUjk8ql83edbZQvfe9Wcaw2MVNLenA
-         ualA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FBQD7Un56lN0z2oeN/M8hCljHk3EqA4dP7dm5bjbnEA=;
-        b=YMEi7Qu8ppO5XFkd49oyqCx1UdncTAUl0G4hQGkLFcBZ+L8kyIgkKS5EYhZ1ERb3uZ
-         DvZo0c7y/n74aCayfzMv/lUh14qUw/cvGdEA2vuj6J39LB0QFhM7tfT8ddRVi8QAurMD
-         uLEJtbe9RtiSYCu/FsdPFBSxxfr/ZB0w07/6fDOOXNiMqCNxmQgcioj4HEeSaZVzzlK0
-         f+ObirBwnQaCtEaPbmgGzlQe5mYou8ODWJOPoqOxskJ93YzNE5vd/qRRkqnX9LtiwaEZ
-         G5kpnkBXo6XZ3U0BcVDQFOtPbPPQ+6SRG/3CZdPRMD3e0uZqk2ypfVHqVuMSCLANTZoA
-         Bqcg==
-X-Gm-Message-State: AOAM5329EWo7fF+u64D+x5hwnR2k7UrSAilWJj0wg0A8OM8GP9xs90/X
-        Mwf5aQwlvBuyx+Y62kULLkjQ0PspP/zhWm9A8Ac=
-X-Google-Smtp-Source: ABdhPJwsOj4HY6c2kPiiTxubjpk0HusZB40NhGfuYkvUWdOhOT13dg7A++neJ2wCyWKWh1tO+XaJtRMlz4sspXbrwRA=
-X-Received: by 2002:aa7:d755:: with SMTP id a21mr3911857eds.146.1622800787647;
- Fri, 04 Jun 2021 02:59:47 -0700 (PDT)
+        id S230010AbhFDL3H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 07:29:07 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27525 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229980AbhFDL3H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 07:29:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1622806041; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=YXjO1NBk4R6zfzdP/85v2mSrHJpM3+AAhXJfrh/G14w=;
+ b=IR/jDwJg8221k2JqF0EXLI35hiIgSvIf3bOExkKnbvPp1nRUppTZw/W6R3eyaTCefHR2eCY3
+ D9YtCfxj0wjN1QpdjrdpG5qPxjVqbnQ2Rmtt4PyFl4hbSbJXk2I3rRoaEyUqL6zN4ePoya8x
+ 1W2kH/HbL3K/n4z98EyuFyvUwZE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 60ba0e05e27c0cc77f096bd0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 04 Jun 2021 11:27:01
+ GMT
+Sender: pmaliset=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEB6CC4338A; Fri,  4 Jun 2021 11:27:00 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmaliset)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F510C4360C;
+        Fri,  4 Jun 2021 11:26:57 +0000 (UTC)
 MIME-Version: 1.0
-References: <20210528071503.1444680-5-chenhuacai@loongson.cn> <20210528205129.GA1519561@bjorn-Precision-5520>
-In-Reply-To: <20210528205129.GA1519561@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Fri, 4 Jun 2021 17:59:35 +0800
-Message-ID: <CAAhV-H6t_UpcW3iCYw9iG3NXhZin4Sk-zsORNcrcg8Q=8jiJcw@mail.gmail.com>
-Subject: Re: [PATCH V2 4/4] PCI: Add quirk for multifunction devices of LS7A
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 04 Jun 2021 16:56:57 +0530
+From:   Prasad Malisetty <pmaliset@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mgautam@codeaurora.org, dianders@chromium.org, mka@chromium.org
+Subject: Re: [PATCH 1/3] dt-bindings: pci: qcom: Document PCIe bindings for
+ SC720
+In-Reply-To: <CAE-0n53KTeF9NOrb+x7P1AG53FENRBGtCEcSxronBpJoww3jew@mail.gmail.com>
+References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
+ <1620382648-17395-2-git-send-email-pmaliset@codeaurora.org>
+ <CAE-0n53KTeF9NOrb+x7P1AG53FENRBGtCEcSxronBpJoww3jew@mail.gmail.com>
+Message-ID: <cb2a6cd35df42314c5e5230bcac752be@codeaurora.org>
+X-Sender: pmaliset@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+On 2021-05-08 01:29, Stephen Boyd wrote:
+> Quoting Prasad Malisetty (2021-05-07 03:17:26)
+>> Document the PCIe DT bindings for SC7280 SoC.The PCIe IP is similar
+>> to the one used on SM8250. Add the compatible for SC7280.
+>> 
+>> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 17 
+>> +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt 
+>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> index 0da458a..e5245ed 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> @@ -12,6 +12,7 @@
+>>                         - "qcom,pcie-ipq4019" for ipq4019
+>>                         - "qcom,pcie-ipq8074" for ipq8074
+>>                         - "qcom,pcie-qcs404" for qcs404
+>> +                       - "qcom,pcie-sc7280" for sc7280
+>>                         - "qcom,pcie-sdm845" for sdm845
+>>                         - "qcom,pcie-sm8250" for sm8250
+>> 
+>> @@ -133,6 +134,22 @@
+>>                         - "slave_bus"   AXI Slave clock
+>> 
+>>  - clock-names:
+>> +       Usage: required for sc7280
+>> +       Value type: <stringlist>
+>> +       Definition: Should contain the following entries
+>> +                       - "aux"         Auxiliary clock
+>> +                       - "cfg"         Configuration clock
+>> +                       - "bus_master"  Master AXI clock
+>> +                       - "bus_slave"   Slave AXI clock
+>> +                       - "slave_q2a"   Slave Q2A clock
+>> +                       - "tbu"         PCIe TBU clock
+>> +                       - "ddrss_sf_tbu" PCIe SF TBU clock
+>> +                       - "pipe"        PIPE clock
+>> +                       - "pipe_src"    PIPE MUX
+> 
+> Is pipe_src necessary? Is it the parent of the pipe clk? If so, please
+> remove it and do whatever is necessary on the pipe clk instead of the
+> parent of the clk.
 
-On Sat, May 29, 2021 at 4:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rob, previous discussion at
-> https://lore.kernel.org/r/20210514080025.1828197-5-chenhuacai@loongson.cn]
->
-> On Fri, May 28, 2021 at 03:15:03PM +0800, Huacai Chen wrote:
-> > From: Jianmin Lv <lvjianmin@loongson.cn>
-> >
-> > In LS7A, multifunction device use same PCI PIN (because the PIN register
-> > report the same INTx value to each function) but we need different IRQ
-> > for different functions, so add a quirk to fix it for standard PCI PIN
-> > usage.
->
-> This seems to say that PCI_INTERRUPT_PIN reports the same value for
-> all functions, but the functions actually use *different* IRQs.
->
-> That would be a hardware defect, and of course, we can work around
-> such things.  It's always better if you can assure us that the defect
-> will be fixed in future designs so we don't have to update the
-> workaround with more device IDs.
-Yes, you are right, and new hardware will not need this workaround.
-
->
-> But Jiaxun suggests [1] that the FDT says all the interrupts go to the
-> same IRQ.
->
-> So I don't know what's going on here.  We can certainly work around a
-> problem, but of course, this quirk would apply for both FDT and
-> ACPI-based systems, and the FDT systems seem to work without it.
-Emmm, I have discussed with Jiaxun, and maybe you missed something. He
-means that ACPI systems need this workaround, and FDT systems don't
-need this. But this workaround doesn't break FDT systems, because FDT
-systems simply ignore the workaround (interrupts are specified in .dts
-file).
-
-Huacai
->
-> [1] https://lore.kernel.org/r/933330cb-9d86-2b22-9bed-64becefbe2d1@flygoat.com
->
-> > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/pci/quirks.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 10b3b2057940..6ab4b3bba36b 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -242,6 +242,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >                       DEV_LS7A_LPC, loongson_system_bus_quirk);
-> >
-> > +static void loongson_pci_pin_quirk(struct pci_dev *dev)
-> > +{
-> > +     dev->pin = 1 + (PCI_FUNC(dev->devfn) & 3);
-> > +}
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
-> > +
-> >  static void loongson_mrrs_quirk(struct pci_dev *dev)
-> >  {
-> >       struct pci_bus *bus = dev->bus;
-> > --
-> > 2.27.0
-> >
+Here pipe_src is MUX. Newer targets require changing pipe-clk mux to 
+switch between pipe_clk and XO for GDSC enable.
+After PHY init, need to configure MUX.
+> 
+>> +                       - "pipe_ext"    PIPE output clock
+> 
+> Is pipe output different from pipe?
+> 
+Yes, pipe_ext clock will generate after PHY init.
+>> +                       - "ref"         REFERENCE clock
+>> +
+>> 
