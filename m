@@ -2,129 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B4239C0D9
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 21:56:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EDDB39C10D
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 22:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbhFDT6f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 15:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
+        id S229930AbhFDUOX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 16:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229854AbhFDT6e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 15:58:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 68F7F613EA;
-        Fri,  4 Jun 2021 19:56:47 +0000 (UTC)
+        id S229791AbhFDUOX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 16:14:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A3A03610E7;
+        Fri,  4 Jun 2021 20:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622836607;
-        bh=AFpjjiA99h0nt4kcs5wc/Q6hDKnPZPZchEi3dNIHl9U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IEGObJaYdVHGM3hMxpDIBzCL7QUfZbpGqzGMgMaCg1NFWMTq+wZsTW8b+lvq7zIbi
-         7A95NF9c6OGnid9mt4NR45qJUAFOBjchGRVyg2yVDD6zzt8BQEk+HSlW6iDr08P2wI
-         XY+AM9Pca+6xWnkddlv6L/p9zNn/Q7h9fcKiA+TIaHDjfAqsRhlgypM46yBUNhipVN
-         Z/uSxdZOLx+bigF78FS01uKVUNjmqclyGU20vjEmoOgqWZQrpJULJ8LH/1lUaXMc8r
-         wygraoTn9dXHDeUON02TEE6+czyAjA4ehQBuXlu6/Ygi6lGNGANVYJzJGKE1n+s0DP
-         3dwpbgbdTM4Uw==
-Date:   Fri, 4 Jun 2021 14:56:46 -0500
+        s=k20201202; t=1622837557;
+        bh=+E5f444FXO74SrVxpmgPjqsEm8CjgWiy4sXFqlkCNhg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SLIeKCUTKxgSj4zdtpHeLnhKjcCUJre5xNgQlyTICMvKctVO5QLPHCf46UFT6mrqh
+         l37MDu4vUcw3VQu4S8GE5QQIOoi61QQ91vTd3rT4e4fpcmTUA2xXNifqhqjdY9A7hE
+         Q4tj1Xn4sYBDzUpBjnG5EMPqECBxvQYIpotWbpxdxKlXNmAzs65n5bm7AN/AmBC/zq
+         FadriSGMk+Ff5NvnCoSWWobQi1ljfavIJYCpXZJHyFsDTNeudEQ9iOIVuNA3Ezf8Tk
+         vsRqcF7ounWGDwEuMpRGYPsIjNHjVxCL5MqoRTdAxtAco30vRvL7tl26Zzk3uclfuG
+         0AXLmQCCyWVHg==
+Date:   Fri, 4 Jun 2021 15:12:35 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] vgaarb: Call vga_arb_device_init() after PCI enumeration
-Message-ID: <20210604195646.GA2231573@bjorn-Precision-5520>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [GIT PULL] PCI fixes for v5.13
+Message-ID: <20210604201235.GA2233426@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H5bO5MAshcxo=xehfxU5zMBKep4ebYaLQ1oT8uuTjqoSQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 04, 2021 at 12:50:03PM +0800, Huacai Chen wrote:
-> On Thu, Jun 3, 2021 at 2:31 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
-> >
-> > [+cc linux-pci]
-> >
-> > On Wed, Jun 2, 2021 at 11:22 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > On Wed, Jun 02, 2021 at 06:36:03PM +0800, Huacai Chen wrote:
-> > > > On Wed, Jun 2, 2021 at 2:03 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > > On Tue, Jun 01, 2021 at 07:12:27PM +0200, Greg KH wrote:
-> > > > > > On Tue, Jun 01, 2021 at 05:56:40PM +0200, Daniel Vetter wrote:
-> > > > > > > On Fri, May 28, 2021 at 04:26:07PM +0800, Huacai Chen wrote:
-> > > > > > > > We should call vga_arb_device_init() after PCI enumeration, otherwise it
-> > > > > > > > may fail to select the default VGA device. Since vga_arb_device_init()
-> > > > > > > > and PCI enumeration function (i.e., pcibios_init() or acpi_init()) are
-> > > > > > > > both wrapped by subsys_initcall(), their sequence is not assured. So, we
-> > > > > > > > use subsys_initcall_sync() instead of subsys_initcall() to wrap vga_arb_
-> > > > > > > > device_init().
-> > > > > >
-> > > > > > Trying to juggle levels like this always fails if you build the code as
-> > > > > > a module.
-> > > > > >
-> > > > > > Why not fix it properly and handle the out-of-order loading by returning
-> > > > > > a "deferred" error if you do not have your resources yet?
-> > > > >
-> > > > > It's not a driver, it's kinda a bolted-on-the-side subsytem of pci. So not
-> > > > > something you can -EPROBE_DEFER I think, without potentially upsetting the
-> > > > > drivers that need this.
-> > > > >
-> > > > > Which might mean we should move this into pci subsystem proper perhaps?
-> > > > > Then adding the init call at the right time becomes trivial since we just
-> > > > > plug it in at the end of pci init.
-> > > > >
-> > > > > Also maybe that's how distros avoid this pain, pci is built-in, vgaarb is
-> > > > > generally a module, problem solved.
-> > > > >
-> > > > > Bjorn, would you take this entire vgaarb.c thing? From a quick look I
-> > > > > don't think it has a drm-ism in it (unlike vga_switcheroo, but that works
-> > > > > a bit differently and doesn't have this init order issue).
-> > > > Emmm, this patch cannot handle the hotplug case and module case, it
-> > > > just handles the case that vgaarb, drm driver and pci all built-in.
-> > > > But I think this is enough, because the original problem only happens
-> > > > on very few BMC-based VGA cards (BMC doesn't set the VGA Enable bit on
-> > > > the bridge, which breaks vgaarb).
-> > >
-> > > I'm not talking aout hotplug, just ordering the various pieces correctly.
-> > > That vgaarb isn't really a driver and also can't really handle hotplug is
-> > > my point. I guess that got lost a bit?
-> > >
-> > > Anyway my proposal is essentially to do a
-> > >
-> > > $ git move drivers/gpu/vga/vgaarb.c drivers/pci
-> > >
-> > > But I just realized that vgaarb is a bool option, so module isn't possible
-> > > anyway, and we could fix this by calling vgaarb from pcibios init (with an
-> > > empty static inline in the header if vgaarb is disabled). That makes the
-> > > dependency very explicit and guarantees it works correctly.
-> >
-> > pcibios_init() is also an initcall and is implemented by every arch.
-> > I agree that calling vga_arb_device_init() directly from
-> > pcibios_init() would probably fix this problem, and it would be really
-> > nice to have it not be an initcall.  But it's also kind of a pain to
-> > have to update all those copies of pcibios_init(), and I would be
-> > looking for a way to unify it since it's not really an arch-specific
-> > thing.
-> >
-> > I think the simplest solution, which I suggested earlier [1], would be
-> > to explicitly call vga_arbiter_add_pci_device() directly from the PCI
-> > core when it enumerates a VGA device.  Then there's no initcall and no
-> > need for the BUS_NOTIFY_ADD/DEL_DEVICE stuff.
-> > vga_arbiter_add_pci_device() could set the default VGA device when it
-> > is enumerated, and change the default device if we enumerate a
-> > "better" one.  And hotplug VGA devices would work automatically.
-> Emm, It seems that your solution has some difficulties to remove the
-> whole initcall(vga_arb_device_init): we call
-> vga_arbiter_add_pci_device() in pci_bus_add_device(), the
-> list_for_each_entry() loop can be moved to
-> vga_arbiter_check_bridge_sharing(), vga_arb_select_default_device()
-> can be renamed to vga_arb_update_default_device() and be called in
-> vga_arbiter_add_pci_device(), but how to handle
-> misc_register(&vga_arb_device)?
+The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-Might need to keep vga_arb_device_init() as an initcall, but remove
-everything from it except the misc_register().
+  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.13-fixes-1
+
+for you to fetch changes up to 85aabbd7b315c65673084b6227bee92c00405239:
+
+  PCI/MSI: Fix MSIs for generic hosts that use device-tree's "msi-map" (2021-05-25 18:37:37 -0500)
+
+----------------------------------------------------------------
+PCI fixes:
+
+  - Fix MSIs for platforms with "msi-map" device-tree property, which we
+    broke in v5.13-rc1 (Jean-Philippe Brucker)
+
+  - Add Krzysztof Wilczyński as PCI reviewer (Lorenzo Pieralisi)
+
+----------------------------------------------------------------
+Jean-Philippe Brucker (1):
+      PCI/MSI: Fix MSIs for generic hosts that use device-tree's "msi-map"
+
+Lorenzo Pieralisi (1):
+      MAINTAINERS: Add Krzysztof as PCI host/endpoint controllers reviewer
+
+ MAINTAINERS         | 2 ++
+ drivers/pci/of.c    | 7 +++++++
+ drivers/pci/probe.c | 3 ++-
+ include/linux/pci.h | 2 ++
+ 4 files changed, 13 insertions(+), 1 deletion(-)
