@@ -2,105 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2834839C1C6
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 22:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43DE739C1D6
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 23:08:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbhFDVBD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 17:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
+        id S229906AbhFDVKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 17:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229982AbhFDVBD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 17:01:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F313A61404;
-        Fri,  4 Jun 2021 20:59:15 +0000 (UTC)
+        id S229668AbhFDVKV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 17:10:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 25F81613EA;
+        Fri,  4 Jun 2021 21:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622840356;
-        bh=JPQiVcD9/Kraxh6rc5CDsi67Y+HVF9LvHrvJzJd0Iik=;
+        s=k20201202; t=1622840914;
+        bh=Xye3NEgxGGlW+L7h1jlnfY5apTXpxQ80ISWiwLJL5g0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NgM3ttWanxkOLy50ukqkCBrYueU6suFIpQSalB4z8oOEvhOuKDakzMy7Itrvyb99x
-         HhWneehq80feCbKn6EVsd590AFvY1FHX6CBJy+nn+Orf7Q3zqdNou+UnxNa4CXncsc
-         1ow6zRDHbJPy04YbHixbNfAAD9zUQFIUyHn19dMiGF6vTG1WoFNh9gJRqZqjfxTTWK
-         lzLolcSdd/cawYNiJW8FZOR3JPoo5TIMPT8vhWVp4vxEJAElFQjizBNTkktIyYBTyH
-         PAdHFER/3i5DTYNHIRRqJI82VvLbCUZwXgCwBQ0mNhKZ62yDjWwBGinJL0m8C1M2qP
-         8Gs8bUbjLoReQ==
-Date:   Fri, 4 Jun 2021 15:59:14 -0500
+        b=TaM//SWb/KIsUNGkxKDWGLtb5Sev3OUCRqvvGSWzSx9tdz7rNOT0dEgfA6QUVLadm
+         lcSEAyOZePbSq+JBbNucDkEvQrhLWUqHiIbkAvfttf7cDveTYmp+5lb3oDLbh1hQlV
+         py1Sp3P2Z2A1IN277joEPD8Zv1n+lPz1jSVHURZFATuftUpnPIcQzLqULie7PTTOv8
+         Jlh/FTCg5JVQKmLeLTFeujWdm2B91poSc6cmnzKNX99UL9eeJVkhouNFIdsBvKPlOj
+         FzFvtM4CqJG3qlEut8U6GL+Ysloe8TzHh8sQmEqqqXC+tJ/c0y8GvmNjlCZP4JG/DR
+         Z6pTG/V5xHnCA==
+Date:   Fri, 4 Jun 2021 16:08:32 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Evan Quan <evan.quan@amd.com>
-Cc:     linux-pci@vger.kernel.org, kw@linux.com, Alexander.Deucher@amd.com
-Subject: Re: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS support
-Message-ID: <20210604205914.GA2239197@bjorn-Precision-5520>
+To:     Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [RFC PATCH 2/3] mwifiex: pcie: add reset_d3cold quirk for
+ Surface gen4+ devices
+Message-ID: <20210604210832.GA2239805@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210602021255.939090-1-evan.quan@amd.com>
+In-Reply-To: <20210522131827.67551-3-verdre@v0yd.nl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 10:12:55AM +0800, Evan Quan wrote:
-> Unexpected GPU hang was observed during runpm stress test
-> on 0x7341 rev 0x00. Further debugging shows broken ATS is
-> related. Thus as a followup of commit 5e89cd303e3a ("PCI:
-> Mark AMD Navi14 GPU rev 0xc5 ATS as broken"), we disable
-> the ATS for the specific SKU also.
+On Sat, May 22, 2021 at 03:18:26PM +0200, Jonas Dreﬂler wrote:
+> From: Tsuchiya Yuto <kitakar@gmail.com>
 > 
-> Signed-off-by: Evan Quan <evan.quan@amd.com>
-> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-> Reviewed-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
-
-Applied to pci/virtualization for v5.14, thanks.
-
-I updated the commit log like this:
-
-    PCI: Mark AMD Navi14 GPU ATS as broken
-
-    Observed unexpected GPU hang during runpm stress test on 0x7341 rev 0x00.
-    Further debugging shows broken ATS is related.
-
-    Disable ATS on this part.  Similar issues on other devices:
-
-      a2da5d8cc0b0 ("PCI: Mark AMD Raven iGPU ATS as broken in some platforms")
-      45beb31d3afb ("PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken")
-      5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
-
-    Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-    Link: https://lore.kernel.org/r/20210602021255.939090-1-evan.quan@amd.com
-    Signed-off-by: Evan Quan <evan.quan@amd.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
-
+> To reset mwifiex on Surface gen4+ (Pro 4 or later gen) devices, it
+> seems that putting the wifi device into D3cold is required according
+> to errata.inf file on Windows installation (Windows/INF/errata.inf).
+> 
+> This patch adds a function that performs power-cycle (put into D3cold
+> then D0) and call the function at the end of reset_prepare().
+> 
+> Note: Need to also reset the parent device (bridge) of wifi on SB1;
+> it might be because the bridge of wifi always reports it's in D3hot.
+> When I tried to reset only the wifi device (not touching parent), it gave
+> the following error and the reset failed:
+> 
+>     acpi device:4b: Cannot transition to power state D0 for parent in D3hot
+>     mwifiex_pcie 0000:03:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+> 
+> Signed-off-by: Tsuchiya Yuto <kitakar@gmail.com>
+> Signed-off-by: Jonas Dreﬂler <verdre@v0yd.nl>
 > ---
-> ChangeLog v2->v3:
-> - further update for description part(suggested by Krzysztof)
-> ChangeLog v1->v2:
-> - cosmetic fix for description part(suggested by Krzysztof)
-> ---
->  drivers/pci/quirks.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/net/wireless/marvell/mwifiex/pcie.c   |   7 +
+>  .../wireless/marvell/mwifiex/pcie_quirks.c    | 123 ++++++++++++++++++
+>  .../wireless/marvell/mwifiex/pcie_quirks.h    |   3 +
+>  3 files changed, 133 insertions(+)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b7e19bbb901a..70803ad6d2ac 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5176,7 +5176,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
->  static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
->  {
->  	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-> -	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
-> +	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
-> +	    (pdev->device == 0x7341 && pdev->revision != 0x00))
->  		return;
->  
->  	if (pdev->device == 0x15d8) {
-> @@ -5203,6 +5204,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
->  /* AMD Navi14 dGPU */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
->  /* AMD Raven platform iGPU */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
->  #endif /* CONFIG_PCI_ATS */
-> -- 
-> 2.29.0
-> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> index 02fdce926de5..d9acfea395ad 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+> @@ -528,6 +528,13 @@ static void mwifiex_pcie_reset_prepare(struct pci_dev *pdev)
+>  	mwifiex_shutdown_sw(adapter);
+>  	clear_bit(MWIFIEX_IFACE_WORK_DEVICE_DUMP, &card->work_flags);
+>  	clear_bit(MWIFIEX_IFACE_WORK_CARD_RESET, &card->work_flags);
+> +
+> +	/* For Surface gen4+ devices, we need to put wifi into D3cold right
+> +	 * before performing FLR
+
+This comment seems incorrect or at least incomplete.  When the device
+is in D3cold, it isn't powered at all, so you can't do anything with
+it, including FLR.  But maybe you meant that you need to put it in
+D3cold and back to D0 before doing an FLR.  That would work.  But in
+that case, there's no point in an FLR because the power cycle has
+already reset more than the FLR will.
+
+Bjorn
