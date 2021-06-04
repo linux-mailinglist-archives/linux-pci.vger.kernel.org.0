@@ -2,118 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A68C39C2C8
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 23:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58A8039C341
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 00:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230227AbhFDVqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 17:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230059AbhFDVqf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Jun 2021 17:46:35 -0400
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3016C061768
-        for <linux-pci@vger.kernel.org>; Fri,  4 Jun 2021 14:44:33 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id x22-20020a4a62160000b0290245cf6b7feeso2575725ooc.13
-        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 14:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc;
-        bh=JC25WRkZBCsb3Y5fTmPTp2hPTJRZh/K4xt7YQY7D4O4=;
-        b=JEuNpd7gylFZbn17vVqmqdfMkxy98APrgbMp+o9mS3siWPpRSQ5uuQC27Gq+IxH3f/
-         Uw+n45L9SrKQgTZzpmwBj276JTiqal+9MsRFOLtEithQ8VpG70/P3q64NpP/EmQW/sol
-         OxiBdWTz0xPY6SHodkTBiCS7Ga0O9GDcAtfUo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc;
-        bh=JC25WRkZBCsb3Y5fTmPTp2hPTJRZh/K4xt7YQY7D4O4=;
-        b=o9sY4LBAuHMJqCX88q9xDQDfBFGwybeWeTX2K4ndXcL4TIEgfJ3fFWVZqwwz02rr8Z
-         ctiAL7riJMwedFU5YhlgbIO/BvlUGzLbTM2urqyrnSBU10gyqAm0jnA4yVostctmO6st
-         AUc0a5Y90P+Xj0JjibbmgwFLUK2y0uyuR8Ow8PmlVmsZiuAag1TeqJ2xMGnq79Z6Y1P1
-         reWRadfc3d1m0mcGvSGB1XMF9P8f5VdiBasNzgvMZCAk7703EF1K8BYuKfUOTkXbN3J2
-         g4JMscpgt7w6OPAYBOIStM4e3Gz7b6zgwcdPX8njoePf1qTmBNfD3GwNltAqpO7C42x4
-         0kfQ==
-X-Gm-Message-State: AOAM533xRabbvOmrDKkIiIg6Bsy3NPBa+ZrkduF7Ou6YxJ9l1ezVAH5Z
-        0EwLoZ9xcUA/PjICN81h7OpTX6idyOm616YmC4SObg==
-X-Google-Smtp-Source: ABdhPJy6w6LzfZQraXTUpEoGT0ueZEnZUPP6hi0L9uLghxBapXi3lqND0wjFan+pdkwveTfBuC+LSOhCIDuLCnteMIM=
-X-Received: by 2002:a05:6820:1048:: with SMTP id x8mr5240459oot.16.1622843073335;
- Fri, 04 Jun 2021 14:44:33 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 4 Jun 2021 21:44:33 +0000
+        id S229774AbhFDWLw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 18:11:52 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24251 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229668AbhFDWLw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 18:11:52 -0400
+IronPort-SDR: oYYSlq6sccd3p1hnaj951Sr39H7YD/fYD4W8qPtfDmGvXaGt6eq+q1rwpktR0TaK1LEL5c8UxR
+ i5xhpRzQeUGA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="290007339"
+X-IronPort-AV: E=Sophos;i="5.83,249,1616482800"; 
+   d="scan'208";a="290007339"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 15:10:04 -0700
+IronPort-SDR: fH1wBMzQEaV0sQM2oOdiGTN+FdFsUnuXdxMYDC3JP6bLCm6TUMnV41BL/Gg07EWpgM9XIudCsA
+ PFiI3f2LyT/g==
+X-IronPort-AV: E=Sophos;i="5.83,249,1616482800"; 
+   d="scan'208";a="439326605"
+Received: from lmrivera-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.251.24.65])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 15:10:03 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     intel-wired-lan@lists.osuosl.org
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        sasha.neftin@intel.com, anthony.l.nguyen@intel.com,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        netdev@vger.kernel.org, mlichvar@redhat.com,
+        richardcochran@gmail.com, hch@infradead.org, helgaas@kernel.org
+Subject: [PATCH next-queue v4 0/4] igc: Add support for PCIe PTM
+Date:   Fri,  4 Jun 2021 15:09:29 -0700
+Message-Id: <20210604220933.3974558-1-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <cb2a6cd35df42314c5e5230bcac752be@codeaurora.org>
-References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
- <1620382648-17395-2-git-send-email-pmaliset@codeaurora.org>
- <CAE-0n53KTeF9NOrb+x7P1AG53FENRBGtCEcSxronBpJoww3jew@mail.gmail.com> <cb2a6cd35df42314c5e5230bcac752be@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Fri, 4 Jun 2021 21:44:32 +0000
-Message-ID: <CAE-0n52y3yuyOrexC+EsnsX6ULDwKDz1PczGwHB211hKu=uj1g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pci: qcom: Document PCIe bindings for SC720
-To:     Prasad Malisetty <pmaliset@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        mgautam@codeaurora.org, dianders@chromium.org, mka@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quoting Prasad Malisetty (2021-06-04 04:26:57)
-> On 2021-05-08 01:29, Stephen Boyd wrote:
-> > Quoting Prasad Malisetty (2021-05-07 03:17:26)
-> >> Document the PCIe DT bindings for SC7280 SoC.The PCIe IP is similar
-> >> to the one used on SM8250. Add the compatible for SC7280.
-> >>
-> >> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 17
-> >> +++++++++++++++++
-> >>  1 file changed, 17 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >> index 0da458a..e5245ed 100644
-> >> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >> @@ -12,6 +12,7 @@
-> >>                         - "qcom,pcie-ipq4019" for ipq4019
-> >>                         - "qcom,pcie-ipq8074" for ipq8074
-> >>                         - "qcom,pcie-qcs404" for qcs404
-> >> +                       - "qcom,pcie-sc7280" for sc7280
-> >>                         - "qcom,pcie-sdm845" for sdm845
-> >>                         - "qcom,pcie-sm8250" for sm8250
-> >>
-> >> @@ -133,6 +134,22 @@
-> >>                         - "slave_bus"   AXI Slave clock
-> >>
-> >>  - clock-names:
-> >> +       Usage: required for sc7280
-> >> +       Value type: <stringlist>
-> >> +       Definition: Should contain the following entries
-> >> +                       - "aux"         Auxiliary clock
-> >> +                       - "cfg"         Configuration clock
-> >> +                       - "bus_master"  Master AXI clock
-> >> +                       - "bus_slave"   Slave AXI clock
-> >> +                       - "slave_q2a"   Slave Q2A clock
-> >> +                       - "tbu"         PCIe TBU clock
-> >> +                       - "ddrss_sf_tbu" PCIe SF TBU clock
-> >> +                       - "pipe"        PIPE clock
-> >> +                       - "pipe_src"    PIPE MUX
-> >
-> > Is pipe_src necessary? Is it the parent of the pipe clk? If so, please
-> > remove it and do whatever is necessary on the pipe clk instead of the
-> > parent of the clk.
->
-> Here pipe_src is MUX. Newer targets require changing pipe-clk mux to
-> switch between pipe_clk and XO for GDSC enable.
-> After PHY init, need to configure MUX.
+Hi,
 
-Ok. I see, so we have to change the parent of the parent of the pipe
-clk?
+Changes from v3:
+  - More descriptive commit messages and comments (Bjorn Helgaas);
+  - Added a pcie_ptm_enabled() helper (Bjorn Helgaas);
+
+Changes from v2:
+  - Now the PTM timestamps are retrieved synchronously with the
+    ioctl();
+  - Fixed some typos in constants;
+  - The IGC_PTM_STAT register is write-1-to-clear, document this more
+    clearly;
+
+Changes from v1:
+  - This now should cross compile better, convert_art_ns_to_tsc() will
+    only be used if CONFIG_X86_TSC is enabled;
+  - PCIe PTM errors reported by the NIC are logged and PTM cycles are
+    restarted in case an error is detected;
+
+Original cover letter (lightly edited):
+
+This adds support for PCIe PTM (Precision Time Measurement) to the igc
+driver. PCIe PTM allows the NIC and Host clocks to be compared more
+precisely, improving the clock synchronization accuracy.
+
+Patch 1/4 reverts a commit that made pci_enable_ptm() private to the
+PCI subsystem, reverting makes it possible for it to be called from
+the drivers.
+
+Patch 2/4 adds the pcie_ptm_enabled() helper.
+
+Patch 3/4 calls pci_enable_ptm() from the igc driver.
+
+Patch 4/4 implements the PCIe PTM support. It adds a workqueue that
+reads the PTM registers periodically and collects the information so a
+subsequent call to getcrosststamp() has all the timestamps needed.
+
+Some questions are raised (also pointed out in the commit message):
+
+1. Using convert_art_ns_to_tsc() is too x86 specific, there should be
+   a common way to create a 'system_counterval_t' from a timestamp.
+
+2. convert_art_ns_to_tsc() says that it should only be used when
+   X86_FEATURE_TSC_KNOWN_FREQ is true, but during tests it works even
+   when it returns false. Should that check be done?
+
+Cheers,
+
+Vinicius Costa Gomes (4):
+  Revert "PCI: Make pci_enable_ptm() private"
+  PCI: Add pcie_ptm_enabled()
+  igc: Enable PCIe PTM
+  igc: Add support for PTP getcrosststamp()
+
+ drivers/net/ethernet/intel/igc/igc.h         |   1 +
+ drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
+ drivers/net/ethernet/intel/igc/igc_main.c    |   6 +
+ drivers/net/ethernet/intel/igc/igc_ptp.c     | 182 +++++++++++++++++++
+ drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
+ drivers/pci/pci.h                            |   3 -
+ drivers/pci/pcie/ptm.c                       |   9 +
+ include/linux/pci.h                          |  10 +
+ 8 files changed, 262 insertions(+), 3 deletions(-)
+
+-- 
+2.31.1
+
