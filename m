@@ -2,120 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60A9239B02D
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 04:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED0CF39B135
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 06:07:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbhFDCHW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Jun 2021 22:07:22 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40346 "EHLO inva020.nxp.com"
+        id S229445AbhFDEJm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 00:09:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229980AbhFDCHV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Jun 2021 22:07:21 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CF9D21A145D;
-        Fri,  4 Jun 2021 04:05:34 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 inva020.eu-rdc02.nxp.com CF9D21A145D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com;
-        s=nselector3; t=1622772334;
-        bh=/BToe/FFxBv0yDcLV2BovJaTgPClfSEPLPNvXr5XpSM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atT81UcUxQoHg8qyG7NT7q43kzHpOQLwE8GHeweE5qc9CyDnqfMRvfbR6D4QnWxle
-         e9pVhjQGHKqov+s29cYaFVVIQZetWOgvuQkzd8FAYBkFh6AkxGOfSl76VlBj0biB6V
-         hHGBNdhf3kA5UIuQ1hONpq5kPtX3MSVWQ5+d0bdSKWl3JHyUNF34d5Qr7B8gwKnOsw
-         /6Xdxxt5FWyYfLfHq1UVoqFnKf/z1MNdc2wnrlEoKguoZQfL0Jz2zvmzksKls1IJYL
-         alDWYvd4Wx1KLwzfxDSVtNv/smEXNHnRGJ66sUbhC+EmDDvHwS0iAcQzkURjdZZsgN
-         lkrZvEo2M4HcQ==
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A52A1A2835;
-        Fri,  4 Jun 2021 04:05:29 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 inva020.eu-rdc02.nxp.com 5A52A1A2835
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 776B54028B;
-        Fri,  4 Jun 2021 10:05:22 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, andrew.smirnov@gmail.com,
-        shawnguo@kernel.org, kw@linux.com, bhelgaas@google.com,
-        stefan@agner.ch, lorenzo.pieralisi@arm.com
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [RESEND, V5 2/2] PCI: imx6: Enable PHY internal regulator when supplied >3V
-Date:   Fri,  4 Jun 2021 09:47:49 +0800
-Message-Id: <1622771269-13844-3-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1622771269-13844-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1622771269-13844-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S229775AbhFDEJm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 00:09:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2336D613F6;
+        Fri,  4 Jun 2021 04:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622779676;
+        bh=Fa4/vxtklnpuLSehENDylHOnyear+62tzcqRhPIPqek=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eV/07M0PUUi3rOoNjsY2m3a/yz9ORz3+mylUp9T/vwFzEDkHIQGD0giGKx07H99YO
+         7CGMX0wK/0aAOm6qJMDlu+oUX4+fND7z9ms+tW6xLLOQi6wCmKI/0FJO19Q/OP+CzV
+         MfwMuH7t0qdVd/iGyQwiWxz4ZFSjg5+ybzbrk5WIMz30qFAmhRPwlDLkvqcJnEp5Oc
+         lwQD9hGEsBEnRRjW+XtQO/1gfMNaIvB9Pqo6pM/joz1wKXpiXeqV4bCuatWT51es5P
+         OVZXKZ2jQ8tmJXe9PxxzvVh3zpTIHW1ApvGOrn8EdZPpkbkR5k3T2chr55nXLLgGxO
+         b6k/qsOw/kHRw==
+Date:   Thu, 3 Jun 2021 23:07:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Joe Perches <joe@perches.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 0/6] PCI/sysfs: Use sysfs_emit() and sysfs_emit_at()
+ in "show" functions
+Message-ID: <20210604040749.GA2170475@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210603000112.703037-1-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The i.MX8MQ PCIe PHY needs 1.8V in default but can be supplied by
-either a 1.8V or a 3.3V regulator.
+On Thu, Jun 03, 2021 at 12:01:06AM +0000, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+> This series aims to bring support for the sysfs_emit() and
+> sysfs_emit_at() functions to the existing PCI-related sysfs objects.
+> These new functions were introduced to make it less ambiguous which
+> function is preferred when writing to the output buffer in a device
+> attribute's "show" callback [1].
+> 
+> Thus, the existing PCI sysfs objects "show" functions will be converted
+> from the using the sprintf(), snprintf() and scnprintf() functions to
+> sysfs_emit() and sysfs_emit_at() accordingly, as the latter is aware of
+> the PAGE_SIZE buffer limit that the sysfs object has and correctly
+> returns the number of bytes written into the buffer.
+> 
+> This series will also address inconsistency related to the presence (or
+> lack of thereof) of a trailing newline in the show() functions adding it
+> where it's currently missing.  This will allow for utilities such as the
+> "cat" command to display the result of the read from a particular sysfs
+> object correctly in a shell.
+> 
+> While working on this series a problem with newline handling related to
+> how the value of the "resource_alignment" sysfs object was parsed and
+> then persisted has been found and corrected.  Also, while at it,
+> a change enabling support for the value of "resource_alignment"
+> previously set using either a command-line argument or through the sysfs
+> object to be cleared at run-time was also included, and thus aligning
+> this particular sysfs object with the behaviour of other such objects
+> that allow for the value to be dynamically updated and cleared as
+> required.
+> 
+> Additionally, a fix to a potential buffer overrun that has been found in
+> the dsm_label_utf16s_to_utf8s() function that is responsible for the
+> character conversion from UTF16 to UTF8 of the buffer that holds the
+> device label obtained through the ACPI _DSM mechanism is included as
+> part of this series.
+> 
+> Finally, a minor fix is also included in this series that has been added
+> to ensure that the value of the "driver_override" variable is only
+> exposed through the corresponding sysfs object when a value is set or
+> otherwise if the value has not been set, the object would return
+> a string representation of the NULL value.  This will also align this
+> particular sysfs object's behaviour with others, where when there is no
+> value then nothing is returned.
+> 
+> [1] Documentation/filesystems/sysfs.rst
+> 
+> This series is related to:
+>   commit ad025f8 ("PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions")
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> 
+> ---
+> Changes in v2:
+>   None.
+> 
+> Changes in v3:
+>   Added Logan Gunthorpe's "Reviewed-by".
+> 
+> Changes in v4:
+>   Separated and squashed all the trivial sysfs_emit()/sysfs_emit_at()
+>   changes into a single patch as per Bjorn Helgaas' request.
+>   Carried Logan Gunthorpe's "Reviewed-by" over.
+> 
+> Changes in v5:
+>   Added check to the resource_alignment_show() function to ensure that
+>   there is an extra space left in the buffer for the newline character,
+>   assuming that it might be provided.
+> 
+> Changes in v6:
+>   Added a cover letter as per Bjorn Helgaas' request.
+>   New patch addressing a potential buffer overrun in the
+>   dsm_label_utf16s_to_utf8s() function has been added.
+> 
+> Krzysztof Wilczyński (6):
+>   PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+>   PCI/sysfs: Use return value from dsm_label_utf16s_to_utf8s() directly
+>   PCI/sysfs: Fix trailing newline handling of resource_alignment_param
+>   PCI/sysfs: Add missing trailing newline to devspec_show()
+>   PCI/sysfs: Only show value when driver_override is not NULL
+>   PCI/sysfs: Fix a buffer overrun problem with
+>     dsm_label_utf16s_to_utf8s()
+> 
+>  drivers/pci/hotplug/pci_hotplug_core.c |  8 +++---
+>  drivers/pci/hotplug/rpadlpar_sysfs.c   |  4 +--
+>  drivers/pci/hotplug/shpchp_sysfs.c     | 38 ++++++++++++++------------
+>  drivers/pci/iov.c                      | 12 ++++----
+>  drivers/pci/msi.c                      |  8 +++---
+>  drivers/pci/p2pdma.c                   |  7 ++---
+>  drivers/pci/pci-label.c                | 22 ++++++++-------
+>  drivers/pci/pci-sysfs.c                |  7 +++--
+>  drivers/pci/pci.c                      | 34 +++++++++++++----------
+>  drivers/pci/pcie/aer.c                 | 20 ++++++++------
+>  drivers/pci/pcie/aspm.c                |  4 +--
+>  drivers/pci/slot.c                     | 18 ++++++------
+>  drivers/pci/switch/switchtec.c         | 18 ++++++------
+>  13 files changed, 107 insertions(+), 93 deletions(-)
 
-The "vph-supply" DT property tells us which external regulator
-supplies the PHY. If that regulator supplies anything over 3V,
-enable the PHY's internal 3.3V-to-1.8V regulator.
+I applied these to pci/resource for v5.14, thanks!
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
----
- drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+I dropped the driver_override change to avoid breaking driverctl.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 853ea8e82952..94b43b4ecca1 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -37,6 +37,7 @@
- #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
- #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
- #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-+#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
- #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
- #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
- 
-@@ -80,6 +81,7 @@ struct imx6_pcie {
- 	u32			tx_swing_full;
- 	u32			tx_swing_low;
- 	struct regulator	*vpcie;
-+	struct regulator	*vph;
- 	void __iomem		*phy_base;
- 
- 	/* power domain for pcie */
-@@ -621,6 +623,17 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 				   imx6_pcie_grp_offset(imx6_pcie),
- 				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
- 				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
-+		/*
-+		 * Regarding the datasheet, the PCIE_VPH is suggested
-+		 * to be 1.8V. If the PCIE_VPH is supplied by 3.3V, the
-+		 * VREG_BYPASS should be cleared to zero.
-+		 */
-+		if (imx6_pcie->vph &&
-+		    regulator_get_voltage(imx6_pcie->vph) > 3000000)
-+			regmap_update_bits(imx6_pcie->iomuxc_gpr,
-+					   imx6_pcie_grp_offset(imx6_pcie),
-+					   IMX8MQ_GPR_PCIE_VREG_BYPASS,
-+					   0);
- 		break;
- 	case IMX7D:
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-@@ -1130,6 +1143,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		imx6_pcie->vpcie = NULL;
- 	}
- 
-+	imx6_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
-+	if (IS_ERR(imx6_pcie->vph)) {
-+		if (PTR_ERR(imx6_pcie->vph) != -ENODEV)
-+			return PTR_ERR(imx6_pcie->vph);
-+		imx6_pcie->vph = NULL;
-+	}
-+
- 	platform_set_drvdata(pdev, imx6_pcie);
- 
- 	ret = imx6_pcie_attach_pd(dev);
--- 
-2.17.1
+I reordered the dsm_label_utf16s_to_utf8s()-related patches to make
+the buffer overflow fix slightly smaller.
 
+If we need to tweak the resource_alignment_param patch, I can just
+squash in incremental changes.
