@@ -2,76 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A89139C02B
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 21:05:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CEE039C03E
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 21:11:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbhFDTHh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 15:07:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48569 "EHLO mga06.intel.com"
+        id S229913AbhFDTN3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 15:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230400AbhFDTHg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 15:07:36 -0400
-IronPort-SDR: TNsCLdvjeYbHPEq/T5W31wNusLgRe9/3onM2tnW19ZDEEKIZjp6JYQrLH88POR1Udy1iNIOzjW
- LdpDWT5esY0A==
-X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="265513944"
-X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
-   d="scan'208";a="265513944"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:47 -0700
-IronPort-SDR: h8aBLckqNqjM7/uZ1yYSm85K2auNXkv6S9EuSufXx5isu2a21RRue61j22JC0yOuORDw954a3/
- PFCXWACujDJQ==
-X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
-   d="scan'208";a="401049134"
-Received: from abathaly-mobl2.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.37])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:47 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-pci@vger.kernel.org
-Cc:     =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>
-Subject: [PATCH 9/9] cxl: Add placeholder for undecoded DVSECs
-Date:   Fri,  4 Jun 2021 12:05:41 -0700
-Message-Id: <20210604190541.175602-10-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210604190541.175602-1-ben.widawsky@intel.com>
-References: <20210604190541.175602-1-ben.widawsky@intel.com>
+        id S229501AbhFDTN3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 15:13:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F124611CA;
+        Fri,  4 Jun 2021 19:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622833902;
+        bh=1OYdqDIJbvdktP3Zf73pda90ObsQDgTAwi6d/Ny82Eg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=l3i12KfTeZrShaULtvDX781siDXGZbz0OUJ+Ol0XmgrK96i8fm7u8a5uw75tem93O
+         42zIsE9/ELfzCz/uD5tZnbGsXOf3XoKpo6VjGqDU1kH+enyI04JkHtvhet1CK2B0E6
+         OoCeRk/kBeWiAIQX16+fj3wMxjh1F+iKL/chbiD/Vl2Nn+0U7wwO9HulXIhMwONHPC
+         PKpmVK39lMsb9LmI8d9RsWN9eWZ7Evt/u0Unp/njgKsmia+XzA02xlH35pmRehGVJg
+         9k7ENbxVddwLmwV4c3JsQQgsD/iRprECdGonip0thoGKQ8/GcFYi4vFo76H+fdRgP4
+         0NU+egalfRzTg==
+Date:   Fri, 4 Jun 2021 14:11:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net v2 2/2] MAINTAINERS: move Murali Karicheri to credits
+Message-ID: <20210604191141.GA2228033@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210429090521.554-2-michael@walle.cc>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- ls-ecaps.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Thu, Apr 29, 2021 at 11:05:21AM +0200, Michael Walle wrote:
+> His email bounces with permanent error "550 Invalid recipient". His last
+> email was from 2020-09-09 on the LKML and he seems to have left TI.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-diff --git a/ls-ecaps.c b/ls-ecaps.c
-index a0ef83d..2d064be 100644
---- a/ls-ecaps.c
-+++ b/ls-ecaps.c
-@@ -868,6 +868,21 @@ cap_dvsec_cxl(struct device *d, int id, int where)
- 
-       dvsec_cxl_register_locator(d->config + where, len, rev);
-       break;
-+    case 2:
-+      printf("\t\tNon-CXL Function Map DVSEC\n");
-+      break;
-+    case 4:
-+      printf("\t\tGPF DVSEC for Port\n");
-+      break;
-+    case 5:
-+      printf("\t\tGPF DVSEC for Device\n");
-+      break;
-+    case 7:
-+      printf("\t\tPCIe DVSEC Flex Bus Port\n");
-+      break;
-+    case 9:
-+      printf("\t\tMLD DVSEC\n");
-+      break;
-     default:
-       break;
-   }
--- 
-2.31.1
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# TI KeyStone PCI driver
 
+I could take both, given a networking ack for [1/2].  Or both could go
+via the networking tree.
+
+> ---
+> changes since v1:
+>  - rebased to net
+> 
+>  CREDITS     |  5 +++++
+>  MAINTAINERS | 13 -------------
+>  2 files changed, 5 insertions(+), 13 deletions(-)
+> 
+> diff --git a/CREDITS b/CREDITS
+> index cef83b958cbe..80d096dbf262 100644
+> --- a/CREDITS
+> +++ b/CREDITS
+> @@ -1874,6 +1874,11 @@ S: Krosenska' 543
+>  S: 181 00 Praha 8
+>  S: Czech Republic
+>  
+> +N: Murali Karicheri
+> +E: m-karicheri2@ti.com
+> +D: Keystone NetCP driver
+> +D: Keystone PCIe host controller driver
+> +
+>  N: Jan "Yenya" Kasprzak
+>  E: kas@fi.muni.cz
+>  D: Author of the COSA/SRP sync serial board driver.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 04f4a2116b35..e264e63f09c0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13780,13 +13780,6 @@ F:	Documentation/devicetree/bindings/pci/ti-pci.txt
+>  F:	drivers/pci/controller/cadence/pci-j721e.c
+>  F:	drivers/pci/controller/dwc/pci-dra7xx.c
+>  
+> -PCI DRIVER FOR TI KEYSTONE
+> -M:	Murali Karicheri <m-karicheri2@ti.com>
+> -L:	linux-pci@vger.kernel.org
+> -L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> -S:	Maintained
+> -F:	drivers/pci/controller/dwc/pci-keystone.c
+> -
+>  PCI DRIVER FOR V3 SEMICONDUCTOR V360EPC
+>  M:	Linus Walleij <linus.walleij@linaro.org>
+>  L:	linux-pci@vger.kernel.org
+> @@ -17974,12 +17967,6 @@ F:	drivers/power/supply/lp8788-charger.c
+>  F:	drivers/regulator/lp8788-*.c
+>  F:	include/linux/mfd/lp8788*.h
+>  
+> -TI NETCP ETHERNET DRIVER
+> -M:	Murali Karicheri <m-karicheri2@ti.com>
+> -L:	netdev@vger.kernel.org
+> -S:	Maintained
+> -F:	drivers/net/ethernet/ti/netcp*
+> -
+>  TI PCM3060 ASoC CODEC DRIVER
+>  M:	Kirill Marinushkin <kmarinushkin@birdec.com>
+>  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+> -- 
+> 2.20.1
+> 
