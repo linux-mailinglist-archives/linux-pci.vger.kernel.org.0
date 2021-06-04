@@ -2,280 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 151E939C27E
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 23:33:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C59EA39C2C7
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 23:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbhFDVey (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 17:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbhFDVex (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Jun 2021 17:34:53 -0400
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7770CC061766;
-        Fri,  4 Jun 2021 14:32:52 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id 69-20020a9d0a4b0000b02902ed42f141e1so10477907otg.2;
-        Fri, 04 Jun 2021 14:32:52 -0700 (PDT)
+        id S230105AbhFDVqb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 17:46:31 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:38911 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230059AbhFDVqa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Jun 2021 17:46:30 -0400
+Received: by mail-ot1-f41.google.com with SMTP id i14-20020a9d624e0000b029033683c71999so10476365otk.5
+        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 14:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oDGProiCSKfs97byvQlpAFHaI+zbUyvA+0ui68k/ZIw=;
-        b=B6slvx5nXQ4jF+11r1IN0YERepRkouNhOYwa/rMFWXuecYQZ3UhiiqULPyoSx+lp1D
-         oSDMiwPHOjJrSF9iCGqNOcpNWm/bdurP4nG308cbWIN1FY/5YWzVZzl7Pwu9qqF8nZAI
-         bLEplhZmsmhtKM9iYgIK1WZ7+XZdb3ChrXgeyreT0ObTGb/PoT4SN8OW6Wp/OdAqoxM7
-         GUb8oG4q4nYtNhPAWYh4LfPlGLjppgo9fkeimP5rx5OVfwEtM7V9mg7BoUXIViXMuhw9
-         0dXzZ6sJ1egzqsRf5bF7zfbrGzRFT7G3fNTuEt5Us21hb7xi1euZb5l5ds3nuaVHwYH4
-         Vr9Q==
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to:cc;
+        bh=UC2AwnCU4W7/DsYhuag8+yME3EH1r1RYHCOePL8HnE8=;
+        b=gyixkUsX9X9cshP0+/da03kfPP1vDkY6E+1CRSM3XENnvzCQrcmZ+wqIEzNlyNmaih
+         ulPMGWPfDkJzeTXMaFS8bZ23mWyGshXPpC6gJSuWjNybEjXUI1uffRVFUUoa3kC054Pn
+         1p0cBrLoSxt/nH9tKKefz5YGdOtpD+kTmZU38=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDGProiCSKfs97byvQlpAFHaI+zbUyvA+0ui68k/ZIw=;
-        b=l6wd/PPHvRPus9MJPto7myHVFmwwxZsoZsZx2XcJhCj6wfK9Hh95nt14xWjcUYqRlr
-         qQtVkELzJN0g2W8pOmM2sRRkdQ8+jUNEOD9QEd6q6nP5n0qwnwDUXx8B/dT/pj0IXZMW
-         69VZGaIiVjPdwYj+iXdrKJlOvCSvBTg4jVb9JfyfCe45BcsryfHIDL5D9ujMjUGfYkjf
-         mBxOu0hdlfiBl6y4vdTzZ0PZ5cW5Y8r8JPvuXABzFAZE3Qaqcow0t7hTy4RwXvSH/c8Z
-         GMvDxrPBcvDgrCr/797Vgf0VK/0vMErRUahf4C7C4SIl2maRqP6ZKZhljJnPlDtN7cgA
-         9vwA==
-X-Gm-Message-State: AOAM532fIACao2A45Sj7+jkAeTf+28Wrv6HURDarqCCSqPci54XMyw8Z
-        hKS6iJRI2kuOjfDupW3W+gRYylS/WtYu/5uPlqU=
-X-Google-Smtp-Source: ABdhPJy/duOW3zXXU0VCeFASVFByb0n9K5IFAmBE8iU7JFUnx0Wlqde41SBA6GIW37hsGt9pfIK/XxM2425Ls48SkxM=
-X-Received: by 2002:a9d:4592:: with SMTP id x18mr5265041ote.74.1622842371840;
- Fri, 04 Jun 2021 14:32:51 -0700 (PDT)
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to:cc;
+        bh=UC2AwnCU4W7/DsYhuag8+yME3EH1r1RYHCOePL8HnE8=;
+        b=CKqUK4/Ft++LrFFGSjmjGPLM3dx/gsPqCZ9zXaOvKq6ApzHAqx2sS9s+uIcGJIH3eb
+         dl0X6EpY+/HQOjSatOqzNU+fJSAHp5BF3/GLPwL7guPYEVVUJfl5FE6s2g2yb+oQzNGl
+         QNzWvjZFdAvTijlG730DUXYVnPlJJZ7Nu+WVymSRSE9bDb51AD8QTGR8LY7BCXvQFkHH
+         Kx8GfVK2ffQZds9kdXDD+BkaB4iQlRHa9QOwVTad/ZJZINhm7HXwZwb8bTvEZ1qNRz1p
+         ewE1cDeipRvYt3lv8BNQsqdor75IjljfSkaKszjpSdurjKAULeitigv7uahpyp26kNmB
+         cyng==
+X-Gm-Message-State: AOAM532S9ubhQ4Ve0x5ZJD+tdOsgJrMSomwq4JJ2BIfb/37y/+S2wsB8
+        5qWx+NZq+jcZbULS5inNF7FeZZW+PuCuDwkts+b/Hg==
+X-Google-Smtp-Source: ABdhPJwr2se1dNVn8fcmj+5C9VlOmdmIbF+cFdeprjZMsb0eOG/2oJZICzO8EqVw3ExXz/X0loWOlYLVrM+akoFuZxk=
+X-Received: by 2002:a05:6830:3154:: with SMTP id c20mr5415860ots.233.1622843023585;
+ Fri, 04 Jun 2021 14:43:43 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 4 Jun 2021 21:43:43 +0000
 MIME-Version: 1.0
-References: <20210515124055.22225-1-sergio.paracuellos@gmail.com>
- <20210515124055.22225-2-sergio.paracuellos@gmail.com> <20210604193506.GC3695694@robh.at.kernel.org>
-In-Reply-To: <20210604193506.GC3695694@robh.at.kernel.org>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Fri, 4 Jun 2021 23:32:40 +0200
-Message-ID: <CAMhs-H8vkVoMaQr4Ky9xhzpwz-LjpBzd0kK=NTgO0Lo-m3pyng@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mt7621-pci: PCIe binding documentation
- for MT7621 SoCs
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
+In-Reply-To: <3b3701bb1e23dec88f2231722872fc40@codeaurora.org>
+References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
+ <1620382648-17395-3-git-send-email-pmaliset@codeaurora.org>
+ <CAE-0n530bSPupOHVDzwpd_JVVN0tOfrAOm9dAt1ZGj7zaXOZ6A@mail.gmail.com> <3b3701bb1e23dec88f2231722872fc40@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.9.1
+Date:   Fri, 4 Jun 2021 21:43:43 +0000
+Message-ID: <CAE-0n50k9z0ZFqP_pOmQjp0s3NCSKYHTmHvZ5rxLb3MzqgavrA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc7280: Add PCIe and PHY related nodes
+To:     Prasad Malisetty <pmaliset@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-staging@lists.linux.dev,
-        Greg KH <gregkh@linuxfoundation.org>,
-        NeilBrown <neil@brown.name>,
-        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mgautam@codeaurora.org, dianders@chromium.org, mka@chromium.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review.
-
-On Fri, Jun 4, 2021 at 9:35 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, May 15, 2021 at 02:40:52PM +0200, Sergio Paracuellos wrote:
-> > Add device tree binding documentation for PCIe in MT7621 SoCs.
+Quoting Prasad Malisetty (2021-05-21 02:57:00)
+> On 2021-05-08 01:36, Stephen Boyd wrote:
+> > Quoting Prasad Malisetty (2021-05-07 03:17:27)
+> >> Add PCIe controller and PHY nodes for sc7280 SOC.
+> >>
+> >> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+> >> ---
+> >>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 138
+> >> +++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 138 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> >> b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> >> index 2cc4785..a9f25fc1 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> >> @@ -12,6 +12,7 @@
+> >>  #include <dt-bindings/power/qcom-aoss-qmp.h>
+> >>  #include <dt-bindings/power/qcom-rpmpd.h>
+> >>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> >> +#include <dt-bindings/gpio/gpio.h>
+> >>
+> >>  / {
+> >>         interrupt-parent = <&intc>;
+> >> @@ -316,6 +317,118 @@
+> >>                         };
+> >>                 };
+> >>
+> > [...]
+> >> +
+> >> +               pcie1_phy: phy@1c0e000 {
+> >> +                       compatible =
+> >> "qcom,sm8250-qmp-gen3x2-pcie-phy";
+> >> +                       reg = <0 0x01c0e000 0 0x1c0>;
+> >> +                       #address-cells = <2>;
+> >> +                       #size-cells = <2>;
+> >> +                       ranges;
+> >> +                       clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+> >> +                                <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+> >> +                                <&gcc GCC_PCIE_CLKREF_EN>,
+> >> +                                <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
+> >> +                       clock-names = "aux", "cfg_ahb", "ref",
+> >> "refgen";
+> >> +
+> >> +                       resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+> >> +                       reset-names = "phy";
+> >> +
+> >> +                       assigned-clocks = <&gcc
+> >> GCC_PCIE1_PHY_RCHNG_CLK>;
+> >> +                       assigned-clock-rates = <100000000>;
+> >> +
+> >> +                       status = "disabled";
 > >
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > ---
-> >  .../bindings/pci/mediatek,mt7621-pci.yaml     | 149 ++++++++++++++++++
-> >  1 file changed, 149 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
+> > I think the style is to put status disabled close to the compatible?
+>
+> Generally I have added status disabled in end as like many nodes. just
+> curious to ask is there any specific reason to put close to compatible.
+
+It's really up to qcom maintainers, which I am not.
+
+> >> +                               };
+> >> +
+> >> +                               reset-n {
+> >> +                                       pins = "gpio2";
+> >> +                                       function = "gpio";
+> >> +
+> >> +                                       drive-strength = <16>;
+> >> +                                       output-low;
+> >> +                                       bias-disable;
+> >> +                               };
+> >> +
+> >> +                               wake-n {
+> >> +                                       pins = "gpio3";
+> >> +                                       function = "gpio";
+> >> +
+> >> +                                       drive-strength = <2>;
+> >> +                                       bias-pull-up;
+> >> +                               };
 > >
-> > diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > new file mode 100644
-> > index 000000000000..7f5f9d583032
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > @@ -0,0 +1,149 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/mediatek,mt7621-pci.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: MediaTek MT7621 PCIe controller
-> > +
-> > +maintainers:
-> > +  - Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > +
-> > +description: |+
-> > +  MediaTek MT7621 PCIe subsys supports single Root complex (RC)
-> > +  with 3 Root Ports. Each Root Ports supports a Gen1 1-lane Link
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: mediatek,mt7621-pci
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: host-pci bridge registers
-> > +      - description: pcie port 0 RC control registers
-> > +      - description: pcie port 1 RC control registers
-> > +      - description: pcie port 2 RC control registers
-> > +
-> > +  ranges:
-> > +    maxItems: 2
-> > +
-> > +  resets:
-> > +    items:
-> > +      - description: pcie port 0 reset.
-> > +      - description: pcie port 1 reset.
-> > +      - description: pcie port 2 reset.
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: pcie0
-> > +      - const: pcie1
-> > +      - const: pcie2
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: pcie port 0 clock.
-> > +      - description: pcie port 1 clock.
-> > +      - description: pcie port 2 clock.
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: pcie0
-> > +      - const: pcie1
-> > +      - const: pcie2
-> > +
-> > +  phys:
-> > +    items:
-> > +      - description: Dual-ported phy for pcie port 0 and 1.
-> > +      - description: Phy for pcie port 2.
-> > +
-> > +  phy-names:
-> > +    items:
-> > +      - const: pcie-phy0
-> > +      - const: pcie-phy2
->
-> If you're going to keep the ports (and I think that's right because
-> there's only a single PCI address space AFAICT), then I think you should
-> move resets, clocks, and phys into each port node.
->
-> So you'll need to define 'pcie@[0-2],0' node with those properties under
-> it.
+> > These last two nodes with the pull-up and drive-strength settings
+> > should
+> > be in the board files, like the idp one, instead of here in the SoC
+> > file. That way board designers can take the SoC and connect the pcie to
+> > an external device using these pins and set the configuration they want
+> > on these pins, or choose not to connect them to the SoC at all and use
+> > those pins for something else.
+> >
+> > In addition, it looks like the reset could be a reset-gpios property
+> > instead of an output-low config.
+> >
+> we are using reset property as perst gpio in pcie node.
 
-Ok I will move these stuff to each port node. So each port node will
-be similar to:
-
-pcie@0,0 {
-    reg = <0x0000 0 0 0 0>;
-    #address-cells = <3>;
-    #size-cells = <2>;
-    device_type = "pci";
-    #interrupt-cells = <1>;
-    clocks = <&clkctrl 24>;
-    resets = <&rstctrl 24>;
-    phys = <&pcie0_phy 1>;
-    interrupt-map-mask = <0 0 0 0>;
-    interrupt-map = <0 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
-    ranges;
-};
-
-How can I be sure by schema that the clocks, reset and phy properties
-are in each port node if I move them from the parent? By now each port
-node is just validating because of ' $ref:
-/schemas/pci/pci-bus.yaml#'.
-
-Thanks in advance for your time.
-
-Best regards,
-    Sergio Paracuellos
-
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - ranges
-> > +  - "#interrupt-cells"
-> > +  - interrupt-map-mask
-> > +  - interrupt-map
-> > +  - resets
-> > +  - reset-names
-> > +  - clocks
-> > +  - clock-names
-> > +  - phys
-> > +  - phy-names
-> > +  - reset-gpios
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > +
-> > +    pcie: pcie@1e140000 {
-> > +        compatible = "mediatek,mt7621-pci";
-> > +        reg = <0x1e140000 0x100>,
-> > +              <0x1e142000 0x100>,
-> > +              <0x1e143000 0x100>,
-> > +              <0x1e144000 0x100>;
-> > +
-> > +        #address-cells = <3>;
-> > +        #size-cells = <2>;
-> > +        pinctrl-names = "default";
-> > +        pinctrl-0 = <&pcie_pins>;
-> > +        device_type = "pci";
-> > +        ranges = <0x02000000 0 0x00000000 0x60000000 0 0x10000000>,  /* pci memory */
-> > +                 <0x01000000 0 0x00000000 0x1e160000 0 0x00010000>;  /* io space */
-> > +        #interrupt-cells = <1>;
-> > +        interrupt-map-mask = <0xF800 0 0 0>;
-> > +        interrupt-map = <0x0000 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>,
-> > +                        <0x0800 0 0 0 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>,
-> > +                        <0x1000 0 0 0 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-> > +        resets = <&rstctrl 24>, <&rstctrl 25>, <&rstctrl 26>;
-> > +        reset-names = "pcie0", "pcie1", "pcie2";
-> > +        clocks = <&clkctrl 24>, <&clkctrl 25>, <&clkctrl 26>;
-> > +        clock-names = "pcie0", "pcie1", "pcie2";
-> > +        phys = <&pcie0_phy 1>, <&pcie2_phy 0>;
-> > +        phy-names = "pcie-phy0", "pcie-phy2";
-> > +        reset-gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
-> > +
-> > +        pcie@0,0 {
-> > +            reg = <0x0000 0 0 0 0>;
-> > +            #address-cells = <3>;
-> > +            #size-cells = <2>;
-> > +            device_type = "pci";
-> > +            #interrupt-cells = <1>;
-> > +            interrupt-map-mask = <0 0 0 0>;
-> > +            interrupt-map = <0 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
-> > +            ranges;
-> > +        };
-> > +
-> > +        pcie@1,0 {
-> > +            reg = <0x0800 0 0 0 0>;
-> > +            #address-cells = <3>;
-> > +            #size-cells = <2>;
-> > +            device_type = "pci";
-> > +            #interrupt-cells = <1>;
-> > +            interrupt-map-mask = <0 0 0 0>;
-> > +            interrupt-map = <0 0 0 0 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > +            ranges;
-> > +        };
-> > +
-> > +        pcie@2,0 {
-> > +            reg = <0x1000 0 0 0 0>;
-> > +            #address-cells = <3>;
-> > +            #size-cells = <2>;
-> > +            device_type = "pci";
-> > +            #interrupt-cells = <1>;
-> > +            interrupt-map-mask = <0 0 0 0>;
-> > +            interrupt-map = <0 0 0 0 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-> > +            ranges;
-> > +        };
-> > +    };
-> > +...
-> > --
-> > 2.25.1
+Ok, perst-gpios should be fine. Presumably perst-gpios should be in the
+board and not in the SoC because of what I wrote up above.
