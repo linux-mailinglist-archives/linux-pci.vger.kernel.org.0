@@ -2,120 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C93239C019
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 21:04:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3DAD39C02A
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 21:05:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbhFDTGT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 15:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49450 "EHLO mail.kernel.org"
+        id S230394AbhFDTHh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 15:07:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48564 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229810AbhFDTGT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 15:06:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4AE5B601FA;
-        Fri,  4 Jun 2021 19:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622833472;
-        bh=cer+Bvra6ed4Y1JhppV0+conxTw5XnnGzF6r3B03UOU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Pgs6fH6TcnnUw8hfgWKlTOSTVfaEuwrfVRR8ujvSBTO324x6uWtuGOckoBCpzJ7Cb
-         /wzC0Ws51l1cn/h0+mHDypRuLpORZWRkK2rN6n7inGVpTy0sIOtSEXE6TY7iUrtQNv
-         IUbVAs85WZLnsAkjma8Xxz5Bl0Qjb/iTQTSAYHDUWXSfU/U6tDwXaZcC/SWh9T9F8y
-         BZyhgWZxGfSS21qyebdNulqatlFqmMZx9cyuQjVNQpkXXgzIsy+i4lV/jxM98CNFYp
-         40mrZty5gLW8tBI/pwa+/em5NIcUR1AWXQh8Yny2fywHYDvi1pGqGlh36R+RCqF3Qx
-         RsgLqKfpASVOA==
-Date:   Fri, 4 Jun 2021 14:04:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wang Xingang <wangxingang5@huawei.com>
-Cc:     robh@kernel.org, will@kernel.org, joro@8bytes.org,
-        robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, xieyingtai@huawei.com,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating
- PCI devices
-Message-ID: <20210604190430.GA2220179@bjorn-Precision-5520>
+        id S229823AbhFDTHg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 15:07:36 -0400
+IronPort-SDR: 4ihZaKe9kVacOgEUPLpbhuDl9ODK095U7ctnHqjSRr4r+0jip9lve3cEZE0un9VTwrVcBg/PYm
+ kP2ZvnYBSZ5A==
+X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="265513933"
+X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
+   d="scan'208";a="265513933"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:46 -0700
+IronPort-SDR: VIbn0inN8QFLJJwUIUTA/pJlhCe7egVGgBkIX2877wjGLDLgqVnxr51EfqY/9BPNrV78BXom6C
+ 7Aj9I+g0gIgg==
+X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
+   d="scan'208";a="401049105"
+Received: from abathaly-mobl2.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.138.37])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 12:05:45 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-pci@vger.kernel.org
+Cc:     =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>
+Subject: [PATCH 0/9] Add CXL 2.0 DVSEC Decoding
+Date:   Fri,  4 Jun 2021 12:05:32 -0700
+Message-Id: <20210604190541.175602-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1621566204-37456-1-git-send-email-wangxingang5@huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc John, who tested 6bf6c24720d3]
+This series improves decoding of CXL 2.0 DVSEC registers by adding more DVSEC
+identifiers and adding fields for the existing decoded identifier. Not all DVSEC
+fields from 2.0 spec are enabled here, only enough for what we needed in driver
+bring-up. The restructuring of the code does make it easy to add support for the
+remaining fields. I submitted a PR for this on github a few months ago [1]. The
+spec is available for download [2].
 
-On Fri, May 21, 2021 at 03:03:24AM +0000, Wang Xingang wrote:
-> From: Xingang Wang <wangxingang5@huawei.com>
-> 
-> When booting with devicetree, the pci_request_acs() is called after the
-> enumeration and initialization of PCI devices, thus the ACS is not
-> enabled. And ACS should be enabled when IOMMU is detected for the
-> PCI host bridge, so add check for IOMMU before probe of PCI host and call
-> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
-> devices.
+Breakdown of patches:
+1-5: Rework existing decoding to support more DVSEC IDs
+6: Improve CXL Device Decoding (8.1.3 from CXL 2.0 spec)
+7: Add port capabilities (8.1.5 from CXL 2.0 spec)
+8: Add register locator (8.1.9 from CXL 2.0 spec)
+9: Report undecoded DVSECs
 
-I'm happy to apply this, but I'm a little puzzled about 6bf6c24720d3
-("iommu/of: Request ACS from the PCI core when configuring IOMMU
-linkage").  It was tested and fixed a problem, but I don't understand
-how.
+Here is an example decoded output of a 5.12 based kernel running in QEMU
+emulation [3]
 
-6bf6c24720d3 added the call to pci_request_acs() in
-of_iommu_configure() so it currently looks like this:
+36:00.0 Memory controller [0502]: Intel Corporation Device 0d93 (rev 01) (prog-if 10)
+	Subsystem: Red Hat, Inc. Device 1100
 
-  of_iommu_configure(dev, ...)
-  {
-    if (dev_is_pci(dev))
-      pci_request_acs();
+	<...>
 
-pci_request_acs() sets pci_acs_enable, which tells us to enable ACS
-when enumerating PCI devices in the future.  But we only call
-pci_request_acs() if we already *have* a PCI device.
+	Capabilities: [100 v1] Designated Vendor-Specific: Vendor=1e98 ID=0000 Rev=1 Len=56: CXL
+		CXLCap:	Cache- IO+ Mem+ Mem HW Init+ HDMCount 1 Viral-
+		CXLCtl:	Cache- IO+ Mem+ Cache SF Cov 0 Cache SF Gran 0 Cache Clean- Viral-
+		CXLSta:	Viral-
+		CXLSta2:	ResetComplete+ ResetError- PMComplete-
+		Cache Size Not Reported
+		Range1: 10000000-fffffff
+			Valid+ Active+ Type=CDAT Class=CDAT interleave=0 timeout=1s
+		Range2: 0-ffffffffffffffff
+			Valid- Active- Type=Volatile Class=DRAM interleave=0 timeout=1s
+	Capabilities: [138 v1] Designated Vendor-Specific: Vendor=1e98 ID=0008 Rev=0 Len=36: CXL
+		Block2	BIR: bar0	ID: component registers
+			RegisterOffset: 0000000000000000
+		Block3	BIR: bar2	ID: CXL device registers
+			RegisterOffset: 0000000000000000
+	Kernel driver in use: cxl_pci
 
-So maybe 6bf6c24720d3 fixed a problem for *some* PCI devices, but not
-all?  E.g., did we call of_iommu_configure() for one PCI device before
-enumerating the rest?
+Ben Widawsky (9):
+  cxl: Rename variable to match other code
+  cxl: Make id check more explicit
+  cxl: Collect all DVSEC Device fields
+  cxl: Rework caps to new function
+  cxl: Rename caps to be device caps
+  cxl: Implement more device DVSEC decoding
+  cxl: Add support for DVSEC port cap
+  cxl: Add DVSEC Register Locator
+  cxl: Add placeholder for undecoded DVSECs
 
-> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
-> configuring IOMMU linkage")
-> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
-> ---
->  drivers/iommu/of_iommu.c | 1 -
->  drivers/pci/of.c         | 8 +++++++-
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index a9d2df001149..54a14da242cc 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->  			.np = master_np,
->  		};
->  
-> -		pci_request_acs();
->  		err = pci_for_each_dma_alias(to_pci_dev(dev),
->  					     of_pci_iommu_init, &info);
->  	} else {
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index da5b414d585a..2313c3f848b0 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -581,9 +581,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
->  
->  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
->  {
-> -	if (!dev->of_node)
-> +	struct device_node *node = dev->of_node;
-> +
-> +	if (!node)
->  		return 0;
->  
-> +	/* Detect IOMMU and make sure ACS will be enabled */
-> +	if (of_property_read_bool(node, "iommu-map"))
-> +		pci_request_acs();
-> +
->  	bridge->swizzle_irq = pci_common_swizzle;
->  	bridge->map_irq = of_irq_parse_and_map_pci;
->  
-> -- 
-> 2.19.1
-> 
+ lib/header.h |  78 ++++++++++++++-----
+ ls-ecaps.c   | 206 ++++++++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 249 insertions(+), 35 deletions(-)
+
+[1]: https://github.com/pciutils/pciutils/pull/59
+[2]: https://www.computeexpresslink.org/download-the-specification
+[3]: https://gitlab.com/bwidawsk/qemu
+
+-- 
+2.31.1
+
+
+-- 
+2.31.1
+
