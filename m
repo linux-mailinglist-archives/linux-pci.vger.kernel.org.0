@@ -2,175 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08E0F39BA9D
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 16:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F4EA39BAE6
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 16:28:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231363AbhFDOH4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 10:07:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:39868 "EHLO foss.arm.com"
+        id S229739AbhFDOa2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 10:30:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230436AbhFDOHz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 10:07:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CF242B;
-        Fri,  4 Jun 2021 07:06:08 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 821613F774;
-        Fri,  4 Jun 2021 07:06:06 -0700 (PDT)
-Date:   Fri, 4 Jun 2021 15:05:49 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Simon Glass <sjg@chromium.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        lak <linux-arm-kernel@lists.infradead.org>,
-        lk <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/42] PCI: aardvark: Various driver fixes
-Message-ID: <20210604140538.GA5204@lpieralisi>
-References: <20210506153153.30454-1-pali@kernel.org>
- <20210603151605.GA18917@lpieralisi>
- <CAPnjgZ38G2Xzz1pTp3kCdaTZrDe+hKoBbqsGLKHyLfjUM7wH7g@mail.gmail.com>
+        id S229629AbhFDOa2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 10:30:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EE43613FF;
+        Fri,  4 Jun 2021 14:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622816921;
+        bh=r1dsTOKQ8C/+R7voi2gDtIS6+mbQM5/TYn1mLjS/iVk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YrQK79g4bJM+dfdx3yZPQ8guH2GsyhOL23SAbr8T+Xb2rhXO9FhzTmngrlXweAR+u
+         4Fmu2x8jFloWZ7AEhMECaEUGc9HaH+z+JF3ty8neeBu2I2UDZwiUuUFEp+2iL4gszb
+         sQw0etgiOoRr5yEqVSqSMfGRBvq2mw+6+E87TuHJZRAloedoJEf9y8uf59T2T3yM3u
+         7cOzgecXrkhrqkjUHZjWqxUzALb49BRkgebJJb6/U6KzeHY00DjQRvzAOEei5TlVRu
+         edvNffjKdDV+u732gACb5VQAic2LOSv7OCNE2TiNbSyzC1KbBAirc/vuvJi9GTOjOT
+         EAReA+eGr0AYw==
+Date:   Fri, 4 Jun 2021 09:28:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Joe Perches <joe@perches.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 3/6] PCI/sysfs: Fix trailing newline handling of
+ resource_alignment_param
+Message-ID: <20210604142839.GA2206654@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPnjgZ38G2Xzz1pTp3kCdaTZrDe+hKoBbqsGLKHyLfjUM7wH7g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210604133230.983956-4-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 03, 2021 at 12:02:28PM -0600, Simon Glass wrote:
-> Hi,
+On Fri, Jun 04, 2021 at 01:32:27PM +0000, Krzysztof Wilczy≈Ñski wrote:
+> The value of the "resource_alignment" can be specified using a kernel
+> command-line argument (using the "pci=resource_alignment=") or through
+> the corresponding sysfs object under the /sys/bus/pci path.
 > 
-> On Thu, 3 Jun 2021 at 09:17, Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Thu, May 06, 2021 at 05:31:11PM +0200, Pali Roh·r wrote:
-> > > This patch series fixes various issues in pci-aardvark.c driver
-> > > (PCIe controller on Marvell Armada 3700 SoC) used on Espressobin
-> > > and Turris Mox.
-> > >
-> > > First patch fixes kernel panic (or TF-A panic depending on used
-> > > firmware) during execution of PIO transfer and I would suggest to
-> > > include this fix into v5.13 release to prevent future kernel panics.
-> > >
-> > > Other patches then fixes PIO issues, PCIe link training, initialization
-> > > of PCIe controller, accessing PCIe Root Bridge/Port registers, handling
-> > > of interrupts (including ERR and PME), setup of Multi-MSI interrupts,
-> > > adding support for masking MSI interrupts, adding support for more than
-> > > 32 MSI interrupts with MSI-X support, and adding support for AER.
-> > >
-> > > Note that there are still some unresolved issues with PCIe on A3720.
-> > > I asked Marvell for PCIe documentation or explanations but I have not
-> > > received anything (yet).
-> > >
-> > > Patch "Fix checking for PIO status" is taken from the Marvell github fork
-> > > and adapted for inclusion into mainline kernel:
-> > > https://github.com/MarvellEmbeddedProcessors/linux-marvell/commit/84444d22023c
-> > >
-> > > Whole patch series is available also in my git branch pci-aardvark:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
-> > >
-> > > If you have Espressobin, Turris Mox or other A3720 board with PCIe
-> > > please test this patch series with your favourite PCIe card if
-> > > everything is working fine.
-> > >
-> > > Evan Wang (1):
-> > >   PCI: aardvark: Fix checking for PIO status
-> > >
-> > > Pali Roh·r (39):
-> > >   PCI: aardvark: Fix kernel panic during PIO transfer
-> > >   PCI: aardvark: Fix checking for PIO Non-posted Request
-> > >   PCI: aardvark: Increase polling delay to 1.5s while waiting for PIO
-> > >     response
-> > >   PCI: pci-bridge-emul: Add PCIe Root Capabilities Register
-> > >   PCI: aardvark: Fix reporting CRS Software Visibility on emulated
-> > >     bridge
-> > >   PCI: aardvark: Fix link training
-> > >   PCI: Add PCI_EXP_DEVCTL_PAYLOAD_* macros
-> > >   PCI: aardvark: Fix PCIe Max Payload Size setting
-> > >   PCI: aardvark: Implement workaround for the readback value of VEND_ID
-> > >   PCI: aardvark: Do not touch status bits of masked interrupts in
-> > >     interrupt handler
-> > >   PCI: aardvark: Check for virq mapping when processing INTx IRQ
-> > >   PCI: aardvark: Remove irq_mask_ack callback for INTx interrupts
-> > >   PCI: aardvark: Don't mask irq when mapping
-> > >   PCI: aardvark: Change name of INTx irq_chip to advk-INT
-> > >   PCI: aardvark: Remove unneeded goto
-> > >   PCI: aardvark: Fix support for MSI interrupts
-> > >   PCI: aardvark: Correctly clear and unmask all MSI interrupts
-> > >   PCI: aardvark: Fix setting MSI address
-> > >   PCI: aardvark: Add support for more than 32 MSI interrupts
-> > >   PCI: aardvark: Add support for masking MSI interrupts
-> > >   PCI: aardvark: Enable MSI-X support
-> > >   PCI: aardvark: Fix support for ERR interrupt on emulated bridge
-> > >   PCI: aardvark: Fix support for PME on emulated bridge
-> > >   PCI: aardvark: Fix support for PME requester on emulated bridge
-> > >   PCI: aardvark: Fix support for bus mastering and PCI_COMMAND on
-> > >     emulated bridge
-> > >   PCI: aardvark: Disable bus mastering and mask all interrupts when
-> > >     unbinding driver
-> > >   PCI: aardvark: Free config space for emulated root bridge when
-> > >     unbinding driver to fix memory leak
-> > >   PCI: aardvark: Reset PCIe card and disable PHY when unbinding driver
-> > >   PCI: aardvark: Rewrite irq code to chained irq handler
-> > >   PCI: aardvark: Use separate INTA interrupt for emulated root bridge
-> > >   PCI: pci-bridge-emul: Add description for class_revision field
-> > >   PCI: pci-bridge-emul: Add definitions for missing capabilities
-> > >     registers
-> > >   PCI: aardvark: Add support for DEVCAP2, DEVCTL2, LNKCAP2 and LNKCTL2
-> > >     registers on emulated bridge
-> > >   PCI: aardvark: Add support for PCI_BRIDGE_CTL_BUS_RESET on emulated
-> > >     bridge
-> > >   PCI: aardvark: Replace custom PCIE_CORE_ERR_CAPCTL_* macros by
-> > >     linux/pci_regs.h macros
-> > >   PCI: aardvark: Replace custom PCIE_CORE_INT_* macros by linux
-> > >     PCI_INTERRUPT_* values
-> > >   PCI: aardvark: Cleanup some register macros
-> > >   PCI: aardvark: Add comments for OB_WIN_ENABLE and ADDR_WIN_DISABLE
-> > >   PCI: aardvark: Add support for Advanced Error Reporting registers on
-> > >     emulated bridge
-> > >
-> > > Russell King (2):
-> > >   PCI: pci-bridge-emul: re-arrange register tests
-> > >   PCI: pci-bridge-emul: add support for PCIe extended capabilities
-> > >
-> > >  drivers/pci/controller/pci-aardvark.c | 980 +++++++++++++++++++-------
-> > >  drivers/pci/pci-bridge-emul.c         | 149 ++--
-> > >  drivers/pci/pci-bridge-emul.h         |  17 +-
-> > >  include/uapi/linux/pci_regs.h         |   6 +
-> > >  4 files changed, 850 insertions(+), 302 deletions(-)
-> >
-> > May I ask you please to split this series in smaller sets so that
-> > it is easier to merge ?
-> >
-> > Let's start with the more urgent fixes that don't involve rework (or
-> > you have not received change requests for since they are simple).
+> Currently, when the value is set via the kernel command-line argument,
+> and then subsequently accessed through sysfs object, the value read back
+> will not be correct, as per:
 > 
-> Is this due to the difficulty / time for reviewing them?
+>   # grep -oE 'pci=resource_alignment.+' /proc/cmdline
+>   pci=resource_alignment=20@00:1f.2
+>   # cat /sys/bus/pci/resource_alignment
+>   20@00:1f.
+> 
+> This is also true when the value is set through the sysfs object, but
+> the trailing newline has not been included, as per:
+> 
+>   # echo -n 20@00:1f.2 > /sys/bus/pci/resource_alignment
+>   # cat /sys/bus/pci/resource_alignment
+>   20@00:1f.
+> 
+> When the value set through the sysfs object includes the trailing
+> newline, then reading it back will work as intended, as per:
+> 
+>   # echo 20@00:1f.2 > /sys/bus/pci/resource_alignment
+>   # cat /sys/bus/pci/resource_alignment
+>   20@00:1f.2
+> 
+> To fix this inconsistency, append a trailing newline in the show()
+> function and strip the trailing line in the store() function if one is
+> present.
+> 
+> Also, allow for the value previously set using either a command-line
+> argument or through the sysfs object to be cleared at run-time.
+> 
+> Fixes: e499081da1a2 ("PCI: Force trailing new line to resource_alignment_param in sysfs")
+> Signed-off-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/pci.c | 34 ++++++++++++++++++++--------------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 5ed316ea5831..68f57d86b243 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6439,34 +6439,40 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
+>  
+>  	spin_lock(&resource_alignment_lock);
+>  	if (resource_alignment_param)
+> -		count = sysfs_emit(buf, "%s", resource_alignment_param);
+> +		count = sysfs_emit(buf, "%s\n", resource_alignment_param);
+>  	spin_unlock(&resource_alignment_lock);
+>  
+> -	/*
+> -	 * When set by the command line, resource_alignment_param will not
+> -	 * have a trailing line feed, which is ugly. So conditionally add
+> -	 * it here.
+> -	 */
+> -	if (count >= 2 && buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
+> -		buf[count - 1] = '\n';
+> -		buf[count++] = 0;
+> -	}
+> -
+>  	return count;
+>  }
+>  
+>  static ssize_t resource_alignment_store(struct bus_type *bus,
+>  					const char *buf, size_t count)
+>  {
+> -	char *param = kstrndup(buf, count, GFP_KERNEL);
+> +	char *param, *old, *end;
+> +
+> +	if (count >= (PAGE_SIZE - 1))
+> +		return -EINVAL;
+>  
+> +	param = kstrndup(buf, count, GFP_KERNEL);
+>  	if (!param)
+>  		return -ENOMEM;
+>  
+> +	end = strchr(param, '\n');
+> +	if (end)
+> +		*end = '\0';
+> +
+>  	spin_lock(&resource_alignment_lock);
+> -	kfree(resource_alignment_param);
+> -	resource_alignment_param = param;
+> +	old = resource_alignment_param;
+> +	if (strlen(param)) {
+> +		resource_alignment_param = param;
+> +	} else {
+> +		kfree(param);
 
-Yes.
+I folded this kfree change (free "param" instead of
+"resource_alignment_param" as in v6) into my pci/sysfs branch.
 
-> I feel it is a bit tough to ask someone to split a series, when it is
-> already nicely split into patches. Reordering to put the important
-> things first seems reasonable. Otherwise perhaps people can just
-> review what they can?
-
-Pali maintains this code, what I do is reviewing the bits of code that
-are common across all PCI host controllers; it would help me to have
-patches that affect common functionality (even if the changes are only
-in the aardvark code) and patches that are aardvark specific to be
-split, to speed up the merge.
-
-It is easier to deal with small series but if this is just a series
-containing various fixes we can leave it as it is and we go through
-it one-by-one.
-
-Lorenzo
+> +		resource_alignment_param = NULL;
+> +	}
+>  	spin_unlock(&resource_alignment_lock);
+> +
+> +	kfree(old);
+> +
+>  	return count;
+>  }
+>  
+> -- 
+> 2.31.1
+> 
