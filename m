@@ -2,157 +2,290 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F218D39B52A
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 10:49:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C5E39B5BA
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 11:17:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbhFDIvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 04:51:35 -0400
-Received: from mail-dm6nam12on2130.outbound.protection.outlook.com ([40.107.243.130]:12832
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229930AbhFDIve (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 04:51:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K/JiG7f/K2wT9xvCiAjZqBiC5Ufca4h5mTxgRITQ5K/XFtKC7Haxv18DLIo0f5mr9q+OWyBDc9YTYpUFwAiLIGgpAv3hiX148Fiw/8YyLaZpZTu11phxVK62BMt2nEcrkUczss7vAE4wOBAI1HnNh0ateO9lLi9hm+kz5+bDCh0//spN1KT7WTT5LRiIK1R8C1bPSps4hoyY7uwypR/2MCkXZQsYmvLCG1gak2hDIwE+aYlOmb65tNwab7XuEAeYTScQbX7PTUpkMeot8onXsCe+PSesx+xTWFKBT6C0t8hX5UEweDTly7vBkIjShuUQMC2jfeEhmREz6I3qUUnxdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jxAOkBtN5Z0P8T9EA9K030+P7bgNO5npwwWiZCLvH/8=;
- b=L7U4U+566MY2T+LJRIgID2VCoYmJCjKqlT1OGiL6+zSx99oIap/kPG2fdwf4nUgodDGEN7L7tJWjod1NFfIjfKs60H/ZN4ZRNvij3M4UKnNFALc7x/Vk1NeIs/sy4NnVjF4Id1qEsATwSwIpvrOb/JN59GLAmWnwuPM6UfK4XStuinoLyFbWGK+gZUGneO0IL/9Ei1yGb95hok9LIOX1HlsycvRqxvh9+DwkFcENJbi9aE+Z9MHcc79IGkKHUMLHIy44CdApf+PmZrdJzwGenkPMj3pZvQ97tjQMUhiKmTWET4thiIphR8qNi32S/nH05nsQetH8uc0vg3vsm3NVYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jxAOkBtN5Z0P8T9EA9K030+P7bgNO5npwwWiZCLvH/8=;
- b=LbZ93m2ZAyc4/VNggLaBpL8qViMOqf0cQ/OIPzIVP8eY3fidvciFWJLwo1tPB7qglGIRVWDdPnfkKn/AtMhibQ2gEC0Gp1BJBB2c6ML+Qm3NH8DlClU0gTStQTR7cCj5hfQMrD5l5icAGOMlqFBl3Fv3eTGvdnNDpckZa1zPQh4=
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12)
- by BYAPR21MB1368.namprd21.prod.outlook.com (2603:10b6:a03:112::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.5; Fri, 4 Jun
- 2021 08:49:46 +0000
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::fda7:afbd:5f96:a099]) by BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::fda7:afbd:5f96:a099%4]) with mapi id 15.20.4219.013; Fri, 4 Jun 2021
- 08:49:46 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-CC:     Michael Kelley <mikelley@microsoft.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrea Parri <Andrea.Parri@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Move completion variable from stack to heap in
- hv_compose_msi_msg()
-Thread-Topic: [PATCH] PCI: hv: Move completion variable from stack to heap in
- hv_compose_msi_msg()
-Thread-Index: AQHXRwXUcSr7TOzxAkmxOED9A1jUh6r2K36AgAlpMCCAAFTJgIADxXew
-Date:   Fri, 4 Jun 2021 08:49:46 +0000
-Message-ID: <BY5PR21MB15061364D7D48499F5D7E8A0CE3B9@BY5PR21MB1506.namprd21.prod.outlook.com>
-References: <1620806824-31151-1-git-send-email-longli@linuxonhyperv.com>
- <MWHPR21MB15931F1698FD128C76219F7DD7249@MWHPR21MB1593.namprd21.prod.outlook.com>
- <BY5PR21MB150673A34B431F9311E6FDC5CE3E9@BY5PR21MB1506.namprd21.prod.outlook.com>
- <20210601231339.GA1391@anparri>
-In-Reply-To: <20210601231339.GA1391@anparri>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=30cdc0d9-fa97-41a9-8df7-63f7bf545e00;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-06-04T08:49:11Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [76.22.9.184]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 658e44e4-f435-47a6-dbfe-08d92735b4a3
-x-ms-traffictypediagnostic: BYAPR21MB1368:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR21MB136800884C25B8D8020605E6CE3B9@BYAPR21MB1368.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ncxx+QFnbToPFcKkiQg+mEmii9o943YAOEc6kGkT82jAVWIpf5heg7LvcXNOnnDnQwagSghE02CUR7r6UeE+jMOKPfv/rElySGszTwVmA+zYAy3zr80Mejjtr1TQbiRNi8+MhZtz40A3PqHSSDwjczb1kxtXoA6hVo3QwCjB9hXkNFNIhZUHDh7VRxUt1VW1tZWfV6gMqLjw9L0dP1Zp96dPyAl7eOOLcDXTYnqjcEjCzR6WGm2J1+wWMqRuwQ/JCP/XYz8ggocNPr4oFs2s9t6c0o46XtcuF0R4fGZu8GID3M7BoJXALjbAcDAYSl6gKaEgMNkOBqcmx7XrmQ2iP+zy8xicEtb6V3HXC1M/iEJ/FxD3h7ghtPRrvUj1BBskmZiclQwMfsfUvpQAROifPpGwtPy5IMpVxlcAfHgYsR113wQxJc3SZrmeexr7zTLdOzPFZYDyTyEvCjGNK41snwzHIlDJLyNxDL8STNKTdCa6GTO1yChsaTmr1rCaBg84xbXD7UihvfAiFLHhzv04Rw5BpjPltCjqcfMkaIjDtJQ5CGO5sFCG9DBc8uypPHsDN5jI6OPpwHTYl6//+5oilxajGs4T7Owobw2BBaWLApf1KFujkBlse56B90LQJslbIT77Kl7nxrkGFuF/jZpq0w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1506.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(86362001)(76116006)(6916009)(8676002)(54906003)(9686003)(186003)(33656002)(83380400001)(107886003)(4326008)(8936002)(26005)(8990500004)(122000001)(38100700002)(316002)(55016002)(478600001)(6506007)(82950400001)(10290500003)(82960400001)(71200400001)(2906002)(52536014)(66476007)(7696005)(66556008)(66446008)(64756008)(66946007)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?JZC1gupexfK4otp/M5/3jiEnsBuB64di12gDJbftsEgZHqxqo1A60TrVVC8u?=
- =?us-ascii?Q?92SsR+xKks5+xodLftSXsrnWL1pcXLwvjofVMh3N0vWyCkf3nWD9jico2w0L?=
- =?us-ascii?Q?kMkqcleyfMHoET1/2cwNvHDKHMIiX0IbwpzNKpXVZXeNc6rTWjqXFVgcqN6F?=
- =?us-ascii?Q?yHnCweM8Eafcyf7slHbb73Yp5Cj+hIPBM9KWpYUAvWbh/217IDGuTWR7mBSm?=
- =?us-ascii?Q?hjbZ7TS3DUFItyOgwO6gEc5ETZDvw2iSg789SupXbbqwSD2mOE9juDb2OwTe?=
- =?us-ascii?Q?rWQwYVKX1kwt3KmJBmCl4XOjo6HziAlJK3q8SqFUyvxt4RHGUKtgoEzpXxna?=
- =?us-ascii?Q?cyrgc0Dzb+7FO9sr7nZ1HKLP7nDI6PmIzvk2dqL3O2efQLci2I4JhqlnUmXH?=
- =?us-ascii?Q?uvzjf95aXQ1oSK/LkSBKPZTRnX2CeY2jS4J4LCyGvdU0wFR7ow5rgTGdMLBn?=
- =?us-ascii?Q?ssrhXNejLOGNiVY8v7lk7VYsobybsCXpLiQlm5UIKIWo7Z+xvz0pNg/vjJ6O?=
- =?us-ascii?Q?vUFrtBkr+/jttKMJdm1fKJrDz7yIzHrca9mKQfb1AjfhG+vjswUSUrqNNT4I?=
- =?us-ascii?Q?4vizeS8KXrAwBn/4N5mZ9vlkikDjx/okMkEvaG/ewEVwO7xY2bKpUpdV1X9F?=
- =?us-ascii?Q?Nbm8HmROnDVKvtWBJqw4hi0FE8+Howiwv+a11TXcwHAQf+Eu4w1QNceC25Rn?=
- =?us-ascii?Q?R7dLz3Skby6ZGYEPd/W3TB6wGGeFJZHmogeyJ27uFzPSAksxYLb1c874quyo?=
- =?us-ascii?Q?7tu2NKyr0T46zuByMp9i+n/NCEPSSBliU8s/EedXbkFbHfEaKh4+5u0iSD4i?=
- =?us-ascii?Q?ceBRzVuvtCibkJDRC8JXahq9xJN8N27YiI/lOjTprIRRb/GgRfdxTfZ4K13T?=
- =?us-ascii?Q?4DGKiG08gIuairpjC6TgGRQzUgoKmVN+vISFLCKlfz1Oyg3NkIKKHVU5KDYP?=
- =?us-ascii?Q?TwWD64FfJdETYGYQVswguPNtr1Sz3ruFb7IKKmxnXhHDj6g3dySJ6RJkAAAb?=
- =?us-ascii?Q?0Ejq6Eq+QMT3JJP2TgPUmrh7Hm2DiTMEJRHaPiy56ZDJXwiqWM39wThTe5vY?=
- =?us-ascii?Q?oCdaXsQ3Z1YtYTZGAMtkC/rekS91e+mC+twAKd2ddDxydfYqy7XRR1gQcCeq?=
- =?us-ascii?Q?ryeiKMrzM/jNYa9igrdbnb3vqJQO+qIMXo9XzrQjGDk9c/JtYE8erooXDFTq?=
- =?us-ascii?Q?3qDxlqGdlltIJ2BjINSlLUspVLlX28HBBdWbCuhfXgzv1hIQy0HHG54J37eg?=
- =?us-ascii?Q?5/53Pjy5LrOw/PPtSIGDvrTauFTdJwu2TOeXs5cGm2sYZ3mZa3z2Is05WqE1?=
- =?us-ascii?Q?JLI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S229976AbhFDJTI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 05:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229930AbhFDJTI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Jun 2021 05:19:08 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87213C06174A
+        for <linux-pci@vger.kernel.org>; Fri,  4 Jun 2021 02:17:22 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id m9so6290341ybo.5
+        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 02:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B1gp+Zd0oKR0HTc5iMyE1hLYFcY/54iV12+JAVMaL38=;
+        b=MCAEK2NHYPoH9XK68nRp4cNxc6Vuyx9WmwIP2Cu8Ar8Jq5qY4XTnjRbCftLJSYiXxw
+         cRpFMpUzYudgpakvJUTNNPe+vNwN1JqLYqoy+uRcgRl4VB7ll9iAvs9lSBu42ncNqb/G
+         JlGrWT7EJ+bwozfnuf4vRpgeHCi7ECjlrGpuDZJ5AzRNlQoakpegBEzaTFpGzjbsETyU
+         u5+UuIVCCNJ6teMmEGdAIc57BVrRzqYRRJT5d29NSsEd17VZ5ilAtaJVLrYwVDwEEgaG
+         VEHiRIdY8kTJlFHyQxmy/GDbgwdvNlCUr7bZdWL5fPnN9SWWa+fDmu04IXtzuEzduBGW
+         zsrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B1gp+Zd0oKR0HTc5iMyE1hLYFcY/54iV12+JAVMaL38=;
+        b=AbvG+5mmIYMLljx7Rr7txnNvQ0fciX7fyrQ3SfFiv+fcMaiiPW+r/yPKZ7XHs/wNap
+         XerK4wI7GOfIoDOxHhSHs1cB8sdptdE8NnOc11X3zkdq29cDe6y4YHK84dKQQrpznEQ7
+         otp0a+WOoP+8ZWMFQDePPdmbC0gyGQ0lFHsyykD4RR95+i9+S0ijIzJv5+s8CHEecTXG
+         ZWE4YQJm2hdTvEd1QpHO7pLFVucAQNeActiI0BmS/BPNi9mx3o2YpoR6j5lmj0+0m9c1
+         TI3P0Od5/by3+vegcFnCycqD+r4cjZalXv90lqorIVnIxt8I1WMOTjo1EaWuzL2QO7sG
+         GjKw==
+X-Gm-Message-State: AOAM531gvXwO2K5IG8l7d0HfeiUXLBKDrw/r5m/gO69HCcm+dD5/ympu
+        XrjmEePbsTnVHsSkKtLfClBFEm45nzm68oHnpP0=
+X-Google-Smtp-Source: ABdhPJwLQiUU7yaDO1CYElcU+iIjscRwMQ9r6AbUuze99QSshdaq7oVLEmOGMAeSuQRmN1vNS3Fb/+UpCw8PwBuzI3k=
+X-Received: by 2002:a25:4f05:: with SMTP id d5mr3777736ybb.473.1622798237835;
+ Fri, 04 Jun 2021 02:17:17 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1506.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 658e44e4-f435-47a6-dbfe-08d92735b4a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2021 08:49:46.4862
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OvY8Bzz9RZWYsCl0JrVf1jwtb7/5C8roU88+Ezx8Z9y4UHWK7SGzwmxGrnGmP4xTejCmL/u7yn2x7ivP/aFjSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1368
+References: <20210520120055.jl7vkqanv7wzeipq@pali> <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
+ <20210520140529.rczoz3npjoadzfqc@pali> <CABLWAfSct8Kn1etyJtZhFc5A33thE-s6=Cz-Gd6+j04S4pfD_A@mail.gmail.com>
+ <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com> <87pmxgwh7o.wl-maz@kernel.org>
+ <13a7e409-646d-40a7-17a0-4e4be011efb2@broadcom.com> <874keqvsf2.wl-maz@kernel.org>
+ <CABLWAfSAq50_WvFrqF0+wjqYx3btBrU1kgms3i9dy8GBm4FcdA@mail.gmail.com>
+ <87bl8o1x8c.wl-maz@kernel.org> <92a918e6-37cc-8892-a665-4121b3200f00@broadcom.com>
+In-Reply-To: <92a918e6-37cc-8892-a665-4121b3200f00@broadcom.com>
+From:   Sandor Bodo-Merle <sbodomerle@gmail.com>
+Date:   Fri, 4 Jun 2021 11:17:05 +0200
+Message-ID: <CABLWAfS+yGHRc5Qo9FeSK-1JA_Xm8H6pY5wzEcHkyk491kAvvQ@mail.gmail.com>
+Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Subject: Re: [PATCH] PCI: hv: Move completion variable from stack to heap=
- in
-> hv_compose_msi_msg()
->=20
-> > I agree if the intent is to deal with a untrusted host, I can follow th=
-e same
-> principle to add this support to all requests to VSP. But this is a diffe=
-rent
-> problem to what this patch intends to address. I can see they may share t=
-he
-> same design principle and common code. My question on a untrusted host is=
-:
-> If a host is untrusted and is misbehaving on purpose, what's the point of
-> keep the VM running and not crashing the PCI driver?
->=20
-> I think the principle can be summarized with "keep the VM _running, if yo=
-u
-> can handle the misbehaviour (possibly, warning on "something
-> wrong/unexpected just happened"); crash, otherwise".
->=20
-> Of course, this is just a principle: the exact meaning of that 'handle' s=
-hould be
-> leverage case by case (which I admittedly haven't here); I'm thinking, e.=
-g., at
-> corresponding complexity/performance impacts and risks of 'mis-
-> assessments'.
->=20
-> Thanks,
->   Andrea
+Would something like this work on top of the previous patch - or it
+needs more checks,
+like the "nr_irqs" iniproc_msi_irq_domain_alloc() ?
 
-I will follow Michael's suggestion and send v2.
+diff --git drivers/pci/controller/pcie-iproc-msi.c
+drivers/pci/controller/pcie-iproc-msi.c
+index eede4e8f3f75..49e9d1a761ff 100644
+--- drivers/pci/controller/pcie-iproc-msi.c
++++ drivers/pci/controller/pcie-iproc-msi.c
+@@ -171,7 +171,7 @@ static struct irq_chip iproc_msi_irq_chip =3D {
 
-Long
+ static struct msi_domain_info iproc_msi_domain_info =3D {
+        .flags =3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-               MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
++              MSI_FLAG_PCI_MSIX,
+        .chip =3D &iproc_msi_irq_chip,
+ };
+
+@@ -539,6 +539,9 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct
+device_node *node)
+        mutex_init(&msi->bitmap_lock);
+        msi->nr_cpus =3D num_possible_cpus();
+
++       if (msi->nr_cpus =3D=3D 1)
++               iproc_msi_domain_info.flags |=3D  MSI_FLAG_MULTI_PCI_MSI;
++
+        msi->nr_irqs =3D of_irq_count(node);
+        if (!msi->nr_irqs) {
+                dev_err(pcie->dev, "found no MSI GIC interrupt\n");
+
+On Thu, Jun 3, 2021 at 6:59 PM Ray Jui <ray.jui@broadcom.com> wrote:
+>
+>
+>
+> On 6/2/2021 1:34 AM, Marc Zyngier wrote:
+> > On Wed, 26 May 2021 17:10:24 +0100,
+> > Sandor Bodo-Merle <sbodomerle@gmail.com> wrote:
+> >>
+> >> [1  <text/plain; UTF-8 (7bit)>]
+> >> The following patch addresses the allocation issue - but indeed - wont
+> >> fix the atomicity of IRQ affinity in this driver (but the majority of
+> >> our product relies on single core SOCs; we also use a dual-core SOC
+> >> also - but we don't change the initial the IRQ affinity).
+> >>
+> >> On Wed, May 26, 2021 at 9:57 AM Marc Zyngier <maz@kernel.org> wrote:
+> >>>
+> >>> On Tue, 25 May 2021 18:27:54 +0100,
+> >>> Ray Jui <ray.jui@broadcom.com> wrote:
+> >>>>
+> >>>> On 5/24/2021 3:37 AM, Marc Zyngier wrote:
+> >>>>> On Thu, 20 May 2021 18:11:32 +0100,
+> >>>>> Ray Jui <ray.jui@broadcom.com> wrote:
+> >>>>>>
+> >>>>>> On 5/20/2021 7:22 AM, Sandor Bodo-Merle wrote:
+> >>>
+> >>> [...]
+> >>>
+> >>>>>> I guess I'm not too clear on what you mean by "multi-MSI interrupt=
+s
+> >>>>>> needs to be aligned to number of requested interrupts.". Would you=
+ be
+> >>>>>> able to plug this into the above explanation so we can have a more=
+ clear
+> >>>>>> understanding of what you mean here?
+> >>>>>
+> >>>>> That's a generic PCI requirement: if you are providing a Multi-MSI
+> >>>>> configuration, the base vector number has to be size-aligned
+> >>>>> (2-aligned for 2 MSIs, 4 aligned for 4, up to 32), and the end-poin=
+t
+> >>>>> supplies up to 5 bits that are orr-ed into the base vector number,
+> >>>>> with a *single* doorbell address. You effectively provide a single =
+MSI
+> >>>>> number and a single address, and the device knows how to drive 2^n =
+MSIs.
+> >>>>>
+> >>>>> This is different from MSI-X, which defines multiple individual
+> >>>>> vectors, each with their own doorbell address.
+> >>>>>
+> >>>>> The main problem you have here (other than the broken allocation
+> >>>>> mechanism) is that moving an interrupt from one core to another
+> >>>>> implies moving the doorbell address to that of another MSI
+> >>>>> group. This isn't possible for Multi-MSI, as all the MSIs must have
+> >>>>> the same doorbell address. As far as I can see, there is no way to
+> >>>>> support Multi-MSI together with affinity change on this HW, and you
+> >>>>> should stop advertising support for this feature.
+> >>>>>
+> >>>>
+> >>>> I was not aware of the fact that multi-MSI needs to use the same
+> >>>> doorbell address (aka MSI posted write address?). Thank you for help=
+ing
+> >>>> to point it out. In this case, yes, like you said, we cannot possibl=
+y
+> >>>> support both multi-MSI and affinity at the same time, since supporti=
+ng
+> >>>> affinity requires us to move from one to another event queue (and ir=
+q)
+> >>>> that will have different doorbell address.
+> >>>>
+> >>>> Do you think it makes sense to do the following by only advertising
+> >>>> multi-MSI capability in the single CPU core case (detected runtime v=
+ia
+> >>>> 'num_possible_cpus')? This will at least allow multi-MSI to work in
+> >>>> platforms with single CPU core that Sandor and Pali use?
+> >>>
+> >>> I don't think this makes much sense. Single-CPU machines are an oddit=
+y
+> >>> these days, and I'd rather you simplify this (already pretty
+> >>> complicated) driver.
+> >>>
+> >>>>> There is also a more general problem here, which is the atomicity o=
+f
+> >>>>> the update on affinity change. If you are moving an interrupt from =
+one
+> >>>>> CPU to the other, it seems you change both the vector number and th=
+e
+> >>>>> target address. If that is the case, this isn't atomic, and you may
+> >>>>> end-up with the device generating a message based on a half-applied
+> >>>>> update.
+> >>>>
+> >>>> Are you referring to the callback in 'irq_set_addinity" and
+> >>>> 'irq_compose_msi_msg'? In such case, can you help to recommend a
+> >>>> solution for it (or there's no solution based on such architecture)?=
+ It
+> >>>> does not appear such atomy can be enforced from the irq framework le=
+vel.
+> >>>
+> >>> irq_compose_msi_msg() is only one part of the problem. The core of th=
+e
+> >>> issue is that the programming of the end-point is not atomic (you nee=
+d
+> >>> to update a 32bit payload *and* a 64bit address).
+> >>>
+> >>> A solution to workaround it would be to rework the way you allocate
+> >>> the vectors, making them constant across all CPUs so that only the
+> >>> address changes when changing the affinity.
+> >>>
+> >>> Thanks,
+> >>>
+> >>>         M.
+> >>>
+> >>> --
+> >>> Without deviation from the norm, progress is not possible.
+> >> [2 0001-PCI-iproc-fix-the-base-vector-number-allocation-for-.patch <te=
+xt/x-diff; UTF-8 (base64)>]
+> >> From df31c9c0333ca4922b7978b30719348e368bea3c Mon Sep 17 00:00:00 2001
+> >> From: Sandor Bodo-Merle <sbodomerle@gmail.com>
+> >> Date: Wed, 26 May 2021 17:48:16 +0200
+> >> Subject: [PATCH] PCI: iproc: fix the base vector number allocation for=
+ Multi
+> >>  MSI
+> >> MIME-Version: 1.0
+> >> Content-Type: text/plain; charset=3DUTF-8
+> >> Content-Transfer-Encoding: 8bit
+> >>
+> >> Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> >> failed to reserve the proper number of bits from the inner domain.
+> >> Natural alignment of the base vector number was also not guaranteed.
+> >>
+> >> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> >> Reported-by: Pali Roh=C3=A1r <pali@kernel.org>
+> >> Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
+> >> ---
+> >>  drivers/pci/controller/pcie-iproc-msi.c | 18 ++++++++----------
+> >>  1 file changed, 8 insertions(+), 10 deletions(-)
+> >>
+> >> diff --git drivers/pci/controller/pcie-iproc-msi.c drivers/pci/control=
+ler/pcie-iproc-msi.c
+> >> index eede4e8f3f75..fa2734dd8482 100644
+> >> --- drivers/pci/controller/pcie-iproc-msi.c
+> >> +++ drivers/pci/controller/pcie-iproc-msi.c
+> >> @@ -252,18 +252,15 @@ static int iproc_msi_irq_domain_alloc(struct irq=
+_domain *domain,
+> >>
+> >>      mutex_lock(&msi->bitmap_lock);
+> >>
+> >> -    /* Allocate 'nr_cpus' number of MSI vectors each time */
+> >> -    hwirq =3D bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vec=
+s, 0,
+> >> -                                       msi->nr_cpus, 0);
+> >> -    if (hwirq < msi->nr_msi_vecs) {
+> >> -            bitmap_set(msi->bitmap, hwirq, msi->nr_cpus);
+> >> -    } else {
+> >> -            mutex_unlock(&msi->bitmap_lock);
+> >> -            return -ENOSPC;
+> >> -    }
+> >> +    /* Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI vecto=
+rs each time */
+> >> +    hwirq =3D bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
+> >> +                                    order_base_2(msi->nr_cpus * nr_ir=
+qs));
+> >>
+> >>      mutex_unlock(&msi->bitmap_lock);
+> >>
+> >> +    if (hwirq < 0)
+> >> +            return -ENOSPC;
+> >> +
+> >>      for (i =3D 0; i < nr_irqs; i++) {
+> >>              irq_domain_set_info(domain, virq + i, hwirq + i,
+> >>                                  &iproc_msi_bottom_irq_chip,
+> >> @@ -284,7 +281,8 @@ static void iproc_msi_irq_domain_free(struct irq_d=
+omain *domain,
+> >>      mutex_lock(&msi->bitmap_lock);
+> >>
+> >>      hwirq =3D hwirq_to_canonical_hwirq(msi, data->hwirq);
+> >> -    bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
+> >> +    bitmap_release_region(msi->bitmap, hwirq,
+> >> +                          order_base_2(msi->nr_cpus * nr_irqs));
+> >>
+> >>      mutex_unlock(&msi->bitmap_lock);
+> >>
+> >
+> > This looks reasonable. However, this doesn't change the issue that you
+> > have with SMP systems and Multi-MSI. I'd like to see a more complete
+> > patch (disabling Multi-MSI on SMP, at the very least).
+> >
+>
+> Yeah, agree with you that we want to see this patch at least disables
+> multi-msi when it detects 'num_possible_cpus' > 1.
+>
+>
+> > Thanks,
+> >
+> >       M.
+> >
