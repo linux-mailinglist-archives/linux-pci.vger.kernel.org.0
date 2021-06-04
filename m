@@ -2,199 +2,427 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5770139BD96
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 18:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 720CA39BDBF
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jun 2021 18:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230516AbhFDQug (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 12:50:36 -0400
-Received: from mail-pj1-f52.google.com ([209.85.216.52]:40873 "EHLO
-        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbhFDQug (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Jun 2021 12:50:36 -0400
-Received: by mail-pj1-f52.google.com with SMTP id jz2-20020a17090b14c2b0290162cf0b5a35so7734214pjb.5
-        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 09:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=8Z/ddpllN+BthqcRI1/6lAChpNxjK3J08p/2Z7tzhPE=;
-        b=Z0bSkm+3JAtIpQOUuoHfCLMRtZZ8gTn2BvYQBI+Rn+GnAvIHStc8C8DCKEhYmcIEBE
-         0QlADX2Q/4LY/QNHjWg2Z7cB2A3rSdsaB4mc93sgoCdPT4SM1M/jwoUDPW4vWbs3lxb0
-         bxzT5b8Afy73ef/bYnkzSfYJSNcXhLttVLmoQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=8Z/ddpllN+BthqcRI1/6lAChpNxjK3J08p/2Z7tzhPE=;
-        b=klpCS90BhRytRRFR9rtaIUMRmon2xR01RpTaU21I08ArpWzsIskhaFQriDJ9O54LJ9
-         zz/SgMwuFK2wleDNi52ca9OT6ODfIad03Xdpo7ceNZEEni8r0+GcViKfbv231i7i6unE
-         3FlTGtFhRLHPnAtCIugUhVQEOX8fUcH0rDsn4YzkFkfboQ1aEzFG/xPfGDaFhf29FUKz
-         pBNbnmCbHW8JGtt2ZV7bteEjJ2vcEdG78ad5mn6G+dN+UFT2rN0depJeqE0mDg3NJ5JY
-         QdFkP3gRXaOTawyU3YCsFMF7q3uyqOXG2dmUA8c3FO55eP0h1iLNL3rJeighXV0tabyv
-         Qv+Q==
-X-Gm-Message-State: AOAM530bCJks/FG2ZCEUhKeWzEQTyWyD9GoIEWdpcC9CTSCuQFKw9w4P
-        Znc8wE8zxpbNiEPptX4Asc6ne5YcT/YCZGow
-X-Google-Smtp-Source: ABdhPJxnNfxmdO2VmsSw2UyF/1JLoB63JDxRl4eZKkQY8lPHFTob7NfyHrBR9GqLXwSlJ9udREa2rQ==
-X-Received: by 2002:a17:90a:fd86:: with SMTP id cx6mr3543384pjb.148.1622825269747;
-        Fri, 04 Jun 2021 09:47:49 -0700 (PDT)
-Received: from [10.136.8.240] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 6sm2186483pfw.56.2021.06.04.09.47.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 09:47:48 -0700 (PDT)
-Subject: Re: pcie-iproc-msi.c: Bug in Multi-MSI support?
-To:     Sandor Bodo-Merle <sbodomerle@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20210520120055.jl7vkqanv7wzeipq@pali>
- <CABLWAfQbKy=fpaY6J=gqtJy5L+pqNeqwU6qkVswYaWnVjiwAHw@mail.gmail.com>
- <20210520140529.rczoz3npjoadzfqc@pali>
- <CABLWAfSct8Kn1etyJtZhFc5A33thE-s6=Cz-Gd6+j04S4pfD_A@mail.gmail.com>
- <4e972ecb-43df-639f-052d-8d1518bae9c0@broadcom.com>
- <87pmxgwh7o.wl-maz@kernel.org>
- <13a7e409-646d-40a7-17a0-4e4be011efb2@broadcom.com>
- <874keqvsf2.wl-maz@kernel.org>
- <CABLWAfSAq50_WvFrqF0+wjqYx3btBrU1kgms3i9dy8GBm4FcdA@mail.gmail.com>
- <87bl8o1x8c.wl-maz@kernel.org>
- <92a918e6-37cc-8892-a665-4121b3200f00@broadcom.com>
- <CABLWAfS+yGHRc5Qo9FeSK-1JA_Xm8H6pY5wzEcHkyk491kAvvQ@mail.gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <4185e424-0ee2-03fb-9dc2-62c16b32a6f0@broadcom.com>
-Date:   Fri, 4 Jun 2021 09:47:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+        id S230422AbhFDQ5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 12:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229791AbhFDQ5P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 12:57:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 44B88613DE;
+        Fri,  4 Jun 2021 16:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622825728;
+        bh=koxXFubPHbOiyXDwrCxoO2ZYyQNuCrdp9eQHTS1o5zQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qNqIXnVF4xOc1Xh0HMDdHEZS6+ZGbaJhat5z2KTcKWOcVvc7JWe9jZUWsvG5FA6jR
+         SBcXpBpBYG/uiIkuD0ngNbnAPp2RkqlHYBzlbRzb+LA1v5I3kG+pnId67EBNrjvQjj
+         qEwj0Z4nkVlImBEFjXWdkcaRGv2hp68eKO8eEStFD3bvo9bweOTyJc5KMtlPonoXXC
+         nsFs6eBHALuZU1ZdqYWAev9mQW/keFnjafIHQiRyY8w5K8+T83wCKjxwEn9Iz3l6Hg
+         2ZSY7UpZvwNa2zRCb8V5FeT1Dk6jNjh64jrlMzm+B8LmlNOeL0KQORNKCEQe+f5Ifm
+         zpmJbtvgGPItA==
+Received: by pali.im (Postfix)
+        id 937C7990; Fri,  4 Jun 2021 18:55:25 +0200 (CEST)
+Date:   Fri, 4 Jun 2021 18:55:25 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-staging@lists.linux.dev,
+        Greg KH <gregkh@linuxfoundation.org>,
+        NeilBrown <neil@brown.name>,
+        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/4] MIPS: pci: Add driver for MT7621 PCIe controller
+Message-ID: <20210604165525.ybgyusazeyzx642v@pali>
+References: <20210515124055.22225-1-sergio.paracuellos@gmail.com>
+ <20210515124055.22225-3-sergio.paracuellos@gmail.com>
+ <20210531131431.bzsvmefqdyawmeo2@pali>
+ <CAMhs-H80=7jctPT70rOmcwcqPw+9iUF84_ZCgGr-TKwJ4eB2Lg@mail.gmail.com>
+ <20210531135041.42ovpmbwuc3yfkaw@pali>
+ <CAMhs-H_fR5aXJ=diTm-2yhgjjv9S6N6jA-DOZ0K_BnQ4UHHh3Q@mail.gmail.com>
+ <CAMhs-H8EwQDvZtzpPn2u_WOWt1wcixOvz5nVZP2miM6j0+P7EA@mail.gmail.com>
+ <20210602122337.fxwaikulbawwkc2j@pali>
+ <CAMhs-H8Gr=ObgMZAZ9VuNqHX4TaKQPPGNNMY4pzh9o=3EbAgUQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CABLWAfS+yGHRc5Qo9FeSK-1JA_Xm8H6pY5wzEcHkyk491kAvvQ@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000c6146905c3f3739e"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMhs-H8Gr=ObgMZAZ9VuNqHX4TaKQPPGNNMY4pzh9o=3EbAgUQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000c6146905c3f3739e
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-
-
-
-On 6/4/2021 2:17 AM, Sandor Bodo-Merle wrote:
-> Would something like this work on top of the previous patch - or it
-> needs more checks,
-> like the "nr_irqs" iniproc_msi_irq_domain_alloc() ?
+On Wednesday 02 June 2021 14:43:53 Sergio Paracuellos wrote:
+> Hi Pali,
 > 
-> diff --git drivers/pci/controller/pcie-iproc-msi.c
-> drivers/pci/controller/pcie-iproc-msi.c
-> index eede4e8f3f75..49e9d1a761ff 100644
-> --- drivers/pci/controller/pcie-iproc-msi.c
-> +++ drivers/pci/controller/pcie-iproc-msi.c
-> @@ -171,7 +171,7 @@ static struct irq_chip iproc_msi_irq_chip = {
+> On Wed, Jun 2, 2021 at 2:23 PM Pali Rohár <pali@kernel.org> wrote:
+> >
+> > On Wednesday 02 June 2021 14:16:26 Sergio Paracuellos wrote:
+> > > Hi Pali,
+> > >
+> > > On Mon, May 31, 2021 at 4:19 PM Sergio Paracuellos
+> > > <sergio.paracuellos@gmail.com> wrote:
+> > > >
+> > > > On Mon, May 31, 2021 at 3:50 PM Pali Rohár <pali@kernel.org> wrote:
+> > > > >
+> > > > > On Monday 31 May 2021 15:39:55 Sergio Paracuellos wrote:
+> > > > > > Hi Pali,
+> > > > > >
+> > > > > > Thanks for your comments.
+> > > > > >
+> > > > > > On Mon, May 31, 2021 at 3:14 PM Pali Rohár <pali@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Saturday 15 May 2021 14:40:53 Sergio Paracuellos wrote:
+> > > > > > > > This patch adds a driver for the PCIe controller of MT7621 SoC.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > > > > > > > ---
+> > > > > > > >  arch/mips/pci/Makefile     |   1 +
+> > > > > > > >  arch/mips/pci/pci-mt7621.c | 624 +++++++++++++++++++++++++++++++++++++
+> > > > > > > >  arch/mips/ralink/Kconfig   |   9 +-
+> > > > > > > >  3 files changed, 633 insertions(+), 1 deletion(-)
+> > > > > > > >  create mode 100644 arch/mips/pci/pci-mt7621.c
+> > > > > > > >
+> > > > > > > > diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
+> > > > > > > > index f3eecc065e5c..178c550739c4 100644
+> > > > > > > > --- a/arch/mips/pci/Makefile
+> > > > > > > > +++ b/arch/mips/pci/Makefile
+> > > > > > > > @@ -24,6 +24,7 @@ obj-$(CONFIG_PCI_AR2315)    += pci-ar2315.o
+> > > > > > > >  obj-$(CONFIG_SOC_AR71XX)     += pci-ar71xx.o
+> > > > > > > >  obj-$(CONFIG_PCI_AR724X)     += pci-ar724x.o
+> > > > > > > >  obj-$(CONFIG_PCI_XTALK_BRIDGE)       += pci-xtalk-bridge.o
+> > > > > > > > +obj-$(CONFIG_PCI_MT7621)     += pci-mt7621.o
+> > > > > > > >  #
+> > > > > > > >  # These are still pretty much in the old state, watch, go blind.
+> > > > > > > >  #
+> > > > > > > > diff --git a/arch/mips/pci/pci-mt7621.c b/arch/mips/pci/pci-mt7621.c
+> > > > > > > > new file mode 100644
+> > > > > > > > index 000000000000..fe1945819d25
+> > > > > > > > --- /dev/null
+> > > > > > > > +++ b/arch/mips/pci/pci-mt7621.c
+> > > > > > > ...
+> > > > > > > > +static int mt7621_pcie_enable_ports(struct mt7621_pcie *pcie)
+> > > > > > > > +{
+> > > > > > > > +     struct device *dev = pcie->dev;
+> > > > > > > > +     struct mt7621_pcie_port *port;
+> > > > > > > > +     u8 num_slots_enabled = 0;
+> > > > > > > > +     u32 slot;
+> > > > > > > > +     u32 val;
+> > > > > > > > +     int err;
+> > > > > > > > +
+> > > > > > > > +     /* Setup MEMWIN and IOWIN */
+> > > > > > > > +     pcie_write(pcie, 0xffffffff, RALINK_PCI_MEMBASE);
+> > > > > > > > +     pcie_write(pcie, pcie->io.start, RALINK_PCI_IOBASE);
+> > > > > > > > +
+> > > > > > > > +     list_for_each_entry(port, &pcie->ports, list) {
+> > > > > > > > +             if (port->enabled) {
+> > > > > > > > +                     err = clk_prepare_enable(port->clk);
+> > > > > > > > +                     if (err) {
+> > > > > > > > +                             dev_err(dev, "enabling clk pcie%d\n", slot);
+> > > > > > > > +                             return err;
+> > > > > > > > +                     }
+> > > > > > > > +
+> > > > > > > > +                     mt7621_pcie_enable_port(port);
+> > > > > > > > +                     dev_info(dev, "PCIE%d enabled\n", port->slot);
+> > > > > > > > +                     num_slots_enabled++;
+> > > > > > > > +             }
+> > > > > > > > +     }
+> > > > > > > > +
+> > > > > > > > +     for (slot = 0; slot < num_slots_enabled; slot++) {
+> > > > > > > > +             val = read_config(pcie, slot, PCI_COMMAND);
+> > > > > > > > +             val |= PCI_COMMAND_MASTER;
+> > > > > > > > +             write_config(pcie, slot, PCI_COMMAND, val);
+> > > > > > >
+> > > > > > > Hello! Is this part of code correct? Because it looks strange if PCIe
+> > > > > > > controller driver automatically enables PCI bus mastering, prior device
+> > > > > > > driver initialize itself.
+> > > > > > >
+> > > > > > > Moreover kernel has already function pci_set_master() for this purpose
+> > > > > > > which is used by device drivers.
+> > > > > > >
+> > > > > > > So I think this code can confuse some device drivers...
+> > > > > >
+> > > > > > I agree that we have pci_set_master() to be used in pci device driver
+> > > > > > code. Original controller driver set this bit for enabled slots. Since
+> > > > > > there is no documentation at all for the PCI in this SoC
+> > > > >
+> > > > > I see... this is really a big problem to do any driver development...
+> > > >
+> > > > For sure it is :(.
+> > > >
+> > > > >
+> > > > > > I have
+> > > > > > maintained the setting in the driver in a cleaner way. See original
+> > > > > > driver code and the setting here [0]. There is no other reason than
+> > > > > > that. I am ok with removing this from here and testing with my two
+> > > > > > devices that everything is still ok if having this setting in the pci
+> > > > > > controller driver is a real problem.
+> > > > >
+> > > > > You can run lspci -nnvv with and without PCI_COMMAND_MASTER code and
+> > > > > then compare outputs.
+> > > > >
+> > > > > Device drivers for sure enable PCI_COMMAND_MASTER at the time when it is
+> > > > > needed, so it is possible that there would be no difference in lspci
+> > > > > output.
+> > > >
+> > > > Thanks. I will take this into account when v2 is submitted after more
+> > > > review comments come :).
+> > >
+> > > I have tested to remove this and check lspci -nnvv output with and
+> > > without PCI_COMMAND_MASTER code and, as you pointed out, there is no
+> > > difference between them. Also, both boards are working without
+> > > regressions at all. So I will remove this code for next version.
+> >
+> > Perfect!
+> >
+> > > Thanks,
+> > >     Sergio Paracuellos
+> > > >
+> > > > >
+> > > > > > [0]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/mt7621-pci/pci-mt7621.c?h=v4.18#n676
+> > > > > >
+> > > > > > Best regards,
+> > > > > >     Sergio Paracuellos
+> > > > > > >
+> > > > > > > > +             /* configure RC FTS number to 250 when it leaves L0s */
+> > > > > > > > +             val = read_config(pcie, slot, PCIE_FTS_NUM);
+> > > > > > > > +             val &= ~PCIE_FTS_NUM_MASK;
+> > > > > > > > +             val |= PCIE_FTS_NUM_L0(0x50);
+> > > > > > > > +             write_config(pcie, slot, PCIE_FTS_NUM, val);
+> >
+> > Could you look also what is doing this code (PCIE_FTS_NUM)? It is marked
+> > as MT specific register. But from this code for me it looks like that it
+> > just access config space of some device and therefore it could be some
+> > standard PCIe register. Just with hardcoded calculated offset.
+
+So based on your lspci output, there is no PCIe capability register at
+address PCIE_FTS_NUM (0x70c), right? It seems strange to trying access
+capability register outside of capability list.
+
+> > Could you provide output from lspci -nnvv? So other people could look at
+> > it and maybe we decode what is this code doing and if it is needed.
 > 
->  static struct msi_domain_info iproc_msi_domain_info = {
->         .flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> -               MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-> +              MSI_FLAG_PCI_MSIX,
->         .chip = &iproc_msi_irq_chip,
->  };
+> # lspci -nnvv
+> 00:02.0 PCI bridge [0604]: Device [0e8d:0801] (rev 01) (prog-if 00
+> [Normal decode])
+
+Hm... Device address is 02. But in your code is:
+
+    u8 num_slots_enabled = 0;
+    ...
+    list_for_each_entry(port, &pcie->ports, list) {
+        if (port->enabled) {
+            ...
+            num_slots_enabled++;
+            ...
+        }
+    }
+    ...
+    for (slot = 0; slot < num_slots_enabled; slot++) {
+        val = read_config(pcie, slot, ...);
+        ...
+        write_config(pcie, slot, ...);
+    }
+
+Which means that this code writes to config space of wrong device 0
+(instead of 2)! In function write_config() can be seen that second
+parameter specify device of BDF address for bus=0 and function=0.
+
+>         Device tree node: /sys/firmware/devicetree/base/pcie@1e140000/pcie@2,0
+>         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR- FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin A routed to IRQ 255
+>         Region 1: Memory at 60200000 (32-bit, non-prefetchable) [size=64K]
+>         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+>         I/O behind bridge: 00000000-00000fff [size=4K]
+>         Memory behind bridge: 60000000-600fffff [size=1M]
+>         Prefetchable memory behind bridge: 60100000-601fffff [size=1M]
+>         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- <SERR- <PERR-
+>         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+>                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+>         Capabilities: [40] Power Management version 3
+>                 Flags: PMEClk- DSI- D1+ D2- AuxCurrent=375mA
+> PME(D0+,D1+,D2-,D3hot+,D3cold-)
+>                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+>         Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+>                 Address: 0000000000000000  Data: 0000
+>         Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
+>                 DevCap: MaxPayload 128 bytes, PhantFunc 0
+>                         ExtTag- RBE+
+>                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+>                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+>                         MaxPayload 128 bytes, MaxReadReq 128 bytes
+>                 DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq-
+> AuxPwr- TransPend-
+>                 LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1,
+> Exit Latency L0s <512ns, L1 <64us
+>                         ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp-
+>                 LnkCtl: ASPM Disabled; RCB 128 bytes, Disabled- CommClk-
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
+>                         TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
+>                 RootCap: CRSVisible-
+>                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
+> PMEIntEna- CRSVisible-
+>                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+>                 DevCap2: Completion Timeout: Not Supported,
+> TimeoutDis+ NROPrPrP- LTR-
+>                          10BitTagComp- 10BitTagReq- OBFF Not
+> Supported, ExtFmt- EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported,
+> EmergencyPowerReductionInit-
+>                          FRS- LN System CLS Not Supported, TPHComp-
+> ExtTPHComp- ARIFwd-
+>                          AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
+> LTR- OBFF Disabled, ARIFwd-
+>                          AtomicOpsCtl: ReqEn- EgressBlck-
+>                 LnkCap2: Supported Link Speeds: 2.5GT/s, Crosslink-
+> Retimer- 2Retimers- DRS-
+>                 LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+>                          Transmit Margin: Normal Operating Range,
+> EnterModifiedCompliance- ComplianceSOS-
+>                          Compliance De-emphasis: -6dB
+>                 LnkSta2: Current De-emphasis Level: -6dB,
+> EqualizationComplete- EqualizationPhase1-
+>                          EqualizationPhase2- EqualizationPhase3-
+> LinkEqualizationRequest-
+>                          Retimer- 2Retimers- CrosslinkRes: unsupported
+>         Capabilities: [100 v1] Advanced Error Reporting
+>                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+>                 CESta:  RxErr+ BadTLP- BadDLLP- Rollover- Timeout-
+> AdvNonFatalErr-
+>                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+> AdvNonFatalErr+
+>                 AERCap: First Error Pointer: 00, ECRCGenCap+
+> ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+>                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+>                 HeaderLog: 00000000 00000000 00000000 00000000
+>                 RootCmd: CERptEn- NFERptEn- FERptEn-
+>                 RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
+>                          FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
+>                 ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
+>         Capabilities: [140 v1] Virtual Channel
+>                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+>                 Arb:    Fixed- WRR32- WRR64- WRR128-
+>                 Ctrl:   ArbSelect=Fixed
+>                 Status: InProgress-
+>                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+>                         Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+>                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+>                         Status: NegoPending- InProgress-
+> lspci: Unable to load libkmod resources: error -12
 > 
-> @@ -539,6 +539,9 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct
-> device_node *node)
->         mutex_init(&msi->bitmap_lock);
->         msi->nr_cpus = num_possible_cpus();
+> 01:00.0 Network controller [0280]: MEDIATEK Corp. Device [14c3:7612]
+>         Subsystem: MEDIATEK Corp. Device [14c3:7612]
+>         Device tree node:
+> /sys/firmware/devicetree/base/pcie@1e140000/pcie@2,0/wifi@0,0
+>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR- FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin A routed to IRQ 20
+>         Region 0: Memory at 60000000 (64-bit, non-prefetchable) [size=1M]
+>         Expansion ROM at 60100000 [virtual] [disabled] [size=64K]
+>         Capabilities: [40] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA
+> PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+>         Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+>                 Address: 0000000000000000  Data: 0000
+>         Capabilities: [70] Express (v2) Endpoint, MSI 00
+>                 DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s
+> unlimited, L1 unlimited
+>                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+
+> FLReset- SlotPowerLimit 0.000W
+>                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+>                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+>                         MaxPayload 128 bytes, MaxReadReq 128 bytes
+>                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> AuxPwr+ TransPend-
+>                 LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1,
+> Exit Latency L0s <2us, L1 unlimited
+>                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
+>                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+>                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+
+> NROPrPrP- LTR-
+>                          10BitTagComp- 10BitTagReq- OBFF Not
+> Supported, ExtFmt- EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported,
+> EmergencyPowerReductionInit-
+>                          FRS- TPHComp- ExtTPHComp-
+>                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
+> LTR- OBFF Disabled,
+>                          AtomicOpsCtl: ReqEn-
+>                 LnkCap2: Supported Link Speeds: 2.5GT/s, Crosslink-
+> Retimer- 2Retimers- DRS-
+>                 LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+>                          Transmit Margin: Normal Operating Range,
+> EnterModifiedCompliance- ComplianceSOS-
+>                          Compliance De-emphasis: -6dB
+>                 LnkSta2: Current De-emphasis Level: -3.5dB,
+> EqualizationComplete- EqualizationPhase1-
+>                          EqualizationPhase2- EqualizationPhase3-
+> LinkEqualizationRequest-
+>                          Retimer- 2Retimers- CrosslinkRes: unsupported
+>         Capabilities: [100 v2] Advanced Error Reporting
+>                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+>                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+> AdvNonFatalErr-
+>                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+> AdvNonFatalErr+
+>                 AERCap: First Error Pointer: 00, ECRCGenCap+
+> ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+>                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+>                 HeaderLog: 00000000 00000000 00000000 00000000
+>         Capabilities: [148 v1] Device Serial Number 00-00-00-00-00-00-00-00
+>         Capabilities: [158 v1] Latency Tolerance Reporting
+>                 Max snoop latency: 0ns
+>                 Max no snoop latency: 0ns
+>         Capabilities: [160 v1] L1 PM Substates
+>                 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+
+> ASPM_L1.1+ L1_PM_Substates+
+>                           PortCommonModeRestoreTime=50us PortTPowerOnTime=10us
+>                 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+>                            T_CommonMode=0us LTR1.2_Threshold=0ns
+>                 L1SubCtl2: T_PwrOn=10us
+>         Kernel driver in use: mt76x2e
 > 
-> +       if (msi->nr_cpus == 1)
-> +               iproc_msi_domain_info.flags |=  MSI_FLAG_MULTI_PCI_MSI;
-> +
-
-That looks right to me. Please also add comments to explain we cannot
-support multi-msi and msi affinity at the same time.
-
-Thanks.
-
->         msi->nr_irqs = of_irq_count(node);
->         if (!msi->nr_irqs) {
->                 dev_err(pcie->dev, "found no MSI GIC interrupt\n");
+> Best regards,
+>     Sergio Paracuellos
 > 
-
-
---000000000000c6146905c3f3739e
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-Pi3DQoJNNR5cV1dw3cNMKQyHRziEjFTVmILshClu9AljdXzCUoHXDUbge8TIJ/fK36qTGCYWwA01
-rTB3drVX3FZq/Uqo0JnVcyP1dtYVzQIDAQABo4IB1TCCAdEwDgYDVR0PAQH/BAQDAgWgMIGjBggr
-BgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9j
-YWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUFBzABhjVodHRwOi8v
-b2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMDBNBgNVHSAERjBE
-MEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20v
-cmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRwOi8vY3JsLmdsb2Jh
-bHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAfBgNVHREEGDAWgRRyYXku
-anVpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdb
-NHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQU5E1VdIocTRYIpXh6e6OnGvwfrEgwDQYJKoZIhvcNAQEL
-BQADggEBADcZteuA4mZVmXNzp/tJky+9TS87L/xAogg4z+0bFDomA2JdNGKjraV7jE3LKHUyCQzU
-Bvp8xXjxCndLBgltr+2Fn/Dna/f29iAs4mPBxgPKhqnqpQuTo2DLID2LWU1SLI9ewIlROY57UCvO
-B6ni+9NcOot0MbKF2A1TnzJjWyd127CVyU5vL3un1/tbtmjiT4Ku8ZDoBEViuuWyhdB6TTEQiwDo
-2NxZdezRkkkq+RoNek6gmtl8IKmXsmr1dKIsRBtLQ0xu+kdX+zYJbAQymI1mkq8qCmFAe5aJkrNM
-NbsYBZGZlcox4dHWayCpn4sK+41xyJsmGrygY3zghqBuHPUxggJtMIICaQIBATBrMFsxCzAJBgNV
-BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdD
-QyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxnTAexrtwIst251kUwDQYJYIZIAWUDBAIBBQCg
-gdQwLwYJKoZIhvcNAQkEMSIEICp/MfSYOsBdBupi8D4bI0mHQtm4DQnvelPmwfRr4gcJMBgGCSqG
-SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIxMDYwNDE2NDc1MFowaQYJKoZI
-hvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG
-9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEF
-AASCAQCSHQfMRk5QU2DCexPeCAYA82N0wHWY1z8klg1gEKnW7qcMRclE8mGaE4d3CYu+vvhLXxSC
-LWTWe47wmaHJbKnI9EPqyh5d38BFD0sRKWW5Up7oXV+24ow4nXzAClywm7V6A4jRns4TfNS/igcU
-2tvUo/1j0ZGUXEVAWmxynpNa8WdvxuL6k7l3qDFNtAmDE43bBKgKcvcrw6VxUkDc2uQtVFJlR7Av
-0weiwBkbx3fxsgJmtEijd+tZveBvUwNUFNMY0he2xihsxnvKx32um0ebWgjCDr0pUyOBVDf5cA1k
-MIkbnpdPCLhTSH2/1k8Rjzz3Jf+hUCAtnkwM7pegICoE
---000000000000c6146905c3f3739e--
+> >
+> > > > > > > > +     }
+> > > > > > > > +
+> > > > > > > > +     return 0;
+> > > > > > > > +}
