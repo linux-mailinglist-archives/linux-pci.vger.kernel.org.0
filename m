@@ -2,132 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E8CE39CAA9
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 21:08:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A41439CAD6
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 22:12:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbhFETKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 15:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
+        id S230010AbhFEUOo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 16:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229994AbhFETKd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Jun 2021 15:10:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C76CD61073;
-        Sat,  5 Jun 2021 19:08:39 +0000 (UTC)
+        id S229998AbhFEUOo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Jun 2021 16:14:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DBA86120E;
+        Sat,  5 Jun 2021 20:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622920125;
-        bh=tTJEbMfaqLm+MQIdZ6b17P+wEJbY3/9z+X1SQ27izYw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JkQm3FNW5iQVYmgT/Gt9sN9r1LoTem2cqXUl0EjU+fiv82NY1pLAYU3Bw6unpEki9
-         JXsjuSgQIFHSyh38wM93iu29TbJXvLcRhJNrLaI3uPlTWuv27IKsdkFioKL4INshFP
-         X6wWHZCeoF+O8iMlmhkcXx84GYrwHdtLzik9jQie2+N1FEL3MtfoR0dRqJZtRSpa3B
-         75ZFgP9ntAFhWGSiwsFlzS8kJV4vdjx4gNxci+2IKGEj7omJo8VOW1W/h4rNmExnEf
-         Cyd+38BTHzfhwZ6TVmr+dpfprstE/6hddhXmgX9dnEe4dYMoT8QPViKF/MrmqKI8pR
-         fNqEWypa3GLOg==
-Date:   Sat, 5 Jun 2021 21:08:36 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "=?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <n@nfraprado.net>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        coresight@lists.linaro.org, devicetree@vger.kernel.org,
-        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
-Message-ID: <20210605210836.540577d4@coco.lan>
-In-Reply-To: <20210605151109.axm3wzbcstsyxczp@notapiano>
-References: <cover.1622898327.git.mchehab+huawei@kernel.org>
-        <20210605151109.axm3wzbcstsyxczp@notapiano>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        s=k20201202; t=1622923975;
+        bh=oiClRQ8zNAbJxP7fr7sthVt6TG4eCBIs03ldx9MHKTU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pHygaBTofx5Zsas0gkUSSpCT0vgcTPSrpT6Fh1j1q/hLCci+7T7jPo2Tq+UNwXfZP
+         zypnr1hvpJ7Msl0qOpvIFZ4iVVq8lWtitKrV4Y/0QY4V8ZWZuNTYy4Tyh1cGXTNUAj
+         wanvE40shXxxW/ERojHgWuO7XtukY2L9lbwi51AN3HBQRVleXSZKFqCC3gF1Dg63ze
+         Mtovy7QZS8DngLJZ5JK7kCbWsz7OI3f21IVdrlJ4hmTytgUUQJv+gRK3IEcvUK8BiD
+         wXKFkM88scyhwOdT6K3K379+54FFEEutJp0VESbDo9RYRSt7yZgNrh1A+haLt7nbGZ
+         u1P/+0gGqTcTg==
+Date:   Sat, 5 Jun 2021 15:12:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sandor Bodo-Merle <sbodomerle@gmail.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: iproc: restrict multi-MSI to single core CPUs
+Message-ID: <20210605201253.GA2318292@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210605171736.15755-1-sbodomerle@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Sat, 5 Jun 2021 12:11:09 -0300
-N=C3=ADcolas F. R. A. Prado <n@nfraprado.net> escreveu:
+[+cc Lorenzo, linux-pci]
 
-> Hi Mauro,
->=20
-> On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab wrote:
-> > As discussed at:
-> > 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
-> >=20
-> > It is better to avoid using :doc:`foo` to refer to Documentation/foo.rs=
-t, as the
-> > automarkup.py extension should handle it automatically, on most cases.
-> >=20
-> > There are a couple of exceptions to this rule:
-> >=20
-> > 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
-> > 2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
-> >=20
-> > It should also be noticed that automarkup.py has currently an issue:
-> > if one use a markup like:
-> >=20
-> > 	Documentation/dev-tools/kunit/api/test.rst
-> > 	  - documents all of the standard testing API excluding mocking
-> > 	    or mocking related features.
-> >=20
-> > or, even:
-> >=20
-> > 	Documentation/dev-tools/kunit/api/test.rst
-> > 	    documents all of the standard testing API excluding mocking
-> > 	    or mocking related features.
-> > =09
-> > The automarkup.py will simply ignore it. Not sure why. This patch series
-> > avoid the above patterns (which is present only on 4 files), but it wou=
-ld be
-> > nice to have a followup patch fixing the issue at automarkup.py. =20
->=20
-> What I think is happening here is that we're using rST's syntax for defin=
-ition
-> lists [1]. automarkup.py ignores literal nodes, and perhaps a definition =
-is
-> considered a literal by Sphinx. Adding a blank line after the Documentati=
-on/...
-> or removing the additional indentation makes it work, like you did in your
-> 2nd and 3rd patch, since then it's not a definition anymore, although the=
-n the
-> visual output is different as well.
+You can use this to find the appropriate cc list:
 
-A literal has a different output. I think that this is not the case, but I=
-=20
-didn't check the python code from docutils/Sphinx.
-=20
-> I'm not sure this is something we need to fix. Does it make sense to use
-> definition lists for links like that? If it does, I guess one option woul=
-d be to
-> whitelist definition lists so they aren't ignored by automarkup, but I fe=
-el
-> this could get ugly really quickly.
+  ./scripts/get_maintainer.pl -f drivers/pci/controller/pcie-iproc-msi.c
 
-Yes, we should avoid handling literal blocks, as this can be a nightmare.
+I added Lorenzo and linux-pci for you.
 
-> FWIW note that it's also possible to use relative paths to docs with auto=
-markup.
+Please update the subject line to:
 
-Not sure if you meant to say using something like ../driver-api/foo.rst.
-If so, relative paths are a problem, as it will pass unnoticed by this scri=
-pt:
+  PCI: iproc: Support multi-MSI only on uniprocessor kernel
 
-	./scripts/documentation-file-ref-check
+On Sat, Jun 05, 2021 at 07:17:36PM +0200, Sandor Bodo-Merle wrote:
+> Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> introduced multi-MSI support with a broken allocation mechanism (it failed to
+> reserve the proper number of bits from the inner domain).  Natural alignment of
+> the base vector number was also not guaranteed.
 
-which is meant to warn when a file is moved to be elsewhere. Ok, it
-could be taught to use "../" to identify paths, but I suspect that this
-could lead to false positives, like here:
+This sounds like it's fixing *two* problems: the bitmap allocation
+problem above, and the multi-MSI restriction problem below.  Please
+split this into two separate patches if possible.
 
-	Documentation/usb/gadget-testing.rst:  # ln -s ../../uncompressed/u
-	Documentation/usb/gadget-testing.rst:  # cd ../../class/fs
-	Documentation/usb/gadget-testing.rst:  # ln -s ../../header/h
+> The interrupt affinity scheme used by this driver is incompatible with
+> multi-MSI as implies moving the doorbell address to that of another MSI group.
+> This isn't possible for Multi-MSI, as all the MSIs must have the same doorbell
+> address. As such it is restricted to systems with single CPU core.
 
-If you meant, instead, :doc:`../foo`, this series address those too.
+Please rewrap the commit log to fit in 75 columns, so it still fits
+in 80 when "git log" indents it.
 
-Regards,
-Mauro
+s/as implies/as it implies/
+s/Multi-MSI/multi-MSI/ (or capitalize them all; just be consistent)
+s/with single CPU core/with a single CPU/
+
+Using "core" here ("single core CPUs" or "single CPU core") suggests
+that this has something to do with single-core CPUs vs multi-core
+CPUs, but I don't think that's the case.
+
+The patch says the important thing is whether the kernel supports one
+CPU or several CPUs.  Whether they're in a single package or not is
+irrelevant.  And apparently multi-MSI even works fine when you boot a
+uniprocessor kernel (CONFIG_NR_CPUS=1) on a multi-processor machine.
+
+> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> Reported-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-iproc-msi.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git drivers/pci/controller/pcie-iproc-msi.c drivers/pci/controller/pcie-iproc-msi.c
+
+Patch is incorrectly generated and lacks a path element, so doesn't
+apply cleanly.  I don't know how you did this, but it should look like
+this (note the leading "a/" and "b/"):
+
+  diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+
+> index eede4e8f3f75..2e42c460b626 100644
+> --- drivers/pci/controller/pcie-iproc-msi.c
+> +++ drivers/pci/controller/pcie-iproc-msi.c
+> @@ -171,7 +171,7 @@ static struct irq_chip iproc_msi_irq_chip = {
+>  
+>  static struct msi_domain_info iproc_msi_domain_info = {
+>  	.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> -		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+> +		MSI_FLAG_PCI_MSIX,
+>  	.chip = &iproc_msi_irq_chip,
+>  };
+>  
+> @@ -252,18 +252,15 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
+>  
+>  	mutex_lock(&msi->bitmap_lock);
+>  
+> -	/* Allocate 'nr_cpus' number of MSI vectors each time */
+> -	hwirq = bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vecs, 0,
+> -					   msi->nr_cpus, 0);
+> -	if (hwirq < msi->nr_msi_vecs) {
+> -		bitmap_set(msi->bitmap, hwirq, msi->nr_cpus);
+> -	} else {
+> -		mutex_unlock(&msi->bitmap_lock);
+> -		return -ENOSPC;
+> -	}
+> +	/* Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI vectors each time */
+
+Can you wrap this comment so it fits in 80 columns, please?  The rest
+of the file is formatted for 80 columns, so it will be nice if this
+matches.
+
+> +	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
+> +					order_base_2(msi->nr_cpus * nr_irqs));
+>  
+>  	mutex_unlock(&msi->bitmap_lock);
+>  
+> +	if (hwirq < 0)
+> +		return -ENOSPC;
+> +
+>  	for (i = 0; i < nr_irqs; i++) {
+>  		irq_domain_set_info(domain, virq + i, hwirq + i,
+>  				    &iproc_msi_bottom_irq_chip,
+> @@ -284,7 +281,8 @@ static void iproc_msi_irq_domain_free(struct irq_domain *domain,
+>  	mutex_lock(&msi->bitmap_lock);
+>  
+>  	hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq);
+> -	bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
+> +	bitmap_release_region(msi->bitmap, hwirq,
+> +			      order_base_2(msi->nr_cpus * nr_irqs));
+>  
+>  	mutex_unlock(&msi->bitmap_lock);
+>  
+> @@ -539,6 +537,9 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
+>  	mutex_init(&msi->bitmap_lock);
+>  	msi->nr_cpus = num_possible_cpus();
+>  
+> +	if (msi->nr_cpus == 1)
+> +		iproc_msi_domain_info.flags |=  MSI_FLAG_MULTI_PCI_MSI;
+> +
+>  	msi->nr_irqs = of_irq_count(node);
+>  	if (!msi->nr_irqs) {
+>  		dev_err(pcie->dev, "found no MSI GIC interrupt\n");
+> -- 
+> 2.31.0
+> 
