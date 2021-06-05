@@ -2,169 +2,267 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A41439CAD6
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 22:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E18D39CB10
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 22:53:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbhFEUOo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 16:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
+        id S230029AbhFEUzI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 16:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229998AbhFEUOo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Jun 2021 16:14:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DBA86120E;
-        Sat,  5 Jun 2021 20:12:55 +0000 (UTC)
+        id S230128AbhFEUzH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Jun 2021 16:55:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 39AA4613EF;
+        Sat,  5 Jun 2021 20:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622923975;
-        bh=oiClRQ8zNAbJxP7fr7sthVt6TG4eCBIs03ldx9MHKTU=;
+        s=k20201202; t=1622926399;
+        bh=Ignpn+45lUFZZoKhwyn5+pQJVDking0sb9LlCPA9BIQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pHygaBTofx5Zsas0gkUSSpCT0vgcTPSrpT6Fh1j1q/hLCci+7T7jPo2Tq+UNwXfZP
-         zypnr1hvpJ7Msl0qOpvIFZ4iVVq8lWtitKrV4Y/0QY4V8ZWZuNTYy4Tyh1cGXTNUAj
-         wanvE40shXxxW/ERojHgWuO7XtukY2L9lbwi51AN3HBQRVleXSZKFqCC3gF1Dg63ze
-         Mtovy7QZS8DngLJZ5JK7kCbWsz7OI3f21IVdrlJ4hmTytgUUQJv+gRK3IEcvUK8BiD
-         wXKFkM88scyhwOdT6K3K379+54FFEEutJp0VESbDo9RYRSt7yZgNrh1A+haLt7nbGZ
-         u1P/+0gGqTcTg==
-Date:   Sat, 5 Jun 2021 15:12:53 -0500
+        b=prm+13VDhkw/2nOfheIhNwOJwacB0ZedJi0D/WhxInh5kYSfC5mh2ut2dQiqCWF1T
+         RWYCIq3T21QpOUUcNT7bclremEdL5665+o7iW8hf045SWPd4JDtIciW54934kar/ZW
+         shnzNIQa4arAM0BGUeYPrRJwlMQNTObGml6F7sKANoO9pTPga0JumPnSoeJyMb3FyO
+         ahhdE1Ub4B0Tt+uDZ0e7alYD3etUBNKsr+frLkCAYmz4s7EFOMmawZ8WbdZLS2D02u
+         n6bzpi5z9NPmGdqAYvwWIf5zc9PoaSIaKEecjb2D2eWjlIYIYdzLzwT5Rm6Jr6BRI8
+         LHqaLziU94bvg==
+Date:   Sat, 5 Jun 2021 15:53:17 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sandor Bodo-Merle <sbodomerle@gmail.com>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Ray Jui <ray.jui@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: iproc: restrict multi-MSI to single core CPUs
-Message-ID: <20210605201253.GA2318292@bjorn-Precision-5520>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 5/7] PCI: Add support for a function level reset based
+ on _RST method
+Message-ID: <20210605205317.GA2254430@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210605171736.15755-1-sbodomerle@gmail.com>
+In-Reply-To: <20210529192527.2708-6-ameynarkhede03@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Lorenzo, linux-pci]
+[+cc Rafael in case you have any ideas about acpi_bind_one() below]
 
-You can use this to find the appropriate cc list:
+Mention ACPI in the subject, e.g.,
 
-  ./scripts/get_maintainer.pl -f drivers/pci/controller/pcie-iproc-msi.c
+  PCI: Add support for ACPI _RST reset method
 
-I added Lorenzo and linux-pci for you.
-
-Please update the subject line to:
-
-  PCI: iproc: Support multi-MSI only on uniprocessor kernel
-
-On Sat, Jun 05, 2021 at 07:17:36PM +0200, Sandor Bodo-Merle wrote:
-> Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
-> introduced multi-MSI support with a broken allocation mechanism (it failed to
-> reserve the proper number of bits from the inner domain).  Natural alignment of
-> the base vector number was also not guaranteed.
-
-This sounds like it's fixing *two* problems: the bitmap allocation
-problem above, and the multi-MSI restriction problem below.  Please
-split this into two separate patches if possible.
-
-> The interrupt affinity scheme used by this driver is incompatible with
-> multi-MSI as implies moving the doorbell address to that of another MSI group.
-> This isn't possible for Multi-MSI, as all the MSIs must have the same doorbell
-> address. As such it is restricted to systems with single CPU core.
-
-Please rewrap the commit log to fit in 75 columns, so it still fits
-in 80 when "git log" indents it.
-
-s/as implies/as it implies/
-s/Multi-MSI/multi-MSI/ (or capitalize them all; just be consistent)
-s/with single CPU core/with a single CPU/
-
-Using "core" here ("single core CPUs" or "single CPU core") suggests
-that this has something to do with single-core CPUs vs multi-core
-CPUs, but I don't think that's the case.
-
-The patch says the important thing is whether the kernel supports one
-CPU or several CPUs.  Whether they're in a single package or not is
-irrelevant.  And apparently multi-MSI even works fine when you boot a
-uniprocessor kernel (CONFIG_NR_CPUS=1) on a multi-processor machine.
-
-> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
-> Reported-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
-> ---
->  drivers/pci/controller/pcie-iproc-msi.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
+On Sun, May 30, 2021 at 12:55:25AM +0530, Amey Narkhede wrote:
+> From: Shanker Donthineni <sdonthineni@nvidia.com>
 > 
-> diff --git drivers/pci/controller/pcie-iproc-msi.c drivers/pci/controller/pcie-iproc-msi.c
+> The _RST is a standard method specified in the ACPI specification. It
+> provides a function level reset when it is described in the acpi_device
+> context associated with PCI-device.
+> 
+> Implement a new reset function pci_dev_acpi_reset() for probing RST
+> method and execute if it is defined in the firmware. The ACPI binding
+> information is available only after calling device_add(). To consider
+> _RST method, move pci_init_reset_methods() to end of pci_device_add()
+> and craete two sysfs entries reset & reset_methond from
+> pci_create_sysfs_dev_files()
 
-Patch is incorrectly generated and lacks a path element, so doesn't
-apply cleanly.  I don't know how you did this, but it should look like
-this (note the leading "a/" and "b/"):
+s/craete/create/
+s/reset_methond/reset_method/
 
-  diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> The default priority of the acpi reset is set to below device-specific
+> and above hardware resets.
 
-> index eede4e8f3f75..2e42c460b626 100644
-> --- drivers/pci/controller/pcie-iproc-msi.c
-> +++ drivers/pci/controller/pcie-iproc-msi.c
-> @@ -171,7 +171,7 @@ static struct irq_chip iproc_msi_irq_chip = {
->  
->  static struct msi_domain_info iproc_msi_domain_info = {
->  	.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> -		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-> +		MSI_FLAG_PCI_MSIX,
->  	.chip = &iproc_msi_irq_chip,
+s/acpi/ACPI/
+
+> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
+> Reviewed-by: Sinan Kaya <okaya@kernel.org>
+> ---
+>  drivers/pci/pci-sysfs.c | 23 ++++++++++++++++++++---
+>  drivers/pci/pci.c       | 30 ++++++++++++++++++++++++++++++
+>  drivers/pci/probe.c     |  2 +-
+>  include/linux/pci.h     |  2 +-
+>  4 files changed, 52 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 04b3d6565..b332d7923 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1482,12 +1482,30 @@ static const struct attribute_group pci_dev_reset_attr_group = {
+>  	.is_visible = pci_dev_reset_attr_is_visible,
 >  };
 >  
-> @@ -252,18 +252,15 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
->  
->  	mutex_lock(&msi->bitmap_lock);
->  
-> -	/* Allocate 'nr_cpus' number of MSI vectors each time */
-> -	hwirq = bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vecs, 0,
-> -					   msi->nr_cpus, 0);
-> -	if (hwirq < msi->nr_msi_vecs) {
-> -		bitmap_set(msi->bitmap, hwirq, msi->nr_cpus);
-> -	} else {
-> -		mutex_unlock(&msi->bitmap_lock);
-> -		return -ENOSPC;
-> -	}
-> +	/* Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI vectors each time */
+> +const struct attribute_group *pci_dev_reset_groups[] = {
+> +	&pci_dev_reset_attr_group,
+> +	&pci_dev_reset_method_attr_group,
+> +	NULL,
+> +};
 
-Can you wrap this comment so it fits in 80 columns, please?  The rest
-of the file is formatted for 80 columns, so it will be nice if this
-matches.
+These should be static sysfs attributes if possible, e.g., see
+e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute").
+pci_create_sysfs_dev_files() will soon be removed completely.
 
-> +	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
-> +					order_base_2(msi->nr_cpus * nr_irqs));
->  
->  	mutex_unlock(&msi->bitmap_lock);
->  
-> +	if (hwirq < 0)
-> +		return -ENOSPC;
+>  int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+>  {
+> +	int retval;
 > +
->  	for (i = 0; i < nr_irqs; i++) {
->  		irq_domain_set_info(domain, virq + i, hwirq + i,
->  				    &iproc_msi_bottom_irq_chip,
-> @@ -284,7 +281,8 @@ static void iproc_msi_irq_domain_free(struct irq_domain *domain,
->  	mutex_lock(&msi->bitmap_lock);
+>  	if (!sysfs_initialized)
+>  		return -EACCES;
 >  
->  	hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq);
-> -	bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
-> +	bitmap_release_region(msi->bitmap, hwirq,
-> +			      order_base_2(msi->nr_cpus * nr_irqs));
->  
->  	mutex_unlock(&msi->bitmap_lock);
->  
-> @@ -539,6 +537,9 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
->  	mutex_init(&msi->bitmap_lock);
->  	msi->nr_cpus = num_possible_cpus();
->  
-> +	if (msi->nr_cpus == 1)
-> +		iproc_msi_domain_info.flags |=  MSI_FLAG_MULTI_PCI_MSI;
+> -	return pci_create_resource_files(pdev);
+> +	retval = pci_create_resource_files(pdev);
+> +	if (retval)
+> +		return retval;
 > +
->  	msi->nr_irqs = of_irq_count(node);
->  	if (!msi->nr_irqs) {
->  		dev_err(pcie->dev, "found no MSI GIC interrupt\n");
+> +	retval = device_add_groups(&pdev->dev, pci_dev_reset_groups);
+> +	if (retval) {
+> +		pci_remove_resource_files(pdev);
+> +		return retval;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  /**
+> @@ -1501,6 +1519,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
+>  	if (!sysfs_initialized)
+>  		return;
+>  
+> +	device_remove_groups(&pdev->dev, pci_dev_reset_groups);
+>  	pci_remove_resource_files(pdev);
+>  }
+>  
+> @@ -1594,8 +1613,6 @@ const struct attribute_group *pci_dev_groups[] = {
+>  	&pci_dev_group,
+>  	&pci_dev_config_attr_group,
+>  	&pci_dev_rom_attr_group,
+> -	&pci_dev_reset_attr_group,
+> -	&pci_dev_reset_method_attr_group,
+>  	&pci_dev_vpd_attr_group,
+>  #ifdef CONFIG_DMI
+>  	&pci_dev_smbios_attr_group,
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index bbed852d9..4a7019d0b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5115,6 +5115,35 @@ static void pci_dev_restore(struct pci_dev *dev)
+>  		err_handler->reset_done(dev);
+>  }
+>  
+> +/**
+> + * pci_dev_acpi_reset - do a function level reset using _RST method
+> + * @dev: device to reset
+> + * @probe: check if _RST method is included in the acpi_device context.
+> + */
+> +static int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
+> +{
+> +#ifdef CONFIG_ACPI
+> +	acpi_handle handle = ACPI_HANDLE(&dev->dev);
+> +
+> +	/* Return -ENOTTY if _RST method is not included in the dev context */
+> +	if (!handle || !acpi_has_method(handle, "_RST"))
+> +		return -ENOTTY;
+> +
+> +	/* Return 0 for probe phase indicating that we can reset this device */
+> +	if (probe)
+> +		return 0;
+> +
+> +	/* Invoke _RST() method to perform a function level reset */
+
+Superfluous comment.  Actually all the single-line comments here are
+superfluous.
+
+> +	if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
+> +		pci_warn(dev, "Failed to reset the device\n");
+
+The message should mention the type of reset, e.g., "ACPI _RST failed ..."
+
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +#else
+> +	return -ENOTTY;
+> +#endif
+> +}
+> +
+>  /*
+>   * The ordering for functions in pci_reset_fn_methods
+>   * is required for reset_methods byte array defined
+> @@ -5122,6 +5151,7 @@ static void pci_dev_restore(struct pci_dev *dev)
+>   */
+>  const struct pci_reset_fn_method pci_reset_fn_methods[] = {
+>  	{ &pci_dev_specific_reset, .name = "device_specific" },
+> +	{ &pci_dev_acpi_reset, .name = "acpi" },
+>  	{ &pcie_reset_flr, .name = "flr" },
+>  	{ &pci_af_flr, .name = "af_flr" },
+>  	{ &pci_pm_reset, .name = "pm" },
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 90fd4f61f..eeab791a0 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2404,7 +2404,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
+>  	pci_rcec_init(dev);		/* Root Complex Event Collector */
+>  
+>  	pcie_report_downtraining(dev);
+> -	pci_init_reset_methods(dev);
+>  }
+>  
+>  /*
+> @@ -2495,6 +2494,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	dev->match_driver = false;
+>  	ret = device_add(&dev->dev);
+>  	WARN_ON(ret < 0);
+> +	pci_init_reset_methods(dev);
+
+This is a little sketchy.  We shouldn't be doing device config stuff
+after device_add() because that's when it becomes available for
+drivers to bind to the device.  If we do anything with the device
+after that point, we may interfere with a driver.
+
+I think the problem is that we don't call acpi_bind_one() until
+device_add().  There's some hackery in pci-acpi.c to deal with a
+similar problem for something else -- see acpi_pci_bridge_d3().
+
+I don't know how to fix this yet.  Here's the call graph that I think
+is relevant:
+
+  pci_scan_single_device
+    pci_scan_device
+      pci_set_of_node
+        dev->dev.of_node = of_pci_find_child_device()  <-- set OF stuff
+    pci_device_add
+      device_add
+        device_platform_notify
+          acpi_platform_notify
+            case KOBJ_ADD:
+              acpi_device_notify
+                acpi_bind_one
+                  ACPI_COMPANION_SET()       <-- sets ACPI_COMPANION
+      pci_init_reset_methods
+        pci_dev_acpi_reset(PCI_RESET_PROBE)
+          handle = ACPI_HANDLE(&dev->dev)    <-- uses ACPI_COMPANION
+
+I think it's kind of a general problem that we currently don't have
+access to the ACPI stuff until *after* device_add().  I included
+pci_set_of_node() in the graph above because that seems sort of
+like an OF analogue of what acpi_bind_one() is doing.
+
+I would really like to do the ACPI_COMPANION setup earlier, maybe
+at the same time as pci_set_of_node().  But I don't know enough about
+what acpi_bind_one() does -- there's a lot going on in there.
+
+>  }
+>  
+>  struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 6e9bc4f9c..a7f063da2 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -49,7 +49,7 @@
+>  			       PCI_STATUS_SIG_TARGET_ABORT | \
+>  			       PCI_STATUS_PARITY)
+>  
+> -#define PCI_RESET_METHODS_NUM 5
+> +#define PCI_RESET_METHODS_NUM 6
+>  
+>  /*
+>   * The PCI interface treats multi-function devices as independent
 > -- 
-> 2.31.0
+> 2.31.1
 > 
