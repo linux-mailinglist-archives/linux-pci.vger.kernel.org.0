@@ -2,438 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A363339C957
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 17:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E62639C966
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 17:12:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230030AbhFEPIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 11:08:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbhFEPIW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Jun 2021 11:08:22 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7116AC061766;
-        Sat,  5 Jun 2021 08:06:18 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id c3so12949175oic.8;
-        Sat, 05 Jun 2021 08:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pZGBUTcsC9wLwf22JBVKSKAB8z8I5XCkTelCimnUDxM=;
-        b=j2/2j5z52zUCyAIzh+24r4ZQzgPlhlbp360qcvdjQyzoZuq3oEB3xqVKO5B0wUhZQp
-         bAAyS6tBB6lNJy/CumNy3yjep/OB+YbZ1m0Q8Z9hPHlxLa5bu+/mPWoq7YSb/H8hDNtI
-         YM5RUish+tmddCmUWZQ/aRFB3G1fTM2b2cK64luMnE89Tcj/+BNh5RdF7q5EFDtIEBin
-         1SoMpWuVQQYr7d8wk7LjdUx+D3rmAkMastaWEI5NEiFIVQ8EBDurg8JRioTP7vEzEcIb
-         6S/cj+3adUB+pEauEI5QVHc/6kA6Jz2Nb2BZbaojOSIQ9S5hNZ8M2eDxo8OTK4yk4+d8
-         FR7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pZGBUTcsC9wLwf22JBVKSKAB8z8I5XCkTelCimnUDxM=;
-        b=ErDtLvfSSGDZ9uJffYaYfVpdVFjwMCtQbZKe4GDyip+Ra2urBW4Govoq2X9/jFeRfx
-         QO5ASxgu/M1rqRxLrMy64z1s4oJkHBF7lhiK1ZP/pnCN+0MhCt4++sAV5rQ9lMUE6kIn
-         tn39m3O3Chp3Grx5pneeDOLOKOhcnE9Dkdhfkh0kN4feIFpvxXDnR9NYbk2gC4xPqgQ1
-         qfrqFQukfWDaubb/FXQyK1w4hgB7OXY2p8b0OHQpoSiJsDimPmG5QfdVFcSHUbY0zkZm
-         AzGrLO0WE7IiXSD8oFapTSeywOla2PSdu9nl45dReIbNmYJ7vlfPo6S3dBHBtRDMiUYB
-         vh1Q==
-X-Gm-Message-State: AOAM533oFvlJhHCsIaWYs11LeYtUMAV34BXuLJBd8voNkBrZAnyEPprl
-        9RqFcJngBPB1mop7Sjpf4LxtDtveSzHfcVdaChM=
-X-Google-Smtp-Source: ABdhPJyJwrkhnizoShzf9kfDu/xsTlC8+y7YCvIAdiYSB6wgIlc3p6eZGEoW1xcKxBkkbuFAmbQtyFS9Bv3LqGEdqMA=
-X-Received: by 2002:aca:efc1:: with SMTP id n184mr14372406oih.23.1622905577676;
- Sat, 05 Jun 2021 08:06:17 -0700 (PDT)
+        id S230097AbhFEPNy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 11:13:54 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37381 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229930AbhFEPNv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Jun 2021 11:13:51 -0400
+Received: (Authenticated sender: n@nfraprado.net)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8D0E020002;
+        Sat,  5 Jun 2021 15:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nfraprado.net;
+        s=gm1; t=1622905920;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vv4/s0oEatJqm6xOhfhv4SCtKvstG4qCMEYIIpldPy0=;
+        b=c3g7o4uEF0JTLo7vMH1ksgmeTVLRz9pP7cqUyB/h+W5DpIymRZemkGu49jcerS4uE/XJQf
+        trJLU85vbJBVfZWGFuOsMTCnYVhfSXPxbndF40vAAuKJ0CB9s0KsBjrJ/9zkVZxSK1kZX7
+        WPbrr1BsDbMi3udCw9RD6VTWhB3rbd/s8FPEH1mqg/QoOWJo+2T2Gjzqe5dJfYUoJ5uWJi
+        mYxE058i/H4Cq0cW3G8Q81eikJU5bVOUF0NbPJeQ/P3UbZMAhOkhJpLRUvntlO2RvnJ5ez
+        x1AXAnbGKQtYTh67G2z/msrTC09lBJ7xVdF4ukLxuwInJgcg+Ro9QEyCJg7rbQ==
+Date:   Sat, 5 Jun 2021 12:11:09 -0300
+From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <n@nfraprado.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        coresight@lists.linaro.org, devicetree@vger.kernel.org,
+        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
+Message-ID: <20210605151109.axm3wzbcstsyxczp@notapiano>
+References: <cover.1622898327.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20210515124055.22225-1-sergio.paracuellos@gmail.com>
- <20210515124055.22225-2-sergio.paracuellos@gmail.com> <20210604193506.GC3695694@robh.at.kernel.org>
- <CAMhs-H8vkVoMaQr4Ky9xhzpwz-LjpBzd0kK=NTgO0Lo-m3pyng@mail.gmail.com>
-In-Reply-To: <CAMhs-H8vkVoMaQr4Ky9xhzpwz-LjpBzd0kK=NTgO0Lo-m3pyng@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Sat, 5 Jun 2021 17:06:06 +0200
-Message-ID: <CAMhs-H9JCVS8ve8xLVdoSdexipPAtQLtEvDo8bKXZu4MABX78Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mt7621-pci: PCIe binding documentation
- for MT7621 SoCs
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-staging@lists.linux.dev,
-        Greg KH <gregkh@linuxfoundation.org>,
-        NeilBrown <neil@brown.name>,
-        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1622898327.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Hi Mauro,
 
-On Fri, Jun 4, 2021 at 11:32 PM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> Hi Rob,
->
-> Thanks for the review.
->
-> On Fri, Jun 4, 2021 at 9:35 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sat, May 15, 2021 at 02:40:52PM +0200, Sergio Paracuellos wrote:
-> > > Add device tree binding documentation for PCIe in MT7621 SoCs.
-> > >
-> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > > ---
-> > >  .../bindings/pci/mediatek,mt7621-pci.yaml     | 149 ++++++++++++++++++
-> > >  1 file changed, 149 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > > new file mode 100644
-> > > index 000000000000..7f5f9d583032
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > > @@ -0,0 +1,149 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pci/mediatek,mt7621-pci.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: MediaTek MT7621 PCIe controller
-> > > +
-> > > +maintainers:
-> > > +  - Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > > +
-> > > +description: |+
-> > > +  MediaTek MT7621 PCIe subsys supports single Root complex (RC)
-> > > +  with 3 Root Ports. Each Root Ports supports a Gen1 1-lane Link
-> > > +
-> > > +allOf:
-> > > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: mediatek,mt7621-pci
-> > > +
-> > > +  reg:
-> > > +    items:
-> > > +      - description: host-pci bridge registers
-> > > +      - description: pcie port 0 RC control registers
-> > > +      - description: pcie port 1 RC control registers
-> > > +      - description: pcie port 2 RC control registers
-> > > +
-> > > +  ranges:
-> > > +    maxItems: 2
-> > > +
-> > > +  resets:
-> > > +    items:
-> > > +      - description: pcie port 0 reset.
-> > > +      - description: pcie port 1 reset.
-> > > +      - description: pcie port 2 reset.
-> > > +
-> > > +  reset-names:
-> > > +    items:
-> > > +      - const: pcie0
-> > > +      - const: pcie1
-> > > +      - const: pcie2
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: pcie port 0 clock.
-> > > +      - description: pcie port 1 clock.
-> > > +      - description: pcie port 2 clock.
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: pcie0
-> > > +      - const: pcie1
-> > > +      - const: pcie2
-> > > +
-> > > +  phys:
-> > > +    items:
-> > > +      - description: Dual-ported phy for pcie port 0 and 1.
-> > > +      - description: Phy for pcie port 2.
-> > > +
-> > > +  phy-names:
-> > > +    items:
-> > > +      - const: pcie-phy0
-> > > +      - const: pcie-phy2
-> >
-> > If you're going to keep the ports (and I think that's right because
-> > there's only a single PCI address space AFAICT), then I think you should
-> > move resets, clocks, and phys into each port node.
-> >
-> > So you'll need to define 'pcie@[0-2],0' node with those properties under
-> > it.
->
-> Ok I will move these stuff to each port node. So each port node will
-> be similar to:
->
-> pcie@0,0 {
->     reg = <0x0000 0 0 0 0>;
->     #address-cells = <3>;
->     #size-cells = <2>;
->     device_type = "pci";
->     #interrupt-cells = <1>;
->     clocks = <&clkctrl 24>;
->     resets = <&rstctrl 24>;
->     phys = <&pcie0_phy 1>;
->     interrupt-map-mask = <0 0 0 0>;
->     interrupt-map = <0 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
->     ranges;
-> };
->
-> How can I be sure by schema that the clocks, reset and phy properties
-> are in each port node if I move them from the parent? By now each port
-> node is just validating because of ' $ref:
-> /schemas/pci/pci-bus.yaml#'.
->
-> Thanks in advance for your time.
->
+On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab wrote:
+> As discussed at:
+> 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
+> 
+> It is better to avoid using :doc:`foo` to refer to Documentation/foo.rst, as the
+> automarkup.py extension should handle it automatically, on most cases.
+> 
+> There are a couple of exceptions to this rule:
+> 
+> 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
+> 2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
+> 
+> It should also be noticed that automarkup.py has currently an issue:
+> if one use a markup like:
+> 
+> 	Documentation/dev-tools/kunit/api/test.rst
+> 	  - documents all of the standard testing API excluding mocking
+> 	    or mocking related features.
+> 
+> or, even:
+> 
+> 	Documentation/dev-tools/kunit/api/test.rst
+> 	    documents all of the standard testing API excluding mocking
+> 	    or mocking related features.
+> 	
+> The automarkup.py will simply ignore it. Not sure why. This patch series
+> avoid the above patterns (which is present only on 4 files), but it would be
+> nice to have a followup patch fixing the issue at automarkup.py.
 
-So I think, this should be enough:
+What I think is happening here is that we're using rST's syntax for definition
+lists [1]. automarkup.py ignores literal nodes, and perhaps a definition is
+considered a literal by Sphinx. Adding a blank line after the Documentation/...
+or removing the additional indentation makes it work, like you did in your
+2nd and 3rd patch, since then it's not a definition anymore, although then the
+visual output is different as well.
 
-%YAML 1.2
----
-$id: http://devicetree.org/schemas/pci/mediatek,mt7621-pci.yaml#
-$schema: http://devicetree.org/meta-schemas/core.yaml#
+I'm not sure this is something we need to fix. Does it make sense to use
+definition lists for links like that? If it does, I guess one option would be to
+whitelist definition lists so they aren't ignored by automarkup, but I feel
+this could get ugly really quickly.
 
-title: MediaTek MT7621 PCIe controller
-
-maintainers:
-  - Sergio Paracuellos <sergio.paracuellos@gmail.com>
-
-description: |+
-  MediaTek MT7621 PCIe subsys supports single Root complex (RC)
-  with 3 Root Ports. Each Root Ports supports a Gen1 1-lane Link
-
-allOf:
-  - $ref: /schemas/pci/pci-bus.yaml#
-
-properties:
-  compatible:
-    const: mediatek,mt7621-pci
-
-  reg:
-    items:
-      - description: host-pci bridge registers
-      - description: pcie port 0 RC control registers
-      - description: pcie port 1 RC control registers
-      - description: pcie port 2 RC control registers
-
-  ranges:
-    maxItems: 2
-
-patternProperties:
-  'pcie@[0-2],0':
-    type: object
-    $ref: /schemas/pci/pci-bus.yaml#
-
-    properties:
-      resets:
-        maxItems: 1
-
-      clocks:
-        maxItems: 1
-
-      phys:
-        maxItems: 1
-
-    required:
-      - "#interrupt-cells"
-      - interrupt-map-mask
-      - interrupt-map
-      - resets
-      - clocks
-      - phys
-      - phy-names
-      - ranges
-
-    unevaluatedProperties: false
-
-required:
-  - compatible
-  - reg
-  - ranges
-  - "#interrupt-cells"
-  - interrupt-map-mask
-  - interrupt-map
-  - reset-gpios
-
-unevaluatedProperties: false
-
-examples:
-  - |
-    #include <dt-bindings/gpio/gpio.h>
-    #include <dt-bindings/interrupt-controller/mips-gic.h>
-
-    pcie: pcie@1e140000 {
-        compatible = "mediatek,mt7621-pci";
-        reg = <0x1e140000 0x100>,
-              <0x1e142000 0x100>,
-              <0x1e143000 0x100>,
-              <0x1e144000 0x100>;
-
-        #address-cells = <3>;
-        #size-cells = <2>;
-        pinctrl-names = "default";
-        pinctrl-0 = <&pcie_pins>;
-        device_type = "pci";
-        ranges = <0x02000000 0 0x00000000 0x60000000 0 0x10000000>,
-/* pci memory */
-                 <0x01000000 0 0x00000000 0x1e160000 0 0x00010000>;
-/* io space */
-        #interrupt-cells = <1>;
-        interrupt-map-mask = <0xF800 0 0 0>;
-        interrupt-map = <0x0000 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>,
-                        <0x0800 0 0 0 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>,
-                        <0x1000 0 0 0 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-        reset-gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
-
-        pcie@0,0 {
-            reg = <0x0000 0 0 0 0>;
-            #address-cells = <3>;
-            #size-cells = <2>;
-            device_type = "pci";
-            #interrupt-cells = <1>;
-            interrupt-map-mask = <0 0 0 0>;
-            interrupt-map = <0 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
-            resets = <&rstctrl 24>;
-            clocks = <&clkctrl 24>;
-            phys = <&pcie0_phy 1>;
-            phy-names = "pcie-phy0";
-            ranges;
-        };
-
-        pcie@1,0 {
-            reg = <0x0800 0 0 0 0>;
-            #address-cells = <3>;
-            #size-cells = <2>;
-            device_type = "pci";
-            #interrupt-cells = <1>;
-            interrupt-map-mask = <0 0 0 0>;
-            interrupt-map = <0 0 0 0 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-            resets = <&rstctrl 25>;
-            clocks = <&clkctrl 25>;
-            phys = <&pcie0_phy 1>;
-            phy-names = "pcie-phy1";
-            ranges;
-        };
-
-        pcie@2,0 {
-            reg = <0x1000 0 0 0 0>;
-            #address-cells = <3>;
-            #size-cells = <2>;
-            device_type = "pci";
-            #interrupt-cells = <1>;
-            interrupt-map-mask = <0 0 0 0>;
-            interrupt-map = <0 0 0 0 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-            resets = <&rstctrl 26>;
-            clocks = <&clkctrl 26>;
-            phys = <&pcie2_phy 0>;
-            phy-names = "pcie-phy2";
-            ranges;
-        };
-    };
-...
-
-I will send these bindings for v2 if you are ok with them.
+FWIW note that it's also possible to use relative paths to docs with automarkup.
 
 Thanks,
-     Sergio Paracuellos
+Nícolas
 
-> Best regards,
->     Sergio Paracuellos
->
-> >
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - ranges
-> > > +  - "#interrupt-cells"
-> > > +  - interrupt-map-mask
-> > > +  - interrupt-map
-> > > +  - resets
-> > > +  - reset-names
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - phys
-> > > +  - phy-names
-> > > +  - reset-gpios
-> > > +
-> > > +unevaluatedProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > > +
-> > > +    pcie: pcie@1e140000 {
-> > > +        compatible = "mediatek,mt7621-pci";
-> > > +        reg = <0x1e140000 0x100>,
-> > > +              <0x1e142000 0x100>,
-> > > +              <0x1e143000 0x100>,
-> > > +              <0x1e144000 0x100>;
-> > > +
-> > > +        #address-cells = <3>;
-> > > +        #size-cells = <2>;
-> > > +        pinctrl-names = "default";
-> > > +        pinctrl-0 = <&pcie_pins>;
-> > > +        device_type = "pci";
-> > > +        ranges = <0x02000000 0 0x00000000 0x60000000 0 0x10000000>,  /* pci memory */
-> > > +                 <0x01000000 0 0x00000000 0x1e160000 0 0x00010000>;  /* io space */
-> > > +        #interrupt-cells = <1>;
-> > > +        interrupt-map-mask = <0xF800 0 0 0>;
-> > > +        interrupt-map = <0x0000 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                        <0x0800 0 0 0 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                        <0x1000 0 0 0 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-> > > +        resets = <&rstctrl 24>, <&rstctrl 25>, <&rstctrl 26>;
-> > > +        reset-names = "pcie0", "pcie1", "pcie2";
-> > > +        clocks = <&clkctrl 24>, <&clkctrl 25>, <&clkctrl 26>;
-> > > +        clock-names = "pcie0", "pcie1", "pcie2";
-> > > +        phys = <&pcie0_phy 1>, <&pcie2_phy 0>;
-> > > +        phy-names = "pcie-phy0", "pcie-phy2";
-> > > +        reset-gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
-> > > +
-> > > +        pcie@0,0 {
-> > > +            reg = <0x0000 0 0 0 0>;
-> > > +            #address-cells = <3>;
-> > > +            #size-cells = <2>;
-> > > +            device_type = "pci";
-> > > +            #interrupt-cells = <1>;
-> > > +            interrupt-map-mask = <0 0 0 0>;
-> > > +            interrupt-map = <0 0 0 0 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
-> > > +            ranges;
-> > > +        };
-> > > +
-> > > +        pcie@1,0 {
-> > > +            reg = <0x0800 0 0 0 0>;
-> > > +            #address-cells = <3>;
-> > > +            #size-cells = <2>;
-> > > +            device_type = "pci";
-> > > +            #interrupt-cells = <1>;
-> > > +            interrupt-map-mask = <0 0 0 0>;
-> > > +            interrupt-map = <0 0 0 0 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > > +            ranges;
-> > > +        };
-> > > +
-> > > +        pcie@2,0 {
-> > > +            reg = <0x1000 0 0 0 0>;
-> > > +            #address-cells = <3>;
-> > > +            #size-cells = <2>;
-> > > +            device_type = "pci";
-> > > +            #interrupt-cells = <1>;
-> > > +            interrupt-map-mask = <0 0 0 0>;
-> > > +            interrupt-map = <0 0 0 0 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-> > > +            ranges;
-> > > +        };
-> > > +    };
-> > > +...
-> > > --
-> > > 2.25.1
+[1] https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#definition-lists
+
+> 
+> On this series:
+> 
+> Patch 1 manually adjust the references inside driver-api/pm/devices.rst,
+> as there it uses :file:`foo` to refer to some Documentation/ files;
+> 
+> Patch 2 converts a table at Documentation/dev-tools/kunit/api/index.rst
+> into a list, carefully avoiding the 
+> 
+> Patch 3 converts the cross-references at the media documentation, also
+> avoiding the automarkup.py bug;
+> 
+> Patches 4-34 convert the other occurrences via a replace script. They were
+> manually edited, in order to honour 80-columns where possible.
+> 
+> I did a diff between the Sphinx 2.4.4 output before and after this patch
+> series in order to double-check that all converted Documentation/ 
+> references will produce <a href=<foo>.rst>foo title</a> tags.
+> 
+> Mauro Carvalho Chehab (34):
+>   docs: devices.rst: better reference documentation docs
+>   docs: dev-tools: kunit: don't use a table for docs name
+>   media: docs: */media/index.rst: don't use ReST doc:`foo`
+>   media: userspace-api: avoid using ReST :doc:`foo` markup
+>   media: driver-api: drivers: avoid using ReST :doc:`foo` markup
+>   media: admin-guide: avoid using ReST :doc:`foo` markup
+>   docs: admin-guide: pm: avoid using ReSt :doc:`foo` markup
+>   docs: admin-guide: hw-vuln: avoid using ReST :doc:`foo` markup
+>   docs: admin-guide: sysctl: avoid using ReST :doc:`foo` markup
+>   docs: block: biodoc.rst: avoid using ReSt :doc:`foo` markup
+>   docs: bpf: bpf_lsm.rst: avoid using ReSt :doc:`foo` markup
+>   docs: core-api: avoid using ReSt :doc:`foo` markup
+>   docs: dev-tools: testing-overview.rst: avoid using ReSt :doc:`foo`
+>     markup
+>   docs: dev-tools: kunit: avoid using ReST :doc:`foo` markup
+>   docs: devicetree: bindings: submitting-patches.rst: avoid using ReSt
+>     :doc:`foo` markup
+>   docs: doc-guide: avoid using ReSt :doc:`foo` markup
+>   docs: driver-api: avoid using ReSt :doc:`foo` markup
+>   docs: driver-api: gpio: using-gpio.rst: avoid using ReSt :doc:`foo`
+>     markup
+>   docs: driver-api: surface_aggregator: avoid using ReSt :doc:`foo`
+>     markup
+>   docs: driver-api: usb: avoid using ReSt :doc:`foo` markup
+>   docs: firmware-guide: acpi: avoid using ReSt :doc:`foo` markup
+>   docs: hwmon: adm1177.rst: avoid using ReSt :doc:`foo` markup
+>   docs: i2c: avoid using ReSt :doc:`foo` markup
+>   docs: kernel-hacking: hacking.rst: avoid using ReSt :doc:`foo` markup
+>   docs: networking: devlink: avoid using ReSt :doc:`foo` markup
+>   docs: PCI: endpoint: pci-endpoint-cfs.rst: avoid using ReSt :doc:`foo`
+>     markup
+>   docs: PCI: pci.rst: avoid using ReSt :doc:`foo` markup
+>   docs: process: submitting-patches.rst: avoid using ReSt :doc:`foo`
+>     markup
+>   docs: security: landlock.rst: avoid using ReSt :doc:`foo` markup
+>   docs: trace: coresight: coresight.rst: avoid using ReSt :doc:`foo`
+>     markup
+>   docs: trace: ftrace.rst: avoid using ReSt :doc:`foo` markup
+>   docs: userspace-api: landlock.rst: avoid using ReSt :doc:`foo` markup
+>   docs: virt: kvm: s390-pv-boot.rst: avoid using ReSt :doc:`foo` markup
+>   docs: x86: avoid using ReSt :doc:`foo` markup
+> 
+>  .../PCI/endpoint/pci-endpoint-cfs.rst         |  2 +-
+>  Documentation/PCI/pci.rst                     |  6 +--
+>  .../special-register-buffer-data-sampling.rst |  3 +-
+>  Documentation/admin-guide/media/bt8xx.rst     | 15 ++++----
+>  Documentation/admin-guide/media/bttv.rst      | 21 ++++++-----
+>  Documentation/admin-guide/media/index.rst     | 12 +++---
+>  Documentation/admin-guide/media/saa7134.rst   |  3 +-
+>  Documentation/admin-guide/pm/intel_idle.rst   | 16 +++++---
+>  Documentation/admin-guide/pm/intel_pstate.rst |  9 +++--
+>  Documentation/admin-guide/sysctl/abi.rst      |  2 +-
+>  Documentation/admin-guide/sysctl/kernel.rst   | 37 ++++++++++---------
+>  Documentation/block/biodoc.rst                |  2 +-
+>  Documentation/bpf/bpf_lsm.rst                 | 13 ++++---
+>  .../core-api/bus-virt-phys-mapping.rst        |  2 +-
+>  Documentation/core-api/dma-api.rst            |  5 ++-
+>  Documentation/core-api/dma-isa-lpc.rst        |  2 +-
+>  Documentation/core-api/index.rst              |  4 +-
+>  Documentation/dev-tools/kunit/api/index.rst   |  8 ++--
+>  Documentation/dev-tools/kunit/faq.rst         |  2 +-
+>  Documentation/dev-tools/kunit/index.rst       | 14 +++----
+>  Documentation/dev-tools/kunit/start.rst       |  6 +--
+>  Documentation/dev-tools/kunit/tips.rst        |  5 ++-
+>  Documentation/dev-tools/kunit/usage.rst       |  8 ++--
+>  Documentation/dev-tools/testing-overview.rst  | 16 ++++----
+>  .../bindings/submitting-patches.rst           | 11 +++---
+>  Documentation/doc-guide/contributing.rst      |  8 ++--
+>  Documentation/driver-api/gpio/using-gpio.rst  |  4 +-
+>  Documentation/driver-api/ioctl.rst            |  2 +-
+>  .../driver-api/media/drivers/bttv-devel.rst   |  2 +-
+>  Documentation/driver-api/media/index.rst      | 10 +++--
+>  Documentation/driver-api/pm/devices.rst       |  8 ++--
+>  .../surface_aggregator/clients/index.rst      |  3 +-
+>  .../surface_aggregator/internal.rst           | 15 ++++----
+>  .../surface_aggregator/overview.rst           |  6 ++-
+>  Documentation/driver-api/usb/dma.rst          |  6 +--
+>  .../acpi/dsd/data-node-references.rst         |  3 +-
+>  .../firmware-guide/acpi/dsd/graph.rst         |  2 +-
+>  .../firmware-guide/acpi/enumeration.rst       |  7 ++--
+>  Documentation/hwmon/adm1177.rst               |  3 +-
+>  Documentation/i2c/instantiating-devices.rst   |  2 +-
+>  Documentation/i2c/old-module-parameters.rst   |  3 +-
+>  Documentation/i2c/smbus-protocol.rst          |  4 +-
+>  Documentation/kernel-hacking/hacking.rst      |  4 +-
+>  .../networking/devlink/devlink-region.rst     |  2 +-
+>  .../networking/devlink/devlink-trap.rst       |  4 +-
+>  Documentation/process/submitting-patches.rst  | 32 ++++++++--------
+>  Documentation/security/landlock.rst           |  3 +-
+>  Documentation/trace/coresight/coresight.rst   |  8 ++--
+>  Documentation/trace/ftrace.rst                |  2 +-
+>  Documentation/userspace-api/landlock.rst      | 11 +++---
+>  .../userspace-api/media/glossary.rst          |  2 +-
+>  Documentation/userspace-api/media/index.rst   | 12 +++---
+>  Documentation/virt/kvm/s390-pv-boot.rst       |  2 +-
+>  Documentation/x86/boot.rst                    |  4 +-
+>  Documentation/x86/mtrr.rst                    |  2 +-
+>  55 files changed, 217 insertions(+), 183 deletions(-)
+> 
+> -- 
+> 2.31.1
+> 
+> 
