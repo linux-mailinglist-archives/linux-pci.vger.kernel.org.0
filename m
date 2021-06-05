@@ -2,463 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DFD339C454
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 02:24:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2ADD39C4EE
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 04:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231148AbhFEA0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 20:26:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:53213 "EHLO mga02.intel.com"
+        id S231258AbhFECEK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Jun 2021 22:04:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230487AbhFEA0A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 20:26:00 -0400
-IronPort-SDR: WzAwVdBZmSmumHgCAN6MaDad17kfR4mOdm0BQEwkFNOwy2PE/SVKFfhzE9BhujmUz78f5xF36m
- Sc+LMIvegADQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="191505938"
-X-IronPort-AV: E=Sophos;i="5.83,249,1616482800"; 
-   d="scan'208";a="191505938"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 17:24:13 -0700
-IronPort-SDR: 8cL3Ac/0d6jnlJe/mqZs32cur/TnzTWm7Qr4hVhA2tuTgEc9SFW6Ehl+fXhweGdPEdE1Oup5kL
- CosW5uM7FBzA==
-X-IronPort-AV: E=Sophos;i="5.83,249,1616482800"; 
-   d="scan'208";a="446862961"
-Received: from lmrivera-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.251.24.65])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 17:24:10 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     intel-wired-lan@lists.osuosl.org
-Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        sasha.neftin@intel.com, anthony.l.nguyen@intel.com,
-        linux-pci@vger.kernel.org, bhelgaas@google.com,
-        netdev@vger.kernel.org, mlichvar@redhat.com,
-        richardcochran@gmail.com, hch@infradead.org, helgaas@kernel.org
-Subject: [PATCH next-queue v5 4/4] igc: Add support for PTP getcrosststamp()
-Date:   Fri,  4 Jun 2021 17:23:56 -0700
-Message-Id: <20210605002356.3996853-5-vinicius.gomes@intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210605002356.3996853-1-vinicius.gomes@intel.com>
-References: <20210605002356.3996853-1-vinicius.gomes@intel.com>
+        id S230169AbhFECEK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Jun 2021 22:04:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F26A3613BF
+        for <linux-pci@vger.kernel.org>; Sat,  5 Jun 2021 02:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622858543;
+        bh=d4HA0w75Y3EgqSo8a4akBrGEgJoOn80fFKdqRDslU3w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dr3ydDrnEwPkuj2Oh5z6jHT5AA3uKZ1jrLy0x2H50pp5q2bNg/oDonm1UmK7Kd3dO
+         Mzv59GeTaVZSaany6XGLn5s0w4mEufc7ajMsWg0yQT2syAe3mk1e0xPaY6oHpMwpqj
+         3UC9PKH8oDNBjXa7MMC3XHLEnXphz+ulL2gIDNfMeBgrC9NwDox4/MGwhngE+XxZuL
+         MOuP/AsSfCkZqK+c6A4k6cKC5FSB58CmJ4F44/2SQFPctYsDm57qsg8wfghBAq9ZJn
+         PzO3O2p43VvlJY/0/SpEmlnCgV78TAbOmkV4+YawJv+kFYzxsgkwg/kgLiZCQsGpW2
+         WcCxkCCZQCnmQ==
+Received: by mail-io1-f47.google.com with SMTP id k16so12092208ios.10
+        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 19:02:22 -0700 (PDT)
+X-Gm-Message-State: AOAM531ZD+loN3JhvKFfZReGsC4L5kpOEKmFJHLdppvHgvjtMmDynSUn
+        6bB/LOgeZ/2tcrYzUMDRr/ap8XR0yueiLl35qxw=
+X-Google-Smtp-Source: ABdhPJxtAQ84yV3VSC9lDgHy0oV6H/0eMYq2wckOvU3SkYO3n6ax/RQYQ8yhqI2IsPZQiDLd/oMmkhPB8xltwMAIxKk=
+X-Received: by 2002:a6b:4105:: with SMTP id n5mr5992888ioa.148.1622858542380;
+ Fri, 04 Jun 2021 19:02:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAAhV-H5bO5MAshcxo=xehfxU5zMBKep4ebYaLQ1oT8uuTjqoSQ@mail.gmail.com>
+ <20210604195646.GA2231573@bjorn-Precision-5520>
+In-Reply-To: <20210604195646.GA2231573@bjorn-Precision-5520>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Sat, 5 Jun 2021 10:02:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6MCGXiO3EcZV2BZi91AiUNsu2aZ=e9g4e2tcVVNOLbfg@mail.gmail.com>
+Message-ID: <CAAhV-H6MCGXiO3EcZV2BZi91AiUNsu2aZ=e9g4e2tcVVNOLbfg@mail.gmail.com>
+Subject: Re: [PATCH] vgaarb: Call vga_arb_device_init() after PCI enumeration
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-i225 has support for PCIe PTM, which allows us to implement support
-for the PTP_SYS_OFFSET_PRECISE ioctl(), implemented in the driver via
-the getcrosststamp() function.
+Hi, Bjorn,
 
-The easiest way to expose the PTM registers would be to configure the PTM
-dialogs to run periodically, but the PTP_SYS_OFFSET_PRECISE ioctl()
-semantics are more aligned to using a kind of "one-shot" way of retrieving
-the PTM timestamps. But this causes a bit more code to be written: the
-trigger registers for the PTM dialogs are not cleared automatically.
+On Sat, Jun 5, 2021 at 3:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jun 04, 2021 at 12:50:03PM +0800, Huacai Chen wrote:
+> > On Thu, Jun 3, 2021 at 2:31 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
+> > >
+> > > [+cc linux-pci]
+> > >
+> > > On Wed, Jun 2, 2021 at 11:22 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > On Wed, Jun 02, 2021 at 06:36:03PM +0800, Huacai Chen wrote:
+> > > > > On Wed, Jun 2, 2021 at 2:03 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > > > On Tue, Jun 01, 2021 at 07:12:27PM +0200, Greg KH wrote:
+> > > > > > > On Tue, Jun 01, 2021 at 05:56:40PM +0200, Daniel Vetter wrote:
+> > > > > > > > On Fri, May 28, 2021 at 04:26:07PM +0800, Huacai Chen wrote:
+> > > > > > > > > We should call vga_arb_device_init() after PCI enumeration, otherwise it
+> > > > > > > > > may fail to select the default VGA device. Since vga_arb_device_init()
+> > > > > > > > > and PCI enumeration function (i.e., pcibios_init() or acpi_init()) are
+> > > > > > > > > both wrapped by subsys_initcall(), their sequence is not assured. So, we
+> > > > > > > > > use subsys_initcall_sync() instead of subsys_initcall() to wrap vga_arb_
+> > > > > > > > > device_init().
+> > > > > > >
+> > > > > > > Trying to juggle levels like this always fails if you build the code as
+> > > > > > > a module.
+> > > > > > >
+> > > > > > > Why not fix it properly and handle the out-of-order loading by returning
+> > > > > > > a "deferred" error if you do not have your resources yet?
+> > > > > >
+> > > > > > It's not a driver, it's kinda a bolted-on-the-side subsytem of pci. So not
+> > > > > > something you can -EPROBE_DEFER I think, without potentially upsetting the
+> > > > > > drivers that need this.
+> > > > > >
+> > > > > > Which might mean we should move this into pci subsystem proper perhaps?
+> > > > > > Then adding the init call at the right time becomes trivial since we just
+> > > > > > plug it in at the end of pci init.
+> > > > > >
+> > > > > > Also maybe that's how distros avoid this pain, pci is built-in, vgaarb is
+> > > > > > generally a module, problem solved.
+> > > > > >
+> > > > > > Bjorn, would you take this entire vgaarb.c thing? From a quick look I
+> > > > > > don't think it has a drm-ism in it (unlike vga_switcheroo, but that works
+> > > > > > a bit differently and doesn't have this init order issue).
+> > > > > Emmm, this patch cannot handle the hotplug case and module case, it
+> > > > > just handles the case that vgaarb, drm driver and pci all built-in.
+> > > > > But I think this is enough, because the original problem only happens
+> > > > > on very few BMC-based VGA cards (BMC doesn't set the VGA Enable bit on
+> > > > > the bridge, which breaks vgaarb).
+> > > >
+> > > > I'm not talking aout hotplug, just ordering the various pieces correctly.
+> > > > That vgaarb isn't really a driver and also can't really handle hotplug is
+> > > > my point. I guess that got lost a bit?
+> > > >
+> > > > Anyway my proposal is essentially to do a
+> > > >
+> > > > $ git move drivers/gpu/vga/vgaarb.c drivers/pci
+> > > >
+> > > > But I just realized that vgaarb is a bool option, so module isn't possible
+> > > > anyway, and we could fix this by calling vgaarb from pcibios init (with an
+> > > > empty static inline in the header if vgaarb is disabled). That makes the
+> > > > dependency very explicit and guarantees it works correctly.
+> > >
+> > > pcibios_init() is also an initcall and is implemented by every arch.
+> > > I agree that calling vga_arb_device_init() directly from
+> > > pcibios_init() would probably fix this problem, and it would be really
+> > > nice to have it not be an initcall.  But it's also kind of a pain to
+> > > have to update all those copies of pcibios_init(), and I would be
+> > > looking for a way to unify it since it's not really an arch-specific
+> > > thing.
+> > >
+> > > I think the simplest solution, which I suggested earlier [1], would be
+> > > to explicitly call vga_arbiter_add_pci_device() directly from the PCI
+> > > core when it enumerates a VGA device.  Then there's no initcall and no
+> > > need for the BUS_NOTIFY_ADD/DEL_DEVICE stuff.
+> > > vga_arbiter_add_pci_device() could set the default VGA device when it
+> > > is enumerated, and change the default device if we enumerate a
+> > > "better" one.  And hotplug VGA devices would work automatically.
+> > Emm, It seems that your solution has some difficulties to remove the
+> > whole initcall(vga_arb_device_init): we call
+> > vga_arbiter_add_pci_device() in pci_bus_add_device(), the
+> > list_for_each_entry() loop can be moved to
+> > vga_arbiter_check_bridge_sharing(), vga_arb_select_default_device()
+> > can be renamed to vga_arb_update_default_device() and be called in
+> > vga_arbiter_add_pci_device(), but how to handle
+> > misc_register(&vga_arb_device)?
+>
+> Might need to keep vga_arb_device_init() as an initcall, but remove
+> everything from it except the misc_register().
+OK, let me try. But I think call  vga_arbiter_add_pci_device() in pci
+core is nearly the same as notifier.
+Anyway, I will send a new patch later.
 
-i225 can be configured to send "fake" packets with the PTM
-information, adding support for handling these types of packets is
-left for the future.
-
-PTM improves the accuracy of time synchronization, for example, using
-phc2sys. Before:
-
-phc2sys[341.511]: CLOCK_REALTIME phc offset       289 s2 freq    +961 delay   2963
-phc2sys[342.511]: CLOCK_REALTIME phc offset      -984 s2 freq    -225 delay   3517
-phc2sys[343.511]: CLOCK_REALTIME phc offset       427 s2 freq    +891 delay   2312
-phc2sys[344.511]: CLOCK_REALTIME phc offset       104 s2 freq    +696 delay   2575
-phc2sys[345.511]: CLOCK_REALTIME phc offset       149 s2 freq    +772 delay   2388
-phc2sys[346.511]: CLOCK_REALTIME phc offset        33 s2 freq    +701 delay   2359
-phc2sys[347.511]: CLOCK_REALTIME phc offset      -216 s2 freq    +462 delay   2706
-phc2sys[348.512]: CLOCK_REALTIME phc offset       140 s2 freq    +753 delay   2300
-phc2sys[349.512]: CLOCK_REALTIME phc offset       -14 s2 freq    +641 delay   2385
-phc2sys[350.512]: CLOCK_REALTIME phc offset      1048 s2 freq   +1699 delay   4303
-phc2sys[351.512]: CLOCK_REALTIME phc offset     -1296 s2 freq    -331 delay   2846
-phc2sys[352.512]: CLOCK_REALTIME phc offset      -912 s2 freq    -336 delay   4006
-phc2sys[353.512]: CLOCK_REALTIME phc offset       880 s2 freq   +1183 delay   2338
-phc2sys[354.512]: CLOCK_REALTIME phc offset       358 s2 freq    +925 delay   2348
-phc2sys[355.512]: CLOCK_REALTIME phc offset      -211 s2 freq    +463 delay   2941
-phc2sys[356.512]: CLOCK_REALTIME phc offset       234 s2 freq    +845 delay   2519
-phc2sys[357.512]: CLOCK_REALTIME phc offset        45 s2 freq    +726 delay   2357
-phc2sys[358.512]: CLOCK_REALTIME phc offset      -262 s2 freq    +433 delay   2821
-phc2sys[359.512]: CLOCK_REALTIME phc offset      -424 s2 freq    +192 delay   3579
-phc2sys[360.513]: CLOCK_REALTIME phc offset       134 s2 freq    +623 delay   3269
-phc2sys[361.513]: CLOCK_REALTIME phc offset      -213 s2 freq    +316 delay   3999
-phc2sys[362.513]: CLOCK_REALTIME phc offset      1023 s2 freq   +1488 delay   2614
-phc2sys[363.513]: CLOCK_REALTIME phc offset        57 s2 freq    +829 delay   2332
-phc2sys[364.513]: CLOCK_REALTIME phc offset      -126 s2 freq    +663 delay   2315
-phc2sys[365.513]: CLOCK_REALTIME phc offset       -85 s2 freq    +666 delay   2449
-phc2sys[366.513]: CLOCK_REALTIME phc offset      -193 s2 freq    +533 delay   2336
-phc2sys[367.513]: CLOCK_REALTIME phc offset      -645 s2 freq     +23 delay   3870
-phc2sys[368.513]: CLOCK_REALTIME phc offset       483 s2 freq    +957 delay   2342
-phc2sys[369.513]: CLOCK_REALTIME phc offset      -166 s2 freq    +453 delay   3025
-phc2sys[370.513]: CLOCK_REALTIME phc offset       327 s2 freq    +896 delay   2250
-
-After:
-
-phc2sys[617.838]: CLOCK_REALTIME phc offset       -25 s2 freq    +309 delay      0
-phc2sys[618.838]: CLOCK_REALTIME phc offset       -43 s2 freq    +284 delay      0
-phc2sys[619.838]: CLOCK_REALTIME phc offset       -12 s2 freq    +302 delay      0
-phc2sys[620.838]: CLOCK_REALTIME phc offset        -2 s2 freq    +308 delay      0
-phc2sys[621.838]: CLOCK_REALTIME phc offset        30 s2 freq    +340 delay      0
-phc2sys[622.838]: CLOCK_REALTIME phc offset        14 s2 freq    +333 delay      0
-phc2sys[623.839]: CLOCK_REALTIME phc offset        -3 s2 freq    +320 delay      0
-phc2sys[624.839]: CLOCK_REALTIME phc offset         9 s2 freq    +331 delay      0
-phc2sys[625.839]: CLOCK_REALTIME phc offset        -1 s2 freq    +324 delay      0
-phc2sys[626.839]: CLOCK_REALTIME phc offset        -6 s2 freq    +318 delay      0
-phc2sys[627.839]: CLOCK_REALTIME phc offset       -10 s2 freq    +313 delay      0
-phc2sys[628.839]: CLOCK_REALTIME phc offset         7 s2 freq    +327 delay      0
-phc2sys[629.839]: CLOCK_REALTIME phc offset         8 s2 freq    +330 delay      0
-phc2sys[630.840]: CLOCK_REALTIME phc offset       -24 s2 freq    +300 delay      0
-phc2sys[631.840]: CLOCK_REALTIME phc offset       -49 s2 freq    +268 delay      0
-phc2sys[632.840]: CLOCK_REALTIME phc offset         6 s2 freq    +308 delay      0
-phc2sys[633.840]: CLOCK_REALTIME phc offset        25 s2 freq    +329 delay      0
-phc2sys[634.840]: CLOCK_REALTIME phc offset         5 s2 freq    +316 delay      0
-phc2sys[635.840]: CLOCK_REALTIME phc offset        10 s2 freq    +323 delay      0
-phc2sys[636.840]: CLOCK_REALTIME phc offset       -13 s2 freq    +303 delay      0
-phc2sys[637.841]: CLOCK_REALTIME phc offset         4 s2 freq    +316 delay      0
-phc2sys[638.841]: CLOCK_REALTIME phc offset        16 s2 freq    +329 delay      0
-phc2sys[639.841]: CLOCK_REALTIME phc offset        31 s2 freq    +349 delay      0
-phc2sys[640.841]: CLOCK_REALTIME phc offset       -21 s2 freq    +306 delay      0
-phc2sys[641.841]: CLOCK_REALTIME phc offset       -14 s2 freq    +307 delay      0
-phc2sys[642.841]: CLOCK_REALTIME phc offset       -24 s2 freq    +293 delay      0
-phc2sys[643.841]: CLOCK_REALTIME phc offset        -6 s2 freq    +304 delay      0
-phc2sys[644.842]: CLOCK_REALTIME phc offset        12 s2 freq    +320 delay      0
-phc2sys[645.842]: CLOCK_REALTIME phc offset        12 s2 freq    +323 delay      0
-phc2sys[646.842]: CLOCK_REALTIME phc offset       -12 s2 freq    +303 delay      0
-
-One possible explanation is that when PTM is not enabled, and there's a lot
-of traffic in the PCIe fabric, some register reads will take more time than
-the others (see the variation in the delay values "before").
-
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
----
- drivers/net/ethernet/intel/igc/igc.h         |   1 +
- drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
- drivers/net/ethernet/intel/igc/igc_ptp.c     | 182 +++++++++++++++++++
- drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
- 4 files changed, 237 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-index 5901ed9fb545..36ef4ba10e2c 100644
---- a/drivers/net/ethernet/intel/igc/igc.h
-+++ b/drivers/net/ethernet/intel/igc/igc.h
-@@ -225,6 +225,7 @@ struct igc_adapter {
- 	struct timecounter tc;
- 	struct timespec64 prev_ptp_time; /* Pre-reset PTP clock */
- 	ktime_t ptp_reset_start; /* Reset time in clock mono */
-+	struct system_time_snapshot snapshot;
- 
- 	char fw_version[32];
- 
-diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-index 71fe5b5ad2ed..0432ba26192e 100644
---- a/drivers/net/ethernet/intel/igc/igc_defines.h
-+++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -481,6 +481,37 @@
- #define IGC_RXCSUM_CRCOFL	0x00000800   /* CRC32 offload enable */
- #define IGC_RXCSUM_PCSD		0x00002000   /* packet checksum disabled */
- 
-+/* PCIe PTM Control */
-+#define IGC_PTM_CTRL_START_NOW	BIT(29) /* Start PTM Now */
-+#define IGC_PTM_CTRL_EN		BIT(30) /* Enable PTM */
-+#define IGC_PTM_CTRL_TRIG	BIT(31) /* PTM Cycle trigger */
-+#define IGC_PTM_CTRL_SHRT_CYC(usec)	(((usec) & 0x2f) << 2)
-+#define IGC_PTM_CTRL_PTM_TO(usec)	(((usec) & 0xff) << 8)
-+
-+#define IGC_PTM_SHORT_CYC_DEFAULT	10  /* Default Short/interrupted cycle interval */
-+#define IGC_PTM_CYC_TIME_DEFAULT	5   /* Default PTM cycle time */
-+#define IGC_PTM_TIMEOUT_DEFAULT		255 /* Default timeout for PTM errors */
-+
-+/* PCIe Digital Delay */
-+#define IGC_PCIE_DIG_DELAY_DEFAULT	0x01440000
-+
-+/* PCIe PHY Delay */
-+#define IGC_PCIE_PHY_DELAY_DEFAULT	0x40900000
-+
-+#define IGC_TIMADJ_ADJUST_METH		0x40000000
-+
-+/* PCIe PTM Status */
-+#define IGC_PTM_STAT_VALID		BIT(0) /* PTM Status */
-+#define IGC_PTM_STAT_RET_ERR		BIT(1) /* Root port timeout */
-+#define IGC_PTM_STAT_BAD_PTM_RES	BIT(2) /* PTM Response msg instead of PTM Response Data */
-+#define IGC_PTM_STAT_T4M1_OVFL		BIT(3) /* T4 minus T1 overflow */
-+#define IGC_PTM_STAT_ADJUST_1ST		BIT(4) /* 1588 timer adjusted during 1st PTM cycle */
-+#define IGC_PTM_STAT_ADJUST_CYC		BIT(5) /* 1588 timer adjusted during non-1st PTM cycle */
-+
-+/* PCIe PTM Cycle Control */
-+#define IGC_PTM_CYCLE_CTRL_CYC_TIME(msec)	((msec) & 0x3ff) /* PTM Cycle Time (msec) */
-+#define IGC_PTM_CYCLE_CTRL_AUTO_CYC_EN		BIT(31) /* PTM Cycle Control */
-+
- /* GPY211 - I225 defines */
- #define GPY_MMD_MASK		0xFFFF0000
- #define GPY_MMD_SHIFT		16
-diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
-index 69617d2c1be2..1683b2f7cc8c 100644
---- a/drivers/net/ethernet/intel/igc/igc_ptp.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
-@@ -9,6 +9,8 @@
- #include <linux/ptp_classify.h>
- #include <linux/clocksource.h>
- #include <linux/ktime.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
- 
- #define INCVALUE_MASK		0x7fffffff
- #define ISGN			0x80000000
-@@ -16,6 +18,9 @@
- #define IGC_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
- #define IGC_PTP_TX_TIMEOUT		(HZ * 15)
- 
-+#define IGC_PTM_STAT_SLEEP		2
-+#define IGC_PTM_STAT_TIMEOUT		100
-+
- /* SYSTIM read access for I225 */
- void igc_ptp_read(struct igc_adapter *adapter, struct timespec64 *ts)
- {
-@@ -752,6 +757,150 @@ int igc_ptp_get_ts_config(struct net_device *netdev, struct ifreq *ifr)
- 		-EFAULT : 0;
- }
- 
-+/* Support for cross timestamping via PCIe PTM is only supported if
-+ * two conditions are met:
-+ *
-+ * 1. We have an way to convert the timestamps in the PTM messages
-+ *    to something related to the system clocks (right now, only
-+ *    X86 systems with support for the Always Running Timer allow that);
-+ *
-+ * 2. We have PTM enabled in the path from the device to the PCIe root port.
-+ */
-+static bool igc_is_crosststamp_supported(struct igc_adapter *adapter)
-+{
-+#if IS_ENABLED(CONFIG_X86_TSC)
-+	return pcie_ptm_enabled(adapter->pdev);
-+#endif
-+	return false;
-+}
-+
-+static struct system_counterval_t igc_device_tstamp_to_system(u64 tstamp)
-+{
-+#if IS_ENABLED(CONFIG_X86_TSC)
-+	return convert_art_ns_to_tsc(tstamp);
-+#else
-+	return (struct system_counterval_t) { };
-+#endif
-+}
-+
-+static void igc_ptm_log_error(struct igc_adapter *adapter, u32 ptm_stat)
-+{
-+	struct net_device *netdev = adapter->netdev;
-+
-+	switch (ptm_stat) {
-+	case IGC_PTM_STAT_RET_ERR:
-+		netdev_err(netdev, "PTM Error: Root port timeout\n");
-+		break;
-+	case IGC_PTM_STAT_BAD_PTM_RES:
-+		netdev_err(netdev, "PTM Error: Bad response, PTM Response Data expected\n");
-+		break;
-+	case IGC_PTM_STAT_T4M1_OVFL:
-+		netdev_err(netdev, "PTM Error: T4 minus T1 overflow\n");
-+		break;
-+	case IGC_PTM_STAT_ADJUST_1ST:
-+		netdev_err(netdev, "PTM Error: 1588 timer adjusted during first PTM cycle\n");
-+		break;
-+	case IGC_PTM_STAT_ADJUST_CYC:
-+		netdev_err(netdev, "PTM Error: 1588 timer adjusted during non-first PTM cycle\n");
-+		break;
-+	default:
-+		netdev_err(netdev, "PTM Error: Unknown error (%#x)\n", ptm_stat);
-+		break;
-+	}
-+}
-+
-+static int igc_phc_get_syncdevicetime(ktime_t *device,
-+				      struct system_counterval_t *system,
-+				      void *ctx)
-+{
-+	struct igc_adapter *adapter = ctx;
-+	struct igc_hw *hw = &adapter->hw;
-+	u32 stat, t2_curr_h, t2_curr_l, ctrl;
-+	u32 t4mt1_prev, t3mt2_prev, delay;
-+	ktime_t t1, t2_curr;
-+	int err;
-+
-+	/* Get a snapshot of system clocks to use as historic value. */
-+	ktime_get_snapshot(&adapter->snapshot);
-+
-+	do {
-+		/* Doing this in a loop because in the event of a
-+		 * badly timed (ha!) system clock adjustment, we may
-+		 * get PTM Errors from the PCI root, but these errors
-+		 * are transitory. Repeating the process returns valid
-+		 * data eventually.
-+		 */
-+
-+		/* To "manually" start the PTM cycle we need to clear and
-+		 * then set again the TRIG bit.
-+		 */
-+		ctrl = rd32(IGC_PTM_CTRL);
-+		ctrl &= ~IGC_PTM_CTRL_TRIG;
-+		wr32(IGC_PTM_CTRL, ctrl);
-+		ctrl |= IGC_PTM_CTRL_TRIG;
-+		wr32(IGC_PTM_CTRL, ctrl);
-+
-+		/* The cycle only starts "for real" when software notifies
-+		 * that it has read the registers, this is done by setting
-+		 * VALID bit.
-+		 */
-+		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
-+
-+		err = readx_poll_timeout(rd32, IGC_PTM_STAT, stat,
-+					 stat, IGC_PTM_STAT_SLEEP,
-+					 IGC_PTM_STAT_TIMEOUT);
-+		if (err < 0)
-+			return err;
-+
-+		if ((stat & IGC_PTM_STAT_VALID) == IGC_PTM_STAT_VALID)
-+			break;
-+
-+		if (stat & ~IGC_PTM_STAT_VALID) {
-+			/* An error occurred, log it. */
-+			igc_ptm_log_error(adapter, stat);
-+			/* The STAT register is write-1-to-clear (W1C),
-+			 * so write the previous error status to clear it.
-+			 */
-+			wr32(IGC_PTM_STAT, stat);
-+			continue;
-+		}
-+	} while (true);
-+
-+	t1 = ktime_set(rd32(IGC_PTM_T1_TIM0_H),
-+		       rd32(IGC_PTM_T1_TIM0_L));
-+
-+	t2_curr_l = rd32(IGC_PTM_CURR_T2_L);
-+	t2_curr_h = rd32(IGC_PTM_CURR_T2_H);
-+
-+	/* FIXME: When the register that tells the endianness of the
-+	 * PTM registers are implemented, check them here and add the
-+	 * appropriate conversion.
-+	 */
-+	t2_curr_h = swab32(t2_curr_h);
-+
-+	t2_curr = ((s64)t2_curr_h << 32 | t2_curr_l);
-+
-+	t4mt1_prev = rd32(IGC_PTM_PREV_T4M1);
-+	t3mt2_prev = rd32(IGC_PTM_PREV_T3M2);
-+
-+	delay = (t4mt1_prev - t3mt2_prev) / 2;
-+
-+	*device = t1 + delay;
-+	*system = igc_device_tstamp_to_system(t2_curr);
-+
-+	return 0;
-+}
-+
-+static int igc_ptp_getcrosststamp(struct ptp_clock_info *ptp,
-+				  struct system_device_crosststamp *cts)
-+{
-+	struct igc_adapter *adapter = container_of(ptp, struct igc_adapter,
-+						   ptp_caps);
-+
-+	return get_device_system_crosststamp(igc_phc_get_syncdevicetime,
-+					     adapter, &adapter->snapshot, cts);
-+}
-+
- /**
-  * igc_ptp_init - Initialize PTP functionality
-  * @adapter: Board private structure
-@@ -788,6 +937,11 @@ void igc_ptp_init(struct igc_adapter *adapter)
- 		adapter->ptp_caps.n_per_out = IGC_N_PEROUT;
- 		adapter->ptp_caps.n_pins = IGC_N_SDP;
- 		adapter->ptp_caps.verify = igc_ptp_verify_pin;
-+
-+		if (!igc_is_crosststamp_supported(adapter))
-+			break;
-+
-+		adapter->ptp_caps.getcrosststamp = igc_ptp_getcrosststamp;
- 		break;
- 	default:
- 		adapter->ptp_clock = NULL;
-@@ -878,7 +1032,9 @@ void igc_ptp_stop(struct igc_adapter *adapter)
- void igc_ptp_reset(struct igc_adapter *adapter)
- {
- 	struct igc_hw *hw = &adapter->hw;
-+	u32 cycle_ctrl, ctrl;
- 	unsigned long flags;
-+	u32 timadj;
- 
- 	/* reset the tstamp_config */
- 	igc_ptp_set_timestamp_mode(adapter, &adapter->tstamp_config);
-@@ -887,12 +1043,38 @@ void igc_ptp_reset(struct igc_adapter *adapter)
- 
- 	switch (adapter->hw.mac.type) {
- 	case igc_i225:
-+		timadj = rd32(IGC_TIMADJ);
-+		timadj |= IGC_TIMADJ_ADJUST_METH;
-+		wr32(IGC_TIMADJ, timadj);
-+
- 		wr32(IGC_TSAUXC, 0x0);
- 		wr32(IGC_TSSDP, 0x0);
- 		wr32(IGC_TSIM,
- 		     IGC_TSICR_INTERRUPTS |
- 		     (adapter->pps_sys_wrap_on ? IGC_TSICR_SYS_WRAP : 0));
- 		wr32(IGC_IMS, IGC_IMS_TS);
-+
-+		if (!igc_is_crosststamp_supported(adapter))
-+			break;
-+
-+		wr32(IGC_PCIE_DIG_DELAY, IGC_PCIE_DIG_DELAY_DEFAULT);
-+		wr32(IGC_PCIE_PHY_DELAY, IGC_PCIE_PHY_DELAY_DEFAULT);
-+
-+		cycle_ctrl = IGC_PTM_CYCLE_CTRL_CYC_TIME(IGC_PTM_CYC_TIME_DEFAULT);
-+
-+		wr32(IGC_PTM_CYCLE_CTRL, cycle_ctrl);
-+
-+		ctrl = IGC_PTM_CTRL_EN |
-+			IGC_PTM_CTRL_START_NOW |
-+			IGC_PTM_CTRL_SHRT_CYC(IGC_PTM_SHORT_CYC_DEFAULT) |
-+			IGC_PTM_CTRL_PTM_TO(IGC_PTM_TIMEOUT_DEFAULT) |
-+			IGC_PTM_CTRL_TRIG;
-+
-+		wr32(IGC_PTM_CTRL, ctrl);
-+
-+		/* Force the first cycle to run. */
-+		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
-+
- 		break;
- 	default:
- 		/* No work to do. */
-diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
-index 0f82990567d9..4499a6f7c577 100644
---- a/drivers/net/ethernet/intel/igc/igc_regs.h
-+++ b/drivers/net/ethernet/intel/igc/igc_regs.h
-@@ -229,6 +229,29 @@
- #define IGC_TXSTMPL	0x0B618  /* Tx timestamp value Low - RO */
- #define IGC_TXSTMPH	0x0B61C  /* Tx timestamp value High - RO */
- 
-+#define IGC_TIMADJ	0x0B60C  /* Time Adjustment Offset Register */
-+
-+/* PCIe Registers */
-+#define IGC_PTM_CTRL		0x12540  /* PTM Control */
-+#define IGC_PTM_STAT		0x12544  /* PTM Status */
-+#define IGC_PTM_CYCLE_CTRL	0x1254C  /* PTM Cycle Control */
-+
-+/* PTM Time registers */
-+#define IGC_PTM_T1_TIM0_L	0x12558  /* T1 on Timer 0 Low */
-+#define IGC_PTM_T1_TIM0_H	0x1255C  /* T1 on Timer 0 High */
-+
-+#define IGC_PTM_CURR_T2_L	0x1258C  /* Current T2 Low */
-+#define IGC_PTM_CURR_T2_H	0x12590  /* Current T2 High */
-+#define IGC_PTM_PREV_T2_L	0x12584  /* Previous T2 Low */
-+#define IGC_PTM_PREV_T2_H	0x12588  /* Previous T2 High */
-+#define IGC_PTM_PREV_T4M1	0x12578  /* T4 Minus T1 on previous PTM Cycle */
-+#define IGC_PTM_CURR_T4M1	0x1257C  /* T4 Minus T1 on this PTM Cycle */
-+#define IGC_PTM_PREV_T3M2	0x12580  /* T3 Minus T2 on previous PTM Cycle */
-+#define IGC_PTM_TDELAY		0x12594  /* PTM PCIe Link Delay */
-+
-+#define IGC_PCIE_DIG_DELAY	0x12550  /* PCIe Digital Delay */
-+#define IGC_PCIE_PHY_DELAY	0x12554  /* PCIe PHY Delay */
-+
- /* Management registers */
- #define IGC_MANC	0x05820  /* Management Control - RW */
- 
--- 
-2.31.1
-
+Huacai
