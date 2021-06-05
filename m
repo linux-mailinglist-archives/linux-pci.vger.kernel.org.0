@@ -2,186 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA9B39CB16
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 22:57:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 060A039CB23
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 23:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230025AbhFEU73 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 16:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        id S230022AbhFEVRU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 17:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229998AbhFEU73 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Jun 2021 16:59:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B71146138C;
-        Sat,  5 Jun 2021 20:57:40 +0000 (UTC)
+        id S229998AbhFEVRU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Jun 2021 17:17:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 63C246138C;
+        Sat,  5 Jun 2021 21:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622926661;
-        bh=TPWZg+mnjUPfUy/j5QyNwvmf07qGh6lfvORxedAcVOs=;
+        s=k20201202; t=1622927731;
+        bh=Zsr65MFw+GKpFwPBz1qIIPrramPqzvT+hq8OpA/dsw8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=H+Nb4suT87C76SMQ1VGje5ufamKQyO9PDReKKtdCwlCQcz0QtoeVB1GPs6Tv87Om9
-         RBOnsKfr1o9g2sr4iBhauCYTFm9G1/9GCTh3ckjTbieRIResqYT/lURd45zmyR3/BN
-         xCF7MB/JgowNKU6e6nFtazeMFLcovrauZm751xVJ3gtCdmqznXq951DjirdSkCT5pl
-         cr+wRf2aicAA8Mgry6dVhXhxk34yJ0UZ3k6fk5VfQ6OsboeNj6MJiSRYLub1zNUyyw
-         MZ+8TI78b7F/J/V/sbcBZWG+JtOlEWCwz1AHOsL7sfn/ePmGYjFS44maQC0uD7+7VB
-         rA6O2xL7zOnAA==
-Date:   Sat, 5 Jun 2021 15:57:39 -0500
+        b=PpQkexKXL/HrnTJKDSxtaqT/wuScq4lBKN00VPLB4GQS5Hd78Pno7tx8Hn1dUbUke
+         9ADly4qYdfE4xM6qq15vV0OlkGKuLKOqRzamE3sctih8AHhXmQS8+kFtaUnxeo9BRG
+         SkVGp958M2kqkbUF2wXCW5bGL7Awaz/Lc41moXdFgMydn15rgT2ug3029gUQf1ovqB
+         ls9K+w9se/B02XNEX7OoCKGQXaSJjy4YQ/5ZEp5tT2QRpfi+j+1RdW1j3w7lmo2Ft7
+         +WJoy2w77K1AfEdYtRafzSG5KZLZX7KNUtMoXCG3l+1EYQSPMZhv8O4ZjkGebN74AG
+         /+zjiqT498HgA==
+Date:   Sat, 5 Jun 2021 16:15:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v5 3/7] PCI: Remove reset_fn field from pci_dev
-Message-ID: <20210605205739.GA2322756@bjorn-Precision-5520>
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V2 2/4] PCI: Move loongson pci quirks to quirks.c
+Message-ID: <20210605211529.GA2326325@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210529192527.2708-4-ameynarkhede03@gmail.com>
+In-Reply-To: <20210528071503.1444680-3-chenhuacai@loongson.cn>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 30, 2021 at 12:55:23AM +0530, Amey Narkhede wrote:
-> reset_fn field is used to indicate whether the
-> device supports any reset mechanism or not.
-> Deprecate use of reset_fn in favor of new
-> reset_methods array which can be used to keep
-> track of all supported reset mechanisms of a device
-> and their ordering.
-> The octeon driver is incorrectly using reset_fn field
-> to detect if the device supports FLR or not. Use
-> pcie_reset_flr to probe whether it supports
-> FLR or not.
-
-s/Deprecate use of/Remove/
-("deprecate" means to disapprove of something, and you're doing more
-than that :))
-
-Rewrap above to fill 75 columns.  Separate paragraphs with blank
-lines.  Add "()" after function names (mentioned elsewhere, but please
-do it everywhere).
-
-> Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-> Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> ---
->  drivers/net/ethernet/cavium/liquidio/lio_vf_main.c | 2 +-
->  drivers/pci/pci-sysfs.c                            | 2 +-
->  drivers/pci/pci.c                                  | 6 +++---
->  drivers/pci/probe.c                                | 1 -
->  drivers/pci/quirks.c                               | 2 +-
->  drivers/pci/remove.c                               | 1 -
->  include/linux/pci.h                                | 1 -
->  7 files changed, 6 insertions(+), 9 deletions(-)
+On Fri, May 28, 2021 at 03:15:01PM +0800, Huacai Chen wrote:
+> Loongson PCH (LS7A chipset) will be used by both MIPS-based and
+> LoongArch-based Loongson processors. MIPS-based Loongson uses FDT
+> but LoongArch-base Loongson uses ACPI, but the driver in drivers/
+> pci/controller/pci-loongson.c is FDT-only. So move the quirks to
+> quirks.c where can be shared by all architectures.
 > 
-> diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> index 516f166ce..336d149ee 100644
-> --- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> +++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> @@ -526,7 +526,7 @@ static void octeon_destroy_resources(struct octeon_device *oct)
->  			oct->irq_name_storage = NULL;
->  		}
->  		/* Soft reset the octeon device before exiting */
-> -		if (oct->pci_dev->reset_fn)
-> +		if (!pcie_reset_flr(oct->pci_dev, 1))
->  			octeon_pci_flr(oct);
->  		else
->  			cn23xx_vf_ask_pf_to_do_flr(oct);
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index beb8d1f4f..316f70c3e 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1367,7 +1367,7 @@ static umode_t pci_dev_reset_attr_is_visible(struct kobject *kobj,
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/pci/controller/pci-loongson.c | 69 ---------------------------
+>  drivers/pci/quirks.c                  | 69 +++++++++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 69 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> index 48169b1e3817..88066e9db69e 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -12,15 +12,6 @@
+>  
+>  #include "../pci.h"
+>  
+> -/* Device IDs */
+> -#define DEV_PCIE_PORT_0	0x7a09
+> -#define DEV_PCIE_PORT_1	0x7a19
+> -#define DEV_PCIE_PORT_2	0x7a29
+> -
+> -#define DEV_LS2K_APB	0x7a02
+> -#define DEV_LS7A_CONF	0x7a10
+> -#define DEV_LS7A_LPC	0x7a0c
+> -
+>  #define FLAG_CFG0	BIT(0)
+>  #define FLAG_CFG1	BIT(1)
+>  #define FLAG_DEV_FIX	BIT(2)
+> @@ -32,66 +23,6 @@ struct loongson_pci {
+>  	u32 flags;
+>  };
+>  
+> -/* Fixup wrong class code in PCIe bridges */
+> -static void bridge_class_quirk(struct pci_dev *dev)
+> -{
+> -	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> -}
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> -			DEV_PCIE_PORT_0, bridge_class_quirk);
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> -			DEV_PCIE_PORT_1, bridge_class_quirk);
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> -			DEV_PCIE_PORT_2, bridge_class_quirk);
+> -
+> -static void system_bus_quirk(struct pci_dev *pdev)
+> -{
+> -	/*
+> -	 * The address space consumed by these devices is outside the
+> -	 * resources of the host bridge.
+> -	 */
+> -	pdev->mmio_always_on = 1;
+> -	pdev->non_compliant_bars = 1;
+> -}
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> -			DEV_LS2K_APB, system_bus_quirk);
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> -			DEV_LS7A_CONF, system_bus_quirk);
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> -			DEV_LS7A_LPC, system_bus_quirk);
+> -
+> -static void loongson_mrrs_quirk(struct pci_dev *dev)
+> -{
+> -	struct pci_bus *bus = dev->bus;
+> -	struct pci_dev *bridge;
+> -	static const struct pci_device_id bridge_devids[] = {
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> -		{ 0, },
+> -	};
+> -
+> -	/* look for the matching bridge */
+> -	while (!pci_is_root_bus(bus)) {
+> -		bridge = bus->self;
+> -		bus = bus->parent;
+> -		/*
+> -		 * Some Loongson PCIe ports have a h/w limitation of
+> -		 * 256 bytes maximum read request size. They can't handle
+> -		 * anything larger than this. So force this limit on
+> -		 * any devices attached under these ports.
+> -		 */
+> -		if (pci_match_id(bridge_devids, bridge)) {
+> -			if (pcie_get_readrq(dev) > 256) {
+> -				pci_info(dev, "limiting MRRS to 256\n");
+> -				pcie_set_readrq(dev, 256);
+> -			}
+> -			break;
+> -		}
+> -	}
+> -}
+> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> -
+>  static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
+>  				unsigned int devfn, int where)
 >  {
->  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
->  
-> -	if (!pdev->reset_fn)
-> +	if (!pci_reset_supported(pdev))
->  		return 0;
->  
->  	return a->mode;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 67a2605d4..bbed852d9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5231,7 +5231,7 @@ int pci_reset_function(struct pci_dev *dev)
->  {
->  	int rc;
->  
-> -	if (!dev->reset_fn)
-> +	if (!pci_reset_supported(dev))
->  		return -ENOTTY;
->  
->  	pci_dev_lock(dev);
-> @@ -5267,7 +5267,7 @@ int pci_reset_function_locked(struct pci_dev *dev)
->  {
->  	int rc;
->  
-> -	if (!dev->reset_fn)
-> +	if (!pci_reset_supported(dev))
->  		return -ENOTTY;
->  
->  	pci_dev_save_and_disable(dev);
-> @@ -5290,7 +5290,7 @@ int pci_try_reset_function(struct pci_dev *dev)
->  {
->  	int rc;
->  
-> -	if (!dev->reset_fn)
-> +	if (!pci_reset_supported(dev))
->  		return -ENOTTY;
->  
->  	if (!pci_dev_trylock(dev))
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 8cf532681..90fd4f61f 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2405,7 +2405,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
->  
->  	pcie_report_downtraining(dev);
->  	pci_init_reset_methods(dev);
-> -	dev->reset_fn = pci_reset_supported(dev);
->  }
->  
->  /*
 > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index f977ba79a..e86cf4a3b 100644
+> index dcb229de1acb..66e4bea69431 100644
 > --- a/drivers/pci/quirks.c
 > +++ b/drivers/pci/quirks.c
-> @@ -5589,7 +5589,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+> @@ -205,6 +205,75 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
+>  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
 >  
->  	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
->  	    pdev->subsystem_device != 0x222e ||
-> -	    !pdev->reset_fn)
-> +	    !pci_reset_supported(pdev))
->  		return;
->  
->  	if (pci_enable_device_mem(pdev))
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index dd12c2fcc..4c54c7505 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -19,7 +19,6 @@ static void pci_stop_dev(struct pci_dev *dev)
->  	pci_pme_active(dev, false);
->  
->  	if (pci_dev_is_added(dev)) {
-> -		dev->reset_fn = 0;
->  
->  		device_release_driver(&dev->dev);
->  		pci_proc_detach_device(dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0955246f8..6e9bc4f9c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -429,7 +429,6 @@ struct pci_dev {
->  	unsigned int	state_saved:1;
->  	unsigned int	is_physfn:1;
->  	unsigned int	is_virtfn:1;
-> -	unsigned int	reset_fn:1;
->  	unsigned int	is_hotplug_bridge:1;
->  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
->  	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+> +/* Loongson-related quirks */
+> +#define DEV_PCIE_PORT_0	0x7a09
+> +#define DEV_PCIE_PORT_1	0x7a19
+> +#define DEV_PCIE_PORT_2	0x7a29
+> +
+> +#define DEV_LS2K_APB	0x7a02
+> +#define DEV_LS7A_CONF	0x7a10
+> +#define DEV_LS7A_LPC	0x7a0c
+
+If you're moving these from device-specific file to a generic file,
+these #defines now need to have device-specific names.
+
+But these appear to be for built-in hardware that can only be present
+in Loongson (I assume mips?) systems.  If that's the case, maybe they
+should go to a mips-specific file like arch/mips/pci/quirks.c?
+
+But I see you see you mention LoongArch above, so I don't know if
+that's part of arch/mips, or if there's an arch/loongson coming, or
+what.
+
+> +/* Fixup wrong class code in PCIe bridges */
+> +static void loongson_bridge_class_quirk(struct pci_dev *dev)
+> +{
+> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_0, loongson_bridge_class_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_1, loongson_bridge_class_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_2, loongson_bridge_class_quirk);
+> +
+> +static void loongson_system_bus_quirk(struct pci_dev *pdev)
+> +{
+> +	/*
+> +	 * The address space consumed by these devices is outside the
+> +	 * resources of the host bridge.
+> +	 */
+> +	pdev->mmio_always_on = 1;
+> +	pdev->non_compliant_bars = 1;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS2K_APB, loongson_system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_CONF, loongson_system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_LPC, loongson_system_bus_quirk);
+> +
+> +static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *bus = dev->bus;
+> +	struct pci_dev *bridge;
+> +	static const struct pci_device_id bridge_devids[] = {
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> +		{ 0, },
+> +	};
+> +
+> +	/* look for the matching bridge */
+> +	while (!pci_is_root_bus(bus)) {
+> +		bridge = bus->self;
+> +		bus = bus->parent;
+> +		/*
+> +		 * Some Loongson PCIe ports have a h/w limitation of
+> +		 * 256 bytes maximum read request size. They can't handle
+> +		 * anything larger than this. So force this limit on
+> +		 * any devices attached under these ports.
+> +		 */
+> +		if (pci_match_id(bridge_devids, bridge)) {
+> +			if (pcie_get_readrq(dev) > 256) {
+> +				pci_info(dev, "limiting MRRS to 256\n");
+> +				pcie_set_readrq(dev, 256);
+> +			}
+> +			break;
+> +		}
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> +
+>  /*
+>   * The Mellanox Tavor device gives false positive parity errors.  Disable
+>   * parity error reporting.
 > -- 
-> 2.31.1
+> 2.27.0
 > 
