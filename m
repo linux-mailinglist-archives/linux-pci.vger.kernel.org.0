@@ -2,147 +2,255 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2ADD39C4EE
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 04:02:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9974639C5E1
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 06:26:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231258AbhFECEK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Jun 2021 22:04:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38640 "EHLO mail.kernel.org"
+        id S230420AbhFEE2Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 00:28:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21915 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230169AbhFECEK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Jun 2021 22:04:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F26A3613BF
-        for <linux-pci@vger.kernel.org>; Sat,  5 Jun 2021 02:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622858543;
-        bh=d4HA0w75Y3EgqSo8a4akBrGEgJoOn80fFKdqRDslU3w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Dr3ydDrnEwPkuj2Oh5z6jHT5AA3uKZ1jrLy0x2H50pp5q2bNg/oDonm1UmK7Kd3dO
-         Mzv59GeTaVZSaany6XGLn5s0w4mEufc7ajMsWg0yQT2syAe3mk1e0xPaY6oHpMwpqj
-         3UC9PKH8oDNBjXa7MMC3XHLEnXphz+ulL2gIDNfMeBgrC9NwDox4/MGwhngE+XxZuL
-         MOuP/AsSfCkZqK+c6A4k6cKC5FSB58CmJ4F44/2SQFPctYsDm57qsg8wfghBAq9ZJn
-         PzO3O2p43VvlJY/0/SpEmlnCgV78TAbOmkV4+YawJv+kFYzxsgkwg/kgLiZCQsGpW2
-         WcCxkCCZQCnmQ==
-Received: by mail-io1-f47.google.com with SMTP id k16so12092208ios.10
-        for <linux-pci@vger.kernel.org>; Fri, 04 Jun 2021 19:02:22 -0700 (PDT)
-X-Gm-Message-State: AOAM531ZD+loN3JhvKFfZReGsC4L5kpOEKmFJHLdppvHgvjtMmDynSUn
-        6bB/LOgeZ/2tcrYzUMDRr/ap8XR0yueiLl35qxw=
-X-Google-Smtp-Source: ABdhPJxtAQ84yV3VSC9lDgHy0oV6H/0eMYq2wckOvU3SkYO3n6ax/RQYQ8yhqI2IsPZQiDLd/oMmkhPB8xltwMAIxKk=
-X-Received: by 2002:a6b:4105:: with SMTP id n5mr5992888ioa.148.1622858542380;
- Fri, 04 Jun 2021 19:02:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAhV-H5bO5MAshcxo=xehfxU5zMBKep4ebYaLQ1oT8uuTjqoSQ@mail.gmail.com>
- <20210604195646.GA2231573@bjorn-Precision-5520>
-In-Reply-To: <20210604195646.GA2231573@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Sat, 5 Jun 2021 10:02:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6MCGXiO3EcZV2BZi91AiUNsu2aZ=e9g4e2tcVVNOLbfg@mail.gmail.com>
-Message-ID: <CAAhV-H6MCGXiO3EcZV2BZi91AiUNsu2aZ=e9g4e2tcVVNOLbfg@mail.gmail.com>
-Subject: Re: [PATCH] vgaarb: Call vga_arb_device_init() after PCI enumeration
+        id S230414AbhFEE2Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Jun 2021 00:28:25 -0400
+IronPort-SDR: miHi/cSiEM/sji8vRqEsQMXO2wlvweeFgrQg3xMwC7BmBIgCd1cx6+6FGVEYqP3nTEpmsSCjRF
+ LiaM880KR0DA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="204437150"
+X-IronPort-AV: E=Sophos;i="5.83,250,1616482800"; 
+   d="scan'208";a="204437150"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 21:26:38 -0700
+IronPort-SDR: CKVj9xqyDREzjRBnYhX1cLOPh6O9hS7D/4wL+UcNgqURSsoVizn8jt0nqDU2QIwDOgPwosUh05
+ d0kwAuZMSueg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,250,1616482800"; 
+   d="scan'208";a="475677287"
+Received: from lkp-server02.sh.intel.com (HELO 1ec8406c5392) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2021 21:26:36 -0700
+Received: from kbuild by 1ec8406c5392 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lpNtM-0007GV-4p; Sat, 05 Jun 2021 04:26:36 +0000
+Date:   Sat, 05 Jun 2021 12:25:41 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/sysfs] BUILD SUCCESS
+ 14c19b2a40b61b609f68d1d6a5518ebb1c30706f
+Message-ID: <60bafcc5.H4/QP6G/m4NyW2IV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/sysfs
+branch HEAD: 14c19b2a40b61b609f68d1d6a5518ebb1c30706f  PCI/sysfs: Add 'devspec' newline
 
-On Sat, Jun 5, 2021 at 3:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jun 04, 2021 at 12:50:03PM +0800, Huacai Chen wrote:
-> > On Thu, Jun 3, 2021 at 2:31 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
-> > >
-> > > [+cc linux-pci]
-> > >
-> > > On Wed, Jun 2, 2021 at 11:22 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > On Wed, Jun 02, 2021 at 06:36:03PM +0800, Huacai Chen wrote:
-> > > > > On Wed, Jun 2, 2021 at 2:03 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > > > On Tue, Jun 01, 2021 at 07:12:27PM +0200, Greg KH wrote:
-> > > > > > > On Tue, Jun 01, 2021 at 05:56:40PM +0200, Daniel Vetter wrote:
-> > > > > > > > On Fri, May 28, 2021 at 04:26:07PM +0800, Huacai Chen wrote:
-> > > > > > > > > We should call vga_arb_device_init() after PCI enumeration, otherwise it
-> > > > > > > > > may fail to select the default VGA device. Since vga_arb_device_init()
-> > > > > > > > > and PCI enumeration function (i.e., pcibios_init() or acpi_init()) are
-> > > > > > > > > both wrapped by subsys_initcall(), their sequence is not assured. So, we
-> > > > > > > > > use subsys_initcall_sync() instead of subsys_initcall() to wrap vga_arb_
-> > > > > > > > > device_init().
-> > > > > > >
-> > > > > > > Trying to juggle levels like this always fails if you build the code as
-> > > > > > > a module.
-> > > > > > >
-> > > > > > > Why not fix it properly and handle the out-of-order loading by returning
-> > > > > > > a "deferred" error if you do not have your resources yet?
-> > > > > >
-> > > > > > It's not a driver, it's kinda a bolted-on-the-side subsytem of pci. So not
-> > > > > > something you can -EPROBE_DEFER I think, without potentially upsetting the
-> > > > > > drivers that need this.
-> > > > > >
-> > > > > > Which might mean we should move this into pci subsystem proper perhaps?
-> > > > > > Then adding the init call at the right time becomes trivial since we just
-> > > > > > plug it in at the end of pci init.
-> > > > > >
-> > > > > > Also maybe that's how distros avoid this pain, pci is built-in, vgaarb is
-> > > > > > generally a module, problem solved.
-> > > > > >
-> > > > > > Bjorn, would you take this entire vgaarb.c thing? From a quick look I
-> > > > > > don't think it has a drm-ism in it (unlike vga_switcheroo, but that works
-> > > > > > a bit differently and doesn't have this init order issue).
-> > > > > Emmm, this patch cannot handle the hotplug case and module case, it
-> > > > > just handles the case that vgaarb, drm driver and pci all built-in.
-> > > > > But I think this is enough, because the original problem only happens
-> > > > > on very few BMC-based VGA cards (BMC doesn't set the VGA Enable bit on
-> > > > > the bridge, which breaks vgaarb).
-> > > >
-> > > > I'm not talking aout hotplug, just ordering the various pieces correctly.
-> > > > That vgaarb isn't really a driver and also can't really handle hotplug is
-> > > > my point. I guess that got lost a bit?
-> > > >
-> > > > Anyway my proposal is essentially to do a
-> > > >
-> > > > $ git move drivers/gpu/vga/vgaarb.c drivers/pci
-> > > >
-> > > > But I just realized that vgaarb is a bool option, so module isn't possible
-> > > > anyway, and we could fix this by calling vgaarb from pcibios init (with an
-> > > > empty static inline in the header if vgaarb is disabled). That makes the
-> > > > dependency very explicit and guarantees it works correctly.
-> > >
-> > > pcibios_init() is also an initcall and is implemented by every arch.
-> > > I agree that calling vga_arb_device_init() directly from
-> > > pcibios_init() would probably fix this problem, and it would be really
-> > > nice to have it not be an initcall.  But it's also kind of a pain to
-> > > have to update all those copies of pcibios_init(), and I would be
-> > > looking for a way to unify it since it's not really an arch-specific
-> > > thing.
-> > >
-> > > I think the simplest solution, which I suggested earlier [1], would be
-> > > to explicitly call vga_arbiter_add_pci_device() directly from the PCI
-> > > core when it enumerates a VGA device.  Then there's no initcall and no
-> > > need for the BUS_NOTIFY_ADD/DEL_DEVICE stuff.
-> > > vga_arbiter_add_pci_device() could set the default VGA device when it
-> > > is enumerated, and change the default device if we enumerate a
-> > > "better" one.  And hotplug VGA devices would work automatically.
-> > Emm, It seems that your solution has some difficulties to remove the
-> > whole initcall(vga_arb_device_init): we call
-> > vga_arbiter_add_pci_device() in pci_bus_add_device(), the
-> > list_for_each_entry() loop can be moved to
-> > vga_arbiter_check_bridge_sharing(), vga_arb_select_default_device()
-> > can be renamed to vga_arb_update_default_device() and be called in
-> > vga_arbiter_add_pci_device(), but how to handle
-> > misc_register(&vga_arb_device)?
->
-> Might need to keep vga_arb_device_init() as an initcall, but remove
-> everything from it except the misc_register().
-OK, let me try. But I think call  vga_arbiter_add_pci_device() in pci
-core is nearly the same as notifier.
-Anyway, I will send a new patch later.
+elapsed time: 727m
 
-Huacai
+configs tested: 193
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+xtensa                generic_kc705_defconfig
+powerpc                      mgcoge_defconfig
+mips                          rm200_defconfig
+powerpc                        fsp2_defconfig
+arm                           stm32_defconfig
+powerpc                 mpc8540_ads_defconfig
+arc                            hsdk_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                    adder875_defconfig
+powerpc                       ebony_defconfig
+sh                        apsh4ad0a_defconfig
+arm                        keystone_defconfig
+powerpc                    gamecube_defconfig
+mips                      maltasmvp_defconfig
+powerpc                 mpc836x_rdk_defconfig
+mips                           gcw0_defconfig
+powerpc                      obs600_defconfig
+arm                           sama5_defconfig
+mips                    maltaup_xpa_defconfig
+powerpc                       eiger_defconfig
+powerpc                      chrp32_defconfig
+arm                           corgi_defconfig
+um                               alldefconfig
+powerpc                  iss476-smp_defconfig
+mips                     loongson2k_defconfig
+mips                  maltasmvp_eva_defconfig
+m68k                         apollo_defconfig
+m68k                        mvme16x_defconfig
+mips                      maltaaprp_defconfig
+arm                             pxa_defconfig
+arm                         s3c6400_defconfig
+arm                     am200epdkit_defconfig
+arc                              alldefconfig
+ia64                      gensparse_defconfig
+mips                         tb0287_defconfig
+arm                            mmp2_defconfig
+sparc                            alldefconfig
+mips                           rs90_defconfig
+i386                                defconfig
+sh                        edosk7705_defconfig
+arm                         shannon_defconfig
+arm                       omap2plus_defconfig
+mips                        qi_lb60_defconfig
+powerpc                        warp_defconfig
+mips                 decstation_r4k_defconfig
+sparc64                             defconfig
+arm                       versatile_defconfig
+arm                        multi_v5_defconfig
+m68k                           sun3_defconfig
+powerpc                           allnoconfig
+openrisc                            defconfig
+arc                        nsim_700_defconfig
+mips                        bcm47xx_defconfig
+mips                            gpr_defconfig
+mips                           ci20_defconfig
+arm                         hackkit_defconfig
+ia64                                defconfig
+powerpc                     taishan_defconfig
+mips                     cu1830-neo_defconfig
+sh                          urquell_defconfig
+sh                           se7724_defconfig
+mips                        maltaup_defconfig
+arm                         lpc32xx_defconfig
+m68k                          multi_defconfig
+arm                         at91_dt_defconfig
+mips                           jazz_defconfig
+sh                           se7619_defconfig
+powerpc                 mpc832x_rdb_defconfig
+sh                        dreamcast_defconfig
+arm                      integrator_defconfig
+arm                            mps2_defconfig
+arm                          simpad_defconfig
+sh                         ap325rxa_defconfig
+sh                            titan_defconfig
+powerpc                     stx_gp3_defconfig
+sh                          rsk7201_defconfig
+nios2                               defconfig
+powerpc                    klondike_defconfig
+arm                       imx_v6_v7_defconfig
+powerpc                     sbc8548_defconfig
+arm                   milbeaut_m10v_defconfig
+sh                               allmodconfig
+powerpc                      tqm8xx_defconfig
+xtensa                         virt_defconfig
+sh                          sdk7780_defconfig
+arm                            lart_defconfig
+arm                          pxa910_defconfig
+arc                        nsimosci_defconfig
+mips                           ip28_defconfig
+powerpc                       holly_defconfig
+xtensa                              defconfig
+powerpc                     kmeter1_defconfig
+mips                         cobalt_defconfig
+powerpc                   motionpro_defconfig
+m68k                            q40_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                     kilauea_defconfig
+mips                           ip22_defconfig
+riscv                    nommu_k210_defconfig
+alpha                            alldefconfig
+arm                         mv78xx0_defconfig
+xtensa                          iss_defconfig
+mips                       lemote2f_defconfig
+nios2                         3c120_defconfig
+sparc                       sparc32_defconfig
+sh                        sh7785lcr_defconfig
+arm                        multi_v7_defconfig
+m68k                                defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a002-20210604
+x86_64               randconfig-a004-20210604
+x86_64               randconfig-a003-20210604
+x86_64               randconfig-a006-20210604
+x86_64               randconfig-a005-20210604
+x86_64               randconfig-a001-20210604
+i386                 randconfig-a003-20210604
+i386                 randconfig-a006-20210604
+i386                 randconfig-a004-20210604
+i386                 randconfig-a001-20210604
+i386                 randconfig-a005-20210604
+i386                 randconfig-a002-20210604
+i386                 randconfig-a003-20210603
+i386                 randconfig-a006-20210603
+i386                 randconfig-a004-20210603
+i386                 randconfig-a001-20210603
+i386                 randconfig-a002-20210603
+i386                 randconfig-a005-20210603
+x86_64               randconfig-a015-20210603
+x86_64               randconfig-a011-20210603
+x86_64               randconfig-a012-20210603
+x86_64               randconfig-a014-20210603
+x86_64               randconfig-a016-20210603
+x86_64               randconfig-a013-20210603
+i386                 randconfig-a015-20210604
+i386                 randconfig-a013-20210604
+i386                 randconfig-a016-20210604
+i386                 randconfig-a011-20210604
+i386                 randconfig-a014-20210604
+i386                 randconfig-a012-20210604
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-b001-20210604
+x86_64               randconfig-a015-20210604
+x86_64               randconfig-a011-20210604
+x86_64               randconfig-a014-20210604
+x86_64               randconfig-a012-20210604
+x86_64               randconfig-a016-20210604
+x86_64               randconfig-a013-20210604
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
