@@ -2,235 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 060A039CB23
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 23:15:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4875939CB39
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 23:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbhFEVRU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 17:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34416 "EHLO mail.kernel.org"
+        id S230050AbhFEVao (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 17:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229998AbhFEVRU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Jun 2021 17:17:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 63C246138C;
-        Sat,  5 Jun 2021 21:15:31 +0000 (UTC)
+        id S229998AbhFEVao (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Jun 2021 17:30:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0738613DF;
+        Sat,  5 Jun 2021 21:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622927731;
-        bh=Zsr65MFw+GKpFwPBz1qIIPrramPqzvT+hq8OpA/dsw8=;
+        s=k20201202; t=1622928536;
+        bh=PsQ26Njl5e5FiSGX655DWgdW2M0w8QvbGjtn0uJSYSE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PpQkexKXL/HrnTJKDSxtaqT/wuScq4lBKN00VPLB4GQS5Hd78Pno7tx8Hn1dUbUke
-         9ADly4qYdfE4xM6qq15vV0OlkGKuLKOqRzamE3sctih8AHhXmQS8+kFtaUnxeo9BRG
-         SkVGp958M2kqkbUF2wXCW5bGL7Awaz/Lc41moXdFgMydn15rgT2ug3029gUQf1ovqB
-         ls9K+w9se/B02XNEX7OoCKGQXaSJjy4YQ/5ZEp5tT2QRpfi+j+1RdW1j3w7lmo2Ft7
-         +WJoy2w77K1AfEdYtRafzSG5KZLZX7KNUtMoXCG3l+1EYQSPMZhv8O4ZjkGebN74AG
-         /+zjiqT498HgA==
-Date:   Sat, 5 Jun 2021 16:15:29 -0500
+        b=kagaz4poB4OhfnoV+a9yMJItRJdi0D/+Glja7ztcCJaEHY5WLHyC+PMQTKaHdZc0X
+         7gCs8oceFvbUiBh3f7JfPZ6xhLSQVrGNXc6W60y2C8iQ2ai85FilZuwR0QByhVP9fV
+         +qupwNqv8k4wkIqdsy/quJQLM6ymsWCogOZvgxP0P+iBTv5Cs3OWCNoKdpJSOavL6V
+         ukL0YFrl3z/STVdkJf8PJXVXUCz/MhH9H0jSgVTKNyCTta71EJDZP9sH2gjYqTFRxz
+         aCSgw/FgoZMENx5ivnSLcoNIXP5WE08ZrxwKrULQloRFPI2ZYmjY9AskNFfQ0Hq+Mw
+         nVpx5pdVv059Q==
+Date:   Sat, 5 Jun 2021 16:28:54 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
         Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V2 2/4] PCI: Move loongson pci quirks to quirks.c
-Message-ID: <20210605211529.GA2326325@bjorn-Precision-5520>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V2 4/4] PCI: Add quirk for multifunction devices of LS7A
+Message-ID: <20210605212854.GA2324905@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210528071503.1444680-3-chenhuacai@loongson.cn>
+In-Reply-To: <CAAhV-H6t_UpcW3iCYw9iG3NXhZin4Sk-zsORNcrcg8Q=8jiJcw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 28, 2021 at 03:15:01PM +0800, Huacai Chen wrote:
-> Loongson PCH (LS7A chipset) will be used by both MIPS-based and
-> LoongArch-based Loongson processors. MIPS-based Loongson uses FDT
-> but LoongArch-base Loongson uses ACPI, but the driver in drivers/
-> pci/controller/pci-loongson.c is FDT-only. So move the quirks to
-> quirks.c where can be shared by all architectures.
+On Fri, Jun 04, 2021 at 05:59:35PM +0800, Huacai Chen wrote:
+> On Sat, May 29, 2021 at 4:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Rob, previous discussion at
+> > https://lore.kernel.org/r/20210514080025.1828197-5-chenhuacai@loongson.cn]
+> >
+> > On Fri, May 28, 2021 at 03:15:03PM +0800, Huacai Chen wrote:
+> > > From: Jianmin Lv <lvjianmin@loongson.cn>
+> > >
+> > > In LS7A, multifunction device use same PCI PIN (because the PIN register
+> > > report the same INTx value to each function) but we need different IRQ
+> > > for different functions, so add a quirk to fix it for standard PCI PIN
+> > > usage.
+> >
+> > This seems to say that PCI_INTERRUPT_PIN reports the same value for
+> > all functions, but the functions actually use *different* IRQs.
+> >
+> > That would be a hardware defect, and of course, we can work around
+> > such things.  It's always better if you can assure us that the defect
+> > will be fixed in future designs so we don't have to update the
+> > workaround with more device IDs.
+>
+> Yes, you are right, and new hardware will not need this workaround.
 > 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/pci/controller/pci-loongson.c | 69 ---------------------------
->  drivers/pci/quirks.c                  | 69 +++++++++++++++++++++++++++
->  2 files changed, 69 insertions(+), 69 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 48169b1e3817..88066e9db69e 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -12,15 +12,6 @@
->  
->  #include "../pci.h"
->  
-> -/* Device IDs */
-> -#define DEV_PCIE_PORT_0	0x7a09
-> -#define DEV_PCIE_PORT_1	0x7a19
-> -#define DEV_PCIE_PORT_2	0x7a29
-> -
-> -#define DEV_LS2K_APB	0x7a02
-> -#define DEV_LS7A_CONF	0x7a10
-> -#define DEV_LS7A_LPC	0x7a0c
-> -
->  #define FLAG_CFG0	BIT(0)
->  #define FLAG_CFG1	BIT(1)
->  #define FLAG_DEV_FIX	BIT(2)
-> @@ -32,66 +23,6 @@ struct loongson_pci {
->  	u32 flags;
->  };
->  
-> -/* Fixup wrong class code in PCIe bridges */
-> -static void bridge_class_quirk(struct pci_dev *dev)
-> -{
-> -	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> -}
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> -			DEV_PCIE_PORT_0, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> -			DEV_PCIE_PORT_1, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> -			DEV_PCIE_PORT_2, bridge_class_quirk);
-> -
-> -static void system_bus_quirk(struct pci_dev *pdev)
-> -{
-> -	/*
-> -	 * The address space consumed by these devices is outside the
-> -	 * resources of the host bridge.
-> -	 */
-> -	pdev->mmio_always_on = 1;
-> -	pdev->non_compliant_bars = 1;
-> -}
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> -			DEV_LS2K_APB, system_bus_quirk);
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> -			DEV_LS7A_CONF, system_bus_quirk);
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> -			DEV_LS7A_LPC, system_bus_quirk);
-> -
-> -static void loongson_mrrs_quirk(struct pci_dev *dev)
-> -{
-> -	struct pci_bus *bus = dev->bus;
-> -	struct pci_dev *bridge;
-> -	static const struct pci_device_id bridge_devids[] = {
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> -		{ 0, },
-> -	};
-> -
-> -	/* look for the matching bridge */
-> -	while (!pci_is_root_bus(bus)) {
-> -		bridge = bus->self;
-> -		bus = bus->parent;
-> -		/*
-> -		 * Some Loongson PCIe ports have a h/w limitation of
-> -		 * 256 bytes maximum read request size. They can't handle
-> -		 * anything larger than this. So force this limit on
-> -		 * any devices attached under these ports.
-> -		 */
-> -		if (pci_match_id(bridge_devids, bridge)) {
-> -			if (pcie_get_readrq(dev) > 256) {
-> -				pci_info(dev, "limiting MRRS to 256\n");
-> -				pcie_set_readrq(dev, 256);
-> -			}
-> -			break;
-> -		}
-> -	}
-> -}
-> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> -
->  static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
->  				unsigned int devfn, int where)
->  {
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index dcb229de1acb..66e4bea69431 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -205,6 +205,75 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
->  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
->  
-> +/* Loongson-related quirks */
-> +#define DEV_PCIE_PORT_0	0x7a09
-> +#define DEV_PCIE_PORT_1	0x7a19
-> +#define DEV_PCIE_PORT_2	0x7a29
-> +
-> +#define DEV_LS2K_APB	0x7a02
-> +#define DEV_LS7A_CONF	0x7a10
-> +#define DEV_LS7A_LPC	0x7a0c
+> > But Jiaxun suggests [1] that the FDT says all the interrupts go to the
+> > same IRQ.
+> >
+> > So I don't know what's going on here.  We can certainly work around a
+> > problem, but of course, this quirk would apply for both FDT and
+> > ACPI-based systems, and the FDT systems seem to work without it.
+>
+> Emmm, I have discussed with Jiaxun, and maybe you missed something. He
+> means that ACPI systems need this workaround, and FDT systems don't
+> need this. But this workaround doesn't break FDT systems, because FDT
+> systems simply ignore the workaround (interrupts are specified in .dts
+> file).
 
-If you're moving these from device-specific file to a generic file,
-these #defines now need to have device-specific names.
+I'm definitely missing something :)
 
-But these appear to be for built-in hardware that can only be present
-in Loongson (I assume mips?) systems.  If that's the case, maybe they
-should go to a mips-specific file like arch/mips/pci/quirks.c?
+Part of my confusion is because generally both ACPI and DT describe
+fixed parts of the platform.  Usually neither describes PCI devices
+because PCI includes ways to discover devices and discover the
+resources (memory, IRQs, etc) they use.
 
-But I see you see you mention LoongArch above, so I don't know if
-that's part of arch/mips, or if there's an arch/loongson coming, or
-what.
+So the general picture is that ACPI and DT describe the parts of
+interrupt routing that can not be discovered from the hardware itself.
+The PCI IRQ pin *can* be discovered from the hardware, so I expected
+both ACPI and DT to rely on it.
 
-> +/* Fixup wrong class code in PCIe bridges */
-> +static void loongson_bridge_class_quirk(struct pci_dev *dev)
-> +{
-> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_0, loongson_bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_1, loongson_bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_2, loongson_bridge_class_quirk);
-> +
-> +static void loongson_system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +	/*
-> +	 * The address space consumed by these devices is outside the
-> +	 * resources of the host bridge.
-> +	 */
-> +	pdev->mmio_always_on = 1;
-> +	pdev->non_compliant_bars = 1;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS2K_APB, loongson_system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_CONF, loongson_system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_LPC, loongson_system_bus_quirk);
-> +
-> +static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +{
-> +	struct pci_bus *bus = dev->bus;
-> +	struct pci_dev *bridge;
-> +	static const struct pci_device_id bridge_devids[] = {
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> +		{ 0, },
-> +	};
-> +
-> +	/* look for the matching bridge */
-> +	while (!pci_is_root_bus(bus)) {
-> +		bridge = bus->self;
-> +		bus = bus->parent;
-> +		/*
-> +		 * Some Loongson PCIe ports have a h/w limitation of
-> +		 * 256 bytes maximum read request size. They can't handle
-> +		 * anything larger than this. So force this limit on
-> +		 * any devices attached under these ports.
-> +		 */
-> +		if (pci_match_id(bridge_devids, bridge)) {
-> +			if (pcie_get_readrq(dev) > 256) {
-> +				pci_info(dev, "limiting MRRS to 256\n");
-> +				pcie_set_readrq(dev, 256);
-> +			}
-> +			break;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +
->  /*
->   * The Mellanox Tavor device gives false positive parity errors.  Disable
->   * parity error reporting.
-> -- 
-> 2.27.0
-> 
+But this quirk applies to [0014:7a09], [0014:7a19], and [0014:7a29],
+which look like they are PCIe Root Ports, and your DT ([2]) *does*
+seem to describe them with interrupt descriptions.  So I assume the
+reason DT systems don't care about this quirk is because they use this
+IRQ info from DT and ignore the PCI_INTERRUPT_PIN?
+
+If DT systems ignore the quirk, as you said above, I assume that means
+that DT overwrites dev->pin sometime *after* the quirk executes?  Or
+there's some DT check that means we ignore dev->pin?  Can you point me
+to whatever this mechanism is?
+
+The quirk is not specific to ACPI or DT, so it's not clear to me how
+it stays out of DT's way.
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/boot/dts/loongson/ls7a-pch.dtsi?id=v5.12#n229
+
+> > [1] https://lore.kernel.org/r/933330cb-9d86-2b22-9bed-64becefbe2d1@flygoat.com
+> >
+> > > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > >  drivers/pci/quirks.c | 17 +++++++++++++++++
+> > >  1 file changed, 17 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index 10b3b2057940..6ab4b3bba36b 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -242,6 +242,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> > >                       DEV_LS7A_LPC, loongson_system_bus_quirk);
+> > >
+> > > +static void loongson_pci_pin_quirk(struct pci_dev *dev)
+> > > +{
+> > > +     dev->pin = 1 + (PCI_FUNC(dev->devfn) & 3);
+> > > +}
+> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
+> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
+> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
+> > > +
+> > >  static void loongson_mrrs_quirk(struct pci_dev *dev)
+> > >  {
+> > >       struct pci_bus *bus = dev->bus;
+> > > --
+> > > 2.27.0
+> > >
