@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA1839C6FE
+	by mail.lfdr.de (Postfix) with ESMTP id 6625139C6FF
 	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 11:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbhFEJTm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S229881AbhFEJTm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 5 Jun 2021 05:19:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:7814 "EHLO mga09.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:42966 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229881AbhFEJTm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S229892AbhFEJTm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Sat, 5 Jun 2021 05:19:42 -0400
-IronPort-SDR: 1ZBbli7pBbGrXTTl5sOGkCEp/+3BmSMwCz4b0cfAaKSWfRCnAAR9dyITYHwTRO6EYCrrMdETm5
- EmKo138wsbYg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="204398576"
+IronPort-SDR: hmnrm36OJ5gTgFewfKxgFy0s22hNYYczjCZoaE857OS5cD7XRmWJdIqfJOTCiY3Bfdhimy1Hqw
+ kp5289EwN1tw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="265583752"
 X-IronPort-AV: E=Sophos;i="5.83,250,1616482800"; 
-   d="scan'208";a="204398576"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2021 02:17:54 -0700
-IronPort-SDR: fUWsUqS1ukQtJpJEAzdVbK8qGtKwydDWYN7v+uaHZ4n/DlhfUt9sGv3DtqN9zVFJb7gScfwPlr
- fQ7SahPddgBg==
+   d="scan'208";a="265583752"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2021 02:17:54 -0700
+IronPort-SDR: oUalgT9pA3d8XMT+ZoSIbq08eBTwsT2WXPUwYT8KNgMxf4qFb2oOudxsUzfAE9C0MiyH00Isc3
+ zYV2rdmPttog==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,250,1616482800"; 
-   d="scan'208";a="618503213"
+   d="scan'208";a="636807031"
 Received: from lkp-server02.sh.intel.com (HELO 1ec8406c5392) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jun 2021 02:17:53 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2021 02:17:53 -0700
 Received: from kbuild by 1ec8406c5392 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lpSRE-0007Ll-Cx; Sat, 05 Jun 2021 09:17:52 +0000
-Date:   Sat, 05 Jun 2021 17:17:06 +0800
+        id 1lpSRE-0007Lr-J1; Sat, 05 Jun 2021 09:17:52 +0000
+Date:   Sat, 05 Jun 2021 17:17:10 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/resource] BUILD SUCCESS
- 65db04053efea3f3e412a7e0cc599962999c96b4
-Message-ID: <60bb4112.xc/tKqrXXruiyEyj%lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS b3e91145f897ea07d44753e306bddc6afedfa7a3
+Message-ID: <60bb4116.5m+QAOZnyRnkety3%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,8 +42,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/resource
-branch HEAD: 65db04053efea3f3e412a7e0cc599962999c96b4  PCI: Coalesce host bridge contiguous apertures
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: b3e91145f897ea07d44753e306bddc6afedfa7a3  Merge branch 'remotes/lorenzo/pci/xgene'
 
 elapsed time: 726m
 
