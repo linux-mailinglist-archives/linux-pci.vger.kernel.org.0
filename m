@@ -2,139 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4875939CB39
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 23:28:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 064AB39CB3E
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jun 2021 23:34:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230050AbhFEVao (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 17:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
+        id S230083AbhFEVgi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 17:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229998AbhFEVao (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Jun 2021 17:30:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D0738613DF;
-        Sat,  5 Jun 2021 21:28:55 +0000 (UTC)
+        id S230010AbhFEVgi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Jun 2021 17:36:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8E20B61355;
+        Sat,  5 Jun 2021 21:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622928536;
-        bh=PsQ26Njl5e5FiSGX655DWgdW2M0w8QvbGjtn0uJSYSE=;
+        s=k20201202; t=1622928889;
+        bh=SgbaIggFv9+4naB82BndY0teY9918UrGh8VLZ2Kwj5k=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kagaz4poB4OhfnoV+a9yMJItRJdi0D/+Glja7ztcCJaEHY5WLHyC+PMQTKaHdZc0X
-         7gCs8oceFvbUiBh3f7JfPZ6xhLSQVrGNXc6W60y2C8iQ2ai85FilZuwR0QByhVP9fV
-         +qupwNqv8k4wkIqdsy/quJQLM6ymsWCogOZvgxP0P+iBTv5Cs3OWCNoKdpJSOavL6V
-         ukL0YFrl3z/STVdkJf8PJXVXUCz/MhH9H0jSgVTKNyCTta71EJDZP9sH2gjYqTFRxz
-         aCSgw/FgoZMENx5ivnSLcoNIXP5WE08ZrxwKrULQloRFPI2ZYmjY9AskNFfQ0Hq+Mw
-         nVpx5pdVv059Q==
-Date:   Sat, 5 Jun 2021 16:28:54 -0500
+        b=f40o9M/MQ15/sbspST4rUF3lPjxB+ajoWnsLy3Q3iHgBtR7Vz5CjRnhEfvSdd9cfH
+         5GncrrzWKBAzlId5De9xgEg69muoP82uF/+L0iJakV/zUu2/hprGubMVYgkN8Mcd+g
+         Py2RM1g3jkIwthfDcaWfj2ZFrpEwIFAtBRJVVEoXDKGF8nPGg4a2kTdBlFxZz+L8mA
+         gNsY6Cqx7Yd20ZrUNry7W4z7RZb/Jw245R18LmXXmiIXXDyUsvVqyDlmEfhGO3lKz5
+         8ntqsxLvxxfUX6ujMcjuIwCyBzdeeRSqLwVs9Xj4s6me7nIp1PL/KyFpyQAPCCS0Ha
+         0EvCdFqPeA/xQ==
+Date:   Sat, 5 Jun 2021 16:34:48 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Huacai Chen <chenhuacai@gmail.com>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+Cc:     huangshuai@loongson.cn, Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
         Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 4/4] PCI: Add quirk for multifunction devices of LS7A
-Message-ID: <20210605212854.GA2324905@bjorn-Precision-5520>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V2 3/4] PCI: Improve the MRRS quirk for LS7A
+Message-ID: <20210605213448.GA2327732@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H6t_UpcW3iCYw9iG3NXhZin4Sk-zsORNcrcg8Q=8jiJcw@mail.gmail.com>
+In-Reply-To: <CAAhV-H4FhW=D0am2QMx+HAMBXiZSap2OTgaBd2QhB-ZVCjzNdg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 04, 2021 at 05:59:35PM +0800, Huacai Chen wrote:
-> On Sat, May 29, 2021 at 4:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Rob, previous discussion at
-> > https://lore.kernel.org/r/20210514080025.1828197-5-chenhuacai@loongson.cn]
-> >
-> > On Fri, May 28, 2021 at 03:15:03PM +0800, Huacai Chen wrote:
-> > > From: Jianmin Lv <lvjianmin@loongson.cn>
-> > >
-> > > In LS7A, multifunction device use same PCI PIN (because the PIN register
-> > > report the same INTx value to each function) but we need different IRQ
-> > > for different functions, so add a quirk to fix it for standard PCI PIN
-> > > usage.
-> >
-> > This seems to say that PCI_INTERRUPT_PIN reports the same value for
-> > all functions, but the functions actually use *different* IRQs.
-> >
-> > That would be a hardware defect, and of course, we can work around
-> > such things.  It's always better if you can assure us that the defect
-> > will be fixed in future designs so we don't have to update the
-> > workaround with more device IDs.
->
-> Yes, you are right, and new hardware will not need this workaround.
+On Fri, Jun 04, 2021 at 05:43:36PM +0800, Huacai Chen wrote:
+> Hi, Bjorn,
 > 
-> > But Jiaxun suggests [1] that the FDT says all the interrupts go to the
-> > same IRQ.
+> On Sat, May 29, 2021 at 4:32 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > >
-> > So I don't know what's going on here.  We can certainly work around a
-> > problem, but of course, this quirk would apply for both FDT and
-> > ACPI-based systems, and the FDT systems seem to work without it.
+> > On Fri, May 28, 2021 at 03:15:02PM +0800, Huacai Chen wrote:
+> > > In new revision of LS7A, some PCIe ports support larger value than 256,
+> > > but their maximum supported MRRS values are not detectable. Moreover,
+> > > the current loongson_mrrs_quirk() cannot avoid devices increasing its
+> > > MRRS after pci_enable_device(). So the only possible way is configure
+> > > MRRS of all devices in BIOS, and add a PCI device flag (PCI_DEV_FLAGS_
+> > > NO_INCREASE_MRRS) to stop the increasing MRRS operations.
+> >
+> > It's still not clear what the problem is.
+> >
+> > As far as I can tell from the PCIe spec, it is legal for an OS to
+> > program any value for MRRS, and it is legal for an endpoint to
+> > generate a Read Request with any size up to its MRRS.  If you
+> > disagree, please cite the relevant section in the spec.
+> >
+> > There is no requirement for the OS to limit the MRRS based on a
+> > restriction elsewhere in the system.  There is no mechanism for the OS
+> > to even discover such a restriction.
+> >
+> > Of course, there is also no requirement that the PCIe Completions
+> > carrying the read data be the same size as the MRRS.  If the non-PCIe
+> > part of the system has a restriction on read burst size, that part of
+> > the system can certainly break up the read and respond with several
+> > PCIe Completions.
+> >
+> > If LS7A can't break up read requests, that sounds like a problem in
+> > the LS7A design.  We should have a description of this erratum.  And
+> > we should have some statement about this being fixed in future
+> > designs, because we don't want to have to update the fixup with the
+> > PCI vendor/device IDs every time new versions come out.
 >
-> Emmm, I have discussed with Jiaxun, and maybe you missed something. He
-> means that ACPI systems need this workaround, and FDT systems don't
-> need this. But this workaround doesn't break FDT systems, because FDT
-> systems simply ignore the workaround (interrupts are specified in .dts
-> file).
+> Thanks for your information, but I think only Mr. Shuai Huang can
+> explain the root cause, too.
+> 
+> > I also don't want to rely on some value left in MRRS by BIOS.  If
+> > certain bridges have specific limits on what MRRS can be, the fixup
+> > should have those limits in it.
+>
+> As I know, each port of LS7A has a different maximum MRRS value (Yes,
+> as you said, this is unreasonable in PCIe spec. but it is a fact in
+> LS7A), and also different between hardware revisions. So, the kernel
+> cannot configure it, and relying on BIOS is the only way.
 
-I'm definitely missing something :)
+Maybe we should just set MRRS to the minimum (128 bytes) for
+everything on this platform.
 
-Part of my confusion is because generally both ACPI and DT describe
-fixed parts of the platform.  Usually neither describes PCI devices
-because PCI includes ways to discover devices and discover the
-resources (memory, IRQs, etc) they use.
+The generic MPS/MRRS config is messy enough already, and I'm hesitant
+to add much complication for what seems to be a fairly broken PCIe
+controller.
 
-So the general picture is that ACPI and DT describe the parts of
-interrupt routing that can not be discovered from the hardware itself.
-The PCI IRQ pin *can* be discovered from the hardware, so I expected
-both ACPI and DT to rely on it.
-
-But this quirk applies to [0014:7a09], [0014:7a19], and [0014:7a29],
-which look like they are PCIe Root Ports, and your DT ([2]) *does*
-seem to describe them with interrupt descriptions.  So I assume the
-reason DT systems don't care about this quirk is because they use this
-IRQ info from DT and ignore the PCI_INTERRUPT_PIN?
-
-If DT systems ignore the quirk, as you said above, I assume that means
-that DT overwrites dev->pin sometime *after* the quirk executes?  Or
-there's some DT check that means we ignore dev->pin?  Can you point me
-to whatever this mechanism is?
-
-The quirk is not specific to ACPI or DT, so it's not clear to me how
-it stays out of DT's way.
-
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/boot/dts/loongson/ls7a-pch.dtsi?id=v5.12#n229
-
-> > [1] https://lore.kernel.org/r/933330cb-9d86-2b22-9bed-64becefbe2d1@flygoat.com
+> > loongson_mrrs_quirk() doesn't look efficient.  We should not have to
+> > run the fixup for *every* PCI device in the system.  Also, we should
+> > not mark every *device* below an LS7A, because it's not the devices
+> > that are defective.
 > >
-> > > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> > If it's the root port or the host bridge that's defective, we should
+> > mark *that*, e.g., something along the lines of how quirk_no_ext_tags()
+> > works.
+> OK, I'll improve my code.
+> 
+> Huacai
+> >
 > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > > > ---
-> > >  drivers/pci/quirks.c | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
+> > >  drivers/pci/pci.c    | 5 +++++
+> > >  drivers/pci/quirks.c | 6 ++++++
+> > >  include/linux/pci.h  | 2 ++
+> > >  3 files changed, 13 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index b717680377a9..6f0d2f5b6f30 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -5802,6 +5802,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+> > >
+> > >       v = (ffs(rq) - 8) << 12;
+> > >
+> > > +     if (dev->dev_flags & PCI_DEV_FLAGS_NO_INCREASE_MRRS) {
+> > > +             if (rq > pcie_get_readrq(dev))
+> > > +                     return -EINVAL;
+> > > +     }
+> > > +
+> > >       ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+> > >                                                 PCI_EXP_DEVCTL_READRQ, v);
 > > >
 > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 10b3b2057940..6ab4b3bba36b 100644
+> > > index 66e4bea69431..10b3b2057940 100644
 > > > --- a/drivers/pci/quirks.c
 > > > +++ b/drivers/pci/quirks.c
-> > > @@ -242,6 +242,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > >                       DEV_LS7A_LPC, loongson_system_bus_quirk);
-> > >
-> > > +static void loongson_pci_pin_quirk(struct pci_dev *dev)
-> > > +{
-> > > +     dev->pin = 1 + (PCI_FUNC(dev->devfn) & 3);
-> > > +}
-> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
-> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
-> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
+> > > @@ -264,6 +264,12 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+> > >                * any devices attached under these ports.
+> > >                */
+> > >               if (pci_match_id(bridge_devids, bridge)) {
+> > > +                     dev->dev_flags |= PCI_DEV_FLAGS_NO_INCREASE_MRRS;
 > > > +
-> > >  static void loongson_mrrs_quirk(struct pci_dev *dev)
-> > >  {
-> > >       struct pci_bus *bus = dev->bus;
+> > > +                     if (pcie_bus_config == PCIE_BUS_DEFAULT ||
+> > > +                         pcie_bus_config == PCIE_BUS_TUNE_OFF)
+> > > +                             break;
+> > > +
+> > >                       if (pcie_get_readrq(dev) > 256) {
+> > >                               pci_info(dev, "limiting MRRS to 256\n");
+> > >                               pcie_set_readrq(dev, 256);
+> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > index c20211e59a57..7fb2072a83b8 100644
+> > > --- a/include/linux/pci.h
+> > > +++ b/include/linux/pci.h
+> > > @@ -227,6 +227,8 @@ enum pci_dev_flags {
+> > >       PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+> > >       /* Don't use Relaxed Ordering for TLPs directed at this device */
+> > >       PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> > > +     /* Don't increase BIOS's MRRS configuration */
+> > > +     PCI_DEV_FLAGS_NO_INCREASE_MRRS = (__force pci_dev_flags_t) (1 << 12),
+> > >  };
+> > >
+> > >  enum pci_irq_reroute_variant {
 > > > --
 > > > 2.27.0
 > > >
