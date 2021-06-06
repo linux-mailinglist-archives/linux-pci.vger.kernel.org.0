@@ -2,440 +2,1014 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F39E339CBCA
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jun 2021 02:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E2E39CC60
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jun 2021 05:08:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbhFFAGB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Jun 2021 20:06:01 -0400
-Received: from mail-bn8nam12on2047.outbound.protection.outlook.com ([40.107.237.47]:51361
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230084AbhFFAGA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Jun 2021 20:06:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zb23E4Nq4gp5/mwBedaHDPpBFhyxS09oJRteG2STcNiKUH+ZnJgTUcIeBeRvwmGMP28bSYO2szQsNKH1mHJoUZ7b9QrM+s1oafi7HAVifb3SL0cksNmgwO5tIGjkDCjnjX4X2brV/TLi+ORJPpjuS+X+g+Qlcjps/+gfH4mztS7725CYccj+4ovkMANYzeKv3nWkk43jV2l2e4N6z9MwD+jUsI4UlG0ZKyLBs2LWDDtdueURneliKkOGqKwAbpGSGZgrtwB2uamecRTVUiqet+7dQ4Z4rXxp0y8QH2ugi1QyrZ6TtsDsXgVcPLt8poGrksEqL88SEp7N+pIdipxljQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toravh5CONJ2Bv5nbQv4zFXFq1TzPUi+jzrE0lz2nxY=;
- b=YeeNmri2gmn7Prsg3Nkem3V8+GGmdtfN6WtdpqdfsbDFKkWzTlDsvZQfzsIlwJodj/bEyvtsEVtsEfyQ0HgX0XunMw2wLrsajTK4Dk4gwdKRKT/vC6WkkRNoPbNmAa6dioZsn81pNkYXFk7ucmh6yPP+ZyMAEm6CRvYtDCa8VoUj/c9Z6+bJi7LqdmpF61Gt9i6QLGOv7+NR89F8wLXjJTlDA1W6Z7vzEWtPV92UembIt5VriNBLANxg3KhhC5MM9m2veB5uiYkSAQWLORR3w5++1iuqD3/wOliEQ8n0OnOGR+CRSwzciHY8L3t0Hy7Wf+W+y1n49jqPGaCe4tPWkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toravh5CONJ2Bv5nbQv4zFXFq1TzPUi+jzrE0lz2nxY=;
- b=XukbS2KzOan44Kjr9mX1PKJZ0WRc77NBmVQqu4TIA20WIpJ4EvcdpE8IMuwplYJL9MXfWOhmW2nAYg0bnGyRLjRMPoY3HZb8cP+gWEfogipZOtAPil3VyDU+KaN39suDbATqIHWoJTRbKLPsQrLClpF3sO9S+ZTe7Pe7y/e71CyB09PDeH0jPYPmJCIxDaBBG49n6hk30t0MOmmxJR3RPLWMgASjkdIrbjGVJLJCMrRizfhMtgX5kyp4o7vPjRJYnQQ99H3Qtp3bg1yLf7y7pUw7Nxedr2n72D0XxZ7V1iW1lWxKsdEovDxJbARorbcEc2TqGfUXsLk0THyKtctWWg==
-Received: from CO2PR04CA0198.namprd04.prod.outlook.com (2603:10b6:104:5::28)
- by DM6PR12MB4747.namprd12.prod.outlook.com (2603:10b6:5:30::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.21; Sun, 6 Jun
- 2021 00:04:10 +0000
-Received: from CO1NAM11FT034.eop-nam11.prod.protection.outlook.com
- (2603:10b6:104:5:cafe::b2) by CO2PR04CA0198.outlook.office365.com
- (2603:10b6:104:5::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.20 via Frontend
- Transport; Sun, 6 Jun 2021 00:04:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT034.mail.protection.outlook.com (10.13.174.248) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4195.22 via Frontend Transport; Sun, 6 Jun 2021 00:04:09 +0000
-Received: from [10.20.112.58] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 6 Jun
- 2021 00:04:07 +0000
-From:   Shanker R Donthineni <sdonthineni@nvidia.com>
-Subject: Re: [PATCH v5 5/7] PCI: Add support for a function level reset based
- on _RST method
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <alex.williamson@redhat.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20210605205317.GA2254430@bjorn-Precision-5520>
-Message-ID: <5d1b9b9b-568a-d581-8938-cac174a22f7a@nvidia.com>
-Date:   Sat, 5 Jun 2021 19:04:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S230105AbhFFDKH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Jun 2021 23:10:07 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:37694 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230060AbhFFDKH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Jun 2021 23:10:07 -0400
+Received: by mail-ot1-f53.google.com with SMTP id v19-20020a0568301413b0290304f00e3d88so13228479otp.4
+        for <linux-pci@vger.kernel.org>; Sat, 05 Jun 2021 20:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6Wsat7eP8HtEfsofQL+T4hJ8ocHdPUSVfI5SXjnpGYE=;
+        b=duqQQRZtaZ871RnZba2nRurlalvdbuy2eu8TvugQGNraXXtJsOrU57TVGRSt97EuYt
+         e7U6r6dgGifS/+VnFIfE1ouhn4JKguEiidTJ1ewV0UN1mZXoTEU9CIQvRDQmrMDv3Y0D
+         +vI6wUaZX2pT0C3NqDtoyIVstdhSYiGP9lPf6fwSHTvwAGnq5SNrJ5Nj79k6rYr08jIu
+         XMIt0ydJTCcnePvtcjtvkj8ocx2Fwic6a6zUcWvhAhFpqUNwjz/3WwSsyZ7tbdT25iCo
+         w1SLPPoMB4cJlD030u0Zol8PGl8dYUQgTyndV70E488EVGib/WRXR7mbDYkDYbEDXe3E
+         3LRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6Wsat7eP8HtEfsofQL+T4hJ8ocHdPUSVfI5SXjnpGYE=;
+        b=FOyQfU1BIFg+cW7K/sTz1PmX3OYX8qKN8+99GQWJ+SpxXke0wECE/iB38ZJ2tibSky
+         I+5TfSIdVS+9oAw8ZJ265ywTIkjxY8O+sI58huwl7XJOk9/6RjLSCav3S9SxZXpQItgS
+         zJiPxgW8tse2v1b9/7xGiN45Odp2EVCCePZmWR1mIpjVxf4GIs7xkHUg6NF0F+B3SdFH
+         wbAiufZtu9JcawEqjiNS3jg86p9YJjIVAKut9Pu/T8KnZXcFw8IsWY5fpfxLXjavLXtJ
+         lpGIhGo9poap59IRWMTF5jcqAh4b91gkBYV5+khXSBhmjmEImv82TdpbFLS/cfe4g/f6
+         MmeA==
+X-Gm-Message-State: AOAM531tNyX1pff3I+l8L5yQC8yuFtLyS1v7R2M+Ac+MsuheZftunaKp
+        eRQDlohk3rAbHuleBVdl/yCaBqE8HsbWgw==
+X-Google-Smtp-Source: ABdhPJzqCBPqCigE1Twew11TDL2AKqpD76B8hF3RU+JPaMRGLTt1YmKYQfxh+LOu+1qsW2mnYvGH2g==
+X-Received: by 2002:a05:6830:717:: with SMTP id y23mr9155647ots.174.1622948837761;
+        Sat, 05 Jun 2021 20:07:17 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id b6sm1424036oic.12.2021.06.05.20.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jun 2021 20:07:17 -0700 (PDT)
+Date:   Sat, 5 Jun 2021 22:07:15 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Siddartha Mohanadoss <smohanad@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] PCI: dwc: Add Qualcomm PCIe Endpoint controller
+ driver
+Message-ID: <YLw744UeM6fj/xoS@builder.lan>
+References: <20210603103814.95177-1-manivannan.sadhasivam@linaro.org>
+ <20210603103814.95177-3-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20210605205317.GA2254430@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 81617498-62a6-4fd4-307b-08d9287e9c0e
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4747:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB47473AE59B8E97209D2DDB32C7399@DM6PR12MB4747.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:597;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lqMcKa+eKzgOUcDwBZv5RG4kBSlKFauI9CD4Rp1Avtzsvx7fji2mBiQGfWbmVMSc9oGN/ZUyaila6j3iNjafCLWEq+vtjiCehtqYzScSwP70/k5aVqhQ1DdzkBjNiVwPrPTAzkYydqGb5SDS8ILnTC5p2z7yLXNl23D+cSzfZRLtjFuMzZgsgJezpfzaXqB/mYyUhZP6yuyoe3IpqiL/zzkqpY1qa0vsc8kZa2hMHdgDhE+9+wMVNxFhqk1RwNEtZVWBrO9gXcvNonjUOG7H5NLWgw1BNGlnLbvRTmYpHOAxi65aM7Z2nfdHajk+JI32Oa6GdvpBYeqhBjXrShvJK8vTw8WSmjNyuHsFb/ymIqJclNel2Bg0PzoGqXARlrMAYGPYtf1MdUSvo1ppb13X4oxvT370iApJWc3xfLIx0yQ1oLhPkogzyppTENETaU1DhDkK3xPSUhP5rLZhuJpU1fkJhfLkIKNSpMiaA7906GdE7vWP4MM0EIGimf8kh0wNC3Dzpb/58z1yXUDP+wP16F7gDSl7tWwa/KeleX+2EOk4RYz0ubxN4UOHvORo13Tb+gW0wrBb5iazD38aYCYsjO4mjhxKirid9/WBzSY8mty98Cf5mCWscD+v5lcQNz4W8Z/WusutwhO7+WWemKo4PiL5l9mTE1gA4z1m5lxeHPSVbT+YCVGSnGZyBh5pTamI
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(39860400002)(136003)(46966006)(36840700001)(26005)(2906002)(16576012)(316002)(53546011)(30864003)(16526019)(54906003)(110136005)(5660300002)(186003)(47076005)(31686004)(31696002)(36860700001)(86362001)(7416002)(82740400003)(336012)(7636003)(4326008)(8936002)(36756003)(478600001)(8676002)(2616005)(36906005)(70206006)(70586007)(356005)(82310400003)(426003)(83380400001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2021 00:04:09.7698
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81617498-62a6-4fd4-307b-08d9287e9c0e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT034.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4747
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210603103814.95177-3-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Thu 03 Jun 05:38 CDT 2021, Manivannan Sadhasivam wrote:
 
-On 6/5/21 3:53 PM, Bjorn Helgaas wrote:
-> Mention ACPI in the subject, e.g.,
->
->   PCI: Add support for ACPI _RST reset method
-Will change in the next patch.
-> On Sun, May 30, 2021 at 12:55:25AM +0530, Amey Narkhede wrote:
->> From: Shanker Donthineni <sdonthineni@nvidia.com>
->>
->> The _RST is a standard method specified in the ACPI specification. It
->> provides a function level reset when it is described in the acpi_device
->> context associated with PCI-device.
->>
->> Implement a new reset function pci_dev_acpi_reset() for probing RST
->> method and execute if it is defined in the firmware. The ACPI binding
->> information is available only after calling device_add(). To consider
->> _RST method, move pci_init_reset_methods() to end of pci_device_add()
->> and craete two sysfs entries reset & reset_methond from
->> pci_create_sysfs_dev_files()
-> s/craete/create/
-> s/reset_methond/reset_method/
-Will fix it.
->> The default priority of the acpi reset is set to below device-specific
->> and above hardware resets.
-> s/acpi/ACPI/
-Will fix it.
->> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
->> Reviewed-by: Sinan Kaya <okaya@kernel.org>
->> ---
->>  drivers/pci/pci-sysfs.c | 23 ++++++++++++++++++++---
->>  drivers/pci/pci.c       | 30 ++++++++++++++++++++++++++++++
->>  drivers/pci/probe.c     |  2 +-
->>  include/linux/pci.h     |  2 +-
->>  4 files changed, 52 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index 04b3d6565..b332d7923 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -1482,12 +1482,30 @@ static const struct attribute_group pci_dev_reset_attr_group = {
->>       .is_visible = pci_dev_reset_attr_is_visible,
->>  };
->>
->> +const struct attribute_group *pci_dev_reset_groups[] = {
->> +     &pci_dev_reset_attr_group,
->> +     &pci_dev_reset_method_attr_group,
->> +     NULL,
->> +};
-> These should be static sysfs attributes if possible, e.g., see
-> e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute").
-> pci_create_sysfs_dev_files() will soon be removed completely.
->
->>  int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->>  {
->> +     int retval;
->> +
->>       if (!sysfs_initialized)
->>               return -EACCES;
->>
->> -     return pci_create_resource_files(pdev);
->> +     retval = pci_create_resource_files(pdev);
->> +     if (retval)
->> +             return retval;
->> +
->> +     retval = device_add_groups(&pdev->dev, pci_dev_reset_groups);
->> +     if (retval) {
->> +             pci_remove_resource_files(pdev);
->> +             return retval;
->> +     }
->> +
->> +     return 0;
->>  }
->>
->>  /**
->> @@ -1501,6 +1519,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
->>       if (!sysfs_initialized)
->>               return;
->>
->> +     device_remove_groups(&pdev->dev, pci_dev_reset_groups);
->>       pci_remove_resource_files(pdev);
->>  }
->>
->> @@ -1594,8 +1613,6 @@ const struct attribute_group *pci_dev_groups[] = {
->>       &pci_dev_group,
->>       &pci_dev_config_attr_group,
->>       &pci_dev_rom_attr_group,
->> -     &pci_dev_reset_attr_group,
->> -     &pci_dev_reset_method_attr_group,
->>       &pci_dev_vpd_attr_group,
->>  #ifdef CONFIG_DMI
->>       &pci_dev_smbios_attr_group,
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index bbed852d9..4a7019d0b 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -5115,6 +5115,35 @@ static void pci_dev_restore(struct pci_dev *dev)
->>               err_handler->reset_done(dev);
->>  }
->>
->> +/**
->> + * pci_dev_acpi_reset - do a function level reset using _RST method
->> + * @dev: device to reset
->> + * @probe: check if _RST method is included in the acpi_device context.
->> + */
->> +static int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
->> +{
->> +#ifdef CONFIG_ACPI
->> +     acpi_handle handle = ACPI_HANDLE(&dev->dev);
->> +
->> +     /* Return -ENOTTY if _RST method is not included in the dev context */
->> +     if (!handle || !acpi_has_method(handle, "_RST"))
->> +             return -ENOTTY;
->> +
->> +     /* Return 0 for probe phase indicating that we can reset this device */
->> +     if (probe)
->> +             return 0;
->> +
->> +     /* Invoke _RST() method to perform a function level reset */
-> Superfluous comment.  Actually all the single-line comments here are
-> superfluous.
-Will remove in the next patch.
->> +     if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
->> +             pci_warn(dev, "Failed to reset the device\n");
-> The message should mention the type of reset, e.g., "ACPI _RST failed ..."
->
-Will change to pci_warn(dev, "ACPI _RST failed\n");
->> +             return -EINVAL;
->> +     }
->> +     return 0;
->> +#else
->> +     return -ENOTTY;
->> +#endif
->> +}
->> +
->>  /*
->>   * The ordering for functions in pci_reset_fn_methods
->>   * is required for reset_methods byte array defined
->> @@ -5122,6 +5151,7 @@ static void pci_dev_restore(struct pci_dev *dev)
->>   */
->>  const struct pci_reset_fn_method pci_reset_fn_methods[] = {
->>       { &pci_dev_specific_reset, .name = "device_specific" },
->> +     { &pci_dev_acpi_reset, .name = "acpi" },
->>       { &pcie_reset_flr, .name = "flr" },
->>       { &pci_af_flr, .name = "af_flr" },
->>       { &pci_pm_reset, .name = "pm" },
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 90fd4f61f..eeab791a0 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -2404,7 +2404,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
->>       pci_rcec_init(dev);             /* Root Complex Event Collector */
->>
->>       pcie_report_downtraining(dev);
->> -     pci_init_reset_methods(dev);
->>  }
->>
->>  /*
->> @@ -2495,6 +2494,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->>       dev->match_driver = false;
->>       ret = device_add(&dev->dev);
->>       WARN_ON(ret < 0);
->> +     pci_init_reset_methods(dev);
-> This is a little sketchy.  We shouldn't be doing device config stuff
-> after device_add() because that's when it becomes available for
-> drivers to bind to the device.  If we do anything with the device
-> after that point, we may interfere with a driver.
-The reason I did PCI driver attach/bind is happening from pci_bus_add_device()
-after setting 'dev->match_driver = true'. I thought it's safe to update reset
-methods after calling device_add() and before driver bind happens.
+> Add driver support for Qualcomm PCIe Endpoint controller driver based on
+> the Designware core with added Qualcomm specific wrapper around the
+> core. The driver support is very basic such that it supports only
+> enumeration, PCIe read/write, and MSI. There is no ASPM and PM support
+> for now but these will be added later.
+> 
+> The driver is capable of using the PERST# and WAKE# side-band GPIOs for
+> operation and written on top of the DWC PCI framework.
+> 
+> Co-developed-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> [mani: restructured the driver and fixed several bugs for upstream]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-void pci_bus_add_device(struct pci_dev *dev)
-{
-    int retval;
+Really nice to see this working!
 
-    /*
-     * Can not put in pci_device_add yet because resources
-     * are not assigned yet for some devices.
-     */
-    pcibios_bus_add_device(dev);
-    pci_fixup_device(pci_fixup_final, dev);
-    pci_create_sysfs_dev_files(dev);
-    pci_proc_attach_device(dev);
-    pci_bridge_d3_update(dev);
+> ---
+>  drivers/pci/controller/dwc/Kconfig        |  10 +
+>  drivers/pci/controller/dwc/Makefile       |   1 +
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 780 ++++++++++++++++++++++
+>  3 files changed, 791 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 423d35872ce4..32e735b1fd85 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -180,6 +180,16 @@ config PCIE_QCOM
+>  	  PCIe controller uses the DesignWare core plus Qualcomm-specific
+>  	  hardware wrappers.
+>  
+> +config PCIE_QCOM_EP
+> +	bool "Qualcomm PCIe controller - Endpoint mode"
+> +	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	help
+> +	  Say Y here to enable support for the PCIe controllers on Qualcomm SoCs
+> +	  to work in endpoint mode. The PCIe controller uses the DesignWare core
+> +	  plus Qualcomm-specific hardware wrappers.
+> +
+>  config PCIE_ARMADA_8K
+>  	bool "Marvell Armada-8K PCIe controller"
+>  	depends on ARCH_MVEBU || COMPILE_TEST
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index eca805c1a023..abb27642d46b 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
+>  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+>  obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+> +obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+>  obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> new file mode 100644
+> index 000000000000..b68511bacc2a
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -0,0 +1,780 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Qualcomm PCIe Endpoint controller driver
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + * Author: Siddartha Mohanadoss <smohanad@codeaurora.org
+> + *
+> + * Copyright (c) 2021, Linaro Ltd.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/reset.h>
+> +#include <linux/delay.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/pm_domain.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +/* PARF registers */
+> +#define PARF_SYS_CTRL				0x00
+> +#define PARF_DB_CTRL				0x10
+> +#define PARF_PM_CTRL				0x20
+> +#define PARF_DEBUG_INT_EN			0x190
+> +#define PARF_AXI_MSTR_RD_HALT_NO_WRITES		0x1a4
+> +#define PARF_AXI_MSTR_WR_ADDR_HALT		0x1a8
+> +#define PARF_Q2A_FLUSH				0x1aC
+> +#define PARF_LTSSM				0x1b0
+> +#define PARF_CFG_BITS				0x210
+> +#define PARF_INT_ALL_STATUS			0x224
+> +#define PARF_INT_ALL_CLEAR			0x228
+> +#define PARF_INT_ALL_MASK			0x22c
+> +#define PARF_SLV_ADDR_MSB_CTRL			0x2c0
+> +#define PARF_DBI_BASE_ADDR			0x350
+> +#define PARF_DBI_BASE_ADDR_HI			0x354
+> +#define PARF_SLV_ADDR_SPACE_SIZE		0x358
+> +#define PARF_SLV_ADDR_SPACE_SIZE_HI		0x35c
+> +#define PARF_ATU_BASE_ADDR			0x634
+> +#define PARF_ATU_BASE_ADDR_HI			0x638
+> +#define PARF_SRIS_MODE				0x644
+> +#define PARF_DEVICE_TYPE			0x1000
+> +#define PARF_BDF_TO_SID_CFG			0x2c00
+> +
+> +/* ELBI registers */
+> +#define ELBI_SYS_STTS				0x08
+> +
+> +/* DBI registers */
+> +#define DBI_CAP_ID_NXT_PTR			0x40
+> +#define DBI_CON_STATUS				0x44
+> +#define DBI_DEVICE_CAPABILITIES			0x74
+> +#define DBI_LINK_CAPABILITIES			0x7c
+> +#define DBI_LINK_CONTROL2_LINK_STATUS2		0xa0
+> +#define DBI_L1SUB_CAPABILITY			0x234
+> +#define DBI_ACK_F_ASPM_CTRL			0x70c
+> +#define DBI_GEN3_RELATED_OFF			0x890
+> +#define DBI_AUX_CLK_FREQ			0xb40
+> +
+> +#define DBI_L0S_ACCPT_LATENCY_MASK		GENMASK(8, 6)
+> +#define DBI_L1_ACCPT_LATENCY_MASK		GENMASK(11, 9)
+> +#define DBI_L0S_EXIT_LATENCY_MASK		GENMASK(14, 12)
+> +#define DBI_L1_EXIT_LATENCY_MASK		GENMASK(17, 15)
+> +#define DBI_ACK_N_FTS_MASK			GENMASK(15, 8)
+> +
+> +/* TCSR registers */
+> +#define TCSR_PCIE_PERST_EN			0x258
+> +#define TCSR_PERST_SEPARATION_ENABLE		0x270
+> +
+> +#define XMLH_LINK_UP				0x400
+> +#define CORE_RESET_TIME_US_MIN			1000
+> +#define CORE_RESET_TIME_US_MAX			1005
+> +#define WAKE_DELAY_US				2000 /* 2 ms */
+> +
+> +#define to_pcie_ep(x)				dev_get_drvdata((x)->dev)
 
-    dev->match_driver = true;     
-    retval = device_attach(&dev->dev);  ---- > PCI driver bind call
+Isn't this also container_of(x, struct qcom_pcie_ep, pci), but without
+the need to assigning and use drvdata?
 
-> I think the problem is that we don't call acpi_bind_one() until
-> device_add().  There's some hackery in pci-acpi.c to deal with a
-> similar problem for something else -- see acpi_pci_bridge_d3().
->
-> I don't know how to fix this yet.  Here's the call graph that I think
-> is relevant:
->
->   pci_scan_single_device
->     pci_scan_device
->       pci_set_of_node
->         dev->dev.of_node = of_pci_find_child_device()  <-- set OF stuff
->     pci_device_add
->       device_add
->         device_platform_notify
->           acpi_platform_notify
->             case KOBJ_ADD:
->               acpi_device_notify
->                 acpi_bind_one
->                   ACPI_COMPANION_SET()       <-- sets ACPI_COMPANION
->       pci_init_reset_methods
->         pci_dev_acpi_reset(PCI_RESET_PROBE)
->           handle = ACPI_HANDLE(&dev->dev)    <-- uses ACPI_COMPANION
->
-> I think it's kind of a general problem that we currently don't have
-> access to the ACPI stuff until *after* device_add().  I included
-> pci_set_of_node() in the graph above because that seems sort of
-> like an OF analogue of what acpi_bind_one() is doing.
->
-> I would really like to do the ACPI_COMPANION setup earlier, maybe
-> at the same time as pci_set_of_node().  But I don't know enough about
-> what acpi_bind_one() does -- there's a lot going on in there.
->
-Yes, it's a general problem ACPI binding information is available only after
-calling device_platform_notify(). There are no exported functions to set
-the ACPI_COMPANION like OF_NODE.
+> +
+> +enum qcom_pcie_ep_link_status {
+> +	QCOM_PCIE_EP_LINK_DISABLED,
+> +	QCOM_PCIE_EP_LINK_ENABLED,
+> +	QCOM_PCIE_EP_LINK_UP,
+> +	QCOM_PCIE_EP_LINK_DOWN,
+> +};
+> +
+> +enum qcom_pcie_ep_irq {
+> +	QCOM_PCIE_EP_INT_RESERVED,
+> +	QCOM_PCIE_EP_INT_LINK_DOWN,
+> +	QCOM_PCIE_EP_INT_BME,
+> +	QCOM_PCIE_EP_INT_PM_TURNOFF,
+> +	QCOM_PCIE_EP_INT_DEBUG,
+> +	QCOM_PCIE_EP_INT_LTR,
+> +	QCOM_PCIE_EP_INT_MHI_Q6,
+> +	QCOM_PCIE_EP_INT_MHI_A7,
+> +	QCOM_PCIE_EP_INT_DSTATE_CHANGE,
+> +	QCOM_PCIE_EP_INT_L1SUB_TIMEOUT,
+> +	QCOM_PCIE_EP_INT_MMIO_WRITE,
+> +	QCOM_PCIE_EP_INT_CFG_WRITE,
+> +	QCOM_PCIE_EP_INT_BRIDGE_FLUSH_N,
+> +	QCOM_PCIE_EP_INT_LINK_UP,
+> +	QCOM_PCIE_EP_INT_AER_LEGACY,
+> +	QCOM_PCIE_EP_INT_PLS_ERR,
+> +	QCOM_PCIE_EP_INT_PME_LEGACY,
+> +	QCOM_PCIE_EP_INT_PLS_PME,
+> +	QCOM_PCIE_EP_INT_MAX,
 
-Another approach: It simplifies the code logic if we update reset methods
-when creating sysfs entries 'reset' and 'reset_method'. I've verified this
-code and getting an expected behavior.
+Afaict these aren't some logical sequence of numbers, they are bit
+offsets in the interrupt registers. Using #define would make this
+obvious.
 
-root@jetson:~# cat /sys/bus/pci/devices/0009\:01\:00.0/reset_method
-acpi,flr
+> +};
+> +
+> +static struct clk_bulk_data qcom_pcie_ep_clks[] = {
+> +	{ .id = "cfg" },
+> +	{ .id = "aux" },
+> +	{ .id = "bus_master" },
+> +	{ .id = "bus_slave" },
+> +	{ .id = "ref" },
+> +	{ .id = "sleep" },
+> +	{ .id = "slave_q2a" },
+> +};
+> +
+> +struct qcom_pcie_ep {
+> +	struct dw_pcie pci;
+> +
+> +	void __iomem *parf;
+> +	void __iomem *elbi;
+> +	void __iomem *tcsr;
+> +
+> +	struct reset_control *core_reset;
+> +	struct gpio_desc *reset;
+> +	struct gpio_desc *wake;
+> +	struct phy *phy;
+> +
+> +	resource_size_t dbi_phys;
+> +	resource_size_t atu_phys;
+> +
+> +	enum qcom_pcie_ep_link_status link_status;
+> +	int global_irq;
+> +	int perst_irq;
+> +};
+> +
+> +static void qcom_pcie_ep_enable_ltssm(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl(pcie_ep->parf + PARF_LTSSM);
+> +	reg |= BIT(8);
+> +	writel_relaxed(reg, pcie_ep->parf + PARF_LTSSM);
+> +}
+> +
+> +static int qcom_pcie_ep_core_reset(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	struct dw_pcie *pci = &pcie_ep->pci;
+> +	struct device *dev = pci->dev;
+> +	int ret = 0;
 
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1427,7 +1427,7 @@ static umode_t pci_dev_reset_method_attr_is_visible(struct kobject *kobj,
- {
-        struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+No need to initialize ret, when the first access is an assignment.
 
--       if (!pci_reset_supported(pdev))
-+       if (!pci_reset_supported(pdev) && !pci_init_reset_methods(pdev))
-                return 0;
+> +
+> +	ret = reset_control_assert(pcie_ep->core_reset);
+> +	if (ret) {
+> +		dev_err(dev, "Cannot assert core reset\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(CORE_RESET_TIME_US_MIN, CORE_RESET_TIME_US_MAX);
+> +
+> +	ret = reset_control_deassert(pcie_ep->core_reset);
+> +	if (ret) {
+> +		dev_err(dev, "Cannot de-assert core reset\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(CORE_RESET_TIME_US_MIN, CORE_RESET_TIME_US_MAX);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Delatch PERST_EN and PERST_SEPARATION_ENABLE with TCSR to avoid
+> + * device reset during host reboot and hibernation. The driver is
+> + * expected to handle this situation.
+> + */
+> +static void qcom_pcie_ep_configure_tcsr(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	writel_relaxed(0x0, pcie_ep->tcsr + TCSR_PCIE_PERST_EN);
 
-        return a->mode;
-@@ -1471,7 +1471,7 @@ static umode_t pci_dev_reset_attr_is_visible(struct kobject *kobj,
- {
-        struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+Please avoid _relaxed accessor unless there's a strong reason, and if so
+document it.
 
--       if (!pci_reset_supported(pdev))
-+       if (!pci_reset_supported(pdev) && !pci_init_reset_methods(pdev))
-                return 0;
+> +	writel_relaxed(0x0, pcie_ep->tcsr + TCSR_PERST_SEPARATION_ENABLE);
+> +}
+> +
+> +static int qcom_pcie_ep_enable_resources(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	struct dw_pcie *pci = &pcie_ep->pci;
+> +	struct device *dev = pci->dev;
+> +	int ret;
+> +
+> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(qcom_pcie_ep_clks),
+> +				      qcom_pcie_ep_clks);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable clocks: %d\n", ret);
 
-        return a->mode;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index bbed852d977f1..13654255fa3dc 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5115,6 +5115,32 @@ static void pci_dev_restore(struct pci_dev *dev)
-                err_handler->reset_done(dev);
- }
-+/**
-+ * pci_dev_acpi_reset - do a function level reset using _RST method
-+ * @dev: device to reset
-+ * @probe: check if _RST method is included in the acpi_device context.
-+ */
-+static int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
-+{
-+#ifdef CONFIG_ACPI
-+       acpi_handle handle = ACPI_HANDLE(&dev->dev);
-+
-+       if (!handle || !acpi_has_method(handle, "_RST"))
-+               return -ENOTTY;
-+
-+       if (probe)
-+               return 0;
-+
-+       if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
-+               pci_warn(dev, "ACPI _RST failed\n");
-+               return -EINVAL;
-+       }
-+       return 0;
-+#else
-+       return -ENOTTY;
-+#endif
-+}
-+
- /*
-  * The ordering for functions in pci_reset_fn_methods
-  * is required for reset_methods byte array defined
-@@ -5122,6 +5148,7 @@ static void pci_dev_restore(struct pci_dev *dev)
-  */
- const struct pci_reset_fn_method pci_reset_fn_methods[] = {
-        { &pci_dev_specific_reset, .name = "device_specific" },
-+       { &pci_dev_acpi_reset, .name = "acpi" },
-        { &pcie_reset_flr, .name = "flr" },
-        { &pci_af_flr, .name = "af_flr" },
-        { &pci_pm_reset, .name = "pm" },
-@@ -5191,7 +5218,7 @@ EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
-  * Stores reset mechanisms supported by device in reset_methods byte array
-  * which is a member of struct pci_dev.
-  */
--void pci_init_reset_methods(struct pci_dev *dev)
-+bool pci_init_reset_methods(struct pci_dev *dev)
- {
-        int i, rc;
-        u8 prio = PCI_RESET_METHODS_NUM;
-@@ -5209,6 +5236,7 @@ void pci_init_reset_methods(struct pci_dev *dev)
-                        break;
-        }
-        memcpy(dev->reset_methods, reset_methods, sizeof(reset_methods));
-+       return pci_reset_supported(dev);
- }
+clk_bulk_prepare_enable() will print an error indicating which of the
+clocks it failed to prepare/enable, so it's better to skip this.
 
- /**
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 13ec6bd6f4f76..3e871a5a21bbd 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -33,7 +33,7 @@ enum pci_mmap_api {
- int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
-                  enum pci_mmap_api mmap_api);
+As such, you can simply do:
 
--void pci_init_reset_methods(struct pci_dev *dev);
-+bool pci_init_reset_methods(struct pci_dev *dev);
- int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
- int pci_bus_error_reset(struct pci_dev *dev);
--void pci_init_reset_methods(struct pci_dev *dev);
-+bool pci_init_reset_methods(struct pci_dev *dev);
- int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
- int pci_bus_error_reset(struct pci_dev *dev);
+	return clk_bulk_prepare_enable();
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 90fd4f61f3802..275a067d7a282 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2404,7 +2404,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
-        pci_rcec_init(dev);             /* Root Complex Event Collector */
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_ep_disable_resources(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	clk_bulk_disable_unprepare(ARRAY_SIZE(qcom_pcie_ep_clks),
+> +				   qcom_pcie_ep_clks);
+> +}
+> +
+> +static void qcom_pcie_ep_configure_irq(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	u32 val;
+> +
+> +	writel_relaxed(0, pcie_ep->parf + PARF_INT_ALL_MASK);
+> +	val = BIT(QCOM_PCIE_EP_INT_LINK_DOWN) |
+> +		BIT(QCOM_PCIE_EP_INT_BME) |
+> +		BIT(QCOM_PCIE_EP_INT_PM_TURNOFF) |
+> +		BIT(QCOM_PCIE_EP_INT_DSTATE_CHANGE) |
+> +		BIT(QCOM_PCIE_EP_INT_LINK_UP);
+> +	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_MASK);
 
-        pcie_report_downtraining(dev);
--       pci_init_reset_methods(dev);
- }
+Again, please avoid the _relaxed versions.
 
+> +}
+> +
+> +static int qcom_pcie_ep_core_init(struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	struct dw_pcie *pci = &pcie_ep->pci;
+> +	u32 val;
+> +
+> +	/* Disable BDF to SID mapping */
+> +	val = readl_relaxed(pcie_ep->parf + PARF_BDF_TO_SID_CFG);
+> +	val |= BIT(0);
+> +	writel_relaxed(val, pcie_ep->parf + PARF_BDF_TO_SID_CFG);
+> +
+> +	/* enable debug IRQ */
+> +	writel_relaxed((BIT(3) | BIT(2) | BIT(1)),
+> +		       pcie_ep->parf + PARF_DEBUG_INT_EN);
+> +
+> +	/* Configure PCIe to endpoint mode */
+> +	writel_relaxed(0x0, pcie_ep->parf + PARF_DEVICE_TYPE);
+> +
+> +	/* Configure PCIe core to support 1GB aperture */
+> +	writel_relaxed(0x40000000, pcie_ep->parf + PARF_SLV_ADDR_SPACE_SIZE);
+> +
+> +	/* Allow entering L1 state */
+> +	val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+> +	val &= ~BIT(5);
+> +	writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+> +
+> +	/* Configure Slave, DBI and iATU base addresses */
+> +	writel_relaxed(BIT(0), pcie_ep->parf + PARF_SLV_ADDR_MSB_CTRL);
+> +	writel_relaxed(0x200, pcie_ep->parf + PARF_SLV_ADDR_SPACE_SIZE_HI);
+> +	writel_relaxed(0x0, pcie_ep->parf + PARF_SLV_ADDR_SPACE_SIZE);
+> +	writel_relaxed(0x100, pcie_ep->parf + PARF_DBI_BASE_ADDR_HI);
+> +	writel_relaxed(pcie_ep->dbi_phys, pcie_ep->parf + PARF_DBI_BASE_ADDR);
+> +	writel_relaxed(0x100, pcie_ep->parf + PARF_ATU_BASE_ADDR_HI);
+> +	writel_relaxed(pcie_ep->atu_phys, pcie_ep->parf + PARF_ATU_BASE_ADDR);
+> +
+> +	/* Read halts write */
+> +	writel_relaxed(0x0, pcie_ep->parf + PARF_AXI_MSTR_RD_HALT_NO_WRITES);
+> +	/* Write after write halt */
+> +	writel_relaxed(BIT(31), pcie_ep->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+> +	/* Q2A flush disable */
+> +	writel_relaxed(0, pcie_ep->parf + PARF_Q2A_FLUSH);
+> +
+> +	/* Disable the DBI Wakeup */
+> +	writel_relaxed(BIT(11), pcie_ep->parf + PARF_SYS_CTRL);
+> +	/* Disable the debouncers */
+> +	writel_relaxed(0x73, pcie_ep->parf + PARF_DB_CTRL);
+> +	/* Disable core clock CGC */
+> +	writel_relaxed(BIT(6), pcie_ep->parf + PARF_SYS_CTRL);
+> +	/* Set AUX power to be on */
+> +	writel_relaxed(BIT(4), pcie_ep->parf + PARF_SYS_CTRL);
+> +	/* Request to exit from L1SS for MSI and LTR MSG */
+> +	writel_relaxed(BIT(1), pcie_ep->parf + PARF_CFG_BITS);
+> +
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +
+> +	/* Set the PMC Register - to support PME in D0/D3hot/D3cold */
+> +	val = dw_pcie_readl_dbi(pci, DBI_CAP_ID_NXT_PTR);
+> +	val |= BIT(31) | BIT(30) | BIT(27);
+> +	dw_pcie_writel_dbi(pci, DBI_CAP_ID_NXT_PTR, val);
+> +
+> +	/* Set the Endpoint L0s Acceptable Latency to 1us (max) */
+> +	val = dw_pcie_readl_dbi(pci, DBI_DEVICE_CAPABILITIES);
+> +	val |= FIELD_PREP(DBI_L0S_ACCPT_LATENCY_MASK, 0x7);
+> +	dw_pcie_writel_dbi(pci, DBI_DEVICE_CAPABILITIES, val);
+> +
+> +	/* Set the Endpoint L1 Acceptable Latency to 1us (max) */
+> +	val = dw_pcie_readl_dbi(pci, DBI_DEVICE_CAPABILITIES);
+> +	val |= FIELD_PREP(DBI_L1_ACCPT_LATENCY_MASK, 0x7);
+> +	dw_pcie_writel_dbi(pci, DBI_DEVICE_CAPABILITIES, val);
+> +
+> +	/* Set the L0s Exit Latency to 2us-4us = 0x6 */
+> +	val = dw_pcie_readl_dbi(pci, DBI_LINK_CAPABILITIES);
+> +	val |= FIELD_PREP(DBI_L0S_EXIT_LATENCY_MASK, 0x6);
+> +	dw_pcie_writel_dbi(pci, DBI_LINK_CAPABILITIES, val);
+> +
+> +	/* Set the L1 Exit Latency to be 32us-64 us = 0x6 */
+> +	val = dw_pcie_readl_dbi(pci, DBI_LINK_CAPABILITIES);
+> +	val |= FIELD_PREP(DBI_L1_EXIT_LATENCY_MASK, 0x6);
+> +	dw_pcie_writel_dbi(pci, DBI_LINK_CAPABILITIES, val);
+> +
+> +	/* L1ss is supported */
+> +	val = dw_pcie_readl_dbi(pci, DBI_L1SUB_CAPABILITY);
+> +	val |= 0x1f;
+> +	dw_pcie_writel_dbi(pci, DBI_L1SUB_CAPABILITY, val);
+> +
+> +	/* Enable Clock Power Management */
+> +	val = dw_pcie_readl_dbi(pci, DBI_LINK_CAPABILITIES);
+> +	val |= BIT(18);
+> +	dw_pcie_writel_dbi(pci, DBI_LINK_CAPABILITIES, val);
+> +
+> +	dw_pcie_dbi_ro_wr_dis(pci);
+> +
+> +	/* Set FTS value to match the PHY setting */
+> +	val = dw_pcie_readl_dbi(pci, DBI_ACK_F_ASPM_CTRL);
+> +	val |= FIELD_PREP(DBI_ACK_N_FTS_MASK, 0x80);
+> +	dw_pcie_writel_dbi(pci, DBI_ACK_F_ASPM_CTRL, val);
+> +
+> +	dw_pcie_writel_dbi(pci, DBI_AUX_CLK_FREQ, 0x14);
+> +
+> +	/* Prevent L1ss wakeup after 100ms */
+> +	val = dw_pcie_readl_dbi(pci, DBI_GEN3_RELATED_OFF);
+> +	val &= ~BIT(0);
+> +	dw_pcie_writel_dbi(pci, DBI_GEN3_RELATED_OFF, val);
+> +
+> +	/* Disable SRIS_MODE */
+> +	val = readl_relaxed(pcie_ep->parf + PARF_SRIS_MODE);
+> +	val &= ~BIT(0);
+> +	writel_relaxed(val, pcie_ep->parf + PARF_SRIS_MODE);
+> +
+> +	qcom_pcie_ep_configure_irq(pcie_ep);
 
+Why is the irq part broken out to its own function?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_confirm_linkup(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(pcie_ep->elbi + ELBI_SYS_STTS);
+> +
+> +	return reg & XMLH_LINK_UP;
+> +}
+> +
+> +static int qcom_pcie_start_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> +
+> +	enable_irq(pcie_ep->perst_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_establish_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> +	struct device *dev = pci->dev;
+> +	int ret;
+> +
+> +	if (pcie_ep->link_status == QCOM_PCIE_EP_LINK_ENABLED) {
+> +		dev_info(dev, "Link is already enabled\n");
+
+Per qcom_pcie_ep_global_threaded_irq() it seems possible that the link
+is enabled but link_status != QCOM_PCIE_EP_LINK_ENABLED.
+
+I'm also not sure how you can end up here with link_status == ENABLED;
+it starts off DISABLED and expect the first thing to happen is "perst"
+asserting, which would end up here and after that the only way you get
+here again is if perst is asserted again - without first being
+deasserted. So perhaps this is part of your manual edge detector?
+
+Perhaps it's not needed if you actually use edge detection on your
+interrupt?
+
+> +		return 0;
+> +	}
+> +
+> +	/* Enable power and clocks */
+> +	ret = qcom_pcie_ep_enable_resources(pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Perform controller reset */
+> +	ret = qcom_pcie_ep_core_reset(pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to reset the core: %d\n", ret);
+> +		goto err_disable_resources;
+> +	}
+> +
+> +	/* Initialize PHY */
+> +	ret = phy_init(pcie_ep->phy);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize PHY: %d\n", ret);
+> +		goto err_disable_resources;
+> +	}
+> +
+> +	/* Power ON PHY */
+> +	ret = phy_power_on(pcie_ep->phy);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to Power ON PHY: %d\n", ret);
+> +		goto err_phy_exit;
+> +	}
+> +
+> +	/* Assert WAKE# to RC to indicate device is ready */
+> +	gpiod_set_value_cansleep(pcie_ep->wake, 0);
+
+Assert sounds like "activate" or "turn on", so I would prefer that you
+make this a logical 1 here and if the signal is inverted specify this
+when you're requesting the gpio.
+
+> +	usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
+> +	gpiod_set_value_cansleep(pcie_ep->wake, 1);
+> +
+> +	/* Configure TCSR */
+> +	qcom_pcie_ep_configure_tcsr(pcie_ep);
+> +
+> +	/* Initialize the controller */
+> +	ret = qcom_pcie_ep_core_init(pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to init controller: %d\n", ret);
+> +		goto err_phy_power_off;
+> +	}
+> +
+> +	ret = dw_pcie_ep_init_complete(&pcie_ep->pci.ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to complete initialization: %d\n", ret);
+> +		goto err_phy_power_off;
+> +	}
+> +
+> +	dw_pcie_ep_init_notify(&pcie_ep->pci.ep);
+> +
+> +	/* Enable LTSSM */
+> +	qcom_pcie_ep_enable_ltssm(pcie_ep);
+> +
+> +	return 0;
+> +/* TODO* assert reset? */
+> +err_phy_power_off:
+> +	phy_power_off(pcie_ep->phy);
+> +err_phy_exit:
+> +	phy_exit(pcie_ep->phy);
+> +err_disable_resources:
+> +	qcom_pcie_ep_disable_resources(pcie_ep);
+> +
+> +	return ret;
+> +}
+> +
+> +static void qcom_pcie_disable_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> +	struct device *dev = pci->dev;
+> +
+> +	if (pcie_ep->link_status == QCOM_PCIE_EP_LINK_DISABLED) {
+> +		dev_info(dev, "Link is already disabled\n");
+
+Why can disable_link happen both from the interrupt handler directly and
+from the dw_pcie_ops?
+
+> +		return;
+> +	}
+> +
+> +	phy_power_off(pcie_ep->phy);
+> +	phy_exit(pcie_ep->phy);
+> +	qcom_pcie_ep_disable_resources(pcie_ep);
+> +	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
+> +}
+> +
+> +/* Common DWC controller ops */
+> +static const struct dw_pcie_ops pci_ops = {
+> +	.link_up = qcom_pcie_confirm_linkup,
+> +	.start_link = qcom_pcie_start_link,
+> +	.stop_link = qcom_pcie_disable_link,
+> +};
+> +
+> +static int qcom_pcie_ep_get_io_resources(struct platform_device *pdev,
+> +					 struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_pcie *pci = &pcie_ep->pci;
+> +	struct resource *res;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+> +	pcie_ep->parf = devm_ioremap_resource(dev, res);
+
+Better make this devm_platform_ioremap_resource_byname(), or someone
+will send a patch the minute this code lands.
+
+> +	if (IS_ERR(pcie_ep->parf))
+> +		return PTR_ERR(pcie_ep->parf);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +	pci->dbi_base2 = pci->dbi_base;
+> +	pcie_ep->dbi_phys = res->start;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> +	pcie_ep->elbi = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(pcie_ep->elbi))
+> +		return PTR_ERR(pcie_ep->elbi);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+> +	pci->atu_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(pci->atu_base))
+> +		return PTR_ERR(pci->atu_base);
+> +	pcie_ep->atu_phys = res->start;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tcsr");
+> +	pcie_ep->tcsr = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pcie_ep->tcsr))
+> +		return PTR_ERR(pcie_ep->tcsr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
+> +				      struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	ret = qcom_pcie_ep_get_io_resources(pdev, pcie_ep);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to get io resources %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Enable GDSC power domain */
+> +	ret = dev_pm_domain_attach(dev, true);
+
+If you only have a single power-domain specified, then it would already
+be attached to "dev".
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(qcom_pcie_ep_clks),
+> +				qcom_pcie_ep_clks);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to get clocks: %d\n", ret);
+
+Don't you already have a print in devm_clk_bulk_get()?
+
+> +		return ret;
+> +	}
+> +
+> +	pcie_ep->core_reset = devm_reset_control_get_exclusive(dev, "core");
+> +	if (IS_ERR(pcie_ep->core_reset))
+> +		return PTR_ERR(pcie_ep->core_reset);
+> +
+> +	pcie_ep->reset = devm_gpiod_get(dev, "reset", GPIOD_IN);
+> +	if (IS_ERR(pcie_ep->reset))
+> +		return PTR_ERR(pcie_ep->reset);
+> +
+> +	pcie_ep->wake = devm_gpiod_get_optional(dev, "wake", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(pcie_ep->wake))
+> +		return PTR_ERR(pcie_ep->wake);
+> +
+> +	pcie_ep->phy = devm_phy_optional_get(&pdev->dev, "pciephy");
+> +	if (IS_ERR(pcie_ep->phy))
+> +		ret = PTR_ERR(pcie_ep->phy);
+> +
+> +	return ret;
+> +}
+> +
+> +/* TODO: Notify clients about PCIe state change */
+> +static irqreturn_t qcom_pcie_ep_global_threaded_irq(int irq, void *data)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = data;
+> +	struct dw_pcie *pci = &pcie_ep->pci;
+> +	struct device *dev = pci->dev;
+> +	u32 status = readl(pcie_ep->parf + PARF_INT_ALL_STATUS);
+> +	u32 mask = readl(pcie_ep->parf + PARF_INT_ALL_MASK);
+> +	u32 dstate, event, val;
+> +
+> +	writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+> +	status &= mask;
+> +
+> +	for (event = 1; event < QCOM_PCIE_EP_INT_MAX; event++) {
+> +		if (status & BIT(event)) {
+
+for_each_set_bit()
+
+> +			switch (event) {
+> +			case QCOM_PCIE_EP_INT_LINK_DOWN:
+> +				dev_info(dev, "Received Linkdown event\n");
+> +				pcie_ep->link_status = QCOM_PCIE_EP_LINK_DOWN;
+> +				break;
+> +			case QCOM_PCIE_EP_INT_BME:
+> +				dev_info(dev, "Received BME event. Link is enabled!\n");
+> +				pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
+> +				break;
+> +			case QCOM_PCIE_EP_INT_PM_TURNOFF:
+> +				dev_info(dev, "Received PM Turn-off event! Entering L23\n");
+> +				val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+> +				val |= BIT(2);
+> +				writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+> +				break;
+> +			case QCOM_PCIE_EP_INT_DSTATE_CHANGE:
+> +				dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) & 0x3;
+> +				dev_info(dev, "Received D%d state event\n", dstate);
+> +				if (dstate == 3) {
+> +					val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+> +					val |= BIT(1);
+> +					writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+> +				}
+> +				/* Handle D0 state change */
+> +				break;
+> +			case QCOM_PCIE_EP_INT_LINK_UP:
+> +				dev_info(dev, "Received Linkup event. Enumeration complete!\n");
+> +				dw_pcie_ep_linkup(&pci->ep);
+> +				pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
+> +				break;
+> +			default:
+> +				dev_err(dev, "Received unknown event: %d\n", event);
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t qcom_pcie_ep_perst_threaded_irq(int irq, void *data)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = data;
+> +	struct dw_pcie *pci = &pcie_ep->pci;
+> +	struct device *dev = pci->dev;
+> +	u32 perst;
+> +
+> +	perst = gpiod_get_value(pcie_ep->reset);
+> +
+> +	if (perst) {
+> +		/* Start link training */
+> +		dev_info(dev, "PERST de-asserted by host. Starting link training!\n");
+> +		qcom_pcie_establish_link(pci);
+> +	} else {
+> +		/* Shutdown the link if the link is already on */
+> +		dev_info(dev, "PERST asserted by host. Shutting down the PCIe link!\n");
+> +		qcom_pcie_disable_link(pci);
+> +	}
+> +
+> +	/* Set trigger type based on the next expected value of perst gpio */
+> +	irq_set_irq_type(gpiod_to_irq(pcie_ep->reset),
+> +			 (perst ? IRQF_TRIGGER_LOW : IRQF_TRIGGER_HIGH));
+
+Looks like you're manually implementing edge triggering, is there any
+reason for that? EDGE_BOTH seems to do the same thing...
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
+> +					     struct qcom_pcie_ep *pcie_ep)
+> +{
+> +	int irq, ret;
+> +
+> +	irq = platform_get_irq_byname(pdev, "global");
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "Failed to get Global IRQ\n");
+> +		return irq;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> +					qcom_pcie_ep_global_threaded_irq,
+> +					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+
+Leave out the trigger and rely on DT.
+
+> +					"global_irq", pcie_ep);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to request Global IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	pcie_ep->perst_irq = gpiod_to_irq(pcie_ep->reset);
+> +	irq_set_status_flags(pcie_ep->perst_irq, IRQ_NOAUTOEN);
+
+Is the global interrupt needed for dw_pcie_ep_init()? Or could this
+simply be done when things are ready to handle the interrupts?
+
+> +	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->perst_irq, NULL,
+> +					qcom_pcie_ep_perst_threaded_irq,
+> +					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +					"perst_irq", pcie_ep);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to request PERST IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				  enum pci_epc_irq_type type, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "Unknown IRQ type\n");
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct pci_epc_features qcom_pcie_epc_features = {
+> +	.linkup_notifier = true,
+> +	.core_init_notifier = true,
+> +	.msi_capable = true,
+> +	.msix_capable = false,
+> +};
+> +
+> +static const struct pci_epc_features *
+> +qcom_pcie_epc_get_features(struct dw_pcie_ep *pci_ep)
+> +{
+> +	return &qcom_pcie_epc_features;
+> +}
+> +
+> +static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	enum pci_barno bar;
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+> +
+> +static struct dw_pcie_ep_ops pci_ep_ops = {
+> +	.ep_init = qcom_pcie_ep_init,
+> +	.raise_irq = qcom_pcie_ep_raise_irq,
+> +	.get_features = qcom_pcie_epc_get_features,
+> +};
+> +
+> +static const struct of_device_id qcom_pcie_ep_match[] = {
+> +	{ .compatible = "qcom,sdx55-pcie-ep", },
+> +	{ }
+> +};
+
+Move this below the probe function.
+
+> +
+> +static int qcom_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct qcom_pcie_ep *pcie_ep;
+> +	int ret;
+> +
+> +	pcie_ep = devm_kzalloc(dev, sizeof(*pcie_ep), GFP_KERNEL);
+> +	if (!pcie_ep)
+> +		return -ENOMEM;
+> +
+> +	pcie_ep->pci.dev = dev;
+> +	pcie_ep->pci.ops = &pci_ops;
+> +	pcie_ep->pci.ep.ops = &pci_ep_ops;
+> +
+> +	ret = qcom_pcie_ep_get_resources(pdev, pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to get resources:%d\n", ret);
+
+You printed an error in about half the error cases in
+qcom_pcie_ep_get_resources(), it would be better to ensure you print a
+specific error for each of the remaining cases there and "silently"
+return here.
+
+Same comment for below cases.
+
+> +		return ret;
+> +	}
+> +
+> +	/* Enable power and clocks */
+> +	ret = qcom_pcie_ep_enable_resources(pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Perform controller reset */
+> +	ret = qcom_pcie_ep_core_reset(pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to reset the core: %d\n", ret);
+> +		goto err_disable_resources;
+> +	}
+> +
+> +	/* Initialize PHY */
+> +	ret = phy_init(pcie_ep->phy);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize PHY: %d\n", ret);
+> +		goto err_disable_resources;
+> +	}
+> +
+> +	/* PHY needs to be powered on for dw_pcie_ep_init() */
+> +	ret = phy_power_on(pcie_ep->phy);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to Power ON PHY: %d\n", ret);
+> +		goto err_phy_exit;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pcie_ep);
+> +
+> +	ret = qcom_pcie_ep_enable_irq_resources(pdev, pcie_ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to get IRQ resources %d\n", ret);
+> +		goto err_phy_power_off;
+> +	}
+> +
+> +	ret = dw_pcie_ep_init(&pcie_ep->pci.ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize endpoint:%d\n", ret);
+> +		goto err_phy_power_off;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_phy_power_off:
+
+Your interrupts remains enabled until devres takes them down after
+returning, so I suspect you need to disable them here as well - at least
+before shutting down the clocks.
+
+> +	phy_power_off(pcie_ep->phy);
+> +err_phy_exit:
+> +	phy_exit(pcie_ep->phy);
+> +err_disable_resources:
+> +	qcom_pcie_ep_disable_resources(pcie_ep);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver qcom_pcie_ep_driver = {
+> +	.probe	= qcom_pcie_ep_probe,
+> +	.driver	= {
+> +		.name		= "qcom-pcie-ep",
+
+Skip the indentation of the '='.
+
+> +		.suppress_bind_attrs = true,
+
+Why do we suppress_bind_attrs?
+
+Regards,
+Bjorn
+
+> +		.of_match_table	= qcom_pcie_ep_match,
+> +	},
+> +};
+> +builtin_platform_driver(qcom_pcie_ep_driver);
+> +
+> +MODULE_AUTHOR("Siddartha Mohanadoss <smohanad@codeaurora.org>");
+> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
+> +MODULE_DESCRIPTION("Qualcomm PCIe Endpoint controller driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.25.1
+> 
