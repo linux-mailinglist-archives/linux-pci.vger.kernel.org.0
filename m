@@ -2,232 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA3A239CD52
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jun 2021 07:00:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0988339CD91
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jun 2021 08:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbhFFFCg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Jun 2021 01:02:36 -0400
-Received: from mail-dm6nam10on2061.outbound.protection.outlook.com ([40.107.93.61]:10647
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229630AbhFFFCf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 6 Jun 2021 01:02:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ODWoHCy/Hi7pGjW+y/J10wdK9843zB3ig/ozNtWAFecXSgFsqwBNm4/u/YIQqwCW8hvosXqz4bikOcmlLjGSoqcEbeSHLuVZe/2cCwX8ALCw5LTiX0CbVrvK5tpEhFRQ8weSJ1b/EOfdB8DSnAFWg6eRDOWD/YclKmrHf2K8oekKbGFFq7Z1CUOMy5+saDLVFeI05lkvaeRoG5ndI1juHHMmwc9Q9XHcebz3OIt4/JfijVg8AfxDgoX19qzWY2tXyDlfGyotthn+ZfqiaR+i0htRrevzPNwXITDLaLxiSbNQGYR6SlfUecEkWjlW/rNfhgpTYKZgLIZ2Teu6J8P3+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F/Yx3TvYUSFTSj88OpaJC2HT3T7X3XzTURt1o8HnWzE=;
- b=evnXv/kuKi0VhmUliLjYRpMPl48AbDvjAgjQbOYzxugXOOMYrq/hYRu6f1uZJwT+xaNansG/lhOF+DWgzWggomd0Zw+D/pWOelF8JISoiSa55KVsdV1YeICEVC4jkOMr0/8phu3bo0Z4OpzUpon6iMAg5h32sGlBCMBJTpE5GcXKc9KDSpq/r1bjyzAMstxPXoQJEcI3ZF3sJjIZTRaAJEbop3LPd4FhcFFXLVxPxE8E+rPfK+FN/Uaq7/tFxAH/2LVeOR6D/7WMihNM+ltc4lOPVD6993DyBggtDxwSuRx0IGWWVoqfkyPn0myE1a5YCx4EjZX+UasI8VDeAOKnew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F/Yx3TvYUSFTSj88OpaJC2HT3T7X3XzTURt1o8HnWzE=;
- b=ty57IaD1B/i/d0JU9rLl8SN7ClPOJniqo9kXIZc9Ic6jrHV+eyxT1ZIfvgCCKVbeVUM+f9w7VLzzMMWUYtzwyq0CwuqmRAYZwze1VvsaRUawmpxut3JQuL8vC300VvvoYXoEEfeVWRp+m9ZBrV4UpU92hcGegHG3CfF1hhGpntiUbaPRzcA3CHua7LeKZdQrp+8Rtnfr49UULSrDGO8dBImvFx9s+bueiNILVJzQ+KDr8NR+ob5TENLmHi+Vk7WaI3zmS0l68p9c/HX5GZfJmoAE9okKs3ebNE/5lyzjF0B64chroWrsE4H6sJC10xEMze65hIH7p9lknS0+eo59jw==
-Received: from MW4PR04CA0021.namprd04.prod.outlook.com (2603:10b6:303:69::26)
- by SN1PR12MB2477.namprd12.prod.outlook.com (2603:10b6:802:28::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.22; Sun, 6 Jun
- 2021 05:00:45 +0000
-Received: from CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:69:cafe::d4) by MW4PR04CA0021.outlook.office365.com
- (2603:10b6:303:69::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.15 via Frontend
- Transport; Sun, 6 Jun 2021 05:00:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT039.mail.protection.outlook.com (10.13.174.110) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4195.22 via Frontend Transport; Sun, 6 Jun 2021 05:00:44 +0000
-Received: from [10.20.112.58] (172.20.187.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 6 Jun
- 2021 05:00:42 +0000
-Subject: Re: [PATCH v5 5/7] PCI: Add support for a function level reset based
- on _RST method
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <alex.williamson@redhat.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20210605205317.GA2254430@bjorn-Precision-5520>
-From:   Shanker R Donthineni <sdonthineni@nvidia.com>
-Message-ID: <b24be059-4f90-f1b5-b49c-ba7076ace9ba@nvidia.com>
-Date:   Sun, 6 Jun 2021 00:00:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S230060AbhFFGGp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Jun 2021 02:06:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45974 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229504AbhFFGGo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 6 Jun 2021 02:06:44 -0400
+IronPort-SDR: 3o66JognwwV769u8l1aKT2bXSqOtzSYzs7es0G5ohSkdMdb6+RGnDapGbo7E1565OjkI9eYKc7
+ ZaFF1foQl7zQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10006"; a="184852986"
+X-IronPort-AV: E=Sophos;i="5.83,252,1616482800"; 
+   d="scan'208";a="184852986"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2021 23:04:55 -0700
+IronPort-SDR: 1LN/NvijEUDEsEzvi/DxSTtqgRrjVRYfKr0VuUkRWmLPWcfE0KcR5LEDYTSKYcO2g4mP/Pm9yO
+ NbqDZxOcPH3A==
+X-IronPort-AV: E=Sophos;i="5.83,252,1616482800"; 
+   d="scan'208";a="439664652"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2021 23:04:53 -0700
+Subject: [PATCH v5 0/6] CXL port and decoder enumeration
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Date:   Sat, 05 Jun 2021 23:04:53 -0700
+Message-ID: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-In-Reply-To: <20210605205317.GA2254430@bjorn-Precision-5520>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b688ec28-5d5e-4ef2-36f9-08d928a80ab0
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2477:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2477FB8FFD96F420C377D13BC7399@SN1PR12MB2477.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vl/S3n1NcpVO9+cyokZCNzDP0Rvp1E8z9tfraG46jUBWyfa1/hxc84HErl8okN1eIxtMYaVSmix//MqYXsywMdlMv1ymt63aGp3zTVbWz1Y8U78fhMcVylUKSfBECzsKkL8uOGkPsK8IbEm3Bc6sll83p8UfajCeIc5VUBioEFScp4sau3YLBc2d/tfQG0XPuUK9Y17sQ2O792gq3bZvJoJxKonrQIWF+YgOBAIoHKOZSyUCIcwRWdL7cz0fUgpScxGFgkq7S/BehLd/E74tJB+xM63qIjNwyCeuGHb7SltKGYKT68Li9aXcJtuW6v94w2gi78jwN6bzRRdKKs03FjNIeQb1LULOORSFFure+DG+rdCgyyy5/+hsLu/9yZHShw4ex3FdW7SufUw1ij9xqmrKT/a9jwLCj4FAtNaYpjLBN6WIveEAOCwPPAGDBTVJX7PyrcD72dDffbHVK5IXey+1AGjlqzM0LR5bknFoSrAVHOxwO2ugYLyiUQ3S0PTWKQVYcvrqUhT0Xn/VvV5LHw0tLBIeD4Ao9+0BUi2LOgb9JfwwIXqiqGvySmR/om3yEd5gN37CV3uqeUizK0wI2WDmnJ231IDKmQVb1CI6py2z6H74pNn4HKyY6tVZ840VtSBNdvtbgADOFW/0s09iGw7MY5IYbHzU16q9HHFjjUkTiVh4Ens2hVUQVW+r7JwJ
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(376002)(136003)(346002)(36840700001)(46966006)(478600001)(336012)(31696002)(53546011)(8936002)(5660300002)(70206006)(36860700001)(70586007)(426003)(8676002)(31686004)(316002)(82310400003)(26005)(16526019)(36906005)(36756003)(186003)(4326008)(7636003)(86362001)(83380400001)(7416002)(2616005)(2906002)(16576012)(110136005)(356005)(54906003)(82740400003)(47076005)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2021 05:00:44.6646
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b688ec28-5d5e-4ef2-36f9-08d928a80ab0
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2477
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Changes since v4 [1]:
+- Rework the object model to better account for downstream ports and
+  enumerate decode capabilities.
+- Include the definition of CFMWS
+- Reference CFMWS in the changelogs and implementation
+- Drop mention of pcie_portdriver for CXL switch enumeration. This will
+  be handled by CXL path validation when an endpoint wants to contribute
+  to a memory region.
 
-On 6/5/21 3:53 PM, Bjorn Helgaas wrote:
-> This is a little sketchy.  We shouldn't be doing device config stuff
-> after device_add() because that's when it becomes available for
-> drivers to bind to the device.  If we do anything with the device
-> after that point, we may interfere with a driver.
->
-> I think the problem is that we don't call acpi_bind_one() until
-> device_add().  There's some hackery in pci-acpi.c to deal with a
-> similar problem for something else -- see acpi_pci_bridge_d3().
->
-> I don't know how to fix this yet.  Here's the call graph that I think
-> is relevant:
-I've refactored pci_dev_acpi_reset() to avoid dependency on acpi_bind_one().
-It can be called any time after creating pci_dev object. The code logic is
-not exactly same as acpi_pci_bridge_d3() but similar flow. No need to set
-ACPI_COMPANION since it would be updated eventually after probing the
-reset methods.
+[1]: http://lore.kernel.org/r/162096970332.1865304.10280028741091576940.stgit@dwillia2-desk3.amr.corp.intel.com
 
-Please review the below code and provide suggestions for the next step.
-
-Updated patch:
-
-[PATCH v5 5/7] PCI: Add support for ACPI _RST reset method
-
-The _RST is a standard method specified in the ACPI specification. It
-provides a function level reset when it is described in the acpi_device
-context associated with PCI-device.
-
-Implement a new reset function pci_dev_acpi_reset() for probing RST
-method and execute if it is defined in the firmware. The ACPI binding
-information is available only after calling device_add(). Since the
-ACPI_COMPANION was not done before calling pci_init_reset_methods(),
-use acpi_pci_find_companion() to know the ACPI binding.
-
-The default priority of the ACPI reset is set to below device-specific
-and above hardware resets.
-
-Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
 ---
- drivers/pci/pci-acpi.c | 30 ++++++++++++++++++++++++++++++
- drivers/pci/pci.c      |  1 +
- drivers/pci/pci.h      |  6 ++++++
- include/linux/pci.h    |  2 +-
- 4 files changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 36bc23e217592..c344c33f5c910 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -934,6 +934,36 @@ static pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+The recently published CXL Fixed Memory Window Structure (CFMWS)
+extension to the CXL Early Discovery Table (CEDT) provides a platform
+firmware mechanism to enumerate CXL memory resources. The table data
+indicates which CXL memory ranges were configured by platform BIOS, and
+which address ranges are available to support hot plug and dynamic
+provisioning of CXL memory regions.
 
- static struct acpi_device *acpi_pci_find_companion(struct device *dev);
+CXL Port Topology:
 
-+/**
-+ * pci_dev_acpi_reset - do a function level reset using _RST method
-+ * @dev: device to reset
-+ * @probe: check if _RST method is included in the acpi_device context.
-+ */
-+int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
-+{
-+       acpi_handle handle = ACPI_HANDLE(&dev->dev);
-+
-+       /* Find out ACPI_HANDLE if not available in the device context */
-+       if (!handle) {
-+               handle = acpi_device_handle(acpi_pci_find_companion(&dev->dev));
-+               if (!handle)
-+                       return -ENOTTY;
-+       }
-+
-+       if (!acpi_has_method(handle, "_RST"))
-+               return -ENOTTY;
-+
-+       if (probe)
-+               return 0;
-+
-+       if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
-+               pci_warn(dev, "ACPI _RST failed\n");
-+               return -EINVAL;
-+       }
-+
-+       return 0;
-+}
-+
- static bool acpi_pci_bridge_d3(struct pci_dev *dev)
- {
-        const struct fwnode_handle *fwnode;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index bbed852d977f1..5726d120b70a2 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5122,6 +5122,7 @@ static void pci_dev_restore(struct pci_dev *dev)
-  */
- const struct pci_reset_fn_method pci_reset_fn_methods[] = {
-        { &pci_dev_specific_reset, .name = "device_specific" },
-+       { &pci_dev_acpi_reset, .name = "acpi" },
-        { &pcie_reset_flr, .name = "flr" },
-        { &pci_af_flr, .name = "af_flr" },
-        { &pci_pm_reset, .name = "pm" },
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 13ec6bd6f4f76..f3974ed1a99c2 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -703,7 +703,13 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
- #ifdef CONFIG_ACPI
- int pci_acpi_program_hp_params(struct pci_dev *dev);
- extern const struct attribute_group pci_dev_acpi_attr_group;
-+int pci_dev_acpi_reset(struct pci_dev *dev, int probe);
- #else
-+static inline int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
-+{
-+       return -ENOTTY;
-+}
-+
- static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- {
-        return -ENODEV;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 6e9bc4f9cdab4..a7f063da2fe5f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -49,7 +49,7 @@
-                               PCI_STATUS_SIG_TARGET_ABORT | \
-                               PCI_STATUS_PARITY)
+The enumeration starts with the ACPI0017 driver registering a 'struct
+cxl_port' object to establish the top of a port topology. It then
+scans the ACPI bus looking for CXL Host Bridges (ACPI0016 instances). A
+cxl_port represents one or more decoder resources between a 'uport'
+(upstream port) and one or more 'dport' (downstream port) instances.
+System software must not assume that 'struct cxl_port' device names will
+be static from one boot to the next. It will generally be the case that
+the root cxl_port starts at id '0' and the host bridges are enumerated
+in the same order starting at id '1', but that is not guaranteed.
 
--#define PCI_RESET_METHODS_NUM 5
-+#define PCI_RESET_METHODS_NUM 6
+A 'uport' is a device that implements a decode. It can either be a
+platform firmware device like ACPI0017 where the decode is described by
+an ACPI data-structure, or a PCIe switch where the upstream port of the
+switch implements a CXL DVSEC pointing to component registers with the
+HDM decoder capability (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
+Capability Structure).
+
+Once a uport and its corresponding dport instances are collected into a
+cxl_port the actual decode resources are then modeled as cxl_decode
+objects that are children of their parent cxl_port. The 'decode' object
+has a 1:1 relationship with ether CFMWS entries at the root level, or
+hardware HDM decoder register instances in a PCIe device's CXL component
+register space at any level of a CXL switch hierarchy. In addition to
+the interleave geometry and address range a decode object conveys the
+target list (targeted dports) in interleave order. The dport id in a
+target list is either its ACPI _UID for Host Bridge targets, or the
+"port number" field from the link capabilities register in the PCIe
+"Express" capability [2].
+
+Here is a tree(1) topology of QEMU emulating a single-ported
+host-bridge:
+
+    /sys/bus/cxl/devices/root0
+    ├── devtype
+    ├── dport0 -> ../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:00
+    ├── port1
+    │   ├── decoder1.0
+    │   │   ├── devtype
+    │   │   ├── end
+    │   │   ├── locked
+    │   │   ├── start
+    │   │   ├── subsystem -> ../../../../bus/cxl
+    │   │   ├── target_list
+    │   │   ├── target_type
+    │   │   └── uevent
+    │   ├── devtype
+    │   ├── dport0 -> ../../pci0000:34/0000:34:00.0
+    │   ├── subsystem -> ../../../bus/cxl
+    │   ├── uevent
+    │   └── uport -> ../../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:00
+    ├── subsystem -> ../../bus/cxl
+    ├── uevent
+    └── uport -> ../platform/ACPI0017:00
 
 
+* The root port is singleton only by convention. A given uport device
+  like ACPI0017 could create a root level port per CFMWS entry. This
+  patch set chooses to implement 1 port at the root level and list all
+  CFMWS decode entries under that port regardless of which dport host
+  bridges are targeted.
 
+[2]: CXL 2.0 8.2.5.12.8 CXL HDM Decoder 0 Target List Low Register
+     (Offset 24h) ...The Target Port Identifier for a given Downstream Port
+     is reported via Port Number field in Link Capabilities Register. (See
+     PCI Express Base Specification).
+
+---
+
+Dan Williams (6):
+      cxl/acpi: Local definition of ACPICA infrastructure
+      cxl/acpi: Introduce cxl_root, the root of a cxl_port topology
+      cxl/Kconfig: Default drivers to CONFIG_CXL_BUS
+      cxl/acpi: Add downstream port data to cxl_port instances
+      cxl/acpi: Enumerate host bridge root ports
+      cxl/acpi: Introduce cxl_decoder objects
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |   94 ++++++
+ drivers/cxl/Kconfig                     |   17 +
+ drivers/cxl/Makefile                    |    2 
+ drivers/cxl/acpi.c                      |  193 ++++++++++++
+ drivers/cxl/acpi.h                      |   48 +++
+ drivers/cxl/core.c                      |  514 +++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h                       |   92 ++++++
+ 7 files changed, 960 insertions(+)
+ create mode 100644 drivers/cxl/acpi.c
+ create mode 100644 drivers/cxl/acpi.h
+
+base-commit: 605a5e41db7d8c930fb80115686991c4c1d08ee4
