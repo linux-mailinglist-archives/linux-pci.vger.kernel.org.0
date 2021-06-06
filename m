@@ -2,134 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C5239CF32
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jun 2021 14:58:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC79A39CF51
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jun 2021 15:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbhFFM7x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Jun 2021 08:59:53 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:41787 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbhFFM7w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Jun 2021 08:59:52 -0400
-Received: by mail-wm1-f43.google.com with SMTP id l11-20020a05600c4f0bb029017a7cd488f5so8363463wmq.0;
-        Sun, 06 Jun 2021 05:58:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tyBks3ibzIGEf1wCbfUSf4kop+pK33FGqskQ8K5nako=;
-        b=qxSBIlvzZiJrl7HORKjj3tocaxGVcIkegXWkzELw351LG+67jotWuCrWL5Y/LyXcs/
-         9Z7fRCOjW5BhlBiC/U+hBVJoewoO50zCtatwebE92oo/pgzxSVsC1zzYxw5roSwYKQTX
-         2u9wbyCliADmvrc02bHEewmi3pUz9I4Q4cPSX5aeT+CndMxuf6vK+pAITGzhzR9lhGkV
-         p+1jsfSBY11lfFXP8dt1ZJFM5gPTYSjAOC3nlR0B19lgI/t72JXS20CMuLIx/lOnJSpq
-         66376c9VhE6xYB00xHNlIc0hWxz7d/PdIObJ/GtFp57AJ+tKMJA18qwideunjEf7/QgI
-         +/yQ==
-X-Gm-Message-State: AOAM531LRVHMuyPUHgsEqSq2KXvyUm47vXu9OTTjeTNeIbQU2VTw7IHr
-        mvRYmkZ2ru+PnX0vCXBBEU0=
-X-Google-Smtp-Source: ABdhPJzLyi0CIqf0ZHMTMOqqEeKrg1/vB1z/iHQZZH84Q43HZczWAW23ui8BUhGuUGPId1JNM6o4Iw==
-X-Received: by 2002:a05:600c:22d9:: with SMTP id 25mr2616904wmg.152.1622984282331;
-        Sun, 06 Jun 2021 05:58:02 -0700 (PDT)
-Received: from rocinante.localdomain ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id n13sm13952224wrg.75.2021.06.06.05.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jun 2021 05:58:01 -0700 (PDT)
-Date:   Sun, 6 Jun 2021 14:58:00 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v5 4/7] PCI/sysfs: Allow userspace to query and set
- device reset mechanism
-Message-ID: <20210606125800.GA76573@rocinante.localdomain>
-References: <20210529192527.2708-1-ameynarkhede03@gmail.com>
- <20210529192527.2708-5-ameynarkhede03@gmail.com>
+        id S230011AbhFFNaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Jun 2021 09:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229878AbhFFNaD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 6 Jun 2021 09:30:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582DC613D4;
+        Sun,  6 Jun 2021 13:28:14 +0000 (UTC)
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1lpsp2-005ldH-7W; Sun, 06 Jun 2021 14:28:12 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210529192527.2708-5-ameynarkhede03@gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 06 Jun 2021 14:28:12 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sandor Bodo-Merle <sbodomerle@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: iproc: Support multi-MSI only on uniprocessor
+ kernel
+In-Reply-To: <20210606123044.31250-2-sbodomerle@gmail.com>
+References: <20210606123044.31250-1-sbodomerle@gmail.com>
+ <20210606123044.31250-2-sbodomerle@gmail.com>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <ee29ebea89cdde2ae891a53c92a8b7a1@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sbodomerle@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Amey and Shanker,
+On 2021-06-06 13:30, Sandor Bodo-Merle wrote:
+> The interrupt affinity scheme used by this driver is incompatible with
+> multi-MSI as it implies moving the doorbell address to that of another 
+> MSI
+> group.  This isn't possible for multi-MSI, as all the MSIs must have 
+> the
+> same doorbell address. As such it is restricted to systems with a 
+> single
+> CPU.
+> 
+> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+> Reported-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
 
-[...]
-> +static ssize_t reset_method_show(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	ssize_t len = 0;
-> +	int i, prio;
-> +
-> +	for (prio = PCI_RESET_METHODS_NUM; prio; prio--) {
-> +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++) {
-> +			if (prio == pdev->reset_methods[i]) {
-> +				len += sysfs_emit_at(buf, len, "%s%s",
-> +						     len ? "," : "",
-> +						     pci_reset_fn_methods[i].name);
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (i == PCI_RESET_METHODS_NUM)
-> +			break;
-> +	}
-> +
-> +	return len;
-> +}
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Make sure to include trailing newline when exposing values through the
-sysfs object to the userspace in the above show() function.
-
-[...]
-> +static ssize_t reset_method_store(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-[...]
-> +
-> +	while ((name = strsep((char **)&buf, ",")) != NULL) {
-[...]
-
-This is something that I wonder could benefit from the following:
-
-  char *options, *end;
-
-  if (count >= (PAGE_SIZE - 1))
-	return -EINVAL;
-  
-  options = kstrndup(buf, count, GFP_KERNEL);
-  if (!options)
-  	return -ENOMEM;
-  
-  while ((name = strsep(&options, ",")) != NULL) {
-  	...
-  }
-  
-  ...
-  
-  kfree(options);
-
-Why?  To avoid changing the string buffer that has been passed to
-reset_method_store() as strsep() while parsing will update the content
-of the buffer.  The cast to (char **), aside of most definitely allowing
-to suppress the probable compiler warning, will also allow for what
-should be a technically a constant string (to which we got a pointer to)
-to be modified.  I am not sure how much could this be of a problem, but
-I would try not to do it, if possible.
-
-[...]
-> +set_reset_methods:
-> +	memcpy(pdev->reset_methods, reset_methods, sizeof(reset_methods));
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(reset_method);
-
-A small nitpikc: customary there is no space (a newline) between the
-function and the macro, the macro follows immediately after.
-
-	Krzysztof
+         M.
+-- 
+Jazz is not dead. It just smells funny...
