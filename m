@@ -2,211 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15F6039E4A5
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 19:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 858FE39E4B8
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 19:05:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbhFGRCN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 13:02:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52031 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230331AbhFGRCM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 13:02:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623085221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TImFWC0HTGVlVbnQIUSZh0jMNDwAtpjYOcXi7DdGfsg=;
-        b=X7sfctUwdMPNbRiufy7u2seFoEnlyG9jVK2ZgjV2ZXR8a59QWt9qCxrsBbYwjyFlHZHVdU
-        yMxZ64f1hdHAN08sfBHAmno6n9085gBeqmAl9sRTRdmzkd/X7fF/WnWu+UXEPlgav6perf
-        l+ncxP85m8agAxHeWqglehQUb598UOo=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-nB-yQHLRPPugIs-NtQwwxw-1; Mon, 07 Jun 2021 13:00:18 -0400
-X-MC-Unique: nB-yQHLRPPugIs-NtQwwxw-1
-Received: by mail-lf1-f71.google.com with SMTP id u7-20020a0565120407b02902ff43b1e7f4so1414107lfk.5
-        for <linux-pci@vger.kernel.org>; Mon, 07 Jun 2021 10:00:18 -0700 (PDT)
+        id S230331AbhFGRHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 13:07:00 -0400
+Received: from mail-pj1-f48.google.com ([209.85.216.48]:42547 "EHLO
+        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230250AbhFGRG7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 13:06:59 -0400
+Received: by mail-pj1-f48.google.com with SMTP id md2-20020a17090b23c2b029016de4440381so442155pjb.1
+        for <linux-pci@vger.kernel.org>; Mon, 07 Jun 2021 10:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WyajxUxD+qII3ozGjsYJB4YKIUgJgPWfBGe14Hw5m2s=;
+        b=ed/0PzMWKcKEyHTP/yKjwBx0JvITUSJQcZm8zLlSmnLmTn3XfbBvCvTUprBKit9LiI
+         mEfZstpZ3HjM4s5khmBvBsJH5XdDYs75OEPphft1zPtGdG19kU5l7Qlu/lko9AmpgoK9
+         qknyWnlJ8aIDK5ItieJ1cII0XqSLwUe6h7PBLQ0xnTzzzeGgARou9TXEx6NJ1mTWa+dz
+         PboVozhKwY82GAQ/HNVbBi4ykNnfwnOjefgWT/P3nMz8jalTcpRqQ6XxZitfCdIbOMHG
+         8HGzmoRQp53yAfDM6W+uPM3XfWtvsu2WRGhyqB9p6ocpzivvWRB6d16bwdVDKhCqDrsQ
+         UTug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TImFWC0HTGVlVbnQIUSZh0jMNDwAtpjYOcXi7DdGfsg=;
-        b=bn6WeTP4QJl4WZ8cAkO5cAbg0x+1dYl6LPVggxX7Z2/KrE2BbSzbKd9bh5e216RcLH
-         qa77i4KLrEYw+rbrJ7pUpheFGvDvrjMwRRHfbZ0+CGe0wY1GMm7u2/ZPC5ieC0e73ffQ
-         mSV2Y4AKGe41auz9gQMYFlGCQrZEYP6Ic/xKpxSn7gSJ+7IwvHsj/V2+tBsoFaXY/tu2
-         sIOQfzRx6wMg+LiP4uvBhRDrzmiVCqrPA2WXARyYpZB6xATnEdGQdp/hLPYWFuSUhYRG
-         mbELHKAuzRU40Et+ILWaeteXOVhksQ4QWlRCqUBNba9q+hckHSFvk4wn//TIjPeaaSUi
-         lZPw==
-X-Gm-Message-State: AOAM531Rko3sBVc2JYHEdkYUGTIm+E7dFm80khs5LZI8TiJYSU3FLN9+
-        j53nXfneW4it/XZwV4cSC3qani3EI7udC9lC4NKjpIH9deoNv1fONqnxVxy1eb31+UIvFgTRzWn
-        RjaJaGSJdT7jwOy49uUwag1iZwtqCd9eYkZ6O
-X-Received: by 2002:a2e:580e:: with SMTP id m14mr7269766ljb.197.1623085217194;
-        Mon, 07 Jun 2021 10:00:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwTkhzmxCJi6PS7y4jmDE+BJDdiD5YSK4954D2dCrGy7KysHZPt6B2LiTHdtA/lDYEXA8GWz+cruQBsawKJZwc=
-X-Received: by 2002:a2e:580e:: with SMTP id m14mr7269730ljb.197.1623085216890;
- Mon, 07 Jun 2021 10:00:16 -0700 (PDT)
+        bh=WyajxUxD+qII3ozGjsYJB4YKIUgJgPWfBGe14Hw5m2s=;
+        b=J96owazD494AuxZ4jqKax/QGSzFAy5f+4bf5qCd7m2XP4M0XwmGDg/e2HHUIyrYE+r
+         aUjv2CSUW2NlaNju+HG8Ay8WbH4NyTjh3blLcZHGP8WlUoK1BejHCvkI5Zn4vrQHYW2J
+         dV5DMuqig+Wd/PmTOYGAL6/BppqSdga7Pw+AgcrFs5HpYYYdB2OhyhCmBnmr2Nc/c2r4
+         h1YHHgVZ8XLn6qLaTMpUzg6CC/FY9/yzsP16jagyhTqZ0Z6yWngolDLLkNOYPNWSDeQi
+         dYlAOR93CdbIwqw9PdQtWe4lsRAuXytVpIKIk8YnXR8TF4HoWlVwstPrN5hPl8Sp95dB
+         sp8w==
+X-Gm-Message-State: AOAM532feSaYsTzqq2tnc+mM0hDuEz42m45lt05viz01LVvlBqXzIb4a
+        G+qPM6XQOLSfMXYc/dvrMY7eVTl3bQ2T5F8Xm+pYCg==
+X-Google-Smtp-Source: ABdhPJxYAfvSMbKm5tmzBj3vnoPe4a8Paiz65/ivTITcRl25ajJ+YtxumvZdZK55xIyWjmiQ3dvqnRN/amfMUhHvDrM=
+X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr114198pjb.13.1623085448150;
+ Mon, 07 Jun 2021 10:04:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
- <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
- <87im3gewlu.ffs@nanos.tec.linutronix.de> <CAFki+L=gp10W1ygv7zdsee=BUGpx9yPAckKr7pyo=tkFJPciEg@mail.gmail.com>
- <CAFki+L=eQoMq+mWhw_jVT-biyuDXpxbXY5nO+F6HvCtpbG9V2w@mail.gmail.com>
- <CAFki+LkB1sk3mOv4dd1D-SoPWHOs28ZwN-PqL_6xBk=Qkm40Lw@mail.gmail.com>
- <87zgwo9u79.ffs@nanos.tec.linutronix.de> <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
-In-Reply-To: <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Mon, 7 Jun 2021 13:00:05 -0400
-Message-ID: <CAFki+L=QTOu_O=1uNobVMi2s9mbcxXgSdTLADCpeBWBoPAikgQ@mail.gmail.com>
-Subject: Re: [PATCH] genirq: Provide new interfaces for affinity hints
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        netdev@vger.kernel.org, chris.friesen@windriver.com,
-        Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com
+References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <162295949886.1109360.17423894188288323907.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0jhh8EXNY9C1_HpD7tdW9s5uNkKdyLOEDAgeK4yHpFXdA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jhh8EXNY9C1_HpD7tdW9s5uNkKdyLOEDAgeK4yHpFXdA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 7 Jun 2021 10:03:57 -0700
+Message-ID: <CAPcyv4hZTrf8a-Ga6yWxMqeg7xy=p5_m6CXKssXY-eKG9otsqA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] cxl/acpi: Local definition of ACPICA infrastructure
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-cxl@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 21, 2021 at 8:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Mon, Jun 7, 2021 at 5:26 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> The discussion about removing the side effect of irq_set_affinity_hint() of
-> actually applying the cpumask (if not NULL) as affinity to the interrupt,
-> unearthed a few unpleasantries:
+> On Sun, Jun 6, 2021 at 8:05 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > The recently released CXL specification change (ECN) for the CXL Fixed
+> > Memory Window Structure (CFMWS) extension to the CXL Early Discovery
+> > Table (CEDT) enables a large amount of functionality. It defines the
+> > root of a CXL memory topology and is needed for all OS flows for CXL
+> > provisioning CXL memory expanders. For ease of merging and tree
+> > management add the new ACPI definition locally (drivers/cxl/acpi.h) in
+> > such a way that they will not collide with the eventual arrival of the
+> > definitions through the ACPICA project to their final location
+> > (drivers/acpi/actbl1.h).
 >
->   1) The modular perf drivers rely on the current behaviour for the very
->      wrong reasons.
->
->   2) While none of the other drivers prevents user space from changing
->      the affinity, a cursorily inspection shows that there are at least
->      expectations in some drivers.
->
-> #1 needs to be cleaned up anyway, so that's not a problem
->
-> #2 might result in subtle regressions especially when irqbalanced (which
->    nowadays ignores the affinity hint) is disabled.
->
-> Provide new interfaces:
->
->   irq_update_affinity_hint() - Only sets the affinity hint pointer
->   irq_apply_affinity_hint()  - Set the pointer and apply the affinity to
->                                the interrupt
->
-> Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
-> document it to be phased out.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
-> ---
-> Applies on:
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-> ---
->  include/linux/interrupt.h |   41 ++++++++++++++++++++++++++++++++++++++++-
->  kernel/irq/manage.c       |    8 ++++----
->  2 files changed, 44 insertions(+), 5 deletions(-)
->
-> --- a/include/linux/interrupt.h
-> +++ b/include/linux/interrupt.h
-> @@ -328,7 +328,46 @@ extern int irq_force_affinity(unsigned i
->  extern int irq_can_set_affinity(unsigned int irq);
->  extern int irq_select_affinity(unsigned int irq);
->
-> -extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
-> +extern int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
-> +                                    bool setaffinity);
-> +
-> +/**
-> + * irq_update_affinity_hint - Update the affinity hint
-> + * @irq:       Interrupt to update
-> + * @cpumask:   cpumask pointer (NULL to clear the hint)
-> + *
-> + * Updates the affinity hint, but does not change the affinity of the interrupt.
-> + */
-> +static inline int
-> +irq_update_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +{
-> +       return __irq_apply_affinity_hint(irq, m, true);
-> +}
-> +
-> +/**
-> + * irq_apply_affinity_hint - Update the affinity hint and apply the provided
-> + *                          cpumask to the interrupt
-> + * @irq:       Interrupt to update
-> + * @cpumask:   cpumask pointer (NULL to clear the hint)
-> + *
-> + * Updates the affinity hint and if @cpumask is not NULL it applies it as
-> + * the affinity of that interrupt.
-> + */
-> +static inline int
-> +irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +{
-> +       return __irq_apply_affinity_hint(irq, m, true);
-> +}
-> +
-> +/*
-> + * Deprecated. Use irq_update_affinity_hint() or irq_apply_affinity_hint()
-> + * instead.
-> + */
-> +static inline int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +{
-> +       return irq_apply_affinity_hint(irq, cpumask);
+> I've just applied the ACPICA series including this change which can be
+> made available as a forward-only branch in my tree, if that helps.
 
-Another change required here, the above should be 'm' instead of 'cpumask'.
-
-> +}
-> +
->  extern int irq_update_affinity_desc(unsigned int irq,
->                                     struct irq_affinity_desc *affinity);
->
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -487,7 +487,8 @@ int irq_force_affinity(unsigned int irq,
->  }
->  EXPORT_SYMBOL_GPL(irq_force_affinity);
->
-> -int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
-> +int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
-> +                             bool setaffinity)
->  {
->         unsigned long flags;
->         struct irq_desc *desc = irq_get_desc_lock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
-> @@ -496,12 +497,11 @@ int irq_set_affinity_hint(unsigned int i
->                 return -EINVAL;
->         desc->affinity_hint = m;
->         irq_put_desc_unlock(desc, flags);
-> -       /* set the initial affinity to prevent every interrupt being on CPU0 */
-> -       if (m)
-> +       if (m && setaffinity)
->                 __irq_set_affinity(irq, m, false);
->         return 0;
->  }
-> -EXPORT_SYMBOL_GPL(irq_set_affinity_hint);
-> +EXPORT_SYMBOL_GPL(__irq_apply_affinity_hint);
->
->  static void irq_affinity_notify(struct work_struct *work)
->  {
->
-
-
--- 
-Thanks
-Nitesh
-
+Yes, please, that would be my preference. When I created this patch
+the concern was that a stable branch was possibly weeks away.
