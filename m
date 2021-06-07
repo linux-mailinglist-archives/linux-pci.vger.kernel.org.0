@@ -2,158 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A7B139D217
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 00:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6AD839D26D
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 02:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231259AbhFFWzM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Jun 2021 18:55:12 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:53791 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230368AbhFFWzK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Jun 2021 18:55:10 -0400
-Received: (Authenticated sender: n@nfraprado.net)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 861051BF203;
-        Sun,  6 Jun 2021 22:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nfraprado.net;
-        s=gm1; t=1623019997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LEITmbgA+ypfFiT6sDRv13/uCob4oKC9Sq9src0AzZE=;
-        b=chA+i0RmfXwj/WF8vUQcsG8LWn2bONkphlI9FxGByy3xXZzQ3/zHKFPGJxmKXuKUW335J7
-        jYK4CRJ9+UN7xZA7RoqojnjXZW+0cqiNSJEER76idFul1Hmyyid+LU7eBwqw4Yf6VUnAAy
-        EO/oCOnOkrJSrla2lWMUer63YFPTS6rPVGC6R5VJrg9wTSN5B9e0Ariq05tQnFO7ePJjQo
-        bl4pkIEG3/A5X1Ubh0QT5mRcrGJQ8WehYjr1NfQyPqrYiwulB4ynbpB9vRe3MCb4L15B0r
-        jLNt083VPjq8mnz5SK6VyymWvFVmHAPrKBJPANhNFdLyuGqe1sYaP2/+H+QnUQ==
-Date:   Sun, 6 Jun 2021 19:52:25 -0300
-From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <n@nfraprado.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        coresight@lists.linaro.org, devicetree@vger.kernel.org,
-        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
-Message-ID: <20210606225225.fz4dsyz6im4bqena@notapiano>
-References: <cover.1622898327.git.mchehab+huawei@kernel.org>
- <20210605151109.axm3wzbcstsyxczp@notapiano>
- <20210605210836.540577d4@coco.lan>
+        id S230093AbhFGAzA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Jun 2021 20:55:00 -0400
+Received: from mail-il1-f173.google.com ([209.85.166.173]:34401 "EHLO
+        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229884AbhFGAzA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Jun 2021 20:55:00 -0400
+Received: by mail-il1-f173.google.com with SMTP id w14so4940232ilv.1;
+        Sun, 06 Jun 2021 17:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y9BSY1kSpvp45nIhQmb2rFERrAQbQ//AOUBQnCkiljQ=;
+        b=bzqz57uoZk0svF4xpSnO8WinJCsc6o5Ynfa3Wut1LGRNe+hqVYf5Ytwoj1n2oR7uTI
+         QgdM99dO7Hryq1BFVzrRwMrlAYR/lCwhc6biDKHTdJsqkWW+RZWbTyJaK97k9uoVJV+T
+         Op0JQ61fWj3rGd1gDDh9vMYenNmUS2bIxaqudCOQ6L2LAoBVuJMSAhRUiV52ncCtP+Nl
+         Vv6T5dmwuLgTseaXBA3HMcorWxV9zUvXx6mXOxwpZVzrRPFbfGQw5EhjnPaK+UXL9TzJ
+         h/a8Q0OBgytcC1Ubx4nEGRv41mDK6PAUhmKZ7BwcGZC+ffRzJ525/py2n8joTNABcfbq
+         Qs3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y9BSY1kSpvp45nIhQmb2rFERrAQbQ//AOUBQnCkiljQ=;
+        b=spp5xXssQbAH9qdzlHJumDsP249yZ47P3GXIOeF6QtR1+NgkHx0F4tTMwXAYp18H1F
+         LBeU/NjD2c16/CwMgJD3LoDV1LGxCi+D+Q0qfaVyVFl9pFfbZ72Q51+44+hnAcLSI1tP
+         C89EDN0FYkOCLFZ2DvNE/8zshIP19nlV83WRrnDYrbxtxdUF4ZqbzQYfS+j5GR+drXW9
+         32tM5nR4Q2oUe0QZrQlk18IR4x9rxv7Dt2w2OitGfh1QHedhnG80SOIGQ8SELEoPT3Gr
+         lfd0jPMsOb5Bu9eKo7cEbLk4KRWGd3SsRgd0QWXjvS6/Ht1ycfdgqYqETDl9HbWRRRAt
+         fXqQ==
+X-Gm-Message-State: AOAM533Zt2x9ImkH2BZ3YoS37FQ3B818lkaVZfa+MN6f4Tp3u6j7oQt/
+        zwJ0stoT5xPvTzXfQxjhhB1UMfjxGSyU4OObu7E=
+X-Google-Smtp-Source: ABdhPJzI1KCYqysRurYIZL21JonrxRELtvXTwC4nnqjgU4EC7pDi/uAnAp76lXUHnDzMuxWYlKkI2kEnbE4VdXkt2zU=
+X-Received: by 2002:a92:d941:: with SMTP id l1mr12591008ilq.143.1623027119606;
+ Sun, 06 Jun 2021 17:51:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210605210836.540577d4@coco.lan>
+References: <20210605211529.GA2326325@bjorn-Precision-5520> <2a51e6b8-37e5-43cb-b0b4-d6fdd1848fe3@www.fastmail.com>
+In-Reply-To: <2a51e6b8-37e5-43cb-b0b4-d6fdd1848fe3@www.fastmail.com>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Mon, 7 Jun 2021 08:51:48 +0800
+Message-ID: <CAAhV-H5fQbJaLrYpmiK9nKWAvFEcvvso==7DpXQzJp=e7faWdg@mail.gmail.com>
+Subject: Re: LoongArch (was: Re: [PATCH V2 2/4] PCI: Move loongson pci quirks
+ to quirks.c)
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>, arnd@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 05, 2021 at 09:08:36PM +0200, Mauro Carvalho Chehab wrote:
-> Em Sat, 5 Jun 2021 12:11:09 -0300
-> Nícolas F. R. A. Prado <n@nfraprado.net> escreveu:
-> 
-> > Hi Mauro,
-> > 
-> > On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab wrote:
-> > > As discussed at:
-> > > 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
-> > > 
-> > > It is better to avoid using :doc:`foo` to refer to Documentation/foo.rst, as the
-> > > automarkup.py extension should handle it automatically, on most cases.
-> > > 
-> > > There are a couple of exceptions to this rule:
-> > > 
-> > > 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
-> > > 2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
-> > > 
-> > > It should also be noticed that automarkup.py has currently an issue:
-> > > if one use a markup like:
-> > > 
-> > > 	Documentation/dev-tools/kunit/api/test.rst
-> > > 	  - documents all of the standard testing API excluding mocking
-> > > 	    or mocking related features.
-> > > 
-> > > or, even:
-> > > 
-> > > 	Documentation/dev-tools/kunit/api/test.rst
-> > > 	    documents all of the standard testing API excluding mocking
-> > > 	    or mocking related features.
-> > > 	
-> > > The automarkup.py will simply ignore it. Not sure why. This patch series
-> > > avoid the above patterns (which is present only on 4 files), but it would be
-> > > nice to have a followup patch fixing the issue at automarkup.py.  
-> > 
-> > What I think is happening here is that we're using rST's syntax for definition
-> > lists [1]. automarkup.py ignores literal nodes, and perhaps a definition is
-> > considered a literal by Sphinx. Adding a blank line after the Documentation/...
-> > or removing the additional indentation makes it work, like you did in your
-> > 2nd and 3rd patch, since then it's not a definition anymore, although then the
-> > visual output is different as well.
-> 
-> A literal has a different output. I think that this is not the case, but I 
-> didn't check the python code from docutils/Sphinx.
+Hi, all,
 
-Okay, I went in deeper to understand the issue and indeed it wasn't what I
-thought. The reason definitions are ignored by automarkup.py is because the main
-loop iterates only over nodes that are of type paragraph:
+On Sun, Jun 6, 2021 at 4:14 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+>
+>
+> =E5=9C=A82021=E5=B9=B46=E6=9C=886=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
+=8D=885:15=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+>
+> +linux-arch and Arnd for arch related discussions
+>
+> >
+> > If you're moving these from device-specific file to a generic file,
+> > these #defines now need to have device-specific names.
+> >
+> > But these appear to be for built-in hardware that can only be present
+> > in Loongson (I assume mips?) systems.  If that's the case, maybe they
+> > should go to a mips-specific file like arch/mips/pci/quirks.c?
+> >
+> > But I see you see you mention LoongArch above, so I don't know if
+> > that's part of arch/mips, or if there's an arch/loongson coming, or
+> > what.
+>
+> As far as I read LoongArch should be a brand new RISC architecture.
+> I saw Loongson release some documents[1] and code[2] regarding this
+> new architecture.
+>
+> Huacai, as you are submitting these code, does it mean Loongson intends
+> to mainline LoongArch kernel?
+> If so, I'm certain that there is a lot of drivers and other code can be
+> reused between MIPS part and LoongArch part for Loongson chips.
+> Could you please make an announcement about your plans?
+>
+> Thanks.
+>
+> [1]: https://github.com/loongson/LoongArch-Documentation
+> [2]: https://github.com/loongarch64
+Yes, LoongArch is a new RISC ISA, it is not compatible with MIPS.
+Loongson processors before 3A4000 is compatible with MIPS, and 3A5000
+is based on LoongArch. Part of LoongArch documentations are available
+in English (as listed above by Jiaxun), others are being translated.
+There will be a new directoy arch/loongarch, and I hope it can be
+coming soon.
 
-    for para in doctree.traverse(nodes.paragraph):
-        for node in para.traverse(nodes.Text):
-            if not isinstance(node.parent, nodes.literal):
-                node.parent.replace(node, markup_refs(name, app, node))
-
-And inspecting the HTML output from your example, the definition name is inside
-a <dt> tag, and it doesn't have a <p> inside. So in summary, automarkup.py will
-only work on elements which are inside a <p> in the output.
-
-Only applying the automarkup inside paragraphs seems like a good decision (which
-covers text in lists and tables as well), so unless there are other types of
-elements without paragraphs where automarkup should work, I think we should just
-avoid using definition lists pointing to documents like that.
-
->  
-> > I'm not sure this is something we need to fix. Does it make sense to use
-> > definition lists for links like that? If it does, I guess one option would be to
-> > whitelist definition lists so they aren't ignored by automarkup, but I feel
-> > this could get ugly really quickly.
-> 
-> Yes, we should avoid handling literal blocks, as this can be a nightmare.
-> 
-> > FWIW note that it's also possible to use relative paths to docs with automarkup.
-> 
-> Not sure if you meant to say using something like ../driver-api/foo.rst.
-> If so, relative paths are a problem, as it will pass unnoticed by this script:
-> 
-> 	./scripts/documentation-file-ref-check
-> 
-> which is meant to warn when a file is moved to be elsewhere. Ok, it
-> could be taught to use "../" to identify paths, but I suspect that this
-> could lead to false positives, like here:
-> 
-> 	Documentation/usb/gadget-testing.rst:  # ln -s ../../uncompressed/u
-> 	Documentation/usb/gadget-testing.rst:  # cd ../../class/fs
-> 	Documentation/usb/gadget-testing.rst:  # ln -s ../../header/h
-
-Yes, that's what I meant. 
-
-Ok, that makes sense. Although after automarkup.py starts printing warnings on
-missing references to files (which is a patch I still need to resend), it would
-work out-of-the-box with relative paths. automarkup wouldn't face that false
-positives issue since it ignores literal blocks, which isn't as easy for a
-standalone script. But that's still in the future, we can discuss what to do
-then after it is implemented, so full paths seem better for now.
-
-Thanks,
-Nícolas
-
-> 
-> If you meant, instead, :doc:`../foo`, this series address those too.
-> 
-> Regards,
-> Mauro
+Huacai
+> --
+> - Jiaxun
