@@ -2,79 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8492739DCCA
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 14:44:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0893D39DD10
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 14:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbhFGMpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 08:45:49 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:7130 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbhFGMpt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 08:45:49 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FzCfC0LcLzYsVC;
-        Mon,  7 Jun 2021 20:41:07 +0800 (CST)
-Received: from dggpemm500009.china.huawei.com (7.185.36.225) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 7 Jun 2021 20:43:55 +0800
-Received: from [10.174.185.226] (10.174.185.226) by
- dggpemm500009.china.huawei.com (7.185.36.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 7 Jun 2021 20:43:54 +0800
-To:     Joerg Roedel <joro@8bytes.org>
-CC:     <robh@kernel.org>, <will@kernel.org>, <helgaas@kernel.org>,
-        <robh+dt@kernel.org>, <gregkh@linuxfoundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <xieyingtai@huawei.com>
-References: <1621566204-37456-1-git-send-email-wangxingang5@huawei.com>
- <YLpIcwdWDGKpw39s@8bytes.org>
-From:   Xingang Wang <wangxingang5@huawei.com>
-Subject: Re: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating PCI
- devices
-Message-ID: <9054b39b-a73c-f5b4-cd61-9af4449a0649@huawei.com>
-Date:   Mon, 7 Jun 2021 20:43:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S230145AbhFGM63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 08:58:29 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:38543 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230213AbhFGM61 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 08:58:27 -0400
+Received: by mail-ot1-f54.google.com with SMTP id j11-20020a9d738b0000b02903ea3c02ded8so2977319otk.5;
+        Mon, 07 Jun 2021 05:56:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/DkD40e1ud2+Lz0j9WJ/X3IfNp4wJD7XrnysEWFbAiw=;
+        b=gIQscirmBhtRIZJzNZEw0DsdLolrtsOY1fvd2Juwsj+vm1A5vTd4Te2WMZSrr33prS
+         hgO8hw2SgU0Z+uhfjp9xOqJCbDWZR6My3s9w/QLJbBrIZAw/BEp2Dy5yoO6QcGpCZLM9
+         gPsjCQgZEF8vJ4Z3WvXr8EMc9TPPXYzbdAy1q9eh1FTs0XaK70osuaHvbQx5oI8sm1J0
+         Dv8zKsbrzDLTrmu1K1Q0YQjz9i4grxZ3O5Yzv1nuCck/fFPfjddYFGObW9OzZwepUPTq
+         YQ9jerME8zD/eG+J92rNpkTX6qL7Yc0sIvHruDrOPEUGmjKd6JE8olfEO8ijQPBO3iGO
+         esfQ==
+X-Gm-Message-State: AOAM5330KOPYSC3faTD2DFKh/RMjeUthuHq/MJxfZAB+P9SCxPqgDbgK
+        c5XVL+1Iv0qiZDG+kDCk1oW/67i/+wnn6l1XmhE=
+X-Google-Smtp-Source: ABdhPJwE9Lrt+4ka8G8lR7rGMbn/DVUAEq32u4i2XbXDqLWhuOCbBO4k7oPfPNtyW93en1oGmqPhiMq18xNrgXJxURo=
+X-Received: by 2002:a9d:6c4d:: with SMTP id g13mr10418092otq.321.1623070596029;
+ Mon, 07 Jun 2021 05:56:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YLpIcwdWDGKpw39s@8bytes.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.185.226]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500009.china.huawei.com (7.185.36.225)
-X-CFilter-Loop: Reflected
+References: <20210603205047.GA2135380@bjorn-Precision-5520> <20210604170938.GA2218177@bjorn-Precision-5520>
+In-Reply-To: <20210604170938.GA2218177@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 7 Jun 2021 14:56:24 +0200
+Message-ID: <CAJZ5v0iDxpYxz3_8RrWSJkM7cf=xS298agXcULm3EqRC++GD2g@mail.gmail.com>
+Subject: Re: [PATCH] PCI/APCI: Move acpi_pci_osc_support() check to
+ negotiation phase
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/6/4 23:36, Joerg Roedel wrote:
-> On Fri, May 21, 2021 at 03:03:24AM +0000, Wang Xingang wrote:
->> From: Xingang Wang <wangxingang5@huawei.com>
->>
->> When booting with devicetree, the pci_request_acs() is called after the
->> enumeration and initialization of PCI devices, thus the ACS is not
->> enabled. And ACS should be enabled when IOMMU is detected for the
->> PCI host bridge, so add check for IOMMU before probe of PCI host and call
->> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
->> devices.
->>
->> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
->> configuring IOMMU linkage")
->> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
->> ---
->>   drivers/iommu/of_iommu.c | 1 -
->>   drivers/pci/of.c         | 8 +++++++-
->>   2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> Should probably go through the PCI tree, so
-> 
-> Acked-by: Joerg Roedel <jroedel@suse.de>
-> 
-> .
-> 
+On Fri, Jun 4, 2021 at 7:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Jun 03, 2021 at 03:50:47PM -0500, Bjorn Helgaas wrote:
+> > On Thu, Jun 03, 2021 at 02:48:14PM +0200, Joerg Roedel wrote:
+> > > From: Joerg Roedel <jroedel@suse.de>
+> > > ...
+>
+> > > -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
+> > > +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
+> > > +                                       *mask, u32 req, u32 support)
+> > >  {
+> > >     struct acpi_pci_root *root;
+> > >     acpi_status status;
+> > > @@ -370,7 +361,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+> > >
+> > >     /* Need to check the available controls bits before requesting them. */
+> > >     while (*mask) {
+> > > -           status = acpi_pci_query_osc(root, root->osc_support_set, mask);
+> > > +           status = acpi_pci_query_osc(root, support, mask);
+> > >             if (ACPI_FAILURE(status))
+> > >                     return status;
+> > >             if (ctrl == *mask)
+> > > @@ -433,18 +424,6 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+> > >             support |= OSC_PCI_EDR_SUPPORT;
+> > >
+> > >     decode_osc_support(root, "OS supports", support);
+> > > -   status = acpi_pci_osc_support(root, support);
+> > > -   if (ACPI_FAILURE(status)) {
+> > > -           *no_aspm = 1;
+> > > -
+> > > -           /* _OSC is optional for PCI host bridges */
+> > > -           if ((status == AE_NOT_FOUND) && !is_pcie)
+> > > -                   return;
+> > > -
+> > > -           dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> > > -                    acpi_format_exception(status));
+> > > -           return;
+> > > -   }
+> > >
+> > >     if (pcie_ports_disabled) {
+> > >             dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
+> >
+> > Also not related to this patch, but it seems pointless to compute and
+> > decode "support" above when we're not going to use _OSC at all.  I
+> > think the "pcie_ports_disabled" test should be the very first thing in
+> > this function (I'm assuming the "pcie_ports=compat" command line
+> > argument *should* apply even on x86_apple_machine, which it doesn't
+> > today).
+>
+> I think I was wrong about this.  Even when "pcie_ports_disabled", the
+> current code *does* evaluate "_OSC(Query, SUPPORT=x, CONTROL=0)",
+> i.e., it tells the platform what Linux supports, but doesn't request
+> control of anything.
+>
+> I think the platform may rely on this knowledge of what the OS
+> supports.  For example, if we tell the platform that Linux has
+> OSC_PCI_EXT_CONFIG_SUPPORT, that may change the behavior of ASL that
+> accesses config space.
+>
+> So I don't think it's safe to move this test to the beginning of the
+> function as I proposed.
+>
+> For the same reason, I'm not sure that it's safe to remove
+> acpi_pci_osc_support() as in this patch.
 
-Thanks
+No, it isn't AFAICS.
 
-.
+[I was about to comment on this, but you were faster.]
+
+>  If either "pcie_ports_disabled" or Linux doesn't support everything in
+> ACPI_PCIE_REQ_SUPPORT, we will never evaluate _OSC at all, so
+> the platform won't know that Linux has OSC_PCI_SEGMENT_GROUPS_SUPPORT,
+> OSC_PCI_HPX_TYPE_3_SUPPORT, OSC_PCI_EXT_CONFIG_SUPPORT, etc.
+
+Right.
