@@ -2,119 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50EDE39DD5E
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 15:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE39F39DE1F
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 15:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230241AbhFGNPe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 09:15:34 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:44693 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230217AbhFGNPd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 09:15:33 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1My3Ad-1lQqle2BNn-00zUeI for <linux-pci@vger.kernel.org>; Mon, 07 Jun 2021
- 15:13:41 +0200
-Received: by mail-wm1-f42.google.com with SMTP id n17-20020a7bc5d10000b0290169edfadac9so12690889wmk.1
-        for <linux-pci@vger.kernel.org>; Mon, 07 Jun 2021 06:13:41 -0700 (PDT)
-X-Gm-Message-State: AOAM532v16sLNTdxtqPzPb+RyxeY2AOah95QpGOP0SQJ+hThMshGIMQD
-        KMK9eKgljMJi1DDVNZ1C+ETx9XtcOhyVEdOazFI=
-X-Google-Smtp-Source: ABdhPJzVSsA4BPtIPlnUE5YjuT9At3i7SPtz91qq7EdebIc4HsMW75RnQfliTFMnahJzNUcRYnQ+g1jXQW+07UOek7I=
-X-Received: by 2002:a1c:9a45:: with SMTP id c66mr12109928wme.43.1623071621240;
- Mon, 07 Jun 2021 06:13:41 -0700 (PDT)
+        id S230197AbhFGNzx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 09:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230215AbhFGNzx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Jun 2021 09:55:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 17934610FB;
+        Mon,  7 Jun 2021 13:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623074042;
+        bh=NVdj6ayfoAT3AL4V0wd+dEF46qN8sMjZMWQkJzFPDCU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IWuL1O6NPXyju3ouiRqrgFICtCHZwYderI8e8AeyIpXhUxQePEiB1wyNcs9ONkLBv
+         ivXD5MV/NWfys8RmFy0Ik2jsia9wpaqiY9dhk1fVPigmXqKYGobrO7zXFKCpf6aFkY
+         UT0O1fRzn5eWvzGauhbasZqLknf7ZDxzUZ5ik87y+1XnfKKA0UaI9axVWhWzLkwYKw
+         q7iVs9M69IUhaCwlujazZuuXAnRo/PbF3h73VjqXPh03JXQri9pqlI7WbPBPHxlbpV
+         iMvbADhEqlOfTotCsa7mUSJDU9WVDj2laj1n3Sme/drbEtFI1n5qnhs2IFM/CXnlK9
+         1XSnT1np3PjcQ==
+Date:   Mon, 7 Jun 2021 08:54:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Quan, Evan" <Evan.Quan@amd.com>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kw@linux.com" <kw@linux.com>
+Subject: Re: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS support
+Message-ID: <20210607135400.GA2478732@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210607130711.3668148-1-linus.walleij@linaro.org>
-In-Reply-To: <20210607130711.3668148-1-linus.walleij@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 7 Jun 2021 15:11:52 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3SigtNyEcDh=NsSD7gaoMt-Cc7b_6Ay2MGEGQGZ4ax6A@mail.gmail.com>
-Message-ID: <CAK8P3a3SigtNyEcDh=NsSD7gaoMt-Cc7b_6Ay2MGEGQGZ4ax6A@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI: ixp4xx: Add a new driver for IXP4xx
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        Zoltan HERPAI <wigyori@uid0.hu>,
-        Raylynn Knight <rayknight@me.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:6qN3MqOiz+S+BYvuy1aXA29t6CYAtLXhMcw8k/lDAUMp52QQo25
- YZRQD2iohsno+HYDv81ZjvfZtelh2ZiTJou4CIdKJV3LUJX+h2mOFEcyC/w1jPm4nhTTeBj
- YpnbwFVVgdA/hKOPKDM13W0t7Pumwm8ruik8yjaNNviMKqIx1dgmtnmHcgdtrIScvWJ0bFZ
- yhtYxnQn2iE2PeFFXeLmw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V3TxGMBQHn8=:E0B67sGqPKAkOBxQGrkso4
- DtKZTDSogQg5Hd7/reTroJV7DZbv1LX5Fl21J/Ky9EoaM6gb05XZGqdppf3usjjNTWSskn1m1
- H/wJVLiUCIHPPpDr9IKfEyFJdFXN7cLLbrV+8yus9Hi6OgNE2mBEmEVIUi1f38N+w+heIGlNm
- DSzK9sN0BLWGJI/Zo2Z5z7wpa+jlK9zuS/Avavi6o8LgEQ0XvTsmfTgWPSd2dCNsowIFCgbS+
- zkqs4nE8fL2aRTC7a4MR1gu49xSSpCQFVxRz7UYcLQsxRW2/ROyTA7W40tqXbvXgBGQnO0ykC
- uDgeBXdngFXUBOLDg3y726mx9L2vngu+oTDHh+9UFY2JNyhh2285cIIg8w+c9+tfqRnBl4rL5
- g5JF+KXe5ilq8ns0xKDACjT+KfHyX8vQN7BYX5KNw32X4EXB8UdxaMwLqXKsz/PJPpPSPFzRr
- WpFISEYY6F1Apt805EC4CsQovHYL6nF01JIJn6RIvBraIl5OkbjmNfIQxgBeXhBedscTUmBlV
- cMfooG0VpGjt3KtMIXxVAUQuKP6GhaAO34NqPTKE2CXSVhaAcQayZA7W/REL1mNbbYy8814M+
- ydxcAF4s8nE/RpSwBKvwBsEjN2I6kvAXxUjKig4kJ+o3xemMx+E/oWj87iOiES/G8Ibd+htsH
- 2UMo=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6PR12MB26193FFC56E703A01CCC382EE4389@DM6PR12MB2619.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 7, 2021 at 3:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> This adds a new PCI controller driver for the Intel IXP4xx
-> (IX425, IXP435 etc), based on the XScale microarchitecture.
->
-> This replaces the old driver in arch/arm/mach-ixp4xx/common-pci.c
-> which utilized the ARM-specific BIOS32 PCI framework,
-> and all parameterization for such things as memory and
-> IO space as well as interrupt swizzling is done from the
-> device tree.
->
-> The plan is to phase out and delete the old driver piecemal.
->
-> The __raw_writel() and __raw_readl() are used for accessing
-> the PCI controller for the same reason that these accessors
-> are used in the timer, IRQ and GPIO drivers: the platform
-> will alter its address bus pattern based on whether the
-> system is booted in big- or little-endian mode. For this
-> reason all register on IXP4xx must always be accessed in
-> native (CPU) endianness.
->
-> This driver supports 64MB of PCI memory space, but not the
-> indirect access of 1GB that is available in the old driver.
-> We can address that later if and only if there are users
-> that need all 1GB of PCI address space. Krzysztof reports
-> having to use indirect MMIO only once for a VGA card. There
-> is work ongoing for general indirect MMIO. (In practice
-> the indirect MMIO is performed by writing address and
-> writing and reading values into/from a controller
-> register.)
->
-> Tested by booting the NSLU2, attaching a USB stick, mounting
-> and browsing the drive.
->
-> Link: https://lore.kernel.org/linux-arm-kernel/m37edwuv8m.fsf@t19.piap.pl/
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Imre Kaloz <kaloz@openwrt.org>
-> Cc: Krzysztof Halasa <khalasa@piap.pl>
-> Cc: Zoltan HERPAI <wigyori@uid0.hu>
-> Cc: Raylynn Knight <rayknight@me.com>
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+On Mon, Jun 07, 2021 at 03:41:35AM +0000, Quan, Evan wrote:
+> [AMD Official Use Only]
+> 
+> Thanks Bjorn.
+> @Deucher, Alexander can you advise whether this is needed for stable kernel branches and which branches if yes?
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Sorry, I should have done this already.  I went ahead and marked it
+for stable.
 
-One small detail:
-
-> +static struct platform_driver ixp4xx_pci_driver = {
-> +       .driver = {
-> +               .name = "ixp4xx-pci",
-> +               .suppress_bind_attrs = true,
-> +               .of_match_table = of_match_ptr(ixp4xx_pci_of_match),
-> +       },
-> +};
-
-That of_match_ptr() is pointless unless the ixp4xx_pci_of_match[] array
-is inside of an #ifdef.
-
-       Arnd
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Saturday, June 5, 2021 4:59 AM
+> > To: Quan, Evan <Evan.Quan@amd.com>
+> > Cc: linux-pci@vger.kernel.org; kw@linux.com; Deucher, Alexander
+> > <Alexander.Deucher@amd.com>
+> > Subject: Re: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS
+> > support
+> > 
+> > On Wed, Jun 02, 2021 at 10:12:55AM +0800, Evan Quan wrote:
+> > > Unexpected GPU hang was observed during runpm stress test on 0x7341
+> > > rev 0x00. Further debugging shows broken ATS is related. Thus as a
+> > > followup of commit 5e89cd303e3a ("PCI:
+> > > Mark AMD Navi14 GPU rev 0xc5 ATS as broken"), we disable the ATS for
+> > > the specific SKU also.
+> > >
+> > > Signed-off-by: Evan Quan <evan.quan@amd.com>
+> > > Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+> > > Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> > 
+> > Applied to pci/virtualization for v5.14, thanks.
+> > 
+> > I updated the commit log like this:
+> > 
+> >     PCI: Mark AMD Navi14 GPU ATS as broken
+> > 
+> >     Observed unexpected GPU hang during runpm stress test on 0x7341 rev
+> > 0x00.
+> >     Further debugging shows broken ATS is related.
+> > 
+> >     Disable ATS on this part.  Similar issues on other devices:
+> > 
+> >       a2da5d8cc0b0 ("PCI: Mark AMD Raven iGPU ATS as broken in some
+> > platforms")
+> >       45beb31d3afb ("PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken")
+> >       5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
+> > 
+> >     Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+> >     Link:
+> > https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.
+> > kernel.org%2Fr%2F20210602021255.939090-1-
+> > evan.quan%40amd.com&amp;data=04%7C01%7Cevan.quan%40amd.com%7
+> > C2999a40d134142c2fdd608d9279b9ddb%7C3dd8961fe4884e608e11a82d994e
+> > 183d%7C0%7C0%7C637584371596788532%7CUnknown%7CTWFpbGZsb3d8ey
+> > JWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> > 7C1000&amp;sdata=%2BgYq6SPJNCgqj%2By%2BLzkAGjmm5TONhApdYlze%
+> > 2FFz%2FiUM%3D&amp;reserved=0
+> >     Signed-off-by: Evan Quan <evan.quan@amd.com>
+> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> >     Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> > 
+> > > ---
+> > > ChangeLog v2->v3:
+> > > - further update for description part(suggested by Krzysztof)
+> > > ChangeLog v1->v2:
+> > > - cosmetic fix for description part(suggested by Krzysztof)
+> > > ---
+> > >  drivers/pci/quirks.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
+> > > b7e19bbb901a..70803ad6d2ac 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -5176,7 +5176,8 @@
+> > > DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422,
+> > > quirk_no_ext_tags);  static void quirk_amd_harvest_no_ats(struct pci_dev
+> > *pdev)  {
+> > >  	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
+> > > -	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
+> > > +	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
+> > > +	    (pdev->device == 0x7341 && pdev->revision != 0x00))
+> > >  		return;
+> > >
+> > >  	if (pdev->device == 0x15d8) {
+> > > @@ -5203,6 +5204,7 @@
+> > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,
+> > > 0x6900, quirk_amd_harvest_no_ats);
+> > > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312,
+> > > quirk_amd_harvest_no_ats);
+> > >  /* AMD Navi14 dGPU */
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340,
+> > > quirk_amd_harvest_no_ats);
+> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341,
+> > > +quirk_amd_harvest_no_ats);
+> > >  /* AMD Raven platform iGPU */
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8,
+> > > quirk_amd_harvest_no_ats);  #endif /* CONFIG_PCI_ATS */
+> > > --
+> > > 2.29.0
+> > >
