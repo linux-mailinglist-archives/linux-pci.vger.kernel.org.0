@@ -2,125 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 556C939E8FF
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 23:18:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AA4939E923
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 23:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbhFGVUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 17:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230359AbhFGVUM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Jun 2021 17:20:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 520806109F;
-        Mon,  7 Jun 2021 21:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623100700;
-        bh=UZGmBdnbVWm8mCbra/+PV/yUR200sqqHIL3AOoDv0y8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gzQzcdYz+xeX4q9mlDbN0cWW9+Q4fVemfJFTV5lL9H2HQzUPBhljzBudwAiw6WbT4
-         WtszooesSqYWS2WciECSYJ2UX3cDYxTgislr/llrWBkcCV2siLIdu8xhGARNqr1CeN
-         6SixUJPDYE9TGLbFTHYoGTEyTOB21ESloUKBQ8R+sseBjnaYRDxv4IC7YPG5b7KhPY
-         AAb3svU5eebBB2Nbz8aaYGbHNSJskQWHGNfWzpSn8npRZ1i40u7sgjB9DbQHFloCGC
-         rPSAi9xBlNw4fcdOXZA3xKWLWwG/9Oy65FZhlJqOWm4h8fdzj0fecdbQ4CsVqbAn8u
-         xQxZPEYwkvI5A==
-Received: by pali.im (Postfix)
-        id BC6747DF; Mon,  7 Jun 2021 23:18:17 +0200 (CEST)
-Date:   Mon, 7 Jun 2021 23:18:17 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Sandor Bodo-Merle <sbodomerle@gmail.com>,
+        id S230394AbhFGVfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 17:35:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43849 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230333AbhFGVfl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 17:35:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623101629;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ne0sdd3NZl98G4gVbRdymPLZj6j1uGmDFhwuH8srjsM=;
+        b=hqQSjSYvpqBzNCAIHFl24rlfsdiqCIayT9cBO3ZRFfIrhSpc2yN3/YrgheTSbJQtUyWffP
+        bJFtBnPxlTyhaaPdXYCmX9dSK717gBn6ISFmhP8Y6mO4Qjgbm/IzZEZhlIj2ic+ApyRCFf
+        7s4dJPv6xryDZPogjKcx1oRkHKyZIZY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-561-XiRWl2-VM0maPb9Nyhb6Gw-1; Mon, 07 Jun 2021 17:33:48 -0400
+X-MC-Unique: XiRWl2-VM0maPb9Nyhb6Gw-1
+Received: by mail-wm1-f69.google.com with SMTP id f22-20020a1c6a160000b029018f49a7efb7so419230wmc.1
+        for <linux-pci@vger.kernel.org>; Mon, 07 Jun 2021 14:33:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ne0sdd3NZl98G4gVbRdymPLZj6j1uGmDFhwuH8srjsM=;
+        b=Rd97OPIf5M7RDCAqRRz/37RtHoNFWmUtM/f0dfu7yWGjIIU3EDYUss4V2Qze2bkqlU
+         upC7GcAUeH4cYnSt8XVPlIfpYTf2KyZggrgwSA00gJYtqjdHT8AL6/SkSULsaAPdFYFw
+         ZfFpHKsx6qyk0jnXnN6/+SXWrA+PeM3BBgwvPGsOXwF6FP/r3m2MdN7gEKYtX4pM678S
+         n1su92AIMoX2dYW1vBEy8dhqJU/n6spHF2rB32M0kcbgmztwUVgDIPwR27HYvX4+p4MC
+         LC6ofTtleFfonNoYwt2Og074P1qYxyYjd82439KKU1mTTHZefjI2T+bLFboCV42MGOmN
+         J/RQ==
+X-Gm-Message-State: AOAM5322k5LQAOYQxSIZQIS5Ei9xZKByQ/hDa3NaN3vd4afqAqRSrHGO
+        DsVcchb+Y8MVO7rmciEhGtw35jXreCAfQwpJ0OKCDOUp4XoPzGVj1GR+2DmlnaJJSyV2G5Du5DD
+        E+sUueR1caRjFy9d1lFHU
+X-Received: by 2002:a7b:c24e:: with SMTP id b14mr19012441wmj.6.1623101627126;
+        Mon, 07 Jun 2021 14:33:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy4ll9t3EwcCKy3igwdQwoTdXU//20aYaO8amkuTKLrzZN/i3Xio/esdoJJJge80qbLcxBnjQ==
+X-Received: by 2002:a7b:c24e:: with SMTP id b14mr19012434wmj.6.1623101626926;
+        Mon, 07 Jun 2021 14:33:46 -0700 (PDT)
+Received: from minerva.home ([92.176.231.106])
+        by smtp.gmail.com with ESMTPSA id q5sm17659319wrm.15.2021.06.07.14.33.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jun 2021 14:33:46 -0700 (PDT)
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: iproc: Support multi-MSI only on uniprocessor
- kernel
-Message-ID: <20210607211817.fy2necxy5mxow6rg@pali>
-References: <20210606123044.31250-1-sbodomerle@gmail.com>
- <20210606123044.31250-2-sbodomerle@gmail.com>
- <927a977c-5bd5-3df1-c990-d817b0759654@broadcom.com>
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH] PCI: rockchip: Avoid accessing PCIe registers with clocks gated
+Date:   Mon,  7 Jun 2021 23:33:28 +0200
+Message-Id: <20210607213328.1711570-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <927a977c-5bd5-3df1-c990-d817b0759654@broadcom.com>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 07 June 2021 09:48:21 Ray Jui wrote:
-> On 6/6/2021 5:30 AM, Sandor Bodo-Merle wrote:
-> > The interrupt affinity scheme used by this driver is incompatible with
-> > multi-MSI as it implies moving the doorbell address to that of another MSI
-> > group.  This isn't possible for multi-MSI, as all the MSIs must have the
-> > same doorbell address. As such it is restricted to systems with a single
-> > CPU.
-> > 
-> > Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
-> > Reported-by: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-iproc-msi.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> > index 557d93dcb3bc..81b4effeb130 100644
-> > --- a/drivers/pci/controller/pcie-iproc-msi.c
-> > +++ b/drivers/pci/controller/pcie-iproc-msi.c
-> > @@ -171,7 +171,7 @@ static struct irq_chip iproc_msi_irq_chip = {
-> >  
-> >  static struct msi_domain_info iproc_msi_domain_info = {
-> >  	.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> > -		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-> > +		MSI_FLAG_PCI_MSIX,
-> >  	.chip = &iproc_msi_irq_chip,
-> >  };
-> >  
-> > @@ -250,6 +250,9 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
-> >  	struct iproc_msi *msi = domain->host_data;
-> >  	int hwirq, i;
-> >  
-> > +	if (msi->nr_cpus > 1 && nr_irqs > 1)
-> > +		return -EINVAL;
-> > +
-> 
-> This should never happen since the framework would have guarded against
-> this. But I guess it does not hurt to have the check here.
+IRQ handlers that are registered for shared interrupts can be called at
+any time after have been registered using the request_irq() function.
 
-Yes, this should not happen, but I suggested to add a comment or assert
-or some other way to document this kind of constrain. Lot of times code
-is copy+pasted to new drivers and because only this one driver has
-.alloc function which is using nr_cpus for allocating msi bitmap, it
-really makes sense to document this constrain also explicitly.
+It's up to drivers to ensure that's always safe for these to be called.
 
-> >  	mutex_lock(&msi->bitmap_lock);
-> >  
-> >  	/*
-> > @@ -540,6 +543,9 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
-> >  	mutex_init(&msi->bitmap_lock);
-> >  	msi->nr_cpus = num_possible_cpus();
-> >  
-> > +	if (msi->nr_cpus == 1)
-> > +		iproc_msi_domain_info.flags |=  MSI_FLAG_MULTI_PCI_MSI;
-                                              ^^
-Just a small note: there are two spaces instead of just one
+Both the "pcie-sys" and "pcie-client" interrupts are shared, but since
+their handlers are registered very early in the probe function, an error
+later can lead to these handlers being executed before all the required
+have been properly setup.
 
-Otherwise looks good to me:
+For example, the rockchip_pcie_read() function used by these IRQ handlers
+expects that some PCIe clocks will already be enabled, otherwise trying
+to access the PCIe registers causes the read to hang and never return.
 
-Acked-by: Pali Rohár <pali@kernel.org>
+The CONFIG_DEBUG_SHIRQ option tests if drivers are able to cope with their
+shared interrupt handlers being called, by generating a spurious interrupt
+just before a shared interrupt handler is unregistered.
 
-> > +
-> >  	msi->nr_irqs = of_irq_count(node);
-> >  	if (!msi->nr_irqs) {
-> >  		dev_err(pcie->dev, "found no MSI GIC interrupt\n");
-> > 
-> 
-> Looks fine to me. Thanks.
-> 
-> Acked-by: Ray Jui <ray.jui@broadcom.com>
+But this means that if the option is enabled, any error in the probe path
+of this driver could lead to one of the IRQ handlers to be executed.
+
+In a rockpro64 board, the following sequence of events happens:
+
+  1) "pcie-sys" IRQ is requested and its handler registered.
+  2) "pcie-client" IRQ is requested and its handler registered.
+  3) probe later fails due readl_poll_timeout() returning a timeout.
+  4) the "pcie-sys" IRQ is unregistered.
+  5) CONFIG_DEBUG_SHIRQ triggers a spurious interrupt.
+  6) "pcie-client" IRQ handler is called for this spurious interrupt.
+  7) IRQ handler tries to read PCIE_CLIENT_INT_STATUS with clocks gated.
+  8) the machine hangs because rockchip_pcie_read() call never returns.
+
+To avoid cases like this, the handlers don't have to be registered until
+very late in the probe function, once all the resources have been setup.
+
+So let's just move all the IRQ init before the pci_host_probe() call, that
+will prevent issues like this and seems to be the correct thing to do too.
+
+Reported-by: Peter Robinson <pbrobinson@gmail.com>
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+---
+
+ drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index f1d08a1b159..78d04ac29cd 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -592,10 +592,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+ 	if (err)
+ 		return err;
+ 
+-	err = rockchip_pcie_setup_irq(rockchip);
+-	if (err)
+-		return err;
+-
+ 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+ 	if (IS_ERR(rockchip->vpcie12v)) {
+ 		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
+@@ -973,8 +969,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto err_vpcie;
+ 
+-	rockchip_pcie_enable_interrupts(rockchip);
+-
+ 	err = rockchip_pcie_init_irq_domain(rockchip);
+ 	if (err < 0)
+ 		goto err_deinit_port;
+@@ -992,6 +986,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	bridge->sysdata = rockchip;
+ 	bridge->ops = &rockchip_pcie_ops;
+ 
++	err = rockchip_pcie_setup_irq(rockchip);
++	if (err)
++		goto err_remove_irq_domain;
++
++	rockchip_pcie_enable_interrupts(rockchip);
++
+ 	err = pci_host_probe(bridge);
+ 	if (err < 0)
+ 		goto err_remove_irq_domain;
+-- 
+2.31.1
+
