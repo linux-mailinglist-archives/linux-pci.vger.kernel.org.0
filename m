@@ -2,197 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 798B939D60D
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 09:33:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 962EC39D61E
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 09:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229436AbhFGHfH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 03:35:07 -0400
-Received: from de-smtp-delivery-102.mimecast.com ([194.104.111.102]:23658 "EHLO
-        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230198AbhFGHfG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 03:35:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1623051194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=18sc27qt2MdAUPAfqSvsq6VWZxZ7AlczriAkSGpC5ng=;
-        b=Pyix9SHANTciYU2xqifUQmsV1pPfamOBPjkhWpad5Ne4T76j3sh/lOjXpOmJ1rLifMtrak
-        mlO8qHY0hoOFBAesfuTQkCbBAqBXEspUI3dEcjP+q2jngRmwVDfrDCZNdD1ih0buF6aMm1
-        6At6s6H3Q7AEhg63ZsWigpc5ZL5vQM4=
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
- (mail-db5eur03lp2055.outbound.protection.outlook.com [104.47.10.55]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- de-mta-38-Ay9mnpsqPUCWs1ZkDMNT7g-1; Mon, 07 Jun 2021 09:33:12 +0200
-X-MC-Unique: Ay9mnpsqPUCWs1ZkDMNT7g-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I+gcBiY7SsoqJjr/ZfbF51TqIsqqrnrc0FOnqqduULWuQQ41x5/YfiyAFNEaSUIB3TcFUPhESBu7zfPtb8DxPUpJOJmxSca7PmxLZC2rNWCMdAGfG+1v6U3ymUafvhPLX8Rt/gu0QqhXYObiOd5/3i77FT6fU3rINZupXMRPoM37AFaJVtU40UCBJh8F6OhQECVL3bB5UEf7yLLa9FTtR2SAoO2VNjDYEq8oKuARWEy81ylvFIyzUpZdOA8dVIKc4BhDLtHmPAOyfCrFSB0p3HcCaeHNluIgXucAKufsxLhXpWuKEmQTiCCkO/mwhXViI4rGBOf3VBFzQKAw9MsAag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=18sc27qt2MdAUPAfqSvsq6VWZxZ7AlczriAkSGpC5ng=;
- b=cNVXG2a+26AtCDTMnZzlgU5yoiBDkdSm6uGCZul2+aXnkq4ejYTlpRe+g2Hr7RMG2uRQ+ygsvmfQWSzI7GkUxGIB1ruLbM/rNtbW5xlV6ERJSQfYts11+vJHdT502I1utjrmMlmZ4PRQjfcAOAKUSwQx3FIbj/AjEDByLMKgWAKMJ4AtqhYJWb3Nxv+/B64EXEjAynPBKiIGiCuegL7Pqgj+HAZVLok2lpsB2gpwUZW9qvQSupX+GiWxfBVS2ts8JEl0dw7Q7KDJBAxE6CCGbiZJAhC9SpXtmyX8/DPeFI/sfiqV0kB7/8Yq4HrjEYtww4BmVOabkOc28K4rxxldxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
-Received: from DB7PR04MB5177.eurprd04.prod.outlook.com (2603:10a6:10:20::21)
- by DB6PR0401MB2294.eurprd04.prod.outlook.com (2603:10a6:4:46::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.20; Mon, 7 Jun
- 2021 07:33:10 +0000
-Received: from DB7PR04MB5177.eurprd04.prod.outlook.com
- ([fe80::790f:c865:4660:1565]) by DB7PR04MB5177.eurprd04.prod.outlook.com
- ([fe80::790f:c865:4660:1565%7]) with mapi id 15.20.4195.030; Mon, 7 Jun 2021
- 07:33:10 +0000
-Date:   Mon, 7 Jun 2021 15:33:02 +0800
-From:   Shung-Hsi Yu <shung-hsi.yu@suse.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Nitesh Lal <nilal@redhat.com>
-Subject: [RFC] genirq: Add effective CPU index retrieving interface
-Message-ID: <YL3LrgAzMNI2hp5i@syu-laptop>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Originating-IP: [39.12.96.182]
-X-ClientProxiedBy: FR0P281CA0013.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:15::18) To DB7PR04MB5177.eurprd04.prod.outlook.com
- (2603:10a6:10:20::21)
+        id S230258AbhFGHgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 03:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230231AbhFGHgU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Jun 2021 03:36:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 29FEA60720;
+        Mon,  7 Jun 2021 07:34:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623051269;
+        bh=0ypPpkJHDs3edXD5bDeKaiim7X/xfBueG4AuE8+Qj+U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MCZa/wfgoJSof9wCVVOv/LrdFcXdwY1vCJuTly8zaeAIwTuRDtC8rzfgyHA9r6/+g
+         NW2tP3feh93C/5Dxty7jg+vScZHZGMhUEyWQ5FgxO8vpWG7sfVd2/FVm9kFVWmNyKF
+         EQBYWqrXHDSSXIu/AIkm5+Ioyl/4Y8qqVlITSp7EP1AHAdF2gq6+t5N/EukG8nlrD5
+         /Z/7kCrp6V3McL/0xD3Opj9oSYMVR4OQwEiMuDlxNhhxICUhrFF3xy6Xf7sAtNEHPC
+         UZ6EjZnr6psnuld6cX9JYfcpHnFwEGAKkBcwq4fn3pJEE/OA/DfL7AgTqkUjjnfOU7
+         t/jaztuq+MVCA==
+Date:   Mon, 7 Jun 2021 09:34:22 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "=?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <n@nfraprado.net>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        coresight@lists.linaro.org, devicetree@vger.kernel.org,
+        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
+Message-ID: <20210607093422.0a369909@coco.lan>
+In-Reply-To: <20210606225225.fz4dsyz6im4bqena@notapiano>
+References: <cover.1622898327.git.mchehab+huawei@kernel.org>
+        <20210605151109.axm3wzbcstsyxczp@notapiano>
+        <20210605210836.540577d4@coco.lan>
+        <20210606225225.fz4dsyz6im4bqena@notapiano>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from syu-laptop (39.12.96.182) by FR0P281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.11 via Frontend Transport; Mon, 7 Jun 2021 07:33:06 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9363e986-da74-4521-8516-08d929868037
-X-MS-TrafficTypeDiagnostic: DB6PR0401MB2294:
-X-Microsoft-Antispam-PRVS: <DB6PR0401MB2294D41DA9F2DAE97FBEC246BF389@DB6PR0401MB2294.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /hWMOC0ayEFV3Yp015C9yYeL5E4Mz3p9/G+/jemCI3ioXpLIRDHmwu8VO6Nat8RViafYMUlmqi9Tr/UmvKeP6cUoozTzx12GitWtt7fDVCeUr6jDj4HD9Z4VaksmaJgk9sdlCHGYAcShORzlNsE2vNGDoGAIfHn/bppp8SkKs37vcX9KJpStbel7JKuZTQt8xmEFNb/uT744HYZdY8HlNSQ6v1baiTWfPrTv0NGXUageGR5ucReNMcl0ECKqW99+ZXXM8PbFGnQsnifhYjuvIocDgHL1ptwxTH1dm5u7E431YOKwEDzFrC47ziZEzb9PeSoG6SM3pvOWLgPW0Rw7ZxtTAWtku/xXrHmGcIzlikxBQm1nLZM9oYyYXH/0ufTDAsGxucJkMlxeNY63MubQrvjFeVQduJYZFpy28I6Q8Zrzi6OYObz5/yz+z97GvhVANKe0MoQ3M71K0qYh/G0TJC3WInpmMGw+YcAKeVr0gUrWYK4KGFvSTWiRU8S80lMWEkhDIIVhw7kTTpq+TJ4RL1C+0Rm04ih3RBjwRyLJZumhf04RDZruJS8QTb36njf41wEhqCtBPVc7zjQrETp0BnWks2XGwxjRrHGCVw8615jPnQxV16bOvwXI+HjLidwhlXeUdfj6wxRGfkso9JA6hsvcca7L835n024FVWMEchyo/Qn7UHokl0Ixuiuj4E4ms314bUCDiERMF0mBWmYm2k+3NzKRzArzMy8+vNRgQk/BVCD/1j2/WyFMYJ4plZr5O+AN3+H97gYVTOvx2NloJA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5177.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(39850400004)(366004)(136003)(376002)(33716001)(83380400001)(8936002)(316002)(478600001)(6496006)(966005)(86362001)(4326008)(186003)(16526019)(8676002)(26005)(66946007)(6666004)(66556008)(2906002)(5660300002)(55016002)(9686003)(956004)(38100700002)(66476007)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?SGVjVlQxcUl1QmRtUWd6aGZObytBU3djaWUzcS8yazZLTEFCN0haOWFiQ2dt?=
- =?utf-8?B?Z3ZOMXFHZEhqSTFCOWF3SHl1MGxWVU9mdjdrb0FvV1paQW1acU9LeThzMHF3?=
- =?utf-8?B?UmdFMXZuRHZOVDlSeUg0Wm4vODZEZEVLMm5NWGR0Qy92NmxqUXpCdFltdnhz?=
- =?utf-8?B?aGNLV0lOKzBVSFhXQzduZ0oweWRtTlhvRytDZGQwdG9ZdVNTL3BtU0g3b0E3?=
- =?utf-8?B?ZUpHOUxuT0k2WllpaWtReFdDcFIvL0xNZWdaQkJ0NEVYQXhoVE1Qck9tcGN3?=
- =?utf-8?B?OEZKNHc0VVJIaEFyb1l3WTVLdlBtQWxaUUJld0xvL0kwRUVBUUV3akRJdWVz?=
- =?utf-8?B?THY0YktudFFCcW5PQW9sWksrWVhXbDBGczVGM1U0eXRuaS80SnI1bEx6SjA1?=
- =?utf-8?B?MWgwaG53ZE5obFlLWmpRc2FqUnJGd1ZCcmhCc3A2TkdPQ2RaQ0FCejFsTXZK?=
- =?utf-8?B?aUhXanZUM1ZxNHVVNXQvU1M2elpJNTFicXFXRlp2YWJXZ0ZCcklNajcra1g5?=
- =?utf-8?B?WDNhNzN0QnVvc1VhRGNkZlBpYTlrNDVHM1VHdjJXcWx1cS9tL0NLVDNBditB?=
- =?utf-8?B?Q25rT1NERVFSaVNOQnc2UHZ2ckFHZnc4ZVhHWkR1UDMvK01Kc2RBODBSOXlF?=
- =?utf-8?B?SVV2SWdqblBBcXpxeG0vMmNlR2Y2ZzRLanZyRmg4aTVnYXZ6WW80ZXJSOVA5?=
- =?utf-8?B?b0hDT3lTbTlpQlBkbzcrQkIrYitUNlJFSHlRU21Idk5TQVZEZUsxbVRsdnVx?=
- =?utf-8?B?Ym42Wmt5S0RQUEY4SWVTMXZwSmZPTlZkRUM4OENCYUc2QUpPUFJBczNpSXZ3?=
- =?utf-8?B?UGthODdjeitLU1kwNXE1aVF3OUQyaGR2by9WUStQNUdlbE4xRGpFcFVGaGRJ?=
- =?utf-8?B?MkFyRzVHUyt5QmJDV1JuQzVucGE3NSt4MTh0cTBuL205V1UvenVjNXVKNitj?=
- =?utf-8?B?TFpPaUtISHJmRTRMUmtReXBwV0JSc2xrSTg4cUMwdFZwN3UvV1ZGbFJ6K096?=
- =?utf-8?B?Mlk4Mi9GOTRUMU9nN1h6V1Y3N0JMbXcvOHlSSzZZdWVIQS9BNmpoQWlZeFJF?=
- =?utf-8?B?aHVTNi9pcVRSalV1V3hiSWcxMHBLV2ZuakRSWlNUN1NnaWZqdEd0aVdyVG53?=
- =?utf-8?B?R0xDNTlBVEExV3h3TmVuRTloZTE0YlBra3F6QTJGeDlHTVNrR1dJYWlUTnA1?=
- =?utf-8?B?STRKT2VzOExOVnpmbzh6cWlid0JIN0pBam5QTS8wR2JJS0VGV204dWY0TzJu?=
- =?utf-8?B?WGRpRXZYOUlhMUxQdDVoL252MFA2MXFuaUo2WXVMYlNJV3ovb1U1NFEraVMz?=
- =?utf-8?B?Ylh6LzI0QjFTRUhsRTVEeU5idHg1Qk1Kdk5jM0R5WkxUOVRaemNmQUU0NlFT?=
- =?utf-8?B?Ulp2UlhEMmtNL2sxYkNMbEYvOXJJK0NKUUtVQkdkcGlSYWRxamptVWhvZVY2?=
- =?utf-8?B?Szd2TXBCRzk1d0MwRW1ONTJGMkRRYUc1VHJjNFJXNVFraEVodFdjWlBZUXJM?=
- =?utf-8?B?bGpOclAxZHdKT0VZVGhObWZ5ZW80V0NZODV6dWlNY1dOeC9KaFF3bGpSclZv?=
- =?utf-8?B?SW1tdjhtSkhOQldQaCtka3g5S1hlcDNUckVTSmtUMjFmaERocEhTenRRLzVl?=
- =?utf-8?B?TEYvaWdiRHdFU2I2akszUTdyVFN3bzRkZmtjL21xZk03bnpVeU54QmlWblM1?=
- =?utf-8?B?Z1ZHdE12SDJmaDJCbmN6QWQ3VlNncWVyOVYveURzTzhPMDJOZXdUenNRQWlO?=
- =?utf-8?Q?N+Ad4xNRKkW6jILRlIuGpdP1+pLHMbSHGR0M1IY?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9363e986-da74-4521-8516-08d929868037
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5177.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2021 07:33:10.4123
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5ffQbu9I3AUFE8o8SJr15s0AfXZnjxpspbOP2Od69gedguz3mfPfFqXi1/9YhdlizBv0LTtSbsUxTt9U29g+RA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2294
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Most driver's IRQ spreading scheme is naive compared to the IRQ spreading
-scheme introduced since IRQ subsystem rework, so it better to rely
-request_irq() to spread IRQ out.
+Em Sun, 6 Jun 2021 19:52:25 -0300
+N=C3=ADcolas F. R. A. Prado <n@nfraprado.net> escreveu:
 
-However, drivers that care about performance enough also tends to try
-allocating memory on the same NUMA node on which the IRQ handler will run.
-For such driver to rely on request_irq() for IRQ spreading, we also need to
-provide an interface to retrieve the CPU index after calling request_irq().
+> On Sat, Jun 05, 2021 at 09:08:36PM +0200, Mauro Carvalho Chehab wrote:
+> > Em Sat, 5 Jun 2021 12:11:09 -0300
+> > N=C3=ADcolas F. R. A. Prado <n@nfraprado.net> escreveu:
+> >  =20
+> > > Hi Mauro,
+> > >=20
+> > > On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab wrote=
+: =20
+> > > > As discussed at:
+> > > > 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
+> > > >=20
+> > > > It is better to avoid using :doc:`foo` to refer to Documentation/fo=
+o.rst, as the
+> > > > automarkup.py extension should handle it automatically, on most cas=
+es.
+> > > >=20
+> > > > There are a couple of exceptions to this rule:
+> > > >=20
+> > > > 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
+> > > > 2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
+> > > >=20
+> > > > It should also be noticed that automarkup.py has currently an issue:
+> > > > if one use a markup like:
+> > > >=20
+> > > > 	Documentation/dev-tools/kunit/api/test.rst
+> > > > 	  - documents all of the standard testing API excluding mocking
+> > > > 	    or mocking related features.
+> > > >=20
+> > > > or, even:
+> > > >=20
+> > > > 	Documentation/dev-tools/kunit/api/test.rst
+> > > > 	    documents all of the standard testing API excluding mocking
+> > > > 	    or mocking related features.
+> > > > =09
+> > > > The automarkup.py will simply ignore it. Not sure why. This patch s=
+eries
+> > > > avoid the above patterns (which is present only on 4 files), but it=
+ would be
+> > > > nice to have a followup patch fixing the issue at automarkup.py.   =
+=20
+> > >=20
+> > > What I think is happening here is that we're using rST's syntax for d=
+efinition
+> > > lists [1]. automarkup.py ignores literal nodes, and perhaps a definit=
+ion is
+> > > considered a literal by Sphinx. Adding a blank line after the Documen=
+tation/...
+> > > or removing the additional indentation makes it work, like you did in=
+ your
+> > > 2nd and 3rd patch, since then it's not a definition anymore, although=
+ then the
+> > > visual output is different as well. =20
+> >=20
+> > A literal has a different output. I think that this is not the case, bu=
+t I=20
+> > didn't check the python code from docutils/Sphinx. =20
+>=20
+> Okay, I went in deeper to understand the issue and indeed it wasn't what I
+> thought. The reason definitions are ignored by automarkup.py is because t=
+he main
+> loop iterates only over nodes that are of type paragraph:
+>=20
+>     for para in doctree.traverse(nodes.paragraph):
+>         for node in para.traverse(nodes.Text):
+>             if not isinstance(node.parent, nodes.literal):
+>                 node.parent.replace(node, markup_refs(name, app, node))
+>=20
+> And inspecting the HTML output from your example, the definition name is =
+inside
+> a <dt> tag, and it doesn't have a <p> inside. So in summary, automarkup.p=
+y will
+> only work on elements which are inside a <p> in the output.
 
-This should be the last missing piece of puzzle that allows removal of
-calls to irq_set_affinity_hint() that were actually intended to spread out
-IRQ.
 
-Link: https://lore.kernel.org/lkml/CAFki+Lm0W_brLu31epqD3gAV+WNKOJfVDfX2M8ZM__aj3nv9uA@mail.gmail.com/
-Link: https://lore.kernel.org/linux-api/87zgwo9u79.ffs@nanos.tec.linutronix.de/
-Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
----
+Yeah, that's what I was suspecting, based on the comments.
 
-I've ask previously in another thread[1], but there doesn't seem to be one,
-so hence this patch.
+Maybe something similar to the above could be done also for some
+non-paragraph data. By looking at:
 
-I apologize if there's anything glaringly wrong, it's my 1st time trying to
-send a patch that deals with driver interface. Just let me know, and I'll
-get it fixed.
+	https://docutils.sourceforge.io/docs/ref/doctree.html
 
-Also, there's probably better a name for the interface but I can't think of
-one.
+It says that the body elements are:
 
-1: https://lore.kernel.org/r/YK9yxQoBPeUfQG05@syu-laptop
+	admonition, attention, block_quote, bullet_list, caution, citation,=20
+	comment, compound, container, danger, definition_list, doctest_block,=20
+	enumerated_list, error, field_list, figure, footnote, hint, image,=20
+	important, line_block, literal_block, note, option_list, paragraph,=20
+	pending, raw, rubric, substitution_definition, system_message,=20
+	table, target, tip, warning
 
----
- include/linux/interrupt.h |  1 +
- kernel/irq/manage.c       | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+So, perhaps a similar loop for definition_list would do the trick,
+but maybe automarkup should also look at other types, like enum lists,
+notes (and their variants, like error/warning) and footnotes.
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 2ed65b01c961..b67621ccde35 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -324,6 +324,7 @@ extern cpumask_var_t irq_default_affinity;
- 
- extern int irq_set_affinity(unsigned int irq, const struct cpumask *cpumask);
- extern int irq_force_affinity(unsigned int irq, const struct cpumask *cpumask);
-+extern int irq_get_effective_cpu(unsigned int irq);
- 
- extern int irq_can_set_affinity(unsigned int irq);
- extern int irq_select_affinity(unsigned int irq);
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index ef30b4762947..5e2a722c5d93 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -487,6 +487,23 @@ int irq_force_affinity(unsigned int irq, const struct cpumask *cpumask)
- }
- EXPORT_SYMBOL_GPL(irq_force_affinity);
- 
-+/**
-+ * irq_get_effective_cpu - Retrieve the effective CPU index
-+ * @irq:	Target interrupt to retrieve effective CPU index
-+ *
-+ * When the effective affinity cpumask has multiple CPU toggled, it just
-+ * returns the first CPU in the cpumask.
-+ */
-+int irq_get_effective_cpu(unsigned int irq)
-+{
-+	struct irq_data *data = irq_get_irq_data(irq);
-+	struct cpumask *m;
-+
-+	m = irq_data_get_effective_affinity_mask(data);
-+	return cpumask_first(m);
-+}
-+EXPORT_SYMBOL_GPL(irq_get_effective_cpu);
-+
- int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
- {
- 	unsigned long flags;
--- 
-2.31.1
+No idea how this would affect the docs build time, though.
 
+> Only applying the automarkup inside paragraphs seems like a good decision=
+ (which
+> covers text in lists and tables as well), so unless there are other types=
+ of
+> elements without paragraphs where automarkup should work, I think we shou=
+ld just
+> avoid using definition lists pointing to documents like that.
+
+Checking the code or doing some tests are needed for us to be sure about wh=
+at
+of the above types docutils don't consider a paragraph.
+
+Thanks,
+Mauro
