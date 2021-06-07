@@ -2,881 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D9939D546
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 08:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 798B939D60D
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 09:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230162AbhFGGrY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 02:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbhFGGrX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 02:47:23 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21EF7C061766;
-        Sun,  6 Jun 2021 23:45:24 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id v142so16626427oie.9;
-        Sun, 06 Jun 2021 23:45:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gYRkx0kHLnwRO9+oR5AUzxFuJaure0Om01eTqYa/7lk=;
-        b=S5MdTtWLwpdjNP7PHcS0P4oVm327mJsHRv9cw8W9aaYfvhwxDrJnMCAbmDyDn5fucL
-         W6OGF1Jmx8Pb+8wykbyrAWuQPwXLdxHihEm1AVt4gzpT2pkwu7O0a+VyJoK9uM5aRkYh
-         2A/+VfdCFwOH1MpiMZU7YmBbuTh+VV7TN/hWgycEC1dCD+jlJ9SixP47IxwyATNY+r+l
-         r4K5Wx29ndjegRVZmA+T6+I1pQPCN8sdca27mMSdtVFuDhuAITcjrhrUePE3fVBP9cYy
-         0kxeiyJaO7iy7ETKcLb7AIfoWBbYbUIWQoQ8E0c/Zb6g2Bs2y7ol8Dz+VaU1sExyjN3m
-         pXVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gYRkx0kHLnwRO9+oR5AUzxFuJaure0Om01eTqYa/7lk=;
-        b=jtkmzLWsMt0kBuKekoOS55/lfJJO6j6PR7r7BDLGbIvyG/8qFZ0278QkOgFE1ejavS
-         Rl9ND4tH+HTXJti2sWRLkcdFcRq+rhEKmZkG6DdPhz2JyMtwuFkKc4fJplqLNu31IVQr
-         Ef+JHEbr//dbfUHAloP22DWotr5avfEkdtA5IdvA0KHlbRThKE3m+OijkO/JYVI9e6Tc
-         5G8V450MyXMHYWHPSPPPXp0Se0olgbMmFdX9qIcUvganSW0YMlr6w/KnljRo/wXxhmL8
-         0JXB+pV40zgB7PuwfvCn8EwBju1AjiBpdvSOIqP8LBs9wq1FW4KI/6bd5BFpOl1+0OWR
-         jbkQ==
-X-Gm-Message-State: AOAM5329zObx4ZeEEk3ogy+qvfcaGQkBDs8p9/oiGf/3S+lkl+qjQ+po
-        H/SXuiRlIvyA0cV3NTDg/ZcXDvbnrDh1T2AttUf3hVhBP0hCAA==
-X-Google-Smtp-Source: ABdhPJyEWm0Do+qYKLs70W4+qlncw+KnphHd8TxJgjcg1I3Anq0aJz6rHz2FulB/CcDFGniycV9MQbf1K5Qs3zhUwIg=
-X-Received: by 2002:aca:d905:: with SMTP id q5mr10462239oig.149.1623048323379;
- Sun, 06 Jun 2021 23:45:23 -0700 (PDT)
+        id S229436AbhFGHfH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 03:35:07 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([194.104.111.102]:23658 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230198AbhFGHfG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 03:35:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1623051194;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=18sc27qt2MdAUPAfqSvsq6VWZxZ7AlczriAkSGpC5ng=;
+        b=Pyix9SHANTciYU2xqifUQmsV1pPfamOBPjkhWpad5Ne4T76j3sh/lOjXpOmJ1rLifMtrak
+        mlO8qHY0hoOFBAesfuTQkCbBAqBXEspUI3dEcjP+q2jngRmwVDfrDCZNdD1ih0buF6aMm1
+        6At6s6H3Q7AEhg63ZsWigpc5ZL5vQM4=
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur03lp2055.outbound.protection.outlook.com [104.47.10.55]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-38-Ay9mnpsqPUCWs1ZkDMNT7g-1; Mon, 07 Jun 2021 09:33:12 +0200
+X-MC-Unique: Ay9mnpsqPUCWs1ZkDMNT7g-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I+gcBiY7SsoqJjr/ZfbF51TqIsqqrnrc0FOnqqduULWuQQ41x5/YfiyAFNEaSUIB3TcFUPhESBu7zfPtb8DxPUpJOJmxSca7PmxLZC2rNWCMdAGfG+1v6U3ymUafvhPLX8Rt/gu0QqhXYObiOd5/3i77FT6fU3rINZupXMRPoM37AFaJVtU40UCBJh8F6OhQECVL3bB5UEf7yLLa9FTtR2SAoO2VNjDYEq8oKuARWEy81ylvFIyzUpZdOA8dVIKc4BhDLtHmPAOyfCrFSB0p3HcCaeHNluIgXucAKufsxLhXpWuKEmQTiCCkO/mwhXViI4rGBOf3VBFzQKAw9MsAag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=18sc27qt2MdAUPAfqSvsq6VWZxZ7AlczriAkSGpC5ng=;
+ b=cNVXG2a+26AtCDTMnZzlgU5yoiBDkdSm6uGCZul2+aXnkq4ejYTlpRe+g2Hr7RMG2uRQ+ygsvmfQWSzI7GkUxGIB1ruLbM/rNtbW5xlV6ERJSQfYts11+vJHdT502I1utjrmMlmZ4PRQjfcAOAKUSwQx3FIbj/AjEDByLMKgWAKMJ4AtqhYJWb3Nxv+/B64EXEjAynPBKiIGiCuegL7Pqgj+HAZVLok2lpsB2gpwUZW9qvQSupX+GiWxfBVS2ts8JEl0dw7Q7KDJBAxE6CCGbiZJAhC9SpXtmyX8/DPeFI/sfiqV0kB7/8Yq4HrjEYtww4BmVOabkOc28K4rxxldxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from DB7PR04MB5177.eurprd04.prod.outlook.com (2603:10a6:10:20::21)
+ by DB6PR0401MB2294.eurprd04.prod.outlook.com (2603:10a6:4:46::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.20; Mon, 7 Jun
+ 2021 07:33:10 +0000
+Received: from DB7PR04MB5177.eurprd04.prod.outlook.com
+ ([fe80::790f:c865:4660:1565]) by DB7PR04MB5177.eurprd04.prod.outlook.com
+ ([fe80::790f:c865:4660:1565%7]) with mapi id 15.20.4195.030; Mon, 7 Jun 2021
+ 07:33:10 +0000
+Date:   Mon, 7 Jun 2021 15:33:02 +0800
+From:   Shung-Hsi Yu <shung-hsi.yu@suse.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Nitesh Lal <nilal@redhat.com>
+Subject: [RFC] genirq: Add effective CPU index retrieving interface
+Message-ID: <YL3LrgAzMNI2hp5i@syu-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-Originating-IP: [39.12.96.182]
+X-ClientProxiedBy: FR0P281CA0013.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::18) To DB7PR04MB5177.eurprd04.prod.outlook.com
+ (2603:10a6:10:20::21)
 MIME-Version: 1.0
-References: <20210515124055.22225-1-sergio.paracuellos@gmail.com>
- <20210515124055.22225-3-sergio.paracuellos@gmail.com> <20210604193012.GB3695694@robh.at.kernel.org>
- <CAMhs-H_z18Pk=y+YeiuxqFS0phW5We4SNKb9=DopEJQdA-6erQ@mail.gmail.com>
-In-Reply-To: <CAMhs-H_z18Pk=y+YeiuxqFS0phW5We4SNKb9=DopEJQdA-6erQ@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Mon, 7 Jun 2021 08:45:12 +0200
-Message-ID: <CAMhs-H9wxPfKj8ps_-55+hUN1nshhKphVYK1Yq=GyEsUf8cW=A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] MIPS: pci: Add driver for MT7621 PCIe controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-staging@lists.linux.dev,
-        Greg KH <gregkh@linuxfoundation.org>,
-        NeilBrown <neil@brown.name>,
-        Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from syu-laptop (39.12.96.182) by FR0P281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.11 via Frontend Transport; Mon, 7 Jun 2021 07:33:06 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9363e986-da74-4521-8516-08d929868037
+X-MS-TrafficTypeDiagnostic: DB6PR0401MB2294:
+X-Microsoft-Antispam-PRVS: <DB6PR0401MB2294D41DA9F2DAE97FBEC246BF389@DB6PR0401MB2294.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /hWMOC0ayEFV3Yp015C9yYeL5E4Mz3p9/G+/jemCI3ioXpLIRDHmwu8VO6Nat8RViafYMUlmqi9Tr/UmvKeP6cUoozTzx12GitWtt7fDVCeUr6jDj4HD9Z4VaksmaJgk9sdlCHGYAcShORzlNsE2vNGDoGAIfHn/bppp8SkKs37vcX9KJpStbel7JKuZTQt8xmEFNb/uT744HYZdY8HlNSQ6v1baiTWfPrTv0NGXUageGR5ucReNMcl0ECKqW99+ZXXM8PbFGnQsnifhYjuvIocDgHL1ptwxTH1dm5u7E431YOKwEDzFrC47ziZEzb9PeSoG6SM3pvOWLgPW0Rw7ZxtTAWtku/xXrHmGcIzlikxBQm1nLZM9oYyYXH/0ufTDAsGxucJkMlxeNY63MubQrvjFeVQduJYZFpy28I6Q8Zrzi6OYObz5/yz+z97GvhVANKe0MoQ3M71K0qYh/G0TJC3WInpmMGw+YcAKeVr0gUrWYK4KGFvSTWiRU8S80lMWEkhDIIVhw7kTTpq+TJ4RL1C+0Rm04ih3RBjwRyLJZumhf04RDZruJS8QTb36njf41wEhqCtBPVc7zjQrETp0BnWks2XGwxjRrHGCVw8615jPnQxV16bOvwXI+HjLidwhlXeUdfj6wxRGfkso9JA6hsvcca7L835n024FVWMEchyo/Qn7UHokl0Ixuiuj4E4ms314bUCDiERMF0mBWmYm2k+3NzKRzArzMy8+vNRgQk/BVCD/1j2/WyFMYJ4plZr5O+AN3+H97gYVTOvx2NloJA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5177.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(39850400004)(366004)(136003)(376002)(33716001)(83380400001)(8936002)(316002)(478600001)(6496006)(966005)(86362001)(4326008)(186003)(16526019)(8676002)(26005)(66946007)(6666004)(66556008)(2906002)(5660300002)(55016002)(9686003)(956004)(38100700002)(66476007)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?SGVjVlQxcUl1QmRtUWd6aGZObytBU3djaWUzcS8yazZLTEFCN0haOWFiQ2dt?=
+ =?utf-8?B?Z3ZOMXFHZEhqSTFCOWF3SHl1MGxWVU9mdjdrb0FvV1paQW1acU9LeThzMHF3?=
+ =?utf-8?B?UmdFMXZuRHZOVDlSeUg0Wm4vODZEZEVLMm5NWGR0Qy92NmxqUXpCdFltdnhz?=
+ =?utf-8?B?aGNLV0lOKzBVSFhXQzduZ0oweWRtTlhvRytDZGQwdG9ZdVNTL3BtU0g3b0E3?=
+ =?utf-8?B?ZUpHOUxuT0k2WllpaWtReFdDcFIvL0xNZWdaQkJ0NEVYQXhoVE1Qck9tcGN3?=
+ =?utf-8?B?OEZKNHc0VVJIaEFyb1l3WTVLdlBtQWxaUUJld0xvL0kwRUVBUUV3akRJdWVz?=
+ =?utf-8?B?THY0YktudFFCcW5PQW9sWksrWVhXbDBGczVGM1U0eXRuaS80SnI1bEx6SjA1?=
+ =?utf-8?B?MWgwaG53ZE5obFlLWmpRc2FqUnJGd1ZCcmhCc3A2TkdPQ2RaQ0FCejFsTXZK?=
+ =?utf-8?B?aUhXanZUM1ZxNHVVNXQvU1M2elpJNTFicXFXRlp2YWJXZ0ZCcklNajcra1g5?=
+ =?utf-8?B?WDNhNzN0QnVvc1VhRGNkZlBpYTlrNDVHM1VHdjJXcWx1cS9tL0NLVDNBditB?=
+ =?utf-8?B?Q25rT1NERVFSaVNOQnc2UHZ2ckFHZnc4ZVhHWkR1UDMvK01Kc2RBODBSOXlF?=
+ =?utf-8?B?SVV2SWdqblBBcXpxeG0vMmNlR2Y2ZzRLanZyRmg4aTVnYXZ6WW80ZXJSOVA5?=
+ =?utf-8?B?b0hDT3lTbTlpQlBkbzcrQkIrYitUNlJFSHlRU21Idk5TQVZEZUsxbVRsdnVx?=
+ =?utf-8?B?Ym42Wmt5S0RQUEY4SWVTMXZwSmZPTlZkRUM4OENCYUc2QUpPUFJBczNpSXZ3?=
+ =?utf-8?B?UGthODdjeitLU1kwNXE1aVF3OUQyaGR2by9WUStQNUdlbE4xRGpFcFVGaGRJ?=
+ =?utf-8?B?MkFyRzVHUyt5QmJDV1JuQzVucGE3NSt4MTh0cTBuL205V1UvenVjNXVKNitj?=
+ =?utf-8?B?TFpPaUtISHJmRTRMUmtReXBwV0JSc2xrSTg4cUMwdFZwN3UvV1ZGbFJ6K096?=
+ =?utf-8?B?Mlk4Mi9GOTRUMU9nN1h6V1Y3N0JMbXcvOHlSSzZZdWVIQS9BNmpoQWlZeFJF?=
+ =?utf-8?B?aHVTNi9pcVRSalV1V3hiSWcxMHBLV2ZuakRSWlNUN1NnaWZqdEd0aVdyVG53?=
+ =?utf-8?B?R0xDNTlBVEExV3h3TmVuRTloZTE0YlBra3F6QTJGeDlHTVNrR1dJYWlUTnA1?=
+ =?utf-8?B?STRKT2VzOExOVnpmbzh6cWlid0JIN0pBam5QTS8wR2JJS0VGV204dWY0TzJu?=
+ =?utf-8?B?WGRpRXZYOUlhMUxQdDVoL252MFA2MXFuaUo2WXVMYlNJV3ovb1U1NFEraVMz?=
+ =?utf-8?B?Ylh6LzI0QjFTRUhsRTVEeU5idHg1Qk1Kdk5jM0R5WkxUOVRaemNmQUU0NlFT?=
+ =?utf-8?B?Ulp2UlhEMmtNL2sxYkNMbEYvOXJJK0NKUUtVQkdkcGlSYWRxamptVWhvZVY2?=
+ =?utf-8?B?Szd2TXBCRzk1d0MwRW1ONTJGMkRRYUc1VHJjNFJXNVFraEVodFdjWlBZUXJM?=
+ =?utf-8?B?bGpOclAxZHdKT0VZVGhObWZ5ZW80V0NZODV6dWlNY1dOeC9KaFF3bGpSclZv?=
+ =?utf-8?B?SW1tdjhtSkhOQldQaCtka3g5S1hlcDNUckVTSmtUMjFmaERocEhTenRRLzVl?=
+ =?utf-8?B?TEYvaWdiRHdFU2I2akszUTdyVFN3bzRkZmtjL21xZk03bnpVeU54QmlWblM1?=
+ =?utf-8?B?Z1ZHdE12SDJmaDJCbmN6QWQ3VlNncWVyOVYveURzTzhPMDJOZXdUenNRQWlO?=
+ =?utf-8?Q?N+Ad4xNRKkW6jILRlIuGpdP1+pLHMbSHGR0M1IY?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9363e986-da74-4521-8516-08d929868037
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5177.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2021 07:33:10.4123
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5ffQbu9I3AUFE8o8SJr15s0AfXZnjxpspbOP2Od69gedguz3mfPfFqXi1/9YhdlizBv0LTtSbsUxTt9U29g+RA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2294
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Most driver's IRQ spreading scheme is naive compared to the IRQ spreading
+scheme introduced since IRQ subsystem rework, so it better to rely
+request_irq() to spread IRQ out.
 
-On Sat, Jun 5, 2021 at 12:25 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> Hi Rob,
->
-> Thanks for the review.
->
-> On Fri, Jun 4, 2021 at 9:30 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sat, May 15, 2021 at 02:40:53PM +0200, Sergio Paracuellos wrote:
-> > > This patch adds a driver for the PCIe controller of MT7621 SoC.
-> > >
-> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > > ---
-> > >  arch/mips/pci/Makefile     |   1 +
-> > >  arch/mips/pci/pci-mt7621.c | 624 +++++++++++++++++++++++++++++++++++++
-> > >  arch/mips/ralink/Kconfig   |   9 +-
-> > >  3 files changed, 633 insertions(+), 1 deletion(-)
-> > >  create mode 100644 arch/mips/pci/pci-mt7621.c
-> > >
-> > > diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-> > > index f3eecc065e5c..178c550739c4 100644
-> > > --- a/arch/mips/pci/Makefile
-> > > +++ b/arch/mips/pci/Makefile
-> > > @@ -24,6 +24,7 @@ obj-$(CONFIG_PCI_AR2315)    += pci-ar2315.o
-> > >  obj-$(CONFIG_SOC_AR71XX)     += pci-ar71xx.o
-> > >  obj-$(CONFIG_PCI_AR724X)     += pci-ar724x.o
-> > >  obj-$(CONFIG_PCI_XTALK_BRIDGE)       += pci-xtalk-bridge.o
-> > > +obj-$(CONFIG_PCI_MT7621)     += pci-mt7621.o
-> > >  #
-> > >  # These are still pretty much in the old state, watch, go blind.
-> > >  #
-> > > diff --git a/arch/mips/pci/pci-mt7621.c b/arch/mips/pci/pci-mt7621.c
-> > > new file mode 100644
-> > > index 000000000000..fe1945819d25
-> > > --- /dev/null
-> > > +++ b/arch/mips/pci/pci-mt7621.c
-> > > @@ -0,0 +1,624 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * BRIEF MODULE DESCRIPTION
-> > > + *     PCI init for Ralink RT2880 solution
-> > > + *
-> > > + * Copyright 2007 Ralink Inc. (bruce_chang@ralinktech.com.tw)
-> > > + *
-> > > + * May 2007 Bruce Chang
-> > > + * Initial Release
-> > > + *
-> > > + * May 2009 Bruce Chang
-> > > + * support RT2880/RT3883 PCIe
-> > > + *
-> > > + * May 2011 Bruce Chang
-> > > + * support RT6855/MT7620 PCIe
-> > > + */
-> > > +
-> > > +#include <linux/bitops.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/delay.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/of_pci.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/pci.h>
-> > > +#include <linux/phy/phy.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/reset.h>
-> > > +#include <linux/sys_soc.h>
-> > > +
-> > > +/* MediaTek specific configuration registers */
-> > > +#define PCIE_FTS_NUM                 0x70c
-> > > +#define PCIE_FTS_NUM_MASK            GENMASK(15, 8)
-> > > +#define PCIE_FTS_NUM_L0(x)           (((x) & 0xff) << 8)
-> > > +
-> > > +/* Host-PCI bridge registers */
-> > > +#define RALINK_PCI_PCICFG_ADDR               0x0000
-> > > +#define RALINK_PCI_PCIMSK_ADDR               0x000C
-> > > +#define RALINK_PCI_CONFIG_ADDR               0x0020
-> > > +#define RALINK_PCI_CONFIG_DATA               0x0024
-> > > +#define RALINK_PCI_MEMBASE           0x0028
-> > > +#define RALINK_PCI_IOBASE            0x002C
-> > > +
-> > > +/* PCIe RC control registers */
-> > > +#define MT7621_PCIE_OFFSET           0x2000
-> > > +#define MT7621_NEXT_PORT             0x1000
-> > > +
-> > > +#define RALINK_PCI_BAR0SETUP_ADDR    0x0010
-> >
-> > Standard BAR0 register?
->
-> Ok, I will remove this and use 'PCI_BASE_ADDRESS_0' instead.
->
-> >
-> > > +#define RALINK_PCI_ID                        0x0030
-> > > +#define RALINK_PCI_CLASS             0x0034
-> > > +#define RALINK_PCI_SUBID             0x0038
-> > > +#define RALINK_PCI_STATUS            0x0050
-> > > +
-> > > +/* Some definition values */
-> > > +#define PCIE_REVISION_ID             BIT(0)
-> > > +#define PCIE_CLASS_CODE                      (0x60400 << 8)
-> > > +#define PCIE_BAR_MAP_MAX             GENMASK(30, 16)
-> > > +#define PCIE_BAR_ENABLE                      BIT(0)
-> > > +#define PCIE_PORT_INT_EN(x)          BIT(20 + (x))
-> > > +#define PCIE_PORT_LINKUP             BIT(0)
-> > > +
-> > > +#define PERST_DELAY_MS                       100
-> > > +
-> > > +/**
-> > > + * struct mt7621_pcie_port - PCIe port information
-> > > + * @base: I/O mapped register base
-> > > + * @list: port list
-> > > + * @pcie: pointer to PCIe host info
-> > > + * @clk: pointer to the port clock gate
-> > > + * @phy: pointer to PHY control block
-> > > + * @pcie_rst: pointer to port reset control
-> > > + * @gpio_rst: gpio reset
-> > > + * @slot: port slot
-> > > + * @enabled: indicates if port is enabled
-> > > + */
-> > > +struct mt7621_pcie_port {
-> > > +     void __iomem *base;
-> > > +     struct list_head list;
-> > > +     struct mt7621_pcie *pcie;
-> > > +     struct clk *clk;
-> > > +     struct phy *phy;
-> > > +     struct reset_control *pcie_rst;
-> > > +     struct gpio_desc *gpio_rst;
-> > > +     u32 slot;
-> > > +     bool enabled;
-> > > +};
-> > > +
-> > > +/**
-> > > + * struct mt7621_pcie - PCIe host information
-> > > + * @base: IO Mapped Register Base
-> > > + * @io: IO resource
-> > > + * @mem: pointer to non-prefetchable memory resource
-> > > + * @dev: Pointer to PCIe device
-> > > + * @io_map_base: virtual memory base address for io
-> > > + * @ports: pointer to PCIe port information
-> > > + * @resets_inverted: depends on chip revision
-> > > + * reset lines are inverted.
-> > > + */
-> > > +struct mt7621_pcie {
-> > > +     void __iomem *base;
-> > > +     struct device *dev;
-> >
-> > > +     struct resource io;
-> > > +     struct resource *mem;
-> > > +     unsigned long io_map_base;
-> >
-> > These are all stored in the host bridge struct, no need for you to store
-> > them.
->
-> IO resources must be requested and mapped manually (see my explanation
-> below) and I use mem resource to also setup mips iocu regions, that is
-> why I am storing it also here.
->
-> >
-> > > +     struct list_head ports;
-> >
-> > A list is kind of an overkill for 3 entries and you know how many ports.
-> > Just embed an array of struct mt7621_pcie_port. Then you only need 1
-> > alloc.
->
-> Since ports are at most three but can be one or two also depending on
-> the board I ended up using a list instead of a fixed array of three
-> ports. This list is dynamically updated depending on link status. If
-> some of the ports are not present in the board nodes initially stored
-> after device tree parsing are deleted for the list. If it is not a big
-> problem I prefer to maintain this list as it is.
->
-> >
-> > > +     bool resets_inverted;
-> > > +};
-> > > +
-> > > +static inline u32 pcie_read(struct mt7621_pcie *pcie, u32 reg)
-> > > +{
-> > > +     return readl(pcie->base + reg);
-> >
-> > Can use _relaxed variants here and through out.
->
-> Ok will change into _relaxed variants if is preferred.
->
-> >
-> > > +}
-> > > +
-> > > +static inline void pcie_write(struct mt7621_pcie *pcie, u32 val, u32 reg)
-> > > +{
-> > > +     writel(val, pcie->base + reg);
-> > > +}
-> > > +
-> > > +static inline void pcie_rmw(struct mt7621_pcie *pcie, u32 reg, u32 clr, u32 set)
-> > > +{
-> > > +     u32 val = readl(pcie->base + reg);
-> > > +
-> > > +     val &= ~clr;
-> > > +     val |= set;
-> > > +     writel(val, pcie->base + reg);
-> > > +}
-> > > +
-> > > +static inline u32 pcie_port_read(struct mt7621_pcie_port *port, u32 reg)
-> > > +{
-> > > +     return readl(port->base + reg);
-> > > +}
-> > > +
-> > > +static inline void pcie_port_write(struct mt7621_pcie_port *port,
-> > > +                                u32 val, u32 reg)
-> > > +{
-> > > +     writel(val, port->base + reg);
-> > > +}
-> > > +
-> > > +static inline u32 mt7621_pci_get_cfgaddr(unsigned int bus, unsigned int slot,
-> > > +                                      unsigned int func, unsigned int where)
-> > > +{
-> > > +     return (((where & 0xF00) >> 8) << 24) | (bus << 16) | (slot << 11) |
-> > > +             (func << 8) | (where & 0xfc) | 0x80000000;
-> > > +}
-> > > +
-> > > +static void __iomem *mt7621_pcie_map_bus(struct pci_bus *bus,
-> > > +                                      unsigned int devfn, int where)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = bus->sysdata;
-> > > +     u32 address = mt7621_pci_get_cfgaddr(bus->number, PCI_SLOT(devfn),
-> > > +                                          PCI_FUNC(devfn), where);
-> > > +
-> > > +     writel(address, pcie->base + RALINK_PCI_CONFIG_ADDR);
-> > > +
-> > > +     return pcie->base + RALINK_PCI_CONFIG_DATA + (where & 3);
-> > > +}
-> > > +
-> > > +struct pci_ops mt7621_pci_ops = {
-> > > +     .map_bus        = mt7621_pcie_map_bus,
-> > > +     .read           = pci_generic_config_read,
-> > > +     .write          = pci_generic_config_write,
-> > > +};
-> > > +
-> > > +static u32 read_config(struct mt7621_pcie *pcie, unsigned int dev, u32 reg)
-> > > +{
-> > > +     u32 address = mt7621_pci_get_cfgaddr(0, dev, 0, reg);
-> > > +
-> > > +     pcie_write(pcie, address, RALINK_PCI_CONFIG_ADDR);
-> > > +     return pcie_read(pcie, RALINK_PCI_CONFIG_DATA);
-> > > +}
-> > > +
-> > > +static void write_config(struct mt7621_pcie *pcie, unsigned int dev,
-> > > +                      u32 reg, u32 val)
-> > > +{
-> > > +     u32 address = mt7621_pci_get_cfgaddr(0, dev, 0, reg);
-> > > +
-> > > +     pcie_write(pcie, address, RALINK_PCI_CONFIG_ADDR);
-> > > +     pcie_write(pcie, val, RALINK_PCI_CONFIG_DATA);
-> > > +}
-> > > +
-> > > +static inline void mt7621_rst_gpio_pcie_assert(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     if (port->gpio_rst)
-> >
-> > Don't need the if. gpiod_set_value should work with NULL.
->
-> Gpio resets can be optional. Some boards use one gpio reset pin for
-> each port but others only one for all of them. So if no reset is not
-> requested for a port I don't want to do anything. Hence, the check.
->
-> >
-> > > +             gpiod_set_value(port->gpio_rst, 1);
-> > > +}
-> > > +
-> > > +static inline void mt7621_rst_gpio_pcie_deassert(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     if (port->gpio_rst)
-> > > +             gpiod_set_value(port->gpio_rst, 0);
-> > > +}
-> > > +
-> > > +static inline bool mt7621_pcie_port_is_linkup(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     return (pcie_port_read(port, RALINK_PCI_STATUS) & PCIE_PORT_LINKUP) != 0;
-> > > +}
-> > > +
-> > > +static inline void mt7621_control_assert(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = port->pcie;
-> > > +
-> > > +     if (pcie->resets_inverted)
-> > > +             reset_control_assert(port->pcie_rst);
-> > > +     else
-> > > +             reset_control_deassert(port->pcie_rst);
-> > > +}
-> > > +
-> > > +static inline void mt7621_control_deassert(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = port->pcie;
-> > > +
-> > > +     if (pcie->resets_inverted)
-> > > +             reset_control_deassert(port->pcie_rst);
-> > > +     else
-> > > +             reset_control_assert(port->pcie_rst);
-> > > +}
-> > > +
-> > > +static void setup_cm_memory_region(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct resource *mem_resource = pcie->mem;
-> > > +     struct device *dev = pcie->dev;
-> > > +     resource_size_t mask;
-> > > +
-> > > +     if (mips_cps_numiocu(0)) {
-> > > +             /*
-> > > +              * FIXME: hardware doesn't accept mask values with 1s after
-> > > +              * 0s (e.g. 0xffef), so it would be great to warn if that's
-> > > +              * about to happen
-> > > +              */
-> > > +             mask = ~(mem_resource->end - mem_resource->start);
-> > > +
-> > > +             write_gcr_reg1_base(mem_resource->start);
-> > > +             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
-> > > +             dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
-> > > +                      (unsigned long long)read_gcr_reg1_base(),
-> > > +                      (unsigned long long)read_gcr_reg1_mask());
-> > > +     }
-> > > +}
-> > > +
-> > > +static int mt7621_pci_parse_request_of_pci_ranges(struct pci_host_bridge *host)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = pci_host_bridge_priv(host);
-> > > +     struct device *dev = pcie->dev;
-> > > +     struct device_node *node = dev->of_node;
-> > > +     struct of_pci_range_parser parser;
-> > > +     struct resource_entry *entry;
-> > > +     struct of_pci_range range;
-> > > +     LIST_HEAD(res);
-> > > +
-> > > +     if (of_pci_range_parser_init(&parser, node)) {
-> > > +             dev_err(dev, "missing \"ranges\" property\n");
-> > > +             return -EINVAL;
-> > > +     }
-> > > +
-> > > +     /*
-> > > +      * IO_SPACE_LIMIT for MIPS is 0xffff but this platform uses IO at
-> > > +      * upper address 0x001e160000. of_pci_range_to_resource does not work
-> >
-> > I think that's normal...
->
-> No, pci_address_to_pio will fail and io resources are not properly
-> assigned at all.
->
-> >
-> > > +      * well for MIPS platforms that don't define PCI_IOBASE, so set the IO
-> > > +      * resource manually instead.
-> >
-> > Can't this be fixed?
->
-> This is the way the current PCI architecture is in mips... Maybe
-> Thomas has a strong opinion on this.
->
-> >
-> > > +      */
-> > > +     for_each_of_pci_range(&parser, &range) {
-> > > +             switch (range.flags & IORESOURCE_TYPE_BITS) {
-> >
-> > The core code already parses ranges for you. Try not to do it again.
-> > (Use the resource instead)
->
-> See below...
->
-> >
-> > > +             case IORESOURCE_IO:
-> > > +                     pcie->io_map_base =
-> > > +                             (unsigned long)ioremap(range.cpu_addr,
-> > > +                                                    range.size);
-> > > +                     pcie->io.name = node->full_name;
-> > > +                     pcie->io.flags = range.flags;
-> > > +                     pcie->io.start = range.cpu_addr;
-> > > +                     pcie->io.end = range.cpu_addr + range.size - 1;
-> > > +                     pcie->io.parent = pcie->io.child = pcie->io.sibling = NULL;
-> > > +                     set_io_port_base(pcie->io_map_base);
-> > > +                     break;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     entry = resource_list_first_type(&host->windows, IORESOURCE_MEM);
-> > > +     if (!entry) {
-> > > +             dev_err(dev, "Cannot get memory resource");
-> > > +             return -EINVAL;
-> > > +     }
-> > > +
-> > > +     pcie->mem = entry->res;
-> > > +     pci_add_resource(&res, &pcie->io);
-> > > +     pci_add_resource(&res, entry->res);
-> > > +     list_splice_init(&res, &host->windows);
-> >
-> > This should already be done for you.
->
-> Most MIPS platforms do not define PCI_IOBASE, nor implement
-> pci_address_to_pio(). Moreover, IO_SPACE_LIMIT is 0xffff for most MIPS
-> platforms. of_pci_range_to_resource passes the _start address_ of the
-> IO range into pci_address_to_pio, which then checks it against
-> IO_SPACE_LIMIT and fails. So I have to do this manually or nothing
-> will work properly...
->
-> >
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
-> > > +                               int slot)
-> > > +{
-> > > +     struct mt7621_pcie_port *port;
-> > > +     struct device *dev = pcie->dev;
-> > > +     struct platform_device *pdev = to_platform_device(dev);
-> > > +     char name[10];
-> > > +
-> > > +     port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> > > +     if (!port)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     port->base = devm_platform_ioremap_resource(pdev, slot + 1);
-> > > +     if (IS_ERR(port->base))
-> > > +             return PTR_ERR(port->base);
-> > > +
-> > > +     snprintf(name, sizeof(name), "pcie%d", slot);
-> > > +     port->clk = devm_clk_get(dev, name);
-> > > +     if (IS_ERR(port->clk)) {
-> > > +             dev_err(dev, "failed to get pcie%d clock\n", slot);
-> > > +             return PTR_ERR(port->clk);
-> > > +     }
-> > > +
-> > > +     snprintf(name, sizeof(name), "pcie%d", slot);
-> > > +     port->pcie_rst = devm_reset_control_get_exclusive(dev, name);
-> > > +     if (PTR_ERR(port->pcie_rst) == -EPROBE_DEFER) {
-> > > +             dev_err(dev, "failed to get pcie%d reset control\n", slot);
-> > > +             return PTR_ERR(port->pcie_rst);
-> > > +     }
-> > > +
-> > > +     snprintf(name, sizeof(name), "pcie-phy%d", slot);
-> > > +     port->phy = devm_phy_get(dev, name);
-> > > +     if (IS_ERR(port->phy) && slot != 1)
-> > > +             return PTR_ERR(port->phy);
-> > > +
-> > > +     port->gpio_rst = devm_gpiod_get_index_optional(dev, "reset", slot,
-> > > +                                                    GPIOD_OUT_LOW);
-> > > +     if (IS_ERR(port->gpio_rst)) {
-> > > +             dev_err(dev, "Failed to get GPIO for PCIe%d\n", slot);
-> > > +             return PTR_ERR(port->gpio_rst);
-> > > +     }
-> > > +
-> > > +     port->slot = slot;
-> > > +     port->pcie = pcie;
-> > > +
-> > > +     INIT_LIST_HEAD(&port->list);
-> > > +     list_add_tail(&port->list, &pcie->ports);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int mt7621_pcie_parse_dt(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct device *dev = pcie->dev;
-> > > +     struct platform_device *pdev = to_platform_device(dev);
-> > > +     struct device_node *node = dev->of_node, *child;
-> > > +     int err;
-> > > +
-> > > +     pcie->base = devm_platform_ioremap_resource(pdev, 0);
-> > > +     if (IS_ERR(pcie->base))
-> > > +             return PTR_ERR(pcie->base);
-> > > +
-> > > +     for_each_available_child_of_node(node, child) {
-> > > +             int slot;
-> > > +
-> > > +             err = of_pci_get_devfn(child);
-> > > +             if (err < 0) {
-> > > +                     of_node_put(child);
-> > > +                     dev_err(dev, "failed to parse devfn: %d\n", err);
-> > > +                     return err;
-> > > +             }
-> > > +
-> > > +             slot = PCI_SLOT(err);
-> > > +
-> > > +             err = mt7621_pcie_parse_port(pcie, slot);
-> > > +             if (err) {
-> > > +                     of_node_put(child);
-> > > +                     return err;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int mt7621_pcie_init_port(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = port->pcie;
-> > > +     struct device *dev = pcie->dev;
-> > > +     u32 slot = port->slot;
-> > > +     int err;
-> > > +
-> > > +     err = phy_init(port->phy);
-> > > +     if (err) {
-> > > +             dev_err(dev, "failed to initialize port%d phy\n", slot);
-> > > +             return err;
-> > > +     }
-> > > +
-> > > +     err = phy_power_on(port->phy);
-> > > +     if (err) {
-> > > +             dev_err(dev, "failed to power on port%d phy\n", slot);
-> > > +             phy_exit(port->phy);
-> > > +             return err;
-> > > +     }
-> > > +
-> > > +     port->enabled = true;
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static void mt7621_pcie_reset_assert(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct mt7621_pcie_port *port;
-> > > +
-> > > +     list_for_each_entry(port, &pcie->ports, list) {
-> > > +             /* PCIe RC reset assert */
-> > > +             mt7621_control_assert(port);
-> > > +
-> > > +             /* PCIe EP reset assert */
-> > > +             mt7621_rst_gpio_pcie_assert(port);
-> > > +     }
-> > > +
-> > > +     msleep(PERST_DELAY_MS);
-> > > +}
-> > > +
-> > > +static void mt7621_pcie_reset_rc_deassert(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct mt7621_pcie_port *port;
-> > > +
-> > > +     list_for_each_entry(port, &pcie->ports, list)
-> > > +             mt7621_control_deassert(port);
-> > > +}
-> > > +
-> > > +static void mt7621_pcie_reset_ep_deassert(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct mt7621_pcie_port *port;
-> > > +
-> > > +     list_for_each_entry(port, &pcie->ports, list)
-> > > +             mt7621_rst_gpio_pcie_deassert(port);
-> > > +
-> > > +     msleep(PERST_DELAY_MS);
-> > > +}
-> > > +
-> > > +static void mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct device *dev = pcie->dev;
-> > > +     struct mt7621_pcie_port *port, *tmp;
-> > > +     int err;
-> > > +
-> > > +     mt7621_pcie_reset_assert(pcie);
-> > > +     mt7621_pcie_reset_rc_deassert(pcie);
-> > > +
-> > > +     list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > > +             u32 slot = port->slot;
-> > > +
-> > > +             if (slot == 1) {
-> > > +                     port->enabled = true;
-> > > +                     continue;
-> > > +             }
-> > > +
-> > > +             err = mt7621_pcie_init_port(port);
-> > > +             if (err) {
-> > > +                     dev_err(dev, "Initiating port %d failed\n", slot);
-> > > +                     list_del(&port->list);
-> > > +             }
-> > > +     }
-> > > +
-> > > +     mt7621_pcie_reset_ep_deassert(pcie);
-> > > +
-> > > +     tmp = NULL;
-> > > +     list_for_each_entry(port, &pcie->ports, list) {
-> > > +             u32 slot = port->slot;
-> > > +
-> > > +             if (!mt7621_pcie_port_is_linkup(port)) {
-> > > +                     dev_err(dev, "pcie%d no card, disable it (RST & CLK)\n",
-> > > +                             slot);
-> > > +                     mt7621_control_assert(port);
-> > > +                     clk_disable_unprepare(port->clk);
-> > > +                     port->enabled = false;
-> > > +
-> > > +                     if (slot == 0) {
-> > > +                             tmp = port;
-> > > +                             continue;
-> > > +                     }
-> > > +
-> > > +                     if (slot == 1 && tmp && !tmp->enabled)
-> > > +                             phy_power_off(tmp->phy)
-> > > +             }
-> > > +     }
-> > > +}
-> > > +
-> > > +static void mt7621_pcie_enable_port(struct mt7621_pcie_port *port)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = port->pcie;
-> > > +     u32 slot = port->slot;
-> > > +     u32 offset = MT7621_PCIE_OFFSET + (slot * MT7621_NEXT_PORT);
-> >
-> > I don't see how this works unless the ports happen to be at the same VA
-> > offset. The writes below are to the 'common' registers which are 0x100
-> > bytes long based on the DT example, but the offset lines up with the
-> > port offsets.
->
-> RC registers for port 0 start at physical address 0x1e142000, for port
-> 1 0x1e143000 and for port 2 0x1e144000. We are using
-> 'pcie_write' which internally uses pcie->base which is 0x1e140000, but
-> all the previous ones have been already requested and mapped for each
-> port so we calculate the offset from this 0x1e140000 and write there.
->
-> >
-> > > +     u32 val;
-> > > +
-> > > +     /* enable pcie interrupt */
-> > > +     val = pcie_read(pcie, RALINK_PCI_PCIMSK_ADDR);
-> > > +     val |= PCIE_PORT_INT_EN(slot);
-> > > +     pcie_write(pcie, val, RALINK_PCI_PCIMSK_ADDR);
-> > > +
-> > > +     /* map 2G DDR region */
-> > > +     pcie_write(pcie, PCIE_BAR_MAP_MAX | PCIE_BAR_ENABLE,
-> > > +                offset + RALINK_PCI_BAR0SETUP_ADDR);
-> > > +
-> > > +     /* configure class code and revision ID */
-> > > +     pcie_write(pcie, PCIE_CLASS_CODE | PCIE_REVISION_ID,
-> > > +                offset + RALINK_PCI_CLASS);
-> > > +}
-> > > +
-> > > +static int mt7621_pcie_enable_ports(struct mt7621_pcie *pcie)
-> > > +{
-> > > +     struct device *dev = pcie->dev;
-> > > +     struct mt7621_pcie_port *port;
-> > > +     u8 num_slots_enabled = 0;
-> > > +     u32 slot;
-> > > +     u32 val;
-> > > +     int err;
-> > > +
-> > > +     /* Setup MEMWIN and IOWIN */
-> > > +     pcie_write(pcie, 0xffffffff, RALINK_PCI_MEMBASE);
-> > > +     pcie_write(pcie, pcie->io.start, RALINK_PCI_IOBASE);
-> > > +
-> > > +     list_for_each_entry(port, &pcie->ports, list) {
-> > > +             if (port->enabled) {
-> > > +                     err = clk_prepare_enable(port->clk);
-> > > +                     if (err) {
-> > > +                             dev_err(dev, "enabling clk pcie%d\n", slot);
-> > > +                             return err;
-> > > +                     }
-> > > +
-> > > +                     mt7621_pcie_enable_port(port);
-> > > +                     dev_info(dev, "PCIE%d enabled\n", port->slot);
-> > > +                     num_slots_enabled++;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     for (slot = 0; slot < num_slots_enabled; slot++) {
-> > > +             val = read_config(pcie, slot, PCI_COMMAND);
-> > > +             val |= PCI_COMMAND_MASTER;
-> > > +             write_config(pcie, slot, PCI_COMMAND, val);
-> > > +             /* configure RC FTS number to 250 when it leaves L0s */
-> > > +             val = read_config(pcie, slot, PCIE_FTS_NUM);
-> > > +             val &= ~PCIE_FTS_NUM_MASK;
-> > > +             val |= PCIE_FTS_NUM_L0(0x50);
-> > > +             write_config(pcie, slot, PCIE_FTS_NUM, val);
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int mt7621_pcie_register_host(struct pci_host_bridge *host)
-> > > +{
-> > > +     struct mt7621_pcie *pcie = pci_host_bridge_priv(host);
-> > > +
-> > > +     host->ops = &mt7621_pci_ops;
-> > > +     host->sysdata = pcie;
-> > > +     return pci_host_probe(host);
-> > > +}
-> > > +
-> > > +static const struct soc_device_attribute mt7621_pci_quirks_match[] = {
-> > > +     { .soc_id = "mt7621", .revision = "E2" }
-> > > +};
-> > > +
-> > > +static int mt7621_pci_probe(struct platform_device *pdev)
-> > > +{
-> > > +     struct device *dev = &pdev->dev;
-> > > +     const struct soc_device_attribute *attr;
-> > > +     struct mt7621_pcie *pcie;
-> > > +     struct pci_host_bridge *bridge;
-> > > +     int err;
-> > > +
-> > > +     if (!dev->of_node)
-> > > +             return -ENODEV;
-> > > +
-> > > +     bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> > > +     if (!bridge)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     pcie = pci_host_bridge_priv(bridge);
-> > > +     pcie->dev = dev;
-> > > +     platform_set_drvdata(pdev, pcie);
-> > > +     INIT_LIST_HEAD(&pcie->ports);
-> > > +
-> > > +     attr = soc_device_match(mt7621_pci_quirks_match);
-> > > +     if (attr)
-> > > +             pcie->resets_inverted = true;
-> > > +
-> > > +     err = mt7621_pcie_parse_dt(pcie);
-> > > +     if (err) {
-> > > +             dev_err(dev, "Parsing DT failed\n");
-> > > +             return err;
-> > > +     }
-> > > +
-> > > +     err = mt7621_pci_parse_request_of_pci_ranges(bridge);
-> > > +     if (err) {
-> > > +             dev_err(dev, "Error requesting pci resources from ranges");
-> > > +             return err;
-> > > +     }
-> > > +
-> > > +     /* set resources limits */
-> > > +     ioport_resource.start = pcie->io.start;
-> > > +     ioport_resource.end = pcie->io.end;
-> > > +
-> > > +     mt7621_pcie_init_ports(pcie);
-> > > +
-> > > +     err = mt7621_pcie_enable_ports(pcie);
-> >
-> > Really need 2 functions here?
->
-> mt7621_pcie_init_ports is in charge of power on the phy and checks for
-> link status to see which ports are in use and mt7621_pcie_enable_ports
-> just enable all the stuff to be ready to be used.
->
-> >
-> > > +     if (err) {
-> > > +             dev_err(dev, "Error enabling pcie ports\n");
-> > > +             return err;
-> > > +     }
-> > > +
-> > > +     setup_cm_memory_region(pcie);
-> > > +
-> > > +     return mt7621_pcie_register_host(bridge);
-> > > +}
-> > > +
-> > > +static const struct of_device_id mt7621_pci_ids[] = {
-> > > +     { .compatible = "mediatek,mt7621-pci" },
-> > > +     {},
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, mt7621_pci_ids);
-> > > +
-> > > +static struct platform_driver mt7621_pci_driver = {
-> > > +     .probe = mt7621_pci_probe,
-> > > +     .driver = {
-> > > +             .name = "mt7621-pci",
-> > > +             .of_match_table = of_match_ptr(mt7621_pci_ids),
-> > > +     },
-> > > +};
-> > > +builtin_platform_driver(mt7621_pci_driver);
-> > > diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
-> > > index ec4daa63c5e3..50e5a54f7d9e 100644
-> > > --- a/arch/mips/ralink/Kconfig
-> > > +++ b/arch/mips/ralink/Kconfig
-> > > @@ -56,7 +56,7 @@ choice
-> > >               select MIPS_GIC
-> > >               select COMMON_CLK
-> > >               select CLKSRC_MIPS_GIC
-> > > -             select HAVE_PCI if PCI_MT7621
-> > > +             select HAVE_PCI
-> > >               select SOC_BUS
-> > >  endchoice
-> > >
-> > > @@ -101,4 +101,11 @@ choice
-> > >
-> > >  endchoice
-> > >
-> > > +config PCI_MT7621
-> > > +     bool "MediaTek MT7621 PCI Controller"
-> > > +     depends on RALINK && SOC_MT7621
-> >
-> > Ideally this should also have (|| COMPILE_TEST), but looks like there
-> > are a few MIPS dependencies in here. So maybe (|| (MIPS &&
-> > COMPILE_TEST)? If it's not built by allmodconfig or defconfig, it's hard
-> > for people to compile test it.
->
-> Ok, I will add (|| (MIPS && COMPILE_TEST) here.
->
-> Best regards,
->     Sergio Paracuellos
->
-> >
-> >
-> > > +     select PCI_DRIVERS_GENERIC
-> > > +     help
-> > > +       This selects a driver for the MediaTek MT7621 PCI Controller.
-> > > +
-> > >  endif
-> > > --
-> > > 2.25.1
+However, drivers that care about performance enough also tends to try
+allocating memory on the same NUMA node on which the IRQ handler will run.
+For such driver to rely on request_irq() for IRQ spreading, we also need to
+provide an interface to retrieve the CPU index after calling request_irq().
 
-I have already sent to staging this patchset[0] regarding your
-comments before moving this driver to 'drivers/pci/controller' and
-sending v2:
+This should be the last missing piece of puzzle that allows removal of
+calls to irq_set_affinity_hint() that were actually intended to spread out
+IRQ.
 
-[0]: https://lore.kernel.org/linux-staging/20210606161358.7114-1-sergio.paracuellos@gmail.com/T/#t
+Link: https://lore.kernel.org/lkml/CAFki+Lm0W_brLu31epqD3gAV+WNKOJfVDfX2M8ZM__aj3nv9uA@mail.gmail.com/
+Link: https://lore.kernel.org/linux-api/87zgwo9u79.ffs@nanos.tec.linutronix.de/
+Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+---
 
-Thanks,
-    Sergio Paracuellos
+I've ask previously in another thread[1], but there doesn't seem to be one,
+so hence this patch.
+
+I apologize if there's anything glaringly wrong, it's my 1st time trying to
+send a patch that deals with driver interface. Just let me know, and I'll
+get it fixed.
+
+Also, there's probably better a name for the interface but I can't think of
+one.
+
+1: https://lore.kernel.org/r/YK9yxQoBPeUfQG05@syu-laptop
+
+---
+ include/linux/interrupt.h |  1 +
+ kernel/irq/manage.c       | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 2ed65b01c961..b67621ccde35 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -324,6 +324,7 @@ extern cpumask_var_t irq_default_affinity;
+ 
+ extern int irq_set_affinity(unsigned int irq, const struct cpumask *cpumask);
+ extern int irq_force_affinity(unsigned int irq, const struct cpumask *cpumask);
++extern int irq_get_effective_cpu(unsigned int irq);
+ 
+ extern int irq_can_set_affinity(unsigned int irq);
+ extern int irq_select_affinity(unsigned int irq);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index ef30b4762947..5e2a722c5d93 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -487,6 +487,23 @@ int irq_force_affinity(unsigned int irq, const struct cpumask *cpumask)
+ }
+ EXPORT_SYMBOL_GPL(irq_force_affinity);
+ 
++/**
++ * irq_get_effective_cpu - Retrieve the effective CPU index
++ * @irq:	Target interrupt to retrieve effective CPU index
++ *
++ * When the effective affinity cpumask has multiple CPU toggled, it just
++ * returns the first CPU in the cpumask.
++ */
++int irq_get_effective_cpu(unsigned int irq)
++{
++	struct irq_data *data = irq_get_irq_data(irq);
++	struct cpumask *m;
++
++	m = irq_data_get_effective_affinity_mask(data);
++	return cpumask_first(m);
++}
++EXPORT_SYMBOL_GPL(irq_get_effective_cpu);
++
+ int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
+ {
+ 	unsigned long flags;
+-- 
+2.31.1
+
