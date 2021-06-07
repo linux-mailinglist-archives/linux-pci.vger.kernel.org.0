@@ -2,141 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE39F39DE1F
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 15:54:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 577F139DE5E
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jun 2021 16:10:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbhFGNzx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 09:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230215AbhFGNzx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Jun 2021 09:55:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 17934610FB;
-        Mon,  7 Jun 2021 13:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623074042;
-        bh=NVdj6ayfoAT3AL4V0wd+dEF46qN8sMjZMWQkJzFPDCU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IWuL1O6NPXyju3ouiRqrgFICtCHZwYderI8e8AeyIpXhUxQePEiB1wyNcs9ONkLBv
-         ivXD5MV/NWfys8RmFy0Ik2jsia9wpaqiY9dhk1fVPigmXqKYGobrO7zXFKCpf6aFkY
-         UT0O1fRzn5eWvzGauhbasZqLknf7ZDxzUZ5ik87y+1XnfKKA0UaI9axVWhWzLkwYKw
-         q7iVs9M69IUhaCwlujazZuuXAnRo/PbF3h73VjqXPh03JXQri9pqlI7WbPBPHxlbpV
-         iMvbADhEqlOfTotCsa7mUSJDU9WVDj2laj1n3Sme/drbEtFI1n5qnhs2IFM/CXnlK9
-         1XSnT1np3PjcQ==
-Date:   Mon, 7 Jun 2021 08:54:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Quan, Evan" <Evan.Quan@amd.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kw@linux.com" <kw@linux.com>
-Subject: Re: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS support
-Message-ID: <20210607135400.GA2478732@bjorn-Precision-5520>
+        id S230211AbhFGOMZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 10:12:25 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:55782 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230193AbhFGOMY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 10:12:24 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 98F7F21AA0;
+        Mon,  7 Jun 2021 14:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1623075032; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yrrcDqwAUjI/Du1NgfJql1DxePl50i9q1z/v2S1/PjU=;
+        b=yd+IGWFeVIzcWkH4CvAPf2cEyuzXDp4clwAPfcyvHi5LZW0PkbrpaSM/pPgQxXqShourjH
+        UROju8kpwC5ucMYaLkUCY16/GW36p5+QtGgQJ3SvnGxXk95zvdcCIBZpiP76Y6L4pH08Zy
+        ub2ZVCxIJeIxdDUCHfkshUbg7QOi2ts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1623075032;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yrrcDqwAUjI/Du1NgfJql1DxePl50i9q1z/v2S1/PjU=;
+        b=5GCOfx0xyGHUY6Wh7ScIDhdgMv3eermx6Z1Jcx5JoRoC2w2vDh0jZ+4IOeymqA40G8FnJW
+        TBxe0jyqUYPAakAQ==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 4A7D8118DD;
+        Mon,  7 Jun 2021 14:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1623075032; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yrrcDqwAUjI/Du1NgfJql1DxePl50i9q1z/v2S1/PjU=;
+        b=yd+IGWFeVIzcWkH4CvAPf2cEyuzXDp4clwAPfcyvHi5LZW0PkbrpaSM/pPgQxXqShourjH
+        UROju8kpwC5ucMYaLkUCY16/GW36p5+QtGgQJ3SvnGxXk95zvdcCIBZpiP76Y6L4pH08Zy
+        ub2ZVCxIJeIxdDUCHfkshUbg7QOi2ts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1623075032;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yrrcDqwAUjI/Du1NgfJql1DxePl50i9q1z/v2S1/PjU=;
+        b=5GCOfx0xyGHUY6Wh7ScIDhdgMv3eermx6Z1Jcx5JoRoC2w2vDh0jZ+4IOeymqA40G8FnJW
+        TBxe0jyqUYPAakAQ==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id lofQD9govmCrOwAALh3uQQ
+        (envelope-from <jroedel@suse.de>); Mon, 07 Jun 2021 14:10:32 +0000
+Date:   Mon, 7 Jun 2021 16:10:30 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/APCI: Move acpi_pci_osc_support() check to
+ negotiation phase
+Message-ID: <YL4o1pJyIm74Lwz3@suse.de>
+References: <20210603124814.19654-1-joro@8bytes.org>
+ <20210603205047.GA2135380@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR12MB26193FFC56E703A01CCC382EE4389@DM6PR12MB2619.namprd12.prod.outlook.com>
+In-Reply-To: <20210603205047.GA2135380@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 03:41:35AM +0000, Quan, Evan wrote:
-> [AMD Official Use Only]
+Hi Bjorn,
+
+On Thu, Jun 03, 2021 at 03:50:47PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jun 03, 2021 at 02:48:14PM +0200, Joerg Roedel wrote:
+
+> If instead you mean that the OS has *not* been granted DPC control,
+> but does _OSC(Query, SUPPORT=x, CONTROL=0), I think that means the OS
+> is telling the platform what it supports but not requesting anything.
+> That sounds legal to me, so if firmware complains about it, I would
+> say it's a firmware problem.
+
+I think it depends on how you look at it. The machine I was working with
+has a BIOS setting where one can configure that DPC is controlled by the
+OS. When it is configured that way, then the BIOS will issue an error
+when an _OSC query is made with control set to 0. This is because it
+indicates to the BIOS that the OS does not take control over DPC and
+thus that the OS does not support it. The BIOS will issue a warning into
+its log and when the Linux later takes control the warning is already
+there.
+
+> But please help me out if I'm misunderstanding something above.  I'm
+> never confident that I really understand _OSC.
+
+I am also not an _OSC expert, but you an Rafael already provided good
+feedback on the necessity of at least one _OSC call, even when Linux
+does not want to take control.
+
+> Unrelated to *this* patch, but I don't understand the point of
+> OSC_PCI_SUPPORT_MASKS and OSC_PCI_CONTROL_MASKS.  These are all
+> internal static functions and it looks like pointless work to apply
+> masks here and in acpi_pci_osc_control_set().
+
+Okay, I will add a separate patch removing thos after this change.
+
+> >  	status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+> >  	if (ACPI_SUCCESS(status)) {
 > 
-> Thanks Bjorn.
-> @Deucher, Alexander can you advise whether this is needed for stable kernel branches and which branches if yes?
+> We can also drop the "if (control)" check inside the ACPI_SUCCESS()
+> block, can't we?
 
-Sorry, I should have done this already.  I went ahead and marked it
-for stable.
+Right, fixed that up.
 
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Saturday, June 5, 2021 4:59 AM
-> > To: Quan, Evan <Evan.Quan@amd.com>
-> > Cc: linux-pci@vger.kernel.org; kw@linux.com; Deucher, Alexander
-> > <Alexander.Deucher@amd.com>
-> > Subject: Re: [PATCH V3] PCI: Add quirk for AMD Navi14 to disable ATS
-> > support
-> > 
-> > On Wed, Jun 02, 2021 at 10:12:55AM +0800, Evan Quan wrote:
-> > > Unexpected GPU hang was observed during runpm stress test on 0x7341
-> > > rev 0x00. Further debugging shows broken ATS is related. Thus as a
-> > > followup of commit 5e89cd303e3a ("PCI:
-> > > Mark AMD Navi14 GPU rev 0xc5 ATS as broken"), we disable the ATS for
-> > > the specific SKU also.
-> > >
-> > > Signed-off-by: Evan Quan <evan.quan@amd.com>
-> > > Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-> > > Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-> > 
-> > Applied to pci/virtualization for v5.14, thanks.
-> > 
-> > I updated the commit log like this:
-> > 
-> >     PCI: Mark AMD Navi14 GPU ATS as broken
-> > 
-> >     Observed unexpected GPU hang during runpm stress test on 0x7341 rev
-> > 0x00.
-> >     Further debugging shows broken ATS is related.
-> > 
-> >     Disable ATS on this part.  Similar issues on other devices:
-> > 
-> >       a2da5d8cc0b0 ("PCI: Mark AMD Raven iGPU ATS as broken in some
-> > platforms")
-> >       45beb31d3afb ("PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken")
-> >       5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
-> > 
-> >     Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-> >     Link:
-> > https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.
-> > kernel.org%2Fr%2F20210602021255.939090-1-
-> > evan.quan%40amd.com&amp;data=04%7C01%7Cevan.quan%40amd.com%7
-> > C2999a40d134142c2fdd608d9279b9ddb%7C3dd8961fe4884e608e11a82d994e
-> > 183d%7C0%7C0%7C637584371596788532%7CUnknown%7CTWFpbGZsb3d8ey
-> > JWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
-> > 7C1000&amp;sdata=%2BgYq6SPJNCgqj%2By%2BLzkAGjmm5TONhApdYlze%
-> > 2FFz%2FiUM%3D&amp;reserved=0
-> >     Signed-off-by: Evan Quan <evan.quan@amd.com>
-> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >     Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-> > 
-> > > ---
-> > > ChangeLog v2->v3:
-> > > - further update for description part(suggested by Krzysztof)
-> > > ChangeLog v1->v2:
-> > > - cosmetic fix for description part(suggested by Krzysztof)
-> > > ---
-> > >  drivers/pci/quirks.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
-> > > b7e19bbb901a..70803ad6d2ac 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -5176,7 +5176,8 @@
-> > > DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422,
-> > > quirk_no_ext_tags);  static void quirk_amd_harvest_no_ats(struct pci_dev
-> > *pdev)  {
-> > >  	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-> > > -	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
-> > > +	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
-> > > +	    (pdev->device == 0x7341 && pdev->revision != 0x00))
-> > >  		return;
-> > >
-> > >  	if (pdev->device == 0x15d8) {
-> > > @@ -5203,6 +5204,7 @@
-> > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,
-> > > 0x6900, quirk_amd_harvest_no_ats);
-> > > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312,
-> > > quirk_amd_harvest_no_ats);
-> > >  /* AMD Navi14 dGPU */
-> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340,
-> > > quirk_amd_harvest_no_ats);
-> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341,
-> > > +quirk_amd_harvest_no_ats);
-> > >  /* AMD Raven platform iGPU */
-> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8,
-> > > quirk_amd_harvest_no_ats);  #endif /* CONFIG_PCI_ATS */
-> > > --
-> > > 2.29.0
-> > >
+Regards,
+
+	Joerg
+
