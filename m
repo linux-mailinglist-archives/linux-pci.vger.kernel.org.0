@@ -2,48 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 880FC39EE65
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 07:50:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECC1D39EE5B
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 07:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230387AbhFHFw1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 01:52:27 -0400
-Received: from mail-ot1-f52.google.com ([209.85.210.52]:33596 "EHLO
-        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230377AbhFHFw0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 01:52:26 -0400
-Received: by mail-ot1-f52.google.com with SMTP id o17-20020a9d76510000b02903eabfc221a9so5498721otl.0;
-        Mon, 07 Jun 2021 22:50:34 -0700 (PDT)
+        id S229526AbhFHFvr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 01:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229507AbhFHFvr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 01:51:47 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBA4C061787;
+        Mon,  7 Jun 2021 22:49:39 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id 5-20020a9d01050000b02903c700c45721so18139552otu.6;
+        Mon, 07 Jun 2021 22:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iNHrhq0IL96XZ0EI6v9hmr0ajyowuoqEGQEPG1rii/A=;
-        b=rqBfJaic00+39Yc0R6kZ1OlmY1TA0B4f0e9Dvt0ly86lrXnPm/NE5j1Rd3h62rxAxq
-         lNexTtLRBT0xJP02vMee/q/SIJOTSpoVt5PMFuzA3a+sx9qCDd53Qnz6jwlrU5o9dRmG
-         BtjLyun9tkzwuXrT65RUwPz4CIznmB6wmDtBbT3gQtWAIZ2oie9v1l5UaPixrqLuH6G7
-         aI3W8olpV26BGkjnVaPn+7KdGtIdov1RowD5rcNhIYEwjOXJDPLeaEvKEvUGPfMzVHsA
-         mPQSnCQhJwyJkG8O0gzFemZYz3CfSGksLiSE1POQUzpLLOdGpm4EwmEKEtGyBl7/+i5p
-         lVtA==
+        bh=IWfL/IMqwLqFbs476iJcEczTrUNwgxx26bfBJrumYEY=;
+        b=BIFHDZRQAOBZkHnHtszMVsQSOdLNWagLf/65IQqHPPbwLYp0jyEghjUO3ktcGUgHGJ
+         eXrxXYZq0QwIt9m8XkZDr8RMzRx+8uG75QsJdHdmMaxTNp0nbHrd9+EThzc4bs0jVM3V
+         koNRVW4k1t/olIcnp0EWY3V4RXs1n1HYGEfauLH+uvzZm0Km55HbNMSPuwkVd4os14Bh
+         tqHEF2yBvnKg1eQus7J6B2QerWzs0OiflYriCG2fSS+BPH24H5K5VpGEwqJ3CD7vtqFU
+         z9ILzsNF772M8H5Vj2oMEWo1sWgUSBBy2CdfpcCVMCzlYijS4NdFMk8icgRpiyno1ki8
+         7H/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iNHrhq0IL96XZ0EI6v9hmr0ajyowuoqEGQEPG1rii/A=;
-        b=PNyaXPOjydrnJVjl5/KqQZFvp5L+bcvI/c5EifHhgz0hgwHZDvvTwvIFUIHDidspJ8
-         7m+AcIqBng/UupBG3n2or+m5iMDH/gsyz4HeY1Lhj4kluwaF46L5NC2qIvHMOAcAF+Ja
-         QiqwdQ3ycEDyIwSK+r9Nke6VB2mmfvIcp+FfvQQEfQpV6paXEvQ/L0FoD9OsFQvTVqcB
-         3Gij/Z3UIBPgd+vJkOfTpPCY62LGsttdftFm6jcRy2052fgliP44XBBdAnRhph3kZnes
-         cl7TZqv/isn+M63xfiWfk3FmK3cvWuIRIYvn+R3u15iwCfy8oMPkD8N35Pl8GKSNDa/S
-         MLCw==
-X-Gm-Message-State: AOAM530ZwF1w0OhpChT0piWZo+x/CErhu9T/CQeG3CpK/x20W/orw3K+
-        D4EsBvGHKgLhtx7AyECgs4Y=
-X-Google-Smtp-Source: ABdhPJzQHszRj8AzKWGqpNBUsat1h0CftaSmlwCcvqRx1YAORY1OtJi+POTtQUuYYy+UBxEHhG6CBg==
-X-Received: by 2002:a9d:5ccc:: with SMTP id r12mr16328130oti.172.1623131374343;
-        Mon, 07 Jun 2021 22:49:34 -0700 (PDT)
+        bh=IWfL/IMqwLqFbs476iJcEczTrUNwgxx26bfBJrumYEY=;
+        b=FdLNu5FHO9YL+PpsDMFleUcw/2y1Q2Rc0au+yVlYNHRQiUAHTJEDtkL2RQac+VvGMl
+         C8WjxWWLGRD4bGfLuNiEbH2LFHTMRQv6pQCa9I9QSwVIbzVHReIFCsAgdL3OEwuONI+e
+         JK8NYw8c35YrMv/0UxTfNHuXPvULco/FehTiJwiBRcBXp8XJwBrkwyImLmXbpDj2GCE+
+         XBxIpOcqSdoAxjm0AbN+6duNTDh69yGVHKpsUglHqhxGnOvOt5B6KPc3eP475Y9ffPQf
+         Ja+Itp3Wyxyal9MXqI5u2jnPEOjXbmwSAJNGsaT8JZ4WxGIrwf8qy3yBoYt2sP3QDaea
+         psaw==
+X-Gm-Message-State: AOAM530zlCWxGAXu4bhuM0DYfIcztzIdBktpxHg7lF/+kltuZrEA9jgX
+        FarwyM867an7BxzndDVSOHM=
+X-Google-Smtp-Source: ABdhPJwZ/5kgbXxp41nZkuipN4+f1AbwPcTklIGob0RENGt5lcOhoGinKVumjhQ88O8HIYx64TCG0A==
+X-Received: by 2002:a9d:4f0e:: with SMTP id d14mr6532892otl.70.1623131378699;
+        Mon, 07 Jun 2021 22:49:38 -0700 (PDT)
 Received: from localhost.localdomain (static-198-54-128-46.cust.tzulo.com. [198.54.128.46])
-        by smtp.googlemail.com with ESMTPSA id o2sm2489730oom.26.2021.06.07.22.49.30
+        by smtp.googlemail.com with ESMTPSA id o2sm2489730oom.26.2021.06.07.22.49.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jun 2021 22:49:34 -0700 (PDT)
+        Mon, 07 Jun 2021 22:49:38 -0700 (PDT)
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     alex.williamson@redhat.com,
@@ -52,9 +55,9 @@ Cc:     alex.williamson@redhat.com,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH v7 6/8] PCI: Add support for ACPI _RST reset method
-Date:   Tue,  8 Jun 2021 11:18:55 +0530
-Message-Id: <20210608054857.18963-7-ameynarkhede03@gmail.com>
+Subject: [PATCH v7 7/8] PCI: Enable NO_BUS_RESET quirk for Nvidia GPUs
+Date:   Tue,  8 Jun 2021 11:18:56 +0530
+Message-Id: <20210608054857.18963-8-ameynarkhede03@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210608054857.18963-1-ameynarkhede03@gmail.com>
 References: <20210608054857.18963-1-ameynarkhede03@gmail.com>
@@ -66,102 +69,43 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Shanker Donthineni <sdonthineni@nvidia.com>
 
-The _RST is a standard method specified in the ACPI specification. It
-provides a function level reset when it is described in the acpi_device
-context associated with PCI-device. Implement a new reset function
-pci_dev_acpi_reset() for probing RST method and execute if it is defined
-in the firmware.
+On select platforms, some Nvidia GPU devices do not work with SBR.
+Triggering SBR would leave the device inoperable for the current
+system boot. It requires a system hard-reboot to get the GPU device
+back to normal operating condition post-SBR. For the affected
+devices, enable NO_BUS_RESET quirk to fix the issue.
 
-The default priority of the ACPI reset is set to below device-specific
-and above hardware resets.
+This issue will be fixed in the next generation of hardware.
 
 Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
 Reviewed-by: Sinan Kaya <okaya@kernel.org>
 ---
- drivers/pci/pci-acpi.c | 23 +++++++++++++++++++++++
- drivers/pci/pci.c      |  1 +
- drivers/pci/pci.h      |  6 ++++++
- include/linux/pci.h    |  2 +-
- 4 files changed, 31 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index eaddbf701..40dd24cd3 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -941,6 +941,29 @@ void pci_set_acpi_fwnode(struct pci_dev *dev)
- 				   acpi_pci_find_companion(&dev->dev));
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index e86cf4a3b..45a8c3caa 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3546,6 +3546,18 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
  }
  
-+/**
-+ * pci_dev_acpi_reset - do a function level reset using _RST method
-+ * @dev: device to reset
-+ * @probe: check if _RST method is included in the acpi_device context.
++/*
++ * Some Nvidia GPU devices do not work with bus reset, SBR needs to be
++ * prevented for those affected devices.
 + */
-+int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
++static void quirk_nvidia_no_bus_reset(struct pci_dev *dev)
 +{
-+	acpi_handle handle = ACPI_HANDLE(&dev->dev);
-+
-+	if (!handle || !acpi_has_method(handle, "_RST"))
-+		return -ENOTTY;
-+
-+	if (probe)
-+		return 0;
-+
-+	if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
-+		pci_warn(dev, "ACPI _RST failed\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++	if ((dev->device & 0xffc0) == 0x2340)
++		quirk_no_bus_reset(dev);
 +}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			 quirk_nvidia_no_bus_reset);
 +
- static bool acpi_pci_bridge_d3(struct pci_dev *dev)
- {
- 	const struct fwnode_handle *fwnode;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 2302aa421..2e7efd7e7 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5121,6 +5121,7 @@ static void pci_dev_restore(struct pci_dev *dev)
-  */
- const struct pci_reset_fn_method pci_reset_fn_methods[] = {
- 	{ &pci_dev_specific_reset, .name = "device_specific" },
-+	{ &pci_dev_acpi_reset, .name = "acpi" },
- 	{ &pcie_reset_flr, .name = "flr" },
- 	{ &pci_af_flr, .name = "af_flr" },
- 	{ &pci_pm_reset, .name = "pm" },
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index d22da6d3c..e9cfb7cd6 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -704,7 +704,13 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
- int pci_acpi_program_hp_params(struct pci_dev *dev);
- extern const struct attribute_group pci_dev_acpi_attr_group;
- void pci_set_acpi_fwnode(struct pci_dev *dev);
-+int pci_dev_acpi_reset(struct pci_dev *dev, int probe);
- #else
-+static inline int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
-+{
-+	return -ENOTTY;
-+}
-+
- static inline void pci_set_acpi_fwnode(struct pci_dev *dev) {}
- static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- {
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 6e9bc4f9c..a7f063da2 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -49,7 +49,7 @@
- 			       PCI_STATUS_SIG_TARGET_ABORT | \
- 			       PCI_STATUS_PARITY)
- 
--#define PCI_RESET_METHODS_NUM 5
-+#define PCI_RESET_METHODS_NUM 6
- 
  /*
-  * The PCI interface treats multi-function devices as independent
+  * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
+  * The device will throw a Link Down error on AER-capable systems and
 -- 
 2.31.1
 
