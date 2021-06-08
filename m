@@ -2,567 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D84133A068A
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 00:02:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCC0D3A07FD
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 01:48:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234195AbhFHWE0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Jun 2021 18:04:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46975 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233062AbhFHWE0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Jun 2021 18:04:26 -0400
-IronPort-SDR: rgIS2lP8xg+Gwa7Vg13EvHqd2Lo0yj6ioPT6OzkD6pi42cn+vz2QtAFYUD2UKWYvBILwO992CI
- hH5ajH5LcmJg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10009"; a="192059343"
-X-IronPort-AV: E=Sophos;i="5.83,259,1616482800"; 
-   d="scan'208";a="192059343"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2021 15:02:32 -0700
-IronPort-SDR: iDOhK+FxKB1hD4Gv0oPyfGsJH1Tnkt5pKXpMyWgKW3gwn0HkYHImjOfKSRrRfrvvhyN6LQg+hR
- lQ0RrqAuQydA==
-X-IronPort-AV: E=Sophos;i="5.83,259,1616482800"; 
-   d="scan'208";a="482133589"
-Received: from vgoornav-mobl1.amr.corp.intel.com (HELO vcostago-mobl2.amr.corp.intel.com) ([10.212.249.197])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2021 15:02:31 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        intel-wired-lan@lists.osuosl.org
-Cc:     linux-pci@vger.kernel.org, richardcochran@gmail.com,
-        hch@infradead.org, netdev@vger.kernel.org, bhelgaas@google.com,
-        helgaas@kernel.org
-Subject: Re: [Intel-wired-lan] [PATCH next-queue v5 4/4] igc: Add support
- for PTP getcrosststamp()
-In-Reply-To: <7815513a-30cb-ced7-52d5-103c397761ff@molgen.mpg.de>
-References: <20210605002356.3996853-1-vinicius.gomes@intel.com>
- <20210605002356.3996853-5-vinicius.gomes@intel.com>
- <7815513a-30cb-ced7-52d5-103c397761ff@molgen.mpg.de>
-Date:   Tue, 08 Jun 2021 15:02:32 -0700
-Message-ID: <87eedcvwuf.fsf@vcostago-mobl2.amr.corp.intel.com>
+        id S229626AbhFHXuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 19:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230361AbhFHXuJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 19:50:09 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6BFC061574
+        for <linux-pci@vger.kernel.org>; Tue,  8 Jun 2021 16:48:13 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id h12so14133932pfe.2
+        for <linux-pci@vger.kernel.org>; Tue, 08 Jun 2021 16:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Sap44HZUeMl7nx9za1mZOMogIkd9R62xvnkQFKrxIkI=;
+        b=O5TmFV1KAdvN1D+AcTNDCooaSYRBMSacr/BZI0dJKrXFv26uFzf0BUAhUTHSPGamM0
+         yVLHKBorRkwDZBvuA3vIspehTxmki2oOsN5O9OZzcocfqZiZqOCmykT17gkeAyRNEcE5
+         atyZ/SzGsfWelzMUq9EuInKkO4pEeBilb+IvrODPS971VZQdfZ9Uo0PLIACOTG8V/17f
+         kH13SDHGy8UEAB3ri9KPeBJJ1FZxva2m9CMRnkJCP2qhrNTqNM6nSftjmXkxqD7HeuLA
+         IQbQvYYUTByGm1S2IiSiK3hw1OW7PUeqyyCruS25BmqofBN9vKQPWvlj5Im/sPb5EWjm
+         oSEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Sap44HZUeMl7nx9za1mZOMogIkd9R62xvnkQFKrxIkI=;
+        b=tWy/ptk2HQRMi1w4qddJRv7ytyzG6lgBwzyPVb+LZVa/fQaEve5k98GoFC5GjOZtDS
+         VionS927ewEYNPBujXdEGIz6G3ofivBWpyvRSanJh9RW9oGzCiogEsWet/k8BX6WkV4C
+         40OAZQb20/+ZG/YcTnxONSG+mYF1pTY+kqexb+3BKPmoXoBuR09w2JstmBTuTy1/SZso
+         +VGrAbChcjawKau2G/Q9MVKHx/Sa/jUp2riNIfOMuB4e+FoMmDhOEKD/nKUCX94iS1gf
+         40zAlglEV6YLWt7yVI1HEfDIwFnAsi02JaDZAcvsb0QY155bkU1xUg23npoLtLxhiTFO
+         ujUg==
+X-Gm-Message-State: AOAM530UwlM6DUYkFrnuwWjSn0szowde9D2IqlQ7IcUtoCTLf+LkP11O
+        jeLYa80tEOZHUItAuoNHVdPBbwVgZmLjADY1CTW5Iu3eNU3GUQ==
+X-Google-Smtp-Source: ABdhPJyRXDadjIRcbEA1ewvrO1tynnhcz0NyuPDRX/2VUt6h8SZwLOi28NHvvbNDeuZkUK4V02BnJNVgPSDfWxePbfo=
+X-Received: by 2002:a63:195b:: with SMTP id 27mr784144pgz.450.1623196093214;
+ Tue, 08 Jun 2021 16:48:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <162295952770.1109360.877553895768113895.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210608140602.00004f0f@Huawei.com>
+In-Reply-To: <20210608140602.00004f0f@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 8 Jun 2021 16:48:02 -0700
+Message-ID: <CAPcyv4ipuqcLPaMa+Md5HvpWi8nrExsKn1jg0TaKkHhMz5V0Pw@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] cxl/acpi: Introduce cxl_decoder objects
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Paul Menzel <pmenzel@molgen.mpg.de> writes:
+On Tue, Jun 8, 2021 at 6:06 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Sat, 5 Jun 2021 23:05:27 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > A cxl_decoder is a child of a cxl_port. It represents a hardware
+> > decoder configuration of an upstream port to one or more of its
+> > downstream ports. The decoder is either represented in standard HDM
+> > decoder registers (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
+> > Capability Structure), or it is a static decode configuration
+> > communicated by platform firmware (see the CXL Early Discovery Table:
+> > Fixed Memory Window Structure).
+> >
+> > The firmware described and hardware described decoders differ slightly
+> > leading to 2 different sub-types of decoders, cxl_decoder_root and
+> > cxl_decoder_switch. At the root level the decode capabilities restrict
+> > what can be mapped beneath them. Mid-level switch decoders are
+> > configured for either acclerator (type-2) or memory-expander (type-3)
+> > operation, but they are otherwise agnostic to the type of memory
+> > (volatile vs persistent) being mapped.
+> >
+> > Here is an example topology from a single-ported host-bridge environmen=
+t
+> > without CFMWS decodes enumerated.
+> >
+> > /sys/bus/cxl/devices/root0
+> > =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > =E2=94=9C=E2=94=80=E2=94=80 dport0 -> ../LNXSYSTM:00/LNXSYBUS:00/ACPI00=
+16:00
+> > =E2=94=9C=E2=94=80=E2=94=80 port1
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 decoder1.0
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 end
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 locked
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 start
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../=
+../../bus/cxl
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_list
+> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_type
+> > =E2=94=82   =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 dport0 -> ../../pci0000:34/0000=
+:34:00.0
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../bus/cxl
+> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 uevent
+> > =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uport -> ../../LNXSYSTM:00/LNXS=
+YBUS:00/ACPI0016:00
+> > =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../bus/cxl
+> > =E2=94=9C=E2=94=80=E2=94=80 uevent
+> > =E2=94=94=E2=94=80=E2=94=80 uport -> ../platform/ACPI0017:00
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> One trivial docs issue and a suggestion that -2 is a bit too magic.
+> Otherwise looks good to me.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-cxl |   70 ++++++++
+> >  drivers/cxl/acpi.c                      |   21 ++
+> >  drivers/cxl/core.c                      |  265 +++++++++++++++++++++++=
+++++++++
+> >  drivers/cxl/cxl.h                       |   48 ++++++
+> >  4 files changed, 403 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/AB=
+I/testing/sysfs-bus-cxl
+> > index 0cb31b7ad17b..f16f18e77578 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > @@ -48,3 +48,73 @@ Description:
+> >               decode of CXL memory resources.  The 'Y' integer reflects=
+ the
+> >               hardware port unique-id used in the hardware decoder targ=
+et
+> >               list.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             CXL decoder objects are enumerated from either a platform
+> > +             firmware description, or a CXL HDM decoder register set i=
+n a
+> > +             PCIe device (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
+> > +             Capability Structure). The 'X' in decoderX.Y represents t=
+he
+> > +             cxl_port container of this decoder, and 'Y' represents th=
+e
+> > +             instance id of a given decoder resource.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/{start,end}
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             The 'start' and 'end' attributes together convey the phys=
+ical
+> > +             address base and last addressable byte of the decoder's d=
+ecode
+> > +             window. For decoders of devtype "cxl_decoder_root" the ad=
+dress
+> > +             range is fixed. For decoders of devtype "cxl_decoder_swit=
+ch" the
+> > +             address is bounded by the decode range of the cxl_port an=
+cestor
+> > +             of the decoder's cxl_port, and dynamically updates based =
+on the
+> > +             active memory regions in that address space.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/locked
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             CXL HDM decoders have the capability to lock the configur=
+ation
+> > +             until the next device reset. For decoders of devtype
+> > +             "cxl_decoder_root" there is no standard facility to unloc=
+k them.
+> > +             For decoders of devtype "cxl_decoder_switch" a secondary =
+bus
+> > +             reset, of the PCIe bridge that provides the bus for this
+> > +             decoders uport, unlocks / resets the decoder.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/target_list
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             Display a comma separated list of the current decoder tar=
+get
+> > +             configuration. The list is ordered by the current configu=
+red
+> > +             interleave order of the decoder's dport instances. Each e=
+ntry in
+> > +             the list is a dport id.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,typ=
+e2,type3}
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             When a CXL decoder is of devtype "cxl_decoder_root", it
+> > +             represents a fixed memory window identified by platform
+> > +             firmware. A fixed window may only support a subset of mem=
+ory
+> > +             types. The 'cap_*' attributes indicate whether persistent
+> > +             memory, volatile memory, accelerator memory, and / or exp=
+ander
+> > +             memory may be mapped behind this decoder's memory window.
+> > +
+> > +What:                /sys/bus/cxl/devices/decoderX.Y/target_type
+> > +Date:                June, 2021
+> > +KernelVersion:       v5.14
+> > +Contact:     linux-cxl@vger.kernel.org
+> > +Description:
+> > +             When a CXL decoder is of devtype "cxl_decoder_switch", it=
+ can
+> > +             optionally decode either accelerator memory (type-2) or e=
+xpander
+> > +             memory (type-3). The 'target_type' attribute indicates th=
+e
+> > +             current setting which may dynamically change based on wha=
+t
+> > +             memory regions are activated in this decode hierarchy.
+>
+> Nice docs.
+>
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index ec324bf063b8..6f203ba7fc1d 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -70,6 +70,7 @@ static int add_host_bridge_uport(struct device *match=
+, void *arg)
+> >       struct device *host =3D root_port->dev.parent;
+> >       struct acpi_pci_root *pci_root;
+> >       struct cxl_walk_context ctx;
+> > +     struct cxl_decoder *cxld;
+> >       struct cxl_port *port;
+> >
+> >       if (!bridge)
+> > @@ -94,7 +95,25 @@ static int add_host_bridge_uport(struct device *matc=
+h, void *arg)
+> >
+> >       if (ctx.count =3D=3D 0)
+> >               return -ENODEV;
+> > -     return ctx.error;
+> > +     if (ctx.error)
+> > +             return ctx.error;
+> > +
+> > +     /* TODO: Scan CHBCR for HDM Decoder resources */
+> > +
+> > +     /*
+> > +      * In the single-port host-bridge case there are no HDM decoders
+> > +      * in the CHBCR and a 1:1 passthrough decode is implied.
+> > +      */
+> > +     if (ctx.count =3D=3D 1) {
+> > +             cxld =3D devm_cxl_add_decoder(host, port, 1, 0, -2, 1, 0,
+>
+> -2?  I'm guessing that has some special meaning and perhaps warrants
+> a nice define to let us know what that is.
 
-> Dear Vinicius,
->
->
-> Am 05.06.21 um 02:23 schrieb Vinicius Costa Gomes:
->> i225 has support for PCIe PTM, which allows us to implement support
->> for the PTP_SYS_OFFSET_PRECISE ioctl(), implemented in the driver via
->> the getcrosststamp() function.
->
-> Maybe:
->
-> i225 supports PCIe Precision Time Measurement (PTM), allowing us to 
-> support the PTP_SYS_OFFSET_PRECISE ioctl() in the driver via the 
-> getcrosststamp() function.
-
-Sure. Sounds good. Will change the commit message.
-
->
->> The easiest way to expose the PTM registers would be to configure the PTM
->> dialogs to run periodically, but the PTP_SYS_OFFSET_PRECISE ioctl()
->> semantics are more aligned to using a kind of "one-shot" way of retrieving
->> the PTM timestamps. But this causes a bit more code to be written: the
->
-> Maybe: But this results in more code:
-
-Will change.
-
->
->> trigger registers for the PTM dialogs are not cleared automatically.
->> 
->> i225 can be configured to send "fake" packets with the PTM
->> information, adding support for handling these types of packets is
->> left for the future.
->> 
->> PTM improves the accuracy of time synchronization, for example, using
->> phc2sys. Before:
->> 
->> phc2sys[341.511]: CLOCK_REALTIME phc offset       289 s2 freq    +961 delay   2963
->> phc2sys[342.511]: CLOCK_REALTIME phc offset      -984 s2 freq    -225 delay   3517
->> phc2sys[343.511]: CLOCK_REALTIME phc offset       427 s2 freq    +891 delay   2312
->> phc2sys[344.511]: CLOCK_REALTIME phc offset       104 s2 freq    +696 delay   2575
->> phc2sys[345.511]: CLOCK_REALTIME phc offset       149 s2 freq    +772 delay   2388
->> phc2sys[346.511]: CLOCK_REALTIME phc offset        33 s2 freq    +701 delay   2359
->> phc2sys[347.511]: CLOCK_REALTIME phc offset      -216 s2 freq    +462 delay   2706
->> phc2sys[348.512]: CLOCK_REALTIME phc offset       140 s2 freq    +753 delay   2300
->> phc2sys[349.512]: CLOCK_REALTIME phc offset       -14 s2 freq    +641 delay   2385
->> phc2sys[350.512]: CLOCK_REALTIME phc offset      1048 s2 freq   +1699 delay   4303
->> phc2sys[351.512]: CLOCK_REALTIME phc offset     -1296 s2 freq    -331 delay   2846
->> phc2sys[352.512]: CLOCK_REALTIME phc offset      -912 s2 freq    -336 delay   4006
->> phc2sys[353.512]: CLOCK_REALTIME phc offset       880 s2 freq   +1183 delay   2338
->> phc2sys[354.512]: CLOCK_REALTIME phc offset       358 s2 freq    +925 delay   2348
->> phc2sys[355.512]: CLOCK_REALTIME phc offset      -211 s2 freq    +463 delay   2941
->> phc2sys[356.512]: CLOCK_REALTIME phc offset       234 s2 freq    +845 delay   2519
->> phc2sys[357.512]: CLOCK_REALTIME phc offset        45 s2 freq    +726 delay   2357
->> phc2sys[358.512]: CLOCK_REALTIME phc offset      -262 s2 freq    +433 delay   2821
->> phc2sys[359.512]: CLOCK_REALTIME phc offset      -424 s2 freq    +192 delay   3579
->> phc2sys[360.513]: CLOCK_REALTIME phc offset       134 s2 freq    +623 delay   3269
->> phc2sys[361.513]: CLOCK_REALTIME phc offset      -213 s2 freq    +316 delay   3999
->> phc2sys[362.513]: CLOCK_REALTIME phc offset      1023 s2 freq   +1488 delay   2614
->> phc2sys[363.513]: CLOCK_REALTIME phc offset        57 s2 freq    +829 delay   2332
->> phc2sys[364.513]: CLOCK_REALTIME phc offset      -126 s2 freq    +663 delay   2315
->> phc2sys[365.513]: CLOCK_REALTIME phc offset       -85 s2 freq    +666 delay   2449
->> phc2sys[366.513]: CLOCK_REALTIME phc offset      -193 s2 freq    +533 delay   2336
->> phc2sys[367.513]: CLOCK_REALTIME phc offset      -645 s2 freq     +23 delay   3870
->> phc2sys[368.513]: CLOCK_REALTIME phc offset       483 s2 freq    +957 delay   2342
->> phc2sys[369.513]: CLOCK_REALTIME phc offset      -166 s2 freq    +453 delay   3025
->> phc2sys[370.513]: CLOCK_REALTIME phc offset       327 s2 freq    +896 delay   2250
->> 
->> After:
->> 
->> phc2sys[617.838]: CLOCK_REALTIME phc offset       -25 s2 freq    +309 delay      0
->> phc2sys[618.838]: CLOCK_REALTIME phc offset       -43 s2 freq    +284 delay      0
->> phc2sys[619.838]: CLOCK_REALTIME phc offset       -12 s2 freq    +302 delay      0
->> phc2sys[620.838]: CLOCK_REALTIME phc offset        -2 s2 freq    +308 delay      0
->> phc2sys[621.838]: CLOCK_REALTIME phc offset        30 s2 freq    +340 delay      0
->> phc2sys[622.838]: CLOCK_REALTIME phc offset        14 s2 freq    +333 delay      0
->> phc2sys[623.839]: CLOCK_REALTIME phc offset        -3 s2 freq    +320 delay      0
->> phc2sys[624.839]: CLOCK_REALTIME phc offset         9 s2 freq    +331 delay      0
->> phc2sys[625.839]: CLOCK_REALTIME phc offset        -1 s2 freq    +324 delay      0
->> phc2sys[626.839]: CLOCK_REALTIME phc offset        -6 s2 freq    +318 delay      0
->> phc2sys[627.839]: CLOCK_REALTIME phc offset       -10 s2 freq    +313 delay      0
->> phc2sys[628.839]: CLOCK_REALTIME phc offset         7 s2 freq    +327 delay      0
->> phc2sys[629.839]: CLOCK_REALTIME phc offset         8 s2 freq    +330 delay      0
->> phc2sys[630.840]: CLOCK_REALTIME phc offset       -24 s2 freq    +300 delay      0
->> phc2sys[631.840]: CLOCK_REALTIME phc offset       -49 s2 freq    +268 delay      0
->> phc2sys[632.840]: CLOCK_REALTIME phc offset         6 s2 freq    +308 delay      0
->> phc2sys[633.840]: CLOCK_REALTIME phc offset        25 s2 freq    +329 delay      0
->> phc2sys[634.840]: CLOCK_REALTIME phc offset         5 s2 freq    +316 delay      0
->> phc2sys[635.840]: CLOCK_REALTIME phc offset        10 s2 freq    +323 delay      0
->> phc2sys[636.840]: CLOCK_REALTIME phc offset       -13 s2 freq    +303 delay      0
->> phc2sys[637.841]: CLOCK_REALTIME phc offset         4 s2 freq    +316 delay      0
->> phc2sys[638.841]: CLOCK_REALTIME phc offset        16 s2 freq    +329 delay      0
->> phc2sys[639.841]: CLOCK_REALTIME phc offset        31 s2 freq    +349 delay      0
->> phc2sys[640.841]: CLOCK_REALTIME phc offset       -21 s2 freq    +306 delay      0
->> phc2sys[641.841]: CLOCK_REALTIME phc offset       -14 s2 freq    +307 delay      0
->> phc2sys[642.841]: CLOCK_REALTIME phc offset       -24 s2 freq    +293 delay      0
->> phc2sys[643.841]: CLOCK_REALTIME phc offset        -6 s2 freq    +304 delay      0
->> phc2sys[644.842]: CLOCK_REALTIME phc offset        12 s2 freq    +320 delay      0
->> phc2sys[645.842]: CLOCK_REALTIME phc offset        12 s2 freq    +323 delay      0
->> phc2sys[646.842]: CLOCK_REALTIME phc offset       -12 s2 freq    +303 delay      0
->
-> Please (additionally) summarize the findings by stating the
-> min/max/avg?
-
-Sure. Will do.
-
->
->> One possible explanation is that when PTM is not enabled, and there's a lot
->> of traffic in the PCIe fabric, some register reads will take more time than
->> the others (see the variation in the delay values "before").
->
-> Can you please document the datasheet name and revision used to 
-> implement this?
-
-Sure. Will document this for the next version.
-
->
->> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->> ---
->>   drivers/net/ethernet/intel/igc/igc.h         |   1 +
->>   drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
->>   drivers/net/ethernet/intel/igc/igc_ptp.c     | 182 +++++++++++++++++++
->>   drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
->>   4 files changed, 237 insertions(+)
->> 
->> diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
->> index 5901ed9fb545..36ef4ba10e2c 100644
->> --- a/drivers/net/ethernet/intel/igc/igc.h
->> +++ b/drivers/net/ethernet/intel/igc/igc.h
->> @@ -225,6 +225,7 @@ struct igc_adapter {
->>   	struct timecounter tc;
->>   	struct timespec64 prev_ptp_time; /* Pre-reset PTP clock */
->>   	ktime_t ptp_reset_start; /* Reset time in clock mono */
->> +	struct system_time_snapshot snapshot;
->>   
->>   	char fw_version[32];
->>   
->> diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
->> index 71fe5b5ad2ed..0432ba26192e 100644
->> --- a/drivers/net/ethernet/intel/igc/igc_defines.h
->> +++ b/drivers/net/ethernet/intel/igc/igc_defines.h
->> @@ -481,6 +481,37 @@
->>   #define IGC_RXCSUM_CRCOFL	0x00000800   /* CRC32 offload enable */
->>   #define IGC_RXCSUM_PCSD		0x00002000   /* packet checksum disabled */
->>   
->> +/* PCIe PTM Control */
->> +#define IGC_PTM_CTRL_START_NOW	BIT(29) /* Start PTM Now */
->> +#define IGC_PTM_CTRL_EN		BIT(30) /* Enable PTM */
->> +#define IGC_PTM_CTRL_TRIG	BIT(31) /* PTM Cycle trigger */
->> +#define IGC_PTM_CTRL_SHRT_CYC(usec)	(((usec) & 0x2f) << 2)
->> +#define IGC_PTM_CTRL_PTM_TO(usec)	(((usec) & 0xff) << 8)
->> +
->> +#define IGC_PTM_SHORT_CYC_DEFAULT	10  /* Default Short/interrupted cycle interval */
->> +#define IGC_PTM_CYC_TIME_DEFAULT	5   /* Default PTM cycle time */
->> +#define IGC_PTM_TIMEOUT_DEFAULT		255 /* Default timeout for PTM errors */
->> +
->> +/* PCIe Digital Delay */
->> +#define IGC_PCIE_DIG_DELAY_DEFAULT	0x01440000
->> +
->> +/* PCIe PHY Delay */
->> +#define IGC_PCIE_PHY_DELAY_DEFAULT	0x40900000
->> +
->> +#define IGC_TIMADJ_ADJUST_METH		0x40000000
->> +
->> +/* PCIe PTM Status */
->> +#define IGC_PTM_STAT_VALID		BIT(0) /* PTM Status */
->> +#define IGC_PTM_STAT_RET_ERR		BIT(1) /* Root port timeout */
->> +#define IGC_PTM_STAT_BAD_PTM_RES	BIT(2) /* PTM Response msg instead of PTM Response Data */
->> +#define IGC_PTM_STAT_T4M1_OVFL		BIT(3) /* T4 minus T1 overflow */
->> +#define IGC_PTM_STAT_ADJUST_1ST		BIT(4) /* 1588 timer adjusted during 1st PTM cycle */
->> +#define IGC_PTM_STAT_ADJUST_CYC		BIT(5) /* 1588 timer adjusted during non-1st PTM cycle */
->> +
->> +/* PCIe PTM Cycle Control */
->> +#define IGC_PTM_CYCLE_CTRL_CYC_TIME(msec)	((msec) & 0x3ff) /* PTM Cycle Time (msec) */
->> +#define IGC_PTM_CYCLE_CTRL_AUTO_CYC_EN		BIT(31) /* PTM Cycle Control */
->> +
->>   /* GPY211 - I225 defines */
->>   #define GPY_MMD_MASK		0xFFFF0000
->>   #define GPY_MMD_SHIFT		16
->> diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
->> index 69617d2c1be2..1683b2f7cc8c 100644
->> --- a/drivers/net/ethernet/intel/igc/igc_ptp.c
->> +++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
->> @@ -9,6 +9,8 @@
->>   #include <linux/ptp_classify.h>
->>   #include <linux/clocksource.h>
->>   #include <linux/ktime.h>
->> +#include <linux/delay.h>
->> +#include <linux/iopoll.h>
->>   
->>   #define INCVALUE_MASK		0x7fffffff
->>   #define ISGN			0x80000000
->> @@ -16,6 +18,9 @@
->>   #define IGC_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
->>   #define IGC_PTP_TX_TIMEOUT		(HZ * 15)
->>   
->> +#define IGC_PTM_STAT_SLEEP		2
->> +#define IGC_PTM_STAT_TIMEOUT		100
->> +
->>   /* SYSTIM read access for I225 */
->>   void igc_ptp_read(struct igc_adapter *adapter, struct timespec64 *ts)
->>   {
->> @@ -752,6 +757,150 @@ int igc_ptp_get_ts_config(struct net_device *netdev, struct ifreq *ifr)
->>   		-EFAULT : 0;
->>   }
->>   
->> +/* Support for cross timestamping via PCIe PTM is only supported if
->> + * two conditions are met:
->
-> Maybe: The two conditions below must be met for cross timestamping via 
-> PCIe PTM
->
-
-Will use your suggestion.
-
->> + *
->> + * 1. We have an way to convert the timestamps in the PTM messages
->
-> s/an way/a way/
-
-Will fix.
+Um, yes, I think I went back and forth on whether this should be a
+zero-length range starting at zero or a zero-length range starting at
+UINT64_MAX, and I ended up botching it with a range of 0 to UINT64_MAX
+- 1. I'll fix this up to provide a "passthrough" version of
+devm_cxl_add_decoder() for the cases like this where a port does not
+adjust the decode from the parent port down to the next level.
 
 >
->> + *    to something related to the system clocks (right now, only
->> + *    X86 systems with support for the Always Running Timer allow that);
->> + *
->> + * 2. We have PTM enabled in the path from the device to the PCIe root port.
->> + */
->> +static bool igc_is_crosststamp_supported(struct igc_adapter *adapter)
->> +{
->> +#if IS_ENABLED(CONFIG_X86_TSC)
->> +	return pcie_ptm_enabled(adapter->pdev);
->> +#endif
->> +	return false;
->
-> I’d also add the preprocessor else branch as below (despite the compiler 
-> opitimzing it away) for readability. Also, I’d do the check in C and not 
-> the preprocessor.
->
->      return IS_ENABLED(CONFIG_X86_TSC) ? pcie_ptm_enabled(adapter->pdev) 
-> : false;
->
+> Given this interface is a bit long perhaps even wroth a comment here on
+> why the values are what they are?
 
-I was using the preprocessor because, before, there was a check for
-CONFIG_PCIE_PTM, now that that check doesn't exist anymore. I can do it
-in C. Will change. Thanks.
-
->> +}
->> +
->> +static struct system_counterval_t igc_device_tstamp_to_system(u64 tstamp)
->> +{
->> +#if IS_ENABLED(CONFIG_X86_TSC)
->> +	return convert_art_ns_to_tsc(tstamp);
->> +#else
->> +	return (struct system_counterval_t) { };
->> +#endif
->> +}
->> +
->> +static void igc_ptm_log_error(struct igc_adapter *adapter, u32 ptm_stat)
->> +{
->> +	struct net_device *netdev = adapter->netdev;
->> +
->> +	switch (ptm_stat) {
->> +	case IGC_PTM_STAT_RET_ERR:
->> +		netdev_err(netdev, "PTM Error: Root port timeout\n");
->> +		break;
->> +	case IGC_PTM_STAT_BAD_PTM_RES:
->> +		netdev_err(netdev, "PTM Error: Bad response, PTM Response Data expected\n");
->> +		break;
->> +	case IGC_PTM_STAT_T4M1_OVFL:
->> +		netdev_err(netdev, "PTM Error: T4 minus T1 overflow\n");
->> +		break;
->> +	case IGC_PTM_STAT_ADJUST_1ST:
->> +		netdev_err(netdev, "PTM Error: 1588 timer adjusted during first PTM cycle\n");
->> +		break;
->> +	case IGC_PTM_STAT_ADJUST_CYC:
->> +		netdev_err(netdev, "PTM Error: 1588 timer adjusted during non-first PTM cycle\n");
->> +		break;
->> +	default:
->> +		netdev_err(netdev, "PTM Error: Unknown error (%#x)\n", ptm_stat);
->> +		break;
->> +	}
->> +}
->> +
->> +static int igc_phc_get_syncdevicetime(ktime_t *device,
->> +				      struct system_counterval_t *system,
->> +				      void *ctx)
->> +{
->> +	struct igc_adapter *adapter = ctx;
->> +	struct igc_hw *hw = &adapter->hw;
->> +	u32 stat, t2_curr_h, t2_curr_l, ctrl;
->> +	u32 t4mt1_prev, t3mt2_prev, delay;
->> +	ktime_t t1, t2_curr;
->> +	int err;
->> +
->> +	/* Get a snapshot of system clocks to use as historic value. */
->> +	ktime_get_snapshot(&adapter->snapshot);
->> +
->> +	do {
->> +		/* Doing this in a loop because in the event of a
->> +		 * badly timed (ha!) system clock adjustment, we may
->> +		 * get PTM Errors from the PCI root, but these errors
->
-> PTM errors
-
-Will fix. Thanks.
-
->
->> +		 * are transitory. Repeating the process returns valid
->> +		 * data eventually.
->> +		 */
->> +
->> +		/* To "manually" start the PTM cycle we need to clear and
->> +		 * then set again the TRIG bit.
->> +		 */
->> +		ctrl = rd32(IGC_PTM_CTRL);
->> +		ctrl &= ~IGC_PTM_CTRL_TRIG;
->> +		wr32(IGC_PTM_CTRL, ctrl);
->> +		ctrl |= IGC_PTM_CTRL_TRIG;
->> +		wr32(IGC_PTM_CTRL, ctrl);
->> +
->> +		/* The cycle only starts "for real" when software notifies
->> +		 * that it has read the registers, this is done by setting
->> +		 * VALID bit.
->> +		 */
->> +		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
->> +
->> +		err = readx_poll_timeout(rd32, IGC_PTM_STAT, stat,
->> +					 stat, IGC_PTM_STAT_SLEEP,
->> +					 IGC_PTM_STAT_TIMEOUT);
->> +		if (err < 0)
->> +			return err;
->
-> Should this be logged?
-
-Good catch. Will fix.
-
->
->> +
->> +		if ((stat & IGC_PTM_STAT_VALID) == IGC_PTM_STAT_VALID)
->> +			break;
->> +
->> +		if (stat & ~IGC_PTM_STAT_VALID) {
->> +			/* An error occurred, log it. */
->> +			igc_ptm_log_error(adapter, stat);
->> +			/* The STAT register is write-1-to-clear (W1C),
->> +			 * so write the previous error status to clear it.
->> +			 */
->> +			wr32(IGC_PTM_STAT, stat);
->> +			continue;
->> +		}
->> +	} while (true);
->
-> I personally prefer to write at least one condition in the loop
-> condition.
-
-I can do that. Will fix.
-
->
->> +
->> +	t1 = ktime_set(rd32(IGC_PTM_T1_TIM0_H),
->> +		       rd32(IGC_PTM_T1_TIM0_L));
->
-> Why not put it into one line?
-
-No reason. Will fix.
-
->
->> +
->> +	t2_curr_l = rd32(IGC_PTM_CURR_T2_L);
->> +	t2_curr_h = rd32(IGC_PTM_CURR_T2_H);
->> +
->> +	/* FIXME: When the register that tells the endianness of the
->> +	 * PTM registers are implemented, check them here and add the
->> +	 * appropriate conversion.
->> +	 */
->> +	t2_curr_h = swab32(t2_curr_h);
->> +
->> +	t2_curr = ((s64)t2_curr_h << 32 | t2_curr_l);
->> +
->> +	t4mt1_prev = rd32(IGC_PTM_PREV_T4M1);
->> +	t3mt2_prev = rd32(IGC_PTM_PREV_T3M2);
->> +
->> +	delay = (t4mt1_prev - t3mt2_prev) / 2;
->> +
->> +	*device = t1 + delay;
->> +	*system = igc_device_tstamp_to_system(t2_curr);
->> +
->> +	return 0;
->> +}
->> +
->> +static int igc_ptp_getcrosststamp(struct ptp_clock_info *ptp,
->> +				  struct system_device_crosststamp *cts)
->> +{
->> +	struct igc_adapter *adapter = container_of(ptp, struct igc_adapter,
->> +						   ptp_caps);
->> +
->> +	return get_device_system_crosststamp(igc_phc_get_syncdevicetime,
->> +					     adapter, &adapter->snapshot, cts);
->> +}
->> +
->>   /**
->>    * igc_ptp_init - Initialize PTP functionality
->>    * @adapter: Board private structure
->> @@ -788,6 +937,11 @@ void igc_ptp_init(struct igc_adapter *adapter)
->>   		adapter->ptp_caps.n_per_out = IGC_N_PEROUT;
->>   		adapter->ptp_caps.n_pins = IGC_N_SDP;
->>   		adapter->ptp_caps.verify = igc_ptp_verify_pin;
->> +
->> +		if (!igc_is_crosststamp_supported(adapter))
->> +			break;
->> +
->> +		adapter->ptp_caps.getcrosststamp = igc_ptp_getcrosststamp;
->>   		break;
->>   	default:
->>   		adapter->ptp_clock = NULL;
->> @@ -878,7 +1032,9 @@ void igc_ptp_stop(struct igc_adapter *adapter)
->>   void igc_ptp_reset(struct igc_adapter *adapter)
->>   {
->>   	struct igc_hw *hw = &adapter->hw;
->> +	u32 cycle_ctrl, ctrl;
->>   	unsigned long flags;
->> +	u32 timadj;
->>   
->>   	/* reset the tstamp_config */
->>   	igc_ptp_set_timestamp_mode(adapter, &adapter->tstamp_config);
->> @@ -887,12 +1043,38 @@ void igc_ptp_reset(struct igc_adapter *adapter)
->>   
->>   	switch (adapter->hw.mac.type) {
->>   	case igc_i225:
->> +		timadj = rd32(IGC_TIMADJ);
->> +		timadj |= IGC_TIMADJ_ADJUST_METH;
->> +		wr32(IGC_TIMADJ, timadj);
->> +
->>   		wr32(IGC_TSAUXC, 0x0);
->>   		wr32(IGC_TSSDP, 0x0);
->>   		wr32(IGC_TSIM,
->>   		     IGC_TSICR_INTERRUPTS |
->>   		     (adapter->pps_sys_wrap_on ? IGC_TSICR_SYS_WRAP : 0));
->>   		wr32(IGC_IMS, IGC_IMS_TS);
->> +
->> +		if (!igc_is_crosststamp_supported(adapter))
->> +			break;
->> +
->> +		wr32(IGC_PCIE_DIG_DELAY, IGC_PCIE_DIG_DELAY_DEFAULT);
->> +		wr32(IGC_PCIE_PHY_DELAY, IGC_PCIE_PHY_DELAY_DEFAULT);
->> +
->> +		cycle_ctrl = IGC_PTM_CYCLE_CTRL_CYC_TIME(IGC_PTM_CYC_TIME_DEFAULT);
->> +
->> +		wr32(IGC_PTM_CYCLE_CTRL, cycle_ctrl);
->> +
->> +		ctrl = IGC_PTM_CTRL_EN |
->> +			IGC_PTM_CTRL_START_NOW |
->> +			IGC_PTM_CTRL_SHRT_CYC(IGC_PTM_SHORT_CYC_DEFAULT) |
->> +			IGC_PTM_CTRL_PTM_TO(IGC_PTM_TIMEOUT_DEFAULT) |
->> +			IGC_PTM_CTRL_TRIG;
->> +
->> +		wr32(IGC_PTM_CTRL, ctrl);
->> +
->> +		/* Force the first cycle to run. */
->> +		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
->> +
->>   		break;
->>   	default:
->>   		/* No work to do. */
->> diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
->> index 0f82990567d9..4499a6f7c577 100644
->> --- a/drivers/net/ethernet/intel/igc/igc_regs.h
->> +++ b/drivers/net/ethernet/intel/igc/igc_regs.h
->> @@ -229,6 +229,29 @@
->>   #define IGC_TXSTMPL	0x0B618  /* Tx timestamp value Low - RO */
->>   #define IGC_TXSTMPH	0x0B61C  /* Tx timestamp value High - RO */
->>   
->> +#define IGC_TIMADJ	0x0B60C  /* Time Adjustment Offset Register */
->> +
->> +/* PCIe Registers */
->> +#define IGC_PTM_CTRL		0x12540  /* PTM Control */
->> +#define IGC_PTM_STAT		0x12544  /* PTM Status */
->> +#define IGC_PTM_CYCLE_CTRL	0x1254C  /* PTM Cycle Control */
->> +
->> +/* PTM Time registers */
->> +#define IGC_PTM_T1_TIM0_L	0x12558  /* T1 on Timer 0 Low */
->> +#define IGC_PTM_T1_TIM0_H	0x1255C  /* T1 on Timer 0 High */
->> +
->> +#define IGC_PTM_CURR_T2_L	0x1258C  /* Current T2 Low */
->> +#define IGC_PTM_CURR_T2_H	0x12590  /* Current T2 High */
->> +#define IGC_PTM_PREV_T2_L	0x12584  /* Previous T2 Low */
->> +#define IGC_PTM_PREV_T2_H	0x12588  /* Previous T2 High */
->> +#define IGC_PTM_PREV_T4M1	0x12578  /* T4 Minus T1 on previous PTM Cycle */
->> +#define IGC_PTM_CURR_T4M1	0x1257C  /* T4 Minus T1 on this PTM Cycle */
->> +#define IGC_PTM_PREV_T3M2	0x12580  /* T3 Minus T2 on previous PTM Cycle */
->> +#define IGC_PTM_TDELAY		0x12594  /* PTM PCIe Link Delay */
->> +
->> +#define IGC_PCIE_DIG_DELAY	0x12550  /* PCIe Digital Delay */
->> +#define IGC_PCIE_PHY_DELAY	0x12554  /* PCIe PHY Delay */
->> +
->>   /* Management registers */
->>   #define IGC_MANC	0x05820  /* Management Control - RW */
->>   
->
-> How can the user find out, that PTP grecroosstamp() is used?
-
-If by user you mean the system administrator or similar, they could look
-at the output of phc2sys, they would see that the "delay" (meaning the
-delay between the device and system timestamps) is going to be zero.
-
-If you mean applications in general, they could check the return value
-of the PTP_SYS_OFFSET_PRECISE(2) ioctl(), it's going to return not
-supported if getcrosststamp() is not used.
-
->
->
-> Kind regards,
->
-> Paul
-
-
-Cheers,
--- 
-Vinicius
+The passthrough helper will address this.
