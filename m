@@ -2,258 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AAEC3A04ED
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 22:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C603A04FD
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 22:11:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234618AbhFHUFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 16:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234256AbhFHUFk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 16:05:40 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984FFC061787
-        for <linux-pci@vger.kernel.org>; Tue,  8 Jun 2021 13:03:46 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id k5so27104pjj.1
-        for <linux-pci@vger.kernel.org>; Tue, 08 Jun 2021 13:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nhI0uZdD+bqC6HZkMksTTcPTgmv+oAlfDoNIYsPwNHQ=;
-        b=JMNPFpGGS5lh/0K8ov8txZDzpZm+eKmL3lxLGosvfpE/O6MkoZ6FcjeMZnzhdxqTJ5
-         yklstTPDnA/gjDJg5+2AtiQxhNsUF/YsbmgKqRO65xaqvxAw7rGv5m7p1tDkB4T7fi07
-         HHoaruGFdVR7uFuX7pAgrLBxePNy4CVWFNPzGIZ8aSLmFgJGuYKrBYJgYHP8TcBLl7hy
-         2rKxLz31QknjybMuV53BdOy0+z9CDO3xXtiIKOO2ZsUR1h7U0j37R9U3barg8Sgsh6Ii
-         Hcvnsja6vN/uz6rfuDbCNVGGgJNBKx4C6873XxqefJNIvcSW1GFV6QeojWLsX6FgVnaz
-         VKLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nhI0uZdD+bqC6HZkMksTTcPTgmv+oAlfDoNIYsPwNHQ=;
-        b=CqZTLw8PpeaOshshKk78cfhdhKGtS9XO7VFcCcXlQE+tylXnNZlzE/M0UfyvLRIiYU
-         vPqXqV+Pgx5IwxCY2jbr7Y0Ev1ucvoJ6sBvukiLL70+gWvWOykiq+Gja6/XLaZiIHr/5
-         gXbB/Nttq9LYtF9S0ChoDMKE9j1/T5GzYEquu334KGjHt3UqmaxA1Qn8p4po4vyiATKs
-         TB6vM0YCXrOyO9/MvmQxh5I89j9TKBcgOFmv5gLZzPAmqb4UvEMUQyKX80VNBrXcd7MI
-         /CKSqSMq/HOZ8ksxec9WYia3Uhu+SZa8cym+FxCN5hcpEHI8ytULh+AOFSpeCes3k6Cz
-         rtNA==
-X-Gm-Message-State: AOAM532Mo6RN+we1dIuQehNSkWNpW99ayg86ILtvlUGZ5fBt3af/sGXV
-        FssIdPvuG4ssIfDGpgDUPyxWrsewA10dxE1lzMgO1w==
-X-Google-Smtp-Source: ABdhPJzPDn7AoKen5PiDE/efuS/RFGNeIk19LM9QLlTquxcqqZoV1WpmhMPseVBYhHaQYA6G6aRuVOlcBz5lQgwLpVw=
-X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr6734466pjb.13.1623182625985;
- Tue, 08 Jun 2021 13:03:45 -0700 (PDT)
+        id S234498AbhFHUNa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 16:13:30 -0400
+Received: from mail-mw2nam12on2082.outbound.protection.outlook.com ([40.107.244.82]:14208
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232764AbhFHUN3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Jun 2021 16:13:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mRNTk70lh+nI9UCxiRxo7Z6WNe1skMoiFE1VyzbUqAuRnUTq3+UVZDdzxXBIN/NMsKlzZfh1MqK5SrrRsSQQyn8VQO4Z3JTZLsKx38hRYxquE/TcqDCksVUl0ZYRwtNjWwOboBRmXgKr45xZCt+rcGGGqIdvf5K9EyytN1sTVhiCLucB6jHxdNRWzNAosEkTfOZ60GtrP4pdLB1FLQeusDSr2iRg1M1ZRND5PRmy9H0H6nPbpGivKlZ5fTvEHU96ZdR++gsMZzKYCumEM5kuaA2v1gZdZ8XGkZpfpwDXbLATGpdbKfYQScjtuebikaAKyeAKFBB56vlGfZiqrrlTEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PIVutr/W+6qREm1qtZjViDSWW3q2e7U8yoxh49uqjEY=;
+ b=hJhKYt8/cWMWoT9IcUr//BiUdNfVObrkO8K1DOiZupZxFj5MgnoHYAMy0ATAOvXSebSitjIz9jdE9mZOckkl6PnS+RJPcU6Xz4IjH37Cpf5ubBuq88hiDTSC4YUwCb7xx/hlRV70s9MgBONyvLQqKDgelhzcxbhc3nyoRS0zxuW/JH1Yp1COkm8LfRJtKj6mBf9Ew/DmmjEvYGbp8NsKdzpz5Rf8P+g9/Hekc4RAyHxhNWyI1KyNJ6mJR/1JRht8WTXZQ1MwAGfzGkgmqwhPUxOwR/HJwx51huzz0HuQknvza+ilt28D8vOklj/hcrKHaJHKhd3kyuYl4YZueF5X0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PIVutr/W+6qREm1qtZjViDSWW3q2e7U8yoxh49uqjEY=;
+ b=G4dPlL56hgndZcozQcnKPJ/N8sz+eC99RcAnQ9FVml3irpwkPHaAHD4nTk/SBvoGtoSTv6fBemSBekdgTn3HLauMqrKsixIwYOxfpeSBckytCIEH0ucLjuitHqAdCSqDzHniN8K6LuBQNJuL2RYCUxR30akxl9+Gik0oipLREXNvLK/LEtVAYIblZ4BEMPuB2R7JSQV3yR3WYcoXYjS7htkMdz68iLywIxw41g3XBKZ4a6cevmKxIpfl+gLFr/qTdK2Fe8p0Ego2PdJElC9sSyFqNLBFeySCNfbvqhV/3rATg5CSI2GlGrab3bZeiHQ8nVCY6p8MjXpRv+DBPZPVXw==
+Received: from BN6PR17CA0059.namprd17.prod.outlook.com (2603:10b6:405:75::48)
+ by CH0PR12MB5156.namprd12.prod.outlook.com (2603:10b6:610:bb::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.21; Tue, 8 Jun
+ 2021 20:11:35 +0000
+Received: from BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:405:75:cafe::8) by BN6PR17CA0059.outlook.office365.com
+ (2603:10b6:405:75::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.23 via Frontend
+ Transport; Tue, 8 Jun 2021 20:11:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT006.mail.protection.outlook.com (10.13.177.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4195.22 via Frontend Transport; Tue, 8 Jun 2021 20:11:34 +0000
+Received: from [10.26.49.10] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Jun
+ 2021 20:11:29 +0000
+Subject: Re: [PATCH V2] PCI: tegra: Fix building Tegra194 PCIe driver
+To:     Vidya Sagar <vidyas@nvidia.com>, Bjorn Helgaas <helgaas@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+References: <20210608130207.GA2597738@bjorn-Precision-5520>
+ <754e3546-402c-2a0d-02e8-5d30701f3b94@nvidia.com>
+ <9b027609-a2c3-3df0-5e65-1f282f03cc5d@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <303946c4-29a1-4f5b-6a4c-be451ece20fe@nvidia.com>
+Date:   Tue, 8 Jun 2021 21:11:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210608122836.000018fc@Huawei.com>
-In-Reply-To: <20210608122836.000018fc@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 8 Jun 2021 13:03:34 -0700
-Message-ID: <CAPcyv4h27dkh4FudzhXMQv8FGwY0b1qm1eDf-vDY6aH1kNZsag@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] cxl/acpi: Introduce cxl_root, the root of a
- cxl_port topology
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9b027609-a2c3-3df0-5e65-1f282f03cc5d@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a6b002e9-9e11-4201-c948-08d92ab99d81
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5156:
+X-Microsoft-Antispam-PRVS: <CH0PR12MB515677D69A9A3CDADDC10BBAD9379@CH0PR12MB5156.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sax39P/2WtloKGio0WShMq5XFyF11HEkQNl9tx0PAYZVj1glAq8nohmS21QisKK1sVebRnZ22yl84U6zn7sIJh+Bk5dMu9qJWh1GPoxH1kbbr86o+c8WGGSUVomLQ6isndrpVeCCS6spieEg6WEGB6FT7SaIsR3NZND/lHXREfMA/KGU/z4x7DVj4MXwvNwz2w4wwaDRB7+ni1Pzq4ZGcWNEZU/Dv7WU3mDnk1IVvUfBd8xaq0J70VGjuKqTAO1k6TYHvJ5RP3+7TMWRcvyXJrITseGLaY2mV9w2aqGFfNAeUe2PCYPuIsc1Cj1goPf/7uys77K1UKJQXNVu4gtSlLpSBdRsBxA9oi8sXnayAKU+vWQWVQd8HK5aueheR72a31HmdtpjWsuwHIoLsIJW6F+IlhumiVhB0/eY3IvT48Ee3bodC//cPfPawREbVMQVLTXZnPFhrJYqUoaf4+98+DoUuc7KFQyGVTS0ragPCjU+mKbr1aUaTVSD5GphBlQE7cPRUNQoaLgazL6b63ad6eOJ3I54Ky+Yl/eeU/LvDPKrWJ2JeVN28n77tct0vEndRarViGE8LKLcEF0lQ2jZyv3/kFXNqaZyZvKnAZBHTbJ722jcqYStyPLpMTxpA8uASgecqlTg6XO5KDAdtUEvzrGc1x2bl3F1JBEKuqevTUrcOpL/T6SPvOmty/84VjlA
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(136003)(376002)(46966006)(36840700001)(316002)(16576012)(110136005)(2906002)(54906003)(86362001)(31686004)(47076005)(82310400003)(36906005)(478600001)(5660300002)(53546011)(36756003)(36860700001)(7636003)(356005)(336012)(186003)(16526019)(8676002)(26005)(82740400003)(4326008)(8936002)(426003)(2616005)(83380400001)(31696002)(70586007)(70206006)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2021 20:11:34.7661
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6b002e9-9e11-4201-c948-08d92ab99d81
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5156
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 8, 2021 at 4:28 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Sat, 5 Jun 2021 23:05:04 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > While CXL builds upon the PCI software model for enumeration and
-> > endpoint control, a static platform component is required to bootstrap
-> > the CXL memory layout. Similar to how ACPI identifies root-level PCI
-> > memory resources the ACPI identifies the address space and interleave
-> > configuration for CXL Memory.
-> >
-> > In addition to identifying the host bridges, ACPI is responsible for
-> > enumerating the CXL memory space that can be addressed by downstream
-> > decoders. This is similar to the requirement for ACPI to publish
-> > resources reported by _CRS for PCI host bridges. Specifically ACPI
-> > publishes a table, CXL Early Discovery Table (CEDT), which includes a
-> > list of CXL Memory resource, CXL Fixed Memory Window Structures (CFMWS).
-> >
-> > For now introduce the core infrastructure for a cxl_port hierarchy
-> > starting with a root level anchor represented by the ACPI0017 device.
-> >
-> > Follow on changes model support for the configurable decode capabilities
-> > of cxl_port instances.
-> >
-> > Co-developed-by: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> Two trivial comments inline.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
 
-Thanks, as always, for taking a look.
+On 08/06/2021 19:34, Vidya Sagar wrote:
 
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl |   11 ++
-> >  drivers/cxl/Kconfig                     |   15 +++
-> >  drivers/cxl/Makefile                    |    2
-> >  drivers/cxl/acpi.c                      |   39 ++++++++
-> >  drivers/cxl/core.c                      |  160 +++++++++++++++++++++++++++++++
-> >  drivers/cxl/cxl.h                       |   23 ++++
-> >  6 files changed, 250 insertions(+)
-> >  create mode 100644 drivers/cxl/acpi.c
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > index 2fe7490ad6a8..fb996ced7629 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -24,3 +24,14 @@ Description:
-> >               (RO) "Persistent Only Capacity" as bytes. Represents the
-> >               identically named field in the Identify Memory Device Output
-> >               Payload in the CXL-2.0 specification.
-> > +
-> > +What:                /sys/bus/cxl/devices/portX/uport
-> > +Date:                May, 2021
-> > +KernelVersion:       v5.14
-> > +Contact:     linux-cxl@vger.kernel.org
-> > +Description:
-> > +             CXL port objects are enumerated from either a platform firmware
-> > +             device (ACPI0017 and ACPI0016) or PCIe switch upstream port with
-> > +             CXL component registers. The 'uport' symlink connects the CXL
-> > +             portX object to the device that published the CXL port
-> > +             capability.
->
-> Is this a complete list of ABI added? Looks like we also add devtype
-> attribute in this series.
+...
 
-devtype is the only missing one, I'll add it.
+>>> What is the purpose of PCIE_TEGRA194_EP (added by c57247f940e8 ("PCI:
+>>> tegra: Add support for PCIe endpoint mode in Tegra194") [1])?  I don't
+>>> see any reference to it in a makefile or a source file.
+>>>
+>>> It looks like one can build a single driver that works in either host
+>>> or endpoint mode, depending on whether a DT node matches
+>>> "nvidia,tegra194-pcie" or "nvidia,tegra194-pcie-ep".
+>>>
+>>> So I think PCIE_TEGRA194_EP is superfluous and should be removed and
+>>> you should have a single tristate Kconfig option.
+>>
+>> This is a good point.
+>>
+>> Sagar, any reason for this?
+> Although it is the same driver that works for both HOST mode and EP
+> mode, PCIE_TEGRA194_EP depends on PCI_ENDPOINT whereas the
+> PCIE_TEGRA194_HOST mode doesn't. Similarly the PCIE_TEGRA194_HOST mode
+> depends on PCI_MSI_IRQ_DOMAIN which PCIE_TEGRA194_EP doesn't depend on.
+> It is possible to have end point mode support disabled (at sub-system
+> level) in the system yet pcie-tegra194 can be compiled for the host mode
+> vice-a-versa for the endpoint mode.
+> Hence, appropriate config HOST/EP needs to be selected to make sure that
+> the rest of the dependencies are enabled in the system.
+> Hope I'm able to give the rationale correctly here.
 
-> Mind you I just realized I didn't document the proposed CDAT file either yet.
+Yes but should we combine them like this ...
 
-Hey, we all need prompts to add documentation. I only remembered to
-add these here because you commented on it last time.
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 423d35872ce4..206455a9b70d 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -254,15 +254,12 @@ config PCI_MESON
+          implement the driver.
+ 
+ config PCIE_TEGRA194
+-       tristate
+-
+-config PCIE_TEGRA194_HOST
+-       tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
++       tristate "NVIDIA Tegra194 (and later) PCIe controller"
+        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+-       depends on PCI_MSI_IRQ_DOMAIN
+-       select PCIE_DW_HOST
++       depends on PCI_MSI_IRQ_DOMAIN || PCI_ENDPOINT
++       select PCIE_DW_HOST if PCI_MSI_IRQ_DOMAIN
++       select PCIE_DW_EP if PCI_ENDPOINT
+        select PHY_TEGRA194_P2U
+-       select PCIE_TEGRA194
+        help
+          Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
+          work in host mode. There are two instances of PCIe controllers in
+@@ -271,21 +268,6 @@ config PCIE_TEGRA194_HOST
+          in order to enable device-specific features PCIE_TEGRA194_EP must be
+          selected. This uses the DesignWare core.
+ 
+-config PCIE_TEGRA194_EP
+-       tristate "NVIDIA Tegra194 (and later) PCIe controller - Endpoint Mode"
+-       depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+-       depends on PCI_ENDPOINT
+-       select PCIE_DW_EP
+-       select PHY_TEGRA194_P2U
+-       select PCIE_TEGRA194
+-       help
+-         Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
+-         work in endpoint mode. There are two instances of PCIe controllers in
+-         Tegra194. This controller can work either as EP or RC. In order to
+-         enable host-specific features PCIE_TEGRA194_HOST must be selected and
+-         in order to enable device-specific features PCIE_TEGRA194_EP must be
+-         selected. This uses the DesignWare core.
+-
 
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index 5483ba92b6da..d2573f6aef91 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -45,4 +45,19 @@ config CXL_MEM_RAW_COMMANDS
-> >         potential impact to memory currently in use by the kernel.
-> >
-> >         If developing CXL hardware or the driver say Y, otherwise say N.
-> > +
-> > +config CXL_ACPI
-> > +     tristate "CXL ACPI: Platform Support"
-> > +     depends on ACPI
-> > +     help
-> > +       Enable support for host managed device memory (HDM) resources
-> > +       published by a platform's ACPI CXL memory layout description.  See
-> > +       Chapter 9.14.1 CXL Early Discovery Table (CEDT) in the CXL 2.0
-> > +       specification, and CXL Fixed Memory Window Structures (CEDT.CFMWS)
-> > +       (https://www.computeexpresslink.org/spec-landing). The CXL core
-> > +       consumes these resource to publish the root of a cxl_port decode
-> > +       hierarchy to map regions that represent System RAM, or Persistent
-> > +       Memory regions to be managed by LIBNVDIMM.
-> > +
-> > +       If unsure say 'm'.
-> >  endif
-> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > index d9d282dc15be..a29efb3e8ad2 100644
-> > --- a/drivers/cxl/Makefile
-> > +++ b/drivers/cxl/Makefile
-> > @@ -1,7 +1,9 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> >  obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-> > +obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> >
-> >  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-> >  cxl_core-y := core.o
-> >  cxl_pci-y := pci.o
-> > +cxl_acpi-y := acpi.o
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > new file mode 100644
-> > index 000000000000..556d25ab6966
-> > --- /dev/null
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -0,0 +1,39 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> > +#include <linux/platform_device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/device.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/acpi.h>
-> > +#include "cxl.h"
-> > +
-> > +static int cxl_acpi_probe(struct platform_device *pdev)
-> > +{
-> > +     struct cxl_port *root_port;
-> > +     struct device *host = &pdev->dev;
-> > +
-> > +     root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
-> > +     if (IS_ERR(root_port))
-> > +             return PTR_ERR(root_port);
-> > +     dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct acpi_device_id cxl_acpi_ids[] = {
-> > +     { "ACPI0017", 0 },
-> > +     { "", 0 },
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
-> > +
-> > +static struct platform_driver cxl_acpi_driver = {
-> > +     .probe = cxl_acpi_probe,
-> > +     .driver = {
-> > +             .name = KBUILD_MODNAME,
-> > +             .acpi_match_table = cxl_acpi_ids,
-> > +     },
-> > +};
-> > +
-> > +module_platform_driver(cxl_acpi_driver);
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_IMPORT_NS(CXL);
-> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
-> > index 853666d8a9f5..dbbb34618d7d 100644
-> > --- a/drivers/cxl/core.c
-> > +++ b/drivers/cxl/core.c
-> > @@ -4,6 +4,8 @@
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/idr.h>
-> >  #include "cxl.h"
-> >
-> >  /**
-> > @@ -13,6 +15,164 @@
-> >   * point for cross-device interleave coordination through cxl ports.
-> >   */
-> >
-> > +static DEFINE_IDA(cxl_port_ida);
-> > +
-> > +static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
-> > +                         char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n", dev->type->name);
->
-> I guess it's really small so doesn't matter that much, but not so nice
-> that we are gaining multiple instances of this same function.
->
+Furthermore, I wonder if we should just move the code
+that is required for ACPI into it's own file like
+drivers/pci/controller/dwc/pcie-tegra194-acpi.c?
 
-This is only the second one unless I'm missing something. I do think
-it might be worth placing a common definition in the driver-core.
-Although it might be the case that I'm the only one that thinks having
-devtype as both an attribute and a uevent variable (DEVTYPE) is
-worthwhile. All the other variables in a dev_uevent() appear somewhere
-in sysfs, so that's a decent argument in my opinion to make devtype a
-core attribute.
+Jon
+
+-- 
+nvpublic
