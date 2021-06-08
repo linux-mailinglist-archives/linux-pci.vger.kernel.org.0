@@ -2,270 +2,567 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0953A059B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 23:17:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D84133A068A
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 00:02:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231208AbhFHVTG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 17:19:06 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:54374 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230460AbhFHVTE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 17:19:04 -0400
-Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5E101401BC;
-        Tue,  8 Jun 2021 21:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1623187030; bh=0KWuJxsIQ9csDcMx3+plGEogegpOiC1qQi1WZVFekAQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=a6vom6Dmn94nkh7YTRaK2IJ/sQ3DTUpLxPGej9g6vM+AIcjR+kZL2+d7zkm/463Py
-         5Azi1TiApZKN4K1oancNjt5ef08wRrzJ1aPZCKFode61Bmu2G8GUxjPKoLHmdF/fN0
-         VPpkVOgEK1iSTvNhO3MFMPypDYBLqGFn2VJC5Ze7NM1xaH5cLipvf7r70wGWPAjtTQ
-         M8YnSQHP7ZZ46N8kXLHxOOu32WbfwnM5PqLVb2AxehZhr9o9nU/QkoIW41uz+A2Kyb
-         PwKIZNsfkRF3LTMZaX684xOKDUXaMDk+LM3YRGZE4SKpRKiybR5iU5VMg7Fffs7ggV
-         JTiqnvRAmElmw==
-Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "o365relay-in.synopsys.com", Issuer "Entrust Certification Authority - L1K" (verified OK))
-        by mailhost.synopsys.com (Postfix) with ESMTPS id B5C9CA005F;
-        Tue,  8 Jun 2021 21:17:08 +0000 (UTC)
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id EEA7F400CC;
-        Tue,  8 Jun 2021 21:17:07 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="nePxpZf3";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gY4Dsf4Aqo1iRTg/SZuaFnUjSlHw08VSW+nQPerxZUtLl4xID/kIG6ccDsYdGaoRz6O7+ifCNFSgLFYoH9rZJl2F8DHBiMW4A61XPgdSmxKpXQpEkUkbs8U0/nu5F9eYgb1e+TA+3Lk78NxpRBm6QfJec0akpFb8V6hYxaeqw1bqTykyolB4WXPcI7xGdObRGAwobIRSFd/QayNvTvOoZLQIzA0LkCgfh3+22S5SUnrpSpAReE1T0J8laxeh+RRQpyoCUVPCSiYEwwjdvAN22OSgVOIIK4FJAQMmUa5G5feRP1iU1KjYFLtP6ghNRk5DkNXdWIMIUaZNNc76WdjXoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0KWuJxsIQ9csDcMx3+plGEogegpOiC1qQi1WZVFekAQ=;
- b=L8zB/+hO070E1/Myjc0wHPy3idvreYQ0QN0EZRKz1P4NSM6kFCLEE7/M0mPPrGl5SMF0GplTNB/4Mg0RaEMNX7Ym6vvglA6Tj1Uy72Vrf1QZg1WeXwmrCVcIjz4NXOY9F6ylloUqQljkl1gxLLuthY4qn+Jz858TRmN5KNvtC5RFCA1zsjXE3uV3mNpvOaiKOXNdVUKFDQ4SfT6VUbX2oCJx81s0yr/Q9qxFFOwb2vexCMlGeKybyQmbs+eT+/twUuQAlRzsbpGfL7dtnm+jn0FyWpWjbW+KC8EntisZoncP/RwswSB9FznL64XJ4RK4/1A0rrmJj7qDaqR3ZGoRLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0KWuJxsIQ9csDcMx3+plGEogegpOiC1qQi1WZVFekAQ=;
- b=nePxpZf3HftszdDrvox1azEdEVSZGbuDcFEMhTNvZULdwAik311BUhml0TZhAw94UpPoOEQno2jXhjF96QTsqVecZ6TrwyRGt/WjeQBSSHT+LymeOZt1HXM/MuCLzlqc6PMkD5ZVL+eceepNxnMPE2pAipm707rxI8KUb8SfNyI=
-Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
- DM5PR12MB2504.namprd12.prod.outlook.com (2603:10b6:4:b5::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4195.23; Tue, 8 Jun 2021 21:17:05 +0000
-Received: from DM5PR12MB1835.namprd12.prod.outlook.com
- ([fe80::41d8:f242:b92b:4cf2]) by DM5PR12MB1835.namprd12.prod.outlook.com
- ([fe80::41d8:f242:b92b:4cf2%11]) with mapi id 15.20.4195.030; Tue, 8 Jun 2021
- 21:17:05 +0000
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-CC:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: Query regarding the use of pcie-designware-plat.c file
-Thread-Topic: Query regarding the use of pcie-designware-plat.c file
-Thread-Index: AQHXXJuqcWXSuDl/kEa22GAYpjGdEasKmBKw
-Date:   Tue, 8 Jun 2021 21:17:05 +0000
-Message-ID: <DM5PR12MB18351813A8F94B0D18E6B505DA379@DM5PR12MB1835.namprd12.prod.outlook.com>
-References: <34650ed1-6567-3c8f-fe29-8816f0fd74f2@nvidia.com>
-In-Reply-To: <34650ed1-6567-3c8f-fe29-8816f0fd74f2@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV1JrWkRGaE9XSmpMV000T1dVdE1URmxZaTA1T0dZekxUQXdNV0Uz?=
- =?utf-8?B?WkdSaE56RXhOVnhoYldVdGRHVnpkRnhrWkdReFlUbGlaQzFqT0RsbExURXha?=
- =?utf-8?B?V0l0T1RobU15MHdNREZoTjJSa1lUY3hNVFZpYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?RTBNVEFpSUhROUlqRXpNalkzTmpZd05qSXlPVFF6TWpZeU15SWdhRDBpVXpG?=
- =?utf-8?B?Mk4wZDRNREF6SzNabVFpdEJiRGhLUjNVNFNraHpWMXBKUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlNGbEpRVUZCZGxOVksyZHhNWHBZUVZKTVZFOHdOV3B2ZW5Bd1JY?=
- =?utf-8?B?Uk5OMVJ0VDJwUGJsRk9RVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUVVkRFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRFF6RnNRMmRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRblJCUjJ0QldYZEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVoUlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVVVRmpkMEowUVVkTlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRkZD?=
- =?utf-8?B?ZEVGSFRVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjJOQlpFRkNl?=
- =?utf-8?B?a0ZHT0VGalFVSjVRVWM0UVZwQlFqRkJSMDFCWkVGQ1prRklVVUZqWjBKb1FV?=
- =?utf-8?B?ZHJRV0puUW5CQlJ6UkJXbmRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFXTjNRbWhCUjNkQldsRkNla0ZHT0VGWlVVSnFRVWROUVdKM1FqRkJSelJC?=
- =?utf-8?B?WkVGQ1prRklRVUZpUVVKb1FVYzBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENlRUZJVlVGaWQw?=
- =?utf-8?B?SXdRVWRWUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRmlaMEozUVVoTlFWaDNRbk5C?=
- =?utf-8?B?UjJ0QldYZENiRUZITkVGamQwSnNRVVk0UVdSQlFteEJTRWxCWWxGQ1prRkVS?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCWTNkQ01FRklWVUZhUVVKc1FVYzBRV1JCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UWpKQlIyTkJXSGRDY2tGSFZVRmxVVUl6UVVjNFFXTm5RbXRCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?Q?FBQUEiLz48L21ldGE+?=
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [89.155.9.70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fbc27837-45fb-4d4f-a58b-08d92ac2c43a
-x-ms-traffictypediagnostic: DM5PR12MB2504:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB250402D5ED3DAFC4AC5A2CC5DA379@DM5PR12MB2504.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3cd4Xlz6j7LlZHtF3dgdN6/lCfwwEkplGuW8PhdYUK3MuFsamcIwD2AD4TLTimqG9OpAQYu4bQkswy6nx4pd5aU8PUT5G/5V2yiKV0gAMnBjiu/UIdMwClKmjv9C8/MO44OpkJVjIR+vZZo3nqzA2Sn+fKePQPWXn5PN0TXF4kpcnooTlydsegpPFuaWxG7286k00KhDC3Wfr0yVExCH3kLIyt37z1Qevx7ByUV/QOdkdOGNDUBhXW+xKddKEkKHwMux2mKEH4c+G8YWani3wrYtCz80nMPGBW5kYfSb9XsLsfsOdfqXtU/DEkxLOU2hPW+abaUc8eUMZWpk88v4MKGrLyzplgKET4GKTFKSh54Mx/pvJub8YOQFFSk39KuvwTGso2UkFgi2sF7NwNbjc2ScClI/QoogS5Z8zGAtaD3t1ZS7E8JcZrrpMhB1LTGhDDQwfvY+mIO7Vk+Y/Z7vukTJ70eRP2RYVIHZnJU+0aI/KNuljprdfxYaL33vo/10N6Cey74PWFpnJ2Lpj6ClipD3smLASij82GmoC84Y4qTOgukwgbwQVbxYzvZ7A92kylaGWy8dqQ/SaY2bsfEwHO8ETspE5hRqB0HfEmdCYQQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(376002)(39860400002)(396003)(346002)(122000001)(7416002)(8676002)(66476007)(64756008)(38100700002)(55016002)(9686003)(6506007)(26005)(186003)(6636002)(8936002)(2906002)(316002)(4326008)(54906003)(66446008)(66556008)(71200400001)(76116006)(7696005)(53546011)(86362001)(478600001)(5660300002)(52536014)(33656002)(110136005)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RnBucDhUT1VMZkkwOExPZitHbXZKQ3VTUEhOL3hUMUllQmRzRCsyaWkyRFht?=
- =?utf-8?B?NUpmOXpXeHhkdjJscFdaeHVXNjRjUHNDZHhSWmxJanJZaFZpTXRJMEthc2lP?=
- =?utf-8?B?L1BVcnQvSWFIYzlNcFVteSswWlU3bm12Y3lwbDB5dno5NTU1MzFwbS9Fc0Yr?=
- =?utf-8?B?bTlOYzZDWmdZOEdTU2tBaWR1eE1yTUQvazA2Mk5ObEJNY3FseDE1MkpHWGVu?=
- =?utf-8?B?dTJzU21WclE4dlVXQTBmZ0JNWTR4L3ZkRnRoNFNkeHdhTzAwcDk0Rm5zTWcx?=
- =?utf-8?B?clJnZmd6R3ZDNEJCem1wWVp1aVArVUd2SzdmMWpEUzVMNk5HZUZuczZXcGlq?=
- =?utf-8?B?dFhRNlIxZ3dNemRqUkJXSzdUc3Z0MG9xaWo0bGxERXB2dlFldDE4eXB2TFZy?=
- =?utf-8?B?OERYcS92ZitUQytKZjlzVVVMV29mc1JtZWhQWkdJa3RFbVRXTEgwVlo3N0hM?=
- =?utf-8?B?RjR1YjJxTklZN3FXd2VwY0N5enZvVC9taUZoczFMWEhneDIyNXNwU3F0QXpt?=
- =?utf-8?B?Z05PdHlyTUw3cEpzRnhEczV3Ry9BSm1PZkNlZXNUYmlyaFpMejFlZytuL3FQ?=
- =?utf-8?B?RXpEZTgweHlibWwxVXB5OHhLOGxaK3dra0tKT2kzOStqSlV1VnM5Y0VzcCta?=
- =?utf-8?B?NUJ1cktsZ1B5SHBZazN4NXpTd2dyUUNBQ3dYaUxTenBpSnhnd0hEaGhrVDgx?=
- =?utf-8?B?aHNHYldxbGFVMFVVbXo4MnFNazAvQTczVllDSzJYWTFZSXE3RE1NeVRUdkp0?=
- =?utf-8?B?dGxHQzBXY1hNaGZqOU9jZ09UTGYrdXlFVFBqT0FEUThTcStEaEoxZFZIRDNz?=
- =?utf-8?B?dFhzdWplR012ZXhsNllwZXNUTHlPVnc3SXMydEwxSFVUMy9UQW16YU5kcURL?=
- =?utf-8?B?bU1VYXg1bGRhNFJTamtUeHd5V2VEcmpQNHhoY3hKdHFqSzNCVXY5amlTNEdy?=
- =?utf-8?B?dHhHbHNZMUl6Y1JyY0ViSWw2Mko3UWVMbkZzWGI3dy9jODJ6TmdIbzhyelVo?=
- =?utf-8?B?UUo5bStMNm1iWFc2WHcxZHVpQWI1d2Y4N1ZjM1ZrbXN0cGlrTS9SYis5dzhK?=
- =?utf-8?B?Y3pndmdDUlpNbTV6WDBadW9VVkpvdmkraVdjSzVxQk1kWDBoUm83M1YzZHRj?=
- =?utf-8?B?OTRLbVVzMjhsYzdJVHk2Yi9BVWE0WngyeXY4OVBlOFQ0c1lYNXh1Qi9raXZO?=
- =?utf-8?B?RThLUWdSdVhhWElzNmZjS2NKQXRiQkFYWTFtcFlKZUg4QXBRQ0RWUGVBUjJ6?=
- =?utf-8?B?NVJ4aTBQT0t4bXljOU9YNm1yU2cxQVZ5Y3JiUVh0UHh5RFJZTC9jdXZJYzlM?=
- =?utf-8?B?QjdYaFpnMEo1VWROSGMxRzNCL0pmU0tQYUE5SE03QnErQTkxN0luUUVFUHZZ?=
- =?utf-8?B?ZjhKQTNPS0cxUUppcU1nV3dpdVY2ZFJoYmtUb0pWcHpkNEtaL2dhaFN0QTBp?=
- =?utf-8?B?T3k5dVpEd0RLSmFFcWlKaWhNVUtXdzVGTXJNUldmVVpBUS9ScTNEa0lkdzBO?=
- =?utf-8?B?bjZuZXdlVzhIWUJSYnJ6c1kySDhTWFN2VnNzM1FjbGhMSFBuTHlhc29JdTQ1?=
- =?utf-8?B?TDQycFM5UGY2cWRIUVdLVkg5d1F4cVhKTGxHSE0vSlg3d21RL3J1OG1aZk9q?=
- =?utf-8?B?S2NsQXBQaHFPNi93VExzOFc2dXRmQlVuUG5SQ08yMkRtUTR4Y2NYUkJDK3d1?=
- =?utf-8?B?MEFraFE1dm91SmhQV3NXbzVvZVlWWkJlSGFIK2w0Zi9FTXVLZENMNXBCTFZm?=
- =?utf-8?Q?BJjTKE3pP/ev77dTVc=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S234195AbhFHWE0 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Jun 2021 18:04:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46975 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233062AbhFHWE0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Jun 2021 18:04:26 -0400
+IronPort-SDR: rgIS2lP8xg+Gwa7Vg13EvHqd2Lo0yj6ioPT6OzkD6pi42cn+vz2QtAFYUD2UKWYvBILwO992CI
+ hH5ajH5LcmJg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10009"; a="192059343"
+X-IronPort-AV: E=Sophos;i="5.83,259,1616482800"; 
+   d="scan'208";a="192059343"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2021 15:02:32 -0700
+IronPort-SDR: iDOhK+FxKB1hD4Gv0oPyfGsJH1Tnkt5pKXpMyWgKW3gwn0HkYHImjOfKSRrRfrvvhyN6LQg+hR
+ lQ0RrqAuQydA==
+X-IronPort-AV: E=Sophos;i="5.83,259,1616482800"; 
+   d="scan'208";a="482133589"
+Received: from vgoornav-mobl1.amr.corp.intel.com (HELO vcostago-mobl2.amr.corp.intel.com) ([10.212.249.197])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2021 15:02:31 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        intel-wired-lan@lists.osuosl.org
+Cc:     linux-pci@vger.kernel.org, richardcochran@gmail.com,
+        hch@infradead.org, netdev@vger.kernel.org, bhelgaas@google.com,
+        helgaas@kernel.org
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v5 4/4] igc: Add support
+ for PTP getcrosststamp()
+In-Reply-To: <7815513a-30cb-ced7-52d5-103c397761ff@molgen.mpg.de>
+References: <20210605002356.3996853-1-vinicius.gomes@intel.com>
+ <20210605002356.3996853-5-vinicius.gomes@intel.com>
+ <7815513a-30cb-ced7-52d5-103c397761ff@molgen.mpg.de>
+Date:   Tue, 08 Jun 2021 15:02:32 -0700
+Message-ID: <87eedcvwuf.fsf@vcostago-mobl2.amr.corp.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc27837-45fb-4d4f-a58b-08d92ac2c43a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2021 21:17:05.2046
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OD0QPVJW0K0q1olJSBQsECFScnEEg1i7mOI5bF/4eqyu6RdFJcDunM8jLcBg96qT0+1mEGMt30Ess2DF14+RKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2504
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgVmlkeWEsDQoNClRoZSBwY2llLWRlc2lnbndhcmUtcGxhdC5jIGlzIHRoZSBkcml2ZXIgZm9y
-IHRoZSBTeW5vcHN5cyBQQ0llIFJDIElQIA0KcHJvdG90eXBlLg0KDQotR3VzdGF2bw0KDQpPbiBU
-dWUsIEp1biA4LCAyMDIxIGF0IDIwOjIyOjM3LCBWaWR5YSBTYWdhciA8dmlkeWFzQG52aWRpYS5j
-b20+IHdyb3RlOg0KDQo+IEhpLA0KPiBJIHdvdWxkIGxpa2UgdG8ga25vdyB3aGF0IGlzIHRoZSB1
-c2Ugb2YgcGNpZS1kZXNpZ253YXJlLXBsYXQuYyBmaWxlLiANCj4gVGhpcyBsb29rcyBsaWtlIGEg
-c2tlbGV0b24gZmlsZSBhbmQgY2FuJ3QgcmVhbGx5IHdvcmsgd2l0aCBhbnkgc3BlY2lmaWMgDQo+
-IGhhcmR3YXJlIGFzIHN1Y2guDQo+IFNvbWUgY29udGV4dCBmb3IgdGhpcyBtYWlsIHRocmVhZCBp
-cywgaWYgdGhlIGNvbmZpZyBDT05GSUdfUENJRV9EV19QTEFUIA0KPiBpcyBlbmFibGVkIGluIGEg
-c3lzdGVtIHdoZXJlIGEgU3lub3BzeXMgRGVzaWduV2FyZSBJUCBiYXNlZCBQQ0llIA0KPiBjb250
-cm9sbGVyIGlzIHByZXNlbnQgYW5kIGl0cyBjb25maWd1cmF0aW9uIGlzIGVuYWJsZWQgKEV4Oi0g
-VGVncmExOTQgDQo+IHN5c3RlbSB3aXRoIENPTkZJR19QQ0lFX1RFR1JBMTk0X0hPU1QgZW5hYmxl
-ZCksIHRoZW4sIGl0IGNhbiBzbyBoYXBwZW4gDQo+IHRoYXQgdGhlIHByb2JlIG9mIHBjaWUtZGVz
-aWdud2FyZS1wbGF0LmMgY2FsbGVkIGZpcnN0IChiZWNhdXNlIGFsbCBEV0MgDQo+IGJhc2VkIFBD
-SWUgY29udHJvbGxlciBub2RlcyBoYXZlICJzbnBzLGR3LXBjaWUiIGNvbXBhdGliaWxpdHkgc3Ry
-aW5nKSANCj4gYW5kIGNhbiBjcmFzaCB0aGUgc3lzdGVtLg0KPiBPbmUgc29sdXRpb24gdG8gdGhp
-cyBpc3N1ZSBpcyB0byByZW1vdmUgdGhlICJzbnBzLGR3LXBjaWUiIGZyb20gdGhlIA0KPiBjb21w
-YXRpYmlsaXR5IHN0cmluZyAoYXMgd2FzIGRvbmUgdGhyb3VnaCB0aGUgY29tbWl0IGY5ZjcxMWVm
-ZDQ0MSANCj4gKCJhcm02NDogdGVncmE6IEZpeCBUZWdyYTE5NCBQQ0llIGNvbXBhdGlibGUgc3Ry
-aW5nIikgYnV0IGl0IHNlZW1zIGxpa2UgDQo+IGEgbG9jYWxpemVkIGZpeCBmb3IgVGVncmExOTQg
-d2hlcmUgdGhlIGlzc3VlIHBvdGVudGlhbGx5IGlzIGdsb2JhbCwgYXMgDQo+IGluLCB0aGUgY3Jh
-c2ggY2FuIGhhcHBlbiBvbiBhbnkgcGxhdGZvcm0uDQo+IFNvLCB3b25kZXJpbmcgaWYgdGhlIGNv
-bmZpZyBvcHRpb24gQ09ORklHX1BDSUVfRFdfUExBVCBjYW4gYmUgcmVtb3ZlZCANCj4gYWx0b2dl
-dGhlciBmb3IgcGNpZS1kZXNpZ253YXJlLXBsYXQuYz8NCj4gDQo+IFRoYW5rcywNCj4gVmlkeWEg
-U2FnYXINCg0KDQo=
+Paul Menzel <pmenzel@molgen.mpg.de> writes:
+
+> Dear Vinicius,
+>
+>
+> Am 05.06.21 um 02:23 schrieb Vinicius Costa Gomes:
+>> i225 has support for PCIe PTM, which allows us to implement support
+>> for the PTP_SYS_OFFSET_PRECISE ioctl(), implemented in the driver via
+>> the getcrosststamp() function.
+>
+> Maybe:
+>
+> i225 supports PCIe Precision Time Measurement (PTM), allowing us to 
+> support the PTP_SYS_OFFSET_PRECISE ioctl() in the driver via the 
+> getcrosststamp() function.
+
+Sure. Sounds good. Will change the commit message.
+
+>
+>> The easiest way to expose the PTM registers would be to configure the PTM
+>> dialogs to run periodically, but the PTP_SYS_OFFSET_PRECISE ioctl()
+>> semantics are more aligned to using a kind of "one-shot" way of retrieving
+>> the PTM timestamps. But this causes a bit more code to be written: the
+>
+> Maybe: But this results in more code:
+
+Will change.
+
+>
+>> trigger registers for the PTM dialogs are not cleared automatically.
+>> 
+>> i225 can be configured to send "fake" packets with the PTM
+>> information, adding support for handling these types of packets is
+>> left for the future.
+>> 
+>> PTM improves the accuracy of time synchronization, for example, using
+>> phc2sys. Before:
+>> 
+>> phc2sys[341.511]: CLOCK_REALTIME phc offset       289 s2 freq    +961 delay   2963
+>> phc2sys[342.511]: CLOCK_REALTIME phc offset      -984 s2 freq    -225 delay   3517
+>> phc2sys[343.511]: CLOCK_REALTIME phc offset       427 s2 freq    +891 delay   2312
+>> phc2sys[344.511]: CLOCK_REALTIME phc offset       104 s2 freq    +696 delay   2575
+>> phc2sys[345.511]: CLOCK_REALTIME phc offset       149 s2 freq    +772 delay   2388
+>> phc2sys[346.511]: CLOCK_REALTIME phc offset        33 s2 freq    +701 delay   2359
+>> phc2sys[347.511]: CLOCK_REALTIME phc offset      -216 s2 freq    +462 delay   2706
+>> phc2sys[348.512]: CLOCK_REALTIME phc offset       140 s2 freq    +753 delay   2300
+>> phc2sys[349.512]: CLOCK_REALTIME phc offset       -14 s2 freq    +641 delay   2385
+>> phc2sys[350.512]: CLOCK_REALTIME phc offset      1048 s2 freq   +1699 delay   4303
+>> phc2sys[351.512]: CLOCK_REALTIME phc offset     -1296 s2 freq    -331 delay   2846
+>> phc2sys[352.512]: CLOCK_REALTIME phc offset      -912 s2 freq    -336 delay   4006
+>> phc2sys[353.512]: CLOCK_REALTIME phc offset       880 s2 freq   +1183 delay   2338
+>> phc2sys[354.512]: CLOCK_REALTIME phc offset       358 s2 freq    +925 delay   2348
+>> phc2sys[355.512]: CLOCK_REALTIME phc offset      -211 s2 freq    +463 delay   2941
+>> phc2sys[356.512]: CLOCK_REALTIME phc offset       234 s2 freq    +845 delay   2519
+>> phc2sys[357.512]: CLOCK_REALTIME phc offset        45 s2 freq    +726 delay   2357
+>> phc2sys[358.512]: CLOCK_REALTIME phc offset      -262 s2 freq    +433 delay   2821
+>> phc2sys[359.512]: CLOCK_REALTIME phc offset      -424 s2 freq    +192 delay   3579
+>> phc2sys[360.513]: CLOCK_REALTIME phc offset       134 s2 freq    +623 delay   3269
+>> phc2sys[361.513]: CLOCK_REALTIME phc offset      -213 s2 freq    +316 delay   3999
+>> phc2sys[362.513]: CLOCK_REALTIME phc offset      1023 s2 freq   +1488 delay   2614
+>> phc2sys[363.513]: CLOCK_REALTIME phc offset        57 s2 freq    +829 delay   2332
+>> phc2sys[364.513]: CLOCK_REALTIME phc offset      -126 s2 freq    +663 delay   2315
+>> phc2sys[365.513]: CLOCK_REALTIME phc offset       -85 s2 freq    +666 delay   2449
+>> phc2sys[366.513]: CLOCK_REALTIME phc offset      -193 s2 freq    +533 delay   2336
+>> phc2sys[367.513]: CLOCK_REALTIME phc offset      -645 s2 freq     +23 delay   3870
+>> phc2sys[368.513]: CLOCK_REALTIME phc offset       483 s2 freq    +957 delay   2342
+>> phc2sys[369.513]: CLOCK_REALTIME phc offset      -166 s2 freq    +453 delay   3025
+>> phc2sys[370.513]: CLOCK_REALTIME phc offset       327 s2 freq    +896 delay   2250
+>> 
+>> After:
+>> 
+>> phc2sys[617.838]: CLOCK_REALTIME phc offset       -25 s2 freq    +309 delay      0
+>> phc2sys[618.838]: CLOCK_REALTIME phc offset       -43 s2 freq    +284 delay      0
+>> phc2sys[619.838]: CLOCK_REALTIME phc offset       -12 s2 freq    +302 delay      0
+>> phc2sys[620.838]: CLOCK_REALTIME phc offset        -2 s2 freq    +308 delay      0
+>> phc2sys[621.838]: CLOCK_REALTIME phc offset        30 s2 freq    +340 delay      0
+>> phc2sys[622.838]: CLOCK_REALTIME phc offset        14 s2 freq    +333 delay      0
+>> phc2sys[623.839]: CLOCK_REALTIME phc offset        -3 s2 freq    +320 delay      0
+>> phc2sys[624.839]: CLOCK_REALTIME phc offset         9 s2 freq    +331 delay      0
+>> phc2sys[625.839]: CLOCK_REALTIME phc offset        -1 s2 freq    +324 delay      0
+>> phc2sys[626.839]: CLOCK_REALTIME phc offset        -6 s2 freq    +318 delay      0
+>> phc2sys[627.839]: CLOCK_REALTIME phc offset       -10 s2 freq    +313 delay      0
+>> phc2sys[628.839]: CLOCK_REALTIME phc offset         7 s2 freq    +327 delay      0
+>> phc2sys[629.839]: CLOCK_REALTIME phc offset         8 s2 freq    +330 delay      0
+>> phc2sys[630.840]: CLOCK_REALTIME phc offset       -24 s2 freq    +300 delay      0
+>> phc2sys[631.840]: CLOCK_REALTIME phc offset       -49 s2 freq    +268 delay      0
+>> phc2sys[632.840]: CLOCK_REALTIME phc offset         6 s2 freq    +308 delay      0
+>> phc2sys[633.840]: CLOCK_REALTIME phc offset        25 s2 freq    +329 delay      0
+>> phc2sys[634.840]: CLOCK_REALTIME phc offset         5 s2 freq    +316 delay      0
+>> phc2sys[635.840]: CLOCK_REALTIME phc offset        10 s2 freq    +323 delay      0
+>> phc2sys[636.840]: CLOCK_REALTIME phc offset       -13 s2 freq    +303 delay      0
+>> phc2sys[637.841]: CLOCK_REALTIME phc offset         4 s2 freq    +316 delay      0
+>> phc2sys[638.841]: CLOCK_REALTIME phc offset        16 s2 freq    +329 delay      0
+>> phc2sys[639.841]: CLOCK_REALTIME phc offset        31 s2 freq    +349 delay      0
+>> phc2sys[640.841]: CLOCK_REALTIME phc offset       -21 s2 freq    +306 delay      0
+>> phc2sys[641.841]: CLOCK_REALTIME phc offset       -14 s2 freq    +307 delay      0
+>> phc2sys[642.841]: CLOCK_REALTIME phc offset       -24 s2 freq    +293 delay      0
+>> phc2sys[643.841]: CLOCK_REALTIME phc offset        -6 s2 freq    +304 delay      0
+>> phc2sys[644.842]: CLOCK_REALTIME phc offset        12 s2 freq    +320 delay      0
+>> phc2sys[645.842]: CLOCK_REALTIME phc offset        12 s2 freq    +323 delay      0
+>> phc2sys[646.842]: CLOCK_REALTIME phc offset       -12 s2 freq    +303 delay      0
+>
+> Please (additionally) summarize the findings by stating the
+> min/max/avg?
+
+Sure. Will do.
+
+>
+>> One possible explanation is that when PTM is not enabled, and there's a lot
+>> of traffic in the PCIe fabric, some register reads will take more time than
+>> the others (see the variation in the delay values "before").
+>
+> Can you please document the datasheet name and revision used to 
+> implement this?
+
+Sure. Will document this for the next version.
+
+>
+>> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+>> ---
+>>   drivers/net/ethernet/intel/igc/igc.h         |   1 +
+>>   drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
+>>   drivers/net/ethernet/intel/igc/igc_ptp.c     | 182 +++++++++++++++++++
+>>   drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
+>>   4 files changed, 237 insertions(+)
+>> 
+>> diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
+>> index 5901ed9fb545..36ef4ba10e2c 100644
+>> --- a/drivers/net/ethernet/intel/igc/igc.h
+>> +++ b/drivers/net/ethernet/intel/igc/igc.h
+>> @@ -225,6 +225,7 @@ struct igc_adapter {
+>>   	struct timecounter tc;
+>>   	struct timespec64 prev_ptp_time; /* Pre-reset PTP clock */
+>>   	ktime_t ptp_reset_start; /* Reset time in clock mono */
+>> +	struct system_time_snapshot snapshot;
+>>   
+>>   	char fw_version[32];
+>>   
+>> diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
+>> index 71fe5b5ad2ed..0432ba26192e 100644
+>> --- a/drivers/net/ethernet/intel/igc/igc_defines.h
+>> +++ b/drivers/net/ethernet/intel/igc/igc_defines.h
+>> @@ -481,6 +481,37 @@
+>>   #define IGC_RXCSUM_CRCOFL	0x00000800   /* CRC32 offload enable */
+>>   #define IGC_RXCSUM_PCSD		0x00002000   /* packet checksum disabled */
+>>   
+>> +/* PCIe PTM Control */
+>> +#define IGC_PTM_CTRL_START_NOW	BIT(29) /* Start PTM Now */
+>> +#define IGC_PTM_CTRL_EN		BIT(30) /* Enable PTM */
+>> +#define IGC_PTM_CTRL_TRIG	BIT(31) /* PTM Cycle trigger */
+>> +#define IGC_PTM_CTRL_SHRT_CYC(usec)	(((usec) & 0x2f) << 2)
+>> +#define IGC_PTM_CTRL_PTM_TO(usec)	(((usec) & 0xff) << 8)
+>> +
+>> +#define IGC_PTM_SHORT_CYC_DEFAULT	10  /* Default Short/interrupted cycle interval */
+>> +#define IGC_PTM_CYC_TIME_DEFAULT	5   /* Default PTM cycle time */
+>> +#define IGC_PTM_TIMEOUT_DEFAULT		255 /* Default timeout for PTM errors */
+>> +
+>> +/* PCIe Digital Delay */
+>> +#define IGC_PCIE_DIG_DELAY_DEFAULT	0x01440000
+>> +
+>> +/* PCIe PHY Delay */
+>> +#define IGC_PCIE_PHY_DELAY_DEFAULT	0x40900000
+>> +
+>> +#define IGC_TIMADJ_ADJUST_METH		0x40000000
+>> +
+>> +/* PCIe PTM Status */
+>> +#define IGC_PTM_STAT_VALID		BIT(0) /* PTM Status */
+>> +#define IGC_PTM_STAT_RET_ERR		BIT(1) /* Root port timeout */
+>> +#define IGC_PTM_STAT_BAD_PTM_RES	BIT(2) /* PTM Response msg instead of PTM Response Data */
+>> +#define IGC_PTM_STAT_T4M1_OVFL		BIT(3) /* T4 minus T1 overflow */
+>> +#define IGC_PTM_STAT_ADJUST_1ST		BIT(4) /* 1588 timer adjusted during 1st PTM cycle */
+>> +#define IGC_PTM_STAT_ADJUST_CYC		BIT(5) /* 1588 timer adjusted during non-1st PTM cycle */
+>> +
+>> +/* PCIe PTM Cycle Control */
+>> +#define IGC_PTM_CYCLE_CTRL_CYC_TIME(msec)	((msec) & 0x3ff) /* PTM Cycle Time (msec) */
+>> +#define IGC_PTM_CYCLE_CTRL_AUTO_CYC_EN		BIT(31) /* PTM Cycle Control */
+>> +
+>>   /* GPY211 - I225 defines */
+>>   #define GPY_MMD_MASK		0xFFFF0000
+>>   #define GPY_MMD_SHIFT		16
+>> diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
+>> index 69617d2c1be2..1683b2f7cc8c 100644
+>> --- a/drivers/net/ethernet/intel/igc/igc_ptp.c
+>> +++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
+>> @@ -9,6 +9,8 @@
+>>   #include <linux/ptp_classify.h>
+>>   #include <linux/clocksource.h>
+>>   #include <linux/ktime.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/iopoll.h>
+>>   
+>>   #define INCVALUE_MASK		0x7fffffff
+>>   #define ISGN			0x80000000
+>> @@ -16,6 +18,9 @@
+>>   #define IGC_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
+>>   #define IGC_PTP_TX_TIMEOUT		(HZ * 15)
+>>   
+>> +#define IGC_PTM_STAT_SLEEP		2
+>> +#define IGC_PTM_STAT_TIMEOUT		100
+>> +
+>>   /* SYSTIM read access for I225 */
+>>   void igc_ptp_read(struct igc_adapter *adapter, struct timespec64 *ts)
+>>   {
+>> @@ -752,6 +757,150 @@ int igc_ptp_get_ts_config(struct net_device *netdev, struct ifreq *ifr)
+>>   		-EFAULT : 0;
+>>   }
+>>   
+>> +/* Support for cross timestamping via PCIe PTM is only supported if
+>> + * two conditions are met:
+>
+> Maybe: The two conditions below must be met for cross timestamping via 
+> PCIe PTM
+>
+
+Will use your suggestion.
+
+>> + *
+>> + * 1. We have an way to convert the timestamps in the PTM messages
+>
+> s/an way/a way/
+
+Will fix.
+
+>
+>> + *    to something related to the system clocks (right now, only
+>> + *    X86 systems with support for the Always Running Timer allow that);
+>> + *
+>> + * 2. We have PTM enabled in the path from the device to the PCIe root port.
+>> + */
+>> +static bool igc_is_crosststamp_supported(struct igc_adapter *adapter)
+>> +{
+>> +#if IS_ENABLED(CONFIG_X86_TSC)
+>> +	return pcie_ptm_enabled(adapter->pdev);
+>> +#endif
+>> +	return false;
+>
+> I’d also add the preprocessor else branch as below (despite the compiler 
+> opitimzing it away) for readability. Also, I’d do the check in C and not 
+> the preprocessor.
+>
+>      return IS_ENABLED(CONFIG_X86_TSC) ? pcie_ptm_enabled(adapter->pdev) 
+> : false;
+>
+
+I was using the preprocessor because, before, there was a check for
+CONFIG_PCIE_PTM, now that that check doesn't exist anymore. I can do it
+in C. Will change. Thanks.
+
+>> +}
+>> +
+>> +static struct system_counterval_t igc_device_tstamp_to_system(u64 tstamp)
+>> +{
+>> +#if IS_ENABLED(CONFIG_X86_TSC)
+>> +	return convert_art_ns_to_tsc(tstamp);
+>> +#else
+>> +	return (struct system_counterval_t) { };
+>> +#endif
+>> +}
+>> +
+>> +static void igc_ptm_log_error(struct igc_adapter *adapter, u32 ptm_stat)
+>> +{
+>> +	struct net_device *netdev = adapter->netdev;
+>> +
+>> +	switch (ptm_stat) {
+>> +	case IGC_PTM_STAT_RET_ERR:
+>> +		netdev_err(netdev, "PTM Error: Root port timeout\n");
+>> +		break;
+>> +	case IGC_PTM_STAT_BAD_PTM_RES:
+>> +		netdev_err(netdev, "PTM Error: Bad response, PTM Response Data expected\n");
+>> +		break;
+>> +	case IGC_PTM_STAT_T4M1_OVFL:
+>> +		netdev_err(netdev, "PTM Error: T4 minus T1 overflow\n");
+>> +		break;
+>> +	case IGC_PTM_STAT_ADJUST_1ST:
+>> +		netdev_err(netdev, "PTM Error: 1588 timer adjusted during first PTM cycle\n");
+>> +		break;
+>> +	case IGC_PTM_STAT_ADJUST_CYC:
+>> +		netdev_err(netdev, "PTM Error: 1588 timer adjusted during non-first PTM cycle\n");
+>> +		break;
+>> +	default:
+>> +		netdev_err(netdev, "PTM Error: Unknown error (%#x)\n", ptm_stat);
+>> +		break;
+>> +	}
+>> +}
+>> +
+>> +static int igc_phc_get_syncdevicetime(ktime_t *device,
+>> +				      struct system_counterval_t *system,
+>> +				      void *ctx)
+>> +{
+>> +	struct igc_adapter *adapter = ctx;
+>> +	struct igc_hw *hw = &adapter->hw;
+>> +	u32 stat, t2_curr_h, t2_curr_l, ctrl;
+>> +	u32 t4mt1_prev, t3mt2_prev, delay;
+>> +	ktime_t t1, t2_curr;
+>> +	int err;
+>> +
+>> +	/* Get a snapshot of system clocks to use as historic value. */
+>> +	ktime_get_snapshot(&adapter->snapshot);
+>> +
+>> +	do {
+>> +		/* Doing this in a loop because in the event of a
+>> +		 * badly timed (ha!) system clock adjustment, we may
+>> +		 * get PTM Errors from the PCI root, but these errors
+>
+> PTM errors
+
+Will fix. Thanks.
+
+>
+>> +		 * are transitory. Repeating the process returns valid
+>> +		 * data eventually.
+>> +		 */
+>> +
+>> +		/* To "manually" start the PTM cycle we need to clear and
+>> +		 * then set again the TRIG bit.
+>> +		 */
+>> +		ctrl = rd32(IGC_PTM_CTRL);
+>> +		ctrl &= ~IGC_PTM_CTRL_TRIG;
+>> +		wr32(IGC_PTM_CTRL, ctrl);
+>> +		ctrl |= IGC_PTM_CTRL_TRIG;
+>> +		wr32(IGC_PTM_CTRL, ctrl);
+>> +
+>> +		/* The cycle only starts "for real" when software notifies
+>> +		 * that it has read the registers, this is done by setting
+>> +		 * VALID bit.
+>> +		 */
+>> +		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
+>> +
+>> +		err = readx_poll_timeout(rd32, IGC_PTM_STAT, stat,
+>> +					 stat, IGC_PTM_STAT_SLEEP,
+>> +					 IGC_PTM_STAT_TIMEOUT);
+>> +		if (err < 0)
+>> +			return err;
+>
+> Should this be logged?
+
+Good catch. Will fix.
+
+>
+>> +
+>> +		if ((stat & IGC_PTM_STAT_VALID) == IGC_PTM_STAT_VALID)
+>> +			break;
+>> +
+>> +		if (stat & ~IGC_PTM_STAT_VALID) {
+>> +			/* An error occurred, log it. */
+>> +			igc_ptm_log_error(adapter, stat);
+>> +			/* The STAT register is write-1-to-clear (W1C),
+>> +			 * so write the previous error status to clear it.
+>> +			 */
+>> +			wr32(IGC_PTM_STAT, stat);
+>> +			continue;
+>> +		}
+>> +	} while (true);
+>
+> I personally prefer to write at least one condition in the loop
+> condition.
+
+I can do that. Will fix.
+
+>
+>> +
+>> +	t1 = ktime_set(rd32(IGC_PTM_T1_TIM0_H),
+>> +		       rd32(IGC_PTM_T1_TIM0_L));
+>
+> Why not put it into one line?
+
+No reason. Will fix.
+
+>
+>> +
+>> +	t2_curr_l = rd32(IGC_PTM_CURR_T2_L);
+>> +	t2_curr_h = rd32(IGC_PTM_CURR_T2_H);
+>> +
+>> +	/* FIXME: When the register that tells the endianness of the
+>> +	 * PTM registers are implemented, check them here and add the
+>> +	 * appropriate conversion.
+>> +	 */
+>> +	t2_curr_h = swab32(t2_curr_h);
+>> +
+>> +	t2_curr = ((s64)t2_curr_h << 32 | t2_curr_l);
+>> +
+>> +	t4mt1_prev = rd32(IGC_PTM_PREV_T4M1);
+>> +	t3mt2_prev = rd32(IGC_PTM_PREV_T3M2);
+>> +
+>> +	delay = (t4mt1_prev - t3mt2_prev) / 2;
+>> +
+>> +	*device = t1 + delay;
+>> +	*system = igc_device_tstamp_to_system(t2_curr);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int igc_ptp_getcrosststamp(struct ptp_clock_info *ptp,
+>> +				  struct system_device_crosststamp *cts)
+>> +{
+>> +	struct igc_adapter *adapter = container_of(ptp, struct igc_adapter,
+>> +						   ptp_caps);
+>> +
+>> +	return get_device_system_crosststamp(igc_phc_get_syncdevicetime,
+>> +					     adapter, &adapter->snapshot, cts);
+>> +}
+>> +
+>>   /**
+>>    * igc_ptp_init - Initialize PTP functionality
+>>    * @adapter: Board private structure
+>> @@ -788,6 +937,11 @@ void igc_ptp_init(struct igc_adapter *adapter)
+>>   		adapter->ptp_caps.n_per_out = IGC_N_PEROUT;
+>>   		adapter->ptp_caps.n_pins = IGC_N_SDP;
+>>   		adapter->ptp_caps.verify = igc_ptp_verify_pin;
+>> +
+>> +		if (!igc_is_crosststamp_supported(adapter))
+>> +			break;
+>> +
+>> +		adapter->ptp_caps.getcrosststamp = igc_ptp_getcrosststamp;
+>>   		break;
+>>   	default:
+>>   		adapter->ptp_clock = NULL;
+>> @@ -878,7 +1032,9 @@ void igc_ptp_stop(struct igc_adapter *adapter)
+>>   void igc_ptp_reset(struct igc_adapter *adapter)
+>>   {
+>>   	struct igc_hw *hw = &adapter->hw;
+>> +	u32 cycle_ctrl, ctrl;
+>>   	unsigned long flags;
+>> +	u32 timadj;
+>>   
+>>   	/* reset the tstamp_config */
+>>   	igc_ptp_set_timestamp_mode(adapter, &adapter->tstamp_config);
+>> @@ -887,12 +1043,38 @@ void igc_ptp_reset(struct igc_adapter *adapter)
+>>   
+>>   	switch (adapter->hw.mac.type) {
+>>   	case igc_i225:
+>> +		timadj = rd32(IGC_TIMADJ);
+>> +		timadj |= IGC_TIMADJ_ADJUST_METH;
+>> +		wr32(IGC_TIMADJ, timadj);
+>> +
+>>   		wr32(IGC_TSAUXC, 0x0);
+>>   		wr32(IGC_TSSDP, 0x0);
+>>   		wr32(IGC_TSIM,
+>>   		     IGC_TSICR_INTERRUPTS |
+>>   		     (adapter->pps_sys_wrap_on ? IGC_TSICR_SYS_WRAP : 0));
+>>   		wr32(IGC_IMS, IGC_IMS_TS);
+>> +
+>> +		if (!igc_is_crosststamp_supported(adapter))
+>> +			break;
+>> +
+>> +		wr32(IGC_PCIE_DIG_DELAY, IGC_PCIE_DIG_DELAY_DEFAULT);
+>> +		wr32(IGC_PCIE_PHY_DELAY, IGC_PCIE_PHY_DELAY_DEFAULT);
+>> +
+>> +		cycle_ctrl = IGC_PTM_CYCLE_CTRL_CYC_TIME(IGC_PTM_CYC_TIME_DEFAULT);
+>> +
+>> +		wr32(IGC_PTM_CYCLE_CTRL, cycle_ctrl);
+>> +
+>> +		ctrl = IGC_PTM_CTRL_EN |
+>> +			IGC_PTM_CTRL_START_NOW |
+>> +			IGC_PTM_CTRL_SHRT_CYC(IGC_PTM_SHORT_CYC_DEFAULT) |
+>> +			IGC_PTM_CTRL_PTM_TO(IGC_PTM_TIMEOUT_DEFAULT) |
+>> +			IGC_PTM_CTRL_TRIG;
+>> +
+>> +		wr32(IGC_PTM_CTRL, ctrl);
+>> +
+>> +		/* Force the first cycle to run. */
+>> +		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
+>> +
+>>   		break;
+>>   	default:
+>>   		/* No work to do. */
+>> diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
+>> index 0f82990567d9..4499a6f7c577 100644
+>> --- a/drivers/net/ethernet/intel/igc/igc_regs.h
+>> +++ b/drivers/net/ethernet/intel/igc/igc_regs.h
+>> @@ -229,6 +229,29 @@
+>>   #define IGC_TXSTMPL	0x0B618  /* Tx timestamp value Low - RO */
+>>   #define IGC_TXSTMPH	0x0B61C  /* Tx timestamp value High - RO */
+>>   
+>> +#define IGC_TIMADJ	0x0B60C  /* Time Adjustment Offset Register */
+>> +
+>> +/* PCIe Registers */
+>> +#define IGC_PTM_CTRL		0x12540  /* PTM Control */
+>> +#define IGC_PTM_STAT		0x12544  /* PTM Status */
+>> +#define IGC_PTM_CYCLE_CTRL	0x1254C  /* PTM Cycle Control */
+>> +
+>> +/* PTM Time registers */
+>> +#define IGC_PTM_T1_TIM0_L	0x12558  /* T1 on Timer 0 Low */
+>> +#define IGC_PTM_T1_TIM0_H	0x1255C  /* T1 on Timer 0 High */
+>> +
+>> +#define IGC_PTM_CURR_T2_L	0x1258C  /* Current T2 Low */
+>> +#define IGC_PTM_CURR_T2_H	0x12590  /* Current T2 High */
+>> +#define IGC_PTM_PREV_T2_L	0x12584  /* Previous T2 Low */
+>> +#define IGC_PTM_PREV_T2_H	0x12588  /* Previous T2 High */
+>> +#define IGC_PTM_PREV_T4M1	0x12578  /* T4 Minus T1 on previous PTM Cycle */
+>> +#define IGC_PTM_CURR_T4M1	0x1257C  /* T4 Minus T1 on this PTM Cycle */
+>> +#define IGC_PTM_PREV_T3M2	0x12580  /* T3 Minus T2 on previous PTM Cycle */
+>> +#define IGC_PTM_TDELAY		0x12594  /* PTM PCIe Link Delay */
+>> +
+>> +#define IGC_PCIE_DIG_DELAY	0x12550  /* PCIe Digital Delay */
+>> +#define IGC_PCIE_PHY_DELAY	0x12554  /* PCIe PHY Delay */
+>> +
+>>   /* Management registers */
+>>   #define IGC_MANC	0x05820  /* Management Control - RW */
+>>   
+>
+> How can the user find out, that PTP grecroosstamp() is used?
+
+If by user you mean the system administrator or similar, they could look
+at the output of phc2sys, they would see that the "delay" (meaning the
+delay between the device and system timestamps) is going to be zero.
+
+If you mean applications in general, they could check the return value
+of the PTP_SYS_OFFSET_PRECISE(2) ioctl(), it's going to return not
+supported if getcrosststamp() is not used.
+
+>
+>
+> Kind regards,
+>
+> Paul
+
+
+Cheers,
+-- 
+Vinicius
