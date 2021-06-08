@@ -2,247 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66A3239EA6A
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 01:50:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 030F839EAD0
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 02:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbhFGXwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Jun 2021 19:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230330AbhFGXwa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Jun 2021 19:52:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E627B60E0B;
-        Mon,  7 Jun 2021 23:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623109838;
-        bh=zyZ+p1WGiJIHDLYNnGYHUCtowoPUjC3u0lfCydw2Q20=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Hz2LEFUK4nc9Y6c9I89/J4eO1n21aDGaezWI/ciCsEneH5rvV7nEALDO8GLw6/yiD
-         xpe5ESQvkbL2UraF+hibV3FNXCrP99lwNjEgtbn+rhFAIoFvJKjkoHF1l5QrMPbZZv
-         bCldXYD+/8KyaYPpP/wKsmMpcfKWWHxDfOQStlT85WcpNuRh6ICDItR67g74L17+nN
-         TptdGdAcNGGSE9PFEuVPID8II1CAnfoApb0TKQrCLeDC75/3ITGIR/9QAXckYoN40J
-         UwdvBAXtLCD+ekLmJSwnNaZGc3KA4bYGRusyB9PpGVGIP/6cmlshIqfjICyniHq8ZC
-         tuLemMltF4VuQ==
-Date:   Mon, 7 Jun 2021 18:50:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH V2] PCI: tegra: Fix building Tegra194 PCIe driver
-Message-ID: <20210607235036.GA2549845@bjorn-Precision-5520>
+        id S231140AbhFHAhr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Jun 2021 20:37:47 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38513 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230266AbhFHAhp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Jun 2021 20:37:45 -0400
+Received: (Authenticated sender: n@nfraprado.net)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8FFC460006;
+        Tue,  8 Jun 2021 00:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nfraprado.net;
+        s=gm1; t=1623112550;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MgIRy6Q6KMGL5hWxoGPNnPkNfCR3aLlJDfZGUzWbz/E=;
+        b=P9jivunjlN1sJ9eOlTMDyLjCEywxVya2Ftqz+hEdSkSw0/elvz6gS8kWLVyXaJ6oaaoyx0
+        qIDIGMwtUglmC/Vgb2Ie9iI6I0cHBdlTTnMy0oKmq/2UNRiAziWlj8Gnr6eAAD4ELzFqsD
+        mHk+x34HxuC0DbsYokBCWzuGfyBXhTfAMoYOS4Pq4ppxQdlPzzlEBRkzLLaXWwWCR9C72i
+        Dqrf/Tb06aPjdbgxtbg/24TPHZncci0Ry+4s1AiNAxQNYtnBdo+YvtUor3hzZf1RWlrLDP
+        UyqtEZ8lSyOFbJLN0PVHDwww5JkrI1RST7HtFLradWY3jd3nAcizBoEu2ztOUQ==
+Date:   Mon, 7 Jun 2021 21:34:58 -0300
+From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <n@nfraprado.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        coresight@lists.linaro.org, devicetree@vger.kernel.org,
+        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
+Message-ID: <20210608003458.kwhbn6mraekcutlt@notapiano>
+References: <cover.1622898327.git.mchehab+huawei@kernel.org>
+ <20210605151109.axm3wzbcstsyxczp@notapiano>
+ <20210605210836.540577d4@coco.lan>
+ <20210606225225.fz4dsyz6im4bqena@notapiano>
+ <20210607093422.0a369909@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a3f39a47-8dff-a4b0-a529-0f17f42114f3@nvidia.com>
+In-Reply-To: <20210607093422.0a369909@coco.lan>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 21, 2021 at 02:11:15PM +0100, Jon Hunter wrote:
-> 
-> On 20/05/2021 23:19, Bjorn Helgaas wrote:
-> > On Thu, May 20, 2021 at 10:01:23AM +0100, Jon Hunter wrote:
-> >> Commit 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
-> >> errata") caused a few build regressions for the Tegra194 PCIe driver
-> >> which are:
-> >>
-> >> 1. The Tegra194 PCIe driver can no longer be built as a module. This
-> >>    was caused by removing the Makefile entry to build the pcie-tegra.c
-> >>    based upon the CONFIG_PCIE_TEGRA194 option. Therefore, restore this
-> >>    so that we can build the driver as a module if ACPI support is not
-> >>    enabled in the kernel.
-> > 
-> > I'm not sure what "if ACPI support is not enabled in the kernel" is
-> > telling me.  Does it mean that we can only build tegra194 as a module
-> > if ACPI is not enabled?  I don't think so (at least, I don't think
-> > Kconfig enforces that).
-> 
-> If ACPI is enabled, then we will build the driver into the kernel. If we
-> have ...
-> 
->  CONFIG_ACPI=y
->  CONFIG_PCIE_TEGRA194=m
-> 
-> FWICS the pcie-tegra194.c driver is builtin to the kernel.
+Hi Mauro,
 
-My understanding is that we want pcie-tegra194.c to be:
+On Mon, Jun 07, 2021 at 09:34:22AM +0200, Mauro Carvalho Chehab wrote:
+> Em Sun, 6 Jun 2021 19:52:25 -0300
+> N�colas F. R. A. Prado <n@nfraprado.net> escreveu:
+> 
+> > On Sat, Jun 05, 2021 at 09:08:36PM +0200, Mauro Carvalho Chehab wrote:
+> > > Em Sat, 5 Jun 2021 12:11:09 -0300
+> > > N�colas F. R. A. Prado <n@nfraprado.net> escreveu:
+> > >   
+> > > > Hi Mauro,
+> > > > 
+> > > > On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab wrote:  
+> > > > > As discussed at:
+> > > > > 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
+> > > > > 
+> > > > > It is better to avoid using :doc:`foo` to refer to Documentation/foo.rst, as the
+> > > > > automarkup.py extension should handle it automatically, on most cases.
+> > > > > 
+> > > > > There are a couple of exceptions to this rule:
+> > > > > 
+> > > > > 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
+> > > > > 2. when it is used with a named tag, e. g. :doc:`some name <foo>`;
+> > > > > 
+> > > > > It should also be noticed that automarkup.py has currently an issue:
+> > > > > if one use a markup like:
+> > > > > 
+> > > > > 	Documentation/dev-tools/kunit/api/test.rst
+> > > > > 	  - documents all of the standard testing API excluding mocking
+> > > > > 	    or mocking related features.
+> > > > > 
+> > > > > or, even:
+> > > > > 
+> > > > > 	Documentation/dev-tools/kunit/api/test.rst
+> > > > > 	    documents all of the standard testing API excluding mocking
+> > > > > 	    or mocking related features.
+> > > > > 	
+> > > > > The automarkup.py will simply ignore it. Not sure why. This patch series
+> > > > > avoid the above patterns (which is present only on 4 files), but it would be
+> > > > > nice to have a followup patch fixing the issue at automarkup.py.    
+> > > > 
+> > > > What I think is happening here is that we're using rST's syntax for definition
+> > > > lists [1]. automarkup.py ignores literal nodes, and perhaps a definition is
+> > > > considered a literal by Sphinx. Adding a blank line after the Documentation/...
+> > > > or removing the additional indentation makes it work, like you did in your
+> > > > 2nd and 3rd patch, since then it's not a definition anymore, although then the
+> > > > visual output is different as well.  
+> > > 
+> > > A literal has a different output. I think that this is not the case, but I 
+> > > didn't check the python code from docutils/Sphinx.  
+> > 
+> > Okay, I went in deeper to understand the issue and indeed it wasn't what I
+> > thought. The reason definitions are ignored by automarkup.py is because the main
+> > loop iterates only over nodes that are of type paragraph:
+> > 
+> >     for para in doctree.traverse(nodes.paragraph):
+> >         for node in para.traverse(nodes.Text):
+> >             if not isinstance(node.parent, nodes.literal):
+> >                 node.parent.replace(node, markup_refs(name, app, node))
+> > 
+> > And inspecting the HTML output from your example, the definition name is inside
+> > a <dt> tag, and it doesn't have a <p> inside. So in summary, automarkup.py will
+> > only work on elements which are inside a <p> in the output.
+> 
+> 
+> Yeah, that's what I was suspecting, based on the comments.
+> 
+> Maybe something similar to the above could be done also for some
+> non-paragraph data. By looking at:
+> 
+> 	https://docutils.sourceforge.io/docs/ref/doctree.html
+> 
+> It says that the body elements are:
+> 
+> 	admonition, attention, block_quote, bullet_list, caution, citation, 
+> 	comment, compound, container, danger, definition_list, doctest_block, 
+> 	enumerated_list, error, field_list, figure, footnote, hint, image, 
+> 	important, line_block, literal_block, note, option_list, paragraph, 
+> 	pending, raw, rubric, substitution_definition, system_message, 
+> 	table, target, tip, warning
 
-  - Built into the kernel when CONFIG_PCIE_TEGRA194=m or =y and
-    CONFIG_ACPI=y and CONFIG_PCI_QUIRKS=y.  If we're using the ACPI
-    pci_root.c driver, we must have the MCFG quirk built-in, and this
-    case worked as I expected (this is on x86):
+Ok, I went through each one by searching the term on [1] and inspecting the
+element to see if it contained a <p> or not. The vast majority did. These are
+the ones I didn't find there or didn't make sense:
 
-      $ grep -E "CONFIG_(ACPI\>|PCI_QUIRKS|PCIE_TEGRA194)" .config
-      CONFIG_ACPI=y
-      CONFIG_PCI_QUIRKS=y
-      CONFIG_PCIE_TEGRA194=y
-      CONFIG_PCIE_TEGRA194_HOST=m
-      CONFIG_PCIE_TEGRA194_EP=y
+	comment
+	container
+	image
+	pending
+	raw
+	substitution_definition
+	system_message
+	target
 
-      $ rm drivers/pci/controller/dwc/pcie-tegra194.*o
-      $ make drivers/pci/controller/dwc/
-	...
-	CC      drivers/pci/controller/dwc/pcie-tegra194.o
-	AR      drivers/pci/controller/dwc/built-in.a
+We can safely ignore them. And these are the ones that matter and don't have
+paragraphs:
 
-  - Built as a module when CONFIG_PCIE_TEGRA194=m and CONFIG_ACPI is
-    not set.  In this case, we're not using the ACPI pci_root.c
-    driver, and we don't need the MCFG quirk built-in, so it should be
-    OK to build a module, and IIUC this patch is supposed to *allow*
-    that.  But in my testing, it did *not* build a module.  Am I
-    missing something?
+	1. literal_block
+	2. doctest_block
+	3. definition_list
+	4. field_list
+	5. option_list
+	6. line_block
 
-      $ grep -E "CONFIG_(ACPI\>|PCI_QUIRKS|PCIE_TEGRA194)" .config
-      # CONFIG_ACPI is not set
-      # CONFIG_PCI_QUIRKS is not set
-      CONFIG_PCIE_TEGRA194=y
-      CONFIG_PCIE_TEGRA194_HOST=m
-      CONFIG_PCIE_TEGRA194_EP=y
+1 and 2 are literals, so we don't care about them.
 
-      $ rm drivers/pci/controller/dwc/pcie-tegra194.*o
-      $ make drivers/pci/controller/dwc/
-	...
-	CC      drivers/pci/controller/dwc/pcie-tegra194.o
-	AR      drivers/pci/controller/dwc/built-in.a
+3 is the one you noticed the issue with. It's worth mentioning that the
+definition term doesn't have a paragraph, but its definition does (as can be
+checked by inspecting [2]).
 
-This was all done with V3 of the patch, but I'm responding to V2 to
-continue the conversation there since I don't think this part changed.
+4 is basically the same as 3, the rst syntax is different but the output is the
+same. That said, I believe we only use those to set options at the top of the
+file, like in translations, and I can't see automarkup being useful in there.
 
-> 	> Should the "if ACPI support is not enabled ..." part just be dropped?
-> > 
-> > I assume it should be possible to build the kernel with ACPI enabled
-> > and with pcie-tegra194 as a module?
+5 is similar to 3 and 4, but the term is formatted using <kbd>, so it's like a
+literal and therefore not relevant.
+
+6 is useful just to preserve indentation, and I'm pretty sure we don't use it in
+the docs.
+
+So in the end, I think the only contenders to be added to automarkup are
+definition lists, and even then I still think we should just substitute those
+definition lists with alternatives like you did in your patches. Personally I
+don't see much gain in using definitions instead of a simple paragraph. But if
+you really think it's an improvement in some way, it could probably be added to
+automarkup in the way you described.
+
+Thanks,
+N�colas
+
+[1] https://sphinx-rtd-theme.readthedocs.io/en/stable/index.html
+[2] https://sphinx-rtd-theme.readthedocs.io/en/stable/demo/lists_tables.html?highlight=definition%20list#definition-lists
+
 > 
-> Per the above that does not appear to be possible.
+> So, perhaps a similar loop for definition_list would do the trick,
+> but maybe automarkup should also look at other types, like enum lists,
+> notes (and their variants, like error/warning) and footnotes.
 > 
-> >> 2. If CONFIG_PCIE_TEGRA194 is configured to build the driver as a
-> >>    module, at the same time that CONFIG_ACPI and CONFIG_PCI_QUIRKS are
-> >>    selected to build the driver into the kernel, then the necessary
-> >>    functions in the driver to probe and remove the device when booting
-> >>    with device-tree and not compiled into to the driver. This prevents
-> >>    the PCIe devices being probed when booting with device-tree. Fix this
-> >>    by using the IS_ENABLED() macro.
-> > 
-> > The #ifdef vs IS_ENABLED() difference is kind of subtle and I have to
-> > figure it out every time.  Maybe something like this?
-> > 
-> >   7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
-> >   errata") added "#ifdef CONFIG_PCIE_TEGRA194" around the native
-> >   driver.
-> > 
-> >   But if we set CONFIG_PCIE_TEGRA194=m to build the driver as a
-> >   module, autoconf.h contains "#define CONFIG_PCIE_TEGRA194_MODULE 1"
-> >   (not "#define CONFIG_PCIE_TEGRA194 1"), so the #ifdef excludes the
-> >   driver.
-> > 
-> >   Instead, use "IS_ENABLED(CONFIG_PCIE_TEGRA194)", which checks for
-> >   either CONFIG_PCIE_TEGRA194 or CONFIG_PCIE_TEGRA194_MODULE.
+> No idea how this would affect the docs build time, though.
 > 
-> OK sounds good. Thanks
+> > Only applying the automarkup inside paragraphs seems like a good decision (which
+> > covers text in lists and tables as well), so unless there are other types of
+> > elements without paragraphs where automarkup should work, I think we should just
+> > avoid using definition lists pointing to documents like that.
 > 
-> >> 3. The below build warnings to be seen with particular kernel
-> >>    configurations. Fix these by adding the necessary guards around these
-> >>    variable definitions.
-> >>
-> >>   drivers/pci/controller/dwc/pcie-tegra194.c:259:18: warning:
-> >>   	‘event_cntr_data_offset’ defined but not used [-Wunused-const-variable=]
-> >>   drivers/pci/controller/dwc/pcie-tegra194.c:250:18: warning:
-> >>   	‘event_cntr_ctrl_offset’ defined but not used [-Wunused-const-variable=]
-> >>   drivers/pci/controller/dwc/pcie-tegra194.c:243:27: warning:
-> >>   	‘pcie_gen_freq’ defined but not used [-Wunused-const-variable=]
-> >>
-> >> Fixes: 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM errata")
-> >> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> > 
-> > This is a candidate for v5.13, since we merged 7f100744749e for
-> > v5.13-rc1.
+> Checking the code or doing some tests are needed for us to be sure about what
+> of the above types docutils don't consider a paragraph.
 > 
-> Yes we need to fix for v5.13.
-> 
-> >> ---
-> >>  drivers/pci/controller/dwc/Makefile        | 1 +
-> >>  drivers/pci/controller/dwc/pcie-tegra194.c | 6 +++++-
-> >>  2 files changed, 6 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> >> index eca805c1a023..f0d1e2d8c022 100644
-> >> --- a/drivers/pci/controller/dwc/Makefile
-> >> +++ b/drivers/pci/controller/dwc/Makefile
-> >> @@ -32,6 +32,7 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> >>  # depending on whether ACPI, the DT driver, or both are enabled.
-> >>  
-> >>  obj-$(CONFIG_PCIE_AL) += pcie-al.o
-> >> +obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
-> >>  obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
-> > 
-> > It sounds like the interesting case is this:
-> > 
-> >   CONFIG_ARM64=y
-> >   CONFIG_ACPI=y
-> >   CONFIG_PCI_QUIRKS=y
-> >   CONFIG_PCIE_TEGRA194=m
-> > 
-> > I don't know how this works in this case:
-> > 
-> >   obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
-> >   obj-$(CONFIG_ARM64) += pcie-tegra194.o
-> > 
-> > We want tegra194_acpi_init() and the rest of the ECAM quirk to be
-> > compiled into the static kernel.  And we want tegra_pcie_dw_probe(),
-> > tegra_pcie_dw_remove(), etc, compiled into a module.
-> > 
-> > Does kbuild really compile pcie-tegra194.c twice?  And if so, it's not
-> > a problem that both the static kernel and the module contain a
-> > tegra194_pcie_ops symbol?
-> 
-> FWICT it does not compile it twice and I only see it builtin. We the
-> above I don't see any module generated.
-> 
-> >>  ifdef CONFIG_ACPI
-> >> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> >> index b19775ab134e..ae70e53a7826 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> >> @@ -240,13 +240,16 @@
-> >>  #define EP_STATE_DISABLED	0
-> >>  #define EP_STATE_ENABLED	1
-> >>  
-> >> +#if IS_ENABLED(CONFIG_PCIE_TEGRA194)
-> >>  static const unsigned int pcie_gen_freq[] = {
-> >>  	GEN1_CORE_CLK_FREQ,
-> >>  	GEN2_CORE_CLK_FREQ,
-> >>  	GEN3_CORE_CLK_FREQ,
-> >>  	GEN4_CORE_CLK_FREQ
-> >>  };
-> >> +#endif
-> > 
-> > This makes the minimal patch, but as Krzysztof suggests, I would
-> > prefer to move the whole struct so it's just inside the
-> > CONFIG_PCIE_TEGRA194 #ifdef.
-> 
-> OK, will do.
-> 
-> >> +#if defined(CONFIG_PCIEASPM)
-> >>  static const u32 event_cntr_ctrl_offset[] = {
-> >>  	0x1d8,
-> >>  	0x1a8,
-> >> @@ -264,6 +267,7 @@ static const u32 event_cntr_data_offset[] = {
-> >>  	0x1c8,
-> >>  	0x1dc
-> >>  };
-> >> +#endif
-> > 
-> > Similar for the CONFIG_PCIEASPM #ifdef.
-> 
-> OK.
-> 
-> Thanks
-> Jon
-> 
-> -- 
-> nvpublic
+> Thanks,
+> Mauro
