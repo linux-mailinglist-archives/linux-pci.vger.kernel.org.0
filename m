@@ -2,133 +2,414 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D27DD39F3B8
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 12:38:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1E339F4F3
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 13:28:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbhFHKki (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 06:40:38 -0400
-Received: from mail-bn8nam11on2086.outbound.protection.outlook.com ([40.107.236.86]:43104
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231283AbhFHKki (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Jun 2021 06:40:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c9qBzqlHKoYfPy8ZaZi6MIrZFy6FMpjxwLZuX9KQRop1lTKdDIjoAVhqKiGwUUMiTw3a6wyWn2u35ml1Dk8GltMJN+Lbhamu4AKl2KfGSAM4c2tvXGPXNQv9tLIvN0XfE5htZIOimXEdH0MhFr/yYMzZF9amFPSA1UYu8XMJLX7J4gILndlWqZLdxjLeNcOfDcKZ71OvMB69iIayyxKNT8zEoO0MFTIPzMwTTcUoXjEj+u84Y1JT98aH7HCULTwTWow/pSb3ATldHCrW6c7WM9YiPRfoQBULCFChRuGaUn3/kY2vHz10LA/3hr8oWuSpVsG0oOHe2X70IOTfUOGeug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LCZq4ykMjVmKZEB1toYi/uNgfrttYiIHJ7H45pLZnLQ=;
- b=lQE7FzUgtnvTsA8ee1c2Sp1Hsrb8ZU5oRNjFQxrvhRfCMLWD14FnJGqYqsL4myRIsmhcXybLP+eF8rp9YGvq9lkmsuTs2LLOefPaYz+xDCwG+SqCq5x61EwPm4/rE0je6eQ/zKa5sYF6JmoiS550qHoQGDXNJIkPbsUA8tEM1MnaMnjOiE3Qr9M1EUYJvkXefGnLhu7Av0syuenSq8VBcw6QKEAVWiaVFNFt2SC51I7M7shkSAYx3R8+PD4NVC1iUSB7pOCNmIRimTYk1X4xuluD+5ghSzldDOR2SbX4ybQO+dT0TyFzAdZLB42uMK7tnzY3CkmUqC1s9ZWtq22/2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LCZq4ykMjVmKZEB1toYi/uNgfrttYiIHJ7H45pLZnLQ=;
- b=TlqBv6ubYYyJURqbGk88caoCWy4c7F7a2VxyLEFVeRIbJ054wqg6t+KBvwR6Gk1gHU426Y773XxHsyXmLsT9VvSS7Rp4NyWau0ts0b0pFySZmwHLNX50/mDbc1s+2H3HZeD10XT4Azbp9aGPLCZYx2taJqQiqvMgEdWqKpTGigLk933XpdzMIxvfDJVWuNqQ1q/S8iWysEyF2DH9V+M0rgxWubkOI46I2n4ofJ0Ywj4i0I13/vPSe6wQ3+zGVwjyg+xEJ+0lVp/XErWdanEw44wbIQ0FdFyDNQjh0fCVTjHKf51cM7OLD6R2Mun/Ye7+29RJFm6kRygAJbA4IFcEqw==
-Received: from BN6PR21CA0019.namprd21.prod.outlook.com (2603:10b6:404:8e::29)
- by BN6PR12MB1345.namprd12.prod.outlook.com (2603:10b6:404:18::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.22; Tue, 8 Jun
- 2021 10:38:44 +0000
-Received: from BN8NAM11FT055.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:8e:cafe::92) by BN6PR21CA0019.outlook.office365.com
- (2603:10b6:404:8e::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.4 via Frontend
- Transport; Tue, 8 Jun 2021 10:38:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT055.mail.protection.outlook.com (10.13.177.62) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4195.22 via Frontend Transport; Tue, 8 Jun 2021 10:38:44 +0000
-Received: from [10.25.75.134] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Jun
- 2021 10:38:40 +0000
-Subject: Re: [PATCH V2 5/5] PCI: tegra: Cleanup unused code
-To:     Om Prakash Singh <omp@nvidia.com>, <kw@linux.com>,
-        <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>
-References: <20210606082204.14222-1-omp@nvidia.com>
- <20210606082204.14222-6-omp@nvidia.com>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <b72e09de-68ee-6ed3-3114-9a19779cb601@nvidia.com>
-Date:   Tue, 8 Jun 2021 16:08:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S231791AbhFHLaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 07:30:35 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3166 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231689AbhFHLad (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 07:30:33 -0400
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4FznnP2Cvwz6G86p;
+        Tue,  8 Jun 2021 19:19:21 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 8 Jun 2021 13:28:38 +0200
+Received: from localhost (10.52.125.197) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 8 Jun 2021
+ 12:28:38 +0100
+Date:   Tue, 8 Jun 2021 12:28:36 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v5 2/6] cxl/acpi: Introduce cxl_root, the root of a
+ cxl_port topology
+Message-ID: <20210608122836.000018fc@Huawei.com>
+In-Reply-To: <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <162295950449.1109360.5228772194963187441.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20210606082204.14222-6-omp@nvidia.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4a939b42-ee36-4ee0-969e-08d92a699700
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1345:
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1345DA8880CB16AB026BBF6CB8379@BN6PR12MB1345.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:327;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wuROlBHbUm5aHG+eUFEEYNyI8BLY6sXX21iU1OzWKMjcH8RG+qGpKWEENA7cVG/65tJqQIpi6LxI6lF24xQBGQye/Sn7JEakzUXGpvBS8ArF36dNEKvcLqBoNjj3aG9Bf0vJrfEtDkkSIeS6l8lDIvVfhsCAoYaNHkNS3P9oEn+NmqiZXRbZoY8FxRtVnXO1J8ld2Oc1JQZVjkW6P9OI3OED27jGgdS0H1jRNgm62QEpPMU+WbmzbsVhI/grOh/zKBLwEqc/IAFpzR8RhGFjXdG5MTLW2DQzNCYY8Ck/0wvduwYu9VoeV+HDl2bq6H2V7HvJpherqG+Oz17viQwKU2CZaQc/VrhugeOMyz9JEIf7ZHtKlfm76t3e1O7LmNJXhbqoDsrbupXSrlxVgnW17i4ySJbq3T8GBfWtrjUDKsxyvxva/9J/5nNMrilJnySUGsTe7RqpAc5PYpiNWlqm7LQXEaP3fA7+W2fkMIVSb4P6AFqFJC/R84xwszCK1dL6X3R9FQgPh/z/mPpx7N3ev5tjiy52cfkwkTJ2OmUy4jT9sFzYLuLB0RAscQQ7agA5VwrizYb57M65CpyGHx/fwQpJhgvIl5aCITpJA2bSISLSId8Ab3hO2p5iH5QOcbmGIeBoHvp9M2dHgI9gzsOqhCeQ52ePcW67D2UmZPOtvV+j4s8/VYl7sWnMphtO8kp7
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(376002)(346002)(136003)(46966006)(36840700001)(6636002)(2906002)(16576012)(31686004)(82740400003)(26005)(107886003)(7636003)(478600001)(36906005)(316002)(8936002)(36756003)(110136005)(83380400001)(4326008)(82310400003)(53546011)(70206006)(16526019)(70586007)(356005)(5660300002)(336012)(36860700001)(186003)(47076005)(31696002)(6666004)(54906003)(426003)(2616005)(8676002)(4744005)(86362001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2021 10:38:44.0987
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a939b42-ee36-4ee0-969e-08d92a699700
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT055.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1345
+X-Originating-IP: [10.52.125.197]
+X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Sat, 5 Jun 2021 23:05:04 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-
-On 6/6/2021 1:52 PM, Om Prakash Singh wrote:
-> Remove unused code from function tegra_pcie_config_ep.
+> While CXL builds upon the PCI software model for enumeration and
+> endpoint control, a static platform component is required to bootstrap
+> the CXL memory layout. Similar to how ACPI identifies root-level PCI
+> memory resources the ACPI identifies the address space and interleave
+> configuration for CXL Memory.
 > 
-> Signed-off-by: Om Prakash Singh <omp@nvidia.com>
+> In addition to identifying the host bridges, ACPI is responsible for
+> enumerating the CXL memory space that can be addressed by downstream
+> decoders. This is similar to the requirement for ACPI to publish
+> resources reported by _CRS for PCI host bridges. Specifically ACPI
+> publishes a table, CXL Early Discovery Table (CEDT), which includes a
+> list of CXL Memory resource, CXL Fixed Memory Window Structures (CFMWS).
+> 
+> For now introduce the core infrastructure for a cxl_port hierarchy
+> starting with a root level anchor represented by the ACPI0017 device.
+> 
+> Follow on changes model support for the configurable decode capabilities
+> of cxl_port instances.
+> 
+> Co-developed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Two trivial comments inline.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
+>  Documentation/ABI/testing/sysfs-bus-cxl |   11 ++
+>  drivers/cxl/Kconfig                     |   15 +++
+>  drivers/cxl/Makefile                    |    2 
+>  drivers/cxl/acpi.c                      |   39 ++++++++
+>  drivers/cxl/core.c                      |  160 +++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h                       |   23 ++++
+>  6 files changed, 250 insertions(+)
+>  create mode 100644 drivers/cxl/acpi.c
 > 
-> Changes in V2:
-> 	- No change
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 2fe7490ad6a8..fb996ced7629 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -24,3 +24,14 @@ Description:
+>  		(RO) "Persistent Only Capacity" as bytes. Represents the
+>  		identically named field in the Identify Memory Device Output
+>  		Payload in the CXL-2.0 specification.
+> +
+> +What:		/sys/bus/cxl/devices/portX/uport
+> +Date:		May, 2021
+> +KernelVersion:	v5.14
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		CXL port objects are enumerated from either a platform firmware
+> +		device (ACPI0017 and ACPI0016) or PCIe switch upstream port with
+> +		CXL component registers. The 'uport' symlink connects the CXL
+> +		portX object to the device that published the CXL port
+> +		capability.
+
+Is this a complete list of ABI added? Looks like we also add devtype
+attribute in this series.
+
+Mind you I just realized I didn't document the proposed CDAT file either yet.
+
+
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 5483ba92b6da..d2573f6aef91 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -45,4 +45,19 @@ config CXL_MEM_RAW_COMMANDS
+>  	  potential impact to memory currently in use by the kernel.
+>  
+>  	  If developing CXL hardware or the driver say Y, otherwise say N.
+> +
+> +config CXL_ACPI
+> +	tristate "CXL ACPI: Platform Support"
+> +	depends on ACPI
+> +	help
+> +	  Enable support for host managed device memory (HDM) resources
+> +	  published by a platform's ACPI CXL memory layout description.  See
+> +	  Chapter 9.14.1 CXL Early Discovery Table (CEDT) in the CXL 2.0
+> +	  specification, and CXL Fixed Memory Window Structures (CEDT.CFMWS)
+> +	  (https://www.computeexpresslink.org/spec-landing). The CXL core
+> +	  consumes these resource to publish the root of a cxl_port decode
+> +	  hierarchy to map regions that represent System RAM, or Persistent
+> +	  Memory regions to be managed by LIBNVDIMM.
+> +
+> +	  If unsure say 'm'.
+>  endif
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index d9d282dc15be..a29efb3e8ad2 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,7 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_CXL_BUS) += cxl_core.o
+>  obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+> +obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  
+>  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+>  cxl_core-y := core.o
+>  cxl_pci-y := pci.o
+> +cxl_acpi-y := acpi.o
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> new file mode 100644
+> index 000000000000..556d25ab6966
+> --- /dev/null
+> +++ b/drivers/cxl/acpi.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/acpi.h>
+> +#include "cxl.h"
+> +
+> +static int cxl_acpi_probe(struct platform_device *pdev)
+> +{
+> +	struct cxl_port *root_port;
+> +	struct device *host = &pdev->dev;
+> +
+> +	root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+> +	if (IS_ERR(root_port))
+> +		return PTR_ERR(root_port);
+> +	dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct acpi_device_id cxl_acpi_ids[] = {
+> +	{ "ACPI0017", 0 },
+> +	{ "", 0 },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
+> +
+> +static struct platform_driver cxl_acpi_driver = {
+> +	.probe = cxl_acpi_probe,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.acpi_match_table = cxl_acpi_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(cxl_acpi_driver);
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_IMPORT_NS(CXL);
+> diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+> index 853666d8a9f5..dbbb34618d7d 100644
+> --- a/drivers/cxl/core.c
+> +++ b/drivers/cxl/core.c
+> @@ -4,6 +4,8 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/slab.h>
+> +#include <linux/idr.h>
+>  #include "cxl.h"
+>  
+>  /**
+> @@ -13,6 +15,164 @@
+>   * point for cross-device interleave coordination through cxl ports.
+>   */
+>  
+> +static DEFINE_IDA(cxl_port_ida);
+> +
+> +static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+> +			    char *buf)
+> +{
+> +	return sysfs_emit(buf, "%s\n", dev->type->name);
+
+I guess it's really small so doesn't matter that much, but not so nice
+that we are gaining multiple instances of this same function.
+
+> +}
+> +static DEVICE_ATTR_RO(devtype);
+> +
+> +static struct attribute *cxl_base_attributes[] = {
+> +	&dev_attr_devtype.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group cxl_base_attribute_group = {
+> +	.attrs = cxl_base_attributes,
+> +};
+> +
+> +static void cxl_port_release(struct device *dev)
+> +{
+> +	struct cxl_port *port = to_cxl_port(dev);
+> +
+> +	ida_free(&cxl_port_ida, port->id);
+> +	kfree(port);
+> +}
+> +
+> +static const struct attribute_group *cxl_port_attribute_groups[] = {
+> +	&cxl_base_attribute_group,
+> +	NULL,
+> +};
+> +
+> +static const struct device_type cxl_port_type = {
+> +	.name = "cxl_port",
+> +	.release = cxl_port_release,
+> +	.groups = cxl_port_attribute_groups,
+> +};
+> +
+> +struct cxl_port *to_cxl_port(struct device *dev)
+> +{
+> +	if (dev_WARN_ONCE(dev, dev->type != &cxl_port_type,
+> +			  "not a cxl_port device\n"))
+> +		return NULL;
+> +	return container_of(dev, struct cxl_port, dev);
+> +}
+> +
+> +static void unregister_dev(void *dev)
+> +{
+> +	device_unregister(dev);
+> +}
+> +
+> +static void cxl_unlink_uport(void *_port)
+> +{
+> +	struct cxl_port *port = _port;
+> +
+> +	sysfs_remove_link(&port->dev.kobj, "uport");
+> +}
+> +
+> +static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
+> +{
+> +	int rc;
+> +
+> +	rc = sysfs_create_link(&port->dev.kobj, &port->uport->kobj, "uport");
+> +	if (rc)
+> +		return rc;
+> +	return devm_add_action_or_reset(host, cxl_unlink_uport, port);
+> +}
+> +
+> +static struct cxl_port *cxl_port_alloc(struct device *uport,
+> +				       resource_size_t component_reg_phys,
+> +				       struct cxl_port *parent_port)
+> +{
+> +	struct cxl_port *port;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	port = kzalloc(sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rc = ida_alloc(&cxl_port_ida, GFP_KERNEL);
+> +	if (rc < 0)
+> +		goto err;
+> +	port->id = rc;
+> +
+> +	/*
+> +	 * The top-level cxl_port "cxl_root" does not have a cxl_port as
+> +	 * its parent and it does not have any corresponding component
+> +	 * registers as its decode is described by a fixed platform
+> +	 * description.
+> +	 */
+> +	dev = &port->dev;
+> +	if (parent_port)
+> +		dev->parent = &parent_port->dev;
+> +	else
+> +		dev->parent = uport;
+> +
+> +	port->uport = uport;
+> +	port->component_reg_phys = component_reg_phys;
+> +
+> +	device_initialize(dev);
+> +	device_set_pm_not_required(dev);
+> +	dev->bus = &cxl_bus_type;
+> +	dev->type = &cxl_port_type;
+> +
+> +	return port;
+> +
+> +err:
+> +	kfree(port);
+> +	return ERR_PTR(rc);
+> +}
+> +
+> +/**
+> + * devm_cxl_add_port - register a cxl_port in CXL memory decode hierarchy
+> + * @host: host device for devm operations
+> + * @uport: "physical" device implementing this upstream port
+> + * @component_reg_phys: (optional) for configurable cxl_port instances
+> + * @parent_port: next hop up in the CXL memory decode hierarchy
+> + */
+> +struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> +				   resource_size_t component_reg_phys,
+> +				   struct cxl_port *parent_port)
+> +{
+> +	struct cxl_port *port;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	port = cxl_port_alloc(uport, component_reg_phys, parent_port);
+> +	if (IS_ERR(port))
+> +		return port;
+> +
+> +	dev = &port->dev;
+> +	if (parent_port)
+> +		rc = dev_set_name(dev, "port%d", port->id);
+> +	else
+> +		rc = dev_set_name(dev, "root%d", port->id);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = devm_add_action_or_reset(host, unregister_dev, dev);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	rc = devm_cxl_link_uport(host, port);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	return port;
+> +
+> +err:
+> +	put_device(dev);
+> +	return ERR_PTR(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_cxl_add_port);
+> +
+>  /**
+>   * cxl_probe_component_regs() - Detect CXL Component register blocks
+>   * @dev: Host device of the @base mapping
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 2c47e9cffd44..46c81165c210 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -145,5 +145,28 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+>  			struct cxl_device_regs *regs,
+>  			struct cxl_register_map *map);
+>  
+> +#define CXL_RESOURCE_NONE ((resource_size_t) -1)
+> +
+> +/**
+> + * struct cxl_port - logical collection of upstream port devices and
+> + *		     downstream port devices to construct a CXL memory
+> + *		     decode hierarchy.
+> + * @dev: this port's device
+> + * @uport: PCI or platform device implementing the upstream port capability
+> + * @id: id for port device-name
+> + * @component_regs_phys: component register capability base address (optional)
+> + */
+> +struct cxl_port {
+> +	struct device dev;
+> +	struct device *uport;
+> +	int id;
+> +	resource_size_t component_reg_phys;
+> +};
+> +
+> +struct cxl_port *to_cxl_port(struct device *dev);
+> +struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> +				   resource_size_t component_reg_phys,
+> +				   struct cxl_port *parent_port);
+> +
+>  extern struct bus_type cxl_bus_type;
+>  #endif /* __CXL_H__ */
 > 
->   drivers/pci/controller/dwc/pcie-tegra194.c | 7 -------
->   1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index ae4c0a29818d..e9d573c850dd 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -2045,13 +2045,6 @@ static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
->   		return ret;
->   	}
->   
-> -	name = devm_kasprintf(dev, GFP_KERNEL, "tegra_pcie_%u_ep_work",
-> -			      pcie->cid);
-> -	if (!name) {
-> -		dev_err(dev, "Failed to create PCIe EP work thread string\n");
-> -		return -ENOMEM;
-> -	}
-> -
->   	pm_runtime_enable(dev);
->   
->   	ret = dw_pcie_ep_init(ep);
-> 
-Acked-by: Vidya Sagar <vidyas@nvidia.com>
+
