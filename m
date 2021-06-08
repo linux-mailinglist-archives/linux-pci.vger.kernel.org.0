@@ -2,105 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A714839F8FB
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 16:24:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E618039FB21
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 17:46:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233278AbhFHO0g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 10:26:36 -0400
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:33340 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233220AbhFHO0f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 10:26:35 -0400
-Received: by mail-pg1-f177.google.com with SMTP id e20so4691977pgg.0;
-        Tue, 08 Jun 2021 07:24:42 -0700 (PDT)
+        id S231268AbhFHPsI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 11:48:08 -0400
+Received: from mail-pj1-f46.google.com ([209.85.216.46]:56281 "EHLO
+        mail-pj1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231165AbhFHPsH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 11:48:07 -0400
+Received: by mail-pj1-f46.google.com with SMTP id k7so12146927pjf.5;
+        Tue, 08 Jun 2021 08:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AY6lStx8IvJJTinWVzlaubjc28iru7pvjmXtwIOc384=;
-        b=sWNsP8BIeVhMMdC/38iOhQQcoJRNKxXK+1Rqkq2Ykx7cijY3X/AxV5qNXsaaG5ZQIf
-         1wUIUyFlWR2c5ziHCftKI2gD9D+135nI8xlM0UNwMcimAmrvxJbetNO8nop9WgPW2XkZ
-         45caja5UTDAsV9LEg3KcmAVlQFXekm0CnhJ01k4SlQqWSwG0jNm9uMbeLXJoHwr8ULIB
-         XNyOnNbPK/M82QKjQOcKMyJhM8EX+U/Mgw/FSU7DgfxMzQykW6Sa2I5iwoC/5fHldd/6
-         3lQHWej1y2H4jBlr8Ri0/M8+FIeqkeB5jK2VCEu2yH/86b+1gKotPS2+Vf77D9CigjVO
-         opsA==
+        bh=ifGZQu8Jq7dV7AdN0OST01e7WbED4WWmcsSQXXwwdJo=;
+        b=iCcjGp++KdStE/BfRHFT1cR1yFuAbMwr/okM2xIV7IkSlvuUNop57o1wd1b8O/dTPU
+         m9AN85xQG4bM3xQpLVo600ucXAvCTOZeToHRJ6yqFcAPZdgatcIZSicT6z5bZ4gFXX1r
+         5msaoNxLGGDp/KsGVYPH5TiYmGdlMFxP7OVIA/phbB6punWvhpEG+JiE753poBmN438g
+         hOvaEYj1IwDhnR2QgEFNjnUN8QdNmtLnC4IXaDzyW5bmlk0m/L+ksifrSxCujP97i0IH
+         QllQIGjrExf4bZebZBvvL0miOikkGPST71wKJx8PTJQ3eh5JD8LRQlZylzmM980u6oiN
+         yq3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AY6lStx8IvJJTinWVzlaubjc28iru7pvjmXtwIOc384=;
-        b=DTS6AMM2f8cFVRlnYE9mr8/B6g8OyzGJAeEeSW9r9uGQZByHuY/H+OP9VsObFC1hH8
-         ZQ6tVMaQhTjV+X1tKWcyX2uQRYFrs4DYNrWJnT4WF5vFRAgZnc6HaeS1tFGlJ0wxYq9K
-         xYLkD50qZXWWRbjzeemgmmMlK5blb/q4PUznDKixCTVjwM6Y3DQtShIib13234O20qXH
-         CUAn55L1hfAIu3Fx28JxJhdeQDAVe1c9U8SMMzDw/c5R+cQHw2GRqUpSmNVju34ciRC5
-         T+KZvqgjMT7Bi4VwLjvUHDxrcO6Uaef6/UVPlA+bGrULx8x8RsQS9qgoM1Q8pHDV8t2I
-         Xf8A==
-X-Gm-Message-State: AOAM5310Jf4VY7ySqPdHU9NR/WOYjaDmx0SKLkPTMroAWv+h4b0hFHZ2
-        sJJe181y1McPsxKtj9otbiQ=
-X-Google-Smtp-Source: ABdhPJz8zUoQhEIBV01BhCslFdLJaI+QfNzP0GAPOgM41cSlY9OBAyMV3W1Sj3ig1Y2d+/dUtD2mxA==
-X-Received: by 2002:a63:d347:: with SMTP id u7mr23205468pgi.434.1623162222347;
-        Tue, 08 Jun 2021 07:23:42 -0700 (PDT)
-Received: from localhost (185.212.56.112.16clouds.com. [185.212.56.112])
-        by smtp.gmail.com with ESMTPSA id s11sm2692034pjz.42.2021.06.08.07.23.41
+        bh=ifGZQu8Jq7dV7AdN0OST01e7WbED4WWmcsSQXXwwdJo=;
+        b=LA7jgEmVgrJTnUG+0alRXgZqbUnky9h8mXO/+BdltpAwAKct692SOh0I2Y/GXsQBGb
+         1Ev7cI5qxrgC9auF8DvUrtQlt9APeAAf6SrEmNdNhnN5gL/IiKYETt1uGbZizMESk27Y
+         O/lw6VjoWHRJW5wg9JoDcC3hL8PNfNvm5RUj2gSXk9CRhCsWVjRJxo9TPjtVcutY2DD3
+         l9n29V7MoyCqp68gDFUGDzUOX75DVUsTtXIJWKCmkAvxuURoPeFw2q0DHmGfESSowB/N
+         jq2/YYPO9eMvPUVWzkIPey3jctpuxXHv7l8oeSJpuOT94BkHjX1DMJpgr1E+ld+lMhoM
+         D3Uw==
+X-Gm-Message-State: AOAM532doJxjerSDV/zVyZ8zHBmLbiIfDomSLYE7+tEhsSmis17VY0cq
+        fOg8Y9siMqjYlMkzu73IU/E=
+X-Google-Smtp-Source: ABdhPJyy+WOcoe5buu/VuBaY4Xly4VOcAVPszB8pBpdk2RQ9QkUcjNbGPQlbpn8bM7JyADfWbagZ6Q==
+X-Received: by 2002:a17:90a:588f:: with SMTP id j15mr5297515pji.112.1623167098105;
+        Tue, 08 Jun 2021 08:44:58 -0700 (PDT)
+Received: from localhost ([103.200.106.115])
+        by smtp.gmail.com with ESMTPSA id z134sm11179376pfc.209.2021.06.08.08.44.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 07:23:42 -0700 (PDT)
-Date:   Tue, 8 Jun 2021 22:23:38 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        corbet@lwn.net, jarkko.nikula@linux.intel.com,
-        mika.westerberg@linux.intel.com, rric@kernel.org,
-        bhelgaas@google.com, wsa@kernel.org, Sanket.Goswami@amd.com,
-        linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Tue, 08 Jun 2021 08:44:57 -0700 (PDT)
+Date:   Tue, 8 Jun 2021 21:14:55 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 1/4] PCI: Introduce pcim_alloc_irq_vectors()
-Message-ID: <20210608142338.GB1030842@nuc8i5>
-References: <YL5FcivbsIBnVvo0@smile.fi.intel.com>
- <20210607171451.GA2507298@bjorn-Precision-5520>
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v7 0/8] Expose and manage PCI device reset
+Message-ID: <20210608154455.ho44n6dnd52ogzxj@archlinux>
+References: <20210608054857.18963-1-ameynarkhede03@gmail.com>
+ <abcbaf1b-6b5f-bddc-eba1-e1e8e3ecf40e@metux.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210607171451.GA2507298@bjorn-Precision-5520>
+In-Reply-To: <abcbaf1b-6b5f-bddc-eba1-e1e8e3ecf40e@metux.net>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 12:14:51PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 07, 2021 at 07:12:34PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 07, 2021 at 11:39:13PM +0800, Dejin Zheng wrote:
-> > > Introduce pcim_alloc_irq_vectors(), a device-managed version of
-> > > pci_alloc_irq_vectors(). Introducing this function can simplify
-> > > the error handling path in many drivers.
-> > > 
-> > > And use pci_free_irq_vectors() to replace some code in pcim_release(),
-> > > they are equivalent, and no functional change. It is more explicit
-> > > that pcim_alloc_irq_vectors() is a device-managed function.
-> > 
-> > ...
-> > 
-> > > When CONFIG_PCI=n, there is no stub for pci_is_managed(), but
-> > > pcim_alloc_irq_vectors() will use it, so add one like other similar stubs.
-> > > Otherwise there can be build errors, as here by kernel test robot
-> > > reported:
-> > > include/linux/pci.h: In function 'pcim_alloc_irq_vectors':
-> > > >> include/linux/pci.h:1847:7: error: implicit declaration of function 'pci_is_managed' [-Werror=implicit-function-declaration]
-> > >     1847 |  if (!pci_is_managed(dev))
-> > >          |       ^~~~~~~~~~~~~~
-> > 
-> > This is rather changelog related material. No need to pollute commit message
-> > with this.
-> > 
-> > ...
-> > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > 
-> > It's new functionality. Why this tag is here?
-> > Use comments (similar location than changelog) to give a credit if you wish.
-> 
-> Agreed, I'll tidy that up, so no need to repost for this.
+On 21/06/08 12:05PM, Enrico Weigelt, metux IT consult wrote:
+> On 08.06.21 07:48, Amey Narkhede wrote:
+>
+> Hi,
+>
+> > PCI and PCIe devices may support a number of possible reset mechanisms
+> > for example Function Level Reset (FLR) provided via Advanced Feature or
+> > PCIe capabilities, Power Management reset, bus reset, or device specific reset.
+> > Currently the PCI subsystem creates a policy prioritizing these reset methods
+> > which provides neither visibility nor control to userspace.
+>
+> Since I've got a current use case for that - could you perhaps tell more
+> about the whole pci device reset mechanisms ?
+>
+> In my case I've got a board that wires reset lines to the soc's gpios.
+> Not sure how exactly to qualify this, but I guess it would count as a
+> bus wide reset.
+>
+> Now the big question for me is how to implement that in a board specific
+> platform driver (which already does setup of gpios and other attached
+> devices), so we can reset the card in slot X in a generic way.
+>
+> Any help highly appreciated.
+>
+>
+> --mtx
+>
+In case of bus reset(pci_reset_secondary_bus()), it uses bridge control
+register to assert reset on bus so I think it should out of the box but
+not 100% sure about it.
 
-Bjorn, Thank you very much, you are so nice!
-
-BR,
-Dejin
+Thanks,
+Amey
