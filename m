@@ -2,281 +2,339 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC0D3A07FD
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 01:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 025243A0818
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 01:59:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbhFHXuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 19:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230361AbhFHXuJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 19:50:09 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6BFC061574
-        for <linux-pci@vger.kernel.org>; Tue,  8 Jun 2021 16:48:13 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id h12so14133932pfe.2
-        for <linux-pci@vger.kernel.org>; Tue, 08 Jun 2021 16:48:13 -0700 (PDT)
+        id S231409AbhFIABZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 20:01:25 -0400
+Received: from mail-pg1-f177.google.com ([209.85.215.177]:40473 "EHLO
+        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231686AbhFIABX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Jun 2021 20:01:23 -0400
+Received: by mail-pg1-f177.google.com with SMTP id j12so17887442pgh.7
+        for <linux-pci@vger.kernel.org>; Tue, 08 Jun 2021 16:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Sap44HZUeMl7nx9za1mZOMogIkd9R62xvnkQFKrxIkI=;
-        b=O5TmFV1KAdvN1D+AcTNDCooaSYRBMSacr/BZI0dJKrXFv26uFzf0BUAhUTHSPGamM0
-         yVLHKBorRkwDZBvuA3vIspehTxmki2oOsN5O9OZzcocfqZiZqOCmykT17gkeAyRNEcE5
-         atyZ/SzGsfWelzMUq9EuInKkO4pEeBilb+IvrODPS971VZQdfZ9Uo0PLIACOTG8V/17f
-         kH13SDHGy8UEAB3ri9KPeBJJ1FZxva2m9CMRnkJCP2qhrNTqNM6nSftjmXkxqD7HeuLA
-         IQbQvYYUTByGm1S2IiSiK3hw1OW7PUeqyyCruS25BmqofBN9vKQPWvlj5Im/sPb5EWjm
-         oSEg==
+         :cc;
+        bh=KzqU+PYu6TQ2sjtIOeLa5pG8LQ4reI3+RD8PP1HfdQ8=;
+        b=Yv/qSc4TiyYqmUXrXByyPKTwWmVKUH4zRDFC4kd+YIDRl2HbfYtK+UU7ZiBR/DEgI7
+         O35P8LJm53EBbyul/w1pUYoaooapubEtD7G3piPPYkFV8vFyj916tZPgdG+p7nhstagY
+         2lnpXv2V7WL37rTz90JF6x+tAU9xkdM3x7MI4dVkMwAKf6PQ4X3f3YsjVGYm0tslNPD/
+         romWbKcNUIPGzwVsvyfqrL5SI+NH1obGthTOMI3w3t4DlckagKwsbsRK2J7Ge38qRzCh
+         tyLxVjxIE60sc13/rILklULr6OC18EFXPzT6lUWBwKlxlu3V3McXdgPqrUIz2yM7gaVx
+         FygQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sap44HZUeMl7nx9za1mZOMogIkd9R62xvnkQFKrxIkI=;
-        b=tWy/ptk2HQRMi1w4qddJRv7ytyzG6lgBwzyPVb+LZVa/fQaEve5k98GoFC5GjOZtDS
-         VionS927ewEYNPBujXdEGIz6G3ofivBWpyvRSanJh9RW9oGzCiogEsWet/k8BX6WkV4C
-         40OAZQb20/+ZG/YcTnxONSG+mYF1pTY+kqexb+3BKPmoXoBuR09w2JstmBTuTy1/SZso
-         +VGrAbChcjawKau2G/Q9MVKHx/Sa/jUp2riNIfOMuB4e+FoMmDhOEKD/nKUCX94iS1gf
-         40zAlglEV6YLWt7yVI1HEfDIwFnAsi02JaDZAcvsb0QY155bkU1xUg23npoLtLxhiTFO
-         ujUg==
-X-Gm-Message-State: AOAM530UwlM6DUYkFrnuwWjSn0szowde9D2IqlQ7IcUtoCTLf+LkP11O
-        jeLYa80tEOZHUItAuoNHVdPBbwVgZmLjADY1CTW5Iu3eNU3GUQ==
-X-Google-Smtp-Source: ABdhPJyRXDadjIRcbEA1ewvrO1tynnhcz0NyuPDRX/2VUt6h8SZwLOi28NHvvbNDeuZkUK4V02BnJNVgPSDfWxePbfo=
-X-Received: by 2002:a63:195b:: with SMTP id 27mr784144pgz.450.1623196093214;
- Tue, 08 Jun 2021 16:48:13 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=KzqU+PYu6TQ2sjtIOeLa5pG8LQ4reI3+RD8PP1HfdQ8=;
+        b=cZBQatWTMd/yLt1YxkxZJHnjb7gd9Bo/slScKRzyk428Asw/lI4cRPAlKhvlH8wcC1
+         7LT+B0IYv63sXbDovH/LJC4O4PXVpPJdwKx0O4IZq3BszVZQGVyZoGwuqYFJZzcDshJm
+         KvSg70NVeU7NRI8Jk36guRfpwjrYG3s+Y/lIdwP4fuyUo1zLRsEZj1PcHYgnXa/X6M9H
+         jEBq3nocSElbwwp9A3VbUoKIn+PrrZS+HbMzV5CKsa4VtxSThGtPhh1XgcM8vWMmV2Zr
+         ym9Qg9ipDLAM/mgPIBbiB7AbOF4gQvzgvT76MWPOE3fTjM9hTvqCsHkXMK5uVnseUMOP
+         5H0A==
+X-Gm-Message-State: AOAM531r+GAxa8278ERhZfeBGY2YsXd7F8qv/pEu1kDKepwEy0Wrmoef
+        cpSoN56xi0ZJPqKP9mZsQYxDzwepHwTcpl7TZwbFxQ==
+X-Google-Smtp-Source: ABdhPJyO1c++PXmaFXVmGRCzA7O0E5ZVhUWu/cd3wK+hhxf9pIu6Ck2KkfjMOWnX68vJQx8ql/aCauWjmhT+KbBHL58=
+X-Received: by 2002:a63:195b:: with SMTP id 27mr819525pgz.450.1623196710232;
+ Tue, 08 Jun 2021 16:58:30 -0700 (PDT)
 MIME-Version: 1.0
 References: <162295949351.1109360.10329014558746500142.stgit@dwillia2-desk3.amr.corp.intel.com>
- <162295952770.1109360.877553895768113895.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20210608140602.00004f0f@Huawei.com>
-In-Reply-To: <20210608140602.00004f0f@Huawei.com>
+ <162295951736.1109360.12642726343803988356.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20210608124910.0000329e@Huawei.com>
+In-Reply-To: <20210608124910.0000329e@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 8 Jun 2021 16:48:02 -0700
-Message-ID: <CAPcyv4ipuqcLPaMa+Md5HvpWi8nrExsKn1jg0TaKkHhMz5V0Pw@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] cxl/acpi: Introduce cxl_decoder objects
+Date:   Tue, 8 Jun 2021 16:58:19 -0700
+Message-ID: <CAPcyv4jc07GuoOu8HPwVucj7PcdNjLjE1ScwRBDTyQ788Ot4tw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] cxl/acpi: Add downstream port data to cxl_port instances
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 8, 2021 at 6:06 AM Jonathan Cameron
+On Tue, Jun 8, 2021 at 4:49 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> On Sat, 5 Jun 2021 23:05:27 -0700
+> On Sat, 5 Jun 2021 23:05:17 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> > A cxl_decoder is a child of a cxl_port. It represents a hardware
-> > decoder configuration of an upstream port to one or more of its
-> > downstream ports. The decoder is either represented in standard HDM
-> > decoder registers (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
-> > Capability Structure), or it is a static decode configuration
-> > communicated by platform firmware (see the CXL Early Discovery Table:
-> > Fixed Memory Window Structure).
+> > In preparation for infrastructure that enumerates and configures the CXL
+> > decode mechanism of an upstream port to its downstream ports, add a
+> > representation for a CXL downstream port.
 > >
-> > The firmware described and hardware described decoders differ slightly
-> > leading to 2 different sub-types of decoders, cxl_decoder_root and
-> > cxl_decoder_switch. At the root level the decode capabilities restrict
-> > what can be mapped beneath them. Mid-level switch decoders are
-> > configured for either acclerator (type-2) or memory-expander (type-3)
-> > operation, but they are otherwise agnostic to the type of memory
-> > (volatile vs persistent) being mapped.
-> >
-> > Here is an example topology from a single-ported host-bridge environmen=
-t
-> > without CFMWS decodes enumerated.
-> >
-> > /sys/bus/cxl/devices/root0
-> > =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=9C=E2=94=80=E2=94=80 dport0 -> ../LNXSYSTM:00/LNXSYBUS:00/ACPI00=
-16:00
-> > =E2=94=9C=E2=94=80=E2=94=80 port1
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 decoder1.0
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 end
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 locked
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 start
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../=
-../../bus/cxl
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_list
-> > =E2=94=82   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 target_type
-> > =E2=94=82   =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uevent
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 devtype
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 dport0 -> ../../pci0000:34/0000=
-:34:00.0
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../bus/cxl
-> > =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 uevent
-> > =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 uport -> ../../LNXSYSTM:00/LNXS=
-YBUS:00/ACPI0016:00
-> > =E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../bus/cxl
-> > =E2=94=9C=E2=94=80=E2=94=80 uevent
-> > =E2=94=94=E2=94=80=E2=94=80 uport -> ../platform/ACPI0017:00
+> > On ACPI systems the top-most logical downstream ports in the hierarchy
+> > are the host bridges (ACPI0016 devices) that decode the memory windows
+> > described by the CXL Early Discovery Table Fixed Memory Window
+> > Structures (CEDT.CFMWS).
 > >
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> One trivial docs issue and a suggestion that -2 is a bit too magic.
-> Otherwise looks good to me.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
 > > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl |   70 ++++++++
-> >  drivers/cxl/acpi.c                      |   21 ++
-> >  drivers/cxl/core.c                      |  265 +++++++++++++++++++++++=
-++++++++
-> >  drivers/cxl/cxl.h                       |   48 ++++++
-> >  4 files changed, 403 insertions(+), 1 deletion(-)
+> >  Documentation/ABI/testing/sysfs-bus-cxl |   13 ++++
+> >  drivers/cxl/acpi.c                      |   44 ++++++++++++++
+> >  drivers/cxl/core.c                      |   95 ++++++++++++++++++++++++++++++-
+> >  drivers/cxl/cxl.h                       |   21 +++++++
+> >  4 files changed, 169 insertions(+), 4 deletions(-)
 > >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/AB=
-I/testing/sysfs-bus-cxl
-> > index 0cb31b7ad17b..f16f18e77578 100644
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > index fb996ced7629..0cb31b7ad17b 100644
 > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
 > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -48,3 +48,73 @@ Description:
-> >               decode of CXL memory resources.  The 'Y' integer reflects=
- the
-> >               hardware port unique-id used in the hardware decoder targ=
-et
-> >               list.
+> > @@ -35,3 +35,16 @@ Description:
+> >               CXL component registers. The 'uport' symlink connects the CXL
+> >               portX object to the device that published the CXL port
+> >               capability.
 > > +
-> > +What:                /sys/bus/cxl/devices/decoderX.Y
+> > +What:                /sys/bus/cxl/devices/portX/dportY
 > > +Date:                June, 2021
 > > +KernelVersion:       v5.14
 > > +Contact:     linux-cxl@vger.kernel.org
 > > +Description:
-> > +             CXL decoder objects are enumerated from either a platform
-> > +             firmware description, or a CXL HDM decoder register set i=
-n a
-> > +             PCIe device (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
-> > +             Capability Structure). The 'X' in decoderX.Y represents t=
-he
-> > +             cxl_port container of this decoder, and 'Y' represents th=
-e
-> > +             instance id of a given decoder resource.
-> > +
-> > +What:                /sys/bus/cxl/devices/decoderX.Y/{start,end}
-> > +Date:                June, 2021
-> > +KernelVersion:       v5.14
-> > +Contact:     linux-cxl@vger.kernel.org
-> > +Description:
-> > +             The 'start' and 'end' attributes together convey the phys=
-ical
-> > +             address base and last addressable byte of the decoder's d=
-ecode
-> > +             window. For decoders of devtype "cxl_decoder_root" the ad=
-dress
-> > +             range is fixed. For decoders of devtype "cxl_decoder_swit=
-ch" the
-> > +             address is bounded by the decode range of the cxl_port an=
-cestor
-> > +             of the decoder's cxl_port, and dynamically updates based =
-on the
-> > +             active memory regions in that address space.
-> > +
-> > +What:                /sys/bus/cxl/devices/decoderX.Y/locked
-> > +Date:                June, 2021
-> > +KernelVersion:       v5.14
-> > +Contact:     linux-cxl@vger.kernel.org
-> > +Description:
-> > +             CXL HDM decoders have the capability to lock the configur=
-ation
-> > +             until the next device reset. For decoders of devtype
-> > +             "cxl_decoder_root" there is no standard facility to unloc=
-k them.
-> > +             For decoders of devtype "cxl_decoder_switch" a secondary =
-bus
-> > +             reset, of the PCIe bridge that provides the bus for this
-> > +             decoders uport, unlocks / resets the decoder.
-> > +
-> > +What:                /sys/bus/cxl/devices/decoderX.Y/target_list
-> > +Date:                June, 2021
-> > +KernelVersion:       v5.14
-> > +Contact:     linux-cxl@vger.kernel.org
-> > +Description:
-> > +             Display a comma separated list of the current decoder tar=
-get
-> > +             configuration. The list is ordered by the current configu=
-red
-> > +             interleave order of the decoder's dport instances. Each e=
-ntry in
-> > +             the list is a dport id.
-> > +
-> > +What:                /sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,typ=
-e2,type3}
-> > +Date:                June, 2021
-> > +KernelVersion:       v5.14
-> > +Contact:     linux-cxl@vger.kernel.org
-> > +Description:
-> > +             When a CXL decoder is of devtype "cxl_decoder_root", it
-> > +             represents a fixed memory window identified by platform
-> > +             firmware. A fixed window may only support a subset of mem=
-ory
-> > +             types. The 'cap_*' attributes indicate whether persistent
-> > +             memory, volatile memory, accelerator memory, and / or exp=
-ander
-> > +             memory may be mapped behind this decoder's memory window.
-> > +
-> > +What:                /sys/bus/cxl/devices/decoderX.Y/target_type
-> > +Date:                June, 2021
-> > +KernelVersion:       v5.14
-> > +Contact:     linux-cxl@vger.kernel.org
-> > +Description:
-> > +             When a CXL decoder is of devtype "cxl_decoder_switch", it=
- can
-> > +             optionally decode either accelerator memory (type-2) or e=
-xpander
-> > +             memory (type-3). The 'target_type' attribute indicates th=
-e
-> > +             current setting which may dynamically change based on wha=
-t
-> > +             memory regions are activated in this decode hierarchy.
->
-> Nice docs.
->
+> > +             CXL port objects are enumerated from either a platform firmware
+> > +             device (ACPI0017 and ACPI0016) or PCIe switch upstream port with
+> > +             CXL component registers. The 'dportY' symlink identifies one or
+> > +             more downstream ports that the upstream port may target in its
+> > +             decode of CXL memory resources.  The 'Y' integer reflects the
+> > +             hardware port unique-id used in the hardware decoder target
+> > +             list.
 > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index ec324bf063b8..6f203ba7fc1d 100644
+> > index 556d25ab6966..0ae7464b603d 100644
 > > --- a/drivers/cxl/acpi.c
 > > +++ b/drivers/cxl/acpi.c
-> > @@ -70,6 +70,7 @@ static int add_host_bridge_uport(struct device *match=
-, void *arg)
-> >       struct device *host =3D root_port->dev.parent;
-> >       struct acpi_pci_root *pci_root;
-> >       struct cxl_walk_context ctx;
-> > +     struct cxl_decoder *cxld;
-> >       struct cxl_port *port;
-> >
-> >       if (!bridge)
-> > @@ -94,7 +95,25 @@ static int add_host_bridge_uport(struct device *matc=
-h, void *arg)
-> >
-> >       if (ctx.count =3D=3D 0)
-> >               return -ENODEV;
-> > -     return ctx.error;
-> > +     if (ctx.error)
-> > +             return ctx.error;
-> > +
-> > +     /* TODO: Scan CHBCR for HDM Decoder resources */
-> > +
-> > +     /*
-> > +      * In the single-port host-bridge case there are no HDM decoders
-> > +      * in the CHBCR and a 1:1 passthrough decode is implied.
-> > +      */
-> > +     if (ctx.count =3D=3D 1) {
-> > +             cxld =3D devm_cxl_add_decoder(host, port, 1, 0, -2, 1, 0,
+> > @@ -5,19 +5,61 @@
+> >  #include <linux/device.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/acpi.h>
+> > +#include <linux/pci.h>
 >
-> -2?  I'm guessing that has some special meaning and perhaps warrants
-> a nice define to let us know what that is.
+> Not immediately seeing why this include is added in this patch.
 
-Um, yes, I think I went back and forth on whether this should be a
-zero-length range starting at zero or a zero-length range starting at
-UINT64_MAX, and I ended up botching it with a range of 0 to UINT64_MAX
-- 1. I'll fix this up to provide a "passthrough" version of
-devm_cxl_add_decoder() for the cases like this where a port does not
-adjust the decode from the parent port down to the next level.
+My neither, it belongs in the next patch.
 
 >
-> Given this interface is a bit long perhaps even wroth a comment here on
-> why the values are what they are?
+> >  #include "cxl.h"
+> >
+> > +static struct acpi_device *to_cxl_host_bridge(struct device *dev)
+> > +{
+> > +     struct acpi_device *adev = to_acpi_device(dev);
+> > +
+> > +     if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0)
+> > +             return adev;
+> > +     return NULL;
+> > +}
+> > +
+> > +static int add_host_bridge_dport(struct device *match, void *arg)
+> > +{
+> > +     int rc;
+> > +     acpi_status status;
+> > +     unsigned long long uid;
+> > +     struct cxl_port *root_port = arg;
+> > +     struct device *host = root_port->dev.parent;
+> > +     struct acpi_device *bridge = to_cxl_host_bridge(match);
+> > +
+> > +     if (!bridge)
+> > +             return 0;
+> > +
+> > +     status = acpi_evaluate_integer(bridge->handle, METHOD_NAME__UID, NULL,
+> > +                                    &uid);
+> > +     if (status != AE_OK) {
+> > +             dev_err(host, "unable to retrieve _UID of %s\n",
+> > +                     dev_name(match));
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     rc = cxl_add_dport(root_port, match, uid, CXL_RESOURCE_NONE);
+> > +     if (rc) {
+> > +             dev_err(host, "failed to add downstream port: %s\n",
+> > +                     dev_name(match));
+> > +             return rc;
+> > +     }
+> > +     dev_dbg(host, "add dport%llu: %s\n", uid, dev_name(match));
+> > +     return 0;
+> > +}
+> > +
+> >  static int cxl_acpi_probe(struct platform_device *pdev)
+> >  {
+> >       struct cxl_port *root_port;
+> >       struct device *host = &pdev->dev;
+> > +     struct acpi_device *adev = ACPI_COMPANION(host);
+> >
+> >       root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+> >       if (IS_ERR(root_port))
+> >               return PTR_ERR(root_port);
+> >       dev_dbg(host, "add: %s\n", dev_name(&root_port->dev));
+> >
+> > -     return 0;
+> > +     return bus_for_each_dev(adev->dev.bus, NULL, root_port,
+> > +                             add_host_bridge_dport);
+> >  }
+> >
+> >  static const struct acpi_device_id cxl_acpi_ids[] = {
+> > diff --git a/drivers/cxl/core.c b/drivers/cxl/core.c
+> > index dbbb34618d7d..4418b30cce4f 100644
+> > --- a/drivers/cxl/core.c
+> > +++ b/drivers/cxl/core.c
+> > @@ -33,10 +33,22 @@ static struct attribute_group cxl_base_attribute_group = {
+> >       .attrs = cxl_base_attributes,
+> >  };
+> >
+> > +static void cxl_dport_release(struct cxl_dport *dport)
+> > +{
+> > +     put_device(dport->dport);
+> > +     list_del(&dport->list);
+> This ordering isn't the reverse of what happens cxl_add_dport()
+> That would be
+>
+> list_del()
+> put_device()
+> kfree()
+>
+> If there is a strong reason for that I'd like to see a comment here.
 
-The passthrough helper will address this.
+No strong reason, I'll reorder.
+
+>
+> > +     kfree(dport);
+> > +}
+> > +
+> >  static void cxl_port_release(struct device *dev)
+> >  {
+> >       struct cxl_port *port = to_cxl_port(dev);
+> > +     struct cxl_dport *dport, *_d;
+> >
+> > +     device_lock(dev);
+> > +     list_for_each_entry_safe(dport, _d, &port->dports, list)
+> > +             cxl_dport_release(dport);
+> > +     device_unlock(dev);
+> >       ida_free(&cxl_port_ida, port->id);
+> >       kfree(port);
+> >  }
+> > @@ -60,9 +72,22 @@ struct cxl_port *to_cxl_port(struct device *dev)
+> >       return container_of(dev, struct cxl_port, dev);
+> >  }
+> >
+> > -static void unregister_dev(void *dev)
+> > +static void unregister_port(void *_port)
+> >  {
+> > -     device_unregister(dev);
+> > +     struct cxl_port *port = _port;
+> > +     struct cxl_dport *dport;
+> > +
+> > +     device_lock(&port->dev);
+> > +     list_for_each_entry(dport, &port->dports, list) {
+> > +             char link_name[CXL_TARGET_STRLEN];
+> > +
+> > +             if (snprintf(link_name, CXL_TARGET_STRLEN, "dport%d",
+> > +                          dport->port_id) >= CXL_TARGET_STRLEN)
+> > +                     continue;
+> > +             sysfs_remove_link(&port->dev.kobj, link_name);
+> > +     }
+> > +     device_unlock(&port->dev);
+> > +     device_unregister(&port->dev);
+> >  }
+> >
+> >  static void cxl_unlink_uport(void *_port)
+> > @@ -113,6 +138,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+> >
+> >       port->uport = uport;
+> >       port->component_reg_phys = component_reg_phys;
+> > +     INIT_LIST_HEAD(&port->dports);
+> >
+> >       device_initialize(dev);
+> >       device_set_pm_not_required(dev);
+> > @@ -157,7 +183,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> >       if (rc)
+> >               goto err;
+> >
+> > -     rc = devm_add_action_or_reset(host, unregister_dev, dev);
+> > +     rc = devm_add_action_or_reset(host, unregister_port, port);
+> >       if (rc)
+> >               return ERR_PTR(rc);
+> >
+> > @@ -173,6 +199,69 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+> >  }
+> >  EXPORT_SYMBOL_GPL(devm_cxl_add_port);
+> >
+> > +static int add_dport(struct cxl_port *port, struct cxl_dport *new)
+> > +{
+> > +     struct cxl_dport *dport, *dup = NULL;
+> > +
+> > +     device_lock(&port->dev);
+> > +     list_for_each_entry (dport, &port->dports, list)
+> > +             if (new->port_id == dport->port_id) {
+> > +                     dup = dport;
+> > +                     goto err;
+> > +             }
+> > +     list_add_tail(&new->list, &port->dports);
+> > +     device_unlock(&port->dev);
+> > +
+> > +     return 0;
+> > +
+> > +err:
+> > +     device_unlock(&port->dev);
+> > +     dev_err(&port->dev,
+> > +             "unable to add dport%d-%s non-unique port id (%s)\n",
+> > +             new->port_id, dev_name(new->dport), dev_name(dup->dport));
+>
+> As there is potential that you might end up with other errors in here long term,
+> why not move this to the point where the error is detected?
+> I think you are fine doing it under the mutex.  Obviously indent will be a deeper
+> than ideal.
+
+Hmm, I'll take a look. Might add a dup finder helper to keep the
+indent under control.
+
+>
+> > +     return -EEXIST;
+> > +}
+> > +
+> > +/*
+>
+> This is a bit inconsistent wrt to what functions get full kernel-doc.
+> My personal preference would be all the exported functions + any others
+> where it is particularly useful.
+
+I agree with the sentiment for globally exported symbols. In this case
+they are in the "CXL" module namespace and privately defined in
+drivers/cxl/ headers. That said, I did document devm_add_cxl_port(),
+so there's no good reason to skip the documentation on the other
+devm_cxl_add_* routines... will fix.
+
+> > + * Append downstream port data to a cxl_port, note that all allocations
+> > + * and links are undone by cxl_port deletion and release.
+> > + */
+> > +int cxl_add_dport(struct cxl_port *port, struct device *dport_dev, int port_id,
+> > +               resource_size_t component_reg_phys)
+> > +{
+> > +     char link_name[CXL_TARGET_STRLEN];
+> > +     struct cxl_dport *dport;
+> > +     int rc;
+> > +
+> > +     if (snprintf(link_name, CXL_TARGET_STRLEN, "dport%d", port_id) >=
+> > +         CXL_TARGET_STRLEN)
+> > +             return -EINVAL;
+> > +
+> > +     dport = kzalloc(sizeof(*dport), GFP_KERNEL);
+> > +     if (!dport)
+> > +             return -ENOMEM;
+> > +
+> > +     INIT_LIST_HEAD(&dport->list);
+> > +     dport->dport = get_device(dport_dev);
+> > +     dport->port_id = port_id;
+> > +     dport->component_reg_phys = component_reg_phys;
+> > +     dport->port = port;
+> > +
+> > +     rc = add_dport(port, dport);
+> > +     if (rc)
+>
+> If you get an error here, it's not been added to the list, but
+> in the cxl_dport_release() you remove it from the list. I think you
+> just want to put and free the device here.
+
+The delete is innocuous because of the INIT_LIST_HEAD() above. So the
+delete will end up doing the right thing and leaving the entry empty
+again, and that saves the need for custom code to handle that case.
