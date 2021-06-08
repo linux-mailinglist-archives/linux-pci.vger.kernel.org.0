@@ -2,268 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF6C39EF89
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 09:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9D7139EFDB
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jun 2021 09:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230351AbhFHHaX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Jun 2021 03:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229518AbhFHHaU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Jun 2021 03:30:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B3D5C61073;
-        Tue,  8 Jun 2021 07:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623137307;
-        bh=O/zMXaiejHSPpLDrpWoLj5vApKw6co+rXXxeAdTs0fQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nLlyZlZD273F402k83SpAE2/yTCnSoxOmIHbl9CNTcXkiOIJIwbU4EIxQMSt2a4ml
-         qYAZ7+GRyFby1j7J/b6Qdg0ngb9aWUorA3LUTEzB/o7nAxtpl99tYE56SX6c/L7cnq
-         JkQNkQc+kckZEP6v8MtI7gBXthqAyHNA2ro1bRHL944hNLYqFQNYNtkG14YdEsbCz8
-         WiPAfikei2ZlyE9DmtO+G5LcsEimR8Zt3bf/sh+4dSJxaQew1IHT6LAPnPOy5G3d1V
-         9RKb6ljsgqP02St+w9CxWqyTHfLgCquU2TvIEjFpSrPZM71r6hel2yJmUWm39106ZP
-         ITZzuhEQ/FbwA==
-Date:   Tue, 8 Jun 2021 09:28:19 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "=?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <n@nfraprado.net>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        coresight@lists.linaro.org, devicetree@vger.kernel.org,
-        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 00/34] docs: avoid using ReST :doc:`foo` tag
-Message-ID: <20210608092819.3f4191b3@coco.lan>
-In-Reply-To: <20210608003458.kwhbn6mraekcutlt@notapiano>
-References: <cover.1622898327.git.mchehab+huawei@kernel.org>
-        <20210605151109.axm3wzbcstsyxczp@notapiano>
-        <20210605210836.540577d4@coco.lan>
-        <20210606225225.fz4dsyz6im4bqena@notapiano>
-        <20210607093422.0a369909@coco.lan>
-        <20210608003458.kwhbn6mraekcutlt@notapiano>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230261AbhFHHqt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Jun 2021 03:46:49 -0400
+Received: from mail-bn8nam11on2087.outbound.protection.outlook.com ([40.107.236.87]:29793
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229507AbhFHHqs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Jun 2021 03:46:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f1Wa0fbLsn4Iys6mLtA/WV6iBrGL0iNhFH+L6p1M9pbj1qfN9yCNoY5PX/ThgRdJjw/SOe4UOHdG+6+UuAl9MOPrceRtLH+1icz6DyyuafGjcGZFZlJX5FEGGraLbOLfLxYjlAZKI0CFlXh2/s/CeMK1wTeSZX5ofic0tvrKuwh5QieOmx3R5t08fyaKD0h6VezZJQfqX31UhPpCL2WZxEGMFodyS/xEQWDxKJIHq8mBxOtL1WocO0CW72+kyAXcR7n7M0c/iZ+7h9TVNPO18n6n7AQCl2U4f9P4nHv2joHE3LuOw46vp3kVyoGqV2cda6cY2spzgmJyn6ZrfYNj9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hxKCVRc+zKzeVDSUkJ96rigFjD3cgfYReWD8eTVYb3g=;
+ b=fJOhQBvl/xItMbbYJbac5sv6DzdiuCGqEHI7UffLpSRZBSTax4qqiwi8BiuGJa6/wlRmBv9n+h/KCzncb5fgk64fnaHGCdDmocfwZDWsqeA35rm0jVPzHBCewctKASRa//fC80cML8KXhZQrzfsdZpniJNqpslcisD0sqrbhjHbvf45lr4EaBqqveyX8otoBTQCrcy3qI8dhGKHFQkILKVChBdUBIey5AECyhIrmX8IHz9m63rKYluc9WRh5sSjpOAdxtYxJB7H0RyWmtgNC3ALx6n/isbSLknrIhuS39Tw7v7mIqSjgBf7m53WGgLAoamMkxdacRuFFY9F5HYLDRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hxKCVRc+zKzeVDSUkJ96rigFjD3cgfYReWD8eTVYb3g=;
+ b=TRRyNoqeU9bHl32btNI5wwvWxQG+DJ3mKGCn/TAPHnkS35Vl45ZN1F2ve9Cdb0KdnRh7smCwPfNVA9m5Olb7Pco2rHHGPo4vHjlUMOuryhWX6lg7H9OKqIbeJOA6iWTYbQ0fQxMbJm4Jsa4AoLcXWnklH0pLjcOlAbr4bd9A5UZuBJwBRipqdUuHWw2dGAg6jPd34DDdierlYeEoBrOLVRivbVfORSMz6Lze9dxhBeYzJWBoAYO5Smec/cF2/VsYMzANPDp9WLgzJyo7RTChliNDLQwPyvlguUR0cXyNVFxWipWDecQztgnsk3XwIEw5oZ2LgF3GPViFUsXUm/MH1A==
+Received: from BN6PR18CA0017.namprd18.prod.outlook.com (2603:10b6:404:121::27)
+ by CY4PR12MB1381.namprd12.prod.outlook.com (2603:10b6:903:42::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.24; Tue, 8 Jun
+ 2021 07:44:53 +0000
+Received: from BN8NAM11FT036.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:121:cafe::a6) by BN6PR18CA0017.outlook.office365.com
+ (2603:10b6:404:121::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.21 via Frontend
+ Transport; Tue, 8 Jun 2021 07:44:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT036.mail.protection.outlook.com (10.13.177.168) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4195.22 via Frontend Transport; Tue, 8 Jun 2021 07:44:53 +0000
+Received: from [10.26.49.10] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Jun
+ 2021 07:44:51 +0000
+Subject: Re: [PATCH V2] PCI: tegra: Fix building Tegra194 PCIe driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+References: <20210607235036.GA2549845@bjorn-Precision-5520>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4aecc0f0-692c-026b-f1dd-0a03ccf4312b@nvidia.com>
+Date:   Tue, 8 Jun 2021 08:44:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210607235036.GA2549845@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1f3d9a4a-9c89-406e-4091-08d92a514de3
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1381:
+X-Microsoft-Antispam-PRVS: <CY4PR12MB13815C26477EFF34A9651840D9379@CY4PR12MB1381.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MGcY+BG2k2EmUDYm3a27gOTK2Wc8M7FWEVoKeig4p7+h6F75ftFaF7H/ai18x4G7d+JgYWwoR8xZ0zrpXD0+XnzobFFXugdZGJZTMkUPHBNV5dV0diWlzSd+C1qXMW+2wL09eOWJbuow3/Sd5++K6FYMcp6l8e6QTuOp7jx/D2QAUqdXERV74zmf3hiCexhsdOz2sP6eUhf9d08CYoW2K8PjpW9131hCbMwNXuDWyWLmKmIVdkzgb64AMwZqell4JBoflY9yjq1Ae4pk/3q7bvKEYeExSKCeV6Xwk8Jw4q1WVdQ123irY7WoWz4XxT4QiKvGUBQjphs1OzNdpZxMBQf8BFo4FJeqXY3+x3g8rQfJ2TWjLINTZ9aku9rEwGEOyULa32CczaxDWgPW+TDVkt/FK+dkfQQyPH6xLCl4Zmh7jcqEwKlifQjqECPPJ5kiEnRz5jVXMuk8UfHzByDbHH3fTclhEFNyer11ZjKQmuQNuwC1TWf5o5GUNrR/tRm3ZEhAOq+0TfuDQRgmdQgns/IMxrBWLAgmrrASujpa9E0WUic9H1DJHM36+IQb3Sv1kJWvQrsMujw0a9NLzgRgq8aqf6zQJStU0/H4kshHjxx7SqPFfUv+rSE4ATba3f45cRUN82qQKZJjVWnuvSdyEOnYuKmXx7IDyFDrOBp+h5LhJWXoWCqO0RIOGYS9apJN
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(136003)(396003)(39860400002)(346002)(36840700001)(46966006)(54906003)(4326008)(8936002)(36860700001)(36906005)(70586007)(31696002)(36756003)(186003)(336012)(16576012)(82310400003)(70206006)(16526019)(6916009)(53546011)(47076005)(356005)(82740400003)(26005)(426003)(478600001)(5660300002)(2906002)(2616005)(7636003)(31686004)(316002)(86362001)(8676002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2021 07:44:53.5263
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f3d9a4a-9c89-406e-4091-08d92a514de3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT036.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1381
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Mon, 7 Jun 2021 21:34:58 -0300
-N=C3=ADcolas F. R. A. Prado <n@nfraprado.net> escreveu:
 
-> Hi Mauro,
->=20
-> On Mon, Jun 07, 2021 at 09:34:22AM +0200, Mauro Carvalho Chehab wrote:
-> > Em Sun, 6 Jun 2021 19:52:25 -0300
-> > N=C3=ADcolas F. R. A. Prado <n@nfraprado.net> escreveu:
-> >  =20
-> > > On Sat, Jun 05, 2021 at 09:08:36PM +0200, Mauro Carvalho Chehab wrote=
-: =20
-> > > > Em Sat, 5 Jun 2021 12:11:09 -0300
-> > > > N=C3=ADcolas F. R. A. Prado <n@nfraprado.net> escreveu:
-> > > >    =20
-> > > > > Hi Mauro,
-> > > > >=20
-> > > > > On Sat, Jun 05, 2021 at 03:17:59PM +0200, Mauro Carvalho Chehab w=
-rote:   =20
-> > > > > > As discussed at:
-> > > > > > 	https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
-> > > > > >=20
-> > > > > > It is better to avoid using :doc:`foo` to refer to Documentatio=
-n/foo.rst, as the
-> > > > > > automarkup.py extension should handle it automatically, on most=
- cases.
-> > > > > >=20
-> > > > > > There are a couple of exceptions to this rule:
-> > > > > >=20
-> > > > > > 1. when :doc:  tag is used to point to a kernel-doc DOC: markup;
-> > > > > > 2. when it is used with a named tag, e. g. :doc:`some name <foo=
->`;
-> > > > > >=20
-> > > > > > It should also be noticed that automarkup.py has currently an i=
-ssue:
-> > > > > > if one use a markup like:
-> > > > > >=20
-> > > > > > 	Documentation/dev-tools/kunit/api/test.rst
-> > > > > > 	  - documents all of the standard testing API excluding mocking
-> > > > > > 	    or mocking related features.
-> > > > > >=20
-> > > > > > or, even:
-> > > > > >=20
-> > > > > > 	Documentation/dev-tools/kunit/api/test.rst
-> > > > > > 	    documents all of the standard testing API excluding mocking
-> > > > > > 	    or mocking related features.
-> > > > > > =09
-> > > > > > The automarkup.py will simply ignore it. Not sure why. This pat=
-ch series
-> > > > > > avoid the above patterns (which is present only on 4 files), bu=
-t it would be
-> > > > > > nice to have a followup patch fixing the issue at automarkup.py=
-.     =20
-> > > > >=20
-> > > > > What I think is happening here is that we're using rST's syntax f=
-or definition
-> > > > > lists [1]. automarkup.py ignores literal nodes, and perhaps a def=
-inition is
-> > > > > considered a literal by Sphinx. Adding a blank line after the Doc=
-umentation/...
-> > > > > or removing the additional indentation makes it work, like you di=
-d in your
-> > > > > 2nd and 3rd patch, since then it's not a definition anymore, alth=
-ough then the
-> > > > > visual output is different as well.   =20
-> > > >=20
-> > > > A literal has a different output. I think that this is not the case=
-, but I=20
-> > > > didn't check the python code from docutils/Sphinx.   =20
-> > >=20
-> > > Okay, I went in deeper to understand the issue and indeed it wasn't w=
-hat I
-> > > thought. The reason definitions are ignored by automarkup.py is becau=
-se the main
-> > > loop iterates only over nodes that are of type paragraph:
-> > >=20
-> > >     for para in doctree.traverse(nodes.paragraph):
-> > >         for node in para.traverse(nodes.Text):
-> > >             if not isinstance(node.parent, nodes.literal):
-> > >                 node.parent.replace(node, markup_refs(name, app, node=
-))
-> > >=20
-> > > And inspecting the HTML output from your example, the definition name=
- is inside
-> > > a <dt> tag, and it doesn't have a <p> inside. So in summary, automark=
-up.py will
-> > > only work on elements which are inside a <p> in the output. =20
-> >=20
-> >=20
-> > Yeah, that's what I was suspecting, based on the comments.
-> >=20
-> > Maybe something similar to the above could be done also for some
-> > non-paragraph data. By looking at:
-> >=20
-> > 	https://docutils.sourceforge.io/docs/ref/doctree.html
-> >=20
-> > It says that the body elements are:
-> >=20
-> > 	admonition, attention, block_quote, bullet_list, caution, citation,=20
-> > 	comment, compound, container, danger, definition_list, doctest_block,=
-=20
-> > 	enumerated_list, error, field_list, figure, footnote, hint, image,=20
-> > 	important, line_block, literal_block, note, option_list, paragraph,=20
-> > 	pending, raw, rubric, substitution_definition, system_message,=20
-> > 	table, target, tip, warning =20
->=20
-> Ok, I went through each one by searching the term on [1] and inspecting t=
-he
-> element to see if it contained a <p> or not. The vast majority did. These=
- are
-> the ones I didn't find there or didn't make sense:
->=20
-> 	comment
-> 	container
-> 	image
-> 	pending
-> 	raw
-> 	substitution_definition
-> 	system_message
-> 	target
->=20
-> We can safely ignore them. And these are the ones that matter and don't h=
-ave
-> paragraphs:
->=20
-> 	1. literal_block
-> 	2. doctest_block
-> 	3. definition_list
-> 	4. field_list
-> 	5. option_list
-> 	6. line_block
->=20
-> 1 and 2 are literals, so we don't care about them.
->=20
-> 3 is the one you noticed the issue with. It's worth mentioning that the
-> definition term doesn't have a paragraph, but its definition does (as can=
- be
-> checked by inspecting [2]).
->=20
-> 4 is basically the same as 3, the rst syntax is different but the output =
-is the
-> same. That said, I believe we only use those to set options at the top of=
- the
-> file, like in translations, and I can't see automarkup being useful in th=
-ere.
->=20
-> 5 is similar to 3 and 4, but the term is formatted using <kbd>, so it's l=
-ike a
-> literal and therefore not relevant.
->=20
-> 6 is useful just to preserve indentation, and I'm pretty sure we don't us=
-e it in
-> the docs.
->=20
-> So in the end, I think the only contenders to be added to automarkup are
-> definition lists, and even then I still think we should just substitute t=
-hose
-> definition lists with alternatives like you did in your patches. Personal=
-ly I
-> don't see much gain in using definitions instead of a simple paragraph. B=
-ut if
-> you really think it's an improvement in some way, it could probably be ad=
-ded to
-> automarkup in the way you described.
+On 08/06/2021 00:50, Bjorn Helgaas wrote:
 
-Thank you for checking this!
+...
 
-Kernel docs use a lot definition lists. At the initial versions, it was
-equivalent to:
+> My understanding is that we want pcie-tegra194.c to be:
+> 
+>   - Built into the kernel when CONFIG_PCIE_TEGRA194=m or =y and
+>     CONFIG_ACPI=y and CONFIG_PCI_QUIRKS=y.  If we're using the ACPI
+>     pci_root.c driver, we must have the MCFG quirk built-in, and this
+>     case worked as I expected (this is on x86):
+> 
+>       $ grep -E "CONFIG_(ACPI\>|PCI_QUIRKS|PCIE_TEGRA194)" .config
+>       CONFIG_ACPI=y
+>       CONFIG_PCI_QUIRKS=y
+>       CONFIG_PCIE_TEGRA194=y
+>       CONFIG_PCIE_TEGRA194_HOST=m
+>       CONFIG_PCIE_TEGRA194_EP=y
+> 
+>       $ rm drivers/pci/controller/dwc/pcie-tegra194.*o
+>       $ make drivers/pci/controller/dwc/
+> 	...
+> 	CC      drivers/pci/controller/dwc/pcie-tegra194.o
+> 	AR      drivers/pci/controller/dwc/built-in.a
+> 
+>   - Built as a module when CONFIG_PCIE_TEGRA194=m and CONFIG_ACPI is
+>     not set.  In this case, we're not using the ACPI pci_root.c
+>     driver, and we don't need the MCFG quirk built-in, so it should be
+>     OK to build a module, and IIUC this patch is supposed to *allow*
+>     that.  But in my testing, it did *not* build a module.  Am I
+>     missing something?
+> 
+>       $ grep -E "CONFIG_(ACPI\>|PCI_QUIRKS|PCIE_TEGRA194)" .config
+>       # CONFIG_ACPI is not set
+>       # CONFIG_PCI_QUIRKS is not set
+>       CONFIG_PCIE_TEGRA194=y
+>       CONFIG_PCIE_TEGRA194_HOST=m
+>       CONFIG_PCIE_TEGRA194_EP=y
 
-	**Something to be written with emphasis**
+The problem appears to be that you still have CONFIG_PCIE_TEGRA194=y and
+CONFIG_PCIE_TEGRA194_EP=y above. If I have ...
 
-	  Some description
+$ grep -E "CONFIG_(ACPI\>|PCI_QUIRKS|PCIE_TEGRA194)" .config
+# CONFIG_ACPI is not set
+CONFIG_PCI_QUIRKS=y
+CONFIG_PCIE_TEGRA194=m
+CONFIG_PCIE_TEGRA194_HOST=m
+# CONFIG_PCIE_TEGRA194_EP is not set
 
-Sphinx later changed the look-and-feel for the term, on html output, but
-the thing is that:
 
-	Something to be written with emphasis
-	   Some description
+> 
+>       $ rm drivers/pci/controller/dwc/pcie-tegra194.*o
+>       $ make drivers/pci/controller/dwc/
+> 	...
+> 	CC      drivers/pci/controller/dwc/pcie-tegra194.o
+> 	AR      drivers/pci/controller/dwc/built-in.a
 
-looks a lot better when read as a text file.
+Then I see ...
 
-Also, on some cases, the first notation doesn't work. The definition-list
-was the only way I know that would allow to apply an emphasis to a literal
-block.
+$ rm drivers/pci/controller/dwc/pcie-tegra194.*o
+$ make drivers/pci/controller/dwc/
+  ...
+  CC [M]  drivers/pci/controller/dwc/pcie-tegra194.o
 
-We can avoid using Documentation/foo on description lists: the current 4=20
-cases where doc:`foo` are already addressed in this series, and the output
-is acceptable.
+Cheers
+Jon
 
-Yet, I have a couple of concerns:
-
-1. It might have some unknown places where a description list is used
-   for Documentation/foo;
-2. It is not trivial to identify if someone add Documentation/foo in
-   the future;
-3. I suspect that there are several places where functions and structs
-   appear at the definition lists.
-
-(1) can probably be checked with a multi-line grep. So, not a big
-    problem;
-
-(2) is something that would require someone to verify from time to
-    time;
-
-but (3) are harder to check and seems to be a valid use-case.
-
-Due to (3), I think we should let automarkup to parse non-literal
-terms on description lists. At very least it should emit a warning when
-it won't be doing auto-conversions for known patterns at definition
-lists (if doing that would generate false-positives).
-
-Thanks,
-Mauro
+-- 
+nvpublic
