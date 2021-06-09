@@ -2,130 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56D0E3A1D25
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 20:50:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DE823A1DF3
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 22:08:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229743AbhFISwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Jun 2021 14:52:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44136 "EHLO mail.kernel.org"
+        id S229626AbhFIUKV convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 9 Jun 2021 16:10:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8730 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229578AbhFISwI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Jun 2021 14:52:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 80F1C61263;
-        Wed,  9 Jun 2021 18:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623264613;
-        bh=C+fQwxf4qGLB0wIX+D9ckXOCcaluaN1AhBUgphBnnq8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KkKklqSEHfckLE6i/wuhhzzkZbHhyLILhl5HwBnlU9KGKYLNXpSyY3wixx46rXjha
-         aGMNvivLt3B2SRRmDmzwpJz5u0rQqIGazdIAvck9wBHAkFKzFiXms133kp5cPJReXV
-         /4RlGiSwLnOX3UGsNvSbapTUBAkxGp6MYZgrvN6m1fOEf69t6IOVlyyfTP0JAXuQHV
-         8v14c+Ro7FEblZNOxWzt9TxeMHNtju9aya6fmxJnR1CvpltFifJFer7osFHhzDhbv0
-         HDgv3l44ZNtnkmLvBtJng5E4sV6nspOk++gcuJWZ1Z2OJBmZ32haoydDaVMJ2xdJsE
-         JzBN+gUeiVBgQ==
-Date:   Wed, 9 Jun 2021 13:50:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Leonardo Bras <leobras.c@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 1/1] of/pci: Add IORESOURCE_MEM_64 to resource flags for
- 64-bit memory addresses
-Message-ID: <20210609185012.GA2647526@bjorn-Precision-5520>
+        id S229472AbhFIUKV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Jun 2021 16:10:21 -0400
+IronPort-SDR: 7yyOQZvyBjly8GOBzpYHNmHZXzO9e0JTNVaCN5TNThu2N22y3Pta+F3q7T4dMPUONBIevS3aRW
+ La0txz4FjtOw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10010"; a="192268277"
+X-IronPort-AV: E=Sophos;i="5.83,261,1616482800"; 
+   d="scan'208";a="192268277"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2021 13:08:24 -0700
+IronPort-SDR: 3TGz301bugDjWwRg6Bww+l0yeV9Yscc3z+HOtZkb450U+OKLqmtKOUM21zN9lUth5+S81ZObjc
+ h+CjizKW+QZA==
+X-IronPort-AV: E=Sophos;i="5.83,261,1616482800"; 
+   d="scan'208";a="482519863"
+Received: from kotikala-mobl1.amr.corp.intel.com (HELO vcostago-mobl2.amr.corp.intel.com) ([10.209.25.177])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2021 13:08:24 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     linux-pci@vger.kernel.org, richardcochran@gmail.com,
+        hch@infradead.org, netdev@vger.kernel.org, bhelgaas@google.com,
+        helgaas@kernel.org, intel-wired-lan@lists.osuosl.org
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v5 3/4] igc: Enable PCIe PTM
+In-Reply-To: <939b8042-a313-47db-43d9-ea37e95b724b@molgen.mpg.de>
+References: <20210605002356.3996853-1-vinicius.gomes@intel.com>
+ <20210605002356.3996853-4-vinicius.gomes@intel.com>
+ <70d32740-eb4b-f7bf-146e-8dc06199d6c9@molgen.mpg.de>
+ <87sg1sw56h.fsf@vcostago-mobl2.amr.corp.intel.com>
+ <939b8042-a313-47db-43d9-ea37e95b724b@molgen.mpg.de>
+Date:   Wed, 09 Jun 2021 13:08:22 -0700
+Message-ID: <87r1havm15.fsf@vcostago-mobl2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+WwAeziGN4EfPAWfA0fieAjfcxfi29=StOx0GeKjAe_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 15, 2021 at 01:59:52PM -0500, Rob Herring wrote:
-> On Thu, Apr 15, 2021 at 1:01 PM Leonardo Bras <leobras.c@gmail.com> wrote:
-> >
-> > Many other resource flag parsers already add this flag when the input
-> > has bits 24 & 25 set, so update this one to do the same.
+Paul Menzel <pmenzel@molgen.mpg.de> writes:
 
-[Adding this to the thread for archaeological purposes since it didn't
-make it to the commit log]
+> Dear Vinicius,
+>
+>
+> Am 08.06.21 um 21:02 schrieb Vinicius Costa Gomes:
+>
+>> Paul Menzel writes:
+>
+>>> Am 05.06.21 um 02:23 schrieb Vinicius Costa Gomes:
+>>>> Enables PCIe PTM (Precision Time Measurement) support in the igc
+>>>> driver. Notifies the PCI devices that PCIe PTM should be enabled.
+>>>>
+>>>> PCIe PTM is similar protocol to PTP (Precision Time Protocol) running
+>>>> in the PCIe fabric, it allows devices to report time measurements from
+>>>> their internal clocks and the correlation with the PCIe root clock.
+>>>>
+>>>> The i225 NIC exposes some registers that expose those time
+>>>> measurements, those registers will be used, in later patches, to
+>>>> implement the PTP_SYS_OFFSET_PRECISE ioctl().
+>>>>
+>>>> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+>>>> ---
+>>>>    drivers/net/ethernet/intel/igc/igc_main.c | 6 ++++++
+>>>>    1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+>>>> index a05e6d8ec660..f23d0303e53b 100644
+>>>> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+>>>> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+>>>> @@ -12,6 +12,8 @@
+>>>>    #include <net/pkt_sched.h>
+>>>>    #include <linux/bpf_trace.h>
+>>>>    #include <net/xdp_sock_drv.h>
+>>>> +#include <linux/pci.h>
+>>>> +
+>>>>    #include <net/ipv6.h>
+>>>>    
+>>>>    #include "igc.h"
+>>>> @@ -5864,6 +5866,10 @@ static int igc_probe(struct pci_dev *pdev,
+>>>>    
+>>>>    	pci_enable_pcie_error_reporting(pdev);
+>>>>    
+>>>> +	err = pci_enable_ptm(pdev, NULL);
+>>>> +	if (err < 0)
+>>>> +		dev_err(&pdev->dev, "PTM not supported\n");
+>>>> +
+>>>
+>>> Sorry, if I am missing something, but do all devices supported by this
+>>> driver support PTM or only the i225 NIC? In that case, it wouldn’t be an
+>>> error for a device not supporting PTM, would it?
+>> 
+>> That was a very good question. I had to talk with the hardware folks.
+>> All the devices supported by the igc driver should support PTM.
+>
+> Thank you for checking that, that is valuable information.
+>
+>> And just to be clear, the reason that I am not returning an error here
+>> is that PTM could not be supported by the host system (think PCI
+>> controller).
+>
+> I just checked `pci_enable_ptm()` and on success it calls 
+> `pci_ptm_info()` logging a message:
+>
+> 	pci_info(dev, "PTM enabled%s, %s granularity\n",
+> 		 dev->ptm_root ? " (root)" : "", clock_desc);
+>
+> Was that present on your system with your patch? Please add that to the 
+> commit message.
 
-The other resource flag parsers appear to be:
+Yes, with my patches applied I can see this message on my systems.
 
-  pci_parse_of_flags(u32 addr0, ...)    # powerpc/kernel/pci_of_scan.c
-    unsigned int as = addr0 & OF_PCI_ADDR0_SPACE_MASK;
-    if (as == OF_PCI_ADDR0_SPACE_MMIO32 || as == OF_PCI_ADDR0_SPACE_MMIO64)
-      flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
-      if (as == OF_PCI_ADDR0_SPACE_MMIO64)
-        flags |= PCI_BASE_ADDRESS_MEM_TYPE_64 | IORESOURCE_MEM_64;
+Sure, will add this to the commit message.
 
-  pci_parse_of_flags(u32 addr0)         # sparc/kernel/pci.c
-    if (addr0 & 0x02000000) {
-      flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
-      if (addr0 & 0x01000000)
-        flags |= IORESOURCE_MEM_64 | PCI_BASE_ADDRESS_MEM_TYPE_64;
+>
+> Regarding my comment, I did not mean returning an error but the log 
+> *level* of the message. So, `dmesg --level err` would show that message. 
+> But if there are PCI controllers not supporting that, it’s not an error, 
+> but a warning at most. So, I’d use:
+>
+> 	dev_warn(&pdev->dev, "PTM not supported by PCI bus/controller 
+> (pci_enable_ptm() failed)\n");
 
-  of_bus_pci_get_flags(... addr)        # drivers/of/address.c (this one)
-    u32 w = be32_to_cpup(addr);
-    switch((w >> 24) & 0x03) {
-    case 0x02: /* 32 bits */
-      flags |= IORESOURCE_MEM;
-      break;
-    case 0x03: /* 64 bits */
-      flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-      break;
+I will use you suggestion for the message, but I think that warn is a
+bit too much, info or notice seem to be better.
 
-It's super annoying to have three copies of essentially the same
-thing.  Even more annoying that they test the same things in three
-completely different ways.  But I remember looking at this several
-years ago, and it wasn't as simple to unify these as I had hoped.
 
-> Many others? Looks like sparc and powerpc to me. Those would be the
-> ones I worry about breaking. Sparc doesn't use of/address.c so it's
-> fine. Powerpc version of the flags code was only fixed in 2019, so I
-> don't think powerpc will care either.
-
-I'm guessing you're referring to df5be5be8735 ("powerpc/pci/of: Fix OF
-flags parsing for 64bit BARs").
-
-> I noticed both sparc and powerpc set PCI_BASE_ADDRESS_MEM_TYPE_64 in
-> the flags. AFAICT, that's not set anywhere outside of arch code. So
-> never for riscv, arm and arm64 at least. That leads me to
-> pci_std_update_resource() which is where the PCI code sets BARs and
-> just copies the flags in PCI_BASE_ADDRESS_MEM_MASK ignoring
-> IORESOURCE_* flags. So it seems like 64-bit is still not handled and
-> neither is prefetch.
-> 
-> > Some devices (like virtio-net) have more than one memory resource
-> > (like MMIO32 and MMIO64) and without this flag it would be needed to
-> > verify the address range to know which one is which.
-> >
-> > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> > ---
-> >  drivers/of/address.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index 73ddf2540f3f..dc7147843783 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -116,9 +116,12 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
-> >                 flags |= IORESOURCE_IO;
-> >                 break;
-> >         case 0x02: /* 32 bits */
-> > -       case 0x03: /* 64 bits */
-> >                 flags |= IORESOURCE_MEM;
-> >                 break;
-> > +
-> > +       case 0x03: /* 64 bits */
-> > +               flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-> > +               break;
-> >         }
-> >         if (w & 0x40000000)
-> >                 flags |= IORESOURCE_PREFETCH;
-> > --
-> > 2.30.2
-> >
+Cheers,
+-- 
+Vinicius
