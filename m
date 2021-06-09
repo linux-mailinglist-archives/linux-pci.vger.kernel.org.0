@@ -2,126 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4243A0C59
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 08:24:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C0A03A0EF1
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 10:50:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbhFIG0O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Jun 2021 02:26:14 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:50575 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229724AbhFIG0O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Jun 2021 02:26:14 -0400
-Received: from [192.168.0.3] (ip5f5aef16.dynamic.kabel-deutschland.de [95.90.239.22])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6992161E6476C;
-        Wed,  9 Jun 2021 08:24:18 +0200 (CEST)
-Subject: Re: [Intel-wired-lan] [PATCH next-queue v5 3/4] igc: Enable PCIe PTM
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     linux-pci@vger.kernel.org, richardcochran@gmail.com,
-        hch@infradead.org, netdev@vger.kernel.org, bhelgaas@google.com,
-        helgaas@kernel.org, intel-wired-lan@lists.osuosl.org
-References: <20210605002356.3996853-1-vinicius.gomes@intel.com>
- <20210605002356.3996853-4-vinicius.gomes@intel.com>
- <70d32740-eb4b-f7bf-146e-8dc06199d6c9@molgen.mpg.de>
- <87sg1sw56h.fsf@vcostago-mobl2.amr.corp.intel.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <939b8042-a313-47db-43d9-ea37e95b724b@molgen.mpg.de>
-Date:   Wed, 9 Jun 2021 08:24:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S233120AbhFIIwn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Jun 2021 04:52:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:53326 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232870AbhFIIwn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Jun 2021 04:52:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE5D91396;
+        Wed,  9 Jun 2021 01:50:48 -0700 (PDT)
+Received: from e123427-lin.arm.com (unknown [10.57.37.140])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F22D3F719;
+        Wed,  9 Jun 2021 01:50:46 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] PCI: aardvark: Fix kernel panic during PIO transfer
+Date:   Wed,  9 Jun 2021 09:50:39 +0100
+Message-Id: <162322862108.3345.4160808336030929680.b4-ty@arm.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20210608203655.31228-1-pali@kernel.org>
+References: <20210608203655.31228-1-pali@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87sg1sw56h.fsf@vcostago-mobl2.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Vinicius,
-
-
-Am 08.06.21 um 21:02 schrieb Vinicius Costa Gomes:
-
-> Paul Menzel writes:
-
->> Am 05.06.21 um 02:23 schrieb Vinicius Costa Gomes:
->>> Enables PCIe PTM (Precision Time Measurement) support in the igc
->>> driver. Notifies the PCI devices that PCIe PTM should be enabled.
->>>
->>> PCIe PTM is similar protocol to PTP (Precision Time Protocol) running
->>> in the PCIe fabric, it allows devices to report time measurements from
->>> their internal clocks and the correlation with the PCIe root clock.
->>>
->>> The i225 NIC exposes some registers that expose those time
->>> measurements, those registers will be used, in later patches, to
->>> implement the PTP_SYS_OFFSET_PRECISE ioctl().
->>>
->>> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->>> ---
->>>    drivers/net/ethernet/intel/igc/igc_main.c | 6 ++++++
->>>    1 file changed, 6 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
->>> index a05e6d8ec660..f23d0303e53b 100644
->>> --- a/drivers/net/ethernet/intel/igc/igc_main.c
->>> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
->>> @@ -12,6 +12,8 @@
->>>    #include <net/pkt_sched.h>
->>>    #include <linux/bpf_trace.h>
->>>    #include <net/xdp_sock_drv.h>
->>> +#include <linux/pci.h>
->>> +
->>>    #include <net/ipv6.h>
->>>    
->>>    #include "igc.h"
->>> @@ -5864,6 +5866,10 @@ static int igc_probe(struct pci_dev *pdev,
->>>    
->>>    	pci_enable_pcie_error_reporting(pdev);
->>>    
->>> +	err = pci_enable_ptm(pdev, NULL);
->>> +	if (err < 0)
->>> +		dev_err(&pdev->dev, "PTM not supported\n");
->>> +
->>
->> Sorry, if I am missing something, but do all devices supported by this
->> driver support PTM or only the i225 NIC? In that case, it wouldn’t be an
->> error for a device not supporting PTM, would it?
+On Tue, 8 Jun 2021 22:36:55 +0200, Pali Rohár wrote:
+> Trying to start a new PIO transfer by writing value 0 in PIO_START register
+> when previous transfer has not yet completed (which is indicated by value 1
+> in PIO_START) causes an External Abort on CPU, which results in kernel
+> panic:
 > 
-> That was a very good question. I had to talk with the hardware folks.
-> All the devices supported by the igc driver should support PTM.
+>     SError Interrupt on CPU0, code 0xbf000002 -- SError
+>     Kernel panic - not syncing: Asynchronous SError Interrupt
+> 
+> [...]
 
-Thank you for checking that, that is valuable information.
+Applied to pci/aardvark, thanks!
 
-> And just to be clear, the reason that I am not returning an error here
-> is that PTM could not be supported by the host system (think PCI
-> controller).
+[1/1] PCI: aardvark: Fix kernel panic during PIO transfer
+      https://git.kernel.org/lpieralisi/pci/c/f77378171b
 
-I just checked `pci_enable_ptm()` and on success it calls 
-`pci_ptm_info()` logging a message:
-
-	pci_info(dev, "PTM enabled%s, %s granularity\n",
-		 dev->ptm_root ? " (root)" : "", clock_desc);
-
-Was that present on your system with your patch? Please add that to the 
-commit message.
-
-Regarding my comment, I did not mean returning an error but the log 
-*level* of the message. So, `dmesg --level err` would show that message. 
-But if there are PCI controllers not supporting that, it’s not an error, 
-but a warning at most. So, I’d use:
-
-	dev_warn(&pdev->dev, "PTM not supported by PCI bus/controller 
-(pci_enable_ptm() failed)\n");
-
->>>    	pci_set_master(pdev);
->>>    
->>>    	err = -ENOMEM;
-
-
-Kind regards,
-
-Paul
+Thanks,
+Lorenzo
