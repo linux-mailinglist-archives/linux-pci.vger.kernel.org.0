@@ -2,213 +2,335 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4158B3A1B81
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 19:07:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C8E3A1B86
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jun 2021 19:08:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbhFIRJ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Jun 2021 13:09:29 -0400
-Received: from mail-bn7nam10on2049.outbound.protection.outlook.com ([40.107.92.49]:21473
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229788AbhFIRJ2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Jun 2021 13:09:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OUxQHRiA3KeGPmaI7weR9ZneZQAE5z+lrLYBjCtBYicJIaYzujy64TNyXbRK0/J95GOTiferHCp8iFxAjjfv2OA2/saJu/ZjNC20g4pigYx6IvbdUQp32TM3J9Azfjhf+gpOR55grx/be69K0+Sro9wpox07UWXPWu8pn9yrEXbk6YABpahKxfxv3GPiExVZWI6YLTu3JmPRS3+otvttCwbFS4j+Stt60HijMOMQMfDjnBSbXMK/teHOmozkrd+BRmhI/VPkPDqSjVW05E/cn+PXNDA0qzioefwwCvMDTTnmHlpO5c149MQXsVkApry61VXZrt2wYLrJiYpFFEW3Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxz8yOvzIkL3bfsemEEk5E3jJa4pmOrrYpsVfvvxqM8=;
- b=nLhJtkA44w+2ZC/oFarrOebkayT/TBS0LbAGpTuHVpzqs8D0MMC94nD0yGGnhrjbd6XrseubJLlTOzEJ1HeZOOEdiQper12BZBN9z7G/woZQ4CL8kTeSrdGyuSSQqsdbAVf0FQUbaODZgQsI2N/yFhLdNBPiu2Zg9Sf9LIupaWwfh7f7nK3pieEF09D48kZzUDl/SLJkParGjE8fPoDd7myxrlylcgdexfgiDXyifHUeNSmo8E7+t64CKMu29pFYeU3fqvG09fPLUKlArwqpTBpMPWXZV9PKXdn8SFFGrBjFVUoWLjtolsnuvjj4qmMyexiPrFeu3DKmmuetMUWqng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxz8yOvzIkL3bfsemEEk5E3jJa4pmOrrYpsVfvvxqM8=;
- b=gxBa1GEWO6POsEra7+aEEiqfe/bm1AlRx1GiXbgMjX217Gw5LV5a8tvFqGW77gfy/XEZDdj8DdsshAggw8BdasmTJvknfypo4NE5eLFDMPi2RS2j7o7sL9Ly8y5eDNSbN0bfiWM3p/x2RTNMTMi4iA4lt71xkt4OOlsCBd52f4hH69/2KnYs06hGcR6Qb5W4XyndEQISJUKeyBRilXOb7TyiuYCcBUL/e7K526GhrxhFPgUS/EOn2KTPvcW7dHtbN1N0CBZeFBhNxyv8ov77I4ng7Gm5umh8QOWZCfGWxb2CvzPSNR8dn7/FwobubtLLbYM17PrkBgPSTjy3tTt3nA==
-Received: from MW4PR03CA0037.namprd03.prod.outlook.com (2603:10b6:303:8e::12)
- by MW2PR12MB2410.namprd12.prod.outlook.com (2603:10b6:907:f::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.27; Wed, 9 Jun
- 2021 17:07:30 +0000
-Received: from CO1NAM11FT036.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8e:cafe::24) by MW4PR03CA0037.outlook.office365.com
- (2603:10b6:303:8e::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.21 via Frontend
- Transport; Wed, 9 Jun 2021 17:07:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT036.mail.protection.outlook.com (10.13.174.124) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4219.21 via Frontend Transport; Wed, 9 Jun 2021 17:07:30 +0000
-Received: from [10.26.49.10] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Jun
- 2021 17:07:28 +0000
-Subject: Re: [PATCH V2] PCI: tegra: Fix building Tegra194 PCIe driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-References: <20210609161842.GA2641672@bjorn-Precision-5520>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <21efef30-099b-9930-ba5c-9c030ea3414a@nvidia.com>
-Date:   Wed, 9 Jun 2021 18:07:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S230232AbhFIRKC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Jun 2021 13:10:02 -0400
+Received: from mout.web.de ([212.227.17.12]:47609 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229788AbhFIRKC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Jun 2021 13:10:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1623258480;
+        bh=Hqw5ywvRoUAMqPU4IJewXBNDS35T7IdqkCfrVT/cpQo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Aj8RSeRClZeJtTQJoe6Tsq6Ht7UfE0cXIDTQigUo78AP5jYvnbxGTdK+8lCkkgens
+         bzsOUbhUuP8AzPC5ntMhKUSB7EDviwx0khSjPt06F5L487KG+L6+tLQuQwkVRW/3YH
+         z7gR6Snpq8FA45z523sFWoJOcjl1lobv6lWAPFp4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.2.53] ([178.12.13.203]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mfc8o-1lOHZQ0avw-00fzT7; Wed, 09
+ Jun 2021 19:08:00 +0200
+Subject: Re: QCA6174 pcie wifi: Add pci quirks
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     bhelgaas@google.com, Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210525221215.GA1235899@bjorn-Precision-5520>
+ <19c3850e-e29c-3e39-9d44-9623a4f97346@web.de>
+ <20210528182135.e7uiugoyuj7hjilb@pali>
+ <8e443996-cead-a826-78ab-1c3f899228cb@web.de>
+ <f72fad24-3b4a-2c62-55be-041ab4e67371@web.de>
+ <20210608183446.3qvj52tm6c2bhtvu@pali>
+From:   Ingmar Klein <ingmar_klein@web.de>
+Message-ID: <3c05bdbe-92d9-7969-4824-82a51e70a069@web.de>
+Date:   Wed, 9 Jun 2021 19:07:58 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-In-Reply-To: <20210609161842.GA2641672@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2113e4b2-4db6-4ee0-720a-08d92b69111d
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2410:
-X-Microsoft-Antispam-PRVS: <MW2PR12MB2410FAA8687F00A0A77C8D9ED9369@MW2PR12MB2410.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qMyKMgMFmHt395BSLvwuEIxwKqDS41o2tBVCjmjoNEqR2s8OX44ONIJarjV6JypYAnTblSNubbCNNaG2FivIOSYWT+PvoDqVYPMhmNnexlsFTGYqsptpA8s78hzBMbx7WPn5d92r/qPE3Ofp/SNZX5G1AR4BvsIhOpDiqtOow7+rQvn0PpGPh0s1WlpYlwPM2mPjQUP9BpszScjPpyUfXDf7BGsD8S8nDuungRJ33nfKH0bj+KZQJ0ODhIW8gD5qjFe7pKLAP+H5SRCSKLHGtMxatIRlrdyXJxo0y+De07qtN/xIXvShOJcAyHGVlr126OJLPVW4m+QOZTkH+I6YoaKcSW7OtphmCjbNvCY1/kUI07kNd1rxeWDPh1yW2uYbhAFNofcH6yJmZMalaPsxENluxizd5PAvotNqxZelUDzqQlGv8EBXmoB6RYJtctH8kW0THlywr4dwYfjFp63foeL5DFiM92CQfOlZFHWuivr/iOjGGtB8MK25Gt3Cvkcx31/8YIPyeS5PKaSm/C4daWZReXuui6WDgknHDGIPw4Iku05v4wqltkE3U6soKt3J2iko7PygTfpW1H3Y97aYT8Qk68gUHYxG8PwR1Wwo+dgyL4lTEU4mgNUZd4Zey1XKOoGgaq02VW/NKI9mVyPg1RxrUVBNqYHn2V+nzpRBXYBjaBn0yX8v2wTLdNdS2mvZ
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(346002)(136003)(376002)(39860400002)(36840700001)(46966006)(54906003)(26005)(8676002)(8936002)(6916009)(16576012)(36756003)(316002)(36906005)(186003)(16526019)(82310400003)(31686004)(86362001)(82740400003)(4326008)(478600001)(2616005)(426003)(356005)(5660300002)(7636003)(53546011)(36860700001)(70586007)(70206006)(31696002)(2906002)(336012)(83380400001)(47076005)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2021 17:07:30.7339
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2113e4b2-4db6-4ee0-720a-08d92b69111d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT036.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2410
+In-Reply-To: <20210608183446.3qvj52tm6c2bhtvu@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:C9VhHisPLBeXiXEkZRLud4cDjwGOXEy9oujqXWxPU+CMmBol1ik
+ n/XMewn1KNXxXf3gIyH2Av71Uz2/oopd08zd5gz7yfCUFlQ551rp/++BX4tFLQkkzVTTm1L
+ C+57APZC2VnMu+ZUsaehvAnqz9QYSbi0DoVimLVZ4/1ao9a4YZwrWBS/ySeOU6DKI7PEo8H
+ LpTO8BevXKKDqLDQsbaLg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8szMIlhYmoc=:2ezf5UGWmxoPD5hiRmEYrj
+ OisI3/ubGeG4RFUz+qWcKCUmKBirxfMqHRZuohQMqwN/sEszF2mvhIATu4IYDmd5hHWiHXbXw
+ BfGDlo4c6O7qVutKxgGFaJXJIJ6t4U/zVuZ+kjarVGkZ6hIKjZM9Qv6Kvqe35UxM6FWGdsjWL
+ VcTCB0h3wwSg1VFou5qVjwBZFl+r1QOzqQxxcsivRYet3rm2oXJIedwYANfh0VK5Zg1nkzQlM
+ 6U41wRS19HY+3FdVcxfgOoGOz4I0HaHvot845f/zovJcDx87uOGVdVsO/Ww+bq+eAxE4oUvvu
+ xeCN0thNJBuLZde7PiGrbWVVsHsolLlvM9Q5IPM9nAc9OtY7/YCuvBoPFMtI5LcK4NzhD0tas
+ 8K18WvajsCK5jFHbl2j1L0griEbVqGzswxRhvNt06AP5VsyWGasijCGOqkmLB7X1yTA/JmB4l
+ 9iovKziCwUbVIATmPFWfkZ1VCrz4ZHumA4iz0MyeNyAe62B6s63lpUI/IX4oLHS+lsFDaN+eU
+ 7LV4v6TDweJvGiL9KKFJsP0aBzO0Y0cJ3/sS8qclPWaq6S44Oa6Hl2/wgkKs7UGNBY3644DHL
+ 3VqUT+J7xPcu+CnZI8Hr3CubN9ztkYaaZHKgRrLMBGfOpAo7R0aVUBicuE9XvBo/c8eAQXJk7
+ wVNB1O6mhUFr9exq92ezVedL9ODFKgephRqMglgSHYZRAlSBdWZIt0NQsEarHUxeMtSmupt0v
+ gkEDAKOFKQroJznFg0lS9XnKyaP13/enLunzj5C3NSb0Y3zBb8DQPHQJrZfjT7j7zsDoQ0v95
+ AkzniwuBQTHlAPOYtHQSOZciqllcw6Klwm55bi+FBAaUo1cAe8T8UrH+UsafGDHdA2mh2NoL1
+ YlupYmyXlcBR/VTBXIv7OvM0NaIGOR/dwJ1iHACA7aik+NaxtnvGUNJWJ0Kvruf54PBhLFnIg
+ 8NXrIN8rhsVw8pyt951ttg5Tj0+COu3JEZM/3tMdp/7CLytLd/7P1hasGgKlW1BPQY/aLV6Ul
+ b5/BhKizstbT+hhG2II2G3QD1tBwWfzh7H8dWxhsoDhKhb4EQdpcQ6aqUbmx0Pbjk7O8Q+Ix+
+ X5WlKJaIXlu6C67tQXQkqHCNHsTqkfxVmA/
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Yes, would be really nice if you could do that.
+Seems to work perfectly fine.
 
-On 09/06/2021 17:18, Bjorn Helgaas wrote:
-> On Tue, Jun 08, 2021 at 09:11:27PM +0100, Jon Hunter wrote:
->> On 08/06/2021 19:34, Vidya Sagar wrote:
+Thanks and have a nice rest of the day!
+Best regards,
+Ingmar
+
+
+Am 08.06.2021 um 20:34 schrieb Pali Roh=C3=A1r:
+> Hello! So should I add also 0x003e device id in next patch iteration?
+>
+> On Saturday 05 June 2021 16:46:36 Ingmar Klein wrote:
+>> Hi Pali and Bjorn,
 >>
->> ...
+>> finally found the time to test.
+>> Pali's v3 patch seems to work like a charm for my card with "0x003e" id
+>> as well.
+>> Just finished compiling a pve-kernel v5.11.21 with Pali's patch,
+>> slightly adjusted for my test card and the Ubuntu kernel source (no
+>> functional differences, just minor adjustments to make it fit the
+>> Proxmox pve-kernel).
 >>
->>>>> What is the purpose of PCIE_TEGRA194_EP (added by c57247f940e8 ("PCI:
->>>>> tegra: Add support for PCIe endpoint mode in Tegra194") [1])?  I don't
->>>>> see any reference to it in a makefile or a source file.
->>>>>
->>>>> It looks like one can build a single driver that works in either host
->>>>> or endpoint mode, depending on whether a DT node matches
->>>>> "nvidia,tegra194-pcie" or "nvidia,tegra194-pcie-ep".
->>>>>
->>>>> So I think PCIE_TEGRA194_EP is superfluous and should be removed and
->>>>> you should have a single tristate Kconfig option.
+>> System works just fine, in contrast to without patch. Of course, no lon=
+g
+>> term tests, yet. However, it is looking really good.
+>> Thanks guys!
+>>
+>> Best regards,
+>> Ingmar
+>>
+>>
+>> Am 28.05.2021 um 20:47 schrieb Ingmar Klein:
+>>> Hi Pali,
+>>> sorry for not checking that detail!
+>>> Of course no problem that you couldn't test that ID. Will be glad to
+>>> do so.
+>>>
+>>> I'll let you know how this turns out.
+>>>
+>>> Best regards,
+>>> Ingmar
+>>>
+>>>
+>>> Am 28.05.2021 um 20:21 schrieb Pali Roh=C3=A1r:
+>>>> Hello Ingmar!
 >>>>
->>>> This is a good point.
+>>>> Now I see that in your patch you have Atheros card with id 0x003e:
+>>>> https://lore.kernel.org/linux-pci/08982e05-b6e8-5a8d-24ab-da1488ee50a=
+8@web.de/
 >>>>
->>>> Sagar, any reason for this?
->>> Although it is the same driver that works for both HOST mode and EP
->>> mode, PCIE_TEGRA194_EP depends on PCI_ENDPOINT whereas the
->>> PCIE_TEGRA194_HOST mode doesn't. Similarly the PCIE_TEGRA194_HOST mode
->>> depends on PCI_MSI_IRQ_DOMAIN which PCIE_TEGRA194_EP doesn't depend on.
->>> It is possible to have end point mode support disabled (at sub-system
->>> level) in the system yet pcie-tegra194 can be compiled for the host mode
->>> vice-a-versa for the endpoint mode.
->>> Hence, appropriate config HOST/EP needs to be selected to make sure that
->>> the rest of the dependencies are enabled in the system.
->>> Hope I'm able to give the rationale correctly here.
->>
->> Yes but should we combine them like this ...
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index 423d35872ce4..206455a9b70d 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -254,15 +254,12 @@ config PCI_MESON
->>           implement the driver.
->>  
->>  config PCIE_TEGRA194
->> -       tristate
->> -
->> -config PCIE_TEGRA194_HOST
->> -       tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
->> +       tristate "NVIDIA Tegra194 (and later) PCIe controller"
->>         depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
->> -       depends on PCI_MSI_IRQ_DOMAIN
->> -       select PCIE_DW_HOST
->> +       depends on PCI_MSI_IRQ_DOMAIN || PCI_ENDPOINT
->> +       select PCIE_DW_HOST if PCI_MSI_IRQ_DOMAIN
->> +       select PCIE_DW_EP if PCI_ENDPOINT
->>         select PHY_TEGRA194_P2U
->> -       select PCIE_TEGRA194
->>         help
->>           Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
->>           work in host mode. There are two instances of PCIe controllers in
->> @@ -271,21 +268,6 @@ config PCIE_TEGRA194_HOST
->>           in order to enable device-specific features PCIE_TEGRA194_EP must be
->>           selected. This uses the DesignWare core.
->>  
->> -config PCIE_TEGRA194_EP
->> -       tristate "NVIDIA Tegra194 (and later) PCIe controller - Endpoint Mode"
->> -       depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
->> -       depends on PCI_ENDPOINT
->> -       select PCIE_DW_EP
->> -       select PHY_TEGRA194_P2U
->> -       select PCIE_TEGRA194
->> -       help
->> -         Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
->> -         work in endpoint mode. There are two instances of PCIe controllers in
->> -         Tegra194. This controller can work either as EP or RC. In order to
->> -         enable host-specific features PCIE_TEGRA194_HOST must be selected and
->> -         in order to enable device-specific features PCIE_TEGRA194_EP must be
->> -         selected. This uses the DesignWare core.
-> 
-> I'm not a Kconfig expert, but I really like that solution, as long as
-> it addresses Vidya's concerns about RP/EP dependencies.
-
-I think that Sagar's concern is that if PCI_ENDPOINT and
-PCI_MSI_IRQ_DOMAIN are enabled, then we will always PCIE_DW_EP and
-PCIE_DW_HOST even if we only need RP or EP functionality. So there is no
-switch at the Tegra driver level to indicate if we want RP, EP or both.
-
-My concern with the existing implementation is that if PCIE_TEGRA194_EP
-is disabled and PCIE_TEGRA194_HOST is enabled, then if PCI_ENDPOINT and
-PCIE_DW_EP already happen to be enabled, we will still have EP
-functionality regardless of PCIE_TEGRA194_EP setting.
-
-I am not sure what is best/preferred in this case.
-
-> Looks like the Kconfig help text should be updated to remove the
-> other PCIE_TEGRA194_EP reference?  Maybe it should include a clue
-> about how the connections to host/endpoint support, e.g., "includes
-> endpoint support if PCI_ENDPOINT is enabled"?
-> 
->> Furthermore, I wonder if we should just move the code
->> that is required for ACPI into it's own file like
->> drivers/pci/controller/dwc/pcie-tegra194-acpi.c?
-> 
-> That might simplify things.  I think the reason we started with things
-> in one file is because for some drivers there's a lot of shared stuff
-> (#defines, register accessors) between the quirk and the native host
-> driver.  Either you have to put it all in one file, or you have to add
-> a shared .h file and make some of that stuff non-static.
-
-I did test this and there is nothing that needs to be shared via a local
-header. We only need to include the appropriate pci headers and so the
-code is well isolated. I send the patch if that is easier to see.
-
-Jon
-
--- 
-nvpublic
+>>>>
+>>>> With my patch I have tested 5 different Atheros cards but none has id
+>>>> 0x003e:
+>>>> https://lore.kernel.org/linux-pci/20210505163357.16012-1-pali@kernel.=
+org/
+>>>>
+>>>>
+>>>> So my patch does not fix that issue for your 0x003e card. I just do n=
+ot
+>>>> have such card for testing.
+>>>>
+>>>> Could you try to apply my patch and then add your id 0x003e into quir=
+k
+>>>> list if it helps?
+>>>>
+>>>> On Friday 28 May 2021 20:08:52 Ingmar Klein wrote:
+>>>>> Thanks to both of you, Bjorn and Pali!
+>>>>> I had hoped that Pali would come with an appropriate fix. Good to kn=
+ow,
+>>>>> that this is taken care of.
+>>>>>
+>>>>> Will test ASAP, but I am confident, that it will work anyway.
+>>>>> Should it unexpectedly not fix my issues, I'll let you know.
+>>>>> Have a nice weekend!
+>>>>> Best regards,
+>>>>> Ingmar
+>>>>>
+>>>>>
+>>>>> Am 26.05.2021 um 00:12 schrieb Bjorn Helgaas:
+>>>>>> On Thu, Apr 15, 2021 at 09:53:38PM +0200, Pali Roh=C3=A1r wrote:
+>>>>>>> Hello!
+>>>>>>>
+>>>>>>> On Thursday 15 April 2021 13:01:19 Alex Williamson wrote:
+>>>>>>>> [cc +Pali]
+>>>>>>>>
+>>>>>>>> On Thu, 15 Apr 2021 20:02:23 +0200
+>>>>>>>> Ingmar Klein <ingmar_klein@web.de> wrote:
+>>>>>>>>
+>>>>>>>>> First thanks to you both, Alex and Bjorn!
+>>>>>>>>> I am in no way an expert on this topic, so I have to fully rely
+>>>>>>>>> on your
+>>>>>>>>> feedback, concerning this issue.
+>>>>>>>>>
+>>>>>>>>> If you should have any other solution approach, in form of
+>>>>>>>>> patch-set, I
+>>>>>>>>> would be glad to test it out. Just let me know, what you think
+>>>>>>>>> might
+>>>>>>>>> make sense.
+>>>>>>>>> I will wait for your further feedback on the issue. In the
+>>>>>>>>> meantime I
+>>>>>>>>> have my current workaround via quirk entry.
+>>>>>>>>>
+>>>>>>>>> By the way, my layman's question:
+>>>>>>>>> Do you think, that the following topic might also apply for the
+>>>>>>>>> QCA6174?
+>>>>>>>>> https://www.spinics.net/lists/linux-pci/msg106395.html
+>>>>>>> I have been testing more ath cards and I'm going to send a new
+>>>>>>> version
+>>>>>>> of this patch with including more PCI ids.
+>>>>>> Dropping this patch in favor of Pali's new version.
+>>>>>>
+>>>>>>>>> Or in other words, should a similar approach be tried for the
+>>>>>>>>> QCA6174
+>>>>>>>>> and if yes, would it bring any benefit at all?
+>>>>>>>>> I hope you can excuse me, in case the questions should not make
+>>>>>>>>> too much
+>>>>>>>>> sense.
+>>>>>>>> If you run lspci -vvv on your device, what do LnkCap and LnkSta
+>>>>>>>> report
+>>>>>>>> under the express capability?=C2=A0 I wonder if your device even =
+supports
+>>>>>>>>> Gen1 speeds, mine does not.
+>>>>>>>> I would not expect that patch to be relevant to you based on your
+>>>>>>>> report.=C2=A0 I understand it to resolve an issue during link
+>>>>>>>> retraining to a
+>>>>>>>> higher speed on boot, not during a bus reset.=C2=A0 Pali can corr=
+ect
+>>>>>>>> if I'm
+>>>>>>>> wrong.=C2=A0 Thanks,
+>>>>>>> These two issues are are related. Both operations (PCIe Hot Reset =
+and
+>>>>>>> PCIe Link Retraining) cause reset of ath chips. Seems that they ca=
+use
+>>>>>>> double reset. After reset these chips reads configuration from
+>>>>>>> internal
+>>>>>>> EEPROM/OTP and if another reset is triggered prior chip finishes
+>>>>>>> internal configuration read then it stops working. My testing show=
+ed
+>>>>>>> that ath10k chips completely disappear from the PCIe bus, some ath=
+9k
+>>>>>>> chips works fine but starts reporting incorrect PCI ID (0xABCD)
+>>>>>>> and some
+>>>>>>> other ath9k chips reports correct PCI ID but does not work. I had
+>>>>>>> discussion with Adrian Chadd who knows probably everything about
+>>>>>>> ath9k
+>>>>>>> and confirmed me that this issue is there with ath9k and ath10k
+>>>>>>> chips.
+>>>>>>>
+>>>>>>> He wrote me that workaround to turn card back from this "broken"
+>>>>>>> state
+>>>>>>> is to do PCIe Cold Reset of the card, which means turning power
+>>>>>>> supply
+>>>>>>> off for particular PCIe slot. Such thing is not supported on many
+>>>>>>> low-end boards, so workaround cannot be applied.
+>>>>>>>
+>>>>>>> I was able to recover my testing cards from this "broken" state by
+>>>>>>> PCIe
+>>>>>>> Warm Reset (=3D reset via PERST# pin).
+>>>>>>>
+>>>>>>> I have tried many other reset methods (PCIe PM reset, Link Down, P=
+CIe
+>>>>>>> Hot Reset with bigger internal, ...) but nothing worked. So seems
+>>>>>>> that
+>>>>>>> the only workaround is to do PCIe Cold Reset or PCIe Warm Reset.
+>>>>>>>
+>>>>>>> I will send V2 of my patch with details and explanation.
+>>>>>>>
+>>>>>>> As kernel does not have API for doing PCIe Warm Reset, I think is
+>>>>>>> another argument why kernel really needs it.
+>>>>>>>
+>>>>>>> I do not have any QCA6174 card for testing, but based on the fact =
+I
+>>>>>>> reproduced this issue with more ath9k and ath10 cards and Adrian
+>>>>>>> confirmed that above reset issue is there, I think that it affects
+>>>>>>> all
+>>>>>>> AR9xxx and QCAxxxx cards handled by ath9k and ath10 drivers.
+>>>>>>>
+>>>>>>> I was told that AMI BIOS was patching their BIOSes found in
+>>>>>>> notebooks to
+>>>>>>> avoid triggering this issue on notebooks ath9k cards.
+>>>>>>>
+>>>>>>>> Alex
+>>>>>>>>
+>>>>>>>>> Am 15.04.2021 um 04:36 schrieb Alex Williamson:
+>>>>>>>>>> On Wed, 14 Apr 2021 16:03:50 -0500
+>>>>>>>>>> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>>>>>
+>>>>>>>>>>> [+cc Alex]
+>>>>>>>>>>>
+>>>>>>>>>>> On Fri, Apr 09, 2021 at 11:26:33AM +0200, Ingmar Klein wrote:
+>>>>>>>>>>>> Edit: Retry, as I did not consider, that my mail-client would
+>>>>>>>>>>>> make this
+>>>>>>>>>>>> party html.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Dear maintainers,
+>>>>>>>>>>>> I recently encountered an issue on my Proxmox server system,
+>>>>>>>>>>>> that
+>>>>>>>>>>>> includes a Qualcomm QCA6174 m.2 PCIe wifi module.
+>>>>>>>>>>>> https://deviwiki.com/wiki/AIRETOS_AFX-QCA6174-NX
+>>>>>>>>>>>>
+>>>>>>>>>>>> On system boot and subsequent virtual machine start (with
+>>>>>>>>>>>> passed-through
+>>>>>>>>>>>> QCA6174), the VM would just freeze/hang, at the point where
+>>>>>>>>>>>> the ath10k
+>>>>>>>>>>>> driver loads.
+>>>>>>>>>>>> Quick search in the proxmox related topics, brought me to the
+>>>>>>>>>>>> following
+>>>>>>>>>>>> discussion, which suggested a PCI quirk entry for the QCA6174
+>>>>>>>>>>>> in the kernel:
+>>>>>>>>>>>> https://forum.proxmox.com/threads/pcie-passthrough-freezes-pr=
+oxmox.27513/
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> I then went ahead, got the Proxmox kernel source (v5.4.106)
+>>>>>>>>>>>> and applied
+>>>>>>>>>>>> the attached patch.
+>>>>>>>>>>>> Effect was as hoped, that the VM hangs are now gone. System
+>>>>>>>>>>>> boots and
+>>>>>>>>>>>> runs as intended.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Judging by the existing quirk entries for Atheros, I would
+>>>>>>>>>>>> think, that
+>>>>>>>>>>>> my proposed "fix" could be included in the vanilla kernel.
+>>>>>>>>>>>> As far as I saw, there is no entry yet, even in the latest
+>>>>>>>>>>>> kernel sources.
+>>>>>>>>>>> This would need a signed-off-by; see
+>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux=
+.git/tree/Documentation/process/submitting-patches.rst?id=3Dv5.11#n361
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> This is an old issue, and likely we'll end up just applying
+>>>>>>>>>>> this as
+>>>>>>>>>>> yet another quirk.=C2=A0 But looking at c3e59ee4e766 ("PCI: Ma=
+rk
+>>>>>>>>>>> Atheros
+>>>>>>>>>>> AR93xx to avoid bus reset"), where it started, it seems to be
+>>>>>>>>>>> connected to 425c1b223dac ("PCI: Add Virtual Channel to
+>>>>>>>>>>> save/restore
+>>>>>>>>>>> support").
+>>>>>>>>>>>
+>>>>>>>>>>> I'd like to dig into that a bit more to see if there are any
+>>>>>>>>>>> clues.
+>>>>>>>>>>> AFAIK Linux itself still doesn't use VC at all, and
+>>>>>>>>>>> 425c1b223dac added
+>>>>>>>>>>> a fair bit of code.=C2=A0 I wonder if we're restoring somethin=
+g out of
+>>>>>>>>>>> order or making some simple mistake in the way to restore VC
+>>>>>>>>>>> config.
+>>>>>>>>>> I don't really have any faith in that bisect report in commit
+>>>>>>>>>> c3e59ee4e766.=C2=A0 To double check I dug out the card from tha=
+t
+>>>>>>>>>> commit,
+>>>>>>>>>> installed an old Fedora release so I could build kernel v3.13,
+>>>>>>>>>> pre-dating 425c1b223dac and tested triggering a bus reset both =
+via
+>>>>>>>>>> setpci and by masking PM reset so that sysfs can trigger the
+>>>>>>>>>> bus reset
+>>>>>>>>>> path with the kernel save/restore code.=C2=A0 Both result in th=
+e system
+>>>>>>>>>> hanging when the device is accessed either restoring from the
+>>>>>>>>>> kernel
+>>>>>>>>>> bus reset or reading from the device after the setpci reset.
+>>>>>>>>>> Thanks,
+>>>>>>>>>>
+>>>>>>>>>> Alex
+>>>>>>>>>>
