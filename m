@@ -2,105 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3877C3A3714
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 00:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E12973A3744
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 00:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbhFJW2A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Jun 2021 18:28:00 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:38362 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231151AbhFJW17 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 18:27:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=VrA153MK/tuxQoc8FB6bcVxMGuksBkUH2etJY1B7azY=; b=o9ULBMduI3BcivBGi3diQZURPA
-        I8pqvox1eiC+7//vKhh+wp0WH4/ckvZarPfhISMTTmIMKzV8cfKEwWh5BN6D5xtIOj5t0OcYiK9ar
-        SlldcHp/UDclQNaowfMDl8+mMVDmB622GEXGHSWDpLxFn88Xsq9ATEC2ZrpfgtVlJ4Dbd0ioyBtOf
-        87cnfhz7zAfNOIrvkBkrkt/cBj7CKLQdXsF9CBgQcFvGRPHJ8CDZcBiJyqy20tuGvLgskyMEouLcL
-        HbI0yokrFVakn0H+F6lRl5kI3/AzwylFcrMsFtAqiK5yf3xAbLhDP5U9bg16LSM6+C0WK35V5Xkf9
-        kVJ25TEA==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lrT7b-0007bn-Hu; Thu, 10 Jun 2021 16:25:56 -0600
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>
-References: <20210610220541.GA2779926@bjorn-Precision-5520>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <ad142e90-86f1-4749-898f-702ae2b7cf51@deltatee.com>
-Date:   Thu, 10 Jun 2021 16:25:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S230269AbhFJWnm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 18:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230001AbhFJWnl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Jun 2021 18:43:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C75D061364;
+        Thu, 10 Jun 2021 22:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623364905;
+        bh=1EzAaDvaFtP7Jm3FouqrhNK+M8umJ1dLnxcuadWZZyM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g82LyrLtHJp7n9C1Fx1pxaYvj9XON2CaM/MB4WCFLewGEEtjxSTSVKJvrrkPjaW1y
+         dKPI6lw30iEApcacy1AWsuW9xysCexDR+NzTYrnZ3XW6HdQbAOjpfA2x9ogU5CGxlw
+         LE2Uwof9jb+h+eM3CmCAMyj6HoLXf18Yx2/aeaeMWqTl1L4RUTZJ8Hi5UFBB/vpSqh
+         jp/tVDVI+NYkUtesKw+oedi3RN2OQQ4FcFl/qqWnrrXxdklPKZr5JCpduLEP8BJlm7
+         JfOF3em9A6lw0aVB5ePzSWUytakcyfxm+96yHwyo0mrW4HUwUSBArTm/ZEdldxYcnc
+         nQvVI8GgSPakQ==
+Date:   Thu, 10 Jun 2021 17:41:43 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
+        Sanket.Goswami@amd.com, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <20210610224143.GA2785655@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210610220541.GA2779926@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v1 1/6] PCI/P2PDMA: Rename upstream_bridge_distance() and
- rework documentation
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210607153916.1021016-2-zhengdejin5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-
-On 2021-06-10 4:05 p.m., Bjorn Helgaas wrote:
-> The new text is:
+On Mon, Jun 07, 2021 at 11:39:13PM +0800, Dejin Zheng wrote:
+> Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> pci_alloc_irq_vectors(). Introducing this function can simplify
+> the error handling path in many drivers.
 > 
->   If there are two virtual functions of the same device behind the same
->   bridge port then PCI_P2PDMA_MAP_BUS_ADDR and a distance of 2 will be
->   returned (one step down to the PCIe switch, then one step back to the
->   same device).
+> And use pci_free_irq_vectors() to replace some code in pcim_release(),
+> they are equivalent, and no functional change. It is more explicit
+> that pcim_alloc_irq_vectors() is a device-managed function.
+
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 452351025a09..e3b3fc59bd35 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1989,10 +1989,7 @@ static void pcim_release(struct device *gendev, void *res)
+>  	struct pci_devres *this = res;
+>  	int i;
+>  
+> -	if (dev->msi_enabled)
+> -		pci_disable_msi(dev);
+> -	if (dev->msix_enabled)
+> -		pci_disable_msix(dev);
+> +	pci_free_irq_vectors(dev);
+
+If I understand correctly, this hunk is a nice simplification, but
+actually has nothing to do with making pcim_alloc_irq_vectors().  I
+have it split to a separate patch in my local tree.  Or am I wrong
+about that?
+
+>  	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
+>  		if (this->region_mask & (1 << i))
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c20211e59a57..5783262c4643 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1730,6 +1730,7 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
+>  
+>  static inline void pci_set_master(struct pci_dev *dev) { }
+>  static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
+> +static inline int pci_is_managed(struct pci_dev *pdev) { return 0; }
+>  static inline void pci_disable_device(struct pci_dev *dev) { }
+>  static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
+>  static inline int pci_assign_resource(struct pci_dev *dev, int i)
+> @@ -1825,6 +1826,30 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  					      NULL);
+>  }
+>  
+> +/**
+> + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
+> + * @dev:		PCI device to operate on
+> + * @min_vecs:		minimum number of vectors required (must be >= 1)
+> + * @max_vecs:		maximum (desired) number of vectors
+> + * @flags:		flags or quirks for the allocation
+> + *
+> + * Return the number of vectors allocated, (which might be smaller than
+> + * @max_vecs) if successful, or a negative error code on error. If less
+> + * than @min_vecs interrupt vectors are available for @dev the function
+> + * will fail with -ENOSPC.
+> + *
+> + * It depends on calling pcim_enable_device() to make IRQ resources
+> + * manageable.
+> + */
+> +static inline int
+> +pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +			unsigned int max_vecs, unsigned int flags)
+> +{
+> +	if (!pci_is_managed(dev))
+> +		return -EINVAL;
+> +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
+
+This is great, but can you explain how pci_alloc_irq_vectors()
+magically becomes a managed interface if we've already called
+pcim_enable_device()?
+
+I certainly believe it does; I'd just like to put a hint in the commit
+log since my 5 minutes of grepping around didn't make it obvious to
+me.
+
+I see that pcim_enable_device() sets pdev->is_managed, but I didn't
+find the connection between that and pci_alloc_irq_vectors().
+
+> +}
+> +
+>  /* Include architecture-dependent settings and functions */
+>  
+>  #include <asm/pci.h>
+> -- 
+> 2.30.1
 > 
-> I *think* this includes two functions of the same multi-function
-> device, or two virtual functions of the same device, right?  In both
-> cases, the two devices are obviously behind the same bridge port.
-
-Yes, that's correct, if it's the same device it must be behind the same
-bridge port; so dropping the "behind the same bridge port" is a good idea.
-
-> 
-> Is this usage of "down to the PCIe switch" the common usage in P2PDMA?
-> I normally think of going from an endpoint to a switch as being "up"
-> toward the CPU.  But PCIe made it all confusing by putting downstream
-> ports at the upstream end of links and vice versa.
-
-Good point. I've been casually saying "down to", but you are right "up"
-makes a lot more sense given the downstream/upstream terminology.
-
-> We also have a bit of a mix in terminology between "bridge," "switch,"
-> "bridge port."  I'd probably write something like:
-> 
->   If they are two functions of the same device behind the same bridge,
->   return PCI_P2PDMA_MAP_BUS_ADDR and a distance of 2 (one hop up to
->   the bridge, then one hop back down to another function of the same
->   device).
-> 
-> No need to repost for this; just let me know what you think and I can
-> tweak accordingly.
-
-What you've written sounds good to me, but I might have just dropped the
-"behind the same bridge" entirely given your feedback above.
-
-Thanks!
-
-Logan
