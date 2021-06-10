@@ -2,51 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B14B93A3493
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 22:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B42103A349B
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 22:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbhFJUJ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Jun 2021 16:09:56 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:44634 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbhFJUJ4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 16:09:56 -0400
-Received: by mail-pl1-f176.google.com with SMTP id b12so1627090plg.11
-        for <linux-pci@vger.kernel.org>; Thu, 10 Jun 2021 13:07:59 -0700 (PDT)
+        id S230245AbhFJUNE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 16:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229941AbhFJUND (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 16:13:03 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34863C061574
+        for <linux-pci@vger.kernel.org>; Thu, 10 Jun 2021 13:11:07 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id e22so631409pgv.10
+        for <linux-pci@vger.kernel.org>; Thu, 10 Jun 2021 13:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FKsgQ7BRGtjEa1Ou+HuJvcTs+5swgCb2B/IPdm9zxRY=;
-        b=leeOmSzcNiA7y4GEQg+I9bSEiLFWkXFJwXql1uqUwgm2PQxqFpY8ztdC/6EOmhPgnJ
-         aYFt4CTufSw2yO9Mb8C6NwPeYqwirZJz9pth5gAVf1OcZAfF0zK58crJo47GeCQ2Go+u
-         KIlTy5dnWycRhaXR0l0ofxm+w/E80QYFrFOx+HM148HiU45Wz6of0C7Xu/q4nXUSlQpx
-         1hcEsbGpGgUuMx8pIw6sMoR0akpXNS+as5LqxoqTqjL6FQdBCSqYkoRKtg0pBaYgf3Qv
-         8ZRoKprPgA0V28YdVxfWW0myhj1B4JnRS7E2XSuruhGVmVuVl2UIXWiQd7exOx9B9Kkx
-         riig==
+        bh=ybXQ8wv/C12Ca5WDiueTj4x3bqTsPAZ5Ylr8uxI2UN8=;
+        b=uniQedDJUO2c9f95UKPw6TdlwlNerlkHGcB6BORYJbsAq5UVrNd1x8o2yZlKLd/Te3
+         Sd/oslHJS/3HPQT1jfKsQQ9qVSpeYTfi1H2vI9j6Jz5qSIzewWwiXfEIVmu4oKH7GILQ
+         VgPO+pA+TkhwKWFyXzjlbVL4/3bf/r2zmNQwc1BH/gkXYDKAa+Y16dBNsgIVb+6eUXla
+         BM0nlPQ+SuSI/3JeVZEnEvp02XsM93sKgxRKmkm6Uet+wLMKOHBh2PrMzrLf/fkqmAkj
+         rM+SeOLqPMz10uMWwI3tX0tHDBH0fmGX1ff6vQ2r3Be0Fd77QnRf/PcFsFrzasMO+qZl
+         D/0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FKsgQ7BRGtjEa1Ou+HuJvcTs+5swgCb2B/IPdm9zxRY=;
-        b=sOLrOg+bsSR509qzawbFfWy+cqRfDvnIbagDc1eahZLnhza5NlQqzx3UCzTnP1C616
-         0waGxV43KdjE7gow96hcg1ijUxR2iNXfhRi3qRl1eepYbDAvCGgILewbH6/UpPmZ4+L/
-         izULNpI1mR1hTrQlcsgUuQcJsCJAINllJmDMJA9oYxSk4HLltaCHuoJxtFJ2OV477XVa
-         6QXPD8GIn+xxd5JYTsqwwPSTnqEbJiLJ9SFFYatinxu/T+a7QQtmFEdVCzXTUDB+inl5
-         PdIWO4Xa/ldhssVWp6hQRVEtE9Fq4mpsfqaXFGrU+wauGjlsHJrFoC06ViAowOMBzdv6
-         Nd6w==
-X-Gm-Message-State: AOAM532yg8cAjW/wvPPpd07QaNJ2+PAku0Bi45OWIsG98evfC3rP8ORG
-        ax3uJKfUXAFtwalzf4reqpOKhFfXvT0dnuuflQ0FQA==
-X-Google-Smtp-Source: ABdhPJz6wmUU+rOu0/RDkASZwBX1XFszYUwrpjXk+vt72BjnsIr5mhgjvJScPGDsB78w/srz5aLN2MQlSetr4zuidcI=
-X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr5197874pjb.13.1623355619412;
- Thu, 10 Jun 2021 13:06:59 -0700 (PDT)
+        bh=ybXQ8wv/C12Ca5WDiueTj4x3bqTsPAZ5Ylr8uxI2UN8=;
+        b=MRaSJo5fH5G06evD/AT5RjgO1gXNZz6cr4jXw0uZNsMYSfwBiAGeFZYVYXo8/7i0Os
+         Vr0T44wFFz4Vu2Ex75uKScykaKQ277hPmEtjzDzZn3aIYGPChTHH4aW+WHCeRk6vut+K
+         VbnKxe0hedT3JNuHNNWm+L1f+4gMrV7iMWMJL+9cWadMU3XW4T/Xcho5j57okqwpshV4
+         kD5rZr0diEvC7IDFJvnBrXPNPsS9Ae21B7QkMApmblhu9lGTXGNUs4Ar9votspGdZ6+s
+         D57v89vyeMgCGUiZ4ATdsN9WXyr1glLaGk2INBoLuEa/39w80UzCkC209KEUMCBdF4m0
+         5kmg==
+X-Gm-Message-State: AOAM5303qgZoivJSbN9pK8TlgyXh0Ahv4rnm2jN4Byop+pl80TPfcLTT
+        jAm2vX0EJqpOFTNFUflfG0XBHxW2eqN65WkGh63ifA==
+X-Google-Smtp-Source: ABdhPJxfjaRqh8MUgs4T2Dweyx5nPlSxYhbGFyZwRyPqLQOkYUzEvKy6Rzx8E7b+W8umVVg4sldpoXtz4S2/Qin70wI=
+X-Received: by 2002:aa7:952b:0:b029:2e9:eef1:8e17 with SMTP id
+ c11-20020aa7952b0000b02902e9eef18e17mr4585971pfp.70.1623355866709; Thu, 10
+ Jun 2021 13:11:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com> <20210524133938.2815206-3-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20210524133938.2815206-3-Jonathan.Cameron@huawei.com>
+References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com>
+ <20210524133938.2815206-2-Jonathan.Cameron@huawei.com> <CAPcyv4i5-d6HrhQwUmjx7HqKA+pr8aQjPGHJ=7Sh3eTgJ1UKyg@mail.gmail.com>
+ <20210610183924.0000491d@Huawei.com>
+In-Reply-To: <20210610183924.0000491d@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 10 Jun 2021 13:06:48 -0700
-Message-ID: <CAPcyv4gBORHzouArX-Fsnhew+ZYur8pp9ySJQGwrOBrGuv+-ZQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] PCI/DOE: Add Data Object Exchange support
+Date:   Thu, 10 Jun 2021 13:10:56 -0700
+Message-ID: <CAPcyv4hE8M2qmMZYH+rRbYJyCV0LVNsc0hAYcRqOawd6aYUBRw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] PCI: Add vendor ID for the PCI SIG
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Linux PCI <linux-pci@vger.kernel.org>, linux-cxl@vger.kernel.org,
         Bjorn Helgaas <helgaas@kernel.org>,
@@ -63,62 +69,78 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
+On Thu, Jun 10, 2021 at 10:39 AM Jonathan Cameron
 <Jonathan.Cameron@huawei.com> wrote:
 >
-> Introduced in a PCI ECN [1], DOE provides a config space based mailbox with
-> standard protocol discovery.  Each mailbox is accessed through a DOE
-> Extended Capability.
+> On Thu, 10 Jun 2021 08:17:23 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> A device may have 1 or more DOE mailboxes, each of which is allowed to
-> support any number of protocols (some DOE protocol specifications apply
-> additional restrictions).  A given protocol may be supported on more than
-> one DOE mailbox on a given function.
+> > On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> > >
+> > > This ID is used in DOE headers to identify protocols that are defined
+> > > within the PCI Express Base Specification.
+> > >
+> > > Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
+> > > 2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
+> > >
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > >  include/linux/pci_ids.h | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > > index 4c3fa5293d76..dcc8b4b14198 100644
+> > > --- a/include/linux/pci_ids.h
+> > > +++ b/include/linux/pci_ids.h
+> > > @@ -149,6 +149,7 @@
+> > >  #define PCI_CLASS_OTHERS               0xff
+> > >
+> > >  /* Vendors and devices.  Sort key: vendor first, device next. */
+> > > +#define PCI_VENDOR_ID_PCI_SIG          0x0001
+> >
+> > Should this not be:
+> >
+> > PCI_DOE_VENDOR_ID_PCI_SIG?
+> >
+> > ...because I don't think this value will ever show up at the typical
+> > config-offset 0 vendor-id, will it?
 >
-> If a driver wishes to access any number of DOE instances / protocols it
-> makes a single call to pci_doe_register_all() which will find available
-> DOEs, create the required infrastructure and cache the protocols they
-> support.  pci_doe_find() can then retrieve a pointer to an appropriate DOE
-> instance.
+> Good question.
 >
-> A synchronous interface is provided in pci_doe_exchange_sync() to perform a
-> single query / response exchange.
+> Whilst I agree it is unlikely to turn up as a conventional vendor-id
+> (though I've not found any text ruling it out) it already turns up
+> in locations other than DOE.
 >
-> Testing conducted against QEMU using:
+> Many of them aren't software visible, but potentially places
+> like SPDM are in which you would have a registry ID of 0x3 (PCI-SIG)
+> followed by the PCI vendor ID (this one).  Those are used in SPDM
+> vendor defined requests / responses.
 >
-> https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
-
-Nice.
-
-I was hoping that by now QEMU upstream would have given us some
-indication that this useful work that has a chance of being merged. I
-fear it's only us CXL practitioner's that care. Perhaps the PCI IDE
-support will get them to move on at least the DOE patches?
-
+> That SPDM feature is then used in IDE establishment.
+> The IDE ECN (via pcisig.com) has the following:
+> "The VendorID field of the VENDOR_DEFINED_REQUEST/
+>  VENDOR_DEFINED_RESPONSE must contain the value 0001h, which is assigned to
+>  the PCI-SIG."
 >
-> [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
->     Data Object Exchange (DOE) - Approved 12 March 2020
+> Which to my reading, isn't quite the same as saying it's a vendor ID,
+> but nearly so.
 >
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Now, I argued the *_DVSEC_* naming in the CXL one based on the spec saying
+> that was all it could be used for but I may well have been wrong longer
+> term.
+>
+> I'm fine with renaming it to the PCI_DOE_* version then dropping the DOE
+> when it gets used for something else though if that works for people.
+>
+> At least this time naming isn't made awkward by legalese.
 
-The core logic of this looks good to me. The interfaces for other code
-to make use of this I feel can lean heavier on existing mechanics. A
-few points come to mind:
+For fun I did a lookup for vendor-id 1 and it came back "Fry's
+Electronics Counterfeit Flash Drive"
 
-- Does this need to support anything more than queue depth 1? I know
-the specification seems to allow for some overlapping and queueing,
-but I don't think there are any use cases that are precluded if the
-max number of tasks in flight for a given DOE is one.
+https://pcilookup.com/?ven=0001&dev=&action=submit
 
-- Once its queue depth 1 then the list of tasks can be replaced with a
-wait_queue_head_t where submitters wait for the previous task to
-finish.
+The potential for it to be used in other places outside of DOE makes
+me think the way you have it here is fine.
 
-- This appears to be the prototypical scenario for deploying the new
-auxiliary bus facility. Rather than custom code device-like facilities
-(lists and parents etc) in 'struct pci_doe' just make pci_doe a device
-directly (auxiliary-device) and separate the infrastructure that
-drives that device to a driver (auxiliary-driver). That makes the
-lifetime management more idiomatic, allows for user space to have
-typical driver-binding controls to manage kernel-user DOE conflicts,
-and it allows for typical driver services like devm.
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
