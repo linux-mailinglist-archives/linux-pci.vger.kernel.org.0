@@ -2,109 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D0D3A36B5
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 23:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 841D43A36AD
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 23:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230160AbhFJVzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Jun 2021 17:55:23 -0400
-Received: from mail-pg1-f171.google.com ([209.85.215.171]:35468 "EHLO
-        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbhFJVzW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 17:55:22 -0400
-Received: by mail-pg1-f171.google.com with SMTP id o9so838710pgd.2;
-        Thu, 10 Jun 2021 14:53:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iEZb1HAGunNhdY/5Q0B2TV+VUw7SSqmOp3IfiC1KV6w=;
-        b=LlM0EbxyzOdNSgxyKNDPYtwDG1WVHV+v4fouU3DbziOjdnCFbtqXLM7cBPaqmHn/wY
-         zQrUE1e6OaFw6hcH0WXCkqqRxcukL3q3bzaCOTTqfBRCiYcmu03tF2nbNubikt92uekU
-         o3vVJgH0RGd7biDy05iNc6pqv2cdGIwToCXOtACVtx0zSuKs7biRJzGjaALlyKHbPm6/
-         uQ685VztdDyalme+cY9E6FAM8r81704fyMvE6Kz/KRLt9E+fFt/Qk+eT2LUJNhXAketD
-         jAW9uloYiRJtQr1YXyIBnnyRJmw69R3cLbvNIsHr+3oOY5dDHSOnpEyT4TTbBfUJbnS/
-         BcOw==
-X-Gm-Message-State: AOAM531yJYGQ0hsuUnP8uxb5UR1U2kh7K0j7Bn3tI9aVm0LNJXV53mvr
-        Z5TmPRvPZNOiF4OmSlc1M7gGZRzaVQ==
-X-Google-Smtp-Source: ABdhPJw2uSITGPgILdhT5spNIAo7woiW7K/FwcK/RX8wK9+o6A5ugRaagkUTjKfKG++E54w8NU8sRw==
-X-Received: by 2002:a63:e316:: with SMTP id f22mr470463pgh.100.1623361993434;
-        Thu, 10 Jun 2021 14:53:13 -0700 (PDT)
-Received: from robh.at.kernel.org ([208.184.162.218])
-        by smtp.gmail.com with ESMTPSA id h8sm3326621pjf.7.2021.06.10.14.52.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 14:53:11 -0700 (PDT)
-Received: (nullmailer pid 2435399 invoked by uid 1000);
-        Thu, 10 Jun 2021 21:46:48 -0000
-Date:   Thu, 10 Jun 2021 16:46:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pci: Add devicetree binding for
- Qualcomm PCIe EP controller
-Message-ID: <20210610214648.GA2407603@robh.at.kernel.org>
-References: <20210603103814.95177-1-manivannan.sadhasivam@linaro.org>
- <20210603103814.95177-2-manivannan.sadhasivam@linaro.org>
- <YLw9de/J7h5KZtHu@builder.lan>
+        id S230288AbhFJVwl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 17:52:41 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:45066 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230272AbhFJVwl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Jun 2021 17:52:41 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1lrSZV-0006lk-N8; Thu, 10 Jun 2021 23:50:41 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     helgaas@kernel.org, robh+dt@kernel.org,
+        Punit Agrawal <punitagrawal@gmail.com>
+Cc:     Punit Agrawal <punitagrawal@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, alexandru.elisei@arm.com, wqu@suse.com,
+        robin.murphy@arm.com, pgwipeout@gmail.com, ardb@kernel.org,
+        briannorris@chromium.org, shawn.lin@rock-chips.com
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Update PCI host bridge window to 32-bit address memory
+Date:   Thu, 10 Jun 2021 23:50:40 +0200
+Message-ID: <3105233.izSxrag8PF@diego>
+In-Reply-To: <20210607112856.3499682-5-punitagrawal@gmail.com>
+References: <20210607112856.3499682-1-punitagrawal@gmail.com> <20210607112856.3499682-5-punitagrawal@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YLw9de/J7h5KZtHu@builder.lan>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 05, 2021 at 10:13:57PM -0500, Bjorn Andersson wrote:
-> On Thu 03 Jun 05:38 CDT 2021, Manivannan Sadhasivam wrote:
-> 
-> > Add devicetree binding for Qualcomm PCIe EP controller used in platforms
-> > like SDX55. The EP controller is based on the Designware core with
-> > Qualcomm specific wrappers.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 144 ++++++++++++++++++
-> >  1 file changed, 144 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> > new file mode 100644
-> > index 000000000000..3e357cb03a5c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> > @@ -0,0 +1,144 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm PCIe Endpoint Controller binding
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +
-> > +allOf:
-> > +  - $ref: "pci-ep.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,sdx55-pcie-ep
-> 
-> The binding looks good, but this is going to cause us an inevitable
-> warning as we'd have to describe the controller twice (rc + ep) in the
-> sdx55.dtsi.
-> 
-> @Rob, what do you suggest we do about this, because it's the same
-> problem currently responsible for hundreds of warnings in the case of
-> GENI (where each node is duplicated for different functions).
+Hi,
 
-What determines the mode? Assuming it is fixed for a platform, can't you 
-just have 2 .dtsi files and include the right one. The SoC file could 
-have the common h/w specific parts (clks, resets, etc.) as those 
-shouldn't really be different depending on the mode. IIRC, some PCI 
-bindings do this by design (meaning there's only one definition).
+Am Montag, 7. Juni 2021, 13:28:56 CEST schrieb Punit Agrawal:
+> The PCIe host bridge on RK3399 advertises a single 64-bit memory
+> address range even though it lies entirely below 4GB.
+> 
+> Previously the OF PCI range parser treated 64-bit ranges more
+> leniently (i.e., as 32-bit), but since commit 9d57e61bf723 ("of/pci:
+> Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+> the code takes a stricter view and treats the ranges as advertised in
+> the device tree (i.e, as 64-bit).
+> 
+> The change in behaviour causes failure when allocating bus addresses
+> to devices connected behind a PCI-to-PCI bridge that require
+> non-prefetchable memory ranges. The allocation failure was observed
+> for certain Samsung NVMe drives connected to RockPro64 boards.
+> 
+> Update the host bridge window attributes to treat it as 32-bit address
+> memory. This fixes the allocation failure observed since commit
+> 9d57e61bf723.
+> 
+> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+> Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
 
-Rob
+just for clarity, should I just pick this patch separately for 5.13-rc to
+make it easy for people using current kernel devicetrees, or should
+this wait for the update mentioned in the cover-letter response
+and should go all together through the PCI tree?
+
+If so, I can provide an
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+
+
+
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 634a91af8e83..4b854eb21f72 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -227,7 +227,7 @@ pcie0: pcie@f8000000 {
+>  		       <&pcie_phy 2>, <&pcie_phy 3>;
+>  		phy-names = "pcie-phy-0", "pcie-phy-1",
+>  			    "pcie-phy-2", "pcie-phy-3";
+> -		ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000>,
+> +		ranges = <0x82000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000>,
+>  			 <0x81000000 0x0 0xfbe00000 0x0 0xfbe00000 0x0 0x100000>;
+>  		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+>  			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>,
+> 
+
+
+
+
