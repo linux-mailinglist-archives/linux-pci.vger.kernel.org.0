@@ -2,72 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA5153A3057
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 18:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0F763A3068
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 18:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbhFJQSa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Jun 2021 12:18:30 -0400
-Received: from mail-ot1-f52.google.com ([209.85.210.52]:43946 "EHLO
-        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbhFJQSa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 12:18:30 -0400
-Received: by mail-ot1-f52.google.com with SMTP id i12-20020a05683033ecb02903346fa0f74dso206976otu.10;
-        Thu, 10 Jun 2021 09:16:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ofEO3HsUWK07Lx2VSX5oLpVzPlgl6WHrBYoJtQCpde4=;
-        b=TWAJWa4YDPbPvZGZyK7UIti/q/ynWhC+pYU+upJsO3mK8Ok2bVZYiYzKPxE+uXt084
-         dMMTpguvt4wRjMIfx2rekRYaWQfUiHF3JpwAsUJWqHr1wg9vw0E00zcpPsGRzYV8zX7G
-         ZXx4V/JNkpYL58UDJZFXiE87VyvPz99nNlUeXx26zvaSlnRdceptOOLWU6FugtOT8BSa
-         8r6yzWndN/gQzlx8XdBxYVkdj/nJsXuHRly0wvXDH/u4c+PJZd1VwSInxYhB8tJ3RO2K
-         Pawl2gQRjWomLKrcVEa5MIEQqof1hCICS2cw/GcyQwgHj1HYckw/UWyG71dF50RmOedm
-         OaBA==
-X-Gm-Message-State: AOAM531dcrbjCrW24miP25nD3U7Kr5aAxj+sBro2oUciQkkQvNGEEzY9
-        U9KEwluEomTjtwVwJoTcsQ==
-X-Google-Smtp-Source: ABdhPJwYNeXmfvs3XPVsdKQpxwAAtg9u28rarO5FRMzjqZQdJ9GfInQHmmnUSH76QTAXOaa1jtPzJw==
-X-Received: by 2002:a05:6830:12d3:: with SMTP id a19mr3018565otq.107.1623341779028;
-        Thu, 10 Jun 2021 09:16:19 -0700 (PDT)
-Received: from robh.at.kernel.org ([172.58.99.113])
-        by smtp.gmail.com with ESMTPSA id b22sm158695oov.31.2021.06.10.09.16.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 09:16:18 -0700 (PDT)
-Received: (nullmailer pid 1907491 invoked by uid 1000);
-        Thu, 10 Jun 2021 16:16:15 -0000
-Date:   Thu, 10 Jun 2021 11:16:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     lorenzo.pieralisi@arm.com, stefan@agner.ch,
-        linux-pci@vger.kernel.org, l.stach@pengutronix.de,
-        shawnguo@kernel.org, kernel@pengutronix.de,
-        andrew.smirnov@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, bhelgaas@google.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com
-Subject: Re: [RESEND, V5 1/2] dt-bindings: imx6q-pcie: Add "vph-supply" for
- PHY supply voltage
-Message-ID: <20210610161615.GA1907422@robh.at.kernel.org>
-References: <1622771269-13844-1-git-send-email-hongxing.zhu@nxp.com>
- <1622771269-13844-2-git-send-email-hongxing.zhu@nxp.com>
+        id S231171AbhFJQWS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 12:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230211AbhFJQWR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Jun 2021 12:22:17 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CA1160C40;
+        Thu, 10 Jun 2021 16:20:21 +0000 (UTC)
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1lrNPn-006mBw-J7; Thu, 10 Jun 2021 17:20:19 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1622771269-13844-2-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 10 Jun 2021 17:20:19 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [RFC v3 0/7] PCI: hv: Support host bridge probing on ARM64
+In-Reply-To: <YMI4fWkHzrD3GKTW@boqun-archlinux>
+References: <20210609163211.3467449-1-boqun.feng@gmail.com>
+ <CAMj1kXGwa28T5Cr_64OC4rqE3qhwWQz+BJPwjdr54G-pVf9+pA@mail.gmail.com>
+ <2283b22ae7832db348bd9b3eff3aab16@misterjones.org>
+ <YMI4fWkHzrD3GKTW@boqun-archlinux>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <dceabce36dc39aa9dce179f32391ddcf@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: boqun.feng@gmail.com, ardb@kernel.org, arnd@arndb.de, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org, csbisa@amazon.com, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 04 Jun 2021 09:47:48 +0800, Richard Zhu wrote:
-> The i.MX8MQ PCIe PHY can use either a 1.8V or a 3.3V power supply.
-> Add a "vph-supply" property to indicate which regulator supplies
-> power for the PHY.
+On 2021-06-10 17:06, Boqun Feng wrote:
+> On Thu, Jun 10, 2021 at 04:42:45PM +0100, Marc Zyngier wrote:
+>> On 2021-06-10 16:01, Ard Biesheuvel wrote:
+>> > On Wed, 9 Jun 2021 at 18:32, Boqun Feng <boqun.feng@gmail.com> wrote:
+>> > >
+>> > > Hi Bjorn, Arnd and Marc,
+>> > >
+>> >
+>> > Instead of cc'ing Arnd, you cc'ed me (Ard)
+>> 
+>> And I don't know if you intended to Cc me, but you definitely didn't.
+>> 
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+> Weird.. seems my sending script got somewhere wrong. Apologies for you
+> both, and Arnd.. I did intend to Cc you and Arnd.
 
-Acked-by: Rob Herring <robh@kernel.org>
+No worries, it happens (I also used the wrong email address when
+replying, so we're even).
+
+> How do you want this to proceed? I could do a resend right now, or I
+> could wait for a few days (and see others' feedback) and send a V4 next
+> week. Sorry again ;-(
+
+Let the current series simmer on the list for a few days, I can
+always eyeball it there if I'm short of patches to review... ;-)
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
