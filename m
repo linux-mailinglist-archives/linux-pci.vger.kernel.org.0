@@ -2,154 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 735763A2290
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 05:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13383A230C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 06:04:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229914AbhFJDGe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Jun 2021 23:06:34 -0400
-Received: from mail-pl1-f174.google.com ([209.85.214.174]:42853 "EHLO
-        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbhFJDGe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Jun 2021 23:06:34 -0400
-Received: by mail-pl1-f174.google.com with SMTP id v13so200809ple.9;
-        Wed, 09 Jun 2021 20:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=B8Zbm8iJYmqDKfwYU3NvGqWfWb4jFMFKhBBsq+CtUJM=;
-        b=eCidbGM6f18dRikxKXcQJXT10LVogp0ILgExD75Acn6KTckWhtlBTJkE79HiFQ/e0M
-         4dkAuvFsa5S3rj+R0RBRjjtnQ5huQ2LlkyjNJrWF91KiDT5ISYgAlGcSfTZnH6/0/KzH
-         Q3M4dxennOlopKvTXcEfdmebRz3yy3X6JKkka3/dUyZGw9l/X+ade52JrSzzft+mODRd
-         sSw+gPwUkevxcdgQluwWxV8VtBsbdWgNHs9IRpkzy6oYW1HS4opOJW0c7P1vhXD49zdO
-         0yQSFvpvUGytxjQJMvmJRnOPeBkZijA4KLT3ZIBJqjAEFoS79MTpGhZPOso1q3rwpksw
-         Oh5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=B8Zbm8iJYmqDKfwYU3NvGqWfWb4jFMFKhBBsq+CtUJM=;
-        b=SW0m82J2KHqiU488z+kK3hzPVNeGtHG61jwCbIenTE4GJDROm4qjbN5Dhc+akxuc9N
-         kI0FwlG9NVJJuvyiPcDOhX33WONKSOqsKQxrgxvRn+ASFENN0CVS/qz/U4GsvgJEUCOh
-         c9UG+jB9DswyEXRjNgdjuVwc5hf8s5Kvw/7Tb6RBZECQEwddS8kLkbMDMcLN3ohyjkne
-         hkzDuRankUnuVTz9M0yvv61zCW9OMfuC/wNi81kzmBFqzbhK5lxtAIZ1NYWt41RwOzD3
-         F76On79HblLFSjVRVmach/rFUqUq4bf7WE5XYP/UsIO+8DbMf+ckoMcEzrfFphQH1pje
-         8y0g==
-X-Gm-Message-State: AOAM533zdxIWmfxeuT26pIiRDWWXsv41MxNoUAD3GKKZFTa/k2KA9IZt
-        G0LXsGYIO242lvHVrqdniw==
-X-Google-Smtp-Source: ABdhPJyYKE6rMFqcOPXMVeLvY7aWkzHOeJcjBR2+G6vcpaUZu3Hb669Of0JjSVYIGBVFJ6N4D9fgKA==
-X-Received: by 2002:a17:902:b594:b029:f8:fb4f:f8d3 with SMTP id a20-20020a170902b594b02900f8fb4ff8d3mr2832626pls.25.1623294207367;
-        Wed, 09 Jun 2021 20:03:27 -0700 (PDT)
-Received: from vultr.guest ([107.191.53.97])
-        by smtp.gmail.com with ESMTPSA id 23sm852892pjw.28.2021.06.09.20.03.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Jun 2021 20:03:26 -0700 (PDT)
-From:   Zheyu Ma <zheyuma97@gmail.com>
-To:     scott@spiteful.org, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zheyu Ma <zheyuma97@gmail.com>
-Subject: [PATCH] PCI: hotplug: set 'thread_finished' flag to be true by default
-Date:   Thu, 10 Jun 2021 03:02:41 +0000
-Message-Id: <1623294161-7917-1-git-send-email-zheyuma97@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        id S229778AbhFJEGZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 00:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229592AbhFJEGY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Jun 2021 00:06:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DB2D2613FF;
+        Thu, 10 Jun 2021 04:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623297869;
+        bh=gp8DSf2esejDzMXehJatTxOWzp66b5XoGY3UTIHCbD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AZmcaE+0HKjr2RD9KRGy4kZ97dxs/cgNCvnqI1q9uOmfdb1Rj2q3RPh84QE/mct9J
+         wx4/AIzg8GsqluYOOlMEfzfDGFCYIgieeqsMET8dR4vq+6pVKLHzXBK4dV05+c896U
+         SxMr26o02Arm84iU8LcbESBixMhb+hezwxvM8OBfes3NoRWP6kObdcdx1vFuVVa5cl
+         vZgHwdXMprNIznRLN4xjppEvlU0phebLYC2UgXyMN+8ToASg3uI3Q3dqY80WyE9B+x
+         nWWHqnGEkH/BM0c1IMSxTYwXaSxGyAKO486tR26hmP/ibsgQLo4VwVPmclLr1jBvfD
+         yU9BrsH3g0XIA==
+Date:   Wed, 9 Jun 2021 23:04:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Punit Agrawal <punitagrawal@gmail.com>, robh+dt@kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, alexandru.elisei@arm.com, wqu@suse.com,
+        robin.murphy@arm.com, pgwipeout@gmail.com, ardb@kernel.org,
+        briannorris@chromium.org, shawn.lin@rock-chips.com
+Subject: Re: [PATCH v3 2/4] PCI: of: Relax the condition for warning about
+ non-prefetchable memory aperture size
+Message-ID: <20210610040427.GA2696540@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac6bf3c8-fe8e-5897-b225-699a7c46a818@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the process of probing the driver 'cpcihp_zt5550', function
-'pci_get_device' may fail, at this time 'cpci_hp_unregister_controller'
-will be called. Since the default value of 'thread_finished' is 0,
-'cpci_stop_thread' will be executed, but at this time 'cpci_thread' has
-not been allocated, which leads to a null pointer dereference.
+On Wed, Jun 09, 2021 at 12:36:08AM +0530, Vidya Sagar wrote:
+> On 6/7/2021 4:58 PM, Punit Agrawal wrote:
+> > 
+> > Commit fede8526cc48 ("PCI: of: Warn if non-prefetchable memory
+> > aperture size is > 32-bit") introduced a warning for non-prefetchable
+> > resources that need more than 32bits to resolve. It turns out that the
+> > check is too restrictive and should be applicable to only resources
+> > that are limited to host bridge windows that don't have the ability to
+> > map 64-bit address space.
+>
+> I think the host bridge windows having the ability to map 64-bit address
+> space is different from restricting the non-prefetchable memory aperture
+> size to 32-bit.
 
-Fix this by set 'thread_finished' to be true by default.
+> Whether the host bridge uses internal translations or not to map the
+> non-prefetchable resources to 64-bit space, the size needs to be programmed
+> in the host bridge's 'Memory Limit Register (Offset 22h)' which can
+> represent sizes only fit into 32-bits.
 
-This log reveals it:
+> Host bridges having the ability to map 64-bit address spaces gives
+> flexibility to utilize the vast 64-bit space for the (restrictive)
+> non-prefetchable memory (i.e. mapping non-prefetchable BARs of endpoints to
+> the 64-bit space in CPU's view) and get it translated internally and put a
+> 32-bit address on the PCIe bus finally.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000028
-PGD 0 P4D 0
-Oops: 0002 [#1] PREEMPT SMP PTI
-CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.12.4-g70e7f0549188-dirty #74
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-RIP: 0010:kthread_stop+0x51/0x380
-Code: b5 4e 10 00 65 8b 05 46 da e1 7e 89 c0 48 0f a3 05 5c c1 ef 05 0f 82 68 01 00 00 e8 99 4e 10 00 4c 8d 6b 28 41 bc 01 00 00 00 <f0> 44 0f c1 63 28 45 85 e4 0f 84 af 02 00 00 e8 7b 4e 10 00 45 85
-RSP: 0000:ffffc90000017ba8 EFLAGS: 00010293
-RAX: ffff888100850000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff811f3b37 RDI: ffffffff86259ca6
-RBP: ffffc90000017bc8 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000001 R11: 00000000ffffffff R12: 0000000000000001
-R13: 0000000000000028 R14: ffff88810160a0c8 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88817b200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000028 CR3: 0000000006a32000 CR4: 00000000000006e0
-Call Trace:
- cpci_stop_thread+0x1a/0x30
- cpci_hp_unregister_controller+0x43/0xc0
- zt5550_hc_init_one+0x67d/0x720
- local_pci_probe+0x4f/0xb0
- pci_device_probe+0x169/0x230
- ? pci_device_remove+0x110/0x110
- really_probe+0x283/0x650
- driver_probe_device+0x89/0x1d0
- ? mutex_lock_nested+0x1b/0x20
- device_driver_attach+0x68/0x70
- __driver_attach+0x11c/0x1b0
- ? device_driver_attach+0x70/0x70
- bus_for_each_dev+0xbb/0x110
- ? rdinit_setup+0x45/0x45
- driver_attach+0x27/0x30
- bus_add_driver+0x1eb/0x2a0
- driver_register+0xa9/0x180
- __pci_register_driver+0x7c/0x90
- ? cpci_hotplug_init+0x1c/0x1c
- zt5550_init+0x66/0x91
- do_one_initcall+0x7f/0x3d0
- ? rdinit_setup+0x45/0x45
- ? rcu_read_lock_sched_held+0x4f/0x80
- kernel_init_freeable+0x2d7/0x329
- ? rest_init+0x2c0/0x2c0
- kernel_init+0x18/0x190
- ? rest_init+0x2c0/0x2c0
- ? rest_init+0x2c0/0x2c0
- ret_from_fork+0x1f/0x30
-Modules linked in:
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-CR2: 0000000000000028
----[ end trace ef108f49fd26a20c ]---
-RIP: 0010:kthread_stop+0x51/0x380
-Code: b5 4e 10 00 65 8b 05 46 da e1 7e 89 c0 48 0f a3 05 5c c1 ef 05 0f 82 68 01 00 00 e8 99 4e 10 00 4c 8d 6b 28 41 bc 01 00 00 00 <f0> 44 0f c1 63 28 45 85 e4 0f 84 af 02 00 00 e8 7b 4e 10 00 45 85
-RSP: 0000:ffffc90000017ba8 EFLAGS: 00010293
-RAX: ffff888100850000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff811f3b37 RDI: ffffffff86259ca6
-RBP: ffffc90000017bc8 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000001 R11: 00000000ffffffff R12: 0000000000000001
-R13: 0000000000000028 R14: ffff88810160a0c8 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88817b200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000028 CR3: 0000000006a32000 CR4: 00000000000006e0
-Kernel panic - not syncing: Fatal exception
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-Kernel Offset: disabled
-Rebooting in 1 seconds..
+The vastness of the 64-bit space in the CPU view only helps with
+non-prefetchable memory if you have multiple host bridges with
+different CPU-to-PCI translations.  Each root bus can only carve up
+4GB of PCI memory space for use by its non-prefetchable memory
+windows.
 
-Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
----
- drivers/pci/hotplug/cpci_hotplug_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Of course, if we're willing to give up the performance, there's
+nothing to prevent us from using non-prefetchable space for
+*prefetchable* resources, as in my example below.
 
-diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-index d0559d2faf50..d527aae4cc60 100644
---- a/drivers/pci/hotplug/cpci_hotplug_core.c
-+++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-@@ -47,7 +47,7 @@ static atomic_t extracting;
- int cpci_debug;
- static struct cpci_hp_controller *controller;
- static struct task_struct *cpci_thread;
--static int thread_finished;
-+static int thread_finished = 1;
- 
- static int enable_slot(struct hotplug_slot *slot);
- static int disable_slot(struct hotplug_slot *slot);
--- 
-2.17.6
+I think the fede8526cc48 commit log is incorrect, or at least
+incomplete:
 
+  As per PCIe spec r5.0, sec 7.5.1.3.8 only 32-bit BAR registers are defined
+  for non-prefetchable memory and hence a warning should be reported when
+  the size of them go beyond 32-bits.
+
+7.5.1.3.8 is talking about non-prefetchable PCI-to-PCI bridge windows,
+not BARs.  AFAIK, 64-bit BARs may be non-prefetchable.  The warning is
+in pci_parse_request_of_pci_ranges(), which isn't looking at
+PCI-to-PCI bridge windows; it's looking at PCI host bridge windows.
+It's legal for a host bridge to have only non-prefetchable windows,
+and prefetchable PCI BARs can be placed in them.
+
+For example, we could have the following:
+
+  pci_bus 0000:00: root bus resource [mem 0x80000000-0x1_ffffffff] (6GB)
+  pci 0000:00:00.0: PCI bridge to [bus 01-7f]
+  pci 0000:00:00.0:   bridge window [mem 0x80000000-0xbfffffff] (1GB)
+  pci 0000:00:00.0:   bridge window [mem 0x1_00000000-0x1_7fffffff 64bit pref] (2GB)
+  pci 0000:00:00.1: PCI bridge to [bus 80-ff]
+  pci 0000:00:00.1:   bridge window [mem 0xc0000000-0xffffffff] (1GB)
+  pci 0000:00:00.1:   bridge window [mem 0x1_80000000-0x1_ffffffff 64bit pref] (2GB)
+
+Here the host bridge window is 6GB and is not prefetchable.  The
+PCI-to-PCI bridge non-prefetchable windows are 1GB each and the bases
+and limits fit in 32 bits.  The prefetchable windows are 2GB each, and
+we're allowed but not required to put these in prefetchable host
+bridge windows.
+
+So I'm not convinced this warning is valid to begin with.  It may be
+that this host bridge configuration isn't optimal, and we might want
+an informational message, but I think it's *legal*.
+
+> > Relax the condition to only warn when the resource size requires >
+> > 32-bits and doesn't allow mapping to 64-bit addresses.
+> > 
+> > Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
+> > Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+> > Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > Cc: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> >   drivers/pci/of.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 1e45186a5715..38fe2589beb0 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -581,7 +581,8 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+> >                          res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> > 
+> >                          if (!(res->flags & IORESOURCE_PREFETCH))
+> > -                               if (upper_32_bits(resource_size(res)))
+> > +                               if (!(res->flags & IORESOURCE_MEM_64) &&
+> > +                                   upper_32_bits(resource_size(res)))
+> >                                          dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
+> > 
+> >                          break;
+> > --
+> > 2.30.2
+> > 
