@@ -2,163 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF71A3A2DAD
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 16:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24DFD3A2DC3
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jun 2021 16:11:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230332AbhFJOGd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Jun 2021 10:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
+        id S230153AbhFJONM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 10:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229941AbhFJOGd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 10:06:33 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5892AC061574;
-        Thu, 10 Jun 2021 07:04:24 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id e1so1063245pld.13;
-        Thu, 10 Jun 2021 07:04:24 -0700 (PDT)
+        with ESMTP id S229941AbhFJONL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 10:13:11 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34D0C061574;
+        Thu, 10 Jun 2021 07:11:15 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id e1so1075119pld.13;
+        Thu, 10 Jun 2021 07:11:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8AXVPJv+STNoawo/hNoKgr2It26kqyxsee+omAIhuCE=;
-        b=Pblo01v+18qR3ohOngCf7O5Lf57Bak5rnsArtW8TpCcZ5gFyyMRgaScW8AJqX/e2wd
-         1+FvP4+0hLwScfEKxFIuONv38mpwYP3RLcERwYiFquQkLrDc+H1hqXFj8goJry5G788d
-         /V+cxqiB+0KJCgDFuppfuS8zKTZv4Ow947Mst4kKmVAYTNkAv1Gunts0SMde2SZIaRAY
-         J+X6WG1rOr3FdE5Uh40V7S6fX1CzhIhF9huXxpqPFkdDydkkH+xi5lYClmSshOWZT3/1
-         iqDqAKbgSFsluvrwyyK6JQTTShoM8TvnUJDn6Ekgw5alPYM9VhGg3ibyroavpheukBAO
-         lJPg==
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=AKAb5TeB5GVwZN1dfSsZMkCOE2IQAp/s3a/nTdKL9s8=;
+        b=RguhKcjDLAidIuWmMdjadAJrThv8iL+sGlVO6ohEOOamg+UnR1Rk3sGHHdB/aVnnnx
+         KHaDwtnZm0YaZ0bNfp6TG5uVuuTEWMK52WRIh7tRcHBeAZ2anbRj48GefXe8Az2mcgFe
+         wrYq/Cl6Qh3gsZjnb+krZxTL62YdKQU8gvKf+vVtgOY8zKksoTLUFBKJiOyOU5AucnpY
+         tzlb/T3McMQvIZ95cQgvXJT/87cIaVl2DzBjdsXrBvyjNJAC1eiMfDHz734+P7g5ZES3
+         2qrvAzTOYSvAYhOIcNvft/nlmBF0pm1bCoEEd0Atrbs6RVWUrBJHTqFhWZ7ScnEqXAZ2
+         M5Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8AXVPJv+STNoawo/hNoKgr2It26kqyxsee+omAIhuCE=;
-        b=PDReWEIoDSIy0+PMdgLCbujbk1oGDZsb1wxS0KCYdWFwJbUn1UMTr8kTr+mc6xNvDU
-         mmiJiXR9hzEDcUmSwF/ca3qCbngwp562gJ3em5+CHdAa72Ii8LOSSzUFIqhoWzf96to4
-         LY67QJx33R3Y/LmGUTnqDSUlCQqS4VaFys5raKrMz7HiwPyKiaiMVRJZ76RtWmC9UL9c
-         JCiTuL1Yc+D4BBGgZXJFTqKOsiZ9sKqFRQsuCGRHIaBxsVWnggjiSkBVIxbJO1Ltwl/l
-         ECxvh0Z4clykWxwsPP6T337wFCUBJwaNaDTS/VCKcLkiYg+emc/j6oVnRjkodDFEv4e4
-         JDYA==
-X-Gm-Message-State: AOAM531N/Q2gdsVHtg7jzcuhjo9fit2YzhatiHBJEuTPtAQaNz9r0Cow
-        auIT1uIkpe8PCkarnPubCgT5M7u7quP31+qCp4s=
-X-Google-Smtp-Source: ABdhPJwRG7Ppgud2JWSXgRGFUJr3Gmrg5A9IuHOTOnLAbtkk5l7MCotx04GbH2Sg6kNle680OM7CThPTeRNR0Q6Iudw=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr3589906pja.181.1623333863845;
- Thu, 10 Jun 2021 07:04:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=AKAb5TeB5GVwZN1dfSsZMkCOE2IQAp/s3a/nTdKL9s8=;
+        b=oYYSkc2qeNc22yqDrWgQztiz0JjYVFtnUmmor2hDMCJLsbabR6VUEs4RYIR6Fv1Jh9
+         LYqCH+8UsBXQL6aNnYXMI8kholyywGFBJ0kUL3EtddDdwRJl1D5Q36wz5KjiYfNVaGtW
+         rhHCzTwj3TqpJ8TmMzNdvspX6kbbzFfkzPI4aYW0mscPbDkiIFIdCtD84KZtwuwgTZhh
+         6Z/wLargnXnoI5e6lRvPF1+ssHLatt61vr1n+yvr1/ku72YPYDUqr8HDTpfjrX76KrBO
+         zajH/0n4hEiGjJG7LfvzxYMsEBPSmEylywDyvr54Aw1lEOAcxvRto9+Y4lbwlo6ZwYgJ
+         /4EQ==
+X-Gm-Message-State: AOAM532kOBoferINJiUrqTniH1NADbN+r3T8y9u2Mk6EAqYabjNyefck
+        3tIk1a2YAYUplPQZSZPETIM=
+X-Google-Smtp-Source: ABdhPJxSS23KMky7aWpo6xT/GMWrgwMd0tgex+K2wIOykt1ER6+OlUghonXSCmSC03AKRZ33FdfJbg==
+X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr3633905pju.181.1623334274948;
+        Thu, 10 Jun 2021 07:11:14 -0700 (PDT)
+Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
+        by smtp.gmail.com with ESMTPSA id q4sm2663079pfg.3.2021.06.10.07.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 07:11:12 -0700 (PDT)
+From:   Punit Agrawal <punitagrawal@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, robh+dt@kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, alexandru.elisei@arm.com, wqu@suse.com,
+        robin.murphy@arm.com, pgwipeout@gmail.com, ardb@kernel.org,
+        briannorris@chromium.org, shawn.lin@rock-chips.com
+Subject: Re: [PATCH v3 2/4] PCI: of: Relax the condition for warning about
+ non-prefetchable memory aperture size
+References: <20210610040427.GA2696540@bjorn-Precision-5520>
+Date:   Thu, 10 Jun 2021 23:11:10 +0900
+In-Reply-To: <20210610040427.GA2696540@bjorn-Precision-5520> (Bjorn Helgaas's
+        message of "Wed, 9 Jun 2021 23:04:27 -0500")
+Message-ID: <87y2bhkdxd.fsf@stealth>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
- <20210610110211.0e239af6@md1za8fc.ad001.siemens.net> <CAHp75VeYy0tyP-OLZX5dbYFZM1C_K5eALo64_nb4rSvH7-93FA@mail.gmail.com>
- <20210610154844.06e1e733@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210610154844.06e1e733@md1za8fc.ad001.siemens.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Jun 2021 17:04:07 +0300
-Message-ID: <CAHp75VdaZc4yXtd1ggUgEooQfHPteded_Ba_kGpQx4c5TJ9-5g@mail.gmail.com>
-Subject: Re: [rfc, PATCH v1 0/7] PCI: introduce p2sb helper
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 4:48 PM Henning Schild
-<henning.schild@siemens.com> wrote:
+Hi Bjorn,
+
+Bjorn Helgaas <helgaas@kernel.org> writes:
+
+> On Wed, Jun 09, 2021 at 12:36:08AM +0530, Vidya Sagar wrote:
+>> On 6/7/2021 4:58 PM, Punit Agrawal wrote:
+>> > 
+>> > Commit fede8526cc48 ("PCI: of: Warn if non-prefetchable memory
+>> > aperture size is > 32-bit") introduced a warning for non-prefetchable
+>> > resources that need more than 32bits to resolve. It turns out that the
+>> > check is too restrictive and should be applicable to only resources
+>> > that are limited to host bridge windows that don't have the ability to
+>> > map 64-bit address space.
+>>
+>> I think the host bridge windows having the ability to map 64-bit address
+>> space is different from restricting the non-prefetchable memory aperture
+>> size to 32-bit.
 >
-> Am Thu, 10 Jun 2021 13:14:49 +0300
-> schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+>> Whether the host bridge uses internal translations or not to map the
+>> non-prefetchable resources to 64-bit space, the size needs to be programmed
+>> in the host bridge's 'Memory Limit Register (Offset 22h)' which can
+>> represent sizes only fit into 32-bits.
 >
-> > On Thu, Jun 10, 2021 at 12:14 PM Henning Schild
-> > <henning.schild@siemens.com> wrote:
-> > >
-> > > Am Mon, 8 Mar 2021 14:20:13 +0200
-> > > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> > >
-> > > > There are a few users and even at least one more is coming
-> > > > that would like to utilize p2sb mechanisms like hide/unhide
-> > > > a device from PCI configuration space.
-> > > >
-> > > > Here is the series to deduplicate existing users and provide
-> > > > a generic way for new comers.
-> > > >
-> > > > It also includes a patch to enable GPIO controllers on Apollo Lake
-> > > > when it's used with ABL bootloader w/o ACPI support.
-> > >
-> > > That bit is especially interesting. Making pinctl*lake initialize
-> > > when ACPI IDs are missing and p2sb is hidden.
-> > >
-> > > However i have seen pinctl-broxton get confused because it was
-> > > trying to come up twice on a system that has the ACPI entries. Once
-> > > as "INT3452" and second as "apollolake-pinctrl". They should
-> > > probably mutually exclude each other. And the two different names
-> > > for "the same"? thing make it impossible to write a driver using
-> > > those GPIOs.
-> >
-> > Then it's clearly told that BIOS provides confusing data, it exposes
-> > the ACPI device and hides it in p2sb, how is it even supposed to work?
+>> Host bridges having the ability to map 64-bit address spaces gives
+>> flexibility to utilize the vast 64-bit space for the (restrictive)
+>> non-prefetchable memory (i.e. mapping non-prefetchable BARs of endpoints to
+>> the 64-bit space in CPU's view) and get it translated internally and put a
+>> 32-bit address on the PCIe bus finally.
 >
-> The patchset works fine on a machine with hidden p2sb and no ACPI,
-> except for the NULL pointer issue i sent that patch for.
+> The vastness of the 64-bit space in the CPU view only helps with
+> non-prefetchable memory if you have multiple host bridges with
+> different CPU-to-PCI translations.  Each root bus can only carve up
+> 4GB of PCI memory space for use by its non-prefetchable memory
+> windows.
 >
-> The problem appeared with the patchset being used on a machine having
-> ACPI entries and a visible p2sb.
-
-Yep, got it. So, basically we have to do something like call
-acpi_dev_present() and forbid the platform device enumeration in this
-case.
-
-> > I consider only these are valid:
-> >  - ACPI device is provided and it's enabled (status = 15) => work with
-> > ACPI enumeration
-> >  - no ACPI device provided and it's hidden or not by p2sb => work via
-> > board file
-> >  - no ACPI device provided and no device needed / present => no
-> > driver is needed
-> >
-> > > Unless it would try and look up both variants or not looking up with
-> > > gpiochip.label.
-> > >
-> > > I would also need that "enable GPIO w/o ACPI" for skylake.
-> >
-> > Not a problem to add a platform driver name there or actually for all
-> > of the Intel pin control drivers (depends what suits better to the
-> > current design).
-> >
-> > >  I think it
-> > > would be generally useful if the GPIO controllers would be enabled
-> > > not depending on ACPI, and coming up with only one "label" to build
-> > > on top.
-> >
-> > I didn't get what 'label' means here...
+> Of course, if we're willing to give up the performance, there's
+> nothing to prevent us from using non-prefetchable space for
+> *prefetchable* resources, as in my example below.
 >
-> The name of the gpiochip /sys/class/gpiochipxxx/label or the first arg
-> to GPIO_LOOKUP_IDX
-> It seems to me that the very same device driver can come up as
-> "apollolake-pinctrl.0" or "INT3452.0" depending on ACPI table entries.
+> I think the fede8526cc48 commit log is incorrect, or at least
+> incomplete:
+>
+>   As per PCIe spec r5.0, sec 7.5.1.3.8 only 32-bit BAR registers are defined
+>   for non-prefetchable memory and hence a warning should be reported when
+>   the size of them go beyond 32-bits.
+>
+> 7.5.1.3.8 is talking about non-prefetchable PCI-to-PCI bridge windows,
+> not BARs.  AFAIK, 64-bit BARs may be non-prefetchable.  The warning is
+> in pci_parse_request_of_pci_ranges(), which isn't looking at
+> PCI-to-PCI bridge windows; it's looking at PCI host bridge windows.
+> It's legal for a host bridge to have only non-prefetchable windows,
+> and prefetchable PCI BARs can be placed in them.
+>
+> For example, we could have the following:
+>
+>   pci_bus 0000:00: root bus resource [mem 0x80000000-0x1_ffffffff] (6GB)
+>   pci 0000:00:00.0: PCI bridge to [bus 01-7f]
+>   pci 0000:00:00.0:   bridge window [mem 0x80000000-0xbfffffff] (1GB)
+>   pci 0000:00:00.0:   bridge window [mem 0x1_00000000-0x1_7fffffff 64bit pref] (2GB)
+>   pci 0000:00:00.1: PCI bridge to [bus 80-ff]
+>   pci 0000:00:00.1:   bridge window [mem 0xc0000000-0xffffffff] (1GB)
+>   pci 0000:00:00.1:   bridge window [mem 0x1_80000000-0x1_ffffffff 64bit pref] (2GB)
+>
+> Here the host bridge window is 6GB and is not prefetchable.  The
+> PCI-to-PCI bridge non-prefetchable windows are 1GB each and the bases
+> and limits fit in 32 bits.  The prefetchable windows are 2GB each, and
+> we're allowed but not required to put these in prefetchable host
+> bridge windows.
+>
+> So I'm not convinced this warning is valid to begin with.  It may be
+> that this host bridge configuration isn't optimal, and we might want
+> an informational message, but I think it's *legal*.
 
-Which is not a problem. Or is it? The proper way is to use character
-devices and find the controller based on other means than the device
-instance name, but user space also can cope with these two, Since we
-never had a platform that did it in the upstream there is no formal
-ABI breakage or so.
+By "optimal" - are you referring to the use of non-prefetchable space
+for prefetchable window?
 
-> > > > Please, comment on the approach and individual patches.
-> > > >
-> > > > (Since it's cross subsystem, the PCI seems like a main one and
-> > > >  I think it makes sense to route it thru it with immutable tag
-> > > >  or branch provided for the others).
+Also, if the warning doesn't apply to PCI host bridge windows, should I
+drop it in the next update? Or leave out this and the next patch to be
+dealt with separately.
 
+Thanks,
+Punit
 
--- 
-With Best Regards,
-Andy Shevchenko
+[...]
+
