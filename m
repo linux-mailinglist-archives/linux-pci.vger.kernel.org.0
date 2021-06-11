@@ -2,145 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4753A3BC3
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 08:11:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D21463A3E3D
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 10:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231288AbhFKGNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Jun 2021 02:13:18 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59873 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231215AbhFKGNR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Jun 2021 02:13:17 -0400
-X-UUID: 947ffe174cbf4ec18ee409fe6c1f579e-20210611
-X-UUID: 947ffe174cbf4ec18ee409fe6c1f579e-20210611
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 656181751; Fri, 11 Jun 2021 14:11:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 11 Jun 2021 14:11:14 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 11 Jun 2021 14:11:13 +0800
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <bhelgaas@google.com>, <matthias.bgg@gmail.com>
-CC:     <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
-        <yong.wu@mediatek.com>, <chuanjia.liu@mediatek.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 4/4] ARM: dts: mediatek: Update MT7629 PCIe node for new format
-Date:   Fri, 11 Jun 2021 14:09:02 +0800
-Message-ID: <20210611060902.12418-5-chuanjia.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20210611060902.12418-1-chuanjia.liu@mediatek.com>
-References: <20210611060902.12418-1-chuanjia.liu@mediatek.com>
+        id S230307AbhFKIrL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Jun 2021 04:47:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229584AbhFKIrL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Jun 2021 04:47:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5D986613B3;
+        Fri, 11 Jun 2021 08:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623401113;
+        bh=lFOCAvTa5kzm9zjAjf2Cb6+Xc+gz2Rbc6efLS2UFKkI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BE54IPKK/mj7XtJint2tB9C5Rd87WaGfFjnd3Qz6D+K5jHuhoULdezgurcXosn2Yv
+         itC/ZCAjXBR3aR4Bm/9wR2sCPrOXHiEL5kGUL71exlcF+Ix1zjrM9+aMGS1oS+Utob
+         5tBmxzN92lAF5wWOszdETku6UgPAI7pnqbgdBvgu0w6HjimxEFLZl6VKbOKs3QjRbd
+         HiXZM6r5X9ujiKTnC8hHjzEvYQWYvWUg+m3vtK7QtvwaHrOL3gnDPeXaQVTrEAYU44
+         I+zOqz2rfXQlMiVyNEUFxfMBlT+jyCP0mjZPmZQNkBT7JiT/exq0be5n9+xuyNep8B
+         ZWEMtyK/AEOBw==
+Date:   Fri, 11 Jun 2021 10:45:07 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 26/34] docs: PCI: endpoint: pci-endpoint-cfs.rst: avoid
+ using ReSt :doc:`foo` markup
+Message-ID: <20210611104507.01bbd489@coco.lan>
+In-Reply-To: <20210610234622.GA2795707@bjorn-Precision-5520>
+References: <5268f6eb75bc0fe000f4884bca0a17f01eddbc40.1622898327.git.mchehab+huawei@kernel.org>
+        <20210610234622.GA2795707@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To match the new dts binding. Remove "subsys",unused
-interrupt and slot node.Add "interrupt-names",
-"linux,pci-domain" and pciecfg node.
+Em Thu, 10 Jun 2021 18:46:22 -0500
+Bjorn Helgaas <helgaas@kernel.org> escreveu:
 
-Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm/boot/dts/mt7629-rfb.dts |  3 ++-
- arch/arm/boot/dts/mt7629.dtsi    | 45 +++++++++++++++-----------------
- 2 files changed, 23 insertions(+), 25 deletions(-)
+> On Sat, Jun 05, 2021 at 03:18:25PM +0200, Mauro Carvalho Chehab wrote:
+> > The :doc:`foo` tag is auto-generated via automarkup.py.
+> > So, use the filename at the sources, instead of :doc:`foo`.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> It'd be nice to know why we're doing this and what the benefit is.
 
-diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
-index 9980c10c6e29..eb536cbebd9b 100644
---- a/arch/arm/boot/dts/mt7629-rfb.dts
-+++ b/arch/arm/boot/dts/mt7629-rfb.dts
-@@ -140,9 +140,10 @@
- 	};
- };
- 
--&pcie {
-+&pcie1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_pins>;
-+	status = "okay";
- };
- 
- &pciephy1 {
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 874043f0490d..46fc236e1b89 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -361,16 +361,21 @@
- 			#reset-cells = <1>;
- 		};
- 
--		pcie: pcie@1a140000 {
-+		pciecfg: pciecfg@1a140000 {
-+			compatible = "mediatek,generic-pciecfg", "syscon";
-+			reg = <0x1a140000 0x1000>;
-+		};
-+
-+		pcie1: pcie@1a145000 {
- 			compatible = "mediatek,mt7629-pcie";
- 			device_type = "pci";
--			reg = <0x1a140000 0x1000>,
--			      <0x1a145000 0x1000>;
--			reg-names = "subsys","port1";
-+			reg = <0x1a145000 0x1000>;
-+			reg-names = "port1";
-+			linux,pci-domain = <1>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
--			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
--				     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-+			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-names = "pcie_irq";
- 			clocks = <&pciesys CLK_PCIE_P1_MAC_EN>,
- 				 <&pciesys CLK_PCIE_P0_AHB_EN>,
- 				 <&pciesys CLK_PCIE_P1_AUX_EN>,
-@@ -391,26 +396,18 @@
- 			power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
- 			bus-range = <0x00 0xff>;
- 			ranges = <0x82000000 0 0x20000000 0x20000000 0 0x10000000>;
-+			status = "disabled";
- 
--			pcie1: pcie@1,0 {
--				device_type = "pci";
--				reg = <0x0800 0 0 0 0>;
--				#address-cells = <3>;
--				#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-+					<0 0 0 2 &pcie_intc1 1>,
-+					<0 0 0 3 &pcie_intc1 2>,
-+					<0 0 0 4 &pcie_intc1 3>;
-+			pcie_intc1: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
- 				#interrupt-cells = <1>;
--				ranges;
--				num-lanes = <1>;
--				interrupt-map-mask = <0 0 0 7>;
--				interrupt-map = <0 0 0 1 &pcie_intc1 0>,
--						<0 0 0 2 &pcie_intc1 1>,
--						<0 0 0 3 &pcie_intc1 2>,
--						<0 0 0 4 &pcie_intc1 3>;
--
--				pcie_intc1: interrupt-controller {
--					interrupt-controller;
--					#address-cells = <0>;
--					#interrupt-cells = <1>;
--				};
- 			};
- 		};
- 
--- 
-2.18.0
+That came from an upstream discussion, mentioned on patch 00/34:
 
+		https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
+
+Basically, using Documentation/.../foo.rst allows some text editors
+to navigate directly to the file. Also, there's a preference from
+some maintainers to keep the ReST files as close as possible to plain
+text.
+
+> Maybe if you know more about ReSt, it's obvious that using :doc:`foo`
+> is wrong and produces the wrong output or something.  But I don't
+> know.
+
+It is more a matter of preference. That's said, there is indeed
+an issue with the current builder: when using SPHINXDIRS="book",
+doc:`foo` references may not work well. For instance, if one is
+building just the driver-api book, a reference like :doc:`../admin-guide/foo`
+can't be solved and will produce a warning, plus a bad output.
+
+By using Documentation/admin-guide/foo.rst, it will simply be
+displayed as a text without producing any harm.
+
+We discussed in the past about that, but we didn't reach to any
+conclusion about the proper way to fix it.
+
+> I do think the pathname in the new text is easier for plain-text
+> readers to follow.
+
+Yes.
+
+> 
+> (What's the correct spelling of "ReSt", BTW?  The cover letter has
+> "ReST", this patch has "ReSt", wikipedia says "RST, ReST, or reST".)
+
+ReSt was a typo.. sorry for that. I guess the proper way is ReST,
+but several places use RST instead. For instance, the conversion
+tool pandoc uses "rst" to refer to this format.
+
+> 
+> But anyway,
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thanks!
+Mauro
+
+> 
+> > ---
+> >  Documentation/PCI/endpoint/pci-endpoint-cfs.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
+> > index 696f8eeb4738..db609b97ad58 100644
+> > --- a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
+> > +++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
+> > @@ -125,4 +125,4 @@ all the EPF devices are created and linked with the EPC device.
+> >  						| interrupt_pin
+> >  						| function
+> >  
+> > -[1] :doc:`pci-endpoint`
+> > +[1] Documentation/PCI/endpoint/pci-endpoint.rst
+> > -- 
+> > 2.31.1
+> >   
+
+
+
+Thanks,
+Mauro
