@@ -2,62 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 832E73A398F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 04:13:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55E873A3A86
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 05:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231178AbhFKCPD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Jun 2021 22:15:03 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:47327 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S230168AbhFKCPC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 22:15:02 -0400
-Received: (qmail 24249 invoked by uid 1000); 10 Jun 2021 22:13:04 -0400
-Date:   Thu, 10 Jun 2021 22:13:04 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Ibrahim Erturk <ierturk@ieee.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: Strange problem with USB device
-Message-ID: <20210611021304.GA23289@rowland.harvard.edu>
-References: <cfc37ce0-823e-0d19-f5d7-fcd571a94943@lwfinger.net>
- <20210608182038.GA1812516@rowland.harvard.edu>
- <a7c7ba62-a74f-d7db-bfd9-4f6c8e25e0b8@lwfinger.net>
- <20210608185314.GB1812516@rowland.harvard.edu>
- <960057be-ef17-49e7-adba-ba2929d3a01f@lwfinger.net>
- <20210609021237.GA1826754@rowland.harvard.edu>
- <CAFHYy-iMty-jjZzgzRA6tOezN-RJ+o4hRL1kZk+tuN1i-K9Ukg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFHYy-iMty-jjZzgzRA6tOezN-RJ+o4hRL1kZk+tuN1i-K9Ukg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S231503AbhFKDxg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Jun 2021 23:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230329AbhFKDxf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Jun 2021 23:53:35 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6305CC061574
+        for <linux-pci@vger.kernel.org>; Thu, 10 Jun 2021 20:51:24 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id n12so1357734pgs.13
+        for <linux-pci@vger.kernel.org>; Thu, 10 Jun 2021 20:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=wkd+psqbxttkDtNMuavQIcbFyZNe+XjsMd8VM7sojkI=;
+        b=JE3Ka7tzFc86cVsvB8jDnClacgUNXr8fr7M5bfL86aoyBQTPxUZSC4+jzCWP/GjsYG
+         Y/05AKjPYV/OGQxQCbP9TJLaKvQE5g3Di6k9LkUVA3nxmGnyCIOXzCKw7GEI/nqvxs0o
+         8VdeX7skBNzJcjawD84AhVUFW3Raoy2hhkXzi8+9mCCXb9VxHueEEyobN4ShgqjOaF7c
+         MwbFzvOCsTmjs7dv3ieBDdoBvJDVW/kB8R07aNgCzcOtxaa+9n9iHp8qI0MFIs4gnv5/
+         boJQmapv6vXP+XO+Lrc5h8UpfViRqnhexKwWM/0MqR0/OqBFvI0KraVHMcmgtrWeA3a3
+         0CDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wkd+psqbxttkDtNMuavQIcbFyZNe+XjsMd8VM7sojkI=;
+        b=ZVSokrcYULfkBKpACUjNSxnLMFfnL6mdaelsOzwqCphSvz/x1q1zJ5A4mjP544XReE
+         jRhpJ8bqBrGp60bqdM+JOzKpirCafmuzAPlXOnXJLfDvKqWnlVJRtCPGVj/aa24+DQjR
+         vEsxvPLt6qvcwdK5B84vGFmQ1LMVI27hr94qqA1e1MXTETm7f3pZIQD/Q7JI/KpmPHhX
+         3ggQnDjUTimma565leBgfF21zug6/1Xu745f11FqHw4iX/1ibrREa6wAwuEI/7vQi5Nh
+         PmDhQDHWPKMia+OhgxpT0LsOVzHfzREgkN7ik8jaCK3JTG+i8lD/PtmDjytZqlb8Utxj
+         K0aQ==
+X-Gm-Message-State: AOAM533zwZxxF/59ta+KapOo6wgiPlvLoZVV3UDcvENmF3RQIOCpl76X
+        LiLMV+LXD/o7NBiCgTocnN78hw==
+X-Google-Smtp-Source: ABdhPJxaRJdzooBXF+rIKkLISjncPrqsB+/j/AV6w+YPi8Nos9bRbP6hkuiTkZI1pGFg/vOxEfQ0uQ==
+X-Received: by 2002:a63:1453:: with SMTP id 19mr1589790pgu.270.1623383483960;
+        Thu, 10 Jun 2021 20:51:23 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id n37sm3565593pfv.47.2021.06.10.20.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 20:51:23 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+Cc:     mie@igel.co.jp, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: endpoint: Fix use after free in pci_epf_remove_cfs()
+Date:   Fri, 11 Jun 2021 12:50:44 +0900
+Message-Id: <20210611035044.87639-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 03:08:16AM +0300, Ibrahim Erturk wrote:
-> Hi,
-> 
-> I've already attached logs and a snapshot from the device manager on
-> the windows side into the bug report. Hope this helps.
+All of entries are freed in a loop, however, the freed entry is accessed
+by list_del() after the loop.
 
-Yes, it does help.  Although the information in those reports is somewhat 
-disorganized, it clearly shows there is only one USB host controller in the 
-system, and that is the one Linux detects.  So my impression that we weren't 
-finding the host controller was wrong.
+Fixes: ef1433f ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
+Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+---
+ drivers/pci/endpoint/pci-epf-core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Back to my earlier guess: The Realtek board has to be told to do something in 
-order to make the Bluetooth device start working, such as turning on a power 
-source.  (And perhaps that is what the RealTek people were talking about when 
-they suggested the problem could be in the rtw8822 power-up sequence.)  Whatever 
-it is, the rtw8822 driver isn't doing it.
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index e9289d10f822..538e902b0ba6 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -202,8 +202,10 @@ static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
+ 		return;
+ 
+ 	mutex_lock(&pci_epf_mutex);
+-	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
++	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry) {
++		list_del(&group->group_entry);
+ 		pci_ep_cfs_remove_epf_group(group);
++	}
+ 	list_del(&driver->epf_group);
+ 	mutex_unlock(&pci_epf_mutex);
+ }
+-- 
+2.17.1
 
-This means it's still a PCI problem.
-
-Alan Stern
-
-PS: Larry, the discrepancy between Windows reporting an Intel USB hub and Linux 
-reporting two Linux Foundation hubs isn't real -- or at least, it's what should 
-be expected.  I can explain in more detail if you're curious, but you don't need 
-to worry about it.
