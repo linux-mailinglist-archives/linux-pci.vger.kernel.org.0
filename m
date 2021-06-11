@@ -2,127 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D21463A3E3D
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 10:45:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11CD43A3E61
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 10:56:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230307AbhFKIrL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Jun 2021 04:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57090 "EHLO mail.kernel.org"
+        id S230460AbhFKI6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Jun 2021 04:58:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26145 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229584AbhFKIrL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Jun 2021 04:47:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5D986613B3;
-        Fri, 11 Jun 2021 08:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623401113;
-        bh=lFOCAvTa5kzm9zjAjf2Cb6+Xc+gz2Rbc6efLS2UFKkI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BE54IPKK/mj7XtJint2tB9C5Rd87WaGfFjnd3Qz6D+K5jHuhoULdezgurcXosn2Yv
-         itC/ZCAjXBR3aR4Bm/9wR2sCPrOXHiEL5kGUL71exlcF+Ix1zjrM9+aMGS1oS+Utob
-         5tBmxzN92lAF5wWOszdETku6UgPAI7pnqbgdBvgu0w6HjimxEFLZl6VKbOKs3QjRbd
-         HiXZM6r5X9ujiKTnC8hHjzEvYQWYvWUg+m3vtK7QtvwaHrOL3gnDPeXaQVTrEAYU44
-         I+zOqz2rfXQlMiVyNEUFxfMBlT+jyCP0mjZPmZQNkBT7JiT/exq0be5n9+xuyNep8B
-         ZWEMtyK/AEOBw==
-Date:   Fri, 11 Jun 2021 10:45:07 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+        id S230248AbhFKI6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Jun 2021 04:58:04 -0400
+IronPort-SDR: D1ZC/df2fLh8g3K/qxkTFZFB89xzJccf/o5Rf1St/pJZMXe6reGEFfaZeoMG5THUvWtH84IVGk
+ ySoqZpr6l1xg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="185180283"
+X-IronPort-AV: E=Sophos;i="5.83,265,1616482800"; 
+   d="scan'208";a="185180283"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 01:56:07 -0700
+IronPort-SDR: ICuZJtsCZ/9A02O/o+zhxo/oqeNEZV1yZeOwRydluYn/XddE7RncQCxCILiUY5tpy3pPqLxPoE
+ 08ERzPyNcM1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,265,1616482800"; 
+   d="scan'208";a="450697238"
+Received: from lkp-server02.sh.intel.com (HELO 3cb98b298c7e) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Jun 2021 01:56:06 -0700
+Received: from kbuild by 3cb98b298c7e with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lrcxS-0000Wu-54; Fri, 11 Jun 2021 08:56:06 +0000
+Date:   Fri, 11 Jun 2021 16:55:23 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 26/34] docs: PCI: endpoint: pci-endpoint-cfs.rst: avoid
- using ReSt :doc:`foo` markup
-Message-ID: <20210611104507.01bbd489@coco.lan>
-In-Reply-To: <20210610234622.GA2795707@bjorn-Precision-5520>
-References: <5268f6eb75bc0fe000f4884bca0a17f01eddbc40.1622898327.git.mchehab+huawei@kernel.org>
-        <20210610234622.GA2795707@bjorn-Precision-5520>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 2462625827721ea1c072e3cc314863ffd13df9c5
+Message-ID: <60c324fb.8ASFM2rpJG0NMRYt%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Thu, 10 Jun 2021 18:46:22 -0500
-Bjorn Helgaas <helgaas@kernel.org> escreveu:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 2462625827721ea1c072e3cc314863ffd13df9c5  Merge branch 'remotes/lorenzo/pci/xgene'
 
-> On Sat, Jun 05, 2021 at 03:18:25PM +0200, Mauro Carvalho Chehab wrote:
-> > The :doc:`foo` tag is auto-generated via automarkup.py.
-> > So, use the filename at the sources, instead of :doc:`foo`.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> 
-> It'd be nice to know why we're doing this and what the benefit is.
+elapsed time: 721m
 
-That came from an upstream discussion, mentioned on patch 00/34:
+configs tested: 165
+configs skipped: 3
 
-		https://lore.kernel.org/linux-doc/871r9k6rmy.fsf@meer.lwn.net/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Basically, using Documentation/.../foo.rst allows some text editors
-to navigate directly to the file. Also, there's a preference from
-some maintainers to keep the ReST files as close as possible to plain
-text.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+sh                          sdk7780_defconfig
+arc                    vdk_hs38_smp_defconfig
+arm                         vf610m4_defconfig
+m68k                           sun3_defconfig
+mips                        nlm_xlp_defconfig
+arm                        spear6xx_defconfig
+arm                           stm32_defconfig
+sh                   sh7770_generic_defconfig
+arm                         s5pv210_defconfig
+sh                          rsk7201_defconfig
+arm                        shmobile_defconfig
+m68k                          sun3x_defconfig
+x86_64                              defconfig
+alpha                            allyesconfig
+arm                          pxa910_defconfig
+sh                   rts7751r2dplus_defconfig
+arm                     davinci_all_defconfig
+powerpc                 mpc8560_ads_defconfig
+mips                           ip32_defconfig
+powerpc                     tqm8560_defconfig
+arm                         hackkit_defconfig
+sh                          kfr2r09_defconfig
+mips                        jmr3927_defconfig
+arm                     am200epdkit_defconfig
+mips                           ip22_defconfig
+ia64                             allmodconfig
+sh                          polaris_defconfig
+arc                                 defconfig
+arm                      footbridge_defconfig
+arm                   milbeaut_m10v_defconfig
+arm                     eseries_pxa_defconfig
+sh                          r7780mp_defconfig
+arm                        mini2440_defconfig
+arm                       omap2plus_defconfig
+h8300                     edosk2674_defconfig
+arm                      tct_hammer_defconfig
+arm                         lpc32xx_defconfig
+powerpc                    ge_imp3a_defconfig
+sh                          urquell_defconfig
+arm                          gemini_defconfig
+parisc                           alldefconfig
+mips                            gpr_defconfig
+nios2                               defconfig
+sparc64                             defconfig
+sh                            shmin_defconfig
+h8300                            alldefconfig
+mips                        workpad_defconfig
+openrisc                  or1klitex_defconfig
+sparc                            alldefconfig
+sh                           se7721_defconfig
+mips                         db1xxx_defconfig
+sh                               j2_defconfig
+powerpc                          allmodconfig
+powerpc                      pmac32_defconfig
+mips                         rt305x_defconfig
+powerpc                      tqm8xx_defconfig
+nios2                         3c120_defconfig
+microblaze                      mmu_defconfig
+powerpc                     rainier_defconfig
+powerpc                      ppc6xx_defconfig
+um                               alldefconfig
+powerpc                 mpc836x_mds_defconfig
+arc                          axs103_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                 linkstation_defconfig
+powerpc                    mvme5100_defconfig
+powerpc                   lite5200b_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                      ppc44x_defconfig
+x86_64                            allnoconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20210610
+i386                 randconfig-a006-20210610
+i386                 randconfig-a004-20210610
+i386                 randconfig-a001-20210610
+i386                 randconfig-a005-20210610
+i386                 randconfig-a003-20210610
+i386                 randconfig-a002-20210611
+i386                 randconfig-a006-20210611
+i386                 randconfig-a004-20210611
+i386                 randconfig-a001-20210611
+i386                 randconfig-a005-20210611
+i386                 randconfig-a003-20210611
+x86_64               randconfig-a015-20210610
+x86_64               randconfig-a011-20210610
+x86_64               randconfig-a012-20210610
+x86_64               randconfig-a014-20210610
+x86_64               randconfig-a016-20210610
+x86_64               randconfig-a013-20210610
+x86_64               randconfig-a002-20210611
+x86_64               randconfig-a001-20210611
+x86_64               randconfig-a004-20210611
+x86_64               randconfig-a003-20210611
+x86_64               randconfig-a006-20210611
+x86_64               randconfig-a005-20210611
+i386                 randconfig-a015-20210610
+i386                 randconfig-a013-20210610
+i386                 randconfig-a016-20210610
+i386                 randconfig-a014-20210610
+i386                 randconfig-a012-20210610
+i386                 randconfig-a011-20210610
+i386                 randconfig-a015-20210611
+i386                 randconfig-a013-20210611
+i386                 randconfig-a016-20210611
+i386                 randconfig-a014-20210611
+i386                 randconfig-a012-20210611
+i386                 randconfig-a011-20210611
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-> Maybe if you know more about ReSt, it's obvious that using :doc:`foo`
-> is wrong and produces the wrong output or something.  But I don't
-> know.
+clang tested configs:
+x86_64               randconfig-a002-20210610
+x86_64               randconfig-a001-20210610
+x86_64               randconfig-a004-20210610
+x86_64               randconfig-a003-20210610
+x86_64               randconfig-a006-20210610
+x86_64               randconfig-a005-20210610
+x86_64               randconfig-a002-20210607
+x86_64               randconfig-a004-20210607
+x86_64               randconfig-a003-20210607
+x86_64               randconfig-a006-20210607
+x86_64               randconfig-a005-20210607
+x86_64               randconfig-a001-20210607
 
-It is more a matter of preference. That's said, there is indeed
-an issue with the current builder: when using SPHINXDIRS="book",
-doc:`foo` references may not work well. For instance, if one is
-building just the driver-api book, a reference like :doc:`../admin-guide/foo`
-can't be solved and will produce a warning, plus a bad output.
-
-By using Documentation/admin-guide/foo.rst, it will simply be
-displayed as a text without producing any harm.
-
-We discussed in the past about that, but we didn't reach to any
-conclusion about the proper way to fix it.
-
-> I do think the pathname in the new text is easier for plain-text
-> readers to follow.
-
-Yes.
-
-> 
-> (What's the correct spelling of "ReSt", BTW?  The cover letter has
-> "ReST", this patch has "ReSt", wikipedia says "RST, ReST, or reST".)
-
-ReSt was a typo.. sorry for that. I guess the proper way is ReST,
-but several places use RST instead. For instance, the conversion
-tool pandoc uses "rst" to refer to this format.
-
-> 
-> But anyway,
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Thanks!
-Mauro
-
-> 
-> > ---
-> >  Documentation/PCI/endpoint/pci-endpoint-cfs.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-> > index 696f8eeb4738..db609b97ad58 100644
-> > --- a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-> > +++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-> > @@ -125,4 +125,4 @@ all the EPF devices are created and linked with the EPC device.
-> >  						| interrupt_pin
-> >  						| function
-> >  
-> > -[1] :doc:`pci-endpoint`
-> > +[1] Documentation/PCI/endpoint/pci-endpoint.rst
-> > -- 
-> > 2.31.1
-> >   
-
-
-
-Thanks,
-Mauro
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
