@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD2B3A452D
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 17:28:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D1643A4531
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 17:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231869AbhFKPag (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Jun 2021 11:30:36 -0400
-Received: from mail-pg1-f172.google.com ([209.85.215.172]:46836 "EHLO
-        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231858AbhFKPac (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Jun 2021 11:30:32 -0400
-Received: by mail-pg1-f172.google.com with SMTP id n12so2727241pgs.13
-        for <linux-pci@vger.kernel.org>; Fri, 11 Jun 2021 08:28:21 -0700 (PDT)
+        id S231853AbhFKPap (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Jun 2021 11:30:45 -0400
+Received: from mail-pj1-f43.google.com ([209.85.216.43]:52034 "EHLO
+        mail-pj1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231804AbhFKPap (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Jun 2021 11:30:45 -0400
+Received: by mail-pj1-f43.google.com with SMTP id k5so5893482pjj.1
+        for <linux-pci@vger.kernel.org>; Fri, 11 Jun 2021 08:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nk5KLnjJUZzmwtQpVnUAlLQfo+45PCj3pfGwn0Xh8Lc=;
-        b=ZWUxrjtFrWfMiz2vkDC3jaU4HtvtATQivM2/a1WCbJcnmtmvKI0dai77VR4iYEO7wi
-         qbyNf8h4nuDiw8nL5J1NWb9gMMiyGOXWgSIcxhIHjtKOTxqX7IkzBlm/uHswtyFUBs9r
-         1dmPjPkxMqFDM4eWBrACbXxSEo8vyq9XlFtA4=
+        bh=POwdGvWH9uF6GuFYGDpfWh3gBTCdeay2Nuv62kz+670=;
+        b=C9jITNUpsFL469uBCWw+ylcEXmDJHC24qGoWeq47lXmwrDoiFy9SQ+nYUnDf9eoUhJ
+         UQMk8xg5DYQsIoGnRwISCRXEWnbFfVNYAqeVla6v7rlivkLs9OCXtvoP8+LC1h0SWDED
+         3sRx2R1OhX94fVL71OHRWyugi7Thhky5EB+DQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nk5KLnjJUZzmwtQpVnUAlLQfo+45PCj3pfGwn0Xh8Lc=;
-        b=aWyC1m3IOw0Q3Trx2+hOfpg/toQXkyDhcJ98pY+1wdNKDarymcPBr9JLXbGQYdmoXf
-         mTAdpcZ8XRYS6J3eUFYsJjOG0D4FcLSfGXq2d2v9WAAi8d0clTDDo1oX73iGBsNDeLXF
-         vOPMb+asiSifkROtxGHvZ8LUoxHj+uaE3yLQG2mCkFONWuILYSI/RC5E2Sr4XY8VRfVj
-         VmfspjrkOSzA7C4vz7YsFfBgLo6HNtsoImksxO5FMGPBYjnNObYRJdhf2GU7WDPOxt+2
-         hR5yNEE+L/oR1aKOWZNg/LXbTprubbqkPWWF5eNv6IDwiztregc1pzn57EKxQ7n3XzJR
-         Tb3w==
-X-Gm-Message-State: AOAM532ZhgoentofZGq/h73+dldo8cwxLvoHDisUGj8wU+cqCFZN+gVm
-        lmu0mVnHg/tSvUUfuh9dHhawZA==
-X-Google-Smtp-Source: ABdhPJzVViGqCnvRmV8jjGxainZfFkO96cSEyNRWz3J/3hQzjle8DzEEYAlc9QxFMOZm5LzjKL8vSg==
-X-Received: by 2002:a63:1210:: with SMTP id h16mr4191204pgl.189.1623425241610;
-        Fri, 11 Jun 2021 08:27:21 -0700 (PDT)
+        bh=POwdGvWH9uF6GuFYGDpfWh3gBTCdeay2Nuv62kz+670=;
+        b=hb/GJj1VJC79adIwbOqjYHjkFryt8825LzPrQWvIsnkyIrrANEfkZGahyeraqI9ZnP
+         0faYhTRHJp8+jvtveUps+az1GbOerJpbUKddpkg3NXNBhgiRvFjL2sAemsdWu0aVkhpn
+         ReW4Wk99Srwwj64jAFMCM27ZDui9G74BO7N1XaV9QuSvG82ApQHv6EAN/e7FSBQrGG3h
+         bpcxgV7FisWxDjcQJ+nJQ4IecqfKjarxtbGO9ERVomQP7oEyd5N5HN4RR+Du2LZwAQR2
+         jr55/UCJEa0YTiWoIFzN449jJ6KIccqWtRgVvLFLcznD5f1iY7xoDnQ9GnXmf7pBdeHw
+         w6rg==
+X-Gm-Message-State: AOAM532jRG9CsWw6X6CebxLNP6ykgbSD/ag2zmsG+g/ytqMDhbszZ0OD
+        d3nBSc2u0nvNXL6LHLEptLRPXg==
+X-Google-Smtp-Source: ABdhPJye589iRfRWyEdkeIKw72OE8rv2dNVWo6QIa4VZn02HOM9CDAmVKp9644S+z7efQaweuHXMtA==
+X-Received: by 2002:a17:90a:7bce:: with SMTP id d14mr5098913pjl.38.1623425250808;
+        Fri, 11 Jun 2021 08:27:30 -0700 (PDT)
 Received: from localhost ([2401:fa00:95:205:33c8:8e01:1161:6797])
-        by smtp.gmail.com with UTF8SMTPSA id a11sm5354193pjq.45.2021.06.11.08.27.14
+        by smtp.gmail.com with UTF8SMTPSA id fs10sm10781936pjb.31.2021.06.11.08.27.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Jun 2021 08:27:20 -0700 (PDT)
+        Fri, 11 Jun 2021 08:27:30 -0700 (PDT)
 From:   Claire Chang <tientzu@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
@@ -75,9 +75,9 @@ Cc:     benh@kernel.crashing.org, paulus@samba.org,
         joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
         maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
         rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: [PATCH v9 01/14] swiotlb: Refactor swiotlb init functions
-Date:   Fri, 11 Jun 2021 23:26:46 +0800
-Message-Id: <20210611152659.2142983-2-tientzu@chromium.org>
+Subject: [PATCH v9 02/14] swiotlb: Refactor swiotlb_create_debugfs
+Date:   Fri, 11 Jun 2021 23:26:47 +0800
+Message-Id: <20210611152659.2142983-3-tientzu@chromium.org>
 X-Mailer: git-send-email 2.32.0.272.g935e593368-goog
 In-Reply-To: <20210611152659.2142983-1-tientzu@chromium.org>
 References: <20210611152659.2142983-1-tientzu@chromium.org>
@@ -87,101 +87,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a new function, swiotlb_init_io_tlb_mem, for the io_tlb_mem struct
-initialization to make the code reusable.
+Split the debugfs creation to make the code reusable for supporting
+different bounce buffer pools, e.g. restricted DMA pool.
 
 Signed-off-by: Claire Chang <tientzu@chromium.org>
 ---
- kernel/dma/swiotlb.c | 53 ++++++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 26 deletions(-)
+ kernel/dma/swiotlb.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 8ca7d505d61c..1a1208c81e85 100644
+index 1a1208c81e85..8a3e2b3b246d 100644
 --- a/kernel/dma/swiotlb.c
 +++ b/kernel/dma/swiotlb.c
-@@ -168,9 +168,32 @@ void __init swiotlb_update_mem_attributes(void)
- 	memset(vaddr, 0, bytes);
- }
+@@ -64,6 +64,9 @@
+ enum swiotlb_force swiotlb_force;
  
--int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
-+static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
-+				    unsigned long nslabs, bool late_alloc,
-+				    bool memory_decrypted)
+ struct io_tlb_mem *io_tlb_default_mem;
++#ifdef CONFIG_DEBUG_FS
++static struct dentry *debugfs_dir;
++#endif
+ 
+ /*
+  * Max segment that we can provide which (if pages are contingous) will
+@@ -664,18 +667,24 @@ EXPORT_SYMBOL_GPL(is_swiotlb_active);
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 
+-static int __init swiotlb_create_debugfs(void)
++static void swiotlb_create_debugfs_files(struct io_tlb_mem *mem)
  {
-+	void *vaddr = phys_to_virt(start);
- 	unsigned long bytes = nslabs << IO_TLB_SHIFT, i;
-+
-+	mem->nslabs = nslabs;
-+	mem->start = start;
-+	mem->end = mem->start + bytes;
-+	mem->index = 0;
-+	mem->late_alloc = late_alloc;
-+	spin_lock_init(&mem->lock);
-+	for (i = 0; i < mem->nslabs; i++) {
-+		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
-+		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
-+		mem->slots[i].alloc_size = 0;
-+	}
-+
-+	if (memory_decrypted)
-+		set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
-+	memset(vaddr, 0, bytes);
+-	struct io_tlb_mem *mem = io_tlb_default_mem;
+-
+-	if (!mem)
+-		return 0;
+-	mem->debugfs = debugfs_create_dir("swiotlb", NULL);
+ 	debugfs_create_ulong("io_tlb_nslabs", 0400, mem->debugfs, &mem->nslabs);
+ 	debugfs_create_ulong("io_tlb_used", 0400, mem->debugfs, &mem->used);
 +}
 +
-+int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
++static int __init swiotlb_create_default_debugfs(void)
 +{
- 	struct io_tlb_mem *mem;
- 	size_t alloc_size;
- 
-@@ -186,16 +209,8 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
- 	if (!mem)
- 		panic("%s: Failed to allocate %zu bytes align=0x%lx\n",
- 		      __func__, alloc_size, PAGE_SIZE);
--	mem->nslabs = nslabs;
--	mem->start = __pa(tlb);
--	mem->end = mem->start + bytes;
--	mem->index = 0;
--	spin_lock_init(&mem->lock);
--	for (i = 0; i < mem->nslabs; i++) {
--		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
--		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
--		mem->slots[i].alloc_size = 0;
--	}
++	struct io_tlb_mem *mem = io_tlb_default_mem;
 +
-+	swiotlb_init_io_tlb_mem(mem, __pa(tlb), nslabs, false, false);
++	debugfs_dir = debugfs_create_dir("swiotlb", NULL);
++	if (mem) {
++		mem->debugfs = debugfs_dir;
++		swiotlb_create_debugfs_files(mem);
++	}
+ 	return 0;
+ }
  
- 	io_tlb_default_mem = mem;
- 	if (verbose)
-@@ -282,7 +297,6 @@ swiotlb_late_init_with_default_size(size_t default_size)
- int
- swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
- {
--	unsigned long bytes = nslabs << IO_TLB_SHIFT, i;
- 	struct io_tlb_mem *mem;
+-late_initcall(swiotlb_create_debugfs);
++late_initcall(swiotlb_create_default_debugfs);
  
- 	if (swiotlb_force == SWIOTLB_NO_FORCE)
-@@ -297,20 +311,7 @@ swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
- 	if (!mem)
- 		return -ENOMEM;
- 
--	mem->nslabs = nslabs;
--	mem->start = virt_to_phys(tlb);
--	mem->end = mem->start + bytes;
--	mem->index = 0;
--	mem->late_alloc = 1;
--	spin_lock_init(&mem->lock);
--	for (i = 0; i < mem->nslabs; i++) {
--		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
--		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
--		mem->slots[i].alloc_size = 0;
--	}
--
--	set_memory_decrypted((unsigned long)tlb, bytes >> PAGE_SHIFT);
--	memset(tlb, 0, bytes);
-+	swiotlb_init_io_tlb_mem(mem, virt_to_phys(tlb), nslabs, true, true);
- 
- 	io_tlb_default_mem = mem;
- 	swiotlb_print_info();
+ #endif
 -- 
 2.32.0.272.g935e593368-goog
 
