@@ -2,239 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6311C3A4188
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 13:57:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A25C73A4437
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 16:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbhFKL7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Jun 2021 07:59:15 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23333 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230370AbhFKL7O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Jun 2021 07:59:14 -0400
-IronPort-SDR: y1PhHGhJE4p7IGEjXTjbHXj+rczgBk1/sm/aOI8S5q0dHtLgAS7Biz06nHHFzXqCKl22OXOp1G
- LGmjplO+FSow==
-X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="192622172"
-X-IronPort-AV: E=Sophos;i="5.83,265,1616482800"; 
-   d="scan'208";a="192622172"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 04:57:16 -0700
-IronPort-SDR: CJvT2sudj4tPPnqKWQ5nGlpgFwnfTGS+HTsHsEfMl9RGu6idCHcc3c9XLnT7L+sCmiLg4KC4Iy
- cfzTrf5s+kHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,265,1616482800"; 
-   d="scan'208";a="483241517"
-Received: from lkp-server02.sh.intel.com (HELO 3cb98b298c7e) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 11 Jun 2021 04:57:14 -0700
-Received: from kbuild by 3cb98b298c7e with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lrfmk-0000a0-Ee; Fri, 11 Jun 2021 11:57:14 +0000
-Date:   Fri, 11 Jun 2021 19:56:52 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 7bf3c2ae58ac07070c57dc67ee3334a4da8e0679
-Message-ID: <60c34f84.Atqw8i/jwyvOS1Zv%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S230508AbhFKOlL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Jun 2021 10:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231698AbhFKOlJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Jun 2021 10:41:09 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5600C061574;
+        Fri, 11 Jun 2021 07:38:54 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id h1so2951386plt.1;
+        Fri, 11 Jun 2021 07:38:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=8lYrWaWj8rXB/t2XiDxhDEhaWgsjpf7zHZODYkct5sY=;
+        b=oYN9j5Z/Cjd7h021FHyj8wxm8sPCqMSSKS+PshjShNgbATg0/a07QGcEO+TPGy/BcR
+         dnNfXLSH/p4J2eBZ+C+EYOutekG4GiJnzsTZlAC/JVREJkDwI3wosR299n4LQHLuMLDt
+         7OoIXY+s15J2V/G7504nJ5oNitQNa5eY+LE9cLIEpGhcByotkmlCjHibHFGGDoSQKyTT
+         rE6KhxFyg68jWlm+L8EcaAZvxic+wLcjXY3fbgYvWa4cC95z3jJL1pFM6tvm8Jm175wl
+         TW9GEu3grV0id3YJEBP4pqcDDcHDpTk/oxs6KLuFEvj8pxcnWT+xPktjhaEtHzixxSiz
+         F8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=8lYrWaWj8rXB/t2XiDxhDEhaWgsjpf7zHZODYkct5sY=;
+        b=melMc5ISQnPn0qk+YLUwQhpp5BHRFAgyRDXjB9CpJsvaqHOpuFL9l+9mKgiDBbRn/3
+         JcDLeTcByzcOWEAkbzrSbHAbmHSSMozbDeRiegQD+UQKIAqGKAsChevt7wFtLai0pVGf
+         mfXZKDlGpb/cwPWjXs+oIryzj6W/8Vt2KGPEOMmeNo4U+mOJpO7VUbQy1jqm+mndC8um
+         QgvU3r0yQvWEr+rXwXx8xF46Nqzl/fjFDY7p/Sz8p9wWuKlcTPsxEDr/jh5c+foc2Yru
+         ZEU6IS/KU7CPnfMpD4Jyh63KaJWAdDpc7KmsIEdzbht2PfCzpue8IHJE7WSYMcY4cy8g
+         P9Zg==
+X-Gm-Message-State: AOAM5328Pcz0Us3kuvD4LUIJvqUinbsWstSUu8ov/7MVILRpp4CoADmg
+        hrfnaj12ozGYm0vqd+29Zo0=
+X-Google-Smtp-Source: ABdhPJwaPJKGmSKoSUrGQKKB1LbnTDaqRXUIvShM3eoRuGHjdDT+qfmx817r+169+oLLB8OLjcRTHQ==
+X-Received: by 2002:a17:90a:6002:: with SMTP id y2mr9656377pji.197.1623422334188;
+        Fri, 11 Jun 2021 07:38:54 -0700 (PDT)
+Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
+        by smtp.gmail.com with ESMTPSA id fy16sm10572998pjb.49.2021.06.11.07.38.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Jun 2021 07:38:53 -0700 (PDT)
+From:   Punit Agrawal <punitagrawal@gmail.com>
+To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc:     helgaas@kernel.org, robh+dt@kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, alexandru.elisei@arm.com, wqu@suse.com,
+        robin.murphy@arm.com, pgwipeout@gmail.com, ardb@kernel.org,
+        briannorris@chromium.org, shawn.lin@rock-chips.com
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Update PCI host bridge
+ window to 32-bit address memory
+References: <20210607112856.3499682-1-punitagrawal@gmail.com>
+        <20210607112856.3499682-5-punitagrawal@gmail.com>
+        <3105233.izSxrag8PF@diego>
+Date:   Fri, 11 Jun 2021 23:38:50 +0900
+In-Reply-To: <3105233.izSxrag8PF@diego> ("Heiko =?utf-8?Q?St=C3=BCbner=22'?=
+ =?utf-8?Q?s?= message of "Thu, 10
+        Jun 2021 23:50:40 +0200")
+Message-ID: <87r1h8ihz9.fsf@stealth>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: 7bf3c2ae58ac07070c57dc67ee3334a4da8e0679  PCI: Add ACS quirk for Broadcom BCM57414 NIC
+Hi Heiko,
 
-elapsed time: 722m
+Heiko St=C3=BCbner <heiko@sntech.de> writes:
 
-configs tested: 177
-configs skipped: 3
+> Hi,
+>
+> Am Montag, 7. Juni 2021, 13:28:56 CEST schrieb Punit Agrawal:
+>> The PCIe host bridge on RK3399 advertises a single 64-bit memory
+>> address range even though it lies entirely below 4GB.
+>>=20
+>> Previously the OF PCI range parser treated 64-bit ranges more
+>> leniently (i.e., as 32-bit), but since commit 9d57e61bf723 ("of/pci:
+>> Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+>> the code takes a stricter view and treats the ranges as advertised in
+>> the device tree (i.e, as 64-bit).
+>>=20
+>> The change in behaviour causes failure when allocating bus addresses
+>> to devices connected behind a PCI-to-PCI bridge that require
+>> non-prefetchable memory ranges. The allocation failure was observed
+>> for certain Samsung NVMe drives connected to RockPro64 boards.
+>>=20
+>> Update the host bridge window attributes to treat it as 32-bit address
+>> memory. This fixes the allocation failure observed since commit
+>> 9d57e61bf723.
+>>=20
+>> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm=
+.com
+>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+>> Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> Cc: Heiko Stuebner <heiko@sntech.de>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>
+> just for clarity, should I just pick this patch separately for 5.13-rc to
+> make it easy for people using current kernel devicetrees, or should
+> this wait for the update mentioned in the cover-letter response
+> and should go all together through the PCI tree?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The device tree change is independent of the other patches in the
+series. It would be great if you can pick this one - I am waiting on
+feedback from Rob before sending an update on the remaining patches.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                 mpc836x_rdk_defconfig
-arm                         cm_x300_defconfig
-arm                         s3c6400_defconfig
-mips                           jazz_defconfig
-powerpc                      chrp32_defconfig
-mips                          rm200_defconfig
-arc                            hsdk_defconfig
-mips                      pistachio_defconfig
-arc                     nsimosci_hs_defconfig
-arm                      jornada720_defconfig
-arm                         axm55xx_defconfig
-powerpc                    socrates_defconfig
-alpha                            allyesconfig
-ia64                         bigsur_defconfig
-ia64                                defconfig
-riscv             nommu_k210_sdcard_defconfig
-arm                        multi_v5_defconfig
-powerpc                     kilauea_defconfig
-mips                   sb1250_swarm_defconfig
-arm                        spear6xx_defconfig
-arm                           stm32_defconfig
-sh                   sh7770_generic_defconfig
-arm                         s5pv210_defconfig
-sh                          rsk7201_defconfig
-arm                        shmobile_defconfig
-m68k                          sun3x_defconfig
-x86_64                              defconfig
-arm                          pxa910_defconfig
-sh                   rts7751r2dplus_defconfig
-sh                         ap325rxa_defconfig
-powerpc                      ep88xc_defconfig
-m68k                       m5475evb_defconfig
-powerpc                       ppc64_defconfig
-sh                         ecovec24_defconfig
-mips                      maltasmvp_defconfig
-arm                         hackkit_defconfig
-sh                          kfr2r09_defconfig
-mips                        jmr3927_defconfig
-arm                     am200epdkit_defconfig
-mips                           ip22_defconfig
-m68k                        m5407c3_defconfig
-arm                             mxs_defconfig
-arm                            pleb_defconfig
-arm                         palmz72_defconfig
-arm                     eseries_pxa_defconfig
-sh                          r7780mp_defconfig
-arm                        mini2440_defconfig
-arm                       omap2plus_defconfig
-h8300                     edosk2674_defconfig
-arm                      tct_hammer_defconfig
-arm                         lpc32xx_defconfig
-sh                                  defconfig
-openrisc                  or1klitex_defconfig
-arm                           spitz_defconfig
-mips                  decstation_64_defconfig
-mips                        workpad_defconfig
-sparc                            alldefconfig
-sh                           se7721_defconfig
-arm                  colibri_pxa300_defconfig
-arm                       imx_v4_v5_defconfig
-powerpc64                           defconfig
-mips                         rt305x_defconfig
-powerpc                      tqm8xx_defconfig
-nios2                         3c120_defconfig
-microblaze                      mmu_defconfig
-xtensa                generic_kc705_defconfig
-sh                          rsk7269_defconfig
-powerpc                    ge_imp3a_defconfig
-i386                             alldefconfig
-m68k                          atari_defconfig
-m68k                         amcore_defconfig
-sh                     sh7710voipgw_defconfig
-arm                        trizeps4_defconfig
-powerpc                     rainier_defconfig
-powerpc                      ppc6xx_defconfig
-um                               alldefconfig
-powerpc                 mpc836x_mds_defconfig
-arc                          axs103_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20210610
-i386                 randconfig-a006-20210610
-i386                 randconfig-a004-20210610
-i386                 randconfig-a001-20210610
-i386                 randconfig-a005-20210610
-i386                 randconfig-a003-20210610
-i386                 randconfig-a002-20210611
-i386                 randconfig-a006-20210611
-i386                 randconfig-a004-20210611
-i386                 randconfig-a001-20210611
-i386                 randconfig-a005-20210611
-i386                 randconfig-a003-20210611
-x86_64               randconfig-a002-20210611
-x86_64               randconfig-a001-20210611
-x86_64               randconfig-a004-20210611
-x86_64               randconfig-a003-20210611
-x86_64               randconfig-a006-20210611
-x86_64               randconfig-a005-20210611
-x86_64               randconfig-a015-20210610
-x86_64               randconfig-a011-20210610
-x86_64               randconfig-a012-20210610
-x86_64               randconfig-a014-20210610
-x86_64               randconfig-a016-20210610
-x86_64               randconfig-a013-20210610
-i386                 randconfig-a015-20210610
-i386                 randconfig-a013-20210610
-i386                 randconfig-a016-20210610
-i386                 randconfig-a014-20210610
-i386                 randconfig-a012-20210610
-i386                 randconfig-a011-20210610
-i386                 randconfig-a015-20210611
-i386                 randconfig-a013-20210611
-i386                 randconfig-a016-20210611
-i386                 randconfig-a014-20210611
-i386                 randconfig-a012-20210611
-i386                 randconfig-a011-20210611
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Thanks,
+Punit
 
-clang tested configs:
-x86_64               randconfig-a015-20210611
-x86_64               randconfig-a011-20210611
-x86_64               randconfig-a012-20210611
-x86_64               randconfig-a014-20210611
-x86_64               randconfig-a016-20210611
-x86_64               randconfig-a013-20210611
-x86_64               randconfig-a002-20210607
-x86_64               randconfig-a004-20210607
-x86_64               randconfig-a003-20210607
-x86_64               randconfig-a006-20210607
-x86_64               randconfig-a005-20210607
-x86_64               randconfig-a001-20210607
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> If so, I can provide an
+> Acked-by: Heiko Stuebner <heiko@sntech.de>
+>
+>
+>
+>> ---
+>>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/=
+dts/rockchip/rk3399.dtsi
+>> index 634a91af8e83..4b854eb21f72 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -227,7 +227,7 @@ pcie0: pcie@f8000000 {
+>>  		       <&pcie_phy 2>, <&pcie_phy 3>;
+>>  		phy-names =3D "pcie-phy-0", "pcie-phy-1",
+>>  			    "pcie-phy-2", "pcie-phy-3";
+>> -		ranges =3D <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000>,
+>> +		ranges =3D <0x82000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000>,
+>>  			 <0x81000000 0x0 0xfbe00000 0x0 0xfbe00000 0x0 0x100000>;
+>>  		resets =3D <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+>>  			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>,
+>>=20
+>
+>
+>
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
