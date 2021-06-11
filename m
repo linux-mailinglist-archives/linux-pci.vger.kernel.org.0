@@ -2,226 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11CD43A3E61
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 10:56:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AF2F3A3F2F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jun 2021 11:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230460AbhFKI6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Jun 2021 04:58:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26145 "EHLO mga12.intel.com"
+        id S230321AbhFKJja (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Jun 2021 05:39:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:47274 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230248AbhFKI6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Jun 2021 04:58:04 -0400
-IronPort-SDR: D1ZC/df2fLh8g3K/qxkTFZFB89xzJccf/o5Rf1St/pJZMXe6reGEFfaZeoMG5THUvWtH84IVGk
- ySoqZpr6l1xg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="185180283"
+        id S230212AbhFKJj2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Jun 2021 05:39:28 -0400
+IronPort-SDR: puOWw2PipAMhE0MswnCQQR0CQNVLrmt4ESfTwB6YD4BsQ/v8S2kR9SUkvp3oTSq4/e5FCpngnA
+ lpYHK2q13H0A==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="192604928"
 X-IronPort-AV: E=Sophos;i="5.83,265,1616482800"; 
-   d="scan'208";a="185180283"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 01:56:07 -0700
-IronPort-SDR: ICuZJtsCZ/9A02O/o+zhxo/oqeNEZV1yZeOwRydluYn/XddE7RncQCxCILiUY5tpy3pPqLxPoE
- 08ERzPyNcM1Q==
-X-ExtLoop1: 1
+   d="scan'208";a="192604928"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 02:37:28 -0700
+IronPort-SDR: dEdwZkSLj4c82XWEYGbelxuZ8NfYI8SeepYSlSx/1baMh1E9tGVruNrwZpuKyphY5DopEx43XL
+ 532JHWRu7tzQ==
 X-IronPort-AV: E=Sophos;i="5.83,265,1616482800"; 
-   d="scan'208";a="450697238"
-Received: from lkp-server02.sh.intel.com (HELO 3cb98b298c7e) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Jun 2021 01:56:06 -0700
-Received: from kbuild by 3cb98b298c7e with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lrcxS-0000Wu-54; Fri, 11 Jun 2021 08:56:06 +0000
-Date:   Fri, 11 Jun 2021 16:55:23 +0800
-From:   kernel test robot <lkp@intel.com>
+   d="scan'208";a="402965434"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 02:37:25 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lrdbO-001TP3-3G; Fri, 11 Jun 2021 12:37:22 +0300
+Date:   Fri, 11 Jun 2021 12:37:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 2462625827721ea1c072e3cc314863ffd13df9c5
-Message-ID: <60c324fb.8ASFM2rpJG0NMRYt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>, corbet@lwn.net,
+        jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
+        Sanket.Goswami@amd.com, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <YMMu0kgEn1emRQvo@smile.fi.intel.com>
+References: <20210607153916.1021016-2-zhengdejin5@gmail.com>
+ <20210610224143.GA2785655@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210610224143.GA2785655@bjorn-Precision-5520>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 2462625827721ea1c072e3cc314863ffd13df9c5  Merge branch 'remotes/lorenzo/pci/xgene'
+On Thu, Jun 10, 2021 at 05:41:43PM -0500, Bjorn Helgaas wrote:
+> On Mon, Jun 07, 2021 at 11:39:13PM +0800, Dejin Zheng wrote:
+> > Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> > pci_alloc_irq_vectors(). Introducing this function can simplify
+> > the error handling path in many drivers.
+> > 
+> > And use pci_free_irq_vectors() to replace some code in pcim_release(),
+> > they are equivalent, and no functional change. It is more explicit
+> > that pcim_alloc_irq_vectors() is a device-managed function.
 
-elapsed time: 721m
+...
 
-configs tested: 165
-configs skipped: 3
+> > @@ -1989,10 +1989,7 @@ static void pcim_release(struct device *gendev, void *res)
+> >  	struct pci_devres *this = res;
+> >  	int i;
+> >  
+> > -	if (dev->msi_enabled)
+> > -		pci_disable_msi(dev);
+> > -	if (dev->msix_enabled)
+> > -		pci_disable_msix(dev);
+> > +	pci_free_irq_vectors(dev);
+> 
+> If I understand correctly, this hunk is a nice simplification, but
+> actually has nothing to do with making pcim_alloc_irq_vectors().  I
+> have it split to a separate patch in my local tree.  Or am I wrong
+> about that?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It's a good simplification that had to be done when pci_free_irq_vectors()
+appeared. But here is the fact that indirectly it's related to the pcim_*()
+APIs, i.e. pcim_alloc_irq_vectors(), because you may noticed this is inside
+pcim_release().
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                          sdk7780_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                         vf610m4_defconfig
-m68k                           sun3_defconfig
-mips                        nlm_xlp_defconfig
-arm                        spear6xx_defconfig
-arm                           stm32_defconfig
-sh                   sh7770_generic_defconfig
-arm                         s5pv210_defconfig
-sh                          rsk7201_defconfig
-arm                        shmobile_defconfig
-m68k                          sun3x_defconfig
-x86_64                              defconfig
-alpha                            allyesconfig
-arm                          pxa910_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                     davinci_all_defconfig
-powerpc                 mpc8560_ads_defconfig
-mips                           ip32_defconfig
-powerpc                     tqm8560_defconfig
-arm                         hackkit_defconfig
-sh                          kfr2r09_defconfig
-mips                        jmr3927_defconfig
-arm                     am200epdkit_defconfig
-mips                           ip22_defconfig
-ia64                             allmodconfig
-sh                          polaris_defconfig
-arc                                 defconfig
-arm                      footbridge_defconfig
-arm                   milbeaut_m10v_defconfig
-arm                     eseries_pxa_defconfig
-sh                          r7780mp_defconfig
-arm                        mini2440_defconfig
-arm                       omap2plus_defconfig
-h8300                     edosk2674_defconfig
-arm                      tct_hammer_defconfig
-arm                         lpc32xx_defconfig
-powerpc                    ge_imp3a_defconfig
-sh                          urquell_defconfig
-arm                          gemini_defconfig
-parisc                           alldefconfig
-mips                            gpr_defconfig
-nios2                               defconfig
-sparc64                             defconfig
-sh                            shmin_defconfig
-h8300                            alldefconfig
-mips                        workpad_defconfig
-openrisc                  or1klitex_defconfig
-sparc                            alldefconfig
-sh                           se7721_defconfig
-mips                         db1xxx_defconfig
-sh                               j2_defconfig
-powerpc                          allmodconfig
-powerpc                      pmac32_defconfig
-mips                         rt305x_defconfig
-powerpc                      tqm8xx_defconfig
-nios2                         3c120_defconfig
-microblaze                      mmu_defconfig
-powerpc                     rainier_defconfig
-powerpc                      ppc6xx_defconfig
-um                               alldefconfig
-powerpc                 mpc836x_mds_defconfig
-arc                          axs103_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                 linkstation_defconfig
-powerpc                    mvme5100_defconfig
-powerpc                   lite5200b_defconfig
-arm                      pxa255-idp_defconfig
-powerpc                      ppc44x_defconfig
-x86_64                            allnoconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20210610
-i386                 randconfig-a006-20210610
-i386                 randconfig-a004-20210610
-i386                 randconfig-a001-20210610
-i386                 randconfig-a005-20210610
-i386                 randconfig-a003-20210610
-i386                 randconfig-a002-20210611
-i386                 randconfig-a006-20210611
-i386                 randconfig-a004-20210611
-i386                 randconfig-a001-20210611
-i386                 randconfig-a005-20210611
-i386                 randconfig-a003-20210611
-x86_64               randconfig-a015-20210610
-x86_64               randconfig-a011-20210610
-x86_64               randconfig-a012-20210610
-x86_64               randconfig-a014-20210610
-x86_64               randconfig-a016-20210610
-x86_64               randconfig-a013-20210610
-x86_64               randconfig-a002-20210611
-x86_64               randconfig-a001-20210611
-x86_64               randconfig-a004-20210611
-x86_64               randconfig-a003-20210611
-x86_64               randconfig-a006-20210611
-x86_64               randconfig-a005-20210611
-i386                 randconfig-a015-20210610
-i386                 randconfig-a013-20210610
-i386                 randconfig-a016-20210610
-i386                 randconfig-a014-20210610
-i386                 randconfig-a012-20210610
-i386                 randconfig-a011-20210610
-i386                 randconfig-a015-20210611
-i386                 randconfig-a013-20210611
-i386                 randconfig-a016-20210611
-i386                 randconfig-a014-20210611
-i386                 randconfig-a012-20210611
-i386                 randconfig-a011-20210611
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+...
 
-clang tested configs:
-x86_64               randconfig-a002-20210610
-x86_64               randconfig-a001-20210610
-x86_64               randconfig-a004-20210610
-x86_64               randconfig-a003-20210610
-x86_64               randconfig-a006-20210610
-x86_64               randconfig-a005-20210610
-x86_64               randconfig-a002-20210607
-x86_64               randconfig-a004-20210607
-x86_64               randconfig-a003-20210607
-x86_64               randconfig-a006-20210607
-x86_64               randconfig-a005-20210607
-x86_64               randconfig-a001-20210607
+> > +/**
+> > + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
+> > + * @dev:		PCI device to operate on
+> > + * @min_vecs:		minimum number of vectors required (must be >= 1)
+> > + * @max_vecs:		maximum (desired) number of vectors
+> > + * @flags:		flags or quirks for the allocation
+> > + *
+> > + * Return the number of vectors allocated, (which might be smaller than
+> > + * @max_vecs) if successful, or a negative error code on error. If less
+> > + * than @min_vecs interrupt vectors are available for @dev the function
+> > + * will fail with -ENOSPC.
+> > + *
+> > + * It depends on calling pcim_enable_device() to make IRQ resources
+> > + * manageable.
+> > + */
+> > +static inline int
+> > +pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> > +			unsigned int max_vecs, unsigned int flags)
+> > +{
+> > +	if (!pci_is_managed(dev))
+> > +		return -EINVAL;
+> > +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
+> 
+> This is great, but can you explain how pci_alloc_irq_vectors()
+> magically becomes a managed interface if we've already called
+> pcim_enable_device()?
+> 
+> I certainly believe it does; I'd just like to put a hint in the commit
+> log since my 5 minutes of grepping around didn't make it obvious to
+> me.
+> 
+> I see that pcim_enable_device() sets pdev->is_managed, but I didn't
+> find the connection between that and pci_alloc_irq_vectors().
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+One needs to read and understand the code, I agree. The explanation is spread
+between pcim_release() and __pci_enable_msi/x_range().
+
+The call chain is
+
+msi_capability_init() / msix_capability_init()
+  ...
+  <- __pci_enable_msi/x_range()
+    <- pci_alloc_irq_vectors_affinity()
+      <- pci_alloc_irq_vectors()
+
+where device msi_enabled / msix_enabled is set.
+
+So, it may deserve to be explained in the commit message.
+
+> > +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
