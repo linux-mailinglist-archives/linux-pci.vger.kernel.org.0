@@ -2,342 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BEDE3A4CE0
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jun 2021 06:40:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EEC93A5075
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jun 2021 22:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbhFLEmV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Jun 2021 00:42:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229985AbhFLEmU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 12 Jun 2021 00:42:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B9D561374
-        for <linux-pci@vger.kernel.org>; Sat, 12 Jun 2021 04:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623472821;
-        bh=h2MVUBbWWtPoo4DrZRMh4N6tqk9475KN79CPpksjyQk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pMInXAx4itrjfif4EczHFRqImCLtEYWfLbkTc+D3xF3qAf81r0N84t39IG1FxgCOi
-         GfVYltn6TQjQERvmQveX3JNWiStZDWKpgXGB8peXt3KzzUMCi1Ss8BJyvblASWwxhe
-         KwuVHKmmfYTaKYroK6OOP58jTAPjS+W1n6IQPMYWxeBsgziPv1f3JvluLEJfcZQAH0
-         gPcbL1+4kSAvsQjDkxVQcrttEnv0VCBH3Rz9bKjeuv6UnVXLB8EeRe4nlNC84xv2kT
-         u+zkXAIH18T2EIn7wDHgjCql5nsBGqMvciQY+IfL/je96fPgAoxC3VR++CD/sWZv9o
-         fI0yt/6yvkUoQ==
-Received: by mail-io1-f49.google.com with SMTP id b25so33395212iot.5
-        for <linux-pci@vger.kernel.org>; Fri, 11 Jun 2021 21:40:21 -0700 (PDT)
-X-Gm-Message-State: AOAM530bnTwJMECEizreexl7mIYeNSoEFZCoIjanmGjACiz8gWlcBorG
-        vPQSbR9D1VSov7LkYyIaBNaM6nZxYmvmM3O2Ugg=
-X-Google-Smtp-Source: ABdhPJwV+cOfKgkNQBTnorWimSt2e5PFjRNpKtu/U1D9uR2zqrKmPKo833nbhr6a4AFCyqjnR+pw/rE6ZRcMdNilcz0=
-X-Received: by 2002:a02:a501:: with SMTP id e1mr6906108jam.96.1623472821006;
- Fri, 11 Jun 2021 21:40:21 -0700 (PDT)
+        id S229874AbhFLUCS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Jun 2021 16:02:18 -0400
+Received: from mail-oo1-f50.google.com ([209.85.161.50]:45665 "EHLO
+        mail-oo1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231431AbhFLUCP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Jun 2021 16:02:15 -0400
+Received: by mail-oo1-f50.google.com with SMTP id q20-20020a4a6c140000b029024915d1bd7cso1616050ooc.12
+        for <linux-pci@vger.kernel.org>; Sat, 12 Jun 2021 13:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PZiW/ysJHqutGyR+JA9Mb4NbGdDS75dnVh/LnFW9ck4=;
+        b=YUdmEvEB/INvD/EijLVHIog4P0gHkrEIDXWP+ZWLWKKMD/vRfwiJsBUYqSBhF4RVs+
+         Pp3ZjQOXovWpuvOwQZzNNZUQdbtePlOPeYNENXD8aLCVxVmiahTDHE0dDK1V1deawCff
+         wKuZMbkITTKPss4kuTyDdomrG9oqaFL36tQSju0mxatdKcL17qjuQbyUtmPwWOoaQ2iW
+         3InFax00gitvHT3VcQtyIVAlg1dFxVqBcgQZ0DzhD6ygMIudmby9HMcP+vA/bxTSshvA
+         XJ9aUlh9Fn0Xs8W4uEaCqz1vWsIvSQ51zVYBSmTeKAX4We6bdW+190F2gLpNcs3qojZM
+         LDag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PZiW/ysJHqutGyR+JA9Mb4NbGdDS75dnVh/LnFW9ck4=;
+        b=mcRZsTCP3YSki1WfZudQQYL3Aa2AAINUiQt+1jBvFBcVWyXiQ8N2YxyRrc0+1E3Vqp
+         JOev7/0HYcN3jXj9EQ5wrpjilR092DZtCW3az+5V14srOhPgw3E83NY9fi+MPC0ikl+b
+         D4TIlw8dO1W4KY/4gtSE1PYC8qXDWLTkat1WzfPP36R/MqM9lxeq4U54yspkZ/2U2Tfn
+         OLk+mh5gifkFUpl4W+x05hqdOYhiNiUrz7CakbgUNUMT7EjMFAxSVoPjc3Tdc6+dIm9H
+         abV1y2d9CnxxCvFWAgtupU9xXHq6TO2IC8giJiPzqyZvXoxgaNvFhegM7jPgYL+JQbsQ
+         eoEw==
+X-Gm-Message-State: AOAM533mtGPhmcsQgz9tmg0NIwQGyTPAJps9A6kZ2T1XFzpfvS56hZtW
+        SYFfwblEWhZ+VbRKHwx81JU=
+X-Google-Smtp-Source: ABdhPJxKF9biY+MDR1mQp/kn69Y1wPTh1JxGBXEnG+J6IHywOd0dXmMH/S5hDNohcrbfGj8ndOtpig==
+X-Received: by 2002:a4a:2242:: with SMTP id z2mr2867469ooe.90.1623527954625;
+        Sat, 12 Jun 2021 12:59:14 -0700 (PDT)
+Received: from fedora.. ([2601:283:4400:c0:96c1:9c48:12a7:2c7c])
+        by smtp.gmail.com with ESMTPSA id l2sm2171150otn.32.2021.06.12.12.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Jun 2021 12:59:13 -0700 (PDT)
+From:   Clayton Casciato <majortomtosourcecontrol@gmail.com>
+To:     bhelgaas@google.com
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-pci@vger.kernel.org,
+        Clayton Casciato <majortomtosourcecontrol@gmail.com>
+Subject: [PATCH] acpi: pci_irq: Fixed a control flow style issue
+Date:   Sat, 12 Jun 2021 13:57:31 -0600
+Message-Id: <20210612195730.1069667-1-majortomtosourcecontrol@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <CAAhV-H6MCGXiO3EcZV2BZi91AiUNsu2aZ=e9g4e2tcVVNOLbfg@mail.gmail.com>
- <20210605175936.GA2309279@bjorn-Precision-5520>
-In-Reply-To: <20210605175936.GA2309279@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Sat, 12 Jun 2021 12:40:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Tj9FmzAzuvq9sTjicwFkGCHGj5wjPWn0nwMPSRKZWrQ@mail.gmail.com>
-Message-ID: <CAAhV-H5Tj9FmzAzuvq9sTjicwFkGCHGj5wjPWn0nwMPSRKZWrQ@mail.gmail.com>
-Subject: Re: [PATCH] vgaarb: Call vga_arb_device_init() after PCI enumeration
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+Fixed coding style issue.
 
-On Sun, Jun 6, 2021 at 1:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sat, Jun 05, 2021 at 10:02:05AM +0800, Huacai Chen wrote:
-> > On Sat, Jun 5, 2021 at 3:56 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Jun 04, 2021 at 12:50:03PM +0800, Huacai Chen wrote:
-> > > > On Thu, Jun 3, 2021 at 2:31 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
->
-> > > > > I think the simplest solution, which I suggested earlier [1],
-> > > > > would be to explicitly call vga_arbiter_add_pci_device()
-> > > > > directly from the PCI core when it enumerates a VGA device.
-> > > > > Then there's no initcall and no need for the
-> > > > > BUS_NOTIFY_ADD/DEL_DEVICE stuff.  vga_arbiter_add_pci_device()
-> > > > > could set the default VGA device when it is enumerated, and
-> > > > > change the default device if we enumerate a "better" one.  And
-> > > > > hotplug VGA devices would work automatically.
-> > > >
-> > > > Emm, It seems that your solution has some difficulties to remove
-> > > > the whole initcall(vga_arb_device_init): we call
-> > > > vga_arbiter_add_pci_device() in pci_bus_add_device(), the
-> > > > list_for_each_entry() loop can be moved to
-> > > > vga_arbiter_check_bridge_sharing(),
-> > > > vga_arb_select_default_device() can be renamed to
-> > > > vga_arb_update_default_device() and be called in
-> > > > vga_arbiter_add_pci_device(), but how to handle
-> > > > misc_register(&vga_arb_device)?
-> > >
-> > > Might need to keep vga_arb_device_init() as an initcall, but
-> > > remove everything from it except the misc_register().
-> >
-> > OK, let me try. But I think call  vga_arbiter_add_pci_device() in
-> > pci core is nearly the same as notifier.  Anyway, I will send a new
-> > patch later.
->
-> Notifiers are useful in some situations, for example, if a loadable
-> module needs to be called when a device is added or removed.
->
-> But when possible, I will always choose a direct call instead because
-> it's much less complicated.  The VGA arbiter cannot be a loadable
-> module, so I don't think there's any reason to use a notifier in this
-> case.
-I have done a new patch (see below) to solve this problem, but I still
-use a notifier. Because in my opinion, direct call is suitable in the
-same subsystem, and notifier is suitable when it is cross subsystem
-(vgaarb and pci are two different subsystems, at least now). If you
-still think it better to use direct call, I will send a new version.
+Signed-off-by: Clayton Casciato <majortomtosourcecontrol@gmail.com>
+---
+ drivers/acpi/pci_irq.c | 45 +++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
-index 5180c5687ee5..9bb3325cb26b 100644
---- a/drivers/gpu/vga/vgaarb.c
-+++ b/drivers/gpu/vga/vgaarb.c
-@@ -585,6 +585,78 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
- }
- EXPORT_SYMBOL(vga_put);
-
-+static void vga_arb_update_default_device(struct vga_device *vgadev)
-+{
-+       struct pci_dev *pdev = vgadev->pdev;
-+       struct device *dev = &pdev->dev;
-+       struct vga_device *vgadev_default;
-+#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-+       int i;
-+       unsigned long flags;
-+       u64 base = screen_info.lfb_base;
-+       u64 size = screen_info.lfb_size;
-+       u64 limit;
-+       resource_size_t start, end;
-+#endif
-+
-+       /* Deal with VGA default device. Use first enabled one
-+        * by default if arch doesn't have it's own hook
-+        */
-+       if (!vga_default_device()) {
-+               if ((vgadev->owns & VGA_RSRC_LEGACY_MASK) ==
-VGA_RSRC_LEGACY_MASK)
-+                       vgaarb_info(dev, "setting as boot VGA device\n");
-+               else
-+                       vgaarb_info(dev, "setting as boot device (VGA
-legacy resources not available)\n");
-+               vga_set_default_device(pdev);
-+       }
-+
-+       vgadev_default = vgadev_find(vga_default);
-+
-+       /* Overrided by a better device */
-+       if (((vgadev_default->owns & VGA_RSRC_LEGACY_MASK) == 0) &&
-+           ((vgadev->owns & VGA_RSRC_LEGACY_MASK) == VGA_RSRC_LEGACY_MASK)) {
-+               vgaarb_info(dev, "overriding boot VGA device\n");
-+               vga_set_default_device(pdev);
-+       }
-+
-+#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-+       if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-+               base |= (u64)screen_info.ext_lfb_base << 32;
-+
-+       limit = base + size;
-+
-+       /*
-+        * Override vga_arbiter_add_pci_device()'s I/O based detection
-+        * as it may take the wrong device (e.g. on Apple system under
-+        * EFI).
-+        *
-+        * Select the device owning the boot framebuffer if there is
-+        * one.
-+        */
-+
-+       /* Does firmware framebuffer belong to us? */
-+       for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-+               flags = pci_resource_flags(vgadev->pdev, i);
-+
-+               if ((flags & IORESOURCE_MEM) == 0)
-+                       continue;
-+
-+               start = pci_resource_start(vgadev->pdev, i);
-+               end  = pci_resource_end(vgadev->pdev, i);
-+
-+               if (!start || !end)
-+                       continue;
-+
-+               if (base < start || limit >= end)
-+                       continue;
-+
-+               if (vgadev->pdev != vga_default_device())
-+                       vgaarb_info(dev, "overriding boot device\n");
-+               vga_set_default_device(vgadev->pdev);
-+       }
-+#endif
-+}
-+
- /*
-  * Rules for using a bridge to control a VGA descendant decoding: if a bridge
-  * has only one VGA descendant then it can be used to control the VGA routing
-@@ -642,6 +714,11 @@ static void
-vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
-                }
-                new_bus = new_bus->parent;
-        }
-+
-+       if (vgadev->bridge_has_one_vga == true)
-+               vgaarb_info(&vgadev->pdev->dev, "bridge control possible\n");
-+       else
-+               vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
- }
-
- /*
-@@ -712,15 +789,7 @@ static bool vga_arbiter_add_pci_device(struct
-pci_dev *pdev)
-                bus = bus->parent;
-        }
-
--       /* Deal with VGA default device. Use first enabled one
--        * by default if arch doesn't have it's own hook
--        */
--       if (vga_default == NULL &&
--           ((vgadev->owns & VGA_RSRC_LEGACY_MASK) == VGA_RSRC_LEGACY_MASK)) {
--               vgaarb_info(&pdev->dev, "setting as boot VGA device\n");
--               vga_set_default_device(pdev);
--       }
--
-+       vga_arb_update_default_device(vgadev);
-        vga_arbiter_check_bridge_sharing(vgadev);
-
-        /* Add to the list */
-@@ -1450,91 +1519,9 @@ static struct miscdevice vga_arb_device = {
-        MISC_DYNAMIC_MINOR, "vga_arbiter", &vga_arb_device_fops
- };
-
--static void __init vga_arb_select_default_device(void)
--{
--       struct pci_dev *pdev;
--       struct vga_device *vgadev;
--
--#if defined(CONFIG_X86) || defined(CONFIG_IA64)
--       u64 base = screen_info.lfb_base;
--       u64 size = screen_info.lfb_size;
--       u64 limit;
--       resource_size_t start, end;
--       unsigned long flags;
--       int i;
--
--       if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
--               base |= (u64)screen_info.ext_lfb_base << 32;
--
--       limit = base + size;
--
--       list_for_each_entry(vgadev, &vga_list, list) {
--               struct device *dev = &vgadev->pdev->dev;
--               /*
--                * Override vga_arbiter_add_pci_device()'s I/O based detection
--                * as it may take the wrong device (e.g. on Apple system under
--                * EFI).
--                *
--                * Select the device owning the boot framebuffer if there is
--                * one.
--                */
--
--               /* Does firmware framebuffer belong to us? */
--               for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
--                       flags = pci_resource_flags(vgadev->pdev, i);
--
--                       if ((flags & IORESOURCE_MEM) == 0)
--                               continue;
--
--                       start = pci_resource_start(vgadev->pdev, i);
--                       end  = pci_resource_end(vgadev->pdev, i);
--
--                       if (!start || !end)
--                               continue;
--
--                       if (base < start || limit >= end)
--                               continue;
--
--                       if (!vga_default_device())
--                               vgaarb_info(dev, "setting as boot device\n");
--                       else if (vgadev->pdev != vga_default_device())
--                               vgaarb_info(dev, "overriding boot device\n");
--                       vga_set_default_device(vgadev->pdev);
--               }
--       }
--#endif
--       if (!vga_default_device()) {
--               list_for_each_entry(vgadev, &vga_list, list) {
--                       struct device *dev = &vgadev->pdev->dev;
--                       u16 cmd;
--
--                       pdev = vgadev->pdev;
--                       pci_read_config_word(pdev, PCI_COMMAND, &cmd);
--                       if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
--                               vgaarb_info(dev, "setting as boot
-device (VGA legacy resources not available)\n");
--                               vga_set_default_device(pdev);
--                               break;
--                       }
--               }
--       }
--
--       if (!vga_default_device()) {
--               vgadev = list_first_entry_or_null(&vga_list,
--                                                 struct vga_device, list);
--               if (vgadev) {
--                       struct device *dev = &vgadev->pdev->dev;
--                       vgaarb_info(dev, "setting as boot device (VGA
-legacy resources not available)\n");
--                       vga_set_default_device(vgadev->pdev);
--               }
--       }
--}
--
- static int __init vga_arb_device_init(void)
+diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+index 08e15774fb9f..6eea3cf7b158 100644
+--- a/drivers/acpi/pci_irq.c
++++ b/drivers/acpi/pci_irq.c
+@@ -260,30 +260,29 @@ static int bridge_has_boot_interrupt_variant(struct pci_bus *bus)
+ static int acpi_reroute_boot_interrupt(struct pci_dev *dev,
+ 				       struct acpi_prt_entry *entry)
  {
-        int rc;
--       struct pci_dev *pdev;
--       struct vga_device *vgadev;
-
-        rc = misc_register(&vga_arb_device);
-        if (rc < 0)
-@@ -1542,26 +1529,6 @@ static int __init vga_arb_device_init(void)
-
-        bus_register_notifier(&pci_bus_type, &pci_notifier);
-
--       /* We add all PCI devices satisfying VGA class in the arbiter by
--        * default */
--       pdev = NULL;
--       while ((pdev =
--               pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
--                              PCI_ANY_ID, pdev)) != NULL)
--               vga_arbiter_add_pci_device(pdev);
--
--       list_for_each_entry(vgadev, &vga_list, list) {
--               struct device *dev = &vgadev->pdev->dev;
--
--               if (vgadev->bridge_has_one_vga)
--                       vgaarb_info(dev, "bridge control possible\n");
--               else
--                       vgaarb_info(dev, "no bridge control possible\n");
--       }
--
--       vga_arb_select_default_device();
--
--       pr_info("loaded\n");
-        return rc;
+-	if (noioapicquirk || noioapicreroute) {
++	if (noioapicquirk || noioapicreroute)
+ 		return 0;
+-	} else {
+-		switch (bridge_has_boot_interrupt_variant(dev->bus)) {
+-		case 0:
+-			/* no rerouting necessary */
+-			return 0;
+-		case INTEL_IRQ_REROUTE_VARIANT:
+-			/*
+-			 * Remap according to INTx routing table in 6700PXH
+-			 * specs, intel order number 302628-002, section
+-			 * 2.15.2. Other chipsets (80332, ...) have the same
+-			 * mapping and are handled here as well.
+-			 */
+-			dev_info(&dev->dev, "PCI IRQ %d -> rerouted to legacy "
+-				 "IRQ %d\n", entry->index,
+-				 (entry->index % 4) + 16);
+-			entry->index = (entry->index % 4) + 16;
+-			return 1;
+-		default:
+-			dev_warn(&dev->dev, "Cannot reroute IRQ %d to legacy "
+-				 "IRQ: unknown mapping\n", entry->index);
+-			return -1;
+-		}
++
++	switch (bridge_has_boot_interrupt_variant(dev->bus)) {
++	case 0:
++		/* no rerouting necessary */
++		return 0;
++	case INTEL_IRQ_REROUTE_VARIANT:
++		/*
++		 * Remap according to INTx routing table in 6700PXH
++		 * specs, intel order number 302628-002, section
++		 * 2.15.2. Other chipsets (80332, ...) have the same
++		 * mapping and are handled here as well.
++		 */
++		dev_info(&dev->dev, "PCI IRQ %d -> rerouted to legacy "
++			 "IRQ %d\n", entry->index,
++			 (entry->index % 4) + 16);
++		entry->index = (entry->index % 4) + 16;
++		return 1;
++	default:
++		dev_warn(&dev->dev, "Cannot reroute IRQ %d to legacy "
++			 "IRQ: unknown mapping\n", entry->index);
++		return -1;
+ 	}
  }
- subsys_initcall(vga_arb_device_init);
+ #endif /* CONFIG_X86_IO_APIC */
+-- 
+2.31.1
 
->
-> Bjorn
