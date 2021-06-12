@@ -2,195 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27DEE3A4C9E
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jun 2021 06:18:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 771E83A4CD6
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jun 2021 06:31:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbhFLEUC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Jun 2021 00:20:02 -0400
-Received: from mail-io1-f49.google.com ([209.85.166.49]:45688 "EHLO
-        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbhFLEUB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Jun 2021 00:20:01 -0400
-Received: by mail-io1-f49.google.com with SMTP id k5so23583984iow.12
-        for <linux-pci@vger.kernel.org>; Fri, 11 Jun 2021 21:17:51 -0700 (PDT)
+        id S229942AbhFLEdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Jun 2021 00:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229584AbhFLEdb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Jun 2021 00:33:31 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB5CC061574
+        for <linux-pci@vger.kernel.org>; Fri, 11 Jun 2021 21:31:19 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id t6so7064599iln.8
+        for <linux-pci@vger.kernel.org>; Fri, 11 Jun 2021 21:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qMfo9SmEDWrsy733ImgWnawPC4LCVIr7AQPFKgdlarY=;
-        b=eICZ1vtB1g2I5oiIG42S/0sKHItJhiaTGBlodWA/ip18xPj9rocyTqcfs9rP7jIIDx
-         byNXPNZKPo4zfUjFYC6CSWc09bcIwiTuDORG1OPt+rzqKGN47X75QNARz8BX8Wkv6ig2
-         SBGkSp/iEGRf2UUtaNtAQNplGw3W0f/Fbus95lxDy4Ezfs7QLfptJJd7dE+IMfjSqVLG
-         sOo7A8XJ9Rk0aOIXZ8PFgv0/PCLJl69S8u+GYghgWyNXq2NwsO/bPHss72SK3v6wgy4c
-         Q26ldOdmxiVAzVcMhcKt9Rmjx2Ln6LGQaHUzi/zdmn1klJ2MbpjZuOgmiCFaoUfoHZt3
-         t+hg==
+        bh=Bt56qcGX0CyLRbpCZFZTQlCbWy17WE9TIiGo+O/YCq8=;
+        b=UZ6dtJ3GOCPKTRI78F1b4p2PVP6RzIzfX2aItDgzqXvNL3Eq2B75zzecGiDmDqjha7
+         b5flhO/jpenwffVnYyF8IQe6L9iCypQTm0k+0mZegR5Y3UXBgSKzIhiscYtXHA1RiUKb
+         NnnSeTFS/IjmBEAYqSbQb2qJ53hy0zaP3czxo7ZoghqZDWxybjLUn6LnaTChftdBXhPf
+         +TRAC0STk7iEf0/gT4J1E5Okdld/7j3MwEtgrjld6tvloorv1CnupPh0vc96dU7owxBr
+         XdEZ+xUmaC5ocpwBr2rGbVLJeO47ES3O+BOia1+SvnfqXe50pxOWHvK6wDAdsiO2A4XM
+         i9bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qMfo9SmEDWrsy733ImgWnawPC4LCVIr7AQPFKgdlarY=;
-        b=TEXP6XYl6nPjB6t6HrLfOqfCVmimdP2p2Apnxk4Zouvirqtr6ZSm+tKGahXsOWco8Y
-         i8iD9QuhVbqDPgHBBLM4AWsh9MCIb72sQLolAhRaxUi5x72bgk9GPwIGfzkl/jekqtF6
-         WrdBBOstXZG3DvOSM0FwSudSJFCJ5YLt95SZUNEotHj4+uNIX/UujeTM8EkUSaPw0IRu
-         onQQoPJkxD8p5RafT1tTs7/o436n5D+k4kTjRpTymEqr7GoTEsVZMVtzl5CzVDibdSAS
-         ME2QQH020h51p71BhPHfKVDOvd84QKuglRMUFUE3s6gCLbhfCPT6jPiaRKHCs8BkZTiB
-         82Fg==
-X-Gm-Message-State: AOAM531rQxXggzkqlkMTZ5chIR1mseY5sBC9jeYbHE8lGobcZC0Zu9YW
-        pxyphVPdg4VQnRM+ySK3VgsNjnH06GxhPzlc6y4=
-X-Google-Smtp-Source: ABdhPJzDzOD4nZXKITX+RFw+DNi/gIT+pNzkljq5PG6Tyi74eQYT6NalRvCvO5ZBwAfD1Nn2mrYZsggHAnnjFm+0mMY=
-X-Received: by 2002:a05:6638:1202:: with SMTP id n2mr6862932jas.57.1623471411209;
- Fri, 11 Jun 2021 21:16:51 -0700 (PDT)
+        bh=Bt56qcGX0CyLRbpCZFZTQlCbWy17WE9TIiGo+O/YCq8=;
+        b=YZrULPgDu3J13C9nKUZ8Lf4QGqYq2Ohia/dlEpsdZKHGMt7ZjoxJ5KnS3i7wtQfqHZ
+         hmvK4mBrFjQBRlK2uzE0eIO/+jpsp6dX2F6jswiCo3ityHptKGmcGmeu1n7hU1Nq+asf
+         LIp3YcQU4ZstTcqBIi5m8GetkFQ59qhb+01xZYG+PEJUJNRElN/ut8qOseaY/SSFbXA+
+         hubTjApdyQUlocvY72L1oraXhz3E4aEqc4/ZAjQIodSM30kBpeKAVyZXIYz5nXW1jpYg
+         OHhrKQPOA1H24hrrVoMZN1xHAf4yykQm74qXxNzzatdbfdRUPQMCx39XetghSOzBSLl2
+         aacw==
+X-Gm-Message-State: AOAM5305UbR1LLLtw+P861wy4ZDWwD+CmGssAu47UWEWot6GOfqQJ/tV
+        7w16t6JnwXPVnmzUdxjBSbMZddvjVOCR3hiCW3Q=
+X-Google-Smtp-Source: ABdhPJxa4L0SpXYJP/iI5MSbC9TEzAmq/ldKXAFJfHWLqF5cu4rVegel2gxuV5Qkrii2K7DHsVR3Ee6zp3mgPFo7zS8=
+X-Received: by 2002:a92:260b:: with SMTP id n11mr5599576ile.134.1623472278563;
+ Fri, 11 Jun 2021 21:31:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAhV-H4FhW=D0am2QMx+HAMBXiZSap2OTgaBd2QhB-ZVCjzNdg@mail.gmail.com>
- <20210605213448.GA2327732@bjorn-Precision-5520>
-In-Reply-To: <20210605213448.GA2327732@bjorn-Precision-5520>
+References: <20210528071503.1444680-2-chenhuacai@loongson.cn>
+ <20210528214309.GA1523480@bjorn-Precision-5520> <CAAhV-H4paNzoF4tEJd1_Z2VgBr64t3evfjdmrrA3CZMw=AXrGw@mail.gmail.com>
+ <21b1495f-689f-2d75-d896-2a33c03b186b@kernel.org>
+In-Reply-To: <21b1495f-689f-2d75-d896-2a33c03b186b@kernel.org>
 From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 12 Jun 2021 12:16:39 +0800
-Message-ID: <CAAhV-H5kM9Q9F7O6xJ4gDYgyK+6eSmZJM5x5ER0UcxuMTwXaoQ@mail.gmail.com>
-Subject: Re: [PATCH V2 3/4] PCI: Improve the MRRS quirk for LS7A
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     huangshuai@loongson.cn, Huacai Chen <chenhuacai@loongson.cn>,
+Date:   Sat, 12 Jun 2021 12:31:06 +0800
+Message-ID: <CAAhV-H7jadY0J80oydRq73d5+GGHuqWv9Y0R7N_e_tbSBrrhiQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] PCI/portdrv: Don't disable device during shutdown
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, huangshuai@loongson.cn,
+        Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
         Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+Hi, Bjorn and Sinan,
 
-On Sun, Jun 6, 2021 at 5:34 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Jun 8, 2021 at 4:43 AM Sinan Kaya <okaya@kernel.org> wrote:
 >
-> On Fri, Jun 04, 2021 at 05:43:36PM +0800, Huacai Chen wrote:
-> > Hi, Bjorn,
+> On 6/4/2021 12:24 PM, Huacai Chen wrote:
+> >> So you need to explain why we need to allow DMA from those devices
+> >> even after we shutdown the port.  "It makes reboot work" is not a
+> >> sufficient explanation.
+> > I think only the designer of LS7A can tell us why. So, Mr. Shuai
+> > Huang, could you please explain this?
 > >
-> > On Sat, May 29, 2021 at 4:32 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Fri, May 28, 2021 at 03:15:02PM +0800, Huacai Chen wrote:
-> > > > In new revision of LS7A, some PCIe ports support larger value than 256,
-> > > > but their maximum supported MRRS values are not detectable. Moreover,
-> > > > the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> > > > MRRS after pci_enable_device(). So the only possible way is configure
-> > > > MRRS of all devices in BIOS, and add a PCI device flag (PCI_DEV_FLAGS_
-> > > > NO_INCREASE_MRRS) to stop the increasing MRRS operations.
-> > >
-> > > It's still not clear what the problem is.
-> > >
-> > > As far as I can tell from the PCIe spec, it is legal for an OS to
-> > > program any value for MRRS, and it is legal for an endpoint to
-> > > generate a Read Request with any size up to its MRRS.  If you
-> > > disagree, please cite the relevant section in the spec.
-> > >
-> > > There is no requirement for the OS to limit the MRRS based on a
-> > > restriction elsewhere in the system.  There is no mechanism for the OS
-> > > to even discover such a restriction.
-> > >
-> > > Of course, there is also no requirement that the PCIe Completions
-> > > carrying the read data be the same size as the MRRS.  If the non-PCIe
-> > > part of the system has a restriction on read burst size, that part of
-> > > the system can certainly break up the read and respond with several
-> > > PCIe Completions.
-> > >
-> > > If LS7A can't break up read requests, that sounds like a problem in
-> > > the LS7A design.  We should have a description of this erratum.  And
-> > > we should have some statement about this being fixed in future
-> > > designs, because we don't want to have to update the fixup with the
-> > > PCI vendor/device IDs every time new versions come out.
-> >
-> > Thanks for your information, but I think only Mr. Shuai Huang can
-> > explain the root cause, too.
-> >
-> > > I also don't want to rely on some value left in MRRS by BIOS.  If
-> > > certain bridges have specific limits on what MRRS can be, the fixup
-> > > should have those limits in it.
-> >
-> > As I know, each port of LS7A has a different maximum MRRS value (Yes,
-> > as you said, this is unreasonable in PCIe spec. but it is a fact in
-> > LS7A), and also different between hardware revisions. So, the kernel
-> > cannot configure it, and relying on BIOS is the only way.
 >
-> Maybe we should just set MRRS to the minimum (128 bytes) for
-> everything on this platform.
+> Could there be some kind of a shutdown/init problem on your graphics
+> card driver?
 >
-> The generic MPS/MRRS config is messy enough already, and I'm hesitant
-> to add much complication for what seems to be a fairly broken PCIe
-> controller.
-I have had an offline discussion with Mr. Shuai Huang, and he told me
-that the root cause is LS7A doesn't break up large read requests (Yes,
-that is a problem in the LS7A design). But I think set MRRS to 128
-bytes in the quirk is not enough, because as I said before, some
-devices (e.g. Realtek 8169) set a big value in its driver. We cannot
-block such operations if we don't touch the PCIe core.
+> During shutdown, remove() callback of all endpoints get called. This is
+> the opportunity for your graphics driver to put hardware into safe
+> state.
+>
+> If there is a problem with the hardware/driver, it should be a quirk as
+> opposed to changing the default safe behavior for all devices.
+I have had an offline discussion with Mr. Shuai Huang, he told me that
+CPU is still writing data to framebuffer while poweroff/reboot, and if
+we clear Bus Master Bit at this time, CPU will wait ack from device,
+but never return, so deadlock.
+
+More or less, we can modify the GPU driver to avoid this, as I said in
+the commit message:
+
+"The poweroff/reboot failures could easily be reproduced on Loongson
+platforms. I think this is not a Loongson-specific problem, instead, is
+a problem related to some specific PCI hosts. On some x86 platforms,
+radeon/amdgpu devices can cause the same problem [1][2], and commit
+faefba95c9e8ca3a ("drm/amdgpu: just suspend the hw on pci shutdown")
+can resolve it.
+
+Radeon driver is more difficult than amdgpu due to its confusing symbol
+names, and I have maintained an out-of-tree patch for a long time [4]."
+
+[1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
+[2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
+[4] https://github.com/chenhuacai/linux/commit/8da06f9b669831829416a3e9f4d1c57f217a42f0
+
+Modifing every GPU driver is impossible for me, and I found some RAID
+controllers have problems, too.
+
+>
+> The port driver here prevents memory from getting corrupted by rogue
+> hardware. There is a window during kexec where hardware can write to
+> system memory addresses if IOVA addresses and system memory addresses
+> overlap.
+>
+KEXEC has no problems, as discussed before:
+http://patchwork.ozlabs.org/project/linux-pci/patch/1600680138-10949-1-git-send-email-chenhc@lemote.com/
+
+static void pci_device_shutdown(struct device *dev)
+{
+  ...
+         if (drv && drv->shutdown)
+                 drv->shutdown(pci_dev);
+
+         /*
+          * If this is a kexec reboot, turn off Bus Master bit on the
+          * device to tell it to not continue to do DMA. Don't touch
+          * devices in D3cold or unknown states.
+          * If it is not a kexec reboot, firmware will hit the PCI
+          * devices with big hammer and stop their DMA any way.
+          */
+         if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+                 pci_clear_master(pci_dev);
+}
 
 Huacai
->
-> > > loongson_mrrs_quirk() doesn't look efficient.  We should not have to
-> > > run the fixup for *every* PCI device in the system.  Also, we should
-> > > not mark every *device* below an LS7A, because it's not the devices
-> > > that are defective.
-> > >
-> > > If it's the root port or the host bridge that's defective, we should
-> > > mark *that*, e.g., something along the lines of how quirk_no_ext_tags()
-> > > works.
-> > OK, I'll improve my code.
-> >
-> > Huacai
-> > >
-> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > ---
-> > > >  drivers/pci/pci.c    | 5 +++++
-> > > >  drivers/pci/quirks.c | 6 ++++++
-> > > >  include/linux/pci.h  | 2 ++
-> > > >  3 files changed, 13 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > index b717680377a9..6f0d2f5b6f30 100644
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -5802,6 +5802,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
-> > > >
-> > > >       v = (ffs(rq) - 8) << 12;
-> > > >
-> > > > +     if (dev->dev_flags & PCI_DEV_FLAGS_NO_INCREASE_MRRS) {
-> > > > +             if (rq > pcie_get_readrq(dev))
-> > > > +                     return -EINVAL;
-> > > > +     }
-> > > > +
-> > > >       ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-> > > >                                                 PCI_EXP_DEVCTL_READRQ, v);
-> > > >
-> > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > > index 66e4bea69431..10b3b2057940 100644
-> > > > --- a/drivers/pci/quirks.c
-> > > > +++ b/drivers/pci/quirks.c
-> > > > @@ -264,6 +264,12 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
-> > > >                * any devices attached under these ports.
-> > > >                */
-> > > >               if (pci_match_id(bridge_devids, bridge)) {
-> > > > +                     dev->dev_flags |= PCI_DEV_FLAGS_NO_INCREASE_MRRS;
-> > > > +
-> > > > +                     if (pcie_bus_config == PCIE_BUS_DEFAULT ||
-> > > > +                         pcie_bus_config == PCIE_BUS_TUNE_OFF)
-> > > > +                             break;
-> > > > +
-> > > >                       if (pcie_get_readrq(dev) > 256) {
-> > > >                               pci_info(dev, "limiting MRRS to 256\n");
-> > > >                               pcie_set_readrq(dev, 256);
-> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > > index c20211e59a57..7fb2072a83b8 100644
-> > > > --- a/include/linux/pci.h
-> > > > +++ b/include/linux/pci.h
-> > > > @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> > > >       PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> > > >       /* Don't use Relaxed Ordering for TLPs directed at this device */
-> > > >       PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> > > > +     /* Don't increase BIOS's MRRS configuration */
-> > > > +     PCI_DEV_FLAGS_NO_INCREASE_MRRS = (__force pci_dev_flags_t) (1 << 12),
-> > > >  };
-> > > >
-> > > >  enum pci_irq_reroute_variant {
-> > > > --
-> > > > 2.27.0
-> > > >
