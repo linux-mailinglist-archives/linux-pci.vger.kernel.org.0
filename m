@@ -2,126 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EEC93A5075
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jun 2021 22:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43AD73A5114
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Jun 2021 00:03:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbhFLUCS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Jun 2021 16:02:18 -0400
-Received: from mail-oo1-f50.google.com ([209.85.161.50]:45665 "EHLO
-        mail-oo1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231431AbhFLUCP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Jun 2021 16:02:15 -0400
-Received: by mail-oo1-f50.google.com with SMTP id q20-20020a4a6c140000b029024915d1bd7cso1616050ooc.12
-        for <linux-pci@vger.kernel.org>; Sat, 12 Jun 2021 13:00:14 -0700 (PDT)
+        id S229777AbhFLWFS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Jun 2021 18:05:18 -0400
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:42948 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229753AbhFLWFS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Jun 2021 18:05:18 -0400
+Received: by mail-ed1-f46.google.com with SMTP id i13so41391355edb.9;
+        Sat, 12 Jun 2021 15:03:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PZiW/ysJHqutGyR+JA9Mb4NbGdDS75dnVh/LnFW9ck4=;
-        b=YUdmEvEB/INvD/EijLVHIog4P0gHkrEIDXWP+ZWLWKKMD/vRfwiJsBUYqSBhF4RVs+
-         Pp3ZjQOXovWpuvOwQZzNNZUQdbtePlOPeYNENXD8aLCVxVmiahTDHE0dDK1V1deawCff
-         wKuZMbkITTKPss4kuTyDdomrG9oqaFL36tQSju0mxatdKcL17qjuQbyUtmPwWOoaQ2iW
-         3InFax00gitvHT3VcQtyIVAlg1dFxVqBcgQZ0DzhD6ygMIudmby9HMcP+vA/bxTSshvA
-         XJ9aUlh9Fn0Xs8W4uEaCqz1vWsIvSQ51zVYBSmTeKAX4We6bdW+190F2gLpNcs3qojZM
-         LDag==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rEDs96ONr8FmGsjH+zhg8paw9S/VwLylFUAj5qFQW1M=;
+        b=kbtIThhn6Eq2Qje5WRWnpASrFaPEFA67EEv9cJxwlGv91wx+pUx0y8AHAeUIMO6l4K
+         oMw3YzHzQ4kusadFsvCIuipG5Q0QgqHY+uSCOXxV+5UDjHXE03JmYxGttBTFLQyZeS4D
+         BJqkedJlohPXsuZedFQJAHohyT5KO+UoKs4mf+CpoI+ov7OEG9afV3P1CF8SoYqHnrrX
+         0oSBfEWjuM7u2qKWVDK+AvPI2/GZyFDK7rTjwzM2oJ1v2w/veskIa+HvpTEOrdle1ELy
+         qRaOx818HzONzHcJ9P1uj1F+KNFKfMg6H1kf0uBK/5LX0pIxLKdfk437EdY+y2Zl6bTo
+         Mgwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PZiW/ysJHqutGyR+JA9Mb4NbGdDS75dnVh/LnFW9ck4=;
-        b=mcRZsTCP3YSki1WfZudQQYL3Aa2AAINUiQt+1jBvFBcVWyXiQ8N2YxyRrc0+1E3Vqp
-         JOev7/0HYcN3jXj9EQ5wrpjilR092DZtCW3az+5V14srOhPgw3E83NY9fi+MPC0ikl+b
-         D4TIlw8dO1W4KY/4gtSE1PYC8qXDWLTkat1WzfPP36R/MqM9lxeq4U54yspkZ/2U2Tfn
-         OLk+mh5gifkFUpl4W+x05hqdOYhiNiUrz7CakbgUNUMT7EjMFAxSVoPjc3Tdc6+dIm9H
-         abV1y2d9CnxxCvFWAgtupU9xXHq6TO2IC8giJiPzqyZvXoxgaNvFhegM7jPgYL+JQbsQ
-         eoEw==
-X-Gm-Message-State: AOAM533mtGPhmcsQgz9tmg0NIwQGyTPAJps9A6kZ2T1XFzpfvS56hZtW
-        SYFfwblEWhZ+VbRKHwx81JU=
-X-Google-Smtp-Source: ABdhPJxKF9biY+MDR1mQp/kn69Y1wPTh1JxGBXEnG+J6IHywOd0dXmMH/S5hDNohcrbfGj8ndOtpig==
-X-Received: by 2002:a4a:2242:: with SMTP id z2mr2867469ooe.90.1623527954625;
-        Sat, 12 Jun 2021 12:59:14 -0700 (PDT)
-Received: from fedora.. ([2601:283:4400:c0:96c1:9c48:12a7:2c7c])
-        by smtp.gmail.com with ESMTPSA id l2sm2171150otn.32.2021.06.12.12.59.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Jun 2021 12:59:13 -0700 (PDT)
-From:   Clayton Casciato <majortomtosourcecontrol@gmail.com>
-To:     bhelgaas@google.com
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-pci@vger.kernel.org,
-        Clayton Casciato <majortomtosourcecontrol@gmail.com>
-Subject: [PATCH] acpi: pci_irq: Fixed a control flow style issue
-Date:   Sat, 12 Jun 2021 13:57:31 -0600
-Message-Id: <20210612195730.1069667-1-majortomtosourcecontrol@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rEDs96ONr8FmGsjH+zhg8paw9S/VwLylFUAj5qFQW1M=;
+        b=bLBKUD5Bp4oS7sJGFnUj5VolrzBWoZ+28i+YNuGMq0Ncit+DmwZ2pADSLGDHb6FabI
+         rQWyRdxehlhymKsJQUOCfUmq+dXe333Ke4AUp8LQBoN8aMJ8YIV2lfwycrKka6CSq/eh
+         aDQYoOOMp8CNPKrjrMV07wOHvCIbhvDmibOhK3NXpCwM6lJE1zvatq5i56jaBqquD1VS
+         1CmLcLXSKq4Wo5rrdqNAaJhX5KYasHKxEugSWP2XrAkKob7mkU7YxCGGr82+Qs01O7g1
+         On9uRKDpW8Vl9RGGqizXmNIqyHIiB7S04E1F3WA19f5+XEb7NKdXjOVtmJyN9lUvI4Pw
+         XJKw==
+X-Gm-Message-State: AOAM531c4dIb43xKEE4Ly6hBHEFIlf/GhWHww3v9aoQCVTTAu6wTEZ2O
+        wf4Ij1k3IeLvZcvlU82UE3fhoNTcEXaTL2TyUKA=
+X-Google-Smtp-Source: ABdhPJwocf+UkwLvI13sMGMlwzWKxuqsxhrp6exew0/a0z/JV3U5Vu/lylFpX54PhzLJx6f/DRjA7ja7BWxLykoGJrc=
+X-Received: by 2002:a05:6402:3082:: with SMTP id de2mr9827627edb.214.1623535337350;
+ Sat, 12 Jun 2021 15:02:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210608080409.1729276-1-javierm@redhat.com>
+In-Reply-To: <20210608080409.1729276-1-javierm@redhat.com>
+From:   Peter Robinson <pbrobinson@gmail.com>
+Date:   Sat, 12 Jun 2021 23:02:06 +0100
+Message-ID: <CALeDE9PAEArn6zTNkWe+eNomx4f1A2sK=jB+7GzE8MRJo=epAw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fixed coding style issue.
+On Tue, Jun 8, 2021 at 9:04 AM Javier Martinez Canillas
+<javierm@redhat.com> wrote:
+>
+> IRQ handlers that are registered for shared interrupts can be called at
+> any time after have been registered using the request_irq() function.
+>
+> It's up to drivers to ensure that's always safe for these to be called.
+>
+> Both the "pcie-sys" and "pcie-client" interrupts are shared, but since
+> their handlers are registered very early in the probe function, an error
+> later can lead to these handlers being executed before all the required
+> resources have been properly setup.
+>
+> For example, the rockchip_pcie_read() function used by these IRQ handlers
+> expects that some PCIe clocks will already be enabled, otherwise trying
+> to access the PCIe registers causes the read to hang and never return.
+>
+> The CONFIG_DEBUG_SHIRQ option tests if drivers are able to cope with their
+> shared interrupt handlers being called, by generating a spurious interrupt
+> just before a shared interrupt handler is unregistered.
+>
+> But this means that if the option is enabled, any error in the probe path
+> of this driver could lead to one of the IRQ handlers to be executed.
+>
+> In a rockpro64 board, the following sequence of events happens:
+>
+>   1) "pcie-sys" IRQ is requested and its handler registered.
+>   2) "pcie-client" IRQ is requested and its handler registered.
+>   3) probe later fails due readl_poll_timeout() returning a timeout.
+>   4) the "pcie-sys" IRQ is unregistered.
+>   5) CONFIG_DEBUG_SHIRQ triggers a spurious interrupt.
+>   6) "pcie-client" IRQ handler is called for this spurious interrupt.
+>   7) IRQ handler tries to read PCIE_CLIENT_INT_STATUS with clocks gated.
+>   8) the machine hangs because rockchip_pcie_read() call never returns.
+>
+> To avoid cases like this, the handlers don't have to be registered until
+> very late in the probe function, once all the resources have been setup.
+>
+> So let's just move all the IRQ init before the pci_host_probe() call, that
+> will prevent issues like this and seems to be the correct thing to do too.
+>
+> Reported-by: Peter Robinson <pbrobinson@gmail.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Tested-by: Peter Robinson <pbrobinson@gmail.com>
 
-Signed-off-by: Clayton Casciato <majortomtosourcecontrol@gmail.com>
----
- drivers/acpi/pci_irq.c | 45 +++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 23 deletions(-)
+Tested on a Rock960, Firefly3399 and a Pinebook Pro
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index 08e15774fb9f..6eea3cf7b158 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -260,30 +260,29 @@ static int bridge_has_boot_interrupt_variant(struct pci_bus *bus)
- static int acpi_reroute_boot_interrupt(struct pci_dev *dev,
- 				       struct acpi_prt_entry *entry)
- {
--	if (noioapicquirk || noioapicreroute) {
-+	if (noioapicquirk || noioapicreroute)
- 		return 0;
--	} else {
--		switch (bridge_has_boot_interrupt_variant(dev->bus)) {
--		case 0:
--			/* no rerouting necessary */
--			return 0;
--		case INTEL_IRQ_REROUTE_VARIANT:
--			/*
--			 * Remap according to INTx routing table in 6700PXH
--			 * specs, intel order number 302628-002, section
--			 * 2.15.2. Other chipsets (80332, ...) have the same
--			 * mapping and are handled here as well.
--			 */
--			dev_info(&dev->dev, "PCI IRQ %d -> rerouted to legacy "
--				 "IRQ %d\n", entry->index,
--				 (entry->index % 4) + 16);
--			entry->index = (entry->index % 4) + 16;
--			return 1;
--		default:
--			dev_warn(&dev->dev, "Cannot reroute IRQ %d to legacy "
--				 "IRQ: unknown mapping\n", entry->index);
--			return -1;
--		}
-+
-+	switch (bridge_has_boot_interrupt_variant(dev->bus)) {
-+	case 0:
-+		/* no rerouting necessary */
-+		return 0;
-+	case INTEL_IRQ_REROUTE_VARIANT:
-+		/*
-+		 * Remap according to INTx routing table in 6700PXH
-+		 * specs, intel order number 302628-002, section
-+		 * 2.15.2. Other chipsets (80332, ...) have the same
-+		 * mapping and are handled here as well.
-+		 */
-+		dev_info(&dev->dev, "PCI IRQ %d -> rerouted to legacy "
-+			 "IRQ %d\n", entry->index,
-+			 (entry->index % 4) + 16);
-+		entry->index = (entry->index % 4) + 16;
-+		return 1;
-+	default:
-+		dev_warn(&dev->dev, "Cannot reroute IRQ %d to legacy "
-+			 "IRQ: unknown mapping\n", entry->index);
-+		return -1;
- 	}
- }
- #endif /* CONFIG_X86_IO_APIC */
--- 
-2.31.1
-
+> ---
+>
+> Changes in v2:
+> - Add missing word in the commit message.
+> - Include Shawn Lin's Acked-by tag.
+>
+>  drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index f1d08a1b159..78d04ac29cd 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -592,10 +592,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+>         if (err)
+>                 return err;
+>
+> -       err = rockchip_pcie_setup_irq(rockchip);
+> -       if (err)
+> -               return err;
+> -
+>         rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+>         if (IS_ERR(rockchip->vpcie12v)) {
+>                 if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
+> @@ -973,8 +969,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>         if (err)
+>                 goto err_vpcie;
+>
+> -       rockchip_pcie_enable_interrupts(rockchip);
+> -
+>         err = rockchip_pcie_init_irq_domain(rockchip);
+>         if (err < 0)
+>                 goto err_deinit_port;
+> @@ -992,6 +986,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>         bridge->sysdata = rockchip;
+>         bridge->ops = &rockchip_pcie_ops;
+>
+> +       err = rockchip_pcie_setup_irq(rockchip);
+> +       if (err)
+> +               goto err_remove_irq_domain;
+> +
+> +       rockchip_pcie_enable_interrupts(rockchip);
+> +
+>         err = pci_host_probe(bridge);
+>         if (err < 0)
+>                 goto err_remove_irq_domain;
+> --
+> 2.31.1
+>
