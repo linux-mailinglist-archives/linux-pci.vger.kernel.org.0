@@ -2,148 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7981F3A5753
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Jun 2021 11:30:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA363A5A14
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Jun 2021 20:49:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231635AbhFMJcY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Jun 2021 05:32:24 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:6298 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231258AbhFMJcU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Jun 2021 05:32:20 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4G2q1V6QwVz1BLwW;
-        Sun, 13 Jun 2021 17:25:18 +0800 (CST)
-Received: from SZX1000464847.huawei.com (10.21.59.169) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Sun, 13 Jun 2021 17:30:15 +0800
-From:   Dongdong Liu <liudongdong3@huawei.com>
-To:     <helgaas@kernel.org>, <hch@infradead.org>, <kw@linux.com>,
-        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
-        <hverkuil-cisco@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [RESEND PATCH V3 6/6] PCI: Enable 10-Bit tag support for PCIe RP devices
-Date:   Sun, 13 Jun 2021 17:29:15 +0800
-Message-ID: <1623576555-40338-7-git-send-email-liudongdong3@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1623576555-40338-1-git-send-email-liudongdong3@huawei.com>
-References: <1623576555-40338-1-git-send-email-liudongdong3@huawei.com>
+        id S232000AbhFMSvG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Jun 2021 14:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231997AbhFMSvF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Jun 2021 14:51:05 -0400
+X-Greylist: delayed 504 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 13 Jun 2021 11:49:04 PDT
+Received: from relay03.th.seeweb.it (relay03.th.seeweb.it [IPv6:2001:4b7a:2000:18::164])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6113DC061574
+        for <linux-pci@vger.kernel.org>; Sun, 13 Jun 2021 11:49:03 -0700 (PDT)
+Received: from [192.168.1.101] (83.6.168.161.neoplus.adsl.tpnet.pl [83.6.168.161])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 424FA1F578;
+        Sun, 13 Jun 2021 20:40:37 +0200 (CEST)
+Subject: Re: [PATCH v2 3/5] pcie-qcom: provide a way to power up qca6390 chip
+ on RB5 platform
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20210128175225.3102958-1-dmitry.baryshkov@linaro.org>
+ <20210128175225.3102958-4-dmitry.baryshkov@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@somainline.org>
+Message-ID: <58800e5a-b1ff-0435-3f1c-c4679edd81ec@somainline.org>
+Date:   Sun, 13 Jun 2021 20:40:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.21.59.169]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20210128175225.3102958-4-dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe spec 5.0r1.0 section 2.2.6.2 implementation note, In configurations
-where a Requester with 10-Bit Tag Requester capability needs to target
-multiple Completers, one needs to ensure that the Requester sends 10-Bit
-Tag Requests only to Completers that have 10-Bit Tag Completer capability.
-So we enable 10-Bit Tag Requester for root port only when the devices
-under the root port support 10-Bit Tag Completer.
+Hi, bumping the discussion as solving this is crucial for Wi-Fi and Bluetooth to work on a good number (which will probably increase with time) of Qualcomm devices, including newer phones.
 
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
----
- drivers/pci/pcie/portdrv_pci.c | 75 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
 
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index c7ff1ee..baf413f 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -90,6 +90,78 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
- #define PCIE_PORTDRV_PM_OPS	NULL
- #endif /* !PM */
- 
-+static int pci_10bit_tag_comp_support(struct pci_dev *dev, void *data)
-+{
-+	u8 *support = data;
-+
-+	if (*support == 0)
-+		return 0;
-+
-+	if (!pci_is_pcie(dev)) {
-+		*support = 0;
-+		return 0;
-+	}
-+
-+	/*
-+	 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note.
-+	 * For configurations where a Requester with 10-Bit Tag Requester
-+	 * capability targets Completers where some do and some do not have
-+	 * 10-Bit Tag Completer capability, how the Requester determines which
-+	 * NPRs include 10-Bit Tags is outside the scope of this specification.
-+	 * So we do not consider hotplug scenario.
-+	 */
-+	if (dev->is_hotplug_bridge) {
-+		*support = 0;
-+		return 0;
-+	}
-+
-+	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP)) {
-+		*support = 0;
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static void pci_configure_rp_10bit_tag(struct pci_dev *dev)
-+{
-+	u8 support = 1;
-+	struct pci_dev *pchild;
-+
-+	if (dev->subordinate == NULL)
-+		return;
-+
-+	/* If no devices under the root port, no need to enable 10-Bit Tag. */
-+	pchild = list_first_entry_or_null(&dev->subordinate->devices,
-+					  struct pci_dev, bus_list);
-+	if (pchild == NULL)
-+		return;
-+
-+	pci_10bit_tag_comp_support(dev, &support);
-+	if (!support)
-+		return;
-+
-+	/*
-+	 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note.
-+	 * In configurations where a Requester with 10-Bit Tag Requester
-+	 * capability needs to target multiple Completers, one needs to ensure
-+	 * that the Requester sends 10-Bit Tag Requests only to Completers
-+	 * that have 10-Bit Tag Completer capability. So we enable 10-Bit Tag
-+	 * Requester for root port only when the devices under the root port
-+	 * support 10-Bit Tag Completer.
-+	 */
-+	pci_walk_bus(dev->subordinate, pci_10bit_tag_comp_support, &support);
-+	if (!support)
-+		return;
-+
-+	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ))
-+		return;
-+
-+	pci_dbg(dev, "enabling 10-Bit Tag Requester\n");
-+	pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
-+				 PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-+}
-+
- /*
-  * pcie_portdrv_probe - Probe PCI-Express port devices
-  * @dev: PCI-Express port device being probed
-@@ -111,6 +183,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
- 	     (type != PCI_EXP_TYPE_RC_EC)))
- 		return -ENODEV;
- 
-+	if (type == PCI_EXP_TYPE_ROOT_PORT)
-+		pci_configure_rp_10bit_tag(dev);
-+
- 	if (type == PCI_EXP_TYPE_RC_EC)
- 		pcie_link_rcec(dev);
- 
--- 
-2.7.4
+Konrad
 
