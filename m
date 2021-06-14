@@ -2,97 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A41DF3A5F06
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 11:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40E153A6B5B
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 18:12:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232660AbhFNJWf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Jun 2021 05:22:35 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3231 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232621AbhFNJWf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Jun 2021 05:22:35 -0400
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G3QfT0cPDz6G9Jq;
-        Mon, 14 Jun 2021 17:10:57 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 14 Jun 2021 11:20:31 +0200
-Received: from localhost (10.52.126.149) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2176.2; Mon, 14 Jun
- 2021 10:20:30 +0100
-Date:   Mon, 14 Jun 2021 10:20:25 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Will Deacon <will@kernel.org>
-CC:     Qi Liu <liuqi115@huawei.com>, <mark.rutland@arm.com>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <zhangshaokun@hisilicon.com>
-Subject: Re: [PATCH v6 2/2] drivers/perf: hisi: Add driver for HiSilicon
- PCIe PMU
-Message-ID: <20210614102025.0000222b@Huawei.com>
-In-Reply-To: <20210611162347.GA16284@willie-the-truck>
-References: <1622467951-32114-1-git-send-email-liuqi115@huawei.com>
-        <1622467951-32114-3-git-send-email-liuqi115@huawei.com>
-        <20210611162347.GA16284@willie-the-truck>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S234580AbhFNQO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Jun 2021 12:14:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43633 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234573AbhFNQO5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Jun 2021 12:14:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623687173;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=U/Ya1k1nXvvGjrRExG8q3FmOawUUZX1h7T0TrtPnmSM=;
+        b=goCD3QgnotXIocEKYMZfH5VHj3SH8r1CrIdjRuQFOmtK6s+T5uQqMNdX+tp8hgxvd59hUz
+        Zw6bfEueQUOIzXiqINcQEnru9p01MTzM8XGKRMqFz0ADajzLjaxBcAW7mEhF2pvRVOYqTY
+        qwnMqK75yMAG7Qw98a7xk8IyGizTIW8=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-nFPUJ6FsPjCYOgSTAXuC0A-1; Mon, 14 Jun 2021 12:12:52 -0400
+X-MC-Unique: nFPUJ6FsPjCYOgSTAXuC0A-1
+Received: by mail-lf1-f69.google.com with SMTP id u7-20020a0565120407b02902ff43b1e7f4so5426072lfk.5
+        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 09:12:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U/Ya1k1nXvvGjrRExG8q3FmOawUUZX1h7T0TrtPnmSM=;
+        b=J0Qczm8hUC9vzlz5+pwSGbJWhQIxkyv1yT+EH0Gu00winEdTG5ntMCyaXVmCtkE8v8
+         AxExBlFOP/ipQJArftEgC0OPCX2sV2b4aNtbXjW63tEYZJ+Jp6ZodryyYDnpFDe1CKfj
+         yC2f7lvJqw2sAmkO3RxXLZvTGYL3rRgQV7rPQMnupI6VbipPduiEZdjQeaiifOghtmBF
+         mDaaYOzjjURylGSFCEVNCmwd2s3vLWV2oPf4omRjFjKXmxc/JJiKW2sot/uh5L+DjT2Z
+         dlSlYLjie7LWclNgXGb2xg+xoZ0VPphC2mtIg1Nj/8syCKny7DpG38LElCHynZmBHQ+b
+         38HA==
+X-Gm-Message-State: AOAM530bWGoDrP6NL7Vs7ibWNBZNE3Sv+SrEZgvgN8Kcf1e1lXyXhafS
+        r2jtf7udkC0ewJf20oY897CqguWSatYxGm2xGF0Vpt6XVTNmF3K8soVCGNVxE4geVm9TpI1WBSo
+        9GCf/hlGpS23fvySetrQJ9PlHyV+S33AwN94y
+X-Received: by 2002:a05:6512:2101:: with SMTP id q1mr8877554lfr.647.1623687170828;
+        Mon, 14 Jun 2021 09:12:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwAbGhpPvqkcHhSsuAdQ1FpWwNWtaQWb83YFBtFmuq7Xr7R/t1YH4+Rj9W+tz1cElNmEXnhxmp8Ko9KgVy5pjU=
+X-Received: by 2002:a05:6512:2101:: with SMTP id q1mr8877529lfr.647.1623687170605;
+ Mon, 14 Jun 2021 09:12:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.126.149]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
+ <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
+ <87im3gewlu.ffs@nanos.tec.linutronix.de> <CAFki+L=gp10W1ygv7zdsee=BUGpx9yPAckKr7pyo=tkFJPciEg@mail.gmail.com>
+ <CAFki+L=eQoMq+mWhw_jVT-biyuDXpxbXY5nO+F6HvCtpbG9V2w@mail.gmail.com>
+ <CAFki+LkB1sk3mOv4dd1D-SoPWHOs28ZwN-PqL_6xBk=Qkm40Lw@mail.gmail.com>
+ <87zgwo9u79.ffs@nanos.tec.linutronix.de> <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
+ <CAFki+L=QTOu_O=1uNobVMi2s9mbcxXgSdTLADCpeBWBoPAikgQ@mail.gmail.com>
+In-Reply-To: <CAFki+L=QTOu_O=1uNobVMi2s9mbcxXgSdTLADCpeBWBoPAikgQ@mail.gmail.com>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Mon, 14 Jun 2021 12:12:38 -0400
+Message-ID: <CAFki+LkJ9kj0TMz8dhGXLXdfwgYLibkMCRvKBwVVX5+F-DP37w@mail.gmail.com>
+Subject: Re: [PATCH] genirq: Provide new interfaces for affinity hints
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
+        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
+        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
+        netdev@vger.kernel.org, chris.friesen@windriver.com,
+        Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 11 Jun 2021 17:23:48 +0100
-Will Deacon <will@kernel.org> wrote:
-
-> On Mon, May 31, 2021 at 09:32:31PM +0800, Qi Liu wrote:
-> > PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported
-> > to sample bandwidth, latency, buffer occupation etc.
-> > 
-> > Each PMU RCiEP device monitors multiple Root Ports, and each RCiEP is
-> > registered as a PMU in /sys/bus/event_source/devices, so users can
-> > select target PMU, and use filter to do further sets.
-> > 
-> > Filtering options contains:
-> > event        - select the event.
-> > subevent     - select the subevent.
-> > port         - select target Root Ports. Information of Root Ports
-> >                are shown under sysfs.
-> > bdf          - select requester_id of target EP device.
-> > trig_len     - set trigger condition for starting event statistics.
-> > trigger_mode - set trigger mode. 0 means starting to statistic when
-> >                bigger than trigger condition, and 1 means smaller.
-> > thr_len      - set threshold for statistics.
-> > thr_mode     - set threshold mode. 0 means count when bigger than
-> >                threshold, and 1 means smaller.
-> > 
-> > Reviewed-by: John Garry <john.garry@huawei.com>
-> > Signed-off-by: Qi Liu <liuqi115@huawei.com>
+On Mon, Jun 7, 2021 at 1:00 PM Nitesh Lal <nilal@redhat.com> wrote:
+>
+> On Fri, May 21, 2021 at 8:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > The discussion about removing the side effect of irq_set_affinity_hint() of
+> > actually applying the cpumask (if not NULL) as affinity to the interrupt,
+> > unearthed a few unpleasantries:
+> >
+> >   1) The modular perf drivers rely on the current behaviour for the very
+> >      wrong reasons.
+> >
+> >   2) While none of the other drivers prevents user space from changing
+> >      the affinity, a cursorily inspection shows that there are at least
+> >      expectations in some drivers.
+> >
+> > #1 needs to be cleaned up anyway, so that's not a problem
+> >
+> > #2 might result in subtle regressions especially when irqbalanced (which
+> >    nowadays ignores the affinity hint) is disabled.
+> >
+> > Provide new interfaces:
+> >
+> >   irq_update_affinity_hint() - Only sets the affinity hint pointer
+> >   irq_apply_affinity_hint()  - Set the pointer and apply the affinity to
+> >                                the interrupt
+> >
+> > Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
+> > document it to be phased out.
+> >
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
 > > ---
-> >  MAINTAINERS                                |    6 +
-> >  drivers/perf/Kconfig                       |    2 +
-> >  drivers/perf/Makefile                      |    1 +
-> >  drivers/perf/pci/Kconfig                   |   16 +
-> >  drivers/perf/pci/Makefile                  |    2 +
-> >  drivers/perf/pci/hisilicon/Makefile        |    3 +
-> >  drivers/perf/pci/hisilicon/hisi_pcie_pmu.c | 1019 ++++++++++++++++++++++++++++  
-> 
-> Can we keep this under drivers/perf/hisilicon/ please? I don't see the
-> need to create a 'pci' directory here.
+> > Applies on:
+> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+> > ---
+> >  include/linux/interrupt.h |   41 ++++++++++++++++++++++++++++++++++++++++-
+> >  kernel/irq/manage.c       |    8 ++++----
+> >  2 files changed, 44 insertions(+), 5 deletions(-)
+> >
+> > --- a/include/linux/interrupt.h
+> > +++ b/include/linux/interrupt.h
+> > @@ -328,7 +328,46 @@ extern int irq_force_affinity(unsigned i
+> >  extern int irq_can_set_affinity(unsigned int irq);
+> >  extern int irq_select_affinity(unsigned int irq);
+> >
+> > -extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
+> > +extern int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
+> > +                                    bool setaffinity);
+> > +
+> > +/**
+> > + * irq_update_affinity_hint - Update the affinity hint
+> > + * @irq:       Interrupt to update
+> > + * @cpumask:   cpumask pointer (NULL to clear the hint)
+> > + *
+> > + * Updates the affinity hint, but does not change the affinity of the interrupt.
+> > + */
+> > +static inline int
+> > +irq_update_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +{
+> > +       return __irq_apply_affinity_hint(irq, m, true);
+> > +}
+> > +
+> > +/**
+> > + * irq_apply_affinity_hint - Update the affinity hint and apply the provided
+> > + *                          cpumask to the interrupt
+> > + * @irq:       Interrupt to update
+> > + * @cpumask:   cpumask pointer (NULL to clear the hint)
+> > + *
+> > + * Updates the affinity hint and if @cpumask is not NULL it applies it as
+> > + * the affinity of that interrupt.
+> > + */
+> > +static inline int
+> > +irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +{
+> > +       return __irq_apply_affinity_hint(irq, m, true);
+> > +}
+> > +
+> > +/*
+> > + * Deprecated. Use irq_update_affinity_hint() or irq_apply_affinity_hint()
+> > + * instead.
+> > + */
+> > +static inline int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +{
+> > +       return irq_apply_affinity_hint(irq, cpumask);
+>
+> Another change required here, the above should be 'm' instead of 'cpumask'.
 
-https://lore.kernel.org/linux-pci/20190103154439.GC16311@edgewater-inn.cambridge.arm.com/
+I am going to and make the suggested changes to this patch and will post it
+with driver patches.
+Please let me know if there are any objections to that.
 
-Discussion back in 2018 about where to put these...
+>
+> > +}
+> > +
+> >  extern int irq_update_affinity_desc(unsigned int irq,
+> >                                     struct irq_affinity_desc *affinity);
+> >
+> > --- a/kernel/irq/manage.c
+> > +++ b/kernel/irq/manage.c
+> > @@ -487,7 +487,8 @@ int irq_force_affinity(unsigned int irq,
+> >  }
+> >  EXPORT_SYMBOL_GPL(irq_force_affinity);
+> >
+> > -int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
+> > +int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
+> > +                             bool setaffinity)
+> >  {
+> >         unsigned long flags;
+> >         struct irq_desc *desc = irq_get_desc_lock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
+> > @@ -496,12 +497,11 @@ int irq_set_affinity_hint(unsigned int i
+> >                 return -EINVAL;
+> >         desc->affinity_hint = m;
+> >         irq_put_desc_unlock(desc, flags);
+> > -       /* set the initial affinity to prevent every interrupt being on CPU0 */
+> > -       if (m)
+> > +       if (m && setaffinity)
+> >                 __irq_set_affinity(irq, m, false);
+> >         return 0;
+> >  }
+> > -EXPORT_SYMBOL_GPL(irq_set_affinity_hint);
+> > +EXPORT_SYMBOL_GPL(__irq_apply_affinity_hint);
+> >
+> >  static void irq_affinity_notify(struct work_struct *work)
+> >  {
+> >
+>
+>
+> --
+> Thanks
+> Nitesh
 
-Though, perf/pci/hisilicon does seem over the top in terms of depth, maybe perf/pci/
-or just give up on that plan and put them (for now at least) in per company directories.
 
-Jonathan
+
+-- 
+Thanks
+Nitesh
+
