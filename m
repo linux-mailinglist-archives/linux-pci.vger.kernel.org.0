@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21D2C3A5CE5
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 08:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACE093A5CEA
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 08:21:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232385AbhFNGXZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Jun 2021 02:23:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:42684 "EHLO verein.lst.de"
+        id S232357AbhFNGXp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Jun 2021 02:23:45 -0400
+Received: from verein.lst.de ([213.95.11.211]:42717 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232045AbhFNGXY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Jun 2021 02:23:24 -0400
+        id S232134AbhFNGXp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Jun 2021 02:23:45 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id B72AF67373; Mon, 14 Jun 2021 08:21:18 +0200 (CEST)
-Date:   Mon, 14 Jun 2021 08:21:18 +0200
+        id 2608B68AFE; Mon, 14 Jun 2021 08:21:40 +0200 (CEST)
+Date:   Mon, 14 Jun 2021 08:21:39 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Claire Chang <tientzu@chromium.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
@@ -49,23 +49,19 @@ Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
         matthew.auld@intel.com, rodrigo.vivi@intel.com,
         thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v9 04/14] swiotlb: Add restricted DMA pool
- initialization
-Message-ID: <20210614062118.GD28343@lst.de>
-References: <20210611152659.2142983-1-tientzu@chromium.org> <20210611152659.2142983-5-tientzu@chromium.org>
+Subject: Re: [PATCH v9 05/14] swiotlb: Update is_swiotlb_buffer to add a
+ struct device argument
+Message-ID: <20210614062139.GE28343@lst.de>
+References: <20210611152659.2142983-1-tientzu@chromium.org> <20210611152659.2142983-6-tientzu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210611152659.2142983-5-tientzu@chromium.org>
+In-Reply-To: <20210611152659.2142983-6-tientzu@chromium.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 11:26:49PM +0800, Claire Chang wrote:
-> Add the initialization function to create restricted DMA pools from
-> matching reserved-memory nodes.
+Looks good,
 
-Bisection hazard:  we should only add the new config option when the
-code is actually read to be used.  So this patch should move to the end
-of the series.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
