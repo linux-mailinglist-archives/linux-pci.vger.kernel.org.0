@@ -2,306 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 935CB3A6C8C
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 18:59:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1FC53A6D58
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 19:43:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234758AbhFNRBU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Jun 2021 13:01:20 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:33718 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233206AbhFNRBT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Jun 2021 13:01:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=tIzgvFT3Jww6YVlLNk8gXbWzFfChiBPuWv34uUgmMIw=; b=QElH4AGtAwQ14iQ3sZOYgERTBG
-        olqRQDkQn8Nb7KF8nrf810a84dfJRnCXT8ERtz7uT7MO1RJdylH8I+Pgh92dj5aW5tO+nv/roaGr9
-        ++zY/2Fv6l4tXZmFGPYOqiEGrqX7Y50m45jjLHAO/UE/m8fJrk/WjAcDXMJIlHvWEN7w0T+XopLer
-        1N/UfAQndu73lzXyOvRPBAWo5Hxc9DXS7dqiHOqISfGRtDK9fXi+B/+qdFRHrFggyenHE1StOckA/
-        HKnQ7DJyvX88dvzrF+oJvCXZuGfZnUqYecpr6FQuHghGflsMVD4vyj1Yb12fAi8z+ra8/F2Ns3I2m
-        fyALFdCA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lspve-0000RM-S3; Mon, 14 Jun 2021 10:59:16 -0600
-To:     Christoph Hellwig <hch@lst.de>, helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org
-References: <20210614055310.3960791-1-hch@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <da9cebf5-0d95-5520-6465-ebe06beaa9dc@deltatee.com>
-Date:   Mon, 14 Jun 2021 10:59:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S232776AbhFNRpU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Jun 2021 13:45:20 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:48506 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231499AbhFNRpT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Jun 2021 13:45:19 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2395E20B83C2;
+        Mon, 14 Jun 2021 10:43:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2395E20B83C2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1623692596;
+        bh=XLwzXvw1RAJgBw5gzYZsnOoVRak/mGbyImQenQwQgTo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KDiTxvhV21kHIkj9uRaQCnKT/bQk9BjdKvPVWn/he4Wur7x+Fs+2A8si/Lj5wMKQp
+         +h67xcKi22RxUYdz9MECaH953kDQ2T+j/jBolGtN7LYAMAs/rhUqk/VsBOyonJDMlx
+         Dr1KurFPY0Fzcqqy6zXjVYVcZdWyvBTl++8WpxjQ=
+Date:   Mon, 14 Jun 2021 12:43:14 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+Message-ID: <20210614174314.GU4910@sequoia>
+References: <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
+ <20200910184627.GA804924@bjorn-Precision-5520>
+ <20210330205332.GE4749@sequoia>
 MIME-Version: 1.0
-In-Reply-To: <20210614055310.3960791-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, helgaas@kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] PCI/P2PDMA: simplify distance calculation
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210330205332.GE4749@sequoia>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-06-13 11:53 p.m., Christoph Hellwig wrote:
-> Merge __calc_map_type_and_dist and calc_map_type_and_dist_warn into
-> calc_map_type_and_dist to simplify the code a bit.  This now means
-> we add the devfn strings to the acs_buf unconditionallity even if
-> the buffer is not printed, but that is not a lot of overhead and
-> keeps the code much simpler.
+On 2021-03-30 15:53:35, Tyler Hicks wrote:
+> On 2020-09-10 13:46:27, Bjorn Helgaas wrote:
+> > On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+> > > On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > [+cc Mark, Florian, Rob, Scott]
+> > > >
+> > > > On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> > > > > Do not use printk in raw_spinlocks,
+> > > > > it will cause BUG: Invalid wait context.
+> > > > >
+> > > > > The trace reported by lockdep follows.
+> > > > >
+> > > > > [    2.986113] =============================
+> > > > > [    2.986115] [ BUG: Invalid wait context ]
+> > > > > [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> > > > > [    2.986118] -----------------------------
+> > > > > [    2.986120] swapper/0/1 is trying to lock:
+> > > > > [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> > > > > [    2.986130] other info that might help us debug this:
+> > > > > [    2.986132] context-{5:5}
+> > > > > [    2.986134] 3 locks held by swapper/0/1:
+> > > > > [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> > > > > [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> > > > > [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> > > > > [    2.986161] stack backtrace:
+> > > > > [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> > > > > [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> > > > > [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> > > > > [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> > > > > [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> > > > > [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> > > > > [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> > > > > [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> > > > > [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> > > > > [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> > > > > [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> > > > > [    2.986245]         ...
+> > > > > [    2.986250] Call Trace:
+> > > > > [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> > > > > [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> > > > > [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> > > > > [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> > > > > [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> > > > > [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> > > > > [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> > > > > [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> > > > > [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> > > > > [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> > > > > [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> > > > > [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> > > > > [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> > > > > [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> > > > > [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> > > > > [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> > > > > [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> > > > > [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> > > > > [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> > > > > [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> > > > > [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> > > > > [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> > > > > [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> > > > > [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> > > > > [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> > > > > [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> > > > > [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> > > > > [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> > > > > [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> > > > >
+> > > > > Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+> > > > > ---
+> > > > >  drivers/pci/access.c | 3 ---
+> > > > >  1 file changed, 3 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > > > index 79c4a2e..b3fc164 100644
+> > > > > --- a/drivers/pci/access.c
+> > > > > +++ b/drivers/pci/access.c
+> > > > > @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+> > > > >        * write happen to have any RW1C (write-one-to-clear) bits set, we
+> > > > >        * just inadvertently cleared something we shouldn't have.
+> > > > >        */
+> > > > > -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> > > > > -                          size, pci_domain_nr(bus), bus->number,
+> > > > > -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> > > >
+> > > > We just changed this printk (see [1]), but I think we still have this
+> > > > lockdep problem even after Mark's change.  So I guess we need another
+> > > > think about this.
+> > > >
+> > > > Maybe we can print something when registering pci_ops that use
+> > > > pci_generic_config_write32()?
+> > > 
+> > > That was my suggestion, but as Mark pointed out that doesn't work if
+> > > pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+> > > 
+> > > Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+> > > writes to a bridge going to cause problems? For xgene, interestingly,
+> > > with DT _write32 is needed, but for ACPI it is not (only _read32). I
+> > > think xgene is practically dead though a few people still have
+> > > systems, but likely xgene with DT is really dead. The ECAM case was
+> > > for QCom server which is also pretty much dead. SA1100 nano-engine is
+> > > really old and something only a few people have at most (Russell
+> > > King). So ignoring all those, we're left with just loongson and iproc.
+> > > Maybe just remove the warning?
+> > 
+> > Sigh, removing it sounds like the best option.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Looks good to me, Thanks.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-> ---
->  drivers/pci/p2pdma.c | 190 +++++++++++++++++--------------------------
->  1 file changed, 73 insertions(+), 117 deletions(-)
+> Hi Bjorn - Was this lockdep issue fixed in a different way than removing
+> the use of printk? I'm mostly interested in reducing the RW1C warnings
+> as Mark suggested here:
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index deb097ceaf41..ca2574debb2d 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -388,79 +388,6 @@ static bool host_bridge_whitelist(struct pci_dev *a, struct pci_dev *b,
->  	return false;
->  }
->  
-> -static enum pci_p2pdma_map_type
-> -__calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
-> -		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
-> -{
-> -	struct pci_dev *a = provider, *b = client, *bb;
-> -	int dist_a = 0;
-> -	int dist_b = 0;
-> -	int acs_cnt = 0;
-> -
-> -	if (acs_redirects)
-> -		*acs_redirects = false;
-> -
-> -	/*
-> -	 * Note, we don't need to take references to devices returned by
-> -	 * pci_upstream_bridge() seeing we hold a reference to a child
-> -	 * device which will already hold a reference to the upstream bridge.
-> -	 */
-> -
-> -	while (a) {
-> -		dist_b = 0;
-> -
-> -		if (pci_bridge_has_acs_redir(a)) {
-> -			seq_buf_print_bus_devfn(acs_list, a);
-> -			acs_cnt++;
-> -		}
-> -
-> -		bb = b;
-> -
-> -		while (bb) {
-> -			if (a == bb)
-> -				goto check_b_path_acs;
-> -
-> -			bb = pci_upstream_bridge(bb);
-> -			dist_b++;
-> -		}
-> -
-> -		a = pci_upstream_bridge(a);
-> -		dist_a++;
-> -	}
-> -
-> -	if (dist)
-> -		*dist = dist_a + dist_b;
-> -
-> -	return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-> -
-> -check_b_path_acs:
-> -	bb = b;
-> -
-> -	while (bb) {
-> -		if (a == bb)
-> -			break;
-> -
-> -		if (pci_bridge_has_acs_redir(bb)) {
-> -			seq_buf_print_bus_devfn(acs_list, bb);
-> -			acs_cnt++;
-> -		}
-> -
-> -		bb = pci_upstream_bridge(bb);
-> -	}
-> -
-> -	if (dist)
-> -		*dist = dist_a + dist_b;
-> -
-> -	if (acs_cnt) {
-> -		if (acs_redirects)
-> -			*acs_redirects = true;
-> -
-> -		return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-> -	}
-> -
-> -	return PCI_P2PDMA_MAP_BUS_ADDR;
-> -}
-> -
->  static unsigned long map_types_idx(struct pci_dev *client)
->  {
->  	return (pci_domain_nr(client->bus) << 16) |
-> @@ -502,63 +429,96 @@ static unsigned long map_types_idx(struct pci_dev *client)
->   * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE with the distance set to the number of
->   * ports per above. If the device is not in the whitelist, return
->   * PCI_P2PDMA_MAP_NOT_SUPPORTED.
-> - *
-> - * If any ACS redirect bits are set, then acs_redirects boolean will be set
-> - * to true and their PCI device names will be appended to the acs_list
-> - * seq_buf. This seq_buf is used to print a warning informing the user how
-> - * to disable ACS using a command line parameter.  (See
-> - * calc_map_type_and_dist_warn() below)
->   */
->  static enum pci_p2pdma_map_type
->  calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
-> -		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
-> +		int *dist, bool verbose)
->  {
-> -	enum pci_p2pdma_map_type map_type;
-> +	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-> +	struct pci_dev *a = provider, *b = client, *bb;
-> +	bool acs_redirects = false;
-> +	struct seq_buf acs_list;
-> +	int acs_cnt = 0;
-> +	int dist_a = 0;
-> +	int dist_b = 0;
-> +	char buf[128];
-> +
-> +	seq_buf_init(&acs_list, buf, sizeof(buf));
-> +
-> +	/*
-> +	 * Note, we don't need to take references to devices returned by
-> +	 * pci_upstream_bridge() seeing we hold a reference to a child
-> +	 * device which will already hold a reference to the upstream bridge.
-> +	 */
-> +	while (a) {
-> +		dist_b = 0;
->  
-> -	map_type = __calc_map_type_and_dist(provider, client, dist,
-> -					    acs_redirects, acs_list);
-> +		if (pci_bridge_has_acs_redir(a)) {
-> +			seq_buf_print_bus_devfn(&acs_list, a);
-> +			acs_cnt++;
-> +		}
->  
-> -	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
-> -		if (!cpu_supports_p2pdma() &&
-> -		    !host_bridge_whitelist(provider, client, acs_redirects))
-> -			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
-> +		bb = b;
-> +
-> +		while (bb) {
-> +			if (a == bb)
-> +				goto check_b_path_acs;
-> +
-> +			bb = pci_upstream_bridge(bb);
-> +			dist_b++;
-> +		}
-> +
-> +		a = pci_upstream_bridge(a);
-> +		dist_a++;
->  	}
->  
-> -	if (provider->p2pdma)
-> -		xa_store(&provider->p2pdma->map_types, map_types_idx(client),
-> -			 xa_mk_value(map_type), GFP_KERNEL);
-> +	*dist = dist_a + dist_b;
-> +	goto map_through_host_bridge;
->  
-> -	return map_type;
-> -}
-> +check_b_path_acs:
-> +	bb = b;
->  
-> -static enum pci_p2pdma_map_type
-> -calc_map_type_and_dist_warn(struct pci_dev *provider, struct pci_dev *client,
-> -			    int *dist)
-> -{
-> -	struct seq_buf acs_list;
-> -	bool acs_redirects;
-> -	char buf[128];
-> -	int ret;
-> +	while (bb) {
-> +		if (a == bb)
-> +			break;
->  
-> -	seq_buf_init(&acs_list, buf, sizeof(buf));
-> +		if (pci_bridge_has_acs_redir(bb)) {
-> +			seq_buf_print_bus_devfn(&acs_list, bb);
-> +			acs_cnt++;
-> +		}
->  
-> -	ret = calc_map_type_and_dist(provider, client, dist, &acs_redirects,
-> -				     &acs_list);
-> -	if (acs_redirects) {
-> +		bb = pci_upstream_bridge(bb);
-> +	}
-> +
-> +	*dist = dist_a + dist_b;
-> +
-> +	if (!acs_cnt) {
-> +		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
-> +		goto done;
-> +	}
-> +
-> +	if (verbose) {
-> +		acs_list.buffer[acs_list.len-1] = 0; /* drop final semicolon */
->  		pci_warn(client, "ACS redirect is set between the client and provider (%s)\n",
->  			 pci_name(provider));
-> -		/* Drop final semicolon */
-> -		acs_list.buffer[acs_list.len-1] = 0;
->  		pci_warn(client, "to disable ACS redirect for this path, add the kernel parameter: pci=disable_acs_redir=%s\n",
->  			 acs_list.buffer);
->  	}
-> +	acs_redirects = true;
->  
-> -	if (ret == PCI_P2PDMA_MAP_NOT_SUPPORTED) {
-> -		pci_warn(client, "cannot be used for peer-to-peer DMA as the client and provider (%s) do not share an upstream bridge or whitelisted host bridge\n",
-> -			 pci_name(provider));
-> +map_through_host_bridge:
-> +	if (!cpu_supports_p2pdma() &&
-> +	    !host_bridge_whitelist(provider, client, acs_redirects)) {
-> +		if (verbose)
-> +			pci_warn(client, "cannot be used for peer-to-peer DMA as the client and provider (%s) do not share an upstream bridge or whitelisted host bridge\n",
-> +				 pci_name(provider));
-> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
->  	}
-> -
-> -	return ret;
-> +done:
-> +	if (provider->p2pdma)
-> +		xa_store(&provider->p2pdma->map_types, map_types_idx(client),
-> +			 xa_mk_value(map_type), GFP_KERNEL);
-> +	return map_type;
->  }
->  
->  /**
-> @@ -599,12 +559,8 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
->  			return -1;
->  		}
->  
-> -		if (verbose)
-> -			map = calc_map_type_and_dist_warn(provider, pci_client,
-> -							  &distance);
-> -		else
-> -			map = calc_map_type_and_dist(provider, pci_client,
-> -						     &distance, NULL, NULL);
-> +		map = calc_map_type_and_dist(provider, pci_client, &distance,
-> +					     verbose);
->  
->  		pci_dev_put(pci_client);
->  
+>  https://lore.kernel.org/lkml/20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz/
 > 
+> While thinking how best to rejuvenate that patch, I came across this
+> thread in the archives and it seems like the plan shifted to completely
+> removing this printk callsite to address the lockdep issue. However,
+> neither patch ended up in Linus' tree nor in the current PCI tree (I
+> only peeked in the next branch).
+> 
+> What's everyone's preference at this point?
+
+Hi Bjorn - friendly ping on this topic. Thanks!
+
+Tyler
+
+> 
+> Thanks!
+> 
+> Tyler
