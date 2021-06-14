@@ -2,225 +2,306 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40E153A6B5B
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 18:12:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 935CB3A6C8C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 18:59:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234580AbhFNQO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Jun 2021 12:14:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43633 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234573AbhFNQO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Jun 2021 12:14:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623687173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=U/Ya1k1nXvvGjrRExG8q3FmOawUUZX1h7T0TrtPnmSM=;
-        b=goCD3QgnotXIocEKYMZfH5VHj3SH8r1CrIdjRuQFOmtK6s+T5uQqMNdX+tp8hgxvd59hUz
-        Zw6bfEueQUOIzXiqINcQEnru9p01MTzM8XGKRMqFz0ADajzLjaxBcAW7mEhF2pvRVOYqTY
-        qwnMqK75yMAG7Qw98a7xk8IyGizTIW8=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-nFPUJ6FsPjCYOgSTAXuC0A-1; Mon, 14 Jun 2021 12:12:52 -0400
-X-MC-Unique: nFPUJ6FsPjCYOgSTAXuC0A-1
-Received: by mail-lf1-f69.google.com with SMTP id u7-20020a0565120407b02902ff43b1e7f4so5426072lfk.5
-        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 09:12:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U/Ya1k1nXvvGjrRExG8q3FmOawUUZX1h7T0TrtPnmSM=;
-        b=J0Qczm8hUC9vzlz5+pwSGbJWhQIxkyv1yT+EH0Gu00winEdTG5ntMCyaXVmCtkE8v8
-         AxExBlFOP/ipQJArftEgC0OPCX2sV2b4aNtbXjW63tEYZJ+Jp6ZodryyYDnpFDe1CKfj
-         yC2f7lvJqw2sAmkO3RxXLZvTGYL3rRgQV7rPQMnupI6VbipPduiEZdjQeaiifOghtmBF
-         mDaaYOzjjURylGSFCEVNCmwd2s3vLWV2oPf4omRjFjKXmxc/JJiKW2sot/uh5L+DjT2Z
-         dlSlYLjie7LWclNgXGb2xg+xoZ0VPphC2mtIg1Nj/8syCKny7DpG38LElCHynZmBHQ+b
-         38HA==
-X-Gm-Message-State: AOAM530bWGoDrP6NL7Vs7ibWNBZNE3Sv+SrEZgvgN8Kcf1e1lXyXhafS
-        r2jtf7udkC0ewJf20oY897CqguWSatYxGm2xGF0Vpt6XVTNmF3K8soVCGNVxE4geVm9TpI1WBSo
-        9GCf/hlGpS23fvySetrQJ9PlHyV+S33AwN94y
-X-Received: by 2002:a05:6512:2101:: with SMTP id q1mr8877554lfr.647.1623687170828;
-        Mon, 14 Jun 2021 09:12:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwAbGhpPvqkcHhSsuAdQ1FpWwNWtaQWb83YFBtFmuq7Xr7R/t1YH4+Rj9W+tz1cElNmEXnhxmp8Ko9KgVy5pjU=
-X-Received: by 2002:a05:6512:2101:: with SMTP id q1mr8877529lfr.647.1623687170605;
- Mon, 14 Jun 2021 09:12:50 -0700 (PDT)
+        id S234758AbhFNRBU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Jun 2021 13:01:20 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:33718 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233206AbhFNRBT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Jun 2021 13:01:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=tIzgvFT3Jww6YVlLNk8gXbWzFfChiBPuWv34uUgmMIw=; b=QElH4AGtAwQ14iQ3sZOYgERTBG
+        olqRQDkQn8Nb7KF8nrf810a84dfJRnCXT8ERtz7uT7MO1RJdylH8I+Pgh92dj5aW5tO+nv/roaGr9
+        ++zY/2Fv6l4tXZmFGPYOqiEGrqX7Y50m45jjLHAO/UE/m8fJrk/WjAcDXMJIlHvWEN7w0T+XopLer
+        1N/UfAQndu73lzXyOvRPBAWo5Hxc9DXS7dqiHOqISfGRtDK9fXi+B/+qdFRHrFggyenHE1StOckA/
+        HKnQ7DJyvX88dvzrF+oJvCXZuGfZnUqYecpr6FQuHghGflsMVD4vyj1Yb12fAi8z+ra8/F2Ns3I2m
+        fyALFdCA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lspve-0000RM-S3; Mon, 14 Jun 2021 10:59:16 -0600
+To:     Christoph Hellwig <hch@lst.de>, helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org
+References: <20210614055310.3960791-1-hch@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <da9cebf5-0d95-5520-6465-ebe06beaa9dc@deltatee.com>
+Date:   Mon, 14 Jun 2021 10:59:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-References: <20210504092340.00006c61@intel.com> <87pmxpdr32.ffs@nanos.tec.linutronix.de>
- <CAFki+Lkjn2VCBcLSAfQZ2PEkx-TR0Ts_jPnK9b-5ne3PUX37TQ@mail.gmail.com>
- <87im3gewlu.ffs@nanos.tec.linutronix.de> <CAFki+L=gp10W1ygv7zdsee=BUGpx9yPAckKr7pyo=tkFJPciEg@mail.gmail.com>
- <CAFki+L=eQoMq+mWhw_jVT-biyuDXpxbXY5nO+F6HvCtpbG9V2w@mail.gmail.com>
- <CAFki+LkB1sk3mOv4dd1D-SoPWHOs28ZwN-PqL_6xBk=Qkm40Lw@mail.gmail.com>
- <87zgwo9u79.ffs@nanos.tec.linutronix.de> <87wnrs9tvp.ffs@nanos.tec.linutronix.de>
- <CAFki+L=QTOu_O=1uNobVMi2s9mbcxXgSdTLADCpeBWBoPAikgQ@mail.gmail.com>
-In-Reply-To: <CAFki+L=QTOu_O=1uNobVMi2s9mbcxXgSdTLADCpeBWBoPAikgQ@mail.gmail.com>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Mon, 14 Jun 2021 12:12:38 -0400
-Message-ID: <CAFki+LkJ9kj0TMz8dhGXLXdfwgYLibkMCRvKBwVVX5+F-DP37w@mail.gmail.com>
-Subject: Re: [PATCH] genirq: Provide new interfaces for affinity hints
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, jbrandeb@kernel.org,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "jinyuqi@huawei.com" <jinyuqi@huawei.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        netdev@vger.kernel.org, chris.friesen@windriver.com,
-        Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210614055310.3960791-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, helgaas@kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.4 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH] PCI/P2PDMA: simplify distance calculation
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 7, 2021 at 1:00 PM Nitesh Lal <nilal@redhat.com> wrote:
->
-> On Fri, May 21, 2021 at 8:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > The discussion about removing the side effect of irq_set_affinity_hint() of
-> > actually applying the cpumask (if not NULL) as affinity to the interrupt,
-> > unearthed a few unpleasantries:
-> >
-> >   1) The modular perf drivers rely on the current behaviour for the very
-> >      wrong reasons.
-> >
-> >   2) While none of the other drivers prevents user space from changing
-> >      the affinity, a cursorily inspection shows that there are at least
-> >      expectations in some drivers.
-> >
-> > #1 needs to be cleaned up anyway, so that's not a problem
-> >
-> > #2 might result in subtle regressions especially when irqbalanced (which
-> >    nowadays ignores the affinity hint) is disabled.
-> >
-> > Provide new interfaces:
-> >
-> >   irq_update_affinity_hint() - Only sets the affinity hint pointer
-> >   irq_apply_affinity_hint()  - Set the pointer and apply the affinity to
-> >                                the interrupt
-> >
-> > Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
-> > document it to be phased out.
-> >
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
-> > ---
-> > Applies on:
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-> > ---
-> >  include/linux/interrupt.h |   41 ++++++++++++++++++++++++++++++++++++++++-
-> >  kernel/irq/manage.c       |    8 ++++----
-> >  2 files changed, 44 insertions(+), 5 deletions(-)
-> >
-> > --- a/include/linux/interrupt.h
-> > +++ b/include/linux/interrupt.h
-> > @@ -328,7 +328,46 @@ extern int irq_force_affinity(unsigned i
-> >  extern int irq_can_set_affinity(unsigned int irq);
-> >  extern int irq_select_affinity(unsigned int irq);
-> >
-> > -extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
-> > +extern int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
-> > +                                    bool setaffinity);
-> > +
-> > +/**
-> > + * irq_update_affinity_hint - Update the affinity hint
-> > + * @irq:       Interrupt to update
-> > + * @cpumask:   cpumask pointer (NULL to clear the hint)
-> > + *
-> > + * Updates the affinity hint, but does not change the affinity of the interrupt.
-> > + */
-> > +static inline int
-> > +irq_update_affinity_hint(unsigned int irq, const struct cpumask *m)
-> > +{
-> > +       return __irq_apply_affinity_hint(irq, m, true);
-> > +}
-> > +
-> > +/**
-> > + * irq_apply_affinity_hint - Update the affinity hint and apply the provided
-> > + *                          cpumask to the interrupt
-> > + * @irq:       Interrupt to update
-> > + * @cpumask:   cpumask pointer (NULL to clear the hint)
-> > + *
-> > + * Updates the affinity hint and if @cpumask is not NULL it applies it as
-> > + * the affinity of that interrupt.
-> > + */
-> > +static inline int
-> > +irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m)
-> > +{
-> > +       return __irq_apply_affinity_hint(irq, m, true);
-> > +}
-> > +
-> > +/*
-> > + * Deprecated. Use irq_update_affinity_hint() or irq_apply_affinity_hint()
-> > + * instead.
-> > + */
-> > +static inline int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
-> > +{
-> > +       return irq_apply_affinity_hint(irq, cpumask);
->
-> Another change required here, the above should be 'm' instead of 'cpumask'.
-
-I am going to and make the suggested changes to this patch and will post it
-with driver patches.
-Please let me know if there are any objections to that.
-
->
-> > +}
-> > +
-> >  extern int irq_update_affinity_desc(unsigned int irq,
-> >                                     struct irq_affinity_desc *affinity);
-> >
-> > --- a/kernel/irq/manage.c
-> > +++ b/kernel/irq/manage.c
-> > @@ -487,7 +487,8 @@ int irq_force_affinity(unsigned int irq,
-> >  }
-> >  EXPORT_SYMBOL_GPL(irq_force_affinity);
-> >
-> > -int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m)
-> > +int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
-> > +                             bool setaffinity)
-> >  {
-> >         unsigned long flags;
-> >         struct irq_desc *desc = irq_get_desc_lock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
-> > @@ -496,12 +497,11 @@ int irq_set_affinity_hint(unsigned int i
-> >                 return -EINVAL;
-> >         desc->affinity_hint = m;
-> >         irq_put_desc_unlock(desc, flags);
-> > -       /* set the initial affinity to prevent every interrupt being on CPU0 */
-> > -       if (m)
-> > +       if (m && setaffinity)
-> >                 __irq_set_affinity(irq, m, false);
-> >         return 0;
-> >  }
-> > -EXPORT_SYMBOL_GPL(irq_set_affinity_hint);
-> > +EXPORT_SYMBOL_GPL(__irq_apply_affinity_hint);
-> >
-> >  static void irq_affinity_notify(struct work_struct *work)
-> >  {
-> >
->
->
-> --
-> Thanks
-> Nitesh
 
 
+On 2021-06-13 11:53 p.m., Christoph Hellwig wrote:
+> Merge __calc_map_type_and_dist and calc_map_type_and_dist_warn into
+> calc_map_type_and_dist to simplify the code a bit.  This now means
+> we add the devfn strings to the acs_buf unconditionallity even if
+> the buffer is not printed, but that is not a lot of overhead and
+> keeps the code much simpler.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
--- 
-Thanks
-Nitesh
+Looks good to me, Thanks.
 
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+> ---
+>  drivers/pci/p2pdma.c | 190 +++++++++++++++++--------------------------
+>  1 file changed, 73 insertions(+), 117 deletions(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index deb097ceaf41..ca2574debb2d 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -388,79 +388,6 @@ static bool host_bridge_whitelist(struct pci_dev *a, struct pci_dev *b,
+>  	return false;
+>  }
+>  
+> -static enum pci_p2pdma_map_type
+> -__calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+> -		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
+> -{
+> -	struct pci_dev *a = provider, *b = client, *bb;
+> -	int dist_a = 0;
+> -	int dist_b = 0;
+> -	int acs_cnt = 0;
+> -
+> -	if (acs_redirects)
+> -		*acs_redirects = false;
+> -
+> -	/*
+> -	 * Note, we don't need to take references to devices returned by
+> -	 * pci_upstream_bridge() seeing we hold a reference to a child
+> -	 * device which will already hold a reference to the upstream bridge.
+> -	 */
+> -
+> -	while (a) {
+> -		dist_b = 0;
+> -
+> -		if (pci_bridge_has_acs_redir(a)) {
+> -			seq_buf_print_bus_devfn(acs_list, a);
+> -			acs_cnt++;
+> -		}
+> -
+> -		bb = b;
+> -
+> -		while (bb) {
+> -			if (a == bb)
+> -				goto check_b_path_acs;
+> -
+> -			bb = pci_upstream_bridge(bb);
+> -			dist_b++;
+> -		}
+> -
+> -		a = pci_upstream_bridge(a);
+> -		dist_a++;
+> -	}
+> -
+> -	if (dist)
+> -		*dist = dist_a + dist_b;
+> -
+> -	return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
+> -
+> -check_b_path_acs:
+> -	bb = b;
+> -
+> -	while (bb) {
+> -		if (a == bb)
+> -			break;
+> -
+> -		if (pci_bridge_has_acs_redir(bb)) {
+> -			seq_buf_print_bus_devfn(acs_list, bb);
+> -			acs_cnt++;
+> -		}
+> -
+> -		bb = pci_upstream_bridge(bb);
+> -	}
+> -
+> -	if (dist)
+> -		*dist = dist_a + dist_b;
+> -
+> -	if (acs_cnt) {
+> -		if (acs_redirects)
+> -			*acs_redirects = true;
+> -
+> -		return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
+> -	}
+> -
+> -	return PCI_P2PDMA_MAP_BUS_ADDR;
+> -}
+> -
+>  static unsigned long map_types_idx(struct pci_dev *client)
+>  {
+>  	return (pci_domain_nr(client->bus) << 16) |
+> @@ -502,63 +429,96 @@ static unsigned long map_types_idx(struct pci_dev *client)
+>   * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE with the distance set to the number of
+>   * ports per above. If the device is not in the whitelist, return
+>   * PCI_P2PDMA_MAP_NOT_SUPPORTED.
+> - *
+> - * If any ACS redirect bits are set, then acs_redirects boolean will be set
+> - * to true and their PCI device names will be appended to the acs_list
+> - * seq_buf. This seq_buf is used to print a warning informing the user how
+> - * to disable ACS using a command line parameter.  (See
+> - * calc_map_type_and_dist_warn() below)
+>   */
+>  static enum pci_p2pdma_map_type
+>  calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+> -		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
+> +		int *dist, bool verbose)
+>  {
+> -	enum pci_p2pdma_map_type map_type;
+> +	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
+> +	struct pci_dev *a = provider, *b = client, *bb;
+> +	bool acs_redirects = false;
+> +	struct seq_buf acs_list;
+> +	int acs_cnt = 0;
+> +	int dist_a = 0;
+> +	int dist_b = 0;
+> +	char buf[128];
+> +
+> +	seq_buf_init(&acs_list, buf, sizeof(buf));
+> +
+> +	/*
+> +	 * Note, we don't need to take references to devices returned by
+> +	 * pci_upstream_bridge() seeing we hold a reference to a child
+> +	 * device which will already hold a reference to the upstream bridge.
+> +	 */
+> +	while (a) {
+> +		dist_b = 0;
+>  
+> -	map_type = __calc_map_type_and_dist(provider, client, dist,
+> -					    acs_redirects, acs_list);
+> +		if (pci_bridge_has_acs_redir(a)) {
+> +			seq_buf_print_bus_devfn(&acs_list, a);
+> +			acs_cnt++;
+> +		}
+>  
+> -	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
+> -		if (!cpu_supports_p2pdma() &&
+> -		    !host_bridge_whitelist(provider, client, acs_redirects))
+> -			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+> +		bb = b;
+> +
+> +		while (bb) {
+> +			if (a == bb)
+> +				goto check_b_path_acs;
+> +
+> +			bb = pci_upstream_bridge(bb);
+> +			dist_b++;
+> +		}
+> +
+> +		a = pci_upstream_bridge(a);
+> +		dist_a++;
+>  	}
+>  
+> -	if (provider->p2pdma)
+> -		xa_store(&provider->p2pdma->map_types, map_types_idx(client),
+> -			 xa_mk_value(map_type), GFP_KERNEL);
+> +	*dist = dist_a + dist_b;
+> +	goto map_through_host_bridge;
+>  
+> -	return map_type;
+> -}
+> +check_b_path_acs:
+> +	bb = b;
+>  
+> -static enum pci_p2pdma_map_type
+> -calc_map_type_and_dist_warn(struct pci_dev *provider, struct pci_dev *client,
+> -			    int *dist)
+> -{
+> -	struct seq_buf acs_list;
+> -	bool acs_redirects;
+> -	char buf[128];
+> -	int ret;
+> +	while (bb) {
+> +		if (a == bb)
+> +			break;
+>  
+> -	seq_buf_init(&acs_list, buf, sizeof(buf));
+> +		if (pci_bridge_has_acs_redir(bb)) {
+> +			seq_buf_print_bus_devfn(&acs_list, bb);
+> +			acs_cnt++;
+> +		}
+>  
+> -	ret = calc_map_type_and_dist(provider, client, dist, &acs_redirects,
+> -				     &acs_list);
+> -	if (acs_redirects) {
+> +		bb = pci_upstream_bridge(bb);
+> +	}
+> +
+> +	*dist = dist_a + dist_b;
+> +
+> +	if (!acs_cnt) {
+> +		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
+> +		goto done;
+> +	}
+> +
+> +	if (verbose) {
+> +		acs_list.buffer[acs_list.len-1] = 0; /* drop final semicolon */
+>  		pci_warn(client, "ACS redirect is set between the client and provider (%s)\n",
+>  			 pci_name(provider));
+> -		/* Drop final semicolon */
+> -		acs_list.buffer[acs_list.len-1] = 0;
+>  		pci_warn(client, "to disable ACS redirect for this path, add the kernel parameter: pci=disable_acs_redir=%s\n",
+>  			 acs_list.buffer);
+>  	}
+> +	acs_redirects = true;
+>  
+> -	if (ret == PCI_P2PDMA_MAP_NOT_SUPPORTED) {
+> -		pci_warn(client, "cannot be used for peer-to-peer DMA as the client and provider (%s) do not share an upstream bridge or whitelisted host bridge\n",
+> -			 pci_name(provider));
+> +map_through_host_bridge:
+> +	if (!cpu_supports_p2pdma() &&
+> +	    !host_bridge_whitelist(provider, client, acs_redirects)) {
+> +		if (verbose)
+> +			pci_warn(client, "cannot be used for peer-to-peer DMA as the client and provider (%s) do not share an upstream bridge or whitelisted host bridge\n",
+> +				 pci_name(provider));
+> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>  	}
+> -
+> -	return ret;
+> +done:
+> +	if (provider->p2pdma)
+> +		xa_store(&provider->p2pdma->map_types, map_types_idx(client),
+> +			 xa_mk_value(map_type), GFP_KERNEL);
+> +	return map_type;
+>  }
+>  
+>  /**
+> @@ -599,12 +559,8 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
+>  			return -1;
+>  		}
+>  
+> -		if (verbose)
+> -			map = calc_map_type_and_dist_warn(provider, pci_client,
+> -							  &distance);
+> -		else
+> -			map = calc_map_type_and_dist(provider, pci_client,
+> -						     &distance, NULL, NULL);
+> +		map = calc_map_type_and_dist(provider, pci_client, &distance,
+> +					     verbose);
+>  
+>  		pci_dev_put(pci_client);
+>  
+> 
