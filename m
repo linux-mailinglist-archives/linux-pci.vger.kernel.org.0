@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B11E3A5D07
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 08:25:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EA0F3A5D12
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jun 2021 08:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232426AbhFNG1t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Jun 2021 02:27:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:42826 "EHLO verein.lst.de"
+        id S232418AbhFNG2T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Jun 2021 02:28:19 -0400
+Received: from verein.lst.de ([213.95.11.211]:42862 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232134AbhFNG1t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Jun 2021 02:27:49 -0400
+        id S232045AbhFNG2S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Jun 2021 02:28:18 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4495467373; Mon, 14 Jun 2021 08:25:44 +0200 (CEST)
-Date:   Mon, 14 Jun 2021 08:25:44 +0200
+        id 1F6F967373; Mon, 14 Jun 2021 08:26:14 +0200 (CEST)
+Date:   Mon, 14 Jun 2021 08:26:13 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Claire Chang <tientzu@chromium.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
@@ -49,22 +49,84 @@ Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
         matthew.auld@intel.com, rodrigo.vivi@intel.com,
         thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v9 08/14] swiotlb: Move alloc_size to find_slots
-Message-ID: <20210614062544.GH28343@lst.de>
-References: <20210611152659.2142983-1-tientzu@chromium.org> <20210611152659.2142983-9-tientzu@chromium.org>
+Subject: Re: [PATCH v9 09/14] swiotlb: Refactor swiotlb_tbl_unmap_single
+Message-ID: <20210614062613.GI28343@lst.de>
+References: <20210611152659.2142983-1-tientzu@chromium.org> <20210611152659.2142983-10-tientzu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210611152659.2142983-9-tientzu@chromium.org>
+In-Reply-To: <20210611152659.2142983-10-tientzu@chromium.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 11:26:53PM +0800, Claire Chang wrote:
-> Move the maintenance of alloc_size to find_slots for better code
-> reusability later.
+On Fri, Jun 11, 2021 at 11:26:54PM +0800, Claire Chang wrote:
+> Add a new function, release_slots, to make the code reusable for supporting
+> different bounce buffer pools, e.g. restricted DMA pool.
+> 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
+> ---
+>  kernel/dma/swiotlb.c | 35 ++++++++++++++++++++---------------
+>  1 file changed, 20 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index 364c6c822063..a6562573f090 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -554,27 +554,15 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+>  	return tlb_addr;
+>  }
+>  
+> -/*
+> - * tlb_addr is the physical address of the bounce buffer to unmap.
+> - */
+> -void swiotlb_tbl_unmap_single(struct device *hwdev, phys_addr_t tlb_addr,
+> -			      size_t mapping_size, enum dma_data_direction dir,
+> -			      unsigned long attrs)
+> +static void release_slots(struct device *dev, phys_addr_t tlb_addr)
+>  {
+> -	struct io_tlb_mem *mem = hwdev->dma_io_tlb_mem;
+> +	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+>  	unsigned long flags;
+> -	unsigned int offset = swiotlb_align_offset(hwdev, tlb_addr);
+> +	unsigned int offset = swiotlb_align_offset(dev, tlb_addr);
+>  	int index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
+>  	int nslots = nr_slots(mem->slots[index].alloc_size + offset);
+>  	int count, i;
+>  
+> -	/*
+> -	 * First, sync the memory before unmapping the entry
+> -	 */
+> -	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+> -	    (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL))
+> -		swiotlb_bounce(hwdev, tlb_addr, mapping_size, DMA_FROM_DEVICE);
+> -
+>  	/*
+>  	 * Return the buffer to the free list by setting the corresponding
+>  	 * entries to indicate the number of contiguous entries available.
+> @@ -609,6 +597,23 @@ void swiotlb_tbl_unmap_single(struct device *hwdev, phys_addr_t tlb_addr,
+>  	spin_unlock_irqrestore(&mem->lock, flags);
+>  }
+>  
+> +/*
+> + * tlb_addr is the physical address of the bounce buffer to unmap.
+> + */
+> +void swiotlb_tbl_unmap_single(struct device *dev, phys_addr_t tlb_addr,
+> +			      size_t mapping_size, enum dma_data_direction dir,
+> +			      unsigned long attrs)
+> +{
+> +	/*
+> +	 * First, sync the memory before unmapping the entry
+> +	 */
+> +	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+> +	    (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL))
+> +		swiotlb_bounce(dev, tlb_addr, mapping_size, DMA_FROM_DEVICE);
+> +
+> +	release_slots(dev, tlb_addr);
 
-Looks good,
+Can you give this a swiotlb_ prefix?
+
+Otherwise looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
