@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BD5B3A80DE
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 15:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 378863A80F1
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 15:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231538AbhFONmb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 09:42:31 -0400
-Received: from verein.lst.de ([213.95.11.211]:49322 "EHLO verein.lst.de"
+        id S231702AbhFONm6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 09:42:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:49354 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230361AbhFONmJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Jun 2021 09:42:09 -0400
+        id S231293AbhFONmj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Jun 2021 09:42:39 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id BE0D967373; Tue, 15 Jun 2021 15:40:02 +0200 (CEST)
-Date:   Tue, 15 Jun 2021 15:40:02 +0200
+        id C138F67373; Tue, 15 Jun 2021 15:40:32 +0200 (CEST)
+Date:   Tue, 15 Jun 2021 15:40:32 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Claire Chang <tientzu@chromium.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
@@ -49,17 +49,32 @@ Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
         matthew.auld@intel.com, rodrigo.vivi@intel.com,
         thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v10 08/12] swiotlb: Refactor swiotlb_tbl_unmap_single
-Message-ID: <20210615134002.GH20389@lst.de>
-References: <20210615132711.553451-1-tientzu@chromium.org> <20210615132711.553451-9-tientzu@chromium.org>
+Subject: Re: [PATCH v10 09/12] swiotlb: Add restricted DMA pool
+ initialization
+Message-ID: <20210615134032.GI20389@lst.de>
+References: <20210615132711.553451-1-tientzu@chromium.org> <20210615132711.553451-10-tientzu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210615132711.553451-9-tientzu@chromium.org>
+In-Reply-To: <20210615132711.553451-10-tientzu@chromium.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
+
+On Tue, Jun 15, 2021 at 09:27:08PM +0800, Claire Chang wrote:
+> Add the initialization function to create restricted DMA pools from
+> matching reserved-memory nodes.
+> 
+> Regardless of swiotlb setting, the restricted DMA pool is preferred if
+> available.
+> 
+> The restricted DMA pools provide a basic level of protection against the
+> DMA overwriting buffer contents at unexpected times. However, to protect
+> against general data leakage and system memory corruption, the system
+> needs to provide a way to lock down the memory access, e.g., MPU.
+> 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
 
 Looks good,
 
