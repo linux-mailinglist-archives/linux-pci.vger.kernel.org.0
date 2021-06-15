@@ -2,100 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC5F33A8B5E
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 23:49:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F341C3A8B7A
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 23:57:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbhFOVvS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 15 Jun 2021 17:51:18 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:52244 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229829AbhFOVvR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Jun 2021 17:51:17 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1ltGvk-0002Ci-Or; Tue, 15 Jun 2021 23:49:08 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        id S230427AbhFOV7g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 17:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229898AbhFOV7g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 17:59:36 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8994DC061760
+        for <linux-pci@vger.kernel.org>; Tue, 15 Jun 2021 14:57:31 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id a26so153965oie.11
+        for <linux-pci@vger.kernel.org>; Tue, 15 Jun 2021 14:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Bx8ExFxKkc1Wbpcf/4af9vTqek0n9FUoJHztqzn3TaE=;
+        b=gA7rugrr78UH+5KSUJD4e2H9ne0qWTc1fs8mpUQeJyD9O9nSSds20fWlfpDClFtBaG
+         1F0qySy4arVUu3ewnRUWE/ZkXZIvLvLsLmB+67+btgie6KTHHxKiHelmfWgbzN/Tftxk
+         p8fEPpYDr46WvcLOJ4cg1MEs/756it1Isc1u2Zh4wJnDz9XgsqlD07ct6+IVfPFYsoFo
+         l4FVGU7Uim0f+wI60d4J+JWhWurMfJHBbaNXq4OIqLx3FBu9EqHTrRmLb7TMLLNoKIln
+         /D/V6ts8FjTHgYTBOVZBwzsTgpl23iFHAVKgvFUfkTdPvsRqxusaO5w+og8HLtSDnY0Y
+         yJmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bx8ExFxKkc1Wbpcf/4af9vTqek0n9FUoJHztqzn3TaE=;
+        b=VJ8AwduWIGd7s8gHLgHi0EXiBCekZpHJ0yvmx+7QHXWQMgipq5UHSxfCgR1buAXKzI
+         UJeEyt/7Te4WTmntv9MkYxzNUm8OlYi3C7ZGqdhH91V2czGIBq798lj9K0O97tufdkBt
+         ey4IzBwduNO+6WDl+rgy9ELzP20EP8iBfeVkgWVnpRmzUOHtosMeOBV1eGh+yyVLRSou
+         sH93dv7VJV/OywNjr7PRIvy6cjd4u1FdUlnHj5a2UxO4ksATD2Bwlt+PPx+XFziZC3IH
+         pNyg8LoCqapt4fp6e3SdooBvXWLUwrr0JQdGqEg1KukLM11dSY/r937G7KcCUD2z0SfA
+         Y/NA==
+X-Gm-Message-State: AOAM531TZfvLYe9mXgZ+p039NLFF/MWyqBIAYcSMTItFs2kTGl8eGmPv
+        0f4x+zUzlODhau5GzdvJNsAW0g==
+X-Google-Smtp-Source: ABdhPJxGXy+G7pzzyEg+jUXaTjixDiSmKxNPn8In3YdycIcAgjIPhirk4d6JRx9HQsjwZQjY6mdKog==
+X-Received: by 2002:a05:6808:692:: with SMTP id k18mr4625645oig.148.1623794250870;
+        Tue, 15 Jun 2021 14:57:30 -0700 (PDT)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id i15sm63109ots.39.2021.06.15.14.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Jun 2021 14:57:30 -0700 (PDT)
+Date:   Tue, 15 Jun 2021 16:57:28 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>, wqu@suse.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Update PCI host bridge window to 32-bit address memory
-Date:   Tue, 15 Jun 2021 23:49:07 +0200
-Message-ID: <3238453.R1toDxpfAE@diego>
-In-Reply-To: <CAL_JsqL8iDo5sLmgNVuXs5wt3TpVJbKHfk7gE740DidmvLOwiQ@mail.gmail.com>
-References: <20210607112856.3499682-1-punitagrawal@gmail.com> <3105233.izSxrag8PF@diego> <CAL_JsqL8iDo5sLmgNVuXs5wt3TpVJbKHfk7gE740DidmvLOwiQ@mail.gmail.com>
+        Siddartha Mohanadoss <smohanad@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] PCI: dwc: Add Qualcomm PCIe Endpoint controller
+ driver
+Message-ID: <YMkiSDxOhD7jun3x@builder.lan>
+References: <20210603103814.95177-1-manivannan.sadhasivam@linaro.org>
+ <20210603103814.95177-3-manivannan.sadhasivam@linaro.org>
+ <YLw744UeM6fj/xoS@builder.lan>
+ <CAL_Jsq++bSPiKcgWUr6AJbJfidPNpUSFCtarRGEV4GP7fb8yPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq++bSPiKcgWUr6AJbJfidPNpUSFCtarRGEV4GP7fb8yPw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Dienstag, 15. Juni 2021, 23:29:12 CEST schrieb Rob Herring:
-> On Thu, Jun 10, 2021 at 3:50 PM Heiko Stübner <heiko@sntech.de> wrote:
+On Tue 15 Jun 16:40 CDT 2021, Rob Herring wrote:
+
+> On Sat, Jun 5, 2021 at 9:07 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
 > >
-> > Hi,
+> > On Thu 03 Jun 05:38 CDT 2021, Manivannan Sadhasivam wrote:
 > >
-> > Am Montag, 7. Juni 2021, 13:28:56 CEST schrieb Punit Agrawal:
-> > > The PCIe host bridge on RK3399 advertises a single 64-bit memory
-> > > address range even though it lies entirely below 4GB.
+> > > Add driver support for Qualcomm PCIe Endpoint controller driver based on
+> > > the Designware core with added Qualcomm specific wrapper around the
+> > > core. The driver support is very basic such that it supports only
+> > > enumeration, PCIe read/write, and MSI. There is no ASPM and PM support
+> > > for now but these will be added later.
 > > >
-> > > Previously the OF PCI range parser treated 64-bit ranges more
-> > > leniently (i.e., as 32-bit), but since commit 9d57e61bf723 ("of/pci:
-> > > Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
-> > > the code takes a stricter view and treats the ranges as advertised in
-> > > the device tree (i.e, as 64-bit).
+> > > The driver is capable of using the PERST# and WAKE# side-band GPIOs for
+> > > operation and written on top of the DWC PCI framework.
 > > >
-> > > The change in behaviour causes failure when allocating bus addresses
-> > > to devices connected behind a PCI-to-PCI bridge that require
-> > > non-prefetchable memory ranges. The allocation failure was observed
-> > > for certain Samsung NVMe drives connected to RockPro64 boards.
-> > >
-> > > Update the host bridge window attributes to treat it as 32-bit address
-> > > memory. This fixes the allocation failure observed since commit
-> > > 9d57e61bf723.
-> > >
-> > > Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > > Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com
-> > > Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> > > Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
-> > > Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > > Cc: Heiko Stuebner <heiko@sntech.de>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Co-developed-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> > > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> > > [mani: restructured the driver and fixed several bugs for upstream]
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > >
-> > just for clarity, should I just pick this patch separately for 5.13-rc to
-> > make it easy for people using current kernel devicetrees, or should
-> > this wait for the update mentioned in the cover-letter response
-> > and should go all together through the PCI tree?
+> > Really nice to see this working!
 > 
-> This was dropped from v4, but should still be applied IMO.
-
-It was probably dropped because I applied it ;-)
-
-It's part of armsoc already [0] and should make its way into
-5.13 shortly.
-
-
-Heiko
-
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/commit/?h=arm/fixes&id=8efe01b4386ab38a36b99cfdc1dc02c38a8898c3
-
+> [...]
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> > > +static void qcom_pcie_ep_configure_tcsr(struct qcom_pcie_ep *pcie_ep)
+> > > +{
+> > > +     writel_relaxed(0x0, pcie_ep->tcsr + TCSR_PCIE_PERST_EN);
+> >
+> > Please avoid _relaxed accessor unless there's a strong reason, and if so
+> > document it.
+> 
+> Uhhh, what!? That's the wrong way around from what I've ever seen
+> anyone say. Have you ever looked at the resulting code on arm32 with
+> OMAP enabled? It's just a memory barrier and an indirect function call
+> on every access.
+> 
+> Use readl/writel if you have an ordering requirement WRT DMA,
+> otherwise use relaxed variants.
 > 
 
+That does make sense. Unfortunately I don't know where this started, but
+I would guess it might have been a reaction to the fact that people
+where just sprinkling wmb() all over the place to be on the safe side...
 
+> > > +     writel_relaxed(0x0, pcie_ep->tcsr + TCSR_PERST_SEPARATION_ENABLE);
+> > > +}
+> > > +
+> 
+> [...]
+> 
+> > > +static struct platform_driver qcom_pcie_ep_driver = {
+> > > +     .probe  = qcom_pcie_ep_probe,
+> > > +     .driver = {
+> > > +             .name           = "qcom-pcie-ep",
+> >
+> > Skip the indentation of the '='.
+> >
+> > > +             .suppress_bind_attrs = true,
+> >
+> > Why do we suppress_bind_attrs?
+> 
+> Because remove is not handled.
+> 
 
+Not handled in Mani's driver, or is this a PCI thing?
 
+Regards,
+Bjorn
