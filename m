@@ -2,179 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 741243A7674
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 07:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3EED3A7945
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 10:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbhFOF2Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 01:28:16 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:34981 "EHLO m43-7.mailgun.net"
+        id S230482AbhFOIr3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 04:47:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:56892 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229488AbhFOF2P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Jun 2021 01:28:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1623734771; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=doO/lOyS2nno44eUAbzgpveEi+a60C/4rJxR/gZVDKM=;
- b=A7yTS+5qWQj+mqHz+H/oJd18Rmc1S4aYOd5EEwIEzd74uboCxu5JB9vqiesIEnLmsOTc7spH
- tCOd5eLIMzBjptOOmeOwODChiETNEjS1MYHJTXN3CBCGMQ+sfeOU8djqLwRgM/2Mm2Ih8PDp
- Fco5heWkOL3w927yc13slBbyRnA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 60c839edf726fa418829cd39 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 15 Jun 2021 05:26:05
- GMT
-Sender: pmaliset=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E239BC4338A; Tue, 15 Jun 2021 05:26:04 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmaliset)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A5C5C433D3;
-        Tue, 15 Jun 2021 05:26:03 +0000 (UTC)
+        id S230332AbhFOIr3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Jun 2021 04:47:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4522D6E;
+        Tue, 15 Jun 2021 01:45:24 -0700 (PDT)
+Received: from [192.168.0.110] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC4F53F694;
+        Tue, 15 Jun 2021 01:45:22 -0700 (PDT)
+Subject: Re: [PATCH v4] PCI: of: Clear 64-bit flag for non-prefetchable memory
+ below 4GB
+To:     Punit Agrawal <punitagrawal@gmail.com>, helgaas@kernel.org,
+        robh+dt@kernel.org
+Cc:     maz@kernel.org, leobras.c@gmail.com,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, wqu@suse.com, robin.murphy@arm.com,
+        pgwipeout@gmail.com, ardb@kernel.org, briannorris@chromium.org,
+        shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>
+References: <20210614230457.752811-1-punitagrawal@gmail.com>
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+Message-ID: <888ca9e9-a1c0-3992-7c01-bbb7400e8dc0@arm.com>
+Date:   Tue, 15 Jun 2021 09:46:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 15 Jun 2021 10:56:03 +0530
-From:   Prasad Malisetty <pmaliset@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        mgautam@codeaurora.org, dianders@chromium.org, mka@chromium.org
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc7280: Add PCIe and PHY related
- nodes
-In-Reply-To: <YLxI3NTvgTJ3qt7h@builder.lan>
-References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
- <1620382648-17395-3-git-send-email-pmaliset@codeaurora.org>
- <CAE-0n530bSPupOHVDzwpd_JVVN0tOfrAOm9dAt1ZGj7zaXOZ6A@mail.gmail.com>
- <3b3701bb1e23dec88f2231722872fc40@codeaurora.org>
- <CAE-0n50k9z0ZFqP_pOmQjp0s3NCSKYHTmHvZ5rxLb3MzqgavrA@mail.gmail.com>
- <YLxI3NTvgTJ3qt7h@builder.lan>
-Message-ID: <108a693b952c6dd84f60130f83a572d7@codeaurora.org>
-X-Sender: pmaliset@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20210614230457.752811-1-punitagrawal@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-06-06 09:32, Bjorn Andersson wrote:
-> On Fri 04 Jun 16:43 CDT 2021, Stephen Boyd wrote:
-> 
->> Quoting Prasad Malisetty (2021-05-21 02:57:00)
->> > On 2021-05-08 01:36, Stephen Boyd wrote:
->> > > Quoting Prasad Malisetty (2021-05-07 03:17:27)
->> > >> Add PCIe controller and PHY nodes for sc7280 SOC.
->> > >>
->> > >> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
->> > >> ---
->> > >>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 138
->> > >> +++++++++++++++++++++++++++++++++++
->> > >>  1 file changed, 138 insertions(+)
->> > >>
->> > >> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> > >> b/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> > >> index 2cc4785..a9f25fc1 100644
->> > >> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> > >> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
->> > >> @@ -12,6 +12,7 @@
->> > >>  #include <dt-bindings/power/qcom-aoss-qmp.h>
->> > >>  #include <dt-bindings/power/qcom-rpmpd.h>
->> > >>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->> > >> +#include <dt-bindings/gpio/gpio.h>
->> > >>
->> > >>  / {
->> > >>         interrupt-parent = <&intc>;
->> > >> @@ -316,6 +317,118 @@
->> > >>                         };
->> > >>                 };
->> > >>
->> > > [...]
->> > >> +
->> > >> +               pcie1_phy: phy@1c0e000 {
->> > >> +                       compatible =
->> > >> "qcom,sm8250-qmp-gen3x2-pcie-phy";
->> > >> +                       reg = <0 0x01c0e000 0 0x1c0>;
->> > >> +                       #address-cells = <2>;
->> > >> +                       #size-cells = <2>;
->> > >> +                       ranges;
->> > >> +                       clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
->> > >> +                                <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
->> > >> +                                <&gcc GCC_PCIE_CLKREF_EN>,
->> > >> +                                <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
->> > >> +                       clock-names = "aux", "cfg_ahb", "ref",
->> > >> "refgen";
->> > >> +
->> > >> +                       resets = <&gcc GCC_PCIE_1_PHY_BCR>;
->> > >> +                       reset-names = "phy";
->> > >> +
->> > >> +                       assigned-clocks = <&gcc
->> > >> GCC_PCIE1_PHY_RCHNG_CLK>;
->> > >> +                       assigned-clock-rates = <100000000>;
->> > >> +
->> > >> +                       status = "disabled";
->> > >
->> > > I think the style is to put status disabled close to the compatible?
->> >
->> > Generally I have added status disabled in end as like many nodes. just
->> > curious to ask is there any specific reason to put close to compatible.
->> 
->> It's really up to qcom maintainers, which I am not.
->> 
-> 
-> I like when it's the last item, as it lends itself nicely to be
-> surrounded by empty lines and thereby easy to spot...
-> 
->> Sure, I will change as like previous one.
+Hi Punit,
 
-> Regards,
-> Bjorn
-> 
->> > >> +                               };
->> > >> +
->> > >> +                               reset-n {
->> > >> +                                       pins = "gpio2";
->> > >> +                                       function = "gpio";
->> > >> +
->> > >> +                                       drive-strength = <16>;
->> > >> +                                       output-low;
->> > >> +                                       bias-disable;
->> > >> +                               };
->> > >> +
->> > >> +                               wake-n {
->> > >> +                                       pins = "gpio3";
->> > >> +                                       function = "gpio";
->> > >> +
->> > >> +                                       drive-strength = <2>;
->> > >> +                                       bias-pull-up;
->> > >> +                               };
->> > >
->> > > These last two nodes with the pull-up and drive-strength settings
->> > > should
->> > > be in the board files, like the idp one, instead of here in the SoC
->> > > file. That way board designers can take the SoC and connect the pcie to
->> > > an external device using these pins and set the configuration they want
->> > > on these pins, or choose not to connect them to the SoC at all and use
->> > > those pins for something else.
->> > >
->> > > In addition, it looks like the reset could be a reset-gpios property
->> > > instead of an output-low config.
->> > >
->> > we are using reset property as perst gpio in pcie node.
->> 
->> Ok, perst-gpios should be fine. Presumably perst-gpios should be in 
->> the
->> board and not in the SoC because of what I wrote up above.
+Thank you for working on this!
 
->> Sure, I will move perst into board specific file
+On 6/15/21 12:04 AM, Punit Agrawal wrote:
+> Alexandru and Qu reported this resource allocation failure on
+> ROCKPro64 v2 and ROCK Pi 4B, both based on the RK3399:
+>
+>   pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
+>   pci 0000:00:00.0: PCI bridge to [bus 01]
+>   pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
+>   pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+>
+> "BAR 14" is the PCI bridge's 32-bit non-prefetchable window, and our
+> PCI allocation code isn't smart enough to allocate it in a host
+> bridge window marked as 64-bit, even though this should work fine.
+>
+> A DT host bridge description includes the windows from the CPU
+> address space to the PCI bus space.  On a few architectures
+> (microblaze, powerpc, sparc), the DT may also describe PCI devices
+> themselves, including their BARs.
+>
+> Before 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
+> flags for 64-bit memory addresses"), of_bus_pci_get_flags() ignored
+> the fact that some DT addresses described 64-bit windows and BARs.
+> That was a problem because the virtio virtual NIC has a 32-bit BAR
+> and a 64-bit BAR, and the driver couldn't distinguish them.
+>
+> 9d57e61bf723 set IORESOURCE_MEM_64 for those 64-bit DT ranges, which
+> fixed the virtio driver.  But it also set IORESOURCE_MEM_64 for host
+> bridge windows, which exposed the fact that the PCI allocator isn't
+> smart enough to put 32-bit resources in those 64-bit windows.
+>
+> Clear IORESOURCE_MEM_64 from host bridge windows since we don't need
+> that information.
+
+I've tested the patch on my rockpro64. Kernel built from tag v5.13-rc6:
+
+[    0.345676] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+x4 link)
+[    0.359300] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+[    0.359343] pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
+[    0.359365] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
+[    0.359387] pci 0000:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
+[    0.359407] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
+[    0.359428] pci 0000:00:00.0: PCI bridge to [bus 01]
+[    0.359862] pcieport 0000:00:00.0: PME: Signaling with IRQ 76
+[    0.360190] pcieport 0000:00:00.0: AER: enabled with IRQ 76
+
+Kernel built from tag v5.13-rc6 with this patch applied:
+
+[    0.345434] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth, limited by
+2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe
+x4 link)
+[    0.359081] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
+[    0.359128] pci 0000:00:00.0: BAR 14: assigned [mem 0xfa000000-0xfa0fffff]
+[    0.359155] pci 0000:01:00.0: BAR 0: assigned [mem 0xfa000000-0xfa003fff 64bit]
+[    0.359217] pci 0000:00:00.0: PCI bridge to [bus 01]
+[    0.359239] pci 0000:00:00.0:   bridge window [mem 0xfa000000-0xfa0fffff]
+[    0.359422] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
+[    0.359687] pcieport 0000:00:00.0: PME: Signaling with IRQ 76
+[    0.360001] pcieport 0000:00:00.0: AER: enabled with IRQ 76
+
+And the NVME on the PCIE expansion card works as expected:
+
+Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+
+Thanks,
+
+Alex
+
+>
+> Fixes: 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+> Reported-at: https://lore.kernel.org/lkml/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com/
+> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> Reported-by: Qu Wenruo <wqu@suse.com>
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> ---
+> Hi,
+>
+> The patch is an updated version to fix the PCI allocation issues on
+> RK3399 based platforms. Previous postings can be found at [0][1][2].
+>
+> The updated patch instead of clearing the 64-bit flag for
+> non-prefetchable memory below 4GB does it unconditionally on the basis
+> that PCI allocation logic cannot deal with the 64-bit flag (although
+> it should be able to). The result is a simpler patch that restores the
+> input to the allocation logic to be identical to before 9d57e61bf723.
+>
+> Tested locally on a RockPro64 on top of v5.13-rc6. Please consider
+> merging.
+>
+> Thanks,
+> Punit
+>
+> Changes:
+> v4:
+>
+> * Updated Patch 1 based on Bjorn's suggestion. Also dropped the
+>   Tested-by tags due to the change of logic
+> * Dropped patch 2 and 3 from the series as it's not critical to the
+>   series
+> * Dropped the device tree changes (Patch 4) as they are already queued
+>   in the soc tree
+>
+> v3:
+> * Improved commit log for clarity (Patch 1)
+> * Added Tested-by tags
+>
+> v2:
+> * Check ranges PCI / bus addresses rather than CPU addresses
+> * (new) Restrict 32-bit size warnings on ranges that don't have the 64-bit attribute set
+> * Refactor the 32-bit size warning to the range parsing loop. This
+>   change also prints the warnings right after the window mappings are
+>   logged.
+>
+> [0] https://lore.kernel.org/linux-arm-kernel/20210527150541.3130505-1-punitagrawal@gmail.com/
+> [1] https://lore.kernel.org/linux-pci/20210531221057.3406958-1-punitagrawal@gmail.com/
+> [2] https://lore.kernel.org/linux-pci/20210607112856.3499682-1-punitagrawal@gmail.com/
+>
+>  drivers/pci/of.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 85dcb7097da4..a143b02b2dcd 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -353,6 +353,8 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  				dev_warn(dev, "More than one I/O resource converted for %pOF. CPU base address for old range lost!\n",
+>  					 dev_node);
+>  			*io_base = range.cpu_addr;
+> +		} else if (resource_type(res) == IORESOURCE_MEM) {
+> +			res->flags &= ~IORESOURCE_MEM_64;
+>  		}
+>  
+>  		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
