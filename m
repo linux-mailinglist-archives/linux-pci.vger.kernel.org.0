@@ -2,155 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D54923A751B
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 05:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8176D3A7593
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 06:06:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbhFODah (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Jun 2021 23:30:37 -0400
-Received: from mail-mw2nam12on2073.outbound.protection.outlook.com ([40.107.244.73]:58744
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229609AbhFODah (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Jun 2021 23:30:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n7LtDsI72P4AaCzfX6PHe5NDg/KBLoEvMFymJOtxtTyD9j3HZM8Rdg5KvA1BKS7/cPn8ze6dkJCnbg9TVIP3/P+60K1df0WQWEtHz5Hx1G5GTO91RUHgVWrQweIXhzKT771mcbG7KppF0PfNnYpn+oBC9kpHbtXPiWavddmLlnZjQ+i/S1/3941CiBVbz1wn/6izEERrQedy+toWnJg3gKgm+udMTXQPM2+teLs/1yesQaA+pU4KN6UAhKmfQdkiodnxUy+MEs3prhfG002FMR/iXnLCeuwNBt/u0x0qGSwk2575TF97d0rU48oDY1H21KeCxA9TajgvepRJMQOp9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B0xqGiKolo13urEJyjMTTwg6+3Zu0nDGlgF//K9DoPY=;
- b=XBO839s5thxMOxRFFd0nEj2GK/8UmGig/hkIPoPlKeBhMPz/9cO0UDC2IQiE1dLBGFsI0owZZO+FGtL1wJA+sJT/tZ8rkWDFFRJJFlYavdq0+lO1tV+oAkZUPP24unryYIK5vUX8q/NUkDsNHoC436CosrTchr1CT2gVA+QXGaB6fEkjMWtsi4dKdsCH05JW/ZiYHqDuIlb9TyS8MobNQvVfk+6DGqhfGhBz7tUmJXV+FvlQwd/4nEts+xvz9ytuJyki8+V9BiEaGj4crIxIC8B/J6uXIcS85QNaYDDyDn8RBA5REkw8dkB3QBi3qswdB3oAg/lLeMGZXL5C+LufVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=synopsys.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B0xqGiKolo13urEJyjMTTwg6+3Zu0nDGlgF//K9DoPY=;
- b=FMT2MvGI5VRjdcYgXMo+yfJ2nbgS5y8fxru3SVXjAquIgLXLqG+CooMR5nSsjFkzYcnJ9Y9h6HkVoXTce5pu6185jSGOFyJJmJLfH6JlPOAqR/Fkm+JnzCjXKjzcxWtrs/pV3oZvvZRzfrmxbX5IXxDewrDJID4yp7mwzKHEBfo5tdodztNBkTKXunHtCOXR2v71lGLImTm7s1Q22yUEiUqsfmBaeHYSBP0K76IfYj47Tto4pS7AZYZ+lzA0XOB3Z1vnxobYa5EuQRlHIkxbsGEjShJDAmV1/limYY+T5Npq2HVYUJV03ZMZE4pWUSEAQW0TKHWDAvCG4hMEq4ZfOg==
-Received: from BN8PR12CA0025.namprd12.prod.outlook.com (2603:10b6:408:60::38)
- by DM5PR12MB1931.namprd12.prod.outlook.com (2603:10b6:3:109::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.21; Tue, 15 Jun
- 2021 03:28:32 +0000
-Received: from BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:60:cafe::62) by BN8PR12CA0025.outlook.office365.com
- (2603:10b6:408:60::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.21 via Frontend
- Transport; Tue, 15 Jun 2021 03:28:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; synopsys.com; dkim=none (message not signed)
- header.d=none;synopsys.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT006.mail.protection.outlook.com (10.13.177.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4219.21 via Frontend Transport; Tue, 15 Jun 2021 03:28:31 +0000
-Received: from [10.25.75.2] (172.20.187.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 15 Jun
- 2021 03:28:28 +0000
-Subject: Re: Query regarding the use of pcie-designware-plat.c file
-To:     Thierry Reding <treding@nvidia.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <34650ed1-6567-3c8f-fe29-8816f0fd74f2@nvidia.com>
- <DM5PR12MB18351813A8F94B0D18E6B505DA379@DM5PR12MB1835.namprd12.prod.outlook.com>
- <d142b6be-f006-1edf-8780-da72ff4f20e3@nvidia.com>
- <YMCOoGzE2uGxabqF@orome.fritz.box>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <26a86c55-7c35-484a-2e6f-9d5c36b078f4@nvidia.com>
-Date:   Tue, 15 Jun 2021 08:58:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S230411AbhFOEIl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 00:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230076AbhFOEIg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 00:08:36 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796EDC061574
+        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 21:06:31 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id c138so27856923qkg.5
+        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 21:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YDA/6rYFbIzGwN3DJJ3v30Ilg60B464lccTuq9RZZyA=;
+        b=fMG07OU4hKhOT0Ejr3qOHcrU08EN3G1+RpniZ8liKpsJESj8tYmvpPMQZbf905Arqa
+         jTNjk7/cw8NTc05aXCrTOb4W4H63TAdnEqedfWvkUqde8aQCNzpKVfF+WTvNV5ptv2qS
+         TsIum45Bdbkm1pBXJPvJDobZEXMxEtOKj24Zc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YDA/6rYFbIzGwN3DJJ3v30Ilg60B464lccTuq9RZZyA=;
+        b=GyYheQ7VUA4Adv3fzpi1B1qhcKMNgZdbH92zJBxsNbwZH1oGiHzyx++eij4kwrvuiP
+         86KOLm4tKUZSoWo4fXGditScxWAzVSkeutAYnLeVmOgDpkSLRZpPyxJj9N1DZjxy8SJ0
+         M5XgiEBUGnZUbFF6yX9YT+oR+LefHXNjUbStcgbwnYqJnwOFuRylPKfPBJqhBG6lr31d
+         K8QDB2le7OCM6RbR+zWX3RdWDGC1MHl9AvOdRQR9nBPxU/606ba96StQ1NxsKQHLrvlp
+         lGmXMiT5hdrGj+zvzkq1icmU6UB4mqO2Va2u5SkDuLnpX3VoKZNbE4OQe47IKmmO+IkC
+         uGqA==
+X-Gm-Message-State: AOAM532urzPG0sIM8BHDWNrVJ5GXmioxQq7nqIiQZUd57moUEMlhAwwU
+        /RWEIlHR+JginEQI04aC4jw0YdxdB4+Tdg==
+X-Google-Smtp-Source: ABdhPJyg5AxLj+sJTNB4hLKXwq6cC81YM7IeStMkaeqy5jiKvwUszFV5LbVGfwx15tVWWP/7ka3w3g==
+X-Received: by 2002:a37:6609:: with SMTP id a9mr20039762qkc.459.1623729990511;
+        Mon, 14 Jun 2021 21:06:30 -0700 (PDT)
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
+        by smtp.gmail.com with ESMTPSA id k124sm11348500qkc.132.2021.06.14.21.06.28
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Jun 2021 21:06:29 -0700 (PDT)
+Received: by mail-qk1-f174.google.com with SMTP id g19so7936377qkk.2
+        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 21:06:28 -0700 (PDT)
+X-Received: by 2002:a02:384b:: with SMTP id v11mr19686288jae.90.1623729977741;
+ Mon, 14 Jun 2021 21:06:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YMCOoGzE2uGxabqF@orome.fritz.box>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.187.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2e21e2c1-3005-41fc-310b-08d92fada67e
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1931:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB193184F987636840659BBB62B8309@DM5PR12MB1931.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Zz9UIzt1ZgEDU7ClKTaDlw0UcW4I5/pE9ChAOPMRDY5NJNiZ4eHva1oFKUYJYOnBrDwxQT8DJUfyUaQ60CHxyEnYvg12Negl8cMdeJIgxHtI1FUOsgc18AYZJzgIzRtOKJfhtMN9LMTcojZabmM2pAowJUFC1LtPkdCy2oTcGknf9FroCj+IqDg1/BsPaOZ/GUvh/tkmRPljFlZMCHuuQ9cVj0ypP7AYKdSh+QYyUCRlmlW9QOaT+/5myFeHwfEEemYrt+BQYG9fF1Qb7VLV1BE43MkkHpPqfdBYZ6Noo+lc2M9tJIJKIZ5DGRToWmFQvNadVrhjgwxkTBPJxhJe96J+IoTLfVb63ytYfjVSGSwLCesSvOlq4Of4TgpraAfLigECSaftlD4nXgEXjPpQwQHGCjQzFZF9+m9DODAfqFL7mW443LipGZHTDFGDV/6EeucHvAqqr9xu60GO+soshTcaUDQizgUV0Ohcfk8ADo/f3LtHwclm6XfuPFvfn1uBDCpdwiO+ezp0UZecP2OlFpufbcuMrNik1RmufqSAq4ydyRi9hsXdlibMh6ciqMl9vf68757E77+MeHNz1EJi7ZEbBCNHUvnpvOQsrJYdXTw03N7FuMbRLVa2wG+AIi8VbdqdEBDR27UjPQmzmj89Qim8EkIkxuyntSJwqRqjO7GhbHtR2T/e8AtRP6w5yPWL
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(396003)(376002)(136003)(39860400002)(46966006)(36840700001)(8936002)(4326008)(31696002)(70586007)(31686004)(82740400003)(53546011)(426003)(336012)(26005)(47076005)(36860700001)(16526019)(70206006)(186003)(2616005)(110136005)(316002)(2906002)(86362001)(16576012)(5660300002)(54906003)(478600001)(36906005)(8676002)(356005)(36756003)(82310400003)(7636003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2021 03:28:31.6972
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e21e2c1-3005-41fc-310b-08d92fada67e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1931
+References: <20210611152659.2142983-1-tientzu@chromium.org>
+ <20210611152659.2142983-2-tientzu@chromium.org> <20210614061644.GA28343@lst.de>
+In-Reply-To: <20210614061644.GA28343@lst.de>
+From:   Claire Chang <tientzu@chromium.org>
+Date:   Tue, 15 Jun 2021 12:06:06 +0800
+X-Gmail-Original-Message-ID: <CALiNf29cE-T7xf+nUZF2pjT8osaXj+wb4MibtdSkAU_K13wuMw@mail.gmail.com>
+Message-ID: <CALiNf29cE-T7xf+nUZF2pjT8osaXj+wb4MibtdSkAU_K13wuMw@mail.gmail.com>
+Subject: Re: [PATCH v9 01/14] swiotlb: Refactor swiotlb init functions
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
+        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
+        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
+        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn / Lorenzo,
-Could you please comment on the options proposed by Thierry?
+On Mon, Jun 14, 2021 at 2:16 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Jun 11, 2021 at 11:26:46PM +0800, Claire Chang wrote:
+> > +     spin_lock_init(&mem->lock);
+> > +     for (i = 0; i < mem->nslabs; i++) {
+> > +             mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
+> > +             mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
+> > +             mem->slots[i].alloc_size = 0;
+> > +     }
+> > +
+> > +     if (memory_decrypted)
+> > +             set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
+> > +     memset(vaddr, 0, bytes);
+>
+> We don't really need to do this call before the memset.  Which means we
+> can just move it to the callers that care instead of having a bool
+> argument.
+>
+> Otherwise looks good:
+>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-- Vidya Sagar
-
-On 6/9/2021 3:19 PM, Thierry Reding wrote:
-> On Wed, Jun 09, 2021 at 10:56:48AM +0530, Vidya Sagar wrote:
->>
->>
->> On 6/9/2021 2:47 AM, Gustavo Pimentel wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> Hi Vidya,
->>>
->>> The pcie-designware-plat.c is the driver for the Synopsys PCIe RC IP
->>> prototype.
->> Thanks for the info Gustavo.
->> But, I don't see any DT file having only "snps,dw-pcie" compatibility
->> string. All the DT files that have "snps,dw-pci" compatibility string also
->> have their platform specific compatibility string and their respective host
->> controller drivers. Also, it is the platform specific compatibility string
->> that is used for binding purpose with their respective drivers and not the
->> "snps,dw-pcie". So, wondering when will pcie-designware-plat.c be used as
->> there is not DT file which has only "snps,dw-pcie" as the compatibility
->> string.
-> 
-> Sounds to me like we have two options:
-> 
->    1. If there's indeed real hardware that's identified by the existing
->       "snps,dw-pcie" compatible string, then it's wrong for other devices
->       to list that in their compatible string because they are likely not
->       compatible with that (i.e. they might be from a register point of
->       view, but at least from an integration point of view they usually
->       differ).
-> 
->    2. If "snps,dw-pcie" is meant to describe the fact that these are all
->       based off the same IP but may be differently integrated, then there
->       should be no driver matching on that compatible string.
-> 
-> Option 2 is not very robust because somebody could easily add a matching
-> driver at some point in the future. Also, if we don't match on a
-> compatible string there's not a lot of use in listing it in DT in the
-> first place.
-> 
-> So I think option 1 would be preferred.
-> 
-> Thierry
-> 
+Thanks for the review. Will wait more days for other reviews and send
+v10 to address the comments in this and other patches.
