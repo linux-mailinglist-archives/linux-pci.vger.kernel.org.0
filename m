@@ -2,122 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8176D3A7593
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 06:06:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 741243A7674
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 07:26:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbhFOEIl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 00:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230076AbhFOEIg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 00:08:36 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796EDC061574
-        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 21:06:31 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id c138so27856923qkg.5
-        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 21:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YDA/6rYFbIzGwN3DJJ3v30Ilg60B464lccTuq9RZZyA=;
-        b=fMG07OU4hKhOT0Ejr3qOHcrU08EN3G1+RpniZ8liKpsJESj8tYmvpPMQZbf905Arqa
-         jTNjk7/cw8NTc05aXCrTOb4W4H63TAdnEqedfWvkUqde8aQCNzpKVfF+WTvNV5ptv2qS
-         TsIum45Bdbkm1pBXJPvJDobZEXMxEtOKj24Zc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YDA/6rYFbIzGwN3DJJ3v30Ilg60B464lccTuq9RZZyA=;
-        b=GyYheQ7VUA4Adv3fzpi1B1qhcKMNgZdbH92zJBxsNbwZH1oGiHzyx++eij4kwrvuiP
-         86KOLm4tKUZSoWo4fXGditScxWAzVSkeutAYnLeVmOgDpkSLRZpPyxJj9N1DZjxy8SJ0
-         M5XgiEBUGnZUbFF6yX9YT+oR+LefHXNjUbStcgbwnYqJnwOFuRylPKfPBJqhBG6lr31d
-         K8QDB2le7OCM6RbR+zWX3RdWDGC1MHl9AvOdRQR9nBPxU/606ba96StQ1NxsKQHLrvlp
-         lGmXMiT5hdrGj+zvzkq1icmU6UB4mqO2Va2u5SkDuLnpX3VoKZNbE4OQe47IKmmO+IkC
-         uGqA==
-X-Gm-Message-State: AOAM532urzPG0sIM8BHDWNrVJ5GXmioxQq7nqIiQZUd57moUEMlhAwwU
-        /RWEIlHR+JginEQI04aC4jw0YdxdB4+Tdg==
-X-Google-Smtp-Source: ABdhPJyg5AxLj+sJTNB4hLKXwq6cC81YM7IeStMkaeqy5jiKvwUszFV5LbVGfwx15tVWWP/7ka3w3g==
-X-Received: by 2002:a37:6609:: with SMTP id a9mr20039762qkc.459.1623729990511;
-        Mon, 14 Jun 2021 21:06:30 -0700 (PDT)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
-        by smtp.gmail.com with ESMTPSA id k124sm11348500qkc.132.2021.06.14.21.06.28
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Jun 2021 21:06:29 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id g19so7936377qkk.2
-        for <linux-pci@vger.kernel.org>; Mon, 14 Jun 2021 21:06:28 -0700 (PDT)
-X-Received: by 2002:a02:384b:: with SMTP id v11mr19686288jae.90.1623729977741;
- Mon, 14 Jun 2021 21:06:17 -0700 (PDT)
+        id S229659AbhFOF2Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 01:28:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34981 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229488AbhFOF2P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Jun 2021 01:28:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1623734771; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=doO/lOyS2nno44eUAbzgpveEi+a60C/4rJxR/gZVDKM=;
+ b=A7yTS+5qWQj+mqHz+H/oJd18Rmc1S4aYOd5EEwIEzd74uboCxu5JB9vqiesIEnLmsOTc7spH
+ tCOd5eLIMzBjptOOmeOwODChiETNEjS1MYHJTXN3CBCGMQ+sfeOU8djqLwRgM/2Mm2Ih8PDp
+ Fco5heWkOL3w927yc13slBbyRnA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 60c839edf726fa418829cd39 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 15 Jun 2021 05:26:05
+ GMT
+Sender: pmaliset=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E239BC4338A; Tue, 15 Jun 2021 05:26:04 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmaliset)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A5C5C433D3;
+        Tue, 15 Jun 2021 05:26:03 +0000 (UTC)
 MIME-Version: 1.0
-References: <20210611152659.2142983-1-tientzu@chromium.org>
- <20210611152659.2142983-2-tientzu@chromium.org> <20210614061644.GA28343@lst.de>
-In-Reply-To: <20210614061644.GA28343@lst.de>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Tue, 15 Jun 2021 12:06:06 +0800
-X-Gmail-Original-Message-ID: <CALiNf29cE-T7xf+nUZF2pjT8osaXj+wb4MibtdSkAU_K13wuMw@mail.gmail.com>
-Message-ID: <CALiNf29cE-T7xf+nUZF2pjT8osaXj+wb4MibtdSkAU_K13wuMw@mail.gmail.com>
-Subject: Re: [PATCH v9 01/14] swiotlb: Refactor swiotlb init functions
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 15 Jun 2021 10:56:03 +0530
+From:   Prasad Malisetty <pmaliset@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mgautam@codeaurora.org, dianders@chromium.org, mka@chromium.org
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc7280: Add PCIe and PHY related
+ nodes
+In-Reply-To: <YLxI3NTvgTJ3qt7h@builder.lan>
+References: <1620382648-17395-1-git-send-email-pmaliset@codeaurora.org>
+ <1620382648-17395-3-git-send-email-pmaliset@codeaurora.org>
+ <CAE-0n530bSPupOHVDzwpd_JVVN0tOfrAOm9dAt1ZGj7zaXOZ6A@mail.gmail.com>
+ <3b3701bb1e23dec88f2231722872fc40@codeaurora.org>
+ <CAE-0n50k9z0ZFqP_pOmQjp0s3NCSKYHTmHvZ5rxLb3MzqgavrA@mail.gmail.com>
+ <YLxI3NTvgTJ3qt7h@builder.lan>
+Message-ID: <108a693b952c6dd84f60130f83a572d7@codeaurora.org>
+X-Sender: pmaliset@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 2:16 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, Jun 11, 2021 at 11:26:46PM +0800, Claire Chang wrote:
-> > +     spin_lock_init(&mem->lock);
-> > +     for (i = 0; i < mem->nslabs; i++) {
-> > +             mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
-> > +             mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
-> > +             mem->slots[i].alloc_size = 0;
-> > +     }
-> > +
-> > +     if (memory_decrypted)
-> > +             set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
-> > +     memset(vaddr, 0, bytes);
->
-> We don't really need to do this call before the memset.  Which means we
-> can just move it to the callers that care instead of having a bool
-> argument.
->
-> Otherwise looks good:
->
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+On 2021-06-06 09:32, Bjorn Andersson wrote:
+> On Fri 04 Jun 16:43 CDT 2021, Stephen Boyd wrote:
+> 
+>> Quoting Prasad Malisetty (2021-05-21 02:57:00)
+>> > On 2021-05-08 01:36, Stephen Boyd wrote:
+>> > > Quoting Prasad Malisetty (2021-05-07 03:17:27)
+>> > >> Add PCIe controller and PHY nodes for sc7280 SOC.
+>> > >>
+>> > >> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+>> > >> ---
+>> > >>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 138
+>> > >> +++++++++++++++++++++++++++++++++++
+>> > >>  1 file changed, 138 insertions(+)
+>> > >>
+>> > >> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> > >> b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> > >> index 2cc4785..a9f25fc1 100644
+>> > >> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> > >> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>> > >> @@ -12,6 +12,7 @@
+>> > >>  #include <dt-bindings/power/qcom-aoss-qmp.h>
+>> > >>  #include <dt-bindings/power/qcom-rpmpd.h>
+>> > >>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>> > >> +#include <dt-bindings/gpio/gpio.h>
+>> > >>
+>> > >>  / {
+>> > >>         interrupt-parent = <&intc>;
+>> > >> @@ -316,6 +317,118 @@
+>> > >>                         };
+>> > >>                 };
+>> > >>
+>> > > [...]
+>> > >> +
+>> > >> +               pcie1_phy: phy@1c0e000 {
+>> > >> +                       compatible =
+>> > >> "qcom,sm8250-qmp-gen3x2-pcie-phy";
+>> > >> +                       reg = <0 0x01c0e000 0 0x1c0>;
+>> > >> +                       #address-cells = <2>;
+>> > >> +                       #size-cells = <2>;
+>> > >> +                       ranges;
+>> > >> +                       clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+>> > >> +                                <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+>> > >> +                                <&gcc GCC_PCIE_CLKREF_EN>,
+>> > >> +                                <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
+>> > >> +                       clock-names = "aux", "cfg_ahb", "ref",
+>> > >> "refgen";
+>> > >> +
+>> > >> +                       resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+>> > >> +                       reset-names = "phy";
+>> > >> +
+>> > >> +                       assigned-clocks = <&gcc
+>> > >> GCC_PCIE1_PHY_RCHNG_CLK>;
+>> > >> +                       assigned-clock-rates = <100000000>;
+>> > >> +
+>> > >> +                       status = "disabled";
+>> > >
+>> > > I think the style is to put status disabled close to the compatible?
+>> >
+>> > Generally I have added status disabled in end as like many nodes. just
+>> > curious to ask is there any specific reason to put close to compatible.
+>> 
+>> It's really up to qcom maintainers, which I am not.
+>> 
+> 
+> I like when it's the last item, as it lends itself nicely to be
+> surrounded by empty lines and thereby easy to spot...
+> 
+>> Sure, I will change as like previous one.
 
-Thanks for the review. Will wait more days for other reviews and send
-v10 to address the comments in this and other patches.
+> Regards,
+> Bjorn
+> 
+>> > >> +                               };
+>> > >> +
+>> > >> +                               reset-n {
+>> > >> +                                       pins = "gpio2";
+>> > >> +                                       function = "gpio";
+>> > >> +
+>> > >> +                                       drive-strength = <16>;
+>> > >> +                                       output-low;
+>> > >> +                                       bias-disable;
+>> > >> +                               };
+>> > >> +
+>> > >> +                               wake-n {
+>> > >> +                                       pins = "gpio3";
+>> > >> +                                       function = "gpio";
+>> > >> +
+>> > >> +                                       drive-strength = <2>;
+>> > >> +                                       bias-pull-up;
+>> > >> +                               };
+>> > >
+>> > > These last two nodes with the pull-up and drive-strength settings
+>> > > should
+>> > > be in the board files, like the idp one, instead of here in the SoC
+>> > > file. That way board designers can take the SoC and connect the pcie to
+>> > > an external device using these pins and set the configuration they want
+>> > > on these pins, or choose not to connect them to the SoC at all and use
+>> > > those pins for something else.
+>> > >
+>> > > In addition, it looks like the reset could be a reset-gpios property
+>> > > instead of an output-low config.
+>> > >
+>> > we are using reset property as perst gpio in pcie node.
+>> 
+>> Ok, perst-gpios should be fine. Presumably perst-gpios should be in 
+>> the
+>> board and not in the SoC because of what I wrote up above.
+
+>> Sure, I will move perst into board specific file
