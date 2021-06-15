@@ -2,135 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C6593A8A93
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 23:05:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6138B3A8AB6
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 23:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230045AbhFOVHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 17:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
+        id S231371AbhFOVLT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 17:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229898AbhFOVHS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Jun 2021 17:07:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BB94B613B9;
-        Tue, 15 Jun 2021 21:05:13 +0000 (UTC)
+        id S231230AbhFOVLT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Jun 2021 17:11:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1F0BB613C7;
+        Tue, 15 Jun 2021 21:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623791113;
-        bh=AT/YWuvp+v63KTyI56swC1rEnVdNJWMoRG4ND7HA4KA=;
+        s=k20201202; t=1623791354;
+        bh=XPZFATeT6O1TSS3iPQi0I85I8kVNARs+UfjO8U3dfVU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n6tT00FVQznwzOGIIdBYbh/aHJKHZLnZ574HMi7CNf0a93WlZ/tZmtGiet1WLWCxw
-         Evbf4kru4No8xMzpBlHEnO7S9+I/NQBLFtTGzDbZewieg7bGo9UcwyUbwPoofs5YYN
-         k9cGnYkop+LSx8Dq40IbTe2roBfIXZ6ZWzNhePBuA1HvAsax2fjGTqKOzD8184N6vH
-         s2FnEdcI7mPtwRB0+p4NowTlYbMAU5kGl4q6Tz7R6Or6zTjiHIP5a/i5fMnXz13dVp
-         DLMzk+lttdt3G2nLSg+8Lv0R5YNmPrg59x0V67uW8iTFU3hjRU18PTM9xnRjfrh5ch
-         L/4qQTAAiTclg==
-Received: by mail-qv1-f51.google.com with SMTP id l3so484192qvl.0;
-        Tue, 15 Jun 2021 14:05:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533jPz7BOCkIwX/CKmIkFoWuLRLBWa1q0TexhN+uBAMKXUKBIj37
-        NWNXUY6RqZ5Qe/+zPB7wqZ3jYc8ZH0uFf4KZfA==
-X-Google-Smtp-Source: ABdhPJxqGIKq/19yHiujzhM/mZ4CCHT4l5CZU9/js7h0X1EYq3fFr5jvC1yrNNhNjStPfF4km4lRf3BEzJIfTAl6fKo=
-X-Received: by 2002:a05:6214:1551:: with SMTP id t17mr7322023qvw.50.1623791112917;
- Tue, 15 Jun 2021 14:05:12 -0700 (PDT)
+        b=pPA+xbPwkHvD/bRBsqIYaropPUgzP0KRUX71yffRfdKMlT/fWysCvoLdreNOuzDYZ
+         jfryhOoN7kI5G/puKCbf+W21R7hEc5ohnGEOBEuHS5m0k4EWdQdBWyR/c8cTtAdXv1
+         +QIONcpJ82r85IRnqVzeKg5EHZ6ljaYX/IFxIh6qSjxJCLQRo/o2Dzw08SJFQtmKqI
+         KB0+U7a+IBrTIdk/Kq03p0Zv0ClsMDjRKsS/1R/Dtugzc2TY4I++m8dO+LU1yqhCZd
+         SE9pE+W8tWpE0tbYrdr1SzcOp++7jpcL4G2avlE8mXfwYFJjq+mJ0JChjaqnfpNxF/
+         ij9pYyK4nHG1w==
+Received: by mail-ed1-f41.google.com with SMTP id t7so7751550edd.5;
+        Tue, 15 Jun 2021 14:09:14 -0700 (PDT)
+X-Gm-Message-State: AOAM533mEukABkC/Efgr+n8RUc8Vs/YiVvLX0Iw1AD7RA0ygOSrfPEQQ
+        5OKnZ+VYIczWhceRzkAuRC9tTAdcUEAdI9OqkA==
+X-Google-Smtp-Source: ABdhPJw414bzNY20+um3YrNRtQXFNYn5br7a3HAvmXNIDiJkSz+f0qWYMHTTl029XmRnYhAh7UpWGbc/GfiHf7emSTc=
+X-Received: by 2002:aa7:dc4c:: with SMTP id g12mr161778edu.258.1623791352761;
+ Tue, 15 Jun 2021 14:09:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <2970bdf2-bef2-bdcb-6ee3-ac1181d97b78@nvidia.com> <20210615194209.GA2908457@bjorn-Precision-5520>
-In-Reply-To: <20210615194209.GA2908457@bjorn-Precision-5520>
+References: <20210607154044.26074-1-srikanth.thokala@intel.com> <20210607154044.26074-3-srikanth.thokala@intel.com>
+In-Reply-To: <20210607154044.26074-3-srikanth.thokala@intel.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 15 Jun 2021 15:05:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLSTp+AUw1-83n0mQCLazk-Eb=YQxoJMXB7GQ-hwwu9UQ@mail.gmail.com>
-Message-ID: <CAL_JsqLSTp+AUw1-83n0mQCLazk-Eb=YQxoJMXB7GQ-hwwu9UQ@mail.gmail.com>
-Subject: Re: Query regarding the use of pcie-designware-plat.c file
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 15 Jun 2021 15:09:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJmLz2TChWYGtEGtHpd5aO4hp+zvx8cExb760PDsx-nRg@mail.gmail.com>
+Message-ID: <CAL_JsqJmLz2TChWYGtEGtHpd5aO4hp+zvx8cExb760PDsx-nRg@mail.gmail.com>
+Subject: Re: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem Bay
+To:     srikanth.thokala@intel.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        mallikarjunappa.sangannavar@intel.com,
+        Krzysztof Wilczynski <kw@linux.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 1:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Mon, Jun 7, 2021 at 1:47 AM <srikanth.thokala@intel.com> wrote:
 >
-> On Wed, Jun 09, 2021 at 05:54:38PM +0100, Jon Hunter wrote:
-> >
-> > On 09/06/2021 17:30, Bjorn Helgaas wrote:
-> > > On Wed, Jun 09, 2021 at 12:52:37AM +0530, Vidya Sagar wrote:
-> > >> Hi,
-> > >> I would like to know what is the use of pcie-designware-plat.c file. This
-> > >> looks like a skeleton file and can't really work with any specific hardware
-> > >> as such.
-> > >> Some context for this mail thread is, if the config CONFIG_PCIE_DW_PLAT is
-> > >> enabled in a system where a Synopsys DesignWare IP based PCIe controller is
-> > >> present and its configuration is enabled (Ex:- Tegra194 system with
-> > >> CONFIG_PCIE_TEGRA194_HOST enabled), then, it can so happen that the probe of
-> > >> pcie-designware-plat.c called first (because all DWC based PCIe controller
-> > >> nodes have "snps,dw-pcie" compatibility string) and can crash the system.
-
-Linux provides no guarantees of what driver will probe if multiple
-match. This has been a known 'problem' forever.
-
-> > > What's the crash?  If a device claims to be compatible with
-> > > "snps,dw-pcie" and pcie-designware-plat.c claims to know how to
-> > > operate "snps,dw-pcie" devices, it seems like something is wrong.
-> > >
-> > > "snps,dw-pcie" is a generic device type, so pcie-designware-plat.c
-> > > might not know how to operate device-specific details of some of those
-> > > devices, but basic functionality should work and it certainly
-> > > shouldn't crash.
-> >
-> > It is not really a crash but a hang when trying to access the hardware
-> > before it has been properly initialised.
+> From: Srikanth Thokala <srikanth.thokala@intel.com>
 >
-> This doesn't really answer my question.
+> Add driver for Intel Keem Bay SoC PCIe controller. This controller
+> is based on DesignWare PCIe core.
 >
-> If the hardware claims to be compatible with "snps,dw-pcie" and a
-> driver knows how to operate "snps,dw-pcie" devices, it should work.
-
-I try to tell people that generic compatibles like this are pointless...
-
-> If the hardware requires initialization that is not part of the
-> "snps,dw-pcie" programming model, it should not claim to be compatible
-> with "snps,dw-pcie".  Or, if pcie-designware-plat.c is missing some
-> init that *is* part of the programming model, maybe it needs to be
-> enhanced?
-
-The driver will only work on an implementation with no clocks (though
-the binding defines clocks), resets, phys, host specific registers or
-interrupt muxing. That's practically no one. We could probably enhance
-the driver to handle the first 3 if there's not differing sequencing
-requirements. If we did this, we'd move the specific compatibles to
-the plat driver, not add "snps,dw-pcie" to DT (because internal kernel
-refactoring shouldn't require a DT change).
-
-> > The scenario I saw was that if the Tegra194 PCIe driver was built as a
-> > module but the pcie-designware-plat.c was built into the kernel, then on
-> > boot we would attempt to probe the pcie-designware-plat.c driver because
-> > module was not available yet and this would hang. Hence, I removed the
-> > "snps,dw-pcie" compatible string for Tegra194 to avoid this and ONLY
-> > probe the Tegra194 PCIe driver.
+> In Root Complex mode, only internal reference clock is possible for
+> Keem Bay A0. For Keem Bay B0, external reference clock can be used
+> and will be the default configuration. Currently, keembay_pcie_of_data
+> structure has one member. It will be expanded later to handle this
+> difference.
 >
-> Maybe something like driver_override (I know this is supported via
-> sysfs, but maybe not via a kernel parameter) or a module parameter for
-> pcie-designware-plat.c to keep it from claiming devices?
-
-We could simply bail probe if "snps,dw-pcie" is not the most specific
-compatible. I don't think we have a ready made helper for that, but it
-would be just checking "compatible" string index 0 against
-"snps,dw-pcie".
-
-> > Sagar is wondering why this hang is only seen/reported for Tegra and
-> > could this happen to other platforms? I think that is potentially could.
+> Endpoint mode link initialization is handled by the boot firmware.
 >
-> Maybe pcie-designware-plat.c works on other platforms, i.e., they
-> don't require the hardware init?
+> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Srikanth Thokala <srikanth.thokala@intel.com>
+> Reviewed-by: Krzysztof Wilczy=C5=84ski <kw@linux.com>
+> ---
+>  MAINTAINERS                               |   7 +
+>  drivers/pci/controller/dwc/Kconfig        |  28 ++
+>  drivers/pci/controller/dwc/Makefile       |   1 +
+>  drivers/pci/controller/dwc/pcie-keembay.c | 451 ++++++++++++++++++++++
+>  4 files changed, 487 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-keembay.c
 
-At least upstream, I don't think there are any. But a lot of platforms
-have 'snps,dw-pcie' as a fallback.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
