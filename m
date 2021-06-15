@@ -2,178 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AD513A7AB8
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 11:35:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 695903A7BBD
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 12:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231494AbhFOJhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 05:37:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231420AbhFOJh3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Jun 2021 05:37:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A0AFF613F1;
-        Tue, 15 Jun 2021 09:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623749725;
-        bh=nCrTW//rNCKdhdaFE0n1nbbVk5eZvKM0DYD4gpwBD5M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H67ZVbAhA/1IlJVK5/Nlo36qA+vVnFTTW3PIjBgNepp5FpCkwnb0LHVUW5BXYvtQN
-         AWvrao8TSRHd0PMLO6E6AOH5qZP2eRAFEFk03X++/8hxZabxVqwcgqknIBEo5tme3A
-         F9mYGl4aTCt6cCgMG6Jh1k+aEOUPk0wTlxROEcVPQzQAn/vn19GqBaQGKBRYuqfPGR
-         uST0fsjQWBjI/JDo87G5yNJzBIQeE6eJx4+1a7wUqmGxxZdXqOFdd879WCJaTrwTE6
-         f05f6QdySXxM4DWfYbsNvuWQZhbXhdgbi9UbczHhqrJCg5iy6ob8sDD/m0rteOu891
-         Q5fVu3wjecizg==
-Date:   Tue, 15 Jun 2021 10:35:20 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "liuqi (BA)" <liuqi115@huawei.com>
-Cc:     mark.rutland@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        zhangshaokun@hisilicon.com
-Subject: Re: [PATCH v6 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
- PMU
-Message-ID: <20210615093519.GB19878@willie-the-truck>
-References: <1622467951-32114-1-git-send-email-liuqi115@huawei.com>
- <1622467951-32114-3-git-send-email-liuqi115@huawei.com>
- <20210611162347.GA16284@willie-the-truck>
- <a299d053-b45f-e941-7a2e-c853079b8cdd@huawei.com>
+        id S231609AbhFOK2F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 06:28:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32682 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231288AbhFOK2E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 06:28:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623752760;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=h2UOdzryF6sn8L4XRhvrh+Vyxn6lZrCVAYeiITI8oa4=;
+        b=PgaG6WQSq9I79t5wA+Vv94ebzAgzsvPZKKltVnLLb9Cat9bAgTWbpqjO8/tWM9CvtioKUT
+        GH29RB6YW7/o/lBvyyb5wsKZYP7HJ2g8RmaW+ylarSkaqCjO2wDdPXDG/Mu27drafj8NzH
+        ycerf+QcEKpknJyTQSwyqzGRcd5oGgY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-559-4HptgHMPNGicKJOuvP3D6g-1; Tue, 15 Jun 2021 06:25:58 -0400
+X-MC-Unique: 4HptgHMPNGicKJOuvP3D6g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4AA791850618;
+        Tue, 15 Jun 2021 10:25:57 +0000 (UTC)
+Received: from x1.localdomain (ovpn-113-81.ams2.redhat.com [10.36.113.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F5EF5D9CA;
+        Tue, 15 Jun 2021 10:25:55 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [RFC 0/1] PCI/ACPI: Make acpi_pci_root_validate_resources() reject IOMEM resources which start at address 0
+Date:   Tue, 15 Jun 2021 12:25:54 +0200
+Message-Id: <20210615102555.6035-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a299d053-b45f-e941-7a2e-c853079b8cdd@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 04:57:09PM +0800, liuqi (BA) wrote:
-> On 2021/6/12 0:23, Will Deacon wrote:
-> > On Mon, May 31, 2021 at 09:32:31PM +0800, Qi Liu wrote:
-> > > PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported
-> > > to sample bandwidth, latency, buffer occupation etc.
-> > > 
-> > > Each PMU RCiEP device monitors multiple Root Ports, and each RCiEP is
-> > > registered as a PMU in /sys/bus/event_source/devices, so users can
-> > > select target PMU, and use filter to do further sets.
-> > > 
-> > > Filtering options contains:
-> > > event        - select the event.
-> > > subevent     - select the subevent.
-> > > port         - select target Root Ports. Information of Root Ports
-> > >                 are shown under sysfs.
-> > > bdf          - select requester_id of target EP device.
-> > > trig_len     - set trigger condition for starting event statistics.
-> > > trigger_mode - set trigger mode. 0 means starting to statistic when
-> > >                 bigger than trigger condition, and 1 means smaller.
-> > > thr_len      - set threshold for statistics.
-> > > thr_mode     - set threshold mode. 0 means count when bigger than
-> > >                 threshold, and 1 means smaller.
-> > > 
-> > > Reviewed-by: John Garry <john.garry@huawei.com>
-> > > Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> > > ---
-> > >   MAINTAINERS                                |    6 +
-> > >   drivers/perf/Kconfig                       |    2 +
-> > >   drivers/perf/Makefile                      |    1 +
-> > >   drivers/perf/pci/Kconfig                   |   16 +
-> > >   drivers/perf/pci/Makefile                  |    2 +
-> > >   drivers/perf/pci/hisilicon/Makefile        |    3 +
-> > >   drivers/perf/pci/hisilicon/hisi_pcie_pmu.c | 1019 ++++++++++++++++++++++++++++
-> > 
-> > Can we keep this under drivers/perf/hisilicon/ please? I don't see the
-> > need to create a 'pci' directory here.
-> > 
-> So how about drivers/perf/hisilicon/pci? as hisi_pcie_pmu.c do not use
-> hisi_uncore_pmu framework.
+Hi All,
 
-That's up to you. As long as it's _somewhere_ under drivers/perf/hisilicon/,
-then I'm not too fussed.
+Here is an attempt to fix an issue which is causing I2C-HID touchpads /
+touchscreens to not work on various recent Intel CPU using Lenovo Ideapad
+laptop models. There are quite a few reports about this and I think I've
+finally figured out what is going on here. See the patch for details.
 
-> > > +static void hisi_pcie_parse_reg_value(struct hisi_pcie_pmu *pcie_pmu,
-> > > +				      u32 reg_off, u16 *arg0, u16 *arg1)
-> > > +{
-> > > +	u32 val = readl(pcie_pmu->base + reg_off);
-> > > +
-> > > +	*arg0 = val & 0xffff;
-> > > +	*arg1 = (val & 0xffff0000) >> 16;
-> > > +}
-> > 
-> > Define a new type for the pair of values and return that directly?
-> > 
-> Sorry, I'm not sure about how to fix this, do you mean add a union like
-> this?
-> union reg_val {
-> 	struct {
-> 		u16 arg0;
-> 		u16 arg1;
-> 	}
-> 	u32 val;
-> }
+Note this is just a RFC for now, with as purpose to gather some feedback,
+specifically feedback on if the solution I came up with to just reject all
+_CSR returned PCI IOMEM regions with a base-address of 0 is acceptable.
 
-I was just thinking along the lines of:
+This is a RFC becase I'm waiting to hear back from the reporters to see if
+the patch actually fixes things.
 
-struct hisi_pcie_reg_pair {
-	u16 lo;
-	u16 hi;
-};
+Regards,
 
-static struct hisi_pcie_reg_pair
-hisi_pcie_parse_reg_value(struct hisi_pcie_pmu *pcie_pmum u32 reg_off)
-{
-	u32 val = readl_relaxed(pcie_pmu->base + reg_off);
-	struct hisi_pcie_reg_pair regs = {
-		.lo = val,
-		.hi = val >> 16,
-	};
+Hans
 
-	return regs;
-}
 
-Does that work?
+Hans de Goede (1):
+  PCI/ACPI: Make acpi_pci_root_validate_resources() reject IOMEM
+    resources which start at address 0
 
-> > > +/*
-> > > + * The bandwidth, latency, bus utilization and buffer occupancy features are
-> > > + * calculated from data in HISI_PCIE_CNT and extended data in HISI_PCIE_EXT_CNT.
-> > > + * Other features are obtained only by HISI_PCIE_CNT.
-> > > + * So data and data_ext are processed in this function to get performanace
-> > > + * value like, bandwidth, latency, etc.
-> > > + */
-> > > +static u64 hisi_pcie_pmu_get_performance(struct perf_event *event, u64 data,
-> > > +					 u64 data_ext)
-> > > +{
-> > > +#define CONVERT_DW_TO_BYTE(x)	(sizeof(u32) * (x))
-> > 
-> > I don't know what a "DW" is, but this macro adds nothing...
-> 
-> DW means double words, and 1DW = 4Bytes, value in hardware counter means DW
-> so I wanna change it into Byte.
-> So how about using 4*data here and adding code comment to explain it.
+ drivers/acpi/pci_root.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Just remove the macro and replace it's single user with sizeof(u32) * x
+-- 
+2.31.1
 
-> > > +	/* Process data to set unit of latency as "us". */
-> > > +	if (is_latency_event(idx))
-> > > +		return div64_u64(data * us_per_cycle, data_ext);
-> > > +
-> > > +	if (is_bus_util_event(idx))
-> > > +		return div64_u64(data * us_per_cycle, data_ext);
-> > > +
-> > > +	if (is_buf_util_event(idx))
-> > > +		return div64_u64(data, data_ext * us_per_cycle);
-> > 
-> > Why do we need to do all this division in the kernel? Can't we just expose
-> > the underlying values and let userspace figure out what it wants to do with
-> > the numbers?
-> > 
-> Our PMU hardware support 8 sets of counters to count bandwidth, latency and
-> utilization events.
-> 
-> For example, when users set latency event, common counter will count delay
-> cycles, and extern counter count number of PCIe packets automaticly. And we
-> do not have a event number for counting number of PCIe packets.
-> 
-> So this division cannot move to userspace tool.
-
-Why can't you expose the packet counter as an extra event to userspace?
-
-Will
