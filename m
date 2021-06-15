@@ -2,46 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41BCA3A8AEF
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 23:18:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0373A3A8B17
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jun 2021 23:29:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbhFOVUf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 17:20:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51620 "EHLO mail.kernel.org"
+        id S229829AbhFOVba (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 17:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229992AbhFOVUe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Jun 2021 17:20:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 520DD613B1;
-        Tue, 15 Jun 2021 21:18:29 +0000 (UTC)
+        id S229689AbhFOVba (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Jun 2021 17:31:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 07F8361078;
+        Tue, 15 Jun 2021 21:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623791909;
-        bh=HvzPcdHo85fJo2BuQWKIos2eC9Gp+mz4aSYW3NOFLvY=;
+        s=k20201202; t=1623792565;
+        bh=Z8l5pyigZ4sAnWmGuyoEt4UlPIHTvZnCXuw0L/8f19g=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iTryfXvN1dqS0YOr65+sQbfAeQ+Hk+TOZQ7ajsfbPem1YDIfNacvRQBtSIW+/EKJF
-         kbYHskVsqrDD45K+xqPXn4UEWPrn8q/VvZFkPh6Swrnc8I0M5ID6LB2ldSL4nI2qFH
-         XcJE506v09LOpTJZyCF1T+Y4Qi4KyTRD+7GHhQhl7dljH2Jt0ZBYleKFIPMVtfNqoK
-         RF8hOkZH+/4ZgeijRy130qy0NGXSF/6pauO4kkbZIyqCtTH6mRBhqM6M9n6JDnMHfR
-         GmDGyISJdX6IPssI5wnCkin5BWgXHYQpp7BojjQoCgv10tzpzrs5ybMGi56sU1iwb8
-         vz0ui0A19SeCQ==
-Received: by mail-ed1-f50.google.com with SMTP id s15so12076620edt.13;
-        Tue, 15 Jun 2021 14:18:29 -0700 (PDT)
-X-Gm-Message-State: AOAM530iAPIVP7hZGwHwVOyJ5z9pXneF3OVufXg8FUje4Dc2V6nnnaja
-        ulOepFg/15HDYEfgAGdORE0l1idmi85EfzF6aA==
-X-Google-Smtp-Source: ABdhPJxXvtatFAsBpPXonzYiVjnjQgygge8MCylwXVfui349mdZRVbpYrxDh5A9gZdo3Biv9dVEhLIbhHGduZl6mTuQ=
-X-Received: by 2002:a05:6402:cb0:: with SMTP id cn16mr163687edb.165.1623791907827;
- Tue, 15 Jun 2021 14:18:27 -0700 (PDT)
+        b=a2814pRmpC9A/dY7FIW1TXMw+SNYEGGICYHjniea7HulIIKgftR8IWPa4cllk80KJ
+         bnKFSdaFURxllZ9BqaeUwoCXTuQVadtvDiRWIQlTG554bqzN/zGLTgSsJj/7jeFZnb
+         E7ydAA47Zyq274qGLkcf1ov3tzuhI6t65y6lAHOpKxRS6qt1ce9JlvSwk6E/ehP8Yg
+         XfXrG47A6zNZQw2JOVJd5KhQWpqbtmYG367TdFCBXkX7X7JkbfBzbcT9OQgCt0Ijk7
+         M5Jj8+K5ya3+0/J3YG+cIulZx4CIqH9CqiWEL5VomGw2CSGI07JLvTa1ftKzL4o2RI
+         MHXvxCHK2grQA==
+Received: by mail-ej1-f53.google.com with SMTP id gt18so75364ejc.11;
+        Tue, 15 Jun 2021 14:29:24 -0700 (PDT)
+X-Gm-Message-State: AOAM530GwU7zVYx79tIsjeljTQL1yQnk9iFU3oxMShHVqCMcVnLDqsCD
+        dntBqdy0qGaHDLArwwS6ZKRqjmHdLHYsEq7PNg==
+X-Google-Smtp-Source: ABdhPJwVoFobxS8FdlynGYavo4IkXRj2LN6HkJlOKOVRHthoC5S/usa5DZkbknsweAGrYK/QFnylIoeJu0eNrrbuMcQ=
+X-Received: by 2002:a17:907:3da4:: with SMTP id he36mr1668881ejc.108.1623792563457;
+ Tue, 15 Jun 2021 14:29:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210614230457.752811-1-punitagrawal@gmail.com>
-In-Reply-To: <20210614230457.752811-1-punitagrawal@gmail.com>
+References: <20210607112856.3499682-1-punitagrawal@gmail.com>
+ <20210607112856.3499682-5-punitagrawal@gmail.com> <3105233.izSxrag8PF@diego>
+In-Reply-To: <3105233.izSxrag8PF@diego>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 15 Jun 2021 15:18:15 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLhOFHwBwtMFMnuEaXsDs9sqzUPS=68t+bDnbFsfXgo+Q@mail.gmail.com>
-Message-ID: <CAL_JsqLhOFHwBwtMFMnuEaXsDs9sqzUPS=68t+bDnbFsfXgo+Q@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: of: Clear 64-bit flag for non-prefetchable memory
- below 4GB
-To:     Punit Agrawal <punitagrawal@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
+Date:   Tue, 15 Jun 2021 15:29:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL8iDo5sLmgNVuXs5wt3TpVJbKHfk7gE740DidmvLOwiQ@mail.gmail.com>
+Message-ID: <CAL_JsqL8iDo5sLmgNVuXs5wt3TpVJbKHfk7gE740DidmvLOwiQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Update PCI host bridge
+ window to 32-bit address memory
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
         "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -51,55 +52,50 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Peter Geis <pgwipeout@gmail.com>,
         Ard Biesheuvel <ardb@kernel.org>,
         Brian Norris <briannorris@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
+        Shawn Lin <shawn.lin@rock-chips.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 5:05 PM Punit Agrawal <punitagrawal@gmail.com> wrote:
+On Thu, Jun 10, 2021 at 3:50 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
 >
-> Alexandru and Qu reported this resource allocation failure on
-> ROCKPro64 v2 and ROCK Pi 4B, both based on the RK3399:
+> Hi,
 >
->   pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
->   pci 0000:00:00.0: PCI bridge to [bus 01]
->   pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
->   pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+> Am Montag, 7. Juni 2021, 13:28:56 CEST schrieb Punit Agrawal:
+> > The PCIe host bridge on RK3399 advertises a single 64-bit memory
+> > address range even though it lies entirely below 4GB.
+> >
+> > Previously the OF PCI range parser treated 64-bit ranges more
+> > leniently (i.e., as 32-bit), but since commit 9d57e61bf723 ("of/pci:
+> > Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+> > the code takes a stricter view and treats the ranges as advertised in
+> > the device tree (i.e, as 64-bit).
+> >
+> > The change in behaviour causes failure when allocating bus addresses
+> > to devices connected behind a PCI-to-PCI bridge that require
+> > non-prefetchable memory ranges. The allocation failure was observed
+> > for certain Samsung NVMe drives connected to RockPro64 boards.
+> >
+> > Update the host bridge window attributes to treat it as 32-bit address
+> > memory. This fixes the allocation failure observed since commit
+> > 9d57e61bf723.
+> >
+> > Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@ar=
+m.com
+> > Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> > Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+> > Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
 >
-> "BAR 14" is the PCI bridge's 32-bit non-prefetchable window, and our
-> PCI allocation code isn't smart enough to allocate it in a host
-> bridge window marked as 64-bit, even though this should work fine.
->
-> A DT host bridge description includes the windows from the CPU
-> address space to the PCI bus space.  On a few architectures
-> (microblaze, powerpc, sparc), the DT may also describe PCI devices
-> themselves, including their BARs.
->
-> Before 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
-> flags for 64-bit memory addresses"), of_bus_pci_get_flags() ignored
-> the fact that some DT addresses described 64-bit windows and BARs.
-> That was a problem because the virtio virtual NIC has a 32-bit BAR
-> and a 64-bit BAR, and the driver couldn't distinguish them.
->
-> 9d57e61bf723 set IORESOURCE_MEM_64 for those 64-bit DT ranges, which
-> fixed the virtio driver.  But it also set IORESOURCE_MEM_64 for host
-> bridge windows, which exposed the fact that the PCI allocator isn't
-> smart enough to put 32-bit resources in those 64-bit windows.
->
-> Clear IORESOURCE_MEM_64 from host bridge windows since we don't need
-> that information.
->
-> Fixes: 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
-> Reported-at: https://lore.kernel.org/lkml/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com/
-> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> Reported-by: Qu Wenruo <wqu@suse.com>
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
+> just for clarity, should I just pick this patch separately for 5.13-rc to
+> make it easy for people using current kernel devicetrees, or should
+> this wait for the update mentioned in the cover-letter response
+> and should go all together through the PCI tree?
 
-I think we've beat this one to death.
+This was dropped from v4, but should still be applied IMO.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
