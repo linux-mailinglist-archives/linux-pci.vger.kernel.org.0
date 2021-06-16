@@ -2,84 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F3103A9AF8
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 14:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C3113A9B2D
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 14:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232919AbhFPMvH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 08:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
+        id S231769AbhFPMzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 08:55:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232917AbhFPMvH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 08:51:07 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B78CC061574;
-        Wed, 16 Jun 2021 05:49:00 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id k22-20020a17090aef16b0290163512accedso3608177pjz.0;
-        Wed, 16 Jun 2021 05:49:00 -0700 (PDT)
+        with ESMTP id S229560AbhFPMzy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 08:55:54 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A6EC061574;
+        Wed, 16 Jun 2021 05:53:48 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id n12so1854276pgs.13;
+        Wed, 16 Jun 2021 05:53:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=bPog0RE85xcT70HcJ3zdDfpWRbRDYp7EE1bqB/NOW4w=;
-        b=IoLYdCWDuxVy2duzo7zynPackCGDlyDgRI4iDjO6Cemgz1TdwaE2aY+ZivXzTsseNa
-         W+XgTj/KD1clC7NM5oxdvDUsquYCWJZfJ2Q3UIHeGj+3dmmjRKyJwm4lhROeriDAhyxs
-         +e1beUQpsLF2hQTMfNjAhQtPewD7jHQ7GZlOPjxXTqU1C2rjyzGtey2UpYdP4liGO4/8
-         0RyLU5XQ/aP8X6U0up23valVFErA9JUwSfSIv+6zCgaC7CXfuUFN7O0JIpuihbeia5Bw
-         XVzFJ4/3dcH+/Hw1f0GbcRGdXqkxv1J8A11JZOJv6OOiD84hUZCBvVxylaqNR3Mthohi
-         Qe4g==
+         :user-agent:mime-version;
+        bh=f4MrgwtY3/W6oCFjtro8tz651lyRS/Kv4xgNCHNchVM=;
+        b=Y4T9AA0WWUCuyhxDCOgE0074vUGHK/oRcYfNE1lHhkqrxCLP9BCCNT973sEJMyUb9w
+         kwm+iM8/CpAT43FscZpF68Z3La9iKUPax7GnLBJiTOQVqGnMk2Tw9CR/OYqqiScNehHB
+         sFVjcZ5yZRqfiD6PK7VGeuWGvzqQ9vKvEQ5vtv3JJoAuijyu1ZpgWeFbr1OrHIoQGfFa
+         wmpV2H/29r0Pe67NLDzzQujobRGpAKW+SkupLPS/j98HxB4t+7h5aikyl4RDyBMlDGT5
+         vuRmPeI2Kwb5x+6l0HLTBUnKoenhLKIIsvu8sp1YuP6VQgRqiJ4DaIz3qiiMTXKVJYrR
+         0yzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version:content-transfer-encoding;
-        bh=bPog0RE85xcT70HcJ3zdDfpWRbRDYp7EE1bqB/NOW4w=;
-        b=FDNygjOCb7Ecdl3os3n/7FxVzHAq1iAXN06tZbI+PL45S7jx0gvErJXw2CVClE2TG3
-         1aGN5LJvoWpGXuuxklB+M0uFxDKI/h1xue7V2C1ZZFK8YL4qoctoXyKamnbnmNBdiNsK
-         O0T0+j0kja+R9wAtzvCRnOUmyMq3PI6RiKrlYBu1BMgiYyINlG/owS29wR7h1nU/pNLd
-         GBCWsOwJTWXGqtdAErThWzwKBPQYrP2vs26Dd8/8O61YX2t3/sunvQy8WchCLWWVc8oV
-         9H4f+qM+TTXDtoMSNc3N78C3ZWr4ciOPj1uNAiGINh5aI71O2pESVWfQj9SfJbPw73Gp
-         vitA==
-X-Gm-Message-State: AOAM533vxpUuS2zcsJfD9wwj3+zOCLsaFReBnZ9IKl65jD6Q0LgBDgNV
-        G3aZuks1w85+HnTHoyynPnQ=
-X-Google-Smtp-Source: ABdhPJzdXESQ4680mekLsqXH9ZnN3Akl6foU+/ByObUepapyrbdiGCVQt1LepR/Xt7ta2JfYgK3Usw==
-X-Received: by 2002:a17:90a:ce18:: with SMTP id f24mr10642746pju.225.1623847739897;
-        Wed, 16 Jun 2021 05:48:59 -0700 (PDT)
+         :message-id:user-agent:mime-version;
+        bh=f4MrgwtY3/W6oCFjtro8tz651lyRS/Kv4xgNCHNchVM=;
+        b=M/einl4UjFPvg8VRE9xTdlWrTzPudJ/3UulmNIqeIpojVrk1NYikgy5O8OdxywzTdJ
+         wkBYGm7gRAo1U4HPrynPWTDDDKdRbXGOzC2qkxPnIHuZhzTn8dPC67VjyLR5YSbKsZFr
+         FFYPN4rMf6HWNziIh+6Bfee0XHlW+fY4ZwPSUbz0cuSYMmZQuVETzZxV32TIjJ8IOmPm
+         edb8G1Hj2lPcfdjhQ2ky3Hur10MTJy/U/XWXkQCUx7KfteAIkuwKuL3YQqJdpaduR7Ux
+         2qncnPRHu3eDBWWYyj41bhUZIgHPc7oew1u4pleoIYZjjh3IhTlNvy3SVTWRdpO9sQLs
+         ge9A==
+X-Gm-Message-State: AOAM53220969T55HEC4ULtCGc5InnnsPB9+JBCLpx/w81/s1VrsBdpHd
+        ZfO91sIL+PxpkVqIy4np/CA=
+X-Google-Smtp-Source: ABdhPJzi6fInaHylrnU5udt0FIOIHzxqnDRVrcq83azGckONk8DTBFxG+DNMq+oLtnT+qKE/MYi1YA==
+X-Received: by 2002:aa7:9ecd:0:b029:2fc:779:b187 with SMTP id r13-20020aa79ecd0000b02902fc0779b187mr7716240pfq.28.1623848027861;
+        Wed, 16 Jun 2021 05:53:47 -0700 (PDT)
 Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
-        by smtp.gmail.com with ESMTPSA id t1sm2143043pfe.61.2021.06.16.05.48.58
+        by smtp.gmail.com with ESMTPSA id p9sm2211326pfo.106.2021.06.16.05.53.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 05:48:58 -0700 (PDT)
+        Wed, 16 Jun 2021 05:53:47 -0700 (PDT)
 From:   Punit Agrawal <punitagrawal@gmail.com>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>
-Cc:     helgaas@kernel.org, robh+dt@kernel.org, maz@kernel.org,
-        leobras.c@gmail.com, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, wqu@suse.com, robin.murphy@arm.com,
-        pgwipeout@gmail.com, ardb@kernel.org, briannorris@chromium.org,
-        shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>, wqu@suse.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Subject: Re: [PATCH v4] PCI: of: Clear 64-bit flag for non-prefetchable
  memory below 4GB
 References: <20210614230457.752811-1-punitagrawal@gmail.com>
-        <888ca9e9-a1c0-3992-7c01-bbb7400e8dc0@arm.com>
-Date:   Wed, 16 Jun 2021 21:48:56 +0900
-In-Reply-To: <888ca9e9-a1c0-3992-7c01-bbb7400e8dc0@arm.com> (Alexandru
-        Elisei's message of "Tue, 15 Jun 2021 09:46:12 +0100")
-Message-ID: <87eed2t1on.fsf@stealth>
+        <CAL_JsqLhOFHwBwtMFMnuEaXsDs9sqzUPS=68t+bDnbFsfXgo+Q@mail.gmail.com>
+Date:   Wed, 16 Jun 2021 21:53:45 +0900
+In-Reply-To: <CAL_JsqLhOFHwBwtMFMnuEaXsDs9sqzUPS=68t+bDnbFsfXgo+Q@mail.gmail.com>
+        (Rob Herring's message of "Tue, 15 Jun 2021 15:18:15 -0600")
+Message-ID: <878s3at1gm.fsf@stealth>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alex,
+Hi Rob,
 
-Alexandru Elisei <alexandru.elisei@arm.com> writes:
+Rob Herring <robh+dt@kernel.org> writes:
 
-> Hi Punit,
->
-> Thank you for working on this!
->
-> On 6/15/21 12:04 AM, Punit Agrawal wrote:
+> On Mon, Jun 14, 2021 at 5:05 PM Punit Agrawal <punitagrawal@gmail.com> wrote:
+>>
 >> Alexandru and Qu reported this resource allocation failure on
 >> ROCKPro64 v2 and ROCK Pi 4B, both based on the RK3399:
 >>
@@ -110,59 +113,27 @@ Alexandru Elisei <alexandru.elisei@arm.com> writes:
 >>
 >> Clear IORESOURCE_MEM_64 from host bridge windows since we don't need
 >> that information.
+>>
+>> Fixes: 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+>> Reported-at: https://lore.kernel.org/lkml/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com/
+>> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> Reported-by: Qu Wenruo <wqu@suse.com>
+>> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+>> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
 >
-> I've tested the patch on my rockpro64. Kernel built from tag v5.13-rc6:
+> I think we've beat this one to death.
 >
-> [=C2=A0=C2=A0=C2=A0 0.345676] pci 0000:01:00.0: 8.000 Gb/s available PCIe=
- bandwidth, limited by
-> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT=
-/s PCIe
-> x4 link)
-> [=C2=A0=C2=A0=C2=A0 0.359300] pci_bus 0000:01: busn_res: [bus 01-1f] end =
-is updated to 01
-> [=C2=A0=C2=A0=C2=A0 0.359343] pci 0000:00:00.0: BAR 14: no space for [mem=
- size 0x00100000]
-> [=C2=A0=C2=A0=C2=A0 0.359365] pci 0000:00:00.0: BAR 14: failed to assign =
-[mem size 0x00100000]
-> [=C2=A0=C2=A0=C2=A0 0.359387] pci 0000:01:00.0: BAR 0: no space for [mem =
-size 0x00004000 64bit]
-> [=C2=A0=C2=A0=C2=A0 0.359407] pci 0000:01:00.0: BAR 0: failed to assign [=
-mem size 0x00004000 64bit]
-> [=C2=A0=C2=A0=C2=A0 0.359428] pci 0000:00:00.0: PCI bridge to [bus 01]
-> [=C2=A0=C2=A0=C2=A0 0.359862] pcieport 0000:00:00.0: PME: Signaling with =
-IRQ 76
-> [=C2=A0=C2=A0=C2=A0 0.360190] pcieport 0000:00:00.0: AER: enabled with IR=
-Q 76
->
-> Kernel built from tag v5.13-rc6 with this patch applied:
->
-> [=C2=A0=C2=A0=C2=A0 0.345434] pci 0000:01:00.0: 8.000 Gb/s available PCIe=
- bandwidth, limited by
-> 2.5 GT/s PCIe x4 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT=
-/s PCIe
-> x4 link)
-> [=C2=A0=C2=A0=C2=A0 0.359081] pci_bus 0000:01: busn_res: [bus 01-1f] end =
-is updated to 01
-> [=C2=A0=C2=A0=C2=A0 0.359128] pci 0000:00:00.0: BAR 14: assigned [mem 0xf=
-a000000-0xfa0fffff]
-> [=C2=A0=C2=A0=C2=A0 0.359155] pci 0000:01:00.0: BAR 0: assigned [mem 0xfa=
-000000-0xfa003fff 64bit]
-> [=C2=A0=C2=A0=C2=A0 0.359217] pci 0000:00:00.0: PCI bridge to [bus 01]
-> [=C2=A0=C2=A0=C2=A0 0.359239] pci 0000:00:00.0:=C2=A0=C2=A0 bridge window=
- [mem 0xfa000000-0xfa0fffff]
-> [=C2=A0=C2=A0=C2=A0 0.359422] pcieport 0000:00:00.0: enabling device (000=
-0 -> 0002)
-> [=C2=A0=C2=A0=C2=A0 0.359687] pcieport 0000:00:00.0: PME: Signaling with =
-IRQ 76
-> [=C2=A0=C2=A0=C2=A0 0.360001] pcieport 0000:00:00.0: AER: enabled with IR=
-Q 76
->
-> And the NVME on the PCIE expansion card works as expected:
->
-> Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks a lot for the retest and the detailed logs.
+Thanks for taking a look. Hopefully everybody is happy with this
+version and the patch can get merged soon.
 
+I assume Bjorn will pick this up as a fix with Alex's Tested-by tag. Let
+me know if any other steps are needed.
+
+Thanks,
 Punit
 
 [...]
