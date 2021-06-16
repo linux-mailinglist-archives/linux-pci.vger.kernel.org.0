@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C3113A9B2D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 14:53:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 372363A9B5F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 15:00:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbhFPMzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 08:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
+        id S232949AbhFPNCf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 09:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbhFPMzy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 08:55:54 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A6EC061574;
-        Wed, 16 Jun 2021 05:53:48 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id n12so1854276pgs.13;
-        Wed, 16 Jun 2021 05:53:48 -0700 (PDT)
+        with ESMTP id S233135AbhFPNCd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 09:02:33 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3FFC061767;
+        Wed, 16 Jun 2021 06:00:24 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id t13so1875495pgu.11;
+        Wed, 16 Jun 2021 06:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=f4MrgwtY3/W6oCFjtro8tz651lyRS/Kv4xgNCHNchVM=;
-        b=Y4T9AA0WWUCuyhxDCOgE0074vUGHK/oRcYfNE1lHhkqrxCLP9BCCNT973sEJMyUb9w
-         kwm+iM8/CpAT43FscZpF68Z3La9iKUPax7GnLBJiTOQVqGnMk2Tw9CR/OYqqiScNehHB
-         sFVjcZ5yZRqfiD6PK7VGeuWGvzqQ9vKvEQ5vtv3JJoAuijyu1ZpgWeFbr1OrHIoQGfFa
-         wmpV2H/29r0Pe67NLDzzQujobRGpAKW+SkupLPS/j98HxB4t+7h5aikyl4RDyBMlDGT5
-         vuRmPeI2Kwb5x+6l0HLTBUnKoenhLKIIsvu8sp1YuP6VQgRqiJ4DaIz3qiiMTXKVJYrR
-         0yzQ==
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=nbiAswAKlZ0y8YPJxSeoqwYopSHf2ViQ7XrbNtGNP7U=;
+        b=uXdMqCkrPWNTiKAf7OMydRO333IWQVnoKc7TSmyHW5AYBvNUsSNHX8CKo0EWS6/YaH
+         cilJMMRHTtZoK77Rk3pA9OB5r2+C2dSFKrYVFSrvJ/4xLQF9uu9LTvM+mRzB5Rw0iu+h
+         8/qeGU2sQ2XZ4eE0uJgV07fAIW+Gbb+W71HdY4dT1bVxwRar8jpbEwI9nM/KyBxgpfqg
+         RQ1+qoMD+Mx5MiBEem6KLuIp5E2Qzff47pZG9iOMLOsdBtLwT1UsPFY31vge55jumMBf
+         7gcYCwkqDUa5eNWwPQisr6w5Q5i9/0iAh3nsxC81jJOG0NB5kpxJR3S6fgnR3u7X8QU3
+         chzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=f4MrgwtY3/W6oCFjtro8tz651lyRS/Kv4xgNCHNchVM=;
-        b=M/einl4UjFPvg8VRE9xTdlWrTzPudJ/3UulmNIqeIpojVrk1NYikgy5O8OdxywzTdJ
-         wkBYGm7gRAo1U4HPrynPWTDDDKdRbXGOzC2qkxPnIHuZhzTn8dPC67VjyLR5YSbKsZFr
-         FFYPN4rMf6HWNziIh+6Bfee0XHlW+fY4ZwPSUbz0cuSYMmZQuVETzZxV32TIjJ8IOmPm
-         edb8G1Hj2lPcfdjhQ2ky3Hur10MTJy/U/XWXkQCUx7KfteAIkuwKuL3YQqJdpaduR7Ux
-         2qncnPRHu3eDBWWYyj41bhUZIgHPc7oew1u4pleoIYZjjh3IhTlNvy3SVTWRdpO9sQLs
-         ge9A==
-X-Gm-Message-State: AOAM53220969T55HEC4ULtCGc5InnnsPB9+JBCLpx/w81/s1VrsBdpHd
-        ZfO91sIL+PxpkVqIy4np/CA=
-X-Google-Smtp-Source: ABdhPJzi6fInaHylrnU5udt0FIOIHzxqnDRVrcq83azGckONk8DTBFxG+DNMq+oLtnT+qKE/MYi1YA==
-X-Received: by 2002:aa7:9ecd:0:b029:2fc:779:b187 with SMTP id r13-20020aa79ecd0000b02902fc0779b187mr7716240pfq.28.1623848027861;
-        Wed, 16 Jun 2021 05:53:47 -0700 (PDT)
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=nbiAswAKlZ0y8YPJxSeoqwYopSHf2ViQ7XrbNtGNP7U=;
+        b=tvWpdk+02wzGR+nQnHs1frHSGRfuIESP0w1V7Fg6D5PrPgmdn0UJ90iubrA9tRsrIa
+         W2Bw5oaYJn6zBg4B+bt0OgqGU85ne9LMfq7XfWWNDZM9D+CsE5lSSnjbH0pidCgT0GMt
+         BvapRj+I5EO0NLNU/9wRbKtj3mftXZfhjyO1dtIm1i8TiVX4r4TPPaPrt8ZRICWx3yAQ
+         V7H0Dr7RkKggWKk+x7CEyZzeEypqa9y9dHNDgiI686UY+15gVNp/iT/p97Pi0D//Hoy9
+         juIrQPpN0FL82vhF8Mrs2iHrSIdYsT2Av9U3OqBxMnPK6++4IRxVeLesmBo4WVfogBX2
+         p8Hw==
+X-Gm-Message-State: AOAM533CMYr/FHmuvoXWpu4vij9tpaPKn0j/+6hAGj3EKxZeOiRzVFB6
+        4PRN9fuwC+dY2FAycDIvGyo=
+X-Google-Smtp-Source: ABdhPJzICrZwP7kf4FTaRUp8e7LF5XaMDQHdJRB1XT5FoGculVj+18BbPpYXhqA4KlHFVFaYJsOlkA==
+X-Received: by 2002:a62:ae03:0:b029:2f8:b04f:c012 with SMTP id q3-20020a62ae030000b02902f8b04fc012mr9593948pff.62.1623848424167;
+        Wed, 16 Jun 2021 06:00:24 -0700 (PDT)
 Received: from localhost (122x211x248x161.ap122.ftth.ucom.ne.jp. [122.211.248.161])
-        by smtp.gmail.com with ESMTPSA id p9sm2211326pfo.106.2021.06.16.05.53.46
+        by smtp.gmail.com with ESMTPSA id h18sm2394018pgl.87.2021.06.16.06.00.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 05:53:47 -0700 (PDT)
+        Wed, 16 Jun 2021 06:00:23 -0700 (PDT)
 From:   Punit Agrawal <punitagrawal@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
+To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -60,81 +60,79 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Peter Geis <pgwipeout@gmail.com>,
         Ard Biesheuvel <ardb@kernel.org>,
         Brian Norris <briannorris@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4] PCI: of: Clear 64-bit flag for non-prefetchable
- memory below 4GB
-References: <20210614230457.752811-1-punitagrawal@gmail.com>
-        <CAL_JsqLhOFHwBwtMFMnuEaXsDs9sqzUPS=68t+bDnbFsfXgo+Q@mail.gmail.com>
-Date:   Wed, 16 Jun 2021 21:53:45 +0900
-In-Reply-To: <CAL_JsqLhOFHwBwtMFMnuEaXsDs9sqzUPS=68t+bDnbFsfXgo+Q@mail.gmail.com>
-        (Rob Herring's message of "Tue, 15 Jun 2021 15:18:15 -0600")
-Message-ID: <878s3at1gm.fsf@stealth>
+        Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Update PCI host bridge
+ window to 32-bit address memory
+References: <20210607112856.3499682-1-punitagrawal@gmail.com>
+        <3105233.izSxrag8PF@diego>
+        <CAL_JsqL8iDo5sLmgNVuXs5wt3TpVJbKHfk7gE740DidmvLOwiQ@mail.gmail.com>
+        <3238453.R1toDxpfAE@diego>
+Date:   Wed, 16 Jun 2021 22:00:21 +0900
+In-Reply-To: <3238453.R1toDxpfAE@diego> ("Heiko =?utf-8?Q?St=C3=BCbner=22'?=
+ =?utf-8?Q?s?= message of "Tue, 15
+        Jun 2021 23:49:07 +0200")
+Message-ID: <871r92t15m.fsf@stealth>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Heiko St=C3=BCbner <heiko@sntech.de> writes:
 
-Rob Herring <robh+dt@kernel.org> writes:
-
-> On Mon, Jun 14, 2021 at 5:05 PM Punit Agrawal <punitagrawal@gmail.com> wrote:
->>
->> Alexandru and Qu reported this resource allocation failure on
->> ROCKPro64 v2 and ROCK Pi 4B, both based on the RK3399:
->>
->>   pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
->>   pci 0000:00:00.0: PCI bridge to [bus 01]
->>   pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
->>   pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
->>
->> "BAR 14" is the PCI bridge's 32-bit non-prefetchable window, and our
->> PCI allocation code isn't smart enough to allocate it in a host
->> bridge window marked as 64-bit, even though this should work fine.
->>
->> A DT host bridge description includes the windows from the CPU
->> address space to the PCI bus space.  On a few architectures
->> (microblaze, powerpc, sparc), the DT may also describe PCI devices
->> themselves, including their BARs.
->>
->> Before 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
->> flags for 64-bit memory addresses"), of_bus_pci_get_flags() ignored
->> the fact that some DT addresses described 64-bit windows and BARs.
->> That was a problem because the virtio virtual NIC has a 32-bit BAR
->> and a 64-bit BAR, and the driver couldn't distinguish them.
->>
->> 9d57e61bf723 set IORESOURCE_MEM_64 for those 64-bit DT ranges, which
->> fixed the virtio driver.  But it also set IORESOURCE_MEM_64 for host
->> bridge windows, which exposed the fact that the PCI allocator isn't
->> smart enough to put 32-bit resources in those 64-bit windows.
->>
->> Clear IORESOURCE_MEM_64 from host bridge windows since we don't need
->> that information.
->>
->> Fixes: 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
->> Reported-at: https://lore.kernel.org/lkml/7a1e2ebc-f7d8-8431-d844-41a9c36a8911@arm.com/
->> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
->> Reported-by: Qu Wenruo <wqu@suse.com>
->> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
->> Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
+> Am Dienstag, 15. Juni 2021, 23:29:12 CEST schrieb Rob Herring:
+>> On Thu, Jun 10, 2021 at 3:50 PM Heiko St=C3=BCbner <heiko@sntech.de> wro=
+te:
+>> >
+>> > Hi,
+>> >
+>> > Am Montag, 7. Juni 2021, 13:28:56 CEST schrieb Punit Agrawal:
+>> > > The PCIe host bridge on RK3399 advertises a single 64-bit memory
+>> > > address range even though it lies entirely below 4GB.
+>> > >
+>> > > Previously the OF PCI range parser treated 64-bit ranges more
+>> > > leniently (i.e., as 32-bit), but since commit 9d57e61bf723 ("of/pci:
+>> > > Add IORESOURCE_MEM_64 to resource flags for 64-bit memory addresses")
+>> > > the code takes a stricter view and treats the ranges as advertised in
+>> > > the device tree (i.e, as 64-bit).
+>> > >
+>> > > The change in behaviour causes failure when allocating bus addresses
+>> > > to devices connected behind a PCI-to-PCI bridge that require
+>> > > non-prefetchable memory ranges. The allocation failure was observed
+>> > > for certain Samsung NVMe drives connected to RockPro64 boards.
+>> > >
+>> > > Update the host bridge window attributes to treat it as 32-bit addre=
+ss
+>> > > memory. This fixes the allocation failure observed since commit
+>> > > 9d57e61bf723.
+>> > >
+>> > > Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> > > Link: https://lore.kernel.org/r/7a1e2ebc-f7d8-8431-d844-41a9c36a8911=
+@arm.com
+>> > > Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>> > > Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
+>> > > Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>> > > Cc: Heiko Stuebner <heiko@sntech.de>
+>> > > Cc: Rob Herring <robh+dt@kernel.org>
+>> >
+>> > just for clarity, should I just pick this patch separately for 5.13-rc=
+ to
+>> > make it easy for people using current kernel devicetrees, or should
+>> > this wait for the update mentioned in the cover-letter response
+>> > and should go all together through the PCI tree?
+>>=20
+>> This was dropped from v4, but should still be applied IMO.
 >
-> I think we've beat this one to death.
+> It was probably dropped because I applied it ;-)
 >
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> It's part of armsoc already [0] and should make its way into
+> 5.13 shortly.
 
-Thanks for taking a look. Hopefully everybody is happy with this
-version and the patch can get merged soon.
+Thanks for sending the patch along. I left a note to the effect in v4
+but it's easy to miss.
 
-I assume Bjorn will pick this up as a fix with Alex's Tested-by tag. Let
-me know if any other steps are needed.
-
-Thanks,
-Punit
+Hopefully all sorted now.
 
 [...]
-
