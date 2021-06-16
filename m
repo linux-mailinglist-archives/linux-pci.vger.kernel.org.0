@@ -2,234 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0D883AA447
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 21:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC673AA5BC
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 22:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbhFPT1v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 15:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
+        id S233777AbhFPU60 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 16:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231354AbhFPT1v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Jun 2021 15:27:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A7DB8600D1;
-        Wed, 16 Jun 2021 19:25:44 +0000 (UTC)
+        id S233698AbhFPU60 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 16:58:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 665B5613BD;
+        Wed, 16 Jun 2021 20:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623871545;
-        bh=/gv361Mn/LyLQ9VG2DAYSdb/BgwsO/j9nF//7mR73aM=;
+        s=k20201202; t=1623876979;
+        bh=o2+SNoyiiMwUqF0/aveyTkIMUSrA4DUtSr3Ox3Vyg/I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fCa2oO3hBfh5MUFOKh8jeekuFcYSNngtZb5FuaCVhwWBXkUUzRldG3auYuQ58SjDZ
-         AlGl0xJ+q6IHei9BWFziXzTic5u01hiIle0PlFLnG+PY9AyV2HiPw/OS5jrdbnUltR
-         4DUNMZT4KsJtTwsuz6scvti2ReYGlD1WwybfDv/zZ8y6Z/51RUpBV7EzVmdxgqu5XL
-         wUdWkDBldf2RPS2ZRhb5Y6R2x6C+g/12AYQmLDmHXC6Rv43wA4uKTzo7LZMa97TGCw
-         7deHJeNUbl9mYG/OfUDfkchVCVf9+7QKRzTLBapd9RCUAC8VnNOOXUdi2TuQexpqH3
-         gsZfpbVCWpIUA==
-Date:   Wed, 16 Jun 2021 14:25:43 -0500
+        b=ahS+J8SpK5EmayCyRJ+YCftv5CYNc7zve3whYyGRhxQIVZH0kpGL3uSKKO1NlTTUO
+         P6dXpZl5Vfn2i7LpzZRTpULwKGm388ylFrWmlio2ikozo1G3sTZoF/svk5A04rQg17
+         yDIc4nXpd+Xr6BdvqQfWGnxRXByiKxQUUVdzuuy+fGktu6/HJkMGy6Ig5SRkvXV7N9
+         1ewriWLGJBt+zjaBKYOcca+dT/O4ykjXqzckjfs/ndVBcQAnN0w/JWTFurmgPG1zeL
+         fOq3JU/5IDweXTAtBaUNdY7v9gjz43YIJJ3esRCUYvksHg9mtCTpp1q0WeEW4WfwKB
+         RP/I9h5S0xD3g==
+Date:   Wed, 16 Jun 2021 15:56:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>, corbet@lwn.net,
-        jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
-        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
-        Sanket.Goswami@amd.com, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 1/4] PCI: Introduce pcim_alloc_irq_vectors()
-Message-ID: <20210616192543.GA2924004@bjorn-Precision-5520>
+To:     Clayton Casciato <majortomtosourcecontrol@gmail.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net, lenb@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] acpi: pci_irq: Fixed a control flow style issue
+Message-ID: <20210616205618.GA3002486@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YMMu0kgEn1emRQvo@smile.fi.intel.com>
+In-Reply-To: <20210612195730.1069667-1-majortomtosourcecontrol@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 12:37:22PM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 10, 2021 at 05:41:43PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jun 07, 2021 at 11:39:13PM +0800, Dejin Zheng wrote:
-> > > Introduce pcim_alloc_irq_vectors(), a device-managed version of
-> > > pci_alloc_irq_vectors(). Introducing this function can simplify
-> > > the error handling path in many drivers.
-> > > 
-> > > And use pci_free_irq_vectors() to replace some code in pcim_release(),
-> > > they are equivalent, and no functional change. It is more explicit
-> > > that pcim_alloc_irq_vectors() is a device-managed function.
+On Sat, Jun 12, 2021 at 01:57:31PM -0600, Clayton Casciato wrote:
+> Fixed coding style issue.
+
+I don't object to this, and in fact, I prefer the style you propose.
+I don't know whether Rafael thinks it's worth the churn since it
+doesn't actually fix anything.
+
+But do take note of the commit log conventions.  Run
+
+  $ git log --oneline drivers/acpi/pci_irq.c
+
+and match the style.  Probably something like this:
+
+  ACPI: PCI: Simplify acpi_reroute_boot_interrupt() coding style
+
+And note that the commit log should use imperative mood and be a
+little more specific about what the commit does.  [1] has several
+great hints.
+
+More below.
+
+> Signed-off-by: Clayton Casciato <majortomtosourcecontrol@gmail.com>
+> ---
+>  drivers/acpi/pci_irq.c | 45 +++++++++++++++++++++---------------------
+>  1 file changed, 22 insertions(+), 23 deletions(-)
 > 
-> ...
-> 
-> > > @@ -1989,10 +1989,7 @@ static void pcim_release(struct device *gendev, void *res)
-> > >  	struct pci_devres *this = res;
-> > >  	int i;
-> > >  
-> > > -	if (dev->msi_enabled)
-> > > -		pci_disable_msi(dev);
-> > > -	if (dev->msix_enabled)
-> > > -		pci_disable_msix(dev);
-> > > +	pci_free_irq_vectors(dev);
-> > 
-> > If I understand correctly, this hunk is a nice simplification, but
-> > actually has nothing to do with making pcim_alloc_irq_vectors().  I
-> > have it split to a separate patch in my local tree.  Or am I wrong
-> > about that?
-> 
-> It's a good simplification that had to be done when pci_free_irq_vectors()
-> appeared.
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index 08e15774fb9f..6eea3cf7b158 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -260,30 +260,29 @@ static int bridge_has_boot_interrupt_variant(struct pci_bus *bus)
+>  static int acpi_reroute_boot_interrupt(struct pci_dev *dev,
+>  				       struct acpi_prt_entry *entry)
+>  {
+> -	if (noioapicquirk || noioapicreroute) {
+> +	if (noioapicquirk || noioapicreroute)
+>  		return 0;
+> -	} else {
+> -		switch (bridge_has_boot_interrupt_variant(dev->bus)) {
+> -		case 0:
+> -			/* no rerouting necessary */
+> -			return 0;
+> -		case INTEL_IRQ_REROUTE_VARIANT:
+> -			/*
+> -			 * Remap according to INTx routing table in 6700PXH
+> -			 * specs, intel order number 302628-002, section
+> -			 * 2.15.2. Other chipsets (80332, ...) have the same
+> -			 * mapping and are handled here as well.
+> -			 */
+> -			dev_info(&dev->dev, "PCI IRQ %d -> rerouted to legacy "
+> -				 "IRQ %d\n", entry->index,
+> -				 (entry->index % 4) + 16);
+> -			entry->index = (entry->index % 4) + 16;
+> -			return 1;
+> -		default:
+> -			dev_warn(&dev->dev, "Cannot reroute IRQ %d to legacy "
+> -				 "IRQ: unknown mapping\n", entry->index);
+> -			return -1;
+> -		}
+> +
+> +	switch (bridge_has_boot_interrupt_variant(dev->bus)) {
+> +	case 0:
+> +		/* no rerouting necessary */
+> +		return 0;
+> +	case INTEL_IRQ_REROUTE_VARIANT:
+> +		/*
+> +		 * Remap according to INTx routing table in 6700PXH
+> +		 * specs, intel order number 302628-002, section
+> +		 * 2.15.2. Other chipsets (80332, ...) have the same
+> +		 * mapping and are handled here as well.
+> +		 */
+> +		dev_info(&dev->dev, "PCI IRQ %d -> rerouted to legacy "
+> +			 "IRQ %d\n", entry->index,
+> +			 (entry->index % 4) + 16);
+> +		entry->index = (entry->index % 4) + 16;
+> +		return 1;
+> +	default:
+> +		dev_warn(&dev->dev, "Cannot reroute IRQ %d to legacy "
+> +			 "IRQ: unknown mapping\n", entry->index);
+> +		return -1;
 
-Sorry to be pedantic.  You say the simplification "had to be done,"
-but AFAICT there was no actual *requirement* for this simplification
-to be done since pci_free_irq_vectors() is functionally identical to
-the previous code.  I think we should do it because it's a little
-simpler, but not because it *fixes* anything.
+Looking at this a little closer, this was added by e1d3a90846b4 ("pci,
+acpi: reroute PCI interrupt to legacy boot interrupt equivalent") [2].
 
-> But here is the fact that indirectly it's related to the pcim_*()
-> APIs, i.e. pcim_alloc_irq_vectors(), because you may noticed this is inside
-> pcim_release().
+It looks like it might be a little over-engineered.  It added
+MAX_IRQ_REROUTE_VARIANTS, which is an indication that
+irq_reroute_variant is a 2-bit bitfield.  But in the last 13 years
+we've never needed more than the single INTEL_IRQ_REROUTE_VARIANT bit.
 
-Yes.  For posterity, my notes about the call chain (after applying
-this patch):
+So I would consider reworking it like this:
 
-  pci_alloc_irq_vectors
-    pci_alloc_irq_vectors_affinity
-      __pci_enable_msix_range                 # MSI-X path
-        __pci_enable_msix
-          msix_capability_init
-            msix_setup_entries
-              for (...)
-                entry = alloc_msi_entry
-                  kzalloc(msi_desc)           <--- alloc
-                  kmemdup(msi_desc->affinity) <--- alloc
-            dev->msix_enabled = 1             # MSI-X enabled
-      __pci_enable_msi_range                  # MSI path
-        msi_capability_init
-          msi_setup_entry
-            alloc_msi_entry                   <--- alloc
-          dev->msi_enabled = 1                # MSI enabled
+  unsigned int intel_irq_reroute:1;
 
-  pcim_release
-    pci_free_irq_vectors
-      pci_disable_msix                        # MSI-X
-        if (!dev->msix_enabled)
-          return
-        pci_msix_shutdown
-          dev->msix_enabled = 0               # MSI-X disabled
-        free_msi_irqs
-          list_for_each_entry_safe(..., msi_list, ...)
-            free_msi_entry
-              kfree(msi_desc->affinity)       <--- free
-              kfree(msi_desc)                 <--- free
-      pci_disable_msi                         # MSI
-        if (!dev->msi_enabled)
-          return
-        pci_msi_shutdown
-          dev->msi_enabled = 0                # MSI disabled
-        free_msi_irqs                         <--- free
+  static void acpi_reroute_boot_interrupt(...)
+  {
+    if (noioapicquirk || noioapicreroute)
+      return;
 
-So I *think* (correct me if I'm wrong):
+    if (bridge_has_intel_irq_reroute(dev->bus)) {
+      dev_info(..., "PCI IRQ %d -> rerouted ...");
+      entry->index = (entry->index % 4) + 16;
+    }
+  }
 
-  - If a driver calls pcim_enable_device(), we will call
-    pcim_release() when the last reference to the device is dropped.
+[1] https://chris.beams.io/posts/git-commit/
+[2] https://git.kernel.org/linus/e1d3a90846b4
 
-  - pci_alloc_irq_vectors() allocates msi_desc and irq_affinity_desc
-    structures via msix_setup_entries() or msi_setup_entry().
-
-  - pcim_release() will free those msi_desc and irq_affinity_desc
-    structures.
-
-  - Even before this series, pcim_release() frees msi_desc and
-    irq_affinity_desc structures by calling pci_disable_msi() and
-    pci_disable_msix().
-
-  - Calling pci_free_irq_vectors() (or pci_disable_msi() or
-    pci_disable_msix()) twice is unnecessary but probably harmless
-    because they bail out early.
-
-So this series actually does not fix any problems whatsoever.
-
-It *does* remove unnecessary pci_free_irq_vectors() calls from
-i2c-designware-pcidrv.c.
-
-But because pci_alloc_irq_vectors() and related interfaces are
-*already* managed as soon as a driver calls pcim_enable_device(),
-we can simply remove the pci_free_irq_vectors() without doing anything
-else.
-
-I don't think we *should* do anything else.  There are many callers of
-pcim_enable_device() that also call pci_alloc_irq_vectors(),
-pci_enable_msix_range(), etc.  We don't have pcim_enable_msix_range(),
-pcim_enable_msi(), pcim_alloc_irq_vectors_affinity(), etc.  I don't
-think it's worth the churn of adding all those and changing all the
-callers to use pcim_*() (as in patch 4/4 here).
-
-Browsing the output of this:
-
-  git grep -En "pcim_enable_device|pci_alloc_irq_vectors|pci_enable_msix_|pci_free_irq_vectors|pci_disable_msi"
-
-leads me to believe there are similar calls of pci_free_irq_vectors()
-that could be removed here:
-
-  mtip_pci_probe
-  sp_pci_probe
-  dw_edma_pcie_probe
-  hisi_dma_probe
-  ioat_pci_probe
-  plx_dma_probe
-  cci_pci_probe
-  hibmc_pci_probe
-  ...
-
-and many more, but I got tired of looking.
-
-> > > +/**
-> > > + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
-> > > + * @dev:		PCI device to operate on
-> > > + * @min_vecs:		minimum number of vectors required (must be >= 1)
-> > > + * @max_vecs:		maximum (desired) number of vectors
-> > > + * @flags:		flags or quirks for the allocation
-> > > + *
-> > > + * Return the number of vectors allocated, (which might be smaller than
-> > > + * @max_vecs) if successful, or a negative error code on error. If less
-> > > + * than @min_vecs interrupt vectors are available for @dev the function
-> > > + * will fail with -ENOSPC.
-> > > + *
-> > > + * It depends on calling pcim_enable_device() to make IRQ resources
-> > > + * manageable.
-> > > + */
-> > > +static inline int
-> > > +pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> > > +			unsigned int max_vecs, unsigned int flags)
-> > > +{
-> > > +	if (!pci_is_managed(dev))
-> > > +		return -EINVAL;
-> > > +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
-> > 
-> > This is great, but can you explain how pci_alloc_irq_vectors()
-> > magically becomes a managed interface if we've already called
-> > pcim_enable_device()?
-> > 
-> > I certainly believe it does; I'd just like to put a hint in the commit
-> > log since my 5 minutes of grepping around didn't make it obvious to
-> > me.
-> > 
-> > I see that pcim_enable_device() sets pdev->is_managed, but I didn't
-> > find the connection between that and pci_alloc_irq_vectors().
-> 
-> One needs to read and understand the code, I agree. The explanation is spread
-> between pcim_release() and __pci_enable_msi/x_range().
-> 
-> The call chain is
-> 
-> msi_capability_init() / msix_capability_init()
->   ...
->   <- __pci_enable_msi/x_range()
->     <- pci_alloc_irq_vectors_affinity()
->       <- pci_alloc_irq_vectors()
-> 
-> where device msi_enabled / msix_enabled is set.
-> 
-> So, it may deserve to be explained in the commit message.
-> 
-> > > +}
-> 
+>  	}
+>  }
+>  #endif /* CONFIG_X86_IO_APIC */
 > -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
+> 2.31.1
 > 
