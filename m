@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1676D3A8FFC
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 05:53:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54DE33A9002
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 05:53:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbhFPDzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 23:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        id S230262AbhFPD4C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 23:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230457AbhFPDzv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 23:55:51 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9E5C061760
-        for <linux-pci@vger.kernel.org>; Tue, 15 Jun 2021 20:53:45 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id k5so917020pjj.1
-        for <linux-pci@vger.kernel.org>; Tue, 15 Jun 2021 20:53:45 -0700 (PDT)
+        with ESMTP id S231153AbhFPDz7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 23:55:59 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB59DC061767
+        for <linux-pci@vger.kernel.org>; Tue, 15 Jun 2021 20:53:53 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id m13-20020a17090b068db02901656cc93a75so3138167pjz.3
+        for <linux-pci@vger.kernel.org>; Tue, 15 Jun 2021 20:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e9Vw6CwKftyWUkkMr8FpV3VZb4mbe4UuYsuH+xmCJ+M=;
-        b=jc3T7c7VZDi587k2gT/eeg1/s25EMO4Lxy72AFhkTEa79olBru5uzce93B9VJJc7mb
-         tv4xxblNNZSpK3BVn4J++3E61DthzfhVz93hD3eVM82+a9MHX0s1kWeLhR0ckmjZau/d
-         yaE/e99lxczNFRLPelQucPShcgrTyXCG38jN8=
+        bh=eU61psdxuacInDbxGN0V8O121x7LcVp3cBkwTdMQ+YI=;
+        b=G+MHCjWefSWSsBn+zFsqavx79K0f1OgfsPHA3pIJ7ZUrc94j/9bKUmi3fYlnxX6sx7
+         MpFnLUq23wOmkqNgWIGDoG5ljrkEFDbKSDT6O1jD22wjvWPKV2kuzmbOLBWoI6lHX43m
+         0UxMGANvZTFecxtxMJ6BmCdD5qQlDyW8Evmz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e9Vw6CwKftyWUkkMr8FpV3VZb4mbe4UuYsuH+xmCJ+M=;
-        b=T+0Jcolda6q6teLu8f0Xjt2EErxNGhGvjh7NBpGWLKeqAk/YG9TC7jpLNkQW7qQwrc
-         0i/67pVYIB++iT7E9j+JbrmzU1XRdHMh+CNdrIoQFvZ4O0AkSD245Au4hvmDbplmUy6w
-         8hsPQvr/FB8Ygzzv4E7xYDay2jJlJTS1jgncJUneKJvcPgn4zoAYCb5uxGgzDg6TVlhH
-         jXV8P1oaXoxYahuGTFHnKbBdibyC9uYvEoZ7c1/tv0ni2nNaEGdL0jjI4dRhRWgvGoJu
-         hdNFnPhstgU8zY8IDLOBHIyUyrzlEj6R5xFFfmJiTxs3CQGAaOukQfJ+GpPzWL1e0y4H
-         Fn1A==
-X-Gm-Message-State: AOAM532paEbHGlW7SbViXgC18mUMvLFFu/n6Hpa0GjTMeZGRC44zRq5/
-        Yj6B0sX6pXeZR+Hh+GOQvRA9dQ==
-X-Google-Smtp-Source: ABdhPJzC2GZu70JiqqjaeNpM5+wD1r3IbZYNkxwRBj90E6QvUGdzry0LzgTDbMYz2ZJVNaBcQldqkQ==
-X-Received: by 2002:a17:90b:318:: with SMTP id ay24mr8150844pjb.150.1623815624668;
-        Tue, 15 Jun 2021 20:53:44 -0700 (PDT)
+        bh=eU61psdxuacInDbxGN0V8O121x7LcVp3cBkwTdMQ+YI=;
+        b=mPddq6sUaXIY/pCumWeVeJiafhCcdRpIshfyR5idZKgCxL5pnhzJ0z25DCSS00QLMv
+         BVkAKUHPoEMaWTYQXcuxbf1cptpADrfnnuYncLZQI00kJywS9XdGewSb5x6agmHfeWz+
+         h6GDIuQvtWgWVxzUmEV+D3Dm5fRQ9J+2DTWdVRnXxllxu+k5pw8x2/TgFV2AkhU28+2f
+         /hBDjob29AOqBI1w+DsMyffxsMWFjzOwlwhu6uTX0xWzL4LRu2en02Vks7egieDGu9al
+         kD/y7aEdiH4tUKWIpGjXktnM+0cnJIenjkGjcN7QoV9wD8BPbDMs5sUB3ykhnJq1oU5G
+         Fvng==
+X-Gm-Message-State: AOAM533lRF+XluVQkoy4tpdFT28KHiQ4+6npHM+CvERKKrL3xgPxPal8
+        J5rw9K1Gc692+MXvDHZthy1UJg==
+X-Google-Smtp-Source: ABdhPJz+/n8SXXk477Y7KP8AZrN6dcjdprvaWXKVwnDO1qXcju51BlhAASYnAFCrwZ+85V6bo0r6Hw==
+X-Received: by 2002:a17:902:b409:b029:114:afa6:7f4a with SMTP id x9-20020a170902b409b0290114afa67f4amr7247326plr.56.1623815633242;
+        Tue, 15 Jun 2021 20:53:53 -0700 (PDT)
 Received: from localhost ([2401:fa00:95:205:3d52:f252:7393:1992])
-        by smtp.gmail.com with UTF8SMTPSA id i21sm523349pfd.219.2021.06.15.20.53.37
+        by smtp.gmail.com with UTF8SMTPSA id x22sm557553pjp.37.2021.06.15.20.53.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Jun 2021 20:53:44 -0700 (PDT)
+        Tue, 15 Jun 2021 20:53:52 -0700 (PDT)
 From:   Claire Chang <tientzu@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
         Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
@@ -78,9 +78,9 @@ Cc:     benh@kernel.crashing.org, paulus@samba.org,
         joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
         maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
         rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: [PATCH v11 06/12] swiotlb: Use is_dev_swiotlb_force for swiotlb data bouncing
-Date:   Wed, 16 Jun 2021 11:52:34 +0800
-Message-Id: <20210616035240.840463-7-tientzu@chromium.org>
+Subject: [PATCH v11 07/12] swiotlb: Move alloc_size to swiotlb_find_slots
+Date:   Wed, 16 Jun 2021 11:52:35 +0800
+Message-Id: <20210616035240.840463-8-tientzu@chromium.org>
 X-Mailer: git-send-email 2.32.0.272.g935e593368-goog
 In-Reply-To: <20210616035240.840463-1-tientzu@chromium.org>
 References: <20210616035240.840463-1-tientzu@chromium.org>
@@ -90,103 +90,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Propagate the swiotlb_force setting into io_tlb_default_mem->force and
-use it to determine whether to bounce the data or not. This will be
-useful later to allow for different pools.
+Rename find_slots to swiotlb_find_slots and move the maintenance of
+alloc_size to it for better code reusability later.
 
 Signed-off-by: Claire Chang <tientzu@chromium.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/swiotlb.h | 11 +++++++++++
- kernel/dma/direct.c     |  2 +-
- kernel/dma/direct.h     |  2 +-
- kernel/dma/swiotlb.c    |  4 ++++
- 4 files changed, 17 insertions(+), 2 deletions(-)
+ kernel/dma/swiotlb.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index dd1c30a83058..efcd56e3a16c 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -84,6 +84,7 @@ extern enum swiotlb_force swiotlb_force;
-  *		unmap calls.
-  * @debugfs:	The dentry to debugfs.
-  * @late_alloc:	%true if allocated using the page allocator
-+ * @force:      %true if swiotlb is forced
-  */
- struct io_tlb_mem {
- 	phys_addr_t start;
-@@ -94,6 +95,7 @@ struct io_tlb_mem {
- 	spinlock_t lock;
- 	struct dentry *debugfs;
- 	bool late_alloc;
-+	bool force;
- 	struct io_tlb_slot {
- 		phys_addr_t orig_addr;
- 		size_t alloc_size;
-@@ -109,6 +111,11 @@ static inline bool is_swiotlb_buffer(struct device *dev, phys_addr_t paddr)
- 	return mem && paddr >= mem->start && paddr < mem->end;
- }
- 
-+static inline bool is_dev_swiotlb_force(struct device *dev)
-+{
-+	return dev->dma_io_tlb_mem->force;
-+}
-+
- void __init swiotlb_exit(void);
- unsigned int swiotlb_max_segment(void);
- size_t swiotlb_max_mapping_size(struct device *dev);
-@@ -120,6 +127,10 @@ static inline bool is_swiotlb_buffer(struct device *dev, phys_addr_t paddr)
- {
- 	return false;
- }
-+static inline bool is_dev_swiotlb_force(struct device *dev)
-+{
-+	return false;
-+}
- static inline void swiotlb_exit(void)
- {
- }
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 7a88c34d0867..3713461d6fe0 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -496,7 +496,7 @@ size_t dma_direct_max_mapping_size(struct device *dev)
- {
- 	/* If SWIOTLB is active, use its maximum mapping size */
- 	if (is_swiotlb_active(dev) &&
--	    (dma_addressing_limited(dev) || swiotlb_force == SWIOTLB_FORCE))
-+	    (dma_addressing_limited(dev) || is_dev_swiotlb_force(dev)))
- 		return swiotlb_max_mapping_size(dev);
- 	return SIZE_MAX;
- }
-diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-index 13e9e7158d94..6c4d13caceb1 100644
---- a/kernel/dma/direct.h
-+++ b/kernel/dma/direct.h
-@@ -87,7 +87,7 @@ static inline dma_addr_t dma_direct_map_page(struct device *dev,
- 	phys_addr_t phys = page_to_phys(page) + offset;
- 	dma_addr_t dma_addr = phys_to_dma(dev, phys);
- 
--	if (unlikely(swiotlb_force == SWIOTLB_FORCE))
-+	if (is_dev_swiotlb_force(dev))
- 		return swiotlb_map(dev, phys, size, dir, attrs);
- 
- 	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
 diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 101abeb0a57d..a9907ac262fc 100644
+index a9907ac262fc..037772724b3c 100644
 --- a/kernel/dma/swiotlb.c
 +++ b/kernel/dma/swiotlb.c
-@@ -179,6 +179,10 @@ static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
- 	mem->end = mem->start + bytes;
- 	mem->index = 0;
- 	mem->late_alloc = late_alloc;
-+
-+	if (swiotlb_force == SWIOTLB_FORCE)
-+		mem->force = true;
-+
- 	spin_lock_init(&mem->lock);
- 	for (i = 0; i < mem->nslabs; i++) {
- 		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
+@@ -431,8 +431,8 @@ static unsigned int wrap_index(struct io_tlb_mem *mem, unsigned int index)
+  * Find a suitable number of IO TLB entries size that will fit this request and
+  * allocate a buffer from that IO TLB pool.
+  */
+-static int find_slots(struct device *dev, phys_addr_t orig_addr,
+-		size_t alloc_size)
++static int swiotlb_find_slots(struct device *dev, phys_addr_t orig_addr,
++			      size_t alloc_size)
+ {
+ 	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+ 	unsigned long boundary_mask = dma_get_seg_boundary(dev);
+@@ -487,8 +487,11 @@ static int find_slots(struct device *dev, phys_addr_t orig_addr,
+ 	return -1;
+ 
+ found:
+-	for (i = index; i < index + nslots; i++)
++	for (i = index; i < index + nslots; i++) {
+ 		mem->slots[i].list = 0;
++		mem->slots[i].alloc_size =
++			alloc_size - ((i - index) << IO_TLB_SHIFT);
++	}
+ 	for (i = index - 1;
+ 	     io_tlb_offset(i) != IO_TLB_SEGSIZE - 1 &&
+ 	     mem->slots[i].list; i--)
+@@ -529,7 +532,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+ 		return (phys_addr_t)DMA_MAPPING_ERROR;
+ 	}
+ 
+-	index = find_slots(dev, orig_addr, alloc_size + offset);
++	index = swiotlb_find_slots(dev, orig_addr, alloc_size + offset);
+ 	if (index == -1) {
+ 		if (!(attrs & DMA_ATTR_NO_WARN))
+ 			dev_warn_ratelimited(dev,
+@@ -543,11 +546,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+ 	 * This is needed when we sync the memory.  Then we sync the buffer if
+ 	 * needed.
+ 	 */
+-	for (i = 0; i < nr_slots(alloc_size + offset); i++) {
++	for (i = 0; i < nr_slots(alloc_size + offset); i++)
+ 		mem->slots[index + i].orig_addr = slot_addr(orig_addr, i);
+-		mem->slots[index + i].alloc_size =
+-			alloc_size - (i << IO_TLB_SHIFT);
+-	}
+ 	tlb_addr = slot_addr(mem->start, index) + offset;
+ 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+ 	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
 -- 
 2.32.0.272.g935e593368-goog
 
