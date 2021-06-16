@@ -2,179 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BF603A99CB
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 14:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4253A99EC
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 14:08:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232762AbhFPMCS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 08:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232742AbhFPMCP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 08:02:15 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE95C061574
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 05:00:08 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id p13so2077649pfw.0
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 05:00:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q6FFMNi0w8wBxpKeYDdXPwwxjU3cn3Myi2hz/ywMz+w=;
-        b=II+5q8Jrp2elpES9k9l3CmxQr74TfDa0QaoFGUqPiHmS/vS6groglYsZx79zA1oICB
-         f54xfCHO8ppvcApZttYBuBZCqFHeXAFlH+n1btsBQaOL7CJxmMeGKwv6WcpJukKFGSdh
-         gkewXhTsG1UHLEmWTN6FDFGz+nkUYca20wbk/eLp6r4k5QqXtcNk+tE+QiyrG140SALh
-         FdOibp0iFLmHgDrU9xl82BHE0JxpIAYkyLwW0HRa3JD56WgbbMwu7LIt+49ZldVGgexj
-         AQZWuJoIWmPg0VVHO9H6ar+vB6Tf86T4tSuOHBTW7roSb49gGjsBGO2VSSlxeAAyJ4RA
-         a6lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q6FFMNi0w8wBxpKeYDdXPwwxjU3cn3Myi2hz/ywMz+w=;
-        b=N9WVte2B2za3dxhbgdJ09DewL1O6sju6jDBEGjtrS8pfxZ9Eq7Unc2zZehr0c4s7sr
-         G1bo9i2DZ/pyqwq6xQuXCKUwDgBOOwltNFS2dXhqg6okgl6bcpBMZd5DNcaTkcJ38Arm
-         H1XJB9HD6vq0QPspj0roHd3AXO5WxBaOW6TP0Pox01scQGRpxFXNdYgQhKLBFCXOZ2Rd
-         aLFPQNeKBnnL8zqUoYytGKr0d0XPW3azToZX2QXhfdjbX0NdQAknGvjU6FMxU2blUT6R
-         pLHHVD1Y3sXz81ufHx2YnbydLtkMBmSGYt9SmjPOolGh9wW3TEVB0mehYDW3iseyoZig
-         SBpg==
-X-Gm-Message-State: AOAM530sQimCIjCbDeqt+gq6syyqeUzKhT+ssc0NMyCU9zPP7tW9TeLf
-        Vk8Alw1CxVCrWNbUJHXYV0xv
-X-Google-Smtp-Source: ABdhPJzAPi3gg7I9jX6acmwD9DgNgs4AYlLzF3vGqebnQQEwnEwZAa+HraDsmO4n15w+2jf0RianDQ==
-X-Received: by 2002:a05:6a00:d65:b029:2ec:2bfa:d0d1 with SMTP id n37-20020a056a000d65b02902ec2bfad0d1mr9278866pfv.14.1623844808273;
-        Wed, 16 Jun 2021 05:00:08 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:280:c67a:95b5:d877:b175:798e])
-        by smtp.gmail.com with ESMTPSA id m1sm2307646pjk.35.2021.06.16.05.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 05:00:07 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        smohanad@codeaurora.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] PCI: endpoint: Add custom notifier support
-Date:   Wed, 16 Jun 2021 17:29:13 +0530
-Message-Id: <20210616115913.138778-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
-References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+        id S230197AbhFPMK4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 08:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229456AbhFPMKz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 08:10:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CD51A61245;
+        Wed, 16 Jun 2021 12:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623845329;
+        bh=QlkI38WT3hL5S6bnBl68cYI3mNCvqwOg2BtN6RClOD8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gNoqbf4BoEB+mMSkF0LbPACcE8hfdhWziBuc3On0yCSF1OPpARGrphJEZzi5R8zhj
+         EQBk9eSasfJ21LDYEs5fQgad/5i5kQ4hvjwr2VzkCT5qsBkbBa2YuO73damjDS9tPT
+         gEWv6ceU59Ud8WyKcV32BLXCIyoDzCKKiI1Qx1b1D7h7TGQnS6Yc8Hh4jwg0vvdXHU
+         1ESCA6NJ9d+xly0Ts4XCXJSqpVE+kwtWKvwUzczVJ12VkVaF8vrrLoIIMNmcUpnUot
+         CLEWTlb2HNfBG1sx2OnHpHCbJjguomfMTK9NnEnMModJku7GBFKFrxYfN57naGCL26
+         kwPvkXDDNtLyg==
+Date:   Wed, 16 Jun 2021 13:08:38 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Claire Chang <tientzu@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com
+Subject: Re: [PATCH v12 00/12] Restricted DMA
+Message-ID: <20210616120837.GA22783@willie-the-truck>
+References: <20210616062157.953777-1-tientzu@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210616062157.953777-1-tientzu@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support for notifying the EPF device about the custom notifications
-received by the EPC device from the Root complex. These notifications
-are EPC/vendor specific and are shared with the specific EPF devices.
+Hi Claire,
 
-For instance, the Qcom EPC device generates events such as MHI_A7,
-MHI_Q6, DEBUG, MMIO_WRITE, CFG_WRITE etc... These events can be passed
-to the EPF device using this notifier.
+On Wed, Jun 16, 2021 at 02:21:45PM +0800, Claire Chang wrote:
+> This series implements mitigations for lack of DMA access control on
+> systems without an IOMMU, which could result in the DMA accessing the
+> system memory at unexpected times and/or unexpected addresses, possibly
+> leading to data leakage or corruption.
+> 
+> For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
+> not behind an IOMMU. As PCI-e, by design, gives the device full access to
+> system memory, a vulnerability in the Wi-Fi firmware could easily escalate
+> to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
+> full chain of exploits; [2], [3]).
+> 
+> To mitigate the security concerns, we introduce restricted DMA. Restricted
+> DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
+> specially allocated region and does memory allocation from the same region.
+> The feature on its own provides a basic level of protection against the DMA
+> overwriting buffer contents at unexpected times. However, to protect
+> against general data leakage and system memory corruption, the system needs
+> to provide a way to restrict the DMA to a predefined memory region (this is
+> usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
+> 
+> [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+> [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+> [2] https://blade.tencent.com/en/advisories/qualpwn/
+> [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+> [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
+> 
+> v12:
+> Split is_dev_swiotlb_force into is_swiotlb_force_bounce (patch 06/12) and
+> is_swiotlb_for_alloc (patch 09/12)
 
-EPC
----
+I took this for a spin in an arm64 KVM guest with virtio devices using the
+DMA API and it works as expected on top of swiotlb devel/for-linus-5.14, so:
 
-```
-static irqreturn_t pcie_ep_irq(int irq, void *data)
-{
-...
-	case PCIE_EP_INT_MHI_A7:
-		pci_epc_custom_notify(epc, PCIE_EP_INT_MHI_A7);
-		break;
-	case PCIE_EP_INT_MHI_Q6:
-		pci_epc_custom_notify(epc, PCIE_EP_INT_MHI_Q6);
-		break;
-	case PCIE_EP_INT_MMIO_WRITE:
-		pci_epc_custom_notify(epc, PCIE_EP_INT_MMIO_WRITE);
-		break;
-...
-}
-```
+Tested-by: Will Deacon <will@kernel.org>
 
-EPF
----
+Thanks!
 
-```
-static int pci_epf_notifier(struct notifier_block *nb, unsigned long val,
-			    void *data)
-{
-...
-	case CUSTOM:
-		cus_event = data;
-		if (cus_event == PCIE_EP_INT_MHI_A7)
-			/* Handle MHI A7 event */
-		else if (cus_event == PCIE_EP_INT_MHI_Q6)
-			/* Handle MHI Q6 event */
-		else if (cus_event == PCIE_EP_INT_MMIO_WRITE)
-			/* Handle MMIO WRITE event */
-		break;
-...
-}
-```
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/pci-epc-core.c | 19 +++++++++++++++++++
- include/linux/pci-epc.h             |  1 +
- include/linux/pci-epf.h             |  1 +
- 3 files changed, 21 insertions(+)
-
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index b4a7bb3caa97..b963a4aa0af4 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -728,6 +728,25 @@ void pci_epc_d_state_notify(struct pci_epc *epc, void *data)
- }
- EXPORT_SYMBOL_GPL(pci_epc_d_state_notify);
- 
-+/**
-+ * pci_epc_custom_notify() - Notify the EPF device that the EPC device has
-+ *			     received the custom events from the Root complex
-+ * @epc: EPC device that received the custom event
-+ * @data: Data for the CUSTOM notifier
-+ *
-+ * Invoke to notify the EPF device that the EPC device has received the Custom
-+ * event from the Root complex. The custom event is EPC/vendor specific and is
-+ * shared with the EPF device.
-+ */
-+void pci_epc_custom_notify(struct pci_epc *epc, void *data)
-+{
-+	if (!epc || IS_ERR(epc))
-+		return;
-+
-+	atomic_notifier_call_chain(&epc->notifier, CUSTOM, data);
-+}
-+EXPORT_SYMBOL_GPL(pci_epc_custom_notify);
-+
- /**
-  * pci_epc_destroy() - destroy the EPC device
-  * @epc: the EPC device that has to be destroyed
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 94c66fae8a88..943d31a83f6e 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -207,6 +207,7 @@ void pci_epc_init_notify(struct pci_epc *epc);
- void pci_epc_bme_notify(struct pci_epc *epc);
- void pci_epc_pme_notify(struct pci_epc *epc, void *data);
- void pci_epc_d_state_notify(struct pci_epc *epc, void *data);
-+void pci_epc_custom_notify(struct pci_epc *epc, void *data);
- void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
- 			enum pci_epc_interface_type type);
- int pci_epc_write_header(struct pci_epc *epc, u8 func_no,
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index ca020c080431..2fa3b90399b9 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -24,6 +24,7 @@ enum pci_notify_event {
- 	BME,
- 	PME,
- 	D_STATE,
-+	CUSTOM,
- };
- 
- enum pci_barno {
--- 
-2.25.1
-
+Will
