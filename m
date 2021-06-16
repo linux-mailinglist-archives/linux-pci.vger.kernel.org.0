@@ -2,285 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C1EB3AA36D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 20:44:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 316BA3AA409
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 21:12:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230087AbhFPSqQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 14:46:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42083 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232003AbhFPSqP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 14:46:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623869048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BFWFjPS5d2LcTVJqwPfBWasVP+1kEMmnR6L/wnzxkXE=;
-        b=DCh3JufI94gHj9hL7q5EZbt4ihAyFilDhNmOmmMusytGoRnhyWIr4qbpjlPsqoQlLQZ21N
-        tF7qZoWLwHd29/5mzfWgFgY0Yhy2S2vCA2V5aJfd8RY20Hw7BH4cQSSdDjhTMYz/LDhiNh
-        AZyFJ0gP7JHCKFc6f/f0w1xfSyhR18g=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-uAqvTvthPBygq3qaOxHBiw-1; Wed, 16 Jun 2021 14:43:15 -0400
-X-MC-Unique: uAqvTvthPBygq3qaOxHBiw-1
-Received: by mail-ej1-f72.google.com with SMTP id l6-20020a1709062a86b029046ec0ceaf5cso1326116eje.8
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 11:43:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BFWFjPS5d2LcTVJqwPfBWasVP+1kEMmnR6L/wnzxkXE=;
-        b=sn8le/k4s0zbR+9gUSDTRgnY7wP4MOgYj2dHgWLGpPTOIXeGY6lniCFbTUj9q2lHo/
-         83QnYHywDuswGok49OLnORtyINMD/4x/rdyyO8tvJ+7SJLczG7uhvuizAWmB1L7hd5e6
-         jVifbruOUuwfPLa395UfIV631Op2y0UiR7BEIqRb/adUtEc0KNLWdYByfejP24gWtzeF
-         1hI1EJIoRlc2oqRTfOZuksHM56IqyKUg/LanNRyEJ7Sa3xa/XG1a6oqF2hQnDES/lLGs
-         EKl11Z4M1lVkVUcZ71JHf9iWl82IU4sjSJgDNjO2fYTQ9ngwM382bFV9GnmVjlF0QAlB
-         tTNA==
-X-Gm-Message-State: AOAM530KjIcx47WWe6Y9wgeE9oK/sAHRia/+U+CkXrjV+JDTzmtVyAYX
-        L+pEXts/APRoXsiz0dnRwrGNZF+7MDO2tBwnPOHvQrKyJwDOAkJRXwnLFuO8WHwbWHRmYRrw9Mo
-        FpjhYV3YJT6cpdwPIxZ/5XaPMbb24hCPuR7kh1n8wAC9To8MV3G3YJCBtYmExOMhyiz+fr9HV
-X-Received: by 2002:a17:907:7201:: with SMTP id dr1mr944625ejc.19.1623868993741;
-        Wed, 16 Jun 2021 11:43:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzKdn5kUSwDiISvQZ6ew6zMbAn+Q7gbTD6L0DYvB+3Ja3fr0BcTK5sPRn9jlNFUp5Yhb7EYjg==
-X-Received: by 2002:a17:907:7201:: with SMTP id dr1mr944603ejc.19.1623868993492;
-        Wed, 16 Jun 2021 11:43:13 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id bd3sm2439036edb.34.2021.06.16.11.43.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Jun 2021 11:43:13 -0700 (PDT)
-Subject: Re: [RFC 1/1] PCI/ACPI: Make acpi_pci_root_validate_resources()
- reject IOMEM resources which start at address 0
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20210615202322.GA2910413@bjorn-Precision-5520>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8065c303-fc11-93f2-64a5-39048b7501fd@redhat.com>
-Date:   Wed, 16 Jun 2021 20:43:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S232415AbhFPTO1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 15:14:27 -0400
+Received: from mail-mw2nam10on2063.outbound.protection.outlook.com ([40.107.94.63]:43002
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232377AbhFPTO0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 15:14:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JQTAnSNmICBG+i62ExIq+Qm2icprTGMRnp+UHEagmzEGZy9ND57i6K/tIxeR4nm1AxId5hrjh1y/C6qv3or2NaEuXzjzI2+CI2LuzDT7zgCr25zFHpnmagXvcp4lN4z1fT3NvWnjsaFvIe6/69KYo2qfFyKw+QrR/KvZoUCT37eFYld2Z1eTHUpw+Gt15KZhWE3dZhB+vXxVATTI4mR2mm06LdCW3jXNldLgFVzMFSMc6pkBHT1jfwFLTj4XtnrYZrql7tbG4yL93fzFB8gM3q45lxAesN4PYL9Y7BZvzKP2AR9Y0SWhgBzAHJYczy2gaBivk/Mw5utJsR5KwLg6ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mTtUdOME4ppYDYmHb2xu666NhFukfFKhDR/IvRGjF0A=;
+ b=bEmeExRmaLzVu5vYLvibDAhqTr19AT60QIr+gOiVKxb00munhqY8XW+kKYI70h44N2KOjxwax5qcWLK+mG6CJRHttj550DU4s3cRPUzvX4FtzJH/QSyoZLSyAHs3PE1ejfLUBdGPZVg8ZKsv8r4ebwbFpkrN62T1OBiuQBKebEeQcew71pHWF481xXvAV/YM0Gwgfhpwb4dvnwiZEuqB4M9Lt1X4jjgkP24nwJfeB5ZMhBTJbJqliw5OfdDETSxScWH3whYt3+kzon1wERKAyzRq+WjnE1nh5QK3X7jaM/SiUSJ3PjGNnOiQYDScV4jMayhJ12wen3yRcg1dJMIEbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mTtUdOME4ppYDYmHb2xu666NhFukfFKhDR/IvRGjF0A=;
+ b=l8nXlPHARHpLK9njfKGBF9g5MZuckXmXZdfEzrEjXyoKpPe2OmhqtfPf58JicGboXe4rf4BhXRWpWdsYGQ++91pDOL1EOlIWC/jzASAXPtLZ3TceUWixEYLcExvjVq/eaMqibgSHvswufO1Ufrq3WfbIVUQaiq22HeuvOVZVRnj1kXDDYR1wEU1EG87aSJQ7jEeoQm8JizyF/C9WCEJ4cdww3V77EhpGo/ISKG+n5EMhmF5LNhJD7tZAQ61BHpstF4SOKrVJ4yBf+zQw0oElG28fLiatVwPo4RV14jkIf2FvkmZGGhZtJkthqNzM0RYVZl96XJB6S2ZYA4hPwDxDKw==
+Received: from MWHPR22CA0049.namprd22.prod.outlook.com (2603:10b6:300:12a::11)
+ by SA0PR12MB4559.namprd12.prod.outlook.com (2603:10b6:806:9e::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16; Wed, 16 Jun
+ 2021 19:12:19 +0000
+Received: from CO1NAM11FT018.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:12a:cafe::37) by MWHPR22CA0049.outlook.office365.com
+ (2603:10b6:300:12a::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15 via Frontend
+ Transport; Wed, 16 Jun 2021 19:12:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT018.mail.protection.outlook.com (10.13.175.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4242.16 via Frontend Transport; Wed, 16 Jun 2021 19:12:18 +0000
+Received: from [10.40.203.90] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Jun
+ 2021 19:12:12 +0000
+Subject: Re: [PATCH 0/5] PCI: endpoint: Add support for additional notifiers
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <kishon@ti.com>, <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <hemantk@codeaurora.org>,
+        <smohanad@codeaurora.org>
+References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+From:   Om Prakash Singh <omp@nvidia.com>
+Message-ID: <9fd37c43-e2ab-f5b2-13dc-a23bd83d3c7b@nvidia.com>
+Date:   Thu, 17 Jun 2021 00:42:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210615202322.GA2910413@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c6238f9a-b1db-4a17-cb03-08d930faa94f
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4559:
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4559A003666EC1A6959749A0DA0F9@SA0PR12MB4559.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: z0+aZCHMhWUkJRKpSHncpybq7viVxHeuU+TR4KwgY53YEyrEOyhXkw9Qs7Fy+/Tf8x9xPag5EbGeJozNM+eLJTV4ZZj2SwlbXvIaib6xMpbhO2I86RC/s7fA029DGBOMgljNbzhtwR1gMuMOaeXq8iWdB8leMRIAYkLAEtx46wLyX5oPBwijuZXp3WTxIDjHoG4eKiUFJ0YsYzJK1rUPyFnAK2sh5+ZecHZzwzV3TIUac37Tof2INgOcHFSsmwWZ4ANrM3ZI809Ks/KnF3JfZnoPEdwQp8ATa2Gc0VERTQSLxh+wKNUibMhKQbh9d5vZYdHfKah9hePLrrN4Rv4zHJMma+ku7fDMP9+R4NLlNPplKj2DBNAHTRtPqkhiPGP9BhsCocicsBYDgokvepa2eVOZvovqb/y6fVnzDLAoWzvZTKlt/vEwSYJvxURDPEFi1LpDoBQPdLaN8jAc+eFvTgDNbcuvIvLa7RHit/Ygiz+g/XIffE2jsEhj5pS8prU+fy4qYqusloaxkljdFvj004+rY61EwQM6qOlT1MaFKRoUPIDAFRRHBaeQT5eNc5fGNQd9MVvhQDhaO7yFiMOMsT9WquBZIS/4RX1R2weSFckSVwwwnZJk2pCDbUWhOpgIocN3W+uPVG/lSPH9sZpF0E4lIk6z9R9toWwmMXK8JuTDF0pKRQXSxxnYYiFIv3Nu
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(376002)(396003)(346002)(136003)(36840700001)(46966006)(36756003)(478600001)(8936002)(426003)(47076005)(54906003)(5660300002)(36860700001)(4326008)(8676002)(336012)(82310400003)(16526019)(6666004)(70206006)(70586007)(31686004)(316002)(82740400003)(110136005)(36906005)(53546011)(356005)(16576012)(26005)(86362001)(2906002)(186003)(2616005)(7636003)(31696002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2021 19:12:18.9022
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6238f9a-b1db-4a17-cb03-08d930faa94f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT018.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4559
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Mani,
+Adding more notifier types will surely help but I believe the list is 
+not exhaustive. What you are trying here is to pass various 
+vendor-specific epc interrupts to EPF driver. That can be taken care by 
+a single notifier interface as well, "pci_epc_custom_notify" from your 
+implementation. This also requires to have pre-defined values of "data" 
+argument to standardize the interface.
 
-On 6/15/21 10:23 PM, Bjorn Helgaas wrote:
-> On Tue, Jun 15, 2021 at 12:25:55PM +0200, Hans de Goede wrote:
->> On some Lenovo laptops the base-addrsss of some PCI devices is left
->> at 0 at boot:
->>
->> [    0.283145] pci 0000:00:15.0: [8086:34e8] type 00 class 0x0c8000
->> [    0.283217] pci 0000:00:15.0: reg 0x10: [mem 0x00000000-0x00000fff 64bit]
->> [    0.285117] pci 0000:00:15.1: [8086:34e9] type 00 class 0x0c8000
->> [    0.285189] pci 0000:00:15.1: reg 0x10: [mem 0x00000000-0x00000fff 64bit]
+your thoughts?
+
+Thanks,
+Om
+
+On 6/16/2021 5:29 PM, Manivannan Sadhasivam wrote:
+> External email: Use caution opening links or attachments
 > 
-> s/base-addrsss/base-address/
-> Timestamps aren't relevant here and can be trimmed.
-
-Ack.
-
-> It's not really an error if BIOS leaves a PCI BAR unprogrammed.
 > 
->> There is a _CRS method for these devices, which simply returns the
->> configured 0 address. This is causing the PCI core to not assign
->> memory to these PCI devices and is causing these errors:
->>
->> [    0.655335] pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
->> [    0.655337] pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
->> [    0.655339] pci 0000:00:15.1: BAR 0: no space for [mem size 0x00001000 64bit]
->> [    0.655340] pci 0000:00:15.1: BAR 0: failed to assign [mem size 0x00001000 64bit]
+> Hello,
 > 
-> I'm confused.  Did you say there's a _CRS method for these *PCI*
-> devices (0000:00:15.0, 0000:00:15.1)?
-
-That is what I intended to say, but TBH I don't fully grasp the
-problem at hand yet and I have not checked this in an actual acpidump.
-
-I would need to see if someone attached an acpidump for one of the
-affected devices to some bug and then I can check...
-
-> I suspect you mean the *host bridge* has a _CRS method, since I think
-> acpi_pci_root_validate_resources() is looking at contents of the host
-> bridge _CRS.
-
-You would expect that from the name, but when I was checking for the
-handling of the pci=nocrs kernel-commandline option the only
-place dealing with this which I could find are:
-
-arch/x86/pci/common.c, which sets does "pci_probe |= PCI_ROOT_NO_CRS"
-where pci_probe is a set of global flags
-
-and:
-
-arch/x86/pci/acpi.c, which sets a static bool pci_use_crs; at
-the global level based on this, and the only place where
-pci_use_crs is checked is here:
-
-static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
-{
-        struct acpi_device *device = ci->bridge;
-        int busnum = ci->root->secondary.start;
-        struct resource_entry *entry, *tmp;
-        int status;
-
-        status = acpi_pci_probe_root_resources(ci);
-        if (pci_use_crs) {
-                resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
-                        if (resource_is_pcicfg_ioport(entry->res))
-                                resource_list_destroy_entry(entry);
-                return status;
-        }
-
-And the patch which we are discussing here influences the
-resource-list returned by acpi_pci_probe_root_resources(ci).
-
-I was a bit surprised about this to, because as you say it looks like
-this code is only about the root windows, but I could not find any
-other code dealing with pci=nocrs and multiple users have confirmed
-that using pci=nocrs helps.
-
-So I ended up writing this patch; and then just asking users to
-test and see what happens, but the patch might very well be
-completely wrong, esp. since it indeed seems this only affects
-root resources...
-
-> On x86, it would likely be a BIOS defect is a host bridge _CRS had a
-> memory window starting at 0, but you didn't show what _CRS contained.
+> This series adds support for additional notifiers in the PCI endpoint
+> framework. The notifiers LINK_DOWN, BME, PME, and D_STATE are generic
+> for all PCI endpoints but there is also a custom notifier (CUSTOM) added
+> to pass the device/vendor specific events to EPF from EPC.
 > 
-> The dmesg at https://bugzilla.redhat.com/show_bug.cgi?id=1871793 shows
-> this, which looks totally normal and should be unaffected by the patch
-> since there's no memory window starting at 0:
+> The example usage of all notifiers is provided in the commit description.
 > 
->   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
->   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
->   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
->   pci_bus 0000:00: root bus resource [mem 0x6d400000-0xbfffffff window]
+> Thanks,
+> Mani
 > 
-> The ones at https://bugzilla.redhat.com/show_bug.cgi?id=1868899 and
-> https://bugs.launchpad.net/ubuntu/+source/linux-signed-hwe/+bug/1878279
-> are similar, so I can't quite connect the dots here.
-
-I've 2 dmesgs from runs both with and without pci=nocrs, the one
-with a clean kernel commandline (no special options) yields:
-
-[    0.312333] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-[    0.312335] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-[    0.312336] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-[    0.312337] pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
-[    0.312338] pci_bus 0000:00: root bus resource [bus 00-fe]
-
-Where as the one with pci=nocrs on the kernel commandline gives:
-
-[    0.271766] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
-[    0.271767] pci_bus 0000:00: root bus resource [mem 0x00000000-0x7fffffffff]
-[    0.271768] pci_bus 0000:00: root bus resource [bus 00-fe]
-
-Hmm, so assuming that you are right that pci=nocrs only influences
-the root resources (and I believe you are), and given that the problem is
-that we are getting these errors:
-
-[    0.655335] pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
-[    0.655337] pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
-[    0.655339] pci 0000:00:15.1: BAR 0: no space for [mem size 0x00001000 64bit]
-[    0.655340] pci 0000:00:15.1: BAR 0: failed to assign [mem size 0x00001000 64bit]
-[    0.655342] pci 0000:00:1f.5: BAR 0: no space for [mem size 0x00001000]
-
-Instead of getting this:
-
-[    0.355716] pci 0000:00:15.0: BAR 0: assigned [mem 0x29c000000-0x29c000fff 64bit]
-[    0.355783] pci 0000:00:15.1: BAR 0: assigned [mem 0x29c001000-0x29c001fff 64bit]
-
-So now I believe that my initial theory for this is probably completely wrong; and
-I wonder if the issue is that the _CRS returned root IOMEM window is big enough
-to exactly hold the BIOS assigned mappings, but it does not have any free space
-allowing the kernel to assign space for the 0000:00:15.0 and 0000:00:15.1
-devices ?
-
-Assuming that that theory is right, how could we work around this problem?
-Or at least do a quick debug patch to confirm that indeed the window is "full" ?
-
->> This happens specifically for the designware I2C PCI devices on these
->> laptops, causing I2C-HID attached touchpads/touchscreens to not work.
->>
->> Booting with nocrs on these devices results in the kernel itself
->> assigning memory to these devices, fixing things:
+> Manivannan Sadhasivam (5):
+>    PCI: endpoint: Add linkdown notifier support
+>    PCI: endpoint: Add BME notifier support
+>    PCI: endpoint: Add PME notifier support
+>    PCI: endpoint: Add D_STATE notifier support
+>    PCI: endpoint: Add custom notifier support
 > 
-> "pci=nocrs" to help people repro this or try the same workaround
-> elsewhere.
-
-Not sure what you are trying to say here.
-
+>   drivers/pci/endpoint/pci-epc-core.c | 89 +++++++++++++++++++++++++++++
+>   include/linux/pci-epc.h             |  5 ++
+>   include/linux/pci-epf.h             |  5 ++
+>   3 files changed, 99 insertions(+)
 > 
->> [    0.355716] pci 0000:00:15.0: BAR 0: assigned [mem 0x29c000000-0x29c000fff 64bit]
->> [    0.355783] pci 0000:00:15.1: BAR 0: assigned [mem 0x29c001000-0x29c001fff 64bit]
->>
->> At least the following models are known to be affected by this (but there
->> might be more):
->>
->> Lenovo IdeaPad 3 15IIL05 81WE
->> Lenovo IdeaPad 5 14IIL05 81YH
->>
->> Add an extra check for the base-address being 0 to
->> acpi_pci_root_validate_resources() and reject IOMEM resources where this
->> is the case, to fix this issue.
->>
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
->> BugLink: https://bugs.launchpad.net/ubuntu/+source/linux-signed-hwe/+bug/1878279
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Note we could instead add the known to be affected models to the
->> pci_crs_quirks table in arch/x86/pci/acpi.c, but it is likely that more
->> systems are affected and a more generic fix seems better in general.
+> --
+> 2.25.1
 > 
-> Definitely good to avoid pci_crs_quirks[] because throwing away _CRS
-> completely leads us into uncharted waters, especially for multi-host
-> bridge systems that support hotplug.
-
-ack.
-
-Regards,
-
-Hans
-
-
-
-> 
->> ---
->>  drivers/acpi/pci_root.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index dcd593766a64..6cd2ca551005 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -686,6 +686,13 @@ static void acpi_pci_root_validate_resources(struct device *dev,
->>  		if (!(res1->flags & type))
->>  			goto next;
->>  
->> +		if ((type & IORESOURCE_MEM) && res1->start == 0) {
->> +			dev_info(dev, "host bridge window %pR (ignored, start address not set)\n",
->> +				 res1);
->> +			free = true;
->> +			goto next;
->> +		}
->> +
->>  		/* Exclude non-addressable range or non-addressable portion */
->>  		end = min(res1->end, root->end);
->>  		if (end <= res1->start) {
->> -- 
->> 2.31.1
->>
-> 
-
