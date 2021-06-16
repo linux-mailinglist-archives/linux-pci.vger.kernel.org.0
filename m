@@ -2,181 +2,234 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 662543AA32D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 20:30:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F32A63AA359
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 20:42:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231666AbhFPScc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 14:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231379AbhFPScb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 14:32:31 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94A7C06175F
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 11:30:24 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id fy24-20020a17090b0218b029016c5a59021fso4551699pjb.0
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 11:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oMmBa/UenZSiz8FWRlUYJ1ApLColqphv5fT0ZtHZkco=;
-        b=WKm6uhmxacLHEonEcSMaA5j3VxH+IMGkGzvLS3a/XOVz+YuDdJpchp0+D4dErQF2N4
-         wonuPp+nUW/aooKV8wk4KPh0EYl+GrrdNV1YOFCiej81yxuvF4yh143YqjOuBaKn6Y+t
-         sON6O3h5g4Hi9HtZBtcb1pOPR4F1/Ti3mSp2D+GhLV9l1nJ+e7W25FX356fw1PYVT+/l
-         4UonLYns+/6oImensYAibJDoZiyOmYTRTiFO2QQQWJjHQNLfHmZeBBIZ+qNzgczk/3xz
-         CLxdlkFimaa70/7+COb05076EcfTGenXgd5zn+C27dIvFgZNIQhiyaNzch7jmwhAlQ7k
-         sGpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oMmBa/UenZSiz8FWRlUYJ1ApLColqphv5fT0ZtHZkco=;
-        b=JOfY9lT6uR+DZXUhcrRlOicUy6MuFd1UkFs1K6HAqeHikWBtiBjg90rvbb+h8bpKAJ
-         GFTWAXtj4OdPPo989iCuakHge0Qd8LHLQ7UvF8ILoVC2iRmupiGE42Qv5visns4D8wTe
-         3RdQEe3JkoSclqBFgKDntOFZZW61aSRWC9H74wgdc4zrjadkFHOWqrwK7psyLdp7/cVD
-         o2UGF/vVsUdBiyzRCCuhXcC+F5KtFJIDyjQnWPhIrIw1YGWCK2118mQ1pfUVTifZRi0n
-         yJKIqSnFaIl3tHfVBAerIr6FniOHA1Ci1zjwlzSRUYAnU6Z6lZS6pt+1troDv7PUhMnD
-         sDWA==
-X-Gm-Message-State: AOAM533rhDvy3F3arJ5t+AWhqMelvbWSHIwvxA0Ymsxk36DjBIi1e5ry
-        GAa80xz1wwtNsRhfu+o/yJ9A
-X-Google-Smtp-Source: ABdhPJyqynxiYazXV5IbplMzPc2VHuctu11Dn+8ZNjUwy+usenSZ+jMti/oBrereusj21n+iGcgFEQ==
-X-Received: by 2002:a17:90a:bd18:: with SMTP id y24mr12297762pjr.83.1623868223982;
-        Wed, 16 Jun 2021 11:30:23 -0700 (PDT)
-Received: from thinkpad ([2409:4072:17:2c05:a14f:78ce:1082:5556])
-        by smtp.gmail.com with ESMTPSA id h4sm2881664pjv.55.2021.06.16.11.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jun 2021 11:30:23 -0700 (PDT)
-Date:   Thu, 17 Jun 2021 00:00:17 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Om Prakash Singh <omp@nvidia.com>
-Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        smohanad@codeaurora.org
-Subject: Re: [PATCH 1/5] PCI: endpoint: Add linkdown notifier support
-Message-ID: <20210616183017.GB152639@thinkpad>
-References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
- <20210616115913.138778-2-manivannan.sadhasivam@linaro.org>
- <443ec752-08e2-83dd-2b6f-b5e74c7bd8e5@nvidia.com>
+        id S231967AbhFPSoG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 14:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231892AbhFPSoD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 14:44:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3914E610A3;
+        Wed, 16 Jun 2021 18:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623868917;
+        bh=A/u+qgoYDIfPJH2nR7TN1MVSs3c34aZySloJGmF3DxI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XW7Y4X4BrA5t9ijeAkMM5QcCdVYTcPYigARzxXFbf+hvb/uvp+9Mh4a34b6q7DC/i
+         sftLrmCBohcI5jLH7tRhCQG0oRbDHxXeJk4RnxcA6Ul46XtSEkqfRY8t/XGFaIFk86
+         qALO4rJMHfSIQDqcWwSZq03gCR35QANxOrYdPBiBe/2o4ooVhYHO++ff/Wjl3yD1k0
+         5+AqyA7gDeMM/vaNpWgsQ3+LVyhh+c7BqwX1vaXN+fU88HSnc2YCtVPrtUbPSvo8Oo
+         6qWAuSvjwilO69NivBQSK/Tx5fcLWTIvpS50NkVkCoknp6Umst4ITXs8YCSnSw0png
+         hRSa7JSohypWw==
+Date:   Wed, 16 Jun 2021 20:41:50 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, iommu@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
+Message-ID: <YMpF7gkpbNQYX5EB@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+References: <20210615191543.1043414-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Ul4MnuDBL/PvPlAZ"
 Content-Disposition: inline
-In-Reply-To: <443ec752-08e2-83dd-2b6f-b5e74c7bd8e5@nvidia.com>
+In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 11:52:28PM +0530, Om Prakash Singh wrote:
-> 
-> 
-> On 6/16/2021 5:29 PM, Manivannan Sadhasivam wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > Add support to notify the EPF device about the linkdown event from the
-> > EPC device.
-> > 
-> > Usage:
-> > ======
-> > 
-> > EPC
-> > ---
-> > 
-> > ```
-> > static irqreturn_t pcie_ep_irq(int irq, void *data)
-> > {
-> > ...
-> >          case PCIE_EP_INT_LINK_DOWN:
-> >                  pci_epc_linkdown(epc);
-> >                  break;
-> Can you provide use case/scenario when epc will get LINK_DOWN interrupt?
-> 
 
-During host shutdown/reboot epc will get LINK_DOWN interrupt. And in our MHI
-function we need to catch that for handling the SYSERR state as per the spec.
+--Ul4MnuDBL/PvPlAZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Mani
+On Tue, Jun 15, 2021 at 01:15:43PM -0600, Rob Herring wrote:
+> If a property has an 'items' list, then a 'minItems' or 'maxItems' with t=
+he
+> same size as the list is redundant and can be dropped. Note that is DT
+> schema specific behavior and not standard json-schema behavior. The tooli=
+ng
+> will fixup the final schema adding any unspecified minItems/maxItems.
+>=20
+> This condition is partially checked with the meta-schema already, but
+> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> An improved meta-schema is pending.
+>=20
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Jassi Brar <jassisinghbrar@gmail.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Vivien Didelot <vivien.didelot@gmail.com>
+> Cc: Vladimir Oltean <olteanv@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ohad Ben-Cohen <ohad@wizery.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-> > ...
-> > }
-> > ```
-> > 
-> > EPF
-> > ---
-> > 
-> > ```
-> > static int pci_epf_notifier(struct notifier_block *nb, unsigned long val,
-> >                              void *data)
-> > {
-> > ...
-> >          case LINK_DOWN:
-> >                  /* Handle link down event */
-> >                  break;
-> > ...
-> > }
-> > ```
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/pci/endpoint/pci-epc-core.c | 17 +++++++++++++++++
-> >   include/linux/pci-epc.h             |  1 +
-> >   include/linux/pci-epf.h             |  1 +
-> >   3 files changed, 19 insertions(+)
-> > 
-> > diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> > index adec9bee72cf..f29d78c18438 100644
-> > --- a/drivers/pci/endpoint/pci-epc-core.c
-> > +++ b/drivers/pci/endpoint/pci-epc-core.c
-> > @@ -641,6 +641,23 @@ void pci_epc_linkup(struct pci_epc *epc)
-> >   }
-> >   EXPORT_SYMBOL_GPL(pci_epc_linkup);
-> > 
-> > +/**
-> > + * pci_epc_linkdown() - Notify the EPF device that EPC device has dropped the
-> > + *                     connection with the Root Complex.
-> > + * @epc: the EPC device which has dropped the link with the host
-> > + *
-> > + * Invoke to Notify the EPF device that the EPC device has dropped the
-> > + * connection with the Root Complex.
-> > + */
-> > +void pci_epc_linkdown(struct pci_epc *epc)
-> > +{
-> > +       if (!epc || IS_ERR(epc))
-> > +               return;
-> > +
-> > +       atomic_notifier_call_chain(&epc->notifier, LINK_DOWN, NULL);
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_epc_linkdown);
-> > +
-> >   /**
-> >    * pci_epc_init_notify() - Notify the EPF device that EPC device's core
-> >    *                        initialization is completed.
-> > diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> > index b82c9b100e97..23590efc13e7 100644
-> > --- a/include/linux/pci-epc.h
-> > +++ b/include/linux/pci-epc.h
-> > @@ -202,6 +202,7 @@ void pci_epc_destroy(struct pci_epc *epc);
-> >   int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
-> >                      enum pci_epc_interface_type type);
-> >   void pci_epc_linkup(struct pci_epc *epc);
-> > +void pci_epc_linkdown(struct pci_epc *epc);
-> >   void pci_epc_init_notify(struct pci_epc *epc);
-> >   void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
-> >                          enum pci_epc_interface_type type);
-> > diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> > index 6833e2160ef1..e9ad634b1575 100644
-> > --- a/include/linux/pci-epf.h
-> > +++ b/include/linux/pci-epf.h
-> > @@ -20,6 +20,7 @@ enum pci_epc_interface_type;
-> >   enum pci_notify_event {
-> >          CORE_INIT,
-> >          LINK_UP,
-> > +       LINK_DOWN,
-> >   };
-> > 
-> >   enum pci_barno {
-> > --
-> > 2.25.1
-> > 
+Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
+
+
+--Ul4MnuDBL/PvPlAZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmDKRekACgkQFA3kzBSg
+KbbFdA/+J6slaN90bvqrl9Kylr+F1vWPHBVKSRdA0mnhK09uqqdE0YEx3nLRBJYG
+zGjhfQY+0UCubghvsI8mYBKj+jv5fkzM8D2Mr13GL5b+zVFOML1f24o8y9Fwsi6A
+qbgTfoI0FaRdGTd1ocYLkYtywYrM9XmSeG9QuXBLIufeQsnOspjtQQ+WYRNM4qzw
+Qa+FkuAJZPED0sG7wbpPkzaA4eNfoKn0YQNwk8tIDdl5qvrw6W0cZ6lhog5v5kPB
+c3gC2OJzR4fXzt+uA2rIWWF9rujLHaiWT0nWXSz93ViX9pZPZ77kDSK4xEz8h3Rr
+mRX25SXmSnOf3xLGGkw6fx86sT5dZ6HlhWbhHbXdGzeYBeCfrgXwgj3wHXlyHA5S
+jIgGUlAeT9uMSmv3lmSQ4Lx3tUvKupZ8zX9N6/ay+2kiIei931x+sP73627hNjwz
+Tnbj1JBDeNgP0Oukiq6xMGyT5VxQk1rgh0garZvFZoPVEr/ae1Z5A8/mNKSwhOVj
+4PRKHuz72zpDbx7LuMaG6EnY5fzhDSGVRCSIeNs4yRX1cnVbtEGbsI7yOmrUx+wl
+3kAkYFZYbin5oRO36gDyYg5ZUyFDy4s+Jh5a8kPFANPY2ToOS8Ssa1hFNu0SSgve
+uONICGgcQoHO4Jbvea809td91bvqtiCieKCCX19GqJa37ktj2Ww=
+=EWxK
+-----END PGP SIGNATURE-----
+
+--Ul4MnuDBL/PvPlAZ--
