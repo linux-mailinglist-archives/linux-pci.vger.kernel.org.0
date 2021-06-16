@@ -2,147 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C6523A9CBA
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 15:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A8743A9CF1
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 16:06:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233554AbhFPN42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 09:56:28 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60052 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233713AbhFPNzq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 09:55:46 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 2.1.0)
- id 08918a6d9c91f4d9; Wed, 16 Jun 2021 15:53:29 +0200
-Received: from kreacher.localnet (89-64-81-4.dynamic.chello.pl [89.64.81.4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id B98A666995C;
-        Wed, 16 Jun 2021 15:53:28 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Koba Ko <koba.ko@canonical.com>,
-        Rajat Jain <rajatja@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI/PM: Target PM state is D3hot if device can only generate PME from D3cold
-Date:   Wed, 16 Jun 2021 15:53:28 +0200
-Message-ID: <2605035.mvXUDI8C0e@kreacher>
-In-Reply-To: <20210615150058.17169-1-mika.westerberg@linux.intel.com>
-References: <20210615150058.17169-1-mika.westerberg@linux.intel.com>
+        id S233422AbhFPOIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 10:08:21 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42120 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233420AbhFPOIU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 10:08:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15GE5f8W117835;
+        Wed, 16 Jun 2021 09:05:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1623852341;
+        bh=qJ2GnQxd+yS6ISLDIaGuRDIGnMu21lKltpoDuOcviVs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Y9lT3fiGcNzub92cli5OVPZlfJJkKpeM+luPVBsr3MFOO6ZPHHHJVpQ+nkPKYeZGc
+         Oigl/gNPm6mvRw7bjJe5x+TOImMI9XtSlzgnK3dGiblZxaNItnhloXDa+TP398uVTd
+         GrMY0JrzySfFxPP8q/iiHvxNcpR1bO38e/T6BowE=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15GE5fR8015784
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Jun 2021 09:05:41 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 16
+ Jun 2021 09:05:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Wed, 16 Jun 2021 09:05:40 -0500
+Received: from [10.250.233.239] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15GE5XZj082268;
+        Wed, 16 Jun 2021 09:05:34 -0500
+Subject: Re: [PATCH v6 0/7] Add SR-IOV support in PCIe Endpoint Core
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+References: <20210517074723.10212-1-kishon@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d5bcf443-a0ee-fda5-5c5c-d69d25b53bb9@ti.com>
+Date:   Wed, 16 Jun 2021 19:35:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 89.64.81.4
-X-CLIENT-HOSTNAME: 89-64-81-4.dynamic.chello.pl
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledrfedvledgjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeetgefgleetgeduheeugeeikeevudelueelvdeufeejfeffgeefjedugfetfeehhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeekledrieegrdekuddrgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrieegrdekuddrgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehuthhkrghrshhhrdhhrdhprghtvghlsehinhhtvghlrdgtohhmpdhrtghpthhtohepkhhosggrrdhkohestggrnhhonhhitggrlhdrtghomhdprhgtphhtthhopehrrghj
- rghtjhgrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkrghirdhhvghnghdrfhgvnhhgsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
+In-Reply-To: <20210517074723.10212-1-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday, June 15, 2021 5:00:58 PM CEST Mika Westerberg wrote:
-> Some PCIe devices only support PME (Power Management Event) from D3cold.
-> One example is ASMedia xHCI controller:
-> 
-> 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
->   ...
->   Capabilities: [78] Power Management version 3
->   	  Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
-> 	  Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> 
-> With such devices, if it has wake enabled, the kernel selects lowest
-> possible power state to be D0 in pci_target_state(). This is problematic
-> because it prevents the root port it is connected to enter low power
-> state too which makes the system consume more energy than necessary.
-> 
-> The problem in pci_target_state() is that it only accounts the "current"
-> device state, so when the bridge above it (a root port for instance) is
-> transitioned into D3hot the device transitions into D3cold. This is
-> because when the root port is first transitioned into D3hot then the
-> ACPI power resource is turned off which puts the PCIe link to L2/L3 (and
-> the root port and the device are in D3cold). If the root port is kept in
-> D3hot it still means that the device below it is still effectively in
-> D3cold as no configuration messages pass through. Furthermore the
-> implementation note of PCIe 5.0 sec 5.3.1.4 says that the device should
-> expect to be transitioned into D3cold soon after its link transitions
-> into L2/L3 Ready state.
-> 
-> Taking the above into consideration, instead of forcing the device stay
-> in D0 we modify pci_target_state() to return D3hot in this special case
-> and make __pci_enable_wake() to enable PME too in this case.
-> 
-> Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-> Reported-by: Koba Ko <koba.ko@canonical.com>
-> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Hi Lorenzo, Bjorn,
 
-Any chance to resend with a CC to linux-pm?
+On 17/05/21 1:17 pm, Kishon Vijay Abraham I wrote:
+> Patch series
+> *) Adds support to add virtual functions to enable endpoint controller
+>    which supports SR-IOV capability
+> *) Add support in Cadence endpoint driver to configure virtual functions
+> *) Enable pci_endpoint_test driver to create pci_device for virtual
+>    functions
+> 
+> v1 of the patch series can be found at [1]
+> v2 of the patch series can be found at [2]
+> v3 of the patch series can be found at [3]
+> v4 of the patch series can be found at [4]
+> v5 of the patch series can be found at [5]
+> 
+> Here both physical functions and virtual functions use the same
+> pci_endpoint_test driver and existing pcitest utility can be used
+> to test virtual functions as well.
+> 
+> Changes from v5:
+> *) Rebased to 5.13-rc1
+> 
+> Changes from v4:
+> *) Added a fix in Cadence driver which was overwriting BAR configuration
+>    of physical function.
+> *) Didn't include Tom's Acked-by since Cadence driver is modified in
+>    this revision.
+> 
+> Changes from v3:
+> *) Fixed Rob's comment and added his Reviewed-by as suggested by him.
+> 
+> Changes from v2:
+> *) Fixed DT binding documentation comment by Rob
+> *) Fixed the error check in pci-epc-core.c
+> 
+> Changes from v1:
+> *) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
+>    binding for EP)
+> 
+> [1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
+> [2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
+> [3] -> https://lore.kernel.org/r/20210305050410.9201-1-kishon@ti.com
+> [4] -> http://lore.kernel.org/r/20210310160943.7606-1-kishon@ti.com
+> [5] -> https://lore.kernel.org/r/20210419083401.31628-1-kishon@ti.com
 
-> ---
-> Hi all,
-> 
-> This is third version of the patch. I changed this according to what Rafael
-> suggested, so that the pci_target_state() returns D3hot for these devices
-> and pci_enable_wake() then enables PME from D3cold. This solves the problem
-> in my test system.
-> 
-> @Utkarsh, @Koba, I appreciate if you could try this one too.
-> 
-> I also dropped the Tested-by tag from Koba Ko and Acked-by from Kai-Heng
-> Feng as this is not the same patch anymore.
-> 
-> The previous version can be seen here:
-> 
-> https://lore.kernel.org/linux-pci/20210531133435.53259-1-mika.westerberg@linux.intel.com/
-> 
->  drivers/pci/pci.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b717680377a9..6605f85a1d63 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2485,7 +2485,13 @@ static int __pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable
->  	if (enable) {
->  		int error;
->  
-> -		if (pci_pme_capable(dev, state))
-> +		/*
-> +		 * Enable PME if device is capable from given state.
-> +		 * Special case is device that can only generate PME
-> +		 * from D3cold then we enable PME too.
-> +		 */
-> +		if (pci_pme_capable(dev, state) ||
-> +		    (state == PCI_D3hot && pci_pme_capable(dev, PCI_D3cold)))
->  			pci_pme_active(dev, true);
->  		else
->  			ret = 1;
-> @@ -2595,6 +2601,16 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
->  		 * PME#.
->  		 */
->  		if (dev->pme_support) {
-> +			/*
-> +			 * Special case if device supports only PME from
-> +			 * D3cold but not from D3hot we still return
-> +			 * D3hot.
-> +			 */
-> +			if (target_state == PCI_D3hot &&
-> +				!(dev->pme_support & (1 << PCI_D3hot)) &&
-> +				(dev->pme_support & (1 << PCI_D3cold)))
-> +				return target_state;
-> +
->  			while (target_state
->  			      && !(dev->pme_support & (1 << target_state)))
->  				target_state--;
-> 
+Can this series be merged for 5.14? It already includes Ack from Rob for
+dt-binding changes and Ack from Tom for Cadence driver changes.
 
-
-
-
+Thanks
+Kishon
