@@ -2,290 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5469E3AA5F8
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 23:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD80C3AA606
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 23:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233900AbhFPVNK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 17:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41474 "EHLO mail.kernel.org"
+        id S233943AbhFPVSo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 17:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233836AbhFPVNK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Jun 2021 17:13:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8645961185;
-        Wed, 16 Jun 2021 21:11:03 +0000 (UTC)
+        id S233836AbhFPVSn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 17:18:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EEB65613DF;
+        Wed, 16 Jun 2021 21:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623877863;
-        bh=z2OzyDJCgpZX3W5DKmLw5Qmpho2XpHcXPPTCWYyHrN8=;
+        s=k20201202; t=1623878197;
+        bh=g0jleB/kEeeiGGDNq1Chp/dzNVZGcHFtnZ8EpEOi+lg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XjnKN56RsqwZSL+0td/zGPfupGBK64ZS1NS1j0D+Q14ew/2oSN1e3QrDiQUAK9xHb
-         cF6JN0rMm40j1VitDZbEzJtGTcEYtrGaXUbvvgK/7gtNb+NGBXfIzMMdXjLRkHIyME
-         je0Ln0lUdpduEQfNw4B1cQYn3ggck40+XqAdNazSG6iG6cM1iP0LUps7TgnXXT2+b6
-         rxoITDGBcVIqd/TbMhRK3HccSBo0yESVM04m1Bmu55/aK0tinDxdGQG0+imIfnQJzL
-         TnCgPxl9l//DuU/i/SnPyx+hilwdhEbYaRIjNSptajZlOKCjgqfgLEl+yDSdHrOoLw
-         1iNBg97+yyMqg==
-Date:   Wed, 16 Jun 2021 16:11:02 -0500
+        b=LhfE3ydVx732Lk8ZAGuNehW4CtJ7CP+EGLJaXRG5cqlco3TT1Gxm25PByaM8S2Vlj
+         JHemkB/lt6CQ3kew15b0BZ18wY/qYbY3Jeheb+nsx6k1Vwn00wrS5/yP67dcDGdeMi
+         61KBaUNQ2/xrB4xa9TT1Jb4iRgmjyqxVHebUXgRnPz58nZVCt/c7C8Sis0EC7f/BeZ
+         o1AbmvKAmk3rEp4zs2aVS5lO3zjYB+fOOdhCED/AFQVBvz282hhrsMk7WIhRKKnflV
+         HTsyLyPOAD9md50qvx8h9WQ2W+/ARkK4dMZ5pWU53893wMqEW0mFTKEz40V+6FzNvk
+         5/bHuiY3CTipA==
+Date:   Wed, 16 Jun 2021 16:16:30 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     logang@deltatee.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/P2PDMA: simplify distance calculation
-Message-ID: <20210616211102.GA3006716@bjorn-Precision-5520>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v6 0/7] Add SR-IOV support in PCIe Endpoint Core
+Message-ID: <20210616211630.GA3007203@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210614055310.3960791-1-hch@lst.de>
+In-Reply-To: <d5bcf443-a0ee-fda5-5c5c-d69d25b53bb9@ti.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 07:53:10AM +0200, Christoph Hellwig wrote:
-> Merge __calc_map_type_and_dist and calc_map_type_and_dist_warn into
-> calc_map_type_and_dist to simplify the code a bit.  This now means
-> we add the devfn strings to the acs_buf unconditionallity even if
-> the buffer is not printed, but that is not a lot of overhead and
-> keeps the code much simpler.
+On Wed, Jun 16, 2021 at 07:35:33PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo, Bjorn,
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> On 17/05/21 1:17 pm, Kishon Vijay Abraham I wrote:
+> > Patch series
+> > *) Adds support to add virtual functions to enable endpoint controller
+> >    which supports SR-IOV capability
+> > *) Add support in Cadence endpoint driver to configure virtual functions
+> > *) Enable pci_endpoint_test driver to create pci_device for virtual
+> >    functions
+> > 
+> > v1 of the patch series can be found at [1]
+> > v2 of the patch series can be found at [2]
+> > v3 of the patch series can be found at [3]
+> > v4 of the patch series can be found at [4]
+> > v5 of the patch series can be found at [5]
+> > 
+> > Here both physical functions and virtual functions use the same
+> > pci_endpoint_test driver and existing pcitest utility can be used
+> > to test virtual functions as well.
+> > 
+> > Changes from v5:
+> > *) Rebased to 5.13-rc1
+> > 
+> > Changes from v4:
+> > *) Added a fix in Cadence driver which was overwriting BAR configuration
+> >    of physical function.
+> > *) Didn't include Tom's Acked-by since Cadence driver is modified in
+> >    this revision.
+> > 
+> > Changes from v3:
+> > *) Fixed Rob's comment and added his Reviewed-by as suggested by him.
+> > 
+> > Changes from v2:
+> > *) Fixed DT binding documentation comment by Rob
+> > *) Fixed the error check in pci-epc-core.c
+> > 
+> > Changes from v1:
+> > *) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
+> >    binding for EP)
+> > 
+> > [1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
+> > [2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
+> > [3] -> https://lore.kernel.org/r/20210305050410.9201-1-kishon@ti.com
+> > [4] -> http://lore.kernel.org/r/20210310160943.7606-1-kishon@ti.com
+> > [5] -> https://lore.kernel.org/r/20210419083401.31628-1-kishon@ti.com
+> 
+> Can this series be merged for 5.14? It already includes Ack from Rob for
+> dt-binding changes and Ack from Tom for Cadence driver changes.
 
-Applied with Logan's reviewed-by to pci/p2pdma for v5.14, thanks!
+Sorry, I think this was assigned to me in patchwork, but Lorenzo
+usually takes care of the endpoint stuff.  He's away this week, but no
+doubt will look at it when he returns.
 
-> ---
->  drivers/pci/p2pdma.c | 190 +++++++++++++++++--------------------------
->  1 file changed, 73 insertions(+), 117 deletions(-)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index deb097ceaf41..ca2574debb2d 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -388,79 +388,6 @@ static bool host_bridge_whitelist(struct pci_dev *a, struct pci_dev *b,
->  	return false;
->  }
->  
-> -static enum pci_p2pdma_map_type
-> -__calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
-> -		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
-> -{
-> -	struct pci_dev *a = provider, *b = client, *bb;
-> -	int dist_a = 0;
-> -	int dist_b = 0;
-> -	int acs_cnt = 0;
-> -
-> -	if (acs_redirects)
-> -		*acs_redirects = false;
-> -
-> -	/*
-> -	 * Note, we don't need to take references to devices returned by
-> -	 * pci_upstream_bridge() seeing we hold a reference to a child
-> -	 * device which will already hold a reference to the upstream bridge.
-> -	 */
-> -
-> -	while (a) {
-> -		dist_b = 0;
-> -
-> -		if (pci_bridge_has_acs_redir(a)) {
-> -			seq_buf_print_bus_devfn(acs_list, a);
-> -			acs_cnt++;
-> -		}
-> -
-> -		bb = b;
-> -
-> -		while (bb) {
-> -			if (a == bb)
-> -				goto check_b_path_acs;
-> -
-> -			bb = pci_upstream_bridge(bb);
-> -			dist_b++;
-> -		}
-> -
-> -		a = pci_upstream_bridge(a);
-> -		dist_a++;
-> -	}
-> -
-> -	if (dist)
-> -		*dist = dist_a + dist_b;
-> -
-> -	return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-> -
-> -check_b_path_acs:
-> -	bb = b;
-> -
-> -	while (bb) {
-> -		if (a == bb)
-> -			break;
-> -
-> -		if (pci_bridge_has_acs_redir(bb)) {
-> -			seq_buf_print_bus_devfn(acs_list, bb);
-> -			acs_cnt++;
-> -		}
-> -
-> -		bb = pci_upstream_bridge(bb);
-> -	}
-> -
-> -	if (dist)
-> -		*dist = dist_a + dist_b;
-> -
-> -	if (acs_cnt) {
-> -		if (acs_redirects)
-> -			*acs_redirects = true;
-> -
-> -		return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-> -	}
-> -
-> -	return PCI_P2PDMA_MAP_BUS_ADDR;
-> -}
-> -
->  static unsigned long map_types_idx(struct pci_dev *client)
->  {
->  	return (pci_domain_nr(client->bus) << 16) |
-> @@ -502,63 +429,96 @@ static unsigned long map_types_idx(struct pci_dev *client)
->   * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE with the distance set to the number of
->   * ports per above. If the device is not in the whitelist, return
->   * PCI_P2PDMA_MAP_NOT_SUPPORTED.
-> - *
-> - * If any ACS redirect bits are set, then acs_redirects boolean will be set
-> - * to true and their PCI device names will be appended to the acs_list
-> - * seq_buf. This seq_buf is used to print a warning informing the user how
-> - * to disable ACS using a command line parameter.  (See
-> - * calc_map_type_and_dist_warn() below)
->   */
->  static enum pci_p2pdma_map_type
->  calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
-> -		int *dist, bool *acs_redirects, struct seq_buf *acs_list)
-> +		int *dist, bool verbose)
->  {
-> -	enum pci_p2pdma_map_type map_type;
-> +	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
-> +	struct pci_dev *a = provider, *b = client, *bb;
-> +	bool acs_redirects = false;
-> +	struct seq_buf acs_list;
-> +	int acs_cnt = 0;
-> +	int dist_a = 0;
-> +	int dist_b = 0;
-> +	char buf[128];
-> +
-> +	seq_buf_init(&acs_list, buf, sizeof(buf));
-> +
-> +	/*
-> +	 * Note, we don't need to take references to devices returned by
-> +	 * pci_upstream_bridge() seeing we hold a reference to a child
-> +	 * device which will already hold a reference to the upstream bridge.
-> +	 */
-> +	while (a) {
-> +		dist_b = 0;
->  
-> -	map_type = __calc_map_type_and_dist(provider, client, dist,
-> -					    acs_redirects, acs_list);
-> +		if (pci_bridge_has_acs_redir(a)) {
-> +			seq_buf_print_bus_devfn(&acs_list, a);
-> +			acs_cnt++;
-> +		}
->  
-> -	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
-> -		if (!cpu_supports_p2pdma() &&
-> -		    !host_bridge_whitelist(provider, client, acs_redirects))
-> -			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
-> +		bb = b;
-> +
-> +		while (bb) {
-> +			if (a == bb)
-> +				goto check_b_path_acs;
-> +
-> +			bb = pci_upstream_bridge(bb);
-> +			dist_b++;
-> +		}
-> +
-> +		a = pci_upstream_bridge(a);
-> +		dist_a++;
->  	}
->  
-> -	if (provider->p2pdma)
-> -		xa_store(&provider->p2pdma->map_types, map_types_idx(client),
-> -			 xa_mk_value(map_type), GFP_KERNEL);
-> +	*dist = dist_a + dist_b;
-> +	goto map_through_host_bridge;
->  
-> -	return map_type;
-> -}
-> +check_b_path_acs:
-> +	bb = b;
->  
-> -static enum pci_p2pdma_map_type
-> -calc_map_type_and_dist_warn(struct pci_dev *provider, struct pci_dev *client,
-> -			    int *dist)
-> -{
-> -	struct seq_buf acs_list;
-> -	bool acs_redirects;
-> -	char buf[128];
-> -	int ret;
-> +	while (bb) {
-> +		if (a == bb)
-> +			break;
->  
-> -	seq_buf_init(&acs_list, buf, sizeof(buf));
-> +		if (pci_bridge_has_acs_redir(bb)) {
-> +			seq_buf_print_bus_devfn(&acs_list, bb);
-> +			acs_cnt++;
-> +		}
->  
-> -	ret = calc_map_type_and_dist(provider, client, dist, &acs_redirects,
-> -				     &acs_list);
-> -	if (acs_redirects) {
-> +		bb = pci_upstream_bridge(bb);
-> +	}
-> +
-> +	*dist = dist_a + dist_b;
-> +
-> +	if (!acs_cnt) {
-> +		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
-> +		goto done;
-> +	}
-> +
-> +	if (verbose) {
-> +		acs_list.buffer[acs_list.len-1] = 0; /* drop final semicolon */
->  		pci_warn(client, "ACS redirect is set between the client and provider (%s)\n",
->  			 pci_name(provider));
-> -		/* Drop final semicolon */
-> -		acs_list.buffer[acs_list.len-1] = 0;
->  		pci_warn(client, "to disable ACS redirect for this path, add the kernel parameter: pci=disable_acs_redir=%s\n",
->  			 acs_list.buffer);
->  	}
-> +	acs_redirects = true;
->  
-> -	if (ret == PCI_P2PDMA_MAP_NOT_SUPPORTED) {
-> -		pci_warn(client, "cannot be used for peer-to-peer DMA as the client and provider (%s) do not share an upstream bridge or whitelisted host bridge\n",
-> -			 pci_name(provider));
-> +map_through_host_bridge:
-> +	if (!cpu_supports_p2pdma() &&
-> +	    !host_bridge_whitelist(provider, client, acs_redirects)) {
-> +		if (verbose)
-> +			pci_warn(client, "cannot be used for peer-to-peer DMA as the client and provider (%s) do not share an upstream bridge or whitelisted host bridge\n",
-> +				 pci_name(provider));
-> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
->  	}
-> -
-> -	return ret;
-> +done:
-> +	if (provider->p2pdma)
-> +		xa_store(&provider->p2pdma->map_types, map_types_idx(client),
-> +			 xa_mk_value(map_type), GFP_KERNEL);
-> +	return map_type;
->  }
->  
->  /**
-> @@ -599,12 +559,8 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
->  			return -1;
->  		}
->  
-> -		if (verbose)
-> -			map = calc_map_type_and_dist_warn(provider, pci_client,
-> -							  &distance);
-> -		else
-> -			map = calc_map_type_and_dist(provider, pci_client,
-> -						     &distance, NULL, NULL);
-> +		map = calc_map_type_and_dist(provider, pci_client, &distance,
-> +					     verbose);
->  
->  		pci_dev_put(pci_client);
->  
-> -- 
-> 2.30.2
-> 
+Bjorn
