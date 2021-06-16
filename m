@@ -2,109 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CF0C3A9C5A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 15:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C6523A9CBA
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 15:54:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233495AbhFPNpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 09:45:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233470AbhFPNpI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Jun 2021 09:45:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8A19C6100A;
-        Wed, 16 Jun 2021 13:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623850982;
-        bh=PNvqZ58yryGZzUwSLjIqM5T0z2MfgSz+KfhEckS1YcY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q1BG8w9PPDB1NFZMuqv7M0Lt6zCOOccDKk4LSEH/fGGvYcAr3ieHpffdGcYh3vTDd
-         j5OzoLzh5TKFs2Ce0YMG+/5s2CmCEt7dy7fFBd3LqO3m2YdixpetQlc5mPxjMG3Z40
-         GFSJ6NVsCe4gnfvcbuCJrsnUnQQCpcTVo1EatEc5ZH5R+M/cC8G2wEWKNJ4vD3bWYt
-         PxXIj1W3hiDAIQIZsbRsdh1ScRGYgrEKSdK8YBMjwcKLB6Ktpd5UvG0R7hHofhNKdE
-         DqR/xYiTJWl7/mHLzrhfOkddt3ViP3isVs59lDur9oWBJd8wYKYTrKmsh3z/SRC+vR
-         w88G1okk6oBMQ==
-Date:   Wed, 16 Jun 2021 14:42:58 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "liuqi (BA)" <liuqi115@huawei.com>
-Cc:     Linuxarm <linuxarm@huawei.com>, mark.rutland@arm.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zhangshaokun@hisilicon.com
-Subject: Re: [PATCH v6 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
- PMU
-Message-ID: <20210616134257.GA22905@willie-the-truck>
-References: <1622467951-32114-1-git-send-email-liuqi115@huawei.com>
- <1622467951-32114-3-git-send-email-liuqi115@huawei.com>
- <20210611162347.GA16284@willie-the-truck>
- <a299d053-b45f-e941-7a2e-c853079b8cdd@huawei.com>
- <20210615093519.GB19878@willie-the-truck>
- <8e15e8d6-cfe8-0926-0ca1-b162302e52a5@huawei.com>
+        id S233554AbhFPN42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 09:56:28 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60052 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233713AbhFPNzq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Jun 2021 09:55:46 -0400
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 2.1.0)
+ id 08918a6d9c91f4d9; Wed, 16 Jun 2021 15:53:29 +0200
+Received: from kreacher.localnet (89-64-81-4.dynamic.chello.pl [89.64.81.4])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by v370.home.net.pl (Postfix) with ESMTPSA id B98A666995C;
+        Wed, 16 Jun 2021 15:53:28 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/PM: Target PM state is D3hot if device can only generate PME from D3cold
+Date:   Wed, 16 Jun 2021 15:53:28 +0200
+Message-ID: <2605035.mvXUDI8C0e@kreacher>
+In-Reply-To: <20210615150058.17169-1-mika.westerberg@linux.intel.com>
+References: <20210615150058.17169-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e15e8d6-cfe8-0926-0ca1-b162302e52a5@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 89.64.81.4
+X-CLIENT-HOSTNAME: 89-64-81-4.dynamic.chello.pl
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledrfedvledgjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeetgefgleetgeduheeugeeikeevudelueelvdeufeejfeffgeefjedugfetfeehhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeekledrieegrdekuddrgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrieegrdekuddrgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehuthhkrghrshhhrdhhrdhprghtvghlsehinhhtvghlrdgtohhmpdhrtghpthhtohepkhhosggrrdhkohestggrnhhonhhitggrlhdrtghomhdprhgtphhtthhopehrrghj
+ rghtjhgrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkrghirdhhvghnghdrfhgvnhhgsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Wed, Jun 16, 2021 at 09:54:23AM +0800, liuqi (BA) wrote:
-> On 2021/6/15 17:35, Will Deacon wrote:
-> > On Tue, Jun 15, 2021 at 04:57:09PM +0800, liuqi (BA) wrote:
-> > > On 2021/6/12 0:23, Will Deacon wrote:
-> > > > On Mon, May 31, 2021 at 09:32:31PM +0800, Qi Liu wrote:
-> > > > > +	/* Process data to set unit of latency as "us". */
-> > > > > +	if (is_latency_event(idx))
-> > > > > +		return div64_u64(data * us_per_cycle, data_ext);
-> > > > > +
-> > > > > +	if (is_bus_util_event(idx))
-> > > > > +		return div64_u64(data * us_per_cycle, data_ext);
-> > > > > +
-> > > > > +	if (is_buf_util_event(idx))
-> > > > > +		return div64_u64(data, data_ext * us_per_cycle);
-> > > > 
-> > > > Why do we need to do all this division in the kernel? Can't we just expose
-> > > > the underlying values and let userspace figure out what it wants to do with
-> > > > the numbers?
-> > > > 
-> > > Our PMU hardware support 8 sets of counters to count bandwidth, latency and
-> > > utilization events.
-> > > 
-> > > For example, when users set latency event, common counter will count delay
-> > > cycles, and extern counter count number of PCIe packets automaticly. And we
-> > > do not have a event number for counting number of PCIe packets.
-> > > 
-> > > So this division cannot move to userspace tool.
-> > 
-> > Why can't you expose the packet counter as an extra event to userspace?
-> > 
-> Maybe I didn’t express it clearly.
+On Tuesday, June 15, 2021 5:00:58 PM CEST Mika Westerberg wrote:
+> Some PCIe devices only support PME (Power Management Event) from D3cold.
+> One example is ASMedia xHCI controller:
 > 
-> As there is no hardware event number for PCIe packets counting, extern
-> counter count packets *automaticly* when latency events is selected by
-> users.
+> 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
+>   ...
+>   Capabilities: [78] Power Management version 3
+>   	  Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+> 	  Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
 > 
-> This means users cannot set "config=0xXX" to start packets counting event.
-> So we can only get the value of counter and extern counter in driver and do
-> the division, then pass the result to userspace.
+> With such devices, if it has wake enabled, the kernel selects lowest
+> possible power state to be D0 in pci_target_state(). This is problematic
+> because it prevents the root port it is connected to enter low power
+> state too which makes the system consume more energy than necessary.
+> 
+> The problem in pci_target_state() is that it only accounts the "current"
+> device state, so when the bridge above it (a root port for instance) is
+> transitioned into D3hot the device transitions into D3cold. This is
+> because when the root port is first transitioned into D3hot then the
+> ACPI power resource is turned off which puts the PCIe link to L2/L3 (and
+> the root port and the device are in D3cold). If the root port is kept in
+> D3hot it still means that the device below it is still effectively in
+> D3cold as no configuration messages pass through. Furthermore the
+> implementation note of PCIe 5.0 sec 5.3.1.4 says that the device should
+> expect to be transitioned into D3cold soon after its link transitions
+> into L2/L3 Ready state.
+> 
+> Taking the above into consideration, instead of forcing the device stay
+> in D0 we modify pci_target_state() to return D3hot in this special case
+> and make __pci_enable_wake() to enable PME too in this case.
+> 
+> Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
+> Reported-by: Koba Ko <koba.ko@canonical.com>
+> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I still think it would be ideal if we could expose both values to userspace
-rather than combine them somehow. Hmm. Anyway...
+Any chance to resend with a CC to linux-pm?
 
-I struggled to figure out exactly what's being counted from the
-documentation patch (please update that). Please can you explain exactly
-what appears in the HISI_PCIE_CNT and HISI_PCIE_EXT_CNT registers for the
-different modes of operation? Without that, the ratios you've chosen to
-report seem rather arbitrary.
+> ---
+> Hi all,
+> 
+> This is third version of the patch. I changed this according to what Rafael
+> suggested, so that the pci_target_state() returns D3hot for these devices
+> and pci_enable_wake() then enables PME from D3cold. This solves the problem
+> in my test system.
+> 
+> @Utkarsh, @Koba, I appreciate if you could try this one too.
+> 
+> I also dropped the Tested-by tag from Koba Ko and Acked-by from Kai-Heng
+> Feng as this is not the same patch anymore.
+> 
+> The previous version can be seen here:
+> 
+> https://lore.kernel.org/linux-pci/20210531133435.53259-1-mika.westerberg@linux.intel.com/
+> 
+>  drivers/pci/pci.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b717680377a9..6605f85a1d63 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2485,7 +2485,13 @@ static int __pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable
+>  	if (enable) {
+>  		int error;
+>  
+> -		if (pci_pme_capable(dev, state))
+> +		/*
+> +		 * Enable PME if device is capable from given state.
+> +		 * Special case is device that can only generate PME
+> +		 * from D3cold then we enable PME too.
+> +		 */
+> +		if (pci_pme_capable(dev, state) ||
+> +		    (state == PCI_D3hot && pci_pme_capable(dev, PCI_D3cold)))
+>  			pci_pme_active(dev, true);
+>  		else
+>  			ret = 1;
+> @@ -2595,6 +2601,16 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+>  		 * PME#.
+>  		 */
+>  		if (dev->pme_support) {
+> +			/*
+> +			 * Special case if device supports only PME from
+> +			 * D3cold but not from D3hot we still return
+> +			 * D3hot.
+> +			 */
+> +			if (target_state == PCI_D3hot &&
+> +				!(dev->pme_support & (1 << PCI_D3hot)) &&
+> +				(dev->pme_support & (1 << PCI_D3cold)))
+> +				return target_state;
+> +
+>  			while (target_state
+>  			      && !(dev->pme_support & (1 << target_state)))
+>  				target_state--;
+> 
 
-I also couldn't figure out how the latency event works. For example, I was
-assuming it would be a filter (a bit like the length), so you could say
-things like "I'm only interested in packets with a latency higher than x"
-but it doesn't look like it works that way.
 
-Thanks,
 
-Will
+
