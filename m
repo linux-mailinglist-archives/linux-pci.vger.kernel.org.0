@@ -2,88 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 284FC3A925A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 08:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 384113A9324
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 08:51:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231789AbhFPGaB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 02:30:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59948 "EHLO mail.kernel.org"
+        id S231570AbhFPGxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 02:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231678AbhFPG3z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Jun 2021 02:29:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5BE86141D;
-        Wed, 16 Jun 2021 06:27:48 +0000 (UTC)
+        id S231774AbhFPGxP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 02:53:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B8F62613B9;
+        Wed, 16 Jun 2021 06:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623824868;
-        bh=MzVBXfG1BKEroabGxLV1n0BhCSj3Ci7z9YuRqrErxvo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mD6Kp5QEvk7O022uVIpL6FiHtnhbg481oWC/kFvecjPy/cLCox5wlJL4ScQnoyX9u
-         oqEyxE10kS0uFxg4MFpXG+DgcR1l2/HtTO5z9ugInQsKbR5nxnjiBck2cJALW3PpwJ
-         08QmYZlLy0j3vqRf5tLrBxtroEJjms2nQjvtb2odYpEV7ALk42SDowmhzzEQS3FbjN
-         zNi3whiqXZ0R/yevK4Ww+aeklnfggeFXPKYHZZj+VfzlPHfinE2RaDElh0GyTWyMzU
-         ouO7vZaNHYl/gESsSF25L1JS9nyDbe75NTQnlOHHK7imfyoNnv/KU2RPpQn4Bpw32N
-         f06Q+j23VAx/w==
-Received: by mail.kernel.org with local (Exim 4.94.2)
-        (envelope-from <mchehab@kernel.org>)
-        id 1ltP1f-004kJi-0B; Wed, 16 Jun 2021 08:27:47 +0200
+        s=k20201202; t=1623826269;
+        bh=vFYUc/FPXe7v29rZc6G7piYAomJ6yWfSv9/yeEoUkxI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TS6XOoGL4KFZ2jcCPUwlMc0J6sXPc0KOW84TacDfvAAZzhzoYsfTc0o8UaAgCmrk0
+         L6OsejPKQEPNzyNv1UJXCQJ9Zxt5fZ9r0nva+0JrnYk1nXFrgHLWTJsOc8mWUd7dCW
+         U7JPDYD1ZoHLVk3hvO4hMrAn3j+IHfpWPgPidSOIG8QKGGstIQpHeRx1WixmbzYdIo
+         9hiPJWevjQLpKtVpMiet/U+H7teRA+CJVUn1IlSDOWt9Atdv27qH1Z5rVbQPg27PfZ
+         /kogiKhOC9XguMKoiBLCUQK3XwN+0wocHAEEVM/JOJIwOkiIQCWb49qy6U8BIYexYe
+         MghCqGcPgKO0A==
+Date:   Wed, 16 Jun 2021 08:51:04 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v2 22/29] docs: PCI: pci.rst: avoid using ReST :doc:`foo` markup
-Date:   Wed, 16 Jun 2021 08:27:37 +0200
-Message-Id: <8697cf945390f6b45fefb4c5fe22ed1c8070e32e.1623824363.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1623824363.git.mchehab+huawei@kernel.org>
-References: <cover.1623824363.git.mchehab+huawei@kernel.org>
+Subject: Re: [PATCH v3 12/16] docs: PCI: acpi-info.rst: replace some
+ characters
+Message-ID: <20210616085104.0477bd7b@coco.lan>
+In-Reply-To: <20210519214731.GA262176@bjorn-Precision-5520>
+References: <320bafda201827dd63208af55b528ae63bcf8217.1621159997.git.mchehab+huawei@kernel.org>
+        <20210519214731.GA262176@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The :doc:`foo` tag is auto-generated via automarkup.py.
-So, use the filename at the sources, instead of :doc:`foo`.
+Em Wed, 19 May 2021 16:47:31 -0500
+Bjorn Helgaas <helgaas@kernel.org> escreveu:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/PCI/pci.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On Sun, May 16, 2021 at 12:18:29PM +0200, Mauro Carvalho Chehab wrote:
+> > The conversion tools used during DocBook/LaTeX/html/Markdown->ReST
+> > conversion and some cut-and-pasted text contain some characters that
+> > aren't easily reachable on standard keyboards and/or could cause
+> > troubles when parsed by the documentation build system.
+> >=20
+> > Replace the occurences of the following characters:
+> >=20
+> > 	- U+00a0 ('=C2=A0'): NO-BREAK SPACE
+> > 	  as it can cause lines being truncated on PDF output
+> >=20
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org> =20
+>=20
+> Apparently you missed
+> https://lore.kernel.org/r/20210512212938.GA2516413@bjorn-Precision-5520
+> where I pointed out a couple issues (3 spaces after period in first
+> hunk, extra whitespace at end of "know about it." hunk) and added my
+> ack.
+>=20
+> The subject line would be more useful as:
+>=20
+>   docs: PCI: Replace non-breaking spaces to avoid PDF issues
+>=20
+> It's fine to defer those issues if you want,=20
 
-diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
-index 814b40f8360b..fa651e25d98c 100644
---- a/Documentation/PCI/pci.rst
-+++ b/Documentation/PCI/pci.rst
-@@ -265,7 +265,7 @@ Set the DMA mask size
- ---------------------
- .. note::
-    If anything below doesn't make sense, please refer to
--   :doc:`/core-api/dma-api`. This section is just a reminder that
-+   Documentation/core-api/dma-api.rst. This section is just a reminder that
-    drivers need to indicate DMA capabilities of the device and is not
-    an authoritative source for DMA interfaces.
- 
-@@ -291,7 +291,7 @@ Many 64-bit "PCI" devices (before PCI-X) and some PCI-X devices are
- Setup shared control data
- -------------------------
- Once the DMA masks are set, the driver can allocate "consistent" (a.k.a. shared)
--memory.  See :doc:`/core-api/dma-api` for a full description of
-+memory.  See Documentation/core-api/dma-api.rst for a full description of
- the DMA APIs. This section is just a reminder that it needs to be done
- before enabling DMA on the device.
- 
-@@ -421,7 +421,7 @@ owners if there is one.
- 
- Then clean up "consistent" buffers which contain the control data.
- 
--See :doc:`/core-api/dma-api` for details on unmapping interfaces.
-+See Documentation/core-api/dma-api.rst for details on unmapping interfaces.
- 
- 
- Unregister from other subsystems
--- 
-2.31.1
+Yeah, I opted to separate the changes into parts. This one is focused
+on problematic chars that could lead into output issues.=20
 
+Once those get merged, I'll submit a separate one with things like curly
+commas and dashes, as a couple of maintainers seem to have different
+opinions about that.
+
+> but this is still:
+>=20
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thanks!
+
+Regards,
+Mauro
