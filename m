@@ -2,193 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E112F3AA690
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 00:23:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13FFA3AA71E
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 00:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233389AbhFPWZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 18:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
+        id S234514AbhFPW7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 18:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231702AbhFPWZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Jun 2021 18:25:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8433E61159;
-        Wed, 16 Jun 2021 22:23:51 +0000 (UTC)
+        id S234490AbhFPW7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 18:59:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F392461164;
+        Wed, 16 Jun 2021 22:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623882231;
-        bh=5jpgqPY1x83qs5b9HXo/R6RwFGHHgxmM+YqIOckLd8A=;
+        s=k20201202; t=1623884227;
+        bh=pfYtK+pVcBGK1GdSTd83BxjxxxLTgZLZVB15o+wRNhQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JeEnLMTEZYCcZSFmUSzgEp7CDOeyaitOmjmyvqTor6jugDkiTMidtJ+z2xBfyf/Iu
-         wu2xCdEwMdFSfZuQWNdFA6CqjIhoO7Mtv+dTAnqFYlVxGSO8D4mVuVzQXHj3uoRRDs
-         EsBr0NcX25W6zW6jS8D1iaDCp5PG5/cjbd4dzPQYHDaWExqJEZeffw0sWVwIA/LGC0
-         zwTm7obq9+Mdj2DjdrKvDZ9Lf8ghIAoWegmuAaW9tfBrvr+OcETnFms7+2O43VrE4e
-         5C3hDlgCrXudwxD8b8mg/zWydsxWa1XWXPNx1XuBFRRvXP+nOkDCl6TV4YmNM9eITu
-         Arrqze1rzdo+w==
-Date:   Wed, 16 Jun 2021 17:23:50 -0500
+        b=b6M40KGD2fOVuLvCK5fTxp2CS7TUr0IfjLF0VOw8y5bN1pp61eRHHh0j3eOSCSU7C
+         6sQkwBKyl4YqK74uv/hEA/ob8LkUs9whB7OT3+nzEdgQg2yveCzdSBZOCDLq7XF3a6
+         QBfI1Adwu7lfwn/ctd24lhF86rnO3WmxggcaxDY4Wr8qxEFyrjPffudy49uqDk0uvv
+         hUB8e0SNEKCxJulJadP8zFs27zFSbfFIblHXiwrnzcnC4hzanJdwntVQg8NaR/JMwI
+         n7wr2u48WCU1uEwzMc0kqc0lAZZBol6PFg0EJDkTnnMUFeX3gMAFlJEEd9zIjOCLCM
+         hoxS+pdu1EpDQ==
+Date:   Wed, 16 Jun 2021 17:57:05 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dynamically map ECAM regions
-Message-ID: <20210616222350.GA3013952@bjorn-Precision-5520>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RFC 1/1] PCI/ACPI: Make acpi_pci_root_validate_resources()
+ reject IOMEM resources which start at address 0
+Message-ID: <20210616225705.GA3014869@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E1lhCAV-0002yb-50@rmk-PC.armlinux.org.uk>
+In-Reply-To: <8065c303-fc11-93f2-64a5-39048b7501fd@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 13, 2021 at 03:18:27PM +0100, Russell King wrote:
-> Attempting to boot 32-bit ARM kernels under QEMU's 3.x virt models
-> fails when we have more than 512M of RAM in the model as we run out
-> of vmalloc space for the PCI ECAM regions. This failure will be
-> silent when running libvirt, as the console in that situation is a
-> PCI device.
-> 
-> In this configuration, the kernel maps the whole ECAM, which QEMU
-> sets up for 256 buses, even when maybe only seven buses are in use.
-> Each bus uses 1M of ECAM space, and ioremap() adds an additional
-> guard page between allocations. The kernel vmap allocator will
-> align these regions to 512K, resulting in each mapping eating 1.5M
-> of vmalloc space. This means we need 384M of vmalloc space just to
-> map all of these, which is very wasteful of resources.
-> 
-> Fix this by only mapping the ECAM for buses we are going to be using.
-> In my setups, this is around seven buses in most guests, which is
-> 10.5M of vmalloc space - way smaller than the 384M that would
-> otherwise be required. This also means that the kernel can boot
-> without forcing extra RAM into highmem with the vmalloc= argument,
-> or decreasing the virtual RAM available to the guest.
-> 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+On Wed, Jun 16, 2021 at 08:43:12PM +0200, Hans de Goede wrote:
+> On 6/15/21 10:23 PM, Bjorn Helgaas wrote:
+> > On Tue, Jun 15, 2021 at 12:25:55PM +0200, Hans de Goede wrote:
 
-Applied with Arnd's reviewed-by to pci/enumeration for v5.14, thanks!
+> I've 2 dmesgs from runs both with and without pci=nocrs, the one
+> with a clean kernel commandline (no special options) yields:
+> 
+> [    0.312333] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+> [    0.312335] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+> [    0.312336] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+> [    0.312337] pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> [    0.312338] pci_bus 0000:00: root bus resource [bus 00-fe]
+> 
+> Where as the one with pci=nocrs on the kernel commandline gives:
+> 
+> [    0.271766] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+> [    0.271767] pci_bus 0000:00: root bus resource [mem 0x00000000-0x7fffffffff]
+> [    0.271768] pci_bus 0000:00: root bus resource [bus 00-fe]
+> 
+> Hmm, so assuming that you are right that pci=nocrs only influences
+> the root resources (and I believe you are), and given that the problem is
+> that we are getting these errors:
+> 
+> [    0.655335] pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
+> [    0.655337] pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
+> [    0.655339] pci 0000:00:15.1: BAR 0: no space for [mem size 0x00001000 64bit]
+> [    0.655340] pci 0000:00:15.1: BAR 0: failed to assign [mem size 0x00001000 64bit]
+> [    0.655342] pci 0000:00:1f.5: BAR 0: no space for [mem size 0x00001000]
+> 
+> Instead of getting this:
+> 
+> [    0.355716] pci 0000:00:15.0: BAR 0: assigned [mem 0x29c000000-0x29c000fff 64bit]
+> [    0.355783] pci 0000:00:15.1: BAR 0: assigned [mem 0x29c001000-0x29c001fff 64bit]
+> 
+> So now I believe that my initial theory for this is probably completely wrong; and
+> I wonder if the issue is that the _CRS returned root IOMEM window is big enough
+> to exactly hold the BIOS assigned mappings, but it does not have any free space
+> allowing the kernel to assign space for the 0000:00:15.0 and 0000:00:15.1
+> devices ?
+>
+> Assuming that that theory is right, how could we work around this problem?
+> Or at least do a quick debug patch to confirm that indeed the window is "full" ?
 
-> ---
->  drivers/pci/ecam.c       | 54 ++++++++++++++++++++++++++++++++++------
->  include/linux/pci-ecam.h |  1 +
->  2 files changed, 47 insertions(+), 8 deletions(-)
+I'd be pretty surprised if the host bridge window actually full --
+[mem 0x65400000-0xbfffffff] is a pretty big range and these devices
+only need 4K each.
+
+But maybe we aren't smart enough when trying to allocate space.
+Places like __pci_bus_size_bridges() and __pci_assign_resource() are
+full of assumptions about what PCI BARs can go where, depending on
+64bit-ness, prefetchability, etc.
+
+Maybe instrumenting those allocation paths would give some insight.
+Possibly we should go ahead and merge some permanent pci_dbg() stuff
+there too.
+
+I do note that the working "pci=nocrs" case puts these devices above
+4GB.  _CRS only told you about host bridge windows *below* 4GB, and
+Linux will never assign space that's outside the windows (except in
+the "pci=nocrs" case, of course).
+
+> >> This happens specifically for the designware I2C PCI devices on these
+> >> laptops, causing I2C-HID attached touchpads/touchscreens to not work.
+> >>
+> >> Booting with nocrs on these devices results in the kernel itself
+> >> assigning memory to these devices, fixing things:
+> > 
+> > "pci=nocrs" to help people repro this or try the same workaround
+> > elsewhere.
 > 
-> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-> index d2a1920bb055..1c40d2506aef 100644
-> --- a/drivers/pci/ecam.c
-> +++ b/drivers/pci/ecam.c
-> @@ -32,7 +32,7 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
->  	struct pci_config_window *cfg;
->  	unsigned int bus_range, bus_range_max, bsz;
->  	struct resource *conflict;
-> -	int i, err;
-> +	int err;
->  
->  	if (busr->start > busr->end)
->  		return ERR_PTR(-EINVAL);
-> @@ -50,6 +50,7 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
->  	cfg->busr.start = busr->start;
->  	cfg->busr.end = busr->end;
->  	cfg->busr.flags = IORESOURCE_BUS;
-> +	cfg->bus_shift = bus_shift;
->  	bus_range = resource_size(&cfg->busr);
->  	bus_range_max = resource_size(cfgres) >> bus_shift;
->  	if (bus_range > bus_range_max) {
-> @@ -77,13 +78,6 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
->  		cfg->winp = kcalloc(bus_range, sizeof(*cfg->winp), GFP_KERNEL);
->  		if (!cfg->winp)
->  			goto err_exit_malloc;
-> -		for (i = 0; i < bus_range; i++) {
-> -			cfg->winp[i] =
-> -				pci_remap_cfgspace(cfgres->start + i * bsz,
-> -						   bsz);
-> -			if (!cfg->winp[i])
-> -				goto err_exit_iomap;
-> -		}
->  	} else {
->  		cfg->win = pci_remap_cfgspace(cfgres->start, bus_range * bsz);
->  		if (!cfg->win)
-> @@ -129,6 +123,44 @@ void pci_ecam_free(struct pci_config_window *cfg)
->  }
->  EXPORT_SYMBOL_GPL(pci_ecam_free);
->  
-> +static int pci_ecam_add_bus(struct pci_bus *bus)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	unsigned int bsz = 1 << cfg->bus_shift;
-> +	unsigned int busn = bus->number;
-> +	phys_addr_t start;
-> +
-> +	if (!per_bus_mapping)
-> +		return 0;
-> +
-> +	if (busn < cfg->busr.start || busn > cfg->busr.end)
-> +		return -EINVAL;
-> +
-> +	busn -= cfg->busr.start;
-> +	start = cfg->res.start + busn * bsz;
-> +
-> +	cfg->winp[busn] = pci_remap_cfgspace(start, bsz);
-> +	if (!cfg->winp[busn])
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pci_ecam_remove_bus(struct pci_bus *bus)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	unsigned int busn = bus->number;
-> +
-> +	if (!per_bus_mapping || busn < cfg->busr.start || busn > cfg->busr.end)
-> +		return;
-> +
-> +	busn -= cfg->busr.start;
-> +	if (cfg->winp[busn]) {
-> +		iounmap(cfg->winp[busn]);
-> +		cfg->winp[busn] = NULL;
-> +	}
-> +}
-> +
->  /*
->   * Function to implement the pci_ops ->map_bus method
->   */
-> @@ -167,6 +199,8 @@ EXPORT_SYMBOL_GPL(pci_ecam_map_bus);
->  /* ECAM ops */
->  const struct pci_ecam_ops pci_generic_ecam_ops = {
->  	.pci_ops	= {
-> +		.add_bus	= pci_ecam_add_bus,
-> +		.remove_bus	= pci_ecam_remove_bus,
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read,
->  		.write		= pci_generic_config_write,
-> @@ -178,6 +212,8 @@ EXPORT_SYMBOL_GPL(pci_generic_ecam_ops);
->  /* ECAM ops for 32-bit access only (non-compliant) */
->  const struct pci_ecam_ops pci_32b_ops = {
->  	.pci_ops	= {
-> +		.add_bus	= pci_ecam_add_bus,
-> +		.remove_bus	= pci_ecam_remove_bus,
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read32,
->  		.write		= pci_generic_config_write32,
-> @@ -187,6 +223,8 @@ const struct pci_ecam_ops pci_32b_ops = {
->  /* ECAM ops for 32-bit read only (non-compliant) */
->  const struct pci_ecam_ops pci_32b_read_ops = {
->  	.pci_ops	= {
-> +		.add_bus	= pci_ecam_add_bus,
-> +		.remove_bus	= pci_ecam_remove_bus,
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read32,
->  		.write		= pci_generic_config_write,
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 65d3d83015c3..944da75ff25c 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -55,6 +55,7 @@ struct pci_ecam_ops {
->  struct pci_config_window {
->  	struct resource			res;
->  	struct resource			busr;
-> +	unsigned int			bus_shift;
->  	void				*priv;
->  	const struct pci_ecam_ops	*ops;
->  	union {
-> -- 
-> 2.20.1
-> 
+> Not sure what you are trying to say here.
+
+Sorry, I just meant that instead of "Booting with nocrs ...", I'd like
+the commit log to say "Booting with 'pci=nocrs' ..." so that
+non-expert users reading it will have a bit of a head start on how to
+try this themselves.
+
+Bjorn
