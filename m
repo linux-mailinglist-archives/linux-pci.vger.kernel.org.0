@@ -2,316 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8903A8E69
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 03:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78AB93A8E9A
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jun 2021 03:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231889AbhFPBeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Jun 2021 21:34:05 -0400
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:49800 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231865AbhFPBeF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 21:34:05 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 15G1Vd67014052; Wed, 16 Jun 2021 10:31:39 +0900
-X-Iguazu-Qid: 34tMM6Vud0gzY6c7uf
-X-Iguazu-QSIG: v=2; s=0; t=1623807099; q=34tMM6Vud0gzY6c7uf; m=Toya5T6GspcyyTL72069Q+UpHdXqc2PijYZgUEE/GU8=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-        by relay.securemx.jp (mx-mr1513) id 15G1Vckk012784
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 16 Jun 2021 10:31:38 +0900
-Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 0D4341000DD;
-        Wed, 16 Jun 2021 10:31:38 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 15G1VbYY016342;
-        Wed, 16 Jun 2021 10:31:37 +0900
-Date:   Wed, 16 Jun 2021 10:31:36 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 2/3] PCI: Visconti: Add Toshiba Visconti PCIe host
- controller driver
-X-TSB-HOP: ON
-Message-ID: <20210616013136.tsxf3tpekczivztb@toshiba.co.jp>
-References: <20210524063004.132043-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210524185839.GA1102116@bjorn-Precision-5520>
+        id S231270AbhFPB4m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Jun 2021 21:56:42 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:6386 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230454AbhFPB4l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Jun 2021 21:56:41 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4G4SnR5K1Vz6y5r;
+        Wed, 16 Jun 2021 09:50:35 +0800 (CST)
+Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Wed, 16 Jun 2021 09:54:30 +0800
+Received: from [127.0.0.1] (10.69.38.203) by dggema757-chm.china.huawei.com
+ (10.1.198.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 16
+ Jun 2021 09:54:23 +0800
+Subject: Re: [PATCH v6 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
+ PMU
+To:     Will Deacon <will@kernel.org>, Linuxarm <linuxarm@huawei.com>
+CC:     <mark.rutland@arm.com>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>
+References: <1622467951-32114-1-git-send-email-liuqi115@huawei.com>
+ <1622467951-32114-3-git-send-email-liuqi115@huawei.com>
+ <20210611162347.GA16284@willie-the-truck>
+ <a299d053-b45f-e941-7a2e-c853079b8cdd@huawei.com>
+ <20210615093519.GB19878@willie-the-truck>
+From:   "liuqi (BA)" <liuqi115@huawei.com>
+Message-ID: <8e15e8d6-cfe8-0926-0ca1-b162302e52a5@huawei.com>
+Date:   Wed, 16 Jun 2021 09:54:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210524185839.GA1102116@bjorn-Precision-5520>
+In-Reply-To: <20210615093519.GB19878@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.69.38.203]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggema757-chm.china.huawei.com (10.1.198.199)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, 
 
-Thanks for your reivew.
-
-
-On Mon, May 24, 2021 at 01:58:39PM -0500, Bjorn Helgaas wrote:
-> [+cc Kishon for cpu_addr_fixup() question]
+Hi Will,
+On 2021/6/15 17:35, Will Deacon wrote:
+> On Tue, Jun 15, 2021 at 04:57:09PM +0800, liuqi (BA) wrote:
+>> On 2021/6/12 0:23, Will Deacon wrote:
+>>> On Mon, May 31, 2021 at 09:32:31PM +0800, Qi Liu wrote:
+>>>> PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported
+>>>> to sample bandwidth, latency, buffer occupation etc.
+>>>>
+>>>> Each PMU RCiEP device monitors multiple Root Ports, and each RCiEP is
+>>>> registered as a PMU in /sys/bus/event_source/devices, so users can
+>>>> select target PMU, and use filter to do further sets.
+>>>>
+>>>> Filtering options contains:
+>>>> event        - select the event.
+>>>> subevent     - select the subevent.
+>>>> port         - select target Root Ports. Information of Root Ports
+>>>>                  are shown under sysfs.
+>>>> bdf          - select requester_id of target EP device.
+>>>> trig_len     - set trigger condition for starting event statistics.
+>>>> trigger_mode - set trigger mode. 0 means starting to statistic when
+>>>>                  bigger than trigger condition, and 1 means smaller.
+>>>> thr_len      - set threshold for statistics.
+>>>> thr_mode     - set threshold mode. 0 means count when bigger than
+>>>>                  threshold, and 1 means smaller.
+>>>>
+>>>> Reviewed-by: John Garry <john.garry@huawei.com>
+>>>> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+>>>> ---
+>>>>    MAINTAINERS                                |    6 +
+>>>>    drivers/perf/Kconfig                       |    2 +
+>>>>    drivers/perf/Makefile                      |    1 +
+>>>>    drivers/perf/pci/Kconfig                   |   16 +
+>>>>    drivers/perf/pci/Makefile                  |    2 +
+>>>>    drivers/perf/pci/hisilicon/Makefile        |    3 +
+>>>>    drivers/perf/pci/hisilicon/hisi_pcie_pmu.c | 1019 ++++++++++++++++++++++++++++
+>>>
+>>> Can we keep this under drivers/perf/hisilicon/ please? I don't see the
+>>> need to create a 'pci' directory here.
+>>>
+>> So how about drivers/perf/hisilicon/pci? as hisi_pcie_pmu.c do not use
+>> hisi_uncore_pmu framework.
 > 
-> Please make the subject "PCI: visconti: Add ..." since the driver
-> names are usually lower-case.  When referring to the hardware itself,
-> use "Visconti", of course.
-
-
-OK, I will do so from next time.
-
+> That's up to you. As long as it's _somewhere_ under drivers/perf/hisilicon/,
+> then I'm not too fussed.
 > 
-> On Mon, May 24, 2021 at 03:30:03PM +0900, Nobuhiro Iwamatsu wrote:
-> > Add support to PCIe RC controller on Toshiba Visconti ARM SoCs. PCIe
-> > controller is based of Synopsys DesignWare PCIe core.
-> > 
-> > This patch does not yet use the clock framework to control the clock.
-> > This will be replaced in the future.
-> > 
-> > v2 -> v3:
-> >   - Update subject.
-> >   - Wrap description in 75 columns.
-> >   - Change config name to PCIE_VISCONTI_HOST.
-> >   - Update Kconfig text.
-> >   - Drop blank lines.
-> >   - Adjusted to 80 columns.
-> >   - Drop inline from functions for register access.
-> >   - Changed function name from visconti_pcie_check_link_status to
-> >     visconti_pcie_link_up.
-> >   - Update to using dw_pcie_host_init().
-> >   - Reorder these in the order of use in visconti_pcie_establish_link.
-> >   - Rewrite visconti_pcie_host_init() without dw_pcie_setup_rc().
-> >   - Change function name from  visconti_device_turnon() to
-> >     visconti_pcie_power_on().
-> >   - Unify formats such as dev_err().
-> >   - Drop error label in visconti_add_pcie_port().
-> > 
-> > v1 -> v2:
-> >   - Fix typo in commit message.
-> >   - Drop "depends on OF && HAS_IOMEM" from Kconfig.
-> >   - Stop using the pointer of struct dw_pcie.
-> >   - Use _relaxed variant.
-> >   - Drop dw_pcie_wait_for_link.
-> >   - Drop dbi resource processing.
-> >   - Drop MSI IRQ initialization processing.
+ok, got it, will move the driver to perf/hisilicon in next version.
+>>>> +static void hisi_pcie_parse_reg_value(struct hisi_pcie_pmu *pcie_pmu,
+>>>> +				      u32 reg_off, u16 *arg0, u16 *arg1)
+>>>> +{
+>>>> +	u32 val = readl(pcie_pmu->base + reg_off);
+>>>> +
+>>>> +	*arg0 = val & 0xffff;
+>>>> +	*arg1 = (val & 0xffff0000) >> 16;
+>>>> +}
+>>>
+>>> Define a new type for the pair of values and return that directly?
+>>>
+>> Sorry, I'm not sure about how to fix this, do you mean add a union like
+>> this?
+>> union reg_val {
+>> 	struct {
+>> 		u16 arg0;
+>> 		u16 arg1;
+>> 	}
+>> 	u32 val;
+>> }
 > 
-> Thanks for the changelog.  Please move it after the "---" line for
-> future versions.  That way it won't appear in the commit log when this
-> is merged.  The notes about v1->v2, v2->v3, etc are useful during
-> review, but not after this is merged.
-
-
-Simliar to the above your comment, I will do so from next time.
-
+> I was just thinking along the lines of:
 > 
-> > Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig         |   9 +
-> >  drivers/pci/controller/dwc/Makefile        |   1 +
-> >  drivers/pci/controller/dwc/pcie-visconti.c | 369 +++++++++++++++++++++
-> >  3 files changed, 379 insertions(+)
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-visconti.c
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index 423d35872ce4..7c3dcb86fcad 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -286,6 +286,15 @@ config PCIE_TEGRA194_EP
-> >  	  in order to enable device-specific features PCIE_TEGRA194_EP must be
-> >  	  selected. This uses the DesignWare core.
-> >  
-> > +config PCIE_VISCONTI_HOST
-> > +	bool "Toshiba Visconti PCIe controllers"
-> > +	depends on ARCH_VISCONTI || COMPILE_TEST
-> > +	depends on PCI_MSI_IRQ_DOMAIN
-> > +	select PCIE_DW_HOST
-> > +	help
-> > +	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
-> > +	  This driver supports TMPV7708 SoC.
-> > +
-
-<snip>
-
-> > diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-> > new file mode 100644
-> > index 000000000000..b764334f32e6
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-visconti.c
-> > @@ -0,0 +1,369 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * DWC PCIe RC driver for Toshiba Visconti ARM SoC
-> > + *
-> > + * Copyright (C) 2021 Toshiba Electronic Device & Storage Corporation
-> > + * Copyright (C) 2021 TOSHIBA CORPORATION
-> > + *
-> > + * Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > + */
-
-<snip>
-
-> > +static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 pci_addr)
-> > +{
-> > +	return pci_addr - PCIE_BUS_OFFSET;
+> struct hisi_pcie_reg_pair {
+> 	u16 lo;
+> 	u16 hi;
+> };
 > 
-> This is called from __dw_pcie_prog_outbound_atu() as:
+> static struct hisi_pcie_reg_pair
+> hisi_pcie_parse_reg_value(struct hisi_pcie_pmu *pcie_pmum u32 reg_off)
+> {
+> 	u32 val = readl_relaxed(pcie_pmu->base + reg_off);
+> 	struct hisi_pcie_reg_pair regs = {
+> 		.lo = val,
+> 		.hi = val >> 16,
+> 	};
 > 
->   cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
+> 	return regs;
+> }
 > 
-> so I think the parameter here should be *cpu_addr*, not pci_addr.
+> Does that work?
+> 
+yes, will fix this, thanks.
+>>>> +/*
+>>>> + * The bandwidth, latency, bus utilization and buffer occupancy features are
+>>>> + * calculated from data in HISI_PCIE_CNT and extended data in HISI_PCIE_EXT_CNT.
+>>>> + * Other features are obtained only by HISI_PCIE_CNT.
+>>>> + * So data and data_ext are processed in this function to get performanace
+>>>> + * value like, bandwidth, latency, etc.
+>>>> + */
+>>>> +static u64 hisi_pcie_pmu_get_performance(struct perf_event *event, u64 data,
+>>>> +					 u64 data_ext)
+>>>> +{
+>>>> +#define CONVERT_DW_TO_BYTE(x)	(sizeof(u32) * (x))
+>>>
+>>> I don't know what a "DW" is, but this macro adds nothing...
+>>
+>> DW means double words, and 1DW = 4Bytes, value in hardware counter means DW
+>> so I wanna change it into Byte.
+>> So how about using 4*data here and adding code comment to explain it.
+> 
+> Just remove the macro and replace it's single user with sizeof(u32) * x
+> 
+ok, thanks.
+>>>> +	/* Process data to set unit of latency as "us". */
+>>>> +	if (is_latency_event(idx))
+>>>> +		return div64_u64(data * us_per_cycle, data_ext);
+>>>> +
+>>>> +	if (is_bus_util_event(idx))
+>>>> +		return div64_u64(data * us_per_cycle, data_ext);
+>>>> +
+>>>> +	if (is_buf_util_event(idx))
+>>>> +		return div64_u64(data, data_ext * us_per_cycle);
+>>>
+>>> Why do we need to do all this division in the kernel? Can't we just expose
+>>> the underlying values and let userspace figure out what it wants to do with
+>>> the numbers?
+>>>
+>> Our PMU hardware support 8 sets of counters to count bandwidth, latency and
+>> utilization events.
+>>
+>> For example, when users set latency event, common counter will count delay
+>> cycles, and extern counter count number of PCIe packets automaticly. And we
+>> do not have a event number for counting number of PCIe packets.
+>>
+>> So this division cannot move to userspace tool.
+> 
+> Why can't you expose the packet counter as an extra event to userspace?
+> 
+Maybe I didn’t express it clearly.
 
-I see, I rename the variable to cpu_addr.
+As there is no hardware event number for PCIe packets counting, extern 
+counter count packets *automaticly* when latency events is selected by 
+users.
 
-> 
-> dra7xx and artpec6 also call it "pci_addr", which is at best
-> confusing.
-> 
-> I'm also confused about exactly what .cpu_addr_fixup() does.  Is it
-> applying an offset that cannot be deduced from the DT description?  If
-> so, *should* this offset be described in DT?
->
-
-This depends on Visconti5's PCIe hardware implementation.
-It depends on the specification that the CPU bus connected to PCIe outputs
-with 0x40000000 added as an offset. This is fixed.
-I will add this description as comment.
-
-> > +}
-> > +
-> > +static const struct dw_pcie_ops dw_pcie_ops = {
-> > +	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
-> > +	.link_up = visconti_pcie_link_up,
-> > +	.start_link = visconti_pcie_start_link,
-> > +	.stop_link = visconti_pcie_stop_link,
-> > +};
-> > +
-> > +static int visconti_pcie_power_on(struct visconti_pcie *pcie)
-> > +{
-> > +	void __iomem *addr;
-> > +	int err;
-> > +	u32 val;
-> > +
-
-<snip>
-
-> > +static int
-> > +visconti_add_pcie_port(struct visconti_pcie *pcie, struct platform_device *pdev)
-> > +{
-> > +	struct dw_pcie *pci = &pcie->pci;
-> > +	struct pcie_port *pp = &pci->pp;
-> > +	struct device *dev = &pdev->dev;
-> > +
-> > +	pp->irq = platform_get_irq_byname(pdev, "intr");
-> > +	if (pp->irq < 0) {
-> > +		dev_err(dev, "Interrupt intr is missing");
-> > +		return pp->irq;
-> > +	}
-> 
-> Looks like most drivers use "pp->irq = platform_get_irq(pdev, 0);"
-> Is there a reason for this to be different?
-
-This driver has two interrupts, msi and usual interrupt.
-MSI is handled by the dwc framework, but the rest is handled by the driver.
-When When I get the IRQ using index, it may not be processed correctly
-depending on how to write DT, so I use platform_get_irq_byname() to check by name.
-
-> 
-> > +	pp->ops = &visconti_pcie_host_ops;
-> > +
-> > +	pci->link_gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> > +	if (pci->link_gen < 0 || pci->link_gen > 3) {
-> > +		pci->link_gen = 3;
-> > +		dev_dbg(dev, "Applied default link speed\n");
-> > +	}
-> > +
-> > +	dev_dbg(dev, "Link speed Gen %d", pci->link_gen);
-> > +
-> > +	return dw_pcie_host_init(pp);
-> > +}
-> > +
-> > +static int visconti_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct visconti_pcie *pcie;
-> > +	struct pcie_port *pp;
-> > +	struct dw_pcie *pci;
-> > +	int ret;
-> > +
-> > +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
-> > +	if (ret)
-> > +		return ret;
-> 
-> Somewhat unusual in PCIe controller drivers.  Is there something
-> unusual about the Visconti hardware?
-> 
-> Also looks a little suspicious since the sequence is:
-> 
->   visconti_pcie_probe
->     dma_set_mask_and_coherent(DMA_BIT_MASK(36))
->     visconti_add_pcie_port
->       dw_pcie_host_init
->         if (pci_msi_enabled())
->           dma_set_mask(DMA_BIT_MASK(32))
-> 
-> so dw_pcie_host_init() will override part of what we're setting here.
+This means users cannot set "config=0xXX" to start packets counting 
+event. So we can only get the value of counter and extern counter in 
+driver and do the division, then pass the result to userspace.
+> Will
+> .
 > 
 
-Indeed, this process is unnecessary. I will drop.
-
-> > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > +	if (!pcie)
-> > +		return -ENOMEM;
-> > +
-> > +	pci = &pcie->pci;
-> > +	pp = &pci->pp;
-> > +	pp->num_vectors = MAX_MSI_IRQS;
-> 
-> Is this necessary?  I can't tell that this driver even implements MSI
-> support.  It looks like tegra194 is the only other driver that sets
-> num_vectors itself.
-
-This device uses MSI. And I double-checked about interrupts. This device
-does not need to do this, as it has a maximum of 32 interrupt vectors.
-I will delete it. Thank you for pointing out.
-
-> 
-> > +	pci->dev = dev;
-> > +	pci->ops = &dw_pcie_ops;
-> > +
-> > +	ret = visconti_get_resources(pdev, pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	platform_set_drvdata(pdev, pcie);
-> > +
-> > +	return visconti_add_pcie_port(pcie, pdev);
-> > +}
-> > +
-> > +static const struct of_device_id visconti_pcie_match[] = {
-> > +	{ .compatible = "toshiba,visconti-pcie" },
-> > +	{},
-> > +};
-> > +
-> > +static struct platform_driver visconti_pcie_driver = {
-> > +	.probe = visconti_pcie_probe,
-> > +	.driver = {
-> > +		.name = "visconti-pcie",
-> > +		.of_match_table = visconti_pcie_match,
-> > +		.suppress_bind_attrs = true,
-> > +	},
-> > +};
-> > +
-> > +builtin_platform_driver(visconti_pcie_driver);
-> > -- 
-> > 2.31.1
-> > 
->
-
-Best regards,
-  Nobuhiro
