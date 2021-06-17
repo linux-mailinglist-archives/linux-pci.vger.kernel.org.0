@@ -2,142 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F268C3AA76A
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 01:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE1A3AA7E1
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 02:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234525AbhFPXZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Jun 2021 19:25:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50774 "EHLO mail.kernel.org"
+        id S234851AbhFQALk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Jun 2021 20:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234508AbhFPXZt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Jun 2021 19:25:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A593B61246;
-        Wed, 16 Jun 2021 23:23:42 +0000 (UTC)
+        id S230481AbhFQALj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Jun 2021 20:11:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 70EFE61351;
+        Thu, 17 Jun 2021 00:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623885823;
-        bh=mAJc1lLyPEqCBwDhdTiW77FLqHQK+4wM8w2PGAr6ZAA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=A+J+Y3/Rchyv6uk5CuuGgfH4vpSLR2bCz0cdvUxEXcj6wfrNf+VUt3LVIOlYckNWI
-         NJOgeDCqsBrKa8z8HJGBPtSO05eM5CMNsSLlcRYkgeRTl4pJlx2pwttg3fDa7KKHW4
-         9Akwuds02Jw9SyRVX0yMXcBHRwbF4PWOOG0x+0hiI2HwUgUZu75mW1BiVsrkqDYXPn
-         IrwoJTOkNwIOuflcp1Ee6EAn6/KMZ2BBegWCG3lBotz/1BVm6rztbou8H0HsPM3Z8p
-         EB/rmC7xRq8+92Usrzjmwh3gSZstc9PHZ/ZEt7ljqqUBjslCE/bIDFjlJgGxgve/fW
-         CAE4kCEpjc3nQ==
-Date:   Wed, 16 Jun 2021 18:23:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mikel Rychliski <mikel@mikelr.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2] PCI: Add quirk for 64-bit DMA on RS690 chipset
-Message-ID: <20210616232341.GA3019418@bjorn-Precision-5520>
+        s=k20201202; t=1623888572;
+        bh=mN2okVVdTICmc/8v91DABSXp7kK2mc41VelpLLMzraM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=ZYuvhN96769HVBf9HwXfEMrx5h2joXFESxJj/lRenrF7yXWLZjtrg1PWIka+vT/Q0
+         oFtXyOpOZ9yR7QPt6WZ9qiVwYGYEJ72zE5pEW7HiR62r0bK1cPffUlPeluSwwsGV++
+         8riMe4sA8jh8H05UnuJF58KJLPG9dNHhkmEpW63Symhvau9C6X5CTpmeRZXg03FBNA
+         YdmM71is91QiA8p/farR5qTSk/+kZjwaUjrHEt7/cAUyCA79A0OF17vUa8D0c+gd+H
+         nwIEeujLTdx4sfeAu0ptJEutsq4BmObXoP4A9/HlakW6ogsicBITdzMemlH7LIUWJw
+         GZfH7kl1LZ6XQ==
+Date:   Wed, 16 Jun 2021 17:09:29 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Claire Chang <tientzu@chromium.org>
+cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com
+Subject: Re: [PATCH v12 11/12] dt-bindings: of: Add restricted DMA pool
+In-Reply-To: <20210616062157.953777-12-tientzu@chromium.org>
+Message-ID: <alpine.DEB.2.21.2106161651290.24906@sstabellini-ThinkPad-T480s>
+References: <20210616062157.953777-1-tientzu@chromium.org> <20210616062157.953777-12-tientzu@chromium.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210611214823.4898-1-mikel@mikelr.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 05:48:23PM -0400, Mikel Rychliski wrote:
-> Although the AMD RS690 chipset has 64-bit DMA support, BIOS implementations
-> sometimes fail to configure the memory limit registers correctly.
+On Wed, 16 Jun 2021, Claire Chang wrote:
+> Introduce the new compatible string, restricted-dma-pool, for restricted
+> DMA. One can specify the address and length of the restricted DMA memory
+> region by restricted-dma-pool in the reserved-memory node.
 > 
-> The Acer F690GVM mainboard uses this chipset and a Marvell 88E8056 NIC. The
-> sky2 driver programs the NIC to use 64-bit DMA, which will not work:
-> 
-> 	sky2 0000:02:00.0: error interrupt status=0x8
-> 	sky2 0000:02:00.0 eth0: tx timeout
-> 	sky2 0000:02:00.0 eth0: transmit ring 0 .. 22 report=0 done=0
-> 
-> Other drivers required by this mainboard either don't support 64-bit DMA,
-> or have it disabled using driver specific quirks. For example, the ahci
-> driver has quirks to enable or disable 64-bit DMA depending on the BIOS
-> version (see ahci_sb600_enable_64bit() in ahci.c). This ahci quirk matches
-> against the SB600 SATA controller, but the real issue is almost certainly
-> with the RS690 PCI host that it was commonly attached to.
-> 
-> To avoid this issue in all drivers with 64-bit DMA support, fix the
-> configuration of the PCI host. If the kernel is aware of physical memory
-> above 4GB, but the BIOS never configured the PCI host with this
-> information, update the registers with our values.
-> 
-> Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
-
-Applied to for-linus for v5.13, thanks!
-
-I replaced PCI_DEVICE_ID_ATI_RS690 with 0x7910 because we don't
-usually add those #defines when they're only used in one place.
-
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
 > ---
->  arch/x86/pci/fixup.c    | 45 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci_ids.h |  1 +
->  2 files changed, 46 insertions(+)
+>  .../reserved-memory/reserved-memory.txt       | 36 +++++++++++++++++--
+>  1 file changed, 33 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 02dc64625e64..4cc479f332ba 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -779,4 +779,49 @@ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1571, pci_amd_enable_64bit_bar);
->  DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x15b1, pci_amd_enable_64bit_bar);
->  DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1601, pci_amd_enable_64bit_bar);
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> index e8d3096d922c..46804f24df05 100644
+> --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> @@ -51,6 +51,23 @@ compatible (optional) - standard definition
+>            used as a shared pool of DMA buffers for a set of devices. It can
+>            be used by an operating system to instantiate the necessary pool
+>            management subsystem if necessary.
+> +        - restricted-dma-pool: This indicates a region of memory meant to be
+> +          used as a pool of restricted DMA buffers for a set of devices. The
+> +          memory region would be the only region accessible to those devices.
+> +          When using this, the no-map and reusable properties must not be set,
+> +          so the operating system can create a virtual mapping that will be used
+> +          for synchronization. The main purpose for restricted DMA is to
+> +          mitigate the lack of DMA access control on systems without an IOMMU,
+> +          which could result in the DMA accessing the system memory at
+> +          unexpected times and/or unexpected addresses, possibly leading to data
+> +          leakage or corruption. The feature on its own provides a basic level
+> +          of protection against the DMA overwriting buffer contents at
+> +          unexpected times. However, to protect against general data leakage and
+> +          system memory corruption, the system needs to provide way to lock down
+> +          the memory access, e.g., MPU. Note that since coherent allocation
+> +          needs remapping, one must set up another device coherent pool by
+> +          shared-dma-pool and use dma_alloc_from_dev_coherent instead for atomic
+> +          coherent allocation.
+>          - vendor specific string in the form <vendor>,[<device>-]<usage>
+>  no-map (optional) - empty property
+>      - Indicates the operating system must not create a virtual mapping
+> @@ -85,10 +102,11 @@ memory-region-names (optional) - a list of names, one for each corresponding
 >  
-> +#define RS690_LOWER_TOP_OF_DRAM2	0x30
-> +#define RS690_LOWER_TOP_OF_DRAM2_VALID	0x1
-> +#define RS690_UPPER_TOP_OF_DRAM2	0x31
-> +#define RS690_HTIU_NB_INDEX		0xA8
-> +#define RS690_HTIU_NB_INDEX_WR_ENABLE	0x100
-> +#define RS690_HTIU_NB_DATA		0xAC
+>  Example
+>  -------
+> -This example defines 3 contiguous regions are defined for Linux kernel:
+> +This example defines 4 contiguous regions for Linux kernel:
+>  one default of all device drivers (named linux,cma@72000000 and 64MiB in size),
+> -one dedicated to the framebuffer device (named framebuffer@78000000, 8MiB), and
+> -one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+> +one dedicated to the framebuffer device (named framebuffer@78000000, 8MiB),
+> +one for multimedia processing (named multimedia-memory@77000000, 64MiB), and
+> +one for restricted dma pool (named restricted_dma_reserved@0x50000000, 64MiB).
+>  
+>  / {
+>  	#address-cells = <1>;
+> @@ -120,6 +138,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+>  			compatible = "acme,multimedia-memory";
+>  			reg = <0x77000000 0x4000000>;
+>  		};
 > +
-> +/*
-> + * Some BIOS implementations support RAM above 4GB, but do not configure the
-> + * PCI host to respond to bus master accesses for these addresses. These
-> + * implementations set the TOP_OF_DRAM_SLOT1 register correctly, so PCI DMA
-> + * works as expected for addresses below 4GB.
-> + *
-> + * Reference: "AMD RS690 ASIC Family Register Reference Guide" (pg. 2-57)
-> + * https://www.amd.com/system/files/TechDocs/43372_rs690_rrg_3.00o.pdf
-> + */
-> +static void rs690_fix_64bit_dma(struct pci_dev *pdev)
-> +{
-> +	u32 val = 0;
-> +	phys_addr_t top_of_dram = __pa(high_memory - 1) + 1;
+> +		restricted_dma_reserved: restricted_dma_reserved {
+> +			compatible = "restricted-dma-pool";
+> +			reg = <0x50000000 0x4000000>;
+> +		};
+>  	};
+>  
+>  	/* ... */
+> @@ -138,4 +161,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+>  		memory-region = <&multimedia_reserved>;
+>  		/* ... */
+>  	};
 > +
-> +	if (top_of_dram <= (1ULL << 32))
-> +		return;
-> +
-> +	pci_write_config_dword(pdev, RS690_HTIU_NB_INDEX,
-> +				RS690_LOWER_TOP_OF_DRAM2);
-> +	pci_read_config_dword(pdev, RS690_HTIU_NB_DATA, &val);
-> +
-> +	if (val)
-> +		return;
-> +
-> +	pci_info(pdev, "Adjusting top of DRAM to %pa for 64-bit DMA support\n", &top_of_dram);
-> +
-> +	pci_write_config_dword(pdev, RS690_HTIU_NB_INDEX,
-> +		RS690_UPPER_TOP_OF_DRAM2 | RS690_HTIU_NB_INDEX_WR_ENABLE);
-> +	pci_write_config_dword(pdev, RS690_HTIU_NB_DATA, top_of_dram >> 32);
-> +
-> +	pci_write_config_dword(pdev, RS690_HTIU_NB_INDEX,
-> +		RS690_LOWER_TOP_OF_DRAM2 | RS690_HTIU_NB_INDEX_WR_ENABLE);
-> +	pci_write_config_dword(pdev, RS690_HTIU_NB_DATA,
-> +		top_of_dram | RS690_LOWER_TOP_OF_DRAM2_VALID);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_RS690,
-> +			rs690_fix_64bit_dma);
-> +
->  #endif
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 4c3fa5293d76..0a7fe2ed520b 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -381,6 +381,7 @@
->  #define PCI_DEVICE_ID_ATI_RS400_166     0x5a32
->  #define PCI_DEVICE_ID_ATI_RS400_200     0x5a33
->  #define PCI_DEVICE_ID_ATI_RS480         0x5950
-> +#define PCI_DEVICE_ID_ATI_RS690         0x7910
->  /* ATI IXP Chipset */
->  #define PCI_DEVICE_ID_ATI_IXP200_IDE	0x4349
->  #define PCI_DEVICE_ID_ATI_IXP200_SMBUS	0x4353
-> -- 
-> 2.13.7
-> 
+> +	pcie_device: pcie_device@0,0 {
+> +		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+> +		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+> +		memory-region = <&restricted_dma_mem_reserved>;
+
+Shouldn't it be &restricted_dma_reserved ?
+
