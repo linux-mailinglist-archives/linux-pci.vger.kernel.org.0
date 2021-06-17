@@ -2,318 +2,351 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B41AC3ABEA9
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 00:17:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAAED3ABF1A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 00:51:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232163AbhFQWTR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 18:19:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232088AbhFQWTM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Jun 2021 18:19:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F0DD6613B4;
-        Thu, 17 Jun 2021 22:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623968224;
-        bh=8lLNvAQJFBYHcwyHgNEpUKH4liF//tJL8IXh/++g2VQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=huvrHHpH2Av8vejTexiFgCIX8gaey/rp/0fjLnRAt1uHvre0POa9FMvPn6CSKF4vP
-         c1dyDYSMYo16eAP+y8b7jCtqCSK/GxM08QdxX1G394l3E8JBesdgSfezsVwCObf+XY
-         7aWLgTlzsBBO6TKNEHxE7nsZ/+OgD85yLW8ohdjh7wOtV4YkqobaNmS5taze+KHWCO
-         fK6lrJ8I7DNEWJB2YicAQ/PLhU6Y66Is1uaJonoeXzDn/9t9wK0lIH/tQqckcXFuET
-         u5Swl2hwja6dodRo6iE7Vpv+Vl8JR6ZLXVJxbLuKQjO/HsCiolAUliP6AHbf478B1T
-         ZnwiO+IrhijxQ==
-Received: by mail-ej1-f42.google.com with SMTP id g8so12572868ejx.1;
-        Thu, 17 Jun 2021 15:17:03 -0700 (PDT)
-X-Gm-Message-State: AOAM533H3WTBiNxJM6fB2cmYC7GQaa7pmWFlsaU47n2KIwiQ92m1Lq8f
-        UK4pz+k6qhTXDxkxwrDizAPdZXHPBGMyCwOnhw==
-X-Google-Smtp-Source: ABdhPJxzgkf6C07sPN7yjl1phyvHCv9pAxXmIQ1iuWsb7n6aw/LK46UKCpGaWvweVtQco41YaA9gmDx268LBgSxFl4o=
-X-Received: by 2002:a17:907:264b:: with SMTP id ar11mr7391845ejc.525.1623968222450;
- Thu, 17 Jun 2021 15:17:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210615191543.1043414-1-robh@kernel.org> <bb8c18f6-139d-76be-87e7-0c93e03cc92c@ti.com>
-In-Reply-To: <bb8c18f6-139d-76be-87e7-0c93e03cc92c@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 17 Jun 2021 16:16:50 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+-ggeBMT_507HN+mM1KirM+w2ZnhZNe+Q7tRsFRJxDOw@mail.gmail.com>
-Message-ID: <CAL_Jsq+-ggeBMT_507HN+mM1KirM+w2ZnhZNe+Q7tRsFRJxDOw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-To:     Suman Anna <s-anna@ti.com>
-Cc:     devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-phy@lists.infradead.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-can@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        id S232418AbhFQWxy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 18:53:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42437 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231911AbhFQWxy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 18:53:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623970305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ktX4Vy+OFS7I9hRX5lJtsDXlsZRssaxkpMUGs5EhFm0=;
+        b=Lel6Zgkwmzas+K8ZYSB6NTStUMM+9/SbyLhUWn7IhN2FkamyzlLSya6n5nAS7xGhV/BLEF
+        Nf6hsmkdn6DfKS6WPL3bQg7kkQiHha3uMrUdNPjVxzUK5SJ3YVwJANCdFpJ94M9Cc2rEuU
+        pp+fpQCDtiAmQ74APY4wo0ebVLzP/Us=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-0j_shYTKOECo_hQlPKd_3w-1; Thu, 17 Jun 2021 18:51:44 -0400
+X-MC-Unique: 0j_shYTKOECo_hQlPKd_3w-1
+Received: by mail-ot1-f71.google.com with SMTP id z17-20020a9d46910000b02903fb81caa138so4743909ote.18
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 15:51:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ktX4Vy+OFS7I9hRX5lJtsDXlsZRssaxkpMUGs5EhFm0=;
+        b=YnZ2fYXozPCHzAdT743sDMdbOJBtG1q1dWLABUnOOzBAIqhw1BHrrm5iVCX/VUakEZ
+         GHfkFtkiuykRHJqaN+pvKHExcOFBjIfcgaXwEjtjaV8zTQTp7RNc9MNY/tVid5yeiq32
+         dSIiycInHSKISSV4U54rTcJawgDeYnwuJdsr/bvZYFOWipvjh4YzncdX/7g8UaoqM/CU
+         208uNg7l+0FafEUzRUacWvck40OeR6/ZzUf9dexA0yTdwVMtvtNqdx+83lSmIGsCGCI6
+         1hr5Pr04TQno666I1939/TZBVKX2jP6zdTtQf7UaN4X5VNMJfPuglynNW5a7xULT88U9
+         /DyQ==
+X-Gm-Message-State: AOAM531BVde9lmWw0ShyEJqAClvwEFgVhkAcIseMsY+ylzTJt2dCWMTZ
+        NODqXcmEyFLH1uinVyxyASCO2NdJz0aAvMz79/64Ko5t+1MWxjcgEYQobPvbnBEBpLIdM+SZOzU
+        bUqrwNYw4k3lqMRnyF8Bc
+X-Received: by 2002:a9d:64a:: with SMTP id 68mr6520657otn.68.1623970303421;
+        Thu, 17 Jun 2021 15:51:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyBvFXrLcJNCYAn2B1zxIgHdFvDssyIl4S87XmoLnOFVFrAca1qSNvdeEjejA6L6tcpLXnFtA==
+X-Received: by 2002:a9d:64a:: with SMTP id 68mr6520644otn.68.1623970303228;
+        Thu, 17 Jun 2021 15:51:43 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id a7sm1490274ooo.9.2021.06.17.15.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Jun 2021 15:51:42 -0700 (PDT)
+Date:   Thu, 17 Jun 2021 16:51:41 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-crypto@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dmaengine@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 1/8] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210617165141.68f51808.alex.williamson@redhat.com>
+In-Reply-To: <20210617215734.GA3135430@bjorn-Precision-5520>
+References: <20210608054857.18963-2-ameynarkhede03@gmail.com>
+        <20210617215734.GA3135430@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 17, 2021 at 10:06 AM Suman Anna <s-anna@ti.com> wrote:
->
-> Hi Rob,
->
-> On 6/15/21 2:15 PM, Rob Herring wrote:
-> > If a property has an 'items' list, then a 'minItems' or 'maxItems' with=
- the
-> > same size as the list is redundant and can be dropped. Note that is DT
-> > schema specific behavior and not standard json-schema behavior. The too=
-ling
-> > will fixup the final schema adding any unspecified minItems/maxItems.
-> >
-> > This condition is partially checked with the meta-schema already, but
-> > only if both 'minItems' and 'maxItems' are equal to the 'items' length.
-> > An improved meta-schema is pending.
-> >
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Jassi Brar <jassisinghbrar@gmail.com>
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Wolfgang Grandegger <wg@grandegger.com>
-> > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> > Cc: Andrew Lunn <andrew@lunn.ch>
-> > Cc: Vivien Didelot <vivien.didelot@gmail.com>
-> > Cc: Vladimir Oltean <olteanv@gmail.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: Ohad Ben-Cohen <ohad@wizery.com>
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> > Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> > Cc: Albert Ou <aou@eecs.berkeley.edu>
-> > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Mark Brown <broonie@kernel.org>
-> > Cc: Zhang Rui <rui.zhang@intel.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
+On Thu, 17 Jun 2021 16:57:34 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+> [+cc Christoph, since he added pcie_flr()]
+> 
+> On Tue, Jun 08, 2021 at 11:18:50AM +0530, Amey Narkhede wrote:
+> > Currently there is separate function pcie_has_flr() to probe if pcie flr is
+> > supported by the device which does not match the calling convention
+> > followed by reset methods which use second function argument to decide
+> > whether to probe or not.  Add new function pcie_reset_flr() that follows
+> > the calling convention of reset methods.  
+> 
+> I don't like the fact that we handle FLR differently from other types
+> of reset, so I do like the fact that this makes them more consistent.
+> 
+> > Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+> > Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
 > > ---
-> >  .../devicetree/bindings/ata/nvidia,tegra-ahci.yaml          | 1 -
-> >  .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml  | 2 --
-> >  .../devicetree/bindings/clock/qcom,gcc-apq8064.yaml         | 1 -
-> >  Documentation/devicetree/bindings/clock/qcom,gcc-sdx55.yaml | 2 --
-> >  .../devicetree/bindings/clock/qcom,gcc-sm8350.yaml          | 2 --
-> >  .../devicetree/bindings/clock/sprd,sc9863a-clk.yaml         | 1 -
-> >  .../devicetree/bindings/crypto/allwinner,sun8i-ce.yaml      | 2 --
-> >  Documentation/devicetree/bindings/crypto/fsl-dcp.yaml       | 1 -
-> >  .../display/allwinner,sun4i-a10-display-backend.yaml        | 6 ------
-> >  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml      | 1 -
-> >  .../bindings/display/allwinner,sun8i-a83t-dw-hdmi.yaml      | 4 ----
-> >  .../bindings/display/allwinner,sun8i-a83t-hdmi-phy.yaml     | 2 --
-> >  .../bindings/display/allwinner,sun8i-r40-tcon-top.yaml      | 2 --
-> >  .../devicetree/bindings/display/bridge/cdns,mhdp8546.yaml   | 2 --
-> >  .../bindings/display/rockchip/rockchip,dw-hdmi.yaml         | 2 --
-> >  Documentation/devicetree/bindings/display/st,stm32-dsi.yaml | 2 --
-> >  .../devicetree/bindings/display/st,stm32-ltdc.yaml          | 1 -
-> >  .../devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml | 4 ----
-> >  .../devicetree/bindings/dma/renesas,rcar-dmac.yaml          | 1 -
-> >  .../devicetree/bindings/edac/amazon,al-mc-edac.yaml         | 2 --
-> >  Documentation/devicetree/bindings/eeprom/at24.yaml          | 1 -
-> >  Documentation/devicetree/bindings/example-schema.yaml       | 2 --
-> >  Documentation/devicetree/bindings/gpu/brcm,bcm-v3d.yaml     | 1 -
-> >  Documentation/devicetree/bindings/gpu/vivante,gc.yaml       | 1 -
-> >  Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 1 -
-> >  .../devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml        | 2 --
-> >  .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.yaml         | 1 -
-> >  .../devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml   | 1 -
-> >  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml     | 2 --
-> >  .../bindings/interrupt-controller/fsl,irqsteer.yaml         | 1 -
-> >  .../bindings/interrupt-controller/loongson,liointc.yaml     | 1 -
-> >  Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml    | 1 -
-> >  .../devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml       | 1 -
-> >  .../devicetree/bindings/mailbox/st,stm32-ipcc.yaml          | 2 --
-> >  .../devicetree/bindings/media/amlogic,gx-vdec.yaml          | 1 -
-> >  Documentation/devicetree/bindings/media/i2c/adv7604.yaml    | 1 -
-> >  .../devicetree/bindings/media/marvell,mmp2-ccic.yaml        | 1 -
-> >  .../devicetree/bindings/media/qcom,sc7180-venus.yaml        | 1 -
-> >  .../devicetree/bindings/media/qcom,sdm845-venus-v2.yaml     | 1 -
-> >  .../devicetree/bindings/media/qcom,sm8250-venus.yaml        | 1 -
-> >  Documentation/devicetree/bindings/media/renesas,drif.yaml   | 1 -
-> >  .../bindings/memory-controllers/mediatek,smi-common.yaml    | 6 ++----
-> >  .../bindings/memory-controllers/mediatek,smi-larb.yaml      | 1 -
-> >  .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml    | 2 --
-> >  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml    | 1 -
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.yaml           | 2 --
-> >  Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml     | 2 --
-> >  Documentation/devicetree/bindings/mmc/sdhci-am654.yaml      | 1 -
-> >  Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml        | 1 -
-> >  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml        | 2 --
-> >  .../devicetree/bindings/net/brcm,bcm4908-enet.yaml          | 2 --
-> >  Documentation/devicetree/bindings/net/can/bosch,m_can.yaml  | 2 --
-> >  Documentation/devicetree/bindings/net/dsa/brcm,sf2.yaml     | 2 --
-> >  Documentation/devicetree/bindings/net/snps,dwmac.yaml       | 2 --
-> >  Documentation/devicetree/bindings/net/stm32-dwmac.yaml      | 1 -
-> >  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml    | 2 --
-> >  Documentation/devicetree/bindings/pci/loongson.yaml         | 1 -
-> >  .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml         | 1 -
-> >  .../devicetree/bindings/pci/microchip,pcie-host.yaml        | 2 --
-> >  Documentation/devicetree/bindings/perf/arm,cmn.yaml         | 1 -
-> >  .../devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml      | 1 -
-> >  .../devicetree/bindings/phy/brcm,brcmstb-usb-phy.yaml       | 3 ---
-> >  Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml    | 1 -
-> >  Documentation/devicetree/bindings/phy/mediatek,tphy.yaml    | 2 --
-> >  .../devicetree/bindings/phy/phy-cadence-sierra.yaml         | 2 --
-> >  .../devicetree/bindings/phy/phy-cadence-torrent.yaml        | 4 ----
-> >  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml    | 1 -
-> >  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml    | 1 -
-> >  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml     | 1 -
-> >  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml   | 2 --
-> >  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 2 --
-> >  Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml | 1 -
-> >  .../devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml   | 1 -
-> >  .../devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml    | 1 -
-> >  .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml    | 1 -
-> >  .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml      | 2 --
-> >  .../devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml     | 1 -
-> >  .../devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml  | 1 -
-> >  Documentation/devicetree/bindings/reset/fsl,imx-src.yaml    | 1 -
-> >  .../devicetree/bindings/riscv/sifive-l2-cache.yaml          | 1 -
-> >  .../devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml    | 1 -
-> >  Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml        | 1 -
-> >  Documentation/devicetree/bindings/serial/fsl-lpuart.yaml    | 2 --
-> >  Documentation/devicetree/bindings/serial/samsung_uart.yaml  | 1 -
-> >  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml          | 1 -
-> >  Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml      | 2 --
-> >  .../bindings/sound/nvidia,tegra-audio-graph-card.yaml       | 1 -
-> >  .../devicetree/bindings/sound/nvidia,tegra210-i2s.yaml      | 2 --
-> >  Documentation/devicetree/bindings/sound/st,stm32-sai.yaml   | 3 ---
-> >  .../devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml     | 1 -
-> >  .../devicetree/bindings/spi/brcm,spi-bcm-qspi.yaml          | 2 --
-> >  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml          | 2 --
-> >  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml   | 1 -
-> >  .../bindings/timer/allwinner,sun5i-a13-hstimer.yaml         | 1 -
-> >  Documentation/devicetree/bindings/timer/arm,arch_timer.yaml | 1 -
-> >  .../devicetree/bindings/timer/arm,arch_timer_mmio.yaml      | 2 --
-> >  .../devicetree/bindings/timer/intel,ixp4xx-timer.yaml       | 1 -
-> >  .../devicetree/bindings/usb/maxim,max3420-udc.yaml          | 2 --
-> >  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml          | 4 ----
-> >  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml    | 3 ---
-> >  .../devicetree/bindings/watchdog/st,stm32-iwdg.yaml         | 1 -
-> >  101 files changed, 2 insertions(+), 163 deletions(-)
-> >
->
-> [snip]
->
-> > diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rpr=
-oc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-> > index 6070456a7b67..f399743b631b 100644
-> > --- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-> > +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-> > @@ -57,7 +57,6 @@ properties:
-> >
-> >    memory-region:
-> >      minItems: 2
-> > -    maxItems: 8
-> >      description: |
-> >        phandle to the reserved memory nodes to be associated with the r=
-emoteproc
-> >        device. There should be at least two reserved memory nodes defin=
-ed. The
->
-> Does this enforce the maxItems to be 2 only now? Or should this be droppi=
-ng the
-> minItems here which matches the length of items instead of maxItems?
->
-> I have originally listed the individual item list only for the mandatory =
-items
-> and rest are scalable. I provided this through "additionalItems: true" un=
-der
-> this property.
+> >  drivers/crypto/cavium/nitrox/nitrox_main.c |  4 +-
+> >  drivers/pci/pci.c                          | 62 ++++++++++++----------
+> >  drivers/pci/pcie/aer.c                     | 12 ++---
+> >  drivers/pci/quirks.c                       |  9 ++--
+> >  include/linux/pci.h                        |  2 +-
+> >  5 files changed, 43 insertions(+), 46 deletions(-)
+> > 
+> > diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
+> > index facc8e6bc..15d6c8452 100644
+> > --- a/drivers/crypto/cavium/nitrox/nitrox_main.c
+> > +++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+> > @@ -306,9 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
+> >  		return -ENOMEM;
+> >  	}
+> >  
+> > -	/* check flr support */
+> > -	if (pcie_has_flr(pdev))
+> > -		pcie_flr(pdev);
+> > +	pcie_reset_flr(pdev, 0);
+> >  
+> >  	pci_restore_state(pdev);
+> >  
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 452351025..3bf36924c 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -4611,32 +4611,12 @@ int pci_wait_for_pending_transaction(struct pci_dev *dev)
+> >  }
+> >  EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+> >  
+> > -/**
+> > - * pcie_has_flr - check if a device supports function level resets
+> > - * @dev: device to check
+> > - *
+> > - * Returns true if the device advertises support for PCIe function level
+> > - * resets.
+> > - */
+> > -bool pcie_has_flr(struct pci_dev *dev)
+> > -{
+> > -	u32 cap;
+> > -
+> > -	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+> > -		return false;
+> > -
+> > -	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> > -	return cap & PCI_EXP_DEVCAP_FLR;
+> > -}
+> > -EXPORT_SYMBOL_GPL(pcie_has_flr);
+> > -
+> >  /**
+> >   * pcie_flr - initiate a PCIe function level reset
+> >   * @dev: device to reset
+> >   *
+> > - * Initiate a function level reset on @dev.  The caller should ensure the
+> > - * device supports FLR before calling this function, e.g. by using the
+> > - * pcie_has_flr() helper.
+> > + * Initiate a function level reset unconditionally on @dev without
+> > + * checking any flags and DEVCAP
+> >   */
+> >  int pcie_flr(struct pci_dev *dev)
+> >  {
+> > @@ -4659,6 +4639,31 @@ int pcie_flr(struct pci_dev *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(pcie_flr);
+> >  
+> > +/**
+> > + * pcie_reset_flr - initiate a PCIe function level reset
+> > + * @dev: device to reset
+> > + * @probe: If set, only check if the device can be reset this way.
+> > + *
+> > + * Initiate a function level reset on @dev.
+> > + */
+> > +int pcie_reset_flr(struct pci_dev *dev, int probe)
+> > +{
+> > +	u32 cap;
+> > +
+> > +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+> > +		return -ENOTTY;
+> > +
+> > +	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> > +	if (!(cap & PCI_EXP_DEVCAP_FLR))
+> > +		return -ENOTTY;
+> > +
+> > +	if (probe)
+> > +		return 0;
+> > +
+> > +	return pcie_flr(dev);  
+> 
+> Christoph added pcie_flr() with a60a2b73ba69 ("PCI: Export
+> pcie_flr()"), where the commit log says he split out the probing
+> because "non-core callers already know their hardware."
+> 
+> It *is* reasonable to expect that drivers know whether their device
+> supports FLR so they don't need to probe.
 
-Good catch. This should be dropped. The meta-schema doesn't enforce
-this if "additionalItems: true" which is rarely used.
+I don't think it changes your suggestion below, but this statement is a
+little troublesome when we look at devices running in VMs where we've
+been known to hide various capabilities, or simply quirks where some
+combination of a known device feature might be otherwise avoided.  A
+more robust driver should try to make fewer assumptions for these
+cases, if not simply the inability to predict future changes to the
+hardware.  
 
-> Also, have the exact same usage in
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml as well=
- which
-> is not included in this patch.
+FLR should be a relatively rare event, but caching for driver API
+purposes seems reasonable.  Thanks,
 
-Yeah, I just missed this one. I've double checked and there aren't any more=
-.
+Alex
 
-Rob
+> But we don't expose the "probe" argument outside the PCI core for any
+> other reset methods, and I would like to avoid that here.
+> 
+> It seems excessive to have to read PCI_EXP_DEVCAP every time.
+> PCI_EXP_DEVCAP_FLR is a read-only bit, and we should only need to look
+> at it once.
+> 
+> What I would really like here is a single bit in the pci_dev that we
+> could set at enumeration-time, e.g., something like this:
+> 
+>   struct pci_dev {
+>     ...
+>     unsigned int has_flr:1;
+>   };
+> 
+>   void set_pcie_port_type(...)    # during enumeration
+>   {
+>     pci_read_config_word(dev, pos + PCI_EXP_DEVCAP, &reg16);
+>     if (reg16 & PCI_EXP_DEVCAP_FLR)
+>       dev->has_flr = 1;
+>   }
+> 
+>   static void quirk_no_flr(...)
+>   {
+>     dev->has_flr = 0;             # get rid of PCI_DEV_FLAGS_NO_FLR_RESET
+>   }
+> 
+>   int pcie_flr(...)
+>   {
+>     if (!dev->has_flr)
+>       return -ENOTTY;
+> 
+>     if (!pci_wait_for_pending_transaction(dev))
+>       ...
+>   }
+> 
+> I think this should be enough that we could get rid of pcie_has_flr()
+> without having to expose the "probe" argument outside drivers/pci/.
+> 
+> Procedural note: if we *do* have to expose the "probe" argument, can
+> you arrange it to have the correct type before touching the drivers, so
+> we only have to touch the drivers once?
+> 
+> > +}
+> > +EXPORT_SYMBOL_GPL(pcie_reset_flr);
+> > +
+> >  static int pci_af_flr(struct pci_dev *dev, int probe)
+> >  {
+> >  	int pos;
+> > @@ -5139,11 +5144,9 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+> >  	rc = pci_dev_specific_reset(dev, 0);
+> >  	if (rc != -ENOTTY)
+> >  		return rc;
+> > -	if (pcie_has_flr(dev)) {
+> > -		rc = pcie_flr(dev);
+> > -		if (rc != -ENOTTY)
+> > -			return rc;
+> > -	}
+> > +	rc = pcie_reset_flr(dev, 0);
+> > +	if (rc != -ENOTTY)
+> > +		return rc;
+> >  	rc = pci_af_flr(dev, 0);
+> >  	if (rc != -ENOTTY)
+> >  		return rc;
+> > @@ -5174,8 +5177,9 @@ int pci_probe_reset_function(struct pci_dev *dev)
+> >  	rc = pci_dev_specific_reset(dev, 1);
+> >  	if (rc != -ENOTTY)
+> >  		return rc;
+> > -	if (pcie_has_flr(dev))
+> > -		return 0;
+> > +	rc = pcie_reset_flr(dev, 1);
+> > +	if (rc != -ENOTTY)
+> > +		return rc;
+> >  	rc = pci_af_flr(dev, 1);
+> >  	if (rc != -ENOTTY)
+> >  		return rc;
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index ec943cee5..98077595a 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -1405,13 +1405,11 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+> >  	}
+> >  
+> >  	if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
+> > -		if (pcie_has_flr(dev)) {
+> > -			rc = pcie_flr(dev);
+> > -			pci_info(dev, "has been reset (%d)\n", rc);
+> > -		} else {
+> > -			pci_info(dev, "not reset (no FLR support)\n");
+> > -			rc = -ENOTTY;
+> > -		}
+> > +		rc = pcie_reset_flr(dev, 0);
+> > +		if (!rc)
+> > +			pci_info(dev, "has been reset\n");
+> > +		else
+> > +			pci_info(dev, "not reset (no FLR support: %d)\n", rc);
+> >  	} else {
+> >  		rc = pci_bus_error_reset(dev);
+> >  		pci_info(dev, "%s Port link has been reset (%d)\n",
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index d85914afe..f977ba79a 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -3819,7 +3819,7 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
+> >  	u32 cfg;
+> >  
+> >  	if (dev->class != PCI_CLASS_STORAGE_EXPRESS ||
+> > -	    !pcie_has_flr(dev) || !pci_resource_start(dev, 0))
+> > +	    pcie_reset_flr(dev, 1) || !pci_resource_start(dev, 0))
+> >  		return -ENOTTY;
+> >  
+> >  	if (probe)
+> > @@ -3888,13 +3888,10 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
+> >   */
+> >  static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+> >  {
+> > -	if (!pcie_has_flr(dev))
+> > -		return -ENOTTY;
+> > +	int ret = pcie_reset_flr(dev, probe);
+> >  
+> >  	if (probe)
+> > -		return 0;
+> > -
+> > -	pcie_flr(dev);
+> > +		return ret;
+> >  
+> >  	msleep(250);
+> >  
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index c20211e59..20b90c205 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1225,7 +1225,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
+> >  			     enum pci_bus_speed *speed,
+> >  			     enum pcie_link_width *width);
+> >  void pcie_print_link_status(struct pci_dev *dev);
+> > -bool pcie_has_flr(struct pci_dev *dev);
+> > +int pcie_reset_flr(struct pci_dev *dev, int probe);
+> >  int pcie_flr(struct pci_dev *dev);
+> >  int __pci_reset_function_locked(struct pci_dev *dev);
+> >  int pci_reset_function(struct pci_dev *dev);
+> > -- 
+> > 2.31.1
+> >   
+> 
+
