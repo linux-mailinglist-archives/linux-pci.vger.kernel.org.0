@@ -2,130 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A291D3ABA3E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 19:05:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34D863ABA54
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 19:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhFQRID (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 13:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231164AbhFQRID (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 13:08:03 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEAAC06175F
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 10:05:55 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id y15so5525719pfl.4
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 10:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=spDOLTpTEkP0pQRlVnvSw7EzDBOy7ixf6KlEeu5zAFw=;
-        b=gvFkjdJ8/nWFYJ6eh4eGwDZH3O/FzRYCKAixYJ+bNuEKuwuss5/DVmrjbX+uVysNvs
-         i+qXxnRozSclnhV9Ko6zmIrYMI87h5HmYTek2HI51jvn+xNCD0bg4XrN4Yqp9qib8CR9
-         CUbQjexgtNkQUUYY4uYwd9nqQU44N+MdMqNFnAuiyyvQF/75BrkWVJgcEymLk/Yr4jeG
-         LXwy06acDKVCdG2uCzuuG+EAuw4cXh15bV4ak7aa62CQzu1ula2LAtWnB2igv14GYA4W
-         lXzfTYxIUy2PbsQtOWmWpcG+YtKPZhkz3VQN8S2EtJE6uuvXzzN4PNXTSebZUa2p7xNz
-         g78g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=spDOLTpTEkP0pQRlVnvSw7EzDBOy7ixf6KlEeu5zAFw=;
-        b=dhT7QsbJzcLxLt5YnkA1Zy8/ATfj4xbxYhkAMVa7Aqz5k817PBntgqTlz3DoFRWVo9
-         tubQRz1lQVZxCjRCuNHgkOtuoGFKhy6z1Lq8NTNGc5BhpEc84zhGEG0H40gwLI+dd/nB
-         nFxuuO2y0B43pvDvY1iHb188ZZ9e4qtkB4fQnjBTnOJaJ9q/Kdjity+PLH1/2gWuxH9R
-         +LWr5XqDL0k5wdMCDrGQ8L1dAey74RtKH+IqQAL+dmDnOdREssEfQE7Lx2I2AUU2RYEi
-         fxB5kNExarW7nogVtip+Fmit+uPc/ukwkSSh6eli4Wh3hhtO/lOqXdtEIjDslswf/95D
-         uxyQ==
-X-Gm-Message-State: AOAM532Cp4N3z/ivBLbqhLDi6okzlU4mpKognzwy0Q4rwKQ+Tsk3bpMJ
-        DVAh48IpAI8r3LJdWkl2uqAv
-X-Google-Smtp-Source: ABdhPJwaG6/j71e6DUZJ1nF3XYcWFet57gwEKHoW0R5fI/eRI2bpxAbaOGhdC3lH0rW9KnnXYL+7tA==
-X-Received: by 2002:a63:d117:: with SMTP id k23mr5831729pgg.60.1623949554810;
-        Thu, 17 Jun 2021 10:05:54 -0700 (PDT)
-Received: from workstation ([120.138.13.64])
-        by smtp.gmail.com with ESMTPSA id nv1sm5562052pjb.43.2021.06.17.10.05.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Jun 2021 10:05:54 -0700 (PDT)
-Date:   Thu, 17 Jun 2021 22:35:50 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Om Prakash Singh <omp@nvidia.com>
-Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        smohanad@codeaurora.org
-Subject: Re: [PATCH 0/5] PCI: endpoint: Add support for additional notifiers
-Message-ID: <20210617170549.GA3075@workstation>
-References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
- <9fd37c43-e2ab-f5b2-13dc-a23bd83d3c7b@nvidia.com>
+        id S231896AbhFQROq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 17 Jun 2021 13:14:46 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3264 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230028AbhFQROq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 13:14:46 -0400
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G5T2f0kGqz6J68h;
+        Fri, 18 Jun 2021 01:05:30 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Thu, 17 Jun 2021 19:12:35 +0200
+Received: from localhost (10.52.120.116) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 17 Jun
+ 2021 18:12:34 +0100
+Date:   Thu, 17 Jun 2021 18:12:25 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Chris Browy <cbrowy@avery-design.com>, <linux-cxl@vger.kernel.org>,
+        "Linux PCI" <linux-pci@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: Re: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object
+ Exchange
+Message-ID: <20210617181225.0000105b@Huawei.com>
+In-Reply-To: <20210318142529.00001507@Huawei.com>
+References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
+        <20210310180306.1588376-2-Jonathan.Cameron@huawei.com>
+        <CAPcyv4gG-==Vj9w3d7=gRRSPaoD5eZHZZ2hAA0h3c07eMT_x1A@mail.gmail.com>
+        <20210316162952.00001ab7@Huawei.com>
+        <CAPcyv4h6hHCuO=0vHbPz2m4qw6-0=wW9swBrWimBsz6_GJu4Aw@mail.gmail.com>
+        <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
+        <CAPcyv4hJG08RaksW3jH_Q5ASqpzX5MtfNFcLqMxAH5jwTidk=w@mail.gmail.com>
+        <20210318142529.00001507@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9fd37c43-e2ab-f5b2-13dc-a23bd83d3c7b@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.120.116]
+X-ClientProxiedBy: lhreml739-chm.china.huawei.com (10.201.108.189) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, 18 Mar 2021 14:25:29 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-On Thu, Jun 17, 2021 at 12:42:07AM +0530, Om Prakash Singh wrote:
-> Hi Mani,
-> Adding more notifier types will surely help but I believe the list is not
-> exhaustive. What you are trying here is to pass various vendor-specific epc
-> interrupts to EPF driver. That can be taken care by a single notifier
-> interface as well, "pci_epc_custom_notify" from your implementation.
-
-That's what I initially thought eventhough not all the notifiers are
-vendor specific. But Kishon suggested to add notifiers for generic ones
-such as BME, PME etc... and that sounded reasonable to me.
-
-> This
-> also requires to have pre-defined values of "data" argument to standardize
-> the interface.
+> On Wed, 17 Mar 2021 18:30:26 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
+> 
+> > Btw your mailer does something odd with the "In-Reply-To:" field, I
+> > need to fix it up manually to include your address.
+> > 
+> > On Tue, Mar 16, 2021 at 4:28 PM Chris Browy <cbrowy@avery-design.com> wrote:  
+> > >
+> > > Please address and clarify 2 queries below...
+> > >
+> > >    
+> > > > On Mar 16, 2021, at 2:14 PM, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > On Tue, Mar 16, 2021 at 9:31 AM Jonathan Cameron
+> > > > <Jonathan.Cameron@huawei.com> wrote:    
+> > > >>
+> > > >> On Mon, 15 Mar 2021 12:45:49 -0700
+> > > >> Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >>    
+> > > >>> Hey Jonathan, happy to see this, some comments below...    
+> > > >>
+> > > >> Hi Dan,
+> > > >>
+> > > >> Thanks for taking a look!
+> > > >>    
+> > > >>>
+> > > >>> On Wed, Mar 10, 2021 at 10:08 AM Jonathan Cameron
+> > > >>> <Jonathan.Cameron@huawei.com> wrote:    
+> > > >>>>
+> > > >>>> Introduced in an ECN to the PCI 5.0, DOE provides a config space
+> > > >>>> based mailbox with standard protocol discovery.  Each mailbox
+> > > >>>> is accessed through a DOE PCIE Extended Capability.
+> > > >>>>
+> > > >>>> A device may have 1 or more DOE mailboxes, each of which is allowed
+> > > >>>> to support any number of protocols (some DOE protocols
+> > > >>>> specifications apply additional restrictions).  A given protocol
+> > > >>>> may be supported on more than one DOE mailbox on a given function.    
+> > > >>>
+> > > >>> Are all those protocol instances shared?
+> > > >>> I'm trying to mental model
+> > > >>> whether, for example, an auxiliary driver instance could be loaded per
+> > > >>> DOE mailbox, or if there would need to be coordination of a given
+> > > >>> protocol no matter how many DOE mailboxes on that device implemented
+> > > >>> that protocol.    
+> > > >>
+> > > >> Just to check I've understood corectly, you mean multiple instances of same
+> > > >> protocol across different DOE mailboxes on a given device?
+> > > >>    
+> > > >
+> > > > Right.    
+> > >
+> > > Could you confirm this case for clarity?  A CXL device may have multiple VF/PF.
+> > > For example, PF=0 could have one or more DOE instances for CDAT protocol.
+> > > The driver will scan PF=0 for all DOE instances and finding one or more of CDAT
+> > > protocol will combine/manage them.  I had not considered multiple CDAT tables
+> > > for single PF.  For CXL devices with multiple PF’s the same process would be
+> > > carried out on PF=1-N.    
+> > 
+> > This patch has nothing to do with CXL. This is a general discussion of
+> > how a PCIE device implements a DOE mailbox or set of mailboxes. The
+> > DOE definition is PF-only afaics from the DOE specification.
+> > 
+> > The CXL specification only says that a device can implement a CDAT per
+> > DOE capability instance, so the CXL spec does not limit the number of
+> > DOE instances to 1, but I can't think of a practical reason to support
+> > more than one.
+> > 
+> > [..]  
+> > > >>> https://cfp.osfc.io/media/osfc2020/submissions/ECQ88N/resources/An_open_source_SPDM_implementation_for_secure_devi_kmIgAQe.pdf    
+> > > >>
+> > > >> Nice!  Looking at CMA / IDE emulation was on my todo list and that looks like
+> > > >> it might make that job a lot easier.    
+> > >
+> > > Would it be useful to integrate the openspdm’s SpdmResponderEmu.c onto the QEMU’s CXL Type3 Device’s
+> > > DOE backend for CMA/IDE testing?  Doesn’t look hard to do.    
+> > 
+> > Yes, I do think it would be useful.  
+> 
+> Agreed.  Very useful indeed.
+> 
+> Jonathan
 > 
 
-No, I don't think we can standardize the arguments to "custom" notifier.
-The custom notifier is supposed to deal with vendor specific events and
-I don't see any benefit on standardizing it. I see it more like an
-opaque driver_data field where we pass driver specific arguments.
+Hi Chris,
+
+Just wondering if this qemu/openspdm integration was something your team have
+had time to look at?  I'd like to ideally get a second DOE usecase
+implemented on the Linux side to prove out the implementation.
+
+If it's fallen off your near term todo list I might see if I can hack
+something together in the meantime.
 
 Thanks,
-Mani
 
-> your thoughts?
-> 
-> Thanks,
-> Om
-> 
-> On 6/16/2021 5:29 PM, Manivannan Sadhasivam wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > Hello,
-> > 
-> > This series adds support for additional notifiers in the PCI endpoint
-> > framework. The notifiers LINK_DOWN, BME, PME, and D_STATE are generic
-> > for all PCI endpoints but there is also a custom notifier (CUSTOM) added
-> > to pass the device/vendor specific events to EPF from EPC.
-> > 
-> > The example usage of all notifiers is provided in the commit description.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > Manivannan Sadhasivam (5):
-> >    PCI: endpoint: Add linkdown notifier support
-> >    PCI: endpoint: Add BME notifier support
-> >    PCI: endpoint: Add PME notifier support
-> >    PCI: endpoint: Add D_STATE notifier support
-> >    PCI: endpoint: Add custom notifier support
-> > 
-> >   drivers/pci/endpoint/pci-epc-core.c | 89 +++++++++++++++++++++++++++++
-> >   include/linux/pci-epc.h             |  5 ++
-> >   include/linux/pci-epf.h             |  5 ++
-> >   3 files changed, 99 insertions(+)
-> > 
-> > --
-> > 2.25.1
-> > 
+Jonathan
