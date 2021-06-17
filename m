@@ -2,101 +2,322 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FDD93AB761
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 17:22:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C1853AB80D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 17:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233277AbhFQPYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 11:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233271AbhFQPYw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 11:24:52 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD856C06175F
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 08:22:44 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id k7so3952713pjf.5
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 08:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MBGbqvseaowVXgAUsLtxjTmL1uju2aQqqvQPrdOEUMI=;
-        b=HE2F97TOVFlVyHorUtSDPv87VQGzS+EG8uzGtZ9iJ/SPN5vRg9BJXjdhsHysIMT5vL
-         RnMGklcRV5fYPciomdLDZQGbZ63cPWs7NqaPdH72A+bdeKMJhIjSQuex6+TXdIOg29Ox
-         ffOezYXKeorOiCgIUgUuzCfPDYbc6xTz5iHr2qH9s6Xj7VngTfJtypZRqGeMULSgL+nw
-         gzYLIht4/5QD2eb2ALIdS2g9Nv09mNUVZsr+YKh4aTv3xJC9WRR46W8Yk47bK/3zfgLT
-         i8YMQ1m37rJbGmSV0B18SWLh3CyX6MfIri5tPDeFuOAZW3yQUN7cm0Q8MGBBIQkMJ3Fv
-         DaXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MBGbqvseaowVXgAUsLtxjTmL1uju2aQqqvQPrdOEUMI=;
-        b=e0srvvMwGn+qCgIesI7wYvAEi7nY9uGJybnu9UNUFcinHzc5T3W5qOi6Lmki0Z9GUW
-         OYngjT3Qh9jXX0OTKBtmEIJMMExxDRzI+ZHxZ+sNOqTellnDAMqxgm0DL13xXZwK8VR6
-         qIZLT7m4ndqA1F6MBUpz8MGjFVUvJt6DlBPi8NkkaLf8mRpbtd7lRF2d1GbIO/EUqkX1
-         xKgqLmzgM9x7MoyEJ2nnuQqWewAFL6UFb3Q5lilNTz4dLwzPIG/Of1YQ02i0Y0B12ttm
-         IAulW+u/7wTorNKmVWdaGgzNopAR9A1bLKNaEIyeCbz42Y0CGF8mttAitj7iIXeVJneB
-         5r4A==
-X-Gm-Message-State: AOAM531p+rjynqvhoflFREEI0fbgn5Iw9E0syC1x+xqXxQ4xR2Q8G3ye
-        a6OXHXw/PpN8laPFQpF/cGH2
-X-Google-Smtp-Source: ABdhPJxFRZNfk3bxzecym17syOMw+PdHrMsWneLe7XMo51guW95xIB+Y+XkOdV/nbOkW7I6IlBxqPw==
-X-Received: by 2002:a17:90a:aa98:: with SMTP id l24mr6118532pjq.156.1623943364299;
-        Thu, 17 Jun 2021 08:22:44 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:601:a552:f5:b632:aa12:8667])
-        by smtp.gmail.com with ESMTPSA id n69sm5639857pfd.132.2021.06.17.08.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jun 2021 08:22:43 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        robh@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, smohanad@codeaurora.org,
-        bjorn.andersson@linaro.org, svarbanov@mm-sol.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 3/3] MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
-Date:   Thu, 17 Jun 2021 20:52:02 +0530
-Message-Id: <20210617152202.83361-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210617152202.83361-1-manivannan.sadhasivam@linaro.org>
-References: <20210617152202.83361-1-manivannan.sadhasivam@linaro.org>
+        id S232640AbhFQQAc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 12:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231941AbhFQQAc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Jun 2021 12:00:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5758361351;
+        Thu, 17 Jun 2021 15:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623945504;
+        bh=Q6/JU/E0btuKwbG5TetUX1vsUfsVbPrY8xkHBDYqwIc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Y26Ymu84AfR2wvDLO2NKU00KsE3y8ppLK6t25Mr+96EKQMjfAyQue3hVQAfa5cq8A
+         77mwrdQIEjuudC7Egcuw+ovgpEFNEK1EbmFhlyldkQldKq98S6R4LPW8i3HPrxb9Cd
+         rKRlLTlmFISd1+JEJmGPVw5Em8MPVJ/vActCqEV1PHsckAjDNDk4Clpd8rVnOI/Pf1
+         gHZ5Edw1o7iVo+bpsClulUKqWKtP5JpdPBBRF0M0n7VMHc71brfUNkd7guxN5TdSgs
+         kkeUZbcrQuN7j6hee4H0jLVUzwRThTJSFCL12b9vE9UPa2eqaLAHuEn22dzKFPdYI+
+         n27q+2q17Oi/g==
+Date:   Thu, 17 Jun 2021 10:58:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dejin Zheng <zhengdejin5@gmail.com>, corbet@lwn.net,
+        jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
+        Sanket.Goswami@amd.com, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <20210617155823.GA3077181@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YMtMELqsY0O7djB4@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add MAINTAINERS entry for Qualcomm PCIe Endpoint driver and its
-devicetree binding. While at it, let's also fix the PCIE RC entry to
-cover only the RC driver.
+On Thu, Jun 17, 2021 at 04:20:16PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 16, 2021 at 02:25:43PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 11, 2021 at 12:37:22PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jun 10, 2021 at 05:41:43PM -0500, Bjorn Helgaas wrote:
+> > > > On Mon, Jun 07, 2021 at 11:39:13PM +0800, Dejin Zheng wrote:
+> > > > > Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> > > > > pci_alloc_irq_vectors(). Introducing this function can simplify
+> > > > > the error handling path in many drivers.
+> > > > > 
+> > > > > And use pci_free_irq_vectors() to replace some code in pcim_release(),
+> > > > > they are equivalent, and no functional change. It is more explicit
+> > > > > that pcim_alloc_irq_vectors() is a device-managed function.
+> > > 
+> > > ...
+> > > 
+> > > > > @@ -1989,10 +1989,7 @@ static void pcim_release(struct device *gendev, void *res)
+> > > > >  	struct pci_devres *this = res;
+> > > > >  	int i;
+> > > > >  
+> > > > > -	if (dev->msi_enabled)
+> > > > > -		pci_disable_msi(dev);
+> > > > > -	if (dev->msix_enabled)
+> > > > > -		pci_disable_msix(dev);
+> > > > > +	pci_free_irq_vectors(dev);
+> > > > 
+> > > > If I understand correctly, this hunk is a nice simplification, but
+> > > > actually has nothing to do with making pcim_alloc_irq_vectors().  I
+> > > > have it split to a separate patch in my local tree.  Or am I wrong
+> > > > about that?
+> > > 
+> > > It's a good simplification that had to be done when pci_free_irq_vectors()
+> > > appeared.
+> > 
+> > Sorry to be pedantic.  You say the simplification "had to be done,"
+> > but AFAICT there was no actual *requirement* for this simplification
+> > to be done since pci_free_irq_vectors() is functionally identical to
+> > the previous code.
+> > I think we should do it because it's a little
+> > simpler, but not because it *fixes* anything.
+> 
+> It makes things more straightforward. So it definitely "fixes" something, but
+> not the code in this case, rather how we maintain this code.
+> 
+> > > But here is the fact that indirectly it's related to the pcim_*()
+> > > APIs, i.e. pcim_alloc_irq_vectors(), because you may noticed this is inside
+> > > pcim_release().
+> > 
+> > Yes.  For posterity, my notes about the call chain (after applying
+> > this patch):
+> > 
+> >   pci_alloc_irq_vectors
+> >     pci_alloc_irq_vectors_affinity
+> >       __pci_enable_msix_range                 # MSI-X path
+> >         __pci_enable_msix
+> >           msix_capability_init
+> >             msix_setup_entries
+> >               for (...)
+> >                 entry = alloc_msi_entry
+> >                   kzalloc(msi_desc)           <--- alloc
+> >                   kmemdup(msi_desc->affinity) <--- alloc
+> >             dev->msix_enabled = 1             # MSI-X enabled
+> >       __pci_enable_msi_range                  # MSI path
+> >         msi_capability_init
+> >           msi_setup_entry
+> >             alloc_msi_entry                   <--- alloc
+> >           dev->msi_enabled = 1                # MSI enabled
+> > 
+> >   pcim_release
+> >     pci_free_irq_vectors
+> >       pci_disable_msix                        # MSI-X
+> >         if (!dev->msix_enabled)
+> >           return
+> >         pci_msix_shutdown
+> >           dev->msix_enabled = 0               # MSI-X disabled
+> >         free_msi_irqs
+> >           list_for_each_entry_safe(..., msi_list, ...)
+> >             free_msi_entry
+> >               kfree(msi_desc->affinity)       <--- free
+> >               kfree(msi_desc)                 <--- free
+> >       pci_disable_msi                         # MSI
+> >         if (!dev->msi_enabled)
+> >           return
+> >         pci_msi_shutdown
+> >           dev->msi_enabled = 0                # MSI disabled
+> >         free_msi_irqs                         <--- free
+> > 
+> > So I *think* (correct me if I'm wrong):
+> > 
+> >   - If a driver calls pcim_enable_device(), we will call
+> >     pcim_release() when the last reference to the device is dropped.
+> > 
+> >   - pci_alloc_irq_vectors() allocates msi_desc and irq_affinity_desc
+> >     structures via msix_setup_entries() or msi_setup_entry().
+> > 
+> >   - pcim_release() will free those msi_desc and irq_affinity_desc
+> >     structures.
+> > 
+> >   - Even before this series, pcim_release() frees msi_desc and
+> >     irq_affinity_desc structures by calling pci_disable_msi() and
+> >     pci_disable_msix().
+> > 
+> >   - Calling pci_free_irq_vectors() (or pci_disable_msi() or
+> >     pci_disable_msix()) twice is unnecessary but probably harmless
+> >     because they bail out early.
+> 
+> > So this series actually does not fix any problems whatsoever.
+> 
+> I tend to disagree.
+> 
+> The PCI managed API is currently inconsistent and what you got is
+> what I already know and had been using until (see below) Christoph
+> told not to do [1].
+> 
+> Even do you as PCI maintainer it took some time to figure this out.
+> But current APIs make it hard for mere users who wants to use it in
+> the drivers.
+> 
+> So, main point of fix here is _API inconsistency_ [0].
+> 
+> But hey, I believe you have been Cc'ed to the initial submission of
+> the pci_*_irq_vector*() rework done by Christoph [2] (hmm... don't
+> see your name there). And he updated documentation as well [3].
+> 
+> Moreover, he insisted to use pci_free_irq_vectors() whenever we are
+> using pci_alloc_irq_vectors(). And he suggested if we want to avoid
+> this we have to make pcim_ variant of the API (see [1] again).
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+I'd like to consider this, but it's hard without a reference :)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd7aff0c120f..cdd370138b9f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14254,7 +14254,15 @@ M:	Stanimir Varbanov <svarbanov@mm-sol.com>
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
--F:	drivers/pci/controller/dwc/*qcom*
-+F:	drivers/pci/controller/dwc/pcie-qcom.c
-+
-+PCIE ENDPOINT DRIVER FOR QUALCOMM
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-pci@vger.kernel.org
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-+F:	drivers/pci/controller/dwc/pcie-qcom-ep.c
- 
- PCIE DRIVER FOR ROCKCHIP
- M:	Shawn Lin <shawn.lin@rock-chips.com>
--- 
-2.25.1
+I do think it would be helpful to have clear guidance about when
+drivers need to use pci_free_irq_vectors().  The existing text in
+msi-howto.rst doesn't address pcim_ at all.
 
+> Maybe you, guys, should got some agreement and clarify it in the
+> documentation?
+
+I agree that the pcim_*() API is confusing at best and it would be
+nice to improve it and document it, but I don't think this series
+really does it.
+
+There are several MSI-related interfaces that use alloc_msi_entry()
+and hence magically become managed if we call pcim_enable_device():
+
+  pci_alloc_irq_vectors()            # ~150 callers
+  pci_alloc_irq_vectors_affinity()   #  ~10 callers
+  pci_enable_msix_exact()            #  ~20 callers (deprecated)
+  pci_enable_msix_range()            #  ~50 callers (deprecated)
+  pci_enable_msi()                   # ~100 callers (deprecated)
+
+This series adds pcim_alloc_irq_vectors(), which sort of fixes *one*
+of them and makes this sequence look nice:
+
+  pcim_enable_device();
+  pcim_alloc_irq_vectors();
+
+but all the others are still potentially managed even though the name
+doesn't indicate it.  And it really doesn't improve the documentation.
+
+Possible steps forward:
+
+  - Add comments in include/linux/pci.h to indicate deprecation
+    (AFAICS, deprecation is currently only mentioned in
+    msi-howto.rst).
+
+  - Migrate callers away from deprecated interfaces (a lot of work).
+
+  - Remove deprecated interfaces.
+
+  - Add pcim_ variants of remaining interfaces (I think only
+    pci_alloc_*()).  Consider returning error for pci_alloc_*() usage
+    by managed drivers.
+
+  - Convert managed callers from pci_alloc_*() to pcim_alloc_*() and
+    remove usage of pci_free_irq_vectors(), pci_disable_msi(),
+    pci_disable_msix().
+
+> [0]: We have a few functions with pcim_ prefix, few without and some from the
+>      latter group imply to behave _differently_ when pcim_enable_device() had
+>      been called.
+> [1]: I'm not able to find the archive of the mailing, but I remember that it
+>      was something like that IIRC during 8250_lpss.c development.
+> [2]: https://lore.kernel.org/linux-pci/1467621574-8277-1-git-send-email-hch@lst.de/
+> [3]: https://www.kernel.org/doc/html/latest/PCI/msi-howto.html#using-msi
+> 
+> > It *does* remove unnecessary pci_free_irq_vectors() calls from
+> > i2c-designware-pcidrv.c.
+> > 
+> > But because pci_alloc_irq_vectors() and related interfaces are
+> > *already* managed as soon as a driver calls pcim_enable_device(),
+> > we can simply remove the pci_free_irq_vectors() without doing anything
+> > else.
+> > 
+> > I don't think we *should* do anything else.
+> 
+> See above.
+> 
+> > There are many callers of
+> > pcim_enable_device() that also call pci_alloc_irq_vectors(),
+> > pci_enable_msix_range(), etc.  We don't have pcim_enable_msix_range(),
+> > pcim_enable_msi(), pcim_alloc_irq_vectors_affinity(), etc.  I don't
+> > think it's worth the churn of adding all those and changing all the
+> > callers to use pcim_*() (as in patch 4/4 here).
+> > 
+> > Browsing the output of this:
+> > 
+> >   git grep -En "pcim_enable_device|pci_alloc_irq_vectors|pci_enable_msix_|pci_free_irq_vectors|pci_disable_msi"
+> > 
+> > leads me to believe there are similar calls of pci_free_irq_vectors()
+> > that could be removed here:
+> > 
+> >   mtip_pci_probe
+> >   sp_pci_probe
+> >   dw_edma_pcie_probe
+> >   hisi_dma_probe
+> >   ioat_pci_probe
+> >   plx_dma_probe
+> >   cci_pci_probe
+> >   hibmc_pci_probe
+> >   ...
+> > 
+> > and many more, but I got tired of looking.
+> > 
+> > > > > +/**
+> > > > > + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
+> > > > > + * @dev:		PCI device to operate on
+> > > > > + * @min_vecs:		minimum number of vectors required (must be >= 1)
+> > > > > + * @max_vecs:		maximum (desired) number of vectors
+> > > > > + * @flags:		flags or quirks for the allocation
+> > > > > + *
+> > > > > + * Return the number of vectors allocated, (which might be smaller than
+> > > > > + * @max_vecs) if successful, or a negative error code on error. If less
+> > > > > + * than @min_vecs interrupt vectors are available for @dev the function
+> > > > > + * will fail with -ENOSPC.
+> > > > > + *
+> > > > > + * It depends on calling pcim_enable_device() to make IRQ resources
+> > > > > + * manageable.
+> > > > > + */
+> > > > > +static inline int
+> > > > > +pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> > > > > +			unsigned int max_vecs, unsigned int flags)
+> > > > > +{
+> > > > > +	if (!pci_is_managed(dev))
+> > > > > +		return -EINVAL;
+> > > > > +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
+> > > > 
+> > > > This is great, but can you explain how pci_alloc_irq_vectors()
+> > > > magically becomes a managed interface if we've already called
+> > > > pcim_enable_device()?
+> > > > 
+> > > > I certainly believe it does; I'd just like to put a hint in the commit
+> > > > log since my 5 minutes of grepping around didn't make it obvious to
+> > > > me.
+> > > > 
+> > > > I see that pcim_enable_device() sets pdev->is_managed, but I didn't
+> > > > find the connection between that and pci_alloc_irq_vectors().
+> > > 
+> > > One needs to read and understand the code, I agree. The explanation is spread
+> > > between pcim_release() and __pci_enable_msi/x_range().
+> > > 
+> > > The call chain is
+> > > 
+> > > msi_capability_init() / msix_capability_init()
+> > >   ...
+> > >   <- __pci_enable_msi/x_range()
+> > >     <- pci_alloc_irq_vectors_affinity()
+> > >       <- pci_alloc_irq_vectors()
+> > > 
+> > > where device msi_enabled / msix_enabled is set.
+> > > 
+> > > So, it may deserve to be explained in the commit message.
+> > > 
+> > > > > +}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
