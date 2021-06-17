@@ -2,336 +2,413 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1198F3AB8DF
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 18:09:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3345E3ABA2A
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 19:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233876AbhFQQLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 12:11:03 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37854 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233682AbhFQQKB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 12:10:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15HG62FL083373;
-        Thu, 17 Jun 2021 11:06:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1623945962;
-        bh=LVkWEpy5e6cRZkuXdEoUXgk9+WHo500mtyYaCdD+Lf0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jeALzHLk3n7+qQeuxED/H4L5B0pUGfd+IKm4cHUnNDcbGNi/N/vECD6HccgWs8Rdc
-         A79ZIeBKglC2uQcNptT6Rqq9rI3jaHqWmNvG1vKe80Rl9RF+rCyfhlpGUEyO1JBVae
-         q2yQKhqF9u2BVEw+7gi7jwzlSE7Jbm56DgmZH8PQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15HG60jb058606
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 17 Jun 2021 11:06:01 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 17
- Jun 2021 11:06:00 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Thu, 17 Jun 2021 11:06:00 -0500
-Received: from [10.250.36.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15HG5xDj116986;
-        Thu, 17 Jun 2021 11:05:59 -0500
-Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-To:     Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, <alsa-devel@alsa-project.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-iio@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-ide@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>, <linux-clk@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        <linux-serial@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        <linux-media@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        <linux-pwm@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
-        <linux-watchdog@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-can@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        id S230457AbhFQRCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 13:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229805AbhFQRCv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Jun 2021 13:02:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 99165613AA;
+        Thu, 17 Jun 2021 17:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623949243;
+        bh=dL4wkinslUu1o2pVcMJ7IhAvRSS6ebej58EJ5JcHwt0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IpbFBjNF+X8vEmvhN8/fjSvz1h8gQlkvfiaMhDlYdMQKPUObTyCDndaJQQyythWbF
+         +z6/HmwDGaErzikKW3tzFZQhGvN2ZZZ5WczQhxi2r+V7uvGXkRUYx5PkotCbwbMEAx
+         f6yQami9+pb8zcNT52xTIcH4OkcipbbRgOx8bgfUVXDen6834GqlKKllhJjD9666CI
+         BBrAmVE9b/ZXRHlopLZoc590RhPuLjkXp15eXjWh7jRcEpJdvSptbXZ0j1y9COSk/x
+         rRrxl+nyCNR+KtZHqSw5JGoZYLfX8FnVaUq+b3aghz2QEhUjZqgdEDg7j3lT1mdl42
+         MyLFclcR+Lopg==
+Date:   Thu, 17 Jun 2021 12:00:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, <netdev@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-usb@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        <linux-crypto@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <dmaengine@vger.kernel.org>, Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <20210615191543.1043414-1-robh@kernel.org>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <bb8c18f6-139d-76be-87e7-0c93e03cc92c@ti.com>
-Date:   Thu, 17 Jun 2021 11:05:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH V4] PCI: tegra: Fix building Tegra194 PCIe driver
+Message-ID: <20210617170042.GA3091529@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20210610064134.336781-1-jonathanh@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+On Thu, Jun 10, 2021 at 07:41:34AM +0100, Jon Hunter wrote:
+> Commit 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
+> errata") caused a few build regressions for the Tegra194 PCIe driver
+> which are:
+> 
+> 1. The Tegra194 PCIe driver can no longer be built as a module. This
+>    was caused by removing the Makefile entry to build the pcie-tegra.c
+>    based upon the CONFIG_PCIE_TEGRA194 option. Therefore, restore this
+>    so that we can build the driver as a module.
+> 2. 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
+>    errata") added "#ifdef CONFIG_PCIE_TEGRA194" around the native
+>    driver. But if we set CONFIG_PCIE_TEGRA194=m to build the driver as a
+>    module, autoconf.h contains "#define CONFIG_PCIE_TEGRA194_MODULE 1"
+>    (not "#define CONFIG_PCIE_TEGRA194 1"), so the #ifdef excludes the
+>    driver. Given that the ACPI quirk code for Tegra194 is completely
+>    independent of the native Tegra194 PCIe driver, move this code into
+>    its own file so that it can be built independently and we can remove
+>    the "#ifdef CONFIG_PCIE_TEGRA194" in the native driver. Note that
+>    given the native Tegra194 PCIe driver is only used with device-tree,
+>    this will not cause any conflicts.
+> 3. The below build warnings to be seen with particular kernel
+>    configurations. Fix these by moving these structure definitions to
+>    within the necessary guards.
+> 
+>   drivers/pci/controller/dwc/pcie-tegra194.c:259:18: warning:
+>   	‘event_cntr_data_offset’ defined but not used [-Wunused-const-variable=]
+>   drivers/pci/controller/dwc/pcie-tegra194.c:250:18: warning:
+>   	‘event_cntr_ctrl_offset’ defined but not used [-Wunused-const-variable=]
+>   drivers/pci/controller/dwc/pcie-tegra194.c:243:27: warning:
+>   	‘pcie_gen_freq’ defined but not used [-Wunused-const-variable=]
+> 
+> Fixes: 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM errata")
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 
-On 6/15/21 2:15 PM, Rob Herring wrote:
-> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
-> same size as the list is redundant and can be dropped. Note that is DT
-> schema specific behavior and not standard json-schema behavior. The tooling
-> will fixup the final schema adding any unspecified minItems/maxItems.
-> 
-> This condition is partially checked with the meta-schema already, but
-> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
-> An improved meta-schema is pending.
-> 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Jassi Brar <jassisinghbrar@gmail.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Vivien Didelot <vivien.didelot@gmail.com>
-> Cc: Vladimir Oltean <olteanv@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ohad Ben-Cohen <ohad@wizery.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Applied with Thierry's reviewed-by and the following subject to
+for-linus for v5.13, thanks!
+
+  PCI: tegra194: Fix MCFG quirk build regressions
+
 > ---
->  .../devicetree/bindings/ata/nvidia,tegra-ahci.yaml          | 1 -
->  .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml  | 2 --
->  .../devicetree/bindings/clock/qcom,gcc-apq8064.yaml         | 1 -
->  Documentation/devicetree/bindings/clock/qcom,gcc-sdx55.yaml | 2 --
->  .../devicetree/bindings/clock/qcom,gcc-sm8350.yaml          | 2 --
->  .../devicetree/bindings/clock/sprd,sc9863a-clk.yaml         | 1 -
->  .../devicetree/bindings/crypto/allwinner,sun8i-ce.yaml      | 2 --
->  Documentation/devicetree/bindings/crypto/fsl-dcp.yaml       | 1 -
->  .../display/allwinner,sun4i-a10-display-backend.yaml        | 6 ------
->  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml      | 1 -
->  .../bindings/display/allwinner,sun8i-a83t-dw-hdmi.yaml      | 4 ----
->  .../bindings/display/allwinner,sun8i-a83t-hdmi-phy.yaml     | 2 --
->  .../bindings/display/allwinner,sun8i-r40-tcon-top.yaml      | 2 --
->  .../devicetree/bindings/display/bridge/cdns,mhdp8546.yaml   | 2 --
->  .../bindings/display/rockchip/rockchip,dw-hdmi.yaml         | 2 --
->  Documentation/devicetree/bindings/display/st,stm32-dsi.yaml | 2 --
->  .../devicetree/bindings/display/st,stm32-ltdc.yaml          | 1 -
->  .../devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml | 4 ----
->  .../devicetree/bindings/dma/renesas,rcar-dmac.yaml          | 1 -
->  .../devicetree/bindings/edac/amazon,al-mc-edac.yaml         | 2 --
->  Documentation/devicetree/bindings/eeprom/at24.yaml          | 1 -
->  Documentation/devicetree/bindings/example-schema.yaml       | 2 --
->  Documentation/devicetree/bindings/gpu/brcm,bcm-v3d.yaml     | 1 -
->  Documentation/devicetree/bindings/gpu/vivante,gc.yaml       | 1 -
->  Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 1 -
->  .../devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml        | 2 --
->  .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.yaml         | 1 -
->  .../devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml   | 1 -
->  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml     | 2 --
->  .../bindings/interrupt-controller/fsl,irqsteer.yaml         | 1 -
->  .../bindings/interrupt-controller/loongson,liointc.yaml     | 1 -
->  Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml    | 1 -
->  .../devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml       | 1 -
->  .../devicetree/bindings/mailbox/st,stm32-ipcc.yaml          | 2 --
->  .../devicetree/bindings/media/amlogic,gx-vdec.yaml          | 1 -
->  Documentation/devicetree/bindings/media/i2c/adv7604.yaml    | 1 -
->  .../devicetree/bindings/media/marvell,mmp2-ccic.yaml        | 1 -
->  .../devicetree/bindings/media/qcom,sc7180-venus.yaml        | 1 -
->  .../devicetree/bindings/media/qcom,sdm845-venus-v2.yaml     | 1 -
->  .../devicetree/bindings/media/qcom,sm8250-venus.yaml        | 1 -
->  Documentation/devicetree/bindings/media/renesas,drif.yaml   | 1 -
->  .../bindings/memory-controllers/mediatek,smi-common.yaml    | 6 ++----
->  .../bindings/memory-controllers/mediatek,smi-larb.yaml      | 1 -
->  .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml    | 2 --
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml    | 1 -
->  Documentation/devicetree/bindings/mmc/mtk-sd.yaml           | 2 --
->  Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml     | 2 --
->  Documentation/devicetree/bindings/mmc/sdhci-am654.yaml      | 1 -
->  Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml        | 1 -
->  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml        | 2 --
->  .../devicetree/bindings/net/brcm,bcm4908-enet.yaml          | 2 --
->  Documentation/devicetree/bindings/net/can/bosch,m_can.yaml  | 2 --
->  Documentation/devicetree/bindings/net/dsa/brcm,sf2.yaml     | 2 --
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml       | 2 --
->  Documentation/devicetree/bindings/net/stm32-dwmac.yaml      | 1 -
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml    | 2 --
->  Documentation/devicetree/bindings/pci/loongson.yaml         | 1 -
->  .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml         | 1 -
->  .../devicetree/bindings/pci/microchip,pcie-host.yaml        | 2 --
->  Documentation/devicetree/bindings/perf/arm,cmn.yaml         | 1 -
->  .../devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml      | 1 -
->  .../devicetree/bindings/phy/brcm,brcmstb-usb-phy.yaml       | 3 ---
->  Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml    | 1 -
->  Documentation/devicetree/bindings/phy/mediatek,tphy.yaml    | 2 --
->  .../devicetree/bindings/phy/phy-cadence-sierra.yaml         | 2 --
->  .../devicetree/bindings/phy/phy-cadence-torrent.yaml        | 4 ----
->  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml    | 1 -
->  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml    | 1 -
->  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml     | 1 -
->  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml   | 2 --
->  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 2 --
->  Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml | 1 -
->  .../devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml   | 1 -
->  .../devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml    | 1 -
->  .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml    | 1 -
->  .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml      | 2 --
->  .../devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml     | 1 -
->  .../devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml  | 1 -
->  Documentation/devicetree/bindings/reset/fsl,imx-src.yaml    | 1 -
->  .../devicetree/bindings/riscv/sifive-l2-cache.yaml          | 1 -
->  .../devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml    | 1 -
->  Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml        | 1 -
->  Documentation/devicetree/bindings/serial/fsl-lpuart.yaml    | 2 --
->  Documentation/devicetree/bindings/serial/samsung_uart.yaml  | 1 -
->  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml          | 1 -
->  Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml      | 2 --
->  .../bindings/sound/nvidia,tegra-audio-graph-card.yaml       | 1 -
->  .../devicetree/bindings/sound/nvidia,tegra210-i2s.yaml      | 2 --
->  Documentation/devicetree/bindings/sound/st,stm32-sai.yaml   | 3 ---
->  .../devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml     | 1 -
->  .../devicetree/bindings/spi/brcm,spi-bcm-qspi.yaml          | 2 --
->  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml          | 2 --
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml   | 1 -
->  .../bindings/timer/allwinner,sun5i-a13-hstimer.yaml         | 1 -
->  Documentation/devicetree/bindings/timer/arm,arch_timer.yaml | 1 -
->  .../devicetree/bindings/timer/arm,arch_timer_mmio.yaml      | 2 --
->  .../devicetree/bindings/timer/intel,ixp4xx-timer.yaml       | 1 -
->  .../devicetree/bindings/usb/maxim,max3420-udc.yaml          | 2 --
->  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml          | 4 ----
->  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml    | 3 ---
->  .../devicetree/bindings/watchdog/st,stm32-iwdg.yaml         | 1 -
->  101 files changed, 2 insertions(+), 163 deletions(-)
+> Changes since V3:
+> - Moved ACPI quirk code into separate source file
 > 
-
-[snip]
-
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-> index 6070456a7b67..f399743b631b 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-> @@ -57,7 +57,6 @@ properties:
+> Changes since V2:
+> - Update the commit message per Bjorn's feedback
+> - Moved the structure definitions within the necessary guards as opposed
+>   to wrapping the existing defintions with the appropriate guards.
+> 
+> Changes since V1:
+> - Added fixes tag
+> - Fixed 'defined but not used' compiler warnings
+> 
+>  drivers/pci/controller/dwc/Makefile           |   3 +-
+>  .../pci/controller/dwc/pcie-tegra194-acpi.c   | 108 ++++++++++++++
+>  drivers/pci/controller/dwc/pcie-tegra194.c    | 138 +++---------------
+>  3 files changed, 128 insertions(+), 121 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194-acpi.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index eca805c1a023..9e6ce0dc2f53 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+>  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+>  obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+>  obj-$(CONFIG_PCI_MESON) += pci-meson.o
+> +obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
 >  
->    memory-region:
->      minItems: 2
-> -    maxItems: 8
->      description: |
->        phandle to the reserved memory nodes to be associated with the remoteproc
->        device. There should be at least two reserved memory nodes defined. The
-
-Does this enforce the maxItems to be 2 only now? Or should this be dropping the
-minItems here which matches the length of items instead of maxItems?
-
-I have originally listed the individual item list only for the mandatory items
-and rest are scalable. I provided this through "additionalItems: true" under
-this property.
-
-Also, have the exact same usage in
-Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml as well which
-is not included in this patch.
-
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> index 73400bc6e91d..75161f191ac3 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> @@ -116,7 +116,6 @@ properties:
->        list, in the specified order, each representing the corresponding
->        internal RAM memory region.
->      minItems: 1
-> -    maxItems: 3
->      items:
->        - const: l2ram
->        - const: l1pram
-
-
-[snip]
-
-> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> index dbc62821c60b..9790617af1bc 100644
-> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> @@ -100,7 +100,6 @@ patternProperties:
->      properties:
->        reg:
->          minItems: 2 # On AM437x one of two PRUSS units don't contain Shared RAM.
-> -        maxItems: 3
->          items:
->            - description: Address and size of the Data RAM0.
->            - description: Address and size of the Data RAM1.
-> @@ -111,7 +110,6 @@ patternProperties:
+> @@ -38,6 +39,6 @@ ifdef CONFIG_ACPI
+>  ifdef CONFIG_PCI_QUIRKS
+>  obj-$(CONFIG_ARM64) += pcie-al.o
+>  obj-$(CONFIG_ARM64) += pcie-hisi.o
+> -obj-$(CONFIG_ARM64) += pcie-tegra194.o
+> +obj-$(CONFIG_ARM64) += pcie-tegra194-acpi.o
+>  endif
+>  endif
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194-acpi.c b/drivers/pci/controller/dwc/pcie-tegra194-acpi.c
+> new file mode 100644
+> index 000000000000..c2de6ed4d86f
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194-acpi.c
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * ACPI quirks for Tegra194 PCIe host controller
+> + *
+> + * Copyright (C) 2021 NVIDIA Corporation.
+> + *
+> + * Author: Vidya Sagar <vidyas@nvidia.com>
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include <linux/pci-acpi.h>
+> +#include <linux/pci-ecam.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +struct tegra194_pcie_ecam  {
+> +	void __iomem *config_base;
+> +	void __iomem *iatu_base;
+> +	void __iomem *dbi_base;
+> +};
+> +
+> +static int tegra194_acpi_init(struct pci_config_window *cfg)
+> +{
+> +	struct device *dev = cfg->parent;
+> +	struct tegra194_pcie_ecam *pcie_ecam;
+> +
+> +	pcie_ecam = devm_kzalloc(dev, sizeof(*pcie_ecam), GFP_KERNEL);
+> +	if (!pcie_ecam)
+> +		return -ENOMEM;
+> +
+> +	pcie_ecam->config_base = cfg->win;
+> +	pcie_ecam->iatu_base = cfg->win + SZ_256K;
+> +	pcie_ecam->dbi_base = cfg->win + SZ_512K;
+> +	cfg->priv = pcie_ecam;
+> +
+> +	return 0;
+> +}
+> +
+> +static void atu_reg_write(struct tegra194_pcie_ecam *pcie_ecam, int index,
+> +			  u32 val, u32 reg)
+> +{
+> +	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+> +
+> +	writel(val, pcie_ecam->iatu_base + offset + reg);
+> +}
+> +
+> +static void program_outbound_atu(struct tegra194_pcie_ecam *pcie_ecam,
+> +				 int index, int type, u64 cpu_addr,
+> +				 u64 pci_addr, u64 size)
+> +{
+> +	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr),
+> +		      PCIE_ATU_LOWER_BASE);
+> +	atu_reg_write(pcie_ecam, index, upper_32_bits(cpu_addr),
+> +		      PCIE_ATU_UPPER_BASE);
+> +	atu_reg_write(pcie_ecam, index, lower_32_bits(pci_addr),
+> +		      PCIE_ATU_LOWER_TARGET);
+> +	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr + size - 1),
+> +		      PCIE_ATU_LIMIT);
+> +	atu_reg_write(pcie_ecam, index, upper_32_bits(pci_addr),
+> +		      PCIE_ATU_UPPER_TARGET);
+> +	atu_reg_write(pcie_ecam, index, type, PCIE_ATU_CR1);
+> +	atu_reg_write(pcie_ecam, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> +}
+> +
+> +static void __iomem *tegra194_map_bus(struct pci_bus *bus,
+> +				      unsigned int devfn, int where)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +	struct tegra194_pcie_ecam *pcie_ecam = cfg->priv;
+> +	u32 busdev;
+> +	int type;
+> +
+> +	if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
+> +		return NULL;
+> +
+> +	if (bus->number == cfg->busr.start) {
+> +		if (PCI_SLOT(devfn) == 0)
+> +			return pcie_ecam->dbi_base + where;
+> +		else
+> +			return NULL;
+> +	}
+> +
+> +	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+> +		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> +
+> +	if (bus->parent->number == cfg->busr.start) {
+> +		if (PCI_SLOT(devfn) == 0)
+> +			type = PCIE_ATU_TYPE_CFG0;
+> +		else
+> +			return NULL;
+> +	} else {
+> +		type = PCIE_ATU_TYPE_CFG1;
+> +	}
+> +
+> +	program_outbound_atu(pcie_ecam, 0, type, cfg->res.start, busdev,
+> +			     SZ_256K);
+> +
+> +	return pcie_ecam->config_base + where;
+> +}
+> +
+> +const struct pci_ecam_ops tegra194_pcie_ops = {
+> +	.init		= tegra194_acpi_init,
+> +	.pci_ops	= {
+> +		.map_bus	= tegra194_map_bus,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+> +};
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index b19775ab134e..fa6b12cfc043 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -22,8 +22,6 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-acpi.h>
+> -#include <linux/pci-ecam.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+> @@ -247,24 +245,6 @@ static const unsigned int pcie_gen_freq[] = {
+>  	GEN4_CORE_CLK_FREQ
+>  };
 >  
->        reg-names:
->          minItems: 2
-> -        maxItems: 3
->          items:
->            - const: dram0
->            - const: dram1
-
-
-regards
-Suman
+> -static const u32 event_cntr_ctrl_offset[] = {
+> -	0x1d8,
+> -	0x1a8,
+> -	0x1a8,
+> -	0x1a8,
+> -	0x1c4,
+> -	0x1d8
+> -};
+> -
+> -static const u32 event_cntr_data_offset[] = {
+> -	0x1dc,
+> -	0x1ac,
+> -	0x1ac,
+> -	0x1ac,
+> -	0x1c8,
+> -	0x1dc
+> -};
+> -
+>  struct tegra_pcie_dw {
+>  	struct device *dev;
+>  	struct resource *appl_res;
+> @@ -313,104 +293,6 @@ struct tegra_pcie_dw_of_data {
+>  	enum dw_pcie_device_mode mode;
+>  };
+>  
+> -#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> -struct tegra194_pcie_ecam  {
+> -	void __iomem *config_base;
+> -	void __iomem *iatu_base;
+> -	void __iomem *dbi_base;
+> -};
+> -
+> -static int tegra194_acpi_init(struct pci_config_window *cfg)
+> -{
+> -	struct device *dev = cfg->parent;
+> -	struct tegra194_pcie_ecam *pcie_ecam;
+> -
+> -	pcie_ecam = devm_kzalloc(dev, sizeof(*pcie_ecam), GFP_KERNEL);
+> -	if (!pcie_ecam)
+> -		return -ENOMEM;
+> -
+> -	pcie_ecam->config_base = cfg->win;
+> -	pcie_ecam->iatu_base = cfg->win + SZ_256K;
+> -	pcie_ecam->dbi_base = cfg->win + SZ_512K;
+> -	cfg->priv = pcie_ecam;
+> -
+> -	return 0;
+> -}
+> -
+> -static void atu_reg_write(struct tegra194_pcie_ecam *pcie_ecam, int index,
+> -			  u32 val, u32 reg)
+> -{
+> -	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+> -
+> -	writel(val, pcie_ecam->iatu_base + offset + reg);
+> -}
+> -
+> -static void program_outbound_atu(struct tegra194_pcie_ecam *pcie_ecam,
+> -				 int index, int type, u64 cpu_addr,
+> -				 u64 pci_addr, u64 size)
+> -{
+> -	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr),
+> -		      PCIE_ATU_LOWER_BASE);
+> -	atu_reg_write(pcie_ecam, index, upper_32_bits(cpu_addr),
+> -		      PCIE_ATU_UPPER_BASE);
+> -	atu_reg_write(pcie_ecam, index, lower_32_bits(pci_addr),
+> -		      PCIE_ATU_LOWER_TARGET);
+> -	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr + size - 1),
+> -		      PCIE_ATU_LIMIT);
+> -	atu_reg_write(pcie_ecam, index, upper_32_bits(pci_addr),
+> -		      PCIE_ATU_UPPER_TARGET);
+> -	atu_reg_write(pcie_ecam, index, type, PCIE_ATU_CR1);
+> -	atu_reg_write(pcie_ecam, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> -}
+> -
+> -static void __iomem *tegra194_map_bus(struct pci_bus *bus,
+> -				      unsigned int devfn, int where)
+> -{
+> -	struct pci_config_window *cfg = bus->sysdata;
+> -	struct tegra194_pcie_ecam *pcie_ecam = cfg->priv;
+> -	u32 busdev;
+> -	int type;
+> -
+> -	if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
+> -		return NULL;
+> -
+> -	if (bus->number == cfg->busr.start) {
+> -		if (PCI_SLOT(devfn) == 0)
+> -			return pcie_ecam->dbi_base + where;
+> -		else
+> -			return NULL;
+> -	}
+> -
+> -	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+> -		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> -
+> -	if (bus->parent->number == cfg->busr.start) {
+> -		if (PCI_SLOT(devfn) == 0)
+> -			type = PCIE_ATU_TYPE_CFG0;
+> -		else
+> -			return NULL;
+> -	} else {
+> -		type = PCIE_ATU_TYPE_CFG1;
+> -	}
+> -
+> -	program_outbound_atu(pcie_ecam, 0, type, cfg->res.start, busdev,
+> -			     SZ_256K);
+> -
+> -	return pcie_ecam->config_base + where;
+> -}
+> -
+> -const struct pci_ecam_ops tegra194_pcie_ops = {
+> -	.init		= tegra194_acpi_init,
+> -	.pci_ops	= {
+> -		.map_bus	= tegra194_map_bus,
+> -		.read		= pci_generic_config_read,
+> -		.write		= pci_generic_config_write,
+> -	}
+> -};
+> -#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> -
+> -#ifdef CONFIG_PCIE_TEGRA194
+> -
+>  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+>  {
+>  	return container_of(pci, struct tegra_pcie_dw, pci);
+> @@ -694,6 +576,24 @@ static struct pci_ops tegra_pci_ops = {
+>  };
+>  
+>  #if defined(CONFIG_PCIEASPM)
+> +static const u32 event_cntr_ctrl_offset[] = {
+> +	0x1d8,
+> +	0x1a8,
+> +	0x1a8,
+> +	0x1a8,
+> +	0x1c4,
+> +	0x1d8
+> +};
+> +
+> +static const u32 event_cntr_data_offset[] = {
+> +	0x1dc,
+> +	0x1ac,
+> +	0x1ac,
+> +	0x1ac,
+> +	0x1c8,
+> +	0x1dc
+> +};
+> +
+>  static void disable_aspm_l11(struct tegra_pcie_dw *pcie)
+>  {
+>  	u32 val;
+> @@ -2413,5 +2313,3 @@ MODULE_DEVICE_TABLE(of, tegra_pcie_dw_of_match);
+>  MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
+>  MODULE_DESCRIPTION("NVIDIA PCIe host controller driver");
+>  MODULE_LICENSE("GPL v2");
+> -
+> -#endif /* CONFIG_PCIE_TEGRA194 */
+> -- 
+> 2.25.1
+> 
