@@ -2,190 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E1E93AB330
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 14:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBEE13AB3AF
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 14:36:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232677AbhFQMEs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 08:04:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:50763 "EHLO mga12.intel.com"
+        id S231270AbhFQMij (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 08:38:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:51631 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232647AbhFQMEr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Jun 2021 08:04:47 -0400
-IronPort-SDR: PFJXzVAOwoT8ubaFduVjsNGNrvD08c9/KnvSP/upKSzpJH5Mr7bfUphCl2WLJv84nddmjMu7HY
- oVeyD9Qdsl5g==
-X-IronPort-AV: E=McAfee;i="6200,9189,10017"; a="186046018"
+        id S230225AbhFQMij (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Jun 2021 08:38:39 -0400
+IronPort-SDR: EG6Sp0VZzvdHbdGjgei2QwddJaQmu0bKMqBY1dAwAbEXyk/jjXlLlBEy6iH3N3+SygQqDZuX//
+ GQVPB0VKhLtw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10017"; a="193487258"
 X-IronPort-AV: E=Sophos;i="5.83,280,1616482800"; 
-   d="scan'208";a="186046018"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 05:02:39 -0700
-IronPort-SDR: VYgWvTg3vduCO5sq9muw6+nzrj6oVzAf93uDUQKqaivI2jQdmAHrhZl9G9zgS2tU7AiOfrmeGj
- vYNUkquhqPxQ==
+   d="scan'208";a="193487258"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 05:36:31 -0700
+IronPort-SDR: MJQMyc7w1n8uDTsoT8uEYfHc/x8e4EG/34sEAhpzZV0qtpCVgYlb6TOwwZTBAoKwTLs3v8PY8t
+ gGNl8rOK/BJQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,280,1616482800"; 
-   d="scan'208";a="479448181"
-Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jun 2021 05:02:38 -0700
-Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1ltqjF-000218-L2; Thu, 17 Jun 2021 12:02:37 +0000
-Date:   Thu, 17 Jun 2021 20:01:39 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- b322a468fae6ab8fc2dcabff78e39d985b9d7892
-Message-ID: <60cb39a3.5g3Dws8hIZpte1hx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="622029109"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2021 05:36:29 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id F025A2DA; Thu, 17 Jun 2021 15:36:53 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v4] PCI/PM: Target PM state is D3hot if device can only generate PME from D3cold
+Date:   Thu, 17 Jun 2021 15:36:53 +0300
+Message-Id: <20210617123653.58640-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: b322a468fae6ab8fc2dcabff78e39d985b9d7892  PCI: of: Clear 64-bit flag for non-prefetchable memory below 4GB
+Some PCIe devices only support PME (Power Management Event) from D3cold.
+One example is ASMedia xHCI controller:
 
-elapsed time: 735m
+11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
+  ...
+  Capabilities: [78] Power Management version 3
+  	  Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+	  Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
 
-configs tested: 128
-configs skipped: 2
+With such devices, if it has wake enabled, the kernel selects lowest
+possible power state to be D0 in pci_target_state(). This is problematic
+because it prevents the root port it is connected to enter low power
+state too which makes the system consume more energy than necessary.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The problem in pci_target_state() is that it only accounts the "current"
+device state, so when the bridge above it (a root port for instance) is
+transitioned into D3hot the device transitions into D3cold. This is
+because when the root port is first transitioned into D3hot then the
+ACPI power resource is turned off which puts the PCIe link to L2/L3 (and
+the root port and the device are in D3cold). If the root port is kept in
+D3hot it still means that the device below it is still effectively in
+D3cold as no configuration messages pass through. Furthermore the
+implementation note of PCIe 5.0 sec 5.3.1.4 says that the device should
+expect to be transitioned into D3cold soon after its link transitions
+into L2/L3 Ready state.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                       maple_defconfig
-mips                           ip28_defconfig
-m68k                          amiga_defconfig
-arc                              alldefconfig
-sh                   rts7751r2dplus_defconfig
-arm                          collie_defconfig
-arm                        multi_v5_defconfig
-arm                         orion5x_defconfig
-riscv                            allmodconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc                      tqm8xx_defconfig
-powerpc                 mpc832x_rdb_defconfig
-mips                             allyesconfig
-arm                         palmz72_defconfig
-xtensa                  nommu_kc705_defconfig
-mips                         tb0219_defconfig
-mips                      pistachio_defconfig
-um                               alldefconfig
-powerpc                 mpc836x_mds_defconfig
-arc                          axs103_defconfig
-powerpc64                           defconfig
-parisc                generic-64bit_defconfig
-m68k                       bvme6000_defconfig
-arm                            hisi_defconfig
-sh                        sh7785lcr_defconfig
-i386                             allyesconfig
-parisc                generic-32bit_defconfig
-arm                   milbeaut_m10v_defconfig
-mips                    maltaup_xpa_defconfig
-h8300                    h8300h-sim_defconfig
-arm                            dove_defconfig
-powerpc                    mvme5100_defconfig
-arm                      pxa255-idp_defconfig
-mips                        bcm47xx_defconfig
-arm                       omap2plus_defconfig
-h8300                     edosk2674_defconfig
-powerpc                      ep88xc_defconfig
-sh                         ecovec24_defconfig
-arm                        multi_v7_defconfig
-arm                          imote2_defconfig
-m68k                        m5307c3_defconfig
-sparc                            alldefconfig
-arm                          exynos_defconfig
-sh                   secureedge5410_defconfig
-arm                           tegra_defconfig
-mips                            gpr_defconfig
-arm                          simpad_defconfig
-s390                       zfcpdump_defconfig
-openrisc                  or1klitex_defconfig
-sh                           se7724_defconfig
-mips                          rm200_defconfig
-arm                         nhk8815_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210617
-x86_64               randconfig-a001-20210617
-x86_64               randconfig-a002-20210617
-x86_64               randconfig-a003-20210617
-x86_64               randconfig-a006-20210617
-x86_64               randconfig-a005-20210617
-i386                 randconfig-a002-20210617
-i386                 randconfig-a006-20210617
-i386                 randconfig-a001-20210617
-i386                 randconfig-a004-20210617
-i386                 randconfig-a005-20210617
-i386                 randconfig-a003-20210617
-i386                 randconfig-a015-20210617
-i386                 randconfig-a013-20210617
-i386                 randconfig-a016-20210617
-i386                 randconfig-a012-20210617
-i386                 randconfig-a014-20210617
-i386                 randconfig-a011-20210617
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Taking the above into consideration, instead of forcing the device stay
+in D0 we modify pci_target_state() to return D3hot in this special case
+and make __pci_enable_wake() to enable PME too in this case.
 
-clang tested configs:
-x86_64               randconfig-b001-20210617
-x86_64               randconfig-a015-20210617
-x86_64               randconfig-a011-20210617
-x86_64               randconfig-a014-20210617
-x86_64               randconfig-a012-20210617
-x86_64               randconfig-a013-20210617
-x86_64               randconfig-a016-20210617
-
+Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
+Reported-by: Koba Ko <koba.ko@canonical.com>
+Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+The previous version of the patch is here:
+
+https://lore.kernel.org/linux-pm/20210616150516.28242-1-mika.westerberg@linux.intel.com/
+
+Changes from the previous version:
+
+  * Dropped redundant test in pci_target_state().
+
+ drivers/pci/pci.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b717680377a9..043c5c304308 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2485,7 +2485,13 @@ static int __pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable
+ 	if (enable) {
+ 		int error;
+ 
+-		if (pci_pme_capable(dev, state))
++		/*
++		 * Enable PME if device is capable from given state.
++		 * Special case is device that can only generate PME
++		 * from D3cold then we enable PME too.
++		 */
++		if (pci_pme_capable(dev, state) ||
++		    (state == PCI_D3hot && pci_pme_capable(dev, PCI_D3cold)))
+ 			pci_pme_active(dev, true);
+ 		else
+ 			ret = 1;
+@@ -2595,6 +2601,14 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+ 		 * PME#.
+ 		 */
+ 		if (dev->pme_support) {
++			/*
++			 * Special case if device supports only PME from
++			 * D3cold but not from D3hot we still return D3hot.
++			 */
++			if (target_state == PCI_D3hot &&
++				(dev->pme_support & (1 << PCI_D3cold)))
++				return target_state;
++
+ 			while (target_state
+ 			      && !(dev->pme_support & (1 << target_state)))
+ 				target_state--;
+-- 
+2.30.2
+
