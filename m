@@ -2,69 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFE6A3AAC88
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 08:39:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36DAC3AAC9D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 08:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbhFQGlh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 02:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        id S229783AbhFQGn3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 02:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbhFQGlh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 02:41:37 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC7AC061574
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 23:39:30 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id 13-20020a17090a08cdb029016eed209ca4so3262758pjn.1
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 23:39:30 -0700 (PDT)
+        with ESMTP id S230268AbhFQGn3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 02:43:29 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BD8C061574
+        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 23:41:22 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id g22so4147201pgk.1
+        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 23:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
         bh=IqsCA/yjikDS1aCYzllqiH9HoLVcQQhYIn5qSeonABE=;
-        b=kDczImboY2eVAJ3+sYnRR25HrludaTlIxUHPV26t7zvADYlkn+EAot8vmNZFxS6ckk
-         NyqXP6vgSOkhkXMigW38BKTSHGkozev95CT8sd0RyYFWHSEXQf1vzK9yA5xbK5UPbuEq
-         Bn0NNhaz+a2zeBhstpYyx1baPQ8VKdD07y9nQ=
+        b=GiFPgetacPTJVsGZ3MFWgSvQPnCdoTJhc4FxcdhnTR1mIKLWNYkC5qsclOh1Nu4T0t
+         2JBHLcEHEvZiTaAAwPJzRshEva/oe1afpxIyCNXuS6Yc5SEiWBAid4ULBNFnG08bi+4b
+         5Y3w62S7YQM/biDmcuEcWF0r86zBUuRahetbQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
         bh=IqsCA/yjikDS1aCYzllqiH9HoLVcQQhYIn5qSeonABE=;
-        b=N06I+eS9SrzzeFaSY7UfMCIY6YXNtOBsXijjNIjO6AyYahfm45sewQiD/d8Yit4fKW
-         x8k84fTNo3NfMVgpQQC5dqlwiQXTDPhKX/H0n5jdwxT3E/YlrjnEpPSfL4YGXcwAoVbQ
-         xth7OQ3DncOBP9xmnR+cSAUNWuoY4RAEGNXRTTbe7j4YsMX1+0ErULL3wyH+yQVZZkdo
-         9+PoTijVGREiPlhlMFU/78z1Hf39hVub/bNw9BY/cEEtJ3yqp2HYxjMYKP54gPW5vfjj
-         CYAu6lr6E8HS63AN5OWEnIFFyNuJ8iUmGit59yS4hBoMKpPuiUlyZApHU+Sq4PyNPCzl
-         muKg==
-X-Gm-Message-State: AOAM532zyyUdIxUbc4IMrvv0TPSWz7WDUr49t/xin3KLYDpHvYz7WwgD
-        hLIhGssp++vM03W6rqqm8U+AroI8SE0Jqw==
-X-Google-Smtp-Source: ABdhPJwyhdwBq21Xd/rjFdI6aB7eeid2VCW6Phy+WEzVFzs9LeyCmPtnpF7UhIlCfnImA/+968wdoQ==
-X-Received: by 2002:a17:902:ed82:b029:ef:48c8:128e with SMTP id e2-20020a170902ed82b02900ef48c8128emr3227077plj.72.1623911969391;
-        Wed, 16 Jun 2021 23:39:29 -0700 (PDT)
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com. [209.85.210.176])
-        by smtp.gmail.com with ESMTPSA id em22sm8039496pjb.27.2021.06.16.23.39.28
+        b=toFc2FQTr6o9Zd52yYCyJieW28gbNkHLhGBkzurhRs0EpNqZeiYUu9y3HC1SO2O1ey
+         JN9X5YqybDCWVH3HdNS0RrGhuj3HJWu6cKID1ymjCjqXqj2w/H+A1SmVKAeBMqBqywTr
+         XpVo2yzxkZJZn+Zpnitr8ESBPW8Mivy3zS2cMQkmEscHFutxryhozpN8pOa9JjX5Ke/B
+         aD2vtClem+NCD1rJ0o0sm6uk3Hp/DOzli22cSMSEVGh4LgjA4s0TNXJu4kZufhT2P868
+         As88yi5KJT2yRpXRsUy9PzK6YZClHnmYlZaCKWjEf6qBjL/3K/xPNxbOkSmnoXNlOSX5
+         fYFA==
+X-Gm-Message-State: AOAM532wKGz24H9rUZkYEzUFbd2hEjn3yiGMTtRIfqZFTkgR3fFlYhNY
+        A9RmdbAaUmYAV5blg37T/81yrZV4UTFnoA==
+X-Google-Smtp-Source: ABdhPJxCPtWBefJS9Js69dBGrLAZ4+DEkqA97Q8w6uC8XweLo/VAOuiUlNCpz3C0BnUP2bXyg49EWw==
+X-Received: by 2002:a62:2942:0:b029:2f4:e012:fb23 with SMTP id p63-20020a6229420000b02902f4e012fb23mr3842455pfp.55.1623912081322;
+        Wed, 16 Jun 2021 23:41:21 -0700 (PDT)
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com. [209.85.210.181])
+        by smtp.gmail.com with ESMTPSA id v4sm4380048pgr.65.2021.06.16.23.41.20
         for <linux-pci@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Jun 2021 23:39:29 -0700 (PDT)
-Received: by mail-pf1-f176.google.com with SMTP id k15so4190330pfp.6
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 23:39:28 -0700 (PDT)
-X-Received: by 2002:a92:c852:: with SMTP id b18mr352877ilq.18.1623911531698;
- Wed, 16 Jun 2021 23:32:11 -0700 (PDT)
+        Wed, 16 Jun 2021 23:41:20 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id p13so4251869pfw.0
+        for <linux-pci@vger.kernel.org>; Wed, 16 Jun 2021 23:41:20 -0700 (PDT)
+X-Received: by 2002:a05:6602:2344:: with SMTP id r4mr2559955iot.69.1623912068770;
+ Wed, 16 Jun 2021 23:41:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210617062635.1660944-1-tientzu@chromium.org>
-In-Reply-To: <20210617062635.1660944-1-tientzu@chromium.org>
+References: <20210616062157.953777-1-tientzu@chromium.org> <20210616120837.GA22783@willie-the-truck>
+In-Reply-To: <20210616120837.GA22783@willie-the-truck>
 From:   Claire Chang <tientzu@chromium.org>
-Date:   Thu, 17 Jun 2021 14:32:00 +0800
-X-Gmail-Original-Message-ID: <CALiNf2_qF7OY0LHToNYx0E79BWMt2n7=nepPPLf+7YV3=KFEyw@mail.gmail.com>
-Message-ID: <CALiNf2_qF7OY0LHToNYx0E79BWMt2n7=nepPPLf+7YV3=KFEyw@mail.gmail.com>
-Subject: Re: [PATCH v13 00/12] Restricted DMA
-To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+Date:   Thu, 17 Jun 2021 14:40:57 +0800
+X-Gmail-Original-Message-ID: <CALiNf28SSxhs_+9Oq=pyOc7OWWDyWrtZLUqXKQKin6dRyXwo=w@mail.gmail.com>
+Message-ID: <CALiNf28SSxhs_+9Oq=pyOc7OWWDyWrtZLUqXKQKin6dRyXwo=w@mail.gmail.com>
+Subject: Re: [PATCH v12 00/12] Restricted DMA
+To:     Will Deacon <will@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>,
         Frank Rowand <frowand.list@gmail.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         boris.ostrovsky@oracle.com, jgross@suse.com,
         Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
         "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
         sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
         grant.likely@arm.com, xypron.glpk@gmx.de,
