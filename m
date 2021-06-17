@@ -2,72 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E400A3ABD50
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 22:15:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66E893ABE6D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 23:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbhFQURd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 16:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
+        id S231445AbhFQV5u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 17:57:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:16700 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232431AbhFQURc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Jun 2021 16:17:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 662FF613D8;
-        Thu, 17 Jun 2021 20:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623960924;
-        bh=L9FplHBnsT4DdGAjNwBoZQiikqRViJZ8+NMc/aNkOAw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dWY/gRmg8kph/qjI/K1gLLsyrOeYNJhLgXUWRlznBt+Blgng7S/7x7WsVBaquYYO3
-         OkrVUaMT8zBsFzz59PAR+3MJPEiG7Z8wty2lhmZGmRYBhYZ6slJT3c/XpX7jC69kBL
-         lht1ccQldDhWB2o4U3sKYA7o56bo7nKjBZ+DTQsoTOUn9VwuAHGBS8khslDDzoaic5
-         znHOBuu1nGn/Dg8SoCUKoMT8xS+RNj08+w8igyA33ch2+dnUpTRM5nRpcXfBqoS1gG
-         rYTdr4nJM0IKro6C1uXMQN/fXka5On3dci1Lha+AwELRsO+2CdIGqNKGOW38A6WFXc
-         PfRfCtWvWPSRA==
-Date:   Thu, 17 Jun 2021 15:15:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] PCI: aardvark: Fix kernel panic during PIO
- transfer
-Message-ID: <20210617201523.GA3104553@bjorn-Precision-5520>
+        id S230494AbhFQV5t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Jun 2021 17:57:49 -0400
+IronPort-SDR: 2zJZy86vQxPd/0B6aC9zSt3YGq5pcnZcRmxugSU18PFJwkBk3JzhFlYSf9an0mwp/ehcoWQomF
+ 0WSBYtOey0bg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="270304152"
+X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
+   d="scan'208";a="270304152"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:55:41 -0700
+IronPort-SDR: 1xhvMVZ1+S3+IX9VIl8+qKUkMfwdn9WaDjg/nl4pDQic89Khzk6wjKo2qVGAmI1Njri6OkQqV1
+ jt4kbV0lnf2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
+   d="scan'208";a="488810895"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Jun 2021 14:55:40 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id 9A0645801CA;
+        Thu, 17 Jun 2021 14:55:40 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
+        hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 0/4] MFD: intel_pmt: Split OOBMSM from intel_pmt driver
+Date:   Thu, 17 Jun 2021 14:54:04 -0700
+Message-Id: <20210617215408.1412409-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <162322862108.3345.4160808336030929680.b4-ty@arm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 09, 2021 at 09:50:39AM +0100, Lorenzo Pieralisi wrote:
-> On Tue, 8 Jun 2021 22:36:55 +0200, Pali Rohár wrote:
-> > Trying to start a new PIO transfer by writing value 0 in PIO_START register
-> > when previous transfer has not yet completed (which is indicated by value 1
-> > in PIO_START) causes an External Abort on CPU, which results in kernel
-> > panic:
-> > 
-> >     SError Interrupt on CPU0, code 0xbf000002 -- SError
-> >     Kernel panic - not syncing: Asynchronous SError Interrupt
-> > 
-> > [...]
-> 
-> Applied to pci/aardvark, thanks!
-> 
-> [1/1] PCI: aardvark: Fix kernel panic during PIO transfer
->       https://git.kernel.org/lpieralisi/pci/c/f77378171b
+Most of the devices in the intel_pmt driver are PMT only devices. However,
+the Out of Band Management Services Module (OOBMSM) can also be used
+access non-PMT devices. In order to better support this without the
+confusion of a dependency on MFD_INTEL_PMT, this patch set rewrites the
+intel_pmt driver to split the functionality into 3 components:
 
-Since this fixes a panic and only affects aardvark, I cherry picked
-this to my for-linus branch.
+	1. intel_pmt - driver for PMT only devices
+	2. intel-oobmsm - driver for devices using the OOBMSM IP which can
+	   support multiple types of capabilities, including PMT
+	3. intel-extended-cap - symbols to handle adding platform device
+	   for both drivers
 
-Can you drop it, Lorenzo?  It's currently the only thing on your
-pci/aardvark branch, so I just dropped that whole branch from -next.
+Additionally, this patch set provides additional DVSEC macros in the PCI
+header as well as support for reading capabilities from a VSEC structure.
 
-Bjorn
+Patch 1 - Adds PCI defines for DVSEC registers
+Patch 2 - Removes OOBMSM from intel_pmt and creates intel-extended-cap.c
+	  support the creation of platform devices for capabilities from
+	  both intel_pmt and intel-oobmsm (Patch 3)
+Patch 2 - Creates a separate driver for OOBMSM
+Patch 3 - Adds support for reading capabilities from PCIe VSEC structures
+
+For submission through MFD branch.
+
+David E. Box (4):
+  PCI: Add #defines for accessing PCIE DVSEC fields
+  MFD: intel_pmt: Remove OOBMSM device for placement in own driver
+  MFD: Add the Intel Out of Band Management Services Module (OOBMSM)
+    driver
+  MFD: intel-extended-cap: Add support for PCIe VSEC structures
+
+ MAINTAINERS                                |   2 +
+ drivers/mfd/Kconfig                        |  15 ++
+ drivers/mfd/Makefile                       |   2 +
+ drivers/mfd/intel_extended_caps.c          | 267 +++++++++++++++++++++
+ drivers/mfd/intel_extended_caps.h          |  40 +++
+ drivers/mfd/intel_oobmsm.c                 |  61 +++++
+ drivers/mfd/intel_pmt.c                    | 198 ++-------------
+ drivers/platform/x86/Kconfig               |   4 +-
+ drivers/platform/x86/intel_pmt_crashlog.c  |   2 +-
+ drivers/platform/x86/intel_pmt_telemetry.c |   2 +-
+ include/uapi/linux/pci_regs.h              |   4 +
+ 11 files changed, 409 insertions(+), 188 deletions(-)
+ create mode 100644 drivers/mfd/intel_extended_caps.c
+ create mode 100644 drivers/mfd/intel_extended_caps.h
+ create mode 100644 drivers/mfd/intel_oobmsm.c
+
+-- 
+2.25.1
+
