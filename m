@@ -2,413 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3345E3ABA2A
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 19:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A291D3ABA3E
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 19:05:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230457AbhFQRCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 13:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229805AbhFQRCv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Jun 2021 13:02:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 99165613AA;
-        Thu, 17 Jun 2021 17:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623949243;
-        bh=dL4wkinslUu1o2pVcMJ7IhAvRSS6ebej58EJ5JcHwt0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IpbFBjNF+X8vEmvhN8/fjSvz1h8gQlkvfiaMhDlYdMQKPUObTyCDndaJQQyythWbF
-         +z6/HmwDGaErzikKW3tzFZQhGvN2ZZZ5WczQhxi2r+V7uvGXkRUYx5PkotCbwbMEAx
-         f6yQami9+pb8zcNT52xTIcH4OkcipbbRgOx8bgfUVXDen6834GqlKKllhJjD9666CI
-         BBrAmVE9b/ZXRHlopLZoc590RhPuLjkXp15eXjWh7jRcEpJdvSptbXZ0j1y9COSk/x
-         rRrxl+nyCNR+KtZHqSw5JGoZYLfX8FnVaUq+b3aghz2QEhUjZqgdEDg7j3lT1mdl42
-         MyLFclcR+Lopg==
-Date:   Thu, 17 Jun 2021 12:00:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH V4] PCI: tegra: Fix building Tegra194 PCIe driver
-Message-ID: <20210617170042.GA3091529@bjorn-Precision-5520>
+        id S229683AbhFQRID (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 13:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231164AbhFQRID (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 13:08:03 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEAAC06175F
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 10:05:55 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id y15so5525719pfl.4
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 10:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=spDOLTpTEkP0pQRlVnvSw7EzDBOy7ixf6KlEeu5zAFw=;
+        b=gvFkjdJ8/nWFYJ6eh4eGwDZH3O/FzRYCKAixYJ+bNuEKuwuss5/DVmrjbX+uVysNvs
+         i+qXxnRozSclnhV9Ko6zmIrYMI87h5HmYTek2HI51jvn+xNCD0bg4XrN4Yqp9qib8CR9
+         CUbQjexgtNkQUUYY4uYwd9nqQU44N+MdMqNFnAuiyyvQF/75BrkWVJgcEymLk/Yr4jeG
+         LXwy06acDKVCdG2uCzuuG+EAuw4cXh15bV4ak7aa62CQzu1ula2LAtWnB2igv14GYA4W
+         lXzfTYxIUy2PbsQtOWmWpcG+YtKPZhkz3VQN8S2EtJE6uuvXzzN4PNXTSebZUa2p7xNz
+         g78g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=spDOLTpTEkP0pQRlVnvSw7EzDBOy7ixf6KlEeu5zAFw=;
+        b=dhT7QsbJzcLxLt5YnkA1Zy8/ATfj4xbxYhkAMVa7Aqz5k817PBntgqTlz3DoFRWVo9
+         tubQRz1lQVZxCjRCuNHgkOtuoGFKhy6z1Lq8NTNGc5BhpEc84zhGEG0H40gwLI+dd/nB
+         nFxuuO2y0B43pvDvY1iHb188ZZ9e4qtkB4fQnjBTnOJaJ9q/Kdjity+PLH1/2gWuxH9R
+         +LWr5XqDL0k5wdMCDrGQ8L1dAey74RtKH+IqQAL+dmDnOdREssEfQE7Lx2I2AUU2RYEi
+         fxB5kNExarW7nogVtip+Fmit+uPc/ukwkSSh6eli4Wh3hhtO/lOqXdtEIjDslswf/95D
+         uxyQ==
+X-Gm-Message-State: AOAM532Cp4N3z/ivBLbqhLDi6okzlU4mpKognzwy0Q4rwKQ+Tsk3bpMJ
+        DVAh48IpAI8r3LJdWkl2uqAv
+X-Google-Smtp-Source: ABdhPJwaG6/j71e6DUZJ1nF3XYcWFet57gwEKHoW0R5fI/eRI2bpxAbaOGhdC3lH0rW9KnnXYL+7tA==
+X-Received: by 2002:a63:d117:: with SMTP id k23mr5831729pgg.60.1623949554810;
+        Thu, 17 Jun 2021 10:05:54 -0700 (PDT)
+Received: from workstation ([120.138.13.64])
+        by smtp.gmail.com with ESMTPSA id nv1sm5562052pjb.43.2021.06.17.10.05.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Jun 2021 10:05:54 -0700 (PDT)
+Date:   Thu, 17 Jun 2021 22:35:50 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Om Prakash Singh <omp@nvidia.com>
+Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        smohanad@codeaurora.org
+Subject: Re: [PATCH 0/5] PCI: endpoint: Add support for additional notifiers
+Message-ID: <20210617170549.GA3075@workstation>
+References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+ <9fd37c43-e2ab-f5b2-13dc-a23bd83d3c7b@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210610064134.336781-1-jonathanh@nvidia.com>
+In-Reply-To: <9fd37c43-e2ab-f5b2-13dc-a23bd83d3c7b@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 07:41:34AM +0100, Jon Hunter wrote:
-> Commit 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
-> errata") caused a few build regressions for the Tegra194 PCIe driver
-> which are:
-> 
-> 1. The Tegra194 PCIe driver can no longer be built as a module. This
->    was caused by removing the Makefile entry to build the pcie-tegra.c
->    based upon the CONFIG_PCIE_TEGRA194 option. Therefore, restore this
->    so that we can build the driver as a module.
-> 2. 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM
->    errata") added "#ifdef CONFIG_PCIE_TEGRA194" around the native
->    driver. But if we set CONFIG_PCIE_TEGRA194=m to build the driver as a
->    module, autoconf.h contains "#define CONFIG_PCIE_TEGRA194_MODULE 1"
->    (not "#define CONFIG_PCIE_TEGRA194 1"), so the #ifdef excludes the
->    driver. Given that the ACPI quirk code for Tegra194 is completely
->    independent of the native Tegra194 PCIe driver, move this code into
->    its own file so that it can be built independently and we can remove
->    the "#ifdef CONFIG_PCIE_TEGRA194" in the native driver. Note that
->    given the native Tegra194 PCIe driver is only used with device-tree,
->    this will not cause any conflicts.
-> 3. The below build warnings to be seen with particular kernel
->    configurations. Fix these by moving these structure definitions to
->    within the necessary guards.
-> 
->   drivers/pci/controller/dwc/pcie-tegra194.c:259:18: warning:
->   	‘event_cntr_data_offset’ defined but not used [-Wunused-const-variable=]
->   drivers/pci/controller/dwc/pcie-tegra194.c:250:18: warning:
->   	‘event_cntr_ctrl_offset’ defined but not used [-Wunused-const-variable=]
->   drivers/pci/controller/dwc/pcie-tegra194.c:243:27: warning:
->   	‘pcie_gen_freq’ defined but not used [-Wunused-const-variable=]
-> 
-> Fixes: 7f100744749e ("PCI: tegra: Add Tegra194 MCFG quirks for ECAM errata")
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Hi,
 
-Applied with Thierry's reviewed-by and the following subject to
-for-linus for v5.13, thanks!
+On Thu, Jun 17, 2021 at 12:42:07AM +0530, Om Prakash Singh wrote:
+> Hi Mani,
+> Adding more notifier types will surely help but I believe the list is not
+> exhaustive. What you are trying here is to pass various vendor-specific epc
+> interrupts to EPF driver. That can be taken care by a single notifier
+> interface as well, "pci_epc_custom_notify" from your implementation.
 
-  PCI: tegra194: Fix MCFG quirk build regressions
+That's what I initially thought eventhough not all the notifiers are
+vendor specific. But Kishon suggested to add notifiers for generic ones
+such as BME, PME etc... and that sounded reasonable to me.
 
-> ---
-> Changes since V3:
-> - Moved ACPI quirk code into separate source file
+> This
+> also requires to have pre-defined values of "data" argument to standardize
+> the interface.
 > 
-> Changes since V2:
-> - Update the commit message per Bjorn's feedback
-> - Moved the structure definitions within the necessary guards as opposed
->   to wrapping the existing defintions with the appropriate guards.
+
+No, I don't think we can standardize the arguments to "custom" notifier.
+The custom notifier is supposed to deal with vendor specific events and
+I don't see any benefit on standardizing it. I see it more like an
+opaque driver_data field where we pass driver specific arguments.
+
+Thanks,
+Mani
+
+> your thoughts?
 > 
-> Changes since V1:
-> - Added fixes tag
-> - Fixed 'defined but not used' compiler warnings
+> Thanks,
+> Om
 > 
->  drivers/pci/controller/dwc/Makefile           |   3 +-
->  .../pci/controller/dwc/pcie-tegra194-acpi.c   | 108 ++++++++++++++
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 138 +++---------------
->  3 files changed, 128 insertions(+), 121 deletions(-)
->  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194-acpi.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index eca805c1a023..9e6ce0dc2f53 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
->  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
->  obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
->  obj-$(CONFIG_PCI_MESON) += pci-meson.o
-> +obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->  
-> @@ -38,6 +39,6 @@ ifdef CONFIG_ACPI
->  ifdef CONFIG_PCI_QUIRKS
->  obj-$(CONFIG_ARM64) += pcie-al.o
->  obj-$(CONFIG_ARM64) += pcie-hisi.o
-> -obj-$(CONFIG_ARM64) += pcie-tegra194.o
-> +obj-$(CONFIG_ARM64) += pcie-tegra194-acpi.o
->  endif
->  endif
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194-acpi.c b/drivers/pci/controller/dwc/pcie-tegra194-acpi.c
-> new file mode 100644
-> index 000000000000..c2de6ed4d86f
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194-acpi.c
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * ACPI quirks for Tegra194 PCIe host controller
-> + *
-> + * Copyright (C) 2021 NVIDIA Corporation.
-> + *
-> + * Author: Vidya Sagar <vidyas@nvidia.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-acpi.h>
-> +#include <linux/pci-ecam.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +struct tegra194_pcie_ecam  {
-> +	void __iomem *config_base;
-> +	void __iomem *iatu_base;
-> +	void __iomem *dbi_base;
-> +};
-> +
-> +static int tegra194_acpi_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct tegra194_pcie_ecam *pcie_ecam;
-> +
-> +	pcie_ecam = devm_kzalloc(dev, sizeof(*pcie_ecam), GFP_KERNEL);
-> +	if (!pcie_ecam)
-> +		return -ENOMEM;
-> +
-> +	pcie_ecam->config_base = cfg->win;
-> +	pcie_ecam->iatu_base = cfg->win + SZ_256K;
-> +	pcie_ecam->dbi_base = cfg->win + SZ_512K;
-> +	cfg->priv = pcie_ecam;
-> +
-> +	return 0;
-> +}
-> +
-> +static void atu_reg_write(struct tegra194_pcie_ecam *pcie_ecam, int index,
-> +			  u32 val, u32 reg)
-> +{
-> +	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
-> +
-> +	writel(val, pcie_ecam->iatu_base + offset + reg);
-> +}
-> +
-> +static void program_outbound_atu(struct tegra194_pcie_ecam *pcie_ecam,
-> +				 int index, int type, u64 cpu_addr,
-> +				 u64 pci_addr, u64 size)
-> +{
-> +	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr),
-> +		      PCIE_ATU_LOWER_BASE);
-> +	atu_reg_write(pcie_ecam, index, upper_32_bits(cpu_addr),
-> +		      PCIE_ATU_UPPER_BASE);
-> +	atu_reg_write(pcie_ecam, index, lower_32_bits(pci_addr),
-> +		      PCIE_ATU_LOWER_TARGET);
-> +	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr + size - 1),
-> +		      PCIE_ATU_LIMIT);
-> +	atu_reg_write(pcie_ecam, index, upper_32_bits(pci_addr),
-> +		      PCIE_ATU_UPPER_TARGET);
-> +	atu_reg_write(pcie_ecam, index, type, PCIE_ATU_CR1);
-> +	atu_reg_write(pcie_ecam, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
-> +}
-> +
-> +static void __iomem *tegra194_map_bus(struct pci_bus *bus,
-> +				      unsigned int devfn, int where)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	struct tegra194_pcie_ecam *pcie_ecam = cfg->priv;
-> +	u32 busdev;
-> +	int type;
-> +
-> +	if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
-> +		return NULL;
-> +
-> +	if (bus->number == cfg->busr.start) {
-> +		if (PCI_SLOT(devfn) == 0)
-> +			return pcie_ecam->dbi_base + where;
-> +		else
-> +			return NULL;
-> +	}
-> +
-> +	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
-> +		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
-> +
-> +	if (bus->parent->number == cfg->busr.start) {
-> +		if (PCI_SLOT(devfn) == 0)
-> +			type = PCIE_ATU_TYPE_CFG0;
-> +		else
-> +			return NULL;
-> +	} else {
-> +		type = PCIE_ATU_TYPE_CFG1;
-> +	}
-> +
-> +	program_outbound_atu(pcie_ecam, 0, type, cfg->res.start, busdev,
-> +			     SZ_256K);
-> +
-> +	return pcie_ecam->config_base + where;
-> +}
-> +
-> +const struct pci_ecam_ops tegra194_pcie_ops = {
-> +	.init		= tegra194_acpi_init,
-> +	.pci_ops	= {
-> +		.map_bus	= tegra194_map_bus,
-> +		.read		= pci_generic_config_read,
-> +		.write		= pci_generic_config_write,
-> +	}
-> +};
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index b19775ab134e..fa6b12cfc043 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -22,8 +22,6 @@
->  #include <linux/of_irq.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
-> -#include <linux/pci-acpi.h>
-> -#include <linux/pci-ecam.h>
->  #include <linux/phy/phy.h>
->  #include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
-> @@ -247,24 +245,6 @@ static const unsigned int pcie_gen_freq[] = {
->  	GEN4_CORE_CLK_FREQ
->  };
->  
-> -static const u32 event_cntr_ctrl_offset[] = {
-> -	0x1d8,
-> -	0x1a8,
-> -	0x1a8,
-> -	0x1a8,
-> -	0x1c4,
-> -	0x1d8
-> -};
-> -
-> -static const u32 event_cntr_data_offset[] = {
-> -	0x1dc,
-> -	0x1ac,
-> -	0x1ac,
-> -	0x1ac,
-> -	0x1c8,
-> -	0x1dc
-> -};
-> -
->  struct tegra_pcie_dw {
->  	struct device *dev;
->  	struct resource *appl_res;
-> @@ -313,104 +293,6 @@ struct tegra_pcie_dw_of_data {
->  	enum dw_pcie_device_mode mode;
->  };
->  
-> -#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-> -struct tegra194_pcie_ecam  {
-> -	void __iomem *config_base;
-> -	void __iomem *iatu_base;
-> -	void __iomem *dbi_base;
-> -};
-> -
-> -static int tegra194_acpi_init(struct pci_config_window *cfg)
-> -{
-> -	struct device *dev = cfg->parent;
-> -	struct tegra194_pcie_ecam *pcie_ecam;
-> -
-> -	pcie_ecam = devm_kzalloc(dev, sizeof(*pcie_ecam), GFP_KERNEL);
-> -	if (!pcie_ecam)
-> -		return -ENOMEM;
-> -
-> -	pcie_ecam->config_base = cfg->win;
-> -	pcie_ecam->iatu_base = cfg->win + SZ_256K;
-> -	pcie_ecam->dbi_base = cfg->win + SZ_512K;
-> -	cfg->priv = pcie_ecam;
-> -
-> -	return 0;
-> -}
-> -
-> -static void atu_reg_write(struct tegra194_pcie_ecam *pcie_ecam, int index,
-> -			  u32 val, u32 reg)
-> -{
-> -	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
-> -
-> -	writel(val, pcie_ecam->iatu_base + offset + reg);
-> -}
-> -
-> -static void program_outbound_atu(struct tegra194_pcie_ecam *pcie_ecam,
-> -				 int index, int type, u64 cpu_addr,
-> -				 u64 pci_addr, u64 size)
-> -{
-> -	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr),
-> -		      PCIE_ATU_LOWER_BASE);
-> -	atu_reg_write(pcie_ecam, index, upper_32_bits(cpu_addr),
-> -		      PCIE_ATU_UPPER_BASE);
-> -	atu_reg_write(pcie_ecam, index, lower_32_bits(pci_addr),
-> -		      PCIE_ATU_LOWER_TARGET);
-> -	atu_reg_write(pcie_ecam, index, lower_32_bits(cpu_addr + size - 1),
-> -		      PCIE_ATU_LIMIT);
-> -	atu_reg_write(pcie_ecam, index, upper_32_bits(pci_addr),
-> -		      PCIE_ATU_UPPER_TARGET);
-> -	atu_reg_write(pcie_ecam, index, type, PCIE_ATU_CR1);
-> -	atu_reg_write(pcie_ecam, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
-> -}
-> -
-> -static void __iomem *tegra194_map_bus(struct pci_bus *bus,
-> -				      unsigned int devfn, int where)
-> -{
-> -	struct pci_config_window *cfg = bus->sysdata;
-> -	struct tegra194_pcie_ecam *pcie_ecam = cfg->priv;
-> -	u32 busdev;
-> -	int type;
-> -
-> -	if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
-> -		return NULL;
-> -
-> -	if (bus->number == cfg->busr.start) {
-> -		if (PCI_SLOT(devfn) == 0)
-> -			return pcie_ecam->dbi_base + where;
-> -		else
-> -			return NULL;
-> -	}
-> -
-> -	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
-> -		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
-> -
-> -	if (bus->parent->number == cfg->busr.start) {
-> -		if (PCI_SLOT(devfn) == 0)
-> -			type = PCIE_ATU_TYPE_CFG0;
-> -		else
-> -			return NULL;
-> -	} else {
-> -		type = PCIE_ATU_TYPE_CFG1;
-> -	}
-> -
-> -	program_outbound_atu(pcie_ecam, 0, type, cfg->res.start, busdev,
-> -			     SZ_256K);
-> -
-> -	return pcie_ecam->config_base + where;
-> -}
-> -
-> -const struct pci_ecam_ops tegra194_pcie_ops = {
-> -	.init		= tegra194_acpi_init,
-> -	.pci_ops	= {
-> -		.map_bus	= tegra194_map_bus,
-> -		.read		= pci_generic_config_read,
-> -		.write		= pci_generic_config_write,
-> -	}
-> -};
-> -#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> -
-> -#ifdef CONFIG_PCIE_TEGRA194
-> -
->  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
->  {
->  	return container_of(pci, struct tegra_pcie_dw, pci);
-> @@ -694,6 +576,24 @@ static struct pci_ops tegra_pci_ops = {
->  };
->  
->  #if defined(CONFIG_PCIEASPM)
-> +static const u32 event_cntr_ctrl_offset[] = {
-> +	0x1d8,
-> +	0x1a8,
-> +	0x1a8,
-> +	0x1a8,
-> +	0x1c4,
-> +	0x1d8
-> +};
-> +
-> +static const u32 event_cntr_data_offset[] = {
-> +	0x1dc,
-> +	0x1ac,
-> +	0x1ac,
-> +	0x1ac,
-> +	0x1c8,
-> +	0x1dc
-> +};
-> +
->  static void disable_aspm_l11(struct tegra_pcie_dw *pcie)
->  {
->  	u32 val;
-> @@ -2413,5 +2313,3 @@ MODULE_DEVICE_TABLE(of, tegra_pcie_dw_of_match);
->  MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
->  MODULE_DESCRIPTION("NVIDIA PCIe host controller driver");
->  MODULE_LICENSE("GPL v2");
-> -
-> -#endif /* CONFIG_PCIE_TEGRA194 */
-> -- 
-> 2.25.1
-> 
+> On 6/16/2021 5:29 PM, Manivannan Sadhasivam wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > Hello,
+> > 
+> > This series adds support for additional notifiers in the PCI endpoint
+> > framework. The notifiers LINK_DOWN, BME, PME, and D_STATE are generic
+> > for all PCI endpoints but there is also a custom notifier (CUSTOM) added
+> > to pass the device/vendor specific events to EPF from EPC.
+> > 
+> > The example usage of all notifiers is provided in the commit description.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > Manivannan Sadhasivam (5):
+> >    PCI: endpoint: Add linkdown notifier support
+> >    PCI: endpoint: Add BME notifier support
+> >    PCI: endpoint: Add PME notifier support
+> >    PCI: endpoint: Add D_STATE notifier support
+> >    PCI: endpoint: Add custom notifier support
+> > 
+> >   drivers/pci/endpoint/pci-epc-core.c | 89 +++++++++++++++++++++++++++++
+> >   include/linux/pci-epc.h             |  5 ++
+> >   include/linux/pci-epf.h             |  5 ++
+> >   3 files changed, 99 insertions(+)
+> > 
+> > --
+> > 2.25.1
+> > 
