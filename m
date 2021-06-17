@@ -2,154 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52E5D3AB1CF
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 13:00:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33AB13AB248
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 13:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231650AbhFQLCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 07:02:37 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:8257 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231559AbhFQLCg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 07:02:36 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4G5Jqd2R89z1BNWY;
-        Thu, 17 Jun 2021 18:55:25 +0800 (CST)
-Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Thu, 17 Jun 2021 19:00:27 +0800
-Received: from [127.0.0.1] (10.69.38.203) by dggema757-chm.china.huawei.com
- (10.1.198.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 17
- Jun 2021 19:00:27 +0800
-Subject: Re: [PATCH v6 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
- PMU
-To:     Will Deacon <will@kernel.org>, Linuxarm <linuxarm@huawei.com>
-CC:     <mark.rutland@arm.com>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>
-References: <1622467951-32114-1-git-send-email-liuqi115@huawei.com>
- <1622467951-32114-3-git-send-email-liuqi115@huawei.com>
- <20210611162347.GA16284@willie-the-truck>
- <a299d053-b45f-e941-7a2e-c853079b8cdd@huawei.com>
- <20210615093519.GB19878@willie-the-truck>
- <8e15e8d6-cfe8-0926-0ca1-b162302e52a5@huawei.com>
- <20210616134257.GA22905@willie-the-truck>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <678f7d55-9408-f323-da53-b5afe2595271@huawei.com>
-Date:   Thu, 17 Jun 2021 19:00:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S232441AbhFQLSp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 07:18:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22194 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231187AbhFQLSo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Jun 2021 07:18:44 -0400
+IronPort-SDR: N5+lk+VhbN/vWPFIk3m6F29L8GLm549z8mmIb2sVz88aCNEWmf84+G18I0WmRROT+uJvkkDmRy
+ wlmCbScBf9mA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10017"; a="227861796"
+X-IronPort-AV: E=Sophos;i="5.83,280,1616482800"; 
+   d="scan'208";a="227861796"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 04:16:37 -0700
+IronPort-SDR: 6Bt/ERKIe6CdROQf9bA7CzmSBhWFpLpcLuqbQceGFU1xaAhyqN7KpFuWV+k8eWzC8+z5l/xr9l
+ ot44zywC6a4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,280,1616482800"; 
+   d="scan'208";a="555175585"
+Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2021 04:16:36 -0700
+Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1ltq0h-0001zR-MC; Thu, 17 Jun 2021 11:16:35 +0000
+Date:   Thu, 17 Jun 2021 19:16:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/hotplug] BUILD SUCCESS
+ a97396c6eb13f65bea894dbe7739b2e883d40a3e
+Message-ID: <60cb2f06.kbTc6fIpN9jb5bHX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20210616134257.GA22905@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.69.38.203]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggema757-chm.china.huawei.com (10.1.198.199)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
+branch HEAD: a97396c6eb13f65bea894dbe7739b2e883d40a3e  PCI: pciehp: Ignore Link Down/Up caused by DPC
 
+elapsed time: 739m
 
-On 2021/6/16 21:42, Will Deacon wrote:
-> Hi,
-> 
-> On Wed, Jun 16, 2021 at 09:54:23AM +0800, liuqi (BA) wrote:
->> On 2021/6/15 17:35, Will Deacon wrote:
->>> On Tue, Jun 15, 2021 at 04:57:09PM +0800, liuqi (BA) wrote:
->>>> On 2021/6/12 0:23, Will Deacon wrote:
->>>>> On Mon, May 31, 2021 at 09:32:31PM +0800, Qi Liu wrote:
->>>>>> +	/* Process data to set unit of latency as "us". */
->>>>>> +	if (is_latency_event(idx))
->>>>>> +		return div64_u64(data * us_per_cycle, data_ext);
->>>>>> +
->>>>>> +	if (is_bus_util_event(idx))
->>>>>> +		return div64_u64(data * us_per_cycle, data_ext);
->>>>>> +
->>>>>> +	if (is_buf_util_event(idx))
->>>>>> +		return div64_u64(data, data_ext * us_per_cycle);
->>>>>
->>>>> Why do we need to do all this division in the kernel? Can't we just expose
->>>>> the underlying values and let userspace figure out what it wants to do with
->>>>> the numbers?
->>>>>
->>>> Our PMU hardware support 8 sets of counters to count bandwidth, latency and
->>>> utilization events.
->>>>
->>>> For example, when users set latency event, common counter will count delay
->>>> cycles, and extern counter count number of PCIe packets automaticly. And we
->>>> do not have a event number for counting number of PCIe packets.
->>>>
->>>> So this division cannot move to userspace tool.
->>>
->>> Why can't you expose the packet counter as an extra event to userspace?
->>>
->> Maybe I didn’t express it clearly.
->>
->> As there is no hardware event number for PCIe packets counting, extern
->> counter count packets *automaticly* when latency events is selected by
->> users.
->>
->> This means users cannot set "config=0xXX" to start packets counting event.
->> So we can only get the value of counter and extern counter in driver and do
->> the division, then pass the result to userspace.
-> 
-> I still think it would be ideal if we could expose both values to userspace
-> rather than combine them somehow. Hmm. Anyway...
-> 
-> I struggled to figure out exactly what's being counted from the
-> documentation patch (please update that). Please can you explain exactly
-> what appears in the HISI_PCIE_CNT and HISI_PCIE_EXT_CNT registers for the
-> different modes of operation? Without that, the ratios you've chosen to
-> report seem rather arbitrary.
-> 
+configs tested: 154
+configs skipped: 2
 
-Hi Will,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-PCIe PMU events can be devided into 2 types: one type is counted by 
-HISI_PCIE_CNT, the other type is counted by HISI_PCIE_EXT_CNT and 
-HISI_PCIE_CNT, including bandwidth events, latency events, buffer 
-utilization and bus utilization.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                       maple_defconfig
+mips                           ip28_defconfig
+m68k                          amiga_defconfig
+arc                              alldefconfig
+sh                   rts7751r2dplus_defconfig
+arm                          collie_defconfig
+arm                       imx_v4_v5_defconfig
+arc                         haps_hs_defconfig
+mips                    maltaup_xpa_defconfig
+riscv             nommu_k210_sdcard_defconfig
+mips                           ip32_defconfig
+powerpc                      tqm8xx_defconfig
+arm                            qcom_defconfig
+arc                 nsimosci_hs_smp_defconfig
+mips                          malta_defconfig
+powerpc                      ppc64e_defconfig
+powerpc                 mpc832x_rdb_defconfig
+mips                             allyesconfig
+arm                         palmz72_defconfig
+xtensa                  nommu_kc705_defconfig
+mips                         tb0219_defconfig
+mips                      pistachio_defconfig
+um                               alldefconfig
+powerpc                 mpc836x_mds_defconfig
+arc                          axs103_defconfig
+powerpc64                           defconfig
+parisc                generic-64bit_defconfig
+m68k                       bvme6000_defconfig
+arm                            hisi_defconfig
+sh                        sh7785lcr_defconfig
+x86_64                           alldefconfig
+arm                     am200epdkit_defconfig
+powerpc                        cell_defconfig
+arm                         orion5x_defconfig
+mips                           ci20_defconfig
+powerpc                    mvme5100_defconfig
+arm                      pxa255-idp_defconfig
+mips                        bcm47xx_defconfig
+powerpc                     pq2fads_defconfig
+powerpc                     ep8248e_defconfig
+sh                            titan_defconfig
+mips                          ath79_defconfig
+arm                      integrator_defconfig
+sh                           se7705_defconfig
+arm                           corgi_defconfig
+sh                             sh03_defconfig
+mips                             allmodconfig
+xtensa                              defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                           se7712_defconfig
+powerpc                     rainier_defconfig
+arm                         s5pv210_defconfig
+sparc                       sparc64_defconfig
+xtensa                          iss_defconfig
+mips                         cobalt_defconfig
+mips                           ip22_defconfig
+arm                       omap2plus_defconfig
+h8300                     edosk2674_defconfig
+powerpc                      ep88xc_defconfig
+sh                         ecovec24_defconfig
+arm                        multi_v7_defconfig
+arm                          imote2_defconfig
+ia64                            zx1_defconfig
+mips                 decstation_r4k_defconfig
+powerpc                      makalu_defconfig
+sh                   secureedge5410_defconfig
+arm                           tegra_defconfig
+mips                            gpr_defconfig
+arm                          simpad_defconfig
+powerpc                     akebono_defconfig
+arm                           sunxi_defconfig
+sh                          rsk7201_defconfig
+s390                       zfcpdump_defconfig
+openrisc                  or1klitex_defconfig
+sh                           se7724_defconfig
+mips                          rm200_defconfig
+arm                         nhk8815_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20210617
+x86_64               randconfig-a001-20210617
+x86_64               randconfig-a002-20210617
+x86_64               randconfig-a003-20210617
+x86_64               randconfig-a006-20210617
+x86_64               randconfig-a005-20210617
+i386                 randconfig-a002-20210617
+i386                 randconfig-a006-20210617
+i386                 randconfig-a001-20210617
+i386                 randconfig-a004-20210617
+i386                 randconfig-a005-20210617
+i386                 randconfig-a003-20210617
+i386                 randconfig-a015-20210617
+i386                 randconfig-a013-20210617
+i386                 randconfig-a016-20210617
+i386                 randconfig-a012-20210617
+i386                 randconfig-a014-20210617
+i386                 randconfig-a011-20210617
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
-if user sets "event=0x10, subevent=0x02", this means "latency of RX 
-memory read" is selected. HISI_PCIE_CNT counts total delay cycles and 
-HISI_PCIE_EXT_CNT counts PCIe packets number at the same time. So PMU 
-driver could obtain average latency by caculating: HISI_PCIE_CNT / 
-HISI_PCIE_EXT_CNT.
+clang tested configs:
+x86_64               randconfig-b001-20210617
+x86_64               randconfig-a015-20210617
+x86_64               randconfig-a011-20210617
+x86_64               randconfig-a014-20210617
+x86_64               randconfig-a012-20210617
+x86_64               randconfig-a013-20210617
+x86_64               randconfig-a016-20210617
 
-if users sets "event=0x04, subevent=0x01", this means bandwidth of RX 
-memory read is selected. HISI_PCIE_CNT counts total packet data volume 
-and HISI_PCIE_EXT_CNT counts cycles, so PMU driver could obtain average 
-bandwidth by caculating: HISI_PCIE_CNT / HISI_PCIE_EXT_CNT.
-
-The same logic is used when calculating bus utilization and buffer 
-utilization. Seems I should add this part in Document patch,I 'll do 
-this in next version, thanks.
-
-> I also couldn't figure out how the latency event works. For example, I was
-> assuming it would be a filter (a bit like the length), so you could say
-> things like "I'm only interested in packets with a latency higher than x"
-> but it doesn't look like it works that way.
-> 
-> Thanks,
-> 
-latency is not a filter, PCIe PMU has a group of lactency events, their 
-event number are within the latency_events_list, and the above explains 
-how latency events work.
-
-PMU drivers have TLP length filter for bandwidth events, users could set 
-like "I only interested in bandwidth of packets with TLP length bigger 
-than x".
-
-Thanks,
-Qi
-
-> Will
-> .
-> 
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
