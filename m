@@ -2,156 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48CEB3ABAFB
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 19:57:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A2133ABB5D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 20:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbhFQR7S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 13:59:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231800AbhFQR7R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Jun 2021 13:59:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 590D8613CE;
-        Thu, 17 Jun 2021 17:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623952629;
-        bh=EhSsmsI9iGJevWK6dFC1JCY+kzfJnsUdrl+be5LxLiU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f125yxtkpG4p0zjEUVnwR25SUAoSZfM1gPA1tkxmH0FlV+r/AcE3al5sqb7AOw8ma
-         V49i6NeTJOv0IBS93Bn1Jp71Df3+wAleDXVYRkMNKUo4jJDWPylnS5Sv25X2AxBU0A
-         lHppEjiIUhrJocXFpqhaqGlRY83eDe6EvLXcNUOt1ZXAIcdiXKszhIOuWzQTPwDeG+
-         S0smvRD5gaqcSW8JsrjwuXWMOS2Or5X1Ejg8VCYHvP3zhZCIjQwDM/K5TiLJua0jO5
-         6tl7rlUlevzUvWZm/3ibhzMnBaVvqG7zy+sz//cB7ZAiIC/mFR1VSM2XnLTkd9Qpj+
-         XrQEl+3SYp7ug==
-Date:   Thu, 17 Jun 2021 18:57:05 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "liuqi (BA)" <liuqi115@huawei.com>
-Cc:     Linuxarm <linuxarm@huawei.com>, mark.rutland@arm.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zhangshaokun@hisilicon.com
-Subject: Re: [PATCH v6 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
- PMU
-Message-ID: <20210617175704.GF24813@willie-the-truck>
-References: <1622467951-32114-1-git-send-email-liuqi115@huawei.com>
- <1622467951-32114-3-git-send-email-liuqi115@huawei.com>
- <20210611162347.GA16284@willie-the-truck>
- <a299d053-b45f-e941-7a2e-c853079b8cdd@huawei.com>
- <20210615093519.GB19878@willie-the-truck>
- <8e15e8d6-cfe8-0926-0ca1-b162302e52a5@huawei.com>
- <20210616134257.GA22905@willie-the-truck>
- <678f7d55-9408-f323-da53-b5afe2595271@huawei.com>
+        id S232860AbhFQSZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Jun 2021 14:25:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45112 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231193AbhFQSZV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 14:25:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623954192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zM68hbAHAIMOq7xMr7KE4zrDHYPaxIaEF68LhoRJqFo=;
+        b=FLdIayPdzNKA4AmgfBt58Jp9dmOcD9nbVlLqTaGcQZmc1ugKI6HjqDkxTMTRaDftS9HmtE
+        IrbOn0e3XIbKYxtTqA96WJL1jxiN8T5BWPxHSEjEg2vLR1G867iVfVgtPv7drdN2ITHghC
+        pNev+/ydL7aYgNLtdFuvi2ukJ8+ucW0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-49-ZpU273kTOTWQ_4Ywm7JjkQ-1; Thu, 17 Jun 2021 14:23:10 -0400
+X-MC-Unique: ZpU273kTOTWQ_4Ywm7JjkQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2940C7405;
+        Thu, 17 Jun 2021 18:23:03 +0000 (UTC)
+Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9ED1860E3A;
+        Thu, 17 Jun 2021 18:22:49 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
+        tglx@linutronix.de, jesse.brandeburg@intel.com,
+        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
+        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
+        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
+        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
+        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
+        luobin9@huawei.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        nilal@redhat.com
+Subject: [PATCH v1 00/14] genirq: Cleanup the usage of irq_set_affinity_hint
+Date:   Thu, 17 Jun 2021 14:22:28 -0400
+Message-Id: <20210617182242.8637-1-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <678f7d55-9408-f323-da53-b5afe2595271@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 17, 2021 at 07:00:26PM +0800, liuqi (BA) wrote:
-> 
-> 
-> On 2021/6/16 21:42, Will Deacon wrote:
-> > Hi,
-> > 
-> > On Wed, Jun 16, 2021 at 09:54:23AM +0800, liuqi (BA) wrote:
-> > > On 2021/6/15 17:35, Will Deacon wrote:
-> > > > On Tue, Jun 15, 2021 at 04:57:09PM +0800, liuqi (BA) wrote:
-> > > > > On 2021/6/12 0:23, Will Deacon wrote:
-> > > > > > On Mon, May 31, 2021 at 09:32:31PM +0800, Qi Liu wrote:
-> > > > > > > +	/* Process data to set unit of latency as "us". */
-> > > > > > > +	if (is_latency_event(idx))
-> > > > > > > +		return div64_u64(data * us_per_cycle, data_ext);
-> > > > > > > +
-> > > > > > > +	if (is_bus_util_event(idx))
-> > > > > > > +		return div64_u64(data * us_per_cycle, data_ext);
-> > > > > > > +
-> > > > > > > +	if (is_buf_util_event(idx))
-> > > > > > > +		return div64_u64(data, data_ext * us_per_cycle);
-> > > > > > 
-> > > > > > Why do we need to do all this division in the kernel? Can't we just expose
-> > > > > > the underlying values and let userspace figure out what it wants to do with
-> > > > > > the numbers?
-> > > > > > 
-> > > > > Our PMU hardware support 8 sets of counters to count bandwidth, latency and
-> > > > > utilization events.
-> > > > > 
-> > > > > For example, when users set latency event, common counter will count delay
-> > > > > cycles, and extern counter count number of PCIe packets automaticly. And we
-> > > > > do not have a event number for counting number of PCIe packets.
-> > > > > 
-> > > > > So this division cannot move to userspace tool.
-> > > > 
-> > > > Why can't you expose the packet counter as an extra event to userspace?
-> > > > 
-> > > Maybe I didn’t express it clearly.
-> > > 
-> > > As there is no hardware event number for PCIe packets counting, extern
-> > > counter count packets *automaticly* when latency events is selected by
-> > > users.
-> > > 
-> > > This means users cannot set "config=0xXX" to start packets counting event.
-> > > So we can only get the value of counter and extern counter in driver and do
-> > > the division, then pass the result to userspace.
-> > 
-> > I still think it would be ideal if we could expose both values to userspace
-> > rather than combine them somehow. Hmm. Anyway...
-> > 
-> > I struggled to figure out exactly what's being counted from the
-> > documentation patch (please update that). Please can you explain exactly
-> > what appears in the HISI_PCIE_CNT and HISI_PCIE_EXT_CNT registers for the
-> > different modes of operation? Without that, the ratios you've chosen to
-> > report seem rather arbitrary.
-> > 
-> 
-> PCIe PMU events can be devided into 2 types: one type is counted by
-> HISI_PCIE_CNT, the other type is counted by HISI_PCIE_EXT_CNT and
-> HISI_PCIE_CNT, including bandwidth events, latency events, buffer
-> utilization and bus utilization.
-> 
-> if user sets "event=0x10, subevent=0x02", this means "latency of RX memory
-> read" is selected. HISI_PCIE_CNT counts total delay cycles and
-> HISI_PCIE_EXT_CNT counts PCIe packets number at the same time. So PMU driver
-> could obtain average latency by caculating: HISI_PCIE_CNT /
-> HISI_PCIE_EXT_CNT.
-> 
-> if users sets "event=0x04, subevent=0x01", this means bandwidth of RX memory
-> read is selected. HISI_PCIE_CNT counts total packet data volume and
-> HISI_PCIE_EXT_CNT counts cycles, so PMU driver could obtain average
-> bandwidth by caculating: HISI_PCIE_CNT / HISI_PCIE_EXT_CNT.
-> 
-> The same logic is used when calculating bus utilization and buffer
-> utilization. Seems I should add this part in Document patch,I 'll do this in
-> next version, thanks.
-> 
-> > I also couldn't figure out how the latency event works. For example, I was
-> > assuming it would be a filter (a bit like the length), so you could say
-> > things like "I'm only interested in packets with a latency higher than x"
-> > but it doesn't look like it works that way.
-> > 
-> > Thanks,
-> > 
-> latency is not a filter, PCIe PMU has a group of lactency events, their
-> event number are within the latency_events_list, and the above explains how
-> latency events work.
-> 
-> PMU drivers have TLP length filter for bandwidth events, users could set
-> like "I only interested in bandwidth of packets with TLP length bigger than
-> x".
+The drivers currently rely on irq_set_affinity_hint() to either set the
+affinity_hint that is consumed by the userspace and/or to enforce a custom
+affinity.
 
-Thanks for the explanations, I think I get it a bit better now. But I still
-think we should be exposing both of the values to userspace instead of
-reporting the ratio from which the individual counters are then
-unrecoverable.
+irq_set_affinity_hint() as the name suggests is originally introduced to
+only set the affinity_hint to help the userspace in guiding the interrupts
+and not the affinity itself. However, since the commit
 
-It will complicate the driver slightly, but can we instead expose the
-events independently and then allowing scheduling some of them in groups?
+	e2e64a932556 "genirq: Set initial affinity in irq_set_affinity_hint()"
 
-That way we just treat HISI_PCIE_CNT and HISI_PCIE_EXT_CNT as separate
-counters, but with a scheduling constraint that events in a register pair
-must be in the same group.
+irq_set_affinity_hint() also started applying the provided cpumask (if not
+NULL) as the affinity for the interrupts. The issue that this commit was
+trying to solve is to allow the drivers to enforce their affinity mask to
+distribute the interrupts across the CPUs such that they don't always end
+up on CPU0. This issue has been resolved within the irq subsystem since the
+commit
 
-Will
+	a0c9259dc4e1 "irq/matrix: Spread interrupts on allocation"
+
+Hence, there is no need for the drivers to overwrite the affinity to spread
+as it is dynamically performed at the time of allocation.
+
+Also, irq_set_affinity_hint() setting affinity unconditionally introduces
+issues for the drivers that only want to set their affinity_hint and not the
+affinity itself as for these driver interrupts the default_smp_affinity_mask
+is completely ignored (for detailed investigation please refer to [1]).
+
+Unfortunately reverting the commit e2e64a932556 is not an option at this
+point for two reasons [2]:
+
+- Several drivers for a valid reason (performance) rely on this API to
+  enforce their own affinity mask
+
+- Until very recently this was the only exported interface that was
+  available
+
+To clear this out Thomas has come up with the following interfaces:
+
+- irq_set_affinity(): only sets affinity of an IRQ [3]
+- irq_update_affinity_hint(): Only sets the hint [4]
+- irq_set_affinity_and_hint(): Sets both affinity and the hint mask [4]
+
+The first API is already merged in the linux-next tree and a v2 for the
+remaining two is included with this patch-set.
+
+To move to the stage where we can safely get rid of the
+irq_set_affinity_hint(), which has been marked deprecated, we have to
+move all its consumers to these new interfaces. In this patch-set, I have
+done that for a few drivers and will hopefully try to move the remaining of
+them in the coming days.
+
+Testing
+-------
+In terms of testing, I have performed some basic testing on x86 to verify
+things such as the interrupts are evenly spread on all CPUs, hint mask is
+correctly set etc. for the drivers - i40e, iavf, mlx5, mlx4, ixgbe, i40iw
+and enic on top of:
+	git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 
+	master - 5.13.0-rc6
+So more testing is probably required for these and the drivers that I didn't
+test and any help will be much appreciated.
+
+[1] https://lore.kernel.org/lkml/1a044a14-0884-eedb-5d30-28b4bec24b23@redhat.com/
+[2] https://lore.kernel.org/linux-pci/d1d5e797-49ee-4968-88c6-c07119343492@arm.com/
+[3] https://lore.kernel.org/linux-arm-kernel/20210518091725.046774792@linutronix.de/
+[4] https://lore.kernel.org/patchwork/patch/1434326/
+
+
+Nitesh Narayan Lal (13):
+  iavf: Use irq_update_affinity_hint
+  i40e: Use irq_update_affinity_hint
+  scsi: megaraid_sas: Use irq_set_affinity_and_hint
+  scsi: mpt3sas: Use irq_set_affinity_and_hint
+  RDMA/i40iw: Use irq_update_affinity_hint
+  enic: Use irq_update_affinity_hint
+  be2net: Use irq_update_affinity_hint
+  ixgbe: Use irq_update_affinity_hint
+  mailbox: Use irq_update_affinity_hint
+  scsi: lpfc: Use irq_set_affinity
+  hinic: Use irq_set_affinity_and_hint
+  net/mlx5: Use irq_update_affinity_hint
+  net/mlx4: Use irq_update_affinity_hint
+
+Thomas Gleixner (1):
+  genirq: Provide new interfaces for affinity hints
+
+ drivers/infiniband/hw/i40iw/i40iw_main.c      |  4 +-
+ drivers/mailbox/bcm-flexrm-mailbox.c          |  4 +-
+ drivers/net/ethernet/cisco/enic/enic_main.c   |  6 +--
+ drivers/net/ethernet/emulex/benet/be_main.c   |  4 +-
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  4 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |  8 ++--
+ drivers/net/ethernet/intel/iavf/iavf_main.c   |  8 ++--
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |  6 +--
+ drivers/net/ethernet/mellanox/mlx4/eq.c       |  6 +--
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  6 +--
+ drivers/scsi/lpfc/lpfc_init.c                 |  4 +-
+ drivers/scsi/megaraid/megaraid_sas_base.c     | 25 ++++++-----
+ drivers/scsi/mpt3sas/mpt3sas_base.c           | 15 ++++---
+ include/linux/interrupt.h                     | 41 ++++++++++++++++++-
+ kernel/irq/manage.c                           |  8 ++--
+ 15 files changed, 95 insertions(+), 54 deletions(-)
+
+--  
+
