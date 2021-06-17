@@ -2,74 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B27743ABCE8
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 21:35:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC043ABD5A
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jun 2021 22:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbhFQThY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 15:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233599AbhFQThX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 15:37:23 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F2FC061574;
-        Thu, 17 Jun 2021 12:35:15 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:104d:444a:d152:279d:1dbb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id A93469A9;
-        Thu, 17 Jun 2021 19:35:14 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A93469A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1623958514; bh=Ob76x7fxQDpyGJnHa31xoDRYOIjUeb2UTOSmumypFGM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Wl987n+7qTGE/KOM2prVX9YDpbSt8wwuxgz0twwMYYpUJfEgudq12x+JUN63FHKBC
-         CtHRaIFZiFgQfgOh2IGa26RFx/+yx5WFl1FJ3X9RmhWnPhOTok8vOP8kjPHWKONWZZ
-         J9uKe8iXDnLzd3wYdgPwEZITwVLlffEj9pCjBHFFV8FbAIBnjAl54FTCMJdEVGZLRi
-         8qrb9j/kiT9YV85XXtje09nGoQZCBZ+HlYUIYKCAsrnZj5XL4gk0A0zDK8yV1vdlAU
-         y7uxQWkMhnNl/RQMgdBd0wpzPDnRSWUieK0ts+R755yHXeeIfQfoRF3d5zda2F/niH
-         07rNDop6MQbfA==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jakub Kicinski <kuba@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        coresight@lists.linaro.org, intel-wired-lan@lists.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-ext4@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 0/8] Replace some bad characters on documents
-In-Reply-To: <cover.1623826294.git.mchehab+huawei@kernel.org>
-References: <cover.1623826294.git.mchehab+huawei@kernel.org>
-Date:   Thu, 17 Jun 2021 13:35:14 -0600
-Message-ID: <87lf78thcd.fsf@meer.lwn.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S231690AbhFQUXG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 17 Jun 2021 16:23:06 -0400
+Received: from server.avery-design.com ([198.57.169.184]:46710 "EHLO
+        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231570AbhFQUXG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 16:23:06 -0400
+X-Greylist: delayed 1881 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Jun 2021 16:23:06 EDT
+Received: from 50-201-210-206-static.hfc.comcastbusiness.net ([50.201.210.206]:55417 helo=smtpclient.apple)
+        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <cbrowy@avery-design.com>)
+        id 1lty0E-0005GH-R0; Thu, 17 Jun 2021 19:48:38 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.100.0.2.22\))
+Subject: Re: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object Exchange
+From:   Chris Browy <cbrowy@avery-design.com>
+In-Reply-To: <20210617181225.0000105b@Huawei.com>
+Date:   Thu, 17 Jun 2021 15:48:28 -0400
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linuxarm <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Reply-To: "20210617181225.0000105b@huawei.com" 
+          <20210617181225.0000105b@Huawei.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <1BC68362-057C-4AB4-BC7C-731CFC3DBED7@avery-design.com>
+References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
+ <20210310180306.1588376-2-Jonathan.Cameron@huawei.com>
+ <CAPcyv4gG-==Vj9w3d7=gRRSPaoD5eZHZZ2hAA0h3c07eMT_x1A@mail.gmail.com>
+ <20210316162952.00001ab7@Huawei.com>
+ <CAPcyv4h6hHCuO=0vHbPz2m4qw6-0=wW9swBrWimBsz6_GJu4Aw@mail.gmail.com>
+ <6F0B8DDD-E661-40C8-839B-1B77998EFF23@avery-design.com>
+ <CAPcyv4hJG08RaksW3jH_Q5ASqpzX5MtfNFcLqMxAH5jwTidk=w@mail.gmail.com>
+ <20210318142529.00001507@Huawei.com> <20210617181225.0000105b@Huawei.com>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+X-Mailer: Apple Mail (2.3654.100.0.2.22)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.avery-design.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - avery-design.com
+X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
+X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> Hi Jon,
->
-> This series contain the remaining 8 patches I submitted at v3 that
-> weren't merged yet at -next.
->
-> This series is rebased on the top of your docs-next branch.
->
-> No changes here, except by some Reviewed/ack lines, and at the
-> name of the final patch (per PCI maintainer's request).
 
-Applied, thanks.
+> On Jun 17, 2021, at 1:12 PM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> 
+> On Thu, 18 Mar 2021 14:25:29 +0000
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+>> On Wed, 17 Mar 2021 18:30:26 -0700
+>> Dan Williams <dan.j.williams@intel.com> wrote:
+>> 
+>>> Btw your mailer does something odd with the "In-Reply-To:" field, I
+>>> need to fix it up manually to include your address.
+>>> 
+>>> On Tue, Mar 16, 2021 at 4:28 PM Chris Browy <cbrowy@avery-design.com> wrote:  
+>>>> 
+>>>> Please address and clarify 2 queries below...
+>>>> 
+>>>> 
+>>>>> On Mar 16, 2021, at 2:14 PM, Dan Williams <dan.j.williams@intel.com> wrote:
+>>>>> 
+>>>>> On Tue, Mar 16, 2021 at 9:31 AM Jonathan Cameron
+>>>>> <Jonathan.Cameron@huawei.com> wrote:    
+>>>>>> 
+>>>>>> On Mon, 15 Mar 2021 12:45:49 -0700
+>>>>>> Dan Williams <dan.j.williams@intel.com> wrote:
+>>>>>> 
+>>>>>>> Hey Jonathan, happy to see this, some comments below...    
+>>>>>> 
+>>>>>> Hi Dan,
+>>>>>> 
+>>>>>> Thanks for taking a look!
+>>>>>> 
+>>>>>>> 
+>>>>>>> On Wed, Mar 10, 2021 at 10:08 AM Jonathan Cameron
+>>>>>>> <Jonathan.Cameron@huawei.com> wrote:    
+>>>>>>>> 
+>>>>>>>> Introduced in an ECN to the PCI 5.0, DOE provides a config space
+>>>>>>>> based mailbox with standard protocol discovery.  Each mailbox
+>>>>>>>> is accessed through a DOE PCIE Extended Capability.
+>>>>>>>> 
+>>>>>>>> A device may have 1 or more DOE mailboxes, each of which is allowed
+>>>>>>>> to support any number of protocols (some DOE protocols
+>>>>>>>> specifications apply additional restrictions).  A given protocol
+>>>>>>>> may be supported on more than one DOE mailbox on a given function.    
+>>>>>>> 
+>>>>>>> Are all those protocol instances shared?
+>>>>>>> I'm trying to mental model
+>>>>>>> whether, for example, an auxiliary driver instance could be loaded per
+>>>>>>> DOE mailbox, or if there would need to be coordination of a given
+>>>>>>> protocol no matter how many DOE mailboxes on that device implemented
+>>>>>>> that protocol.    
+>>>>>> 
+>>>>>> Just to check I've understood corectly, you mean multiple instances of same
+>>>>>> protocol across different DOE mailboxes on a given device?
+>>>>>> 
+>>>>> 
+>>>>> Right.    
+>>>> 
+>>>> Could you confirm this case for clarity?  A CXL device may have multiple VF/PF.
+>>>> For example, PF=0 could have one or more DOE instances for CDAT protocol.
+>>>> The driver will scan PF=0 for all DOE instances and finding one or more of CDAT
+>>>> protocol will combine/manage them.  I had not considered multiple CDAT tables
+>>>> for single PF.  For CXL devices with multiple PF’s the same process would be
+>>>> carried out on PF=1-N.    
+>>> 
+>>> This patch has nothing to do with CXL. This is a general discussion of
+>>> how a PCIE device implements a DOE mailbox or set of mailboxes. The
+>>> DOE definition is PF-only afaics from the DOE specification.
+>>> 
+>>> The CXL specification only says that a device can implement a CDAT per
+>>> DOE capability instance, so the CXL spec does not limit the number of
+>>> DOE instances to 1, but I can't think of a practical reason to support
+>>> more than one.
+>>> 
+>>> [..]  
+>>>>>>> https://cfp.osfc.io/media/osfc2020/submissions/ECQ88N/resources/An_open_source_SPDM_implementation_for_secure_devi_kmIgAQe.pdf    
+>>>>>> 
+>>>>>> Nice!  Looking at CMA / IDE emulation was on my todo list and that looks like
+>>>>>> it might make that job a lot easier.    
+>>>> 
+>>>> Would it be useful to integrate the openspdm’s SpdmResponderEmu.c onto the QEMU’s CXL Type3 Device’s
+>>>> DOE backend for CMA/IDE testing?  Doesn’t look hard to do.    
+>>> 
+>>> Yes, I do think it would be useful.  
+>> 
+>> Agreed.  Very useful indeed.
+>> 
+>> Jonathan
+>> 
+> 
+> Hi Chris,
+> 
+> Just wondering if this qemu/openspdm integration was something your team have
+> had time to look at?  I'd like to ideally get a second DOE usecase
+> implemented on the Linux side to prove out the implementation.
+> 
+> If it's fallen off your near term todo list I might see if I can hack
+> something together in the meantime.
 
-jon
+We have been working on this.  The plan was 
+1) implement modified version of openspdm requester running as QEMU app to pass DOE via CXL 
+    driver IOCTL’s to do DOE (DONE)
+2) enhance cxl_type3.c to call openspdm responder to implement device side SPDM (NOT DONE)
+3) enhance the Avery CXL Type 3 device SystemVerilog model to call opensldm 
+   responder to implement device side SPDM (DONE)
+
+Currently we run 1) and 3) using our QEMU co-sim environment.
+
+Huai-Cheng can probably finish 2) next week so we can run entirely in QEMU stand-alone environment.
+
+
+> 
+> Thanks,
+> 
+> Jonathan
+
