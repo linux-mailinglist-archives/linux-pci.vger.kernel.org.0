@@ -2,157 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB0353AD4EC
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 00:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82DE73AD59A
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 01:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234914AbhFRWU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Jun 2021 18:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234898AbhFRWUZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Jun 2021 18:20:25 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4A2C06175F
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 15:18:15 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id e1so5413693plh.8
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 15:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FE3ige4IUrzO4rZznPTG12clkaJsue7K7FUGlSBMAfs=;
-        b=Yf/hd/nvGltzFs93oV+O815gndRr0N0A4GD+hlEjUljs8fR/r42/5waH+foBbKS7WR
-         4ieWebjxoeI31qMYukpCCF4suivtuw0KIX1kY4xCHCyeA8Pd+qdR2kMIky/pA2j/9n1z
-         T5UtTANEkuiNSh3GT2iBd2oGjOT4PXXJ8YxOU/uBtqj1IiaNYwuRoT9AQFd4bB3iGSod
-         26qHtN9qmDpGolnh/MwXPQ8M2sR3UfA7xZml5iJWrbGghC/MI1rSVb3r8vzpAHp9WgHN
-         rQlO7Wfj93/2gQ031V5AE3UWSmVQEAXyZXRDPtXzUcgRjadraLTfDfG3fXk5uJ+V0D/n
-         TtDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FE3ige4IUrzO4rZznPTG12clkaJsue7K7FUGlSBMAfs=;
-        b=J+TknBOjgveHV9L/Ak3x/QSA6+iQoJMN4/9xMqy4xVaCImB7VuM7T58NlU87lP1aQt
-         az/jr62Tk8BFMM5vTCWi3UpijSFlxniQFOobGvf0qYgY6zvRh/ro8tlUzNMhM6aFXmfr
-         LyDjno/rZTVNpeugFtf8EdWrF2DlNcoguhDLFBoiOZDpAl7cutMN1gNNuxyt4gC0R7Ij
-         yqrRlPFUZfQRk9Dnd5CbkEXX6l8nfQnI/ZuQ6JUe/L+PJvSpqyIizgU2qpOxu/u707Pk
-         SoYLx+UGqi/wWyBrWBrVPSx90jcun8G0vXalccdUfBxF6GFFX0Pk1ZHIKDFNrxlXzUFg
-         AQhA==
-X-Gm-Message-State: AOAM5325zNr9GwcVU+jTzOCOl0uS4k9tcgHPQrhryCxMnOMb27jN6+c/
-        h4KlqEOBQi2Eb7Zd9sn6rY8ySrkT9ck0Ld3/rB4FZA==
-X-Google-Smtp-Source: ABdhPJw3BE/jkA8KN4GViEwVomKCDOYCAzb4JhqF7GBtQ+4ny9zul9rQENwJ5XFkX0U2csBd6emTDpwOakbDlUjAcRc=
-X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr24404565pjb.13.1624054695229;
- Fri, 18 Jun 2021 15:18:15 -0700 (PDT)
+        id S231217AbhFRXDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Jun 2021 19:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231240AbhFRXDo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Jun 2021 19:03:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2AFA1613BD;
+        Fri, 18 Jun 2021 23:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624057294;
+        bh=O1HK2H+gu/eyMSlkJPLC7a6tkuqX8DtvddAbywKNgsY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AwlM75/MLDYy2ICXfXKfgBe+lffzr9iRQdVYubIDEDRCZn2QBg8NRxVp1nmERZx0K
+         VJk/xLkFoiYZh+SPdCLHlhUtra58DbPOdmy5mFL2Agnd2xL+5p74UNPN9NfEi2otoN
+         8V8wCIr3mQ/R1whT+fDFA7vpHPe+cRR+9JS/SPFT/Y6g1xYhA9Njq78YxZC1BpeFIW
+         9QgL0SIPuoItZvKcwfeLaefKIFggtxY9pB6CeDZKy+38jzLU2db7EcBDYCvsjq1HuU
+         Gydk6a8b3tP8rJyS95wI4tkeeLoVxNpTrNWCqODTn19GCfrIJ7UD6m88vRNyXI1jfP
+         DMfaE0ADiIP0w==
+Date:   Fri, 18 Jun 2021 18:01:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Artem Lapkin <email2tema@gmail.com>
+Cc:     narmstrong@baylibre.com, yue.wang@Amlogic.com,
+        khilman@baylibre.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, jbrunet@baylibre.com, christianshewitt@gmail.com,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        art@khadas.com, nick@khadas.com, gouwa@khadas.com
+Subject: Re: [PATCH] PCI: dwc: meson add quirk
+Message-ID: <20210618230132.GA3228427@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210616085118.1141101-1-omosnace@redhat.com>
-In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 18 Jun 2021 15:18:04 -0700
-Message-ID: <CAPcyv4jvR8CT4rYODR5KUHNdiqMwQSwJZ+OkVf61kLT3JfjC_Q@mail.gmail.com>
-Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        selinux@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        X86 ML <x86@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, bpf@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210618063821.1383357-1-art@khadas.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 1:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> lockdown") added an implementation of the locked_down LSM hook to
-> SELinux, with the aim to restrict which domains are allowed to perform
-> operations that would breach lockdown.
->
-> However, in several places the security_locked_down() hook is called in
-> situations where the current task isn't doing any action that would
-> directly breach lockdown, leading to SELinux checks that are basically
-> bogus.
->
-> To fix this, add an explicit struct cred pointer argument to
-> security_lockdown() and define NULL as a special value to pass instead
-> of current_cred() in such situations. LSMs that take the subject
-> credentials into account can then fall back to some default or ignore
-> such calls altogether. In the SELinux lockdown hook implementation, use
-> SECINITSID_KERNEL in case the cred argument is NULL.
->
-> Most of the callers are updated to pass current_cred() as the cred
-> pointer, thus maintaining the same behavior. The following callers are
-> modified to pass NULL as the cred pointer instead:
-> 1. arch/powerpc/xmon/xmon.c
->      Seems to be some interactive debugging facility. It appears that
->      the lockdown hook is called from interrupt context here, so it
->      should be more appropriate to request a global lockdown decision.
-> 2. fs/tracefs/inode.c:tracefs_create_file()
->      Here the call is used to prevent creating new tracefs entries when
->      the kernel is locked down. Assumes that locking down is one-way -
->      i.e. if the hook returns non-zero once, it will never return zero
->      again, thus no point in creating these files. Also, the hook is
->      often called by a module's init function when it is loaded by
->      userspace, where it doesn't make much sense to do a check against
->      the current task's creds, since the task itself doesn't actually
->      use the tracing functionality (i.e. doesn't breach lockdown), just
->      indirectly makes some new tracepoints available to whoever is
->      authorized to use them.
-> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
->      Here a cryptographic secret is redacted based on the value returned
->      from the hook. There are two possible actions that may lead here:
->      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
->         task context is relevant, since the dumped data is sent back to
->         the current task.
->      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
->         dumped SA is broadcasted to tasks subscribed to XFRM events -
->         here the current task context is not relevant as it doesn't
->         represent the tasks that could potentially see the secret.
->      It doesn't seem worth it to try to keep using the current task's
->      context in the a) case, since the eventual data leak can be
->      circumvented anyway via b), plus there is no way for the task to
->      indicate that it doesn't care about the actual key value, so the
->      check could generate a lot of "false alert" denials with SELinux.
->      Thus, let's pass NULL instead of current_cred() here faute de
->      mieux.
->
-> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-[..]
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 2acc6173da36..c1747b6555c7 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -568,7 +568,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
->         if (!IS_ENABLED(CONFIG_CXL_MEM_RAW_COMMANDS))
->                 return false;
->
-> -       if (security_locked_down(LOCKDOWN_NONE))
-> +       if (security_locked_down(current_cred(), LOCKDOWN_NONE))
+On Fri, Jun 18, 2021 at 02:38:21PM +0800, Artem Lapkin wrote:
+> Device set same 256 bytes maximum read request size equal MAX_READ_REQ_SIZE
+> was find some issue with HDMI scrambled picture and nvme devices
+> at intensive writing...
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+Wait a minute.  We're getting way too much of this MRRS fiddling with 
+too little understanding of what the real problem is, and this is
+becoming a maintenance problem.
 
-...however that usage looks wrong. The expectation is that if kernel
-integrity protections are enabled then raw command access should be
-disabled. So I think that should be equivalent to LOCKDOWN_PCI_ACCESS
-in terms of the command capabilities to filter.
+We need more details about what the problem is and what specific
+devices are affected.  If this is a defect in the host bridge, we
+should have published errata about this because AFAICT there is
+nothing in the spec that limits the MRRS the OS can program.
+
+If we need to work around a problem, the quirk should relate to the
+device that is defective, not to every PCI device that could
+potentially be plugged in.
+
+Related recent issue:
+https://lore.kernel.org/r/20210528203224.GA1516603@bjorn-Precision-5520
+
+> [    4.798971] nvme 0000:01:00.0: fix MRRS from 512 to 256
+> 
+> This quirk setup same MRRS if we try solve this problem with
+> pci=pcie_bus_perf kernel command line param
+> 
+> Signed-off-by: Artem Lapkin <art@khadas.com>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 27 ++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 686ded034f22..e2d40e5c2661 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -466,6 +466,33 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static void meson_pcie_quirk(struct pci_dev *dev)
+> +{
+> +	int mrrs;
+> +
+> +	/* no need quirk */
+> +	if (pcie_bus_config != PCIE_BUS_DEFAULT)
+> +		return;
+> +
+> +	/* no need for root bus */
+> +	if (pci_is_root_bus(dev->bus))
+> +		return;
+> +
+> +	mrrs = pcie_get_readrq(dev);
+> +
+> +	/*
+> +	 * set same 256 bytes maximum read request size equal MAX_READ_REQ_SIZE
+> +	 * was find some issue with HDMI scrambled picture and nvme devices
+> +	 * at intensive writing...
+> +	 */
+> +
+> +	if (mrrs != MAX_READ_REQ_SIZE) {
+> +		dev_info(&dev->dev, "fix MRRS from %d to %d\n", mrrs, MAX_READ_REQ_SIZE);
+> +		pcie_set_readrq(dev, MAX_READ_REQ_SIZE);
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, meson_pcie_quirk);
+> +
+>  static const struct of_device_id meson_pcie_of_match[] = {
+>  	{
+>  		.compatible = "amlogic,axg-pcie",
+> -- 
+> 2.25.1
+> 
