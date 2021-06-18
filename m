@@ -2,168 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C80E73ACCDB
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 15:55:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D91A43ACD05
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 16:03:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233944AbhFRN55 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Jun 2021 09:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233754AbhFRN54 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Jun 2021 09:57:56 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BED3C061574;
-        Fri, 18 Jun 2021 06:55:47 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id gt18so16028323ejc.11;
-        Fri, 18 Jun 2021 06:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kS7LsTY4eD7PtOoLcWypfb1WOFaf7PfUkRMKOVYnU+8=;
-        b=Mp8tuTYLkmhc2aO3txv/mJbnJaHomRPOnKpHFfGlEj0F5FZMWhn/WejQ5nBaAdZXMU
-         iMd6s7lxRWbBhfiuKES3JS+NmSeIksru1Xfe2WVkch95GxeeTAkUDNVfte1AfILCP8eT
-         rggyQjstzIm+IOaQhxRXwhAVP/xwM/m+dsvWGyLYU0KhsKsg15rteqVvzcRLQHVOGtaw
-         tEDvOh5UDjW5f6H3YWsy8vQMl5I1V9cCfMQW0X8KIYEzdLXqyANtNKf0bco7UK3pxuIf
-         qERAVUFHuseSd5OE465zS9IlyYu2QN04S4sy4pkM60b75/Nwrb8k2LfOHvACVRh9Y+0A
-         4FiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=kS7LsTY4eD7PtOoLcWypfb1WOFaf7PfUkRMKOVYnU+8=;
-        b=sE/wIt0KYsgm71UPKq1LjZBIyT9EW7W2Z8LZM8MNVBsjiQftJE46auSmfJ8v/uj8Vw
-         7ob/RIV/Br3Uub+vAWG0aWJ1VfHLrBSR4Xdtn2ubyfdJ22J5U2rVHehd4tc0i6Sg5e3J
-         EDCoV+Nx0MoSPW0ch+epPjIyNCPGitMU9QcD8GOrNvDAxzzcCnTWgIeJwJlH3qapi4uv
-         Hmd4/G7JA4wHPtdgiGiNdZTQo3SF5hR64dqQV99Sjz3F2u/pFw2dNZbk7yCNeUUUmYt1
-         r0ICle4l8GxGJMAY4Sklivt76Rk9ziC/PGSHKcy+zLXox4HQdGQo9iQdha1b/LPNR9/A
-         xe9w==
-X-Gm-Message-State: AOAM532veeLNuh0iuzVdlxibeid2OtxKMkv5UbClf35pSN5PRvyqb58c
-        A9++l/0R6Ouq8D15YWkTzko=
-X-Google-Smtp-Source: ABdhPJwvfW1ZR5K8R4Kq8/9q1FbEYvOuZOvnuZsxlhZRv8R4PJJ7ikwI4mv3rkJsNxtWK/fFG+YAYg==
-X-Received: by 2002:a17:906:6849:: with SMTP id a9mr11363699ejs.415.1624024545629;
-        Fri, 18 Jun 2021 06:55:45 -0700 (PDT)
-Received: from m4.home (tor-exit-2.zbau.f3netze.de. [2a0b:f4c0:16c:2::1])
-        by smtp.gmail.com with ESMTPSA id gz12sm1091362ejc.36.2021.06.18.06.55.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jun 2021 06:55:44 -0700 (PDT)
-Sender: Domenico Andreoli <domenico.andreoli.it@gmail.com>
-Received: from cavok by m4.home with local (Exim 4.94.2)
-        (envelope-from <cavok@m4>)
-        id 1luEyF-0000bC-CI; Fri, 18 Jun 2021 15:55:43 +0200
-Date:   Fri, 18 Jun 2021 15:55:43 +0200
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Punit Agrawal <punitagrawal@gmail.com>, robh+dt@kernel.org,
-        maz@kernel.org, leobras.c@gmail.com,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, alexandru.elisei@arm.com, wqu@suse.com,
-        robin.murphy@arm.com, pgwipeout@gmail.com, ardb@kernel.org,
-        briannorris@chromium.org, shawn.lin@rock-chips.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4] PCI: of: Clear 64-bit flag for non-prefetchable
- memory below 4GB
-Message-ID: <YMyl31ERhGDE1yGh@m4>
-References: <20210614230457.752811-1-punitagrawal@gmail.com>
- <20210616231234.GA3018015@bjorn-Precision-5520>
+        id S232176AbhFROFj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Jun 2021 10:05:39 -0400
+Received: from mail-dm6nam12on2077.outbound.protection.outlook.com ([40.107.243.77]:28641
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230387AbhFROFj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Jun 2021 10:05:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b5L+gudlA2xANyHjWq9y7Hvj37bg7OzwWz9qpKk2owrFsKq7yia6t0eaemQ7fd5sLqs6XAZKJEzWZ1OSUmkxMkkREQQWo0ljF6mofdoGnzzz4P+7iFyoVhTLK70Xy7pKpsVCRwEU+bmfGZva2al3hEARVp8dGQOT+mscG3qBypndnI1+WsHdDl1tx900elIe9OWoltQnJ76S5bskzqstExj1zsYJtvC8zPjLXLAW6jNr7nt3pquwTEXfq8igNQF4iCmKD01d1aUZH3QhFYbKNkEIPN9nGholExxBna+LTBcX5WiAjoy4s1TKwjHaNMgpfPpGCDmixQByJ2XXyUvhWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4POVLKjY5xOkkH6JuNEauLFv6Kod1Dr191HZJ78qDus=;
+ b=WHmtsEw7tKlhQSfIwct8NR2opDzzxBJ/W6FS/7g5UnMjDhvd2WPUSSu7asvw/E4JyFgw83IzMmcFMMpbfKb3saABg32Es3sn0sIHR0jzd4vTTrHiPXCrfWqEy9qL3YtUEom+oZj68YwlQjL6IKUMPM5LRRCD48sw6ql2uWGP2f9Xx15K4iPwtRZvMxVAFcwEwtcu2/7N41aXQcjOE2sxIOjILSzih9p0UlCUEZbcseqNP9uiTsEt+ld8xRKyjuBvjrDuWNcKKwdq4KrLbMvEFVnBfAicee1fWwm23JBl6UJDxwHkly3vHV/Td++Ke6fo00fXpEChGwdMUcK7iF/wwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4POVLKjY5xOkkH6JuNEauLFv6Kod1Dr191HZJ78qDus=;
+ b=CgtGg/1wk5yiPFFzj7HTGW2Alg+QX+g04HpaJHhA4AUS265lGPek5njaMq38dMb2nVCDgrmDm+8zuFl4kBX/aLpEnPaQVB+VjmFJw/EwLBLGaO3LozAeX2OLjFQLXopMT1/ZcHU09HeSpnUY2NAZNG9/JtAo8UJGBxgIikE+v/qHQQaFSjkRYhZ2WfdMXcKoc2u0E5/5zIc8OSI0yfjGGz4EQIDOWOU6GR7tDYooerzqsqACD//SkhawRvsZFQb7SQnBo3aWzmvNEsLnzmm+MqRnUSJIf/BazY0tlNHNzi7tnV6HuXmnSl/wZH9au15+gguoeALTJtgNF7Yz16eoag==
+Received: from MW2PR2101CA0005.namprd21.prod.outlook.com (2603:10b6:302:1::18)
+ by BL0PR12MB2547.namprd12.prod.outlook.com (2603:10b6:207:3e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21; Fri, 18 Jun
+ 2021 14:03:29 +0000
+Received: from CO1NAM11FT025.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:302:1:cafe::28) by MW2PR2101CA0005.outlook.office365.com
+ (2603:10b6:302:1::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.0 via Frontend
+ Transport; Fri, 18 Jun 2021 14:03:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT025.mail.protection.outlook.com (10.13.175.232) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4242.16 via Frontend Transport; Fri, 18 Jun 2021 14:03:28 +0000
+Received: from [10.26.49.10] (172.20.187.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 18 Jun
+ 2021 14:03:27 +0000
+Subject: Re: [pci:for-linus] BUILD SUCCESS WITH WARNING
+ 15ac366c3d20ce1e08173f1de393a8ce95a1facf
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, Thierry Reding <treding@nvidia.com>
+References: <20210618131304.GA3182065@bjorn-Precision-5520>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1991f432-3c32-32da-997d-e1dec12df0c5@nvidia.com>
+Date:   Fri, 18 Jun 2021 15:03:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/GHSmsL4CpCm23nY"
-Content-Disposition: inline
-In-Reply-To: <20210616231234.GA3018015@bjorn-Precision-5520>
+In-Reply-To: <20210618131304.GA3182065@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e66fd69a-7634-42e8-4575-08d93261d944
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2547:
+X-Microsoft-Antispam-PRVS: <BL0PR12MB25475ECC0C132108163C28DCD90D9@BL0PR12MB2547.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:203;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zwtmWYgtojbe1V8LL/Rb9rkUqD2mCP/2vDP7tieIeospWShj89wjquY8IwBH4Bh5QPmJDi9tdd74xji1qYsug028XwOmjj+ruuAaMpG7THG2pqcFqSVCpF7NK04X9v+K3O/ZXwk8H4XygIdX6EDZbZWXUAojh9fzrnpNFK3TsmbRKqAa4G+Ij6HvgONcM3Bb7UA/e+E72BvQFu+0glM9FmEcUEIbKpunwGUzbFn1txfHqMFf3pJED/BOSd/b1UTkNuiTteATgjXkuMnI0273MOwYPLgVJlS7cWdYmvGkFfEh07C12pj4LvbwK3ZxdreBnkmRu+fjXcLZOKX1WJjf8mi2w90DidFFuRW0Avv99+povx/uEypTONvTdjc3vQU4BOB19BsuEMLTk1I9YwFRkeNA2ca+75LbOm/wzEbvuHtkyPscM8zpbVoc71yoMDCb0k4sT/K09hF03Xl8L9u3oHZni14RYjV9JAATvNiQCpsbtHnH7q9T4kaR3MLRT6O6rYVRLWNEf2f0JqrI8HUwra0ISHVTKICYZp1GyBRuQeQII7CCkWy1HzPv++I+9uwxqW+osjNfrhzCTDU0u0zkjQqcYne24m6TlAPlHfNHDy3g9ZSUDSjLnklekUU7ZuV7otm/CXC1lrG3xZEoJje20Ubp2bgL/QysdWRrdstXtphgGbyO8X+/hEX1HeOJ9fRT3ZGWbkQT5iwkPWnbDN7Yf4w1uz9Cnuzqzr53glbrkyFyKogV5cmQPqqWDnYhoIBfn03bLdwDKs6SjGBhh+1khb+kbsSBGjom5yK2j0CFKu2DHGMoaZ8KhmYFAzacCA4sB90PpoAoT4oUBjvOg96/LijXvfvAAiQJ5cChM86Vtb4=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(46966006)(36840700001)(2906002)(31696002)(26005)(966005)(70586007)(186003)(53546011)(47076005)(70206006)(82310400003)(36860700001)(2616005)(31686004)(83380400001)(16576012)(4326008)(6636002)(478600001)(16526019)(36756003)(86362001)(110136005)(8676002)(82740400003)(356005)(6666004)(7636003)(36906005)(54906003)(107886003)(316002)(336012)(8936002)(5660300002)(426003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2021 14:03:28.6973
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e66fd69a-7634-42e8-4575-08d93261d944
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT025.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2547
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Bjorn,
 
---/GHSmsL4CpCm23nY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 18/06/2021 14:13, Bjorn Helgaas wrote:
+> [+to Jon, +cc Thierry]
+> 
+> On Fri, Jun 18, 2021 at 06:34:20PM +0800, kernel test robot wrote:
+>> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+>> branch HEAD: 15ac366c3d20ce1e08173f1de393a8ce95a1facf  PCI: aardvark: Fix kernel panic during PIO transfer
+>>
+>> possible Warning in current branch:
+>>
+>> drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour. See condition at line 1826. [shiftTooManyBitsSigned]
+> 
+> This looks like a legit warning, but I think the only commit that
+> could be related is this one:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=for-linus&id=99ab5996278379a02d5a84c4a7ac33a2ebfdb29e
+> 
+> which doesn't touch that code.
+> 
+> It does *move* some code, so maybe this was an existing warning that
+> moved enough that the robot thought it was new?
 
-On Wed, Jun 16, 2021 at 06:12:34PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jun 15, 2021 at 08:04:57AM +0900, Punit Agrawal wrote:
-> > Alexandru and Qu reported this resource allocation failure on
-> > ROCKPro64 v2 and ROCK Pi 4B, both based on the RK3399:
-> >=20
-> >   pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff 64bit]
-> >   pci 0000:00:00.0: PCI bridge to [bus 01]
-> >   pci 0000:00:00.0: BAR 14: no space for [mem size 0x00100000]
-> >   pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
-> >=20
-> > "BAR 14" is the PCI bridge's 32-bit non-prefetchable window, and our
-> > PCI allocation code isn't smart enough to allocate it in a host
-> > bridge window marked as 64-bit, even though this should work fine.
-> >=20
-> > A DT host bridge description includes the windows from the CPU
-> > address space to the PCI bus space.  On a few architectures
-> > (microblaze, powerpc, sparc), the DT may also describe PCI devices
-> > themselves, including their BARs.
-> >=20
-> > Before 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource
-> > flags for 64-bit memory addresses"), of_bus_pci_get_flags() ignored
-> > the fact that some DT addresses described 64-bit windows and BARs.
-> > That was a problem because the virtio virtual NIC has a 32-bit BAR
-> > and a 64-bit BAR, and the driver couldn't distinguish them.
-> >=20
-> > 9d57e61bf723 set IORESOURCE_MEM_64 for those 64-bit DT ranges, which
-> > fixed the virtio driver.  But it also set IORESOURCE_MEM_64 for host
-> > bridge windows, which exposed the fact that the PCI allocator isn't
-> > smart enough to put 32-bit resources in those 64-bit windows.
-> >=20
-> > Clear IORESOURCE_MEM_64 from host bridge windows since we don't need
-> > that information.
-> >=20
-> > Fixes: 9d57e61bf723 ("of/pci: Add IORESOURCE_MEM_64 to resource flags f=
-or 64-bit memory addresses")
-> > Reported-at: https://lore.kernel.org/lkml/7a1e2ebc-f7d8-8431-d844-41a9c=
-36a8911@arm.com/
-> > Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > Reported-by: Qu Wenruo <wqu@suse.com>
-> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Punit Agrawal <punitagrawal@gmail.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
->=20
-> Applied with:
->=20
->     Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
->     Reviewed-by: Rob Herring <robh@kernel.org>
->     Acked-by: Ard Biesheuvel <ardb@kernel.org>
->=20
-> to for-linus for v5.13, thanks a lot!
 
-Late-tested-by: Domenico Andreoli <domenico.andreoli@linux.com>
+I guessing that this is now happening because we are now compiling the
+bulk of the code in the driver. However, yes looks like it has been
+there for a while. 
 
-See https://lore.kernel.org/lkml/YMyTUv7Jsd89PGci@m4/T/#u
+I wonder if the '(1 << irq)' is being treated as a signed type.
 
-Thanks!
+> How can we reproduce this to make sure we fix it?
 
-Dom
+I was able to reproduce it by ...
 
---=20
-rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+$ cppcheck --force --enable=all drivers/pci/controller/dwc/pcie-tegra194.c 
+Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
 
---/GHSmsL4CpCm23nY
-Content-Type: application/pgp-signature; name="signature.asc"
+drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability: Shifting signed 32-bit value by 31 bits is implementation-defined behaviour. See condition at line 1826. [shiftTooManyBitsSigned]
+ appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
+                      ^
+drivers/pci/controller/dwc/pcie-tegra194.c:1826:19: note: Assuming that condition 'irq>31' is not redundant
+ if (unlikely(irq > 31))
+                  ^
+drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: note: Shift
+ appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE0znebYyV6RAN/q8htwRzp/vsqYEFAmDMpd4ACgkQtwRzp/vs
-qYE8bBAAvdg4Ph1fMCdtPFOlq3OJ4H6H+miCxcsoYKa5hAJmPfNoO11Dl/NDCpPt
-IBHXANLck5mg3h6JchBflok3uciGEoWsuFeOrc0ZfEd4lZxE4/SlL5PgJXKcFnn0
-FepNItnn9UoShx7maGUL+ln0L+ZsPqbVarrKZlisaPOdZWAVEEhvPiZ/nHuc+Ok7
-9X9Ak96OhHkNtJ+PAidSkxJt8L2BchSJbF1bkvUCL2gzdhGcNrqmIUvX3fTtMuUF
-4ErL36lc1FaLCHpmZO5+TEs4THdlYoPJdmTJ4chYnCLi0kW5tw7b2EEtJ9oglih4
-wrxPfuHNheQ+NqXrTGARzuJ9uxuDzE4tbFWd9VDwufuqM5nTyX+UjPHw9UNmrKXx
-nT6AoLRfNk4zBwtwrviXOPTRckDiInBOW8zxdNWs28CvtSEkDjk1oXdBVqdMEFrL
-tGoJZC5hOOzZokHYNUHtemblVbDqwi/5BHIRK/gKs3ym6mUuAX+3C84tXw9OPVH2
-jiJutDbhbqJoqJxdAz9A81CEI5PpHqtkJ+LHcTlGKd+lReb2YafC/GZNGAJK8UEx
-fP/GRfn6YKFoP7YwDnh1lIZ+2ReDA8ObkW4MvrqpvFYlCdGBmM/wOS4MDqr+Jp3u
-Ys5WekD5aeKo7Xt5p0+ZhIx5RUp90rCz8aw6cfN7grk6Bwexw2c=
-=aphM
------END PGP SIGNATURE-----
+I was able to fix this by ...
 
---/GHSmsL4CpCm23nY--
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 8fc08336f76e..05d6a8da190b 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1826,7 +1826,7 @@ static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
+        if (unlikely(irq > 31))
+                return -EINVAL;
+ 
+-       appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
++       appl_writel(pcie, (BIT(1) << irq), APPL_MSI_CTRL_1);
+ 
+        return 0;
+ }
+
+I can send this as a patch.
+
+Cheers
+Jon
+
+-- 
+nvpublic
