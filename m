@@ -2,208 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB593AC174
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 05:40:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C7FA3AC30F
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 08:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232090AbhFRDmq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Jun 2021 23:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232110AbhFRDmq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Jun 2021 23:42:46 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F0FC061768
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 20:40:36 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id c7so5696940edn.6
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jun 2021 20:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v3U6tSssyiyTmySewt2Ln0yQu0gc7Qdpf16AvD+Xaxk=;
-        b=2IcUlThUD9BpN0YyQAHGmGcQr5S6gOJpFAuAjkTFZTnpzRn9tzKgvjENS7ySkBTDUb
-         WVu8rDNnk4oMaPDWaYfJqGQq5hspjx3UAm8iGpqhN5Tm3s/4JNu9ecnP/aWmJefz9KgA
-         jyaF4PQvWKhcAMY06wY9zLmJ3F3grfHwVu/lTteAZll8NquJe5RM3crl0S/T9nJz4lga
-         qE6I+1oXf+z4XpHgtSakyooDjOifTHlFJYDjvZrRG53E21pvvJVkEQhe7yTOwfRW+SR3
-         lPE0DbuCzB2/MU+0Ln8LRSJFFCt8crMBcGon76/h7fb0x+sFtOdRmHlxhubL8TVLcdkW
-         w8MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v3U6tSssyiyTmySewt2Ln0yQu0gc7Qdpf16AvD+Xaxk=;
-        b=QAQrglj3QXe4UOWOiQU/uUc41mHt8lgj1kr+mrnjAPEtrRhcQpIyaA/cuOZCEva322
-         OP3BB3Q2tRkbOisMu7c+GeXpLdhsW9WCN5GSj0/+BzJ2hA4AwcteUOL+7y8CqLaDtaF+
-         TnZVvK6iJQiVgwj2QRCpHKtwMsEyQqvmq4D/+E2ztcgB2IjBvd/UVpwZUjaqz94IedY9
-         f/NlG5DzkIOIdR2Xru0OjIb0LLCLSPl1GtSqhldHU9tWPaO3bqDdLQ2t3AdckHUIwY1B
-         eG36OD9O+PVUfQjflNCj9JQlBDxGkVt0ztQ0JOFKeIGkVrAJ8jl3C/X7VMuz+Lv67TPE
-         Vmyw==
-X-Gm-Message-State: AOAM531XTKP158pkLYG/5EF+5xPKklwIaYVd1dsbFw6WqOoHHbCD+VNc
-        095YjOXxXaTs8Z1jyQ3r+6WX8rxImqWDLK/ZiD3M
-X-Google-Smtp-Source: ABdhPJw5b/xZ/eb8rl7JdfhOxmPvL4XDmYW6VYxutA0Sjq6NM72bhKaQUg+rtX3S00r5obIGVrm+f+Zrvy0193ShGoE=
-X-Received: by 2002:a05:6402:1771:: with SMTP id da17mr2074259edb.31.1623987634898;
- Thu, 17 Jun 2021 20:40:34 -0700 (PDT)
+        id S232724AbhFRGHL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Jun 2021 02:07:11 -0400
+Received: from mail-dm6nam12on2087.outbound.protection.outlook.com ([40.107.243.87]:17696
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232250AbhFRGHL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Jun 2021 02:07:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RldX2oLBw+Ls11LySRNF66Iz8ocZH1pzWdfdz7zTW5/T5L5YGTy6HKHRej1KM1VxoVaKUjh7sp4/Q89lwYw4rpYb8psd/tvE+LqdXU5ijz5IERwkb7DUdcHL9QsjaKbAzo+L+x3s2BJEkF7PUkpVvuGE+MIlnQgT8pukA9YuBetiAN9bkKPDaFICOdZnvEOq4o8sW6O+umFRyQgCQRWMDEHqn/SG1L2F5CHPZo5kPU+OlqY8HDde/yfrvOP/cI2NkYF/UguwwgyjA+DvYeie0sv0UKxuuXVOcTiKgxFdiPyWlGbBVn7uOcm8BZTWiOsns7O7iTQih4cdyLlskKEEFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m8vRcoqGTzGNRzbAI3bgcHDVggQrU0yQKccQvm9Y0dw=;
+ b=Hv65vD9nCvKjlEq3hE+/MAI45wo4oawBZavA6YjGkdZxxDAux+Fdfgo35Ii2sLMKlbKBOsUSYkUf6Nfzx0RSD46E5UTOFop+SQBkv/6yA4WE4qEcWKyBGkdPH9s798JXRkof53Ih2psnjQ3siH0sBPlWa77Sppa/aNNQ7YRWooC9wCkA6ygId+ixwk/i0P9l6VQ7cHdvfzqqdKhzBMlBM2O6ttSW6yRvi+kaD0T867ULHwQu+WxN88vZKYBz1Bhsrb5kfc5lAlRMpb2efxFzCfwKVUfSDx6g3kiDOi7Eqk50pg4XtLRLt3SWRhz8XSnqQHy3siJrGY3NkiuFeRyGNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m8vRcoqGTzGNRzbAI3bgcHDVggQrU0yQKccQvm9Y0dw=;
+ b=YZvIS/uVUHNtkN4jbO7wDfmX8Tmy4JKUgtNVj4ZiZq6I5KVxdsScSUASD4E5JQw1Dq/IJ+u+xHmzVlTyaloQFbvpUwPJAS3ShpRPt3ahG9Hxnh+FDCovySM7eHzzyBD5bdv46NkNfex7ieMt2G7KBLYOWXiU1xYA2XxKgxRzshc=
+Received: from MW4PR04CA0364.namprd04.prod.outlook.com (2603:10b6:303:81::9)
+ by BL0PR12MB2449.namprd12.prod.outlook.com (2603:10b6:207:40::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.19; Fri, 18 Jun
+ 2021 06:05:00 +0000
+Received: from CO1NAM11FT033.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:81:cafe::30) by MW4PR04CA0364.outlook.office365.com
+ (2603:10b6:303:81::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21 via Frontend
+ Transport; Fri, 18 Jun 2021 06:05:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT033.mail.protection.outlook.com (10.13.174.247) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4242.16 via Frontend Transport; Fri, 18 Jun 2021 06:04:59 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 18 Jun
+ 2021 01:04:59 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 18 Jun
+ 2021 01:04:59 -0500
+Received: from weisheng-Pro-E800-G4-WS950T.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2242.4
+ via Frontend Transport; Fri, 18 Jun 2021 01:04:56 -0500
+From:   Wesley Sheng <wesley.sheng@amd.com>
+To:     <linasvepstas@gmail.com>, <ruscur@russell.cc>, <oohall@gmail.com>,
+        <bhelgaas@google.com>, <corbet@lwn.net>,
+        <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <wesleyshenggit@sina.com>, Wesley Sheng <wesley.sheng@amd.com>
+Subject: [PATCH] Documentation: PCI: pci-error-recovery: rearrange the general sequence
+Date:   Fri, 18 Jun 2021 14:04:46 +0800
+Message-ID: <20210618060446.7969-1-wesley.sheng@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210616085118.1141101-1-omosnace@redhat.com>
-In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 17 Jun 2021 23:40:24 -0400
-Message-ID: <CAHC9VhSr2KpeBXuyoHR3_hs+qczFUaBx0oCSMfBBA5UNYU+0KA@mail.gmail.com>
-Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-acpi@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c335bac5-537b-40b4-567d-08d9321f018c
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2449:
+X-Microsoft-Antispam-PRVS: <BL0PR12MB24496B894077FCD6D378CB55950D9@BL0PR12MB2449.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hdb3PO/yundkY2G3PysnZ7VtPs6KEzhwwbarZaSqmfsVtrXUbLgkaF+UbO2BK1TuUWzR0h0ZBWSnGSXs1Nf00xHWPdBMZW6NtzceY/W4qZC2bF7unyAchFg9zs/brqGsm16jX51ikNpQv1ex218Zjrq362ihnk87h3/XGK36iR60TGsSEEn/mX1Ty3lGFUt3fQusyYVcc8bMC1bau/v0zmdIYbgAPPMa/DINK7512yexzqp0J1PKLcOHOGL2T3iD5vBCZpm+VyoDhrA68IW5DtaKiYAxCUdO8R6VNbVuOYt19LelhVl24mvKfVHjK7b3ICY/HN2pz+/cyulKtRGoeNLkOhd2nn8f2k6wGsbUSFC7a0CaxL/qPPgsdJdNrbmzGQclHN0+mh9JIDMxoul9MG6sPHiiuD9z27Gk7/7dtoCvOZkpEOMRo+ImHj/Jl55vrKrCMSK8zzosuHS0e4KF/xD7bq6MjD3HtQH//bQbSMt4s0d1HryYyAqJUYEb67GL18sP3yns5MkDAonLSdDhWdrE8s1RL8uxPF3WSqtnXDlce3ApiRPguoW+gCNCOkTLe/6Q47/b4wUXQ8/nd5IdSTi8sMBm4y5w5frN5Ftv373rXRntR4etdayqKOqF2kP18Jl5ppUI3U4fSLooTRfYwDdffOYnV/bsQFKIBcr7ohJMlym7LmxlU93QF05syK9MmENMGSZMJPC0/sy0fam97A==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(39860400002)(376002)(46966006)(36840700001)(7696005)(2906002)(83380400001)(82310400003)(54906003)(316002)(36756003)(8936002)(44832011)(36860700001)(426003)(8676002)(7416002)(70206006)(110136005)(6666004)(70586007)(26005)(47076005)(186003)(86362001)(2616005)(478600001)(81166007)(356005)(4326008)(5660300002)(1076003)(82740400003)(336012)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2021 06:04:59.9396
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c335bac5-537b-40b4-567d-08d9321f018c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT033.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2449
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 4:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> lockdown") added an implementation of the locked_down LSM hook to
-> SELinux, with the aim to restrict which domains are allowed to perform
-> operations that would breach lockdown.
->
-> However, in several places the security_locked_down() hook is called in
-> situations where the current task isn't doing any action that would
-> directly breach lockdown, leading to SELinux checks that are basically
-> bogus.
->
-> To fix this, add an explicit struct cred pointer argument to
-> security_lockdown() and define NULL as a special value to pass instead
-> of current_cred() in such situations. LSMs that take the subject
-> credentials into account can then fall back to some default or ignore
-> such calls altogether. In the SELinux lockdown hook implementation, use
-> SECINITSID_KERNEL in case the cred argument is NULL.
->
-> Most of the callers are updated to pass current_cred() as the cred
-> pointer, thus maintaining the same behavior. The following callers are
-> modified to pass NULL as the cred pointer instead:
-> 1. arch/powerpc/xmon/xmon.c
->      Seems to be some interactive debugging facility. It appears that
->      the lockdown hook is called from interrupt context here, so it
->      should be more appropriate to request a global lockdown decision.
-> 2. fs/tracefs/inode.c:tracefs_create_file()
->      Here the call is used to prevent creating new tracefs entries when
->      the kernel is locked down. Assumes that locking down is one-way -
->      i.e. if the hook returns non-zero once, it will never return zero
->      again, thus no point in creating these files. Also, the hook is
->      often called by a module's init function when it is loaded by
->      userspace, where it doesn't make much sense to do a check against
->      the current task's creds, since the task itself doesn't actually
->      use the tracing functionality (i.e. doesn't breach lockdown), just
->      indirectly makes some new tracepoints available to whoever is
->      authorized to use them.
-> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
->      Here a cryptographic secret is redacted based on the value returned
->      from the hook. There are two possible actions that may lead here:
->      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
->         task context is relevant, since the dumped data is sent back to
->         the current task.
->      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
->         dumped SA is broadcasted to tasks subscribed to XFRM events -
->         here the current task context is not relevant as it doesn't
->         represent the tasks that could potentially see the secret.
->      It doesn't seem worth it to try to keep using the current task's
->      context in the a) case, since the eventual data leak can be
->      circumvented anyway via b), plus there is no way for the task to
->      indicate that it doesn't care about the actual key value, so the
->      check could generate a lot of "false alert" denials with SELinux.
->      Thus, let's pass NULL instead of current_cred() here faute de
->      mieux.
->
-> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reset_link() callback function was called before mmio_enabled() in
+pcie_do_recovery() function actually, so rearrange the general
+sequence betwen step 2 and step 3 accordingly.
 
-This seems reasonable to me, but before I merge it into the SELinux
-tree I think it would be good to get some ACKs from the relevant
-subsystem folks.  I don't believe we ever saw a response to the last
-question for the PPC folks, did we?
+Signed-off-by: Wesley Sheng <wesley.sheng@amd.com>
+---
+ Documentation/PCI/pci-error-recovery.rst | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-> ---
->
-> v3:
-> - add the cred argument to security_locked_down() and adapt all callers
-> - keep using current_cred() in BPF, as the hook calls have been shifted
->   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
->   buggy SELinux lockdown permission checks"))
-> - in SELinux, don't ignore hook calls where cred == NULL, but use
->   SECINITSID_KERNEL as the subject instead
-> - update explanations in the commit message
->
-> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> - change to a single hook based on suggestions by Casey Schaufler
->
-> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
->
->  arch/powerpc/xmon/xmon.c             |  4 ++--
->  arch/x86/kernel/ioport.c             |  4 ++--
->  arch/x86/kernel/msr.c                |  4 ++--
->  arch/x86/mm/testmmiotrace.c          |  2 +-
->  drivers/acpi/acpi_configfs.c         |  2 +-
->  drivers/acpi/custom_method.c         |  2 +-
->  drivers/acpi/osl.c                   |  3 ++-
->  drivers/acpi/tables.c                |  2 +-
->  drivers/char/mem.c                   |  2 +-
->  drivers/cxl/mem.c                    |  2 +-
->  drivers/firmware/efi/efi.c           |  2 +-
->  drivers/firmware/efi/test/efi_test.c |  2 +-
->  drivers/pci/pci-sysfs.c              |  6 +++---
->  drivers/pci/proc.c                   |  6 +++---
->  drivers/pci/syscall.c                |  2 +-
->  drivers/pcmcia/cistpl.c              |  2 +-
->  drivers/tty/serial/serial_core.c     |  2 +-
->  fs/debugfs/file.c                    |  2 +-
->  fs/debugfs/inode.c                   |  2 +-
->  fs/proc/kcore.c                      |  2 +-
->  fs/tracefs/inode.c                   |  2 +-
->  include/linux/lsm_hook_defs.h        |  2 +-
->  include/linux/lsm_hooks.h            |  1 +
->  include/linux/security.h             |  4 ++--
->  kernel/bpf/helpers.c                 | 10 ++++++----
->  kernel/events/core.c                 |  2 +-
->  kernel/kexec.c                       |  2 +-
->  kernel/kexec_file.c                  |  2 +-
->  kernel/module.c                      |  2 +-
->  kernel/params.c                      |  2 +-
->  kernel/power/hibernate.c             |  3 ++-
->  kernel/trace/bpf_trace.c             | 20 ++++++++++++--------
->  kernel/trace/ftrace.c                |  4 ++--
->  kernel/trace/ring_buffer.c           |  2 +-
->  kernel/trace/trace.c                 | 10 +++++-----
->  kernel/trace/trace_events.c          |  2 +-
->  kernel/trace/trace_events_hist.c     |  4 ++--
->  kernel/trace/trace_events_synth.c    |  2 +-
->  kernel/trace/trace_events_trigger.c  |  2 +-
->  kernel/trace/trace_kprobe.c          |  6 +++---
->  kernel/trace/trace_printk.c          |  2 +-
->  kernel/trace/trace_stack.c           |  2 +-
->  kernel/trace/trace_stat.c            |  2 +-
->  kernel/trace/trace_uprobe.c          |  4 ++--
->  net/xfrm/xfrm_user.c                 | 11 +++++++++--
->  security/lockdown/lockdown.c         |  3 ++-
->  security/security.c                  |  4 ++--
->  security/selinux/hooks.c             |  7 +++++--
->  48 files changed, 97 insertions(+), 77 deletions(-)
-
+diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+index 187f43a03200..ac6a8729ef28 100644
+--- a/Documentation/PCI/pci-error-recovery.rst
++++ b/Documentation/PCI/pci-error-recovery.rst
+@@ -184,7 +184,14 @@ is STEP 6 (Permanent Failure).
+    and prints an error to syslog.  A reboot is then required to
+    get the device working again.
+ 
+-STEP 2: MMIO Enabled
++STEP 2: Link Reset
++------------------
++The platform resets the link.  This is a PCI-Express specific step
++and is done whenever a fatal error has been detected that can be
++"solved" by resetting the link.
++
++
++STEP 3: MMIO Enabled
+ --------------------
+ The platform re-enables MMIO to the device (but typically not the
+ DMA), and then calls the mmio_enabled() callback on all affected
+@@ -197,8 +204,8 @@ information, if any, and eventually do things like trigger a device local
+ reset or some such, but not restart operations. This callback is made if
+ all drivers on a segment agree that they can try to recover and if no automatic
+ link reset was performed by the HW. If the platform can't just re-enable IOs
+-without a slot reset or a link reset, it will not call this callback, and
+-instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
++without a slot reset, it will not call this callback, and
++instead will have gone directly or STEP 4 (Slot Reset)
+ 
+ .. note::
+ 
+@@ -210,7 +217,7 @@ instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
+    such an error might cause IOs to be re-blocked for the whole
+    segment, and thus invalidate the recovery that other devices
+    on the same segment might have done, forcing the whole segment
+-   into one of the next states, that is, link reset or slot reset.
++   into next states, that is, slot reset.
+ 
+ The driver should return one of the following result codes:
+   - PCI_ERS_RESULT_RECOVERED
+@@ -233,17 +240,11 @@ The driver should return one of the following result codes:
+ 
+ The next step taken depends on the results returned by the drivers.
+ If all drivers returned PCI_ERS_RESULT_RECOVERED, then the platform
+-proceeds to either STEP3 (Link Reset) or to STEP 5 (Resume Operations).
++proceeds to STEP 5 (Resume Operations).
+ 
+ If any driver returned PCI_ERS_RESULT_NEED_RESET, then the platform
+ proceeds to STEP 4 (Slot Reset)
+ 
+-STEP 3: Link Reset
+-------------------
+-The platform resets the link.  This is a PCI-Express specific step
+-and is done whenever a fatal error has been detected that can be
+-"solved" by resetting the link.
+-
+ STEP 4: Slot Reset
+ ------------------
+ 
 -- 
-paul moore
-www.paul-moore.com
+2.25.1
+
