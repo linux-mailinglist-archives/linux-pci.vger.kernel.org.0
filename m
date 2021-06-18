@@ -2,158 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F44C3ACE4C
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 17:08:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87E8E3ACE58
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 17:10:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234317AbhFRPLC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Jun 2021 11:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbhFRPLC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Jun 2021 11:11:02 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA85C06175F
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 08:08:52 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id o39-20020a05600c5127b02901d23584fd9bso6128639wms.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 08:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BB8SswcEaNjvxfv5/SYWvaIhulUyrjsY7Tim+J287Po=;
-        b=yZmbw54fJezM3UObaPBhSLvrX2gSA9+LSWtH2qYk8jxMojG6lI4YXcKvqvsvQQTWIE
-         lKA9iT6D1d2pROZ95mRBVhxjLinX2g0RwgNXx44mtfn7OyIZ+Tr3yT4TzvkeeNuMehuE
-         q+74TUg2i0XDPXq1zmBmBmtPyIHQnYUJxckq3BZpSYji7LI0HpPGRGG5GfW3cMZP3FAT
-         pSnY2lWSuurXxwZ2+2fuKJEZkaIHtSKYQaCG+GP4MMvstlaqbVqmTSvo9SFUYGVZPjaN
-         mr9bjoIs4vlySv5nbPD0ujzQtferv/pkjS1KsqRY1eNHlYcmhfiTDdUPOu7R5J4tkiqm
-         1D6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=BB8SswcEaNjvxfv5/SYWvaIhulUyrjsY7Tim+J287Po=;
-        b=NEp+wUL94tGVjTCHCfAA7u2Vy9Df7U/DFkgOGtBJ8Oq0+szsjnMfaoF9nSks+sTbCx
-         7FLN8YNjnSGFnnmy5jg9IXmdTg+fdxAg3W1OSUO3n4xYt3klFUjCijkkM7Z1RgLveDbn
-         1+mozakl7Im1xSNoW8oNa7nRUhUVbVSNTJGPVpFrl1M0A24D6BVRsWszES3juPbpjkXh
-         ZYeYQ8wSnhYozLH2PpCOzIgilDYg8nKagn+VtEuIqpGYWOszpc2EOETAPSSD4hX/Cdmh
-         d0e+hEVyzUQLIRUmJuwlvD51229jo7F+rga2YgUYUbr7Wlupc+SY9JT5mUtw9wxyeM5C
-         44cA==
-X-Gm-Message-State: AOAM531BnNPNVv/dgEqIIPta8Y/hF5ru7qf00cAOdSveuEX31DLNEPnB
-        D6U0crUYo02gDTDRFc+Bbtrjmw==
-X-Google-Smtp-Source: ABdhPJxDHp+81lE3UaKhD8t72YZzpU4a1NRKPGAQoLZH13xKQADxUrtdW0KvDdrw21Ae2pn6NnLEOA==
-X-Received: by 2002:a1c:7314:: with SMTP id d20mr10760262wmb.167.1624028931071;
-        Fri, 18 Jun 2021 08:08:51 -0700 (PDT)
-Received: from [10.1.3.24] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u12sm9276925wrr.40.2021.06.18.08.08.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Jun 2021 08:08:50 -0700 (PDT)
-Subject: Re: [PATCH] PCI: dwc: meson add quirk
-To:     Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Artem Lapkin <email2tema@gmail.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        art@khadas.com, Nick Xie <nick@khadas.com>, gouwa@khadas.com
-References: <20210618063821.1383357-1-art@khadas.com>
- <CAFBinCB6bHy6Han0+oUcuGfccv1Rh_P0Gows1ezWdV4eA267tg@mail.gmail.com>
- <CAL_JsqK+zjf2r_Q9gE8JwJw+Emn+JB4wOyH7eQct=kBvpUKstw@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Organization: Baylibre
-Message-ID: <9b27444c-ea13-0dd2-a671-cef27e03b35c@baylibre.com>
-Date:   Fri, 18 Jun 2021 17:08:42 +0200
+        id S232249AbhFRPM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Jun 2021 11:12:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:42578 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231461AbhFRPM0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Jun 2021 11:12:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B71D313A1;
+        Fri, 18 Jun 2021 08:10:16 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28ED33F694;
+        Fri, 18 Jun 2021 08:10:16 -0700 (PDT)
+Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Vikram Sethi <vsethi@nvidia.com>, vidyas@nvidia.com,
+        treding@nvidia.com, Jon Masters <jcm@jonmasters.org>,
+        mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        sudeep.holla@arm.com, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, bhelgaas@google.com,
+        linux-arm-kernel@lists.infradead.org, ebrower@nvidia.com,
+        jcm@redhat.com, Jason Gunthorpe <jgg@nvidia.com>,
+        Marcin Wojtas <mw@semihalf.com>
+References: <20210105045735.1709825-1-jeremy.linton@arm.com>
+ <20210107181416.GA3536@willie-the-truck>
+ <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
+ <20210108103216.GA17931@e121166-lin.cambridge.arm.com>
+ <20210122194829.GE25471@willie-the-truck>
+ <b37bbff9-d4f8-ece6-3a89-fa21093e15e1@nvidia.com>
+ <20210126225351.GA30941@willie-the-truck>
+ <20210325131231.GA18590@e121166-lin.cambridge.arm.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <4372c1a8-fa4b-aa5c-a0db-d3843d4a3ec5@arm.com>
+Date:   Fri, 18 Jun 2021 10:10:15 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqK+zjf2r_Q9gE8JwJw+Emn+JB4wOyH7eQct=kBvpUKstw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210325131231.GA18590@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/06/2021 16:30, Rob Herring wrote:
-> On Fri, Jun 18, 2021 at 6:12 AM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->>
->> Hi Artem,
->>
->> On Fri, Jun 18, 2021 at 8:38 AM Artem Lapkin <email2tema@gmail.com> wrote:
+Hi,
+
+On 3/25/21 8:12 AM, Lorenzo Pieralisi wrote:
+> On Tue, Jan 26, 2021 at 10:53:51PM +0000, Will Deacon wrote:
+>> On Tue, Jan 26, 2021 at 11:08:31AM -0600, Vikram Sethi wrote:
+>>> On 1/22/2021 1:48 PM, Will Deacon wrote:
+>>>> On Fri, Jan 08, 2021 at 10:32:16AM +0000, Lorenzo Pieralisi wrote:
+>>>>> On Thu, Jan 07, 2021 at 04:05:48PM -0500, Jon Masters wrote:
+>>>>>> On 1/7/21 1:14 PM, Will Deacon wrote:
+>>>>>>> On Mon, Jan 04, 2021 at 10:57:35PM -0600, Jeremy Linton wrote:
+>>>>>>>> Given that most arm64 platform's PCI implementations needs quirks
+>>>>>>>> to deal with problematic config accesses, this is a good place to
+>>>>>>>> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
+>>>>>>>> standard SMC conduit designed to provide a simple PCI config
+>>>>>>>> accessor. This specification enhances the existing ACPI/PCI
+>>>>>>>> abstraction and expects power, config, etc functionality is handled
+>>>>>>>> by the platform. It also is very explicit that the resulting config
+>>>>>>>> space registers must behave as is specified by the pci specification.
+>>>>>>>>
+>>>>>>>> Lets hook the normal ACPI/PCI config path, and when we detect
+>>>>>>>> missing MADT data, attempt to probe the SMC conduit. If the conduit
+>>>>>>>> exists and responds for the requested segment number (provided by the
+>>>>>>>> ACPI namespace) attach a custom pci_ecam_ops which redirects
+>>>>>>>> all config read/write requests to the firmware.
+>>>>>>>>
+>>>>>>>> This patch is based on the Arm PCI Config space access document @
+>>>>>>>> https://developer.arm.com/documentation/den0115/latest
+>>>>>>> Why does firmware need to be involved with this at all? Can't we just
+>>>>>>> quirk Linux when these broken designs show up in production? We'll need
+>>>>>>> to modify Linux _anyway_ when the firmware interface isn't implemented
+>>>>>>> correctly...
+>>>>>> I agree with Will on this. I think we want to find a way to address some
+>>>>>> of the non-compliance concerns through quirks in Linux. However...
+>>>>> I understand the concern and if you are asking me if this can be fixed
+>>>>> in Linux it obviously can. The point is, at what cost for SW and
+>>>>> maintenance - in Linux and other OSes, I think Jeremy summed it up
+>>>>> pretty well:
+>>>>>
+>>>>> https://lore.kernel.org/linux-pci/61558f73-9ac8-69fe-34c1-2074dec5f18a@arm.com
+>>>>>
+>>>>> The issue here is that what we are asked to support on ARM64 ACPI is a
+>>>>> moving target and the target carries PCI with it.
+>>>>>
+>>>>> This potentially means that all drivers in:
+>>>>>
+>>>>> drivers/pci/controller
+>>>>>
+>>>>> may require an MCFG quirk and to implement it we may have to:
+>>>>>
+>>>>> - Define new ACPI bindings (that may need AML and that's already a
+>>>>>    showstopper for some OSes)
+>>>>> - Require to manage clocks in the kernel (see link-up checks)
+>>>>> - Handle PCI config space faults in the kernel
+>>>>>
+>>>>> Do we really want to do that ? I don't think so. Therefore we need
+>>>>> to have a policy to define what constitutes a "reasonable" quirk and
+>>>>> that's not objective I am afraid, however we slice it (there is no
+>>>>> such a thing as eg 90% ECAM).
+>>>> Without a doubt, I would much prefer to see these quirks and workarounds
+>>>> in Linux than hidden behind a firmware interface. Every single time.
 >>>
->>> Device set same 256 bytes maximum read request size equal MAX_READ_REQ_SIZE
->>> was find some issue with HDMI scrambled picture and nvme devices
->>> at intensive writing...
+>>> In that case, can you please comment on/apply Tegra194 ECAM quirk that was rejected
 >>>
->>> [    4.798971] nvme 0000:01:00.0: fix MRRS from 512 to 256
+>>> a year ago, and was the reason we worked with Samer/ARM to define this common
 >>>
->>> This quirk setup same MRRS if we try solve this problem with
->>> pci=pcie_bus_perf kernel command line param
->> thank you for investigating this issue and for providing a fix!
+>>> mechanism?
+>>>
+>>> https://lkml.org/lkml/2020/1/3/395
+>>>
+>>> The T194 ECAM is from widely used Root Port IP from a IP vendor. That is one reason so many
+>>>
+>>> *existing* SOCs have ECAM quirks. ARM is only now working with the Root port IP vendors
+>>>
+>>> to test ECAM, MSI etc, but the reality is there were deficiencies in industry IP that is widely
+>>>
+>>> used. If this common quirk is not the way to go, then please apply the T194 specific quirk which was
+>>>
+>>> NAK'd a year ago, or suggest how to improve that quirk.
+>>>
+>>> The ECAM issue has been fixed on future Tegra chips and is validated preSilicon with BSA
+>>>
+>>> tests, so it is not going to be a recurrent issue for us.
 >>
->> [...]
->>> +static void meson_pcie_quirk(struct pci_dev *dev)
->>> +{
->>> +       int mrrs;
->>> +
->>> +       /* no need quirk */
->>> +       if (pcie_bus_config != PCIE_BUS_DEFAULT)
->>> +               return;
->>> +
->>> +       /* no need for root bus */
->>> +       if (pci_is_root_bus(dev->bus))
->>> +               return;
->>> +
->>> +       mrrs = pcie_get_readrq(dev);
->>> +
->>> +       /*
->>> +        * set same 256 bytes maximum read request size equal MAX_READ_REQ_SIZE
->>> +        * was find some issue with HDMI scrambled picture and nvme devices
->>> +        * at intensive writing...
->>> +        */
->>> +
->>> +       if (mrrs != MAX_READ_REQ_SIZE) {
->>> +               dev_info(&dev->dev, "fix MRRS from %d to %d\n", mrrs, MAX_READ_REQ_SIZE);
->>> +               pcie_set_readrq(dev, MAX_READ_REQ_SIZE);
->>> +       }
->>> +}
->>> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, meson_pcie_quirk);
+>> (aside: please fix your mail client not to add all these blank lines)
+>>
+>> Personally, if a hundred lines of self-contained quirk code is all
+>> that is needed to get your legacy IP running, then I would say we
+>> should merge it.  But I don't maintain the PCI subsystem, and I trust
+>> Bjorn and Lorenzo's judgement as to what is the right thing to do when
+>> it concerns that code.  After all, they're the ones who end up having
+>> to look after this stuff long after the hardware companies have
+>> stopped caring.
 > 
-> Isn't this going to run for everyone if meson driver happens to be enabled?
-
-It should be enabled only when the Amlogic bridge is present, thus similar filtering as keystone & loongon
-is needed, but with such filtering we could reuse ks_pcie_quirk() and loongson_mrrs_quirk() as is.
-
+> A discussion was held between me, Will Deacon, Bjorn Helgaas and Jon
+> Masters to agree on a proposed solution for this matter, a summary of the
+> outcome below:
 > 
->> it seems that other PCIe controllers need something similar. in
->> particular I found pci-keystone [0] and pci-loongson [1]
->> while comparing your code with the two existing implementations two
->> things came to my mind:
->> 1. your implementation slightly differs from the two existing ones as
->> it's not walking through the parent PCI busses (I think this would be
->> relevant if there's another bridge between the host bridge and the
->> actual device)
->> 2. (this is a question towards the PCI maintainers) does it make sense
->> to have this MRRS quirk re-usable somewhere?
+> - The PCI SMC conduit and related specifications are seen as firmware
+>    kludge to a long-standing HW compliance issue. The SMC interface does
+>    not encourage Arm partners to fix their IPs and its only purpose
+>    consists in papering over HW issues that should have been fixed by
+>    now; were the PCI SMC conduit introduced at arm64 ACPI inception as
+>    part of the standardization effort the matter would have been different
+>    but introducing it now brings about more shortcomings than benefits on
+>    balance, especially if MCFG quirks can be controlled and monitored (and
+>    they will).
 > 
-> Yes. Ideally, the max size could just be data in the bus or bridge
-> struct and perhaps some flags too, then the core can handle
-> everything.
+>    The end-goal is that hardware must be ECAM compliant. An SMC-based
+>    solution runs counter to that desire by removing the incentive for ECAM
+>    compliance.
+> 
+>    In sum, the SMC conduit solution was deemed to be deficient in these
+>    respects:
+> 
+> 	* Removes incentive to build hardware with compliant ECAM
+> 	* Moves quirk code into firmware where it can't sensibly
+> 	  be maintained or updated
+> 	* Future of the SMC conduit is unclear and has no enforceable
+> 	  phase-out plan
 
-AFAIL Simply moving ks_pcie_quirk() and loongson_mrrs_quirk() to core with the amlogic pci IDS added would be sufficient here.
+Well there is another aspect that wasn't readily apparent. We now need 
+one of those "linux mode" switches in the firmware that everyone loves 
+to hate. In the case of the uefi/CM4 the only really sane default for 
+that switch is "SMC mode" because out of the box the "claim pci 
+compliance when we aren't" mode crashes linux kernels without the quirk.
 
-Neil
+So this decision creates a user interface problem specific to linux 
+installs that require quirking. There are strong opinions on both sides, 
+but linux refusing to support it doesn't make it go away, it just 
+creates additional maint overhead for Linux.
+
+
 
 > 
-> Rob
+>    It was decided that the PCI SMC conduit enablement patches will not be
+>    merged for these specific reasons.
+> 
+> - It is not clear why ACPI enablement is requested for platforms that are
+>    clearly not compliant with Arm SBSA/SBBR guidelines; there is no
+>    interest from distros in enabling ACPI bootstrap on non-SBSA compliant
+>    HW, devicetree firmware can be used to bootstrap non-compliant platforms.
+> - We agreed that Linux will rely on MCFG quirks to enable PCI on ACPI
+>    arm64 systems if the relevant HW is not ECAM compliant (and ACPI
+>    enablement is requested); non-ECAM compliance must be classified as a HW
+>    defect and filed in the Linux kernel as an erratum in (or equivalent
+>    mechanism TBD):
+> 
+>    Documentation/arm64/acpi-ecam-quirks.rst
+> 
+>    Entries will contain an expected lifetime for the SoC in question and
+>    a contact point. When an entry expires, a patch to remove the related
+>    MCFG quirk will be proposed and action taken accordingly (either the
+>    quirk is removed since support is no longer required or the entry is
+>    updated). Details behind the specific mechanism to follow on public
+>    mailing lists.
+> 
+> - MCFG quirks will be reviewed by PCI maintainers and acceptance will be
+>    granted or refused on a case by case basis; the aim is supporting HW
+>    where quirks are self-contained and don't require FW or specifications
+>    updates.
+> 
+>    In order to request a MCFG quirk acceptance a relevant errata entry
+>    should be filed in the related Linux kernel documentation errata file.
+>    This will help detect whether non-ECAM HW bugs that were granted an
+>    MCFG quirk are actually fixed in subsequent SoCs.
+> 
+> - As a rule of thumb (that will be drafted in non-ECAM errata guidelines),
+>    to be considered for upstream MCFG quirks must not rely on additional
+>    ACPI firmware bindings and AML code other than MCFG table and
+>    PNP0A08/PNP0A03 ACPI *existing* bindings.
+> 
+>    MCFG quirks suitability for upstream merge will be determined by
+>    PCI maintainers only.
 > 
 
