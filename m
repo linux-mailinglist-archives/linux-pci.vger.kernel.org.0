@@ -2,136 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7021A3ACFA2
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 18:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D6F3ACFCC
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 18:04:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbhFRQEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Jun 2021 12:04:37 -0400
-Received: from mail-dm6nam12on2080.outbound.protection.outlook.com ([40.107.243.80]:42721
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        id S235748AbhFRQHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Jun 2021 12:07:00 -0400
+Received: from mail-bn8nam08on2050.outbound.protection.outlook.com ([40.107.100.50]:57569
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229945AbhFRQEh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Jun 2021 12:04:37 -0400
+        id S235760AbhFRQGv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Jun 2021 12:06:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b7krZCSU9TwpF03ak9bRCLr5y5VpSV9WGfX1MV+GKbTsxHPfjLLp73njUmx/tcI2k+xocH3I+02gsqvZKb448+F1Q9wvWOBdfB4ggGFfmYyg/yEG0EWZMMUtJmsg9I+Z7g9OhJIDuHjApWDniTsKwFIigzRmhQwMvWbbKglSM+cuG/W/CY6RJFmJvZgM0/gym0KNU5cyWTxTCpfjK9WZ1QeOpOjOBBFlWv9fFQ+E7YVEuHbkYuWz04uNyVyHZi4WLS8U6RrfaTgBA07iNAKgHavD2AUM7oVmrUlkXELHLsYRdMbdRm2rBzSJErwhtX3Awhu2w3r2sz2iOWfFcOnmhw==
+ b=F5oDFWHouMNVadG78Fao5aN+EoapEo5EEEAe0Mjr4iTg9de5tMJikANXa5rGS9RcoC59+hO3ygLa43PuPLbdR+bb055bDrgYXfAWaVol11dwtHIoYyl6cYCDj6wuh+jnx2wjMVLXis+DhcT9IQ9zrKqvL9XfJLk/a1Tgj3/N096sy3aF0DaOBTwgK2itelE15TBTAf8oLQlEH8VH/LCCHG10oKCZ3CYV7k4AoMLxY1ut71UTuyBOIDPhUXvgRHfiq9Jm8/oJIzCTl9B9pJEoPaGmEnqux2Qwag2+SFyKRPAFFw3u6FRqp1eGTqgM6R+qUtGFOhSrsmzg9uXtkNXOfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2PDbRDZTdu1LiyKB3LKBECP7k5jFp9quK5yV3JQ7DVQ=;
- b=jb3CQ0VRCg07DljJ2vT7TK0+2gzM71s18pYFi7NmQg0JWm6TxzzIToGFC8Z9PGjrlUPcNDtHH+3Hz7QDmqsWR/JQpP2CgQn8gEpJInRJ/PVQRKi1mMuyQhMm+K9UvWKqJQO4S8klvBzrWn2NS2WGXKUP/jfRaNE/s5ef4XxK06ySB7GXkesoyUdlY6hC1zVwdf67VJoS71DWSjhbjX0mEUmxEX4wJBY128aIG0Br8XEB+XWzhj9J1PrGCXg7MmjqvK+bvD57/BEsVl6JKRaMjyOPPdwbc3T3zAEYZEB2UdgO1vdeDd+Jlzz9BykW+9ponUP2FTojfKCdu61DqGpL+g==
+ bh=efExUyw/LUOlK5E1DGknBmUOC3C5u2zRGNQhjke1TAM=;
+ b=EDW6WhnPdRC1T2qgP/BHi5v7xZ60+eI1Bm83PEWSstOh1CnzZ4xOVi5lJOba94YIa/bhQycp/u3zXFewNBzYZCJBB0A6ecvEiUGi20OEEz7N+iUK88j2VTn4eyAJOJKwypu9Je0YjNTRAGJEG/DtYQteV3F37nQRbnjPAHHHEzIic7SbHY258fl8DwTdysWRBDloWP35oVej+THI1/yh4Va5aG/eZEyAhRCOh4ffLpxFVS7+fIS3GsaOrteLthq/cDlbOC7YDCCcWaV+AZx8tvb/vD6p1gurh7iPmzvDBszPjvE3tVooybACZxobUNC7zdZtazXeb+E0Tvx+RbfVqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.36) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ 216.228.112.34) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2PDbRDZTdu1LiyKB3LKBECP7k5jFp9quK5yV3JQ7DVQ=;
- b=Kr6KnoGDrLJlx7s0RyZ3VNLdWY8VNFd5o5KDpatDpg9FP9oyyvCYetZSg0D1LgETzCwHPEo7FJbz/V/Zx8iZhKRBNd+xNLLn/ODZvCmpv61o98G0dsy3K0/U3uWaQEo40P4aBGC42+NwSB0vc5ARbnkm/p5LLX5hanhv1Ps5pz3t5xnJ+BMs3+FkSltdq+IYnQHiiD2TvURMO1vBhEnwBtTk+60Y8cS6IsXckEVkMxq2EQRas0pooQ8LA8gGZu+UJ6BI6Xc+QJGP7Jg7qfG7SYVhxygrndUfc1+iLJlgpaAYe7+st6AddB6aa81lxl5bx7exgopVtyTRhhEAz56W0Q==
-Received: from MWHPR15CA0029.namprd15.prod.outlook.com (2603:10b6:300:ad::15)
- by DM6PR12MB3818.namprd12.prod.outlook.com (2603:10b6:5:1cf::24) with
+ bh=efExUyw/LUOlK5E1DGknBmUOC3C5u2zRGNQhjke1TAM=;
+ b=Md4BcLmd9WOjKl0yeV6NEXc5XPe4mfp9nGTXf9VSYWnxIaKoIqj5Id81Mldkl0j4J4j9TLCLLHAoDbpxMEqBLrEPy3T1P9PotXLDri6EyAyf6GCpp+wwgB5l4gwmC7H3cRvg1KpvCTxqTxcuyvAdCj95b3crr2K2k5I1uQtKQCBWo1T6+/C+Dxy19FErQh8MNZreQdbu5mvFlUgKKBV6FmJfqCStFlJbLuDQ0tUKUFoJJt7KuIHBvUjvpUJb4Lfn00Q8WLupiYylnzQEkV4ao2einetUsuzfb7k+MEQC86KDeqi98ilKtnFWKkNw7U0zolsVZ88RSV2EF53dsjTcvA==
+Received: from DS7PR03CA0006.namprd03.prod.outlook.com (2603:10b6:5:3b8::11)
+ by CH2PR12MB3976.namprd12.prod.outlook.com (2603:10b6:610:28::26) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.19; Fri, 18 Jun
- 2021 16:02:26 +0000
-Received: from CO1NAM11FT054.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:ad:cafe::16) by MWHPR15CA0029.outlook.office365.com
- (2603:10b6:300:ad::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.19 via Frontend
- Transport; Fri, 18 Jun 2021 16:02:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
- smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16; Fri, 18 Jun
+ 2021 16:04:40 +0000
+Received: from DM6NAM11FT059.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b8:cafe::f2) by DS7PR03CA0006.outlook.office365.com
+ (2603:10b6:5:3b8::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15 via Frontend
+ Transport; Fri, 18 Jun 2021 16:04:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.36; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.36) by
- CO1NAM11FT054.mail.protection.outlook.com (10.13.174.70) with Microsoft SMTP
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT059.mail.protection.outlook.com (10.13.172.92) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4242.16 via Frontend Transport; Fri, 18 Jun 2021 16:02:25 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 18 Jun
- 2021 16:02:25 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 18 Jun
- 2021 16:02:25 +0000
-Received: from moonraker.nvidia.com (172.20.187.6) by mail.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 18 Jun 2021 09:02:23 -0700
+ 15.20.4242.16 via Frontend Transport; Fri, 18 Jun 2021 16:04:39 +0000
+Received: from [10.26.49.10] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 18 Jun
+ 2021 16:04:37 +0000
+Subject: Re: [pci:for-linus] BUILD SUCCESS WITH WARNING
+ 15ac366c3d20ce1e08173f1de393a8ce95a1facf
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Thierry Reding <treding@nvidia.com>,
+        kernel test robot <lkp@intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>, <linux-pci@vger.kernel.org>
+References: <20210618153812.GA3192337@bjorn-Precision-5520>
 From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] PCI: tegra: Fix shiftTooManyBitsSigned warning for Tegra194
-Date:   Fri, 18 Jun 2021 17:02:19 +0100
-Message-ID: <20210618160219.303092-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.25.1
+Message-ID: <eb1172bd-421a-f651-77cf-5607ec19e10e@nvidia.com>
+Date:   Fri, 18 Jun 2021 17:04:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20210618153812.GA3192337@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 60e3ebed-495a-432d-7106-08d93272775b
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3818:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3818F4D3C23B976126330A6DD90D9@DM6PR12MB3818.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Office365-Filtering-Correlation-Id: 2eb78e1a-a68a-46fa-bab5-08d93272c703
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3976:
+X-Microsoft-Antispam-PRVS: <CH2PR12MB3976EB27C82D703B46F5AD17D90D9@CH2PR12MB3976.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 82BSdF3h8M3A1qZfwhR2B9d/ttZrWKmvbJwb82sx39nmQzt7gy1Jde60E0DU6o/hMgFFiIWg/xsWuWq8aojOjQjUdbTNn9t0HrqVfCnaVjc5FE3MyqJyt6b8osIUksRKGFBd/m02bDn4pWaugq8tvWBvuOFG0CVOEmgRBeH4Wdb4/VjZkgkyQT2+BiH4t6JKuoTB277T6qh4WtwXNy5jAR38B8nBhE9PEQfr/dPWfcUdBWAFVAL4uUmorfNc8+9Q6ae24R1ARQSv3JlZzGNOr/YvtXvgr/Vnm6SnTS02F65pLzAwzyFirU743XRxqmztNP/cw5c92lU82dzsemT/EnWp2M3KpArvmF4kalG3NdvjTmZrJSXSrv+MvVa+c7bVES3d6EEeqkYZmQzj09OVBq+AsKxzwhm1dTVkAr3BmqCnmZG0VQZR9CD+0zRFnmmUjXJ4fwxn5pEK1lQHh85YW8+75JNOODwVARQTD+6VC6GY+eFgLke27faDK+FIu4qhpMoCsKWPnQC0EKoBkKHXe07yaImgselb3XOOcQP6ROZoDzupTXj1VgLDQCbq4IlfI7B+s6Lhb27UiUKVXym0jWzI7gw6+r1b+bYzo4ukbHiJYkd/klgUCnRIJePNfqghof0aSDIJbrLj0JAQp1FPMjNrBrLTadEwGoeWIFcT46LukH9/yBlTvvhUt88SLask
-X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(376002)(39860400002)(46966006)(36840700001)(54906003)(7696005)(36906005)(83380400001)(8676002)(8936002)(2616005)(70206006)(4326008)(82740400003)(6636002)(186003)(316002)(110136005)(6666004)(7636003)(36756003)(70586007)(2906002)(426003)(5660300002)(26005)(336012)(356005)(47076005)(478600001)(107886003)(82310400003)(36860700001)(1076003)(86362001)(145543001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: UCcbe/0WVvP1Si7Cb8uEriLqo41vmIqo/uZwWZLK2PT7vYaQAps6EnHos5kyeeuDNTUYoqz+gfxVt0KSEGjDpmEZ2L/aRnKNcsS3qnklKjW02ddhJAPWXoRXAtBHfCoLPeCo8KDpjp5rucWK4RDX6bUGagMycymjSDo+zJojENnpCEHCebq/1C+m3G5J+JdTm2hGOLl5K0W7z8jUQ192AV3idTzmErZtPw2O0VaygXEsX57MBzCbxxBEMBa7GggcjMR7q7ubFPRcKrDc3vKN9WGqacjFktseiZ2oJis//rgYHtQicUPGEp/zjy3giHEG+aVKFdGHLk5eW6saEeBL0V7cbhW9cDGGFCpNZPZAs62LOFGoFKCdHkSbmE0HJEdWqTOtre19yxhfdxOr74MNPiic1NH8dFh8UvqYmUXK39fMRfBsO0besg1zp4cOj8DHXtLlzxhLWQvcq0mAwXGA3a7tJu1hFu4JP2EToWhX5qfONFra7OsQBRO5UpFA2gXKt7w8mmUlg3TsXe8kVxM5BV1lrKkRYUzJ95pIuA7FskLXFm7exAF1m+YlN15lv3NA5gORJwOfxA/Ij9IoL4rRen/KtUCnypB/yGRsTlgyg5DabDMxv4aapvG4M9kNVMS5x7GkPrXgPEnf6BR5NjlXfYoQDG4SW8L58T1+clGbz98qOxAARTC61eXYFRavF/iq
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(36840700001)(46966006)(16576012)(82740400003)(5660300002)(31686004)(2616005)(86362001)(4326008)(426003)(26005)(70206006)(356005)(6916009)(54906003)(4744005)(8936002)(82310400003)(7636003)(31696002)(8676002)(316002)(2906002)(36756003)(16526019)(36860700001)(186003)(53546011)(336012)(478600001)(47076005)(70586007)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2021 16:02:25.8608
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2021 16:04:39.5077
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60e3ebed-495a-432d-7106-08d93272775b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2eb78e1a-a68a-46fa-bab5-08d93272c703
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT054.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT059.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3818
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3976
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The cppcheck tool issues the following warning for the Tegra194 PCIe
-driver ...
+On 18/06/2021 16:38, Bjorn Helgaas wrote:
 
- $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
- Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
+...
 
- drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability:
-	Shifting signed 32-bit value by 31 bits is
-	implementation-defined behaviour. See condition at line 1826.
-	[shiftTooManyBitsSigned]
+> Please also let me know what changed that made this show up now.
+> 
+> We need to figure out whether this fix should be squashed into
+> "PCI: tegra194: Fix MCFG quirk build regressions", applied before it
+> on for-linus for v5.13, or applied for v5.14.
 
-  appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
-                      ^
-The above warning occurs because the '1' is treated as a signed type
-and so fix this by using the 'BIT' macro to ensure that this is defined
-as a unsigned type.
+I see the issue even without the above patch and so I don't believe it
+is related. I am not sure why it is only being flagged now. It looks
+like commit c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint
+mode in Tegra194") introduced this.
 
-Fixes: c57247f940e8 PCI: tegra: Add support for PCIe endpoint mode in Tegra194
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jon
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 8fc08336f76e..3c1feeab104f 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1826,7 +1826,7 @@ static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
- 	if (unlikely(irq > 31))
- 		return -EINVAL;
- 
--	appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
-+	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
- 
- 	return 0;
- }
 -- 
-2.25.1
-
+nvpublic
