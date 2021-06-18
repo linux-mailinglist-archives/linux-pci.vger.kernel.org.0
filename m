@@ -2,40 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC5D3AD2A2
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 21:19:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1773AD2E7
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jun 2021 21:32:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233819AbhFRTVY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Jun 2021 15:21:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58504 "EHLO
+        id S231896AbhFRTek (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Jun 2021 15:34:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58578 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232433AbhFRTVY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Jun 2021 15:21:24 -0400
+        with ESMTP id S230318AbhFRTej (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Jun 2021 15:34:39 -0400
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1624043953;
+        s=2020; t=1624044748;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=sSLxGC3VTRMA2Whz78he85SSFCN5pOWp9Ja2rRincrE=;
-        b=Nh4soZq81bzyJPDPuk6OzK7HF4t54zEr2or1xJZHbE/JpRDaIB2XoDCYU9n1UiBMxI+SpZ
-        gYAStHegI/oNOuab4hNo8UKqfktYNa6DHie9NnNhpHnOi3ZTmOnHBRS9t6Mwni1Sw0CrRv
-        2++Ypt6yi9HJswKEy/4ehOO1ygPmj9JcbMcNedlZGwJwRriy8Sdg1U6HWjRRrw9tto4BTC
-        /TfF50Bzzxe/CTixRdGbI9ln6URYNxw0lM/9SNRLk1Q9BPybWFiwTOEWlCLd3VT237g679
-        Kl5ANInl8B/rrHu6xEerRqfVGkFhf2eavm+zWxVhvBbP6DegejfN/f65ELFQeQ==
+        bh=uGYDUibjRJnL82nD8o3BWNGmm7rRgf7fDGXt/JOep+Y=;
+        b=sUzKg4BepwE7mv3qWCix1guOBHZSMT8DXBkwFLMTULjbfeKMG/v0Be1pssBXpuJ7qBTefD
+        EAZZcGJtwmWTWqNQOzwsdfNv+JGakxIdAvjKTy5DhKOEa2tb9jZpjFwLshZ5nXdaR/vWFB
+        +f82bgqbIbec0ACPaDMfh0QHpV8mQBNW/Ngi6TnKCRMlJlivQvuWcSJC8OaGKXFAa6/C4e
+        1igh80HtnFSygR8IyCIwjJbh5jNhn/ZA4LT2UB1cEZSuWMW7SN9uyidMjirfiMM5/9FUzL
+        bTk2LH8lobMsGTlcV6Om83acKgM4PUNr2UFCR+yBKRgUyS12TvSAVrFOOEnffA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1624043953;
+        s=2020e; t=1624044748;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=sSLxGC3VTRMA2Whz78he85SSFCN5pOWp9Ja2rRincrE=;
-        b=RSZzBGebnC17LsPojYK3bBoRQRgGmd+zjyPW5m11as59RHQl5NDNcQRPMID7YkOywbpvre
-        Lg6856XaSEqMB/AA==
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        bh=uGYDUibjRJnL82nD8o3BWNGmm7rRgf7fDGXt/JOep+Y=;
+        b=O4Tyuu3AGxQcKB3jYIokFBqi7TQbdNSdn3r02m2Tb81waKj+8YkqzliySHPtD3MwGFeKI3
+        49tR6qJY2A6WWYDQ==
+To:     Ming Lei <ming.lei@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
         linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
         Keith Busch <keith.busch@intel.com>,
         Marc Zyngier <marc.zyngier@arm.com>,
@@ -44,39 +43,66 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Shivasharan Srikanteshwara 
         <shivasharan.srikanteshwara@broadcom.com>
 Subject: Re: [patch v6 3/7] genirq/affinity: Add new callback for (re)calculating interrupt sets
-In-Reply-To: <20210615195707.GA2909907@bjorn-Precision-5520>
-References: <20210615195707.GA2909907@bjorn-Precision-5520>
-Date:   Fri, 18 Jun 2021 21:19:12 +0200
-Message-ID: <878s37f0b3.ffs@nanos.tec.linutronix.de>
+In-Reply-To: <YMlIbt3EPyRJHNWf@T590>
+References: <20190216172228.512444498@linutronix.de> <20210615195707.GA2909907@bjorn-Precision-5520> <YMlIbt3EPyRJHNWf@T590>
+Date:   Fri, 18 Jun 2021 21:32:28 +0200
+Message-ID: <875yybezoz.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 15 2021 at 14:57, Bjorn Helgaas wrote:
->
->> @@ -1196,6 +1196,13 @@ int pci_alloc_irq_vectors_affinity(struc
->>  	/* use legacy irq if allowed */
->>  	if (flags & PCI_IRQ_LEGACY) {
->>  		if (min_vecs == 1 && dev->irq) {
->> +			/*
->> +			 * Invoke the affinity spreading logic to ensure that
->> +			 * the device driver can adjust queue configuration
->> +			 * for the single interrupt case.
->> +			 */
->> +			if (affd)
->> +				irq_create_affinity_masks(1, affd);
->
-> This looks like a leak because irq_create_affinity_masks() returns a
-> pointer to kcalloc()ed space, but we throw away the pointer.
->
-> Or is there something very subtle going on here, like this special
-> case doesn't allocate anything?  I do see the "Nothing to assign?"
-> case that returns NULL with no alloc, but it's not completely trivial
-> to verify that we take that case here.
+On Wed, Jun 16 2021 at 08:40, Ming Lei wrote:
+> On Tue, Jun 15, 2021 at 02:57:07PM -0500, Bjorn Helgaas wrote:
 
-Yes, it's subtle and it's subtle crap. Sorry that I did not catch that.
+> +static inline void irq_affinity_calc_sets_legacy(struct irq_affinity *affd)
+
+This function name sucks because the function is really a wrapper around
+irq_affinity_calc_sets(). What's so legacy about this? The fact that
+it's called from the legacy PCI single interrupt code path?
+
+> @@ -405,6 +405,30 @@ static void default_calc_sets(struct irq_affinity *affd, unsigned int affvecs)
+>  	affd->set_size[0] = affvecs;
+>  }
+>  
+> +static void irq_affinity_calc_sets(unsigned int affvecs,
+> +		struct irq_affinity *affd)
+
+Please align the arguments when you need a line break.
+
+> +{
+> +	/*
+> +	 * Simple invocations do not provide a calc_sets() callback. Install
+> +	 * the generic one.
+> +	 */
+> +	if (!affd->calc_sets)
+> +		affd->calc_sets = default_calc_sets;
+> +
+> +	/* Recalculate the sets */
+> +	affd->calc_sets(affd, affvecs);
+> +
+> +	WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS);
+
+Hrm. That function really should return an error code to tell the caller
+that something went wrong.
+
+> +}
+> +
+> +/* Provide a chance to call ->calc_sets for legacy */
+
+What does this comment tell? Close to zero. 
+
+> +void irq_affinity_calc_sets_legacy(struct irq_affinity *affd)
+> +{
+> +	if (!affd)
+> +		return;
+> +	irq_affinity_calc_sets(0, affd);
+> +}
+
+What's wrong with just exposing irq_affinity_calc_sets() have that
+NULL pointer check in the function and add proper function documentation
+which explains what this is about?
 
 Thanks,
 
