@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E54553AD833
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 08:40:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B08963AD835
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 08:40:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233959AbhFSGml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Jun 2021 02:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35190 "EHLO
+        id S234017AbhFSGmo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Jun 2021 02:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233963AbhFSGmg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 02:42:36 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F7AFC061760;
-        Fri, 18 Jun 2021 23:40:25 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id x21-20020a17090aa395b029016e25313bfcso7185666pjp.2;
-        Fri, 18 Jun 2021 23:40:25 -0700 (PDT)
+        with ESMTP id S233909AbhFSGmk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 02:42:40 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF132C061574;
+        Fri, 18 Jun 2021 23:40:29 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 22-20020a17090a0c16b0290164a5354ad0so9446701pjs.2;
+        Fri, 18 Jun 2021 23:40:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jMdLXDhFl4H1jBrVVGBSGnbHc6XgMnjwU52Wg9vOITA=;
-        b=IH+xuUGqI1f9AUP9hnelNrxh0SN+eH8L+m0MSZOUAStxDdSMizzef6SyMrsw5aaB1P
-         K12IXSa4V5+3Rb1FMmX61jqbGvgIUGCni1qaqyS+TG6G6ArjERDnkQzVru2zU7xdubKC
-         zkyM0QnpKfxBDnkejKI/+I25JPvNRcSSVzzg6UiX68pYUwwrclfXnoy3Ati2dbtipn91
-         dWzf7R0oZq6KvSOQFZOtCQuYYz+5f6cYiTvdRnsoeB6nYDxdRi662LvnTw/0vAxPhsPc
-         GUE3xNyzVxvgWE5YpZL+x/oxB5MPu5tNDnmIrWDHmlaP6KAn8stTju6PFO58p9GpiX/h
-         X37Q==
+        bh=1glDM6oLeTVKmgkuXKty5D8QEB/JX/Xhu+0hRlzxY50=;
+        b=ck0SbqtDwvvUv3IUYad5DJbmdangdvOau/iCF9srKXiWZ2fV80yAO2xqVqvTZbOUr9
+         vdKxDq+MfnRmzW9JqCyZB1oifJpXKLJmsUwXsLWYe/3xwCLFI5hGK3iblNeQshsIKBSC
+         9mGrHWq8CmakB5U9A9am3FED/Z3S5wE8bNGopHZBPT7LC1c0dBS/IKteyzryggtIFaDk
+         7uqtxXmvinZCZFHYD8aN15OmZh30c3RoLTmCWxG1AYpJ9LRvGREa+13OCPYMDw2aWmQo
+         neQtOvKO1FYfVV4w7ChdXNMecl6yc9UiQhLFAcGCIjpgM1w571u+qSHdkSyV+GIC6HsM
+         MM0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jMdLXDhFl4H1jBrVVGBSGnbHc6XgMnjwU52Wg9vOITA=;
-        b=k2yfy2YfS8VWcEBZEOeFV0FS2yQRb3K36kqsTSE4sgjjktgaewJe9gawVkEG5xWGfW
-         jJUWMPV4dYqDz4t99a87M7V46TK75YtsUMZS8fNcS9aKAQkuhWAfVliQDVzEECBhCxov
-         kUWNWbNMgQvn1s3AXBTSntcqKgDu6ZqEC0sboxp/10Nr5G7lE11dd7NqmUIktxQ8w3c8
-         yIAxEuwVCAJlEK6OTJ0ti9KPEPHep4oqzUX/7k5HVH+jCmbmAnvb3KpBmeIx69cWfCig
-         HbebA6fs7+WeGKj3tdW0KBx+75ueYZoTp/cnOOhIYYDRxOxN/zJIOfg6b7fM0r5I/2Rx
-         hEGw==
-X-Gm-Message-State: AOAM531fInBOJmH9heUYseVHH8RkUzAAFGrNEzP8YtZyAGhyt/3w7/2M
-        4kEeZuJP0ZT+Sx6asJfWeEM=
-X-Google-Smtp-Source: ABdhPJxsfwbnPxy93E8cwaFesNULmdimBitNo/Xif9c/y85Wm/Rca1Q+h7DW6w8IvnhnFvfgnesddw==
-X-Received: by 2002:a17:90a:7401:: with SMTP id a1mr25489029pjg.57.1624084824992;
-        Fri, 18 Jun 2021 23:40:24 -0700 (PDT)
+        bh=1glDM6oLeTVKmgkuXKty5D8QEB/JX/Xhu+0hRlzxY50=;
+        b=mS2pVimPN5mvwsc7Z84ryFC2vQYgN3eISlVWTRbK3WkTFBNrM+9icUp0fqhioEou4d
+         uaX+AJGd9OhfJLh8U85vYkeli6bSJGf9/lwlUPbImT3Gb6W2Qv1AE7d9DdsHheys/ae/
+         imbtms5TZEpeX8QXK2YplVXBrwTNqMxgUb/K4Bjvvr92DSZBLbLvRlJOaZU1GmSM4ath
+         iSZ30dbqMMk+mgL4AoTglaSgOrGAqsUE1bRfEkYZr4hjnJWce4LlWcPqjdh7caVeliM+
+         tcw92dIMfLYvw9p4bSJ/ysNJpQ0zP0bvaOsunH+usqOjuAGu1ENgpxkUbbWIoc1XsutD
+         /lAQ==
+X-Gm-Message-State: AOAM532A2z5QDSv6TyOIXQoE4i1XD8Egf4B5xXnlPDT8isqHtfFA6CD8
+        CgP8egn4btzPmBbut2clqwg=
+X-Google-Smtp-Source: ABdhPJxylxUb3CRVvUOB7sWREsvDlUHSsbGKGDdn2Z/cAkCOJOGn25zImPk4XDriCcBsagFUQaG9lA==
+X-Received: by 2002:a17:90a:5907:: with SMTP id k7mr14518747pji.46.1624084829359;
+        Fri, 18 Jun 2021 23:40:29 -0700 (PDT)
 Received: from localhost.localdomain (199.19.111.227.16clouds.com. [199.19.111.227])
-        by smtp.gmail.com with ESMTPSA id r19sm9440274pfh.152.2021.06.18.23.40.20
+        by smtp.gmail.com with ESMTPSA id r19sm9440274pfh.152.2021.06.18.23.40.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jun 2021 23:40:24 -0700 (PDT)
+        Fri, 18 Jun 2021 23:40:29 -0700 (PDT)
 From:   Artem Lapkin <email2tema@gmail.com>
 X-Google-Original-From: Artem Lapkin <art@khadas.com>
 To:     narmstrong@baylibre.com
@@ -57,9 +57,9 @@ Cc:     yue.wang@Amlogic.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         art@khadas.com, nick@khadas.com, gouwa@khadas.com
-Subject: [PATCH 3/4] PCI: keystone move mrrs quirk to core
-Date:   Sat, 19 Jun 2021 14:39:51 +0800
-Message-Id: <20210619063952.2008746-4-art@khadas.com>
+Subject: [PATCH 4/4] PCI: loongson move mrrs quirk to core
+Date:   Sat, 19 Jun 2021 14:39:52 +0800
+Message-Id: <20210619063952.2008746-5-art@khadas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210619063952.2008746-1-art@khadas.com>
 References: <20210619063952.2008746-1-art@khadas.com>
@@ -69,81 +69,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Replace dublicated functionality ks_pcie_quirk to mrrs_limit_quirk
+Replace dublicated functionality loongson_mrrs_quirk to mrrs_limit_quirk
 from core pci quirks
 
 Signed-off-by: Artem Lapkin <art@khadas.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 49 -----------------------
- 1 file changed, 49 deletions(-)
+ drivers/pci/controller/pci-loongson.c | 42 ++-------------------------
+ 1 file changed, 3 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 53aa35cb3..879ae2d4f 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -83,12 +83,6 @@
- #define ERR_IRQ_ALL			(ERR_AER | ERR_AXI | ERR_CORR | \
- 					 ERR_NONFATAL | ERR_FATAL | ERR_SYS)
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 48169b1e3..5a54faf10 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -13,10 +13,6 @@
+ #include "../pci.h"
  
--/* PCIE controller device IDs */
--#define PCIE_RC_K2HK			0xb008
--#define PCIE_RC_K2E			0xb009
--#define PCIE_RC_K2L			0xb00a
--#define PCIE_RC_K2G			0xb00b
+ /* Device IDs */
+-#define DEV_PCIE_PORT_0	0x7a09
+-#define DEV_PCIE_PORT_1	0x7a19
+-#define DEV_PCIE_PORT_2	0x7a29
 -
- #define KS_PCIE_DEV_TYPE_MASK		(0x3 << 1)
- #define KS_PCIE_DEV_TYPE(mode)		((mode) << 1)
- 
-@@ -521,49 +515,6 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
- 	return 0;
+ #define DEV_LS2K_APB	0x7a02
+ #define DEV_LS7A_CONF	0x7a10
+ #define DEV_LS7A_LPC	0x7a0c
+@@ -38,11 +34,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
  }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+-			DEV_PCIE_PORT_0, bridge_class_quirk);
++			PCI_DEVICE_ID_LOONGSON_PCIE_PORT_0, bridge_class_quirk);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+-			DEV_PCIE_PORT_1, bridge_class_quirk);
++			PCI_DEVICE_ID_LOONGSON_PCIE_PORT_1, bridge_class_quirk);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+-			DEV_PCIE_PORT_2, bridge_class_quirk);
++			PCI_DEVICE_ID_LOONGSON_PCIE_PORT_2, bridge_class_quirk);
  
--static void ks_pcie_quirk(struct pci_dev *dev)
+ static void system_bus_quirk(struct pci_dev *pdev)
+ {
+@@ -60,38 +56,6 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_LS7A_LPC, system_bus_quirk);
+ 
+-static void loongson_mrrs_quirk(struct pci_dev *dev)
 -{
 -	struct pci_bus *bus = dev->bus;
 -	struct pci_dev *bridge;
--	static const struct pci_device_id rc_pci_devids[] = {
--		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2HK),
--		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
--		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2E),
--		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
--		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
--		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
--		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
--		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+-	static const struct pci_device_id bridge_devids[] = {
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
 -		{ 0, },
 -	};
 -
--	if (pci_is_root_bus(bus))
--		bridge = dev;
--
--	/* look for the host bridge */
+-	/* look for the matching bridge */
 -	while (!pci_is_root_bus(bus)) {
 -		bridge = bus->self;
 -		bus = bus->parent;
--	}
--
--	if (!bridge)
--		return;
--
--	/*
--	 * Keystone PCI controller has a h/w limitation of
--	 * 256 bytes maximum read request size.  It can't handle
--	 * anything higher than this.  So force this limit on
--	 * all downstream devices.
--	 */
--	if (pci_match_id(rc_pci_devids, bridge)) {
--		if (pcie_get_readrq(dev) > 256) {
--			dev_info(&dev->dev, "limiting MRRS to 256\n");
--			pcie_set_readrq(dev, 256);
+-		/*
+-		 * Some Loongson PCIe ports have a h/w limitation of
+-		 * 256 bytes maximum read request size. They can't handle
+-		 * anything larger than this. So force this limit on
+-		 * any devices attached under these ports.
+-		 */
+-		if (pci_match_id(bridge_devids, bridge)) {
+-			if (pcie_get_readrq(dev) > 256) {
+-				pci_info(dev, "limiting MRRS to 256\n");
+-				pcie_set_readrq(dev, 256);
+-			}
+-			break;
 -		}
 -	}
 -}
--DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
+-DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
 -
- static void ks_pcie_msi_irq_handler(struct irq_desc *desc)
+ static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
+ 				unsigned int devfn, int where)
  {
- 	unsigned int irq = desc->irq_data.hwirq;
 -- 
 2.25.1
 
