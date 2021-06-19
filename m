@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5CA43AD82D
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 08:40:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0513AD82F
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 08:40:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233773AbhFSGmX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Jun 2021 02:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35124 "EHLO
+        id S231637AbhFSGmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Jun 2021 02:42:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231637AbhFSGmX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 02:42:23 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43438C061574;
-        Fri, 18 Jun 2021 23:40:13 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id e33so9700865pgm.3;
-        Fri, 18 Jun 2021 23:40:13 -0700 (PDT)
+        with ESMTP id S233902AbhFSGmZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 02:42:25 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4C0C061574;
+        Fri, 18 Jun 2021 23:40:14 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id q192so2870658pfc.7;
+        Fri, 18 Jun 2021 23:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4BqdgBHlkY5WITeFSr4aT0Yb2yF3TJEhWLYU++k4kDc=;
-        b=OyJR0Nfb8+QGn3KzeftqpXXNYZ0z6y3vw7+jeGicalCGyi3T9Q8LWumQqgoCXEPvMw
-         6XAifQxgt9eFldC7SIU4rY10qlaiVWmXAW3Xr8YzP6ilEfvKPXWeaDTYDyExHtcp92QS
-         MtZC6OYe4leOWMObtezIaKH7diNPzu5Y/1PVVKcbWbOe5KB+yyPCbNIp7/EOn+mxwlAq
-         HSV2nCvbDPH+MKISoDlABO4wraYUqQVkVW2ulFqAEWSpxeHxACOCnspvNE46/FcU2Sj1
-         bMQ/2i3fDJ1R57h6lwEskSF0F0jmVKXeSNk00LzJJ4+KccUuL3uFt5fK2lAxLN4K2D0+
-         kozQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cTrGZor3giFSILahtV27RiFLtW55t+UVcQqePFHTEzI=;
+        b=XcNwAOt4Iaca+5I7ng6jQeAUgDZQdzV4x+GsaNGBPWqmAq4s8U5PZ4FfMEEBZWsnbg
+         /iO6gOOw4+uCrfX34VEFStsCbq5OOVSZU/ESNU4tiGHnzD6FZawjxIUXwzBkkNqzpgc5
+         UGdbvD03/Iw8AXIprWT5hpsLEXL9iVNGb2jW07IN+7MfStS/TW0/j6X+BaodroEsueSd
+         e3xddEaEP1QuOJTWLD2u1Zm9jas4qm741gSJBMa7Z1mwQzzqY8GxzNXCQkBruUjqWvk5
+         FWmGoaGpOLc9QbblLOdV+JRTA5FspI/0o8WWSnghAPnHFy7HtUChgdBAP7nuQmYErDVx
+         r1sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4BqdgBHlkY5WITeFSr4aT0Yb2yF3TJEhWLYU++k4kDc=;
-        b=YeVsckhk87/wHdi9+ZF7rNLS/q3nRbp9H17y3rLlYPlXL/u9ELdPzIkH+mxMYxLJX7
-         pf+YiDIM4qncwzOdq+QOA/m6rjGC2wzA/DiFVbvpoUW3vcQ9JiEreuvA3TfG24qwVAUk
-         iZgPRpluCtqA77Bqn0T/g9N1EtBd66fQwCz2BXq++p6GEj/TkM9txCiozT0pkLEc6bcv
-         CDpEKBBVT6q/F3FwAUdJfApZIWJzK9jT5cmhkdrXLXyzxJN4gSdKEFhbZymUKGjUSMga
-         BZKdSMrFq5MUnQnRkNokXJdix8XXED3KAOwx/Tqo/t8BuWupXYgOEGQh4V7Z9ngWo/ia
-         72nA==
-X-Gm-Message-State: AOAM531rBEXKAxxvH9gRDE9HPpAunr0nHdgLj6FeGv9X26TEel8pp7So
-        Q1jcGztV2YWST0lbN0PGLX8=
-X-Google-Smtp-Source: ABdhPJx6qUHdAKvNLGs9CTuBE4CgynbGRylM+XJL0CFH/7p4Eml/rzSVbtxAj2oJWYngPavAiszjFg==
-X-Received: by 2002:a62:1942:0:b029:2e9:debd:d8b1 with SMTP id 63-20020a6219420000b02902e9debdd8b1mr8852127pfz.9.1624084807935;
-        Fri, 18 Jun 2021 23:40:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cTrGZor3giFSILahtV27RiFLtW55t+UVcQqePFHTEzI=;
+        b=bF1Op6+hzto/PTB0Q6JZEaSnm1wqhBaBjZrxr3nW9qawbpiNKeEBZjr7Kx3E4lFMl8
+         b7HDUdCM2K823egVnP0E0wAeMRPvpcxPiaR3T4xQp0Vsh8pASyk+f1HVzOr7uxuvIcIp
+         6rHzB883lFsyYy0R6ffOFqs4XdzYGwDyZhnJ+fPefR+tSB0WKoKld5jv1J1lw6qqKhcR
+         4GEzi0Vldp1oH9XOtoHmlqWnD7+hxQKFPL0G5jqNCl5N49EXHyYCPsQzhXxV3Mu3uGUV
+         a+B16I4+dkvU9CUy5HZl+8IGWcnutje5Qhb2lcANytzIMdB/bFjb6EcXJfuvOWR5+uYK
+         unTQ==
+X-Gm-Message-State: AOAM533nyzvr/b+Yn86NytNZw/sCk7SVWt9OkSKH7LrHrpKZZNsGKxSM
+        D3EcBSOUx0eOJB+2KmMEEGVQXeZ3W+eu+w==
+X-Google-Smtp-Source: ABdhPJywWDZq3dgNDKtQB7s+bDUb2ze2dkeB2P4aHX12qoZcnCaeqhQ+Sct5O2yT2zz/apKFljN1qw==
+X-Received: by 2002:a63:ff20:: with SMTP id k32mr13898803pgi.82.1624084814388;
+        Fri, 18 Jun 2021 23:40:14 -0700 (PDT)
 Received: from localhost.localdomain (199.19.111.227.16clouds.com. [199.19.111.227])
-        by smtp.gmail.com with ESMTPSA id r19sm9440274pfh.152.2021.06.18.23.40.01
+        by smtp.gmail.com with ESMTPSA id r19sm9440274pfh.152.2021.06.18.23.40.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jun 2021 23:40:07 -0700 (PDT)
+        Fri, 18 Jun 2021 23:40:13 -0700 (PDT)
 From:   Artem Lapkin <email2tema@gmail.com>
 X-Google-Original-From: Artem Lapkin <art@khadas.com>
 To:     narmstrong@baylibre.com
@@ -57,38 +57,52 @@ Cc:     yue.wang@Amlogic.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         art@khadas.com, nick@khadas.com, gouwa@khadas.com
-Subject: [PATCH 0/4] PCI: replace dublicated MRRS limit quirks
-Date:   Sat, 19 Jun 2021 14:39:48 +0800
-Message-Id: <20210619063952.2008746-1-art@khadas.com>
+Subject: [PATCH 1/4] PCI: move Keystone and Loongson device IDs to pci_ids
+Date:   Sat, 19 Jun 2021 14:39:49 +0800
+Message-Id: <20210619063952.2008746-2-art@khadas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210619063952.2008746-1-art@khadas.com>
+References: <20210619063952.2008746-1-art@khadas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Replace dublicated MRRS limit quirks by mrrs_limit_quirk from core
+Moved from
 * drivers/pci/controller/dwc/pci-keystone.c
 * drivers/pci/controller/pci-loongson.c
 
-Both ks_pcie_quirk loongson_mrrs_quirk was rewritten without any
-functionality changes by one mrrs_limit_quirk
+Signed-off-by: Artem Lapkin <art@khadas.com>
+---
+ include/linux/pci_ids.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Added DesignWare PCI controller which need same quirk for
-* drivers/pci/controller/dwc/pci-meson.c (PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3)
-
-This quirk can solve some issue for Khadas VIM3/VIM3L(Amlogic)
-with HDMI scrambled picture and nvme devices at intensive writing...
-
-come from:
-* https://lore.kernel.org/linux-pci/20210618063821.1383357-1-art@khadas.com/
-
-Artem Lapkin (4):
- PCI: move Keystone and Loongson device IDs to pci_ids
- PCI: core: quirks: add mrrs_limit_quirk
- PCI: keystone move mrrs quirk to core
- PCI: loongson move mrrs quirk to core
-
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 4c3fa5293d76..e19d224bbca8 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -151,6 +151,9 @@
+ /* Vendors and devices.  Sort key: vendor first, device next. */
+ 
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
++#define PCI_DEVICE_ID_LOONGSON_PCIE_PORT_0	0x7a09
++#define PCI_DEVICE_ID_LOONGSON_PCIE_PORT_1	0x7a19
++#define PCI_DEVICE_ID_LOONGSON_PCIE_PORT_2	0x7a29
+ 
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+ #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
+@@ -885,6 +888,10 @@
+ #define PCI_DEVICE_ID_TI_J721E		0xb00d
+ #define PCI_DEVICE_ID_TI_DRA74x		0xb500
+ #define PCI_DEVICE_ID_TI_DRA72x		0xb501
++#define PCI_DEVICE_ID_TI_RC_K2HK	0xb008
++#define PCI_DEVICE_ID_TI_RC_K2E		0xb009
++#define PCI_DEVICE_ID_TI_RC_K2L		0xb00a
++#define PCI_DEVICE_ID_TI_RC_K2G		0xb00b
+ 
+ #define PCI_VENDOR_ID_SONY		0x104d
+ 
 -- 
 2.25.1
 
