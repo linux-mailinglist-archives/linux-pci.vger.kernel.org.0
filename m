@@ -2,207 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7170B3AD8A4
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 10:37:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C2043AD8B7
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 10:55:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234308AbhFSIjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Jun 2021 04:39:15 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4216 "EHLO mga06.intel.com"
+        id S231819AbhFSI5t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Jun 2021 04:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234304AbhFSIjO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 19 Jun 2021 04:39:14 -0400
-IronPort-SDR: JtTdH3fMNoblM8o+3kLeBbM1cS6F4j1vHkeLQj4JZH8i0VvHJTyoqonabSup2/mtZCcwJvRVfw
- cipsJVRQv8Cg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="267802366"
-X-IronPort-AV: E=Sophos;i="5.83,285,1616482800"; 
-   d="scan'208";a="267802366"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2021 01:37:03 -0700
-IronPort-SDR: Pc8gaqgMkNQu0LOu/6bfuEWETDiKzvxd6nbAUOvAw9sCukeItx9TAuO8EXFaccpbev6mJehzL0
- kg5wzS3RlPJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,285,1616482800"; 
-   d="scan'208";a="480027326"
-Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Jun 2021 01:37:02 -0700
-Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1luWTN-0003SI-Gx; Sat, 19 Jun 2021 08:37:01 +0000
-Date:   Sat, 19 Jun 2021 16:36:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- f18139966d072dab8e4398c95ce955a9742e04f7
-Message-ID: <60cdac9e.Ar7sC8w9yYU31NYX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S230225AbhFSI5s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 19 Jun 2021 04:57:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 393E9611AC;
+        Sat, 19 Jun 2021 08:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624092938;
+        bh=H65t3E3E1UfbQm0vFNUtnZkOHVJMZekG+qInfxOtAWM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oy/1bVbpWvijx+yMF4KrmzPASld/lhNxS3J9mB4Fm+Is+yWhyhWxJ0J9dO19gUCbP
+         xuzVvs+/1xpO+1FzdWJVlMQGN9NIzTVznZaSBkIzPkeOyP0avkdA+07pO1bTmODqEu
+         8hgXAujIIRl1e39BJbLIZvBv2C03EJU1cLc04H7Fyn63HynHUmH24+fZLcqqQ4/Lk0
+         5ZEezmOur8J4nsAbntFSxM0cd/P/k7J6B50Ag84D/gRxZ1nII157gdAo8lzTdYzJRh
+         ZcoVqbDTLSythnXkRMEYSU/l3bZxmbQjoJbpwofeTz+EZYhCDI+3vBarBjzjogJeQe
+         VAJdYP8yWgVhw==
+Received: by pali.im (Postfix)
+        id BF920655; Sat, 19 Jun 2021 10:55:35 +0200 (CEST)
+Date:   Sat, 19 Jun 2021 10:55:35 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: xhci_pci & PCIe hotplug crash
+Message-ID: <20210619085535.rpqitskpptgj7dwk@pali>
+References: <20210505120117.4wpmo6fhvzznf3wv@pali>
+ <YJKK7SDIaeH1L/fC@kroah.com>
+ <20210505123346.kxfpumww5i4qmhnk@pali>
+ <20210505124402.GB29101@wunner.de>
+ <20210505130240.lmryb26xffzkg4pl@pali>
+ <ea58430d088742a1910475a680fb1de5@AcuMS.aculab.com>
+ <20210505153942.mntbkmphw3ik3pdg@pali>
+ <20210619075358.GA31639@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210619075358.GA31639@wunner.de>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: f18139966d072dab8e4398c95ce955a9742e04f7  PCI: aardvark: Fix kernel panic during PIO transfer
+On Saturday 19 June 2021 09:53:58 Lukas Wunner wrote:
+> On Wed, May 05, 2021 at 05:39:42PM +0200, Pali Rohár wrote:
+> > On Wednesday 05 May 2021 15:20:11 David Laight wrote:
+> > > From: Pali Rohár
+> > > Sent: 05 May 2021 14:03
+> > > > So seems that PCIe controller HW triggers these external aborts when
+> > > > device on PCIe bus is not accessible anymore.
+> > > > 
+> > > > If this issue is really caused by MMIO access from xhci driver when
+> > > > device is not accessible on the bus anymore, can we do something to
+> > > > prevent this kernel crash? Somehow mask that external abort in kernel
+> > > > for a time during MMIO access?
+> > > 
+> > > If it is a cycle abort then the interrupted address is probably
+> > > that of the MMIO instruction.
+> > > So you need to catch the abort, emulate the instruction and
+> > > then return to the next one.
+> > 
+> > Has kernel API & infrastructure for catching these aborts and executing
+> > own driver handler when abort happens?
+> 
+> Yes, see here for an example:
+> 
+> https://lore.kernel.org/linux-pci/20210615191405.21878-4-jim2101024@gmail.com/
 
-elapsed time: 720m
+What I do not see here how to catch and recover from error. It looks
+like that in above patch is just implemented catching error, printing
+more verbose output and let kernel continue in rebooting / crashing.
 
-configs tested: 145
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                          rsk7269_defconfig
-powerpc                     asp8347_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                     skiroot_defconfig
-arm                         bcm2835_defconfig
-powerpc                    klondike_defconfig
-mips                          rb532_defconfig
-powerpc                     tqm8540_defconfig
-powerpc                 mpc834x_itx_defconfig
-sh                          polaris_defconfig
-x86_64                            allnoconfig
-xtensa                       common_defconfig
-arm                          pxa168_defconfig
-nios2                         3c120_defconfig
-nds32                             allnoconfig
-powerpc64                           defconfig
-arm                      pxa255-idp_defconfig
-powerpc                     tqm8555_defconfig
-arm                     am200epdkit_defconfig
-arm                         orion5x_defconfig
-sh                        edosk7705_defconfig
-sh                           se7722_defconfig
-mips                  maltasmvp_eva_defconfig
-m68k                       m5249evb_defconfig
-mips                         cobalt_defconfig
-m68k                        stmark2_defconfig
-powerpc                        fsp2_defconfig
-arm                          badge4_defconfig
-sh                           se7619_defconfig
-powerpc                      pmac32_defconfig
-um                           x86_64_defconfig
-arm                             pxa_defconfig
-sh                                  defconfig
-arm                            pleb_defconfig
-m68k                        m5272c3_defconfig
-mips                      maltaaprp_defconfig
-powerpc                 mpc8540_ads_defconfig
-powerpc                      obs600_defconfig
-arm                           spitz_defconfig
-powerpc                     mpc83xx_defconfig
-ia64                            zx1_defconfig
-powerpc                   motionpro_defconfig
-m68k                            q40_defconfig
-m68k                        m5307c3_defconfig
-ia64                      gensparse_defconfig
-arm                     davinci_all_defconfig
-powerpc                 mpc832x_rdb_defconfig
-powerpc               mpc834x_itxgp_defconfig
-arm                          iop32x_defconfig
-arm                          lpd270_defconfig
-arm                          collie_defconfig
-mips                malta_qemu_32r6_defconfig
-sh                             espt_defconfig
-powerpc                  storcenter_defconfig
-s390                             alldefconfig
-sh                     magicpanelr2_defconfig
-s390                          debug_defconfig
-powerpc                     tqm5200_defconfig
-arm                       netwinder_defconfig
-arc                           tb10x_defconfig
-arm                             ezx_defconfig
-powerpc                     kmeter1_defconfig
-arm                        clps711x_defconfig
-mips                  decstation_64_defconfig
-arm                       mainstone_defconfig
-m68k                       m5475evb_defconfig
-powerpc                         wii_defconfig
-xtensa                              defconfig
-sh                            migor_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20210618
-i386                 randconfig-a006-20210618
-i386                 randconfig-a004-20210618
-i386                 randconfig-a001-20210618
-i386                 randconfig-a005-20210618
-i386                 randconfig-a003-20210618
-x86_64               randconfig-a015-20210618
-x86_64               randconfig-a011-20210618
-x86_64               randconfig-a012-20210618
-x86_64               randconfig-a014-20210618
-x86_64               randconfig-a016-20210618
-x86_64               randconfig-a013-20210618
-i386                 randconfig-a015-20210618
-i386                 randconfig-a016-20210618
-i386                 randconfig-a013-20210618
-i386                 randconfig-a014-20210618
-i386                 randconfig-a012-20210618
-i386                 randconfig-a011-20210618
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-b001-20210618
-x86_64               randconfig-a002-20210618
-x86_64               randconfig-a001-20210618
-x86_64               randconfig-a004-20210618
-x86_64               randconfig-a003-20210618
-x86_64               randconfig-a006-20210618
-x86_64               randconfig-a005-20210618
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+At least I do not see how to "catch the abort, emulate the instruction
+and then return to the next one" as David wrote.
