@@ -2,98 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35A563AD771
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 05:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5CA43AD82D
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 08:40:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231689AbhFSDqU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Jun 2021 23:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
+        id S233773AbhFSGmX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Jun 2021 02:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233773AbhFSDqI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Jun 2021 23:46:08 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B23B5C061767
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 20:43:56 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id h3so10136353ilc.9
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 20:43:56 -0700 (PDT)
+        with ESMTP id S231637AbhFSGmX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 02:42:23 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43438C061574;
+        Fri, 18 Jun 2021 23:40:13 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id e33so9700865pgm.3;
+        Fri, 18 Jun 2021 23:40:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zO5LL7Owrsk50u85z5NQdq/+aN2FoxcpBADlxiwbwtc=;
-        b=GoMVApQGRvRIO7blwwZSLVX7KnEaLUsgQiZnYGnQ8mp+79muo9lTEuES+H8kLhS8xC
-         djxEq6nvfo+uAAf09DzdZIJgtSBquVbHx1Yy7Zj9ycZDtCn5PRIixQGHzFvC0S0QErMk
-         dzuQb1UZyozHrgC7e811z9kAB0L/tg8WkvJDw=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4BqdgBHlkY5WITeFSr4aT0Yb2yF3TJEhWLYU++k4kDc=;
+        b=OyJR0Nfb8+QGn3KzeftqpXXNYZ0z6y3vw7+jeGicalCGyi3T9Q8LWumQqgoCXEPvMw
+         6XAifQxgt9eFldC7SIU4rY10qlaiVWmXAW3Xr8YzP6ilEfvKPXWeaDTYDyExHtcp92QS
+         MtZC6OYe4leOWMObtezIaKH7diNPzu5Y/1PVVKcbWbOe5KB+yyPCbNIp7/EOn+mxwlAq
+         HSV2nCvbDPH+MKISoDlABO4wraYUqQVkVW2ulFqAEWSpxeHxACOCnspvNE46/FcU2Sj1
+         bMQ/2i3fDJ1R57h6lwEskSF0F0jmVKXeSNk00LzJJ4+KccUuL3uFt5fK2lAxLN4K2D0+
+         kozQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zO5LL7Owrsk50u85z5NQdq/+aN2FoxcpBADlxiwbwtc=;
-        b=GExAT39H9L13Wos/gQbLwuCVGJWiaWH2lzVJA+ieY/db60z2XJjJ7uMfMREUHG26t6
-         szikWASSXaIrqTjH3vQAnrVH0HiGN/KPiOtYwYMu4Xnd2RjNivjnrvQrFIk9OYQESa07
-         MqNXNwEGwgWU2dyKLWGCS29EbjuVBpet0at+FRShTEPV+YmsQ47Rwah+Mw9YQyVCAoBG
-         pTj7Q30Ed+OxtZVk6RYHCOWjT2NrymBIrMCK/6A9ZZJPKSYk0A8cX5Uw0U3QBOWyStIk
-         OYX4JNqu7JuLGQBLxgDdvaGQOHELrHGREku6muycN+QosPUS685oW9MYBeh1gWi7fM8g
-         m/iA==
-X-Gm-Message-State: AOAM532Fg/Ika5t8Hj2LPrgsC1Pok/HPqIid1iJQ1G+WoA/yoBrEVqj7
-        9YgUFQ0mVDJUXfN3BgZQRa3aYWoSfpzcwg==
-X-Google-Smtp-Source: ABdhPJz0DUunE/XXoGX7mRhEwm6JvqzMMoBLkV6tL+e0UFgE+3VtRczAUtwaFFhIsihf3nyJrHWHPQ==
-X-Received: by 2002:a92:7a07:: with SMTP id v7mr108056ilc.224.1624074236005;
-        Fri, 18 Jun 2021 20:43:56 -0700 (PDT)
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
-        by smtp.gmail.com with ESMTPSA id y13sm5369138ioa.51.2021.06.18.20.43.54
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Jun 2021 20:43:55 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id k16so9196066ios.10
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jun 2021 20:43:54 -0700 (PDT)
-X-Received: by 2002:a05:6602:50:: with SMTP id z16mr10626949ioz.155.1624074224014;
- Fri, 18 Jun 2021 20:43:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4BqdgBHlkY5WITeFSr4aT0Yb2yF3TJEhWLYU++k4kDc=;
+        b=YeVsckhk87/wHdi9+ZF7rNLS/q3nRbp9H17y3rLlYPlXL/u9ELdPzIkH+mxMYxLJX7
+         pf+YiDIM4qncwzOdq+QOA/m6rjGC2wzA/DiFVbvpoUW3vcQ9JiEreuvA3TfG24qwVAUk
+         iZgPRpluCtqA77Bqn0T/g9N1EtBd66fQwCz2BXq++p6GEj/TkM9txCiozT0pkLEc6bcv
+         CDpEKBBVT6q/F3FwAUdJfApZIWJzK9jT5cmhkdrXLXyzxJN4gSdKEFhbZymUKGjUSMga
+         BZKdSMrFq5MUnQnRkNokXJdix8XXED3KAOwx/Tqo/t8BuWupXYgOEGQh4V7Z9ngWo/ia
+         72nA==
+X-Gm-Message-State: AOAM531rBEXKAxxvH9gRDE9HPpAunr0nHdgLj6FeGv9X26TEel8pp7So
+        Q1jcGztV2YWST0lbN0PGLX8=
+X-Google-Smtp-Source: ABdhPJx6qUHdAKvNLGs9CTuBE4CgynbGRylM+XJL0CFH/7p4Eml/rzSVbtxAj2oJWYngPavAiszjFg==
+X-Received: by 2002:a62:1942:0:b029:2e9:debd:d8b1 with SMTP id 63-20020a6219420000b02902e9debdd8b1mr8852127pfz.9.1624084807935;
+        Fri, 18 Jun 2021 23:40:07 -0700 (PDT)
+Received: from localhost.localdomain (199.19.111.227.16clouds.com. [199.19.111.227])
+        by smtp.gmail.com with ESMTPSA id r19sm9440274pfh.152.2021.06.18.23.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Jun 2021 23:40:07 -0700 (PDT)
+From:   Artem Lapkin <email2tema@gmail.com>
+X-Google-Original-From: Artem Lapkin <art@khadas.com>
+To:     narmstrong@baylibre.com
+Cc:     yue.wang@Amlogic.com, khilman@baylibre.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        jbrunet@baylibre.com, christianshewitt@gmail.com,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        art@khadas.com, nick@khadas.com, gouwa@khadas.com
+Subject: [PATCH 0/4] PCI: replace dublicated MRRS limit quirks
+Date:   Sat, 19 Jun 2021 14:39:48 +0800
+Message-Id: <20210619063952.2008746-1-art@khadas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210617062635.1660944-1-tientzu@chromium.org> <CALiNf2_qF7OY0LHToNYx0E79BWMt2n7=nepPPLf+7YV3=KFEyw@mail.gmail.com>
-In-Reply-To: <CALiNf2_qF7OY0LHToNYx0E79BWMt2n7=nepPPLf+7YV3=KFEyw@mail.gmail.com>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Sat, 19 Jun 2021 11:43:33 +0800
-X-Gmail-Original-Message-ID: <CALiNf289bo1WzEWWapzeQ8xYiH8s1qgDkpHVgy=PgAmv6rvGnQ@mail.gmail.com>
-Message-ID: <CALiNf289bo1WzEWWapzeQ8xYiH8s1qgDkpHVgy=PgAmv6rvGnQ@mail.gmail.com>
-Subject: Re: [PATCH v13 00/12] Restricted DMA
-To:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, grant.likely@arm.com,
-        xypron.glpk@gmx.de, Thierry Reding <treding@nvidia.com>,
-        mingo@kernel.org, bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-v14: https://lore.kernel.org/patchwork/cover/1448954/
+Replace dublicated MRRS limit quirks by mrrs_limit_quirk from core
+* drivers/pci/controller/dwc/pci-keystone.c
+* drivers/pci/controller/pci-loongson.c
+
+Both ks_pcie_quirk loongson_mrrs_quirk was rewritten without any
+functionality changes by one mrrs_limit_quirk
+
+Added DesignWare PCI controller which need same quirk for
+* drivers/pci/controller/dwc/pci-meson.c (PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3)
+
+This quirk can solve some issue for Khadas VIM3/VIM3L(Amlogic)
+with HDMI scrambled picture and nvme devices at intensive writing...
+
+come from:
+* https://lore.kernel.org/linux-pci/20210618063821.1383357-1-art@khadas.com/
+
+Artem Lapkin (4):
+ PCI: move Keystone and Loongson device IDs to pci_ids
+ PCI: core: quirks: add mrrs_limit_quirk
+ PCI: keystone move mrrs quirk to core
+ PCI: loongson move mrrs quirk to core
+
+-- 
+2.25.1
+
