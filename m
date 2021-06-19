@@ -2,183 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F153ADAEF
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 18:39:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BECC3ADB01
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Jun 2021 19:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234001AbhFSQlL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Jun 2021 12:41:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59533 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234790AbhFSQlI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 12:41:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624120737;
+        id S234858AbhFSRCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Jun 2021 13:02:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35076 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232203AbhFSRCo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Jun 2021 13:02:44 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1624122031;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=wbiqFTgyr2qVT+KslDN1kNwhH+ycxPPZqgEd38hPDCM=;
-        b=IjBCitkBmDsQXp5VRde3KQ18ZGHbLnjnYe/aAWFz3eKgQYj2a53996ag/BItda5RIV6aO9
-        jVVAmTVFHiLfEa3BRaAD5b3va0zz2uskUB5lJ5HqrKYYTDUUFMU4aEHan/LLi1tlsyCHHA
-        rWNlbx0SexHlvFaALRE4LNd+pMwO0qQ=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-JTmSf8MfNjmokbRRmQINIg-1; Sat, 19 Jun 2021 12:38:55 -0400
-X-MC-Unique: JTmSf8MfNjmokbRRmQINIg-1
-Received: by mail-vs1-f72.google.com with SMTP id v27-20020a67c89b0000b02902227f70aa8fso2578908vsk.6
-        for <linux-pci@vger.kernel.org>; Sat, 19 Jun 2021 09:38:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wbiqFTgyr2qVT+KslDN1kNwhH+ycxPPZqgEd38hPDCM=;
-        b=Ti2NASRrxxM5oSUsUqrJk69Kh09kBF1uNVQP8XbLssqqtAeRSOB5tRGaok6f7QRDXD
-         6Bkejy87PAgM754MH8BR4VecR6mexbaIAVqGvuJyXvhH3O7xTvqiGEGclsRCS4KYq5d5
-         UaPjxbvhHDN+qqK+deRACbX4JA0UmZWaWm4ry2l76qpJSfdoCfBjJfiwjgEl+JDDnDFM
-         XQxRggdvF+KyLe84gSi/+X9d0pj4MgQsQAwz2ieTXiTNYFO67YbiNF3oUwZKLktmwYsV
-         jUs6ocNM6URc4ERoA48yPmxSFgZfRJhs2NVHgG77TfhQ8PBWnEcIx1h18Q2Ipbx4J3t2
-         tksg==
-X-Gm-Message-State: AOAM530RjndTCVliWYjsMcqPXwYQs1dj2KXR2lT/S7YdV3ktp3LD6cxU
-        RbboOrbArsPI7AhiwwisGFy/LOmO5VNGMTeKbPPUlaTL9ISqbmFOqhTlJQSwY2bEOe2ZLrwDyae
-        nEYX5zAzErnVU/a2PFjL1w9JTv0F5oqVeZOY1
-X-Received: by 2002:a9f:3743:: with SMTP id a3mr17091671uae.92.1624120734995;
-        Sat, 19 Jun 2021 09:38:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzehFfaaWYP9AWbBh706kWIK3vDxHR8P63KwuLiGoF8f6zf2ocIjKEwad+AacB+2euZypvQBA1RlQJ2pGyN8iA=
-X-Received: by 2002:a9f:3743:: with SMTP id a3mr17091644uae.92.1624120734773;
- Sat, 19 Jun 2021 09:38:54 -0700 (PDT)
+        bh=B0WuIzDMWF99bBZuLNCq2ygkfH35IcPVOSY6Jg7e+OI=;
+        b=zWzKICElodmiWYNyww0vsbIf5K1JIwRn9+v/TR+PlrsUkchd2PKtD5ng6LpeFgbgsTCKw4
+        GBwmGVSPosDKlhUUBZWSNx6e7wz2eqzwKRj1CuthEf+l1vTDYf3U+Y7Xu9kTG+70DBDmlK
+        Bk6Dco+InfRE+z5QGnIXhU31JJXAS+rcpcEninckSnnpG0svX6TEdlrLdqMEQTZMVfly3x
+        9TxzUOm6mtr/EJi67HqlweKY04sNhwUhk8rFZHANb9cX23E1VUNpFGkNaiwqoMfPsIyG8B
+        kcgTJwMUfiPDmBVazSTYhENptpnSjrZ1yRGnj0brteKWvQfemy8H9dbCFDc8/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1624122031;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B0WuIzDMWF99bBZuLNCq2ygkfH35IcPVOSY6Jg7e+OI=;
+        b=yGz+IcnIfKBafxps3sdFRFstTzITkh1lKwhIXMPHyEs4gwR741lmdzOnbFnqgotz0a8XG7
+        K3OHwMhzVPurVVAg==
+To:     Ondrej Mosnacek <omosnace@redhat.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux lockdown checks
+In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
+References: <20210616085118.1141101-1-omosnace@redhat.com>
+Date:   Sat, 19 Jun 2021 19:00:30 +0200
+Message-ID: <8735tdiyc1.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <20210107181416.GA3536@willie-the-truck> <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
- <20210108103216.GA17931@e121166-lin.cambridge.arm.com> <20210122194829.GE25471@willie-the-truck>
- <b37bbff9-d4f8-ece6-3a89-fa21093e15e1@nvidia.com> <20210126225351.GA30941@willie-the-truck>
- <20210325131231.GA18590@e121166-lin.cambridge.arm.com> <20210616173646.GA1840163@nvidia.com>
- <CA+kK7ZijdNERQSauEvAffR7JLbfZ512na2-9cJrU0vFbNnDGwQ@mail.gmail.com>
- <20210618140554.GD1002214@nvidia.com> <CA+kK7ZhJ8+BhLZeZ5XtL2M_qDpOo823taFbM45DTV=H6L1EvhQ@mail.gmail.com>
-In-Reply-To: <CA+kK7ZhJ8+BhLZeZ5XtL2M_qDpOo823taFbM45DTV=H6L1EvhQ@mail.gmail.com>
-From:   Jon Masters <jcm@redhat.com>
-Date:   Sat, 19 Jun 2021 12:38:44 -0400
-Message-ID: <CA+kK7ZhaqWrEkRzGrOtLwbs1fiyXAeztKy9P6-LgJx_GAWevtw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vikram Sethi <vsethi@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Eric Brower <ebrower@nvidia.com>, Grant.Likely@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-P.S. Note that you shouldn't have to do any of the below because this
-is exactly what someone should be sitting on Cadence and Synopsys for
-until they do it correctly in licenseable IP that just does the right
-thing. A real RC as a unit. No more root ports and vendors having to
-hack it together. If we want to solve the actual problem, then that is
-the actual problem.
+On Wed, Jun 16 2021 at 10:51, Ondrej Mosnacek wrote:
+> diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
+> index bda73cb7a044..c43a13241ae8 100644
+> --- a/arch/x86/mm/testmmiotrace.c
+> +++ b/arch/x86/mm/testmmiotrace.c
+> @@ -116,7 +116,7 @@ static void do_test_bulk_ioremapping(void)
+>  static int __init init(void)
+>  {
+>  	unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
+> -	int ret = security_locked_down(LOCKDOWN_MMIOTRACE);
+> +	int ret = security_locked_down(current_cred(), LOCKDOWN_MMIOTRACE);
 
-Ok, off my hobby horse ;)
+I have no real objection to those patches, but it strikes me odd that
+out of the 62 changed places 58 have 'current_cred()' and 4 have NULL as
+argument.
 
-On Sat, Jun 19, 2021 at 12:34 PM Jon Masters <jcm@redhat.com> wrote:
->
-> Hi Jason,
->
-> On Fri, Jun 18, 2021 at 10:06 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >
-> > On Fri, Jun 18, 2021 at 09:21:54AM -0400, Jon Masters wrote:
-> > >    Hi Jason,
-> > >    On Wed, Jun 16, 2021 at 1:38 PM Jason Gunthorpe <[1]jgg@nvidia.com>
-> > >    wrote:
-> > >
-> > >      On Thu, Mar 25, 2021 at 01:12:31PM +0000, Lorenzo Pieralisi wrote:
-> > >      However, in modern server type systems the PCI config space is often
-> > >      a
-> > >      software fiction being created by firmware throughout the PCI
-> > >      space. This has become necessary as the config space has exploded in
-> > >      size and complexity and PCI devices themselves have become very,
-> > >      very
-> > >      complicated. Not just the config space of single devices, but even
-> > >      bridges and topology are SW created in some cases.
-> > >      HW that is doing this is already trapping the config cycles somehow,
-> > >      presumably with some very ugly way like x86's SMM. Allowing a
-> > >      designed
-> > >      in way to inject software into the config space cycles does sound a
-> > >      lot cleaner and better to me.
-> > >
-> > >    This is not required. SMM is terrible, indeed. But we don't have to
-> > >    relive it in Arm just because that's [EL3] the easy place to shove
-> > >    things :)
-> >
-> > "This is not required"? What does that mean?
->
-> It's not required to implement platform hacks in SMM-like EL3. The
-> correct place to do this kind of thing is behind the scenes in a
-> platform microcontroller (note that I do not necessarily mean Arm's
-> SCP approach, you can do much better than that).
->
-> > >      For instance it may solve other pain points if ARM systems had a
-> > >      cheap
-> > >      way to emulate up a "PCI device" to wrapper around some IP blob on
-> > >      chip. The x86 world has really driven this approach where everything
-> > >      on SOC is PCI discoverable, and it does seem to work well.
-> > >      IMHO SW emulation of config space is an important ingredient to do
-> > >      this.
-> > >
-> > >    There are certainly ways to build PCI configuration space in a
-> > >    programmable way that does not require software trapping into
-> > >    MM.
-> >
-> > Can you elaborate on what you'd like to see here? Where do you want to
-> > put the software then?
->
-> There are places other than EL3 where this should live. It should not
-> involve the AP at all in a correct configuration. It should (only)
-> appear to be done in hardware, but where you do it is up to an
-> implementation. Doing it correctly also accounts for others accessing
-> configuration space simultaneously. You don't want to have to stop the
-> world, or break PCI ordering semantics on access. There is a right way
-> (hardware) to do this, and a wrong way (EL3 hacks). But I'll leave
-> folks to figure out how to implement it. There are several possible
-> approaches to do this.
->
-> > >    I strongly agree with the value of an industry standard approach
-> > >    to this in hardware, particularly if the PCIe vendors would offer
-> > >    this as IP.  In a perfect world, ECAM would simply be an
-> > >    abstraction and never directly map to fixed hardware, thus one
-> > >    could correct defects in behavior in the field. I believe on the
-> > >    x86 side of the house, there is some interesting trapping support
-> > >    in the LPC/IOH already and this is absolutely what Arm should be
-> > >    doing.
-> >
-> > AFAIK x86 has HW that traps the read/writes to the ECAM and can
-> > trigger a FW flow to emulate them, maybe in SMM, I don't know the
-> > details. It ceratinly used to be like this when SMM could trap the
-> > config space io read/write registers.
->
-> They trap to something that isn't in SMM, but it is in firmware. That
-> is the correct (in my opinion) approach to this. It's one time where
-> I'm going to say that all the Arm vendors should be doing what Intel
-> is doing in their implementation today.
->
-> > Is that what you want to see for ARM? Is that better than a SMC?
->
-> Yes, because you preserve perfect ECAM semantics and correct it behind
-> the scenes. That's what people should be building.
->
-> > That is alot of special magic hardware to avoid a SMC call...
->
-> And it's the correct way to do it. Either that, or get ECAM perfect up
-> front and do pre-si testing under emulation to confirm.
->
-> </opinion>
->
-> Jon.
+I can't see why this would ever end up with anything else than
+current_cred() or NULL and NULL being the 'special' case. So why not
+having security_locked_down_no_cred() and make current_cred() implicit
+for security_locked_down() which avoids most of the churn and just makes
+the special cases special. I might be missing something though.
 
+Thanks,
+
+        tglx
