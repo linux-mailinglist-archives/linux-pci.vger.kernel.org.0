@@ -2,85 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5B793ADD76
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Jun 2021 09:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 130643ADD9F
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Jun 2021 10:05:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbhFTHrI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Jun 2021 03:47:08 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:39959 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbhFTHrI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Jun 2021 03:47:08 -0400
-X-Greylist: delayed 406 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Jun 2021 03:47:08 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 9E787300000A6;
-        Sun, 20 Jun 2021 09:38:04 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 92EBE10880; Sun, 20 Jun 2021 09:38:04 +0200 (CEST)
-Date:   Sun, 20 Jun 2021 09:38:04 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ethan Zhao <haifeng.zhao@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Ignore Link Down/Up caused by DPC
-Message-ID: <20210620073804.GA13118@wunner.de>
-References: <0be565d97438fe2a6d57354b3aa4e8626952a00b.1619857124.git.lukas@wunner.de>
- <20210616221945.GA3010216@bjorn-Precision-5520>
+        id S229679AbhFTIIA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sun, 20 Jun 2021 04:08:00 -0400
+Received: from 6-200-5-45.rpnnetprovedor.com.br ([45.5.200.6]:59409 "EHLO
+        srv01.rpnnetprovedor.com.br" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229706AbhFTIHu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Jun 2021 04:07:50 -0400
+Received: from [84.38.130.143] (helo=IP-130-143.dataclub.eu)
+        by srv01.rpnnetprovedor.com.br with esmtpa (Exim 4.92.2)
+        (envelope-from <robertnellsona@citromail.hu>)
+        id 1lusSW-0005rm-Fo
+        for linux-pci@vger.kernel.org; Sun, 20 Jun 2021 05:05:36 -0300
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210616221945.GA3010216@bjorn-Precision-5520>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: CAN YOU INVEST WITH ME?...6
+To:     linux-pci@vger.kernel.org
+From:   "Mr.  Robert" <robertnellsona@citromail.hu>
+Date:   Sun, 20 Jun 2021 11:05:35 +0300
+Reply-To: robertnellsona@citromail.hu
+Message-Id: <E1lusSW-0005rm-Fo@srv01.rpnnetprovedor.com.br>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 05:19:45PM -0500, Bjorn Helgaas wrote:
-> On Sat, May 01, 2021 at 10:29:00AM +0200, Lukas Wunner wrote:
-> > Downstream Port Containment (PCIe Base Spec, sec. 6.2.10) disables the
-> > link upon an error and attempts to re-enable it when instructed by the
-> > DPC driver.
-> > 
-> > A slot which is both DPC- and hotplug-capable is currently brought down
-> > by pciehp once DPC is triggered (due to the link change) and brought up
-> > on successful recovery.  That's undesirable, the slot should remain up
-> > so that the hotplugged device remains bound to its driver.
-> 
-> I think the slot being "brought down" means slot power is turned off,
-> right?
-> 
-> I reworded it along those lines and applied this to pci/hotplug for
-> v5.14, thanks!
 
-Thanks, the reworded commit message LGTM and is more readable.
+ATTENTION; linux-pci@vger.kernel.org,
 
-"Being brought down" is just a colloquial term for pciehp_disable_slot(),
-i.e. unbinding and removal of the pci_dev's below the hotplug port,
-removing slot power, turning off the power LED and setting the slot's
-state to OFF_STATE.
+IMPORTANT INVESTMENT INFORMATION
 
-Indeed, turning off slot power concurrently to DPC recovery is wrong
-and likely the biggest contributor to the problems seen.
+We have a good investment program going on now.
+We have $95m USD for Investment in your Country.
+We use this opportunity to invest you to join the investment program and you will never regret it.
+Please kindly invest with us and you will be receiving monthly income/return/profit every month.
+We can also give you Loan, 
 
-Another issue is that after bringing down the slot due to the Link Change
-event, pciehp will notice that Presence Detect State is set and will try
-to bring the slot up again, even though DPC recovery may not have completed
-yet.
+We have: 
 
-The commit should solve all those synchronization issues between pciehp
-and DPC.
+1. Short Term Loan, 
 
-Thanks,
+2. Medium Term Loan 
 
-Lukas
+3. and Long Term Loan, 
+
+There is no need of collateral security. We will use our company to sign agreement and guarantee on your behalf and our Lawyer will sign on your behalf.
+
+Reply for more detail.
+
+Thank you Sir.
+
+Robert Nellson.
+INVESTMENT MANAGER.
