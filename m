@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 621AE3AF33C
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 19:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C233AF39B
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 20:01:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231873AbhFUSAQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 14:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39622 "EHLO mail.kernel.org"
+        id S233824AbhFUSC3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 14:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232804AbhFUR6I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Jun 2021 13:58:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 54E64613C0;
-        Mon, 21 Jun 2021 17:53:51 +0000 (UTC)
+        id S233664AbhFUSA1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Jun 2021 14:00:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4F7D6611BD;
+        Mon, 21 Jun 2021 17:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624298032;
-        bh=mhDHTAAZ4nKLxUl2wPcuv746/b/8WFTJ+qLnCbvApbI=;
+        s=k20201202; t=1624298083;
+        bh=Xg3ckCh4MrK9PKspTRjU2MM4Mq3C/p5v9MLKyXw03lI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqQUfVqywY6iBcF3RFAbhDP166VsLK/40F99U0GgIJMvD5F3jPvMzX588gG6kyjlZ
-         U0FjguUTHedHrrHH+pqm/L4a6MUC7JyByGNxHwyj5pyx6zijFARKU2mI6qONWI7IZA
-         St/mPyA7In48917VwoqZUjlkyYy3DrBfMx/sBYhZlto8G8dUq9w5n50LrWaEzvvJHd
-         aoLMUEDJixN0EzdQ1yLx2D0jvQeX7bSjdw0ayQ1NNPJMVExxMUpTz7WAdIk8wnSANm
-         xFr+fVfhjH4h+erZA356YYszsRUAxrDczpIhIaEsJxIfkQqO+WexEh+1n9mAb41kk8
-         BCWVQ4oiG6mLA==
+        b=hDNijmuCOLA4UZ3M9hGl3WZVKMt2P4d8+E9pCbDrkMDp9T9pq5jN1rT0qR3HuaP0F
+         YNEyxigjnvOMuoOOIDX/6IdxqwzDpnlRwjyO4CSGaE9SEt1zUuHDO7aNFw3f5Fic7B
+         IrWk/ji6jeXhFzsG4fki5kw523zGrpTXbj4IY+XBWMt9QW5wclwOJezbkm6p2SLbWp
+         hozWbzClQKy3dRGybdUBeQxnWHR9JdGKdudSiHnvjPahuIZLkyEOdsCL5zPHUv3yeI
+         +rGYec79YHU764Gt7fe0V4LBwf30Q5SN644o8J4wz5ofNh5NPcAf0aY0y3qyw1epD1
+         9fVRypldpTW8Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mikel Rychliski <mikel@mikelr.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 33/35] PCI: Add AMD RS690 quirk to enable 64-bit DMA
-Date:   Mon, 21 Jun 2021 13:52:58 -0400
-Message-Id: <20210621175300.735437-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 24/26] PCI: Add AMD RS690 quirk to enable 64-bit DMA
+Date:   Mon, 21 Jun 2021 13:53:57 -0400
+Message-Id: <20210621175400.735800-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210621175300.735437-1-sashal@kernel.org>
-References: <20210621175300.735437-1-sashal@kernel.org>
+In-Reply-To: <20210621175400.735800-1-sashal@kernel.org>
+References: <20210621175400.735800-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -78,7 +78,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 44 insertions(+)
 
 diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index 0a0e168be1cb..9b0e771302ce 100644
+index 0c67a5a94de3..76959a7d88c8 100644
 --- a/arch/x86/pci/fixup.c
 +++ b/arch/x86/pci/fixup.c
 @@ -779,4 +779,48 @@ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1571, pci_amd_enable_64bit_bar);
