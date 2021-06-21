@@ -2,80 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B66563AF6C0
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 22:19:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A623AF80F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 23:50:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbhFUUWH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 16:22:07 -0400
-Received: from verein.lst.de ([213.95.11.211]:43813 "EHLO verein.lst.de"
+        id S232193AbhFUVw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 17:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230028AbhFUUWG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Jun 2021 16:22:06 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id AC60868B05; Mon, 21 Jun 2021 22:19:46 +0200 (CEST)
-Date:   Mon, 21 Jun 2021 22:19:46 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Claire Chang <tientzu@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>, grant.likely@arm.com,
-        xypron.glpk@gmx.de, Thierry Reding <treding@nvidia.com>,
-        mingo@kernel.org, bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com
-Subject: Re: [PATCH v13 01/12] swiotlb: Refactor swiotlb init functions
-Message-ID: <20210621201946.GA13822@lst.de>
-References: <20210617062635.1660944-1-tientzu@chromium.org> <20210617062635.1660944-2-tientzu@chromium.org> <alpine.DEB.2.21.2106171434480.24906@sstabellini-ThinkPad-T480s> <CALiNf29SJ0jXirWVDhJw4BUNvkjUeGPyGNJK9m8c30OPX41=5Q@mail.gmail.com> <741a34cc-547c-984d-8af4-2f309880acfa@amd.com> <20210618143212.GA19284@lst.de> <alpine.DEB.2.21.2106211052270.24906@sstabellini-ThinkPad-T480s>
+        id S232200AbhFUVw2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Jun 2021 17:52:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5FDA5611BD;
+        Mon, 21 Jun 2021 21:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624312214;
+        bh=ASJpjO4B5B2HjnAT1rQKZXnzFE1GlAd0RDATC2QKCMs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qzzLcOwvxAEHfqrOMc/fqW7oZmce8kJcI+D4SgysArJN50HcinfX94iftRLY9AWkh
+         wDtkTUvDizN4sXZVTetglSQYiANjBCaIKCoWQhSlmyVe4oz2lBnENWMBykP7BYq6Nk
+         6we3W2alNEvgCZlDlQaoq0onrtvJdlMeMobetZ4BKhIQx5s75d2I97FHMRxSxb83Gm
+         8eEt6ORPwSE970ueUNRgcqYtA2zBAdDuqg7ZA08BhNlZUVnERysrXbG2eerbMwXqhy
+         pmJEBRIhjQP0vVSXC70oHo3jg+fAj+dJErYPaHV26ldi8o42pEGzEUjDaM5jnmo5eg
+         TPe5nBI2rcSBw==
+Date:   Mon, 21 Jun 2021 16:50:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-pci@vger.kernel.org
+Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 213519] New: WARNING on
+ system reboot in: drivers/gpu/drm/i915/intel_runtime_pm.c:635
+ intel_runtime_pm_driver_release]
+Message-ID: <20210621215009.GA3305615@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2106211052270.24906@sstabellini-ThinkPad-T480s>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 10:59:20AM -0700, Stefano Stabellini wrote:
-> Just as a clarification: I was referring to the zeroing of "mem" in
-> swiotlb_late_init_with_tbl and swiotlb_init_with_tbl. While it looks
-> like Tom and Christoph are talking about the zeroing of "tlb".
+----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
 
-Indeed. 
+Date: Mon, 21 Jun 2021 02:50:09 +0000
+From: bugzilla-daemon@bugzilla.kernel.org
+To: bjorn@helgaas.com
+Subject: [Bug 213519] New: WARNING on system reboot in:
+	drivers/gpu/drm/i915/intel_runtime_pm.c:635 intel_runtime_pm_driver_release
+Message-ID: <bug-213519-41252@https.bugzilla.kernel.org/>
 
-> 
-> The zeroing of "mem" is required as some fields of struct io_tlb_mem
-> need to be initialized to zero. While the zeroing of "tlb" is not
-> required except from the point of view of not leaking sensitive data as
-> Christoph mentioned.
-> 
-> Either way, Claire's v14 patch 01/12 looks fine to me.
+https://bugzilla.kernel.org/show_bug.cgi?id=213519
 
-Agreed.
+            Bug ID: 213519
+           Summary: WARNING on system reboot in:
+                    drivers/gpu/drm/i915/intel_runtime_pm.c:635
+                    intel_runtime_pm_driver_release
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.12.12
+          Hardware: x86-64
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: PCI
+          Assignee: drivers_pci@kernel-bugs.osdl.org
+          Reporter: j-comm@westvi.com
+        Regression: No
+
+Created attachment 297517
+  --> https://bugzilla.kernel.org/attachment.cgi?id=297517&action=edit
+Contents of 'warning' stack trace, etc.
+
+As mentioned in summary - warning message in this routine at system reboot. Try
+as I might, I cannot include the text of the warning directly here in the
+description without losing carriage returns, so I include it as a text
+attachment.
+
+----- End forwarded message -----
+
+[Attachment contents below]
+
+[  239.019148] ------------[ cut here ]------------
+[  239.024226] i915 0000:00:02.0: i915 raw-wakerefs=1 wakelocks=1 on cleanup
+[  239.031561] WARNING: CPU: 4 PID: 2484 at drivers/gpu/drm/i915/intel_runtime_pm.c:635 intel_runtime_pm_driver_release+0x4f/0x60
+[  239.043974] Modules linked in: mei_wdt x86_pkg_temp_thermal ghash_clmulni_intel mei_me mei cryptd
+[  239.053656] CPU: 4 PID: 2484 Comm: reboot Not tainted 5.12.12 #1
+[  239.060236] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./NUC-8665UE, BIOS P1.50 06/04/2021
+[  239.070766] RIP: 0010:intel_runtime_pm_driver_release+0x4f/0x60
+[  239.077256] Code: 10 4c 8b 6f 50 4d 85 ed 75 03 4c 8b 2f e8 59 8f 11 00 41 89 d8 44 89 e1 4c 89 ea 48 89 c6 48 c7 c7 f8 25 7d b0 e8 06 e8 67 00 <0f> 0b 5b 41 5c 41 5d 5d c3 0f 1f 84 00 00 00 00 00 55 48 89 e5 48
+[  239.097700] RSP: 0018:ffffb8c682f3bd30 EFLAGS: 00010286
+[  239.103422] RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffffffb0af01e8
+[  239.111185] RDX: 0000000000000000 RSI: 00000000ffffdfff RDI: ffffffffb0a401e0
+[  239.118850] RBP: ffffb8c682f3bd48 R08: 0000000000000000 R09: ffffb8c682f3bb08
+[  239.126617] R10: ffffb8c682f3bb00 R11: ffffffffb0b20228 R12: 0000000000000001
+[  239.134390] R13: ffff978680d114b0 R14: ffff97868197eae8 R15: 00000000fee1dead
+[  239.142203] FS:  00007f741a182580(0000) GS:ffff9789dc500000(0000) knlGS:0000000000000000
+[  239.151044] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  239.157318] CR2: 000000000169f4c8 CR3: 000000019cf14003 CR4: 00000000003706e0
+[  239.165098] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  239.172874] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  239.180658] Call Trace:
+[  239.183346]  i915_driver_shutdown+0xcf/0xe0
+[  239.187920]  i915_pci_shutdown+0x10/0x20
+[  239.192181]  pci_device_shutdown+0x35/0x60
+[  239.196629]  device_shutdown+0x156/0x1b0
+[  239.200827]  __do_sys_reboot.cold+0x2f/0x5b
+[  239.205410]  __x64_sys_reboot+0x16/0x20
+[  239.209586]  do_syscall_64+0x38/0x50
+[  239.213399]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+[  239.218837] RIP: 0033:0x7f741a0a9bc3
+[  239.222740] Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 89 fa be 69 19 12 28 bf ad de e1 fe b8 a9 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 71 c2 0c 00 f7 d8
+[  239.243228] RSP: 002b:00007ffcc2a16488 EFLAGS: 00000206 ORIG_RAX: 00000000000000a9
+[  239.251503] RAX: ffffffffffffffda RBX: 00007ffcc2a165d8 RCX: 00007f741a0a9bc3
+[  239.259304] RDX: 0000000001234567 RSI: 0000000028121969 RDI: 00000000fee1dead
+[  239.267105] RBP: 0000000000000004 R08: 0000000000000000 R09: 000000000169e2e0
+[  239.274926] R10: fffffffffffffd06 R11: 0000000000000206 R12: 0000000000000000
+[  239.282719] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
+[  239.290433] ---[ end trace cd9d07db38ec6618 ]---
+
