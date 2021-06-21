@@ -2,73 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4D653AE672
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 11:47:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF45F3AE70F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 12:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbhFUJti (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 05:49:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:59930 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229890AbhFUJt2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Jun 2021 05:49:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E3771FB;
-        Mon, 21 Jun 2021 02:47:14 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 932403F718;
-        Mon, 21 Jun 2021 02:47:12 -0700 (PDT)
-Date:   Mon, 21 Jun 2021 10:47:06 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] PCI: aardvark: Fix kernel panic during PIO
- transfer
-Message-ID: <20210621094706.GA26022@lpieralisi>
-References: <162322862108.3345.4160808336030929680.b4-ty@arm.com>
- <20210617201523.GA3104553@bjorn-Precision-5520>
+        id S230102AbhFUKal (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 06:30:41 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:7496 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229804AbhFUKaj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Jun 2021 06:30:39 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4G7lz74j6HzZkyf;
+        Mon, 21 Jun 2021 18:25:23 +0800 (CST)
+Received: from SZX1000464847.huawei.com (10.21.59.169) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Mon, 21 Jun 2021 18:28:22 +0800
+From:   Dongdong Liu <liudongdong3@huawei.com>
+To:     <helgaas@kernel.org>, <hch@infradead.org>, <kw@linux.com>,
+        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
+        <hverkuil-cisco@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH V5 0/6] PCI: Enable 10-Bit tag support for PCIe devices
+Date:   Mon, 21 Jun 2021 18:27:16 +0800
+Message-ID: <1624271242-111890-1-git-send-email-liudongdong3@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210617201523.GA3104553@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.21.59.169]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 17, 2021 at 03:15:23PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jun 09, 2021 at 09:50:39AM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, 8 Jun 2021 22:36:55 +0200, Pali Roh�r wrote:
-> > > Trying to start a new PIO transfer by writing value 0 in PIO_START register
-> > > when previous transfer has not yet completed (which is indicated by value 1
-> > > in PIO_START) causes an External Abort on CPU, which results in kernel
-> > > panic:
-> > > 
-> > >     SError Interrupt on CPU0, code 0xbf000002 -- SError
-> > >     Kernel panic - not syncing: Asynchronous SError Interrupt
-> > > 
-> > > [...]
-> > 
-> > Applied to pci/aardvark, thanks!
-> > 
-> > [1/1] PCI: aardvark: Fix kernel panic during PIO transfer
-> >       https://git.kernel.org/lpieralisi/pci/c/f77378171b
-> 
-> Since this fixes a panic and only affects aardvark, I cherry picked
-> this to my for-linus branch.
-> 
-> Can you drop it, Lorenzo?  It's currently the only thing on your
-> pci/aardvark branch, so I just dropped that whole branch from -next.
+10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+field size from 8 bits to 10 bits.
 
-I have dropped the branch from my tree as well as requested.
+This patchset is to enable 10-Bit tag for PCIe EP devices (include VF) and
+RP devices
 
-Thanks,
-Lorenzo
+V4->V5:
+- Fix warning variable 'capa' is uninitialized.
+- Fix warning unused variable 'pchild'.
+
+V3->V4:
+- Get the value of pcie_devcap2 in set_pcie_port_type().
+- Add Reviewed-by: Christoph Hellwig <hch@lst.de> in [PATCH V4 1/6],
+  [PATCH V4 3/6], [PATCH V4 4/6], [PATCH V4 5/6].
+- Fix some code style.
+- Rebased on v5.13-rc6.
+
+V2->V3:
+- Use cached Device Capabilities Register suggested by Christoph.
+- Fix code style to avoid > 80 char lines.
+- Renamve devcap2 to pcie_devcap2.
+
+V1->V2: Fix some comments by Christoph.
+- Store the devcap2 value in the pci_dev instead of reading it multiple
+  times.
+- Change pci_info to pci_dbg to avoid the noisy log.
+- Rename ext_10bit_tag_comp_path to ext_10bit_tag.
+- Fix the compile error.
+- Rebased on v5.13-rc1.
+
+Dongdong Liu (6):
+  PCI: Use cached Device Capabilities Register
+  PCI: Use cached Device Capabilities 2 Register
+  PCI: Add 10-Bit Tag register definitions
+  PCI: Enable 10-Bit tag support for PCIe Endpoint devices
+  PCI/IOV: Enable 10-Bit tag support for PCIe VF devices
+  PCI: Enable 10-Bit tag support for PCIe RP devices
+
+ drivers/media/pci/cobalt/cobalt-driver.c        |  5 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c |  4 +-
+ drivers/pci/iov.c                               |  8 +++
+ drivers/pci/pci.c                               | 14 ++---
+ drivers/pci/pcie/aspm.c                         | 11 ++--
+ drivers/pci/pcie/portdrv_pci.c                  | 72 +++++++++++++++++++++++++
+ drivers/pci/probe.c                             | 54 ++++++++++++++-----
+ drivers/pci/quirks.c                            |  3 +-
+ include/linux/pci.h                             |  5 ++
+ include/uapi/linux/pci_regs.h                   |  5 ++
+ 10 files changed, 144 insertions(+), 37 deletions(-)
+
+--
+2.7.4
+
