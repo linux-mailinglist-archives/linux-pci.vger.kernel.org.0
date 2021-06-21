@@ -2,246 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1E113AF1BA
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 19:15:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9B093AF1C1
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 19:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbhFURRh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 13:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230059AbhFURRh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Jun 2021 13:17:37 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07FCDC061756;
-        Mon, 21 Jun 2021 10:15:22 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id x22so7399281pll.11;
-        Mon, 21 Jun 2021 10:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vLkEnphqch5/WsWN5BRAkVt/dJhdo5e4NycFb+xafoc=;
-        b=Zr9qeffP4/VadNftyoFyjTDDcmPPnrndlfggU4nx8o9YhRmuqQvaulEHfFoowz3pfh
-         67XtAU2P/g73012xgRX+nSi2Fd2nh/lWpzsC2LpzGnVD8TA7GV1el6LySVB3uUfnK4kU
-         Xd8Yplh59MRnpU5b+obQne9STok8tDIe+2rOJ4lRAoEkt/Vu0b3IfqXXnZmb/VT+kE2o
-         dpR0/Uc9lyvCTnOPyLg29ph89hcL8tdpQOE2m8MCcCWMl6KeZvMM+Kk2jNkY3EOyyuy5
-         5f31931GmksXnzW03/qoLb9K+fli/kMAnG0pnytbFOXGJBvB5XxdhhrsTzPlz89AQ+6p
-         uI1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vLkEnphqch5/WsWN5BRAkVt/dJhdo5e4NycFb+xafoc=;
-        b=Ts/NZ37xpQ5VRvk///krST4Lab4mtHUYrjEoXlgDByP5/0A8fOpvO1iXSuSmhSf230
-         4/AYxkxy3NJ/GI2Us1SCyIs8XeUs9XKqqY07UsJNf6Ws+/1s3fDuE+bnoxW0VFVXAwWb
-         Zek0nYB0JWtS8JJcXBe1XWNga0XXQfib8XWnvfJWP6MbVZK28dnj+h6GtgyF6GGKIidm
-         UVKeHwf3ialyTgQwMUTi1U7xZlvmJhOviSt9jCD4k2uECdiR3sIhrHd6jjlkZTdZbEMU
-         p5hLXY5bHTCQlsEQaihOQy2MZ1qYYkZ3lGHZW4j6denzQdStSowlyXE6ya+YUmlUL/NS
-         O8cQ==
-X-Gm-Message-State: AOAM532tfNAOErAiSs7BLDdyd9IHepjfY7DirSWj3/b/lYnRMwPHLnu4
-        3pE1NqaB5+UHm98tCJFD/hs=
-X-Google-Smtp-Source: ABdhPJwvOIA9ogwRcnjSdum17wLFfB+m+5aYA6iAJBPiIuAoSStO88zQf6F3E183cvxrYGY7p0CCkA==
-X-Received: by 2002:a17:90a:cd03:: with SMTP id d3mr28166990pju.31.1624295721539;
-        Mon, 21 Jun 2021 10:15:21 -0700 (PDT)
-Received: from localhost ([103.248.31.165])
-        by smtp.gmail.com with ESMTPSA id i20sm900484pfo.130.2021.06.21.10.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 10:15:21 -0700 (PDT)
-Date:   Mon, 21 Jun 2021 22:45:18 +0530
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Shanker R Donthineni <sdonthineni@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        id S230268AbhFURU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 13:20:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38066 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230059AbhFURU0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Jun 2021 13:20:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 345321042;
+        Mon, 21 Jun 2021 10:18:12 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBBA43F694;
+        Mon, 21 Jun 2021 10:18:10 -0700 (PDT)
+Date:   Mon, 21 Jun 2021 18:18:01 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Nadeem Athani <nadeem@cadence.com>
+Cc:     tjoseph@cadence.com, robh@kernel.org, bhelgaas@google.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Sinan Kaya <okaya@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v7 2/8] PCI: Add new array for keeping track of ordering
- of reset methods
-Message-ID: <20210621171518.vs4h4y6ag2benlwp@archlinux>
-References: <20210608054857.18963-3-ameynarkhede03@gmail.com>
- <20210617231305.GA3139128@bjorn-Precision-5520>
- <20210618172242.vs3qwimjpcicb4m4@archlinux>
- <1fb0a184-908c-5f98-ef6d-74edc602c2e0@nvidia.com>
+        kw@linux.com, kishon@ti.com, mparab@cadence.com,
+        sjakhade@cadence.com, pthombar@cadence.com
+Subject: Re: [PATCH] [v2] PCI: cadence: Set LTSSM Detect Quiet state minimum
+ delay as workaround for training defect.
+Message-ID: <20210621171751.GA32574@lpieralisi>
+References: <20210528155626.21793-1-nadeem@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1fb0a184-908c-5f98-ef6d-74edc602c2e0@nvidia.com>
+In-Reply-To: <20210528155626.21793-1-nadeem@cadence.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/06/21 10:02AM, Shanker R Donthineni wrote:
-> Hi Bjorn,
->
-> On 6/18/21 12:22 PM, Amey Narkhede wrote:
-> > I wonder if this would be easier if dev->reset_methods[] contained
-> > indices into pci_reset_fn_methods[], highest priority first, with the
-> > priority being determined when dev->reset_methods[] is updated.  For
-> > example:
-> >
-> >   const struct pci_reset_fn_method pci_reset_fn_methods[] = {
-> >     { },                                                     # 0
-> >     { &pci_dev_specific_reset, .name = "device_specific" },  # 1
-> >     { &pci_dev_acpi_reset, .name = "acpi" },                 # 2
-> >     { &pcie_reset_flr, .name = "flr" },                      # 3
-> >     { &pci_af_flr, .name = "af_flr" },                       # 4
-> >     { &pci_pm_reset, .name = "pm" },                         # 5
-> >     { &pci_reset_bus_function, .name = "bus" },              # 6
-> >   };
-> >
-> >   dev->reset_methods[] = [1, 2, 3, 4, 5, 6]
-> >     means all reset methods are supported, in the default priority
-> >     order
-> >
-> >   dev->reset_methods[] = [1, 0, 0, 0, 0, 0]
-> >     means only pci_dev_specific_reset is supported
-> >
-> >   dev->reset_methods[] = [3, 5, 0, 0, 0, 0]
-> >     means pcie_reset_flr and pci_pm_reset are supported, in that
-> >     priority order
-> What about keeping two bitmap fields 'resets_supported' and 'resets_enabled' in
-> pci_dev object and mange it through sysfs and probe helper function. We can avoid
-> two loops multiple paces and takes only 2Bytes of memory to keep track resets.
->
-> resets_supported  ---> initialized during pci_dev setup
-> resets_enabled ---> Exposed to userspace through sysfs by default set to resets_supported
->
-> include/linux/pci.h:
-> ------------------------
-> /* Different types of PCI resets possible, lower number is higher priority */
-> #define PCI_RESET_METHOD_DEVSPEC     0
-> #define PCI_RESET_METHOD_ACPI            1
-> #define PCI_RESET_METHOD_FLR              2
-> #define PCI_RESET_METHOD_Af_FLR         3
-> #define PCI_RESET_METHOD_PM               4
-> #define PCI_RESET_METHOD_BUS             5
-> #define PCI_RESET_METHOD_MAX            6
->
-> struct pci_dev {
->     ...
->         u8              resets_supported;
->         u8              resets_enabled;
-> };
->
-> static inline bool pci_reset_supported(struct pci_dev *dev)
-> {
->         return !!(dev->resets_supported);
-> }
->
->
-> drivers/pci/pci.c:
-> --------------------
-> const struct pci_reset_fn_method pci_reset_fn_methods[PCI_RESET_METHOD_MAX] = {
->         [PCI_RESET_METHOD_DEVSPEC] = { &pci_dev_specific_reset,
->                                                                    .name = "device_specific" },
->         [PCI_RESET_METHOD_ACPI] = { &pci_dev_acpi_reset, .name = "acpi" },
->         [PCI_RESET_METHOD_FLR] = { &pcie_reset_flr, .name = "flr" },
->         [PCI_RESET_METHOD_Af_FLR] = { &pci_af_flr, .name = "af_flr" },
->         [PCI_RESET_METHOD_PM] = { &pci_pm_reset, .name = "pm" },
->         [PCI_RESET_METHOD_BUS] = { &pci_reset_bus_function, .name = "bus" }
-> };
->
->
-> void pci_init_reset_methods(struct pci_dev *dev)
-> {
->         int i, rc;
->
->         BUILD_BUG_ON(ARRAY_SIZE(pci_reset_fn_methods) != PCI_RESET_METHOD_MAX);
->         might_sleep();
->
->         for (i = 0; i < PCI_RESET_METHOD_MAX; i++) {
->                 rc = pci_reset_fn_methods[i].reset_fn(dev, PCI_RESET_PROBE);
->                 if (!rc)
->                         dev->resets_supported |= BIT(i);
->                 else if (rc != -ENOTTY)
->                         break;
->         }
->         dev->resets_enabled = dev->resets_supported;
-> }
->
-> int __pci_reset_function_locked(struct pci_dev *dev)
-> {
->         int i, rc = -ENOTTY;
->
->         might_sleep();
->
->         for (i = 0; i < PCI_RESET_METHOD_MAX; i++) {
->                 if (dev->resets_enabled & BIT(i)) {
->                         rc = pci_reset_fn_methods[i].reset_fn(dev, 0);
->                         if (rc != -ENOTTY)
->                                 return rc;
->                 }
->         }
->
->         if (rc == -ENOTTY)
->                 pci_warn(dev, "No reset happened reason %s\n",
->                          !!dev->resets_supported ?
->                          "disabled by user" : "not supported");
->
->         return rc;
-> }
->
-> drivers/pci/pci-sysfs.c
-> ----------------------------
-> static ssize_t reset_method_store(struct device *dev,
->                                   struct device_attribute *attr,
->                                   const char *buf, size_t count)
-> {
->         struct pci_dev *pdev = to_pci_dev(dev);
->         u8 resets_enabled = 0;
-> ...
->         if (sysfs_streq(options, "default")) {
->                 pdev->resets_enabled = pdev->resets_supported;
->                 goto set_reset_methods;
->         }
->
->         while ((name = strsep(&options, ",")) != NULL) {
->                 if (sysfs_streq(name, ""))
->                         continue;
->                 name = strim(name);
->
->                 for (i = 0; i < PCI_RESET_METHOD_MAX; i++) {
->                         if ((pdev->resets_supported & BIT(i)) &&
->                             sysfs_streq(name, pci_reset_fn_methods[i].name)) {
->                                 resets_enabled |= BIT(i);
->                                 break;
->                         }
->                 }
-> ...
->         }
->
-> set_reset_methods:
->         kfree(options);
->         pdev->resets_enabled =  resets_enabled;
->         return count;
-> }
->
-> static ssize_t reset_method_show(struct device *dev,
->                                  struct device_attribute *attr,
->                                  char *buf)
-> {
->         struct pci_dev *pdev = to_pci_dev(dev);
->         ssize_t len = 0;
->         int i;
->
->         for (i = 0; i < PCI_RESET_METHOD_MAX; i++) {
->                 if (pdev->resets_enabled & BIT(i))
->                         len += sysfs_emit_at(buf, len, "%s%s",
->                                              len ? "," : "",
->                                              pci_reset_fn_methods[i].name);
->         }
->         len += sysfs_emit_at(buf, len, len ? "\n" : "");
->
->         return len;
-> }
->
-Thank you for the idea.
-Actually that would be coming full circle because Alex, Raphael and I
-tried similar approach earlier while prototyping for v2 but this implementation
-does look better than what I had at that time.
+Subjects should not end with a period, remove it.
+
+On Fri, May 28, 2021 at 05:56:26PM +0200, Nadeem Athani wrote:
+> PCIe fails to link up if SERDES lanes not used by PCIe are assigned to
+> another protocol. For example, link training fails if lanes 2 and 3 are
+> assigned to another protocol while lanes 0 and 1 are used for PCIe to
+> form a two lane link. This failure is due to an incorrect tie-off on an
+> internal status signal indicating electrical idle.
+> 
+> Status signals going from SERDES to PCIe Controller are tied-off when a
+> lane is not assigned to PCIe. Signal indicating electrical idle is
+> incorrectly tied-off to a state that indicates non-idle. As a result,
+> PCIe sees unused lanes to be out of electrical idle and this causes
+> LTSSM to exit Detect.Quiet state without waiting for 12ms timeout to
+> occur. If a receiver is not detected on the first receiver detection
+> attempt in Detect.Active state, LTSSM goes back to Detect.Quiet and
+> again moves forward to Detect.Active state without waiting for 12ms as
+> required by PCIe base specification. Since wait time in Detect.Quiet is
+> skipped, multiple receiver detect operations are performed back-to-back
+> without allowing time for capacitance on the transmit lines to
+> discharge. This causes subsequent receiver detection to always fail even
+> if a receiver gets connected eventually.
+> 
+> Adding a quirk flag "quirk_detect_quiet_flag" to program the minimum
+> time that LTSSM waits on entering Detect.Quiet state.
+> Setting this to 2ms for specific TI j7200 SOC as a workaround to resolve
+> a link training issue in IP.
+> In future revisions this setting will not be required.
+> 
+> As per PCIe specification, all Receivers must meet the Z-RX-DC
+> specification for 2.5 GT/s within 1ms of entering Detect.Quiet LTSSM
+> substate. The LTSSM must stay in this substate until the ZRXDC
+> specification for 2.5 GT/s is met.
+> 
+> 00 : 0 minimum wait time in Detect.Quiet state.
+> 01 : 100us minimum wait time in Detect.Quiet state.
+> 10 : 1ms minimum wait time in Detect.Quiet state.
+> 11 : 2ms minimum wait time in Detect.Quiet state.
+> 
+> Changes in v2:
+> 1. Adding the function cdns_pcie_detect_quiet_min_delay_set in
+> pcie-cadence.c and invoking it from host and endpoint driver file.
+> 
+> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c   |  4 ++++
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  3 +++
+>  drivers/pci/controller/cadence/pcie-cadence.c      | 17 +++++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 15 +++++++++++++++
+>  4 files changed, 39 insertions(+)
+
+Can you tell me please what's the status of these patches ?
+
+https://patchwork.kernel.org/user/todo/linux-pci/?series=&submitter=194539&state=&q=&archive=
+
+Are they all solving the same problem so I only have to review:
+
+https://patchwork.kernel.org/project/linux-pci/patch/20210528155626.21793-1-nadeem@cadence.com
+
+?
+
+I am asking because the "first" posting was a two-patch series and then it
+became one, I lost track of versions in between.
 
 Thanks,
-Amey
+Lorenzo
+
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 897cdde02bd8..dd7df1ac7fda 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -623,6 +623,10 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  	ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE;
+>  	/* Reserve region 0 for IRQs */
+>  	set_bit(0, &ep->ob_region_map);
+> +
+> +	if (ep->quirk_detect_quiet_flag)
+> +		cdns_pcie_detect_quiet_min_delay_set(&ep->pcie);
+> +
+>  	spin_lock_init(&ep->lock);
+>  
+>  	return 0;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index ae1c55503513..fb96d37a135c 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -498,6 +498,9 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  		return PTR_ERR(rc->cfg_base);
+>  	rc->cfg_res = res;
+>  
+> +	if (rc->quirk_detect_quiet_flag)
+> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> +
+>  	ret = cdns_pcie_start_link(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to start link\n");
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+> index 3c3646502d05..65b6c8bed0d4 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -7,6 +7,23 @@
+>  
+>  #include "pcie-cadence.h"
+>  
+> +void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+> +{
+> +	u32 delay = 0x3;
+> +	u32 ltssm_control_cap;
+> +
+> +	/*
+> +	 * Set the LTSSM Detect Quiet state min. delay to 2ms.
+> +	 */
+> +
+> +	ltssm_control_cap = cdns_pcie_readl(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP);
+> +	ltssm_control_cap = ((ltssm_control_cap &
+> +			    ~CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK) |
+> +			    CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay));
+> +
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP, ltssm_control_cap);
+> +}
+> +
+>  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+>  				   u32 r, bool is_io,
+>  				   u64 cpu_addr, u64 pci_addr, size_t size)
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 254d2570f8c9..ccdf9cee9dde 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -189,6 +189,14 @@
+>  /* AXI link down register */
+>  #define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
+>  
+> +/* LTSSM Capabilities register */
+> +#define CDNS_PCIE_LTSSM_CONTROL_CAP             (CDNS_PCIE_LM_BASE + 0x0054)
+> +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK  GENMASK(2, 1)
+> +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT 1
+> +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay) \
+> +	 (((delay) << CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT) & \
+> +	 CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK)
+> +
+>  enum cdns_pcie_rp_bar {
+>  	RP_BAR_UNDEFINED = -1,
+>  	RP_BAR0,
+> @@ -292,6 +300,7 @@ struct cdns_pcie {
+>   * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
+>   *                available
+>   * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
+> + * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
+>   */
+>  struct cdns_pcie_rc {
+>  	struct cdns_pcie	pcie;
+> @@ -301,6 +310,7 @@ struct cdns_pcie_rc {
+>  	u32			device_id;
+>  	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
+>  	bool                    quirk_retrain_flag;
+> +	bool                    quirk_detect_quiet_flag;
+>  };
+>  
+>  /**
+> @@ -331,6 +341,7 @@ struct cdns_pcie_epf {
+>   *        registers fields (RMW) accessible by both remote RC and EP to
+>   *        minimize time between read and write
+>   * @epf: Structure to hold info about endpoint function
+> + * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
+>   */
+>  struct cdns_pcie_ep {
+>  	struct cdns_pcie	pcie;
+> @@ -345,6 +356,7 @@ struct cdns_pcie_ep {
+>  	/* protect writing to PCI_STATUS while raising legacy interrupts */
+>  	spinlock_t		lock;
+>  	struct cdns_pcie_epf	*epf;
+> +	bool                    quirk_detect_quiet_flag;
+>  };
+>  
+>  
+> @@ -505,6 +517,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  	return 0;
+>  }
+>  #endif
+> +
+> +void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+> +
+>  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+>  				   u32 r, bool is_io,
+>  				   u64 cpu_addr, u64 pci_addr, size_t size);
+> -- 
+> 2.15.0
+> 
