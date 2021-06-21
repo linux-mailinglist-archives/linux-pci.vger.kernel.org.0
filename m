@@ -2,464 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ECC03AE2A4
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 07:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FDCE3AE3A0
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 09:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbhFUFRF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 01:17:05 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52286 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbhFUFRF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Jun 2021 01:17:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15L5EhVO024608;
-        Mon, 21 Jun 2021 00:14:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1624252483;
-        bh=9+FoGrQbfEgDGrfSiRjmzzGkiNARGqK3/nesZ7fnEAw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KUUaZHOP4RDD+pkjerltZgCOeocdq7lygyigmYB/llcod1rDygr4it9JcXbCiA6XP
-         CiqigeLFpB9YpGTjjAuhLsSK6q4R11DsV1vBzsAq3iySeFqakAHMvQq8tpnYxnNsdd
-         MTphlek0tPj/JnIra9y14SLVgqQjjI/xnczk4SlU=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15L5EhRF101463
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 21 Jun 2021 00:14:43 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 21
- Jun 2021 00:14:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Mon, 21 Jun 2021 00:14:43 -0500
-Received: from [10.250.235.52] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15L5EbsE032154;
-        Mon, 21 Jun 2021 00:14:38 -0500
-Subject: Re: [PATCH v2 2/5] PCI: endpoint: Replace spinlock with mutex
-To:     Vidya Sagar <vidyas@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Om Prakash Singh <omp@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>
-References: <20200212112514.2000-1-kishon@ti.com>
- <20200212112514.2000-3-kishon@ti.com>
- <901293cd-e67a-04a4-d61e-37a105c33d15@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <36aa4b00-0b3f-011a-4ade-1f79df983157@ti.com>
-Date:   Mon, 21 Jun 2021 10:44:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <901293cd-e67a-04a4-d61e-37a105c33d15@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        id S229890AbhFUHDb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 03:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229618AbhFUHDa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Jun 2021 03:03:30 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F001FC061756
+        for <linux-pci@vger.kernel.org>; Mon, 21 Jun 2021 00:01:16 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id i4so4303110plt.12
+        for <linux-pci@vger.kernel.org>; Mon, 21 Jun 2021 00:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=uMzv+T/Wucp5pVssFwhVMxpuZI8wy6p/j6myJL8r3oQ=;
+        b=wKAqRToJTrozBDWE1bKnJIGWABV2Nbt/tC9DdB6+S2NMCUfWD8eTQvS/6pTK99JD06
+         VuQM28W+rphsDWblnmVEJ7I4hdRkwxlKxb21NOoe1De3WHR2xO72UmZoU04VDVz9B3Ep
+         uFh6COeB6e9ypG2o977TrCR7MiJh2WlZhfXRNV4CqytbNZHRs0LyBRL4zCxwlFYkHGhP
+         g7XSFUwW812CcwuPKIn6lccsM/5axqAaJ7Q2JXGjbG4zdqJvmOTuaYk6AIkE1uv5UMgK
+         PykvZ3ZsWooOr/SYKpIi0zDAFVwEhgMrxLeotybHUk5IfTqkgIbfFCUyDlxSxDJENY33
+         /xcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uMzv+T/Wucp5pVssFwhVMxpuZI8wy6p/j6myJL8r3oQ=;
+        b=kDuOv3iJxQ4yI4YoQFz2y31gH5JaCxDpqhJ7Vxbj/o3k7zkLehNf+tmRYYYXT4aJbm
+         T3UgY/PZTTLnAf7V7nb604lJqv7eWvzxl4Bqc7yxP7zdGWezzV3GsNE70WR8b7toVVJt
+         FVL4VFviZlNrydcepzcWWybWHIrmXMxCEaUIP+Oq2jB8fD12M8bLHNtH0qXkNgQQVFod
+         UMAUynK9SpucTDbaWrrO/M8P1it2shOsiqy/8YpgumB3Uw+5qHW6e+UAYV4Sbt0GJn19
+         OYtJSZh1jgKdqBmWmHla0lKKedAbiDYKELGObFcr5ORbPMOT35OSa1VESD9DfWfqZLK4
+         kSYQ==
+X-Gm-Message-State: AOAM532GG9YW4ona/THcgbNk26JuYpusAOVEtjWZJiZ7ruIBAJc9sB6T
+        mjzkTaHzlspNXd1rfnlEnwvhgA==
+X-Google-Smtp-Source: ABdhPJzoGUmOEx/WZyy8xRXKh2BNwe521xh/uf++He4NfZygjklN1uvuVklhO9lI1o2yMjyCmSqGSQ==
+X-Received: by 2002:a17:902:720b:b029:113:19d7:2da7 with SMTP id ba11-20020a170902720bb029011319d72da7mr16531354plb.55.1624258876483;
+        Mon, 21 Jun 2021 00:01:16 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id n5sm12098478pgf.35.2021.06.21.00.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jun 2021 00:01:16 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     kishon@ti.com
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, mie@igel.co.jp
+Subject: [PATCH] PCI: endpoint: Fix use after free in pci_epf_remove_cfs()
+Date:   Mon, 21 Jun 2021 16:00:58 +0900
+Message-Id: <20210621070058.37682-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Vidya Sagar,
+All of entries are freed in a loop, however, the freed entry is accessed
+by list_del() after the loop.
 
-On 11/06/21 3:22 pm, Vidya Sagar wrote:
-> Hi Kishon,
-> Apologies for bringup it up this late.
-> I'm wondering if there was any issue which this patch tried to address?
+When epf driver that includes pci-epf-test unload, the pci_epf_remove_cfs()
+is called, and occurred the use after free. Therefore, kernel panics
+randomly after or while the module unloading.
 
-There was one function pci_epc_linkup() which was expected to be invoked
-in interrupt context (basically when the LINKUP interrupt is raised).
-But after it was moved to use atomic notifier, all the EPC core APIs
-were replaced to use mutex.
-> Actually, "The pci_epc_ops is not intended to be invoked from interrupt
-> context" isn't true in case of Tegra194. We do call
-> dw_pcie_ep_init_notify() API from threaded irq service routine and it
-> eventually calls mutext_lock() of pci_epc_get_features() which is
-> reusulting in the following warning log.
-> BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:
-> Would like hear your comments on it.
+I tested this patch with r8a77951-Salvator-xs boards.
 
-I don't think it is ideal to initialize EPC in interrupt context (unless
-there is a specific reason for it). EPC initialization can be moved to
-bottom half similar to how commands are handled after LINKUP.
+Fixes: ef1433f ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
+Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+---
+ drivers/pci/endpoint/pci-epf-core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks
-Kishon
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index e9289d10f822..538e902b0ba6 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -202,8 +202,10 @@ static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
+ 		return;
+ 
+ 	mutex_lock(&pci_epf_mutex);
+-	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
++	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry) {
++		list_del(&group->group_entry);
+ 		pci_ep_cfs_remove_epf_group(group);
++	}
+ 	list_del(&driver->epf_group);
+ 	mutex_unlock(&pci_epf_mutex);
+ }
+-- 
+2.17.1
 
-> 
-> Thanks,
-> Vidya Sagar
-> 
-> On 2/12/2020 4:55 PM, Kishon Vijay Abraham I wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> The pci_epc_ops is not intended to be invoked from interrupt context.
->> Hence replace spin_lock_irqsave and spin_unlock_irqrestore with
->> mutex_lock and mutex_unlock respectively.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   drivers/pci/endpoint/pci-epc-core.c | 82 +++++++++++------------------
->>   include/linux/pci-epc.h             |  6 +--
->>   2 files changed, 34 insertions(+), 54 deletions(-)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c
->> b/drivers/pci/endpoint/pci-epc-core.c
->> index 2f6436599fcb..e51a12ed85bb 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -120,7 +120,6 @@ const struct pci_epc_features
->> *pci_epc_get_features(struct pci_epc *epc,
->>                                                      u8 func_no)
->>   {
->>          const struct pci_epc_features *epc_features;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return NULL;
->> @@ -128,9 +127,9 @@ const struct pci_epc_features
->> *pci_epc_get_features(struct pci_epc *epc,
->>          if (!epc->ops->get_features)
->>                  return NULL;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          epc_features = epc->ops->get_features(epc, func_no);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return epc_features;
->>   }
->> @@ -144,14 +143,12 @@ EXPORT_SYMBOL_GPL(pci_epc_get_features);
->>    */
->>   void pci_epc_stop(struct pci_epc *epc)
->>   {
->> -       unsigned long flags;
->> -
->>          if (IS_ERR(epc) || !epc->ops->stop)
->>                  return;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          epc->ops->stop(epc);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_stop);
->>
->> @@ -164,7 +161,6 @@ EXPORT_SYMBOL_GPL(pci_epc_stop);
->>   int pci_epc_start(struct pci_epc *epc)
->>   {
->>          int ret;
->> -       unsigned long flags;
->>
->>          if (IS_ERR(epc))
->>                  return -EINVAL;
->> @@ -172,9 +168,9 @@ int pci_epc_start(struct pci_epc *epc)
->>          if (!epc->ops->start)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->start(epc);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -193,7 +189,6 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8
->> func_no,
->>                        enum pci_epc_irq_type type, u16 interrupt_num)
->>   {
->>          int ret;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return -EINVAL;
->> @@ -201,9 +196,9 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8
->> func_no,
->>          if (!epc->ops->raise_irq)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->raise_irq(epc, func_no, type, interrupt_num);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -219,7 +214,6 @@ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
->>   int pci_epc_get_msi(struct pci_epc *epc, u8 func_no)
->>   {
->>          int interrupt;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return 0;
->> @@ -227,9 +221,9 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no)
->>          if (!epc->ops->get_msi)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          interrupt = epc->ops->get_msi(epc, func_no);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          if (interrupt < 0)
->>                  return 0;
->> @@ -252,7 +246,6 @@ int pci_epc_set_msi(struct pci_epc *epc, u8
->> func_no, u8 interrupts)
->>   {
->>          int ret;
->>          u8 encode_int;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
->>              interrupts > 32)
->> @@ -263,9 +256,9 @@ int pci_epc_set_msi(struct pci_epc *epc, u8
->> func_no, u8 interrupts)
->>
->>          encode_int = order_base_2(interrupts);
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->set_msi(epc, func_no, encode_int);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -281,7 +274,6 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msi);
->>   int pci_epc_get_msix(struct pci_epc *epc, u8 func_no)
->>   {
->>          int interrupt;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return 0;
->> @@ -289,9 +281,9 @@ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no)
->>          if (!epc->ops->get_msix)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          interrupt = epc->ops->get_msix(epc, func_no);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          if (interrupt < 0)
->>                  return 0;
->> @@ -311,7 +303,6 @@ EXPORT_SYMBOL_GPL(pci_epc_get_msix);
->>   int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
->>   {
->>          int ret;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
->>              interrupts < 1 || interrupts > 2048)
->> @@ -320,9 +311,9 @@ int pci_epc_set_msix(struct pci_epc *epc, u8
->> func_no, u16 interrupts)
->>          if (!epc->ops->set_msix)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->set_msix(epc, func_no, interrupts - 1);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -339,17 +330,15 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
->>   void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no,
->>                          phys_addr_t phys_addr)
->>   {
->> -       unsigned long flags;
->> -
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return;
->>
->>          if (!epc->ops->unmap_addr)
->>                  return;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          epc->ops->unmap_addr(epc, func_no, phys_addr);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>
->> @@ -367,7 +356,6 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
->>                       phys_addr_t phys_addr, u64 pci_addr, size_t size)
->>   {
->>          int ret;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return -EINVAL;
->> @@ -375,9 +363,9 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
->>          if (!epc->ops->map_addr)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr,
->> size);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -394,8 +382,6 @@ EXPORT_SYMBOL_GPL(pci_epc_map_addr);
->>   void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no,
->>                         struct pci_epf_bar *epf_bar)
->>   {
->> -       unsigned long flags;
->> -
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
->>              (epf_bar->barno == BAR_5 &&
->>               epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
->> @@ -404,9 +390,9 @@ void pci_epc_clear_bar(struct pci_epc *epc, u8
->> func_no,
->>          if (!epc->ops->clear_bar)
->>                  return;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          epc->ops->clear_bar(epc, func_no, epf_bar);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_clear_bar);
->>
->> @@ -422,7 +408,6 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no,
->>                      struct pci_epf_bar *epf_bar)
->>   {
->>          int ret;
->> -       unsigned long irq_flags;
->>          int flags = epf_bar->flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
->> @@ -437,9 +422,9 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no,
->>          if (!epc->ops->set_bar)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, irq_flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->set_bar(epc, func_no, epf_bar);
->> -       spin_unlock_irqrestore(&epc->lock, irq_flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -460,7 +445,6 @@ int pci_epc_write_header(struct pci_epc *epc, u8
->> func_no,
->>                           struct pci_epf_header *header)
->>   {
->>          int ret;
->> -       unsigned long flags;
->>
->>          if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>                  return -EINVAL;
->> @@ -468,9 +452,9 @@ int pci_epc_write_header(struct pci_epc *epc, u8
->> func_no,
->>          if (!epc->ops->write_header)
->>                  return 0;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          ret = epc->ops->write_header(epc, func_no, header);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return ret;
->>   }
->> @@ -487,8 +471,6 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
->>    */
->>   int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
->>   {
->> -       unsigned long flags;
->> -
->>          if (epf->epc)
->>                  return -EBUSY;
->>
->> @@ -500,9 +482,9 @@ int pci_epc_add_epf(struct pci_epc *epc, struct
->> pci_epf *epf)
->>
->>          epf->epc = epc;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          list_add_tail(&epf->list, &epc->pci_epf);
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>
->>          return 0;
->>   }
->> @@ -517,15 +499,13 @@ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
->>    */
->>   void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
->>   {
->> -       unsigned long flags;
->> -
->>          if (!epc || IS_ERR(epc) || !epf)
->>                  return;
->>
->> -       spin_lock_irqsave(&epc->lock, flags);
->> +       mutex_lock(&epc->lock);
->>          list_del(&epf->list);
->>          epf->epc = NULL;
->> -       spin_unlock_irqrestore(&epc->lock, flags);
->> +       mutex_unlock(&epc->lock);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
->>
->> @@ -604,7 +584,7 @@ __pci_epc_create(struct device *dev, const struct
->> pci_epc_ops *ops,
->>                  goto err_ret;
->>          }
->>
->> -       spin_lock_init(&epc->lock);
->> +       mutex_init(&epc->lock);
->>          INIT_LIST_HEAD(&epc->pci_epf);
->>          ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
->>
->> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->> index 36644ccd32ac..9dd60f2e9705 100644
->> --- a/include/linux/pci-epc.h
->> +++ b/include/linux/pci-epc.h
->> @@ -88,7 +88,7 @@ struct pci_epc_mem {
->>    * @mem: address space of the endpoint controller
->>    * @max_functions: max number of functions that can be configured in
->> this EPC
->>    * @group: configfs group representing the PCI EPC device
->> - * @lock: spinlock to protect pci_epc ops
->> + * @lock: mutex to protect pci_epc ops
->>    * @notifier: used to notify EPF of any EPC events (like linkup)
->>    */
->>   struct pci_epc {
->> @@ -98,8 +98,8 @@ struct pci_epc {
->>          struct pci_epc_mem              *mem;
->>          u8                              max_functions;
->>          struct config_group             *group;
->> -       /* spinlock to protect against concurrent access of EP
->> controller */
->> -       spinlock_t                      lock;
->> +       /* mutex to protect against concurrent access of EP controller */
->> +       struct mutex                    lock;
->>          struct atomic_notifier_head     notifier;
->>   };
->>
->> -- 
->> 2.17.1
->>
