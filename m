@@ -2,82 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B85D3AE480
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 10:01:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CA033AE533
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 10:45:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbhFUIDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 04:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229618AbhFUIDh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 21 Jun 2021 04:03:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1B5F961156;
-        Mon, 21 Jun 2021 08:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624262483;
-        bh=xkIVlbEuJDCy/58h9s+rXKkCBkl+0cKos+yjyqiA2ks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u2g8JzKD4v4BtPFaM377n22YOz19qDW8FDr/F6xVWyQRWzCgygQYMyg2ToGzRI8EU
-         F+y+BRT0TzfXol6Be0CqTpJ2Ug5vR+2GX3SPKM36A8yGVoqtoHi1Ab4nqfBBF2Xn00
-         t1Iv53NuBY0HAIj1hIbMHjJz/NaXQ4HZOHQ1TPdqGosS6/c/dZKDRUJMwEh7CT1R89
-         awvM/3rgZ2BNiCGuZ7AQLyAelNCYbPafo6JHOFLxnrmwUszf30dhVra0yrnAfUg1ZS
-         kByFHj5hDrRnB+FYupkp4/Epz+uTj6N7x1U8lSSdIlplOZdDT/Xl72oGga+5K5/F+y
-         EjUbrIZ3Fp8Jw==
-Date:   Mon, 21 Jun 2021 11:01:20 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
-        tglx@linutronix.de, jesse.brandeburg@intel.com,
-        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
-        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
-        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
-        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
-        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
-        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
-        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
-        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
-        luobin9@huawei.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        nilal@redhat.com
-Subject: Re: [PATCH v1 13/14] net/mlx5: Use irq_update_affinity_hint
-Message-ID: <YNBHUMRqc+s0JesY@unreal>
-References: <20210617182242.8637-1-nitesh@redhat.com>
- <20210617182242.8637-14-nitesh@redhat.com>
+        id S230308AbhFUIrk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 04:47:40 -0400
+Received: from mailout1.secunet.com ([62.96.220.44]:57870 "EHLO
+        mailout1.secunet.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229946AbhFUIrk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Jun 2021 04:47:40 -0400
+X-Greylist: delayed 582 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Jun 2021 04:47:37 EDT
+Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
+        by mailout1.secunet.com (Postfix) with ESMTP id BAFED80004E;
+        Mon, 21 Jun 2021 10:35:39 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 21 Jun 2021 10:35:39 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 21 Jun
+ 2021 10:35:39 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+        id 249D031803E8; Mon, 21 Jun 2021 10:35:39 +0200 (CEST)
+Date:   Mon, 21 Jun 2021 10:35:39 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+CC:     <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        <selinux@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <x86@kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+Message-ID: <20210621083539.GY40979@gauss3.secunet.de>
+References: <20210616085118.1141101-1-omosnace@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20210617182242.8637-14-nitesh@redhat.com>
+In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 17, 2021 at 02:22:41PM -0400, Nitesh Narayan Lal wrote:
-> The driver uses irq_set_affinity_hint() to update the affinity_hint mask
-> that is consumed by the userspace to distribute the interrupts. However,
-> under the hood irq_set_affinity_hint() also applies the provided cpumask
-> (if not NULL) as the affinity for the given interrupt which is an
-> undocumented side effect.
+On Wed, Jun 16, 2021 at 10:51:18AM +0200, Ondrej Mosnacek wrote:
+> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> lockdown") added an implementation of the locked_down LSM hook to
+> SELinux, with the aim to restrict which domains are allowed to perform
+> operations that would breach lockdown.
 > 
-> To remove this side effect irq_set_affinity_hint() has been marked
-> as deprecated and new interfaces have been introduced. Hence, replace the
-> irq_set_affinity_hint() with the new interface irq_update_affinity_hint()
-> that only updates the affinity_hint pointer.
+> However, in several places the security_locked_down() hook is called in
+> situations where the current task isn't doing any action that would
+> directly breach lockdown, leading to SELinux checks that are basically
+> bogus.
 > 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> To fix this, add an explicit struct cred pointer argument to
+> security_lockdown() and define NULL as a special value to pass instead
+> of current_cred() in such situations. LSMs that take the subject
+> credentials into account can then fall back to some default or ignore
+> such calls altogether. In the SELinux lockdown hook implementation, use
+> SECINITSID_KERNEL in case the cred argument is NULL.
 > 
+> Most of the callers are updated to pass current_cred() as the cred
+> pointer, thus maintaining the same behavior. The following callers are
+> modified to pass NULL as the cred pointer instead:
+> 1. arch/powerpc/xmon/xmon.c
+>      Seems to be some interactive debugging facility. It appears that
+>      the lockdown hook is called from interrupt context here, so it
+>      should be more appropriate to request a global lockdown decision.
+> 2. fs/tracefs/inode.c:tracefs_create_file()
+>      Here the call is used to prevent creating new tracefs entries when
+>      the kernel is locked down. Assumes that locking down is one-way -
+>      i.e. if the hook returns non-zero once, it will never return zero
+>      again, thus no point in creating these files. Also, the hook is
+>      often called by a module's init function when it is loaded by
+>      userspace, where it doesn't make much sense to do a check against
+>      the current task's creds, since the task itself doesn't actually
+>      use the tracing functionality (i.e. doesn't breach lockdown), just
+>      indirectly makes some new tracepoints available to whoever is
+>      authorized to use them.
+> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+>      Here a cryptographic secret is redacted based on the value returned
+>      from the hook. There are two possible actions that may lead here:
+>      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+>         task context is relevant, since the dumped data is sent back to
+>         the current task.
+>      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+>         dumped SA is broadcasted to tasks subscribed to XFRM events -
+>         here the current task context is not relevant as it doesn't
+>         represent the tasks that could potentially see the secret.
+>      It doesn't seem worth it to try to keep using the current task's
+>      context in the a) case, since the eventual data leak can be
+>      circumvented anyway via b), plus there is no way for the task to
+>      indicate that it doesn't care about the actual key value, so the
+>      check could generate a lot of "false alert" denials with SELinux.
+>      Thus, let's pass NULL instead of current_cred() here faute de
+>      mieux.
+> 
+> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
 
-Thanks,
-Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+For the xfrm part:
+
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+
