@@ -2,222 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DF763AE3F6
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 09:18:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 093023AE46E
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jun 2021 10:01:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbhFUHUs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Jun 2021 03:20:48 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:5057 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbhFUHUq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Jun 2021 03:20:46 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G7gjW4jX5zXjQ2;
-        Mon, 21 Jun 2021 15:13:19 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Mon, 21 Jun 2021 15:18:27 +0800
-Subject: Re: [RESEND PATCH V3 1/6] PCI: Use cached Device Capabilities
- Register
-To:     kernel test robot <lkp@intel.com>, <helgaas@kernel.org>,
-        <hch@infradead.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>,
-        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>
-References: <1623576555-40338-2-git-send-email-liudongdong3@huawei.com>
- <202106182257.tOtKvefG-lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, <clang-built-linux@googlegroups.com>,
-        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <ecbf9316-77db-e9fa-9d6e-4aee2117986a@huawei.com>
-Date:   Mon, 21 Jun 2021 15:18:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S229904AbhFUIDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Jun 2021 04:03:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229618AbhFUIDX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 21 Jun 2021 04:03:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F3816109F;
+        Mon, 21 Jun 2021 08:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624262469;
+        bh=gPO/dZoq96/4oBsyGc1ThSkFDnPfX3ZoVFD1snea8ck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HoNf1YGzRXgmHTU0loB2T4/SVEkLSsgPC2LdgggESiQ/uR8KVA7Vc9FK+lMaTqEn3
+         LCRUsDfVsGZ96ib/C5wbKl9kCzUcPfOYfn/MEH75lKXjG2Zm/TiV6awVNAKtdtCTM6
+         JwR+eb3iepOdUsq7+qZp6+Ls9y2fPIbHlDgID+r0bqzE4Jpkh2E75XwNcCxIwPGCvD
+         S6QIF89nU708IuCQcUBIQ/f3kUCMfYrUZTabOAvyNZLYAiz2pe+PADAE3lLRajHYDg
+         VuEVdVy4jo0EFD+c3bqZ4hMTpFn+OiBNEuhL+eZpl0rb6ax5Culn7vFTzt6buowbaw
+         eKMm/dci8g3Mg==
+Date:   Mon, 21 Jun 2021 11:01:06 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
+        tglx@linutronix.de, jesse.brandeburg@intel.com,
+        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
+        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
+        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
+        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
+        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
+        luobin9@huawei.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        nilal@redhat.com
+Subject: Re: [PATCH v1 14/14] net/mlx4: Use irq_update_affinity_hint
+Message-ID: <YNBHQvo1uDfBbr5c@unreal>
+References: <20210617182242.8637-1-nitesh@redhat.com>
+ <20210617182242.8637-15-nitesh@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <202106182257.tOtKvefG-lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210617182242.8637-15-nitesh@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Jun 17, 2021 at 02:22:42PM -0400, Nitesh Narayan Lal wrote:
+> The driver uses irq_set_affinity_hint() to update the affinity_hint mask
+> that is consumed by the userspace to distribute the interrupts. However,
+> under the hood irq_set_affinity_hint() also applies the provided cpumask
+> (if not NULL) as the affinity for the given interrupt which is an
+> undocumented side effect.
+> 
+> To remove this side effect irq_set_affinity_hint() has been marked
+> as deprecated and new interfaces have been introduced. Hence, replace the
+> irq_set_affinity_hint() with the new interface irq_update_affinity_hint()
+> that only updates the affinity_hint pointer.
+> 
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx4/eq.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/eq.c b/drivers/net/ethernet/mellanox/mlx4/eq.c
+> index 9e48509ed3b2..f549d697ca95 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/eq.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/eq.c
+> @@ -244,9 +244,9 @@ static void mlx4_set_eq_affinity_hint(struct mlx4_priv *priv, int vec)
+>  	    cpumask_empty(eq->affinity_mask))
+>  		return;
+>  
+> -	hint_err = irq_set_affinity_hint(eq->irq, eq->affinity_mask);
+> +	hint_err = irq_update_affinity_hint(eq->irq, eq->affinity_mask);
+>  	if (hint_err)
+> -		mlx4_warn(dev, "irq_set_affinity_hint failed, err %d\n", hint_err);
+> +		mlx4_warn(dev, "irq_update_affinity_hint failed, err %d\n", hint_err);
+>  }
+>  #endif
+>  
+> @@ -1124,7 +1124,7 @@ static void mlx4_free_irqs(struct mlx4_dev *dev)
+>  		if (eq_table->eq[i].have_irq) {
+>  			free_cpumask_var(eq_table->eq[i].affinity_mask);
+>  #if defined(CONFIG_SMP)
+> -			irq_set_affinity_hint(eq_table->eq[i].irq, NULL);
+> +			irq_update_affinity_hint(eq_table->eq[i].irq, NULL);
+>  #endif
 
-
-On 2021/6/18 22:51, kernel test robot wrote:
-> Hi Dongdong,
->
-> Thank you for the patch! Perhaps something to improve:
->
-> [auto build test WARNING on pci/next]
-> [also build test WARNING on linuxtv-media/master linus/master v5.13-rc6 next-20210618]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/Dongdong-Liu/PCI-Enable-10-Bit-tag-support-for-PCIe-devices/20210617-041115
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: s390-randconfig-r032-20210618 (attached as .config)
-> compiler: clang version 13.0.0 (https://github.com/llvm/llvm-project 64720f57bea6a6bf033feef4a5751ab9c0c3b401)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install s390 cross compiling tool for clang build
->         # apt-get install binutils-s390x-linux-gnu
->         # https://github.com/0day-ci/linux/commit/caefa7e6d0209bc08eb1934b58dae3aaa0b9dbba
->         git remote add linux-review https://github.com/0day-ci/linux
->         git fetch --no-tags linux-review Dongdong-Liu/PCI-Enable-10-Bit-tag-support-for-PCIe-devices/20210617-041115
->         git checkout caefa7e6d0209bc08eb1934b58dae3aaa0b9dbba
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=s390
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>):
->
->    In file included from drivers/media/pci/cobalt/cobalt-driver.c:18:
->    In file included from drivers/media/pci/cobalt/cobalt-driver.h:16:
->    In file included from include/linux/pci.h:39:
->    In file included from include/linux/io.h:13:
->    In file included from arch/s390/include/asm/io.h:75:
->    include/asm-generic/io.h:464:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            val = __raw_readb(PCI_IOBASE + addr);
->                              ~~~~~~~~~~ ^
->    include/asm-generic/io.h:477:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
->                                                            ~~~~~~~~~~ ^
->    include/uapi/linux/byteorder/big_endian.h:36:59: note: expanded from macro '__le16_to_cpu'
->    #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
->                                                              ^
->    include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
->    #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
->                                                         ^
->    In file included from drivers/media/pci/cobalt/cobalt-driver.c:18:
->    In file included from drivers/media/pci/cobalt/cobalt-driver.h:16:
->    In file included from include/linux/pci.h:39:
->    In file included from include/linux/io.h:13:
->    In file included from arch/s390/include/asm/io.h:75:
->    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
->                                                            ~~~~~~~~~~ ^
->    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
->    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
->                                                              ^
->    include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
->    #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
->                                                         ^
->    In file included from drivers/media/pci/cobalt/cobalt-driver.c:18:
->    In file included from drivers/media/pci/cobalt/cobalt-driver.h:16:
->    In file included from include/linux/pci.h:39:
->    In file included from include/linux/io.h:13:
->    In file included from arch/s390/include/asm/io.h:75:
->    include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            __raw_writeb(value, PCI_IOBASE + addr);
->                                ~~~~~~~~~~ ^
->    include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
->                                                          ~~~~~~~~~~ ^
->    include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
->                                                          ~~~~~~~~~~ ^
->    include/asm-generic/io.h:609:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            readsb(PCI_IOBASE + addr, buffer, count);
->                   ~~~~~~~~~~ ^
->    include/asm-generic/io.h:617:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            readsw(PCI_IOBASE + addr, buffer, count);
->                   ~~~~~~~~~~ ^
->    include/asm-generic/io.h:625:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            readsl(PCI_IOBASE + addr, buffer, count);
->                   ~~~~~~~~~~ ^
->    include/asm-generic/io.h:634:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            writesb(PCI_IOBASE + addr, buffer, count);
->                    ~~~~~~~~~~ ^
->    include/asm-generic/io.h:643:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            writesw(PCI_IOBASE + addr, buffer, count);
->                    ~~~~~~~~~~ ^
->    include/asm-generic/io.h:652:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
->            writesl(PCI_IOBASE + addr, buffer, count);
->                    ~~~~~~~~~~ ^
->>> drivers/media/pci/cobalt/cobalt-driver.c:199:7: warning: variable 'capa' is uninitialized when used here [-Wuninitialized]
->                        capa,
->                        ^~~~
->    drivers/media/pci/cobalt/cobalt-driver.h:160:71: note: expanded from macro 'cobalt_info'
->    #define cobalt_info(fmt, arg...) v4l2_info(&cobalt->v4l2_dev, fmt, ## arg)
->                                                                          ^~~
->    include/media/v4l2-common.h:67:39: note: expanded from macro 'v4l2_info'
->            v4l2_printk(KERN_INFO, dev, fmt , ## arg)
->                                                 ^~~
->    include/media/v4l2-common.h:58:44: note: expanded from macro 'v4l2_printk'
->            printk(level "%s: " fmt, (dev)->name , ## arg)
->                                                      ^~~
->    drivers/media/pci/cobalt/cobalt-driver.c:189:10: note: initialize the variable 'capa' to silence this warning
->            u32 capa;
->                    ^
->                     = 0
->    13 warnings generated.
->
->
-> vim +/capa +199 drivers/media/pci/cobalt/cobalt-driver.c
->
->    184	
->    185	void cobalt_pcie_status_show(struct cobalt *cobalt)
->    186	{
->    187		struct pci_dev *pci_dev = cobalt->pci_dev;
->    188		struct pci_dev *pci_bus_dev = cobalt->pci_dev->bus->self;
->    189		u32 capa;
->    190		u16 stat, ctrl;
->    191	
->    192		if (!pci_is_pcie(pci_dev) || !pci_is_pcie(pci_bus_dev))
->    193			return;
->    194	
->    195		/* Device */
->    196		pcie_capability_read_word(pci_dev, PCI_EXP_DEVCTL, &ctrl);
->    197		pcie_capability_read_word(pci_dev, PCI_EXP_DEVSTA, &stat);
->    198		cobalt_info("PCIe device capability 0x%08x: Max payload %d\n",
->  > 199			    capa,
-Will fix with pci_dev->pcie_devcap.
+This #if/endif can be deleted.
 
 Thanks,
-Dongdong
->    200			    get_payload_size(pci_dev->pcie_devcap & PCI_EXP_DEVCAP_PAYLOAD));
->    201		cobalt_info("PCIe device control 0x%04x: Max payload %d. Max read request %d\n",
->    202			    ctrl,
->    203			    get_payload_size((ctrl & PCI_EXP_DEVCTL_PAYLOAD) >> 5),
->    204			    get_payload_size((ctrl & PCI_EXP_DEVCTL_READRQ) >> 12));
->    205		cobalt_info("PCIe device status 0x%04x\n", stat);
->    206	
->    207		/* Link */
->    208		pcie_capability_read_dword(pci_dev, PCI_EXP_LNKCAP, &capa);
->    209		pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &ctrl);
->    210		pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &stat);
->    211		cobalt_info("PCIe link capability 0x%08x: %s per lane and %u lanes\n",
->    212				capa, get_link_speed(capa),
->    213				(capa & PCI_EXP_LNKCAP_MLW) >> 4);
->    214		cobalt_info("PCIe link control 0x%04x\n", ctrl);
->    215		cobalt_info("PCIe link status 0x%04x: %s per lane and %u lanes\n",
->    216			    stat, get_link_speed(stat),
->    217			    (stat & PCI_EXP_LNKSTA_NLW) >> 4);
->    218	
->    219		/* Bus */
->    220		pcie_capability_read_dword(pci_bus_dev, PCI_EXP_LNKCAP, &capa);
->    221		cobalt_info("PCIe bus link capability 0x%08x: %s per lane and %u lanes\n",
->    222				capa, get_link_speed(capa),
->    223				(capa & PCI_EXP_LNKCAP_MLW) >> 4);
->    224	
->    225		/* Slot */
->    226		pcie_capability_read_dword(pci_dev, PCI_EXP_SLTCAP, &capa);
->    227		pcie_capability_read_word(pci_dev, PCI_EXP_SLTCTL, &ctrl);
->    228		pcie_capability_read_word(pci_dev, PCI_EXP_SLTSTA, &stat);
->    229		cobalt_info("PCIe slot capability 0x%08x\n", capa);
->    230		cobalt_info("PCIe slot control 0x%04x\n", ctrl);
->    231		cobalt_info("PCIe slot status 0x%04x\n", stat);
->    232	}
->    233	
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
