@@ -2,83 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B9B53B082F
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 17:04:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C67E83B08F2
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 17:26:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230185AbhFVPGd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 11:06:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231248AbhFVPGc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Jun 2021 11:06:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C0DAE6113D;
-        Tue, 22 Jun 2021 15:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624374257;
-        bh=oaiMFoJRDJDuxcwnmjSR+k33zwVVQ5QsiBRDzO4U8IU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MbK5yH3du65dtdfjyFUn8KV0qZJDlPKU6g9XgYx2XWw4M7R+r43TopBpTMzOpd2tK
-         0c7iv7DEyrJ856RPFDBTqA1UxsDAUmmPI6efu22i9i41Zo4pMat8CZqgLoq+DgHoYN
-         2/khlnmfQwOEolpq9fUyKFqhp8WsFXt4dsiExPRHZT8Kxh2Chb5sVMZeNLxA6G9evl
-         nXGAURsPhbmfr/P/Ml46VfYCvsyS2y4cUDd2tXlyZG/tEv/o7wY0LKQl4Jybbg+VzI
-         NRGgFkmBNtzI9G3U1DdCQueXD8JK1qRC98grlLycKzEz9CnGloz76kUg/6wEDB1xan
-         ddOwzjqelqVRA==
-Date:   Tue, 22 Jun 2021 10:04:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 1/4] PCI: Add #defines for accessing PCIE DVSEC fields
-Message-ID: <20210622150415.GA3336733@bjorn-Precision-5520>
+        id S231936AbhFVP3L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 11:29:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232087AbhFVP3K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 11:29:10 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AD0C061574;
+        Tue, 22 Jun 2021 08:26:53 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id y13-20020a1c4b0d0000b02901c20173e165so2558710wma.0;
+        Tue, 22 Jun 2021 08:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iREvRYd3Jw/uqUSWQKuYJucIkeBg2924CRlJ1YiHk5w=;
+        b=R8uvF2EI8NCwXb8QpW12T3b4wTO8IcQ8jgbHHBiKgF9LGnVUhQJfJtGaN2bAiyglWH
+         F7oTpfRXCp0IStdz/s/K39V/GnL00Fq430cFpwRfBQXeyYqlxV00YJlWZdkQn9HLn3NB
+         R/woi01xmS3k81eF0UJHNYjQbA4xTCcE7hpI0cKTg0DQB066bATaFULTrohoAHUr17GI
+         iKBEdRbgiZ5zbV0Z+PE1xlB3qzcKVsi02oskhaArCjvbsxFTy2rXY1NpdMLC3UJdCvR5
+         y39d45SpvUvizxRdmARP/8QoYRH6WN9D+FSabI5RwXJ/Egx1cxdKXuvUOljCeAqbWF+o
+         Rl5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iREvRYd3Jw/uqUSWQKuYJucIkeBg2924CRlJ1YiHk5w=;
+        b=BuUXU9dDmx1fFMRVdtYF6RLeSGyjMvOXuV5pUdlgPBx7FwEFFi4xzHrv3/4tNB82Th
+         LKSS0RqCYj7DyBIHqrPX6ACDhHd7KB5K2bg9MNLHKAuss2ZSxz3dV4VB+KD0tZrL9F8k
+         DTmu0hgPOvFbZT46jyLQ3Yp/PSkKvU1vQl0HKGF/c8nArrP1fsy6kCcwZacWS5VNd9Qv
+         qjli6yvkrtir1JLVTkCV0ItAnpwOoxt7KCRdq/WxIXUhGB8sApQmj60/v5BfD1wcaHtu
+         VGKJ1sgObv1lb0U5jPZYefjAf0HCGtHE/M+0pxJFVsSS7h3tYmrtyTSmypGj0DoJej78
+         o1NA==
+X-Gm-Message-State: AOAM533JCu68OQv/7uIBlZ98v7K5J3MZlX4N1fYmn6s769F2fF7UIF2z
+        VfPRYbimCqAzISmml9hIZ9o=
+X-Google-Smtp-Source: ABdhPJzUklaWfijjyr/QbZe9TxRCC6Rdn+RrwCKY4rd7cIy/g0zxVcLA8G7PDAcZMjIvtxpOJoA6Jw==
+X-Received: by 2002:a1c:2584:: with SMTP id l126mr5069924wml.83.1624375612387;
+        Tue, 22 Jun 2021 08:26:52 -0700 (PDT)
+Received: from snuff.lan (84-236-11-56.pool.digikabel.hu. [84.236.11.56])
+        by smtp.gmail.com with ESMTPSA id l15sm11469907wrt.47.2021.06.22.08.26.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Jun 2021 08:26:51 -0700 (PDT)
+From:   Sandor Bodo-Merle <sbodomerle@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sandor Bodo-Merle <sbodomerle@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH v2 1/2] PCI: iproc: Fix multi-MSI base vector number allocation
+Date:   Tue, 22 Jun 2021 17:26:29 +0200
+Message-Id: <20210622152630.40842-1-sbodomerle@gmail.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20210621144702.GD27516@lpieralisi>
+References: <20210621144702.GD27516@lpieralisi>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210617215408.1412409-2-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Dan, Jonathan]
+Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+introduced multi-MSI support with a broken allocation mechanism (it failed
+to reserve the proper number of bits from the inner domain).  Natural
+alignment of the base vector number was also not guaranteed.
 
-On Thu, Jun 17, 2021 at 02:54:05PM -0700, David E. Box wrote:
-> Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
-> in the Designated Vendor Specific Extended Capability (DVSEC). Defined
-> in PCIe r5.0, sec 7.9.6.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
+Reported-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Pali Rohár <pali@kernel.org>
+Acked-by: Ray Jui <ray.jui@broadcom.com>
+---
+ drivers/pci/controller/pcie-iproc-msi.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+index eede4e8f3f75..557d93dcb3bc 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -252,18 +252,18 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
+ 
+ 	mutex_lock(&msi->bitmap_lock);
+ 
+-	/* Allocate 'nr_cpus' number of MSI vectors each time */
+-	hwirq = bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vecs, 0,
+-					   msi->nr_cpus, 0);
+-	if (hwirq < msi->nr_msi_vecs) {
+-		bitmap_set(msi->bitmap, hwirq, msi->nr_cpus);
+-	} else {
+-		mutex_unlock(&msi->bitmap_lock);
+-		return -ENOSPC;
+-	}
++	/*
++	 * Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI vectors
++	 * each time
++	 */
++	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
++					order_base_2(msi->nr_cpus * nr_irqs));
+ 
+ 	mutex_unlock(&msi->bitmap_lock);
+ 
++	if (hwirq < 0)
++		return -ENOSPC;
++
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, hwirq + i,
+ 				    &iproc_msi_bottom_irq_chip,
+@@ -284,7 +284,8 @@ static void iproc_msi_irq_domain_free(struct irq_domain *domain,
+ 	mutex_lock(&msi->bitmap_lock);
+ 
+ 	hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq);
+-	bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
++	bitmap_release_region(msi->bitmap, hwirq,
++			      order_base_2(msi->nr_cpus * nr_irqs));
+ 
+ 	mutex_unlock(&msi->bitmap_lock);
+ 
+-- 
+2.31.0
 
-I don't have time right now to really look at the
-intel_extended_caps.c patch [1], but I wonder if there's anything
-there that could be abstracted and shared with CXL, etc?  If not, no
-worries.
-
-[1] https://lore.kernel.org/r/20210617215408.1412409-5-david.e.box@linux.intel.com
-
-> ---
->  include/uapi/linux/pci_regs.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index e709ae8235e7..57ee51f19283 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1080,7 +1080,11 @@
->  
->  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
->  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
-> +#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
-> +#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
-> +#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
->  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
-> +#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
->  
->  /* Data Link Feature */
->  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> -- 
-> 2.25.1
-> 
