@@ -2,225 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37B3F3B0E5F
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 22:10:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 857713B0EFA
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 22:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbhFVUNE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 16:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbhFVUND (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 16:13:03 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0594C061756
-        for <linux-pci@vger.kernel.org>; Tue, 22 Jun 2021 13:10:47 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id j184so42856991qkd.6
-        for <linux-pci@vger.kernel.org>; Tue, 22 Jun 2021 13:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FEaj5TzKzhC7h9IFSKKjMs8DSuzea5RNxJgmYoQLtDo=;
-        b=gAVB6WdGFfSF8M3fXNSIPpQmdJeqZQsRwA717UsvPbCaHtHJwO67jeInsCAEu8fZ9h
-         uHT5p2OxZYu2RG7C998+c+PSzH1bWfNmR/AKE4JJasXBiXiAvt9eghjBffcqzfsWT6O8
-         itPCAH6dnbArXOZBiLxZWkyFcZYrakdwz1qMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FEaj5TzKzhC7h9IFSKKjMs8DSuzea5RNxJgmYoQLtDo=;
-        b=YsR3GT1bKscA1nRF4d1cgntg04FSeZ3BqsxUq+FZHtE5TUiJJIoEsyAxZM6QeEgtFM
-         Vh0KktQXoCliUstZ97cEBVmxYoUI/mxU3MnfHuCFsuy23Bki+CNYf+gzs1/O9c3VWmbp
-         hjf2A6Lr1kgm6ErZKRovBnNKIRh0kGFPk2kQ9uhhoemclsv3Ywa3sBfQ6oFdAX/peaRp
-         v4NpKh/551awu1V/c4PmBNq2SsAobjJwar09orFWtNONBaolINVVFqfFuJsJVP8OdLq4
-         vVFOLlXXZqsJ+s/Eb9Px040MYtpO9sPvBI0DfsIBw5Sd0hTDVSU49ot997ps0O+zQzBH
-         F/BA==
-X-Gm-Message-State: AOAM532WM01DjwNWTD4jXBVeNtkXY78iHwaYaCvZm+E0d6NZa/eKg2Gz
-        04a3LEpkh8QrzDJekL609iUtYrVUYC/nmA==
-X-Google-Smtp-Source: ABdhPJxefH48/hgeCsM+9MOAFAh/SROHW4L0hPrTNjxgiZJu7ZMuZI1x5Xjtq+bEi5o/M/M4Nn2bdA==
-X-Received: by 2002:a37:5d46:: with SMTP id r67mr6351479qkb.12.1624392646947;
-        Tue, 22 Jun 2021 13:10:46 -0700 (PDT)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com. [209.85.222.178])
-        by smtp.gmail.com with ESMTPSA id f2sm1275191qth.11.2021.06.22.13.10.45
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Jun 2021 13:10:46 -0700 (PDT)
-Received: by mail-qk1-f178.google.com with SMTP id j184so42856871qkd.6
-        for <linux-pci@vger.kernel.org>; Tue, 22 Jun 2021 13:10:45 -0700 (PDT)
-X-Received: by 2002:a25:80d4:: with SMTP id c20mr7216839ybm.345.1624392645386;
- Tue, 22 Jun 2021 13:10:45 -0700 (PDT)
+        id S229567AbhFVUvG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 16:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229501AbhFVUvF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Jun 2021 16:51:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6056961076;
+        Tue, 22 Jun 2021 20:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624394929;
+        bh=mwEideQxjVVmirB+NlDLXy5czZ2ulbfVRBw3HaAWPes=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MT5l0Zt/WsnpST7TYlcC5RUySdzRS6tznzlG7nMFIk9eKR36GimJ272LE6iEUfOon
+         MjW4LeY7F3TdMrfx78KL/bhC2X6/iUsHNqw2HNwJysQNp6Waj97FbMeoALf9zNraUL
+         iq1GSu4NR0HL0X39IIYDVikKoR9Vg0U13l36vy92lig16mtPN4Sd2X2urPopuz1HI6
+         aTuQo8V6hCKxvxhgnhoPCHmU6g0NZi/h24nhyVzXb+w63tCoLQV2fdKzVED9njVniH
+         uVVk1GuXaRRXlOJV67+w/maj4Aig/9tjTlyTkrCQoCJIyZ2X/jhkOcTYRN5DTkkWXB
+         VSPb8RAUUzeAA==
+Received: by pali.im (Postfix)
+        id CF724889; Tue, 22 Jun 2021 22:48:46 +0200 (CEST)
+Date:   Tue, 22 Jun 2021 22:48:46 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linus.walleij@linaro.org, kishon@ti.com,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+Message-ID: <20210622204846.s5z2brzhgkrsxs4f@pali>
+References: <20210531090540.2663171-1-luca@lucaceresoli.net>
+ <20210531133211.llyiq3jcfy25tmz4@pali>
+ <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
+ <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
+ <20210531162242.jm73yzntzmilsvbg@pali>
+ <8207a53c-4de9-d0e5-295a-c165e7237e36@lucaceresoli.net>
+ <20210622110627.aqzxxtf2j3uxfeyl@pali>
+ <20210622115604.GA25503@lpieralisi>
+ <20210622121649.ouiaecdvwutgdyy5@pali>
+ <20210622142325.GA27099@lpieralisi>
 MIME-Version: 1.0
-References: <20210621235248.2521620-1-dianders@chromium.org>
- <067dd86d-da7f-ac83-6ce6-b8fd5aba0b6f@arm.com> <CAD=FV=Vg7kqhgxZppHXwMPMc0xATZ+MqbrXx-FB0eg7pHhNE8w@mail.gmail.com>
- <20210622200219.GA28722@robh.at.kernel.org> <CAGETcx8Cpjvsr2K6f2oDNJDcGiu2T1fEf3D_2S4THduH4cPzKQ@mail.gmail.com>
-In-Reply-To: <CAGETcx8Cpjvsr2K6f2oDNJDcGiu2T1fEf3D_2S4THduH4cPzKQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 22 Jun 2021 13:10:33 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xw=NBkozOb4d4TM5DwBCSOG7v3ZA5ZgpcZqtQXE5UPsg@mail.gmail.com>
-Message-ID: <CAD=FV=Xw=NBkozOb4d4TM5DwBCSOG7v3ZA5ZgpcZqtQXE5UPsg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] iommu: Enable devices to request non-strict DMA,
- starting with QCom SD/MMC
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pci@vger.kernel.org, quic_c_gdjako@quicinc.com,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Rajat Jain <rajatja@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Gross <agross@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210622142325.GA27099@lpieralisi>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tuesday 22 June 2021 15:23:25 Lorenzo Pieralisi wrote:
+> On Tue, Jun 22, 2021 at 02:16:49PM +0200, Pali Rohár wrote:
+> > On Tuesday 22 June 2021 12:56:04 Lorenzo Pieralisi wrote:
+> > > [Adding Linus for GPIO discussion, thread:
+> > > https://lore.kernel.org/linux-pci/20210531090540.2663171-1-luca@lucaceresoli.net]
+> > > 
+> > > On Tue, Jun 22, 2021 at 01:06:27PM +0200, Pali Rohár wrote:
+> > > > Hello!
+> > > > 
+> > > > On Tuesday 22 June 2021 12:57:22 Luca Ceresoli wrote:
+> > > > > Nothing happened after a few weeks... I understand that knowing the
+> > > > > correct reset timings is relevant, but unfortunately I cannot help much
+> > > > > in finding out the correct values.
+> > > > > 
+> > > > > However I'm wondering what should happen to this patch. It *does* fix a
+> > > > > real bug, but potentially with an incorrect or non-optimal usleep range.
+> > > > > Do we really want to ignore a bugfix because we are not sure about how
+> > > > > long this delay should be?
+> > > > 
+> > > > As there is no better solution right now, I'm fine with your patch. But
+> > > > patch needs to be approved by Lorenzo, so please wait for his final
+> > > > answer.
+> > > 
+> > > I am not a GPIO expert and I have a feeling this is platform specific
+> > > beyond what the PCI specification can actually define architecturally.
+> > 
+> > In my opinion timeout is not platform specific as I wrote in email:
+> > https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+> > 
+> > My experiments already proved that some PCIe cards needs to be in reset
+> > state for some minimal time otherwise they cannot be enumerated. And it
+> > does not matter to which platform you connect those (endpoint) cards.
+> > 
+> > I do not think that timeout itself is platform specific. GPIO controls
+> > PERST# pin and therefore specified sleep value directly drives how long
+> > is card on the other end of PCIe slot in Warm Reset state. PCIe CEM spec
+> > directly says that PERST# signal controls PCIe Warm Reset.
+> 
+> Point taken but regardless this deviates from the PCI electromechanical
+> specifications (ie T-PERST-CLK), does not it ?
 
-On Tue, Jun 22, 2021 at 1:06 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Jun 22, 2021 at 1:02 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Jun 22, 2021 at 09:06:02AM -0700, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Tue, Jun 22, 2021 at 4:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > >
-> > > > Hi Doug,
-> > > >
-> > > > On 2021-06-22 00:52, Douglas Anderson wrote:
-> > > > >
-> > > > > This patch attempts to put forward a proposal for enabling non-strict
-> > > > > DMA on a device-by-device basis. The patch series requests non-strict
-> > > > > DMA for the Qualcomm SDHCI controller as a first device to enable,
-> > > > > getting a nice bump in performance with what's believed to be a very
-> > > > > small drop in security / safety (see the patch for the full argument).
-> > > > >
-> > > > > As part of this patch series I am end up slightly cleaning up some of
-> > > > > the interactions between the PCI subsystem and the IOMMU subsystem but
-> > > > > I don't go all the way to fully remove all the tentacles. Specifically
-> > > > > this patch series only concerns itself with a single aspect: strict
-> > > > > vs. non-strict mode for the IOMMU. I'm hoping that this will be easier
-> > > > > to talk about / reason about for more subsystems compared to overall
-> > > > > deciding what it means for a device to be "external" or "untrusted".
-> > > > >
-> > > > > If something like this patch series ends up being landable, it will
-> > > > > undoubtedly need coordination between many maintainers to land. I
-> > > > > believe it's fully bisectable but later patches in the series
-> > > > > definitely depend on earlier ones. Sorry for the long CC list. :(
-> > > >
-> > > > Unfortunately, this doesn't work. In normal operation, the default
-> > > > domains should be established long before individual drivers are even
-> > > > loaded (if they are modules), let alone anywhere near probing. The fact
-> > > > that iommu_probe_device() sometimes gets called far too late off the
-> > > > back of driver probe is an unfortunate artefact of the original
-> > > > probe-deferral scheme, and causes other problems like potentially
-> > > > malformed groups - I've been forming a plan to fix that for a while now,
-> > > > so I for one really can't condone anything trying to rely on it.
-> > > > Non-deterministic behaviour based on driver probe order for multi-device
-> > > > groups is part of the existing problem, and your proposal seems equally
-> > > > vulnerable to that too.
-> > >
-> > > Doh! :( I definitely can't say I understand the iommu subsystem
-> > > amazingly well. It was working for me, but I could believe that I was
-> > > somehow violating a rule somewhere.
-> > >
-> > > I'm having a bit of a hard time understanding where the problem is
-> > > though. Is there any chance that you missed the part of my series
-> > > where I introduced a "pre_probe" step? Specifically, I see this:
-> > >
-> > > * really_probe() is called w/ a driver and a device.
-> > > * -> calls dev->bus->dma_configure() w/ a "struct device *"
-> > > * -> eventually calls iommu_probe_device() w/ the device.
-> > > * -> calls iommu_alloc_default_domain() w/ the device
-> > > * -> calls iommu_group_alloc_default_domain()
-> > > * -> always allocates a new domain
-> > >
-> > > ...so we always have a "struct device" when a domain is allocated if
-> > > that domain is going to be associated with a device.
-> > >
-> > > I will agree that iommu_probe_device() is called before the driver
-> > > probe, but unless I missed something it's after the device driver is
-> > > loaded.  ...and assuming something like patch #1 in this series looks
-> > > OK then iommu_probe_device() will be called after "pre_probe".
-> > >
-> > > So assuming I'm not missing something, I'm not actually relying the
-> > > IOMMU getting init off the back of driver probe.
-> > >
-> > >
-> > > > FWIW we already have a go-faster knob for people who want to tweak the
-> > > > security/performance compromise for specific devices, namely the sysfs
-> > > > interface for changing a group's domain type before binding the relevant
-> > > > driver(s). Is that something you could use in your application, say from
-> > > > an initramfs script?
-> > >
-> > > We've never had an initramfs script in Chrome OS. I don't know all the
-> > > history of why (I'm trying to check), but I'm nearly certain it was a
-> > > conscious decision. Probably it has to do with the fact that we're not
-> > > trying to build a generic distribution where a single boot source can
-> > > boot a huge variety of hardware. We generally have one kernel for a
-> > > class of devices. I believe avoiding the initramfs just keeps things
-> > > simpler.
-> > >
-> > > I think trying to revamp Chrome OS to switch to an initramfs type
-> > > system would be a pretty big undertaking since (as I understand it)
-> > > you can't just run a little command and then return to the normal boot
-> > > flow. Once you switch to initramfs you're committing to finding /
-> > > setting up the rootfs yourself and on Chrome OS I believe that means a
-> > > whole bunch of dm-verity work.
-> > >
-> > >
-> > > ...so probably the initramfs is a no-go for me, but I'm still crossing
-> > > my fingers that the pre_probe() might be legit if you take a second
-> > > look at it?
-> >
-> > Couldn't you have a driver flag that has the same effect as twiddling
-> > sysfs? At the being of probe, check the flag and go set the underlying
-> > sysfs setting in the device.
->
-> My understanding of what Robin is saying is that we'd need this info
-> well before the driver is even available. The pre_probe() is
-> effectively doing the same thing you are suggesting.
+Well, I was not able to understand and decode PCIe base and PCIe CEM
+specs to figure out which timeout value should be used. You wrote about
+T-PERST-CLK but I'm really not sure if it is this one... Therefore I
+cannot say if something deviates from spec or not.
 
-Right, I was just about to respond with the same. ;-) So overall right
-now we're blocked waiting for someone to point out the error in my
-logic. ;-)
+> I misused "platform" to
+> define something that apparently is not contemplated by the PCI
+> specifications (and I would like to understand why).
+>  
+> I guess on ACPI systems (ie where the PERST# handling is implemented in
+> FW) this is handled in BIOS/UEFI
 
+PCIe base spec does not define any standard interface for controlling
+PCIe Warm Reset and PCIe CEM spec does not define any SW interface for
+PERST# pin. So every board / computer with PCIe slot may connect PERST#
+pin in different way to CPU. Some ARM boards connect all PERST# pins to
+just one GPIO, and so via SW you can reset all PCIe cards at the same
+time. No granularity to reset just one card. Some other connects all
+PERST# pin to CPU reset output pin, so when CPU / board resets it cause
+also reset of all PCIe cards.
 
-> > Though you may want this to be per device, not per driver. To do that
-> > early, I think you'd need a DT property. I wouldn't be totally opposed
-> > to that and I appreciate you not starting there. :)
->
-> Which is what I'm suggest elsewhere in the thread:
->
-> https://lore.kernel.org/lkml/CAGETcx83qCZF5JN5cqXxdSFiEgfc4jYESJg-RepL2wJXJv0Eww@mail.gmail.com/
+I read that some server machines have some dedicated device connected to
+CPU via i2c/smbus, which controls PERST# pins for each PCIe slot
+individually. And on these machines people use userspace i2cset
+application to control PERST# and therefore can reset cards manually.
 
-Rob: I'd be happy if you wanted to comment on that thread. If you say
-that it's fine to add a generic device tree property to control
-strictness then I'm more than happy to add support for it. I've been
-going on the theory that you'd NAK such a property but I'm totally
-good with being wrong. ;-)
+If ACPI / BIOS / UEFI system has some kind of PCIe support && PERST# is
+controller by software then for sure it needs to reset PCIe card (at
+least putting it from reset state to normal) prior trying to read PCI
+device/vendor ID from config space.
 
-I'd be more than happy if you could suggest what you'd envision such a
-property to be named.
+> need to peruse the code to check how
+> PERST# is handled and whether the delay is per host controller driver.
 
+Are there any open source implementations? Or we are just limited to
+dump ACPI bytecode or BIOS / UEFI firmware and start reverse engineering
+it? Because this would not be simple.
 
--Doug
+And major problems with PCIe Warm Reset / PERST# signal I saw only on
+boards where there is no BIOS / UEFI / ACPI; just native PCIe controller
+drivers which talks directly to HW.
+
+I was not able to find any way how to control PERST# on any my x86
+laptop (standard setup with UEFI and ACPI). So I'm even not sure if on
+x86 laptops is PERST# controllable by SW. I can imagine that this PIN
+may be connected to some reset circuit from Embedded Controller which
+may take full control of resetting card when it is needed at correct
+time.
+
+So it is possible that code which controls PERST# on x86 does not have
+to run on CPU and may be "burned" as part of other hardware...
+
+> > 
+> > What is here platform specific thing is that PERST# signal is controlled
+> > by GPIO. But value of signal (high / low) and how long is in signal in
+> > which state for me sounds like not an platform specific thing, but as
+> > PCIe / CEM related.
+> 
+> There are two different things to agree on this patch
+> 1) how GPIO drives PERST#
+
+I'm not sure what do you mean by this 1). GPIO is set to output
+direction and can be either in low or high state. One of this states
+represents RESET state on PERST# pin and which it is (low or high) is
+defined by DTS (reset-gpio).
+
+So setting GPIO with output direction to value 1 (active) always puts
+card into reset state and setting GPIO to value 0 (inactive) puts card
+into normal state.
+
+> 2) the PERST# de-assertion delay.
+
+This is open question.
+
+> I appreciate they are related and that Luca had to handle them together
+> but logically they are separated "issues", it'd be great if we manage
+> to nail down how they should be handled before we merge this code.
+> 
+> Lorenzo
+> 
+> > 
+> > > There are two things I'd like to see:
+> > > 
+> > > 1) If Linus can have a look at the GPIO bits in this thread that would
+> > >    definitely help clarify any pending controversy
+> > > 2) Kishon to test on *existing* platforms and confirm there are no
+> > >    regressions triggered
+> > > 
+> > > > I would suggest to add a comment for call "usleep_range(1000, 2000);"
+> > > > that you have chosen some "random" values which worked fine on your
+> > > > setup and that they fix mentioned bug. Comment just to mark this sleep
+> > > > code that is suboptimal / not-so-correct and to prevent other people to
+> > > > copy+paste this code into other (new) drivers...
+> > > 
+> > > Yes a comment would help but as I say above I am afraid this is
+> > > a platform specific set-up, ie that delay is somewhat tied to
+> > > a platform, not sure there is anything we can do.
+> > > 
+> > > If Linus and Kishon are happy with the approach we can merge this
+> > > patch.
+> > > 
+> > > Lorenzo
