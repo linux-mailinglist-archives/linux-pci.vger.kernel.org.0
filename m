@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 412C13B02D7
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 13:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 129BA3B0334
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 13:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbhFVLh4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 07:37:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:47610 "EHLO foss.arm.com"
+        id S230229AbhFVLvg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 07:51:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:47822 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229668AbhFVLh4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Jun 2021 07:37:56 -0400
+        id S229831AbhFVLvf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Jun 2021 07:51:35 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F11DF31B;
-        Tue, 22 Jun 2021 04:35:39 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 602D231B;
+        Tue, 22 Jun 2021 04:49:19 -0700 (PDT)
 Received: from [10.57.9.136] (unknown [10.57.9.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFDAF3F694;
-        Tue, 22 Jun 2021 04:35:35 -0700 (PDT)
-Subject: Re: [PATCH 0/6] iommu: Enable devices to request non-strict DMA,
- starting with QCom SD/MMC
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 178F33F694;
+        Tue, 22 Jun 2021 04:49:15 -0700 (PDT)
+Subject: Re: [PATCH 4/6] iommu: Combine device strictness requests with the
+ global default
 To:     Douglas Anderson <dianders@chromium.org>,
         gregkh@linuxfoundation.org, rafael@kernel.org,
         rafael.j.wysocki@intel.com, will@kernel.org, joro@8bytes.org,
@@ -29,21 +29,16 @@ Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
         iommu@lists.linux-foundation.org, sonnyrao@chromium.org,
         saiprakash.ranjan@codeaurora.org, linux-mmc@vger.kernel.org,
         vbadigan@codeaurora.org, rajatja@google.com, saravanak@google.com,
-        joel@joelfernandes.org, Andy Gross <agross@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org
 References: <20210621235248.2521620-1-dianders@chromium.org>
+ <20210621165230.4.Id84a954e705fcad3fdb35beb2bc372e4bf2108c7@changeid>
 From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <067dd86d-da7f-ac83-6ce6-b8fd5aba0b6f@arm.com>
-Date:   Tue, 22 Jun 2021 12:35:29 +0100
+Message-ID: <a023af85-5060-0a3c-4648-b00f8b8c0430@arm.com>
+Date:   Tue, 22 Jun 2021 12:49:10 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210621235248.2521620-1-dianders@chromium.org>
+In-Reply-To: <20210621165230.4.Id84a954e705fcad3fdb35beb2bc372e4bf2108c7@changeid>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -51,65 +46,194 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Doug,
-
 On 2021-06-22 00:52, Douglas Anderson wrote:
+> In the patch ("drivers: base: Add bits to struct device to control
+> iommu strictness") we add the ability for devices to tell us about
+> their IOMMU strictness requirements. Let's now take that into account
+> in the IOMMU layer.
 > 
-> This patch attempts to put forward a proposal for enabling non-strict
-> DMA on a device-by-device basis. The patch series requests non-strict
-> DMA for the Qualcomm SDHCI controller as a first device to enable,
-> getting a nice bump in performance with what's believed to be a very
-> small drop in security / safety (see the patch for the full argument).
-> 
-> As part of this patch series I am end up slightly cleaning up some of
-> the interactions between the PCI subsystem and the IOMMU subsystem but
-> I don't go all the way to fully remove all the tentacles. Specifically
-> this patch series only concerns itself with a single aspect: strict
-> vs. non-strict mode for the IOMMU. I'm hoping that this will be easier
-> to talk about / reason about for more subsystems compared to overall
-> deciding what it means for a device to be "external" or "untrusted".
-> 
-> If something like this patch series ends up being landable, it will
-> undoubtedly need coordination between many maintainers to land. I
-> believe it's fully bisectable but later patches in the series
-> definitely depend on earlier ones. Sorry for the long CC list. :(
+> A few notes here:
+> * Presumably this is always how iommu_get_dma_strict() was intended to
+>    behave. Had this not been the intention then it never would have
+>    taken a domain as a parameter.
 
-Unfortunately, this doesn't work. In normal operation, the default 
-domains should be established long before individual drivers are even 
-loaded (if they are modules), let alone anywhere near probing. The fact 
-that iommu_probe_device() sometimes gets called far too late off the 
-back of driver probe is an unfortunate artefact of the original 
-probe-deferral scheme, and causes other problems like potentially 
-malformed groups - I've been forming a plan to fix that for a while now, 
-so I for one really can't condone anything trying to rely on it. 
-Non-deterministic behaviour based on driver probe order for multi-device 
-groups is part of the existing problem, and your proposal seems equally 
-vulnerable to that too.
+FWIW strictness does have the semantic of being a per-domain property, 
+but mostly in the sense that it's only relevant to IOMMU_DOMAIN_DMA 
+domains, so the main thing was encapsulating that check rather than 
+duplicating it all over callsites.
 
-FWIW we already have a go-faster knob for people who want to tweak the 
-security/performance compromise for specific devices, namely the sysfs 
-interface for changing a group's domain type before binding the relevant 
-driver(s). Is that something you could use in your application, say from 
-an initramfs script?
+> * The iommu_set_dma_strict() feels awfully non-symmetric now. That
+>    function sets the _default_ strictness globally in the system
+>    whereas iommu_get_dma_strict() returns the value for a given domain
+>    (falling back to the default). Presumably, at least, the fact that
+>    iommu_set_dma_strict() doesn't take a domain makes this obvious.
 
-Thanks,
+It *is* asymmetric - one is for IOMMU core code and individual driver 
+internals to know whether they need to do whatever bits of setting up a 
+flush queue for a given domain they are responsible for, while the other 
+is specifically for two drivers to force the global default in order to 
+preserve legacy driver-specific behaviour. Maybe that should have been 
+called something like iommu_set_dma_default_strict instead... :/
+
 Robin.
 
-> Douglas Anderson (6):
->    drivers: base: Add the concept of "pre_probe" to drivers
->    drivers: base: Add bits to struct device to control iommu strictness
->    PCI: Indicate that we want to force strict DMA for untrusted devices
->    iommu: Combine device strictness requests with the global default
->    iommu: Stop reaching into PCIe devices to decide strict vs. non-strict
->    mmc: sdhci-msm: Request non-strict IOMMU mode
+> The function iommu_get_dma_strict() should now make it super obvious
+> where strictness comes from and who overides who. Though the function
+> changed a bunch to make the logic clearer, the only two new rules
+> should be:
+> * Devices can force strictness for themselves, overriding the cmdline
+>    "iommu.strict=0" or a call to iommu_set_dma_strict(false)).
+> * Devices can request non-strictness for themselves, assuming there
+>    was no cmdline "iommu.strict=1" or a call to
+>    iommu_set_dma_strict(true).
 > 
->   drivers/base/dd.c             | 10 +++++--
->   drivers/iommu/dma-iommu.c     |  2 +-
->   drivers/iommu/iommu.c         | 56 +++++++++++++++++++++++++++--------
->   drivers/mmc/host/sdhci-msm.c  |  8 +++++
->   drivers/pci/probe.c           |  4 ++-
->   include/linux/device.h        | 11 +++++++
->   include/linux/device/driver.h |  9 ++++++
->   include/linux/iommu.h         |  2 ++
->   8 files changed, 85 insertions(+), 17 deletions(-)
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>   drivers/iommu/iommu.c | 56 +++++++++++++++++++++++++++++++++----------
+>   include/linux/iommu.h |  2 ++
+>   2 files changed, 45 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 808ab70d5df5..0c84a4c06110 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -28,8 +28,19 @@
+>   static struct kset *iommu_group_kset;
+>   static DEFINE_IDA(iommu_group_ida);
+>   
+> +enum iommu_strictness {
+> +	IOMMU_DEFAULT_STRICTNESS = -1,
+> +	IOMMU_NOT_STRICT = 0,
+> +	IOMMU_STRICT = 1,
+> +};
+> +static inline enum iommu_strictness bool_to_strictness(bool strictness)
+> +{
+> +	return (enum iommu_strictness)strictness;
+> +}
+> +
+>   static unsigned int iommu_def_domain_type __read_mostly;
+> -static bool iommu_dma_strict __read_mostly = true;
+> +static enum iommu_strictness cmdline_dma_strict __read_mostly = IOMMU_DEFAULT_STRICTNESS;
+> +static enum iommu_strictness driver_dma_strict __read_mostly = IOMMU_DEFAULT_STRICTNESS;
+>   static u32 iommu_cmd_line __read_mostly;
+>   
+>   struct iommu_group {
+> @@ -69,7 +80,6 @@ static const char * const iommu_group_resv_type_string[] = {
+>   };
+>   
+>   #define IOMMU_CMD_LINE_DMA_API		BIT(0)
+> -#define IOMMU_CMD_LINE_STRICT		BIT(1)
+>   
+>   static int iommu_alloc_default_domain(struct iommu_group *group,
+>   				      struct device *dev);
+> @@ -336,25 +346,38 @@ early_param("iommu.passthrough", iommu_set_def_domain_type);
+>   
+>   static int __init iommu_dma_setup(char *str)
+>   {
+> -	int ret = kstrtobool(str, &iommu_dma_strict);
+> +	bool strict;
+> +	int ret = kstrtobool(str, &strict);
+>   
+>   	if (!ret)
+> -		iommu_cmd_line |= IOMMU_CMD_LINE_STRICT;
+> +		cmdline_dma_strict = bool_to_strictness(strict);
+>   	return ret;
+>   }
+>   early_param("iommu.strict", iommu_dma_setup);
+>   
+>   void iommu_set_dma_strict(bool strict)
+>   {
+> -	if (strict || !(iommu_cmd_line & IOMMU_CMD_LINE_STRICT))
+> -		iommu_dma_strict = strict;
+> +	/* A driver can request strictness but not the other way around */
+> +	if (driver_dma_strict != IOMMU_STRICT)
+> +		driver_dma_strict = bool_to_strictness(strict);
+>   }
+>   
+>   bool iommu_get_dma_strict(struct iommu_domain *domain)
+>   {
+> -	/* only allow lazy flushing for DMA domains */
+> -	if (domain->type == IOMMU_DOMAIN_DMA)
+> -		return iommu_dma_strict;
+> +	/* Non-DMA domains or anyone forcing it to strict makes it strict */
+> +	if (domain->type != IOMMU_DOMAIN_DMA ||
+> +	    cmdline_dma_strict == IOMMU_STRICT ||
+> +	    driver_dma_strict == IOMMU_STRICT ||
+> +	    domain->force_strict)
+> +		return true;
+> +
+> +	/* Anyone requesting non-strict (if no forces) makes it non-strict */
+> +	if (cmdline_dma_strict == IOMMU_NOT_STRICT ||
+> +	    driver_dma_strict == IOMMU_NOT_STRICT ||
+> +	    domain->request_non_strict)
+> +		return false;
+> +
+> +	/* Nobody said anything, so it's strict by default */
+>   	return true;
+>   }
+>   EXPORT_SYMBOL_GPL(iommu_get_dma_strict);
+> @@ -1519,7 +1542,8 @@ static int iommu_get_def_domain_type(struct device *dev)
+>   
+>   static int iommu_group_alloc_default_domain(struct bus_type *bus,
+>   					    struct iommu_group *group,
+> -					    unsigned int type)
+> +					    unsigned int type,
+> +					    struct device *dev)
+>   {
+>   	struct iommu_domain *dom;
+>   
+> @@ -1534,6 +1558,12 @@ static int iommu_group_alloc_default_domain(struct bus_type *bus,
+>   	if (!dom)
+>   		return -ENOMEM;
+>   
+> +	/* Save the strictness requests from the device */
+> +	if (dev && type == IOMMU_DOMAIN_DMA) {
+> +		dom->request_non_strict = dev->request_non_strict_iommu;
+> +		dom->force_strict = dev->force_strict_iommu;
+> +	}
+> +
+>   	group->default_domain = dom;
+>   	if (!group->domain)
+>   		group->domain = dom;
+> @@ -1550,7 +1580,7 @@ static int iommu_alloc_default_domain(struct iommu_group *group,
+>   
+>   	type = iommu_get_def_domain_type(dev) ? : iommu_def_domain_type;
+>   
+> -	return iommu_group_alloc_default_domain(dev->bus, group, type);
+> +	return iommu_group_alloc_default_domain(dev->bus, group, type, dev);
+>   }
+>   
+>   /**
+> @@ -1721,7 +1751,7 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+>   	if (!gtype.type)
+>   		gtype.type = iommu_def_domain_type;
+>   
+> -	iommu_group_alloc_default_domain(bus, group, gtype.type);
+> +	iommu_group_alloc_default_domain(bus, group, gtype.type, NULL);
+>   
+>   }
+>   
+> @@ -3130,7 +3160,7 @@ static int iommu_change_dev_def_domain(struct iommu_group *group,
+>   	}
+>   
+>   	/* Sets group->default_domain to the newly allocated domain */
+> -	ret = iommu_group_alloc_default_domain(dev->bus, group, type);
+> +	ret = iommu_group_alloc_default_domain(dev->bus, group, type, dev);
+>   	if (ret)
+>   		goto out;
+>   
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 32d448050bf7..0bddef77f415 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -81,6 +81,8 @@ struct iommu_domain_geometry {
+>   
+>   struct iommu_domain {
+>   	unsigned type;
+> +	bool force_strict:1;
+> +	bool request_non_strict:1;
+>   	const struct iommu_ops *ops;
+>   	unsigned long pgsize_bitmap;	/* Bitmap of page sizes in use */
+>   	iommu_fault_handler_t handler;
 > 
