@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C67E83B08F2
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 17:26:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B48D3B08F5
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 17:27:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbhFVP3L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 11:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59142 "EHLO
+        id S232230AbhFVP3U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 11:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232087AbhFVP3K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 11:29:10 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AD0C061574;
-        Tue, 22 Jun 2021 08:26:53 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id y13-20020a1c4b0d0000b02901c20173e165so2558710wma.0;
-        Tue, 22 Jun 2021 08:26:53 -0700 (PDT)
+        with ESMTP id S231876AbhFVP3T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 11:29:19 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FD7C061574;
+        Tue, 22 Jun 2021 08:27:02 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id h21-20020a1ccc150000b02901d4d33c5ca0so2525665wmb.3;
+        Tue, 22 Jun 2021 08:27:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iREvRYd3Jw/uqUSWQKuYJucIkeBg2924CRlJ1YiHk5w=;
-        b=R8uvF2EI8NCwXb8QpW12T3b4wTO8IcQ8jgbHHBiKgF9LGnVUhQJfJtGaN2bAiyglWH
-         F7oTpfRXCp0IStdz/s/K39V/GnL00Fq430cFpwRfBQXeyYqlxV00YJlWZdkQn9HLn3NB
-         R/woi01xmS3k81eF0UJHNYjQbA4xTCcE7hpI0cKTg0DQB066bATaFULTrohoAHUr17GI
-         iKBEdRbgiZ5zbV0Z+PE1xlB3qzcKVsi02oskhaArCjvbsxFTy2rXY1NpdMLC3UJdCvR5
-         y39d45SpvUvizxRdmARP/8QoYRH6WN9D+FSabI5RwXJ/Egx1cxdKXuvUOljCeAqbWF+o
-         Rl5A==
+        bh=H0fRRUN9hmaR59XL6pJP1fOrRa3SKmuQ9EeViv8hJUQ=;
+        b=bb88ouU3crmfqRKxU+pJjoZiy3AST7BfANO3yReF/O6pWOA7iBqjUsWYoT8ICvzP8r
+         IIjp3xtUiQUpIbWbwXfZLciETKWnqXfdsvEXyQIOt3AL+Vv4KYu+Lsa/6HOnLXk7uL/R
+         BP+5htCixe6hHRmQvIGxl5WuFojOJnUC5aro2E58Jvw2GuwvKmtVdj8ZZIj5TmZzCiAR
+         ai7b5c8YJTWu952PjSVbuJ/kUAyBOkuiMbpmHVYpt7TRTV6zE16DIEvG7G8ssOMR+zbZ
+         HOeZEMd7LmUwEvJ3ezUVJX7O716Yc8Y5Ci9j0draS4b6MkAXcsHXZcw4PltYtSQmrF/e
+         FtlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iREvRYd3Jw/uqUSWQKuYJucIkeBg2924CRlJ1YiHk5w=;
-        b=BuUXU9dDmx1fFMRVdtYF6RLeSGyjMvOXuV5pUdlgPBx7FwEFFi4xzHrv3/4tNB82Th
-         LKSS0RqCYj7DyBIHqrPX6ACDhHd7KB5K2bg9MNLHKAuss2ZSxz3dV4VB+KD0tZrL9F8k
-         DTmu0hgPOvFbZT46jyLQ3Yp/PSkKvU1vQl0HKGF/c8nArrP1fsy6kCcwZacWS5VNd9Qv
-         qjli6yvkrtir1JLVTkCV0ItAnpwOoxt7KCRdq/WxIXUhGB8sApQmj60/v5BfD1wcaHtu
-         VGKJ1sgObv1lb0U5jPZYefjAf0HCGtHE/M+0pxJFVsSS7h3tYmrtyTSmypGj0DoJej78
-         o1NA==
-X-Gm-Message-State: AOAM533JCu68OQv/7uIBlZ98v7K5J3MZlX4N1fYmn6s769F2fF7UIF2z
-        VfPRYbimCqAzISmml9hIZ9o=
-X-Google-Smtp-Source: ABdhPJzUklaWfijjyr/QbZe9TxRCC6Rdn+RrwCKY4rd7cIy/g0zxVcLA8G7PDAcZMjIvtxpOJoA6Jw==
-X-Received: by 2002:a1c:2584:: with SMTP id l126mr5069924wml.83.1624375612387;
-        Tue, 22 Jun 2021 08:26:52 -0700 (PDT)
+        bh=H0fRRUN9hmaR59XL6pJP1fOrRa3SKmuQ9EeViv8hJUQ=;
+        b=KiG1/0URC430sYEAgdb3tYtUTjC8LSiQ2ef+wA0JYsqP9zzlf3IDy8XOSkyTObmw0m
+         C1sMB4VNyRACZBo213p+Cw964Tlw+O1FWeyu5PSZhx2GybIZRL1MNat2zyVW7wbz7vq2
+         8Y6KcpK3L/isPmbkjjq3UMnbNOPuhAuYv112N7OEwBwWKRIqJfeNtQsAVaORE8d2nOjG
+         BLfYVvmcYuEGv6fPOasCBWn7tuugbGNa81mg59s3H8cMRwkoP9SipwNH+1/DLW/wBFrb
+         5r/1xIxAz8J3cFp98E7owEYiNAGzqh3i7gNJZsuU+Bea3/yqG2qNkSsFb4/xv7SuPcYz
+         n8jQ==
+X-Gm-Message-State: AOAM530L/B6AvUwXHn7XEEK6iFXJ0YYdvwk+kTELtTc+vLOgt5G8bie7
+        254zTV0k+8RAvYpsCb+B0O0=
+X-Google-Smtp-Source: ABdhPJy33SSeYQeH48XF1N0otWdKyEt0GndZA8MdlT5lYAscQku+HNc9OSLWOiH0pqnVbuUIQ+omOg==
+X-Received: by 2002:a1c:7706:: with SMTP id t6mr5237921wmi.62.1624375621362;
+        Tue, 22 Jun 2021 08:27:01 -0700 (PDT)
 Received: from snuff.lan (84-236-11-56.pool.digikabel.hu. [84.236.11.56])
-        by smtp.gmail.com with ESMTPSA id l15sm11469907wrt.47.2021.06.22.08.26.49
+        by smtp.gmail.com with ESMTPSA id l15sm11469907wrt.47.2021.06.22.08.26.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jun 2021 08:26:51 -0700 (PDT)
+        Tue, 22 Jun 2021 08:27:01 -0700 (PDT)
 From:   Sandor Bodo-Merle <sbodomerle@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
@@ -58,11 +58,12 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sandor Bodo-Merle <sbodomerle@gmail.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v2 1/2] PCI: iproc: Fix multi-MSI base vector number allocation
-Date:   Tue, 22 Jun 2021 17:26:29 +0200
-Message-Id: <20210622152630.40842-1-sbodomerle@gmail.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH v2 2/2] PCI: iproc: Support multi-MSI only on uniprocessor kernel
+Date:   Tue, 22 Jun 2021 17:26:30 +0200
+Message-Id: <20210622152630.40842-2-sbodomerle@gmail.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20210621144702.GD27516@lpieralisi>
 References: <20210621144702.GD27516@lpieralisi>
@@ -73,63 +74,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
-introduced multi-MSI support with a broken allocation mechanism (it failed
-to reserve the proper number of bits from the inner domain).  Natural
-alignment of the base vector number was also not guaranteed.
+The interrupt affinity scheme used by this driver is incompatible with
+multi-MSI as it implies moving the doorbell address to that of another MSI
+group.  This isn't possible for multi-MSI, as all the MSIs must have the
+same doorbell address. As such it is restricted to systems with a single
+CPU.
 
 Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
-Reported-by: Pali Rohár <pali@kernel.org>
+Reported-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sandor Bodo-Merle <sbodomerle@gmail.com>
 Acked-by: Marc Zyngier <maz@kernel.org>
 Acked-by: Pali Rohár <pali@kernel.org>
 Acked-by: Ray Jui <ray.jui@broadcom.com>
 ---
- drivers/pci/controller/pcie-iproc-msi.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/pci/controller/pcie-iproc-msi.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-index eede4e8f3f75..557d93dcb3bc 100644
+index 557d93dcb3bc..81b4effeb130 100644
 --- a/drivers/pci/controller/pcie-iproc-msi.c
 +++ b/drivers/pci/controller/pcie-iproc-msi.c
-@@ -252,18 +252,18 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
+@@ -171,7 +171,7 @@ static struct irq_chip iproc_msi_irq_chip = {
  
- 	mutex_lock(&msi->bitmap_lock);
+ static struct msi_domain_info iproc_msi_domain_info = {
+ 	.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
++		MSI_FLAG_PCI_MSIX,
+ 	.chip = &iproc_msi_irq_chip,
+ };
  
--	/* Allocate 'nr_cpus' number of MSI vectors each time */
--	hwirq = bitmap_find_next_zero_area(msi->bitmap, msi->nr_msi_vecs, 0,
--					   msi->nr_cpus, 0);
--	if (hwirq < msi->nr_msi_vecs) {
--		bitmap_set(msi->bitmap, hwirq, msi->nr_cpus);
--	} else {
--		mutex_unlock(&msi->bitmap_lock);
--		return -ENOSPC;
--	}
-+	/*
-+	 * Allocate 'nr_irqs' multiplied by 'nr_cpus' number of MSI vectors
-+	 * each time
-+	 */
-+	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
-+					order_base_2(msi->nr_cpus * nr_irqs));
+@@ -250,6 +250,9 @@ static int iproc_msi_irq_domain_alloc(struct irq_domain *domain,
+ 	struct iproc_msi *msi = domain->host_data;
+ 	int hwirq, i;
  
- 	mutex_unlock(&msi->bitmap_lock);
- 
-+	if (hwirq < 0)
-+		return -ENOSPC;
++	if (msi->nr_cpus > 1 && nr_irqs > 1)
++		return -EINVAL;
 +
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, hwirq + i,
- 				    &iproc_msi_bottom_irq_chip,
-@@ -284,7 +284,8 @@ static void iproc_msi_irq_domain_free(struct irq_domain *domain,
  	mutex_lock(&msi->bitmap_lock);
  
- 	hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq);
--	bitmap_clear(msi->bitmap, hwirq, msi->nr_cpus);
-+	bitmap_release_region(msi->bitmap, hwirq,
-+			      order_base_2(msi->nr_cpus * nr_irqs));
+ 	/*
+@@ -540,6 +543,9 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
+ 	mutex_init(&msi->bitmap_lock);
+ 	msi->nr_cpus = num_possible_cpus();
  
- 	mutex_unlock(&msi->bitmap_lock);
- 
++	if (msi->nr_cpus == 1)
++		iproc_msi_domain_info.flags |=  MSI_FLAG_MULTI_PCI_MSI;
++
+ 	msi->nr_irqs = of_irq_count(node);
+ 	if (!msi->nr_irqs) {
+ 		dev_err(pcie->dev, "found no MSI GIC interrupt\n");
 -- 
 2.31.0
 
