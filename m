@@ -2,111 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DE0B3B01EC
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 12:57:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFA893B0251
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 13:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbhFVK7n convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 22 Jun 2021 06:59:43 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:53049 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230002AbhFVK7m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 06:59:42 -0400
-Received: from [77.244.183.192] (port=61762 helo=[192.168.178.41])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1lve5s-000E1s-5i; Tue, 22 Jun 2021 12:57:24 +0200
-Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20210531090540.2663171-1-luca@lucaceresoli.net>
- <20210531133211.llyiq3jcfy25tmz4@pali>
- <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
- <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
- <20210531162242.jm73yzntzmilsvbg@pali>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <8207a53c-4de9-d0e5-295a-c165e7237e36@lucaceresoli.net>
-Date:   Tue, 22 Jun 2021 12:57:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S229907AbhFVLHj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 07:07:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:47060 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229682AbhFVLHh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Jun 2021 07:07:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0069231B;
+        Tue, 22 Jun 2021 04:05:21 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5302E3F694;
+        Tue, 22 Jun 2021 04:05:19 -0700 (PDT)
+Date:   Tue, 22 Jun 2021 12:05:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Chen-Yu Tsai <wenst@chromium.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Randy Wu <Randy.Wu@mediatek.com>, youlin.pei@mediatek.com
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: mediatek-gen3: Add support for
+ MT8195
+Message-ID: <20210622110517.GB24565@lpieralisi>
+References: <20210601024408.24485-1-jianjun.wang@mediatek.com>
+ <20210601024408.24485-2-jianjun.wang@mediatek.com>
+ <CAGXv+5G-8+ppafiUnqWm2UeiL+edHJ2zYZvU-S7mz_NdrM3YsA@mail.gmail.com>
+ <1622526594.9054.6.camel@mhfsdcap03>
+ <CAGXv+5GMTbC5TTgURhPAvxBEY18S6-T-BZ9CpXsO91Trim7TXw@mail.gmail.com>
+ <db62910b-febd-6cba-8a72-2bf718f7b110@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210531162242.jm73yzntzmilsvbg@pali>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db62910b-febd-6cba-8a72-2bf718f7b110@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 31/05/21 18:22, Pali Rohár wrote:
-> Hello Kishon!
+On Wed, Jun 02, 2021 at 01:33:07PM +0200, Matthias Brugger wrote:
 > 
-> On Monday 31 May 2021 21:30:30 Kishon Vijay Abraham I wrote:
->> I had given the timing mentioned in the specification here
->> https://lore.kernel.org/r/023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com
->>
->> The PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION defines the Power
->> Sequencing and Reset Signal Timings in Table 2-4. Please also refer Figure
->> 2-10: Power Up of the CEM.
->>
->> ╔═════════════╤══════════════════════════════════════╤═════╤═════╤═══════╗
->> ║ Symbol      │ Parameter                            │ Min │ Max │ Units ║
->> ╠═════════════╪══════════════════════════════════════╪═════╪═════╪═══════╣
->> ║ T PVPERL    │ Power stable to PERST# inactive      │ 100 │     │ ms    ║
->> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
->> ║ T PERST-CLK │ REFCLK stable before PERST# inactive │ 100 │     │ μs    ║
->> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
->> ║ T PERST     │ PERST# active time                   │ 100 │     │ μs    ║
->> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
->> ║ T FAIL      │ Power level invalid to PERST# active │     │ 500 │ ns    ║
->> ╟─────────────┼──────────────────────────────────────┼─────┼─────┼───────╢
->> ║ T WKRF      │ WAKE# rise – fall time               │     │ 100 │ ns    ║
->> ╚═════════════╧══════════════════════════════════════╧═════╧═════╧═══════╝
->>
->> The de-assertion of #PERST is w.r.t both power stable and refclk stable.
 > 
-> I think this does not fully answer this problematic question. One thing
-> is initial power on and second thing is warm reset (when both power and
-> clock is stable).
+> On 01/06/2021 08:07, Chen-Yu Tsai wrote:
+> > Hi,
+> > 
+> > On Tue, Jun 1, 2021 at 1:50 PM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+> >>
+> >> On Tue, 2021-06-01 at 11:53 +0800, Chen-Yu Tsai wrote:
+> >>> Hi,
+> >>>
+> >>> On Tue, Jun 1, 2021 at 10:50 AM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+> >>>>
+> >>>> MT8195 is an ARM platform SoC which has the same PCIe IP with MT8192.
+> >>>
+> >>> Based on what I'm seeing internally, there seems to be some inconsistency
+> >>> across the MediaTek platform on whether new compatible strings should be
+> >>> introduced for "fully compatible" IP blocks.
+> >>>
+> >>> If this hardware block in MT8195 is "the same" as the one in MT8192, do we
+> >>> really need the new compatible string? Are there any concerns?
+> >>
+> >> Hi Chen-Yu,
+> >>
+> >> It's ok to reuse the compatible string with MT8192, but I think this
+> >> will be easier to find which platforms this driver is compatible with,
+> >> especially when we have more and more platforms in the future.
+> > 
+> > If it's just for informational purposes, then having the MT8192 compatible
+> > as a fallback would work, and we wouldn't need to make changes to the driver.
+> > This works better especially if we have to support multiple operating systems
+> > that use device tree.
+> > 
+> > So we would want
+> > 
+> >     "mediatek,mt8195-pcie", "mediatek,mt8192-pcie"
+> > 
+> > and
+> > 
+> >     "mediatek,mt8192-pcie"
+> > 
+> > be the valid options.
+> > 
+> > Personally I'm not seeing enough value to justify adding the compatible string
+> > just for informational purposes though. One could easily discern which hardware
+> > is used by looking at the device tree.
+> > 
 > 
-> On more ARM boards, power is not SW controllable and is automatically
-> enabled when powering board on. So Tₚᵥₚₑᵣₗ is calculated since
-> bootloader and therefore not needed to take into account in kernel.
+> I agree, if no differences between the two chips are known, adding a
+> binding withe new compatible and a fallback is a good thing. If we
+> later on realize that mt8195 PCI block has differences, we can add the
+> matching to the driver.
+
+So this series can be dropped, right ?
+
+Thanks,
+Lorenzo
+
+> Regards,
+> Matthias
 > 
-> Tₚₑᵣₛₜ₋cₗₖ is only 100 µs and experiments proved that 100 µs not enough
-> for toggling PERST# GPIO. At least one 1 ms is needed and for some cards
-> at least 10 ms. Otherwise cards are not detected.
-> 
-> So when you have both power and clock stable and you want to reset card
-> via PERST# signal, above table does not say how long it is needed to
-> have PERST# in reset state.
-
-Nothing happened after a few weeks... I understand that knowing the
-correct reset timings is relevant, but unfortunately I cannot help much
-in finding out the correct values.
-
-However I'm wondering what should happen to this patch. It *does* fix a
-real bug, but potentially with an incorrect or non-optimal usleep range.
-Do we really want to ignore a bugfix because we are not sure about how
-long this delay should be?
-
--- 
-Luca
-
+> > 
+> > Regards
+> > ChenYu
+> > 
+> > 
+> >> Thanks.
+> >>>
+> >>>
+> >>> Thanks
+> >>> ChenYu
+> >>>
+> >>>
+> >>>> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> >>>> ---
+> >>>>  Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml | 4 +++-
+> >>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> >>>> index e7b1f9892da4..d5e4a3e63d97 100644
+> >>>> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> >>>> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> >>>> @@ -48,7 +48,9 @@ allOf:
+> >>>>
+> >>>>  properties:
+> >>>>    compatible:
+> >>>> -    const: mediatek,mt8192-pcie
+> >>>> +    oneOf:
+> >>>> +      - const: mediatek,mt8192-pcie
+> >>>> +      - const: mediatek,mt8195-pcie
+> >>>>
+> >>>>    reg:
+> >>>>      maxItems: 1
+> >>>> --
+> >>>> 2.18.0
+> >>>> _______________________________________________
+> >>>> Linux-mediatek mailing list
+> >>>> Linux-mediatek@lists.infradead.org
+> >>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> >>
