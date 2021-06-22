@@ -2,71 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5FE03B0567
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 15:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAA923B05D8
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 15:31:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231722AbhFVNDs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 09:03:48 -0400
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:47000 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231370AbhFVNDr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 09:03:47 -0400
-Received: by mail-ot1-f47.google.com with SMTP id v5-20020a0568301bc5b029045c06b14f83so4568706ota.13;
-        Tue, 22 Jun 2021 06:01:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2NcTRL4wccrHi9sSWNz57LOOjn+N0AxIofL4KbJc/ig=;
-        b=rKKVuilxw5h291EJ82tyWC/8Px5Syo8ekdVf6odHwLwC11nknd/afhQoeYax5hZzHM
-         c5JwPaLLjnQp0lCEeGjX4AQiUx+MYfw0546sVjKhhojUaK489k1qyayWenDxlk0nCnyA
-         oQDnOPlusPVcAasOlVMhd0DpLrQoduHYwUrPQPO85TKppYBQuXbin+de72go8hbP7zUm
-         hsiHDTp1KAVvPpM6RSdcvLXIJ13YmtXxg/Y/bseMG++N2rfNJk2j/tHjfuGVIC/6nolT
-         Nus5Ibyd31rtl5M8kQKz3EyOlgR5uzg6585ti0iX7dSJZVIyBwuXKoS7B+/EfMuZdbJq
-         03cw==
-X-Gm-Message-State: AOAM530Bm06KOFUN83IWWUTXtlePdS/VU7EIc/cqu32X8rjVEA6BWRJE
-        eb7rwBc5orxs3egWTy1vVHeTmbySfl9LB4Q5bHM=
-X-Google-Smtp-Source: ABdhPJyKjHV3+esCsGlGeaN8t/I0yIGGj7Mdq25BoUCBh0UMOhrGtyHSGG83n+tY6Xh4X8RnJRiv35gNDnwtVaZXuqs=
-X-Received: by 2002:a05:6830:1bf7:: with SMTP id k23mr3176695otb.206.1624366891596;
- Tue, 22 Jun 2021 06:01:31 -0700 (PDT)
+        id S230039AbhFVNdc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 22 Jun 2021 09:33:32 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37744 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229988AbhFVNdb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 09:33:31 -0400
+Received: from [77.244.183.192] (port=62712 helo=[192.168.178.41])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1lvgUk-0009At-JG; Tue, 22 Jun 2021 15:31:14 +0200
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linus.walleij@linaro.org, kishon@ti.com, linux-pci@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20210531090540.2663171-1-luca@lucaceresoli.net>
+ <20210531133211.llyiq3jcfy25tmz4@pali>
+ <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
+ <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
+ <20210531162242.jm73yzntzmilsvbg@pali>
+ <8207a53c-4de9-d0e5-295a-c165e7237e36@lucaceresoli.net>
+ <20210622110627.aqzxxtf2j3uxfeyl@pali> <20210622115604.GA25503@lpieralisi>
+ <20210622121649.ouiaecdvwutgdyy5@pali>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <18a104a9-2cb8-7535-a5b2-f5f049adff47@lucaceresoli.net>
+Date:   Tue, 22 Jun 2021 15:31:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <CAJZ5v0gkETL83rm71LiJ8sed=UFn00_Sss8wJ20-+KQiJR0hew@mail.gmail.com>
- <20210622125802.GA3323179@bjorn-Precision-5520>
-In-Reply-To: <20210622125802.GA3323179@bjorn-Precision-5520>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Jun 2021 15:01:20 +0200
-Message-ID: <CAJZ5v0j9GS2y0tpnzaGu8n9=kbHD9QkBUDguANcJz01u+PX08g@mail.gmail.com>
-Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 213481] e1000e
- hardware failure due to PCI patch in all kernels 5.10.36+ with Intel I219-V]
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Michael <phyre@rogers.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210622121649.ouiaecdvwutgdyy5@pali>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 2:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Jun 22, 2021 at 02:21:06PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Jun 22, 2021 at 12:02 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > FYI.  Looks like 4514d991d992 ("PCI: PM: Do not read power state in
-> > > pci_enable_device_flags()") appeared in v5.13-rc1, so it would be nice
-> > > to fix before v5.13.
-> >
-> > I think let's revert it for now and revisit.
->
-> Sounds good.
->
-> > Do you want me to push the revert?
->
-> Sure, it'd be great if you could.  I'm traveling and don't have as
-> much time as usual this week.  Thanks!
+Hi,
 
-Will do, thanks!
+On 22/06/21 14:16, Pali Rohár wrote:
+> On Tuesday 22 June 2021 12:56:04 Lorenzo Pieralisi wrote:
+>> [Adding Linus for GPIO discussion, thread:
+>> https://lore.kernel.org/linux-pci/20210531090540.2663171-1-luca@lucaceresoli.net]
+>>
+>> On Tue, Jun 22, 2021 at 01:06:27PM +0200, Pali Rohár wrote:
+>>> Hello!
+>>>
+>>> On Tuesday 22 June 2021 12:57:22 Luca Ceresoli wrote:
+>>>> Nothing happened after a few weeks... I understand that knowing the
+>>>> correct reset timings is relevant, but unfortunately I cannot help much
+>>>> in finding out the correct values.
+>>>>
+>>>> However I'm wondering what should happen to this patch. It *does* fix a
+>>>> real bug, but potentially with an incorrect or non-optimal usleep range.
+>>>> Do we really want to ignore a bugfix because we are not sure about how
+>>>> long this delay should be?
+>>>
+>>> As there is no better solution right now, I'm fine with your patch. But
+>>> patch needs to be approved by Lorenzo, so please wait for his final
+>>> answer.
+>>
+>> I am not a GPIO expert and I have a feeling this is platform specific
+>> beyond what the PCI specification can actually define architecturally.
+> 
+> In my opinion timeout is not platform specific as I wrote in email:
+> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+> 
+> My experiments already proved that some PCIe cards needs to be in reset
+> state for some minimal time otherwise they cannot be enumerated. And it
+> does not matter to which platform you connect those (endpoint) cards.
+> 
+> I do not think that timeout itself is platform specific. GPIO controls
+> PERST# pin and therefore specified sleep value directly drives how long
+> is card on the other end of PCIe slot in Warm Reset state. PCIe CEM spec
+> directly says that PERST# signal controls PCIe Warm Reset.
+> 
+> What is here platform specific thing is that PERST# signal is controlled
+> by GPIO. But value of signal (high / low) and how long is in signal in
+> which state for me sounds like not an platform specific thing, but as
+> PCIe / CEM related.
+
+That's exactly my understanding of this matter. At least for the dra7xx
+controller it works exactly like this, PERSTn# is nothing but a GPIO
+output from the SoC that drives the PERSTn# input of the external chip
+without affecting the controller directly.
+
+-- 
+Luca
+
