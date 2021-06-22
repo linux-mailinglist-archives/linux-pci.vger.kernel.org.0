@@ -2,377 +2,576 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F24C3AFC81
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 07:13:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31CE53AFCB0
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 07:30:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbhFVFPx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 01:15:53 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:29166 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229612AbhFVFPx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 01:15:53 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15M5CItn032587;
-        Mon, 21 Jun 2021 22:13:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=9k669+/qUrnB0rmntSr17Vy9DoRKJxbjcO3ngI9cUp4=;
- b=SKT6Oq0teNe7U488t8ubSWqfzOAjSkaTVkOv2a6IgJGC1EYZgoOcBMFxfHg3QInbbfX0
- PtpAtJGCmrqxgPDLd6KlpNYUpqsR6GD+ZXmOM2rWbJ/i1TIoWsUWLe6AMcmjz+N+2NTm
- AOJRwOiUVmMjM4CH3rp6drYgZktRJdLAhZPtgP+mozmx7FpeV9z6PPR5gs2N10z7C7wS
- enqrcHAp3v/2Kp7HOqvPVFn+/V+WwSqW/+7OMeZJLI6vwfTzibb0f5l9QLYH2+NbwCcY
- sEiBjn3UgE9RmpxxYIFXbF3vmBcD0u8JykW2c/t1mns+gI+EF2VeolC1BSx3f40H7npM oA== 
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 39apms3ae7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Jun 2021 22:13:27 -0700
+        id S229854AbhFVFcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 01:32:16 -0400
+Received: from mail-dm6nam12on2042.outbound.protection.outlook.com ([40.107.243.42]:62816
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229853AbhFVFcQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Jun 2021 01:32:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lh1G+qsZjn0JDdnML/vztBh5oCrhlnShTwEaLPDZ42VRDKret9PHwSzQPLAOt+90cqHBqqzfPfF6hcb8piB/RKGZgrekxkibPYLPnjHJrqoZx2jnVSmvaTfz14M+tRK+MeKtRXvgZjUIpXMs+TaKSwnUXDKoN9Co68ES+5vpu64VC1EM1/sigroCYSKLax+5t6Pyjz9Vf/Ttqm8dwlGQtEKQeW7GxvAPDClqYdXa6fKl8gEztuNHjvJzcrTRGVfN8MFQQTvpEoGCUmUpxwx0HbgZQzWqAT8aQRibyY50W9EsXDXG2kKTBZXdpDeti7a9KlTewXt3hRfn6zkAXNJ7VQ==
+ b=oYPpUZq54p1/1QG6TmZv0IQW+0H3nN98hT17sgD54sxR8qVnpWHd2slHWEC/2L19J4aJo3CsMKwWrCm82hqsv2G11sEyCazRLjzRGv+g7xybbDWZhLyR4hHQDl81hSBl5xA5z0oDfOf9BXaAuV6o/NBJuG20gsE/temWmoiAgOCfh7GEL0tLxUtXaxCK2z4mROok6LLPLDE0Qd328php/dDVR2K/73Bh9y7iBzMvvhRsOrTyh/Qw7ngZn713RcwOepXqBCSMsByJ47hlkx7TJ2VNfqtsxa7X/uJMUadZmG4GYSQ6PAIqcGqA5aaRjMTIjpxqa6g74Oi2HjyP6YZx3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9k669+/qUrnB0rmntSr17Vy9DoRKJxbjcO3ngI9cUp4=;
- b=bsa+CqwYfBzfQFWUy5XVEP4VYllUBKS8Q/omwCDzopEk7/myj2sp9Fvy4BgGSt60gZ6bxTDV83vAqdbQ5328eUKGohtTkHTD5QTZ6MKhZ3/7I9e16NB6/arPcnfSrWYbNmUAs2UBiDkGaok3r7qMmo4hyZaDC7XrWsIMXHHgrkyhDm/2BYIrXtWoWPD40dB/xQxIlKy+32BtfR6jZTXYR6CRLuI9G4Z/VMe0AN2xBhUFZ+w/5R1aXshmQqSTkRWtNfSjjFV4HTXloaDF1Y7f5Fd5SOOb1EvrU+65Dk63AMnATJzOsR2YvX6t8hhrRWpZL/g6cKXzdor3Uqx6rbcgtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ bh=HNKWM8gudmVZB7Nc03W6cpFEcwIgWncQDko+svHaOeA=;
+ b=I/d8byY8l6mn3ul5+nOcOHOKxfrg5YwVtAjmClRs/4WqOM5QBzjis8PP4qXnsKdk5oaC5wSDHxiDxE5cybAVCt3iwqqyxWvj7mWUnjgQK/A6oc6faS7n9faErSJgK438OW1Ow4MR8DBOx3ZJpdIKhb3gIaSpa6TYg5/e8K8s5YB34CcygsJb+ZTWqOrQXocKcSeMfSH7HpoixUUy7YA/saTSWkMVKDGEDfDP82Bd6oEUf1a23amqP1ajFOVOpO3fRaxX0+4sexPY39oCsIirHEBJxhXDovAbAG44mOqcGWemiFku/aobaqcxS7fResjRwNHQQoQtgQC4tXvdR+Bmbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9k669+/qUrnB0rmntSr17Vy9DoRKJxbjcO3ngI9cUp4=;
- b=YP1rFIJmNpPj7iFx0poA+9AitP4ij2jagjMEQv3DJdT7cSPp83XSTwx1Mwd24MUvSZEghwTUeBg+oUmL1mtUwZukkBVfrcNVlr9S9JZ1f2AGpy7PAfCvGWvMYlf7NrquHc+7THk8OGdc7GOk6/tl6t/QB+kavBMVgx5Z6rYBHkc=
-Received: from CO2PR07MB2503.namprd07.prod.outlook.com (2603:10b6:100:1::19)
- by MWHPR07MB2798.namprd07.prod.outlook.com (2603:10b6:300:22::11) with
+ bh=HNKWM8gudmVZB7Nc03W6cpFEcwIgWncQDko+svHaOeA=;
+ b=XBInVJGOxiov7M2jBbu68/9KgNAo0lPw9mhFLQmB7WghyYXh9R5x75TuwIxByVT/kyWG04yumIDVEhvAseUKqxECNi7ocvYPMygl9g4tzAX42JdGuFs0wap6Rbwlg+ggFW6fLE2YvS+nB2iIQokK9oVjNRwHE2167dWW7F44ccOu0DExHSyhhk2Ku8Hk3vnHlgdSX2gTjWvub0z9VdlWYrunhxQveAgiYQ1KQDdjdKxzcfB4ZeqdagHcRBsFTqw4pYdkM0zQfoA1nqin7cmcHzSbpwanAz2F4k0NjKm7NKyEYziPNHJ3Gxf+zhTumw60SHZnQEWTpomEFX53eBUDfw==
+Received: from DS7PR03CA0085.namprd03.prod.outlook.com (2603:10b6:5:3bb::30)
+ by BN9PR12MB5083.namprd12.prod.outlook.com (2603:10b6:408:134::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21; Tue, 22 Jun
- 2021 05:13:24 +0000
-Received: from CO2PR07MB2503.namprd07.prod.outlook.com
- ([fe80::2547:1fe2:65b5:20ff]) by CO2PR07MB2503.namprd07.prod.outlook.com
- ([fe80::2547:1fe2:65b5:20ff%12]) with mapi id 15.20.4242.023; Tue, 22 Jun
- 2021 05:13:24 +0000
-From:   Athani Nadeem Ladkhan <nadeem@cadence.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "kishon@ti.com" <kishon@ti.com>,
-        Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Subject: RE: [PATCH] [v2] PCI: cadence: Set LTSSM Detect Quiet state minimum
- delay as workaround for training defect.
-Thread-Topic: [PATCH] [v2] PCI: cadence: Set LTSSM Detect Quiet state minimum
- delay as workaround for training defect.
-Thread-Index: AQHXU9oM6tIqQ+jZ4Uq1yc3zn273c6se2xKAgADF2UA=
-Date:   Tue, 22 Jun 2021 05:13:23 +0000
-Message-ID: <CO2PR07MB2503BEB6B23A27E99A8A6EADD8099@CO2PR07MB2503.namprd07.prod.outlook.com>
-References: <20210528155626.21793-1-nadeem@cadence.com>
- <20210621171751.GA32574@lpieralisi>
-In-Reply-To: <20210621171751.GA32574@lpieralisi>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbmFkZWVtXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctOGRjOTIwZmEtZDMxOC0xMWViLWFlYTAtZDQ4MWQ3OWExZmRlXGFtZS10ZXN0XDhkYzkyMGZiLWQzMTgtMTFlYi1hZWEwLWQ0ODFkNzlhMWZkZWJvZHkudHh0IiBzej0iOTQzNSIgdD0iMTMyNjg4MTIzOTg2ODgxMDk4IiBoPSJaWVQ5akNHS1hEMjZ2bDBkZ0VhVGhqRlMza2M9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=cadence.com;
-x-originating-ip: [59.145.174.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 07cddce4-1a91-4ec8-4e83-08d9353c75f5
-x-ms-traffictypediagnostic: MWHPR07MB2798:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR07MB2798B29CA370A576E7864E52D8099@MWHPR07MB2798.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IiamGhhWIrYu058UZo7UnKdmeS8n/eldZoxLNgcA+zO7xkKr/fV495bgi9pfXd1r4Qxk1w/nTs2ZmbyZ+YC/uG9tAGVOs4r/8lJzSECwShzoNc3j38MRcJ3kh5nhiuJHCI8ZwbQJal2AWMkqr8v/DO41Yiv8FGmcTeoAlE+plHgwKoT3uvWgSCbD+ziRmuSYpB3Untye2suoQgus3BFcK0xaR+BLAMvlAdzLC7mRalmnK8kUDRZqHjXS70Nh931B4zd1bUVjV0yKUc7wGt+vFG8pjG3ZRY+4hvVmEzR/vxbH0ZXa4E0EKM+uaZrfT1+sO4IPZEE/ac9MT1VmrqSjd07j37NHEcklm1bGRySS/VZmhv8Cj+Evjlg5okaVknA+TqBkPh5YU0oOWjTSthUB63KSiX1IKM6jw3TYlMYCN+ggAI/E93WhNsR9OuWqvA9jdJOGii/2tCJ5Bw341/B/ttoKxK4kKuKfnyPTGN8LP3m6yzc8fmCYFQsVtTuiPPOjTW6vGMh/IHjIXwHCvofjYKszBePPN93VKix6JaxFnmH0XOyGxR/e2Kse5wbi0Upw5nFrNzxyKCRuLLu35x5B2RhqOKqSsAntYK1nB+1fe/7YHqwwkEg1fgSBhbxH9vuZLoUyQggvufTJWr+EP088EZOMbmcmnG0maoPmVJn/Ww46gk3Q9vWdt6SuCth/kCBzYCoPz7bUsMnd6gkYjBW2J2tbdDihdCR5iRQeZstk1C1+U+ZHpUF04adhUitvA8stYYJrB9v3p8fi86ynTv3LgaUnrL3erDnpV7BcCE+9XwrmT7/JipU5FDiqvZvjUSCf
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO2PR07MB2503.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(366004)(39850400004)(396003)(346002)(36092001)(55016002)(6506007)(53546011)(122000001)(54906003)(8936002)(64756008)(66446008)(76116006)(6916009)(66946007)(66556008)(38100700002)(186003)(5660300002)(66476007)(33656002)(7696005)(107886003)(966005)(316002)(52536014)(478600001)(83380400001)(9686003)(8676002)(2906002)(86362001)(71200400001)(4326008)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xz+axHjnOnM0+zkrGaeOOBglIV+7YTLi2/MTwSnJg44IbtA88igzmQGJ/OK4?=
- =?us-ascii?Q?ce8Xv2PTaZ23PpTNgOB36g5tFUelfqNE9zTK5PUbnoZnWOGrXgtOinlHk+L3?=
- =?us-ascii?Q?BgpiPhnlDKN3ciLHV4T1T/Z7xQH9rQj1QTpBhvfw3m6RLb2KzivT+dwhLQMs?=
- =?us-ascii?Q?L8jqBfgCc93FL2/hcgiGX9NTm0L3BRSyUPYwE10YivglUIsyqEExcr0mehmp?=
- =?us-ascii?Q?rdajLfAt4M36WabtIRWvM94aIGz4DKXK8S9tAnKKo0GW8bn7hTEo1f692B07?=
- =?us-ascii?Q?50eA3GN7aslW+m167oLg9ekzQgN4AxToJWED8apjt3D+P+MydZDNthC9rtde?=
- =?us-ascii?Q?G/TIWxLmHc4I0MhY23PRFXARMpZ89amYXHjXa5fDQKrUWIwMcBUjGYZfQI2u?=
- =?us-ascii?Q?hTq7ZnrjDRCXvBgs1kn3aJT//QqXc8nsSiBgGvJjxoZ90NYRZp8CkY73IOzD?=
- =?us-ascii?Q?mL4Lv4hHQCr+oYdLH4cJ1rzwjC8Xtyr4p6pMknNBXBbNvSlyYIGk47njJqPF?=
- =?us-ascii?Q?uuZdQI4aZqPGz8kJ09ygZI215X0CV+RQTSCKo/UzRgFUInGLyxwki0N/sUkw?=
- =?us-ascii?Q?HF53YfXQISndEYKJmq/KS+6SdT8ejb8S+hObnPN+2DAehchqaSUMD/alMQpw?=
- =?us-ascii?Q?GrBwAsprYhtrEQ4KdMW67WmLPkzqU73E0XtqJmjyLVgnLzz3G3cJxJEh+Etp?=
- =?us-ascii?Q?/CHJfBFh4dfuSskLtN0+mO/6tIjORNwFmQIF3D5odfWESeCRpg2enyzrXzsz?=
- =?us-ascii?Q?jpUtmLTYhJPq6UcmuJFYOCY1LP+4CbKxyqTkoFKI7sxcRvacIhqF/QboOcKD?=
- =?us-ascii?Q?iZV0rZjUvdlD8QnzDeo7tOej3jXZgI1VcSl1qTtzPl9k8vr4qN5tyHm9Hzte?=
- =?us-ascii?Q?4rXXvmP3zzkYPtt7NIQr7VOJ6ipfP39Q+ao0Ra5BkS68L/CwR6ul5GSWi2Ph?=
- =?us-ascii?Q?VY9vvnW8Upxe0XwAdoczLQTpFDspSkmY1MNvAxZptogdkKjGJf4SV/UD1hPl?=
- =?us-ascii?Q?EpieUoiFsgd0fOigyEIBHUsY24v3/znAuYTNXtk9Ta3XICJRk1pwPNu0Djju?=
- =?us-ascii?Q?WSJ4uzSaQ3i3PSYs1jtmWoz1TKsjIfnOxu9cTjuhXz3SbNPHw5sT1+LIwhFy?=
- =?us-ascii?Q?8ll6FA//xDezTPcUmf0X6AylXkZMagbzoWwLUPMMQvgk/CwMBjclFITiwH0f?=
- =?us-ascii?Q?aADjMLxsRiuanv0MgHyHXyaEtxX31cfcaPjXLQF+IUsvHkov++v7dHZ/dhwJ?=
- =?us-ascii?Q?HPBTqUl+uKpm7aiUHoDzVs00MEmjhkjZ0GS+bRpLGi7vd5g+Pjgcq/xAsGL3?=
- =?us-ascii?Q?v6GDvVq7mpFNYxYfmUUfKWTx?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16; Tue, 22 Jun
+ 2021 05:29:59 +0000
+Received: from DM6NAM11FT068.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3bb:cafe::75) by DS7PR03CA0085.outlook.office365.com
+ (2603:10b6:5:3bb::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16 via Frontend
+ Transport; Tue, 22 Jun 2021 05:29:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT068.mail.protection.outlook.com (10.13.173.67) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4242.16 via Frontend Transport; Tue, 22 Jun 2021 05:29:59 +0000
+Received: from [10.25.73.60] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 22 Jun
+ 2021 05:29:56 +0000
+Subject: Re: [PATCH v2 2/5] PCI: endpoint: Replace spinlock with mutex
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Athani Nadeem Ladkhan" <nadeem@cadence.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Om Prakash Singh <omp@nvidia.com>,
+        Krishna Thota <kthota@nvidia.com>
+References: <20200212112514.2000-1-kishon@ti.com>
+ <20200212112514.2000-3-kishon@ti.com>
+ <901293cd-e67a-04a4-d61e-37a105c33d15@nvidia.com>
+ <36aa4b00-0b3f-011a-4ade-1f79df983157@ti.com>
+ <c5e5a847-fd2f-6a52-1587-03ac4f1c7ec4@nvidia.com>
+ <5ce3b55b-3695-379a-1726-bf48aff3b4b9@ti.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <0dcc8f8e-4aab-4676-eb95-5f45b5cda1b2@nvidia.com>
+Date:   Tue, 22 Jun 2021 10:59:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO2PR07MB2503.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07cddce4-1a91-4ec8-4e83-08d9353c75f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2021 05:13:24.0187
+In-Reply-To: <5ce3b55b-3695-379a-1726-bf48aff3b4b9@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f2775499-35fc-4bb5-8904-08d9353ec73a
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5083:
+X-Microsoft-Antispam-PRVS: <BN9PR12MB5083F7E39B4B5152A787A57AB8099@BN9PR12MB5083.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1Je3I6shRd+uqRXBBTsLGN2exi+hoyBywLLa1mSNWYHD761Y7r9Tr3tfhBY1ojD5GCm4kOIs5uxW2B89YNJSKXTP3w/pfl02Yz9+aw7kZv1REJ0TFXla+tjLMyqAyfC3Z3hSpd/OZOMmRwGHnE0wWQLs5LXmZmyOogaAlIBLE9Jtw+UpfFlTbhXw2UmxOU4LdqzDhLC78EdPLShApw/3oLdUBamgjU1qiDmSgJT+HorBUVmVvel5d+eq6IzoWVxX+/w5+F8VSKXKPajdizkqu2wrFmgh+eDBQNuIdAWPb89cU35F3EUSnX08P64HyRWuD1mfMWef9vYFHzBKeLkKKcK8j28k/zIjdfU8gcgk8mm1OO1SR0XpsQY4jCjO83ZarcUPZEMTD+mMDUeQc86Kubgef2LRRTnX2Wwvu34t/YcwLaqxBnwFY8g2MIwSo5P3kGRTgpbZiDu32Swx/rqZEGyIjuIx8Yj8gRNnZzanWWtMfwdkR4bta8R9aVJfWihpUN0oDP3IfO37uYxyTCtkoYh7F/tVxBH3vthV96AQ4IdPr57CyY7HpHWsfOWT1wVOBK2zSRGkMxw5exWvPmTAGEl/JVhwznimO8w+MQFg4f8o/3aRDfXWzBeJZ/YQVasurtgxB+f89OQx0qpZKlHsfMl1EUzeumnckHR9uW/jaoztJyzYbliIBWee4BHXkfCA
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(36840700001)(46966006)(36860700001)(82310400003)(83380400001)(70586007)(107886003)(70206006)(30864003)(53546011)(8936002)(36906005)(86362001)(186003)(316002)(478600001)(31696002)(31686004)(16526019)(5660300002)(8676002)(54906003)(4326008)(16576012)(26005)(47076005)(6916009)(6666004)(36756003)(82740400003)(336012)(356005)(2616005)(2906002)(426003)(7636003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2021 05:29:59.5063
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0HGhzmWiqS1sSndtAnkfaySSNpY3HALXNcELYVhXHy6qLoAasstgZPCdhgng/nDS9spfrDucpvKlh6gof7pWxNbhYjsxFkDE2yTf2NTeGa0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR07MB2798
-X-Proofpoint-ORIG-GUID: zxD0tKfDmwpi42sdAIp5UnoBgLDsEhgh
-X-Proofpoint-GUID: zxD0tKfDmwpi42sdAIp5UnoBgLDsEhgh
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-22_03:2021-06-21,2021-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 suspectscore=0
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 mlxscore=0
- clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2104190000 definitions=main-2106220031
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2775499-35fc-4bb5-8904-08d9353ec73a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT068.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5083
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Monday, June 21, 2021 10:48 PM
-> To: Athani Nadeem Ladkhan <nadeem@cadence.com>
-> Cc: Tom Joseph <tjoseph@cadence.com>; robh@kernel.org;
-> bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
-> kernel@vger.kernel.org; kw@linux.com; kishon@ti.com; Milind Parab
-> <mparab@cadence.com>; Swapnil Kashinath Jakhade
-> <sjakhade@cadence.com>; Parshuram Raju Thombare
-> <pthombar@cadence.com>
-> Subject: Re: [PATCH] [v2] PCI: cadence: Set LTSSM Detect Quiet state
-> minimum delay as workaround for training defect.
->=20
-> EXTERNAL MAIL
->=20
->=20
-> Subjects should not end with a period, remove it.
-This will be corrected in next patch.
->=20
-> On Fri, May 28, 2021 at 05:56:26PM +0200, Nadeem Athani wrote:
-> > PCIe fails to link up if SERDES lanes not used by PCIe are assigned to
-> > another protocol. For example, link training fails if lanes 2 and 3
-> > are assigned to another protocol while lanes 0 and 1 are used for PCIe
-> > to form a two lane link. This failure is due to an incorrect tie-off
-> > on an internal status signal indicating electrical idle.
-> >
-> > Status signals going from SERDES to PCIe Controller are tied-off when
-> > a lane is not assigned to PCIe. Signal indicating electrical idle is
-> > incorrectly tied-off to a state that indicates non-idle. As a result,
-> > PCIe sees unused lanes to be out of electrical idle and this causes
-> > LTSSM to exit Detect.Quiet state without waiting for 12ms timeout to
-> > occur. If a receiver is not detected on the first receiver detection
-> > attempt in Detect.Active state, LTSSM goes back to Detect.Quiet and
-> > again moves forward to Detect.Active state without waiting for 12ms as
-> > required by PCIe base specification. Since wait time in Detect.Quiet
-> > is skipped, multiple receiver detect operations are performed
-> > back-to-back without allowing time for capacitance on the transmit
-> > lines to discharge. This causes subsequent receiver detection to
-> > always fail even if a receiver gets connected eventually.
-> >
-> > Adding a quirk flag "quirk_detect_quiet_flag" to program the minimum
-> > time that LTSSM waits on entering Detect.Quiet state.
-> > Setting this to 2ms for specific TI j7200 SOC as a workaround to
-> > resolve a link training issue in IP.
-> > In future revisions this setting will not be required.
-> >
-> > As per PCIe specification, all Receivers must meet the Z-RX-DC
-> > specification for 2.5 GT/s within 1ms of entering Detect.Quiet LTSSM
-> > substate. The LTSSM must stay in this substate until the ZRXDC
-> > specification for 2.5 GT/s is met.
-> >
-> > 00 : 0 minimum wait time in Detect.Quiet state.
-> > 01 : 100us minimum wait time in Detect.Quiet state.
-> > 10 : 1ms minimum wait time in Detect.Quiet state.
-> > 11 : 2ms minimum wait time in Detect.Quiet state.
-> >
-> > Changes in v2:
-> > 1. Adding the function cdns_pcie_detect_quiet_min_delay_set in
-> > pcie-cadence.c and invoking it from host and endpoint driver file.
-> >
-> > Signed-off-by: Nadeem Athani <nadeem@cadence.com>
-> > ---
-> >  drivers/pci/controller/cadence/pcie-cadence-ep.c   |  4 ++++
-> >  drivers/pci/controller/cadence/pcie-cadence-host.c |  3 +++
-> >  drivers/pci/controller/cadence/pcie-cadence.c      | 17 ++++++++++++++=
-+++
-> >  drivers/pci/controller/cadence/pcie-cadence.h      | 15 ++++++++++++++=
-+
-> >  4 files changed, 39 insertions(+)
->=20
-> Can you tell me please what's the status of these patches ?
-These should be discarded.
->=20
-> https://urldefense.com/v3/__https://patchwork.kernel.org/user/todo/linux-
-> pci/?series=3D&submitter=3D194539&state=3D&q=3D&archive=3D__;!!EHscmS1ygi=
-U1lA!S
-> ffFfz2_4D72wnwKo_Hgq310uaxhkR7jk4l5vQMYCgwFPYLHDivDXtqJ1uu_RA$
->=20
-> Are they all solving the same problem so I only have to review:
-Only need to review the below one.
->=20
-> https://urldefense.com/v3/__https://patchwork.kernel.org/project/linux-
-> pci/patch/20210528155626.21793-1-
-> nadeem@cadence.com__;!!EHscmS1ygiU1lA!SffFfz2_4D72wnwKo_Hgq310ua
-> xhkR7jk4l5vQMYCgwFPYLHDivDXtorT4PhuQ$
->=20
-> ?
->=20
-> I am asking because the "first" posting was a two-patch series and then i=
-t
-> became one, I lost track of versions in between.
->=20
-> Thanks,
-> Lorenzo
->=20
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > index 897cdde02bd8..dd7df1ac7fda 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > @@ -623,6 +623,10 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-> >  	ep->irq_pci_addr =3D CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE;
-> >  	/* Reserve region 0 for IRQs */
-> >  	set_bit(0, &ep->ob_region_map);
-> > +
-> > +	if (ep->quirk_detect_quiet_flag)
-> > +		cdns_pcie_detect_quiet_min_delay_set(&ep->pcie);
-> > +
-> >  	spin_lock_init(&ep->lock);
-> >
-> >  	return 0;
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > index ae1c55503513..fb96d37a135c 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > @@ -498,6 +498,9 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-> >  		return PTR_ERR(rc->cfg_base);
-> >  	rc->cfg_res =3D res;
-> >
-> > +	if (rc->quirk_detect_quiet_flag)
-> > +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
-> > +
-> >  	ret =3D cdns_pcie_start_link(pcie);
-> >  	if (ret) {
-> >  		dev_err(dev, "Failed to start link\n"); diff --git
-> > a/drivers/pci/controller/cadence/pcie-cadence.c
-> > b/drivers/pci/controller/cadence/pcie-cadence.c
-> > index 3c3646502d05..65b6c8bed0d4 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> > @@ -7,6 +7,23 @@
-> >
-> >  #include "pcie-cadence.h"
-> >
-> > +void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie) {
-> > +	u32 delay =3D 0x3;
-> > +	u32 ltssm_control_cap;
-> > +
-> > +	/*
-> > +	 * Set the LTSSM Detect Quiet state min. delay to 2ms.
-> > +	 */
-> > +
-> > +	ltssm_control_cap =3D cdns_pcie_readl(pcie,
-> CDNS_PCIE_LTSSM_CONTROL_CAP);
-> > +	ltssm_control_cap =3D ((ltssm_control_cap &
-> > +			    ~CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK) |
-> > +			    CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay));
-> > +
-> > +	cdns_pcie_writel(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP,
-> > +ltssm_control_cap); }
-> > +
-> >  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u=
-8
-> fn,
-> >  				   u32 r, bool is_io,
-> >  				   u64 cpu_addr, u64 pci_addr, size_t size) diff
-> --git
-> > a/drivers/pci/controller/cadence/pcie-cadence.h
-> > b/drivers/pci/controller/cadence/pcie-cadence.h
-> > index 254d2570f8c9..ccdf9cee9dde 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> > @@ -189,6 +189,14 @@
-> >  /* AXI link down register */
-> >  #define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
-> >
-> > +/* LTSSM Capabilities register */
-> > +#define CDNS_PCIE_LTSSM_CONTROL_CAP             (CDNS_PCIE_LM_BASE +
-> 0x0054)
-> > +#define  CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK  GENMASK(2, 1)
-> #define
-> > +CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT 1 #define
-> > +CDNS_PCIE_DETECT_QUIET_MIN_DELAY(delay) \
-> > +	 (((delay) << CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT) & \
-> > +	 CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK)
-> > +
-> >  enum cdns_pcie_rp_bar {
-> >  	RP_BAR_UNDEFINED =3D -1,
-> >  	RP_BAR0,
-> > @@ -292,6 +300,7 @@ struct cdns_pcie {
-> >   * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free
-> or
-> >   *                available
-> >   * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
-> > + * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as
-> > + quirk
-> >   */
-> >  struct cdns_pcie_rc {
-> >  	struct cdns_pcie	pcie;
-> > @@ -301,6 +310,7 @@ struct cdns_pcie_rc {
-> >  	u32			device_id;
-> >  	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
-> >  	bool                    quirk_retrain_flag;
-> > +	bool                    quirk_detect_quiet_flag;
-> >  };
-> >
-> >  /**
-> > @@ -331,6 +341,7 @@ struct cdns_pcie_epf {
-> >   *        registers fields (RMW) accessible by both remote RC and EP t=
-o
-> >   *        minimize time between read and write
-> >   * @epf: Structure to hold info about endpoint function
-> > + * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as
-> > + quirk
-> >   */
-> >  struct cdns_pcie_ep {
-> >  	struct cdns_pcie	pcie;
-> > @@ -345,6 +356,7 @@ struct cdns_pcie_ep {
-> >  	/* protect writing to PCI_STATUS while raising legacy interrupts */
-> >  	spinlock_t		lock;
-> >  	struct cdns_pcie_epf	*epf;
-> > +	bool                    quirk_detect_quiet_flag;
-> >  };
-> >
-> >
-> > @@ -505,6 +517,9 @@ static inline int cdns_pcie_ep_setup(struct
-> cdns_pcie_ep *ep)
-> >  	return 0;
-> >  }
-> >  #endif
-> > +
-> > +void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
-> > +
-> >  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u=
-8
-> fn,
-> >  				   u32 r, bool is_io,
-> >  				   u64 cpu_addr, u64 pci_addr, size_t size);
-> > --
-> > 2.15.0
-> >
+
+On 6/21/2021 7:07 PM, Kishon Vijay Abraham I wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> Hi Vidya Sagar,
+> 
+> On 21/06/21 3:08 pm, Vidya Sagar wrote:
+>>
+>>
+>> On 6/21/2021 10:44 AM, Kishon Vijay Abraham I wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> Hi Vidya Sagar,
+>>>
+>>> On 11/06/21 3:22 pm, Vidya Sagar wrote:
+>>>> Hi Kishon,
+>>>> Apologies for bringup it up this late.
+>>>> I'm wondering if there was any issue which this patch tried to address?
+>>>
+>>> There was one function pci_epc_linkup() which was expected to be invoked
+>>> in interrupt context (basically when the LINKUP interrupt is raised).
+>>> But after it was moved to use atomic notifier, all the EPC core APIs
+>>> were replaced to use mutex.
+>>>> Actually, "The pci_epc_ops is not intended to be invoked from interrupt
+>>>> context" isn't true in case of Tegra194. We do call
+>>>> dw_pcie_ep_init_notify() API from threaded irq service routine and it
+>>>> eventually calls mutext_lock() of pci_epc_get_features() which is
+>>>> reusulting in the following warning log.
+>>>> BUG: sleeping function called from invalid context at
+>>>> kernel/locking/mutex.c:
+>>>> Would like hear your comments on it.
+>> After reviewing the logs and code again, I think it was my mistake to
+>> come to early conclusion that it was because of calling mutex_lock() in
+>> the atomic context. It is clear now.
+>>
+>> I would like to understand the reason behind putting locks in the epc
+>> core driver before calling ops.
+> 
+> There could be two different functions trying to configure endpoint
+> controller (could be a multi-function endpoint) and the framework should
+> guarantee the hardware is not accessed by both the functions simultaneously.
+Not all ops functions need to be protected by the lock. for ex:- 
+get/set_msi(x)(), raise_irq(), get_features() don't need to be protected 
+by a global lock. So, transferring the synchronization responsibility to 
+the controller driver gives an efficient control on locking.
+
+> 
+>> I believe the ops callers should implement lock if they are concurrently
+>> accessing the ops instead of adding a global lock in the epc core.
+> This can only protect within a function and not across multiple functions.
+>> This would help in scenarios like the one below.
+>>
+>>      We have a performance oriented endpoint function driver which calls
+>> map, unmap & raise_irq ops from softirq context and because of
+>> mutex_lock(), we can't do that now. epc core driver should not restrict
+>> the function drivers to use only non-atomic functions.
+> 
+> Not sure what exactly the function driver does but can't map/unmap be
+> done for a big block once to optimize and operate on that buffer? I'd
+> assume you are having a custom driver on the host side too?
+We implemented a function driver that provides a virtual ethernet 
+interface. To complement this, we have a PCIe device driver on the host 
+that exposes a virtual ethernet interface in the host system. 
+start_xmit() in the function driver of the virtual ethernet interface is 
+a soft irq which maps/unmaps each skb buffer dynamically. So, a one time 
+static mapping is not possible. Similarly, because of the global lock, 
+start_xmit() can not raise_irq() to the host.
+
+Thanks,
+Vidya Sagar
+> 
+> Thanks
+> Kishon
+> 
+>>
+>> Thanks,
+>> Vidya Sagar
+>>>
+>>> I don't think it is ideal to initialize EPC in interrupt context (unless
+>>> there is a specific reason for it). EPC initialization can be moved to
+>>> bottom half similar to how commands are handled after LINKUP.
+>>
+>>>
+>>> Thanks
+>>> Kishon
+>>>
+>>>>
+>>>> Thanks,
+>>>> Vidya Sagar
+>>>>
+>>>> On 2/12/2020 4:55 PM, Kishon Vijay Abraham I wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> The pci_epc_ops is not intended to be invoked from interrupt context.
+>>>>> Hence replace spin_lock_irqsave and spin_unlock_irqrestore with
+>>>>> mutex_lock and mutex_unlock respectively.
+>>>>>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>     drivers/pci/endpoint/pci-epc-core.c | 82
+>>>>> +++++++++++------------------
+>>>>>     include/linux/pci-epc.h             |  6 +--
+>>>>>     2 files changed, 34 insertions(+), 54 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/endpoint/pci-epc-core.c
+>>>>> b/drivers/pci/endpoint/pci-epc-core.c
+>>>>> index 2f6436599fcb..e51a12ed85bb 100644
+>>>>> --- a/drivers/pci/endpoint/pci-epc-core.c
+>>>>> +++ b/drivers/pci/endpoint/pci-epc-core.c
+>>>>> @@ -120,7 +120,6 @@ const struct pci_epc_features
+>>>>> *pci_epc_get_features(struct pci_epc *epc,
+>>>>>                                                        u8 func_no)
+>>>>>     {
+>>>>>            const struct pci_epc_features *epc_features;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return NULL;
+>>>>> @@ -128,9 +127,9 @@ const struct pci_epc_features
+>>>>> *pci_epc_get_features(struct pci_epc *epc,
+>>>>>            if (!epc->ops->get_features)
+>>>>>                    return NULL;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            epc_features = epc->ops->get_features(epc, func_no);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return epc_features;
+>>>>>     }
+>>>>> @@ -144,14 +143,12 @@ EXPORT_SYMBOL_GPL(pci_epc_get_features);
+>>>>>      */
+>>>>>     void pci_epc_stop(struct pci_epc *epc)
+>>>>>     {
+>>>>> -       unsigned long flags;
+>>>>> -
+>>>>>            if (IS_ERR(epc) || !epc->ops->stop)
+>>>>>                    return;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            epc->ops->stop(epc);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>     }
+>>>>>     EXPORT_SYMBOL_GPL(pci_epc_stop);
+>>>>>
+>>>>> @@ -164,7 +161,6 @@ EXPORT_SYMBOL_GPL(pci_epc_stop);
+>>>>>     int pci_epc_start(struct pci_epc *epc)
+>>>>>     {
+>>>>>            int ret;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR(epc))
+>>>>>                    return -EINVAL;
+>>>>> @@ -172,9 +168,9 @@ int pci_epc_start(struct pci_epc *epc)
+>>>>>            if (!epc->ops->start)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->start(epc);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -193,7 +189,6 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>                          enum pci_epc_irq_type type, u16 interrupt_num)
+>>>>>     {
+>>>>>            int ret;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return -EINVAL;
+>>>>> @@ -201,9 +196,9 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>            if (!epc->ops->raise_irq)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->raise_irq(epc, func_no, type, interrupt_num);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -219,7 +214,6 @@ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
+>>>>>     int pci_epc_get_msi(struct pci_epc *epc, u8 func_no)
+>>>>>     {
+>>>>>            int interrupt;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return 0;
+>>>>> @@ -227,9 +221,9 @@ int pci_epc_get_msi(struct pci_epc *epc, u8
+>>>>> func_no)
+>>>>>            if (!epc->ops->get_msi)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            interrupt = epc->ops->get_msi(epc, func_no);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            if (interrupt < 0)
+>>>>>                    return 0;
+>>>>> @@ -252,7 +246,6 @@ int pci_epc_set_msi(struct pci_epc *epc, u8
+>>>>> func_no, u8 interrupts)
+>>>>>     {
+>>>>>            int ret;
+>>>>>            u8 encode_int;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
+>>>>>                interrupts > 32)
+>>>>> @@ -263,9 +256,9 @@ int pci_epc_set_msi(struct pci_epc *epc, u8
+>>>>> func_no, u8 interrupts)
+>>>>>
+>>>>>            encode_int = order_base_2(interrupts);
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->set_msi(epc, func_no, encode_int);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -281,7 +274,6 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msi);
+>>>>>     int pci_epc_get_msix(struct pci_epc *epc, u8 func_no)
+>>>>>     {
+>>>>>            int interrupt;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return 0;
+>>>>> @@ -289,9 +281,9 @@ int pci_epc_get_msix(struct pci_epc *epc, u8
+>>>>> func_no)
+>>>>>            if (!epc->ops->get_msix)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            interrupt = epc->ops->get_msix(epc, func_no);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            if (interrupt < 0)
+>>>>>                    return 0;
+>>>>> @@ -311,7 +303,6 @@ EXPORT_SYMBOL_GPL(pci_epc_get_msix);
+>>>>>     int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16
+>>>>> interrupts)
+>>>>>     {
+>>>>>            int ret;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
+>>>>>                interrupts < 1 || interrupts > 2048)
+>>>>> @@ -320,9 +311,9 @@ int pci_epc_set_msix(struct pci_epc *epc, u8
+>>>>> func_no, u16 interrupts)
+>>>>>            if (!epc->ops->set_msix)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->set_msix(epc, func_no, interrupts - 1);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -339,17 +330,15 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
+>>>>>     void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no,
+>>>>>                            phys_addr_t phys_addr)
+>>>>>     {
+>>>>> -       unsigned long flags;
+>>>>> -
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return;
+>>>>>
+>>>>>            if (!epc->ops->unmap_addr)
+>>>>>                    return;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            epc->ops->unmap_addr(epc, func_no, phys_addr);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>     }
+>>>>>     EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+>>>>>
+>>>>> @@ -367,7 +356,6 @@ int pci_epc_map_addr(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>                         phys_addr_t phys_addr, u64 pci_addr, size_t
+>>>>> size)
+>>>>>     {
+>>>>>            int ret;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return -EINVAL;
+>>>>> @@ -375,9 +363,9 @@ int pci_epc_map_addr(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>            if (!epc->ops->map_addr)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr,
+>>>>> size);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -394,8 +382,6 @@ EXPORT_SYMBOL_GPL(pci_epc_map_addr);
+>>>>>     void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no,
+>>>>>                           struct pci_epf_bar *epf_bar)
+>>>>>     {
+>>>>> -       unsigned long flags;
+>>>>> -
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
+>>>>>                (epf_bar->barno == BAR_5 &&
+>>>>>                 epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
+>>>>> @@ -404,9 +390,9 @@ void pci_epc_clear_bar(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>            if (!epc->ops->clear_bar)
+>>>>>                    return;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            epc->ops->clear_bar(epc, func_no, epf_bar);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>     }
+>>>>>     EXPORT_SYMBOL_GPL(pci_epc_clear_bar);
+>>>>>
+>>>>> @@ -422,7 +408,6 @@ int pci_epc_set_bar(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>                        struct pci_epf_bar *epf_bar)
+>>>>>     {
+>>>>>            int ret;
+>>>>> -       unsigned long irq_flags;
+>>>>>            int flags = epf_bar->flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
+>>>>> @@ -437,9 +422,9 @@ int pci_epc_set_bar(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>            if (!epc->ops->set_bar)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, irq_flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->set_bar(epc, func_no, epf_bar);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, irq_flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -460,7 +445,6 @@ int pci_epc_write_header(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>                             struct pci_epf_header *header)
+>>>>>     {
+>>>>>            int ret;
+>>>>> -       unsigned long flags;
+>>>>>
+>>>>>            if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>>>>>                    return -EINVAL;
+>>>>> @@ -468,9 +452,9 @@ int pci_epc_write_header(struct pci_epc *epc, u8
+>>>>> func_no,
+>>>>>            if (!epc->ops->write_header)
+>>>>>                    return 0;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            ret = epc->ops->write_header(epc, func_no, header);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return ret;
+>>>>>     }
+>>>>> @@ -487,8 +471,6 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
+>>>>>      */
+>>>>>     int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
+>>>>>     {
+>>>>> -       unsigned long flags;
+>>>>> -
+>>>>>            if (epf->epc)
+>>>>>                    return -EBUSY;
+>>>>>
+>>>>> @@ -500,9 +482,9 @@ int pci_epc_add_epf(struct pci_epc *epc, struct
+>>>>> pci_epf *epf)
+>>>>>
+>>>>>            epf->epc = epc;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            list_add_tail(&epf->list, &epc->pci_epf);
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>
+>>>>>            return 0;
+>>>>>     }
+>>>>> @@ -517,15 +499,13 @@ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
+>>>>>      */
+>>>>>     void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
+>>>>>     {
+>>>>> -       unsigned long flags;
+>>>>> -
+>>>>>            if (!epc || IS_ERR(epc) || !epf)
+>>>>>                    return;
+>>>>>
+>>>>> -       spin_lock_irqsave(&epc->lock, flags);
+>>>>> +       mutex_lock(&epc->lock);
+>>>>>            list_del(&epf->list);
+>>>>>            epf->epc = NULL;
+>>>>> -       spin_unlock_irqrestore(&epc->lock, flags);
+>>>>> +       mutex_unlock(&epc->lock);
+>>>>>     }
+>>>>>     EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
+>>>>>
+>>>>> @@ -604,7 +584,7 @@ __pci_epc_create(struct device *dev, const struct
+>>>>> pci_epc_ops *ops,
+>>>>>                    goto err_ret;
+>>>>>            }
+>>>>>
+>>>>> -       spin_lock_init(&epc->lock);
+>>>>> +       mutex_init(&epc->lock);
+>>>>>            INIT_LIST_HEAD(&epc->pci_epf);
+>>>>>            ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
+>>>>>
+>>>>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>>>>> index 36644ccd32ac..9dd60f2e9705 100644
+>>>>> --- a/include/linux/pci-epc.h
+>>>>> +++ b/include/linux/pci-epc.h
+>>>>> @@ -88,7 +88,7 @@ struct pci_epc_mem {
+>>>>>      * @mem: address space of the endpoint controller
+>>>>>      * @max_functions: max number of functions that can be configured in
+>>>>> this EPC
+>>>>>      * @group: configfs group representing the PCI EPC device
+>>>>> - * @lock: spinlock to protect pci_epc ops
+>>>>> + * @lock: mutex to protect pci_epc ops
+>>>>>      * @notifier: used to notify EPF of any EPC events (like linkup)
+>>>>>      */
+>>>>>     struct pci_epc {
+>>>>> @@ -98,8 +98,8 @@ struct pci_epc {
+>>>>>            struct pci_epc_mem              *mem;
+>>>>>            u8                              max_functions;
+>>>>>            struct config_group             *group;
+>>>>> -       /* spinlock to protect against concurrent access of EP
+>>>>> controller */
+>>>>> -       spinlock_t                      lock;
+>>>>> +       /* mutex to protect against concurrent access of EP
+>>>>> controller */
+>>>>> +       struct mutex                    lock;
+>>>>>            struct atomic_notifier_head     notifier;
+>>>>>     };
+>>>>>
+>>>>> --
+>>>>> 2.17.1
+>>>>>
