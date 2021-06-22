@@ -2,102 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 230263AFE36
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 09:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0F6A3AFEA6
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 10:02:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230087AbhFVHsi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 03:48:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229702AbhFVHsh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 03:48:37 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15M7Y95n182007;
-        Tue, 22 Jun 2021 03:45:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=3inlT+G7TQt324HQqr9Smnn1Cc8CLfWEFzQw2GeP8L4=;
- b=Di4HD7bvQg71eLCA6REKFQYUxLA3q4TUWoK/sjS6khC2C/pp7pT11tjfq4Qacw2y7zim
- auQOxTBjzfJ0g7z7FYdhJ8mclCW13n7YpyxCwi5GQSs1aMbHcn3A/7wkXhjDuoLGi4K2
- 1p9rCBcl8+4bMV5HNdzo60xyYGeYXkD+sAp4c0GTKv78t4HEyNS/LuQyUzggYKprdPCA
- Tdd/vpQ5LozCZkAgnMMIeb3Y3Sb6I7RrGWaXog44T0iTy8vqtKgwMzV9o+64MYLvXwbT
- 7dGgAeWHsUXCrVOCORU/habPSvl8FuhELrrHrWDTAaM+kdVChW6wAGQSk+C2BBXQ+DUl 0Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39bae3t6uc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Jun 2021 03:45:34 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15M7ZJ9i188881;
-        Tue, 22 Jun 2021 03:45:33 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39bae3t6sv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Jun 2021 03:45:33 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15M7hPH3023794;
-        Tue, 22 Jun 2021 07:45:31 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3997uh99cw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Jun 2021 07:45:31 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15M7jSwE8520026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Jun 2021 07:45:28 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8472B4204B;
-        Tue, 22 Jun 2021 07:45:28 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7E9442045;
-        Tue, 22 Jun 2021 07:45:27 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 22 Jun 2021 07:45:27 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     mcgrof@kernel.org
-Cc:     alex.williamson@redhat.com, axboe@kernel.dk, bhelgaas@google.com,
-        cohuck@redhat.com, eric.auger@redhat.com,
-        giovanni.cabiddu@intel.com, gregkh@linuxfoundation.org,
-        jannh@google.com, jeyu@kernel.org, jgg@ziepe.ca, jikos@kernel.org,
-        jpoimboe@redhat.com, keescook@chromium.org, kevin.tian@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, mbenes@suse.com, minchan@kernel.org,
-        mjrosato@linux.ibm.com, ngupta@vflare.org, peterz@infradead.org,
-        rostedt@goodmis.org, sergey.senozhatsky.work@gmail.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH 1/2] pci: export pci_dev_unlock() and the respective unlock
-Date:   Tue, 22 Jun 2021 09:45:27 +0200
-Message-Id: <20210622074527.3486039-1-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210622000310.728294-1-mcgrof@kernel.org>
-References: <20210622000310.728294-1-mcgrof@kernel.org>
+        id S230292AbhFVIFN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Jun 2021 04:05:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230206AbhFVIFL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 04:05:11 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D61C061756
+        for <linux-pci@vger.kernel.org>; Tue, 22 Jun 2021 01:02:55 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lvbMx-0007w7-Lf; Tue, 22 Jun 2021 10:02:51 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lvbMw-0008Cs-OP; Tue, 22 Jun 2021 10:02:50 +0200
+Date:   Tue, 22 Jun 2021 10:02:50 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Make struct pci_epf_driver::remove return
+ void
+Message-ID: <20210622080250.wav54n2tfb2m5w3r@pengutronix.de>
+References: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
+ <1195e3d6-e2ca-f54b-aa09-289dbebd85d7@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: tHmapKhGjdnzC2kf8X1ZsHuVbBQLQXVV
-X-Proofpoint-ORIG-GUID: 3XLUL0t0HKIuQU1c_eg-wIiYVfa0QOku
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-22_04:2021-06-21,2021-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
- mlxlogscore=999 bulkscore=0 impostorscore=0 mlxscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106220046
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hnmwjub76jnjkr44"
+Content-Disposition: inline
+In-Reply-To: <1195e3d6-e2ca-f54b-aa09-289dbebd85d7@kleine-koenig.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Luis, Hello Bjorn,
 
-Interesting timing, I currently have a very similar patch lying around though
-with also exporting pci_dev_lock(). I'm planning to use that for upcoming
-support of automatic PCI devices recovery on s390x following the
-Documentation/PCI/pci-error-recovery.rst recovery flow. There too exprting
-these functions would make the code simpler to grok in my opinion. So if Bjorn
-accepts this there could soon be another user, not sure if one would want to
-then already export pci_dev_lock() too or wait until my patches so it's not
-exported without users.
+--hnmwjub76jnjkr44
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Niklas Schnelle
+Hello Bjorn,
+
+On Mon, May 10, 2021 at 09:26:37PM +0200, Uwe Kleine-K=F6nig wrote:
+> On 2/23/21 10:07 AM, Uwe Kleine-K=F6nig wrote:
+> > The driver core ignores the return value of pci_epf_device_remove()
+> > (because there is only little it can do when a device disappears) and
+> > there are no pci_epf_drivers with a remove callback.
+> >=20
+> > So make it impossible for future drivers to return an unused error code
+> > by changing the remove prototype to return void.
+> >=20
+> > The real motivation for this change is the quest to make struct
+> > bus_type::remove return void, too.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> Ping! This patch now waits for more than 2 months on feedback (or
+> application). The 5.13 merge window just closed, this is a great opportun=
+ity
+> to apply this patch for next.
+
+It seems I don't get feedback from Kishon and Lorenzo. This is one of
+the last patches I need to actually change bus_type::remove. Would you
+be willing to take the patch without them reacting? Or do you have a way
+to trigger them that is more effective than I have?
+
+Best regards
+Uwe
+
+> > ---
+> >   drivers/pci/endpoint/pci-epf-core.c | 5 ++---
+> >   include/linux/pci-epf.h             | 2 +-
+> >   2 files changed, 3 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint=
+/pci-epf-core.c
+> > index 7646c8660d42..a19c375f9ec9 100644
+> > --- a/drivers/pci/endpoint/pci-epf-core.c
+> > +++ b/drivers/pci/endpoint/pci-epf-core.c
+> > @@ -389,15 +389,14 @@ static int pci_epf_device_probe(struct device *de=
+v)
+> >   static int pci_epf_device_remove(struct device *dev)
+> >   {
+> > -	int ret =3D 0;
+> >   	struct pci_epf *epf =3D to_pci_epf(dev);
+> >   	struct pci_epf_driver *driver =3D to_pci_epf_driver(dev->driver);
+> >   	if (driver->remove)
+> > -		ret =3D driver->remove(epf);
+> > +		driver->remove(epf);
+> >   	epf->driver =3D NULL;
+> > -	return ret;
+> > +	return 0;
+> >   }
+> >   static struct bus_type pci_epf_bus_type =3D {
+> > diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> > index 6833e2160ef1..f8a17b6b1d31 100644
+> > --- a/include/linux/pci-epf.h
+> > +++ b/include/linux/pci-epf.h
+> > @@ -85,7 +85,7 @@ struct pci_epf_ops {
+> >    */
+> >   struct pci_epf_driver {
+> >   	int	(*probe)(struct pci_epf *epf);
+> > -	int	(*remove)(struct pci_epf *epf);
+> > +	void	(*remove)(struct pci_epf *epf);
+> >   	struct device_driver	driver;
+> >   	struct pci_epf_ops	*ops;
+> >=20
+>=20
+>=20
+
+
+
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--hnmwjub76jnjkr44
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDRmScACgkQwfwUeK3K
+7An5Lwf/V8DlYfQdyPie1tJXpiC1CGs+B1Ccefs865ffeGXygquLhhtljoxRD6uS
+TUzhR94CWfudkvaS6GgiPbPwGWxXj+j+wA6tiOw+qPU1fbmmkC9BZMq2FjEmdzv1
+zWdim5thQlBjxtEttGEdSrY2ca75gUmlyIIKItVibI10VkPHsx5/Qd/4yaOfUXcg
+CkxmRE6ugygWP/ZTnn4lN0bc0TfPitMFCCxjIVBBmTuvJJCaxCm96rBUgdtKH7LS
+9QjAUe4FyhRevK6+zlTP93gt6xHt1ZzHBR2fd9p02VT1CGrDn9uCk9kSolrlEAKi
+GBWgTBjPWvO30setu9I8+x7c2UxE2w==
+=cgzf
+-----END PGP SIGNATURE-----
+
+--hnmwjub76jnjkr44--
