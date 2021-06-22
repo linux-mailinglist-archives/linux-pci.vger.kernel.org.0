@@ -2,177 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E298B3B0F2B
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 23:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C05033B0F35
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jun 2021 23:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbhFVVFS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Jun 2021 17:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230157AbhFVVFR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 22 Jun 2021 17:05:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B82596108E;
-        Tue, 22 Jun 2021 21:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624395780;
-        bh=v96U5qnlOhDf3w1FKsu7SjrxREMp2X2HSv3JOsCkgmU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=jp86WFjWXckU//EExyz6NMfilYlNSGD/Sp+e74iycIMnJPnrnvb2f/IMZhcf30u/Y
-         nZN/eIYPHlNFb7aaAK4BGrzQ8h60A0DeuaUctP8s9mDpf/LCXTiw3xhjYNzVwnhtzX
-         TCr/gTHfn3WY41P/JfXANtN8uFlsPQPDxHmgwY0xOxtbMzYm2w8bezm6pQenS5mO9T
-         QACOuqiKoEaVeTvNfrREoxgLiMZfrcQDhTBPBD0g1ngPW8KyWNjA64wNxxoLTDCtna
-         okD7zfnO67pIIlP+aLcNDcQOeKWv20TpkQkk9C2UIZdw5p+0AdNoxQDYVfglebC4DR
-         9wbHzTawfV26w==
-Date:   Tue, 22 Jun 2021 14:02:58 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Claire Chang <tientzu@chromium.org>
-cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
-        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
-        jxgao@google.com, joonas.lahtinen@linux.intel.com,
-        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        matthew.auld@intel.com, rodrigo.vivi@intel.com,
-        thomas.hellstrom@linux.intel.com, thomas.lendacky@amd.com
-Subject: Re: [PATCH v14 01/12] swiotlb: Refactor swiotlb init functions
-In-Reply-To: <20210619034043.199220-2-tientzu@chromium.org>
-Message-ID: <alpine.DEB.2.21.2106221402390.24906@sstabellini-ThinkPad-T480s>
-References: <20210619034043.199220-1-tientzu@chromium.org> <20210619034043.199220-2-tientzu@chromium.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S229758AbhFVVGy convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 22 Jun 2021 17:06:54 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58058 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229746AbhFVVGy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Jun 2021 17:06:54 -0400
+Received: from [77.244.183.192] (port=62208 helo=[192.168.178.41])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1lvnZU-0002Jx-61; Tue, 22 Jun 2021 23:04:36 +0200
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linus.walleij@linaro.org, linux-pci@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20210531090540.2663171-1-luca@lucaceresoli.net>
+ <20210531133211.llyiq3jcfy25tmz4@pali>
+ <8ff1c54f-bb29-1e40-8342-905e34361e1c@lucaceresoli.net>
+ <9fdbada4-4902-cec1-f283-0d12e1d4ac64@ti.com>
+ <20210531162242.jm73yzntzmilsvbg@pali>
+ <8207a53c-4de9-d0e5-295a-c165e7237e36@lucaceresoli.net>
+ <20210622110627.aqzxxtf2j3uxfeyl@pali> <20210622115604.GA25503@lpieralisi>
+ <20210622121649.ouiaecdvwutgdyy5@pali>
+ <18a104a9-2cb8-7535-a5b2-f5f049adff47@lucaceresoli.net>
+ <4d4c0d4d-41b4-4756-5189-bffa15f88406@ti.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <b20bae1d-cd6b-864b-8357-0da365c8406f@lucaceresoli.net>
+Date:   Tue, 22 Jun 2021 23:04:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <4d4c0d4d-41b4-4756-5189-bffa15f88406@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 19 Jun 2021, Claire Chang wrote:
-> Add a new function, swiotlb_init_io_tlb_mem, for the io_tlb_mem struct
-> initialization to make the code reusable.
-> 
-> Signed-off-by: Claire Chang <tientzu@chromium.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Tested-by: Stefano Stabellini <sstabellini@kernel.org>
-> Tested-by: Will Deacon <will@kernel.org>
+Hi Kishon,
 
-Acked-by: Stefano Stabellini <sstabellini@kernel.org>
-
-
-> ---
->  kernel/dma/swiotlb.c | 50 ++++++++++++++++++++++----------------------
->  1 file changed, 25 insertions(+), 25 deletions(-)
+On 22/06/21 15:57, Kishon Vijay Abraham I wrote:
+> Hi Luca, Pali,
 > 
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index 52e2ac526757..1f9b2b9e7490 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -168,9 +168,28 @@ void __init swiotlb_update_mem_attributes(void)
->  	memset(vaddr, 0, bytes);
->  }
->  
-> -int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
-> +static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
-> +				    unsigned long nslabs, bool late_alloc)
->  {
-> +	void *vaddr = phys_to_virt(start);
->  	unsigned long bytes = nslabs << IO_TLB_SHIFT, i;
-> +
-> +	mem->nslabs = nslabs;
-> +	mem->start = start;
-> +	mem->end = mem->start + bytes;
-> +	mem->index = 0;
-> +	mem->late_alloc = late_alloc;
-> +	spin_lock_init(&mem->lock);
-> +	for (i = 0; i < mem->nslabs; i++) {
-> +		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
-> +		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
-> +		mem->slots[i].alloc_size = 0;
-> +	}
-> +	memset(vaddr, 0, bytes);
-> +}
-> +
-> +int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
-> +{
->  	struct io_tlb_mem *mem;
->  	size_t alloc_size;
->  
-> @@ -186,16 +205,8 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
->  	if (!mem)
->  		panic("%s: Failed to allocate %zu bytes align=0x%lx\n",
->  		      __func__, alloc_size, PAGE_SIZE);
-> -	mem->nslabs = nslabs;
-> -	mem->start = __pa(tlb);
-> -	mem->end = mem->start + bytes;
-> -	mem->index = 0;
-> -	spin_lock_init(&mem->lock);
-> -	for (i = 0; i < mem->nslabs; i++) {
-> -		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
-> -		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
-> -		mem->slots[i].alloc_size = 0;
-> -	}
-> +
-> +	swiotlb_init_io_tlb_mem(mem, __pa(tlb), nslabs, false);
->  
->  	io_tlb_default_mem = mem;
->  	if (verbose)
-> @@ -282,8 +293,8 @@ swiotlb_late_init_with_default_size(size_t default_size)
->  int
->  swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
->  {
-> -	unsigned long bytes = nslabs << IO_TLB_SHIFT, i;
->  	struct io_tlb_mem *mem;
-> +	unsigned long bytes = nslabs << IO_TLB_SHIFT;
->  
->  	if (swiotlb_force == SWIOTLB_NO_FORCE)
->  		return 0;
-> @@ -297,20 +308,9 @@ swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
->  	if (!mem)
->  		return -ENOMEM;
->  
-> -	mem->nslabs = nslabs;
-> -	mem->start = virt_to_phys(tlb);
-> -	mem->end = mem->start + bytes;
-> -	mem->index = 0;
-> -	mem->late_alloc = 1;
-> -	spin_lock_init(&mem->lock);
-> -	for (i = 0; i < mem->nslabs; i++) {
-> -		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
-> -		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
-> -		mem->slots[i].alloc_size = 0;
-> -	}
-> -
-> +	memset(mem, 0, sizeof(*mem));
->  	set_memory_decrypted((unsigned long)tlb, bytes >> PAGE_SHIFT);
-> -	memset(tlb, 0, bytes);
-> +	swiotlb_init_io_tlb_mem(mem, virt_to_phys(tlb), nslabs, true);
->  
->  	io_tlb_default_mem = mem;
->  	swiotlb_print_info();
-> -- 
-> 2.32.0.288.g62a8d224e6-goog
+> On 22/06/21 7:01 pm, Luca Ceresoli wrote:
+>> Hi,
+>>
+>> On 22/06/21 14:16, Pali Rohár wrote:
+>>> On Tuesday 22 June 2021 12:56:04 Lorenzo Pieralisi wrote:
+>>>> [Adding Linus for GPIO discussion, thread:
+>>>> https://lore.kernel.org/linux-pci/20210531090540.2663171-1-luca@lucaceresoli.net]
+>>>>
+>>>> On Tue, Jun 22, 2021 at 01:06:27PM +0200, Pali Rohár wrote:
+>>>>> Hello!
+>>>>>
+>>>>> On Tuesday 22 June 2021 12:57:22 Luca Ceresoli wrote:
+>>>>>> Nothing happened after a few weeks... I understand that knowing the
+>>>>>> correct reset timings is relevant, but unfortunately I cannot help much
+>>>>>> in finding out the correct values.
+>>>>>>
+>>>>>> However I'm wondering what should happen to this patch. It *does* fix a
+>>>>>> real bug, but potentially with an incorrect or non-optimal usleep range.
+>>>>>> Do we really want to ignore a bugfix because we are not sure about how
+>>>>>> long this delay should be?
+>>>>>
+>>>>> As there is no better solution right now, I'm fine with your patch. But
+>>>>> patch needs to be approved by Lorenzo, so please wait for his final
+>>>>> answer.
+>>>>
+>>>> I am not a GPIO expert and I have a feeling this is platform specific
+>>>> beyond what the PCI specification can actually define architecturally.
+>>>
+>>> In my opinion timeout is not platform specific as I wrote in email:
+>>> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+>>>
+>>> My experiments already proved that some PCIe cards needs to be in reset
+>>> state for some minimal time otherwise they cannot be enumerated. And it
+>>> does not matter to which platform you connect those (endpoint) cards.
+>>>
+>>> I do not think that timeout itself is platform specific. GPIO controls
+>>> PERST# pin and therefore specified sleep value directly drives how long
+>>> is card on the other end of PCIe slot in Warm Reset state. PCIe CEM spec
+>>> directly says that PERST# signal controls PCIe Warm Reset.
+>>>
+>>> What is here platform specific thing is that PERST# signal is controlled
+>>> by GPIO. But value of signal (high / low) and how long is in signal in
+>>> which state for me sounds like not an platform specific thing, but as
+>>> PCIe / CEM related.
+>>
+>> That's exactly my understanding of this matter. At least for the dra7xx
+>> controller it works exactly like this, PERSTn# is nothing but a GPIO
+>> output from the SoC that drives the PERSTn# input of the external chip
+>> without affecting the controller directly.
+>>
 > 
+> While the patch itself is correct, this kind-of changes the behavior on
+> already upstreamed platforms. Previously the driver expected #PERST to
+> be asserted be external means (or default power-up state) and only takes
+> care of de-asserting the #PERST line.
+> 
+> There are 2 platforms that will be impacted due to this change
+> 1) arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi (has an inverter on
+> GPIO line)
+> 2) arch/arm/boot/dts/am571x-idk.dts (directly connected to #PERST)
+> For 1), gpiod_set_value(reset, 0) will assert the PERST line due to the
+> inverter (and GPIO_ACTIVE_LOW)
+> For 2), gpiod_set_value(reset, 0) will assert the PERST line because we
+> have GPIO_ACTIVE_HIGH
+> 
+> So this patch should have to be accompanied with DT changes (and this
+> patch also breaks old DT compatibility).
+
+Thanks for researching and reporting which platforms are affected. I can
+certainly take care of changing these two DTs in the next patch
+iteration but I have no way to test them: I have access to an X15 but
+without any expansion boards, and no IDK.
+
+-- 
+Luca
+
