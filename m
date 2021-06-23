@@ -2,58 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 584E83B1D8F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 17:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6544B3B1E0B
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 17:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbhFWPZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 11:25:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:36852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229523AbhFWPZp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Jun 2021 11:25:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED1B331B;
-        Wed, 23 Jun 2021 08:23:27 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.46.124])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3D1E3F718;
-        Wed, 23 Jun 2021 08:23:26 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Fix shiftTooManyBitsSigned warning for Tegra194
-Date:   Wed, 23 Jun 2021 16:23:20 +0100
-Message-Id: <162446177943.19852.7323663097557808562.b4-ty@arm.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20210618160219.303092-1-jonathanh@nvidia.com>
-References: <20210618160219.303092-1-jonathanh@nvidia.com>
+        id S231500AbhFWP4w convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 23 Jun 2021 11:56:52 -0400
+Received: from [183.90.58.236] ([183.90.58.236]:51746 "EHLO ns1.zackeruz.tk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231436AbhFWP4w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Jun 2021 11:56:52 -0400
+Received: from johnlewis.com (unknown [192.168.20.1])
+        by ns1.zackeruz.tk (Postfix) with ESMTPSA id 0402384632D
+        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 23:54:32 +0800 (+08)
+Reply-To: robert_turner@johnlewis-trading.com,
+          pippawicks.sales@johnlewis-trading.com
+From:   John Lewis & Partnersip <robert.turner107@johnlewis.com>
+To:     linux-pci@vger.kernel.org
+Subject: 6/23/2021 Product Inquiry 
+Date:   23 Jun 2021 15:54:32 +0000
+Message-ID: <20210623094114.E46864D869311F36@johnlewis.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 18 Jun 2021 17:02:19 +0100, Jon Hunter wrote:
-> The cppcheck tool issues the following warning for the Tegra194 PCIe
-> driver ...
-> 
->  $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
->  Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
-> 
->  drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability:
-> 	Shifting signed 32-bit value by 31 bits is
-> 	implementation-defined behaviour. See condition at line 1826.
-> 	[shiftTooManyBitsSigned]
-> 
-> [...]
+Dear linux-pci
 
-Applied to pci/tegra, thanks!
+The famous brand John Lewis Partnership, is UK's largest multi-
+channel retailer with over 126 shops and multiple expansion in 
+Africa furnished by European/Asian/American products. We are 
+sourcing new products to attract new customers and also retain 
+our existing ones, create new partnerships with companies dealing 
+with different kinds of goods globally.
 
-[1/1] PCI: tegra194: Fix shiftTooManyBitsSigned warning for Tegra194
-      https://git.kernel.org/lpieralisi/pci/c/b1eca3a544
+Your company's products are of interest to our market as we have 
+an amazing market for your products.
 
-Thanks,
-Lorenzo
+Provide us your current catalog through email to review more. We 
+hope to be able to order with you and start a long-term friendly,
+respectable and solid business partnership. Please we would 
+appreciate it if you could send us your stock availability via 
+email if any.
+
+Our payment terms are 15 days net in Europe, 30 days Net in UK 
+and 30 days net in Asia/USA as we operate with over 5297 
+suppliers around the globe for the past 50 years now. For 
+immediate response Send your reply to robert_turner@johnlewis-
+trading.com for us to be able to 
+treat with care and urgency.
+
+
+Best Regards
+
+Rob Turner
+Head Of Procurement Operations
+John Lewis & Partners.
+robert_turner@johnlewis-trading.com
+Tel: +44-7451-274090
+WhatsApp: +447497483925
+www.johnlewis.com
+REGISTERED OFFICE: 171 VICTORIA STREET, LONDON SW1E 5NN 
