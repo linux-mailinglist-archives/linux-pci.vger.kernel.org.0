@@ -2,95 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 693C03B163F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 10:52:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1173B1679
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 11:07:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbhFWIyo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 04:54:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:60002 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230001AbhFWIyn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Jun 2021 04:54:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEAC731B;
-        Wed, 23 Jun 2021 01:52:25 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED0CC3F719;
-        Wed, 23 Jun 2021 01:52:24 -0700 (PDT)
-Date:   Wed, 23 Jun 2021 09:52:14 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Fix shiftTooManyBitsSigned warning for
- Tegra194
-Message-ID: <20210623085206.GA10593@lpieralisi>
-References: <20210618160219.303092-1-jonathanh@nvidia.com>
- <20210618230428.GA3231877@bjorn-Precision-5520>
+        id S229833AbhFWJJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 05:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230092AbhFWJJl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 05:09:41 -0400
+Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14751C061574
+        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 02:07:23 -0700 (PDT)
+Received: by mail-qv1-xf36.google.com with SMTP id r19so1033421qvw.5
+        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 02:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=13Gr0i1MTKRVJOLYjbaQS0t+sJQavN2HZYVSf9igv0I=;
+        b=SA9G17LOrb34DyVZWPMTTHIONdcJ/5ZbZWqssqBb4aWqa4vseTx3+V6CkFU4RvePBr
+         YNNS8jqCGxfTDXRduKfQQMwLt3JL1m3nr4PNVWIksCr6YiJm78aGWUxZDo4V4hXGS1bN
+         zAH4ZuRlx4WIbGetsYgzQvT1yucBC3KtrF3U0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=13Gr0i1MTKRVJOLYjbaQS0t+sJQavN2HZYVSf9igv0I=;
+        b=p4Sb5jq0ykQFDQEM3C84HgizAdG0FwBFVQx8rhMoIpyWg+2FQJ7m9AjwfRSBLvWAo1
+         K24jhtpL6ov/IB8TWkdCsXv/qsywIATCWnvBymgpuhwhjPOofqqY7o/WcTts46g8/5by
+         UvxoLmOSmaoiROPXg4aDKvVy4gwqkb8S5rxvndAUwi1Fv5LED9wRuf+muv6sMmLBRs19
+         T3zgLvZzTolR29+LuMP6CX1FUXkklf6Ona2VejfZtt493/wSr6yZ6HRIVWuDeZ/IPhlr
+         T1J0nUTmOB5GpWKpM3Z7Y+nrW0WvOw/BlhYLk5GC/BwAmAxYX23BfDysCdZWm7c5553L
+         x6tQ==
+X-Gm-Message-State: AOAM532o+y7EXdHtuSzW4IMa7Nrd9M+noRNcUKmDu8xHPagr2RkGeBmx
+        S4Ff8A1aEjyyhrmoATZg7RrucaTmza/1Rg==
+X-Google-Smtp-Source: ABdhPJzmtPXf00wu5/Keq7O0pH3sSVr4NCSfOt7Y3pxiv5bmOMiVFTXWPnjBtlbuApdeZCqvrNrSfg==
+X-Received: by 2002:ad4:596b:: with SMTP id eq11mr1188385qvb.34.1624439241565;
+        Wed, 23 Jun 2021 02:07:21 -0700 (PDT)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
+        by smtp.gmail.com with ESMTPSA id i16sm7957520qki.121.2021.06.23.02.07.21
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Jun 2021 02:07:21 -0700 (PDT)
+Received: by mail-qk1-f175.google.com with SMTP id bl4so3320212qkb.8
+        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 02:07:21 -0700 (PDT)
+X-Received: by 2002:a02:4b46:: with SMTP id q67mr7991027jaa.84.1624438886886;
+ Wed, 23 Jun 2021 02:01:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210618230428.GA3231877@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20210619034043.199220-1-tientzu@chromium.org> <YNLy7z0Zq1AXKLng@char.us.oracle.com>
+In-Reply-To: <YNLy7z0Zq1AXKLng@char.us.oracle.com>
+From:   Claire Chang <tientzu@chromium.org>
+Date:   Wed, 23 Jun 2021 17:01:16 +0800
+X-Gmail-Original-Message-ID: <CALiNf28U9xaqth99u=hB45b=qWMYaSoe2DGgNVFrHXze6wNmdQ@mail.gmail.com>
+Message-ID: <CALiNf28U9xaqth99u=hB45b=qWMYaSoe2DGgNVFrHXze6wNmdQ@mail.gmail.com>
+Subject: Re: [PATCH v14 00/12] Restricted DMA
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, grant.likely@arm.com,
+        xypron.glpk@gmx.de, Thierry Reding <treding@nvidia.com>,
+        mingo@kernel.org, bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
+        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
+        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
+        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 18, 2021 at 06:04:28PM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 18, 2021 at 05:02:19PM +0100, Jon Hunter wrote:
-> > The cppcheck tool issues the following warning for the Tegra194 PCIe
-> > driver ...
-> > 
-> >  $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
-> >  Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
-> > 
-> >  drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability:
-> > 	Shifting signed 32-bit value by 31 bits is
-> > 	implementation-defined behaviour. See condition at line 1826.
-> > 	[shiftTooManyBitsSigned]
-> > 
-> >   appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
-> >                       ^
-> > The above warning occurs because the '1' is treated as a signed type
-> > and so fix this by using the 'BIT' macro to ensure that this is defined
-> > as a unsigned type.
-> 
-> The subject and commit log should describe the problem we're fixing.
-> The *warning* is not the problem; the problem is the undefined
-> behavior.
-> 
-> I'll fix this up, no need to repost for this.
+On Wed, Jun 23, 2021 at 4:38 PM Konrad Rzeszutek Wilk
+<konrad.wilk@oracle.com> wrote:
+>
+> On Sat, Jun 19, 2021 at 11:40:31AM +0800, Claire Chang wrote:
+> > This series implements mitigations for lack of DMA access control on
+> > systems without an IOMMU, which could result in the DMA accessing the
+> > system memory at unexpected times and/or unexpected addresses, possibly
+> > leading to data leakage or corruption.
+> >
+> > For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
+> > not behind an IOMMU. As PCI-e, by design, gives the device full access to
+> > system memory, a vulnerability in the Wi-Fi firmware could easily escalate
+> > to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
+> > full chain of exploits; [2], [3]).
+> >
+> > To mitigate the security concerns, we introduce restricted DMA. Restricted
+> > DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
+> > specially allocated region and does memory allocation from the same region.
+> > The feature on its own provides a basic level of protection against the DMA
+> > overwriting buffer contents at unexpected times. However, to protect
+> > against general data leakage and system memory corruption, the system needs
+> > to provide a way to restrict the DMA to a predefined memory region (this is
+> > usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
+> >
+> > [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+> > [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+> > [2] https://blade.tencent.com/en/advisories/qualpwn/
+> > [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+> > [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
+>
+> Heya Claire,
+>
+> I put all your patches on
+> https://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git/log/?h=devel/for-linus-5.14
+>
+> Please double-check that they all look ok.
+>
+> Thank you!
 
-Hi Bjorn,
-
-I can fix it up myself, just wanted to ask if you merged it already, it
-does not look like but I thought I'd check.
-
-Thanks,
-Lorenzo
-
-> > Fixes: c57247f940e8 PCI: tegra: Add support for PCIe endpoint mode in Tegra194
-> > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > index 8fc08336f76e..3c1feeab104f 100644
-> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > @@ -1826,7 +1826,7 @@ static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
-> >  	if (unlikely(irq > 31))
-> >  		return -EINVAL;
-> >  
-> > -	appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
-> > +	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
-> >  
-> >  	return 0;
-> >  }
-> > -- 
-> > 2.25.1
-> > 
+They look fine. Thank you!
