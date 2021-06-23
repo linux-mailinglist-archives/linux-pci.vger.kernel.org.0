@@ -2,128 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E2883B1A27
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 14:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B65693B1AC0
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 15:08:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231387AbhFWMai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 08:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231614AbhFWMaH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Jun 2021 08:30:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6F56E6108E;
-        Wed, 23 Jun 2021 12:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624451269;
-        bh=HAVJtTVrzJxFsKJDIJrqeHQYANllpN93YiRxUl5ea+M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=r9uTZTY8L+cxqEC0D/c6wq3MQRcaWXF8v7sEiOA9xiQU3ruHwYZWlEDOtHm13UOCz
-         19cSGVM+U+wIUWMw5KNz4JLBEaiSgi/jXU+Qd5dWM1Ju2o71bNZJQ26eFpUw9efCdc
-         cDzo49YNoThQnCPYFjdZQZ/JCIX4YErETCp93OnjO7RAI11/xLR0fa1tV9LGQ+4ZKJ
-         eamWbxN4iYGqMN5auJNmXQR4quHCm1r/VbRVKMuIPEdOIBddH0lftIrAGFkY1dzORL
-         8Z0h2MVg7se6DDADGr3tGAgbWUcsP5cg1AKfqAxSCpXjsVT6OuEuSkYL1Wm5RvhI0t
-         mmwuRI1fQgjIg==
-Date:   Wed, 23 Jun 2021 07:27:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, Tian Tao <tiantao6@hisilicon.com>,
-        p.zabel@pengutronix.de, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        tglx@linutronix.de, maz@kernel.org
-Subject: Re: [PATCH v2] PCI: tegra: move to use request_irq by IRQF_NO_AUTOEN
- flag
-Message-ID: <20210623122747.GA3357115@bjorn-Precision-5520>
+        id S230326AbhFWNK5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 09:10:57 -0400
+Received: from mail-mw2nam08on2072.outbound.protection.outlook.com ([40.107.101.72]:36544
+        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230430AbhFWNKz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Jun 2021 09:10:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PloSFpD2HQlgzei3i3UnWKIL4yUbIuLJhNazv0CdNF1DGqurVswHxD1o9GDBw2hBp2iJwWQ9wuAtLUKKOrrEp0eOdEK4TcyDPZz9lvMcdIqHi0AA03LYQVOR4lVyhDqBK10S5LY0iGsvfvFDiGa40hbwDPeokh+5rFU2AvevbWkzMkjX4gGLsjzZSgn4TxdBBjcBJN04TgDvMG+QhTJNIAS/Jh35XACdjjDQzc8BzQWMqLHQSJ3lBI2ZYYuPEXb1OZTkBxu78WCTWg+HAqAruWDIUXuQIcdKdPDIxMCvPplIHzlO+JWY31YBG06Rcp/EKlSJ5u4B7JEoic8jOdZ+ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rP0wHlia1yI1cUcdDmU/uCnMmEauFXjOKTA5MsIAO20=;
+ b=aoeGN9buCwslhC5BgO6qC3mWW5BnscPfIcmwijAZZLFSUL5UZKTnnqkEgtHbMkMZ7QKluP9vf03QV6ouT6rh5fb353Vx0LA+GW/vPjRT3dhkZTw/sZAWs8Zb5MIRxF+lpoSRRecnw1NQ9rHiULdBzVsJBjA7dW6gPb5hcrR4wUfAHCA9W9Ibyqrn/GsFi1Pl6RCpcPvxunXJA72nRJ15K8WKN43TVpFM6aO3ZnyL0Tu6LFA8UICs8bF355BraTWFE0AVXoO8DoMdkSLI2drnLwFEYG8IYbFeD8tRbqOi0VPBxgNhak2y3tTnxo7cyFyC6YZLadlQSsrJvkpYnph1UA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rP0wHlia1yI1cUcdDmU/uCnMmEauFXjOKTA5MsIAO20=;
+ b=AvjxNZio6ES8hPXgXR71GdYg/vkWUTPmvCJrkm0v1TFxW/fJOd3oS1Qpk4jCaawZcaIDCbpPccjvEiMJFIO6yG808ZU6r3djNWR3f0IwH3Ah33FOOjuTgbw0ADJhLzTA08EWBZg11wH7h4jope+fUTFo8iGhsDYlfevMkry6z3o=
+Received: from DS7PR03CA0243.namprd03.prod.outlook.com (2603:10b6:5:3b3::8) by
+ SN6PR02MB5437.namprd02.prod.outlook.com (2603:10b6:805:ea::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4242.21; Wed, 23 Jun 2021 13:08:36 +0000
+Received: from DM3NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:3b3:cafe::54) by DS7PR03CA0243.outlook.office365.com
+ (2603:10b6:5:3b3::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.19 via Frontend
+ Transport; Wed, 23 Jun 2021 13:08:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT034.mail.protection.outlook.com (10.13.4.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4264.18 via Frontend Transport; Wed, 23 Jun 2021 13:08:36 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 23 Jun 2021 06:08:09 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.2 via Frontend Transport; Wed, 23 Jun 2021 06:08:09 -0700
+Envelope-to: git@xilinx.com,
+ linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ robh@kernel.org,
+ lorenzo.pieralisi@arm.com,
+ bhelgaas@google.com,
+ monstr@monstr.eu,
+ linux-kernel@vger.kernel.org,
+ kw@linux.com
+Received: from [172.30.17.109] (port=43174)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1lw2bw-00074a-JD; Wed, 23 Jun 2021 06:08:08 -0700
+Subject: Re: [PATCH] PCI: xilinx-nwl: Enable the clock through CCF
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Michal Simek <michal.simek@xilinx.com>
+CC:     <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+        <git@xilinx.com>, "Hyun Kwon" <hyun.kwon@xilinx.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>
+References: <dbc0ab2e109111ca814e73abb30a1dda5d333dbe.1624449519.git.michal.simek@xilinx.com>
+ <20210623122040.GA46059@rocinante>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <d7dd7dfe-2c48-c155-793d-1431256a070e@xilinx.com>
+Date:   Wed, 23 Jun 2021 15:08:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20210623122040.GA46059@rocinante>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210623094519.GA11297@lpieralisi>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b0ac16ce-063d-4e3e-3eee-08d9364802c4
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5437:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB54379410A7C5899F5BBB686AC6089@SN6PR02MB5437.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: V2YQ9GS0nzv6tuTh42jn22QgQAUnug00LUZTaQtYN+N6UVjPkzMykcmfSi5fIf1Ud5j8MB5xAfUl6cJDH5qIr0lVk6y5wn7JErYhJ7NdBpjIz6se962fSqeOcEc37Ag+kUATEGrt6vrbHC3yHiKezUIdKk2kkGpbyz+xk0tuJNanfT3Sxg2H5WATdTkQZo6kTYVu6pH2EIZBTystzpW32jFguzCy+CO0eMk2SAL0hND7XlTDwxK0IqwRAX0ky/lho+9pxprZ7BWncxl2Na8m39MGHZrTlarRkNeC4Jzd/AxMT72Fj4xprqIUJftTAaPOusOQuFmBw9ZtuOMNzQh/lb4theYS8nzxdyMPPy9g5NetS2elnJ0KLgqHRHUy0g9aTkOO72XLhbQeCZdvFbPkCeW4AR3ZbnemMq+3PLLkivPe/GLPu+t87ALewhIAyA7Q6G6CqRfAW57Tz6Jt7DAuk3wCOSj68iVkVOBcUPSl1oKqOKoXEu4BCvBcLCBuzn2LLRkvVZT5Kgsicm5/Nwl2RCOuhZ2IMoIjOAhT1kivyi3rR8S4OiawI4aBC01im4Jbhz2A1zxUbVAuXUT0teATqv7z0UPmNX4WOf4S7HDL8gQzJl3h8+AsOeBJAVNdURGxzZj0q27HJG+dycngHAqN8YHXfCT2WPfTxodzLoYU/cqkpMygfFU3LToN+AK8hAMbs56YDncvzaYhsMjuvMr4Lg==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(346002)(396003)(36840700001)(46966006)(8936002)(2906002)(8676002)(478600001)(70206006)(336012)(316002)(36906005)(36860700001)(186003)(4326008)(70586007)(110136005)(54906003)(82310400003)(5660300002)(53546011)(26005)(47076005)(83380400001)(9786002)(31696002)(6666004)(82740400003)(426003)(36756003)(2616005)(7636003)(31686004)(44832011)(66574015)(356005)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2021 13:08:36.0687
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0ac16ce-063d-4e3e-3eee-08d9364802c4
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT034.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5437
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 23, 2021 at 10:45:19AM +0100, Lorenzo Pieralisi wrote:
-> [+Marc, Thomas]
-> 
-> thread: https://lore.kernel.org/linux-pci/1621213953-54030-1-git-send-email-tiantao6@hisilicon.com
-> 
-> On Mon, May 31, 2021 at 03:32:33PM +0530, Vidya Sagar wrote:
-> > I want to re-examine this patch.
-> > I don't see any references in the kernel where IRQ_NOAUTOEN is passed
-> > directly in request_irq APIs.
-> 
-> AFAICS there are many references, not sure what you actually checked.
-> 
-> > It is always set explicitly through irq_set_status_flags() *before*
-> > calling request_irq APIs.  I don't see any comment in the header file
-> > either that says something like it should always be set before
-> > requesting the irq.  Lorenzo/Bjorn, could you please throw some light
-> > on what is correct thing to do here?
-> 
-> To be honest I don't know. Certainly Marc and Thomas know if they have
-> a minute to chime in.
+Hi Krzysztof,
 
-I don't know either.  If this *is* the right thing to do it needs a
-much better commit log because this is not merely a simplification
-that can be verified with a couple minutes of code reading.
+On 6/23/21 2:20 PM, Krzysztof WilczyÅ„ski wrote:
+> Hi Michal,
+> 
+> Thank you for sending the patch over!
 
-This is the only use of IRQ_NOAUTOEN in drivers/pci/, which itself
-raises the question of why we need it.
+Thanks for review.
 
-Also, please update the subject line to s/tegra/tegra194/ and start
-with a capital letter to match convention.
+> 
+>> Simply enable clocks. There is no remove function that's why
+>> this should be enough for simple operation.
+> 
+> What clock is this?  Would it be worth mentioning what it is for
+> a reference (and for posterity) the commit message?
 
-> > On 5/17/2021 3:47 PM, Vidya Sagar wrote:
-> > > Thanks for the patch.
-> > > 
-> > > Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
-> > > 
-> > > - Vidya Sagar
-> > > 
-> > > On 5/17/2021 6:42 AM, Tian Tao wrote:
-> > > > External email: Use caution opening links or attachments
-> > > > 
-> > > > 
-> > > > request_irq() after setting IRQ_NOAUTOEN as below
-> > > > irq_set_status_flags(irq, IRQ_NOAUTOEN);
-> > > > request_irq(dev, irq...);
-> > > > can be replaced by request_irq() with IRQF_NO_AUTOEN flag.
-> > > > 
-> > > > this change is just to simplify the code, no actual functional changes.
-> > > > 
-> > > > Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> > > > ---
-> > > > 
-> > > > v2: update the commit message.
-> > > > ---
-> > > >   drivers/pci/controller/dwc/pcie-tegra194.c | 5 ++---
-> > > >   1 file changed, 2 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > index bafd2c6..7349926 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > @@ -2021,14 +2021,13 @@ static int tegra_pcie_config_ep(struct
-> > > > tegra_pcie_dw *pcie,
-> > > >                  return -ENOMEM;
-> > > >          }
-> > > > 
-> > > > -       irq_set_status_flags(pcie->pex_rst_irq, IRQ_NOAUTOEN);
-> > > > -
-> > > >          pcie->ep_state = EP_STATE_DISABLED;
-> > > > 
-> > > >          ret = devm_request_threaded_irq(dev, pcie->pex_rst_irq, NULL,
-> > > >                                          tegra_pcie_ep_pex_rst_irq,
-> > > >                                          IRQF_TRIGGER_RISING |
-> > > > -                                       IRQF_TRIGGER_FALLING |
-> > > > IRQF_ONESHOT,
-> > > > +                                       IRQF_TRIGGER_FALLING |
-> > > > +                                       IRQF_ONESHOT | IRQF_NO_AUTOEN
-> > > >                                          name, (void *)pcie);
-> > > >          if (ret < 0) {
-> > > >                  dev_err(dev, "Failed to request IRQ for PERST:
-> > > > %d\n", ret);
-> > > > -- 
-> > > > 2.7.4
-> > > > 
+It is reference clock coming to the IP. I will update commit message.
+
+
+> 
+> Also why it would need to be enabled and wasn't before?  Would this be
+> a fix for some problem?  Would this warrant a "Fixes:" tag?  And would
+> it need to be back-ported to stable kernels?
+
+I will update commit message. Normally reference clock is enabled by
+firmware but on some configurations this doesn't need to be truth that's
+why it is necessary to enable it. It also records refcount for this
+reference clock is good.
+
+I will add Fixes tag to v2.
+
+> 
+> [...]
+>> @@ -823,6 +825,11 @@ static int nwl_pcie_probe(struct platform_device *pdev)
+>>  		return err;
+>>  	}
+>>  
+>> +	pcie->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(pcie->clk))
+>> +		return PTR_ERR(pcie->clk);
+>> +	clk_prepare_enable(pcie->clk);
+>> +
+> [...]
+> 
+> Almost every other user of clk_prepare_enable() would check for
+> potential failure, print an appropriate message, and then do the
+> necessary clean-up before bailing out and returning an error.
+> 
+> Would adding an error check for clk_prepare_enable() and printing an
+> error message using dev_err() be too much in this case?  If not, then
+> I would rather follow the pattern that other users established and
+> handle errors as needed.  What do you think?
+
+Agree. I have added it. It is called very early and devm_ functions are
+used that's why cleanup shouldn't be necessary.
+
+I have also found that clock wasn't documented in dt binding for this IP
+but we are setting it up for quite a long time.
+9c8a47b484ed ("arm64: dts: xilinx: Add the clock nodes for zynqmp")
+
+Thanks,
+Michal
