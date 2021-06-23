@@ -2,116 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33DE33B1977
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 13:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B75593B198F
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 14:04:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbhFWMBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 08:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbhFWMBC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 08:01:02 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67452C061574
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 04:58:44 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id i5so3119182eds.1
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 04:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9Cr3FOxDCKFbZ45/SASs869fm2FT51Wxo7xPbqs8/OQ=;
-        b=gldfewNMLkyVBMH/zlJu9aDAy2GDCrb6OuSVrhBktnKvPzf2RNRk4cI1/bOCodlS10
-         3AaBKFrRULbImPzl78pRU2+0ZIzXteZASDPO6XkfLJKEf2FpPxXHOiAJEBCEd+zFb2lf
-         R73DARnSiIkrpdW/FKTDnZhibzpFxEfy/7fFmuja4LzRTdCTxLLz5Rnc89dCnGEAooSS
-         PudcjMDNYaO47DVWY5SzHxXqQqJ458XxBW390dDsDgQWEVwt4cFyX0PeCtaMkLev7fkz
-         EZrJb88MnzFG2UUgo6QGFNt031UsJJ8PoZpR5xPo5wvuM9Pzb7Ych5z1D0jQJYmyiVyl
-         e3ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=9Cr3FOxDCKFbZ45/SASs869fm2FT51Wxo7xPbqs8/OQ=;
-        b=NPXXWOq/W6PRH8g+ux/MEvmQExymg/nVNWFT9lAfpL22Ku6DyZ1NlLMea29hGOLqru
-         BSWQ0ODVhk6F6afEX+Z/2GpDhwUrps1FwMU0e5CboEBAOAaGEBLWpUCtmiyshX6SIPuv
-         6w1k61sVerzWGRP5ZlJIVwmzJ8ApOunXWcFUE9eX1YW3zjqSSKK9iCej4skkZ9F/5a6J
-         cQLNB6qsFkQZZg44iabC3QkEi279saeA2U0dLvcXja6B8oHX6OpyFb8CSzZQsnp3hTHH
-         3RgGlOIlu4fW5aIFGS/ABNxcS8VPlGm7eGTgNuyUtHJWKqb3f70lVz/Ce510IhWUAwPz
-         Cndw==
-X-Gm-Message-State: AOAM531qzeeprwUSL7movaiJfFpvDCcmh3pDuyjjtbaQFJGhY3wHXbH+
-        kVi2ZS8qjkhDZBoBJKALRd3S1A==
-X-Google-Smtp-Source: ABdhPJzTGMoHx9VJNXaGAsxn/RTBQDeIVE7k0dF3mEuxYY5UUpBNGpCkhps+zH/xoatqoGTgVqX46Q==
-X-Received: by 2002:a05:6402:3138:: with SMTP id dd24mr11675698edb.92.1624449522943;
-        Wed, 23 Jun 2021 04:58:42 -0700 (PDT)
-Received: from localhost ([2a02:768:2307:40d6::648])
-        by smtp.gmail.com with ESMTPSA id i10sm6252318edt.25.2021.06.23.04.58.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 23 Jun 2021 04:58:42 -0700 (PDT)
-Sender: Michal Simek <monstr@monstr.eu>
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Hyun Kwon <hyun.kwon@xilinx.com>,
+        id S230121AbhFWMHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 08:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230019AbhFWMHB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Jun 2021 08:07:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A01CC6044F;
+        Wed, 23 Jun 2021 12:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624449883;
+        bh=EcGql4AOk/Bq2QCWSdhodlfFpHz5gEaNlvEX2r9KEoI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=a9W3UzIedVNFEAbepmm7nqKZEyYId9daA4wkLOhQMAbKqTDbuU53x6BvlJT0bKudz
+         gfvPeXHxIdFMO8CdrBzp7luJrBPjIgh6qTjjoe8BFB8g5NTUHRfTGDJC8O3JTE/S5j
+         F2x/QfGn87rZHRP85HUYW/tPCEOo5+X4WUf2Qbd14EjKYmhEgdubWegjX+zyLRsYnX
+         ec1BBLgwv6/W35KhyB20I3YCkKx+etumjDdJYmRcAc+ucXysJOFGV3BGSsuHs94NQz
+         cb99AH70uE6xr0OFR5A1+qYpzFpGU09slaz95xVI/IQAytD1vPzjub9KGWaSktNnAF
+         vRQkPqJT4v4ZA==
+Date:   Wed, 23 Jun 2021 07:04:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: xilinx-nwl: Enable the clock through CCF
-Date:   Wed, 23 Jun 2021 13:58:41 +0200
-Message-Id: <dbc0ab2e109111ca814e73abb30a1dda5d333dbe.1624449519.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.32.0
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix shiftTooManyBitsSigned warning for
+ Tegra194
+Message-ID: <20210623120441.GA3355109@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210623085206.GA10593@lpieralisi>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Hyun Kwon <hyun.kwon@xilinx.com>
+On Wed, Jun 23, 2021 at 09:52:14AM +0100, Lorenzo Pieralisi wrote:
+> On Fri, Jun 18, 2021 at 06:04:28PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 18, 2021 at 05:02:19PM +0100, Jon Hunter wrote:
+> > > The cppcheck tool issues the following warning for the Tegra194 PCIe
+> > > driver ...
+> > > 
+> > >  $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
+> > >  Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
+> > > 
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability:
+> > > 	Shifting signed 32-bit value by 31 bits is
+> > > 	implementation-defined behaviour. See condition at line 1826.
+> > > 	[shiftTooManyBitsSigned]
+> > > 
+> > >   appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
+> > >                       ^
+> > > The above warning occurs because the '1' is treated as a signed type
+> > > and so fix this by using the 'BIT' macro to ensure that this is defined
+> > > as a unsigned type.
+> > 
+> > The subject and commit log should describe the problem we're fixing.
+> > The *warning* is not the problem; the problem is the undefined
+> > behavior.
+> > 
+> > I'll fix this up, no need to repost for this.
+> 
+> Hi Bjorn,
+> 
+> I can fix it up myself, just wanted to ask if you merged it already, it
+> does not look like but I thought I'd check.
 
-Simply enable clocks. There is no remove function that's why
-this should be enough for simple operation.
+Oops, sorry, I guess I dropped the ball on this one and didn't get it
+merged.  When you do, can you update the subject as well, e.g.,
 
-Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+  s/PCI: tegra/PCI: tegra194/
 
- drivers/pci/controller/pcie-xilinx-nwl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+to differentiate from the other "tegra" driver?
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 8689311c5ef6..3afd4f89ba77 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -6,6 +6,7 @@
-  * (C) Copyright 2014 - 2015, Xilinx, Inc.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -169,6 +170,7 @@ struct nwl_pcie {
- 	u8 last_busno;
- 	struct nwl_msi msi;
- 	struct irq_domain *legacy_irq_domain;
-+	struct clk *clk;
- 	raw_spinlock_t leg_mask_lock;
- };
- 
-@@ -823,6 +825,11 @@ static int nwl_pcie_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	pcie->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pcie->clk))
-+		return PTR_ERR(pcie->clk);
-+	clk_prepare_enable(pcie->clk);
-+
- 	err = nwl_pcie_bridge_init(pcie);
- 	if (err) {
- 		dev_err(dev, "HW Initialization failed\n");
--- 
-2.32.0
-
+> > > Fixes: c57247f940e8 PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+> > > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index 8fc08336f76e..3c1feeab104f 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -1826,7 +1826,7 @@ static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
+> > >  	if (unlikely(irq > 31))
+> > >  		return -EINVAL;
+> > >  
+> > > -	appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
+> > > +	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
+> > >  
+> > >  	return 0;
+> > >  }
+> > > -- 
+> > > 2.25.1
+> > > 
