@@ -2,139 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B4C3B1FE5
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 19:53:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B6CE3B1FF3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 19:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbhFWRzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 13:55:23 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:34647 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbhFWRzW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 13:55:22 -0400
-Received: by mail-oi1-f173.google.com with SMTP id u11so4272040oiv.1;
-        Wed, 23 Jun 2021 10:53:03 -0700 (PDT)
+        id S229794AbhFWR7C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 13:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229726AbhFWR7B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 13:59:01 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E511C061574;
+        Wed, 23 Jun 2021 10:56:44 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id g4so1968958pjk.0;
+        Wed, 23 Jun 2021 10:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DwIfz4asrkwuxmRED1rKoCWobK2Fs+gtJGcm4ugHhII=;
+        b=PHqpv/vNsxYvJHoQSOgvoOhS2E+KYn3GN3ju0fpcgknzl1CoZUxMDbGHy+R0QS7sbJ
+         GvxL0GhIO2pdxKiKSPZ7bg+7vs3eqR8Fo2PJARXdK60ONkH7y9ZYub7eGaf0vAbAJl8f
+         SS8igeh3Nxx1iiulRk1RF0TYCYWlZDoS+QaMdEJgcnLp6cj5GMLaMQO8oqpNDeE4Zkn7
+         geSe4mKXZ5JvhH6wkr6npq556Cio4UiQDbjItlGC3FvsbSkA3vW35SDMXtz1q5/PZZ1H
+         fer/NIKB83NX39zc4A9BawKRCAJXPTWSloy33/YnEKNKHkDjqjm/Zdtmi9Sm+zhgQiS9
+         elzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kKQr82HDDUwFX7W6f2RL9f2u87FR6WdUapSEsXW/DEs=;
-        b=KeWdipt25KXMRkrgo4efs0m9yMPVNZbI6kOvMS85qbcJhDraziteoKg5tlEkN8OF5N
-         9649HlVKd7zbigK7hKtTXjlaqxEmqmP6XkV647OO4t0zW7zRzRlV5sumEMMTE9Jvw6Y9
-         crikD4nj6Q39tW9jUmnU/dutD5Mbz7pJwAwTpwVdLyjl2RCfKog8MuWFF5z2uHRsX9Lp
-         R/xtM8Pd/4lCEaoot4OEqBY0sqmnPqn3Q9AQJu52lghn+kzFn736/tf+7wQYuy/ukGGD
-         9atzfjU0ayBNS+QrhkKK2vBVETwxhMrhUqLfg8pTfA4m/DWY5/41KTsyP0FQL9K5C0Xh
-         p8xA==
-X-Gm-Message-State: AOAM5319OsK+tjd0Cd71ioDXsUAvSDyOwzfdgPRsoyokA92Fp/OBg+hc
-        zZXtolmgnGKLSnkYZZTgDlmoVgjQzstwdW18LFM=
-X-Google-Smtp-Source: ABdhPJwVRzUAEkyf6DGKb9Rgt01zJyb6iZCfhq/4GmCXF95MvMM5PMAMAYEdojbAeYhPmygDFAJ4PoXN1OdcVCwNbew=
-X-Received: by 2002:a05:6808:8d9:: with SMTP id k25mr807424oij.69.1624470783298;
- Wed, 23 Jun 2021 10:53:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DwIfz4asrkwuxmRED1rKoCWobK2Fs+gtJGcm4ugHhII=;
+        b=D4sSYaDHMT6Yqvh20k+9WPp9AcQM91vARl99LsviHtBcns3knZqoRsPcK+qcqyuXrN
+         LqnHdzBjE26UgnhXVuJv7jd1VjGQad3mQRhposfKzFRk63vqE6hIDWtx5pMEzHnGA46Y
+         qwnb058Z3L+pjk2eUMAUqRfX9MOXhhLxOybT5UUbcwWDwb/8STgkUjL5qGeMWVwEleBy
+         tbWtehQsV1unR+NzUUmmVNIpOdoC+VDz56Z2PxbOOZX5DuD+8AVPaX/MTyupT5PiLFMN
+         1zwO4TQhM93WcVZ/bcqZdReF5/4Ahb/BCu3UxYFG7nBgXg4H5Q8hSRxXClObJ4OAXCeX
+         sCTQ==
+X-Gm-Message-State: AOAM530WK2UlEzX9pewqqDIcJVjbGmjfZIuOuoksAVF6fNyhhu/LBdad
+        dWVKqNhY2N9fbfpiPapnafQ=
+X-Google-Smtp-Source: ABdhPJw0z77xCN6a0ourMoOmBDy05HNNfjyZ/s97855wAhkT9/fPiX2al4ZePASUYQkPMvC1DvTZUQ==
+X-Received: by 2002:a17:90a:d102:: with SMTP id l2mr866909pju.225.1624471003738;
+        Wed, 23 Jun 2021 10:56:43 -0700 (PDT)
+Received: from localhost ([103.248.31.165])
+        by smtp.gmail.com with ESMTPSA id i20sm480012pfo.130.2021.06.23.10.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jun 2021 10:56:43 -0700 (PDT)
+Date:   Wed, 23 Jun 2021 23:26:41 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set
+ device reset mechanism
+Message-ID: <20210623175641.obsq2w2vlsppmyna@archlinux>
+References: <20210621193307.gt7iwwg6gqqojhfc@archlinux>
+ <20210623120623.GA3295394@bjorn-Precision-5520>
+ <20210623140711.ur67lbbrsudgxrp4@archlinux>
 MIME-Version: 1.0
-References: <3219454.74lMxhSOWB@kreacher> <YNDoGICcg0V8HhpQ@eldamar.lan>
-In-Reply-To: <YNDoGICcg0V8HhpQ@eldamar.lan>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Jun 2021 19:52:52 +0200
-Message-ID: <CAJZ5v0hrcRWgre0HiJFw32dkmNUjaRzT=mFH=6WskopMbZsavA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Do not read power state in pci_enable_device_flags()
-To:     Salvatore Bonaccorso <carnil@debian.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210623140711.ur67lbbrsudgxrp4@archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 9:27 PM Salvatore Bonaccorso <carnil@debian.org> wrote:
+On 21/06/23 07:37PM, Amey Narkhede wrote:
+> On 21/06/23 07:06AM, Bjorn Helgaas wrote:
+> > On Tue, Jun 22, 2021 at 01:03:07AM +0530, Amey Narkhede wrote:
+> > > On 21/06/21 02:07PM, Bjorn Helgaas wrote:
+> > > > On Mon, Jun 21, 2021 at 10:58:54PM +0530, Amey Narkhede wrote:
+> > > > > On 21/06/21 08:01AM, Bjorn Helgaas wrote:
+> > > > > > On Sat, Jun 19, 2021 at 07:29:20PM +0530, Amey Narkhede wrote:
+> > > > > > > On 21/06/18 03:00PM, Bjorn Helgaas wrote:
+> > > > > > > > On Tue, Jun 08, 2021 at 11:18:53AM +0530, Amey Narkhede wrote:
+> > > > > > > > > Add reset_method sysfs attribute to enable user to
+> > > > > > > > > query and set user preferred device reset methods and
+> > > > > > > > > their ordering.
+> > > > > >
+> > > > > > > > > +	if (sysfs_streq(options, "default")) {
+> > > > > > > > > +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++)
+> > > > > > > > > +			reset_methods[i] = reset_methods[i] ? prio-- : 0;
+> > > > > > > > > +		goto set_reset_methods;
+> > > > > > > > > +	}
+> > > > > > > >
+> > > > > > > > If you use pci_init_reset_methods() here, you can also get this case
+> > > > > > > > out of the way early.
+> > > > > > > >
+> > > > > > > The problem with alternate encoding is we won't be able to know if
+> > > > > > > one of the reset methods was disabled previously. For example,
+> > > > > > >
+> > > > > > > # cat reset_methods
+> > > > > > > flr,bus 			# dev->reset_methods = [3, 5, 0, ...]
+> > > > > > > # echo bus > reset_methods 	# dev->reset_methods = [5, 0, 0, ...]
+> > > > > > > # cat reset_methods
+> > > > > > > bus
+> > > > > > >
+> > > > > > > Now if an user wants to enable flr
+> > > > > > >
+> > > > > > > # echo flr > reset_methods 	# dev->reset_methods = [3, 0, 0, ...]
+> > > > > > > OR
+> > > > > > > # echo bus,flr > reset_methods 	# dev->reset_methods = [5, 3, 0, ...]
+> > > > > > >
+> > > > > > > either they need to write "default" first then flr or we will need to
+> > > > > > > reprobe reset methods each time when user writes to reset_method attribute.
+> > > > > >
+> > > > > > Not sure I completely understand the problem here.  I think relying on
+> > > > > > previous state that is invisible to the user is a little problematic
+> > > > > > because it's hard for the user to predict what will happen.
+> > > > > >
+> > > > > > If the user enables a method that was previously "disabled" because
+> > > > > > the probe failed, won't the reset method itself just fail with
+> > > > > > -ENOTTY?  Is that a problem?
+> > > > > >
+> > > > > I think I didn't explain this correctly. With current implementation
+> > > > > its not necessary to explicitly set *order of availabe* reset methods.
+> > > > > User can directly write a single supported reset method only and then perform
+> > > > > the reset. Side effect of that is other methods are disabled if user
+> > > > > writes single or less than available number of supported reset method.
+> > > > > Current implementation is able to handle this case but with new encoding
+> > > > > we'll need to reprobe reset methods everytime because we have no way
+> > > > > of distingushing supported and currently enabled reset method.
+> > > >
+> > > > I'm confused.  I thought the point of the nested loops to find the
+> > > > highest priority enabled reset method was to allow the user to control
+> > > > the order.  The sysfs doc says writing "reset_method" sets the "reset
+> > > > methods and their ordering."
+> > > >
+> > > > It seems complicated to track "supported" and "enabled" separately,
+> > > > and I don't know what the benefit is.  If we write "reset_method" to
+> > > > enable reset X, can we just probe reset X to see if it's supported?
+> > >
+> > > Although final result is same whether user writes a supported reset method or
+> > > their ordering that is,
+> > > # echo bus > reset_methods
+> > > and
+> > > # echo bus,flr > reset_methods
+> > >
+> > > are the same but in the first version, users don't have to explicitly
+> > > set the ordering if they just want to perform bus reset.
+> > > Current implementation allows the flexibility for switching between
+> > > first and second option.
+> >
+> > Sorry, I can't quite make sense of the above.
+> >
+> > Your doc implies the following are different:
+> >
+> >   # echo bus,flr > reset_methods
+> >   # echo flr,bus > reset_methods
+> >
+> > Are they?  If you don't need to provide control over the order of
+> > trying resets, this can all be simplified quite a bit.
+> >
+> > Bjorn
+> The v1 of the patch series allowed only single reset method to be
+> written instead of ordering of all supported reset methods.
+> With your example, current implementation allows both writing single
+> value and list of supported reset methods.
 >
-> Hi,
+> # echo bus > reset_methods
+> and
+> # echo bus,flr > reset_methods
 >
-> On Tue, Mar 16, 2021 at 04:51:40PM +0100, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > It should not be necessary to update the current_state field of
-> > struct pci_dev in pci_enable_device_flags() before calling
-> > do_pci_enable_device() for the device, because none of the
-> > code between that point and the pci_set_power_state() call in
-> > do_pci_enable_device() invoked later depends on it.
-> >
-> > Moreover, doing that is actively harmful in some cases.  For example,
-> > if the given PCI device depends on an ACPI power resource whose _STA
-> > method initially returns 0 ("off"), but the config space of the PCI
-> > device is accessible and the power state retrieved from the
-> > PCI_PM_CTRL register is D0, the current_state field in the struct
-> > pci_dev representing that device will get out of sync with the
-> > power.state of its ACPI companion object and that will lead to
-> > power management issues going forward.
-> >
-> > To avoid such issues it is better to leave the current_state value
-> > as is until it is changed to PCI_D0 by do_pci_enable_device() as
-> > appropriate.  However, the power state of the device is not changed
-> > to PCI_D0 if it is already enabled when pci_enable_device_flags()
-> > gets called for it, so update its current_state in that case, but
-> > use pci_update_current_state() covering platform PM too for that.
-> >
-> > Link: https://lore.kernel.org/lkml/20210314000439.3138941-1-luzmaximilian@gmail.com/
-> > Reported-by: Maximilian Luz <luzmaximilian@gmail.com>
-> > Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Max, I've added a T-by from you even though the patch is slightly different
-> > from what you have tested, but the difference shouldn't matter for your case.
-> >
-> > ---
-> >  drivers/pci/pci.c |   16 +++-------------
-> >  1 file changed, 3 insertions(+), 13 deletions(-)
-> >
-> > Index: linux-pm/drivers/pci/pci.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci.c
-> > +++ linux-pm/drivers/pci/pci.c
-> > @@ -1870,20 +1870,10 @@ static int pci_enable_device_flags(struc
-> >       int err;
-> >       int i, bars = 0;
-> >
-> > -     /*
-> > -      * Power state could be unknown at this point, either due to a fresh
-> > -      * boot or a device removal call.  So get the current power state
-> > -      * so that things like MSI message writing will behave as expected
-> > -      * (e.g. if the device really is in D0 at enable time).
-> > -      */
-> > -     if (dev->pm_cap) {
-> > -             u16 pmcsr;
-> > -             pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > -             dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > -     }
-> > -
-> > -     if (atomic_inc_return(&dev->enable_cnt) > 1)
-> > +     if (atomic_inc_return(&dev->enable_cnt) > 1) {
-> > +             pci_update_current_state(dev, dev->current_state);
-> >               return 0;               /* already enabled */
-> > +     }
-> >
-> >       bridge = pci_upstream_bridge(dev);
-> >       if (bridge)
+> OR
 >
-> A user in Debian reported that this commit caused an issue, cf.
-> https://bugs.debian.org/990008#10 with the e1000e driver failing to
-> probe the device. It was reported as well to
-> https://bugzilla.kernel.org/show_bug.cgi?id=213481
+> # echo flr > reset_methods
+> and
+> echo flr,bus > reset_methods
 >
-> According to the above and
-> https://bugzilla.kernel.org/show_bug.cgi?id=213481#c2 reverting
-> 4514d991d992 ("PCI: PM: Do not read power state in
-> pci_enable_device_flags()") fixes the issue.
+# echo flr,bus and echo bus,flr are different.
 
-This commit has just been reverted.
+> Its more of a preference than a functional point. Ultimately the
+> __pci_reset_function_locked() function will only perform 'bus' reset in
+> this example because we make sure 'reset_methods' file only contains
+> valid device supported reset methods all the time so
+> __pci_reset_function_locked() won't go into -ENOTTY case but with new
+Oops I'm wrong here. __pci_reset_function_locked() can return -ENOTTY
+and follow through if a reset fails.
 
-We will try to address the original issue addressed by it in a different way.
-
-Thanks!
+Rest of the point should hold.
+> encoding theres no way to make sure `reset_methods`sysfs attribute will
+> contain valid supported reset methods all the time because of the reset
+> methods can be masked implicitly if user uses first option of writing
+> only single value.
+>
+> My point is current implementation allows more flexibility for the user.
+>
+> Thanks,
+> Amey
