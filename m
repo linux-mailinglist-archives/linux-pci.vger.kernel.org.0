@@ -2,103 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B75593B198F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 14:04:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6054D3B1990
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 14:06:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbhFWMHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 08:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        id S230157AbhFWMIn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 08:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230019AbhFWMHB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 23 Jun 2021 08:07:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A01CC6044F;
-        Wed, 23 Jun 2021 12:04:43 +0000 (UTC)
+        id S230019AbhFWMIm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Jun 2021 08:08:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DE7F6102A;
+        Wed, 23 Jun 2021 12:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624449883;
-        bh=EcGql4AOk/Bq2QCWSdhodlfFpHz5gEaNlvEX2r9KEoI=;
+        s=k20201202; t=1624449985;
+        bh=pRjRyRfLrESTWmV+JAD0jFiz2kLDegDFhdIBtqzV2a8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=a9W3UzIedVNFEAbepmm7nqKZEyYId9daA4wkLOhQMAbKqTDbuU53x6BvlJT0bKudz
-         gfvPeXHxIdFMO8CdrBzp7luJrBPjIgh6qTjjoe8BFB8g5NTUHRfTGDJC8O3JTE/S5j
-         F2x/QfGn87rZHRP85HUYW/tPCEOo5+X4WUf2Qbd14EjKYmhEgdubWegjX+zyLRsYnX
-         ec1BBLgwv6/W35KhyB20I3YCkKx+etumjDdJYmRcAc+ucXysJOFGV3BGSsuHs94NQz
-         cb99AH70uE6xr0OFR5A1+qYpzFpGU09slaz95xVI/IQAytD1vPzjub9KGWaSktNnAF
-         vRQkPqJT4v4ZA==
-Date:   Wed, 23 Jun 2021 07:04:41 -0500
+        b=lDS22IWujCGbBwr2H+FZidYVi2ctHxtn0bg2GUVranYGqe2eU1rgevF8BVIdbq1vm
+         PI7PRruiW+g42S+f+unuo5+ui34MXUbQLowbXFTHHLQBeXdVcv1DtFJvpRPGk6uF7S
+         vWLhY2gyaX5jXQVvgbA7bTYtTwe9Q+TLqimYZhGaTWyfN9wmLgL3kQj/vkZuBGDXyF
+         AUf7GnRC0SWsjXQrLB1+1uu4j8QPuKN+nrh7OfoMVTf4Jl45HUErFbF3w1fQlihZGD
+         1FyBE3O3Cf1qSrhIuyPi9MJj4k0PRQc8Ru2fzfTQc3q2Tmf0jcf5285xcS+q3p6BML
+         i639rYdjo/gyw==
+Date:   Wed, 23 Jun 2021 07:06:23 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Fix shiftTooManyBitsSigned warning for
- Tegra194
-Message-ID: <20210623120441.GA3355109@bjorn-Precision-5520>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set
+ device reset mechanism
+Message-ID: <20210623120623.GA3295394@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210623085206.GA10593@lpieralisi>
+In-Reply-To: <20210621193307.gt7iwwg6gqqojhfc@archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 23, 2021 at 09:52:14AM +0100, Lorenzo Pieralisi wrote:
-> On Fri, Jun 18, 2021 at 06:04:28PM -0500, Bjorn Helgaas wrote:
-> > On Fri, Jun 18, 2021 at 05:02:19PM +0100, Jon Hunter wrote:
-> > > The cppcheck tool issues the following warning for the Tegra194 PCIe
-> > > driver ...
-> > > 
-> > >  $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
-> > >  Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
-> > > 
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability:
-> > > 	Shifting signed 32-bit value by 31 bits is
-> > > 	implementation-defined behaviour. See condition at line 1826.
-> > > 	[shiftTooManyBitsSigned]
-> > > 
-> > >   appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
-> > >                       ^
-> > > The above warning occurs because the '1' is treated as a signed type
-> > > and so fix this by using the 'BIT' macro to ensure that this is defined
-> > > as a unsigned type.
-> > 
-> > The subject and commit log should describe the problem we're fixing.
-> > The *warning* is not the problem; the problem is the undefined
-> > behavior.
-> > 
-> > I'll fix this up, no need to repost for this.
+On Tue, Jun 22, 2021 at 01:03:07AM +0530, Amey Narkhede wrote:
+> On 21/06/21 02:07PM, Bjorn Helgaas wrote:
+> > On Mon, Jun 21, 2021 at 10:58:54PM +0530, Amey Narkhede wrote:
+> > > On 21/06/21 08:01AM, Bjorn Helgaas wrote:
+> > > > On Sat, Jun 19, 2021 at 07:29:20PM +0530, Amey Narkhede wrote:
+> > > > > On 21/06/18 03:00PM, Bjorn Helgaas wrote:
+> > > > > > On Tue, Jun 08, 2021 at 11:18:53AM +0530, Amey Narkhede wrote:
+> > > > > > > Add reset_method sysfs attribute to enable user to
+> > > > > > > query and set user preferred device reset methods and
+> > > > > > > their ordering.
+> > > >
+> > > > > > > +	if (sysfs_streq(options, "default")) {
+> > > > > > > +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++)
+> > > > > > > +			reset_methods[i] = reset_methods[i] ? prio-- : 0;
+> > > > > > > +		goto set_reset_methods;
+> > > > > > > +	}
+> > > > > >
+> > > > > > If you use pci_init_reset_methods() here, you can also get this case
+> > > > > > out of the way early.
+> > > > > >
+> > > > > The problem with alternate encoding is we won't be able to know if
+> > > > > one of the reset methods was disabled previously. For example,
+> > > > >
+> > > > > # cat reset_methods
+> > > > > flr,bus 			# dev->reset_methods = [3, 5, 0, ...]
+> > > > > # echo bus > reset_methods 	# dev->reset_methods = [5, 0, 0, ...]
+> > > > > # cat reset_methods
+> > > > > bus
+> > > > >
+> > > > > Now if an user wants to enable flr
+> > > > >
+> > > > > # echo flr > reset_methods 	# dev->reset_methods = [3, 0, 0, ...]
+> > > > > OR
+> > > > > # echo bus,flr > reset_methods 	# dev->reset_methods = [5, 3, 0, ...]
+> > > > >
+> > > > > either they need to write "default" first then flr or we will need to
+> > > > > reprobe reset methods each time when user writes to reset_method attribute.
+> > > >
+> > > > Not sure I completely understand the problem here.  I think relying on
+> > > > previous state that is invisible to the user is a little problematic
+> > > > because it's hard for the user to predict what will happen.
+> > > >
+> > > > If the user enables a method that was previously "disabled" because
+> > > > the probe failed, won't the reset method itself just fail with
+> > > > -ENOTTY?  Is that a problem?
+> > > >
+> > > I think I didn't explain this correctly. With current implementation
+> > > its not necessary to explicitly set *order of availabe* reset methods.
+> > > User can directly write a single supported reset method only and then perform
+> > > the reset. Side effect of that is other methods are disabled if user
+> > > writes single or less than available number of supported reset method.
+> > > Current implementation is able to handle this case but with new encoding
+> > > we'll need to reprobe reset methods everytime because we have no way
+> > > of distingushing supported and currently enabled reset method.
+> >
+> > I'm confused.  I thought the point of the nested loops to find the
+> > highest priority enabled reset method was to allow the user to control
+> > the order.  The sysfs doc says writing "reset_method" sets the "reset
+> > methods and their ordering."
+> >
+> > It seems complicated to track "supported" and "enabled" separately,
+> > and I don't know what the benefit is.  If we write "reset_method" to
+> > enable reset X, can we just probe reset X to see if it's supported?
+>
+> Although final result is same whether user writes a supported reset method or
+> their ordering that is,
+> # echo bus > reset_methods
+> and
+> # echo bus,flr > reset_methods
 > 
-> Hi Bjorn,
-> 
-> I can fix it up myself, just wanted to ask if you merged it already, it
-> does not look like but I thought I'd check.
+> are the same but in the first version, users don't have to explicitly
+> set the ordering if they just want to perform bus reset.
+> Current implementation allows the flexibility for switching between
+> first and second option.
 
-Oops, sorry, I guess I dropped the ball on this one and didn't get it
-merged.  When you do, can you update the subject as well, e.g.,
+Sorry, I can't quite make sense of the above.
 
-  s/PCI: tegra/PCI: tegra194/
+Your doc implies the following are different:
 
-to differentiate from the other "tegra" driver?
+  # echo bus,flr > reset_methods
+  # echo flr,bus > reset_methods
 
-> > > Fixes: c57247f940e8 PCI: tegra: Add support for PCIe endpoint mode in Tegra194
-> > > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > index 8fc08336f76e..3c1feeab104f 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > @@ -1826,7 +1826,7 @@ static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
-> > >  	if (unlikely(irq > 31))
-> > >  		return -EINVAL;
-> > >  
-> > > -	appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
-> > > +	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
-> > >  
-> > >  	return 0;
-> > >  }
-> > > -- 
-> > > 2.25.1
-> > > 
+Are they?  If you don't need to provide control over the order of
+trying resets, this can all be simplified quite a bit.
+
+Bjorn
