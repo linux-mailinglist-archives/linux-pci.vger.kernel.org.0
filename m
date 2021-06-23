@@ -2,89 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B55E3B202A
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 20:20:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E068F3B205B
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 20:37:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbhFWSWk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 14:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbhFWSWk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 14:22:40 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C56C06175F
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 11:20:21 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id g4so7654964qkl.1
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 11:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jl8pbJWalrLhIBlNXOVoQQE4IHG/JvIijc85CtgYeeo=;
-        b=O9TJXI61AW9H2nQtUEnlSBFAPp1Dbm0DFWyvVQzfD/PJICtcInbflOVhVjNXaZC+/A
-         P5oHFmIKwbl6pOHIftFzPCxPDeh1x/lKRVvMsGHK9UZml3jK2tnIowXHThpv5UVtE+Sm
-         5cLMhWY0zpTFvHpTYfr1AbjnBxpwd81+C7RPncszrI4askcQTsqjuNBSpGs42/FuYOUR
-         Zo1Jsaxs5PUHdvj03/RI59F2gWk6fh+bkxwXwGg+BUd0Fx0z6y8O2HdfuaUyv4OWvRWt
-         P1LDggXBACdgJJyoF+/8c2wmxP4OmrriRa/T9WiPUOMz7uGWEHZKMmmYOJhGWbGV+5kQ
-         mXTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jl8pbJWalrLhIBlNXOVoQQE4IHG/JvIijc85CtgYeeo=;
-        b=OWyrfVfVWJpx3+jvNJ5hh1/EHTuYsjuTwlyX4F3FFMlVNmLQM+x0U7L0/gUej4bMzZ
-         qpEhzRqK3CTvtH9UNbmcF3i0yz+xPHeWX18+MVoDE5Qquf8AQKyQ6gYKBTFfihRuTYdW
-         S+yYTfpQXUfR75tuBrfwg9Chxjl1RSL0nEKAGsyPhTsqQnWif/swYPDCQMdYp/gnbmRt
-         104KjtiP0mEW2LcLEio8rdq7uYBSCgM0/hF+VXKaH6dbZed9TFXg9prWU38py9HwF53m
-         nWkUfWRrqUi82BiXT974C9FEqmIEp54E6MQN1xdjtTnYau+xnD5gVbLuwMdP1Y9mSfp2
-         4J+g==
-X-Gm-Message-State: AOAM531tOch0/WCPlQSQmb91Wh2r+AbutDKZeYM69dIV2FHwzUrxCRBm
-        3QuM7Y7UJt3VVi+5zky1d0TcPw==
-X-Google-Smtp-Source: ABdhPJxSsiUaYE217a9+roMj6tfYeEagEHiITUo/av6ByWOnU7jl//t+ROZ4QR4Wpb+FkcwkwjCMDw==
-X-Received: by 2002:ae9:c219:: with SMTP id j25mr1367484qkg.313.1624472420239;
-        Wed, 23 Jun 2021 11:20:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-113-94.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.113.94])
-        by smtp.gmail.com with ESMTPSA id x19sm474843qtp.58.2021.06.23.11.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jun 2021 11:20:19 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1lw7U3-00BlBX-5u; Wed, 23 Jun 2021 15:20:19 -0300
-Date:   Wed, 23 Jun 2021 15:20:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     bhelgaas@google.com, alex.williamson@redhat.com, cohuck@redhat.com,
-        kevin.tian@intel.com, eric.auger@redhat.com,
-        giovanni.cabiddu@intel.com, mjrosato@linux.ibm.com,
-        jannh@google.com, kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        schnelle@linux.ibm.com, minchan@kernel.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, jeyu@kernel.org,
-        ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        axboe@kernel.dk, mbenes@suse.com, jpoimboe@redhat.com,
-        tglx@linutronix.de, keescook@chromium.org, jikos@kernel.org,
-        rostedt@goodmis.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] vfio: use the new pci_dev_trylock() helper to
- simplify try lock
-Message-ID: <20210623182019.GW1096940@ziepe.ca>
-References: <20210623022824.308041-1-mcgrof@kernel.org>
- <20210623022824.308041-3-mcgrof@kernel.org>
+        id S229688AbhFWSkG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 14:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229523AbhFWSkF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 23 Jun 2021 14:40:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3C1E061185;
+        Wed, 23 Jun 2021 18:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624473468;
+        bh=K9ctSOOXg/HLNG/KMzo+bt+uXbhOKksVK31vHq8QEAc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pew0mCStiOrsU0bWjM0b54f2cDTk0BFJYuT7oL0Hl93RfndilrrpZ00P5EcbMTEX/
+         /lbkdoUtJfhzG6xhgO6NWycBIcDRvmNhEJGTWAKSFbeL2aFhOe2jpLrVodVSrKGkzr
+         gHxURUCJo+Bry9z+VHTZDIOT/ABoSs0DN2Tjo7IL/UHU38iukI2V/m5xdJIYc7NUws
+         7NMVKjT7vcMuSIu2fy0OZOLVI8+LwwecPlMOHv27TBpClMax/sAEQmgzVN3VS5iIlB
+         HGiL4Uzn3xHn2voW7eTXBh/NjM9NO32LN+GkhPpRHj+kINjyQizH9+P5WDGveYcADU
+         kFBCzfquuEa8w==
+Date:   Wed, 23 Jun 2021 19:37:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Qian Cai <quic_qiancai@quicinc.com>
+Cc:     Claire Chang <tientzu@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
+        peterz@infradead.org, benh@kernel.crashing.org,
+        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
+        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
+        mingo@kernel.org, jxgao@google.com, sstabellini@kernel.org,
+        Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        bskeggs@redhat.com, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Thierry Reding <treding@nvidia.com>,
+        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
+        linux-devicetree <devicetree@vger.kernel.org>, daniel@ffwll.ch,
+        airlied@linux.ie, maarten.lankhorst@linux.intel.com,
+        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        rodrigo.vivi@intel.com, bhelgaas@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        thomas.lendacky@amd.com, Robin Murphy <robin.murphy@arm.com>,
+        bauerman@linux.ibm.com
+Subject: Re: [PATCH v14 06/12] swiotlb: Use is_swiotlb_force_bounce for
+ swiotlb data bouncing
+Message-ID: <20210623183736.GA472@willie-the-truck>
+References: <20210619034043.199220-1-tientzu@chromium.org>
+ <20210619034043.199220-7-tientzu@chromium.org>
+ <76c3343d-72e5-9df3-8924-5474ee698ef4@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210623022824.308041-3-mcgrof@kernel.org>
+In-Reply-To: <76c3343d-72e5-9df3-8924-5474ee698ef4@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 07:28:24PM -0700, Luis Chamberlain wrote:
-> Use the new pci_dev_trylock() helper to simplify our locking.
+On Wed, Jun 23, 2021 at 12:39:29PM -0400, Qian Cai wrote:
 > 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> On 6/18/2021 11:40 PM, Claire Chang wrote:
+> > Propagate the swiotlb_force into io_tlb_default_mem->force_bounce and
+> > use it to determine whether to bounce the data or not. This will be
+> > useful later to allow for different pools.
+> > 
+> > Signed-off-by: Claire Chang <tientzu@chromium.org>
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > Tested-by: Stefano Stabellini <sstabellini@kernel.org>
+> > Tested-by: Will Deacon <will@kernel.org>
+> > Acked-by: Stefano Stabellini <sstabellini@kernel.org>
+> 
+> Reverting the rest of the series up to this patch fixed a boot crash with NVMe on today's linux-next.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Hmm, so that makes patch 7 the suspicious one, right?
 
-Jason
+Looking at that one more closely, it looks like swiotlb_find_slots() takes
+'alloc_size + offset' as its 'alloc_size' parameter from
+swiotlb_tbl_map_single() and initialises 'mem->slots[i].alloc_size' based
+on 'alloc_size + offset', which looks like a change in behaviour from the
+old code, which didn't include the offset there.
+
+swiotlb_release_slots() then adds the offset back on afaict, so we end up
+accounting for it twice and possibly unmap more than we're supposed to?
+
+Will
