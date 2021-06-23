@@ -2,138 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D1173B1679
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 11:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6E173B1664
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jun 2021 11:02:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229833AbhFWJJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Jun 2021 05:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbhFWJJl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 05:09:41 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14751C061574
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 02:07:23 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id r19so1033421qvw.5
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 02:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=13Gr0i1MTKRVJOLYjbaQS0t+sJQavN2HZYVSf9igv0I=;
-        b=SA9G17LOrb34DyVZWPMTTHIONdcJ/5ZbZWqssqBb4aWqa4vseTx3+V6CkFU4RvePBr
-         YNNS8jqCGxfTDXRduKfQQMwLt3JL1m3nr4PNVWIksCr6YiJm78aGWUxZDo4V4hXGS1bN
-         zAH4ZuRlx4WIbGetsYgzQvT1yucBC3KtrF3U0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=13Gr0i1MTKRVJOLYjbaQS0t+sJQavN2HZYVSf9igv0I=;
-        b=p4Sb5jq0ykQFDQEM3C84HgizAdG0FwBFVQx8rhMoIpyWg+2FQJ7m9AjwfRSBLvWAo1
-         K24jhtpL6ov/IB8TWkdCsXv/qsywIATCWnvBymgpuhwhjPOofqqY7o/WcTts46g8/5by
-         UvxoLmOSmaoiROPXg4aDKvVy4gwqkb8S5rxvndAUwi1Fv5LED9wRuf+muv6sMmLBRs19
-         T3zgLvZzTolR29+LuMP6CX1FUXkklf6Ona2VejfZtt493/wSr6yZ6HRIVWuDeZ/IPhlr
-         T1J0nUTmOB5GpWKpM3Z7Y+nrW0WvOw/BlhYLk5GC/BwAmAxYX23BfDysCdZWm7c5553L
-         x6tQ==
-X-Gm-Message-State: AOAM532o+y7EXdHtuSzW4IMa7Nrd9M+noRNcUKmDu8xHPagr2RkGeBmx
-        S4Ff8A1aEjyyhrmoATZg7RrucaTmza/1Rg==
-X-Google-Smtp-Source: ABdhPJzmtPXf00wu5/Keq7O0pH3sSVr4NCSfOt7Y3pxiv5bmOMiVFTXWPnjBtlbuApdeZCqvrNrSfg==
-X-Received: by 2002:ad4:596b:: with SMTP id eq11mr1188385qvb.34.1624439241565;
-        Wed, 23 Jun 2021 02:07:21 -0700 (PDT)
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
-        by smtp.gmail.com with ESMTPSA id i16sm7957520qki.121.2021.06.23.02.07.21
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Jun 2021 02:07:21 -0700 (PDT)
-Received: by mail-qk1-f175.google.com with SMTP id bl4so3320212qkb.8
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 02:07:21 -0700 (PDT)
-X-Received: by 2002:a02:4b46:: with SMTP id q67mr7991027jaa.84.1624438886886;
- Wed, 23 Jun 2021 02:01:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210619034043.199220-1-tientzu@chromium.org> <YNLy7z0Zq1AXKLng@char.us.oracle.com>
-In-Reply-To: <YNLy7z0Zq1AXKLng@char.us.oracle.com>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Wed, 23 Jun 2021 17:01:16 +0800
-X-Gmail-Original-Message-ID: <CALiNf28U9xaqth99u=hB45b=qWMYaSoe2DGgNVFrHXze6wNmdQ@mail.gmail.com>
-Message-ID: <CALiNf28U9xaqth99u=hB45b=qWMYaSoe2DGgNVFrHXze6wNmdQ@mail.gmail.com>
-Subject: Re: [PATCH v14 00/12] Restricted DMA
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, grant.likely@arm.com,
-        xypron.glpk@gmx.de, Thierry Reding <treding@nvidia.com>,
-        mingo@kernel.org, bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com,
-        Tom Lendacky <thomas.lendacky@amd.com>
+        id S229920AbhFWJFN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Jun 2021 05:05:13 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:39569 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229833AbhFWJFN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Jun 2021 05:05:13 -0400
+X-UUID: 552431a23ebe4ed6ab6a1b0e58b8b1c6-20210623
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WHVs4dh6AbAKAbeIIKWBxdhvq+wckIntxxe4eFfwL3A=;
+        b=gZMamKoetcWP3ttbQXdOp/wfPXqx/YKRVd5BPGlaE6AvZnbVcP01sgyKX9kWl7YOtN1nwYvKaDxrnEiknpXU19V0plkvv58G+rc7peFJyMUoNamQ4PIqtgbGL73P0aOV6vv+pNfZDxQ1TslBxrqooxHsFYo+GrbwSISXdsowYT4=;
+X-UUID: 552431a23ebe4ed6ab6a1b0e58b8b1c6-20210623
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1401636374; Wed, 23 Jun 2021 17:02:52 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 23 Jun
+ 2021 17:02:49 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 23 Jun 2021 17:02:48 +0800
+Message-ID: <1624438968.2701.3.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: mediatek-gen3: Add support for
+ MT8195
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Chen-Yu Tsai <wenst@chromium.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Randy Wu <Randy.Wu@mediatek.com>, <youlin.pei@mediatek.com>
+Date:   Wed, 23 Jun 2021 17:02:48 +0800
+In-Reply-To: <20210622110517.GB24565@lpieralisi>
+References: <20210601024408.24485-1-jianjun.wang@mediatek.com>
+         <20210601024408.24485-2-jianjun.wang@mediatek.com>
+         <CAGXv+5G-8+ppafiUnqWm2UeiL+edHJ2zYZvU-S7mz_NdrM3YsA@mail.gmail.com>
+         <1622526594.9054.6.camel@mhfsdcap03>
+         <CAGXv+5GMTbC5TTgURhPAvxBEY18S6-T-BZ9CpXsO91Trim7TXw@mail.gmail.com>
+         <db62910b-febd-6cba-8a72-2bf718f7b110@gmail.com>
+         <20210622110517.GB24565@lpieralisi>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 4D63936515B4AAF2E78DF35DD5D25263CB69BF69C06A8201811E5A3736340AA42000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 23, 2021 at 4:38 PM Konrad Rzeszutek Wilk
-<konrad.wilk@oracle.com> wrote:
->
-> On Sat, Jun 19, 2021 at 11:40:31AM +0800, Claire Chang wrote:
-> > This series implements mitigations for lack of DMA access control on
-> > systems without an IOMMU, which could result in the DMA accessing the
-> > system memory at unexpected times and/or unexpected addresses, possibly
-> > leading to data leakage or corruption.
-> >
-> > For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
-> > not behind an IOMMU. As PCI-e, by design, gives the device full access to
-> > system memory, a vulnerability in the Wi-Fi firmware could easily escalate
-> > to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
-> > full chain of exploits; [2], [3]).
-> >
-> > To mitigate the security concerns, we introduce restricted DMA. Restricted
-> > DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
-> > specially allocated region and does memory allocation from the same region.
-> > The feature on its own provides a basic level of protection against the DMA
-> > overwriting buffer contents at unexpected times. However, to protect
-> > against general data leakage and system memory corruption, the system needs
-> > to provide a way to restrict the DMA to a predefined memory region (this is
-> > usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
-> >
-> > [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
-> > [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
-> > [2] https://blade.tencent.com/en/advisories/qualpwn/
-> > [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
-> > [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
->
-> Heya Claire,
->
-> I put all your patches on
-> https://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git/log/?h=devel/for-linus-5.14
->
-> Please double-check that they all look ok.
->
-> Thank you!
+T24gVHVlLCAyMDIxLTA2LTIyIGF0IDEyOjA1ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gV2VkLCBKdW4gMDIsIDIwMjEgYXQgMDE6MzM6MDdQTSArMDIwMCwgTWF0dGhpYXMg
+QnJ1Z2dlciB3cm90ZToNCj4gPiANCj4gPiANCj4gPiBPbiAwMS8wNi8yMDIxIDA4OjA3LCBDaGVu
+LVl1IFRzYWkgd3JvdGU6DQo+ID4gPiBIaSwNCj4gPiA+IA0KPiA+ID4gT24gVHVlLCBKdW4gMSwg
+MjAyMSBhdCAxOjUwIFBNIEppYW5qdW4gV2FuZyA8amlhbmp1bi53YW5nQG1lZGlhdGVrLmNvbT4g
+d3JvdGU6DQo+ID4gPj4NCj4gPiA+PiBPbiBUdWUsIDIwMjEtMDYtMDEgYXQgMTE6NTMgKzA4MDAs
+IENoZW4tWXUgVHNhaSB3cm90ZToNCj4gPiA+Pj4gSGksDQo+ID4gPj4+DQo+ID4gPj4+IE9uIFR1
+ZSwgSnVuIDEsIDIwMjEgYXQgMTA6NTAgQU0gSmlhbmp1biBXYW5nIDxqaWFuanVuLndhbmdAbWVk
+aWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+Pj4+DQo+ID4gPj4+PiBNVDgxOTUgaXMgYW4gQVJNIHBs
+YXRmb3JtIFNvQyB3aGljaCBoYXMgdGhlIHNhbWUgUENJZSBJUCB3aXRoIE1UODE5Mi4NCj4gPiA+
+Pj4NCj4gPiA+Pj4gQmFzZWQgb24gd2hhdCBJJ20gc2VlaW5nIGludGVybmFsbHksIHRoZXJlIHNl
+ZW1zIHRvIGJlIHNvbWUgaW5jb25zaXN0ZW5jeQ0KPiA+ID4+PiBhY3Jvc3MgdGhlIE1lZGlhVGVr
+IHBsYXRmb3JtIG9uIHdoZXRoZXIgbmV3IGNvbXBhdGlibGUgc3RyaW5ncyBzaG91bGQgYmUNCj4g
+PiA+Pj4gaW50cm9kdWNlZCBmb3IgImZ1bGx5IGNvbXBhdGlibGUiIElQIGJsb2Nrcy4NCj4gPiA+
+Pj4NCj4gPiA+Pj4gSWYgdGhpcyBoYXJkd2FyZSBibG9jayBpbiBNVDgxOTUgaXMgInRoZSBzYW1l
+IiBhcyB0aGUgb25lIGluIE1UODE5MiwgZG8gd2UNCj4gPiA+Pj4gcmVhbGx5IG5lZWQgdGhlIG5l
+dyBjb21wYXRpYmxlIHN0cmluZz8gQXJlIHRoZXJlIGFueSBjb25jZXJucz8NCj4gPiA+Pg0KPiA+
+ID4+IEhpIENoZW4tWXUsDQo+ID4gPj4NCj4gPiA+PiBJdCdzIG9rIHRvIHJldXNlIHRoZSBjb21w
+YXRpYmxlIHN0cmluZyB3aXRoIE1UODE5MiwgYnV0IEkgdGhpbmsgdGhpcw0KPiA+ID4+IHdpbGwg
+YmUgZWFzaWVyIHRvIGZpbmQgd2hpY2ggcGxhdGZvcm1zIHRoaXMgZHJpdmVyIGlzIGNvbXBhdGli
+bGUgd2l0aCwNCj4gPiA+PiBlc3BlY2lhbGx5IHdoZW4gd2UgaGF2ZSBtb3JlIGFuZCBtb3JlIHBs
+YXRmb3JtcyBpbiB0aGUgZnV0dXJlLg0KPiA+ID4gDQo+ID4gPiBJZiBpdCdzIGp1c3QgZm9yIGlu
+Zm9ybWF0aW9uYWwgcHVycG9zZXMsIHRoZW4gaGF2aW5nIHRoZSBNVDgxOTIgY29tcGF0aWJsZQ0K
+PiA+ID4gYXMgYSBmYWxsYmFjayB3b3VsZCB3b3JrLCBhbmQgd2Ugd291bGRuJ3QgbmVlZCB0byBt
+YWtlIGNoYW5nZXMgdG8gdGhlIGRyaXZlci4NCj4gPiA+IFRoaXMgd29ya3MgYmV0dGVyIGVzcGVj
+aWFsbHkgaWYgd2UgaGF2ZSB0byBzdXBwb3J0IG11bHRpcGxlIG9wZXJhdGluZyBzeXN0ZW1zDQo+
+ID4gPiB0aGF0IHVzZSBkZXZpY2UgdHJlZS4NCj4gPiA+IA0KPiA+ID4gU28gd2Ugd291bGQgd2Fu
+dA0KPiA+ID4gDQo+ID4gPiAgICAgIm1lZGlhdGVrLG10ODE5NS1wY2llIiwgIm1lZGlhdGVrLG10
+ODE5Mi1wY2llIg0KPiA+ID4gDQo+ID4gPiBhbmQNCj4gPiA+IA0KPiA+ID4gICAgICJtZWRpYXRl
+ayxtdDgxOTItcGNpZSINCj4gPiA+IA0KPiA+ID4gYmUgdGhlIHZhbGlkIG9wdGlvbnMuDQo+ID4g
+PiANCj4gPiA+IFBlcnNvbmFsbHkgSSdtIG5vdCBzZWVpbmcgZW5vdWdoIHZhbHVlIHRvIGp1c3Rp
+ZnkgYWRkaW5nIHRoZSBjb21wYXRpYmxlIHN0cmluZw0KPiA+ID4ganVzdCBmb3IgaW5mb3JtYXRp
+b25hbCBwdXJwb3NlcyB0aG91Z2guIE9uZSBjb3VsZCBlYXNpbHkgZGlzY2VybiB3aGljaCBoYXJk
+d2FyZQ0KPiA+ID4gaXMgdXNlZCBieSBsb29raW5nIGF0IHRoZSBkZXZpY2UgdHJlZS4NCj4gPiA+
+IA0KPiA+IA0KPiA+IEkgYWdyZWUsIGlmIG5vIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhlIHR3byBj
+aGlwcyBhcmUga25vd24sIGFkZGluZyBhDQo+ID4gYmluZGluZyB3aXRoZSBuZXcgY29tcGF0aWJs
+ZSBhbmQgYSBmYWxsYmFjayBpcyBhIGdvb2QgdGhpbmcuIElmIHdlDQo+ID4gbGF0ZXIgb24gcmVh
+bGl6ZSB0aGF0IG10ODE5NSBQQ0kgYmxvY2sgaGFzIGRpZmZlcmVuY2VzLCB3ZSBjYW4gYWRkIHRo
+ZQ0KPiA+IG1hdGNoaW5nIHRvIHRoZSBkcml2ZXIuDQo+IA0KPiBTbyB0aGlzIHNlcmllcyBjYW4g
+YmUgZHJvcHBlZCwgcmlnaHQgPw0KDQpZZXMsIHdlIHdpbGwgc2VuZCBkdC1iaW5kaW5ncyB3aXRo
+IGR0cyBjaGFuZ2VzIGluIGFub3RoZXIgc2VyaWVzLA0KdGhhbmtzLg0KPiANCj4gVGhhbmtzLA0K
+PiBMb3JlbnpvDQo+IA0KPiA+IFJlZ2FyZHMsDQo+ID4gTWF0dGhpYXMNCj4gPiANCj4gPiA+IA0K
+PiA+ID4gUmVnYXJkcw0KPiA+ID4gQ2hlbll1DQo+ID4gPiANCj4gPiA+IA0KPiA+ID4+IFRoYW5r
+cy4NCj4gPiA+Pj4NCj4gPiA+Pj4NCj4gPiA+Pj4gVGhhbmtzDQo+ID4gPj4+IENoZW5ZdQ0KPiA+
+ID4+Pg0KPiA+ID4+Pg0KPiA+ID4+Pj4gU2lnbmVkLW9mZi1ieTogSmlhbmp1biBXYW5nIDxqaWFu
+anVuLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ID4+Pj4gLS0tDQo+ID4gPj4+PiAgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCB8IDQg
+KysrLQ0KPiA+ID4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkNCj4gPiA+Pj4+DQo+ID4gPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1nZW4zLnlhbWwNCj4gPiA+
+Pj4+IGluZGV4IGU3YjFmOTg5MmRhNC4uZDVlNGEzZTYzZDk3IDEwMDY0NA0KPiA+ID4+Pj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdl
+bjMueWFtbA0KPiA+ID4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0KPiA+ID4+Pj4gQEAgLTQ4LDcgKzQ4LDkgQEAg
+YWxsT2Y6DQo+ID4gPj4+Pg0KPiA+ID4+Pj4gIHByb3BlcnRpZXM6DQo+ID4gPj4+PiAgICBjb21w
+YXRpYmxlOg0KPiA+ID4+Pj4gLSAgICBjb25zdDogbWVkaWF0ZWssbXQ4MTkyLXBjaWUNCj4gPiA+
+Pj4+ICsgICAgb25lT2Y6DQo+ID4gPj4+PiArICAgICAgLSBjb25zdDogbWVkaWF0ZWssbXQ4MTky
+LXBjaWUNCj4gPiA+Pj4+ICsgICAgICAtIGNvbnN0OiBtZWRpYXRlayxtdDgxOTUtcGNpZQ0KPiA+
+ID4+Pj4NCj4gPiA+Pj4+ICAgIHJlZzoNCj4gPiA+Pj4+ICAgICAgbWF4SXRlbXM6IDENCj4gPiA+
+Pj4+IC0tDQo+ID4gPj4+PiAyLjE4LjANCj4gPiA+Pj4+IF9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gPj4+PiBMaW51eC1tZWRpYXRlayBtYWlsaW5n
+IGxpc3QNCj4gPiA+Pj4+IExpbnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiA+
+Pj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVk
+aWF0ZWsNCj4gPiA+Pg0KDQo=
 
-They look fine. Thank you!
