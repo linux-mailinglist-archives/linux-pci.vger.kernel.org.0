@@ -2,174 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B55DC3B3617
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 20:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C67563B36C4
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 21:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231407AbhFXSvD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 14:51:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:50970 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229464AbhFXSvC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 14:51:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624560522;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CNg9Wq5m1VbMd3O85AU7blSYJl1f6ygn421IFBSPGw4=;
-        b=EeSeWpMAJ28kVDu79WY3tBJEuJAmOJDwLaFXGFawglyot9RbBfTYL9fnboNXT0LhzWW0Fi
-        CIXcROwIbhMnYdtJYwRIrTxYQk5qZWieMo94yD2wO+2dhsabSf2EinBJz4SRFjGBiOPIgD
-        PIq9aRNF6rlSVVAa5fN2tRni5ox76wM=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-PKo7gkhwPheQM79qjuQhkg-1; Thu, 24 Jun 2021 14:48:41 -0400
-X-MC-Unique: PKo7gkhwPheQM79qjuQhkg-1
-Received: by mail-ot1-f72.google.com with SMTP id z60-20020a9d24c20000b029045ef35e4636so4056438ota.2
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 11:48:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CNg9Wq5m1VbMd3O85AU7blSYJl1f6ygn421IFBSPGw4=;
-        b=VF72FTOzWrfdL+NML1fAtqWcoCHXrDuGyDngs80otnliW1/f0LJHOUqNbK0scr4RF/
-         lGZWuU4Tct3WHm5QyovPEyWmCNI0c2/XmlHZyrxZlweFFnAB7yhJ1k8ugQwnPAVM9b4K
-         VFGNesy1W3AH+xPsSzkZiX4ZTrgCLHeO45LsHF3yELPsEpL5o3DZv+I4E+M66mp8b2lN
-         O1ewZwmq/WJO58p6c+zmgr2e1Isy0FB34aNESfzFm6L7WB26nkZBUAEaUgjbDokUAQdX
-         41XcT3id5pUwHRlCivSGdmSZ/F1Ik4wWJRuoiE0DPsWJC2PGyxEsfVAwBRLvGMXosTIA
-         R1jQ==
-X-Gm-Message-State: AOAM530v4e4L1dWYe/g2iPLnKE69HtNMvSCEUbFNcNinnkqbteKp6IT4
-        b44cNj1isvJoNXCg4pMOvZx8Jv78jsiKli4q3ZEM4r5RcJ5kOXjX8lYsDzrj28MNwr+oiMCIEYX
-        bI6he9/QJVOEkP9DY+9yo
-X-Received: by 2002:a4a:9863:: with SMTP id z32mr5585640ooi.37.1624560520523;
-        Thu, 24 Jun 2021 11:48:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxU0ze/kEarHzCX2HjFxCcEH4B/4H0wuysel+p0dtbgq8Vkn1XmNwRZVrwk4jcuz9r/80IzYQ==
-X-Received: by 2002:a4a:9863:: with SMTP id z32mr5585630ooi.37.1624560520315;
-        Thu, 24 Jun 2021 11:48:40 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id 26sm799626ooy.46.2021.06.24.11.48.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jun 2021 11:48:39 -0700 (PDT)
-Date:   Thu, 24 Jun 2021 12:48:38 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v7 1/8] PCI: Add pcie_reset_flr to follow calling
- convention of other reset methods
-Message-ID: <20210624124838.4accc23c.alex.williamson@redhat.com>
-In-Reply-To: <20210624161559.GA3532867@bjorn-Precision-5520>
-References: <20210624152809.m3glwh6lxckykt33@archlinux>
-        <20210624161559.GA3532867@bjorn-Precision-5520>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S232683AbhFXTXg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 15:23:36 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:20040 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232502AbhFXTXf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 15:23:35 -0400
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15OJBmri025165;
+        Thu, 24 Jun 2021 19:20:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2020-01-29;
+ bh=P8+6fQKt1GcJiNjuEjUVT8DwDaU9l6qyoErT2/2fhEo=;
+ b=ka4uO+w+HngPAlAlcvgVQkkZRUykFcqf4Wu4LLsIczBlUd9+Zr5u8u3Ez0oc7X0geuor
+ NBnMkH8lTH5cH7Nisz9W4sdd/zSB8dlSuy3OuvmdLF8Oc7s/wwN/Fv0dpLseQu3bdK7Z
+ 8wAYkg3ilAXxVIAui6DqWxa+spw0uny2hoar3/sW6hLatzWZNfkDtYHhjydp8A4Dz1yK
+ GiXznXL3JrmlRiC7nrEgrJPCqHuLUkxkwkvq/iCKDaooi2WJW6N0x6uixsHWWfFPAAKc
+ gswRROCllkfB1ApiO/vA4vIcprZIkyFi/x5gUAkuecntkqUc3lqadkY4GOxgsTJQ65SP VA== 
+Received: from oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 39c634ufgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Jun 2021 19:20:09 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 15OJK8hE035087;
+        Thu, 24 Jun 2021 19:20:08 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
+        by userp3030.oracle.com with ESMTP id 3995q18276-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Jun 2021 19:20:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VpXMUxGbaQ9Xui1oyOBNhR0FlQrJsdrtDWMytIAHuioZMgW6zJlsv0RQ7Zyy0ipuGwV0EUoaBtpPPrGQUVhU1CLMwCc9Bm8NqLTCV7tGBbpMKTFW5SUdcmi3ileOSoHTnlrahWvP/PpcvPQ/WFhlq+5wfRP9HRB/tNFpZ4AODVejGA9Qxl8rH6/fmzV648vSQp0wun865YcsPwpsymd8TQBbwmJi20B1Pp7gt0UP1UXNTYXU7rhhoYl5uLLKeSQFQQBZV1J8tjezI7kk2zII34EuwGHr/4/yuq293og361XsZByELl0pIX7r0XIXUGcPXoH8mQvOFxB7+8kh/lDqug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P8+6fQKt1GcJiNjuEjUVT8DwDaU9l6qyoErT2/2fhEo=;
+ b=Cshqzkx1kSkYTdieScYtwuU9XYvSgltLRPgvqkm3ZBoVSbGYTAYM5qdWlrwvkT/mspLR05MBNFoGz90ikfF/o/uoaF0/Eesq/Xm5Puf03B/hjAot7s6Lge/vvuFHHqTa2s4illm5NLGJ+NLAFv7nzjkfJt1GA5mL1y5yCNmODo8AKrfZMMgzjG2iCOB2Kt70LnEPvNLJHbxqic952W1o6t7HGBjryKCAJD6yiJ/KAftlNRXLHAYBbQwU6GEyt1I+QLhfOZkDdVHwKGSfrYx6g3uNXjLWyM6BREfD6BHHy6s7qtMPkL3Opw/zDHY1RHzRrLCo4BJRtF9YLXheO5/4Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P8+6fQKt1GcJiNjuEjUVT8DwDaU9l6qyoErT2/2fhEo=;
+ b=Jx9PG0C124tyZswmT6sJXGulr9UexRz4ZOBu9TDsfCCLOqUNHQ+2JT25KlFEKD+cGDZa3h/55BGXNVLxWyk0I9RTPjP/mauOKH1Q6kDRxZw8D/8pJee/Gpp3ZW0YskPauNAsJcHC8NUtNeVPFg82SXUhFRLKJmuFn41INbG7puM=
+Authentication-Results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=oracle.com;
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
+ by BYAPR10MB3160.namprd10.prod.outlook.com (2603:10b6:a03:151::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18; Thu, 24 Jun
+ 2021 19:20:04 +0000
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::8111:d8f1:c262:808d]) by BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::8111:d8f1:c262:808d%6]) with mapi id 15.20.4264.020; Thu, 24 Jun 2021
+ 19:20:04 +0000
+Date:   Thu, 24 Jun 2021 15:19:48 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Claire Chang <tientzu@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com, thomas.lendacky@amd.com,
+        quic_qiancai@quicinc.com
+Subject: Re: [PATCH v15 00/12] Restricted DMA
+Message-ID: <YNTa1C5uvz+qWryf@char.us.oracle.com>
+References: <20210624155526.2775863-1-tientzu@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210624155526.2775863-1-tientzu@chromium.org>
+X-Originating-IP: [138.3.200.25]
+X-ClientProxiedBy: SN7P220CA0022.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:806:123::27) To BYAPR10MB2999.namprd10.prod.outlook.com
+ (2603:10b6:a03:85::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from char.us.oracle.com (138.3.200.25) by SN7P220CA0022.NAMP220.PROD.OUTLOOK.COM (2603:10b6:806:123::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.18 via Frontend Transport; Thu, 24 Jun 2021 19:19:52 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e32a325a-d0c9-45f4-bf49-08d93745119f
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3160:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR10MB31602652C7EC6BB6F81C1EC689079@BYAPR10MB3160.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i0tzwxIw/4elx5hgGO6B8CjrGZlYNudIrNxhhnBv2AEVGAu3qOEccTjmeVw/yPlpMcjJ+bDbBhjn2+hfLQmHvardT7U8dwR+IEbO7gNAHn2Z40GzLkt2Djw00klfkLLAHCILKIC9zOgcorAPVDMjXkKbIlTliv3wNg24lL7EqRJMotYkuff7S6PZqVUXbXzc//pNHEPio2z2Eo1mRtTbf3fbGtVHMdIfhSgIJ296IsKDCmAgGn5GEtoon3Z+v46kv+INIkWfCgzMcbBsVx4lKMzLE8QmpVn9X7BSPKqfM3zFeze7TuQTiNVgq768IO4blRwz+2U/w9Cj/H228oFeO3kwMlesgS2ci9DK+bc80GeW8fBEaNLRbfu0pTbG4Nkp62ywr+Psrcn1FwwVSlEUzu0RwicBeIgVIFR8EyFHPo03bhK7p9MS+DYJkd51RB/nv1JVOxXc4pGAoLz9viAev2WgTXqjTOSwvxbiBt9uLFMJ91UdTyqUQS/j4OivQHGYSZ87uFWSAWq3GKoPdu0oUpDnelPvYoE1tSfPQXbt2hN3tRPNnZIIZjKLMsCL8OrMTf+g4sXDuRRlgKfSafBgs8YmmBmEHzgjpGhodv/ZU6sR0Q9ixbnl9+dmmVdG5UO2nMOaOBQZeDV32rZA8g4BGBS6ESeLgdNda4Z+LkxoauheVOYquI/kgI8/85XfvvZrZG9+Tzf95XXXFs8C2y4JE74r8pc42U7e/6Go8i7RRPUGbTxkN+nz7UlMN9ZoIsXrVSX+8cUweb8l+SAdXpkX8gOfrk2Md+ongBUv9oRB94xn/X4PMchHzLipHqlELFr4ywVw9ywqe4tu2UAb9+J7cQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(346002)(39860400002)(376002)(366004)(54906003)(8676002)(5660300002)(316002)(86362001)(6916009)(478600001)(186003)(7406005)(2906002)(55016002)(966005)(16526019)(7416002)(26005)(6666004)(7366002)(38100700002)(52116002)(66476007)(7696005)(956004)(83380400001)(66556008)(4326008)(38350700002)(66946007)(8936002)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bvJ7q3CIhSDXU5AEz5Lo5jbUWTmD3cx8rMWsToDHYRSYX63S2y8cG2e1rYk2?=
+ =?us-ascii?Q?eErzOJrygXEY8O1Y/n1U2p6iY1ReaLDVmCYe4vz5cWjRIHDU5CMCmVOl8Bcz?=
+ =?us-ascii?Q?xMmC8BvlazQ72+db6pe6YdvGFp5Qopzgw6ji6oq8s6ENqjEe+LrA188CgOVY?=
+ =?us-ascii?Q?FggWwijeLR8ekpCFnbsjOEaZRkjsxZD46BgCPJLfmSgk6z6e81cAZInUIF0p?=
+ =?us-ascii?Q?iuRYgKmhuI+wJ8VpgKyshIsdIxZTz/mIbVkXTkjO0ho3OT3wCJJsAEEv7s+8?=
+ =?us-ascii?Q?TIa6UwGP7uu6IyNz7WM1z/6K1mrBHONs7YO31I6J/Q+U2y/AnhENtMbc7313?=
+ =?us-ascii?Q?gcycAGPLkyxzVtE6hG6Aypbh0cgAnalSfvg2GOlA7Ia3tCpSS8XGsK0a6mfP?=
+ =?us-ascii?Q?9qlsq2UaTVrGTEZIsl40V2DBVUGkEkEU6jo42bXwraARhocJU5ki5J86gGw8?=
+ =?us-ascii?Q?ZOK1ghIKDsWW6c5hOjKBkXIq5Q4g3IcgftRSrYV2iZXgJ+XquJ2HIYdIcE6v?=
+ =?us-ascii?Q?B9sSLXP5DHB7dYUuPzI8EeMBKVBv4A+n1L9KFX/cX+4dfhTi5q+gjYoflut/?=
+ =?us-ascii?Q?f/DliTbrcQ2lHj7hgQvkfaYX32T+5CYDB5DyAra4EVdfei5/Jc9T6k7kiVxB?=
+ =?us-ascii?Q?sZctc0fLIREF6B1VGnF1YRj4eOeep8xT1L8OdL2o2rheBbEZDWXP2X3r5z/T?=
+ =?us-ascii?Q?ifZUwFkcrFhjrzbcZfiqgSDJ9KHF63Yt9zPnKv8Z5QGaTiqWVDARBIoonOEZ?=
+ =?us-ascii?Q?vJj+fZRore8OtRvlbRRxmiS7DocoHqdwjKa5nTteojR48eb5qKwEq/O0Ur6F?=
+ =?us-ascii?Q?KK/aC62a7rGONpgH5LjXC/o5izoP+hEPlTBqqSOnmJb7G4rQ+Oj8Akj6ijiK?=
+ =?us-ascii?Q?ROsj4gvLWimdelviji7rwTQ+JNbMKWJ2yJ1YfhZu5pmTUINuaYk0miM7t1Zd?=
+ =?us-ascii?Q?Og0aJ5QTriX3Lc6I3dmPmemfRZBGAI9b2NSt5L+2nHVgHQostGwVXMSn21Iq?=
+ =?us-ascii?Q?W8EoQo5Jc8LgRX2EhDJKGtYHGOeqeV+iV14voRiubW5rWI7jkzYLX29RGcHL?=
+ =?us-ascii?Q?txctobWYht7yescW1LhNXeTjBSrYNeea81RBXT0vtNPp1dQkjcgbIlnKfy3u?=
+ =?us-ascii?Q?7k1B6kQITgUefQ6ez/oj5hn6Xk044IdQtV3wl2NbUYHbzFE0xVs2Q3dvVbg6?=
+ =?us-ascii?Q?5C9UORHyjqNrPPFfPf4bvIBlt6+EJ4D15blYHjoo8k7AlUVxAOF/I6W4CSqs?=
+ =?us-ascii?Q?cYZzsOgcLSPISaMKyIk2Rzp1Grqnz0+XcGTd6Kza4oLRHo+4JDdQitYPRs7k?=
+ =?us-ascii?Q?oUYwqFmElmXOYx+cMilA4Egb?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e32a325a-d0c9-45f4-bf49-08d93745119f
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2021 19:20:04.0737
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xBncePuLzykfxJ7flQwRuVznf5ZATSXtneYvTgwW4c5iJ1PYAWB6YsZWdW9JYVICQZytQCiZHGX3C+dIcjwY8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3160
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10025 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2106240106
+X-Proofpoint-ORIG-GUID: HVGSeOE_AI_2-cWDVJ4zX0pPBMurpisx
+X-Proofpoint-GUID: HVGSeOE_AI_2-cWDVJ4zX0pPBMurpisx
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 24 Jun 2021 11:15:59 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> [+to Alex]
+On Thu, Jun 24, 2021 at 11:55:14PM +0800, Claire Chang wrote:
+> This series implements mitigations for lack of DMA access control on
+> systems without an IOMMU, which could result in the DMA accessing the
+> system memory at unexpected times and/or unexpected addresses, possibly
+> leading to data leakage or corruption.
 > 
-> On Thu, Jun 24, 2021 at 08:58:09PM +0530, Amey Narkhede wrote:
-> > On 21/06/24 07:23AM, Bjorn Helgaas wrote:  
-> > > On Tue, Jun 08, 2021 at 11:18:50AM +0530, Amey Narkhede wrote:  
-> > > > Currently there is separate function pcie_has_flr() to probe if pcie flr is
-> > > > supported by the device which does not match the calling convention
-> > > > followed by reset methods which use second function argument to decide
-> > > > whether to probe or not.  Add new function pcie_reset_flr() that follows
-> > > > the calling convention of reset methods.  
-> > >  
-> > > > +/**
-> > > > + * pcie_reset_flr - initiate a PCIe function level reset
-> > > > + * @dev: device to reset
-> > > > + * @probe: If set, only check if the device can be reset this way.
-> > > > + *
-> > > > + * Initiate a function level reset on @dev.
-> > > > + */
-> > > > +int pcie_reset_flr(struct pci_dev *dev, int probe)
-> > > > +{
-> > > > +	u32 cap;
-> > > > +
-> > > > +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-> > > > +		return -ENOTTY;
-> > > > +
-> > > > +	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
-> > > > +	if (!(cap & PCI_EXP_DEVCAP_FLR))
-> > > > +		return -ENOTTY;
-> > > > +
-> > > > +	if (probe)
-> > > > +		return 0;
-> > > > +
-> > > > +	return pcie_flr(dev);
-> > > > +}  
-> > >
-> > > Tangent: I've been told before, but I can't remember why we need the
-> > > "probe" interface.  Since we're looking at this area again, can we add
-> > > a comment to clarify this?
-> > >
-> > > Every time I read this, I wonder why we can't just get rid of the
-> > > probe and attempt a reset.  If it fails because it's not supported, we
-> > > could just try the next one in the list.  
-> > 
-> > Part of the reason is to have same calling convention as other reset
-> > methods and other reason is devices that run in VMs where various
-> > capabilities can be hidden or have quirks for avoiding known troublesome
-> > combination of device features as Alex explained here
-> > https://lore.kernel.org/linux-pci/20210624151242.ybew2z5rseuusj7v@archlinux/T/#mb67c09a2ce08ce4787652e4c0e7b9e5adf1df57a
-> > 
-> > On the side note as you suggested earlier to cache flr capability
-> > earlier the PCI_EXP_DEVCAP reading code won't be there in next version
-> > so its just trivial check(dev->has_flr).  
+> For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
+> not behind an IOMMU. As PCI-e, by design, gives the device full access to
+> system memory, a vulnerability in the Wi-Fi firmware could easily escalate
+> to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
+> full chain of exploits; [2], [3]).
 > 
-> Sorry, I didn't make my question clear.  I'm not asking why we're
-> adding a "probe" argument to pcie_reset_flr() to make it consistent
-> with pci_af_flr(), pci_pm_reset(), pci_parent_bus_reset(), etc.  I
-> like making the interfaces consistent.
+> To mitigate the security concerns, we introduce restricted DMA. Restricted
+> DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
+> specially allocated region and does memory allocation from the same region.
+> The feature on its own provides a basic level of protection against the DMA
+> overwriting buffer contents at unexpected times. However, to protect
+> against general data leakage and system memory corruption, the system needs
+> to provide a way to restrict the DMA to a predefined memory region (this is
+> usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
 > 
-> What I'm asking here is why the "probe" argument exists for *any* of
-> these interfaces and why pci_probe_reset_function() exists.
+> [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+> [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+> [2] https://blade.tencent.com/en/advisories/qualpwn/
+> [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+> [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
 > 
-> This is really more a question for Alex since it's a historical
-> question, not anything directly related to your series.  I'm not
-> proposing *removing* the "probe" argument; I know it exists for a
-> reason because I've asked about it before.  But I forgot the answer,
-> which makes me think a hint in the code would be useful.
+> v15:
+> - Apply Will's diff (https://lore.kernel.org/patchwork/patch/1448957/#1647521)
+>   to fix the crash reported by Qian.
+> - Add Stefano's Acked-by tag for patch 01/12 from v14
 
-Heh [1]
+That all should be now be on
 
-That might be what you're recalling, but in that case I was adding
-exported symbols that allowed probing bus vs slot reset because the
-scope of affected devices is different.  My use case is testing whether
-the user owns all the affected devices, so it's really not a
-test-by-doing opportunity.
-
-For these single-function scoped resets, as in the reply to [1]
-pci_probe_reset_function() isn't exported and the only caller is
-internal PCI code to determine whether to create the 'reset' sysfs
-attribute.  Sure, as it exists today we could reset the device and test
-whether it worked to get that value, that's what vfio-pci does now
-before we give the device to the user, but the critical difference is
-that in the vfio case we always want to flush any state that might be
-leaked to the user and at device init time, doing so only invites
-issues.
-
-This series obviously expands the scope of probing, we don't just want
-to know that there's at least one method available to us, but precisely
-which ones.  It's rather impractical to try to reset a function a half
-dozen different ways on boot for the possibility that the admin might
-want to manipulate the reset order later.  And oh gosh, if we don't
-cache the methods supported and re-test-by-doing when the attribute is
-written, let's just not go there.  Thanks,
-
-Alex
-
-[1]https://lore.kernel.org/linux-pci/CAErSpo625CTnxZvy-gmy8VzxT4favF4s=_giU6nGey_N=VwK5A@mail.gmail.com/
+https://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git/
+devel/for-linus-5.14 (and linux-next)
 
