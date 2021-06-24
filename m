@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5114F3B392D
+	by mail.lfdr.de (Postfix) with ESMTP id 9B3103B392E
 	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 00:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232715AbhFXW3b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 18:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38050 "EHLO mail.kernel.org"
+        id S232870AbhFXW3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 18:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232848AbhFXW3a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Jun 2021 18:29:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A635E613AB;
-        Thu, 24 Jun 2021 22:27:10 +0000 (UTC)
+        id S232873AbhFXW3b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 18:29:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 06FA561375;
+        Thu, 24 Jun 2021 22:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624573630;
-        bh=Abh9XGgE1ipE6laKxqtRrQbaboUN5YYNzU9KrJVJ4A4=;
+        s=k20201202; t=1624573632;
+        bh=jYt5kfZFIc6erlp5/8lvnkSBPgbQ6DNhQvJQ28jGNJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPb9HZhfiRsegh08jXRFFjTY7QMb5lQk8SmScz+r8HO8aR6VTOvDijtiU8YVjDz5W
-         M3y9WSYIgv/cQwe0uHVmo1AscxNAkMQGHuvjEwGLGJ2ecIp44c9ORpcW18awGuwQsP
-         Dvd7hLFlkAJP3eqdfye+s6goRTsa7W0JoqhcdzA7AEfbuPOGLTp6p1ONZdzsR1BTCG
-         1HDKO0H1nE/WdFzZLSduvzdnk4o0IiXArDZ4SgMnMjhJK7yAF9n8eybAmhYO2toQCW
-         z4uUi6cQAPAdBsCmsZ1rq+LYECN0wYxhtG1x+rYrhR3yg2oEehXxYUF2h5jcvnEPJM
-         fqOopr45O+Xqg==
+        b=kd7vizbDFBauhateivIkhyAS7AStROoZqtwp9gkAiGOj8di81tHkRcunYn1wtYuzh
+         XqDNQnlAa6wyt8vcP0gpp4vSvvPoiorZ3mYKq1glVKQTciW2RU4mkeEVekVbFaOHIB
+         VjdFIvkfmN+SdxOIvmvQuRrVx9Ykkyd83yivSCXPPcFix1t9pNrj3RteUBRnffiri7
+         95Te6fuY3YMGppRmo5jReHWcsh2ckNXzdzlZ4k5XDnf/BTS3iA+RPHMXX++5NHalIs
+         ivePIe8pYmt4NkbgX4Og9rw+vsbuYJuIdhoMCwuJbjQ80f+wYwrP9Q5oUXx9ejJtlj
+         dAfODsxjJ6Rhg==
 Received: by pali.im (Postfix)
-        id 64C9C8A3; Fri, 25 Jun 2021 00:27:10 +0200 (CEST)
+        id B87C88A3; Fri, 25 Jun 2021 00:27:11 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -38,9 +38,9 @@ Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
         Kostya Porotchkin <kostap@marvell.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [RESEND PATCH 4/5] PCI: aardvark: Implement workaround for the readback value of VEND_ID
-Date:   Fri, 25 Jun 2021 00:26:20 +0200
-Message-Id: <20210624222621.4776-5-pali@kernel.org>
+Subject: [RESEND PATCH 5/5] PCI: aardvark: Implement workaround for PCIe Completion Timeout
+Date:   Fri, 25 Jun 2021 00:26:21 +0200
+Message-Id: <20210624222621.4776-6-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210624222621.4776-1-pali@kernel.org>
 References: <20210624222621.4776-1-pali@kernel.org>
@@ -52,57 +52,68 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Marvell Armada 3700 Functional Errata, Guidelines, and Restrictions
-document describes in erratum 4.1 PCIe value of vendor ID (Ref #: 243):
+document describes in erratum 3.12 PCIe Completion Timeout (Ref #: 251),
+that PCIe IP does not support a strong-ordered model for inbound posted vs.
+outbound completion.
 
-    The readback value of VEND_ID (RD0070000h [15:0]) is 1B4Bh, while it
-    should read 11ABh.
+As a workaround for this erratum, DIS_ORD_CHK flag in Debug Mux Control
+register must be set. It disables the ordering check in the core between
+Completions and Posted requests received from the link.
 
-    The firmware can write the correct value, 11ABh, through VEND_ID
-    (RD0076044h [15:0]).
+It was reported that enabling this workaround fixes instability issues and
+"Unhandled fault" errors when using 60 GHz WiFi 802.11ad card with Qualcomm
+QCA6335 chip under significant load which were caused by interrupt status
+stuck in the outbound CMPLT queue traced back to this erratum.
 
-Implement this workaround in aardvark driver for both PCI vendor id and PCI
-subsystem vendor id.
+This workaround fixes also kernel panic triggered after some minutes of
+usage 5 GHz WiFi 802.11ax card with Mediatek MT7915 chip:
 
-This change affects and fixes PCI vendor id of emulated PCIe root bridge.
-After this change emulated PCIe root bridge has correct vendor id.
+    Internal error: synchronous external abort: 96000210 [#1] SMP
+    Kernel panic - not syncing: Fatal exception in interrupt
 
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <kabel@kernel.org>
-Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
 Cc: stable@vger.kernel.org
 ---
- drivers/pci/controller/pci-aardvark.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Patch was originally written by Thomas and is already for a long time part
+of Marvell SDK. I have just re-written/re-applied it on top of mainline
+kernel and also wrote a new updated commit message.
+
+Please note that this patch is questionable as Bjorn has some objections
+and nobody, including Marvell, was not able to explain erratum nor what
+is workaround exactly doing. Documentation about this topic is basically
+missing.
+
+We just know that it fixes real kernel crashes when using WiFi cards.
+---
+ drivers/pci/controller/pci-aardvark.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 397431d641f6..9ff68abd8d1e 100644
+index 9ff68abd8d1e..231f4469d87e 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -166,6 +166,7 @@
- #define     LTSSM_MASK				0x3f
+@@ -167,6 +167,8 @@
  #define     LTSSM_L0				0x10
  #define     RC_BAR_CONFIG			0x300
-+#define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
+ #define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
++#define DEBUG_MUX_CTRL_REG			(LMI_BASE_ADDR + 0x208)
++#define     DIS_ORD_CHK				BIT(30)
  
  /* PCIe core controller registers */
  #define CTRL_CORE_BASE_ADDR			0x18000
-@@ -417,6 +418,16 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg |= (IS_RC_MSK << IS_RC_SHIFT);
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+@@ -450,6 +452,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 		PCIE_CORE_CTRL2_TD_ENABLE;
+ 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
  
-+	/*
-+	 * Replace incorrect PCI vendor id value 0x1b4b by correct value 0x11ab.
-+	 * VENDOR_ID_REG contains vendor id in low 16 bits and subsystem vendor
-+	 * id in high 16 bits. Updating this register changes readback value of
-+	 * read-only vendor id bits in PCIE_CORE_DEV_ID_REG register. Workaround
-+	 * for erratum 4.1: "The value of device and vendor ID is incorrect".
-+	 */
-+	reg = (PCI_VENDOR_ID_MARVELL << 16) | PCI_VENDOR_ID_MARVELL;
-+	advk_writel(pcie, reg, VENDOR_ID_REG);
++	/* Disable ordering checks, workaround for erratum 3.12 "PCIe completion timeout" */
++	reg = advk_readl(pcie, DEBUG_MUX_CTRL_REG);
++	reg |= DIS_ORD_CHK;
++	advk_writel(pcie, reg, DEBUG_MUX_CTRL_REG);
 +
- 	/* Set Advanced Error Capabilities and Control PF0 register */
- 	reg = PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX |
- 		PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN |
+ 	/* Set lane X1 */
+ 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+ 	reg &= ~LANE_CNT_MSK;
 -- 
 2.20.1
 
