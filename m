@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE5723B3027
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 15:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7FC3B302E
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 15:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232047AbhFXNh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 09:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
+        id S231361AbhFXNjR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 09:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232017AbhFXNhq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Jun 2021 09:37:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C60B613DC;
-        Thu, 24 Jun 2021 13:35:26 +0000 (UTC)
+        id S230257AbhFXNjR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 09:39:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E3EA2613EB;
+        Thu, 24 Jun 2021 13:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1624541726;
-        bh=Im8AJ/xzLG5igrCZBPvx/X/s8SqGh6KWTqyck17cCoQ=;
+        s=korg; t=1624541817;
+        bh=g0zux5mruXr8HgwB0J/Fg2ET0cGWJ+eO/WgbobZer78=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JMLHRQ28OMZLW0wpvUm9Xlwqyt9Io+/duHqoiOloEkUkX/Z+6wqU/OyjDHWs6Lntt
-         5QIdEoOiCKJecySIuqaNnTytjdIkfTjeATJDukQ/7TLjS1RN5+KZWhulco76hoOX9F
-         U6o29EcMkWGSpT+pTyVkK77jJjZVWw2k/R93MySk=
-Date:   Thu, 24 Jun 2021 15:35:24 +0200
+        b=MnmTzlvS04mRBfahmUtH3yzTTGvsVHhdNFYf3l3iseIf39pEAh4JE4jSnyR2UppWJ
+         CDpwlF/glmCJ4fKm3UqgkdW9J4VDJN6bDrCrvdl4aUyTlaywsra5opQSPuC8Ozkxpg
+         dZ1ObbX9YCUcZNB/d6C7WJAWNrp7h6ETzueX1SH0=
+Date:   Thu, 24 Jun 2021 15:36:54 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     rafael@kernel.org, rafael.j.wysocki@intel.com, will@kernel.org,
@@ -32,75 +32,82 @@ Cc:     rafael@kernel.org, rafael.j.wysocki@intel.com, will@kernel.org,
         sonnyrao@chromium.org, saiprakash.ranjan@codeaurora.org,
         linux-mmc@vger.kernel.org, vbadigan@codeaurora.org,
         rajatja@google.com, saravanak@google.com, joel@joelfernandes.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] drivers: base: Add the concept of "pre_probe" to
- drivers
-Message-ID: <YNSKHAiS3qIOwDVA@kroah.com>
+Subject: Re: [PATCH 2/6] drivers: base: Add bits to struct device to control
+ iommu strictness
+Message-ID: <YNSKdhMACa9LFuVN@kroah.com>
 References: <20210621235248.2521620-1-dianders@chromium.org>
- <20210621165230.1.Id4ee5788c993294f66542721fca7719c00a5d8f3@changeid>
+ <20210621165230.2.Icfe7cbb2cc86a38dde0ee5ba240e0580a0ec9596@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210621165230.1.Id4ee5788c993294f66542721fca7719c00a5d8f3@changeid>
+In-Reply-To: <20210621165230.2.Icfe7cbb2cc86a38dde0ee5ba240e0580a0ec9596@changeid>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 04:52:43PM -0700, Douglas Anderson wrote:
-> Right now things are a bit awkward if a driver would like a chance to
-> run before some of the more "automatic" things (pinctrl, DMA, IOMMUs,
-> ...) happen to a device. This patch aims to fix that problem by
-> introducing the concept of a "pre_probe" function that drivers can
-> implement to run before the "automatic" stuff.
+On Mon, Jun 21, 2021 at 04:52:44PM -0700, Douglas Anderson wrote:
+> How to control the "strictness" of an IOMMU is a bit of a mess right
+> now. As far as I can tell, right now:
+> * You can set the default to "non-strict" and some devices (right now,
+>   only PCI devices) can request to run in "strict" mode.
+> * You can set the default to "strict" and no devices in the system are
+>   allowed to run as "non-strict".
 > 
-> Why would you want to run before the "automatic" stuff? The incentive
-> in my case is that I want to be able to fill in some boolean flags in
-> the "struct device" before the IOMMU init runs. It appears that the
-> strictness vs. non-strictness of a device's iommu config is determined
-> once at init time and can't be changed afterwards. However, I would
-> like to avoid hardcoding the rules for strictness in the IOMMU
-> driver. Instead I'd like to let individual drivers be able to make
-> informed decisions about the appropriateness of strictness
-> vs. non-strictness.
+> I believe this needs to be improved a bit. Specifically:
+> * We should be able to default to "strict" mode but let devices that
+>   claim to be fairly low risk request that they be run in "non-strict"
+>   mode.
+> * We should allow devices outside of PCIe to request "strict" mode if
+>   the system default is "non-strict".
 > 
-> The desire for running code pre_probe is likely not limited to my use
-> case. I believe that the list "qcom_smmu_client_of_match" is hacked
-> into the iommu driver specifically because there was no real good
-> framework for this. For the existing list it wasn't _quite_ as ugly as
-> my needs since the decision could be made solely on compatible string,
-> but it still feels like it would have been better for individual
-> drivers to run code and setup some state rather than coding up a big
-> list in the IOMMU driver.
+> I believe the correct way to do this is two bits in "struct
+> device". One allows a device to force things to "strict" mode and the
+> other allows a device to _request_ "non-strict" mode. The asymmetry
+> here is on purpose. Generally if anything in the system makes a
+> request for strictness of something then we want it strict. Thus
+> drivers can only request (but not force) non-strictness.
 > 
-> Even without this patch, I believe it is possible for a driver to run
-> before the "automatic" things by registering for
-> "BUS_NOTIFY_BIND_DRIVER" in its init call, though I haven't personally
-> tested this. Using the notifier is a bit awkward, though, and I'd
-> rather avoid it. Also, using "BUS_NOTIFY_BIND_DRIVER" would require
-> drivers to stop using the convenience module_platform_driver() helper
-> and roll a bunch of boilerplate code.
+> It's expected that the strictness fields can be filled in by the bus
+> code like in the patch ("PCI: Indicate that we want to force strict
+> DMA for untrusted devices") or by using the new pre_probe concept
+> introduced in the patch ("drivers: base: Add the concept of
+> "pre_probe" to drivers").
 > 
-> NOTE: the pre_probe here is listed in the driver structure. As a side
-> effect of this it will be passed a "struct device *" rather than the
-> more specific device type (like the "struct platform_device *" that
-> most platform devices get passed to their probe). Presumably this
-> won't cause trouble and it's a lot less code to write but if we need
-> to make it more symmetric that's also possible by touching more files.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  include/linux/device.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index f1a00040fa53..c1b985e10c47 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -449,6 +449,15 @@ struct dev_links_info {
+>   *		and optionall (if the coherent mask is large enough) also
+>   *		for dma allocations.  This flag is managed by the dma ops
+>   *		instance from ->dma_supported.
+> + * @force_strict_iommu: If set to %true then we should force this device to
+> + *			iommu.strict regardless of the other defaults in the
+> + *			system. Only has an effect if an IOMMU is in place.
 
-No, please please no.
+Why would you ever NOT want to do this?
 
-If a bus really wants to do crud like this, it can do it in it's own
-probe callback, the driver core doesn't need to mess with this.
+> + * @request_non_strict_iommu: If set to %true and there are no other known
+> + *			      reasons to make the iommu.strict for this device,
+> + *			      then default to non-strict mode. This implies
+> + *			      some belief that the DMA master for this device
+> + *			      won't abuse the DMA path to compromise the kernel.
+> + *			      Only has an effect if an IOMMU is in place.
 
-If you need to mess with iommu values in struct device, again, do that
-in the bus core for the devices on that specific bus, that's where those
-values are supposed to be set anyway, right?
+This feels in contrast to the previous field you just added, how do they
+both interact?  Would an enum work better?
 
-If the iommu drivers need to be run before a specific bus is
-initialized, then fix that there, the driver core does not need to care
-about this at all.
-
-so a big NACK on this one, sorry.
+thanks,
 
 greg k-h
