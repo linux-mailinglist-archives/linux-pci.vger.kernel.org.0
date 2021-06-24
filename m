@@ -2,134 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D6A73B34AE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 19:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C55F83B34C1
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 19:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbhFXRZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 13:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55954 "EHLO
+        id S231488AbhFXRaa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 13:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbhFXRZj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 13:25:39 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFAEC061574
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:23:19 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id c138so16155911qkg.5
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:23:19 -0700 (PDT)
+        with ESMTP id S229573AbhFXRa3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 13:30:29 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDD8C061574;
+        Thu, 24 Jun 2021 10:28:09 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id t9so5303176pgn.4;
+        Thu, 24 Jun 2021 10:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+rsHIuusfgMY4pqsH67Cui+AEpTgqc5yU+NQJneTe3I=;
-        b=nBGujxlend0FDFpaE8uA1VUl+5W3aXuZOEudrIKeZDfQ/+pPr4z/II/WEyNd+uPN26
-         soAHBGP+8BikRpyXJAG3b8cFuHlgqAS3iEFezd2Ak3P1sLNeJUFtACX4Ma/t0C5DxnCj
-         gDadjhrj4RKoBq1/dEScJTk1qx68aEBMsAMaM=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Aaw37jAPjEH9fknpMLD7D8CrB6Ci5AT0QfUiiI7nv3E=;
+        b=MUyWN+8oUn3IVQSjpzrM78+p0DxwevxQKw5Ltf4e0r7NZLDQgEQwCzYlhg6yhqvFJj
+         kvxw19QQXlIOudNc+uKRr14Pi1P+QMIGY2fvpzmxFSYR+kF0CfXYlsbgpi5hl3KmpM0O
+         /8vJ9gPB/kN1utHjyR1/q3XlMphmYBBnDk4JR0N9azV90Rt+w+1rEMqh1/VBb3qObEf2
+         TU0cXmk3atCsFRa1YdFq8sEbaOotefHlPvKUAxG8kgWCIwkyqWHwjj8bprnmllTVCyE9
+         n/tevZNhq+MZ68p34tuwvlnYaKMOvRrxr6GtSiwVAB1fHowjgNkDqxOY1QfCGOziPaLK
+         gZaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+rsHIuusfgMY4pqsH67Cui+AEpTgqc5yU+NQJneTe3I=;
-        b=NZpsbPxtiwMoovpJciWCHEdFoCc+B1Z/4Zjge+rNHsJD7ziLFlYxsIz4+Snagl8ez4
-         r/lHwz3tCxAPLuyH18sT/zlW9J62u/dY5FL1cMa//O6DGp1DOyeUyTls0ve/44O6t0Wk
-         +GHVYyt40cCiSRpNBBaTmXeFQ0kDNMqAcx0yAOFb484MLkUwATF/wmmUJu751kHhT9mY
-         axIStoNobTMW/eiUBuLn3S4LyzO1lIymb4q3GLVvwhw50O852axWgjM3+B6WX3ketM/h
-         pmHCSjpcCD8G7PpKuJhI/EY/JZImpaqOefLMSxT3Vr2uUr3cmHiQR/YKrMB/wgB0izzp
-         zCPg==
-X-Gm-Message-State: AOAM5300j5PoeR91kzwtQgZRgi7cXkiKCbZUJ0u9GeAiFuIu6lqYFQaE
-        fzcxhtE4pyjFOlGMl+8Ko/GiOcGQrHOv5w==
-X-Google-Smtp-Source: ABdhPJzHc3oG9FSbiJVLAkZHvcs4ErPWFZ063djy/D/CWRDLeWZEDbicjY0ywEZmW5Cpzot0WKqIPg==
-X-Received: by 2002:a37:f717:: with SMTP id q23mr6894420qkj.463.1624555398565;
-        Thu, 24 Jun 2021 10:23:18 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id t187sm2964504qkc.56.2021.06.24.10.23.17
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Jun 2021 10:23:18 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id b64so368710yba.0
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:23:17 -0700 (PDT)
-X-Received: by 2002:a25:2405:: with SMTP id k5mr6470962ybk.405.1624555397076;
- Thu, 24 Jun 2021 10:23:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Aaw37jAPjEH9fknpMLD7D8CrB6Ci5AT0QfUiiI7nv3E=;
+        b=G7U3kQB2lp1kja3BUj30yZjybiQoXzpoRNhbreEORRyxlsPG0+qmwzwXI0XjF9pUmu
+         M3K5wGkqXCCFxI+sesAzZvt+dsJiyShW2hDULWFkNfRkuHx8M9f45nktXU3AyV52c/JH
+         /0t46r/T3nE/MFDiNIHwhhdXu5qJqbHxe8XSIHULjdIDt/9x8dKH8WsV9AaCFa5noaYJ
+         LfmBb0Phs+658mDerBKBjOcMHREqgfG496GEiVkQkcTJ6aj8wfLAkJedre0I2vSN2AZ+
+         L/B3a0VyTBtcGZlvJ2dzbZpTIaLxYwTXybee077yv/sWe24MKhFYMdfIfXbn7bGA1EH6
+         qfmg==
+X-Gm-Message-State: AOAM533uwrvnc6C5Gqh6bVhUo7cuqGrB40EFhKj0odb7Kyp+WbmhgK6H
+        l/l6vFJMzcaOnpOKvC1aMCo=
+X-Google-Smtp-Source: ABdhPJw1sqp/qIfwIsG1YDSTrgE/MCafjTjUt58wM/NRG6zeHymFMwDXSLDDJrl/WrBwk1WkXAUPWA==
+X-Received: by 2002:a62:1782:0:b029:2f7:dcbe:c292 with SMTP id 124-20020a6217820000b02902f7dcbec292mr6254221pfx.63.1624555689138;
+        Thu, 24 Jun 2021 10:28:09 -0700 (PDT)
+Received: from localhost ([103.248.31.165])
+        by smtp.gmail.com with ESMTPSA id y21sm3091075pgc.93.2021.06.24.10.28.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Jun 2021 10:28:08 -0700 (PDT)
+Date:   Thu, 24 Jun 2021 22:58:06 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set
+ device reset mechanism
+Message-ID: <20210624172806.ay6dak2wdtv3nruj@archlinux>
+References: <20210624151242.ybew2z5rseuusj7v@archlinux>
+ <20210624165601.GA3535644@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210621235248.2521620-1-dianders@chromium.org>
- <067dd86d-da7f-ac83-6ce6-b8fd5aba0b6f@arm.com> <CAD=FV=Vg7kqhgxZppHXwMPMc0xATZ+MqbrXx-FB0eg7pHhNE8w@mail.gmail.com>
- <498f3184-99fe-c21b-0eb0-a199f2615ceb@arm.com> <CAD=FV=UQBRY4hobBWVWtC8y07NLRLhpejdvUAD+7UWw-jqP2UA@mail.gmail.com>
-In-Reply-To: <CAD=FV=UQBRY4hobBWVWtC8y07NLRLhpejdvUAD+7UWw-jqP2UA@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 24 Jun 2021 10:23:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V4ZrUZagtE8qtRXwFEdw9FqGt-tpX-yCO3Hvi9Aw22UA@mail.gmail.com>
-Message-ID: <CAD=FV=V4ZrUZagtE8qtRXwFEdw9FqGt-tpX-yCO3Hvi9Aw22UA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] iommu: Enable devices to request non-strict DMA,
- starting with QCom SD/MMC
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pci@vger.kernel.org, quic_c_gdjako@quicinc.com,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Rajat Jain <rajatja@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Gross <agross@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210624165601.GA3535644@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Wed, Jun 23, 2021 at 10:29 AM Doug Anderson <dianders@chromium.org> wrote:
+On 21/06/24 11:56AM, Bjorn Helgaas wrote:
+> On Thu, Jun 24, 2021 at 08:42:42PM +0530, Amey Narkhede wrote:
+> > On 21/06/24 07:15AM, Bjorn Helgaas wrote:
+> > > On Tue, Jun 08, 2021 at 11:18:53AM +0530, Amey Narkhede wrote:
+> > > > Add reset_method sysfs attribute to enable user to
+> > > > query and set user preferred device reset methods and
+> > > > their ordering.
+> > >
+> > > > +		Writing the name or comma separated list of names of any of
+> > > > +		the device supported reset methods to this file will set the
+> > > > +		reset methods and their ordering to be used when resetting
+> > > > +		the device.
+> > >
+> > > > +	while ((name = strsep(&options, ",")) != NULL) {
+> > > > +		if (sysfs_streq(name, ""))
+> > > > +			continue;
+> > > > +
+> > > > +		name = strim(name);
+> > > > +
+> > > > +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++) {
+> > > > +			if (reset_methods[i] &&
+> > > > +			    sysfs_streq(name, pci_reset_fn_methods[i].name)) {
+> > > > +				reset_methods[i] = prio--;
+> > > > +				break;
+> > > > +			}
+> > > > +		}
+> > > > +
+> > > > +		if (i == PCI_RESET_METHODS_NUM) {
+> > > > +			kfree(options);
+> > > > +			return -EINVAL;
+> > > > +		}
+> > > > +	}
+> > >
+> > > Asking again since we didn't get this clarified before.  The above
+> > > tells me that "reset_methods" allows the user to control the
+> > > *order* in which we try reset methods.
+> > >
+> > > Consider the following two uses:
+> > >
+> > >   (1) # echo bus,flr > reset_methods
+> > >
+> > >   (2) # echo flr,bus > reset_methods
+> > >
+> > > Do these have the same effect or not?
+> > >
+> > They have different effect.
 >
-> * Instead of putting the details in per-device nodes, maybe it makes
-> sense to accept that we should be specifying these things at the IOMMU
-> level? If specifying things at the device tree level then the
-> device-tree node of the IOMMU itself would just have a list of things
-> that should be strict/non-strict. ...this could potentially be merged
-> with a hardcoded list of things in the IOMMU driver based on the IOMMU
-> compatible string.
+> I asked about this because Shanker's idea [1] of using two bitmaps
+> only keeps track of which resets are *enabled*.  It does not keep
+> track of the *ordering*.  Since you want to control the ordering, I
+> think we need more state than just the supported/enabled bitmaps.
 >
-> Do those sound right?
+> > > If "reset_methods" allows control over the order, I expect them to
+> > > be different: (1) would try a bus reset and, if the bus reset
+> > > failed, an FLR, while (2) would try an FLR and, if the FLR failed,
+> > > a bus reset.
+> >
+> > Exactly you are right.
+> >
+> > Now the point I was presenting was with new encoding we have to
+> > write list of *all of the supported reset methods* in order for
+> > example, in above example flr,bus or bus,flr. We can't just write
+> > 'flr' or 'bus' then switch back to writing flr,bus/bus,flr (these
+> > have different effect as mentioned earlier).
 >
-> I still haven't totally grokked the ideal way to identify devices. I
-> guess on Qualcomm systems each device is in its own group and so could
-> have its own strictness levels? ...or would it be better to list by
-> "stream ID" or something like that?
+> It sounds like you're saying this sequence can't work:
 >
-> If we do something like this then maybe that's a solution that could
-> land short-ish term? We would know right at init time whether a given
-> domain should be strict or non-strict and there'd be no requirements
-> to transition it.
+>   # echo flr > reset_methods
+# dev->reset_methods = [3, 0, 0, ..]
+>   # echo bus,flr > reset_methods
+# to get dev->reset_methods = [6, 3, 0, ...]
+we'll need to probe reset methods here.
+>
+> But I'm afraid you'll have to walk me through the reasons why this
+> can't be made to work.
+I wrote incomplete description. It can work but we'll need to probe
+everytime which involves reading different capabilities(PCI_CAP_ID_AF,
+PCI_PM_CTRL etc) from device. With current encoding we just have to
+probe at the begining.
+>
+> > Basically with new encoding an user can't write subset of reset
+> > methods they have to write list of *all* supported methods
+> > everytime.
+>
+> Why does the user have to write all supported methods?  Is that to
+> preserve the fact that "cat reset_methods" always shows all the
+> supported methods so the user knows what's available?
+>
+> I'm wondering why we can't do something like this (pidgin code):
+>
+>   if (option == "default") {
+>     pci_init_reset_methods(dev);
+>     return;
+>   }
+>
+>   n = 0;
+>   foreach method in option {
+>     i = lookup_reset_method(method);
+>     if (pci_reset_methods[i].reset_fn(dev, PROBE) == 0)
+Repeatedly calling probe might have some impact as it involves reading
+device registers as explained earlier.
+>       dev->reset_methods[n++] = i;           # method i supported
+>   }
+>   dev->reset_methods[n++] = 0;               # end of supported methods
+>
+> If we did something like the above, the user could always find the
+> list of all methods supported by a device by doing this:
+>
+>   # echo default > reset_methods
+>   # cat reset_methods
+>
+This is one solution for current problem with new encoding.
+> Yes, this does call the "probe" methods several times.  I don't think
+> that's necessarily a problem.
+I thought this would be a problem because of your earlier suggestion
+of caching flr capability to avoid probing multiple times. In this case
+we'll need to read different device registers multiple times. With
+current encoding we don't have to do that multiple times.
 
-OK, so I have attempted to implement this in the Qualcomm IOMMU driver
-in v2 of this series:
-
-https://lore.kernel.org/r/20210624171759.4125094-1-dianders@chromium.org/
-
-Hopefully that doesn't fragment the discussion too much, but it seemed
-like it might help move us forward to see what this would look like in
-code.
-
-I'll also note that I removed a few people from the CC list on v2 of
-the series because I'm no longer touching any code outside of the
-IOMMU subsystem and I thought folks would appreciate less noise in
-their inboxes. I've CCed a boatload of mailing lists though so it
-should be easy to find. If I dropped you from the CC list of v2 and
-you really want back on then I'm more than happy to re-add you.
-
--Doug
+Thanks,
+Amey
+>
+> Bjorn
+>
+> [1] https://lore.kernel.org/r/1fb0a184-908c-5f98-ef6d-74edc602c2e0@nvidia.com
