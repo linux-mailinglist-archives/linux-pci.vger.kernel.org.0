@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52E333B3256
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 17:12:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B963B3294
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 17:28:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231932AbhFXPPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 11:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        id S232206AbhFXPad (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 11:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231709AbhFXPPF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 11:15:05 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0D8C061574;
-        Thu, 24 Jun 2021 08:12:46 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id c7-20020a17090ad907b029016faeeab0ccso6102212pjv.4;
-        Thu, 24 Jun 2021 08:12:46 -0700 (PDT)
+        with ESMTP id S231708AbhFXPac (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 11:30:32 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48ECC061574;
+        Thu, 24 Jun 2021 08:28:12 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id g192so5456381pfb.6;
+        Thu, 24 Jun 2021 08:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=I++4uMEcTuGw2BfmtX3AQuuRG9WweA+grH1hO3oOMI0=;
-        b=LIaRvG4u4m0ZkmLFuNXfahT2MJggIPMzzsoiUFMm30HNCFVQRYTiqDqfJPWiBdG6rE
-         ZF8ADuOtzJabCG7cCVkWFiFSDa1J15p+jTLtGe7HklPYHyGo6AGaL0kbwsl6h4sRVf1M
-         8/bz8mbmT6mxhuK3et4euwzK7oUYmMdBafpbAqrxaDgxUN+8j24o+Gn+oubxGunBJ4kA
-         ND025OxQA88vvfO8Suwdw530Fl2Tn7NAhY5uY+bzcKt/AlbqbiD5G0bS+qAIN5CW2uXc
-         G3f41AvGEpQOs81ne03tbvnkqARlG3HAyvSG1YIrJa2YbRyN4IG8s4SErR1HCGLl4Jwc
-         5WSA==
+        bh=Q2gPlbxZIu0s2pp6ayJgQnoK8WTCgbC9z/0R22rI7LA=;
+        b=hQX23N294SlJ3Va9DqB9y9whZlmWswxGS0Zaj1oObBt2Y9ymGHliiplpfi3/NRXbWz
+         Z7ef0HCQZOY4/7YhyTc5nECnIjsIm2Y159MvDm/u5VeUKW39c0CXfvFW9lqLyZa1aF0l
+         lWeLAH+VXY+vTEIaqiIgrgxwUubLRPlMT7w/LXdFLUX7UuxOcRu7dTIIA/X0Q3YtqEY6
+         pJP0ox++dod96lJvzInz2A2TMQTDFY/EXA6zTChEU4pOpRCcdiez8zDN32vLbPaSLEGq
+         BgLCvLJo4tzt8wLVZQDu6aIbQQeWpu7S2Ajet3jez2VVRhi26k9Rc/89jZhPG7pEi2NY
+         kmmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=I++4uMEcTuGw2BfmtX3AQuuRG9WweA+grH1hO3oOMI0=;
-        b=I5u/GTcHavxKSd9d+A6O6UXh4tyc/QzS9XdJJZ616Z0/XO9UGA/G16fSkHl2KrGn11
-         Jg6ywbIpgK8pxzAv2LuVtxWgfwXl/tjLbKrX/YWS/eSFxIPr37GIgBnMjqZy6U1ycOKj
-         hqMie3Fia8djl1mqH9+3OusxHAEmyX6KvNO7njiDvevrtZLMdvkiHau54kLKfPJIljeS
-         Owma2tXMPwFqdLN1biGpZ7HmDqbVO6cBCnb0GfmYYagWWt7x3U9PmUlxqFo1Pzn5V/20
-         ej8imjbSJi46FOmpLp9TUJOBCS/2EUWsDS3n2as0HLm4bwghcxFBkz0h0VMACf+pMavj
-         Pdzw==
-X-Gm-Message-State: AOAM530CsQ/uDawMVbgOhUFpGTHR+cEZAEYzGrpr6pPUCWqkg/QdX4Z7
-        jlTcDMAEo4bK0JAkOE3BHf8=
-X-Google-Smtp-Source: ABdhPJwrN7EokPvZOFe7BEvJUtMJ+OMCroyVIeTW/0sbVX59L1m0TRG+nxZkvMFen37/cMkmyfAh9w==
-X-Received: by 2002:a17:90a:d082:: with SMTP id k2mr16179928pju.15.1624547565615;
-        Thu, 24 Jun 2021 08:12:45 -0700 (PDT)
+        bh=Q2gPlbxZIu0s2pp6ayJgQnoK8WTCgbC9z/0R22rI7LA=;
+        b=bXQKlQuDtD65pv5KuP7c8m1mBlpjhvJiq653yHbfxewkFv5V1bxNdRkR5YcHpJGKqL
+         A2srGWmXTfGUMLdcusnG9h/V9UzrYL4uVNAsImGJeehTNsexrWlMspiX/rXrCSRTZM1X
+         /muvWAgvwZNInXyXvD+Y2F6K4mD65cDOytjYTty9R8rAlwYu9Eg1la27pV6B7UUH7JEc
+         yjGnqY4BL2cxI3y5Gt7cWP/dv4G9E6sh2C2h97KtbmpLUAeH1rhwHCAEYTAr/e+DQQuX
+         yoc8yR2V6XxOHVpPZf7axxLroQ2Iyxd3CpYZGjng4jMS2GbocaN3VnbI/wPlXIz9cGCl
+         lbKA==
+X-Gm-Message-State: AOAM533jOhjx5wpiA28F1aiVPmKBVZ6W7A+mReORp9yd1BdkTlv6epvw
+        VpiFiUkv7iblM0Qqo0ZAngU=
+X-Google-Smtp-Source: ABdhPJwmceMxhr6RsXl0aCSiYeaB/BVCTVe5LMoG0ibCbU1T+OhWgLWjJ/ZDfa6Y1tJIrSxHkwAAoQ==
+X-Received: by 2002:a63:7985:: with SMTP id u127mr5259787pgc.228.1624548492228;
+        Thu, 24 Jun 2021 08:28:12 -0700 (PDT)
 Received: from localhost ([103.248.31.165])
-        by smtp.gmail.com with ESMTPSA id t2sm3191465pfg.73.2021.06.24.08.12.44
+        by smtp.gmail.com with ESMTPSA id v13sm3669552pja.44.2021.06.24.08.28.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jun 2021 08:12:45 -0700 (PDT)
-Date:   Thu, 24 Jun 2021 20:42:42 +0530
+        Thu, 24 Jun 2021 08:28:11 -0700 (PDT)
+Date:   Thu, 24 Jun 2021 20:58:09 +0530
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     alex.williamson@redhat.com,
@@ -56,76 +56,68 @@ Cc:     alex.williamson@redhat.com,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set
- device reset mechanism
-Message-ID: <20210624151242.ybew2z5rseuusj7v@archlinux>
-References: <20210608054857.18963-5-ameynarkhede03@gmail.com>
- <20210624121521.GA3518338@bjorn-Precision-5520>
+Subject: Re: [PATCH v7 1/8] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210624152809.m3glwh6lxckykt33@archlinux>
+References: <20210608054857.18963-2-ameynarkhede03@gmail.com>
+ <20210624122309.GA3518896@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210624121521.GA3518338@bjorn-Precision-5520>
+In-Reply-To: <20210624122309.GA3518896@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/06/24 07:15AM, Bjorn Helgaas wrote:
-> On Tue, Jun 08, 2021 at 11:18:53AM +0530, Amey Narkhede wrote:
-> > Add reset_method sysfs attribute to enable user to
-> > query and set user preferred device reset methods and
-> > their ordering.
+On 21/06/24 07:23AM, Bjorn Helgaas wrote:
+> On Tue, Jun 08, 2021 at 11:18:50AM +0530, Amey Narkhede wrote:
+> > Currently there is separate function pcie_has_flr() to probe if pcie flr is
+> > supported by the device which does not match the calling convention
+> > followed by reset methods which use second function argument to decide
+> > whether to probe or not.  Add new function pcie_reset_flr() that follows
+> > the calling convention of reset methods.
 >
-> > +		Writing the name or comma separated list of names of any of
-> > +		the device supported reset methods to this file will set the
-> > +		reset methods and their ordering to be used when resetting
-> > +		the device.
->
-> > +	while ((name = strsep(&options, ",")) != NULL) {
-> > +		if (sysfs_streq(name, ""))
-> > +			continue;
+> > +/**
+> > + * pcie_reset_flr - initiate a PCIe function level reset
+> > + * @dev: device to reset
+> > + * @probe: If set, only check if the device can be reset this way.
+> > + *
+> > + * Initiate a function level reset on @dev.
+> > + */
+> > +int pcie_reset_flr(struct pci_dev *dev, int probe)
+> > +{
+> > +	u32 cap;
 > > +
-> > +		name = strim(name);
+> > +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+> > +		return -ENOTTY;
 > > +
-> > +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++) {
-> > +			if (reset_methods[i] &&
-> > +			    sysfs_streq(name, pci_reset_fn_methods[i].name)) {
-> > +				reset_methods[i] = prio--;
-> > +				break;
-> > +			}
-> > +		}
+> > +	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> > +	if (!(cap & PCI_EXP_DEVCAP_FLR))
+> > +		return -ENOTTY;
 > > +
-> > +		if (i == PCI_RESET_METHODS_NUM) {
-> > +			kfree(options);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
+> > +	if (probe)
+> > +		return 0;
+> > +
+> > +	return pcie_flr(dev);
+> > +}
 >
-> Asking again since we didn't get this clarified before.  The above
-> tells me that "reset_methods" allows the user to control the *order*
-> in which we try reset methods.
+> Tangent: I've been told before, but I can't remember why we need the
+> "probe" interface.  Since we're looking at this area again, can we add
+> a comment to clarify this?
 >
-> Consider the following two uses:
->
->   (1) # echo bus,flr > reset_methods
->
->   (2) # echo flr,bus > reset_methods
->
-> Do these have the same effect or not?
->
-They have different effect.
-> If "reset_methods" allows control over the order, I expect them to be
-> different: (1) would try a bus reset and, if the bus reset failed, an
-> FLR, while (2) would try an FLR and, if the FLR failed, a bus reset.
-Exactly you are right.
+> Every time I read this, I wonder why we can't just get rid of the
+> probe and attempt a reset.  If it fails because it's not supported, we
+> could just try the next one in the list.
 
-Now the point I was presenting was with new encoding we have to write
-list of *all of the supported reset methods* in order for example, in
-above example flr,bus or bus,flr. We can't just write 'flr' or 'bus'
-then switch back to writing flr,bus/bus,flr(these have different effect
-as mentioned earlier).
+Part of the reason is to have same calling convention as other reset
+methods and other reason is devices that run in VMs where various
+capabilities can be hidden or have quirks for avoiding known troublesome
+combination of device features as Alex explained here
+https://lore.kernel.org/linux-pci/20210624151242.ybew2z5rseuusj7v@archlinux/T/#mb67c09a2ce08ce4787652e4c0e7b9e5adf1df57a
 
-Basically with new encoding an user can't write subset of reset methods
-they have to write list of *all* supported methods everytime.
+On the side note as you suggested earlier to cache flr capability
+earlier the PCI_EXP_DEVCAP reading code won't be there in next version
+so its just trivial check(dev->has_flr).
 
 Thanks,
 Amey
