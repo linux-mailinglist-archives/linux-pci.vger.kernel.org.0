@@ -2,118 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B3103B392E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 00:27:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53CE33B394E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 00:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232870AbhFXW3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 18:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
+        id S232785AbhFXWnC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 18:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232873AbhFXW3b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Jun 2021 18:29:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 06FA561375;
-        Thu, 24 Jun 2021 22:27:12 +0000 (UTC)
+        id S229643AbhFXWnC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 18:43:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 45373613A9;
+        Thu, 24 Jun 2021 22:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624573632;
-        bh=jYt5kfZFIc6erlp5/8lvnkSBPgbQ6DNhQvJQ28jGNJ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kd7vizbDFBauhateivIkhyAS7AStROoZqtwp9gkAiGOj8di81tHkRcunYn1wtYuzh
-         XqDNQnlAa6wyt8vcP0gpp4vSvvPoiorZ3mYKq1glVKQTciW2RU4mkeEVekVbFaOHIB
-         VjdFIvkfmN+SdxOIvmvQuRrVx9Ykkyd83yivSCXPPcFix1t9pNrj3RteUBRnffiri7
-         95Te6fuY3YMGppRmo5jReHWcsh2ckNXzdzlZ4k5XDnf/BTS3iA+RPHMXX++5NHalIs
-         ivePIe8pYmt4NkbgX4Og9rw+vsbuYJuIdhoMCwuJbjQ80f+wYwrP9Q5oUXx9ejJtlj
-         dAfODsxjJ6Rhg==
-Received: by pali.im (Postfix)
-        id B87C88A3; Fri, 25 Jun 2021 00:27:11 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        s=k20201202; t=1624574442;
+        bh=2RVF0pPWJN9bsOvwEQ1wuKz8hUlipUgiYt0DkqZHZtU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=C07/XAF2fa67lKOB++qXyN0IRjAQX8HJ2L0BsJLlxgNNyjMCsl3m0tSFsLFA5xvqs
+         RuJA/oxtWcJjtIhCFOGLQ0blYbayFGWQ5i0aotk9lcH/REAfA35SSMGLuGNwDYgkHU
+         L0vY+sXoGTmF22zybs787DZkfceg+CGDn/Z4jQe2NjdWipqh0uaOHQzDcCTwmYXtiZ
+         tOXfqBi7Sk/rL2iEDA+IVSOY7dzCq7RtxERD8QvQHfiaoF3XwlzucUapiVpKCGqc0G
+         nS1JnsB7pu9yK+lEoi/5OS/OwRCuxUSc51hLyCBnXzi4JKdZjWPRoPV9btzF2rYi1e
+         hxt46bcoGnE3g==
+Date:   Thu, 24 Jun 2021 17:40:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        "Remi Pommarel" <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        "Tomasz Maciej Nowak" <tmn505@gmail.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Kostya Porotchkin <kostap@marvell.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [RESEND PATCH 5/5] PCI: aardvark: Implement workaround for PCIe Completion Timeout
-Date:   Fri, 25 Jun 2021 00:26:21 +0200
-Message-Id: <20210624222621.4776-6-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210624222621.4776-1-pali@kernel.org>
-References: <20210624222621.4776-1-pali@kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        rfi@lists.rocketboards.org, Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+Message-ID: <20210624224040.GA3567297@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210608080409.1729276-1-javierm@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Marvell Armada 3700 Functional Errata, Guidelines, and Restrictions
-document describes in erratum 3.12 PCIe Completion Timeout (Ref #: 251),
-that PCIe IP does not support a strong-ordered model for inbound posted vs.
-outbound completion.
+[+cc Michal, Ley Foon, Jingoo, Thierry, Jonathan]
 
-As a workaround for this erratum, DIS_ORD_CHK flag in Debug Mux Control
-register must be set. It disables the ordering check in the core between
-Completions and Posted requests received from the link.
+On Tue, Jun 08, 2021 at 10:04:09AM +0200, Javier Martinez Canillas wrote:
+> IRQ handlers that are registered for shared interrupts can be called at
+> any time after have been registered using the request_irq() function.
+> 
+> It's up to drivers to ensure that's always safe for these to be called.
+> 
+> Both the "pcie-sys" and "pcie-client" interrupts are shared, but since
+> their handlers are registered very early in the probe function, an error
+> later can lead to these handlers being executed before all the required
+> resources have been properly setup.
+> 
+> For example, the rockchip_pcie_read() function used by these IRQ handlers
+> expects that some PCIe clocks will already be enabled, otherwise trying
+> to access the PCIe registers causes the read to hang and never return.
+> 
+> The CONFIG_DEBUG_SHIRQ option tests if drivers are able to cope with their
+> shared interrupt handlers being called, by generating a spurious interrupt
+> just before a shared interrupt handler is unregistered.
+> 
+> But this means that if the option is enabled, any error in the probe path
+> of this driver could lead to one of the IRQ handlers to be executed.
 
-It was reported that enabling this workaround fixes instability issues and
-"Unhandled fault" errors when using 60 GHz WiFi 802.11ad card with Qualcomm
-QCA6335 chip under significant load which were caused by interrupt status
-stuck in the outbound CMPLT queue traced back to this erratum.
+I'm not an IRQ expert, but I think this is an issue regardless of
+CONFIG_DEBUG_SHIRQ, isn't it?  Anything used by an IRQ handler should
+be initialized before the handler is registered.  CONFIG_DEBUG_SHIRQ
+is just a way to help find latent problems.
 
-This workaround fixes also kernel panic triggered after some minutes of
-usage 5 GHz WiFi 802.11ax card with Mediatek MT7915 chip:
+> In a rockpro64 board, the following sequence of events happens:
+> 
+>   1) "pcie-sys" IRQ is requested and its handler registered.
+>   2) "pcie-client" IRQ is requested and its handler registered.
+>   3) probe later fails due readl_poll_timeout() returning a timeout.
+>   4) the "pcie-sys" IRQ is unregistered.
+>   5) CONFIG_DEBUG_SHIRQ triggers a spurious interrupt.
+>   6) "pcie-client" IRQ handler is called for this spurious interrupt.
+>   7) IRQ handler tries to read PCIE_CLIENT_INT_STATUS with clocks gated.
+>   8) the machine hangs because rockchip_pcie_read() call never returns.
+> 
+> To avoid cases like this, the handlers don't have to be registered until
+> very late in the probe function, once all the resources have been setup.
+> 
+> So let's just move all the IRQ init before the pci_host_probe() call, that
+> will prevent issues like this and seems to be the correct thing to do too.
 
-    Internal error: synchronous external abort: 96000210 [#1] SMP
-    Kernel panic - not syncing: Fatal exception in interrupt
+Previously we registered rockchip_pcie_subsys_irq_handler() and
+rockchip_pcie_client_irq_handler() before the PCIe clocks were
+enabled.  That's a problem because they depend on those clocks being
+enabled, and your patch fixes that.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Cc: stable@vger.kernel.org
----
-Patch was originally written by Thomas and is already for a long time part
-of Marvell SDK. I have just re-written/re-applied it on top of mainline
-kernel and also wrote a new updated commit message.
+rockchip_pcie_legacy_int_handler() depends on rockchip->irq_domain,
+which isn't initialized until rockchip_pcie_init_irq_domain().
+Previously we registered rockchip_pcie_legacy_int_handler() as the
+handler for the "legacy" IRQ before rockchip_pcie_init_irq_domain().
 
-Please note that this patch is questionable as Bjorn has some objections
-and nobody, including Marvell, was not able to explain erratum nor what
-is workaround exactly doing. Documentation about this topic is basically
-missing.
+I think you patch *also* fixes that problem, right?
 
-We just know that it fixes real kernel crashes when using WiFi cards.
----
- drivers/pci/controller/pci-aardvark.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I think this is also an issue with the following other drivers.  They all
+set the handler to something that uses an IRQ domain before they
+actually initialize the domain:
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 9ff68abd8d1e..231f4469d87e 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -167,6 +167,8 @@
- #define     LTSSM_L0				0x10
- #define     RC_BAR_CONFIG			0x300
- #define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
-+#define DEBUG_MUX_CTRL_REG			(LMI_BASE_ADDR + 0x208)
-+#define     DIS_ORD_CHK				BIT(30)
- 
- /* PCIe core controller registers */
- #define CTRL_CORE_BASE_ADDR			0x18000
-@@ -450,6 +452,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 		PCIE_CORE_CTRL2_TD_ENABLE;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
- 
-+	/* Disable ordering checks, workaround for erratum 3.12 "PCIe completion timeout" */
-+	reg = advk_readl(pcie, DEBUG_MUX_CTRL_REG);
-+	reg |= DIS_ORD_CHK;
-+	advk_writel(pcie, reg, DEBUG_MUX_CTRL_REG);
-+
- 	/* Set lane X1 */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
- 	reg &= ~LANE_CNT_MSK;
--- 
-2.20.1
+  # nwl --------------------------------------------------------------
+  nwl_pcie_probe
+    nwl_pcie_parse_dt
+      pcie->irq_intx = platform_get_irq_byname(pdev, "intx")
+      irq_set_chained_handler_and_data(pcie->irq_intx, nwl_pcie_leg_handler)
+    nwl_pcie_bridge_init
+      devm_request_irq
+    nwl_pcie_init_irq_domain
+      pcie->legacy_irq_domain = irq_domain_add_linear()
 
+  nwl_pcie_leg_handler
+    irq_find_mapping(pcie->legacy_irq_domain)
+
+
+  # altera --------------------------------------------------------------
+  altera_pcie_probe
+    altera_pcie_parse_dt
+      irq_set_chained_handler_and_data(altera_pcie_isr)
+    altera_pcie_init_irq_domain
+      pcie->irq_domain = irq_domain_add_linear()
+
+  altera_pcie_isr
+    irq_find_mapping(pcie->irq_domain)
+
+
+  # ks --------------------------------------------------------------
+  ks_pcie_config_legacy_irq
+    irq_set_chained_handler_and_data(ks_pcie_legacy_irq_handler)
+    ks_pcie->legacy_irq_domain = irq_domain_add_linear()
+
+  ks_pcie_legacy_irq_handler
+    ks_pcie_handle_legacy_irqirq_linear_revmap(ks_pcie->legacy_irq_domain)
+
+
+  # tegra --------------------------------------------------------------
+  tegra_pcie_msi_setup
+    if (IS_ENABLED(CONFIG_PCI_MSI)) {
+      tegra_allocate_domains
+	parent = irq_domain_create_linear()
+	msi->domain = pci_msi_create_irq_domain(parent)
+    }
+    irq_set_chained_handler_and_data(tegra_pcie_msi_irq)
+
+  tegra_pcie_msi_irq
+    irq_find_mapping(msi->domain->parent)
+
+
+Tegra is a little wierd because the IS_ENABLED(CONFIG_PCI_MSI) only
+covers the IRQ domain alloc; it doesn't cover setting the handler.  So
+if CONFIG_PCI_MSI is not set, we don't alloc the IRQ domain, but we
+still set a handler that *uses* the IRQ domain.  That seems somewhat
+broken.
+
+> Reported-by: Peter Robinson <pbrobinson@gmail.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+> 
+> Changes in v2:
+> - Add missing word in the commit message.
+> - Include Shawn Lin's Acked-by tag.
+> 
+>  drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index f1d08a1b159..78d04ac29cd 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -592,10 +592,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+>  	if (err)
+>  		return err;
+>  
+> -	err = rockchip_pcie_setup_irq(rockchip);
+> -	if (err)
+> -		return err;
+> -
+>  	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+>  	if (IS_ERR(rockchip->vpcie12v)) {
+>  		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
+> @@ -973,8 +969,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	if (err)
+>  		goto err_vpcie;
+>  
+> -	rockchip_pcie_enable_interrupts(rockchip);
+> -
+>  	err = rockchip_pcie_init_irq_domain(rockchip);
+>  	if (err < 0)
+>  		goto err_deinit_port;
+> @@ -992,6 +986,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	bridge->sysdata = rockchip;
+>  	bridge->ops = &rockchip_pcie_ops;
+>  
+> +	err = rockchip_pcie_setup_irq(rockchip);
+> +	if (err)
+> +		goto err_remove_irq_domain;
+> +
+> +	rockchip_pcie_enable_interrupts(rockchip);
+> +
+>  	err = pci_host_probe(bridge);
+>  	if (err < 0)
+>  		goto err_remove_irq_domain;
+> -- 
+> 2.31.1
+> 
