@@ -2,286 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 595503B34A2
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 19:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83C1D3B34A8
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 19:20:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232400AbhFXRU7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 13:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232416AbhFXRUw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 13:20:52 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96467C0617AD
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:18:31 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id z3-20020a17090a3983b029016bc232e40bso3895342pjb.4
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nkeWCBI+uU/7cGiyR8KqX3jtouOj5+BeMGH/nCx1Gq8=;
-        b=Ayx3KtOrfzrF668/PdjmLpf7tQlp6VlbptxTyKHq7GsvYQIJPQY5qKMrWpc9iYrXjR
-         kUJX4rrZWID0zFM5jzuOxvaqFCw8/SZ/SXf6IwfZ9urvuDnhdrQFQCEb2gseUY8BXV7p
-         KwbwUAVnc+MiyP4GgT8glTY6U/l2S8y2wDwOU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nkeWCBI+uU/7cGiyR8KqX3jtouOj5+BeMGH/nCx1Gq8=;
-        b=uVXHFS8IJQZO54oXJfVnfCpwSk9Fyjdx6Srp9mgo+tMo+C79Hi4XOQy8ZUFJNzGYEX
-         r8EHxwmy5hN2018VvNvRqlarfg43tW66XpQp3FwzMLDks4luVcjZFNt4m+3qC4O206Ze
-         VqaGCQHBP6q2wP08RCOZgfnMf1Bml0vkKrhXyo5WaypCJeJxVu9BOsw4c4g8pSl/N33l
-         9Ei5qouf11OPYkN4zao3IR4ud9g2aFbDJt1Rm3jHB6mVeJMLnsHiitSrRR5E1f6hlCRs
-         giQrxUukvRIr3XRjFSdEG1iMuyX0N/rUaL4R+z87nXrzWcIgqm7sFiGT6N8qYHfUGMv2
-         RTxg==
-X-Gm-Message-State: AOAM532RG2mbc4NPGSqJNU5L87qzM80hEsdp6+BlL3Z9TiZw+cJwVe05
-        omZsQtxTe7k+CA57hvAvFQbNww==
-X-Google-Smtp-Source: ABdhPJyh24ZBk4IyfzZyEkgHlKXR3pzQ1j5uOTe/6sAHkvrmVGAJ4JM61YDjzhKl8PSKbPF0E6Cx2A==
-X-Received: by 2002:a17:90a:8c4:: with SMTP id 4mr16092152pjn.82.1624555111053;
-        Thu, 24 Jun 2021 10:18:31 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:201:fd74:62bc:19e3:a43b])
-        by smtp.gmail.com with ESMTPSA id z9sm3365960pfa.2.2021.06.24.10.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jun 2021 10:18:30 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com, bhelgaas@google.com
-Cc:     john.garry@huawei.com, robdclark@chromium.org,
-        quic_c_gdjako@quicinc.com, saravanak@google.com,
-        rajatja@google.com, saiprakash.ranjan@codeaurora.org,
-        vbadigan@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, sonnyrao@chromium.org,
-        joel@joelfernandes.org, Douglas Anderson <dianders@chromium.org>,
-        Jordan Crouse <jordan@cosmicpenguin.net>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] mmc: sdhci-msm: Request non-strict IOMMU mode
-Date:   Thu, 24 Jun 2021 10:17:59 -0700
-Message-Id: <20210624101557.v2.3.Icde6be7601a5939960caf802056c88cd5132eb4e@changeid>
-X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
-In-Reply-To: <20210624171759.4125094-1-dianders@chromium.org>
-References: <20210624171759.4125094-1-dianders@chromium.org>
+        id S229721AbhFXRXR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 13:23:17 -0400
+Received: from mail-mw2nam12on2041.outbound.protection.outlook.com ([40.107.244.41]:47539
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229573AbhFXRXQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 13:23:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L7ukIQhqhXhLYaFsu9Hw5Fm/YxKLt0j2BEBGIp/VzzD9dJs/vLf5EWpx/E2/Uw1lshxhQmDPa8PshoARjn684GO86KqK0/CFlFksH+0W0olM7M9tYP/w8nc+vXAXCBPgCTMUPMl4in43V6VX10sxqfeVmd3CgfipXCP+PCCPI9Q8WXSMqGHXD4Ms2mVKdbph+RwKeHxw8Hdd+xXGD2lWOpWXCthO2b/L5G4xzzfGf7LO3W2NvzNR8fd1BLvXPRSVvKEjlrdmewr4AnuNsSGa4IjJZ6leGekB/YzdNRtPr5PAQ/GNa3S04LIFqtjxPrUjSV5m7f6yR4yM1U3sf1LGkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MIT0a63A3Je0pvZyvVZObOmkFpOYGdDhMiPj18uJ7Xk=;
+ b=KVBh8uHjHg3LqejbbxaBs3rKH0TVD8l3kBDr2Sf6P48oY0xC/sAryvjPfZdyzsc7xVLOrIYBLA3dQcSviMUrAEgdHKRFcJL3JXuYkkvQzAaEJIlAcS45kHkNcIKXebfS0oBC3yKwR+SBUDVpZocB+q6dB9ZjH9t9F/xgKbqu7fpiFgI4sBH+9ug3rZpxlnx98tEHBA/tzLcNQZJfyGSyP4WJibqSyrgnS2pc7/FWYD1KfzAnQMdCaIBfoec45WLVHnR3zHOoVyV7hBlo/eWLligFiHunNjGjc+6qW3AYzWUpTof8I702oInS2NQEy6WLCqKkOWTWbeyTEMWqJibhSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=nutanix.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MIT0a63A3Je0pvZyvVZObOmkFpOYGdDhMiPj18uJ7Xk=;
+ b=jh9k30W4YJkjWzwGdGuKnfZwsWURr9JElOIw00zknRFPeGRXMC4PEIvvSjfJhO1w3bU4xiZAfTjzrpTItLJOuYLFGbW0S+ejus1cBKwK7w0JXFEqhTgoChNVeOsJkXi8M9yL32OzIF0Qu8y9HvthZqkyIakjIiHTqFtLP2n3Iw4jjWDipT3zOKv4zTU569pi/v6ozvAd2Bdw0IWrAjMV8gxGkcQ4A2l2lM1Ick/sG2ecj46jhqRkk71juiMrlh1rh9jD5nX70tI4OZf1aYWAbtor0j4CWxIWqC46w4tTuUeY01RuxAJIk+5Ite6g15DaMO7DMh8EKSWEWbq5g7+4MA==
+Received: from BN6PR1101CA0012.namprd11.prod.outlook.com
+ (2603:10b6:405:4a::22) by DM5PR1201MB0139.namprd12.prod.outlook.com
+ (2603:10b6:4:4e::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21; Thu, 24 Jun
+ 2021 17:20:56 +0000
+Received: from BN8NAM11FT045.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:405:4a:cafe::f4) by BN6PR1101CA0012.outlook.office365.com
+ (2603:10b6:405:4a::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.23 via Frontend
+ Transport; Thu, 24 Jun 2021 17:20:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; nutanix.com; dkim=none (message not signed)
+ header.d=none;nutanix.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT045.mail.protection.outlook.com (10.13.177.47) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4264.18 via Frontend Transport; Thu, 24 Jun 2021 17:20:55 +0000
+Received: from [10.20.112.135] (172.20.187.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 24 Jun
+ 2021 17:20:53 +0000
+Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set device
+ reset mechanism
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Amey Narkhede <ameynarkhede03@gmail.com>
+CC:     <alex.williamson@redhat.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+References: <20210624165601.GA3535644@bjorn-Precision-5520>
+From:   Shanker R Donthineni <sdonthineni@nvidia.com>
+Message-ID: <6659e61c-f9ae-4450-53ab-75b76a9f3c5e@nvidia.com>
+Date:   Thu, 24 Jun 2021 12:20:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20210624165601.GA3535644@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7f7115c6-86fb-480c-8410-08d937346d30
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0139:
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB013906099FF6A96CC49981E3C7079@DM5PR1201MB0139.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HxN09LwyFGRFGa1BrJJIuNsXRX3K8TXA0vrSN6Pk5tYX/uZ2iEFhP6SQyddLPolmN/z1D1+6eqssF8Z5+Y3uN2Un2gDEg3Ni++xyO7QjuaotO3Y8p7XtBBQwABZRwDdLbqJwe5d03p+Ya0GZEnrOnDT3Qh06UIHo5uTQ3pMEbpfZbBCsjS7BIB1Vutu276yjSwrVUJeEfEUL3aIOjEMudV9DlLNDUbnGmq/uwkrKgKo1CTY2bYGX8nQFnVbACzPD5WuopeGMcTfw4FMY11TNXqw33yRvrrWJXsem4vUIcIuKJUHy+/T03C+g/eytwWzN3+IQiC2IQdEX7gt0WmRTpgtPrBR5Bcv54liKidgjjg0tTblsjeRCjLLKY4II87uGfNlmSAOhKjcE0XLHQPIT/iI5HQvNwwr3pppjcWFXDKX8HxOG/YrPmdv8GFfVD3/B1nHIm3Ilbx1aJ3Py7t3gZ/MdW+ltuNS3vg6gzgODkb1Z75utp2ciQBPLetABTZDf5C0J/IZYgOrUv8B7Dq4XfEi2iozhk/+VGtiC0lM9kSDADIjxuilfIbnqMI/FB7fpMPriBu/1+Ba5Z1x8VgeJnSi27ZUX4j9ix8tKLzgRrLouAfB6+QTVn2fVR5kw7i1kPQDdtzGGvHviwEohYrtERqh0PVaQa9VbklM4+3u+gioatZ8kfZfRSb9Uz9XZrtCHKLZrtIK/gvrT0U064DhaMP8oS3CcjxrloSWP75sRoxO22WfIui9f6pb34hj3WXDd
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(46966006)(36840700001)(54906003)(110136005)(2616005)(426003)(47076005)(478600001)(5660300002)(8936002)(7636003)(36756003)(356005)(82740400003)(31686004)(83380400001)(8676002)(296002)(4326008)(16576012)(186003)(36860700001)(31696002)(7416002)(53546011)(86362001)(2906002)(70586007)(336012)(36906005)(70206006)(82310400003)(16526019)(316002)(26005)(3714002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2021 17:20:55.7170
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f7115c6-86fb-480c-8410-08d937346d30
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT045.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0139
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The concept of IOMMUs being in strict vs. non-strict mode is a
-pre-existing Linux concept. I've included a rough summary here to help
-evaluate this patch.
 
-IOMMUs can be run in "strict" mode or in "non-strict" mode. The
-quick-summary difference between the two is that in "strict" mode we
-wait until everything is flushed out when we unmap DMA memory. In
-"non-strict" we don't.
 
-Using the IOMMU in "strict" mode is more secure/safer but slower
-because we have to sit and wait for flushes while we're unmapping. To
-explain a bit why "non-strict" mode is unsafe, let's imagine two
-examples.
+On 6/24/21 11:56 AM, Bjorn Helgaas wrote:
+> Why does the user have to write all supported methods?  Is that to
+> preserve the fact that "cat reset_methods" always shows all the
+> supported methods so the user knows what's available?
+>
+> I'm wondering why we can't do something like this (pidgin code):
+>
+>   if (option == "default") {
+>     pci_init_reset_methods(dev);
+>     return;
+>   }
+>
+>   n = 0;
+>   foreach method in option {
+>     i = lookup_reset_method(method);
+>     if (pci_reset_methods[i].reset_fn(dev, PROBE) == 0)
+>       dev->reset_methods[n++] = i;           # method i supported
+>   }
+>   dev->reset_methods[n++] = 0;               # end of supported methods
+>
+> If we did something like the above, the user could always find the
+> list of all methods supported by a device by doing this:
+>
+>   # echo default > reset_methods
+>   # cat reset_methods
+>
+> Yes, this does call the "probe" methods several times.  I don't think
+> that's necessarily a problem.
+Agree, I don't think admin/user will change reset methods frequently and no
+side effects or performance impacts on probing multiple times.   
 
-An example of "non-strict" being insecure when reading from a device:
-a) Linux driver maps memory for DMA.
-b) Linux driver starts DMA on the device.
-c) Device write to RAM subject to bounds checking done by IOMMU.
-d) Device finishes writing to RAM and signals transfer is finished.
-e) Linux driver starts unmapping DMA memory but doesn't wait for the
-   unmap to finish (the definition of non-strict). At this point,
-   though, the Linux APIs say that the driver owns the memory and
-   shouldn't expect any more scribbling from the DMA device.
-f) Linux driver validates that the data in memory looks sane and that
-   accessing it won't cause the driver to, for instance, overflow a
-   buffer.
-g) Device takes advantage of knowledge of how the Linux driver works
-   and sneaks in a modification to the data after the validation but
-   before the IOMMU unmap flush finishes.
-h) Device has now caused the Linux driver to access memory it
-   shouldn't.
-
-An example of "non-strict" being insecure when writing to a device:
-a) Linux driver writes data intended for the device to RAM.
-b) Linux driver maps memory for DMA.
-c) Linux driver starts DMA on the device.
-d) Device reads from RAM subject to bounds checking done by IOMMU.
-e) Device finishes reading from RAM and signals transfer is finished.
-f) Linux driver starts unmapping DMA memory but doesn't wait for the
-   unmap to finish (the definition of non-strict)
-g) Linux driver frees memory and returns it to the pool of memory
-   available for other users to allocate.
-h) Memory is allocated for another purpose since it was free memory.
-i) Device takes advantage of the period of time before IOMMU flush to
-   read memory that it shouldn't have had access to. What exactly the
-   memory could contain depends on the randomness of who allocated
-   next, though exploits have been built on flimisier holes.
-
-As you can see from the above examples, using the iommu in
-"non-strict" mode might not sound _too_ scary (the window of badness
-is small and the exposed memory is small) but there is certainly
-risk. Let's evaluate the risk by breaking it down into two problems
-that IOMMUs are supposed to be protecting us against:
-
-Case 1: IOMMUs prevent malicious code running on the peripheral (maybe
-a malicious peripheral or maybe someone exploited a benign peripheral)
-from turning into an exploit of the Linux kernel. This is particularly
-important if the peripheral has loadable / updatable firmware or if
-the peripheral has some type of general purpose processor and is
-processing untrusted inputs. It's also important if the device is
-something that can be easily plugged into the host and the device has
-direct DMA access itself, like a PCIe device.
-
-Case 2: IOMMUs limit the severity of a class of software bugs in the
-kernel. If we misconfigure a peripheral by accident then instead of
-the peripheral clobbering random memory due to a bug we might get an
-IOMMU error.
-
-Now that we understand the issue and the risks, let's evaluate whether
-we really need "strict" mode for the Qualcomm SDHCI controllers. I
-will make the argument that we don't _need_ strict mode for them. Why?
-* The SDHCI controller on Qualcomm SoCs doesn't appear to have
-  loadable / updatable firmware and, assuming it's got some firmware
-  baked into it, I see no evidence that the firmware could be
-  compromised.
-* Even though, for external SD cards in particular, the controller is
-  dealing with "untrusted" inputs, it's dealing with them in a very
-  controlled way.  It seems unlikely that a rogue SD card would be
-  able to present something to the SDHCI controller that would cause
-  it to DMA to/from an address other than one the kernel told it
-  about.
-* Although it would be nice to catch more software bugs, once the
-  Linux driver has been debugged and stressed the value is not very
-  high. If the IOMMU caught something like this the system would be in
-  a pretty bad shape anyway (we don't really recover from IOMMU
-  errors) and the only benefit would be a better spotlight on what
-  went wrong.
-
-Now we have a good understanding of the benefits of "strict" mode for
-our SDHCI controllers, let's look at some performance numbers. I used
-"dd" to measure read speeds from eMMC on a sc7180-trogdor-lazor
-board. Basic test command (while booted from USB):
-  echo 3 > /proc/sys/vm/drop_caches
-  dd if=/dev/mmcblk1 of=/dev/null bs=4M count=512
-
-I attempted to run my tests for enough iterations that results
-stabilized and weren't too noisy. Tests were run with patches picked
-to the chromeos-5.4 tree (sanity checked against v5.13-rc7). I also
-attempted to compare to other attempts to address IOMMU problems
-and/or attempts to bump the cpufreq up to solve this problem:
-- eMMC datasheet spec: 300 MB/s "Typical Sequential Performance"
-  NOTE: we're driving the bus at 192 MHz instead of 200 Mhz so we might
-  not be able to achieve the full 300 MB/s.
-- Baseline: 210.9 MB/s
-- Baseline + peg cpufreq to max: 284.3 MB/s
-- This patch: 279.6 MB/s
-- This patch + peg cpufreq to max: 288.1 MB/s
-- Joel's IO Wait fix [1]: 258.4 MB/s
-- Joel's IO Wait fix [1] + peg cpufreq to max: 287.8 MB/s
-- TLBIVA patches [2] + [3]: 214.7 MB/s
-- TLBIVA patches [2] + [3] + peg cpufreq to max: 285.7 MB/s
-- This patch plus Joel's [1]: 280.2 MB/s
-- This patch plus Joel's [1] + peg...: 279.0 MB/s
-  NOTE: I suspect something in the system was thermal throttling since
-  there's a heat wave right now.
-
-I also spent a little bit of time trying to see if I could get the
-IOMMU flush for MMC out of the critical path but was unable to figure
-out how to do this and get good performance.
-
-Overall I'd say that the performance results above show:
-* It's really not straightforward to point at "one thing" that is
-  making our eMMC performance bad.
-* It's certainly possible to get pretty good eMMC performance even
-  without this patch.
-* This patch makes it much easier to get good eMMC performance.
-* No other solutions that I found resulted in quite as good eMMC
-  performance as having this patch.
-
-Given all the above (security safety concerns are minimal and it's a
-nice performance win), I'm proposing that running SDHCI on Qualcomm
-SoCs in non-strict mode is the right thing to do until such point in
-time as someone can come up with a better solution to get good SD/eMMC
-performance without it.
-
-Now that we've decided we want the SD/MMC controller in non-strict
-mode, we need to figure out how to make it happen. We will take
-advantage of the fact that on Qualcomm IOMMUs we know that SD/MMC
-controllers are in a domain by themselves and hook in when initting
-the domain context. In response to a previous version of this series
-there had been discussion [4] of having this driven from a device tree
-property and this solution doesn't preclude that but is a good jumping
-off point.
-
-NOTES:
-* It's likely that arguments similar to the above can be made for
-  other SDHCI controllers. However, given that this is something that
-  can have an impact on security it feels like we want each SDHCI
-  controller to opt-in. I believe it is conceivable, for instance,
-  that some SDHCI controllers might have loadable or updatable
-  firmware.
-* It's also likely other peripherals will want this to get the quick
-  performance win. That also should be fine, though anyone landing a
-  similar patch should be very careful that it is low risk for all
-  users of a given peripheral.
-* Conceivably if even this patch is considered too "high risk", we
-  could limit this to just non-removable cards (like eMMC) by just
-  checking the device tree. This is one nice advantage of using the
-  pre_probe() to set this.
-
-[1] https://lore.kernel.org/r/20210618040639.3113489-1-joel@joelfernandes.org
-[2] https://lore.kernel.org/r/1623850736-389584-1-git-send-email-quic_c_gdjako@quicinc.com/
-[3] https://lore.kernel.org/r/cover.1623981933.git.saiprakash.ranjan@codeaurora.org/
-[4] https://lore.kernel.org/r/20210621235248.2521620-1-dianders@chromium.org
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Now accomplish the goal by putting rules in the IOMMU driver.
-- Reworded commit message to clarify things pointed out by Greg.
-
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 98b3a1c2a181..bd66376d21ce 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -172,6 +172,24 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
- 	{ }
- };
- 
-+static const struct of_device_id qcom_smmu_nonstrict_of_match[] __maybe_unused = {
-+	{ .compatible = "qcom,sdhci-msm-v4" },
-+	{ .compatible = "qcom,sdhci-msm-v5" },
-+	{ }
-+};
-+
-+static int qcom_smmu_init_context(struct arm_smmu_domain *smmu_domain,
-+		struct io_pgtable_cfg *pgtbl_cfg, struct device *dev)
-+{
-+	const struct of_device_id *match =
-+		of_match_device(qcom_smmu_nonstrict_of_match, dev);
-+
-+	if (match)
-+		smmu_domain->domain.strictness = IOMMU_NOT_STRICT;
-+
-+	return 0;
-+}
-+
- static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- {
- 	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
-@@ -295,6 +313,7 @@ static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
- }
- 
- static const struct arm_smmu_impl qcom_smmu_impl = {
-+	.init_context = qcom_smmu_init_context,
- 	.cfg_probe = qcom_smmu_cfg_probe,
- 	.def_domain_type = qcom_smmu_def_domain_type,
- 	.reset = qcom_smmu500_reset,
--- 
-2.32.0.93.g670b81a890-goog
+We should support enabling partially ordered reset methods and restore
+default methods either by re-probing resets or remember supported
+resets in pci_dev.
 
