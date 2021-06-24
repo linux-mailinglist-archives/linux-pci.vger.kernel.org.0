@@ -2,103 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5FC13B2893
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 09:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93AFB3B2A48
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 10:23:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231644AbhFXH2e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 03:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231598AbhFXH2a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 03:28:30 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46505C061768
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 00:26:09 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id p4-20020a17090a9304b029016f3020d867so2916795pjo.3
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 00:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MBGbqvseaowVXgAUsLtxjTmL1uju2aQqqvQPrdOEUMI=;
-        b=rfeNjALnsdRnocOgQep2/GLYnJGjRc1WjxIn1Xc02z4Wk6smdmyeDss8WDcsTLPIfL
-         Myr57xBgLa0KylpBWSZXBKQVvSTRuJF8pJtWd2XRkxmzm9vJeAtYlRm/EeTI5kPejveX
-         YUmv4GI8LCPqbS/zIX1fCe2IXo1MR4AnGEUJ4sE0B4PpSYs7LxofCZwig44hSKLNHUrB
-         YB9EwLXewAx6BQYeCyyGZ9iNaihebdvwvtaEPErNYiZetLqJVFg1iKec/QT8bCUDEH0y
-         2mhdXGndkdexIRV1t4Gcvyf0idaUv1OQWbAof50y9n5zh1BIxOdRpee3Ynzc4BU4JOh4
-         o+TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MBGbqvseaowVXgAUsLtxjTmL1uju2aQqqvQPrdOEUMI=;
-        b=aoVEHrEtahFEyrkha+kWyEPjOTTNbEFtqZ95ka0OYu63/RLxxdkTLI6dhjW7PAlxvV
-         VyOAElbPetacVcyijejs1h3ru2+qW0ha3uROJ3p+f/30O+YdsPPSf0Qa5odbceNdVAoM
-         M47oEIo/Y9X9IRwpSjJqro9/oxqq3Xm8lgmpdmMh04QO7MmuJKel/erDK/F1V2TS8TcG
-         mionv8/KEir1mTg5B0GktLUJjLPQnzizr19LBsJ+4oO81nVF4t312Pnf35sYXSnSjnHJ
-         eMhwPQOpB73lLMpOBuyPuhfsoMj3DG3nwWuzav9EcAe59rOdsz2zWjPWbe/qlA9LqKZN
-         ozZw==
-X-Gm-Message-State: AOAM531nChSiS8y8ZAEqWZO9RB/87D1oNBnCAg2dY5BcIBgQ+82T8Bg3
-        11x1GOUEAEuahEGKo9tiexop
-X-Google-Smtp-Source: ABdhPJzs3r+zSCr6iGhCazDTh+Irhpi94KXfvEQ6RKy0/fdm/RMDCeFfNHrtUd2/lxyVGF9iNc+faA==
-X-Received: by 2002:a17:902:a981:b029:116:a139:6054 with SMTP id bh1-20020a170902a981b0290116a1396054mr3143757plb.60.1624519568820;
-        Thu, 24 Jun 2021 00:26:08 -0700 (PDT)
-Received: from localhost.localdomain ([120.138.12.173])
-        by smtp.gmail.com with ESMTPSA id g13sm1923802pfv.65.2021.06.24.00.26.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jun 2021 00:26:08 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        robh@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, smohanad@codeaurora.org,
-        bjorn.andersson@linaro.org, sallenki@codeaurora.org,
-        skananth@codeaurora.org, vpernami@codeaurora.org,
-        vbadigan@codeaurora.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 3/3] MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
-Date:   Thu, 24 Jun 2021 12:55:34 +0530
-Message-Id: <20210624072534.21191-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210624072534.21191-1-manivannan.sadhasivam@linaro.org>
-References: <20210624072534.21191-1-manivannan.sadhasivam@linaro.org>
+        id S231904AbhFXIZg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 04:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231826AbhFXIZg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 04:25:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5BBF0613E8;
+        Thu, 24 Jun 2021 08:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624522997;
+        bh=6+8DC4IpeSttLdmm9MiRqdcSoNk3uI+zKuzqUGGQ0tI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PR8eWWcZxoaaR3PHZ+0yx3IkvkyHx21mNtuv5xgJeJmyJs1W6r+CbjgA+yHVKMkJL
+         IWcK4EfdmE/lIZi3VujgYuhGPySCBnosd2qQI+fYUfVdERvbY9tIbkozvfgIs0K+mH
+         NeknLrIKOm8FSkTEwJCOyJaRWzxUGIZWcQUhpnh/0R87DkzXQ6A83jGnlQ3CY2qapc
+         6Y524qcucOMYihsEQ3UmMrIIZVWLU2OS2drXflYz1gIiWN5Cdc1/Jr3YltLXaNFlL+
+         06A4yN2o82WCKI4p3tJU3nxEQ/cmtFBI9mG+HZopzmHC4TmIbRTBYnGYF335qDu6+I
+         4PQuN+yfZaSlw==
+Received: by pali.im (Postfix)
+        id E3C5780E; Thu, 24 Jun 2021 10:23:14 +0200 (CEST)
+Date:   Thu, 24 Jun 2021 10:23:14 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     xxm <xxm@rock-chips.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        kernel test robot <lkp@intel.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v9 2/2] PCI: rockchip: Add Rockchip RK356X host
+ controller driver
+Message-ID: <20210624082314.mw3ilcufswmb635m@pali>
+References: <20210506023448.169146-1-xxm@rock-chips.com>
+ <20210506023544.169196-1-xxm@rock-chips.com>
+ <20210623143333.GA15104@lpieralisi>
+ <46b3f277-2bde-321d-b616-3f3b41259e4d@rock-chips.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <46b3f277-2bde-321d-b616-3f3b41259e4d@rock-chips.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add MAINTAINERS entry for Qualcomm PCIe Endpoint driver and its
-devicetree binding. While at it, let's also fix the PCIE RC entry to
-cover only the RC driver.
+On Thursday 24 June 2021 10:08:54 xxm wrote:
+> 在 2021/6/23 22:33, Lorenzo Pieralisi 写道:
+> > On Thu, May 06, 2021 at 10:35:44AM +0800, Simon Xue wrote:
+> > > +static int rockchip_pcie_start_link(struct dw_pcie *pci)
+> > > +{
+> > > +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> > > +
+> > > +	/* Reset device */
+> > > +	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
+> > > +
+> > > +	rockchip_pcie_enable_ltssm(rockchip);
+> > > +
+> > > +	/*
+> > > +	 * PCIe requires the refclk to be stable for 100µs prior to releasing
+> > > +	 * PERST. See table 2-4 in section 2.6.2 AC Specifications of the PCI
+> > > +	 * Express Card Electromechanical Specification, 1.1. However, we don't
+> > > +	 * know if the refclk is coming from RC's PHY or external OSC. If it's
+> > > +	 * from RC, so enabling LTSSM is the just right place to release #PERST.
+> > > +	 * We need more extra time as before, rather than setting just
+> > > +	 * 100us as we don't know how long should the device need to reset.
+> > > +	 */
+> > > +	msleep(100);
+> > Any rationale behind the time chosen ?
+> We found some device need about 30ms, so 100ms here just leave more room for
+> other devices.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Can you share information which PCIe card needs 30ms?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd7aff0c120f..cdd370138b9f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14254,7 +14254,15 @@ M:	Stanimir Varbanov <svarbanov@mm-sol.com>
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
--F:	drivers/pci/controller/dwc/*qcom*
-+F:	drivers/pci/controller/dwc/pcie-qcom.c
-+
-+PCIE ENDPOINT DRIVER FOR QUALCOMM
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-pci@vger.kernel.org
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-+F:	drivers/pci/controller/dwc/pcie-qcom-ep.c
- 
- PCIE DRIVER FOR ROCKCHIP
- M:	Shawn Lin <shawn.lin@rock-chips.com>
--- 
-2.25.1
-
+Last year I did tests with more WiFi AC cards and "the slowest" one was
+Compex WLE1216 which needed about 11ms (more than 10ms). All other cards
+were happy with just 1-2ms.
