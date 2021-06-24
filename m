@@ -2,204 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E670D3B36CE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 21:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 901593B38B6
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 23:31:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232731AbhFXTYa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 15:24:30 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:62126 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232417AbhFXTY1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 15:24:27 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15OJBqEH025724;
-        Thu, 24 Jun 2021 19:21:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2020-01-29;
- bh=Q5jxGgw/e7hKqYXxYbU2t6cMICL0Den735IuDjh1eLs=;
- b=AwapEz9Fn4isusfA3zGuaEInXZkBGlEb+1ZsiVmDJRpcmk7RH0/zg04lPgfbHBJUVAZr
- UpsX+ZH4CCKA5VNyl4+RN6fTbStc1giOrabAVIXs82+pF+cQUDdPXLX7Wh+GyQciTi1g
- 01TvEtkQAKEiqF/TOqlv2AFEirVNPYFUsdxdtSMRV184a/YziX++8dEyNjLbKTKCtjO4
- RlVmF+7gao7jmZOY/4KN0qQCK2oEALnCFm9wMRrFMXG0if8EZ9WYfPSW6MNd0Wisuzi1
- bBnFi3HJwrsqgq79XkmX3940QsqaN9ecafHt9eKmIbdTtsc9BWMg3lDrcgpB4D31E3ar hw== 
-Received: from oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 39c8twatp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Jun 2021 19:21:10 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 15OJHgSF002381;
-        Thu, 24 Jun 2021 19:21:09 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        by userp3020.oracle.com with ESMTP id 399tbwf96k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Jun 2021 19:21:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bsJhIILTZggUN9b2aVXhA72CJGMmfSvKxcl8GoCi5gOkOxApwApWj4dHHwqSjJZwk63Qiwb6ZaOWgv5jCJ5giHkSHTRlRohjap4TJ8gX6dD4QZZSlF+7xWmXKy1IsPZeX9iyWx8YceDW3wWF5SrDqe+kaJHQ2Mhn2QMTNFl5C4bd6Sx2+6/enfGE9x2zwFSuasKiKa+H0tSeDSJz/7I9FKbdw5U5cGYYt1QoltONloTIAuuypdzXnlCM/7W7FDumf9GV6z5qU715zbRpdxj4xT4dTqsTbpi7yq+2QU7PCUMk/u63pq0HMv+Ia3JCKWEX2hd1sYukYKBn8rPTjuw9zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q5jxGgw/e7hKqYXxYbU2t6cMICL0Den735IuDjh1eLs=;
- b=h9vQXr7yAwo1dF3Jr2Eu6WhoHSSGuRpIoSRJHdN/uNNNBUSSiUCPvof2dx+ZIj62ZIXngoSd8BaBZ5WCEBulia+B1w90dGcrspsFBO69LwPAuKp07TbgSmPj3pw5S8crsUxIWcBwStUmoxatAl6I5CDLxLXtBFrBuDm+TQ+RRWedvxDENdaAdxUwX5ExndqONyrxRzPcQP/iNE7dns7oQbu4IuqmVGWs82uPNanvnDkKV8CwphV6hPbvNCJJXZ9wNovaiLwnYSFBsNBRvZtNTv/Q8DJ3SHngHtSVrX9SSRJhFMifHYgzwrcuRVAZzxgLYMeBMVQ+r2iaDrVLdN+JsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q5jxGgw/e7hKqYXxYbU2t6cMICL0Den735IuDjh1eLs=;
- b=lv5vM2Tgin8y/ly7lXc68mx37dnRV098CJrmD3i5cpzSsBjE2qGcTrTJX5beuFzThZ8IhtKZUiWGMA7a4Hf7N9V0fYzcbAsx9BKaLxKZp3xGtgbVYPkRvExTAcdQd8GZsz5OdlLx+ikEYw+u2DhFiQjtrjyikX1QbN26ykKJzow=
-Authentication-Results: chromium.org; dkim=none (message not signed)
- header.d=none;chromium.org; dmarc=none action=none header.from=oracle.com;
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
- by BYAPR10MB3160.namprd10.prod.outlook.com (2603:10b6:a03:151::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18; Thu, 24 Jun
- 2021 19:21:05 +0000
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::8111:d8f1:c262:808d]) by BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::8111:d8f1:c262:808d%6]) with mapi id 15.20.4264.020; Thu, 24 Jun 2021
- 19:21:05 +0000
-Date:   Thu, 24 Jun 2021 15:20:55 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Claire Chang <tientzu@chromium.org>
-Cc:     Qian Cai <quic_qiancai@quicinc.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
-        peterz@infradead.org, benh@kernel.crashing.org,
-        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
-        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
-        mingo@kernel.org, Jianxiong Gao <jxgao@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        maarten.lankhorst@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
-        jani.nikula@linux.intel.com,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        rodrigo.vivi@intel.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bauerman@linux.ibm.com
-Subject: Re: [PATCH v14 06/12] swiotlb: Use is_swiotlb_force_bounce for
- swiotlb data bouncing
-Message-ID: <YNTbF5kP0r+VgO6Y@char.us.oracle.com>
-References: <19d4c7a2-744d-21e0-289c-a576e1f0e6f3@quicinc.com>
- <20210624054315.GA25381@lst.de>
- <CALiNf288ZLMhY3E8E3N+z9rkwi1viWNLm1wwMEwT4rNwh3FfwQ@mail.gmail.com>
- <364e6715-eafd-fc4a-e0af-ce2a042756b4@arm.com>
- <20210624111855.GA1382@willie-the-truck>
- <452155d2-c98e-23f6-86d6-3a2ff2e74783@arm.com>
- <20210624114829.GB1382@willie-the-truck>
- <43ec9dd6-12c0-98ec-8d5d-b2904292721e@quicinc.com>
- <YNSq56zyJ7EYdTcI@char.us.oracle.com>
- <CALiNf2_WCVodEZJz9PaCTgk_c8LpOAcD4=YZTLDMVyorJs3ESQ@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALiNf2_WCVodEZJz9PaCTgk_c8LpOAcD4=YZTLDMVyorJs3ESQ@mail.gmail.com>
-X-Originating-IP: [138.3.200.25]
-X-ClientProxiedBy: BYAPR05CA0015.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::28) To BYAPR10MB2999.namprd10.prod.outlook.com
- (2603:10b6:a03:85::27)
+        id S232650AbhFXVdc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 24 Jun 2021 17:33:32 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35392 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232582AbhFXVdc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 17:33:32 -0400
+Received: from [77.244.183.192] (port=63848 helo=[192.168.178.41])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1lwWwI-000Dnu-Sg; Thu, 24 Jun 2021 23:31:10 +0200
+Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linus.walleij@linaro.org, linux-pci@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <8207a53c-4de9-d0e5-295a-c165e7237e36@lucaceresoli.net>
+ <20210622110627.aqzxxtf2j3uxfeyl@pali> <20210622115604.GA25503@lpieralisi>
+ <20210622121649.ouiaecdvwutgdyy5@pali>
+ <18a104a9-2cb8-7535-a5b2-f5f049adff47@lucaceresoli.net>
+ <4d4c0d4d-41b4-4756-5189-bffa15f88406@ti.com>
+ <20210622205220.ypu22tuxhpdn2jwz@pali>
+ <2873969e-ac56-a41f-0cc9-38e387542aa1@lucaceresoli.net>
+ <20210622211901.ikulpy32d6qlr4yw@pali>
+ <588741e4-b085-8ae2-3311-27037c040a57@lucaceresoli.net>
+ <20210622222328.3lfgkrhsdy6izedv@pali>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <51be082a-ff10-8a19-5648-f279aabcac51@lucaceresoli.net>
+Date:   Thu, 24 Jun 2021 23:31:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from char.us.oracle.com (138.3.200.25) by BYAPR05CA0015.namprd05.prod.outlook.com (2603:10b6:a03:c0::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.8 via Frontend Transport; Thu, 24 Jun 2021 19:20:58 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 20a391a4-213a-4ec3-68bf-08d937453637
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3160:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR10MB31604EE3C3F8658D0C7EA04489079@BYAPR10MB3160.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pYdgjjoUa/aadMQBwtD/HaKpdIg+4KgIuqoO2rsqwrEDpqRstvBdYENPfVnLzWHpNJjCHb9QbFMNnnTXwDfvjxsk05OWAn+ZZk7ZqrLSI/82FebrxBSJvfxTRi84KplYBLfPwiY1CCf+Rosv1U2n9pT+C6fVNAe81HhPD8uy531LADjyi3y2bFtLdxWkKKvJyke4G1NOYYAQg7F3HN1RVSPMgJlrQVI5bRT0R9fKz6TprhsQ5t6aR2CJ7oDMH1Ee5e1I8JyZJnNA0swpLooRhSzvzcaVqyBmXNRZwKkm+fse0vKviaVCEhSbgp2e16HdF1mZTLVQJHjfe0ibfaA5O16XkqiT0OJiCMo74bpd9eC4ahOLvF5pdpUL1G5sXnuEP8LkhAIbS0t2VpDp8WnhOQcXeve3eXgtGWtqU94EFic/C6blK+lGUmM66vBpyt30WIKdjOMJ6d9YSeSIkTbrcbWqIueR/NHLfMoyLLxC9MrH8QUqZ2KnWeNYrcNOa6QlhKHIV78Kv3jWwHqDMfDSRa91HdUC5tBKNECYDLBjHEASp9gW/+8Ld/94wvQBjfJsHiyc96nKbT8XBEoIhf5OHqvRmzW/TMknGru8oRla0WOtph/GqlK77xAr6fuBkQ8wf65//wDzww19mnuEpL0OQxZ3uejrISO2yLFunffeOXH7X3B8RKmV0Yh6ZshLRdYno4xAd2lcvRL1AuIJPfPT5yuM0NBzvHEx0tsSA4BEIs17wagt+7Va/75gfDlf2eF6PkCorBd3yT/wMYNPWnjYKtySAnEzW04zG8g/1b4xmlQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(346002)(39860400002)(376002)(366004)(53546011)(4744005)(54906003)(8676002)(5660300002)(316002)(86362001)(6916009)(478600001)(186003)(7406005)(2906002)(55016002)(16526019)(7416002)(26005)(6666004)(7366002)(38100700002)(52116002)(66476007)(7696005)(956004)(66556008)(4326008)(38350700002)(66946007)(8936002)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?meXSVjMpKq5RD4mjjT4/Qr7D7Q+QArEjVUVFZJT5oEzpGZFSOcI/yS9ccoxe?=
- =?us-ascii?Q?wI7pWoyITasmJCxtrUrlSo/hS2gKObh4hQtKhQDcx8HpRaTF4edWfIHa2SkZ?=
- =?us-ascii?Q?stvqg/xXlbOgXxvr5tslAWOlx8yFmmZvJb/mmxwvNVSnqeY6v2LPJYLnhSJn?=
- =?us-ascii?Q?aaNZJ7egPtod5QNSQ/zLpgo9Z8pzH0Mi75m7foM6WfZLewba4z92mM2/cnLe?=
- =?us-ascii?Q?TpgdrUWmpvpZ8FhpfK8nnRKWgMZeRL9Jli2vrkP/8cEjkvJw2f0c935CSi7P?=
- =?us-ascii?Q?67DB/0AkyD3Pb2IMnaOfqNG2esagbl9E/qjDjojDVGuUWVI7/Dzxkr5XHpYW?=
- =?us-ascii?Q?FdSZ/L5ZHM3JHYTDKTv5/bPzBtInxgXW0hvL4CSz1g+nzKc/PYcoJWDiboI8?=
- =?us-ascii?Q?zmAtuOek2Y29sidRZzl5CVTlRne/nTpkfxTGqQwLaiT7GYSZjBjmQ1dPoNM0?=
- =?us-ascii?Q?Ybqp6McVr3nGiSNQUm9QzT6zTBI7URhvkTqjbqbAvZZP6TLp311YWran4Dmj?=
- =?us-ascii?Q?eX6M42+vJ/A85WLbTZgGfZQA5TMu3cmBqs7Wbu2k/uZWkUAP/wudlw6xRNtU?=
- =?us-ascii?Q?7useIAOiDmMb8arkQy+jWyH1QDjKp8RR7INExGrMzxosIrFHTYbwyyuAQmf9?=
- =?us-ascii?Q?N1tJ+ilwRrZlCPpgy9BAwHVzXZkbLA3QOKiuAqrOpvWscu4eNpNhNx5WyNb1?=
- =?us-ascii?Q?DdFRdepguoe4L0y2Hlf1GhjqxurSVJTnqJ5DA7XdwsuqQPDbZgR1Ya5Ks+sZ?=
- =?us-ascii?Q?bVGV0IjPkUisUct4x3thR1ymDEfLeU8NlYcb5JOhQuZkP7gKa+jlak0HSc9I?=
- =?us-ascii?Q?xRTEBqH9Nsnw1FxWixrO/579nemhCY+MoyhbWYSKN/+VDqcsELR110XP2BjM?=
- =?us-ascii?Q?/ctaZwoWMQX1LdRpKO9EzMG/WYN0hukGlnX7fyazUCETSDeoG+r475DqEnjZ?=
- =?us-ascii?Q?CenePjAGDu48t5PTi2Slz9HrZR4MUzGLBWJvecVcgD6pUX96GCbQdfBwiXEu?=
- =?us-ascii?Q?BFdSlGQAFG+orSOAoT0AmH0v4X1NqVcZVtZ57rUG548tSEajIgAB6ADfs+EQ?=
- =?us-ascii?Q?Uj2xGAo6Tsh9QKLAFrZvdFifHZaMfYq2GGOpA+ZAiMdIiQnNIZT+xFoqZQ5w?=
- =?us-ascii?Q?3boPCIdkRAZIWTt0uQB86DYbkUQUozkfaKUQkzWI2TUZmNdC27dM8QcjNMfG?=
- =?us-ascii?Q?D6qyA3rB5B0gADdrjhbGjV8ULm8zWAq/yC5toUEPNf72nl94mwq1NYqT+pq3?=
- =?us-ascii?Q?1dkzG1Jgs4D0hJtYoL6gzcU1pKDDJHsMSzxQdSQn5sifopfJbrigdqAK8WT+?=
- =?us-ascii?Q?C7DTauQD5TUqGkw6+haxD630?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20a391a4-213a-4ec3-68bf-08d937453637
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2021 19:21:05.4356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 82hHNNiOaxu54jnsZ4uTpzVrq+TlaocBwcIevDh/KhHXr/l8iUrl6xoWdmw7bEEIWdz2uCVQRg7ZaiQhMoWsGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3160
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10025 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2106240106
-X-Proofpoint-ORIG-GUID: 6iDfD9Kng50yFMMjc0HRylcYvzz-gyz5
-X-Proofpoint-GUID: 6iDfD9Kng50yFMMjc0HRylcYvzz-gyz5
+In-Reply-To: <20210622222328.3lfgkrhsdy6izedv@pali>
+Content-Type: text/plain; charset=utf-8
+Content-Language: it-IT
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 24, 2021 at 11:58:57PM +0800, Claire Chang wrote:
-> On Thu, Jun 24, 2021 at 11:56 PM Konrad Rzeszutek Wilk
-> <konrad.wilk@oracle.com> wrote:
-> >
-> > On Thu, Jun 24, 2021 at 10:10:51AM -0400, Qian Cai wrote:
-> > >
-> > >
-> > > On 6/24/2021 7:48 AM, Will Deacon wrote:
-> > > > Ok, diff below which attempts to tackle the offset issue I mentioned as
-> > > > well. Qian Cai -- please can you try with these changes?
-> > >
-> > > This works fine.
-> >
-> > Cool. Let me squash this patch in #6 and rebase the rest of them.
-> >
-> > Claire, could you check the devel/for-linus-5.14 say by end of today to
-> > double check that I didn't mess anything up please?
+Hi Pali,
+
+On 23/06/21 00:23, Pali Rohár wrote:
+> On Tuesday 22 June 2021 23:36:35 Luca Ceresoli wrote:
+>> Hi Pali,
+>>
+>> On 22/06/21 23:19, Pali Rohár wrote:
+>>> On Tuesday 22 June 2021 23:08:07 Luca Ceresoli wrote:
+>>>> On 22/06/21 22:52, Pali Rohár wrote:
+>>>>> On Tuesday 22 June 2021 19:27:37 Kishon Vijay Abraham I wrote:
+>>>>>> Hi Luca, Pali,
+>>>>>>
+>>>>>> On 22/06/21 7:01 pm, Luca Ceresoli wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 22/06/21 14:16, Pali Rohár wrote:
+>>>>>>>> On Tuesday 22 June 2021 12:56:04 Lorenzo Pieralisi wrote:
+>>>>>>>>> [Adding Linus for GPIO discussion, thread:
+>>>>>>>>> https://lore.kernel.org/linux-pci/20210531090540.2663171-1-luca@lucaceresoli.net]
+>>>>>>>>>
+>>>>>>>>> On Tue, Jun 22, 2021 at 01:06:27PM +0200, Pali Rohár wrote:
+>>>>>>>>>> Hello!
+>>>>>>>>>>
+>>>>>>>>>> On Tuesday 22 June 2021 12:57:22 Luca Ceresoli wrote:
+>>>>>>>>>>> Nothing happened after a few weeks... I understand that knowing the
+>>>>>>>>>>> correct reset timings is relevant, but unfortunately I cannot help much
+>>>>>>>>>>> in finding out the correct values.
+>>>>>>>>>>>
+>>>>>>>>>>> However I'm wondering what should happen to this patch. It *does* fix a
+>>>>>>>>>>> real bug, but potentially with an incorrect or non-optimal usleep range.
+>>>>>>>>>>> Do we really want to ignore a bugfix because we are not sure about how
+>>>>>>>>>>> long this delay should be?
+>>>>>>>>>>
+>>>>>>>>>> As there is no better solution right now, I'm fine with your patch. But
+>>>>>>>>>> patch needs to be approved by Lorenzo, so please wait for his final
+>>>>>>>>>> answer.
+>>>>>>>>>
+>>>>>>>>> I am not a GPIO expert and I have a feeling this is platform specific
+>>>>>>>>> beyond what the PCI specification can actually define architecturally.
+>>>>>>>>
+>>>>>>>> In my opinion timeout is not platform specific as I wrote in email:
+>>>>>>>> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+>>>>>>>>
+>>>>>>>> My experiments already proved that some PCIe cards needs to be in reset
+>>>>>>>> state for some minimal time otherwise they cannot be enumerated. And it
+>>>>>>>> does not matter to which platform you connect those (endpoint) cards.
+>>>>>>>>
+>>>>>>>> I do not think that timeout itself is platform specific. GPIO controls
+>>>>>>>> PERST# pin and therefore specified sleep value directly drives how long
+>>>>>>>> is card on the other end of PCIe slot in Warm Reset state. PCIe CEM spec
+>>>>>>>> directly says that PERST# signal controls PCIe Warm Reset.
+>>>>>>>>
+>>>>>>>> What is here platform specific thing is that PERST# signal is controlled
+>>>>>>>> by GPIO. But value of signal (high / low) and how long is in signal in
+>>>>>>>> which state for me sounds like not an platform specific thing, but as
+>>>>>>>> PCIe / CEM related.
+>>>>>>>
+>>>>>>> That's exactly my understanding of this matter. At least for the dra7xx
+>>>>>>> controller it works exactly like this, PERSTn# is nothing but a GPIO
+>>>>>>> output from the SoC that drives the PERSTn# input of the external chip
+>>>>>>> without affecting the controller directly.
+>>>>>>>
+>>>>>>
+>>>>>> While the patch itself is correct, this kind-of changes the behavior on
+>>>>>> already upstreamed platforms. Previously the driver expected #PERST to
+>>>>>> be asserted be external means (or default power-up state) and only takes
+>>>>>> care of de-asserting the #PERST line.
+>>>>>>
+>>>>>> There are 2 platforms that will be impacted due to this change
+>>>>>> 1) arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi (has an inverter on
+>>>>>> GPIO line)
+>>>>>> 2) arch/arm/boot/dts/am571x-idk.dts (directly connected to #PERST)
+>>>>>>
+>>>>>> For 1), gpiod_set_value(reset, 0) will assert the PERST line due to the
+>>>>>> inverter (and GPIO_ACTIVE_LOW)
+>>>>>> For 2), gpiod_set_value(reset, 0) will assert the PERST line because we
+>>>>>> have GPIO_ACTIVE_HIGH
+>>>>>
+>>>>> Ou! This is a problem in DT. It needs to be defined in a way that state
+>>>>> is same for every DTS device which uses this driver.
+>>>>
+>>>> Why?
+>>>
+>>> I'm starting to be confused by triple or more negations (asserting,
+>>> signal inverter, active low)...
+>>>
+>>> In your patch is GPIO set value to 0 and Kishon wrote that GPIO set
+>>> value to 0 for those two boards assert PERST# line. Asserting PERST#
+>>> line cause endpoint PCIe card to be in reset state. And in pci-dra7xx.c
+>>> driver there is no other code which de-asserts PERST# line.
+>>>
+>>> So based on all this information I deduced that your patch will cause
+>>> putting PCIe cards into reset state (forever) and therefore they would
+>>> not work.
+>>>
+>>> Or do I have here some mistake?
+>>
+>> Uhm, at time time in the night I'm not sure I can do much more than
+>> adding a few notes on top of the commit message. I hope it helps anyway.
+>>
+>> The PCIe PERSTn reset pin is active low and should be asserted, then
+>> deasserted.
+>>
+>> The current implementation only drives the pin once in "HIGH" position,
+>> thus presumably it was intended to deassert the pin. This has two problems:
+>>
+>>   1) it assumes the pin was asserted by other means before loading the
+>>      driver [Note: Kishon confirmed so far]
 > 
-> I just submitted v15 here
-> (https://lore.kernel.org/patchwork/cover/1451322/) in case it's
-> helpful.
+> This is easily solvable. Just assert PERST# pin explicitly via
+> gpiod_set_value() call prior calling that sleep function. And it would
+> work whatever state that pin has at init time. This has advantage that
+> reader of that code does not need to do too much investigation to check
+> at which state is GPIO at probe time and what implication it has...
 
-Oh! Nice!
-> I'll double check of course. Thanks for the efforts!
+I agree, it's what my patch does.
 
-I ended up using your patch #6 and #7. Please double-check.
+> Some other driver are doing it too, e.g. pci-aardvark.c.
+> 
+> Due to fact that also bootloader may use PCIe bus (maybe not now, but in
+> future; like it happened with pci-aardvark after introducing boot
+> support from NVMe disks), initial state may change.
+> 
+>>   2) it has the wrong polarity, since "HIGH" means "active", and the pin is
+>>      presumably configured as active low coherently with the PCIe
+>>      convention, thus it is driven physically to 0, keeping the device
+>>      under reset unless the pin is configured as active high.
+>>      [Note: the curren 2 DTS files pointed to by Kishon have different
+>>       polarities]
+>>
+>> Fix both problems by:
+>>
+>>   1) keeping devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH) as is, but
+>>      assuming the pin is correctly configured as "active low" this now
+>>      becomes a reset assertion
+>>   2) adding gpiod_set_value(reset, 0) after a delay to deassert reset
+>> [Note: this is exactly the current idea, but with the additional need to
+>> fix (=invert) the current polarities in DT]
+> 
+> Lorenzo asked a good question how GPIO drives PERST#. And maybe it would
+> be a good idea to unify all pci controller drivers to use same GPIO
+> value for asserting PERST# pin. If it is possible. As we can see it is a
+> big mess.
+
+I might be short-righted, but I can think of only one way the code
+should look like in controller drivers. Which is, unsurprisingly, what
+my patch does:
+
+  /* 1 == assert reset == put device under reset */
+  gpiod_set_value(reset, 1);
+  /* or: devm_gpiod_get_optional(..., GPIOD_OUT_HIGH); */
+
+  usleep_range(/* values under discussion */);
+
+  /* 0 == deassert reset == release device from reset */
+  gpiod_set_value(reset, 0);
+
+The PCI controller driver should and can't care about any line
+inversion. It's board-dependent, and as such it should be marked in
+device tree (or ACPI or whatever -- I'm assuming ACPI can describe this it).
+
+Am I overlooking anything?
+-- 
+Luca
+
