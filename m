@@ -2,128 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B53A83B271F
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 08:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D00C53B2887
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 09:25:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230464AbhFXGIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 02:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42662 "EHLO
+        id S231439AbhFXH2K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 03:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231126AbhFXGIU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 02:08:20 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5406BC061574
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 23:06:02 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id z1so5031842ils.0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 23:06:02 -0700 (PDT)
+        with ESMTP id S231466AbhFXH2K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 03:28:10 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45607C061756
+        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 00:25:50 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id h4so4004676pgp.5
+        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 00:25:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=osJqntoZHJL8VeQbE2d8Gx1TrOiajWQXazXH9w70kIY=;
-        b=f09JHaTt6yY9HlwcujpzmyCJbvbUoIE0cZNa0aICkCK68T/rODYze/6/aKRkuFqgtc
-         aQSgGc4CEL1bXaOSKVo+xlBop7hH5m1EqqxXbZi8VyWUJmFL6g6BM4X4ZMkMlYffhkXb
-         itPPZk67YIl+8XjGG/C0lboNwjIIr80wXQ+NM=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T7hKBbNfZnUEFRVyGSb3NXeHE5g+9KB0412sx5zKsWc=;
+        b=WmhHUBR9MFvp62nyWky5sL7YdhwHI4HK6/dsMwN3s+hGgUn0qByVEuoa7GyUu4xh0E
+         p1SOmN08+ilFp4CdAYq4oHsWsDDlgst3Vvi4f8N48iTjUKNH44SxljmeDSSRNnvqKlDb
+         vL6RlzefR/fUz/p9movHNNxfkC8xmeQcrrepgWrK8XdlUyJDcwIERMaovpEWV0U+2dMI
+         5sulrsdMaUM8cbGCtRRqrRPrv3OaVXRcKZwgaFdOhL3+rN4h12KkY26le74F+OCPYMIy
+         M+aKHfEbFyDYq1Uv4JC+CxlgSZo5C8i+AAU6sMRMLZm6MlXtdk1S8i6E5uN/bFQC7gvs
+         smhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=osJqntoZHJL8VeQbE2d8Gx1TrOiajWQXazXH9w70kIY=;
-        b=N6cFexeuoQtuA+o1PKIGJ78Y4rZf8tbcbOBX/6mvOJ7Yx3TUkvbCfhwUlLmAOIuARX
-         fv+Me6o+Xm+oNHdHbOdvWB8o2kd48edssUeZh7RaaJ7KmHASmbHc6g+qnNdbeLiqIwd6
-         /T/AB2MEY81+dquLTh6i0WGUI3jTDWpp0hqP3u0zm9y2CLlZaAMs92bmOS10zHJfFuRZ
-         jOR9Z077NPFDCyY9YDLtAaNzWbyzD0/PTOj+F1JK8++mV5oWvVwKGM9wKSKfAjIDNXic
-         gYCG91bi7H02QKgsxB4EWdaOYzTPPQc6/Z4FWE7DKOgDSM7Rx2DWFLzynar8cbp1O8Wn
-         Ej0Q==
-X-Gm-Message-State: AOAM532rbeE4I3kjrdDaHtFh0EUwxat+MUTMXUmogr9VNJBb9kpCuFP9
-        Sp2aAdj0z/wVpyEXl9zReAxyHkE/cfwaJQ==
-X-Google-Smtp-Source: ABdhPJxD6AD0kzerAdCUsEEe4917ooepWnnAgAxE7mwmAogER5ZxlaTgMCPVVZXT438oauSfipoQWA==
-X-Received: by 2002:a92:4a01:: with SMTP id m1mr2329083ilf.96.1624514761263;
-        Wed, 23 Jun 2021 23:06:01 -0700 (PDT)
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
-        by smtp.gmail.com with ESMTPSA id b23sm721680ior.4.2021.06.23.23.06.00
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Jun 2021 23:06:00 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id h2so6448594iob.11
-        for <linux-pci@vger.kernel.org>; Wed, 23 Jun 2021 23:06:00 -0700 (PDT)
-X-Received: by 2002:a92:750c:: with SMTP id q12mr2332407ilc.303.1624514749926;
- Wed, 23 Jun 2021 23:05:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T7hKBbNfZnUEFRVyGSb3NXeHE5g+9KB0412sx5zKsWc=;
+        b=Kd6EiGvW2PKj4NfTXSOIlMMXKtjz+hrUZ07US0eY8QM7l08doYeufUbHMdhI9vhhk5
+         uN7GLyPDEz9lwIAn4HmU9FKTUyFLdWO0sXcjst52EngB0I4ey31qEaEirJi3QEVI1pPn
+         ICgUbbQoD21YwCjgohz7hLpbazZYTnFLKhrqNznSO7IqZz11GVcG4T59ZKksFegug8f8
+         hBiTAkOpL6tSn3KxellinMppDwvTzKYrqNySyFYgIHl+mryVqteB66j9Uel+WTs+VvnY
+         MuiEOKDVE21/tdzXH9wYxBwm3xJKF0BilEgMd+tBwBPkyj5rZc2K4uylPxcUd+grDQcD
+         kjBw==
+X-Gm-Message-State: AOAM5315Cu7hep6dy4/sLCS8HsjyqbsT89ijHAt1U+iIyeyZoys3ionI
+        CtfU7GPIyOm0XPW8hMbZZfV5
+X-Google-Smtp-Source: ABdhPJzbC8sFhxzhtT90my6oBv8SO5Uf7hSmvwZew0WXOMnIwTiZ30h32OAgk0uwVDGkrSJztwUX7Q==
+X-Received: by 2002:a63:e948:: with SMTP id q8mr3627859pgj.52.1624519549630;
+        Thu, 24 Jun 2021 00:25:49 -0700 (PDT)
+Received: from localhost.localdomain ([120.138.12.173])
+        by smtp.gmail.com with ESMTPSA id g13sm1923802pfv.65.2021.06.24.00.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Jun 2021 00:25:49 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        hemantk@codeaurora.org, smohanad@codeaurora.org,
+        bjorn.andersson@linaro.org, sallenki@codeaurora.org,
+        skananth@codeaurora.org, vpernami@codeaurora.org,
+        vbadigan@codeaurora.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 0/3] Add Qualcomm PCIe Endpoint driver support
+Date:   Thu, 24 Jun 2021 12:55:31 +0530
+Message-Id: <20210624072534.21191-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210619034043.199220-1-tientzu@chromium.org> <20210619034043.199220-7-tientzu@chromium.org>
- <76c3343d-72e5-9df3-8924-5474ee698ef4@quicinc.com> <20210623183736.GA472@willie-the-truck>
- <19d4c7a2-744d-21e0-289c-a576e1f0e6f3@quicinc.com> <20210624054315.GA25381@lst.de>
-In-Reply-To: <20210624054315.GA25381@lst.de>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Thu, 24 Jun 2021 14:05:39 +0800
-X-Gmail-Original-Message-ID: <CALiNf288ZLMhY3E8E3N+z9rkwi1viWNLm1wwMEwT4rNwh3FfwQ@mail.gmail.com>
-Message-ID: <CALiNf288ZLMhY3E8E3N+z9rkwi1viWNLm1wwMEwT4rNwh3FfwQ@mail.gmail.com>
-Subject: Re: [PATCH v14 06/12] swiotlb: Use is_swiotlb_force_bounce for
- swiotlb data bouncing
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Qian Cai <quic_qiancai@quicinc.com>, Will Deacon <will@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
-        peterz@infradead.org, benh@kernel.crashing.org,
-        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
-        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
-        mingo@kernel.org, Jianxiong Gao <jxgao@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        maarten.lankhorst@linux.intel.com, linuxppc-dev@lists.ozlabs.org,
-        jani.nikula@linux.intel.com,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        rodrigo.vivi@intel.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Robin Murphy <robin.murphy@arm.com>, bauerman@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 24, 2021 at 1:43 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Wed, Jun 23, 2021 at 02:44:34PM -0400, Qian Cai wrote:
-> > is_swiotlb_force_bounce at /usr/src/linux-next/./include/linux/swiotlb.h:119
-> >
-> > is_swiotlb_force_bounce() was the new function introduced in this patch here.
-> >
-> > +static inline bool is_swiotlb_force_bounce(struct device *dev)
-> > +{
-> > +     return dev->dma_io_tlb_mem->force_bounce;
-> > +}
->
-> To me the crash looks like dev->dma_io_tlb_mem is NULL.  Can you
-> turn this into :
->
->         return dev->dma_io_tlb_mem && dev->dma_io_tlb_mem->force_bounce;
->
-> for a quick debug check?
+Hello,
 
-I just realized that dma_io_tlb_mem might be NULL like Christoph
-pointed out since swiotlb might not get initialized.
-However,  `Unable to handle kernel paging request at virtual address
-dfff80000000000e` looks more like the address is garbage rather than
-NULL?
-I wonder if that's because dev->dma_io_tlb_mem is not assigned
-properly (which means device_initialize is not called?).
+This series adds support for Qualcomm PCIe Endpoint controller found
+in platforms like SDX55. The Endpoint controller is based on the designware
+core with additional Qualcomm wrappers around the core.
+
+The driver is added separately unlike other Designware based drivers that
+combine RC and EP in a single driver. This is done to avoid complexity and
+to maintain this driver autonomously.
+
+The driver has been validated with an out of tree MHI function driver on
+SDX55 based Telit FN980 EVB connected to x86 host machine over PCIe.
+
+Thanks,
+Mani
+
+Changes in v4:
+
+* Removed the active_config settings needed for IPA integration
+* Switched to writel for couple of relaxed versions that sneaked in
+
+Changes in v3:
+
+* Lot of minor cleanups to the driver patch based on review from Bjorn and Stan.
+* Noticeable changes are:
+  - Got rid of _relaxed calls and used readl/writel
+  - Got rid of separate TCSR memory region and used syscon for getting the
+    register offsets for Perst registers
+  - Changed the wake gpio handling logic
+  - Added remove() callback and removed "suppress_bind_attrs"
+  - stop_link() callback now just disables PERST IRQ
+* Added MMIO region and doorbell interrupt to the binding
+* Added logic to write MMIO physicall address to MHI base address as it is
+  for the function driver to work 
+
+Changes in v2:
+
+* Addressed the comments from Rob on bindings patch
+* Modified the driver as per binding change
+* Fixed the warnings reported by Kbuild bot
+* Removed the PERST# "enable_irq" call from probe()
+
+Manivannan Sadhasivam (3):
+  dt-bindings: pci: Add devicetree binding for Qualcomm PCIe EP
+    controller
+  PCI: dwc: Add Qualcomm PCIe Endpoint controller driver
+  MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 160 ++++
+ MAINTAINERS                                   |  10 +-
+ drivers/pci/controller/dwc/Kconfig            |  10 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     | 751 ++++++++++++++++++
+ 5 files changed, 931 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
+
+-- 
+2.25.1
+
