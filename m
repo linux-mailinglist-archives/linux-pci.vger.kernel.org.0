@@ -2,141 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 399C83B38F8
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 23:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EA743B38FD
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 23:57:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232732AbhFXV6c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 17:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60378 "EHLO mail.kernel.org"
+        id S232582AbhFXWAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 18:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232684AbhFXV6c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Jun 2021 17:58:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4AE47613BD;
-        Thu, 24 Jun 2021 21:56:11 +0000 (UTC)
+        id S229589AbhFXWAQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 18:00:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 00831613B9;
+        Thu, 24 Jun 2021 21:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624571771;
-        bh=uGG6YUnEwsam67bYwj7IxyHLEQ/mCNUmCarToXK+Hr8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SiF3u7FfmApVD7gmlvmW8CeqfRvNiIe70yfZcFUvWHYlC9QePqysx6FC1B3lhci1E
-         y2faflM8yDpiUgIT98EtONU39RL9V8Y/FS6Pov84HlG4fluloZTKuGifpZwvkKuMhb
-         zV6Vg42OuM09nNYgWdkhs9OB2vbUirPttF59i/wgKug8QqoMG2aSICcgQMZ3GyPf74
-         KYHRMnNODoFzT3L/EQYvoS3agDl54L+MwpeZpmJvE2wu4seimIZk9IwEyVYs7A10xh
-         4OJNhHHSt0+2iEazrDeLQlcx5kD/Q9aHW4GY/Z4OQ2YOkgKgysP9GURJ2UHDFXPZae
-         TdJmYXIjv12lg==
-Received: by pali.im (Postfix)
-        id 85A24BFC; Thu, 24 Jun 2021 23:56:09 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        s=k20201202; t=1624571877;
+        bh=yVk9OWhsYOUvvXi+eu9rDTIcKsexzhSWaaaSYGYVEWs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bHbi53wf4EUCWV/VckTBBkgagYzQIdjlzw3hcwmfMZfsbYZSE4G0Othlk82OPvcZi
+         mTEx1LgDjqNpWsw7u/wWPfhnX171bPwXZlPLByNKd2MAj8OYJctlnftGgyeTNf/vth
+         TQZAgILapC5f3WM5jzMoBYOSMct2ATOCDOPDpXj6uDP1GHbaDHra10TGXLV5cp0eeA
+         9o3UJCFoK9B2eXWiaufN4zDbHO/7TJ/GUTRU/E6lBcF8YfsNAxN5rNFHLPb3BhYZIL
+         7RkKaM3A9/4ObdekMM6p0pDuF0bnJ8f3JhCuFhK4V12QZgbyB0Kdjb5i0xSx58rS1e
+         uRlaHLRc8ceiQ==
+Date:   Thu, 24 Jun 2021 16:57:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        "Remi Pommarel" <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        "Tomasz Maciej Nowak" <tmn505@gmail.com>,
-        "Marc Zyngier" <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM space
-Date:   Thu, 24 Jun 2021 23:55:46 +0200
-Message-Id: <20210624215546.4015-3-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210624215546.4015-1-pali@kernel.org>
-References: <20210624215546.4015-1-pali@kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+Message-ID: <20210624215750.GA3556174@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210608080409.1729276-1-javierm@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Current PCIe MEM space of size 16 MB is not enough for some combination
-of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
-Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
-so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
-allocate more PCIe BARs for more PCIe cards.
+On Tue, Jun 08, 2021 at 10:04:09AM +0200, Javier Martinez Canillas wrote:
+> IRQ handlers that are registered for shared interrupts can be called at
+> any time after have been registered using the request_irq() function.
+> 
+> It's up to drivers to ensure that's always safe for these to be called.
+> 
+> Both the "pcie-sys" and "pcie-client" interrupts are shared, but since
+> their handlers are registered very early in the probe function, an error
+> later can lead to these handlers being executed before all the required
+> resources have been properly setup.
+> 
+> For example, the rockchip_pcie_read() function used by these IRQ handlers
+> expects that some PCIe clocks will already be enabled, otherwise trying
+> to access the PCIe registers causes the read to hang and never return.
 
-Without this change some combination of PCIe cards cannot be used and
-kernel show error messages in dmesg during initialization:
+The read *never* completes?  That might be a bit problematic because
+it implies that we may not be able to recover from PCIe errors.  Most
+controllers will timeout eventually, log an error, and either
+fabricate some data (typically ~0) to complete the CPU's read or cause
+some kind of abort or machine check.
 
-    pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
-    pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
-    pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
-    pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
-    pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
-    pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
-    pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
-    pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
-    pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
-    pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
-    pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
-
-Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
-kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
-crashes during loading of kernel DTB file. This bug is present only in
-U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
-affected by this bug. Bug is fixed in U-Boot version 2021.07.
-
-To not break booting new kernels on existing versions of U-Boot on Turris
-Mox, use first 16 MB range for IO and second range with rest of PCIe window
-for MEM.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
----
- .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index 53e817c5f6f3..86b3025f174b 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -134,6 +134,23 @@
- 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
- 	status = "okay";
- 	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-+	/*
-+	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
-+	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
-+	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
-+	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
-+	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
-+	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
-+	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
-+	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
-+	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
-+	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
-+	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
-+	 */
-+	#address-cells = <3>;
-+	#size-cells = <2>;
-+	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
-+		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
- 
- 	/* enabled by U-Boot if PCIe module is present */
- 	status = "disabled";
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 7a2df148c6a3..dac3007f2ac1 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -488,8 +488,15 @@
- 			#interrupt-cells = <1>;
- 			msi-parent = <&pcie0>;
- 			msi-controller;
--			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
--				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
-+			/*
-+			 * The 128 MiB address range [0xe8000000-0xf0000000] is
-+			 * dedicated for PCIe and can be assigned to 8 windows
-+			 * with size a power of two. Use one 64 KiB window for
-+			 * IO at the end and the remaining seven windows
-+			 * (totaling 127 MiB) for MEM.
-+			 */
-+			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
-+				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0 0 0 1 &pcie_intc 0>,
- 					<0 0 0 2 &pcie_intc 1>,
--- 
-2.20.1
-
+Just asking in case there's some controller configuration that should
+be tweaked.
