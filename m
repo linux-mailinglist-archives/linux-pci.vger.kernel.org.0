@@ -2,62 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B0A43B3464
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 19:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8695E3B3483
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 19:14:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232397AbhFXRLy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 13:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbhFXRLw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 13:11:52 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F080C061766
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:09:31 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id d9so9173097ioo.2
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 10:09:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
-         :subject:to;
-        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
-        b=p95plxgcKdT8+TUJCmcKdAyJL6L8C+j3muAeTI6tbvEOMwKUFZvBH22Z3GEGxdnUZH
-         d9XkDasjcz/bUj2n1PkWxPPQL/Sxtf1a7ckN43IkWwU4a9v6DYeOi9Tg8DPYHl700hH/
-         xlmv54Ir2NUVB8zwaX1UsxTzP5GUW3mdywmszCeflzWKbXzDgkMNhx+qVsi3FklHnD5x
-         fSDWvxz3POXOJ/0yZM+F2G99rPMTFJK+bPA5TWYu0VJpvpEjmQwRSgXLB6dx+kXpC0Uz
-         JX+JhI0lSB7VkwJTdkbApCrUx6TGzp99N5mAm/d0lil4hmexz93RFAPSpMzmwkjNchKB
-         rXTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
-         :from:date:message-id:subject:to;
-        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
-        b=b6pbFGMq3GZogQrOYrE7ouch5Ll2C2olMN0r1QdjlbstkdZT8SPxqthUwvGHJZjSLP
-         ey6htMDCwnULIJ9dmPM1Rvr1e//1tfvJrocZ+oDDXnC9DpfnBqjYRZndIRNp2bphfdMn
-         oyG7xg2K3KHTOC0pjOEuyI9TQyV1QGP5GqCkXbmVksQMX0LmJnJyPsKcGeeGK/wBaHhs
-         TFB4qNropyh5IR15RRFLWcndJ1OhBYSs8sRrl+OqlDeC0HZja9lLTQEa6FmJmPDmBTEQ
-         PHOQd8kOaIcaYOuuhcll9FG2RBviXRyVU5pNTeSGkpriGjbnkmfNYCamAgrsbFmuYPzz
-         z9cA==
-X-Gm-Message-State: AOAM530sy3Sr4CWzh1ozmBCsA2qbNe4S4pIoGAI01xu/14ztkIoIdfoZ
-        6TLXBkVXHB7w01wcy9hyBFqcbpz/S9T5+QRQD6cTYCl8I5MbAw==
-X-Google-Smtp-Source: ABdhPJzkYUuO368jts0QgMQyJe9SHzg0U698qd8KdfojEfYsXnHtwMfPGxVHmw7fwQ64+IhHRhAEJH5nusdeW4BWzcA=
-X-Received: by 2002:a05:6e02:524:: with SMTP id h4mr4098121ils.255.1624554560853;
- Thu, 24 Jun 2021 10:09:20 -0700 (PDT)
+        id S232274AbhFXRQn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 13:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230116AbhFXRQn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 13:16:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 01497613DC;
+        Thu, 24 Jun 2021 17:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624554863;
+        bh=zVx5VItzPLj7HM2YlVcVsl4Odcp6W+sfx757TCcPVvo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lLVOyh83aDlfzLS35Lp6FTJ9GjwU890OLYt3ugyyuhqJKZOXsZ31j6RbKA/3YzPPZ
+         otQb+zN1LEBQXnNX4zfKiMWvQIYNHSA2KOZsJ3c3cwEZ0tl50Won0eWl/BSJO2xga3
+         rocixqHPfQU43C/00V3ia+q+lMXNUaqCR3eCvufViJFSJPSzPDlS5BUZNPBopBIODw
+         G9M9o1hS26H5cHfgUbj5mTLGcqGDNa0VFGzLcDWqNd2hiBhqM1eUECmdB+Lh7vcvjF
+         Nv5C/espaC6lGRAb/591DtiFwdoZhs9bKx7k12IcPayOrebldsQbdva8rtmawEEAw9
+         2eLXEa6BHYQRg==
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?R=C3=B6tti?= 
+        <espressobinboardarmbiantempmailaddress@posteo.de>,
+        Zachary Zhang <zhangzg@marvell.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        stable@vger.kernel.org
+Subject: [PATCH 1/2] PCI: Call MPS fixup quirks early
+Date:   Thu, 24 Jun 2021 19:14:17 +0200
+Message-Id: <20210624171418.27194-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Received: by 2002:a05:6638:3aa:0:0:0:0 with HTTP; Thu, 24 Jun 2021 10:09:20
- -0700 (PDT)
-Reply-To: tutywoolgar021@gmail.com
-In-Reply-To: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
-References: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
-From:   tuty woolgar <faridaamadoubas@gmail.com>
-Date:   Thu, 24 Jun 2021 17:09:20 +0000
-Message-ID: <CADB47+607zNBfYFb4bj0nUhuuYgAdwT=G_wJ9-EeV0ESHe56Jg@mail.gmail.com>
-Subject: greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-My greetings to you my friend i hope you are fine and good please respond
-back to me thanks,
+The pci_device_add() function calls header fixups only after
+pci_configure_device(), which configures MPS.
+
+So in order to have MPS fixups working, they need to be called early.
+
+Signed-off-by: Marek Behún <kabel@kernel.org>
+Fixes: 27d868b5e6cfa ("PCI: Set MPS to match upstream bridge")
+Cc: stable@vger.kernel.org
+---
+ drivers/pci/quirks.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 22b2bb1109c9..4d9b9d8fbc43 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3233,12 +3233,12 @@ static void fixup_mpss_256(struct pci_dev *dev)
+ {
+ 	dev->pcie_mpss = 1; /* 256 bytes */
+ }
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+-			 PCI_DEVICE_ID_SOLARFLARE_SFC4000A_0, fixup_mpss_256);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+-			 PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+-			 PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
++			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_0, fixup_mpss_256);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
++			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
++			PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
+ 
+ /*
+  * Intel 5000 and 5100 Memory controllers have an erratum with read completion
+-- 
+2.31.1
+
