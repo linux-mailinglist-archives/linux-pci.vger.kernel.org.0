@@ -2,135 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 823CE3B3226
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 17:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E333B3256
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 17:12:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232316AbhFXPDW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 11:03:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43334 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230267AbhFXPDV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 11:03:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15OF0I1n070523;
-        Thu, 24 Jun 2021 10:00:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1624546818;
-        bh=pxpiC6BVI9g4NL2xx5Bt4qIO5YjlhGqvffc+sdE9s40=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=d/BKExzlYgQhjb7mEOLnCHqbh7Jwg0po/7SK2j+9iw8KJTH8zl0YJc2UJRPUhr1pf
-         Xl6h4MelEyxRtlXlI1RmXdNzFEwBoTcsuLTWUdGm16WygZFFLDQjmJBR0WLKAgAR+b
-         KHX17RYAFD3KkF17LFfxfgdPXWdyNAa0Jv13sOYs=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15OF0IEw033674
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Jun 2021 10:00:18 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 24
- Jun 2021 10:00:17 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Thu, 24 Jun 2021 10:00:17 -0500
-Received: from [10.250.232.28] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15OF0AKN061030;
-        Thu, 24 Jun 2021 10:00:11 -0500
-Subject: Re: [PATCH v6 0/7] Add SR-IOV support in PCIe Endpoint Core
+        id S231932AbhFXPPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 11:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231709AbhFXPPF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 11:15:05 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0D8C061574;
+        Thu, 24 Jun 2021 08:12:46 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id c7-20020a17090ad907b029016faeeab0ccso6102212pjv.4;
+        Thu, 24 Jun 2021 08:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=I++4uMEcTuGw2BfmtX3AQuuRG9WweA+grH1hO3oOMI0=;
+        b=LIaRvG4u4m0ZkmLFuNXfahT2MJggIPMzzsoiUFMm30HNCFVQRYTiqDqfJPWiBdG6rE
+         ZF8ADuOtzJabCG7cCVkWFiFSDa1J15p+jTLtGe7HklPYHyGo6AGaL0kbwsl6h4sRVf1M
+         8/bz8mbmT6mxhuK3et4euwzK7oUYmMdBafpbAqrxaDgxUN+8j24o+Gn+oubxGunBJ4kA
+         ND025OxQA88vvfO8Suwdw530Fl2Tn7NAhY5uY+bzcKt/AlbqbiD5G0bS+qAIN5CW2uXc
+         G3f41AvGEpQOs81ne03tbvnkqARlG3HAyvSG1YIrJa2YbRyN4IG8s4SErR1HCGLl4Jwc
+         5WSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I++4uMEcTuGw2BfmtX3AQuuRG9WweA+grH1hO3oOMI0=;
+        b=I5u/GTcHavxKSd9d+A6O6UXh4tyc/QzS9XdJJZ616Z0/XO9UGA/G16fSkHl2KrGn11
+         Jg6ywbIpgK8pxzAv2LuVtxWgfwXl/tjLbKrX/YWS/eSFxIPr37GIgBnMjqZy6U1ycOKj
+         hqMie3Fia8djl1mqH9+3OusxHAEmyX6KvNO7njiDvevrtZLMdvkiHau54kLKfPJIljeS
+         Owma2tXMPwFqdLN1biGpZ7HmDqbVO6cBCnb0GfmYYagWWt7x3U9PmUlxqFo1Pzn5V/20
+         ej8imjbSJi46FOmpLp9TUJOBCS/2EUWsDS3n2as0HLm4bwghcxFBkz0h0VMACf+pMavj
+         Pdzw==
+X-Gm-Message-State: AOAM530CsQ/uDawMVbgOhUFpGTHR+cEZAEYzGrpr6pPUCWqkg/QdX4Z7
+        jlTcDMAEo4bK0JAkOE3BHf8=
+X-Google-Smtp-Source: ABdhPJwrN7EokPvZOFe7BEvJUtMJ+OMCroyVIeTW/0sbVX59L1m0TRG+nxZkvMFen37/cMkmyfAh9w==
+X-Received: by 2002:a17:90a:d082:: with SMTP id k2mr16179928pju.15.1624547565615;
+        Thu, 24 Jun 2021 08:12:45 -0700 (PDT)
+Received: from localhost ([103.248.31.165])
+        by smtp.gmail.com with ESMTPSA id t2sm3191465pfg.73.2021.06.24.08.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Jun 2021 08:12:45 -0700 (PDT)
+Date:   Thu, 24 Jun 2021 20:42:42 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-References: <20210616211630.GA3007203@bjorn-Precision-5520>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <0fd19e28-e0a6-fd79-672a-b588fb2763ba@ti.com>
-Date:   Thu, 24 Jun 2021 20:30:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set
+ device reset mechanism
+Message-ID: <20210624151242.ybew2z5rseuusj7v@archlinux>
+References: <20210608054857.18963-5-ameynarkhede03@gmail.com>
+ <20210624121521.GA3518338@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210616211630.GA3007203@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210624121521.GA3518338@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+On 21/06/24 07:15AM, Bjorn Helgaas wrote:
+> On Tue, Jun 08, 2021 at 11:18:53AM +0530, Amey Narkhede wrote:
+> > Add reset_method sysfs attribute to enable user to
+> > query and set user preferred device reset methods and
+> > their ordering.
+>
+> > +		Writing the name or comma separated list of names of any of
+> > +		the device supported reset methods to this file will set the
+> > +		reset methods and their ordering to be used when resetting
+> > +		the device.
+>
+> > +	while ((name = strsep(&options, ",")) != NULL) {
+> > +		if (sysfs_streq(name, ""))
+> > +			continue;
+> > +
+> > +		name = strim(name);
+> > +
+> > +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++) {
+> > +			if (reset_methods[i] &&
+> > +			    sysfs_streq(name, pci_reset_fn_methods[i].name)) {
+> > +				reset_methods[i] = prio--;
+> > +				break;
+> > +			}
+> > +		}
+> > +
+> > +		if (i == PCI_RESET_METHODS_NUM) {
+> > +			kfree(options);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+>
+> Asking again since we didn't get this clarified before.  The above
+> tells me that "reset_methods" allows the user to control the *order*
+> in which we try reset methods.
+>
+> Consider the following two uses:
+>
+>   (1) # echo bus,flr > reset_methods
+>
+>   (2) # echo flr,bus > reset_methods
+>
+> Do these have the same effect or not?
+>
+They have different effect.
+> If "reset_methods" allows control over the order, I expect them to be
+> different: (1) would try a bus reset and, if the bus reset failed, an
+> FLR, while (2) would try an FLR and, if the FLR failed, a bus reset.
+Exactly you are right.
 
-On 17/06/21 2:46 am, Bjorn Helgaas wrote:
-> On Wed, Jun 16, 2021 at 07:35:33PM +0530, Kishon Vijay Abraham I wrote:
->> Hi Lorenzo, Bjorn,
->>
->> On 17/05/21 1:17 pm, Kishon Vijay Abraham I wrote:
->>> Patch series
->>> *) Adds support to add virtual functions to enable endpoint controller
->>>    which supports SR-IOV capability
->>> *) Add support in Cadence endpoint driver to configure virtual functions
->>> *) Enable pci_endpoint_test driver to create pci_device for virtual
->>>    functions
->>>
->>> v1 of the patch series can be found at [1]
->>> v2 of the patch series can be found at [2]
->>> v3 of the patch series can be found at [3]
->>> v4 of the patch series can be found at [4]
->>> v5 of the patch series can be found at [5]
->>>
->>> Here both physical functions and virtual functions use the same
->>> pci_endpoint_test driver and existing pcitest utility can be used
->>> to test virtual functions as well.
->>>
->>> Changes from v5:
->>> *) Rebased to 5.13-rc1
->>>
->>> Changes from v4:
->>> *) Added a fix in Cadence driver which was overwriting BAR configuration
->>>    of physical function.
->>> *) Didn't include Tom's Acked-by since Cadence driver is modified in
->>>    this revision.
->>>
->>> Changes from v3:
->>> *) Fixed Rob's comment and added his Reviewed-by as suggested by him.
->>>
->>> Changes from v2:
->>> *) Fixed DT binding documentation comment by Rob
->>> *) Fixed the error check in pci-epc-core.c
->>>
->>> Changes from v1:
->>> *) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
->>>    binding for EP)
->>>
->>> [1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
->>> [2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
->>> [3] -> https://lore.kernel.org/r/20210305050410.9201-1-kishon@ti.com
->>> [4] -> http://lore.kernel.org/r/20210310160943.7606-1-kishon@ti.com
->>> [5] -> https://lore.kernel.org/r/20210419083401.31628-1-kishon@ti.com
->>
->> Can this series be merged for 5.14? It already includes Ack from Rob for
->> dt-binding changes and Ack from Tom for Cadence driver changes.
-> 
-> Sorry, I think this was assigned to me in patchwork, but Lorenzo
-> usually takes care of the endpoint stuff.  He's away this week, but no
-> doubt will look at it when he returns.
+Now the point I was presenting was with new encoding we have to write
+list of *all of the supported reset methods* in order for example, in
+above example flr,bus or bus,flr. We can't just write 'flr' or 'bus'
+then switch back to writing flr,bus/bus,flr(these have different effect
+as mentioned earlier).
 
-Can you consider merging this series for 5.14?
+Basically with new encoding an user can't write subset of reset methods
+they have to write list of *all* supported methods everytime.
 
-Thank You,
-Kishon
+Thanks,
+Amey
