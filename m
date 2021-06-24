@@ -2,112 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C02D3B33BA
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 18:16:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B3D73B3438
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jun 2021 18:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231668AbhFXQS0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 12:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33780 "EHLO mail.kernel.org"
+        id S229445AbhFXQ6X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 12:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231321AbhFXQSZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 24 Jun 2021 12:18:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CBA20613B3;
-        Thu, 24 Jun 2021 16:16:05 +0000 (UTC)
+        id S229464AbhFXQ6W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 24 Jun 2021 12:58:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B495613DA;
+        Thu, 24 Jun 2021 16:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624551366;
-        bh=LRAKIyItqZRjNgN2DEdMSx4GcyvU1DlflvVaoGixOWw=;
+        s=k20201202; t=1624553763;
+        bh=sPdX9JSZ1QoBwl0KfaUR+wv694Ee5eRmqS36z7b9xLE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mlGWialXvl3ChYUFloKtM214TrVMealpz6qozA9XzuCppW+VMdwwEpbnyWWFR7PvT
-         YCVTKrFx7/XYPElpLNGoKrpzTCe1YwngiYm582FDGo1Lb0j6oKKUWQWP2160wNDS8Y
-         X5md3nm7VwKoffkQ7R+pqB+aXZJKZHypi3ZEL52AZmvW4CL8VROI0G7KkykOGt6tCf
-         cuFevnCK5ZAJ8RAT+G35pUoC7E0N+opfC8FKm8GUIOYsUc1VhCUxzfPkyb1KB7RtyU
-         iu313vgXCwx3LDAvJvXpOwCgqgQwBYMas5W++/NGeoYsT9j6ugKxUYXJtYMykZWrqn
-         GxI9MqBtgqIJA==
-Date:   Thu, 24 Jun 2021 11:15:59 -0500
+        b=Y8VKK6YfBzQJ5MhCmGisCYNGxAEJbmeCGqp6JDtqL1rHm6xMTH2ly+SR12Xg95ZRs
+         L9LysdnV3xJDkEPmtFRvwPtSI5MKmyHfjcPuAwNpZ44IBM6fJTKC+HwRd3urc16v+m
+         t20LiXv916JkNUd7ukxN9jFpOwCfvY1/RP9cIErSfEzpyqsIMK6coBcP7TjNVo16kn
+         BIvtog8pJD1Uu33hPLOGEL1BlWo3dRljri26DLGj2RWrxjKrMqTDZXrpjoNVcccKEz
+         71lZvicUQz0oyAQFU9oRaw3xLvr8xOnx/9Cm10gFGVwEU4beK6A6SnoqYWA+yoj07t
+         +++fGisxNK/NQ==
+Date:   Thu, 24 Jun 2021 11:56:01 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Raphael Norwitz <raphael.norwitz@nutanix.com>,
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v7 1/8] PCI: Add pcie_reset_flr to follow calling
- convention of other reset methods
-Message-ID: <20210624161559.GA3532867@bjorn-Precision-5520>
+Subject: Re: [PATCH v7 4/8] PCI/sysfs: Allow userspace to query and set
+ device reset mechanism
+Message-ID: <20210624165601.GA3535644@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210624152809.m3glwh6lxckykt33@archlinux>
+In-Reply-To: <20210624151242.ybew2z5rseuusj7v@archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Alex]
+On Thu, Jun 24, 2021 at 08:42:42PM +0530, Amey Narkhede wrote:
+> On 21/06/24 07:15AM, Bjorn Helgaas wrote:
+> > On Tue, Jun 08, 2021 at 11:18:53AM +0530, Amey Narkhede wrote:
+> > > Add reset_method sysfs attribute to enable user to
+> > > query and set user preferred device reset methods and
+> > > their ordering.
+> >
+> > > +		Writing the name or comma separated list of names of any of
+> > > +		the device supported reset methods to this file will set the
+> > > +		reset methods and their ordering to be used when resetting
+> > > +		the device.
+> >
+> > > +	while ((name = strsep(&options, ",")) != NULL) {
+> > > +		if (sysfs_streq(name, ""))
+> > > +			continue;
+> > > +
+> > > +		name = strim(name);
+> > > +
+> > > +		for (i = 0; i < PCI_RESET_METHODS_NUM; i++) {
+> > > +			if (reset_methods[i] &&
+> > > +			    sysfs_streq(name, pci_reset_fn_methods[i].name)) {
+> > > +				reset_methods[i] = prio--;
+> > > +				break;
+> > > +			}
+> > > +		}
+> > > +
+> > > +		if (i == PCI_RESET_METHODS_NUM) {
+> > > +			kfree(options);
+> > > +			return -EINVAL;
+> > > +		}
+> > > +	}
+> >
+> > Asking again since we didn't get this clarified before.  The above
+> > tells me that "reset_methods" allows the user to control the
+> > *order* in which we try reset methods.
+> >
+> > Consider the following two uses:
+> >
+> >   (1) # echo bus,flr > reset_methods
+> >
+> >   (2) # echo flr,bus > reset_methods
+> >
+> > Do these have the same effect or not?
+> >
+> They have different effect.
 
-On Thu, Jun 24, 2021 at 08:58:09PM +0530, Amey Narkhede wrote:
-> On 21/06/24 07:23AM, Bjorn Helgaas wrote:
-> > On Tue, Jun 08, 2021 at 11:18:50AM +0530, Amey Narkhede wrote:
-> > > Currently there is separate function pcie_has_flr() to probe if pcie flr is
-> > > supported by the device which does not match the calling convention
-> > > followed by reset methods which use second function argument to decide
-> > > whether to probe or not.  Add new function pcie_reset_flr() that follows
-> > > the calling convention of reset methods.
-> >
-> > > +/**
-> > > + * pcie_reset_flr - initiate a PCIe function level reset
-> > > + * @dev: device to reset
-> > > + * @probe: If set, only check if the device can be reset this way.
-> > > + *
-> > > + * Initiate a function level reset on @dev.
-> > > + */
-> > > +int pcie_reset_flr(struct pci_dev *dev, int probe)
-> > > +{
-> > > +	u32 cap;
-> > > +
-> > > +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-> > > +		return -ENOTTY;
-> > > +
-> > > +	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
-> > > +	if (!(cap & PCI_EXP_DEVCAP_FLR))
-> > > +		return -ENOTTY;
-> > > +
-> > > +	if (probe)
-> > > +		return 0;
-> > > +
-> > > +	return pcie_flr(dev);
-> > > +}
-> >
-> > Tangent: I've been told before, but I can't remember why we need the
-> > "probe" interface.  Since we're looking at this area again, can we add
-> > a comment to clarify this?
-> >
-> > Every time I read this, I wonder why we can't just get rid of the
-> > probe and attempt a reset.  If it fails because it's not supported, we
-> > could just try the next one in the list.
+I asked about this because Shanker's idea [1] of using two bitmaps
+only keeps track of which resets are *enabled*.  It does not keep
+track of the *ordering*.  Since you want to control the ordering, I
+think we need more state than just the supported/enabled bitmaps.
+
+> > If "reset_methods" allows control over the order, I expect them to
+> > be different: (1) would try a bus reset and, if the bus reset
+> > failed, an FLR, while (2) would try an FLR and, if the FLR failed,
+> > a bus reset.
+>
+> Exactly you are right.
 > 
-> Part of the reason is to have same calling convention as other reset
-> methods and other reason is devices that run in VMs where various
-> capabilities can be hidden or have quirks for avoiding known troublesome
-> combination of device features as Alex explained here
-> https://lore.kernel.org/linux-pci/20210624151242.ybew2z5rseuusj7v@archlinux/T/#mb67c09a2ce08ce4787652e4c0e7b9e5adf1df57a
-> 
-> On the side note as you suggested earlier to cache flr capability
-> earlier the PCI_EXP_DEVCAP reading code won't be there in next version
-> so its just trivial check(dev->has_flr).
+> Now the point I was presenting was with new encoding we have to
+> write list of *all of the supported reset methods* in order for
+> example, in above example flr,bus or bus,flr. We can't just write
+> 'flr' or 'bus' then switch back to writing flr,bus/bus,flr (these
+> have different effect as mentioned earlier).
 
-Sorry, I didn't make my question clear.  I'm not asking why we're
-adding a "probe" argument to pcie_reset_flr() to make it consistent
-with pci_af_flr(), pci_pm_reset(), pci_parent_bus_reset(), etc.  I
-like making the interfaces consistent.
+It sounds like you're saying this sequence can't work:
 
-What I'm asking here is why the "probe" argument exists for *any* of
-these interfaces and why pci_probe_reset_function() exists.
+  # echo flr > reset_methods
+  # echo bus,flr > reset_methods
 
-This is really more a question for Alex since it's a historical
-question, not anything directly related to your series.  I'm not
-proposing *removing* the "probe" argument; I know it exists for a
-reason because I've asked about it before.  But I forgot the answer,
-which makes me think a hint in the code would be useful.
+But I'm afraid you'll have to walk me through the reasons why this
+can't be made to work.
+
+> Basically with new encoding an user can't write subset of reset
+> methods they have to write list of *all* supported methods
+> everytime.
+
+Why does the user have to write all supported methods?  Is that to
+preserve the fact that "cat reset_methods" always shows all the
+supported methods so the user knows what's available?
+
+I'm wondering why we can't do something like this (pidgin code):
+
+  if (option == "default") {
+    pci_init_reset_methods(dev);
+    return;
+  }
+
+  n = 0;
+  foreach method in option {
+    i = lookup_reset_method(method);
+    if (pci_reset_methods[i].reset_fn(dev, PROBE) == 0)
+      dev->reset_methods[n++] = i;           # method i supported
+  }
+  dev->reset_methods[n++] = 0;               # end of supported methods
+
+If we did something like the above, the user could always find the
+list of all methods supported by a device by doing this:
+
+  # echo default > reset_methods
+  # cat reset_methods
+
+Yes, this does call the "probe" methods several times.  I don't think
+that's necessarily a problem.
 
 Bjorn
+
+[1] https://lore.kernel.org/r/1fb0a184-908c-5f98-ef6d-74edc602c2e0@nvidia.com
