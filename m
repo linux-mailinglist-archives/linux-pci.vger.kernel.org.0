@@ -2,26 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5C923B4091
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69ABD3B4092
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:32:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231381AbhFYJeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 05:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
+        id S231153AbhFYJe1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 05:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230523AbhFYJeE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 05:34:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 92CAD61427;
-        Fri, 25 Jun 2021 09:31:42 +0000 (UTC)
+        id S230523AbhFYJe0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Jun 2021 05:34:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9FCBE61409;
+        Fri, 25 Jun 2021 09:32:04 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V3 3/4] PCI: Improve the MRRS quirk for LS7A
-Date:   Fri, 25 Jun 2021 17:30:29 +0800
-Message-Id: <20210625093030.3698570-4-chenhuacai@loongson.cn>
+Subject: [PATCH V3 4/4] PCI: Add quirk for multifunction devices of LS7A
+Date:   Fri, 25 Jun 2021 17:30:30 +0800
+Message-Id: <20210625093030.3698570-5-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210625093030.3698570-1-chenhuacai@loongson.cn>
 References: <20210625093030.3698570-1-chenhuacai@loongson.cn>
@@ -31,75 +32,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In new revision of LS7A, some PCIe ports support larger value than 256,
-but their maximum supported MRRS values are not detectable. Moreover,
-the current loongson_mrrs_quirk() cannot avoid devices increasing its
-MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-will actually set a big value in its driver. So the only possible way is
-configure MRRS of all devices in BIOS, and add a PCI device flag (i.e.,
-PCI_DEV_FLAGS_NO_INCREASE_MRRS) to stop the increasing MRRS operations.
+From: Jianmin Lv <lvjianmin@loongson.cn>
 
-However, according to PCIe Spec, it is legal for an OS to program any
-value for MRRS, and it is also legal for an endpoint to generate a Read
-Request with any size up to its MRRS. As the hardware engineers says,
-the root cause here is LS7A doesn't break up large read requests (Yes,
-that is a problem in the LS7A design).
+In LS7A, multifunction device use same PCI PIN (because the PIN register
+report the same INTx value to each function) but we need different IRQ
+for different functions, so add a quirk to fix it for standard PCI PIN
+usage.
 
+This patch only affect ACPI based systems (and only needed by ACPI based
+systems, too). For DT based systems, the irq mappings is defined in .dts
+files and be handled by of_irq_parse_pci().
+
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/pci.c    | 5 +++++
- drivers/pci/quirks.c | 8 +++++++-
- include/linux/pci.h  | 2 ++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c    | 14 ++++++++++++++
+ include/linux/pci_ids.h | 10 ++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b717680377a9..6f0d2f5b6f30 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5802,6 +5802,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
-+	if (dev->dev_flags & PCI_DEV_FLAGS_NO_INCREASE_MRRS) {
-+		if (rq > pcie_get_readrq(dev))
-+			return -EINVAL;
-+	}
-+
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
- 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index dee4798a49fc..8284480dc7e4 100644
+index 8284480dc7e4..bf3002cff64c 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -263,7 +263,13 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
- 		 * anything larger than this. So force this limit on
- 		 * any devices attached under these ports.
- 		 */
--		if (pci_match_id(bridge_devids, bridge)) {
-+		if (bridge && pci_match_id(bridge_devids, bridge)) {
-+			dev->dev_flags |= PCI_DEV_FLAGS_NO_INCREASE_MRRS;
-+
-+			if (pcie_bus_config == PCIE_BUS_DEFAULT ||
-+			    pcie_bus_config == PCIE_BUS_TUNE_OFF)
-+				break;
-+
- 			if (pcie_get_readrq(dev) > 256) {
- 				pci_info(dev, "limiting MRRS to 256\n");
- 				pcie_set_readrq(dev, 256);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 24306504226a..5e0ec3e4318b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -227,6 +227,8 @@ enum pci_dev_flags {
- 	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
- 	/* Don't use Relaxed Ordering for TLPs directed at this device */
- 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-+	/* Don't increase BIOS's MRRS configuration */
-+	PCI_DEV_FLAGS_NO_INCREASE_MRRS = (__force pci_dev_flags_t) (1 << 12),
- };
+@@ -242,6 +242,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_LS7A_LPC, loongson_system_bus_quirk);
  
- enum pci_irq_reroute_variant {
++static void loongson_pci_pin_quirk(struct pci_dev *dev)
++{
++	dev->pin = 1 + (PCI_FUNC(dev->devfn) & 3);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_AHCI, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_EHCI, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_OHCI, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_GPU, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_GMAC, loongson_pci_pin_quirk);
++
+ static void loongson_mrrs_quirk(struct pci_dev *dev)
+ {
+ 	struct pci_bus *bus = dev->bus;
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 4c3fa5293d76..dc024ab21d91 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -151,6 +151,16 @@
+ /* Vendors and devices.  Sort key: vendor first, device next. */
+ 
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
++#define PCI_DEVICE_ID_LOONGSON_APB      0x7a02
++#define PCI_DEVICE_ID_LOONGSON_GMAC     0x7a03
++#define PCI_DEVICE_ID_LOONGSON_DC       0x7a06
++#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
++#define PCI_DEVICE_ID_LOONGSON_GPU      0x7a15
++#define PCI_DEVICE_ID_LOONGSON_AHCI     0x7a08
++#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
++#define PCI_DEVICE_ID_LOONGSON_OHCI     0x7a24
++#define PCI_DEVICE_ID_LOONGSON_LPC      0x7a0c
++#define PCI_DEVICE_ID_LOONGSON_DMA      0x7a0f
+ 
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+ #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
 -- 
 2.27.0
 
