@@ -2,117 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BDD43B3A0B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 02:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EEDD3B3A34
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 02:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232935AbhFYAMm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Jun 2021 20:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
+        id S232729AbhFYAoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Jun 2021 20:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233076AbhFYAMa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 20:12:30 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD34C061760
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 17:10:09 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id d16so13309260lfn.3
-        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 17:10:09 -0700 (PDT)
+        with ESMTP id S232300AbhFYAoV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Jun 2021 20:44:21 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF5BC061574
+        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 17:42:01 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id t13so6157535pgu.11
+        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 17:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FNTTrJ3FL1iq3YniplXZ8119Emiw8hp3FUgBfyLOtsY=;
-        b=H/gWxWmhKDTGjRX15XTwo2KDADDg2PfwLeK8QAkQyJmNyuli18P+1mAV6lo10NgW+y
-         VPNgQmBidtxHzk1bciUp4km2D5CazJCt/SL3vWjLfdaXvJzxdJF2c4PhoyuvQCxOl4tF
-         KHhJXfveAViSCT4QZ6IH6n2KCo0MwAKTJD5uByEFEoi+heEJi9+R4v44lNRxE9hv+8yx
-         uh0aMKqEBItpBCuLvmKqzUT8DCqEypJSLjGaUEIQgjyaDVfWYcazrjn2uDN0vLp0WRdg
-         jynSvZhtlLomKu7cFBoX/D11D+s0FCTlyPJiVbsDYM4dHFTXWgrCCPfI8EIVLqWYuT7E
-         yztQ==
+         :cc;
+        bh=EqlrFHdkETA6GW6RTp23OD25mZ9+t6ZRMvVFoaOPoUc=;
+        b=bWcnQFoaV8XnWx2CmMqEub8uZpXzFMse4FkKs/6K7fAcmnfM33tj2MQVZVMqk8lHor
+         cnCu5fEy9K2Coqappl8ZOF4ctPyliF3MamPmCDoyKpou7w8OAoAQjHS8393soCVU2vwe
+         MHeea8kRyeqRwy1slhC35EkQWOKLuZs+gqotQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FNTTrJ3FL1iq3YniplXZ8119Emiw8hp3FUgBfyLOtsY=;
-        b=GfidAO4Rcv8N+fMXlb54/1+O9Bs+wSHTIuGHvzLKmCROWkBoJroGsTVN+viABS/RZp
-         r8JBKw9Dm1FX2BzUvN/ovLWsAe8lt5eZZXPfybL4Dk6TcmJdUbKhU6kOv78AP41J1Swq
-         pU+zqBImTpXNcVT15MTpxdm2OZ5dSX+NtMzHdTP5I3dVC+5xjbP3Dd37Ith/tSuyQSWZ
-         ovWANp3iE4b9AxajV5xfC952VZV3+e2ANI9V9LCwaAX1qt3MtRxcIdUYJvbK6uIeud/h
-         uGjgMnvgfihB/B62gx7a+hs0vmjMn5EwNlIeIYdjBp/MtKNrgLTu5ztm60YwYyKIUl6j
-         OoSA==
-X-Gm-Message-State: AOAM5306fk4x4MCIc0N5KkcN2GMv3WvwCkUuSKZEofH4GzCU4pgvbBDJ
-        o0kV7SWm/uVRpZHCsdZ17FMaaUxuAU43WJTP+ztsvw==
-X-Google-Smtp-Source: ABdhPJzhpdZ+qRb8l4M1S8NIRcHZuamvKemb8/lfE8nfui9Lb+u/kx6k4mY8D8H38j6ZEeiQ6LWsZQZbCm6ko+gfuM0=
-X-Received: by 2002:a05:6512:3f08:: with SMTP id y8mr5640261lfa.649.1624579808001;
- Thu, 24 Jun 2021 17:10:08 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=EqlrFHdkETA6GW6RTp23OD25mZ9+t6ZRMvVFoaOPoUc=;
+        b=ts3735z9s3vYPRFc8bYOOolgAR8VCTS8mGKStoOwBZJTZ5ApuUrWgCfIIFuR25p5x9
+         ibElgKxMEWHnYFSnoRWG41W6IkF0sc22qS+4wtQzVMkMp7TgF41s67FbK4hP3mFv+GHl
+         2cRN715fkiQPCslfVgWzVU72x5mVIXPTVBGV8+ANW9PhbUWV2W23gYQyFk2i+qKQhN16
+         KyHfLkEFHuxMqlyvEq3r889JVQjLt8+KmVLLKeNa5DzBJELNzFMazwWwqCDUL/CKBf3Z
+         cGDkf3E8TuGMBUnsxv0tIBFBzfr+9bBAOsDiphA5D2K5POOXSGejoVesFsKnXFlaW4Pa
+         bVWw==
+X-Gm-Message-State: AOAM530yb5vRwSWl3CO6T7Ykiu9ZKaa0LJF0ws60k11nu8RDINGe4Cyz
+        S9HHPD1F1V13Cb7xHA/TtHsL6l8c0J1gog==
+X-Google-Smtp-Source: ABdhPJyclbGMtzTmGoD/PNISmmzbmAS2sNzSD83wuIHiB/pnD8g1K2QGgDfIS1itoxERAreQbvyERA==
+X-Received: by 2002:a63:df56:: with SMTP id h22mr7026993pgj.224.1624581720764;
+        Thu, 24 Jun 2021 17:42:00 -0700 (PDT)
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com. [209.85.215.179])
+        by smtp.gmail.com with ESMTPSA id b5sm3470086pgh.41.2021.06.24.17.41.59
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Jun 2021 17:42:00 -0700 (PDT)
+Received: by mail-pg1-f179.google.com with SMTP id y14so6160923pgs.12
+        for <linux-pci@vger.kernel.org>; Thu, 24 Jun 2021 17:41:59 -0700 (PDT)
+X-Received: by 2002:a05:6602:1546:: with SMTP id h6mr6334034iow.34.1624581707960;
+ Thu, 24 Jun 2021 17:41:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210622115604.GA25503@lpieralisi> <20210622121649.ouiaecdvwutgdyy5@pali>
- <18a104a9-2cb8-7535-a5b2-f5f049adff47@lucaceresoli.net> <4d4c0d4d-41b4-4756-5189-bffa15f88406@ti.com>
- <20210622205220.ypu22tuxhpdn2jwz@pali> <2873969e-ac56-a41f-0cc9-38e387542aa1@lucaceresoli.net>
- <20210622211901.ikulpy32d6qlr4yw@pali> <588741e4-b085-8ae2-3311-27037c040a57@lucaceresoli.net>
- <20210622222328.3lfgkrhsdy6izedv@pali> <CACRpkdai2cvoNFR8yH2MHP+R27nQm1HZNK4-mJ50mE7DHrBmXw@mail.gmail.com>
- <20210624233448.ouvczfbogmtnbrye@pali>
-In-Reply-To: <20210624233448.ouvczfbogmtnbrye@pali>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 25 Jun 2021 02:09:56 +0200
-Message-ID: <CACRpkdZyMr-8Qmf3S7R+RcWe5shhnMeBoEsJoQdREimpB-xw+g@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: dra7xx: Fix reset behaviour
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20210624155526.2775863-1-tientzu@chromium.org> <YNTa1C5uvz+qWryf@char.us.oracle.com>
+In-Reply-To: <YNTa1C5uvz+qWryf@char.us.oracle.com>
+From:   Claire Chang <tientzu@chromium.org>
+Date:   Fri, 25 Jun 2021 08:41:37 +0800
+X-Gmail-Original-Message-ID: <CALiNf297ep9C8-3s=F-xRDud=QB9geMfCMKTqLzPJKEdYnfbXQ@mail.gmail.com>
+Message-ID: <CALiNf297ep9C8-3s=F-xRDud=QB9geMfCMKTqLzPJKEdYnfbXQ@mail.gmail.com>
+Subject: Re: [PATCH v15 00/12] Restricted DMA
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, grant.likely@arm.com,
+        xypron.glpk@gmx.de, Thierry Reding <treding@nvidia.com>,
+        mingo@kernel.org, bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
+        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
+        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
+        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Qian Cai <quic_qiancai@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 1:34 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
-
-> > gpiod_set_value(gpiod, 1) =3D=3D assert the line
-> > gpiod_set_value(gpiod, 0) =3D=3D de-assert the line
+On Fri, Jun 25, 2021 at 3:20 AM Konrad Rzeszutek Wilk
+<konrad.wilk@oracle.com> wrote:
 >
-> Problem is that some pci controller drivers (e.g. pci-j721e.c or
-> pcie-rockchip-host.c) expects that gpiod_set_value_cansleep(gpiod, 1)
-> de-asserts the line and it is already used in this way.
+> On Thu, Jun 24, 2021 at 11:55:14PM +0800, Claire Chang wrote:
+> > This series implements mitigations for lack of DMA access control on
+> > systems without an IOMMU, which could result in the DMA accessing the
+> > system memory at unexpected times and/or unexpected addresses, possibly
+> > leading to data leakage or corruption.
+> >
+> > For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
+> > not behind an IOMMU. As PCI-e, by design, gives the device full access to
+> > system memory, a vulnerability in the Wi-Fi firmware could easily escalate
+> > to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
+> > full chain of exploits; [2], [3]).
+> >
+> > To mitigate the security concerns, we introduce restricted DMA. Restricted
+> > DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
+> > specially allocated region and does memory allocation from the same region.
+> > The feature on its own provides a basic level of protection against the DMA
+> > overwriting buffer contents at unexpected times. However, to protect
+> > against general data leakage and system memory corruption, the system needs
+> > to provide a way to restrict the DMA to a predefined memory region (this is
+> > usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
+> >
+> > [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+> > [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+> > [2] https://blade.tencent.com/en/advisories/qualpwn/
+> > [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+> > [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
+> >
+> > v15:
+> > - Apply Will's diff (https://lore.kernel.org/patchwork/patch/1448957/#1647521)
+> >   to fix the crash reported by Qian.
+> > - Add Stefano's Acked-by tag for patch 01/12 from v14
 >
-> Which is opposite of the behavior which you wrote above.
-
-I sketched a way out of the problem using a quirk in
-gpiolib in another response. We have a few of these
-cases where we have to code our way out of mistakes,
-such things happen.
-
-The problem is common, and due to the fact that device tree
-authors ignores the flag GPIO_ACTIVE_HIGH (which has
-been around since the early days of device tree on PowerPC)
-instead they opt to do the inversion in code. Which violates the
-contract that the DT should describe the hardware.
-
-The ambition of the DT specifications/schemas are to be operating
-system independent, and this kind of stuff creates a situation
-where other operating systems can't use the specification without
-also going and looking at how Linux has implemented stuff.
-Which is against the ambition of the device tree work.
-
-> I would suggest to define enum/macro with word ASSERT and DEASSERT in
-> its name instead of just true/false boolean or 0/1 int.
+> That all should be now be on
 >
-> In case of this PERST# misunderstanding, having assert/deassert in name
-> should really help.
+> https://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git/
+> devel/for-linus-5.14 (and linux-next)
+>
 
-Hm that looks useful, Bart &co what do you think?
-
-#define GPIOD_ASSERTED 1
-#define GPIOD_DEASSERTED 0
-
-in consumer.h, would that be helpful for users?
-
-Yours,
-Linus Walleij
+devel/for-linus-5.14 looks good. Thanks!
