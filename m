@@ -2,240 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EFA23B42BD
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 13:54:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8453B4339
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 14:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbhFYL40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 07:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49260 "EHLO mail.kernel.org"
+        id S231391AbhFYMci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 08:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229498AbhFYL4Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 07:56:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CAC7D61464;
-        Fri, 25 Jun 2021 11:54:04 +0000 (UTC)
+        id S231273AbhFYMch (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Jun 2021 08:32:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A4C9361463;
+        Fri, 25 Jun 2021 12:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624622045;
-        bh=eKwvSIEBtV9yZ29mPOO8grGRX6O2AyCWp0i7Tkuc/eM=;
+        s=k20201202; t=1624624216;
+        bh=236dSGX7ExOVPv4h0UeOksGQ8SgYCOQ7aXD3NGK83S0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QFSo0RtCEX5GX6dxNXbQPazYaVXnToZoTw5wAT9kzABmT8tlQbNsI1XLHqgD94n8i
-         OVyd/zpV1wDiEjb7Jjf72vfpx/tR91Omxa/B+VTUci7uCDvoBLoSVJBGVtVAY8T8Pp
-         XuOMj1cBGeeONi3D8PXntWB+tqzF2qXfZlO4Kr139M4Qy1rHg0LgR5KPQNBM+pA8Ye
-         85iPWTiuNn3Z6kAPZ0q8vwytmfGfK62g+9swaY+lqTUxR/n858VD7ckLYkLXAn7Fz7
-         OV/EBGLBwEMvY3YXZvFdRAIyYB6y5ALIJLwKYxRNSI4YCEgz4/jOuHJpOpyAqCJXA4
-         yrlT5YcDA1j1A==
-Received: by pali.im (Postfix)
-        id 7061360E; Fri, 25 Jun 2021 13:54:02 +0200 (CEST)
-Date:   Fri, 25 Jun 2021 13:54:02 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Koen Vandeputte <koen.vandeputte@citymesh.com>
-Cc:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Yinghai Lu <yinghai@kernel.org>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-Message-ID: <20210625115402.jwga35xmknmo4vdk@pali>
-References: <20200909112850.hbtgkvwqy2rlixst@pali>
- <20201006222222.GA3221382@bjorn-Precision-5520>
- <20201007081227.d6f6otfsnmlgvegi@pali>
- <20210407142538.GA12387@meh.true.cz>
- <20210407145147.bvtubdmz4k6nulf7@pali>
- <20210407153041.GA17046@meh.true.cz>
- <cd4812f0-1de3-0582-936c-ba30906595af@citymesh.com>
+        b=bCaWwZtC9a0kNjsO191mUbtUcojnviRFMJnXBZ/UQc+wZDgM8hUcreC3qNCEkirNE
+         bbLWlaMbJfBXlg05V08tS0sV+lbJ6mjPNoN7Y8AT15UfxghYQbA3zVDmQkdENHWUeg
+         aoWWbni5r3mbAZmV1yWyb6Qtn3Rm3bH4e4imD6DcErBaFTOVYzmckxYQM6wCi00qxL
+         IKspsHt2W8+A5P7LrhMSB0wLC0J5AtiueFbpUWEKsYqOURtPkRdQJiwA+N05SkMbY0
+         yNml1K+qGwoAZk+3C0lKdhaf1wsPR1zKe7fVETOXT9FqPpHlh5Z2ca5kWomvg9Dx6c
+         8Pdmk/dzJ5M/g==
+Date:   Fri, 25 Jun 2021 13:30:05 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Claire Chang <tientzu@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+        Joerg Roedel <joro@8bytes.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com, thomas.lendacky@amd.com,
+        quic_qiancai@quicinc.com
+Subject: Re: [PATCH v15 00/12] Restricted DMA
+Message-ID: <20210625123004.GA3170@willie-the-truck>
+References: <20210624155526.2775863-1-tientzu@chromium.org>
+ <YNTa1C5uvz+qWryf@char.us.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cd4812f0-1de3-0582-936c-ba30906595af@citymesh.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <YNTa1C5uvz+qWryf@char.us.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+On Thu, Jun 24, 2021 at 03:19:48PM -0400, Konrad Rzeszutek Wilk wrote:
+> On Thu, Jun 24, 2021 at 11:55:14PM +0800, Claire Chang wrote:
+> > This series implements mitigations for lack of DMA access control on
+> > systems without an IOMMU, which could result in the DMA accessing the
+> > system memory at unexpected times and/or unexpected addresses, possibly
+> > leading to data leakage or corruption.
+> > 
+> > For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus is
+> > not behind an IOMMU. As PCI-e, by design, gives the device full access to
+> > system memory, a vulnerability in the Wi-Fi firmware could easily escalate
+> > to a full system exploit (remote wifi exploits: [1a], [1b] that shows a
+> > full chain of exploits; [2], [3]).
+> > 
+> > To mitigate the security concerns, we introduce restricted DMA. Restricted
+> > DMA utilizes the existing swiotlb to bounce streaming DMA in and out of a
+> > specially allocated region and does memory allocation from the same region.
+> > The feature on its own provides a basic level of protection against the DMA
+> > overwriting buffer contents at unexpected times. However, to protect
+> > against general data leakage and system memory corruption, the system needs
+> > to provide a way to restrict the DMA to a predefined memory region (this is
+> > usually done at firmware level, e.g. MPU in ATF on some ARM platforms [4]).
+> > 
+> > [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+> > [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+> > [2] https://blade.tencent.com/en/advisories/qualpwn/
+> > [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+> > [4] https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8183/drivers/emi_mpu/emi_mpu.c#L132
+> > 
+> > v15:
+> > - Apply Will's diff (https://lore.kernel.org/patchwork/patch/1448957/#1647521)
+> >   to fix the crash reported by Qian.
+> > - Add Stefano's Acked-by tag for patch 01/12 from v14
+> 
+> That all should be now be on
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git/
+> devel/for-linus-5.14 (and linux-next)
 
-On Friday 25 June 2021 13:29:00 Koen Vandeputte wrote:
-> Hi all,
-> 
-> 
-> Adding some more info regarding this issue:
-> 
-> I've cooked up this simple patch to get some more info:
-> 
-> 
-> Index: linux-5.10.44/drivers/pci/pci-sysfs.c
-> ===================================================================
-> --- linux-5.10.44.orig/drivers/pci/pci-sysfs.c
-> +++ linux-5.10.44/drivers/pci/pci-sysfs.c
-> @@ -1335,6 +1335,8 @@ int __must_check pci_create_sysfs_dev_fi
->      int rom_size;
->      struct bin_attribute *attr;
-> 
-> +    dump_stack();
-> +
->      if (!sysfs_initialized)
->          return -EACCES;
-> 
-> 
-> Which shows this:
-> 
-> 
-> [    1.847384] Key type .fscrypt registered
-> [    1.854288] pci 0000:01:00.0: PCI bridge to [bus 02-05]
-> [    1.859242] Key type fscrypt-provisioning registered
-> [    1.863252] pci 0000:01:00.0:   bridge window [mem 0x01100000-0x011fffff]
-> [    1.874096] Key type encrypted registered
-> [    1.879290] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    1.879306] pci 0000:00:00.0:   bridge window [mem 0x01100000-0x012fffff]
-> 
-> --> patch kicking in here showing first creation now
-> 
-> [    1.879346] CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.10.44 #0
-> [    1.913354] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [    1.919908] Workqueue: events_unbound async_run_entry_fn
-> [    1.925255] [<8010d5e0>] (unwind_backtrace) from [<801099f0>]
-> (show_stack+0x10/0x14)
-> [    1.933008] [<801099f0>] (show_stack) from [<804ab92c>]
-> (dump_stack+0x94/0xa8)
-> [    1.940249] [<804ab92c>] (dump_stack) from [<804ea96c>]
-> (pci_create_sysfs_dev_files+0x10/0x28c)
-> [    1.948969] [<804ea96c>] (pci_create_sysfs_dev_files) from [<804dc648>]
-> (pci_bus_add_device+0x20/0x84)
-> [    1.958287] [<804dc648>] (pci_bus_add_device) from [<804dc6d8>]
-> (pci_bus_add_devices+0x2c/0x70)
-> [    1.966996] [<804dc6d8>] (pci_bus_add_devices) from [<804dffc8>]
-> (pci_host_probe+0x40/0x94)
-> [    1.975362] [<804dffc8>] (pci_host_probe) from [<804fd5f0>]
-> (dw_pcie_host_init+0x1c0/0x3fc)
-> [    1.983720] [<804fd5f0>] (dw_pcie_host_init) from [<804fdcb0>]
-> (imx6_pcie_probe+0x358/0x63c)
-> [    1.992179] [<804fdcb0>] (imx6_pcie_probe) from [<8054c79c>]
-> (platform_drv_probe+0x48/0x98)
-> [    2.000542] [<8054c79c>] (platform_drv_probe) from [<8054a9fc>]
-> (really_probe+0xfc/0x4dc)
-> [    2.008732] [<8054a9fc>] (really_probe) from [<8054b0bc>]
-> (driver_probe_device+0x5c/0xb4)
-> [    2.016916] [<8054b0bc>] (driver_probe_device) from [<8054b1bc>]
-> (__driver_attach_async_helper+0xa8/0xac)
-> [    2.026497] [<8054b1bc>] (__driver_attach_async_helper) from [<8014beec>]
-> (async_run_entry_fn+0x44/0x108)
-> [    2.036082] [<8014beec>] (async_run_entry_fn) from [<80141b64>]
-> (process_one_work+0x1d8/0x43c)
-> [    2.044704] [<80141b64>] (process_one_work) from [<80141e2c>]
-> (worker_thread+0x64/0x5b0)
-> [    2.052802] [<80141e2c>] (worker_thread) from [<80147698>]
-> (kthread+0x148/0x14c)
-> [    2.060207] [<80147698>] (kthread) from [<80100148>]
-> (ret_from_fork+0x14/0x2c)
-> [    2.067433] Exception stack(0x81075fb0 to 0x81075ff8)
-> [    2.072493] 5fa0:                                     00000000 00000000
-> 00000000 00000000
-> [    2.080678] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> 00000000 00000000
-> [    2.088864] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> --> getting called again ..  different caller this time .. seems unimportant
-> ?
-> 
-> [    2.095490] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.10.44 #0
-> [    2.095924] pcieport 0000:00:00.0: PME: Signaling with IRQ 307
-> [    2.101510] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [    2.113883] [<8010d5e0>] (unwind_backtrace) from [<801099f0>]
-> (show_stack+0x10/0x14)
-> [    2.121638] [<801099f0>] (show_stack) from [<804ab92c>]
-> (dump_stack+0x94/0xa8)
-> [    2.128875] [<804ab92c>] (dump_stack) from [<804ea96c>]
-> (pci_create_sysfs_dev_files+0x10/0x28c)
-> [    2.137588] [<804ea96c>] (pci_create_sysfs_dev_files) from [<80b1b920>]
-> (pci_sysfs_init+0x34/0x54)
-> [    2.146559] [<80b1b920>] (pci_sysfs_init) from [<80101820>]
-> (do_one_initcall+0x54/0x1e8)
-> [    2.154667] [<80101820>] (do_one_initcall) from [<80b01108>]
-> (kernel_init_freeable+0x23c/0x290)
-> [    2.163386] [<80b01108>] (kernel_init_freeable) from [<80837e3c>]
-> (kernel_init+0x8/0x118)
-> [    2.171578] [<80837e3c>] (kernel_init) from [<80100148>]
-> (ret_from_fork+0x14/0x2c)
-> [    2.179151] Exception stack(0x81053fb0 to 0x81053ff8)
-> [    2.184210] 3fa0:                                     00000000 00000000
-> 00000000 00000000
-> [    2.192393] 3fc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> 00000000 00000000
-> [    2.200575] 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> --> And then finally, the error occurs as it's already been added before. 
-> same cpu and same PID trying to add the same stuff again to sysfs
+Thanks Konrad!
 
-This just proves that you have hit this race condition.
-
-> [    2.207200] CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.10.44 #0
-> [    2.207263] sysfs: cannot create duplicate filename
-> '/devices/platform/soc/1ffc000.pcie/pci0000:00/0000:00:00.0/config' <------
-> [    2.213478] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [    2.230798] Workqueue: events_unbound async_run_entry_fn
-> [    2.236129] [<8010d5e0>] (unwind_backtrace) from [<801099f0>]
-> (show_stack+0x10/0x14)
-> [    2.243882] [<801099f0>] (show_stack) from [<804ab92c>]
-> (dump_stack+0x94/0xa8)
-> [    2.251118] [<804ab92c>] (dump_stack) from [<804ea96c>]
-> (pci_create_sysfs_dev_files+0x10/0x28c)
-> [    2.259837] [<804ea96c>] (pci_create_sysfs_dev_files) from [<804dc648>]
-> (pci_bus_add_device+0x20/0x84)
-> [    2.269153] [<804dc648>] (pci_bus_add_device) from [<804dc6d8>]
-> (pci_bus_add_devices+0x2c/0x70)
-> [    2.277861] [<804dc6d8>] (pci_bus_add_devices) from [<804dc70c>]
-> (pci_bus_add_devices+0x60/0x70)
-> [    2.286656] [<804dc70c>] (pci_bus_add_devices) from [<804dffc8>]
-> (pci_host_probe+0x40/0x94)
-> [    2.295018] [<804dffc8>] (pci_host_probe) from [<804fd5f0>]
-> (dw_pcie_host_init+0x1c0/0x3fc)
-> [    2.303377] [<804fd5f0>] (dw_pcie_host_init) from [<804fdcb0>]
-> (imx6_pcie_probe+0x358/0x63c)
-> [    2.311832] [<804fdcb0>] (imx6_pcie_probe) from [<8054c79c>]
-> (platform_drv_probe+0x48/0x98)
-> [    2.320196] [<8054c79c>] (platform_drv_probe) from [<8054a9fc>]
-> (really_probe+0xfc/0x4dc)
-> [    2.328382] [<8054a9fc>] (really_probe) from [<8054b0bc>]
-> (driver_probe_device+0x5c/0xb4)
-> [    2.336567] [<8054b0bc>] (driver_probe_device) from [<8054b1bc>]
-> (__driver_attach_async_helper+0xa8/0xac)
-> [    2.346145] [<8054b1bc>] (__driver_attach_async_helper) from [<8014beec>]
-> (async_run_entry_fn+0x44/0x108)
-> [    2.355727] [<8014beec>] (async_run_entry_fn) from [<80141b64>]
-> (process_one_work+0x1d8/0x43c)
-> [    2.364350] [<80141b64>] (process_one_work) from [<80141e2c>]
-> (worker_thread+0x64/0x5b0)
-> [    2.372449] [<80141e2c>] (worker_thread) from [<80147698>]
-> (kthread+0x148/0x14c)
-> [    2.379853] [<80147698>] (kthread) from [<80100148>]
-> (ret_from_fork+0x14/0x2c)
-> [    2.387077] Exception stack(0x81075fb0 to 0x81075ff8)
-> [    2.392134] 5fa0:                                     00000000 00000000
-> 00000000 00000000
-> [    2.400317] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000
-> 00000000 00000000
-> [    2.408498] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> 
-> 
-> Any idea?
-> 
-> Thanks,
-> 
-> Koen
-> 
-
-It is same race condition which I described in the first email of this
-email thread. I described exactly when it happens. I'm not able to
-trigger it with new kernels but as we know race conditions are hard to
-trigger...
-
-So result is that we know about it, just fix is not ready yet as it is
-not easy to fix it.
-
-Krzysztof has been working on fixing it, so maybe can provide an
-update...
+Will
