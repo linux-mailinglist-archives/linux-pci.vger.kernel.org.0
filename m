@@ -2,100 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69ABD3B4092
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:32:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6DEF3B41E4
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 12:48:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231153AbhFYJe1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 05:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230523AbhFYJe0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 05:34:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9FCBE61409;
-        Fri, 25 Jun 2021 09:32:04 +0000 (UTC)
-From:   Huacai Chen <chenhuacai@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V3 4/4] PCI: Add quirk for multifunction devices of LS7A
-Date:   Fri, 25 Jun 2021 17:30:30 +0800
-Message-Id: <20210625093030.3698570-5-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210625093030.3698570-1-chenhuacai@loongson.cn>
-References: <20210625093030.3698570-1-chenhuacai@loongson.cn>
+        id S231484AbhFYKu4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 06:50:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231434AbhFYKuy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 06:50:54 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4864DC061760
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 03:48:33 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id d16so10942760ejm.7
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 03:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WhOkJFhhcMCvG9eYnyjt7CnrRL/VDkD60CmDg5qW9qQ=;
+        b=0UOZv1kJg5OVullQOL/2z7Z2f91Sa20xr6rC7Lkvxvlo/C7InWl5L25Kxu2zj5XNke
+         JMAMjVznn//p0Cm45UOElhVW9+dtglXXFQ+jNYIJP2EZ0RW6joK6LkkHRTlUCtI35iVU
+         Zmk+E3VO9roL5Du9cMY1OviNp77QIQy+fAiHZw5SzsbzjXN01yFqF2T1oZIm3Qmgqu++
+         UT5Z5Xm0nioJhJuIMRRxu38V45s8D+BR3kb3GvMuXD7wpM9tzXWvOEio8PnQ3nQjUCXU
+         eNf49OgRWCAMG0iaIek4l5NTtGwW/DQHbwafUJPaDu/G3eL8OuLy1YR9pV4OLWbjEZfS
+         HfrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=WhOkJFhhcMCvG9eYnyjt7CnrRL/VDkD60CmDg5qW9qQ=;
+        b=T7Ro78mA8OwAQ45E74goxDFZlw3xzwoF0IfOJAG1tcIjXypA4Xne2uNu406aMJVZeD
+         q9WcKxx/EXZ5aXuPBgNi9Dai5IbMA0MgGgEsKtSX32sk8eyKBVdhr9x7peALII68z7/D
+         3XZVMibxLH396eDSQHhxAPcyH0lLtHV1/uZkAI/kSyZqM4TD0hOwMN/zmGrfynKL8PBk
+         66CRmjuUk+ytTY2sWbj2sYiVu9BzbdkB6wdWRwnA+T+AKnqKC3NlTXhPi7JK1Rbws8Pv
+         sCtap8Oex/uCgfAE+orR5wtsCfBVTGdWBegMjt+igdrWYNckm6UrquZ7Fhnn9b2HWCKv
+         NFaQ==
+X-Gm-Message-State: AOAM533nPBNN/oytzVEaaaCNewWRogJrSGVqQAke1AnapN9Pknc9Dyjg
+        nnvqGtplOdKV8koiUjnhsIEfmQ==
+X-Google-Smtp-Source: ABdhPJyWv17CkFrPZyhAwT2UtrVpT95SIEZDss7AqBVx48NZh0LsFkNBBAX6d1Z6H81W1kERmmJl9w==
+X-Received: by 2002:a17:906:3c56:: with SMTP id i22mr10280007ejg.369.1624618111901;
+        Fri, 25 Jun 2021 03:48:31 -0700 (PDT)
+Received: from localhost ([2a02:768:2307:40d6::f9e])
+        by smtp.gmail.com with ESMTPSA id p17sm3653387eds.92.2021.06.25.03.48.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 25 Jun 2021 03:48:31 -0700 (PDT)
+Sender: Michal Simek <monstr@monstr.eu>
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com,
+        bharat.kumar.gogada@xilinx.com, kw@linux.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Ravi Kiran Gummaluri <rgummal@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: [PATCH v3 0/2] PCI: xilinx-nwl: Add clock handling
+Date:   Fri, 25 Jun 2021 12:48:21 +0200
+Message-Id: <cover.1624618100.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jianmin Lv <lvjianmin@loongson.cn>
+Hi,
 
-In LS7A, multifunction device use same PCI PIN (because the PIN register
-report the same INTx value to each function) but we need different IRQ
-for different functions, so add a quirk to fix it for standard PCI PIN
-usage.
+this small series add support for enabling PCIe reference clock by driver.
 
-This patch only affect ACPI based systems (and only needed by ACPI based
-systems, too). For DT based systems, the irq mappings is defined in .dts
-files and be handled by of_irq_parse_pci().
+Thanks,
+Michal
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/pci/quirks.c    | 14 ++++++++++++++
- include/linux/pci_ids.h | 10 ++++++++++
- 2 files changed, 24 insertions(+)
+Changes in v3:
+- use PCIe instead of pcie
+- add stable cc
+- update commit message - reported by Krzysztof
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 8284480dc7e4..bf3002cff64c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -242,6 +242,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_LPC, loongson_system_bus_quirk);
- 
-+static void loongson_pci_pin_quirk(struct pci_dev *dev)
-+{
-+	dev->pin = 1 + (PCI_FUNC(dev->devfn) & 3);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_AHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_EHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_OHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_GPU, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_GMAC, loongson_pci_pin_quirk);
-+
- static void loongson_mrrs_quirk(struct pci_dev *dev)
- {
- 	struct pci_bus *bus = dev->bus;
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 4c3fa5293d76..dc024ab21d91 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -151,6 +151,16 @@
- /* Vendors and devices.  Sort key: vendor first, device next. */
- 
- #define PCI_VENDOR_ID_LOONGSON		0x0014
-+#define PCI_DEVICE_ID_LOONGSON_APB      0x7a02
-+#define PCI_DEVICE_ID_LOONGSON_GMAC     0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_DC       0x7a06
-+#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
-+#define PCI_DEVICE_ID_LOONGSON_GPU      0x7a15
-+#define PCI_DEVICE_ID_LOONGSON_AHCI     0x7a08
-+#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
-+#define PCI_DEVICE_ID_LOONGSON_OHCI     0x7a24
-+#define PCI_DEVICE_ID_LOONGSON_LPC      0x7a0c
-+#define PCI_DEVICE_ID_LOONGSON_DMA      0x7a0f
- 
- #define PCI_VENDOR_ID_TTTECH		0x0357
- #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
+Changes in v2:
+- new patch in this series because I found that it has never been sent
+- Update commit message - reported by Krzysztof
+- Check return value from clk_prepare_enable() - reported by Krzysztof
+
+Hyun Kwon (1):
+  PCI: xilinx-nwl: Enable the clock through CCF
+
+Michal Simek (1):
+  dt-bindings: pci: xilinx-nwl: Document optional clock property
+
+ .../devicetree/bindings/pci/xilinx-nwl-pcie.txt      |  1 +
+ drivers/pci/controller/pcie-xilinx-nwl.c             | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
+
 -- 
-2.27.0
+2.32.0
 
