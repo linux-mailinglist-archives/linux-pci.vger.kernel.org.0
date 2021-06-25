@@ -2,155 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64CC53B4A8A
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Jun 2021 00:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E3F3B4AF1
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Jun 2021 01:31:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbhFYWY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 18:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229776AbhFYWY1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 18:24:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 75FE560FEA;
-        Fri, 25 Jun 2021 22:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624659725;
-        bh=L3UONXhXZKcUroRee6sVTo4jlKsefTA08F5Hc1dk03w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JF/94Iz9hMQz6VMi2V9/P72p99bcd3dA7hk3j1n7BotG9LgCdbYu4nYyEb8lirHnu
-         dTCJPXh4iZcIGQoPcvl6ofCO5G46iCG4PEgkwoza49rIUucbRm78UUF0tW++o+5DnA
-         zQNIiqFRpsIBW1CqhR9Y4osuYelgmFSh6LSXvMPxIaAvCnFUKwlpoVI3ksbQi164eF
-         dfqDWllD4c9jOeP+de7hBwSyHgINxCul/9ZT8mNls4QlOR05BF6+wMSOpXk21lySYr
-         c5RJA804TtpG1VvxBSE+xqAONygHds/FbWCV7JxRlQUgZHcMSLlSrgEoRjIGWpNkDw
-         tGK+m+GK2is+Q==
-Date:   Fri, 25 Jun 2021 17:22:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V3 3/4] PCI: Improve the MRRS quirk for LS7A
-Message-ID: <20210625222204.GA3657225@bjorn-Precision-5520>
+        id S229934AbhFYXdp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 19:33:45 -0400
+Received: from mail-ed1-f44.google.com ([209.85.208.44]:37620 "EHLO
+        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229884AbhFYXdn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 19:33:43 -0400
+Received: by mail-ed1-f44.google.com with SMTP id i24so15632263edx.4
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 16:31:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=grWbq2F+Cd1mhUpOOh41AdDJ1fHAAT0Gk3rXj3mM/e0=;
+        b=luc5Lr0RtEXBVeqT6lQ/pogNx+obmPv/KrXLQ2AqoXi2FXmCWG+0gN/AoFCHw/r5Vm
+         r879I3lKJ5HnZb4KIehhnZzvrj78cAAKKXeE5FJrOnYiLAUqQPXKNZ/G1kJzxtO0ke4w
+         oNQJWSflpddgKDbSWT42NCZ3QL+bfyAtNZwyYLuvx0iPFE4MubORYkCBuv+TgmqxuHP/
+         zBxmF7w/ZuDF4D/k5tBA3dtghwofRRd85OEL7s6xSmAnAAh+WryQdg5iKpws+jjEU9NI
+         Py1VE4j/TXCKd4auHIF3qouD5wI2gs9Fq9X0NxXaIyO8TX+YpZSLG9bLIEW+TDeANDGO
+         7xdQ==
+X-Gm-Message-State: AOAM5337odEvdPYmTMuJQzwYQ2nTMsg/VKiWRIUS+4h79hw0zcmUON+T
+        MJOBUI6ITvcsKPpwRGE6ZfI=
+X-Google-Smtp-Source: ABdhPJxRXt20Wu1Zz7tjGF5rQgutsqmXp4iQ3kJPCFspK+pf1XGEhrymoP3kjSEVME0VlchlyD/WxQ==
+X-Received: by 2002:a05:6402:4248:: with SMTP id g8mr18212498edb.368.1624663879755;
+        Fri, 25 Jun 2021 16:31:19 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id b8sm4741015edr.42.2021.06.25.16.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Jun 2021 16:31:19 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>, linux-pci@vger.kernel.org
+Subject: [PATCH 0/2] Allow deferred execution of iomem_get_mapping()
+Date:   Fri, 25 Jun 2021 23:31:16 +0000
+Message-Id: <20210625233118.2814915-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210625093030.3698570-4-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 05:30:29PM +0800, Huacai Chen wrote:
-> In new revision of LS7A, some PCIe ports support larger value than 256,
-> but their maximum supported MRRS values are not detectable. Moreover,
-> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> will actually set a big value in its driver. So the only possible way is
-> configure MRRS of all devices in BIOS, and add a PCI device flag (i.e.,
-> PCI_DEV_FLAGS_NO_INCREASE_MRRS) to stop the increasing MRRS operations.
-> 
-> However, according to PCIe Spec, it is legal for an OS to program any
-> value for MRRS, and it is also legal for an endpoint to generate a Read
-> Request with any size up to its MRRS. As the hardware engineers says,
-> the root cause here is LS7A doesn't break up large read requests (Yes,
-> that is a problem in the LS7A design).
+Hello,
 
-"LS7A doesn't break up large read requests" claims to be a root cause,
-but you haven't yet said what the actual *problem* is.
+At the moment, the dependency on iomem_get_mapping() that is currently
+used in the pci_create_resource_files() and pci_create_legacy_files()
+stops us from completely retiring the late_initcall() that is used to
+invoke pci_sysfs_init() when creating sysfs object for PCI devices.
 
-Is the problem that an endpoint reports a malformed TLP because it
-received a completion bigger than it can handle?  Is it that the LS7A
-root port reports some kind of error if it receives a Memory Read
-request with a size that's "too big"?  Maybe the LS7A doesn't know
-what to do when it receives a Memory Read request with MRRS > MPS?
-What exactly happens when the problem occurs?
+This dependency on iomem_get_mapping() stops us from retiring the
+late_initcall at the moment as when we convert dynamically added sysfs
+objects, that are primarily added in the pci_create_resource_files() and
+pci_create_legacy_files(), as these attributes are added before the VFS
+completes its initialisation, and since most of the PCI devices are
+typically enumerated in subsys_initcall this leads to a failure and an
+Oops related to iomem_get_mapping() access.
 
-MRRS applies only to the read request.  It is not directly related to
-the size of the completions that carry the data back to the device
-(except that obviously you shouldn't get a completion larger than the
-read you requested).
+See relevant conversations:
+  https://lore.kernel.org/linux-pci/20210204165831.2703772-1-daniel.vetter@ffwll.ch/
+  https://lore.kernel.org/linux-pci/20210313215747.GA2394467@bjorn-Precision-5520/
+  
+After some deliberation about the problem at hand, Dan Williams
+suggested a solution to the problem, see:
+  https://lore.kernel.org/linux-pci/CAPcyv4i0y_4cMGEpNVShLUyUk3nyWH203Ry3S87BqnDJE0Rmxg@mail.gmail.com/
 
-The setting that directly controls the size of completions is MPS
-(Max_Payload_Size).  One reason to break up read requests is because
-the endpoint's buffers can't accommodate big TLPs.  One way to deal
-with that is to set MPS in the hierarchy to a smaller value.  Then the
-root port must ensure that no TLP exceeds the MPS size, regardless of
-what the MRRS in the read request was.
+The idea is to defer execution of the iomem_get_mapping() to only when
+the sysfs open callback is run, and thus removing the reliance of
+fs_initcalls to complete before any other sub-system that uses the
+iomem_get_mapping().
 
-For example, if the endpoint's MRRS=4096 and the hierarchy's MPS=128,
-it's up to the root port to break up completions into 128-byte chunks.
+Currently, the PCI sub-system will benefit the most from this change
+allowing for it to complete the transition from dynamically created to
+static sysfs objects.
 
-It's also possible to set the endpoint's MRRS=128, which means reads
-to main memory will never receive completions larger than 128 bytes.
-But it does NOT guarantee that a peer-to-peer DMA from another device
-will be limited to 128 bytes.  The other device is allowed to generate
-Memory Write TLPs with payloads up to its MPS size, and MRRS is not
-involved at all.
+This series aims to take Dan Williams' idea through the finish line.
 
-It's not clear yet whether the LS7A problem is with MRRS, with MPS, or
-with some combination.  It's important to understand exactly what is
-broken here so the quirk doesn't get in the way of future changes to
-the generic MRRS and MPS configuration.
+Related to:
+  https://lore.kernel.org/linux-pci/20210527205845.GA1421476@bjorn-Precision-5520/
+  https://lore.kernel.org/linux-pci/20210507102706.7658-1-danijel.slivka@amd.com/
+  https://lore.kernel.org/linux-pci/20200716110423.xtfyb3n6tn5ixedh@pali/
 
-Here's a good overview:
+	Krzysztof
 
-  https://www.xilinx.com/support/documentation/white_papers/wp350.pdf
+Krzysztof Wilczyński (2):
+  sysfs: Invoke iomem_get_mapping() from the sysfs open callback
+  PCI/sysfs: Pass iomem_get_mapping() as a function pointer
 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/pci/pci.c    | 5 +++++
->  drivers/pci/quirks.c | 8 +++++++-
->  include/linux/pci.h  | 2 ++
->  3 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b717680377a9..6f0d2f5b6f30 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5802,6 +5802,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  
->  	v = (ffs(rq) - 8) << 12;
->  
-> +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_INCREASE_MRRS) {
-> +		if (rq > pcie_get_readrq(dev))
-> +			return -EINVAL;
-> +	}
-> +
->  	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
->  						  PCI_EXP_DEVCTL_READRQ, v);
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index dee4798a49fc..8284480dc7e4 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -263,7 +263,13 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
->  		 * anything larger than this. So force this limit on
->  		 * any devices attached under these ports.
->  		 */
-> -		if (pci_match_id(bridge_devids, bridge)) {
-> +		if (bridge && pci_match_id(bridge_devids, bridge)) {
-> +			dev->dev_flags |= PCI_DEV_FLAGS_NO_INCREASE_MRRS;
-> +
-> +			if (pcie_bus_config == PCIE_BUS_DEFAULT ||
-> +			    pcie_bus_config == PCIE_BUS_TUNE_OFF)
-> +				break;
-> +
->  			if (pcie_get_readrq(dev) > 256) {
->  				pci_info(dev, "limiting MRRS to 256\n");
->  				pcie_set_readrq(dev, 256);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 24306504226a..5e0ec3e4318b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->  	/* Don't use Relaxed Ordering for TLPs directed at this device */
->  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> +	/* Don't increase BIOS's MRRS configuration */
-> +	PCI_DEV_FLAGS_NO_INCREASE_MRRS = (__force pci_dev_flags_t) (1 << 12),
->  };
->  
->  enum pci_irq_reroute_variant {
-> -- 
-> 2.27.0
-> 
+ drivers/pci/pci-sysfs.c | 6 +++---
+ fs/sysfs/file.c         | 2 +-
+ include/linux/sysfs.h   | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+-- 
+2.32.0
+
