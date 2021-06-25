@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABC813B3FF8
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 168CC3B3FFA
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:05:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231247AbhFYJHj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 05:07:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58090 "EHLO mail.kernel.org"
+        id S231235AbhFYJHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 05:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231202AbhFYJHg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 05:07:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9788961429;
-        Fri, 25 Jun 2021 09:05:15 +0000 (UTC)
+        id S231225AbhFYJHh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Jun 2021 05:07:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A98B261430;
+        Fri, 25 Jun 2021 09:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624611915;
-        bh=bSZaCzZjtkokgNsQgMTbjqozG/2HYUqUMC4IsdmArDI=;
+        s=k20201202; t=1624611917;
+        bh=7rRm/q8fAPvDNEHFrOmUDFjPtfaxc24KmQZoezmDFow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IAFPOA+RaI2Pa4WE7E2S48dpfZEZhgstRYDM6urxLW0pkga3eLBT62D0WDmxS4jBj
-         gfG/3vF74IQx1mmPbFzejxxmBCjqXgsKGuMEw8GfFjHpt18q29QddXemxkV0Lcresj
-         lO3OKOl2XD22+CEhl+pQMf/zBEwr2Fa8/MC85dz8NEdivW5yPw3KEn+MsI+2lZKEtV
-         fEbRW80hki+1SM/aRRvKKx7I5TY6TM2HXj9iXUM6Plf/jh/Ybic6whh4zQJ1S0LdWE
-         c5RvDxvwd2srvkMzeg+DeRd8PyE3acEEbVU27V8goCeMZb/7436dV/ZRwGd9MbYime
-         62kRdwCxeLtQg==
+        b=R2h482+ZytKgB/HtcV8UAiWzwa434koKn+f4CPYtzLkKWiQ7NbNtDBemoDOyZcIWF
+         bFdAfdGK9NyQEtZQstUYaOksg8oX0Iv/UOD0K8cin8XNDIRCqa2YjQF8YiG1HtzCwM
+         Hr+3n6nFm1+26b2Sn0OC9EGekJxkxZ2mvtqgR25ig0G18TBgyZqt97JdhN0kdebDyB
+         MWl4jzfAMVlVokdmQtMEK1bzvAWyFrLiEv9N9rZi5O7lIocpe7fwNPvHLDbGW0nILz
+         NcUriVVQKcEpSz+vmZuehuTE2giU9yxFShDtB/eynaICXcUf/TM+1KSfx2+ag/7Bn0
+         Oa2+MaRbwAgdg==
 Received: by pali.im (Postfix)
-        id 58DB760E; Fri, 25 Jun 2021 11:05:15 +0200 (CEST)
+        id 6A80360E; Fri, 25 Jun 2021 11:05:16 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -33,9 +33,9 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
         Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] PCI: aardvark: Correctly clear and unmask all MSI interrupts
-Date:   Fri, 25 Jun 2021 11:03:18 +0200
-Message-Id: <20210625090319.10220-7-pali@kernel.org>
+Subject: [PATCH 7/7] PCI: aardvark: Fix setting MSI address
+Date:   Fri, 25 Jun 2021 11:03:19 +0200
+Message-Id: <20210625090319.10220-8-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210625090319.10220-1-pali@kernel.org>
 References: <20210625090319.10220-1-pali@kernel.org>
@@ -46,65 +46,93 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Define a new macro PCIE_MSI_ALL_MASK and use it for masking, unmasking and
-clearing all MSI interrupts.
+MSI address for receiving MSI interrupts needs to be correctly set before
+enabling processing of MSI interrupts.
+
+Move code for setting PCIE_MSI_ADDR_LOW_REG and PCIE_MSI_ADDR_HIGH_REG
+registers with MSI address from advk_pcie_init_msi_irq_domain() function to
+advk_pcie_setup_hw() function before enabling PCIE_CORE_CTRL2_MSI_ENABLE.
+
+As part of this change, also remove unused variable msi_msg, which was used
+only for MSI doorbell address. MSI address can be any address which cannot
+be used to DMA to. So change it to the address of the main struct advk_pcie
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <kabel@kernel.org>
-Cc: stable@vger.kernel.org
+Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
 ---
- drivers/pci/controller/pci-aardvark.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 0e81d89f307d..7cad6d989f6c 100644
+index 7cad6d989f6c..84ecc418e6be 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -117,6 +117,7 @@
- #define PCIE_MSI_ADDR_HIGH_REG			(CONTROL_BASE_ADDR + 0x54)
- #define PCIE_MSI_STATUS_REG			(CONTROL_BASE_ADDR + 0x58)
- #define PCIE_MSI_MASK_REG			(CONTROL_BASE_ADDR + 0x5C)
-+#define     PCIE_MSI_ALL_MASK			GENMASK(31, 0)
- #define PCIE_MSI_PAYLOAD_REG			(CONTROL_BASE_ADDR + 0x9C)
- #define     PCIE_MSI_DATA_MASK			GENMASK(15, 0)
+@@ -244,7 +244,6 @@ struct advk_pcie {
+ 	struct msi_domain_info msi_domain_info;
+ 	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
+ 	struct mutex msi_used_lock;
+-	u16 msi_msg;
+ 	int link_gen;
+ 	struct pci_bridge_emul bridge;
+ 	struct gpio_desc *reset_gpio;
+@@ -403,6 +402,7 @@ static void advk_pcie_disable_ob_win(struct advk_pcie *pcie, u8 win_num)
  
-@@ -470,19 +471,22 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
++	phys_addr_t msi_addr;
+ 	u32 reg;
+ 	int i;
  
- 	/* Clear all interrupts */
-+	advk_writel(pcie, PCIE_MSI_ALL_MASK, PCIE_MSI_STATUS_REG);
- 	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_REG);
- 	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
- 	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
+@@ -465,6 +465,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	reg |= LANE_COUNT_1;
+ 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
  
- 	/* Disable All ISR0/1 Sources */
--	reg = PCIE_ISR0_ALL_MASK;
--	reg &= ~PCIE_ISR0_MSI_INT_PENDING;
--	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
--
-+	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_MASK_REG);
- 	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
- 
- 	/* Unmask all MSIs */
--	advk_writel(pcie, 0, PCIE_MSI_MASK_REG);
-+	advk_writel(pcie, ~(u32)PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
++	/* Set MSI address */
++	msi_addr = virt_to_phys(pcie);
++	advk_writel(pcie, lower_32_bits(msi_addr), PCIE_MSI_ADDR_LOW_REG);
++	advk_writel(pcie, upper_32_bits(msi_addr), PCIE_MSI_ADDR_HIGH_REG);
 +
-+	/* Unmask summary MSI interrupt */
-+	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-+	reg &= ~PCIE_ISR0_MSI_INT_PENDING;
-+	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
+ 	/* Enable MSI */
+ 	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
+ 	reg |= PCIE_CORE_CTRL2_MSI_ENABLE;
+@@ -982,10 +987,10 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
+ 					 struct msi_msg *msg)
+ {
+ 	struct advk_pcie *pcie = irq_data_get_irq_chip_data(data);
+-	phys_addr_t msi_msg = virt_to_phys(&pcie->msi_msg);
++	phys_addr_t msi_addr = virt_to_phys(pcie);
  
- 	/* Enable summary interrupt for GIC SPI source */
- 	reg = PCIE_IRQ_ALL_MASK & (~PCIE_IRQ_ENABLE_INTS_MASK);
-@@ -1177,7 +1181,7 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+-	msg->address_lo = lower_32_bits(msi_msg);
+-	msg->address_hi = upper_32_bits(msi_msg);
++	msg->address_lo = lower_32_bits(msi_addr);
++	msg->address_hi = upper_32_bits(msi_addr);
+ 	msg->data = data->hwirq;
+ }
  
- 	msi_mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
- 	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
--	msi_status = msi_val & ~msi_mask;
-+	msi_status = msi_val & ((~msi_mask) & PCIE_MSI_ALL_MASK);
+@@ -1080,7 +1085,6 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+ 	struct device_node *node = dev->of_node;
+ 	struct irq_chip *bottom_ic, *msi_ic;
+ 	struct msi_domain_info *msi_di;
+-	phys_addr_t msi_msg_phys;
  
- 	for (msi_idx = 0; msi_idx < MSI_IRQ_NUM; msi_idx++) {
- 		if (!(BIT(msi_idx) & msi_status))
+ 	mutex_init(&pcie->msi_used_lock);
+ 
+@@ -1098,13 +1102,6 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+ 		MSI_FLAG_MULTI_PCI_MSI;
+ 	msi_di->chip = msi_ic;
+ 
+-	msi_msg_phys = virt_to_phys(&pcie->msi_msg);
+-
+-	advk_writel(pcie, lower_32_bits(msi_msg_phys),
+-		    PCIE_MSI_ADDR_LOW_REG);
+-	advk_writel(pcie, upper_32_bits(msi_msg_phys),
+-		    PCIE_MSI_ADDR_HIGH_REG);
+-
+ 	pcie->msi_inner_domain =
+ 		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
+ 				      &advk_msi_domain_ops, pcie);
 -- 
 2.20.1
 
