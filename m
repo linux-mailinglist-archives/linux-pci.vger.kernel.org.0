@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D6D63B408B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:31:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5C923B4091
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:31:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbhFYJd2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 05:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
+        id S231381AbhFYJeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 05:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230461AbhFYJd1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 05:33:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2815061423;
-        Fri, 25 Jun 2021 09:31:04 +0000 (UTC)
+        id S230523AbhFYJeE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Jun 2021 05:34:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 92CAD61427;
+        Fri, 25 Jun 2021 09:31:42 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V3 2/4] PCI: Move loongson pci quirks to quirks.c
-Date:   Fri, 25 Jun 2021 17:30:28 +0800
-Message-Id: <20210625093030.3698570-3-chenhuacai@loongson.cn>
+Subject: [PATCH V3 3/4] PCI: Improve the MRRS quirk for LS7A
+Date:   Fri, 25 Jun 2021 17:30:29 +0800
+Message-Id: <20210625093030.3698570-4-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210625093030.3698570-1-chenhuacai@loongson.cn>
 References: <20210625093030.3698570-1-chenhuacai@loongson.cn>
@@ -31,190 +31,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Loongson PCH (LS7A chipset) will be used by both MIPS-based and
-LoongArch-based Loongson processors. MIPS-based Loongson uses FDT
-but LoongArch-base Loongson uses ACPI, but the driver in drivers/
-pci/controller/pci-loongson.c is FDT-only. So move the quirks to
-quirks.c where can be shared by all architectures.
+In new revision of LS7A, some PCIe ports support larger value than 256,
+but their maximum supported MRRS values are not detectable. Moreover,
+the current loongson_mrrs_quirk() cannot avoid devices increasing its
+MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+will actually set a big value in its driver. So the only possible way is
+configure MRRS of all devices in BIOS, and add a PCI device flag (i.e.,
+PCI_DEV_FLAGS_NO_INCREASE_MRRS) to stop the increasing MRRS operations.
 
-LoongArch is a new RISC ISA, mainline support will come soon, and
-documentations are here (in translation):
-
-https://github.com/loongson/LoongArch-Documentation
+However, according to PCIe Spec, it is legal for an OS to program any
+value for MRRS, and it is also legal for an endpoint to generate a Read
+Request with any size up to its MRRS. As the hardware engineers says,
+the root cause here is LS7A doesn't break up large read requests (Yes,
+that is a problem in the LS7A design).
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/controller/pci-loongson.c | 69 ---------------------------
- drivers/pci/quirks.c                  | 69 +++++++++++++++++++++++++++
- 2 files changed, 69 insertions(+), 69 deletions(-)
+ drivers/pci/pci.c    | 5 +++++
+ drivers/pci/quirks.c | 8 +++++++-
+ include/linux/pci.h  | 2 ++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 48169b1e3817..88066e9db69e 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -12,15 +12,6 @@
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b717680377a9..6f0d2f5b6f30 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5802,6 +5802,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
  
- #include "../pci.h"
+ 	v = (ffs(rq) - 8) << 12;
  
--/* Device IDs */
--#define DEV_PCIE_PORT_0	0x7a09
--#define DEV_PCIE_PORT_1	0x7a19
--#define DEV_PCIE_PORT_2	0x7a29
--
--#define DEV_LS2K_APB	0x7a02
--#define DEV_LS7A_CONF	0x7a10
--#define DEV_LS7A_LPC	0x7a0c
--
- #define FLAG_CFG0	BIT(0)
- #define FLAG_CFG1	BIT(1)
- #define FLAG_DEV_FIX	BIT(2)
-@@ -32,66 +23,6 @@ struct loongson_pci {
- 	u32 flags;
- };
++	if (dev->dev_flags & PCI_DEV_FLAGS_NO_INCREASE_MRRS) {
++		if (rq > pcie_get_readrq(dev))
++			return -EINVAL;
++	}
++
+ 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+ 						  PCI_EXP_DEVCTL_READRQ, v);
  
--/* Fixup wrong class code in PCIe bridges */
--static void bridge_class_quirk(struct pci_dev *dev)
--{
--	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_0, bridge_class_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_1, bridge_class_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_2, bridge_class_quirk);
--
--static void system_bus_quirk(struct pci_dev *pdev)
--{
--	/*
--	 * The address space consumed by these devices is outside the
--	 * resources of the host bridge.
--	 */
--	pdev->mmio_always_on = 1;
--	pdev->non_compliant_bars = 1;
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_LS2K_APB, system_bus_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_LS7A_CONF, system_bus_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_LS7A_LPC, system_bus_quirk);
--
--static void loongson_mrrs_quirk(struct pci_dev *dev)
--{
--	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
--	static const struct pci_device_id bridge_devids[] = {
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
--		{ 0, },
--	};
--
--	/* look for the matching bridge */
--	while (!pci_is_root_bus(bus)) {
--		bridge = bus->self;
--		bus = bus->parent;
--		/*
--		 * Some Loongson PCIe ports have a h/w limitation of
--		 * 256 bytes maximum read request size. They can't handle
--		 * anything larger than this. So force this limit on
--		 * any devices attached under these ports.
--		 */
--		if (pci_match_id(bridge_devids, bridge)) {
--			if (pcie_get_readrq(dev) > 256) {
--				pci_info(dev, "limiting MRRS to 256\n");
--				pcie_set_readrq(dev, 256);
--			}
--			break;
--		}
--	}
--}
--DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
--
- static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
- 				unsigned int devfn, int where)
- {
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 22b2bb1109c9..dee4798a49fc 100644
+index dee4798a49fc..8284480dc7e4 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -205,6 +205,75 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
- 				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
+@@ -263,7 +263,13 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+ 		 * anything larger than this. So force this limit on
+ 		 * any devices attached under these ports.
+ 		 */
+-		if (pci_match_id(bridge_devids, bridge)) {
++		if (bridge && pci_match_id(bridge_devids, bridge)) {
++			dev->dev_flags |= PCI_DEV_FLAGS_NO_INCREASE_MRRS;
++
++			if (pcie_bus_config == PCIE_BUS_DEFAULT ||
++			    pcie_bus_config == PCIE_BUS_TUNE_OFF)
++				break;
++
+ 			if (pcie_get_readrq(dev) > 256) {
+ 				pci_info(dev, "limiting MRRS to 256\n");
+ 				pcie_set_readrq(dev, 256);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 24306504226a..5e0ec3e4318b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -227,6 +227,8 @@ enum pci_dev_flags {
+ 	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+ 	/* Don't use Relaxed Ordering for TLPs directed at this device */
+ 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
++	/* Don't increase BIOS's MRRS configuration */
++	PCI_DEV_FLAGS_NO_INCREASE_MRRS = (__force pci_dev_flags_t) (1 << 12),
+ };
  
-+/* Loongson-related quirks */
-+#define DEV_PCIE_PORT_0	0x7a09
-+#define DEV_PCIE_PORT_1	0x7a19
-+#define DEV_PCIE_PORT_2	0x7a29
-+
-+#define DEV_LS2K_APB	0x7a02
-+#define DEV_LS7A_CONF	0x7a10
-+#define DEV_LS7A_LPC	0x7a0c
-+
-+/* Fixup wrong class code in PCIe bridges */
-+static void loongson_bridge_class_quirk(struct pci_dev *dev)
-+{
-+	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_bridge_class_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_bridge_class_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_bridge_class_quirk);
-+
-+static void loongson_system_bus_quirk(struct pci_dev *pdev)
-+{
-+	/*
-+	 * The address space consumed by these devices is outside the
-+	 * resources of the host bridge.
-+	 */
-+	pdev->mmio_always_on = 1;
-+	pdev->non_compliant_bars = 1;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS2K_APB, loongson_system_bus_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_CONF, loongson_system_bus_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_LPC, loongson_system_bus_quirk);
-+
-+static void loongson_mrrs_quirk(struct pci_dev *dev)
-+{
-+	struct pci_bus *bus = dev->bus;
-+	struct pci_dev *bridge;
-+	static const struct pci_device_id bridge_devids[] = {
-+		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-+		{ 0, },
-+	};
-+
-+	/* look for the matching bridge */
-+	while (!pci_is_root_bus(bus)) {
-+		bridge = bus->self;
-+		bus = bus->parent;
-+		/*
-+		 * Some Loongson PCIe ports have a h/w limitation of
-+		 * 256 bytes maximum read request size. They can't handle
-+		 * anything larger than this. So force this limit on
-+		 * any devices attached under these ports.
-+		 */
-+		if (pci_match_id(bridge_devids, bridge)) {
-+			if (pcie_get_readrq(dev) > 256) {
-+				pci_info(dev, "limiting MRRS to 256\n");
-+				pcie_set_readrq(dev, 256);
-+			}
-+			break;
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-+
- /*
-  * The Mellanox Tavor device gives false positive parity errors.  Disable
-  * parity error reporting.
+ enum pci_irq_reroute_variant {
 -- 
 2.27.0
 
