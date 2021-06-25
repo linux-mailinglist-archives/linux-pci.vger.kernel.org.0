@@ -2,104 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2BA03B4AF2
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Jun 2021 01:31:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D18DC3B4B61
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Jun 2021 01:53:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbhFYXdr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 19:33:47 -0400
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:40933 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbhFYXdr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 19:33:47 -0400
-Received: by mail-ed1-f54.google.com with SMTP id t3so15617740edc.7
-        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 16:31:23 -0700 (PDT)
+        id S229826AbhFYXzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 19:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229882AbhFYXzg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 19:55:36 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D829C061574
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 16:53:15 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id a127so8681233pfa.10
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 16:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B3kmBVK4hmEcO9Vrc14ZH+X77ezATv4UHRmAcjtROjA=;
+        b=jbaCAE6XAVd+/5OJyfxauN6L5jT22syUfDB5Uv8D1nVMDu7JfsBOuOyS34unBt8UQW
+         le9e6ZLBPG5rWMXsuBV6EVlYM+kx/rPVwYFe76xPcXFpsc/HzCxfuQ5tYS4I7bxv4VaZ
+         nV5MJUbFL79/y92oSV9tXcv3OEgLyInXGC96wq1vZNMTRCWeofL+kyTiX9o5rSVybFMX
+         SydWyRkT9AAV/KovTfwTVhVU6oEnOWyUr7mXM0F6v3InsFa09zPNkW/rBdmwQA7UmYHH
+         5gel16Zbs9EBa0hBWhN9LDG7A9dV0t9oBvRSuM+ce95egsr9haAPDAJ8nVk4R+n3eaz0
+         xhLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4GSicSMy/nF6trnS/MfRL+W4ghg4phn0UKLi5jH9tX0=;
-        b=dHh2I8uFDjmv4hg0aVa6hD6TImzsFuNkpVoNOvplAZVO9D0jo7r2weQksRFqtoJi7O
-         os8MbiSi4AXSSRjaEqwDWU/qgRPI3vHjG4tsEAMsGSNSw8IXjClSy/NfFm9rDx2jlnps
-         DdeNFZ/M4W/9jb+BarOz5sZPz3xd06rD0aoMMzQscGz/JdVp778/0ELl/hujJ6pU3uV8
-         PvKdtBnmcFm4LwTz+9vR7Bao6PkLCXsTnmV9zjso5Z2VbllSfzrxcU6Luxn5YcfsROME
-         hqBLyMjLxhQKq5sRbxWRSsJf+o/3iU/V07hp64nj3SLxmwPU6IXTszU4g4COvGOTmCry
-         BKGA==
-X-Gm-Message-State: AOAM530NnrLF4MyDi2HL0pIZxHtega6/guB4yFMiBHrnU2FJEpETGf6N
-        2L2lajTXoqtVy7hoD5BMztw=
-X-Google-Smtp-Source: ABdhPJxcwVf9Ujl44620E7ruXJyLFgSSTjsl1l7fOmqWeKzz9Qf8o+1gglnW9qFQ+OBy56Qtdtd6bA==
-X-Received: by 2002:aa7:c256:: with SMTP id y22mr18306948edo.177.1624663881680;
-        Fri, 25 Jun 2021 16:31:21 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id b8sm4741015edr.42.2021.06.25.16.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Jun 2021 16:31:21 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B3kmBVK4hmEcO9Vrc14ZH+X77ezATv4UHRmAcjtROjA=;
+        b=Zj+Rr/aT+4RqEEcfeRCGCtvlenCi3vjSGTZedKwZyscTuG4HhYe24IKKzc51N1UcNI
+         MozhTiFX6soMKWBMg2bz2giOCuWX44GSD+pBXh5CQY8AFLWhnTl+qDVHNhxp3HhwjrrM
+         RqDHqMlxplyAGwkgfp7qWcwpUNJryaJ4EuU6bMV3R3RN+FCO1Ar9uj5vhJAYnsqTcHVs
+         ypX0mJu8R8jC85h7Z9JOFO8nj8c+qS5iqza8cwU0C+AB0LjvNLwbztpjRymeH4nHLgEq
+         6y0xGHzWCwwTo2Ifgt9FBLIRH3ObpHuQLvoWV/mAo7MzKdv4zKZHoHOmHbcoBGlMkkD3
+         2tbQ==
+X-Gm-Message-State: AOAM533mwFFWCdkq6mZHpD1HFOZukOWWsjX1EJWV+smp7wzU98d5i/cb
+        Thx0+SjE0DNJjtg95t14Za2Juq2G9Ux6B6GbNcVnyQ==
+X-Google-Smtp-Source: ABdhPJyY8gc5R6ztqPzE2PwuxCweSsGSpfL8CkLFAk62tuvCYCvC+XasZdec/PQSRG4Mq/zwiNGZhQB70uDcj2cE7lc=
+X-Received: by 2002:a65:5204:: with SMTP id o4mr9497858pgp.279.1624665194608;
+ Fri, 25 Jun 2021 16:53:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210625233118.2814915-1-kw@linux.com> <20210625233118.2814915-2-kw@linux.com>
+In-Reply-To: <20210625233118.2814915-2-kw@linux.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 25 Jun 2021 16:53:03 -0700
+Message-ID: <CAPcyv4iUcuVsSVcBVwZeHpV=XG1Vss-dWjCdQRJgNiUef0VHxQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] sysfs: Invoke iomem_get_mapping() from the sysfs open callback
+To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 2/2] PCI/sysfs: Pass iomem_get_mapping() as a function pointer
-Date:   Fri, 25 Jun 2021 23:31:18 +0000
-Message-Id: <20210625233118.2814915-3-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210625233118.2814915-1-kw@linux.com>
-References: <20210625233118.2814915-1-kw@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The struct bin_attribute requires the "mapping" member to be a function
-pointer with a signature requiring the return type to be a pointer to
-the struct address_space.
+On Fri, Jun 25, 2021 at 4:31 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> wr=
+ote:
+>
+> Defer invocation of the iomem_get_mapping() to the sysfs open callback
+> so that it can be executed as needed when the binary sysfs object has
+> been accessed.
+>
+> To do that, convert the "mapping" member of the struct bin_attribute
+> from a pointer to the struct address_space into a function pointer with
+> a signature that requires the same return type, and then updates the
+> sysfs_kf_bin_open() to invoke provided function should the function
+> pointer be valid.
+>
+> Thus, this change removes the need for the fs_initcalls to complete
+> before any other sub-system that uses the iomem_get_mapping() would be
+> able to invoke it safely without leading to a failure and an Oops
+> related to an invalid iomem_get_mapping() access.
+>
+> Co-authored-by: Dan Williams <dan.j.williams@intel.com>
 
-Thus, convert every invocation of iomem_get_mapping() into a function
-pointer assignment, therefore allowing for the iomem_get_mapping()
-invocation to be deferred to when the sysfs open callback runs.
+Go ahead and replace this with:
 
-Co-authored-by: Dan Williams <dan.j.williams@intel.com>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/pci-sysfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index beb8d1f4fafe..cff1c121eb08 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -965,7 +965,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_io->read = pci_read_legacy_io;
- 	b->legacy_io->write = pci_write_legacy_io;
- 	b->legacy_io->mmap = pci_mmap_legacy_io;
--	b->legacy_io->mapping = iomem_get_mapping();
-+	b->legacy_io->mapping = iomem_get_mapping;
- 	pci_adjust_legacy_attr(b, pci_mmap_io);
- 	error = device_create_bin_file(&b->dev, b->legacy_io);
- 	if (error)
-@@ -978,7 +978,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_mem->size = 1024*1024;
- 	b->legacy_mem->attr.mode = 0600;
- 	b->legacy_mem->mmap = pci_mmap_legacy_mem;
--	b->legacy_io->mapping = iomem_get_mapping();
-+	b->legacy_io->mapping = iomem_get_mapping;
- 	pci_adjust_legacy_attr(b, pci_mmap_mem);
- 	error = device_create_bin_file(&b->dev, b->legacy_mem);
- 	if (error)
-@@ -1195,7 +1195,7 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 		}
- 	}
- 	if (res_attr->mmap)
--		res_attr->mapping = iomem_get_mapping();
-+		res_attr->mapping = iomem_get_mapping;
- 	res_attr->attr.name = res_attr_name;
- 	res_attr->attr.mode = 0600;
- 	res_attr->size = pci_resource_len(pdev, num);
--- 
-2.32.0
-
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
