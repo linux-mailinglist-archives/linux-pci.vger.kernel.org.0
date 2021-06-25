@@ -2,62 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFE313B41E5
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 12:48:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33F1A3B41E9
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 12:48:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231492AbhFYKu4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 06:50:56 -0400
+        id S231530AbhFYKu7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 06:50:59 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231474AbhFYKu4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 06:50:56 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D6BC061768
-        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 03:48:35 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id hz1so14446716ejc.1
-        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 03:48:35 -0700 (PDT)
+        with ESMTP id S230526AbhFYKu6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 06:50:58 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35BF4C061574
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 03:48:36 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id r7so12732574edv.12
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 03:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yEczI+XDhSurUjjMQxYZ5XHZvjXwC8D9bI8UZldm8s4=;
-        b=H5374yea1w76ePI0Fhc/GxmGIOBTPZO4ORHmcJVAaCXAxfX6FalGgMETXaOyLKz814
-         soOOOCBkiTSM91EQcDYOafe4d/NGp9YfvtDeMibmyM05rhoM/dEr3+XVpRVocyEF/snB
-         j/h79tshpOrgWpXOfEM8DMMfOz14RIZu2GYG/95VhkcgxO8qGYkAm/4WeZk9AhJ/JP7r
-         cud7Dml3O6/rVw6G5k0CkyDzC1DqIWNAOwdRtVPaVgthmGvHhcj2L81Ue1CNcVqpBZFf
-         uQtCL3ugcPTqCCs+xbBtRAtP7C1zMbsI4TXTDKlsa4wHUR9H5PMnXeHfXGb6XJImDuKH
-         S+2g==
+        bh=BzUOqw2gH4V8TdtIGcYxGonGtJVkiti92NxdBxij2EM=;
+        b=zFDUHgK0b1U7i7MdkVNsz8yJC4c8ItZe+xAzZSfX/RelVfJLl255VU1V0SnVejrUqj
+         mpWdPH+j1CkiIfB1m3QG+T2Z3mtmxpBidW0W0/x70KDdovD9FL7L4iaQHZ8g53do5B9+
+         cQNFGy7Od3ug6ZTHnnG7Us+KnkhNoidyvML9ZendFma77hEu2TkuMhuth+0ohz0BpliE
+         dspvDwhwIyLfr+Uhr6iVPGzuduC4zK+fH9/AdCHb08I8yD7zaa/1Va1SpwaVIB1cQtEO
+         Q++1CojnFwemmcSTrc1WbokaA31ZJFUTKKCxJ5nSfk3TSQ3yexxbxv5kz9UVXij0mOF3
+         aJCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=yEczI+XDhSurUjjMQxYZ5XHZvjXwC8D9bI8UZldm8s4=;
-        b=Vuttb6i2g6LFFdgykQKQm4X0joC9e6scSCnZxt+vQ+OFyfXim4TiM7ZgdVH4lw8p4m
-         LlhlyAUfSk03z0F0f5FqfAKCBaK1IefVdX3lBlGI4lJ2q89dN/nkS7tN4h6hRxW6WnCh
-         agEBVOxpGmlU+xmG7vwSc/otbd4SJMgdkYG9nn6VDr4S4sUQDf8vI/OHBQwkz+3scbIh
-         9p15UyJIqXsFhDV8JAoZ33MzksRIdebNoHDvcqL+htsoufPOQzJP73G8M3ai4ZM0QYOx
-         DJgoWSLvK753aMOlZ+ZPef39JKofC1FyGq5MDu3Q91063DZpAYPZkGVzjoYmfThujjB1
-         LNkQ==
-X-Gm-Message-State: AOAM531c/7wQ70zN/3tgFhpRumYJpg/jIB5YHfM1s0SxudOIps3rUBUZ
-        ZrE9OZumC7tn36M8ecR0UudmmQ==
-X-Google-Smtp-Source: ABdhPJxeYgBZ/WcQE/JTHAdJlc0ZKJx9MuEDhGUZO3uISFWkWNnCFWxgpfZIDCEmNmXxcR8ABq5akQ==
-X-Received: by 2002:a17:906:dbd5:: with SMTP id yc21mr10285205ejb.223.1624618113391;
-        Fri, 25 Jun 2021 03:48:33 -0700 (PDT)
+        bh=BzUOqw2gH4V8TdtIGcYxGonGtJVkiti92NxdBxij2EM=;
+        b=nZkQlGUIG0qYpbglGNkOKyxG+DIgPGkb37miCIm7nJhzecjH7E/xm3N4CMnK/X9+Tt
+         k9YCGqvTCONhlMcpKuUfpsC0yHIwL3QoqqOWGTBWbgERD/TC/Ic4dq2b53tfkkn0aRRW
+         n0rPNyr/UKa+NuuCIjve8yt4PBgaXmqKkR46WfZ0Q7386CrnNdF+LpN13PGXevmmgEZa
+         WtlOdh0jxCsz/i7O9YEpjP5A+aNUoaEnCwYCqcklNmJfPpODKzIruqjntZy3gJdy9NTX
+         iTBHdHSIG9wpf3X9QoBG318C2MYXf5NGQ9qb1C8OQbsDL2m19hdcA0E1ULj5FEnoWvbp
+         0hUg==
+X-Gm-Message-State: AOAM532cIPfTZWLRwJNHUnqf3H1zk/dxPzeyywqcDfTpNq4MY+fQeYtq
+        7Pfd/+mvp/lZa8p0x3V0uxJygA==
+X-Google-Smtp-Source: ABdhPJzH2+0Vo1cyQWNm5G1yUtgYNu+PZorJGXLBHWCC4q79CwJKjfdrF3OJRkr93TOzq2W6B7rwfA==
+X-Received: by 2002:aa7:da8a:: with SMTP id q10mr13318907eds.81.1624618114807;
+        Fri, 25 Jun 2021 03:48:34 -0700 (PDT)
 Received: from localhost ([2a02:768:2307:40d6::f9e])
-        by smtp.gmail.com with ESMTPSA id h7sm2551454ejl.8.2021.06.25.03.48.32
+        by smtp.gmail.com with ESMTPSA id ar14sm2471522ejc.108.2021.06.25.03.48.34
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 25 Jun 2021 03:48:33 -0700 (PDT)
+        Fri, 25 Jun 2021 03:48:34 -0700 (PDT)
 Sender: Michal Simek <monstr@monstr.eu>
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
         michal.simek@xilinx.com, git@xilinx.com,
         bharat.kumar.gogada@xilinx.com, kw@linux.com
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, stable@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Ravi Kiran Gummaluri <rgummal@xilinx.com>,
+        Rob Herring <robh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: [PATCH v3 1/2] dt-bindings: pci: xilinx-nwl: Document optional clock property
-Date:   Fri, 25 Jun 2021 12:48:22 +0200
-Message-Id: <67aa2c189337181bb2d7721fb616db5640587d2a.1624618100.git.michal.simek@xilinx.com>
+Subject: [PATCH v3 2/2] PCI: xilinx-nwl: Enable the clock through CCF
+Date:   Fri, 25 Jun 2021 12:48:23 +0200
+Message-Id: <ee6997a08fab582b1c6de05f8be184f3fe8d5357.1624618100.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <cover.1624618100.git.michal.simek@xilinx.com>
 References: <cover.1624618100.git.michal.simek@xilinx.com>
@@ -67,36 +71,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Clock property hasn't been documented in binding document but it is used
-for quite a long time where clock was specified by commit 9c8a47b484ed
-("arm64: dts: xilinx: Add the clock nodes for zynqmp").
+From: Hyun Kwon <hyun.kwon@xilinx.com>
 
+Enable PCIe reference clock. There is no remove function that's why
+this should be enough for simple operation.
+Normally this clock is enabled by default by firmware but there are
+usecases where this clock should be enabled by driver itself.
+It is also good that PCIe clock is recorded in a clock framework.
+
+Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
-(no changes since v2)
+Changes in v3:
+- use PCIe instead of pcie
+- add stable cc
+- update commit message - reported by Krzysztof
 
 Changes in v2:
-- new patch in this series because I found that it has never been sent
+- Update commit message - reported by Krzysztof
+- Check return value from clk_prepare_enable() - reported by Krzysztof
 
-Bharat: Can you please start to work on converting it to yaml?
+ drivers/pci/controller/pcie-xilinx-nwl.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
----
- Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-index 2d677e90a7e2..f56f8c58c5d9 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-@@ -35,6 +35,7 @@ Required properties:
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+index 8689311c5ef6..1c3d5b87ef20 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -6,6 +6,7 @@
+  * (C) Copyright 2014 - 2015, Xilinx, Inc.
+  */
  
- Optional properties:
- - dma-coherent: present if DMA operations are coherent
-+- clocks: Input clock specifier. Refer to common clock bindings
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+@@ -169,6 +170,7 @@ struct nwl_pcie {
+ 	u8 last_busno;
+ 	struct nwl_msi msi;
+ 	struct irq_domain *legacy_irq_domain;
++	struct clk *clk;
+ 	raw_spinlock_t leg_mask_lock;
+ };
  
- Example:
- ++++++++
+@@ -823,6 +825,16 @@ static int nwl_pcie_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
++	pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pcie->clk))
++		return PTR_ERR(pcie->clk);
++
++	err = clk_prepare_enable(pcie->clk);
++	if (err) {
++		dev_err(dev, "can't enable PCIe ref clock\n");
++		return err;
++	}
++
+ 	err = nwl_pcie_bridge_init(pcie);
+ 	if (err) {
+ 		dev_err(dev, "HW Initialization failed\n");
 -- 
 2.32.0
 
