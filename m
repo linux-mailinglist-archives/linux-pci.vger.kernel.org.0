@@ -2,392 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA2533B3CD5
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 08:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47B1E3B3D05
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 09:09:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbhFYG56 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 02:57:58 -0400
-Received: from regular1.263xmail.com ([211.150.70.203]:38882 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbhFYG5y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 02:57:54 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by regular1.263xmail.com (Postfix) with ESMTP id D0C1A8DC;
-        Fri, 25 Jun 2021 14:55:22 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from xxm-vm.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P30156T139874253620992S1624604118052833_;
-        Fri, 25 Jun 2021 14:55:21 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <25abb18687147f0a6a8bbc0f2da15c2e>
-X-RL-SENDER: xxm@rock-chips.com
-X-SENDER: xxm@rock-chips.com
-X-LOGIN-NAME: xxm@rock-chips.com
-X-FST-TO: bhelgaas@google.com
-X-RCPT-COUNT: 12
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Simon Xue <xxm@rock-chips.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Johan Jonker <jbx6244@gmail.com>,
+        id S229630AbhFYHMD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 03:12:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52799 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229454AbhFYHMC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Jun 2021 03:12:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624604981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FLtazXb3G6fRRX9xtmGZQwP57cBRAMVoE8LLTV4/QLo=;
+        b=iXnT9CmgRRkvDdsgkj8ZUasrWgmBoN2MLWqTQGuRtSebE8Xu6Pmc3/jXJX1X1PbkQw6Kwg
+        Z7GrS6fHBX2UDSEKFTRfprHEOCyae1FMazIJXXdQkSKB6+O+KVNS+6xw9JHCauUrXyD15w
+        jon1XfdCdcN5NQHpdpYg9yScVxjBpIE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-8tkP-SWoOzy_pVKfUpdfUw-1; Fri, 25 Jun 2021 03:09:40 -0400
+X-MC-Unique: 8tkP-SWoOzy_pVKfUpdfUw-1
+Received: by mail-wm1-f70.google.com with SMTP id f22-20020a1c6a160000b029018f49a7efb7so3816544wmc.1
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jun 2021 00:09:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FLtazXb3G6fRRX9xtmGZQwP57cBRAMVoE8LLTV4/QLo=;
+        b=m8si9TOHx7DuU0neryLaaTDMeIspA+WtVKcIndey9+vYZEHYHKrJ/o5+9STfoBf1dh
+         iSmNgLXe7ylxPy1DjB5AcInruwL4K28TVimpja+Sq1LqA2SuTvZjBLCeDD/QLNqkr+J7
+         hVNX+2XdI1FlKXFawCk6gERObuCvwRD6MTF7Tm1kmY2hRr7A+bMLFfcmQHgCNx485tT/
+         gOhrCK/bia1mhGwgcNEwGNRb4CjSf9drYXxYfLBjKu2vamvDxbQciuE0DQ0t6ftYdQI1
+         n+FjGi6Bkqjis9iIOpnv33VeRpSK6798sY8uVD6lstkmvvxaktFSHjXmBlcBNSLDa5qh
+         USOA==
+X-Gm-Message-State: AOAM531FFTldwqPmKyl0P1Mg+ZZQfoRmWg+SHZC3ySSAavO2rq3G0e8T
+        ydCIXB5s1VZXc9g18kLuwde/rXcBhyn0+01WWFWjhIy3HmfJ4SockA3Sq1CYWPcmx8jdsYUOvLh
+        ZY3EhP2+0DNUrqGKrkFvR
+X-Received: by 2002:a1c:4b04:: with SMTP id y4mr8928270wma.186.1624604979081;
+        Fri, 25 Jun 2021 00:09:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwEZC10pOGlNPzeVGtuSNOzeepcf5gnuWto136WmaedGGkMX3t/mR9Y/5SHRge1PZWfwCJHYw==
+X-Received: by 2002:a1c:4b04:: with SMTP id y4mr8928243wma.186.1624604978853;
+        Fri, 25 Jun 2021 00:09:38 -0700 (PDT)
+Received: from [192.168.1.101] ([92.176.231.106])
+        by smtp.gmail.com with ESMTPSA id i18sm1603468wrw.55.2021.06.25.00.09.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Jun 2021 00:09:38 -0700 (PDT)
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Heiko Stuebner <heiko@sntech.de>,
-        Simon Xue <xxm@rock-chips.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v11] PCI: rockchip-dwc: Add Rockchip RK356X host controller driver
-Date:   Fri, 25 Jun 2021 14:55:11 +0800
-Message-Id: <20210625065511.1096935-1-xxm@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        rfi@lists.rocketboards.org, Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+References: <20210624224040.GA3567297@bjorn-Precision-5520>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+Message-ID: <5bee3702-595b-f57b-f962-28644b7e646f@redhat.com>
+Date:   Fri, 25 Jun 2021 09:09:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210624224040.GA3567297@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a driver for the DesignWare-based PCIe controller found on
-RK356X. The existing pcie-rockchip-host driver is only used for
-the Rockchip-designed IP found on RK3399.
+Hello Bjorn,
 
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
- drivers/pci/controller/dwc/Kconfig            |  11 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 276 ++++++++++++++++++
- 3 files changed, 288 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+On 6/25/21 12:40 AM, Bjorn Helgaas wrote:
+> [+cc Michal, Ley Foon, Jingoo, Thierry, Jonathan]
+> 
+> On Tue, Jun 08, 2021 at 10:04:09AM +0200, Javier Martinez Canillas wrote:
+>> IRQ handlers that are registered for shared interrupts can be called at
+>> any time after have been registered using the request_irq() function.
+>>
+>> It's up to drivers to ensure that's always safe for these to be called.
+>>
+>> Both the "pcie-sys" and "pcie-client" interrupts are shared, but since
+>> their handlers are registered very early in the probe function, an error
+>> later can lead to these handlers being executed before all the required
+>> resources have been properly setup.
+>>
+>> For example, the rockchip_pcie_read() function used by these IRQ handlers
+>> expects that some PCIe clocks will already be enabled, otherwise trying
+>> to access the PCIe registers causes the read to hang and never return.
+>>
+>> The CONFIG_DEBUG_SHIRQ option tests if drivers are able to cope with their
+>> shared interrupt handlers being called, by generating a spurious interrupt
+>> just before a shared interrupt handler is unregistered.
+>>
+>> But this means that if the option is enabled, any error in the probe path
+>> of this driver could lead to one of the IRQ handlers to be executed.
+> 
+> I'm not an IRQ expert, but I think this is an issue regardless of
+> CONFIG_DEBUG_SHIRQ, isn't it?  Anything used by an IRQ handler should
+> be initialized before the handler is registered.  CONFIG_DEBUG_SHIRQ
+> is just a way to help find latent problems.
+>
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 423d35872ce4..60d3dde9ca39 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -214,6 +214,17 @@ config PCIE_ARTPEC6_EP
- 	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
- 	  endpoint mode. This uses the DesignWare core.
+Yes, it's an issue regardless. It's just that this debug option tests if the
+drivers aren't making the wrong assumption, exactly to find issues like this.
+
+>> In a rockpro64 board, the following sequence of events happens:
+>>
+>>   1) "pcie-sys" IRQ is requested and its handler registered.
+>>   2) "pcie-client" IRQ is requested and its handler registered.
+>>   3) probe later fails due readl_poll_timeout() returning a timeout.
+>>   4) the "pcie-sys" IRQ is unregistered.
+>>   5) CONFIG_DEBUG_SHIRQ triggers a spurious interrupt.
+>>   6) "pcie-client" IRQ handler is called for this spurious interrupt.
+>>   7) IRQ handler tries to read PCIE_CLIENT_INT_STATUS with clocks gated.
+>>   8) the machine hangs because rockchip_pcie_read() call never returns.
+>>
+>> To avoid cases like this, the handlers don't have to be registered until
+>> very late in the probe function, once all the resources have been setup.
+>>
+>> So let's just move all the IRQ init before the pci_host_probe() call, that
+>> will prevent issues like this and seems to be the correct thing to do too.
+> 
+> Previously we registered rockchip_pcie_subsys_irq_handler() and
+> rockchip_pcie_client_irq_handler() before the PCIe clocks were
+> enabled.  That's a problem because they depend on those clocks being
+> enabled, and your patch fixes that.
+>
+> rockchip_pcie_legacy_int_handler() depends on rockchip->irq_domain,
+> which isn't initialized until rockchip_pcie_init_irq_domain().
+> Previously we registered rockchip_pcie_legacy_int_handler() as the
+> handler for the "legacy" IRQ before rockchip_pcie_init_irq_domain().
+> 
+> I think you patch *also* fixes that problem, right?
+>
+
+Correct, that's why I moved the initialization and IRQ enable after that.
  
-+config PCIE_ROCKCHIP_DW_HOST
-+	bool "Rockchip DesignWare PCIe controller"
-+	select PCIE_DW
-+	select PCIE_DW_HOST
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
-+	depends on OF
-+	help
-+	  Enables support for the DesignWare PCIe controller in the
-+	  Rockchip SoC except RK3399.
-+
- config PCIE_INTEL_GW
- 	bool "Intel Gateway PCIe host controller support"
- 	depends on OF && (X86 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 9e6ce0dc2f53..3710e91471f7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-+obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) += pcie-dw-rockchip.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
- obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-new file mode 100644
-index 000000000000..20cef2e06f66
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -0,0 +1,276 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe host controller driver for Rockchip SoCs.
-+ *
-+ * Copyright (C) 2021 Rockchip Electronics Co., Ltd.
-+ *		http://www.rock-chips.com
-+ *
-+ * Author: Simon Xue <xxm@rock-chips.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#include "pcie-designware.h"
-+
-+/*
-+ * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
-+ * mask for the lower 16 bits.
-+ */
-+#define HIWORD_UPDATE(mask, val) (((mask) << 16) | (val))
-+#define HIWORD_UPDATE_BIT(val)	HIWORD_UPDATE(val, val)
-+
-+#define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
-+
-+#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-+#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-+#define PCIE_SMLH_LINKUP		BIT(16)
-+#define PCIE_RDLH_LINKUP		BIT(17)
-+#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-+#define PCIE_L0S_ENTRY			0x11
-+#define PCIE_CLIENT_GENERAL_CONTROL	0x0
-+#define PCIE_CLIENT_GENERAL_DEBUG	0x104
-+#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
-+#define PCIE_CLIENT_LTSSM_STATUS	0x300
-+#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
-+#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
-+
-+struct rockchip_pcie {
-+	struct dw_pcie			pci;
-+	void __iomem			*apb_base;
-+	struct phy			*phy;
-+	struct clk_bulk_data		*clks;
-+	unsigned int			clk_cnt;
-+	struct reset_control		*rst;
-+	struct gpio_desc		*rst_gpio;
-+	struct regulator                *vpcie3v3;
-+};
-+
-+static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
-+					     u32 reg)
-+{
-+	return readl_relaxed(rockchip->apb_base + reg);
-+}
-+
-+static void rockchip_pcie_writel_apb(struct rockchip_pcie *rockchip,
-+						u32 val, u32 reg)
-+{
-+	writel_relaxed(val, rockchip->apb_base + reg);
-+}
-+
-+static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
-+{
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
-+				 PCIE_CLIENT_GENERAL_CONTROL);
-+}
-+
-+static int rockchip_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	u32 val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_STATUS);
-+
-+	if ((val & PCIE_LINKUP) == PCIE_LINKUP &&
-+	    (val & PCIE_LTSSM_STATUS_MASK) == PCIE_L0S_ENTRY)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+
-+	/* Reset device */
-+	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
-+
-+	rockchip_pcie_enable_ltssm(rockchip);
-+
-+	/*
-+	 * PCIe requires the refclk to be stable for 100µs prior to releasing
-+	 * PERST. See table 2-4 in section 2.6.2 AC Specifications of the PCI
-+	 * Express Card Electromechanical Specification, 1.1. However, we don't
-+	 * know if the refclk is coming from RC's PHY or external OSC. If it's
-+	 * from RC, so enabling LTSSM is the just right place to release #PERST.
-+	 * We need more extra time as before, rather than setting just
-+	 * 100us as we don't know how long should the device need to reset.
-+	 */
-+	msleep(100);
-+	gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_host_init(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	u32 val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-+
-+	/* LTSSM enable control mode */
-+	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-+
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
-+				 PCIE_CLIENT_GENERAL_CONTROL);
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
-+	.host_init = rockchip_pcie_host_init,
-+};
-+
-+static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->pci.dev;
-+	int ret;
-+
-+	ret = devm_clk_bulk_get_all(dev, &rockchip->clks);
-+	if (ret < 0)
-+		return ret;
-+
-+	rockchip->clk_cnt = ret;
-+
-+	return clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
-+}
-+
-+static int rockchip_pcie_resource_get(struct platform_device *pdev,
-+				      struct rockchip_pcie *rockchip)
-+{
-+	rockchip->apb_base = devm_platform_ioremap_resource_byname(pdev, "apb");
-+	if (IS_ERR(rockchip->apb_base))
-+		return PTR_ERR(rockchip->apb_base);
-+
-+	rockchip->rst_gpio = devm_gpiod_get_optional(&pdev->dev, "reset",
-+						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(rockchip->rst_gpio))
-+		return PTR_ERR(rockchip->rst_gpio);
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->pci.dev;
-+	int ret;
-+
-+	rockchip->phy = devm_phy_get(dev, "pcie-phy");
-+	if (IS_ERR(rockchip->phy))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->phy),
-+				     "missing PHY\n");
-+
-+	ret = phy_init(rockchip->phy);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_power_on(rockchip->phy);
-+	if (ret)
-+		phy_exit(rockchip->phy);
-+
-+	return ret;
-+}
-+
-+static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
-+{
-+	phy_exit(rockchip->phy);
-+	phy_power_off(rockchip->phy);
-+}
-+
-+static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->pci.dev;
-+
-+	rockchip->rst = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(rockchip->rst))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->rst),
-+				     "failed to get reset lines\n");
-+
-+	return reset_control_deassert(rockchip->rst);
-+}
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.link_up = rockchip_pcie_link_up,
-+	.start_link = rockchip_pcie_start_link,
-+};
-+
-+static int rockchip_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rockchip_pcie *rockchip;
-+	struct pcie_port *pp;
-+	int ret;
-+
-+	rockchip = devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
-+	if (!rockchip)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, rockchip);
-+
-+	rockchip->pci.dev = dev;
-+	rockchip->pci.ops = &dw_pcie_ops;
-+
-+	pp = &rockchip->pci.pp;
-+	pp->ops = &rockchip_pcie_host_ops;
-+
-+	ret = rockchip_pcie_resource_get(pdev, rockchip);
-+	if (ret)
-+		return ret;
-+
-+	/* DON'T MOVE ME: must be enable before PHY init */
-+	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-+	if (IS_ERR(rockchip->vpcie3v3))
-+		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
-+			return dev_err_probe(dev, PTR_ERR(rockchip->vpcie3v3),
-+					"failed to get vpcie3v3 regulator\n");
-+
-+	ret = regulator_enable(rockchip->vpcie3v3);
-+	if (ret) {
-+		dev_err(dev, "failed to enable vpcie3v3 regulator\n");
-+		return ret;
-+	}
-+
-+	ret = rockchip_pcie_phy_init(rockchip);
-+	if (ret)
-+		goto disable_regulator;
-+
-+	ret = rockchip_pcie_reset_control_release(rockchip);
-+	if (ret)
-+		goto deinit_phy;
-+
-+	ret = rockchip_pcie_clk_init(rockchip);
-+	if (ret)
-+		goto deinit_phy;
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (!ret)
-+		return 0;
-+
-+	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-+deinit_phy:
-+	rockchip_pcie_phy_deinit(rockchip);
-+disable_regulator:
-+	regulator_disable(rockchip->vpcie3v3);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id rockchip_pcie_of_match[] = {
-+	{ .compatible = "rockchip,rk3568-pcie", },
-+	{},
-+};
-+
-+static struct platform_driver rockchip_pcie_driver = {
-+	.driver = {
-+		.name	= "rockchip-dw-pcie",
-+		.of_match_table = rockchip_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = rockchip_pcie_probe,
-+};
-+builtin_platform_driver(rockchip_pcie_driver);
+> I think this is also an issue with the following other drivers.  They all
+> set the handler to something that uses an IRQ domain before they
+> actually initialize the domain:
+
+Yes, I agreed with your assessment and also noticed that others drivers have
+similar issues. I just don't have any of those platforms to try to reproduce
+the bugs and test a fix.
+
+Best regards,
 -- 
-2.25.1
-
-
+Javier Martinez Canillas
+Software Engineer
+New Platform Technologies Enablement team
+RHEL Engineering
 
