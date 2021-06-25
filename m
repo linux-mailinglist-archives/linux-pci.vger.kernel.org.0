@@ -2,137 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 168CC3B3FFA
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:05:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 671B63B400F
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jun 2021 11:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbhFYJHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Jun 2021 05:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
+        id S230490AbhFYJLM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Jun 2021 05:11:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:50866 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231225AbhFYJHh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 25 Jun 2021 05:07:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A98B261430;
-        Fri, 25 Jun 2021 09:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624611917;
-        bh=7rRm/q8fAPvDNEHFrOmUDFjPtfaxc24KmQZoezmDFow=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2h482+ZytKgB/HtcV8UAiWzwa434koKn+f4CPYtzLkKWiQ7NbNtDBemoDOyZcIWF
-         bFdAfdGK9NyQEtZQstUYaOksg8oX0Iv/UOD0K8cin8XNDIRCqa2YjQF8YiG1HtzCwM
-         Hr+3n6nFm1+26b2Sn0OC9EGekJxkxZ2mvtqgR25ig0G18TBgyZqt97JdhN0kdebDyB
-         MWl4jzfAMVlVokdmQtMEK1bzvAWyFrLiEv9N9rZi5O7lIocpe7fwNPvHLDbGW0nILz
-         NcUriVVQKcEpSz+vmZuehuTE2giU9yxFShDtB/eynaICXcUf/TM+1KSfx2+ag/7Bn0
-         Oa2+MaRbwAgdg==
-Received: by pali.im (Postfix)
-        id 6A80360E; Fri, 25 Jun 2021 11:05:16 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        id S229839AbhFYJLM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 25 Jun 2021 05:11:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9FF331B;
+        Fri, 25 Jun 2021 02:08:51 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B87053F719;
+        Fri, 25 Jun 2021 02:08:50 -0700 (PDT)
+Date:   Fri, 25 Jun 2021 10:08:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] PCI: aardvark: Fix setting MSI address
-Date:   Fri, 25 Jun 2021 11:03:19 +0200
-Message-Id: <20210625090319.10220-8-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210625090319.10220-1-pali@kernel.org>
-References: <20210625090319.10220-1-pali@kernel.org>
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix shiftTooManyBitsSigned warning for
+ Tegra194
+Message-ID: <20210625090845.GA15052@lpieralisi>
+References: <20210618230428.GA3231877@bjorn-Precision-5520>
+ <20210624230150.GA3574555@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210624230150.GA3574555@bjorn-Precision-5520>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-MSI address for receiving MSI interrupts needs to be correctly set before
-enabling processing of MSI interrupts.
+On Thu, Jun 24, 2021 at 06:01:50PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 18, 2021 at 06:04:28PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 18, 2021 at 05:02:19PM +0100, Jon Hunter wrote:
+> > > The cppcheck tool issues the following warning for the Tegra194 PCIe
+> > > driver ...
+> > > 
+> > >  $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
+> > >  Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
+> > > 
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability:
+> > > 	Shifting signed 32-bit value by 31 bits is
+> > > 	implementation-defined behaviour. See condition at line 1826.
+> > > 	[shiftTooManyBitsSigned]
+> > > 
+> > >   appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
+> > >                       ^
+> > > The above warning occurs because the '1' is treated as a signed type
+> > > and so fix this by using the 'BIT' macro to ensure that this is defined
+> > > as a unsigned type.
+> > 
+> > The subject and commit log should describe the problem we're fixing.
+> > The *warning* is not the problem; the problem is the undefined
+> > behavior.
 
-Move code for setting PCIE_MSI_ADDR_LOW_REG and PCIE_MSI_ADDR_HIGH_REG
-registers with MSI address from advk_pcie_init_msi_irq_domain() function to
-advk_pcie_setup_hw() function before enabling PCIE_CORE_CTRL2_MSI_ENABLE.
+I updated the commit log accordingly but I did not change the
+subject :-/
 
-As part of this change, also remove unused variable msi_msg, which was used
-only for MSI doorbell address. MSI address can be any address which cannot
-be used to DMA to. So change it to the address of the main struct advk_pcie
+> > I'll fix this up, no need to repost for this.
+> 
+> I merged this from Lorenzo's branch, but I updated the commit log like
+> this because the undefined behavior is the real problem:
+> 
+>     PCI: tegra194: Fix tegra_pcie_ep_raise_msi_irq() ill-defined shift
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <kabel@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
----
- drivers/pci/controller/pci-aardvark.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+Yep, I forgot to update the subject, thanks for doing that.
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 7cad6d989f6c..84ecc418e6be 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -244,7 +244,6 @@ struct advk_pcie {
- 	struct msi_domain_info msi_domain_info;
- 	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
- 	struct mutex msi_used_lock;
--	u16 msi_msg;
- 	int link_gen;
- 	struct pci_bridge_emul bridge;
- 	struct gpio_desc *reset_gpio;
-@@ -403,6 +402,7 @@ static void advk_pcie_disable_ob_win(struct advk_pcie *pcie, u8 win_num)
- 
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
-+	phys_addr_t msi_addr;
- 	u32 reg;
- 	int i;
- 
-@@ -465,6 +465,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg |= LANE_COUNT_1;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
- 
-+	/* Set MSI address */
-+	msi_addr = virt_to_phys(pcie);
-+	advk_writel(pcie, lower_32_bits(msi_addr), PCIE_MSI_ADDR_LOW_REG);
-+	advk_writel(pcie, upper_32_bits(msi_addr), PCIE_MSI_ADDR_HIGH_REG);
-+
- 	/* Enable MSI */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
- 	reg |= PCIE_CORE_CTRL2_MSI_ENABLE;
-@@ -982,10 +987,10 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
- 					 struct msi_msg *msg)
- {
- 	struct advk_pcie *pcie = irq_data_get_irq_chip_data(data);
--	phys_addr_t msi_msg = virt_to_phys(&pcie->msi_msg);
-+	phys_addr_t msi_addr = virt_to_phys(pcie);
- 
--	msg->address_lo = lower_32_bits(msi_msg);
--	msg->address_hi = upper_32_bits(msi_msg);
-+	msg->address_lo = lower_32_bits(msi_addr);
-+	msg->address_hi = upper_32_bits(msi_addr);
- 	msg->data = data->hwirq;
- }
- 
-@@ -1080,7 +1085,6 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
- 	struct device_node *node = dev->of_node;
- 	struct irq_chip *bottom_ic, *msi_ic;
- 	struct msi_domain_info *msi_di;
--	phys_addr_t msi_msg_phys;
- 
- 	mutex_init(&pcie->msi_used_lock);
- 
-@@ -1098,13 +1102,6 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
- 		MSI_FLAG_MULTI_PCI_MSI;
- 	msi_di->chip = msi_ic;
- 
--	msi_msg_phys = virt_to_phys(&pcie->msi_msg);
--
--	advk_writel(pcie, lower_32_bits(msi_msg_phys),
--		    PCIE_MSI_ADDR_LOW_REG);
--	advk_writel(pcie, upper_32_bits(msi_msg_phys),
--		    PCIE_MSI_ADDR_HIGH_REG);
--
- 	pcie->msi_inner_domain =
- 		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
- 				      &advk_msi_domain_ops, pcie);
--- 
-2.20.1
+Lorenzo
 
+> 
+>     tegra_pcie_ep_raise_msi_irq() shifted a signed 32-bit value left by 31
+>     bits.  The behavior of this is implementation-defined.
+> 
+>     Replace the shift by BIT(), which is well-defined.
+> 
+>     Found by cppcheck:
+> 
+>       $ cppcheck --enable=all drivers/pci/controller/dwc/pcie-tegra194.c
+>       Checking drivers/pci/controller/dwc/pcie-tegra194.c ...
+> 
+>       drivers/pci/controller/dwc/pcie-tegra194.c:1829:23: portability: Shifting signed 32-bit value by 31 bits is implementation-defined behaviour. See condition at line 1826.  [shiftTooManyBitsSigned]
+> 
+>       appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
+>                          ^
+> 
+>     [bhelgaas: commit log]
+>     Link: https://lore.kernel.org/r/20210618160219.303092-1-jonathanh@nvidia.com
+>     Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+>     Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>     Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> > > Fixes: c57247f940e8 PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+> > > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index 8fc08336f76e..3c1feeab104f 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -1826,7 +1826,7 @@ static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
+> > >  	if (unlikely(irq > 31))
+> > >  		return -EINVAL;
+> > >  
+> > > -	appl_writel(pcie, (1 << irq), APPL_MSI_CTRL_1);
+> > > +	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
+> > >  
+> > >  	return 0;
+> > >  }
+> > > -- 
+> > > 2.25.1
+> > > 
