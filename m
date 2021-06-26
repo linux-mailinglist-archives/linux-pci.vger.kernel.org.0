@@ -2,99 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84B4F3B4D3B
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Jun 2021 08:50:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA1C3B4E68
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Jun 2021 13:51:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbhFZGxN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Jun 2021 02:53:13 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:40233 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbhFZGxN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Jun 2021 02:53:13 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id DF8ED100B095C;
-        Sat, 26 Jun 2021 08:50:49 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id A102C4389E8; Sat, 26 Jun 2021 08:50:49 +0200 (CEST)
-Date:   Sat, 26 Jun 2021 08:50:49 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ethan Zhao <haifeng.zhao@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Ignore Link Down/Up caused by DPC
-Message-ID: <20210626065049.GA19767@wunner.de>
-References: <0be565d97438fe2a6d57354b3aa4e8626952a00b.1619857124.git.lukas@wunner.de>
- <20210616221945.GA3010216@bjorn-Precision-5520>
- <20210620073804.GA13118@wunner.de>
- <08c046b0-c9f2-3489-eeef-7e7aca435bb9@gmail.com>
+        id S229871AbhFZLxd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Jun 2021 07:53:33 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3321 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229518AbhFZLxc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Jun 2021 07:53:32 -0400
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GBsL50ykLz6L4sw;
+        Sat, 26 Jun 2021 19:37:33 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Sat, 26 Jun 2021 13:51:08 +0200
+Received: from [10.47.80.199] (10.47.80.199) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Sat, 26 Jun
+ 2021 12:51:07 +0100
+Subject: Re: [PATCH v7 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
+ PMU
+To:     "liuqi (BA)" <liuqi115@huawei.com>, Linuxarm <linuxarm@huawei.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>
+References: <1624532384-43002-1-git-send-email-liuqi115@huawei.com>
+ <1624532384-43002-3-git-send-email-liuqi115@huawei.com>
+ <485dcb90-01bc-766a-466a-f32563e2076f@huawei.com>
+ <95de93f7-1618-5aa6-9a23-6445c5cb3515@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <1b164e4b-b30b-f071-51fa-841cc76ec017@huawei.com>
+Date:   Sat, 26 Jun 2021 12:44:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08c046b0-c9f2-3489-eeef-7e7aca435bb9@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <95de93f7-1618-5aa6-9a23-6445c5cb3515@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.80.199]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 03:38:41PM -0500, stuart hayes wrote:
-> I have a system that is failing to recover after an EDR event with (or
-> without...) this patch.  It looks like the problem is similar to what this
-> patch is trying to fix, except that on my system, the hotplug port is
-> downstream of the root port that has DPC, so the "link down" event on it is
-> not being ignored.  So the hotplug code disables the slot (which contains an
-> NVMe device on this system) while the nvme driver is trying to use it, which
-> results in a failed recovery and another EDR event, and the kernel ends up
-> with the DPC trigger status bit set in the root port, so everything
-> downstream is gone.
+On 26/06/2021 03:13, liuqi (BA) wrote:
 > 
-> I added the hack below so the hotplug code will ignore the "link down"
-> events on the ports downstream of the root port during DPC recovery, and it
-> recovers no problem.  (I'm not proposing this as a correct fix.)
+> 
+> On 2021/6/25 23:53, John Garry wrote:
+>> On 24/06/2021 11:59, Qi Liu wrote:
+>>> +
+>>> +/*
+>>> + * Events with the "dl" suffix in their names count performance in 
+>>> DL layer,
+>>> + * otherswise, events count performance in TL layer.
+>>> + */
+>>> +static struct attribute *hisi_pcie_pmu_events_attr[] = {
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(bw_rx_mwr, 0x010004),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(bw_rx_mrd, 0x100005),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(bw_tx_mwr, 0x010005),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(bw_tx_mrd, 0x200004),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(lat_rx_mwr, 0x000010),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(lat_rx_mrd, 0x020010),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(lat_tx_mrd, 0x000011),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(bw_rx_dl, 0x010084),
+>>> +    HISI_PCIE_PMU_EVENT_ATTR(bw_tx_dl, 0x030084),
+>>> +    NULL
+>>> +};
+>>> +
+>>> +static struct attribute_group hisi_pcie_pmu_events_group = {
+>>> +    .name = "events",
+>>> +    .attrs = hisi_pcie_pmu_events_attr,
+>>> +};
+>>> +
+>>> +static struct attribute *hisi_pcie_pmu_format_attr[] = {
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(event, "config:0-15"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(subevent, "config:16-23"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(thr_len, "config1:0-3"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(thr_mode, "config1:4"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(trig_len, "config1:5-8"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(trig_mode, "config1:9"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(port, "config2:0-15"),
+>>> +    HISI_PCIE_PMU_FORMAT_ATTR(bdf, "config2:16-31"),
+>>> +    NULL
+>>> +};
+>>
+>> I am just wondering how this now works.
+>>
+>> So if the user programs the following:
+>> ./perf stat -v -e hisi_pcieX/lat_rx_mrd/
+>>
+>> Then the value (incremented) in HISI_PCIE_CNT (I think that's the 
+>> right one) is returned as the event count. But one would expect 
+>> bandwidth from that event, while we only return here the delay cycles 
+>> - how is the count in HISI_PCIE_CNT_EXT exposed, so userspace can do 
+>> the calc for bw?
+>>
+> 
 
-Please help me understand what's causing the Link Down event in the
-first place:
+Hi Qi,
 
-With DPC, the hardware (only) disables the link on the port containing the
-error.  Since that's the Root Port above the hotplug port in your case,
-the link between the hotplug port and the NVMe drive should remain up.
+> 
+> Hardware counter and ext_counter work together for bandwidth, latency,
+> bus utilization and buffer occupancy events. For example, for latency
+> events(idx = 0x10), counter counts total delay cycles and ext_counter
+> counts PCIe packets number.
+> 
+> As we don't want PMU driver to process these two data, "delay cycles"
+> can be treated as an event(id = 0x10), "packets number" as another event
+> (id = 0x10 << 8), and driver could export these data separately.
+> 
+> if the user want to calculate latency of rx memory read, they should:
+> ./perf stat -v -e '{hisi_pcieX/event=0x10, 
+> subevent=0x01/,hisi_pcieX/event=0x0400, subevent=0x01/
+> 
+> and for bandwidth event:
+> ./perf stat -v -e '{hisi_pcieX/event=0x4, 
+> subevent=0x02/,hisi_pcieX/event=0x1000, subevent=0x02/
 
-Since your patch sets the PCI_DPC_RECOVERING flag during invocation
-of the dev->driver->err_handler->slot_reset() hook, I assume that's
-what's causing the Link Down.  However pcie_portdrv_slot_reset()
-only restores and saves PCI config space, I don't think that's
-causing a Link Down?
+I would suggest supporting a perf metric for this then, which would be like:
 
-Is maybe nvme_slot_reset() causing the Link Down on the parent hotplug port?
+{
+    "BriefDescription": "Latency for inbound traffic...",
+    "MetricName": "hisi_pcie_lat_rx_mrd",
+    "MetricExpr": "hisi_pcieX@event\\=0x4@subevent\\=0x02 \ 
+hisi_pcieX@event\\=0x1000@subevent\\=0x02 \",
+    "Unit": "hisi_pci",
+    "Compat": "v1"
+},
+
+(syntax may be incorrect - illustration only)
+
+> 
+> Then the value in HISI_PCIE_CNT and HISI_PCIE_EXT_CNT returned 
+> separately, and userspace could do the calculation.
+
+But I am still curious about lat_rx_mrd and the other events which we 
+continue to advertise. They don't really provide latency or bandwidth on 
+their own, but only half the necessary data. So I doubt their purpose.
 
 Thanks,
+John
 
-Lukas
-
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index b576aa890c76..dfd983c3c5bf 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -119,8 +132,10 @@ static int report_slot_reset(struct pci_dev *dev, void
-> *data)
->  		!dev->driver->err_handler->slot_reset)
->  		goto out;
-> 
-> +	set_bit(PCI_DPC_RECOVERING, &dev->priv_flags);
->  	err_handler = dev->driver->err_handler;
->  	vote = err_handler->slot_reset(dev);
-> +	clear_bit(PCI_DPC_RECOVERING, &dev->priv_flags);
->  	*result = merge_result(*result, vote);
->  out:
->  	device_unlock(&dev->dev);
