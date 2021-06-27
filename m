@@ -2,166 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68AA23B5099
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Jun 2021 02:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31FB53B50A8
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Jun 2021 02:41:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbhF0ADR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Jun 2021 20:03:17 -0400
-Received: from mo-csw1116.securemx.jp ([210.130.202.158]:35002 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbhF0ADQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Jun 2021 20:03:16 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 15R00SVB011057; Sun, 27 Jun 2021 09:00:28 +0900
-X-Iguazu-Qid: 2wGr6xj2Av23yqJIaQ
-X-Iguazu-QSIG: v=2; s=0; t=1624752027; q=2wGr6xj2Av23yqJIaQ; m=JWDH5ldToPndZdG/ZCv/gnc4JZgTuIDCsOg5hq5hK6c=
-Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
-        by relay.securemx.jp (mx-mr1111) id 15R00PaA021429
-        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sun, 27 Jun 2021 09:00:26 +0900
-Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 5A8211000C4;
-        Sun, 27 Jun 2021 09:00:25 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.toshiba.co.jp  with ESMTP id 15R00OM0007276;
-        Sun, 27 Jun 2021 09:00:24 +0900
-Date:   Sun, 27 Jun 2021 09:00:23 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        yuji2.ishikawa@toshiba.co.jp,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 2/3] PCI: Visconti: Add Toshiba Visconti PCIe host
- controller driver
-X-TSB-HOP: ON
-Message-ID: <20210627000023.54t4vz5wvva525ng@toshiba.co.jp>
-References: <20210524063004.132043-3-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20210524185839.GA1102116@bjorn-Precision-5520>
- <CAL_JsqLMdxA_yVdz6_s7XP8SsCDhwctUxG+3+jAnJs5fwyk=MA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLMdxA_yVdz6_s7XP8SsCDhwctUxG+3+jAnJs5fwyk=MA@mail.gmail.com>
+        id S230186AbhF0AmX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Jun 2021 20:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230104AbhF0AmW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Jun 2021 20:42:22 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8861CC061574;
+        Sat, 26 Jun 2021 17:39:59 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id y4so10764225pfi.9;
+        Sat, 26 Jun 2021 17:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4jHYszcKubr0Ej2Ko8nc+ikN0GTCEvzz8hVq8Stfd/I=;
+        b=ax31dI1KEc4BWk5NO/dQkCzOD6cllo7IZBubLurqyI35t/x/rUZ9Ex8wYBqwWo4OLb
+         Bei77BZKd0DJo+ietUXFf+2ZEPYXaByHhc5r/W7j8sQuDhFcYEKeGSZNw6pDQQkkqPHa
+         PQnaQtr21arXdVOKLXchV0u5aWjXHUEphyk0eLaSVLUCu9Zvvjv63kmc9fxG7buAa84B
+         zAk7Mk+9IfcDoLOArLwitFgp/v5aY8zuB55AQBOICiv0ZwQ1c/ms6hBLXSErxxms8JgB
+         uG9u9yM9igKI0WG1LSojEk+gL0sp3zaDCxoqh/7k2GNg/fgfIYaB+xDj/L2kWrLp5tE6
+         MeUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4jHYszcKubr0Ej2Ko8nc+ikN0GTCEvzz8hVq8Stfd/I=;
+        b=b/lf70AKgrt+QoPa/hD+78zPSVogPrVxZ+yxP4IsAz/EDjoe7GGk0pcIOuPOvMX3eZ
+         BgDyyUHSY168Mh3rdVj13+oX6vJxugL3Dem6aWRuM359bxAjwXDUpcMjfJyyAY3Sr9jK
+         JTVHBx3YiVOFaQySBr2zfP5dA3+TiWw5ACGayf7IXgoi/2akTG0AKe03ShdLCcPXUZAo
+         e1bvfGFiubbYzzKgh2P/cxa5MLCP/H+AWbt+jHGqoIgcZqXGYa9BtaJODQcXMHTj0wnL
+         DoA2d39d2DKJkga4g5Zn7MSCfK5QcY/dPzyhcc0Wets0KS2pFoi+1zBfpL/cZ4cKUaB7
+         z+9g==
+X-Gm-Message-State: AOAM530syOGLuvrX8ml+1rsTyESbGuO5tgdCJKPng4kV6ucwQmofufXB
+        qwbRXU1OInMoxCddoLhL7Q==
+X-Google-Smtp-Source: ABdhPJxSNrsgyfYE6zNRvBRAHsfqELt7Bqf4tA7zy545FDcoGCJgaazq9O1jUaAiXOW7r3Qr21YCrg==
+X-Received: by 2002:a63:1a5b:: with SMTP id a27mr16765222pgm.427.1624754398247;
+        Sat, 26 Jun 2021 17:39:58 -0700 (PDT)
+Received: from localhost.localdomain ([154.16.166.176])
+        by smtp.gmail.com with ESMTPSA id s9sm9738267pfm.120.2021.06.26.17.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Jun 2021 17:39:57 -0700 (PDT)
+From:   Shunyong Yang <yang.shunyong@gmail.com>
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com, kw@linux.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shunyong Yang <yang.shunyong@gmail.com>
+Subject: [PATCH] tools: PCI: Zero-initialize param
+Date:   Sun, 27 Jun 2021 08:39:37 +0800
+Message-Id: <20210627003937.6249-1-yang.shunyong@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+The values in param may be random if they are not initialized, which
+may cause use_dma flag set even when "-d" option is not provided
+in command line. Initializing all members to 0 to solve this.
 
+Signed-off-by: Shunyong Yang <yang.shunyong@gmail.com>
+---
+ tools/pci/pcitest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for your comment.
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 0a1344c45213..59bcd6220a58 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -40,7 +40,7 @@ struct pci_test {
+ 
+ static int run_test(struct pci_test *test)
+ {
+-	struct pci_endpoint_test_xfer_param param;
++	struct pci_endpoint_test_xfer_param param = {0};
+ 	int ret = -EINVAL;
+ 	int fd;
+ 
+-- 
+2.17.1
 
-On Wed, Jun 16, 2021 at 10:32:05AM -0600, Rob Herring wrote:
-> On Mon, May 24, 2021 at 12:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Kishon for cpu_addr_fixup() question]
-> >
-> > Please make the subject "PCI: visconti: Add ..." since the driver
-> > names are usually lower-case.  When referring to the hardware itself,
-> > use "Visconti", of course.
-> >
-> > On Mon, May 24, 2021 at 03:30:03PM +0900, Nobuhiro Iwamatsu wrote:
-> > > Add support to PCIe RC controller on Toshiba Visconti ARM SoCs. PCIe
-> > > controller is based of Synopsys DesignWare PCIe core.
-> > >
-> > > This patch does not yet use the clock framework to control the clock.
-> > > This will be replaced in the future.
-> > >
-> > > v2 -> v3:
-> > >   - Update subject.
-> > >   - Wrap description in 75 columns.
-> > >   - Change config name to PCIE_VISCONTI_HOST.
-> > >   - Update Kconfig text.
-> > >   - Drop blank lines.
-> > >   - Adjusted to 80 columns.
-> > >   - Drop inline from functions for register access.
-> > >   - Changed function name from visconti_pcie_check_link_status to
-> > >     visconti_pcie_link_up.
-> > >   - Update to using dw_pcie_host_init().
-> > >   - Reorder these in the order of use in visconti_pcie_establish_link.
-> > >   - Rewrite visconti_pcie_host_init() without dw_pcie_setup_rc().
-> > >   - Change function name from  visconti_device_turnon() to
-> > >     visconti_pcie_power_on().
-> > >   - Unify formats such as dev_err().
-> > >   - Drop error label in visconti_add_pcie_port().
-> > >
-> > > v1 -> v2:
-> > >   - Fix typo in commit message.
-> > >   - Drop "depends on OF && HAS_IOMEM" from Kconfig.
-> > >   - Stop using the pointer of struct dw_pcie.
-> > >   - Use _relaxed variant.
-> > >   - Drop dw_pcie_wait_for_link.
-> > >   - Drop dbi resource processing.
-> > >   - Drop MSI IRQ initialization processing.
-> >
-> > Thanks for the changelog.  Please move it after the "---" line for
-> > future versions.  That way it won't appear in the commit log when this
-> > is merged.  The notes about v1->v2, v2->v3, etc are useful during
-> > review, but not after this is merged.
-> >
-> > > Signed-off-by: Yuji Ishikawa <yuji2.ishikawa@toshiba.co.jp>
-> > > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> > > ---
-> > >  drivers/pci/controller/dwc/Kconfig         |   9 +
-> > >  drivers/pci/controller/dwc/Makefile        |   1 +
-> > >  drivers/pci/controller/dwc/pcie-visconti.c | 369 +++++++++++++++++++++
-> > >  3 files changed, 379 insertions(+)
-> > >  create mode 100644 drivers/pci/controller/dwc/pcie-visconti.c
-> 
-> 
-> > > +static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 pci_addr)
-> > > +{
-> > > +     return pci_addr - PCIE_BUS_OFFSET;
-> >
-> > This is called from __dw_pcie_prog_outbound_atu() as:
-> >
-> >   cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
-> >
-> > so I think the parameter here should be *cpu_addr*, not pci_addr.
-> >
-> > dra7xx and artpec6 also call it "pci_addr", which is at best
-> > confusing.
-> >
-> > I'm also confused about exactly what .cpu_addr_fixup() does.  Is it
-> > applying an offset that cannot be deduced from the DT description?  If
-> > so, *should* this offset be described in DT?
-> 
-> It could be perhaps, but it would be a custom property, not something
-> we can handle in 'ranges'. I'd rather it be implicit from the
-> compatible than a custom property.
-> 
-> AIUI, the issue is the cpu address gets masked (high bits discarded).
-> This can happen when the internal bus address decoding throws away
-> upper address bits.
-> 
-> For example:
-> 
-> 0xa0000000 -> 0x20000000    -> 0x00000000
-> cpu addr   -> DW local addr -> PCI bus addr
-> 
-> DT has the first and last addresses, but iATU needs the middle and last address.
-> 
-> This could be just a data value rather than an ops function. While a
-> subtract works here, that's fragile (the DT needs to match the
-> #define) and I think a mask would be more appropriate.a
-
-In this SoC specification, the CPU bus outputs the offset value from
-0x40000000 to the PCIE bus, so 0x40000000 is subtracted from the CPU
-bus address. This 0x40000000 is also based on io_base from DT.
-Therefore, how about the following processing?
-
-return cpu_addr - pp->io_base;
-
-If I use a mask, it will be as follows.
-
-return cpu_addr & ~pp->io_base;
-
-Best regards,
-  Nobuhiro
