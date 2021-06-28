@@ -2,228 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE823B5ECD
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jun 2021 15:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 362A13B67C1
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jun 2021 19:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232756AbhF1NXL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Jun 2021 09:23:11 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:13028 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbhF1NXK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Jun 2021 09:23:10 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GD7Sf0NGFzZhp4;
-        Mon, 28 Jun 2021 21:17:38 +0800 (CST)
-Received: from dggpemm500009.china.huawei.com (7.185.36.225) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 28 Jun 2021 21:20:42 +0800
-Received: from [10.174.185.226] (10.174.185.226) by
- dggpemm500009.china.huawei.com (7.185.36.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 28 Jun 2021 21:20:42 +0800
-From:   Xingang Wang <wangxingang5@huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <robh@kernel.org>, <will@kernel.org>, <joro@8bytes.org>,
-        <robh+dt@kernel.org>, <gregkh@linuxfoundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <xieyingtai@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Auger Eric <eric.auger@redhat.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>
-References: <20210604190430.GA2220179@bjorn-Precision-5520>
- <7cd2f48a-8cb5-d290-7187-267d92e9a595@huawei.com>
-Subject: Re: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating PCI
- devices
-Message-ID: <038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com>
-Date:   Mon, 28 Jun 2021 21:20:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S232558AbhF1Riv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Jun 2021 13:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233235AbhF1Riu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Jun 2021 13:38:50 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E290BC061574
+        for <linux-pci@vger.kernel.org>; Mon, 28 Jun 2021 10:36:24 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id c8so14762421pfp.5
+        for <linux-pci@vger.kernel.org>; Mon, 28 Jun 2021 10:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GGtA7KmG4o78hcTt7ZnGdtNRg3dvE4rEaAeKUvUMqG8=;
+        b=q7O3PLK5p3FkmEMgXLFp5yfmTxe66TbOnr+5Qhw+KTd4bhLO8mxfBffwiNNlCGBdUJ
+         LESRbM75Y93TFKuMZ9UiKbV5ISBtZCLzbTNvOKRXCgNy1H8zVAqlImBjCr/UJbfjylTy
+         xKBcGSO/P/dqhuBrVFzS3PW7q8MjQgY79CVeZusNsAXWLlr5ytpND/H6pm0UiXnrRQEi
+         O8pW4MXb57t0JPUGqML2v7y0sHMJac6VUUcOr3XwsVLmwHlo7IIEafkHO6EC6yXNhMxS
+         d5neHoTteJ+L2D+HnDExOUeFQXSFHW7qg0gAu8MHftWz30z3guPy3/MrPV3fabAOdOxK
+         3XJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GGtA7KmG4o78hcTt7ZnGdtNRg3dvE4rEaAeKUvUMqG8=;
+        b=i3B8/wVKq7LInC5fXcKJbVqdSdAR931zWn2PPEC9L2heYPql9v098HQ3rc1y1cmR9y
+         G4kKoX8KtWA53hNg23a5bpQ4EE1VCxWUtV8pEQUVyfoITriNQfwlBmM2xbJfmzY4rdPO
+         7vlwhjxCM+mxrHe1oxpAhPtueBQOcfGjJdl0Jpp3bM6bweFO5dEh81fi2Atgk8EDRaC5
+         TqandzSlJX5mbjCjthBdl2lZSsCPbeby+l1H3BnbMIaAj/TymOWjIQeO9+vWNURfQjNP
+         xx5zWMhDPuVJa+KeNWoztqnJT/atE0090CJu4m+dumkW3J5ccYm6O8HOVJZgiC5zrvYJ
+         +Klw==
+X-Gm-Message-State: AOAM5315eUh/MPXJSpyTg5M7gJJCDZOOdxHq1ISm8oXkt0p3gq8DN1Mu
+        qlNlI79UV3B5eWERolE7BvmNgdwC4e5fbrqFz0aqng==
+X-Google-Smtp-Source: ABdhPJx0bGkCkBnmJAJGpvA8M8TmO8U8Qxfs05H2Q7bgUvFfGActrmAnYTJnQP/mD4IzfO+NQWzSVkVdgUWtee/H43Y=
+X-Received: by 2002:a65:6248:: with SMTP id q8mr6548554pgv.279.1624901784442;
+ Mon, 28 Jun 2021 10:36:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7cd2f48a-8cb5-d290-7187-267d92e9a595@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.185.226]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500009.china.huawei.com (7.185.36.225)
-X-CFilter-Loop: Reflected
+References: <20210625233118.2814915-1-kw@linux.com> <20210625233118.2814915-2-kw@linux.com>
+ <YNmf9sAB2NEnivsk@infradead.org>
+In-Reply-To: <YNmf9sAB2NEnivsk@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 28 Jun 2021 10:36:13 -0700
+Message-ID: <CAPcyv4ihEZB7kXKVA1GCbWv=ZR2hvBfhwBX9fBFYYTCdg=aLrg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] sysfs: Invoke iomem_get_mapping() from the sysfs open callback
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Krzysztof Wilczy??ski" <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        "Pali Roh??r" <pali@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Mon, Jun 28, 2021 at 3:12 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Jun 25, 2021 at 11:31:17PM +0000, Krzysztof Wilczy??ski wrote:
+> >       if (battr->mapping)
+> > -             of->file->f_mapping = battr->mapping;
+> > +             of->file->f_mapping = battr->mapping();
+>
+> I think get_mapping() is a better name now.  That being said this
+> whole programming model looks a little weird.
 
-I would like to add more explanation about what problem this patch
-fixed.
+I think both those points are fair.
 
-I am testing the SVA/vSVA series patches written by @Jean and @Brucker.
-I test with the following qemu command line, with a hisilicon SEC device
-attached on a pcie-root-port.
+> Also, does this patch imply the mapping field of the sysfs bin
+> attributes wasn't used before at all?
 
-$QEMU/qemu-system-aarch64 \
-     -enable-kvm \
-     -kernel $LINUX/arch/arm64/boot/Image \
-     -m 16G \
-     -smp cores=8,threads=1,sockets=2 	\
-     -machine virt,kernel_irqchip=on,gic-version=3,iommu=smmuv3 \
-     -device 
-pcie-root-port,port=0x8,chassis=1,id=pci.1,bus=pcie.0,addr=0x1 \
-     -device vfio-pci,host=75:00.0,bus=pci.1,addr=0x0,id=acc2 \
-     -net none \
-     -initrd ./mfs.cpio.gz \
-     -cpu host \
-     -nographic \
-     -append "rdinit=init console=ttyAMA0 earlycon=pl011,0x9000000" \
-
-And I got the guest PCI configuration:
-00:00.0 Class 0600: Device 1b36:0008 		# root bus
-00:01.0 Class 0604: Device 1b36:000c 		# root port
-	Capabilities: [148 v1] Access Control Services
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans+
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- 
-EgressCtrl- DirectTrans-
-	Kernel driver in use: pcieport
-01:00.0 Class 1000: Device 19e5:a255 (rev 21) 	# SEC
-
-The PCI configuration shows that the ACS of the pcie root port is
-not enabled, while it should have.
-
-Then when I insmod device driver and init the SVA feature, I got
-
-[   24.342450] hisi_sec2 0000:01:00.0: cannot attach to incompatible 
-domain (0 SSID bits != 10)
-[   24.343731] hisi_sec2 0000:01:00.0: Failed to add to iommu group 0: -22
-[   24.345243] hisi_sec2 0000:01:00.0: enabling device (0000 -> 0002)
-qemu-system-aarch64: vfio_enable_vectors failed to register S1 MSI 
-binding for vector 0(-2)
-qemu-system-aarch64: vfio: Error: Failed to setup MSI fds: Interrupted 
-system call
-qemu-system-aarch64: vfio: Error: Failed to enable MSI
-
-I figured out that this error occurs in the arm_smmu_attach_dev
-when checking ssid_bits for SVA feature,
-the master->ssid_bits != smmu_domain->s1_cfg.s1cdmax caused this 
-problem. This is becuase the ACS of pcie-root-port is not enabled, the 
-pcie-root-port and SEC device share the same domain.
-And SEC's ssid_bits is 10, while pcie-root-port's s1cdmax is zero, this 
-cause the problem.
-
-And about why the ACS is not enabled in kernel, I have explained as the 
-following:
-
-On 2021/6/7 20:58, Xingang Wang wrote:
-> On 2021/6/5 3:04, Bjorn Helgaas wrote:
->> [+cc John, who tested 6bf6c24720d3]
->>
->> On Fri, May 21, 2021 at 03:03:24AM +0000, Wang Xingang wrote:
->>> From: Xingang Wang <wangxingang5@huawei.com>
->>>
->>> When booting with devicetree, the pci_request_acs() is called after the
->>> enumeration and initialization of PCI devices, thus the ACS is not
->>> enabled. And ACS should be enabled when IOMMU is detected for the
->>> PCI host bridge, so add check for IOMMU before probe of PCI host and 
->>> call
->>> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
->>> devices.
->>
->> I'm happy to apply this, but I'm a little puzzled about 6bf6c24720d3
->> ("iommu/of: Request ACS from the PCI core when configuring IOMMU
->> linkage").  It was tested and fixed a problem, but I don't understand
->> how.
->>
->> 6bf6c24720d3 added the call to pci_request_acs() in
->> of_iommu_configure() so it currently looks like this:
->>
->>    of_iommu_configure(dev, ...)
->>    {
->>      if (dev_is_pci(dev))
->>        pci_request_acs();
->>
->> pci_request_acs() sets pci_acs_enable, which tells us to enable ACS
->> when enumerating PCI devices in the future.  But we only call
->> pci_request_acs() if we already *have* a PCI device.
->>
->> So maybe 6bf6c24720d3 fixed a problem for *some* PCI devices, but not
->> all?  E.g., did we call of_iommu_configure() for one PCI device before
->> enumerating the rest?
->>
-> I test the kernel on an arm platform with qemu:
-> 
-> qemu-system-aarch64 \
->   -cpu host \
->   -kernel arch/arm64/boot/Image \
->   -enable-kvm \
->   -m 8G \
->   -smp 2,sockets=2,cores=1,threads=1     \
->   -machine virt,kernel_irqchip=on,gic-version=3,iommu=smmuv3\
->   -initrd rootfs.cpio.gz \
->   -nographic \
->   -append "rdinit=init console=ttyAMA0 earlycon=pl011,0x9000000 nokaslr" \
->   -device pcie-root-port,port=0x1,chassis=1,id=pci.1,addr=0x8 \
->   -netdev user,id=hostnet0 \
->   -device 
-> virtio-net-pci,netdev=hostnet0,id=net0,mac=08:13:3a:5a:22:5b,bus=pci.1,addr=0x0 
-> \
-> 
-> And find that the of_iommu_configure is called after the enumeration
-> of the pcie-root-port. And this might only infect the first device, when 
-> enumerating
-> the rest devices, the pci_acs_enable has already be enabled.
-> 
-> But to make sure that the pci_acs_enable will always be set before all 
-> PCI devices,
-> it would be better to set it in initialization of PCI bridges.
-> 
-> Thanks
-> 
-> Xingang
-> 
->>> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
->>> configuring IOMMU linkage")
->>> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
->>> ---
->>>   drivers/iommu/of_iommu.c | 1 -
->>>   drivers/pci/of.c         | 8 +++++++-
->>>   2 files changed, 7 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->>> index a9d2df001149..54a14da242cc 100644
->>> --- a/drivers/iommu/of_iommu.c
->>> +++ b/drivers/iommu/of_iommu.c
->>> @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct 
->>> device *dev,
->>>               .np = master_np,
->>>           };
->>> -        pci_request_acs();
->>>           err = pci_for_each_dma_alias(to_pci_dev(dev),
->>>                            of_pci_iommu_init, &info);
->>>       } else {
->>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->>> index da5b414d585a..2313c3f848b0 100644
->>> --- a/drivers/pci/of.c
->>> +++ b/drivers/pci/of.c
->>> @@ -581,9 +581,15 @@ static int 
->>> pci_parse_request_of_pci_ranges(struct device *dev,
->>>   int devm_of_pci_bridge_init(struct device *dev, struct 
->>> pci_host_bridge *bridge)
->>>   {
->>> -    if (!dev->of_node)
->>> +    struct device_node *node = dev->of_node;
->>> +
->>> +    if (!node)
->>>           return 0;
->>> +    /* Detect IOMMU and make sure ACS will be enabled */
->>> +    if (of_property_read_bool(node, "iommu-map"))
->>> +        pci_request_acs();
->>> +
->>>       bridge->swizzle_irq = pci_common_swizzle;
->>>       bridge->map_irq = of_irq_parse_and_map_pci;
->>> -- 
->>> 2.19.1
->>>
->> .
->>
-> 
-> .
+It defaulted to an address_space per file rather than a shared address
+space across all files that map physical addresses as file offsets.
