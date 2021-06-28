@@ -2,90 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E13B63B5A36
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jun 2021 10:03:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02DF43B5B6B
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jun 2021 11:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232174AbhF1IGS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Jun 2021 04:06:18 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:17526 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229911AbhF1IGS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Jun 2021 04:06:18 -0400
-X-UUID: 37a9a923059e48819e7bcb92db666673-20210628
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=UyCUoWq5C8H8X3Ls/9jw1l30aSnsYNS8MIqI3Jdte34=;
-        b=NQShitKfmMb479YptqZkariH15y33S2g8+NDnwgUZ+eDrNkMRyFunmkMb7By0jVUIZSbsLMJqa2tFzr9mtZZChfk+abZn0TBa5ACznHKLh+5bkm38UEgRgGO8Ekd5hBsQJPM211xrhtYh9OPpy8oPpP01bUSxJ+/bQaXIaZWDag=;
-X-UUID: 37a9a923059e48819e7bcb92db666673-20210628
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1510859484; Mon, 28 Jun 2021 16:03:45 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 28 Jun
- 2021 16:03:36 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 28 Jun 2021 16:03:35 +0800
-Message-ID: <1624867415.19871.7.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: mediatek-gen3: Add property to
- disable dvfsrc voltage request
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>, <linux-pci@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
-        <sin_jieyang@mediatek.com>, <drinkcat@chromium.org>,
-        <Rex-BC.Chen@mediatek.com>, Krzysztof Wilczyski <kw@linux.com>,
-        <Ryan-JH.Yu@mediatek.com>
-Date:   Mon, 28 Jun 2021 16:03:35 +0800
-In-Reply-To: <20210611114824.14537-2-jianjun.wang@mediatek.com>
-References: <20210611114824.14537-1-jianjun.wang@mediatek.com>
-         <20210611114824.14537-2-jianjun.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S232152AbhF1Jfn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Jun 2021 05:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231935AbhF1Jfi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Jun 2021 05:35:38 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642EEC061574
+        for <linux-pci@vger.kernel.org>; Mon, 28 Jun 2021 02:33:12 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id h2so21403693iob.11
+        for <linux-pci@vger.kernel.org>; Mon, 28 Jun 2021 02:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t+aiQ2ukdg8u/BSZcOQu5XL5M5ZLzOE5atR65oy5RQY=;
+        b=BnJfwtF/4KSMo1DL7VYVTosxzJB3HAxJogjj+E+dGsfKYDfyYTf4stNq4ACHlYGtrv
+         Xw4IFHkEDz+4rrIgExzV9aKaftXyLJ36Qeskq4ScrzS3AF/Tkc3+IauFj7Dwz7bM/iR+
+         XRh6H8PNssM4hHrAt4X6pOzoeKkQdQWdH0zpzRFc5uWMBiWGhWxegQOoLGONMgPAcYVU
+         wqlimvYnHnFdOT9pJQAALdSBknW3Ge3owpCmgnorbUjV270ed/ENqj/4qwKbBcxOf8EI
+         q1p742gJcUNwPFczXRBxdeVB0+u37ddk4ZZuy+vN8IfuUYqvHVkLGTA6wwxHuJFLd7Rh
+         KTBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t+aiQ2ukdg8u/BSZcOQu5XL5M5ZLzOE5atR65oy5RQY=;
+        b=SZzuwq2F/IzwRCWRUc5DfggutfKm7OXpesKserk+26c3C3VQi4V3fG22MPW2+XUBk4
+         rI6CQHW1/Ej4ZfFRNef0UDLarqWgp2nLLpX5bq3HoyXv72LBjOMeu2av4/4AE/eQ5kIT
+         zFa+C7fG/WOlTQElSbObq/C/IhULi1BjlSI3VHFHWIXjydgTdFQoaSIrQSYILo5V7Bgt
+         Kcgzrqw1yqRhSNu/Gk+6S6xV+PmMesafj+UyRWgsILaWAbA3TE6q6m95U/0JG5aBDBPP
+         Sv+YxTnbOp0Z8CuDB3xXsOpQvmTvzeD2lLiJDkWTg4DJQgcZ0vemZz0ez5tDt7Hexg2/
+         OkAg==
+X-Gm-Message-State: AOAM533iTNr9pOHqX2skxDzGwpEFex7ScltdvIVj2o4pGjTgyYnL0tQz
+        3PZVAHIwoMFBRO8vwunZ/phBgj7N1Ottn9uc3zo=
+X-Google-Smtp-Source: ABdhPJyehWg5QNf6rK3e+L7cVe+Ah/VBk1jioGWeNUlqNOGB0DQ2FCcLYd5wA22SWqwTQJX/5Ae+BD/uHY7ydWnmQBc=
+X-Received: by 2002:a05:6638:d4b:: with SMTP id d11mr21824814jak.112.1624872791722;
+ Mon, 28 Jun 2021 02:33:11 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3C847F0C72EE72988F88A8EF8A8CFC570617985F93A7278597666503F0F909702000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20210625093030.3698570-2-chenhuacai@loongson.cn> <20210625204556.GA3656680@bjorn-Precision-5520>
+In-Reply-To: <20210625204556.GA3656680@bjorn-Precision-5520>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Mon, 28 Jun 2021 17:32:59 +0800
+Message-ID: <CAAhV-H54S3bAw8muCHeaEYn7T6z-um-iLB098HE3es_1gR7-gA@mail.gmail.com>
+Subject: Re: [PATCH V3 1/4] PCI/portdrv: Don't disable device during shutdown
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgUm9iLCBCam9ybiwgTWF0dGhpYXMsDQoNCkNvdWxkIHlvdSBwbGVhc2UgaGVscCB0byB0YWtl
-IGEgbG9vayBhdCB0aGlzIHBhdGNoIHNlcmllcz8NCg0KV2UgaGF2ZSBkb25lIHRoZSBpbnRlcm5h
-bCB0ZXN0cyBhbmQgbmVlZCB0byBpbXBsZW1lbnQgdGhpcyBmdW5jdGlvbiBpbg0KdGhlIGZpbmFs
-IHByb2R1Y3QsIFdlIHJlYWxseSBuZWVkIHlvdXIgc3VnZ2VzdGlvbnMuDQoNClRoYW5rcy4NCg0K
-T24gRnJpLCAyMDIxLTA2LTExIGF0IDE5OjQ4ICswODAwLCBKaWFuanVuIFdhbmcgd3JvdGU6DQo+
-IEFkZCBwcm9wZXJ0eSB0byBkaXNhYmxlIGR2ZnNyYyB2b2x0YWdlIHJlcXVlc3QsIGlmIHRoaXMg
-cHJvcGVydHkNCj4gaXMgcHJlc2VudGVkLCB3ZSBhc3N1bWUgdGhhdCB0aGUgcmVxdWVzdGVkIHZv
-bHRhZ2UgaXMgYWx3YXlzDQo+IGhpZ2hlciBlbm91Z2ggdG8ga2VlcCB0aGUgUENJZSBjb250cm9s
-bGVyIGFjdGl2ZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEppYW5qdW4gV2FuZyA8amlhbmp1bi53
-YW5nQG1lZGlhdGVrLmNvbT4NCj4gUmV2aWV3ZWQtYnk6IFFpemhvbmcgQ2hlbmcgPHFpemhvbmcu
-Y2hlbmdAbWVkaWF0ZWsuY29tPg0KPiBUZXN0ZWQtYnk6IFFpemhvbmcgQ2hlbmcgPHFpemhvbmcu
-Y2hlbmdAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bj
-aS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCAgICAgICB8IDggKysrKysrKysNCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA4IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0K
-PiBpbmRleCBlN2IxZjk4OTJkYTQuLjNlMjZjMDMyY2VhOSAxMDA2NDQNCj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0K
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBj
-aWUtZ2VuMy55YW1sDQo+IEBAIC05Niw2ICs5NiwxMiBAQCBwcm9wZXJ0aWVzOg0KPiAgICBwaHlz
-Og0KPiAgICAgIG1heEl0ZW1zOiAxDQo+ICANCj4gKyAgZGlzYWJsZS1kdmZzcmMtdmx0LXJlcToN
-Cj4gKyAgICBkZXNjcmlwdGlvbjogRGlzYWJsZSBkdmZzcmMgdm9sdGFnZSByZXF1ZXN0LCBpZiB0
-aGlzIHByb3BlcnR5IGlzIHByZXNlbnRlZCwNCj4gKyAgICAgIHdlIGFzc3VtZSB0aGF0IHRoZSBy
-ZXF1ZXN0ZWQgdm9sdGFnZSBpcyBhbHdheXMgaGlnaGVyIGVub3VnaCB0byBrZWVwDQo+ICsgICAg
-ICB0aGUgUENJZSBjb250cm9sbGVyIGFjdGl2ZS4NCj4gKyAgICB0eXBlOiBib29sZWFuDQo+ICsN
-Cj4gICAgJyNpbnRlcnJ1cHQtY2VsbHMnOg0KPiAgICAgIGNvbnN0OiAxDQo+ICANCj4gQEAgLTE2
-Niw2ICsxNzIsOCBAQCBleGFtcGxlczoNCj4gICAgICAgICAgICAgICAgICAgICAgIDwmaW5mcmFj
-ZmdfcnN0IDM+Ow0KPiAgICAgICAgICAgICAgcmVzZXQtbmFtZXMgPSAicGh5IiwgIm1hYyI7DQo+
-ICANCj4gKyAgICAgICAgICAgIGRpc2FibGUtZHZmc3JjLXZsdC1yZXE7DQo+ICsNCj4gICAgICAg
-ICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ICAgICAgICAgICAgICBpbnRlcnJ1cHQt
-bWFwLW1hc2sgPSA8MCAwIDAgMHg3PjsNCj4gICAgICAgICAgICAgIGludGVycnVwdC1tYXAgPSA8
-MCAwIDAgMSAmcGNpZV9pbnRjIDA+LA0KDQo=
+Hi, Bjorn,
 
+On Sat, Jun 26, 2021 at 4:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jun 25, 2021 at 05:30:27PM +0800, Huacai Chen wrote:
+> > Use separate remove()/shutdown() callback, and don't disable PCI device
+> > during shutdown. This can avoid some poweroff/reboot failures.
+> >
+> > The poweroff/reboot failures could easily be reproduced on Loongson
+> > platforms. I think this is not a Loongson-specific problem, instead, is
+> > a problem related to some specific PCI hosts. On some x86 platforms,
+> > radeon/amdgpu devices can cause the same problem [1][2], and commit
+> > faefba95c9e8ca3a ("drm/amdgpu: just suspend the hw on pci shutdown")
+> > can resolve it.
+> >
+> > As Tiezhu said, this occasionally shutdown or reboot failure is due to
+> > clear PCI_COMMAND_MASTER on the device in do_pci_disable_device() [3].
+> >
+> > static void do_pci_disable_device(struct pci_dev *dev)
+> > {
+> >         u16 pci_command;
+> >
+> >         pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+> >         if (pci_command & PCI_COMMAND_MASTER) {
+> >                 pci_command &= ~PCI_COMMAND_MASTER;
+> >                 pci_write_config_word(dev, PCI_COMMAND, pci_command);
+> >         }
+> >
+> >         pcibios_disable_device(dev);
+> > }
+> >
+> > When remove "pci_command &= ~PCI_COMMAND_MASTER;", it can work well when
+> > shutdown or reboot. The root cause on Loongson platform is that CPU is
+> > still writing data to framebuffer while poweroff/reboot, and if we clear
+> > Bus Master Bit at this time, CPU will wait ack from device, but never
+> > return, so a hardware deadlock happens.
+>
+> Doesn't make sense yet.  Bus Master enables the *device* to do DMA.  A
+> CPU can do MMIO to a device, e.g., to write data to a framebuffer,
+> regardless of the state of Bus Master Enable.  Also, those MMIO writes
+> done by a CPU are Memory Write transactions on PCIe, which are
+> "Posted" Requests, which means they do not receive acks.  So this
+> cannot be the root cause.
+For LS7A, if we disable Bus Master bit when CPU is still accessing
+PCIe devices, the PCIe controller doesn't forward requests to
+downstream devices, and also doesn't send TIMEOUT to CPU, which causes
+CPU wait forever (hardware lockup). This behavior is a PCIe protocol
+violation, and will be fixed in new revision of hardware (add timeout
+mechanism for CPU read request).
+
+Huacai
+>
+> Bjorn
