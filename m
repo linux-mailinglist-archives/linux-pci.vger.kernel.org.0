@@ -2,65 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4F6D3B5CF2
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jun 2021 13:09:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 263D73B5DDA
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jun 2021 14:18:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232787AbhF1LLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Jun 2021 07:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232781AbhF1LLe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Jun 2021 07:11:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A96CD61C71;
-        Mon, 28 Jun 2021 11:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1624878549;
-        bh=uImDlloM2fNLspP3AHGBmgdXtW6ZmXKHVCV5VoFsTvA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GNwcP18fpQnUYTve6gyZxClZ6rIOrzNKbiZAKbuhRF03fneFzRy8O2f/xDCC472Qy
-         E2JKbvZmL0nU/h77Z5B7JyiqefEWWtNV0e7U/m1pTn5ZMzAFOOhmA4w2uyE2p7s60n
-         dj1m1DO11jyZrNkuB/fD8yvbC3DkW5EARSxqYZ4g=
-Date:   Mon, 28 Jun 2021 13:09:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Krzysztof Wilczy??ski <kw@linux.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Kees Cook <keescook@chromium.org>,
-        Pali Roh??r <pali@kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI/sysfs: Pass iomem_get_mapping() as a function
- pointer
-Message-ID: <YNmt0gkonSbCXxus@kroah.com>
-References: <20210625233118.2814915-1-kw@linux.com>
- <20210625233118.2814915-3-kw@linux.com>
- <YNmhVQzj4fdgVPf0@infradead.org>
- <20210628102453.GA139153@rocinante>
+        id S233005AbhF1MUr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Jun 2021 08:20:47 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3326 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232802AbhF1MUr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Jun 2021 08:20:47 -0400
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GD5zN25B8z6FBQq;
+        Mon, 28 Jun 2021 20:10:40 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 28 Jun 2021 14:18:19 +0200
+Received: from [10.47.83.88] (10.47.83.88) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 28 Jun
+ 2021 13:18:19 +0100
+Subject: Re: [PATCH v7 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
+ PMU
+To:     "liuqi (BA)" <liuqi115@huawei.com>, Linuxarm <linuxarm@huawei.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+References: <1624532384-43002-1-git-send-email-liuqi115@huawei.com>
+ <1624532384-43002-3-git-send-email-liuqi115@huawei.com>
+ <485dcb90-01bc-766a-466a-f32563e2076f@huawei.com>
+ <95de93f7-1618-5aa6-9a23-6445c5cb3515@huawei.com>
+ <1b164e4b-b30b-f071-51fa-841cc76ec017@huawei.com>
+ <403d09f8-6fe8-c04c-151b-40816c344b55@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <f2e0ac61-d46d-1245-46e7-aea9bb83c64d@huawei.com>
+Date:   Mon, 28 Jun 2021 13:11:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210628102453.GA139153@rocinante>
+In-Reply-To: <403d09f8-6fe8-c04c-151b-40816c344b55@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.83.88]
+X-ClientProxiedBy: lhreml751-chm.china.huawei.com (10.201.108.201) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 12:24:53PM +0200, Krzysztof Wilczy??ski wrote:
-> Hi Christoph,
-> 
-> > Doesn't this need to be merged into the previous patch to prevent
-> > a compile failure after just the previous patch is applied?
-> 
-> Yes, it does.  I kept it separate for the sake of review, since we have
-> sysfs and PCI involved.  I wasn't sure if Bjorn would prefer to have
-> this done as separate patches or not, to be honest.
-> 
-> Bjorn said that he can squash this when applying, thus I left it as-is
-> for now - which means that the entire series has to be applied for
-> everything to build cleanly.
-> 
-> I will send v3 that merges first two patches.  Sorry for troubles!
+On 28/06/2021 11:49, liuqi (BA) wrote:
+>>> Hardware counter and ext_counter work together for bandwidth, latency,
+>>> bus utilization and buffer occupancy events. For example, for latency
+>>> events(idx = 0x10), counter counts total delay cycles and ext_counter
+>>> counts PCIe packets number.
+>>>
+>>> As we don't want PMU driver to process these two data, "delay cycles"
+>>> can be treated as an event(id = 0x10), "packets number" as another event
+>>> (id = 0x10 << 8), and driver could export these data separately.
+>>>
+>>> if the user want to calculate latency of rx memory read, they should:
+>>> ./perf stat -v -e '{hisi_pcieX/event=0x10,
+>>> subevent=0x01/,hisi_pcieX/event=0x0400, subevent=0x01/
+>>>
+>>> and for bandwidth event:
+>>> ./perf stat -v -e '{hisi_pcieX/event=0x4,
+>>> subevent=0x02/,hisi_pcieX/event=0x1000, subevent=0x02/
+> Hi John,
+>> I would suggest supporting a perf metric for this then, which would be
+>> like:
+>>
+>> {
+>>      "BriefDescription": "Latency for inbound traffic...",
+>>      "MetricName": "hisi_pcie_lat_rx_mrd",
+>>      "MetricExpr": "hisi_pcieX@event\\=0x4@subevent\\=0x02 \
+>> hisi_pcieX@event\\=0x1000@subevent\\=0x02 \",
+>>      "Unit": "hisi_pci",
+>>      "Compat": "v1"
+>> },
+>>
+>> (syntax may be incorrect - illustration only)
+>>
+> yes, we could add these metrics in json file, thanks.
 
-This all needs to wait until after 5.14-rc1 is out anyway, so no rush.
+The syntax is actually like:
+    "MetricExpr": "hisi_pcieX@event\\=0x4\\,subevent\\=0x2@ / 
+hisi_pcieX@event\\=0x1000\\,subevent\\=0x2@",
 
-greg k-h
+>>> Then the value in HISI_PCIE_CNT and HISI_PCIE_EXT_CNT returned
+>>> separately, and userspace could do the calculation.
+>> But I am still curious about lat_rx_mrd and the other events which we
+>> continue to advertise. They don't really provide latency or bandwidth on
+>> their own, but only half the necessary data. So I doubt their purpose.
+>>
+> So how about changing the event name to show the real purpose of this
+> event, like changing "bw_rx_mrd" to "flux_rx_mrd", and changing
+> "lat_rx_mrd" to "delay_rx_mrd"?
+
+eh, I suppose you could, but I am not sure of the value. However I 
+assume that the driver will detect and reject invalid or nonsense 
+combinations of events if you did want this.
+
+Thanks,
+John
