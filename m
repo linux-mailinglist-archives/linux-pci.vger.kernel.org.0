@@ -2,189 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D75E63B6B00
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 00:35:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C99E3B6BC4
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 02:38:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234130AbhF1Whj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Jun 2021 18:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
+        id S231799AbhF2Ak5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Jun 2021 20:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233442AbhF1Whi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 28 Jun 2021 18:37:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C27B961CF8;
-        Mon, 28 Jun 2021 22:35:11 +0000 (UTC)
+        id S230086AbhF2Ak5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 28 Jun 2021 20:40:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8DE9061CDC;
+        Tue, 29 Jun 2021 00:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624919712;
-        bh=QyAz1bZ33vFRqW6hsxAk9xKcPi8o6PeEGENZ/VDmpkM=;
+        s=k20201202; t=1624927110;
+        bh=WZivHehj0fn2zKFGoJRQXv8BLeKMtv+80LunaiEbIWE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KBy3dR61rGFf1QLXIaLWP37q1lbZumC59euOBeDHERFTWslWvyLHGWCASE4MNYy3C
-         HkKBUCvPARj2ETyd3Qerx0ZoCkQtVKf98vda7Ux0Wo7mJ9q32x2pXyu/YKDt+fmPdm
-         JhY3KrQJio8r2/9ctKfdEREoFwqRLBYzSK0Fd7E17KBPS/2XMmcdwZOFxZWhUaA192
-         b0p6bHi2MRb8rS5LpWGrf4ya2o7rNu3bJVednHftOICf67ZvANl1isdO+yxAGo9wQT
-         w6wCa9jHaGG3nA8ls9DaBcam62I6pJuEyJ/HM0hcpX4U7r5UUYkFWQfj0GJVedzlPF
-         SbaQHJXLqQVMQ==
-Date:   Mon, 28 Jun 2021 17:35:10 -0500
+        b=J1YEvvYJz8zqaFhsLjQqpLSF32fSg8EVWaPWDmNeDM59GEdo2i/8BDcz9EpIFVSCo
+         3yvEZc1PA3yJF+uTYog0vVSprT51/Q07l2wkuhnh3WaFGQoR1nHd980Jz+O7EYZPwq
+         QeurrrGQPohqwS8DaCgRZT6R+g8O/slmEq4popLssCB3q/VGC9B1C6lQLyXIY1IayC
+         4MSXCiS2RRAV/kW4sr2eJXv+IycAui1dukFIBfTh9HbJ0WnlioejbQNfIU/iiwFZpD
+         fnWoD7SLZ4z/gyfw3PH4wTebBOJmXO1q9gsWqNMBiI0FySzwSMpOv4+ZFr8ULcs65z
+         S9ujiOiO3McFA==
+Date:   Mon, 28 Jun 2021 19:38:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V4 3/4] PCI: Improve the MRRS quirk for LS7A
-Message-ID: <20210628223510.GA3956387@bjorn-Precision-5520>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        rfi@lists.rocketboards.org, Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+Message-ID: <20210629003829.GA3978248@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210628101027.1372370-4-chenhuacai@loongson.cn>
+In-Reply-To: <20210624224040.GA3567297@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 06:10:26PM +0800, Huacai Chen wrote:
-> In new revision of LS7A, some PCIe ports support larger value than 256,
-> but their maximum supported MRRS values are not detectable. Moreover,
-> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> will actually set a big value in its driver. So the only possible way
-> is configure MRRS of all devices in BIOS, and add a PCI bus flag (i.e.,
-> PCI_BUS_FLAGS_NO_INC_MRRS) to stop the increasing MRRS operations.
+On Thu, Jun 24, 2021 at 05:40:40PM -0500, Bjorn Helgaas wrote:
+> [+cc Michal, Ley Foon, Jingoo, Thierry, Jonathan]
 > 
-> However, according to PCIe Spec, it is legal for an OS to program any
-> value for MRRS, and it is also legal for an endpoint to generate a Read
-> Request with any size up to its MRRS. As the hardware engineers say, the
-> root cause here is LS7A doesn't break up large read requests. In detail,
-> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-> request with a size that's "too big" (Yes, that is a problem in the LS7A
-> hardware design).
+> On Tue, Jun 08, 2021 at 10:04:09AM +0200, Javier Martinez Canillas wrote:
+> > IRQ handlers that are registered for shared interrupts can be called at
+> > any time after have been registered using the request_irq() function.
+> > 
+> > It's up to drivers to ensure that's always safe for these to be called.
+> > 
+> > Both the "pcie-sys" and "pcie-client" interrupts are shared, but since
+> > their handlers are registered very early in the probe function, an error
+> > later can lead to these handlers being executed before all the required
+> > resources have been properly setup.
+> > 
+> > For example, the rockchip_pcie_read() function used by these IRQ handlers
+> > expects that some PCIe clocks will already be enabled, otherwise trying
+> > to access the PCIe registers causes the read to hang and never return.
+> > 
+> > The CONFIG_DEBUG_SHIRQ option tests if drivers are able to cope with their
+> > shared interrupt handlers being called, by generating a spurious interrupt
+> > just before a shared interrupt handler is unregistered.
+> > 
+> > But this means that if the option is enabled, any error in the probe path
+> > of this driver could lead to one of the IRQ handlers to be executed.
 > 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/pci/pci.c    |  5 +++++
->  drivers/pci/quirks.c | 41 +++++++++++------------------------------
->  include/linux/pci.h  |  1 +
->  3 files changed, 17 insertions(+), 30 deletions(-)
+> I'm not an IRQ expert, but I think this is an issue regardless of
+> CONFIG_DEBUG_SHIRQ, isn't it?  Anything used by an IRQ handler should
+> be initialized before the handler is registered.  CONFIG_DEBUG_SHIRQ
+> is just a way to help find latent problems.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 8d4ebe095d0c..0f1ff4a6fe44 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5812,6 +5812,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  
->  	v = (ffs(rq) - 8) << 12;
->  
-> +	if (dev->bus->bus_flags & PCI_BUS_FLAGS_NO_INC_MRRS) {
-> +		if (rq > pcie_get_readrq(dev))
-> +			return -EINVAL;
-
-I'd prefer to make this simpler, so we just never touch MRRS at all,
-like this:
-
-  @@ -5785,6 +5785,9 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
-	  u16 v;
-	  int ret;
-
-  +       if (<loongson-quirk>)
-  +               return -EINVAL;
-  +
-	  if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-		  return -EINVAL;
-
-What would that break?  It's just harder to analyze the behavior if it
-depends on what the driver is trying to do.  AFAIK, devices should
-*work* correctly with any value of MRRS.
-
-> +	}
-> +
->  	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
->  						  PCI_EXP_DEVCTL_READRQ, v);
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index dee4798a49fc..4bbdf5a5425f 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -242,37 +242,18 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_LS7A_LPC, loongson_system_bus_quirk);
->  
-> -static void loongson_mrrs_quirk(struct pci_dev *dev)
-> -{
-> -	struct pci_bus *bus = dev->bus;
-> -	struct pci_dev *bridge;
-> -	static const struct pci_device_id bridge_devids[] = {
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> -		{ 0, },
-> -	};
-> -
-> -	/* look for the matching bridge */
-> -	while (!pci_is_root_bus(bus)) {
-> -		bridge = bus->self;
-> -		bus = bus->parent;
-> -		/*
-> -		 * Some Loongson PCIe ports have a h/w limitation of
-> -		 * 256 bytes maximum read request size. They can't handle
-> -		 * anything larger than this. So force this limit on
-> -		 * any devices attached under these ports.
-> -		 */
-> -		if (pci_match_id(bridge_devids, bridge)) {
-> -			if (pcie_get_readrq(dev) > 256) {
-> -				pci_info(dev, "limiting MRRS to 256\n");
-> -				pcie_set_readrq(dev, 256);
-> -			}
-> -			break;
-> -		}
-> -	}
-> +static void loongson_mrrs_quirk(struct pci_dev *pdev)
-> +{
-> +	/*
-> +	 * Some Loongson PCIe ports have h/w limitations of maximum read
-> +	 * request size. They can't handle anything larger than this. So
-> +	 * force this limit on any devices attached under these ports.
-> +	 */
-> +	pdev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_INC_MRRS;
->  }
-> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_LOONGSON, DEV_PCIE_PORT_2, loongson_mrrs_quirk);
-
-Thanks for making this quirk Loongson-specific.  Can you reverse the
-order of patches 2 and 3, so this fix happens before moving the quirk
-to drivers/pci/quirks.c?
-
->  /*
->   * The Mellanox Tavor device gives false positive parity errors.  Disable
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 24306504226a..b336239b5282 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -240,6 +240,7 @@ enum pci_bus_flags {
->  	PCI_BUS_FLAGS_NO_MMRBC	= (__force pci_bus_flags_t) 2,
->  	PCI_BUS_FLAGS_NO_AERSID	= (__force pci_bus_flags_t) 4,
->  	PCI_BUS_FLAGS_NO_EXTCFG	= (__force pci_bus_flags_t) 8,
-> +	PCI_BUS_FLAGS_NO_INC_MRRS = (__force pci_bus_flags_t) 16,
-
-This is not a property of the *bus*.  
-
-Apparently it's a property of the Root Port or maybe of the Root
-Complex itself.  What about RCiePs, which don't have a Root Port above
-them?  They still have an MRRS field in their Device Control
-registers.  Are there restrictions on how MRRS can be set for an
-RCiEP?
-
-If you need to restrict MRRS for RCiEPs as well as for devices below
-LS7A Root Ports, I think setting a bit in struct pci_host_bridge and
-using pci_find_host_bridge() would work.
-
-If you don't need to restrict MRRS for RCiEPs (or if there are no
-RCiEPs at all) you could put a bit in the struct pci_dev and use
-pcie_find_root_port().  But this would consume a bit in *every*
-pci_dev on every system, so it's a little more wasteful in that sense.
-
->  };
->  
->  /* Values from Link Status register, PCIe r3.1, sec 7.8.8 */
-> -- 
-> 2.27.0
+> > In a rockpro64 board, the following sequence of events happens:
+> > 
+> >   1) "pcie-sys" IRQ is requested and its handler registered.
+> >   2) "pcie-client" IRQ is requested and its handler registered.
+> >   3) probe later fails due readl_poll_timeout() returning a timeout.
+> >   4) the "pcie-sys" IRQ is unregistered.
+> >   5) CONFIG_DEBUG_SHIRQ triggers a spurious interrupt.
+> >   6) "pcie-client" IRQ handler is called for this spurious interrupt.
+> >   7) IRQ handler tries to read PCIE_CLIENT_INT_STATUS with clocks gated.
+> >   8) the machine hangs because rockchip_pcie_read() call never returns.
+> > 
+> > To avoid cases like this, the handlers don't have to be registered until
+> > very late in the probe function, once all the resources have been setup.
+> > 
+> > So let's just move all the IRQ init before the pci_host_probe() call, that
+> > will prevent issues like this and seems to be the correct thing to do too.
 > 
+> Previously we registered rockchip_pcie_subsys_irq_handler() and
+> rockchip_pcie_client_irq_handler() before the PCIe clocks were
+> enabled.  That's a problem because they depend on those clocks being
+> enabled, and your patch fixes that.
+> 
+> rockchip_pcie_legacy_int_handler() depends on rockchip->irq_domain,
+> which isn't initialized until rockchip_pcie_init_irq_domain().
+> Previously we registered rockchip_pcie_legacy_int_handler() as the
+> handler for the "legacy" IRQ before rockchip_pcie_init_irq_domain().
+> 
+> I think your patch *also* fixes that problem, right?
+
+The lack of consistency in how we use
+irq_set_chained_handler_and_data() really bugs me.
+
+Your patch fixes the ordering issue where we installed
+rockchip_pcie_legacy_int_handler() before initializing data
+(rockchip->irq_domain) that it depends on.
+
+But AFAICT, rockchip still has the problem that we don't *unregister*
+rockchip_pcie_legacy_int_handler() when the rockchip-pcie module is
+removed.  Doesn't this mean that if we unload the module, then receive 
+an interrupt from the device, we'll try to call a function that is no
+longer present?
+
+> > diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> > index f1d08a1b159..78d04ac29cd 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-host.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> > @@ -592,10 +592,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
+> >  	if (err)
+> >  		return err;
+> >  
+> > -	err = rockchip_pcie_setup_irq(rockchip);
+> > -	if (err)
+> > -		return err;
+> > -
+> >  	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+> >  	if (IS_ERR(rockchip->vpcie12v)) {
+> >  		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
+> > @@ -973,8 +969,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+> >  	if (err)
+> >  		goto err_vpcie;
+> >  
+> > -	rockchip_pcie_enable_interrupts(rockchip);
+> > -
+> >  	err = rockchip_pcie_init_irq_domain(rockchip);
+> >  	if (err < 0)
+> >  		goto err_deinit_port;
+> > @@ -992,6 +986,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+> >  	bridge->sysdata = rockchip;
+> >  	bridge->ops = &rockchip_pcie_ops;
+> >  
+> > +	err = rockchip_pcie_setup_irq(rockchip);
+> > +	if (err)
+> > +		goto err_remove_irq_domain;
+> > +
+> > +	rockchip_pcie_enable_interrupts(rockchip);
+> > +
+> >  	err = pci_host_probe(bridge);
+> >  	if (err < 0)
+> >  		goto err_remove_irq_domain;
+> > -- 
+> > 2.31.1
+> > 
