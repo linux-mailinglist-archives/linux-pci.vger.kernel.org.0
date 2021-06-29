@@ -2,60 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BEF23B7007
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 11:19:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 294C93B70C9
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 12:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232568AbhF2JWU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Jun 2021 05:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232692AbhF2JWU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Jun 2021 05:22:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B2B6D61D62;
-        Tue, 29 Jun 2021 09:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624958393;
-        bh=OA++y/DDOlweI+AA1ja6j164iMODugp67kjNzFsTH3U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TADl2Z2wxbFRi5tCA8LCOqCo7X/XlGTjk8CPdtSbcEJNFXq/eMXBgtu+eZSae+cb7
-         LOfstLUxle6lNfbNkK/5tjXQOoo0Xc50W5Pb6TY/j2fp/Iwog8uuosizrGkgR6fhuT
-         n7QU94MxQQ6c/H83kUQgmsOLWialQgWSRZVvM0r6M4kLubLBklnf9/2RP8ibuJT1LU
-         dp1KVZdpnl3ak9MeLmb7YX8vsukXfX7LtE+L6Ajfr80j+X/LZ4Z9r5uiriWX0BRvgJ
-         bWD6BSUCkqgTNgqFeeTAAJxP+DhvHucz/eiaP7cijssx/yadVu+r8C4HX4kEhkOIj6
-         CnyOAGeKDmhsQ==
+        id S232556AbhF2Khs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Jun 2021 06:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232518AbhF2Khs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Jun 2021 06:37:48 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F173C061574
+        for <linux-pci@vger.kernel.org>; Tue, 29 Jun 2021 03:35:20 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id s19so20402239ilj.1
+        for <linux-pci@vger.kernel.org>; Tue, 29 Jun 2021 03:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w7pqd1Gy9mXbqe/+ndtEdp2Pq005cIy4ParQJkTo5zc=;
+        b=cq/hFaQR++XZ6dPkVc9Kt0oRwkjfVX7i9TwSiCUxaMMHVi+8VmaS/ZuBFWNrkrmmby
+         T4S6byyYzci1UWM069U7w23c2Tye0wz5rVmLvoqqvi5H5yAXtmvlfzGdSHDFhJcHDy2G
+         mG5/2EH4n0isR8zyJFJahqOaYhpYmpgoUFWD1pGvfsOW284j5KIlY/Dyx9JjDc+bVbKF
+         RRYFG+HGOXijx5KnaYNOtCgucupvOO8pSdQdUG0LMC+Xm3mqr9UNDQiAK9OybevD7Fiv
+         wO+ynx2AV8jHZe0zBz0srwgUX5XEqmCa+G2ueF/GjKrZpgXM1n8ojXRsIcNM+xBFnMp9
+         cfzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w7pqd1Gy9mXbqe/+ndtEdp2Pq005cIy4ParQJkTo5zc=;
+        b=OuCcQbm15K/UT5JqWlFytroiQIJNRrkHrfimcm7GtyQPi6QrxRn0BSknTYZD7BCMkT
+         sUTrJOOgEMrL8HC8EKZ4EKLBngzMzMLJ6QJoKwuX9QK+h5qE3Kog5FiUbls+JsAiXh0B
+         V65pw7+RuqTIRiKIRJfjLDgjAFwBVHSDpcuO253cWL/7/m+wAx4uHfRtePTQV1cyY1si
+         /iwKmHiHnv0zKhTDrFxworKiQiCY/IWLhsp+1FH5iy7WqcrlYXg2a1qwulnL0Yv5HS+V
+         8z9970cSNgalRtKUQlI+0nFEkExMQUZ1NVyee9ddrd2erqoz2MUD2SdslKDU6x4ab72u
+         VCtQ==
+X-Gm-Message-State: AOAM533mqgJhb3Vrh0iODXyf2QmVGlNh+KUnaUNAbZ3/U6tEl4v8hpv5
+        RYOjkCmzJux50mZNWaLDZK79bepTj/y0vI+zlJk=
+X-Google-Smtp-Source: ABdhPJyKbFoQJAWxOv0qSjPERU/Gf3ybeDSsDbDmgPwDfL+jiFWCUR5q4JhpMDj9Y6g0KEwLShHCQXPhcJvbiQM98qc=
+X-Received: by 2002:a92:6509:: with SMTP id z9mr21520143ilb.184.1624962919686;
+ Tue, 29 Jun 2021 03:35:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210629085521.2976352-1-chenhuacai@loongson.cn>
+ <20210629085521.2976352-2-chenhuacai@loongson.cn> <980b31f6-d9ad-802b-1b9d-4c882f75fa50@kernel.org>
+In-Reply-To: <980b31f6-d9ad-802b-1b9d-4c882f75fa50@kernel.org>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Tue, 29 Jun 2021 18:35:07 +0800
+Message-ID: <CAAhV-H637pWg03KLUz4-CKLweqLmM+RH1DbfidT2pq=eVhO9OA@mail.gmail.com>
 Subject: Re: [PATCH V5 1/4] PCI/portdrv: Don't disable device during shutdown
-To:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20210629085521.2976352-1-chenhuacai@loongson.cn>
- <20210629085521.2976352-2-chenhuacai@loongson.cn>
-From:   Sinan Kaya <okaya@kernel.org>
-Message-ID: <980b31f6-d9ad-802b-1b9d-4c882f75fa50@kernel.org>
-Date:   Tue, 29 Jun 2021 12:19:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <20210629085521.2976352-2-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/29/2021 11:55 AM, Huacai Chen wrote:
-> he root cause on Loongson platform is that CPU is
-> still accessing PCIe devices while poweroff/reboot, and if we disable
-> the Bus Master Bit at this time, the PCIe controller doesn't forward
-> requests to downstream devices, and also doesn't send TIMEOUT to CPU,
-> which causes CPU wait forever (hardware deadlock). This behavior is a
-> PCIe protocol violation, and will be fixed in new revisions of hardware
-> (add timeout mechanism for CPU read request, whether or not Bus Master
-> bit is cleared).
+Hi, Sinan,
 
-Your word above says this is a quirk and it needs to be handled as such
-in the code rather than impacting all platforms.
+On Tue, Jun 29, 2021 at 5:19 PM Sinan Kaya <okaya@kernel.org> wrote:
+>
+> On 6/29/2021 11:55 AM, Huacai Chen wrote:
+> > he root cause on Loongson platform is that CPU is
+> > still accessing PCIe devices while poweroff/reboot, and if we disable
+> > the Bus Master Bit at this time, the PCIe controller doesn't forward
+> > requests to downstream devices, and also doesn't send TIMEOUT to CPU,
+> > which causes CPU wait forever (hardware deadlock). This behavior is a
+> > PCIe protocol violation, and will be fixed in new revisions of hardware
+> > (add timeout mechanism for CPU read request, whether or not Bus Master
+> > bit is cleared).
+>
+> Your word above says this is a quirk and it needs to be handled as such
+> in the code rather than impacting all platforms.
 
+Yes, this is more or less a quirk, and we have already found the root
+cause in hardware. However, as I said before, there are other
+platforms that also have similar problems.
+
+Huacai
+>
