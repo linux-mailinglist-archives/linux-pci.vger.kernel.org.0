@@ -2,130 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 778A43B7AA3
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jun 2021 01:14:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA213B7AC9
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jun 2021 01:50:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235199AbhF2XQk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Jun 2021 19:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233329AbhF2XQk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Jun 2021 19:16:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 890A061D16;
-        Tue, 29 Jun 2021 23:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625008451;
-        bh=B9niwO40e9W9wr3Oqskh655dcl5dlMNvAjpZ/8BRQaE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WKUu6rfYtfCck0isLyJxRq53hVBBHIe9UPk83ec+yu81yY0P1LjgQ4pm51qmoNI7m
-         O2GDQ9/0MNb21bfDfrQzUo7TzG29mohPNwdYxoy5ZW385X+dWsEO/u68aXTphVSmHp
-         LhqzUNqKofRqPONUNzBsHoH8cpB3DEBIW58R/fKRnMR9ebymoCe9vkrGUZE7Qm2fQV
-         +La8XXcOObtRLcgqdDVIOvde+PjxFhOSyyHklgSTUp8wH/oPabZ7C/HDobWhdLsNEI
-         IwX5wl09+G2kodABsPjHtSCH432NRzKSWyZXfCS0KUu9FqiBgaBWgfoqz/H0INYtz2
-         S2mwHscZmOjHg==
-Date:   Tue, 29 Jun 2021 18:14:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        rfi@lists.rocketboards.org, Jingoo Han <jingoohan1@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
- clocks gated
-Message-ID: <20210629231410.GA4097899@bjorn-Precision-5520>
+        id S235506AbhF2XxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Jun 2021 19:53:06 -0400
+Received: from mo-csw1116.securemx.jp ([210.130.202.158]:48874 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233056AbhF2XxC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Jun 2021 19:53:02 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 15TNo5fA027394; Wed, 30 Jun 2021 08:50:05 +0900
+X-Iguazu-Qid: 2wGqimLSptaMBrzYf3
+X-Iguazu-QSIG: v=2; s=0; t=1625010605; q=2wGqimLSptaMBrzYf3; m=8tXOEjdEbXlzXauNDjXtyxN5zZQtkWtU8usVbLVyB3s=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+        by relay.securemx.jp (mx-mr1113) id 15TNo3b5034107
+        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 30 Jun 2021 08:50:04 +0900
+Received: from enc01.toshiba.co.jp (enc01.toshiba.co.jp [106.186.93.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by imx2-a.toshiba.co.jp (Postfix) with ESMTPS id 1F7111000FD;
+        Wed, 30 Jun 2021 08:50:03 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.toshiba.co.jp  with ESMTP id 15TNo23H001568;
+        Wed, 30 Jun 2021 08:50:02 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH v4 0/3] Visconti: Add Toshiba Visconti PCIe host controller driver
+Date:   Wed, 30 Jun 2021 08:49:49 +0900
+X-TSB-HOP: ON
+Message-Id: <20210629234952.306578-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d5a983f-bfdd-d79b-4ec9-357ea26dd2c8@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 29, 2021 at 11:52:44AM +0100, Robin Murphy wrote:
-> On 2021-06-29 07:17, Javier Martinez Canillas wrote:
-> > On 6/29/21 2:38 AM, Bjorn Helgaas wrote:
-> > > On Thu, Jun 24, 2021 at 05:40:40PM -0500, Bjorn Helgaas wrote:
-> > 
-> > [snip]
-> > 
-> > > > > 
-> > > > > So let's just move all the IRQ init before the pci_host_probe() call, that
-> > > > > will prevent issues like this and seems to be the correct thing to do too.
-> > > > 
-> > > > Previously we registered rockchip_pcie_subsys_irq_handler() and
-> > > > rockchip_pcie_client_irq_handler() before the PCIe clocks were
-> > > > enabled.  That's a problem because they depend on those clocks being
-> > > > enabled, and your patch fixes that.
-> > > > 
-> > > > rockchip_pcie_legacy_int_handler() depends on rockchip->irq_domain,
-> > > > which isn't initialized until rockchip_pcie_init_irq_domain().
-> > > > Previously we registered rockchip_pcie_legacy_int_handler() as the
-> > > > handler for the "legacy" IRQ before rockchip_pcie_init_irq_domain().
-> > > > 
-> > > > I think your patch *also* fixes that problem, right?
-> > > 
-> > > The lack of consistency in how we use
-> > > irq_set_chained_handler_and_data() really bugs me.
-> > > 
-> > > Your patch fixes the ordering issue where we installed
-> > > rockchip_pcie_legacy_int_handler() before initializing data
-> > > (rockchip->irq_domain) that it depends on.
-> > > 
-> > > But AFAICT, rockchip still has the problem that we don't *unregister*
-> > > rockchip_pcie_legacy_int_handler() when the rockchip-pcie module is
-> > > removed.  Doesn't this mean that if we unload the module, then receive
-> > > an interrupt from the device, we'll try to call a function that is no
-> > > longer present?
-> > 
-> > Good question, I don't to be honest. I'll have to dig deeper on this but
-> > my experience is that the module removal (and device unbind) is not that
-> > well tested on ARM device drivers in general.
-> 
-> Well, it does use devm_request_irq() so the handler should be unregistered
-> by devres *after* ->remove has finished, however that does still leave a
-> potential race window in which a pending IRQ could be taken during the later
-> part of rockchip_pcie_remove() after it has started turning off critical
-> things. Unless the clocks and regulators can also be delegated to devres, it
-> might be more robust to explicitly manage the IRQs as well. Mixing the two
-> schemes can be problematic when the exact order of both setup and teardown
-> matters.
+Hi,
 
-I don't understand the devm_request_irq() connection.  I'm looking at
-this irq_set_chained_handler_and_data() call [1]:
+This series is the PCIe driver for Toshiba's ARM SoC, Visconti[0].
+This provides DT binding documentation, device driver, MAINTAINER files.
+This patch series is v4, and the updating record of each file is below:
 
-  static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
-  {
-    ...
-    irq = platform_get_irq_byname(pdev, "legacy");
-    irq_set_chained_handler_and_data(irq,
-				     rockchip_pcie_legacy_int_handler,
-				     rockchip);
+  dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller
+    v3 -> v4:
+     - Changed the redundant clock name.
+    v2 -> v3:
+      - No update.
+    v1 -> v2:
+      - Remove white space.
+      - Drop num-viewport and bus-range from required.
+      - Drop status line from example.
+      - Drop bus-range from required.
+      - Removed lines defined in pci-bus.yaml from required.
 
-    irq = platform_get_irq_byname(pdev, "client");
-    ...
+  PCI: visconti: Add Toshiba Visconti PCIe host controller driver
+    v3 -> v4:
+      - Change variable from pci_addr to cpu_addr in visconti_pcie_cpu_addr_fixup().
+      - Change the calculation method of CPU addres from subtraction to mask, and
+        add comment.
+      - Drop dma_set_mask_and_coherent().
+      - Drop set MAX_MSI_IRQS.
+      - Drop dev_dbg for Link speed.
+      - Use use the dev_err_probe() to handle the devm_clk_get() failed.
+      - Changed the redundant clock name.
+    v2 -> v3:
+      - Update subject.
+      - Wrap description in 75 columns.
+      - Change config name to PCIE_VISCONTI_HOST.
+      - Update Kconfig text.
+      - Drop empty lines.
+      - Adjusted to 80 columns.
+      - Drop inline from functions for register access.
+      - Changed function name from visconti_pcie_check_link_status to
+        visconti_pcie_link_up.
+      - Update to using dw_pcie_host_init().
+      - Reorder these in the order of use in visconti_pcie_establish_link().
+      - Rewrite visconti_pcie_host_init() without dw_pcie_setup_rc().
+      - Change function name from  visconti_device_turnon() to
+        visconti_pcie_power_on().
+      - Unify formats such as dev_err().
+      - Drop error label in visconti_add_pcie_port(). 
+    v1 -> v2:
+      - Fix typo in commit message.
+      - Drop "depends on OF && HAS_IOMEM" from Kconfig.
+      - Stop using the pointer of struct dw_pcie.
+      - Use _relaxed variant.
+      - Drop dw_pcie_wait_for_link.
+      - Drop dbi resource processing.
+      - Drop MSI IRQ initialization processing.
+  
+  MAINTAINERS: Add entries for Toshiba Visconti PCIe controller
+    v3 -> v4:
+      - No update.
+    v2 -> v3:
+      - No update.
+    v1 -> v2:
+      - No update.
 
-We look up "irq", pass it to irq_set_chained_handler_and_data(), and
-throw it away without saving it anywhere.  How would anything know how
-to unregister rockchip_pcie_legacy_int_handler()?
+Best regards,
+  Nobuhiro
 
-I could imagine irq_set_chained_handler_and_data() saving what's
-needed for unregistration, but I would think that would require a
-device pointer, which we don't give it.
+Nobuhiro Iwamatsu (3):
+  dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller
+  PCI: visconti: Add Toshiba Visconti PCIe host controller driver
+  MAINTAINERS: Add entries for Toshiba Visconti PCIe controller
 
-I'm IRQ-illiterate, so please educate me!
+ .../bindings/pci/toshiba,visconti-pcie.yaml   | 110 ++++++
+ MAINTAINERS                                   |   2 +
+ drivers/pci/controller/dwc/Kconfig            |   9 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-visconti.c    | 360 ++++++++++++++++++
+ 5 files changed, 482 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-visconti.c
 
-Bjorn
+-- 
+2.32.0
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-rockchip-host.c?id=v5.13#n562
