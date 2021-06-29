@@ -2,103 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D11123B70FF
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 12:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 867713B714E
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 13:26:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233291AbhF2KzV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Jun 2021 06:55:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:48506 "EHLO foss.arm.com"
+        id S233446AbhF2L26 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Jun 2021 07:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231956AbhF2KzT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 29 Jun 2021 06:55:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FAF131B;
-        Tue, 29 Jun 2021 03:52:52 -0700 (PDT)
-Received: from [10.57.46.146] (unknown [10.57.46.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F4993F694;
-        Tue, 29 Jun 2021 03:52:49 -0700 (PDT)
-Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
- clocks gated
-To:     Javier Martinez Canillas <javierm@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
+        id S233305AbhF2L26 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Jun 2021 07:28:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ACE8061DAC;
+        Tue, 29 Jun 2021 11:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624965991;
+        bh=F30hBRWClVvbBmTrrAiINYq8PfBD0IeyRejhMfNe8HI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bv7Q/bJabeGrvtp/eoCESx/GBrSDJ/OwQPDgjEq55Yc4PgbexRakbi5VVkln1j/S0
+         4ub4D+srGvKv8296+h9MHI/6+7XBatQ1bPQerLGeD58WSpQK9WR3UTAZsl1KWNZjhI
+         VgSiKKL+HGSKWSEmqW+Lyr5fhZnEH3bI8iJWPSi957+Rg1CNw+YZPXnVv20eyQIxAh
+         hblJ6I9hj/ppVFYHsTaI5FPhKdyK8bsShoiGXILVOTKjRrzI3GtyCl6Yvd9txhrIb7
+         57BfwFWG+ZoqCuPLf8UlNLOLQDxAAP1l/xAlF2ICt8ZogPGHfl+o2C97S59OBtb7G0
+         9ctkLP4Y3Mf/A==
+Subject: Re: [PATCH V5 1/4] PCI/portdrv: Don't disable device during shutdown
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        rfi@lists.rocketboards.org, Jingoo Han <jingoohan1@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-References: <20210629003829.GA3978248@bjorn-Precision-5520>
- <2317a4bc-bd4d-53a7-7fa6-87728d5393cd@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3d5a983f-bfdd-d79b-4ec9-357ea26dd2c8@arm.com>
-Date:   Tue, 29 Jun 2021 11:52:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+        linux-pci <linux-pci@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20210629085521.2976352-1-chenhuacai@loongson.cn>
+ <20210629085521.2976352-2-chenhuacai@loongson.cn>
+ <980b31f6-d9ad-802b-1b9d-4c882f75fa50@kernel.org>
+ <CAAhV-H637pWg03KLUz4-CKLweqLmM+RH1DbfidT2pq=eVhO9OA@mail.gmail.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Message-ID: <5badf90a-1b85-692e-2206-a1fdf06f5543@kernel.org>
+Date:   Tue, 29 Jun 2021 14:26:25 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <2317a4bc-bd4d-53a7-7fa6-87728d5393cd@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <CAAhV-H637pWg03KLUz4-CKLweqLmM+RH1DbfidT2pq=eVhO9OA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-06-29 07:17, Javier Martinez Canillas wrote:
-> On 6/29/21 2:38 AM, Bjorn Helgaas wrote:
->> On Thu, Jun 24, 2021 at 05:40:40PM -0500, Bjorn Helgaas wrote:
-> 
-> [snip]
-> 
->>>>
->>>> So let's just move all the IRQ init before the pci_host_probe() call, that
->>>> will prevent issues like this and seems to be the correct thing to do too.
->>>
->>> Previously we registered rockchip_pcie_subsys_irq_handler() and
->>> rockchip_pcie_client_irq_handler() before the PCIe clocks were
->>> enabled.  That's a problem because they depend on those clocks being
->>> enabled, and your patch fixes that.
->>>
->>> rockchip_pcie_legacy_int_handler() depends on rockchip->irq_domain,
->>> which isn't initialized until rockchip_pcie_init_irq_domain().
->>> Previously we registered rockchip_pcie_legacy_int_handler() as the
->>> handler for the "legacy" IRQ before rockchip_pcie_init_irq_domain().
->>>
->>> I think your patch *also* fixes that problem, right?
->>
->> The lack of consistency in how we use
->> irq_set_chained_handler_and_data() really bugs me.
->>
->> Your patch fixes the ordering issue where we installed
->> rockchip_pcie_legacy_int_handler() before initializing data
->> (rockchip->irq_domain) that it depends on.
->>
->> But AFAICT, rockchip still has the problem that we don't *unregister*
->> rockchip_pcie_legacy_int_handler() when the rockchip-pcie module is
->> removed.  Doesn't this mean that if we unload the module, then receive
->> an interrupt from the device, we'll try to call a function that is no
->> longer present?
->>
-> 
-> Good question, I don't to be honest. I'll have to dig deeper on this but
-> my experience is that the module removal (and device unbind) is not that
-> well tested on ARM device drivers in general.
+On 6/29/2021 1:35 PM, Huacai Chen wrote:
+> Yes, this is more or less a quirk, and we have already found the root
+> cause in hardware. However, as I said before, there are other
+> platforms that also have similar problems.
 
-Well, it does use devm_request_irq() so the handler should be 
-unregistered by devres *after* ->remove has finished, however that does 
-still leave a potential race window in which a pending IRQ could be 
-taken during the later part of rockchip_pcie_remove() after it has 
-started turning off critical things. Unless the clocks and regulators 
-can also be delegated to devres, it might be more robust to explicitly 
-manage the IRQs as well. Mixing the two schemes can be problematic when 
-the exact order of both setup and teardown matters.
+Proper way is to fix the driver's shutdown routine not workaround it.
 
-Robin.
+Even if that's not possible, Is there a reason why we cannot quirk them
+too if they are broken?
+
+If you are aware of such other platforms, please file a bug.
+We should get the owner's to look.
+
+
