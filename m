@@ -2,135 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 409293B7961
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jun 2021 22:28:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 778A43B7AA3
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jun 2021 01:14:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235435AbhF2UbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Jun 2021 16:31:20 -0400
-Received: from angie.orcam.me.uk ([78.133.224.34]:60160 "EHLO
-        angie.orcam.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234149AbhF2UbU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Jun 2021 16:31:20 -0400
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 5CE6792009C; Tue, 29 Jun 2021 22:28:50 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 56D5692009B;
-        Tue, 29 Jun 2021 22:28:50 +0200 (CEST)
-Date:   Tue, 29 Jun 2021 22:28:50 +0200 (CEST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: x86/PCI: Add support for the Intel 82378ZB/82379AB (SIO/SIO.A) PIRQ
- router
-Message-ID: <alpine.DEB.2.21.2106272338180.37803@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S235199AbhF2XQk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Jun 2021 19:16:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233329AbhF2XQk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 29 Jun 2021 19:16:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 890A061D16;
+        Tue, 29 Jun 2021 23:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625008451;
+        bh=B9niwO40e9W9wr3Oqskh655dcl5dlMNvAjpZ/8BRQaE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WKUu6rfYtfCck0isLyJxRq53hVBBHIe9UPk83ec+yu81yY0P1LjgQ4pm51qmoNI7m
+         O2GDQ9/0MNb21bfDfrQzUo7TzG29mohPNwdYxoy5ZW385X+dWsEO/u68aXTphVSmHp
+         LhqzUNqKofRqPONUNzBsHoH8cpB3DEBIW58R/fKRnMR9ebymoCe9vkrGUZE7Qm2fQV
+         +La8XXcOObtRLcgqdDVIOvde+PjxFhOSyyHklgSTUp8wH/oPabZ7C/HDobWhdLsNEI
+         IwX5wl09+G2kodABsPjHtSCH432NRzKSWyZXfCS0KUu9FqiBgaBWgfoqz/H0INYtz2
+         S2mwHscZmOjHg==
+Date:   Tue, 29 Jun 2021 18:14:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        rfi@lists.rocketboards.org, Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+Message-ID: <20210629231410.GA4097899@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d5a983f-bfdd-d79b-4ec9-357ea26dd2c8@arm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Intel 82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A) 
-ISA bridges implement PCI interrupt steering with a PIRQ router[1][2] 
-that is exactly the same as that of the PIIX and ICH southbridges (or 
-actually the other way round, given that the SIO ASIC was there first).
+On Tue, Jun 29, 2021 at 11:52:44AM +0100, Robin Murphy wrote:
+> On 2021-06-29 07:17, Javier Martinez Canillas wrote:
+> > On 6/29/21 2:38 AM, Bjorn Helgaas wrote:
+> > > On Thu, Jun 24, 2021 at 05:40:40PM -0500, Bjorn Helgaas wrote:
+> > 
+> > [snip]
+> > 
+> > > > > 
+> > > > > So let's just move all the IRQ init before the pci_host_probe() call, that
+> > > > > will prevent issues like this and seems to be the correct thing to do too.
+> > > > 
+> > > > Previously we registered rockchip_pcie_subsys_irq_handler() and
+> > > > rockchip_pcie_client_irq_handler() before the PCIe clocks were
+> > > > enabled.  That's a problem because they depend on those clocks being
+> > > > enabled, and your patch fixes that.
+> > > > 
+> > > > rockchip_pcie_legacy_int_handler() depends on rockchip->irq_domain,
+> > > > which isn't initialized until rockchip_pcie_init_irq_domain().
+> > > > Previously we registered rockchip_pcie_legacy_int_handler() as the
+> > > > handler for the "legacy" IRQ before rockchip_pcie_init_irq_domain().
+> > > > 
+> > > > I think your patch *also* fixes that problem, right?
+> > > 
+> > > The lack of consistency in how we use
+> > > irq_set_chained_handler_and_data() really bugs me.
+> > > 
+> > > Your patch fixes the ordering issue where we installed
+> > > rockchip_pcie_legacy_int_handler() before initializing data
+> > > (rockchip->irq_domain) that it depends on.
+> > > 
+> > > But AFAICT, rockchip still has the problem that we don't *unregister*
+> > > rockchip_pcie_legacy_int_handler() when the rockchip-pcie module is
+> > > removed.  Doesn't this mean that if we unload the module, then receive
+> > > an interrupt from the device, we'll try to call a function that is no
+> > > longer present?
+> > 
+> > Good question, I don't to be honest. I'll have to dig deeper on this but
+> > my experience is that the module removal (and device unbind) is not that
+> > well tested on ARM device drivers in general.
+> 
+> Well, it does use devm_request_irq() so the handler should be unregistered
+> by devres *after* ->remove has finished, however that does still leave a
+> potential race window in which a pending IRQ could be taken during the later
+> part of rockchip_pcie_remove() after it has started turning off critical
+> things. Unless the clocks and regulators can also be delegated to devres, it
+> might be more robust to explicitly manage the IRQs as well. Mixing the two
+> schemes can be problematic when the exact order of both setup and teardown
+> matters.
 
-An earlier version of the SIO, the 82378IB[3][4], does not implement PCI 
-interrupt steering however, so we need to exclude it by checking the low 
-nibble of the PCI Revision Identification Register[5][6] for being at 
-least 3.
+I don't understand the devm_request_irq() connection.  I'm looking at
+this irq_set_chained_handler_and_data() call [1]:
 
-There is a note in the 82379AB specification update[7] saying that the 
-device ID for that chip is 0x7, rather than 0x484 as stated in the 
-datasheet[8].  It looks like a red herring however, for no report has 
-been ever seen with that value quoted and it matches the documented 
-default value of the PCI Command Register, which comes next after the 
-PCI Device Identification Register, so it looks like a copy-&-paste 
-editorial mistake.
+  static int rockchip_pcie_setup_irq(struct rockchip_pcie *rockchip)
+  {
+    ...
+    irq = platform_get_irq_byname(pdev, "legacy");
+    irq_set_chained_handler_and_data(irq,
+				     rockchip_pcie_legacy_int_handler,
+				     rockchip);
 
-NB the 82378ZB has been commonly used with smaller DEC Alpha systems 
-with the contents of the Revision Identification Register reported as 
-one of 0x3, 0x43, or 0x83, so the masking of the high nibble seems 
-indeed right by empirical observation.  The value in the high nibble 
-might be either random, or depend on the batch, or correspond to some 
-other state such as reset straps.
+    irq = platform_get_irq_byname(pdev, "client");
+    ...
 
-References:
+We look up "irq", pass it to irq_set_chained_handler_and_data(), and
+throw it away without saving it anywhere.  How would anything know how
+to unregister rockchip_pcie_legacy_int_handler()?
 
-[1] "82378 System I/O (SIO)", Intel Corporation, Order Number: 
-    290473-004, December 1994, Section 4.1.26 "PIRQ[3:0]#--PIRQ Route 
-    Control Registers"
+I could imagine irq_set_chained_handler_and_data() saving what's
+needed for unregistration, but I would think that would require a
+device pointer, which we don't give it.
 
-[2] "82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A)",
-    Intel Corporation, Order Number: 290571-001, March 1996, Section 
-    3.1.25. "PIRQ[3:0]#--PIRQ Route Control Registers", p. 48
+I'm IRQ-illiterate, so please educate me!
 
-[3] "82378IB System I/O (SIO)", Intel Corporation, Order Number:
-    290473-002, April 1993, Section 5.8.7.7 "Edge and Level Triggered
-    Modes"
+Bjorn
 
-[4] "82378IB to 82378ZB Errata Fix and Feature Enhancement Conversion
-    FOL933002-01",
-    <https://web.archive.org/web/19990421045433/http://support.intel.com/support/chipsets/420/8511.htm>
-
-[5] "82378 System I/O (SIO)", Intel Corporation, Order Number: 
-    290473-004, December 1994, Section 4.1.5. "RID--Revision 
-    Identification Register"
-
-[6] "82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A)",
-    Intel Corporation, Order Number: 290571-001, March 1996, Section 
-    3.1.5. "RID--Revision Identification Register", p. 34
-
-[7] "Intel 82379AB (SIO.A) System I/O Component Specification Update", 
-    Intel Corporation, Order Number: 297734-001, May, 1996, "Component 
-    Identification via Programming Interface", p. 5
-
-[8] "82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A)",
-    Intel Corporation, Order Number: 290571-001, March 1996, Section 
-    3.1.2. "DID--Device Identification Register", p. 33
-
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
----
- arch/x86/pci/irq.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-linux-x86-pirq-router-sio.diff
-Index: linux-macro-ide/arch/x86/pci/irq.c
-===================================================================
---- linux-macro-ide.orig/arch/x86/pci/irq.c
-+++ linux-macro-ide/arch/x86/pci/irq.c
-@@ -627,6 +627,13 @@ static __init int intel_router_probe(str
- 		return 0;
- 
- 	switch (device) {
-+		u8 rid;
-+	case PCI_DEVICE_ID_INTEL_82378:
-+		pci_read_config_byte(router, PCI_REVISION_ID, &rid);
-+		/* Tell 82378IB (rev < 3) and 82378ZB/82379AB apart.  */
-+		if ((rid & 0xfu) < 3)
-+			break;
-+		fallthrough;
- 	case PCI_DEVICE_ID_INTEL_82371FB_0:
- 	case PCI_DEVICE_ID_INTEL_82371SB_0:
- 	case PCI_DEVICE_ID_INTEL_82371AB_0:
-@@ -668,7 +675,7 @@ static __init int intel_router_probe(str
- 	case PCI_DEVICE_ID_INTEL_ICH10_3:
- 	case PCI_DEVICE_ID_INTEL_PATSBURG_LPC_0:
- 	case PCI_DEVICE_ID_INTEL_PATSBURG_LPC_1:
--		r->name = "PIIX/ICH";
-+		r->name = "SIO/PIIX/ICH";
- 		r->get = pirq_piix_get;
- 		r->set = pirq_piix_set;
- 		return 1;
-@@ -682,7 +689,7 @@ static __init int intel_router_probe(str
- 	     device <= PCI_DEVICE_ID_INTEL_DH89XXCC_LPC_MAX)
- 	||  (device >= PCI_DEVICE_ID_INTEL_PANTHERPOINT_LPC_MIN &&
- 	     device <= PCI_DEVICE_ID_INTEL_PANTHERPOINT_LPC_MAX)) {
--		r->name = "PIIX/ICH";
-+		r->name = "SIO/PIIX/ICH";
- 		r->get = pirq_piix_get;
- 		r->set = pirq_piix_set;
- 		return 1;
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-rockchip-host.c?id=v5.13#n562
