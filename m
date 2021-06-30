@@ -2,111 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 372613B8A0F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jun 2021 23:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9953B8A55
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 00:10:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235679AbhF3VOW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Jun 2021 17:14:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:4366 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235470AbhF3VOI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 30 Jun 2021 17:14:08 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10031"; a="195720895"
-X-IronPort-AV: E=Sophos;i="5.83,312,1616482800"; 
-   d="scan'208";a="195720895"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2021 14:11:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,312,1616482800"; 
-   d="scan'208";a="447630144"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 30 Jun 2021 14:11:39 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.174])
-        by linux.intel.com (Postfix) with ESMTP id EE3C4580279;
-        Wed, 30 Jun 2021 14:11:38 -0700 (PDT)
-Message-ID: <f590ee871d0527a12b307f1494cb4c8a91c5e3c2.camel@linux.intel.com>
-Subject: Re: [PATCH 2/4] MFD: intel_pmt: Remove OOBMSM device
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 30 Jun 2021 14:11:38 -0700
-In-Reply-To: <YNxENGGctLXmifzj@dell>
-References: <20210617215408.1412409-1-david.e.box@linux.intel.com>
-         <20210617215408.1412409-3-david.e.box@linux.intel.com>
-         <YNxENGGctLXmifzj@dell>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S232724AbhF3WMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Jun 2021 18:12:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25927 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232513AbhF3WMc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Jun 2021 18:12:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625091002;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2ReCbrtMP/cxLMRe/lZJL4GXF42nMx1vpMXEPSI0hvQ=;
+        b=KAkRhiD8lqEvL133a/SsRTuJ3V3X6QTJbHgZDmSbP5Fo4A9hp4Rg8tb+AximmvOuFzsUrH
+        XVggwiAQVukZO+7MhQJ/1ceKftRhCprdXfPu1UecDbuC8RWTrt7HPooQ6XTcK5F5rjmohq
+        haIbDGgRzphVCvhpPbVn3gi026jO7JE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-119-rCztVIqCPHyV8HPh9BPeLQ-1; Wed, 30 Jun 2021 18:10:01 -0400
+X-MC-Unique: rCztVIqCPHyV8HPh9BPeLQ-1
+Received: by mail-wm1-f72.google.com with SMTP id t82-20020a1cc3550000b02901ee1ed24f94so3541390wmf.9
+        for <linux-pci@vger.kernel.org>; Wed, 30 Jun 2021 15:10:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2ReCbrtMP/cxLMRe/lZJL4GXF42nMx1vpMXEPSI0hvQ=;
+        b=Z5yb+mlkolkOk98dzKhF1zugLk5Ip8YHzx2Qa397uDlVSUutRaz7sJndR1/7a9PA3l
+         8r9xFj0M6tFgiwjpLyJS8QZ+Ul18X0D6xCRG2CdOJ+AaHi0+ybF2e5n6q9gU2NLXmgJf
+         F9dq0Sz5xa6QqQ09EJdaGZLmQwpL5ekdGoBdZF+0Q/r9G1brJde6dKz21Q+6kSX3KRiP
+         +F/FF7mu3L2kki2svDdy1meYWDyuMf8Kgap4ROEZR0J4r7ElM5adjXpOqBFvJOeON7qm
+         pmxCUqj6jk1n1nr0Qht/Ppj279+OmSgdsm87GPqFyCqHt6m8MI3lGf4U2A/0LPOPkkB3
+         Rw8Q==
+X-Gm-Message-State: AOAM532sAmNU+dx9g2HdrTqIDsHvUz92b65Cga8fd+7r44ctRyDgMuxj
+        tnueWDD/Y0uxhcqp/0Zmtk3EddUe3RBw51dVifVHmdxLcv43DyjuGzzmGrfYbacco0Slrkbe3BA
+        pZO2WwkK2l65Ee7FuVyM9
+X-Received: by 2002:a7b:cf3a:: with SMTP id m26mr16882648wmg.117.1625091000111;
+        Wed, 30 Jun 2021 15:10:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwlU5TtFXVLyohpWwUCLVR70qKXp8D+c6+g8CDe44j7e9CNHSYRynn3Hnx7Cwjxfz20NWN+Rw==
+X-Received: by 2002:a7b:cf3a:: with SMTP id m26mr16882631wmg.117.1625090999901;
+        Wed, 30 Jun 2021 15:09:59 -0700 (PDT)
+Received: from [192.168.1.101] ([92.176.231.106])
+        by smtp.gmail.com with ESMTPSA id d17sm9611715wro.93.2021.06.30.15.09.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Jun 2021 15:09:59 -0700 (PDT)
+Subject: Re: [PATCH v2] PCI: rockchip: Avoid accessing PCIe registers with
+ clocks gated
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+References: <20210630203030.GA4178852@bjorn-Precision-5520>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+Message-ID: <51276875-658e-e6fe-5433-b5d795b253ff@redhat.com>
+Date:   Thu, 1 Jul 2021 00:09:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210630203030.GA4178852@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2021-06-30 at 11:15 +0100, Lee Jones wrote:
-> On Thu, 17 Jun 2021, David E. Box wrote:
-> 
-> > Unlike the other devices in intel_pmt, the Out of Band Management
-> > Services
-> > Module (OOBMSM) is actually not a PMT dedicated device. It can also
-> > be used
-> > to describe non-PMT capabilities. Like PMT, these capabilities are
-> > also
-> > enumerated using PCIe Vendor Specific registers in config space. In
-> > order
-> > to better support these devices without the confusion of a
-> > dependency on
-> > MFD_INTEL_PMT, remove the OOBMSM device from intel_pmt so that it
-> > can be
-> > later placed in its own driver. Since much of the same code will be
-> > used by
-> > intel_pmt and the new driver, create a new file with symbols to be
-> > used by
-> > both.
-> > 
-> > While performing this split we need to also handle the creation of
-> > platform
-> > devices for the non-PMT capabilities. Currently PMT devices are
-> > named by
-> > their capability (e.g. pmt_telemetry). Instead, generically name
-> > them by
-> > their capability ID (e.g. intel_extnd_cap_2). This allows the IDs
-> > to be
-> > created automatically.  However, to ensure that unsupported devices
-> > aren't
-> > created, use an allow list to specify supported capabilities.
-> > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >  MAINTAINERS                                |   1 +
-> >  drivers/mfd/Kconfig                        |   4 +
-> >  drivers/mfd/Makefile                       |   1 +
-> >  drivers/mfd/intel_extended_caps.c          | 208
-> > +++++++++++++++++++++
-> 
-> Please consider moving this <whatever this is> out to either
-> drivers/pci or drivers/platform/x86.
+On 6/30/21 10:30 PM, Bjorn Helgaas wrote:
+> On Wed, Jun 30, 2021 at 09:59:58PM +0200, Javier Martinez Canillas wrote:
 
-None of the cell drivers are in MFD, only the PCI drivers from which
-the cells are created. I understood that these should be in MFD. But
-moving it to drivers/platform/x86 would be fine with me. That keeps the
-code together in the same subsystem. Comment from Hans or Andy? 
+[snip]
 
+>>
+>> But maybe you can also add a paragraph that mentions the CONFIG_DEBUG_SHIRQ
+>> option and shared interrupts? That way, other driver authors could know that
+>> by enabling this an underlying problem might be exposed for them to fix.
 > 
-> I suggest Andy should also be on Cc.
-> 
-> >  drivers/mfd/intel_extended_caps.h          |  40 ++++
-> >  drivers/mfd/intel_pmt.c                    | 198 ++---------------
-> > ---
-> >  drivers/platform/x86/intel_pmt_crashlog.c  |   2 +-
-> >  drivers/platform/x86/intel_pmt_telemetry.c |   2 +-
-> >  8 files changed, 270 insertions(+), 186 deletions(-)
-> >  create mode 100644 drivers/mfd/intel_extended_caps.c
-> >  create mode 100644 drivers/mfd/intel_extended_caps.h
+> Good idea, thanks!  I added this; is it something like what you had in
+> mind?
 > 
 
+Thanks a lot for doing this rewording. I just have a small nit for the text.
+
+>     Found by enabling CONFIG_DEBUG_SHIRQ, which calls the IRQ handler when it
+>     is being unregistered.  An error during the probe path might cause this
+>     unregistration and IRQ handler execution before the device or data
+>     structure init has finished.
+> 
+
+The IRQ handler is not called when unregistered, but it is called when another
+handler for the shared IRQ is unregistered. In this particular driver, both a
+"pcie-sys" and "pcie-client" handlers are registered, then an error leads to
+"pcie-sys" being unregistered and the handler for "pcie-client" being called.
+
+So maybe the following instead?
+
+    Found by enabling CONFIG_DEBUG_SHIRQ, which calls the IRQ handlers when a
+    handler for the shared IRQ is unregistered. An error during the probe path
+    might cause this unregistration and handler execution before the device or
+    data structure init has finished.
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Software Engineer
+New Platform Technologies Enablement team
+RHEL Engineering
 
