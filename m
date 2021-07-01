@@ -2,83 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B14303B97EC
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 23:02:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E89A3B981E
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 23:25:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232926AbhGAVF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 17:05:27 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:36422 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbhGAVF0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 17:05:26 -0400
-Received: by mail-lf1-f44.google.com with SMTP id d16so14220087lfn.3
-        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 14:02:54 -0700 (PDT)
+        id S233648AbhGAV1Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 17:27:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46508 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233274AbhGAV1Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 17:27:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625174693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=J/pkuckV+XJBIvkI3fjjZrH/4ezGzwjpiC++Zq74xe4=;
+        b=Lqm9T4U1Ly1q1ivn44PtCJFCjciNVr+ndhyV7OTxm9h93/OQrNr/02C0hsaMAifMq1xWXa
+        we7y5KltBFzJnHpI9uqzPYv8gmQ1YvPzErup2T8JFB8lqw6YyxWlHdEAFYw3Z1V+KPTiju
+        oYWD+oVn8hg7RQk+BXMFcRqLB4OQcd8=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-KcpX8j3EPRW2ar5CjR42Cg-1; Thu, 01 Jul 2021 17:24:52 -0400
+X-MC-Unique: KcpX8j3EPRW2ar5CjR42Cg-1
+Received: by mail-oo1-f72.google.com with SMTP id l1-20020a4ad9c10000b029024cb72acba1so4206259oou.10
+        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 14:24:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JE6sI1cXi9IoYmq2Jf3nI0zQd5U5PWje0uxRZUNbQZY=;
-        b=tsjCqqRVGRHjll+hgVIyZvD2xPqJGkTw3xWIxVnRISofmWzEkXgcsQoinLTbNgnG9q
-         NP/PXXuNERdQg8RNmH3gS0aYn3uGmmfagPL8GolH6HklMCX3b02HnSThrloQjLFhqAJO
-         qhBfYGBNVv5soOMctltQRArE3n3yDfi6XnwRrNmUaLUZCdEOO+w9NiHH0euwBRf2CTj2
-         v4k6xdY9T6ciywOMpR9DxoeEbztyonofBYxRRl2lQIrXgmz6tDY7RqSAQ1X2sp6+rIEm
-         s1rUyXhufvQBg3xGOdiLvVX2W5ylAD4ctwtZmORZ4dw9lp5Q7tX6WAHe89lGAHK9LdUU
-         P/rQ==
-X-Gm-Message-State: AOAM530gxpFjBMCkRz1Jy+Q7fYDXAfYSgaP3CSCi2Kd1asHK6l1FIvm6
-        NJXxGGJRDwqXIJnI4xw+XLU=
-X-Google-Smtp-Source: ABdhPJwd/vc5UfafJqN5CCMYGBinKTkl1VjKUD7L0aakEih9zH6usEE+Hhz9EiQELu2soXrTnQ0gTg==
-X-Received: by 2002:ac2:4f89:: with SMTP id z9mr1218811lfs.46.1625173374134;
-        Thu, 01 Jul 2021 14:02:54 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id f21sm72175lfk.212.2021.07.01.14.02.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=J/pkuckV+XJBIvkI3fjjZrH/4ezGzwjpiC++Zq74xe4=;
+        b=oYwIVy9LcJsbSBAvqOK6/Tjo9fokXIM0cZpE0x54mCcAImJvO4e1DbWwqQOeuluMmM
+         LPkXh66l7jjMWUtyNCHPPT2AZZYaG6bEgMUlNSIBZyWD9DEhI/eXc4zrbWAcGmzb/m6l
+         ILC2bxYRIZG3WF4aRnfFCKxieOFuLQO2V/RlXbyP5/sb4UA49zi1E6TvKIMTna4jTrxp
+         VbnAW1VOpTk4P3H+cFxsNpqcOZeMSsI6epLwsZ2Ldxk2Tnjo0AfS6bMG293VncZWBRb5
+         fKNH3XjeQpFgaG1PuHagSLVg4cgNPPnzw06GQjpnRi568heMm0KpHhomI9+FqqSLo7eK
+         YWlQ==
+X-Gm-Message-State: AOAM532+iAny961foFKS00cYE5Bey9MepsVvBFzwj+71Uhk7B7Bva4/C
+        8HcWw2UZgQ1ULASc8SoOooKNs90bKN2S9rk1X3bTVvoP4TcKthPQIWUVh0wF24//tluHLELrY3j
+        zslOR5RHVYmzyIzD5MCj3
+X-Received: by 2002:aca:5384:: with SMTP id h126mr9135133oib.69.1625174691989;
+        Thu, 01 Jul 2021 14:24:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz6wIfKRZimG8t6mMWGtJhAyre1Asho1T6CrSgZ4HQm/Ze4Vd5ECmaJfJdOPoNqjNBTl2GL6g==
+X-Received: by 2002:aca:5384:: with SMTP id h126mr9135124oib.69.1625174691710;
+        Thu, 01 Jul 2021 14:24:51 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id c14sm245279oic.50.2021.07.01.14.24.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 14:02:53 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Jingoo Han <jingoohan1@gmail.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: dwc: Remove surplus break statement after return
-Date:   Thu,  1 Jul 2021 21:02:52 +0000
-Message-Id: <20210701210252.1638709-1-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
+        Thu, 01 Jul 2021 14:24:51 -0700 (PDT)
+Date:   Thu, 1 Jul 2021 15:24:49 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Robert Straw <drbawb@fatalsyntax.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Disable Samsung SM951/PM951 NVMe before FLR
+Message-ID: <20210701152449.6071f1d2.alex.williamson@redhat.com>
+In-Reply-To: <20210701201545.GA85919@bjorn-Precision-5520>
+References: <YN4etaP6hInKvSgG@infradead.org>
+        <20210701201545.GA85919@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As part of code refactoring completed in the commit a0fd361db8e5 ("PCI:
-dwc: Move "dbi", "dbi2", and "addr_space" resource setup into common
-code") the function dw_plat_add_pcie_ep() has been removed and the call
-to the dw_pcie_ep_init() has been moved into dw_plat_pcie_probe().
+On Thu, 1 Jul 2021 15:15:45 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-This change left a break statement behind that is not needed any more as
-as the function dw_plat_pcie_probe() returns immediately after making
-a call to dw_pcie_ep_init().
+> On Thu, Jul 01, 2021 at 08:59:49PM +0100, Christoph Hellwig wrote:
+> > On Thu, Jul 01, 2021 at 02:38:56PM -0500, Bjorn Helgaas wrote:  
+> > > On Fri, Apr 30, 2021 at 06:01:19PM -0500, Robert Straw wrote:  
+> > > > The SM951/PM951, when used in conjunction with the vfio-pci driver and
+> > > > passed to a KVM guest, can exhibit the fatal state addressed by the
+> > > > existing `nvme_disable_and_flr` quirk. If the guest cleanly shuts down
+> > > > the SSD, and vfio-pci attempts an FLR to the device while it is in this
+> > > > state, the nvme driver will fail when it attempts to bind to the device
+> > > > after the FLR due to the frozen config area, e.g:
+> > > > 
+> > > >   nvme nvme2: frozen state error detected, reset controller
+> > > >   nvme nvme2: Removing after probe failure status: -12
+> > > > 
+> > > > By including this older model (Samsung 950 PRO) of the controller in the
+> > > > existing quirk: the device is able to be cleanly reset after being used
+> > > > by a KVM guest.
+> > > > 
+> > > > Signed-off-by: Robert Straw <drbawb@fatalsyntax.com>  
+> > > 
+> > > Applied to pci/virtualization for v5.14, thanks!  
+> > 
+> > FYI, I really do not like the idea of the PCIe core messing with NVMe
+> > registers like this.  
 
-Thus remove this surplus break statement that became a dead code.
+What are the specific concerns of PCI-core messing with NVMe registers,
+or any other device specific registers?
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/dwc/pcie-designware-plat.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-index 9b397c807261..8851eb161a0e 100644
---- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-@@ -164,7 +164,6 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
+PCI-core is being told to reset the device, so whether directly or
+implicitly, device specific registers will be affected regardless of
+how much we directly poke them.
  
- 		pci->ep.ops = &pcie_ep_ops;
- 		return dw_pcie_ep_init(&pci->ep);
--		break;
- 	default:
- 		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
- 	}
--- 
-2.32.0
+> I hadn't looked at the nvme_disable_and_flr() implementation, but yes,
+> I see what you mean, that *is* ugly.  I dropped this patch for now.
+
+This attempts to implement the minimum necessary code to disable the
+device per the spec, where even though the spec reference isn't the
+latest, it should still be applicable to newer devices (I assume the
+NVMe standard cares about backwards compatibility).
+ 
+> I see that you suggested earlier that we not allow these devices to be
+> assigned via VFIO [1].  Is that practical?  Sounds like it could be
+> fairly punitive.
+
+Punitive, yes.  Most hardware is broken in one way or another.
+
+> I assume this reset is normally used when vfio-pci is the driver in
+> the host kernel and there probably is no guest.  In that particular
+> case, I'd guess there's no conflict, but as you say, the sysfs reset
+> attribute could trigger this reset when there *is* a guest driver, so
+> there *would* be a conflict.
+> 
+> Could we coordinate this reset with vfio somehow so we only use
+> nvme_disable_and_flr() when there is no guest?
+
+We can trigger a reset via sysfs whether the host driver is vfio-pci or
+any other device driver.  I don't understand what that has to do with
+specifically messing with NVMe registers here.  Don't we usually say
+that resetting *any* running devices via sysfs is a shoot yourself in
+the foot scenario?  `echo 0 > enable` would be dis-recommended as well,
+or using setpci to manually trigger a reset or poking BAR registers, or
+writing garbage to the resource attributes.
+
+vfio tries to make use of this in coordination with userspace
+requesting a device reset or to attempt to clear devices state so it's
+not leaked between users (more applicable when we're not talking about
+mass storage devices).  In a VM scenario, that should correspond to
+something like a VM reset or poking FLR from the guest.
+
+I think the sysfs reset mechanism used to be more useful for VMs back
+in the days of legacy KVM device assignment, when it was usually
+libvirt trying to reset a device rather than a host kernel driver like
+vfio-pci.  I still find it useful for some use cases and it's not like
+there aren't plenty of other ways to break your device out from under
+the running drivers if you're sufficiently privileged.  What's really
+the issue here?  Thanks,
+
+Alex
 
