@@ -2,81 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 556D83B9662
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 21:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D0F43B96A7
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 21:39:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbhGATTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 15:19:15 -0400
-Received: from mail-wm1-f45.google.com ([209.85.128.45]:53821 "EHLO
-        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbhGATTO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 15:19:14 -0400
-Received: by mail-wm1-f45.google.com with SMTP id w13so5202495wmc.3
-        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 12:16:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kQF8cLAtr4vueW7JSMUMX/IBfK/Lv//HrORl0QoGClk=;
-        b=coYfnQVLpoUTEY25ES3Es3QAHyC1riLi1DeTecOfSVXt54jiPpLDiFluDN1MC7PSal
-         6erWnyywnXFw0SvWOtrSgyHzv/uYG/VhVzSuG5AFnyVUKvtJBa8EGV0E4p5BSYaAdG26
-         4lR0js7j2SwoLaStVEyocy6kuNlbOmvJnN9h2AoWfOnWUcVy4Fxzql9ZZi8bOQt+8cCY
-         emONCI164SlbzkDKIGM1QN3VT0+c7HwDJBdCpPBd6mGm/kBTRNJid3GtngxiMOWq9D7I
-         LzpV7V4zeRSiBM22gCqdsDIXB6yZqDqUCe9NzDL4ILhwCkGfeRWOqaxG88kh76AU6wsW
-         vccQ==
-X-Gm-Message-State: AOAM5330loGMSwOiEUxlDocyYdasHTj4G6Y88YQkDWjIB31q7EXWyymM
-        DOH+/YeHPZUrR8wcy3pamWU=
-X-Google-Smtp-Source: ABdhPJwCnjKs+5W8DJyB5J6LDav2hzmvfNV/EDDEHJrZNEWjCCEFi2ftpaXZCRr2/9lpBT9rgjW1tA==
-X-Received: by 2002:a05:600c:354f:: with SMTP id i15mr1297082wmq.101.1625167002277;
-        Thu, 01 Jul 2021 12:16:42 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id p15sm778956wmq.43.2021.07.01.12.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 12:16:41 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Jesper Nilsson <jesper.nilsson@axis.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: artpec6: Remove surplus break statement after return
-Date:   Thu,  1 Jul 2021 19:16:40 +0000
-Message-Id: <20210701191640.1493543-1-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
+        id S233426AbhGATl3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 15:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229894AbhGATl3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Jul 2021 15:41:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F3A8613FC;
+        Thu,  1 Jul 2021 19:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625168338;
+        bh=UhAkGKW7cUMVGHA+DcsBA8sSxLionOWYHd2rVJtcjk4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PXK1ZWkVa9VIqewj4n7yVblpP5YFnxC+g06A3vNwYtdDHDGdCMxviMlpoEYpxntLu
+         RBYE27Td7Lkf4mBpE3DX+TbYuqpN1JTpDj+J0wI1nXl23zy8NMI+L2SIjoHm8jj6nD
+         0avcNv8aGuTXpnF4zWpMdiJaZUIQEsiXBrA9sbohWdtA/r8JlX02gelvBk8AGSffNd
+         9E/3l+ngXdbWG+7gEhFux9YypWXQoQnu2NNB42ZvJDFzeiLiXp775AXSRzHpG8tppn
+         aMfJXPnUG3KFTIiOjUcscyvkC2SBtnluvJdJTovG+lqj+r/p+VHhhThabV76aZSdfT
+         l0NgWZvSQBpiw==
+Date:   Thu, 1 Jul 2021 14:38:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Straw <drbawb@fatalsyntax.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alex.williamson@redhat.com
+Subject: Re: [PATCH v2] PCI: Disable Samsung SM951/PM951 NVMe before FLR
+Message-ID: <20210701193856.GA82535@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210430230119.2432760-1-drbawb@fatalsyntax.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As part of code refactoring completed in the commit a0fd361db8e5 ("PCI:
-dwc: Move "dbi", "dbi2", and "addr_space" resource setup into common
-code") the function artpec6_add_pcie_ep() has been removed and the call
-to the dw_pcie_ep_init() has been moved into artpec6_pcie_probe().
+On Fri, Apr 30, 2021 at 06:01:19PM -0500, Robert Straw wrote:
+> The SM951/PM951, when used in conjunction with the vfio-pci driver and
+> passed to a KVM guest, can exhibit the fatal state addressed by the
+> existing `nvme_disable_and_flr` quirk. If the guest cleanly shuts down
+> the SSD, and vfio-pci attempts an FLR to the device while it is in this
+> state, the nvme driver will fail when it attempts to bind to the device
+> after the FLR due to the frozen config area, e.g:
+> 
+>   nvme nvme2: frozen state error detected, reset controller
+>   nvme nvme2: Removing after probe failure status: -12
+> 
+> By including this older model (Samsung 950 PRO) of the controller in the
+> existing quirk: the device is able to be cleanly reset after being used
+> by a KVM guest.
+> 
+> Signed-off-by: Robert Straw <drbawb@fatalsyntax.com>
 
-This change left a break statement behind that is not needed any more as
-as the function artpec6_pcie_probe() return immediately after making
-a call to dw_pcie_ep_init().
+Applied to pci/virtualization for v5.14, thanks!
 
-Thus remove this surplus break statement that became a dead code.
-
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/dwc/pcie-artpec6.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index 597c282f586c..739871bece75 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -445,7 +445,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 		pci->ep.ops = &pcie_ep_ops;
- 
- 		return dw_pcie_ep_init(&pci->ep);
--		break;
- 	}
- 	default:
- 		dev_err(dev, "INVALID device type %d\n", artpec6_pcie->mode);
--- 
-2.32.0
-
+> ---
+> changes in v2:
+>   - update subject to match style of ffb0863426eb 
+> 
+>  drivers/pci/quirks.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e3b..e339ca238 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3920,6 +3920,7 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>  		reset_ivb_igd },
+>  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IVB_M2_VGA,
+>  		reset_ivb_igd },
+> +	{ PCI_VENDOR_ID_SAMSUNG, 0xa802, nvme_disable_and_flr },
+>  	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
+>  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+>  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+> -- 
+> 2.31.1
+> 
