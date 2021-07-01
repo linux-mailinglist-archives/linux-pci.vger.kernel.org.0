@@ -2,154 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25F633B8EF5
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 10:39:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C681E3B8F0A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 10:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235067AbhGAImN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 04:42:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22461 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235427AbhGAImN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 04:42:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625128783;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u9jAbsencUUDdK5AITgRqpk4mB/AMqBStj1da/54uyc=;
-        b=f96rBK/TT4CLe0Q34bDYMJ2tHFBcg5r9qNK/eNwZgO5R3Tggat82bH4DFuKrE9pXKlK35z
-        VTNVateNQ+qMhXZN3jy2gFT3wWFnPLOQH7peWeeDTM4cksadIIVagLvQv7PyBMOvawutVd
-        nASmf6R9qjaGeTNfmoUzzSMxS8VOg3A=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-b1tDIi4lM72DzU9nxhD8hg-1; Thu, 01 Jul 2021 04:39:41 -0400
-X-MC-Unique: b1tDIi4lM72DzU9nxhD8hg-1
-Received: by mail-ed1-f70.google.com with SMTP id w1-20020a0564022681b0290394cedd8a6aso2664913edd.14
-        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 01:39:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u9jAbsencUUDdK5AITgRqpk4mB/AMqBStj1da/54uyc=;
-        b=C73x3Epm4Tk1eHffk4avH+l4knTVdCiyE0bXFwO5YhYXineAb5IHO/PiTm1eYmDOfn
-         t5GeQ8qGwNjK7oe3tBalefzWbjsP81lVDWBO+WQh83NXxvgfU7Pvn0IBKApTBH/Fhnoc
-         sahtiwQHieWX/sbLGE1whcJG091eYBw7Sc695swFsqOuT7IiVmbWFVMsVNhpjbRQoco2
-         JNpnD3yuBVpCSGuLR6RyLLO+7w1ifu++XTbwHWX+Wanql4EGh6aA4L48iIC/Cw3x2+J5
-         K/6eU2yPx/R7Ovy91BtWoVkjvtIaTNVAzzzjEtJY9cODZBD8s6FUePzv3XeZxivKH7ZQ
-         eOHw==
-X-Gm-Message-State: AOAM531CxzMS0oiUuT3Zx+6Eq2kNHR9w3vLH2pXTbnHFTISCI62CXChQ
-        Wc2YRBECMUK2Y/qTu9rIqw1tQtJcYhj8AfzNann844P4kk6YIzmOqwTEclhO8EP8sz2pww4Qktt
-        rySB3mS3G8q1EaVJtLKYU
-X-Received: by 2002:a05:6402:176f:: with SMTP id da15mr51597389edb.334.1625128780803;
-        Thu, 01 Jul 2021 01:39:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwjM9KkxtshOjO1NdUjE9y5FxAxm9cYgDU4y0IKWEB3WTjlpt1wyNiLoAcJdRJ2Lm+4zJaUzQ==
-X-Received: by 2002:a05:6402:176f:: with SMTP id da15mr51597374edb.334.1625128780670;
-        Thu, 01 Jul 2021 01:39:40 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id q5sm10322484ejc.117.2021.07.01.01.39.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jul 2021 01:39:40 -0700 (PDT)
-Subject: Re: [PATCH 2/4] MFD: intel_pmt: Remove OOBMSM device
-To:     david.e.box@linux.intel.com, Lee Jones <lee.jones@linaro.org>
-Cc:     mgross@linux.intel.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20210617215408.1412409-1-david.e.box@linux.intel.com>
- <20210617215408.1412409-3-david.e.box@linux.intel.com>
- <YNxENGGctLXmifzj@dell>
- <f590ee871d0527a12b307f1494cb4c8a91c5e3c2.camel@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e734a968-818a-380d-0ae5-fee41b3db246@redhat.com>
-Date:   Thu, 1 Jul 2021 10:39:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S235357AbhGAIrE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 04:47:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:13765 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235088AbhGAIrE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Jul 2021 04:47:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10031"; a="208449899"
+X-IronPort-AV: E=Sophos;i="5.83,313,1616482800"; 
+   d="scan'208";a="208449899"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2021 01:44:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,313,1616482800"; 
+   d="scan'208";a="626294208"
+Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 01 Jul 2021 01:44:32 -0700
+Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lysJD-000AQV-Dq; Thu, 01 Jul 2021 08:44:31 +0000
+Date:   Thu, 01 Jul 2021 16:44:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/rockchip] BUILD SUCCESS
+ 450bc737daf066e83fb50cdbdb5c8918231aeedc
+Message-ID: <60dd805c.VbsENxTKeTZH/s6u%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <f590ee871d0527a12b307f1494cb4c8a91c5e3c2.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/rockchip
+branch HEAD: 450bc737daf066e83fb50cdbdb5c8918231aeedc  PCI: rockchip: Register IRQ handlers after device and data are ready
 
-On 6/30/21 11:11 PM, David E. Box wrote:
-> On Wed, 2021-06-30 at 11:15 +0100, Lee Jones wrote:
->> On Thu, 17 Jun 2021, David E. Box wrote:
->>
->>> Unlike the other devices in intel_pmt, the Out of Band Management
->>> Services
->>> Module (OOBMSM) is actually not a PMT dedicated device. It can also
->>> be used
->>> to describe non-PMT capabilities. Like PMT, these capabilities are
->>> also
->>> enumerated using PCIe Vendor Specific registers in config space. In
->>> order
->>> to better support these devices without the confusion of a
->>> dependency on
->>> MFD_INTEL_PMT, remove the OOBMSM device from intel_pmt so that it
->>> can be
->>> later placed in its own driver. Since much of the same code will be
->>> used by
->>> intel_pmt and the new driver, create a new file with symbols to be
->>> used by
->>> both.
->>>
->>> While performing this split we need to also handle the creation of
->>> platform
->>> devices for the non-PMT capabilities. Currently PMT devices are
->>> named by
->>> their capability (e.g. pmt_telemetry). Instead, generically name
->>> them by
->>> their capability ID (e.g. intel_extnd_cap_2). This allows the IDs
->>> to be
->>> created automatically.  However, to ensure that unsupported devices
->>> aren't
->>> created, use an allow list to specify supported capabilities.
->>>
->>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
->>> ---
->>>  MAINTAINERS                                |   1 +
->>>  drivers/mfd/Kconfig                        |   4 +
->>>  drivers/mfd/Makefile                       |   1 +
->>>  drivers/mfd/intel_extended_caps.c          | 208
->>> +++++++++++++++++++++
->>
->> Please consider moving this <whatever this is> out to either
->> drivers/pci or drivers/platform/x86.
-> 
-> None of the cell drivers are in MFD, only the PCI drivers from which
-> the cells are created. I understood that these should be in MFD. But
-> moving it to drivers/platform/x86 would be fine with me. That keeps the
-> code together in the same subsystem. Comment from Hans or Andy? 
+elapsed time: 728m
 
-I'm fine with moving everything to drivers/platform/x86, but AFAIK
-usually the actual code which has the MFD cells and creates the
-child devices usually lives under drivers/mfd
+configs tested: 159
+configs skipped: 3
 
-Regards,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Hans
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+sh                          urquell_defconfig
+arm                          pcm027_defconfig
+arc                    vdk_hs38_smp_defconfig
+arc                        nsimosci_defconfig
+arm                    vt8500_v6_v7_defconfig
+powerpc                      tqm8xx_defconfig
+powerpc                     tqm8548_defconfig
+sh                           se7619_defconfig
+mips                        workpad_defconfig
+arm                         at91_dt_defconfig
+sh                           se7712_defconfig
+ia64                         bigsur_defconfig
+mips                      maltasmvp_defconfig
+arm                       aspeed_g4_defconfig
+sh                           se7724_defconfig
+arm                         s5pv210_defconfig
+m68k                        m5272c3_defconfig
+ia64                             alldefconfig
+powerpc                  mpc866_ads_defconfig
+arm                       omap2plus_defconfig
+arm                         axm55xx_defconfig
+m68k                        mvme16x_defconfig
+powerpc                     ep8248e_defconfig
+arm                            xcep_defconfig
+sh                          sdk7786_defconfig
+sh                        dreamcast_defconfig
+sh                        edosk7705_defconfig
+arm                            zeus_defconfig
+powerpc                       maple_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                          collie_defconfig
+sh                           se7721_defconfig
+arm                          gemini_defconfig
+openrisc                            defconfig
+mips                        maltaup_defconfig
+sh                             shx3_defconfig
+powerpc                 mpc8540_ads_defconfig
+parisc                           alldefconfig
+mips                         db1xxx_defconfig
+sh                          r7785rp_defconfig
+mips                           xway_defconfig
+powerpc                     sbc8548_defconfig
+arc                          axs103_defconfig
+sh                          rsk7203_defconfig
+s390                             allyesconfig
+mips                        qi_lb60_defconfig
+powerpc                        warp_defconfig
+arm                           h5000_defconfig
+mips                   sb1250_swarm_defconfig
+mips                      bmips_stb_defconfig
+powerpc                     sequoia_defconfig
+xtensa                       common_defconfig
+arm                       spear13xx_defconfig
+arm                         hackkit_defconfig
+powerpc                   bluestone_defconfig
+mips                       capcella_defconfig
+arm                      pxa255-idp_defconfig
+mips                         rt305x_defconfig
+sh                           se7705_defconfig
+powerpc                        fsp2_defconfig
+ia64                          tiger_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                 mpc836x_mds_defconfig
+sh                          landisk_defconfig
+um                               alldefconfig
+sh                              ul2_defconfig
+arm                             pxa_defconfig
+sh                           se7206_defconfig
+mips                         mpc30x_defconfig
+arc                     nsimosci_hs_defconfig
+ia64                             allmodconfig
+m68k                        m5307c3_defconfig
+arm                        magician_defconfig
+mips                          ath25_defconfig
+sh                          sdk7780_defconfig
+mips                          rm200_defconfig
+mips                        omega2p_defconfig
+mips                  decstation_64_defconfig
+powerpc                  mpc885_ads_defconfig
+nios2                            alldefconfig
+mips                     loongson1c_defconfig
+sh                           se7343_defconfig
+x86_64                            allnoconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210630
+x86_64               randconfig-a001-20210630
+x86_64               randconfig-a004-20210630
+x86_64               randconfig-a005-20210630
+x86_64               randconfig-a006-20210630
+x86_64               randconfig-a003-20210630
+i386                 randconfig-a004-20210630
+i386                 randconfig-a001-20210630
+i386                 randconfig-a003-20210630
+i386                 randconfig-a002-20210630
+i386                 randconfig-a005-20210630
+i386                 randconfig-a006-20210630
+i386                 randconfig-a014-20210630
+i386                 randconfig-a011-20210630
+i386                 randconfig-a016-20210630
+i386                 randconfig-a012-20210630
+i386                 randconfig-a013-20210630
+i386                 randconfig-a015-20210630
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
 
+clang tested configs:
+x86_64               randconfig-b001-20210630
+x86_64               randconfig-a012-20210630
+x86_64               randconfig-a015-20210630
+x86_64               randconfig-a016-20210630
+x86_64               randconfig-a013-20210630
+x86_64               randconfig-a011-20210630
+x86_64               randconfig-a014-20210630
 
-
-> 
->>
->> I suggest Andy should also be on Cc.
->>
->>>  drivers/mfd/intel_extended_caps.h          |  40 ++++
->>>  drivers/mfd/intel_pmt.c                    | 198 ++---------------
->>> ---
->>>  drivers/platform/x86/intel_pmt_crashlog.c  |   2 +-
->>>  drivers/platform/x86/intel_pmt_telemetry.c |   2 +-
->>>  8 files changed, 270 insertions(+), 186 deletions(-)
->>>  create mode 100644 drivers/mfd/intel_extended_caps.c
->>>  create mode 100644 drivers/mfd/intel_extended_caps.h
->>
-> 
-> 
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
