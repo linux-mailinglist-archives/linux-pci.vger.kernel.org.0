@@ -2,84 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9F113B96BF
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 21:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C537A3B96CB
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 21:56:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233681AbhGATsl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 15:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
+        id S230014AbhGAT6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 15:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233671AbhGATsl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Jul 2021 15:48:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 558336137D;
-        Thu,  1 Jul 2021 19:46:10 +0000 (UTC)
+        id S229894AbhGAT6q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Jul 2021 15:58:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A8EE760233;
+        Thu,  1 Jul 2021 19:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625168770;
-        bh=JojscTv4rJz7rLg1H0xFJT4opmHXJRbrVBHCt+0GBx8=;
+        s=k20201202; t=1625169376;
+        bh=0tk6pCGhB7CEmcEYHhS2WfVG7YC4MgQfOLE4SRmhUxE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Cwqd8JAebD5mpCCmmOL4SYvZqtsOrtNDokB1ZrlBeeegWptFOf99u3bhR0aQWrAlk
-         Mf1zshpIectrgmDrUZp+0NATCv/aTN3mCMzDJJaF6xu0iYdg+/GDSU1PSRmSLkchgp
-         1U81FvJ95twCUs3ihDLNQ6v3Nx3SnyBHBEIerImdbnUgyTfc9AT9Bj2YGtS7iPyCEs
-         mMO9YVJBuMEXiFnyqzUjo9dWHlSScqUVfNL+CwHQxYn2KZ+SCAQf3ldWPuuVYo2xND
-         3eYtJdsxYxuHubu6NdEND6EbnLDXwrDB2gU+9ASff0EvbWm+Ny7LT9jLjCyKAxgaay
-         f1swrGHt+5ZCg==
-Date:   Thu, 1 Jul 2021 14:46:09 -0500
+        b=aaisAVeDZ6J4hH2KcuS49aHwdVW2RqeAP+OFeqDtu6yuYcP07X7rIJuoEm5HWqAYp
+         Xs/P/8oTfOy3rHpmgyFvMPnfUEpo6Fr5lkkdI09/0gKOC4rGWcG0qhafPfQM7Q4jN1
+         ih+++7j4e9RgSxsUkRp/1Vq08X4Yg/JB4OpFjgXob8wj80jhg/KBV7tAJgpSC0PsQ1
+         h4/u54wTJ5IhItcaZmQhFDGqr5lLIa64H9zUHTxqme9BYEPZGo+uvTtJnzgNFOmvzd
+         z1rzNuBN/OHxw5alFEjZNqKBcnGnKIU+lNhlm083HBzblaMhACAxMiDlQJMKjHocoE
+         K1W6cJ40qbWXQ==
+Date:   Thu, 1 Jul 2021 14:56:14 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Joyce Ooi <joyce.ooi@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Jesper Nilsson <jesper.nilsson@axis.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Ley Foon Tan <lftan.linux@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Replace Ley Foon Tan as Altera PCIE
- maintainer
-Message-ID: <20210701194609.GA83537@bjorn-Precision-5520>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: artpec6: Remove surplus break statement after return
+Message-ID: <20210701195614.GA84355@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210701065247.152292-1-joyce.ooi@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210701191640.1493543-1-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 02:52:47PM +0800, Joyce Ooi wrote:
-> This patch is to replace Ley Foon Tan as Altera PCIE maintainer as she
-> has moved to a different role.
+On Thu, Jul 01, 2021 at 07:16:40PM +0000, Krzysztof Wilczyński wrote:
+> As part of code refactoring completed in the commit a0fd361db8e5 ("PCI:
+> dwc: Move "dbi", "dbi2", and "addr_space" resource setup into common
+> code") the function artpec6_add_pcie_ep() has been removed and the call
+> to the dw_pcie_ep_init() has been moved into artpec6_pcie_probe().
 > 
-> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> This change left a break statement behind that is not needed any more as
+> as the function artpec6_pcie_probe() return immediately after making
+> a call to dw_pcie_ep_init().
+> 
+> Thus remove this surplus break statement that became a dead code.
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 
-Applied to pci/misc for v5.14, thanks!
+According to
 
-I also dropped the rfi@lists.rocketboards.org address since it seems
-to be dead.  If it's fixed, let me know and we'll keep it.
+  $ git grep -n -A1 "return.*;" drivers/pci
+
+there's at least one more instance in
+drivers/pci/controller/dwc/pcie-designware-plat.c.
 
 > ---
->  MAINTAINERS |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/dwc/pcie-artpec6.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 66d047d..7693c5b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14148,7 +14148,7 @@ F:	Documentation/devicetree/bindings/pci/aardvark-pci.txt
->  F:	drivers/pci/controller/pci-aardvark.c
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+> index 597c282f586c..739871bece75 100644
+> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> @@ -445,7 +445,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+>  		pci->ep.ops = &pcie_ep_ops;
 >  
->  PCI DRIVER FOR ALTERA PCIE IP
-> -M:	Ley Foon Tan <ley.foon.tan@intel.com>
-> +M:	Joyce Ooi <joyce.ooi@intel.com>
->  L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
-> @@ -14353,7 +14353,7 @@ S:	Supported
->  F:	Documentation/PCI/pci-error-recovery.rst
->  
->  PCI MSI DRIVER FOR ALTERA MSI IP
-> -M:	Ley Foon Tan <ley.foon.tan@intel.com>
-> +M:	Joyce Ooi <joyce.ooi@intel.com>
->  L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
+>  		return dw_pcie_ep_init(&pci->ep);
+> -		break;
+>  	}
+
+Not related to your patch, but I'm not really a fan of the block here
+(needed because of the local "u32 val" declaration) because we end up
+with two close braces at the same indent level.  I'd rather declare
+the variable at the top with the other local variables and dispense
+with the braces.
+
+>  	default:
+>  		dev_err(dev, "INVALID device type %d\n", artpec6_pcie->mode);
 > -- 
-> 1.7.1
+> 2.32.0
 > 
