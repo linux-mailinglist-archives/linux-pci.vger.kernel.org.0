@@ -2,114 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 062B33B95BF
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 19:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17AE53B95EF
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 20:07:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229956AbhGAR7M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 13:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60636 "EHLO mail.kernel.org"
+        id S233770AbhGASJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 14:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229844AbhGAR7L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Jul 2021 13:59:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D4C6E613DD;
-        Thu,  1 Jul 2021 17:56:40 +0000 (UTC)
+        id S233223AbhGASJw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Jul 2021 14:09:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 509896140D;
+        Thu,  1 Jul 2021 18:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625162201;
-        bh=NyBvgaZPchBNsApofJiL0TQRScH+mnCzNII+o4g+/1o=;
+        s=k20201202; t=1625162841;
+        bh=agtTRmyWXB9kEbONbwNsqiEDAWJkJ50/g6gaMLYdm98=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mnx89TNBxzMocqrY8+v5319A1Pr1XJJub+npPbeggQcfXoNs9bhmxyRhO9uF6bTkS
-         WUaV7xuPKYByCdTw3uOPSOlyovA/B7LfNuvXlFlmdq+92m2TbJpPXYD4LvvWv+H8Ek
-         SMaa3yj0okE5EbKLK+6JEk+br9LuugsevX/7x3S9YisE/1/B97vOXi6wMqfApet1od
-         vLaHssfAL+yRVXYzMQZQbF+SbPd5kdHz13zk8xhpgy3h0CVSrn1PNJVYyXTI1ImLho
-         CXwz33AfAZjgghheBDaQvqap0laRIf7sDOObZPoxtTqdpJbozPxlE3FVbocIDkzQJW
-         R4TT5M/OkZaXw==
-Date:   Thu, 1 Jul 2021 12:56:39 -0500
+        b=I58Og3y7Xjz/8RFEAADuFy6sVCWZNSgiIrmCizpmoJDPxwIqMT+wUKM+m+/iiT8BS
+         28dwwd4IvFnUf63JPpLWE34/6qggR0BJ9SdfXql9FqwuxmcsfFrtAecjEfc+kR05Zy
+         bo2vMYPbPACT4FhgEfj1h2Cac78t7q/j3ma2U/tMTOuPJSC62zLwIgZsijU4zotLHt
+         IudifaknX8yWr+WDHrGZG1vVpEm5PXZ+nIBTKI9sfkMzqVkbY0XNWU8O6/nSkDdAVG
+         qlydlHEDoeadfvjokisfxWAPKxK0ouaGTWGSBevuB47AN8SE6+uSQDtle+AsH0g1Gw
+         H8LKiDim+W72Q==
+Date:   Thu, 1 Jul 2021 13:07:20 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Scott Murray <scott@spiteful.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: cpcihp: Move declaration of cpci_debug to the
- header file
-Message-ID: <20210701175639.GA73684@bjorn-Precision-5520>
+To:     Siyu Jin <jinsiyu940203@163.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip: Fix timeout in
+ rockchip_pcie_host_init_port()
+Message-ID: <20210701180720.GA74228@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210510024529.3221347-1-kw@linux.com>
+In-Reply-To: <20210421083115.30213-1-jinsiyu940203@163.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 02:45:29AM +0000, Krzysztof Wilczyński wrote:
-> At the moment, the global variable cpci_debug is declared in the
-> cpci_hotplug_core.c file.  Since this variable has users outside of this
-> file and uses the extern keyword to change its visibility, move the
-> variable declaration to the header file.
+On Wed, Apr 21, 2021 at 04:31:15PM +0800, Siyu Jin wrote:
+> In function rockchip_pcie_host_init_port(), it defines a timeout
+> value of 500ms to wait for pcie training. However, it is not enough
+> for samsung PM953 SSD drive and realtek RTL8111F network adapter,
+> which leads to the following errors:
 > 
-> This resolves the following sparse warning:
-> 
->   drivers/pci/hotplug/cpci_hotplug_core.c:47:5: warning: symbol 'cpci_debug' was not declared. Should it be static?
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> 	[    0.879663] rockchip-pcie f8000000.pcie: PCIe link training gen1 timeout!
+> 	[    0.880284] rockchip-pcie f8000000.pcie: deferred probe failed
+> 	[    0.880932] rockchip-pcie: probe of f8000000.pcie failed with error -110
+
+s/pcie/PCIe/ (also below)
+s/samsung/Samsung/
+s/realtek/Realtek/
+
+Remove the timestamps because they're not useful here.
+
+Indent quoted material like the error messages by two spaces.
+
+When you repost, add these recipients (found by
+"./scripts/get_maintainer.pl drivers/pci/controller/pcie-rockchip-host.c"):
+
+  Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+  Shawn Lin <shawn.lin@rock-chips.com>
+  Rob Herring <robh@kernel.org>
+  Krzysztof Wilczyński <kw@linux.com> (since he commented on this post)
+
+> The pcie spec only defines the min time of training, not the max
+> one. So set a proper timeout value is important. Change the value
+> to 1000ms will fix this bug.
+
+Can you include the spec reference about where it defines the minimum
+training time?
+
+I guess this is actually a Rockchip-specific thing, since I assume
+these devices work fine on other systems?  So maybe this is not a PCIe
+thing but a Rockchip thing?
+
+> Signed-off-by: Siyu Jin <jinsiyu940203@163.com>
 > ---
->  drivers/pci/hotplug/cpci_hotplug.h      | 3 +++
->  drivers/pci/hotplug/cpci_hotplug_core.c | 1 -
->  drivers/pci/hotplug/cpci_hotplug_pci.c  | 2 --
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/pcie-rockchip-host.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-> index f33ff2bca414..3fdd1b9bd8c3 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug.h
-> +++ b/drivers/pci/hotplug/cpci_hotplug.h
-> @@ -75,6 +75,9 @@ int cpci_hp_unregister_bus(struct pci_bus *bus);
->  int cpci_hp_start(void);
->  int cpci_hp_stop(void);
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index f1d08a1b1591..aa42e28b49a8 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -329,10 +329,10 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
 >  
-> +/* Global variables */
-> +extern int cpci_debug;
-> +
->  /*
->   * Internal function prototypes, these functions should not be used by
->   * board/chassis drivers.
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-> index d0559d2faf50..7a78e6340291 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-> @@ -44,7 +44,6 @@ static DECLARE_RWSEM(list_rwsem);
->  static LIST_HEAD(slot_list);
->  static int slots;
->  static atomic_t extracting;
-> -int cpci_debug;
-
-We can add a declaration, but we still need a *definition* somewhere,
-right?
-
-drivers/pci/hotplug/ has several drivers that are split over multiple
-files.  IMHO there is zero benefit to splitting them into multiple
-files and one of the downsides is things like this that shouldn't be
-global, but are global because of the split.
-
-Not sure it's worth the churn of squashing them together, at least for
-ancient things like this.  pciehp is a perennial thorn in my side,
-though.  Every time I look for something, I try two or three files
-before finding the right one.
-
->  static struct cpci_hp_controller *controller;
->  static struct task_struct *cpci_thread;
->  static int thread_finished;
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_pci.c b/drivers/pci/hotplug/cpci_hotplug_pci.c
-> index 2c16adb7f4ec..6c48066acb44 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_pci.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_pci.c
-> @@ -19,8 +19,6 @@
+>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
 >  
->  #define MY_NAME	"cpci_hotplug"
+> -	/* 500ms timeout value should be enough for Gen1/2 training */
+> +	/* 1000ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
+>  				 status, PCIE_LINK_UP(status), 20,
+> -				 500 * USEC_PER_MSEC);
+> +				 1000 * USEC_PER_MSEC);
+>  	if (err) {
+>  		dev_err(dev, "PCIe link training gen1 timeout!\n");
+>  		goto err_power_off_phy;
+> @@ -349,7 +349,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
 >  
-> -extern int cpci_debug;
-> -
->  #define dbg(format, arg...)					\
->  	do {							\
->  		if (cpci_debug)					\
+>  		err = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
+>  					 status, PCIE_LINK_IS_GEN2(status), 20,
+> -					 500 * USEC_PER_MSEC);
+> +					 1000 * USEC_PER_MSEC);
+>  		if (err)
+>  			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
+>  	}
 > -- 
-> 2.31.1
+> 2.17.1
 > 
