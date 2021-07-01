@@ -2,94 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 048B43B97AF
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 22:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF3E43B97C2
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 22:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234126AbhGAUih (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 16:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234094AbhGAUig (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Jul 2021 16:38:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BC1A7613F4;
-        Thu,  1 Jul 2021 20:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625171766;
-        bh=pH7dATbUtCrASeuOIG1FOhR4E4lRvxGEQRtc5eAb8Lw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Frv69sO4DPumcYPtZbYVBUwRULypShfF6R1ZYaZOEZn+k4zWfOG9TwKpxPPS7sL6p
-         /zGu+le3IL4dsFf0BYEWWMC/p5d+PfDJ/wum0os1Po6mYZU7Jq3k3ziWS6yGCIi9/L
-         9DgCCfB9ijLbVIKuT0yDWIj2eU3sQ3q6I70JDcPleb5ArPEnjCx1zWyzvr0o6pNsBU
-         3Rrnl6ZxwTz67C4QD9BomiiyyYTS9VFmWjsivQ1DUpgJkGMuh1XJzQru8dAXUm/fmt
-         Lc2FKbbLEpCUNvW/Sw5Xr6EdA7qUQpGRuBHOX+0f4DzdpnMv+O5GVZHSsbbTNUSuTc
-         Y/xnto9ovcStg==
-Date:   Thu, 1 Jul 2021 15:36:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+        id S233425AbhGAUqf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 16:46:35 -0400
+Received: from mail-lj1-f170.google.com ([209.85.208.170]:41897 "EHLO
+        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229934AbhGAUqf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 16:46:35 -0400
+Received: by mail-lj1-f170.google.com with SMTP id h6so10263380ljl.8
+        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 13:44:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kQF8cLAtr4vueW7JSMUMX/IBfK/Lv//HrORl0QoGClk=;
+        b=TA6Fod1aWN2YoC7zdytK6spFM0+NujFcK0f6OIW5GYfR/VqlVkSC8vRTpBFHPHEVCp
+         a5aoUZc94xxsK8fjx90VLvNzXf6q0HsacyEEW4Yh+h9yUEoruCRg9dQKCPOYumBu0VYl
+         HgqiwKFMANyvVVdiuBuJV1ppXgPB4iU5Ws8UrQWTqxeYTL5NSMTCKLTbrqrwuB9DUh+2
+         Z5Cp+s6C1rCiXH3Tek2wpvIsISN2HFhSPsLo7obyytHzzjVvS4G9E8Oux+XvN98wJMXu
+         T4c6cmdw32wQee9N/e242GO5WFJJZRdsTaMIFvE2U18uxiQDYFK4Gx+Q/VZROsV1v2AR
+         e6SQ==
+X-Gm-Message-State: AOAM532hyfx0+pTRQoC05mfpTA6S2yFc3I9WyXnk3R4hyXNH8IcQ21Wj
+        fGU/2xLVdZmw41PoNluSRwc=
+X-Google-Smtp-Source: ABdhPJxsNX3q+LRBdTiuUvN3gUVBZL29ogbKwTVEs4+iAwE0kaiAYYiTHT+ozqWLZjJVmS0oIIGzZg==
+X-Received: by 2002:a2e:a706:: with SMTP id s6mr1063996lje.169.1625172243348;
+        Thu, 01 Jul 2021 13:44:03 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id w8sm69942lfq.27.2021.07.01.13.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jul 2021 13:44:02 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Jesper Nilsson <jesper.nilsson@axis.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Scott Murray <scott@spiteful.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: cpcihp: Move declaration of cpci_debug to the
- header file
-Message-ID: <20210701203604.GA89386@bjorn-Precision-5520>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH v2 1/2] PCI: artpec6: Remove surplus break statement after return
+Date:   Thu,  1 Jul 2021 20:44:00 +0000
+Message-Id: <20210701204401.1636562-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210701184306.1492003-1-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 06:43:06PM +0000, Krzysztof Wilczyński wrote:
-> At the moment, the global variable cpci_debug is declared in the
-> cpci_hotplug_core.c file.  Since this variable has users outside of this
-> file and uses the extern keyword to change its visibility, move the
-> variable declaration to the header file.
-> 
-> This resolves the following sparse warning:
-> 
->   drivers/pci/hotplug/cpci_hotplug_core.c:47:5: warning: symbol 'cpci_debug' was not declared. Should it be static?
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+As part of code refactoring completed in the commit a0fd361db8e5 ("PCI:
+dwc: Move "dbi", "dbi2", and "addr_space" resource setup into common
+code") the function artpec6_add_pcie_ep() has been removed and the call
+to the dw_pcie_ep_init() has been moved into artpec6_pcie_probe().
 
-Applied to pci/hotplug for v5.14, thanks!
+This change left a break statement behind that is not needed any more as
+as the function artpec6_pcie_probe() return immediately after making
+a call to dw_pcie_ep_init().
 
-> ---
-> Changes in v2:
->   Remove hunk that incorrectly removed definition of the cpci_debug
->   variable.
-> 
->  drivers/pci/hotplug/cpci_hotplug.h     | 3 +++
->  drivers/pci/hotplug/cpci_hotplug_pci.c | 2 --
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-> index f33ff2bca414..3fdd1b9bd8c3 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug.h
-> +++ b/drivers/pci/hotplug/cpci_hotplug.h
-> @@ -75,6 +75,9 @@ int cpci_hp_unregister_bus(struct pci_bus *bus);
->  int cpci_hp_start(void);
->  int cpci_hp_stop(void);
->  
-> +/* Global variables */
-> +extern int cpci_debug;
-> +
->  /*
->   * Internal function prototypes, these functions should not be used by
->   * board/chassis drivers.
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_pci.c b/drivers/pci/hotplug/cpci_hotplug_pci.c
-> index 2c16adb7f4ec..6c48066acb44 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_pci.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_pci.c
-> @@ -19,8 +19,6 @@
->  
->  #define MY_NAME	"cpci_hotplug"
->  
-> -extern int cpci_debug;
-> -
->  #define dbg(format, arg...)					\
->  	do {							\
->  		if (cpci_debug)					\
-> -- 
-> 2.32.0
-> 
+Thus remove this surplus break statement that became a dead code.
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/dwc/pcie-artpec6.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+index 597c282f586c..739871bece75 100644
+--- a/drivers/pci/controller/dwc/pcie-artpec6.c
++++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+@@ -445,7 +445,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+ 		pci->ep.ops = &pcie_ep_ops;
+ 
+ 		return dw_pcie_ep_init(&pci->ep);
+-		break;
+ 	}
+ 	default:
+ 		dev_err(dev, "INVALID device type %d\n", artpec6_pcie->mode);
+-- 
+2.32.0
+
