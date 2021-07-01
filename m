@@ -2,133 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 340593B93DF
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 17:25:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6A173B93DD
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 17:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233335AbhGAP1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S233303AbhGAP1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 1 Jul 2021 11:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S233064AbhGAP1p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 1 Jul 2021 11:27:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E12A96140A;
-        Thu,  1 Jul 2021 15:25:14 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1A1B0613FB;
+        Thu,  1 Jul 2021 15:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1625153114;
-        bh=+xwpidjwxHnbYP8ChZRNxTaoNpy++W26pPBlNiZG1Es=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YE1gmcnGC9g80E48RRI74yVfqEgwwBB2bKAeTy4DSkuQhlA9/8EOdAK+quQe0R/fZ
-         QZGdA60OQIAmf8X54geE76/5GIhw2kc8aPAkegkan+nwD+yYdnrOEtLGHngCzXszMi
-         z/8iYsXxwzLtyuUWHEHaNgvnIaIqwYcbmg3uLh+9ukbLGgk8D9/d+WsfqdzShslDRC
-         4E8DyJ+UVGFQSXByxm0ESUjpqZIfzPhXLbe5XTP4BzMppZXitZ5m/4k6rLQCPs31zX
-         8eOwQWjYoLw2uXyx+edD60Yd9zlQEUdA8T2OksazGEWz2WvimcIHL1CKGuKlMRx0Y2
-         h9ro5wQDaYH3g==
-Received: by mail-ej1-f45.google.com with SMTP id bg14so11020110ejb.9;
-        Thu, 01 Jul 2021 08:25:14 -0700 (PDT)
-X-Gm-Message-State: AOAM5321ZNxX9mQ30BQBya0tz6yj0neSExHS0EUuFz0/u+toUPQdhbk4
-        dogHXhxWwkmCMCoVLYOAOrViU96aaOxzBkEY8w==
-X-Google-Smtp-Source: ABdhPJzUEsTvx8EteF/IK3c/gYkviXw1F7trsPeasxSHv8iu+ZIaHLTIVsLiLpAQlbHQOTQVV45g91QrmyohrBAw17o=
-X-Received: by 2002:a17:907:3e8a:: with SMTP id hs10mr372288ejc.359.1625153113214;
- Thu, 01 Jul 2021 08:25:13 -0700 (PDT)
+        bh=oy7CS2cC73Awck4LkRDJSbx3cjVglQSbDgobfA6G/PE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=unv6bliIX8ll7yFsd7MslKmvessqaWgwsv7q2W3KttFTfdzEhwkYH9jZmMPRRsem0
+         AD1lep5Iybwzp1ymLloldrE/l0mgPBR3dIM8ddk6ly3T1cpVM6BkhvvZFctcmURQvv
+         WaM02aOuCiz76D54FE6ahcMpFzq6jYv0XnJIlje8ftucSzThZpgsjRm9wgjHjyRgW+
+         H6lTYpJucWyME/BbLbpvd/GIiKAigHKiEHZ2e8eASMublXz2Z+jzGSqqLIWaQttHoz
+         HK6mFzve0XNvW0nL4rJ8rF4Z+tSWLCCcSFruNJ5xbNiN+t1/HkgZPcUkjjEEUiUBhh
+         K8RgE7ZIcP9+Q==
+Date:   Thu, 1 Jul 2021 10:25:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        =?iso-8859-1?Q?R=F6tti?= 
+        <espressobinboardarmbiantempmailaddress@posteo.de>,
+        Zachary Zhang <zhangzg@marvell.com>,
+        Edward Cree <ecree.xilinx@gmail.com>,
+        Martin Habets <habetsm.xilinx@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Ben Hutchings <ben.hutchings@essensium.com>
+Subject: Re: [PATCH 1/2] PCI: Call MPS fixup quirks early
+Message-ID: <20210701152512.GA55520@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210630034653.10260-1-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20210630034653.10260-1-manivannan.sadhasivam@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 1 Jul 2021 09:25:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLHp3kBc1VtGVRxVr_k69GqSC_JX88jo3stdM4W9Qq6AQ@mail.gmail.com>
-Message-ID: <CAL_JsqLHp3kBc1VtGVRxVr_k69GqSC_JX88jo3stdM4W9Qq6AQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Add Qualcomm PCIe Endpoint driver support
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        hemantk@codeaurora.org,
-        Siddartha Mohanadoss <smohanad@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        skananth@codeaurora.org, vpernami@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210624171418.27194-1-kabel@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 29, 2021 at 9:47 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> Hello,
->
-> This series adds support for Qualcomm PCIe Endpoint controller found
-> in platforms like SDX55. The Endpoint controller is based on the designware
-> core with additional Qualcomm wrappers around the core.
->
-> The driver is added separately unlike other Designware based drivers that
-> combine RC and EP in a single driver. This is done to avoid complexity and
-> to maintain this driver autonomously.
->
-> The driver has been validated with an out of tree MHI function driver on
-> SDX55 based Telit FN980 EVB connected to x86 host machine over PCIe.
->
-> Thanks,
-> Mani
->
-> Changes in v5:
->
-> * Removed the DBI register settings that are not needed
-> * Used the standard definitions available in pci_regs.h
-> * Added defines for all the register fields
-> * Removed the left over code from previous iteration
->
-> Changes in v4:
->
-> * Removed the active_config settings needed for IPA integration
-> * Switched to writel for couple of relaxed versions that sneaked in
+[+cc Edward, Martin (SFC maintainers), Ben, Keith (just FYI)]
 
-I thought we resolved this discussion. Use _relaxed variants unless
-you need the stronger ones.
+On Thu, Jun 24, 2021 at 07:14:17PM +0200, Marek Behún wrote:
+> The pci_device_add() function calls header fixups only after
+> pci_configure_device(), which configures MPS.
 
-Rob
+This makes good sense; the call graph looks like:
 
->
-> Changes in v3:
->
-> * Lot of minor cleanups to the driver patch based on review from Bjorn and Stan.
-> * Noticeable changes are:
->   - Got rid of _relaxed calls and used readl/writel
->   - Got rid of separate TCSR memory region and used syscon for getting the
->     register offsets for Perst registers
->   - Changed the wake gpio handling logic
->   - Added remove() callback and removed "suppress_bind_attrs"
->   - stop_link() callback now just disables PERST IRQ
-> * Added MMIO region and doorbell interrupt to the binding
-> * Added logic to write MMIO physicall address to MHI base address as it is
->   for the function driver to work
->
-> Changes in v2:
->
-> * Addressed the comments from Rob on bindings patch
-> * Modified the driver as per binding change
-> * Fixed the warnings reported by Kbuild bot
-> * Removed the PERST# "enable_irq" call from probe()
->
-> Manivannan Sadhasivam (3):
->   dt-bindings: pci: Add devicetree binding for Qualcomm PCIe EP
->     controller
->   PCI: dwc: Add Qualcomm PCIe Endpoint controller driver
->   MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
->
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 160 ++++
->  MAINTAINERS                                   |  10 +-
->  drivers/pci/controller/dwc/Kconfig            |  10 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     | 742 ++++++++++++++++++
->  5 files changed, 922 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
->
-> --
-> 2.25.1
->
+  pci_device_add
+    pci_configure_device
+      pci_configure_mps
+        pcie_get_mps(dev)
+        pcie_get_mps(bridge)
+ +      pcie_set_mps(dev)             # added by 27d868b5e6cfa
+    pci_fixup_device(pci_fixup_header)
+
+> So in order to have MPS fixups working, they need to be called early.
+> 
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Fixes: 27d868b5e6cfa ("PCI: Set MPS to match upstream bridge")
+
+Before 27d868b5e6cfa, pci_configure_device() really didn't *do*
+anything [1].  It read the MPS settings from the device and upstream
+bridge and possibly printed a warning, but didn't change anything.
+
+After 27d868b5e6cfa, pci_configure_device() did actually call
+pcie_set_mps(), which updates the Device Control register (possibly
+restricted by dev->pcie_mpss, which is set by this quirk).
+
+The fixup_mpss_256() quirk was added in 2011 by a94d072b2023 ("PCI:
+Add quirk for known incorrect MPSS").  Interesting that 27d868b5e6cfa
+was merged in 2015 but apparently nobody noticed until now.  I guess
+those Solarflare devices aren't widely used?
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/probe.c?id=27d868b5e6cfa^#n1278
+
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/quirks.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 22b2bb1109c9..4d9b9d8fbc43 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3233,12 +3233,12 @@ static void fixup_mpss_256(struct pci_dev *dev)
+>  {
+>  	dev->pcie_mpss = 1; /* 256 bytes */
+>  }
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+> -			 PCI_DEVICE_ID_SOLARFLARE_SFC4000A_0, fixup_mpss_256);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+> -			 PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
+> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOLARFLARE,
+> -			 PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+> +			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_0, fixup_mpss_256);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+> +			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+> +			PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
+>  
+>  /*
+>   * Intel 5000 and 5100 Memory controllers have an erratum with read completion
+> -- 
+> 2.31.1
+> 
