@@ -2,104 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E2FB3B97C3
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 22:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2413B3B97C8
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 22:50:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233491AbhGAUqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 16:46:36 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:43606 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbhGAUqg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 16:46:36 -0400
-Received: by mail-lj1-f180.google.com with SMTP id f13so10257676ljp.10
-        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 13:44:05 -0700 (PDT)
+        id S232771AbhGAUxO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 16:53:14 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:45761 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230213AbhGAUxO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jul 2021 16:53:14 -0400
+Received: by mail-lf1-f53.google.com with SMTP id bq39so1554984lfb.12
+        for <linux-pci@vger.kernel.org>; Thu, 01 Jul 2021 13:50:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iVS1NuRQOjDJx0zHL86NloP+4ltmCaJEZU9LmlzJl70=;
-        b=BPHhabjIkw1LqeiDQJPSU/Wfgk7Yc3GTvVFKNBHnGp8WYMcsRsAUcHr66nZwSUGc6O
-         CG9RNjYgq2MqJpoq9jcYl3m5n+et2jbE1Jk2btOxsO8NybCfJh0hRnrOKZ3q5bJFtLXK
-         K8HMDNaAdFR5m/SNfbxaNMTYFMoSKk7gICC05kBKZaqbrW37w5y//bG6/zNAdUjicnub
-         S/H+Cw2C2VaQkD/98eUVFaVd8jZuG/GIPn3ytCWuLlgU6a+c5Fo6Grpdf5PUaIjZVh7b
-         t05+H5k0sxobzy6pcC2FsGCD6+IKWeAjZrNdqDMa5QfjBTJgctdBcMjN5DTJjNvHVozN
-         PsKw==
-X-Gm-Message-State: AOAM530I3PyenF4e82yMWAcSEV3fXANZTYwHt5TBWnwjqJzW9aPQwV8k
-        R/wC7iS0+twl2bQrL86GBYQ=
-X-Google-Smtp-Source: ABdhPJxPjttGkitm9boSf7BhGN32AdPEJM6o9g14HbYXUz3SqqvQHZLSPPSBHc4jwawNaMO5/arCxA==
-X-Received: by 2002:a2e:9010:: with SMTP id h16mr1084171ljg.118.1625172244445;
-        Thu, 01 Jul 2021 13:44:04 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id w8sm69942lfq.27.2021.07.01.13.44.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JNnWqssbpNlrqeNTedR8Co4e27hSBMSc+oyPNDRDHGs=;
+        b=iIEeNdVtDK60TAlkSxAPXmaPNseC/F80RgyAFTnm8NFi+IQObTSrTGh9Nv2OIGqXGJ
+         CMv0Zh4WuX1bY13EB+pVWauzsL5ynpDw4+7ohKgiFfcmTJfTdGKeOZySBr2If+U5BmxY
+         eLeQDPsxF96YIWFqzf7MHJe9+YFIFUZBF6wRL4XdDGqgU08ZHAeBqtNJXZlTz9dvxukF
+         XLigkGez9fTD5P7tvG7qHBsUtGIxngx+Pa/EM/RxwWkysXlF0kvY30E5QbhjmwPGq/ni
+         8apEmVK/D/ge/N9zQkDMx26+T+DLVbM2ZcRmX1JizlhIC6LCV7JrrMNPIdJHTWKFS0lh
+         aqkg==
+X-Gm-Message-State: AOAM530x1J75/c+ezFNJ6WRrv4EJqgiDQDV4j3+LmDrPdUHC2oYQGnIp
+        WLNQQoJ6eaXe/RNFDJ4ijPg=
+X-Google-Smtp-Source: ABdhPJz4s/pTAiLcSDdCzemQVgXpOXt3LsUrWeQiApW17o3lnXh5B1RpKXh1OzjwE0JSceNJvmKXtQ==
+X-Received: by 2002:ac2:5ec9:: with SMTP id d9mr1133633lfq.60.1625172641640;
+        Thu, 01 Jul 2021 13:50:41 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id d37sm70760lfv.68.2021.07.01.13.50.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 13:44:03 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Jesper Nilsson <jesper.nilsson@axis.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thu, 01 Jul 2021 13:50:41 -0700 (PDT)
+Date:   Thu, 1 Jul 2021 22:50:40 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jesper Nilsson <jesper.nilsson@axis.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH v2 2/2] PCI: artpec6: Remove local code block from within switch statement
-Date:   Thu,  1 Jul 2021 20:44:01 +0000
-Message-Id: <20210701204401.1636562-2-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210701204401.1636562-1-kw@linux.com>
-References: <20210701204401.1636562-1-kw@linux.com>
+Subject: Re: [PATCH] PCI: artpec6: Remove surplus break statement after return
+Message-ID: <20210701205040.GA309322@rocinante>
+References: <20210701191640.1493543-1-kw@linux.com>
+ <20210701195614.GA84355@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210701195614.GA84355@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-At the moment, the switch statement in the artpec6_pcie_probe() has
-a local code block where the local variable "val" is defined and
-immediately used by the artpec6_pcie_readl() within this local scope.
+Hi Bjorn,
 
-This extra code block adds brackets at the same indentation level as the
-switch statement itself which can hinder readability of the code.
+[...]
+> According to
+> 
+>   $ git grep -n -A1 "return.*;" drivers/pci
+> 
+> there's at least one more instance in
+> drivers/pci/controller/dwc/pcie-designware-plat.c.
 
-Thus, move the variable "val" declaration and definition at the top of
-the function where other variables are already present, and remove the
-extra code block from within the select statement.  This also is the
-preferred style in the PCI tree.
+Nice find!  I will send a patch shortly.  Thank you!
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/dwc/pcie-artpec6.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+[...]
+> >  		pci->ep.ops = &pcie_ep_ops;
+> >  
+> >  		return dw_pcie_ep_init(&pci->ep);
+> > -		break;
+> >  	}
+> 
+> Not related to your patch, but I'm not really a fan of the block here
+> (needed because of the local "u32 val" declaration) because we end up
+> with two close braces at the same indent level.  I'd rather declare
+> the variable at the top with the other local variables and dispense
+> with the braces.
 
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index 739871bece75..c91fc1954432 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -384,6 +384,7 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 	const struct artpec_pcie_of_data *data;
- 	enum artpec_pcie_variants variant;
- 	enum dw_pcie_device_mode mode;
-+	u32 val;
- 
- 	match = of_match_device(artpec6_pcie_of_match, dev);
- 	if (!match)
-@@ -432,9 +433,7 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 		if (ret < 0)
- 			return ret;
- 		break;
--	case DW_PCIE_EP_TYPE: {
--		u32 val;
--
-+	case DW_PCIE_EP_TYPE:
- 		if (!IS_ENABLED(CONFIG_PCIE_ARTPEC6_EP))
- 			return -ENODEV;
- 
-@@ -445,7 +444,6 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 		pci->ep.ops = &pcie_ep_ops;
- 
- 		return dw_pcie_ep_init(&pci->ep);
--	}
- 	default:
- 		dev_err(dev, "INVALID device type %d\n", artpec6_pcie->mode);
- 	}
--- 
-2.32.0
+No problem!  I will sent v2 to take care of this too in the same time.
 
+	Krzysztof
