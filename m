@@ -2,26 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27CEE3B8E59
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 09:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A27B93B8E5A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 09:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234839AbhGAHsv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 03:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        id S234865AbhGAHtN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 03:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229906AbhGAHsv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Jul 2021 03:48:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C46E61417;
-        Thu,  1 Jul 2021 07:46:19 +0000 (UTC)
+        id S229906AbhGAHtM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Jul 2021 03:49:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C15561490;
+        Thu,  1 Jul 2021 07:46:40 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V6 3/4] PCI: Add quirk for LS7A to avoid reboot failure
-Date:   Thu,  1 Jul 2021 15:44:57 +0800
-Message-Id: <20210701074458.1809532-4-chenhuacai@loongson.cn>
+Subject: [PATCH V6 4/4] PCI: Add quirk for multifunction devices of LS7A
+Date:   Thu,  1 Jul 2021 15:44:58 +0800
+Message-Id: <20210701074458.1809532-5-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210701074458.1809532-1-chenhuacai@loongson.cn>
 References: <20210701074458.1809532-1-chenhuacai@loongson.cn>
@@ -31,99 +32,80 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit cc27b735ad3a75574a ("PCI/portdrv: Turn off PCIe services during
-shutdown") causes poweroff/reboot failure on systems with LS7A chipset.
-We found that if we remove "pci_command &= ~PCI_COMMAND_MASTER;" in
-do_pci_disable_device(), it can work well. The hardware engineer says
-that the root cause is that CPU is still accessing PCIe devices while
-poweroff/reboot, and if we disable the Bus Master Bit at this time, the
-PCIe controller doesn't forward requests to downstream devices, and also
-doesn't send TIMEOUT to CPU, which causes CPU wait forever (hardware
-deadlock). This behavior is a PCIe protocol violation (Bus Master should
-not be involved in CPU MMIO transactions), and it will be fixed in new
-revisions of hardware (add timeout mechanism for CPU read request,
-whether or not Bus Master bit is cleared).
+From: Jianmin Lv <lvjianmin@loongson.cn>
 
-On some x86 platforms, radeon/amdgpu devices can cause similar problems
-[1][2]. Once before I wanted to make a single patch to solve "all of
-these problems" together, but it seems unreasonable because maybe they
-are not exactly the same problem. So, this patch just add a quirk for
-LS7A to avoid clearing Bus Master bit in pcie_port_device_remove(), and
-leave other platforms as is.
+In LS7A, multifunction device use same PCI PIN (because the PIN register
+report the same INTx value to each function) but we need different IRQ
+for different functions, so add a quirk to fix it for standard PCI PIN
+usage.
 
-[1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
-[2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
+This patch only affect ACPI based systems (and only needed by ACPI based
+systems, too). For DT based systems, the irq mappings is defined in .dts
+files and be handled by of_irq_parse_pci().
 
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/pcie/portdrv_core.c |  6 +++++-
- drivers/pci/quirks.c            | 21 +++++++++++++++++++++
- include/linux/pci.h             |  1 +
- 3 files changed, 27 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c    | 23 +++++++++++++++++++++++
+ include/linux/pci_ids.h | 11 +++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index e1fed6649c41..7f9549a1f48b 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -486,9 +486,13 @@ EXPORT_SYMBOL_GPL(pcie_port_find_device);
-  */
- void pcie_port_device_remove(struct pci_dev *dev)
- {
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-+
- 	device_for_each_child(&dev->dev, NULL, remove_iter);
- 	pci_free_irq_vectors(dev);
--	pci_disable_device(dev);
-+
-+	if (!bridge->no_dis_bmaster)
-+		pci_disable_device(dev);
- }
- 
- /**
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index febc53943051..b1a13d8fe3b6 100644
+index b1a13d8fe3b6..f52f203c4209 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -263,6 +263,27 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+@@ -284,6 +284,29 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
+ 			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
  
-+static void loongson_bmaster_quirk(struct pci_dev *pdev)
++static void loongson_pci_pin_quirk(struct pci_dev *pdev)
 +{
-+	/*
-+	 * Some Loongson PCIe ports have h/w limitations of maximum read
-+	 * request size. They can't handle anything larger than this. So
-+	 * force this limit on any devices attached under these ports.
-+	 */
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-+
-+	if (!bridge)
-+		return;
-+
-+	bridge->no_dis_bmaster = 1;
++	pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
 +}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_bmaster_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_bmaster_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			PCI_DEVICE_ID_LOONGSON_AHCI, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			PCI_DEVICE_ID_LOONGSON_EHCI, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			PCI_DEVICE_ID_LOONGSON_OHCI, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			PCI_DEVICE_ID_LOONGSON_DC, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			PCI_DEVICE_ID_LOONGSON_GPU, loongson_pci_pin_quirk);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
++			PCI_DEVICE_ID_LOONGSON_GMAC, loongson_pci_pin_quirk);
 +
  /*
   * The Mellanox Tavor device gives false positive parity errors.  Disable
   * parity error reporting.
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 5cdf926000fc..74a7da2e8996 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -542,6 +542,7 @@ struct pci_host_bridge {
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
- 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
-+	unsigned int	no_dis_bmaster:1;	/* No Disable Bus Master */
- 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
- 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 4bac1831de80..17b2ab059176 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -151,6 +151,17 @@
+ /* Vendors and devices.  Sort key: vendor first, device next. */
+ 
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
++#define PCI_DEVICE_ID_LOONGSON_HOST     0x7a00
++#define PCI_DEVICE_ID_LOONGSON_APB      0x7a02
++#define PCI_DEVICE_ID_LOONGSON_GMAC     0x7a03
++#define PCI_DEVICE_ID_LOONGSON_DC       0x7a06
++#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
++#define PCI_DEVICE_ID_LOONGSON_GPU      0x7a15
++#define PCI_DEVICE_ID_LOONGSON_AHCI     0x7a08
++#define PCI_DEVICE_ID_LOONGSON_EHCI     0x7a14
++#define PCI_DEVICE_ID_LOONGSON_OHCI     0x7a24
++#define PCI_DEVICE_ID_LOONGSON_LPC      0x7a0c
++#define PCI_DEVICE_ID_LOONGSON_DMA      0x7a0f
+ 
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+ #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
 -- 
 2.27.0
 
