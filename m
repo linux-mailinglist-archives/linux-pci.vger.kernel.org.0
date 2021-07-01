@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8105F3B8E56
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 09:45:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27CEE3B8E59
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jul 2021 09:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234697AbhGAHsJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 03:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
+        id S234839AbhGAHsv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jul 2021 03:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229906AbhGAHsJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Jul 2021 03:48:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B57ED61490;
-        Thu,  1 Jul 2021 07:45:37 +0000 (UTC)
+        id S229906AbhGAHsv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 1 Jul 2021 03:48:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C46E61417;
+        Thu,  1 Jul 2021 07:46:19 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V6 2/4] PCI: Move loongson pci quirks to quirks.c
-Date:   Thu,  1 Jul 2021 15:44:56 +0800
-Message-Id: <20210701074458.1809532-3-chenhuacai@loongson.cn>
+Subject: [PATCH V6 3/4] PCI: Add quirk for LS7A to avoid reboot failure
+Date:   Thu,  1 Jul 2021 15:44:57 +0800
+Message-Id: <20210701074458.1809532-4-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210701074458.1809532-1-chenhuacai@loongson.cn>
 References: <20210701074458.1809532-1-chenhuacai@loongson.cn>
@@ -31,145 +31,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Loongson PCH (LS7A chipset) will be used by both MIPS-based and
-LoongArch-based Loongson processors. MIPS-based Loongson uses FDT
-but LoongArch-base Loongson uses ACPI, but the driver in drivers/
-pci/controller/pci-loongson.c is FDT-only. So move the quirks to
-quirks.c where can be shared by all architectures.
+Commit cc27b735ad3a75574a ("PCI/portdrv: Turn off PCIe services during
+shutdown") causes poweroff/reboot failure on systems with LS7A chipset.
+We found that if we remove "pci_command &= ~PCI_COMMAND_MASTER;" in
+do_pci_disable_device(), it can work well. The hardware engineer says
+that the root cause is that CPU is still accessing PCIe devices while
+poweroff/reboot, and if we disable the Bus Master Bit at this time, the
+PCIe controller doesn't forward requests to downstream devices, and also
+doesn't send TIMEOUT to CPU, which causes CPU wait forever (hardware
+deadlock). This behavior is a PCIe protocol violation (Bus Master should
+not be involved in CPU MMIO transactions), and it will be fixed in new
+revisions of hardware (add timeout mechanism for CPU read request,
+whether or not Bus Master bit is cleared).
 
-LoongArch is a new RISC ISA, mainline support will come soon, and
-documentations are here (in translation):
+On some x86 platforms, radeon/amdgpu devices can cause similar problems
+[1][2]. Once before I wanted to make a single patch to solve "all of
+these problems" together, but it seems unreasonable because maybe they
+are not exactly the same problem. So, this patch just add a quirk for
+LS7A to avoid clearing Bus Master bit in pcie_port_device_remove(), and
+leave other platforms as is.
 
-https://github.com/loongson/LoongArch-Documentation
+[1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
+[2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/controller/pci-loongson.c | 58 ---------------------------
- drivers/pci/quirks.c                  | 58 +++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+), 58 deletions(-)
+ drivers/pci/pcie/portdrv_core.c |  6 +++++-
+ drivers/pci/quirks.c            | 21 +++++++++++++++++++++
+ include/linux/pci.h             |  1 +
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index b02c98723f3b..88066e9db69e 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -12,15 +12,6 @@
- 
- #include "../pci.h"
- 
--/* Device IDs */
--#define DEV_PCIE_PORT_0	0x7a09
--#define DEV_PCIE_PORT_1	0x7a19
--#define DEV_PCIE_PORT_2	0x7a29
--
--#define DEV_LS2K_APB	0x7a02
--#define DEV_LS7A_CONF	0x7a10
--#define DEV_LS7A_LPC	0x7a0c
--
- #define FLAG_CFG0	BIT(0)
- #define FLAG_CFG1	BIT(1)
- #define FLAG_DEV_FIX	BIT(2)
-@@ -32,55 +23,6 @@ struct loongson_pci {
- 	u32 flags;
- };
- 
--/* Fixup wrong class code in PCIe bridges */
--static void bridge_class_quirk(struct pci_dev *dev)
--{
--	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_0, bridge_class_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_1, bridge_class_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_2, bridge_class_quirk);
--
--static void system_bus_quirk(struct pci_dev *pdev)
--{
--	/*
--	 * The address space consumed by these devices is outside the
--	 * resources of the host bridge.
--	 */
--	pdev->mmio_always_on = 1;
--	pdev->non_compliant_bars = 1;
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_LS2K_APB, system_bus_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_LS7A_CONF, system_bus_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_LS7A_LPC, system_bus_quirk);
--
--static void loongson_mrrs_quirk(struct pci_dev *pdev)
--{
--	/*
--	 * Some Loongson PCIe ports have h/w limitations of maximum read
--	 * request size. They can't handle anything larger than this. So
--	 * force this limit on any devices attached under these ports.
--	 */
--	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
--
--	if (!bridge)
--		return;
--
--	bridge->no_inc_mrrs = 1;
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
--			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
--
- static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
- 				unsigned int devfn, int where)
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index e1fed6649c41..7f9549a1f48b 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -486,9 +486,13 @@ EXPORT_SYMBOL_GPL(pcie_port_find_device);
+  */
+ void pcie_port_device_remove(struct pci_dev *dev)
  {
++	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
++
+ 	device_for_each_child(&dev->dev, NULL, remove_iter);
+ 	pci_free_irq_vectors(dev);
+-	pci_disable_device(dev);
++
++	if (!bridge->no_dis_bmaster)
++		pci_disable_device(dev);
+ }
+ 
+ /**
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 22b2bb1109c9..febc53943051 100644
+index febc53943051..b1a13d8fe3b6 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -205,6 +205,64 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
- 				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
+@@ -263,6 +263,27 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
  
-+/* Device IDs */
-+#define DEV_PCIE_PORT_0	0x7a09
-+#define DEV_PCIE_PORT_1	0x7a19
-+#define DEV_PCIE_PORT_2	0x7a29
-+
-+#define DEV_LS2K_APB	0x7a02
-+#define DEV_LS7A_CONF	0x7a10
-+#define DEV_LS7A_LPC	0x7a0c
-+
-+/* Fixup wrong class code in PCIe bridges */
-+static void bridge_class_quirk(struct pci_dev *dev)
-+{
-+	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, bridge_class_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, bridge_class_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, bridge_class_quirk);
-+
-+static void system_bus_quirk(struct pci_dev *pdev)
-+{
-+	/*
-+	 * The address space consumed by these devices is outside the
-+	 * resources of the host bridge.
-+	 */
-+	pdev->mmio_always_on = 1;
-+	pdev->non_compliant_bars = 1;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS2K_APB, system_bus_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_CONF, system_bus_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_LPC, system_bus_quirk);
-+
-+static void loongson_mrrs_quirk(struct pci_dev *pdev)
++static void loongson_bmaster_quirk(struct pci_dev *pdev)
 +{
 +	/*
 +	 * Some Loongson PCIe ports have h/w limitations of maximum read
@@ -181,18 +100,30 @@ index 22b2bb1109c9..febc53943051 100644
 +	if (!bridge)
 +		return;
 +
-+	bridge->no_inc_mrrs = 1;
++	bridge->no_dis_bmaster = 1;
 +}
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_0, loongson_bmaster_quirk);
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_1, loongson_bmaster_quirk);
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
 +
  /*
   * The Mellanox Tavor device gives false positive parity errors.  Disable
   * parity error reporting.
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 5cdf926000fc..74a7da2e8996 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -542,6 +542,7 @@ struct pci_host_bridge {
+ 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+ 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+ 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
++	unsigned int	no_dis_bmaster:1;	/* No Disable Bus Master */
+ 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+ 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+ 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 -- 
 2.27.0
 
