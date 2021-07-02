@@ -2,136 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 673C43BA11E
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 15:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DC83BA191
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 15:48:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232439AbhGBNVN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jul 2021 09:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44320 "EHLO mail.kernel.org"
+        id S232565AbhGBNuk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jul 2021 09:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232363AbhGBNVM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 2 Jul 2021 09:21:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D3B36109D;
-        Fri,  2 Jul 2021 13:18:33 +0000 (UTC)
+        id S232386AbhGBNuk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Jul 2021 09:50:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 910436142B;
+        Fri,  2 Jul 2021 13:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625231920;
-        bh=GDNc99vWU2EKYVywroGm/MONGRMfJ1bw5GtcP1Kxyew=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UpJXnxcF4r+u8N9In3Ngt/3KsBiIssEtR46hbKVGD4imJoDwZps2CiNu9/tX6XODL
-         RkRPeCMJzkowmvGyx+vBIS2hY1z4ccknZBrbZdUt3JmjE2xh4ItTea2grkiScPUhIn
-         HLmoRTEOJQbfW+p5GY0xQ0VKUewGU1RsIqEJOhMbpuv3pp74w18YlrSAOnrKBIP55s
-         v+J/uIyo0HZY5XHsn1OOtuplTl/3fBAHP0aXr8wAQJjJJZ7gIcW+IXijJkOA5vhe1e
-         A78+z8Z0KIiDl7b4jtkq2bGKSaVHIDksVIMFkEDwiE3IncWj68Vxm0ezE9lm9A76mg
-         Qcdpn8Gt/MWYA==
-Date:   Fri, 2 Jul 2021 14:18:29 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Claire Chang <tientzu@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
-        peterz@infradead.org, dri-devel@lists.freedesktop.org,
-        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
-        mingo@kernel.org, jxgao@google.com, sstabellini@kernel.org,
-        Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>, airlied@linux.ie,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        rodrigo.vivi@intel.com, bhelgaas@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>, quic_qiancai@quicinc.com,
-        lkml <linux-kernel@vger.kernel.org>, tfiga@chromium.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        thomas.lendacky@amd.com, linuxppc-dev@lists.ozlabs.org,
-        bauerman@linux.ibm.com
-Subject: Re: [PATCH v15 12/12] of: Add plumbing for restricted DMA pool
-Message-ID: <20210702131829.GA11132@willie-the-truck>
-References: <20210624155526.2775863-1-tientzu@chromium.org>
- <20210624155526.2775863-13-tientzu@chromium.org>
- <20210702030807.GA2685166@roeck-us.net>
- <87ca3ada-22ed-f40c-0089-ca6fffc04f24@arm.com>
+        s=k20201202; t=1625233688;
+        bh=2sqvaKpsBfNMgq83CEar15dETBn3QWs27Pt8LM/rCwM=;
+        h=From:Date:Subject:To:Cc:From;
+        b=rc62/bOo5T2jDzR4RHPSTBU9uRAByYE4yKqqeivveY0JA8eJssOJVIEfs4EEX9KR4
+         IrPz2C1OHXFxfio5zL9ScYUVfVpHi+OjIZlwgHNng3KBYm8KKAL+dYGLu889KvdIss
+         fVFNvo7E+VSwodDiRF+vWIF4GJDR3Zy+uNmCHZ7vaEazMC3DpeWUDWUVlwaDhSqKcx
+         QMu8wJv7wuaNTcicgKSOeNP+BaC1q/oUQKf/u0QWsAc2DHQsPrc4+Eep50U/kLxyhq
+         umlzUc/4pDN/spuMUbKadOeONFFU/IcYgJTX1atZh8dGPu9YZwT2y3EJSMHgQDUxPa
+         Fpxib2ruZpQNQ==
+Received: by mail-wr1-f42.google.com with SMTP id a13so12520603wrf.10;
+        Fri, 02 Jul 2021 06:48:08 -0700 (PDT)
+X-Gm-Message-State: AOAM531HmZiGYBoh4yGtqDG8rEH7cLPaeeQKb4FsoqEaMP3mIm/oV+SN
+        M003SqBHeS269JAKkVMVYp8i4/Nmzd2ixxRW/Ko=
+X-Google-Smtp-Source: ABdhPJxjuAcWk+fUW2iebkdnRr3QNskMI/RshqdGsVxS1+zazUtNB4DLWU+IzcKQARqYjKSwvSI4o2tSJmitDSPbyTM=
+X-Received: by 2002:adf:ee10:: with SMTP id y16mr6057171wrn.99.1625233687201;
+ Fri, 02 Jul 2021 06:48:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ca3ada-22ed-f40c-0089-ca6fffc04f24@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Fri, 2 Jul 2021 15:47:51 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+Message-ID: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+Subject: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 02, 2021 at 12:39:41PM +0100, Robin Murphy wrote:
-> On 2021-07-02 04:08, Guenter Roeck wrote:
-> > On Thu, Jun 24, 2021 at 11:55:26PM +0800, Claire Chang wrote:
-> > > If a device is not behind an IOMMU, we look up the device node and set
-> > > up the restricted DMA when the restricted-dma-pool is presented.
-> > > 
-> > > Signed-off-by: Claire Chang <tientzu@chromium.org>
-> > > Tested-by: Stefano Stabellini <sstabellini@kernel.org>
-> > > Tested-by: Will Deacon <will@kernel.org>
-> > 
-> > With this patch in place, all sparc and sparc64 qemu emulations
-> > fail to boot. Symptom is that the root file system is not found.
-> > Reverting this patch fixes the problem. Bisect log is attached.
-> 
-> Ah, OF_ADDRESS depends on !SPARC, so of_dma_configure_id() is presumably
-> returning an unexpected -ENODEV from the of_dma_set_restricted_buffer()
-> stub. That should probably be returning 0 instead, since either way it's not
-> an error condition for it to simply do nothing.
+The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-Something like below?
+  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
 
-Will
+are available in the Git repository at:
 
---->8
+  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
+tags/asm-generic-pci-ioport-5.14
 
-From 4d9dcb9210c1f37435b6088284e04b6b36ee8c4d Mon Sep 17 00:00:00 2001
-From: Will Deacon <will@kernel.org>
-Date: Fri, 2 Jul 2021 14:13:28 +0100
-Subject: [PATCH] of: Return success from of_dma_set_restricted_buffer() when
- !OF_ADDRESS
+for you to fetch changes up to 5ae6eadfdaf431f47adbdf1754f3b5a5fd638de2:
 
-When CONFIG_OF_ADDRESS=n, of_dma_set_restricted_buffer() returns -ENODEV
-and breaks the boot for sparc[64] machines. Return 0 instead, since the
-function is essentially a glorified NOP in this configuration.
+  asm-generic/io.h: warn in inb() and friends with undefined
+PCI_IOBASE (2021-05-10 17:37:55 +0200)
 
-Cc: Claire Chang <tientzu@chromium.org>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/20210702030807.GA2685166@roeck-us.net
-Signed-off-by: Will Deacon <will@kernel.org>
----
- drivers/of/of_private.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+----------------------------------------------------------------
+asm-generic: rework PCI I/O space access
 
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 8fde97565d11..34dd548c5eac 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -173,7 +173,8 @@ static inline int of_dma_get_range(struct device_node *np,
- static inline int of_dma_set_restricted_buffer(struct device *dev,
- 					       struct device_node *np)
- {
--	return -ENODEV;
-+	/* Do nothing, successfully. */
-+	return 0;
- }
- #endif
- 
--- 
-2.32.0.93.g670b81a890-goog
+A rework for PCI I/O space access from Niklas Schnelle:
 
+  "This is version 5 of my attempt to get rid of a clang
+  -Wnull-pointer-arithmetic warning for the use of PCI_IOBASE in
+  asm-generic/io.h. This was originally found on s390 but should apply to
+  all platforms leaving PCI_IOBASE undefined while making use of the inb()
+  and friends helpers from asm-generic/io.h.
+
+  This applies cleanly and was compile tested on top of v5.12 for the
+  previously broken ARC, nds32, h8300 and risc-v architecture. It also
+  applies cleanly on v5.13-rc1 for which I boot tested it on s390.
+
+  I did boot test this only on x86_64 and s390x the former implements
+  inb() itself while the latter would emit a WARN_ONCE() but no drivers
+  use inb().
+
+Link: https://lore.kernel.org/lkml/20210510145234.594814-1-schnelle@linux.ibm.com/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+----------------------------------------------------------------
+Niklas Schnelle (3):
+      sparc: explicitly set PCI_IOBASE to 0
+      risc-v: Use generic io.h helpers for nommu
+      asm-generic/io.h: warn in inb() and friends with undefined PCI_IOBASE
+
+ arch/riscv/include/asm/io.h |  5 +++--
+ arch/sparc/include/asm/io.h |  8 ++++++++
+ include/asm-generic/io.h    | 68
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 75 insertions(+), 6 deletions(-)
