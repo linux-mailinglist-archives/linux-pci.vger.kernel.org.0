@@ -2,111 +2,387 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F28193BA469
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 21:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 526EB3BA4C0
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 22:40:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230517AbhGBTpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jul 2021 15:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230486AbhGBTpt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jul 2021 15:45:49 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80386C061765
-        for <linux-pci@vger.kernel.org>; Fri,  2 Jul 2021 12:43:16 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id h6so14769717ljl.8
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jul 2021 12:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hfx5fSmOdgY90FoUlA/sfF9P5clz6NRu1yzH0lQXy18=;
-        b=A/SegpDPvGpVDgVFaqmM0GXMqPsQ/YHD1gkkXyAN6+ZudmMV3Oj69yFt8Zsw66RCuG
-         K3vuuTgR1a5B67XiC6xopZzPFZV+4QKrQ620iRpmYgken8P2VG5mnpN5IKG785/EDPoz
-         m6WWZRkWp8qmJ7M/20I+XPw9h9fKWKKZgpaXI=
+        id S231186AbhGBUm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jul 2021 16:42:59 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:39889 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231179AbhGBUm6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jul 2021 16:42:58 -0400
+Received: by mail-lj1-f182.google.com with SMTP id e3so6522127ljo.6
+        for <linux-pci@vger.kernel.org>; Fri, 02 Jul 2021 13:40:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hfx5fSmOdgY90FoUlA/sfF9P5clz6NRu1yzH0lQXy18=;
-        b=cndymuQV64ZLmKHKzCB0HkSILRJs06qgR5QsIPg0hBnfH+ul8DCCsuwLMH9Mrd5pSK
-         dcjHKYyDjN8O55OubrnwhTAirSJXkcfg1PBz9zvI1LxVJFVh+ngDzzNfyiDBpyECMRlX
-         9Jmj8sO6+ap3K49Xw0LrOOtc3I6SJu0od/4IWqYYenFruUL5OVxx9nhnGnxmmOls5+12
-         UjpzciA3J1Kl4epXieObDeU61nLa2KUfQe4pC/HIuBnaDPNXsMn//FJSP5kyfw3ikMgK
-         GaYWOrpJsM49sdaCe95A18Ztp2dqZtr+QIcpel/bFpCViwD8anrykXbtxRJoDL0QL346
-         KC/Q==
-X-Gm-Message-State: AOAM530DltWtcjt54e7lQ7WABoRKpbCvtK7iYUTa9LBQa2JNab7xCFlc
-        QXQcYlhe8StG5dpdT1754xiJp+ZHpW/GKMokVvM=
-X-Google-Smtp-Source: ABdhPJwgqCEYkjkD18sHmcuTpYgqj2mpXYk8i/QQaXJI5i0qgs8gIAdYxxXLroVfCzrRHqiJgxYZJQ==
-X-Received: by 2002:a2e:b8cb:: with SMTP id s11mr816370ljp.340.1625254994459;
-        Fri, 02 Jul 2021 12:43:14 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id y11sm356003lfe.117.2021.07.02.12.43.13
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Jul 2021 12:43:13 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id q16so20045047lfr.4
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jul 2021 12:43:13 -0700 (PDT)
-X-Received: by 2002:a05:6512:374b:: with SMTP id a11mr866325lfs.377.1625254993210;
- Fri, 02 Jul 2021 12:43:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8XmZGkFlIjDwabyMzBOy9CvoDQY094ZNfNgHxGJydqU=;
+        b=jQq3TspO6gY5XaFMq7XSOAaxtBNaWbO7SA+U+vUP8S6AXdl+YlN79p9Se6eekd9wZz
+         2i8ORiQYKn1pE4l2hTIu7cpJYWbAuEAQ4X7MJcMxFzRP8UkojZxOCwCZhz5AsuXbRtnF
+         WOnW4ZHvJ9P6MYZAqRVy2I3XIYROtKuSqe0sTrm7spaKvzB/dd9WtJTnn+KEZ+eRSHxb
+         n+h/VxLstMWNav4EwUakBzw93/K0oHQVpfq9b7FUmyFUDbmPYxqgI2jetVg2cKm09e2U
+         234hHyCnSY3q1UpZFXH9x8IHwrHqwCC1m4w470OFfSDr/lu/EmbH/V43NrbQb8JCsYHs
+         NAwQ==
+X-Gm-Message-State: AOAM533VaIiZyu1jpGvHCci0d2/EgwFvlY525btZp8taWyHK98QXyziV
+        gfPHu/2BwALjyDkpaTjiZlg=
+X-Google-Smtp-Source: ABdhPJypg+iexLBW3WPDv001kjr9yidLe0RVPFcjpaX8B5vb4zz6NS5iC3Vq8H8BvBWbKE1Gii99dQ==
+X-Received: by 2002:a2e:3e07:: with SMTP id l7mr970502lja.131.1625258424304;
+        Fri, 02 Jul 2021 13:40:24 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id o142sm364201lfa.299.2021.07.02.13.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jul 2021 13:40:23 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Ray Jui <rjui@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3] PCI: iproc: Fix a non-compliant kernel-doc
+Date:   Fri,  2 Jul 2021 20:40:22 +0000
+Message-Id: <20210702204022.1654290-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
-In-Reply-To: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 2 Jul 2021 12:42:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
-Message-ID: <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 2, 2021 at 6:48 AM Arnd Bergmann <arnd@kernel.org> wrote:
->
-> A rework for PCI I/O space access from Niklas Schnelle:
+Fix a non-compliant kernel-doc used to describe struct and enum types
+and functions in the pcie-iproc.c, pcie-iproc-msi.c and pcie-iproc.h
+files.
 
-I pulled this, but then I ended up unpulling.
+Add missing documentation of the "mem" filed of the struct iproc_pcie,
+and the enum values "IPROC_PCIE_IB_MAP_MEM", "IPROC_PCIE_IB_MAP_IO" and
+"IPROC_PCIE_IB_MAP_INVALID" of the enum iproc_pcie_ib_map_type.
 
-I don't absolutely _hate_ the concept, but I really find this to be
-very unpalatable:
+Thus, resolve the following build time warning related to kernel-doc:
 
-  #if !defined(inb) && !defined(_inb)
-  #define _inb _inb
-  static inline u8 _inb(unsigned long addr)
-  {
-  #ifdef PCI_IOBASE
-        u8 val;
+  drivers/pci/controller/pcie-iproc.c:92: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:139: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:153: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:441: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:623: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:901: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_MEM' not described in enum 'iproc_pcie_ib_map_type'
+  drivers/pci/controller/pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_IO' not described in enum 'iproc_pcie_ib_map_type'
+  drivers/pci/controller/pcie-iproc.c:151: warning: Enum value 'IPROC_PCIE_IB_MAP_INVALID' not described in enum 'iproc_pcie_ib_map_type'
 
-        __io_pbr();
-        val = __raw_readb(PCI_IOBASE + addr);
-        __io_par(val);
-        return val;
-  #else
-        WARN_ONCE(1, "No I/O port support\n");
-        return ~0;
-  #endif
-  }
-  #endif
+  drivers/pci/controller/pcie-iproc-msi.c:52: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc-msi.c:68: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
 
-because honestly, the notion of a run-time warning for a compile-time
-"this cannot work" is just wrong.
+  drivers/pci/controller/pcie-iproc.h:11: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.h:28: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.h:39: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.h:51: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+  drivers/pci/controller/pcie-iproc.h:112: warning: Function parameter or member 'mem' not described in 'iproc_pcie'
 
-If the platform doesn't have inb/outb, and you compile some driver
-that uses them, you don't want a run-time warning. Particularly since
-in many cases nobody will ever run it, and the main use case was to do
-compile-testing across a wide number of platforms.
+No change to functionality intended.
 
-So if the platform doesn't have inb/outb, they simply should not be
-declared, and there should be a *compile-time* error. That is
-literally a lot more useful, and it avoids this extra code.
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pcie-iproc-msi.c | 54 +++++++--------
+ drivers/pci/controller/pcie-iproc.c     | 49 +++++++-------
+ drivers/pci/controller/pcie-iproc.h     | 88 +++++++++++++++----------
+ 3 files changed, 103 insertions(+), 88 deletions(-)
 
-Extra code that not only doesn't add value, but that actually
-*subtracts* value is not code I really want to pull.
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+index eede4e8f3f75..d20e66319774 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -49,14 +49,14 @@ enum iproc_msi_reg {
+ struct iproc_msi;
+ 
+ /**
+- * iProc MSI group
++ * struct iproc_msi_grp - iProc MSI group.
+  *
+- * One MSI group is allocated per GIC interrupt, serviced by one iProc MSI
+- * event queue.
++ * @msi:	Pointer to iProc MSI data.
++ * @gic_irq:	GIC interrupt.
++ * @eq:		Event queue number.
+  *
+- * @msi: pointer to iProc MSI data
+- * @gic_irq: GIC interrupt
+- * @eq: Event queue number
++ * One MSI group is allocated per GIC interrupt, serviced by one iProc MSI event
++ * queue.
+  */
+ struct iproc_msi_grp {
+ 	struct iproc_msi *msi;
+@@ -65,30 +65,30 @@ struct iproc_msi_grp {
+ };
+ 
+ /**
+- * iProc event queue based MSI
++ * struct iproc_msi - iProc event queue based MSI.
++ *
++ * @pcie:		Pointer to iProc PCIe data.
++ * @reg_offsets:	MSI register offsets.
++ * @grps:		MSI groups.
++ * @nr_irqs:		Number of total interrupts connected to GIC.
++ * @nr_cpus:		Number of toal CPUs.
++ * @has_inten_reg:	Indicates the MSI interrupt enable register needs to be
++ *			set explicitly (required for some legacy platforms).
++ * @bitmap:		MSI vector bitmap.
++ * @bitmap_lock:	Lock to protect access to the MSI bitmap.
++ * @nr_msi_vecs:	Total number of MSI vectors.
++ * @inner_domain:	Inner IRQ domain.
++ * @msi_domain:		MSI IRQ domain.
++ * @nr_eq_region:	Required number of 4K aligned memory region for MSI
++ *			event queues.
++ * @nr_msi_region:	Required number of 4K aligned address region for MSI
++ *			posted writes.
++ * @eq_cpu:		Pointer to allocated memory region for MSI event queues.
++ * @eq_dma:		DMA address of MSI event queues.
++ * @msi_addr:		MSI address.
+  *
+  * Only meant to be used on platforms without MSI support integrated into the
+  * GIC.
+- *
+- * @pcie: pointer to iProc PCIe data
+- * @reg_offsets: MSI register offsets
+- * @grps: MSI groups
+- * @nr_irqs: number of total interrupts connected to GIC
+- * @nr_cpus: number of toal CPUs
+- * @has_inten_reg: indicates the MSI interrupt enable register needs to be
+- * set explicitly (required for some legacy platforms)
+- * @bitmap: MSI vector bitmap
+- * @bitmap_lock: lock to protect access to the MSI bitmap
+- * @nr_msi_vecs: total number of MSI vectors
+- * @inner_domain: inner IRQ domain
+- * @msi_domain: MSI IRQ domain
+- * @nr_eq_region: required number of 4K aligned memory region for MSI event
+- * queues
+- * @nr_msi_region: required number of 4K aligned address region for MSI posted
+- * writes
+- * @eq_cpu: pointer to allocated memory region for MSI event queues
+- * @eq_dma: DMA address of MSI event queues
+- * @msi_addr: MSI address
+  */
+ struct iproc_msi {
+ 	struct iproc_pcie *pcie;
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index 02e52f698eeb..2a400bf81f58 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -89,10 +89,10 @@
+ #define IPROC_PCIE_REG_INVALID		0xffff
+ 
+ /**
+- * iProc PCIe outbound mapping controller specific parameters
+- *
+- * @window_sizes: list of supported outbound mapping window sizes in MB
+- * @nr_sizes: number of supported outbound mapping window sizes
++ * struct iproc_pcie_ob_map - iProc PCIe outbound mapping controller specific
++ *			      parameters.
++ * @window_sizes:	List of supported outbound mapping window sizes in MB.
++ * @nr_sizes:		Number of supported outbound mapping window sizes.
+  */
+ struct iproc_pcie_ob_map {
+ 	resource_size_t window_sizes[MAX_NUM_OB_WINDOW_SIZES];
+@@ -136,32 +136,31 @@ static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
+ };
+ 
+ /**
+- * iProc PCIe inbound mapping type
++ * enum iproc_pcie_ib_map_type - iProc PCIe inbound mapping type.
++ * @IPROC_PCIE_IB_MAP_MEM:	DDR memory.
++ * @IPROC_PCIE_IB_MAP_IO:	Device I/O memory.
++ * @IPROC_PCIE_IB_MAP_INVALID:	Invalid or unused.
+  */
+ enum iproc_pcie_ib_map_type {
+-	/* for DDR memory */
+ 	IPROC_PCIE_IB_MAP_MEM = 0,
+-
+-	/* for device I/O memory */
+ 	IPROC_PCIE_IB_MAP_IO,
+-
+-	/* invalid or unused */
+ 	IPROC_PCIE_IB_MAP_INVALID
+ };
+ 
+ /**
+- * iProc PCIe inbound mapping controller specific parameters
+- *
+- * @type: inbound mapping region type
+- * @size_unit: inbound mapping region size unit, could be SZ_1K, SZ_1M, or
+- * SZ_1G
+- * @region_sizes: list of supported inbound mapping region sizes in KB, MB, or
+- * GB, depending on the size unit
+- * @nr_sizes: number of supported inbound mapping region sizes
+- * @nr_windows: number of supported inbound mapping windows for the region
+- * @imap_addr_offset: register offset between the upper and lower 32-bit
+- * IMAP address registers
+- * @imap_window_offset: register offset between each IMAP window
++ * struct iproc_pcie_ib_map - iProc PCIe inbound mapping controller specific
++ *			      parameters.
++ * @type:		Inbound mapping region type
++ * @size_unit:		Inbound mapping region size unit, could be SZ_1K, SZ_1M,
++ *			or SZ_1G.
++ * @region_sizes:	List of supported inbound mapping region sizes in KB,
++ *			MB, or GB, depending on the size unit.
++ * @nr_sizes:		Number of supported inbound mapping region sizes.
++ * @nr_windows:		Number of supported inbound mapping windows for the
++ *			region.
++ * @imap_addr_offset:	Register offset between the upper and lower 32-bit IMAP
++ *			address registers.
++ * @imap_window_offset:	Register offset between each IMAP window.
+  */
+ struct iproc_pcie_ib_map {
+ 	enum iproc_pcie_ib_map_type type;
+@@ -437,7 +436,7 @@ static inline void iproc_pcie_write_reg(struct iproc_pcie *pcie,
+ 	writel(val, pcie->base + offset);
+ }
+ 
+-/**
++/*
+  * APB error forwarding can be disabled during access of configuration
+  * registers of the endpoint device, to prevent unsupported requests
+  * (typically seen during enumeration with multi-function devices) from
+@@ -619,7 +618,7 @@ static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
+-/**
++/*
+  * Note access to the configuration registers are protected at the higher layer
+  * by 'pci_lock' in drivers/pci/access.c
+  */
+@@ -897,7 +896,7 @@ static inline int iproc_pcie_ob_write(struct iproc_pcie *pcie, int window_idx,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * Some iProc SoCs require the SW to configure the outbound address mapping
+  *
+  * Outbound address translation:
+diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
+index c2676e442f55..432ce216f1fb 100644
+--- a/drivers/pci/controller/pcie-iproc.h
++++ b/drivers/pci/controller/pcie-iproc.h
+@@ -7,7 +7,16 @@
+ #define _PCIE_IPROC_H
+ 
+ /**
+- * iProc PCIe interface type
++ * enum iproc_pcie_type - iProc PCIe interface type.
++ * @IPROC_PCIE_PAXB_BCMA:	New generation of iProc BCMA-based host
++ *				controllers.
++ * @IPROC_PCIE_PAXB:		iProc PAXB-based host controllers for SoCs such
++ *				as NS, NSP, Cygnus, NS2 and Pegasus.
++ * @IPROC_PCIE_PAXB_V2:		Next generation of iProc PAXB-based host
++ *				controllers using the Stingray SoCs.
++ * @IPROC_PCIE_PAXC:		iProx PAXC-based host controllers.
++ * @IPROC_PCIE_PAXC_V2:		Second generation of the iProc PAXC-based host
++ *				controllers.
+  *
+  * PAXB is the wrapper used in root complex that can be connected to an
+  * external endpoint device.
+@@ -24,10 +33,10 @@ enum iproc_pcie_type {
+ };
+ 
+ /**
+- * iProc PCIe outbound mapping
+- * @axi_offset: offset from the AXI address to the internal address used by
+- * the iProc PCIe core
+- * @nr_windows: total number of supported outbound mapping windows
++ * struct iproc_pcie_ob - iProc PCIe outbound mapping.
++ * @axi_offset:	Offset from the AXI address to the internal address used by the
++ *		iProc PCIe core.
++ * @nr_windows:	Total number of supported outbound mapping windows.
+  */
+ struct iproc_pcie_ob {
+ 	resource_size_t axi_offset;
+@@ -35,8 +44,8 @@ struct iproc_pcie_ob {
+ };
+ 
+ /**
+- * iProc PCIe inbound mapping
+- * @nr_regions: total number of supported inbound mapping regions
++ * struct iproc_pcie_ib - iProc PCIe inbound mapping.
++ * @nr_regions:	Total number of supported inbound mapping regions.
+  */
+ struct iproc_pcie_ib {
+ 	unsigned int nr_regions;
+@@ -47,35 +56,42 @@ struct iproc_pcie_ib_map;
+ struct iproc_msi;
+ 
+ /**
+- * iProc PCIe device
+- *
+- * @dev: pointer to device data structure
+- * @type: iProc PCIe interface type
+- * @reg_offsets: register offsets
+- * @base: PCIe host controller I/O register base
+- * @base_addr: PCIe host controller register base physical address
+- * @phy: optional PHY device that controls the Serdes
+- * @map_irq: function callback to map interrupts
+- * @ep_is_internal: indicates an internal emulated endpoint device is connected
+- * @iproc_cfg_read: indicates the iProc config read function should be used
+- * @rej_unconfig_pf: indicates the root complex needs to detect and reject
+- * enumeration against unconfigured physical functions emulated in the ASIC
+- * @has_apb_err_disable: indicates the controller can be configured to prevent
+- * unsupported request from being forwarded as an APB bus error
+- * @fix_paxc_cap: indicates the controller has corrupted capability list in its
+- * config space registers and requires SW based fixup
+- *
+- * @need_ob_cfg: indicates SW needs to configure the outbound mapping window
+- * @ob: outbound mapping related parameters
+- * @ob_map: outbound mapping related parameters specific to the controller
+- *
+- * @need_ib_cfg: indicates SW needs to configure the inbound mapping window
+- * @ib: inbound mapping related parameters
+- * @ib_map: outbound mapping region related parameters
+- *
+- * @need_msi_steer: indicates additional configuration of the iProc PCIe
+- * controller is required to steer MSI writes to external interrupt controller
+- * @msi: MSI data
++ * struct iproc_pcie - iProc PCIe device.
++ * @dev:			Pointer to device data structure.
++ * @type:			iProc PCIe interface type.
++ * @reg_offsets:		Register offsets.
++ * @base:			PCIe host controller I/O register base.
++ * @base_addr:			PCIe host controller register base physical
++ *				address.
++ * @mem:			Host bridge memory window resource.
++ * @phy:			Optional PHY device that controls the Serdes.
++ * @map_irq:			Function callback to map interrupts.
++ * @ep_is_internal:		Indicates an internal emulated endpoint device
++ *				is connected.
++ * @iproc_cfg_read:		Indicates the iProc config read function should
++ *				be used.
++ * @rej_unconfig_pf:		Indicates the root complex needs to detect and
++ *				reject enumeration against unconfigured physical
++ *				functions emulated in the ASIC.
++ * @has_apb_err_disable:	Indicates the controller can be configured to
++ *				prevent unsupported request from being forwarded
++ *				as an APB bus error.
++ * @fix_paxc_cap:		Indicates the controller has corrupted
++ *				capability list in its config space registers
++ *				and requires SW based fixup.
++ * @need_ob_cfg:		Indicates SW needs to configure the outbound
++ *				mapping window.
++ * @ob:				Outbound mapping related parameters.
++ * @ob_map:			Outbound mapping related parameters specific to
++ *				the controller.
++ * @need_ib_cfg:		indicates SW needs to configure the inbound
++ *				mapping window.
++ * @ib:				Inbound mapping related parameters.
++ * @ib_map:			Outbound mapping region related parameters.
++ * @need_msi_steer:		Indicates additional configuration of the iProc
++ *				PCIe controller is required to steer MSI writes
++ *				to external interrupt controller.
++ * @msi:			MSI data.
+  */
+ struct iproc_pcie {
+ 	struct device *dev;
+-- 
+2.32.0
 
-                     Linus
