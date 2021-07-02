@@ -2,177 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19F1B3B9AFA
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 05:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 193F83B9DA8
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 10:44:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234771AbhGBDZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jul 2021 23:25:12 -0400
-Received: from mail-mw2nam10on2057.outbound.protection.outlook.com ([40.107.94.57]:11936
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234731AbhGBDZM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 1 Jul 2021 23:25:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EhlbwW8y2iQii9UdZRrX7xrSCBXrk9YYzQNvy9kol1DoP/ceDlnj64ECnN28tLlhKxopqYEP0euMboIF7HV7qHUYUy/D7CM3HpdsrrlqW4pcIu7rkTyYcVJcTbNOpayy87X/Pjx6mBJtOrUQ9050j1So7jIM65A9UI8czMoHbOJxfCLXItHrFh/oaMl+uQAF1PJeilR5YM4cjG8bk4VnIJVHXtDtu+LdOdrpFW3ImNNV7ZHphVcO4i3G9F0ynFp+0TSMkVrcdFKGEDOWQsHeNxmyn3EaBUHTylCobrw7ZasBQAtU9HlU5PmJgrGQDq0ty9XTbVfh+mRNolUtHO15Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qvCXO4SJ+TiDx+dMDHSWlACKeFJbrHDeuVczQYAxIfo=;
- b=Xs/uJ2B9B/2U0JnJpOuEcBVSIxNzcV59iABx0LLxOzzpArUsKndDPq0JJsM44ZFRFZge650CuvEZ1uPpbwPUGoqh/cz6NtXbNw6PaR9scfuAOkZiW4iPZUgrhKXtVK76DGbvraP13iUe8nvlyB0MD/uTLOeZ8BNi51LOSfUaqrsoqJlKSBWK+xr5YGg9lmbtO+DjnwL33IcyVCB9FUILd9IzLzC5gt5qTaTGFOv38lM+h6omi6myTST9BTf8TV+H5B4/0KCneKftaOX2uDZly6Gh8SCg0Aj75MUsyp5SpQ/vTsiRWAH/qV1gXEHmcZggQ2V73+iF78VYPt0236/xAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=russell.cc smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qvCXO4SJ+TiDx+dMDHSWlACKeFJbrHDeuVczQYAxIfo=;
- b=ISrPg7AQzEP+ltTNbtnXuA6bG7fX32WEEOQ+Ci1/uOaeVh7jv3JESK9C/WryxEBNQ6QGdA4pjz8D9ol2+lSyjB039BBQ87mq+q4Z45WqT/SdJBYsl9JI219V4Y/QN2y7lu/FQg/tYAPJN7fNqjZFYBjJ3Nrp7fyRaUrMbIs7Mrc=
-Received: from DM5PR21CA0070.namprd21.prod.outlook.com (2603:10b6:3:129::32)
- by MWHPR1201MB0207.namprd12.prod.outlook.com (2603:10b6:301:4d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.24; Fri, 2 Jul
- 2021 03:22:37 +0000
-Received: from DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:129:cafe::b4) by DM5PR21CA0070.outlook.office365.com
- (2603:10b6:3:129::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.4 via Frontend
- Transport; Fri, 2 Jul 2021 03:22:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; russell.cc; dkim=none (message not signed)
- header.d=none;russell.cc; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT041.mail.protection.outlook.com (10.13.172.98) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4287.22 via Frontend Transport; Fri, 2 Jul 2021 03:22:36 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 1 Jul 2021
- 22:22:36 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 1 Jul 2021
- 20:22:35 -0700
-Received: from weisheng-Pro-E800-G4-WS950T.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2242.4
- via Frontend Transport; Thu, 1 Jul 2021 22:22:33 -0500
-From:   Wesley Sheng <wesley.sheng@amd.com>
-To:     <ruscur@russell.cc>, <oohall@gmail.com>, <linasvepstas@gmail.com>,
-        <bhelgaas@google.com>, <corbet@lwn.net>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <wesleyshenggit@sina.com>, <wesley.sheng@amd.com>
-Subject: [PATCH v2] Documentation: PCI: pci-error-recovery: swap sequence between MMIO Enabled and Link Reset
-Date:   Fri, 2 Jul 2021 11:22:30 +0800
-Message-ID: <20210702032230.7518-1-wesley.sheng@amd.com>
-X-Mailer: git-send-email 2.25.1
+        id S230256AbhGBIrJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jul 2021 04:47:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30527 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230166AbhGBIrI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Jul 2021 04:47:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10032"; a="208651534"
+X-IronPort-AV: E=Sophos;i="5.83,316,1616482800"; 
+   d="scan'208";a="208651534"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2021 01:44:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,316,1616482800"; 
+   d="scan'208";a="482220140"
+Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Jul 2021 01:44:34 -0700
+Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lzEmo-000B0G-AQ; Fri, 02 Jul 2021 08:44:34 +0000
+Date:   Fri, 02 Jul 2021 16:44:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/hotplug] BUILD SUCCESS
+ 6d71cc4c91d856f05d9f175fba866616dd1a7d1f
+Message-ID: <60ded1e3.dxMSINQoI2KqnUTj%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8b17ba83-45dc-45f9-cb71-08d93d08a3fe
-X-MS-TrafficTypeDiagnostic: MWHPR1201MB0207:
-X-Microsoft-Antispam-PRVS: <MWHPR1201MB0207A980A88DF91836A76353951F9@MWHPR1201MB0207.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jjVW7Oc+M6gdMagwO94mXvscQQ9kAfktE3mmfBNW9IDkRruOFaK9LpPydvE4X5H8cdxjTPeCS6ZqLRv1tNp1m2EXcDINeUGwS6eGSlWuLZn3dpvGJVJhM8aDaPpIuBNK/nBibKNM17tWOzuUSLd9GBqnYLjDrk7Q+WfAWR+fwcPYEPnbGAm5b6s4QSngcmEMdMZzNY+QYF/WIDRxPWbWcFy1peUQTdKXn9U+rqbWmDiiggb76RoXKJ+gxzzjtklxlNc1l+zy2CKQpp9cja2HhGyZBQfGE3u4I75+LBWoZPTAuD0LTnMC8vbKeVi6YbLuX6II9fuTd0u32wxB9aeY38pyel/P1irnW3pKnUWimrYX4PA7rTD8M+qqKsXUqEREtwAUtfY9jQ5NB/L+uu2OqoPeemgZRQINT0sRdrxYcFwxiSZS/F7oXicTo4x2VVqY1a+x4evd4zgYU6iDyvGkeWOvl1BgLPNFkBzs9jQ0652ijVpJ2yfdxpJQWgUsG+kqvln96vGWunpK3C8WFNOpVnNOJVKVlm6xBjm3MLqCFfhQM+El+uADGjb8DeXnSMNcgv0mcajBv94V7zoNHCpn05MHsAapFCUC3HCXUfE2vOFd3eMgEiEGELPkQiLn3LQOUbCdDZJNLfa1C7HYGKNObudk+t7AmXVjmZc2t0WUpV/EPggLhUbp6IT0HOHu+74cBCef09JvdbBfteQ94qEvYlmic+LbAPbVQs6dbEwvxmO0RqW53vKLzcaGYNLskcWm
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(39860400002)(346002)(36840700001)(46966006)(7696005)(186003)(47076005)(70206006)(2616005)(2906002)(36860700001)(70586007)(82740400003)(44832011)(4326008)(5660300002)(1076003)(26005)(82310400003)(336012)(478600001)(110136005)(54906003)(316002)(8936002)(356005)(86362001)(36756003)(83380400001)(426003)(7416002)(81166007)(8676002)(2101003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2021 03:22:36.9073
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b17ba83-45dc-45f9-cb71-08d93d08a3fe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB0207
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Reset_link() callback function (named with reset_subordinates()
-in pcie_do_recovery() function) was called before mmio_enabled(),
-so exchange the sequence between step 2 MMIO Enabled and step 3
-Link Reset accordingly.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
+branch HEAD: 6d71cc4c91d856f05d9f175fba866616dd1a7d1f  PCI: cpcihp: Declare cpci_debug in header file
 
-Signed-off-by: Wesley Sheng <wesley.sheng@amd.com>
+elapsed time: 723m
+
+configs tested: 169
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                       imx_v6_v7_defconfig
+arm                   milbeaut_m10v_defconfig
+mips                         mpc30x_defconfig
+xtensa                           alldefconfig
+mips                            e55_defconfig
+sh                         ecovec24_defconfig
+mips                           ip28_defconfig
+mips                             allmodconfig
+arm                         assabet_defconfig
+arm                          badge4_defconfig
+m68k                                defconfig
+riscv                             allnoconfig
+mips                      fuloong2e_defconfig
+arm                         vf610m4_defconfig
+sh                           se7619_defconfig
+powerpc                 mpc85xx_cds_defconfig
+sh                           se7780_defconfig
+powerpc                  mpc866_ads_defconfig
+xtensa                generic_kc705_defconfig
+sh                          sdk7780_defconfig
+sh                         microdev_defconfig
+arm                        cerfcube_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                    sam440ep_defconfig
+powerpc                     powernv_defconfig
+powerpc                      acadia_defconfig
+um                                  defconfig
+arm                           stm32_defconfig
+powerpc                         wii_defconfig
+powerpc                   currituck_defconfig
+mips                 decstation_r4k_defconfig
+nds32                               defconfig
+arm                           omap1_defconfig
+csky                                defconfig
+alpha                               defconfig
+mips                        nlm_xlr_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                    socrates_defconfig
+arm                            lart_defconfig
+ia64                        generic_defconfig
+sh                           se7722_defconfig
+sh                         ap325rxa_defconfig
+sh                           se7724_defconfig
+mips                     decstation_defconfig
+sh                        edosk7760_defconfig
+arm                        magician_defconfig
+arm                     eseries_pxa_defconfig
+openrisc                            defconfig
+arm                        spear3xx_defconfig
+sh                          kfr2r09_defconfig
+mips                      bmips_stb_defconfig
+powerpc                          g5_defconfig
+mips                       bmips_be_defconfig
+arm                          ixp4xx_defconfig
+arm                        oxnas_v6_defconfig
+mips                         bigsur_defconfig
+s390                             allyesconfig
+arc                     nsimosci_hs_defconfig
+xtensa                  nommu_kc705_defconfig
+sh                          rsk7203_defconfig
+mips                     loongson2k_defconfig
+m68k                        m5272c3_defconfig
+arm                        multi_v7_defconfig
+mips                         tb0287_defconfig
+arm                       imx_v4_v5_defconfig
+arm                       mainstone_defconfig
+arm                        shmobile_defconfig
+mips                           jazz_defconfig
+riscv                            alldefconfig
+mips                           mtx1_defconfig
+powerpc                       ppc64_defconfig
+arm                       versatile_defconfig
+mips                           ip27_defconfig
+mips                         tb0226_defconfig
+powerpc                 canyonlands_defconfig
+xtensa                              defconfig
+sh                          urquell_defconfig
+sh                ecovec24-romimage_defconfig
+powerpc                 mpc8560_ads_defconfig
+powerpc                  storcenter_defconfig
+mips                      pistachio_defconfig
+sh                     magicpanelr2_defconfig
+m68k                        mvme147_defconfig
+powerpc                 mpc837x_rdb_defconfig
+arc                     haps_hs_smp_defconfig
+m68k                         apollo_defconfig
+powerpc                     tqm8541_defconfig
+mips                         tb0219_defconfig
+arm                        spear6xx_defconfig
+mips                           xway_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nios2                            allyesconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210630
+x86_64               randconfig-a001-20210630
+x86_64               randconfig-a004-20210630
+x86_64               randconfig-a005-20210630
+x86_64               randconfig-a006-20210630
+x86_64               randconfig-a003-20210630
+i386                 randconfig-a004-20210630
+i386                 randconfig-a001-20210630
+i386                 randconfig-a003-20210630
+i386                 randconfig-a002-20210630
+i386                 randconfig-a005-20210630
+i386                 randconfig-a006-20210630
+i386                 randconfig-a014-20210630
+i386                 randconfig-a011-20210630
+i386                 randconfig-a016-20210630
+i386                 randconfig-a012-20210630
+i386                 randconfig-a013-20210630
+i386                 randconfig-a015-20210630
+i386                 randconfig-a015-20210701
+i386                 randconfig-a016-20210701
+i386                 randconfig-a011-20210701
+i386                 randconfig-a012-20210701
+i386                 randconfig-a013-20210701
+i386                 randconfig-a014-20210701
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                            kunit_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-b001-20210630
+x86_64               randconfig-b001-20210702
+x86_64               randconfig-a012-20210630
+x86_64               randconfig-a015-20210630
+x86_64               randconfig-a016-20210630
+x86_64               randconfig-a013-20210630
+x86_64               randconfig-a011-20210630
+x86_64               randconfig-a014-20210630
+
 ---
- Documentation/PCI/pci-error-recovery.rst | 25 ++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
-index 187f43a03200..0e2f3f77bf0a 100644
---- a/Documentation/PCI/pci-error-recovery.rst
-+++ b/Documentation/PCI/pci-error-recovery.rst
-@@ -157,7 +157,7 @@ drivers.
- If all drivers on the segment/slot return PCI_ERS_RESULT_CAN_RECOVER,
- then the platform should re-enable IOs on the slot (or do nothing in
- particular, if the platform doesn't isolate slots), and recovery
--proceeds to STEP 2 (MMIO Enable).
-+proceeds to STEP 3 (MMIO Enable).
- 
- If any driver requested a slot reset (by returning PCI_ERS_RESULT_NEED_RESET),
- then recovery proceeds to STEP 4 (Slot Reset).
-@@ -184,7 +184,14 @@ is STEP 6 (Permanent Failure).
-    and prints an error to syslog.  A reboot is then required to
-    get the device working again.
- 
--STEP 2: MMIO Enabled
-+STEP 2: Link Reset
-+------------------
-+The platform resets the link.  This is a PCI-Express specific step
-+and is done whenever a fatal error has been detected that can be
-+"solved" by resetting the link.
-+
-+
-+STEP 3: MMIO Enabled
- --------------------
- The platform re-enables MMIO to the device (but typically not the
- DMA), and then calls the mmio_enabled() callback on all affected
-@@ -197,8 +204,8 @@ information, if any, and eventually do things like trigger a device local
- reset or some such, but not restart operations. This callback is made if
- all drivers on a segment agree that they can try to recover and if no automatic
- link reset was performed by the HW. If the platform can't just re-enable IOs
--without a slot reset or a link reset, it will not call this callback, and
--instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
-+without a slot reset, it will not call this callback, and
-+instead will have gone directly to STEP 4 (Slot Reset)
- 
- .. note::
- 
-@@ -210,7 +217,7 @@ instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
-    such an error might cause IOs to be re-blocked for the whole
-    segment, and thus invalidate the recovery that other devices
-    on the same segment might have done, forcing the whole segment
--   into one of the next states, that is, link reset or slot reset.
-+   into the next states, that is, slot reset.
- 
- The driver should return one of the following result codes:
-   - PCI_ERS_RESULT_RECOVERED
-@@ -233,17 +240,11 @@ The driver should return one of the following result codes:
- 
- The next step taken depends on the results returned by the drivers.
- If all drivers returned PCI_ERS_RESULT_RECOVERED, then the platform
--proceeds to either STEP3 (Link Reset) or to STEP 5 (Resume Operations).
-+proceeds to STEP 5 (Resume Operations).
- 
- If any driver returned PCI_ERS_RESULT_NEED_RESET, then the platform
- proceeds to STEP 4 (Slot Reset)
- 
--STEP 3: Link Reset
--------------------
--The platform resets the link.  This is a PCI-Express specific step
--and is done whenever a fatal error has been detected that can be
--"solved" by resetting the link.
--
- STEP 4: Slot Reset
- ------------------
- 
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
