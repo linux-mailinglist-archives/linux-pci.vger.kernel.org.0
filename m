@@ -2,100 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 037723BA506
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 23:26:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 143323BA510
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 23:35:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbhGBV30 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jul 2021 17:29:26 -0400
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:37712 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230157AbhGBV3Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jul 2021 17:29:25 -0400
-Received: by mail-wm1-f49.google.com with SMTP id r9-20020a7bc0890000b02901f347b31d55so7048857wmh.2
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jul 2021 14:26:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lNRHGimSxBoy+1q0mlL9dusHS4KmdEIv9IpGZomHC08=;
-        b=CBcVUR6aBsYWLbfGFAG6G3PEe5am4WH8uVQaYvqUil9LB78EcSXAmTYTTYY+KjFalU
-         gaUVvV5jEZ0OzQrDddN3DPXW5v9YnqJ/qszdoBaFZ/BCD9z9K8PL1TMNmEOfyIHOgCXz
-         j1pjt9Dr/IKLfqMdfXDmBavnLQR61ZrTrQ0URu8HTJK2XTkA/WQh0ng/xBMoFNRIdvGz
-         E5jMcb+Cort67Owu0gQd/MCZGwqGu1de8Yl7ngZW511OV16e5runXt/CkhjJncD6zD4t
-         +PKI1XFd9xbGVaDMmSg0u2CeSITBbn9ir+8VTTlE5G1++qReAU1rUsReWhxjl8VG2dvw
-         3F+w==
-X-Gm-Message-State: AOAM530GwwmKgmyhCqHdUYAirjGmta7PQgJhPoHiJ0utSRo6DlRzVUKU
-        dVc+fD1Dd6zTGhP9xu6rCL0=
-X-Google-Smtp-Source: ABdhPJx8OvpHzOJ7dMNS96mU5Z+EIP0ahKHhPM3BSIPAKjiEnZy/n0i/MdXKKc+c/Uat6cZQiy2Aaw==
-X-Received: by 2002:a05:600c:218f:: with SMTP id e15mr1845893wme.28.1625261212464;
-        Fri, 02 Jul 2021 14:26:52 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id a11sm4438949wrt.71.2021.07.02.14.26.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 14:26:51 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Tom Joseph <tjoseph@cadence.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S229807AbhGBVh7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jul 2021 17:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229648AbhGBVh7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Jul 2021 17:37:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7B354613FB;
+        Fri,  2 Jul 2021 21:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625261726;
+        bh=z7+DYpKgnBsH4gmStBPaBdAdXn1cQOKI9dZV8b3NXNM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O5U27fRGk74UARzD45f9wKHvk3EX5YX9VineY9x+lwNVRwPZbVg77sihAIfNO7bNm
+         weYJvacJPidHc0BudFJcR7hZSbxiqcCQXtvEMs1z0wL1XwcHPkI2wPlapiJ5EcWwUP
+         baXFw8lRJ4jHmFrq38eMWFLA8KHdhmnxIzlcfaonjKEnN120lM9QSAPm7ayVP5k28l
+         pfgei4X66MYPcjbKZdkHFaFp9aPyC3aslYtleoTzjJn0/9fN6REv/Tg1WTk6koylwa
+         1j9lu3YAcCXGqY3OfWgAnnlGEIHjoxhMdYTfGxEpb3S3EUfjgPBeTt37NnpHBMs4gz
+         /1OGn4ZesjZqg==
+Received: by pali.im (Postfix)
+        id 35F7167D; Fri,  2 Jul 2021 23:35:24 +0200 (CEST)
+Date:   Fri, 2 Jul 2021 23:35:24 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: cadence: Remove surplus and document missing struct members
-Date:   Fri,  2 Jul 2021 21:26:50 +0000
-Message-Id: <20210702212650.1661227-1-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/42] PCI: aardvark: Add support for more than 32 MSI
+ interrupts
+Message-ID: <20210702213524.mhpu24dxlh2fe7zm@pali>
+References: <20210506153153.30454-1-pali@kernel.org>
+ <20210506153153.30454-21-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210506153153.30454-21-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing documentation for the members "dev", "phy_count", "phy" and
-"link" of the struct cdns_pcie, and remove surplus member "bus".
+FYI this one patch does not work. Please drop it.
 
-Thus resolve build time warnings related to kernel-doc:
+On Thursday 06 May 2021 17:31:31 Pali Rohár wrote:
+> Aardvark HW can handle MSI interrupt with any 16-bit number. Received MSI
+> interrupt number is visible in PCIE_MSI_PAYLOAD_REG register after clearing
+> corresponding bit in PCIE_MSI_STATUS_REG register.
 
-  drivers/pci/controller/cadence/pcie-cadence.h:281: warning: Function parameter or member 'dev' not described in 'cdns_pcie'
-  drivers/pci/controller/cadence/pcie-cadence.h:281: warning: Function parameter or member 'phy_count' not described in 'cdns_pcie'
-  drivers/pci/controller/cadence/pcie-cadence.h:281: warning: Function parameter or member 'phy' not described in 'cdns_pcie'
-  drivers/pci/controller/cadence/pcie-cadence.h:281: warning: Function parameter or member 'link' not described in 'cdns_pcie'
+After doing heavy load testing I figured out that PCIE_MSI_PAYLOAD_REG
+register is either buggy or unusable or there is missing some other
+configuration as it contains in most cases just content of the last
+received memory write operation to MSI doorbell register. And also even
+after clearing corresponding bit in PCIE_MSI_STATUS_REG register.
 
-No change to functionality intended.
+Therefore we should avoid usage of PCIE_MSI_PAYLOAD_REG register
+completely. Which implies that it is needed to use only corresponding
+bit from PCIE_MSI_STATUS_REG register and so only 32 MSI interrupts are
+supported.
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/cadence/pcie-cadence.h | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+I will address removal of PCIE_MSI_STATUS_REG register in other followup
+patch.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 254d2570f8c9..5577fefce4f1 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -260,13 +260,18 @@ struct cdns_pcie_ops {
- };
- 
- /**
-- * struct cdns_pcie - private data for Cadence PCIe controller drivers
-- * @reg_base: IO mapped register base
-- * @mem_res: start/end offsets in the physical system memory to map PCI accesses
-- * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
-- * @bus: In Root Complex mode, the bus number
-- * @ops: Platform specific ops to control various inputs from Cadence PCIe
-- *       wrapper
-+ * struct cdns_pcie - Private data for Cadence PCIe controller drivers.
-+ * @reg_base:	IO mapped register base.
-+ * @mem_res:	Start/end offsets in the physical system memory to map PCI
-+ *		accesses.
-+ * @dev:	The PCI device.
-+ * @is_rc:	Tell whether the PCIe controller mode is Root Complex or
-+ *		Endpoint.
-+ * @phy_count:	Number of supported PHY devices.
-+ * @phy:	List of pointers to specific PHY control blocks.
-+ * @link:	List of pointers to corresponding device link representations.
-+ * @ops:	Platform specific ops to control various inputs from Cadence
-+ *		PCIe wrapper.
-  */
- struct cdns_pcie {
- 	void __iomem		*reg_base;
--- 
-2.32.0
-
+> The first 32 interrupt numbers are currently stored in linear map in MSI
+> inner domain. Store the rest in dynamic radix tree for space efficiency.
+> 
+> Free interrupt numbers (available for MSI inner domain allocation) for the
+> first 32 interrupts are currently stored in a bitmap. For the rest,
+> introduce a linked list of allocated regions.
+> 
+> In the most common scenario there is only one PCIe card connected on boards
+> with Armada 3720 SoC. Since in Multi-MSI mode the PCIe device can use at
+> most 32 interrupts, all these interrupts are allocated in the linear map of
+> MSI inner domain and marked as used in the bitmap.
+> 
+> For less common scenarios with PCIe devices with multiple functions or with
+> a PCIe Bridge with packet switches with more connected PCIe devices more
+> than 32 interrupts are requested. In this case, store each interrupt range
+> from each interrupt request into the linked list as one node. In the worst
+> case every PCIe function will occupy one node in this linked list.
+> 
+> This change allows to use all 32 Multi-MSI interrupts on every connected
+> PCIe card on the Turris Mox router with Mox G module.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Marek Behún <kabel@kernel.org>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 71 ++++++++++++++++++++++++---
+>  1 file changed, 64 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 199015215779..d74e84b0e689 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -178,11 +178,18 @@
+>  #define RETRAIN_WAIT_MAX_RETRIES	10
+>  #define RETRAIN_WAIT_USLEEP_US		2000
+>  
+> -#define MSI_IRQ_NUM			32
+> +#define MSI_IRQ_LINEAR_COUNT		32
+> +#define MSI_IRQ_TOTAL_COUNT		65536
+>  
+>  #define CFG_RD_UR_VAL			0xffffffff
+>  #define CFG_RD_CRS_VAL			0xffff0001
+>  
+> +struct advk_msi_range {
+> +	struct list_head list;
+> +	u16 first;
+> +	u16 count;
+> +};
+> +
+>  struct advk_pcie {
+>  	struct platform_device *pdev;
+>  	void __iomem *base;
+> @@ -193,7 +200,8 @@ struct advk_pcie {
+>  	struct irq_chip msi_bottom_irq_chip;
+>  	struct irq_chip msi_irq_chip;
+>  	struct msi_domain_info msi_domain_info;
+> -	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
+> +	DECLARE_BITMAP(msi_used_linear, MSI_IRQ_LINEAR_COUNT);
+> +	struct list_head msi_used_radix;
+>  	struct mutex msi_used_lock;
+>  	int link_gen;
+>  	struct pci_bridge_emul bridge;
+> @@ -885,12 +893,44 @@ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
+>  				     unsigned int nr_irqs, void *args)
+>  {
+>  	struct advk_pcie *pcie = domain->host_data;
+> +	struct advk_msi_range *msi_range, *msi_range_prev, *msi_range_next;
+> +	unsigned int first, count, last;
+>  	int hwirq, i;
+>  
+>  	mutex_lock(&pcie->msi_used_lock);
+> -	hwirq = bitmap_find_free_region(pcie->msi_used, MSI_IRQ_NUM,
+> +
+> +	/* First few used interrupt numbers are marked in bitmap (the most common) */
+> +	hwirq = bitmap_find_free_region(pcie->msi_used_linear, MSI_IRQ_LINEAR_COUNT,
+>  					order_base_2(nr_irqs));
+> +
+> +	/* And rest used interrupt numbers are stored in linked list as ranges */
+> +	if (hwirq < 0) {
+> +		count = 1 << order_base_2(nr_irqs);
+> +		msi_range_prev = list_entry(&pcie->msi_used_radix, typeof(*msi_range), list);
+> +		do {
+> +			msi_range_next = list_next_entry(msi_range_prev, list);
+> +			last = list_entry_is_head(msi_range_next, &pcie->msi_used_radix, list)
+> +				? MSI_IRQ_TOTAL_COUNT : msi_range_next->first;
+> +			first = list_entry_is_head(msi_range_prev, &pcie->msi_used_radix, list)
+> +				? MSI_IRQ_LINEAR_COUNT : round_up(msi_range_prev->first +
+> +								  msi_range_prev->count, count);
+> +			if (first + count > last) {
+> +				msi_range_prev = msi_range_next;
+> +				continue;
+> +			}
+> +			msi_range = kzalloc(sizeof(*msi_range), GFP_KERNEL);
+> +			if (msi_range) {
+> +				hwirq = first;
+> +				msi_range->first = first;
+> +				msi_range->count = count;
+> +				list_add(&msi_range->list, &msi_range_prev->list);
+> +			}
+> +			break;
+> +		} while (!list_entry_is_head(msi_range_next, &pcie->msi_used_radix, list));
+> +	}
+> +
+>  	mutex_unlock(&pcie->msi_used_lock);
+> +
+>  	if (hwirq < 0)
+>  		return -ENOSPC;
+>  
+> @@ -908,9 +948,20 @@ static void advk_msi_irq_domain_free(struct irq_domain *domain,
+>  {
+>  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+>  	struct advk_pcie *pcie = domain->host_data;
+> +	struct advk_msi_range *msi_range;
+>  
+>  	mutex_lock(&pcie->msi_used_lock);
+> -	bitmap_release_region(pcie->msi_used, d->hwirq, order_base_2(nr_irqs));
+> +	if (d->hwirq < MSI_IRQ_LINEAR_COUNT) {
+> +		bitmap_release_region(pcie->msi_used_linear, d->hwirq, order_base_2(nr_irqs));
+> +	} else {
+> +		list_for_each_entry(msi_range, &pcie->msi_used_radix, list) {
+> +			if (msi_range->first != d->hwirq)
+> +				continue;
+> +			list_del(&msi_range->list);
+> +			kfree(msi_range);
+> +			break;
+> +		}
+> +	}
+>  	mutex_unlock(&pcie->msi_used_lock);
+>  }
+>  
+> @@ -967,6 +1018,7 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+>  	struct msi_domain_info *msi_di;
+>  
+>  	mutex_init(&pcie->msi_used_lock);
+> +	INIT_LIST_HEAD(&pcie->msi_used_radix);
+>  
+>  	bottom_ic = &pcie->msi_bottom_irq_chip;
+>  
+> @@ -982,9 +1034,14 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+>  		MSI_FLAG_MULTI_PCI_MSI;
+>  	msi_di->chip = msi_ic;
+>  
+> +	/*
+> +	 * Aardvark HW can handle MSI interrupt with any 16bit number.
+> +	 * For optimization first few interrupts are allocated in linear map
+> +	 * (which is common scenario) and rest are allocated in radix tree.
+> +	 */
+>  	pcie->msi_inner_domain =
+> -		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
+> -				      &advk_msi_domain_ops, pcie);
+> +		__irq_domain_add(NULL, MSI_IRQ_LINEAR_COUNT, MSI_IRQ_TOTAL_COUNT, 0,
+> +				 &advk_msi_domain_ops, pcie);
+>  	if (!pcie->msi_inner_domain)
+>  		return -ENOMEM;
+>  
+> @@ -1052,7 +1109,7 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+>  	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
+>  	msi_status = msi_val & ((~msi_mask) & PCIE_MSI_ALL_MASK);
+>  
+> -	for (msi_idx = 0; msi_idx < MSI_IRQ_NUM; msi_idx++) {
+> +	for (msi_idx = 0; msi_idx < BITS_PER_TYPE(msi_status); msi_idx++) {
+>  		if (!(BIT(msi_idx) & msi_status))
+>  			continue;
+>  
+> -- 
+> 2.20.1
+> 
