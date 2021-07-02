@@ -2,64 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C6CC3BA4C5
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 22:42:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B79F3BA4D2
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 22:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230295AbhGBUp3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jul 2021 16:45:29 -0400
-Received: from mail-lj1-f171.google.com ([209.85.208.171]:40873 "EHLO
-        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230274AbhGBUp3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jul 2021 16:45:29 -0400
-Received: by mail-lj1-f171.google.com with SMTP id d25so14979132lji.7
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jul 2021 13:42:55 -0700 (PDT)
+        id S230363AbhGBUvx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jul 2021 16:51:53 -0400
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:55855 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230274AbhGBUvx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jul 2021 16:51:53 -0400
+Received: by mail-wm1-f51.google.com with SMTP id j34so7382206wms.5
+        for <linux-pci@vger.kernel.org>; Fri, 02 Jul 2021 13:49:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wwFAE8l/C4zFxc7d7E3lrH3jbEGK/fQ5qtao/zfzSoA=;
-        b=HnW5weQBMggFXbZwJWgjFV6ormdf2HzuWbQ2vEyesmK2pcN/FIW2xttY3jCDIGLyNt
-         5O2cpdjfOEWOYDDgESNzUemflzIBIWETcGGdMH+yPjvRh5VzZRVOAjtcuo+JQLXvwPL6
-         +83CM4LSd2J9Ajx5h++iJDlEUmkRq3hiuRA0ut2Ix8esJOSX9OuvbzenoWINbo3Gbqg3
-         dGwAajgHlx36BXfxbRuqFekCLOD+qrrubnrS5fr/mzzQ3Nghc+XVZA/yQis/3ZBsXs3D
-         pFPd28Nvt2oJaZ24pbT7o4YdmNcASwDn0D0rbcu2ziqF7xXYZyj3H3o/tHwBUJvS+zpl
-         jQpg==
-X-Gm-Message-State: AOAM532a4crjbEU2/0jYcvBj/mPw6xzU9Ohxb66P8HRY1J5k373WEfje
-        13HzkpLti9+2NKubYRtL2og=
-X-Google-Smtp-Source: ABdhPJy+g8+u9rbb3gEXKSB0acIR9Mjdm2d0NVvnKca/0vVtUpsrxeFiIzeit7dGcRkhLyNgffAPLQ==
-X-Received: by 2002:a05:651c:2103:: with SMTP id a3mr868636ljq.218.1625258574836;
-        Fri, 02 Jul 2021 13:42:54 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id y1sm364974ljc.29.2021.07.02.13.42.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=10oXadjisSG6IULhcnPD9e2Y6meG9j0iGoNhGOJk3Yc=;
+        b=p91yuZ2JGdtEvd8qq+KDZanXYq4FYhLbVw7WDRipohqHzk54sbYtMRRyBDXL09bjBk
+         32i8gPkOLIVoqfQKrLlxYCiUQCTGTJN5wbhqtmo4QzFH6WPliOMSTnxUct+wHzeBcRSw
+         1nphuekEhI/emJahuxY4pwOmsBRnJ4UlqvZZB+QtMWLmUdGssi3jAP21Gss6SleAICEP
+         oNhbTRd5yIpnZMJzUoUhPkjquvbbpFrx6wKqWi205a4M3qVF1SoeoNqr2Ns1NFzCiSd0
+         CrucM7VgSMJpcQHfr64mkl+ztF2r7I2vK0doKFPdMjfczbI0evsac857xlcwNbzl7jHL
+         lFJA==
+X-Gm-Message-State: AOAM532anTbyentrowd8gBevwDlV6d11TXZpo5CDLDqfBAxuWAgKh5hh
+        IuApdwOREA5S+AdbpHPna5I=
+X-Google-Smtp-Source: ABdhPJwLuEbapAR7V3Pw+8ClQaJQbnfb36RLQnr+xY4232Cx5nZVHc6leO+slvB5YSBHT+iH//idvw==
+X-Received: by 2002:a1c:208a:: with SMTP id g132mr1685951wmg.140.1625258959009;
+        Fri, 02 Jul 2021 13:49:19 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id t17sm4120742wrs.61.2021.07.02.13.49.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 13:42:54 -0700 (PDT)
-Date:   Fri, 2 Jul 2021 22:42:52 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: iproc: Fix a non-compliant kernel-doc
-Message-ID: <20210702204252.GA390418@rocinante>
-References: <20210519183829.165982-1-kw@linux.com>
- <3623373c-b95c-344f-63c3-3eeeda623e90@infradead.org>
- <20210519224908.GA616654@rocinante.localdomain>
+        Fri, 02 Jul 2021 13:49:18 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Fix kernel-doc formatting
+Date:   Fri,  2 Jul 2021 20:49:17 +0000
+Message-Id: <20210702204917.1655556-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210519224908.GA616654@rocinante.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Randy,
+Fix kernel-doc formatting of function pci_dev_set_io_state(), and
+resolve build time warnings related to kernel-doc:
 
-[...]
-> I will update everything accordingly.
+  drivers/pci/pci.h:337: warning: Function parameter or member 'dev' not described in 'pci_dev_set_io_state'
+  drivers/pci/pci.h:337: warning: Function parameter or member 'new' not described in 'pci_dev_set_io_state'
 
-Sorry for the delay!  I just sent a v3 of this patch.
+No change to functionality intended.
 
-	Krzysztof
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/pci.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 37c913bbc6e1..e313e3a02c95 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -323,13 +323,14 @@ struct pci_sriov {
+ 
+ /**
+  * pci_dev_set_io_state - Set the new error state if possible.
+- *
+- * @dev - pci device to set new error_state
+- * @new - the state we want dev to be in
++ * @dev: PCI device to set new error_state.
++ * @new: The state we want dev to be in.
+  *
+  * Must be called with device_lock held.
+  *
+- * Returns true if state has been changed to the requested state.
++ * Return:
++ * * true  - On success, current state has been changed to the requested state.
++ * * false - On failure, current state has not been changed.
+  */
+ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
+ 					pci_channel_state_t new)
+-- 
+2.32.0
+
