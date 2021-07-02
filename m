@@ -2,128 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34BD23BA38C
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 19:16:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80C6E3BA442
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jul 2021 21:11:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbhGBRSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jul 2021 13:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbhGBRSl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jul 2021 13:18:41 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE52C061762;
-        Fri,  2 Jul 2021 10:16:08 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id n14so19319696lfu.8;
-        Fri, 02 Jul 2021 10:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:user-agent:mime-version:to:cc:subject
-         :references:in-reply-to:content-transfer-encoding;
-        bh=eIvDzQe/4c2beVLlwKPyRniIDsc7hswiYgzlsE5Kshk=;
-        b=GpO48OnCXjeMIc/hn94VOetuU2mb6gg0Avt9i9Pc1aslIWu4DYQ8VgHwZsOH6NoDD4
-         xQCT1pi0X5VeZw/7wiRm+sXwhpIr2gZKbu7phPR1NvCq/FR69Es7+aQikn6a/IKsGR1Q
-         pWZ6ekRu10y1CFTyJZDdrEIT1e5zDdmfPIAYWK+sIE53dLpJkQLdWbpvVAp18O4F1Mga
-         k5kslE8jCnyl67aL+sbfm6A3gTjx1sngUJZvczviE5z5isMTMkpcfCB6EvgelkL07P7G
-         kamX7ZE6QeD7lTHYeQkYpcrPGvUbNOMVolcHBwnFu+1BTt6dCa8UEaXep9GwKR7Sr/v8
-         5iDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
-         :cc:subject:references:in-reply-to:content-transfer-encoding;
-        bh=eIvDzQe/4c2beVLlwKPyRniIDsc7hswiYgzlsE5Kshk=;
-        b=M2vFWSmW6MwjuXR2GTl4kjqmmUdBHKEJ9/KSJCw9vb7TNO4gfTaNYIK0xbPbBpLjNq
-         dbG3/ShuN9n5gyVL4KBUJqfnr0goIxZNMDL4xN923JWddzad9xs6j/zl2gzaOzHrPu3x
-         iq+6UMflxpz7PA+mY/c7z2EJTUR6RvlRAUGnPMKn0Zot89cwnlFexty+9lnxMWatkFaX
-         r5h7agojAnWC0VKOEWjKOnwyWrZ0Itqj26UAKHdSipEqzyMyLJr5caRz1ZEy1OA5j5jC
-         6u18h+rC2wBShvZMi1KVK7hQDAQ0urRM9PR/WMC3/JCEAQCVNVFao308rPSFzpWuS1UP
-         Suzw==
-X-Gm-Message-State: AOAM533e9+sXBGWQonv5HXsyBuKcU35AW5gmkP15Msa/dgn29VU/3FmW
-        AkF60fDTm56oYuxsrpBqO7Y=
-X-Google-Smtp-Source: ABdhPJxczqe5g7CIi6mXET/ZC4ShVPsY/7ocyMy/ayiB7sEhLmvDLOOeuCp6nwv0Giey4R8Dv7SZDQ==
-X-Received: by 2002:a05:6512:3761:: with SMTP id z1mr480053lft.99.1625246166141;
-        Fri, 02 Jul 2021 10:16:06 -0700 (PDT)
-Received: from [192.168.0.91] ([188.242.181.97])
-        by smtp.googlemail.com with ESMTPSA id o14sm410325ljp.25.2021.07.02.10.16.05
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Fri, 02 Jul 2021 10:16:05 -0700 (PDT)
-Message-ID: <60DF4C75.7020609@gmail.com>
-Date:   Fri, 02 Jul 2021 20:27:17 +0300
-From:   Nikolai Zhubr <zhubr.2@gmail.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
+        id S230463AbhGBTN6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jul 2021 15:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230207AbhGBTN5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 2 Jul 2021 15:13:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1691A61183;
+        Fri,  2 Jul 2021 19:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625253085;
+        bh=klUIsIhWvZmbWebJyfac/c8U1h51t/Hvwkz6tLvqBrk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jItIaqzyyOP14CaLbpTDzzmfmck0KuJNO5DtS0XpBiM89fkL6XKH168V/Ec25FPlx
+         u5hxom5szi7D9RHtuWo5nLRTyphonBeM1Wzo6gR53Ysik5yDL1ZF378YwlC9zcIIVD
+         cZJoWsxHZK5PECIU1TBeRgao6M08yvx72xKDxUm5C+RgUeeD6x6PM9AVRLj/Z52gLD
+         F8Nq/6pW5YrsJcxgjTMG5kLI5mfuKmLerwZ+fLo3xFnHh22T8DjqVCY2MkM8FSh13+
+         /d4MYzgK2SXLWtzX6h6yla7M9f/mUX3UwG6wLaGEd2rToeqAjiNxB8PmQcQcOaCwcF
+         E+zG4WRO4rfVQ==
+Date:   Fri, 2 Jul 2021 14:11:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v8 1/8] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210702191123.GA228462@bjorn-Precision-5520>
 MIME-Version: 1.0
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@kernel.org>,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] x86/PCI: SiS PIRQ router updates
-References: <alpine.DEB.2.21.2106240047560.37803@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2106240047560.37803@angie.orcam.me.uk>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210630144955.71c5abac.alex.williamson@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Maciej,
+Please add "()" after function names in subject lines.
 
-24.06.2021 2:38, Maciej W. Rozycki:
->   As we use the generic `sis' infix (capitalised or not) for the SiS85C503
-> southbridge I have prepared this small patch series to first make the
-> existing SiS program entities use a more specific `sis503' infix, and then
-> provide a suitable PIRQ router for the SiS85C497 device.
->
->   Posted as an RFC at this stage as it still has to be verified.
->
->   Nikolai, can you please give it a hit with the extra debug patch as
-> requested in my other message?
+On Wed, Jun 30, 2021 at 02:49:55PM -0600, Alex Williamson wrote:
+> On Thu, 1 Jul 2021 01:34:15 +0530
+> Amey Narkhede <ameynarkhede03@gmail.com> wrote:
+> > On 21/06/30 11:56AM, Alex Williamson wrote:
+> > > On Tue, 29 Jun 2021 21:30:57 +0530
+> > > Amey Narkhede <ameynarkhede03@gmail.com> wrote:
+> > >  
+> > > > Add has_flr bitfield in struct pci_dev to indicate support for pcie flr
+> > > > to avoid reading PCI_EXP_DEVCAP multiple times and get rid of
+> > > > PCI_DEV_FLAGS_NO_FLR_RESET in quirk_no_flr().
+> > > >
+> > > > Currently there is separate function pcie_has_flr() to probe if pcie flr is
+> > > > supported by the device which does not match the calling convention
+> > > > followed by reset methods which use second function argument to decide
+> > > > whether to probe or not.  Add new function pcie_reset_flr() that follows
+> > > > the calling convention of reset methods.
 
-With
-linux-x86-pirq-router-sis85c503.diff applied
-linux-x86-pirq-router-sis85c497.diff applied
-and DEBUG 1 in arch/x86/include/asm/pci_x86.h
-here is new log:
+s/pcie/PCIe/ (except for variables, function names, etc)
 
-https://pastebin.com/n3udQgcq
+> > > >  static int pci_af_flr(struct pci_dev *dev, int probe)
+> > > >  {
+> > > >  	int pos;
+> > > >  	u8 cap;
+> > > >
+> > > > -	pos = pci_find_capability(dev, PCI_CAP_ID_AF);
+> > > > -	if (!pos)
+> > > > +	if (!dev->has_flr)
+> > > >  		return -ENOTTY;
+> > > >
+> > > > -	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+> > > > +	pos = pci_find_capability(dev, PCI_CAP_ID_AF);
+> > > > +	if (!pos)
+> > > >  		return -ENOTTY;
+> > > >
+> > > >  	pci_read_config_byte(dev, pos + PCI_AF_CAP, &cap);  
+> > >
+> > >
+> > > How can has_flr encompass both methods of invoking FLR?  PCIe FLR is
+> > > not a prerequisite to AF FLR.
+> > >  
+> > I see. Does this mean that there should be a separate flag for disabling
+> > AF FLR?
+> 
+> There hasn't been a need so far.  Per the ECN, the AF capability is
+> meant to make select PCIe features available on conventional PCI
+> devices.  It seems like it would be against the spirit of the AF
+> capability to implement both an AF capability and a PCIe capability,
+> but I don't see that it's definitively addressed by the spec.
+> 
+> AF FLR is sufficiently rare that it's probably reasonable to make a
+> has_pcie_flr bit on the device and leave AF FLR alone.
 
-My feeling is that something went a bit wrong because:
+This sounds good to me.  I agree that I'd prefer not to have a single
+bit that applies to both AF FLR and PCIe FLR since they are distinct
+mechanisms, discovered and initiated differently.
 
-8139too 0000:00:0d.0: can't route interrupt
+> I can't really say that I'm in favor of assigning a has_flr bit the
+> double duty of also quirking broken FLR, if nothing else it's
+> inconsistent with our other means of quirking resets.
 
-and
+By "other means of quirking resets," do you mean
+PCI_DEV_FLAGS_NO_BUS_RESET, PCI_DEV_FLAGS_NO_PM_RESET, and
+PCI_DEV_FLAGS_NO_FLR_RESET?
 
-# 8259A.pl
-irq 0: 00, edge
-irq 1: 00, edge
-irq 2: 00, edge
-irq 3: 00, edge
-irq 4: 00, edge
-irq 5: 00, edge
-irq 6: 00, edge
-irq 7: 00, edge
-irq 8: 00, edge
-irq 9: 00, edge
-irq 10: 00, edge
-irq 11: 00, edge
-irq 12: 00, edge
-irq 13: 00, edge
-irq 14: 00, edge
-irq 15: 00, edge
+I agree that a pdev->has_pcie_flr bit would be different from those,
+and maybe it's better to stick with PCI_DEV_FLAGS_NO_FLR_RESET for
+now.
 
-Note: I still used 4.14 kernel for this test but your patches applied 
-cleanly with no fuzz so I suppose it should be ok.
+In general, I don't like the dual approach of some things being in the
+pci_dev_flags enum and others being "unsigned int foo:1" in the struct
+pci_dev because I can't tell if there's a reason to choose one over
+the other.  If there's not a reason to have both, I'd like to migrate
+them all to the ":1" approach because it seems a little more readable
+to me.
 
-
-Thank you,
-
-Regards,
-Nikolai
-
-
->
->    Maciej
->
-
+Bjorn
