@@ -2,195 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BBF3BA7A0
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Jul 2021 09:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAC0D3BA7ED
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Jul 2021 10:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbhGCHF4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 3 Jul 2021 03:05:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:44742 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229528AbhGCHF4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 3 Jul 2021 03:05:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10033"; a="206984856"
-X-IronPort-AV: E=Sophos;i="5.83,320,1616482800"; 
-   d="scan'208";a="206984856"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2021 00:03:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,320,1616482800"; 
-   d="scan'208";a="626921675"
-Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jul 2021 00:03:19 -0700
-Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lzZgM-000BQ4-SF; Sat, 03 Jul 2021 07:03:18 +0000
-Date:   Sat, 03 Jul 2021 15:02:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS e7e1458ecc1892e408c2626f88255de6595ff33d
-Message-ID: <60e00b94.HLZOewjCaj4xkrAU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S230081AbhGCIyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 3 Jul 2021 04:54:08 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:34649 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229983AbhGCIyI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Jul 2021 04:54:08 -0400
+Received: by mail-ed1-f43.google.com with SMTP id i5so16589822eds.1
+        for <linux-pci@vger.kernel.org>; Sat, 03 Jul 2021 01:51:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O+Kfmnl2EWxJSSuCIjQFLDmSQ7vmSswC4IMpgw5JJfo=;
+        b=bvUuK4jfbu324xzgidfkbWgOF+3VqYojp7YGmPg0wHd+wnDm9JsUaErR+aszW0Ez2s
+         BCXTQZKgmJKJPgoHwpgBgwPMiw8vcKBUpCknAqg3s95pMQNfoqYC7QHaiK1Z3618ds18
+         Koo53azufuAXL9adIBfom4SmKS5TzYpljcAcooJTGZnRsShWyTNQcRPi0gx8OJIrc6gX
+         88Sxw+bW+2K9FsZH7Zxcjk/Jzh4QZ8f6JKwZmOKwgmxcFmc5yditKofb9ZL806l5ClAG
+         +4ATP88kM2oM0Ct9XjUZ/WdLk1U9bg6lWgAiNQ9OjRs/V4yU4f6cvsUJoU44Zb0moVNp
+         ehzw==
+X-Gm-Message-State: AOAM533HTOk8iaps1F+USBsoeRq/bne8lztePfMCIWS4hyL0o7AkRxBo
+        nQnsoKhs4XONaSyLaeeeiBQ=
+X-Google-Smtp-Source: ABdhPJxa9fB/gqpmrBYw+BO/+gQFyNBOcCxQZ1YPMrRfQ8SjCQVReXs9aAs3NuIilIa4MUdCXZOfCw==
+X-Received: by 2002:a05:6402:c92:: with SMTP id cm18mr4142535edb.29.1625302293122;
+        Sat, 03 Jul 2021 01:51:33 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id k21sm2302108edo.41.2021.07.03.01.51.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Jul 2021 01:51:32 -0700 (PDT)
+Date:   Sat, 3 Jul 2021 10:51:31 +0200
+From:   Krzysztof Wilczy??ski <kw@linux.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Scott Murray <scott@spiteful.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: hotplug: Fix kernel-doc formatting and add
+ missing documentation
+Message-ID: <20210703085131.GA427173@rocinante>
+References: <20210702231541.1671875-1-kw@linux.com>
+ <20210703064848.GA24279@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210703064848.GA24279@wunner.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: e7e1458ecc1892e408c2626f88255de6595ff33d  Merge branch 'remotes/lorenzo/pci/xgene'
+Hi Lukas,
 
-elapsed time: 720m
+Thank you for feedback!
 
-configs tested: 138
-configs skipped: 2
+[...]
+> I respectfully submit that the formatting is fine and there's nothing
+> to be "fixed" here (as the commit message claims).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The fixing it probably more relevant to the two first hunks, everything
+else would be more of a style update so that kernel-doc is kept with the
+following guideline:
+  https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                     rainier_defconfig
-arm                  colibri_pxa270_defconfig
-powerpc                        cell_defconfig
-arm                        neponset_defconfig
-arm                        oxnas_v6_defconfig
-sh                          landisk_defconfig
-powerpc                     redwood_defconfig
-riscv             nommu_k210_sdcard_defconfig
-mips                        nlm_xlr_defconfig
-sh                              ul2_defconfig
-powerpc                     mpc512x_defconfig
-openrisc                         alldefconfig
-powerpc                      mgcoge_defconfig
-powerpc                    mvme5100_defconfig
-arm                          pxa910_defconfig
-xtensa                  nommu_kc705_defconfig
-arm                    vt8500_v6_v7_defconfig
-m68k                            q40_defconfig
-ia64                          tiger_defconfig
-arm                          ep93xx_defconfig
-arm                           tegra_defconfig
-i386                             alldefconfig
-sh                             espt_defconfig
-arm                       cns3420vb_defconfig
-arm                          ixp4xx_defconfig
-arm                         axm55xx_defconfig
-powerpc                      walnut_defconfig
-m68k                        mvme16x_defconfig
-arm                           omap1_defconfig
-powerpc                     stx_gp3_defconfig
-sh                           se7750_defconfig
-m68k                          atari_defconfig
-h8300                               defconfig
-powerpc                     kmeter1_defconfig
-mips                           ci20_defconfig
-sh                        edosk7760_defconfig
-mips                           jazz_defconfig
-m68k                            mac_defconfig
-x86_64                            allnoconfig
-arm                       spear13xx_defconfig
-mips                 decstation_r4k_defconfig
-arm                             pxa_defconfig
-arm                         bcm2835_defconfig
-arm                        spear6xx_defconfig
-powerpc                 mpc834x_mds_defconfig
-mips                        vocore2_defconfig
-powerpc                     mpc5200_defconfig
-sh                           se7206_defconfig
-powerpc                     tqm5200_defconfig
-arm                            hisi_defconfig
-mips                          ath79_defconfig
-powerpc                  mpc885_ads_defconfig
-powerpc                      pasemi_defconfig
-mips                           xway_defconfig
-powerpc64                        alldefconfig
-m68k                          sun3x_defconfig
-arm                        keystone_defconfig
-mips                          ath25_defconfig
-arm                          lpd270_defconfig
-mips                        bcm63xx_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20210702
-i386                 randconfig-a006-20210702
-i386                 randconfig-a001-20210702
-i386                 randconfig-a003-20210702
-i386                 randconfig-a005-20210702
-i386                 randconfig-a002-20210702
-x86_64               randconfig-a015-20210702
-x86_64               randconfig-a012-20210702
-x86_64               randconfig-a014-20210702
-x86_64               randconfig-a011-20210702
-x86_64               randconfig-a016-20210702
-x86_64               randconfig-a013-20210702
-i386                 randconfig-a015-20210702
-i386                 randconfig-a016-20210702
-i386                 randconfig-a011-20210702
-i386                 randconfig-a012-20210702
-i386                 randconfig-a013-20210702
-i386                 randconfig-a014-20210702
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Which is something other users of kernel-doc seldom embrace as I could
+only find a handful of places where this format is somewhat followed.
 
-clang tested configs:
-x86_64               randconfig-b001-20210702
-x86_64               randconfig-a004-20210702
-x86_64               randconfig-a005-20210702
-x86_64               randconfig-a002-20210702
-x86_64               randconfig-a006-20210702
-x86_64               randconfig-a003-20210702
-x86_64               randconfig-a001-20210702
+Thus, like you say, keeping the scope of changes to only updating what
+matters would be more appropriate.  I will send another revision that
+does exactly that.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> > + * @inband_presence_disabled:	Flag to used to track whether the in-band
+> > + *				presence detection is disabled.
+> 
+> That's not proper English and also not very useful because the documentation
+> merely repeats what the flag's name says.  I'd suggest something along the
+> lines of:
+>  * @inband_presence_disabled: whether In-Band Presence Detect Disable is
+>  *	supported by the controller and disabled per spec recommendation
+>  *	(PCIe r5.0, appendix I implementation note)
+
+Thank you!  I will use your version going forward.
+
+	Krzysztof
