@@ -2,61 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60DBF3BAEAC
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Jul 2021 22:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33ACF3BB475
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 01:57:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229873AbhGDUMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 4 Jul 2021 16:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229614AbhGDUMV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 4 Jul 2021 16:12:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 761B3613C2;
-        Sun,  4 Jul 2021 20:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625429385;
-        bh=ovJyi4Hh16NWrYDmmVuIqD+G6wRTG54EF7/8gepZQE4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=fs4PYC8CVzp491neB7SMlBFKgLQen4YUlPVwvIzrxkrN2wMaUcXMzDr2T/mI6Z45d
-         L5S24VjIGaqWPLHBa3BEgvCHZwwaeY3cokDP1g4bYsczeSLgoUcRWDiHv7WXHepnh1
-         DvIhCOvx6YGgBJf0iSx4RYZvBxXAtCrtr6/ZbL3WMyMuQp8EAzqtGt8UWhGKZT3GoG
-         7d/UALYa4CkjKfC3URSxnr/2I0V23yUTgUQ9QUoscNpgBxSKo4LeNSgroMKL00cRPk
-         wI3TACZb4h6QdNPfPkb16OfeEQxnAvPa7iMocYD/gWbQrillzDrTVMT+ud3vyuGHlW
-         ESzRLMJoxRHPQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 6FCF860A38;
-        Sun,  4 Jul 2021 20:09:45 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) update for v5.14
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
-References: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.14
-X-PR-Tracked-Commit-Id: 4ad6181e4b216ed0cb52f45d3c6d2c70c8ae9243
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0c66a95c7e014abc3489e69dd3972d9225027d49
-Message-Id: <162542938545.15409.9316512791620116947.pr-tracker-bot@kernel.org>
-Date:   Sun, 04 Jul 2021 20:09:45 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S229614AbhGEAAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Jul 2021 20:00:13 -0400
+Received: from mail-ed1-f45.google.com ([209.85.208.45]:36666 "EHLO
+        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229549AbhGEAAM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Jul 2021 20:00:12 -0400
+Received: by mail-ed1-f45.google.com with SMTP id h2so21481632edt.3
+        for <linux-pci@vger.kernel.org>; Sun, 04 Jul 2021 16:57:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zsJ12EGxba1PvEuauYMRSCCrS1obdvbtRZvPvKXCc6c=;
+        b=f3HCixkkdisf8ALVAUiBdlJrENjcSJsZa7i64SXC9lRvh1kuVz1sQ2sOdrGWlWUZ7T
+         FTIOcrtsTJKOXnG6mSCd8JuHEos91ynGR9eFkC1ViTJNufvLmoi2Fk5l1HNvhX5YrMNc
+         yJU2GrcaCYiRyiQ3ipB49lqMlkl6nYgsiCPslk3u3I+FlLXA/StiSt5YouO5I26oZraN
+         wTUWmci1rQ0YKaHppZZpcJbEXoWx7RFoNbLxKrF2sVuluJcQlt3fiFIvfdzL0E9cw6gM
+         2/5JP9/0Koro0d70smUbmIePUUxHbzD5SFxK903YTFhYWL3yIzahbfb4nUUajPrQMb4C
+         RZVA==
+X-Gm-Message-State: AOAM530cfPjQrHrJpcxdaxYboHMamGlZr4Hs2O1jS9pkYImzUnH7rp7k
+        u/rmzHFhysvxF2+t3kUX0O8=
+X-Google-Smtp-Source: ABdhPJxzGD8TTAXccfB3p7HDiKGnjkO8AYpcxHUUgA+vEbCJ7Sf6kLBHt3UgtpKTX12RDaOsE2o1Xg==
+X-Received: by 2002:a05:6402:220e:: with SMTP id cq14mr12114655edb.140.1625443055174;
+        Sun, 04 Jul 2021 16:57:35 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id cf22sm1115453ejb.33.2021.07.04.16.57.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Jul 2021 16:57:34 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: tegra: Remove unused struct tegra_pcie_bus
+Date:   Sun,  4 Jul 2021 23:57:33 +0000
+Message-Id: <20210704235733.2514131-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Sat, 3 Jul 2021 08:08:28 -0700:
+Following the code refactoring completed in the commit 1fd92928bab5
+("PCI: tegra: Refactor configuration space mapping code") there are no
+more known users of struct tegra_pcie_bus.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.14
+Thus, remove declaration of struct tegra_pcie_bus as it's no longer
+needed and does not have any existing users left.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0c66a95c7e014abc3489e69dd3972d9225027d49
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pci-tegra.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Thank you!
-
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 8069bd9232d4..64adb3fc22d6 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -372,11 +372,6 @@ struct tegra_pcie_port {
+ 	struct gpio_desc *reset_gpio;
+ };
+ 
+-struct tegra_pcie_bus {
+-	struct list_head list;
+-	unsigned int nr;
+-};
+-
+ static inline void afi_writel(struct tegra_pcie *pcie, u32 value,
+ 			      unsigned long offset)
+ {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.32.0
+
