@@ -2,157 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA48B3BAD62
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Jul 2021 16:28:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60DBF3BAEAC
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Jul 2021 22:10:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbhGDOar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 4 Jul 2021 10:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59192 "EHLO mail.kernel.org"
+        id S229873AbhGDUMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Jul 2021 16:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229492AbhGDOar (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 4 Jul 2021 10:30:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F0E1613DA;
-        Sun,  4 Jul 2021 14:28:11 +0000 (UTC)
+        id S229614AbhGDUMV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 4 Jul 2021 16:12:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 761B3613C2;
+        Sun,  4 Jul 2021 20:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625408891;
-        bh=U1oBp2gmy6ssXIaqGEG+DjQ5wAtfrSkeZH5kSDqQSp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ePyMBFadVb+Lm0dvanwHLQGAqt21H1alU3L/XLJtPgVacczgDPrhi0C+PFPYNubog
-         rgfZg4UkpUa501hfbeb1hcPiwl/WbUa3Z57wO3/VdKeczlHx0n1fBk2eEWv7QNaXlf
-         ABGvmSYh5rzoGJuzEu4d736X3Znfkq92zk1pw7BpV92c/auhkztJko4jd7kcCqMjHJ
-         xmdbtj046Cg5+KWTdQ/m8X3hUPDxbGN4aLKA4duhdATHKP/YriMBOoop4fzGrt2Oxd
-         xTjzyW3H0LxvfD++7KhGGMfLFb+s/AEyKIoywjVeG7/xmybuH5NFMS5WcsrVhJHhlu
-         2jN+w5HGh/YKw==
-Received: by pali.im (Postfix)
-        id B00009CA; Sun,  4 Jul 2021 16:28:08 +0200 (CEST)
-Date:   Sun, 4 Jul 2021 16:28:08 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Aaron Ma <aaron.ma@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        davem@davemloft.net, kuba@kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Subject: Re: [PATCH 1/2] igc: don't rd/wr iomem when PCI is removed
-Message-ID: <20210704142808.f43jbcufk37hundo@pali>
-References: <20210702045120.22855-1-aaron.ma@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210702045120.22855-1-aaron.ma@canonical.com>
-User-Agent: NeoMutt/20180716
+        s=k20201202; t=1625429385;
+        bh=ovJyi4Hh16NWrYDmmVuIqD+G6wRTG54EF7/8gepZQE4=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=fs4PYC8CVzp491neB7SMlBFKgLQen4YUlPVwvIzrxkrN2wMaUcXMzDr2T/mI6Z45d
+         L5S24VjIGaqWPLHBa3BEgvCHZwwaeY3cokDP1g4bYsczeSLgoUcRWDiHv7WXHepnh1
+         DvIhCOvx6YGgBJf0iSx4RYZvBxXAtCrtr6/ZbL3WMyMuQp8EAzqtGt8UWhGKZT3GoG
+         7d/UALYa4CkjKfC3URSxnr/2I0V23yUTgUQ9QUoscNpgBxSKo4LeNSgroMKL00cRPk
+         wI3TACZb4h6QdNPfPkb16OfeEQxnAvPa7iMocYD/gWbQrillzDrTVMT+ud3vyuGHlW
+         ESzRLMJoxRHPQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 6FCF860A38;
+        Sun,  4 Jul 2021 20:09:45 +0000 (UTC)
+Subject: Re: [GIT PULL] Compute Express Link (CXL) update for v5.14
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
+References: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPcyv4haJdFPBdUJDwVwMvR4Ezij7Osn-+H0JApF=9fM2AM5wA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.14
+X-PR-Tracked-Commit-Id: 4ad6181e4b216ed0cb52f45d3c6d2c70c8ae9243
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0c66a95c7e014abc3489e69dd3972d9225027d49
+Message-Id: <162542938545.15409.9316512791620116947.pr-tracker-bot@kernel.org>
+Date:   Sun, 04 Jul 2021 20:09:45 +0000
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-cxl@vger.kernel.org, Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+ Bjorn, Krzysztof and linux-pci
+The pull request you sent on Sat, 3 Jul 2021 08:08:28 -0700:
 
-On Friday 02 July 2021 12:51:19 Aaron Ma wrote:
-> Check PCI state when rd/wr iomem.
-> Implement wr32 function as rd32 too.
-> 
-> When unplug TBT dock with i225, rd/wr PCI iomem will cause error log:
-> Trace:
-> BUG: unable to handle page fault for address: 000000000000b604
-> Oops: 0000 [#1] SMP NOPTI
-> RIP: 0010:igc_rd32+0x1c/0x90 [igc]
-> Call Trace:
-> igc_ptp_suspend+0x6c/0xa0 [igc]
-> igc_ptp_stop+0x12/0x50 [igc]
-> igc_remove+0x7f/0x1c0 [igc]
-> pci_device_remove+0x3e/0xb0
-> __device_release_driver+0x181/0x240
-> 
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> ---
->  drivers/net/ethernet/intel/igc/igc_main.c | 16 ++++++++++++++++
->  drivers/net/ethernet/intel/igc/igc_regs.h |  7 ++-----
->  2 files changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index f1adf154ec4a..606b72cb6193 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -5292,6 +5292,10 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
->  	u8 __iomem *hw_addr = READ_ONCE(hw->hw_addr);
->  	u32 value = 0;
->  
-> +	if (igc->pdev &&
-> +		igc->pdev->error_state == pci_channel_io_perm_failure)
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-5.14
 
-Hello! This code pattern and commit message looks like that we could use
-pci_dev_is_disconnected() helper function for checking if device is
-still connected or was disconnected.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0c66a95c7e014abc3489e69dd3972d9225027d49
 
-Apparently pci_dev_is_disconnected() is defined only in private header
-file drivers/pci/pci.h and not in public include/linux/pci.h.
+Thank you!
 
-Aaron: can you check if pci_dev_is_disconnected() is really something
-which should be used and it helps you?
-
-Bjorn, Krzysztof: what do you think about lifting helper function
-pci_dev_is_disconnected() to be available to all drivers and not only in
-PCI subsystem?
-
-I think that such helper function makes driver code more readable and
-can be useful also for other drivers which are checking if return value
-is all F's.
-
-> +		return 0;
-
-Aaron: should not you return all F's on error? Because few lines below
-in this function is returned value with all F's when PCIe link lost.
-
-> +
->  	value = readl(&hw_addr[reg]);
-
-Anyway, this code looks to be racy. When pci_channel_io_perm_failure is
-set (e.g. by hotplug interrupt) after checking for pdev->error_state and
-prior executing above readl() then mentioned fatal error still occurs.
-
->  
->  	/* reads should not return all F's */
-> @@ -5308,6 +5312,18 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
->  	return value;
->  }
->  
-> +void igc_wr32(struct igc_hw *hw, u32 reg, u32 val)
-> +{
-> +	struct igc_adapter *igc = container_of(hw, struct igc_adapter, hw);
-> +	u8 __iomem *hw_addr = READ_ONCE(hw->hw_addr);
-> +
-> +	if (igc->pdev &&
-> +		igc->pdev->error_state == pci_channel_io_perm_failure)
-> +		return;
-> +
-> +	writel((val), &hw_addr[(reg)]);
-> +}
-> +
->  int igc_set_spd_dplx(struct igc_adapter *adapter, u32 spd, u8 dplx)
->  {
->  	struct igc_mac_info *mac = &adapter->hw.mac;
-> diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
-> index cc174853554b..eb4be87d0e8b 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_regs.h
-> +++ b/drivers/net/ethernet/intel/igc/igc_regs.h
-> @@ -260,13 +260,10 @@ struct igc_hw;
->  u32 igc_rd32(struct igc_hw *hw, u32 reg);
->  
->  /* write operations, indexed using DWORDS */
-> -#define wr32(reg, val) \
-> -do { \
-> -	u8 __iomem *hw_addr = READ_ONCE((hw)->hw_addr); \
-> -	writel((val), &hw_addr[(reg)]); \
-> -} while (0)
-> +void igc_wr32(struct igc_hw *hw, u32 reg, u32 val);
->  
->  #define rd32(reg) (igc_rd32(hw, reg))
-> +#define wr32(reg, val) (igc_wr32(hw, reg, val))
->  
->  #define wrfl() ((void)rd32(IGC_STATUS))
->  
-> -- 
-> 2.30.2
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
