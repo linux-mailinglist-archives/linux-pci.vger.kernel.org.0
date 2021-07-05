@@ -2,119 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 367453BC39C
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 23:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E52253BC3E7
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 00:32:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbhGEVZx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jul 2021 17:25:53 -0400
-Received: from mail-lf1-f48.google.com ([209.85.167.48]:46925 "EHLO
+        id S230096AbhGEWee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jul 2021 18:34:34 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:40865 "EHLO
         mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbhGEVZw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 17:25:52 -0400
-Received: by mail-lf1-f48.google.com with SMTP id p21so12842060lfj.13
-        for <linux-pci@vger.kernel.org>; Mon, 05 Jul 2021 14:23:14 -0700 (PDT)
+        with ESMTP id S230086AbhGEWee (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 18:34:34 -0400
+Received: by mail-lf1-f48.google.com with SMTP id q18so34793491lfc.7;
+        Mon, 05 Jul 2021 15:31:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z25jV3Lc+Jaa1XrFF2O29mwDomdRuLImlWbMu42JCcw=;
-        b=o8ZxFas7UUNO8m/l8WPOXx3d8xm+CpeuVkdfUvB9ZvWQC8DPjRXfSs6vRhq5k6GJCY
-         jtK2TCav1lQgkPj4Lsg+t4YXy7f16Vf+mPWXySgPcBya0gAH4prYAGYkur2E8jpH77Us
-         y34q467FDnoploPuZQ8MqFRlrL080u/+KJ04EZS6oD5R0P2+3CbXnHIJpqSdMtDmUnKf
-         yxgd6WgPI5Yi3qNa28hCIoQAaaazo03263K1hbk3NY9QAVzQHwohAm9PAN4sBnW7z5Z3
-         5Rd33G3RkcTiAv4g3Xb7RnQZT9R694cK6CTtWfAMOeS3eTh36DgVbYU2ol9PPMck39+Q
-         rAPA==
-X-Gm-Message-State: AOAM530WsO35blU7LOhISX9VKDXrRen3UtEViLmTXwhwiQAEmVOc5ZMG
-        SxCH5xjk48QCsYzhZTBdksg=
-X-Google-Smtp-Source: ABdhPJyNs2pjiHwDnBxvd8lPYpgh9YiuzhrMHdL6ty9/pKEgoXAZVS8ok3z10s3T8PWYhOGFAtvyMQ==
-X-Received: by 2002:a05:6512:3103:: with SMTP id n3mr11658069lfb.173.1625520193313;
-        Mon, 05 Jul 2021 14:23:13 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id x1sm1191338lfa.21.2021.07.05.14.23.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XxIYzc2a0GDS3UgyyLc6UOgUpTaRimvmHueOqUiNlAo=;
+        b=GGzFZa1ON7XO8JxzZ/b9/mnrym6z2i0TllvAf60WWEzPT1TFFrgnO/mEkst5xmyR02
+         0MRtTUzFGiRhGlJahrmBO/wfjdQg0Son14YojLohjzidmJSZfJoPY0pkjMTkjPKDqtbM
+         NyHjAtABE3r3m3XaALiZMqKKZHTchA9Pxd3qRfiq61JVeLf/Sfa96jtGnNFO1wEl1LGw
+         RX8kc0Nh2l/4BINKwkWJ3npqWwnlJNMW9o974z0O4/ypMLuvAYgtwtHroCpieZlbxSd5
+         MtmvfZ1dZ059NGlk8xjyDfZdppDAReZkNGpfMtUN6MoLeLkTq2Ep8KL3ujoNslbhOp/c
+         3bSA==
+X-Gm-Message-State: AOAM532e1H9Lp6QeWtry4xFdTSZ4n+KPZwnYXbBDkTzi6Qpd1EUWVbKO
+        5R3Kioo6hQXZJq0kyZCsPKE=
+X-Google-Smtp-Source: ABdhPJwhTaMDcZK4oJs5vCYFU941vuJCjaKeS/t/gMmUoiDsOK+EDfsIeiiIvmNjg4Dj0eA7GWSjrA==
+X-Received: by 2002:a19:6e46:: with SMTP id q6mr8610756lfk.165.1625524314396;
+        Mon, 05 Jul 2021 15:31:54 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id j17sm365773lja.38.2021.07.05.15.31.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jul 2021 14:23:12 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 4/4] PCI: Don't use the strtobool() wrapper for kstrtobool()
-Date:   Mon,  5 Jul 2021 21:23:08 +0000
-Message-Id: <20210705212308.3050976-4-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210705212308.3050976-1-kw@linux.com>
-References: <20210705212308.3050976-1-kw@linux.com>
+        Mon, 05 Jul 2021 15:31:53 -0700 (PDT)
+Date:   Tue, 6 Jul 2021 00:31:52 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 3/3] PCI: tegra: make const array err_msg static
+Message-ID: <20210705223152.GA142312@rocinante>
+References: <55b11e9a7fa2987fbc0869d68ae59888954d65e2.1620148539.git.christophe.jaillet@wanadoo.fr>
+ <5f3f35296b944b94546cc7d1e9cc6186484620d8.1620148539.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5f3f35296b944b94546cc7d1e9cc6186484620d8.1620148539.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The strtobool() function is a wrapper over the kstrtobool() function
-that has been added for backward compatibility.
+Hi Christophe,
 
-There is no reason to use the old API, thus rather than using the
-wrapper use the kstrtobool() directly.
+Thank you for sending the patches over and taking care about these!
 
-Related:
-  commit ef951599074b ("lib: move strtobool() to kstrtobool()")
+I was wondering whether you will be willing to send a v2 of this series
+that would include fixes to everything the checkpatch.pl script reports
+against this driver?  There aren't a lot of things to fix, thus the idea
+to squash everything at once.  These warnings would be as follows
+(excluding the ones you taken care of in this series):
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/p2pdma.c    | 6 +++---
- drivers/pci/pcie/aspm.c | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+  drivers/pci/controller/pci-tegra.c:1661: WARNING: please, no space before tabs
+  drivers/pci/controller/pci-tegra.c:1890: WARNING: quoted string split across lines
+  drivers/pci/controller/pci-tegra.c:1891: WARNING: quoted string split across lines
+  drivers/pci/controller/pci-tegra.c:2619: WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 196382630363..1bd299cf3872 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -911,7 +911,7 @@ EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
-  *
-  * Parses an attribute value to decide whether to enable p2pdma.
-  * The value can select a PCI device (using its full BDF device
-- * name) or a boolean (in any format strtobool() accepts). A false
-+ * name) or a boolean (in any format kstrtobool() accepts). A false
-  * value disables p2pdma, a true value expects the caller
-  * to automatically find a compatible device and specifying a PCI device
-  * expects the caller to use the specific provider.
-@@ -943,11 +943,11 @@ int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
- 	} else if ((page[0] == '0' || page[0] == '1') && !iscntrl(page[1])) {
- 		/*
- 		 * If the user enters a PCI device that  doesn't exist
--		 * like "0000:01:00.1", we don't want strtobool to think
-+		 * like "0000:01:00.1", we don't want kstrtobool to think
- 		 * it's a '0' when it's clearly not what the user wanted.
- 		 * So we require 0's and 1's to be exactly one character.
- 		 */
--	} else if (!strtobool(page, use_p2pdma)) {
-+	} else if (!kstrtobool(page, use_p2pdma)) {
- 		return 0;
- 	}
- 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index ac0557a305af..ba8b17000d94 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1219,7 +1219,7 @@ static ssize_t aspm_attr_store_common(struct device *dev,
- 	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
- 	bool state_enable;
- 
--	if (strtobool(buf, &state_enable) < 0)
-+	if (kstrtobool(buf, &state_enable) < 0)
- 		return -EINVAL;
- 
- 	down_read(&pci_bus_sem);
-@@ -1276,7 +1276,7 @@ static ssize_t clkpm_store(struct device *dev,
- 	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
- 	bool state_enable;
- 
--	if (strtobool(buf, &state_enable) < 0)
-+	if (kstrtobool(buf, &state_enable) < 0)
- 		return -EINVAL;
- 
- 	down_read(&pci_bus_sem);
--- 
-2.32.0
+These should be trivial to fix.  The two pertaining to "quoted string
+split across lines" would be something that we might or might not decide
+to do anything about this - technically, as per the Linux kernel coding
+style [1], we ought to fix this... but, this particular case is not
+a terrible example, so I will leave this at your discretion.
 
+What do you think?
+
+Also, don't worry if you don't have the time or otherwise, as these are
+trivial things and it would only be a bonus to take care of them.
+
+1. https://www.kernel.org/doc/html/v4.10/process/coding-style.html#breaking-long-lines-and-strings
+
+	Krzysztof
