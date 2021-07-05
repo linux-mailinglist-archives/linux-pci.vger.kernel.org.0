@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B05493BBE2A
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 16:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06F793BBE2B
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 16:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231528AbhGEOZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231539AbhGEOZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 5 Jul 2021 10:25:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51412 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbhGEOZJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 10:25:09 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41ABC061574;
-        Mon,  5 Jul 2021 07:22:31 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id s13so7236698plg.12;
-        Mon, 05 Jul 2021 07:22:31 -0700 (PDT)
+        with ESMTP id S231540AbhGEOZN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 10:25:13 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E282FC061760;
+        Mon,  5 Jul 2021 07:22:36 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id h4so18429517pgp.5;
+        Mon, 05 Jul 2021 07:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v1N3+qWlEG+Qg73HGcApeu+QIm5Y+1lSdg14qL5Ytgo=;
-        b=I6oizvPvHL+WCwjmHmcKNfI8iLnnA8kGMIJghSJdL7NOyRvGA+HBQBIE24G1bi/9Ca
-         xvRwl7bqE/sD0teac/t8TCVF4biSLZ1KFjqgDGbZJw10k86MNJenqJq8bTLcqZCq3OfA
-         xCUjyFt9t/FeTIupXBgJ4LfYIb4hlmVqCk7WjZ5ZXp+C4L1En/tY2esULG9Sm4VTFwZa
-         3DoSdZ8hONVKrWB2C2/Dp8ZYnsYj9gybx951BzPuqSiJ+37coP3juCrDfpARlyPelNAA
-         tf0iQ3zbhdVbtivhr7DFinJXX+PuDfLmF77PZzBqIanzVChm0d0A0gBvzKbYMkgIKMJo
-         Gz8Q==
+        bh=cUyFfTZzWLY1nC0kNlDEdNgOhsBcCI3jl7nSUjoy+o0=;
+        b=oxqRWx3hnchLIDwXqQSlZqMYE0Ze5PHmuqc5ExIoQDqZyG8j5GEJzu462t8oQYtA1F
+         sO23iz5yRYe3P0fFxjWns3HJTumyPJ73UY3eaSPWMd519rBcdCam/SQ83I72l9hPUKFE
+         ewAgiDh2+HBASAVbwv9+NBryrlxwG7kGb2FD8EwwJuGoXBN+s+29ZVj/CL/Ay/R9p9Ei
+         1HCbT1D0RZzWbtRkpHj/9QCKLl98wN7cIi3eZ4v46RZhQyGs9gooyjnCUhRRXaSJbitB
+         PFnRJCoPB7Dl1FuY50X4HX3EWio54R6UJVcWNzjQLIf7afg+NRL6FvZLSzj7mGovqgrS
+         7yZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v1N3+qWlEG+Qg73HGcApeu+QIm5Y+1lSdg14qL5Ytgo=;
-        b=OINWRbLiRVJFiTnjMNV4ct6nt8CmBzhtgI34fpX1npAMpqvcnf9vKfQVBJwyEFYzew
-         b31NyNnv3d+Xa/RZIiKf4JKAVPbzz9FdLg5IptoNdYG/2iNpIVQNxWmLjayyCzb63OlL
-         v7bN4MFuAcUF5SeR1wZO20epjN5sscNGAuZw3by7zlRrFOnObGVT+yPq732Rx3hG+uI1
-         QezkOOkI7YElqbawraIG2H+0Vbqy1L+KJBpXlWhxLt3MuGbGb9O/3dO+vFyM1w4PfV2l
-         /JQQtOZdDnmKepTEtYb6zVBOMdU00pnFGwxwpkwWl9Q5ZTfu4bH8795oaslQloYXdISe
-         yZhA==
-X-Gm-Message-State: AOAM530VGCCl80llBscJ+T6jzqZe7zzrtNGWsg/MxIUWtMKU73g7ur8B
-        hPlrjF5Ss8uVcGD+kgsmmA0=
-X-Google-Smtp-Source: ABdhPJz3/tGECHbpfs2E9rtjoI6L8iPtlP5MuPrr/j0yag0LiG5a6nzU96OZdYMt1r097qE3mVv9EA==
-X-Received: by 2002:a17:90a:6d89:: with SMTP id a9mr15816933pjk.194.1625494951443;
-        Mon, 05 Jul 2021 07:22:31 -0700 (PDT)
+        bh=cUyFfTZzWLY1nC0kNlDEdNgOhsBcCI3jl7nSUjoy+o0=;
+        b=AZkoGnfGuqS3C327t7T7MVne0PZ41b2v6urO1ebKQwjTECKBbGEj4stB8BsX6tnXxI
+         AZrsi/p0DTUaVhie5HeTh0/28XmqR5dhf4fgY7KRk/jN5wJblJPlHG438MgYgyYv/qyJ
+         rXr0/b8Ulx0tuTH9IE/PwpVPGMgW2nF4MZyAg/qIjXXJ2hptGy/QttV9xxAyQwAJH9xm
+         lWUitWPgGRqw8FvEjVd0ZF5nDG13uN2YV6VfQug1hsvcT9o0+6bz8F/Ii3VbJWu5twtR
+         R4D4So8ADFLihcCwAYFsYhmIdqARkbL4CCE7NQyF636lsFsxiM1uoime9Hod5XjK5Zt9
+         /8iQ==
+X-Gm-Message-State: AOAM532mz2zY6o519YADLoZnyH62bYMc2BbqgtfLjj/yX9diX6qyAkt9
+        o0KMLaUn+GCJuas3YUYRZv8=
+X-Google-Smtp-Source: ABdhPJyLMc113K9irs1cGiipwliBGIG4AQ0ypBvY1CXqLMk+USAAYNpktPDvkki6FbelJLgJLpxnXA==
+X-Received: by 2002:a63:5912:: with SMTP id n18mr16135678pgb.108.1625494956558;
+        Mon, 05 Jul 2021 07:22:36 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4042:2696:1624:5e13:abf4:6ecf:a1f1])
-        by smtp.googlemail.com with ESMTPSA id 92sm22615307pjv.29.2021.07.05.07.22.26
+        by smtp.googlemail.com with ESMTPSA id 92sm22615307pjv.29.2021.07.05.07.22.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jul 2021 07:22:31 -0700 (PDT)
+        Mon, 05 Jul 2021 07:22:36 -0700 (PDT)
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     alex.williamson@redhat.com,
@@ -55,9 +55,9 @@ Cc:     alex.williamson@redhat.com,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH v9 6/8] PCI: Setup ACPI fwnode early and at the same time with OF
-Date:   Mon,  5 Jul 2021 19:51:36 +0530
-Message-Id: <20210705142138.2651-7-ameynarkhede03@gmail.com>
+Subject: [PATCH v9 7/8] PCI: Add support for ACPI _RST reset method
+Date:   Mon,  5 Jul 2021 19:51:37 +0530
+Message-Id: <20210705142138.2651-8-ameynarkhede03@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210705142138.2651-1-ameynarkhede03@gmail.com>
 References: <20210705142138.2651-1-ameynarkhede03@gmail.com>
@@ -69,76 +69,102 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Shanker Donthineni <sdonthineni@nvidia.com>
 
-The pci_dev objects are created through two mechanisms 1) during PCI
-bus scan and 2) from I/O Virtualization. The fwnode in pci_dev object
-is being set at different places depends on the type of firmware used,
-device creation mechanism, and acpi_pci_bridge_d3() WAR.
+The _RST is a standard method specified in the ACPI specification. It
+provides a function level reset when it is described in the acpi_device
+context associated with PCI-device. Implement a new reset function
+pci_dev_acpi_reset() for probing RST method and execute if it is defined
+in the firmware.
 
-The software features which have a dependency on ACPI fwnode properties
-and need to be handled before device_add() will not work. One use case,
-the software has to check the existence of _RST method to support ACPI
-based reset method.
-
-This patch does the two changes in order to provide fwnode consistently.
- - Set ACPI and OF fwnodes from pci_setup_device().
- - Remove pci_set_acpi_fwnode() in acpi_pci_bridge_d3().
-
-After this patch, ACPI/OF firmware properties are visible at the same
-time during the early stage of pci_dev setup. And also call sites should
-be able to use firmware agnostic functions device_property_xxx() for the
-early PCI quirks in the future.
+The default priority of the ACPI reset is set to below device-specific
+and above hardware resets.
 
 Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
 ---
- drivers/pci/pci-acpi.c | 1 -
- drivers/pci/probe.c    | 7 ++++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/pci-acpi.c | 23 +++++++++++++++++++++++
+ drivers/pci/pci.c      |  1 +
+ drivers/pci/pci.h      |  6 ++++++
+ include/linux/pci.h    |  2 +-
+ 4 files changed, 31 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index eaddbf701..dae021322 100644
+index dae021322..b6de71d15 100644
 --- a/drivers/pci/pci-acpi.c
 +++ b/drivers/pci/pci-acpi.c
-@@ -952,7 +952,6 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 		return false;
+@@ -941,6 +941,29 @@ void pci_set_acpi_fwnode(struct pci_dev *dev)
+ 				   acpi_pci_find_companion(&dev->dev));
+ }
  
- 	/* Assume D3 support if the bridge is power-manageable by ACPI. */
--	pci_set_acpi_fwnode(dev);
- 	adev = ACPI_COMPANION(&dev->dev);
- 
- 	if (adev && acpi_device_power_manageable(adev))
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 221a20415..ba0137322 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1790,6 +1790,9 @@ int pci_setup_device(struct pci_dev *dev)
- 	dev->error_state = pci_channel_io_normal;
- 	set_pcie_port_type(dev);
- 
-+	pci_set_of_node(dev);
-+	pci_set_acpi_fwnode(dev);
++/**
++ * pci_dev_acpi_reset - do a function level reset using _RST method
++ * @dev: device to reset
++ * @probe: check if _RST method is included in the acpi_device context.
++ */
++int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
++{
++	acpi_handle handle = ACPI_HANDLE(&dev->dev);
 +
- 	pci_dev_assign_slot(dev);
++	if (!handle || !acpi_has_method(handle, "_RST"))
++		return -ENOTTY;
++
++	if (probe)
++		return 0;
++
++	if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
++		pci_warn(dev, "ACPI _RST failed\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ {
+ 	const struct fwnode_handle *fwnode;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d5c16492c..1e64dbd3e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5115,6 +5115,7 @@ static void pci_dev_restore(struct pci_dev *dev)
+ const struct pci_reset_fn_method pci_reset_fn_methods[] = {
+ 	{ },
+ 	{ &pci_dev_specific_reset, .name = "device_specific" },
++	{ &pci_dev_acpi_reset, .name = "acpi" },
+ 	{ &pcie_reset_flr, .name = "flr" },
+ 	{ &pci_af_flr, .name = "af_flr" },
+ 	{ &pci_pm_reset, .name = "pm" },
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 990b73e90..2c12017ed 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -705,7 +705,13 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
+ int pci_acpi_program_hp_params(struct pci_dev *dev);
+ extern const struct attribute_group pci_dev_acpi_attr_group;
+ void pci_set_acpi_fwnode(struct pci_dev *dev);
++int pci_dev_acpi_reset(struct pci_dev *dev, int probe);
+ #else
++static inline int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
++{
++	return -ENOTTY;
++}
++
+ static inline void pci_set_acpi_fwnode(struct pci_dev *dev) {}
+ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
+ {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index f34563831..c3b0d771c 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -50,7 +50,7 @@
+ 			       PCI_STATUS_PARITY)
  
- 	/*
-@@ -1925,6 +1928,7 @@ int pci_setup_device(struct pci_dev *dev)
- 	default:				    /* unknown header */
- 		pci_err(dev, "unknown header type %02x, ignoring device\n",
- 			dev->hdr_type);
-+		pci_release_of_node(dev);
- 		return -EIO;
+ /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
+-#define PCI_NUM_RESET_METHODS 6
++#define PCI_NUM_RESET_METHODS 7
  
- 	bad:
-@@ -2352,10 +2356,7 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
- 	dev->vendor = l & 0xffff;
- 	dev->device = (l >> 16) & 0xffff;
- 
--	pci_set_of_node(dev);
--
- 	if (pci_setup_device(dev)) {
--		pci_release_of_node(dev);
- 		pci_bus_put(dev->bus);
- 		kfree(dev);
- 		return NULL;
+ /*
+  * The PCI interface treats multi-function devices as independent
 -- 
 2.32.0
 
