@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBB63BBF3E
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 17:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B127E3BBFAC
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 17:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232167AbhGEPbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jul 2021 11:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56578 "EHLO mail.kernel.org"
+        id S231956AbhGEPcu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jul 2021 11:32:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232089AbhGEPbl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:31:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D87FC61978;
-        Mon,  5 Jul 2021 15:29:03 +0000 (UTC)
+        id S232394AbhGEPcc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 5 Jul 2021 11:32:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CFA4361997;
+        Mon,  5 Jul 2021 15:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625498944;
-        bh=iIjodSY/gAGcSVElEFWD4Ml/sA1x2PVygsJsaiw+aHo=;
+        s=k20201202; t=1625498995;
+        bh=cGwUjEPu6GVrJ4vuw2Vln/bkM7M4tBAEK+eA5D8vZi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YeigBurxyPXEZI+zmu6weAorYpU4ZS4bY0n+E5hBhFcfAfb6dpPsgkWP/gmkvMACT
-         YpOanFjBEgpdmiud1VDvvdnHuegkTrofpP00V/1xeWf30QXZwz6Ba59AqFdcaWuXb8
-         y9vfuhxFVdg3Bpg18MZ0oa9vosu9AHJFQX0WYBkXMQIYgm2iv6jn8XSsNhUz+hdhvT
-         9QaOD1MDPSmK8voYHxSXtxAcHZ+0L5FfS3Ba/f8FZuoG4FFrscLgrkPTBe6vd/VEkK
-         WHpaYuxcUWYsXVZiRV64mDqzr4AEsvJ6s5fletfuz5IM87SY10agEQ2AQEBzxmc7+o
-         n/IVuOAo9QT9A==
+        b=OjB1RJFypU3CF2yMV2kGcLr5b/iVpflBO1b9ewV3NXOz8QmGe0XEq7/9uiQRhov1U
+         qvkdREfmQvF5MicMoF51J2QgfGlgySMRbl8PtWw/XNAw4W6X1iWyHVun6y7SKVGoZy
+         0aA1VdJpx7KwMlvR3ZjGd44sxYFh5SCoQ2iHlWhQvgYAgjiG1/TGdbrPUUu01OQVVo
+         bJmiycC3TCsns8M1+tS/R2zD5yPe13/CpH4SL+WKFrnOx90ZKOt3la9uvNkQUYq3W3
+         xahzGuDS4yKLNZJ9jvk5A0Og1EU0E44i/XkCiLeyLVH6WfKMgbVU7LeG7iz8GNkqjU
+         m4CWNNLqx3zew==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
         Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>,
         Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
         linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 37/59] PCI: hv: Add check for hyperv_initialized in init_hv_pci_drv()
-Date:   Mon,  5 Jul 2021 11:27:53 -0400
-Message-Id: <20210705152815.1520546-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 34/52] PCI: hv: Add check for hyperv_initialized in init_hv_pci_drv()
+Date:   Mon,  5 Jul 2021 11:28:55 -0400
+Message-Id: <20210705152913.1521036-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210705152815.1520546-1-sashal@kernel.org>
-References: <20210705152815.1520546-1-sashal@kernel.org>
+In-Reply-To: <20210705152913.1521036-1-sashal@kernel.org>
+References: <20210705152913.1521036-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,10 +63,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6511648271b2..bebe3eeebc4e 100644
+index 27a17a1e4a7c..7479edf3676c 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3476,6 +3476,9 @@ static void __exit exit_hv_pci_drv(void)
+@@ -3480,6 +3480,9 @@ static void __exit exit_hv_pci_drv(void)
  
  static int __init init_hv_pci_drv(void)
  {
