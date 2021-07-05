@@ -2,171 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 489193BBCEE
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 14:40:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD4A3BBE1D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 16:22:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230360AbhGEMnT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jul 2021 08:43:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57214 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230188AbhGEMnT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 08:43:19 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 165CXBp8111265;
-        Mon, 5 Jul 2021 08:40:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=+wzwx/rOWMtl2r9GcTZe+zXqgVhpNq7S2WQ1D1BJGrc=;
- b=aROnRBytRIk1ez38XeC4cePF2pOS/eq9A6h5a5W7AeUVML7CyuEvp1uirwyhCw3TTync
- ha0H4DnLXHvFzOVqbaTmlHv/Hg6N/2BXisMNj9ytgporkybdDbMg0xDz75Z0hSZImBp8
- xwHZNXaEKj18it7Lg/SS8+gcJnpeQPNkw2k+CwlGcUaCEhXRMNN9qOJ4GXjALRHxbQnp
- hv00ydqtqpvKVhzw0RoDY8PACZMST+3T50amaul96cmdcXHgKLS14LQl+77lSW2tjBb8
- PQrBnE91LOmFi81326CKPaJTyj7dBjeqvhsuGPU7TAVpfHyk2KNM81zlP4qvrazO2QlM CQ== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39kyj0cs3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Jul 2021 08:40:40 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 165CYsvU016959;
-        Mon, 5 Jul 2021 12:40:38 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 39jf5h8suh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Jul 2021 12:40:38 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 165Cea6W31326696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 5 Jul 2021 12:40:36 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1DCB411C064;
-        Mon,  5 Jul 2021 12:40:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C546711C050;
-        Mon,  5 Jul 2021 12:40:35 +0000 (GMT)
-Received: from sig-9-145-159-22.de.ibm.com (unknown [9.145.159.22])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  5 Jul 2021 12:40:35 +0000 (GMT)
-Message-ID: <d1d41b7ca4bf2b25e234e5cda0ad624e714f7a64.camel@linux.ibm.com>
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 05 Jul 2021 14:40:35 +0200
-In-Reply-To: <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
-         <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
-         <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8qRyU10tlyXzjrA-NE2p44wRQ1ld1zne
-X-Proofpoint-ORIG-GUID: 8qRyU10tlyXzjrA-NE2p44wRQ1ld1zne
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-05_07:2021-07-02,2021-07-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- suspectscore=0 spamscore=0 clxscore=1011 bulkscore=0 adultscore=0
- mlxlogscore=984 lowpriorityscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2107050067
+        id S231336AbhGEOYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jul 2021 10:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230285AbhGEOYh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 10:24:37 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F4CC06175F;
+        Mon,  5 Jul 2021 07:21:59 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id v13so10333799ple.9;
+        Mon, 05 Jul 2021 07:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eTmmmfhbZe/o2WqiYNUf5EzatKBKvlNcT12AxwNNdlg=;
+        b=aoGYRHtzWYrI8gbO8G/cf3w4ATS52HdhdNFmIYQQO5sBR4rlKNg5hWj/E3UDjxh8Xe
+         y9RLGsaj+BGN4XbMqCRW/wUFQ0sym/xW9gyD9rI8SevjNCHdvYP6n7EGy0Q6UJkSetDW
+         nIDYpIF61E7Kx68HHYBPDa7fXB8mQU72tR6BsBRkIBtufxJKeX1Z+g///Hje5bOwT4Gk
+         cxf6EI0CKkII/iQUpD6Wc/Bs67yl4XeS/c2J9/QGHJIftieDWw1foP9g3eDG7Jy76cdv
+         QTkGs8C8BwUV5345qGF6LuqjuV9bU3LyP/3KS3VIg/54TDNMTVuCaicPZxDRTZu3ynjh
+         TabA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eTmmmfhbZe/o2WqiYNUf5EzatKBKvlNcT12AxwNNdlg=;
+        b=gXjt27yaOokwYtrZIgqLNhDUCXHn2TCPYI+cW/zqT2QifPAAlMbbCdKD1U/C85ytmy
+         ZIkScW7AjymyT6tUC1cEr7a9V1kwIQYJeFNKH7mOSM27Kn4tnoAOAGdTyMwBHB70SdoK
+         DsSi/wP0yI6PpeRLzsdcrn5E4t20dVx+gOGjasPVjSMBgv0hPyBfurlZsBYumRsyUua9
+         mW0VV9IS6DfklheiI4pdYoLMlQ/PLtRiAklsu5Bx9NRynqYVAvpKUiSs+vDcpTJne7Yw
+         AI6YC7y6a7tznCoxmjK8yZI52VA9HhvKIxD8nkbYV59yPizirPb39nvKN+zZmVTm8ffi
+         tjog==
+X-Gm-Message-State: AOAM532MR9qqTuSj554492+OBIKhb40aPG7Eve+29wZoh+wlIuVoDBod
+        I3YksxmleYYK7sAOM4agMW0=
+X-Google-Smtp-Source: ABdhPJwuacdErMcPMZfKjdrxNMrKEVhUPu0ZprxwaTQ+PwMIMcQJHFhgVyR7hl3omb/7RH8X9t1Q9w==
+X-Received: by 2002:a17:902:f543:b029:129:8fd3:c6ac with SMTP id h3-20020a170902f543b02901298fd3c6acmr4150975plf.31.1625494918968;
+        Mon, 05 Jul 2021 07:21:58 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4042:2696:1624:5e13:abf4:6ecf:a1f1])
+        by smtp.googlemail.com with ESMTPSA id 92sm22615307pjv.29.2021.07.05.07.21.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jul 2021 07:21:58 -0700 (PDT)
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Amey Narkhede <ameynarkhede03@gmail.com>
+Subject: [PATCH v9 0/8] Expose and manage PCI device reset
+Date:   Mon,  5 Jul 2021 19:51:30 +0530
+Message-Id: <20210705142138.2651-1-ameynarkhede03@gmail.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 2021-07-03 at 14:12 +0200, Arnd Bergmann wrote:
-> On Fri, Jul 2, 2021 at 9:42 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> > On Fri, Jul 2, 2021 at 6:48 AM Arnd Bergmann <arnd@kernel.org> wrote:
-> > > A rework for PCI I/O space access from Niklas Schnelle:
-> > 
-> > I pulled this, but then I ended up unpulling.
-> > 
-> > I don't absolutely _hate_ the concept, but I really find this to be
-> > very unpalatable:
-> > 
-> >   #if !defined(inb) && !defined(_inb)
-> >   #define _inb _inb
-> >   static inline u8 _inb(unsigned long addr)
-> >   {
-> >   #ifdef PCI_IOBASE
-> >         u8 val;
-> > 
-> >         __io_pbr();
-> >         val = __raw_readb(PCI_IOBASE + addr);
-> >         __io_par(val);
-> >         return val;
-> >   #else
-> >         WARN_ONCE(1, "No I/O port support\n");
-> >         return ~0;
-> >   #endif
-> >   }
-> >   #endif
-> > 
-> > because honestly, the notion of a run-time warning for a compile-time
-> > "this cannot work" is just wrong.
-> 
-> Ok, fair enough, back to the drawing board then.
+PCI and PCIe devices may support a number of possible reset mechanisms
+for example Function Level Reset (FLR) provided via Advanced Feature or
+PCIe capabilities, Power Management reset, bus reset, or device specific reset.
+Currently the PCI subsystem creates a policy prioritizing these reset methods
+which provides neither visibility nor control to userspace.
 
-Yes, hard to argue with the reasoning. I'll be here to assist with
-testing etc.
+Expose the reset methods available per device to userspace, via sysfs
+and allow an administrative user or device owner to have ability to
+manage per device reset method priorities or exclusions.
+This feature aims to allow greater control of a device for use cases
+as device assignment, where specific device or platform issues may
+interact poorly with a given reset method, and for which device specific
+quirks have not been developed.
 
-> 
-> > If the platform doesn't have inb/outb, and you compile some driver
-> > that uses them, you don't want a run-time warning. Particularly since
-> > in many cases nobody will ever run it, and the main use case was to do
-> > compile-testing across a wide number of platforms.
-> > 
-> > So if the platform doesn't have inb/outb, they simply should not be
-> > declared, and there should be a *compile-time* error. That is
-> > literally a lot more useful, and it avoids this extra code.
-> 
-> I tried adding a Kconfig option over a decade ago, but at the time
-> gave up when I couldn't still get drivers/ide and the 8250 uart driver
-> to build in a sensible way that would still allow the MMIO based
-> variants to work, but leave out the PIO accessors. With drivers/ide
-> gone, and the drivers/tty/serial/ having gone through many changes,
-> it's probably easier now.
-> 
-> I could imagine adding a CONFIG_LEGACY_PCI that controls
-> whether we have any pre-PCIe devices or those PCIe drivers
-> that need PIO accessors other than ioport_map()/pci_iomap().
-> 
-> This can then select a CONFIG_IOPORT, which controls whether
-> inb/outb etc are provided. x86 and anything that uses inb/outb for
-> non-PCI devices would select it as well.
+Changes in v9:
+	- Renamed has_flr bitfield to has_pcie_flr and restored
+	  use of PCI_DEV_FLAGS_NO_FLR_RESET in quirk_no_flr()
+	- Cleaned up sysfs code
 
-I saw your patch in the other mail and will give it a try on our
-systems as well.
+Changes in v8:
+	- Added has_flr bitfield to struct pci_dev to cache flr
+	  capability
+	- Updated encoding scheme used in reset_methods array as per
+	  Bjorn's suggestion
+	- Updated Shanker's ACPI patches
 
-> 
-> > Extra code that not only doesn't add value, but that actually
-> > *subtracts* value is not code I really want to pull.
-> 
-> What happened here specifically is that the asm-generic version
-> is definitely broken and can cause a NULL pointer dereference
-> on platforms that used to fall back to NULL PCI_IOBASE.
-> 
-> The latest clang does complain about those drivers with a
-> correct warning (not an error) that shows up in s390 allmodconfig
-> builds. Niklas' original version of the patch tried to shut up the
-> warning but did not address the dangerous behavior, which I
-> did not find sufficient either.
-> 
-> The version we got here makes it no longer crash the kernel, but
-> I see your point that the runtime warning is still wrong. I'll have
-> a look at what it would take to guard all inb/outb callers with a
-> Kconfig conditional, and will report back after that.
-> 
->       Arnd
+Changes in v7:
+	- Fix the pci_dev_acpi_reset() prototype mismatch
+	  in case of CONFIG_ACPI=n
 
-Thanks for your explanation I had already forgotten some of the details
-and have nothing to add.
+Changes in v6:
+	- Address Bjorn's and Krzysztof's review comments
+	- Add Shanker's updated patches along with new
+	  "PCI: Setup ACPI_COMPANION early" patch
 
-Except, thanks, I guess I can now strike "Got code criticiced by Linus
-Torvalds" from my bucket list.
+Changes in v5:
+	- Rebase the series over pci/reset branch of
+	  Bjorn's pci tree to avoid merge conflicts
+	  caused by recent changes in existing reset
+	  sysfs attribute
 
+Changes in v4:
+	- Change the order or strlen and strim in reset_method_store
+	  function to avoid extra strlen call.
+	- Use consistent terminology in new
+	  pci_reset_mode enum and rename the probe argument
+	  of reset functions.
+
+Changes in v3:
+	- Dropped "PCI: merge slot and bus reset implementations" which was
+	  already accepted separately
+	- Grammar fixes
+	- Added Shanker's patches which were rebased on v2 of this series
+	- Added "PCI: Change the type of probe argument in reset functions"
+	  and additional user input sanitization code in reset_method_store
+	  function per review feedback from Krzysztof
+
+Changes in v2:
+	- Use byte array instead of bitmap to keep track of
+	  ordering of reset methods
+	- Fix incorrect use of reset_fn field in octeon driver
+	- Allow writing comma separated list of names of supported reset
+	  methods to reset_method sysfs attribute
+	- Writing empty string instead of "none" to reset_method attribute
+	  disables ability of reset the device
+
+Amey Narkhede (5):
+  PCI: Add pcie_reset_flr to follow calling convention of other reset
+    methods
+  PCI: Add new array for keeping track of ordering of reset methods
+  PCI: Remove reset_fn field from pci_dev
+  PCI/sysfs: Allow userspace to query and set device reset mechanism
+  PCI: Change the type of probe argument in reset functions
+
+Shanker Donthineni (3):
+  PCI: Define a function to set ACPI_COMPANION in pci_dev
+  PCI: Setup ACPI fwnode early and at the same time with OF
+  PCI: Add support for ACPI _RST reset method
+
+ Documentation/ABI/testing/sysfs-bus-pci       |  19 ++
+ drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
+ .../ethernet/cavium/liquidio/lio_vf_main.c    |   2 +-
+ drivers/pci/hotplug/pciehp.h                  |   2 +-
+ drivers/pci/hotplug/pciehp_hpc.c              |   4 +-
+ drivers/pci/pci-acpi.c                        |  38 +++-
+ drivers/pci/pci-sysfs.c                       | 107 ++++++++-
+ drivers/pci/pci.c                             | 215 ++++++++++--------
+ drivers/pci/pci.h                             |  23 +-
+ drivers/pci/pcie/aer.c                        |  12 +-
+ drivers/pci/probe.c                           |  17 +-
+ drivers/pci/quirks.c                          |  42 ++--
+ drivers/pci/remove.c                          |   1 -
+ include/linux/pci.h                           |  17 +-
+ include/linux/pci_hotplug.h                   |   2 +-
+ 15 files changed, 361 insertions(+), 144 deletions(-)
+
+--
+2.32.0
