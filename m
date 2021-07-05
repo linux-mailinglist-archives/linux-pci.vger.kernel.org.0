@@ -2,101 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D923BC12F
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 17:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 966003BC16D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 18:12:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbhGEPtf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jul 2021 11:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231721AbhGEPtf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 11:49:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CF9C061574
-        for <linux-pci@vger.kernel.org>; Mon,  5 Jul 2021 08:46:58 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0QoA-0005vo-Qd; Mon, 05 Jul 2021 17:46:54 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0QoA-0003ZS-0C; Mon, 05 Jul 2021 17:46:54 +0200
-Date:   Mon, 5 Jul 2021 17:46:50 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S229560AbhGEQOo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jul 2021 12:14:44 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:40548 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229495AbhGEQOo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 12:14:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=Q3YIK3t9z+fN5nGyXTdIuXppJPkxUCeL7c4AVzJi+kY=; b=l6HJ3DnwxZZU6aKXCzjaIRSBsT
+        LbVWl7FbsPNed0mxfaZYeSjZ9c+8xrk+2OoGr0VRbICRVllqYNWNz6P3qI5F5Hbi/yJzxfC6qaXyS
+        yOyg762Y2AC2DmygosBJ8ljHE2PFFwpGB/NqLv0FdY9n0GHIea2PFxVbdRewWp5Qfaxpo0Ckd70t3
+        /05fNLEg6T9pgswty+tL7OVFlueljO2/Vpr0wEVGZWABzpXmcDWH2YSCi2mFUZjSKnh1DHadyrHNn
+        JevsJ05ol0XwIxSLUv8X+oEfgDo9iidMUv0OITntKJuyIGvU4cnVPujmsLdCwWSMDnvqww98+xxsN
+        vOlYnjhA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1m0RCQ-0002b1-IF; Mon, 05 Jul 2021 10:12:01 -0600
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pengutronix.de, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Make struct pci_epf_driver::remove return
- void
-Message-ID: <20210705154650.roeaqika5ptknrnt@pengutronix.de>
-References: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
- <2a12ff97-a916-d70e-9e5b-b796e9c58288@ti.com>
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org
+References: <20210701095621.3129283-1-eric.dumazet@gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <986ec985-a42c-9107-564d-5878a669388b@deltatee.com>
+Date:   Mon, 5 Jul 2021 10:11:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="godrklbzgejy4bt2"
-Content-Disposition: inline
-In-Reply-To: <2a12ff97-a916-d70e-9e5b-b796e9c58288@ti.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+In-Reply-To: <20210701095621.3129283-1-eric.dumazet@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, rafael@kernel.org, jglisse@redhat.com, gregkh@linuxfoundation.org, hch@lst.de, ira.weiny@intel.com, dan.j.williams@intel.com, edumazet@google.com, linux-kernel@vger.kernel.org, bhelgaas@google.com, eric.dumazet@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.4 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        MYRULES_URI_HASH,NICE_REPLY_A autolearn=no autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH] PCI/P2PDMA: finish RCU conversion of pdev->p2pdma
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---godrklbzgejy4bt2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On 2021-07-01 3:56 a.m., Eric Dumazet wrote:
+> From: Eric Dumazet <edumazet@google.com>
+> 
+> While looking at pci_alloc_p2pmem() I found rcu protection
+> was not properly applied there, as pdev->p2pdma was
+> potentially read multiple times.
+> 
+> I decided to fix pci_alloc_p2pmem(), add __rcu qualifier
+> to p2pdma field of struct pci_dev, and fix all
+> other accesses to this field with proper rcu verbs.
+> 
+> Fixes: 1570175abd16 ("PCI/P2PDMA: track pgmap references per resource, not globally")
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: linux-pci@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 03:29:27PM +0530, Kishon Vijay Abraham I wrote:
-> On 23/02/21 2:37 pm, Uwe Kleine-K=F6nig wrote:
-> > The driver core ignores the return value of pci_epf_device_remove()
-> > (because there is only little it can do when a device disappears) and
-> > there are no pci_epf_drivers with a remove callback.
-> >=20
-> > So make it impossible for future drivers to return an unused error code
-> > by changing the remove prototype to return void.
-> >=20
-> > The real motivation for this change is the quest to make struct
-> > bus_type::remove return void, too.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->=20
-> Fine with this change!
->=20
-> FWIW:
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-Thanks for the ack. How can I expect this patch to go into mainline now?
-Will Bjorn pick it up now that you acked?
+For history, though, Dan had originally suggested the full RCU
+protection is not necessary and it was only a barrier to force the NULL
+check on teardown to resolve:
 
-Best regards
-Uwe
+https://lore.kernel.org/nvdimm/CAPcyv4jZiK+OHjwNqDARv4g326AQZx7N_Lmxj1Zux_bX1T2CLQ@mail.gmail.com/
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Things may have changed since then and other uses might be racing with
+the teardown, so having it marked __rcu and fully protected sounds like
+a good idea to me.
 
---godrklbzgejy4bt2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDjKWYACgkQwfwUeK3K
-7Amc7QgAiIy+wjl/dynWfO5IzkjtZ4nfZppBMSMXgGWEkNZa31N47lrmmQhPV/eD
-CLEW+vU6KUPVfRTdRpByaSuO9oJlbxTY1oqKMYCW1IPZPo057ExzqAc0WZqByvIV
-lVqUnn22Cvua0DAMy4vgKug76CbDwDAvWNMDmGNIbwwvsYVG9/C/CuEFeWuNPoWt
-JrGpRIdRWszd555oF//UMVfj5FijAPyqkF9axiVQfqC0zMtnR45GWBSzHzKLL9OM
-7IeDRkyp474Qzcv+H8VranpfdRwR/8x3dVIB6utCNfDIKv7wUFPYK/xldV021/f0
-RTndK+WDBA7oLKBy5paHSMyvSU7ioQ==
-=S80+
------END PGP SIGNATURE-----
-
---godrklbzgejy4bt2--
+Logan
