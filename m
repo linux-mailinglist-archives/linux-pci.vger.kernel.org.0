@@ -2,104 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 895713BB901
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 10:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2D983BB96A
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jul 2021 10:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbhGEIY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jul 2021 04:24:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43966 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbhGEIYY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 04:24:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1658LTJ0005911;
-        Mon, 5 Jul 2021 03:21:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1625473289;
-        bh=Y5AlfMUgJJYX/2dmO0aHXkikhRLjjtuU8z3wKxricB0=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=AaI85ThQ6sn8gb1DpFaqvtAe9iPcadMGWGata0NI9XKZ3m1sX8+UyeZt8Nm4GvGia
-         m6/BYDrsUoYJ0+4fW2O7HDwekOiteOnirynRY2s7B5m7PjzNCEoKIp6uNvMo6uIsQ+
-         PISwMnGtSwdxUbEli4ipDfWO5CjjQ3luGPrn8k6Y=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1658LTVF129783
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 5 Jul 2021 03:21:29 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 5 Jul
- 2021 03:21:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Mon, 5 Jul 2021 03:21:28 -0500
-Received: from [10.250.232.207] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1658LNtD100793;
-        Mon, 5 Jul 2021 03:21:24 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 08/40] PCI: keystone: Cleanup MSI/legacy interrupt
- configuration and handling
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-CC:     Jingoo Han <jingoohan1@gmail.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <Gustavo.Pimentel@synopsys.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Nishanth Menon <nm@ti.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20180921102155.22839-1-kishon@ti.com>
- <20180921102155.22839-9-kishon@ti.com> <20210703210152.GA16176@rocinante>
-Message-ID: <56160f1d-ec91-3b99-312c-aef66eb1a7c2@ti.com>
-Date:   Mon, 5 Jul 2021 13:51:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S230126AbhGEIiH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jul 2021 04:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230085AbhGEIiH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jul 2021 04:38:07 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C61C061574;
+        Mon,  5 Jul 2021 01:35:31 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id o10so16637920ils.6;
+        Mon, 05 Jul 2021 01:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=d/z0wdGwqo9fBiWvUKCHWb/kQLPqJkEvWOdgihFLsj8=;
+        b=nnIo3J5eDnno109p9aSKDxVdvCbFHp1smIORXB6hZq5EJHpgLZSCO4qP5Zs/l1a6XV
+         HB8E3gbb9zLBNY+M89JdThVHsIUMNs8YWeIVS3vgcwqOMSy34psw+1t/dNaHc+RgCpGt
+         Ud6XtMDaWKU0aKQZlxLdbBKP71+N4ICCQyeG2NNdbYcPGjpJku68kl4nOv5pU62ibYT1
+         oToGm7yNkp15taLIWju8i0ZO5Ry08JoF3LMatsVsrVh9gFMz/wdk400nt1P/xbtP3FaZ
+         O5FMuRzJ/grWG1JJL08q+p47b8UrFJO14V+l+wjvzua9sliDAmZYOE0OQNatiTH03wr/
+         zmAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=d/z0wdGwqo9fBiWvUKCHWb/kQLPqJkEvWOdgihFLsj8=;
+        b=GCx5Ui9cjNUdP2ZZBX4mRYViR8JN3K+e04TAn7Zk2tCLEHpGFhPrkzk/Vvq8PhXhZC
+         mepfEgzENJS1jwDYcBWi58tXVpNPgTuNOezfDax3vD5FX1ENJomG7jxKpwBuJAlTzIqe
+         kDXYJoq1XJWbY69NDqZyD3UP0P9lS/Y+XPo5U5VLq8fW9zw3I1GGa8JAvk+RcitgXcZK
+         EMsAFlYxvHMxi6T1GYZErwK1pqs5tZSlt0f4tpdb6ztvTIvW4vqEPsC1Bc/TdwTsshiU
+         8n19CLv6SQjqxiRXOCp1fWxY5GAaNbVuT0wVgRcMoKNj9VcqVStmLZcH5vjGtLpPkhEv
+         8UYg==
+X-Gm-Message-State: AOAM5329s9oNhjasV606cFjZx/nzwa70DLA7ZDkaOSVgfyDl6vEnTYfH
+        Dvjv2plxgN+jHcj0rRrZzKiAXQ0mbGXgpPWC3hE=
+X-Google-Smtp-Source: ABdhPJz2XNkzxoMF2ciJoR4PMgzdzbrxMkwrN9p4oVhgaS5rrdQ8ctbDneqd2RHXne/ebOI01Evyw56XuTGLo2Wwkng=
+X-Received: by 2002:a05:6e02:1d0e:: with SMTP id i14mr3756014ila.150.1625474130559;
+ Mon, 05 Jul 2021 01:35:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210703210152.GA16176@rocinante>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20210701154634.GA60743@bjorn-Precision-5520> <67a9e1fa.81a9.17a64c8e7f7.Coremail.chenhuacai@loongson.cn>
+In-Reply-To: <67a9e1fa.81a9.17a64c8e7f7.Coremail.chenhuacai@loongson.cn>
+From:   Art Nikpal <email2tema@gmail.com>
+Date:   Mon, 5 Jul 2021 16:35:19 +0800
+Message-ID: <CAKaHn9KxRrBsn4b9fSO1eDzM3XdV2GzfwVX+cGw9uS_eKg75dw@mail.gmail.com>
+Subject: Re: Re: [PATCH 0/4] PCI: replace dublicated MRRS limit quirks
+To:     =?UTF-8?B?6ZmI5Y2O5omN?= <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Artem Lapkin <art@khadas.com>,
+        Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>,
+        chenhuacai@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Krzysztof,
+> Does that means keystone and Loongson has the same MRRS problem? And what=
+ should I do now?
 
-On 04/07/21 2:31 am, Krzysztof Wilczyński wrote:
-> Hi Kishon,
-> 
->> Now that all PCI keystone functionality has been moved to pci-keystone.c,
->> cleanup MSI/legacy interrupt configuration and handling.
->>  *) Cleanup macros
->>  *) Remove unnecessary structure variables (required when 2 files are
->>     used)
->>  *) Remove ks_dw_pcie_legacy_irq_chip and use dummy_irq_chip
->>  *) Move request_irq of error irq from ks_add_pcie_port to ks_pcie_probe
->>     as error_irq is common to both host mode and device mode
-> [...]
-> 
-> While looking at some small clean-ups for Bjorn, I stumbled upon this
-> series, and it seems a lot of your work here cover what Bjorn wanted to
-> do, thus I need to ask - do you recall, and I appreciate it's been
-> a while (three years actually), what happened and/or if you ever had the
-> time to work on this series?
-> 
-> Would it be possible to resurrect this?  Do you need any help?
+Look like yes ! and  amlogic has the same problem.
+I think somebody need to rewrite it all to one common quirk for this proble=
+m.
 
-A lot of patches in this series should already be merged (after
-splitting into smaller ones)
-http://patchwork.ozlabs.org/project/linux-pci/list/?series=71185
+If no one has any objection, I can try to remake it again.
 
-https://patchwork.kernel.org/project/linux-arm-kernel/cover/20190321095927.7058-1-kishon@ti.com/
-
-The following series is still pending and is in my TODO list
-https://lore.kernel.org/r/20210325090026.8843-1-kishon@ti.com
-
-Are there any other clean-ups you are looking into?
-
-Thanks and Regards
-Kishon
+On Fri, Jul 2, 2021 at 9:15 AM =E9=99=88=E5=8D=8E=E6=89=8D <chenhuacai@loon=
+gson.cn> wrote:
+>
+> Hi, Bjorn,
+>
+> &gt; -----=E5=8E=9F=E5=A7=8B=E9=82=AE=E4=BB=B6-----
+> &gt; =E5=8F=91=E4=BB=B6=E4=BA=BA: "Bjorn Helgaas" <helgaas@kernel.org>
+> &gt; =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2021-07-01 23:46:34 (=E6=98=9F=
+=E6=9C=9F=E5=9B=9B)
+> &gt; =E6=94=B6=E4=BB=B6=E4=BA=BA: "Artem Lapkin" <email2tema@gmail.com>
+> &gt; =E6=8A=84=E9=80=81: narmstrong@baylibre.com, yue.wang@Amlogic.com, k=
+hilman@baylibre.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.c=
+om, jbrunet@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@g=
+ooglemail.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.=
+org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, art@k=
+hadas.com, nick@khadas.com, gouwa@khadas.com, "Huacai Chen" <chenhuacai@loo=
+ngson.cn>
+> &gt; =E4=B8=BB=E9=A2=98: Re: [PATCH 0/4] PCI: replace dublicated MRRS lim=
+it quirks
+> &gt;
+> &gt; [+cc Huacai]
+> &gt;
+> &gt; On Sat, Jun 19, 2021 at 02:39:48PM +0800, Artem Lapkin wrote:
+> &gt; &gt; Replace dublicated MRRS limit quirks by mrrs_limit_quirk from c=
+ore
+> &gt; &gt; * drivers/pci/controller/dwc/pci-keystone.c
+> &gt; &gt; * drivers/pci/controller/pci-loongson.c
+> &gt;
+> &gt; s/dublicated/duplicated/ (several occurrences)
+> &gt;
+> &gt; Capitalize subject lines.
+> &gt;
+> &gt; Use "git log --online" to learn conventions and follow them.
+> &gt;
+> &gt; Add "()" after function names.
+> &gt;
+> &gt; Capitalize acronyms appropriately (NVMe, MRRS, PCI, etc).
+> &gt;
+> &gt; End sentences with periods.
+> &gt;
+> &gt; A "move" patch must include both the removal and the addition and ma=
+ke
+> &gt; no changes to the code itself.
+> &gt;
+> &gt; Amlogic appears without explanation in 2/4.  Must be separate patch =
+to
+> &gt; address only that specific issue.  Should reference published erratu=
+m
+> &gt; if possible.  "Solves some issue" is not a compelling justification.
+> &gt;
+> &gt; The tree must be consistent and functionally the same or improved
+> &gt; after every patch.
+> &gt;
+> &gt; Add to pci_ids.h only if symbol used more than one place.
+> &gt;
+> &gt; See
+> &gt; https://lore.kernel.org/r/20210701074458.1809532-3-chenhuacai@loongs=
+on.cn,
+> &gt; which looks similar.  Combine efforts if possible and cc Huacai so
+> &gt; you're both aware of overlapping work.
+> &gt;
+> &gt; More hints in case they're useful:
+> &gt; https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-gl=
+aptop.roam.corp.google.com/
+> &gt;
+> &gt; &gt; Both ks_pcie_quirk loongson_mrrs_quirk was rewritten without an=
+y
+> &gt; &gt; functionality changes by one mrrs_limit_quirk
+> Does that means keystone and Loongson has the same MRRS problem? And what=
+ should I do now?
+>
+> Huacai
+> &gt; &gt;
+> &gt; &gt; Added DesignWare PCI controller which need same quirk for
+> &gt; &gt; * drivers/pci/controller/dwc/pci-meson.c (PCI_DEVICE_ID_SYNOPSY=
+S_HAPSUSB3)
+> &gt; &gt;
+> &gt; &gt; This quirk can solve some issue for Khadas VIM3/VIM3L(Amlogic)
+> &gt; &gt; with HDMI scrambled picture and nvme devices at intensive writi=
+ng...
+> &gt; &gt;
+> &gt; &gt; come from:
+> &gt; &gt; * https://lore.kernel.org/linux-pci/20210618063821.1383357-1-ar=
+t@khadas.com/
+> &gt; &gt;
+> &gt; &gt; Artem Lapkin (4):
+> &gt; &gt;  PCI: move Keystone and Loongson device IDs to pci_ids
+> &gt; &gt;  PCI: core: quirks: add mrrs_limit_quirk
+> &gt; &gt;  PCI: keystone move mrrs quirk to core
+> &gt; &gt;  PCI: loongson move mrrs quirk to core
+> &gt; &gt;
+> &gt; &gt; --
+> &gt; &gt; 2.25.1
+> &gt; &gt;
+>
+>
+> </chenhuacai@loongson.cn></email2tema@gmail.com></helgaas@kernel.org>
