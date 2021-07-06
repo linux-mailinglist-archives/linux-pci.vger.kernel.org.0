@@ -2,152 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D080F3BDE47
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 22:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1E63BDE77
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 22:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbhGFUPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 16:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229781AbhGFUPV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Jul 2021 16:15:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6DA3861C30;
-        Tue,  6 Jul 2021 20:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625602362;
-        bh=dMozURTgCDtE/nqPAO74mQrk2jYpZIJHRjna9oZLlBU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Db9XAFhBa72OXFLdJe6GXAe/gZDR5QG+hGO3+xDnHonYYM+FlgwPWSvgSrm3bQusq
-         osIxRYJYffsfg/KpY4b0tIRSr6pZqEjha6bo02sIuLPPIJBvj647EIJ+DXg0wl5v35
-         qLWfmZPBhiuDvHy5bu8WAfzk1WV9DgRLVUGWwoHSLto66tapyWeaSr6hz7Fu+SK5VH
-         GlqYDmEAtWv9gkTKACbrruIxwI01aGoGf17XGYPVMKysWaM2E+bcJdhXhL1iK/J0Ro
-         W0UCW+oKJri7o2LOVn5bjsEo0uukvIzqnFCIPE6d1Kfvy8V5I1GeFZKiGxbXDdg/Hj
-         sAiqAbLwoPEFQ==
-Date:   Tue, 6 Jul 2021 15:12:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Aaron Ma <aaron.ma@canonical.com>
-Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        davem@davemloft.net, kuba@kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] igc: don't rd/wr iomem when PCI is removed
-Message-ID: <20210706201241.GA820992@bjorn-Precision-5520>
+        id S229919AbhGFUhC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 16:37:02 -0400
+Received: from mail-ej1-f49.google.com ([209.85.218.49]:45992 "EHLO
+        mail-ej1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229781AbhGFUhB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 16:37:01 -0400
+Received: by mail-ej1-f49.google.com with SMTP id hc16so36206247ejc.12;
+        Tue, 06 Jul 2021 13:34:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ICSJlQlSgTNd605M++v+mHZyBgX5QCDOQLTCW/JboK8=;
+        b=RbdwTONsbKLLWtK3IFGKix+k9A7v7MKeqjuCEYRRQ2QcEE4nlJVD/eyWME0smJb/+G
+         i4vrMfVMrKjyeOkVhk8Fg1KyYiTa9EA56+91IBZhDfwKZtqp6+eaaeqGyPNbnC9umDTN
+         mB6H4wb8EpfydJhgfvm74kHMipypuQzsfqwId+8cmS4CpsCX0dsWwUpYQ6UJ83zIQ740
+         cLo3gSP7An0sKB8Ds8aP14033HqSsvImePV3/GqtN1I+DdKqDgBLoUGeBBkkjScVvkMx
+         70mJOufC4Jmxx0ORwZvAM8OoqzAznooQYnZrhSlitPW+X7G4ScMvsUALAUSHnCLbeI0I
+         IOMQ==
+X-Gm-Message-State: AOAM533PGVB+ynXC2Q95KScdahL8AcLKVIdsxZHzLpaAJwfPFy2sEWCs
+        I0Hw6wwVvHlc+PBfxH0+IvXOTV6yNK488n6m
+X-Google-Smtp-Source: ABdhPJzk7Av2OZ6J6ktZL9FvReBxgzGh5O0TaVuvB2PM/lqy/MNt0nyKfPdOWfFinUNhQmGg4noc5g==
+X-Received: by 2002:a17:907:c0f:: with SMTP id ga15mr19995713ejc.228.1625603661503;
+        Tue, 06 Jul 2021 13:34:21 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id k25sm6343895eds.77.2021.07.06.13.34.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jul 2021 13:34:21 -0700 (PDT)
+Date:   Tue, 6 Jul 2021 22:34:19 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Jingoo Han <jingoohan2@gmail.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gustavo.Pimentel@synopsys.com, Mark Rutland <mark.rutland@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 08/40] PCI: keystone: Cleanup MSI/legacy interrupt
+ configuration and handling
+Message-ID: <20210706203419.GA213769@rocinante>
+References: <20180921102155.22839-1-kishon@ti.com>
+ <20180921102155.22839-9-kishon@ti.com>
+ <20210703210152.GA16176@rocinante>
+ <56160f1d-ec91-3b99-312c-aef66eb1a7c2@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210702045120.22855-1-aaron.ma@canonical.com>
+In-Reply-To: <56160f1d-ec91-3b99-312c-aef66eb1a7c2@ti.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 02, 2021 at 12:51:19PM +0800, Aaron Ma wrote:
-> Check PCI state when rd/wr iomem.
-> Implement wr32 function as rd32 too.
+Hi Kishon,
+
+[...]
+> > Would it be possible to resurrect this?  Do you need any help?
 > 
-> When unplug TBT dock with i225, rd/wr PCI iomem will cause error log:
-> Trace:
-> BUG: unable to handle page fault for address: 000000000000b604
-> Oops: 0000 [#1] SMP NOPTI
-> RIP: 0010:igc_rd32+0x1c/0x90 [igc]
-> Call Trace:
-> igc_ptp_suspend+0x6c/0xa0 [igc]
-> igc_ptp_stop+0x12/0x50 [igc]
-> igc_remove+0x7f/0x1c0 [igc]
-> pci_device_remove+0x3e/0xb0
-> __device_release_driver+0x181/0x240
+> A lot of patches in this series should already be merged (after
+> splitting into smaller ones)
+> http://patchwork.ozlabs.org/project/linux-pci/list/?series=71185
 > 
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> ---
->  drivers/net/ethernet/intel/igc/igc_main.c | 16 ++++++++++++++++
->  drivers/net/ethernet/intel/igc/igc_regs.h |  7 ++-----
->  2 files changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index f1adf154ec4a..606b72cb6193 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -5292,6 +5292,10 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
->  	u8 __iomem *hw_addr = READ_ONCE(hw->hw_addr);
->  	u32 value = 0;
->  
-> +	if (igc->pdev &&
-> +		igc->pdev->error_state == pci_channel_io_perm_failure)
-> +		return 0;
+> https://patchwork.kernel.org/project/linux-arm-kernel/cover/20190321095927.7058-1-kishon@ti.com/
 
-I don't think this solves the problem.
+Ah!  Nice!
 
-  - Driver calls igc_rd32().
+[...]
+> Are there any other clean-ups you are looking into?
 
-  - "if (pci_channel_io_perm_failure)" evaluates to false (error_state
-    does not indicate an error).
+Bjorn was looking recently at struct keystone_pcie and suggested that
+perhaps things such as for example the legacy_host_irqs member could be
+refactored - in this particular case it seems to only store a single
+item in the array, etc.
 
-  - Device is unplugged.
+And this series of patches I found is refactoring a lot of the elements
+of the driver and thus the struct keystone_pcie too in due process.
 
-  - igc_rd32() calls readl(), which performs MMIO read, which fails
-    because the device is no longer present.  readl() returns ~0 on
-    most platforms.
+I suppose, it would be just better to wait for you to complete all the
+work you have planned?  What do you think?
 
-  - Same page fault occurs.
-
-The only way is to check *after* the MMIO read to see whether an error
-occurred.  On most platforms that means checking for ~0 data.  If you
-see that, a PCI error *may* have occurred.
-
-If you know that ~0 can never be valid, e.g., if you're reading a
-register where ~0 is not a valid value, you know for sure that an
-error has occurred.
-
-If ~0 might be a valid value, e.g., if you're reading a buffer that
-contains arbitrary data, you have to look harder.   You might read a
-register than cannot contain ~0, and see if you get the data you
-expect.  Or you might read the Vendor ID or something from config
-space.
-
->  	value = readl(&hw_addr[reg]);
->  
->  	/* reads should not return all F's */
-> @@ -5308,6 +5312,18 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
->  	return value;
->  }
->  
-> +void igc_wr32(struct igc_hw *hw, u32 reg, u32 val)
-> +{
-> +	struct igc_adapter *igc = container_of(hw, struct igc_adapter, hw);
-> +	u8 __iomem *hw_addr = READ_ONCE(hw->hw_addr);
-> +
-> +	if (igc->pdev &&
-> +		igc->pdev->error_state == pci_channel_io_perm_failure)
-> +		return;
-> +
-> +	writel((val), &hw_addr[(reg)]);
-> +}
-> +
->  int igc_set_spd_dplx(struct igc_adapter *adapter, u32 spd, u8 dplx)
->  {
->  	struct igc_mac_info *mac = &adapter->hw.mac;
-> diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
-> index cc174853554b..eb4be87d0e8b 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_regs.h
-> +++ b/drivers/net/ethernet/intel/igc/igc_regs.h
-> @@ -260,13 +260,10 @@ struct igc_hw;
->  u32 igc_rd32(struct igc_hw *hw, u32 reg);
->  
->  /* write operations, indexed using DWORDS */
-> -#define wr32(reg, val) \
-> -do { \
-> -	u8 __iomem *hw_addr = READ_ONCE((hw)->hw_addr); \
-> -	writel((val), &hw_addr[(reg)]); \
-> -} while (0)
-> +void igc_wr32(struct igc_hw *hw, u32 reg, u32 val);
->  
->  #define rd32(reg) (igc_rd32(hw, reg))
-> +#define wr32(reg, val) (igc_wr32(hw, reg, val))
->  
->  #define wrfl() ((void)rd32(IGC_STATUS))
->  
-> -- 
-> 2.30.2
-> 
+	Krzysztof
