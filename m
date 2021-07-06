@@ -2,77 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3F323BD89C
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 16:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B91BD3BD84E
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 16:34:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232334AbhGFOpM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 10:45:12 -0400
-Received: from verein.lst.de ([213.95.11.211]:33850 "EHLO verein.lst.de"
+        id S231839AbhGFOhG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 10:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232771AbhGFOog (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Jul 2021 10:44:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 67BF268BEB; Tue,  6 Jul 2021 16:05:13 +0200 (CEST)
-Date:   Tue, 6 Jul 2021 16:05:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
-        peterz@infradead.org, benh@kernel.crashing.org,
-        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
-        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
-        Frank Rowand <frowand.list@gmail.com>, mingo@kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Saravana Kannan <saravanak@google.com>, mpe@ellerman.id.au,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Jianxiong Gao <jxgao@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        maarten.lankhorst@linux.intel.com, airlied@linux.ie,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
-        Nathan Chancellor <nathan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, rodrigo.vivi@intel.com,
+        id S231485AbhGFOhE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 6 Jul 2021 10:37:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F4A661AC0;
+        Tue,  6 Jul 2021 14:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625581398;
+        bh=kLVem+lC4RwgaSvlRxNWh6WClbsCqyCWUybrD/hsjdo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dvBxQHrmw6EPUmkbmwxaVbFTYhRXd43UhsERgeVTjyeN1Rok/1RGCSSvjSJdC/5IL
+         GrDuLOEZKo2AWon9u7+Be3SWrEOtuXBnZ3J/UgSLqU3q6dUA9JZObFM4oeEtq3LW7i
+         8/JJaq8D+AMhDJy0bA4rtdwqp2b/CJLsEue/hs2EeqUFUHjX0nJN8e+gLNnugBJLf5
+         GNx3/AIhIMoJalL/yvToUL/G1X9ikKh0hxME4PbsbFo07r8tOKQcvVUCC1vv5Hqzs3
+         JyZEwbtjX2jukib2GAOPYALdIQ2ZqysUaG3sGtFAaHrURNkghH84UJ/OfEOCZrV3pH
+         fM8gEFrTlWXpw==
+Received: by pali.im (Postfix)
+        id D17896E9; Tue,  6 Jul 2021 16:23:15 +0200 (CEST)
+Date:   Tue, 6 Jul 2021 16:23:15 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Aaron Ma <aaron.ma@canonical.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Claire Chang <tientzu@chromium.org>,
-        boris.ostrovsky@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jgross@suse.com, Nicolas Boichat <drinkcat@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Qian Cai <quic_qiancai@quicinc.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, xypron.glpk@gmx.de,
-        Tom Lendacky <thomas.lendacky@amd.com>, bauerman@linux.ibm.com
-Subject: Re: [PATCH v15 06/12] swiotlb: Use is_swiotlb_force_bounce for
- swiotlb data bouncing
-Message-ID: <20210706140513.GA26498@lst.de>
-References: <YNyUQwiagNeZ9YeJ@Ryzen-9-3900X.localdomain> <20210701074045.GA9436@willie-the-truck> <ea28db1f-846e-4f0a-4f13-beb67e66bbca@kernel.org> <20210702135856.GB11132@willie-the-truck> <0f7bd903-e309-94a0-21d7-f0e8e9546018@arm.com> <YN/7xcxt/XGAKceZ@Ryzen-9-3900X.localdomain> <20210705190352.GA19461@willie-the-truck> <20210706044848.GA13640@lst.de> <20210706132422.GA20327@willie-the-truck> <a59f771f-3289-62f0-ca50-8f3675d9b166@arm.com>
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        davem@davemloft.net, kuba@kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: [PATCH 1/2] igc: don't rd/wr iomem when PCI is removed
+Message-ID: <20210706142315.ve22wypovdezqnva@pali>
+References: <20210702045120.22855-1-aaron.ma@canonical.com>
+ <20210704142808.f43jbcufk37hundo@pali>
+ <20210705230212.GC142312@rocinante>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a59f771f-3289-62f0-ca50-8f3675d9b166@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210705230212.GC142312@rocinante>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 03:01:04PM +0100, Robin Murphy wrote:
-> FWIW I was pondering the question of whether to do something along those 
-> lines or just scrap the default assignment entirely, so since I hadn't got 
-> round to saying that I've gone ahead and hacked up the alternative 
-> (similarly untested) for comparison :)
->
-> TBH I'm still not sure which one I prefer...
+On Tuesday 06 July 2021 01:02:12 Krzysztof Wilczyński wrote:
+> Hi Pali,
+> 
+> [...]
+> > Aaron: can you check if pci_dev_is_disconnected() is really something
+> > which should be used and it helps you?
+> 
+> While having a closer look, I've noticed that quite a few of the network
+> drivers handle this somewhat, as I see that a lot of them have some sort
+> of I/O error handles set where a check for "pci_channel_io_perm_failure"
+> seem to be having place.  This is also true for this driver looking at
+> the igc_io_error_detected().
+> 
+> Is this not working for the igc driver?  Or is this for something
+> completely different?
 
-Claire did implement something like your suggestion originally, but
-I don't really like it as it doesn't scale for adding multiple global
-pools, e.g. for the 64-bit addressable one for the various encrypted
-secure guest schemes.
+I guess that this callback is called when Bridge receive some kind of
+fatal error. Non-AER-aware bridges probably do not have to inform system
+that error happened and kernel would not call this callback. So I guess
+it depends on to which "machine" you need this network adapter.
+
+So in my opinion this callback is there for PCI subsystem to inform
+driver that error happened and let driver to do any hw specific recovery
+if it is possible.
+
+But I think problem described here can be slightly different. It is
+needed to check if device is still alive or was disconnected.
+
+> Having said all that, I am not an expert in network drivers, so pardon
+> me if I am asking about something completely different, and I apologise
+> if that is the case.
+> 
+> > Bjorn, Krzysztof: what do you think about lifting helper function
+> > pci_dev_is_disconnected() to be available to all drivers and not only in
+> > PCI subsystem?
+> 
+> No objections from me, if we believe it's useful and that it might
+> encourage people to use a common API.  Currently, I can see at least
+> five potential users of this helper.
+> 
+> 	Krzysztof
