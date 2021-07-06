@@ -2,231 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7F643BC9DB
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 12:27:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15A623BC95D
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 12:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231512AbhGFK3r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 06:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231305AbhGFK3o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Jul 2021 06:29:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 67D94619A5;
-        Tue,  6 Jul 2021 10:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625567225;
-        bh=0Vco6bcsV+Des5dnB/IHP43/fsWcFHTPga6X4P0iyiI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MJ47WOBtCFnBMrkhOv+LFd3d2n5QIFWUez/HdhcKSgj7hDo7O0eQPQO5H1okLYNyY
-         WRHGLatcUEVgmIJR5BCR7gEfLHN7Lv0rc0YJ5MyF740i+lCi8D4V+MGNYVLcohzTMs
-         AfQKJwNYwrk/3LHkBQb8ARTgdmp51CHltJ3T5fWM60xGKOpwPUaG1eqdKH5Upw0qVs
-         s7qgJDHkhXgsuZf0dm36DQ+Su4NaRp8y0KTbqHcRHQh4sMzfcc9GcElEIURZcXDone
-         /RqrSOsALErH8v8KBG/HSN0T6lH+qCDwKWZm1izYVpvXQqH5K2135N2PlYwMDGoyI2
-         kPGtTEoLasdOg==
-Date:   Tue, 6 Jul 2021 12:26:31 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Frank Li <lznuaa@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        SeongJae Park <sjpark@amazon.de>,
-        Julien Grall <jgrall@amazon.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] bus: Make remove callback return void
-Message-ID: <20210706122631.463bc671@coco.lan>
-In-Reply-To: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
-References: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S231342AbhGFKT6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 06:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231282AbhGFKT5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 06:19:57 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C36C061574;
+        Tue,  6 Jul 2021 03:17:17 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id p16so9945356lfc.5;
+        Tue, 06 Jul 2021 03:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=X2D7Bt2IdjBq2a78rwwkGP6XebZQeXoiwYkPeKto0j8=;
+        b=Lt4R+kCCujrQVA3cpbS67lwcxc2vIlxnul/nibztyaAEU3duKuC2Y936IM6k6SMDMz
+         svzSv/0uCnPJU/lqmSh7oOsW/FE4jhRGs4jCwPDI6Sn9Ogvpr5I1Eiv3EZHxW7rFn7AS
+         uJ10bRE5pZJ/R5mkLRiA7XHQFK/sAHGYtCdGri2h5SzKnsyBT6CtYUtvYMWG3R8vW4jf
+         7Ajof+7uCJZfWuxU5E086A4+7pkS3JPMGICEbJzHsqOtVcPn7mWYFD1rQHM40yIGv9Zh
+         3NDTidg/h9UeScPw+i0MKKXv09r9oO6gBlBM2Sbv6qIwqPNup799mEQtd44d79tRs1TY
+         hzUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=X2D7Bt2IdjBq2a78rwwkGP6XebZQeXoiwYkPeKto0j8=;
+        b=MKggpyLVWk19WaJmmPd/h2wofD0bV7dDmDAiNob8tJomSba2wXjzAA/tBafqsnM4L/
+         GUdGQ69+mRlyf3uPcPSqn8L17iKo77hVLa7piOpPgmZt8wjbhSnwqerB1uKr9eSFZAN9
+         1qC2l0V9gwngxeGbjNX+QRh43zaDFpmVvk07zTGIvhCaKmwEujGAsezp1xqO1tYjdAq+
+         Kcbqhq9tpwJK2BUmO616NdQmQzeX3V8yIdFmvQ/rfXvE8wqiVDfmTIkQPdlWMzJaEKdH
+         n95GsntsQj35VqPF2YkfCXjHsWPtowSc5vbL6iezsOl62Pv471LjUQuS+ZzSm/Mu6Dlr
+         nonw==
+X-Gm-Message-State: AOAM532Ya3+192rjnwYmD6gXRUXayatBepD8wwBYzis+Fyoj8RhjB+TT
+        IVNtkPoZEYO90NyEXpsmouU=
+X-Google-Smtp-Source: ABdhPJzMkogRCYNUrvuPKFu422vA1OVRU//FC11GeAGypRdDxEhgIxaL0z1gX2o5C7SMQJRYv1oBEw==
+X-Received: by 2002:a19:c752:: with SMTP id x79mr14393053lff.644.1625566636268;
+        Tue, 06 Jul 2021 03:17:16 -0700 (PDT)
+Received: from [192.168.0.91] ([188.242.181.97])
+        by smtp.googlemail.com with ESMTPSA id i6sm1352589lfe.164.2021.07.06.03.17.15
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Tue, 06 Jul 2021 03:17:15 -0700 (PDT)
+Message-ID: <60E43052.8040802@gmail.com>
+Date:   Tue, 06 Jul 2021 13:28:34 +0300
+From:   Nikolai Zhubr <zhubr.2@gmail.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@kernel.org>,
+        x86@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/PCI: Handle PIRQ routing tables with no router device
+ given
+References: <alpine.DEB.2.21.2107051133010.33206@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2107051133010.33206@angie.orcam.me.uk>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Tue,  6 Jul 2021 11:50:37 +0200
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> escreveu:
+Hello Maciej,
 
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
->=20
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
->=20
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
->=20
-> this patch depends on "PCI: endpoint: Make struct pci_epf_driver::remove
-> return void" that is not yet applied, see
-> https://lore.kernel.org/r/20210223090757.57604-1-u.kleine-koenig@pengutro=
-nix.de.
->=20
-> I tested it using allmodconfig on amd64 and arm, but I wouldn't be
-> surprised if I still missed to convert a driver. So it would be great to
-> get this into next early after the merge window closes.
->=20
-> I send this mail to all people that get_maintainer.pl emits for this
-> patch. I wonder how many recipents will refuse this mail because of the
-> long Cc: list :-)
->=20
-> Best regards
-> Uwe
->=20
+05.07.2021 13:46, Maciej W. Rozycki:
+> PIRQ routing tables provided by the PCI BIOS usually specify the PCI
+> vendor:device ID as well as the bus address of the device implementing
+> the PIRQ router, e.g.:
+[...]
+> linux-x86-pirq-router-nodev.diff
 
-> diff --git a/drivers/media/pci/bt8xx/bttv-gpio.c b/drivers/media/pci/bt8x=
-x/bttv-gpio.c
-> index b730225ca887..a2b18e2bed1b 100644
-> --- a/drivers/media/pci/bt8xx/bttv-gpio.c
-> +++ b/drivers/media/pci/bt8xx/bttv-gpio.c
-> @@ -46,14 +46,13 @@ static int bttv_sub_probe(struct device *dev)
->  	return sub->probe ? sub->probe(sdev) : -ENODEV;
->  }
-> =20
-> -static int bttv_sub_remove(struct device *dev)
-> +static void bttv_sub_remove(struct device *dev)
->  {
->  	struct bttv_sub_device *sdev =3D to_bttv_sub_dev(dev);
->  	struct bttv_sub_driver *sub =3D to_bttv_sub_drv(dev->driver);
-> =20
->  	if (sub->remove)
->  		sub->remove(sdev);
-> -	return 0;
->  }
-> =20
-
-Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> # for drivers/media
+This one throws a panic in bus_find_device() here.
+I can not yet get a good printout because scrollback does not work.
+Maybe it is because of 4.14 kernel, and in order to apply it I had to 
+change pci_get_domain_bus_and_slot back to pci_get_bus_and_slot.
+I'll try to also test with 5.x kernel later today.
 
 
-Thanks,
-Mauro
+Thank you,
+
+Regards,
+Nikolai
+
+
+> Index: linux-macro-ide-tty/arch/x86/pci/irq.c
+> ===================================================================
+> --- linux-macro-ide-tty.orig/arch/x86/pci/irq.c
+> +++ linux-macro-ide-tty/arch/x86/pci/irq.c
+> @@ -908,10 +908,32 @@ static struct pci_dev *pirq_router_dev;
+>    *	chipset" ?
+>    */
+>
+> +static bool __init pirq_try_router(struct irq_router *r,
+> +				   struct irq_routing_table *rt,
+> +				   struct pci_dev *dev)
+> +{
+> +	struct irq_router_handler *h;
+> +
+> +	DBG(KERN_DEBUG "PCI: Trying IRQ router for [%04x:%04x]\n",
+> +	    dev->vendor, dev->device);
+> +
+> +	for (h = pirq_routers; h->vendor; h++) {
+> +		/* First look for a router match */
+> +		if (rt->rtr_vendor == h->vendor&&
+> +		    h->probe(r, dev, rt->rtr_device))
+> +			return true;
+> +		/* Fall back to a device match */
+> +		if (dev->vendor == h->vendor&&
+> +		    h->probe(r, dev, dev->device))
+> +			return true;
+> +	}
+> +	return false;
+> +}
+> +
+>   static void __init pirq_find_router(struct irq_router *r)
+>   {
+>   	struct irq_routing_table *rt = pirq_table;
+> -	struct irq_router_handler *h;
+> +	struct pci_dev *dev;
+>
+>   #ifdef CONFIG_PCI_BIOS
+>   	if (!rt->signature) {
+> @@ -930,27 +952,28 @@ static void __init pirq_find_router(stru
+>   	DBG(KERN_DEBUG "PCI: Attempting to find IRQ router for [%04x:%04x]\n",
+>   	    rt->rtr_vendor, rt->rtr_device);
+>
+> -	pirq_router_dev = pci_get_domain_bus_and_slot(0, rt->rtr_bus,
+> -						      rt->rtr_devfn);
+> -	if (!pirq_router_dev) {
+> -		DBG(KERN_DEBUG "PCI: Interrupt router not found at "
+> -			"%02x:%02x\n", rt->rtr_bus, rt->rtr_devfn);
+> -		return;
+> +	/* Use any vendor:device provided by the routing table or try all.  */
+> +	if (rt->rtr_vendor) {
+> +		dev = pci_get_domain_bus_and_slot(0, rt->rtr_bus,
+> +						  rt->rtr_devfn);
+> +		if (pirq_try_router(r, rt, dev))
+> +			pirq_router_dev = dev;
+> +	} else {
+> +		for_each_pci_dev(dev) {
+> +			if (pirq_try_router(r, rt, dev)) {
+> +				pirq_router_dev = dev;
+> +				break;
+> +			}
+> +		}
+>   	}
+>
+> -	for (h = pirq_routers; h->vendor; h++) {
+> -		/* First look for a router match */
+> -		if (rt->rtr_vendor == h->vendor&&
+> -			h->probe(r, pirq_router_dev, rt->rtr_device))
+> -			break;
+> -		/* Fall back to a device match */
+> -		if (pirq_router_dev->vendor == h->vendor&&
+> -			h->probe(r, pirq_router_dev, pirq_router_dev->device))
+> -			break;
+> -	}
+> -	dev_info(&pirq_router_dev->dev, "%s IRQ router [%04x:%04x]\n",
+> -		 pirq_router.name,
+> -		 pirq_router_dev->vendor, pirq_router_dev->device);
+> +	if (pirq_router_dev)
+> +		dev_info(&pirq_router_dev->dev, "%s IRQ router [%04x:%04x]\n",
+> +			 pirq_router.name,
+> +			 pirq_router_dev->vendor, pirq_router_dev->device);
+> +	else
+> +		DBG(KERN_DEBUG "PCI: Interrupt router not found at "
+> +		    "%02x:%02x\n", rt->rtr_bus, rt->rtr_devfn);
+>
+>   	/* The device remains referenced for the kernel lifetime */
+>   }
+>
+
