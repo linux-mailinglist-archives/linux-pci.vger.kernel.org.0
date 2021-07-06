@@ -2,156 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E444D3BDEFF
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 23:37:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E163BDF4F
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 00:15:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbhGFVkc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 17:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43092 "EHLO
+        id S229873AbhGFWRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 18:17:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbhGFVka (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 17:40:30 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE21C061574;
-        Tue,  6 Jul 2021 14:37:51 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id h1-20020a17090a3d01b0290172d33bb8bcso2390238pjc.0;
-        Tue, 06 Jul 2021 14:37:51 -0700 (PDT)
+        with ESMTP id S229753AbhGFWRo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 18:17:44 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C149DC061574
+        for <linux-pci@vger.kernel.org>; Tue,  6 Jul 2021 15:15:05 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so328690otl.3
+        for <linux-pci@vger.kernel.org>; Tue, 06 Jul 2021 15:15:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ocbz7plpl2GsaeWZtT2xSwu/ECmgcGgX+U0mFWoVx8o=;
-        b=fjV4+ka8h0vH05QQfb5mosysrP9nHimBGyZMIaa5AG6oYKlZIJ9fBu1u8zdUGxqK0V
-         Um+d4Woup62vh1nDeTEMfYQu/z07c7tU/WMAtzd8zyjZ+D++/9qAcGD3Qi5HWfAEidnP
-         LVIhoqq3BcdDCaWawKEqjjS8yu6I4JR+nAEzkK0jeMXN28vBiyhs3oL9vVM3I/zG4bRq
-         0ch+fVpWTwIZJdpOA5MGN4Hsas/DzY0s55S8/73rafQT0BQHzaPtbSSjdX9FgBPH3Kng
-         zdOUu0zymj0lCUC9mcaI5h90C5jAW9R9slEqBMssceloFyAtObCoJPafpr9GaUMLPWWg
-         1jSA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=alaBIcPjtR5SO43mLw3wyiICmJV1pgc+CN0LQaZTtL4=;
+        b=FZ8UOYRbhl0lP+M/wV+79So4wS4vhYVFgCk+x86Gp1GBDbLTeDju/tr3jxxO6gUYFo
+         DeVvbtcCk2ILIeIC0zNOT6YhSiBx1WvuzvvPSKfBoZDqVSbHs6kFJSvVKRFCUteoIJpI
+         PaTCP6GEqJsmBXyc5qe3ONwhDztVxMMuSNCjUMF5jhkfgpo8sxXFeLVQvKS5Ouy7uF37
+         GK/ZBz35nTEZXEwMTXKn+hkyT4DTo05Bb3SbBKz3HTGaQxLlaBddjGB5PuwWRiJFi5Tp
+         pJkgYlszSFn3b5VpY/X0y8SpB0Y6RFa/OqZxEVBFSiPg2RyL5tzmZNlC4v2nxDUuB+vS
+         /Wug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ocbz7plpl2GsaeWZtT2xSwu/ECmgcGgX+U0mFWoVx8o=;
-        b=WK3yTWnvM5htSk/VSimnCQqje/FGFNelVEcwioYL2R7o83YW8eHgkZ6evNB3mBqPc0
-         b3GB1gLkWojJs9XG4BTClxxWXSVq9Gv09epEhdKJWYrb06H3nFuUuHgoZMgPD+WJybRF
-         3gZPab5P9vzwNlIIVEEo5Jl90VKSVHHxvBhjU3Pay3BEhOy6ShtVlTPAKjzUw+5LPvM3
-         g6Hpy3G6QibGd3AnFNfSCRKBRvetF31DDjQDeo8pnbGgCNJEzMmdhIwT1ify8AXwqciQ
-         XYOzvzRvY9jKXvHDc86y1R7eC14/aeggf/uWlHU2/VXBeEU0HO0uKcxPPx3BI1CBvsUI
-         0OtQ==
-X-Gm-Message-State: AOAM531T2RTDL3ySJyrUH9BdixZdoksL8kUK7Ivl7hx7XCT9buaF/thj
-        cTEAlptetL3RDzHa5EJYnN0=
-X-Google-Smtp-Source: ABdhPJyn2Hi8kaCYu+WokB25snaMIG+9Q6KwjeQoMDQJIrAIZd3JeXm641055Ca25Y6q1bD80UK2hA==
-X-Received: by 2002:a17:90a:3009:: with SMTP id g9mr2332932pjb.82.1625607470831;
-        Tue, 06 Jul 2021 14:37:50 -0700 (PDT)
-Received: from shinobu ([156.146.35.76])
-        by smtp.gmail.com with ESMTPSA id h14sm14343197pgv.47.2021.07.06.14.37.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 14:37:49 -0700 (PDT)
-Date:   Wed, 7 Jul 2021 06:37:39 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
-Message-ID: <YOTMp88HfFiy6+RM@shinobu>
-References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
- <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=alaBIcPjtR5SO43mLw3wyiICmJV1pgc+CN0LQaZTtL4=;
+        b=OLLlylvblxrUACS3gAfooaVa6pD1FnMEkpV0P1QqvD7Dr+Le8VbKYZhtNQ9JDhuRYm
+         rHfG+Hy3smSWtWO+UObpBubET9Be8NpXQ5DvlU/znyVoKINKYqb+h4hOjDivWGFQknan
+         IPfpMgp/v4kY+BREwzgQlke1qbOuH/Nqs3GCj0qPbpF+cRJEIbhmnwOeCFFsoHUp4Voj
+         vIbqjotulmkOpS7pBV6mltDCIohpV0+bOMDym4v9wqlAZ4AVOS8ynqg5aMWg9yssz+HZ
+         BRbd7sLGEIPOZ3JQnrr0aDHZDxBcDzq6RkQK1KpfNuBPpUJPHEGJ8qQrdpv1gTgBcJPQ
+         oqLQ==
+X-Gm-Message-State: AOAM533NgIibA8FuXG+7j/ncRNg1c12yMutRZteUM/SLqyve6YSXedAO
+        DsRcbIJpLmLUZKW1dKa4sJA84RsuUAiF0zsg
+X-Google-Smtp-Source: ABdhPJxTnZ975uTmwIN4qLMchFyaeyMKd0hYPR4XnkvGfD7KLwABYpXRLdm1hC2jlVl05qQg7nMkrg==
+X-Received: by 2002:a05:6830:3089:: with SMTP id f9mr16052644ots.160.1625609705097;
+        Tue, 06 Jul 2021 15:15:05 -0700 (PDT)
+Received: from ?IPv6:2603:8081:2802:9dfb:d456:b7b1:8f00:bd70? (2603-8081-2802-9dfb-d456-b7b1-8f00-bd70.res6.spectrum.com. [2603:8081:2802:9dfb:d456:b7b1:8f00:bd70])
+        by smtp.gmail.com with ESMTPSA id y6sm3761889oiy.18.2021.07.06.15.15.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jul 2021 15:15:04 -0700 (PDT)
+Subject: Re: [PATCH v2] PCI: pciehp: Ignore Link Down/Up caused by DPC
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ethan Zhao <haifeng.zhao@intel.com>,
+        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <0be565d97438fe2a6d57354b3aa4e8626952a00b.1619857124.git.lukas@wunner.de>
+ <20210616221945.GA3010216@bjorn-Precision-5520>
+ <20210620073804.GA13118@wunner.de>
+ <08c046b0-c9f2-3489-eeef-7e7aca435bb9@gmail.com>
+ <20210626065049.GA19767@wunner.de>
+From:   stuart hayes <stuart.w.hayes@gmail.com>
+Message-ID: <661f1019-da20-6656-989f-2e7dea240fc4@gmail.com>
+Date:   Tue, 6 Jul 2021 17:15:02 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VOubNWsj2sFIOkFX"
-Content-Disposition: inline
-In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210626065049.GA19767@wunner.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---VOubNWsj2sFIOkFX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 06, 2021 at 05:48:03PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
->=20
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
->=20
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
->=20
-> Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> (For ARM, Am=
-ba and related parts)
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Acked-by: Chen-Yu Tsai <wens@csie.org> (for drivers/bus/sunxi-rsb.c)
-> Acked-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> (for drivers/media)
-> Acked-by: Hans de Goede <hdegoede@redhat.com> (For drivers/platform)
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-By: Vinod Koul <vkoul@kernel.org>
-> Acked-by: Juergen Gross <jgross@suse.com> (For Xen)
-> Acked-by: Lee Jones <lee.jones@linaro.org> (For drivers/mfd)
-> Acked-by: Johannes Thumshirn <jth@kernel.org> (For drivers/mcb)
-> Acked-by: Johan Hovold <johan@kernel.org>
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> (For drive=
-rs/slimbus)
-> Acked-by: Kirti Wankhede <kwankhede@nvidia.com> (For drivers/vfio)
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com> (For ulpi and=
- typec)
-> Acked-by: Samuel Iglesias Gons=C3=A1lvez <siglesias@igalia.com> (For ipac=
-k)
-> Reviewed-by: Tom Rix <trix@redhat.com> (For fpga)
-> Acked-by: Geoff Levand <geoff@infradead.org> (For ps3)
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
+On 6/26/2021 1:50 AM, Lukas Wunner wrote:
+> On Fri, Jun 25, 2021 at 03:38:41PM -0500, stuart hayes wrote:
+>> I have a system that is failing to recover after an EDR event with (or
+>> without...) this patch.  It looks like the problem is similar to what this
+>> patch is trying to fix, except that on my system, the hotplug port is
+>> downstream of the root port that has DPC, so the "link down" event on it is
+>> not being ignored.  So the hotplug code disables the slot (which contains an
+>> NVMe device on this system) while the nvme driver is trying to use it, which
+>> results in a failed recovery and another EDR event, and the kernel ends up
+>> with the DPC trigger status bit set in the root port, so everything
+>> downstream is gone.
+>>
+>> I added the hack below so the hotplug code will ignore the "link down"
+>> events on the ports downstream of the root port during DPC recovery, and it
+>> recovers no problem.  (I'm not proposing this as a correct fix.)
+> 
+> Please help me understand what's causing the Link Down event in the
+> first place:
+> 
+> With DPC, the hardware (only) disables the link on the port containing the
+> error.  Since that's the Root Port above the hotplug port in your case,
+> the link between the hotplug port and the NVMe drive should remain up.
+> 
+> Since your patch sets the PCI_DPC_RECOVERING flag during invocation
+> of the dev->driver->err_handler->slot_reset() hook, I assume that's
+> what's causing the Link Down.  However pcie_portdrv_slot_reset()
+> only restores and saves PCI config space, I don't think that's
+> causing a Link Down?
+> 
+> Is maybe nvme_slot_reset() causing the Link Down on the parent hotplug port?
+> 
+> Thanks,
+> 
+> Lukas
+> 
 
->  drivers/base/isa.c                        | 4 +---
+Sorry for the delayed response--I was out of town.
 
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+I believe the Link Down is happening because a hot reset is propagated 
+down when the link is lost under the root port 64:02.0.  From the PCIe 
+Base Spec 5.0, section 6.6.1 "conventional reset":
 
---VOubNWsj2sFIOkFX
-Content-Type: application/pgp-signature; name="signature.asc"
+• For a Switch, the following must cause a hot reset to be sent on all 
+Downstream Ports:
+   ...
+   ◦ The Data Link Layer of the Upstream Port reporting DL_Down status. 
+In Switches that support Link speeds greater than 5.0 GT/s, the Upstream 
+Port must direct the LTSSM of each Downstream Port to the Hot Reset 
+state, but not hold the LTSSMs in that state. This permits each 
+downstream Port to begin Link training immediately after its hot reset 
+completes. This behavior is recommended for all Switches.
+   ◦ Receiving a hot reset on the Upstream Port
+(end of paste from pci spec)
 
------BEGIN PGP SIGNATURE-----
+For reference, here's the "lspci -t" output covering the root port 
+64:02.0 that is getting the DPC... there are NVMe drives at 69:00.0, 
+6a:00.0, 6c:00.0, and 6e:00.0, and a SAS controller at 79:00.0.
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAmDkzSMACgkQhvpINdm7
-VJLVFhAAyxEk2xOSRC1xhJSnjLQvNeb+KeTAJr+uaSAwwExERXcbGlIryhqCZSij
-fZRzkvgPIscNAegWidvmuhZlhkFJPwvPArfhB/pFIDvQ1xX0kCPH3T51Lncu35Tf
-vgluc4JhAW9+1UzoKZsv8RK4uY2ETRMBBeYs7epjqK2RhCvzG8rDMD+Dy49nxrYX
-eNdmcR+7EcK8RjLmb/YEfNXxcXdDW0KlU5ATAh+PKuAPKbOKpoKfKuYsOYS7VrGJ
-MAk5lC5J/bqbBWM4eqm+g5NbskWMr1N5WC60R7K3isMCoaEpnKNhSD3kvYIFe2Tf
-mWyIE2c7D+UWhzbp+Kq4+DHzBN4ajLBy0oMd28HrGOQmD+/chjjc1zTOK9uNBvKz
-xBRbxQl7OrAnKhUqcrgVpVL30EvTNajZIOZdwtGXhQCWW+MX747JE+H291VLg3gz
-a0p6IJ8TS+gOgGGvmNjVg6yHYuKv6XDbDfI7tc0dRJUOoVqfbkIHSvAQQzn0LIFn
-k/Ln4D8LDFj8X3fHbfz200+nzo9gwA5ZXhWXzvTKXhSEyBoc3+i+Ihn3bgYf6rI8
-j8LozqWaWpNxaLMBrLuy06ldAuzhnQ7wPw1JuGXDAY1vdMYVVRp1XcbjBSqybXMA
-weoaxx4Lwh05XikzxZpXDQBx5N+5V3sYRuqGrYs7H1ZUm0rT0I0=
-=yTaM
------END PGP SIGNATURE-----
+  +-[0000:64]-+-00.0
+  |           +-00.1
+  |           +-00.2
+  |           +-00.4
+  | 
+\-02.0-[65-79]----00.0-[66-79]--+-00.0-[67-70]----00.0-[68-70]--+-00.0-[69]----00.0
+  |                                           | 
+       +-04.0-[6a]----00.0
+  |                                           | 
+       +-08.0-[6b]--
+  |                                           | 
+       +-0c.0-[6c]----00.0
+  |                                           | 
+       +-10.0-[6d]--
+  |                                           | 
+       +-14.0-[6e]----00.0
+  |                                           | 
+       +-18.0-[6f]--
+  |                                           | 
+       \-1c.0-[70]--
+  | 
++-04.0-[71-76]----00.0-[72-76]--+-10.0-[73]--
+  |                                           | 
+       +-14.0-[74]--
+  |                                           | 
+       +-18.0-[75]--
+  |                                           | 
+       \-1c.0-[76]--
+  |                                           +-08.0-[77-78]----00.0-[78]--
+  |                                           \-1c.0-[79]----00.0
 
---VOubNWsj2sFIOkFX--
+I put in some debug code to printk the config registers before the 
+config space is restored.  Before I trigger the DPC, the slot status 
+register at 68:00.0 reads 0x40 (presence detected), and after the DPC 
+(but before restoring PCI config space for 68:00.0), it reads 0x140 (DLL 
+state changed + presence detected).
+
+Before config space is restored to 68:00.0, the command register is 0. 
+After config space is restored, I see "pcieport 0000:68:00.0: pciehp: 
+pending interrupts 0x0010 from Slot Status" followed by "...pciehp: 
+Slot(211): Link Down".  So I assume as soon as it is able to (when its 
+config space is restored), 68:00.0 sends the hotplug interrupt, which 
+takes down 69:00.0.
+
+
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index b576aa890c76..dfd983c3c5bf 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -119,8 +132,10 @@ static int report_slot_reset(struct pci_dev *dev, void
+>> *data)
+>>   		!dev->driver->err_handler->slot_reset)
+>>   		goto out;
+>>
+>> +	set_bit(PCI_DPC_RECOVERING, &dev->priv_flags);
+>>   	err_handler = dev->driver->err_handler;
+>>   	vote = err_handler->slot_reset(dev);
+>> +	clear_bit(PCI_DPC_RECOVERING, &dev->priv_flags);
+>>   	*result = merge_result(*result, vote);
+>>   out:
+>>   	device_unlock(&dev->dev);
