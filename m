@@ -2,222 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B28A3BC8B6
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 11:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC69A3BC8CF
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 11:57:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbhGFJ4r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 05:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52912 "EHLO
+        id S231315AbhGFJ7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 05:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbhGFJ4r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 05:56:47 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114F5C061574
-        for <linux-pci@vger.kernel.org>; Tue,  6 Jul 2021 02:54:09 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id p8so25362656wrr.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jul 2021 02:54:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g0tC4MUw9+SlqVFCUMsi7lqIq0CVDtng7PTCdgO5oEU=;
-        b=S+dyx3xgcpj4V3ANCC/A6Amv96T6RfsrHnI9Uz0FsZM7M1pQr864n7wdcaBDSg5Vbd
-         lSGSdbe5aZ7zVjxxd8F3zNng8k7IdH9JrfTHCb6mrD9gTr8Xuf7RacFgLdU5FwOZMpDE
-         /5SWAXvxFc6XhtmPg+H9EO6ov+vEG+E41XGQweMOGVHNECJ6mUL4VfMJ8L1FScR+leFe
-         0WRWQ4MGc4yS43o/cqzD1xSwhjXiUjKMSdBvuTAKvIfDabwOnMUx3BlyDP7xrVSCBsPl
-         YoqCvWxCZ8hn7ZglybVg4QTJlaFVIBsgzc8hxEma6a1XaJhJr1SyqaPdJ1wk96tEEFo/
-         s4aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=g0tC4MUw9+SlqVFCUMsi7lqIq0CVDtng7PTCdgO5oEU=;
-        b=jrwkbq/Pfi5JQVIKuyY9fl7iLrW4hdTDGxrf4TLO9ZeLwWtuzh5Pi8T/giJwLEUtmu
-         7N9lEkzUfkp8Mog9S+NofEQ5ZJqVdejk3I7/1xOb1Cguz9i9yu2aStrnumGDOiGSHBJ1
-         EyMHmcPJYN3Qhq0eN/mxvmVk1nLXMil0mlkkG8RpARX3uXuoBQr+kMVJHqk61n9mRsPq
-         pC489GPz2NtF/UQhierp8OdT4gPSHjDaYEk/dy3ppBmXDeZV9WSIHOWgt2duRihkG+dv
-         JOjADL7Dll2dQAyORAzys4U1nEZKQ1cnjeBdfNtMSWn3DB50sNMhJkSpJ5fvkbmAQ0EE
-         B0ag==
-X-Gm-Message-State: AOAM5313/sOqmiuMLMdWr1tIJ/RMv/ovhVJtJ4IcVtqMNawQMXkpg3qx
-        qrJOWKEYUFucV1yRtPv3yoR5aA==
-X-Google-Smtp-Source: ABdhPJw1OVsLKqTJI+QcQyufAyhgXFbBXCF9GbXQs8fIfbWhEVMa+N/VRwbpAMfkQ9yGFvibeQJX3g==
-X-Received: by 2002:adf:fb51:: with SMTP id c17mr21148359wrs.106.1625565246820;
-        Tue, 06 Jul 2021 02:54:06 -0700 (PDT)
-Received: from ?IPv6:2001:861:44c0:66c0:7257:ae4e:a17f:5800? ([2001:861:44c0:66c0:7257:ae4e:a17f:5800])
-        by smtp.gmail.com with ESMTPSA id e23sm2264839wme.31.2021.07.06.02.54.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jul 2021 02:54:06 -0700 (PDT)
-Subject: Re: [PATCH 0/4] PCI: replace dublicated MRRS limit quirks
-To:     Art Nikpal <email2tema@gmail.com>,
-        Huacai Chen <chenhuacai@gmail.com>
-Cc:     =?UTF-8?B?6ZmI5Y2O5omN?= <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        with ESMTP id S231181AbhGFJ7a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 05:59:30 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C838BC061760;
+        Tue,  6 Jul 2021 02:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=16iZcd8UM9edxy0w5wY5BQzXODSiQ7QkmW3vxkbk5D0=; b=a3mzSZ9zhXvQ7z72FKA8Fdnpk
+        LWcvpcuWofwRYcFCjviYZJk1oPXrs7M3uQJ+ywY1LHJEnj+NRwjgrzF1fC0F4Her/0HY+w0mU3H3Y
+        10CG8a1oWmfqpRlDsr7HNnDdAy6f+2/u33SyEsVG77yaTgZQwrs2MZiscSAA5F+AnLuDVz82jgC0J
+        lYqY2gLTqCI0RBtuMN88P4U2IEdFt2eygNpGPrRxU5Qv7iomPheSViajY02rYqXloTzTH8q6Js++w
+        YBqCoH4+kucnPqJUrbotraNf2h/vP6y9RzvkP75RGSjwQMJ9WI7C7sCONSx2yqdBujcUYV4c5FTfO
+        peWj6rYRg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45790)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1m0hoi-0006RU-5N; Tue, 06 Jul 2021 10:56:36 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1m0hoO-0001sr-Ht; Tue, 06 Jul 2021 10:56:16 +0100
+Date:   Tue, 6 Jul 2021 10:56:16 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>,
-        Gouwa Wang <gouwa@khadas.com>
-References: <20210701154634.GA60743@bjorn-Precision-5520>
- <67a9e1fa.81a9.17a64c8e7f7.Coremail.chenhuacai@loongson.cn>
- <CAKaHn9KxRrBsn4b9fSO1eDzM3XdV2GzfwVX+cGw9uS_eKg75dw@mail.gmail.com>
- <CAAhV-H5M5Qf01DTD8ULGGGnv2kc2exRgXCLyNOOaqRL=dZ77xQ@mail.gmail.com>
- <CAKaHn9+iHk3UtovWU+WE2mXD9oTZD9UdxrYuLB2Odgbr91Gs-Q@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Organization: Baylibre
-Message-ID: <1271fa28-dddd-01a3-5ad5-e3b4898f5482@baylibre.com>
-Date:   Tue, 6 Jul 2021 11:54:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        SeongJae Park <sjpark@amazon.de>,
+        Julien Grall <jgrall@amazon.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH] bus: Make remove callback return void
+Message-ID: <20210706095616.GQ22278@shell.armlinux.org.uk>
+References: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAKaHn9+iHk3UtovWU+WE2mXD9oTZD9UdxrYuLB2Odgbr91Gs-Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 06/07/2021 08:06, Art Nikpal wrote:
->> But, Loongson platform has newer revision of hardware, and the MRRS
->> quirk has changed, please see:
->> https://patchwork.kernel.org/project/linux-pci/list/?series=509497
->> Huacai
+On Tue, Jul 06, 2021 at 11:50:37AM +0200, Uwe Kleine-K�nig wrote:
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
 > 
-> OK! tnx for information ! maybe we can cooperate and make one
-> universal quirk for all
-
-In their Designware PCIe controller driver, amlogic sets the Max_Payload_Size & Max_Read_Request_Size to 256:
-https://elixir.bootlin.com/linux/latest/source/drivers/pci/controller/dwc/pci-meson.c#L260
-https://elixir.bootlin.com/linux/latest/source/drivers/pci/controller/dwc/pci-meson.c#L276
-in their root port PCIe Express Device Control Register.
-
-Looking at the Synopsys DW-PCIe Databook, Max_Payload_Size & Max_Read_Request_Size are used to decompose into AXI burst,
-but it seems the Max_Payload_Size & Max_Read_Request_Size are set by default to 512 but the internal Max_Payload_Size_Supported
-is set to 256, thus changing these values to 256 at runtime to match and optimize bandwidth.
-
-It's said, "Reducing Outbound Decomposition" :
- - "Ensure that your application master does not generate bursts of size greater than or equal to Max_Payload_Size"
- - "Program your PCIe system with a larger value of Max_Payload_Size without exceeding Max_Payload_Size_Supported"
- - "Program your PCIe system with a larger value of Max_Read_Request without exceeding Max_Payload_Size_Supported:
-
-So leaving 512 in Max_Payload_Size & Max_Read_Request leads to Outbound Decomposition which decreases PCIe link and degrades
-the AXI bus by doubling the bursts, leading to this fix to avoid overflowing the AXI bus.
-
-So it seems to be still needed, I assume this *should* be handled in the core somehow to propagate these settings to child endpoints to match
-the root port Max_Payload_Size & Max_Read_Request sizes.
-
-Maybe by adding a core function to set these values instead of using the dw_pcie_find_capability() & dw_pcie_write/readl_dbi() helpers
-and set a state on the root port to propagate the value ?
-
-Neil
-
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
 > 
-> On Tue, Jul 6, 2021 at 9:36 AM Huacai Chen <chenhuacai@gmail.com> wrote:
->>
->> Hi, Art,
->>
->> On Mon, Jul 5, 2021 at 4:35 PM Art Nikpal <email2tema@gmail.com> wrote:
->>>
->>>> Does that means keystone and Loongson has the same MRRS problem? And what should I do now?
->>>
->>> Look like yes ! and  amlogic has the same problem.
->>> I think somebody need to rewrite it all to one common quirk for this problem.
->>>
->>> If no one has any objection, I can try to remake it again.
->> But, Loongson platform has newer revision of hardware, and the MRRS
->> quirk has changed, please see:
->> https://patchwork.kernel.org/project/linux-pci/list/?series=509497
->>
->> Huacai
->>>
->>> On Fri, Jul 2, 2021 at 9:15 AM 陈华才 <chenhuacai@loongson.cn> wrote:
->>>>
->>>> Hi, Bjorn,
->>>>
->>>> &gt; -----原始邮件-----
->>>> &gt; 发件人: "Bjorn Helgaas" <helgaas@kernel.org>
->>>> &gt; 发送时间: 2021-07-01 23:46:34 (星期四)
->>>> &gt; 收件人: "Artem Lapkin" <email2tema@gmail.com>
->>>> &gt; 抄送: narmstrong@baylibre.com, yue.wang@Amlogic.com, khilman@baylibre.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, jbrunet@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, art@khadas.com, nick@khadas.com, gouwa@khadas.com, "Huacai Chen" <chenhuacai@loongson.cn>
->>>> &gt; 主题: Re: [PATCH 0/4] PCI: replace dublicated MRRS limit quirks
->>>> &gt;
->>>> &gt; [+cc Huacai]
->>>> &gt;
->>>> &gt; On Sat, Jun 19, 2021 at 02:39:48PM +0800, Artem Lapkin wrote:
->>>> &gt; &gt; Replace dublicated MRRS limit quirks by mrrs_limit_quirk from core
->>>> &gt; &gt; * drivers/pci/controller/dwc/pci-keystone.c
->>>> &gt; &gt; * drivers/pci/controller/pci-loongson.c
->>>> &gt;
->>>> &gt; s/dublicated/duplicated/ (several occurrences)
->>>> &gt;
->>>> &gt; Capitalize subject lines.
->>>> &gt;
->>>> &gt; Use "git log --online" to learn conventions and follow them.
->>>> &gt;
->>>> &gt; Add "()" after function names.
->>>> &gt;
->>>> &gt; Capitalize acronyms appropriately (NVMe, MRRS, PCI, etc).
->>>> &gt;
->>>> &gt; End sentences with periods.
->>>> &gt;
->>>> &gt; A "move" patch must include both the removal and the addition and make
->>>> &gt; no changes to the code itself.
->>>> &gt;
->>>> &gt; Amlogic appears without explanation in 2/4.  Must be separate patch to
->>>> &gt; address only that specific issue.  Should reference published erratum
->>>> &gt; if possible.  "Solves some issue" is not a compelling justification.
->>>> &gt;
->>>> &gt; The tree must be consistent and functionally the same or improved
->>>> &gt; after every patch.
->>>> &gt;
->>>> &gt; Add to pci_ids.h only if symbol used more than one place.
->>>> &gt;
->>>> &gt; See
->>>> &gt; https://lore.kernel.org/r/20210701074458.1809532-3-chenhuacai@loongson.cn,
->>>> &gt; which looks similar.  Combine efforts if possible and cc Huacai so
->>>> &gt; you're both aware of overlapping work.
->>>> &gt;
->>>> &gt; More hints in case they're useful:
->>>> &gt; https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
->>>> &gt;
->>>> &gt; &gt; Both ks_pcie_quirk loongson_mrrs_quirk was rewritten without any
->>>> &gt; &gt; functionality changes by one mrrs_limit_quirk
->>>> Does that means keystone and Loongson has the same MRRS problem? And what should I do now?
->>>>
->>>> Huacai
->>>> &gt; &gt;
->>>> &gt; &gt; Added DesignWare PCI controller which need same quirk for
->>>> &gt; &gt; * drivers/pci/controller/dwc/pci-meson.c (PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3)
->>>> &gt; &gt;
->>>> &gt; &gt; This quirk can solve some issue for Khadas VIM3/VIM3L(Amlogic)
->>>> &gt; &gt; with HDMI scrambled picture and nvme devices at intensive writing...
->>>> &gt; &gt;
->>>> &gt; &gt; come from:
->>>> &gt; &gt; * https://lore.kernel.org/linux-pci/20210618063821.1383357-1-art@khadas.com/
->>>> &gt; &gt;
->>>> &gt; &gt; Artem Lapkin (4):
->>>> &gt; &gt;  PCI: move Keystone and Loongson device IDs to pci_ids
->>>> &gt; &gt;  PCI: core: quirks: add mrrs_limit_quirk
->>>> &gt; &gt;  PCI: keystone move mrrs quirk to core
->>>> &gt; &gt;  PCI: loongson move mrrs quirk to core
->>>> &gt; &gt;
->>>> &gt; &gt; --
->>>> &gt; &gt; 2.25.1
->>>> &gt; &gt;
->>>>
->>>>
->>>> </chenhuacai@loongson.cn></email2tema@gmail.com></helgaas@kernel.org>
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
+> 
+> Signed-off-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 
+Yay! For ARM, Amba and related parts:
+
+Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
