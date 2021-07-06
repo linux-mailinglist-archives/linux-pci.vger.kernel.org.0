@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 717933BCAF0
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 12:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DDEE3BCAF2
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 12:51:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231721AbhGFKxt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 06:53:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54472 "EHLO
+        id S231732AbhGFKxw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 06:53:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54486 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231732AbhGFKxt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 06:53:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 166AoxqR120294;
-        Tue, 6 Jul 2021 05:50:59 -0500
+        with ESMTP id S231642AbhGFKxw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 06:53:52 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 166Ap42N120321;
+        Tue, 6 Jul 2021 05:51:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1625568659;
-        bh=J49vfWzT3jgaISF6FLeuW0Uwzh22n7B1mHounVkrx44=;
+        s=ti-com-17Q1; t=1625568664;
+        bh=BwujCQU52uufj03106RGl0byjIe1My+N311MbFxbJqE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QRtDLKY+9pv0+c1LStJ41DLBbvBRvLgx33LT6rHrk6+D08jWL42A31fg8pZTU1FRp
-         C1pDoj67iYKP+KuM+5uG/ghlC8fHneDKJn02tmnn2jcQ6LlUiiCJrW9HeWmXp48lSf
-         n7cwPozDyNe3Ozj1lBLHB3H/oUfHbMPWxbib6ajY=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 166Aox1x087000
+        b=OjziZu+lDZUhKTS6KoiEqwJFNeclSGaNEowlVmxWM2jZadDXiolTS+rd4XEr2Pg+0
+         I23GxoSjj8PW0alrE9wAdmIwB/ZxNuryhe9WHn+cWQcj2UL/4ScOPgY3NPyc8tqYye
+         Ye5iafIyluG0EpY95uoBkYz2LTKPJNfxv/h3ue88=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 166Ap4rJ126321
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 6 Jul 2021 05:50:59 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 6 Jul 2021 05:51:04 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 6 Jul
- 2021 05:50:59 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ 2021 05:51:03 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 6 Jul 2021 05:50:59 -0500
+ Frontend Transport; Tue, 6 Jul 2021 05:51:03 -0500
 Received: from a0393678-ssd.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 166Aoar5015822;
-        Tue, 6 Jul 2021 05:50:55 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 166Aoar6015822;
+        Tue, 6 Jul 2021 05:50:59 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
@@ -47,9 +47,9 @@ CC:     Lokesh Vutla <lokeshvutla@ti.com>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Nadeem Athani <nadeem@cadence.com>
-Subject: [PATCH 4/5] misc: pci_endpoint_test: Do not request or allocate IRQs in probe
-Date:   Tue, 6 Jul 2021 16:20:34 +0530
-Message-ID: <20210706105035.9915-5-kishon@ti.com>
+Subject: [PATCH 5/5] misc: pci_endpoint_test: Add deviceID for AM64 and J7200
+Date:   Tue, 6 Jul 2021 16:20:35 +0530
+Message-ID: <20210706105035.9915-6-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210706105035.9915-1-kishon@ti.com>
 References: <20210706105035.9915-1-kishon@ti.com>
@@ -60,62 +60,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allocation of IRQ vectors and requesting IRQ is done as part of
-PCITEST_SET_IRQTYPE. Do not request or allocate IRQs in probe for
-AM654 and J721E so that the user space test script has better control
-of the devices for which the IRQs are configured. Since certain user
-space scripts could rely on allocation of IRQ vectors during probe,
-remove allocation of IRQs only for TI's K3 platform.
+Add device ID specific to AM64 and J7200 in pci_endpoint_test so that
+endpoints configured with those deviceIDs can use pci_endpoint_test
+driver.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/misc/pci_endpoint_test.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index c7ee34013485..9740f2a0e7cd 100644
+index 9740f2a0e7cd..707cf9d7e8c0 100644
 --- a/drivers/misc/pci_endpoint_test.c
 +++ b/drivers/misc/pci_endpoint_test.c
-@@ -79,6 +79,9 @@
- #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
- #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
+@@ -69,6 +69,8 @@
+ #define FLAG_USE_DMA				BIT(0)
  
-+#define is_j721e_pci_dev(pdev)         \
-+		((pdev)->device == PCI_DEVICE_ID_TI_J721E)
-+
- static DEFINE_IDA(pci_endpoint_test_ida);
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
++#define PCI_DEVICE_ID_TI_J7200			0xb00f
++#define PCI_DEVICE_ID_TI_AM64			0xb010
+ #define PCI_DEVICE_ID_LS1088A			0x80c0
  
- #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
-@@ -810,9 +813,11 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 
- 	pci_set_master(pdev);
- 
--	if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type)) {
--		err = -EINVAL;
--		goto err_disable_irq;
-+	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
-+		if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type)) {
-+			err = -EINVAL;
-+			goto err_disable_irq;
-+		}
- 	}
- 
- 	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-@@ -850,9 +855,11 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 		goto err_ida_remove;
- 	}
- 
--	if (!pci_endpoint_test_request_irq(test)) {
--		err = -EINVAL;
--		goto err_kfree_test_name;
-+	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
-+		if (!pci_endpoint_test_request_irq(test)) {
-+			err = -EINVAL;
-+			goto err_kfree_test_name;
-+		}
- 	}
- 
- 	misc_device = &test->miscdev;
+ #define is_am654_pci_dev(pdev)		\
+@@ -976,6 +978,12 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
+ 	  .driver_data = (kernel_ulong_t)&j721e_data,
+ 	},
++	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J7200),
++	  .driver_data = (kernel_ulong_t)&j721e_data,
++	},
++	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM64),
++	  .driver_data = (kernel_ulong_t)&j721e_data,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
 -- 
 2.17.1
 
