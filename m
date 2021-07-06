@@ -2,206 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 363263BD8E9
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 16:48:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B203BD905
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 16:52:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbhGFOvN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 10:51:13 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:61358 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231551AbhGFOvM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 10:51:12 -0400
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 166Ea92x007666;
-        Tue, 6 Jul 2021 14:46:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2020-01-29;
- bh=WU+kWS+XFwScrBHDFLuHuPL8XAeR1HWcalcFJDsg5/A=;
- b=ljpM98954IvHlAJtclNXnzXU4bMz9wn7GaK8celDgHItU3i1yeDwdbg+ZsQDArrXuQxC
- imZllZaAKMFdKATE7d+bWo7vBXIAwdwVF1/FfCFHJA93dK6oHtjqfLzp9ME8PDtvW0oU
- vwgmGG5Ae5vTrDfFJurOG6byc3EyZv7ptrcTPlrt9HZNzqwTo6ptBTANNS+Yq4LW1t0s
- bQr20/8oupHA8HBMaN6kHlhIFv4cBiL6xSPakuRkKkMKBkajaaTxP5f55D4yO+Sazp/v
- 1rgLevs4fkbDwG2oMpadh3Ks2Kz+bojXWijZEvR+FL8TPeUtG5shX3/KbABlhjeop55v HA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 39kq8eb22y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Jul 2021 14:46:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 166EaUSp016951;
-        Tue, 6 Jul 2021 14:46:29 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-        by userp3020.oracle.com with ESMTP id 39k1nv635h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Jul 2021 14:46:28 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZGnTw1swKcW5ip8J4JmjZSqOFUFv+Z7J0PAEOYO/6hNXTzdXvOLrNAirdhv4zbr3UlF/r/p0OOemrO1JjsCFhreATieBhz99voxQU8q71X2xJBRqcWi9BYHQGz4JFV25lrk2xgYgIyzQI0DvhF6Nhfl5NAaL8TKU270O+sVU6vjQtOiMbQLUrw38R2ETunyQaEdc36d4X7G9z7nj4KZK2nex88XVBhoDHfx6IErHoiASubQvLS2egua3f35RIDd3Hj3KPM3df+KHKhDv26uaQiAB1nut5eGzEop+G1jrRAh+YMaaoJudf/FpfaA6A07165gif9un55Ti8lm2F6rjjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WU+kWS+XFwScrBHDFLuHuPL8XAeR1HWcalcFJDsg5/A=;
- b=UPgeZ49NT7JcUfjo6Rpw3D3Et0hbOa8BX0EQbXpm271GjU+mNAgIK/fdGjUB4fjn87bVL0qASWFDfEOlxs7zWPaTJBHG3V/enVlRnUfKdIvKRYOHjabeMr5PUChKJH/dOR5xnJ+EjH8cAxdYX65PQbxo3oEBDo5bQBP/n0XWzOyNwPabFdnOJeanH2JYLpnqGeY05OKkSSfZtsibhQPwV+C+hNy3OTusnOR+iVbEs93rY+ND+KH3vKd93+AGI0T8jo86akEFjQkqPdEoveBT5G8g5YLEcBbuQJQuXECUYyQjdR1OCyau+KWI+V/Sm8GXRdBWXGp6DD7Pcm/4zCwrIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WU+kWS+XFwScrBHDFLuHuPL8XAeR1HWcalcFJDsg5/A=;
- b=dTxG3qWmEG98UvY0KgSxasmXk1z+hyVb1s/lfz6eLJJ97qyZaYDWAzWGs/1d1V9te3baS2j8lKrSOJGfiA0OU3ovAL3oqigBm8H/6DnuIJy/c84pLBc7FWGhY036bxMmM2VrrFd9FrMna/eKWOvp0ktvvP3s9Tnwp1JESmmtrPc=
-Authentication-Results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=oracle.com;
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
- by BY5PR10MB4148.namprd10.prod.outlook.com (2603:10b6:a03:211::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16; Tue, 6 Jul
- 2021 14:46:23 +0000
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::8111:d8f1:c262:808d]) by BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::8111:d8f1:c262:808d%6]) with mapi id 15.20.4287.033; Tue, 6 Jul 2021
- 14:46:23 +0000
-Date:   Tue, 6 Jul 2021 10:46:07 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
-        peterz@infradead.org, benh@kernel.crashing.org,
-        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
-        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
-        Frank Rowand <frowand.list@gmail.com>, mingo@kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Saravana Kannan <saravanak@google.com>, mpe@ellerman.id.au,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Jianxiong Gao <jxgao@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        maarten.lankhorst@linux.intel.com, airlied@linux.ie,
+        id S231544AbhGFOzL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 10:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231248AbhGFOzH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 10:55:07 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDE3C0617AB;
+        Tue,  6 Jul 2021 07:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=1ayrkKf5NvJjQdfUl2A/VO9K+bU0q5/9ZgivWetFS3o=; b=JbK3meFocLJ6fB6QYONBPtOQk9
+        DJh8XYIRvVsq19DtaRbOde3Pqt+U3mVhAJRiVq9/pLYYfHRPetQ2VwkvtOK63TFIov9LQtN9N9PJt
+        W7/r5BUcb6i86u+BjFat8OYQU9y2P1DA/EDcTwU14mU2aPtj4aDiy4zBQ/DSm0rkTEqy36baSOqyA
+        V4yYgj7JmTV6DLtcs5VRxDGb3q6cP0CLL/po4JfkE8jt0lxs+Hs+g3d6AcmGzyEozq//QEL4RnMt8
+        byUYd3U5VUmkthiwr4pU7QnYiaWZQxohw6U15DrlSostKCZf7pcDzFMvg9GIfhVhYyVE4cG/tyrih
+        3mmB/xNA==;
+Received: from [2602:306:c5a2:a380:b447:81b0:ffaa:defc]
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m0mQg-00F4IY-8x; Tue, 06 Jul 2021 14:52:06 +0000
+Subject: Re: [PATCH] bus: Make remove callback return void
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
-        Nathan Chancellor <nathan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, rodrigo.vivi@intel.com,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Claire Chang <tientzu@chromium.org>,
-        boris.ostrovsky@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jgross@suse.com, Nicolas Boichat <drinkcat@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Qian Cai <quic_qiancai@quicinc.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, xypron.glpk@gmx.de,
-        Tom Lendacky <thomas.lendacky@amd.com>, bauerman@linux.ibm.com
-Subject: Re: [PATCH v15 06/12] swiotlb: Use is_swiotlb_force_bounce for
- swiotlb data bouncing
-Message-ID: <YORsr0h7u5l9DZwh@char.us.oracle.com>
-References: <20210701074045.GA9436@willie-the-truck>
- <ea28db1f-846e-4f0a-4f13-beb67e66bbca@kernel.org>
- <20210702135856.GB11132@willie-the-truck>
- <0f7bd903-e309-94a0-21d7-f0e8e9546018@arm.com>
- <YN/7xcxt/XGAKceZ@Ryzen-9-3900X.localdomain>
- <20210705190352.GA19461@willie-the-truck>
- <20210706044848.GA13640@lst.de>
- <20210706132422.GA20327@willie-the-truck>
- <a59f771f-3289-62f0-ca50-8f3675d9b166@arm.com>
- <20210706140513.GA26498@lst.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210706140513.GA26498@lst.de>
-X-ClientProxiedBy: SA9PR13CA0101.namprd13.prod.outlook.com
- (2603:10b6:806:24::16) To BYAPR10MB2999.namprd10.prod.outlook.com
- (2603:10b6:a03:85::27)
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        SeongJae Park <sjpark@amazon.de>,
+        Julien Grall <jgrall@amazon.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
+From:   Geoff Levand <geoff@infradead.org>
+Message-ID: <7a68b536-302c-0374-848f-4b9535ff1306@infradead.org>
+Date:   Tue, 6 Jul 2021 07:51:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from char.us.oracle.com (138.3.200.56) by SA9PR13CA0101.namprd13.prod.outlook.com (2603:10b6:806:24::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.12 via Frontend Transport; Tue, 6 Jul 2021 14:46:12 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3025c928-428b-4e34-408e-08d9408cd2e6
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4148:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR10MB41488CBFBBC87F5A0D8771B6891B9@BY5PR10MB4148.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zF6soiZvqQ5qK3hqPmokbLbv7oSQfaV92o/5XjwtoXrBZWQFQPz+wW678QL4wTY5k5ZCfXWq5Lq8r4W+6DdO4dp4dxT8OB58Qh+3Gso3HkYUhPjLIE4B3WSMht+E6V+A++qEKz7lO+Ds8jc3+wCUe9nxeH8NXRt1e5eQQf4lv1u4r5rYwv+vRBuTDJbDeTolJnrd23RSyc9mRbqkBgaFHGOxk9ymj3WWeRQy5iPzm0N4KjQm5Lkwa22g394xGUcVc2U99x/DCRYK7HF/t3m+UbpBTQkqE6XV/IPx6WP2XFykVTYnOSnvXfJDdRq1839Pt/59hqSvHEqIyalZiSqlBNNkobvj01ky0rmuES6qv9YstFZUyoLeDdg2AF/pjXiMStTZXEWwgu9ZPSLUIqq9AOudfPABjkgIv8PuX4QyU/NVpy3H7nIkXVayYXsnBCWR6peYbPOhnkJzKXZRLAHu5znTwPFliuTJhcrz/7wVY2EV4Z1SbIz6cQUCv5ttLigzaKaAvQWAv0t2PsnxDoubqArLdRhhwwXGS5WtmNrWAR91QOwAnqK9cEq0MzipvpCbeV6qDNwSkbnGqyDCyIAQt4+Qdz+N3zQEKt29hNwn118pkmgo4V17rlN5f2aIyfkV2IQDgq+9HVmDEMAxSXy/ag2XjG18zq0IKJ/ddCL0H7ylKJVOQfi0Y8uhxTCv18JSiJ3hwKZVHt6KsTdU8FvNhw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(366004)(346002)(396003)(136003)(376002)(4326008)(26005)(52116002)(7696005)(956004)(478600001)(66476007)(7416002)(186003)(7406005)(7366002)(86362001)(6916009)(38350700002)(38100700002)(5660300002)(55016002)(8936002)(54906003)(2906002)(66556008)(8676002)(316002)(66946007)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ylmDwz4fIvOiYvZenj2A98Qc4waYmu0qu9/y10agl2MovOknW/kj9bS4dIKy?=
- =?us-ascii?Q?kzOMtO6hZE/AtHsmdBqyFsgdnfYcpE5Sp0BNocjxGTT0irDdAd9MNu+Zjg5s?=
- =?us-ascii?Q?J0nWMeE6ReYK5jYw8Q8488gHHxN805F8JpvsyzWk/9P4PlR9peIU/x2XDeRT?=
- =?us-ascii?Q?PElgi1zHnvjyncWax6mYAlgxusncGDEZHPkI3g9cqdrUxsK5T63iNXOjQeND?=
- =?us-ascii?Q?X2OH3l6sC1hjDvC2gxupEHJPgB0vQmdo7YDJOvSqs+glaIuqW+IfQxcXK6Or?=
- =?us-ascii?Q?sxQm1ieS8n1xc0ZQD+zAiOT0bg3+LTYaGiO3f3jPk+cEPzeQAIiZY/qTA2Vc?=
- =?us-ascii?Q?PHyzUMD+nar9xGaOTvtvmh0Td2Mfv35JASQr5NpY29dh7s4Klrcniy74BOf1?=
- =?us-ascii?Q?u7s2ppj7XsT4xUqSxQJKSPMAn9xnQfNKgVNl4D8BN0mXzQv9smLhlJhE7h66?=
- =?us-ascii?Q?fdIwcvJp3+Hb0GH+uMslBX4I3nYNSde9d+YKYY0zhlZ7xZ6QFgzYAr+35dSa?=
- =?us-ascii?Q?GwlxnQfMcV6TMtnShlFSmc4xoTkUgozMyB+fYab7X91e/t6CKtA0WeTZnW3A?=
- =?us-ascii?Q?MUp3YncCSSmEl+Bn2dBW+aR6GDLpZoqaaWivOlHmm0VLZjgb7B1CNsBw4zOg?=
- =?us-ascii?Q?YIPqDTMvrceomjZuZmPRNjkXE8m3bLNchfsW+4XaEmU34JHjrg1RMlUpaIAX?=
- =?us-ascii?Q?AjvmEiXWEhqwHfkvcJkooJGhfla+7D5wZUVA3Oqr4GHJbqSRB1HVViIVd8Pt?=
- =?us-ascii?Q?fhq96k43i7HKe/nLQZxvIBP9dACKZW6kqjrOBc4szQM9NeD28ER9cK7gFX/Z?=
- =?us-ascii?Q?wBj8f3Kd+InP9LraK+pVLaQkizpgNEBy5Khp8LNFwKx2QBsIDRRHe/ph3s6S?=
- =?us-ascii?Q?GGO+JAt6nz61QJ3A6IM+wjxwtQxJWPTxRPMyX5DvrHbN3Umq/yPviooWlcg0?=
- =?us-ascii?Q?3UyFGhYKnKEVLCItFWZVhMr9c9m1RKMmw/80PCQThGkW/KDxP44B0pgQe1wx?=
- =?us-ascii?Q?K0rDHqi80QRNtpL/WpPBJ9dS6rwPzgKNfuhmMlqZRfLmtwpqdIiVl7K5r5X5?=
- =?us-ascii?Q?N7gBvdec0XcBKzaxQi97BsNnG4mvBkgns6pdXToh+XpyLGUOF13XQBKuzElF?=
- =?us-ascii?Q?xHwGFixJJTfRqlAXZRkxIqOR3QWOGz7uPvEG2R+upn/90caFAztXOWhblXTS?=
- =?us-ascii?Q?PUb0BTERL55p1lxuNz7fKdZ9A7SckPqeT+pxjosxGWgt0KF6e/dp5rMZMTE1?=
- =?us-ascii?Q?gZ3mCx6mOReNtlBLTB+MxqKkf1CtyBgkdxWfhIONaPMpJa1i269Tg39PX6FK?=
- =?us-ascii?Q?WZoteRTQ6Xr9npwaCdc1oV3m?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3025c928-428b-4e34-408e-08d9408cd2e6
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2021 14:46:23.0788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aWnBQz0Nm3vUrv9srYd4Kk1ov4KnDekN5v7MvGmwZCxRwUoX4n3GZhCUf/xMSE5l+zgBcq4SLUcaR4pDsl9LNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4148
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10037 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 phishscore=0
- adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2107060068
-X-Proofpoint-GUID: EICPB_qXh3tYgTdDU7lDjxv4jJl8DKoT
-X-Proofpoint-ORIG-GUID: EICPB_qXh3tYgTdDU7lDjxv4jJl8DKoT
+In-Reply-To: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 04:05:13PM +0200, Christoph Hellwig wrote:
-> On Tue, Jul 06, 2021 at 03:01:04PM +0100, Robin Murphy wrote:
-> > FWIW I was pondering the question of whether to do something along those 
-> > lines or just scrap the default assignment entirely, so since I hadn't got 
-> > round to saying that I've gone ahead and hacked up the alternative 
-> > (similarly untested) for comparison :)
-> >
-> > TBH I'm still not sure which one I prefer...
-> 
-> Claire did implement something like your suggestion originally, but
-> I don't really like it as it doesn't scale for adding multiple global
-> pools, e.g. for the 64-bit addressable one for the various encrypted
-> secure guest schemes.
+On 7/6/21 2:50 AM, Uwe Kleine-König wrote:
 
-Couple of things:
- - I am not pushing to Linus the Claire's patchset until we have a
-   resolution on this. I hope you all agree that is a sensible way
-   forward as much as I hate doing that.
+> --- a/arch/powerpc/platforms/ps3/system-bus.c
+> +++ b/arch/powerpc/platforms/ps3/system-bus.c
+> @@ -381,7 +381,7 @@ static int ps3_system_bus_probe(struct device *_dev)
+>  	return result;
+>  }
+>  
+> -static int ps3_system_bus_remove(struct device *_dev)
+> +static void ps3_system_bus_remove(struct device *_dev)
+>  {
+>  	struct ps3_system_bus_device *dev = ps3_dev_to_system_bus_dev(_dev);
+>  	struct ps3_system_bus_driver *drv;
+> @@ -399,7 +399,6 @@ static int ps3_system_bus_remove(struct device *_dev)
+>  			__func__, __LINE__, drv->core.name);
+>  
+>  	pr_debug(" <- %s:%d: %s\n", __func__, __LINE__, dev_name(&dev->core));
+> -	return 0;
+>  }
 
- - I like Robin's fix as it is simplest looking. Would love to see if it
-   does fix the problem.
+PS3 part looks fine.
 
- - Christopher - we can always add multiple pools as the next milestone
-   and just focus on this feature getting tested extensively during this
-   release.
-
- - Would it be worth (for future or maybe in another tiny fix) to also add
-   a printk in swiotlb when we de-allocate the buffer so when someone looks
-   through the `dmesg` it becomes much easier to diagnose issues?
-
+Acked-by: Geoff Levand <geoff@infradead.org>
