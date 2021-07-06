@@ -2,110 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B303BDBED
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 19:07:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE1F63BDCBA
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jul 2021 20:10:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230247AbhGFRJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jul 2021 13:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229956AbhGFRJs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 6 Jul 2021 13:09:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8BEB61C3B;
-        Tue,  6 Jul 2021 17:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625591229;
-        bh=VhhzIH6gzRT8gtRsisto5IDFaHK+/13p4/dNI43mqXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hl0xCyjFbo3wnMVlDA8LcQL8eHToHXmUMr23zuNOTdipVfwNhivzNpi8rpTly6eYi
-         yPd2oC5omfpzshqqnFMLEQGIyy9TAQeSgCgSvFYmHpKLsM30eMNC98TPrdW8hja8Kb
-         4m1fjoFjCWorTG/lEoPVyDyK3SJHLMjyzybho2CdMauS/azg7sMbNbYLaDlqMOER13
-         ALFzRBBx8Uq7Drdf4gPPQLMEsDVKJLDGxMmwxLH7I7ZcRSFV8ffeda6f2WQMZefhG6
-         DGh52bATmGicYuUcNyMSkAeHgzE8e4+s/u25yglW+hkrikwQu6kPAYHnUHYwEX7ru4
-         L8ww7+blLmJBA==
-Date:   Tue, 6 Jul 2021 18:06:58 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, heikki.krogerus@linux.intel.com,
-        thomas.hellstrom@linux.intel.com, peterz@infradead.org,
-        benh@kernel.crashing.org, joonas.lahtinen@linux.intel.com,
-        dri-devel@lists.freedesktop.org, chris@chris-wilson.co.uk,
-        grant.likely@arm.com, paulus@samba.org,
-        Frank Rowand <frowand.list@gmail.com>, mingo@kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Saravana Kannan <saravanak@google.com>, mpe@ellerman.id.au,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Jianxiong Gao <jxgao@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        maarten.lankhorst@linux.intel.com, airlied@linux.ie,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
-        Nathan Chancellor <nathan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, rodrigo.vivi@intel.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Claire Chang <tientzu@chromium.org>,
-        boris.ostrovsky@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jgross@suse.com, Nicolas Boichat <drinkcat@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Qian Cai <quic_qiancai@quicinc.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, xypron.glpk@gmx.de,
-        Tom Lendacky <thomas.lendacky@amd.com>, bauerman@linux.ibm.com
-Subject: Re: [PATCH v15 06/12] swiotlb: Use is_swiotlb_force_bounce for
- swiotlb data bouncing
-Message-ID: <20210706170657.GD20750@willie-the-truck>
-References: <ea28db1f-846e-4f0a-4f13-beb67e66bbca@kernel.org>
- <20210702135856.GB11132@willie-the-truck>
- <0f7bd903-e309-94a0-21d7-f0e8e9546018@arm.com>
- <YN/7xcxt/XGAKceZ@Ryzen-9-3900X.localdomain>
- <20210705190352.GA19461@willie-the-truck>
- <20210706044848.GA13640@lst.de>
- <20210706132422.GA20327@willie-the-truck>
- <a59f771f-3289-62f0-ca50-8f3675d9b166@arm.com>
- <20210706140513.GA26498@lst.de>
- <bb32d5a6-2b34-4524-e171-3e9f5f4d3a94@arm.com>
+        id S231163AbhGFSLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jul 2021 14:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231192AbhGFSLC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jul 2021 14:11:02 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADFDC0613DE
+        for <linux-pci@vger.kernel.org>; Tue,  6 Jul 2021 11:08:23 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id i12-20020a05683033ecb02903346fa0f74dso22455227otu.10
+        for <linux-pci@vger.kernel.org>; Tue, 06 Jul 2021 11:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rFh4HQBpaw9ewOD7eKuJ7KI9YAzHhN8tlxJ6LopMKHs=;
+        b=Sz6rE6fIxKghlltcLCE+UXPsQefAUgPvTMscjeRzq2kl6NTGV49umux5xM0XcDuF3f
+         KuSKKfkZ8nSISGEXHz3w1v+CP9bxuRJkim+LBmkXAMBhskBSVWy4R8UYC7L1pwY+g7hz
+         Zg3WKG3mRVhsusU5VFmdXh5UPocqhZf4lahEU95r9tDGNbsVfHF1Q4HkA+YZfm/i81fd
+         v0xNi9dJEaEvf856OdG6fjSc31APYItT+IUiPzbg0w9QbfcYoXqLRo58SwLlUHuXr/Qb
+         gjgu5RAVRwk/bKL57rYJjqGIxVt7qPeDusZUEamQ36NdV7/ZYwdc/uo7wSJkJLcpf0tD
+         jOXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rFh4HQBpaw9ewOD7eKuJ7KI9YAzHhN8tlxJ6LopMKHs=;
+        b=U7oKzdp3a4Ri0MEwK7IC0+Rweb5mEvqCPaC2dz1jH2cdrsYkVd3jUpZryP85UQd/9L
+         VnWOUs1T7IiK3I6xiJyusI/5NPgttUE249gJSfE0SKt4hErVrSkwRb59fi+GjISqXFI6
+         WP1EPaTnQc6COJbkW4UMhHyhc8KTduxzueibzgzYgWMredNrh91OFZd172EKw9dH93TN
+         luxf5At+yyZpfDJpr9QUcDqNH6ts+fbn2lCYKbwfljzDtHfky9NMa5NUlGKRSFPFEYp/
+         2J2TRDOon9Nn392UVPQuNjdud05Hf76XFNfcvfsNMi9jxmYt+ogrn5Z9vYOkoTfMEya2
+         3I3w==
+X-Gm-Message-State: AOAM531r9oW5iyVYIxAf+h1Nm9H1+7Enp4QTi3dVucYfOrqo600b2gtY
+        afnq+M6xPTfz72YjsixBlwmu5w==
+X-Google-Smtp-Source: ABdhPJwwC8pa+wbm0v5SSaX+DFJoQ7jJmXTjdD3iH0933Y2rw8Y2+zYlxp2w0qjcBNkHXGnjSvRJ6w==
+X-Received: by 2002:a9d:3d3:: with SMTP id f77mr16276146otf.43.1625594902170;
+        Tue, 06 Jul 2021 11:08:22 -0700 (PDT)
+Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id 68sm497113otd.74.2021.07.06.11.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jul 2021 11:08:21 -0700 (PDT)
+Date:   Tue, 6 Jul 2021 13:08:18 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>
+Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-fpga@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+Message-ID: <YOSb1+yeVeLxiSRc@yoga>
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb32d5a6-2b34-4524-e171-3e9f5f4d3a94@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 04:39:11PM +0100, Robin Murphy wrote:
-> On 2021-07-06 15:05, Christoph Hellwig wrote:
-> > On Tue, Jul 06, 2021 at 03:01:04PM +0100, Robin Murphy wrote:
-> > > FWIW I was pondering the question of whether to do something along those
-> > > lines or just scrap the default assignment entirely, so since I hadn't got
-> > > round to saying that I've gone ahead and hacked up the alternative
-> > > (similarly untested) for comparison :)
-> > > 
-> > > TBH I'm still not sure which one I prefer...
-> > 
-> > Claire did implement something like your suggestion originally, but
-> > I don't really like it as it doesn't scale for adding multiple global
-> > pools, e.g. for the 64-bit addressable one for the various encrypted
-> > secure guest schemes.
+On Tue 06 Jul 10:48 CDT 2021, Uwe Kleine-K?nig wrote:
+
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
 > 
-> Ah yes, that had slipped my mind, and it's a fair point indeed. Since we're
-> not concerned with a minimal fix for backports anyway I'm more than happy to
-> focus on Will's approach. Another thing is that that looks to take us a
-> quiet step closer to the possibility of dynamically resizing a SWIOTLB pool,
-> which is something that some of the hypervisor protection schemes looking to
-> build on top of this series may want to explore at some point.
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
+> 
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
+> 
 
-Ok, I'll split that nasty diff I posted up into a reviewable series and we
-can take it from there.
+Thanks for doing this!
 
-Will
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org> (rpmsg and apr)
+
+[..]
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index c1404d3dae2c..7f6fac618ab2 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -530,7 +530,7 @@ static int rpmsg_dev_probe(struct device *dev)
+>  	return err;
+>  }
+>  
+> -static int rpmsg_dev_remove(struct device *dev)
+> +static void rpmsg_dev_remove(struct device *dev)
+>  {
+>  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+>  	struct rpmsg_driver *rpdrv = to_rpmsg_driver(rpdev->dev.driver);
+> @@ -546,8 +546,6 @@ static int rpmsg_dev_remove(struct device *dev)
+>  
+>  	if (rpdev->ept)
+>  		rpmsg_destroy_ept(rpdev->ept);
+> -
+> -	return err;
+
+This leaves err assigned but never used, but I don't mind following up
+with a patch cleaning that up after this has landed.
+
+>  }
+>  
+>  static struct bus_type rpmsg_bus = {
+
+Regards,
+Bjorn
