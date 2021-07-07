@@ -2,236 +2,319 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E3F3BF15D
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 23:23:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0573BF17C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 23:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232532AbhGGV00 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jul 2021 17:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230432AbhGGV00 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jul 2021 17:26:26 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5ED3BC061574;
-        Wed,  7 Jul 2021 14:23:45 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id AA3C392009C; Wed,  7 Jul 2021 23:23:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id A294892009B;
-        Wed,  7 Jul 2021 23:23:43 +0200 (CEST)
-Date:   Wed, 7 Jul 2021 23:23:43 +0200 (CEST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] PCI: Do not restore firmware BAR assignments behind a PCI-PCI
- bridge
-Message-ID: <alpine.DEB.2.21.2104211620400.44318@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S230141AbhGGVpX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jul 2021 17:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230048AbhGGVpW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Jul 2021 17:45:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D414961C94;
+        Wed,  7 Jul 2021 21:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625694162;
+        bh=+Q+mYhXOJkdvBhONPOGw0MrCiDQXHRW5YTw/H/s6sxs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lDYeiGm9BRypGOQTRMyWXxTPLpwbp/iUSb658mrkfYmiVyGXivceUDv31M+8qKxtY
+         HaSgOxwCgeqKipGy4KWNoVHUa8QsW6w7tkecIcdHrqk6y4SzTn1zOh0dp6IDPgnRFi
+         H81HG1+uIUxsyVPhr22GijVjgJq/G17UheU2CeXtWZyCDvFmvA8Hf+AlWr/LQmL820
+         7X+/zF4/bcMLfU6sbzkq+oL8hxHohZEtZm7t5x8nslYdun3Ukwitipdf4nmkA8R1e7
+         d4WDu97eM2F9Zxkmm7EuT+5FozRdHL9OSgEvewFHdEBJEJ8LoCfrjM7gaVd+9vE/cq
+         5czmZ9hkdkLjA==
+Date:   Wed, 7 Jul 2021 16:42:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [GIT PULL] PCI changes for v5.14
+Message-ID: <20210707214240.GA937039@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix an issue with the Tyan Tomcat IV S1564D system, the BIOS of which 
-does not assign PCI buses beyond #2, where our resource reallocation 
-code preserves the reset default of an I/O BAR assignment outside its 
-upstream PCI-to-PCI bridge's I/O forwarding range for device 06:08.0 in 
-this log:
+The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-pci_bus 0000:00: max bus depth: 4 pci_try_num: 5
-[...]
-pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.0: BAR 4: trying firmware assignment [io  0xfce0-0xfcff]
-pci 0000:06:08.0: BAR 4: assigned [io  0xfce0-0xfcff]
-pci 0000:06:08.1: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.1: BAR 4: trying firmware assignment [io  0xfce0-0xfcff]
-pci 0000:06:08.1: BAR 4: [io  0xfce0-0xfcff] conflicts with 0000:06:08.0 [io  0xfce0-0xfcff]
-pci 0000:06:08.1: BAR 4: failed to assign [io  size 0x0020]
-pci 0000:05:00.0: PCI bridge to [bus 06]
-pci 0000:05:00.0:   bridge window [mem 0xd8000000-0xd85fffff]
-[...]
-pci 0000:00:11.0: PCI bridge to [bus 01-06]
-pci 0000:00:11.0:   bridge window [io  0xe000-0xefff]
-pci 0000:00:11.0:   bridge window [mem 0xd8000000-0xdfffffff]
-pci 0000:00:11.0:   bridge window [mem 0xa8000000-0xafffffff 64bit pref]
-pci_bus 0000:00: No. 2 try to assign unassigned res
-[...]
-pci 0000:06:08.1: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.1: BAR 4: trying firmware assignment [io  0xfce0-0xfcff]
-pci 0000:06:08.1: BAR 4: [io  0xfce0-0xfcff] conflicts with 0000:06:08.0 [io  0xfce0-0xfcff]
-pci 0000:06:08.1: BAR 4: failed to assign [io  size 0x0020]
-pci 0000:05:00.0: PCI bridge to [bus 06]
-pci 0000:05:00.0:   bridge window [mem 0xd8000000-0xd85fffff]
-[...]
-pci 0000:00:11.0: PCI bridge to [bus 01-06]
-pci 0000:00:11.0:   bridge window [io  0xe000-0xefff]
-pci 0000:00:11.0:   bridge window [mem 0xd8000000-0xdfffffff]
-pci 0000:00:11.0:   bridge window [mem 0xa8000000-0xafffffff 64bit pref]
-pci_bus 0000:00: No. 3 try to assign unassigned res
-pci 0000:00:11.0: resource 7 [io  0xe000-0xefff] released
-[...]
-pci 0000:06:08.1: BAR 4: assigned [io  0x2000-0x201f]
-pci 0000:05:00.0: PCI bridge to [bus 06]
-pci 0000:05:00.0:   bridge window [io  0x2000-0x2fff]
-pci 0000:05:00.0:   bridge window [mem 0xd8000000-0xd85fffff]
-[...]
-pci 0000:00:11.0: PCI bridge to [bus 01-06]
-pci 0000:00:11.0:   bridge window [io  0x1000-0x2fff]
-pci 0000:00:11.0:   bridge window [mem 0xd8000000-0xdfffffff]
-pci 0000:00:11.0:   bridge window [mem 0xa8000000-0xafffffff 64bit pref]
-pci_bus 0000:00: resource 4 [io  0x0000-0xffff]
-pci_bus 0000:00: resource 5 [mem 0x00000000-0xffffffff]
-pci_bus 0000:01: resource 0 [io  0x1000-0x2fff]
-pci_bus 0000:01: resource 1 [mem 0xd8000000-0xdfffffff]
-pci_bus 0000:01: resource 2 [mem 0xa8000000-0xafffffff 64bit pref]
-pci_bus 0000:02: resource 0 [io  0x1000-0x2fff]
-pci_bus 0000:02: resource 1 [mem 0xd8000000-0xd8bfffff]
-pci_bus 0000:04: resource 0 [io  0x1000-0x1fff]
-pci_bus 0000:04: resource 1 [mem 0xd8600000-0xd8afffff]
-pci_bus 0000:05: resource 0 [io  0x2000-0x2fff]
-pci_bus 0000:05: resource 1 [mem 0xd8000000-0xd85fffff]
-pci_bus 0000:06: resource 0 [io  0x2000-0x2fff]
-pci_bus 0000:06: resource 1 [mem 0xd8000000-0xd85fffff]
+  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
 
--- note that the assignment of 0xfce0-0xfcff is outside the range of 
-0x2000-0x2fff assigned to bus #6:
+are available in the Git repository at:
 
-05:00.0 PCI bridge: Texas Instruments XIO2000(A)/XIO2200A PCI Express-to-PCI Bridge (rev 03) (prog-if 00 [Normal decode])
-        Flags: bus master, fast devsel, latency 0
-        Bus: primary=05, secondary=06, subordinate=06, sec-latency=0
-        I/O behind bridge: 00002000-00002fff
-        Memory behind bridge: d8000000-d85fffff
-        Capabilities: [50] Power Management version 2
-        Capabilities: [60] Message Signalled Interrupts: 64bit+ Queue=0/4 Enable-
-        Capabilities: [80] #0d [0000]
-        Capabilities: [90] Express PCI/PCI-X Bridge IRQ 0
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.14-changes
 
-06:08.0 USB controller: VIA Technologies, Inc. VT82xx/62xx/VX700/8x0/900 UHCI USB 1.1 Controller (rev 61) (prog-if 00 [UHCI])
-	Subsystem: VIA Technologies, Inc. VT82xx/62xx/VX700/8x0/900 UHCI USB 1.1 Controller
-        Flags: bus master, medium devsel, latency 22, IRQ 5
-        I/O ports at fce0 [size=32]
-        Capabilities: [80] Power Management version 2
+for you to fetch changes up to d58b2061105956f6e69691bf0259b1dd1e9fb601:
 
-06:08.1 USB controller: VIA Technologies, Inc. VT82xx/62xx/VX700/8x0/900 UHCI USB 1.1 Controller (rev 61) (prog-if 00 [UHCI])
-	Subsystem: VIA Technologies, Inc. VT82xx/62xx/VX700/8x0/900 UHCI USB 1.1 Controller
-        Flags: bus master, medium devsel, latency 22, IRQ 5
-        I/O ports at 2000 [size=32]
-        Capabilities: [80] Power Management version 2
+  Merge branch 'remotes/lorenzo/pci/mobiveil' (2021-07-06 10:56:32 -0500)
 
-Since both 06:08.0 and 06:08.1 have the same reset defaults the latter 
-device escapes its fate and gets a good assignment owing to an address 
-conflict with the former device.
+----------------------------------------------------------------
 
-Consequently when the device driver tries to access 06:08.0 according to 
-its designated address range it pokes at an unassigned I/O location, 
-likely subtractively decoded by the southbridge and forwarded to ISA, 
-causing the driver to become confused and bail out:
+Enumeration:
+  - Fix dsm_label_utf16s_to_utf8s() buffer overrun (Krzysztof Wilczyński)
+  - Rely on lengths from scnprintf(), dsm_label_utf16s_to_utf8s()
+    (Krzysztof Wilczyński)
+  - Use sysfs_emit() and sysfs_emit_at() in "show" functions (Krzysztof
+    Wilczyński)
+  - Fix 'resource_alignment' newline issues (Krzysztof Wilczyński)
+  - Add 'devspec' newline (Krzysztof Wilczyński)
+  - Dynamically map ECAM regions (Russell King)
 
-uhci_hcd 0000:06:08.0: host system error, PCI problems?
-uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
-uhci_hcd 0000:06:08.0: host controller halted, very bad!
-uhci_hcd 0000:06:08.0: HCRESET not completed yet!
-uhci_hcd 0000:06:08.0: HC died; cleaning up
+Resource management:
+  - Coalesce host bridge contiguous apertures (Kai-Heng Feng)
 
-if good luck happens or if bad luck does, an infinite flood of messages:
+PCIe native device hotplug:
+  - Ignore Link Down/Up caused by DPC (Lukas Wunner)
 
-uhci_hcd 0000:06:08.0: host system error, PCI problems?
-uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
-uhci_hcd 0000:06:08.0: host system error, PCI problems?
-uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
-uhci_hcd 0000:06:08.0: host system error, PCI problems?
-uhci_hcd 0000:06:08.0: host controller process error, something bad happened!
-[...]
+Power management:
+  - Leave Apple Thunderbolt controllers on for s2idle or standby
+    (Konstantin Kharlamov)
 
-making the system virtually unusuable.
+Virtualization:
+  - Work around Huawei Intelligent NIC VF FLR erratum (Chiqijun)
+  - Clarify error message for unbound IOV devices (Moritz Fischer)
+  - Add pci_reset_bus_function() Secondary Bus Reset interface (Raphael
+    Norwitz)
 
-This is because we have code to deal with a situation from PR #16263, 
-where broken ACPI firmware reports the wrong address range for the host 
-bridge's decoding window and trying to adjust to the window causes more 
-breakage than leaving the BIOS assignments intact.
+Peer-to-peer DMA:
+  - Simplify distance calculation (Christoph Hellwig)
+  - Finish RCU conversion of pdev->p2pdma (Eric Dumazet)
+  - Rename upstream_bridge_distance() and rework doc (Logan Gunthorpe)
+  - Collect acs list in stack buffer to avoid sleeping (Logan Gunthorpe)
+  - Use correct calc_map_type_and_dist() return type (Logan Gunthorpe)
+  - Warn if host bridge not in whitelist (Logan Gunthorpe)
+  - Refactor pci_p2pdma_map_type() (Logan Gunthorpe)
+  - Avoid pci_get_slot(), which may sleep (Logan Gunthorpe)
 
-This may work for a device directly on the root bus decoded by the host 
-bridge only, but for a device behind one or more PCI-to-PCI (or CardBus) 
-bridges those bridges' forwarding windows have been standardised and 
-need to be respected, or leaving whatever has been there in a downstream 
-device's BAR will have no effect as cycles for the addresses recorded 
-there will have no chance to appear on the bus the device has been 
-immediately attached to.
+Altera PCIe controller driver:
+  - Add Joyce Ooi as Altera PCIe maintainer (Joyce Ooi)
 
-Do not restore the firmware assignment for a device behind a PCI-to-PCI 
-bridge then, fixing the system concerned as follows:
+Broadcom iProc PCIe controller driver:
+  - Fix multi-MSI base vector number allocation (Sandor Bodo-Merle)
+  - Support multi-MSI only on uniprocessor kernel (Sandor Bodo-Merle)
 
-pci_bus 0000:00: max bus depth: 4 pci_try_num: 5
-[...]
-pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.0: BAR 4: failed to assign [io  size 0x0020]
-pci 0000:06:08.1: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.1: BAR 4: failed to assign [io  size 0x0020]
-[...]
-pci_bus 0000:00: No. 2 try to assign unassigned res
-[...]
-pci 0000:06:08.0: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.0: BAR 4: failed to assign [io  size 0x0020]
-pci 0000:06:08.1: BAR 4: no space for [io  size 0x0020]
-pci 0000:06:08.1: BAR 4: failed to assign [io  size 0x0020]
-[...]
-pci_bus 0000:00: No. 3 try to assign unassigned res
-[...]
-pci 0000:06:08.0: BAR 4: assigned [io  0x2000-0x201f]
-pci 0000:06:08.1: BAR 4: assigned [io  0x2020-0x203f]
+Freescale i.MX6 PCIe controller driver:
+  - Limit DBI register length for imx6qp PCIe (Richard Zhu)
+  - Add "vph-supply" for PHY supply voltage (Richard Zhu)
+  - Enable PHY internal regulator when supplied >3V (Richard Zhu)
+  - Remove imx6_pcie_probe() redundant error message (Zhen Lei)
 
-and making device 06:08.0 work correctly.
+Intel Gateway PCIe controller driver:
+  - Fix INTx enable (Martin Blumenstingl)
 
-Cf. <https://bugzilla.kernel.org/show_bug.cgi?id=16263>
+Marvell Aardvark PCIe controller driver:
+  - Fix checking for PIO Non-posted Request (Pali Rohár)
+  - Implement workaround for the readback value of VEND_ID (Pali Rohár)
 
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Fixes: 58c84eda0756 ("PCI: fall back to original BIOS BAR addresses")
-Cc: stable@vger.kernel.org # v2.6.35+
----
-For the record the system's bus topology is as follows:
+MediaTek PCIe controller driver:
+  - Remove redundant error printing in mtk_pcie_subsys_powerup() (Zhen Lei)
 
--[0000:00]-+-00.0
-           +-07.0
-           +-07.1
-           +-07.2
-           +-11.0-[0000:01-06]----00.0-[0000:02-06]--+-00.0-[0000:03]--
-           |                                         +-01.0-[0000:04]--+-00.0
-           |                                         |                 \-00.3
-           |                                         \-02.0-[0000:05-06]----00.0-[0000:06]--+-05.0
-           |                                                                                +-08.0
-           |                                                                                +-08.1
-           |                                                                                \-08.2
-           +-12.0
-           +-13.0
-           \-14.0
----
- drivers/pci/setup-res.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+MediaTek PCIe Gen3 controller driver:
+  - Add missing MODULE_DEVICE_TABLE (Zou Wei)
 
-linux-pci-setup-res-fw-address-nobridge.diff
-Index: linux-macro-ide-tty/drivers/pci/setup-res.c
-===================================================================
---- linux-macro-ide-tty.orig/drivers/pci/setup-res.c
-+++ linux-macro-ide-tty/drivers/pci/setup-res.c
-@@ -328,13 +328,15 @@ int pci_assign_resource(struct pci_dev *
- 	ret = _pci_assign_resource(dev, resno, size, align);
- 
- 	/*
--	 * If we failed to assign anything, let's try the address
--	 * where firmware left it.  That at least has a chance of
--	 * working, which is better than just leaving it disabled.
-+	 * If we failed to assign anything and we're not behind a P2P
-+	 * or CardBus bridge, let's try the address where firmware
-+	 * left it.  That at least has a chance of working, which is
-+	 * better than just leaving it disabled.
- 	 */
- 	if (ret < 0) {
- 		pci_info(dev, "BAR %d: no space for %pR\n", resno, res);
--		ret = pci_revert_fw_address(res, dev, resno, size);
-+		if (!dev->bus->parent)
-+			ret = pci_revert_fw_address(res, dev, resno, size);
- 	}
- 
- 	if (ret < 0) {
+Microchip PolarFlare PCIe controller driver:
+  - Make struct event_descs static (Krzysztof Wilczyński)
+
+Microsoft Hyper-V host bridge driver:
+  - Fix race condition when removing the device (Long Li)
+  - Remove bus device removal unused refcount/functions (Long Li)
+
+Mobiveil PCIe controller driver:
+  - Remove unused readl and writel functions (Krzysztof Wilczyński)
+
+NVIDIA Tegra PCIe controller driver:
+  - Add missing MODULE_DEVICE_TABLE (Zou Wei)
+
+NVIDIA Tegra194 PCIe controller driver:
+  - Fix tegra_pcie_ep_raise_msi_irq() ill-defined shift (Jon Hunter)
+  - Fix host initialization during resume (Vidya Sagar)
+
+Rockchip PCIe controller driver:
+  - Register IRQ handlers after device and data are ready (Javier Martinez
+    Canillas)
+
+----------------------------------------------------------------
+Bjorn Helgaas (26):
+      PCI: xgene: Annotate __iomem pointer
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/error'
+      Merge branch 'pci/hotplug'
+      Merge branch 'pci/misc'
+      Merge branch 'pci/p2pdma'
+      Merge branch 'pci/pm'
+      Merge branch 'pci/reset'
+      Merge branch 'pci/resource'
+      Merge branch 'pci/sysfs'
+      Merge branch 'pci/virtualization'
+      Merge branch 'pci/host/imx6'
+      Merge branch 'pci/host/intel-gw'
+      Merge branch 'pci/host/rockchip'
+      Merge branch 'pci/host/tegra'
+      Merge branch 'pci/host/tegra194'
+      Merge branch 'pci/host/xgene'
+      Merge branch 'pci/kernel-doc'
+      Merge branch 'remotes/lorenzo/pci/aardvark'
+      Merge branch 'remotes/lorenzo/pci/ftpci100'
+      Merge branch 'remotes/lorenzo/pci/hv'
+      Merge branch 'remotes/lorenzo/pci/iproc'
+      Merge branch 'remotes/lorenzo/pci/mediatek'
+      Merge branch 'remotes/lorenzo/pci/mediatek-gen3'
+      Merge branch 'remotes/lorenzo/pci/microchip'
+      Merge branch 'remotes/lorenzo/pci/mobiveil'
+
+Chiqijun (1):
+      PCI: Work around Huawei Intelligent NIC VF FLR erratum
+
+Christoph Hellwig (1):
+      PCI/P2PDMA: Simplify distance calculation
+
+Eric Dumazet (1):
+      PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma
+
+Javier Martinez Canillas (1):
+      PCI: rockchip: Register IRQ handlers after device and data are ready
+
+Jon Hunter (1):
+      PCI: tegra194: Fix tegra_pcie_ep_raise_msi_irq() ill-defined shift
+
+Joyce Ooi (1):
+      MAINTAINERS: Add Joyce Ooi as Altera PCIe maintainer
+
+Kai-Heng Feng (1):
+      PCI: Coalesce host bridge contiguous apertures
+
+Konstantin Kharlamov (1):
+      PCI: Leave Apple Thunderbolt controllers on for s2idle or standby
+
+Krzysztof Wilczyński (9):
+      PCI: microchip: Make the struct event_descs static
+      PCI: mobiveil: Remove unused readl and writel functions
+      PCI/sysfs: Fix dsm_label_utf16s_to_utf8s() buffer overrun
+      PCI/sysfs: Rely on lengths from scnprintf(), dsm_label_utf16s_to_utf8s()
+      PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions
+      PCI/sysfs: Fix 'resource_alignment' newline issues
+      PCI/sysfs: Add 'devspec' newline
+      PCI: cpcihp: Declare cpci_debug in header file
+      PCI: Fix kernel-doc formatting
+
+Logan Gunthorpe (6):
+      PCI/P2PDMA: Rename upstream_bridge_distance() and rework doc
+      PCI/P2PDMA: Collect acs list in stack buffer to avoid sleeping
+      PCI/P2PDMA: Use correct calc_map_type_and_dist() return type
+      PCI/P2PDMA: Warn if host bridge not in whitelist
+      PCI/P2PDMA: Refactor pci_p2pdma_map_type()
+      PCI/P2PDMA: Avoid pci_get_slot(), which may sleep
+
+Long Li (2):
+      PCI: hv: Fix a race condition when removing the device
+      PCI: hv: Remove bus device removal unused refcount/functions
+
+Lukas Wunner (1):
+      PCI: pciehp: Ignore Link Down/Up caused by DPC
+
+Martin Blumenstingl (1):
+      PCI: intel-gw: Fix INTx enable
+
+Moritz Fischer (1):
+      PCI/IOV: Clarify error message for unbound devices
+
+Niklas Schnelle (1):
+      PCI: Print a debug message on PCI device release
+
+Pali Rohár (2):
+      PCI: aardvark: Fix checking for PIO Non-posted Request
+      PCI: aardvark: Implement workaround for the readback value of VEND_ID
+
+Randy Dunlap (1):
+      PCI: ftpci100: Rename macro name collision
+
+Raphael Norwitz (1):
+      PCI: Add pci_reset_bus_function() Secondary Bus Reset interface
+
+Richard Zhu (3):
+      PCI: imx6: Limit DBI register length for imx6qp PCIe
+      dt-bindings: imx6q-pcie: Add "vph-supply" for PHY supply voltage
+      PCI: imx6: Enable PHY internal regulator when supplied >3V
+
+Russell King (1):
+      PCI: Dynamically map ECAM regions
+
+Sandor Bodo-Merle (2):
+      PCI: iproc: Fix multi-MSI base vector number allocation
+      PCI: iproc: Support multi-MSI only on uniprocessor kernel
+
+Vidya Sagar (1):
+      PCI: tegra194: Fix host initialization during resume
+
+Wesley Sheng (1):
+      Documentation: PCI: Fix typo in pci-error-recovery.rst
+
+Yang Li (1):
+      x86/pci: Return true/false (not 1/0) from bool functions
+
+Yicong Yang (1):
+      PCI/AER: Use consistent format when printing PCI device
+
+Zhen Lei (2):
+      PCI: mediatek: Remove redundant error printing in mtk_pcie_subsys_powerup()
+      PCI: imx6: Remove imx6_pcie_probe() redundant error message
+
+Zou Wei (2):
+      PCI: mediatek-gen3: Add missing MODULE_DEVICE_TABLE
+      PCI: tegra: Add missing MODULE_DEVICE_TABLE
+
+ Documentation/PCI/pci-error-recovery.rst           |   2 +-
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   3 +
+ MAINTAINERS                                        |   6 +-
+ arch/x86/pci/mmconfig-shared.c                     |  10 +-
+ drivers/pci/controller/cadence/pcie-cadence.h      |   7 +-
+ drivers/pci/controller/dwc/pci-imx6.c              |  25 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c         |  10 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c         |   4 +-
+ .../pci/controller/mobiveil/pcie-layerscape-gen4.c |  11 -
+ drivers/pci/controller/pci-aardvark.c              |  13 +-
+ drivers/pci/controller/pci-ftpci100.c              |  30 +-
+ drivers/pci/controller/pci-hyperv.c                |  64 ++--
+ drivers/pci/controller/pci-tegra.c                 |   1 +
+ drivers/pci/controller/pci-xgene.c                 |   4 +-
+ drivers/pci/controller/pcie-iproc-msi.c            |  35 +-
+ drivers/pci/controller/pcie-iproc.c                |  24 +-
+ drivers/pci/controller/pcie-iproc.h                |  16 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c        |   1 +
+ drivers/pci/controller/pcie-mediatek.c             |   4 +-
+ drivers/pci/controller/pcie-microchip-host.c       |   2 +-
+ drivers/pci/controller/pcie-rockchip-host.c        |  12 +-
+ drivers/pci/ecam.c                                 |  54 ++-
+ drivers/pci/hotplug/cpci_hotplug.h                 |   3 +
+ drivers/pci/hotplug/cpci_hotplug_pci.c             |   2 -
+ drivers/pci/hotplug/cpqphp_core.c                  |   7 +-
+ drivers/pci/hotplug/cpqphp_ctrl.c                  |   2 +-
+ drivers/pci/hotplug/pci_hotplug_core.c             |   8 +-
+ drivers/pci/hotplug/pciehp.h                       |   3 +
+ drivers/pci/hotplug/pciehp_hpc.c                   |  36 ++
+ drivers/pci/hotplug/rpadlpar_sysfs.c               |   4 +-
+ drivers/pci/hotplug/shpchp_sysfs.c                 |  38 ++-
+ drivers/pci/iov.c                                  |  23 +-
+ drivers/pci/msi.c                                  |   8 +-
+ drivers/pci/p2pdma.c                               | 376 +++++++++++----------
+ drivers/pci/pci-label.c                            |  22 +-
+ drivers/pci/pci-sysfs.c                            |   2 +-
+ drivers/pci/pci.c                                  |  54 +--
+ drivers/pci/pci.h                                  |   8 +-
+ drivers/pci/pcie/aer.c                             |  24 +-
+ drivers/pci/pcie/aspm.c                            |   4 +-
+ drivers/pci/pcie/dpc.c                             |  74 +++-
+ drivers/pci/probe.c                                |  53 ++-
+ drivers/pci/quirks.c                               |  76 +++++
+ drivers/pci/slot.c                                 |  18 +-
+ drivers/pci/switch/switchtec.c                     |  18 +-
+ include/linux/pci-ecam.h                           |   1 +
+ include/linux/pci-ep-cfs.h                         |   2 +-
+ include/linux/pci-epc.h                            |   5 +-
+ include/linux/pci-epf.h                            |   5 +-
+ include/linux/pci.h                                |   2 +-
+ include/linux/pci_hotplug.h                        |   2 +
+ include/uapi/linux/pcitest.h                       |   2 +-
+ 52 files changed, 789 insertions(+), 431 deletions(-)
