@@ -2,319 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0573BF17C
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 23:42:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D9AD3BF1B2
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 23:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbhGGVpX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jul 2021 17:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230048AbhGGVpW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Jul 2021 17:45:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D414961C94;
-        Wed,  7 Jul 2021 21:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625694162;
-        bh=+Q+mYhXOJkdvBhONPOGw0MrCiDQXHRW5YTw/H/s6sxs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lDYeiGm9BRypGOQTRMyWXxTPLpwbp/iUSb658mrkfYmiVyGXivceUDv31M+8qKxtY
-         HaSgOxwCgeqKipGy4KWNoVHUa8QsW6w7tkecIcdHrqk6y4SzTn1zOh0dp6IDPgnRFi
-         H81HG1+uIUxsyVPhr22GijVjgJq/G17UheU2CeXtWZyCDvFmvA8Hf+AlWr/LQmL820
-         7X+/zF4/bcMLfU6sbzkq+oL8hxHohZEtZm7t5x8nslYdun3Ukwitipdf4nmkA8R1e7
-         d4WDu97eM2F9Zxkmm7EuT+5FozRdHL9OSgEvewFHdEBJEJ8LoCfrjM7gaVd+9vE/cq
-         5czmZ9hkdkLjA==
-Date:   Wed, 7 Jul 2021 16:42:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [GIT PULL] PCI changes for v5.14
-Message-ID: <20210707214240.GA937039@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        id S232512AbhGGVyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jul 2021 17:54:49 -0400
+Received: from mail-am6eur05on2087.outbound.protection.outlook.com ([40.107.22.87]:46273
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230002AbhGGVyn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 7 Jul 2021 17:54:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGlI00tOYmH5JlziKq/YJEi2G81qTDnMLXD0g38ik6DfnM0fAeopR4eLT1hdnPRnDZ8i7uO633WimO/ulohWRnVDoKLAj4ILVrE4zuY9aQ6LEKOQmLg5l8BRTZXvolUV76N/CHs2wIIPjO50NILCtNWIwpD6kbr3U2UpK06tAsjz9TMSIk9eZ5yVZ46e+0twVfz/6v+r9lC8p/2r0BXU11Hyu7ysatrFHXI026sSArYV19vJcH/xiqTRCvRpqFWea/lksv3CuKfidvMK+fsJNku2nB1PNOaXbiqtp+HcVtui12vXXAr69WiFh7Rd0y5kvtAS5fPPGYTSiAGbgLI9jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WOlcEdl7QPNc6aw+1dLvTyRyvVtdMsDxOzlMGNdOHQA=;
+ b=AiHB8XcWUzftmRQ8B4O/zoeQlhLDIu4bcW+pvwfO5IsHVyUGscy/I9slvdI4WgQVktekfnhryaEwdFwTFR9imSMoCc7ARUnSrm1lo0QSMZZylMpO9wmjhJstddGpfrjQzsjZ6jsxhAkML4Y7hsoIfHC6tg++Wry/XcWXGJSlXi8DgBGUqDzUjEat06vi2vUN3x6vP4m+8BkhOlq3PsVo58xAjDuzfXE5VEmUY9jJo9CFe09LXvRtMvEygejTKmsr77qKSu+EoDaglo0q6aconvgiVlPLTKovwKAKscuSXmhWqg5tGP1bUJuT5wpB6DoQThzZyVtb5TI5bWVDfJIrWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=eckelmann.de; dmarc=pass action=none header.from=eckelmann.de;
+ dkim=pass header.d=eckelmann.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=eckelmannde.onmicrosoft.com; s=selector1-eckelmannde-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WOlcEdl7QPNc6aw+1dLvTyRyvVtdMsDxOzlMGNdOHQA=;
+ b=nyoOMG2EmWX7k1wjdqkZw23W20Vbar7Ie7yaBQcRChgP48y90jPdfJOftoeeMoO4Jvuck46m4ECg7nBFX2PDldDe9whxUm102xMg+bGkcq6MSVWb/aizip8qyVPN1ROdiJG6B3GhSHSNuHYFfZgsJa7BNBB0tyB8MvXV6LjD+K4=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none
+ header.from=eckelmann.de;
+Received: from AM9P189MB1700.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:2fc::15)
+ by AM8P189MB1411.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:242::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.21; Wed, 7 Jul
+ 2021 21:51:56 +0000
+Received: from AM9P189MB1700.EURP189.PROD.OUTLOOK.COM
+ ([fe80::cc15:eec3:792a:3310]) by AM9P189MB1700.EURP189.PROD.OUTLOOK.COM
+ ([fe80::cc15:eec3:792a:3310%7]) with mapi id 15.20.4308.022; Wed, 7 Jul 2021
+ 21:51:56 +0000
+Date:   Wed, 7 Jul 2021 23:51:54 +0200
+From:   Thorsten Scherer <t.scherer@eckelmann.de>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de, Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        SeongJae Park <sjpark@amazon.de>,
+        Julien Grall <jgrall@amazon.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Johannes Thumshirn <jth@kernel.org>
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+Message-ID: <20210707215108.ervxrkmbitp3l2ej@ws067.eckelmann.group>
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+X-ClientProxiedBy: PR3P251CA0003.EURP251.PROD.OUTLOOK.COM
+ (2603:10a6:102:b5::6) To AM9P189MB1700.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:2fc::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2a00:1f08:400:4::2) by PR3P251CA0003.EURP251.PROD.OUTLOOK.COM (2603:10a6:102:b5::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.20 via Frontend Transport; Wed, 7 Jul 2021 21:51:55 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8987669f-0789-4189-d163-08d94191700f
+X-MS-TrafficTypeDiagnostic: AM8P189MB1411:
+X-Microsoft-Antispam-PRVS: <AM8P189MB14112A254C08C477E55D0F8F9F1A9@AM8P189MB1411.EURP189.PROD.OUTLOOK.COM>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Lb/VPh7eDx+8uAXqVeH7DJbNAOhaPuWa3f5CT3h/INJORJ7mDCVWkm0CgKnudmpM9LI5W5r92BSyz0MjERB/4Gl2oyYOs5kUzr701FfZiZY78zjaiiCvN937bnDKnFeBpH+5Eg0XX7n3GmrgtwbkOF74I2eM77+1VB/tY4YSiuWcARdLL6shSP45qF4FNj14/fNhVk0AUdcYfeOIsUk5I+bI5xtVyT9lRX30HosaKOFmZ7WZfL8Pedh+pb+FJSZr0vQK0xnGVagwa0sx0K5bG8EuKmDPkT/kHKOPCLtGkAy9cHH/TjUWbnenC+qYCABLS+BPXtsyhf09uojC24nCdD6qpui9tRfVEwLNN8soTS1mPqkyUjZbH2duVE8voOYUrFxoT5VB1WCHtBxJ5pf1YHLlwyNdvfjWduXRSI/1dx+pMFumUZbz4qaAIhbKhp3k0T8lKtEnVUz1tojhWXN5dkSDoOv2v09TWzbH8JNtjcm1shSJu2Ue06Lwl4vcFB4WVvzTisBKRlH4667qd3Fi6Wv0p3pLcBqXqFfUQmYbwjEjD/nEc8Xh72CCIvB6O9DMV7wGTsqVy1qgEVLiQb7fmJ1dUl9klnw57ekGd3WclklG+03/CyMV17aN8kRx6CvN4qltad8RnDU9uLm1fTUAh5SoGDVUWTVbMn1GXRNjoedSG7LnFrqmeG64bEyhrVjZW5I/ar6wxxFNkjqLmm8bNT+cimHXdWK0dPvh0tD8gYmiOnkVIw4J0AkuOz9DJBQNbLVcUoE/FBD9hslaMn1fvQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9P189MB1700.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(39830400003)(366004)(376002)(136003)(4326008)(6916009)(4744005)(2906002)(6486002)(7406005)(7416002)(15974865002)(8936002)(8676002)(66946007)(478600001)(86362001)(5660300002)(316002)(52116002)(6496006)(1076003)(54906003)(38100700002)(66574015)(66556008)(66476007)(9686003)(186003)(557034005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?eDZZLUdi0LX9JYklNk1x7DqZXpMygmSWtSlaRlIBVNvRThOPePohfCLPA5?=
+ =?iso-8859-1?Q?vqTMntKBtCEzz1xuRmWc4X3UdMrUl1+m/hUKXWwf8ByXww3o0gauh+nl2C?=
+ =?iso-8859-1?Q?69oPdOhoDszfyN+oGyL8lKfkoIoELQDUp0Ha/E97SArD/mEBG3+8tGTpoH?=
+ =?iso-8859-1?Q?R+/Dsd7ze7SAecXrgTcbqeE58MZtNUpv6qc3jyupRynVRxr2WwsDmPuw4e?=
+ =?iso-8859-1?Q?VI6CvmvETAdFJ7Ich0AROZZHaaUyJXsw/T2LNLCk+NStIuzMFGKY/Tu6Vv?=
+ =?iso-8859-1?Q?O9IX5YhN0GV5QDX4Gsp/qDQURyrnlnkOC6lE8kQoPlhRq7jFr1VnQWEVGh?=
+ =?iso-8859-1?Q?4LphKn/5DEwUQSIv8a7ViE8raLMb4ZH86eg3sfpHrl8s4+QoxOdloluOpj?=
+ =?iso-8859-1?Q?C9Wn34IqqcUow6TqqcoR4ZBmSIL9f4N5vo+8qJiIgtqJFtTzxqKOkWerSD?=
+ =?iso-8859-1?Q?BWaD4YYbjzfF2ilwbrH+rqO8VnQXI5ld4/X1jcyMYvHLz6bg568C7V1KxD?=
+ =?iso-8859-1?Q?Y7zEert5KiX/SyywI0tPlAyuqfgQ+6UQlk+fc/BPS+uz6jMsoaLINQxYVi?=
+ =?iso-8859-1?Q?P9LpStzEEQAWUszpav4E4QzsZArxc2DTNOGkorJY8NnkthOeL7CBmQ8uSw?=
+ =?iso-8859-1?Q?4URnC8tb0wov6bGORczmFXo4v5xsDTy+Y56CvMO7rKQ+mgK3EK3ynmizZ6?=
+ =?iso-8859-1?Q?N7XObtVUWYuaOWevEeC5xqeZAblK7p/xBUrOZS/l61QdC4RpPv9x9LvOAn?=
+ =?iso-8859-1?Q?rj5gjedsRyLrfjqZmVJD83C87tjMqZcwwWTTJXAZOK2BL6xcf9DCZeazaK?=
+ =?iso-8859-1?Q?a6QmImE/vabFEUTlnw9THp+zXcbVPVJwCtXiHoFGQXYyMCIt6eXWo8O0vC?=
+ =?iso-8859-1?Q?XslR0dVr6kKfKIJQ6pn0IKWgBw90OARdiPlJO/xswtkxlwACx9NcI/a1gf?=
+ =?iso-8859-1?Q?Bxw4s+R9Tq/3wzGyGeszWMKLIr9cxaPrn5ywIu/smDokwdrndWaH8PiJlY?=
+ =?iso-8859-1?Q?PeZQQzAB0LsN9sLV0OTfnoaUFyOd/NO7G91skbNKrwTr67CSMLZpO0Efix?=
+ =?iso-8859-1?Q?ePmY/61Phqj1rTLGOc5UUnvgvLdUKPalem/6yK0T7emq+mTJ6f2adICuEA?=
+ =?iso-8859-1?Q?fIeXJzzGT9XkhMHRlK4s9uNkklGZHW8ChgBnc/l37rX3dBSq6YR1xbogeC?=
+ =?iso-8859-1?Q?vIIUdfOkiaNs6trXwq5V4kjGCaGafYjiQV1vzfd2NygYMLcH0Gy1Qm5ULX?=
+ =?iso-8859-1?Q?/TafMLXdYbz3Nc2PBViPY72+XuZIeTPAyFAtWijazfS7dod5Zu9NFXXH3V?=
+ =?iso-8859-1?Q?J7zFPCNC7zR7ej2QYOwXouGEQM83Ck5nULNdh8XhUk5cmio9IZQll40jUK?=
+ =?iso-8859-1?Q?QIQevgKi3tv9aWyxzUZyC4tJ5cZcdoug=3D=3D?=
+X-OriginatorOrg: eckelmann.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8987669f-0789-4189-d163-08d94191700f
+X-MS-Exchange-CrossTenant-AuthSource: AM9P189MB1700.EURP189.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2021 21:51:56.1698
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 62e24f58-823c-4d73-8ff2-db0a5f20156c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ur8XMZiF6bwEyBALI0qg2jMFHKKsDYaGvYi6ddYfgV7bn1VoiuIVhLN4LTrTEmRStKglRvEnKtWfYKCJBBKoYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8P189MB1411
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
+On Tue, Jul 06, 2021 at 05:48:03PM +0200, Uwe Kleine-K�nig wrote:
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
+> 
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
+> 
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
 
-are available in the Git repository at:
+[...]
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.14-changes
+>  drivers/siox/siox-core.c                  | 4 +---
 
-for you to fetch changes up to d58b2061105956f6e69691bf0259b1dd1e9fb601:
+(For drivers/siox)
 
-  Merge branch 'remotes/lorenzo/pci/mobiveil' (2021-07-06 10:56:32 -0500)
+Acked-by: Thorsten Scherer <t.scherer@eckelmann.de>
 
-----------------------------------------------------------------
+Best regards
+Thorsten
 
-Enumeration:
-  - Fix dsm_label_utf16s_to_utf8s() buffer overrun (Krzysztof Wilczyński)
-  - Rely on lengths from scnprintf(), dsm_label_utf16s_to_utf8s()
-    (Krzysztof Wilczyński)
-  - Use sysfs_emit() and sysfs_emit_at() in "show" functions (Krzysztof
-    Wilczyński)
-  - Fix 'resource_alignment' newline issues (Krzysztof Wilczyński)
-  - Add 'devspec' newline (Krzysztof Wilczyński)
-  - Dynamically map ECAM regions (Russell King)
-
-Resource management:
-  - Coalesce host bridge contiguous apertures (Kai-Heng Feng)
-
-PCIe native device hotplug:
-  - Ignore Link Down/Up caused by DPC (Lukas Wunner)
-
-Power management:
-  - Leave Apple Thunderbolt controllers on for s2idle or standby
-    (Konstantin Kharlamov)
-
-Virtualization:
-  - Work around Huawei Intelligent NIC VF FLR erratum (Chiqijun)
-  - Clarify error message for unbound IOV devices (Moritz Fischer)
-  - Add pci_reset_bus_function() Secondary Bus Reset interface (Raphael
-    Norwitz)
-
-Peer-to-peer DMA:
-  - Simplify distance calculation (Christoph Hellwig)
-  - Finish RCU conversion of pdev->p2pdma (Eric Dumazet)
-  - Rename upstream_bridge_distance() and rework doc (Logan Gunthorpe)
-  - Collect acs list in stack buffer to avoid sleeping (Logan Gunthorpe)
-  - Use correct calc_map_type_and_dist() return type (Logan Gunthorpe)
-  - Warn if host bridge not in whitelist (Logan Gunthorpe)
-  - Refactor pci_p2pdma_map_type() (Logan Gunthorpe)
-  - Avoid pci_get_slot(), which may sleep (Logan Gunthorpe)
-
-Altera PCIe controller driver:
-  - Add Joyce Ooi as Altera PCIe maintainer (Joyce Ooi)
-
-Broadcom iProc PCIe controller driver:
-  - Fix multi-MSI base vector number allocation (Sandor Bodo-Merle)
-  - Support multi-MSI only on uniprocessor kernel (Sandor Bodo-Merle)
-
-Freescale i.MX6 PCIe controller driver:
-  - Limit DBI register length for imx6qp PCIe (Richard Zhu)
-  - Add "vph-supply" for PHY supply voltage (Richard Zhu)
-  - Enable PHY internal regulator when supplied >3V (Richard Zhu)
-  - Remove imx6_pcie_probe() redundant error message (Zhen Lei)
-
-Intel Gateway PCIe controller driver:
-  - Fix INTx enable (Martin Blumenstingl)
-
-Marvell Aardvark PCIe controller driver:
-  - Fix checking for PIO Non-posted Request (Pali Rohár)
-  - Implement workaround for the readback value of VEND_ID (Pali Rohár)
-
-MediaTek PCIe controller driver:
-  - Remove redundant error printing in mtk_pcie_subsys_powerup() (Zhen Lei)
-
-MediaTek PCIe Gen3 controller driver:
-  - Add missing MODULE_DEVICE_TABLE (Zou Wei)
-
-Microchip PolarFlare PCIe controller driver:
-  - Make struct event_descs static (Krzysztof Wilczyński)
-
-Microsoft Hyper-V host bridge driver:
-  - Fix race condition when removing the device (Long Li)
-  - Remove bus device removal unused refcount/functions (Long Li)
-
-Mobiveil PCIe controller driver:
-  - Remove unused readl and writel functions (Krzysztof Wilczyński)
-
-NVIDIA Tegra PCIe controller driver:
-  - Add missing MODULE_DEVICE_TABLE (Zou Wei)
-
-NVIDIA Tegra194 PCIe controller driver:
-  - Fix tegra_pcie_ep_raise_msi_irq() ill-defined shift (Jon Hunter)
-  - Fix host initialization during resume (Vidya Sagar)
-
-Rockchip PCIe controller driver:
-  - Register IRQ handlers after device and data are ready (Javier Martinez
-    Canillas)
-
-----------------------------------------------------------------
-Bjorn Helgaas (26):
-      PCI: xgene: Annotate __iomem pointer
-      Merge branch 'pci/enumeration'
-      Merge branch 'pci/error'
-      Merge branch 'pci/hotplug'
-      Merge branch 'pci/misc'
-      Merge branch 'pci/p2pdma'
-      Merge branch 'pci/pm'
-      Merge branch 'pci/reset'
-      Merge branch 'pci/resource'
-      Merge branch 'pci/sysfs'
-      Merge branch 'pci/virtualization'
-      Merge branch 'pci/host/imx6'
-      Merge branch 'pci/host/intel-gw'
-      Merge branch 'pci/host/rockchip'
-      Merge branch 'pci/host/tegra'
-      Merge branch 'pci/host/tegra194'
-      Merge branch 'pci/host/xgene'
-      Merge branch 'pci/kernel-doc'
-      Merge branch 'remotes/lorenzo/pci/aardvark'
-      Merge branch 'remotes/lorenzo/pci/ftpci100'
-      Merge branch 'remotes/lorenzo/pci/hv'
-      Merge branch 'remotes/lorenzo/pci/iproc'
-      Merge branch 'remotes/lorenzo/pci/mediatek'
-      Merge branch 'remotes/lorenzo/pci/mediatek-gen3'
-      Merge branch 'remotes/lorenzo/pci/microchip'
-      Merge branch 'remotes/lorenzo/pci/mobiveil'
-
-Chiqijun (1):
-      PCI: Work around Huawei Intelligent NIC VF FLR erratum
-
-Christoph Hellwig (1):
-      PCI/P2PDMA: Simplify distance calculation
-
-Eric Dumazet (1):
-      PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma
-
-Javier Martinez Canillas (1):
-      PCI: rockchip: Register IRQ handlers after device and data are ready
-
-Jon Hunter (1):
-      PCI: tegra194: Fix tegra_pcie_ep_raise_msi_irq() ill-defined shift
-
-Joyce Ooi (1):
-      MAINTAINERS: Add Joyce Ooi as Altera PCIe maintainer
-
-Kai-Heng Feng (1):
-      PCI: Coalesce host bridge contiguous apertures
-
-Konstantin Kharlamov (1):
-      PCI: Leave Apple Thunderbolt controllers on for s2idle or standby
-
-Krzysztof Wilczyński (9):
-      PCI: microchip: Make the struct event_descs static
-      PCI: mobiveil: Remove unused readl and writel functions
-      PCI/sysfs: Fix dsm_label_utf16s_to_utf8s() buffer overrun
-      PCI/sysfs: Rely on lengths from scnprintf(), dsm_label_utf16s_to_utf8s()
-      PCI/sysfs: Use sysfs_emit() and sysfs_emit_at() in "show" functions
-      PCI/sysfs: Fix 'resource_alignment' newline issues
-      PCI/sysfs: Add 'devspec' newline
-      PCI: cpcihp: Declare cpci_debug in header file
-      PCI: Fix kernel-doc formatting
-
-Logan Gunthorpe (6):
-      PCI/P2PDMA: Rename upstream_bridge_distance() and rework doc
-      PCI/P2PDMA: Collect acs list in stack buffer to avoid sleeping
-      PCI/P2PDMA: Use correct calc_map_type_and_dist() return type
-      PCI/P2PDMA: Warn if host bridge not in whitelist
-      PCI/P2PDMA: Refactor pci_p2pdma_map_type()
-      PCI/P2PDMA: Avoid pci_get_slot(), which may sleep
-
-Long Li (2):
-      PCI: hv: Fix a race condition when removing the device
-      PCI: hv: Remove bus device removal unused refcount/functions
-
-Lukas Wunner (1):
-      PCI: pciehp: Ignore Link Down/Up caused by DPC
-
-Martin Blumenstingl (1):
-      PCI: intel-gw: Fix INTx enable
-
-Moritz Fischer (1):
-      PCI/IOV: Clarify error message for unbound devices
-
-Niklas Schnelle (1):
-      PCI: Print a debug message on PCI device release
-
-Pali Rohár (2):
-      PCI: aardvark: Fix checking for PIO Non-posted Request
-      PCI: aardvark: Implement workaround for the readback value of VEND_ID
-
-Randy Dunlap (1):
-      PCI: ftpci100: Rename macro name collision
-
-Raphael Norwitz (1):
-      PCI: Add pci_reset_bus_function() Secondary Bus Reset interface
-
-Richard Zhu (3):
-      PCI: imx6: Limit DBI register length for imx6qp PCIe
-      dt-bindings: imx6q-pcie: Add "vph-supply" for PHY supply voltage
-      PCI: imx6: Enable PHY internal regulator when supplied >3V
-
-Russell King (1):
-      PCI: Dynamically map ECAM regions
-
-Sandor Bodo-Merle (2):
-      PCI: iproc: Fix multi-MSI base vector number allocation
-      PCI: iproc: Support multi-MSI only on uniprocessor kernel
-
-Vidya Sagar (1):
-      PCI: tegra194: Fix host initialization during resume
-
-Wesley Sheng (1):
-      Documentation: PCI: Fix typo in pci-error-recovery.rst
-
-Yang Li (1):
-      x86/pci: Return true/false (not 1/0) from bool functions
-
-Yicong Yang (1):
-      PCI/AER: Use consistent format when printing PCI device
-
-Zhen Lei (2):
-      PCI: mediatek: Remove redundant error printing in mtk_pcie_subsys_powerup()
-      PCI: imx6: Remove imx6_pcie_probe() redundant error message
-
-Zou Wei (2):
-      PCI: mediatek-gen3: Add missing MODULE_DEVICE_TABLE
-      PCI: tegra: Add missing MODULE_DEVICE_TABLE
-
- Documentation/PCI/pci-error-recovery.rst           |   2 +-
- .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   3 +
- MAINTAINERS                                        |   6 +-
- arch/x86/pci/mmconfig-shared.c                     |  10 +-
- drivers/pci/controller/cadence/pcie-cadence.h      |   7 +-
- drivers/pci/controller/dwc/pci-imx6.c              |  25 +-
- drivers/pci/controller/dwc/pcie-intel-gw.c         |  10 +-
- drivers/pci/controller/dwc/pcie-tegra194.c         |   4 +-
- .../pci/controller/mobiveil/pcie-layerscape-gen4.c |  11 -
- drivers/pci/controller/pci-aardvark.c              |  13 +-
- drivers/pci/controller/pci-ftpci100.c              |  30 +-
- drivers/pci/controller/pci-hyperv.c                |  64 ++--
- drivers/pci/controller/pci-tegra.c                 |   1 +
- drivers/pci/controller/pci-xgene.c                 |   4 +-
- drivers/pci/controller/pcie-iproc-msi.c            |  35 +-
- drivers/pci/controller/pcie-iproc.c                |  24 +-
- drivers/pci/controller/pcie-iproc.h                |  16 +-
- drivers/pci/controller/pcie-mediatek-gen3.c        |   1 +
- drivers/pci/controller/pcie-mediatek.c             |   4 +-
- drivers/pci/controller/pcie-microchip-host.c       |   2 +-
- drivers/pci/controller/pcie-rockchip-host.c        |  12 +-
- drivers/pci/ecam.c                                 |  54 ++-
- drivers/pci/hotplug/cpci_hotplug.h                 |   3 +
- drivers/pci/hotplug/cpci_hotplug_pci.c             |   2 -
- drivers/pci/hotplug/cpqphp_core.c                  |   7 +-
- drivers/pci/hotplug/cpqphp_ctrl.c                  |   2 +-
- drivers/pci/hotplug/pci_hotplug_core.c             |   8 +-
- drivers/pci/hotplug/pciehp.h                       |   3 +
- drivers/pci/hotplug/pciehp_hpc.c                   |  36 ++
- drivers/pci/hotplug/rpadlpar_sysfs.c               |   4 +-
- drivers/pci/hotplug/shpchp_sysfs.c                 |  38 ++-
- drivers/pci/iov.c                                  |  23 +-
- drivers/pci/msi.c                                  |   8 +-
- drivers/pci/p2pdma.c                               | 376 +++++++++++----------
- drivers/pci/pci-label.c                            |  22 +-
- drivers/pci/pci-sysfs.c                            |   2 +-
- drivers/pci/pci.c                                  |  54 +--
- drivers/pci/pci.h                                  |   8 +-
- drivers/pci/pcie/aer.c                             |  24 +-
- drivers/pci/pcie/aspm.c                            |   4 +-
- drivers/pci/pcie/dpc.c                             |  74 +++-
- drivers/pci/probe.c                                |  53 ++-
- drivers/pci/quirks.c                               |  76 +++++
- drivers/pci/slot.c                                 |  18 +-
- drivers/pci/switch/switchtec.c                     |  18 +-
- include/linux/pci-ecam.h                           |   1 +
- include/linux/pci-ep-cfs.h                         |   2 +-
- include/linux/pci-epc.h                            |   5 +-
- include/linux/pci-epf.h                            |   5 +-
- include/linux/pci.h                                |   2 +-
- include/linux/pci_hotplug.h                        |   2 +
- include/uapi/linux/pcitest.h                       |   2 +-
- 52 files changed, 789 insertions(+), 431 deletions(-)
+--
+Thorsten Scherer | Eckelmann AG | www.eckelmann.de |
