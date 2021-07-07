@@ -2,228 +2,271 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB96A3BE787
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 14:01:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FE383BE7FC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 14:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbhGGMDs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jul 2021 08:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231358AbhGGMDr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 7 Jul 2021 08:03:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 22BB161C78;
-        Wed,  7 Jul 2021 12:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625659267;
-        bh=x3B4x8BU2OkCmrAavlTqYXzWR4EYU/t1YZNFwkkeelk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dv7cAsiHvsbf6rsHT5HoZGhUKAwVKSZrNZu3MJ+IAd8WSSbTTUz0aHgIrk7WyCRkv
-         /RxlmQNWkovTNL93o8QSCXvJzA//EU4Dx7IfrXLdYjx1ckI1v7HZwqWXpTkKuu/4jf
-         y1//8ZQ2Nj2Gprbm8c3qvH45a1gUTHcTAg6ZfZ/ilYyiJw4viYQLtKO2ICtUorE7aY
-         g52rhmunhzNNtN0Om3toPXbqwJHZ/NfUNwcvjpgAoURtDUTpA4/vXkmpNqcbeeyisl
-         2ulujxgkChNpY8GqwKzbyqHJo4A1zS1VKOrAeiWxHVb3h28l8UXCsQHoUhrO/8MPVE
-         fGCDtlaVsVt2w==
-Date:   Wed, 7 Jul 2021 07:01:05 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Nadeem Athani <nadeem@cadence.com>
-Subject: Re: [PATCH 2/5] PCI: j721e: Add PCIe support for J7200
-Message-ID: <20210707120105.GA886562@bjorn-Precision-5520>
+        id S231753AbhGGMdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jul 2021 08:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231630AbhGGMd1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jul 2021 08:33:27 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 45925C061574;
+        Wed,  7 Jul 2021 05:30:44 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id BAD1492009C; Wed,  7 Jul 2021 14:30:41 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id B44E592009B;
+        Wed,  7 Jul 2021 14:30:41 +0200 (CEST)
+Date:   Wed, 7 Jul 2021 14:30:41 +0200 (CEST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+cc:     x86@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/PCI: Handle IRQ swizzling with PIRQ routers
+Message-ID: <alpine.DEB.2.21.2107071402120.1711@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210706105035.9915-3-kishon@ti.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 04:20:32PM +0530, Kishon Vijay Abraham I wrote:
-> J7200 has the same PCIe IP as in J721E with minor changes in the
-> wrapper. J7200 allows byte access of bridge configuration space
-> registers and the register field for LINK_DOWN interrupt is different.
-> J7200 also requires "quirk_detect_quiet_flag" to be set. Configure these
-> changes as part of driver data applicable only to J7200.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pci-j721e.c | 44 ++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index 35e61048e133..803da33b86d8 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -27,6 +27,7 @@
->  #define STATUS_REG_SYS_2	0x508
->  #define STATUS_CLR_REG_SYS_2	0x708
->  #define LINK_DOWN		BIT(1)
-> +#define J7200_LINK_DOWN		BIT(10)
->  
->  #define J721E_PCIE_USER_CMD_STATUS	0x4
->  #define LINK_TRAINING_ENABLE		BIT(0)
-> @@ -57,6 +58,7 @@ struct j721e_pcie {
->  	struct cdns_pcie	*cdns_pcie;
->  	void __iomem		*user_cfg_base;
->  	void __iomem		*intd_cfg_base;
-> +	u32			link_irq_reg_field;
+Similarly to MP-tables PIRQ routing tables may not list devices behind 
+PCI-to-PCI bridges, leading to interrupt routing failures, e.g.:
 
-This seems to be a device-specific "link down" bit, so maybe a more
-descriptive name that suggests "link down"?
+pci 0000:00:07.0: PIIX/ICH IRQ router [8086:7000]
+pci 0000:02:00.0: ignoring bogus IRQ 255
+pci 0000:02:01.0: ignoring bogus IRQ 255
+pci 0000:02:02.0: ignoring bogus IRQ 255
+pci 0000:04:00.0: ignoring bogus IRQ 255
+pci 0000:04:00.3: ignoring bogus IRQ 255
+pci 0000:00:11.0: PCI INT A -> PIRQ 63, mask deb8, excl 0c20
+pci 0000:00:11.0: PCI INT A -> newirq 0
+PCI: setting IRQ 11 as level-triggered
+pci 0000:00:11.0: found PCI INT A -> IRQ 11
+pci 0000:00:11.0: sharing IRQ 11 with 0000:00:07.2
+pci 0000:02:00.0: PCI INT A not found in routing table
+pci 0000:02:01.0: PCI INT A not found in routing table
+pci 0000:02:02.0: PCI INT A not found in routing table
+pci 0000:04:00.0: PCI INT A not found in routing table
+pci 0000:04:00.3: PCI INT D not found in routing table
+pci 0000:06:05.0: PCI INT A not found in routing table
+pci 0000:06:08.0: PCI INT A not found in routing table
+pci 0000:06:08.1: PCI INT B not found in routing table
+pci 0000:06:08.2: PCI INT C not found in routing table
 
->  };
->  
->  enum j721e_pcie_mode {
-> @@ -67,6 +69,9 @@ enum j721e_pcie_mode {
->  struct j721e_pcie_data {
->  	enum j721e_pcie_mode	mode;
->  	bool quirk_retrain_flag;
-> +	bool			quirk_detect_quiet_flag;
-> +	u32			link_irq_reg_field;
-> +	bool			byte_access_allowed;
+and consequently non-working devices.  Since PCI-to-PCI bridges have a 
+standardised way of routing interrupts by the means of swizzling do it 
+for configurations that use a PIRQ router as well, like with APIC-based 
+setups, and use the determined corresponding topmost bridge's interrupt 
+pin assignment to route a given device's interrupt:
 
-Maybe re-indent quirk_retrain_flag so the struct is consistent?
+pci 0000:00:07.0: PIIX/ICH IRQ router [8086:7000]
+pci 0000:02:00.0: ignoring bogus IRQ 255
+pci 0000:02:01.0: ignoring bogus IRQ 255
+pci 0000:02:02.0: ignoring bogus IRQ 255
+pci 0000:04:00.0: ignoring bogus IRQ 255
+pci 0000:04:00.3: ignoring bogus IRQ 255
+pci 0000:00:11.0: PCI INT A -> PIRQ 63, mask deb8, excl 0c20
+pci 0000:00:11.0: PCI INT A -> newirq 0
+PCI: setting IRQ 11 as level-triggered
+pci 0000:00:11.0: found PCI INT A -> IRQ 11
+pci 0000:00:11.0: sharing IRQ 11 with 0000:00:07.2
+pci 0000:02:00.0: using bridge 0000:00:11.0 INT A to get INT A
+pci 0000:00:11.0: sharing IRQ 11 with 0000:02:00.0
+pci 0000:02:01.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:02:02.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:04:00.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:04:00.3: using bridge 0000:00:11.0 INT A to get INT D
+pci 0000:00:11.0: sharing IRQ 11 with 0000:04:00.3
+pci 0000:06:05.0: using bridge 0000:00:11.0 INT D to get INT A
+pci 0000:06:08.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:06:08.1: using bridge 0000:00:11.0 INT D to get INT B
+pci 0000:06:08.2: using bridge 0000:00:11.0 INT A to get INT C
+pci 0000:00:11.0: sharing IRQ 11 with 0000:06:08.2
+pci 0000:02:01.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:02:01.0: PCI INT A -> PIRQ 60, mask deb8, excl 0c20
+pci 0000:02:01.0: PCI INT A -> newirq 0
+PCI: setting IRQ 10 as level-triggered
+pci 0000:02:01.0: found PCI INT A -> IRQ 10
+pci 0000:02:01.0: sharing IRQ 10 with 0000:00:14.0
+pci 0000:02:00.0: using bridge 0000:00:11.0 INT A to get INT A
+pci 0000:02:01.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:02:02.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:04:00.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:02:01.0: sharing IRQ 10 with 0000:04:00.0
+pci 0000:04:00.3: using bridge 0000:00:11.0 INT A to get INT D
+pci 0000:06:05.0: using bridge 0000:00:11.0 INT D to get INT A
+pci 0000:06:08.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:06:08.1: using bridge 0000:00:11.0 INT D to get INT B
+pci 0000:06:08.2: using bridge 0000:00:11.0 INT A to get INT C
+pci 0000:02:02.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:02:02.0: PCI INT A -> PIRQ 61, mask deb8, excl 0c20
+pci 0000:02:02.0: PCI INT A -> newirq 0
+PCI: setting IRQ 5 as level-triggered
+pci 0000:02:02.0: found PCI INT A -> IRQ 5
+pci 0000:02:02.0: sharing IRQ 5 with 0000:00:13.0
+pci 0000:02:00.0: using bridge 0000:00:11.0 INT A to get INT A
+pci 0000:02:01.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:02:02.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:04:00.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:04:00.3: using bridge 0000:00:11.0 INT A to get INT D
+pci 0000:06:05.0: using bridge 0000:00:11.0 INT D to get INT A
+pci 0000:06:08.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:02:02.0: sharing IRQ 5 with 0000:06:08.0
+pci 0000:06:08.1: using bridge 0000:00:11.0 INT D to get INT B
+pci 0000:06:08.2: using bridge 0000:00:11.0 INT A to get INT C
+pci 0000:06:05.0: using bridge 0000:00:11.0 INT D to get INT A
+pci 0000:06:05.0: PCI INT A -> PIRQ 62, mask deb8, excl 0c20
+pci 0000:06:05.0: PCI INT A -> newirq 0
+pci 0000:06:05.0: found PCI INT A -> IRQ 5
+pci 0000:06:05.0: sharing IRQ 5 with 0000:00:12.0
+pci 0000:02:00.0: using bridge 0000:00:11.0 INT A to get INT A
+pci 0000:02:01.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:02:02.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:04:00.0: using bridge 0000:00:11.0 INT B to get INT A
+pci 0000:04:00.3: using bridge 0000:00:11.0 INT A to get INT D
+pci 0000:06:05.0: using bridge 0000:00:11.0 INT D to get INT A
+pci 0000:06:08.0: using bridge 0000:00:11.0 INT C to get INT A
+pci 0000:06:08.1: using bridge 0000:00:11.0 INT D to get INT B
+pci 0000:06:05.0: sharing IRQ 5 with 0000:06:08.1
+pci 0000:06:08.2: using bridge 0000:00:11.0 INT A to get INT C
 
-I know there's a pattern of using "bool" in these structs, but I don't
-think it's really any better than "unsigned int :1" and it takes more
-space.
+Adjust log messages accordingly.
 
-https://lore.kernel.org/r/CA+55aFzKQ6Pj18TB8p4Yr0M4t+S+BsiHH=BJNmn=76-NcjTj-g@mail.gmail.com/
-https://lore.kernel.org/r/CA+55aFxnePDimkVKVtv3gNmRGcwc8KQ5mHYvUxY8sAQg6yvVYg@mail.gmail.com/
+Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+---
+ arch/x86/pci/irq.c |   60 +++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 47 insertions(+), 13 deletions(-)
 
->  };
->  
->  static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
-> @@ -98,12 +103,12 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
->  	u32 reg;
->  
->  	reg = j721e_pcie_intd_readl(pcie, STATUS_REG_SYS_2);
-> -	if (!(reg & LINK_DOWN))
-> +	if (!(reg & pcie->link_irq_reg_field))
->  		return IRQ_NONE;
->  
->  	dev_err(dev, "LINK DOWN!\n");
->  
-> -	j721e_pcie_intd_writel(pcie, STATUS_CLR_REG_SYS_2, LINK_DOWN);
-> +	j721e_pcie_intd_writel(pcie, STATUS_CLR_REG_SYS_2, pcie->link_irq_reg_field);
->  	return IRQ_HANDLED;
->  }
->  
-> @@ -112,7 +117,7 @@ static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
->  	u32 reg;
->  
->  	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_2);
-> -	reg |= LINK_DOWN;
-> +	reg |= pcie->link_irq_reg_field;
->  	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_2, reg);
->  }
->  
-> @@ -284,10 +289,25 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
->  static const struct j721e_pcie_data j721e_pcie_rc_data = {
->  	.mode = PCI_MODE_RC,
->  	.quirk_retrain_flag = true,
-> +	.byte_access_allowed = false,
-> +	.link_irq_reg_field = LINK_DOWN,
->  };
->  
->  static const struct j721e_pcie_data j721e_pcie_ep_data = {
->  	.mode = PCI_MODE_EP,
-> +	.link_irq_reg_field = LINK_DOWN,
-> +};
-> +
-> +static const struct j721e_pcie_data j7200_pcie_rc_data = {
-> +	.mode = PCI_MODE_RC,
-> +	.quirk_detect_quiet_flag = true,
-> +	.link_irq_reg_field = J7200_LINK_DOWN,
-> +	.byte_access_allowed = true,
-> +};
-> +
-> +static const struct j721e_pcie_data j7200_pcie_ep_data = {
-> +	.mode = PCI_MODE_EP,
-> +	.quirk_detect_quiet_flag = true,
->  };
->  
->  static const struct of_device_id of_j721e_pcie_match[] = {
-> @@ -299,6 +319,14 @@ static const struct of_device_id of_j721e_pcie_match[] = {
->  		.compatible = "ti,j721e-pcie-ep",
->  		.data = &j721e_pcie_ep_data,
->  	},
-> +	{
-> +		.compatible = "ti,j7200-pcie-host",
-> +		.data = &j7200_pcie_rc_data,
-> +	},
-> +	{
-> +		.compatible = "ti,j7200-pcie-ep",
-> +		.data = &j7200_pcie_ep_data,
-> +	},
->  	{},
->  };
->  
-> @@ -309,10 +337,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  	struct pci_host_bridge *bridge;
->  	struct j721e_pcie_data *data;
->  	struct cdns_pcie *cdns_pcie;
-> +	bool byte_access_allowed;
->  	struct j721e_pcie *pcie;
->  	struct cdns_pcie_rc *rc;
->  	struct cdns_pcie_ep *ep;
->  	struct gpio_desc *gpiod;
-> +	u32 link_irq_reg_field;
->  	void __iomem *base;
->  	struct clk *clk;
->  	u32 num_lanes;
-> @@ -325,6 +355,8 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  
->  	mode = (u32)data->mode;
-> +	byte_access_allowed = data->byte_access_allowed;
-> +	link_irq_reg_field = data->link_irq_reg_field;
->  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->  	if (!pcie)
-> @@ -332,6 +364,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  
->  	pcie->dev = dev;
->  	pcie->mode = mode;
-> +	pcie->link_irq_reg_field = link_irq_reg_field;
->  
->  	base = devm_platform_ioremap_resource_byname(pdev, "intd_cfg");
->  	if (IS_ERR(base))
-> @@ -391,9 +424,11 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  			goto err_get_sync;
->  		}
->  
-> -		bridge->ops = &cdns_ti_pcie_host_ops;
-> +		if (!byte_access_allowed)
-
-Why bother with the "byte_access_allowed" local variable?  Could just
-use "data->byte_access_allowed" here, as the code below uses
-"data->quirk_retrain_flag", etc.
-
-Same with "link_irq_reg_field" above, I guess.
-
-> +			bridge->ops = &cdns_ti_pcie_host_ops;
->  		rc = pci_host_bridge_priv(bridge);
->  		rc->quirk_retrain_flag = data->quirk_retrain_flag;
-> +		rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
->  
->  		cdns_pcie = &rc->pcie;
->  		cdns_pcie->dev = dev;
-> @@ -459,6 +494,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  			ret = -ENOMEM;
->  			goto err_get_sync;
->  		}
-> +		ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
->  
->  		cdns_pcie = &ep->pcie;
->  		cdns_pcie->dev = dev;
-> -- 
-> 2.17.1
-> 
+linux-x86-pirq-swizzle-irq.diff
+Index: linux-macro-ide-tty/arch/x86/pci/irq.c
+===================================================================
+--- linux-macro-ide-tty.orig/arch/x86/pci/irq.c
++++ linux-macro-ide-tty/arch/x86/pci/irq.c
+@@ -985,7 +985,7 @@ static void __init pirq_find_router(stru
+  * for motherboard devices, so if a complete match is found, then give
+  * it precedence over a slot match.
+  */
+-static struct irq_info *pirq_get_info(struct pci_dev *dev)
++static struct irq_info *pirq_get_dev_info(struct pci_dev *dev)
+ {
+ 	struct irq_routing_table *rt = pirq_table;
+ 	int entries = (rt->size - sizeof(struct irq_routing_table)) /
+@@ -1004,11 +1004,42 @@ static struct irq_info *pirq_get_info(st
+ 	return slotinfo;
+ }
+ 
++/*
++ * Buses behind bridges are typically not listed in the PIRQ routing table.
++ * Do the usual dance then and walk the tree of bridges up adjusting the
++ * pin number accordingly on the way until the originating root bus device
++ * has been reached and then use its routing information.
++ */
++static struct irq_info *pirq_get_info(struct pci_dev *dev, u8 *pin)
++{
++	struct pci_dev *temp_dev = dev;
++	struct irq_info *info;
++	u8 temp_pin = *pin;
++	u8 dpin = temp_pin;
++
++	info = pirq_get_dev_info(dev);
++	while (!info && temp_dev->bus->parent) {
++		struct pci_dev *bridge = temp_dev->bus->self;
++
++		temp_pin = pci_swizzle_interrupt_pin(temp_dev, temp_pin);
++		info = pirq_get_dev_info(bridge);
++		if (info)
++			dev_warn(&dev->dev,
++				 "using bridge %s INT %c to get INT %c\n",
++				 pci_name(bridge),
++				 'A' + temp_pin - 1, 'A' + dpin - 1);
++
++		temp_dev = bridge;
++	}
++	*pin = temp_pin;
++	return info;
++}
++
+ static int pcibios_lookup_irq(struct pci_dev *dev, int assign)
+ {
+-	u8 pin;
+ 	struct irq_info *info;
+ 	int i, pirq, newirq;
++	u8 dpin, pin;
+ 	int irq = 0;
+ 	u32 mask;
+ 	struct irq_router *r = &pirq_router;
+@@ -1016,8 +1047,8 @@ static int pcibios_lookup_irq(struct pci
+ 	char *msg = NULL;
+ 
+ 	/* Find IRQ pin */
+-	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+-	if (!pin) {
++	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &dpin);
++	if (!dpin) {
+ 		dev_dbg(&dev->dev, "no interrupt pin\n");
+ 		return 0;
+ 	}
+@@ -1030,20 +1061,21 @@ static int pcibios_lookup_irq(struct pci
+ 	if (!pirq_table)
+ 		return 0;
+ 
+-	info = pirq_get_info(dev);
++	pin = dpin;
++	info = pirq_get_info(dev, &pin);
+ 	if (!info) {
+ 		dev_dbg(&dev->dev, "PCI INT %c not found in routing table\n",
+-			'A' + pin - 1);
++			'A' + dpin - 1);
+ 		return 0;
+ 	}
+ 	pirq = info->irq[pin - 1].link;
+ 	mask = info->irq[pin - 1].bitmap;
+ 	if (!pirq) {
+-		dev_dbg(&dev->dev, "PCI INT %c not routed\n", 'A' + pin - 1);
++		dev_dbg(&dev->dev, "PCI INT %c not routed\n", 'A' + dpin - 1);
+ 		return 0;
+ 	}
+ 	dev_dbg(&dev->dev, "PCI INT %c -> PIRQ %02x, mask %04x, excl %04x",
+-		'A' + pin - 1, pirq, mask, pirq_table->exclusive_irqs);
++		'A' + dpin - 1, pirq, mask, pirq_table->exclusive_irqs);
+ 	mask &= pcibios_irq_mask;
+ 
+ 	/* Work around broken HP Pavilion Notebooks which assign USB to
+@@ -1085,7 +1117,7 @@ static int pcibios_lookup_irq(struct pci
+ 				newirq = i;
+ 		}
+ 	}
+-	dev_dbg(&dev->dev, "PCI INT %c -> newirq %d", 'A' + pin - 1, newirq);
++	dev_dbg(&dev->dev, "PCI INT %c -> newirq %d", 'A' + dpin - 1, newirq);
+ 
+ 	/* Check if it is hardcoded */
+ 	if ((pirq & 0xf0) == 0xf0) {
+@@ -1113,15 +1145,17 @@ static int pcibios_lookup_irq(struct pci
+ 			return 0;
+ 		}
+ 	}
+-	dev_info(&dev->dev, "%s PCI INT %c -> IRQ %d\n", msg, 'A' + pin - 1, irq);
++	dev_info(&dev->dev, "%s PCI INT %c -> IRQ %d\n",
++		 msg, 'A' + dpin - 1, irq);
+ 
+ 	/* Update IRQ for all devices with the same pirq value */
+ 	for_each_pci_dev(dev2) {
+-		pci_read_config_byte(dev2, PCI_INTERRUPT_PIN, &pin);
+-		if (!pin)
++		pci_read_config_byte(dev2, PCI_INTERRUPT_PIN, &dpin);
++		if (!dpin)
+ 			continue;
+ 
+-		info = pirq_get_info(dev2);
++		pin = dpin;
++		info = pirq_get_info(dev2, &pin);
+ 		if (!info)
+ 			continue;
+ 		if (info->irq[pin - 1].link == pirq) {
