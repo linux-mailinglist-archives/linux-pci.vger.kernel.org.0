@@ -2,142 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 126FF3BF08D
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 21:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 094803BF09C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jul 2021 22:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbhGGT5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jul 2021 15:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57596 "EHLO
+        id S231315AbhGGUKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jul 2021 16:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230359AbhGGT5Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jul 2021 15:57:25 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C75C06175F
-        for <linux-pci@vger.kernel.org>; Wed,  7 Jul 2021 12:54:44 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id j199so3232270pfd.7
-        for <linux-pci@vger.kernel.org>; Wed, 07 Jul 2021 12:54:44 -0700 (PDT)
+        with ESMTP id S230296AbhGGUKs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jul 2021 16:10:48 -0400
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18C3C061574
+        for <linux-pci@vger.kernel.org>; Wed,  7 Jul 2021 13:08:06 -0700 (PDT)
+Received: by mail-oo1-xc31.google.com with SMTP id i26-20020a4ad39a0000b02902554d87361cso796979oos.13
+        for <linux-pci@vger.kernel.org>; Wed, 07 Jul 2021 13:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=acPssYyJkYRZ5l6K/T6/hcBt/2q8D6RkPE04ZGYzuUs=;
-        b=E5uy5MslTE41zWq6b5S2KbnVkxqxiaRwbVF4Vy6cpWM/YP4CxEXr5+dFMSpf/nqQ8+
-         7nK+mfPmqq0FRZqP0IjDi5E56EgyI2oyk/VuP9yQgMws58c9pnBMdtC3M01f/Yf6cP/Z
-         LEAL78R7f+JVMagUa6Oqrjn6ljWzmJE2+fHB4wlH+l0tgb2fsreT4/BV+LXm/XtyLGJD
-         xVucTlF6O7w33mDWvlW1tHJq5UryBhg3bu3vCjOCZKvVo6K9ggqsFt06GX1Yc8kqS5MG
-         99ZURqYbLy0iVLPnTREYqXLZUpsL7rz3ccXucqone4gxs0W62diAHI5Wsm+vrTV4VDl5
-         hY4g==
+        bh=96jWry9WOsdwKu+G0dTVRx+JdimFiJ2QAYFEbiH3H34=;
+        b=RGANX0PGc0mFZu9cqrNOVbTfGn0v+kokDFQAPwfrxJwtPODfB/7BgVckPJVrWeW3aX
+         Zq/e9LoJ0785EJh+wDzA6h31JQ0sQKhf5OC8+6825AOXSTrCQRvNmjr00Qv4QYBChNR1
+         yEToxoe8pidstwnQJpDD7tRYOzkEa8SGd8UWQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=acPssYyJkYRZ5l6K/T6/hcBt/2q8D6RkPE04ZGYzuUs=;
-        b=pN0wXPPAqPm631TbWUpBQSwtLyuXmoi6R7S7J7U4Co4c51HiJzDMFRaLz3cBnNJ086
-         QpdczDR4PL7MiPQgNrXSKcuyjvCXIlirOQK4GimE2qlKliRbC61GYzRTs3XfoBtlkGQR
-         PFgF7cwFchTJu0ST2KbG3FEvsbHP/6BGVsaG1+gAbnpmOplLaKo7NIX2ma494FiOCUhc
-         JKffzE45p+XeYvrnSjCFuLHe78Tswvdfqewf9/XBsX/kmC/1TH/Eot4YrYV1Z2u34LQ5
-         UzPGGIkOfwal2f8z9sbSrT94UAzUEUF42EPfXPfu/TtGTruJOoKatcg6KntQN3sAGa3z
-         /6Rw==
-X-Gm-Message-State: AOAM531DVjZp1esbj2SGQ5hJqbwYuGdi+6k5VNVvLHQTJOIR3ZwMeLk0
-        hxCFth1Vya5EkMIXwmPbMD111Dek484NAPNYn85HQw==
-X-Google-Smtp-Source: ABdhPJy6wVdiTqOKpkwIGhiqcJLqxxH0ie3iTWCcfS4GubAN/QU35K0OENF/vZ5XDM3fEl8JhCyxYnN9lZqmW6yhuAg=
-X-Received: by 2002:a65:6248:: with SMTP id q8mr28290636pgv.279.1625687684305;
- Wed, 07 Jul 2021 12:54:44 -0700 (PDT)
+        bh=96jWry9WOsdwKu+G0dTVRx+JdimFiJ2QAYFEbiH3H34=;
+        b=Chlw9Eoon+7Rf3ep++ZDJxQIguDBqJgt2ZMnAJBxr0ouQSCVgb+XPT40lwJfipa+Yq
+         DP4r+rh/KeLiJ/YMCOcf/hvD7bbsc49AyWXo4zneLdBudt+ZhEZmw/vHv5uR7g3geN19
+         aIHJs4A2WPb55WqrjeYJgZNvRl2MnyAjv4zmMocc/4PlNhS2Dkx7N6DMcr0KvAewSqAI
+         vpCLrO69er7Lx19kbghHta72dx/8x4WUnDI+NBw29PS7IIBsXxSoeguLOZXT3W8uQtso
+         aVOzeYUPK9FCE/HLrDk32j0qsw7Di7rk3K8uDIUz3cjGWWKDnKRtycPS/WFwCWSucDfX
+         Upaw==
+X-Gm-Message-State: AOAM533AL/EFsVF3Y1IqJ6NgNCxCsl+lyFWD+wVuWR2SQsBpi7CR2Prl
+        eJ3VodJ313OJuVU3VOPo81ZStliDXR/zFA==
+X-Google-Smtp-Source: ABdhPJwgsJNt2jaidWKNb4kG1VEMUftN+r6EQfearpNZbh+Fb5Uefs1hjBop0HvNfpFPrywji4PIhg==
+X-Received: by 2002:a4a:2242:: with SMTP id z2mr19434606ooe.90.1625688486117;
+        Wed, 07 Jul 2021 13:08:06 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id p5sm16840oip.35.2021.07.07.13.08.06
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Jul 2021 13:08:06 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id o17-20020a9d76510000b02903eabfc221a9so3540509otl.0
+        for <linux-pci@vger.kernel.org>; Wed, 07 Jul 2021 13:08:06 -0700 (PDT)
+X-Received: by 2002:a25:d97:: with SMTP id 145mr35869561ybn.276.1625688024885;
+ Wed, 07 Jul 2021 13:00:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com>
- <20210524133938.2815206-3-Jonathan.Cameron@huawei.com> <CAPcyv4gBORHzouArX-Fsnhew+ZYur8pp9ySJQGwrOBrGuv+-ZQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4gBORHzouArX-Fsnhew+ZYur8pp9ySJQGwrOBrGuv+-ZQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 7 Jul 2021 12:54:33 -0700
-Message-ID: <CAPcyv4i2ukD4ZQ_KfTaKXLyMakpSk=Y3_QJGV2P_PLHHVkPwFw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] PCI/DOE: Add Data Object Exchange support
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>, linux-cxl@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Fangjian <f.fangjian@huawei.com>, Linuxarm <linuxarm@huawei.com>
+References: <20210624171759.4125094-1-dianders@chromium.org>
+ <YNXXwvuErVnlHt+s@8bytes.org> <CAD=FV=UFxZH7g8gH5+M=Fv4Y-e1bsLkNkPGJhNwhvVychcGQcQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=UFxZH7g8gH5+M=Fv4Y-e1bsLkNkPGJhNwhvVychcGQcQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 7 Jul 2021 13:00:13 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W=HmgH3O3z+nThWL6U+X4Oh37COe-uTzVB9SanP2n86w@mail.gmail.com>
+Message-ID: <CAD=FV=W=HmgH3O3z+nThWL6U+X4Oh37COe-uTzVB9SanP2n86w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] iommu: Enable non-strict DMA on QCom SD/MMC
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Rob Clark <robdclark@chromium.org>, quic_c_gdjako@quicinc.com,
+        Saravana Kannan <saravanak@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pci@vger.kernel.org,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jordan Crouse <jordan@cosmicpenguin.net>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 1:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > Introduced in a PCI ECN [1], DOE provides a config space based mailbox with
-> > standard protocol discovery.  Each mailbox is accessed through a DOE
-> > Extended Capability.
-> >
-> > A device may have 1 or more DOE mailboxes, each of which is allowed to
-> > support any number of protocols (some DOE protocol specifications apply
-> > additional restrictions).  A given protocol may be supported on more than
-> > one DOE mailbox on a given function.
-> >
-> > If a driver wishes to access any number of DOE instances / protocols it
-> > makes a single call to pci_doe_register_all() which will find available
-> > DOEs, create the required infrastructure and cache the protocols they
-> > support.  pci_doe_find() can then retrieve a pointer to an appropriate DOE
-> > instance.
-> >
-> > A synchronous interface is provided in pci_doe_exchange_sync() to perform a
-> > single query / response exchange.
-> >
-> > Testing conducted against QEMU using:
-> >
-> > https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
->
-> Nice.
->
-> I was hoping that by now QEMU upstream would have given us some
-> indication that this useful work that has a chance of being merged. I
-> fear it's only us CXL practitioner's that care. Perhaps the PCI IDE
-> support will get them to move on at least the DOE patches?
->
-> >
-> > [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
-> >     Data Object Exchange (DOE) - Approved 12 March 2020
-> >
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> The core logic of this looks good to me. The interfaces for other code
-> to make use of this I feel can lean heavier on existing mechanics. A
-> few points come to mind:
->
-> - Does this need to support anything more than queue depth 1? I know
-> the specification seems to allow for some overlapping and queueing,
-> but I don't think there are any use cases that are precluded if the
-> max number of tasks in flight for a given DOE is one.
->
-> - Once its queue depth 1 then the list of tasks can be replaced with a
-> wait_queue_head_t where submitters wait for the previous task to
-> finish.
->
-> - This appears to be the prototypical scenario for deploying the new
-> auxiliary bus facility. Rather than custom code device-like facilities
-> (lists and parents etc) in 'struct pci_doe' just make pci_doe a device
-> directly (auxiliary-device) and separate the infrastructure that
-> drives that device to a driver (auxiliary-driver). That makes the
-> lifetime management more idiomatic, allows for user space to have
-> typical driver-binding controls to manage kernel-user DOE conflicts,
-> and it allows for typical driver services like devm.
+Hi,
 
-Hi Jonathan,
+On Fri, Jun 25, 2021 at 7:42 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Fri, Jun 25, 2021 at 6:19 AM Joerg Roedel <joro@8bytes.org> wrote:
+> >
+> > Hi Douglas,
+> >
+> > On Thu, Jun 24, 2021 at 10:17:56AM -0700, Douglas Anderson wrote:
+> > > The goal of this patch series is to get better SD/MMC performance on
+> > > Qualcomm eMMC controllers and in generally nudge us forward on the
+> > > path of allowing some devices to be in strict mode and others to be in
+> > > non-strict mode.
+> >
+> > So if I understand it right, this patch-set wants a per-device decision
+> > about setting dma-mode to strict vs. non-strict.
+> >
+> > I think we should get to the reason why strict mode is used by default
+> > first. Is the default on ARM platforms to use iommu-strict mode by
+> > default and if so, why?
+> >
+> > The x86 IOMMUs use non-strict mode by default (yes, it is a security
+> > trade-off).
+>
+> It is certainly a good question. I will say that, as per usual, I'm
+> fumbling around trying to solve problems in subsystems I'm not an
+> expert at, so if something I'm saying sounds like nonsense it probably
+> is. Please correct me.
+>
+> I guess I'd start out by thinking about what devices I think need to
+> be in "strict" mode. Most of my thoughts on this are in the 3rd patch
+> in the series. I think devices where it's important to be in strict
+> mode fall into "Case 1" from that patch description, copied here:
+>
+> Case 1: IOMMUs prevent malicious code running on the peripheral (maybe
+> a malicious peripheral or maybe someone exploited a benign peripheral)
+> from turning into an exploit of the Linux kernel. This is particularly
+> important if the peripheral has loadable / updatable firmware or if
+> the peripheral has some type of general purpose processor and is
+> processing untrusted inputs. It's also important if the device is
+> something that can be easily plugged into the host and the device has
+> direct DMA access itself, like a PCIe device.
+>
+>
+> Using sc7180 as an example (searching for iommus in sc7180.dtsi), I'd
+> expect these peripherals to be in strict mode:
+>
+> * WiFi / LTE - I'm almost certain we want this in "strict" mode. Both
+> have loadable / updatable firmware and both do complex processing on
+> untrusted inputs. Both have a history of being compromised over the
+> air just by being near an attacker. Note that on sc7180 these are
+> _not_ connected over PCI so we can't leverage any PCI mechanism for
+> deciding strict / non-strict.
+>
+> * Video decode / encode - pretty sure we want this in strict. It's got
+> loadable / updatable firmware and processing complex / untrusted
+> inputs.
+>
+> * LPASS (low power audio subsystem) - I don't know a ton and I think
+> we don't use this much on our designs, but I believe it meets the
+> definitions for needing "strict".
+>
+> * The QUPs (handles UART, SPI, and i2c) - I'm not as sure here. These
+> are much "smarter" than you'd expect. They have loadable / updatable
+> firmware and certainly have a sort of general purpose processor in
+> them. They also might be processing untrusted inputs, but presumably
+> in a pretty simple way. At the moment we don't use a ton of DMA here
+> anyway and these are pretty low speed, so I would tend to leave them
+> as strict just to be on the safe side.
+>
+>
+> I'd expect these to be non-strict:
+>
+> * SD/MMC - as described in this patch series.
+>
+> * USB - As far as I know firmware isn't updatable and has no history
+> of being compromised.
+>
+>
+> Special:
+>
+> * GPU - This already has a bunch of special cases, so we probably
+> don't need to discuss here.
+>
+>
+> As far as I can tell everything in sc7180.dtsi that has an "iommus"
+> property is classified above. So, unless I'm wrong and it's totally
+> fine to run LTE / WiFi / Video / LPASS in non-strict mode then:
+>
+> * We still need some way to pick strict vs. non-strict.
+>
+> * Since I've only identified two peripherals that I think should be
+> non-strict, having "strict" the default seems like fewer special
+> cases. It's also safer.
+>
+>
+> In terms of thinking about x86 / AMD where the default is non-strict,
+> I don't have any historical knowledge there. I guess the use of PCI
+> for connecting WiFi is more common (so you can use the PCI special
+> cases) and I'd sorta hope that WiFi is running in strict mode. For
+> video encode / decode, perhaps x86 / AMD are just accepting the risk
+> here because there was no kernel infrastructure for doing better? I'd
+> also expect that x86/AMD don't have something quite as crazy as the
+> QUPs for UART/I2C/SPI, but even if they do I wouldn't be terribly
+> upset if they were in non-strict mode.
+>
+> ...so I guess maybe the super short answer to everything above is that
+> I believe that at least WiFi ought to be in "strict" mode and it's not
+> on PCI so we need to come up with some type of per-device solution.
 
-Are you waiting on me to take a shot at refactoring the DOE driver
-into this proposed auxiliary device/driver organization? I am happy to
-do that if you've moved on to looking at the kernel-side SPDM
-implementation [1].
+I guess this thread has been silent for a bit of time now. Given that
+my previous version generated a whole bunch of traffic, I guess I'm
+assuming this:
 
-I would expect DOE,  SPDM, and IDE would be a useful topic to discuss
-at the the Plumbers PCI Microconference assuming we do not solve all
-the open issues before September.
+a) Nothing is inherently broken with my current approach.
 
-[1]: https://lore.kernel.org/r/20210629132520.00000d1f@Huawei.com
+b) My current approach doesn't make anybody terribly upset even if
+nobody is totally in love with it.
+
+c) Nobody has any other bright ideas for ways to solve this that would
+make my patch series obsolete.
+
+I guess I'll take that as a good sign and hope that it means that this
+approach has a path forward. I suppose it could just be that everyone
+is busy and/or on vacation, but I've always been an optimist!
+
+My plan continues to be to send a v3 of my patch series atop Sai's
+patch [1] and John's series [2]. I'll plan to wait a bit longer before
+posting my v3 to allow for more feedback/thoughts and also to see if
+either Sai's patches or John's patches land and/or have newer versions
+posted. :-)
+
+-Doug
+
+[1] https://lore.kernel.org/r/20210623134201.16140-1-saiprakash.ranjan@codeaurora.org
+[2] https://lore.kernel.org/linux-doc/1624016058-189713-1-git-send-email-john.garry@huawei.com
