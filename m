@@ -2,213 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 222A63C16E7
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jul 2021 18:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F26C3C1744
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jul 2021 18:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbhGHQQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Jul 2021 12:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbhGHQQd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Jul 2021 12:16:33 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B700C061574;
-        Thu,  8 Jul 2021 09:13:50 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id z9so3337129ljm.2;
-        Thu, 08 Jul 2021 09:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:user-agent:mime-version:to:cc:subject
-         :references:in-reply-to:content-transfer-encoding;
-        bh=L79SJAnjkEQ4XmnZyjSoa+Biso4xOMpboqeiniJwlu0=;
-        b=MEgBNmeqyv12qfNYpV9gw15Ayl1fH0d1En8IF25jT8zp2XGVaaroyQ3LKdFVnahWyj
-         AD8sgLfEMUAW23uUlTTyTnJyxthqef5e8/N/FYX/HYGIp9P/Eij5yieVljRmWSyvuSvK
-         r6iAHzQUGf7jqJy3ETRp/vAaH7zok5T2YuQTPFkV9kwb6exlRQWo2bo2V9SSX7XNzbw+
-         M+6n+NPrxqand44H5etPUz5OR32/E9iJMDeDxRrPSmOFQ52/bPoV5W30j+L9KdqWaA+P
-         MSQdhs4FFdox4EBsqlrAQTBKpZjdtDvGKxRMdohlRfUFOXr0bIJpxkSHEdeZGWaHLYJ8
-         5/rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
-         :cc:subject:references:in-reply-to:content-transfer-encoding;
-        bh=L79SJAnjkEQ4XmnZyjSoa+Biso4xOMpboqeiniJwlu0=;
-        b=fPUPRe5mlm3pIAotFoKOjjV57+jT/SYNzgUYuNEtHVo9I2R51mXe3hYTlrK8PANKl8
-         TJGFTfK1/wDd86m/U3ePLpg36TANFYbUEMlOie+avB6MMt/vfVdAkJZvvitodga47WE4
-         EQcxfpxPa9AIYS5T6twzjdZMni/pm4tAlGlze6prs7MIgAf7gnWBFwr2c0HdnBxTyXm/
-         vyaJa0oNjOTAaY0Z9SunBKfIuVd9JDc/BA3k83XF9u6iIfPlaZfYd/dlZfOQgM8gmIi1
-         FIxi87A4sdTpXICXCP76/gkJ/f/KJobAWDY/g2WRDEExSgt5FVo09BRRzsOhHg6MTqxI
-         Pg3w==
-X-Gm-Message-State: AOAM533R8X2Eq52igRZTbvKgeYmfF0EEnKRxWrU1ka/tm2jkXh0wvlb5
-        kVqzZ84eq+D+76v5rQuHQvM=
-X-Google-Smtp-Source: ABdhPJwqF9TNW7DHwAQHsl3587BSwQm9vifyWtoMPYB/f6O+ZyKk1TyPio80EwSPjWU+P9cHhAOJag==
-X-Received: by 2002:a2e:9bd1:: with SMTP id w17mr24638107ljj.316.1625760827360;
-        Thu, 08 Jul 2021 09:13:47 -0700 (PDT)
-Received: from [192.168.0.91] ([188.242.181.97])
-        by smtp.googlemail.com with ESMTPSA id bn30sm277876ljb.87.2021.07.08.09.13.43
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 08 Jul 2021 09:13:44 -0700 (PDT)
-Message-ID: <60E726E2.2050104@gmail.com>
-Date:   Thu, 08 Jul 2021 19:25:06 +0300
-From:   Nikolai Zhubr <zhubr.2@gmail.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
+        id S229650AbhGHQrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Jul 2021 12:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229524AbhGHQrN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Jul 2021 12:47:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 88F256145A;
+        Thu,  8 Jul 2021 16:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625762671;
+        bh=W3zJ1dUIVfwK2RD5Gb/pjjaY8IvTpKuqVuwPdbuz25M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sp+30VCoqVzKdRCHxsdjheJ32Al4GyKkdqY67UI3HBglP9/4ElBHuP/C2H/FyWKo7
+         e/R4/9B3d7vhaPNlh1DPVXpIf7uT6p/REBIACdKpJwJF9GZS42ymRBAxS0kVUi63dX
+         LFzIygW0HZtu2Ulg0IazOQ0jJMqOOsCWNLsNFVLNWlAdaw+e6puTS7FlMwyfD5gEdI
+         lFB3Rrin6g2B0nXBBJNO+PUuvd4DpkVlBGoDw/jR5Tje1HakbrKaEjYhMjAxMq0G0/
+         9JUb/J7ll5Lxx3f7sEDifcv8wjoDYV7KpD0n+YA4MYDlWDIvbopDufBoyo/NtyqWxC
+         FAtOTP/W4ikEQ==
+Date:   Thu, 8 Jul 2021 17:44:19 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
+        peterz@infradead.org, benh@kernel.crashing.org,
+        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
+        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
+        Frank Rowand <frowand.list@gmail.com>, mingo@kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Saravana Kannan <saravanak@google.com>, mpe@ellerman.id.au,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        bskeggs@redhat.com, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Thierry Reding <treding@nvidia.com>,
+        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Jianxiong Gao <jxgao@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        maarten.lankhorst@linux.intel.com, airlied@linux.ie,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
+        Rob Herring <robh+dt@kernel.org>, rodrigo.vivi@intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Claire Chang <tientzu@chromium.org>,
+        boris.ostrovsky@oracle.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jgross@suse.com, Nicolas Boichat <drinkcat@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Qian Cai <quic_qiancai@quicinc.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, xypron.glpk@gmx.de,
+        Tom Lendacky <thomas.lendacky@amd.com>, bauerman@linux.ibm.com
+Subject: Re: [PATCH v15 06/12] swiotlb: Use is_swiotlb_force_bounce for
+ swiotlb data bouncing
+Message-ID: <20210708164418.GB23598@willie-the-truck>
+References: <0f7bd903-e309-94a0-21d7-f0e8e9546018@arm.com>
+ <YN/7xcxt/XGAKceZ@Ryzen-9-3900X.localdomain>
+ <20210705190352.GA19461@willie-the-truck>
+ <20210706044848.GA13640@lst.de>
+ <20210706132422.GA20327@willie-the-truck>
+ <a59f771f-3289-62f0-ca50-8f3675d9b166@arm.com>
+ <20210706140513.GA26498@lst.de>
+ <bb32d5a6-2b34-4524-e171-3e9f5f4d3a94@arm.com>
+ <20210706170657.GD20750@willie-the-truck>
+ <e1c026c6-22c7-8979-4941-de9cfab3863a@kernel.org>
 MIME-Version: 1.0
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@kernel.org>,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/PCI: Handle PIRQ routing tables with no router
- device given
-References: <alpine.DEB.2.21.2107061320570.1711@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2107061320570.1711@angie.orcam.me.uk>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1c026c6-22c7-8979-4941-de9cfab3863a@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Maciej,
+On Tue, Jul 06, 2021 at 12:14:16PM -0700, Nathan Chancellor wrote:
+> On 7/6/2021 10:06 AM, Will Deacon wrote:
+> > On Tue, Jul 06, 2021 at 04:39:11PM +0100, Robin Murphy wrote:
+> > > On 2021-07-06 15:05, Christoph Hellwig wrote:
+> > > > On Tue, Jul 06, 2021 at 03:01:04PM +0100, Robin Murphy wrote:
+> > > > > FWIW I was pondering the question of whether to do something along those
+> > > > > lines or just scrap the default assignment entirely, so since I hadn't got
+> > > > > round to saying that I've gone ahead and hacked up the alternative
+> > > > > (similarly untested) for comparison :)
+> > > > > 
+> > > > > TBH I'm still not sure which one I prefer...
+> > > > 
+> > > > Claire did implement something like your suggestion originally, but
+> > > > I don't really like it as it doesn't scale for adding multiple global
+> > > > pools, e.g. for the 64-bit addressable one for the various encrypted
+> > > > secure guest schemes.
+> > > 
+> > > Ah yes, that had slipped my mind, and it's a fair point indeed. Since we're
+> > > not concerned with a minimal fix for backports anyway I'm more than happy to
+> > > focus on Will's approach. Another thing is that that looks to take us a
+> > > quiet step closer to the possibility of dynamically resizing a SWIOTLB pool,
+> > > which is something that some of the hypervisor protection schemes looking to
+> > > build on top of this series may want to explore at some point.
+> > 
+> > Ok, I'll split that nasty diff I posted up into a reviewable series and we
+> > can take it from there.
+> 
+> For what it's worth, I attempted to boot Will's diff on top of Konrad's
+> devel/for-linus-5.14 and it did not work; in fact, I got no output on my
+> monitor period, even with earlyprintk=, and I do not think this machine has
+> a serial console.
 
-06.07.2021 14:30, Maciej W. Rozycki:
-> Changes from v1:
->
-> - preinitialise `dev' in `pirq_find_router' for `for_each_pci_dev',
->
-> - avoid calling `pirq_try_router' with null `dev'.
-> ---
->   arch/x86/pci/irq.c |   64 ++++++++++++++++++++++++++++++++++++-----------------
->   1 file changed, 44 insertions(+), 20 deletions(-)
->
-> linux-x86-pirq-router-nodev.diff
+Looking back at the diff, I completely messed up swiotlb_exit() by mixing up
+physical and virtual addresses.
 
-Success!
-Here is new log:
+> Robin's fix does work, it survived ten reboots with no issues getting to X
+> and I do not see the KASAN and slub debug messages anymore but I understand
+> that this is not the preferred solution it seems (although Konrad did want
+> to know if it works).
+> 
+> I am happy to test any further patches or follow ups as needed, just keep me
+> on CC.
 
-https://pastebin.com/QXaUsCV4
+Cheers. Since this isn't 5.14 material any more, I'll CC you on a series
+next week.
 
-and --
-
-# 8259A.pl
-irq 0: 00, edge
-irq 1: 00, edge
-irq 2: 00, edge
-irq 3: 00, edge
-irq 4: 00, edge
-irq 5: 00, edge
-irq 6: 00, edge
-irq 7: 00, edge
-irq 8: 02, edge
-irq 9: 02, level
-irq 10: 02, edge
-irq 11: 02, edge
-irq 12: 02, edge
-irq 13: 02, edge
-irq 14: 02, edge
-irq 15: 02, edge
-
-Some notes:
-- please ignore the backtrace from 8139too, it is expected and will be 
-worked on later;
-- the message line " -> edge" looks somewhat strange, my guess is it 
-might be a small unintentional leftover of some bigger and more detailed 
-message/debugging, anyway, I'd humbly suppose "Triggering mode adjusted" 
-would look better.
-
-Thank you!
-
-
-Regards,
-Nikolai
-
-
-> Index: linux-macro-ide-tty/arch/x86/pci/irq.c
-> ===================================================================
-> --- linux-macro-ide-tty.orig/arch/x86/pci/irq.c
-> +++ linux-macro-ide-tty/arch/x86/pci/irq.c
-> @@ -908,10 +908,32 @@ static struct pci_dev *pirq_router_dev;
->    *	chipset" ?
->    */
->
-> +static bool __init pirq_try_router(struct irq_router *r,
-> +				   struct irq_routing_table *rt,
-> +				   struct pci_dev *dev)
-> +{
-> +	struct irq_router_handler *h;
-> +
-> +	DBG(KERN_DEBUG "PCI: Trying IRQ router for [%04x:%04x]\n",
-> +	    dev->vendor, dev->device);
-> +
-> +	for (h = pirq_routers; h->vendor; h++) {
-> +		/* First look for a router match */
-> +		if (rt->rtr_vendor == h->vendor&&
-> +		    h->probe(r, dev, rt->rtr_device))
-> +			return true;
-> +		/* Fall back to a device match */
-> +		if (dev->vendor == h->vendor&&
-> +		    h->probe(r, dev, dev->device))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
->   static void __init pirq_find_router(struct irq_router *r)
->   {
->   	struct irq_routing_table *rt = pirq_table;
-> -	struct irq_router_handler *h;
-> +	struct pci_dev *dev;
->
->   #ifdef CONFIG_PCI_BIOS
->   	if (!rt->signature) {
-> @@ -930,27 +952,29 @@ static void __init pirq_find_router(stru
->   	DBG(KERN_DEBUG "PCI: Attempting to find IRQ router for [%04x:%04x]\n",
->   	    rt->rtr_vendor, rt->rtr_device);
->
-> -	pirq_router_dev = pci_get_domain_bus_and_slot(0, rt->rtr_bus,
-> -						      rt->rtr_devfn);
-> -	if (!pirq_router_dev) {
-> -		DBG(KERN_DEBUG "PCI: Interrupt router not found at "
-> -			"%02x:%02x\n", rt->rtr_bus, rt->rtr_devfn);
-> -		return;
-> +	/* Use any vendor:device provided by the routing table or try all.  */
-> +	if (rt->rtr_vendor) {
-> +		dev = pci_get_domain_bus_and_slot(0, rt->rtr_bus,
-> +						  rt->rtr_devfn);
-> +		if (dev&&  pirq_try_router(r, rt, dev))
-> +			pirq_router_dev = dev;
-> +	} else {
-> +		dev = NULL;
-> +		for_each_pci_dev(dev) {
-> +			if (pirq_try_router(r, rt, dev)) {
-> +				pirq_router_dev = dev;
-> +				break;
-> +			}
-> +		}
->   	}
->
-> -	for (h = pirq_routers; h->vendor; h++) {
-> -		/* First look for a router match */
-> -		if (rt->rtr_vendor == h->vendor&&
-> -			h->probe(r, pirq_router_dev, rt->rtr_device))
-> -			break;
-> -		/* Fall back to a device match */
-> -		if (pirq_router_dev->vendor == h->vendor&&
-> -			h->probe(r, pirq_router_dev, pirq_router_dev->device))
-> -			break;
-> -	}
-> -	dev_info(&pirq_router_dev->dev, "%s IRQ router [%04x:%04x]\n",
-> -		 pirq_router.name,
-> -		 pirq_router_dev->vendor, pirq_router_dev->device);
-> +	if (pirq_router_dev)
-> +		dev_info(&pirq_router_dev->dev, "%s IRQ router [%04x:%04x]\n",
-> +			 pirq_router.name,
-> +			 pirq_router_dev->vendor, pirq_router_dev->device);
-> +	else
-> +		DBG(KERN_DEBUG "PCI: Interrupt router not found at "
-> +		    "%02x:%02x\n", rt->rtr_bus, rt->rtr_devfn);
->
->   	/* The device remains referenced for the kernel lifetime */
->   }
->
-
+Will
