@@ -2,126 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B4863BF713
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jul 2021 10:48:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6C903BF787
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jul 2021 11:23:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231241AbhGHIvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Jul 2021 04:51:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:53882 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230414AbhGHIvE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 8 Jul 2021 04:51:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD1D631B;
-        Thu,  8 Jul 2021 01:48:22 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A1813F5A1;
-        Thu,  8 Jul 2021 01:48:21 -0700 (PDT)
-Date:   Thu, 8 Jul 2021 09:48:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Fangjian <f.fangjian@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v4 2/5] PCI/DOE: Add Data Object Exchange support
-Message-ID: <20210708084815.GA6845@lpieralisi>
-References: <20210524133938.2815206-1-Jonathan.Cameron@huawei.com>
- <20210524133938.2815206-3-Jonathan.Cameron@huawei.com>
- <CAPcyv4gBORHzouArX-Fsnhew+ZYur8pp9ySJQGwrOBrGuv+-ZQ@mail.gmail.com>
- <CAPcyv4i2ukD4ZQ_KfTaKXLyMakpSk=Y3_QJGV2P_PLHHVkPwFw@mail.gmail.com>
+        id S231286AbhGHJ0T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Jul 2021 05:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231281AbhGHJ0T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Jul 2021 05:26:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA05C061574
+        for <linux-pci@vger.kernel.org>; Thu,  8 Jul 2021 02:23:37 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m1QFp-0004jm-Ls; Thu, 08 Jul 2021 11:23:33 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m1QFo-00036H-1b; Thu, 08 Jul 2021 11:23:32 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m1QFo-0007fe-03; Thu, 08 Jul 2021 11:23:32 +0200
+Date:   Thu, 8 Jul 2021 11:23:18 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        kernel@pengutronix.de, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Make struct pci_epf_driver::remove return
+ void
+Message-ID: <20210708092318.zksrx77fx53y45bt@pengutronix.de>
+References: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
+ <2a12ff97-a916-d70e-9e5b-b796e9c58288@ti.com>
+ <20210705154650.roeaqika5ptknrnt@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gdhr36g2kwaoa2cn"
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4i2ukD4ZQ_KfTaKXLyMakpSk=Y3_QJGV2P_PLHHVkPwFw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210705154650.roeaqika5ptknrnt@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 07, 2021 at 12:54:33PM -0700, Dan Williams wrote:
-> On Thu, Jun 10, 2021 at 1:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Mon, May 24, 2021 at 6:41 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > Introduced in a PCI ECN [1], DOE provides a config space based mailbox with
-> > > standard protocol discovery.  Each mailbox is accessed through a DOE
-> > > Extended Capability.
-> > >
-> > > A device may have 1 or more DOE mailboxes, each of which is allowed to
-> > > support any number of protocols (some DOE protocol specifications apply
-> > > additional restrictions).  A given protocol may be supported on more than
-> > > one DOE mailbox on a given function.
-> > >
-> > > If a driver wishes to access any number of DOE instances / protocols it
-> > > makes a single call to pci_doe_register_all() which will find available
-> > > DOEs, create the required infrastructure and cache the protocols they
-> > > support.  pci_doe_find() can then retrieve a pointer to an appropriate DOE
-> > > instance.
-> > >
-> > > A synchronous interface is provided in pci_doe_exchange_sync() to perform a
-> > > single query / response exchange.
-> > >
-> > > Testing conducted against QEMU using:
-> > >
-> > > https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
-> >
-> > Nice.
-> >
-> > I was hoping that by now QEMU upstream would have given us some
-> > indication that this useful work that has a chance of being merged. I
-> > fear it's only us CXL practitioner's that care. Perhaps the PCI IDE
-> > support will get them to move on at least the DOE patches?
-> >
-> > >
-> > > [1] https://members.pcisig.com/wg/PCI-SIG/document/14143
-> > >     Data Object Exchange (DOE) - Approved 12 March 2020
-> > >
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >
-> > The core logic of this looks good to me. The interfaces for other code
-> > to make use of this I feel can lean heavier on existing mechanics. A
-> > few points come to mind:
-> >
-> > - Does this need to support anything more than queue depth 1? I know
-> > the specification seems to allow for some overlapping and queueing,
-> > but I don't think there are any use cases that are precluded if the
-> > max number of tasks in flight for a given DOE is one.
-> >
-> > - Once its queue depth 1 then the list of tasks can be replaced with a
-> > wait_queue_head_t where submitters wait for the previous task to
-> > finish.
-> >
-> > - This appears to be the prototypical scenario for deploying the new
-> > auxiliary bus facility. Rather than custom code device-like facilities
-> > (lists and parents etc) in 'struct pci_doe' just make pci_doe a device
-> > directly (auxiliary-device) and separate the infrastructure that
-> > drives that device to a driver (auxiliary-driver). That makes the
-> > lifetime management more idiomatic, allows for user space to have
-> > typical driver-binding controls to manage kernel-user DOE conflicts,
-> > and it allows for typical driver services like devm.
-> 
-> Hi Jonathan,
-> 
-> Are you waiting on me to take a shot at refactoring the DOE driver
-> into this proposed auxiliary device/driver organization? I am happy to
-> do that if you've moved on to looking at the kernel-side SPDM
-> implementation [1].
-> 
-> I would expect DOE,  SPDM, and IDE would be a useful topic to discuss
-> at the the Plumbers PCI Microconference assuming we do not solve all
-> the open issues before September.
 
-Definitely, I will make sure we schedule a slot on these topics.
+--gdhr36g2kwaoa2cn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Lorenzo
+On Mon, Jul 05, 2021 at 05:46:50PM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>=20
+> On Tue, Jun 22, 2021 at 03:29:27PM +0530, Kishon Vijay Abraham I wrote:
+> > On 23/02/21 2:37 pm, Uwe Kleine-K=F6nig wrote:
+> > > The driver core ignores the return value of pci_epf_device_remove()
+> > > (because there is only little it can do when a device disappears) and
+> > > there are no pci_epf_drivers with a remove callback.
+> > >=20
+> > > So make it impossible for future drivers to return an unused error co=
+de
+> > > by changing the remove prototype to return void.
+> > >=20
+> > > The real motivation for this change is the quest to make struct
+> > > bus_type::remove return void, too.
+> > >=20
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > Fine with this change!
+> >=20
+> > FWIW:
+> > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>=20
+> Thanks for the ack. How can I expect this patch to go into mainline now?
+> Will Bjorn pick it up now that you acked?
 
-> [1]: https://lore.kernel.org/r/20210629132520.00000d1f@Huawei.com
+There is a series[1] that I'd like to get into mainline during the next
+merge window and that depends on this patch. Ideally it would go in
+for v5.14-rc1, otherwise I'd like to add it to the series changing
+bus_type::remove that it goes in together. Would be sad if I had to
+delay this cleanup for this dependency not going in.
+
+Best regards
+Uwe
+
+[1] https://lore.kernel.org/lkml/20210706154803.1631813-1-u.kleine-koenig@p=
+engutronix.de
+
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--gdhr36g2kwaoa2cn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDmw/0ACgkQwfwUeK3K
+7AlYuggAg0xDgHqXT0iruioVCPhVocLb6LxWjezE4XN75ysLZeTRQkMjDL+XhJ73
+nUSYnul815fJCh4St6CBGO3qJhTa9gqdlU29/hrtJ7olTddm7i+qc12YVwqYNwfE
+xpRTjsphIhv8sThUHoupZ+JyjthDMkzak9JP6WthSry+nhP52nSWqQZJ8PC993a0
+SRenvTuOgKsLCtV1cD7L8UjxEbRYW/Etam2yI2LMEmKNxyx7etHNk6zWDPayqiIN
+estnj4gbQmXEtYQyN/ZT9mexAqinx/WLm0cyiKkVvwBbDqwH32e3CqZBWZjtiY8k
+uojZp2ogX/IMUkJfotP9M9qYYVS5Ug==
+=jFiT
+-----END PGP SIGNATURE-----
+
+--gdhr36g2kwaoa2cn--
