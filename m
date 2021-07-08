@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 006D83C168D
+	by mail.lfdr.de (Postfix) with ESMTP id 762083C168E
 	for <lists+linux-pci@lfdr.de>; Thu,  8 Jul 2021 17:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232010AbhGHPxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S232048AbhGHPxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 8 Jul 2021 11:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229592AbhGHPxF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S231139AbhGHPxF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 8 Jul 2021 11:53:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B24461607;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D90261621;
         Thu,  8 Jul 2021 15:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1625759423;
-        bh=sEi0ifqdSJujS+O4xXc7C5cCdEC25XeRG+JKalDhaK8=;
+        bh=xEtFsGe/nvgIp++LyqaQ4D6RN/JlX1hRQoJR0nM7xCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqLhpcw3/FU1yNCS5TZA89EgZ5TbU2WnUem4g+yvVSIo3/5pEOe6JkZxf7yNQNwJL
-         mxeNzBPssr2y4BlcCvqiVsRokl1lpIDTbck5b79/gEvT2ydM6qy//FSULLDO7hPDtt
-         2rWcM7X2dD0Y9SXWjgf7hqekrGoro6Afar4nKFbW1kiK9P9U69B0frmao7kkUcLIb4
-         fCLyhaWboCTa0PmT/dU3B/qVmB6gCzIAf+jde0661+mwWy96U2asFz9u2M372pxg26
-         wPIdmgMPjWoeWeZBruNb2y9oDnd+Yg2zMovFcTIZADk4dlSMYImISmHdfCzLDdZ09N
-         S3ilQrNS8QXwg==
+        b=m8s5yUQeTgWi8eo5peF7561VxDxeM742XOxEdZ/F/mclKn9KSdEm71YCmAoFqeN49
+         byHn/3F1JaoVuZa5IHbj1s92KeGusY5M9oWAkTV7gZV1DdMnPyLWskP7ZineKHFGqd
+         jAaKx2HzgzXGq4qPs7KsYdAkqMSsnassAnyCH76H2SkRfs1Fo7LGwMtV0lT9zOhGPW
+         VWqKIht1zLjLdEXXhYcHxDm9I5Aeb6+ORsCE59KcZxeAlkJqny0ewiM8v1uzZha78D
+         lGCa5Fik3MGkkOKl9K4t+gYNVa9QYYGFJqTzxugZnh4k8UvKahAHxEqXRjrdCvO43f
+         i67eh73Vskq3w==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1m1WI4-008VV9-GR; Thu, 08 Jul 2021 17:50:16 +0200
+        id 1m1WI4-008VVC-Hx; Thu, 08 Jul 2021 17:50:16 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Manivannan Sadhasivam <mani@kernel.org>,
         Rob Herring <robh@kernel.org>
@@ -37,9 +37,9 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH RFC 3/7] bindings: kirin-pcie.txt: fix compatible string
-Date:   Thu,  8 Jul 2021 17:50:10 +0200
-Message-Id: <a0311a01873a7ad2cd9293edfd1e5ffb439010b6.1625758732.git.mchehab+huawei@kernel.org>
+Subject: [PATCH RFC 4/7] bindings: kirin-pcie.txt: drop PHY properties
+Date:   Thu,  8 Jul 2021 17:50:11 +0200
+Message-Id: <de0710266c8838f52551dad59896d045c46e9202.1625758732.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1625758732.git.mchehab+huawei@kernel.org>
 References: <cover.1625758732.git.mchehab+huawei@kernel.org>
@@ -50,37 +50,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pcie-kirin driver doesn't declare a hisilicon,kirin-pcie.
-Also, remove the useless comment after the description, as other
-compat will be supported by the same driver in the future.
+There are several properties there that belong to the PHY
+interface. Drop them, as a new binding file will describe
+the PHY properties for Kirin 960.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/kirin-pcie.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/pci/kirin-pcie.txt    | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-index 6bbe43818ad5..71cac2b74002 100644
+index 71cac2b74002..21fb41a3ee3b 100644
 --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-@@ -9,7 +9,7 @@ Additional properties are described here:
- 
+@@ -10,13 +10,11 @@ Additional properties are described here:
  Required properties
  - compatible:
--	"hisilicon,kirin960-pcie" for PCIe of Kirin960 SoC
-+	"hisilicon,kirin960-pcie"
- - reg: Should contain rc_dbi, apb, phy, config registers location and length.
+ 	"hisilicon,kirin960-pcie"
+-- reg: Should contain rc_dbi, apb, phy, config registers location and length.
++- reg: Should contain rc_dbi, apb, config registers location and length.
  - reg-names: Must include the following entries:
    "dbi": controller configuration registers;
-@@ -23,7 +23,7 @@ Optional properties:
- Example based on kirin960:
+   "apb": apb Ctrl register defined by Kirin;
+-  "phy": apb PHY register defined by Kirin;
+   "config": PCIe configuration space registers.
+-- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
  
+ Optional properties:
+ 
+@@ -25,8 +23,8 @@ Example based on kirin960:
  	pcie@f4000000 {
--		compatible = "hisilicon,kirin-pcie";
-+		compatible = "hisilicon,kirin960-pcie";
+ 		compatible = "hisilicon,kirin960-pcie";
  		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
- 		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
- 		reg-names = "dbi","apb","phy", "config";
+-		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
+-		reg-names = "dbi","apb","phy", "config";
++		      <0x0 0xF4000000 0 0x2000>;
++		reg-names = "dbi","apb", "config";
+ 		bus-range = <0x0  0x1>;
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+@@ -39,12 +37,7 @@ Example based on kirin960:
+ 				<0x0 0 0 2 &gic 0 0 0  283 4>,
+ 				<0x0 0 0 3 &gic 0 0 0  284 4>,
+ 				<0x0 0 0 4 &gic 0 0 0  285 4>;
+-		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
+-			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
+-			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
+-			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
+-			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+-		clock-names = "pcie_phy_ref", "pcie_aux",
+-			      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
+-		reset-gpios = <&gpio11 1 0 >;
++		clocks = <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
++			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>;
++		clock-names = "pcie_aux", "pcie_apb_sys";
+ 	};
 -- 
 2.31.1
 
