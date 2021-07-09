@@ -2,120 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE1DF3C2973
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 21:15:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3D213C2989
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 21:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbhGITSL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 15:18:11 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:42533 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbhGITSL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 15:18:11 -0400
-Received: by mail-wr1-f44.google.com with SMTP id r11so8261484wro.9;
-        Fri, 09 Jul 2021 12:15:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8pe1y794l4mjAhpeUAB5o7/eaZgmg4VuBK+ArLDxngI=;
-        b=kTIVSzvwgqWRuRBLLz2lNg833E5xqKHEBkcMzE5zk/VKTo80iVH/4p2YvOxBQO6v6p
-         kVdG8kYkVp3a4n+tRNDDodIlVQuoIaVqlbLgyZYhP3j9F98N5kYtWcy6lEj7Aga/8Ftr
-         Ubau/6eoYxaR3asDff/uJz4hjxucqkCuf7VZogz/DUarRAG0L0inuaygwKwXzMdpL41K
-         C3oeJrIOM0eu1A3HR7p0UoXOfM8Pm2WlY8C6EWnnwPn1Q2Rvyy9dGkhMENQW3qnNYzcg
-         zU0HUEqT4tNh55q/O8dzPodpO9EjMtuHxDgiXyAcwJ12DRgvRRrqRZSUbKx+ALb+RxvA
-         apmA==
-X-Gm-Message-State: AOAM533IQ+uFNV5xlYlPAt2RrXqRUQ3/rimCm+hOMjzbGEX7T3beOtFZ
-        IH4Zvde7hxsX3axFcapdEqs=
-X-Google-Smtp-Source: ABdhPJyEJldATArnxS19lyD3QfM4/weciDnCmCrbLDF8cTqtbXo14co61cfReirRF3kTiSYKhkpPKg==
-X-Received: by 2002:adf:a54b:: with SMTP id j11mr25842163wrb.305.1625858126260;
-        Fri, 09 Jul 2021 12:15:26 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id t22sm5824822wmi.22.2021.07.09.12.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 12:15:25 -0700 (PDT)
-Date:   Fri, 9 Jul 2021 19:15:24 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [EXTERNAL] Re: [PATCH 1/1] PCI: hv: Support for create interrupt
- v3
-Message-ID: <20210709191524.vbtlyg42v77f5drw@liuwe-devbox-debian-v2>
-References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
- <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
- <MW4PR21MB200200F17E1D0E4AEEA87D0DC0189@MW4PR21MB2002.namprd21.prod.outlook.com>
+        id S231245AbhGITYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 15:24:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:58602 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229552AbhGITYl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Jul 2021 15:24:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3396531B;
+        Fri,  9 Jul 2021 12:21:57 -0700 (PDT)
+Received: from [10.57.33.207] (unknown [10.57.33.207])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B38DD3F66F;
+        Fri,  9 Jul 2021 12:21:52 -0700 (PDT)
+Subject: Re: [PATCH v2 0/3] iommu: Enable non-strict DMA on QCom SD/MMC
+To:     Joerg Roedel <joro@8bytes.org>,
+        Doug Anderson <dianders@chromium.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Rajat Jain <rajatja@google.com>, Will Deacon <will@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, quic_c_gdjako@quicinc.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+References: <20210624171759.4125094-1-dianders@chromium.org>
+ <YNXXwvuErVnlHt+s@8bytes.org>
+ <CAD=FV=UFxZH7g8gH5+M=Fv4Y-e1bsLkNkPGJhNwhvVychcGQcQ@mail.gmail.com>
+ <CAD=FV=W=HmgH3O3z+nThWL6U+X4Oh37COe-uTzVB9SanP2n86w@mail.gmail.com>
+ <YOaymBHc4g2cIfRn@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0a2042ff-1604-d32d-35a7-d4df8f591459@arm.com>
+Date:   Fri, 9 Jul 2021 20:21:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW4PR21MB200200F17E1D0E4AEEA87D0DC0189@MW4PR21MB2002.namprd21.prod.outlook.com>
+In-Reply-To: <YOaymBHc4g2cIfRn@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 09, 2021 at 04:42:13PM +0000, Sunil Muthuswamy wrote:
-> > > +/*
-> > > + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
-> > > + *	Everything is the same as in 'hv_msi_desc2' except that the size
-> > > + *	of the 'vector_count' field is larger to support bigger vector
-> > > + *	values. For ex: LPI vectors on ARM.
-> > > + */
-> > > +struct hv_msi_desc3 {
-> > > +	u32	vector;
-> > > +	u8	delivery_mode;
-> > > +	u8	reserved;
-> > > +	u16	vector_count;
-> > > +	u16	processor_count;
-> > > +	u16	processor_array[32];
-> > > +} __packed;
-> > > +
-> > >  /**
-> > >   * struct tran_int_desc
-> > >   * @reserved:		unused, padding
-> > > @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
-> > >  	struct hv_msi_desc2 int_desc;
-> > >  } __packed;
-> > >
-> > > +struct pci_create_interrupt3 {
-> > > +	struct pci_message message_type;
-> > > +	union win_slot_encoding wslot;
-> > > +	struct hv_msi_desc3 int_desc;
-> > > +} __packed;
-> > > +
-> > >  struct pci_delete_interrupt {
-> > >  	struct pci_message message_type;
-> > >  	union win_slot_encoding wslot;
-> > > @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
-> > >  	return sizeof(*int_pkt);
-> > >  }
-> > >
-> > > +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *cpu,
-> > > +				       u16 *count)
-> > 
-> > Isn't count redundant here? I don't see how this can be used safely for
-> > passing back more than 1 cpu, since if cpu is pointing to an array, its
-> > size is not specified.
-> > 
-> > Wei.
+On 2021-07-08 09:08, Joerg Roedel wrote:
+> On Wed, Jul 07, 2021 at 01:00:13PM -0700, Doug Anderson wrote:
+>> a) Nothing is inherently broken with my current approach.
+>>
+>> b) My current approach doesn't make anybody terribly upset even if
+>> nobody is totally in love with it.
 > 
-> Yes, it is at the moment. But, the function can be extended in the future to take
-> a size as well. But, it will always be 1 and I preferred keeping that information
-> with the implementation. If you have preference, I can hard code that in the
-> caller. It seems fine for me either ways.
-
-Since this is not too much trouble I would rather you remove count and
-then introduce it when it is needed.
-
-Wei.
-
+> Well, no, sorry :)
 > 
-> - Sunil
+> I don't think it is a good idea to allow drivers to opt-out of the
+> strict-setting. This is a platform or user decision, and the driver
+> should accept whatever it gets.
+> 
+> So the real question is still why strict is the default setting and how
+> to change that.
+
+It's occurred to me whilst hacking on the relevant area that there's an 
+important point I may have somewhat glossed over there: most of the 
+IOMMU drivers that are used for arm64 do not take advantage of 
+non-strict mode anyway. If anything it would be detrimental, since 
+iommu-dma would waste a bunch of time and memory managing flush queues 
+and firing off the batch invalidations while internally the drivers are 
+still invalidating each unmap synchronously.
+
+Those IOMMUs in mobile and embedded SoCs are also mostly used for media 
+devices, where the buffers are relatively large and change relatively 
+infrequently, so they are less likely to gain significantly from 
+supporting non-strict mode. It's primarily the Arm SMMUs which get used 
+in the more "x86-like" paradigm (especially in larger systems) of being 
+stuck in front of everything including networking/storage/PCIe/etc. 
+where the workloads are far more varied.
+
+Robin.
+
+> Or document for the users that want performance how to
+> change the setting, so that they can decide.
+> 
+> Regards,
+> 
+> 	Joerg
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> 
