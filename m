@@ -2,221 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0086B3C1E0E
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 06:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A64563C222C
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 12:24:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbhGIEVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 00:21:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60169 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229719AbhGIEVu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Jul 2021 00:21:50 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10039"; a="190021299"
-X-IronPort-AV: E=Sophos;i="5.84,225,1620716400"; 
-   d="scan'208";a="190021299"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2021 21:19:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,225,1620716400"; 
-   d="scan'208";a="628735314"
-Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jul 2021 21:19:05 -0700
-Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m1hyj-000Efq-9g; Fri, 09 Jul 2021 04:19:05 +0000
-Date:   Fri, 09 Jul 2021 12:18:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:review/pm-vaibhav] BUILD SUCCESS
- 7a9ee6d14fe2fb4207101d72f7b0301b7e616294
-Message-ID: <60e7ce10.2GFlAQbEYiNyB+t4%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S232010AbhGIK1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 06:27:21 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:53950 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232006AbhGIK1V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 06:27:21 -0400
+Received: by mail-wm1-f46.google.com with SMTP id w13so6010400wmc.3;
+        Fri, 09 Jul 2021 03:24:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cAfemKVKaAPq40ft5rYBbrNJJ0FxZzS3NBhkFBnKSzI=;
+        b=YAW3U4TOhh9jayB20oqIkMIbn+6IlNyrt+m2wQxcJG+1ope3QDQS/7WtJ2qyEdcAij
+         nXCyzZKfc+AKkbCp5bv3Yjcgh7ZTClRW3LkkSEw619K1hchuypXujudHmFJgvXxkTaJo
+         XFgFNgr8P8vr99RzkiTqpoU2crGGqHcu1/GAfCFhEph4C3H51XdXOmr2OsVQrrwTg5Qq
+         CJYdnLOFbjEaQ5+zykCHG9c+aU+f2odg4DQfOQJP6CMbVaXWEg3swaWWdyyRmOUZ9PRD
+         25UvOunY5Asg1XBjfOmRKMIrgef9FygU1izOS9xTevHyEN/MLIoTt1c6OhbvaDk/c8g2
+         wZpQ==
+X-Gm-Message-State: AOAM531IIt2ZSzlc1hyEz6ZbSXVdtTkvxWhvrTnITClw+GcSYULIdLFK
+        2Lgg8pVXdSPtA+vQkgKDZaU=
+X-Google-Smtp-Source: ABdhPJz7KdWD9EJLU17W1kLv6XakRSsjJEumz5JxJkpi9BFIWNd/m8DAe9BoZPX7TXQA5ORW8lv8ug==
+X-Received: by 2002:a1c:e90d:: with SMTP id q13mr38611656wmc.163.1625826276878;
+        Fri, 09 Jul 2021 03:24:36 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id j1sm11370711wms.7.2021.07.09.03.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jul 2021 03:24:36 -0700 (PDT)
+Date:   Fri, 9 Jul 2021 10:24:34 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH 1/1] PCI: hv: Support for create interrupt v3
+Message-ID: <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
+References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git review/pm-vaibhav
-branch HEAD: 7a9ee6d14fe2fb4207101d72f7b0301b7e616294  XXX SPLIT DRIVERS atl1e: use generic power management
+On Thu, Jul 08, 2021 at 11:04:49PM +0000, Sunil Muthuswamy wrote:
+> Hyper-V vPCI protocol version 1_4 adds support for create interrupt
+> v3. Create interrupt v3 essentially makes the size of the vector
+> field bigger in the message, thereby allowing bigger vector values.
+> For example, that will come into play for supporting LPI vectors
+> on ARM, which start at 8192.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 74 ++++++++++++++++++++++++++---
+>  1 file changed, 68 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index bebe3eeebc4e..de61b20f9604 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -64,6 +64,7 @@ enum pci_protocol_version_t {
+>  	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
+>  	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
+>  	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* Vibranium */
+> +	PCI_PROTOCOL_VERSION_1_4 = PCI_MAKE_VERSION(1, 4),      /* Fe */
+>  };
+>  
+>  #define CPU_AFFINITY_ALL	-1ULL
+> @@ -73,6 +74,7 @@ enum pci_protocol_version_t {
+>   * first.
+>   */
+>  static enum pci_protocol_version_t pci_protocol_versions[] = {
+> +	PCI_PROTOCOL_VERSION_1_4,
+>  	PCI_PROTOCOL_VERSION_1_3,
+>  	PCI_PROTOCOL_VERSION_1_2,
+>  	PCI_PROTOCOL_VERSION_1_1,
+> @@ -122,6 +124,8 @@ enum pci_message_type {
+>  	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
+>  	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
+>  	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
+> +	PCI_RESOURCES_ASSIGNED3         = PCI_MESSAGE_BASE + 0x1A,
+> +	PCI_CREATE_INTERRUPT_MESSAGE3   = PCI_MESSAGE_BASE + 0x1B,
+>  	PCI_MESSAGE_MAXIMUM
+>  };
+>  
+> @@ -235,6 +239,21 @@ struct hv_msi_desc2 {
+>  	u16	processor_array[32];
+>  } __packed;
+>  
+> +/*
+> + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
+> + *	Everything is the same as in 'hv_msi_desc2' except that the size
+> + *	of the 'vector_count' field is larger to support bigger vector
+> + *	values. For ex: LPI vectors on ARM.
+> + */
+> +struct hv_msi_desc3 {
+> +	u32	vector;
+> +	u8	delivery_mode;
+> +	u8	reserved;
+> +	u16	vector_count;
+> +	u16	processor_count;
+> +	u16	processor_array[32];
+> +} __packed;
+> +
+>  /**
+>   * struct tran_int_desc
+>   * @reserved:		unused, padding
+> @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
+>  	struct hv_msi_desc2 int_desc;
+>  } __packed;
+>  
+> +struct pci_create_interrupt3 {
+> +	struct pci_message message_type;
+> +	union win_slot_encoding wslot;
+> +	struct hv_msi_desc3 int_desc;
+> +} __packed;
+> +
+>  struct pci_delete_interrupt {
+>  	struct pci_message message_type;
+>  	union win_slot_encoding wslot;
+> @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
+>  	return sizeof(*int_pkt);
+>  }
+>  
+> +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *cpu,
+> +				       u16 *count)
 
-elapsed time: 727m
+Isn't count redundant here? I don't see how this can be used safely for
+passing back more than 1 cpu, since if cpu is pointing to an array, its
+size is not specified.
 
-configs tested: 163
-configs skipped: 3
+Wei.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                      malta_kvm_defconfig
-sh                           se7712_defconfig
-m68k                       bvme6000_defconfig
-arm                         palmz72_defconfig
-mips                          rb532_defconfig
-sh                           se7721_defconfig
-m68k                         apollo_defconfig
-parisc                              defconfig
-powerpc                     asp8347_defconfig
-arm                           u8500_defconfig
-arm                            hisi_defconfig
-sh                 kfr2r09-romimage_defconfig
-x86_64                              defconfig
-ia64                            zx1_defconfig
-m68k                          multi_defconfig
-powerpc                       maple_defconfig
-powerpc                   lite5200b_defconfig
-arm                         s5pv210_defconfig
-sh                   rts7751r2dplus_defconfig
-powerpc                  iss476-smp_defconfig
-powerpc                      chrp32_defconfig
-powerpc                   bluestone_defconfig
-powerpc                 mpc832x_rdb_defconfig
-powerpc                     ep8248e_defconfig
-arm                        oxnas_v6_defconfig
-arm                         at91_dt_defconfig
-arm                             rpc_defconfig
-sparc                       sparc32_defconfig
-arm                       multi_v4t_defconfig
-m68k                        stmark2_defconfig
-arm                          imote2_defconfig
-arm                          pxa3xx_defconfig
-sh                          urquell_defconfig
-arc                    vdk_hs38_smp_defconfig
-sh                        dreamcast_defconfig
-mips                        nlm_xlp_defconfig
-powerpc                         ps3_defconfig
-powerpc                    sam440ep_defconfig
-arm                           corgi_defconfig
-powerpc                          allmodconfig
-arm                  colibri_pxa270_defconfig
-mips                         cobalt_defconfig
-mips                     loongson2k_defconfig
-sh                           se7724_defconfig
-arc                        nsim_700_defconfig
-s390                             allmodconfig
-arm                         vf610m4_defconfig
-arc                              allyesconfig
-mips                      pic32mzda_defconfig
-arm                        cerfcube_defconfig
-powerpc                     kmeter1_defconfig
-sh                        sh7785lcr_defconfig
-powerpc                     akebono_defconfig
-powerpc                   motionpro_defconfig
-sh                           se7750_defconfig
-s390                          debug_defconfig
-powerpc                    mvme5100_defconfig
-sh                     magicpanelr2_defconfig
-m68k                       m5475evb_defconfig
-sh                               alldefconfig
-nds32                             allnoconfig
-mips                    maltaup_xpa_defconfig
-nios2                         3c120_defconfig
-mips                      bmips_stb_defconfig
-arm                        mvebu_v5_defconfig
-sh                           se7619_defconfig
-mips                        vocore2_defconfig
-sparc64                          alldefconfig
-sh                        sh7757lcr_defconfig
-powerpc                          allyesconfig
-sh                   secureedge5410_defconfig
-mips                        jmr3927_defconfig
-powerpc                     tqm8560_defconfig
-arm                           h3600_defconfig
-arm                        mvebu_v7_defconfig
-sh                            hp6xx_defconfig
-arm                         socfpga_defconfig
-sh                          rsk7269_defconfig
-nios2                         10m50_defconfig
-mips                        omega2p_defconfig
-ia64                         bigsur_defconfig
-powerpc                  mpc885_ads_defconfig
-arm                     davinci_all_defconfig
-riscv                    nommu_k210_defconfig
-mips                     loongson1c_defconfig
-mips                            gpr_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210707
-x86_64               randconfig-a002-20210707
-x86_64               randconfig-a005-20210707
-x86_64               randconfig-a006-20210707
-x86_64               randconfig-a003-20210707
-x86_64               randconfig-a001-20210707
-i386                 randconfig-a006-20210708
-i386                 randconfig-a004-20210708
-i386                 randconfig-a001-20210708
-i386                 randconfig-a003-20210708
-i386                 randconfig-a005-20210708
-i386                 randconfig-a002-20210708
-i386                 randconfig-a004-20210707
-i386                 randconfig-a006-20210707
-i386                 randconfig-a001-20210707
-i386                 randconfig-a003-20210707
-i386                 randconfig-a005-20210707
-i386                 randconfig-a002-20210707
-i386                 randconfig-a015-20210707
-i386                 randconfig-a016-20210707
-i386                 randconfig-a012-20210707
-i386                 randconfig-a011-20210707
-i386                 randconfig-a014-20210707
-i386                 randconfig-a013-20210707
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                            kunit_defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-b001-20210707
-x86_64               randconfig-a015-20210707
-x86_64               randconfig-a014-20210707
-x86_64               randconfig-a012-20210707
-x86_64               randconfig-a011-20210707
-x86_64               randconfig-a016-20210707
-x86_64               randconfig-a013-20210707
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +{
+> +	/*
+> +	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
+> +	 * by subsequent retarget in hv_irq_unmask().
+> +	 */
+> +	*cpu = cpumask_first_and(affinity, cpu_online_mask);
+> +	*count = 1;
+> +}
+> +
