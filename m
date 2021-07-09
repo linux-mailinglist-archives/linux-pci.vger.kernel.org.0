@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 878503C237D
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 14:38:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 106AA3C237F
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 14:38:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbhGIMlM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 08:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34366 "EHLO
+        id S231366AbhGIMlT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 08:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbhGIMlL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 08:41:11 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0910C0613DD;
-        Fri,  9 Jul 2021 05:38:28 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id m83so932084pfd.0;
-        Fri, 09 Jul 2021 05:38:28 -0700 (PDT)
+        with ESMTP id S229671AbhGIMlT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 08:41:19 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451E6C0613DD;
+        Fri,  9 Jul 2021 05:38:35 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id b12so8596872pfv.6;
+        Fri, 09 Jul 2021 05:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dmpEl8jyHm3zHYz90wVqs2oB/lVmJE3SrC9iWzeIxbI=;
-        b=dagvDfJTqEjUdj3WcSA9oME5qoqA1lNshO6JuBlLPhlSoPD85QrsOMmK2NJoKsQKnJ
-         bhvkf464d/wbkKpaK87u64qWN/C41rtN4ALC4MGysCNI/JRGdOdaFq6b6Y8ugkpxlw+h
-         A2Gd+qmME4goCN+4/AiHNumJFEntwUtolF9tG0Ccz4dIzM2dX42z3vrb2Jz1b23IpUMU
-         6UeiF+LieKFjkN1Agm4/4mtHQNNuf9ll52XS1Cx31HsDNx2jKkuJ+a2sPb/VGGuW5DYk
-         /QtTIg0LqBGszPGl0gfuULdi36zXsEvYGPn8x4s3rEFx+GoHf+axlZ9M6twM9Qz8o1ra
-         xwrA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7R3s+j1qGVmQgk8nzQGz8LuiGYGjPRzDJeSTLid5q98=;
+        b=IZ+DQdOT5rpbSNkYjO9u4SZzzqvNcBuskt6cmQlwlltLsnyhtKBcDU2NeRKBVmoh4A
+         PMfydbC/iZ2F5Vp46x8y3Wdvyxy0VpUAQbBegWYyFOO9iGVkDKq1iBtAtXFYPLKal5AH
+         OpAgC+6P5TXv3PkppgRy3OUS49E+ZDiYzy1Je6nke2WAiB+0kykzc5W2K+JRF7lXp9zb
+         0+JKOVy6PZsZTtjH4nO3ZJkDxxWSSHk0BiYtkgo5bDP+kZxz9J1EkpXFWEZ/Av+ch/SH
+         mpptl6txXh1UC1bOQP52sFIcxozQ3I0bKEG6RC72nlq0O8Gk6b9fZzuebaEfUClYg61J
+         ZeBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dmpEl8jyHm3zHYz90wVqs2oB/lVmJE3SrC9iWzeIxbI=;
-        b=gD0Xka0uNu1l0z/liwKUSkQAee6Tgf6IoXIBPJiOsZzjgSTr3cvMoch+zCX5uaQ4GS
-         BKIarghWzhfDLeDvCEMwM7zGrNGyyYD0Le9udMU/3dkf8a3hJAUe22+X2SMdNGy4P2lV
-         NVJR/ozVlZfLFyjt4gz+WmRAzv6xXBZD8/kvef4lvjEYHxlOIGrv5y2i28114IuZBLre
-         vF06kS85LHMbEySxBQWrUtRZ0ZQi/2uYhwoBtrMnS/kZhL1w1ssIyNAkSkLhfjhNZWot
-         v1+4GXtsLxIN7Z4XvffWh4x0DEa1BOcqdW0WEzqMTvE19KD/vGtAWTQ7ruYYdcndrvV8
-         LmzQ==
-X-Gm-Message-State: AOAM531SgAfSjHhBX2fAUz0tFtuHSxVUbbhlDOWqJKlfpvSwNxHWKbWB
-        r0ZhjtVsW0iI8toBP7oC9Us=
-X-Google-Smtp-Source: ABdhPJx9qDUqhb3FCpPy6p1bff9KhIlpJi6RzX0iQyIXgsp4pJ8oO0N0KhfHnvGpvwCtZEwogx7OFQ==
-X-Received: by 2002:a63:1601:: with SMTP id w1mr37488621pgl.116.1625834308250;
-        Fri, 09 Jul 2021 05:38:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7R3s+j1qGVmQgk8nzQGz8LuiGYGjPRzDJeSTLid5q98=;
+        b=mdDYu23l/2O8LhMAd5+8JwqfbqR+h4thZqM4sjCNRV06W0jockrgoV9xoR9idMP2A1
+         8hEJd5T9VcJAlB6AXQKOrJ2VE2YWNbYySEAcV7t4ct6YOy/PXCRfDRIbVS9kDeNZMlXI
+         tT7mvp0eMXZigJAZeLlJM3GFtPsZfnRo9cZRxu3enn4MLzqc/8K3AcdqleulgiNSQDmF
+         gM6tdYCaOLooNGwEoGVznM2iulR5IHolkmk01dWsJnlbplyFmcYEOEKT9SeXEI8d/HBU
+         JXv+FVyi+Vx599WG2wmQ4QyIvmCINb1aqGlg9xxDx5gVMYJ6LYqzZvwp1x65ToYxaOx0
+         bSig==
+X-Gm-Message-State: AOAM533BPmMiAIBs1E8pX3wU1K9T3+exRHM5qf1LekwVo0vx6lwghCtM
+        ItBTkG8Avpaah3zAerVcgVj9kNWyxEbV0DLw
+X-Google-Smtp-Source: ABdhPJwt0x0UOXa58B6/UXcHIEiUFjauLg77OuLBRVcdaoHGXHR7jif9fsEM10OUdTGpCkvJc59cZA==
+X-Received: by 2002:a65:5189:: with SMTP id h9mr13191628pgq.245.1625834314548;
+        Fri, 09 Jul 2021 05:38:34 -0700 (PDT)
 Received: from localhost.localdomain ([152.57.176.46])
-        by smtp.googlemail.com with ESMTPSA id j6sm5592402pji.23.2021.07.09.05.38.20
+        by smtp.googlemail.com with ESMTPSA id j6sm5592402pji.23.2021.07.09.05.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 05:38:27 -0700 (PDT)
+        Fri, 09 Jul 2021 05:38:34 -0700 (PDT)
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     alex.williamson@redhat.com,
@@ -56,116 +56,244 @@ Cc:     alex.williamson@redhat.com,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: [PATCH v10 0/8] Expose and manage PCI device reset
-Date:   Fri,  9 Jul 2021 18:08:05 +0530
-Message-Id: <20210709123813.8700-1-ameynarkhede03@gmail.com>
+Subject: [PATCH v10 1/8] PCI: Add pcie_reset_flr to follow calling convention of other reset methods
+Date:   Fri,  9 Jul 2021 18:08:06 +0530
+Message-Id: <20210709123813.8700-2-ameynarkhede03@gmail.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210709123813.8700-1-ameynarkhede03@gmail.com>
+References: <20210709123813.8700-1-ameynarkhede03@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI and PCIe devices may support a number of possible reset mechanisms
-for example Function Level Reset (FLR) provided via Advanced Feature or
-PCIe capabilities, Power Management reset, bus reset, or device specific reset.
-Currently the PCI subsystem creates a policy prioritizing these reset methods
-which provides neither visibility nor control to userspace.
+Add has_pcie_flr bitfield in struct pci_dev to indicate support for PCIe
+FLR to avoid reading PCI_EXP_DEVCAP multiple times.
 
-Expose the reset methods available per device to userspace, via sysfs
-and allow an administrative user or device owner to have ability to
-manage per device reset method priorities or exclusions.
-This feature aims to allow greater control of a device for use cases
-as device assignment, where specific device or platform issues may
-interact poorly with a given reset method, and for which device specific
-quirks have not been developed.
+Currently there is separate function pcie_has_flr() to probe if PCIe FLR
+is supported by the device which does not match the calling convention
+followed by reset methods which use second function argument to decide
+whether to probe or not. Add new function pcie_reset_flr() that follows
+the calling convention of reset methods.
 
-Changes in v10:
-	- Fix build error on ppc as reported by build bot
+Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+---
+ drivers/crypto/cavium/nitrox/nitrox_main.c |  4 +-
+ drivers/pci/pci.c                          | 59 +++++++++++-----------
+ drivers/pci/pcie/aer.c                     | 12 ++---
+ drivers/pci/probe.c                        |  6 ++-
+ drivers/pci/quirks.c                       |  9 ++--
+ include/linux/pci.h                        |  3 +-
+ 6 files changed, 45 insertions(+), 48 deletions(-)
 
-Changes in v9:
-	- Renamed has_flr bitfield to has_pcie_flr and restored
-	  use of PCI_DEV_FLAGS_NO_FLR_RESET in quirk_no_flr()
-	- Cleaned up sysfs code
-
-Changes in v8:
-	- Added has_flr bitfield to struct pci_dev to cache flr
-	  capability
-	- Updated encoding scheme used in reset_methods array as per
-	  Bjorn's suggestion
-	- Updated Shanker's ACPI patches
-
-Changes in v7:
-	- Fix the pci_dev_acpi_reset() prototype mismatch
-	  in case of CONFIG_ACPI=n
-
-Changes in v6:
-	- Address Bjorn's and Krzysztof's review comments
-	- Add Shanker's updated patches along with new
-	  "PCI: Setup ACPI_COMPANION early" patch
-
-Changes in v5:
-	- Rebase the series over pci/reset branch of
-	  Bjorn's pci tree to avoid merge conflicts
-	  caused by recent changes in existing reset
-	  sysfs attribute
-
-Changes in v4:
-	- Change the order or strlen and strim in reset_method_store
-	  function to avoid extra strlen call.
-	- Use consistent terminology in new
-	  pci_reset_mode enum and rename the probe argument
-	  of reset functions.
-
-Changes in v3:
-	- Dropped "PCI: merge slot and bus reset implementations" which was
-	  already accepted separately
-	- Grammar fixes
-	- Added Shanker's patches which were rebased on v2 of this series
-	- Added "PCI: Change the type of probe argument in reset functions"
-	  and additional user input sanitization code in reset_method_store
-	  function per review feedback from Krzysztof
-
-Changes in v2:
-	- Use byte array instead of bitmap to keep track of
-	  ordering of reset methods
-	- Fix incorrect use of reset_fn field in octeon driver
-	- Allow writing comma separated list of names of supported reset
-	  methods to reset_method sysfs attribute
-	- Writing empty string instead of "none" to reset_method attribute
-	  disables ability of reset the device
-
-Amey Narkhede (5):
-  PCI: Add pcie_reset_flr to follow calling convention of other reset
-    methods
-  PCI: Add new array for keeping track of ordering of reset methods
-  PCI: Remove reset_fn field from pci_dev
-  PCI/sysfs: Allow userspace to query and set device reset mechanism
-  PCI: Change the type of probe argument in reset functions
-
-Shanker Donthineni (3):
-  PCI: Define a function to set ACPI_COMPANION in pci_dev
-  PCI: Setup ACPI fwnode early and at the same time with OF
-  PCI: Add support for ACPI _RST reset method
-
- Documentation/ABI/testing/sysfs-bus-pci       |  19 ++
- drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
- .../ethernet/cavium/liquidio/lio_vf_main.c    |   2 +-
- drivers/pci/hotplug/pciehp.h                  |   2 +-
- drivers/pci/hotplug/pciehp_hpc.c              |   4 +-
- drivers/pci/hotplug/pnv_php.c                 |   4 +-
- drivers/pci/pci-acpi.c                        |  38 +++-
- drivers/pci/pci-sysfs.c                       | 107 ++++++++-
- drivers/pci/pci.c                             | 215 ++++++++++--------
- drivers/pci/pci.h                             |  23 +-
- drivers/pci/pcie/aer.c                        |  12 +-
- drivers/pci/probe.c                           |  17 +-
- drivers/pci/quirks.c                          |  42 ++--
- drivers/pci/remove.c                          |   1 -
- include/linux/pci.h                           |  17 +-
- include/linux/pci_hotplug.h                   |   2 +-
- 16 files changed, 363 insertions(+), 146 deletions(-)
-
---
+diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
+index facc8e6bc..15d6c8452 100644
+--- a/drivers/crypto/cavium/nitrox/nitrox_main.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+@@ -306,9 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	/* check flr support */
+-	if (pcie_has_flr(pdev))
+-		pcie_flr(pdev);
++	pcie_reset_flr(pdev, 0);
+ 
+ 	pci_restore_state(pdev);
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 452351025..fefa6d7b3 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4611,32 +4611,12 @@ int pci_wait_for_pending_transaction(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+ 
+-/**
+- * pcie_has_flr - check if a device supports function level resets
+- * @dev: device to check
+- *
+- * Returns true if the device advertises support for PCIe function level
+- * resets.
+- */
+-bool pcie_has_flr(struct pci_dev *dev)
+-{
+-	u32 cap;
+-
+-	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+-		return false;
+-
+-	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+-	return cap & PCI_EXP_DEVCAP_FLR;
+-}
+-EXPORT_SYMBOL_GPL(pcie_has_flr);
+-
+ /**
+  * pcie_flr - initiate a PCIe function level reset
+  * @dev: device to reset
+  *
+- * Initiate a function level reset on @dev.  The caller should ensure the
+- * device supports FLR before calling this function, e.g. by using the
+- * pcie_has_flr() helper.
++ * Initiate a function level reset unconditionally on @dev without
++ * checking any flags and DEVCAP
+  */
+ int pcie_flr(struct pci_dev *dev)
+ {
+@@ -4659,6 +4639,28 @@ int pcie_flr(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(pcie_flr);
+ 
++/**
++ * pcie_reset_flr - initiate a PCIe function level reset
++ * @dev: device to reset
++ * @probe: If set, only check if the device can be reset this way.
++ *
++ * Initiate a function level reset on @dev.
++ */
++int pcie_reset_flr(struct pci_dev *dev, int probe)
++{
++	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
++		return -ENOTTY;
++
++	if (!dev->has_pcie_flr)
++		return -ENOTTY;
++
++	if (probe)
++		return 0;
++
++	return pcie_flr(dev);
++}
++EXPORT_SYMBOL_GPL(pcie_reset_flr);
++
+ static int pci_af_flr(struct pci_dev *dev, int probe)
+ {
+ 	int pos;
+@@ -5139,11 +5141,9 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+ 	rc = pci_dev_specific_reset(dev, 0);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	if (pcie_has_flr(dev)) {
+-		rc = pcie_flr(dev);
+-		if (rc != -ENOTTY)
+-			return rc;
+-	}
++	rc = pcie_reset_flr(dev, 0);
++	if (rc != -ENOTTY)
++		return rc;
+ 	rc = pci_af_flr(dev, 0);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+@@ -5174,8 +5174,9 @@ int pci_probe_reset_function(struct pci_dev *dev)
+ 	rc = pci_dev_specific_reset(dev, 1);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	if (pcie_has_flr(dev))
+-		return 0;
++	rc = pcie_reset_flr(dev, 1);
++	if (rc != -ENOTTY)
++		return rc;
+ 	rc = pci_af_flr(dev, 1);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ec943cee5..98077595a 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1405,13 +1405,11 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+ 	}
+ 
+ 	if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
+-		if (pcie_has_flr(dev)) {
+-			rc = pcie_flr(dev);
+-			pci_info(dev, "has been reset (%d)\n", rc);
+-		} else {
+-			pci_info(dev, "not reset (no FLR support)\n");
+-			rc = -ENOTTY;
+-		}
++		rc = pcie_reset_flr(dev, 0);
++		if (!rc)
++			pci_info(dev, "has been reset\n");
++		else
++			pci_info(dev, "not reset (no FLR support: %d)\n", rc);
+ 	} else {
+ 		rc = pci_bus_error_reset(dev);
+ 		pci_info(dev, "%s Port link has been reset (%d)\n",
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 3a62d09b8..072a3d4dc 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1487,6 +1487,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ {
+ 	int pos;
+ 	u16 reg16;
++	u32 reg32;
+ 	int type;
+ 	struct pci_dev *parent;
+ 
+@@ -1497,8 +1498,9 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	pdev->pcie_cap = pos;
+ 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+ 	pdev->pcie_flags_reg = reg16;
+-	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+-	pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
++	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &reg32);
++	pdev->pcie_mpss = reg32 & PCI_EXP_DEVCAP_PAYLOAD;
++	pdev->has_pcie_flr = !!(reg32 & PCI_EXP_DEVCAP_FLR);
+ 
+ 	parent = pci_upstream_bridge(pdev);
+ 	if (!parent)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d85914afe..f977ba79a 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3819,7 +3819,7 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
+ 	u32 cfg;
+ 
+ 	if (dev->class != PCI_CLASS_STORAGE_EXPRESS ||
+-	    !pcie_has_flr(dev) || !pci_resource_start(dev, 0))
++	    pcie_reset_flr(dev, 1) || !pci_resource_start(dev, 0))
+ 		return -ENOTTY;
+ 
+ 	if (probe)
+@@ -3888,13 +3888,10 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
+  */
+ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+ {
+-	if (!pcie_has_flr(dev))
+-		return -ENOTTY;
++	int ret = pcie_reset_flr(dev, probe);
+ 
+ 	if (probe)
+-		return 0;
+-
+-	pcie_flr(dev);
++		return ret;
+ 
+ 	msleep(250);
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c20211e59..d432428fd 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -337,6 +337,7 @@ struct pci_dev {
+ 	u8		msi_cap;	/* MSI capability offset */
+ 	u8		msix_cap;	/* MSI-X capability offset */
+ 	u8		pcie_mpss:3;	/* PCIe Max Payload Size Supported */
++	u8		has_pcie_flr:1; /* PCIe FLR supported */
+ 	u8		rom_base_reg;	/* Config register controlling ROM */
+ 	u8		pin;		/* Interrupt pin this device uses */
+ 	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
+@@ -1225,7 +1226,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
+ 			     enum pci_bus_speed *speed,
+ 			     enum pcie_link_width *width);
+ void pcie_print_link_status(struct pci_dev *dev);
+-bool pcie_has_flr(struct pci_dev *dev);
++int pcie_reset_flr(struct pci_dev *dev, int probe);
+ int pcie_flr(struct pci_dev *dev);
+ int __pci_reset_function_locked(struct pci_dev *dev);
+ int pci_reset_function(struct pci_dev *dev);
+-- 
 2.32.0
+
