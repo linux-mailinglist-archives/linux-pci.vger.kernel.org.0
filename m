@@ -2,255 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D67893C2920
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 20:44:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1DF3C2973
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 21:15:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbhGISrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 14:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229459AbhGISra (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Jul 2021 14:47:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 98D9B60238;
-        Fri,  9 Jul 2021 18:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625856286;
-        bh=u4IGhXiKWHtarMynw8d7DvZQNHWKMfkObaDbgGNcKg8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aL94Dn3yx9EeVaiHjRMEwKQB+D46uURlIk9J830CpcL5mR2CKnKtISfBoapSjvlKJ
-         /WOidQXvGfoJToUKttM0lhpiXp2iYqpON6ReQqozRGPfAuWQFBGyMruwxufLk+wLhn
-         0mOwAQjpVF1HVgXquxw+E/6O8nUKy3eEclvXTHQCcnuRRCjsdvc7cD19lvN+Z1rp55
-         Gr/MOi03wrynUfXPz+eZTzYpFQkCd0WPqzpxqZCGsjCMMMOQmtXTc9+dd/PEF0CFVs
-         AfzbH9iHknuQ/gx42gHWLa6O0XW+Dm8hZm2wgxB6BywJ9xIzcyPigO3VP1ywBTAPQh
-         fE8xh/sUqOOpA==
-Received: by pali.im (Postfix)
-        id 1D77077D; Fri,  9 Jul 2021 20:44:44 +0200 (CEST)
-Date:   Fri, 9 Jul 2021 20:44:43 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S229499AbhGITSL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 15:18:11 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:42533 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbhGITSL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 15:18:11 -0400
+Received: by mail-wr1-f44.google.com with SMTP id r11so8261484wro.9;
+        Fri, 09 Jul 2021 12:15:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8pe1y794l4mjAhpeUAB5o7/eaZgmg4VuBK+ArLDxngI=;
+        b=kTIVSzvwgqWRuRBLLz2lNg833E5xqKHEBkcMzE5zk/VKTo80iVH/4p2YvOxBQO6v6p
+         kVdG8kYkVp3a4n+tRNDDodIlVQuoIaVqlbLgyZYhP3j9F98N5kYtWcy6lEj7Aga/8Ftr
+         Ubau/6eoYxaR3asDff/uJz4hjxucqkCuf7VZogz/DUarRAG0L0inuaygwKwXzMdpL41K
+         C3oeJrIOM0eu1A3HR7p0UoXOfM8Pm2WlY8C6EWnnwPn1Q2Rvyy9dGkhMENQW3qnNYzcg
+         zU0HUEqT4tNh55q/O8dzPodpO9EjMtuHxDgiXyAcwJ12DRgvRRrqRZSUbKx+ALb+RxvA
+         apmA==
+X-Gm-Message-State: AOAM533IQ+uFNV5xlYlPAt2RrXqRUQ3/rimCm+hOMjzbGEX7T3beOtFZ
+        IH4Zvde7hxsX3axFcapdEqs=
+X-Google-Smtp-Source: ABdhPJyEJldATArnxS19lyD3QfM4/weciDnCmCrbLDF8cTqtbXo14co61cfReirRF3kTiSYKhkpPKg==
+X-Received: by 2002:adf:a54b:: with SMTP id j11mr25842163wrb.305.1625858126260;
+        Fri, 09 Jul 2021 12:15:26 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t22sm5824822wmi.22.2021.07.09.12.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jul 2021 12:15:25 -0700 (PDT)
+Date:   Fri, 9 Jul 2021 19:15:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/2] mwifiex: pcie: add reset_d3cold quirk for Surface
- gen4+ devices
-Message-ID: <20210709184443.fxcbc77te6ptypar@pali>
-References: <20210709145831.6123-1-verdre@v0yd.nl>
- <20210709145831.6123-3-verdre@v0yd.nl>
- <20210709151800.7b2qqezlcicbgrqn@pali>
- <b1002254-97c6-d271-c385-4a5c9fe0c914@mailbox.org>
- <20210709161251.g4cvq3l4fnh4ve4r@pali>
- <d9158206-8ebe-c857-7533-47155a6464e1@gmail.com>
- <20210709173013.vkavxrtz767vrmej@pali>
- <89a60b06-b22d-2ea8-d164-b74e4c92c914@gmail.com>
+Subject: Re: [EXTERNAL] Re: [PATCH 1/1] PCI: hv: Support for create interrupt
+ v3
+Message-ID: <20210709191524.vbtlyg42v77f5drw@liuwe-devbox-debian-v2>
+References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+ <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
+ <MW4PR21MB200200F17E1D0E4AEEA87D0DC0189@MW4PR21MB2002.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <89a60b06-b22d-2ea8-d164-b74e4c92c914@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <MW4PR21MB200200F17E1D0E4AEEA87D0DC0189@MW4PR21MB2002.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 09 July 2021 20:16:49 Maximilian Luz wrote:
-> On 7/9/21 7:30 PM, Pali Rohár wrote:
-> > On Friday 09 July 2021 19:03:37 Maximilian Luz wrote:
-> > > On 7/9/21 6:12 PM, Pali Rohár wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > > Hello! Now I'm thinking loudly about this patch. Why this kind of reset
-> > > > > > is needed only for Surface devices? AFAIK these 88W8897 chips are same
-> > > > > > in all cards. Chip itself implements PCIe interface (and also SDIO) so
-> > > > > > for me looks very strange if this 88W8897 PCIe device needs DMI specific
-> > > > > > quirks. I cannot believe that Microsoft got some special version of
-> > > > > > these chips from Marvell which are different than version uses on cards
-> > > > > > in mPCIe form factor.
-> > > > > > 
-> > > > > > And now when I'm reading comment below about PCIe bridge to which is
-> > > > > > this 88W8897 PCIe chip connected, is not this rather an issue in that
-> > > > > > PCIe bridge (instead of mwifiex/88W8897) or in ACPI firmware which
-> > > > > > controls this bridge?
-> > > > > > 
-> > > > > > Or are having other people same issues on mPCIe form factor wifi cards
-> > > > > > with 88W8897 chips and then this quirk should not DMI dependent?
-> > > > > > 
-> > > > > > Note that I'm seeing issues with reset and other things also on chip
-> > > > > > 88W8997 when is connected to system via SDIO. These chips have both PCIe
-> > > > > > and SDIO buses, it just depends which pins are used.
-> > > > > > 
-> > > > > 
-> > > > > Hi and thanks for the quick reply! Honestly I've no idea, this is just the
-> > > > > first method we found that allows for a proper reset of the chip. What I
-> > > > > know is that some Surface devices need that ACPI DSM call (the one that was
-> > > > > done in the commit I dropped in this version of the patchset) to reset the
-> > > > > chip instead of this method.
-> > > > > 
-> > > > > Afaik other devices with this chip don't need this resetting method, at
-> > > > > least Marvell employees couldn't reproduce the issues on their testing
-> > > > > devices.
-> > > > > 
-> > > > > So would you suggest we just try to match for the pci chip 88W8897 instead?
-> > > > 
-> > > > Hello! Such suggestion makes sense when we know that it is 88W8897
-> > > > issue. But if you got information that issue cannot be reproduced on
-> > > > other 88W8897 cards then matching 88W8897 is not correct.
-> > > > 
-> > > >   From all this information looks like that it is problem in (Microsoft?)
-> > > > PCIe bridge to which is card connected. Otherwise I do not reason how it
-> > > > can be 88W8897 affected. Either it is reproducible on 88W8897 cards also
-> > > > in other devices or issue is not on 88W8897 card.
-> > > 
-> > > I doubt that it's an issue with the PCIe bridge (itself at least). The
-> > > same type of bridge is used for both dGPU and NVME SSD on my device (see
-> > > lspci output below) and those work fine. Also if I'm seeing that right
-> > > it's from the Intel CPU, so my guess is that a lot more people would
-> > > have issues with that then.
+On Fri, Jul 09, 2021 at 04:42:13PM +0000, Sunil Muthuswamy wrote:
+> > > +/*
+> > > + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
+> > > + *	Everything is the same as in 'hv_msi_desc2' except that the size
+> > > + *	of the 'vector_count' field is larger to support bigger vector
+> > > + *	values. For ex: LPI vectors on ARM.
+> > > + */
+> > > +struct hv_msi_desc3 {
+> > > +	u32	vector;
+> > > +	u8	delivery_mode;
+> > > +	u8	reserved;
+> > > +	u16	vector_count;
+> > > +	u16	processor_count;
+> > > +	u16	processor_array[32];
+> > > +} __packed;
+> > > +
+> > >  /**
+> > >   * struct tran_int_desc
+> > >   * @reserved:		unused, padding
+> > > @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
+> > >  	struct hv_msi_desc2 int_desc;
+> > >  } __packed;
+> > >
+> > > +struct pci_create_interrupt3 {
+> > > +	struct pci_message message_type;
+> > > +	union win_slot_encoding wslot;
+> > > +	struct hv_msi_desc3 int_desc;
+> > > +} __packed;
+> > > +
+> > >  struct pci_delete_interrupt {
+> > >  	struct pci_message message_type;
+> > >  	union win_slot_encoding wslot;
+> > > @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
+> > >  	return sizeof(*int_pkt);
+> > >  }
+> > >
+> > > +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *cpu,
+> > > +				       u16 *count)
 > > 
-> >  From information below it seems to be related to surprise removal.
-> > Therefore is surprise removal working without issue for dGPU or NVME
-> > SSD? Not all PCIe bridges support surprise removal...
-> 
-> The dGPU on the Surface Book 2 is detachable (the whole base where that
-> is placed can be removed). As far as I can tell surprise removal works
-> perfectly fine for that one. The only thing that it needs is a driver for
-> out-of-band hot-plug signalling if the device is in D3cold while removed
-> as hotplug/removal notifications via PCI don't work in D3cold (this
-> works via ACPI, there is as far as I can tell no such mechanism for
-> WiFi, probably since it's not intended to be hot-unplugged).
-
-Ok. Thank you for confirmation.
-
-> > > I don't know about the hardware side, so it might be possible that it's
-> > > an issue with integrating both bridge and wifi chip, in which case it's
-> > > still probably best handled via DMI quirks unless we know more.
-> > > 
-> > > Also as Tsuchiya mentioned in his original submission, on Windows the
-> > > device is reset via this D3cold method. I've only skimmed that
-> > > errata.inf file mentioned, but I think this is what he's referring to:
-> > > 
-> > >    Controls whether ACPIDeviceEnableD3ColdOnSurpriseRemoval rule will be
-> > >    evaluated or not on a given platform. Currently
-> > >    ACPIDeviceEnableD3ColdOnSurpriseRemoval rule only needs to be
-> > >    evaluated on Surface platforms which contain the Marvell WiFi
-> > >    controller which depends on device going through D3Cold as part of
-> > >    surprise-removal.
-> > > 
-> > > and
-> > > 
-> > >    Starting with Windows releases *after* Blue, ACPI will not put
-> > >    surprise-removed devices into D3Cold automatically. Some known
-> > >    scenarios (viz. WiFi reset/recovery) rely on the device cycling
-> > >    through D3Cold on surprise-removal. This hack allows surprise-removed
-> > >    devices to be put into D3Cold (if supported by the stack).
-> > > 
-> > > So, as far as I can tell, the chip doesn't like to be surprise-removed
-> > > (which seems to happen during reset) and then needs to be power-cycled,
-> > > which I think is likely due to some issue with firmware state.
+> > Isn't count redundant here? I don't see how this can be used safely for
+> > passing back more than 1 cpu, since if cpu is pointing to an array, its
+> > size is not specified.
 > > 
-> > Thanks for information. This really does not look like PCIe bridge
-> > specific if bridge itself can handle surprise-removed devices. lspci can
-> > tell us if bridge supports it or not (see below).
-> > 
-> > > So the quirk on Windows seems very Surface specific.
-> > > 
-> > > There also seem a bunch of revisions of these chips around, for example
-> > > my SB2 is affected by a bug that we've tied to the specific hardware
-> > > revision which causes some issues with host-sleep (IIRC chip switches
-> > > rapidly between wake and sleep states without any external influence,
-> > > which is not how it should behave and how it does behave on a later
-> > > hardware revision).
-> > 
-> > Interesting... This looks like the issue can be in 88W8897 chip and
-> > needs some special conditions to trigger? And Surface is triggering it
-> > always?
+> > Wei.
 > 
-> Not always. It's been a while since I've been actively looking at this
-> and I'm not sure we ever had a good way to reproduce this. Also, I've
-> never really dealt with it as in-depth as Tsuchiya and Jonas have.
-> 
-> My (very) quick attempt ('echo 1 > /sys/bus/pci/.../reset) at
-> reproducing this didn't work, so I think at very least a network
-> connection needs to be active.
+> Yes, it is at the moment. But, the function can be extended in the future to take
+> a size as well. But, it will always be 1 and I preferred keeping that information
+> with the implementation. If you have preference, I can hard code that in the
+> caller. It seems fine for me either ways.
 
-This is doing PCIe function level reset. Maybe you can get more luck
-with PCIe Hot Reset. See following link how to trigger PCIe Hot Reset
-from userspace: https://alexforencich.com/wiki/en/pcie/hot-reset-linux
+Since this is not too much trouble I would rather you remove count and
+then introduce it when it is needed.
 
-> Unfortunately I can't test that with a
-> network connection (and without compiling a custom kernel for which I
-> don't have the time right now) because there's currently another bug
-> deadlocking on device removal if there's an active connection during
-> removal (which also seems to trigger on reset). That one ill be fixed
-> by
-> 
->   https://lore.kernel.org/linux-wireless/20210515024227.2159311-1-briannorris@chromium.org/
-> 
-> Jonas might know more.
-> 
-> > > > > Then we'd probably have to check if there are any laptops where multiple
-> > > > > devices are connected to the pci bridge as Amey suggested in a review
-> > > > > before.
-> > > > 
-> > > > Well, I do not know... But if this is issue with PCIe bridge then
-> > > > similar issue could be observed also for other PCIe devices with this
-> > > > PCIe bridge. But question is if there are other laptops with this PCIe
-> > > > bridge. And also it can be a problem in ACPI firmware on those Surface
-> > > > devices, which implements some PCIe bridge functionality. So it is
-> > > > possible that issue is with PCIe bridge, not in HW, but in SW/firmware
-> > > > part which can be Microsoft specific... So too many questions to which
-> > > > we do not know answers.
-> > > > 
-> > > > Could you provide output of 'lspci -nn -vv' and 'lspci -tvnn' on
-> > > > affected machines? If you have already sent it in some previous email,
-> > > > just send a link. At least I'm not able to find it right now and output
-> > > > may contain something useful...
-> > > 
-> > >  From my Surface Book 2 (with the same issue):
-> > > 
-> > >   - lspci -tvnn: https://paste.ubuntu.com/p/mm3YpcZJ8N/
-> > >   - lspci -vv -nn: https://paste.ubuntu.com/p/dctTDP738N/
-> > 
-> > Could you re-run lspci under root account? There are missing important
-> > parts like "Capabilities: <access denied>" where is information if
-> > bridge supports surprise removal or not.
-> 
-> Ah sorry, sure thing. Here's the updated lspci -nn -vv log:
-> 
->   https://paste.ubuntu.com/p/fzsmCvm86Y/
-> 
-> The log for lspci -tvnn is the same.
-
-Ok. So bridge for wifi card (00:1c.0) indicates:
-
-    SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
-            Slot #0, PowerLimit 10.000W; Interlock- NoCompl+
-
-No support for surprise removal, nor for hotplug interrupt.
-
-But bridge for nvidia card (00:1c.4) indicates:
-
-    SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-            Slot #4, PowerLimit 25.000W; Interlock- NoCompl+
-
-And interesting, it supports hotplug interrupt and also surprise
-removal. Which matches what you wrote above about dGPU.
-
-So another idea: maybe problem is really in 88W8897 and recovering is
-working only via bridge which supports surprise removal? Just guessing.
-Or kernel PCIe hotplug driver is doing something which is needed for
-recovering 88W8897 and because this bridge does not support surprise
-removal, it behaves differently?
+Wei.
 
 > 
-> > > Regards,
-> > > Max
+> - Sunil
