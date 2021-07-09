@@ -2,174 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED9D73C27B4
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 18:42:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09A063C27F9
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 19:04:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbhGIQpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 12:45:00 -0400
-Received: from mail-dm6nam11on2106.outbound.protection.outlook.com ([40.107.223.106]:25568
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229459AbhGIQpA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Jul 2021 12:45:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DTy8wIAhn1xDOeQEm/zm1l9uMN37u196oAKRT2A9S8vN7745qKPKK8xXmwfkkw5mzFxPpF9cWjfoDIWlR6WX7L0Kwh9Edv1O7kHoFpy8oQvnYYTk9/VCuw60ZjMuem4cXSE9GzLf89oUYZVhAwSI4JbTdILAdQd77GgyYlPcRLNttRu04/iUEi7UzxM1dNzvT+CDdOHOZS2zfO9L7hyERhO1jX+X3BZrHIwoFJEzfnAbWjDk09ejMuWhCgRDHHp9BCP3y+clHV7JSCISwosqHtmCvLcBm/Q+MYEoKmRJMZYzllLC+aYAdOtw5FRS21THiRvSP3Ivc8vJmJyZRXUJMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rVnDT0r3pUxCxQXeXJaQDgUfiK1gygZN1kEZZikg0F4=;
- b=ibUieBn6btYGnzCLgOt+mWXphALTrf6Y9T6UPIBcekvVtnVCYYqkqGyB5sLPa50Fp0xwQCsfd+rhCeZJBONkqI601yCQQpjFFsbcGjR36+s83Pve6q4B9ufkq4upbCt/mEohRiCWFR1dK6l56ROXIzF0Ui3pgep/jf9PA9TE0b/hQ2zVpBwNsXeRsV6+FJ/Avgc4NAG5sEzo8L+F/g1Mvpaamx0ooOufV05vNvqBX5ylenx2CJdH6/qK7q3ZX52Qyn69nw2aG6xCFB6AOZNjh0USJnGb76+tZLNydRyKf5kIu6vLJqJazQKskG/Wt/pPYvWsaSJ/Sfc7+/cwprH/Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rVnDT0r3pUxCxQXeXJaQDgUfiK1gygZN1kEZZikg0F4=;
- b=UGKZhlrEsa31tlQmM2mv6v1onfA1gXIZz5Ty86oHzhSPSS8YgZUplxomtQhBKngPxLCOxpTi1u73F4XNr6ZvioL43P60jklMnyWo+69hWHCkwBDjcjAEZTK0NT17nF9EhqNq8pp/sSR1RTdpr1JLDSAn7PnVsfABG/ef0Bus26g=
-Received: from MW4PR21MB2002.namprd21.prod.outlook.com (2603:10b6:303:68::18)
- by MWHPR21MB0510.namprd21.prod.outlook.com (2603:10b6:300:df::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.0; Fri, 9 Jul
- 2021 16:42:13 +0000
-Received: from MW4PR21MB2002.namprd21.prod.outlook.com
- ([fe80::f8cc:2c20:d821:355c]) by MW4PR21MB2002.namprd21.prod.outlook.com
- ([fe80::f8cc:2c20:d821:355c%4]) with mapi id 15.20.4331.012; Fri, 9 Jul 2021
- 16:42:13 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S230093AbhGIRG3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 13:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230048AbhGIRG1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 13:06:27 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D6FAC0613DD;
+        Fri,  9 Jul 2021 10:03:43 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id hr1so17441014ejc.1;
+        Fri, 09 Jul 2021 10:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dVvi+fZClluzxbZN95gNbThYay+2YwEvt12ff5eLbXk=;
+        b=tEu1JMlVzD8b1ypcdJPbklHbisxRVqJruL4zMITA4wwQWTQlw9JW2PCaAikP5hc6LH
+         nBO4sDB+3rIcpzI6li/thAFzEd1rtBgfFWRTm5mNUS7La79azOLXUrSbVXXP5NhVsOGV
+         LM/jRRmNQr7t8SFQn4Kjtn9nCHfLBaJbrxb/NfwURY5ptX1HVYBVxI9kYoMCoA1CJG+B
+         rN9bNSD0vWjGu8RjQyD/xmOETiz01jK0RSlEO5HgcqE9UcFlFhoke6elSE9u7jvk/nYv
+         H7COXhXsDnRgdniVwk8qxRZJUtmfGmCSIwRUksFkpOWEYSNgUAV9GHWb0erbuLdZ64il
+         qSzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dVvi+fZClluzxbZN95gNbThYay+2YwEvt12ff5eLbXk=;
+        b=HZLdsUUo3wInXSmrDF1vkopxUyIdt4CLAW4Zn6OPm6YPAovBhHplrsz9Bz5tVMYSjh
+         N8fka6U4JVwvJyVLI5NzkkNMEZhGXv5S0QUYf6PaRqas5erkgs/s8wXO4uCE/p7jKhPu
+         GA6bcYreAiMy5epMzF/AieyK0C7hDekhfe4zRECymX3O258kbMKOeyarwOYFpPOf3eTH
+         gw3NHhWs01mI+mXnGKkLPGGvc1wqGGtfbIivYEr+wn++nGMF4sQZVFfcjaL+G1apjbFG
+         ICzixd7ADqFyKZxrinZdBjcp4TzpfBxzMXa0vuZZXambu0ELSkTv9pdKq56tzWJHRbsK
+         0ukw==
+X-Gm-Message-State: AOAM5327Mo/LDyawBT3ocVkLXqOeGXLASQ/UxagocRrkkIXBUGmNNUH0
+        7w9TNKfTSS9HEgCqRXJDa4Q=
+X-Google-Smtp-Source: ABdhPJyNpj7VoaP/QFxXSqjELez4vxqyI7afRt1sdshszXWHVKMHr5T0zib4zwltcYgIr6pk8m7p/g==
+X-Received: by 2002:a17:907:1c98:: with SMTP id nb24mr39644300ejc.316.1625850221623;
+        Fri, 09 Jul 2021 10:03:41 -0700 (PDT)
+Received: from [10.17.0.13] ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id zp1sm2581308ejb.92.2021.07.09.10.03.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Jul 2021 10:03:41 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] mwifiex: pcie: add reset_d3cold quirk for Surface
+ gen4+ devices
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: RE: [EXTERNAL] Re: [PATCH 1/1] PCI: hv: Support for create interrupt
- v3
-Thread-Topic: [EXTERNAL] Re: [PATCH 1/1] PCI: hv: Support for create interrupt
- v3
-Thread-Index: Add0TIVdcQX5pMV/TWWUfz5smDdQ7AAYBcoAAAzvoMA=
-Date:   Fri, 9 Jul 2021 16:42:13 +0000
-Message-ID: <MW4PR21MB200200F17E1D0E4AEEA87D0DC0189@MW4PR21MB2002.namprd21.prod.outlook.com>
-References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
- <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
-In-Reply-To: <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c2a6a17e-4ab9-46b7-218b-08d942f8814b
-x-ms-traffictypediagnostic: MWHPR21MB0510:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB0510E94A4CD167A20923C31DC0189@MWHPR21MB0510.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YjRtFPW92xV16XbwNcOlw5yFIWB5bWi2SlYcDwydb7RcMCW+Xwga1Pu2p3Mm/mXVzHNkxRBEi6cKLTmWLMfMBzO6P5MAwsMntkD8VXEoaZiax99GTedOTPeK5AD/u6mjyth006iJN4VyZfPvMEh8NKsXyUiND9o+1EG7ULyMeNZsNrbW7XR0rL9XccnNuW+r+el3c77GezWuCD1Ckz2hU71HnSt/t5WS3wNEYc4rcqfRSxjOxiUJ2GUsxh+GC4sVEqPAMG+qKi0oOlv+MSeB8Pn92J5dHNgpth4Gc+new13Ou64zbK703l79xbu0TMmkkG+EwAjWZQAD3DV6QglN2gK79hVRFT7Z63V3LOz0+JtwhyHTLqOGZrr2ZccJX5//IKRuCP5bX9yqeeHEopElhVMG1y9NUGRZWDaX8k2Y4HWOvfJXlfDgN2/WkoROeLRkEkmVXm/XijfY1KZ+Hhdk99cCKqJbHVBKzcONx9BSsiYoWl/XpdmU24ghMmGZAwCUQfiWIsuScM3x9Rsl814IH2uM+aWwCqup4/O81+uqb4WoT4DERlp4Y3yj0oKUJoN39z/ImiQoNd75Tyy3646Bs7SPW16B0TngMZuh0O1c1UDs9JilEuJ1KFlNk8ZVI9phrPuzr5kH2FkFngHgF4eH1g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2002.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8990500004)(83380400001)(86362001)(122000001)(6916009)(82950400001)(64756008)(66476007)(66556008)(6506007)(186003)(66946007)(9686003)(82960400001)(8676002)(33656002)(38100700002)(8936002)(5660300002)(52536014)(10290500003)(2906002)(7696005)(66446008)(4326008)(71200400001)(478600001)(55016002)(316002)(76116006)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+G9mdU9YIDdcYMryNwsENnm7x6O73a3n4JqmiTz4T8ZiRCg+JCTxbNL0JQV+?=
- =?us-ascii?Q?LeJkie1tcNf7/cWmQY5DstcAlRQmJsC8YiZP4DxcfyVtuttnSGxWZQQ4GroR?=
- =?us-ascii?Q?FEecUHt9ShAdxgo0MOmOrUweQ8SFPdkocb7dx1E3nl3CiAq4rp0i/fXpt61C?=
- =?us-ascii?Q?WNF5y+BRLNFea9qXnN+OJ7z4BFoEXySTV0/fTXoT4CZOH8VHLD5durMXIRkB?=
- =?us-ascii?Q?PI0myeXxEc8zLI1QPtpA3SEol0i87cd8YdlUOIRMTYqQ9OItiiAK7o5prhz0?=
- =?us-ascii?Q?5Vb7dzP17iXFxxMSeJS9gMqebY0bVQRaouoGC9THTE3kZdTVWF+8oaY1s0gL?=
- =?us-ascii?Q?BRTgQHq7eSBD0T+u9VacPM30m7hwGf+XOvvI0dQFWiwWPsTWg7h8GJAM72SS?=
- =?us-ascii?Q?CuUYP79gwW1ndJF2km6f5qYsiY5mCFjal44c1XXVkuBh3UIqgW5fAdcNffHO?=
- =?us-ascii?Q?8c65YzlmSwqTwSA1ybGtP6zfbcVtokI7bWyfrtKVlaZc5/981ZOQ9lOebvSU?=
- =?us-ascii?Q?PJuersbyfOsWexnToLeSzUlrh9jSMvH11gvDk9XpEIHzOrzA9JZHViETLex+?=
- =?us-ascii?Q?UQl0in0/QAc9u0n2GOO3uvOcH60CB2wgg11XZ/2jydnQa1g0doyVBXSnEu9E?=
- =?us-ascii?Q?ZBTNK8T3qlM+UwBtnb9c7bTDylpnI8sMzc9igIxAyVADQVwoYa59IMHwYBQj?=
- =?us-ascii?Q?X/9Naf8FOY7L/c7+rTdaghsgC2njSmEsbXTjO8BwN3ktXWd1Fh3Q9mt4Dh8M?=
- =?us-ascii?Q?brAImkJNSaoDPgXjsCtZ1Jn2FYfKGknYSJdPx/TQ3eMUZIb7csQxHgbEKFHc?=
- =?us-ascii?Q?YFVoAu8kK1r9IdNQDFvMLF7ezBA75kX7c00lPoPk7YdRj6GFhfAJo+vUEI7J?=
- =?us-ascii?Q?BPfJ4OVmoK8U/rzDu8G9QYiQ+FoA9H0I7Q+v2q6SyYmmbofbSJxrUcuke7oD?=
- =?us-ascii?Q?dAgIOtr2V9c0W+TfZvMSDpR4A78/r5BAOtD/5g8HLLaORxHT6pRzMbk/WYXp?=
- =?us-ascii?Q?/o9FoX3dGRtQdv5/0uy3lVgg53t5K78AMuB1zsSG/+dr/4YaADPBmKNYZCVg?=
- =?us-ascii?Q?l4OL5gr/yGQx29FclO+recQN/oa0RU7swnRUrGMxCjoN2MS4BzGznCbHgOUn?=
- =?us-ascii?Q?aE0c+ED+delEJtBO08sLnh8K71xxEg5h9oTr1JiLVTwlmlm0k6WpzA1Ej+Ek?=
- =?us-ascii?Q?BYBKD9g1Qvo8Y1bc4JBJdY0hzWttqHt4tOvO98EEJqaE6n1Qq22H6Ul6PsIt?=
- =?us-ascii?Q?uixLtzHYksrJq3Bbe8w5Aqg8qZU6aMojZYyFYZR9xbPX9q/ltzeLCtQBHUnO?=
- =?us-ascii?Q?0LZuE4J0F3u0dAcYtyL3yxRWv+WkhwMR8pIHrSrfHhJpqIRKsdYwuSccqktq?=
- =?us-ascii?Q?NVra/WbwVdq+2AeurICDSGcIDNkp?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+References: <20210709145831.6123-1-verdre@v0yd.nl>
+ <20210709145831.6123-3-verdre@v0yd.nl> <20210709151800.7b2qqezlcicbgrqn@pali>
+ <b1002254-97c6-d271-c385-4a5c9fe0c914@mailbox.org>
+ <20210709161251.g4cvq3l4fnh4ve4r@pali>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <d9158206-8ebe-c857-7533-47155a6464e1@gmail.com>
+Date:   Fri, 9 Jul 2021 19:03:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2002.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2a6a17e-4ab9-46b7-218b-08d942f8814b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2021 16:42:13.6649
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: golI9Z5X0mYpbMJOZ8dokA5Syu8qyZqwvTK3XSqL66goMhj/wh41rsqEenN+KHJnAUdARUPzt69P9Rk3rLDUb8IWngfs+fHievQRkcDOtHo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0510
+In-Reply-To: <20210709161251.g4cvq3l4fnh4ve4r@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > +/*
-> > + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
-> > + *	Everything is the same as in 'hv_msi_desc2' except that the size
-> > + *	of the 'vector_count' field is larger to support bigger vector
-> > + *	values. For ex: LPI vectors on ARM.
-> > + */
-> > +struct hv_msi_desc3 {
-> > +	u32	vector;
-> > +	u8	delivery_mode;
-> > +	u8	reserved;
-> > +	u16	vector_count;
-> > +	u16	processor_count;
-> > +	u16	processor_array[32];
-> > +} __packed;
-> > +
-> >  /**
-> >   * struct tran_int_desc
-> >   * @reserved:		unused, padding
-> > @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
-> >  	struct hv_msi_desc2 int_desc;
-> >  } __packed;
-> >
-> > +struct pci_create_interrupt3 {
-> > +	struct pci_message message_type;
-> > +	union win_slot_encoding wslot;
-> > +	struct hv_msi_desc3 int_desc;
-> > +} __packed;
-> > +
-> >  struct pci_delete_interrupt {
-> >  	struct pci_message message_type;
-> >  	union win_slot_encoding wslot;
-> > @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
-> >  	return sizeof(*int_pkt);
-> >  }
-> >
-> > +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *=
-cpu,
-> > +				       u16 *count)
->=20
-> Isn't count redundant here? I don't see how this can be used safely for
-> passing back more than 1 cpu, since if cpu is pointing to an array, its
-> size is not specified.
->=20
-> Wei.
+On 7/9/21 6:12 PM, Pali Rohár wrote:
 
-Yes, it is at the moment. But, the function can be extended in the future t=
-o take
-a size as well. But, it will always be 1 and I preferred keeping that infor=
-mation
-with the implementation. If you have preference, I can hard code that in th=
-e
-caller. It seems fine for me either ways.
+[...]
 
-- Sunil
+>>> Hello! Now I'm thinking loudly about this patch. Why this kind of reset
+>>> is needed only for Surface devices? AFAIK these 88W8897 chips are same
+>>> in all cards. Chip itself implements PCIe interface (and also SDIO) so
+>>> for me looks very strange if this 88W8897 PCIe device needs DMI specific
+>>> quirks. I cannot believe that Microsoft got some special version of
+>>> these chips from Marvell which are different than version uses on cards
+>>> in mPCIe form factor.
+>>>
+>>> And now when I'm reading comment below about PCIe bridge to which is
+>>> this 88W8897 PCIe chip connected, is not this rather an issue in that
+>>> PCIe bridge (instead of mwifiex/88W8897) or in ACPI firmware which
+>>> controls this bridge?
+>>>
+>>> Or are having other people same issues on mPCIe form factor wifi cards
+>>> with 88W8897 chips and then this quirk should not DMI dependent?
+>>>
+>>> Note that I'm seeing issues with reset and other things also on chip
+>>> 88W8997 when is connected to system via SDIO. These chips have both PCIe
+>>> and SDIO buses, it just depends which pins are used.
+>>>
+>>
+>> Hi and thanks for the quick reply! Honestly I've no idea, this is just the
+>> first method we found that allows for a proper reset of the chip. What I
+>> know is that some Surface devices need that ACPI DSM call (the one that was
+>> done in the commit I dropped in this version of the patchset) to reset the
+>> chip instead of this method.
+>>
+>> Afaik other devices with this chip don't need this resetting method, at
+>> least Marvell employees couldn't reproduce the issues on their testing
+>> devices.
+>>
+>> So would you suggest we just try to match for the pci chip 88W8897 instead?
+> 
+> Hello! Such suggestion makes sense when we know that it is 88W8897
+> issue. But if you got information that issue cannot be reproduced on
+> other 88W8897 cards then matching 88W8897 is not correct.
+> 
+>  From all this information looks like that it is problem in (Microsoft?)
+> PCIe bridge to which is card connected. Otherwise I do not reason how it
+> can be 88W8897 affected. Either it is reproducible on 88W8897 cards also
+> in other devices or issue is not on 88W8897 card.
+
+I doubt that it's an issue with the PCIe bridge (itself at least). The
+same type of bridge is used for both dGPU and NVME SSD on my device (see
+lspci output below) and those work fine. Also if I'm seeing that right
+it's from the Intel CPU, so my guess is that a lot more people would
+have issues with that then.
+
+I don't know about the hardware side, so it might be possible that it's
+an issue with integrating both bridge and wifi chip, in which case it's
+still probably best handled via DMI quirks unless we know more.
+
+Also as Tsuchiya mentioned in his original submission, on Windows the
+device is reset via this D3cold method. I've only skimmed that
+errata.inf file mentioned, but I think this is what he's referring to:
+
+   Controls whether ACPIDeviceEnableD3ColdOnSurpriseRemoval rule will be
+   evaluated or not on a given platform. Currently
+   ACPIDeviceEnableD3ColdOnSurpriseRemoval rule only needs to be
+   evaluated on Surface platforms which contain the Marvell WiFi
+   controller which depends on device going through D3Cold as part of
+   surprise-removal.
+
+and
+
+   Starting with Windows releases *after* Blue, ACPI will not put
+   surprise-removed devices into D3Cold automatically. Some known
+   scenarios (viz. WiFi reset/recovery) rely on the device cycling
+   through D3Cold on surprise-removal. This hack allows surprise-removed
+   devices to be put into D3Cold (if supported by the stack).
+
+So, as far as I can tell, the chip doesn't like to be surprise-removed
+(which seems to happen during reset) and then needs to be power-cycled,
+which I think is likely due to some issue with firmware state.
+
+So the quirk on Windows seems very Surface specific.
+
+There also seem a bunch of revisions of these chips around, for example
+my SB2 is affected by a bug that we've tied to the specific hardware
+revision which causes some issues with host-sleep (IIRC chip switches
+rapidly between wake and sleep states without any external influence,
+which is not how it should behave and how it does behave on a later
+hardware revision).
+
+>> Then we'd probably have to check if there are any laptops where multiple
+>> devices are connected to the pci bridge as Amey suggested in a review
+>> before.
+> 
+> Well, I do not know... But if this is issue with PCIe bridge then
+> similar issue could be observed also for other PCIe devices with this
+> PCIe bridge. But question is if there are other laptops with this PCIe
+> bridge. And also it can be a problem in ACPI firmware on those Surface
+> devices, which implements some PCIe bridge functionality. So it is
+> possible that issue is with PCIe bridge, not in HW, but in SW/firmware
+> part which can be Microsoft specific... So too many questions to which
+> we do not know answers.
+> 
+> Could you provide output of 'lspci -nn -vv' and 'lspci -tvnn' on
+> affected machines? If you have already sent it in some previous email,
+> just send a link. At least I'm not able to find it right now and output
+> may contain something useful...
+
+ From my Surface Book 2 (with the same issue):
+
+  - lspci -tvnn: https://paste.ubuntu.com/p/mm3YpcZJ8N/
+  - lspci -vv -nn: https://paste.ubuntu.com/p/dctTDP738N/
+
+Regards,
+Max
