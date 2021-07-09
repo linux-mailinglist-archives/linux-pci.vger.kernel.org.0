@@ -2,159 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A64563C222C
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 12:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A5C53C2259
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 12:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232010AbhGIK1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 06:27:21 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:53950 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232006AbhGIK1V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 06:27:21 -0400
-Received: by mail-wm1-f46.google.com with SMTP id w13so6010400wmc.3;
-        Fri, 09 Jul 2021 03:24:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cAfemKVKaAPq40ft5rYBbrNJJ0FxZzS3NBhkFBnKSzI=;
-        b=YAW3U4TOhh9jayB20oqIkMIbn+6IlNyrt+m2wQxcJG+1ope3QDQS/7WtJ2qyEdcAij
-         nXCyzZKfc+AKkbCp5bv3Yjcgh7ZTClRW3LkkSEw619K1hchuypXujudHmFJgvXxkTaJo
-         XFgFNgr8P8vr99RzkiTqpoU2crGGqHcu1/GAfCFhEph4C3H51XdXOmr2OsVQrrwTg5Qq
-         CJYdnLOFbjEaQ5+zykCHG9c+aU+f2odg4DQfOQJP6CMbVaXWEg3swaWWdyyRmOUZ9PRD
-         25UvOunY5Asg1XBjfOmRKMIrgef9FygU1izOS9xTevHyEN/MLIoTt1c6OhbvaDk/c8g2
-         wZpQ==
-X-Gm-Message-State: AOAM531IIt2ZSzlc1hyEz6ZbSXVdtTkvxWhvrTnITClw+GcSYULIdLFK
-        2Lgg8pVXdSPtA+vQkgKDZaU=
-X-Google-Smtp-Source: ABdhPJz7KdWD9EJLU17W1kLv6XakRSsjJEumz5JxJkpi9BFIWNd/m8DAe9BoZPX7TXQA5ORW8lv8ug==
-X-Received: by 2002:a1c:e90d:: with SMTP id q13mr38611656wmc.163.1625826276878;
-        Fri, 09 Jul 2021 03:24:36 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id j1sm11370711wms.7.2021.07.09.03.24.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 03:24:36 -0700 (PDT)
-Date:   Fri, 9 Jul 2021 10:24:34 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 1/1] PCI: hv: Support for create interrupt v3
-Message-ID: <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
-References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+        id S230208AbhGIKoh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 06:44:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229868AbhGIKoe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Jul 2021 06:44:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 390F5613D6;
+        Fri,  9 Jul 2021 10:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625827311;
+        bh=LIIAa/aqK4HB8FJB22iEgxigFKB0TfOTlDkd+ACAaEQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l+AHKjtkC4zwuTRSoEPGei9fYxI51Dc8P8waNHA4MdpkUCBKqdWWk2+p2JofNH372
+         AKD0zhy6ejV+UUO2ZEqD8Xr58XkRDTmx1J2an3JG6Rb5rtWbKcelyRmGTAWSpp1OAw
+         s1vIKZJaHa13/cmHYiu6nk61+Yv7ekJM5lqTRf2rcmKKF+kCM32erCLOvk82/GGufA
+         +0YCG6sCyJ3XKBBIh6J0lTUG2O9FSb5hco2KeV8/WN5ctCCHcbmlyMDsUeSqI/xoek
+         aqumwamXfIfXiu1p/B3Y2FUfZzqHuCVKAq2ICK2dhriFSYiNtcD/16+LvyjscR3iWn
+         2+MY7cCM889FA==
+Received: by mail.kernel.org with local (Exim 4.94.2)
+        (envelope-from <mchehab@kernel.org>)
+        id 1m1nx7-00B5FP-3x; Fri, 09 Jul 2021 12:41:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: [PATCH v3 0/9] Add support for Hikey 970 PCIe
+Date:   Fri,  9 Jul 2021 12:41:36 +0200
+Message-Id: <cover.1625826353.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 08, 2021 at 11:04:49PM +0000, Sunil Muthuswamy wrote:
-> Hyper-V vPCI protocol version 1_4 adds support for create interrupt
-> v3. Create interrupt v3 essentially makes the size of the vector
-> field bigger in the message, thereby allowing bigger vector values.
-> For example, that will come into play for supporting LPI vectors
-> on ARM, which start at 8192.
-> 
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 74 ++++++++++++++++++++++++++---
->  1 file changed, 68 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index bebe3eeebc4e..de61b20f9604 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -64,6 +64,7 @@ enum pci_protocol_version_t {
->  	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
->  	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
->  	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* Vibranium */
-> +	PCI_PROTOCOL_VERSION_1_4 = PCI_MAKE_VERSION(1, 4),      /* Fe */
->  };
->  
->  #define CPU_AFFINITY_ALL	-1ULL
-> @@ -73,6 +74,7 @@ enum pci_protocol_version_t {
->   * first.
->   */
->  static enum pci_protocol_version_t pci_protocol_versions[] = {
-> +	PCI_PROTOCOL_VERSION_1_4,
->  	PCI_PROTOCOL_VERSION_1_3,
->  	PCI_PROTOCOL_VERSION_1_2,
->  	PCI_PROTOCOL_VERSION_1_1,
-> @@ -122,6 +124,8 @@ enum pci_message_type {
->  	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
->  	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
->  	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
-> +	PCI_RESOURCES_ASSIGNED3         = PCI_MESSAGE_BASE + 0x1A,
-> +	PCI_CREATE_INTERRUPT_MESSAGE3   = PCI_MESSAGE_BASE + 0x1B,
->  	PCI_MESSAGE_MAXIMUM
->  };
->  
-> @@ -235,6 +239,21 @@ struct hv_msi_desc2 {
->  	u16	processor_array[32];
->  } __packed;
->  
-> +/*
-> + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
-> + *	Everything is the same as in 'hv_msi_desc2' except that the size
-> + *	of the 'vector_count' field is larger to support bigger vector
-> + *	values. For ex: LPI vectors on ARM.
-> + */
-> +struct hv_msi_desc3 {
-> +	u32	vector;
-> +	u8	delivery_mode;
-> +	u8	reserved;
-> +	u16	vector_count;
-> +	u16	processor_count;
-> +	u16	processor_array[32];
-> +} __packed;
-> +
->  /**
->   * struct tran_int_desc
->   * @reserved:		unused, padding
-> @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
->  	struct hv_msi_desc2 int_desc;
->  } __packed;
->  
-> +struct pci_create_interrupt3 {
-> +	struct pci_message message_type;
-> +	union win_slot_encoding wslot;
-> +	struct hv_msi_desc3 int_desc;
-> +} __packed;
-> +
->  struct pci_delete_interrupt {
->  	struct pci_message message_type;
->  	union win_slot_encoding wslot;
-> @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
->  	return sizeof(*int_pkt);
->  }
->  
-> +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *cpu,
-> +				       u16 *count)
+As requested by Rob Herring, this series split the PHY part into a separate driver.
+Then, it adds support for Kirin 970 on a single patch.
 
-Isn't count redundant here? I don't see how this can be used safely for
-passing back more than 1 cpu, since if cpu is pointing to an array, its
-size is not specified.
+With this change, the PHY-specific device tree bindings for Kirin 960 moved
+to its own PHY properties.
 
-Wei.
+Manivannan,
 
-> +{
-> +	/*
-> +	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
-> +	 * by subsequent retarget in hv_irq_unmask().
-> +	 */
-> +	*cpu = cpumask_first_and(affinity, cpu_online_mask);
-> +	*count = 1;
-> +}
-> +
+Please notice that the last two patches are marked as co-developed:
+
+	phy: hisilicon: add driver for Kirin 970 PCIe PHY
+	arm64: dts: hisilicon: Add support for HiKey 970 PCIe controller hardware
+
+The first one contains the code you submitted in the past adding
+support for Kirin 970 at the pcie-kirin driver, modified by me and
+moved to a separate driver.
+
+The second one is the DTS file, also modified by me in order to split the PHY
+properties from the PCIe ones.
+
+Please send your SoB to confirm that both changes are OK for you.
+
+Tested on Hikey970:
+
+  $ lspci
+  00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3670 (rev 01)
+  01:00.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+  02:01.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+  02:04.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+  02:05.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+  02:07.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+  02:09.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+  06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 07)
+
+  $ ethtool enp6s0
+  Settings for enp6s0:
+	Supported ports: [ TP	 MII ]
+	Supported link modes:   10baseT/Half 10baseT/Full
+	                        100baseT/Half 100baseT/Full
+	                        1000baseT/Half 1000baseT/Full
+	Supported pause frame use: Symmetric Receive-only
+	Supports auto-negotiation: Yes
+	Supported FEC modes: Not reported
+	Advertised link modes:  10baseT/Half 10baseT/Full
+	                        100baseT/Half 100baseT/Full
+	                        1000baseT/Half 1000baseT/Full
+	Advertised pause frame use: Symmetric Receive-only
+	Advertised auto-negotiation: Yes
+	Advertised FEC modes: Not reported
+	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+	                                     100baseT/Half 100baseT/Full
+	Link partner advertised pause frame use: Symmetric Receive-only
+	Link partner advertised auto-negotiation: Yes
+	Link partner advertised FEC modes: Not reported
+	Speed: 100Mb/s
+	Duplex: Full
+	Auto-negotiation: on
+	master-slave cfg: preferred slave
+	master-slave status: slave
+	Port: Twisted Pair
+	PHYAD: 0
+	Transceiver: external
+	MDI-X: Unknown
+  netlink error: Operation not permitted
+	Link detected: yes
+
+Partially tested on Hikey 960[1]:
+
+  $ lspci
+  00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3660 (rev 01)
+
+[1] The Hikey 960 doesn't come with any internal PCIe device.
+    Its hardware supports just an external device via a M.2 slot that
+    doesn't support SATA. I ordered a NVMe device to test, but the vendor
+    is currently out of supply. It should take 4-5 weeks to arrive here. I'll
+    run an extra test on it once it arrives.
+
+Manivannan Sadhasivam (1):
+  arm64: dts: hisilicon: Add support for HiKey 970 PCIe controller
+    hardware
+
+Mauro Carvalho Chehab (8):
+  dt-bindings: phy: add bindings for Hikey 960 PCIe PHY
+  dt-bindings: phy: add bindings for Hikey 970 PCIe PHY
+  dt-bindings: PCI: kirin: fix compatible string
+  dt-bindings: PCI: kirin: drop PHY properties
+  phy: hisilicon: add a PHY driver for Kirin 960
+  PCI: kirin: drop the PHY logic from the driver
+  PCI: kirin: use regmap for APB registers
+  phy: hisilicon: add driver for Kirin 970 PCIe PHY
+
+ .../devicetree/bindings/pci/kirin-pcie.txt    |  21 +-
+ .../phy/hisilicon,phy-hi3660-pcie.yaml        |  82 ++
+ .../phy/hisilicon,phy-hi3670-pcie.yaml        | 101 ++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |  29 +-
+ arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  72 ++
+ .../boot/dts/hisilicon/hikey970-pmic.dtsi     |   1 -
+ drivers/pci/controller/dwc/pcie-kirin.c       | 298 ++----
+ drivers/phy/hisilicon/Kconfig                 |  20 +
+ drivers/phy/hisilicon/Makefile                |   2 +
+ drivers/phy/hisilicon/phy-hi3660-pcie.c       | 325 +++++++
+ drivers/phy/hisilicon/phy-hi3670-pcie.c       | 892 ++++++++++++++++++
+ 11 files changed, 1572 insertions(+), 271 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,phy-hi3660-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,phy-hi3670-pcie.yaml
+ create mode 100644 drivers/phy/hisilicon/phy-hi3660-pcie.c
+ create mode 100644 drivers/phy/hisilicon/phy-hi3670-pcie.c
+
+-- 
+2.31.1
+
+
