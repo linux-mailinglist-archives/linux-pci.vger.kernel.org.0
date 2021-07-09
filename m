@@ -2,209 +2,301 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 102543C2565
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 15:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3DA73C2595
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jul 2021 16:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232144AbhGIOAc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jul 2021 10:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232083AbhGIOAb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Jul 2021 10:00:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 04FE5613C1;
-        Fri,  9 Jul 2021 13:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625839068;
-        bh=V7HJ8fMGt1R/rfzieoKwkAhPUtMkuM6FOH/wYJYnCGc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XwpnxKqaT9YJKkcKm1jsUKDwbkkL2mCvSU3FQ1bmEaOGeIJ9altd1QIzjJPY1CTSj
-         vtUQRqqUOnoIQ5Yu0ozbPas0SclC5rCBQERtqUu4ZQ+ORP9BOW9XcGOexsPq+52g5X
-         ry+65t2UbTDMsP2DweTu2GIHf9tmIRDo4Pf5GtifAY4q7GwZUM/jUtTau17COQNScq
-         hfjXnEMsxNeEhjj20dyJlxD2WC2DjFAmJ4d7vIL/FKccgIFwRlFI0L7Q+YJ/syAjiC
-         /N+Qj/HP473sIrpXnoVGguxvEGFl/Jvn3p5XTke8AieF4xJ6rcjKXg+xoeGDwllaWd
-         lqpZ5xOmVRGxg==
-Received: by mail.kernel.org with local (Exim 4.94.2)
-        (envelope-from <mchehab@kernel.org>)
-        id 1m1r0i-0004lI-N6; Fri, 09 Jul 2021 15:57:44 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
+        id S231875AbhGIONp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jul 2021 10:13:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231732AbhGIONo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jul 2021 10:13:44 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCDFC0613DD;
+        Fri,  9 Jul 2021 07:11:00 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4GLw753K2SzQk3M;
+        Fri,  9 Jul 2021 16:10:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id ENcqCjhAKuMw; Fri,  9 Jul 2021 16:10:53 +0200 (CEST)
+Subject: Re: [RFC PATCH 2/3] mwifiex: pcie: add reset_d3cold quirk for Surface
+ gen4+ devices
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: PCI: kirin-pcie.txt: convert it to yaml
-Date:   Fri,  9 Jul 2021 15:57:43 +0200
-Message-Id: <29d96d1b7fc27efd1437ba0cd73e21dfd354ac23.1625838920.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1625838920.git.mchehab+huawei@kernel.org>
-References: <cover.1625838920.git.mchehab+huawei@kernel.org>
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+References: <20210522131827.67551-1-verdre@v0yd.nl>
+ <20210522131827.67551-3-verdre@v0yd.nl>
+ <20210522184416.mscbmay27jciy2hv@archlinux>
+ <1a844abf-2259-ff4f-d49d-de95870345dc@mailbox.org>
+ <20210524202734.sgvv4qtzonlqmj7p@archlinux>
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+Message-ID: <3fdadc15-220e-2cdf-e650-1f465e6f4a88@mailbox.org>
+Date:   Fri, 9 Jul 2021 16:10:20 +0200
 MIME-Version: 1.0
+In-Reply-To: <20210524202734.sgvv4qtzonlqmj7p@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -2.49 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 12CAA1823
+X-Rspamd-UID: 9d884b
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the file into a JSON description at the yaml format.
+On 5/24/21 10:27 PM, Amey Narkhede wrote:
+ > On 21/05/23 12:28PM, Jonas Dreßler wrote:
+ >> On 5/22/21 8:44 PM, Amey Narkhede wrote:
+ >>> On 21/05/22 03:18PM, Jonas Dreßler wrote:
+ >>>> From: Tsuchiya Yuto <kitakar@gmail.com>
+ >>>>
+ >>>> To reset mwifiex on Surface gen4+ (Pro 4 or later gen) devices, it
+ >>>> seems that putting the wifi device into D3cold is required according
+ >>>> to errata.inf file on Windows installation (Windows/INF/errata.inf).
+ >>>>
+ >>>> This patch adds a function that performs power-cycle (put into D3cold
+ >>>> then D0) and call the function at the end of reset_prepare().
+ >>>>
+ >>>> Note: Need to also reset the parent device (bridge) of wifi on SB1;
+ >>>> it might be because the bridge of wifi always reports it's in D3hot.
+ >>>> When I tried to reset only the wifi device (not touching parent), 
+it gave
+ >>>> the following error and the reset failed:
+ >>>>
+ >>>>       acpi device:4b: Cannot transition to power state D0 for 
+parent in D3hot
+ >>>>       mwifiex_pcie 0000:03:00.0: can't change power state from 
+D3cold to D0 (config space inaccessible)
+ >>>>
+ >>> May I know how did you reset only the wifi device when you encountered
+ >>> this error?
+ >>
+ >> Not exactly sure what you mean by that, the trick was to put the parent
+ >> bridge into D3cold and then into D0 before transitioning the card into
+ >> D0.
+ >>
+ > If the parent bridge has multiple devices attached to it, this can
+ > have some side effects on other devices after the reset but as you
+ > mentioned below that parent bridge is only connected to wifi card it
+ > should be fine in that case.
+ >
+ >> That "Cannot transition to power state" warning is just the kernel
+ >> enforcing ACPI specs afaik, and that prevents us from putting the device
+ >> into ACPI state D0. This in turn means the device still has no power and
+ >> we can't set the PCI power state to D0, which is the second error.
+ >>
+ >>>
+ >>>> Signed-off-by: Tsuchiya Yuto <kitakar@gmail.com>
+ >>>> Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+ >>>> ---
+ >>>>    drivers/net/wireless/marvell/mwifiex/pcie.c   |   7 +
+ >>>>    .../wireless/marvell/mwifiex/pcie_quirks.c    | 123 
+++++++++++++++++++
+ >>>>    .../wireless/marvell/mwifiex/pcie_quirks.h    |   3 +
+ >>>>    3 files changed, 133 insertions(+)
+ >>>>
+ >>>> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c 
+b/drivers/net/wireless/marvell/mwifiex/pcie.c
+ >>>> index 02fdce926de5..d9acfea395ad 100644
+ >>>> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
+ >>>> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+ >>>> @@ -528,6 +528,13 @@ static void mwifiex_pcie_reset_prepare(struct 
+pci_dev *pdev)
+ >>>>    	mwifiex_shutdown_sw(adapter);
+ >>>>    	clear_bit(MWIFIEX_IFACE_WORK_DEVICE_DUMP, &card->work_flags);
+ >>>>    	clear_bit(MWIFIEX_IFACE_WORK_CARD_RESET, &card->work_flags);
+ >>>> +
+ >>>> +	/* For Surface gen4+ devices, we need to put wifi into D3cold right
+ >>>> +	 * before performing FLR
+ >>>> +	 */
+ >>>> +	if (card->quirks & QUIRK_FW_RST_D3COLD)
+ >>>> +		mwifiex_pcie_reset_d3cold_quirk(pdev);
+ >>>> +
+ >>>>    	mwifiex_dbg(adapter, INFO, "%s, successful\n", __func__);
+ >>>>
+ >>>>    	card->pci_reset_ongoing = true;
+ >>>> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c 
+b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+ >>>> index 4064f99b36ba..b5f214fc1212 100644
+ >>>> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+ >>>> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+ >>>> @@ -15,6 +15,72 @@
+ >>>>
+ >>>>    /* quirk table based on DMI matching */
+ >>>>    static const struct dmi_system_id mwifiex_quirk_table[] = {
+ >>>> +	{
+ >>>> +		.ident = "Surface Pro 4",
+ >>>> +		.matches = {
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 4"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Pro 5",
+ >>>> +		.matches = {
+ >>>> +			/* match for SKU here due to generic product name "Surface Pro" */
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1796"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Pro 5 (LTE)",
+ >>>> +		.matches = {
+ >>>> +			/* match for SKU here due to generic product name "Surface Pro" */
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1807"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Pro 6",
+ >>>> +		.matches = {
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 6"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Book 1",
+ >>>> +		.matches = {
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Book 2",
+ >>>> +		.matches = {
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book 2"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Laptop 1",
+ >>>> +		.matches = {
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>> +	{
+ >>>> +		.ident = "Surface Laptop 2",
+ >>>> +		.matches = {
+ >>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+ >>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop 2"),
+ >>>> +		},
+ >>>> +		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+ >>>> +	},
+ >>>>    	{}
+ >>>>    };
+ >>>>
+ >>>> @@ -29,4 +95,61 @@ void mwifiex_initialize_quirks(struct 
+pcie_service_card *card)
+ >>>>
+ >>>>    	if (!card->quirks)
+ >>>>    		dev_info(&pdev->dev, "no quirks enabled\n");
+ >>>> +	if (card->quirks & QUIRK_FW_RST_D3COLD)
+ >>>> +		dev_info(&pdev->dev, "quirk reset_d3cold enabled\n");
+ >>>> +}
+ >>>> +
+ >>>> +static void mwifiex_pcie_set_power_d3cold(struct pci_dev *pdev)
+ >>>> +{
+ >>>> +	dev_info(&pdev->dev, "putting into D3cold...\n");
+ >>>> +
+ >>>> +	pci_save_state(pdev);
+ >>>> +	if (pci_is_enabled(pdev))
+ >>>> +		pci_disable_device(pdev);
+ >>>> +	pci_set_power_state(pdev, PCI_D3cold);
+ >>>> +}
+ >>> pci_set_power_state with PCI_D3cold state calls
+ >>> pci_bus_set_current_state(dev->subordinate, PCI_D3cold).
+ >>> Maybe this was the reason for the earlier problem you had?
+ >>> Not 100% sure about this though CCing: Alex
+ >>
+ >> Hmm, so we'd only have to put the bridge into D3cold and that takes care
+ >> of the device going to D3cold automatically?
+ >>
+ > Yeah I think it should do it. Have you tried this?
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../bindings/pci/hisilicon,kirin-pcie.yaml    | 79 +++++++++++++++++++
- .../devicetree/bindings/pci/kirin-pcie.txt    | 41 ----------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 80 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+Finally found some time to try that now and looks like it doesn't work. 
+First reset works fine, but on the second one the device can't switch 
+from D3cold to D0:
 
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-new file mode 100644
-index 000000000000..66271419cd6e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/hisilicon,kirin-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon Kirin SoCs PCIe host DT description
-+
-+maintainers:
-+  - Xiaowei Song <songxiaowei@hisilicon.com>
-+  - Binghui Wang <wangbinghui@hisilicon.com>
-+
-+description: |
-+  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
-+  It shares common functions with the PCIe DesignWare core driver and
-+  inherits common properties defined in
-+  Documentation/devicetree/bindings/pci/designware,pcie.yaml.
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    const: hisilicon,kirin960-pcie
-+    const: hisilicon,kirin970-pcie
-+
-+  reg:
-+    description: |
-+      Should contain rc_dbi, apb, config registers location and length.
-+
-+  reg-names:
-+    items:
-+      - const: dbi          # controller configuration registers
-+      - const: apb          # apb Ctrl register defined by Kirin
-+      - const: config       # PCIe configuration space registers
-+
-+  "#address-cells":
-+    const: 3
-+
-+  "#size-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pcie: pcie@f4000000 {
-+        compatible = "hisilicon,kirin960-pcie";
-+        reg = <0x0 0xf4000000 0x0 0x1000>,
-+              <0x0 0xff3fe000 0x0 0x1000>,
-+              <0x0 0xf4000000 0 0x2000>;
-+        reg-names = "dbi","apb", "config";
-+        bus-range = <0x0  0x1>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        device_type = "pci";
-+        ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
-+        num-lanes = <1>;
-+        #interrupt-cells = <1>;
-+        interrupts = <0 283 4>;
-+        interrupt-names = "msi";
-+        interrupt-map-mask = <0xf800 0 0 7>;
-+        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-deleted file mode 100644
-index 3a36eeb1c434..000000000000
---- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--HiSilicon Kirin SoCs PCIe host DT description
--
--Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
--It shares common functions with the PCIe DesignWare core driver and
--inherits common properties defined in
--Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
--
--Additional properties are described here:
--
--Required properties
--- compatible:
--	"hisilicon,kirin960-pcie"
--	"hisilicon,kirin970-pcie"
--- reg: Should contain rc_dbi, apb, config registers location and length.
--- reg-names: Must include the following entries:
--  "dbi": controller configuration registers;
--  "apb": apb Ctrl register defined by Kirin;
--  "config": PCIe configuration space registers.
--
--Optional properties:
--
--Example based on kirin960:
--
--	pcie@f4000000 {
--		compatible = "hisilicon,kirin960-pcie";
--		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
--		      <0x0 0xF4000000 0 0x2000>;
--		reg-names = "dbi","apb", "config";
--		bus-range = <0x0  0x1>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		device_type = "pci";
--		ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
--		num-lanes = <1>;
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
--				<0x0 0 0 2 &gic 0 0 0  283 4>,
--				<0x0 0 0 3 &gic 0 0 0  284 4>,
--				<0x0 0 0 4 &gic 0 0 0  285 4>;
--	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55ca4cac17b0..d5a592db84d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14369,7 +14369,7 @@ M:	Xiaowei Song <songxiaowei@hisilicon.com>
- M:	Binghui Wang <wangbinghui@hisilicon.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/pci/kirin-pcie.txt
-+F:	Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
- F:	drivers/pci/controller/dwc/pcie-kirin.c
- 
- PCIE DRIVER FOR HISILICON STB
--- 
-2.31.1
+mwifiex_pcie 0000:01:00.0: can't change power state from D3cold to D0 
+(config space inaccessible)
 
+Thanks,
+Jonas
+
+ >>>
+ >>>> +
+ >>>> +static int mwifiex_pcie_set_power_d0(struct pci_dev *pdev)
+ >>>> +{
+ >>>> +	int ret;
+ >>>> +
+ >>>> +	dev_info(&pdev->dev, "putting into D0...\n");
+ >>>> +
+ >>>> +	pci_set_power_state(pdev, PCI_D0);
+ >>>> +	ret = pci_enable_device(pdev);
+ >>>> +	if (ret) {
+ >>>> +		dev_err(&pdev->dev, "pci_enable_device failed\n");
+ >>>> +		return ret;
+ >>>> +	}
+ >>>> +	pci_restore_state(pdev);
+ >>> On the side note just save and restore is enough in this case?
+ >>> What would be the device <-> driver state after the reset as you
+ >>> are calling this on parent_pdev below so that affects other
+ >>> devices on bus?
+ >>
+ >> Not sure we can do anything more than save and restore, can we? I don't
+ >> think it will affect other devices on the bus, the parent bridge is only
+ >> connected to the wifi card, nothing else.
+ >>
+ > I was thinking of doing remove-reset-rescan but I think save-restore
+ > should be ok if there is a single device connected to the parent bridge.
+ >
+ > Thanks,
+ > Amey
+ > [...]
+ >>>> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h 
+b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+ >>>> index 7a1fe3b3a61a..549093067813 100644
+ >>>> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+ >>>> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+ >>>> @@ -5,4 +5,7 @@
+ >>>>
+ >>>>    #include "pcie.h"
+ >>>>
+ >>>> +#define QUIRK_FW_RST_D3COLD	BIT(0)
+ >>>> +
+ >>>>    void mwifiex_initialize_quirks(struct pcie_service_card *card);
+ >>>> +int mwifiex_pcie_reset_d3cold_quirk(struct pci_dev *pdev);
+ >>>> --
+ >>>> 2.31.1
+ >>>>
+ >>
+ >> Thanks for the review,
+ >> Jonas
