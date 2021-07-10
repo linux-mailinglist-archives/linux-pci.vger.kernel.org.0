@@ -2,46 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E203C3806
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:51:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E5B83C3810
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:51:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233384AbhGJXxo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Jul 2021 19:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        id S233171AbhGJXxu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Jul 2021 19:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233149AbhGJXxJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:53:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2DF0D61361;
-        Sat, 10 Jul 2021 23:50:22 +0000 (UTC)
+        id S233182AbhGJXxM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:53:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3532A6135F;
+        Sat, 10 Jul 2021 23:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961023;
-        bh=qjAee10GKoNtEd3QJvJ5ofikK7mIpHulu3nelTdmX4M=;
+        s=k20201202; t=1625961026;
+        bh=ZKkm3ed5F/+6ULuJXKWRc77JtNczmJ7XfH84J09nG/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ar1L4cnDHzEyC6rccrXu5CMb5+lNwGfRjKMa4pQzi3ooKyVu8h6yhAwOHqdugvztH
-         hNW7WO3YljmmhD3w8CqY4KsRIfJRj3jwxCbyOhPk7/TPHeLSvZYKt2DxMKRLedtMqJ
-         Fi0xe/pwuw7MpHqhEv567maGV++zIaUaS1otUdfmbZLCfOqLYDoErN2LSIFawOG9Fn
-         l8nAH7Y/1gXD/ts/v9zG7YWb86nUS2/ehfJr6z//gEAshJv2l4RB2uevqfT4JSpD5J
-         jjIR8r39RSeIcq5mRo2wKy/2PhR55Su/nLMXBDO9Ca99gP1A0OYfDA0a990tziFI5N
-         cFHxAw8Xf/H1Q==
+        b=T0iXjEG2pLF2G4Cmd52JvlJ2eUYE/E4nj7wN8IBUYe2XoW2P7VGK0vt3yPLSWOETW
+         KpYWwUgSqjZ3qD4cWtPzyaadWl9tvEth0cBSVBb8hNgMltGA9xnQHGeJv1dK5cMDiZ
+         ojYTIVLaHJRlPdKTyUxNFz3ATnhl18DmrOZjLoH6QB4B/p2MQKlYzgIjiPzeqZO8Dz
+         pGwvq7sQPNiFTZ2bgTk5u+WFEsEbASYlpH44stLnfUNheJtLYmRm1DmpSX99rogQ2W
+         C9+oPcDtGKurRVyTHlp/dnyTnHBDK9gOMm7uTRC3P2Hy70NbPj2qVm8VtH/XrJqTDo
+         R52FFSuP+1GaA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>,
+Cc:     Long Li <longli@microsoft.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 05/37] PCI: ftpci100: Rename macro name collision
-Date:   Sat, 10 Jul 2021 19:49:43 -0400
-Message-Id: <20210710235016.3221124-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 07/37] PCI: hv: Fix a race condition when removing the device
+Date:   Sat, 10 Jul 2021 19:49:45 -0400
+Message-Id: <20210710235016.3221124-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210710235016.3221124-1-sashal@kernel.org>
 References: <20210710235016.3221124-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -49,118 +44,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Long Li <longli@microsoft.com>
 
-[ Upstream commit 5be967d5016ac5ffb9c4d0df51b48441ee4d5ed1 ]
+[ Upstream commit 94d22763207ac6633612b8d8e0ca4fba0f7aa139 ]
 
-PCI_IOSIZE is defined in mach-loongson64/spaces.h, so change the name
-of the PCI_* macros in pci-ftpci100.c to use FTPCI_* so that they are
-more localized and won't conflict with other drivers or arches.
+On removing the device, any work item (hv_pci_devices_present() or
+hv_pci_eject_device()) scheduled on workqueue hbus->wq may still be running
+and race with hv_pci_remove().
 
-../drivers/pci/controller/pci-ftpci100.c:37: warning: "PCI_IOSIZE" redefined
-   37 | #define PCI_IOSIZE 0x00
-      |
-In file included from ../arch/mips/include/asm/addrspace.h:13,
-...              from ../drivers/pci/controller/pci-ftpci100.c:15:
-arch/mips/include/asm/mach-loongson64/spaces.h:11: note: this is the location of the previous definition
-   11 | #define PCI_IOSIZE SZ_16M
+This can happen because the host may send PCI_EJECT or PCI_BUS_RELATIONS(2)
+and decide to rescind the channel immediately after that.
 
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20210517234117.3660-1-rdunlap@infradead.org
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Fix this by flushing/destroying the workqueue of hbus before doing hbus remove.
+
+Link: https://lore.kernel.org/r/1620806800-30983-1-git-send-email-longli@linuxonhyperv.com
+Signed-off-by: Long Li <longli@microsoft.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Wilczyński <kw@linux.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-ftpci100.c | 30 +++++++++++++--------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 30 ++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index da3cd216da00..aefef1986201 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -34,12 +34,12 @@
-  * Special configuration registers directly in the first few words
-  * in I/O space.
-  */
--#define PCI_IOSIZE	0x00
--#define PCI_PROT	0x04 /* AHB protection */
--#define PCI_CTRL	0x08 /* PCI control signal */
--#define PCI_SOFTRST	0x10 /* Soft reset counter and response error enable */
--#define PCI_CONFIG	0x28 /* PCI configuration command register */
--#define PCI_DATA	0x2C
-+#define FTPCI_IOSIZE	0x00
-+#define FTPCI_PROT	0x04 /* AHB protection */
-+#define FTPCI_CTRL	0x08 /* PCI control signal */
-+#define FTPCI_SOFTRST	0x10 /* Soft reset counter and response error enable */
-+#define FTPCI_CONFIG	0x28 /* PCI configuration command register */
-+#define FTPCI_DATA	0x2C
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 03ed5cb1c4b2..4932d7677be2 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -444,7 +444,6 @@ enum hv_pcibus_state {
+ 	hv_pcibus_probed,
+ 	hv_pcibus_installed,
+ 	hv_pcibus_removing,
+-	hv_pcibus_removed,
+ 	hv_pcibus_maximum
+ };
  
- #define FARADAY_PCI_STATUS_CMD		0x04 /* Status and command */
- #define FARADAY_PCI_PMC			0x40 /* Power management control */
-@@ -195,9 +195,9 @@ static int faraday_raw_pci_read_config(struct faraday_pci *p, int bus_number,
- 			PCI_CONF_FUNCTION(PCI_FUNC(fn)) |
- 			PCI_CONF_WHERE(config) |
- 			PCI_CONF_ENABLE,
--			p->base + PCI_CONFIG);
-+			p->base + FTPCI_CONFIG);
+@@ -3247,8 +3246,9 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
+-	struct hv_dr_state *dr;
+ 	struct hv_pci_compl comp_pkt;
++	struct hv_pci_dev *hpdev, *tmp;
++	unsigned long flags;
+ 	int ret;
  
--	*value = readl(p->base + PCI_DATA);
-+	*value = readl(p->base + FTPCI_DATA);
+ 	/*
+@@ -3260,9 +3260,16 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
  
- 	if (size == 1)
- 		*value = (*value >> (8 * (config & 3))) & 0xFF;
-@@ -230,17 +230,17 @@ static int faraday_raw_pci_write_config(struct faraday_pci *p, int bus_number,
- 			PCI_CONF_FUNCTION(PCI_FUNC(fn)) |
- 			PCI_CONF_WHERE(config) |
- 			PCI_CONF_ENABLE,
--			p->base + PCI_CONFIG);
-+			p->base + FTPCI_CONFIG);
- 
- 	switch (size) {
- 	case 4:
--		writel(value, p->base + PCI_DATA);
-+		writel(value, p->base + FTPCI_DATA);
- 		break;
- 	case 2:
--		writew(value, p->base + PCI_DATA + (config & 3));
-+		writew(value, p->base + FTPCI_DATA + (config & 3));
- 		break;
- 	case 1:
--		writeb(value, p->base + PCI_DATA + (config & 3));
-+		writeb(value, p->base + FTPCI_DATA + (config & 3));
- 		break;
- 	default:
- 		ret = PCIBIOS_BAD_REGISTER_NUMBER;
-@@ -469,7 +469,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 		if (!faraday_res_to_memcfg(io->start - win->offset,
- 					   resource_size(io), &val)) {
- 			/* setup I/O space size */
--			writel(val, p->base + PCI_IOSIZE);
-+			writel(val, p->base + FTPCI_IOSIZE);
- 		} else {
- 			dev_err(dev, "illegal IO mem size\n");
- 			return -EINVAL;
-@@ -477,11 +477,11 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	if (!keep_devs) {
+ 		/* Delete any children which might still exist. */
+-		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
+-		if (dr && hv_pci_start_relations_work(hbus, dr))
+-			kfree(dr);
++		spin_lock_irqsave(&hbus->device_list_lock, flags);
++		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
++			list_del(&hpdev->list_entry);
++			if (hpdev->pci_slot)
++				pci_destroy_slot(hpdev->pci_slot);
++			/* For the two refs got in new_pcichild_device() */
++			put_pcichild(hpdev);
++			put_pcichild(hpdev);
++		}
++		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
  	}
  
- 	/* Setup hostbridge */
--	val = readl(p->base + PCI_CTRL);
-+	val = readl(p->base + FTPCI_CTRL);
- 	val |= PCI_COMMAND_IO;
- 	val |= PCI_COMMAND_MEMORY;
- 	val |= PCI_COMMAND_MASTER;
--	writel(val, p->base + PCI_CTRL);
-+	writel(val, p->base + FTPCI_CTRL);
- 	/* Mask and clear all interrupts */
- 	faraday_raw_pci_write_config(p, 0, 0, FARADAY_PCI_CTRL2 + 2, 2, 0xF000);
- 	if (variant->cascaded_irq) {
+ 	ret = hv_send_resources_released(hdev);
+@@ -3305,13 +3312,23 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 
+ 	hbus = hv_get_drvdata(hdev);
+ 	if (hbus->state == hv_pcibus_installed) {
++		tasklet_disable(&hdev->channel->callback_event);
++		hbus->state = hv_pcibus_removing;
++		tasklet_enable(&hdev->channel->callback_event);
++		destroy_workqueue(hbus->wq);
++		hbus->wq = NULL;
++		/*
++		 * At this point, no work is running or can be scheduled
++		 * on hbus-wq. We can't race with hv_pci_devices_present()
++		 * or hv_pci_eject_device(), it's safe to proceed.
++		 */
++
+ 		/* Remove the bus from PCI's point of view. */
+ 		pci_lock_rescan_remove();
+ 		pci_stop_root_bus(hbus->pci_bus);
+ 		hv_pci_remove_slots(hbus);
+ 		pci_remove_root_bus(hbus->pci_bus);
+ 		pci_unlock_rescan_remove();
+-		hbus->state = hv_pcibus_removed;
+ 	}
+ 
+ 	ret = hv_pci_bus_exit(hdev, false);
+@@ -3326,7 +3343,6 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 	irq_domain_free_fwnode(hbus->sysdata.fwnode);
+ 	put_hvpcibus(hbus);
+ 	wait_for_completion(&hbus->remove_event);
+-	destroy_workqueue(hbus->wq);
+ 
+ 	hv_put_dom_num(hbus->sysdata.domain);
+ 
 -- 
 2.30.2
 
