@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 976143C3896
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A21B03C38E5
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233627AbhGJXz2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Jul 2021 19:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41100 "EHLO mail.kernel.org"
+        id S233768AbhGJX4k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Jul 2021 19:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233720AbhGJXyd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:54:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 324F361057;
-        Sat, 10 Jul 2021 23:51:26 +0000 (UTC)
+        id S233766AbhGJXzn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:55:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8943461414;
+        Sat, 10 Jul 2021 23:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961087;
-        bh=ltZ7vO6TGRJU0yf0niTNoGRE3EuoqsctVzx+HefZ7Do=;
+        s=k20201202; t=1625961118;
+        bh=OuHsKg9a2GNZq4MxBv3ku1L95ibqa7CqYS5ARqRF1q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQXbkkE3X0p3Vc49jaAIJo2IigfPV483QqSDj9aRBPJtIn6PU2RIAaUOyxwdKwFjt
-         kI0t+3P+bovud/O97XkcqXXA3uTEiNcTVL0/eO7Zy5GaKVM7NOLhPz8TTmXCaTGj+M
-         RV+1R1lKv5Zo5lG1drSqCliVuqOSu9BK0nieFETvvosB5aSsj52EjNhs1W+MVPY13b
-         xUH+4TL43Z2BvNfllWM3cC0iWOOarSJmKn2QE2AHxrfujvVokTHQgN8ay5K8vxAbgN
-         Ew37x3Vaj/n1BRPriz86vg8qsp7cm+H7yKN37lvWqKa81L/gF+610T7o93YERF2pxJ
-         pqrX8XQcxWYvQ==
+        b=dbx3mpb1Yhhze4xdrLdiTrLsw4EX16TasCKkg3jUWGFqluijaNHU1x6Qz0jwf2DA3
+         Y8rERr7lcTgXT9USyJQpS0JqyoL4w9U6vIGRxu3DvaIBiV03yUa0jRGboerMvcIX6w
+         /ES71g0IjNy89WTCcVAOnko2BUlyOuJdp2L/1RYMMYM+oa+HjR5ctA8ZujKr8BtiAx
+         qO9+EJWUU4fTLlH8Kh66Z9s82hPcLekES/nEfwlqxaiIOEligd6O4+doKqhfLctvvo
+         XAYHh0sayKfQv1Duh9JkzSkJIpc9iL9jwxos1C2LWX5jdHtTvZFfid2OEba9YocVXr
+         t/vJoXoQnKcPg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zou Wei <zou_wei@huawei.com>, Hulk Robot <hulkci@huawei.com>,
@@ -32,12 +32,12 @@ Cc:     Zou Wei <zou_wei@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/28] PCI: tegra: Add missing MODULE_DEVICE_TABLE
-Date:   Sat, 10 Jul 2021 19:50:54 -0400
-Message-Id: <20210710235107.3221840-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 11/22] PCI: tegra: Add missing MODULE_DEVICE_TABLE
+Date:   Sat, 10 Jul 2021 19:51:32 -0400
+Message-Id: <20210710235143.3222129-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710235107.3221840-1-sashal@kernel.org>
-References: <20210710235107.3221840-1-sashal@kernel.org>
+In-Reply-To: <20210710235143.3222129-1-sashal@kernel.org>
+References: <20210710235143.3222129-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index cfa3c83d6cc7..99d505a85067 100644
+index 097c02197ec8..1f8dd5ca02a9 100644
 --- a/drivers/pci/controller/pci-tegra.c
 +++ b/drivers/pci/controller/pci-tegra.c
-@@ -2613,6 +2613,7 @@ static const struct of_device_id tegra_pcie_of_match[] = {
+@@ -2245,6 +2245,7 @@ static const struct of_device_id tegra_pcie_of_match[] = {
  	{ .compatible = "nvidia,tegra20-pcie", .data = &tegra20_pcie },
  	{ },
  };
