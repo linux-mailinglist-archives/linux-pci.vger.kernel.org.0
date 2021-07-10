@@ -2,43 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B7183C385C
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:52:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7549C3C387C
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:52:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233497AbhGJXyo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Jul 2021 19:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40528 "EHLO mail.kernel.org"
+        id S233993AbhGJXzJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Jul 2021 19:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233501AbhGJXxz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:53:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E58D2613E0;
-        Sat, 10 Jul 2021 23:50:59 +0000 (UTC)
+        id S233592AbhGJXyM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:54:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 26AAF6139A;
+        Sat, 10 Jul 2021 23:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961061;
-        bh=N5eJoTF0ViH2kJuzZiUhRZNc/Voul3eL5qnXxBEUhno=;
+        s=k20201202; t=1625961077;
+        bh=EVmXXHjaRF80xiIY8Q2N2toit2bFFczKgUbpR2q2xl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqpk5y8STynGzkyDnq/K818q/6pHUTB+L4+2sRu+hEGULdjMF2wa1Tmq2ALHgAKZz
-         BaRaEfrrdYn9FHD1UPZuhJfjI1fPvY/6PW1AexgTdmNmlfI1gBZKCulwWjjSbwwYWl
-         +PekKf3KRkEgQUBNDKv+OB2pOYWE29brWpR+xWLqKNOoWxPgbvw04hpmBMLXvDRl+t
-         QRhnDYaW+Z+AO/BBAH48fLzmEKQnxI0N+oS4X84xq2l8uS9wvPZK0ZOqhNJ5DhWZ6m
-         wfZ0cOL8tkt8IsD7TYWclPoTeGRqXisSj7koDW2155NBjvxozZ5WMHULH2tj2obz8p
-         dZie9VwQbI0SA==
+        b=SmW0pVlOFjGr34UJK44tOcwPJwJ1N0rpENFAjgNmsZAzdCkMlDLrRlRRZAsZ+jChc
+         bMQ91+WldT/cChZTbStXaoUAPCBGQLsqrCE+HIvtGkTtDTC8tLt/BxClTMaGUmJIiU
+         XHisx1F/Bji2feonIXLZpVD1g23RsydgJfNp++FrsvHeCJHLwxX2MIMHAhmosoAWKV
+         9YrQzQnijM3bAknc/1FoicCUFH+GVBh0bpVrb4qNwQqYvdtZQrhJxyPGub1o+eb7e7
+         m7/DlBzweuwSPOu+fZVzEN/sqUbmfjEJW0Cs1Ru6eU8VOas6HLzDJvntPLtgZ+Nfy6
+         CI6b3BZLKBv5g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 33/37] PCI: rockchip: Register IRQ handlers after device and data are ready
-Date:   Sat, 10 Jul 2021 19:50:11 -0400
-Message-Id: <20210710235016.3221124-33-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/28] PCI/P2PDMA: Avoid pci_get_slot(), which may sleep
+Date:   Sat, 10 Jul 2021 19:50:47 -0400
+Message-Id: <20210710235107.3221840-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710235016.3221124-1-sashal@kernel.org>
-References: <20210710235016.3221124-1-sashal@kernel.org>
+In-Reply-To: <20210710235107.3221840-1-sashal@kernel.org>
+References: <20210710235107.3221840-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -47,79 +42,85 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Javier Martinez Canillas <javierm@redhat.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 3cf5f7ab230e2b886e493c7a8449ed50e29d2b98 ]
+[ Upstream commit 3ec0c3ec2d92c09465534a1ff9c6f9d9506ffef6 ]
 
-An IRQ handler may be called at any time after it is registered, so
-anything it relies on must be ready before registration.
+In order to use upstream_bridge_distance_warn() from a dma_map function, it
+must not sleep. However, pci_get_slot() takes the pci_bus_sem so it might
+sleep.
 
-rockchip_pcie_subsys_irq_handler() and rockchip_pcie_client_irq_handler()
-read registers in the PCIe controller, but we registered them before
-turning on clocks to the controller.  If either is called before the clocks
-are turned on, the register reads fail and the machine hangs.
+In order to avoid this, try to get the host bridge's device from the first
+element in the device list. It should be impossible for the host bridge's
+device to go away while references are held on child devices, so the first
+element should not be able to change and, thus, this should be safe.
 
-Similarly, rockchip_pcie_legacy_int_handler() uses rockchip->irq_domain,
-but we installed it before initializing irq_domain.
+Introduce a static function called pci_host_bridge_dev() to obtain the host
+bridge's root device.
 
-Register IRQ handlers after their data structures are initialized and
-clocks are enabled.
-
-Found by enabling CONFIG_DEBUG_SHIRQ, which calls the IRQ handler when it
-is being unregistered.  An error during the probe path might cause this
-unregistration and IRQ handler execution before the device or data
-structure init has finished.
-
-[bhelgaas: commit log]
-Link: https://lore.kernel.org/r/20210608080409.1729276-1-javierm@redhat.com
-Reported-by: Peter Robinson <pbrobinson@gmail.com>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Link: https://lore.kernel.org/r/20210610160609.28447-7-logang@deltatee.com
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/p2pdma.c | 34 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 9705059523a6..0d6df73bb918 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -593,10 +593,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
- 	if (err)
- 		return err;
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 0608aae72ccc..0153abdbbc8d 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -292,10 +292,41 @@ static const struct pci_p2pdma_whitelist_entry {
+ 	{}
+ };
  
--	err = rockchip_pcie_setup_irq(rockchip);
--	if (err)
--		return err;
--
- 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
- 	if (IS_ERR(rockchip->vpcie12v)) {
- 		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
-@@ -974,8 +970,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_vpcie;
- 
--	rockchip_pcie_enable_interrupts(rockchip);
--
- 	err = rockchip_pcie_init_irq_domain(rockchip);
- 	if (err < 0)
- 		goto err_deinit_port;
-@@ -993,6 +987,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	bridge->sysdata = rockchip;
- 	bridge->ops = &rockchip_pcie_ops;
- 
-+	err = rockchip_pcie_setup_irq(rockchip);
-+	if (err)
-+		goto err_remove_irq_domain;
++/*
++ * This lookup function tries to find the PCI device corresponding to a given
++ * host bridge.
++ *
++ * It assumes the host bridge device is the first PCI device in the
++ * bus->devices list and that the devfn is 00.0. These assumptions should hold
++ * for all the devices in the whitelist above.
++ *
++ * This function is equivalent to pci_get_slot(host->bus, 0), however it does
++ * not take the pci_bus_sem lock seeing __host_bridge_whitelist() must not
++ * sleep.
++ *
++ * For this to be safe, the caller should hold a reference to a device on the
++ * bridge, which should ensure the host_bridge device will not be freed
++ * or removed from the head of the devices list.
++ */
++static struct pci_dev *pci_host_bridge_dev(struct pci_host_bridge *host)
++{
++	struct pci_dev *root;
 +
-+	rockchip_pcie_enable_interrupts(rockchip);
++	root = list_first_entry_or_null(&host->bus->devices,
++					struct pci_dev, bus_list);
 +
- 	err = pci_host_probe(bridge);
- 	if (err < 0)
- 		goto err_remove_irq_domain;
++	if (!root)
++		return NULL;
++	if (root->devfn != PCI_DEVFN(0, 0))
++		return NULL;
++
++	return root;
++}
++
+ static bool __host_bridge_whitelist(struct pci_host_bridge *host,
+ 				    bool same_host_bridge)
+ {
+-	struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
++	struct pci_dev *root = pci_host_bridge_dev(host);
+ 	const struct pci_p2pdma_whitelist_entry *entry;
+ 	unsigned short vendor, device;
+ 
+@@ -304,7 +335,6 @@ static bool __host_bridge_whitelist(struct pci_host_bridge *host,
+ 
+ 	vendor = root->vendor;
+ 	device = root->device;
+-	pci_dev_put(root);
+ 
+ 	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
+ 		if (vendor != entry->vendor || device != entry->device)
 -- 
 2.30.2
 
