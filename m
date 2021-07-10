@@ -2,44 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A273C37DA
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:50:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94E203C3806
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 01:51:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232676AbhGJXxL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Jul 2021 19:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40316 "EHLO mail.kernel.org"
+        id S233384AbhGJXxo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Jul 2021 19:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232949AbhGJXwx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:52:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7CFAA60234;
-        Sat, 10 Jul 2021 23:50:06 +0000 (UTC)
+        id S233149AbhGJXxJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:53:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2DF0D61361;
+        Sat, 10 Jul 2021 23:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961007;
-        bh=usjltRtEuFp8h2ICKIOczpm839/NnubVdwqvLBLU3LI=;
+        s=k20201202; t=1625961023;
+        bh=qjAee10GKoNtEd3QJvJ5ofikK7mIpHulu3nelTdmX4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eBXCZ/3azbVIYV23cyVWDk4EPEiNMJ6pA7qoRoLK3PVvWuFaooMeehHpTuwBq7nCd
-         fjJhVhwMTT+Rea+AUBoEk5++CcPAgK9K3LdCISt3r/+uK8YGytjBKRw1lp3RG2HehY
-         jNBaSZqVXHzYer+cbRbxmTPJZWC8i4Ux5aaNieE7TOBXH0Rz/0jtiYRVum/9JDQOyf
-         gKSaHFmvNHB8S+Nic1I09+A54dk/tLVXyXy5iI6FbLZv3kkzI8jyIcQCqfBRKjc/jr
-         d8S3BIjwQsn6rL1qOXkZRoEfH31zKhvrFDu1SanJ4lFydgB+HU1UtyVSElBb7TPZpq
-         byfME3y0KOTmw==
+        b=ar1L4cnDHzEyC6rccrXu5CMb5+lNwGfRjKMa4pQzi3ooKyVu8h6yhAwOHqdugvztH
+         hNW7WO3YljmmhD3w8CqY4KsRIfJRj3jwxCbyOhPk7/TPHeLSvZYKt2DxMKRLedtMqJ
+         Fi0xe/pwuw7MpHqhEv567maGV++zIaUaS1otUdfmbZLCfOqLYDoErN2LSIFawOG9Fn
+         l8nAH7Y/1gXD/ts/v9zG7YWb86nUS2/ehfJr6z//gEAshJv2l4RB2uevqfT4JSpD5J
+         jjIR8r39RSeIcq5mRo2wKy/2PhR55Su/nLMXBDO9Ca99gP1A0OYfDA0a990tziFI5N
+         cFHxAw8Xf/H1Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        kernel test robot <lkp@intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.12 37/43] PCI: rockchip: Register IRQ handlers after device and data are ready
-Date:   Sat, 10 Jul 2021 19:49:09 -0400
-Message-Id: <20210710234915.3220342-37-sashal@kernel.org>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 05/37] PCI: ftpci100: Rename macro name collision
+Date:   Sat, 10 Jul 2021 19:49:43 -0400
+Message-Id: <20210710235016.3221124-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710234915.3220342-1-sashal@kernel.org>
-References: <20210710234915.3220342-1-sashal@kernel.org>
+In-Reply-To: <20210710235016.3221124-1-sashal@kernel.org>
+References: <20210710235016.3221124-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -47,79 +49,118 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Javier Martinez Canillas <javierm@redhat.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 3cf5f7ab230e2b886e493c7a8449ed50e29d2b98 ]
+[ Upstream commit 5be967d5016ac5ffb9c4d0df51b48441ee4d5ed1 ]
 
-An IRQ handler may be called at any time after it is registered, so
-anything it relies on must be ready before registration.
+PCI_IOSIZE is defined in mach-loongson64/spaces.h, so change the name
+of the PCI_* macros in pci-ftpci100.c to use FTPCI_* so that they are
+more localized and won't conflict with other drivers or arches.
 
-rockchip_pcie_subsys_irq_handler() and rockchip_pcie_client_irq_handler()
-read registers in the PCIe controller, but we registered them before
-turning on clocks to the controller.  If either is called before the clocks
-are turned on, the register reads fail and the machine hangs.
+../drivers/pci/controller/pci-ftpci100.c:37: warning: "PCI_IOSIZE" redefined
+   37 | #define PCI_IOSIZE 0x00
+      |
+In file included from ../arch/mips/include/asm/addrspace.h:13,
+...              from ../drivers/pci/controller/pci-ftpci100.c:15:
+arch/mips/include/asm/mach-loongson64/spaces.h:11: note: this is the location of the previous definition
+   11 | #define PCI_IOSIZE SZ_16M
 
-Similarly, rockchip_pcie_legacy_int_handler() uses rockchip->irq_domain,
-but we installed it before initializing irq_domain.
-
-Register IRQ handlers after their data structures are initialized and
-clocks are enabled.
-
-Found by enabling CONFIG_DEBUG_SHIRQ, which calls the IRQ handler when it
-is being unregistered.  An error during the probe path might cause this
-unregistration and IRQ handler execution before the device or data
-structure init has finished.
-
-[bhelgaas: commit log]
-Link: https://lore.kernel.org/r/20210608080409.1729276-1-javierm@redhat.com
-Reported-by: Peter Robinson <pbrobinson@gmail.com>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20210517234117.3660-1-rdunlap@infradead.org
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Wilczyński <kw@linux.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pci-ftpci100.c | 30 +++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index f1d08a1b1591..78d04ac29cd5 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -592,10 +592,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
- 	if (err)
- 		return err;
+diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+index da3cd216da00..aefef1986201 100644
+--- a/drivers/pci/controller/pci-ftpci100.c
++++ b/drivers/pci/controller/pci-ftpci100.c
+@@ -34,12 +34,12 @@
+  * Special configuration registers directly in the first few words
+  * in I/O space.
+  */
+-#define PCI_IOSIZE	0x00
+-#define PCI_PROT	0x04 /* AHB protection */
+-#define PCI_CTRL	0x08 /* PCI control signal */
+-#define PCI_SOFTRST	0x10 /* Soft reset counter and response error enable */
+-#define PCI_CONFIG	0x28 /* PCI configuration command register */
+-#define PCI_DATA	0x2C
++#define FTPCI_IOSIZE	0x00
++#define FTPCI_PROT	0x04 /* AHB protection */
++#define FTPCI_CTRL	0x08 /* PCI control signal */
++#define FTPCI_SOFTRST	0x10 /* Soft reset counter and response error enable */
++#define FTPCI_CONFIG	0x28 /* PCI configuration command register */
++#define FTPCI_DATA	0x2C
  
--	err = rockchip_pcie_setup_irq(rockchip);
--	if (err)
--		return err;
--
- 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
- 	if (IS_ERR(rockchip->vpcie12v)) {
- 		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
-@@ -973,8 +969,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_vpcie;
+ #define FARADAY_PCI_STATUS_CMD		0x04 /* Status and command */
+ #define FARADAY_PCI_PMC			0x40 /* Power management control */
+@@ -195,9 +195,9 @@ static int faraday_raw_pci_read_config(struct faraday_pci *p, int bus_number,
+ 			PCI_CONF_FUNCTION(PCI_FUNC(fn)) |
+ 			PCI_CONF_WHERE(config) |
+ 			PCI_CONF_ENABLE,
+-			p->base + PCI_CONFIG);
++			p->base + FTPCI_CONFIG);
  
--	rockchip_pcie_enable_interrupts(rockchip);
--
- 	err = rockchip_pcie_init_irq_domain(rockchip);
- 	if (err < 0)
- 		goto err_deinit_port;
-@@ -992,6 +986,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	bridge->sysdata = rockchip;
- 	bridge->ops = &rockchip_pcie_ops;
+-	*value = readl(p->base + PCI_DATA);
++	*value = readl(p->base + FTPCI_DATA);
  
-+	err = rockchip_pcie_setup_irq(rockchip);
-+	if (err)
-+		goto err_remove_irq_domain;
-+
-+	rockchip_pcie_enable_interrupts(rockchip);
-+
- 	err = pci_host_probe(bridge);
- 	if (err < 0)
- 		goto err_remove_irq_domain;
+ 	if (size == 1)
+ 		*value = (*value >> (8 * (config & 3))) & 0xFF;
+@@ -230,17 +230,17 @@ static int faraday_raw_pci_write_config(struct faraday_pci *p, int bus_number,
+ 			PCI_CONF_FUNCTION(PCI_FUNC(fn)) |
+ 			PCI_CONF_WHERE(config) |
+ 			PCI_CONF_ENABLE,
+-			p->base + PCI_CONFIG);
++			p->base + FTPCI_CONFIG);
+ 
+ 	switch (size) {
+ 	case 4:
+-		writel(value, p->base + PCI_DATA);
++		writel(value, p->base + FTPCI_DATA);
+ 		break;
+ 	case 2:
+-		writew(value, p->base + PCI_DATA + (config & 3));
++		writew(value, p->base + FTPCI_DATA + (config & 3));
+ 		break;
+ 	case 1:
+-		writeb(value, p->base + PCI_DATA + (config & 3));
++		writeb(value, p->base + FTPCI_DATA + (config & 3));
+ 		break;
+ 	default:
+ 		ret = PCIBIOS_BAD_REGISTER_NUMBER;
+@@ -469,7 +469,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 		if (!faraday_res_to_memcfg(io->start - win->offset,
+ 					   resource_size(io), &val)) {
+ 			/* setup I/O space size */
+-			writel(val, p->base + PCI_IOSIZE);
++			writel(val, p->base + FTPCI_IOSIZE);
+ 		} else {
+ 			dev_err(dev, "illegal IO mem size\n");
+ 			return -EINVAL;
+@@ -477,11 +477,11 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Setup hostbridge */
+-	val = readl(p->base + PCI_CTRL);
++	val = readl(p->base + FTPCI_CTRL);
+ 	val |= PCI_COMMAND_IO;
+ 	val |= PCI_COMMAND_MEMORY;
+ 	val |= PCI_COMMAND_MASTER;
+-	writel(val, p->base + PCI_CTRL);
++	writel(val, p->base + FTPCI_CTRL);
+ 	/* Mask and clear all interrupts */
+ 	faraday_raw_pci_write_config(p, 0, 0, FARADAY_PCI_CTRL2 + 2, 2, 0xF000);
+ 	if (variant->cascaded_irq) {
 -- 
 2.30.2
 
