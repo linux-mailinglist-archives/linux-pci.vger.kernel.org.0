@@ -2,185 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAF663C346C
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jul 2021 14:01:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C09973C3645
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Jul 2021 21:09:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbhGJMEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 10 Jul 2021 08:04:24 -0400
-Received: from mga01.intel.com ([192.55.52.88]:19211 "EHLO mga01.intel.com"
+        id S230406AbhGJTLb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 10 Jul 2021 15:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230377AbhGJMEY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 10 Jul 2021 08:04:24 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10040"; a="231598835"
-X-IronPort-AV: E=Sophos;i="5.84,229,1620716400"; 
-   d="scan'208";a="231598835"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2021 05:01:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,229,1620716400"; 
-   d="scan'208";a="650161971"
-Received: from lkp-server01.sh.intel.com (HELO 4aae0cb4f5b5) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2021 05:01:36 -0700
-Received: from kbuild by 4aae0cb4f5b5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m2Bfr-000Fha-MT; Sat, 10 Jul 2021 12:01:35 +0000
-Date:   Sat, 10 Jul 2021 20:00:34 +0800
-From:   kernel test robot <lkp@intel.com>
+        id S229652AbhGJTLa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 10 Jul 2021 15:11:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 6A42B6135F;
+        Sat, 10 Jul 2021 19:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625944125;
+        bh=1dcQ3bsc224Yww/7bR72g0x+lCZqr1o2XXQNy2c1c8Y=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=NQe43PGy27fcjbG+kCO/ktnpUK21+Uyu4i/WiXzrxZJ5Et8jC1AvEGc3C1TPwpnQI
+         Ci4veKwIVdOqzc4Wft+a4BroVqDmKxgWgtVKwYtaBPEiKptlKBHzxvb37Fpcc3y2Q6
+         JVbMieHPLZTfQpgk8Uhn5qWhlBfr34odG/2Szo8S7hNSrQILCLoR+fjk30kB5OC+63
+         1Kj135FBt5TYhXSZV4PgcxAi4YBI9IbkLZngd9YDVZo5O1kHfronV7Ez0S+CAXoyYr
+         3KtOj9FeTxujj9fd3AT1UgTl1oDNfXe3FWC9EY2ZcXhFhGnMbyYaYsjYTwTvwzj52i
+         fGF5jmEK/vgPw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 635F160A36;
+        Sat, 10 Jul 2021 19:08:45 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v5.14
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210710002245.GA1190136@bjorn-Precision-5520>
+References: <20210710002245.GA1190136@bjorn-Precision-5520>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210710002245.GA1190136@bjorn-Precision-5520>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.14-fixes-1
+X-PR-Tracked-Commit-Id: 62efe3eebc8bfc351961eee769a5c2fc30221451
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 67d8d365646217225b458d90234f332e8d41f93d
+Message-Id: <162594412540.8052.10406577944726862262.pr-tracker-bot@kernel.org>
+Date:   Sat, 10 Jul 2021 19:08:45 +0000
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 62efe3eebc8bfc351961eee769a5c2fc30221451
-Message-ID: <60e98be2.uK6Z/uu+w5JhbBue%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: 62efe3eebc8bfc351961eee769a5c2fc30221451  Revert "PCI: Coalesce host bridge contiguous apertures"
+The pull request you sent on Fri, 9 Jul 2021 19:22:45 -0500:
 
-elapsed time: 721m
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.14-fixes-1
 
-configs tested: 127
-configs skipped: 5
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/67d8d365646217225b458d90234f332e8d41f93d
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thank you!
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sparc                            allyesconfig
-h8300                     edosk2674_defconfig
-arm                        spear6xx_defconfig
-sh                        edosk7760_defconfig
-m68k                       m5249evb_defconfig
-sh                            migor_defconfig
-arm                          imote2_defconfig
-mips                      malta_kvm_defconfig
-arm                          pcm027_defconfig
-mips                       lemote2f_defconfig
-arm                         orion5x_defconfig
-mips                   sb1250_swarm_defconfig
-arm                        clps711x_defconfig
-powerpc                      ep88xc_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                       maple_defconfig
-m68k                        m5307c3_defconfig
-powerpc                    gamecube_defconfig
-arm                            dove_defconfig
-mips                          ath79_defconfig
-xtensa                generic_kc705_defconfig
-riscv                    nommu_virt_defconfig
-sh                              ul2_defconfig
-arm                         nhk8815_defconfig
-sh                           se7724_defconfig
-m68k                       m5208evb_defconfig
-arm                       aspeed_g5_defconfig
-arm                          ep93xx_defconfig
-arc                            hsdk_defconfig
-arc                         haps_hs_defconfig
-sh                               allmodconfig
-riscv                             allnoconfig
-arm                         shannon_defconfig
-alpha                            alldefconfig
-mips                malta_qemu_32r6_defconfig
-powerpc                     taishan_defconfig
-sh                            hp6xx_defconfig
-sh                             sh03_defconfig
-powerpc                      cm5200_defconfig
-arm                         s5pv210_defconfig
-sh                           sh2007_defconfig
-m68k                         apollo_defconfig
-mips                     loongson1c_defconfig
-arm                           viper_defconfig
-s390                             allyesconfig
-arm                        mvebu_v5_defconfig
-mips                       capcella_defconfig
-mips                      pistachio_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20210710
-x86_64               randconfig-a004-20210710
-x86_64               randconfig-a002-20210710
-x86_64               randconfig-a003-20210710
-x86_64               randconfig-a006-20210710
-x86_64               randconfig-a001-20210710
-x86_64               randconfig-a004-20210709
-x86_64               randconfig-a005-20210709
-x86_64               randconfig-a002-20210709
-x86_64               randconfig-a006-20210709
-x86_64               randconfig-a003-20210709
-x86_64               randconfig-a001-20210709
-i386                 randconfig-a006-20210709
-i386                 randconfig-a004-20210709
-i386                 randconfig-a001-20210709
-i386                 randconfig-a003-20210709
-i386                 randconfig-a005-20210709
-i386                 randconfig-a002-20210709
-i386                 randconfig-a015-20210709
-i386                 randconfig-a016-20210709
-i386                 randconfig-a011-20210709
-i386                 randconfig-a012-20210709
-i386                 randconfig-a013-20210709
-i386                 randconfig-a014-20210709
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-b001-20210709
-x86_64               randconfig-a015-20210709
-x86_64               randconfig-a011-20210709
-x86_64               randconfig-a012-20210709
-x86_64               randconfig-a014-20210709
-x86_64               randconfig-a016-20210709
-x86_64               randconfig-a013-20210709
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
