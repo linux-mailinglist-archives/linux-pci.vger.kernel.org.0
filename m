@@ -2,327 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 336AF3C3E18
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 18:51:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 257803C3E1B
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 18:53:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbhGKQyE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Jul 2021 12:54:04 -0400
-Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:47534 "EHLO
-        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230050AbhGKQyE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Jul 2021 12:54:04 -0400
-Received: from pps.filterd (m0127839.ppops.net [127.0.0.1])
-        by mx0a-002c1b01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16BGncZV016028;
-        Sun, 11 Jul 2021 09:51:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version;
- s=proofpoint20171006; bh=o8F+HGOfT9d8N9o+NiSGntEeTQkmQ/x/oqd8JthmO3A=;
- b=M3UjWjxvmkB6fLwe9PFHbxlt+BztujorJ/M2txqgMlZLZ12ohV5XPGcYIpMqqeNT/bKl
- a0SdKeGkrbAMAivOwlJXe6pHSYXFGbXTRw74nrEzRw/ki2gqdOP74x1E524o1NYFVeAP
- enyYVuy0YxtAipaJZTQbkg9r9tJHEC5NRsuAlUoRC0hYG8brM8XgUgIV1B1wA0uf+lqo
- OURFBlA8ijvsmilQFWmK1ojd1tRxlZVn04IdW/P7xBb6cko0dsk9o75uadUNOiJxAfpI
- 3pbU7RuPOfVtwTRja9oRYTzDqK74/fArzrxF4a2qiz3UVwhyif2NOeCUiew6f+8YfRuQ Jw== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
-        by mx0a-002c1b01.pphosted.com with ESMTP id 39qamjsna2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 11 Jul 2021 09:51:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GGBvMRc9gkelLY5uML32Lj6Yrh1K0tgqcm31WfCdYsuzK5os8OtbFPqPCypS51e3KGkfl+XuqOFAoTU+Er13/XHiVJ4LI1sIj01WwGjdKqgWNOwxeUM4Bktk9/v43kGxtOCXRs9WZpJyurciggYlqE6n3XP07XQEPzPkK9xPKuTZ6FD9GnNiyBp0ytcO6vw20qufj4cTkNRQOUm7PpqI6f5D6wDJj0yi/92RFtCGAoJ/2osgcwZDHrHm0YRrrIPDi2ev1js9gM1dlgRR1TVMxUR5hhj91Y1C71sIpKskLV3Pd/gP5wl8vrnPTtq0BmmzC+44/9mJVWcSUChHevXKkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o8F+HGOfT9d8N9o+NiSGntEeTQkmQ/x/oqd8JthmO3A=;
- b=YPHfqAfFjD8qpGbspt0HvVZ4cBX6NCDLLvYh2iAWLMqj8HTFalhdiaMJ5MGsPire62fTvkweoK0CZLI0GraMx0e0S9QW6S5+xMzEn4quFNzKBbmfiwzvetqPLCE05tqzz2fA7r2iWvB28ZtoKGXm/AU4WVp0HibyMcFs4P9JXJ1D/1WQcaqnZLa7fKwnzEWYsxRCfpHweTD9yXBHoNjC9ydGjJ7cjEgaR9EtqKXwAE3cEkQZGgaYd8z/2uqMEnh+CXrEPhz5R3fO0jIBeJ5Dcg06TfqpvbC/IriJaghhvJ9aNIvSwxmRAr2T+KfwZSmsmnnp/n7ckbZh601HFgPCmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from SN6PR02MB4543.namprd02.prod.outlook.com (2603:10b6:805:b1::24)
- by SA0PR02MB7241.namprd02.prod.outlook.com (2603:10b6:806:ef::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.21; Sun, 11 Jul
- 2021 16:51:02 +0000
-Received: from SN6PR02MB4543.namprd02.prod.outlook.com
- ([fe80::182b:62b8:51c1:ba59]) by SN6PR02MB4543.namprd02.prod.outlook.com
- ([fe80::182b:62b8:51c1:ba59%5]) with mapi id 15.20.4308.026; Sun, 11 Jul 2021
- 16:51:02 +0000
-From:   Raphael Norwitz <raphael.norwitz@nutanix.com>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v9 4/8] PCI/sysfs: Allow userspace to query and set device
- reset mechanism
-Thread-Topic: [PATCH v9 4/8] PCI/sysfs: Allow userspace to query and set
- device reset mechanism
-Thread-Index: AQHXcaktjT4W9oc3UEOmIGnwEgPzR6s+BoMA
-Date:   Sun, 11 Jul 2021 16:51:02 +0000
-Message-ID: <20210711165056.GA30721@raphael-debian-dev>
-References: <20210705142138.2651-1-ameynarkhede03@gmail.com>
- <20210705142138.2651-5-ameynarkhede03@gmail.com>
-In-Reply-To: <20210705142138.2651-5-ameynarkhede03@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nutanix.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b20617e3-74c6-45bb-017f-08d9448c1134
-x-ms-traffictypediagnostic: SA0PR02MB7241:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR02MB7241AA1FBDCB3C76181D300AEA169@SA0PR02MB7241.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gjXFlwjf7V31Poy6EtGE8bc32nkfSq7VYm82HInrnSWSpSWwRNvqHQ+zEQaZ304vaywKXDQihYcndumoUcU7abN//ZJApX3NfyqVyFUOJnu+qSlYWw1vZsc3ICv5YZMswROA+ao1hMNHIU6bJp9tXr/8O9LEhTEl83pmUF1RQwsPb7CmyGTBCEcM/F8KArYvqAUMhTra5dgwwesDcxNcOtnJuR6yTFhD6ck9wQsbRftTIOSsVcn7KhEUQNxp+M7F1BrlKe9h710m2rOYrQgivbxyDgGNvmMDHASkiywhCfRc7t8glhqd+aY7xjb59uS5xo6fAZp0p01XN1U3GcOYHPas0Xf8yg07Z9PrQ+q4BXd/VQ2FIq2q+A1ADcux5oZ80zUI2ysh7Lox6kNldHi6BYkqpVNtyLdn6e8+TrP6Le1pTV6vr0OYXZaaHQxfjCYkAuGV4RLkHukWS0nqp1kanvrvbj0tDupt/RjxXc4ID1rHIcoK7n9ZdwgNeIlyLvVi+WkMJgY0W+XTKVu3tDxMTn2p+yAEBuFpOIK8XikQdePZ57GtX5nEZ9ywEYJHQB1J4Po1OjQumywe614cEvieulz0uNq7Mm+DVls8D9WJzuwrkS3pRzQmE1JVIs8BzActsKEqk2yrKbZ8N7nD/tzBAg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR02MB4543.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(376002)(396003)(346002)(39850400004)(136003)(366004)(8936002)(38100700002)(33656002)(83380400001)(76116006)(8676002)(6916009)(4326008)(44832011)(6486002)(86362001)(7416002)(1076003)(9686003)(64756008)(54906003)(478600001)(122000001)(91956017)(186003)(66476007)(66556008)(316002)(66446008)(71200400001)(5660300002)(2906002)(66946007)(6506007)(33716001)(6512007)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?WacBp6kc9PrjGBc90hViMWH2yMz6woBrwxbBtGc4ahomgKsqeoSfdp2E+LfC?=
- =?us-ascii?Q?sgylQleUhMEIzpb2kNshRtJGpk+od9S5vofOq1o7BaMxXwuMmgf4WWoKx6hG?=
- =?us-ascii?Q?IgghC8UtkcRdYET3om/qu+Vn8HFJ3Bji6CCLqUMeJve77Q7KggwS/mSztC6C?=
- =?us-ascii?Q?nff5PaeesVoDE9QZNBECc3LJ6n3Qx6J+aUxrnKgAMbS2d4Bl6BDauBtr5Gye?=
- =?us-ascii?Q?SY4o+ReYE1arpXglUwIrOzc2O31rFsKoZPrsrl4cGQL8jO34vd47zFVDNbqw?=
- =?us-ascii?Q?a4t0bfCbyr8j2nAnNfY9ZXsV3t+8j0WoLOZhAZh/SV3fK3LOAt0FtMHaIDtr?=
- =?us-ascii?Q?sdI/1WmMr/BId9afLs9Uc5dSmjPmJxqJk4IqlxUHCscDB+2i0ImYf66X36rH?=
- =?us-ascii?Q?wCNl/AGH/5alvbk8oClywmJKUCDR3LWnKi9Z8WqXi9jPd0ikmjJqYgCYnLi4?=
- =?us-ascii?Q?Dni9/5o4zssvlD5t++XHjLwkVt/O3LTa0jKw8zO7hP7cWoPvBFdoUS/netei?=
- =?us-ascii?Q?Vr1MEoZn/aEgIkBNadpB/qUY5W/chSycTEmcc1ztc2db50G0DKKQy6RT/5IS?=
- =?us-ascii?Q?wWy0vEltUvEih78KWvioXo5iM+O5Fo8le8LVHNyQ/sq7yHC25NQDQ9/Rqk8w?=
- =?us-ascii?Q?DY13HFysdGpRYSqAiuLItby8EmjS2Le5OvSnlFD23uWSB3nrO58mqDFO1gN7?=
- =?us-ascii?Q?eAGNXA51HRmNVgrex+K/Zlxzlq1nXMh4+0y2AEFNRV5Ri0IlwT/9iCA+lHaw?=
- =?us-ascii?Q?m1eG7uDKpfANWLT7D2w5ffDShraO02LLNSjprggtuoDZ9Dor18wCgskhxwgM?=
- =?us-ascii?Q?fZNPaKMWRokfxR0rCNChgi+thkBSonXukqhIMBQl7olZK1tJ9qxqZDEF81xV?=
- =?us-ascii?Q?I8OsGUSMDn7PvsslTlaqwO7CvJKQgX/D4RSwt0BOstJjcIb1xMf0qzycirqg?=
- =?us-ascii?Q?su714z6Ka0Grehi4Fm35aERWKbUt1EhEr6tZ8xIzF2xlUqwJAwymaaTE+6GM?=
- =?us-ascii?Q?o700DFplKkyEfPyVVLGuELLdhxbGqEgAAZhP6RLHc6vpk37LV3bohQjT47K5?=
- =?us-ascii?Q?2malBQzo0NGbbM/7VigVwER0Sr3Q4/zNCBNE0rWeADterBzL+WC8ghD17n0i?=
- =?us-ascii?Q?ELZauvYUs5Xoqc6AOLfS6fb6qj1b3ViAOUMGtYDlBNqa487IWJpyTDQXm5XR?=
- =?us-ascii?Q?g30gVTGc3ry/IhUA0BX9qH/vMN6CuHy7EItk2eN0WBWMioaYqNdxlWTe/GK9?=
- =?us-ascii?Q?0MX3JGBN02uWwXYD8ROSt7qSYH/9awl9QQWvi5+gjTNLIf3aFLKEhQDrvK3S?=
- =?us-ascii?Q?jJocORRXVPQFhCMq+hCE5tHt?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A959285D80C9E446ACA6FE9D346CF7D8@namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S229934AbhGKQ4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 11 Jul 2021 12:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229660AbhGKQ4e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Jul 2021 12:56:34 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710EBC0613DD;
+        Sun, 11 Jul 2021 09:53:47 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4GNCf16kVVzQjxW;
+        Sun, 11 Jul 2021 18:53:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id QyD4CyZlz4gw; Sun, 11 Jul 2021 18:53:39 +0200 (CEST)
+Subject: Re: [PATCH v2 2/2] mwifiex: pcie: add reset_d3cold quirk for Surface
+ gen4+ devices
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20210709184443.fxcbc77te6ptypar@pali>
+ <251bd696-9029-ec5a-8b0c-da78a0c8b2eb@gmail.com>
+ <20210709194401.7lto67x6oij23uc5@pali>
+ <4e35bfc1-c38d-7198-dedf-a1f2ec28c788@gmail.com>
+ <20210709212505.mmqxdplmxbemqzlo@pali>
+ <bfbb3b4d-07f7-1b97-54f0-21eba4766798@gmail.com>
+ <20210709225433.axpzdsfbyvieahvr@pali>
+ <89c9d1b8-c204-d028-9f2c-80d580dabb8b@gmail.com>
+ <20210710000756.4j3tte63t5u6bbt4@pali>
+ <1d45c961-d675-ea80-abe4-8d4bcf3cf8d4@gmail.com>
+ <20210710003826.clnk5sh3cvlamwjr@pali>
+ <2d7eef37-aab3-8986-800f-74ffc27b62c5@gmail.com>
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+Message-ID: <fc1f39b0-2d61-387f-303f-9715781a2c4a@mailbox.org>
+Date:   Sun, 11 Jul 2021 18:53:32 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4543.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b20617e3-74c6-45bb-017f-08d9448c1134
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2021 16:51:02.3137
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t3sPu4UMshBUNV+k9DUcK8g641j0mWdDVisquKZoEXoOuVJVjbb2koaAD8OF6kgq71luBHw/Nj1d7C2F+ymC+xnkRU8dXjt0gp3cQtrcLNU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR02MB7241
-X-Proofpoint-ORIG-GUID: -o39XnhOpTBypQStR5uMu34AU6bD2oN9
-X-Proofpoint-GUID: -o39XnhOpTBypQStR5uMu34AU6bD2oN9
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-11_10:2021-07-09,2021-07-11 signatures=0
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <2d7eef37-aab3-8986-800f-74ffc27b62c5@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -3.11 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 6E94D1842
+X-Rspamd-UID: 54db4e
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 05, 2021 at 07:51:34PM +0530, Amey Narkhede wrote:
-> Add reset_method sysfs attribute to enable user to query and set user
-> preferred device reset methods and their ordering.
->=20
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+On 7/10/21 3:07 AM, Maximilian Luz wrote:
+> On 7/10/21 2:38 AM, Pali Rohár wrote:
+>> On Saturday 10 July 2021 02:18:12 Maximilian Luz wrote:
+>>> On 7/10/21 2:07 AM, Pali Rohár wrote:
+>>>
+>>> [...]
+>>>
+>>>>> Interesting, I was not aware of this. IIRC we've been experimenting 
+>>>>> with
+>>>>> the mwlwifi driver (which that lrdmwl driver seems to be based 
+>>>>> on?), but
+>>>>> couldn't get that to work with the firmware we have.
+>>>>
+>>>> mwlwifi is that soft-mac driver and uses completely different firmware.
+>>>> For sure it would not work with current full-mac firmware.
+>>>>
+>>>>> IIRC it also didn't
+>>>>> work with the Windows firmware (which seems to be significantly
+>>>>> different from the one we have for Linux and seems to use or be 
+>>>>> modeled
+>>>>> after some special Windows WiFi driver interface).
+>>>>
+>>>> So... Microsoft has different firmware for this chip? And it is working
+>>>> with mwifiex driver?
+>>>
+>>> I'm not sure how special that firmware really is (i.e. if it is Surface
+>>> specific or just what Marvell uses on Windows), only that it doesn't
+>>> look like the firmware included in the linux-firmware repo. The Windows
+>>> firmware doesn't work with either mwlwifi or mwifiex drivers (IIRC) and
+>>> on Linux we use the official firmware from the linux-firmware repo.
+>>
+>> Version available in the linux-firmware repo is also what big companies
+>> (like google) receive for their systems... sometimes just only older
+>> version as Marvell/NXP is slow in updating files in linux-firmware.
+>> Seems that it is also same what receive customers under NDA as more
+>> companies dropped "proprietary" ex-Marvell/NXP driver on internet and it
+>> contained this firmware with some sources of driver which looks like a
+>> fork of mwifiex (or maybe mwifiex is "cleaned fork" of that driver :D)
+>>
+>> There is old firmware documentation which describe RPC communication
+>> between OS and firmware:
+>> http://wiki.laptop.org/images/f/f3/Firmware-Spec-v5.1-MV-S103752-00.pdf
+>>
+>> It is really old for very old wifi chips and when I checked it, it still
+>> matches what mwifiex is doing with new chips. Just there are new and
+>> more commands. And documentation is OS-neutral.
+>>
+>> So if Microsoft has some "incompatible" firmware with this, it could
+>> mean that they got something special which nobody else have? Maybe it
+>> can explain that "connected standby" and maybe also better stability?
+>>
+>> Or just windows distribute firmware in different format and needs to
+>> "unpack" or "preprocess" prior downloading it to device?
+> 
+> If memory serves me right, Jonas did some reverse engineering on the
+> Windows driver and found that it uses the "new" WDI Miniport API: It
+> seems that originally both Windows and Linux drivers (and firmware)
+> were pretty much the same (he mentioned there were similarities in
+> terminology), but then they switched to that new API on Windows and
+> changed the firmware with it, so that the driver now essentially only
+> forwards the commands from that API to the firmware and the firmware
+> handles the rest.
+> 
+> By reading the Windows docs on that API, that change might have been
+> forced on them as some Windows 10 features apparently only work via
+> that API.
+> 
+> He'll probably know more about that than I do.
 
-Just some spacing NITs.
+Not much I can add there, it seemed a lot like both mwifiex and the 
+Windows 10 WDI miniport driver were both derived from the same codebase 
+originally, but in order to be compatible with the WDI miniport API and 
+other stuff Windows requires from wifi devices (I recall there was some 
+SAR-value control/reporting stuff too), some parts of the firmware had 
+to be rewritten.
 
-Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+In the end, the Windows firmware is updated a lot more often and likely 
+includes a bunch of bugfixes the linux firmware doesn't have, but it 
+can't be used on linux without a ton of work that would probably include 
+rebuilding proprietary APIs from Windows.
 
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci |  19 +++++
->  drivers/pci/pci-sysfs.c                 | 103 ++++++++++++++++++++++++
->  2 files changed, 122 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/=
-testing/sysfs-bus-pci
-> index ef00fada2..43f4e33c7 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -121,6 +121,25 @@ Description:
->  		child buses, and re-discover devices removed earlier
->  		from this part of the device tree.
-> =20
-> +What:		/sys/bus/pci/devices/.../reset_method
-> +Date:		March 2021
-> +Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-> +Description:
-> +		Some devices allow an individual function to be reset
-> +		without affecting other functions in the same slot.
-> +
-> +		For devices that have this support, a file named
-> +		reset_method will be present in sysfs. Initially reading
-> +		this file will give names of the device supported reset
-> +		methods and their ordering. After write, this file will
-> +		give names and ordering of currently enabled reset methods.
-> +		Writing the name or comma separated list of names of any of
-> +		the device supported reset methods to this file will set
-> +		the reset methods and their ordering to be used when
-> +		resetting the device. Writing empty string to this file
-> +		will disable ability to reset the device and writing
-> +		"default" will return to the original value.
-> +
->  What:		/sys/bus/pci/devices/.../reset
->  Date:		July 2009
->  Contact:	Michael S. Tsirkin <mst@redhat.com>
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 316f70c3e..8a740e211 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1334,6 +1334,108 @@ static const struct attribute_group pci_dev_rom_a=
-ttr_group =3D {
->  	.is_bin_visible =3D pci_dev_rom_attr_is_visible,
->  };
-> =20
-> +static ssize_t reset_method_show(struct device *dev,
-
-Nit: spaces on the following two lines. "struct device_attribute *attr"
-and "char *buf" should be in line with "struct device *dev"
-
-> +				 struct device_attribute *attr,
-> +				 char *buf)
-> +{
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);
-> +	ssize_t len =3D 0;
-> +	int i, idx;
-> +
-> +	for (i =3D 0; i < PCI_NUM_RESET_METHODS; i++) {
-> +		idx =3D pdev->reset_methods[i];
-> +		if (!idx)
-> +			break;
-> +
-> +		len +=3D sysfs_emit_at(buf, len, "%s%s", len ? "," : "",
-> +				     pci_reset_fn_methods[idx].name);
-> +	}
-> +
-> +	if (len)
-> +		len +=3D sysfs_emit_at(buf, len, "\n");
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t reset_method_store(struct device *dev,
-
-Nit: spaces on the following two lines
-
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);
-> +	int n =3D 0;
-> +	char *name, *options =3D NULL;
-> +	u8 reset_methods[PCI_NUM_RESET_METHODS] =3D { 0 };
-> +
-> +	if (count >=3D (PAGE_SIZE - 1))
-> +		return -EINVAL;
-> +
-> +	if (sysfs_streq(buf, "")) {
-> +		pci_warn(pdev, "All device reset methods disabled by user");
-> +		goto set_reset_methods;
-> +	}
-> +
-> +	if (sysfs_streq(buf, "default")) {
-> +		pci_init_reset_methods(pdev);
-> +		return count;
-> +	}
-> +
-> +	options =3D kstrndup(buf, count, GFP_KERNEL);
-> +	if (!options)
-> +		return -ENOMEM;
-> +
-> +	while ((name =3D strsep(&options, ",")) !=3D NULL) {
-> +		int i;
-> +
-> +		if (sysfs_streq(name, ""))
-> +			continue;
-> +
-> +		name =3D strim(name);
-> +
-> +		for (i =3D 1; i < PCI_NUM_RESET_METHODS; i++) {
-> +			if (sysfs_streq(name, pci_reset_fn_methods[i].name) &&
-> +			    !pci_reset_fn_methods[i].reset_fn(pdev, 1)) {
-> +				reset_methods[n++] =3D i;
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (i =3D=3D PCI_NUM_RESET_METHODS) {
-> +			kfree(options);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	if (!pci_reset_fn_methods[1].reset_fn(pdev, 1) && reset_methods[0] !=3D=
- 1)
-> +		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user"=
-);
-> +
-> +set_reset_methods:
-> +	memcpy(pdev->reset_methods, reset_methods, sizeof(reset_methods));
-> +	kfree(options);
-> +	return count;
-> +}
-> +static DEVICE_ATTR_RW(reset_method);
-> +
-> +static struct attribute *pci_dev_reset_method_attrs[] =3D {
-> +	&dev_attr_reset_method.attr,
-> +	NULL,
-> +};
-> +
-> +static umode_t pci_dev_reset_method_attr_is_visible(struct kobject *kobj=
-,
-
-Nit: ditto - spacing.
-
-> +						    struct attribute *a, int n)
-> +{
-> +	struct pci_dev *pdev =3D to_pci_dev(kobj_to_dev(kobj));
-> +
-> +	if (!pci_reset_supported(pdev))
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +static const struct attribute_group pci_dev_reset_method_attr_group =3D =
-{
-> +	.attrs =3D pci_dev_reset_method_attrs,
-> +	.is_visible =3D pci_dev_reset_method_attr_is_visible,
-> +};
-> +
->  static ssize_t reset_store(struct device *dev, struct device_attribute *=
-attr,
-
-Nit: spacing following line.
-
->  			   const char *buf, size_t count)
->  {
-> @@ -1491,6 +1593,7 @@ const struct attribute_group *pci_dev_groups[] =3D =
-{
->  	&pci_dev_config_attr_group,
->  	&pci_dev_rom_attr_group,
->  	&pci_dev_reset_attr_group,
-> +	&pci_dev_reset_method_attr_group,
->  	&pci_dev_vpd_attr_group,
->  #ifdef CONFIG_DMI
->  	&pci_dev_smbios_attr_group,
-> --=20
-> 2.32.0
->=20
-> =
+Also, from my testing with custom APs and sniffing packets with 
+Wireshark, the functionality, limitations and weird 
+"semi-spec-compliant" behaviors were exactly the same with the Windows 
+firmware: It doesn't support WPA3, it can't connect to fast transition 
+APs (funnily enough that's opposed to what MS claims) and it also can't 
+spawn an AP with WPA-PSK-SHA256 AKM ciphers. So not sure there's a lot 
+of sense in spending more time trying to go down that path.
