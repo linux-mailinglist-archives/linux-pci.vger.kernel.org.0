@@ -2,78 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B28A3C3C0A
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 13:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A3D53C3D26
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 16:06:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232755AbhGKL6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Jul 2021 07:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229688AbhGKL6x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 11 Jul 2021 07:58:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C8D5F61090;
-        Sun, 11 Jul 2021 11:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626004566;
-        bh=WzhpHgoJ55znqI9v2KgCulY11RVSrhkw90oNP0TAaNo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rfjwd3SrnEITNEfGHks9pZLMimE7BuMh6egQEIoqoSaepy6W8Ye1fCzaKtYPXOjSQ
-         JQMF9CHURnTFGs9BydGrLmr19o/orWyGyk3//Lx9su6Z1nrCjAH6MCxVYBAnFIazRT
-         xS/hVXOi4psGZHwjHUUZYV1t9aCUNjTPsa1V8wvY5MYSIU6mm6oaQ2P+oxkehFVNBY
-         WhAq/YqIYrUM5LoOLZrAgD0WwwkNOkTK4K7yJ6W5HtYOkAQNZ1vkCfdF494qKFlDvo
-         K9CJBDj6IYhCzj/tW2fA2bXGf2Qr8g/y4FD4bisQcsJ2WcsfGw4WZIEEW8Hdl1Dku/
-         nfYtc6Kz3GF6A==
-Date:   Sun, 11 Jul 2021 14:56:01 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Shunyong Yang <yang.shunyong@gmail.com>
-Cc:     bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        kw@linux.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools: PCI: Zero-initialize param
-Message-ID: <YOrcUcx2PdaBxRQi@unreal>
-References: <20210627003937.6249-1-yang.shunyong@gmail.com>
- <d4c250af-aa50-0ec0-c66a-104092646e15@gmail.com>
+        id S232913AbhGKOIz convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sun, 11 Jul 2021 10:08:55 -0400
+Received: from mail.07d05.mspz7.gob.ec ([186.46.59.139]:53738 "EHLO
+        mail.07d05.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232907AbhGKOIz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 11 Jul 2021 10:08:55 -0400
+X-Greylist: delayed 2186 seconds by postgrey-1.27 at vger.kernel.org; Sun, 11 Jul 2021 10:08:54 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 2AFF91845225;
+        Sun, 11 Jul 2021 08:16:57 -0500 (-05)
+Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id POSY67K2ir0n; Sun, 11 Jul 2021 08:16:57 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id B4DF61845212;
+        Sun, 11 Jul 2021 08:16:56 -0500 (-05)
+X-Virus-Scanned: amavisd-new at 07d05.mspz7.gob.ec
+Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id zXWhQIo2JUPZ; Sun, 11 Jul 2021 08:16:56 -0500 (-05)
+Received: from cris-PC.wifi (unknown [105.9.79.139])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTPSA id 9D51418454C4;
+        Sun, 11 Jul 2021 08:16:48 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d4c250af-aa50-0ec0-c66a-104092646e15@gmail.com>
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: spende von 2,000,000 euro
+To:     Recipients <maria.coronel@07d05.mspz7.gob.ec>
+From:   ''Tayeb souami'' <maria.coronel@07d05.mspz7.gob.ec>
+Date:   Sun, 11 Jul 2021 15:16:39 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20210711131648.9D51418454C4@mail.07d05.mspz7.gob.ec>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 11, 2021 at 09:48:17AM +0800, Shunyong Yang wrote:
-> Hi, Bjorn and Kishon,
-> 
->   Gentle ping. Would you please help to review and merge this tiny change?
-> 
-> Thansk.
-> 
-> Shunyong.
-> 
-> On 2021/6/27 8:39, Shunyong Yang wrote:
-> > The values in param may be random if they are not initialized, which
-> > may cause use_dma flag set even when "-d" option is not provided
-> > in command line. Initializing all members to 0 to solve this.
-> > 
-> > Signed-off-by: Shunyong Yang <yang.shunyong@gmail.com>
-> > ---
-> >   tools/pci/pcitest.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-> > index 0a1344c45213..59bcd6220a58 100644
-> > --- a/tools/pci/pcitest.c
-> > +++ b/tools/pci/pcitest.c
-> > @@ -40,7 +40,7 @@ struct pci_test {
-> >   static int run_test(struct pci_test *test)
-> >   {
-> > -	struct pci_endpoint_test_xfer_param param;
-> > +	struct pci_endpoint_test_xfer_param param = {0};
+Hallo mein lieber Freund
+Mein Name ist Tayeb Souami aus New Jersey in Amerika und ich habe den America Lottery Jackpot von 315 Millionen Euro gewonnen. Ich habe mich entschlossen, die Summe von 2.000.000 Euro an fünf glückliche Personen zu spenden, und Sie wurden als einer der Begünstigten ausgewählt. Bitte klicken Sie auf diesen Link, um mehr über meinen Gewinn zu erfahren.
 
-You can simply write {} instead of {0} - zero is not needed.
 
-Thanks
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
-> >   	int ret = -EINVAL;
-> >   	int fd;
+Bitte kontaktieren Sie mich über diese E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+Herr Tayeb Souami
