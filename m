@@ -2,137 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E3153C66C5
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 01:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A70A43C66C8
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 01:09:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233453AbhGLXKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 19:10:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233227AbhGLXKy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 19:10:54 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8562C0613DD;
-        Mon, 12 Jul 2021 16:08:04 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id x16so9195448plg.3;
-        Mon, 12 Jul 2021 16:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4pQlPWeYDasqT5HSwq98XRlnC0Bt0+1EaZmNOibXW04=;
-        b=Yw3FqYsR8SI3j7U39sRckJQB5mg/EWKrrV5SEZSYye2fX8jrsH4vPluQayT/7/IhXr
-         6agWVqffEsFS1ZF2Df8T3XP4sAia8Z8f/53QpJOqsTVOkGrFgwfdFm6P7kLGFTRzMWfQ
-         Il78xfjXKZcgDQzaI53AzPyy+vxsn8eD9UaOqGM7XSqUuu4VSYRFQv3QxeMi+N8CRS1A
-         zpnztX//YHHq+8jAjdrqXr5sigfuIqTJRYVLvv+/5QO0i+rV952c1N5dmlQKn/dvdR78
-         PpOlpC08tSIn/J5civ1yvwKBRlRoUffVJvqKLfU0zlhVV4DFRGKUsfiD0gdr8W4YJSia
-         NKVw==
+        id S231922AbhGLXMQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 19:12:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23232 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230522AbhGLXMO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 19:12:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626131364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pQP+qtN0tfA18/8MgoFuBtUXbYJF/jq+trCW5RaJtbg=;
+        b=Kd/DaHhdi9wf75KpEeUYr9tVdWnZ6iC0H9SIlOmiQt9e1BTQQoKtw3U6FQRn6mImM+vr1c
+        LP2HgVlmxj6Q/HaW84HkX3VhTS+xderHGW3MLGbZVoVSLktkhFJztdPLUIFaXWM4wgU+lh
+        IkpyJlLjN5f9BX4vAowdSr9gV7EZdtY=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-42-BjnP8AMsOFy79dbyxZvyVw-1; Mon, 12 Jul 2021 19:09:23 -0400
+X-MC-Unique: BjnP8AMsOFy79dbyxZvyVw-1
+Received: by mail-oi1-f198.google.com with SMTP id w2-20020aca62020000b029024073490067so14066795oib.21
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 16:09:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4pQlPWeYDasqT5HSwq98XRlnC0Bt0+1EaZmNOibXW04=;
-        b=CrIwWZUn0bqvDd8p/iGCievlNco4SeOiyVDfnDQ1CKKk7kxkXqoT3b88i8s1PjdDGw
-         4oIG+m39iW51/xwnKFwufD+IOM906R/VkqhHAQARYh38sI55kGq/67wm+H+G/tXipkGZ
-         bqKDuvHXi0LGmIZsc3JGZPOh6cpeoGU6vYu6Y+25BAdBS7XeIwW0+bGh0e+o/zuF9+cp
-         WMKrNnRNTXXjrMIl12Dtad2UjjebEluDhPcpTZBDJHSqGggH3+1zHY5AaKNmBrsP1wUc
-         an/SeJHPf+XYHiW7KeGg5P70lj3LVVQlzL4syiPNaypCbtmRaaKFZ6ZZmMckEjI9+/MD
-         H3Qw==
-X-Gm-Message-State: AOAM530NsmQ7yoc59OkwBe86hWkJwteQ5OleMDScoUXObGIouPeoeJF/
-        v9tnluOBbVi4U/xbR096U3fYMM/+JQqbc+X0G44=
-X-Google-Smtp-Source: ABdhPJwl/cs7gjt7UJvM1RfNNXWnPv2JwXE2ke1+At2e0tEfL/PE79WKC/dXpX7uZcwpL8qyXTn3xOsnANHWEcUeh70=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr16378709pja.181.1626131284145;
- Mon, 12 Jul 2021 16:08:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pQP+qtN0tfA18/8MgoFuBtUXbYJF/jq+trCW5RaJtbg=;
+        b=e/5StxdVC22/4bAbKPHZG58qDlNqinOWCWW0ozS8WTK5Tpa6uIEzEKqHngCKXUL4MN
+         nNSKpvhVKus7GXKEnfOT6iAtFg12dA223wx+Qx94brY8rSGTSvfcKu3m4ui/BLexVqKb
+         oWJwvFiHUMWf+0pOySKem9wuA56IpQf1firCJRqwj1UtUMAHquCjeDQobEe7zGaQmRLo
+         rUMxc9mjoGjj2c77sDWpGpQKwfFNBTaa/JBQgnclYwa0eJM4YQAhi37Z2LT+kYtA1gmy
+         8OR7XG6NbCz6ICmNpYROh63qDCN3abQuTqfVWzCq6J1gr+5ioWOIG0rS9Uf0kLED0Ygz
+         V/pQ==
+X-Gm-Message-State: AOAM530XvlaJbxLqFMRSdpjYAOii2CeZ5tlfbecXTPNRdnOaPzwt52mE
+        nA3MKgm5JmEs3gAfHD2CM5xQ92is2JQUlbIJoqpRfaYHHIvKA9eFHlz56ociGGI6b6nn44187hn
+        AQm/WeNJ+HHMnSB865vNb
+X-Received: by 2002:a05:6830:1e8f:: with SMTP id n15mr1057054otr.339.1626131362476;
+        Mon, 12 Jul 2021 16:09:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwwhcTOde2jQsNFlY8x8e8K/8yPXg4c8JBdQ4xOIMyXytc1XHrpEbyrJWE+VOYiElovegOVvg==
+X-Received: by 2002:a05:6830:1e8f:: with SMTP id n15mr1057038otr.339.1626131362199;
+        Mon, 12 Jul 2021 16:09:22 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id g1sm3330802otk.21.2021.07.12.16.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jul 2021 16:09:21 -0700 (PDT)
+Date:   Mon, 12 Jul 2021 17:09:20 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Shanker Donthineni <sdonthineni@nvidia.com>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v10 7/8] PCI: Add support for ACPI _RST reset method
+Message-ID: <20210712170920.2a0868ac.alex.williamson@redhat.com>
+In-Reply-To: <20210709123813.8700-8-ameynarkhede03@gmail.com>
+References: <20210709123813.8700-1-ameynarkhede03@gmail.com>
+        <20210709123813.8700-8-ameynarkhede03@gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <YOwr/GMIExCoNjeZ@smile.fi.intel.com> <20210712223631.GA1682719@bjorn-Precision-5520>
-In-Reply-To: <20210712223631.GA1682719@bjorn-Precision-5520>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 13 Jul 2021 02:07:27 +0300
-Message-ID: <CAHp75VfDcQXqmK9=4k4rqi7t2OZaVPC13b45vLY7fELr7zBG_Q@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 1:36 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Mon, Jul 12, 2021 at 02:48:12PM +0300, Andy Shevchenko wrote:
-> > On Thu, Jul 08, 2021 at 04:47:06PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Apr 02, 2020 at 11:23:27PM +0300, Andy Shevchenko wrote:
+On Fri,  9 Jul 2021 18:08:12 +0530
+Amey Narkhede <ameynarkhede03@gmail.com> wrote:
 
-...
+> From: Shanker Donthineni <sdonthineni@nvidia.com>
+> 
+> The _RST is a standard method specified in the ACPI specification. It
+> provides a function level reset when it is described in the acpi_device
+> context associated with PCI-device. Implement a new reset function
+> pci_dev_acpi_reset() for probing RST method and execute if it is defined
+> in the firmware.
+> 
+> The default priority of the ACPI reset is set to below device-specific
+> and above hardware resets.
+> 
+> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
+> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> Reviewed-by: Sinan Kaya <okaya@kernel.org>
+> ---
+>  drivers/pci/pci-acpi.c | 23 +++++++++++++++++++++++
+>  drivers/pci/pci.c      |  1 +
+>  drivers/pci/pci.h      |  6 ++++++
+>  include/linux/pci.h    |  2 +-
+>  4 files changed, 31 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index dae021322..b6de71d15 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -941,6 +941,29 @@ void pci_set_acpi_fwnode(struct pci_dev *dev)
+>  				   acpi_pci_find_companion(&dev->dev));
+>  }
+>  
+> +/**
+> + * pci_dev_acpi_reset - do a function level reset using _RST method
+> + * @dev: device to reset
+> + * @probe: check if _RST method is included in the acpi_device context.
+> + */
+> +int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
+> +{
+> +	acpi_handle handle = ACPI_HANDLE(&dev->dev);
+> +
+> +	if (!handle || !acpi_has_method(handle, "_RST"))
+> +		return -ENOTTY;
+> +
+> +	if (probe)
+> +		return 0;
+> +
+> +	if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
+> +		pci_warn(dev, "ACPI _RST failed\n");
+> +		return -EINVAL;
 
-> > Datasheets are publicly available (at least one may google and find some
-> > information about those PCH chips). I have in possession the hardware for
-> > gpio-pch. I can easily test that part at least.
->
-> If you have a URL for those datasheets, can you share it?  I spent
-> some time looking but all I found was 1-2 page marketing brochures.
 
-It's a part of the so called EG20T PCH. It's part of in particular
-Intel Galileo (Quark SoC) and Intel Minnowboard (v1) (Atom E6xx SoC).
-Hence the easily found links:
+Should we return -ENOTTY here instead to give a possible secondary
+reset method a chance?  Thanks,
 
-http://minnowboard.outof.biz/MinnowBoard.html
-https://www.elinux.org/Minnowboard:Minnow_Original
-https://en.wikipedia.org/wiki/List_of_Intel_Atom_microprocessors
+Alex
 
-https://www.intel.com/content/www/us/en/embedded/products/quark/x1000/documentation.html?grouping=EMT_Content%20Type&sort=title:asc
-(Chapter 19)
 
-https://ark.intel.com/content/www/us/en/ark/products/codename/37567/products-formerly-tunnel-creek.html
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  {
+>  	const struct fwnode_handle *fwnode;
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d5c16492c..1e64dbd3e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5115,6 +5115,7 @@ static void pci_dev_restore(struct pci_dev *dev)
+>  const struct pci_reset_fn_method pci_reset_fn_methods[] = {
+>  	{ },
+>  	{ &pci_dev_specific_reset, .name = "device_specific" },
+> +	{ &pci_dev_acpi_reset, .name = "acpi" },
+>  	{ &pcie_reset_flr, .name = "flr" },
+>  	{ &pci_af_flr, .name = "af_flr" },
+>  	{ &pci_pm_reset, .name = "pm" },
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 990b73e90..2c12017ed 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -705,7 +705,13 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
+>  int pci_acpi_program_hp_params(struct pci_dev *dev);
+>  extern const struct attribute_group pci_dev_acpi_attr_group;
+>  void pci_set_acpi_fwnode(struct pci_dev *dev);
+> +int pci_dev_acpi_reset(struct pci_dev *dev, int probe);
+>  #else
+> +static inline int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
+> +{
+> +	return -ENOTTY;
+> +}
+> +
+>  static inline void pci_set_acpi_fwnode(struct pci_dev *dev) {}
+>  static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
+>  {
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index f34563831..c3b0d771c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -50,7 +50,7 @@
+>  			       PCI_STATUS_PARITY)
+>  
+>  /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
+> -#define PCI_NUM_RESET_METHODS 6
+> +#define PCI_NUM_RESET_METHODS 7
+>  
+>  /*
+>   * The PCI interface treats multi-function devices as independent
 
-Hmm... Funny, the document #324211 can't be downloaded
-https://download.intel.com/embedded/chipsets/datasheet/324211.pdf
-
-I guess you may ping Intel and tell them that they should play nice
-when talking about "open hardware" (MinnowBoard initiative).
-Nevertheless, the (Old? #457798 is a specification update under NDA.
-Okay, it refers to rev 8, while Mouser, see below, provides rev 9)
-copy is available on other sites, such as
-
-https://www.mouser.tw/pdfdocs/Intel_Platform_Controller_Hub_EG20T_datasheet.pdf
-(Chapter 16)
-
-> > > that's not a trivial task, and I don't think that burden should fall
-> > > on anyone who wants to make any improvements to these drivers.
-> >
-> > > Another alternative would be to remove legacy PCI PM usage
-> > > (ioh_gpio_suspend() and ioh_gpio_resume()) from gpio-ml-ioh.  That
-> > > would mean gpio-ml-ioh wouldn't support power management at all, which
-> > > isn't a good thing, but maybe it would be even more motivation to
-> > > unify it with gpio-pch (which has already been converted by
-> > > 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"))?
-> >
-> > With regard to (1) probably we may exceptionally accept the fix to
-> > gpio-ml-ioh, but I really prefer to do the much more _useful_ job on
-> > it by unifying the two.
->
-> Should Vaibhav re-post this patch, or do you want to pull it from the
-> archives?  I just checked and it still applies cleanly to v5.14-rc1.
->
-> Here it is for reference:
->   https://lore.kernel.org/lkml/20200402155057.30667-1-vaibhavgupta40@gmail.com/
-
-I'll take from the archives.
-
-> I'll post a couple small patches toward unifying them.  They don't do
-> the whole job but they're baby steps.
-
-Thanks! I look forward to seeing them soon!
-
--- 
-With Best Regards,
-Andy Shevchenko
