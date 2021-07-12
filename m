@@ -2,117 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B8233C5BC0
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 14:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FEF33C5BE4
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 14:21:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232203AbhGLLvM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 07:51:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:65221 "EHLO mga05.intel.com"
+        id S231939AbhGLMOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 08:14:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52381 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230364AbhGLLvM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Jul 2021 07:51:12 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10042"; a="295611062"
+        id S230074AbhGLMOw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Jul 2021 08:14:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10042"; a="209785552"
 X-IronPort-AV: E=Sophos;i="5.84,232,1620716400"; 
-   d="scan'208";a="295611062"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 04:48:21 -0700
+   d="scan'208";a="209785552"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 05:12:03 -0700
 X-IronPort-AV: E=Sophos;i="5.84,232,1620716400"; 
-   d="scan'208";a="561721690"
+   d="scan'208";a="652927011"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 04:48:18 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 05:12:00 -0700
 Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1m2uQ0-00CD4d-KB; Mon, 12 Jul 2021 14:48:12 +0300
-Date:   Mon, 12 Jul 2021 14:48:12 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
-        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to
- dev_pm_ops
-Message-ID: <YOwr/GMIExCoNjeZ@smile.fi.intel.com>
-References: <CAHp75Vfpj+ENMe9u-SMKfvCsyFtOucUT9bD3qfWX+QjccZ9ZyQ@mail.gmail.com>
- <20210708214706.GA1059661@bjorn-Precision-5520>
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1m2umv-00CDOQ-W1; Mon, 12 Jul 2021 15:11:53 +0300
+Date:   Mon, 12 Jul 2021 15:11:53 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com
+Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
+ support library
+Message-ID: <YOwxidwFKL9fS9gr@smile.fi.intel.com>
+References: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
+ <20210309014221.GA1831206@bjorn-Precision-5520>
+ <20210309094252.396b7f2d@md1za8fc.ad001.siemens.net>
+ <3f33a178-3002-e93e-89f1-8cf05097da25@metux.net>
+ <20210406154001.3eec0698@md1za8fc.ad001.siemens.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210708214706.GA1059661@bjorn-Precision-5520>
+In-Reply-To: <20210406154001.3eec0698@md1za8fc.ad001.siemens.net>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 08, 2021 at 04:47:06PM -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 02, 2020 at 11:23:27PM +0300, Andy Shevchenko wrote:
-> > On Thu, Apr 2, 2020 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Apr 02, 2020 at 09:33:46PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
-> > > > >
-> > > > > Convert the legacy callback .suspend() and .resume()
-> > > > > to the generic ones.
-> > > >
-> > > > Thank you for the patch.
-> > > >
-> > > > Rather then doing this I think the best approach is to unify gpio-pch
-> > > > and gpio-ml-ioh together.
-> > > > Under umbrella of the task, the clean ups like above are highly
-> > > > appreciated.
-> > >
-> > > I'd be all in favor of that, but what Vaibhav is working toward is
-> > > eliminating use of legacy PM in PCI drivers.  I think unifying drivers
-> > > is really out of scope for that project.
-> > >
-> > > If you'd rather leave gpio-ml-ioh.c alone for now, I suggest that
-> > > Vaibhav move on to other PCI drivers that use legacy PM.  If we
-> > > convert all the others away from legacy PM and gpio-ml-ioh.c is the
-> > > only one remaining, then I guess we can revisit this :)
-> > 
-> > Then skip this driver for good.
-> > 
-> > > Or, maybe converting gpio-ml-ioh.c now, along the lines of
-> > > 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"), would be one small
-> > > step towards the eventual unification, by making gpio-pch and
-> > > gpio-ml-ioh a little more similar.
-> > 
-> > I think it will delay the real work here (very old code motivates
-> > better to get rid of it then semi-fixed one).
+On Tue, Apr 06, 2021 at 03:40:01PM +0200, Henning Schild wrote:
+> Am Fri, 2 Apr 2021 15:09:12 +0200
+> schrieb "Enrico Weigelt, metux IT consult" <lkml@metux.net>:
 > 
-> With respect, I think it is unreasonable to use the fact that
-> gpio-ml-ioh and gpio-pch should be unified to hold up the conversion
-> of gpio-ml-ioh to generic power management.
+> > On 09.03.21 09:42, Henning Schild wrote:
+> > 
+> > > The device will respond to MMIO while being hidden. I am afraid
+> > > nothing stops a collision, except for the assumption that the BIOS
+> > > is always right and PCI devices never get remapped. But just
+> > > guessing here.  
+> > 
+> > What could go wrong if it is remapped, except that this driver would
+> > write to the wrong mmio space ?
+> > 
+> > If it's unhidden, pci-core should see it and start the usual probing,
+> > right ?
 > 
-> I do not want to skip gpio-ml-ioh for good, because it is one of the
-> few remaining drivers that use the legacy PCI PM interfaces.  We are
-> very close to being able to remove a significant amount of ugly code
-> from the PCI core.
+> I have seen this guy exposed to Linux on coreboot machines. No issues.
+> But i can imagine BIOSs that somehow make use of the device and assume
+> it wont move. So we would at least need a parameter to allow keeping
+> that device hidden, or "fixed" in memory.
 
-Makes sense (1).
+I'm wondering if they have pin control device described in the ACPI.
+If so, how in that case you prevent double initialisation?
 
-> gpio-ml-ioh and gpio-pch do look quite similar, and no doubt it would
-> be great to unify them.  But without datasheets or hardware to test,
-
-Datasheets are publicly available (at least one may google and find some
-information about those PCH chips). I have in possession the hardware for
-gpio-pch. I can easily test that part at least.
-
-> that's not a trivial task, and I don't think that burden should fall
-> on anyone who wants to make any improvements to these drivers.
-
-> Another alternative would be to remove legacy PCI PM usage
-> (ioh_gpio_suspend() and ioh_gpio_resume()) from gpio-ml-ioh.  That
-> would mean gpio-ml-ioh wouldn't support power management at all, which
-> isn't a good thing, but maybe it would be even more motivation to
-> unify it with gpio-pch (which has already been converted by
-> 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"))?
-
-With regard to (1) probably we may exceptionally accept the fix to gpio-ml-ioh,
-but I really prefer to do the much more _useful_ job on it by unifying the two.
+We would need to check both: P2SB and ACPI tables. Basically if we enable P2SB
+as a PCI device we may create a corresponding driver (somewhere under
+drivers/pci or PDx86) and check in its probe that ACPI device is also present
+and functional.
 
 -- 
 With Best Regards,
