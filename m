@@ -2,1032 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96C003C568E
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 12:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 286DC3C56B9
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 12:58:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354358AbhGLIUL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 04:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44606 "EHLO mail.kernel.org"
+        id S1348221AbhGLIXm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 04:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355703AbhGLITd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Jul 2021 04:19:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3C15761416;
-        Mon, 12 Jul 2021 08:16:37 +0000 (UTC)
+        id S1350529AbhGLIWk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Jul 2021 04:22:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 192B56115A;
+        Mon, 12 Jul 2021 08:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626077803;
-        bh=da5HqnJh6pA+sdSHU8oH76gaX8RzkHk7s9wzBg9Fh54=;
+        s=k20201202; t=1626077992;
+        bh=oiAKFE0F6sF9YhyTJBg+1E7QA8xdjUhbMNjBvBqhUp8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IMCoBF2WoOB8uzvb6ipL2uTT52yQ/QLL/xRGxcxm9/lyW9oR+ueyc2z2YsFtlvVkt
-         9nmFIopeiQXAJoMTIVRKov7CvRUOVI1tT6GTRGEcsSMJ6mngrV6n1bq4QjsUj1z9D/
-         jIabNsekxroaEsuY9nOL4s5Sum3O0WC2hzfQSvzj6wUhoCBQDeGxTVFEOC3T/iwxs3
-         qgFxZfp62ShOOkDMhZKpimBW6MHg21D12kY9wLd8mpF+pPd50wImNgazKF3oTucO7A
-         bWfySMCtfR9UlpPzcaPXaJfwinh5n0Yt0wyNPMdUCQYGmel4rMhax4cNpACIwQJGZ3
-         jE/mEZtGYjhbg==
-Date:   Mon, 12 Jul 2021 13:46:34 +0530
+        b=H9jyRPsSgBpbzr0U7ugKnFGzSoeoZh5NLAuVVLjzojjgZMF9Bi7QDBe63AvxT6u1Q
+         I26ah/GCPI4ObdZlhUbfZsw2J48Uv6FHO/57yuvvkf1iqhzFqkDJ0ZYWtFTOzpfRct
+         fXjUl2cqjppSFPFC645Ij1uroFqSCsRaowmOiiOcgg2q2Chml5QMW3eT4LXyqWNxcm
+         lfBvRHbUZ9U4pQzokko9yBubUmZNweaq6btX9sIpLoqPBuUcp87VAAMrtfGygEhYUb
+         jtzdtZg6HZdC+EMQsLx5b3WGiinShYyUoq2Js3uYe5CNiRgL+yZSq9kJ1Sf++HbRMj
+         7hMLbk6aSYnpg==
+Date:   Mon, 12 Jul 2021 13:49:44 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Rob Herring <robh@kernel.org>, linuxarm@huawei.com,
         mauro.chehab@huawei.com,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v3 8/9] phy: hisilicon: add driver for Kirin 970 PCIe PHY
-Message-ID: <20210712081634.GB8113@workstation>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 0/9] Add support for Hikey 970 PCIe
+Message-ID: <20210712081944.GC8113@workstation>
 References: <cover.1625826353.git.mchehab+huawei@kernel.org>
- <1b010af75ee5ac0f2b03bd513a60bf8198afad74.1625826353.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b010af75ee5ac0f2b03bd513a60bf8198afad74.1625826353.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1625826353.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 09, 2021 at 12:41:44PM +0200, Mauro Carvalho Chehab wrote:
-> The Kirin 970 PHY is somewhat similar to the Kirin 960, but it
-> does a lot more. Add the needed bits for PCIe to start working on
-> Hikey 970 boards.
-> 
-> Co-developed-by: Manivannan Sadhasivam <mani@kernel.org>
+Hi Mauro,
 
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+On Fri, Jul 09, 2021 at 12:41:36PM +0200, Mauro Carvalho Chehab wrote:
+> As requested by Rob Herring, this series split the PHY part into a separate driver.
+> Then, it adds support for Kirin 970 on a single patch.
+> 
+> With this change, the PHY-specific device tree bindings for Kirin 960 moved
+> to its own PHY properties.
+> 
+> Manivannan,
+> 
+> Please notice that the last two patches are marked as co-developed:
+> 
+> 	phy: hisilicon: add driver for Kirin 970 PCIe PHY
+> 	arm64: dts: hisilicon: Add support for HiKey 970 PCIe controller hardware
+> 
+> The first one contains the code you submitted in the past adding
+> support for Kirin 970 at the pcie-kirin driver, modified by me and
+> moved to a separate driver.
+> 
+> The second one is the DTS file, also modified by me in order to split the PHY
+> properties from the PCIe ones.
+> 
+> Please send your SoB to confirm that both changes are OK for you.
+> 
+
+I'm fine with the changes. The dts patch already has my s-o-b as you
+preserved my authorship and I've sent my s-o-b for the driver patch.
+I used my korg address for the driver patch but that's fine as all these
+efforts were done in my spare time.
 
 Thanks,
 Mani
 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../devicetree/bindings/pci/kirin-pcie.txt    |   1 +
->  drivers/pci/controller/dwc/pcie-kirin.c       |   1 +
->  drivers/phy/hisilicon/Kconfig                 |  10 +
->  drivers/phy/hisilicon/Makefile                |   1 +
+> Tested on Hikey970:
+> 
+>   $ lspci
+>   00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3670 (rev 01)
+>   01:00.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   02:01.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   02:04.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   02:05.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   02:07.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   02:09.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 07)
+> 
+>   $ ethtool enp6s0
+>   Settings for enp6s0:
+> 	Supported ports: [ TP	 MII ]
+> 	Supported link modes:   10baseT/Half 10baseT/Full
+> 	                        100baseT/Half 100baseT/Full
+> 	                        1000baseT/Half 1000baseT/Full
+> 	Supported pause frame use: Symmetric Receive-only
+> 	Supports auto-negotiation: Yes
+> 	Supported FEC modes: Not reported
+> 	Advertised link modes:  10baseT/Half 10baseT/Full
+> 	                        100baseT/Half 100baseT/Full
+> 	                        1000baseT/Half 1000baseT/Full
+> 	Advertised pause frame use: Symmetric Receive-only
+> 	Advertised auto-negotiation: Yes
+> 	Advertised FEC modes: Not reported
+> 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> 	                                     100baseT/Half 100baseT/Full
+> 	Link partner advertised pause frame use: Symmetric Receive-only
+> 	Link partner advertised auto-negotiation: Yes
+> 	Link partner advertised FEC modes: Not reported
+> 	Speed: 100Mb/s
+> 	Duplex: Full
+> 	Auto-negotiation: on
+> 	master-slave cfg: preferred slave
+> 	master-slave status: slave
+> 	Port: Twisted Pair
+> 	PHYAD: 0
+> 	Transceiver: external
+> 	MDI-X: Unknown
+>   netlink error: Operation not permitted
+> 	Link detected: yes
+> 
+> Partially tested on Hikey 960[1]:
+> 
+>   $ lspci
+>   00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3660 (rev 01)
+> 
+> [1] The Hikey 960 doesn't come with any internal PCIe device.
+>     Its hardware supports just an external device via a M.2 slot that
+>     doesn't support SATA. I ordered a NVMe device to test, but the vendor
+>     is currently out of supply. It should take 4-5 weeks to arrive here. I'll
+>     run an extra test on it once it arrives.
+> 
+> Manivannan Sadhasivam (1):
+>   arm64: dts: hisilicon: Add support for HiKey 970 PCIe controller
+>     hardware
+> 
+> Mauro Carvalho Chehab (8):
+>   dt-bindings: phy: add bindings for Hikey 960 PCIe PHY
+>   dt-bindings: phy: add bindings for Hikey 970 PCIe PHY
+>   dt-bindings: PCI: kirin: fix compatible string
+>   dt-bindings: PCI: kirin: drop PHY properties
+>   phy: hisilicon: add a PHY driver for Kirin 960
+>   PCI: kirin: drop the PHY logic from the driver
+>   PCI: kirin: use regmap for APB registers
+>   phy: hisilicon: add driver for Kirin 970 PCIe PHY
+> 
+>  .../devicetree/bindings/pci/kirin-pcie.txt    |  21 +-
+>  .../phy/hisilicon,phy-hi3660-pcie.yaml        |  82 ++
+>  .../phy/hisilicon,phy-hi3670-pcie.yaml        | 101 ++
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |  29 +-
+>  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  72 ++
+>  .../boot/dts/hisilicon/hikey970-pmic.dtsi     |   1 -
+>  drivers/pci/controller/dwc/pcie-kirin.c       | 298 ++----
+>  drivers/phy/hisilicon/Kconfig                 |  20 +
+>  drivers/phy/hisilicon/Makefile                |   2 +
+>  drivers/phy/hisilicon/phy-hi3660-pcie.c       | 325 +++++++
 >  drivers/phy/hisilicon/phy-hi3670-pcie.c       | 892 ++++++++++++++++++
->  5 files changed, 905 insertions(+)
+>  11 files changed, 1572 insertions(+), 271 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,phy-hi3660-pcie.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,phy-hi3670-pcie.yaml
+>  create mode 100644 drivers/phy/hisilicon/phy-hi3660-pcie.c
 >  create mode 100644 drivers/phy/hisilicon/phy-hi3670-pcie.c
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> index a93a8cfa1afb..585aadfeafd1 100644
-> --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> @@ -10,6 +10,7 @@ Additional properties are described here:
->  Required properties
->  - compatible:
->  	"hisilicon,kirin960-pcie"
-> +	"hisilicon,kirin970-pcie"
->  - reg: Should contain rc_dbi, apb, config registers location and length.
->  - reg-names: Must include the following entries:
->    "dbi": controller configuration registers;
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 78271dddf2e8..c51745f9b56b 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -280,6 +280,7 @@ static int __exit kirin_pcie_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id kirin_pcie_match[] = {
->  	{ .compatible = "hisilicon,kirin960-pcie" },
-> +	{ .compatible = "hisilicon,kirin970-pcie" },
->  	{},
->  };
->  
-> diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-> index c0725907e2cb..e52d54b0c9d6 100644
-> --- a/drivers/phy/hisilicon/Kconfig
-> +++ b/drivers/phy/hisilicon/Kconfig
-> @@ -43,6 +43,16 @@ config PHY_HI3670_USB
->  
->  	  To compile this driver as a module, choose M here.
->  
-> +config PHY_HI3670_PCIE
-> +	tristate "hi3670 PCIe PHY support"
-> +	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	select MFD_SYSCON
-> +	help
-> +	  Enable this to support the HISILICON HI3670 PCIe PHY.
-> +
-> +	  To compile this driver as a module, choose M here.
-> +
->  config PHY_HISTB_COMBPHY
->  	tristate "HiSilicon STB SoCs COMBPHY support"
->  	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-> diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-> index 3c3d70dd7469..2670f2f382e1 100644
-> --- a/drivers/phy/hisilicon/Makefile
-> +++ b/drivers/phy/hisilicon/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
->  obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
->  obj-$(CONFIG_PHY_HI3660_PCIE)		+= phy-hi3660-pcie.o
->  obj-$(CONFIG_PHY_HI3670_USB)		+= phy-hi3670-usb3.o
-> +obj-$(CONFIG_PHY_HI3670_PCIE)		+= phy-hi3670-pcie.o
->  obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
->  obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
->  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-> diff --git a/drivers/phy/hisilicon/phy-hi3670-pcie.c b/drivers/phy/hisilicon/phy-hi3670-pcie.c
-> new file mode 100644
-> index 000000000000..dcbf7d47d8e7
-> --- /dev/null
-> +++ b/drivers/phy/hisilicon/phy-hi3670-pcie.c
-> @@ -0,0 +1,892 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe phy driver for Kirin 970
-> + *
-> + * Copyright (C) 2017 HiSilicon Electronics Co., Ltd.
-> + *		https://www.huawei.com
-> + * Copyright (C) 2021 Huawei Technologies Co., Ltd.
-> + *		https://www.huawei.com
-> + *
-> + * Authors:
-> + *	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> + *	Manivannan Sadhasivam <mani@kernel.org>
-> + *
-> + * Based on:
-> + * 	https://lore.kernel.org/lkml/4c9d6581478aa966698758c0420933f5defab4dd.1612335031.git.mchehab+huawei@kernel.org/
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/gpio.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define AXI_CLK_FREQ			207500000
-> +#define REF_CLK_FREQ			100000000
-> +
-> +/* PCIe CTRL registers */
-> +#define SOC_PCIECTRL_CTRL0_ADDR   0x000
-> +#define SOC_PCIECTRL_CTRL1_ADDR   0x004
-> +#define SOC_PCIECTRL_CTRL7_ADDR   0x01c
-> +#define SOC_PCIECTRL_CTRL12_ADDR  0x030
-> +#define SOC_PCIECTRL_CTRL20_ADDR  0x050
-> +#define SOC_PCIECTRL_CTRL21_ADDR  0x054
-> +#define SOC_PCIECTRL_STATE0_ADDR  0x400
-> +
-> +/* PCIe PHY registers */
-> +#define SOC_PCIEPHY_CTRL0_ADDR    0x000
-> +#define SOC_PCIEPHY_CTRL1_ADDR    0x004
-> +#define SOC_PCIEPHY_CTRL2_ADDR    0x008
-> +#define SOC_PCIEPHY_CTRL3_ADDR    0x00c
-> +#define SOC_PCIEPHY_CTRL38_ADDR   0x0098
-> +#define SOC_PCIEPHY_STATE0_ADDR   0x400
-> +
-> +#define PCIE_LINKUP_ENABLE            (0x8020)
-> +#define PCIE_ELBI_SLV_DBI_ENABLE      (0x1 << 21)
-> +#define PCIE_LTSSM_ENABLE_BIT         (0x1 << 11)
-> +#define PCIEPHY_RESET_BIT             (0x1 << 17)
-> +#define PCIEPHY_PIPE_LINE0_RESET_BIT  (0x1 << 19)
-> +
-> +#define PORT_MSI_CTRL_ADDR            0x820
-> +#define PORT_MSI_CTRL_UPPER_ADDR      0x824
-> +#define PORT_MSI_CTRL_INT0_ENABLE     0x828
-> +
-> +#define EYEPARAM_NOCFG 0xFFFFFFFF
-> +#define RAWLANEN_DIG_PCS_XF_TX_OVRD_IN_1 0x3001
-> +#define SUP_DIG_LVL_OVRD_IN 0xf
-> +#define LANEN_DIG_ASIC_TX_OVRD_IN_1 0x1002
-> +#define LANEN_DIG_ASIC_TX_OVRD_IN_2 0x1003
-> +
-> +/* hi3670 pciephy register */
-> +#define SOC_PCIEPHY_MMC1PLL_CTRL1  0xc04
-> +#define SOC_PCIEPHY_MMC1PLL_CTRL16 0xC40
-> +#define SOC_PCIEPHY_MMC1PLL_CTRL17 0xC44
-> +#define SOC_PCIEPHY_MMC1PLL_CTRL20 0xC50
-> +#define SOC_PCIEPHY_MMC1PLL_CTRL21 0xC54
-> +#define SOC_PCIEPHY_MMC1PLL_STAT0  0xE00
-> +
-> +#define CRGPERIPH_PEREN12   0x470
-> +#define CRGPERIPH_PERDIS12  0x474
-> +#define CRGPERIPH_PCIECTRL0 0x800
-> +
-> +/* define ie,oe cfg */
-> +#define IO_IE_EN_HARD_BYPASS         (0x1 << 27)
-> +#define IO_OE_EN_HARD_BYPASS         (0x1 << 11)
-> +#define IO_HARD_CTRL_DEBOUNCE_BYPASS (0x1 << 10)
-> +#define IO_OE_GT_MODE                (0x2 << 7)
-> +#define DEBOUNCE_WAITCFG_IN          (0xf << 20)
-> +#define DEBOUNCE_WAITCFG_OUT         (0xf << 13)
-> +
-> +/* noc power domain */
-> +#define NOC_POWER_IDLEREQ_1 0x38c
-> +#define NOC_POWER_IDLE_1    0x394
-> +#define NOC_PW_MASK         0x10000
-> +#define NOC_PW_SET_BIT      0x1
-> +
-> +/* Number of GPIOs required by PHY */
-> +#define MAX_GPIO_RESETS		4
-> +#define MAX_GPIO_CLKREQ		3
-> +#define NUM_EYEPARAM		5
-> +
-> +/* info located in sysctrl */
-> +#define SCTRL_PCIE_CMOS_OFFSET	0x60
-> +#define SCTRL_PCIE_CMOS_BIT	0x10
-> +#define SCTRL_PCIE_ISO_OFFSET	0x44
-> +#define SCTRL_PCIE_ISO_BIT	0x30
-> +#define SCTRL_PCIE_HPCLK_OFFSET	0x190
-> +#define SCTRL_PCIE_HPCLK_BIT	0x184000
-> +#define SCTRL_PCIE_OE_OFFSET	0x14a
-> +#define PCIE_DEBOUNCE_PARAM	0xF0F400
-> +#define PCIE_OE_BYPASS		(0x3 << 28)
-> +
-> +/* peri_crg ctrl */
-> +#define CRGCTRL_PCIE_ASSERT_OFFSET	0x88
-> +#define CRGCTRL_PCIE_ASSERT_BIT		0x8c000000
-> +
-> +/* Time for delay */
-> +#define REF_2_PERST_MIN		20000
-> +#define REF_2_PERST_MAX		25000
-> +#define PERST_2_ACCESS_MIN	10000
-> +#define PERST_2_ACCESS_MAX	12000
-> +#define PIPE_CLK_WAIT_MIN	550
-> +#define PIPE_CLK_WAIT_MAX	600
-> +#define TIME_CMOS_MIN		100
-> +#define TIME_CMOS_MAX		105
-> +#define TIME_PHY_PD_MIN		10
-> +#define TIME_PHY_PD_MAX		11
-> +
-> +struct hi3670_pcie_phy {
-> +	struct device	*dev;
-> +	void __iomem	*base;
-> +	struct regmap	*apb;
-> +	struct regmap	*crgctrl;
-> +	struct regmap	*sysctrl;
-> +	struct regmap	*pmctrl;
-> +	struct clk	*apb_sys_clk;
-> +	struct clk	*apb_phy_clk;
-> +	struct clk	*phy_ref_clk;
-> +	struct clk	*pcie_aclk;
-> +	struct clk	*pcie_aux_clk;
-> +	int		n_gpio_resets;
-> +	int		n_gpio_clkreq;
-> +	int		gpio_id_reset[MAX_GPIO_RESETS];
-> +	const char	*reset_names[MAX_GPIO_RESETS];
-> +	int		gpio_id_clkreq[MAX_GPIO_CLKREQ];
-> +	const char	*clkreq_names[MAX_GPIO_CLKREQ];
-> +	u32		eye_param[NUM_EYEPARAM];
-> +};
-> +
-> +
-> +/* Registers in PCIePHY */
-> +static inline void hi3670_apb_phy_writel(struct hi3670_pcie_phy *phy,
-> +					 u32 val, u32 reg)
-> +{
-> +	writel(val, phy->base + 0x40000 + reg);
-> +}
-> +
-> +static inline u32 hi3670_apb_phy_readl(struct hi3670_pcie_phy *phy, u32 reg)
-> +{
-> +	return readl(phy->base + 0x40000 + reg);
-> +}
-> +
-> +static inline void kirin_apb_natural_phy_writel(struct hi3670_pcie_phy *phy,
-> +						u32 val, u32 reg)
-> +{
-> +	writel(val, phy->base + reg * 4);
-> +}
-> +
-> +static inline u32 kirin_apb_natural_phy_readl(struct hi3670_pcie_phy *phy,
-> +					      u32 reg)
-> +{
-> +	return readl(phy->base + reg * 4);
-> +}
-> +
-> +static void hi3670_pcie_phy_oe_enable(struct hi3670_pcie_phy *phy)
-> +{
-> +	u32 val;
-> +
-> +	regmap_read(phy->sysctrl, SCTRL_PCIE_OE_OFFSET, &val);
-> +	val |= PCIE_DEBOUNCE_PARAM;
-> +	val &= ~PCIE_OE_BYPASS;
-> +	regmap_write(phy->sysctrl, SCTRL_PCIE_OE_OFFSET, val);
-> +}
-> +
-> +void hi3670_pcie_get_eyeparam(struct hi3670_pcie_phy *phy)
-> +{
-> +	struct device *dev = phy->dev;
-> +	struct device_node *np;
-> +	int ret, i;
-> +
-> +	np = dev->of_node;
-> +
-> +	ret = of_property_read_u32_array(np, "hisilicon,eye-diagram-param",
-> +					 phy->eye_param, NUM_EYEPARAM);
-> +	if (!ret)
-> +		return;
-> +
-> +	/* There's no optional eye_param property. Set array to default */
-> +	for (i = 0; i < NUM_EYEPARAM; i++)
-> +		phy->eye_param[i] = EYEPARAM_NOCFG;
-> +}
-> +
-> +static void hi3670_pcie_set_eyeparam(struct hi3670_pcie_phy *phy)
-> +{
-> +	u32 val;
-> +
-> +	val = kirin_apb_natural_phy_readl(phy, RAWLANEN_DIG_PCS_XF_TX_OVRD_IN_1);
-> +
-> +	if (phy->eye_param[1] != EYEPARAM_NOCFG) {
-> +		val &= (~0xf00);
-> +		val |= (phy->eye_param[1] << 8) | (0x1 << 12);
-> +	}
-> +	kirin_apb_natural_phy_writel(phy, val, RAWLANEN_DIG_PCS_XF_TX_OVRD_IN_1);
-> +
-> +	val = kirin_apb_natural_phy_readl(phy, LANEN_DIG_ASIC_TX_OVRD_IN_2);
-> +	val &= (~0x1FBF);
-> +	if (phy->eye_param[2] != EYEPARAM_NOCFG)
-> +		val |= (phy->eye_param[2]<< 0) | (0x1 << 6);
-> +
-> +	if (phy->eye_param[3] != EYEPARAM_NOCFG)
-> +		val |= (phy->eye_param[3] << 7) | (0x1 << 13);
-> +
-> +	kirin_apb_natural_phy_writel(phy, val, LANEN_DIG_ASIC_TX_OVRD_IN_2);
-> +
-> +	val = kirin_apb_natural_phy_readl(phy, SUP_DIG_LVL_OVRD_IN);
-> +	if (phy->eye_param[0] != EYEPARAM_NOCFG) {
-> +		val &= (~0x1C0);
-> +		val |= (phy->eye_param[0] << 6) | (0x1 << 9);
-> +	}
-> +	kirin_apb_natural_phy_writel(phy, val, SUP_DIG_LVL_OVRD_IN);
-> +
-> +	val = kirin_apb_natural_phy_readl(phy, LANEN_DIG_ASIC_TX_OVRD_IN_1);
-> +	if (phy->eye_param[4] != EYEPARAM_NOCFG) {
-> +		val &= (~0x7E00);
-> +		val |= (phy->eye_param[4] << 9) | (0x1 << 15);
-> +	}
-> +	kirin_apb_natural_phy_writel(phy, val, LANEN_DIG_ASIC_TX_OVRD_IN_1);
-> +}
-> +
-> +static int hi3670_pcie_gpio_request(struct hi3670_pcie_phy *phy,
-> +				    struct device *dev)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < phy->n_gpio_resets; i++) {
-> +		if (!gpio_is_valid(phy->gpio_id_reset[i])) {
-> +			dev_err(dev, "unable to get a valid %s gpio\n",
-> +				phy->reset_names[i]);
-> +			return -ENODEV;
-> +		}
-> +
-> +		ret = devm_gpio_request(dev, phy->gpio_id_reset[i],
-> +					phy->reset_names[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < phy->n_gpio_clkreq; i++) {
-> +		if (!gpio_is_valid(phy->gpio_id_clkreq[i])) {
-> +			dev_err(dev, "unable to get a valid %s gpio\n",
-> +				phy->clkreq_names[i]);
-> +			return -ENODEV;
-> +		}
-> +
-> +		ret = devm_gpio_request(dev, phy->gpio_id_clkreq[i],
-> +					phy->clkreq_names[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void hi3670_pcie_natural_cfg(struct hi3670_pcie_phy *phy)
-> +{
-> +	u32 val;
-> +
-> +	/* change 2p mem_ctrl */
-> +	regmap_write(phy->apb, SOC_PCIECTRL_CTRL20_ADDR, 0x02605550);
-> +
-> +	/* pull up sys_aux_pwr_det */
-> +	regmap_read(phy->apb, SOC_PCIECTRL_CTRL7_ADDR, &val);
-> +	val |= (0x1 << 10);
-> +	regmap_write(phy->apb, SOC_PCIECTRL_CTRL7_ADDR, val);
-> +
-> +	/* output, pull down */
-> +	regmap_read(phy->apb, SOC_PCIECTRL_CTRL12_ADDR, &val);
-> +	val &= ~(0x3 << 2);
-> +	val |= (0x1 << 1);
-> +	val &= ~(0x1 << 0);
-> +	regmap_write(phy->apb, SOC_PCIECTRL_CTRL12_ADDR, val);
-> +
-> +	/* Handle phy_reset and lane0_reset to HW */
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_CTRL1_ADDR);
-> +	val |= PCIEPHY_RESET_BIT;
-> +	val &= ~PCIEPHY_PIPE_LINE0_RESET_BIT;
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_CTRL1_ADDR);
-> +
-> +	/* fix chip bug: TxDetectRx fail */
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_CTRL38_ADDR);
-> +	val |= (0x1 << 2);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_CTRL38_ADDR);
-> +}
-> +
-> +static void hi3670_pcie_pll_init(struct hi3670_pcie_phy *phy)
-> +{
-> +	u32 val;
-> +
-> +	/* choose FNPLL */
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL1);
-> +	val |= (0x1 << 27);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL1);
-> +
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL16);
-> +	val &= 0xF000FFFF;
-> +	/* fnpll fbdiv = 0xD0 */
-> +	val |= (0xd0 << 16);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL16);
-> +
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL17);
-> +	val &= 0xFF000000;
-> +	/* fnpll fracdiv = 0x555555 */
-> +	val |= (0x555555 << 0);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL17);
-> +
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL20);
-> +	val &= 0xF5FF88FF;
-> +	/* fnpll dll_en = 0x1 */
-> +	val |= (0x1 << 27);
-> +	/* fnpll postdiv1 = 0x5 */
-> +	val |= (0x5 << 8);
-> +	/* fnpll postdiv2 = 0x4 */
-> +	val |= (0x4 << 12);
-> +	/* fnpll pll_mode = 0x0 */
-> +	val &= ~(0x1 << 25);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL20);
-> +
-> +	hi3670_apb_phy_writel(phy, 0x20, SOC_PCIEPHY_MMC1PLL_CTRL21);
-> +}
-> +
-> +static int hi3670_pcie_pll_ctrl(struct hi3670_pcie_phy *phy, bool enable)
-> +{
-> +	struct device *dev = phy->dev;
-> +	u32 val;
-> +	int time = 200;
-> +
-> +	if (enable) {
-> +		/* pd = 0 */
-> +		val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL16);
-> +		val &= ~(0x1 << 0);
-> +		hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL16);
-> +
-> +		val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_STAT0);
-> +
-> +		/* choose FNPLL */
-> +		while (!(val & 0x10)) {
-> +			if (!time) {
-> +				dev_err(dev, "wait for pll_lock timeout\n");
-> +				return -1;
-> +			}
-> +			time --;
-> +			udelay(1);
-> +			val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_STAT0);
-> +		}
-> +
-> +		/* pciepll_bp = 0 */
-> +		val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL20);
-> +		val &= ~(0x1 << 16);
-> +		hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL20);
-> +
-> +	} else {
-> +		/* pd = 1 */
-> +		val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL16);
-> +		val |= (0x1 << 0);
-> +		hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL16);
-> +
-> +		/* pciepll_bp = 1 */
-> +		val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_MMC1PLL_CTRL20);
-> +		val |= (0x1 << 16);
-> +		hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_MMC1PLL_CTRL20);
-> +	}
-> +
-> +	 return 0;
-> +}
-> +
-> +static void hi3670_pcie_hp_debounce_gt(struct hi3670_pcie_phy *phy, bool open)
-> +{
-> +	if (open)
-> +		/* gt_clk_pcie_hp/gt_clk_pcie_debounce open */
-> +		regmap_write(phy->crgctrl, CRGPERIPH_PEREN12, 0x9000);
-> +	else
-> +		/* gt_clk_pcie_hp/gt_clk_pcie_debounce close */
-> +		regmap_write(phy->crgctrl, CRGPERIPH_PERDIS12, 0x9000);
-> +}
-> +
-> +static void hi3670_pcie_phyref_gt(struct hi3670_pcie_phy *phy, bool open)
-> +{
-> +	unsigned int val;
-> +
-> +	regmap_read(phy->crgctrl, CRGPERIPH_PCIECTRL0, &val);
-> +
-> +	if (open)
-> +		val &= ~(0x1 << 1); //enable hard gt mode
-> +	else
-> +		val |= (0x1 << 1); //disable hard gt mode
-> +
-> +	regmap_write(phy->crgctrl, CRGPERIPH_PCIECTRL0, val);
-> +
-> +	/* disable soft gt mode */
-> +	regmap_write(phy->crgctrl, CRGPERIPH_PERDIS12, 0x4000);
-> +}
-> +
-> +static void hi3670_pcie_oe_ctrl(struct hi3670_pcie_phy *phy, bool en_flag)
-> +{
-> +	unsigned int val;
-> +
-> +	regmap_read(phy->crgctrl , CRGPERIPH_PCIECTRL0, &val);
-> +
-> +	/* set ie cfg */
-> +	val |= IO_IE_EN_HARD_BYPASS;
-> +
-> +	/* set oe cfg */
-> +	val &= ~IO_HARD_CTRL_DEBOUNCE_BYPASS;
-> +
-> +	/* set phy_debounce in&out time */
-> +	val |= (DEBOUNCE_WAITCFG_IN | DEBOUNCE_WAITCFG_OUT);
-> +
-> +	/* select oe_gt_mode */
-> +	val |= IO_OE_GT_MODE;
-> +
-> +	if (en_flag)
-> +		val &= ~IO_OE_EN_HARD_BYPASS;
-> +	else
-> +		val |= IO_OE_EN_HARD_BYPASS;
-> +
-> +	regmap_write(phy->crgctrl, CRGPERIPH_PCIECTRL0, val);
-> +}
-> +
-> +static void hi3670_pcie_ioref_gt(struct hi3670_pcie_phy *phy, bool open)
-> +{
-> +	unsigned int val;
-> +
-> +	if (open) {
-> +		regmap_write(phy->apb, SOC_PCIECTRL_CTRL21_ADDR, 0x20000070);
-> +
-> +		hi3670_pcie_oe_ctrl(phy, true);
-> +
-> +		/* en hard gt mode */
-> +		regmap_read(phy->crgctrl, CRGPERIPH_PCIECTRL0, &val);
-> +		val &= ~(0x1 << 0);
-> +		regmap_write(phy->crgctrl, CRGPERIPH_PCIECTRL0, val);
-> +
-> +		/* disable soft gt mode */
-> +		regmap_write(phy->crgctrl, CRGPERIPH_PERDIS12, 0x2000);
-> +
-> +	} else {
-> +		/* disable hard gt mode */
-> +		regmap_read(phy->crgctrl, CRGPERIPH_PCIECTRL0, &val);
-> +		val |= (0x1 << 0);
-> +		regmap_write(phy->crgctrl, CRGPERIPH_PCIECTRL0, val);
-> +
-> +		/* disable soft gt mode */
-> +		regmap_write(phy->crgctrl, CRGPERIPH_PERDIS12, 0x2000);
-> +
-> +		hi3670_pcie_oe_ctrl(phy, false);
-> +       }
-> +}
-> +
-> +static int hi3670_pcie_allclk_ctrl(struct hi3670_pcie_phy *phy, bool clk_on)
-> +{
-> +	struct device *dev = phy->dev;
-> +	u32 val;
-> +	int ret = 0;
-> +
-> +	if (!clk_on)
-> +		goto close_clocks;
-> +
-> +	/* choose 100MHz clk src: Bit[8]==1 pad, Bit[8]==0 pll */
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_CTRL1_ADDR);
-> +	val &= ~(0x1 << 8);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_CTRL1_ADDR);
-> +
-> +	hi3670_pcie_pll_init(phy);
-> +
-> +	ret = hi3670_pcie_pll_ctrl(phy, true);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable pll\n");
-> +		return -1;
-> +	}
-> +	hi3670_pcie_hp_debounce_gt(phy, true);
-> +	hi3670_pcie_phyref_gt(phy, true);
-> +	hi3670_pcie_ioref_gt(phy, true);
-> +
-> +	ret = clk_set_rate(phy->pcie_aclk, AXI_CLK_FREQ);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set rate\n");
-> +		goto close_clocks;
-> +	}
-> +
-> +	return 0;
-> +
-> +close_clocks:
-> +	hi3670_pcie_ioref_gt(phy, false);
-> +	hi3670_pcie_phyref_gt(phy, false);
-> +	hi3670_pcie_hp_debounce_gt(phy, false);
-> +
-> +	hi3670_pcie_pll_ctrl(phy, false);
-> +
-> +	return ret;
-> +}
-> +
-> +static bool is_pipe_clk_stable(struct hi3670_pcie_phy *phy)
-> +{
-> +	struct device *dev = phy->dev;
-> +	u32 val;
-> +	u32 time = 100;
-> +	u32 pipe_clk_stable = 0x1 << 19;
-> +
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_STATE0_ADDR);
-> +	while (val & pipe_clk_stable) {
-> +		mdelay(1);
-> +		if (time == 0) {
-> +			dev_err(dev, "PIPE clk is not stable\n");
-> +			return false;
-> +		}
-> +		time--;
-> +		val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_STATE0_ADDR);
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static int hi3670_pcie_noc_power(struct hi3670_pcie_phy *phy, bool enable)
-> +{
-> +	struct device *dev = phy->dev;
-> +	u32 time = 100;
-> +	unsigned int val = NOC_PW_MASK;
-> +	int rst;
-> +
-> +	if (enable)
-> +		val = NOC_PW_MASK | NOC_PW_SET_BIT;
-> +	else
-> +		val = NOC_PW_MASK;
-> +	rst = enable ? 1 : 0;
-> +
-> +	regmap_write(phy->pmctrl, NOC_POWER_IDLEREQ_1, val);
-> +
-> +	time = 100;
-> +	regmap_read(phy->pmctrl, NOC_POWER_IDLE_1, &val);
-> +	while((val & NOC_PW_SET_BIT) != rst) {
-> +		udelay(10);
-> +		if (!time) {
-> +			dev_err(dev, "Failed to reverse noc power-status\n");
-> +			return -1;
-> +		}
-> +		time--;
-> +		regmap_read(phy->pmctrl, NOC_POWER_IDLE_1, &val);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int hi3670_pcie_get_apb(struct hi3670_pcie_phy *phy)
-> +{
-> +	struct device_node *pcie_port;
-> +	struct device *dev = phy->dev;
-> +	struct device *pcie_dev;
-> +
-> +	pcie_port = of_get_child_by_name(dev->parent->of_node, "pcie");
-> +	if (!pcie_port) {
-> +		dev_err(dev, "no pcie node found in %s\n",
-> +			dev->parent->of_node->full_name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	pcie_dev = bus_find_device_by_of_node(&platform_bus_type, pcie_port);
-> +	if (!pcie_dev) {
-> +                dev_err(dev, "Didn't find pcie device\n");
-> +                return -ENODEV;
-> +        }
-> +
-> +        /*
-> +	 * We might just use NULL instead of the APB name, as the
-> +	 * pcie-kirin currently registers directly just one regmap (although
-> +	 * the DWC driver register other regmaps).
-> +	 *
-> +	 * Yet, it sounds safer to warrant that it will be accessing the
-> +	 * right regmap. So, let's use the named version.
-> +	 */
-> +	phy->apb = dev_get_regmap(pcie_dev, "kirin_pcie_apb");
-> +	if (!phy->apb) {
-> +		dev_err(dev, "Failed to get APB regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +static int kirin_pcie_clk_ctrl(struct hi3670_pcie_phy *phy, bool enable)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!enable)
-> +		goto close_clk;
-> +
-> +	ret = clk_set_rate(phy->phy_ref_clk, REF_CLK_FREQ);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(phy->phy_ref_clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(phy->apb_sys_clk);
-> +	if (ret)
-> +		goto apb_sys_fail;
-> +
-> +	ret = clk_prepare_enable(phy->apb_phy_clk);
-> +	if (ret)
-> +		goto apb_phy_fail;
-> +
-> +	ret = clk_prepare_enable(phy->pcie_aclk);
-> +	if (ret)
-> +		goto aclk_fail;
-> +
-> +	ret = clk_prepare_enable(phy->pcie_aux_clk);
-> +	if (ret)
-> +		goto aux_clk_fail;
-> +
-> +	return 0;
-> +
-> +close_clk:
-> +	clk_disable_unprepare(phy->pcie_aux_clk);
-> +aux_clk_fail:
-> +	clk_disable_unprepare(phy->pcie_aclk);
-> +aclk_fail:
-> +	clk_disable_unprepare(phy->apb_phy_clk);
-> +apb_phy_fail:
-> +	clk_disable_unprepare(phy->apb_sys_clk);
-> +apb_sys_fail:
-> +	clk_disable_unprepare(phy->phy_ref_clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int hi3670_pcie_phy_init(struct phy *generic_phy)
-> +{
-> +	struct hi3670_pcie_phy *phy = phy_get_drvdata(generic_phy);
-> +	struct device *dev = phy->dev;
-> +	int ret;
-> +
-> +	/*
-> +	 * The code under hi3670_pcie_get_apb() need to access the
-> +	 * DWC APB registers. So, get them from
-> +	 * the pcie driver's regmap (see pcie-kirin regmap).
-> +	 *
-> +	 * Such kind of resource can only be obtained during the PCIe
-> +	 * power_on sequence, as the code inside pcie-kirin needs to
-> +	 * be already probed, as it needs to register the APB regmap.
-> +	 */
-> +
-> +	ret = hi3670_pcie_get_apb(phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* phy regulator needs to be powered on before calling it */
-> +	return hi3670_pcie_gpio_request(phy, dev);
-> +}
-> +
-> +static int hi3670_pcie_phy_power_on(struct phy *generic_phy)
-> +{
-> +	struct hi3670_pcie_phy *phy = phy_get_drvdata(generic_phy);
-> +	int val, ret, i;
-> +
-> +	/* Power supply for Host */
-> +	regmap_write(phy->sysctrl,
-> +		     SCTRL_PCIE_CMOS_OFFSET, SCTRL_PCIE_CMOS_BIT);
-> +	usleep_range(TIME_CMOS_MIN, TIME_CMOS_MAX);
-> +
-> +	hi3670_pcie_phy_oe_enable(phy);
-> +
-> +	for (i = 0; i < phy->n_gpio_clkreq; i++) {
-> +		ret = gpio_direction_output(phy->gpio_id_clkreq[i], 0);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = kirin_pcie_clk_ctrl(phy, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* ISO disable, PCIeCtrl, PHY assert and clk gate clear */
-> +	regmap_write(phy->sysctrl,
-> +		     SCTRL_PCIE_ISO_OFFSET, SCTRL_PCIE_ISO_BIT);
-> +	regmap_write(phy->crgctrl,
-> +		     CRGCTRL_PCIE_ASSERT_OFFSET, CRGCTRL_PCIE_ASSERT_BIT);
-> +	regmap_write(phy->sysctrl,
-> +		     SCTRL_PCIE_HPCLK_OFFSET, SCTRL_PCIE_HPCLK_BIT);
-> +
-> +	hi3670_pcie_natural_cfg(phy);
-> +
-> +	ret = hi3670_pcie_allclk_ctrl(phy, true);
-> +	if (ret)
-> +		goto disable_clks;
-> +
-> +	/* pull down phy_test_powerdown signal */
-> +	val = hi3670_apb_phy_readl(phy, SOC_PCIEPHY_CTRL0_ADDR);
-> +	val &= ~(0x1 << 22);
-> +	hi3670_apb_phy_writel(phy, val, SOC_PCIEPHY_CTRL0_ADDR);
-> +
-> +	/* deassert controller perst_n */
-> +	regmap_read(phy->apb, SOC_PCIECTRL_CTRL12_ADDR, &val);
-> +	val |= (0x1 << 2);
-> +	regmap_write(phy->apb, SOC_PCIECTRL_CTRL12_ADDR, val);
-> +	udelay(10);
-> +
-> +	/* perst assert Endpoints */
-> +	usleep_range(21000, 23000);
-> +	for (i = 0; i < phy->n_gpio_resets; i++) {
-> +		ret = gpio_direction_output(phy->gpio_id_reset[i], 1);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	usleep_range(10000, 11000);
-> +
-> +	ret = is_pipe_clk_stable(phy);
-> +	if (!ret)
-> +		goto disable_clks;
-> +
-> +	hi3670_pcie_set_eyeparam(phy);
-> +
-> +	ret = hi3670_pcie_noc_power(phy, false);
-> +	if (ret)
-> +		goto disable_clks;
-> +
-> +	return 0;
-> +
-> +disable_clks:
-> +	kirin_pcie_clk_ctrl(phy, false);
-> +	return ret;
-> +}
-> +
-> +static int hi3670_pcie_phy_power_off(struct phy *generic_phy)
-> +{
-> +	struct hi3670_pcie_phy *phy = phy_get_drvdata(generic_phy);
-> +
-> +	/* Drop power supply for Host */
-> +	regmap_write(phy->sysctrl, SCTRL_PCIE_CMOS_OFFSET, 0x00);
-> +
-> +	kirin_pcie_clk_ctrl(phy, false);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops hi3670_phy_ops = {
-> +	.init		= hi3670_pcie_phy_init,
-> +	.power_on	= hi3670_pcie_phy_power_on,
-> +	.power_off	= hi3670_pcie_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int hi3670_pcie_phy_get_resources(struct hi3670_pcie_phy *phy,
-> +					 struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	char name[32];
-> +	int i;
-> +
-> +	/* syscon */
-> +	phy->crgctrl = syscon_regmap_lookup_by_compatible("hisilicon,hi3670-crgctrl");
-> +	if (IS_ERR(phy->crgctrl))
-> +		return PTR_ERR(phy->crgctrl);
-> +
-> +	phy->sysctrl = syscon_regmap_lookup_by_compatible("hisilicon,hi3670-sctrl");
-> +	if (IS_ERR(phy->sysctrl))
-> +		return PTR_ERR(phy->sysctrl);
-> +
-> +	phy->pmctrl = syscon_regmap_lookup_by_compatible("hisilicon,hi3670-pmctrl");
-> +	if (IS_ERR(phy->sysctrl))
-> +		return PTR_ERR(phy->sysctrl);
-> +
-> +	/* clocks */
-> +	phy->phy_ref_clk = devm_clk_get(dev, "pcie_phy_ref");
-> +	if (IS_ERR(phy->phy_ref_clk))
-> +		return PTR_ERR(phy->phy_ref_clk);
-> +
-> +	phy->pcie_aux_clk = devm_clk_get(dev, "pcie_aux");
-> +	if (IS_ERR(phy->pcie_aux_clk))
-> +		return PTR_ERR(phy->pcie_aux_clk);
-> +
-> +	phy->apb_phy_clk = devm_clk_get(dev, "pcie_apb_phy");
-> +	if (IS_ERR(phy->apb_phy_clk))
-> +		return PTR_ERR(phy->apb_phy_clk);
-> +
-> +	phy->apb_sys_clk = devm_clk_get(dev, "pcie_apb_sys");
-> +	if (IS_ERR(phy->apb_sys_clk))
-> +		return PTR_ERR(phy->apb_sys_clk);
-> +
-> +	phy->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-> +	if (IS_ERR(phy->pcie_aclk))
-> +		return PTR_ERR(phy->pcie_aclk);
-> +
-> +	/* registers */
-> +	phy->base = devm_platform_ioremap_resource_byname(pdev, "phy");
-> +	if (IS_ERR(phy->base))
-> +		return PTR_ERR(phy->base);
-> +
-> +	/* perst reset gpios */
-> +	phy->n_gpio_resets = of_gpio_named_count(np, "reset-gpios");
-> +	if (phy->n_gpio_resets > MAX_GPIO_RESETS) {
-> +		dev_err(dev, "Too many GPIO resets!\n");
-> +		return -EINVAL;
-> +	}
-> +	for (i = 0; i < phy->n_gpio_resets; i++) {
-> +		phy->gpio_id_reset[i] = of_get_named_gpio(dev->of_node,
-> +							  "reset-gpios", i);
-> +		if (phy->gpio_id_reset[i] < 0)
-> +			return phy->gpio_id_reset[i];
-> +
-> +		sprintf(name, "pcie_perst_%d", i);
-> +
-> +		phy->reset_names[i] = devm_kstrdup_const(dev, name,
-> +							 GFP_KERNEL);
-> +		if (!phy->reset_names[i])
-> +			return -ENOMEM;
-> +	}
-> +
-> +	/* clock request gpios */
-> +	phy->n_gpio_clkreq = of_gpio_named_count(np, "clkreq-gpios");
-> +	if (phy->n_gpio_clkreq > MAX_GPIO_CLKREQ) {
-> +		dev_err(dev, "Too many GPIO clock requests!\n");
-> +		return -EINVAL;
-> +	}
-> +	for (i = 0; i < phy->n_gpio_clkreq; i++) {
-> +		phy->gpio_id_clkreq[i] = of_get_named_gpio(dev->of_node,
-> +							   "clkreq-gpios", i);
-> +		if (phy->gpio_id_clkreq[i] < 0)
-> +			return phy->gpio_id_clkreq[i];
-> +
-> +		sprintf(name, "pcie_clkreq_%d", i);
-> +		phy->clkreq_names[i] = devm_kstrdup_const(dev, name,
-> +							  GFP_KERNEL);
-> +		if (!phy->clkreq_names[i])
-> +			return -ENOMEM;
-> +	}
-> +
-> +	hi3670_pcie_get_eyeparam(phy);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hi3670_pcie_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	struct hi3670_pcie_phy *phy;
-> +	struct phy *generic_phy;
-> +	int ret;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	phy->dev = dev;
-> +
-> +	ret = hi3670_pcie_phy_get_resources(phy, pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	generic_phy = devm_phy_create(dev, dev->of_node, &hi3670_phy_ops);
-> +	if (IS_ERR(generic_phy)) {
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(generic_phy);
-> +	}
-> +
-> +	phy_set_drvdata(generic_phy, phy);
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static const struct of_device_id hi3670_pcie_phy_match[] = {
-> +	{
-> +		.compatible = "hisilicon,hi970-pcie-phy",
-> +	},
-> +	{},
-> +};
-> +
-> +static struct platform_driver hi3670_pcie_phy_driver = {
-> +	.probe	= hi3670_pcie_phy_probe,
-> +	.driver = {
-> +		.of_match_table	= hi3670_pcie_phy_match,
-> +		.name		= "hi3670_pcie_phy",
-> +		.suppress_bind_attrs = true,
-> +	}
-> +};
-> +builtin_platform_driver(hi3670_pcie_phy_driver);
 > -- 
 > 2.31.1
+> 
 > 
