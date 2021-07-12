@@ -2,92 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 330C53C6660
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 00:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 750983C6670
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 00:36:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbhGLWci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 18:32:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25562 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230030AbhGLWch (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 18:32:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626128988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oqwnxhFQeQ65Qf2gqGF6dVcU4wyYdloL+ALXZBg9iZw=;
-        b=XJV2UxeVwlHhXCbfUZs4tvyhZbOD61dbAHjWCd/V0wXuCfgECNFl0276oJVMBuc/B2CzjG
-        roZApXRaH2wblVxmzqqTt8g9uCT61bdPwywxmavwdQIdfOvvF/1e+YH71nnP9y9kq1AwWW
-        0dSJk0AYbq3Q0WVhx3ihH5HFl9OASmM=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-dSCbzzYCMX-ljwtTa6sOdA-1; Mon, 12 Jul 2021 18:29:47 -0400
-X-MC-Unique: dSCbzzYCMX-ljwtTa6sOdA-1
-Received: by mail-ot1-f69.google.com with SMTP id l44-20020a9d1b2f0000b029048596759dfcso14155020otl.2
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 15:29:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oqwnxhFQeQ65Qf2gqGF6dVcU4wyYdloL+ALXZBg9iZw=;
-        b=ge43+kdMaAOIuQBTJpfBdv6+5aGFUrJ5fJgEzEs08xzAxOvH5w4TefnabgbdoYOF/L
-         rISVKQ05Igru75j4ZTLOVp2p/VmsECJ0vJWhX82t//k9tne3kzoo/gY/kOVr7ijTNw/0
-         Vj8Zbva8QAPCgh+OCZ/UjYSx8+rKZ5Ian+sfpjs82waLrjv2LxH65QaKHaIJwdoFblOD
-         uYXZoFHk0iT/VSNZw3wliy7PPqh3BAhccApzcbUZV/K8Ec+j6VfmRk+V74OqmsI7wxx6
-         PU+RDKKzShSzc99nynzPmrFaKem9q57DYcctU6Yb4EQbS6s1RETn3OcQA4sitU4uaEov
-         MaGA==
-X-Gm-Message-State: AOAM533QQ9uwzCxtVrt4qym2nB3SwVWlOa58IP1f4VrnCuydJRmRnFt7
-        1/Jeik22LBtlWPBxXI7s/tXpNGepU+oSBfrkGwu/RVaaRQDXqHSHm969UwpEWW1WmA9cJhzCbRN
-        JAiDzzmZFYkpWDz6183st
-X-Received: by 2002:a05:6808:144c:: with SMTP id x12mr731359oiv.167.1626128986818;
-        Mon, 12 Jul 2021 15:29:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyPrLezc2SstkxbEIw+obAYlT8e4FWRHpPJn0hdQ48gdtgupKwx0cOXBonRhFt1kHN+69DRVg==
-X-Received: by 2002:a05:6808:144c:: with SMTP id x12mr731347oiv.167.1626128986704;
-        Mon, 12 Jul 2021 15:29:46 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id l2sm3422223otl.27.2021.07.12.15.29.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jul 2021 15:29:46 -0700 (PDT)
-Date:   Mon, 12 Jul 2021 16:29:45 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 5/8] PCI: Define a function to set ACPI_COMPANION in
- pci_dev
-Message-ID: <20210712162945.4a6090de.alex.williamson@redhat.com>
-In-Reply-To: <20210709123813.8700-6-ameynarkhede03@gmail.com>
-References: <20210709123813.8700-1-ameynarkhede03@gmail.com>
-        <20210709123813.8700-6-ameynarkhede03@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230030AbhGLWjW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 18:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229931AbhGLWjW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Jul 2021 18:39:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 303CF61183;
+        Mon, 12 Jul 2021 22:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626129393;
+        bh=ZLUAxjTwJuR1eoy9AUGR/u9jh4N+I5I/fJ261D+fEQk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HOmcKa4Z9wxBEQ9WYqiglwEhp3GIsvbMPGxKk8yReBkc9xoCypcbo8DSB3XreUBAs
+         x/q8pHobaTJlwT2XnfKGKWOSDuDFyfSmy+RKeymJeBo8ZHFgH0CDiriZqFdMOkavis
+         TipwjcettlCG9w5QkkFlwwdsQESA5PIIGM82CDaMqfVOoNn17hkXW5+9OaVUhZ4WfL
+         txUY8Ocbzw5NSfvRvSb0Pu9L2onlsZxpnSn12qAYxFV17HahRbaWSTqFsMHJTPCow1
+         aeJZd718H+PvQAUC07Hb6JoxXv2OCMes/TMU18gflDEcFMcHkYuqX64Hh/qqVBUlbU
+         A86c7L4B6Qhcg==
+Date:   Mon, 12 Jul 2021 17:36:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
+        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to
+ dev_pm_ops
+Message-ID: <20210712223631.GA1682719@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YOwr/GMIExCoNjeZ@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri,  9 Jul 2021 18:08:10 +0530
-Amey Narkhede <ameynarkhede03@gmail.com> wrote:
-
-> From: Shanker Donthineni <sdonthineni@nvidia.com>
+On Mon, Jul 12, 2021 at 02:48:12PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 08, 2021 at 04:47:06PM -0500, Bjorn Helgaas wrote:
+> > On Thu, Apr 02, 2020 at 11:23:27PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Apr 2, 2020 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Thu, Apr 02, 2020 at 09:33:46PM +0300, Andy Shevchenko wrote:
+> > > > > On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+> > > > > >
+> > > > > > Convert the legacy callback .suspend() and .resume()
+> > > > > > to the generic ones.
+> > > > >
+> > > > > Thank you for the patch.
+> > > > >
+> > > > > Rather then doing this I think the best approach is to unify gpio-pch
+> > > > > and gpio-ml-ioh together.
+> > > > > Under umbrella of the task, the clean ups like above are highly
+> > > > > appreciated.
+> > > >
+> > > > I'd be all in favor of that, but what Vaibhav is working toward is
+> > > > eliminating use of legacy PM in PCI drivers.  I think unifying drivers
+> > > > is really out of scope for that project.
+> > > >
+> > > > If you'd rather leave gpio-ml-ioh.c alone for now, I suggest that
+> > > > Vaibhav move on to other PCI drivers that use legacy PM.  If we
+> > > > convert all the others away from legacy PM and gpio-ml-ioh.c is the
+> > > > only one remaining, then I guess we can revisit this :)
+> > > 
+> > > Then skip this driver for good.
+> > > 
+> > > > Or, maybe converting gpio-ml-ioh.c now, along the lines of
+> > > > 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"), would be one small
+> > > > step towards the eventual unification, by making gpio-pch and
+> > > > gpio-ml-ioh a little more similar.
+> > > 
+> > > I think it will delay the real work here (very old code motivates
+> > > better to get rid of it then semi-fixed one).
+> > 
+> > With respect, I think it is unreasonable to use the fact that
+> > gpio-ml-ioh and gpio-pch should be unified to hold up the conversion
+> > of gpio-ml-ioh to generic power management.
+> > 
+> > I do not want to skip gpio-ml-ioh for good, because it is one of the
+> > few remaining drivers that use the legacy PCI PM interfaces.  We are
+> > very close to being able to remove a significant amount of ugly code
+> > from the PCI core.
 > 
-> Move the existing code logic from acpi_pci_bridge_d3() to a separate
-> function pci_set_acpi_fwnode() to set the ACPI fwnode.
+> Makes sense (1).
 > 
-> No functional change with this patch.
+> > gpio-ml-ioh and gpio-pch do look quite similar, and no doubt it would
+> > be great to unify them.  But without datasheets or hardware to test,
 > 
-> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
-> ---
->  drivers/pci/pci-acpi.c | 12 ++++++++----
->  drivers/pci/pci.h      |  2 ++
->  2 files changed, 10 insertions(+), 4 deletions(-)
+> Datasheets are publicly available (at least one may google and find some
+> information about those PCH chips). I have in possession the hardware for
+> gpio-pch. I can easily test that part at least.
 
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+If you have a URL for those datasheets, can you share it?  I spent
+some time looking but all I found was 1-2 page marketing brochures.
 
+> > that's not a trivial task, and I don't think that burden should fall
+> > on anyone who wants to make any improvements to these drivers.
+> 
+> > Another alternative would be to remove legacy PCI PM usage
+> > (ioh_gpio_suspend() and ioh_gpio_resume()) from gpio-ml-ioh.  That
+> > would mean gpio-ml-ioh wouldn't support power management at all, which
+> > isn't a good thing, but maybe it would be even more motivation to
+> > unify it with gpio-pch (which has already been converted by
+> > 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"))?
+> 
+> With regard to (1) probably we may exceptionally accept the fix to
+> gpio-ml-ioh, but I really prefer to do the much more _useful_ job on
+> it by unifying the two.
+
+Should Vaibhav re-post this patch, or do you want to pull it from the
+archives?  I just checked and it still applies cleanly to v5.14-rc1.
+
+Here it is for reference:
+  https://lore.kernel.org/lkml/20200402155057.30667-1-vaibhavgupta40@gmail.com/
+
+I'll post a couple small patches toward unifying them.  They don't do
+the whole job but they're baby steps.
+
+Bjorn
