@@ -2,162 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41BC63C3E27
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jul 2021 19:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9DD33C426B
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 05:58:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbhGKREp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 11 Jul 2021 13:04:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229688AbhGKREp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 11 Jul 2021 13:04:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8AE1610A6;
-        Sun, 11 Jul 2021 17:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626022918;
-        bh=XiwSCptAfKifULMy9fRRaw604V6wMcanQF7EaUJ+Kb0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V2up30sic42QEo3JlF7zsEZXxqmAEpu7iqQnAjKt47MhF0clgWLmKkFjNPsWeaAjq
-         dCJtXpKdXPArMWt4k7WGeLZq0LYZrpe7miqE1X6liSvXrD9JE1jxOp0SX3j+0pKHfS
-         HpgWa9apHIx0zZB6BR7HWRB0LZw16uybzKXh82s2+mtHSYgX9tNeQHXcPf7ZO3WrAo
-         WZCsKucUVUdZ1dEo60fLQV3gUZK+Yk9vFfcRAEKG8t46Z6e7PANvzb4YUMgJTGhO4i
-         evKlsPRR90/v1oniEUQJDgcbRu+0ggpvBB0l+13lU3HIZ6Mndoi7cQUzDLbYJCKnyT
-         eYGRMkpRF6PUQ==
-Received: by pali.im (Postfix)
-        id 9577C773; Sun, 11 Jul 2021 19:01:55 +0200 (CEST)
-Date:   Sun, 11 Jul 2021 19:01:55 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/2] mwifiex: pcie: add reset_d3cold quirk for Surface
- gen4+ devices
-Message-ID: <20210711170155.zt5mpig6sgusifs3@pali>
-References: <4e35bfc1-c38d-7198-dedf-a1f2ec28c788@gmail.com>
- <20210709212505.mmqxdplmxbemqzlo@pali>
- <bfbb3b4d-07f7-1b97-54f0-21eba4766798@gmail.com>
- <20210709225433.axpzdsfbyvieahvr@pali>
- <89c9d1b8-c204-d028-9f2c-80d580dabb8b@gmail.com>
- <20210710000756.4j3tte63t5u6bbt4@pali>
- <1d45c961-d675-ea80-abe4-8d4bcf3cf8d4@gmail.com>
- <20210710003826.clnk5sh3cvlamwjr@pali>
- <2d7eef37-aab3-8986-800f-74ffc27b62c5@gmail.com>
- <fc1f39b0-2d61-387f-303f-9715781a2c4a@mailbox.org>
+        id S229505AbhGLEAs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 00:00:48 -0400
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:50252
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229508AbhGLEAr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 00:00:47 -0400
+X-Greylist: delayed 392 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Jul 2021 00:00:46 EDT
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPS id 534AB40325
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 03:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1626061858;
+        bh=TS6ZtQlpQH2xl9ZNXcYMmhzZw7AVZ3Gie0AgelezqWc=;
+        h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
+        b=ZYrevDAlWHkVoO9ZN2cqCfT7uj04JaJGn8PoiTFsxP2owAqQNU0QrgxVWoBAk5R5r
+         qCVa93ofPph507MmnXxU9dpQxOBuk9pUe43NmUJHsluelcO2xwmmFZrVE45ICLK7FL
+         ndUIe4Ej4JmDbpetoGf3rzZo+2c9DZkQbMrJqDf65BbsfpsMnbWcYkzdGhdMrFP6rV
+         Xu85/SfMbLF1Px0P1sUu32LuhssVmACOe/AV7LKrOeN70oghmrjno77IHMHKFH6oPN
+         +PBpm5Tk3nhAEQvxPZ+xu3TCGtviH+zvD1tIq7ntcHuQn1e4OigFCuJ5SNsSKJ8B96
+         3d6lwbIRDNTuQ==
+Received: by mail-ed1-f69.google.com with SMTP id cw12-20020a056402228cb02903a4b3e93e15so2766919edb.2
+        for <linux-pci@vger.kernel.org>; Sun, 11 Jul 2021 20:50:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TS6ZtQlpQH2xl9ZNXcYMmhzZw7AVZ3Gie0AgelezqWc=;
+        b=YF6uj7T53PmGtgosR+7M9f1bQ9CpbPG4C9lk9RCt67D2PGv1GQrFLPKsfNa4c+hPPK
+         SKndTgCJkN0lC2o9yMcmZe3JLlGQ22yNDDTwfPuDJm8By65SlpyIpWD4YANX123GfQK+
+         CyBg3MINgtkx4r5L0jbPTzVqUppL30K4FEpPjMZiLYFW2257FdXQGBVla3LRa4HykA+6
+         dQDJbvqrivY97es0Jla+dAwgEP1HWg2tHEWjkZ0dmjZUYYbbllkZGONja/BmaOI79uuN
+         oowE2/FfwLtERsQ7c6E0f1oMz9jZ2Z6uTpRoLxnlmTZk1SLXIBZzc5s/hm3Mr/W6rBZ5
+         qvIA==
+X-Gm-Message-State: AOAM532nvMyICNoFczuEAL+5+aFNNEidRLgari5f4EvERLb/ibN/KPY1
+        iyzdVrECzpfFc4/nNzEpd3tAcMJgzGpxWNXjvZf0icUG2+DMVEU+ORpbrSaVSMIqHGwKu/CfbN8
+        mjdgVJrEs1Wy9DVT6yvMrdYUMmkb0hN25JMZ4WzpiLOFAiu1gt6A6Ew==
+X-Received: by 2002:a17:906:7946:: with SMTP id l6mr49182616ejo.230.1626061857226;
+        Sun, 11 Jul 2021 20:50:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyvx+nMqxgzwDNg5qoegnO4WTc4qOPZuz71EKJdoBcxAHJ998Ysjmd6WvoLjB13pp4yOo2xHqd4TRSAdL5k69I=
+X-Received: by 2002:a17:906:7946:: with SMTP id l6mr49182591ejo.230.1626061856904;
+ Sun, 11 Jul 2021 20:50:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc1f39b0-2d61-387f-303f-9715781a2c4a@mailbox.org>
-User-Agent: NeoMutt/20180716
+References: <20210401131252.531935-1-kai.heng.feng@canonical.com> <20210709231529.GA3270116@roeck-us.net>
+In-Reply-To: <20210709231529.GA3270116@roeck-us.net>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Mon, 12 Jul 2021 11:50:45 +0800
+Message-ID: <CAAd53p7s=k7pa_GdaetQGQYp9GbQR+jkQWLQoe6-c0oTjCQXxw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Coalesce contiguous regions for host bridges
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sunday 11 July 2021 18:53:32 Jonas Dreßler wrote:
-> On 7/10/21 3:07 AM, Maximilian Luz wrote:
-> > On 7/10/21 2:38 AM, Pali Rohár wrote:
-> > > On Saturday 10 July 2021 02:18:12 Maximilian Luz wrote:
-> > > > On 7/10/21 2:07 AM, Pali Rohár wrote:
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > > Interesting, I was not aware of this. IIRC we've been
-> > > > > > experimenting with
-> > > > > > the mwlwifi driver (which that lrdmwl driver seems to be
-> > > > > > based on?), but
-> > > > > > couldn't get that to work with the firmware we have.
-> > > > > 
-> > > > > mwlwifi is that soft-mac driver and uses completely different firmware.
-> > > > > For sure it would not work with current full-mac firmware.
-> > > > > 
-> > > > > > IIRC it also didn't
-> > > > > > work with the Windows firmware (which seems to be significantly
-> > > > > > different from the one we have for Linux and seems to
-> > > > > > use or be modeled
-> > > > > > after some special Windows WiFi driver interface).
-> > > > > 
-> > > > > So... Microsoft has different firmware for this chip? And it is working
-> > > > > with mwifiex driver?
-> > > > 
-> > > > I'm not sure how special that firmware really is (i.e. if it is Surface
-> > > > specific or just what Marvell uses on Windows), only that it doesn't
-> > > > look like the firmware included in the linux-firmware repo. The Windows
-> > > > firmware doesn't work with either mwlwifi or mwifiex drivers (IIRC) and
-> > > > on Linux we use the official firmware from the linux-firmware repo.
-> > > 
-> > > Version available in the linux-firmware repo is also what big companies
-> > > (like google) receive for their systems... sometimes just only older
-> > > version as Marvell/NXP is slow in updating files in linux-firmware.
-> > > Seems that it is also same what receive customers under NDA as more
-> > > companies dropped "proprietary" ex-Marvell/NXP driver on internet and it
-> > > contained this firmware with some sources of driver which looks like a
-> > > fork of mwifiex (or maybe mwifiex is "cleaned fork" of that driver :D)
-> > > 
-> > > There is old firmware documentation which describe RPC communication
-> > > between OS and firmware:
-> > > http://wiki.laptop.org/images/f/f3/Firmware-Spec-v5.1-MV-S103752-00.pdf
-> > > 
-> > > It is really old for very old wifi chips and when I checked it, it still
-> > > matches what mwifiex is doing with new chips. Just there are new and
-> > > more commands. And documentation is OS-neutral.
-> > > 
-> > > So if Microsoft has some "incompatible" firmware with this, it could
-> > > mean that they got something special which nobody else have? Maybe it
-> > > can explain that "connected standby" and maybe also better stability?
-> > > 
-> > > Or just windows distribute firmware in different format and needs to
-> > > "unpack" or "preprocess" prior downloading it to device?
-> > 
-> > If memory serves me right, Jonas did some reverse engineering on the
-> > Windows driver and found that it uses the "new" WDI Miniport API: It
-> > seems that originally both Windows and Linux drivers (and firmware)
-> > were pretty much the same (he mentioned there were similarities in
-> > terminology), but then they switched to that new API on Windows and
-> > changed the firmware with it, so that the driver now essentially only
-> > forwards the commands from that API to the firmware and the firmware
-> > handles the rest.
-> > 
-> > By reading the Windows docs on that API, that change might have been
-> > forced on them as some Windows 10 features apparently only work via
-> > that API.
-> > 
-> > He'll probably know more about that than I do.
-> 
-> Not much I can add there, it seemed a lot like both mwifiex and the Windows
-> 10 WDI miniport driver were both derived from the same codebase originally,
-> but in order to be compatible with the WDI miniport API and other stuff
-> Windows requires from wifi devices (I recall there was some SAR-value
-> control/reporting stuff too), some parts of the firmware had to be
-> rewritten.
-> 
-> In the end, the Windows firmware is updated a lot more often and likely
-> includes a bunch of bugfixes the linux firmware doesn't have, but it can't
-> be used on linux without a ton of work that would probably include
-> rebuilding proprietary APIs from Windows.
-> 
-> Also, from my testing with custom APs and sniffing packets with Wireshark,
-> the functionality, limitations and weird "semi-spec-compliant" behaviors
-> were exactly the same with the Windows firmware: It doesn't support WPA3, it
-> can't connect to fast transition APs (funnily enough that's opposed to what
-> MS claims) and it also can't spawn an AP with WPA-PSK-SHA256 AKM ciphers. So
-> not sure there's a lot of sense in spending more time trying to go down that
-> path.
+Hi Guenter,
 
-New version of firmware files are available on NXP portal, where are
-updated more frequently, but only for companies which have NXP accounts
-and signed NDA with NXP. Not for end users.
+On Sat, Jul 10, 2021 at 7:15 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Hi,
+>
+> On Thu, Apr 01, 2021 at 09:12:52PM +0800, Kai-Heng Feng wrote:
+> > Built-in graphics on HP EliteDesk 805 G6 doesn't work because graphics
+> > can't get the BAR it needs:
+> > [    0.611504] pci_bus 0000:00: root bus resource [mem 0x10020200000-0x100303fffff window]
+> > [    0.611505] pci_bus 0000:00: root bus resource [mem 0x10030400000-0x100401fffff window]
+> > ...
+> > [    0.638083] pci 0000:00:08.1:   bridge window [mem 0xd2000000-0xd23fffff]
+> > [    0.638086] pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100401fffff 64bit pref]
+> > [    0.962086] pci 0000:00:08.1: can't claim BAR 15 [mem 0x10030000000-0x100401fffff 64bit pref]: no compatible bridge window
+> > [    0.962086] pci 0000:00:08.1: [mem 0x10030000000-0x100401fffff 64bit pref] clipped to [mem 0x10030000000-0x100303fffff 64bit pref]
+> > [    0.962086] pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100303fffff 64bit pref]
+> > [    0.962086] pci 0000:07:00.0: can't claim BAR 0 [mem 0x10030000000-0x1003fffffff 64bit pref]: no compatible bridge window
+> > [    0.962086] pci 0000:07:00.0: can't claim BAR 2 [mem 0x10040000000-0x100401fffff 64bit pref]: no compatible bridge window
+> >
+> > However, the root bus has two contiguous regions that can contain the
+> > child resource requested.
+> >
+> > Bjorn Helgaas pointed out that we can simply coalesce contiguous regions
+> > for host bridges, since host bridge don't have _SRS. So do that
+> > accordingly to make child resource can be contained. This change makes
+> > the graphics works on the system in question.
+> >
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212013
+> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>
+> With this patch in place, I can no longer boot the ppc:sam460ex
+> qemu emulation from nvme. I see the following boot error:
+>
+> nvme nvme0: Device not ready; aborting initialisation, CSTS=0x0
+> nvme nvme0: Removing after probe failure status: -19
+>
+> A key difference seems to be swapped region addresses:
+>
+> ok:
+>
+> PCI host bridge to bus 0002:00^M
+> pci_bus 0002:00: root bus resource [io  0x0000-0xffff]
+> pci_bus 0002:00: root bus resource [mem 0xd80000000-0xdffffffff] (bus address [0x80000000-0xffffffff])
+> pci_bus 0002:00: root bus resource [mem 0xc0ee00000-0xc0eefffff] (bus address [0x00000000-0x000fffff])
+>
+> bad:
+>
+> PCI host bridge to bus 0002:00^M
+> pci_bus 0002:00: root bus resource [io  0x0000-0xffff]
+> pci_bus 0002:00: root bus resource [mem 0xc0ee00000-0xc0eefffff] (bus address [0x00000000-0x000fffff])
+> pci_bus 0002:00: root bus resource [mem 0xd80000000-0xdffffffff] (bus address [0x80000000-0xffffffff])
+>
+> and then bar address assignments are swapped/changed.
+>
+> ok:
+>
+> pci 0002:00:06.0: BAR 0: assigned [mem 0xd80000000-0xd83ffffff]^M
+> pci 0002:00:06.0: BAR 1: assigned [mem 0xd84000000-0xd841fffff]^M
+> pci 0002:00:02.0: BAR 0: assigned [mem 0xd84200000-0xd84203fff 64bit]^M
+> pci 0002:00:01.0: BAR 5: assigned [mem 0xd84204000-0xd842041ff]^M
+> pci 0002:00:03.0: BAR 0: assigned [io  0x1000-0x107f]^M
+> pci 0002:00:03.0: BAR 1: assigned [mem 0xd84204200-0xd8420427f]^M
+> pci 0002:00:01.0: BAR 4: assigned [io  0x1080-0x108f]^M
+> pci 0002:00:01.0: BAR 0: assigned [io  0x1090-0x1097]^M
+> pci 0002:00:01.0: BAR 2: assigned [io  0x1098-0x109f]^M
+> pci 0002:00:01.0: BAR 1: assigned [io  0x10a0-0x10a3]^M
+> pci 0002:00:01.0: BAR 3: assigned [io  0x10a4-0x10a7]^M
+> pci_bus 0002:00: resource 4 [io  0x0000-0xffff]^M
+> pci_bus 0002:00: resource 5 [mem 0xd80000000-0xdffffffff]^M
+> pci_bus 0002:00: resource 6 [mem 0xc0ee00000-0xc0eefffff]^M
+>
+> bad:
+>
+> pci 0002:00:06.0: BAR 0: assigned [mem 0xd80000000-0xd83ffffff]^M
+> pci 0002:00:06.0: BAR 1: assigned [mem 0xd84000000-0xd841fffff]^M
+> pci 0002:00:02.0: BAR 0: assigned [mem 0xc0ee00000-0xc0ee03fff 64bit]^M
+> pci 0002:00:01.0: BAR 5: assigned [mem 0xc0ee04000-0xc0ee041ff]^M
+> pci 0002:00:03.0: BAR 0: assigned [io  0x1000-0x107f]^M
+> pci 0002:00:03.0: BAR 1: assigned [mem 0xc0ee04200-0xc0ee0427f]^M
+> pci 0002:00:01.0: BAR 4: assigned [io  0x1080-0x108f]^M
+> pci 0002:00:01.0: BAR 0: assigned [io  0x1090-0x1097]^M
+> pci 0002:00:01.0: BAR 2: assigned [io  0x1098-0x109f]^M
+> pci 0002:00:01.0: BAR 1: assigned [io  0x10a0-0x10a3]^M
+> pci 0002:00:01.0: BAR 3: assigned [io  0x10a4-0x10a7]^M
+> pci_bus 0002:00: resource 4 [io  0x0000-0xffff]^M
+> pci_bus 0002:00: resource 5 [mem 0xc0ee00000-0xc0eefffff]^M
+> pci_bus 0002:00: resource 6 [mem 0xd80000000-0xdffffffff]^M
+>
+> Reverting this patch fixes the problem.
 
-If you want these new firmware files, you need to ask NXP developers as
-only they can ask for non-NDA distribution and include new version into
-linux-firmware repository. Like in this pull request where is new SDIO
-firmware for 88W8897:
-https://lore.kernel.org/linux-firmware/DB7PR04MB453855B0D6C41923BCB0922EFC1C9@DB7PR04MB4538.eurprd04.prod.outlook.com/
+Can you please comment out the list_sort()? Seems like the precaution
+breaks your system...
+
+Kai-Heng
+
+>
+> Guenter
+>
+> ---
+> bisect log:
+>
+> # bad: [f55966571d5eb2876a11e48e798b4592fa1ffbb7] Merge tag 'drm-next-2021-07-08-1' of git://anongit.freedesktop.org/drm/drm
+> # good: [e9f1cbc0c4114880090c7a578117d3b9cf184ad4] Merge tag 'acpi-5.14-rc1-2' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+> git bisect start 'f55966571d5e' 'e9f1cbc0c411'
+> # bad: [b0dfd9af28b60d7ec42c359ae84c1ba97e093100] Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+> git bisect bad b0dfd9af28b60d7ec42c359ae84c1ba97e093100
+> # bad: [364a716bd73e9846d3118a43f600f8f517658b38] Merge branch 'pci/host/intel-gw'
+> git bisect bad 364a716bd73e9846d3118a43f600f8f517658b38
+> # good: [c9fb9042c98df94197a1ba4cf14a77c8053b0fae] Merge branch 'pci/p2pdma'
+> git bisect good c9fb9042c98df94197a1ba4cf14a77c8053b0fae
+> # bad: [7132700067f234d37c234e5d711bb49ea06d2352] Merge branch 'pci/sysfs'
+> git bisect bad 7132700067f234d37c234e5d711bb49ea06d2352
+> # bad: [131e4f76c9ae9636046bf04d19d43af0e4ae9807] Merge branch 'pci/resource'
+> git bisect bad 131e4f76c9ae9636046bf04d19d43af0e4ae9807
+> # good: [411e2a43d210e98730713acf6d01dcf823ee35e3] PCI: Work around Huawei Intelligent NIC VF FLR erratum
+> git bisect good 411e2a43d210e98730713acf6d01dcf823ee35e3
+> # good: [e92605b0a0cdafb6c37b9d1ad24fe1cf8280eeb6] Merge branch 'pci/pm'
+> git bisect good e92605b0a0cdafb6c37b9d1ad24fe1cf8280eeb6
+> # bad: [65db04053efea3f3e412a7e0cc599962999c96b4] PCI: Coalesce host bridge contiguous apertures
+> git bisect bad 65db04053efea3f3e412a7e0cc599962999c96b4
+> # first bad commit: [65db04053efea3f3e412a7e0cc599962999c96b4] PCI: Coalesce host bridge contiguous apertures
