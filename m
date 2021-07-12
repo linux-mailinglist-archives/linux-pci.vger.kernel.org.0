@@ -2,601 +2,296 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E59B03C6221
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 19:45:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CDF93C6337
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jul 2021 21:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235522AbhGLRr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 13:47:59 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:34657 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234728AbhGLRr6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 13:47:58 -0400
-Received: by mail-il1-f173.google.com with SMTP id e13so20460331ilc.1;
-        Mon, 12 Jul 2021 10:45:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ajatf6nQwEZ59cgaPAdaASubAC/UcMPkKKVknAE5bvM=;
-        b=UOrhL9WFjK9Og7nV3L3vTiCCFzpDqyGAGopFpFEb7xD7q0AIc8c4jvv2GX/fajgsKX
-         5OuWfyndm3dHJp0B28FGqtrIVGH+H0cMQp9w+XfORIyRpKlrrnChpNviVNATxhIO902H
-         8XJP0tbnZVyj+DSV7zb+okAqffwQ8sqZhQY8o9nN3iChBqtB+gvH3hV0KhUD4+4sGcHp
-         WaLK2Xu0R1AHxo2Z1yKALH/Dhh1uQxDiQzzRDNXxtCiiNTd3c6d7elPMWSjdtMz6HQ4o
-         1uU25yHFgXpDsmJh29ezjrb07GzApi0e0Z16bILlo+Cn/jn8WbuXc070EkYMUQp0syT4
-         n1Rw==
-X-Gm-Message-State: AOAM531C2OGyJfv+IxOBaqTBhGkWzsmLdm5Q9qRC+wnkKxsnH8NQvcgX
-        d/uzQWvHvapdb5acu9ruvg==
-X-Google-Smtp-Source: ABdhPJz+gM/VO4P/82jsvkZWlHe7Tbh91b89uvKUK6Unkmnu28V43rFcrXtWt/sWhVVdbHLLVtcvbw==
-X-Received: by 2002:a92:6d03:: with SMTP id i3mr41675ilc.66.1626111908570;
-        Mon, 12 Jul 2021 10:45:08 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id n13sm8436717ilq.5.2021.07.12.10.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jul 2021 10:45:07 -0700 (PDT)
-Received: (nullmailer pid 2178008 invoked by uid 1000);
-        Mon, 12 Jul 2021 17:45:04 -0000
-Date:   Mon, 12 Jul 2021 11:45:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: designware-pcie.txt: convert it
- to yaml
-Message-ID: <20210712174504.GA2158814@robh.at.kernel.org>
-References: <cover.1625838920.git.mchehab+huawei@kernel.org>
- <fa846c83165894accdac1715c3fddfbdcb060958.1625838920.git.mchehab+huawei@kernel.org>
+        id S236095AbhGLTK1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 15:10:27 -0400
+Received: from mail-dm6nam10on2124.outbound.protection.outlook.com ([40.107.93.124]:56977
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S236084AbhGLTK0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Jul 2021 15:10:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jA6o5v0j72FssvdXRBtI6vWwCbFIvSpyDm0/ZUURytlb6XUtXNTLasAyAvpFW4K3a0hLSH9M0gn3rjDzzdBKO3N4GBu4sKuc8pyFG3o58qQMqIKyXOiGLxdpJlP4aa7Tu3xfPGdLaopleD5xfP4pB8YSC3o/vAgOYW3jl7+NhFf2igzgfHghb+T0oH3otyIAhEGt8dmi+RPdxUQh/IChWt/j8qU5zmJqkTPb/Dyu+uSRs1Aae6OKzoZYJECD3xKRr+OuQV10fgxOarSH+GR4HkLyTJBl2fV/qwwZmFkhuN9OXRCZ76yZc5FNtlqgFW+lIYbIMkLU+JLd2r/0ixZtIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uUM4+fOzUo0gG6HGAHhmyVjLZVEIdcyvVFOloslkBnU=;
+ b=JHzi1ZQrtQa6nAPBVFS72kfYN72WBsDkOtfcL3wqj8l6QYqPBdMw51WjDLF57/hEfgtfIYK8fpJrJRWetpKrJTQWv1qBuWOZ9AFN1i/NBN61ljk+sc6+q+GMoGzBrBcUo7KHaRj+efmvS3smYbOfeCOHrWgjTrW+n1xo7CKr5CLt62qZRQBW3lZs0s5E4jdLMg1jExwH0/YzzKbUpFSie+36MUUGa/f9pPFpLFsVxtjtAXdZdyE8hmOKE4/Igl930q6KYhT17bvWO7zjaE+qhNX5IiPsdoacal5gRofphCn365/2X2vRh2wJ3ll5+STGihZgUU1rF6jFrUCiiyotjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uUM4+fOzUo0gG6HGAHhmyVjLZVEIdcyvVFOloslkBnU=;
+ b=OUJH+RrTQP6ecoduOYT3KrUz08XQgOkDdB7xQh8v0XsHGDy938X82LPbYBCZ1Kp7myZJjl9oGBgjjeo0dtXflHiNsZ6io5nY32ya5s+5iyP+iD+Q5heTbmB6CeSEXh/7xqo1bZqnADJ8ZDIYISzvzf7x0kYOXhq6i7el1oor7LE=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by MW4PR21MB2025.namprd21.prod.outlook.com (2603:10b6:303:11c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.8; Mon, 12 Jul
+ 2021 19:07:35 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::cdf4:efd:7237:3c19]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::cdf4:efd:7237:3c19%7]) with mapi id 15.20.4331.009; Mon, 12 Jul 2021
+ 19:07:35 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>, Dexuan Cui <decui@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: RE: [PATCH 1/1] PCI: hv: Support for create interrupt v3
+Thread-Topic: [PATCH 1/1] PCI: hv: Support for create interrupt v3
+Thread-Index: Add0TIVdcQX5pMV/TWWUfz5smDdQ7ADAscqQ
+Date:   Mon, 12 Jul 2021 19:07:35 +0000
+Message-ID: <MWHPR21MB15933F3AB6C53B11B0257E11D7159@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+In-Reply-To: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0427ad34-30ce-4617-8641-271adbc45791;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-07-12T18:54:10Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6a10589c-042b-4cd7-55c2-08d945684f03
+x-ms-traffictypediagnostic: MW4PR21MB2025:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW4PR21MB2025EADDFA199F84F298FF25D7159@MW4PR21MB2025.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: H99wOylYBpJ4fVhOGQTNjlGjlQiB81QurpU0Vfl50eUZMWR4txiXwnwV2bi5txIGLirSsObRLFAq19BqpIlYH6psLb+qQRD7mmjs9s8dkwkdSs/yqDnPmNwc0LVRObeMPCwfEusB7aLGL2nNT74W5F7+b7ZzOhQ9IjoTgGcn+2msA7HHMhPlZDSs+f9JdIulZI52sXv5obhW3qG5UQRw6tJF0TkS8S3Q9MJsGBKEHZZ8OQBXK84Bp+qvQDxxsH8nyOU9f2aj8E9wIGrPU8e6yrctIYx5QEurULuj1OWQsSSYZgv1gBnx8C4QYfK0LrypSlc+If3oPlyWKnyit6zlw4V8itFv++1pCcwNzMrHV1v8gMslvovokf5EAmhys65Ovberl5haZYgSKmyexoRpDNvz249LbMggvWwWWu74hABDWwQVNCK26U65V8mlGxDzQvz/XhJNL50JrH7kgUDJgD7XMGkiibvtvpq2PEytLYI0WYOSr7w+EYQcjSiGlnkpC/JkwVJ4yYPN9gbpJim79h7P0XniGKsOWgN6+RF7Op4dgaV+ggiMT0sRA5hwdaatrC30QgOco7QnVmmhptHHXvY25RknlFA76wcTpG5/hIDWVEPRK8ZhzfX7yBtVR7xxw7EXQz9pC1dCLM9/CnzOKw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(82950400001)(4326008)(5660300002)(64756008)(10290500003)(52536014)(55016002)(82960400001)(66476007)(66556008)(8990500004)(66446008)(76116006)(71200400001)(66946007)(6636002)(26005)(478600001)(6506007)(7696005)(122000001)(8936002)(8676002)(38100700002)(316002)(83380400001)(110136005)(2906002)(33656002)(186003)(86362001)(9686003)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?RibO4lp/D389fTJ5eQd0pMTRyVqJhIxH8fZH5Vxb25uLgKrYfgDvP1vH53/w?=
+ =?us-ascii?Q?iyBXCkDh0EIHhoaZ8kxjXry31Mafd/FyhZw/EMsjm20CtRwvTp3iEswkil6D?=
+ =?us-ascii?Q?jcTTA6uPSF8xrM8oCAxC1Eyg88iFA2cypkuK4/0k6K/8gMCZWeHfNtwjI9nT?=
+ =?us-ascii?Q?7aunJZRJftvZNki6H5VsA718UdzM78844wSpt5/BbWoSr/rF5gCvhhNAb4r/?=
+ =?us-ascii?Q?WO2RB7XaTxQ/QH0cuEoTWqojMyGB+F5/zi1tmwffbyVUPBH6VdCJzOMTkLBt?=
+ =?us-ascii?Q?ibuf5ymzUzdl5VxIn2Ofzw0a5cwY1tJALVIP9iWlHdpsMa9oR7ToN1A87D4k?=
+ =?us-ascii?Q?zETv/egc5CxAUpnPSZUuo5A4yKKKEsgbQpU2+Tjd7UanLu1gKcITemI5NVhK?=
+ =?us-ascii?Q?rkhNbsGD5gUed7eLpFhRLutpC/TAjjkbDaDppqotlSn/mh4t5uRmNu2Ac3z2?=
+ =?us-ascii?Q?FgkwYovdyKIWduBD2R1xh5Ekcz293xy+S4mtgYTtiiLF7q8iFXisWSQmHDFQ?=
+ =?us-ascii?Q?2Vi2D3rym/kqRR43OlfL3OLGnhGBDc3wJ1dxmP+kSlB+0YL6pnR+QQaAHjG+?=
+ =?us-ascii?Q?e8xuxvRvOLJJC1riez3hW9RjJD3wUkvTtJSUWQ+mEM7FW7FRqAm2jgkRyCjR?=
+ =?us-ascii?Q?ICvvJkkn1nVvXSuKMK+/uIAkWRpoKEtnz+QPpSBEh3t9TOa5joVKUahJyTvj?=
+ =?us-ascii?Q?bw73MQvDBY6T1v4hQY6+GsgpkAbq1O6ynml7N7f3S06WtdSoCCPEHT3NEWUO?=
+ =?us-ascii?Q?QNtleEWnQz1D7Zu+1H/ZYRgcaynS1O+h5r9RRT8T8zDZ6b7VW1axZTVL+YPk?=
+ =?us-ascii?Q?IACkWPh+T2r4JSNbwvuF3okHua1+b7Za/JicZ83xhZR0ZIFrzq64dFqVDSgY?=
+ =?us-ascii?Q?4bIQZGAyGE2vd2+fHo4KJmF4frMK1hLV1dJgFY103Kb0tsjEY3jq7HpM8TEv?=
+ =?us-ascii?Q?MnGITzcF7Tb6mqUyFcG2UXGqnnNnbmMDL2Ulq2fxQ74KthtdkEesCN4+3Q28?=
+ =?us-ascii?Q?o2xo2KH+tV9q5icZxPUOqo4orBjZNVJRyYF6ZzJ9qZ5L8S4VYf23QakTPbTE?=
+ =?us-ascii?Q?PV2+L4uSra3JMgQ9+cLROr914rMHpM1l8greUsEPLYGG0Dy2c43A0TbTkmqr?=
+ =?us-ascii?Q?0bzSzZ1Pqtt+70x6BgpyFfBwy1m8rHw6BnNhftatsgKVOpiCIYzRfYd8iSqe?=
+ =?us-ascii?Q?fpW9UwHrMqIKmWjy9nqbyUpctdVjdfYhJ7GnN557CG3RZYJ7FkueKcEr1RSe?=
+ =?us-ascii?Q?gMbpXlqhnFMrLYVREXz0fam+0LwTSNGMx5u92s4KHeToL9XfKJySDLh7UDi4?=
+ =?us-ascii?Q?HBTX08a5y2M9x9RDvvfpJ4t+?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa846c83165894accdac1715c3fddfbdcb060958.1625838920.git.mchehab+huawei@kernel.org>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a10589c-042b-4cd7-55c2-08d945684f03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2021 19:07:35.2700
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C9xmWLS1O/8Xco7xHpJDwyYD+IZq61ImGpkF/iXpTi3nOweDVQW+ss2qaB49iO2d5V7UgRXRrcXk6qZypmOAQmT4hDt7bbDDoH4+EUJHXtM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB2025
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 09, 2021 at 03:57:42PM +0200, Mauro Carvalho Chehab wrote:
-> Convert the file to DT schema.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+From: Sunil Muthuswamy <sunilmut@microsoft.com> Sent: Thursday, July 8, 202=
+1 4:05 PM
+>=20
+> Hyper-V vPCI protocol version 1_4 adds support for create interrupt
+> v3. Create interrupt v3 essentially makes the size of the vector
+> field bigger in the message, thereby allowing bigger vector values.
+> For example, that will come into play for supporting LPI vectors
+> on ARM, which start at 8192.
+>=20
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 > ---
->  .../bindings/pci/amlogic,meson-pcie.txt       |   4 +-
->  .../bindings/pci/axis,artpec6-pcie.txt        |   2 +-
->  .../bindings/pci/designware-pcie.txt          |  77 ----------
->  .../bindings/pci/fsl,imx6q-pcie.txt           |   2 +-
->  .../bindings/pci/hisilicon-histb-pcie.txt     |   2 +-
->  .../devicetree/bindings/pci/kirin-pcie.txt    |   2 +-
->  .../bindings/pci/layerscape-pci.txt           |   2 +-
->  .../bindings/pci/nvidia,tegra194-pcie.txt     |   4 +-
->  .../devicetree/bindings/pci/pci-armada8k.txt  |   2 +-
->  .../devicetree/bindings/pci/pcie-al.txt       |   2 +-
->  .../devicetree/bindings/pci/qcom,pcie.txt     |  14 +-
->  .../bindings/pci/samsung,exynos-pcie.yaml     |   2 +-
->  .../bindings/pci/sifive,fu740-pcie.yaml       |   2 +-
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml | 135 ++++++++++++++++++
->  .../pci/socionext,uniphier-pcie-ep.yaml       |   2 +-
->  .../devicetree/bindings/pci/ti-pci.txt        |   4 +-
->  .../devicetree/bindings/pci/uniphier-pcie.txt |   2 +-
->  MAINTAINERS                                   |   2 +-
->  18 files changed, 160 insertions(+), 102 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/designware-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> index b6acbe694ffb..c3a75ac6e59d 100644
-> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> @@ -3,7 +3,7 @@ Amlogic Meson AXG DWC PCIE SoC controller
->  Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
->  It shares common functions with the PCIe DesignWare core driver and
->  inherits common properties defined in
-> -Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
->  
->  Additional properties are described here:
->  
-> @@ -33,7 +33,7 @@ Required properties:
->  - phy-names: must contain "pcie"
->  
->  - device_type:
-> -	should be "pci". As specified in designware-pcie.txt
-> +	should be "pci". As specified in snps,dw-pcie.yaml
->  
->  
->  Example configuration:
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> index 979dc7b6cfe8..cc6dcdb676b9 100644
-> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> @@ -1,7 +1,7 @@
->  * Axis ARTPEC-6 PCIe interface
->  
->  This PCIe host controller is based on the Synopsys DesignWare PCIe IP
-> -and thus inherits all the common properties defined in designware-pcie.txt.
-> +and thus inherits all the common properties defined in snps,dw-pcie.yaml.
->  
->  Required properties:
->  - compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> deleted file mode 100644
-> index 78494c4050f7..000000000000
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ /dev/null
-> @@ -1,77 +0,0 @@
-> -* Synopsys DesignWare PCIe interface
+>  drivers/pci/controller/pci-hyperv.c | 74 ++++++++++++++++++++++++++---
+>  1 file changed, 68 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index bebe3eeebc4e..de61b20f9604 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -64,6 +64,7 @@ enum pci_protocol_version_t {
+>  	PCI_PROTOCOL_VERSION_1_1 =3D PCI_MAKE_VERSION(1, 1),	/* Win10 */
+>  	PCI_PROTOCOL_VERSION_1_2 =3D PCI_MAKE_VERSION(1, 2),	/* RS1 */
+>  	PCI_PROTOCOL_VERSION_1_3 =3D PCI_MAKE_VERSION(1, 3),	/* Vibranium */
+> +	PCI_PROTOCOL_VERSION_1_4 =3D PCI_MAKE_VERSION(1, 4),      /* Fe */
+
+It would be better if we can avoid annotating with internal code names.
+Inside of MSFT we tend to forget over time, and people outside usually
+have no idea what they mean. =20
+
+>  };
+>=20
+>  #define CPU_AFFINITY_ALL	-1ULL
+> @@ -73,6 +74,7 @@ enum pci_protocol_version_t {
+>   * first.
+>   */
+>  static enum pci_protocol_version_t pci_protocol_versions[] =3D {
+> +	PCI_PROTOCOL_VERSION_1_4,
+>  	PCI_PROTOCOL_VERSION_1_3,
+>  	PCI_PROTOCOL_VERSION_1_2,
+>  	PCI_PROTOCOL_VERSION_1_1,
+> @@ -122,6 +124,8 @@ enum pci_message_type {
+>  	PCI_CREATE_INTERRUPT_MESSAGE2	=3D PCI_MESSAGE_BASE + 0x17,
+>  	PCI_DELETE_INTERRUPT_MESSAGE2	=3D PCI_MESSAGE_BASE + 0x18, /* unused */
+>  	PCI_BUS_RELATIONS2		=3D PCI_MESSAGE_BASE + 0x19,
+> +	PCI_RESOURCES_ASSIGNED3         =3D PCI_MESSAGE_BASE + 0x1A,
+> +	PCI_CREATE_INTERRUPT_MESSAGE3   =3D PCI_MESSAGE_BASE + 0x1B,
+>  	PCI_MESSAGE_MAXIMUM
+>  };
+>=20
+> @@ -235,6 +239,21 @@ struct hv_msi_desc2 {
+>  	u16	processor_array[32];
+>  } __packed;
+>=20
+> +/*
+> + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
+> + *	Everything is the same as in 'hv_msi_desc2' except that the size
+> + *	of the 'vector_count' field is larger to support bigger vector
+
+Actually, it's the "vector" field that's bigger, not "vector_count".
+
+> + *	values. For ex: LPI vectors on ARM.
+> + */
+> +struct hv_msi_desc3 {
+> +	u32	vector;
+> +	u8	delivery_mode;
+> +	u8	reserved;
+> +	u16	vector_count;
+> +	u16	processor_count;
+> +	u16	processor_array[32];
+> +} __packed;
+> +
+>  /**
+>   * struct tran_int_desc
+>   * @reserved:		unused, padding
+> @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
+>  	struct hv_msi_desc2 int_desc;
+>  } __packed;
+>=20
+> +struct pci_create_interrupt3 {
+> +	struct pci_message message_type;
+> +	union win_slot_encoding wslot;
+> +	struct hv_msi_desc3 int_desc;
+> +} __packed;
+> +
+>  struct pci_delete_interrupt {
+>  	struct pci_message message_type;
+>  	union win_slot_encoding wslot;
+> @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
+>  	return sizeof(*int_pkt);
+>  }
+>=20
+> +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *cp=
+u,
+> +				       u16 *count)
+> +{
+> +	/*
+> +	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
+> +	 * by subsequent retarget in hv_irq_unmask().
+> +	 */
+> +	*cpu =3D cpumask_first_and(affinity, cpu_online_mask);
+> +	*count =3D 1;
+> +}
+> +
+>  static u32 hv_compose_msi_req_v2(
+>  	struct pci_create_interrupt2 *int_pkt, struct cpumask *affinity,
+>  	u32 slot, u8 vector)
+>  {
+>  	int cpu;
+> +	u16 cpu_count;
+>=20
+>  	int_pkt->message_type.type =3D PCI_CREATE_INTERRUPT_MESSAGE2;
+>  	int_pkt->wslot.slot =3D slot;
+>  	int_pkt->int_desc.vector =3D vector;
+>  	int_pkt->int_desc.vector_count =3D 1;
+>  	int_pkt->int_desc.delivery_mode =3D APIC_DELIVERY_MODE_FIXED;
 > -
-> -Required properties:
-> -- compatible:
-> -	"snps,dw-pcie" for RC mode;
-> -	"snps,dw-pcie-ep" for EP mode;
-> -- reg: For designware cores version < 4.80 contains the configuration
-> -       address space. For designware core version >= 4.80, contains
-> -       the configuration and ATU address space
-> -- reg-names: Must be "config" for the PCIe configuration space and "atu" for
-> -	     the ATU address space.
-> -    (The old way of getting the configuration address space from "ranges"
-> -    is deprecated and should be avoided.)
-> -RC mode:
-> -- #address-cells: set to <3>
-> -- #size-cells: set to <2>
-> -- device_type: set to "pci"
-> -- ranges: ranges for the PCI memory and I/O regions
-> -- #interrupt-cells: set to <1>
-> -- interrupt-map-mask and interrupt-map: standard PCI
-> -	properties to define the mapping of the PCIe interface to interrupt
-> -	numbers.
-> -EP mode:
-> -- num-ib-windows: number of inbound address translation windows
-> -- num-ob-windows: number of outbound address translation windows
-> -
-> -Optional properties:
-> -- num-lanes: number of lanes to use (this property should be specified unless
-> -  the link is brought already up in BIOS)
-> -- reset-gpio: GPIO pin number of power good signal
-> -- clocks: Must contain an entry for each entry in clock-names.
-> -	See ../clocks/clock-bindings.txt for details.
-> -- clock-names: Must include the following entries:
-> -	- "pcie"
-> -	- "pcie_bus"
-> -- snps,enable-cdm-check: This is a boolean property and if present enables
-> -   automatic checking of CDM (Configuration Dependent Module) registers
-> -   for data corruption. CDM registers include standard PCIe configuration
-> -   space registers, Port Logic registers, DMA and iATU (internal Address
-> -   Translation Unit) registers.
-> -RC mode:
-> -- num-viewport: number of view ports configured in hardware. If a platform
-> -  does not specify it, the driver assumes 2.
-> -- bus-range: PCI bus numbers covered (it is recommended for new devicetrees
-> -  to specify this property, to keep backwards compatibility a range of
-> -  0x00-0xff is assumed if not present)
-> -
-> -EP mode:
-> -- max-functions: maximum number of functions that can be configured
-> -
-> -Example configuration:
-> -
-> -	pcie: pcie@dfc00000 {
-> -		compatible = "snps,dw-pcie";
-> -		reg = <0xdfc00000 0x0001000>, /* IP registers */
-> -		      <0xd0000000 0x0002000>; /* Configuration space */
-> -		reg-names = "dbi", "config";
-> -		#address-cells = <3>;
-> -		#size-cells = <2>;
-> -		device_type = "pci";
-> -		ranges = <0x81000000 0 0x00000000 0xde000000 0 0x00010000
-> -			  0x82000000 0 0xd0400000 0xd0400000 0 0x0d000000>;
-> -		interrupts = <25>, <24>;
-> -		#interrupt-cells = <1>;
-> -		num-lanes = <1>;
-> -	};
-> -or
-> -	pcie: pcie@dfc00000 {
-> -		compatible = "snps,dw-pcie-ep";
-> -		reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
-> -		      <0xdfc01000 0x0001000>, /* IP registers 2 */
-> -		      <0xd0000000 0x2000000>; /* Configuration space */
-> -		reg-names = "dbi", "dbi2", "addr_space";
-> -		num-ib-windows = <6>;
-> -		num-ob-windows = <2>;
-> -		num-lanes = <1>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index de4b2baf91e8..5cee38ce711b 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -1,7 +1,7 @@
->  * Freescale i.MX6 PCIe interface
->  
->  This PCIe host controller is based on the Synopsys DesignWare PCIe IP
-> -and thus inherits all the common properties defined in designware-pcie.txt.
-> +and thus inherits all the common properties defined in snps,dw-pcie.yaml.
->  
->  Required properties:
->  - compatible:
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> index 760b4d740616..5f0cf6c2fef3 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> @@ -3,7 +3,7 @@ HiSilicon STB PCIe host bridge DT description
->  The HiSilicon STB PCIe host controller is based on the DesignWare PCIe core.
->  It shares common functions with the DesignWare PCIe core driver and inherits
->  common properties defined in
-> -Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
->  
->  Additional properties are described here:
->  
-> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> index 585aadfeafd1..3a36eeb1c434 100644
-> --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> @@ -3,7 +3,7 @@ HiSilicon Kirin SoCs PCIe host DT description
->  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
->  It shares common functions with the PCIe DesignWare core driver and
->  inherits common properties defined in
-> -Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
->  
->  Additional properties are described here:
->  
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index 6d898dd4a8e2..f36efa73a470 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -1,7 +1,7 @@
->  Freescale Layerscape PCIe controller
->  
->  This PCIe host controller is based on the Synopsys DesignWare PCIe IP
-> -and thus inherits all the common properties defined in designware-pcie.txt.
-> +and thus inherits all the common properties defined in snps,dw-pcie.yaml.
->  
->  This controller derives its clocks from the Reset Configuration Word (RCW)
->  which is used to describe the PLL settings at the time of chip-reset.
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> index bd43f3c3ece4..498a7b3bd2a6 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> @@ -1,7 +1,7 @@
->  NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
->  
->  This PCIe controller is based on the Synopsis Designware PCIe IP
-> -and thus inherits all the common properties defined in designware-pcie.txt.
-> +and thus inherits all the common properties defined in snps,dw-pcie.yaml.
->  Some of the controller instances are dual mode where in they can work either
->  in root port mode or endpoint mode but one at a time.
->  
-> @@ -22,7 +22,7 @@ Required properties:
->    property.
->  - reg-names: Must include the following entries:
->    "appl": Controller's application logic registers
-> -  "config": As per the definition in designware-pcie.txt
-> +  "config": As per the definition in snps,dw-pcie.yaml
->    "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
->               Translation Unit) registers of the PCIe core are made available
->               for SW access.
-> diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> index 7a813d0e6d63..ff25a134befa 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> @@ -1,7 +1,7 @@
->  * Marvell Armada 7K/8K PCIe interface
->  
->  This PCIe host controller is based on the Synopsys DesignWare PCIe IP
-> -and thus inherits all the common properties defined in designware-pcie.txt.
-> +and thus inherits all the common properties defined in snps,dw-pcie.yaml.
->  
->  Required properties:
->  - compatible: "marvell,armada8k-pcie"
-> diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
-> index 557a5089229d..2ad1fe466eab 100644
-> --- a/Documentation/devicetree/bindings/pci/pcie-al.txt
-> +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
-> @@ -2,7 +2,7 @@
->  
->  Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
->  PCI core. It inherits common properties defined in
-> -Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
->  
->  Properties of the host controller node that differ from it are:
->  
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 0da458a051b6..1226b19b8c3d 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -33,22 +33,22 @@
->  - device_type:
->  	Usage: required
->  	Value type: <string>
-> -	Definition: Should be "pci". As specified in designware-pcie.txt
-> +	Definition: Should be "pci". As specified in snps,dw-pcie.yaml
->  
->  - #address-cells:
->  	Usage: required
->  	Value type: <u32>
-> -	Definition: Should be 3. As specified in designware-pcie.txt
-> +	Definition: Should be 3. As specified in snps,dw-pcie.yaml
->  
->  - #size-cells:
->  	Usage: required
->  	Value type: <u32>
-> -	Definition: Should be 2. As specified in designware-pcie.txt
-> +	Definition: Should be 2. As specified in snps,dw-pcie.yaml
->  
->  - ranges:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> -	Definition: As specified in designware-pcie.txt
-> +	Definition: As specified in snps,dw-pcie.yaml
->  
->  - interrupts:
->  	Usage: required
-> @@ -63,17 +63,17 @@
->  - #interrupt-cells:
->  	Usage: required
->  	Value type: <u32>
-> -	Definition: Should be 1. As specified in designware-pcie.txt
-> +	Definition: Should be 1. As specified in snps,dw-pcie.yaml
->  
->  - interrupt-map-mask:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> -	Definition: As specified in designware-pcie.txt
-> +	Definition: As specified in snps,dw-pcie.yaml
->  
->  - interrupt-map:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> -	Definition: As specified in designware-pcie.txt
-> +	Definition: As specified in snps,dw-pcie.yaml
->  
->  - clocks:
->  	Usage: required
-> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> index 1810bf722350..3f49c8017c7a 100644
-> --- a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> @@ -13,7 +13,7 @@ maintainers:
->  description: |+
->    Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
->    PCIe IP and thus inherits all the common properties defined in
-> -  designware-pcie.txt.
-> +  snps,dw-pcie.yaml.
->  
->  allOf:
->    - $ref: /schemas/pci/pci-bus.yaml#
-> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> index b03cbb9b6602..0cc1998a9d46 100644
-> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> @@ -10,7 +10,7 @@ description: |+
->    SiFive FU740 PCIe host controller is based on the Synopsys DesignWare
->    PCI core. It shares common features with the PCIe DesignWare core and
->    inherits common properties defined in
-> -  Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
->  
->  maintainers:
->    - Paul Walmsley <paul.walmsley@sifive.com>
-> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> new file mode 100644
-> index 000000000000..de463338b6ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/snps,dw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> -	/*
+> -	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
+> -	 * by subsequent retarget in hv_irq_unmask().
+> -	 */
+>  	cpu =3D cpumask_first_and(affinity, cpu_online_mask);
+
+Shouldn't this line be deleted since the new hv_compose_msi_req_get_cpu()
+function is doing the work?
+
+> +	hv_compose_msi_req_get_cpu(affinity, &cpu, &cpu_count);
+>  	int_pkt->int_desc.processor_array[0] =3D
+>  		hv_cpu_number_to_vp_number(cpu);
+> -	int_pkt->int_desc.processor_count =3D 1;
+> +	int_pkt->int_desc.processor_count =3D cpu_count;
 > +
-> +title: Synopsys DesignWare PCIe interface
+> +	return sizeof(*int_pkt);
+> +}
 > +
-> +maintainers:
-> +  - Jingoo Han <jingoohan1@gmail.com>
-> +  - Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> +static u32 hv_compose_msi_req_v3(
+> +	struct pci_create_interrupt3 *int_pkt, struct cpumask *affinity,
+> +	u32 slot, u32 vector)
+> +{
+> +	int cpu;
+> +	u16 cpu_count;
 > +
-> +description: |
-> +  Synopsys DesignWare PCIe host controller
+> +	int_pkt->message_type.type =3D PCI_CREATE_INTERRUPT_MESSAGE3;
+> +	int_pkt->wslot.slot =3D slot;
+> +	int_pkt->int_desc.vector =3D vector;
+> +	int_pkt->int_desc.reserved =3D 0;
+> +	int_pkt->int_desc.vector_count =3D 1;
+> +	int_pkt->int_desc.delivery_mode =3D APIC_DELIVERY_MODE_FIXED;
+> +	hv_compose_msi_req_get_cpu(affinity, &cpu, &cpu_count);
+> +	int_pkt->int_desc.processor_array[0] =3D
+> +		hv_cpu_number_to_vp_number(cpu);
+> +	int_pkt->int_desc.processor_count =3D cpu_count;
+>=20
+>  	return sizeof(*int_pkt);
+>  }
+> @@ -1385,6 +1439,7 @@ static void hv_compose_msi_msg(struct irq_data *dat=
+a, struct msi_msg *msg)
+>  		union {
+>  			struct pci_create_interrupt v1;
+>  			struct pci_create_interrupt2 v2;
+> +			struct pci_create_interrupt3 v3;
+>  		} int_pkts;
+>  	} __packed ctxt;
+>=20
+> @@ -1432,6 +1487,13 @@ static void hv_compose_msi_msg(struct irq_data *da=
+ta, struct msi_msg *msg)
+>  					cfg->vector);
+>  		break;
+>=20
+> +	case PCI_PROTOCOL_VERSION_1_4:
+> +		size =3D hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
+> +					dest,
+> +					hpdev->desc.win_slot.slot,
+> +					cfg->vector);
+> +		break;
 > +
-> +properties:
-> +  compatible:
-> +    anyOf:
-> +      - {}
-> +      - items:
-> +          contains:
-
-Drop 'contains'. 'items' schema applies to array elements whereas 
-'contains' applies to an array.
-
-> +            enum:
-> +              - snps,dw-pcie
-> +              - snps,dw-pcie-ep
-> +
-> +  reg:
-> +    description: |
-> +      It should contain Data Bus Interface (dbi, dbi2) registers for all
-> +      versions.
-
-Not all versions have dbi2.
-
-> +      For designware cores version < 4.80, contains the configuration
-> +      address space. For designware core version >= 4.80,
-> +      contains the configuration and ATU address space.
-
-config space should always be present. For a brief time (around 2014), 
-it was not required but has been since. For purposes of the schema, we 
-can say always required.
-
-ATU is optional in 4.80 or later. 
-
-> +    minItems: 2
-> +    maxItems: 4
-> +
-> +  reg-names:
-> +    minItems: 2
-> +    maxItems: 4
-> +    items:
-> +      contains:
-
-Drop contains.
-
-> +        enum: [dbi, dbi2, config, atu, addr_space]
-> +
-> +  num-lanes:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: |
-> +      number of lanes to use (this property should be specified unless
-> +      the link is brought already up in BIOS)
-> +    maxItems: 1
-
-Drop. Not an array. 'maximum: 16' is needed though pci-bus.yaml may 
-cover that already.
-
-> +
-> +  reset-gpio:
-> +    description: GPIO pin number of PERST# signal
-> +    maxItems: 1
-
-deprecated: true
-
-And add 'reset-gpios'
-
-> +
-> +  "snps,enable-cdm-check":
-
-Don't need quotes.
-
-> +    type: boolean
-> +    description: |
-> +      This is a boolean property and if present enables
-> +      automatic checking of CDM (Configuration Dependent Module) registers
-> +      for data corruption. CDM registers include standard PCIe configuration
-> +      space registers, Port Logic registers, DMA and iATU (internal Address
-> +      Translation Unit) registers.
-> +
-> +  num-viewport:
-> +    description: |
-> +      number of view ports configured in hardware. If a platform
-> +      does not specify it, the driver assumes 2.
-
-That's no longer true. This and the next 2 properties are now detected 
-if not specified.
-
-> +    deprecated: true
-> +
-> +  num-ib-windows:
-> +    description: number of inbound address translation windows
-> +    maxItems: 1
-> +    deprecated: true
-> +
-> +  num-ob-windows:
-> +    description: number of outbound address translation windows
-> +    maxItems: 1
-> +    deprecated: true
-> +
-> +  # The following are optional properties for EP mode
-> +
-> +  max-functions:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: maximum number of functions that can be configured
-> +
-> +required:
-> +  - reg
-> +  - reg-names
-> +  - compatible
-> +
-> +additionalProperties: false
-
-unevaluatedProperties: false
-
-so that we can have child PCI devices...
-
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: snps,dw-pcie
-> +    then:
-> +      allOf:
-> +        - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +patternProperties:
-> +  "pcie?_ep@[0-9a-f]+$":
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        contains:
-> +          const: snps,dw-pcie-ep
-
-This doesn't make sense. This is defining a child node of the DW 
-controller with 'snps,dw-pcie-ep'.
-
-> +
-> +  "pcie?@[0-9a-f]+$":
-> +    type: object
-> +
-> +examples:
-> +  - |
-> +    pcie: pcie@dfc00000 {
-
-Drop unused labels.
-
-> +      compatible = "snps,dw-pcie";
-> +      reg = <0xdfc00000 0x0001000>, /* IP registers */
-> +            <0xd0000000 0x0002000>; /* Configuration space */
-> +      reg-names = "dbi", "config";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      device_type = "pci";
-> +      ranges = <0x81000000 0 0x00000000 0xde000000 0 0x00010000>,
-> +               <0x82000000 0 0xd0400000 0xd0400000 0 0x0d000000>;
-> +      interrupts = <25>, <24>;
-> +      #interrupt-cells = <1>;
-> +      num-lanes = <1>;
-> +    };
-> +    pcie_ep: pcie_ep@dfd00000 {
-
-'pcie-ep' is preferred.
-
-> +      compatible = "snps,dw-pcie-ep";
-> +      reg = <0xdfc00000 0x0001000>, /* IP registers 1 */
-> +            <0xdfc01000 0x0001000>, /* IP registers 2 */
-> +            <0xd0000000 0x2000000>; /* Configuration space */
-> +      reg-names = "dbi", "dbi2", "addr_space";
-> +    };
+>  	default:
+>  		/* As we only negotiate protocol versions known to this driver,
+>  		 * this path should never hit. However, this is it not a hot
+> --
+> 2.17.1
