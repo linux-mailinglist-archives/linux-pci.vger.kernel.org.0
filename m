@@ -2,85 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BA013C6B35
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 09:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92B393C6B43
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 09:31:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234121AbhGMH3w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 03:29:52 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:14075 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233762AbhGMH3w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 03:29:52 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GPBvN1SPwzbc2D;
-        Tue, 13 Jul 2021 15:23:44 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 13 Jul 2021 15:27:00 +0800
-Received: from thunder-town.china.huawei.com (10.174.179.0) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 13 Jul 2021 15:27:00 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] PCI: Optimize pci_resource_len() to reduce the binary size of kernel
-Date:   Tue, 13 Jul 2021 15:22:36 +0800
-Message-ID: <20210713072236.3043-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        id S234205AbhGMHej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 03:34:39 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:41159 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233762AbhGMHej (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Jul 2021 03:34:39 -0400
+Received: from localhost.localdomain (ip5f5aeb78.dynamic.kabel-deutschland.de [95.90.235.120])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id D066F61E30BCC;
+        Tue, 13 Jul 2021 09:31:47 +0200 (CEST)
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Guohan Lu <lguohan@gmail.com>, balsup <balsup@contoso.com>,
+        Madhava Reddy Siddareddygari <msiddare@cisco.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Reserve address space for powered-off devices behind PCIe bridges
+Date:   Tue, 13 Jul 2021 09:31:24 +0200
+Message-Id: <20210713073124.177027-1-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.179.0]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_resource_end() can be 0 only when pci_resource_start() is 0.
-Otherwise, it is definitely an error. In this case, pci_resource_len()
-should be regarded as 0. Therefore, determining whether
-pci_resource_start() and pci_resource_end() are both 0 can be reduced to
-determining only whether pci_resource_end() is 0.
+From: balsup <balsup@contoso.com>
 
-Although only one condition judgment is reduced, the macro function
-pci_resource_len() is widely referenced in the kernel. I used defconfig to
-compile the latest kernel on X86, and its binary code size was reduced by
-about 3KB.
+Data path devices are powered off by default, they will not be visible at
+BIOS stage and memory for these devices is not reserved.
 
-Before:
- [ 2] .rela.text        RELA             0000000000000000  093bfcb0
-      0000000001a67168  0000000000000018   I      68     1     8
+By default, no address space would be reserved on the bridges for these
+unpowered devices. When they were powered up, they could fail to initialize
+because there was no appropriately aligned window available for a given
+BAR.
 
-After:
- [ 2] .rela.text        RELA             0000000000000000  093bfcb0
-      0000000001a66598  0000000000000018   I      68     1     8
+This patch will reserve address space for data path devices that are behind
+PCIe bridge, so that when devices are available PCIe subsystem will be
+assign the address within the specified range.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Madhava Reddy Siddareddygari <msiddare@cisco.com>
 ---
- include/linux/pci.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This patch was submitted to the SONiC project for a Cisco device [1].
+It’s better to have it reviewed and committed upstream though.
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 540b377ca8f6..23ef1a15eb5d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1881,9 +1881,7 @@ int pci_iobar_pfn(struct pci_dev *pdev, int bar, struct vm_area_struct *vma);
- #define pci_resource_end(dev, bar)	((dev)->resource[(bar)].end)
- #define pci_resource_flags(dev, bar)	((dev)->resource[(bar)].flags)
- #define pci_resource_len(dev,bar) \
--	((pci_resource_start((dev), (bar)) == 0 &&	\
--	  pci_resource_end((dev), (bar)) ==		\
--	  pci_resource_start((dev), (bar))) ? 0 :	\
-+	((pci_resource_end((dev), (bar)) == 0) ? 0 :	\
- 							\
- 	 (pci_resource_end((dev), (bar)) -		\
- 	  pci_resource_start((dev), (bar)) + 1))
+ drivers/pci/setup-bus.c | 159 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 159 insertions(+)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 2ce636937c6e..266097984e19 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -967,6 +967,148 @@ static inline resource_size_t calculate_mem_align(resource_size_t *aligns,
+ 	return min_align;
+ }
+ 
++#define PLX_RES_MAGIC_VALUE            0xABBA
++#define PLX_RES_DS_PORT_REG0           0xC6C
++#define PLX_RES_DS_PORT_REG1           0xC70
++#define PLX_RES_MAGIC_OFFSET           0xC76
++#define PLX_RES_NP_MASK                0x1
++#define PLX_RES_P_MASK                 0x1F
++
++static struct pci_dev *
++plx_find_nt_device(struct pci_bus *bus, unsigned short brg_dev_id)
++{
++	struct pci_dev *dev, *nt_virt_dev = NULL;
++	struct pci_bus *child_bus;
++	unsigned short vendor, devid, class;
++
++	if (!bus)
++		return NULL;
++
++	list_for_each_entry(child_bus, &bus->children, node) {
++		list_for_each_entry(dev, &child_bus->devices, bus_list) {
++			vendor = dev->vendor;
++			devid = dev->device;
++			class = dev->class >> 8;
++
++			if ((vendor == PCI_VENDOR_ID_PLX) &&
++					(brg_dev_id == devid) &&
++					(class == PCI_CLASS_BRIDGE_OTHER)) {
++				dev_dbg(&dev->dev, "Found NT device 0x%x\n",
++						devid);
++				nt_virt_dev = dev;
++				break;
++			}
++		}
++
++		if (nt_virt_dev)
++			break;
++	}
++	return nt_virt_dev;
++}
++
++static resource_size_t
++pci_get_plx_downstream_res_size(struct pci_bus *bus, unsigned long res_type)
++{
++	int depth = 0;
++	resource_size_t size = 0;
++	struct pci_dev *dev = bus->self;
++	struct pci_bus *tmp_bus;
++	struct pci_dev *nt_virt_dev;
++	u16 res_magic = 0;
++
++	/*
++	 * 32 bits to store the memory requirement for PLX ports.
++	 * Following is the layout:
++	 * np32_0:1;  --> non-prefetchable port 0
++	 * p64_0:5;   --> prefetchable port 0
++	 * np32_1:1;  --> non-prefetchable port 1
++	 * p64_1:5;   --> prefetchable port 1
++	 * np32_2:1;  --> non-prefetchable port 2
++	 * p64_2:5;   --> prefetchable port 2
++	 * np32_3:1;  --> non-prefetchable port 3
++	 * p64_3:5;   --> prefetchable port 3
++	 * np32_4:1;  --> non-prefetchable port 4
++	 * p64_4:5;   --> prefetchable port 4
++	 * reserved:2;
++	 */
++	unsigned int port_bitmap;
++
++	u32 mem_res_bitmap = 0;
++	unsigned int ds_port_offset = 0;
++	unsigned short multiplier = 0;
++	unsigned short np_size = 0;
++
++	/*
++	 * PLX8713 used on FC4 and FC8
++	 * PLX8725 used on FC12 and FC18
++	 */
++	if (!dev || dev->vendor != PCI_VENDOR_ID_PLX ||
++			((dev->device & 0xFF00) != 0x8700))
++		return size;
++
++	tmp_bus = bus;
++	while (tmp_bus->parent) {
++		tmp_bus = tmp_bus->parent;
++		depth++;
++	}
++
++	/* Only for Second level bridges */
++	if (depth != 5)
++		return size;
++
++	nt_virt_dev = plx_find_nt_device(bus->parent, 0x87b0);
++	if (nt_virt_dev) {
++		pci_read_config_word(nt_virt_dev, PLX_RES_MAGIC_OFFSET,
++				&res_magic);
++		dev_dbg(&nt_virt_dev->dev,
++				"Magic offset of 0x%x found in NT device\n", res_magic);
++	}
++
++	if (res_magic == PLX_RES_MAGIC_VALUE) {
++		/*
++		 * The pacifics are connected on PLX ports:
++		 *  FC4 and FC8: #3, #4
++		 *  FC12       : #3, #4, #5
++		 *  FC18       : #3, #4, #5, #11
++		 */
++
++		/* Calculate resource based on EEPROM values */
++		ds_port_offset = (bus->number - bus->parent->number) - 1;
++		if (ds_port_offset < 5) {
++			pci_read_config_dword(nt_virt_dev, PLX_RES_DS_PORT_REG0,
++					&mem_res_bitmap);
++		} else {
++			ds_port_offset -= 5;
++			pci_read_config_dword(nt_virt_dev, PLX_RES_DS_PORT_REG1,
++					&mem_res_bitmap);
++		}
++		port_bitmap = mem_res_bitmap;
++		dev_dbg(&bus->dev, "Port offset: 0x%x, res bitmap 0x%x\n",
++				ds_port_offset, mem_res_bitmap);
++
++		if (ds_port_offset < 5) {
++			u8 m[] = { 26, 20, 14, 8, 2 };
++			u8 s[] = { 31, 25, 19, 13, 7 };
++
++			multiplier = (port_bitmap >> m[ds_port_offset]) & PLX_RES_P_MASK;
++			np_size = (port_bitmap >> s[ds_port_offset]) & PLX_RES_NP_MASK;
++
++			dev_dbg(&bus->dev, "Multiplier: %d, np_size: %d\n",
++					multiplier, np_size);
++
++			if (res_type & IORESOURCE_PREFETCH) {
++				size = 0x100000 << (multiplier - 1);
++				dev_dbg(&bus->dev, "Pref Multiplier %d, Size 0x%llx\n",
++						multiplier, (long long) size);
++			} else if (np_size) {
++				size = 0x100000;
++				dev_dbg(&bus->dev, "NP Size 0x%llx\n", (long long) size);
++			}
++		}
++	}
++	return size;
++}
++
+ /**
+  * pbus_size_mem() - Size the memory window of a given bus
+  *
+@@ -1001,6 +1143,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t children_add_align = 0;
+ 	resource_size_t add_align = 0;
++	unsigned int dev_count = 0;
+ 
+ 	if (!b_res)
+ 		return -ENOSPC;
+@@ -1016,6 +1159,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		int i;
+ 
++		dev_count++;
+ 		for (i = 0; i < PCI_NUM_RESOURCES; i++) {
+ 			struct resource *r = &dev->resource[i];
+ 			resource_size_t r_size;
+@@ -1071,6 +1215,21 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 		}
+ 	}
+ 
++	/* Static allocation for FC pacific */
++	if (!size && !dev_count) {
++		size = pci_get_plx_downstream_res_size(bus, type);
++		if (size) {
++			order = __ffs(size);
++			dev_dbg(&bus->self->dev, "order for %llx is %u\n", (long long) size, order);
++			if ((order >= 20) &&
++					((order -= 20) < ARRAY_SIZE(aligns)) &&
++					(order > max_order)) {
++				max_order = order;
++				dev_dbg(&bus->self->dev, "max_order reset to %d; size %zx\n", max_order, (size_t)size);
++			}
++		}
++	}
++
+ 	min_align = calculate_mem_align(aligns, max_order);
+ 	min_align = max(min_align, window_alignment(bus, b_res->flags));
+ 	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
 -- 
-2.25.1
+2.32.0
 
