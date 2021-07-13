@@ -2,149 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 921183C6995
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 07:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AB663C6A61
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 08:16:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbhGMFEX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 01:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229470AbhGMFEX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 13 Jul 2021 01:04:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3BE7260725;
-        Tue, 13 Jul 2021 05:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626152494;
-        bh=pi3/8CoqzjVtefalb1lWMBNyAW91jVNorghWkKWho4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EqaYF2N5sMlq0M0fk5mUicFGrE6aNAmXHAc2fMoL2DSv0gKGJ2/60bUYhr+1OQX8J
-         8jsjHtpmgjqkCNQ0K59/TPvzZI+TjecAjGMpek0JQPn35c5Lo6z9N9CFzWxdasDR8U
-         207WXhjs27NbxS7Z8XNNQUjJZuoto1O3YZNMDo+/lObOZ1LccEt/vmK4N+Ng7xMawH
-         vf+Vz+Ybr8U211B6xEfeH71tSFQi5x0T+olygk3gNRRf/2HESt2q/mX/8yEfL8XSpT
-         q2tvic72ShedZz/IOiSP/DHwFN/Z4ieixhGNdCJNbsTQJMo2KgeOZrS4U4OICgLquT
-         2fbdSdrAsDzKw==
-Date:   Tue, 13 Jul 2021 08:01:30 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Nitesh Lal <nilal@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
-        frederic@kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
-        Stefan Assmann <sassmann@redhat.com>,
-        Tomas Henzl <thenzl@redhat.com>, kashyap.desai@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
-        dick.kennedy@broadcom.com, Ken Cox <jkc@redhat.com>,
-        faisal.latif@intel.com, shiraz.saleem@intel.com, tariqt@nvidia.com,
-        Alaa Hleihel <ahleihel@redhat.com>,
-        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
-        saeedm@nvidia.com, benve@cisco.com, govind@gmx.com,
-        jassisinghbrar@gmail.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
-        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
-        Al Stone <ahs3@redhat.com>
-Subject: Re: [PATCH v2 00/14] genirq: Cleanup the usage of
- irq_set_affinity_hint
-Message-ID: <YO0eKv2GJcADQTHH@unreal>
-References: <20210629152746.2953364-1-nitesh@redhat.com>
- <CAFki+LnUGiEE-7Uf-x8-TQZYZ+3Migrr=81gGLYszxaK-6A9WQ@mail.gmail.com>
- <YOrWqPYPkZp6nRLS@unreal>
- <CAFki+L=FYOTQ1+-MHWmTuA6ZxTUcZA9t41HRL2URYgv03oFbDg@mail.gmail.com>
+        id S233453AbhGMGT3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 02:19:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231922AbhGMGT3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 02:19:29 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EC9C0613DD
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 23:16:39 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3Bid-00046w-2t; Tue, 13 Jul 2021 08:16:35 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3Bib-0006NK-KT; Tue, 13 Jul 2021 08:16:33 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3Bib-0000lC-JM; Tue, 13 Jul 2021 08:16:33 +0200
+Date:   Tue, 13 Jul 2021 08:16:30 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        kernel@pengutronix.de, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: endpoint: Make struct pci_epf_driver::remove return
+ void
+Message-ID: <20210713061630.e3krhew2wumw4b7r@pengutronix.de>
+References: <20210223090757.57604-1-u.kleine-koenig@pengutronix.de>
+ <20210712205149.GA1675719@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="os7n47pn6x7hle2u"
 Content-Disposition: inline
-In-Reply-To: <CAFki+L=FYOTQ1+-MHWmTuA6ZxTUcZA9t41HRL2URYgv03oFbDg@mail.gmail.com>
+In-Reply-To: <20210712205149.GA1675719@bjorn-Precision-5520>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 05:27:05PM -0400, Nitesh Lal wrote:
-> Hi Leon,
-> 
-> On Sun, Jul 11, 2021 at 7:32 AM Leon Romanovsky <leonro@nvidia.com> wrote:
-> >
-> > On Thu, Jul 08, 2021 at 03:24:20PM -0400, Nitesh Lal wrote:
-> > > On Tue, Jun 29, 2021 at 11:28 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >
-> > <...>
-> >
-> > > >
-> > > >  drivers/infiniband/hw/i40iw/i40iw_main.c      |  4 +-
-> > > >  drivers/mailbox/bcm-flexrm-mailbox.c          |  4 +-
-> > > >  drivers/net/ethernet/cisco/enic/enic_main.c   |  8 +--
-> > > >  drivers/net/ethernet/emulex/benet/be_main.c   |  4 +-
-> > > >  drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  4 +-
-> > > >  drivers/net/ethernet/intel/i40e/i40e_main.c   |  8 +--
-> > > >  drivers/net/ethernet/intel/iavf/iavf_main.c   |  8 +--
-> > > >  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++--
-> > > >  drivers/net/ethernet/mellanox/mlx4/eq.c       |  8 ++-
-> > > >  .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  6 +--
-> > > >  drivers/scsi/lpfc/lpfc_init.c                 |  4 +-
-> > > >  drivers/scsi/megaraid/megaraid_sas_base.c     | 27 +++++-----
-> > > >  drivers/scsi/mpt3sas/mpt3sas_base.c           | 21 ++++----
-> > > >  include/linux/interrupt.h                     | 53 ++++++++++++++++++-
-> > > >  kernel/irq/manage.c                           |  8 +--
-> > > >  15 files changed, 113 insertions(+), 64 deletions(-)
-> > > >
-> > > > --
-> > > >
-> > > >
-> > >
-> > > Gentle ping.
-> > > Any comments or suggestions on any of the patches included in this series?
-> >
-> > Please wait for -rc1, rebase and resend.
-> > At least i40iw was deleted during merge window.
-> >
-> 
-> In -rc1 some non-trivial mlx5 changes also went in.  I was going through
-> these changes and it seems after your patch
-> 
-> e4e3f24b822f: ("net/mlx5: Provide cpumask at EQ creation phase")
-> 
-> we do want to control the affinity for the mlx5 interrupts from the driver.
-> Is that correct? 
 
-We would like to create devices with correct affinity from the
-beginning. For this, we will introduce extension to devlink to control
-affinity that will be used prior initialization sequence.
+--os7n47pn6x7hle2u
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently, netdev users who don't want irqbalance are digging into
-their procfs, reconfigure affinity on already existing devices and
-hope for the best. 
+Hello Bjorn,
 
-This is even more cumbersome for the SIOV use case, where every physical
-NIC PCI device will/can create thousands of lightweights netdevs that will
-be forwarded to the containers later. These containers are limited to known
-CPU cores, so no reason do not limit netdev device too.
+On Mon, Jul 12, 2021 at 03:51:49PM -0500, Bjorn Helgaas wrote:
+> On Tue, Feb 23, 2021 at 10:07:57AM +0100, Uwe Kleine-K=F6nig wrote:
+> > The driver core ignores the return value of pci_epf_device_remove()
+> > (because there is only little it can do when a device disappears) and
+> > there are no pci_epf_drivers with a remove callback.
+> >=20
+> > So make it impossible for future drivers to return an unused error code
+> > by changing the remove prototype to return void.
+> >=20
+> > The real motivation for this change is the quest to make struct
+> > bus_type::remove return void, too.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Can you just include this with the rest of your series that depends on
+> it, like you did for the s390 patches, so they're all together?
 
-The same goes for other sub-functions of that PCI device, like RDMA,
-vdpa e.t.c.
-
-> This would mean that we should use irq_set_affinity_and_hint() instead
-> of irq_update_affinity_hint().
-
-I think so.
+Yeah sure, will resend the complete series later today. I hesitated to
+include the pci patch as I didn't know your plans for it and didn't want
+to create a mess by interfering with your workflow.
 
 Thanks
+Uwe
 
-> 
-> -- 
-> Thanks
-> Nitesh
-> 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--os7n47pn6x7hle2u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDtL7sACgkQwfwUeK3K
+7AnOcQf/TScc2DQuPQp71PJVWshMNDHN61FzDQj1bbJ/UeXaFmLHOlT7As68t7+y
+wg+TRjPYRMvTlEmTD8slN526pUFtWneCgjrSXQ5L9AFRyLJr/dchKJTqHA0m0jxF
+6tiBIbG0wQ+DHq8JsoGtZU468kvhl/+4j3rB9Aq5BReN4mLseswQD7MO1X/6vqVM
+CN3nuMAIqkBCXnCk/sAYYUuPZ5pYk74YpHC3AkrmEQVopNQWCVmUQG2SpJeyYDiv
+st7FDmR9p9XBST/XfzxMplBHYxF9BsGpmYuh2JuzG8uqNrmfTiOQRJnnlwW35lxI
+SxDB13coS1vlL+xk6SD1XcRE+lwyQQ==
+=5bzd
+-----END PGP SIGNATURE-----
+
+--os7n47pn6x7hle2u--
