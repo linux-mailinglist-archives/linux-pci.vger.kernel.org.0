@@ -2,144 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA5523C6FC4
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 13:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D68B3C70B7
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 14:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235848AbhGMLfW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 07:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235875AbhGMLfV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 07:35:21 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE252C0613EE;
-        Tue, 13 Jul 2021 04:32:31 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id w13so13399071wmc.3;
-        Tue, 13 Jul 2021 04:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VxdNMTgC7RTJI/82gSAHHxnwIsTXy+NvVdODaOq4tmU=;
-        b=jbrgQaNivHHWkIhys33LFvPyuiYLHxbq70sxVdJgim8ewGwhZtO9FUjdIMTe+omB3s
-         DAxzDDGIqKo0OQ4mC/0OzgOEqLh4pCc3mhTZQ70dyfup1z3oHLB+wvyqZZKTjynnOwUX
-         uNjy5YwuC3Qhe1z6V0DKxCgWr+pJv5vjLLaboqX9Fl1VGs2cX27ipJqIQ0UluoCiMNDm
-         h9sIW5o7je9YRHhbDIcAQoh+Jid5V0oKBpKlgTph0zoL6xzX/+RkXYwPO4s6+XbUXbck
-         alJLAHgki3I65JeyuI0yJ+rbagfm1mc6OZPVt5QCANqVd+IEQxTCzzsFjJdbUnbAjh+G
-         K90w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VxdNMTgC7RTJI/82gSAHHxnwIsTXy+NvVdODaOq4tmU=;
-        b=b/FW6vu3GX/ddrgwq+B5IH8QTfVkdbTBxTEWNuije76ukAMfckn4amDvviuR7OKiQ6
-         e9g5EavDsqeKB1vCuyryLJpjQG2MjTdWuALke3ENMRZ8Ev9Jw7H3uQ4k/vw5qWTK6AcX
-         R1ea90A7CxXFFjbA0QPQ0z4O/eaigAnobipDik3wHuu9LF4CdyI5szBC5A9lswHqSrOb
-         tO8+ZTnGORC3UIk8Tize525zWDSg/o9giZXjUkYQ5fRF68JF6Mj5/NMfxBkWaWDilMuk
-         Q9e4emvHN5R6P+fBsLUsW1Xnur8Va5fvxAmQAQHSQXLObeOD1knfzsRLylTAibUjbRB9
-         wt0w==
-X-Gm-Message-State: AOAM5321p1t1pTJLzI3hzuCbQ5vTl5wdg6pNJHI9sJ3mac11QJwo+srn
-        rWDpBuhGJC8o8n0p69zNVA87Fyt9DnWyUQ==
-X-Google-Smtp-Source: ABdhPJxiGPc++BzEpZlBMmV+XlyZZlbgyEGXgaNiGp0hI/Tv7hPRxDVW7mz937Gx9gR/Y6p1sdMtyg==
-X-Received: by 2002:a7b:c042:: with SMTP id u2mr4495286wmc.86.1626175950253;
-        Tue, 13 Jul 2021 04:32:30 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.127.100])
-        by smtp.gmail.com with ESMTPSA id r16sm2056532wmg.11.2021.07.13.04.32.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jul 2021 04:32:29 -0700 (PDT)
-To:     Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        lorenzo.pieralisi@arm.com, robh+dt@kernel.org, bhelgaas@google.com
-Cc:     ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
-        yong.wu@mediatek.com, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210611060902.12418-1-chuanjia.liu@mediatek.com>
- <20210611060902.12418-3-chuanjia.liu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v10 2/4] PCI: mediatek: Add new method to get shared
- pcie-cfg base address and parse node
-Message-ID: <e462d9f0-2fa3-6106-f060-9753dc604b9f@gmail.com>
-Date:   Tue, 13 Jul 2021 13:32:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+        id S236178AbhGMMxJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 08:53:09 -0400
+Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:44434
+        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236135AbhGMMxI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 08:53:08 -0400
+Received: from localhost (1.general.khfeng.us.vpn [10.172.68.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id CCB6840613;
+        Tue, 13 Jul 2021 12:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1626180617;
+        bh=VKTLYaxwHaurvjQpqIVYOmBUcfv3FuH+zrzCHFmaYmE=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version;
+        b=uzd5MPvTl0ewwx6lTqNurVMdn+Y98K63CQoEcTf5B5Hvheg2M/IQ1kFuMRngHGNVT
+         ABDgPZi3KmzlSGno2C/xMFqogj/5zqh5y1jyh+yeuvB0D5ryCxSC+9bE+HOHLsPU0l
+         /gtLaG4s/0WbeJQJnnKbdYsE4gKNjDp228D1xai2PS9n+X4YOS4AzIEulR0ZXbi+FL
+         6nAfwx6H9ueHStP1k3MaKW0H09OrKNsYZfWfs8RJnM4XYRsQtOD5CblaCy/IXscPRq
+         xTXxnulJiCD7fPL/plVm4BL2i99FqrZo0CP5TiqzehRMYzobAK2XJGE/6Pq2vxIUCA
+         ajg598zGCvMOA==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] PCI: Reinstate "PCI: Coalesce host bridge contiguous apertures"
+Date:   Tue, 13 Jul 2021 20:50:07 +0800
+Message-Id: <20210713125007.1260304-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
+References: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20210611060902.12418-3-chuanjia.liu@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Built-in graphics on HP EliteDesk 805 G6 doesn't work because graphics
+can't get the BAR it needs:
+  pci_bus 0000:00: root bus resource [mem 0x10020200000-0x100303fffff window]
+  pci_bus 0000:00: root bus resource [mem 0x10030400000-0x100401fffff window]
 
+  pci 0000:00:08.1:   bridge window [mem 0xd2000000-0xd23fffff]
+  pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100401fffff 64bit pref]
+  pci 0000:00:08.1: can't claim BAR 15 [mem 0x10030000000-0x100401fffff 64bit pref]: no compatible bridge window
+  pci 0000:00:08.1: [mem 0x10030000000-0x100401fffff 64bit pref] clipped to [mem 0x10030000000-0x100303fffff 64bit pref]
+  pci 0000:00:08.1:   bridge window [mem 0x10030000000-0x100303fffff 64bit pref]
+  pci 0000:07:00.0: can't claim BAR 0 [mem 0x10030000000-0x1003fffffff 64bit pref]: no compatible bridge window
+  pci 0000:07:00.0: can't claim BAR 2 [mem 0x10040000000-0x100401fffff 64bit pref]: no compatible bridge window
 
-On 11/06/2021 08:09, Chuanjia Liu wrote:
-> For the new dts format, add a new method to get
-> shared pcie-cfg base address and parse node.
-> 
-> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+However, the root bus has two contiguous apertures that can contain the
+child resource requested.
 
-You missed the
-Reviewed-by: Rob Herring <robh@kernel.org>
-given in v8. Or were there any substantial changes in this patch?
+Coalesce contiguous apertures so we can allocate from the entire contiguous
+region.
 
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 52 +++++++++++++++++++-------
->  1 file changed, 39 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 62a042e75d9a..950f577a2f44 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -14,6 +14,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/msi.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> @@ -23,6 +24,7 @@
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
->  #include <linux/reset.h>
->  
->  #include "../pci.h"
-> @@ -207,6 +209,7 @@ struct mtk_pcie_port {
->   * struct mtk_pcie - PCIe host information
->   * @dev: pointer to PCIe device
->   * @base: IO mapped register base
-> + * @cfg: IO mapped register map for PCIe config
->   * @free_ck: free-run reference clock
->   * @mem: non-prefetchable memory resource
->   * @ports: pointer to PCIe port information
-> @@ -215,6 +218,7 @@ struct mtk_pcie_port {
->  struct mtk_pcie {
->  	struct device *dev;
->  	void __iomem *base;
-> +	struct regmap *cfg;
->  	struct clk *free_ck;
->  
->  	struct list_head ports;
-> @@ -650,7 +654,11 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
->  		return err;
->  	}
->  
-> -	port->irq = platform_get_irq(pdev, port->slot);
-> +	if (of_find_property(dev->of_node, "interrupt-names", NULL))
-> +		port->irq = platform_get_irq_byname(pdev, "pcie_irq");
-> +	else
-> +		port->irq = platform_get_irq(pdev, port->slot);
-> +
+This is the second take of commit 65db04053efe ("PCI: Coalesce host
+bridge contiguous apertures"). The original approach sorts the apertures
+by address, but that makes NVMe stop working on QEMU ppc:sam460ex:
+  PCI host bridge to bus 0002:00
+  pci_bus 0002:00: root bus resource [io  0x0000-0xffff]
+  pci_bus 0002:00: root bus resource [mem 0xd80000000-0xdffffffff] (bus address [0x80000000-0xffffffff])
+  pci_bus 0002:00: root bus resource [mem 0xc0ee00000-0xc0eefffff] (bus address [0x00000000-0x000fffff])
 
-Do I understand that this is used for backwards compatibility with older DTS? I
-just wonder why we don't need to mandate
-interrupt-names = "pcie_irq"
-in the binding description.
+After the offending commit:
+  PCI host bridge to bus 0002:00
+  pci_bus 0002:00: root bus resource [io  0x0000-0xffff]
+  pci_bus 0002:00: root bus resource [mem 0xc0ee00000-0xc0eefffff] (bus address [0x00000000-0x000fffff])
+  pci_bus 0002:00: root bus resource [mem 0xd80000000-0xdffffffff] (bus address [0x80000000-0xffffffff])
 
-Regards,
-Matthias
+Since the apertures on HP EliteDesk 805 G6 are already in ascending
+order, doing a precautious sorting is not necessary.
+
+Remove the sorting part to avoid the regression on ppc:sam460ex.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=212013
+Cc: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v2:
+ - Bring back the original commit message.
+
+ drivers/pci/probe.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 79177ac37880..5de157600466 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -877,11 +877,11 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
+ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ {
+ 	struct device *parent = bridge->dev.parent;
+-	struct resource_entry *window, *n;
++	struct resource_entry *window, *next, *n;
+ 	struct pci_bus *bus, *b;
+-	resource_size_t offset;
++	resource_size_t offset, next_offset;
+ 	LIST_HEAD(resources);
+-	struct resource *res;
++	struct resource *res, *next_res;
+ 	char addr[64], *fmt;
+ 	const char *name;
+ 	int err;
+@@ -961,11 +961,34 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+ 		dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
+ 
++	/* Coalesce contiguous windows */
++	resource_list_for_each_entry_safe(window, n, &resources) {
++		if (list_is_last(&window->node, &resources))
++			break;
++
++		next = list_next_entry(window, node);
++		offset = window->offset;
++		res = window->res;
++		next_offset = next->offset;
++		next_res = next->res;
++
++		if (res->flags != next_res->flags || offset != next_offset)
++			continue;
++
++		if (res->end + 1 == next_res->start) {
++			next_res->start = res->start;
++			res->flags = res->start = res->end = 0;
++		}
++	}
++
+ 	/* Add initial resources to the bus */
+ 	resource_list_for_each_entry_safe(window, n, &resources) {
+-		list_move_tail(&window->node, &bridge->windows);
+ 		offset = window->offset;
+ 		res = window->res;
++		if (!res->end)
++			continue;
++
++		list_move_tail(&window->node, &bridge->windows);
+ 
+ 		if (res->flags & IORESOURCE_BUS)
+ 			pci_bus_insert_busn_res(bus, bus->number, res->end);
+-- 
+2.31.1
+
