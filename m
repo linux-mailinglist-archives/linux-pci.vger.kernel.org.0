@@ -2,107 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6EE3C68B1
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 04:55:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 921183C6995
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 07:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233772AbhGMC6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 22:58:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234085AbhGMC6G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 22:58:06 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11A42C0613E9
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 19:55:17 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id h1-20020a17090a3d01b0290172d33bb8bcso544181pjc.0
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 19:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NV7/yF1O74iLBNvfkEg1IJxU/cGFxdoh71Qlx0oT7BE=;
-        b=X1tpyci5/JZOAmQTWbvBRYGBKEjFQa32Z1GqbGitkfjZeFm876Exs6I6EzAKr71u3w
-         7A9W7fEISdzeCnFUA7EXPX2f2ZINeOySZDLRvaKm+msueXuac1pcHE0yCEYkHdn/Q+u9
-         XPQOuuCK/mXYFAMLbRThjEglWjjjn/veXffM1hAeQ7Myg4JAp8DQ8yGuAFvUe/8zRnwC
-         cgWFn9DCscrhh6W9gvvTsOsqomEWb9cp5z2xGkleXXCdCcmjpGUJbr0x1Hcs2bLscaEu
-         rkfTxxtxIen4is6h0zUIsi07BI76kwtYf5+slg8lhXo3r8Ddal7PC18bVHKezcHFkf0G
-         HIwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NV7/yF1O74iLBNvfkEg1IJxU/cGFxdoh71Qlx0oT7BE=;
-        b=H2VjSE9ICJYHwEf77+RaOI2OTQDpnXP8mHD/X8AQniAqLVeQsQWuBkowYRE4sj84p3
-         KC3YVdoGKD2oNXUAp9GHTMMqeyBs7ijStypSpeCsHffN/e759fV3QhvlHsmTJxHyH5t2
-         jCXic2bVywnSuADL4jJYdlNpFeD0CSwTn3GSE3C4L1jnaoDcfDCw8lZYjsM5qq751Upz
-         o9lmP3Y5Nk5nErQE6n+YwCd+kPsVoxiUryjoqcrn7UyQHpm7Gr4A4JqK9GFSIpfKNwTO
-         xstGQxS4crLksrmrjggrUbAaFpNpcceJh5ChrbiM0t17W0YTqYJwshemvPlTvYOYCqTo
-         wjJQ==
-X-Gm-Message-State: AOAM531uMeFx0cg2j6CWUIrDVv0pGBQGx+DDx5z+vL9HUByl8MAn5seC
-        o52i7pDrxpu6r/UfrtJaJdQkJA==
-X-Google-Smtp-Source: ABdhPJzmqN/Pby+dpGrUe+mBl1BHg3jXyAwyBRe/KcDBUjVoqsrBBm1K9pblrBcWEzCwkNNuMcLFtQ==
-X-Received: by 2002:a17:902:d213:b029:127:9520:7649 with SMTP id t19-20020a170902d213b029012795207649mr1741094ply.10.1626144916660;
-        Mon, 12 Jul 2021 19:55:16 -0700 (PDT)
-Received: from localhost.localdomain ([45.135.186.134])
-        by smtp.gmail.com with ESMTPSA id r14sm19303344pgm.28.2021.07.12.19.55.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Jul 2021 19:55:16 -0700 (PDT)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        jean-philippe <jean-philippe@linaro.org>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v5 3/3] PCI: Set dma-can-stall for HiSilicon chips
-Date:   Tue, 13 Jul 2021 10:54:36 +0800
-Message-Id: <1626144876-11352-4-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1626144876-11352-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1626144876-11352-1-git-send-email-zhangfei.gao@linaro.org>
+        id S229913AbhGMFEX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 01:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229470AbhGMFEX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Jul 2021 01:04:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3BE7260725;
+        Tue, 13 Jul 2021 05:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626152494;
+        bh=pi3/8CoqzjVtefalb1lWMBNyAW91jVNorghWkKWho4Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EqaYF2N5sMlq0M0fk5mUicFGrE6aNAmXHAc2fMoL2DSv0gKGJ2/60bUYhr+1OQX8J
+         8jsjHtpmgjqkCNQ0K59/TPvzZI+TjecAjGMpek0JQPn35c5Lo6z9N9CFzWxdasDR8U
+         207WXhjs27NbxS7Z8XNNQUjJZuoto1O3YZNMDo+/lObOZ1LccEt/vmK4N+Ng7xMawH
+         vf+Vz+Ybr8U211B6xEfeH71tSFQi5x0T+olygk3gNRRf/2HESt2q/mX/8yEfL8XSpT
+         q2tvic72ShedZz/IOiSP/DHwFN/Z4ieixhGNdCJNbsTQJMo2KgeOZrS4U4OICgLquT
+         2fbdSdrAsDzKw==
+Date:   Tue, 13 Jul 2021 08:01:30 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Nitesh Lal <nilal@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
+        frederic@kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
+        Stefan Assmann <sassmann@redhat.com>,
+        Tomas Henzl <thenzl@redhat.com>, kashyap.desai@broadcom.com,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, Ken Cox <jkc@redhat.com>,
+        faisal.latif@intel.com, shiraz.saleem@intel.com, tariqt@nvidia.com,
+        Alaa Hleihel <ahleihel@redhat.com>,
+        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
+        saeedm@nvidia.com, benve@cisco.com, govind@gmx.com,
+        jassisinghbrar@gmail.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
+        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
+        Al Stone <ahs3@redhat.com>
+Subject: Re: [PATCH v2 00/14] genirq: Cleanup the usage of
+ irq_set_affinity_hint
+Message-ID: <YO0eKv2GJcADQTHH@unreal>
+References: <20210629152746.2953364-1-nitesh@redhat.com>
+ <CAFki+LnUGiEE-7Uf-x8-TQZYZ+3Migrr=81gGLYszxaK-6A9WQ@mail.gmail.com>
+ <YOrWqPYPkZp6nRLS@unreal>
+ <CAFki+L=FYOTQ1+-MHWmTuA6ZxTUcZA9t41HRL2URYgv03oFbDg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFki+L=FYOTQ1+-MHWmTuA6ZxTUcZA9t41HRL2URYgv03oFbDg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
-actually on the AMBA bus. These fake PCI devices can support SVA via
-SMMU stall feature, by setting dma-can-stall for ACPI platforms.
+On Mon, Jul 12, 2021 at 05:27:05PM -0400, Nitesh Lal wrote:
+> Hi Leon,
+> 
+> On Sun, Jul 11, 2021 at 7:32 AM Leon Romanovsky <leonro@nvidia.com> wrote:
+> >
+> > On Thu, Jul 08, 2021 at 03:24:20PM -0400, Nitesh Lal wrote:
+> > > On Tue, Jun 29, 2021 at 11:28 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >
+> > <...>
+> >
+> > > >
+> > > >  drivers/infiniband/hw/i40iw/i40iw_main.c      |  4 +-
+> > > >  drivers/mailbox/bcm-flexrm-mailbox.c          |  4 +-
+> > > >  drivers/net/ethernet/cisco/enic/enic_main.c   |  8 +--
+> > > >  drivers/net/ethernet/emulex/benet/be_main.c   |  4 +-
+> > > >  drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  4 +-
+> > > >  drivers/net/ethernet/intel/i40e/i40e_main.c   |  8 +--
+> > > >  drivers/net/ethernet/intel/iavf/iavf_main.c   |  8 +--
+> > > >  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++--
+> > > >  drivers/net/ethernet/mellanox/mlx4/eq.c       |  8 ++-
+> > > >  .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  6 +--
+> > > >  drivers/scsi/lpfc/lpfc_init.c                 |  4 +-
+> > > >  drivers/scsi/megaraid/megaraid_sas_base.c     | 27 +++++-----
+> > > >  drivers/scsi/mpt3sas/mpt3sas_base.c           | 21 ++++----
+> > > >  include/linux/interrupt.h                     | 53 ++++++++++++++++++-
+> > > >  kernel/irq/manage.c                           |  8 +--
+> > > >  15 files changed, 113 insertions(+), 64 deletions(-)
+> > > >
+> > > > --
+> > > >
+> > > >
+> > >
+> > > Gentle ping.
+> > > Any comments or suggestions on any of the patches included in this series?
+> >
+> > Please wait for -rc1, rebase and resend.
+> > At least i40iw was deleted during merge window.
+> >
+> 
+> In -rc1 some non-trivial mlx5 changes also went in.  I was going through
+> these changes and it seems after your patch
+> 
+> e4e3f24b822f: ("net/mlx5: Provide cpumask at EQ creation phase")
+> 
+> we do want to control the affinity for the mlx5 interrupts from the driver.
+> Is that correct? 
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- drivers/pci/quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+We would like to create devices with correct affinity from the
+beginning. For this, we will introduce extension to devlink to control
+affinity that will be used prior initialization sequence.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 5d46ac6..03b0f98 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1823,10 +1823,23 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI
- 
- static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
- {
-+	struct property_entry properties[] = {
-+		PROPERTY_ENTRY_BOOL("dma-can-stall"),
-+		{},
-+	};
-+
- 	if (pdev->revision != 0x21 && pdev->revision != 0x30)
- 		return;
- 
- 	pdev->pasid_no_tlp = 1;
-+
-+	/*
-+	 * Set the dma-can-stall property on ACPI platforms. Device tree
-+	 * can set it directly.
-+	 */
-+	if (!pdev->dev.of_node &&
-+	    device_add_properties(&pdev->dev, properties))
-+		pci_warn(pdev, "could not add stall property");
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
--- 
-2.7.4
+Currently, netdev users who don't want irqbalance are digging into
+their procfs, reconfigure affinity on already existing devices and
+hope for the best. 
 
+This is even more cumbersome for the SIOV use case, where every physical
+NIC PCI device will/can create thousands of lightweights netdevs that will
+be forwarded to the containers later. These containers are limited to known
+CPU cores, so no reason do not limit netdev device too.
+
+The same goes for other sub-functions of that PCI device, like RDMA,
+vdpa e.t.c.
+
+> This would mean that we should use irq_set_affinity_and_hint() instead
+> of irq_update_affinity_hint().
+
+I think so.
+
+Thanks
+
+> 
+> -- 
+> Thanks
+> Nitesh
+> 
