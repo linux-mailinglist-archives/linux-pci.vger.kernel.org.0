@@ -2,140 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21A813C6E5E
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 12:24:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCFFF3C6F83
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 13:18:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235297AbhGMK1a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 06:27:30 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:40880 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235143AbhGMK1a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 06:27:30 -0400
-Received: by mail-wm1-f52.google.com with SMTP id h18-20020a05600c3512b029020e4ceb9588so1230548wmq.5
-        for <linux-pci@vger.kernel.org>; Tue, 13 Jul 2021 03:24:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M6EALgS37OQWvu8bXWN8/n6HJahdTZizhntFgVrPkfs=;
-        b=ImxbbldBlIQRitbI/RTPUkxwLCmuiSsBithwESXlhACKgpePryZrl5sSu3/k7Nimt+
-         cA/Tj3pIr9tOpKohtJKn2mGqwrmKQ1FoKQXIhmXbfyxGwxbblzkG7+f1yyapkRlfLAjZ
-         TS1FC5Gwwyt6v0Gr1vKmKZYCO0n+ZwGONzKO+ANM9OUbwf5F4sALH5GaEi9kPNhbp7l+
-         qlprHSmYNOBa+yAP2E/4Ox20PUwrlZ3jEg9f0b236UqvsOyaDRwS86MlrGd4Xoipcf5e
-         bzn/2U7lUFGZ8mkwiddrxCUtuvr+mtoMUCRbKOp6RuJPzAQkylyo4jzkZBXz9ZnZl6Bh
-         2mKA==
-X-Gm-Message-State: AOAM531R1GLCzHOPgN5FuBbqzKln/WI8SymaEhMHfsYgTs9cYwKbZIWS
-        7dnSoKIeUh4dTvfNnaeD0Bw=
-X-Google-Smtp-Source: ABdhPJwMkCYbwjlCFs4c9HRQHl1h+NEeec1NL6AJxd9u+VqwvmNVlRjvAv3u84hFVAXlq2PK7qI1cw==
-X-Received: by 2002:a7b:cc15:: with SMTP id f21mr19814233wmh.5.1626171878810;
-        Tue, 13 Jul 2021 03:24:38 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id h13sm17104423wrs.68.2021.07.13.03.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 03:24:38 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Refactor pci_ioremap_bar() and pci_ioremap_wc_bar()
-Date:   Tue, 13 Jul 2021 10:24:36 +0000
-Message-Id: <20210713102436.304693-1-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
+        id S235968AbhGMLVA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 07:21:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235390AbhGMLU6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Jul 2021 07:20:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 344AA61178;
+        Tue, 13 Jul 2021 11:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626175088;
+        bh=G3DpPuSACBy7CTePMGBCkcBIAOUG+KzTOSbhqPO32E0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ESQW+vzQ0c21D41buSWvccNUGNN5X8LojV5B2NWlcjYl2b6wJFnmkm9KDpYL3TNL4
+         rrN9gvVBsEag7eI0F+SoyUW+J0OXR/jx+8pQ+G3L2wf0MKChDFnsWYxxs9UBsbPGb3
+         aBVcjc4QeCYJH34IodncdvAo5y3Of1z7bEwT8A1aVLwyz+qdfP6FuEeiSnp3LCwFXm
+         cFq3kW0T54mQ9bcWKq1SWiMHvSj/V/egkSpQ7K0Vqggii237AqGFUdSwVvv5vFtfNp
+         oUqISdXQa/Du+5om3X1ugLJoi8bcUNt+w74aGT3o97FhKjPGPWJ0d9lgRc7fXGeDYf
+         468P+XCrKyARQ==
+Received: by mail.kernel.org with local (Exim 4.94.2)
+        (envelope-from <mchehab@kernel.org>)
+        id 1m3GQK-006b3Y-Rv; Tue, 13 Jul 2021 13:18:00 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH v4 0/5] convert designware-pcie.txt and kirin-pcie.txt to yaml
+Date:   Tue, 13 Jul 2021 13:17:50 +0200
+Message-Id: <cover.1626174242.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently, functions pci_ioremap_bar() and pci_ioremap_wc_bar() share
-similar implementation details as both functions were almost identical
-in the past, especially when the latter was initially introduced in the
-commit c43996f4001d ("PCI: Add pci_ioremap_wc_bar()") as somewhat exact
-copy of the function pci_ioremap_bar().
+Hi Rob,
 
-However, function pci_ioremap_bar() received several updates that were
-never introduced to the function pci_ioremap_wc_bar().
+This series (in particular, the last patch) depends on this series:
+	https://lore.kernel.org/lkml/cover.1626157454.git.mchehab+huawei@kernel.org/
 
-Thus, to align implementation of both functions and reduce the need to
-duplicate code between them, introduce a new internal function called
-__pci_ioremap_resource() as a helper with a shared codebase intended to
-be called from functions pci_ioremap_bar() and pci_ioremap_wc_bar().
+It convert designware-pcie.txt and kirin-pcie.txt to DT schema.
 
-The  __pci_ioremap_resource() function will therefore include a check
-for the IORESOURCE_UNSET flag that has previously been added to the
-function pci_ioremap_bar() in the commit 646c0282df04 ("PCI: Fail
-pci_ioremap_bar() on unassigned resources") and otherwise has been
-missing from function pci_ioremap_wc_bar().
+This series uses a different strategy than v4: after doing lots of tests and
+trying to tweak the syntax, I opted to create two files instead of one.
 
-Additionally, function __pci_ioremap_resource() will retire the usage of
-the WARN_ON() macro and replace it with pci_err() to show information
-such as the driver name, the BAR number and resource details in case of
-a failure, instead of printing a complete backtrace. The WARN_ON() has
-already been replaced with pci_warn() in the commit 1f7bf3bfb5d6 ("PCI:
-Show driver, BAR#, and resource on pci_ioremap_bar() failure") which
-sadly didn't include an update to the function pci_ioremap_wc_bar() at
-that time.
+The first one (snps,dw-pcie.yaml) uses the pci-bus.yaml schema.
+The second one (add snps,dw-pcie-ep.yaml) uses the pci-ep.yaml schema.
 
-Finally, a direct use of functions ioremap() and ioremap_wc() in the
-function __pci_ioremap_resource() will be replaced with calls to the
-pci_iomap_range() and pci_iomap_wc_range() functions respectively.
+Without splitting it into two, I was unable to find a way that would work,
+due to the need of using:
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/pci.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+	AllOf:
+	   - $ref: /schemas/pci/pci-bus.yaml#
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e3bb0d073352..4bae55f0700b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -206,7 +206,8 @@ int pci_status_get_and_clear_errors(struct pci_dev *pdev)
- EXPORT_SYMBOL_GPL(pci_status_get_and_clear_errors);
- 
- #ifdef CONFIG_HAS_IOMEM
--void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
-+static void __iomem *__pci_ioremap_resource(struct pci_dev *pdev, int bar,
-+					    bool write_combine)
- {
- 	struct resource *res = &pdev->resource[bar];
- 
-@@ -214,24 +215,25 @@ void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
- 	 * Make sure the BAR is actually a memory resource, not an IO resource
- 	 */
- 	if (res->flags & IORESOURCE_UNSET || !(res->flags & IORESOURCE_MEM)) {
--		pci_warn(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
-+		pci_err(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
- 		return NULL;
- 	}
--	return ioremap(res->start, resource_size(res));
-+
-+	if (write_combine)
-+		return pci_iomap_wc_range(pdev, bar, 0, 0);
-+
-+	return pci_iomap_range(pdev, bar, 0, 0);
-+}
-+
-+void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
-+{
-+	return __pci_ioremap_resource(pdev, bar, false);
- }
- EXPORT_SYMBOL_GPL(pci_ioremap_bar);
- 
- void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar)
- {
--	/*
--	 * Make sure the BAR is actually a memory resource, not an IO resource
--	 */
--	if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM)) {
--		WARN_ON(1);
--		return NULL;
--	}
--	return ioremap_wc(pci_resource_start(pdev, bar),
--			  pci_resource_len(pdev, bar));
-+	return __pci_ioremap_resource(pdev, bar, true);
- }
- EXPORT_SYMBOL_GPL(pci_ioremap_wc_bar);
- #endif
+For the non-endpoint part.
+
+In order to make easier to review, I also opted to split the patch into
+4 ones:
+
+patch 1:
+   adds the Designware PCI DT schema;
+patch 2:
+   adds the Designware PCI endpoint DT schema;
+patch 3:
+   changes the existing references to point to the new schemas.
+   On yaml files, it uses the proper $ref to point to the right DT schema;
+patch 4
+   drops the old txt file.
+
+Patch5 is independent: it converts the pcie-kirin.txt to DT schema and
+adds a reference to the newly-converted DWC schema.
+
+It should be noticed that I had to make a few amends at the "reg" field
+on patches 1 and 2, in order to avoid warnings about some properties
+found on some DWC-dependent DT schemas, as some have "addr_space",
+"link", "app" and "elbi".
+
+With this change, it now passes "make dt_binding_check".
+
+Mauro Carvalho Chehab (5):
+  dt-bindings: PCI: add snps,dw-pcie.yaml
+  dt-bindings: PCI: add snps,dw-pcie-ep.yaml
+  dt-bindings: PCI: update references to Designware schema
+  dt-bindings: PCI: remove designware-pcie.txt
+  dt-bindings: PCI: kirin-pcie.txt: Convert it to yaml
+
+ .../bindings/pci/amlogic,meson-pcie.txt       |  4 +-
+ .../bindings/pci/axis,artpec6-pcie.txt        |  2 +-
+ .../bindings/pci/designware-pcie.txt          | 77 ---------------
+ .../bindings/pci/fsl,imx6q-pcie.txt           |  2 +-
+ .../bindings/pci/hisilicon,kirin-pcie.yaml    | 81 ++++++++++++++++
+ .../bindings/pci/hisilicon-histb-pcie.txt     |  2 +-
+ .../devicetree/bindings/pci/kirin-pcie.txt    | 41 --------
+ .../bindings/pci/layerscape-pci.txt           |  2 +-
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  5 +-
+ .../devicetree/bindings/pci/pci-armada8k.txt  |  2 +-
+ .../devicetree/bindings/pci/pcie-al.txt       |  2 +-
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 14 +--
+ .../bindings/pci/samsung,exynos-pcie.yaml     |  4 +-
+ .../bindings/pci/sifive,fu740-pcie.yaml       |  4 +-
+ .../bindings/pci/snps,dw-pcie-ep.yaml         | 90 +++++++++++++++++
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml | 96 +++++++++++++++++++
+ .../pci/socionext,uniphier-pcie-ep.yaml       |  4 +-
+ .../devicetree/bindings/pci/ti-pci.txt        |  4 +-
+ .../devicetree/bindings/pci/uniphier-pcie.txt |  2 +-
+ MAINTAINERS                                   |  5 +-
+ 20 files changed, 297 insertions(+), 146 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/designware-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+
 -- 
-2.32.0
+2.31.1
+
 
