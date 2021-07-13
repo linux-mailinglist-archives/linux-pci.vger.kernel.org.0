@@ -2,196 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC4263C7887
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 23:13:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA2643C788D
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 23:15:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234957AbhGMVQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 17:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbhGMVQ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 17:16:29 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6F0C0613DD
-        for <linux-pci@vger.kernel.org>; Tue, 13 Jul 2021 14:13:39 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id k4so434840wrc.8
-        for <linux-pci@vger.kernel.org>; Tue, 13 Jul 2021 14:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZWgSXwVMZjKjD4eA0vP++QBEI8Mms6KB3JA83NarNJE=;
-        b=RcdGkSoqAK4YEieKfnE4JeS6glpxoo09dhkWwz+nCUx/wkHDnLW5q4FCmYVd9ZF4KG
-         ocZ2RpzQTQIF7WKrzRfsmvoyTDJq5F4ESbQ0QqZU2AU5rC7sbKXrRArtxDgbro84Cd/F
-         Z4/SqPKyVymmXMp4oDvRMgQFiL3pl3ddQJhGheb7TrAFBNxVyZzLn0BXIuNYwQXIjf5d
-         LZjX7bQJ47n1Kn5ttWq5GWj75ri0/dP+NqtblryODbW7VpGEw0oaNvbTOaZBfOLaaLEn
-         c6QtnlTLRKkaYTGq6ybt0E+QRADT85w4lDp/W22rqyd1HbQ1zzOjLLkOSttvUgNM8qct
-         DLcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZWgSXwVMZjKjD4eA0vP++QBEI8Mms6KB3JA83NarNJE=;
-        b=t9F3TZavgr2SCpoBYc50mRh5uu8Mba2vmel4/AO/m54scvE800YZn0gLkqWszyDVCm
-         gG+uPstYE5UZBEX57zBSJCC1aq9MEHtBzUktUjeqfAc1+fR3GXUCXs0rskoKe8uwcKLW
-         uXSO8VbYluWrtrS4WkFRnMoUDxiXmkrFzt1iG/Gpppzbs5DguuA1UX/Nd3AwNfZvdtQ0
-         PhrCwOpJrSXDKm5qlp+SEdFgjbUttYg8mbCAZ3UVWazO5DFmLL9dPt+c65k6FmYwJGaE
-         ah7c+WdrON8c9JTEQxGdtY8BITmUXq+BT2kjk/JeVsMx6wDrz/o8eJ59Jq8KNGKix4+t
-         6Ong==
-X-Gm-Message-State: AOAM532bjR3bfwJ4RmO7H/Vw6oPHm4nt2mhx+SuM16YIuI+L5Kw/xHIp
-        Gh4c/zLtZZNggJqInYP2jckfAq47ksxBWA==
-X-Google-Smtp-Source: ABdhPJyBeLjN5GlJQpOIdiwqBiSMkfH8dAhCAd8baB9qTXrABwAyPObLlpmk8fju+MfBNe+EwAHfeA==
-X-Received: by 2002:adf:ffcf:: with SMTP id x15mr8414963wrs.76.1626210817540;
-        Tue, 13 Jul 2021 14:13:37 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f3f:3d00:3810:5e81:4d98:f8c5? (p200300ea8f3f3d0038105e814d98f8c5.dip0.t-ipconnect.de. [2003:ea:8f3f:3d00:3810:5e81:4d98:f8c5])
-        by smtp.googlemail.com with ESMTPSA id p3sm3340071wmq.17.2021.07.13.14.13.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jul 2021 14:13:36 -0700 (PDT)
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Hannes Reinecke <hare@suse.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20210713202555.GA1771351@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 1/5] PCI/VPD: Refactor pci_vpd_size
-Message-ID: <0fb70529-3b0e-4865-bf6d-460030948019@gmail.com>
-Date:   Tue, 13 Jul 2021 23:13:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S235662AbhGMVS2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 17:18:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24849 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235572AbhGMVS1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 17:18:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626210936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VMJGkrX22NsvQPy5d9/dm13+Xn72U9Eqcs783OTJsIw=;
+        b=CQiUj50UBIAvT4YGO6zW7L/ieNBN1HN5OAISTAAfzkSaLXIOhqnGfMNsZiD0W9jqUayS4i
+        dwHmCfFgpREjnNbdeAA0eBPhGAbBiTRow+YLfOLDuTogImSKv3I2Xh5p8YANZM1DVeAGyT
+        ezbHM6rrI6m/5y+euOefRLXhhWQIxL4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-583-t7gVGBMqPpiCrJUFuxX7Fg-1; Tue, 13 Jul 2021 17:15:34 -0400
+X-MC-Unique: t7gVGBMqPpiCrJUFuxX7Fg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E57FA804145;
+        Tue, 13 Jul 2021 21:15:28 +0000 (UTC)
+Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A9A9A5D9DD;
+        Tue, 13 Jul 2021 21:15:12 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
+        tglx@linutronix.de, jesse.brandeburg@intel.com,
+        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
+        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
+        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
+        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
+        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, nilal@redhat.com,
+        tatyana.e.nikolova@intel.com, mustafa.ismail@intel.com,
+        ahs3@redhat.com, leonro@nvidia.com, chandrakanth.patil@broadcom.com
+Subject: [PATCH v3 00/14] genirq: Cleanup the usage of irq_set_affinity_hint
+Date:   Tue, 13 Jul 2021 17:14:48 -0400
+Message-Id: <20210713211502.464259-1-nitesh@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20210713202555.GA1771351@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13.07.2021 22:25, Bjorn Helgaas wrote:
-> [+cc Hannes]
-> 
-> On Thu, May 13, 2021 at 10:58:40PM +0200, Heiner Kallweit wrote:
->> The only Short Resource Data Type tag is the end tag. This allows to
->> remove the generic SRDT tag handling and the code be significantly
->> simplified.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/pci/vpd.c | 46 ++++++++++++----------------------------------
->>  1 file changed, 12 insertions(+), 34 deletions(-)
->>
->> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
->> index 26bf7c877..ecdce170f 100644
->> --- a/drivers/pci/vpd.c
->> +++ b/drivers/pci/vpd.c
->> @@ -73,50 +73,28 @@ EXPORT_SYMBOL(pci_write_vpd);
->>  static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
->>  {
->>  	size_t off = 0;
->> -	unsigned char header[1+2];	/* 1 byte tag, 2 bytes length */
->> +	u8 header[3];	/* 1 byte tag, 2 bytes length */
->>  
->>  	while (off < old_size && pci_read_vpd(dev, off, 1, header) == 1) {
->> -		unsigned char tag;
->> -
->>  		if (!header[0] && !off) {
->>  			pci_info(dev, "Invalid VPD tag 00, assume missing optional VPD EPROM\n");
->>  			return 0;
->>  		}
->>  
->> -		if (header[0] & PCI_VPD_LRDT) {
->> -			/* Large Resource Data Type Tag */
->> -			tag = pci_vpd_lrdt_tag(header);
->> -			/* Only read length from known tag items */
->> -			if ((tag == PCI_VPD_LTIN_ID_STRING) ||
->> -			    (tag == PCI_VPD_LTIN_RO_DATA) ||
->> -			    (tag == PCI_VPD_LTIN_RW_DATA)) {
->> -				if (pci_read_vpd(dev, off+1, 2,
->> -						 &header[1]) != 2) {
->> -					pci_warn(dev, "invalid large VPD tag %02x size at offset %zu",
->> -						 tag, off + 1);
->> -					return 0;
->> -				}
->> -				off += PCI_VPD_LRDT_TAG_SIZE +
->> -					pci_vpd_lrdt_size(header);
->> -			}
->> -		} else {
->> -			/* Short Resource Data Type Tag */
->> -			off += PCI_VPD_SRDT_TAG_SIZE +
->> -				pci_vpd_srdt_size(header);
->> -			tag = pci_vpd_srdt_tag(header);
->> -		}
->> -
->> -		if (tag == PCI_VPD_STIN_END)	/* End tag descriptor */
->> -			return off;
->> +		if (header[0] == PCI_VPD_SRDT_END)
->> +			return off + PCI_VPD_SRDT_TAG_SIZE;
-> 
-> This makes the code beautiful.  But I think pci_vpd_size() is too
-> picky even now, and this patch makes it more so.
-> 
-> I don't know why pci_vpd_size() currently checks the tags for
-> ID_STRING, RO_DATA, and RW_DATA.  That seems too aggressive to me.
-> 
+The drivers currently rely on irq_set_affinity_hint() to either set the
+affinity_hint that is consumed by the userspace and/or to enforce a custom
+affinity.
 
-It checks for these tags (+ the end tag) because it's the only ones
-defined for VPD by the PCI spec.
+irq_set_affinity_hint() as the name suggests is originally introduced to
+only set the affinity_hint to help the userspace in guiding the interrupts
+and not the affinity itself. However, since the commit
 
-> I think these data items originally came from PNP ISA, and it defines
-> several other tags.  Of course, that wasn't for PCI devices, but a
-> Google search for '"invalid" "vpd tag" "at offset"' does find several
-> cases where VPD contains things that look like PNP ISA data items.
-> 
+        e2e64a932556 "genirq: Set initial affinity in irq_set_affinity_hint()"
 
-Right, the tag format is based on PNP ISA. But PCI spec explicitly
-lists the supported tags.
-I tried to do the same search and found:
-- "invalid short vpd tag 00" and "invalid large tag 7f"
-   Both are symptom of a missing optional VPD EEPROM.
-- "ixgbe 0000:0b:00.0: invalid short VPD tag 06 at offset 4" and a
-  similar message for igb
-  I didn't see any response explaining what causes this issue.
-  My personal guess: Some OEM provided invalid VPD EEPROM content.
-  Offset 4 is the first character of the ID string. The message
-  indicates that the ID tag declares an empty ID. That would be weird.
+irq_set_affinity_hint() also started applying the provided cpumask (if not
+NULL) as the affinity for the interrupts. The issue that this commit was
+trying to solve is to allow the drivers to enforce their affinity mask to
+distribute the interrupts across the CPUs such that they don't always end
+up on CPU0. This issue has been resolved within the irq subsystem since the
+commit
 
-> I think we should compute the VPD size by iterating through it looking
-> only at the type (small or large) and the data item length until we
-> find the End Tag.
-> 
+        a0c9259dc4e1 "irq/matrix: Spread interrupts on allocation"
 
-Still I didn't see any example of a rejected valid VPD image.
-Not checking for supported tags increases he risk that we interpret
-a random byte as tag and read beyond the VPD end, what is known to
-cause a freeze on some devices.
+Hence, there is no need for the drivers to overwrite the affinity to spread
+as it is dynamically performed at the time of allocation.
 
-> This code originally came from 104daa71b396 ("PCI: Determine actual
-> VPD size on first access"), so I added Hannes in case there was some
-> reason we do the extra validation.
-> 
->> -		if ((tag != PCI_VPD_LTIN_ID_STRING) &&
->> -		    (tag != PCI_VPD_LTIN_RO_DATA) &&
->> -		    (tag != PCI_VPD_LTIN_RW_DATA)) {
->> -			pci_warn(dev, "invalid %s VPD tag %02x at offset %zu",
->> -				 (header[0] & PCI_VPD_LRDT) ? "large" : "short",
->> -				 tag, off);
->> +		if (header[0] != PCI_VPD_LRDT_ID_STRING &&
->> +		    header[0] != PCI_VPD_LRDT_RO_DATA &&
->> +		    header[0] != PCI_VPD_LRDT_RW_DATA) {
->> +			pci_warn(dev, "invalid VPD tag %02x at offset %zu", header[0], off);
->>  			return 0;
->>  		}
->> +
->> +		if (pci_read_vpd(dev, off + 1, 2, header + 1) != 2)
->> +			return 0;
->> +
->> +		off += PCI_VPD_LRDT_TAG_SIZE + pci_vpd_lrdt_size(header);
->>  	}
->>  	return 0;
->>  }
->> -- 
->> 2.31.1
->>
->>
+Also, irq_set_affinity_hint() setting affinity unconditionally introduces
+issues for the drivers that only want to set their affinity_hint and not the
+affinity itself as for these driver interrupts the default_smp_affinity_mask
+is completely ignored (for detailed investigation please refer to [1]).
+
+Unfortunately reverting the commit e2e64a932556 is not an option at this
+point for two reasons [2]:
+
+- Several drivers for a valid reason (performance) rely on this API to
+  enforce their affinity mask
+
+- Until very recently this was the only exported interface that was
+  available
+
+To clear this out Thomas has come up with the following interfaces:
+
+- irq_set_affinity(): only sets affinity of an IRQ [3]
+- irq_update_affinity_hint(): Only sets the hint [4]
+- irq_set_affinity_and_hint(): Sets both affinity and the hint mask [4]
+
+The first API is already merged in the linus's tree and the patch
+that introduces the other two interfaces is included with this patch-set.
+
+To move to the stage where we can safely get rid of the
+irq_set_affinity_hint(), which has been marked deprecated, we have to
+move all its consumers to these new interfaces. In this patch-set, I have
+done that for a few drivers and will hopefully try to move the remaining of
+them in the coming days.
+
+Testing
+-------
+In terms of testing, I have performed some basic testing on x86 to verify
+things such as the interrupts are evenly spread on all CPUs, hint mask is
+correctly set etc. for the drivers - i40e, iavf, mlx5, mlx4, ixgbe, and
+enic on top of:
+
+        git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+
+So more testing is probably required for these and the drivers that I didn't
+test and any help will be much appreciated.
+
+
+Notes
+-----
+- For the mpt3sas driver I decided to go with the usage of
+  irq_set_affinity_and_hint over irq_set_affinity based on my analysis of
+  it and the megaraid driver. However, if we are sure that it is not
+  required then I can replace it with just irq_set_affinity as one of its
+  comment suggests.
+
+Change from v2 [5]
+------------------
+
+- Rebased on top of 5.14-rc1 (Leon Romanovsky)
+  + After discussion with Leon [6], made changes in the mlx5 patch to use
+    irq_set_affinity_and_hint over irq_update_affinity_hint
+  + i40iw is replaced with irdma driver, hence made the respective changes
+    in irdma (also replcaed irq_update_affinity_hint with
+    irq_set_affinity_and_hint).
+
+Change from v1 [7]
+------------------
+- Fixed compilation error by adding the new interface definitions for cases
+  where CONFIG_SMP is not defined
+
+- Fixed function usage in megaraid_sas and removed unnecessary variable
+  (Robin Murphy)
+
+- Removed unwanted #if/endif from mlx4 (Leon Romanovsky)
+
+- Other indentation related fixes
+
+ 
+[1] https://lore.kernel.org/lkml/1a044a14-0884-eedb-5d30-28b4bec24b23@redhat.com/
+[2] https://lore.kernel.org/linux-pci/d1d5e797-49ee-4968-88c6-c07119343492@arm.com/
+[3] https://lore.kernel.org/linux-arm-kernel/20210518091725.046774792@linutronix.de/
+[4] https://lore.kernel.org/patchwork/patch/1434326/
+[5] https://lore.kernel.org/lkml/20210629152746.2953364-1-nitesh@redhat.com/
+[6] https://lore.kernel.org/lkml/YO0eKv2GJcADQTHH@unreal/
+[7] https://lore.kernel.org/linux-scsi/20210617182242.8637-1-nitesh@redhat.com/
+
+
+Nitesh Narayan Lal (13):
+  iavf: Use irq_update_affinity_hint
+  i40e: Use irq_update_affinity_hint
+  scsi: megaraid_sas: Use irq_set_affinity_and_hint
+  scsi: mpt3sas: Use irq_set_affinity_and_hint
+  RDMA/irdma: Use irq_set_affinity_and_hint
+  enic: Use irq_update_affinity_hint
+  be2net: Use irq_update_affinity_hint
+  ixgbe: Use irq_update_affinity_hint
+  mailbox: Use irq_update_affinity_hint
+  scsi: lpfc: Use irq_set_affinity
+  hinic: Use irq_set_affinity_and_hint
+  net/mlx5: Use irq_set_affinity_and_hint
+  net/mlx4: Use irq_update_affinity_hint
+
+Thomas Gleixner (1):
+  genirq: Provide new interfaces for affinity hints
+
+ drivers/infiniband/hw/irdma/hw.c              |  4 +-
+ drivers/mailbox/bcm-flexrm-mailbox.c          |  4 +-
+ drivers/net/ethernet/cisco/enic/enic_main.c   |  8 +--
+ drivers/net/ethernet/emulex/benet/be_main.c   |  4 +-
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  4 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |  8 +--
+ drivers/net/ethernet/intel/iavf/iavf_main.c   |  8 +--
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++--
+ drivers/net/ethernet/mellanox/mlx4/eq.c       |  8 ++-
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  8 +--
+ drivers/scsi/lpfc/lpfc_init.c                 |  4 +-
+ drivers/scsi/megaraid/megaraid_sas_base.c     | 27 +++++-----
+ drivers/scsi/mpt3sas/mpt3sas_base.c           | 21 ++++----
+ include/linux/interrupt.h                     | 53 ++++++++++++++++++-
+ kernel/irq/manage.c                           |  8 +--
+ 15 files changed, 114 insertions(+), 65 deletions(-)
+
+-- 
+
 
