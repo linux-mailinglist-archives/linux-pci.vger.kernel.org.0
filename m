@@ -2,187 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 771FF3C6CDA
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 11:06:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21A813C6E5E
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 12:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234795AbhGMJJM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 05:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234121AbhGMJJM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 05:09:12 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D8EC0613DD;
-        Tue, 13 Jul 2021 02:06:21 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 7-20020a9d0d070000b0290439abcef697so21797862oti.2;
-        Tue, 13 Jul 2021 02:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9Au+qoSVHB4VwxC9iKkQR94HxlbBA0K+/1PBJPfppOc=;
-        b=sRYMdsr/MH/y7malyvLoVgJEWfqHdp6Vrj/XQeg2SbBGiWG8qXZ7/aHTDbXBzCS7n4
-         sv+elgQ/zCdr/MpVmtarAZT1UOwVihpuZ08f30ygdhm0DqshFFO3htSpvtPSt+5PX5Up
-         fH0MBOXHKozqDZQlEXNqYmhkOhyK40NX5EndXwR0cIJZx1T4NIwTEpPKzY+EzCLdsCDe
-         iAztvUSOQiWWnfwrPIW5gcgYRte7G+oIJuOfunmyLiLUaxPtnFR9tXVSECjDQzUYrPJU
-         jnZhBNuIfORTaHmHTuqHNE5ayOt5U9qDAQrFuia3fLSFbWpVtIMvk/igf0IPoBHURvFI
-         zo5A==
+        id S235297AbhGMK1a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 06:27:30 -0400
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:40880 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235143AbhGMK1a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 06:27:30 -0400
+Received: by mail-wm1-f52.google.com with SMTP id h18-20020a05600c3512b029020e4ceb9588so1230548wmq.5
+        for <linux-pci@vger.kernel.org>; Tue, 13 Jul 2021 03:24:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9Au+qoSVHB4VwxC9iKkQR94HxlbBA0K+/1PBJPfppOc=;
-        b=QOsg7kS/5gkIKaBLftb3uIS9v5VyoJTp3BD6D2C0i3+Yx5yhyjHTzn80LXP4hPQeAm
-         8m7muyIAKUCTm1SY5uJzsdapLjaoHEmpVn5wQ/liN1s7cFMys2a7KxFy+OLUnB5CYdON
-         TOX1rcrg31THqSzLdgsy1MeZcdhZDFPVa6F4Q7E5cNSzU5FM9NOQl8MQvI/2djOht4ds
-         9FCq3r95jZluOqaMZ/wHd/MFI0/pmQQmfmlIJZzw1D4Zta53r4kSGLXNDyfsetyamPOu
-         LGVcckx15d0vIBLDX0mCcWqULIVt9wSxpruwx4Ht+PamHiyA3FTnMRMnN2TdIhdQBEmw
-         ww9Q==
-X-Gm-Message-State: AOAM531hz/bb7KSURgtBhSzJ3X0zNn0EGLq+RV4FKAV8DA5LwVIznnYq
-        ke+LDKF9gKJRiuSxI3/WDYFFlnK8osU=
-X-Google-Smtp-Source: ABdhPJz1t4eOhXNJJ4vGWL3ObMrQD7iWG8+jMxQzCTu4k0COQhMyuFHS8d2cHpreBEldaM1wgou/QA==
-X-Received: by 2002:a9d:1d7:: with SMTP id e81mr2707555ote.171.1626167180499;
-        Tue, 13 Jul 2021 02:06:20 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x30sm3762921ote.44.2021.07.13.02.06.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jul 2021 02:06:19 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH 1/1] PCI: Coalesce host bridge contiguous apertures
- without sorting
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
- <f18e36f7-cb18-1a4a-e7e8-4fbb253581ae@roeck-us.net>
- <CAAd53p50502g1_7Db4xzUXrzcofmtBDO=+-HLqfs+J7NvVhB+A@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <346ae622-de15-b81d-c129-24c9e77b59d4@roeck-us.net>
-Date:   Tue, 13 Jul 2021 02:06:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        bh=M6EALgS37OQWvu8bXWN8/n6HJahdTZizhntFgVrPkfs=;
+        b=ImxbbldBlIQRitbI/RTPUkxwLCmuiSsBithwESXlhACKgpePryZrl5sSu3/k7Nimt+
+         cA/Tj3pIr9tOpKohtJKn2mGqwrmKQ1FoKQXIhmXbfyxGwxbblzkG7+f1yyapkRlfLAjZ
+         TS1FC5Gwwyt6v0Gr1vKmKZYCO0n+ZwGONzKO+ANM9OUbwf5F4sALH5GaEi9kPNhbp7l+
+         qlprHSmYNOBa+yAP2E/4Ox20PUwrlZ3jEg9f0b236UqvsOyaDRwS86MlrGd4Xoipcf5e
+         bzn/2U7lUFGZ8mkwiddrxCUtuvr+mtoMUCRbKOp6RuJPzAQkylyo4jzkZBXz9ZnZl6Bh
+         2mKA==
+X-Gm-Message-State: AOAM531R1GLCzHOPgN5FuBbqzKln/WI8SymaEhMHfsYgTs9cYwKbZIWS
+        7dnSoKIeUh4dTvfNnaeD0Bw=
+X-Google-Smtp-Source: ABdhPJwMkCYbwjlCFs4c9HRQHl1h+NEeec1NL6AJxd9u+VqwvmNVlRjvAv3u84hFVAXlq2PK7qI1cw==
+X-Received: by 2002:a7b:cc15:: with SMTP id f21mr19814233wmh.5.1626171878810;
+        Tue, 13 Jul 2021 03:24:38 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id h13sm17104423wrs.68.2021.07.13.03.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jul 2021 03:24:38 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Refactor pci_ioremap_bar() and pci_ioremap_wc_bar()
+Date:   Tue, 13 Jul 2021 10:24:36 +0000
+Message-Id: <20210713102436.304693-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-In-Reply-To: <CAAd53p50502g1_7Db4xzUXrzcofmtBDO=+-HLqfs+J7NvVhB+A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/13/21 1:49 AM, Kai-Heng Feng wrote:
-> On Tue, Jul 13, 2021 at 4:45 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> On 7/13/21 12:57 AM, Kai-Heng Feng wrote:
->>> Commit 65db04053efe ("PCI: Coalesce host bridge contiguous apertures")
->>> sorts the resources by address so the resources can be swapped.
->>>
->>> Before:
->>> PCI host bridge to bus 0002:00
->>> pci_bus 0002:00: root bus resource [io  0x0000-0xffff]
->>> pci_bus 0002:00: root bus resource [mem 0xd80000000-0xdffffffff] (bus address [0x80000000-0xffffffff])
->>> pci_bus 0002:00: root bus resource [mem 0xc0ee00000-0xc0eefffff] (bus address [0x00000000-0x000fffff])
->>>
->>> And after:
->>> PCI host bridge to bus 0002:00
->>> pci_bus 0002:00: root bus resource [io  0x0000-0xffff]
->>> pci_bus 0002:00: root bus resource [mem 0xc0ee00000-0xc0eefffff] (bus address [0x00000000-0x000fffff])
->>> pci_bus 0002:00: root bus resource [mem 0xd80000000-0xdffffffff] (bus address [0x80000000-0xffffffff])
->>>
->>> However, the sorted resources make NVMe stops working on QEMU ppc:sam460ex.
->>>
->>> Resources in the original issue are already in ascending order:
->>> pci_bus 0000:00: root bus resource [mem 0x10020200000-0x100303fffff window]
->>> pci_bus 0000:00: root bus resource [mem 0x10030400000-0x100401fffff window]
->>>
->>> So remove the sorting part to resolve the issue.
->>>
->>> Reported-by: Guenter Roeck <linux@roeck-us.net>
->>> Fixes: 65db04053efe ("PCI: Coalesce host bridge contiguous apertures")
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>
->> I think the original commit message would make more sense here. This patch
->> doesn't fix 65db04053efe, it replaces it. The commit message now misses
->> the point, and the patch coalesces continuous apertures without explaining
->> the reason.
-> 
-> Because the message is already in the git log so I didn't think that's
-> necessary.
+Currently, functions pci_ioremap_bar() and pci_ioremap_wc_bar() share
+similar implementation details as both functions were almost identical
+in the past, especially when the latter was initially introduced in the
+commit c43996f4001d ("PCI: Add pci_ioremap_wc_bar()") as somewhat exact
+copy of the function pci_ioremap_bar().
 
-Hmm, not my decision to make, but the original commit got reverted.
-The commit log associated with this patch should still reflect what
-the patch does.
+However, function pci_ioremap_bar() received several updates that were
+never introduced to the function pci_ioremap_wc_bar().
 
-Guenter
+Thus, to align implementation of both functions and reduce the need to
+duplicate code between them, introduce a new internal function called
+__pci_ioremap_resource() as a helper with a shared codebase intended to
+be called from functions pci_ioremap_bar() and pci_ioremap_wc_bar().
 
-> Will send another one with the original message along with this one.
-> 
-> Kai-Heng
-> 
->>
->> Guenter
->>
->>> ---
->>>    drivers/pci/probe.c | 31 +++++++++++++++++++++++++++----
->>>    1 file changed, 27 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->>> index 79177ac37880..5de157600466 100644
->>> --- a/drivers/pci/probe.c
->>> +++ b/drivers/pci/probe.c
->>> @@ -877,11 +877,11 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
->>>    static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->>>    {
->>>        struct device *parent = bridge->dev.parent;
->>> -     struct resource_entry *window, *n;
->>> +     struct resource_entry *window, *next, *n;
->>>        struct pci_bus *bus, *b;
->>> -     resource_size_t offset;
->>> +     resource_size_t offset, next_offset;
->>>        LIST_HEAD(resources);
->>> -     struct resource *res;
->>> +     struct resource *res, *next_res;
->>>        char addr[64], *fmt;
->>>        const char *name;
->>>        int err;
->>> @@ -961,11 +961,34 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->>>        if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
->>>                dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
->>>
->>> +     /* Coalesce contiguous windows */
->>> +     resource_list_for_each_entry_safe(window, n, &resources) {
->>> +             if (list_is_last(&window->node, &resources))
->>> +                     break;
->>> +
->>> +             next = list_next_entry(window, node);
->>> +             offset = window->offset;
->>> +             res = window->res;
->>> +             next_offset = next->offset;
->>> +             next_res = next->res;
->>> +
->>> +             if (res->flags != next_res->flags || offset != next_offset)
->>> +                     continue;
->>> +
->>> +             if (res->end + 1 == next_res->start) {
->>> +                     next_res->start = res->start;
->>> +                     res->flags = res->start = res->end = 0;
->>> +             }
->>> +     }
->>> +
->>>        /* Add initial resources to the bus */
->>>        resource_list_for_each_entry_safe(window, n, &resources) {
->>> -             list_move_tail(&window->node, &bridge->windows);
->>>                offset = window->offset;
->>>                res = window->res;
->>> +             if (!res->end)
->>> +                     continue;
->>> +
->>> +             list_move_tail(&window->node, &bridge->windows);
->>>
->>>                if (res->flags & IORESOURCE_BUS)
->>>                        pci_bus_insert_busn_res(bus, bus->number, res->end);
->>>
->>
+The  __pci_ioremap_resource() function will therefore include a check
+for the IORESOURCE_UNSET flag that has previously been added to the
+function pci_ioremap_bar() in the commit 646c0282df04 ("PCI: Fail
+pci_ioremap_bar() on unassigned resources") and otherwise has been
+missing from function pci_ioremap_wc_bar().
+
+Additionally, function __pci_ioremap_resource() will retire the usage of
+the WARN_ON() macro and replace it with pci_err() to show information
+such as the driver name, the BAR number and resource details in case of
+a failure, instead of printing a complete backtrace. The WARN_ON() has
+already been replaced with pci_warn() in the commit 1f7bf3bfb5d6 ("PCI:
+Show driver, BAR#, and resource on pci_ioremap_bar() failure") which
+sadly didn't include an update to the function pci_ioremap_wc_bar() at
+that time.
+
+Finally, a direct use of functions ioremap() and ioremap_wc() in the
+function __pci_ioremap_resource() will be replaced with calls to the
+pci_iomap_range() and pci_iomap_wc_range() functions respectively.
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/pci.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e3bb0d073352..4bae55f0700b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -206,7 +206,8 @@ int pci_status_get_and_clear_errors(struct pci_dev *pdev)
+ EXPORT_SYMBOL_GPL(pci_status_get_and_clear_errors);
+ 
+ #ifdef CONFIG_HAS_IOMEM
+-void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
++static void __iomem *__pci_ioremap_resource(struct pci_dev *pdev, int bar,
++					    bool write_combine)
+ {
+ 	struct resource *res = &pdev->resource[bar];
+ 
+@@ -214,24 +215,25 @@ void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
+ 	 * Make sure the BAR is actually a memory resource, not an IO resource
+ 	 */
+ 	if (res->flags & IORESOURCE_UNSET || !(res->flags & IORESOURCE_MEM)) {
+-		pci_warn(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
++		pci_err(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
+ 		return NULL;
+ 	}
+-	return ioremap(res->start, resource_size(res));
++
++	if (write_combine)
++		return pci_iomap_wc_range(pdev, bar, 0, 0);
++
++	return pci_iomap_range(pdev, bar, 0, 0);
++}
++
++void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
++{
++	return __pci_ioremap_resource(pdev, bar, false);
+ }
+ EXPORT_SYMBOL_GPL(pci_ioremap_bar);
+ 
+ void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar)
+ {
+-	/*
+-	 * Make sure the BAR is actually a memory resource, not an IO resource
+-	 */
+-	if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM)) {
+-		WARN_ON(1);
+-		return NULL;
+-	}
+-	return ioremap_wc(pci_resource_start(pdev, bar),
+-			  pci_resource_len(pdev, bar));
++	return __pci_ioremap_resource(pdev, bar, true);
+ }
+ EXPORT_SYMBOL_GPL(pci_ioremap_wc_bar);
+ #endif
+-- 
+2.32.0
 
