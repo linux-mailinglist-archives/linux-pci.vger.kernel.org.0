@@ -2,108 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 625443C66CB
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 01:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 064703C6770
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jul 2021 02:25:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233227AbhGLXM1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jul 2021 19:12:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54682 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232598AbhGLXM0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 19:12:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626131377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ncUzG7oD+cRuBPSNikH54792RGrvr4Fe/3Hos8E3uks=;
-        b=T9MbOaMrqioeCIHaPOkM8huVydSrj35IMGIsqlromCU0R26vxO3Pj+Zgtya+m+rLGCg5dK
-        Dm2DpaTOAdxV93+nBWPUDBGZjY8quEl4ZM8Xno6Ek8+wVNhx0vfUgXUq7P1tQyB1GKjm0j
-        1Q56vTrCKaG6aAn7EUI/EejZV+UBN7s=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-573-1d9KQBTmNxKTXgNmTimHLA-1; Mon, 12 Jul 2021 19:09:36 -0400
-X-MC-Unique: 1d9KQBTmNxKTXgNmTimHLA-1
-Received: by mail-oi1-f198.google.com with SMTP id v16-20020aca48100000b0290240f6bdaf7dso12882095oia.14
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 16:09:36 -0700 (PDT)
+        id S233729AbhGMA2R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jul 2021 20:28:17 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:54917 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230099AbhGMA2R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jul 2021 20:28:17 -0400
+Received: by mail-wm1-f54.google.com with SMTP id k32so9268739wms.4
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jul 2021 17:25:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ncUzG7oD+cRuBPSNikH54792RGrvr4Fe/3Hos8E3uks=;
-        b=r2igXFE9xaT8KHTeyYhPZPVdIEl/ONvSo2mvAl19S/XSL1WL+hbtXsNBvwrthHXUPj
-         Si+OG9iakOMa74e3e4w9turPtwNrF6jUud/RDYWLa6Z0PowKFWoOwffi3ZsJSl6O64/w
-         v4HePUILBTpBCr5q3a6mxUpuen8nc2HSaapBjczAI9rCEw9p58oxMdisYMNh2tIu1ZnR
-         YgW0WSn6QMhxAj5QnFm39NyLNOWdUBq3PYkforz2YiXHPiiIQZcpJ7XGoAqkkmBjeEuc
-         yYzGhe5pzrYYGYgVVVCpNaj/HaAtucCvWX5RAy6142sp9SXU/4Lf7oHScU6Wu8adyISA
-         GvIg==
-X-Gm-Message-State: AOAM530m0SSxbMB9ek9vIZJ8atFNeGjZK5rA1OWdnXvgEc9FkqbqBeqF
-        0sMuR/fefh1KCOlec/I7IDXipp4A1tVE6SnI9vcjbDjyD53bQbVU0IJ0OSCRfjQKxMy/xt/sGBa
-        tysbB3Ds2A5e9UzjIuwAs
-X-Received: by 2002:a54:438f:: with SMTP id u15mr12421730oiv.107.1626131375434;
-        Mon, 12 Jul 2021 16:09:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyf9OMLGHwJk5r+6cOuZb4j5x61M5JyJUaq4Ttbl9dxhduUH51eWgeVjM/8TiHf0dlltpaqyg==
-X-Received: by 2002:a54:438f:: with SMTP id u15mr12421718oiv.107.1626131375310;
-        Mon, 12 Jul 2021 16:09:35 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id r24sm1026885otg.14.2021.07.12.16.09.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q1JaKWz4ljmDgmlS6XOgBpL8dJbggktcA486snVdwEo=;
+        b=CD37hZHid8KIx308NRAyxf8RSnYZ/hqK7YMVx1U/jJCklzuGp1rN0LW+UTJlb3g4cb
+         ree5+Y52dw9TWLkYAh57vhGoGUW4ejILLbAKpmJwXU3SdiKZF104SMEftQZDtTFphI1s
+         uUTzwU0Zg1V6vrlKRbqfsrkfp3LNE6vgsz4caZZ1qPUSN8WxcFNaDM2CKWp5TyimXL0q
+         2JA/l2hnykpvM0dWnaE/mpq2E19GFmSIHv9Lge/5DqXk5jBFYQBuiEhckWMc/+jYmXJa
+         UZVX9IIIke/LVuqeapWxVow65/Go0XytkDQplPaFkJ506R+MA5viWKMZuoMDXqpP/ndS
+         zh7A==
+X-Gm-Message-State: AOAM532Fd32yaWJ52CgcckJmIGAweJAJnDcos72jUyqPAIeQOZxQB1jV
+        apdFlZ6ncgXbJolRDr+vkVs=
+X-Google-Smtp-Source: ABdhPJziVUbprznFZuoOf+eG8kg08hyPDAKraPFSp2ML3Rde1dpKkVWCkubdOfyTsnbJzZC0XgepIQ==
+X-Received: by 2002:a05:600c:a45:: with SMTP id c5mr17728264wmq.153.1626135927526;
+        Mon, 12 Jul 2021 17:25:27 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id p5sm38895wme.2.2021.07.12.17.25.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jul 2021 16:09:35 -0700 (PDT)
-Date:   Mon, 12 Jul 2021 17:09:34 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 6/8] PCI: Setup ACPI fwnode early and at the same
- time with OF
-Message-ID: <20210712170934.34666a1f.alex.williamson@redhat.com>
-In-Reply-To: <20210709123813.8700-7-ameynarkhede03@gmail.com>
-References: <20210709123813.8700-1-ameynarkhede03@gmail.com>
-        <20210709123813.8700-7-ameynarkhede03@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        Mon, 12 Jul 2021 17:25:27 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell Currey <ruscur@russell.cc>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: [PATCH 1/2] PCI: Use pcie_reset_state_t type in function arguments
+Date:   Tue, 13 Jul 2021 00:25:24 +0000
+Message-Id: <20210713002525.203840-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri,  9 Jul 2021 18:08:11 +0530
-Amey Narkhede <ameynarkhede03@gmail.com> wrote:
+The pcie_reset_state_t type has been introduced in the commit
+f7bdd12d234d ("pci: New PCI-E reset API") along with the enum
+pcie_reset_state, but it has never been used for anything else
+other than to define the members of the enumeration set in the
+enum pcie_reset_state.
 
-> From: Shanker Donthineni <sdonthineni@nvidia.com>
-> 
-> The pci_dev objects are created through two mechanisms 1) during PCI
-> bus scan and 2) from I/O Virtualization. The fwnode in pci_dev object
-> is being set at different places depends on the type of firmware used,
-> device creation mechanism, and acpi_pci_bridge_d3() WAR.
-> 
-> The software features which have a dependency on ACPI fwnode properties
-> and need to be handled before device_add() will not work. One use case,
-> the software has to check the existence of _RST method to support ACPI
-> based reset method.
-> 
-> This patch does the two changes in order to provide fwnode consistently.
->  - Set ACPI and OF fwnodes from pci_setup_device().
->  - Remove pci_set_acpi_fwnode() in acpi_pci_bridge_d3().
-> 
-> After this patch, ACPI/OF firmware properties are visible at the same
-> time during the early stage of pci_dev setup. And also call sites should
-> be able to use firmware agnostic functions device_property_xxx() for the
-> early PCI quirks in the future.
-> 
-> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
-> ---
->  drivers/pci/pci-acpi.c | 1 -
->  drivers/pci/probe.c    | 7 ++++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
+Thus, replace the direct use of enum pcie_reset_state in function
+arguments and replace it with pcie_reset_state_t type so that the
+argument type matches the type used in enum pcie_reset_state.
 
-Looks ok to me.
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/pci.c   | 4 ++--
+ include/linux/pci.h | 5 ++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index aacf575c15cf..5c3386a73eb1 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2194,7 +2194,7 @@ EXPORT_SYMBOL(pci_disable_device);
+  * implementation. Architecture implementations can override this.
+  */
+ int __weak pcibios_set_pcie_reset_state(struct pci_dev *dev,
+-					enum pcie_reset_state state)
++					pcie_reset_state_t state)
+ {
+ 	return -EINVAL;
+ }
+@@ -2206,7 +2206,7 @@ int __weak pcibios_set_pcie_reset_state(struct pci_dev *dev,
+  *
+  * Sets the PCI reset state for the device.
+  */
+-int pci_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state)
++int pci_set_pcie_reset_state(struct pci_dev *dev, pcie_reset_state_t state)
+ {
+ 	return pcibios_set_pcie_reset_state(dev, state);
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 540b377ca8f6..15f93de69e6a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -191,7 +191,6 @@ enum {
+ };
+ 
+ typedef unsigned int __bitwise pcie_reset_state_t;
+-
+ enum pcie_reset_state {
+ 	/* Reset is NOT asserted (Use to deassert reset) */
+ 	pcie_deassert_reset = (__force pcie_reset_state_t) 1,
+@@ -1205,7 +1204,7 @@ extern unsigned int pcibios_max_latency;
+ void pci_set_master(struct pci_dev *dev);
+ void pci_clear_master(struct pci_dev *dev);
+ 
+-int pci_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state);
++int pci_set_pcie_reset_state(struct pci_dev *dev, pcie_reset_state_t state);
+ int pci_set_cacheline_size(struct pci_dev *dev);
+ int __must_check pci_set_mwi(struct pci_dev *dev);
+ int __must_check pcim_set_mwi(struct pci_dev *dev);
+@@ -2079,7 +2078,7 @@ extern u8 pci_cache_line_size;
+ void pcibios_disable_device(struct pci_dev *dev);
+ void pcibios_set_master(struct pci_dev *dev);
+ int pcibios_set_pcie_reset_state(struct pci_dev *dev,
+-				 enum pcie_reset_state state);
++				 pcie_reset_state_t state);
+ int pcibios_add_device(struct pci_dev *dev);
+ void pcibios_release_device(struct pci_dev *dev);
+ #ifdef CONFIG_PCI
+-- 
+2.32.0
 
