@@ -2,86 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2C6B3C853E
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 15:24:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E9F3C855A
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 15:32:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbhGNN1L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 09:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231585AbhGNN1L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 09:27:11 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A208AC06175F;
-        Wed, 14 Jul 2021 06:24:19 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id t9so2405268pgn.4;
-        Wed, 14 Jul 2021 06:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MpnZuAZbCMOKMEatsZAK8Y5LMoNjSwV6AcaoXKKiInY=;
-        b=mVexPQFTpgcXN+cSnUxlF8X8+lezKlCXKV5PIOPEjCZyrZW7Sb5marUrAv50Hvs8X6
-         nkeyAlXLdPaMVz8MhRucXnuG53sduUibzltKg9pXG9xg1SIIoYglFEz+YeRmxQm1MUoq
-         e6I/3NQWxX0WiOXk5eUxCvKXphecG7W5XMpAaKsGUznn01M5eaAsuRziUXjIe3sokReQ
-         yShxM6NSVFmjMCwP8De2KtUr/+5CfZKLq4LpRdmBz2d0RkUewwe2HaLnr5PH/eWV5XVe
-         jEhIA0kFpXx2c5qvPs8ZkXCxcXZ6bMr124OjtaX3ywFDv8GfZvLYY4Pgg/qx63mqxmm/
-         fTUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MpnZuAZbCMOKMEatsZAK8Y5LMoNjSwV6AcaoXKKiInY=;
-        b=k01lgiusN9VCqxEIbaevbto4KVmAvd2IjVoPc7PWD6qAMpbTmQY0DGlThXIZHf1hTu
-         GdbxfnGmgAM1ZoqhHhTXPA3NgHxe+E01KrErE7JEwZ08FL7aaf4eCsOYA8O8hCuNtUSL
-         J2m2EalMhQYgDLMyeRDhgsej/X5pOsR3fr42YHVc6pEG3krI5B9cNcxOYW98afcUcDrm
-         28M/ogAUiR6GbRQRL54cJWitCqKQmKobUbJ6s9MogJ4MJR1JMNjcFKRagQ0NopMdedZH
-         560cxJOgrfAnCTPvDDx1J5B/SrfL8jQiif52pYanK4xvH9ceZ9oEyCobwZn1/GPfjdsC
-         4O1g==
-X-Gm-Message-State: AOAM530zfMy0tGN6e8YW2gpI4auS/LRuFxHwgF6xDl5lQuuMfIn04nYc
-        fypsIK94CiMcT7ohT7ybSw==
-X-Google-Smtp-Source: ABdhPJyiRY03+Cyoo5h5GQHVwjyLKPK/nRsfU908t52MAocbJmK9HtlK/tZj6QdSAJu18vEoUm0wLA==
-X-Received: by 2002:aa7:820d:0:b029:2f1:d22d:f21d with SMTP id k13-20020aa7820d0000b02902f1d22df21dmr10059594pfi.7.1626269058873;
-        Wed, 14 Jul 2021 06:24:18 -0700 (PDT)
-Received: from localhost.localdomain ([85.203.23.47])
-        by smtp.gmail.com with ESMTPSA id w2sm2305161pjq.5.2021.07.14.06.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 06:24:18 -0700 (PDT)
-From:   Shunyong Yang <yang.shunyong@gmail.com>
-To:     bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        kw@linux.com, leon@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shunyong Yang <yang.shunyong@gmail.com>
-Subject: [PATCH v2] tools: PCI: Zero-initialize param
-Date:   Wed, 14 Jul 2021 21:23:31 +0800
-Message-Id: <20210714132331.5200-1-yang.shunyong@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S231543AbhGNNfs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 09:35:48 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59872 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231485AbhGNNfs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 09:35:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 16EDWocJ042933;
+        Wed, 14 Jul 2021 08:32:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1626269570;
+        bh=VJxlTJ1XN3jRDHNNvgt5P3v8pnejqQJk8QQzrEvGJlU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sRTfR0bptL5MrsOtq4zjQbB0bCM1yvzYHjOfmcDLJznTHpDJ4VSFiy6TkGfRSOfoi
+         BsbSjQTEmXK3vB1i+fYz9hR9riuoosga55HkNmYt4s2oAUkGJA4PDDACTIYrTFL41A
+         ziP4lRKEry8GH9fOKDVTRizielNsBBddCuu92WP4=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 16EDWoVr043632
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 14 Jul 2021 08:32:50 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 14
+ Jul 2021 08:32:49 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Wed, 14 Jul 2021 08:32:50 -0500
+Received: from [10.250.235.160] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 16EDWkcB018210;
+        Wed, 14 Jul 2021 08:32:47 -0500
+Subject: Re: [PATCH v2] tools: PCI: Zero-initialize param
+To:     Shunyong Yang <yang.shunyong@gmail.com>, <bhelgaas@google.com>,
+        <lorenzo.pieralisi@arm.com>, <kw@linux.com>, <leon@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20210714132331.5200-1-yang.shunyong@gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9e40fd4c-6aec-db3e-f323-0f2cfb67d58c@ti.com>
+Date:   Wed, 14 Jul 2021 19:02:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210714132331.5200-1-yang.shunyong@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The values in param may be random if they are not initialized, which
-may cause use_dma flag set even when "-d" option is not provided
-in command line. Initializing all members to 0 to solve this.
 
-Signed-off-by: Shunyong Yang <yang.shunyong@gmail.com>
----
-v2: Change {0} to {} as Leon Romanovsky's comment.
----
- tools/pci/pcitest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 0a1344c45213..441b54234635 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -40,7 +40,7 @@ struct pci_test {
- 
- static int run_test(struct pci_test *test)
- {
--	struct pci_endpoint_test_xfer_param param;
-+	struct pci_endpoint_test_xfer_param param = {};
- 	int ret = -EINVAL;
- 	int fd;
- 
--- 
-2.25.1
+On 14/07/21 6:53 pm, Shunyong Yang wrote:
+> The values in param may be random if they are not initialized, which
+> may cause use_dma flag set even when "-d" option is not provided
+> in command line. Initializing all members to 0 to solve this.
+> 
+> Signed-off-by: Shunyong Yang <yang.shunyong@gmail.com>
 
+Thanks for the fix.
+
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+
+> ---
+> v2: Change {0} to {} as Leon Romanovsky's comment.
+> ---
+>  tools/pci/pcitest.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+> index 0a1344c45213..441b54234635 100644
+> --- a/tools/pci/pcitest.c
+> +++ b/tools/pci/pcitest.c
+> @@ -40,7 +40,7 @@ struct pci_test {
+>  
+>  static int run_test(struct pci_test *test)
+>  {
+> -	struct pci_endpoint_test_xfer_param param;
+> +	struct pci_endpoint_test_xfer_param param = {};
+>  	int ret = -EINVAL;
+>  	int fd;
+>  
+> 
