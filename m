@@ -2,143 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 075B63C93F8
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 00:44:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E4A3C941B
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 00:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231452AbhGNWqX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 18:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231394AbhGNWqW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 18:46:22 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B58C06175F
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jul 2021 15:43:30 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id e11so1129166oii.9
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jul 2021 15:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NKdMPRaHG9zg/8mmbatzWuo8Xg06TAfgtbZsirE/45Y=;
-        b=E+iXOOttCyz5hrR6Z/XbL7oj5jIG+m50w1OELc/WorMjYqeTsD3qDvfkrlNuFAcKmC
-         Xcw4Jh9051S3ZxCAM+mrwOjLib6dVIdDoO9Upmv/7NeR/CAo8IE1dtxr4DAqwZY5fr1I
-         +962sLbCEWb0MsOqhoVYgQvO9/Nj4kUgNmhF7WrLH/QbAT0g6GjqDr9tPS2pDXo4Hrju
-         P0LoSUXtALoCMfRmKbOViJWk73wO29MFgCk5hlhMM4UfpZHsGLtXzSuls8Y3iTpkhJsV
-         F4ukfNSuC4Nf9/xANIJF9sWCW7EMvOzzXExO8jMwTZNki9ThbA+hNUeYK/7QD4Hk7WKz
-         zuyw==
+        id S237293AbhGNW7V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 18:59:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25106 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237245AbhGNW7U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 18:59:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626303388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p53AiDq4RRf5s7Uh7mGyD6/R6lQu0pl6+URNGF7eeJg=;
+        b=XL2mBR+3yVDMmwBxEAC2hCfs5f1q08TtP++VAZxkLV0an87ImUf0IT6rZdkb564Of1dzca
+        nRNFVz7JBTJm5X7MZ1WCzzpIYMYyWUZ6znhZ0DfT0D3FI2LSRU9IQaRoEplL+6Pivcg3Hc
+        aee8Xktnm9xrdKsWygaV1ich8l5s4yY=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-KPNRu21gMSKmRVYd2m9OBg-1; Wed, 14 Jul 2021 18:56:27 -0400
+X-MC-Unique: KPNRu21gMSKmRVYd2m9OBg-1
+Received: by mail-oi1-f198.google.com with SMTP id x207-20020aca31d80000b029025a580320a5so1538093oix.12
+        for <linux-pci@vger.kernel.org>; Wed, 14 Jul 2021 15:56:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NKdMPRaHG9zg/8mmbatzWuo8Xg06TAfgtbZsirE/45Y=;
-        b=TPLfHEQQiZ8SX+k5qR2Y5VOsGyfoJuSTUf2bc4G+UdPNc5VTSZR08weK/Uz+3mCqZJ
-         lwwJBZXebYgcO2BOqdZATyT3jikU9s7KZmJtBGQK09STYHIbdrJk4fZKtlVfe4hfdL56
-         wUh+sFFngmauY037f6J7Ka8NWemr1/zDlFzjL5rwkas6Bc8MSzZXUHuw4B8fzmoN1V0Q
-         DSzXb+FuO7vScNAI8B1bna9OgBpnnk8087xm0nYfEw+KG0eUJV2tcYFqb0fZxFefMdCm
-         lGOpq2XNXbHdeQdKPKaMHWrOdeZMoyUatV3g2QVE7/OKNH3NMpDbjkrUBtIZPcaw9B6W
-         SXmQ==
-X-Gm-Message-State: AOAM531aDgQKdtaZyGAXPrjhGeJC+uheu5XYP9lIi6pwsP8EHXBppjWw
-        a/RzcBR0AIuyIE2HFYG60BA5FucG6XXpu4h3WEg=
-X-Google-Smtp-Source: ABdhPJxyXtu8K06FOhemIrwS7w1C02VPh1VIereYaigDCyxUkrzhAl1YTGli3syg1Up4WynMYHEB41XSKRnEzREKENY=
-X-Received: by 2002:aca:c346:: with SMTP id t67mr1756721oif.124.1626302610077;
- Wed, 14 Jul 2021 15:43:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p53AiDq4RRf5s7Uh7mGyD6/R6lQu0pl6+URNGF7eeJg=;
+        b=jAIhQkSGt8XMkfpYgTDlNHLj3fRr8b/mgTbDuIoKr6iT3Qb+vvxPQCCIarYrLDLXLM
+         1asZlQrooFH8+hs8DRXMTk9BAsLF+ecrGxcEB7MJ2kOatwodoIJOQrGbBZsZVQyKlbMQ
+         STVSvETmOAcwwty3hsEgavFXcWz5vg6kJfkAdRxP6qGhlIRrV5A3q1ZWL1bQPNrBk7jZ
+         vnkn0Jwer+EdKMtT2kcTlyEwq2bOTPe13tmO+haPXMhsb06+SB3sNFK3/WDqlZ5875sO
+         0Zw0p16y5lVDgACVi6WRsdFHfN+OiJj8Nqm/kKK/b/dptyISz9LdJyRY4SW6Si1Ve7GT
+         yDMQ==
+X-Gm-Message-State: AOAM531eBAAgyLYtGs6SktM221XbtlB8B21EZcUX5XAeW7T4cxlkDeM2
+        JneY4EcUX8TMyzzqY2i74QpoFzHdDBR2R5P0ClhdMHBgb8tThDvgRkAbPZCmRc5Pu9OBDfR+F+i
+        lvAM1YDkJ5dUIseFpQVJN
+X-Received: by 2002:a05:6830:1d8c:: with SMTP id y12mr419766oti.75.1626303386329;
+        Wed, 14 Jul 2021 15:56:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxFKmf1VsQgh+UBBi+EvUXyhVVpNx63nHwBogYk7AYyZyKjx3X4wwKOQ8itqMq1hX+iXCyWMQ==
+X-Received: by 2002:a05:6830:1d8c:: with SMTP id y12mr419761oti.75.1626303386189;
+        Wed, 14 Jul 2021 15:56:26 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id x29sm665755ooj.10.2021.07.14.15.56.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jul 2021 15:56:25 -0700 (PDT)
+Date:   Wed, 14 Jul 2021 16:56:24 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Shanker R Donthineni <sdonthineni@nvidia.com>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v10 7/8] PCI: Add support for ACPI _RST reset method
+Message-ID: <20210714165624.47272c2d.alex.williamson@redhat.com>
+In-Reply-To: <e8f0b236-dfb3-c9cf-4683-c43e8bc0c0b4@nvidia.com>
+References: <20210709123813.8700-1-ameynarkhede03@gmail.com>
+        <20210709123813.8700-8-ameynarkhede03@gmail.com>
+        <20210712170920.2a0868ac.alex.williamson@redhat.com>
+        <e8f0b236-dfb3-c9cf-4683-c43e8bc0c0b4@nvidia.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <CALdZjm7v3WaaS_ispa20PkjUnLq1t1Zdr29wKw_rZkQYExK-3w@mail.gmail.com>
- <20210714160350.1bef2778.alex.williamson@redhat.com>
-In-Reply-To: <20210714160350.1bef2778.alex.williamson@redhat.com>
-From:   Ruben <rubenbryon@gmail.com>
-Date:   Thu, 15 Jul 2021 01:43:17 +0300
-Message-ID: <CALdZjm6TsfsaQZRxJvr5YDh9VRn28vQjFY+JfZv-daU=gQu_Uw@mail.gmail.com>
-Subject: Re: [question]: BAR allocation failing
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-No luck so far with "-global q35-pcihost.pci-hole64-size=2048G"
-("-global q35-host.pci-hole64-size=" gave an error "warning: global
-q35-host.pci-hole64-size has invalid class name").
-The result stays the same.
+On Mon, 12 Jul 2021 19:51:41 -0500
+Shanker R Donthineni <sdonthineni@nvidia.com> wrote:
 
-When we pass through the NVLink bridges we can have the (5 working)
-GPUs talk at full P2P bandwidth and is described in the NVidia docs as
-a valid option (ie. passing through all GPUs and NVlink bridges).
-In production we have the bridges passed through to a service VM which
-controls traffic, which is also described in their docs.
+> Hi Alex,
+> 
+> On 7/12/21 6:09 PM, Alex Williamson wrote:
+> >> +/**
+> >> + * pci_dev_acpi_reset - do a function level reset using _RST method
+> >> + * @dev: device to reset
+> >> + * @probe: check if _RST method is included in the acpi_device context.
+> >> + */
+> >> +int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
+> >> +{
+> >> +     acpi_handle handle = ACPI_HANDLE(&dev->dev);
+> >> +
+> >> +     if (!handle || !acpi_has_method(handle, "_RST"))
+> >> +             return -ENOTTY;
+> >> +
+> >> +     if (probe)
+> >> +             return 0;
+> >> +
+> >> +     if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
+> >> +             pci_warn(dev, "ACPI _RST failed\n");
+> >> +             return -EINVAL;  
+> > Should we return -ENOTTY here instead to give a possible secondary
+> > reset method a chance?  Thanks,  
+> Thanks for reviewing patches.
+> 
+> ACPI/AML _RST method type is VOID. The only possibility of failure would be
+> either system is running out of memory or bugs in ACPICA. There is no strong
+> reason not to return -NOTTY.
+> 
+> I'll fix in the next version. Is there opportunity to include reset feature in v5.14-rc2?
 
-Op do 15 jul. 2021 om 01:03 schreef Alex Williamson
-<alex.williamson@redhat.com>:
->
-> On Thu, 15 Jul 2021 00:32:30 +0300
-> Ruben <rubenbryon@gmail.com> wrote:
->
-> > I am experiencing an issue with virtualizing a machine which contains
-> > 8 NVidia A100 80GB cards.
-> > As a bare metal host, the machine behaves as expected, the GPUs are
-> > connected to the host with a PLX chip PEX88096, which connects 2 GPUs
-> > to 16 lanes on the CPU (using the same NVidia HGX Delta baseboard).
-> > When passing through all GPUs and NVLink bridges to a VM, a problem
-> > arises in that the system can only initialize 4-5 of the 8 GPUs.
-> >
-> > The dmesg log shows failed attempts for assiging BAR space to the GPUs
-> > that are not getting initialized.
-> >
-> > Things that were tried:
-> > Q35-i440fx with and without UEFI
-> > Qemu 5.x, Qemu 6.0
-> > Host Ubuntu 20.04 host with Qemu/libvirt
-> > Now running proxmox 7 on debian 11, host kernel 5.11.22-2, VM kernel 5.4.0-77
-> > VM kernel parameters pci=nocrs pci=realloc=on/off
-> >
-> > ------------------------------------
-> >
-> > lspci -v:
-> > 01:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
-> >         Memory at db000000 (32-bit, non-prefetchable) [size=16M]
-> >         Memory at 2000000000 (64-bit, prefetchable) [size=128G]
-> >         Memory at 1000000000 (64-bit, prefetchable) [size=32M]
-> >
-> > 02:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
-> >         Memory at dc000000 (32-bit, non-prefetchable) [size=16M]
-> >         Memory at 4000000000 (64-bit, prefetchable) [size=128G]
-> >         Memory at 6000000000 (64-bit, prefetchable) [size=32M]
-> >
-> > ...
-> >
-> > 0c:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
-> >         Memory at e0000000 (32-bit, non-prefetchable) [size=16M]
-> >         Memory at <ignored> (64-bit, prefetchable)
-> >         Memory at <ignored> (64-bit, prefetchable)
-> >
-> > ...
-> >
-> ...
-> >
-> > ------------------------------------
-> >
-> > I have (blindly) messed with parameters like pref64-reserve for the
-> > pcie-root-port but to be frank I have little clue what I'm doing so my
-> > question would be suggestions on what I can try.
-> > This server will not be running an 8 GPU VM in production but I have a
-> > few days left to test before it goes to work. I was hoping to learn
-> > how to overcome this issue in the future.
-> > Please be aware that my knowledge regarding virtualization and the
-> > Linux kernel does not reach far.
->
-> Try playing with the QEMU "-global q35-host.pci-hole64-size=" option for
-> the VM rather than pci=nocrs.  The default 64-bit MMIO hole for
-> QEMU/q35 is only 32GB.  You might be looking at a value like 2048G to
-> support this setup, but could maybe get away with 1024G if there's room
-> in 32-bit space for the 3rd BAR.
->
-> Note that assigning bridges usually doesn't make a lot of sense and
-> NVLink is a proprietary black box, so we don't know how to virtualize
-> it or what the guest drivers will do with it, you're on your own there.
-> We generally recommend to use vGPUs for such cases so the host driver
-> can handle all the NVLink aspects for GPU peer-to-peer.  Thanks,
->
-> Alex
->
+Sounds good, it's a corner case but since we've got a series of methods
+we can try and part of the point of Amey's series is giving the user
+control of the order and methods to try, we might as well make use of
+it.  I think there's also some precedence in the quirks that they can
+fail and fall through to standard resets.
+
+I'll leave any upstream timing questions to Bjorn, but we've passed the
+v5.14 merge window when new functionality is generally accepted.
+
+> Can I add your reviewed-by since no other comments to this patch?
+
+Yeah, s/-EINVAL/-ENOTTY/
+
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+
+Thanks!
+
