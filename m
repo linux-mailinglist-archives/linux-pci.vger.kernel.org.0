@@ -2,71 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5573C80A2
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 10:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 712FB3C80BB
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 10:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238638AbhGNIuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 04:50:21 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:38445 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238432AbhGNIuV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 04:50:21 -0400
-Received: by mail-wm1-f48.google.com with SMTP id b14-20020a1c1b0e0000b02901fc3a62af78so3390097wmb.3;
-        Wed, 14 Jul 2021 01:47:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZcKu6JzHt5KJb3Xql7bkDVD+N0alIA9rphZxYoZe6yk=;
-        b=TXaPKzVBu0NkYrw75dK/PFQnjGY/gstqSbgpjxmD387DFsMMzDHu53+7091/aipGHp
-         ZexBdGP9ZWoNL1j5pZWoV5EaCwcTGeDU/dEPTaQltarZjc9Tva7daUUSFvF4m3keIGsC
-         ms1MAhQlujtYO4qCdjo14AHtypcLtyGBbNM7N1WMB7shmh5dzCzWJupqBh8ioL/Z3Cup
-         xyljQz0WTdg+I7DovmsrC5hD/JTBr/WRp7CriR7gE7+brxwQIztpIRo49huWLqm208yT
-         h4jvWaq6Jp2CaMHByzLwmDNqWrZYiC+Ub1LMYQ2xISaFponYDnbS/gTfzGdHjZtYXNKZ
-         0swA==
-X-Gm-Message-State: AOAM532SBxMuF/BZG0YZGjBS5cjF93czIKuch0nWcgSehdiRfs6odCCp
-        Jz8ENMsii9X5hHyaBGn5G2w=
-X-Google-Smtp-Source: ABdhPJx6gTDt7Mx/u77c//bGw9Tbdbun269RavkN2+RKuhQ+f+AA/+Z2bkSgxQYMmWgjXsDKti52Lg==
-X-Received: by 2002:a7b:c24a:: with SMTP id b10mr2780414wmj.37.1626252449320;
-        Wed, 14 Jul 2021 01:47:29 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id l20sm1506246wmq.3.2021.07.14.01.47.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 01:47:28 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 08:47:27 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v3 1/1] PCI: hv: Support for create interrupt v3
-Message-ID: <20210714084727.y3cxrj3365k4sfw6@liuwe-devbox-debian-v2>
-References: <MW4PR21MB20026A6EA554A0B9EC696AA8C0159@MW4PR21MB2002.namprd21.prod.outlook.com>
+        id S238579AbhGNI6O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 04:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238496AbhGNI6O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 04:58:14 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4375C06175F;
+        Wed, 14 Jul 2021 01:55:21 -0700 (PDT)
+Received: from cap.home.8bytes.org (p4ff2b1ea.dip0.t-ipconnect.de [79.242.177.234])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 768882DF;
+        Wed, 14 Jul 2021 10:55:19 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v2 0/2] PCI/ACPI: Simplify PCIe _OSC feature negotiation
+Date:   Wed, 14 Jul 2021 10:55:10 +0200
+Message-Id: <20210714085512.2176-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW4PR21MB20026A6EA554A0B9EC696AA8C0159@MW4PR21MB2002.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 09:58:18PM +0000, Sunil Muthuswamy wrote:
-> Hyper-V vPCI protocol version 1_4 adds support for create interrupt
-> v3. Create interrupt v3 essentially makes the size of the vector
-> field bigger in the message, thereby allowing bigger vector values.
-> For example, that will come into play for supporting LPI vectors
-> on ARM, which start at 8192.
-> 
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Hi,
+
+here is the second version of my patch(es) to simplify the _OSC
+negotiation of PCIe features between Linux and the firmware.
+
+The main part is in patch 1, which removes the _OSC call for supported
+features by merging it with the actuall _OSC call to negotiate the
+features with the firmware.
+
+This allows some simplifications of the code, notably the removal of
+the acpi_pci_osc_support() function and the control=NULL special
+casing in the acpi_pci_query_osc() function.
+
+Please review.
+
+Thanks,
+
+	Joerg
+
+Joerg Roedel (2):
+  PCI/APCI: Move acpi_pci_osc_support() check to negotiation phase
+  PCI/ACPI: Remove OSC_PCI_SUPPORT_MASKS and OSC_PCI_CONTROL_MASKS
+
+ drivers/acpi/pci_root.c | 116 ++++++++++++++++++----------------------
+ include/linux/acpi.h    |   2 -
+ 2 files changed, 52 insertions(+), 66 deletions(-)
+
+
+base-commit: e73f0f0ee7541171d89f2e2491130c7771ba58d3
+-- 
+2.31.1
+
