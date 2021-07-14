@@ -2,165 +2,275 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC02B3C8439
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 14:03:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DC463C843E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 14:04:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239305AbhGNMGT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 08:06:19 -0400
-Received: from mail-dm6nam12on2063.outbound.protection.outlook.com ([40.107.243.63]:18785
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230492AbhGNMGS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Jul 2021 08:06:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZXEbsHZwnm+zTbAhLSsQIn7wnrbq2V2qQyi3Os307TVMGqevuHufug9Jmioln5FpHmrBMpL4R0nvZmtvhCLsgleFETOvHamDlLOeTJonFK0Y0zFXSOCYr6s9BBGO+mFmXZwK9B07XAuAu4NPJAiKrUE1l/ZhPADEA1iDeI13o/nZt+wc87X6Pa13w8dmE+wh/Z54DohZuq2SKiJE5HWkIMAULV4lXzOQNrSMdyiVFUsVoDaEngjKqKWIa5MogKO+trd1GaAoiWL8EBgcCt9PWZ/YMxHpvZotByGS3iI++t5oqGvxyU8t/MK8oCbxgfoj79r1zN02k1oInM8flOJNwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=85SjtTEprxqrFHC+JLVNiK/0uOvPscg9jvMEIcq510I=;
- b=nbCeJTaZ5LsJ/qaCuMR6bBBeMDjInSXO0DWDnG3gWVlTvCoTX2j+8aY/EK96XLgsEoWkqs3jjC3yRV5nGOnui8Q3tZkv0kkARD4ANEd26ghmloWSRXUR436GfsAvoPqAnbwuAEacllvfzSKIJNxefKFTmO2gknqpljwc0y+Y0nOED/RaJniN6JPpP6C+279B4/mk93rxN3RHbFa5IuRaFr1k/tDTlHJTQuiHkxqWsiRApdGomHaYyMdOwvp+RphWhYN3x+jzu3NcRKnkuF5bW0qQMxm9CXBN5jxD6ZFSs8VDAywITvu+5NDq3CGLmCn3oOe1iIBpP58jKGhd2TzCJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=broadcom.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=85SjtTEprxqrFHC+JLVNiK/0uOvPscg9jvMEIcq510I=;
- b=qV9kT5RQ82cBxJCsq7grvIa9pUNE3tu2mP2Oj3pD8QiougIUPgm6ZlC6h99col8wHB5251UZWvz/mlL65J1CMrtfpmDNcSRU2Hz/iJtwOBYTmfEwEFVGsbM2OjZ0xFyi3xEfh1jmAkra6ewirODZfkt6nSlCfsd4mHc4D9mwmTYSmt8I4/rcS9PSK0ujgRn+CyysT7L1G/zX8TMnH6qqZmlEMY1RpghHfv7fqjW0hpEO/rxSvUjuIyLshcbiwRTxxc+vZI5Cg0e8T8Oa8NWDoxjpeMg3R6L9bw023YdetJVK1NAnj8A0S9T5nPRH0ptf7sq6H52lUajWFCY7PhQ4mQ==
-Received: from BN9PR03CA0971.namprd03.prod.outlook.com (2603:10b6:408:109::16)
- by CY4PR12MB1733.namprd12.prod.outlook.com (2603:10b6:903:11d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.23; Wed, 14 Jul
- 2021 12:03:25 +0000
-Received: from BN8NAM11FT052.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:109:cafe::ac) by BN9PR03CA0971.outlook.office365.com
- (2603:10b6:408:109::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend
- Transport; Wed, 14 Jul 2021 12:03:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; broadcom.com; dkim=none (message not signed)
- header.d=none;broadcom.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT052.mail.protection.outlook.com (10.13.177.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4331.21 via Frontend Transport; Wed, 14 Jul 2021 12:03:25 +0000
-Received: from localhost (172.20.187.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 14 Jul
- 2021 12:03:24 +0000
-Date:   Wed, 14 Jul 2021 15:03:20 +0300
-From:   Leon Romanovsky <leonro@nvidia.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <tglx@linutronix.de>, <jesse.brandeburg@intel.com>,
-        <robin.murphy@arm.com>, <mtosatti@redhat.com>, <mingo@kernel.org>,
-        <jbrandeb@kernel.org>, <frederic@kernel.org>,
-        <juri.lelli@redhat.com>, <abelits@marvell.com>,
-        <bhelgaas@google.com>, <rostedt@goodmis.org>,
-        <peterz@infradead.org>, <davem@davemloft.net>,
-        <akpm@linux-foundation.org>, <sfr@canb.auug.org.au>,
-        <stephen@networkplumber.org>, <rppt@linux.vnet.ibm.com>,
-        <chris.friesen@windriver.com>, <maz@kernel.org>,
-        <nhorman@tuxdriver.com>, <pjwaskiewicz@gmail.com>,
-        <sassmann@redhat.com>, <thenzl@redhat.com>,
-        <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>,
-        <sathya.prakash@broadcom.com>, <sreekanth.reddy@broadcom.com>,
-        <suganath-prabu.subramani@broadcom.com>,
-        <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
-        <jkc@redhat.com>, <faisal.latif@intel.com>,
-        <shiraz.saleem@intel.com>, <tariqt@nvidia.com>,
-        <ahleihel@redhat.com>, <kheib@redhat.com>, <borisp@nvidia.com>,
-        <saeedm@nvidia.com>, <benve@cisco.com>, <govind@gmx.com>,
-        <jassisinghbrar@gmail.com>, <ajit.khaparde@broadcom.com>,
-        <sriharsha.basavapatna@broadcom.com>, <somnath.kotur@broadcom.com>,
-        <nilal@redhat.com>, <tatyana.e.nikolova@intel.com>,
-        <mustafa.ismail@intel.com>, <ahs3@redhat.com>,
-        <chandrakanth.patil@broadcom.com>
-Subject: Re: [PATCH v3 06/14] RDMA/irdma: Use irq_set_affinity_and_hint
-Message-ID: <YO7SiFE1dE0dFhkE@unreal>
-References: <20210713211502.464259-1-nitesh@redhat.com>
- <20210713211502.464259-7-nitesh@redhat.com>
+        id S231281AbhGNMHU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 08:07:20 -0400
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:37842 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231193AbhGNMHU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 08:07:20 -0400
+Received: by mail-ot1-f48.google.com with SMTP id e1-20020a9d63c10000b02904b8b87ecc43so2202448otl.4;
+        Wed, 14 Jul 2021 05:04:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5e9knfz3JG2gvEu2JVirrsq3sLTuduOyNuC1JgchsD0=;
+        b=J+2TzqKqZXfTSoQnbwcAmHcwBFa0dmaZCyzZGSISr+sg/nyiEA/dFdY5N8EppxOqjh
+         OOfSiPQ+4OebJWLV7k+YU+KsBok/7l79vV6YpAQ2wiBtdj25VKbo6E9fVNEfJDfa1LA5
+         6CVOrsf6wlCpkcrKWygyoeLa9Oq0C0dgnU5fWTxDrPFtT3pHYBNt4KZYuBBbkhliOhro
+         4L2ZoZwKji2rk1KJ20Ll4588m+wx2bLoru2dFmipflIKroVwwRqYlJ7npFRBxS/LpeaJ
+         dR4IChYVJu88B06rB4n4FSHvv19ktlM47opLUo543W8tCnyMOiTGvJVe9olIYgDT60XJ
+         inAA==
+X-Gm-Message-State: AOAM5310gkHHzg83KZZPq8y3IQ6/WNMaDWBg+eFAvGmkK6BajkHh+usN
+        PtplrttQow0S+Fpb2z3cyLqNW+qhAY5nHnpwYhU=
+X-Google-Smtp-Source: ABdhPJyH6gHb9v+2jbbt+B7bBKNZJC6DMtAQiA/tEoDx2TTr3eweGm/4CmAvbMEjhoEXHsTd6x99boZ+xpCTfJGbb1c=
+X-Received: by 2002:a9d:2968:: with SMTP id d95mr7885578otb.321.1626264268335;
+ Wed, 14 Jul 2021 05:04:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20210713211502.464259-7-nitesh@redhat.com>
-X-Originating-IP: [172.20.187.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9dadaf63-fa90-4550-036a-08d946bf6278
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1733:
-X-Microsoft-Antispam-PRVS: <CY4PR12MB17338AAAF23F30B6BBE2FD70BD139@CY4PR12MB1733.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FyCFlaDzwYybc19i92z3NayEgYnxaaKT14xiwx/u3+784TdeUdjPBrsVrRw/t7WqCTcnuInM5zkYi2fstN28i4YlH4Xk4ahjB0yJ721/MWUIKZbnlqpamJpgKMcCqhlR2QFSeF+d9OlLjC78cvvjzQloFwRDVh35FaLDy9aSLuiRVh7+0f8kgVoXNPUaL/gpN3qGoqiiPxi8Y6c+SRwKPxJF/Vzchp1TMFSlgttD0RLyo9mC9hLLLSGvzMQBgsokCWrf8xwtTl2arcVG5Yo95Fbo7ijC4d+L1TLnivyoLTpB7011I7tLaoGKdvAAp2Eng/pIHl1NlpFoJdbOAcpr3W+9o5Uad/fXId+pIn8x9HlX0mzGkUNdvc0g4jDMgupH1AdQtPeacZGoYzPscNU4zXsseSRGoX4cCqXGEM9TtlDDP1UI4tA5/VcIfHy47KP/W02PsO//OEB3i6ZVfcGT1zM4Wil/+rYTiu06S06Sly0qP3wtq20/C6ZVIyQXd3lgACOBIwgy9nCUhm6ywt0NXj/YjqHaIIs9h4vtOmZiYk0VseTbIhEHdjAn1olqBj0actbynmBCgVYWHcdAU/Zc+dajsJKWYh9eMQp0RyPo4RfFMxuTXwjJcGwOsDHLnfsuZqy7qhTC8pEu1SIMJau0WVhCyfNbTsdaYdQW0f4RmXkqDSnzyNpfsYRhaQbv06vuMjDIB+jHlk4knUbA2pr7QO3F89A+uawjQ289jOKlH2A=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(7916004)(4636009)(376002)(39860400002)(136003)(346002)(396003)(46966006)(36840700001)(33716001)(426003)(316002)(82740400003)(9686003)(6916009)(186003)(8936002)(36906005)(83380400001)(16526019)(478600001)(36860700001)(47076005)(5660300002)(26005)(34020700004)(86362001)(8676002)(70586007)(82310400003)(54906003)(70206006)(336012)(7366002)(7416002)(4326008)(7406005)(356005)(6666004)(2906002)(7636003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2021 12:03:25.2137
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dadaf63-fa90-4550-036a-08d946bf6278
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT052.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1733
+References: <20210714085512.2176-1-joro@8bytes.org> <20210714085512.2176-2-joro@8bytes.org>
+In-Reply-To: <20210714085512.2176-2-joro@8bytes.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 14 Jul 2021 14:04:17 +0200
+Message-ID: <CAJZ5v0if-5A0vZSTeDvqLtqE2jZrKjCFcRouR2uFgycZ7CdWkg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PCI/APCI: Move acpi_pci_osc_support() check to
+ negotiation phase
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 05:14:54PM -0400, Nitesh Narayan Lal wrote:
-> The driver uses irq_set_affinity_hint() to update the affinity_hint mask
-> that is consumed by the userspace to distribute the interrupts and to apply
-> the provided mask as the affinity for its interrupts. However,
-> irq_set_affinity_hint() applying the provided cpumask as an affinity for
-> the interrupt is an undocumented side effect.
-> 
-> To remove this side effect irq_set_affinity_hint() has been marked
-> as deprecated and new interfaces have been introduced. Hence, replace the
-> irq_set_affinity_hint() with the new interface irq_set_affinity_and_hint()
-> where the provided mask needs to be applied as the affinity and
-> affinity_hint pointer needs to be set and replace with
-> irq_update_affinity_hint() where only affinity_hint needs to be updated.
-> 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+On Wed, Jul 14, 2021 at 10:55 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> The acpi_pci_osc_support() does an _OSC query with _OSC supported set
+> to what the OS supports but a zero _OSC control value, only to later
+> claim the features Linux wants to control with an extra _OSC query.
+>
+> Nothing between the two _OSC querys depends on the result of the first
+> one (if successfull), and if the supported query fails the control
+> query will fail too. So it is a good code simplification to combine
+> these two querys into one.
+>
+> As a result the acpi_pci_osc_support() function can be removed and
+> acpi_pci_query_osc() be simplified because it no longer called with a
+> NULL pointer for *control. Also some code duplication in the existing
+> error paths was consolidated.
+>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 > ---
->  drivers/infiniband/hw/irdma/hw.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/irdma/hw.c b/drivers/infiniband/hw/irdma/hw.c
-> index 7afb8a6a0526..7f13a051d4de 100644
-> --- a/drivers/infiniband/hw/irdma/hw.c
-> +++ b/drivers/infiniband/hw/irdma/hw.c
-> @@ -537,7 +537,7 @@ static void irdma_destroy_irq(struct irdma_pci_f *rf,
->  	struct irdma_sc_dev *dev = &rf->sc_dev;
->  
->  	dev->irq_ops->irdma_dis_irq(dev, msix_vec->idx);
-> -	irq_set_affinity_hint(msix_vec->irq, NULL);
-> +	irq_update_affinity_hint(msix_vec->irq, NULL);
->  	free_irq(msix_vec->irq, dev_id);
+>  drivers/acpi/pci_root.c | 114 ++++++++++++++++++----------------------
+>  1 file changed, 52 insertions(+), 62 deletions(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d7deedf3548e..c703832b7f7f 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -201,31 +201,20 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>
+>         support &= OSC_PCI_SUPPORT_MASKS;
+>         support |= root->osc_support_set;
+> +       *control &= OSC_PCI_CONTROL_MASKS;
+>
+>         capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+>         capbuf[OSC_SUPPORT_DWORD] = support;
+> -       if (control) {
+> -               *control &= OSC_PCI_CONTROL_MASKS;
+> -               capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+> -       } else {
+> -               /* Run _OSC query only with existing controls. */
+> -               capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
+> -       }
+> +       capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+>
+>         status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+>         if (ACPI_SUCCESS(status)) {
+>                 root->osc_support_set = support;
+> -               if (control)
+> -                       *control = result;
+> +               *control = result;
+>         }
+>         return status;
 >  }
->  
-> @@ -1087,7 +1087,7 @@ irdma_cfg_ceq_vector(struct irdma_pci_f *rf, struct irdma_ceq *iwceq,
->  	}
->  	cpumask_clear(&msix_vec->mask);
->  	cpumask_set_cpu(msix_vec->cpu_affinity, &msix_vec->mask);
-> -	irq_set_affinity_hint(msix_vec->irq, &msix_vec->mask);
-> +	irq_set_affinity_and_hint(msix_vec->irq, &msix_vec->mask);
+>
+> -static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
+> -{
+> -       return acpi_pci_query_osc(root, flags, NULL);
+> -}
+> -
+>  struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
+>  {
+>         struct acpi_pci_root *root;
+> @@ -348,7 +337,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+>   * _OSC bits the BIOS has granted control of, but its contents are meaningless
+>   * on failure.
+>   **/
+> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
+> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
+> +                                           *mask, u32 req, u32 support)
+>  {
+>         struct acpi_pci_root *root;
+>         acpi_status status;
+> @@ -372,7 +362,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+>
+>         /* Need to check the available controls bits before requesting them. */
+>         while (*mask) {
+> -               status = acpi_pci_query_osc(root, root->osc_support_set, mask);
+> +               status = acpi_pci_query_osc(root, support, mask);
+>                 if (ACPI_FAILURE(status))
+>                         return status;
+>                 if (ctrl == *mask)
+> @@ -402,7 +392,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+>  static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>                                  bool is_pcie)
+>  {
+> -       u32 support, control, requested;
+> +       u32 support, control = 0, requested;
+>         acpi_status status;
+>         struct acpi_device *device = root->device;
+>         acpi_handle handle = device->handle;
+> @@ -435,59 +425,49 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>                 support |= OSC_PCI_EDR_SUPPORT;
+>
+>         decode_osc_support(root, "OS supports", support);
+> -       status = acpi_pci_osc_support(root, support);
+> -       if (ACPI_FAILURE(status)) {
+> -               *no_aspm = 1;
+>
+> -               /* _OSC is optional for PCI host bridges */
+> -               if ((status == AE_NOT_FOUND) && !is_pcie)
+> +       if (!pcie_ports_disabled) {
 
-I think that it needs to be irq_update_affinity_hint().
+If pcie_ports_disabled is set, we don't want to request any control
+from the platform firmware at all and, specifically, we don't want to
+evaluate _OSC with the OSC_QUERY_ENABLE clear in
+capbuf[OSC_QUERY_DWORD].
 
->  	if (status) {
->  		ibdev_dbg(&rf->iwdev->ibdev, "ERR: ceq irq config fail\n");
->  		return IRDMA_ERR_CFG;
-> -- 
-> 2.27.0
-> 
+I'm not sure how this is achieved after your changes.
+
+> +               if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
+> +                       decode_osc_support(root, "not requesting OS control; OS requires",
+> +                                       ACPI_PCIE_REQ_SUPPORT);
+>                         return;
+> +               }
+>
+> -               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> -                        acpi_format_exception(status));
+> -               return;
+> -       }
+> -
+> -       if (pcie_ports_disabled) {
+> -               dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
+> -               return;
+> -       }
+> -
+> -       if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
+> -               decode_osc_support(root, "not requesting OS control; OS requires",
+> -                                  ACPI_PCIE_REQ_SUPPORT);
+> -               return;
+> -       }
+> -
+> -       control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL
+> -               | OSC_PCI_EXPRESS_PME_CONTROL;
+> +               control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL
+> +                       | OSC_PCI_EXPRESS_PME_CONTROL;
+>
+> -       if (IS_ENABLED(CONFIG_PCIEASPM))
+> -               control |= OSC_PCI_EXPRESS_LTR_CONTROL;
+> +               if (IS_ENABLED(CONFIG_PCIEASPM))
+> +                       control |= OSC_PCI_EXPRESS_LTR_CONTROL;
+>
+> -       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> -               control |= OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
+> +               if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> +                       control |= OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
+>
+> -       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+> -               control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+> +               if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+> +                       control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+>
+> -       if (pci_aer_available())
+> -               control |= OSC_PCI_EXPRESS_AER_CONTROL;
+> +               if (pci_aer_available())
+> +                       control |= OSC_PCI_EXPRESS_AER_CONTROL;
+>
+> -       /*
+> -        * Per the Downstream Port Containment Related Enhancements ECN to
+> -        * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
+> -        * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
+> -        * and EDR.
+> -        */
+> -       if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+> -               control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+> +               /*
+> +                * Per the Downstream Port Containment Related Enhancements ECN to
+> +                * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
+> +                * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
+> +                * and EDR.
+> +                */
+> +               if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+> +                       control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+> +       }
+>
+> +       /* Need an _OSC call even with pcie_ports_disabled set */
+>         requested = control;
+>         status = acpi_pci_osc_control_set(handle, &control,
+> -                                         OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+> +                                         OSC_PCI_EXPRESS_CAPABILITY_CONTROL,
+> +                                         support);
+> +
+>         if (ACPI_SUCCESS(status)) {
+> -               decode_osc_control(root, "OS now controls", control);
+> +               if (control)
+> +                       decode_osc_control(root, "OS now controls", control);
+> +
+>                 if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
+>                         /*
+>                          * We have ASPM control, but the FADT indicates that
+> @@ -498,10 +478,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>                         *no_aspm = 1;
+>                 }
+>         } else {
+> -               decode_osc_control(root, "OS requested", requested);
+> -               decode_osc_control(root, "platform willing to grant", control);
+> -               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> -                       acpi_format_exception(status));
+> +               /* Platform wants to control PCIe features */
+> +               root->osc_support_set = 0;
+>
+>                 /*
+>                  * We want to disable ASPM here, but aspm_disabled
+> @@ -511,6 +489,18 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>                  * root scan.
+>                  */
+>                 *no_aspm = 1;
+> +
+> +               /* _OSC is optional for PCI host bridges */
+> +               if ((status == AE_NOT_FOUND) && !is_pcie)
+> +                       return;
+> +
+> +               if (requested) {
+> +                       decode_osc_control(root, "OS requested", requested);
+> +                       decode_osc_control(root, "platform willing to grant", control);
+> +               }
+> +
+> +               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
+> +                       acpi_format_exception(status));
+>         }
+>  }
+>
+> --
+> 2.31.1
+>
