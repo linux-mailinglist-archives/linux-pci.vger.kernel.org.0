@@ -2,118 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24AEC3C7BD3
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 04:28:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78D2B3C7E90
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 08:33:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237561AbhGNCbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 22:31:42 -0400
-Received: from mail-il1-f172.google.com ([209.85.166.172]:45051 "EHLO
-        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237422AbhGNCbm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 22:31:42 -0400
-Received: by mail-il1-f172.google.com with SMTP id r16so55445ilt.11;
-        Tue, 13 Jul 2021 19:28:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uPhI6R4g3txHpQracoqfXeG0O0NmHZsOBtb8VJZ/KSE=;
-        b=YeeOotCs+lZjCv3ySUYD8K7EtusosqSVfjTn4deYRHI7IqAl5PK/97DQtdIeuYW1Ex
-         1IBA3Nh6cOWsAWH3xPG+38T0KDp305Mvhqc+Cjs7+4KyqQL38VWExp/A+tikWn29mReA
-         QMicN+LkohJ5olLtYVttjAJwzfLaiubdkT90kdtHJH0qpvKNJwOYycQBxZs++t9Ak7qV
-         dBpfLtuiYSTx6Es1C7UVqeDp9/0llIEMR9nlSoU6qsuQWfguflxGnrQhSm8cQhgR7UN9
-         6z75/olEgTbUOA43RVELyyWSBdB/t6FUOALLnJh732vKQAijpXp3Xuh9sYLO49uQuEOa
-         ci2g==
-X-Gm-Message-State: AOAM533EXPbP+MW8ILQc9GU8/CoLo5tByMxujlTeNG6O0yDz+RcsOADM
-        t7xyHT1b/d4pJd2PEHvpZA==
-X-Google-Smtp-Source: ABdhPJyUPkTxtzkmyu8wOE5G5Y26j6e1VhACWo8dUIVd9hhTg2D4jmYokwK7CDioBWy0/VSvJWaa0w==
-X-Received: by 2002:a05:6e02:e82:: with SMTP id t2mr5156384ilj.218.1626229731609;
-        Tue, 13 Jul 2021 19:28:51 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id r16sm465316iln.30.2021.07.13.19.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 19:28:51 -0700 (PDT)
-Received: (nullmailer pid 1333200 invoked by uid 1000);
-        Wed, 14 Jul 2021 02:28:49 -0000
-Date:   Tue, 13 Jul 2021 20:28:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com, Manivannan Sadhasivam <mani@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 4/8] dt-bindings: PCI: kirin: Drop PHY properties
-Message-ID: <20210714022849.GA1330659@robh.at.kernel.org>
-References: <cover.1626157454.git.mchehab+huawei@kernel.org>
- <a04c9c92187ceaee0fd4b8d4721e2a3275d97518.1626157454.git.mchehab+huawei@kernel.org>
+        id S238104AbhGNGgb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 02:36:31 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:11301 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238028AbhGNGgb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 02:36:31 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4GPndx2yCvz8shC
+        for <linux-pci@vger.kernel.org>; Wed, 14 Jul 2021 14:29:09 +0800 (CST)
+Received: from dggpemm500017.china.huawei.com (7.185.36.178) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 14 Jul 2021 14:33:37 +0800
+Received: from [10.174.178.220] (10.174.178.220) by
+ dggpemm500017.china.huawei.com (7.185.36.178) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 14 Jul 2021 14:33:37 +0800
+From:   Wenchao Hao <haowenchao@huawei.com>
+Subject: [question]: Query regarding the PCI addresses
+To:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     Wu Bo <wubo40@huawei.com>, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        <linfeilong@huawei.com>, <lijinlin3@huawei.com>
+Message-ID: <bb7e27ea-5957-21a0-34b4-5adf517c3546@huawei.com>
+Date:   Wed, 14 Jul 2021 14:33:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a04c9c92187ceaee0fd4b8d4721e2a3275d97518.1626157454.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.178.220]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500017.china.huawei.com (7.185.36.178)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 08:28:37AM +0200, Mauro Carvalho Chehab wrote:
-> There are several properties there that belong to the PHY
-> interface. Drop them, as a new binding file will describe
-> the PHY properties for Kirin 960.
+Since linux identify PCI peripheral by [domain:bus:device:function] 
+number like following,
 
-Folks are okay with an incompatible change on hikey960?
+# lspci -D
+0000:00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
+0000:00:01.0 PCI bridge: Intel Corporation 82801 PCI Bridge (rev 92)
+0000:00:02.0 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub 
+PCI Express Root Port 0 (rev 02)
+0000:00:02.1 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub 
+PCI Express Root Port 0 (rev 02)
+0000:00:02.2 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub 
+PCI Express Root Port 0 (rev 02)
+0000:00:02.3 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub 
+PCI Express Root Port 0 (rev 02)
+0000:01:00.0 PCI bridge: Red Hat, Inc. QEMU PCI-PCI bridge
+0000:02:01.0 USB controller: Intel Corporation 82801DB/DBM (ICH4/ICH4-M) 
+USB2 EHCI Controller (rev 10)
+0000:02:02.0 Unclassified device [00ff]: Virtio: Virtio memory balloon
+0000:02:03.0 SCSI storage controller: Virtio: Virtio SCSI
+0000:02:04.0 Display controller: Virtio: Virtio GPU (rev 01)
+0000:03:00.0 Ethernet controller: Virtio: Virtio network device (rev 01)
 
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../devicetree/bindings/pci/kirin-pcie.txt       | 16 +++-------------
->  1 file changed, 3 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> index 71cac2b74002..a93a8cfa1afb 100644
-> --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> @@ -10,13 +10,11 @@ Additional properties are described here:
->  Required properties
->  - compatible:
->  	"hisilicon,kirin960-pcie"
-> -- reg: Should contain rc_dbi, apb, phy, config registers location and length.
-> +- reg: Should contain rc_dbi, apb, config registers location and length.
->  - reg-names: Must include the following entries:
->    "dbi": controller configuration registers;
->    "apb": apb Ctrl register defined by Kirin;
-> -  "phy": apb PHY register defined by Kirin;
->    "config": PCIe configuration space registers.
-> -- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->  
->  Optional properties:
->  
-> @@ -25,8 +23,8 @@ Example based on kirin960:
->  	pcie@f4000000 {
->  		compatible = "hisilicon,kirin960-pcie";
->  		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
-> -		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
-> -		reg-names = "dbi","apb","phy", "config";
-> +		      <0x0 0xF4000000 0 0x2000>;
-> +		reg-names = "dbi","apb", "config";
->  		bus-range = <0x0  0x1>;
->  		#address-cells = <3>;
->  		#size-cells = <2>;
-> @@ -39,12 +37,4 @@ Example based on kirin960:
->  				<0x0 0 0 2 &gic 0 0 0  283 4>,
->  				<0x0 0 0 3 &gic 0 0 0  284 4>,
->  				<0x0 0 0 4 &gic 0 0 0  285 4>;
-> -		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-> -			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-> -			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-> -			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-> -			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-> -		clock-names = "pcie_phy_ref", "pcie_aux",
-> -			      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-> -		reset-gpios = <&gpio11 1 0 >;
->  	};
-> -- 
-> 2.31.1
-> 
-> 
+Here are my questions: Are these [domain:bus:device:function] number 
+come from hardware's
+physical connection or allocated by software dynamic? If hardware do not 
+change, can we
+guarantee these number do not change after system reboot? If they are 
+not fixed, then is there
+anyway I can get a fixed ID which can indicate physical connection.
+
+Thanks, Hope to get your help.
