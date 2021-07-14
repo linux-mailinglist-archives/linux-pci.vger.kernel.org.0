@@ -2,147 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5913C82EB
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 12:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBFF03C82D4
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 12:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238917AbhGNKcc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 06:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239129AbhGNKcb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 06:32:31 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 591FBC061762;
-        Wed, 14 Jul 2021 03:29:40 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id 201so1025615qkj.13;
-        Wed, 14 Jul 2021 03:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MjtB63O8D6JZEGLQ/GVfQXEaFWYKcg+D2+varZhpuDo=;
-        b=LjjPBgmN78m+5VJLZrewYnBR6ZZfRjNoneQMnEhrS8cFOWElmH+4HuwQyWnXuPcXM4
-         iCQwcyvT8BTPK1FIFjkX52293Yp8b8UTC53P7nmMTZucD4LUpG6KNwp7kJZP+UKbiGN8
-         cIJ3gfHHwxtUE+YIMpsvMIu3d8CBccf9I4+iSwJtLLi2LXaJoFW6Am4STjGjCYTmTQVJ
-         ex0DYEh8X6fT+fn8hymR2j63fp3x5bt/66pSU0O5DzwskWcacPErIy3HFb6C+B5iKVPf
-         GJu6F1XpFIgumjfo5l7D2WP+EcMFIf3RBEWclTmwg60T7Rub9TZo+swD06lSfT7kBgM5
-         BOpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MjtB63O8D6JZEGLQ/GVfQXEaFWYKcg+D2+varZhpuDo=;
-        b=eTwfpBuyLUbS2d5grrCR4OD2/B08nQ8e61oSDc2LGZcrB4NcTf+2+2fZ3GpX/MIUJ7
-         bdqF5p+3eUBtA/WsUZD+s+KCEjRmOHg+dn9X9yBc7R91z5uQEhUTCsV+xk6LiLcXMFf4
-         r/ixRyUQpqpgsbmHUDDMJ0Mys7ALHC2cNheSBHENA9BRr/Z3+Wbe/bC6aQw7ccP+pdEJ
-         sY6Lrx3N80mvZHUtj+kMXMG912LdMO+ft4y9/QJs+DEcYCwe3tOu0tKo6/5J4GhfBPQF
-         ht8tP+tPP6lAgHqryA5yFDo0TajO6IWdXT+nOpyUz2aECopEJDpasO3PQ3oTcIFGsN+z
-         +ZvA==
-X-Gm-Message-State: AOAM5323PDrDft8QddnE7o3ZUDTdOGPVl36efqFa0rvRIdeHXnnDyFey
-        lXuZcQHiYUgZvblf8ll6fbc=
-X-Google-Smtp-Source: ABdhPJyIQ4bAu5TuRkSktzpUaxKE9S5Kn2Eipv5skl92L4xZ/DaDosYBF1hPBKslEuM4tJ2Q72EAww==
-X-Received: by 2002:ae9:e002:: with SMTP id m2mr9208764qkk.474.1626258578690;
-        Wed, 14 Jul 2021 03:29:38 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id k6sm614543qtg.78.2021.07.14.03.29.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 03:29:38 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 72D4F27C005A;
-        Wed, 14 Jul 2021 06:29:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 14 Jul 2021 06:29:37 -0400
-X-ME-Sender: <xms:kbzuYDViUfRItF8rPHX6vN-ic8is2MZWkqlW_bXywEo6Jrl5nibUHA>
-    <xme:kbzuYLmKtOvCqIwXhLl7WmY7BRuDXzVGcOtzlADRJROXPgcIOJ_l96vDq5blR8aqw
-    _RDQJ-v01JDLI7LCA>
-X-ME-Received: <xmr:kbzuYPaebdiUUw5n5lWFDeq_0BaIMtRcnlA5PPyhn0NVJs_UvQZdSwB1zyhIpQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekgddvkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpeehvdevteefgfeiudettdefvedvvdelkeejueffffelgeeuhffhjeetkeeiueeu
-    leenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:kbzuYOUeKcfcythj7uzBsnvXkLUEruYwgfH4En_JWPMTrEvtmu6WNA>
-    <xmx:kbzuYNmpowsRfbNGzZYYya4v1-pWzunrJO3_SZu8H_YdkyzURBIj_g>
-    <xmx:kbzuYLfjOkJu3TxOJ-WO9o8n2Gd9uk_XjmlMWDILc9wDbtzmWKmIEw>
-    <xmx:kbzuYMfbLHVurHIjUzOYJ7AwOxYUVtcmfbpkSyZ0kzUgFCJevzVTAAMMzEQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 14 Jul 2021 06:29:37 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: [RFC v4 7/7] PCI: hv: Turn on the host bridge probing on ARM64
-Date:   Wed, 14 Jul 2021 18:27:37 +0800
-Message-Id: <20210714102737.198432-8-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210714102737.198432-1-boqun.feng@gmail.com>
-References: <20210714102737.198432-1-boqun.feng@gmail.com>
+        id S237997AbhGNKcL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 06:32:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:33100 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237788AbhGNKcL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Jul 2021 06:32:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51AFAD6E;
+        Wed, 14 Jul 2021 03:29:19 -0700 (PDT)
+Received: from [10.57.36.240] (unknown [10.57.36.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4FA73F774;
+        Wed, 14 Jul 2021 03:29:14 -0700 (PDT)
+Subject: Re: [PATCH v2 0/3] iommu: Enable non-strict DMA on QCom SD/MMC
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Rajat Jain <rajatja@google.com>, Will Deacon <will@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, quic_c_gdjako@quicinc.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+References: <20210624171759.4125094-1-dianders@chromium.org>
+ <YNXXwvuErVnlHt+s@8bytes.org>
+ <CAD=FV=UFxZH7g8gH5+M=Fv4Y-e1bsLkNkPGJhNwhvVychcGQcQ@mail.gmail.com>
+ <CAD=FV=W=HmgH3O3z+nThWL6U+X4Oh37COe-uTzVB9SanP2n86w@mail.gmail.com>
+ <YOaymBHc4g2cIfRn@8bytes.org> <edd1de35-5b9e-b679-9428-23c6d5005740@arm.com>
+ <YO65OOScL5vru1Kr@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <255adda2-3b5f-b080-4da1-f3c5d5a4f7a6@arm.com>
+Date:   Wed, 14 Jul 2021 11:29:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <YO65OOScL5vru1Kr@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now we have everything we need, just provide a proper sysdata type for
-the bus to use on ARM64 and everything else works.
+On 2021-07-14 11:15, Joerg Roedel wrote:
+> Hi Robin,
+> 
+> On Fri, Jul 09, 2021 at 02:56:47PM +0100, Robin Murphy wrote:
+>> As I mentioned before, conceptually I think this very much belongs in sysfs
+>> as a user decision. We essentially have 4 levels of "strictness":
+>>
+>> 1: DMA domain with bounce pages
+>> 2: DMA domain
+>> 3: DMA domain with flush queue
+>> 4: Identity domain
+> 
+> Together with reasonable defaults (influenced by compile-time
+> options) it seems to be a good thing to configure at runtime via
+> sysfs.
+> 
+> We already have CONFIG_IOMMU_DEFAULT_PASSTHROUGH, which can probably be
+> extended to be an option list:
+> 
+> 	- CONFIG_IOMMU_DEFAULT_PASSTHROUGH: Trusted devices are identity
+> 					    mapped
+> 
+> 	- CONFIG_IOMMU_DEFAULT_DMA_STRICT: Trusted devices are DMA
+> 					   mapped with strict flush
+> 					   behavior on unmap
+> 
+> 	- CONFIG_IOMMU_DEFAULT_DMA_LAZY: Trusted devices are DMA mapped
+> 					 with flush queues for performance
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Indeed, I got focused on the sysfs angle, but rearranging the Kconfig 
+default that way to match makes a lot of sense, and is another thing 
+which should fall out really easily from my domain type rework, so I'll 
+add that to my branch now before I forget again.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index e6276aaa4659..62dbe98d1fe1 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -40,6 +40,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/delay.h>
- #include <linux/semaphore.h>
- #include <linux/irqdomain.h>
-@@ -448,7 +449,11 @@ enum hv_pcibus_state {
- };
- 
- struct hv_pcibus_device {
-+#ifdef CONFIG_X86
- 	struct pci_sysdata sysdata;
-+#elif defined(CONFIG_ARM64)
-+	struct pci_config_window sysdata;
-+#endif
- 	struct pci_host_bridge *bridge;
- 	struct fwnode_handle *fwnode;
- 	/* Protocol version negotiated with the host */
-@@ -3075,7 +3080,9 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			 dom_req, dom);
- 
- 	hbus->bridge->domain_nr = dom;
-+#ifdef CONFIG_X86
- 	hbus->sysdata.domain = dom;
-+#endif
- 
- 	hbus->hdev = hdev;
- 	INIT_LIST_HEAD(&hbus->children);
--- 
-2.30.2
+> Untrusted devices always get into the DMA domain with bounce pages by
+> default.
+> 
+> The defaults can be changed at runtime via sysfs. We already have basic
+> support for runtime switching of the default domain, so that can be
+> re-used.
 
+As mentioned yesterday, already done! I'm hoping to be able to post the 
+patches next week after some testing :)
+
+Cheers,
+Robin.
