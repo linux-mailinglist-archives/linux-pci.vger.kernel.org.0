@@ -2,113 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F5FC3C83AB
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 13:19:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D4113C83BD
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 13:20:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238984AbhGNLWW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 07:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232161AbhGNLWV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 07:22:21 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7B1C06175F;
-        Wed, 14 Jul 2021 04:19:29 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id dj21so2684908edb.0;
-        Wed, 14 Jul 2021 04:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=t9BiriwpOcNEknMm/iM0jLz5+veRh3lTn49M6YjFIAg=;
-        b=hlIl5a1YaVJjTVmyVNJnn1PWoxiuSvlzAUJuzged3kbs3f0MnU3O6thtTUDVgDi92h
-         a6lVeKJkqp820ALDwGpl0U4ZoxAMjMn+acN9pcaGjCoFS1XYuXtgTSIiCcsOc/c7MsP8
-         SV7Ic6lu7fje6N2E7q3i3Gdu7cHTbVqzUHZLBHfD0bbPc+hF+ZjxM+XZGWfRuzu9go1z
-         z5rtou2E5Z9P1+P+XLCjbPmePtW3jjmWFaqHG8cW+A6CPjQ0Vuh7TsCvNw/S1tFCMBK5
-         /BTyNdrp012ROvh3zA1ftXagejr6fJjP4/LUtc1mqDEBgzXR03Il/kL+LBMq1e71S5df
-         9iLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t9BiriwpOcNEknMm/iM0jLz5+veRh3lTn49M6YjFIAg=;
-        b=t7cme94IFJwjHHgXpu0THyNluAff06f/cEkgCn9x73zRQxSbQ7+TQiST9rtv2hQjBR
-         MaEcBeM4b1tIgIK5YYQBWeodWDOIcH1Wx66BNNo0Epk4CLorR5LdD2bKvYG7brSABJsV
-         958RFGiADhcdkjf2VzwOTB7ahwlW1S24vw344DmltTSdD0yDgixhFkV46fpF0ojeRxEg
-         9tFdnqJMsZpiGjCkBwc7PPG17Ps91OC7E0oJu11IDBnqSiG1g8gjnBpprjZ2sFHvoXgU
-         8aqBblBw/tW5gggLU9cEvjK2KPO++qAtG3AZrhNgcFo7lj66sacN/dIBxgr7V7nszwYs
-         8IrQ==
-X-Gm-Message-State: AOAM533OAwsToo0zagXhXFKU0Pp/5Td99PpBsR5Fh0eW3RKd5RkFw5/X
-        l2F0ot9TDiLxWY4Abo6tx60=
-X-Google-Smtp-Source: ABdhPJyStSekdjayeUViGApOVQNa7pYq8yu4/35Q8QcMoWOA1JNSFYmBgCv5OylZFSiL/p6MZ/P2KA==
-X-Received: by 2002:a05:6402:35d4:: with SMTP id z20mr13349613edc.138.1626261567652;
-        Wed, 14 Jul 2021 04:19:27 -0700 (PDT)
-Received: from [192.168.0.108] ([77.127.114.213])
-        by smtp.gmail.com with ESMTPSA id v16sm137541edc.52.2021.07.14.04.19.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jul 2021 04:19:27 -0700 (PDT)
-Subject: Re: [PATCH v3 14/14] net/mlx4: Use irq_update_affinity_hint
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
-        tglx@linutronix.de, jesse.brandeburg@intel.com,
-        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
-        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
-        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
-        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
-        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
-        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
-        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
-        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
-        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        somnath.kotur@broadcom.com, nilal@redhat.com,
-        tatyana.e.nikolova@intel.com, mustafa.ismail@intel.com,
-        ahs3@redhat.com, leonro@nvidia.com, chandrakanth.patil@broadcom.com
-References: <20210713211502.464259-1-nitesh@redhat.com>
- <20210713211502.464259-15-nitesh@redhat.com>
-From:   Tariq Toukan <ttoukan.linux@gmail.com>
-Message-ID: <c2d794bf-20b4-95fa-dfba-e85cf6b74bd4@gmail.com>
-Date:   Wed, 14 Jul 2021 14:19:20 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S230437AbhGNLXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 07:23:13 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34994 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S239252AbhGNLXN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 07:23:13 -0400
+X-UUID: 9e8e18d3f251481dad6f4a190c7ce515-20210714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JvxaiGfMsn7QBnaqj6qePbCrrXbpLHrwC0rk4w7ViDc=;
+        b=sbz3OeVTXFtBumuY38Rq1MKrRmoRIIaGKIPQhOqcbuIdIemzVL2I1/g3MMo6AIdJr9jTQnK4WzVho3wknUxYK+Duzfj8ZGlKTTdh8xRHnZfMAjzJ4zZm+Z9H5E0DmViR9gazXPZBqw1ifPo9Ue/OuFqLHLLxRSmb3n8c2OJIYn0=;
+X-UUID: 9e8e18d3f251481dad6f4a190c7ce515-20210714
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1090164648; Wed, 14 Jul 2021 19:20:19 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 14 Jul
+ 2021 19:20:13 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 14 Jul 2021 19:20:12 +0800
+Message-ID: <1626261612.8134.1.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: mediatek-gen3: Add property to
+ disable dvfsrc voltage request
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Qizhong Cheng <qizhong.cheng@mediatek.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <youlin.pei@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <ot_jiey.yang@mediatek.com>,
+        <drinkcat@chromium.org>, <Rex-BC.Chen@mediatek.com>,
+        Krzysztof Wilczyski <kw@linux.com>, <Ryan-JH.Yu@mediatek.com>
+Date:   Wed, 14 Jul 2021 19:20:12 +0800
+In-Reply-To: <1625024423.20084.12.camel@mhfsdcap03>
+References: <20210630024934.18903-1-jianjun.wang@mediatek.com>
+         <20210630024934.18903-2-jianjun.wang@mediatek.com>
+         <1625024423.20084.12.camel@mhfsdcap03>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20210713211502.464259-15-nitesh@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 2BFD83614F95DED623F532636757125FFAAE8188D0AA27564AC8C064EC7B622D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+SGksDQoNCkp1c3QgZ2VudGxlIHBpbmcgZm9yIHRoaXMgcGF0Y2ggc2V0LCBwbGVhc2Uga2luZGx5
+IGxldCBtZSBrbm93IHlvdXINCmNvbW1lbnRzIGFib3V0IHRoaXMgcGF0Y2ggc2V0Lg0KDQpUaGFu
+a3MuDQoNCk9uIFdlZCwgMjAyMS0wNi0zMCBhdCAxMTo0MCArMDgwMCwgUWl6aG9uZyBDaGVuZyB3
+cm90ZToNCj4gUmV2aWV3ZWQtYnk6IFFpemhvbmcgQ2hlbmcgPHFpemhvbmcuY2hlbmdAbWVkaWF0
+ZWsuY29tPg0KPiBUZXN0ZWQtYnk6IFFpemhvbmcgQ2hlbmcgPHFpemhvbmcuY2hlbmdAbWVkaWF0
+ZWsuY29tPg0KPiANCj4gT24gV2VkLCAyMDIxLTA2LTMwIGF0IDEwOjQ5ICswODAwLCBKaWFuanVu
+IFdhbmcgd3JvdGU6DQo+ID4gQWRkIHByb3BlcnR5IHRvIGRpc2FibGUgZHZmc3JjIHZvbHRhZ2Ug
+cmVxdWVzdCwgaWYgdGhpcyBwcm9wZXJ0eQ0KPiA+IGlzIHByZXNlbnRlZCwgd2UgYXNzdW1lIHRo
+YXQgdGhlIHJlcXVlc3RlZCB2b2x0YWdlIGlzIGFsd2F5cw0KPiA+IGhpZ2hlciBlbm91Z2ggdG8g
+a2VlcCB0aGUgUENJZSBjb250cm9sbGVyIGFjdGl2ZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBKaWFuanVuIFdhbmcgPGppYW5qdW4ud2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCAgICAg
+ICB8IDggKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQ0KPiA+
+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
+L21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0KPiA+IGluZGV4IGU3YjFmOTg5MmRhNC4u
+M2UyNmMwMzJjZWE5IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1nZW4zLnlhbWwNCj4gPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sDQo+ID4g
+QEAgLTk2LDYgKzk2LDEyIEBAIHByb3BlcnRpZXM6DQo+ID4gICAgcGh5czoNCj4gPiAgICAgIG1h
+eEl0ZW1zOiAxDQo+ID4gIA0KPiA+ICsgIGRpc2FibGUtZHZmc3JjLXZsdC1yZXE6DQo+ID4gKyAg
+ICBkZXNjcmlwdGlvbjogRGlzYWJsZSBkdmZzcmMgdm9sdGFnZSByZXF1ZXN0LCBpZiB0aGlzIHBy
+b3BlcnR5IGlzIHByZXNlbnRlZCwNCj4gPiArICAgICAgd2UgYXNzdW1lIHRoYXQgdGhlIHJlcXVl
+c3RlZCB2b2x0YWdlIGlzIGFsd2F5cyBoaWdoZXIgZW5vdWdoIHRvIGtlZXANCj4gPiArICAgICAg
+dGhlIFBDSWUgY29udHJvbGxlciBhY3RpdmUuDQo+ID4gKyAgICB0eXBlOiBib29sZWFuDQo+ID4g
+Kw0KPiA+ICAgICcjaW50ZXJydXB0LWNlbGxzJzoNCj4gPiAgICAgIGNvbnN0OiAxDQo+ID4gIA0K
+PiA+IEBAIC0xNjYsNiArMTcyLDggQEAgZXhhbXBsZXM6DQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgIDwmaW5mcmFjZmdfcnN0IDM+Ow0KPiA+ICAgICAgICAgICAgICByZXNldC1uYW1lcyA9ICJw
+aHkiLCAibWFjIjsNCj4gPiAgDQo+ID4gKyAgICAgICAgICAgIGRpc2FibGUtZHZmc3JjLXZsdC1y
+ZXE7DQo+ID4gKw0KPiA+ICAgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiA+
+ICAgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgMHg3PjsNCj4gPiAgICAg
+ICAgICAgICAgaW50ZXJydXB0LW1hcCA9IDwwIDAgMCAxICZwY2llX2ludGMgMD4sDQo+IA0KPiAN
+Cg0K
 
-
-On 7/14/2021 12:15 AM, Nitesh Narayan Lal wrote:
-> The driver uses irq_set_affinity_hint() to update the affinity_hint mask
-> that is consumed by the userspace to distribute the interrupts. However,
-> under the hood irq_set_affinity_hint() also applies the provided cpumask
-> (if not NULL) as the affinity for the given interrupt which is an
-> undocumented side effect.
-> 
-> To remove this side effect irq_set_affinity_hint() has been marked
-> as deprecated and new interfaces have been introduced. Hence, replace the
-> irq_set_affinity_hint() with the new interface irq_update_affinity_hint()
-> that only updates the affinity_hint pointer.
-> 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
-
-Thanks for you patch.
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-
-Tariq
