@@ -2,275 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DC463C843E
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 14:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06ACB3C84DC
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 14:56:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbhGNMHU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 08:07:20 -0400
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:37842 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231193AbhGNMHU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 08:07:20 -0400
-Received: by mail-ot1-f48.google.com with SMTP id e1-20020a9d63c10000b02904b8b87ecc43so2202448otl.4;
-        Wed, 14 Jul 2021 05:04:28 -0700 (PDT)
+        id S239192AbhGNM7r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 08:59:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23509 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231462AbhGNM7r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 08:59:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626267415;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=raZzmrSm7aAF93XtBd5NdebdkvP4rzoUtxpQ14Vvgi8=;
+        b=YSGQxx/P/js+w8W0ywRLPHlB4ntHt3v9xhBFAbiPzCmvRshPwPP9Kp6+mszzPXm3FlA9kH
+        VePyjelIMjGEf1M+KUmFYoFe3bADaOefBc/Jx4PO1cC6ofRrka/b+Xh0Nq3RrrSqDy6wEX
+        I+hObQYmFMA3tdRvyBQbv1+gAfCFCrY=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-489-HMHzyVl9PTqvIfG2TXc1lA-1; Wed, 14 Jul 2021 08:56:54 -0400
+X-MC-Unique: HMHzyVl9PTqvIfG2TXc1lA-1
+Received: by mail-lj1-f198.google.com with SMTP id b3-20020a05651c0323b029018ba0baeb6eso1114553ljp.5
+        for <linux-pci@vger.kernel.org>; Wed, 14 Jul 2021 05:56:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5e9knfz3JG2gvEu2JVirrsq3sLTuduOyNuC1JgchsD0=;
-        b=J+2TzqKqZXfTSoQnbwcAmHcwBFa0dmaZCyzZGSISr+sg/nyiEA/dFdY5N8EppxOqjh
-         OOfSiPQ+4OebJWLV7k+YU+KsBok/7l79vV6YpAQ2wiBtdj25VKbo6E9fVNEfJDfa1LA5
-         6CVOrsf6wlCpkcrKWygyoeLa9Oq0C0dgnU5fWTxDrPFtT3pHYBNt4KZYuBBbkhliOhro
-         4L2ZoZwKji2rk1KJ20Ll4588m+wx2bLoru2dFmipflIKroVwwRqYlJ7npFRBxS/LpeaJ
-         dR4IChYVJu88B06rB4n4FSHvv19ktlM47opLUo543W8tCnyMOiTGvJVe9olIYgDT60XJ
-         inAA==
-X-Gm-Message-State: AOAM5310gkHHzg83KZZPq8y3IQ6/WNMaDWBg+eFAvGmkK6BajkHh+usN
-        PtplrttQow0S+Fpb2z3cyLqNW+qhAY5nHnpwYhU=
-X-Google-Smtp-Source: ABdhPJyH6gHb9v+2jbbt+B7bBKNZJC6DMtAQiA/tEoDx2TTr3eweGm/4CmAvbMEjhoEXHsTd6x99boZ+xpCTfJGbb1c=
-X-Received: by 2002:a9d:2968:: with SMTP id d95mr7885578otb.321.1626264268335;
- Wed, 14 Jul 2021 05:04:28 -0700 (PDT)
+        bh=raZzmrSm7aAF93XtBd5NdebdkvP4rzoUtxpQ14Vvgi8=;
+        b=kuIGS4/Q1ChTAGrIcRSsA9O2UCDR/7NNT2Qj91UElWLkoNeXsr/BdXpZEb+/ZDx1d8
+         0kyPlNkJ/jxYuCsXVkZo4dDUMszmxFXIaNMda1mUjSEOhRLHJppZS8/c0IJiz7cgw5zF
+         d9nmON1a1t1UMCWangAQ/p6vACrDFyhXpWOQJ+5AuxHFXx1Niola6V4BN6iIY96wGJ7A
+         vofHBdStmwF/Gqvjbv5ByO9E7G5cWRZS0AIguyR4xUNgNqXkNfMo0Gx/Wcg5TSP77ovo
+         WpUMDxMvPXdLsuRcOjKTecjoT45JLkyvgMZKXsIe6IhN5xZ3SM/KUMihATBq16fEdS5K
+         OuDg==
+X-Gm-Message-State: AOAM530koyZt/m3hLdnjOqKU+QGJx9bYm1KilWAvY6h1sFmm9wlHuAQV
+        06YkgE3Tune+LzH5W1Bg4IdJHfM/qKZIjBL7zrdwNdMO5Gtnp5W7RefELPN5lXWJ8ru50L7psBu
+        BghhghcblQ8PM38a/6YCA5N3YeFPv5NIx5QTW
+X-Received: by 2002:a19:7d05:: with SMTP id y5mr7890006lfc.159.1626267412624;
+        Wed, 14 Jul 2021 05:56:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx8jmr/n3HvyYiI0el6kooSvghZovJs9ESz6mJmR0hmZCuQ98JAONelY4P6o0p0ninDERR/o2eRUttWE5gB5mc=
+X-Received: by 2002:a19:7d05:: with SMTP id y5mr7889951lfc.159.1626267412400;
+ Wed, 14 Jul 2021 05:56:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210714085512.2176-1-joro@8bytes.org> <20210714085512.2176-2-joro@8bytes.org>
-In-Reply-To: <20210714085512.2176-2-joro@8bytes.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 14 Jul 2021 14:04:17 +0200
-Message-ID: <CAJZ5v0if-5A0vZSTeDvqLtqE2jZrKjCFcRouR2uFgycZ7CdWkg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] PCI/APCI: Move acpi_pci_osc_support() check to
- negotiation phase
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>
+References: <20210713211502.464259-1-nitesh@redhat.com> <20210713211502.464259-7-nitesh@redhat.com>
+ <YO7SiFE1dE0dFhkE@unreal>
+In-Reply-To: <YO7SiFE1dE0dFhkE@unreal>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Wed, 14 Jul 2021 08:56:41 -0400
+Message-ID: <CAFki+Lm-CpKZai1fV5aMJzEb-x+003m8wLQShSrYpyNh3XC50Q@mail.gmail.com>
+Subject: Re: [PATCH v3 06/14] RDMA/irdma: Use irq_set_affinity_and_hint
+To:     Leon Romanovsky <leonro@nvidia.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
+        frederic@kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
+        Stefan Assmann <sassmann@redhat.com>,
+        Tomas Henzl <thenzl@redhat.com>, kashyap.desai@broadcom.com,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, Ken Cox <jkc@redhat.com>,
+        faisal.latif@intel.com, shiraz.saleem@intel.com, tariqt@nvidia.com,
+        Alaa Hleihel <ahleihel@redhat.com>,
+        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
+        saeedm@nvidia.com, benve@cisco.com, govind@gmx.com,
+        jassisinghbrar@gmail.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
+        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
+        Al Stone <ahs3@redhat.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 10:55 AM Joerg Roedel <joro@8bytes.org> wrote:
+On Wed, Jul 14, 2021 at 8:03 AM Leon Romanovsky <leonro@nvidia.com> wrote:
 >
-> From: Joerg Roedel <jroedel@suse.de>
+> On Tue, Jul 13, 2021 at 05:14:54PM -0400, Nitesh Narayan Lal wrote:
+> > The driver uses irq_set_affinity_hint() to update the affinity_hint mask
+> > that is consumed by the userspace to distribute the interrupts and to apply
+> > the provided mask as the affinity for its interrupts. However,
+> > irq_set_affinity_hint() applying the provided cpumask as an affinity for
+> > the interrupt is an undocumented side effect.
+> >
+> > To remove this side effect irq_set_affinity_hint() has been marked
+> > as deprecated and new interfaces have been introduced. Hence, replace the
+> > irq_set_affinity_hint() with the new interface irq_set_affinity_and_hint()
+> > where the provided mask needs to be applied as the affinity and
+> > affinity_hint pointer needs to be set and replace with
+> > irq_update_affinity_hint() where only affinity_hint needs to be updated.
+> >
+> > Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> > ---
+> >  drivers/infiniband/hw/irdma/hw.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/infiniband/hw/irdma/hw.c b/drivers/infiniband/hw/irdma/hw.c
+> > index 7afb8a6a0526..7f13a051d4de 100644
+> > --- a/drivers/infiniband/hw/irdma/hw.c
+> > +++ b/drivers/infiniband/hw/irdma/hw.c
+> > @@ -537,7 +537,7 @@ static void irdma_destroy_irq(struct irdma_pci_f *rf,
+> >       struct irdma_sc_dev *dev = &rf->sc_dev;
+> >
+> >       dev->irq_ops->irdma_dis_irq(dev, msix_vec->idx);
+> > -     irq_set_affinity_hint(msix_vec->irq, NULL);
+> > +     irq_update_affinity_hint(msix_vec->irq, NULL);
+> >       free_irq(msix_vec->irq, dev_id);
+> >  }
+> >
+> > @@ -1087,7 +1087,7 @@ irdma_cfg_ceq_vector(struct irdma_pci_f *rf, struct irdma_ceq *iwceq,
+> >       }
+> >       cpumask_clear(&msix_vec->mask);
+> >       cpumask_set_cpu(msix_vec->cpu_affinity, &msix_vec->mask);
+> > -     irq_set_affinity_hint(msix_vec->irq, &msix_vec->mask);
+> > +     irq_set_affinity_and_hint(msix_vec->irq, &msix_vec->mask);
 >
-> The acpi_pci_osc_support() does an _OSC query with _OSC supported set
-> to what the OS supports but a zero _OSC control value, only to later
-> claim the features Linux wants to control with an extra _OSC query.
+> I think that it needs to be irq_update_affinity_hint().
 >
-> Nothing between the two _OSC querys depends on the result of the first
-> one (if successfull), and if the supported query fails the control
-> query will fail too. So it is a good code simplification to combine
-> these two querys into one.
->
-> As a result the acpi_pci_osc_support() function can be removed and
-> acpi_pci_query_osc() be simplified because it no longer called with a
-> NULL pointer for *control. Also some code duplication in the existing
-> error paths was consolidated.
->
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  drivers/acpi/pci_root.c | 114 ++++++++++++++++++----------------------
->  1 file changed, 52 insertions(+), 62 deletions(-)
->
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index d7deedf3548e..c703832b7f7f 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -201,31 +201,20 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
->
->         support &= OSC_PCI_SUPPORT_MASKS;
->         support |= root->osc_support_set;
-> +       *control &= OSC_PCI_CONTROL_MASKS;
->
->         capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
->         capbuf[OSC_SUPPORT_DWORD] = support;
-> -       if (control) {
-> -               *control &= OSC_PCI_CONTROL_MASKS;
-> -               capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
-> -       } else {
-> -               /* Run _OSC query only with existing controls. */
-> -               capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
-> -       }
-> +       capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
->
->         status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
->         if (ACPI_SUCCESS(status)) {
->                 root->osc_support_set = support;
-> -               if (control)
-> -                       *control = result;
-> +               *control = result;
->         }
->         return status;
->  }
->
-> -static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
-> -{
-> -       return acpi_pci_query_osc(root, flags, NULL);
-> -}
-> -
->  struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
->  {
->         struct acpi_pci_root *root;
-> @@ -348,7 +337,8 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->   * _OSC bits the BIOS has granted control of, but its contents are meaningless
->   * on failure.
->   **/
-> -static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
-> +static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32
-> +                                           *mask, u32 req, u32 support)
->  {
->         struct acpi_pci_root *root;
->         acpi_status status;
-> @@ -372,7 +362,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
->
->         /* Need to check the available controls bits before requesting them. */
->         while (*mask) {
-> -               status = acpi_pci_query_osc(root, root->osc_support_set, mask);
-> +               status = acpi_pci_query_osc(root, support, mask);
->                 if (ACPI_FAILURE(status))
->                         return status;
->                 if (ctrl == *mask)
-> @@ -402,7 +392,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
->  static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->                                  bool is_pcie)
->  {
-> -       u32 support, control, requested;
-> +       u32 support, control = 0, requested;
->         acpi_status status;
->         struct acpi_device *device = root->device;
->         acpi_handle handle = device->handle;
-> @@ -435,59 +425,49 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->                 support |= OSC_PCI_EDR_SUPPORT;
->
->         decode_osc_support(root, "OS supports", support);
-> -       status = acpi_pci_osc_support(root, support);
-> -       if (ACPI_FAILURE(status)) {
-> -               *no_aspm = 1;
->
-> -               /* _OSC is optional for PCI host bridges */
-> -               if ((status == AE_NOT_FOUND) && !is_pcie)
-> +       if (!pcie_ports_disabled) {
 
-If pcie_ports_disabled is set, we don't want to request any control
-from the platform firmware at all and, specifically, we don't want to
-evaluate _OSC with the OSC_QUERY_ENABLE clear in
-capbuf[OSC_QUERY_DWORD].
+Ah! I got a little confused from our last conversation about mlx5.
 
-I'm not sure how this is achieved after your changes.
+IIUC mlx5 sub-function use case uses irdma (?) and that's why I thought
+that perhaps we would also want to define the affinity here from the beginning.
 
-> +               if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
-> +                       decode_osc_support(root, "not requesting OS control; OS requires",
-> +                                       ACPI_PCIE_REQ_SUPPORT);
->                         return;
-> +               }
->
-> -               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-> -                        acpi_format_exception(status));
-> -               return;
-> -       }
-> -
-> -       if (pcie_ports_disabled) {
-> -               dev_info(&device->dev, "PCIe port services disabled; not requesting _OSC control\n");
-> -               return;
-> -       }
-> -
-> -       if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
-> -               decode_osc_support(root, "not requesting OS control; OS requires",
-> -                                  ACPI_PCIE_REQ_SUPPORT);
-> -               return;
-> -       }
-> -
-> -       control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL
-> -               | OSC_PCI_EXPRESS_PME_CONTROL;
-> +               control = OSC_PCI_EXPRESS_CAPABILITY_CONTROL
-> +                       | OSC_PCI_EXPRESS_PME_CONTROL;
->
-> -       if (IS_ENABLED(CONFIG_PCIEASPM))
-> -               control |= OSC_PCI_EXPRESS_LTR_CONTROL;
-> +               if (IS_ENABLED(CONFIG_PCIEASPM))
-> +                       control |= OSC_PCI_EXPRESS_LTR_CONTROL;
->
-> -       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> -               control |= OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
-> +               if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> +                       control |= OSC_PCI_EXPRESS_NATIVE_HP_CONTROL;
->
-> -       if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
-> -               control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
-> +               if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
-> +                       control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
->
-> -       if (pci_aer_available())
-> -               control |= OSC_PCI_EXPRESS_AER_CONTROL;
-> +               if (pci_aer_available())
-> +                       control |= OSC_PCI_EXPRESS_AER_CONTROL;
->
-> -       /*
-> -        * Per the Downstream Port Containment Related Enhancements ECN to
-> -        * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
-> -        * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
-> -        * and EDR.
-> -        */
-> -       if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
-> -               control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-> +               /*
-> +                * Per the Downstream Port Containment Related Enhancements ECN to
-> +                * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
-> +                * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
-> +                * and EDR.
-> +                */
-> +               if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
-> +                       control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-> +       }
->
-> +       /* Need an _OSC call even with pcie_ports_disabled set */
->         requested = control;
->         status = acpi_pci_osc_control_set(handle, &control,
-> -                                         OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
-> +                                         OSC_PCI_EXPRESS_CAPABILITY_CONTROL,
-> +                                         support);
-> +
->         if (ACPI_SUCCESS(status)) {
-> -               decode_osc_control(root, "OS now controls", control);
-> +               if (control)
-> +                       decode_osc_control(root, "OS now controls", control);
-> +
->                 if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
->                         /*
->                          * We have ASPM control, but the FADT indicates that
-> @@ -498,10 +478,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->                         *no_aspm = 1;
->                 }
->         } else {
-> -               decode_osc_control(root, "OS requested", requested);
-> -               decode_osc_control(root, "platform willing to grant", control);
-> -               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-> -                       acpi_format_exception(status));
-> +               /* Platform wants to control PCIe features */
-> +               root->osc_support_set = 0;
->
->                 /*
->                  * We want to disable ASPM here, but aspm_disabled
-> @@ -511,6 +489,18 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->                  * root scan.
->                  */
->                 *no_aspm = 1;
-> +
-> +               /* _OSC is optional for PCI host bridges */
-> +               if ((status == AE_NOT_FOUND) && !is_pcie)
-> +                       return;
-> +
-> +               if (requested) {
-> +                       decode_osc_control(root, "OS requested", requested);
-> +                       decode_osc_control(root, "platform willing to grant", control);
-> +               }
-> +
-> +               dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-> +                       acpi_format_exception(status));
->         }
->  }
->
-> --
-> 2.31.1
->
+In any case, I will make the change and re-post.
+
+--
+Thanks
+Nitesh
+
