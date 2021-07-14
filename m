@@ -2,266 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF4483C8423
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 13:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD0E3C842E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 14:01:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230492AbhGNMCm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 08:02:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230405AbhGNMCm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 08:02:42 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D19C06175F;
-        Wed, 14 Jul 2021 04:59:50 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id w15so2105220pgk.13;
-        Wed, 14 Jul 2021 04:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BYAB0IcsIwM15U87TPked3FMLOx8gHDrWRUXhvAMX6s=;
-        b=Gufl/RwhzJ5LxDX9O9h23x6IyjJfJOsdRBrThWLFRUQEpYpWnyYv9U/0fDGtAzucI+
-         AQZCZTxDT71GTt9rakmmyCZZfPfVYBeK3MpDcAyEr+Cme8PlExajcePe9mYGVrBJxABH
-         fCfoFUUmCzyE4rVur6psK6+h45Ct8plwcUcPP+gJNGkE3aA8i7vvC1Wke3Pc5Sjb/9PH
-         shyeXTWTPgk5K6q9GU9pUxA0cbEOihndSAQmYlkMUrVZNdaKQNGkHOXxcCzrxYCbZFMX
-         lRCjGkQj6UIQtbH43VPYdlJP2ngKOho+v7FohpGP8D6L3GdbhRW8qDd6w9TaC/WHc+PJ
-         EbjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BYAB0IcsIwM15U87TPked3FMLOx8gHDrWRUXhvAMX6s=;
-        b=I00f37j/dmkKbW5g0X4XwQcIYD1SfSMBgdEo4GmEKrQTQDKy0IXpYyiKEhVw7Fgrid
-         IvOejHc/ANQxrsyxAgZxJ1X94H+/YYKgg5yuJB3+CfOEYe0NSGyi+46yRgDI4pUrl3Fy
-         OJjp/gXjIIuq0iaXegT3r/2WNulr3ujuhQdxdR3PQgJhyBdiPuz7F1ZQhrephhf4LV4o
-         9uy6ehGcs7Pt1/73NOWMwGvjlyCWVMMnhbd/+KXTYJwSt8dPU4660Oc6/fGUL+YIqc5g
-         mIHukeYiBI/sM571ecmSnn88W7Rq2x6yGkKupNHVyPkxhstUwzZoPN90j14oLWkZjdp2
-         cqig==
-X-Gm-Message-State: AOAM531V8XKOiT22asdC6KmrjDb4B/SXOjqlHdNyXC7DvFPf40KljItN
-        3DAF/MnXFt2UPuarkhYhO0M=
-X-Google-Smtp-Source: ABdhPJyt2AhECgFQf7u1LRvs/w4wkAonRtMrS76/76coZWeyWQZKmvZgWIQecPDnB8q6uQYWLAe/1A==
-X-Received: by 2002:a65:6404:: with SMTP id a4mr9330265pgv.175.1626263989620;
-        Wed, 14 Jul 2021 04:59:49 -0700 (PDT)
-Received: from localhost ([152.57.175.214])
-        by smtp.gmail.com with ESMTPSA id d2sm5715445pjo.50.2021.07.14.04.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 04:59:49 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 17:29:43 +0530
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Raphael Norwitz <raphael.norwitz@nutanix.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: Re: [PATCH v9 4/8] PCI/sysfs: Allow userspace to query and set
- device reset mechanism
-Message-ID: <20210714115943.sxld7obcmzvf6k56@archlinux>
-References: <20210705142138.2651-1-ameynarkhede03@gmail.com>
- <20210705142138.2651-5-ameynarkhede03@gmail.com>
- <20210711165056.GA30721@raphael-debian-dev>
+        id S239263AbhGNMEL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 08:04:11 -0400
+Received: from mail-mw2nam10on2051.outbound.protection.outlook.com ([40.107.94.51]:30048
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230492AbhGNMEK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Jul 2021 08:04:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GtyYLmaAYy+tVJJbLzMvmG0gAPrcdx2UNH8u70yeCWGlHfpi/CBCEeZMZcd26LWqMD9U26MGS9kktQoCOfB6C63UEAm54L8jz0XzmhIGnDjJY850LEZIwb8bTDkR2Yp/+u5orjckHShFhQLkqPNAacZb+qWa2eY6WTx+SrvLIQuUDl/8UZTxQzPofo10fF7zITWeBIK09/1J0XZV9ezyh9/OSx9+UAC5AZ2LQQiiGwo2OfV2cKaU/FNdwDXH4NB2WQ25wQfO9r0dtXWlMxcpL8HI0De9B5Rd2mEGB/S4/ySnoZkMFwt/DUhBUpa3mt6kCtufC4GSu6TiDgnMmCv4tA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Afk9pwx8zsfsMRAI1uzc5fLgBmmsPfPZAPCt3Nrfcxs=;
+ b=G2y64mIlxPC4KGBNPEzlWH1U+4LcgQRjA7JHuJOBVovrm81mTnkY0jp/VZu8RfiSHf9nEiNW9T0A0vJol1SvdX51wNcWgAidFrMPodvjblgqRzzrAJ5hLuwQYc0KA1XEMrhaHfme+VFJBm3j/s3KM2V3fedwZ8QE0cn4dPV6Xq0EFHH/xAPYlLq5ChFti0EQyYBIHUaV5OoAY0k11GB5k8xCtz0C4aG+NXeU0AkYmiMCX/s+mKPKOUGvGgn0OdBAnChA8UPUukCPHJblwrRBm4b7HePcAhQQHgsfiFkd6/eaYRklwg7DnKgNhjMA2VhUATJZQrAJvWko1LShMeiMOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=broadcom.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Afk9pwx8zsfsMRAI1uzc5fLgBmmsPfPZAPCt3Nrfcxs=;
+ b=tjEZ8FQjGJqWaRtWzrrV2knn5dAGFHP8nI0+ywbc2Xkfa7BfOcD3UDdYCtH+XaXaCP7iiMRCdRpnU3ncPn3FcDDgw/RZcoSv3gpKt0IBVPQ7yH9LVQ4AGC800r2f4qFQzt2FyuRXOpgyJiZ6po3z0DBMlxZLY4ZvF4uyapUhMXx3EDK1PWPO3EIol3wxsWFtOoo9Rh1qlYGDyj8VIYJVAs0oAAV8ANsNEJnYsl9uBUMvdfrBsRxbRgx4Yse7VuDi4AA/I6qEHMn1nDE9Jd1mapyTkotlZ0rxIX60oYNp3Wr6deyfxDo7W+phlTmHgvB1xB15cByzy6ptViAmyU4kPg==
+Received: from BN6PR19CA0062.namprd19.prod.outlook.com (2603:10b6:404:e3::24)
+ by MWHPR12MB1647.namprd12.prod.outlook.com (2603:10b6:301:c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.23; Wed, 14 Jul
+ 2021 12:01:17 +0000
+Received: from BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:e3:cafe::2a) by BN6PR19CA0062.outlook.office365.com
+ (2603:10b6:404:e3::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend
+ Transport; Wed, 14 Jul 2021 12:01:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; broadcom.com; dkim=none (message not signed)
+ header.d=none;broadcom.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT003.mail.protection.outlook.com (10.13.177.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4331.21 via Frontend Transport; Wed, 14 Jul 2021 12:01:16 +0000
+Received: from localhost (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 14 Jul
+ 2021 12:01:15 +0000
+Date:   Wed, 14 Jul 2021 15:01:11 +0300
+From:   Leon Romanovsky <leonro@nvidia.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <tglx@linutronix.de>, <jesse.brandeburg@intel.com>,
+        <robin.murphy@arm.com>, <mtosatti@redhat.com>, <mingo@kernel.org>,
+        <jbrandeb@kernel.org>, <frederic@kernel.org>,
+        <juri.lelli@redhat.com>, <abelits@marvell.com>,
+        <bhelgaas@google.com>, <rostedt@goodmis.org>,
+        <peterz@infradead.org>, <davem@davemloft.net>,
+        <akpm@linux-foundation.org>, <sfr@canb.auug.org.au>,
+        <stephen@networkplumber.org>, <rppt@linux.vnet.ibm.com>,
+        <chris.friesen@windriver.com>, <maz@kernel.org>,
+        <nhorman@tuxdriver.com>, <pjwaskiewicz@gmail.com>,
+        <sassmann@redhat.com>, <thenzl@redhat.com>,
+        <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>,
+        <sathya.prakash@broadcom.com>, <sreekanth.reddy@broadcom.com>,
+        <suganath-prabu.subramani@broadcom.com>,
+        <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
+        <jkc@redhat.com>, <faisal.latif@intel.com>,
+        <shiraz.saleem@intel.com>, <tariqt@nvidia.com>,
+        <ahleihel@redhat.com>, <kheib@redhat.com>, <borisp@nvidia.com>,
+        <saeedm@nvidia.com>, <benve@cisco.com>, <govind@gmx.com>,
+        <jassisinghbrar@gmail.com>, <ajit.khaparde@broadcom.com>,
+        <sriharsha.basavapatna@broadcom.com>, <somnath.kotur@broadcom.com>,
+        <nilal@redhat.com>, <tatyana.e.nikolova@intel.com>,
+        <mustafa.ismail@intel.com>, <ahs3@redhat.com>,
+        <chandrakanth.patil@broadcom.com>
+Subject: Re: [PATCH v3 13/14] net/mlx5: Use irq_set_affinity_and_hint
+Message-ID: <YO7SB4q9Q7S0lIbR@unreal>
+References: <20210713211502.464259-1-nitesh@redhat.com>
+ <20210713211502.464259-14-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20210711165056.GA30721@raphael-debian-dev>
+In-Reply-To: <20210713211502.464259-14-nitesh@redhat.com>
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 797b4754-2ad9-49a3-ea44-08d946bf15fd
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1647:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB16475C114E3A6D82D238DB70BD139@MWHPR12MB1647.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lHd8QiqpZAqYtLAnlPeVNhluLMUv7ZLOLrxyKbdLM2va1jb/KRejkIADZMVNCHcvGZ7p0NGXi8evV0PEyXNgAvPT1fER36ofobKa2IOyKRLtYB12bZgGLGRnuhj6iRNA0L+5RRphJx/KjyO9VmYrKApc+8OBhjGXGGsU9OLQKj7UGzGqFnveFz9o5mlUJwTsJ8nHEqM7/Ypxplm2F+ZQH4m5riJOlbJNz7FhoZn4pMKUEfB3F69qvTEsJSRb2Tm1pf6FByqVlhkE+8wF30ZahCIfqFZQx9MBKLrlfG6kMB/Uzd1CaVHEQCz+by51+oGtvN7PgClTee5W9i94A7Hd8zepPZEiNHnUrwOmXliSQBV3e2pjMTwaP+e/3o4sptZ/n2+AERc7ucB9FHqrDZSiJQShNigovmzlsAgEXV93X2Rpv6k876yJvbFj60tqWi+AZ4Kcn0ZupG+r1y2DlctGgk9/MsyUGcdixX999R9xiPmxKt70XqGKu/YPum2M2Fk+5bJ5J8ugef/PAZsKAn8jYqvglQfDQBV9uDzv2npHOjS4TYuwxj0rNSYJC0fw4NQFbXOhr/nyIW0mgY7zN9sbLTpoAkooOIyMa9VR8JdkszKkXQVvRNzKb+puYbYknGK1vwHPiRB5mpNkbLZSIdQg0F00wO9OlabyV+g0v54sZdn4M1qZYXkB+N6evm1C8PO2UNn5+BjqoIN4HI4Irl1fXNSYTNK+cyqS728duAlksBI=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(7916004)(346002)(39860400002)(136003)(376002)(396003)(46966006)(36840700001)(2906002)(70206006)(478600001)(6666004)(26005)(36906005)(70586007)(186003)(16526019)(82740400003)(82310400003)(356005)(86362001)(5660300002)(7636003)(47076005)(8676002)(9686003)(4326008)(36860700001)(83380400001)(316002)(7366002)(33716001)(34020700004)(7406005)(8936002)(7416002)(426003)(6916009)(54906003)(336012);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2021 12:01:16.9526
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 797b4754-2ad9-49a3-ea44-08d946bf15fd
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT003.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1647
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/07/11 04:51PM, Raphael Norwitz wrote:
-> On Mon, Jul 05, 2021 at 07:51:34PM +0530, Amey Narkhede wrote:
-> > Add reset_method sysfs attribute to enable user to query and set user
-> > preferred device reset methods and their ordering.
-> >
-> > Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
->
-> Just some spacing NITs.
->
-> Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
->
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-pci |  19 +++++
-> >  drivers/pci/pci-sysfs.c                 | 103 ++++++++++++++++++++++++
-> >  2 files changed, 122 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > index ef00fada2..43f4e33c7 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > @@ -121,6 +121,25 @@ Description:
-> >  		child buses, and re-discover devices removed earlier
-> >  		from this part of the device tree.
-> >
-> > +What:		/sys/bus/pci/devices/.../reset_method
-> > +Date:		March 2021
-> > +Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-> > +Description:
-> > +		Some devices allow an individual function to be reset
-> > +		without affecting other functions in the same slot.
-> > +
-> > +		For devices that have this support, a file named
-> > +		reset_method will be present in sysfs. Initially reading
-> > +		this file will give names of the device supported reset
-> > +		methods and their ordering. After write, this file will
-> > +		give names and ordering of currently enabled reset methods.
-> > +		Writing the name or comma separated list of names of any of
-> > +		the device supported reset methods to this file will set
-> > +		the reset methods and their ordering to be used when
-> > +		resetting the device. Writing empty string to this file
-> > +		will disable ability to reset the device and writing
-> > +		"default" will return to the original value.
-> > +
-> >  What:		/sys/bus/pci/devices/.../reset
-> >  Date:		July 2009
-> >  Contact:	Michael S. Tsirkin <mst@redhat.com>
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 316f70c3e..8a740e211 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -1334,6 +1334,108 @@ static const struct attribute_group pci_dev_rom_attr_group = {
-> >  	.is_bin_visible = pci_dev_rom_attr_is_visible,
-> >  };
-> >
-> > +static ssize_t reset_method_show(struct device *dev,
->
-> Nit: spaces on the following two lines. "struct device_attribute *attr"
-> and "char *buf" should be in line with "struct device *dev"
->
-Not sure what happened when creating the patches but on my editor spaces
-seems to consistent as you suggested here. For some reason git
-format-patch is acting weird.
+On Tue, Jul 13, 2021 at 05:15:01PM -0400, Nitesh Narayan Lal wrote:
+> The driver uses irq_set_affinity_hint() to update the affinity_hint mask
+> that is consumed by the userspace to distribute the interrupts and to apply
+> the provided mask as the affinity for the mlx5 interrupts. However,
+> irq_set_affinity_hint() applying the provided cpumask as an affinity for
+> the interrupt is an undocumented side effect.
+> 
+> To remove this side effect irq_set_affinity_hint() has been marked
+> as deprecated and new interfaces have been introduced. Hence, replace the
+> irq_set_affinity_hint() with the new interface irq_set_affinity_and_hint()
+> where the provided mask needs to be applied as the affinity and
+> affinity_hint pointer needs to be set and replace with
+> irq_update_affinity_hint() where only affinity_hint needs to be updated.
+> 
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
 
 Thanks,
-Amey
-> > +				 struct device_attribute *attr,
-> > +				 char *buf)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	ssize_t len = 0;
-> > +	int i, idx;
-> > +
-> > +	for (i = 0; i < PCI_NUM_RESET_METHODS; i++) {
-> > +		idx = pdev->reset_methods[i];
-> > +		if (!idx)
-> > +			break;
-> > +
-> > +		len += sysfs_emit_at(buf, len, "%s%s", len ? "," : "",
-> > +				     pci_reset_fn_methods[idx].name);
-> > +	}
-> > +
-> > +	if (len)
-> > +		len += sysfs_emit_at(buf, len, "\n");
-> > +
-> > +	return len;
-> > +}
-> > +
-> > +static ssize_t reset_method_store(struct device *dev,
->
-> Nit: spaces on the following two lines
->
-> > +				  struct device_attribute *attr,
-> > +				  const char *buf, size_t count)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int n = 0;
-> > +	char *name, *options = NULL;
-> > +	u8 reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
-> > +
-> > +	if (count >= (PAGE_SIZE - 1))
-> > +		return -EINVAL;
-> > +
-> > +	if (sysfs_streq(buf, "")) {
-> > +		pci_warn(pdev, "All device reset methods disabled by user");
-> > +		goto set_reset_methods;
-> > +	}
-> > +
-> > +	if (sysfs_streq(buf, "default")) {
-> > +		pci_init_reset_methods(pdev);
-> > +		return count;
-> > +	}
-> > +
-> > +	options = kstrndup(buf, count, GFP_KERNEL);
-> > +	if (!options)
-> > +		return -ENOMEM;
-> > +
-> > +	while ((name = strsep(&options, ",")) != NULL) {
-> > +		int i;
-> > +
-> > +		if (sysfs_streq(name, ""))
-> > +			continue;
-> > +
-> > +		name = strim(name);
-> > +
-> > +		for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
-> > +			if (sysfs_streq(name, pci_reset_fn_methods[i].name) &&
-> > +			    !pci_reset_fn_methods[i].reset_fn(pdev, 1)) {
-> > +				reset_methods[n++] = i;
-> > +				break;
-> > +			}
-> > +		}
-> > +
-> > +		if (i == PCI_NUM_RESET_METHODS) {
-> > +			kfree(options);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> > +	if (!pci_reset_fn_methods[1].reset_fn(pdev, 1) && reset_methods[0] != 1)
-> > +		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
-> > +
-> > +set_reset_methods:
-> > +	memcpy(pdev->reset_methods, reset_methods, sizeof(reset_methods));
-> > +	kfree(options);
-> > +	return count;
-> > +}
-> > +static DEVICE_ATTR_RW(reset_method);
-> > +
-> > +static struct attribute *pci_dev_reset_method_attrs[] = {
-> > +	&dev_attr_reset_method.attr,
-> > +	NULL,
-> > +};
-> > +
-> > +static umode_t pci_dev_reset_method_attr_is_visible(struct kobject *kobj,
->
-> Nit: ditto - spacing.
->
-> > +						    struct attribute *a, int n)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> > +
-> > +	if (!pci_reset_supported(pdev))
-> > +		return 0;
-> > +
-> > +	return a->mode;
-> > +}
-> > +
-> > +static const struct attribute_group pci_dev_reset_method_attr_group = {
-> > +	.attrs = pci_dev_reset_method_attrs,
-> > +	.is_visible = pci_dev_reset_method_attr_is_visible,
-> > +};
-> > +
-> >  static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
->
-> Nit: spacing following line.
->
-> >  			   const char *buf, size_t count)
-> >  {
-> > @@ -1491,6 +1593,7 @@ const struct attribute_group *pci_dev_groups[] = {
-> >  	&pci_dev_config_attr_group,
-> >  	&pci_dev_rom_attr_group,
-> >  	&pci_dev_reset_attr_group,
-> > +	&pci_dev_reset_method_attr_group,
-> >  	&pci_dev_vpd_attr_group,
-> >  #ifdef CONFIG_DMI
-> >  	&pci_dev_smbios_attr_group,
-> > --
-> > 2.32.0
-> >
-> >
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
