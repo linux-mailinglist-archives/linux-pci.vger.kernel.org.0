@@ -2,72 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C8AC3C911B
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 22:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 838963C929C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 22:56:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241085AbhGNT5t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 15:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240312AbhGNTw3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Jul 2021 15:52:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 22C986100A;
-        Wed, 14 Jul 2021 19:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626292177;
-        bh=WfMWrkHvJ44P3JTRAzMBFhBHH9ErA8FDl5XjQ3/gaXk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VVa6aI500N7TcMemN2ST4LsAKUV1CDY1wp4O5LPgrfRmoiT7Z9uxVB1tGNmIDYKKw
-         bYaYwfAEm5ou82Vv9P/nBJyi1Ea3wK3D6hVRLHUjRhqSk4v+GOVWtulEGMiPY98RHl
-         xCuny/vdiZLZTL5H0CbvwGuEdO4CBSl8Z2yepo86yBpct9Q4K7PQtBVrry3pIk3+cB
-         hAyON+FBCynK+gRdzhQCQWclkPr4/fxPj9Fkr69p2uwozduMLUmxmZ5YZ/bjjYFZSu
-         1TWdY02T43e8nLic+h8QMNUQjawJkOFeZ9rumpaXQiVyL7vSnrNNBAXYIoKEg1CY/T
-         QwmXD5E0+g6Iw==
-Date:   Wed, 14 Jul 2021 14:49:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC v4 4/7] PCI: hv: Generify PCI probing
-Message-ID: <20210714194935.GA1870211@bjorn-Precision-5520>
+        id S232169AbhGNU67 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 16:58:59 -0400
+Received: from mail-io1-f47.google.com ([209.85.166.47]:43933 "EHLO
+        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229816AbhGNU64 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 16:58:56 -0400
+Received: by mail-io1-f47.google.com with SMTP id k16so3798791ios.10;
+        Wed, 14 Jul 2021 13:56:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EnXGA3+YFuTeU9FgBeezkUFsCLztW7qvPFMTFHbshIE=;
+        b=geiflgiHlgWYlABVSNxupNF5PEQju3Gkn9EuC8hy4z+aUrb5U21OF9rxRHXegQqvCt
+         1SdFSJhuPvuLeIhnBE3oBXnF2V+96NWbXOBrzwe2LHovJP8w7Sy8y4PZz70lbq4BbYni
+         G79QGsijJ/dfSs+4ZYcJqW9rhzVBvURYLq0p1yWrKSHPI/tlHj7sz2g8JMSdtLYFmFp0
+         3ddYrGd3NFE6ffkE4fpBbqHQhDRWhbUNhhEjcvodOWZt01c/qAU1oNfQ1VSpmUkwwQWX
+         nDdhhGNCSsidqWmWl2Fggc7PWgHv1hwQZJSlomV7Dz78FgYn6rkrd7V8xQgNOVdMK++u
+         1Wtg==
+X-Gm-Message-State: AOAM5315INXpfNYMPBv4OYpHiA9HctEaPQXZ4ZO0lwYCsUmmTdcaQGi3
+        weyI6bk1P05XMFewD4suFQ==
+X-Google-Smtp-Source: ABdhPJw0iescfn8O25Yt7XsiSUUqM/GRNh7g3KtGLFJc/07iO22Wlyt6LTh+CH9Qvxaegp7wOQhRcA==
+X-Received: by 2002:a6b:7619:: with SMTP id g25mr25255iom.151.1626296163599;
+        Wed, 14 Jul 2021 13:56:03 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id i14sm1714108ilu.71.2021.07.14.13.56.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jul 2021 13:56:03 -0700 (PDT)
+Received: (nullmailer pid 3507153 invoked by uid 1000);
+        Wed, 14 Jul 2021 20:56:02 -0000
+Date:   Wed, 14 Jul 2021 14:56:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: PCI: ftpci100: convert faraday,ftpci100
+ to YAML
+Message-ID: <20210714205602.GA3507072@robh.at.kernel.org>
+References: <20210628193508.2826903-1-clabbe@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210714102737.198432-5-boqun.feng@gmail.com>
+In-Reply-To: <20210628193508.2826903-1-clabbe@baylibre.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 06:27:34PM +0800, Boqun Feng wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Mon, 28 Jun 2021 19:35:08 +0000, Corentin Labbe wrote:
+> Converts pci/faraday,ftpci100.txt to yaml.
+> Some change are also made:
+> - example has wrong interrupts place
 > 
-> In order to support ARM64 Hyper-V PCI, we need to set up the bridge at
-> probing time because ARM64 is a PCI_DOMAIN_GENERIC arch and we don't
-> have pci_config_window (ARM64 sysdata) for a PCI root bus on Hyper-V, so
-> it's impossible to retrieve the information (e.g. PCI domains, irq
-> domains) from bus sysdata on ARM64 after creation.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+> Changes since v1:
+> - fixed issues reported by Rob Herring https://patchwork.kernel.org/project/linux-pci/patch/20210503185228.1518131-1-clabbe@baylibre.com/
+> - moved comment as asked by Linus Walleij
 > 
-> Originally in create_root_hv_pci_bus(), pci_create_root_bus() is used to
-> create the root bus and the corresponding bridge based on x86 sysdata.
-> Now we create a bridge first and then call pci_scan_root_bus_bridge(),
-> which allows us to do the necessary set-ups for the bridge.
+> Changes since v2:
+> - fixed issues reported by Rob Herring https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20210510203041.4024411-1-clabbe@baylibre.com/
+> 
+>  .../bindings/pci/faraday,ftpci100.txt         | 135 --------------
+>  .../bindings/pci/faraday,ftpci100.yaml        | 176 ++++++++++++++++++
+>  2 files changed, 176 insertions(+), 135 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/faraday,ftpci100.yaml
+> 
 
-Also here and other patches in this series:
-
-  s/irq/IRQ/
-  s/msi/MSI/
-
-in subject lines, commit logs, comments.
+Applied, thanks!
