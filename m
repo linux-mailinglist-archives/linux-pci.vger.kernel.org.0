@@ -2,126 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 937D93C7A65
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 02:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6E2B3C7B8A
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jul 2021 04:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236981AbhGNAJa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Jul 2021 20:09:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236966AbhGNAJa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 20:09:30 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEAE1C0613DD;
-        Tue, 13 Jul 2021 17:06:38 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id s193so2790431qke.4;
-        Tue, 13 Jul 2021 17:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BRzBORQqhYkIvSSgRD10J8EaiYQ9ItZJaai9Sym40Us=;
-        b=teI5WRKub2F/rwFPxCg0ZINCjBfRJc54nJqUFdAMXpGIMiTspU9RrcrUvARcHwoeMd
-         CQXv1wJ/Fog/rhWZSvumcNrgcq+BxotT51h+tTiRDV8aZpevQuwsLDR4vyQtZSmmoC6h
-         F9IEcsAuWnvI+dAhgG0Eo2jqsi01XmkKdYdzhKwGl4vTdbqsh5/P7DXsca+16o6s1nU2
-         2kLICjJFyej3TGeGHMleEoqCSW2m15wa6CXhxq4NskVTucQzPb/x7tap01fpFeI4k0/I
-         0oDywPh08J0yunT5JHEEyAcZVTBsHz7FszjRqikpByO6wq8hJu89C/WxnMp4EIv1s5qc
-         +urw==
+        id S237397AbhGNCQn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Jul 2021 22:16:43 -0400
+Received: from mail-io1-f48.google.com ([209.85.166.48]:39567 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237349AbhGNCQn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Jul 2021 22:16:43 -0400
+Received: by mail-io1-f48.google.com with SMTP id h6so159884iok.6;
+        Tue, 13 Jul 2021 19:13:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=BRzBORQqhYkIvSSgRD10J8EaiYQ9ItZJaai9Sym40Us=;
-        b=jaCUceWBz0/cYOZU79Cy/ec70DX30Bo1aoN/oPuSkOaiiYTi3SUCKRdyvSv4RzBerP
-         1FnrzLRKfxBZ/aFjA13qpVxlv7vqXhNaQFDd2O7A7Ric9gVkgOERzJmLlAln/uTxY60n
-         aiT/ocug+AUhyXkbcaieKVSkOhcmNtwsrQw0a/vEfckxmzuAE/E2h7q6dyFUzQIiBxS9
-         f7JLGmz/k7fHAt6Iiz6eFA8H0+Asqy57eHziNJeuQua9fSfR+2YxyiZNA/yJX86wvnYQ
-         SINmcGetzP8D6ppOFtxJXze34/fBw4odSABy8Me72gNSSTWqtq6RUnRAX9rWGnOSBGI4
-         zOqw==
-X-Gm-Message-State: AOAM530aHdgwBMIgaujGcK30XvvgoFRjVJW/ih+yMxrCWOZlEBxRBQiS
-        uE5rkAMf18C2CAHrZKo5fgE=
-X-Google-Smtp-Source: ABdhPJwNdfUqk7dW6v+BkJSkD78e6Hf5RHfzRN9m+TvOapNBOx9APu0hdr4kc7VyqpHBok4bqL0fFQ==
-X-Received: by 2002:a05:620a:b85:: with SMTP id k5mr282577qkh.219.1626221197830;
-        Tue, 13 Jul 2021 17:06:37 -0700 (PDT)
-Received: from fedora ([130.44.160.152])
-        by smtp.gmail.com with ESMTPSA id o1sm128098qta.87.2021.07.13.17.06.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/Z/tZKf0aO1xZoDSmm5DT5QLfVwlo8xPEjAU//SkRvw=;
+        b=ohJxfK1yBHVjiovH634DdI2n/C72NjvhTB/yblm1tNW8Cm25xo+QF8/ETm/OVFCf0I
+         1jbz5d2bq4vf8OL8aGp1Oz/jCTpwcs+uxJIxhwwW+eGDZMJou9R7ixZHQIJkDJfBsv8i
+         Z2+PerNJED3CA8IIXAshNULGY80iUzzbdtnkcfILD6WQHwGOuWbkkDrJd9qnKNfTJI7x
+         kPjW56KgaSNaO4ZUqe+7jOEZjY/7F6rihQyZdGP4Www/lZ1YsT0FoGXPui2qXf/55d96
+         pchznHihC6wzLa9r1wg+qpnABDrBbzLHA67j9PD84jDWFAoEDxMX3VzjspHrjPzKIbeI
+         ae/Q==
+X-Gm-Message-State: AOAM531k0Nz+88lGmavFQohc8IGNSZ+/zPn0u+xIvRwlc2+DmH/TLa2q
+        7PAG4lJbY6kK2NQv4aAHjA==
+X-Google-Smtp-Source: ABdhPJyGycRTbO/9c2EWLHRjrDhvSrVs9AADZSCbP1Zmc+vSCeJI8j7lLZxtqwcsyaMkFhpNIMVurQ==
+X-Received: by 2002:a5e:a816:: with SMTP id c22mr5597258ioa.94.1626228831107;
+        Tue, 13 Jul 2021 19:13:51 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id w1sm424335ilv.59.2021.07.13.19.13.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 17:06:37 -0700 (PDT)
-Sender: Konrad Rzeszutek Wilk <konrad.r.wilk@gmail.com>
-Date:   Tue, 13 Jul 2021 20:06:33 -0400
-From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        heikki.krogerus@linux.intel.com, thomas.hellstrom@linux.intel.com,
-        peterz@infradead.org, benh@kernel.crashing.org,
-        joonas.lahtinen@linux.intel.com, dri-devel@lists.freedesktop.org,
-        chris@chris-wilson.co.uk, grant.likely@arm.com, paulus@samba.org,
-        Frank Rowand <frowand.list@gmail.com>, mingo@kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Saravana Kannan <saravanak@google.com>, mpe@ellerman.id.au,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        bskeggs@redhat.com, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Thierry Reding <treding@nvidia.com>,
-        intel-gfx@lists.freedesktop.org, matthew.auld@intel.com,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Jianxiong Gao <jxgao@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        maarten.lankhorst@linux.intel.com, airlied@linux.ie,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, jani.nikula@linux.intel.com,
-        Nathan Chancellor <nathan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, rodrigo.vivi@intel.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Claire Chang <tientzu@chromium.org>,
-        boris.ostrovsky@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jgross@suse.com, Nicolas Boichat <drinkcat@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Qian Cai <quic_qiancai@quicinc.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, xypron.glpk@gmx.de,
-        Tom Lendacky <thomas.lendacky@amd.com>, bauerman@linux.ibm.com
-Subject: Re: [PATCH v15 06/12] swiotlb: Use is_swiotlb_force_bounce for
- swiotlb data bouncing
-Message-ID: <YO4qifiYjL4BTMv4@fedora>
-References: <YN/7xcxt/XGAKceZ@Ryzen-9-3900X.localdomain>
- <20210705190352.GA19461@willie-the-truck>
- <20210706044848.GA13640@lst.de>
- <20210706132422.GA20327@willie-the-truck>
- <a59f771f-3289-62f0-ca50-8f3675d9b166@arm.com>
- <20210706140513.GA26498@lst.de>
- <YORsr0h7u5l9DZwh@char.us.oracle.com>
- <20210706165720.GC20750@willie-the-truck>
- <YOSMDZmtfXEKerpf@char.us.oracle.com>
- <20210712135645.GA28881@willie-the-truck>
+        Tue, 13 Jul 2021 19:13:50 -0700 (PDT)
+Received: (nullmailer pid 1309349 invoked by uid 1000);
+        Wed, 14 Jul 2021 02:13:48 -0000
+Date:   Tue, 13 Jul 2021 20:13:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        hemantk@codeaurora.org, smohanad@codeaurora.org,
+        bjorn.andersson@linaro.org, sallenki@codeaurora.org,
+        skananth@codeaurora.org, vpernami@codeaurora.org,
+        vbadigan@codeaurora.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: pci: Add devicetree binding for
+ Qualcomm PCIe EP controller
+Message-ID: <20210714021348.GA1302552@robh.at.kernel.org>
+References: <20210630034653.10260-1-manivannan.sadhasivam@linaro.org>
+ <20210630034653.10260-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210712135645.GA28881@willie-the-truck>
+In-Reply-To: <20210630034653.10260-2-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-..snip..
-> > > I think the main question I have is how would you like to see patches for
-> > > 5.15? i.e. as patches on top of devel/for-linus-5.14 or something else?
-> > 
-> > Yes that would be perfect. If there are any dependencies on the rc1, I
-> > can rebase it on top of that.
+On Wed, Jun 30, 2021 at 09:16:51AM +0530, Manivannan Sadhasivam wrote:
+> Add devicetree binding for Qualcomm PCIe EP controller used in platforms
+> like SDX55. The EP controller is based on the Designware core with
+> Qualcomm specific wrappers.
 > 
-> Yes, please, rebasing would be very helpful. The broader rework of
-> 'io_tlb_default_mem' is going to conflict quite badly otherwise.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 160 ++++++++++++++++++
+>  1 file changed, 160 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> new file mode 100644
+> index 000000000000..9110d33809cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -0,0 +1,160 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm PCIe Endpoint Controller binding
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +allOf:
+> +  - $ref: "pci-ep.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sdx55-pcie-ep
+> +
+> +  reg:
+> +    items:
+> +      - description: Qualcomm specific PARF configuration registers
+> +      - description: Designware PCIe registers
+> +      - description: External local bus interface registers
+> +      - description: Address Translation Unit (ATU) registers
+> +      - description: Memory region used to map remote RC address space
+> +      - description: BAR memory region
+> +
+> +  reg-names:
+> +    items:
+> +      - const: parf
+> +      - const: dbi
+> +      - const: elbi
+> +      - const: atu
+> +      - const: addr_space
+> +      - const: mmio
+> +
+> +  clocks:
+> +    items:
+> +      - description: PCIe Auxiliary clock
+> +      - description: PCIe CFG AHB clock
+> +      - description: PCIe Master AXI clock
+> +      - description: PCIe Slave AXI clock
+> +      - description: PCIe Slave Q2A AXI clock
+> +      - description: PCIe Sleep clock
+> +      - description: PCIe Reference clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aux
+> +      - const: cfg
+> +      - const: bus_master
+> +      - const: bus_slave
+> +      - const: slave_q2a
+> +      - const: sleep
+> +      - const: ref
+> +
+> +  qcom,perst-regs:
+> +    description: Reference to a syscon representing TCSR followed by the two
+> +                 offsets within syscon for Perst enable and Perst separation
+> +                 enable registers
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    items:
+> +      minItems: 3
+> +      maxItems: 3
+> +
+> +  interrupts:
+> +    items:
+> +      - description: PCIe Global interrupt
+> +      - description: PCIe Doorbell interrupt
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: global
+> +      - const: doorbell
+> +
+> +  reset-gpios:
+> +    description: GPIO that is being used as PERST# input signal
+> +    maxItems: 1
+> +
+> +  wake-gpios:
+> +    description: GPIO that is being used as WAKE# output signal
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: core
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pciephy
+> +
+> +  num-lanes:
+> +    default: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - qcom,perst-regs
+> +  - interrupts
+> +  - interrupt-names
+> +  - reset-gpios
+> +  - resets
+> +  - reset-names
+> +  - power-domains
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sdx55.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pcie_ep: pcie-ep@40000000 {
+> +        compatible = "qcom,sdx55-pcie-ep";
+> +        reg = <0x01c00000 0x3000>,
+> +              <0x40000000 0xf1d>,
+> +              <0x40000f20 0xc8>,
+> +              <0x40001000 0x1000>,
+> +              <0x40002000 0x1000>,
+> +              <0x01c03000 0x3000>;
+> +        reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
+> +                    "mmio";
+> +
+> +        clocks = <&gcc GCC_PCIE_AUX_CLK>,
+> +             <&gcc GCC_PCIE_CFG_AHB_CLK>,
+> +             <&gcc GCC_PCIE_MSTR_AXI_CLK>,
+> +             <&gcc GCC_PCIE_SLV_AXI_CLK>,
+> +             <&gcc GCC_PCIE_SLV_Q2A_AXI_CLK>,
+> +             <&gcc GCC_PCIE_SLEEP_CLK>,
+> +             <&gcc GCC_PCIE_0_CLKREF_CLK>;
+> +        clock-names = "aux", "cfg", "bus_master", "bus_slave",
+> +                      "slave_q2a", "sleep", "ref";
+> +
+> +        qcom,perst-regs = <&tcsr 0xb258 0xb270>;
+> +
+> +        interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
+> +        	     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "global", "doorbell";
+> +        reset-gpios = <&tlmm 57 GPIO_ACTIVE_HIGH>;
+> +        wake-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
+> +        resets = <&gcc GCC_PCIE_BCR>;
+> +        reset-names = "core";
+> +        power-domains = <&gcc PCIE_GDSC>;
+> +        phys = <&pcie0_lane>;
+> +        phy-names = "pciephy";
+> +        max-link-speed = <3>;
+> +        num-lanes = <2>;
+> +
+> +        status = "disabled";
 
-There is a devel/for-linus-5.15 (based on v5.14-rc1) now.
+Why are you disabling the example? Drop status.
 
-Thank you!
-> 
-> Cheers,
-> 
-> Will
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
