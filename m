@@ -2,160 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC563CA099
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 16:27:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 298803CA0F1
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 16:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbhGOOaJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 10:30:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
+        id S236837AbhGOOwr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 10:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229624AbhGOOaJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Jul 2021 10:30:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7E7C061380;
-        Thu, 15 Jul 2021 14:27:15 +0000 (UTC)
+        id S234745AbhGOOwr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Jul 2021 10:52:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1863860FE7;
+        Thu, 15 Jul 2021 14:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626359235;
-        bh=AGyuleLLySuJZOXIhP50qs5G+JR+3YkSlYA9wEtrdFU=;
+        s=k20201202; t=1626360594;
+        bh=16TRO9Qbmcnd0SRg6DNF/8XFK02qPEiiTLSukYvzfWw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LAsigfQEioFHBsO2Yfllu37Uivtp8fbLz0MwAN8MRlLxMQHPUp57HSg54SQxkd2Hv
-         heYfTnSgyunAAsnbjXORA5Nfo7Dh2Pq9M347Gs3KCgRspQNXssHk5T6gitGls/Mup5
-         VI85BHRmF4GVPAil13xrKX53LAsIJ7IuFYltLtWC1Hvw5v4HlpHE70b3GIzCJEVvxb
-         90ebkVkyKivVHfnK+HhgW2TNNKMTR1Vtra5cuGIDYkQLuWUl3xguSlUhwK9LRxOuuY
-         ehI4h/7zJljh0j4AB70SP4vz6bJUnfMJdf3+ihLiFOcFVXjK0RUfvXoBES7pnpozuW
-         1B+jZUJCgnfhw==
-Date:   Thu, 15 Jul 2021 09:27:14 -0500
+        b=N4th+ueHz9sd9u/L0T1lQVcMZcK9N+j7V24gv5fDqYhlxh9N/55dFlBo0j7RZzS20
+         VQhn3RY9hfl30RJGjtnA8wKRXudc+AobtFsIMIM/PvxPWG3zZZUBZGO6zXsIsgo3pP
+         m/ohQl4VONZ+iPFq/+k9UKE+HmgV+368wecHAOT+VqIYcb0i/FWcZuRH96nPozqp4C
+         miLAGFYB3ea53okFnlmb6qjvnx8g/VDf1R9NvFD+bBtSCerdLKyWRyRkcy5PVJQ/5h
+         AWdNDkUHurytrdjXPNFmsnztf0nNOsQ2oINha+SFIHv2AZsNR6Uxk1ukzjA10aeqkN
+         vYfNXB1DLLAVQ==
+Date:   Thu, 15 Jul 2021 09:49:52 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] genirq/affinity: add helper of irq_affinity_calc_sets
-Message-ID: <20210715142714.GA1957636@bjorn-Precision-5520>
+To:     Ruben <rubenbryon@gmail.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [question]: BAR allocation failing
+Message-ID: <20210715144952.GA1960220@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210715111827.569756-1-ming.lei@redhat.com>
+In-Reply-To: <CALdZjm6TsfsaQZRxJvr5YDh9VRn28vQjFY+JfZv-daU=gQu_Uw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 07:18:27PM +0800, Ming Lei wrote:
-> When driver requests to allocate irq affinity managed vectors,
-> pci_alloc_irq_vectors_affinity() may fallback to single vector
-> allocation. In this situation, we don't need to call
-> irq_create_affinity_masks for calling into ->calc_sets() for
-> avoiding potential memory leak, so add the helper for this purpose.
+On Thu, Jul 15, 2021 at 01:43:17AM +0300, Ruben wrote:
+> No luck so far with "-global q35-pcihost.pci-hole64-size=2048G"
+> ("-global q35-host.pci-hole64-size=" gave an error "warning: global
+> q35-host.pci-hole64-size has invalid class name").
+> The result stays the same.
+
+Alex will have to chime in about the qemu option problem.
+
+Your dmesg excerpts don't include the host bridge window info, e.g.,
+"root bus resource [mem 0x7f800000-0xefffffff window]".  That tells
+you what PCI thinks is available for devices.  This info comes from
+ACPI, and I don't know whether the BIOS on qemu is smart enough to
+compute it based on "q35-host.pci-hole64-size=".  But dmesg will tell
+you.
+
+"pci=nocrs" tells the kernel to ignore those windows from ACPI and
+pretend everything that's not RAM is available for devices.  Of
+course, that's not true in general, so it's not really safe.
+
+PCI resources are hierarchical: an endpoint BAR must be contained
+in the Root Ports window, which must in turn be contained in the host
+bridge window.  You trimmed most of that information out from your
+dmesg log, so we can't see exactly what's wrong.
+
+> When we pass through the NVLink bridges we can have the (5 working)
+> GPUs talk at full P2P bandwidth and is described in the NVidia docs as
+> a valid option (ie. passing through all GPUs and NVlink bridges).
+> In production we have the bridges passed through to a service VM which
+> controls traffic, which is also described in their docs.
 > 
-> Fixes: c66d4bd110a1 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  drivers/pci/msi.c         |  3 ++-
->  include/linux/interrupt.h |  7 +++++++
->  kernel/irq/affinity.c     | 29 ++++++++++++++++++-----------
->  3 files changed, 27 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 9232255c8515..3d6db20d1b2b 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1224,7 +1224,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
->  			 * for the single interrupt case.
->  			 */
->  			if (affd)
-> -				irq_create_affinity_masks(1, affd);
-> +				WARN_ON_ONCE(irq_affinity_calc_sets(1, affd));
-
-Hmmm.  Not sure I like this yet:
-
-  - I prefer required code to be on its own, not hidden inside a
-    WARN() (personal preference, I know).
-
-  - WARN() doesn't seem like the right thing here.  I think this
-    generates a backtrace but the driver that called this has no
-    indication.  Isn't the problem that a .calc_sets() method set
-    "affd->nr_sets > IRQ_AFFINITY_MAX_SETS"?
-
-    It looks like those methods are supplied by drivers
-    (nvme_calc_irq_sets(), csio_calc_sets()) and it seems like they
-    should find out about this somehow.
-
->  			pci_intx(dev, 1);
->  			return 1;
->  		}
-> diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-> index 2ed65b01c961..c7ff84d60465 100644
-> --- a/include/linux/interrupt.h
-> +++ b/include/linux/interrupt.h
-> @@ -340,6 +340,7 @@ irq_create_affinity_masks(unsigned int nvec, struct irq_affinity *affd);
->  
->  unsigned int irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
->  				       const struct irq_affinity *affd);
-> +int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd);
->  
->  #else /* CONFIG_SMP */
->  
-> @@ -391,6 +392,12 @@ irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
->  	return maxvec;
->  }
->  
-> +static inline int irq_affinity_calc_sets(unsigned int affvecs,
-> +					 struct irq_affinity *affd)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif /* CONFIG_SMP */
->  
->  /*
-> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-> index 4d89ad4fae3b..735f697d7d15 100644
-> --- a/kernel/irq/affinity.c
-> +++ b/kernel/irq/affinity.c
-> @@ -405,6 +405,23 @@ static void default_calc_sets(struct irq_affinity *affd, unsigned int affvecs)
->  	affd->set_size[0] = affvecs;
->  }
->  
-> +int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd)
-> +{
-> +	/*
-> +	 * Simple invocations do not provide a calc_sets() callback. Install
-> +	 * the generic one.
-> +	 */
-> +	if (!affd->calc_sets)
-> +		affd->calc_sets = default_calc_sets;
-> +
-> +	/* Recalculate the sets */
-> +	affd->calc_sets(affd, affvecs);
-> +
-> +	if (affd->nr_sets > IRQ_AFFINITY_MAX_SETS)
-> +		return -ERANGE;
-> +	return 0;
-> +}
-> +
->  /**
->   * irq_create_affinity_masks - Create affinity masks for multiqueue spreading
->   * @nvecs:	The total number of vectors
-> @@ -429,17 +446,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
->  	else
->  		affvecs = 0;
->  
-> -	/*
-> -	 * Simple invocations do not provide a calc_sets() callback. Install
-> -	 * the generic one.
-> -	 */
-> -	if (!affd->calc_sets)
-> -		affd->calc_sets = default_calc_sets;
-> -
-> -	/* Recalculate the sets */
-> -	affd->calc_sets(affd, affvecs);
-> -
-> -	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
-> +	if (WARN_ON_ONCE(irq_affinity_calc_sets(affvecs, affd)))
->  		return NULL;
->  
->  	/* Nothing to assign? */
-> -- 
-> 2.31.1
-> 
+> Op do 15 jul. 2021 om 01:03 schreef Alex Williamson
+> <alex.williamson@redhat.com>:
+> >
+> > On Thu, 15 Jul 2021 00:32:30 +0300
+> > Ruben <rubenbryon@gmail.com> wrote:
+> >
+> > > I am experiencing an issue with virtualizing a machine which contains
+> > > 8 NVidia A100 80GB cards.
+> > > As a bare metal host, the machine behaves as expected, the GPUs are
+> > > connected to the host with a PLX chip PEX88096, which connects 2 GPUs
+> > > to 16 lanes on the CPU (using the same NVidia HGX Delta baseboard).
+> > > When passing through all GPUs and NVLink bridges to a VM, a problem
+> > > arises in that the system can only initialize 4-5 of the 8 GPUs.
+> > >
+> > > The dmesg log shows failed attempts for assiging BAR space to the GPUs
+> > > that are not getting initialized.
+> > >
+> > > Things that were tried:
+> > > Q35-i440fx with and without UEFI
+> > > Qemu 5.x, Qemu 6.0
+> > > Host Ubuntu 20.04 host with Qemu/libvirt
+> > > Now running proxmox 7 on debian 11, host kernel 5.11.22-2, VM kernel 5.4.0-77
+> > > VM kernel parameters pci=nocrs pci=realloc=on/off
+> > >
+> > > ------------------------------------
+> > >
+> > > lspci -v:
+> > > 01:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
+> > >         Memory at db000000 (32-bit, non-prefetchable) [size=16M]
+> > >         Memory at 2000000000 (64-bit, prefetchable) [size=128G]
+> > >         Memory at 1000000000 (64-bit, prefetchable) [size=32M]
+> > >
+> > > 02:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
+> > >         Memory at dc000000 (32-bit, non-prefetchable) [size=16M]
+> > >         Memory at 4000000000 (64-bit, prefetchable) [size=128G]
+> > >         Memory at 6000000000 (64-bit, prefetchable) [size=32M]
+> > >
+> > > ...
+> > >
+> > > 0c:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
+> > >         Memory at e0000000 (32-bit, non-prefetchable) [size=16M]
+> > >         Memory at <ignored> (64-bit, prefetchable)
+> > >         Memory at <ignored> (64-bit, prefetchable)
+> > >
+> > > ...
+> > >
+> > ...
+> > >
+> > > ------------------------------------
+> > >
+> > > I have (blindly) messed with parameters like pref64-reserve for the
+> > > pcie-root-port but to be frank I have little clue what I'm doing so my
+> > > question would be suggestions on what I can try.
+> > > This server will not be running an 8 GPU VM in production but I have a
+> > > few days left to test before it goes to work. I was hoping to learn
+> > > how to overcome this issue in the future.
+> > > Please be aware that my knowledge regarding virtualization and the
+> > > Linux kernel does not reach far.
+> >
+> > Try playing with the QEMU "-global q35-host.pci-hole64-size=" option for
+> > the VM rather than pci=nocrs.  The default 64-bit MMIO hole for
+> > QEMU/q35 is only 32GB.  You might be looking at a value like 2048G to
+> > support this setup, but could maybe get away with 1024G if there's room
+> > in 32-bit space for the 3rd BAR.
+> >
+> > Note that assigning bridges usually doesn't make a lot of sense and
+> > NVLink is a proprietary black box, so we don't know how to virtualize
+> > it or what the guest drivers will do with it, you're on your own there.
+> > We generally recommend to use vGPUs for such cases so the host driver
+> > can handle all the NVLink aspects for GPU peer-to-peer.  Thanks,
+> >
+> > Alex
+> >
