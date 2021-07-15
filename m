@@ -2,253 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 850703CA48A
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 19:32:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D6353CA4B6
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 19:48:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236182AbhGORfc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 13:35:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235891AbhGORfb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jul 2021 13:35:31 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4029EC06175F;
-        Thu, 15 Jul 2021 10:32:38 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id gh6so3230888qvb.3;
-        Thu, 15 Jul 2021 10:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZMhm9Q1ft2ZuJHnsgYob9UiHLcsqHs1PTnUjZmty0Ss=;
-        b=de2SvrF1oRHJ1RaUTUgDxztdq/aLJitMAt74d4K3e+TPceDirxz+g7MUVorInP8RCe
-         n4Y/Wh8ocWciGZp/lgpKTFdM8CQTP8iquH75D7ETaN4eGuQ8CG2fQga5yawfHzjH46is
-         geb98vOpP6lOVVVCq+WvVQfxyNb7mJwi7Fe17kojvJXI+mSKSDoRcinUg1Ywz+Mnh6HL
-         ujVKAhBjfkiBuUHKAQx1P3ko4Fyf9zR70NH8PRPybe/xXdgkfHG4LDx8GabXdHjliuGV
-         ubFDcwe/v5npezWOmPbfvrGu5rXaoigwILGnDu0HFBtUtFhmzxt/QQ/RmqZkd3redq+p
-         vYag==
+        id S234181AbhGORvs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 13:51:48 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:34670 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232764AbhGORvs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jul 2021 13:51:48 -0400
+Received: by mail-ot1-f42.google.com with SMTP id w8-20020a0568304108b02904b3da3d49e5so7067855ott.1;
+        Thu, 15 Jul 2021 10:48:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZMhm9Q1ft2ZuJHnsgYob9UiHLcsqHs1PTnUjZmty0Ss=;
-        b=WsOqVeFAowF5x6FIP8pabpo8DONmOt09qtjW6Zwyl5DL7U5vIdHrkiSsiLyjcspRSb
-         Q5ShjYWp9x4T9VtBiBgeasc8iuov8ohxYjwLqFRUMfIG8mcKbJIc5dfCbIDOvvmZ5T5W
-         5t9aw97WvWJW8hhzb+LesQnTZ7NWE/nn5U6qGERYooZIJqTF6Wwgc8/aSs8OC8/KUbc3
-         zYWmGBu9J60E4wuDWN6D6utuKM7zKL3jjLHZDBWaYumKDN6iIbU6L9oy6g5ySX7GyZAf
-         YPKOGrI9ADkymDcB4Wi0p++gnxbcyT+V2NA6yPMnDFwFOzwFsAUjry8X+O51pz5oFhPQ
-         4zBw==
-X-Gm-Message-State: AOAM533PfjSpjGdtRSbBUNMnjGyU+8CGCkVnh90jZ10FlMj05DzcIvwP
-        CkF2T1BsmFutxJL/dSF+ecc=
-X-Google-Smtp-Source: ABdhPJzKHeH+osOcaM58zeKsiokt6uEE3J17OoNO8AREwf9A+BMGPyp6zlg0BpheemYCI32KDnDO2A==
-X-Received: by 2002:ad4:5343:: with SMTP id v3mr5422776qvs.45.1626370357369;
-        Thu, 15 Jul 2021 10:32:37 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id p21sm2801615qki.36.2021.07.15.10.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 10:32:36 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id E4C6E27C005A;
-        Thu, 15 Jul 2021 13:32:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 15 Jul 2021 13:32:35 -0400
-X-ME-Sender: <xms:M3HwYIAN0PR7g0_40VYCKzYo8y5tH4Iva0qBf2_P-KPi8eUJLyZDlA>
-    <xme:M3HwYKjbrOLoP_Ot813QT8wFXwN5DhXR6S5ZXh0bMyoSJieWMTrFfwGDo5TAUOJ9P
-    -MHnpnq8L_3qGWvTw>
-X-ME-Received: <xmr:M3HwYLnOMvf1qXvbEs6ylWTZYNJJPfEEaEkddjTWZjOJdktyuQruOueeT6G2MA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvddtgdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
-    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:M3HwYOymyysziTxpCE0cwXUtYcbZH_bdRBVkOWGV0kdZCvY97FdX8g>
-    <xmx:M3HwYNTegWM2MP_61k8YLADy8nvalcUicTErG9eMU5Ro45NEL1ix4w>
-    <xmx:M3HwYJb01NDLjj17HywZ3Vadhl3oLzDX2pN6CtKJocxkRRC-iyWy_w>
-    <xmx:M3HwYPkuKHLTL0P9oBpTbjpRmfWYUsJ-UrGs6XL4J_K1z0cO26FPAagA1VY>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 15 Jul 2021 13:32:34 -0400 (EDT)
-Date:   Fri, 16 Jul 2021 01:30:52 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC v4 1/7] PCI: Introduce domain_nr in pci_host_bridge
-Message-ID: <YPBwzO7c/rw09IkE@boqun-archlinux>
-References: <20210714102737.198432-2-boqun.feng@gmail.com>
- <20210714193319.GA1867593@bjorn-Precision-5520>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jcrbc3Lo2wrK1gqLlKICJUse0DnEcveTnssb36tWaFw=;
+        b=gC7+n6O1SQX+fkbLVjIfsls35vl3LQw23qQGyyqzZpS5Ebdxo7tFeDTRG7RJjePgcn
+         8CIvy+/BFoTQ52D48bpdFAtvQAx0BWursD3dV2WKnTcYgecALk6flWNu1Xw2k7Cb+wMd
+         Luoh4GIftb1ObWzyvoG7/qz06C1nXdGIkqwqIADsQGJsjhUEg2RCWWS4+hYOGPQEsLTq
+         XKctgu4PVEhvyeI2oI2ukx9jgZ/xROKG/D1AYM6GhM4le2UnfPTfO7g9ObvzznQ6ML3B
+         cdn1UTMhXV95Vo33+H4uoU4rXg1TcAPpA190ujuZWj3uSWg9aUkXvk9lFGxcsi4s+Qqq
+         8JrA==
+X-Gm-Message-State: AOAM530FeWow1NLMyyT2/vOMc4V7mp+JBSeltQu/Xkl0XS4ZZpyfUKJZ
+        yurogwI/GVPrqjnD40DLgHco3TlasuUHJEgpKN8=
+X-Google-Smtp-Source: ABdhPJznIn4JZ6FGh9vnM99VHBbxik5p/8w58wO8aDsw/VvUURRvMEl/NR5APNAN3VATtUNcsQYBRNA2OgGvmigHDSA=
+X-Received: by 2002:a9d:604e:: with SMTP id v14mr4713049otj.260.1626371334859;
+ Thu, 15 Jul 2021 10:48:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210714193319.GA1867593@bjorn-Precision-5520>
+References: <CAJZ5v0hJRASb-JrJYGAX_8j+S_Rvjy0VsjB17ndM3BYgQ+mE=g@mail.gmail.com>
+ <20210715161454.GA1776966@bjorn-Precision-5520>
+In-Reply-To: <20210715161454.GA1776966@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 15 Jul 2021 19:48:43 +0200
+Message-ID: <CAJZ5v0htnbHx7cqHhtik=PoS0A7RjbxyNdkcQfFfTw3Pb_ODKg@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI/PM: Target PM state is D3hot if device can only
+ generate PME from D3cold
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 02:33:19PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jul 14, 2021 at 06:27:31PM +0800, Boqun Feng wrote:
-> > Currently we retrieve the PCI domain number of the host bridge from the
-> > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
-> > we have the information at PCI host bridge probing time, and it makes
-> > sense that we store it into pci_host_bridge. One benefit of doing so is
-> > the requirement for supporting PCI on Hyper-V for ARM64, because the
-> > host bridge of Hyper-V doesn't have pci_config_window, whereas ARM64 is
-> > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
-> > number from pci_config_window on ARM64 Hyper-V guest.
-> > 
-> > As the preparation for ARM64 Hyper-V PCI support, we introduce the
-> > domain_nr in pci_host_bridge and a sentinel value to allow drivers to
-> > set domain numbers properly at probing time. Currently
-> > CONFIG_PCI_DOMAINS_GENERIC=y archs are only users of this
-> > newly-introduced field.
-> 
-> Thanks for pushing on this.  PCI_DOMAINS_GENERIC is really not very
-> generic today and it will be good to make it more so.
-> 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  drivers/pci/probe.c |  6 +++++-
-> >  include/linux/pci.h | 10 ++++++++++
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 79177ac37880..60c50d4f156f 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -594,6 +594,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
-> >  	bridge->native_pme = 1;
-> >  	bridge->native_ltr = 1;
-> >  	bridge->native_dpc = 1;
-> > +	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
-> >  
-> >  	device_initialize(&bridge->dev);
-> >  }
-> > @@ -898,7 +899,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
-> >  	bus->ops = bridge->ops;
-> >  	bus->number = bus->busn_res.start = bridge->busnr;
-> >  #ifdef CONFIG_PCI_DOMAINS_GENERIC
-> > -	bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
-> > +	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
-> > +		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
-> > +	else
-> > +		bus->domain_nr = bridge->domain_nr;
-> 
-> The domain_nr in struct pci_bus is really only used by
-> pci_domain_nr().  It seems like it really belongs in the struct
-> pci_host_bridge and probably doesn't need to be duplicated in the
-> struct pci_bus.  But that's probably a project for the future.
-> 
+On Thu, Jul 15, 2021 at 6:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Jul 12, 2021 at 05:22:58PM +0200, Rafael J. Wysocki wrote:
+> > On Thu, Jul 8, 2021 at 3:20 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > >
+> > > On Thursday, July 8, 2021 2:39:49 PM CEST Rafael J. Wysocki wrote:
+> > > > On Thu, Jul 8, 2021 at 2:18 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, Jul 7, 2021 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jun 17, 2021 at 03:36:53PM +0300, Mika Westerberg wrote:
+> > > > > > > Some PCIe devices only support PME (Power Management Event) from D3cold.
+> > > > > > > One example is ASMedia xHCI controller:
+> > > > > > >
+> > > > > > > 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
+> > > > > > >   ...
+> > > > > > >   Capabilities: [78] Power Management version 3
+> > > > > > >         Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+> > > > > > >         Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> > > > > > >
+> > > > > > > With such devices, if it has wake enabled, the kernel selects lowest
+> > > > > > > possible power state to be D0 in pci_target_state(). This is problematic
+> > > > > > > because it prevents the root port it is connected to enter low power
+> > > > > > > state too which makes the system consume more energy than necessary.
+> > > > > >
+> > > > > > IIUC this is because the loop that checks which states support PME
+> > > > > > starts with D3hot and doesn't even look at D3cold.
+> > > > >
+> > > > > That's because the device itself cannot be programmed into D3cold, so
+> > > > > the target state cannot be D3cold for it.
+> > > > >
+> > > > > > > The problem in pci_target_state() is that it only accounts the "current"
+> > > > > > > device state, so when the bridge above it (a root port for instance) is
+> > > > > > > transitioned into D3hot the device transitions into D3cold. This is
+> > > > > > > because when the root port is first transitioned into D3hot then the
+> > > > > > > ACPI power resource is turned off which puts the PCIe link to L2/L3 (and
+> > > > > > > the root port and the device are in D3cold). If the root port is kept in
+> > > > > > > D3hot it still means that the device below it is still effectively in
+> > > > > > > D3cold as no configuration messages pass through. Furthermore the
+> > > > > > > implementation note of PCIe 5.0 sec 5.3.1.4 says that the device should
+> > > > > > > expect to be transitioned into D3cold soon after its link transitions
+> > > > > > > into L2/L3 Ready state.
+> > > > > > >
+> > > > > > > Taking the above into consideration, instead of forcing the device stay
+> > > > > > > in D0 we modify pci_target_state() to return D3hot in this special case
+> > > > > > > and make __pci_enable_wake() to enable PME too in this case.
+> > > > > > >
+> > > > > > > Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
+> > > > > > > Reported-by: Koba Ko <koba.ko@canonical.com>
+> > > > > > > Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > > > > ---
+> > > > > > > The previous version of the patch is here:
+> > > > > > >
+> > > > > > > https://lore.kernel.org/linux-pm/20210616150516.28242-1-mika.westerberg@linux.intel.com/
+> > > > > > >
+> > > > > > > Changes from the previous version:
+> > > > > > >
+> > > > > > >   * Dropped redundant test in pci_target_state().
+> > > > > > >
+> > > > > > >  drivers/pci/pci.c | 16 +++++++++++++++-
+> > > > > > >  1 file changed, 15 insertions(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > > > > index b717680377a9..043c5c304308 100644
+> > > > > > > --- a/drivers/pci/pci.c
+> > > > > > > +++ b/drivers/pci/pci.c
+> > > > > > > @@ -2485,7 +2485,13 @@ static int __pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable
+> > > > > > >       if (enable) {
+> > > > > > >               int error;
+> > > > > > >
+> > > > > > > -             if (pci_pme_capable(dev, state))
+> > > > > > > +             /*
+> > > > > > > +              * Enable PME if device is capable from given state.
+> > > > > > > +              * Special case is device that can only generate PME
+> > > > > > > +              * from D3cold then we enable PME too.
+> > > > > > > +              */
+> > > > > > > +             if (pci_pme_capable(dev, state) ||
+> > > > > > > +                 (state == PCI_D3hot && pci_pme_capable(dev, PCI_D3cold)))
+> > > > > > >                       pci_pme_active(dev, true);
+> > > > > > >               else
+> > > > > > >                       ret = 1;
+> > > > > > > @@ -2595,6 +2601,14 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+> > > > > > >                * PME#.
+> > > > > > >                */
+> > > > > > >               if (dev->pme_support) {
+> > > > > > > +                     /*
+> > > > > > > +                      * Special case if device supports only PME from
+> > > > > > > +                      * D3cold but not from D3hot we still return D3hot.
+> > > > > > > +                      */
+> > > > > > > +                     if (target_state == PCI_D3hot &&
+> > > > > > > +                             (dev->pme_support & (1 << PCI_D3cold)))
+> > > > > > > +                             return target_state;
+> > > > > >
+> > > > > > I've spent quite a bit of time trying to understand this, and I'm kind
+> > > > > > of dragging my feet on it because I haven't been able to really
+> > > > > > connect this with the specs.
+> > > > >
+> > > > > The specs aren't very clear in this area, though.
+> > > > >
+> > > > > The overall picture is that the device in question is connected to a
+> > > > > port (a root port in this particular case) that can be programmed into
+> > > > > D3cold via ACPI, but the endpoint itself can only be programmed into
+> > > > > D3hot.  However, if the port goes into D3cold, the endpoint also goes
+> > > > > into D3cold (actually, my understanding of the specs is that even if
+> > > > > the port goes into D3hot, the endpoint should still be assumed to go
+> > > > > into D3cold).
+> > > > >
+> > > > > The power state of the endpoint is changed first and at the time this
+> > > > > happens it is not known which power state the port is going to be
+> > > > > programmed into.
+> > > > >
+> > > > > Now, the device is wake-capable (in general) and so we want it to be
+> > > > > able to signal wakeup from the final power state.  Because it only
+> > > > > reports PME support in D0 and in D3cold, the kernel today leaves it in
+> > > > > D0 which causes the port to stay in D0 too.  Still, putting the device
+> > > > > into D3hot allows the port to go into D3cold which in turn causes the
+> > > > > device to go into D3cold and it can signal wakeup from that state.
+> > > > >
+> > > > > So there are two ways to get into a configuration from which the
+> > > > > endpoint device can signal wakeup, either by leaving it and the port
+> > > > > holding it both in D0, or by putting it into D3hot, so that the port
+> > > > > can go into D3cold in which case the endpoint will end up in D3cold.
+> > > > >
+> > > > > The Mika's patch is aiming at enabling the second option.
+> > > > >
+> > > > > > It also seems unfortunate to have to add this special case in two places.
+> > > > >
+> > > > > That's because __pci_enable_wake() tries to be extra careful and only
+> > > > > call pci_pme_active() if PME is known to be supported in the target
+> > > > > power state, but that is not strictly necessary.  It could just call
+> > > > > pci_pme_active() unconditionally and return the
+> > > > > platform_pci_set_wakeup() return value.
+> > > > >
+> > > > > I think I'll send a patch making this change.
+> > > >
+> > > > Actually, it needs to fail if PME cannot be signaled from the target
+> > > > state and the device is not power-manageable by the platform.
+> > > >
+> > > > A better idea may be to make pci_pme_capable() also check if the
+> > > > parent bridge can go into D3cold and return "true" if so and "state"
+> > > > is D3hot while PME signaling from D3cold is supported.
+> > >
+> > > So below is my version of the $subject patch (untested).
+> > >
+> > > Please let me know what you think.
+> >
+> > I gave some more consideration to this and I was not able to convince
+> > myself that putting the parent port into D3hot was sufficient for the
+> > endpoint device connected to it to go into D3cold.
+>
+> Thanks, that was a sticking point for me, too.  I've never been able
+> to directly connect the parent port's D0-D3cold power state to the
+> main power state for a downstream device.
+>
+> > However, the PCI PM spec v1.2 clearly mandates that putting a bridge
+> > into D3cold will cause power to be removed from the entire bus
+> > segment below it, which should apply to PCIe devices by extension.
+>
+> Are you referring to Table 6-1, where it says "No PCI transactions; no
+> clock; no Vcc" on the secondary bus if the bridge is in D3cold?
 
-Agreed. Maybe we can define pci_bus_domain_nr() as:
+Yes, I am.
 
-	static inline int pci_domain_nr(struct pci_bus *bus)
-	{
-		struct device *bridge = bus->bridge;
-		struct pci_host_bridge *b = container_of(bridge, struct pci_host_bridge, dev);
+> I'm not really clear on how a bridge's power state affects main power
+> for downstream devices.  What about optical links where the power
+> distribution is more separate from the communication path?
 
-		return b->domain_nr;
-	}
-
-but apart from corretness (e.g. should we use get_device() for
-bus->bridge?), it makes more sense if ->domain_nr of pci_host_bridge
-is used (as a way to set domain number at probing time) for most of
-drivers and archs. ;-)
-
-> >  #endif
-> >  
-> >  	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 540b377ca8f6..952bb7d46576 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -526,6 +526,15 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
-> >  	return (pdev->error_state != pci_channel_io_normal);
-> >  }
-> >  
-> > +/*
-> > + * PCI Conventional has at most 256 PCI bus segments and PCI Express has at
-> > + * most 65536 "PCI Segments Groups", therefore -1 is not a valid PCI domain
-> 
-> s/Segments/Segment/
-> 
-> Do you have a reference for these limits?  I don't think either
-> Conventional PCI or PCIe actually specifies a hardware limit on the
-> number of domains (I think PCI uses "segment group" to mean the same
-> thing).
-> 
-> "Segment" in the Conventional PCI spec, r3.0, means a bus segment,
-> which connects all the devices on a single bus.  Obviously there's a
-> limit of 256 buses under a single host bridge, but that's different
-> concept than a domain/segment group.
-> 
-> The PCI Firmware spec, r3.3, defines "Segment Group Number" as being
-> in the range 0..65535, but as far as I know, that's just a firmware
-> issue, and it applies equally to Conventional PCI and PCIe.
-> 
-> I think you're right that -1 is a reasonable sentinel; I just don't
-> want to claim a difference here unless there really is one.
-> 
-
-I think you're right, I got confused on the concepts of "Segment" and
-"Segment Group".
-
-After digging in specs, I haven't find any difference on the limitation
-between Conventional PCI and PCIe. The PCI Firmware spec, r3.2, refers
-ACPI (3.0 and later) spec for the details of "Segment Group", and in
-ACPI spec v6.3, the description _SEG object says:
-
-"""
-The lower 16 bits of _SEG returned integer is the PCI Segment Group
-number. Other bits are reserved.
-"""
-
-So I'm thinking replacing the comments with:
-
-Currently in ACPI spec, for each PCI host bridge, PCI Segment Group
-number is limited to a 16-bit value, therefore (int)-1 is not a valid
-PCI domain number, and can be used as a sentinel value indicating
-->domain_nr is not set by the driver (and CONFIG_PCI_DOMAINS_GENERIC=y
-archs will set it with pci_bus_find_domain_nr()).
-
-Thoughts?
-
-Regards,
-BOqun
-
-> > + * number, and can be used as a sentinel value indicating ->domain_nr is not
-> > + * set by the driver (and CONFIG_PCI_DOMAINS_GENERIC=y can set it in generic
-> > + * code).
-> > + */
-> > +#define PCI_DOMAIN_NR_NOT_SET (-1)
-> > +
-> >  struct pci_host_bridge {
-> >  	struct device	dev;
-> >  	struct pci_bus	*bus;		/* Root bus */
-> > @@ -533,6 +542,7 @@ struct pci_host_bridge {
-> >  	struct pci_ops	*child_ops;
-> >  	void		*sysdata;
-> >  	int		busnr;
-> > +	int		domain_nr;
-> >  	struct list_head windows;	/* resource_entry */
-> >  	struct list_head dma_ranges;	/* dma ranges resource list */
-> >  	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
-> > -- 
-> > 2.30.2
-> > 
+My understanding is that the PCIe downstream port going into D3cold
+must shut down the link to the downstream component connected to it
+which means that, as far as PME signaling goes, the downstream
+component ends up in the D3cold-equivalent situation, even if it has
+its own power supply.
