@@ -2,127 +2,271 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29E4A3C941B
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 00:58:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E574B3C956E
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 03:11:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237293AbhGNW7V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jul 2021 18:59:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25106 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237245AbhGNW7U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jul 2021 18:59:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626303388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p53AiDq4RRf5s7Uh7mGyD6/R6lQu0pl6+URNGF7eeJg=;
-        b=XL2mBR+3yVDMmwBxEAC2hCfs5f1q08TtP++VAZxkLV0an87ImUf0IT6rZdkb564Of1dzca
-        nRNFVz7JBTJm5X7MZ1WCzzpIYMYyWUZ6znhZ0DfT0D3FI2LSRU9IQaRoEplL+6Pivcg3Hc
-        aee8Xktnm9xrdKsWygaV1ich8l5s4yY=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-KPNRu21gMSKmRVYd2m9OBg-1; Wed, 14 Jul 2021 18:56:27 -0400
-X-MC-Unique: KPNRu21gMSKmRVYd2m9OBg-1
-Received: by mail-oi1-f198.google.com with SMTP id x207-20020aca31d80000b029025a580320a5so1538093oix.12
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jul 2021 15:56:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p53AiDq4RRf5s7Uh7mGyD6/R6lQu0pl6+URNGF7eeJg=;
-        b=jAIhQkSGt8XMkfpYgTDlNHLj3fRr8b/mgTbDuIoKr6iT3Qb+vvxPQCCIarYrLDLXLM
-         1asZlQrooFH8+hs8DRXMTk9BAsLF+ecrGxcEB7MJ2kOatwodoIJOQrGbBZsZVQyKlbMQ
-         STVSvETmOAcwwty3hsEgavFXcWz5vg6kJfkAdRxP6qGhlIRrV5A3q1ZWL1bQPNrBk7jZ
-         vnkn0Jwer+EdKMtT2kcTlyEwq2bOTPe13tmO+haPXMhsb06+SB3sNFK3/WDqlZ5875sO
-         0Zw0p16y5lVDgACVi6WRsdFHfN+OiJj8Nqm/kKK/b/dptyISz9LdJyRY4SW6Si1Ve7GT
-         yDMQ==
-X-Gm-Message-State: AOAM531eBAAgyLYtGs6SktM221XbtlB8B21EZcUX5XAeW7T4cxlkDeM2
-        JneY4EcUX8TMyzzqY2i74QpoFzHdDBR2R5P0ClhdMHBgb8tThDvgRkAbPZCmRc5Pu9OBDfR+F+i
-        lvAM1YDkJ5dUIseFpQVJN
-X-Received: by 2002:a05:6830:1d8c:: with SMTP id y12mr419766oti.75.1626303386329;
-        Wed, 14 Jul 2021 15:56:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxFKmf1VsQgh+UBBi+EvUXyhVVpNx63nHwBogYk7AYyZyKjx3X4wwKOQ8itqMq1hX+iXCyWMQ==
-X-Received: by 2002:a05:6830:1d8c:: with SMTP id y12mr419761oti.75.1626303386189;
-        Wed, 14 Jul 2021 15:56:26 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id x29sm665755ooj.10.2021.07.14.15.56.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 15:56:25 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 16:56:24 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Shanker R Donthineni <sdonthineni@nvidia.com>
-Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 7/8] PCI: Add support for ACPI _RST reset method
-Message-ID: <20210714165624.47272c2d.alex.williamson@redhat.com>
-In-Reply-To: <e8f0b236-dfb3-c9cf-4683-c43e8bc0c0b4@nvidia.com>
-References: <20210709123813.8700-1-ameynarkhede03@gmail.com>
-        <20210709123813.8700-8-ameynarkhede03@gmail.com>
-        <20210712170920.2a0868ac.alex.williamson@redhat.com>
-        <e8f0b236-dfb3-c9cf-4683-c43e8bc0c0b4@nvidia.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230507AbhGOBOu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jul 2021 21:14:50 -0400
+Received: from mail-dm6nam10on2091.outbound.protection.outlook.com ([40.107.93.91]:54272
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229909AbhGOBOu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 14 Jul 2021 21:14:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JDcH5vdMbq0bjRvjSoCJvTrtAZbtVWNKN5n17fm7Lb4NrMmAVPVZGngV0d19VMyI4IMXGrXByaZbT8O7NpyhfazBCCX9YqaLLb+PhZqAAmT5YQ82i1jpUVdwOStNVXvyDO49wJAJtLOsi8e9c6W6bjDp2z+OuIsRP/NkAWMgvcAoHg7+IYr9FhgjE3PCEjvyMnZ584kskBIDlv5Oh2NxGmrQLCKY/Tph7bpuRLv7Z9+8mGW+On9qiXupwWd9B9bjx5CNgVZVhCN+2TFA7OD3bZZzOZ9gPqgRQNPxt+bkjroBFxoV0vScz2NRAlk9gGnVK1vSQnuPa6PDZY8OxqbliA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CjtP/IWiVInmU6j0I/o8MVO4MakrpNn+UXyEQDR6Q1A=;
+ b=SfY310QslWhrLpc0PMtZ/4ZE7SnnnkzDodE0gpGwVMFwa5YL5lBaxD2L+0OMRwPNWE5MxRNXhWtUrfJ4OJHlWMVFE1LDsVJgxGGsss71DCXkctM9AT147Qx4P+JdIivhTUSCsdyKXbM3YYvpJM7xXgnK8pSh5krZG8cXUyUxr5c6mvpdRUL1aADVdOM+sQfanXEF+ZPB9bFWqgpsI+p3hPK3zTdAC5Xlq6jWxG52ooFhRPTRifa5zfEpkHo0HcTDDM2SUH7GhRZEYEfA2RvZ1n1x0EeHMcS76yRWPgHnNgddljBMUt1jnIjr+3eI+KAV6SkqtXhfPjX7AGJIzEZO9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CjtP/IWiVInmU6j0I/o8MVO4MakrpNn+UXyEQDR6Q1A=;
+ b=UFYOhId9ad09yVa8ougAfNUVNISF7Sa55Ssi0weWRfVAqRAymP79S3qZkT3prGaS+aYDipKGUGw+ci1ncYMVlXC6xKtIaSS4qwg648POrJhU8JKh+bCEzrYF8YBKIoWCsYxXvwn5LEPmL4hCivR4LEXpTYE1zhRpTvp74MsbS9Y=
+Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
+ by BYAPR21MB1719.namprd21.prod.outlook.com (2603:10b6:a02:c0::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.0; Thu, 15 Jul
+ 2021 01:11:55 +0000
+Received: from BYAPR21MB1270.namprd21.prod.outlook.com
+ ([fe80::2c36:65ec:79ee:6f02]) by BYAPR21MB1270.namprd21.prod.outlook.com
+ ([fe80::2c36:65ec:79ee:6f02%5]) with mapi id 15.20.4331.014; Thu, 15 Jul 2021
+ 01:11:55 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'x86@kernel.org'" <x86@kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: RE: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
+Thread-Topic: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
+Thread-Index: Add5D8Zto2s5ndNhQDWxYbgsDd9OBQABZMKw
+Date:   Thu, 15 Jul 2021 01:11:55 +0000
+Message-ID: <BYAPR21MB127099BADA8490B48910D3F1BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
+References: <BYAPR21MB12703228F3E7A8B8158EB054BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB12703228F3E7A8B8158EB054BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=db47dedc-4fc3-455e-8eb3-f852bb4a6534;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-07-14T19:38:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: df258fe2-5710-445a-408c-08d9472d8949
+x-ms-traffictypediagnostic: BYAPR21MB1719:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR21MB1719047A19CE88F4F5449663BF129@BYAPR21MB1719.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JX+J0hRS3pmRguaT7Ew8eIbwUOFzxk2SxAHX+ClOtN5BsFXA4eCBHep2QiIozHUD6VOy09BTg5TvZHw8Li7Yn7qi/WC6Kxny4U4yoTubyvsYTo8EVsTa4YxzSdu7CWxgToJd4lUKuNN9oMLmqGKcX+QLrFSQOzMEVCqdanX62hm9C0UHarJeGDu9pWadSfC2INxK5wQoCrFR3viclrccNtz48Mm/k7h0xltiVAeqczunYsmkWgwJsGI8z4Le5SehpyD2BblFauaKoN/48aDxAYv3HYEfdKB99Dknd+kiVqPLOZJeDeo/Q1LZBytnO2Ze1bICYjBwGlM0ejyW/s2DMpmtfG3AhsTkizeGafNs34zW03PtfWyA3HvXN0LjwDwxrlwhSyBi0sqzMP3P55nLKDmFld/JvWncQwcrBctflpRAkC/Nx6zw8/FBLPeX1KmfOAQ2XtUWrbULLWLKFRf11e0C9wMeu1xc+dRrBUylrsAlZJq7I+wIfkwmTbmoIH4VaWoHc0v0GXJLJqm6mCaN9ELje1scXl3nT88RnLcQ/UWKeUtXYKxZQ4PXHRzRElrvPCfzRdPHdIXakUyGtSucfrmBJKnNLnC8ijrRDXwjuYLMnIBKiOM2nx2iIOKwLpKM6Gp65rHb6Y0cOHdnraq722sJd2QGw3H2O6rSy/rMFcZzV/Di81dZeyNF53RfiiGuQtKnvF7hks+Pd/IgK7Won36DpSuWcNQeieeGtqTl/S/NAE/wi2Nw73uDfhUeb1H+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38100700002)(55016002)(71200400001)(110136005)(2906002)(7696005)(186003)(5660300002)(66446008)(53546011)(26005)(6506007)(8936002)(52536014)(8676002)(83380400001)(2940100002)(76116006)(66556008)(64756008)(122000001)(66946007)(82960400001)(4326008)(8990500004)(9686003)(478600001)(316002)(10290500003)(66476007)(33656002)(82950400001)(86362001)(54906003)(491001)(38070700004)(505234006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Dl1CjpG+acKBKengQvINZzNiNOJ7tqpfYvw2wKn/cFuQRSsPEpYTyGyU+Cg5?=
+ =?us-ascii?Q?ECW4XaQ52uN+ap3c9Z8mSIo1Mvv29J1bZ+ODv7oXZnc2yvN3tPAqVMGIV5rZ?=
+ =?us-ascii?Q?28k5tVtOPqnF1tVGAi9aYThdgLfOCy/bhPoBVLYDFnlC2W4B3PPSwmQJaOXm?=
+ =?us-ascii?Q?FxcSXgCUKt76G/+8ZUgss/fP0Lzuwj/dL6v8ifOuDMIx572TaLxZwG356xh+?=
+ =?us-ascii?Q?ETmPqfgd2mxkoXQHxqgdsruHG3RU3Pafkr1sF7MMHaI/2KHeeRwWSFVUP5Pe?=
+ =?us-ascii?Q?JIgDXI7TbsRLEur/BtMxwpulVZZiTBO9P8229I3BzrdHh73B+zvsLqIGg+Ji?=
+ =?us-ascii?Q?i9+4eT2b+YVaLBSsNt8P2XEHjiWkT6IsNhKsfbS3a5PXoATEjdvEXULsJDiC?=
+ =?us-ascii?Q?m9RSCuN5PNGFqpehM1ucU3FSOi6axtV/sSu8/ZW3vDKZRKoLFNEFIBoHFFM1?=
+ =?us-ascii?Q?p1kYz3knwlM+RX18cqySUH1Wnq7oPRRsyGWHbwmb/RqlFh+azONQXJAEZjCf?=
+ =?us-ascii?Q?NyvKJe1bBerhoJoyHJhsHH85If+F+tqwh7jxeVDoOGPsRL9u1tuPQLXFQ67C?=
+ =?us-ascii?Q?H89tccOCBCinc4jEKl9o1vlULRTeASJkxh2J4ARFzDsKDpoWHyju78985L/M?=
+ =?us-ascii?Q?r1lNFMz2ArzZu/xpt3U1q0mSyKUdoZODUdWYpkrGSHUGMZu5dMkcQFxii/56?=
+ =?us-ascii?Q?rwh7fpDyOOCnWJ8D1Wz7B+DY4wOPPDVWTcJsUlAPqp4cW75Y5qTZKeDuMZtw?=
+ =?us-ascii?Q?d5m+dCTwJdlpOHvfOzq2VQkqeCBPTyNsK/rqQQycr1UeuFmxnj0vj7hPbXby?=
+ =?us-ascii?Q?Qd2iWADWxw/v7sE1ypUis3pbyFIFAhHKBHu70gPJhRwdnhXQpw26K7c7oqtm?=
+ =?us-ascii?Q?xefvCarl50zbYQUCJs9xfhcb/2GoIp3Sp5xQhbtHmTKwv2gPgudxcfl2gb9C?=
+ =?us-ascii?Q?Ei4J+Uz6cWjVC5MrbEhEErOrDTXLd/qE5n0MvvXqw79B0Lx1WYL80q27FMSZ?=
+ =?us-ascii?Q?3/BEqwuNCylrEtv6iKUwSJN2r8M27jehzMvjvlALDlLJKg/Ia9Rys04BFqbA?=
+ =?us-ascii?Q?ouRb2zmW5Zw+5ZCQgVY08HL9YgVIV6OaR4l+oULj9pao+SqOJNRFYcu4DaZ/?=
+ =?us-ascii?Q?fO7H8urkZD94q7tLjdbs25joRpERgHtpDT9HlRohTj0dVoS+/2EWMy+Wq2++?=
+ =?us-ascii?Q?3ioQxHmXEl5QzB5d53Hf/y8/pYn6CaJMBwzdI5aO1DtLNBRq0oGBsWNP0rZc?=
+ =?us-ascii?Q?td84QRmHZ05/7MW9Cek6QmmsIGC2/4+rwFwd0q1q43P4P54Zdix9Faf18TeU?=
+ =?us-ascii?Q?VjMsnQiTR7CNQh2XHO1tF9ag?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df258fe2-5710-445a-408c-08d9472d8949
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2021 01:11:55.0596
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aZS2gkJvgC48ymhosWFLz3rIAqUZNc9rDZj8Z7pWtQULeuSoYbUquwXS6X1QTezijKE9+ppgElJ+OAlXkqzbVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1719
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 12 Jul 2021 19:51:41 -0500
-Shanker R Donthineni <sdonthineni@nvidia.com> wrote:
+> From: Dexuan Cui
+> Sent: Wednesday, July 14, 2021 5:39 PM
+> To: netdev@vger.kernel.org; x86@kernel.org
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>; linux-kernel@vger.kernel.org
+> Subject: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=3D8
+>=20
+> Hi all,
+> I'm seeing a strange "no MSI-X interrupt" issue with the Mellanox NIC
+> driver on a physical Linux host [1], if I only enable part of the CPUs.
+>=20
+> The physical host has 104 logical processors (2 sockets, and each socket
+> has 26 cores with HT enabled). By default, the Mellanox driver works fine
+> when Linux boots up.
+>=20
+> If I only use 1, 2, 32, 64, 96 processors by the Linux kernel parameter
+> "maxcpus=3DX" or "nr_cpus=3DX", everthing still works fine.
+>=20
+> However, if the Linux host OS only uses 4, 8 or 16 processors, the
+> mlx5_core driver fails to load as it can not receive interrupt when
+> creating EQ (maxcpus=3D8 or 16), or the driver can load but it reports a
+> timeout error when I try to bring the NIC up (maxcpus=3D4). This issue is
+> a 100% repro.
+>=20
+> For example, with "maxcpus=3D8", I get the below timeout error when tryin=
+g
+> to load mlx5_core:
+>=20
+> # modprobe mlx5_core
+> [ 1475.716688] mlx5_core 0000:d8:00.0: firmware version: 16.25.8352
+> [ 1475.722742] mlx5_core 0000:d8:00.0: 126.016 Gb/s available PCIe
+> bandwidth (8.0 GT/s PCIe x16 link)
+> [ 1475.991398] mlx5_core 0000:d8:00.0: E-Switch: Total vports 2, per vpor=
+t:
+> max uc(1024) max mc(16384)
+>=20
+> [ 1537.020001] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid 1416)=
+:
+> Recovered 1 EQEs on cmd_eq
+> [ 1537.028969] mlx5_core 0000:d8:00.0:
+> wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]: CREATE_EQ(0x301)
+> recovered after timeout
+> [ 1598.460003] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid 1416)=
+:
+> Recovered 1 EQEs on cmd_eq
+> [ 1598.468978] mlx5_core 0000:d8:00.0:
+> wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]: CREATE_EQ(0x301)
+> recovered after timeout
+> [ 1659.900010] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid 1416)=
+:
+> Recovered 1 EQEs on cmd_eq
+> [ 1659.908987] mlx5_core 0000:d8:00.0:
+> wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]: CREATE_EQ(0x301)
+> recovered after timeout
+> [ 1721.340006] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid 1416)=
+:
+> Recovered 1 EQEs on cmd_eq
+> [ 1721.348989] mlx5_core 0000:d8:00.0:
+> wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]: CREATE_EQ(0x301)
+> recovered after timeout
+>=20
+> When this happens, the mlx5_core driver is stuck with the below
+> call-trace, waiting for some interrupt:
+>=20
+> # ps aux |grep modprobe
+> root        1416  0.0  0.0  11024  1472 ttyS0    D+   08:08   0:00
+> modprobe mlx5_core
+> root        1480  0.0  0.0   6440   736 pts/0    S+   08:15   0:00
+> grep --color=3Dauto modprobe
+>=20
+> # cat /proc/1416/stack
+> [<0>] cmd_exec+0x8a7/0x9b0 [mlx5_core]
+> [<0>] mlx5_cmd_exec+0x24/0x50 [mlx5_core]
+> [<0>] create_map_eq+0x2a6/0x380 [mlx5_core]
+> [<0>] mlx5_eq_table_create+0x504/0x710 [mlx5_core]
+> [<0>] mlx5_load+0x52/0x130 [mlx5_core]
+> [<0>] mlx5_init_one+0x1cc/0x250 [mlx5_core]
+> [<0>] probe_one+0x1d3/0x2a0 [mlx5_core]
+> [<0>] local_pci_probe+0x45/0x80
+> [<0>] pci_device_probe+0x10f/0x1c0
+> [<0>] really_probe+0x1c1/0x3b0
+> [<0>] __driver_probe_device+0x109/0x180
+> [<0>] driver_probe_device+0x23/0xa0
+> [<0>] __driver_attach+0xbd/0x160
+> [<0>] bus_for_each_dev+0x7c/0xc0
+> [<0>] driver_attach+0x1e/0x20
+> [<0>] bus_add_driver+0x152/0x1f0
+> [<0>] driver_register+0x74/0xd0
+> [<0>] __pci_register_driver+0x68/0x70
+> [<0>] init+0x6b/0x1000 [mlx5_core]
+> [<0>] do_one_initcall+0x46/0x1d0
+> [<0>] do_init_module+0x62/0x250
+> [<0>] load_module+0x2503/0x2730
+> [<0>] __do_sys_finit_module+0xbf/0x120
+> [<0>] __x64_sys_finit_module+0x1a/0x20
+> [<0>] do_syscall_64+0x38/0xc0
+> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+>=20
+> To make the issue even weirder, when the issue happens (e.g. when Linux
+> only uses 8 processors), if I manually bring CPU #8~#31 online [2] and
+> then bring them offline [3], the Mellanox driver will work fine!
+>=20
+> This is a x86-64 host. Is it possibe that the IOMMU Interrrupt Remapping
+> is not proprely set up with maxcpus=3D4, 8 and 16?
+>=20
+> The above tests were done with the recent Linux v5.14-rc1 kernel. I also
+> tried Ubuntu 20.04's kernel "5.4.0-77-generic", and the Mellanox driver
+> exhibits exactly the same issue.
+>=20
+> I have Linux/Windows dual-boot on this physical machine, and Windows
+> doesn't have the issue when I let it only use 4, 8 and 16 processors.
+> So this looks like somehow the issue is specific to Linux.
+>=20
+> Can someone please shed some light on this strange issue? I'm ready
+> to provide more logs if needed. Thanks!
+>=20
+> PS, the physical machine has 4 NVMe controllers and 4 Broadcom NICs,
+> which are not affected by maxcpus=3D4, 8, and 16.
+>=20
+> [1] This is the 'lspci' output of the Mellanox NIC:
+> d8:00.0 Ethernet controller: Mellanox Technologies MT27800 Family
+> [ConnectX-5]
+>         Subsystem: Mellanox Technologies MT27800 Family [ConnectX-5]
+>         Flags: bus master, fast devsel, latency 0, IRQ 33, NUMA node 1
+>         Memory at f8000000 (64-bit, prefetchable) [size=3D32M]
+>         Expansion ROM at fbe00000 [disabled] [size=3D1M]
+>         Capabilities: [60] Express Endpoint, MSI 00
+>         Capabilities: [48] Vital Product Data
+>         Capabilities: [9c] MSI-X: Enable+ Count=3D64 Masked-
+>         Capabilities: [c0] Vendor Specific Information: Len=3D18 <?>
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [150] Alternative Routing-ID Interpretation (ARI)
+>         Capabilities: [180] Single Root I/O Virtualization (SR-IOV)
+>         Capabilities: [1c0] Secondary PCI Express
+>         Kernel driver in use: mlx5_core
+>         Kernel modules: mlx5_core
+> 00: b3 15 17 10 46 05 10 00 00 00 00 02 08 00 00 00
+> 10: 0c 00 00 f8 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 b3 15 80 00
+> 30: 00 00 e0 fb 60 00 00 00 00 00 00 00 ff 01 00 00
+>=20
+> [2] for i in `seq 8 31`;  do echo 1 >  /sys/devices/system/cpu/cpu$i/onli=
+ne;
+> done
+> [3] for i in `seq 8 31`;  do echo 0 >  /sys/devices/system/cpu/cpu$i/onli=
+ne;
+> done
+>=20
+> Thanks,
+> -- Dexuan
 
-> Hi Alex,
-> 
-> On 7/12/21 6:09 PM, Alex Williamson wrote:
-> >> +/**
-> >> + * pci_dev_acpi_reset - do a function level reset using _RST method
-> >> + * @dev: device to reset
-> >> + * @probe: check if _RST method is included in the acpi_device context.
-> >> + */
-> >> +int pci_dev_acpi_reset(struct pci_dev *dev, int probe)
-> >> +{
-> >> +     acpi_handle handle = ACPI_HANDLE(&dev->dev);
-> >> +
-> >> +     if (!handle || !acpi_has_method(handle, "_RST"))
-> >> +             return -ENOTTY;
-> >> +
-> >> +     if (probe)
-> >> +             return 0;
-> >> +
-> >> +     if (ACPI_FAILURE(acpi_evaluate_object(handle, "_RST", NULL, NULL))) {
-> >> +             pci_warn(dev, "ACPI _RST failed\n");
-> >> +             return -EINVAL;  
-> > Should we return -ENOTTY here instead to give a possible secondary
-> > reset method a chance?  Thanks,  
-> Thanks for reviewing patches.
-> 
-> ACPI/AML _RST method type is VOID. The only possibility of failure would be
-> either system is running out of memory or bugs in ACPICA. There is no strong
-> reason not to return -NOTTY.
-> 
-> I'll fix in the next version. Is there opportunity to include reset feature in v5.14-rc2?
+(+ the linux-pci list)
 
-Sounds good, it's a corner case but since we've got a series of methods
-we can try and part of the point of Amey's series is giving the user
-control of the order and methods to try, we might as well make use of
-it.  I think there's also some precedence in the quirks that they can
-fail and fall through to standard resets.
+It turns out that adding "intremap=3Doff" can work around the issue!
 
-I'll leave any upstream timing questions to Bjorn, but we've passed the
-v5.14 merge window when new functionality is generally accepted.
+The root cause is still not clear yet. I don't know why Windows is good her=
+e.
 
-> Can I add your reviewed-by since no other comments to this patch?
-
-Yeah, s/-EINVAL/-ENOTTY/
-
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-
-Thanks!
+Thanks,
+Dexuan
 
