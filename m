@@ -2,195 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 483783CA3E9
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 19:23:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DFB33CA40C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 19:25:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234100AbhGOR0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 13:26:34 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:35641 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbhGOR0d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jul 2021 13:26:33 -0400
-Received: by mail-io1-f46.google.com with SMTP id d9so7356552ioo.2;
-        Thu, 15 Jul 2021 10:23:40 -0700 (PDT)
+        id S234845AbhGOR17 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 13:27:59 -0400
+Received: from mail-il1-f173.google.com ([209.85.166.173]:35597 "EHLO
+        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233770AbhGOR16 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jul 2021 13:27:58 -0400
+Received: by mail-il1-f173.google.com with SMTP id a11so5701993ilf.2;
+        Thu, 15 Jul 2021 10:25:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Kf1evJp0mMw4X9FefVnWN29DSwILfIRDegyhezWiKMs=;
-        b=erq8rXDY78o7xlo4SIHYyxi/8yoLbu7bZCNWQl9XVbQegcQ7UdzZgQuYQ54qXO+h8j
-         sPHTLw6U10g+aeOGtwTnSNqNRhAY2Mndj6zYVUXqcEgUOTVG2m/ZbU7obMlgRGVYkmV2
-         hYPzHJ9Q7ZVHV0lFy4XexCc2xNR7XUIWzw2t/XeTmL+DFadinTzdTGShDJuVHFE3juie
-         shDTO4QAzvcj8HUgrtvRYRTOxdx2de33VbOf3MnaDtKfHFkuvoj7EGQ+7397Ii1ZpuPu
-         nnnqnBrggj+9UlZihuTK9EraxhhyPQXQ6OktsoXr3YKb2uIo8jDO8DCtVJQa7ZhCMhud
-         divA==
-X-Gm-Message-State: AOAM530NwF2RTKFvSumTgLSfooRzzkb21ZFu/EeXXTNpcQR+Oji9LxSv
-        ekAQBfkfXl5leOffyZ2noQ==
-X-Google-Smtp-Source: ABdhPJxD+9lkUaw6EjbkEA9Dvv2T2gjP6OqfRxwcyBfzlcv8uV672bm/jA+nXHywZqBhpFtSa3btiA==
-X-Received: by 2002:a02:9f8e:: with SMTP id a14mr4958548jam.55.1626369820252;
-        Thu, 15 Jul 2021 10:23:40 -0700 (PDT)
+        bh=UT6yu64pjsQwg83SvbhVDr958pjgnmXDxPh8Y2Ai0pY=;
+        b=RETj90UpgIRMOVoB/i0iNsFKH9/CKC851Dnp18nowrB57QamirZi/qWL7OFb8v2DzO
+         nGfcf9+UsCI9lKjjNBRDe58RWxRXA4gCRm61k6BlevixBmaXqOVzElLLHBsJRVHhWOV9
+         opiOwLT0OJBOhPPnnKN6yp1/W6vjTOGfj93bAp62RT8Fmn5v3VnQFjgd6aAu3M9vdlTg
+         qEDFGIj6QDptPNCDbLRZhBoNMiojipygqjU7iD14x8Zh+if4UBB15r5KgGSw4T/5ChPX
+         W0nUjuo7DqhcHTp8KM/r2vts/U6UeWfYBi6x5MuLOMc8UWak8XsE6DhEZ9tToxxNUAU0
+         Jipg==
+X-Gm-Message-State: AOAM530O28V/3iVME9xsbmAiTO4JShGj+JkuoSpv2b7RE0aLPTcCWtob
+        N8le1+bl1Src1TOwavihvQ==
+X-Google-Smtp-Source: ABdhPJyCLi7fSw7/fRoMn4kkpqkEFdQrBnpSMyjD+Rv63YLKdSMEk51qZSuhA94mLu4gvpYc0GAooA==
+X-Received: by 2002:a92:6605:: with SMTP id a5mr3597431ilc.15.1626369904925;
+        Thu, 15 Jul 2021 10:25:04 -0700 (PDT)
 Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id i5sm3490419ilc.16.2021.07.15.10.23.38
+        by smtp.gmail.com with ESMTPSA id c16sm3424131ilo.72.2021.07.15.10.25.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 10:23:39 -0700 (PDT)
-Received: (nullmailer pid 1277979 invoked by uid 1000);
-        Thu, 15 Jul 2021 17:23:37 -0000
-Date:   Thu, 15 Jul 2021 11:23:37 -0600
+        Thu, 15 Jul 2021 10:25:03 -0700 (PDT)
+Received: (nullmailer pid 1280076 invoked by uid 1000);
+        Thu, 15 Jul 2021 17:25:00 -0000
+Date:   Thu, 15 Jul 2021 11:25:00 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Binghui Wang <wangbinghui@hisilicon.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: PCI: add snps,dw-pcie.yaml
-Message-ID: <20210715172337.GA1263164@robh.at.kernel.org>
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] dt-bindings: PCI: kirin-pcie.txt: Convert it to
+ yaml
+Message-ID: <20210715172500.GB1263164@robh.at.kernel.org>
 References: <cover.1626174242.git.mchehab+huawei@kernel.org>
- <0454d09414d74d9789213f5e7779002bcc024537.1626174242.git.mchehab+huawei@kernel.org>
+ <1f9b2f372364328e9cd3a18cf605ad541f3de4ab.1626174242.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0454d09414d74d9789213f5e7779002bcc024537.1626174242.git.mchehab+huawei@kernel.org>
+In-Reply-To: <1f9b2f372364328e9cd3a18cf605ad541f3de4ab.1626174242.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 01:17:51PM +0200, Mauro Carvalho Chehab wrote:
-> Currently, the designware schema is defined on a text file:
-> 	designware-pcie.txt
-> 
-> Convert the pci-bus part into a schema.
+On Tue, Jul 13, 2021 at 01:17:55PM +0200, Mauro Carvalho Chehab wrote:
+> Convert the file into a JSON description at the yaml format.
 > 
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml | 96 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+>  .../bindings/pci/hisilicon,kirin-pcie.yaml    | 81 +++++++++++++++++++
+>  .../devicetree/bindings/pci/kirin-pcie.txt    | 41 ----------
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 82 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
 > new file mode 100644
-> index 000000000000..fd372d715ab4
+> index 000000000000..f797e2cc3da6
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> @@ -0,0 +1,96 @@
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+> @@ -0,0 +1,81 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pci/snps,dw-pcie.yaml#
+> +$id: http://devicetree.org/schemas/pci/hisilicon,kirin-pcie.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Synopsys DesignWare PCIe interface
+> +title: HiSilicon Kirin SoCs PCIe host DT description
 > +
 > +maintainers:
-> +  - Jingoo Han <jingoohan1@gmail.com>
-> +  - Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> +  - Xiaowei Song <songxiaowei@hisilicon.com>
+> +  - Binghui Wang <wangbinghui@hisilicon.com>
 > +
 > +description: |
-> +  Synopsys DesignWare PCIe host controller
+> +  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
+> +  It shares common functions with the PCIe DesignWare core driver and
+> +  inherits common properties defined in
+> +  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
+
+Make this part of the schema:
+
 > +
 > +allOf:
 > +  - $ref: /schemas/pci/pci-bus.yaml#
+
+$ref: /schemas/pci/snps,dw-pcie-yaml#
+
+Instead.
+
 > +
 > +properties:
 > +  compatible:
-> +    anyOf:
-> +      - {}
-> +      - const: snps,dw-pcie
+> +    contains:
+> +      enum:
+> +        - hisilicon,kirin960-pcie
+> +        - hisilicon,kirin970-pcie
 > +
 > +  reg:
 > +    description: |
-> +      It should contain Data Bus Interface (dbi) and config registers for all
-> +      versions.
-> +      For designware core version >= 4.80, it may contain ATU address space.
-> +    minItems: 2
-> +    maxItems: 4
+> +      Should contain rc_dbi, apb, config registers location and length.
+
+maxItems: 3
+
 > +
 > +  reg-names:
-> +    minItems: 2
-> +    maxItems: 4
 > +    items:
-> +      enum: [dbi, dbi2, config, atu, addr_space, app, elbi, mgmt]
+> +      - const: dbi          # controller configuration registers
+> +      - const: apb          # apb Ctrl register defined by Kirin
+> +      - const: config       # PCIe configuration space registers
+> +
 
-Isn't 'config' only for host and 'addr_space' only for endpoint?
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+
+Don't need these 2. pci-bus.yaml covers that.
 
 > +
-> +  num-lanes:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: |
-> +      number of lanes to use (this property should be specified unless
-> +      the link is brought already up in BIOS)
-> +    maximum: 16
-> +
-> +  reset-gpio:
-> +    description: GPIO pin number of PERST# signal
-> +    maxItems: 1
-> +    deprecated: true
-> +
-> +  reset-gpios:
-> +    description: GPIO controlled connection to PERST# signal
-> +    maxItems: 1
-> +
-> +  snps,enable-cdm-check:
-> +    type: boolean
-> +    description: |
-> +      This is a boolean property and if present enables
-> +      automatic checking of CDM (Configuration Dependent Module) registers
-> +      for data corruption. CDM registers include standard PCIe configuration
-> +      space registers, Port Logic registers, DMA and iATU (internal Address
-> +      Translation Unit) registers.
-> +
-> +  num-viewport:
-> +    description: |
-> +      number of view ports configured in hardware. If a platform
-> +      does not specify it, the driver autodetects it.
-> +    deprecated: true
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
 > +
 > +unevaluatedProperties: false
 > +
-> +required:
-> +  - reg
-> +  - reg-names
-> +  - compatible
-> +
 > +examples:
 > +  - |
-> +    bus {
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      pcie@dfc00000 {
-> +        device_type = "pci";
-> +        compatible = "snps,dw-pcie";
-> +        reg = <0xdfc00000 0x0001000>, /* IP registers */
-> +              <0xd0000000 0x0002000>; /* Configuration space */
-> +        reg-names = "dbi", "config";
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      pcie: pcie@f4000000 {
+> +        compatible = "hisilicon,kirin960-pcie";
+> +        reg = <0x0 0xf4000000 0x0 0x1000>,
+> +              <0x0 0xff3fe000 0x0 0x1000>,
+> +              <0x0 0xf4000000 0 0x2000>;
+> +        reg-names = "dbi","apb", "config";
+
+space                        ^
+
+> +        bus-range = <0x0  0x1>;
 > +        #address-cells = <3>;
 > +        #size-cells = <2>;
-> +        ranges = <0x81000000 0 0x00000000 0xde000000 0 0x00010000>,
-> +                 <0x82000000 0 0xd0400000 0xd0400000 0 0x0d000000>;
-> +        interrupts = <25>, <24>;
-
-Not documented.
-
-> +        #interrupt-cells = <1>;
-
-Not documented.
-
+> +        device_type = "pci";
+> +        ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
 > +        num-lanes = <1>;
+> +        #interrupt-cells = <1>;
+> +        interrupts = <0 283 4>;
+
+Not documented.
+
+> +        interrupt-names = "msi";
+
+Not documented.
+
+> +        interrupt-map-mask = <0xf800 0 0 7>;
+> +        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
 > +      };
 > +    };
+> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> deleted file mode 100644
+> index 3a36eeb1c434..000000000000
+> --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -HiSilicon Kirin SoCs PCIe host DT description
+> -
+> -Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
+> -It shares common functions with the PCIe DesignWare core driver and
+> -inherits common properties defined in
+> -Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
+> -
+> -Additional properties are described here:
+> -
+> -Required properties
+> -- compatible:
+> -	"hisilicon,kirin960-pcie"
+> -	"hisilicon,kirin970-pcie"
+> -- reg: Should contain rc_dbi, apb, config registers location and length.
+> -- reg-names: Must include the following entries:
+> -  "dbi": controller configuration registers;
+> -  "apb": apb Ctrl register defined by Kirin;
+> -  "config": PCIe configuration space registers.
+> -
+> -Optional properties:
+> -
+> -Example based on kirin960:
+> -
+> -	pcie@f4000000 {
+> -		compatible = "hisilicon,kirin960-pcie";
+> -		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
+> -		      <0x0 0xF4000000 0 0x2000>;
+> -		reg-names = "dbi","apb", "config";
+> -		bus-range = <0x0  0x1>;
+> -		#address-cells = <3>;
+> -		#size-cells = <2>;
+> -		device_type = "pci";
+> -		ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
+> -		num-lanes = <1>;
+> -		#interrupt-cells = <1>;
+> -		interrupt-map-mask = <0xf800 0 0 7>;
+> -		interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
+> -				<0x0 0 0 2 &gic 0 0 0  283 4>,
+> -				<0x0 0 0 3 &gic 0 0 0  284 4>,
+> -				<0x0 0 0 4 &gic 0 0 0  285 4>;
+> -	};
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4529cf5ed430..f0115c590731 100644
+> index b54bd9dd07ec..d5f53b2d3f9c 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -14283,6 +14283,7 @@ M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> @@ -14420,7 +14420,7 @@ M:	Xiaowei Song <songxiaowei@hisilicon.com>
+>  M:	Binghui Wang <wangbinghui@hisilicon.com>
 >  L:	linux-pci@vger.kernel.org
 >  S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
->  F:	drivers/pci/controller/dwc/*designware*
+> -F:	Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> +F:	Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+>  F:	drivers/pci/controller/dwc/pcie-kirin.c
 >  
->  PCI DRIVER FOR TI DRA7XX/J721E
+>  PCIE DRIVER FOR HISILICON STB
 > -- 
 > 2.31.1
 > 
