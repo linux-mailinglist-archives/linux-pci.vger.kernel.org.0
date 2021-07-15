@@ -2,142 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298803CA0F1
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 16:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 922163CA213
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 18:14:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236837AbhGOOwr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 10:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
+        id S229554AbhGOQRu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 12:17:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234745AbhGOOwr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Jul 2021 10:52:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1863860FE7;
-        Thu, 15 Jul 2021 14:49:53 +0000 (UTC)
+        id S229518AbhGOQRt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Jul 2021 12:17:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 21FEA613ED;
+        Thu, 15 Jul 2021 16:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626360594;
-        bh=16TRO9Qbmcnd0SRg6DNF/8XFK02qPEiiTLSukYvzfWw=;
+        s=k20201202; t=1626365696;
+        bh=A7zSoEx7UkfbVYYyEkb2r6uf0hfMsazAqkvQUCCA4YU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N4th+ueHz9sd9u/L0T1lQVcMZcK9N+j7V24gv5fDqYhlxh9N/55dFlBo0j7RZzS20
-         VQhn3RY9hfl30RJGjtnA8wKRXudc+AobtFsIMIM/PvxPWG3zZZUBZGO6zXsIsgo3pP
-         m/ohQl4VONZ+iPFq/+k9UKE+HmgV+368wecHAOT+VqIYcb0i/FWcZuRH96nPozqp4C
-         miLAGFYB3ea53okFnlmb6qjvnx8g/VDf1R9NvFD+bBtSCerdLKyWRyRkcy5PVJQ/5h
-         AWdNDkUHurytrdjXPNFmsnztf0nNOsQ2oINha+SFIHv2AZsNR6Uxk1ukzjA10aeqkN
-         vYfNXB1DLLAVQ==
-Date:   Thu, 15 Jul 2021 09:49:52 -0500
+        b=AxbrAyVlv14/pD7tcJyYVo9mGkIi2WhYCZpiQY/mx9svci+sYvJjbdSuai497QbqT
+         GjWpEHZUK41cey366hwqWR4ZilWUvFBtBpJiLkR1aNVPn4sssRXF3gyOYRKLKfWJKE
+         mw7UOjtZQASM75gCAAxgwHxevSMkNXFdOl7lMcSBjYx2ADKiNu5nbRVyyOJz1Ar5Y/
+         j8Z3KkZ5ju2zoOSINtK5kpp3LAfNzAlnoW1STkcO215XhCnsON3k382PblRntlePWw
+         //KxsMlyaQrGbSO++NDmOtZvTCiVy/jz+4Ptl+ZJ4SWq2dyCLl0ENJwJPrKLSxcAgQ
+         YUO8sBaWGNomw==
+Date:   Thu, 15 Jul 2021 11:14:54 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ruben <rubenbryon@gmail.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [question]: BAR allocation failing
-Message-ID: <20210715144952.GA1960220@bjorn-Precision-5520>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v4] PCI/PM: Target PM state is D3hot if device can only
+ generate PME from D3cold
+Message-ID: <20210715161454.GA1776966@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALdZjm6TsfsaQZRxJvr5YDh9VRn28vQjFY+JfZv-daU=gQu_Uw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hJRASb-JrJYGAX_8j+S_Rvjy0VsjB17ndM3BYgQ+mE=g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 01:43:17AM +0300, Ruben wrote:
-> No luck so far with "-global q35-pcihost.pci-hole64-size=2048G"
-> ("-global q35-host.pci-hole64-size=" gave an error "warning: global
-> q35-host.pci-hole64-size has invalid class name").
-> The result stays the same.
-
-Alex will have to chime in about the qemu option problem.
-
-Your dmesg excerpts don't include the host bridge window info, e.g.,
-"root bus resource [mem 0x7f800000-0xefffffff window]".  That tells
-you what PCI thinks is available for devices.  This info comes from
-ACPI, and I don't know whether the BIOS on qemu is smart enough to
-compute it based on "q35-host.pci-hole64-size=".  But dmesg will tell
-you.
-
-"pci=nocrs" tells the kernel to ignore those windows from ACPI and
-pretend everything that's not RAM is available for devices.  Of
-course, that's not true in general, so it's not really safe.
-
-PCI resources are hierarchical: an endpoint BAR must be contained
-in the Root Ports window, which must in turn be contained in the host
-bridge window.  You trimmed most of that information out from your
-dmesg log, so we can't see exactly what's wrong.
-
-> When we pass through the NVLink bridges we can have the (5 working)
-> GPUs talk at full P2P bandwidth and is described in the NVidia docs as
-> a valid option (ie. passing through all GPUs and NVlink bridges).
-> In production we have the bridges passed through to a service VM which
-> controls traffic, which is also described in their docs.
+On Mon, Jul 12, 2021 at 05:22:58PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jul 8, 2021 at 3:20 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Thursday, July 8, 2021 2:39:49 PM CEST Rafael J. Wysocki wrote:
+> > > On Thu, Jul 8, 2021 at 2:18 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Wed, Jul 7, 2021 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Jun 17, 2021 at 03:36:53PM +0300, Mika Westerberg wrote:
+> > > > > > Some PCIe devices only support PME (Power Management Event) from D3cold.
+> > > > > > One example is ASMedia xHCI controller:
+> > > > > >
+> > > > > > 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
+> > > > > >   ...
+> > > > > >   Capabilities: [78] Power Management version 3
+> > > > > >         Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+> > > > > >         Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> > > > > >
+> > > > > > With such devices, if it has wake enabled, the kernel selects lowest
+> > > > > > possible power state to be D0 in pci_target_state(). This is problematic
+> > > > > > because it prevents the root port it is connected to enter low power
+> > > > > > state too which makes the system consume more energy than necessary.
+> > > > >
+> > > > > IIUC this is because the loop that checks which states support PME
+> > > > > starts with D3hot and doesn't even look at D3cold.
+> > > >
+> > > > That's because the device itself cannot be programmed into D3cold, so
+> > > > the target state cannot be D3cold for it.
+> > > >
+> > > > > > The problem in pci_target_state() is that it only accounts the "current"
+> > > > > > device state, so when the bridge above it (a root port for instance) is
+> > > > > > transitioned into D3hot the device transitions into D3cold. This is
+> > > > > > because when the root port is first transitioned into D3hot then the
+> > > > > > ACPI power resource is turned off which puts the PCIe link to L2/L3 (and
+> > > > > > the root port and the device are in D3cold). If the root port is kept in
+> > > > > > D3hot it still means that the device below it is still effectively in
+> > > > > > D3cold as no configuration messages pass through. Furthermore the
+> > > > > > implementation note of PCIe 5.0 sec 5.3.1.4 says that the device should
+> > > > > > expect to be transitioned into D3cold soon after its link transitions
+> > > > > > into L2/L3 Ready state.
+> > > > > >
+> > > > > > Taking the above into consideration, instead of forcing the device stay
+> > > > > > in D0 we modify pci_target_state() to return D3hot in this special case
+> > > > > > and make __pci_enable_wake() to enable PME too in this case.
+> > > > > >
+> > > > > > Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
+> > > > > > Reported-by: Koba Ko <koba.ko@canonical.com>
+> > > > > > Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > > > ---
+> > > > > > The previous version of the patch is here:
+> > > > > >
+> > > > > > https://lore.kernel.org/linux-pm/20210616150516.28242-1-mika.westerberg@linux.intel.com/
+> > > > > >
+> > > > > > Changes from the previous version:
+> > > > > >
+> > > > > >   * Dropped redundant test in pci_target_state().
+> > > > > >
+> > > > > >  drivers/pci/pci.c | 16 +++++++++++++++-
+> > > > > >  1 file changed, 15 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > > > index b717680377a9..043c5c304308 100644
+> > > > > > --- a/drivers/pci/pci.c
+> > > > > > +++ b/drivers/pci/pci.c
+> > > > > > @@ -2485,7 +2485,13 @@ static int __pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable
+> > > > > >       if (enable) {
+> > > > > >               int error;
+> > > > > >
+> > > > > > -             if (pci_pme_capable(dev, state))
+> > > > > > +             /*
+> > > > > > +              * Enable PME if device is capable from given state.
+> > > > > > +              * Special case is device that can only generate PME
+> > > > > > +              * from D3cold then we enable PME too.
+> > > > > > +              */
+> > > > > > +             if (pci_pme_capable(dev, state) ||
+> > > > > > +                 (state == PCI_D3hot && pci_pme_capable(dev, PCI_D3cold)))
+> > > > > >                       pci_pme_active(dev, true);
+> > > > > >               else
+> > > > > >                       ret = 1;
+> > > > > > @@ -2595,6 +2601,14 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+> > > > > >                * PME#.
+> > > > > >                */
+> > > > > >               if (dev->pme_support) {
+> > > > > > +                     /*
+> > > > > > +                      * Special case if device supports only PME from
+> > > > > > +                      * D3cold but not from D3hot we still return D3hot.
+> > > > > > +                      */
+> > > > > > +                     if (target_state == PCI_D3hot &&
+> > > > > > +                             (dev->pme_support & (1 << PCI_D3cold)))
+> > > > > > +                             return target_state;
+> > > > >
+> > > > > I've spent quite a bit of time trying to understand this, and I'm kind
+> > > > > of dragging my feet on it because I haven't been able to really
+> > > > > connect this with the specs.
+> > > >
+> > > > The specs aren't very clear in this area, though.
+> > > >
+> > > > The overall picture is that the device in question is connected to a
+> > > > port (a root port in this particular case) that can be programmed into
+> > > > D3cold via ACPI, but the endpoint itself can only be programmed into
+> > > > D3hot.  However, if the port goes into D3cold, the endpoint also goes
+> > > > into D3cold (actually, my understanding of the specs is that even if
+> > > > the port goes into D3hot, the endpoint should still be assumed to go
+> > > > into D3cold).
+> > > >
+> > > > The power state of the endpoint is changed first and at the time this
+> > > > happens it is not known which power state the port is going to be
+> > > > programmed into.
+> > > >
+> > > > Now, the device is wake-capable (in general) and so we want it to be
+> > > > able to signal wakeup from the final power state.  Because it only
+> > > > reports PME support in D0 and in D3cold, the kernel today leaves it in
+> > > > D0 which causes the port to stay in D0 too.  Still, putting the device
+> > > > into D3hot allows the port to go into D3cold which in turn causes the
+> > > > device to go into D3cold and it can signal wakeup from that state.
+> > > >
+> > > > So there are two ways to get into a configuration from which the
+> > > > endpoint device can signal wakeup, either by leaving it and the port
+> > > > holding it both in D0, or by putting it into D3hot, so that the port
+> > > > can go into D3cold in which case the endpoint will end up in D3cold.
+> > > >
+> > > > The Mika's patch is aiming at enabling the second option.
+> > > >
+> > > > > It also seems unfortunate to have to add this special case in two places.
+> > > >
+> > > > That's because __pci_enable_wake() tries to be extra careful and only
+> > > > call pci_pme_active() if PME is known to be supported in the target
+> > > > power state, but that is not strictly necessary.  It could just call
+> > > > pci_pme_active() unconditionally and return the
+> > > > platform_pci_set_wakeup() return value.
+> > > >
+> > > > I think I'll send a patch making this change.
+> > >
+> > > Actually, it needs to fail if PME cannot be signaled from the target
+> > > state and the device is not power-manageable by the platform.
+> > >
+> > > A better idea may be to make pci_pme_capable() also check if the
+> > > parent bridge can go into D3cold and return "true" if so and "state"
+> > > is D3hot while PME signaling from D3cold is supported.
+> >
+> > So below is my version of the $subject patch (untested).
+> >
+> > Please let me know what you think.
 > 
-> Op do 15 jul. 2021 om 01:03 schreef Alex Williamson
-> <alex.williamson@redhat.com>:
-> >
-> > On Thu, 15 Jul 2021 00:32:30 +0300
-> > Ruben <rubenbryon@gmail.com> wrote:
-> >
-> > > I am experiencing an issue with virtualizing a machine which contains
-> > > 8 NVidia A100 80GB cards.
-> > > As a bare metal host, the machine behaves as expected, the GPUs are
-> > > connected to the host with a PLX chip PEX88096, which connects 2 GPUs
-> > > to 16 lanes on the CPU (using the same NVidia HGX Delta baseboard).
-> > > When passing through all GPUs and NVLink bridges to a VM, a problem
-> > > arises in that the system can only initialize 4-5 of the 8 GPUs.
-> > >
-> > > The dmesg log shows failed attempts for assiging BAR space to the GPUs
-> > > that are not getting initialized.
-> > >
-> > > Things that were tried:
-> > > Q35-i440fx with and without UEFI
-> > > Qemu 5.x, Qemu 6.0
-> > > Host Ubuntu 20.04 host with Qemu/libvirt
-> > > Now running proxmox 7 on debian 11, host kernel 5.11.22-2, VM kernel 5.4.0-77
-> > > VM kernel parameters pci=nocrs pci=realloc=on/off
-> > >
-> > > ------------------------------------
-> > >
-> > > lspci -v:
-> > > 01:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
-> > >         Memory at db000000 (32-bit, non-prefetchable) [size=16M]
-> > >         Memory at 2000000000 (64-bit, prefetchable) [size=128G]
-> > >         Memory at 1000000000 (64-bit, prefetchable) [size=32M]
-> > >
-> > > 02:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
-> > >         Memory at dc000000 (32-bit, non-prefetchable) [size=16M]
-> > >         Memory at 4000000000 (64-bit, prefetchable) [size=128G]
-> > >         Memory at 6000000000 (64-bit, prefetchable) [size=32M]
-> > >
-> > > ...
-> > >
-> > > 0c:00.0 3D controller: NVIDIA Corporation Device 20b2 (rev a1)
-> > >         Memory at e0000000 (32-bit, non-prefetchable) [size=16M]
-> > >         Memory at <ignored> (64-bit, prefetchable)
-> > >         Memory at <ignored> (64-bit, prefetchable)
-> > >
-> > > ...
-> > >
-> > ...
-> > >
-> > > ------------------------------------
-> > >
-> > > I have (blindly) messed with parameters like pref64-reserve for the
-> > > pcie-root-port but to be frank I have little clue what I'm doing so my
-> > > question would be suggestions on what I can try.
-> > > This server will not be running an 8 GPU VM in production but I have a
-> > > few days left to test before it goes to work. I was hoping to learn
-> > > how to overcome this issue in the future.
-> > > Please be aware that my knowledge regarding virtualization and the
-> > > Linux kernel does not reach far.
-> >
-> > Try playing with the QEMU "-global q35-host.pci-hole64-size=" option for
-> > the VM rather than pci=nocrs.  The default 64-bit MMIO hole for
-> > QEMU/q35 is only 32GB.  You might be looking at a value like 2048G to
-> > support this setup, but could maybe get away with 1024G if there's room
-> > in 32-bit space for the 3rd BAR.
-> >
-> > Note that assigning bridges usually doesn't make a lot of sense and
-> > NVLink is a proprietary black box, so we don't know how to virtualize
-> > it or what the guest drivers will do with it, you're on your own there.
-> > We generally recommend to use vGPUs for such cases so the host driver
-> > can handle all the NVLink aspects for GPU peer-to-peer.  Thanks,
-> >
-> > Alex
-> >
+> I gave some more consideration to this and I was not able to convince
+> myself that putting the parent port into D3hot was sufficient for the
+> endpoint device connected to it to go into D3cold.  
+
+Thanks, that was a sticking point for me, too.  I've never been able
+to directly connect the parent port's D0-D3cold power state to the
+main power state for a downstream device.
+
+> However, the PCI PM spec v1.2 clearly mandates that putting a bridge
+> into D3cold will cause power to be removed from the entire bus
+> segment below it, which should apply to PCIe devices by extension.
+
+Are you referring to Table 6-1, where it says "No PCI transactions; no
+clock; no Vcc" on the secondary bus if the bridge is in D3cold?
+
+I'm not really clear on how a bridge's power state affects main power
+for downstream devices.  What about optical links where the power
+distribution is more separate from the communication path?
+
+> So I'm going to submit a new version of the patch below in which
+> pci_pme_capable() will check whether or not the parent will go into
+> D3cold in addition to all of the other checks.
+> 
+> Stay tuned!
+
+Bjorn
