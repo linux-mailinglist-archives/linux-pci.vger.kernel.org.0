@@ -2,134 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFAA73CA87B
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 21:00:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED2D3CAA0B
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 21:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242813AbhGOTBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 15:01:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
+        id S243665AbhGOTLp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 15:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242505AbhGOS7o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Jul 2021 14:59:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8707F613D0;
-        Thu, 15 Jul 2021 18:56:50 +0000 (UTC)
+        id S243994AbhGOTKa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Jul 2021 15:10:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2816A613D6;
+        Thu, 15 Jul 2021 19:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626375410;
-        bh=h8VhkJGv7XBlYbGJhIbYQWwxLGpNUt9qSt9i6JbEzSA=;
+        s=k20201202; t=1626376051;
+        bh=sNwJPcMC4QHZVtTwEA0KWkXpkqmHuuMfLW28ut1gRlo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FbZLfbNCxaDykYsqZQEwXtA10VhNEzqCz3CH0vTk3EzdlTlUjwcC6hKBXttGHUd0C
-         iqNZrkhCK1tO8JtwqYFp5PRkd9h2RVaHQ1Ei9x69q7HEm7tx49MRJV5QDhfEUHvSzM
-         ejM2uL8Mt0+zvFoarESpfMUM7d3isPs8hSFUi+R1W0rR+1WnzDYTbyfbif48ZHw3iW
-         QqtICE2h98rG7/Mhw2goBD5Ll1Xlp6DTPMchAlel9IflNb9/ml6jo/2rSULp2VJMHk
-         DESwQFImwuypPe/2wM3CGVDGu7YuiNdAV3/C8vq9dB1jfSo51mZVIPmiVGz4jMHCbm
-         ZxM6FrMIW1biw==
-Date:   Thu, 15 Jul 2021 13:56:49 -0500
+        b=YRQ9qY9riX+H9uGE48Q11ANNmQX79yEVzhj5hp7YkisprzIC5SpGEajSSG1GVBapR
+         nMjgtIsvcPPdg1XqGZCiyN1Wi7R4NrAL2O3jS+M4Nj6IlpsMqE7zH31rJkdYv3GDnq
+         oEdK2m8npftI+EfYlODmgowIoJ8tpqJUbwdj013sP7i4FlKp6zpk4tda5wJqzwEpoK
+         y2R6ypvS2HgSw6Vdy10l4kIOyayMrk4X2iKaG0vcxjLjwF6uvckXXKv2oPdWAwlKkH
+         1t92NZepjI77mBoqFKqDBE4OFjWDFSawmXSxAjkbL5z4RsSqIpcFGFV0mRIjyLRfFA
+         oYyj7ilLzJkMQ==
+Date:   Thu, 15 Jul 2021 14:07:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Billie Alsup (balsup)" <balsup@cisco.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Guohan Lu <lguohan@gmail.com>,
-        "Madhava Reddy Siddareddygari (msiddare)" <msiddare@cisco.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: Re: [RFC][PATCH] PCI: Reserve address space for powered-off devices
- behind PCIe bridges
-Message-ID: <20210715185649.GA1984276@bjorn-Precision-5520>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC v4 1/7] PCI: Introduce domain_nr in pci_host_bridge
+Message-ID: <20210715190729.GA1986347@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <545AA576-42A5-47A7-A08A-062582B1569A@cisco.com>
+In-Reply-To: <YPBwzO7c/rw09IkE@boqun-archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 06:12:25PM +0000, Billie Alsup (balsup) wrote:
-> It took me a while to figure out that the "New Outlook" option
-> doesn't actually allow sending plain text, so I have to switch to
-> "Old Outlook" mode.
+On Fri, Jul 16, 2021 at 01:30:52AM +0800, Boqun Feng wrote:
+> On Wed, Jul 14, 2021 at 02:33:19PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Jul 14, 2021 at 06:27:31PM +0800, Boqun Feng wrote:
+> > > Currently we retrieve the PCI domain number of the host bridge from the
+> > > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
+> > > we have the information at PCI host bridge probing time, and it makes
+> > > sense that we store it into pci_host_bridge. One benefit of doing so is
+> > > the requirement for supporting PCI on Hyper-V for ARM64, because the
+> > > host bridge of Hyper-V doesn't have pci_config_window, whereas ARM64 is
+> > > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
+> > > number from pci_config_window on ARM64 Hyper-V guest.
+> > > 
+> > > As the preparation for ARM64 Hyper-V PCI support, we introduce the
+> > > domain_nr in pci_host_bridge and a sentinel value to allow drivers to
+> > > set domain numbers properly at probing time. Currently
+> > > CONFIG_PCI_DOMAINS_GENERIC=y archs are only users of this
+> > > newly-introduced field.
+> > 
+> > Thanks for pushing on this.  PCI_DOMAINS_GENERIC is really not very
+> > generic today and it will be good to make it more so.
+> > 
+> > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > > ---
+> > >  drivers/pci/probe.c |  6 +++++-
+> > >  include/linux/pci.h | 10 ++++++++++
+> > >  2 files changed, 15 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > index 79177ac37880..60c50d4f156f 100644
+> > > --- a/drivers/pci/probe.c
+> > > +++ b/drivers/pci/probe.c
+> > > @@ -594,6 +594,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+> > >  	bridge->native_pme = 1;
+> > >  	bridge->native_ltr = 1;
+> > >  	bridge->native_dpc = 1;
+> > > +	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
+> > >  
+> > >  	device_initialize(&bridge->dev);
+> > >  }
+> > > @@ -898,7 +899,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+> > >  	bus->ops = bridge->ops;
+> > >  	bus->number = bus->busn_res.start = bridge->busnr;
+> > >  #ifdef CONFIG_PCI_DOMAINS_GENERIC
+> > > -	bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
+> > > +	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
+> > > +		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
+> > > +	else
+> > > +		bus->domain_nr = bridge->domain_nr;
+> > 
+> > The domain_nr in struct pci_bus is really only used by
+> > pci_domain_nr().  It seems like it really belongs in the struct
+> > pci_host_bridge and probably doesn't need to be duplicated in the
+> > struct pci_bus.  But that's probably a project for the future.
+> 
+> Agreed. Maybe we can define pci_bus_domain_nr() as:
+> 
+> 	static inline int pci_domain_nr(struct pci_bus *bus)
+> 	{
+> 		struct device *bridge = bus->bridge;
+> 		struct pci_host_bridge *b = container_of(bridge, struct pci_host_bridge, dev);
+> 
+> 		return b->domain_nr;
+> 	}
+> 
+> but apart from corretness (e.g. should we use get_device() for
+> bus->bridge?), it makes more sense if ->domain_nr of pci_host_bridge
+> is used (as a way to set domain number at probing time) for most of
+> drivers and archs. ;-)
 
-Since you've gone to that much trouble already, also note
-http://vger.kernel.org/majordomo-info.html and
-https://people.kernel.org/tglx/notes-about-netiquette 
+If we're holding a struct pci_bus *, we must have a reference on the
+bus, which in turn holds a reference on upstream devices, so there
+should be no need for get_device() here.
 
-BTW, the attribution in the email you quoted below got corrupted in
-such a way that it appears that I wrote the whole thing, instead of 
-what actually happened, which is that I wrote a half dozen lines of
-response to your email.  Linux uses old skool email conventions ;)
+But yes, I think something like this is where we should be heading.
 
-> It is not clear as to what parameters Linux would use to consider a
-> window broken.
+> > >  #endif
+> > >  
+> > >  	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
+> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > index 540b377ca8f6..952bb7d46576 100644
+> > > --- a/include/linux/pci.h
+> > > +++ b/include/linux/pci.h
+> > > @@ -526,6 +526,15 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
+> > >  	return (pdev->error_state != pci_channel_io_normal);
+> > >  }
+> > >  
+> > > +/*
+> > > + * PCI Conventional has at most 256 PCI bus segments and PCI Express has at
+> > > + * most 65536 "PCI Segments Groups", therefore -1 is not a valid PCI domain
+> > 
+> > s/Segments/Segment/
+> > 
+> > Do you have a reference for these limits?  I don't think either
+> > Conventional PCI or PCIe actually specifies a hardware limit on the
+> > number of domains (I think PCI uses "segment group" to mean the same
+> > thing).
+> > 
+> > "Segment" in the Conventional PCI spec, r3.0, means a bus segment,
+> > which connects all the devices on a single bus.  Obviously there's a
+> > limit of 256 buses under a single host bridge, but that's different
+> > concept than a domain/segment group.
+> > 
+> > The PCI Firmware spec, r3.3, defines "Segment Group Number" as being
+> > in the range 0..65535, but as far as I know, that's just a firmware
+> > issue, and it applies equally to Conventional PCI and PCIe.
+> > 
+> > I think you're right that -1 is a reasonable sentinel; I just don't
+> > want to claim a difference here unless there really is one.
+> > 
+> 
+> I think you're right, I got confused on the concepts of "Segment" and
+> "Segment Group".
+> 
+> After digging in specs, I haven't find any difference on the limitation
+> between Conventional PCI and PCIe. The PCI Firmware spec, r3.2, refers
+> ACPI (3.0 and later) spec for the details of "Segment Group", and in
+> ACPI spec v6.3, the description _SEG object says:
+> 
+> """
+> The lower 16 bits of _SEG returned integer is the PCI Segment Group
+> number. Other bits are reserved.
+> """
+> 
+> So I'm thinking replacing the comments with:
+> 
+> Currently in ACPI spec, for each PCI host bridge, PCI Segment Group
+> number is limited to a 16-bit value, therefore (int)-1 is not a valid
+> PCI domain number, and can be used as a sentinel value indicating
+> ->domain_nr is not set by the driver (and CONFIG_PCI_DOMAINS_GENERIC=y
+> archs will set it with pci_bus_find_domain_nr()).
 
-By "broken," I just mean things that are prohibited by the PCI spec,
-like "region doesn't fit in a window of an upstream device" or
-"non-prefetchable region placed in a prefetchable window."
+Yes, I think that's a better description.
 
-> But if the kernel preserves some bridge window
-> assignment, then it seems feasible for our BIOS to run this same
-> algorithm (reading PLX persistent scratch registers to determine
-> window sizes).  I will raise this possibility with our own kernel
-> team to discuss with the bios team.  We can also look more closely
-> at the resource_alignment options to see if that might suffice.
-> Thanks for the information!
-
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Date: Thursday, July 15, 2021 at 10:14 AM
-> To: "Billie Alsup (balsup)" <balsup@cisco.com>
-> Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Bjorn Helgaas <bhelgaas@google.com>, Guohan Lu <lguohan@gmail.com>, "Madhava Reddy Siddareddygari (msiddare)" <msiddare@cisco.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-> Subject: Re: [RFC][PATCH] PCI: Reserve address space for powered-off devices behind PCIe bridges
-> 
-> On Thu, Jul 15, 2021 at 04:52:26PM +0000, Billie Alsup (balsup) wrote:
-> We are aware of how Cisco device specific this code is, and hadn't
-> intended to upstream it.  This code was originally written for an
-> older kernel version (4.8.28-WR9.0.0.26_cgl).  I am not the original
-> author; I just ported it into various SONiC linux kernels.  We use
-> ACPI with SONiC (although not on our non-SONiC products), so I
-> thought I might be able to define such windows within the ACPI tree
-> and have some generic code to read such configuration information
-> from the ACPI tables,. However, initial attempts failed so I went
-> with the existing approach.  I believe we did look at the hpmmiosize
-> parameter, but iirc it applied to each bridge, rather than being a
-> pool of address space to dynamically parcel out as necessary.
-> 
-> Right.  I mentioned "pci=resource_alignment=" because it claims to be
-> able to specify window sizes for specific bridges.  But I haven't
-> exercised that myself.
-> 
-> There are multiple bridges involved in the hardware (there are 8
-> hot-plug fabric cards, each with multiple PCI devices).  Devices on
-> the card are in multiple power zones, so all devices are not
-> immediately visible to the pci scanning code.  The top level bridge
-> reserves close to 5G.  The 2nd level (towards the fabric cards)
-> reserve 4.5G.  The 3rd level has 9 bridges each reserving 512M.  The
-> 4th level reserves 384M (with a 512M alignment restriction iirc).
-> The 5th level reserves 384M (again with an alignment restriction).
-> That defines the bridge hierarchy visible at boot.  Things behind
-> that 5th level are hot-plugged where there are two more bridge
-> levels and 5 devices (1 requiring 2x64M blocks and 4 requiring
-> 1x64M).
-> 
-> I'm not sure if the Cisco kernel team has revisited the hpmmiosize
-> and resource_alignment parameters since this initial implementation.
-> Reading the description of Sergey's patches, he seems to be
-> approaching the same problem from a different direction.   It is
-> unclear if such an approach is practical for our environment.   It
-> would require updates to all of our SONiC drivers to support
-> stopping/remapping/restarting, and it is unclear if that is
-> acceptable.  It is certainly less preferable to pre-reserving the
-> required space.  For our embedded product, we know exactly what
-> devices will be plugged in, and allowing that to be pre-programmed
-> into the PLX eeprom gives us the flexibility we need.  
-> 
-> If you know up front what devices are possible and how much space they
-> need, possibly your firmware could assign the bridge windows you need.
-> Linux generally does not change window assignments unless they are
-> broken.
-> 
-> Bjorn
-> 
-> 
+> > > + * number, and can be used as a sentinel value indicating ->domain_nr is not
+> > > + * set by the driver (and CONFIG_PCI_DOMAINS_GENERIC=y can set it in generic
+> > > + * code).
