@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 649623C9E3C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 14:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F30593C9E3F
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 14:09:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232378AbhGOMMA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 08:12:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41759 "EHLO
+        id S232170AbhGOMMO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 08:12:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:37266 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232367AbhGOMMA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jul 2021 08:12:00 -0400
+        by vger.kernel.org with ESMTP id S229973AbhGOMMO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jul 2021 08:12:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626350946;
+        s=mimecast20190719; t=1626350960;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pMdTzJHNKVWe9GNkdImtqswTDriEuMcivsx+NF2L4oM=;
-        b=gtrCt26qUN9OgMe+7FXfsMBvCQEWw9Ei7NmrhvZTybbXbzyKgftuU2aRJMQ0WH+4JVSqH0
-        oJxgGQCP8sc7kqKRHJOOLXEWMsa+NkVlRO6yWEwVz7AY2QF5nHdM/TAQIbJb7RD1FyGPls
-        szKpTwubk7iL5aMt06tv2vStarjSUYw=
+        bh=1Nw+X27P2N0k1f/4Z+RbTJx7kTAVQrNvB7dNv3jx6hA=;
+        b=ROLTUe4T4vYG6nPx6ZXHZfP0BixWBspAwN0nMKIvyGJ0rm7CW1Kn+E4FgePH4vygdzhwSb
+        1EZuQ5kclLvsSRGNTprVUMKZJPN7WzJZkh7UFAf3lMp9DGEfnQTVHmWZvOeKsyZYAB3bxi
+        WHSWNJJj9dXdfl2CwPJJGXOgU8xPIjE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-OJhv6rFHMpmzMXH3APQCSQ-1; Thu, 15 Jul 2021 08:09:05 -0400
-X-MC-Unique: OJhv6rFHMpmzMXH3APQCSQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-400-5BQR0uGEN8iA2aClCvUJZA-1; Thu, 15 Jul 2021 08:09:12 -0400
+X-MC-Unique: 5BQR0uGEN8iA2aClCvUJZA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF41D1835AC4;
-        Thu, 15 Jul 2021 12:09:03 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDDB1804301;
+        Thu, 15 Jul 2021 12:09:10 +0000 (UTC)
 Received: from localhost (ovpn-12-61.pek2.redhat.com [10.72.12.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 71A2E1002D71;
-        Thu, 15 Jul 2021 12:08:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74E3718A50;
+        Thu, 15 Jul 2021 12:09:06 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -45,85 +45,78 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Garry <john.garry@huawei.com>,
         Hannes Reinecke <hare@suse.de>,
         Keith Busch <kbusch@kernel.org>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 1/3] driver core: mark device as irq affinity managed if any irq is managed
-Date:   Thu, 15 Jul 2021 20:08:42 +0800
-Message-Id: <20210715120844.636968-2-ming.lei@redhat.com>
+Subject: [PATCH V4 2/3] blk-mq: mark if one queue map uses managed irq
+Date:   Thu, 15 Jul 2021 20:08:43 +0800
+Message-Id: <20210715120844.636968-3-ming.lei@redhat.com>
 In-Reply-To: <20210715120844.636968-1-ming.lei@redhat.com>
 References: <20210715120844.636968-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-irq vector allocation with managed affinity may be used by driver, and
-blk-mq needs this info because managed irq will be shutdown when all
-CPUs in the affinity mask are offline.
+Retrieve this info via the field 'irq_affinity_managed' of 'struct
+device' in queue map helpers.
 
-The info of using managed irq is often produced by drivers(pci subsystem,
-platform device, ...), and it is consumed by blk-mq, so different subsystems
-are involved in this info flow
-
-Address this issue by adding one field of .irq_affinity_managed into
-'struct device'.
-
-Suggested-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/base/platform.c | 7 +++++++
- drivers/pci/msi.c       | 3 +++
- include/linux/device.h  | 1 +
- 3 files changed, 11 insertions(+)
+ block/blk-mq-pci.c     | 1 +
+ block/blk-mq-rdma.c    | 3 +++
+ block/blk-mq-virtio.c  | 1 +
+ include/linux/blk-mq.h | 3 ++-
+ 4 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 8640578f45e9..d28cb91d5cf9 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -388,6 +388,13 @@ int devm_platform_get_irqs_affinity(struct platform_device *dev,
- 				ptr->irq[i], ret);
- 			goto err_free_desc;
- 		}
-+
-+		/*
-+		 * mark the device as irq affinity managed if any irq affinity
-+		 * descriptor is managed
-+		 */
-+		if (desc[i].is_managed)
-+			dev->dev.irq_affinity_managed = true;
+diff --git a/block/blk-mq-pci.c b/block/blk-mq-pci.c
+index b595a94c4d16..aa0bdb80d0ce 100644
+--- a/block/blk-mq-pci.c
++++ b/block/blk-mq-pci.c
+@@ -37,6 +37,7 @@ int blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
+ 		for_each_cpu(cpu, mask)
+ 			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+ 	}
++	qmap->use_managed_irq = pdev->dev.irq_affinity_managed;
+ 
+ 	return 0;
+ 
+diff --git a/block/blk-mq-rdma.c b/block/blk-mq-rdma.c
+index 14f968e58b8f..7b10d8bd2a37 100644
+--- a/block/blk-mq-rdma.c
++++ b/block/blk-mq-rdma.c
+@@ -36,6 +36,9 @@ int blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
+ 			map->mq_map[cpu] = map->queue_offset + queue;
  	}
  
- 	devres_add(&dev->dev, ptr);
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 3d6db20d1b2b..7ddec90b711d 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1197,6 +1197,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 	if (flags & PCI_IRQ_AFFINITY) {
- 		if (!affd)
- 			affd = &msi_default_affd;
-+		dev->dev.irq_affinity_managed = true;
- 	} else {
- 		if (WARN_ON(affd))
- 			affd = NULL;
-@@ -1215,6 +1216,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 			return nvecs;
- 	}
- 
-+	dev->dev.irq_affinity_managed = false;
++	/* So far RDMA doesn't use managed irq */
++	map->use_managed_irq = false;
 +
- 	/* use legacy IRQ if allowed */
- 	if (flags & PCI_IRQ_LEGACY) {
- 		if (min_vecs == 1 && dev->irq) {
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 59940f1744c1..9ec6e671279e 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -569,6 +569,7 @@ struct device {
- #ifdef CONFIG_DMA_OPS_BYPASS
- 	bool			dma_ops_bypass : 1;
- #endif
-+	bool			irq_affinity_managed : 1;
+ 	return 0;
+ 
+ fallback:
+diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
+index 7b8a42c35102..b57a0aa6d900 100644
+--- a/block/blk-mq-virtio.c
++++ b/block/blk-mq-virtio.c
+@@ -38,6 +38,7 @@ int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
+ 		for_each_cpu(cpu, mask)
+ 			qmap->mq_map[cpu] = qmap->queue_offset + queue;
+ 	}
++	qmap->use_managed_irq = vdev->dev.irq_affinity_managed;
+ 
+ 	return 0;
+ fallback:
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 1d18447ebebc..d54a795ec971 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -192,7 +192,8 @@ struct blk_mq_hw_ctx {
+ struct blk_mq_queue_map {
+ 	unsigned int *mq_map;
+ 	unsigned int nr_queues;
+-	unsigned int queue_offset;
++	unsigned int queue_offset:31;
++	unsigned int use_managed_irq:1;
  };
  
  /**
