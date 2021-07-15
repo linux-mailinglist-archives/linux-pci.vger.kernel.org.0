@@ -2,96 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5EC43CA3AB
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 19:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2EAB3CA3E5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jul 2021 19:23:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232620AbhGORQr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jul 2021 13:16:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
+        id S231128AbhGOR0b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jul 2021 13:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231950AbhGORQq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Jul 2021 13:16:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 37C48613DC;
-        Thu, 15 Jul 2021 17:13:53 +0000 (UTC)
+        id S229786AbhGOR0b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Jul 2021 13:26:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CCBE3613C3;
+        Thu, 15 Jul 2021 17:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626369233;
-        bh=LCd49HWXy1jWbU+Ko+6zi8yExfbJ/VIy+k0XDmPhQ3M=;
+        s=k20201202; t=1626369818;
+        bh=OGUJau3scHdd64RSx5cFSqUwQcJpiG2djIeuei8VZG8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=H1I8ENqvsSJ6+ZTKa+/ZHcLdnaPBI2NfbfDX8h829LHoBcoizROgLe5AD+TIEnlNJ
-         pbLQgmEuknMGJ/kOI01SLTOOnYo5y871T2BXbz82qss45ayapjnMDYMd4Z13ZzptGY
-         QhVGtNH8SzRWwFNVucUvPFqg0i+b/6VwpAFxV3kaI7GzBmTsvd2Wn/ZTeOqL/VOXAK
-         wDzVGO0M4ArZDKmb/0fnpyLvkmm8djzfC18uhN9IBRoB3LWMTRR7HlNeyAFftuXqpe
-         7TzG3PqU0eEA6MAi4Gr0zp2epSeRzWsPcRQpNqqBj9s6YVf5pcvAdq4sJaMgaqfpk1
-         e5Ii0totcl19Q==
-Date:   Thu, 15 Jul 2021 12:13:52 -0500
+        b=OdPNYAcFfgbsuPxqoZtCZvpLrCWmmtm+h5G/QUcmG0WayfrHgisLKB6+a3IohCqN9
+         kQc7+VLwXw7leCgLPAi8tZlm1GM0OROs7iRU7SaIJVOlhMlwjBTFDDtUMYnvyQOy29
+         raqTKd266KLvoDMSb/t2A/iuIXEZk7WZqZ8HmdFyi6gWHUz5Ne3PhyK3x5YgoHsLj/
+         RvnZBWQDX9FspIEqy8YdwLUtynF4je2ZjCiPTEdTTAcNOvG0GZiKhukBJoUnLMjSY1
+         zWIao0UUb3EMU5VarklADbrjKbVdxu4xnL378DY3Kf9uqchs0dk/ki8TA79hjDU31t
+         iXqapcLUNqFsQ==
+Date:   Thu, 15 Jul 2021 12:23:36 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Billie Alsup (balsup)" <balsup@cisco.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Guohan Lu <lguohan@gmail.com>,
-        "Madhava Reddy Siddareddygari (msiddare)" <msiddare@cisco.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: Re: [RFC][PATCH] PCI: Reserve address space for powered-off devices
- behind PCIe bridges
-Message-ID: <20210715171352.GA1974727@bjorn-Precision-5520>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     hch@infradead.org, kw@linux.com, linux-pci@vger.kernel.org,
+        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH V5 4/6] PCI: Enable 10-Bit tag support for PCIe Endpoint
+ devices
+Message-ID: <20210715172336.GA1972959@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR11MB3527AEB1E4969C0833D1697ED9129@BYAPR11MB3527.namprd11.prod.outlook.com>
+In-Reply-To: <1624271242-111890-5-git-send-email-liudongdong3@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 04:52:26PM +0000, Billie Alsup (balsup) wrote:
-> We are aware of how Cisco device specific this code is, and hadn't
-> intended to upstream it.  This code was originally written for an
-> older kernel version (4.8.28-WR9.0.0.26_cgl).  I am not the original
-> author; I just ported it into various SONiC linux kernels.  We use
-> ACPI with SONiC (although not on our non-SONiC products), so I
-> thought I might be able to define such windows within the ACPI tree
-> and have some generic code to read such configuration information
-> from the ACPI tables,. However, initial attempts failed so I went
-> with the existing approach.  I believe we did look at the hpmmiosize
-> parameter, but iirc it applied to each bridge, rather than being a
-> pool of address space to dynamically parcel out as necessary.
+[+cc Logan]
 
-Right.  I mentioned "pci=resource_alignment=" because it claims to be
-able to specify window sizes for specific bridges.  But I haven't
-exercised that myself.
-
-> There are multiple bridges involved in the hardware (there are 8
-> hot-plug fabric cards, each with multiple PCI devices).  Devices on
-> the card are in multiple power zones, so all devices are not
-> immediately visible to the pci scanning code.  The top level bridge
-> reserves close to 5G.  The 2nd level (towards the fabric cards)
-> reserve 4.5G.  The 3rd level has 9 bridges each reserving 512M.  The
-> 4th level reserves 384M (with a 512M alignment restriction iirc).
-> The 5th level reserves 384M (again with an alignment restriction).
-> That defines the bridge hierarchy visible at boot.  Things behind
-> that 5th level are hot-plugged where there are two more bridge
-> levels and 5 devices (1 requiring 2x64M blocks and 4 requiring
-> 1x64M).
+On Mon, Jun 21, 2021 at 06:27:20PM +0800, Dongdong Liu wrote:
+> 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+> field size from 8 bits to 10 bits.
 > 
-> I'm not sure if the Cisco kernel team has revisited the hpmmiosize
-> and resource_alignment parameters since this initial implementation.
-> Reading the description of Sergey's patches, he seems to be
-> approaching the same problem from a different direction.   It is
-> unclear if such an approach is practical for our environment.   It
-> would require updates to all of our SONiC drivers to support
-> stopping/remapping/restarting, and it is unclear if that is
-> acceptable.  It is certainly less preferable to pre-reserving the
-> required space.  For our embedded product, we know exactly what
-> devices will be plugged in, and allowing that to be pre-programmed
-> into the PLX eeprom gives us the flexibility we need.  
+> For platforms where the RC supports 10-Bit Tag Completer capability,
+> it is highly recommended for platform firmware or operating software
 
-If you know up front what devices are possible and how much space they
-need, possibly your firmware could assign the bridge windows you need.
-Linux generally does not change window assignments unless they are
-broken.
+Recommended by whom?  If the spec recommends it, we should provide the
+citation.
 
-Bjorn
+> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
+> bit automatically in Endpoints with 10-Bit Tag Requester capability. This
+> enables the important class of 10-Bit Tag capable adapters that send
+> Memory Read Requests only to host memory.
+
+What is the implication for P2PDMA?  What happens if we enable 10-bit
+tags for device A, and A generates Mem Read Requests to device B,
+which does not support 10-bit tags?
+
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/pci/probe.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  2 ++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 0208865..33241fb 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2048,6 +2048,38 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
+>  	return 0;
+>  }
+>  
+> +static void pci_configure_10bit_tags(struct pci_dev *dev)
+> +{
+> +	struct pci_dev *bridge;
+> +
+> +	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP))
+> +		return;
+> +
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		dev->ext_10bit_tag = 1;
+> +		return;
+> +	}
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ext_10bit_tag)
+> +		dev->ext_10bit_tag = 1;
+> +
+> +	/*
+> +	 * 10-Bit Tag Requester Enable in Device Control 2 Register is RsvdP
+> +	 * for VF.
+> +	 */
+> +	if (dev->is_virtfn)
+> +		return;
+> +
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT &&
+> +	    dev->ext_10bit_tag == 1 &&
+> +	    (dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ)) {
+> +		pci_dbg(dev, "enabling 10-Bit Tag Requester\n");
+> +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+> +					PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
+> +	}
+> +}
+> +
+>  /**
+>   * pcie_relaxed_ordering_enabled - Probe for PCIe relaxed ordering enable
+>   * @dev: PCI device to query
+> @@ -2184,6 +2216,7 @@ static void pci_configure_device(struct pci_dev *dev)
+>  {
+>  	pci_configure_mps(dev);
+>  	pci_configure_extended_tags(dev, NULL);
+> +	pci_configure_10bit_tags(dev);
+
+I think 10-bit tag support should be integrated with extended (8-bit)
+tag support instead of having two separate functions.
+
+If we have "no_ext_tags" set because some device doesn't support 8-bit
+tags correctly, we probably shouldn't try to enable 10-bit tags
+either.
+
+>  	pci_configure_relaxed_ordering(dev);
+>  	pci_configure_ltr(dev);
+>  	pci_configure_eetlp_prefix(dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index de1fc24..445d102 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -393,6 +393,8 @@ struct pci_dev {
+>  #endif
+>  	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
+>  
+> +	unsigned int	ext_10bit_tag:1; /* 10-Bit Tag Completer Supported
+> +					    from root to here */
+>  	pci_channel_state_t error_state;	/* Current connectivity state */
+>  	struct device	dev;			/* Generic device interface */
+>  
+> -- 
+> 2.7.4
+> 
