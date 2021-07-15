@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D3F3CAED9
+	by mail.lfdr.de (Postfix) with ESMTP id DBC893CAEDA
 	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 00:00:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231342AbhGOWDO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231624AbhGOWDO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 15 Jul 2021 18:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:49322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231631AbhGOWDM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 15 Jul 2021 18:03:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2967A613CF;
-        Thu, 15 Jul 2021 22:00:18 +0000 (UTC)
+        id S231685AbhGOWDN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 15 Jul 2021 18:03:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BD94560FE7;
+        Thu, 15 Jul 2021 22:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626386418;
-        bh=uuqbgYsdR09711D4OQRZWd0so/Mh3lkDLC8k/5VKZYU=;
+        s=k20201202; t=1626386420;
+        bh=7GX89LyvSQPClxnegp6N1W9nDIfrwiEDYQISro10bos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frF1Rl49DC1bxW4jo6t7Zqy0v4cEXAMcfgZJ7Yy3XDLE/NunwuRLtKzvNSSNQ2BVV
-         3hnpkrb6D9h+zxncKwpIeG245Gc5cxPSDFn4VnEInWHsdWBfOZnELi4xP/XYjBcK0H
-         7MDYuRKpKyHHwI1HiL2ca2U/bNzIcwuyoz+8Ms2NmzRy7BG2DVsUg0rnSYu67cCnzy
-         iQnIxLn2IBqGVfCKWspQ17nQImmFougbdvj5GrGWS4OeQefH7d3IqXMZ7CoeNkJlHI
-         ASzPd/2gj4GwNT324ZALpyT4+VG8velgVS8gSKfPPWDaxXwP2lW4FazIGIFpc9QVSA
-         8i+cUwMVz1NIw==
+        b=fhLANE8hEbxYfivzMrReud/kBGHjRBwqNSyA621Q5ERlu9GY0VyZamUdiRr8gNbvc
+         FD/ue5QAPgZiyK+ITUyhErDE/nirB6+wGGffdL4gnmngIORWHRA8IYN3ITB8cSBbK1
+         7k8IzddVyzRFVgHqX/SG7Ym9mLHJg4sgExZPtpGQ7ffGuchUxoddPJSt06fnMsZfbh
+         ka3+wws6Hheqq9UvxbSexAEPxbubyU+cy8kC3NAlTQ9hELp4QskCcKDdJpHXJNv5HT
+         oDt6qyr+kDQV3NGnJdawtxlDZRi6nxcGYsI7e27TWN/knTVRrOjFtCAxnxekBRbPIL
+         5dqbp49Bwtm6w==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Heiner Kallweit <hkallweit1@gmail.com>
 Cc:     Hannes Reinecke <hare@suse.de>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/5] PCI/VPD: Consolidate missing EEPROM checks
-Date:   Thu, 15 Jul 2021 16:59:57 -0500
-Message-Id: <20210715215959.2014576-4-helgaas@kernel.org>
+Subject: [PATCH 4/5] PCI/VPD: Don't check Large Resource types for validity
+Date:   Thu, 15 Jul 2021 16:59:58 -0500
+Message-Id: <20210715215959.2014576-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210715215959.2014576-1-helgaas@kernel.org>
 References: <dc566e6c-4c9b-bcd5-1f33-edba94cedd00@gmail.com>
@@ -42,94 +42,68 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-A missing VPD EEPROM typically reads as either all 0xff or all zeroes.
-Both cases lead to invalid VPD resource items.  A 0xff tag would be a Large
-Resource with length 0xffff (65535).  That's invalid because VPD can only
-be 32768 bytes, limited by the size of the address register in the VPD
-Capability.
+VPD consists of a series of Small and Large Resources.  Computing the size
+of VPD requires only the length of each, which is specified in the generic
+tag of each resource.  We only expect to see ID_STRING, RO_DATA, and
+RW_DATA in VPD, but it's not a problem if it contains other resource types.
 
-A VPD that reads as all zeroes is also invalid because a 0x00 tag is a
-Small Resource with length 0, which would result in an item of length 1.
-This isn't explicitly illegal in PCIe r5.0, sec 6.28, but the format is
-derived from PNP ISA, which *does* say "a small resource data type may be
-2-8 bytes in size" (Plug and Play ISA v1.0a, sec 6.2.2.
-
-Check for these invalid tags and return VPD size of zero if we find them.
-If they occur at the beginning of VPD, assume it's the result of a missing
-EEPROM.
+Drop the validity checking of Large Resource items.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/vpd.c | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+ drivers/pci/vpd.c | 37 ++++++++++++++-----------------------
+ 1 file changed, 14 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 9b54dd95e42c..9c2744d79b53 100644
+index 9c2744d79b53..d7a4a9f05bd6 100644
 --- a/drivers/pci/vpd.c
 +++ b/drivers/pci/vpd.c
-@@ -77,11 +77,7 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
- 
- 	while (off < old_size && pci_read_vpd(dev, off, 1, header) == 1) {
- 		unsigned char tag;
--
--		if (!header[0] && !off) {
--			pci_info(dev, "Invalid VPD tag 00, assume missing optional VPD EPROM\n");
--			return 0;
--		}
-+		size_t size;
- 
+@@ -82,31 +82,22 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
  		if (header[0] & PCI_VPD_LRDT) {
  			/* Large Resource Data Type Tag */
-@@ -96,8 +92,16 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
- 						 off + 1);
- 					return 0;
- 				}
--				off += PCI_VPD_LRDT_TAG_SIZE +
--					pci_vpd_lrdt_size(header);
-+				size = pci_vpd_lrdt_size(header);
-+
-+				/*
-+				 * Missing EEPROM may read as 0xff.
-+				 * Length of 0xffff (65535) cannot be valid
-+				 * because VPD can't be that large.
-+				 */
-+				if (size > PCI_VPD_MAX_SIZE)
-+					goto error;
-+				off += PCI_VPD_LRDT_TAG_SIZE + size;
- 			} else {
- 				pci_warn(dev, "invalid large VPD tag %02x at offset %zu",
- 					 tag, off);
-@@ -105,14 +109,28 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+ 			tag = pci_vpd_lrdt_tag(header);
+-			/* Only read length from known tag items */
+-			if ((tag == PCI_VPD_LTIN_ID_STRING) ||
+-			    (tag == PCI_VPD_LTIN_RO_DATA) ||
+-			    (tag == PCI_VPD_LTIN_RW_DATA)) {
+-				if (pci_read_vpd(dev, off+1, 2,
+-						 &header[1]) != 2) {
+-					pci_warn(dev, "failed VPD read at offset %zu",
+-						 off + 1);
+-					return 0;
+-				}
+-				size = pci_vpd_lrdt_size(header);
+-
+-				/*
+-				 * Missing EEPROM may read as 0xff.
+-				 * Length of 0xffff (65535) cannot be valid
+-				 * because VPD can't be that large.
+-				 */
+-				if (size > PCI_VPD_MAX_SIZE)
+-					goto error;
+-				off += PCI_VPD_LRDT_TAG_SIZE + size;
+-			} else {
+-				pci_warn(dev, "invalid large VPD tag %02x at offset %zu",
+-					 tag, off);
++			if (pci_read_vpd(dev, off + 1, 2, &header[1]) != 2) {
++				pci_warn(dev, "failed VPD read at offset %zu",
++					 off + 1);
+ 				return 0;
  			}
- 		} else {
- 			/* Short Resource Data Type Tag */
--			off += PCI_VPD_SRDT_TAG_SIZE +
--				pci_vpd_srdt_size(header);
- 			tag = pci_vpd_srdt_tag(header);
-+			size = pci_vpd_srdt_size(header);
++			size = pci_vpd_lrdt_size(header);
 +
 +			/*
-+			 * Missing EEPROM may read as 0x00.  A small item
-+			 * must be at least 2 bytes.
++			 * Missing EEPROM may read as 0xff.  Length of
++			 * 0xffff (65535) cannot be valid because VPD can't
++			 * be that large.
 +			 */
-+			if (size == 0)
++			if (size > PCI_VPD_MAX_SIZE)
 +				goto error;
 +
-+			off += PCI_VPD_SRDT_TAG_SIZE + size;
- 			if (tag == PCI_VPD_STIN_END)	/* End tag descriptor */
- 				return off;
- 		}
- 	}
- 	return 0;
-+
-+error:
-+	pci_info(dev, "invalid VPD tag %#04x at offset %zu%s\n",
-+		 header[0], off, off == 0 ?
-+		 "; assume missing optional EEPROM" : "");
-+	return 0;
- }
- 
- /*
++			off += PCI_VPD_LRDT_TAG_SIZE + size;
+ 		} else {
+ 			/* Short Resource Data Type Tag */
+ 			tag = pci_vpd_srdt_tag(header);
 -- 
 2.25.1
 
