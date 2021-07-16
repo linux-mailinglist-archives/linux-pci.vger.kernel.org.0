@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 059A73CB9B6
+	by mail.lfdr.de (Postfix) with ESMTP id C953A3CB9B7
 	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 17:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240773AbhGPP1Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 11:27:25 -0400
-Received: from mail-bn8nam08on2086.outbound.protection.outlook.com ([40.107.100.86]:5408
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        id S240889AbhGPP10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 11:27:26 -0400
+Received: from mail-dm6nam10on2054.outbound.protection.outlook.com ([40.107.93.54]:3809
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240765AbhGPP1Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 11:27:24 -0400
+        id S240855AbhGPP10 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Jul 2021 11:27:26 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CnfgvhtkzNCzQLZQXZG+veqIuz0jIKI0X66ZUf8CEhckwrrr4X2m6MnbNWo4NyaPoN1wDU31EA3HWFBXOQysTI21M4vj/R6eGIS6X0/xxm237priD9auW/jtvGSS6SdrrHTb7iYFOEyL8vTnLWPEQLmu/omeGCD1T6r/O3M/J+cGytaaenOqNJZ3Yth4pEiTk7f7iNV7Dv7zsvqHGiT/74MTWTUIEMSDFsMCzYm5kUz4SBHGgvvgeUPqpTnVfd3i8CN6n0UuAAnDkqfyYkAkDnFdE0DemyeOqHbmeMlQJAoWYYomh9h82R1zbXodlAJes4x/miZByNklmR6Z2ZtGxQ==
+ b=RqgPt0WEf1tjO3sz1PjeAwNtvO5umgzuyyR1/YTsFkj03I248LIIEqwyOu2ZPYsj3DtRctxI0BS7R9J+MeSrotUhkZc9UPNNIUcpLYSUGyGShfNiw9kHBTo5XzTOcYFCRm24q5Mnup9inhJxkQIfheVdFGUic/wZR9Cm1lrMLNySCL/Jdjelo1oBWxEDidaVkrTwc65fIHUSh+YivSlwkDJTh3kI7OG7QgilYUApQObGs4fJsADH4/RmvBBsto45+Md8iK0jWFbsCtVpEQdTHmY0x9XrjHupou3srCeXOoDmglDSZor3ItLa8NSsL8GspnmUKFZyB12QLRSIa76UWQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TNGEdyd2PXOAXWZpuACvKtbKoIiSd/mnufsXFJddCvc=;
- b=BovVt5TbsQAzb2YRaTjTzIQ9CiB0YBxMfi0HBvjONHMOo80W/DDY5ReVNG9Ie/e/TUiKtdYcdnH+zKcNu0idwje4mi1iJyks2NRhaflr0CnYVQTGy3LcO8QQEaOlzx1VF47IltakKvlHsXRBSggmPFHWw6YxTM9GvRoHyQXyrBEvfpOkmxebOf0KSlrjeltOmUWYCiZxVEZhHQUbm8I4YYwGqRp5kIqLnsYejwCVQk7Q1SNfeEwIWVwB0MTCuMgK16vdhPuOjzBBvZzIF6SiAvThb8BQ9qaFZxJdFsvoigARLs0KrI9t7LfwGMP/YXFpqsSWvwRD7pg3QvEn7/qb5Q==
+ bh=cziv2NW0lWnsmfgx12k0Ck9NVtSNjKT67wiQkKh+vzw=;
+ b=U/CkEYYzr3kEwU7mWV1e69obyxxkJValos1XIsF/32mrh3g68lte4itS7lnIdP5gJWgnGko9teX1Ou4AiVW63lt0Bg5omx1oDMUC5iENkAT9ZvQ4IZOEeyIZWTAJG17st9uFu4+kN+Az3Ci1zMxLFoyeNJTXjrVP6C0t+JnY9LxZKLajG1stPKl/ru0nOFS75px6jeLwOQ848MR3XEpHl5gZjY67h8tzt193OfkSSOaW0VbumZvgyjFibONUIzuf7ftVVx1I5QfJg/E0+dkaKwMqaq8CflcCD1BPtOGnID3eAV56MkY/kMgHciw1RSy8M/5suVR76mSjBmenWqCXWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.112.34) smtp.rcpttodomain=rjwysocki.net smtp.mailfrom=nvidia.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TNGEdyd2PXOAXWZpuACvKtbKoIiSd/mnufsXFJddCvc=;
- b=Dfp6sJPdAlh9PKPNhaOBDd1dRAflFcYSTlsLkibDvhLe9mGt1mvzSeHvN5LHQqDD1ymh/fBr6Ygr/jd8qXZmW857mDoNEsC8Nf8PYhWiRVqs1zjOqs1A1y4Kdrch+l8KczFdHI0M+DzabkPB7X22uhKenvlzJtUGZhVkVee6bQuiHvkMq+MCuVEaJiqkhLQSRjCU8ZCEXKCfYGHEiBGAGAb9N9wSoptzWKDD5hOQYJjTuWfyj9n26Sby3RkVQQAMD7pVPmPaZAPHYtQ2oaok31oIB2frDywcOavvyZiMkjr2SYAVt6keZoZI1MuHVB4Y8l/LgzvwDVOd18kNVpq1wA==
-Received: from BN6PR17CA0032.namprd17.prod.outlook.com (2603:10b6:405:75::21)
- by DM5PR12MB1754.namprd12.prod.outlook.com (2603:10b6:3:10f::19) with
+ bh=cziv2NW0lWnsmfgx12k0Ck9NVtSNjKT67wiQkKh+vzw=;
+ b=aqGTa+lQUlVby+KnXI/C7ZpnoirsEuZSdvlDceLV6G4QbTZsy90i04I5IfASfIMGuj961PaxkodnIS/WUO3NVAvzdg0r+jKwSWQYrm3LxoUFciMOU7sqkv2uE0oM7OUmgKmPNGUlhvCSvoTzzbhbTFr53XrMqDS+2qa/pV08+/BXGD/wO8Sz8psh2dK18AUgEop9CxldEYzT2g20KYD5HVRIX/HbMLgNlqlQ/gCBekEdX+KLmbBUtLve05q5kRdq9LIBIdJZBCYEg2rBrtHmPYxOKaIWUH8dV4SEZjijDboH1k2TPZtAfagQMxa+Mvrv0GJZP0C0aiSkzCdP3ktiow==
+Received: from BN0PR03CA0027.namprd03.prod.outlook.com (2603:10b6:408:e6::32)
+ by DM6PR12MB2713.namprd12.prod.outlook.com (2603:10b6:5:4c::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.23; Fri, 16 Jul
- 2021 15:24:28 +0000
-Received: from BN8NAM11FT008.eop-nam11.prod.protection.outlook.com
- (2603:10b6:405:75:cafe::a5) by BN6PR17CA0032.outlook.office365.com
- (2603:10b6:405:75::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.22 via Frontend
- Transport; Fri, 16 Jul 2021 15:24:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.25; Fri, 16 Jul
+ 2021 15:24:29 +0000
+Received: from BN8NAM11FT007.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e6:cafe::d0) by BN0PR03CA0027.outlook.office365.com
+ (2603:10b6:408:e6::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend
+ Transport; Fri, 16 Jul 2021 15:24:29 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
  smtp.mailfrom=nvidia.com; rjwysocki.net; dkim=none (message not signed)
  header.d=none;rjwysocki.net; dmarc=pass action=none header.from=nvidia.com;
@@ -45,12 +45,12 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.112.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.112.34; helo=mail.nvidia.com;
 Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT008.mail.protection.outlook.com (10.13.177.95) with Microsoft SMTP
+ BN8NAM11FT007.mail.protection.outlook.com (10.13.177.109) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 15:24:27 +0000
+ 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 15:24:29 +0000
 Received: from SDONTHINENI-DESKTOP.nvidia.com (172.20.187.6) by
  HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 16 Jul 2021 15:24:25 +0000
+ 15.0.1497.2; Fri, 16 Jul 2021 15:24:27 +0000
 From:   Shanker Donthineni <sdonthineni@nvidia.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 CC:     Alex Williamson <alex.williamson@redhat.com>,
@@ -60,9 +60,9 @@ CC:     Alex Williamson <alex.williamson@redhat.com>,
         Sinan Kaya <okaya@kernel.org>,
         "Amey Narkhede" <ameynarkhede03@gmail.com>,
         Shanker Donthineni <sdonthineni@nvidia.com>
-Subject: [PATCH v12 1/8] PCI: Add pcie_reset_flr to follow calling convention of other reset methods
-Date:   Fri, 16 Jul 2021 10:19:39 -0500
-Message-ID: <20210716151946.690-2-sdonthineni@nvidia.com>
+Subject: [PATCH v12 2/8] PCI: Add new array for keeping track of ordering of reset methods
+Date:   Fri, 16 Jul 2021 10:19:40 -0500
+Message-ID: <20210716151946.690-3-sdonthineni@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210716151946.690-1-sdonthineni@nvidia.com>
 References: <20210716151946.690-1-sdonthineni@nvidia.com>
@@ -74,258 +74,252 @@ X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
  HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 865eb03a-5836-4379-7440-08d9486dcd0a
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1754:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1754DAE7EE02B0A2EAB12F9DC7119@DM5PR12MB1754.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Office365-Filtering-Correlation-Id: 14fbe6c9-17d4-4f9c-5b67-08d9486dce0f
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2713:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB27133660667F74E591F9C430C7119@DM6PR12MB2713.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zJCDgyd9feG6NfklPjRuX9g0NOSpO/lORo0VQUm84UQxNmyCStyQkwTPxgw8zqa28EdsT1dsSB2kcoAIX23rBt9OQ72XIF9PxMoylPbfqKk38PnhnxnOjZnQklJ27k4Dhe2zn2zOWH5Qjj3ZVfy2/BiGSscasSYMDMj6UflkGKDZMkBufrVQeYuY/kEXS05cNr5/nYACSxZxoq5wX8lUbj6crPkPYyqhIIVetWZD5SPl702pOBBebL/Iyy86yMoItoS6uB8tUoPbe+N5+LAk0Ma6qFR0ASYfo45za22mVbF12WRkwFyY9+8vPivOp43LUivpALlWdHYtMbxSS+vYjbrGnA9gk4EbZ3kJxugvBxk9BF5O7JDEIZA7QF+ksU5jcwXbapWsWYNkaIc4ZDD7Ei3Oj68I11Wim+33UdF/u3OcWRY2aKN/nWlYvQs95XzHUC2XzAOfUdAuG+6Y8nc+i6ax7qnBtKDp3wy/zkjk40pu52d4ODMjm4VMCUB36+cjuGovA9Ctl/PoLxkgnc9pRIROaPXqkc80bukGEbyuWCwsln42aAySkPenrjCO7hAkDfhPxZXZA6CV6etu6cAl4ISQ81PfP+uzHGmYEZAJwgcwhNy69IXcAwSs6clva99XtBK+2EmDTilTlknL/R9TwljjIpVZ44D8rzOSc3GVi55G1PuOXQSlQkV7Ho6fZEA4GZtg/Ag6rOKVua6qre9ZeBd7c8TzlJqCqlmu0vPkXQs=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(346002)(376002)(136003)(46966006)(36840700001)(82740400003)(186003)(426003)(2616005)(7636003)(82310400003)(16526019)(26005)(7696005)(34020700004)(356005)(6666004)(2906002)(5660300002)(8676002)(36756003)(47076005)(336012)(1076003)(478600001)(316002)(8936002)(83380400001)(36860700001)(70586007)(36906005)(4326008)(54906003)(86362001)(107886003)(70206006)(6916009);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: YtlYHXxSu5n1Fovx2biZ5YlKnCPb0ilYcQSGHdV2YrdcuqDmnPF+Lf+WvoWsTP7e6KKYa/Nt+UPftJqpJ94wj01eguqaWom1IUGsAwH8wn1UeSNaVcnFQeUpZswXTrM8erAnhJddXw59x3bdagXpiM6tcQODFe06eOIYo5ccIYAsAaicCijM5bw4+A2FRM258afFUyHFuKw4n9Ul25sV9+lTW878kQqeKpg81c/krbvJctK9IMi+0QwW150YTDewGhVEVmkBB23qEmZdPJS8JAasZ6aSsLTlk6pgC3XRrzdGCoyWuPk2S8WQGsGl+fPXGmpsNyPvCxtqpeMtjv+4SjlyzIyB9UC297NsAF9/SUgXM64H51pQIBpkMIESgTrj6Ff74YRENivN9ahfaxmR4a6S/y2fd4ShxWLwpgkm98JSOjsKQKnbg7HWEcEi0lOno/84LUJwDO56zKwvIapHzNOKYWgai3gcEOI8kPghrDXgjqhmJjueJInXDtB34n+W3MB/PrnOk4YNX+C+xhjQclC5fQmGPa6K+/Pl8nMAaLY7Xl+/yEfcsRQZpQcSQeIBupRoBlFau5ewVW+4b6x9Mis7HbKUft5dxmNhTGJ7iR/BZA5Wctj6v74BIJULcvJlf10gbYrWN2GynC/t2TmAJj3gsxXrqkSAbC6HLBgF3OZQ+MxBCCY134vCyJf8D1AmJGSK6zTWeamgR96oouLXXVP3Lr+OB1zk6oUJWosLJDw=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(46966006)(36840700001)(1076003)(36906005)(186003)(54906003)(4326008)(83380400001)(5660300002)(356005)(2616005)(7696005)(16526019)(36860700001)(6666004)(2906002)(6916009)(82740400003)(336012)(82310400003)(86362001)(107886003)(8676002)(47076005)(34020700004)(316002)(26005)(426003)(8936002)(478600001)(7636003)(70206006)(36756003)(70586007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 15:24:27.6686
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 15:24:29.3674
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 865eb03a-5836-4379-7440-08d9486dcd0a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14fbe6c9-17d4-4f9c-5b67-08d9486dce0f
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT007.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1754
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2713
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Amey Narkhede <ameynarkhede03@gmail.com>
 
-Add has_pcie_flr bitfield in struct pci_dev to indicate support for PCIe
-FLR to avoid reading PCI_EXP_DEVCAP multiple times.
+Introduce a new array reset_methods in struct pci_dev to keep track of
+reset mechanisms supported by the device and their ordering.
 
-Currently there is separate function pcie_has_flr() to probe if PCIe FLR
-is supported by the device which does not match the calling convention
-followed by reset methods which use second function argument to decide
-whether to probe or not. Add new function pcie_reset_flr() that follows
-the calling convention of reset methods.
+Also refactor probing and reset functions to take advantage of calling
+convention of reset functions.
 
+Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/crypto/cavium/nitrox/nitrox_main.c |  4 +-
- drivers/pci/pci.c                          | 59 +++++++++++-----------
- drivers/pci/pcie/aer.c                     | 12 ++---
- drivers/pci/probe.c                        |  6 ++-
- drivers/pci/quirks.c                       |  9 ++--
- include/linux/pci.h                        |  3 +-
- 6 files changed, 45 insertions(+), 48 deletions(-)
+ drivers/pci/pci.c   | 92 ++++++++++++++++++++++++++-------------------
+ drivers/pci/pci.h   |  9 ++++-
+ drivers/pci/probe.c |  5 +--
+ include/linux/pci.h |  7 ++++
+ 4 files changed, 70 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
-index 96bc7b5c6532d..2db3fd5815c82 100644
---- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-+++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-@@ -306,9 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
- 		return -ENOMEM;
- 	}
- 
--	/* check flr support */
--	if (pcie_has_flr(pdev))
--		pcie_flr(pdev);
-+	pcie_reset_flr(pdev, 0);
- 
- 	pci_restore_state(pdev);
- 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index aacf575c15cff..16870e4d7863a 100644
+index 16870e4d7863a..4d5618b232363 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -4621,32 +4621,12 @@ int pci_wait_for_pending_transaction(struct pci_dev *dev)
+@@ -72,6 +72,14 @@ static void pci_dev_d3_sleep(struct pci_dev *dev)
+ 		msleep(delay);
  }
- EXPORT_SYMBOL(pci_wait_for_pending_transaction);
  
--/**
-- * pcie_has_flr - check if a device supports function level resets
-- * @dev: device to check
-- *
-- * Returns true if the device advertises support for PCIe function level
-- * resets.
-- */
--bool pcie_has_flr(struct pci_dev *dev)
--{
--	u32 cap;
--
--	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
--		return false;
--
--	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
--	return cap & PCI_EXP_DEVCAP_FLR;
--}
--EXPORT_SYMBOL_GPL(pcie_has_flr);
--
- /**
-  * pcie_flr - initiate a PCIe function level reset
-  * @dev: device to reset
-  *
-- * Initiate a function level reset on @dev.  The caller should ensure the
-- * device supports FLR before calling this function, e.g. by using the
-- * pcie_has_flr() helper.
-+ * Initiate a function level reset unconditionally on @dev without
-+ * checking any flags and DEVCAP
-  */
- int pcie_flr(struct pci_dev *dev)
- {
-@@ -4669,6 +4649,28 @@ int pcie_flr(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_GPL(pcie_flr);
- 
-+/**
-+ * pcie_reset_flr - initiate a PCIe function level reset
-+ * @dev: device to reset
-+ * @probe: If set, only check if the device can be reset this way.
-+ *
-+ * Initiate a function level reset on @dev.
-+ */
-+int pcie_reset_flr(struct pci_dev *dev, int probe)
++int pci_reset_supported(struct pci_dev *dev)
 +{
-+	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-+		return -ENOTTY;
++	u8 null_reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
 +
-+	if (!dev->has_pcie_flr)
-+		return -ENOTTY;
-+
-+	if (probe)
-+		return 0;
-+
-+	return pcie_flr(dev);
++	return memcmp(null_reset_methods,
++		      dev->reset_methods, sizeof(null_reset_methods));
 +}
-+EXPORT_SYMBOL_GPL(pcie_reset_flr);
 +
- static int pci_af_flr(struct pci_dev *dev, int probe)
- {
- 	int pos;
-@@ -5151,11 +5153,9 @@ int __pci_reset_function_locked(struct pci_dev *dev)
- 	rc = pci_dev_specific_reset(dev, 0);
- 	if (rc != -ENOTTY)
- 		return rc;
--	if (pcie_has_flr(dev)) {
--		rc = pcie_flr(dev);
--		if (rc != -ENOTTY)
--			return rc;
--	}
-+	rc = pcie_reset_flr(dev, 0);
-+	if (rc != -ENOTTY)
-+		return rc;
- 	rc = pci_af_flr(dev, 0);
- 	if (rc != -ENOTTY)
- 		return rc;
-@@ -5186,8 +5186,9 @@ int pci_probe_reset_function(struct pci_dev *dev)
- 	rc = pci_dev_specific_reset(dev, 1);
- 	if (rc != -ENOTTY)
- 		return rc;
--	if (pcie_has_flr(dev))
--		return 0;
-+	rc = pcie_reset_flr(dev, 1);
-+	if (rc != -ENOTTY)
-+		return rc;
- 	rc = pci_af_flr(dev, 1);
- 	if (rc != -ENOTTY)
- 		return rc;
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index df4ba9b384c24..031379deb1304 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1407,13 +1407,11 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
- 	}
+ #ifdef CONFIG_PCI_DOMAINS
+ int pci_domains_supported = 1;
+ #endif
+@@ -5116,6 +5124,15 @@ static void pci_dev_restore(struct pci_dev *dev)
+ 		err_handler->reset_done(dev);
+ }
  
- 	if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
--		if (pcie_has_flr(dev)) {
--			rc = pcie_flr(dev);
--			pci_info(dev, "has been reset (%d)\n", rc);
--		} else {
--			pci_info(dev, "not reset (no FLR support)\n");
--			rc = -ENOTTY;
--		}
-+		rc = pcie_reset_flr(dev, 0);
++const struct pci_reset_fn_method pci_reset_fn_methods[] = {
++	{ },
++	{ &pci_dev_specific_reset, .name = "device_specific" },
++	{ &pcie_reset_flr, .name = "flr" },
++	{ &pci_af_flr, .name = "af_flr" },
++	{ &pci_pm_reset, .name = "pm" },
++	{ &pci_reset_bus_function, .name = "bus" },
++};
++
+ /**
+  * __pci_reset_function_locked - reset a PCI device function while holding
+  * the @dev mutex lock.
+@@ -5138,65 +5155,62 @@ static void pci_dev_restore(struct pci_dev *dev)
+  */
+ int __pci_reset_function_locked(struct pci_dev *dev)
+ {
+-	int rc;
++	int i, m, rc = -ENOTTY;
+ 
+ 	might_sleep();
+ 
+ 	/*
+-	 * A reset method returns -ENOTTY if it doesn't support this device
+-	 * and we should try the next method.
++	 * A reset method returns -ENOTTY if it doesn't support this device and
++	 * we should try the next method.
+ 	 *
+-	 * If it returns 0 (success), we're finished.  If it returns any
+-	 * other error, we're also finished: this indicates that further
+-	 * reset mechanisms might be broken on the device.
++	 * If it returns 0 (success), we're finished.  If it returns any other
++	 * error, we're also finished: this indicates that further reset
++	 * mechanisms might be broken on the device.
+ 	 */
+-	rc = pci_dev_specific_reset(dev, 0);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pcie_reset_flr(dev, 0);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_af_flr(dev, 0);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_pm_reset(dev, 0);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	return pci_reset_bus_function(dev, 0);
++	for (i = 0; i <  PCI_NUM_RESET_METHODS && (m = dev->reset_methods[i]); i++) {
++		rc = pci_reset_fn_methods[m].reset_fn(dev, 0);
 +		if (!rc)
-+			pci_info(dev, "has been reset\n");
-+		else
-+			pci_info(dev, "not reset (no FLR support: %d)\n", rc);
- 	} else {
- 		rc = pci_bus_error_reset(dev);
- 		pci_info(dev, "%s Port link has been reset (%d)\n",
++			return 0;
++		if (rc != -ENOTTY)
++			return rc;
++	}
++
++	return -ENOTTY;
+ }
+ EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+ 
+ /**
+- * pci_probe_reset_function - check whether the device can be safely reset
+- * @dev: PCI device to reset
++ * pci_init_reset_methods - check whether device can be safely reset
++ * and store supported reset mechanisms.
++ * @dev: PCI device to check for reset mechanisms
+  *
+  * Some devices allow an individual function to be reset without affecting
+  * other functions in the same device.  The PCI device must be responsive
+- * to PCI config space in order to use this function.
++ * to reads and writes to its PCI config space in order to use this function.
+  *
+- * Returns 0 if the device function can be reset or negative if the
+- * device doesn't support resetting a single function.
++ * Stores reset mechanisms supported by device in reset_methods byte array
++ * which is a member of struct pci_dev.
+  */
+-int pci_probe_reset_function(struct pci_dev *dev)
++void pci_init_reset_methods(struct pci_dev *dev)
+ {
+-	int rc;
++	int i, n, rc;
++	u8 reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
++
++	n = 0;
++
++	BUILD_BUG_ON(ARRAY_SIZE(pci_reset_fn_methods) != PCI_NUM_RESET_METHODS);
+ 
+ 	might_sleep();
+ 
+-	rc = pci_dev_specific_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pcie_reset_flr(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_af_flr(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_pm_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
++	for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
++		rc = pci_reset_fn_methods[i].reset_fn(dev, 1);
++		if (!rc)
++			reset_methods[n++] = i;
++		else if (rc != -ENOTTY)
++			break;
++	}
+ 
+-	return pci_reset_bus_function(dev, 1);
++	memcpy(dev->reset_methods, reset_methods, sizeof(reset_methods));
+ }
+ 
+ /**
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 93dcdd4310726..482d26cff7912 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -33,7 +33,8 @@ enum pci_mmap_api {
+ int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
+ 		  enum pci_mmap_api mmap_api);
+ 
+-int pci_probe_reset_function(struct pci_dev *dev);
++int pci_reset_supported(struct pci_dev *dev);
++void pci_init_reset_methods(struct pci_dev *dev);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
+ 
+@@ -610,6 +611,12 @@ struct pci_dev_reset_methods {
+ 	int (*reset)(struct pci_dev *dev, int probe);
+ };
+ 
++struct pci_reset_fn_method {
++	int (*reset_fn)(struct pci_dev *pdev, int probe);
++	char *name;
++};
++
++extern const struct pci_reset_fn_method pci_reset_fn_methods[];
+ #ifdef CONFIG_PCI_QUIRKS
+ int pci_dev_specific_reset(struct pci_dev *dev, int probe);
+ #else
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 79177ac37880f..d99ef232169e2 100644
+index d99ef232169e2..4ce7979d703eb 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -1488,6 +1488,7 @@ void set_pcie_port_type(struct pci_dev *pdev)
- {
- 	int pos;
- 	u16 reg16;
-+	u32 reg32;
- 	int type;
- 	struct pci_dev *parent;
+@@ -2430,9 +2430,8 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_rcec_init(dev);		/* Root Complex Event Collector */
  
-@@ -1498,8 +1499,9 @@ void set_pcie_port_type(struct pci_dev *pdev)
- 	pdev->pcie_cap = pos;
- 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
- 	pdev->pcie_flags_reg = reg16;
--	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
--	pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
-+	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &reg32);
-+	pdev->pcie_mpss = reg32 & PCI_EXP_DEVCAP_PAYLOAD;
-+	pdev->has_pcie_flr = !!(reg32 & PCI_EXP_DEVCAP_FLR);
- 
- 	parent = pci_upstream_bridge(pdev);
- 	if (!parent)
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 6d74386eadc2c..90144fbc4f4ea 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3852,7 +3852,7 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
- 	u32 cfg;
- 
- 	if (dev->class != PCI_CLASS_STORAGE_EXPRESS ||
--	    !pcie_has_flr(dev) || !pci_resource_start(dev, 0))
-+	    pcie_reset_flr(dev, 1) || !pci_resource_start(dev, 0))
- 		return -ENOTTY;
- 
- 	if (probe)
-@@ -3921,13 +3921,10 @@ static int nvme_disable_and_flr(struct pci_dev *dev, int probe)
-  */
- static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
- {
--	if (!pcie_has_flr(dev))
--		return -ENOTTY;
-+	int ret = pcie_reset_flr(dev, probe);
- 
- 	if (probe)
--		return 0;
+ 	pcie_report_downtraining(dev);
 -
--	pcie_flr(dev);
-+		return ret;
+-	if (pci_probe_reset_function(dev) == 0)
+-		dev->reset_fn = 1;
++	pci_init_reset_methods(dev);
++	dev->reset_fn = pci_reset_supported(dev);
+ }
  
- 	msleep(250);
- 
+ /*
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 540b377ca8f61..5652214fe3a58 100644
+index 5652214fe3a58..8c2d3a357eedb 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -337,6 +337,7 @@ struct pci_dev {
- 	u8		msi_cap;	/* MSI capability offset */
- 	u8		msix_cap;	/* MSI-X capability offset */
- 	u8		pcie_mpss:3;	/* PCIe Max Payload Size Supported */
-+	u8		has_pcie_flr:1; /* PCIe FLR supported */
- 	u8		rom_base_reg;	/* Config register controlling ROM */
- 	u8		pin;		/* Interrupt pin this device uses */
- 	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
-@@ -1228,7 +1229,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- 			     enum pci_bus_speed *speed,
- 			     enum pcie_link_width *width);
- void pcie_print_link_status(struct pci_dev *dev);
--bool pcie_has_flr(struct pci_dev *dev);
-+int pcie_reset_flr(struct pci_dev *dev, int probe);
- int pcie_flr(struct pci_dev *dev);
- int __pci_reset_function_locked(struct pci_dev *dev);
- int pci_reset_function(struct pci_dev *dev);
+@@ -49,6 +49,9 @@
+ 			       PCI_STATUS_SIG_TARGET_ABORT | \
+ 			       PCI_STATUS_PARITY)
+ 
++/* Number of reset methods used in pci_reset_fn_methods array in pci.c */
++#define PCI_NUM_RESET_METHODS 6
++
+ /*
+  * The PCI interface treats multi-function devices as independent
+  * devices.  The slot/function address of each device is encoded
+@@ -506,6 +509,10 @@ struct pci_dev {
+ 	char		*driver_override; /* Driver name to force a match */
+ 
+ 	unsigned long	priv_flags;	/* Private flags for the PCI driver */
++	/*
++	 * See pci_reset_fn_methods array in pci.c for ordering.
++	 */
++	u8 reset_methods[PCI_NUM_RESET_METHODS];	/* Reset methods ordered by priority */
+ };
+ 
+ static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
 -- 
 2.25.1
 
