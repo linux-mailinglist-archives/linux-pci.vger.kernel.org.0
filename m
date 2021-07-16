@@ -2,140 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D01A43CBE35
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 23:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 410B23CBEC5
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 23:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235000AbhGPVLK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 17:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51240 "EHLO mail.kernel.org"
+        id S230490AbhGPV7o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 17:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234129AbhGPVLJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 17:11:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CF820613D8;
-        Fri, 16 Jul 2021 21:08:11 +0000 (UTC)
+        id S229951AbhGPV7o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Jul 2021 17:59:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9BE93613F1;
+        Fri, 16 Jul 2021 21:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626469692;
-        bh=1OuRSZMukpUPn6yWC0ivcwqWoT7Psb+QZ1P/W4VwbW0=;
+        s=k20201202; t=1626472608;
+        bh=tKOagru+qVjZu758/c2+PD/cp+FBJEYcEqv4iWhxaPM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gBFBqaz8LVGz4ZDU3iPcueWkVTHPWPgOQpsP0Y2H3nqhDfOwoVPHBzv6JuTDOoRnE
-         pI4iZKgRcOQry6EQelUKjFI9jAGZUJy2/Naj5H2hL8QAD9ux53jhU6XNTFqGX3+PS1
-         asBgXX1KxkSrqRb1/ijPljRP/0qDLYIMtXHPeAv07OF3bt/KeFQRxkt/dMfSH/+7Dd
-         bUoGbzd3KDq1u4I7Y6QL5R6JI28X2lyK55gUTLrMOBDK3Zh69wmWp2ECaf2jjOY4bA
-         PvwwuxGxqqA4jDWIcvkTD2g+PdLidv8EEqJRPdjAh2p9oWb+rZY2Ydne4tOTF+m8JM
-         UCII9w4WR5Z7A==
-Date:   Fri, 16 Jul 2021 16:08:10 -0500
+        b=e2UqQdNW5pYCKTyKK8jAqDuZqpEirChvkwC599w+H6aOm9Qv8mu9vy48R51bYAr0j
+         w3yCkdaLqpqIKUWJZK1HoYcHsFLWBHYpVXq3Zr7YoSVjTTwo+B9ifXHaXZaUobTqEW
+         3pQ1ggAuaoDtyEZ9t1wn0V64OH29cF8Futx8VmCFYYumKBx0Akm6BtmzcFwEOVAzHU
+         CJ7+FKQqUIoYRikNq+AqZIpJWXxhg+nBu2vFOKKigN/Inalh9OK68cNBtnz4pU3y0L
+         T9ND9WMdh4Bxd2t+Or2QLw+7vrlhS2p3NObkHye4pyt/7cnerVAG9umOO/P+Wf9xow
+         H2VYyTbl/sWWA==
+Date:   Fri, 16 Jul 2021 16:56:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Refactor pci_ioremap_bar() and pci_ioremap_wc_bar()
-Message-ID: <20210716210810.GA2142315@bjorn-Precision-5520>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
+ capability bit
+Message-ID: <20210716215647.GA2146665@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210713102436.304693-1-kw@linux.com>
+In-Reply-To: <20210512213314.7778-1-stuart.w.hayes@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 10:24:36AM +0000, Krzysztof Wilczyński wrote:
-> Currently, functions pci_ioremap_bar() and pci_ioremap_wc_bar() share
-> similar implementation details as both functions were almost identical
-> in the past, especially when the latter was initially introduced in the
-> commit c43996f4001d ("PCI: Add pci_ioremap_wc_bar()") as somewhat exact
-> copy of the function pci_ioremap_bar().
-> 
-> However, function pci_ioremap_bar() received several updates that were
-> never introduced to the function pci_ioremap_wc_bar().
-> 
-> Thus, to align implementation of both functions and reduce the need to
-> duplicate code between them, introduce a new internal function called
-> __pci_ioremap_resource() as a helper with a shared codebase intended to
-> be called from functions pci_ioremap_bar() and pci_ioremap_wc_bar().
-> 
-> The  __pci_ioremap_resource() function will therefore include a check
-> for the IORESOURCE_UNSET flag that has previously been added to the
-> function pci_ioremap_bar() in the commit 646c0282df04 ("PCI: Fail
-> pci_ioremap_bar() on unassigned resources") and otherwise has been
-> missing from function pci_ioremap_wc_bar().
-> 
-> Additionally, function __pci_ioremap_resource() will retire the usage of
-> the WARN_ON() macro and replace it with pci_err() to show information
-> such as the driver name, the BAR number and resource details in case of
-> a failure, instead of printing a complete backtrace. The WARN_ON() has
-> already been replaced with pci_warn() in the commit 1f7bf3bfb5d6 ("PCI:
-> Show driver, BAR#, and resource on pci_ioremap_bar() failure") which
-> sadly didn't include an update to the function pci_ioremap_wc_bar() at
-> that time.
-> 
-> Finally, a direct use of functions ioremap() and ioremap_wc() in the
-> function __pci_ioremap_resource() will be replaced with calls to the
-> pci_iomap_range() and pci_iomap_wc_range() functions respectively.
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+On Thu, May 13, 2021 at 03:03:14AM +0530, Stuart Hayes wrote:
+> The pcieport driver can fail to attach to a downstream port that doesn't
+> support bandwidth notification.  This can happen when, in
+> pcie_port_device_register(), pci_init_service_irqs() tries (and fails) to
+> set up a bandwidth notification IRQ for a device that doesn't support it.
 
-Nice cleanup, thanks!
+I'm trying to figure out exactly how this fails.  The only failure
+path in pcie_init_service_irqs() is when
+pci_alloc_irq_vectors(PCI_IRQ_LEGACY) fails, which I guess means the
+port's dev->irq was zero?
 
-Applied to pci/resource for v5.15.
+And to even attempt legacy IRQs, either we had pcie_pme_no_msi() or
+pcie_port_enable_irq_vec() failed?
 
-I reverted to using plain ioremap() since pci_iomap_range() doesn't
-seem to add anything except overhead.
+> This patch changes get_port_device_capability() to look at the link
+> bandwidth notification capability bit in the link capabilities register of
+> the port, instead of assuming that all downstream ports have that
+> capability.
 
+I think this needs:
+
+  Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
+
+because even though b4c7d2076b4e ("PCI/LINK: Remove bandwidth
+notification") removed *most* of e8303bb7a75c, it did not remove the
+code in get_port_device_capability() that you're fixing here.
+
+I can fix this up locally, no need to resend.  I think the patch
+itself is fine, just trying to understand the commit log.
+
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
 > ---
->  drivers/pci/pci.c | 26 ++++++++++++++------------
->  1 file changed, 14 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e3bb0d073352..4bae55f0700b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -206,7 +206,8 @@ int pci_status_get_and_clear_errors(struct pci_dev *pdev)
->  EXPORT_SYMBOL_GPL(pci_status_get_and_clear_errors);
+> changes from v1:
+> 	- corrected spelling errors in commit message
+> 	- added Lukas' reviewed-by:
+> 
+> ---
+>  drivers/pci/pcie/portdrv_core.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index e1fed6649c41..3ee63968deaa 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -257,8 +257,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		services |= PCIE_PORT_SERVICE_DPC;
 >  
->  #ifdef CONFIG_HAS_IOMEM
-> -void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
-> +static void __iomem *__pci_ioremap_resource(struct pci_dev *pdev, int bar,
-> +					    bool write_combine)
->  {
->  	struct resource *res = &pdev->resource[bar];
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> -	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> -		services |= PCIE_PORT_SERVICE_BWNOTIF;
+> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		u32 linkcap;
+> +
+> +		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
+> +		if (linkcap & PCI_EXP_LNKCAP_LBNC)
+> +			services |= PCIE_PORT_SERVICE_BWNOTIF;
+> +	}
 >  
-> @@ -214,24 +215,25 @@ void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
->  	 * Make sure the BAR is actually a memory resource, not an IO resource
->  	 */
->  	if (res->flags & IORESOURCE_UNSET || !(res->flags & IORESOURCE_MEM)) {
-> -		pci_warn(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
-> +		pci_err(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
->  		return NULL;
->  	}
-> -	return ioremap(res->start, resource_size(res));
-> +
-> +	if (write_combine)
-> +		return pci_iomap_wc_range(pdev, bar, 0, 0);
-> +
-> +	return pci_iomap_range(pdev, bar, 0, 0);
-> +}
-> +
-> +void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
-> +{
-> +	return __pci_ioremap_resource(pdev, bar, false);
+>  	return services;
 >  }
->  EXPORT_SYMBOL_GPL(pci_ioremap_bar);
->  
->  void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar)
->  {
-> -	/*
-> -	 * Make sure the BAR is actually a memory resource, not an IO resource
-> -	 */
-> -	if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM)) {
-> -		WARN_ON(1);
-> -		return NULL;
-> -	}
-> -	return ioremap_wc(pci_resource_start(pdev, bar),
-> -			  pci_resource_len(pdev, bar));
-> +	return __pci_ioremap_resource(pdev, bar, true);
->  }
->  EXPORT_SYMBOL_GPL(pci_ioremap_wc_bar);
->  #endif
 > -- 
-> 2.32.0
+> 2.27.0
 > 
