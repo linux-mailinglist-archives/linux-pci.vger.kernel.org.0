@@ -2,145 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEA4D3CB6AC
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 13:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 630A13CB853
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 16:00:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232394AbhGPL0W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 07:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232222AbhGPL0B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 07:26:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A8AC86023B;
-        Fri, 16 Jul 2021 11:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626434533;
-        bh=ymtVNzxVfN5KdOU5IVgRxYIYYFfih2gnBtxs8vuCWsU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LqySXf0xk+WtUBkYRn+1USXOUzZswQn16313q7bEOl9g16Nvj44nSVne1gIzInUIL
-         e+3B5+dlV9dxOc/HDmTHoYszcErOm9gGBoMYNjdgbtrSoN6GbqbD+ZRAvlu3AqKCQj
-         rM1yxRR+EP6Sc3+7kPirVxruYEEjBp/PWXfi6PY3Tlwu+kmTJbmPe9oYih5mK1+At0
-         /07dDgiWv8qlbDokoBlSXhsCnJuLUcz7wgsY1wjvvBV/Tc7KMLZG6Nf2v6ckkUiIEp
-         DOofZNWoxwQPuyCFbWGPaPIBGyMsBEab+PzThNBEsd43jTy0sUu6f166sHUAiimLH4
-         bczQLX2Qm4CBg==
-Date:   Fri, 16 Jul 2021 13:22:08 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com, Manivannan Sadhasivam <mani@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 4/8] dt-bindings: PCI: kirin: Drop PHY properties
-Message-ID: <20210716132208.3cd8f404@coco.lan>
-In-Reply-To: <20210714022849.GA1330659@robh.at.kernel.org>
-References: <cover.1626157454.git.mchehab+huawei@kernel.org>
-        <a04c9c92187ceaee0fd4b8d4721e2a3275d97518.1626157454.git.mchehab+huawei@kernel.org>
-        <20210714022849.GA1330659@robh.at.kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S240385AbhGPOCv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 10:02:51 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:15029 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240360AbhGPOCp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jul 2021 10:02:45 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GRCT7257RzZjxh;
+        Fri, 16 Jul 2021 21:56:27 +0800 (CST)
+Received: from dggpemm500017.china.huawei.com (7.185.36.178) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Fri, 16 Jul 2021 21:59:46 +0800
+Received: from [10.174.178.220] (10.174.178.220) by
+ dggpemm500017.china.huawei.com (7.185.36.178) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Fri, 16 Jul 2021 21:59:45 +0800
+Subject: Re: [question]: Query regarding the PCI addresses
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        Wu Bo <wubo40@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        <linfeilong@huawei.com>, <lijinlin3@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20210714165427.GA1854138@bjorn-Precision-5520>
+From:   Wenchao Hao <haowenchao@huawei.com>
+Message-ID: <9809f4d7-cf9e-3672-cb02-4c49c55abada@huawei.com>
+Date:   Fri, 16 Jul 2021 21:59:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20210714165427.GA1854138@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.178.220]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500017.china.huawei.com (7.185.36.178)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Tue, 13 Jul 2021 20:28:49 -0600
-Rob Herring <robh@kernel.org> escreveu:
+On 2021/7/15 0:54, Bjorn Helgaas wrote:
+> [+cc Matthew for "lspci -P"]
+>
+> On Wed, Jul 14, 2021 at 02:33:37PM +0800, Wenchao Hao wrote:
+>> Since linux identify PCI peripheral by [domain:bus:device:function] number
+>> like following,
+>>
+>> # lspci -D
+>> 0000:00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
+>> 0000:00:01.0 PCI bridge: Intel Corporation 82801 PCI Bridge (rev 92)
+>> 0000:00:02.0 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub PCI
+>> Express Root Port 0 (rev 02)
+>> 0000:00:02.1 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub PCI
+>> Express Root Port 0 (rev 02)
+>> 0000:00:02.2 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub PCI
+>> Express Root Port 0 (rev 02)
+>> 0000:00:02.3 PCI bridge: Intel Corporation 7500/5520/5500/X58 I/O Hub PCI
+>> Express Root Port 0 (rev 02)
+>> 0000:01:00.0 PCI bridge: Red Hat, Inc. QEMU PCI-PCI bridge
+>> 0000:02:01.0 USB controller: Intel Corporation 82801DB/DBM (ICH4/ICH4-M)
+>> USB2 EHCI Controller (rev 10)
+>> 0000:02:02.0 Unclassified device [00ff]: Virtio: Virtio memory balloon
+>> 0000:02:03.0 SCSI storage controller: Virtio: Virtio SCSI
+>> 0000:02:04.0 Display controller: Virtio: Virtio GPU (rev 01)
+>> 0000:03:00.0 Ethernet controller: Virtio: Virtio network device (rev 01)
+>>
+>> Here are my questions: Are these [domain:bus:device:function] number
+>> come from hardware's physical connection or allocated by software
+>> dynamic?
+> The device and function numbers are completely determined by the
+> hardware and are not programmable.
+>
+> Bus numbers are programmable and are determined by the Secondary Bus
+> Number of the bridge leading to the device.  These bus numbers are
+> generally programmed by the BIOS on x86.  It's possible for Linux to
+> reprogram them, but it generally leaves them alone if they are valid.
+>
+> On x86 with ACPI, the domain number comes from the _SEG method of the
+> PNP0A03 device that describes the host bridge.  This may correspond to
+> a programmable hardware register, but that isn't visible to the OS and
+> Linux has no way to change it.
+>
+>> If hardware do not change, can we guarantee these number do not
+>> change after system reboot?
+> For the typical x86 system with ACPI, this is really a question for
+> the BIOS.  If the hardware doesn't change, I would *expect* the
+> domain/bus/device/function numbers to stay the same, but only BIOS
+> folks can answer this definitively.
+>
+>> If they are not fixed, then is there anyway I can get a fixed ID
+>> which can indicate physical connection.
+> You can look at the "lspci -P" option.  I'm not really familiar with
+> this, but I think Matthew (cc'd) implemented it.
+>
+> Bjorn
+> .
 
-> On Tue, Jul 13, 2021 at 08:28:37AM +0200, Mauro Carvalho Chehab wrote:
-> > There are several properties there that belong to the PHY
-> > interface. Drop them, as a new binding file will describe
-> > the PHY properties for Kirin 960.  
-> 
-> Folks are okay with an incompatible change on hikey960?
+Thanks Bjorn for your great analysis and I would ask BIOS for their 
+suggestions.
+I think we can put some constraints such as make BIOS give a stable bus
+number on our users to meet their needs of finding a stable path,
+although this method looks ugly.
 
-Accepting an incompatible change here seems the right thing to do.
+Wenchao
 
-Another possibility would be to create a "pcie-kirin-with-phy" driver
-that would be identical to the existing one, except for the absence
-of a PHY and using a different compatible string.
-
--
-
-Long answer:
-
-There aren't many alternatives here, if we want to split the PHY out of
-the driver, as you requested.
-
-I've been scratching my head in order to find a way that would keep
-the Hikey960 a separate PHY driver, with a proper DT schema, but
-capable of also parse the original DT schema.
-
-See, making the phy driver parse the PCIE-based OF-node data is 
-trivial (I have already a patch doing that), but it will require at
-least some DT schema additions, in order to add a pcie_phy node[1]:
-
-<snip>
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index e0eca598af1f..6aaa2f966d74 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -1001,6 +1001,11 @@ spi3: spi@ff3b3000 {
-                        status = "disabled";
-                };
- 
-+               pcie_phy: pcie-phy@f3f2000 {
-+                       compatible = "hisilicon,hi960-pcie-phy";
-+                       #phy-cells = <0>;
-+               };
-+
-                pcie@f4000000 {
-                        compatible = "hisilicon,kirin960-pcie";
-                        reg = <0x0 0xf4000000 0x0 0x1000>,
-@@ -1012,6 +1017,7 @@ pcie@f4000000 {
-                        #address-cells = <3>;
-                        #size-cells = <2>;
-                        device_type = "pci";
-+                       phys = <&pcie_phy>;
-                        ranges = <0x02000000 0x0 0x00000000
-                                  0x0 0xf6000000
-                                  0x0 0x02000000>;
-</snip>
-
-[1] or, alternatively, the pcie-kirin driver would need to dynamically
-    populate DT with the above, as some ACPI drivers do when the
-    firmware is broken.
-
-Without a PHY representation at the DT schema, the PHY driver won't 
-be recognized by pcie-kirin.
-
-See, even if the pcie-kirin driver would be changed to register
-the PHY without DT, with:
-
-	phy = devm_of_phy_get(dev, NULL, "hi3660_pcie_phy");
-
-The phy_get() implementation will internally ignore a non-DT PHY,
-as internally, it uses of_property_match_string() if the caller driver
-has of_node:
-
-	struct phy *phy_get(struct device *dev, const char *string)
-	{
-		int index = 0;
-		struct phy *phy;
-		struct device_link *link;
-
-		if (dev->of_node) {
-			if (string)
-				index = of_property_match_string(dev->of_node, "phy-names",
-					string);
-			else
-				index = 0;
-			phy = _of_phy_get(dev->of_node, index);
-		} else {
-			if (string == NULL) {
-				dev_WARN(dev, "missing string\n");
-				return ERR_PTR(-EINVAL);
-			}
-			phy = phy_find(dev, string);
-		}
-
-Thanks,
-Mauro
