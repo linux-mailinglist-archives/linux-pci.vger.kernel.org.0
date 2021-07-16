@@ -2,144 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 471A13CBD71
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 22:02:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D01A43CBE35
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 23:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232619AbhGPUEy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 16:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40648 "EHLO mail.kernel.org"
+        id S235000AbhGPVLK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 17:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232312AbhGPUEx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 16:04:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1AFDB613F3;
-        Fri, 16 Jul 2021 20:01:55 +0000 (UTC)
+        id S234129AbhGPVLJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Jul 2021 17:11:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF820613D8;
+        Fri, 16 Jul 2021 21:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626465716;
-        bh=rFOR2qypUtELpoy2NWUoxm7klREkrZb97itZWXUaaq8=;
+        s=k20201202; t=1626469692;
+        bh=1OuRSZMukpUPn6yWC0ivcwqWoT7Psb+QZ1P/W4VwbW0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pi9l/EsCuyB3C2oqdMBel42BqfeYCuwLFgejqa+LxYPXLcBaatM7lXFExmrtCrx3m
-         BchR35OeiH7MTAe9IsqKSuyT0fTRX5ESy75Eey5eo44I+o0GVu0+HD8q3NK2wplTV3
-         rvwLro/bCPchoWBwM+NyAEfcQNl49rj2ZswFD8SO8W9Rc1aUmIuwtzYm+wdtdEYhpA
-         TVUy3EQdryL2kJ8mkzjnJhT7t4mL0Iz5gm3c0fDBCTDIOKqTpGIXzsmdsacrDWWXNE
-         elut+xl31sz+UAVfyhC9lCXCLW98XJzlkMow/keBWtNLRRAiIDwHoTevOumlr4avmu
-         dBvchD8JHB1Ug==
-Date:   Fri, 16 Jul 2021 15:01:54 -0500
+        b=gBFBqaz8LVGz4ZDU3iPcueWkVTHPWPgOQpsP0Y2H3nqhDfOwoVPHBzv6JuTDOoRnE
+         pI4iZKgRcOQry6EQelUKjFI9jAGZUJy2/Naj5H2hL8QAD9ux53jhU6XNTFqGX3+PS1
+         asBgXX1KxkSrqRb1/ijPljRP/0qDLYIMtXHPeAv07OF3bt/KeFQRxkt/dMfSH/+7Dd
+         bUoGbzd3KDq1u4I7Y6QL5R6JI28X2lyK55gUTLrMOBDK3Zh69wmWp2ECaf2jjOY4bA
+         PvwwuxGxqqA4jDWIcvkTD2g+PdLidv8EEqJRPdjAh2p9oWb+rZY2Ydne4tOTF+m8JM
+         UCII9w4WR5Z7A==
+Date:   Fri, 16 Jul 2021 16:08:10 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Daniel Wagner <dwagner@suse.de>,
-        Wen Xiong <wenxiong@us.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH V4 1/3] driver core: mark device as irq affinity managed
- if any irq is managed
-Message-ID: <20210716200154.GA2113453@bjorn-Precision-5520>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Refactor pci_ioremap_bar() and pci_ioremap_wc_bar()
+Message-ID: <20210716210810.GA2142315@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210715120844.636968-2-ming.lei@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210713102436.304693-1-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 15, 2021 at 08:08:42PM +0800, Ming Lei wrote:
-> irq vector allocation with managed affinity may be used by driver, and
-> blk-mq needs this info because managed irq will be shutdown when all
-> CPUs in the affinity mask are offline.
+On Tue, Jul 13, 2021 at 10:24:36AM +0000, Krzysztof Wilczyński wrote:
+> Currently, functions pci_ioremap_bar() and pci_ioremap_wc_bar() share
+> similar implementation details as both functions were almost identical
+> in the past, especially when the latter was initially introduced in the
+> commit c43996f4001d ("PCI: Add pci_ioremap_wc_bar()") as somewhat exact
+> copy of the function pci_ioremap_bar().
 > 
-> The info of using managed irq is often produced by drivers(pci subsystem,
-
-Add space between "drivers" and "(".
-s/pci/PCI/
-
-Does this "managed IRQ" (or "managed affinity", not sure what the
-correct terminology is here) have something to do with devm?
-
-> platform device, ...), and it is consumed by blk-mq, so different subsystems
-> are involved in this info flow
-
-Add period at end of sentence.
-
-> Address this issue by adding one field of .irq_affinity_managed into
-> 'struct device'.
+> However, function pci_ioremap_bar() received several updates that were
+> never introduced to the function pci_ioremap_wc_bar().
 > 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> Thus, to align implementation of both functions and reduce the need to
+> duplicate code between them, introduce a new internal function called
+> __pci_ioremap_resource() as a helper with a shared codebase intended to
+> be called from functions pci_ioremap_bar() and pci_ioremap_wc_bar().
+> 
+> The  __pci_ioremap_resource() function will therefore include a check
+> for the IORESOURCE_UNSET flag that has previously been added to the
+> function pci_ioremap_bar() in the commit 646c0282df04 ("PCI: Fail
+> pci_ioremap_bar() on unassigned resources") and otherwise has been
+> missing from function pci_ioremap_wc_bar().
+> 
+> Additionally, function __pci_ioremap_resource() will retire the usage of
+> the WARN_ON() macro and replace it with pci_err() to show information
+> such as the driver name, the BAR number and resource details in case of
+> a failure, instead of printing a complete backtrace. The WARN_ON() has
+> already been replaced with pci_warn() in the commit 1f7bf3bfb5d6 ("PCI:
+> Show driver, BAR#, and resource on pci_ioremap_bar() failure") which
+> sadly didn't include an update to the function pci_ioremap_wc_bar() at
+> that time.
+> 
+> Finally, a direct use of functions ioremap() and ioremap_wc() in the
+> function __pci_ioremap_resource() will be replaced with calls to the
+> pci_iomap_range() and pci_iomap_wc_range() functions respectively.
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+
+Nice cleanup, thanks!
+
+Applied to pci/resource for v5.15.
+
+I reverted to using plain ioremap() since pci_iomap_range() doesn't
+seem to add anything except overhead.
+
 > ---
->  drivers/base/platform.c | 7 +++++++
->  drivers/pci/msi.c       | 3 +++
->  include/linux/device.h  | 1 +
->  3 files changed, 11 insertions(+)
+>  drivers/pci/pci.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 8640578f45e9..d28cb91d5cf9 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -388,6 +388,13 @@ int devm_platform_get_irqs_affinity(struct platform_device *dev,
->  				ptr->irq[i], ret);
->  			goto err_free_desc;
->  		}
-> +
-> +		/*
-> +		 * mark the device as irq affinity managed if any irq affinity
-> +		 * descriptor is managed
-> +		 */
-> +		if (desc[i].is_managed)
-> +			dev->dev.irq_affinity_managed = true;
->  	}
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e3bb0d073352..4bae55f0700b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -206,7 +206,8 @@ int pci_status_get_and_clear_errors(struct pci_dev *pdev)
+>  EXPORT_SYMBOL_GPL(pci_status_get_and_clear_errors);
 >  
->  	devres_add(&dev->dev, ptr);
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 3d6db20d1b2b..7ddec90b711d 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1197,6 +1197,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
->  	if (flags & PCI_IRQ_AFFINITY) {
->  		if (!affd)
->  			affd = &msi_default_affd;
-> +		dev->dev.irq_affinity_managed = true;
-
-This is really opaque to me.  I can't tell what the connection between
-PCI_IRQ_AFFINITY and irq_affinity_managed is.
-
-AFAICT the only place irq_affinity_managed is ultimately used is
-blk_mq_hctx_notify_offline(), and there's no obvious connection
-between that and this code.
-
->  	} else {
->  		if (WARN_ON(affd))
->  			affd = NULL;
-> @@ -1215,6 +1216,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
->  			return nvecs;
->  	}
+>  #ifdef CONFIG_HAS_IOMEM
+> -void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
+> +static void __iomem *__pci_ioremap_resource(struct pci_dev *pdev, int bar,
+> +					    bool write_combine)
+>  {
+>  	struct resource *res = &pdev->resource[bar];
 >  
-> +	dev->dev.irq_affinity_managed = false;
+> @@ -214,24 +215,25 @@ void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
+>  	 * Make sure the BAR is actually a memory resource, not an IO resource
+>  	 */
+>  	if (res->flags & IORESOURCE_UNSET || !(res->flags & IORESOURCE_MEM)) {
+> -		pci_warn(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
+> +		pci_err(pdev, "can't ioremap BAR %d: %pR\n", bar, res);
+>  		return NULL;
+>  	}
+> -	return ioremap(res->start, resource_size(res));
 > +
->  	/* use legacy IRQ if allowed */
->  	if (flags & PCI_IRQ_LEGACY) {
->  		if (min_vecs == 1 && dev->irq) {
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 59940f1744c1..9ec6e671279e 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -569,6 +569,7 @@ struct device {
->  #ifdef CONFIG_DMA_OPS_BYPASS
->  	bool			dma_ops_bypass : 1;
+> +	if (write_combine)
+> +		return pci_iomap_wc_range(pdev, bar, 0, 0);
+> +
+> +	return pci_iomap_range(pdev, bar, 0, 0);
+> +}
+> +
+> +void __iomem *pci_ioremap_bar(struct pci_dev *pdev, int bar)
+> +{
+> +	return __pci_ioremap_resource(pdev, bar, false);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_ioremap_bar);
+>  
+>  void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar)
+>  {
+> -	/*
+> -	 * Make sure the BAR is actually a memory resource, not an IO resource
+> -	 */
+> -	if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM)) {
+> -		WARN_ON(1);
+> -		return NULL;
+> -	}
+> -	return ioremap_wc(pci_resource_start(pdev, bar),
+> -			  pci_resource_len(pdev, bar));
+> +	return __pci_ioremap_resource(pdev, bar, true);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_ioremap_wc_bar);
 >  #endif
-> +	bool			irq_affinity_managed : 1;
->  };
->  
->  /**
 > -- 
-> 2.31.1
+> 2.32.0
 > 
-> 
-> _______________________________________________
-> Linux-nvme mailing list
-> Linux-nvme@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-nvme
