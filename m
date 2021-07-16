@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EA1F3CB9BB
+	by mail.lfdr.de (Postfix) with ESMTP id E2B763CB9BC
 	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 17:24:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240863AbhGPP1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S240908AbhGPP1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 16 Jul 2021 11:27:33 -0400
-Received: from mail-dm6nam11on2084.outbound.protection.outlook.com ([40.107.223.84]:52672
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+Received: from mail-bn8nam11on2067.outbound.protection.outlook.com ([40.107.236.67]:35904
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240892AbhGPP12 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 11:27:28 -0400
+        id S240866AbhGPP1a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Jul 2021 11:27:30 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T63tSswUejcoMz0rU0esspATMwyo46SSUdUBT9oJkFl5ETbgOes3OBh65BpZO2hhvPafzaPDj5K2gzSnvtpyX7pxoyDuB79mrYx3ItXrrCdMrpgI//i+WZUBrG2MYitpLUW7PG3CKLYJpDFd8J0WP+IeUQ1lNJtQtXpWHcmipAwPXrBZfn2HEpsv3MYuntvzt4oWc97zetpHBWqyKujdVGZCBAajSklMZwRtswM6b3LWjN+rolTAGpu/tcQgbvFBm/w+3R5N8bhfPl1zoOO5ZhPIargYAALc5oLYUKnWx2uJP5fjHM8htuQ0nzUGGksgfkD5o9vt6cqqbEeRXzOblw==
+ b=U37IcBeMST7N6a+dmaATLAd1u+2DY6XANUTy1IbdaV9A8JErVnR2DpPbZEmlgqCED75EzT7s3w9dJEHnmLSr8ySfc1L6IjH9k7cd3OAZ3Sr4HP05JMLJEL6NTijTaj76ke6Q4btLcNz65SEjrgNqOz/pApqzqKjFVkdbxP5+s48erosMg8rLIYCl0rjGX0AW5REtXhY/24GoNnDo+KrlcILEgP+TcATmbNz1LWQW+QfIVgqW9IDuLPcf9TPtBuwsyS9i/njppb/2Ewdx3dIQmOoIc3AQk/I62M9yF1xzth1j7o1fkT1f6RqYYoZ6+ZwtsLIx/g0YQUZ3K2QRiMS8YQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pl+5ztjPoWm2qZQ0S94/WMf9XlisuAxbrMhd3ecEYH8=;
- b=FVJckbIjE348BksNZf+hmwRVDA/bF/xpIK3vbZbC3CvQNKwUKCwneyt1NROWa59yHtZuYT28X1x/wDq3Wiiu8jHhRtFY8eFCSbbDk83ksQKx3oaMfvCjDbRCSWPJ+EMc/ZQPpleRp0zv4aJFMDX9UMAJ7xoSDcSgyIagVIqDHJcy3xopiXxSF4hZZfXQQTtNGZgNGY2ByBIpS/3fDFd2ObfBWhpjETpHVtVtykEW9p2wR/qWDOaSOPTO8K3DZPZDuMcmuPhZvZyRiQnm/d4+xqPJhU7agXTNDE4rwfJhEFXroDcUWRX2Q6d5WEnUq+sYLpVT76r2e8cWUFG3kQdTvw==
+ bh=MPy1cW+x+aIesqEakKo/iI1KkcGL54cHthCCKR1n5DA=;
+ b=HFwRrgtHku6gxu8sbVpas3fiwaPeGMgn7JlKUwO5vrJA6CaAMfQXA5XCXeh5pUOnuvlEODsu9PuOZzm4JFGmSefHqzlZBDXPl2sd59Y8mXP2q2MVL68xQx6ppH8K6OyhyCd8ODnRDraZI8k/LpPaLiNexUj8AzvlQ+5J9dXtr5i87pSZuYg92lUP/vB9sXEKzZuXDCrl1Ve1ENn6oy/mMkoOXHm8BgffMe2Ejz72DeujO4qa1eDzCGl1Dg9d1S2bP9BeVNoKWPpRGaswCvc3UURUrW1BUaV5h6XWlMR9msyuN2xHFqYYNs3t56ChWgxXqlKE0eHK0f/KT9HGrexPRw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.112.34) smtp.rcpttodomain=rjwysocki.net smtp.mailfrom=nvidia.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pl+5ztjPoWm2qZQ0S94/WMf9XlisuAxbrMhd3ecEYH8=;
- b=gTWJtcaSEhroZCKD76Vu06QD3HKuBeMAUcE2ZuQt1XoegseCyN6IR+Ry7e6fdxz5IzrGvMfxhM9+riMIu3Vbjlo/j+w6mNmh7b3M7mvlBjrh+ETTJbzRW2Z4Jn4/YeYYr9rtxHeb0DYnmCLJZ0fZud1i5TXAegm6A5N8nJ6l2rEJ++Wb2qRsWGpDbx4MNS5vysXsciz/y3vUcp6fFMmon2j+dc3XfFS9Jf1zZ/J1Sswa33j0ce4AFEWBPHOCgWdtW3Oeq/bc5IcMo0hygUFnI6WUADoe1X0ycm5WAEaTrj7+/zTFW1c9yOUKjBB13Kp7pzSu8v/v7JoPSkq9rlHioA==
-Received: from BN6PR21CA0022.namprd21.prod.outlook.com (2603:10b6:404:8e::32)
- by BN8PR12MB3155.namprd12.prod.outlook.com (2603:10b6:408:97::30) with
+ bh=MPy1cW+x+aIesqEakKo/iI1KkcGL54cHthCCKR1n5DA=;
+ b=KIhZCbj3lrxrXaesU/BH/dZYdXxvWO2fM5q3gePScVZkHJ23hSRzK0Lwlc6CYqjr6A4H5JKK0oLak/ZqIExam954iKMD2TCh/rQ6Hpx/br/23ec0kDkN5PQWvAXYzIsz+7KZ0CHZbqmBlQdISHItNS2gUCD+FpFltZ4eI8OP5JpFNDfGtZzkOPoO6ZNDz6yM1x2bJ2SBoWe/5JEIs4c2xn9ACv22Baeewt4fVyNTx6nXB1OzNHREG/PMZ82xAlZqrW6Cwc44u8mkawZ0mzWICgLYunCK40kCk7XsqcWZK95y0Nhc8hBriblEm7wL3DeFuprcO0QalLZAUbrQnFSCeA==
+Received: from BN6PR13CA0027.namprd13.prod.outlook.com (2603:10b6:404:13e::13)
+ by CO6PR12MB5474.namprd12.prod.outlook.com (2603:10b6:303:139::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21; Fri, 16 Jul
- 2021 15:24:31 +0000
-Received: from BN8NAM11FT044.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:8e:cafe::77) by BN6PR21CA0022.outlook.office365.com
- (2603:10b6:404:8e::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.2 via Frontend
- Transport; Fri, 16 Jul 2021 15:24:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.23; Fri, 16 Jul
+ 2021 15:24:33 +0000
+Received: from BN8NAM11FT058.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:13e:cafe::19) by BN6PR13CA0027.outlook.office365.com
+ (2603:10b6:404:13e::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.11 via Frontend
+ Transport; Fri, 16 Jul 2021 15:24:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
  smtp.mailfrom=nvidia.com; rjwysocki.net; dkim=none (message not signed)
  header.d=none;rjwysocki.net; dmarc=pass action=none header.from=nvidia.com;
@@ -45,12 +45,12 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.112.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.112.34; helo=mail.nvidia.com;
 Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT044.mail.protection.outlook.com (10.13.177.219) with Microsoft SMTP
+ BN8NAM11FT058.mail.protection.outlook.com (10.13.177.58) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 15:24:31 +0000
+ 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 15:24:33 +0000
 Received: from SDONTHINENI-DESKTOP.nvidia.com (172.20.187.6) by
  HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 16 Jul 2021 15:24:28 +0000
+ 15.0.1497.2; Fri, 16 Jul 2021 15:24:30 +0000
 From:   Shanker Donthineni <sdonthineni@nvidia.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 CC:     Alex Williamson <alex.williamson@redhat.com>,
@@ -60,10 +60,10 @@ CC:     Alex Williamson <alex.williamson@redhat.com>,
         Sinan Kaya <okaya@kernel.org>,
         "Amey Narkhede" <ameynarkhede03@gmail.com>,
         Shanker Donthineni <sdonthineni@nvidia.com>,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>
-Subject: [PATCH v12 3/8] PCI: Remove reset_fn field from pci_dev
-Date:   Fri, 16 Jul 2021 10:19:41 -0500
-Message-ID: <20210716151946.690-4-sdonthineni@nvidia.com>
+        Leon Romanovsky <leonro@nvidia.com>
+Subject: [PATCH v12 4/8] PCI/sysfs: Allow userspace to query and set device reset mechanism
+Date:   Fri, 16 Jul 2021 10:19:42 -0500
+Message-ID: <20210716151946.690-5-sdonthineni@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210716151946.690-1-sdonthineni@nvidia.com>
 References: <20210716151946.690-1-sdonthineni@nvidia.com>
@@ -75,161 +75,194 @@ X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
  HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 83cc6e2c-9db7-4354-a7be-08d9486dcf2e
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3155:
-X-Microsoft-Antispam-PRVS: <BN8PR12MB31553B261D27FE92B06954C2C7119@BN8PR12MB3155.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-MS-Office365-Filtering-Correlation-Id: cfa02b9c-fa86-4836-74c1-08d9486dd03c
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5474:
+X-Microsoft-Antispam-PRVS: <CO6PR12MB54740D8BDA02A5DA34B22F91C7119@CO6PR12MB5474.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3exZ0Of7SsVddA9bCKH0rNftnhelEvtu9witenCTYvQTEURQzrok4eY3bN2B7HqKtmoJlscxhNelDYhlBxBW+FtavwZxMmnpY74wEqrqR4y7P5Z2IWagwZlbCYWjFy7+eMfszKvx7hGtdKisE2OnjqCiXkS8flPH7gfAWul/aV5W8s0ES0gjgrP/sODGEDWFuR7l3A+3ihSlK7bXMdKUw+aBTeRi41SKxT8Vp5SG5SOwEGOtgv1purKwb+8+jACxJ2P2YqWfV8bVrc5MOttU9hcH+/HBmWDDS+JKt1Y6LLLseYzILut+a77fiB7c9M7vHpInI5rR04tcSnDvTWLl8KgOaMaX9Db6nizcVWcPdXHQ5/xd37zyhKNc3iqH+yzJG/2I0SGbOoX70VABgmIuB3qM93J5l38P1wLzhjM2n2rgXee00gSLLuMwXGjCyozR5cYdJ+CdGoEauaggqbFgrIXbE9UoxQ/5NFt+ciVdPM7DFmF2hUV/ROr63wgxfARbCpgmKbSg0hFXHLi9DFxx8v75lPxjqdNgdT1V6QqKoBoIs6axyfvpRrThO5Ld9ug+zHP7xun3e93auTEIACK26fRqZ06DGZ9Yw+uX2+4WpRr3HoMPFgJqC03kea25hCDZoj6nKZLhhvRKPjSGzyiU7enYfxhHSAkxc4/JoeWr4E5ATel5vPaLEQJVhb3HOxmlLYqAv9su4rYQDoASwy7gCbDgMy24ix06I/6O1eJajYA=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(376002)(39860400002)(46966006)(36840700001)(8936002)(2616005)(2906002)(82310400003)(6666004)(70206006)(316002)(34020700004)(186003)(82740400003)(47076005)(5660300002)(426003)(16526019)(70586007)(478600001)(8676002)(26005)(6916009)(83380400001)(54906003)(36860700001)(336012)(36906005)(7696005)(7416002)(86362001)(36756003)(1076003)(7636003)(4326008)(356005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: NVR+1S6BwVRvANlBd//7v5GLGLEfziEf3WWpcvdlOTpylbE/SogmO/php8yN3YmMRIwFLwyRHE1wnmkY11YhwdcaugaRKxexnFDMmk117932UnNEV+NcHwemSeKaIiGHa/KlljWgftidCW5fays2syTFsEBjNRose+HS06olDQ53kK2NPeLKx4ApEziEhnpzMtB5uzdUiS9XD8SCBvb6uGMgZb6B2qacIkQGQ/wIbpOrrz+BFgQJID7xotiQVam3EY46/tCAW2FxhT1bR2HE+1sTIjAzV18CDlyHlFmhFo434p5x5Y66NuEeCYXdA0fkyKGAZdNkOBj0w88xL6QwQ2ueZyU9x73Bx7w/U4/iMRG2GrKiEzGxwhgAsPqgmfYOrWXowYZd0SLxl6nujZh23YJC50gDZcry2G/NwAoGAAL3m7jgK+qJN7CR8yhiXceh3KXzZtE67y86CP6q+CR+qaX/Lkk5vLpD9/8Vmo1bl692ZrUL+vb+s6K/tUHZXfaQxu86DXKliWH7aabSV1EwhVrizjF/fnNU6Sa564rfGWvwluR1t/nkDW2ExBsUbY3omt0rorbU/WJP5Sp8C9CU5qoyRD2DcxxlhRue5E+yhRtXHLgVUL2pGBOn2Nawem/OLyQqpVbTWWqIdXz3aIQeg22mdDLc2HGDfYMbW91LYGqSkU8sgO4KuU46pYOP+8ZuCWngsJ/kugkp0qhYksBtC+4coW4gARB3YWUrgCXBTHw=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(39860400002)(136003)(46966006)(36840700001)(316002)(36906005)(70586007)(54906003)(8676002)(2616005)(6666004)(70206006)(8936002)(82310400003)(426003)(36860700001)(6916009)(36756003)(2906002)(5660300002)(4326008)(7636003)(82740400003)(47076005)(34020700004)(478600001)(83380400001)(107886003)(16526019)(186003)(356005)(336012)(26005)(86362001)(7696005)(1076003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 15:24:31.2453
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 15:24:33.0204
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83cc6e2c-9db7-4354-a7be-08d9486dcf2e
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfa02b9c-fa86-4836-74c1-08d9486dd03c
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT044.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT058.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3155
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5474
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Amey Narkhede <ameynarkhede03@gmail.com>
 
-reset_fn field is used to indicate whether the device supports any reset
-mechanism or not. Remove the use of reset_fn in favor of new reset_methods
-array which can be used to keep track of all supported reset mechanisms of
-a device and their ordering.
+Add reset_method sysfs attribute to enable user to query and set user
+preferred device reset methods and their ordering.
 
-The octeon driver is incorrectly using reset_fn field to detect if the
-device supports FLR or not. Use pcie_reset_flr() to probe whether it
-supports FLR or not.
-
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
 Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/net/ethernet/cavium/liquidio/lio_vf_main.c | 2 +-
- drivers/pci/pci-sysfs.c                            | 2 +-
- drivers/pci/pci.c                                  | 6 +++---
- drivers/pci/probe.c                                | 1 -
- drivers/pci/quirks.c                               | 2 +-
- drivers/pci/remove.c                               | 1 -
- include/linux/pci.h                                | 1 -
- 7 files changed, 6 insertions(+), 9 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci |  19 +++++
+ drivers/pci/pci-sysfs.c                 | 103 ++++++++++++++++++++++++
+ 2 files changed, 122 insertions(+)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-index ffddb3126a323..d185df5acea69 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-@@ -526,7 +526,7 @@ static void octeon_destroy_resources(struct octeon_device *oct)
- 			oct->irq_name_storage = NULL;
- 		}
- 		/* Soft reset the octeon device before exiting */
--		if (oct->pci_dev->reset_fn)
-+		if (!pcie_reset_flr(oct->pci_dev, 1))
- 			octeon_pci_flr(oct);
- 		else
- 			cn23xx_vf_ask_pf_to_do_flr(oct);
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index 793cbb76cd250..beb94b9c18c78 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -121,6 +121,25 @@ Description:
+ 		child buses, and re-discover devices removed earlier
+ 		from this part of the device tree.
+ 
++What:		/sys/bus/pci/devices/.../reset_method
++Date:		March 2021
++Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
++Description:
++		Some devices allow an individual function to be reset
++		without affecting other functions in the same slot.
++
++		For devices that have this support, a file named
++		reset_method will be present in sysfs. Initially reading
++		this file will give names of the device supported reset
++		methods and their ordering. After write, this file will
++		give names and ordering of currently enabled reset methods.
++		Writing the name or comma separated list of names of any of
++		the device supported reset methods to this file will set
++		the reset methods and their ordering to be used when
++		resetting the device. Writing empty string to this file
++		will disable ability to reset the device and writing
++		"default" will return to the original value.
++
+ What:		/sys/bus/pci/devices/.../reset
+ Date:		July 2009
+ Contact:	Michael S. Tsirkin <mst@redhat.com>
 diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 5d63df7c18206..a1d9b0e83615a 100644
+index a1d9b0e83615a..65791d8b07aa5 100644
 --- a/drivers/pci/pci-sysfs.c
 +++ b/drivers/pci/pci-sysfs.c
-@@ -1367,7 +1367,7 @@ static umode_t pci_dev_reset_attr_is_visible(struct kobject *kobj,
- {
- 	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+@@ -1334,6 +1334,108 @@ static const struct attribute_group pci_dev_rom_attr_group = {
+ 	.is_bin_visible = pci_dev_rom_attr_is_visible,
+ };
  
--	if (!pdev->reset_fn)
++static ssize_t reset_method_show(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	ssize_t len = 0;
++	int i, idx;
++
++	for (i = 0; i < PCI_NUM_RESET_METHODS; i++) {
++		idx = pdev->reset_methods[i];
++		if (!idx)
++			break;
++
++		len += sysfs_emit_at(buf, len, "%s%s", len ? "," : "",
++				     pci_reset_fn_methods[idx].name);
++	}
++
++	if (len)
++		len += sysfs_emit_at(buf, len, "\n");
++
++	return len;
++}
++
++static ssize_t reset_method_store(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t count)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	int n = 0;
++	char *name, *options = NULL;
++	u8 reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
++
++	if (count >= (PAGE_SIZE - 1))
++		return -EINVAL;
++
++	if (sysfs_streq(buf, "")) {
++		pci_warn(pdev, "All device reset methods disabled by user");
++		goto set_reset_methods;
++	}
++
++	if (sysfs_streq(buf, "default")) {
++		pci_init_reset_methods(pdev);
++		return count;
++	}
++
++	options = kstrndup(buf, count, GFP_KERNEL);
++	if (!options)
++		return -ENOMEM;
++
++	while ((name = strsep(&options, ",")) != NULL) {
++		int i;
++
++		if (sysfs_streq(name, ""))
++			continue;
++
++		name = strim(name);
++
++		for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
++			if (sysfs_streq(name, pci_reset_fn_methods[i].name) &&
++			    !pci_reset_fn_methods[i].reset_fn(pdev, 1)) {
++				reset_methods[n++] = i;
++				break;
++			}
++		}
++
++		if (i == PCI_NUM_RESET_METHODS) {
++			kfree(options);
++			return -EINVAL;
++		}
++	}
++
++	if (!pci_reset_fn_methods[1].reset_fn(pdev, 1) && reset_methods[0] != 1)
++		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
++
++set_reset_methods:
++	memcpy(pdev->reset_methods, reset_methods, sizeof(reset_methods));
++	kfree(options);
++	return count;
++}
++static DEVICE_ATTR_RW(reset_method);
++
++static struct attribute *pci_dev_reset_method_attrs[] = {
++	&dev_attr_reset_method.attr,
++	NULL,
++};
++
++static umode_t pci_dev_reset_method_attr_is_visible(struct kobject *kobj,
++						    struct attribute *a, int n)
++{
++	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
++
 +	if (!pci_reset_supported(pdev))
- 		return 0;
- 
- 	return a->mode;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4d5618b232363..cc9f96effa546 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5233,7 +5233,7 @@ int pci_reset_function(struct pci_dev *dev)
++		return 0;
++
++	return a->mode;
++}
++
++static const struct attribute_group pci_dev_reset_method_attr_group = {
++	.attrs = pci_dev_reset_method_attrs,
++	.is_visible = pci_dev_reset_method_attr_is_visible,
++};
++
+ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
+ 			   const char *buf, size_t count)
  {
- 	int rc;
- 
--	if (!dev->reset_fn)
-+	if (!pci_reset_supported(dev))
- 		return -ENOTTY;
- 
- 	pci_dev_lock(dev);
-@@ -5269,7 +5269,7 @@ int pci_reset_function_locked(struct pci_dev *dev)
- {
- 	int rc;
- 
--	if (!dev->reset_fn)
-+	if (!pci_reset_supported(dev))
- 		return -ENOTTY;
- 
- 	pci_dev_save_and_disable(dev);
-@@ -5292,7 +5292,7 @@ int pci_try_reset_function(struct pci_dev *dev)
- {
- 	int rc;
- 
--	if (!dev->reset_fn)
-+	if (!pci_reset_supported(dev))
- 		return -ENOTTY;
- 
- 	if (!pci_dev_trylock(dev))
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4ce7979d703eb..66f052446de20 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2431,7 +2431,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
--	dev->reset_fn = pci_reset_supported(dev);
- }
- 
- /*
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 90144fbc4f4ea..f43883a2e33df 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5626,7 +5626,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
- 
- 	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
- 	    pdev->subsystem_device != 0x222e ||
--	    !pdev->reset_fn)
-+	    !pci_reset_supported(pdev))
- 		return;
- 
- 	if (pci_enable_device_mem(pdev))
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index dd12c2fcc7dc1..4c54c75050dc1 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -19,7 +19,6 @@ static void pci_stop_dev(struct pci_dev *dev)
- 	pci_pme_active(dev, false);
- 
- 	if (pci_dev_is_added(dev)) {
--		dev->reset_fn = 0;
- 
- 		device_release_driver(&dev->dev);
- 		pci_proc_detach_device(dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 8c2d3a357eedb..58cc2e2b05051 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -431,7 +431,6 @@ struct pci_dev {
- 	unsigned int	state_saved:1;
- 	unsigned int	is_physfn:1;
- 	unsigned int	is_virtfn:1;
--	unsigned int	reset_fn:1;
- 	unsigned int	is_hotplug_bridge:1;
- 	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
- 	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+@@ -1491,6 +1593,7 @@ const struct attribute_group *pci_dev_groups[] = {
+ 	&pci_dev_config_attr_group,
+ 	&pci_dev_rom_attr_group,
+ 	&pci_dev_reset_attr_group,
++	&pci_dev_reset_method_attr_group,
+ 	&pci_dev_vpd_attr_group,
+ #ifdef CONFIG_DMI
+ 	&pci_dev_smbios_attr_group,
 -- 
 2.25.1
 
