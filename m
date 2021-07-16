@@ -2,108 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA5E3CB89C
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 16:17:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C79393CB8A4
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 16:25:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233208AbhGPOUJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 10:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
+        id S232775AbhGPO21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 10:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232808AbhGPOUI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 10:20:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 908C3613F8;
-        Fri, 16 Jul 2021 14:17:13 +0000 (UTC)
+        id S232958AbhGPO2X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Jul 2021 10:28:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C7C3060FE7;
+        Fri, 16 Jul 2021 14:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626445033;
-        bh=roBf1Wt7hwRbg8jZMq/FXbJlPyIY+1hOlDEHXSRw5Ek=;
+        s=k20201202; t=1626445529;
+        bh=dz0aDz4wygX1RXd+1ixps/rHbXJdWNt4QAz8cmbfDG8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aR9bhms2VTxbePnfsjB++kQWjWAYAKFRbk1bDPhWMMyPgUyrVA2d35rEjxNwrNl7X
-         ctJT/PSAbI1madzLW6dEl8SyFDiFq4jcYKlL8tDxJrK6bOA/r8FS9DFQdr/g40zeGQ
-         oz1PtxnOzuc/3ibvR/VawPJ7wzqMGzhn1G5hTgHoYFoYrFTYdwik0uGBfRD19nQh/g
-         bqYrmuTV3HfDCzpJL7HEAo6ftVZe7UjJ8BI5Ppm9A4+nUJBFahUloSVsJiKL6glbt7
-         yd8KVLsoeayeMuG55sTyNNmzjp7rK8umIMc5WkZFjeq0Ek0H7FDNep3N8jrG4TlioW
-         WlzJl/q4L6GoQ==
-Date:   Fri, 16 Jul 2021 09:17:12 -0500
+        b=EM2wDTqSFm/omBZOOknm73OwkjoCQvtLrZsblzox3BXsDQa3AqLYb06/KqevhoLb8
+         /f+6Z+vzCD72SwkElcsmJkLGE5GVagGrXm87yDaY95djKwEvU3KTNrzzRk0qdbtoZr
+         kYMbijQ5S16jkfjWYypPMzlHToB61mDoDKslijYrRSNwublBKjcZFQJ3N583p9KIMQ
+         lYy9JWP3+F+Ao3Xospdxk5cps+Im8oYNzu9tbTxx8tngj+aKpZGN4Ro7dXzBonYuDZ
+         hFjTiD5hBG/tsiYqsKtZhwrIMGW+acbZsAcaRC7ZgeZ9nvKL/2U6vUeco3uZ2d53hI
+         9Z1qnCjA2gyNg==
+Date:   Fri, 16 Jul 2021 09:25:27 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, linux-pci@vger.kernel.org,
-        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH V5 4/6] PCI: Enable 10-Bit tag support for PCIe Endpoint
- devices
-Message-ID: <20210716141712.GA2096096@bjorn-Precision-5520>
+To:     Wenchao Hao <haowenchao@huawei.com>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Wu Bo <wubo40@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>, linfeilong@huawei.com,
+        lijinlin3@huawei.com, Matthew Wilcox <willy@infradead.org>
+Subject: Re: [question]: Query regarding the PCI addresses
+Message-ID: <20210716142527.GA2097477@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <db506d81-3cb9-4cdc-fb4a-f2d28587b9b2@huawei.com>
+In-Reply-To: <7d146a3a-199a-3135-331e-b34371d5ec80@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 16, 2021 at 07:12:16PM +0800, Dongdong Liu wrote:
-> Hi Bjorn
-> 
-> Many thanks for your review.
-> 
-> On 2021/7/16 1:23, Bjorn Helgaas wrote:
-> > [+cc Logan]
-> > 
-> > On Mon, Jun 21, 2021 at 06:27:20PM +0800, Dongdong Liu wrote:
-> > > 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
-> > > field size from 8 bits to 10 bits.
+On Fri, Jul 16, 2021 at 10:04:51PM +0800, Wenchao Hao wrote:
+> On 2021/7/15 1:26, Keith Busch wrote:
+> > On Wed, Jul 14, 2021 at 11:54:27AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Jul 14, 2021 at 02:33:37PM +0800, Wenchao Hao wrote:
 > > > 
-> > > For platforms where the RC supports 10-Bit Tag Completer capability,
-> > > it is highly recommended for platform firmware or operating software
+> > > > If they are not fixed, then is there anyway I can get a fixed ID
+> > > > which can indicate physical connection.
+> > > You can look at the "lspci -P" option.  I'm not really familiar with
+> > > this, but I think Matthew (cc'd) implemented it.
+> > That option shows the parent devices for each listed device, but that
+> > may not produce the same output if BDf doesn't always enumerate the
+> > same.
 > > 
-> > Recommended by whom?  If the spec recommends it, we should provide the
-> > citation.
->
-> PCIe spec 5.0 r1.0 section 2.2.6.2 IMPLEMENTATION NOTE says that.
-> Will fix.
-
-Thanks, that will be helpful.
-
-> > > that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
-> > > bit automatically in Endpoints with 10-Bit Tag Requester capability. This
-> > > enables the important class of 10-Bit Tag capable adapters that send
-> > > Memory Read Requests only to host memory.
-> > 
-> > What is the implication for P2PDMA?  What happens if we enable 10-bit
-> > tags for device A, and A generates Mem Read Requests to device B,
-> > which does not support 10-bit tags?
->
-> PCIe spec 5.0 r1.0 section 2.2.6.2 says
-> If an Endpoint supports sending Requests to other Endpoints (as opposed to
-> host memory), the Endpoint must not send 10-Bit Tag Requests to another
-> given Endpoint unless an implementation-specific mechanism determines that
-> the Endpoint supports 10-Bit Tag Completer capability. Not sending 10-Bit
-> Tag Requests to other Endpoints at all
-> may be acceptable for some implementations. More sophisticated mechanisms
-> are outside the scope of this specification.
+> > I think Wenchao was seeking some invariant device identification that
+> > can be used to look up its BDf. There's no PCI level requirement for
+> > uniquely identifying a specific device across changing topologies, so I
+> > don't think this is generically possible.
 > 
-> Not sending 10-Bit Tag Requests to other Endpoints at all seems simple.
-> Add kernel parameter pci=pcie_bus_peer2peer when boot kernel with P2PDMA,
-> then do not config 10-BIT Tag.
-> 
-> if (pcie_bus_config != PCIE_BUS_PEER2PEER)
-> 	pci_configure_10bit_tags(dev);
+> Yes, I want a way to access device which can keep unchanged, a
+> direction is according to hardware. If we have anyway which makes
+> it possible for software can describe hardware connection would
+> satisfy our demand.
 
-Seems like a reasonable start.  I wish this were more dynamic and we
-didn't have to rely on a kernel parameter to make P2PDMA safe, but
-that seems to be the current situation.
-
-Does the same consideration apply to enabling Extended Tags (8-bit
-tags)?  I would guess so, but sec 2.2.6.2 says "Receivers/Completers
-must handle 8-bit Tag values correctly regardless of the setting of
-their Extended Tag Field Enable bit" so there's some subtlety there
-with regard to what "Extended Tag Field Supported" means.
-
-I don't know why the "Extended Tag Field Supported" bit exists if all
-receivers are required to support 8-bit tags.
-
-If we need a similar change to pci_configure_extended_tags() to check
-pcie_bus_config, that should be a separate patch because it would be a
-bug fix independent of 10-bit tag support.
+I don't know whether this would be useful, but PCI does define an
+optional "Device Serial Number" extended capability.  It has issues
+like the fact that many devices don't support it at all, and even on
+devices that do support it, the serial number may not actually be
+unique.  There is minimal support for this in Linux (pci_get_dsn()),
+but it is currently not exposed to userspace via sysfs.
 
 Bjorn
