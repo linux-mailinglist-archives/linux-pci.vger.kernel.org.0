@@ -2,73 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C79393CB8A4
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 16:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 297623CB8AC
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 16:29:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232775AbhGPO21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 10:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        id S233157AbhGPOcp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 10:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232958AbhGPO2X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Jul 2021 10:28:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C7C3060FE7;
-        Fri, 16 Jul 2021 14:25:28 +0000 (UTC)
+        id S232988AbhGPOco (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Jul 2021 10:32:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 92222608FE;
+        Fri, 16 Jul 2021 14:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626445529;
-        bh=dz0aDz4wygX1RXd+1ixps/rHbXJdWNt4QAz8cmbfDG8=;
+        s=k20201202; t=1626445789;
+        bh=VPwtDfFzlw2mMjhZCIjf8rYJAIRLSJ0qqv+tfTiMLqQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EM2wDTqSFm/omBZOOknm73OwkjoCQvtLrZsblzox3BXsDQa3AqLYb06/KqevhoLb8
-         /f+6Z+vzCD72SwkElcsmJkLGE5GVagGrXm87yDaY95djKwEvU3KTNrzzRk0qdbtoZr
-         kYMbijQ5S16jkfjWYypPMzlHToB61mDoDKslijYrRSNwublBKjcZFQJ3N583p9KIMQ
-         lYy9JWP3+F+Ao3Xospdxk5cps+Im8oYNzu9tbTxx8tngj+aKpZGN4Ro7dXzBonYuDZ
-         hFjTiD5hBG/tsiYqsKtZhwrIMGW+acbZsAcaRC7ZgeZ9nvKL/2U6vUeco3uZ2d53hI
-         9Z1qnCjA2gyNg==
-Date:   Fri, 16 Jul 2021 09:25:27 -0500
+        b=L+iju3E9TjfAX40sCXr1w6l/1yhGm39A5FS/30uSaeW+Lsq2rZnATy/faAaI4Kg8X
+         xAkgX1Y1p0mPS9uEfa/w7+9kHyEoJYSSOtJXGRdEZVF9UnUSkq18TmtGQAkrBEWvqg
+         86Vmyc2ZYHn99ZraEakry6E1C95TOLwCVv41apVGUg+0qq46jQL1haF7ewlajB6Mzx
+         HtOjG8VbLvrXkR9n9nZeoKW/LuqYXA0mbInPJj9uKB3xFoyOhkrv2+8i89jST2NyBX
+         P49d4jE8pbMzeA/lM2o0mIyKrxwXoeIXlfaQo9GEYTt40Juxw3CnF3AMiVom58ksud
+         4SF1jo27uR/2g==
+Date:   Fri, 16 Jul 2021 09:29:48 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wenchao Hao <haowenchao@huawei.com>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Wu Bo <wubo40@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>, linfeilong@huawei.com,
-        lijinlin3@huawei.com, Matthew Wilcox <willy@infradead.org>
-Subject: Re: [question]: Query regarding the PCI addresses
-Message-ID: <20210716142527.GA2097477@bjorn-Precision-5520>
+To:     Prasad Malisetty <pmaliset@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, swboyd@chromium.org, lorenzo.pieralisi@arm.com,
+        svarbanov@mm-sol.com, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dianders@chromium.org,
+        mka@chromium.org, vbadigan@codeaurora.org, sallenki@codeaurora.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] Add DT bindings and DT nodes for PCIe and PHY in
+ SC7280
+Message-ID: <20210716142948.GA2098168@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d146a3a-199a-3135-331e-b34371d5ec80@huawei.com>
+In-Reply-To: <1626443927-32028-1-git-send-email-pmaliset@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 16, 2021 at 10:04:51PM +0800, Wenchao Hao wrote:
-> On 2021/7/15 1:26, Keith Busch wrote:
-> > On Wed, Jul 14, 2021 at 11:54:27AM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Jul 14, 2021 at 02:33:37PM +0800, Wenchao Hao wrote:
-> > > 
-> > > > If they are not fixed, then is there anyway I can get a fixed ID
-> > > > which can indicate physical connection.
-> > > You can look at the "lspci -P" option.  I'm not really familiar with
-> > > this, but I think Matthew (cc'd) implemented it.
-> > That option shows the parent devices for each listed device, but that
-> > may not produce the same output if BDf doesn't always enumerate the
-> > same.
-> > 
-> > I think Wenchao was seeking some invariant device identification that
-> > can be used to look up its BDf. There's no PCI level requirement for
-> > uniquely identifying a specific device across changing topologies, so I
-> > don't think this is generically possible.
+[+cc linux-pci]
+
+On Fri, Jul 16, 2021 at 07:28:43PM +0530, Prasad Malisetty wrote:
+> Changes in v4 as suggested by Bjorn:
 > 
-> Yes, I want a way to access device which can keep unchanged, a
-> direction is according to hardware. If we have anyway which makes
-> it possible for software can describe hardware connection would
-> satisfy our demand.
+> 	* Changed pipe clk mux name as gcc_pcie_1_pipe_clk_src.
+> 	* Changed pipe_ext_src as phy_pipe_clk.
+> 	* Updated commit message for [PATCH v4 4/4]. 
+> 		
+> 
+> Changes in v3:
+> 	* Changed pipe clock names in dt bindings as pipe_mux and phy_pipe.
+> 	* Moved reset and NVMe GPIO pin configs into board specific file.
+> 	* Updated pipe clk mux commit message.
+> 	
+> Changes in v2:
+> 	* Moved pcie pin control settings into IDP file.
+> 	* Replaced pipe_clk_src with pipe_clk_mux in pcie driver 
+> 	* Included pipe clk mux setting change set in this series
+> 
+> Prasad Malisetty (4):
+>   dt-bindings: pci: qcom: Document PCIe bindings for SC720
+>   arm64: dts: qcom: sc7280: Add PCIe and PHY related nodes
+>   arm64: dts: qcom: sc7280: Add PCIe nodes for IDP board
+>   PCIe: qcom: Add support to control pipe clk src
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.txt          |  17 +++
+>  arch/arm64/boot/dts/qcom/sc7280-idp.dts            |  38 +++++++
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 125 +++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-qcom.c             |  22 ++++
 
-I don't know whether this would be useful, but PCI does define an
-optional "Device Serial Number" extended capability.  It has issues
-like the fact that many devices don't support it at all, and even on
-devices that do support it, the serial number may not actually be
-unique.  There is minimal support for this in Linux (pci_get_dsn()),
-but it is currently not exposed to userspace via sysfs.
+  $ ./scripts/get_maintainer.pl -f drivers/pci/controller/dwc/pcie-qcom.c
 
-Bjorn
+tells you that linux-pci should be included.  One reason that's
+important is because patchwork watches linux-pci for incoming patches,
+and I use patchwork as my to-do list.  
