@@ -2,117 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE93F3CBA1B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 17:51:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8873B3CBB3E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jul 2021 19:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235850AbhGPPyd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 11:54:33 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:56566 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233725AbhGPPyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jul 2021 11:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=CDFVzQSWuNRMGCf8MH35qzWG3e/KgXu0vrM/hkxVtvs=; b=mLkS+CIUjmZtZIofu2VtxU+2zv
-        ESag6YCC3FQVhKXtDCa1jV1netTgdUXUztVPPGChwTIcVS4TUveJ9HYi1gbYq6ySndWzDbxjYynN2
-        Q+0fhGAbK/oCC+7TAtGGoBVzxEL9mdK5/aGjYYSgqSRE9StHKg+z45evhQU3zEXNh9wgoBwDgt8mQ
-        mP5nB0+PJArEGN2QHzIzyD6UeLf8CSW1Vol3eQkbFSjH6HKtqQkH7fMe3Vxe9iw2oaQw+hEKZPfvC
-        yjJ4t1HF61CNTFOpopiux/NmmEIdno6P4nmXqd/lkJqgMKjpZs9iD8rOksQyuaLiTtn2Ll+/aeIbF
-        rgmEMIBw==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1m4Q7f-0003BA-7d; Fri, 16 Jul 2021 09:51:32 -0600
-To:     Dongdong Liu <liudongdong3@huawei.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     hch@infradead.org, kw@linux.com, linux-pci@vger.kernel.org,
-        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org
-References: <20210715172336.GA1972959@bjorn-Precision-5520>
- <db506d81-3cb9-4cdc-fb4a-f2d28587b9b2@huawei.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <dcad182a-fafc-39ad-b1f2-8ed86f3634d9@deltatee.com>
-Date:   Fri, 16 Jul 2021 09:51:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S231247AbhGPRgf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jul 2021 13:36:35 -0400
+Received: from mail-io1-f52.google.com ([209.85.166.52]:43572 "EHLO
+        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230428AbhGPRgd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jul 2021 13:36:33 -0400
+Received: by mail-io1-f52.google.com with SMTP id k16so11478327ios.10;
+        Fri, 16 Jul 2021 10:33:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bBjy0/9KrCFc43pikW3DapYBnLJRP7OXLZVYWY+cmRw=;
+        b=S3J6w5viE6zDh0lQnxATT8w7C0pRFcI61r6J5UXZbNnlNEr5rkzcIn/NFWPfD7eTgU
+         zjssBGhRpnrcRtR3JR+WK59ahDQTMm/juU5PVZ7CpvgnsEJE9KW3nhTOHKqtY8h5YFkr
+         A6VPHmdJ+JXmSJtVnUvBr/aBqumLMqizfRM3YtgYUJx6mdqG8qWHSOfv0E/cRceLhMoN
+         ygEdlw44+9C6lBvXrhYzTOzzIfLbNGABQ+Hjei/T3jTx2pcVtJjBW27GjCh1FTnGKnQ+
+         v1OYlF5/p44WjTJBkM0xnSy9sjnmr01Pz1aA05FClnD39jAcNQv5hiskXflkDi4OAjxr
+         ehpQ==
+X-Gm-Message-State: AOAM5315WNST4ikd7ilwtZj1hNuANItgjT8Vem3vtlDTrQtntZ71osZz
+        CD8OgJlu2nGiLRkJ0JouEw==
+X-Google-Smtp-Source: ABdhPJzCbDOWUkZnVdfikQrZKWQIRQPpnK2e+P3EobkMzcpWA9doURsO3jNZdUmZuJQDbGWnD2EtQw==
+X-Received: by 2002:a02:a797:: with SMTP id e23mr9901120jaj.121.1626456817576;
+        Fri, 16 Jul 2021 10:33:37 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id i14sm4765382ilu.71.2021.07.16.10.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Jul 2021 10:33:36 -0700 (PDT)
+Received: (nullmailer pid 3641673 invoked by uid 1000);
+        Fri, 16 Jul 2021 17:33:33 -0000
+Date:   Fri, 16 Jul 2021 11:33:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        ot_jieyang@mediatek.com, drinkcat@chromium.org,
+        Rex-BC.Chen@mediatek.com, Krzysztof Wilczyski <kw@linux.com>,
+        Ryan-JH.Yu@mediatek.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: mediatek-gen3: Add property to
+ disable dvfsrc voltage request
+Message-ID: <20210716173333.GA3632722@robh.at.kernel.org>
+References: <20210630024934.18903-1-jianjun.wang@mediatek.com>
+ <20210630024934.18903-2-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <db506d81-3cb9-4cdc-fb4a-f2d28587b9b2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: netdev@vger.kernel.org, linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl, rajur@chelsio.com, linux-pci@vger.kernel.org, kw@linux.com, hch@infradead.org, helgaas@kernel.org, liudongdong3@huawei.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH V5 4/6] PCI: Enable 10-Bit tag support for PCIe Endpoint
- devices
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210630024934.18903-2-jianjun.wang@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-07-16 5:12 a.m., Dongdong Liu wrote:
-> Hi Bjorn
+On Wed, Jun 30, 2021 at 10:49:33AM +0800, Jianjun Wang wrote:
+> Add property to disable dvfsrc voltage request, if this property
+> is presented, we assume that the requested voltage is always
+> higher enough to keep the PCIe controller active.
 > 
-> Many thanks for your review.
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml       | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> On 2021/7/16 1:23, Bjorn Helgaas wrote:
->> [+cc Logan]
->>
->> On Mon, Jun 21, 2021 at 06:27:20PM +0800, Dongdong Liu wrote:
->>> 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
->>> field size from 8 bits to 10 bits.
->>>
->>> For platforms where the RC supports 10-Bit Tag Completer capability,
->>> it is highly recommended for platform firmware or operating software
->>
->> Recommended by whom?  If the spec recommends it, we should provide the
->> citation.
-> PCIe spec 5.0 r1.0 section 2.2.6.2 IMPLEMENTATION NOTE says that.
-> Will fix.
->>
->>> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
->>> bit automatically in Endpoints with 10-Bit Tag Requester capability. This
->>> enables the important class of 10-Bit Tag capable adapters that send
->>> Memory Read Requests only to host memory.
->>
->> What is the implication for P2PDMA?  What happens if we enable 10-bit
->> tags for device A, and A generates Mem Read Requests to device B,
->> which does not support 10-bit tags?
-> PCIe spec 5.0 r1.0 section 2.2.6.2 says
-> If an Endpoint supports sending Requests to other Endpoints (as opposed 
-> to host memory), the Endpoint must not send 10-Bit Tag Requests to 
-> another given Endpoint unless an implementation-specific mechanism 
-> determines that the Endpoint supports 10-Bit Tag Completer capability. 
-> Not sending 10-Bit Tag Requests to other Endpoints at all
-> may be acceptable for some implementations. More sophisticated 
-> mechanisms are outside the scope of this specification.
-> 
-> Not sending 10-Bit Tag Requests to other Endpoints at all seems simple.
-> Add kernel parameter pci=pcie_bus_peer2peer when boot kernel with 
-> P2PDMA, then do not config 10-BIT Tag.
-> 
-> if (pcie_bus_config != PCIE_BUS_PEER2PEER)
-> 	pci_configure_10bit_tags(dev);
-> 
-> Bjorn and Logan, any suggestion?
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> index e7b1f9892da4..3e26c032cea9 100644
+> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> @@ -96,6 +96,12 @@ properties:
+>    phys:
+>      maxItems: 1
+>  
+> +  disable-dvfsrc-vlt-req:
+> +    description: Disable dvfsrc voltage request, if this property is presented,
+> +      we assume that the requested voltage is always higher enough to keep
+> +      the PCIe controller active.
+> +    type: boolean
 
-I think we need a check in the P2PDMA code to ensure that a device with
-10bit tags doesn't interact with a device that has no 10bit tags. Before
-that happens, the kernel should emit a warning saying to enable a
-specific kernel parameter.
+What determines setting this property? Can it be implied by the 
+compatible (which should be SoC specific).
 
-Though a parameter with a bit more granularity might be appropriate. See
-what was done for disable_acs_redir where it affects only the devices
-specified in the list.
+Is this property specific to PCIe controller? 
 
-Thanks,
+Wouldn't the request be harmless to make the voltage request even if not 
+needed?
 
-Logan
+I think this probably should be addressed in a common way as part of 
+other QoS, devfreq, etc. requirements for devices.
+
+Rob
