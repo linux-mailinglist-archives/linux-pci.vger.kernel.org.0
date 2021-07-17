@@ -2,167 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AC4A3CC0C2
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 04:44:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDE5B3CC20F
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 10:51:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232537AbhGQCq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jul 2021 22:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230504AbhGQCq6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jul 2021 22:46:58 -0400
-Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94918C06175F
-        for <linux-pci@vger.kernel.org>; Fri, 16 Jul 2021 19:44:01 -0700 (PDT)
-Received: by mail-oi1-x22a.google.com with SMTP id p67so13311062oig.2
-        for <linux-pci@vger.kernel.org>; Fri, 16 Jul 2021 19:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bmlEnPOKgfIO2z3IyeC41bhkbZbLqUNwpemYc6rL7cw=;
-        b=oaQOJwki9tlOcO1eJlQ/dmJalpsQALuScSRjPvY/1nziDADrVMaqFllvvU+o00cR9y
-         Cc+C8nVAHeEW3zssfe6mfK613KGrVxqFyUxgoaIFNK43D68CN0ncDpUjdAQkKiq451Pe
-         P4TwyG4FZogVa1O+JSpR6bFzQFOoe7So0a+26+Ku6tANSzbiZrvnvyc01M3cOVb/n3Uo
-         7U4Oa7CzKS9PBOeEqMkNsAAtzpkfyyo92b3ZlGLKegy48lz3MSq+X4bLRATObBdNDRbT
-         aPH3i9EXzxWlQ2RFDVSV+y5PNZSagGKgLx1kbFnX8RzBZfR+s53vPbiDu+ZpFpJUyYNk
-         ZdHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bmlEnPOKgfIO2z3IyeC41bhkbZbLqUNwpemYc6rL7cw=;
-        b=bJ9DOcLUAHpiWmTVSLgTXS3dnfscRseRYD6I9uMWaRxLMyliPv3DK31nXyIKReGYKh
-         w6RFE0UHhMCVR+CXJxsKyyE/J6wcoIJT2TMCQ0hTs9ycslQJtoJKijAWOARJPURnTDoH
-         pcbwndQa1tu/+KqGiW0+89PD8NEnU4QbjP/46JwnP7mC/j/feUgLv4/6eStV6hNkCe5I
-         IXwsbMiUQEv4KKoCuYvj5/hViQgaFxMzTT6D2mBSiK/Fk7TDVWFaudXpULM5FSaBjPNl
-         dOrPnHD7zgsgPH9/vFUEAglcxVq4oxxVvzstsRX0/yqp1LCdQKLWvQRb602HnMmP9cRM
-         h2bA==
-X-Gm-Message-State: AOAM530gJHBY0PBpjiXNFYJkqTZ1F16cBxLB+dipNyydMhD1KWpwlbi5
-        rISugFeDFgOLhtlRcc4Q0Rk9FPYpFFxElg==
-X-Google-Smtp-Source: ABdhPJz8gMjhsjiBv2QZ7y93xJMVRJzqh4JEavPIsO6qxKgbHakG8tJbs0w5irETNkAXa0cusmCXAg==
-X-Received: by 2002:aca:1308:: with SMTP id e8mr14763444oii.168.1626489840954;
-        Fri, 16 Jul 2021 19:44:00 -0700 (PDT)
-Received: from ?IPv6:2603:8081:2802:9dfb:49b3:8e2:3d6d:26c8? (2603-8081-2802-9dfb-49b3-08e2-3d6d-26c8.res6.spectrum.com. [2603:8081:2802:9dfb:49b3:8e2:3d6d:26c8])
-        by smtp.gmail.com with ESMTPSA id q9sm2286269otk.18.2021.07.16.19.44.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Jul 2021 19:44:00 -0700 (PDT)
-Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
- capability bit
+        id S230081AbhGQIxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jul 2021 04:53:39 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:11437 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231812AbhGQIxj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jul 2021 04:53:39 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GRhYz48GGzcdyy;
+        Sat, 17 Jul 2021 16:47:19 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Sat, 17 Jul 2021 16:50:38 +0800
+Subject: Re: [PATCH V5 4/6] PCI: Enable 10-Bit tag support for PCIe Endpoint
+ devices
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-References: <20210716215647.GA2146665@bjorn-Precision-5520>
-From:   stuart hayes <stuart.w.hayes@gmail.com>
-Message-ID: <b49039c4-3c31-5b0e-a7be-a01355e166dd@gmail.com>
-Date:   Fri, 16 Jul 2021 21:43:58 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+References: <20210716141712.GA2096096@bjorn-Precision-5520>
+CC:     <hch@infradead.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>,
+        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>, <okaya@kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <0f223592-16ff-626b-94ef-3e89a51d1971@huawei.com>
+Date:   Sat, 17 Jul 2021 16:50:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210716215647.GA2146665@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20210716141712.GA2096096@bjorn-Precision-5520>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc Sinan]
 
-
-On 7/16/2021 4:56 PM, Bjorn Helgaas wrote:
-> On Thu, May 13, 2021 at 03:03:14AM +0530, Stuart Hayes wrote:
->> The pcieport driver can fail to attach to a downstream port that doesn't
->> support bandwidth notification.  This can happen when, in
->> pcie_port_device_register(), pci_init_service_irqs() tries (and fails) to
->> set up a bandwidth notification IRQ for a device that doesn't support it.
-> 
-> I'm trying to figure out exactly how this fails.  The only failure
-> path in pcie_init_service_irqs() is when
-> pci_alloc_irq_vectors(PCI_IRQ_LEGACY) fails, which I guess means the
-> port's dev->irq was zero?
-> 
-
-Yes... dev->irq is zero.  Here's "lspci -v "for the device in case it helps:
-
-66:00.0 PCI bridge: Broadcom / LSI PEX880xx PCIe Gen 4 Switch (rev b0) 
-(prog-if 00 [Normal decode])
-         Flags: bus master, fast devsel, latency 0, NUMA node 0
-         Bus: primary=66, secondary=67, subordinate=70, sec-latency=0
-         I/O behind bridge: [disabled]
-         Memory behind bridge: be000000-bf4fffff [size=21M]
-         Prefetchable memory behind bridge: 
-00000d0000000000-00000d00017fffff [size=24M]
-         Capabilities: [40] Power Management version 3
-         Capabilities: [68] Express Downstream Port (Slot-), MSI 00
-         Capabilities: [a4] Subsystem: Broadcom / LSI Device a064
-         Capabilities: [100] Device Serial Number 00-80-5e-10-56-39-53-50
-         Capabilities: [fb4] Advanced Error Reporting
-         Capabilities: [148] Virtual Channel
-         Capabilities: [b70] Vendor Specific Information: ID=0001 Rev=0 
-Len=010 <?>
-         Capabilities: [e00] Multicast
-         Capabilities: [f24] Access Control Services
-
-> And to even attempt legacy IRQs, either we had pcie_pme_no_msi() or
-> pcie_port_enable_irq_vec() failed?
-> 
-
-pcie_port_enable_irq_vec() failed.  I don't believe this device has the 
-ability to generate interrupts.
-
->> This patch changes get_port_device_capability() to look at the link
->> bandwidth notification capability bit in the link capabilities register of
->> the port, instead of assuming that all downstream ports have that
->> capability.
-> 
-> I think this needs:
-> 
->    Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
-> 
-> because even though b4c7d2076b4e ("PCI/LINK: Remove bandwidth
-> notification") removed *most* of e8303bb7a75c, it did not remove the
-> code in get_port_device_capability() that you're fixing here.
-> 
-> I can fix this up locally, no need to resend.  I think the patch
-> itself is fine, just trying to understand the commit log.
-> 
-
-Thank you!
-
-
->> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
->> Reviewed-by: Lukas Wunner <lukas@wunner.de>
->> ---
+On 2021/7/16 22:17, Bjorn Helgaas wrote:
+> On Fri, Jul 16, 2021 at 07:12:16PM +0800, Dongdong Liu wrote:
+>> Hi Bjorn
 >>
->> changes from v1:
->> 	- corrected spelling errors in commit message
->> 	- added Lukas' reviewed-by:
+>> Many thanks for your review.
 >>
->> ---
->>   drivers/pci/pcie/portdrv_core.c | 9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
+>> On 2021/7/16 1:23, Bjorn Helgaas wrote:
+>>> [+cc Logan]
+>>>
+>>> On Mon, Jun 21, 2021 at 06:27:20PM +0800, Dongdong Liu wrote:
+>>>> 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+>>>> field size from 8 bits to 10 bits.
+>>>>
+>>>> For platforms where the RC supports 10-Bit Tag Completer capability,
+>>>> it is highly recommended for platform firmware or operating software
+>>>
+>>> Recommended by whom?  If the spec recommends it, we should provide the
+>>> citation.
 >>
->> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
->> index e1fed6649c41..3ee63968deaa 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -257,8 +257,13 @@ static int get_port_device_capability(struct pci_dev *dev)
->>   		services |= PCIE_PORT_SERVICE_DPC;
->>   
->>   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->> -	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
->> -		services |= PCIE_PORT_SERVICE_BWNOTIF;
->> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
->> +		u32 linkcap;
->> +
->> +		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
->> +		if (linkcap & PCI_EXP_LNKCAP_LBNC)
->> +			services |= PCIE_PORT_SERVICE_BWNOTIF;
->> +	}
->>   
->>   	return services;
->>   }
->> -- 
->> 2.27.0
+>> PCIe spec 5.0 r1.0 section 2.2.6.2 IMPLEMENTATION NOTE says that.
+>> Will fix.
+>
+> Thanks, that will be helpful.
+>
+>>>> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
+>>>> bit automatically in Endpoints with 10-Bit Tag Requester capability. This
+>>>> enables the important class of 10-Bit Tag capable adapters that send
+>>>> Memory Read Requests only to host memory.
+>>>
+>>> What is the implication for P2PDMA?  What happens if we enable 10-bit
+>>> tags for device A, and A generates Mem Read Requests to device B,
+>>> which does not support 10-bit tags?
 >>
+>> PCIe spec 5.0 r1.0 section 2.2.6.2 says
+>> If an Endpoint supports sending Requests to other Endpoints (as opposed to
+>> host memory), the Endpoint must not send 10-Bit Tag Requests to another
+>> given Endpoint unless an implementation-specific mechanism determines that
+>> the Endpoint supports 10-Bit Tag Completer capability. Not sending 10-Bit
+>> Tag Requests to other Endpoints at all
+>> may be acceptable for some implementations. More sophisticated mechanisms
+>> are outside the scope of this specification.
+>>
+>> Not sending 10-Bit Tag Requests to other Endpoints at all seems simple.
+>> Add kernel parameter pci=pcie_bus_peer2peer when boot kernel with P2PDMA,
+>> then do not config 10-BIT Tag.
+>>
+>> if (pcie_bus_config != PCIE_BUS_PEER2PEER)
+>> 	pci_configure_10bit_tags(dev);
+>
+> Seems like a reasonable start.  I wish this were more dynamic and we
+> didn't have to rely on a kernel parameter to make P2PDMA safe, but
+> that seems to be the current situation.
+>
+> Does the same consideration apply to enabling Extended Tags (8-bit
+> tags)?  I would guess so, but sec 2.2.6.2 says "Receivers/Completers
+> must handle 8-bit Tag values correctly regardless of the setting of
+> their Extended Tag Field Enable bit" so there's some subtlety there
+> with regard to what "Extended Tag Field Supported" means.
+>
+> I don't know why the "Extended Tag Field Supported" bit exists if all
+> receivers are required to support 8-bit tags.
+
+The comment in the [PATCH] PCI: enable extended tags support for PCIe 
+endpoints 
+(https://patchwork.kernel.org/project/linux-arm-msm/patch/1474769434-5756-1-git-send-email-okaya@codeaurora.org/)
+says "All PCIe completers are required to support 8 bit tags.
+Generation of 8 bit tags is optional. That's why, there is a supported 
+and an enable/disable bit."
+
+So the completers can handle 8-bit Tag values correctly also regardless 
+of "Extended Tag Field Supported" ?  seems not very clearly, but current 
+code implement follow this.
+
+>
+> If we need a similar change to pci_configure_extended_tags() to check
+> pcie_bus_config, that should be a separate patch because it would be a
+> bug fix independent of 10-bit tag support.
+>
+Seems no need if All PCIe completers are required to support 8 bit tags.
+
+Thanks,
+Dongdong
+> Bjorn
+> .
+>
