@@ -2,131 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDE5B3CC20F
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 10:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6175B3CC22B
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 11:31:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230081AbhGQIxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Jul 2021 04:53:39 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:11437 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231812AbhGQIxj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jul 2021 04:53:39 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GRhYz48GGzcdyy;
-        Sat, 17 Jul 2021 16:47:19 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Sat, 17 Jul 2021 16:50:38 +0800
-Subject: Re: [PATCH V5 4/6] PCI: Enable 10-Bit tag support for PCIe Endpoint
- devices
+        id S232540AbhGQJeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jul 2021 05:34:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43870 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231862AbhGQJeC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jul 2021 05:34:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626514265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qpkQ64ZywmmGid3wm2wpO4W6jPhvZtPWa6GAG8VtSbo=;
+        b=RPeTG1xP0ojA65g4BwQEHk70btfaozScT7QM38tKz4DBfopf/lBREQupUbbbknXGejDSt0
+        zSqo0nj0g3d0sm4mW6XKodOjJZ9O+1bHPiJBPp5P67UB5ejquHNiFiUaC4cRRfkxkwpwY2
+        oJBA8oHz2Fwl8qPhuPZ4AByP/cW3xYc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-541-fkIVUY3gMrKMjaSGLm28wg-1; Sat, 17 Jul 2021 05:31:03 -0400
+X-MC-Unique: fkIVUY3gMrKMjaSGLm28wg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D3B8100B3AC;
+        Sat, 17 Jul 2021 09:31:00 +0000 (UTC)
+Received: from T590 (ovpn-12-83.pek2.redhat.com [10.72.12.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6DC6360C0F;
+        Sat, 17 Jul 2021 09:30:48 +0000 (UTC)
+Date:   Sat, 17 Jul 2021 17:30:43 +0800
+From:   Ming Lei <ming.lei@redhat.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20210716141712.GA2096096@bjorn-Precision-5520>
-CC:     <hch@infradead.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>,
-        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>, <okaya@kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <0f223592-16ff-626b-94ef-3e89a51d1971@huawei.com>
-Date:   Sat, 17 Jul 2021 16:50:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Daniel Wagner <dwagner@suse.de>,
+        Wen Xiong <wenxiong@us.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH V4 1/3] driver core: mark device as irq affinity managed
+ if any irq is managed
+Message-ID: <YPKjQxZ4roigdvbq@T590>
+References: <20210715120844.636968-2-ming.lei@redhat.com>
+ <20210716200154.GA2113453@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210716141712.GA2096096@bjorn-Precision-5520>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210716200154.GA2113453@bjorn-Precision-5520>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Sinan]
+On Fri, Jul 16, 2021 at 03:01:54PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jul 15, 2021 at 08:08:42PM +0800, Ming Lei wrote:
+> > irq vector allocation with managed affinity may be used by driver, and
+> > blk-mq needs this info because managed irq will be shutdown when all
+> > CPUs in the affinity mask are offline.
+> > 
+> > The info of using managed irq is often produced by drivers(pci subsystem,
+> 
+> Add space between "drivers" and "(".
+> s/pci/PCI/
 
-On 2021/7/16 22:17, Bjorn Helgaas wrote:
-> On Fri, Jul 16, 2021 at 07:12:16PM +0800, Dongdong Liu wrote:
->> Hi Bjorn
->>
->> Many thanks for your review.
->>
->> On 2021/7/16 1:23, Bjorn Helgaas wrote:
->>> [+cc Logan]
->>>
->>> On Mon, Jun 21, 2021 at 06:27:20PM +0800, Dongdong Liu wrote:
->>>> 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
->>>> field size from 8 bits to 10 bits.
->>>>
->>>> For platforms where the RC supports 10-Bit Tag Completer capability,
->>>> it is highly recommended for platform firmware or operating software
->>>
->>> Recommended by whom?  If the spec recommends it, we should provide the
->>> citation.
->>
->> PCIe spec 5.0 r1.0 section 2.2.6.2 IMPLEMENTATION NOTE says that.
->> Will fix.
->
-> Thanks, that will be helpful.
->
->>>> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
->>>> bit automatically in Endpoints with 10-Bit Tag Requester capability. This
->>>> enables the important class of 10-Bit Tag capable adapters that send
->>>> Memory Read Requests only to host memory.
->>>
->>> What is the implication for P2PDMA?  What happens if we enable 10-bit
->>> tags for device A, and A generates Mem Read Requests to device B,
->>> which does not support 10-bit tags?
->>
->> PCIe spec 5.0 r1.0 section 2.2.6.2 says
->> If an Endpoint supports sending Requests to other Endpoints (as opposed to
->> host memory), the Endpoint must not send 10-Bit Tag Requests to another
->> given Endpoint unless an implementation-specific mechanism determines that
->> the Endpoint supports 10-Bit Tag Completer capability. Not sending 10-Bit
->> Tag Requests to other Endpoints at all
->> may be acceptable for some implementations. More sophisticated mechanisms
->> are outside the scope of this specification.
->>
->> Not sending 10-Bit Tag Requests to other Endpoints at all seems simple.
->> Add kernel parameter pci=pcie_bus_peer2peer when boot kernel with P2PDMA,
->> then do not config 10-BIT Tag.
->>
->> if (pcie_bus_config != PCIE_BUS_PEER2PEER)
->> 	pci_configure_10bit_tags(dev);
->
-> Seems like a reasonable start.  I wish this were more dynamic and we
-> didn't have to rely on a kernel parameter to make P2PDMA safe, but
-> that seems to be the current situation.
->
-> Does the same consideration apply to enabling Extended Tags (8-bit
-> tags)?  I would guess so, but sec 2.2.6.2 says "Receivers/Completers
-> must handle 8-bit Tag values correctly regardless of the setting of
-> their Extended Tag Field Enable bit" so there's some subtlety there
-> with regard to what "Extended Tag Field Supported" means.
->
-> I don't know why the "Extended Tag Field Supported" bit exists if all
-> receivers are required to support 8-bit tags.
+OK.
 
-The comment in the [PATCH] PCI: enable extended tags support for PCIe 
-endpoints 
-(https://patchwork.kernel.org/project/linux-arm-msm/patch/1474769434-5756-1-git-send-email-okaya@codeaurora.org/)
-says "All PCIe completers are required to support 8 bit tags.
-Generation of 8 bit tags is optional. That's why, there is a supported 
-and an enable/disable bit."
+> 
+> Does this "managed IRQ" (or "managed affinity", not sure what the
+> correct terminology is here) have something to do with devm?
+> 
+> > platform device, ...), and it is consumed by blk-mq, so different subsystems
+> > are involved in this info flow
+> 
+> Add period at end of sentence.
 
-So the completers can handle 8-bit Tag values correctly also regardless 
-of "Extended Tag Field Supported" ?  seems not very clearly, but current 
-code implement follow this.
+OK.
 
->
-> If we need a similar change to pci_configure_extended_tags() to check
-> pcie_bus_config, that should be a separate patch because it would be a
-> bug fix independent of 10-bit tag support.
->
-Seems no need if All PCIe completers are required to support 8 bit tags.
+> 
+> > Address this issue by adding one field of .irq_affinity_managed into
+> > 'struct device'.
+> > 
+> > Suggested-by: Christoph Hellwig <hch@lst.de>
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> > ---
+> >  drivers/base/platform.c | 7 +++++++
+> >  drivers/pci/msi.c       | 3 +++
+> >  include/linux/device.h  | 1 +
+> >  3 files changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 8640578f45e9..d28cb91d5cf9 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -388,6 +388,13 @@ int devm_platform_get_irqs_affinity(struct platform_device *dev,
+> >  				ptr->irq[i], ret);
+> >  			goto err_free_desc;
+> >  		}
+> > +
+> > +		/*
+> > +		 * mark the device as irq affinity managed if any irq affinity
+> > +		 * descriptor is managed
+> > +		 */
+> > +		if (desc[i].is_managed)
+> > +			dev->dev.irq_affinity_managed = true;
+> >  	}
+> >  
+> >  	devres_add(&dev->dev, ptr);
+> > diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> > index 3d6db20d1b2b..7ddec90b711d 100644
+> > --- a/drivers/pci/msi.c
+> > +++ b/drivers/pci/msi.c
+> > @@ -1197,6 +1197,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+> >  	if (flags & PCI_IRQ_AFFINITY) {
+> >  		if (!affd)
+> >  			affd = &msi_default_affd;
+> > +		dev->dev.irq_affinity_managed = true;
+> 
+> This is really opaque to me.  I can't tell what the connection between
+> PCI_IRQ_AFFINITY and irq_affinity_managed is.
 
-Thanks,
-Dongdong
-> Bjorn
-> .
->
+Comment for PCI_IRQ_AFFINITY is 'Auto-assign affinity',
+'irq_affinity_managed' basically means that irq's affinity is managed by
+kernel.
+
+What blk-mq needs is exactly if PCI_IRQ_AFFINITY is applied when
+allocating irq vectors. When PCI_IRQ_AFFINITY is used, genirq will
+shutdown the irq when all CPUs in the assigned affinity are offline,
+then blk-mq has to drain all in-flight IOs which will be completed
+via this irq and prevent new IO. That is the connection.
+
+Or you think 'irq_affinity_managed' isn't named well?
+
+> 
+> AFAICT the only place irq_affinity_managed is ultimately used is
+> blk_mq_hctx_notify_offline(), and there's no obvious connection
+> between that and this code.
+
+I believe the connection is described in comment.
+
+
+Thanks, 
+Ming
+
