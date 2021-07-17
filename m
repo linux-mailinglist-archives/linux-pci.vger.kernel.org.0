@@ -2,120 +2,284 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E943CC23D
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 11:41:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F7D43CC4DF
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 19:33:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232967AbhGQJop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Jul 2021 05:44:45 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:11438 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231716AbhGQJoo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jul 2021 05:44:44 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GRjhx0pGzzcbFd;
-        Sat, 17 Jul 2021 17:38:25 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Sat, 17 Jul 2021 17:41:44 +0800
-Subject: Re: [PATCH V5 4/6] PCI: Enable 10-Bit tag support for PCIe Endpoint
- devices
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20210715172336.GA1972959@bjorn-Precision-5520>
- <db506d81-3cb9-4cdc-fb4a-f2d28587b9b2@huawei.com>
- <dcad182a-fafc-39ad-b1f2-8ed86f3634d9@deltatee.com>
-CC:     <hch@infradead.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>,
-        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <97fd40fb-433a-930d-878c-0700268037ca@huawei.com>
-Date:   Sat, 17 Jul 2021 17:41:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S232935AbhGQRgd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jul 2021 13:36:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232828AbhGQRgd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 17 Jul 2021 13:36:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1752160FE9;
+        Sat, 17 Jul 2021 17:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626543216;
+        bh=8UJsRAhhjNWe5moISiQfYaQWURDgLORzw685VSH4JKQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hFNYYlHH6LBqD9Uu4Lq5RXs7fZ9XjVh1W4kXnUJ/rz0FIkBQj3vEKefS/PriWYe42
+         VwT0vIzW97WA2eX6V84+ZxDRXc2ROcofx0FZ+uucBg0R/MjVlo7RVNWo13nRCzFdDP
+         Z3p24L6wyZk1U7KClIrPmChGnGgu007K/pZHvDz19GJBoZK2xSvnn+zuBrSMC1lQbR
+         G0aPzaKK69wZZEg6VE62tgZXmRPtIvAQbamLB5pqt5pFu/obPS/m2KDLUZVnFziH4I
+         UVNGwk8TrdTkLGJMgr64aXdH5RBIbVGRpNc9pagcw9RkFbspyWVqO4DkkwDGr3CQA1
+         JccO77A7y1z9g==
+Date:   Sat, 17 Jul 2021 12:33:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     marek.vasut@gmail.com
+Cc:     linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
+Message-ID: <20210717173334.GA2232818@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <dcad182a-fafc-39ad-b1f2-8ed86f3634d9@deltatee.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210514200549.431275-1-marek.vasut@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, May 14, 2021 at 10:05:49PM +0200, marek.vasut@gmail.com wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> 
+> The R-Car PCIe controller is capable of handling L0s/L1 link states.
+> While the controller can enter and exit L0s link state, and exit L1
+> link state, without any additional action from the driver, to enter
+> L1 link state, the driver must complete the link state transition by
+> issuing additional commands to the controller.
+> 
+> The problem is, this transition is not atomic. The controller sets
+> PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
+> the PCIe card, but then the controller enters some sort of inbetween
+> state. The driver must detect this condition and complete the link
+> state transition, by setting L1IATN bit in PMCTLR and waiting for
+> the link state transition to complete.
+> 
+> If a PCIe access happens inside this window, where the controller
+> is between L0 and L1 link states, the access generates a fault and
+> the ARM 'imprecise external abort' handler is invoked.
+> 
+> Just like other PCI controller drivers, here we hook the fault handler,
+> perform the fixup to help the controller enter L1 link state, and then
+> restart the instruction which triggered the fault. Since the controller
+> is in L1 link state now, the link can exit from L1 link state to L0 and
+> successfully complete the access.
+> 
+> While it was suggested to disable L1 link state support completely on
+> the controller level, this would not prevent the L1 link state entry
+> initiated by the link partner. This happens e.g. in case a PCIe card
+> enters D3Hot state, which could be initiated from pci_set_power_state()
+> if the card indicates D3Hot support, which in turn means link must enter
+> L1 state. So instead, fix up the L1 link state after all.
+> 
+> Note that this fixup is applicable only to Aarch32 R-Car controllers,
+> the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
+> 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
+> [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
 
+This patch is horribly ugly but it's working around a horrible
+hardware problem, and I don't have any better suggestions, so I guess
+we don't really have much choice.
 
-On 2021/7/16 23:51, Logan Gunthorpe wrote:
->
->
-> On 2021-07-16 5:12 a.m., Dongdong Liu wrote:
->> Hi Bjorn
->>
->> Many thanks for your review.
->>
->> On 2021/7/16 1:23, Bjorn Helgaas wrote:
->>> [+cc Logan]
->>>
->>> On Mon, Jun 21, 2021 at 06:27:20PM +0800, Dongdong Liu wrote:
->>>> 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
->>>> field size from 8 bits to 10 bits.
->>>>
->>>> For platforms where the RC supports 10-Bit Tag Completer capability,
->>>> it is highly recommended for platform firmware or operating software
->>>
->>> Recommended by whom?  If the spec recommends it, we should provide the
->>> citation.
->> PCIe spec 5.0 r1.0 section 2.2.6.2 IMPLEMENTATION NOTE says that.
->> Will fix.
->>>
->>>> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
->>>> bit automatically in Endpoints with 10-Bit Tag Requester capability. This
->>>> enables the important class of 10-Bit Tag capable adapters that send
->>>> Memory Read Requests only to host memory.
->>>
->>> What is the implication for P2PDMA?  What happens if we enable 10-bit
->>> tags for device A, and A generates Mem Read Requests to device B,
->>> which does not support 10-bit tags?
->> PCIe spec 5.0 r1.0 section 2.2.6.2 says
->> If an Endpoint supports sending Requests to other Endpoints (as opposed
->> to host memory), the Endpoint must not send 10-Bit Tag Requests to
->> another given Endpoint unless an implementation-specific mechanism
->> determines that the Endpoint supports 10-Bit Tag Completer capability.
->> Not sending 10-Bit Tag Requests to other Endpoints at all
->> may be acceptable for some implementations. More sophisticated
->> mechanisms are outside the scope of this specification.
->>
->> Not sending 10-Bit Tag Requests to other Endpoints at all seems simple.
->> Add kernel parameter pci=pcie_bus_peer2peer when boot kernel with
->> P2PDMA, then do not config 10-BIT Tag.
->>
->> if (pcie_bus_config != PCIE_BUS_PEER2PEER)
->> 	pci_configure_10bit_tags(dev);
->>
->> Bjorn and Logan, any suggestion?
->
-> I think we need a check in the P2PDMA code to ensure that a device with
-> 10bit tags doesn't interact with a device that has no 10bit tags. Before
-> that happens, the kernel should emit a warning saying to enable a
-> specific kernel parameter.
-Seems reasonable.
->
-> Though a parameter with a bit more granularity might be appropriate. See
-> what was done for disable_acs_redir where it affects only the devices
-> specified in the list.
+I do think the commit log is a bit glib:
 
-Many Thanks for your suggestion. I will investigate more about this.
+  - "The R-Car PCIe controller is capable of handling L0s/L1 link
+    states."  AFAICT every PCIe device is required to handle L0 and L1
+    without software assistance.  So saying R-Car is "capable" puts a
+    better face on this than seems warranted.
 
-It seems P2PDMA also does not consider MPS safe issue if not use 
-"pci=pcie_bus_peer2peer".
+    L0s doesn't seem relevant at all; at least it doesn't seem to play
+    a role in the patch.  There's no such thing as "returning to L0s"
+    as mentioned in the comment below; L0s is only reachable from L0.
+    Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
 
-Thanks,
-Dongdong
->
-> Thanks,
->
-> Logan
-> .
->
+  - "The problem is, this transition is not atomic."  I think the
+    *problem* is the hardware is broken in the first place.  This
+    transition is supposed to be invisible to software.
+
+  - "Just like other PCI controller drivers ..." suggests that this is
+    an ordinary situation that we shouldn't be concerned about.  This
+    patch may be the best we can do to work around a bad hardware
+    defect, but it's definitely not ordinary.
+
+    I think the other hook_fault_code() uses are for reporting
+    legitimate PCIe errors, which most controllers log and turn
+    into ~0 data responses without generating an abort or machine
+    check, not things caused by hardware defects, so they're not
+    really comparable.
+
+Has Renesas documented this as an erratum?  Will future devices
+require additions to rcar_pcie_abort_handler_of_match[]?
+
+It'd be nice if the commit log mentioned the user-visible effect of
+this problem.  I guess it does mention external aborts -- I assume you
+see those when downstream devices go to D3hot or when ASPM puts the
+link in L1?  And the abort results in a reboot?
+
+To be clear, I'm not objecting to the patch.  It's a hardware problem
+and we should work around it as best we can.
+
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+> V2: - Update commit message, add link to TFA repository commit
+>     - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
+>     - Cache clock and check whether they are enabled before register
+>       access
+> V3: - Fix commit message according to spellchecker
+>     - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
+>       (in case the kernel is multiplatform)
+> V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
+> V5: - Add mutex around rcar_pcie_aarch32_abort_handler()
+>     - Update commit message again to point out issues with L1/D3Hot states
+> V6: - Return 1 only if condition cannot be fixed
+> ---
+>  drivers/pci/controller/pcie-rcar-host.c | 84 +++++++++++++++++++++++++
+>  drivers/pci/controller/pcie-rcar.h      |  7 +++
+>  2 files changed, 91 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+> index 765cf2b45e24..0d3f8dc5ff8a 100644
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
+> @@ -13,6 +13,7 @@
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+> @@ -41,6 +42,21 @@ struct rcar_msi {
+>  	int irq2;
+>  };
+>  
+> +#ifdef CONFIG_ARM
+> +/*
+> + * Here we keep a static copy of the remapped PCIe controller address.
+> + * This is only used on aarch32 systems, all of which have one single
+> + * PCIe controller, to provide quick access to the PCIe controller in
+> + * the L1 link state fixup function, called from the ARM fault handler.
+> + */
+> +static void __iomem *pcie_base;
+> +/*
+> + * Static copy of bus clock pointer, so we can check whether the clock
+> + * is enabled or not.
+> + */
+> +static struct clk *pcie_bus_clk;
+> +#endif
+> +
+>  /* Structure representing the PCIe interface */
+>  struct rcar_pcie_host {
+>  	struct rcar_pcie	pcie;
+> @@ -776,6 +792,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
+>  	}
+>  	host->msi.irq2 = i;
+>  
+> +#ifdef CONFIG_ARM
+> +	/* Cache static copy for L1 link state fixup hook on aarch32 */
+> +	pcie_base = pcie->base;
+> +	pcie_bus_clk = host->bus_clk;
+> +#endif
+> +
+>  	return 0;
+>  
+>  err_irq2:
+> @@ -1031,4 +1053,66 @@ static struct platform_driver rcar_pcie_driver = {
+>  	},
+>  	.probe = rcar_pcie_probe,
+>  };
+> +
+> +#ifdef CONFIG_ARM
+> +static DEFINE_SPINLOCK(pmsr_lock);
+> +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
+> +		unsigned int fsr, struct pt_regs *regs)
+> +{
+> +	unsigned long flags;
+> +	int ret = 0;
+> +	u32 pmsr;
+> +
+> +	spin_lock_irqsave(&pmsr_lock, flags);
+> +
+> +	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
+> +		ret = 1;
+> +		goto unlock_exit;
+> +	}
+> +
+> +	pmsr = readl(pcie_base + PMSR);
+> +
+> +	/*
+> +	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
+> +	 * the PCIe controller is not in L1 link state. If true, apply
+> +	 * fix, which will put the controller into L1 link state, from
+> +	 * which it can return to L0s/L0 on its own.
+> +	 */
+> +	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
+> +		writel(L1IATN, pcie_base + PMCTLR);
+> +		while (!(readl(pcie_base + PMSR) & L1FAEG))
+> +			;
+> +		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
+> +	}
+> +
+> +unlock_exit:
+> +	spin_unlock_irqrestore(&pmsr_lock, flags);
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
+> +	{ .compatible = "renesas,pcie-r8a7779" },
+> +	{ .compatible = "renesas,pcie-r8a7790" },
+> +	{ .compatible = "renesas,pcie-r8a7791" },
+> +	{ .compatible = "renesas,pcie-rcar-gen2" },
+> +	{},
+> +};
+> +
+> +static int __init rcar_pcie_init(void)
+> +{
+> +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
+> +#ifdef CONFIG_ARM_LPAE
+> +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+> +				"asynchronous external abort");
+> +#else
+> +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+> +				"imprecise external abort");
+> +#endif
+> +	}
+> +
+> +	return platform_driver_register(&rcar_pcie_driver);
+> +}
+> +device_initcall(rcar_pcie_init);
+> +#else
+>  builtin_platform_driver(rcar_pcie_driver);
+> +#endif
+> diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
+> index d4c698b5f821..9bb125db85c6 100644
+> --- a/drivers/pci/controller/pcie-rcar.h
+> +++ b/drivers/pci/controller/pcie-rcar.h
+> @@ -85,6 +85,13 @@
+>  #define  LTSMDIS		BIT(31)
+>  #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
+>  #define PMSR			0x01105c
+> +#define  L1FAEG			BIT(31)
+> +#define  PMEL1RX		BIT(23)
+> +#define  PMSTATE		GENMASK(18, 16)
+> +#define  PMSTATE_L1		(3 << 16)
+> +#define PMCTLR			0x011060
+> +#define  L1IATN			BIT(31)
+> +
+>  #define MACS2R			0x011078
+>  #define MACCGSPSETR		0x011084
+>  #define  SPCNGRSN		BIT(31)
+> -- 
+> 2.30.2
+> 
