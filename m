@@ -2,74 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 036EB3CCCCA
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 05:49:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 123973CCD33
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 06:52:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234490AbhGSDqP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Jul 2021 23:46:15 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:43954 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234437AbhGSDqP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Jul 2021 23:46:15 -0400
-Received: by mail-wr1-f43.google.com with SMTP id a13so20094354wrf.10;
-        Sun, 18 Jul 2021 20:43:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ONoVQ5THxMhl7DPI15ZFDi8zxLFgdWafLvVkEUKpWG8=;
-        b=SJMlUJ/O3c/KVMiispzCA4uwK66gpoK0mpIuqQyMiJzcgCdSEA6zSZ8IBVtOIE9lUc
-         1X0/G49Q1afRtdwiskNCeym7bB5ijf4ZDf8aERF3UMtUjvWJtIjo3Cyo4uCMSfUHpH14
-         UcXezIdFWRqVpzRutjRoz/kY+Je9HteqEJPbO/sEo5FFSfnB4RGnyD0KmfwJutJGv+2o
-         NU9/qZKQ3SW7qyfSiZXT075hNeMNKixRCd2AHt/0UfZ/sIi7GgU8penlzDoFUsk24+Yz
-         aybNssXBWwaH5F8pYCDBt6adcjqyrCwlV126v9t9Mj8iCFaNIkZuPKhjQYtB1wu2faZZ
-         i3YQ==
-X-Gm-Message-State: AOAM533xlMVSsm9hCTbD+I/rxM7dTcNphrTPzRfDPN7uKZ9AV3/CwHVP
-        fr1plYxfXpIlYeSSdtW0cdI=
-X-Google-Smtp-Source: ABdhPJzPLygmQU20lrZ/dL8xPW8ms/6wLuzh0S8mZOtMj2jxCMb2Mt6iyYqHdjrtq/VsSmke6KQCwQ==
-X-Received: by 2002:a5d:5552:: with SMTP id g18mr1884088wrw.333.1626666195718;
-        Sun, 18 Jul 2021 20:43:15 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id b15sm5575905wru.97.2021.07.18.20.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Jul 2021 20:43:15 -0700 (PDT)
-Date:   Mon, 19 Jul 2021 05:43:13 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Use sysfs_emit() in "show" functions
-Message-ID: <20210719034313.GA274232@rocinante>
-References: <1626662666-15798-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S229577AbhGSEzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 00:55:47 -0400
+Received: from mail.distrito09d14.saludzona5.gob.ec ([181.211.241.146]:59450
+        "EHLO mail.distrito09d14.saludzona5.gob.ec" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229512AbhGSEzr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 00:55:47 -0400
+X-Greylist: delayed 3384 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Jul 2021 00:55:47 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.distrito09d14.saludzona5.gob.ec (Postfix) with ESMTP id 76E717C76EC;
+        Sun, 18 Jul 2021 22:27:28 -0500 (-05)
+Received: from mail.distrito09d14.saludzona5.gob.ec ([127.0.0.1])
+        by localhost (mail.distrito09d14.saludzona5.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SqyCEDFX4X3j; Sun, 18 Jul 2021 22:27:28 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.distrito09d14.saludzona5.gob.ec (Postfix) with ESMTP id 2FFD97A425F;
+        Sun, 18 Jul 2021 19:04:25 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.distrito09d14.saludzona5.gob.ec 2FFD97A425F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=distrito09d14.saludzona5.gob.ec;
+        s=9545D480-B182-11EA-AD29-124AAFB0486A; t=1626653065;
+        bh=lNb6zZ2/CKMU9xuNPBtPYnwYqW6PrxuxjasUmmzH4uo=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=cCiBKjeO9Bd78iLb9Vfn+b3Mf494bULXce7TebeBrcXgXAaoMRpE0yUxp3zRgvuKZ
+         J5FHi8JusMwbz2SLgZ+WRK2/n0agC1KbmyrUkn1WRbYN5wfDUmUohjZGreuL2PeKp4
+         uzHlzKp0caMfV8oBFueuY5Ev4Z8YGYfSFXwOtPLlUxvYz/hsuDfbuvLPFGCjCT1+4B
+         tCSFQViwClMNqWqIeFcP6cNsyVe0FrtSNEFT85f2HUj/EqBVYveZ6usiq71VhTGR8T
+         Q2hhjvJURgx/d73FKLuBuw984g4PJMLLbI+mmRh2s+W3PQ61dAggW85PoPv8j1Njgk
+         JzQcR8+HFz/Mw==
+X-Virus-Scanned: amavisd-new at distrito09d14.saludzona5.gob.ec
+Received: from mail.distrito09d14.saludzona5.gob.ec ([127.0.0.1])
+        by localhost (mail.distrito09d14.saludzona5.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id MCmynCulbZp4; Sun, 18 Jul 2021 19:04:25 -0500 (-05)
+Received: from cris-PC.www.huaweimobilewifi.com (unknown [105.4.3.24])
+        by mail.distrito09d14.saludzona5.gob.ec (Postfix) with ESMTPSA id 7B24949DF0A;
+        Sun, 18 Jul 2021 17:38:21 -0500 (-05)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1626662666-15798-1-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Euro?=
+To:     Recipients <morayma.morales@distrito09d14.saludzona5.gob.ec>
+From:   ''Michael Weirsky'' 
+        <morayma.morales@distrito09d14.saludzona5.gob.ec>
+Date:   Mon, 19 Jul 2021 00:49:42 +0200
+Reply-To: mikeweirskyspende@gmail.com
+Message-Id: <20210718223821.7B24949DF0A@mail.distrito09d14.saludzona5.gob.ec>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Hayashi-san,
+Lieber Freund,
 
-Thank you for sending the patch over!
+Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen.
+Das ist dein Spendencode: [MW530342019]
 
-> Convert sprintf() in sysfs "show" functions to sysfs_emit() in order to
-> check for buffer overruns in sysfs outputs.
+www.youtube.com/watch?v=3Dun8yRTmrYMY
 
-Nice catch!
 
-A small nitpick: what you are changing here are technically not sysfs
-objects since all of these are related to configfs.  Having said that,
-configfs shares the same semantics for normal attributes with sysfs, so
-a maximum size of PAGE_SIZE applies here too, and thus sysfs_emit()
-would work fine.
+Antworten Sie mit dem SPENDE-CODE an diese =
 
-Thank you for taking care of this!
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+E-Mail:mikeweirskyspende@gmail.com
 
-	Krzysztof
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Mike Weirsky
