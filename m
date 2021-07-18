@@ -2,133 +2,300 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A22363CC539
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jul 2021 20:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8E3B3CC706
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Jul 2021 02:26:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234308AbhGQSTG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Jul 2021 14:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234042AbhGQSTF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jul 2021 14:19:05 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429DBC061762;
-        Sat, 17 Jul 2021 11:16:07 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id l18-20020a1ced120000b029014c1adff1edso10135426wmh.4;
-        Sat, 17 Jul 2021 11:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ehuacrsuMdw3ygvYbFrzQAQ54kh2HQeMKN3gD1G8z+U=;
-        b=Nb5VvJgfneGO/G+bdkhc9N5rMBAxari3skk+QcqSEuPiXkfe6K07RqI0Wpwu6JeAtB
-         H7sgoBAMcpwoWESQQE2fLftWggE/7m3lNPdzBJX27bdnLDVJ2DRRJV/oCwfXFxO72e5Y
-         46kICeF5ocbSRZAZmddDnEa/ncB0iNspfHzO3BOS+ldjaHoHk6U/fpGArEsk9uDNUMJK
-         TSRODU1+Bn7tI97fkHzmErtjnvT16JHcrN+jCB7eK92kVdMaKJTrdwA/vXrBY8Jn8bWj
-         0Qaz7wXZmZ3rzCCphR/wkDPM2kqEXQKX4Mu+Agcer8Uc3WAwYMdjV/x3A43y4Sd+//Pt
-         m95w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ehuacrsuMdw3ygvYbFrzQAQ54kh2HQeMKN3gD1G8z+U=;
-        b=L9UUh+Ywm9UjhhTARz+1pimTbFaHgAouHiLmAotNlIABbaa+NIsaAC8UZBEQI3ReU6
-         IRwosePnoOALTByymIjnXycmpVl2yEzoz11x0lQ20stenRKNGgRLgCJovXahT4JNjh+w
-         4RUP8B4/jgVOXtO1pfTjTGjARsACAkTh3fjSQdi4UMkoc7pq0f2RDS8bT9WfcWjFxk8y
-         XFd9F/srgdKiggVxipEBeW3wSvsFn5Zj7m49bAs6909HDcmO91RGC/zBC6nkzsppSUS6
-         HembauI46F7gT9UO35haMuRsgt4JxEl8UOjRpD5Ju/dCieFBF6ADzY7UFQ8PIr/QcNy9
-         WWwA==
-X-Gm-Message-State: AOAM530JPCAqCJVzxF845+pDKxMtjlR76IgqN5oMpwQC1pL98uA0Yf5F
-        ArEPRX7RGcuQaBUMp3EjAfZKxJxpY00=
-X-Google-Smtp-Source: ABdhPJyZ6bm6lxYhybCMhlRpJgSdyArUypy4ayj+uNLIYMdz8H+5dm/WNFw/nf4JazLc5a1tI2eeCg==
-X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr3080320wmn.49.1626545765857;
-        Sat, 17 Jul 2021 11:16:05 -0700 (PDT)
-Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id d29sm17716495wrb.63.2021.07.17.11.16.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Jul 2021 11:16:05 -0700 (PDT)
-From:   Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S230318AbhGRA3P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jul 2021 20:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230259AbhGRA3P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 17 Jul 2021 20:29:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BB6FD61153;
+        Sun, 18 Jul 2021 00:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626567978;
+        bh=URoambk1xvFO2WPF6LufgHf8T3Y30E5lldB6rMC0Gxw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MRhAQ4RYE9+YNKwm6uB4bxR+Ioh6atTI8BXom7t3jQeFqq6T30INZAuU4tF/c6JAS
+         SohO3UvdZqD0aPeKpeben0kxtxuaKzLcaG4GTf6lh+EYLngTIYkswC8nOFSRanurBy
+         aLbash0ENbyn0ELvB2I1TRMLYUwXYzgLN/8MDiiCbYwkSntmXvXrvWbCp8k8l5bisa
+         2VBmiM1FKa7+osCHDRY5uFY9R63d5Xhtrj7dygthh27uVeURklHVrueiPlWQP2TWlK
+         KhwDddmNwdR+9v9Rqy1QTXyQe2AABGrUCYuGsX9dCFTEPFnqyfoUnwU1+wczjf/Pfg
+         814jiwHDBAy9Q==
+Received: by pali.im (Postfix)
+        id 0772795D; Sun, 18 Jul 2021 02:26:14 +0200 (CEST)
+Date:   Sun, 18 Jul 2021 02:26:14 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-References: <20210717173334.GA2232818@bjorn-Precision-5520>
-Message-ID: <19265a67-20e0-f049-ee75-6ce3caa184ad@gmail.com>
-Date:   Sat, 17 Jul 2021 20:14:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: Re: [PATCH v11 3/3] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+Message-ID: <20210718002614.3l74hlondwgthuby@pali>
+References: <1619111097-10232-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1619111097-10232-4-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20210717173334.GA2232818@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1619111097-10232-4-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/17/21 7:33 PM, Bjorn Helgaas wrote:
-[...]
+Hello Kunihiko!
 
->> Note that this fixup is applicable only to Aarch32 R-Car controllers,
->> the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
->> 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
->> [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
+On Friday 23 April 2021 02:04:57 Kunihiko Hayashi wrote:
+> This patch adds misc interrupt handler to detect and invoke PME/AER event.
 > 
-> This patch is horribly ugly but it's working around a horrible
-> hardware problem, and I don't have any better suggestions, so I guess
-> we don't really have much choice.
+> In UniPhier PCIe controller, PME/AER signals are assigned to the same
+> signal as MSI by the internal logic. These signals should be detected by
+> the internal register, however, DWC MSI handler can't handle these signals.
 > 
-> I do think the commit log is a bit glib:
-
-Should I reword the commit message one more time and send V7 ?
-
->    - "The R-Car PCIe controller is capable of handling L0s/L1 link
->      states."  AFAICT every PCIe device is required to handle L0 and L1
->      without software assistance.  So saying R-Car is "capable" puts a
->      better face on this than seems warranted.
+> DWC MSI handler calls .msi_host_isr() callback function, that detects
+> PME/AER signals using the internal register and invokes the interrupt
+> with PME/AER IRQ numbers.
 > 
->      L0s doesn't seem relevant at all; at least it doesn't seem to play
->      a role in the patch.  There's no such thing as "returning to L0s"
->      as mentioned in the comment below; L0s is only reachable from L0.
->      Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
+> These IRQ numbers is obtained by uniphier_pcie_port_get_irq() function,
+> that finds the device that matches PME/AER from the devices associated
+> with Root Port, and returns its IRQ number.
+
+If I understood this issue correctly, it means that your PCIe controller
+does not issue regular MSI interrupt for PME and AER events, but rather
+it issue controller specific interrupt and you need to figure out what
+kind of controller-specific event happened (e.g. PME or AER or something
+else).
+
+But if your controller supports PME or AER then it expose in its PCIe
+Root Port capabilities register MSI number for these PME and AER events.
+Kernel PCIe PME and AER drivers read from capabilities register these
+numbers and register irq functions to be called when interrupt happens.
+
+So it means that you do not need to implement uniphier_pcie_port_get_irq
+function via this "ugly" foreach and call pcie_port_service_get_irq. But
+you can read this MSI interrupt number directly from your controller in
+this pcie-uniphier.c driver and then use irq_find_mapping() to convert
+hw MSI number to kernel's virq (used in generic_handle_irq()).
+
+Because currently you use in pcie-uniphier.c call to function
+pcie_port_service_get_irq() which returns cached interrupt number value
+which was read from PCIe Root Port capability register by PCI subsystem
+callbacked back to the pcie-uniphier.c driver.
+
+For me this looks like "ugly" if you need to do something in
+"complicated" way and add dependency e.g. on compile options like
+"if (!IS_ENABLED(CONFIG_PCIEAER) && !IS_ENABLED(CONFIG_PCIE_PME))" if it
+can be easily avoided.
+
+I'm writing this because I was solving exactly same problem for aardvark
+PCIe controller with PME, AER and HP interrupts (patches are on ML). So
+I think that this pcie-uniphier.c implementation can be simplified
+without need to use checks for CONFIG_* options and calling
+pcie_port_service_get_irq() in list_for_each_entry loop.
+
+
+Could you please post output of 'lspci -nn -vv'? In my opinion MSI
+numbers for AER and PME in Root Port could be constant so it may
+simplify implementation even more. (Just to note that in my case
+aardvark returns zero as MSI number and it is also documented in spec).
+
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 105 +++++++++++++++++++++++++----
+>  1 file changed, 91 insertions(+), 14 deletions(-)
 > 
->    - "The problem is, this transition is not atomic."  I think the
->      *problem* is the hardware is broken in the first place.  This
->      transition is supposed to be invisible to software.
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 7e8bad3..dcd8fa8 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/reset.h>
+>  
+>  #include "pcie-designware.h"
+> +#include "../../pcie/portdrv.h"
+>  
+>  #define PCL_PINCTRL0			0x002c
+>  #define PCL_PERST_PLDN_REGEN		BIT(12)
+> @@ -44,7 +45,9 @@
+>  #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>  
+>  #define PCL_RCV_INT			0x8108
+> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+> @@ -68,6 +71,8 @@ struct uniphier_pcie_priv {
+>  	struct reset_control *rst;
+>  	struct phy *phy;
+>  	struct irq_domain *legacy_irq_domain;
+> +	int aer_irq;
+> +	int pme_irq;
+>  };
+>  
+>  #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+> @@ -164,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>  
+>  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  {
+> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+> +	u32 val;
+> +
+> +	val = PCL_RCV_INT_ALL_ENABLE;
+> +	if (pci_msi_enabled())
+> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+> +	else
+> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+> +
+> +	writel(val, priv->base + PCL_RCV_INT);
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>  }
+>  
+> @@ -228,28 +241,51 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>  	.map = uniphier_pcie_intx_map,
+>  };
+>  
+> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>  {
+> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	unsigned long reg;
+> -	u32 val, bit, virq;
+> +	u32 val;
+>  
+> -	/* INT for debug */
+>  	val = readl(priv->base + PCL_RCV_INT);
+>  
+>  	if (val & PCL_CFG_BW_MGT_STATUS)
+>  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> -		dev_dbg(pci->dev, "Root Error\n");
+> -	if (val & PCL_CFG_PME_MSI_STATUS)
+> -		dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +	if (is_msi) {
+> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
+> +			dev_dbg(pci->dev, "Root Error Status\n");
+> +			if (priv->aer_irq)
+> +				generic_handle_irq(priv->aer_irq);
+> +		}
+> +
+> +		if (val & PCL_CFG_PME_MSI_STATUS) {
+> +			dev_dbg(pci->dev, "PME Interrupt\n");
+> +			if (priv->pme_irq)
+> +				generic_handle_irq(priv->pme_irq);
+> +		}
+> +	}
+>  
+>  	writel(val, priv->base + PCL_RCV_INT);
+> +}
+> +
+> +static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
+> +{
+> +	uniphier_pcie_misc_isr(pp, true);
+> +}
+> +
+> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long reg;
+> +	u32 val, bit, irq;
+> +
+> +	uniphier_pcie_misc_isr(pp, false);
+>  
+>  	/* INTx */
+>  	chained_irq_enter(chip, desc);
+> @@ -258,8 +294,8 @@ static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>  	reg = FIELD_GET(PCL_RCV_INTX_ALL_STATUS, val);
+>  
+>  	for_each_set_bit(bit, &reg, PCI_NUM_INTX) {
+> -		virq = irq_linear_revmap(priv->legacy_irq_domain, bit);
+> -		generic_handle_irq(virq);
+> +		irq = irq_linear_revmap(priv->legacy_irq_domain, bit);
+> +		generic_handle_irq(irq);
+>  	}
+>  
+>  	chained_irq_exit(chip, desc);
+> @@ -317,8 +353,45 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> +static int uniphier_pcie_port_get_irq(struct pcie_port *pp, u32 service)
+> +{
+> +	struct pci_dev *pcidev;
+> +	int irq = 0;
+> +
+> +	if (!IS_ENABLED(CONFIG_PCIEAER) && !IS_ENABLED(CONFIG_PCIE_PME))
+> +		return 0;
+> +
+> +	/*
+> +	 * Finds the device that matches 'service' from the devices
+> +	 * associated with Root Port, and returns its IRQ number.
+> +	 */
+> +	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
+> +		irq = pcie_port_service_get_irq(pcidev, service);
+> +		if (irq)
+> +			break;
+> +	}
+> +
+> +	return irq;
+> +}
+> +
+> +static int uniphier_pcie_host_init_complete(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	if (IS_ENABLED(CONFIG_PCIE_PME))
+> +		priv->pme_irq =
+> +			uniphier_pcie_port_get_irq(pp, PCIE_PORT_SERVICE_PME);
+> +	if (IS_ENABLED(CONFIG_PCIEAER))
+> +		priv->aer_irq =
+> +			uniphier_pcie_port_get_irq(pp, PCIE_PORT_SERVICE_AER);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+>  	.host_init = uniphier_pcie_host_init,
+> +	.msi_host_isr = uniphier_pcie_msi_host_isr,
+>  };
+>  
+>  static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
+> @@ -398,7 +471,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  
+>  	priv->pci.pp.ops = &uniphier_pcie_host_ops;
+>  
+> -	return dw_pcie_host_init(&priv->pci.pp);
+> +	ret = dw_pcie_host_init(&priv->pci.pp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return uniphier_pcie_host_init_complete(&priv->pci.pp);
+>  }
+>  
+>  static const struct of_device_id uniphier_pcie_match[] = {
+> -- 
+> 2.7.4
 > 
->    - "Just like other PCI controller drivers ..." suggests that this is
->      an ordinary situation that we shouldn't be concerned about.  This
->      patch may be the best we can do to work around a bad hardware
->      defect, but it's definitely not ordinary.
-> 
->      I think the other hook_fault_code() uses are for reporting
->      legitimate PCIe errors, which most controllers log and turn
->      into ~0 data responses without generating an abort or machine
->      check, not things caused by hardware defects, so they're not
->      really comparable.
-> 
-> Has Renesas documented this as an erratum?
-
-They are aware of this.
-
-> Will future devices
-> require additions to rcar_pcie_abort_handler_of_match[]?
-
-No, this change is for legacy arm32 SoCs only.
-
-> It'd be nice if the commit log mentioned the user-visible effect of
-> this problem.  I guess it does mention external aborts -- I assume you
-> see those when downstream devices go to D3hot or when ASPM puts the
-> link in L1?  And the abort results in a reboot?
-
-It results in a hang.
-
-> To be clear, I'm not objecting to the patch.  It's a hardware problem
-> and we should work around it as best we can.
-
-[...]
