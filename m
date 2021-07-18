@@ -2,197 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9832B3CC98F
-	for <lists+linux-pci@lfdr.de>; Sun, 18 Jul 2021 16:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70DB33CC9DD
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Jul 2021 18:31:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232224AbhGRO3o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Jul 2021 10:29:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25530 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230307AbhGRO3o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 18 Jul 2021 10:29:44 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10049"; a="191230828"
-X-IronPort-AV: E=Sophos;i="5.84,249,1620716400"; 
-   d="scan'208";a="191230828"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2021 07:26:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,249,1620716400"; 
-   d="scan'208";a="414071228"
-Received: from lkp-server01.sh.intel.com (HELO a467b34d8c10) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 18 Jul 2021 07:26:45 -0700
-Received: from kbuild by a467b34d8c10 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m57ki-0000LE-Fo; Sun, 18 Jul 2021 14:26:44 +0000
-Date:   Sun, 18 Jul 2021 22:26:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/resource] BUILD SUCCESS
- a67462fc9de8b958d6a2c2c34d0195733a8c61a6
-Message-ID: <60f439ff.eigffAmEEM0l7+yU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S229503AbhGRQeV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 18 Jul 2021 12:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229462AbhGRQeV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Jul 2021 12:34:21 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD10C061762;
+        Sun, 18 Jul 2021 09:31:22 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id q190so14350816qkd.2;
+        Sun, 18 Jul 2021 09:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lbh05RiC9h+30ZwLSJuzKF/YhVuILafOxJla7vQvCA0=;
+        b=jmNWNzfIx2VINMPbOuBUsWw7VW5Q/BWYX9XhYEVPT4sPwF5HDm7MQrRaAbcG3JFPTj
+         V0fsbZaWmM54ex9ja8pt32rWm5SqOzpPoisihs/387WycF2t43snthLEc08kMWxmHPg4
+         9GSFYDG9wcdXDTrwtVfR6oqOzF3JvuwMnkDPR6jflnc2USTr0Qc18ygfc2E78DrBoEgI
+         8mbrnnJje1MliJf/CTdrJC2F12vdPXdKvmJ39Rwy/qupeDIUmI9QkLh56j4WCeQR0a83
+         I2lrPzaM8bGJno6oAXaAHm98gsP+nvZqxrCJmyf+MpTP/fddxjO3LMTnD/6mXjFXX/zg
+         d3+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lbh05RiC9h+30ZwLSJuzKF/YhVuILafOxJla7vQvCA0=;
+        b=Bj6RWrfJWbhOLnESD30NXsBTzjQN9noTCMkjma0hUTlcCDv9ERFgsppcFVL+hd9jR+
+         7R2Wfmy6ZdWdgVQbXbRQ0BWnwdALuzjBE++VH/Oz4gCLLCZMvp5d69839PRnwHNeGkPd
+         QzkcdroMpsl4iFbH0tKKyIOkX/xG2dI25iryEBbSPpCGaGT4GHdrpe1VH2GQcqIND7i6
+         XiFU13SzN0GB5dcyLmqpWJPq8a7N3JeZLvgtpnfJ3UXyWeRLqDTFUufeiXFSa7zsNfjB
+         bwQrB2py7rKNYT38XK4vGcRHCSfU5iVBhOmpRr09Dj5JpFNbOGw8PpDroZ0owf+Zjcok
+         XUBw==
+X-Gm-Message-State: AOAM530v6EJV8rChzzFiG/ewOTmQC33BN0LrcDdPoRzmAUbZ6axMWrZN
+        MwzlaX6RzUFVz9PZyS1FAz6WwzLIBYvV658c8Ww=
+X-Google-Smtp-Source: ABdhPJwdZrYq6+2AmWIqGSoKlOkdc1j95wY48iXw7BxS7NWHlKR+ilQMiiMkB4+eflmAtVVIaWMOKxa9rEMT2tFF+/A=
+X-Received: by 2002:a05:620a:24c7:: with SMTP id m7mr19929203qkn.143.1626625881476;
+ Sun, 18 Jul 2021 09:31:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <CAOSf1CGVpogQGAatuY_N0db6OL2BFegGtj6VTLA9KFz0TqYBQg@mail.gmail.com>
+ <20210708154550.GA1019947@bjorn-Precision-5520>
+In-Reply-To: <20210708154550.GA1019947@bjorn-Precision-5520>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Mon, 19 Jul 2021 02:31:10 +1000
+Message-ID: <CAOSf1CHtHLyEHC58jwemZS6j=jAU2OrrYitkUYmdisJtuFu4dw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] igc: don't rd/wr iomem when PCI is removed
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Aaron Ma <aaron.ma@canonical.com>, jesse.brandeburg@intel.com,
+        anthony.l.nguyen@intel.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/resource
-branch HEAD: a67462fc9de8b958d6a2c2c34d0195733a8c61a6  PCI: Refactor pci_ioremap_bar() and pci_ioremap_wc_bar()
+On Fri, Jul 9, 2021 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> *snip*
+>
+> Apologies for rehashing what's probably obvious to everybody but me.
+> I'm trying to get a better handle on benign vs poisonous errors.
+>
+> MMIO means CPU reads or writes to the device.  In PCI, writes are
+> posted and don't receive a response, so a driver will never see
+> writel() return an error (although an error may be reported
+> asynchronously via AER or similar).
+>
+> So I think we're mostly talking about CPU reads here.  We expect a PCI
+> response containing the data.  Sometimes there's no response or an
+> error response.  The behavior of the host bridge in these error cases
+> is not defined by PCI, so what the CPU sees is not consistent across
+> platforms.  In some cases, the bridge handles this as a catastrophic
+> error that forces a system restart.
+>
+> But in most cases, at least on x86, the bridge logs an error and
+> fabricates ~0 data so the CPU read can complete.  Then it's up to
+> software to recognize that an error occurred and decide what to do
+> about it.  Is this a benign or a poisonous error?
+>
+> I'd say this is a benign error. It certainly can't be ignored, but as
+> long as the driver recognizes the error, it should be able to deal
+> with it without crashing the whole system and forcing a restart.
 
-elapsed time: 738m
+I was thinking more in terms of what the driver author sees rather
+than what's happening on the CPU side. The crash seen in the OP
+appears to be because the code is "doing an MMIO." However, the
+reasons for the crash have nothing to do with the actual mechanics of
+the operation (which should be benign). The point I was making is that
+the pattern of:
 
-configs tested: 139
-configs skipped: 3
+if (is_disconnected())
+    return failure;
+return do_mmio_read(addr);
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+does have some utility as a last-ditch attempt to prevent crashes in
+the face of obnoxious bridges or bad hardware. Granted, that should be
+a platform concern rather than something that should ever appear in
+driver code, but considering drivers open-code readl()/writel() calls
+there's not really any place to put that sort of workaround.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                       mainstone_defconfig
-sh                          landisk_defconfig
-arm                            lart_defconfig
-mips                            ar7_defconfig
-sh                               allmodconfig
-arm                  colibri_pxa300_defconfig
-powerpc                       ebony_defconfig
-arm                         s3c6400_defconfig
-arm                      footbridge_defconfig
-arm                            hisi_defconfig
-arm                       versatile_defconfig
-nios2                         3c120_defconfig
-arc                        vdk_hs38_defconfig
-sh                            shmin_defconfig
-powerpc                 canyonlands_defconfig
-powerpc                        cell_defconfig
-microblaze                      mmu_defconfig
-h8300                     edosk2674_defconfig
-mips                     cu1830-neo_defconfig
-arm                         lpc18xx_defconfig
-sh                          rsk7203_defconfig
-arm                         at91_dt_defconfig
-mips                           rs90_defconfig
-powerpc                   bluestone_defconfig
-powerpc                    amigaone_defconfig
-m68k                       m5208evb_defconfig
-powerpc                  storcenter_defconfig
-um                                  defconfig
-sh                          urquell_defconfig
-powerpc                 mpc8313_rdb_defconfig
-xtensa                  audio_kc705_defconfig
-m68k                        m5272c3_defconfig
-arm                          collie_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                        spear6xx_defconfig
-sh                        dreamcast_defconfig
-m68k                           sun3_defconfig
-microblaze                          defconfig
-powerpc                  mpc885_ads_defconfig
-ia64                            zx1_defconfig
-powerpc                      chrp32_defconfig
-sh                           se7206_defconfig
-arm                        mini2440_defconfig
-powerpc                 mpc837x_mds_defconfig
-sh                      rts7751r2d1_defconfig
-arc                    vdk_hs38_smp_defconfig
-mips                            gpr_defconfig
-arm                         cm_x300_defconfig
-riscv                            alldefconfig
-arm                        realview_defconfig
-powerpc                      ppc64e_defconfig
-arm                         palmz72_defconfig
-arm                     davinci_all_defconfig
-sh                           se7751_defconfig
-arm                           h5000_defconfig
-sh                           se7780_defconfig
-sh                          polaris_defconfig
-powerpc                      ep88xc_defconfig
-mips                          rb532_defconfig
-powerpc                     tqm8560_defconfig
-openrisc                            defconfig
-arm                            dove_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20210718
-x86_64               randconfig-a004-20210718
-x86_64               randconfig-a002-20210718
-x86_64               randconfig-a003-20210718
-x86_64               randconfig-a006-20210718
-x86_64               randconfig-a001-20210718
-i386                 randconfig-a005-20210718
-i386                 randconfig-a004-20210718
-i386                 randconfig-a006-20210718
-i386                 randconfig-a001-20210718
-i386                 randconfig-a003-20210718
-i386                 randconfig-a002-20210718
-i386                 randconfig-a014-20210718
-i386                 randconfig-a015-20210718
-i386                 randconfig-a011-20210718
-i386                 randconfig-a013-20210718
-i386                 randconfig-a016-20210718
-i386                 randconfig-a012-20210718
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+That all said, the case in the OP is due to an entirely avoidable
+driver bug and that sort of hack is absolutely the wrong thing to do.
 
-clang tested configs:
-x86_64               randconfig-b001-20210718
-x86_64               randconfig-a013-20210718
-x86_64               randconfig-a015-20210718
-x86_64               randconfig-a012-20210718
-x86_64               randconfig-a014-20210718
-x86_64               randconfig-a011-20210718
-x86_64               randconfig-a016-20210718
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Oliver
