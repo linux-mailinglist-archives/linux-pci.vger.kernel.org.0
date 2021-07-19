@@ -2,81 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 123973CCD33
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 06:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FE303CCE9B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 09:35:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbhGSEzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 00:55:47 -0400
-Received: from mail.distrito09d14.saludzona5.gob.ec ([181.211.241.146]:59450
-        "EHLO mail.distrito09d14.saludzona5.gob.ec" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229512AbhGSEzr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 00:55:47 -0400
-X-Greylist: delayed 3384 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Jul 2021 00:55:47 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.distrito09d14.saludzona5.gob.ec (Postfix) with ESMTP id 76E717C76EC;
-        Sun, 18 Jul 2021 22:27:28 -0500 (-05)
-Received: from mail.distrito09d14.saludzona5.gob.ec ([127.0.0.1])
-        by localhost (mail.distrito09d14.saludzona5.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id SqyCEDFX4X3j; Sun, 18 Jul 2021 22:27:28 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.distrito09d14.saludzona5.gob.ec (Postfix) with ESMTP id 2FFD97A425F;
-        Sun, 18 Jul 2021 19:04:25 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.distrito09d14.saludzona5.gob.ec 2FFD97A425F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=distrito09d14.saludzona5.gob.ec;
-        s=9545D480-B182-11EA-AD29-124AAFB0486A; t=1626653065;
-        bh=lNb6zZ2/CKMU9xuNPBtPYnwYqW6PrxuxjasUmmzH4uo=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=cCiBKjeO9Bd78iLb9Vfn+b3Mf494bULXce7TebeBrcXgXAaoMRpE0yUxp3zRgvuKZ
-         J5FHi8JusMwbz2SLgZ+WRK2/n0agC1KbmyrUkn1WRbYN5wfDUmUohjZGreuL2PeKp4
-         uzHlzKp0caMfV8oBFueuY5Ev4Z8YGYfSFXwOtPLlUxvYz/hsuDfbuvLPFGCjCT1+4B
-         tCSFQViwClMNqWqIeFcP6cNsyVe0FrtSNEFT85f2HUj/EqBVYveZ6usiq71VhTGR8T
-         Q2hhjvJURgx/d73FKLuBuw984g4PJMLLbI+mmRh2s+W3PQ61dAggW85PoPv8j1Njgk
-         JzQcR8+HFz/Mw==
-X-Virus-Scanned: amavisd-new at distrito09d14.saludzona5.gob.ec
-Received: from mail.distrito09d14.saludzona5.gob.ec ([127.0.0.1])
-        by localhost (mail.distrito09d14.saludzona5.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id MCmynCulbZp4; Sun, 18 Jul 2021 19:04:25 -0500 (-05)
-Received: from cris-PC.www.huaweimobilewifi.com (unknown [105.4.3.24])
-        by mail.distrito09d14.saludzona5.gob.ec (Postfix) with ESMTPSA id 7B24949DF0A;
-        Sun, 18 Jul 2021 17:38:21 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        id S234899AbhGSHiu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 03:38:50 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:52582 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234897AbhGSHiu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 03:38:50 -0400
+X-UUID: c8027073d19b494b8063573dc30295ee-20210719
+X-UUID: c8027073d19b494b8063573dc30295ee-20210719
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1450423299; Mon, 19 Jul 2021 15:35:48 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 19 Jul 2021 15:35:46 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 19 Jul 2021 15:35:46 +0800
+From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+To:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
+        <matthias.bgg@gmail.com>, <lorenzo.pieralisi@arm.com>
+CC:     <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
+        <yong.wu@mediatek.com>, Frank Wunderlich <frank-w@public-files.de>,
+        <chuanjia.liu@mediatek.com>, <linux-pci@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 0/4] PCI: mediatek: Spilt PCIe node to comply with hardware design 
+Date:   Mon, 19 Jul 2021 15:34:52 +0800
+Message-ID: <20210719073456.28666-1-chuanjia.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Euro?=
-To:     Recipients <morayma.morales@distrito09d14.saludzona5.gob.ec>
-From:   ''Michael Weirsky'' 
-        <morayma.morales@distrito09d14.saludzona5.gob.ec>
-Date:   Mon, 19 Jul 2021 00:49:42 +0200
-Reply-To: mikeweirskyspende@gmail.com
-Message-Id: <20210718223821.7B24949DF0A@mail.distrito09d14.saludzona5.gob.ec>
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Lieber Freund,
+There are two independent PCIe controllers in MT2712 and MT7622 platform.
+Each of them should contain an independent MSI domain.
 
-Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen.
-Das ist dein Spendencode: [MW530342019]
+In old dts architecture, MSI domain will be inherited from the root bridge,
+and all of the devices will share the same MSI domain.Hence that,
+the PCIe devices will not work properly if the irq number 
+which required is more than 32.
 
-www.youtube.com/watch?v=3Dun8yRTmrYMY
+Split the PCIe node for MT2712 and MT7622 platform to comply with 
+the hardware design and fix MSI issue.
+
+change note:
+  v11:Rebase for 5.14-rc1 and add "interrupt-names", "linux,pci-domain" 
+      description in binding file. No code change.
+  v10:Rebase for 5.13-rc1, no code change. 
+  v9:fix kernel-ci bot warning. In the scene of using new dts format,
+     when mtk_pcie_parse_port fails, of_node_put don't need to be called.
+  v8:remove slot node and fix yaml warning.
+  v7:dt-bindings file was modified as suggested by Rob, other file no
+     change.
+  v6:Fix yaml error. make sure driver compatible with old and 
+     new DTS format.
+  v5:rebase for 5.9-rc1, no code change. 
+  v4:change commit message due to bayes statistical bogofilter
+     considers this series patch SPAM.
+  v3:rebase for 5.8-rc1. Only collect ack of Ryder, No code change.
+  v2:change the allocation of MT2712 PCIe MMIO space due to the
+     allocation size is not right in v1.
+
+Chuanjia Liu (4):
+  dt-bindings: PCI: mediatek: Update the Device tree bindings
+  PCI: mediatek: Add new method to get shared pcie-cfg base address and parse node
+  arm64: dts: mediatek: Split PCIe node for MT2712 and MT7622
+  ARM: dts: mediatek: Update MT7629 PCIe node for new format
+
+  .../bindings/pci/mediatek-pcie-cfg.yaml       |  39 ++++
+  .../devicetree/bindings/pci/mediatek-pcie.txt | 206 ++++++++++--------
+  arch/arm/boot/dts/mt7629-rfb.dts              |   3 +-
+  arch/arm/boot/dts/mt7629.dtsi                 |  45 ++--
+  arch/arm64/boot/dts/mediatek/mt2712e.dtsi     |  97 +++++----
+  .../dts/mediatek/mt7622-bananapi-bpi-r64.dts  |  16 +-
+  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts  |   6 +-
+  arch/arm64/boot/dts/mediatek/mt7622.dtsi      | 112 +++++-----
+  drivers/pci/controller/pcie-mediatek.c        |  52 +++--
+  9 files changed, 330 insertions(+), 246 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
+
+--
+2.18.0
 
 
-Antworten Sie mit dem SPENDE-CODE an diese =
-
-
-E-Mail:mikeweirskyspende@gmail.com
-
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Mike Weirsky
