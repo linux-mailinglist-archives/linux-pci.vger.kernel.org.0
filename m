@@ -2,69 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE0D33CF269
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 05:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21AB03CF259
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 05:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244428AbhGTC1I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 22:27:08 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:40502 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359658AbhGSVWA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 17:22:00 -0400
-Received: by mail-il1-f173.google.com with SMTP id b14so17411599ilf.7;
-        Mon, 19 Jul 2021 15:02:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pxD+Cus6QToWUCkMrsmBw2UQ5ikpfGFz25k3lebVLec=;
-        b=IZgNgi64+DPMqn/qD8WFtu+2ObaM434ktchd5W+Hzz44UfDYFpIeOzdsu9hQydsc9A
-         LTf6OzJ/WiS04ZZBfHrMsKvRS7xyoS8n2WIsTY+PB6IzQzPVprxcbm/+6g/gSP6k9xSN
-         Q7IdY4R9fGayfYDOXYYd1gQ3jZIvexRo7KHFfj95khnhVoMfoZ7W/2+o0dSN24KJTVC5
-         pa+/J3xw7X1ztUg2A+2ah5r3yqshb/5T3EsMSa0g/GGxYIv3WQALwr+MrtYdBwx4ZS8F
-         7XVhBNVhX5ksnux10Pa3Iq3e7jsp2NtM85WoZxkS0Zm9bPPCwClgJqxAet9MLkBnmMOZ
-         oBcw==
-X-Gm-Message-State: AOAM531S7kpWULSLGxBz8Q3J7jhnTcgA1tz6OqpFh1x2Espq/a8hWGdC
-        gs9kefHpMdStal49jPwyvA==
-X-Google-Smtp-Source: ABdhPJxj9rrfMRfCKDXsPGXrgyI2rNuALj8hbfDOvwGqlJHRW6z1ufZWYhiPBNUXqtmZAVzwpUfGtg==
-X-Received: by 2002:a92:c54d:: with SMTP id a13mr6120613ilj.74.1626732158251;
-        Mon, 19 Jul 2021 15:02:38 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id t24sm11481232ioh.24.2021.07.19.15.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jul 2021 15:02:37 -0700 (PDT)
-Received: (nullmailer pid 2677241 invoked by uid 1000);
-        Mon, 19 Jul 2021 22:02:32 -0000
-Date:   Mon, 19 Jul 2021 16:02:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linux-pci@vger.kernel.org, mauro.chehab@huawei.com,
+        id S233274AbhGTCZJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 22:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1376282AbhGSVZc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Jul 2021 17:25:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CA44F6112D;
+        Mon, 19 Jul 2021 22:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626732368;
+        bh=jl3+HQaa6Y30qcgRRGvX0chBvuQ871X8ti+5rAJtfVc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pcAfCBx+KzPds61fHhOS5ytEyCApu2DNAWHbdd7gwV9rYVp+OS0IDnM+F/BdTEAUg
+         WiHG3xDNppY+cyw+5RVsebqh3ijs9YSwy1e+OjAHeOp8vkT/Z4TmSCK8nusUmD481d
+         tj5vX/9dc4lZIKfz0sS1m9ZBFlazmy0h7e4kx7TTnA6pYBZKlaekf4nrEz+I1RhBRl
+         sUxasixv/5Z/M7KF06AmL3FJfeoFBNdIF5EvTfdNl36SxTzUFmicxGVBUg8nGuEeiH
+         envzF3EOdaznI9FX9ZpSWcO+4WVPs1YnHroqNhZIJG90OMLl8OpryqOVRKDLeMeNfZ
+         bcse7kxNwyAlA==
+Date:   Mon, 19 Jul 2021 17:06:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        marek.vasut@gmail.com, linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linuxarm@huawei.com, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 4/5] dt-bindings: PCI: remove designware-pcie.txt
-Message-ID: <20210719220232.GA2677156@robh.at.kernel.org>
-References: <cover.1626608375.git.mchehab+huawei@kernel.org>
- <c93261b41f9ffe8d97d8c930f57b41aaf7de5264.1626608375.git.mchehab+huawei@kernel.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
+Message-ID: <20210719220606.GA30209@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c93261b41f9ffe8d97d8c930f57b41aaf7de5264.1626608375.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210719172340.vvtnddbli2vgxndi@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 18 Jul 2021 13:40:51 +0200, Mauro Carvalho Chehab wrote:
-> Now that the properties defined there were converted to DT schema,
-> and the other dt-bindings are pointing to the new schemas,
-> drop it.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../bindings/pci/designware-pcie.txt          | 77 -------------------
->  MAINTAINERS                                   |  1 -
->  2 files changed, 78 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/designware-pcie.txt
-> 
+On Mon, Jul 19, 2021 at 07:23:40PM +0200, Pali Rohár wrote:
+> > On Sat, Jul 17, 2021 at 12:33:34PM -0500, Bjorn Helgaas wrote:
 
-Applied, thanks!
+> > >   - "The R-Car PCIe controller is capable of handling L0s/L1 link
+> > >     states."  AFAICT every PCIe device is required to handle L0 and L1
+> > >     without software assistance.  So saying R-Car is "capable" puts a
+> > >     better face on this than seems warranted.
+> > > 
+> > >     L0s doesn't seem relevant at all; at least it doesn't seem to play
+> > >     a role in the patch.  There's no such thing as "returning to L0s"
+> > >     as mentioned in the comment below; L0s is only reachable from L0.
+> > >     Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
+> 
+> IIRC from L1 you can only go to Recovery. And from L0s you go to L0 or
+> Recovery. But I do not know what is or was changed in PCIe r5.0.
+
+Yes.  Per PCIe r5.0, fig 4-26, the LTSSM state diagram, that's still
+the same.  The overview in Fig 5-1 doesn't include Recovery, Detect,
+and othef LTSSM states.
