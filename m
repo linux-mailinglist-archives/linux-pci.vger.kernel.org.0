@@ -2,126 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDF203CEC89
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 22:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2151A3CEEED
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 00:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355596AbhGSReE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 13:34:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29844 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1380554AbhGSR3c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 13:29:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626718211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tEPNOxkaSwVynI5bC9ITnmbjNbhpuULp2AY9Cx1gq1w=;
-        b=W8m204haE+31EnFbbP6asZZGt1YE369vjAu94jVCewnTvEeJBo5Bt9buE56rJ0Yw3+qaVT
-        7jxpejgZD3851WpOt0Ko23X292RbR++76Uhtfha5HcIN6rIrKxHpyqldCstDaagnn1loL2
-        YJda79o6lnh2MVc8t1eu9m+6gyjejc0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-hZ9227ZuP4uKGpcABK-XpA-1; Mon, 19 Jul 2021 14:10:09 -0400
-X-MC-Unique: hZ9227ZuP4uKGpcABK-XpA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F162A1800D41;
-        Mon, 19 Jul 2021 18:10:07 +0000 (UTC)
-Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 15937610AE;
-        Mon, 19 Jul 2021 18:09:59 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
-        tglx@linutronix.de, jesse.brandeburg@intel.com,
-        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
-        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
-        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
-        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
-        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
-        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
-        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
-        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
-        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        somnath.kotur@broadcom.com, nilal@redhat.com,
-        tatyana.e.nikolova@intel.com, mustafa.ismail@intel.com,
-        ahs3@redhat.com, leonro@nvidia.com,
-        chandrakanth.patil@broadcom.com, bjorn.andersson@linaro.org,
-        chunkuang.hu@kernel.org, yongqiang.niu@mediatek.com,
-        baolin.wang7@gmail.com, poros@redhat.com, minlei@redhat.com,
-        emilne@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        _govind@gmx.com, ley.foon.tan@intel.com, kabel@kernel.org,
-        viresh.kumar@linaro.org, Tushar.Khandelwal@arm.com,
-        luobin9@huawei.com
-Subject: [PATCH v4 14/14] net/mlx4: Use irq_update_affinity_hint
-Date:   Mon, 19 Jul 2021 14:07:46 -0400
-Message-Id: <20210719180746.1008665-15-nitesh@redhat.com>
-In-Reply-To: <20210719180746.1008665-1-nitesh@redhat.com>
-References: <20210719180746.1008665-1-nitesh@redhat.com>
+        id S243616AbhGSVW5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 17:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1383624AbhGSR7S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 13:59:18 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC86C061574;
+        Mon, 19 Jul 2021 11:26:28 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id n4so10935515wms.1;
+        Mon, 19 Jul 2021 11:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=niGHA44vho3xswp3bGtUo+jGvJWl4PkcLrOhnDSDxcQ=;
+        b=BxXPcxXNcwtpfhtjzEe93kaoQhkxXH8e14CRMxgK0kwDLLianfVgAG92SQiWwTEKfR
+         VDoiNRH66D3IjpGqxmQzkj03IbV0yrGTNmvM2bTPpXJjnJRbKN/DZwKdVy14q0v3BMXp
+         1uqG0RUCv7aJdgGVwnVaMw18Qa2Is7kRUiOFG7QmYgl8PRQ+BwKbwhDbbl1h4us9DZ1t
+         BniU0N4Hzbu2pY3k1g6Hbp0MH+5AGrPpN5kHbPHgpF6z8VQDPBK3V0M+t3P24zxf0S+P
+         h8DgVaboRwnlQet8MtLgaTmOC+LqZ11uYLCflmsLyJMyHs7YZXEl4RIY9HZgCD6/xqSc
+         Pobw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=niGHA44vho3xswp3bGtUo+jGvJWl4PkcLrOhnDSDxcQ=;
+        b=FupE3mseSf6S6mAh0hCaWAhGVd8qcshdkRj3AV5LgXwdbolYl+rY8ym5sUxMtv4VBI
+         W9DXRBtvCv9W7DSwCno6BBsxssCsakzjCXztCWx4dIo7LBTIsXtfxw/uLTvDk4HPPSl9
+         cril7U3gp8Ya1yQwjRvhLMdDFH+9TEpnvFCkbOoAUk2dRAqeKKrB3haxlcpBhCA8E7Dq
+         d0OfuF02YDLITAztHLpcquXywglOJrbLh84UgDLv2eyoAbbPIgoEGcgnETRLi42b9WsG
+         uMcxDzqolLjuwiBeQGTRfCckko7yho5XTkdj8s7s7gpobYLs8qM5A30N5BLB08tVAnuW
+         97Pg==
+X-Gm-Message-State: AOAM531afEwlmvdOX4oZReIJLcZARUKbRwUUQ/LKUL+CImLfqzFeGPjc
+        m9wrBlQrSE1YLwCJkakWgAwok/rafSE=
+X-Google-Smtp-Source: ABdhPJyzbAFdIJximxHXRf5AXob7cX2F2iWUtjwnVWfSyF2vdrH+ceceDlGgba7qrb+KDI6P1p4ihw==
+X-Received: by 2002:a05:600c:2290:: with SMTP id 16mr27741035wmf.32.1626719955315;
+        Mon, 19 Jul 2021 11:39:15 -0700 (PDT)
+Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id h9sm17345207wmb.35.2021.07.19.11.39.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Jul 2021 11:39:14 -0700 (PDT)
+Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+References: <20210514200549.431275-1-marek.vasut@gmail.com>
+ <20210717173334.GA2232818@bjorn-Precision-5520>
+ <20210719085953.GA17481@lpieralisi> <20210719172340.vvtnddbli2vgxndi@pali>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <62e8d92a-806b-15fb-672d-2519d5a2fa4b@gmail.com>
+Date:   Mon, 19 Jul 2021 20:39:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
+In-Reply-To: <20210719172340.vvtnddbli2vgxndi@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver uses irq_set_affinity_hint() to update the affinity_hint mask
-that is consumed by the userspace to distribute the interrupts. However,
-under the hood irq_set_affinity_hint() also applies the provided cpumask
-(if not NULL) as the affinity for the given interrupt which is an
-undocumented side effect.
+On 7/19/21 7:23 PM, Pali Rohár wrote:
 
-To remove this side effect irq_set_affinity_hint() has been marked
-as deprecated and new interfaces have been introduced. Hence, replace the
-irq_set_affinity_hint() with the new interface irq_update_affinity_hint()
-that only updates the affinity_hint pointer.
+[...]
 
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
----
- drivers/net/ethernet/mellanox/mlx4/eq.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+>>>> The R-Car PCIe controller is capable of handling L0s/L1 link states.
+>>>> While the controller can enter and exit L0s link state, and exit L1
+>>>> link state, without any additional action from the driver, to enter
+>>>> L1 link state, the driver must complete the link state transition by
+>>>> issuing additional commands to the controller.
+>>>>
+>>>> The problem is, this transition is not atomic. The controller sets
+>>>> PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
+>>>> the PCIe card, but then the controller enters some sort of inbetween
+>>>> state. The driver must detect this condition and complete the link
+>>>> state transition, by setting L1IATN bit in PMCTLR and waiting for
+>>>> the link state transition to complete.
+>>>>
+>>>> If a PCIe access happens inside this window, where the controller
+>>>> is between L0 and L1 link states, the access generates a fault and
+>>>> the ARM 'imprecise external abort' handler is invoked.
+> 
+> And if PCIe MMIO access does not happen, what fixes this issue?
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/eq.c b/drivers/net/ethernet/mellanox/mlx4/eq.c
-index 9e48509ed3b2..414e390e6b48 100644
---- a/drivers/net/ethernet/mellanox/mlx4/eq.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/eq.c
-@@ -244,9 +244,9 @@ static void mlx4_set_eq_affinity_hint(struct mlx4_priv *priv, int vec)
- 	    cpumask_empty(eq->affinity_mask))
- 		return;
- 
--	hint_err = irq_set_affinity_hint(eq->irq, eq->affinity_mask);
-+	hint_err = irq_update_affinity_hint(eq->irq, eq->affinity_mask);
- 	if (hint_err)
--		mlx4_warn(dev, "irq_set_affinity_hint failed, err %d\n", hint_err);
-+		mlx4_warn(dev, "irq_update_affinity_hint failed, err %d\n", hint_err);
- }
- #endif
- 
-@@ -1123,9 +1123,7 @@ static void mlx4_free_irqs(struct mlx4_dev *dev)
- 	for (i = 0; i < dev->caps.num_comp_vectors + 1; ++i)
- 		if (eq_table->eq[i].have_irq) {
- 			free_cpumask_var(eq_table->eq[i].affinity_mask);
--#if defined(CONFIG_SMP)
--			irq_set_affinity_hint(eq_table->eq[i].irq, NULL);
--#endif
-+			irq_update_affinity_hint(eq_table->eq[i].irq, NULL);
- 			free_irq(eq_table->eq[i].irq, eq_table->eq + i);
- 			eq_table->eq[i].have_irq = 0;
- 		}
--- 
-2.27.0
+Then you have no problem because you don't hit this fault.
 
+> In this
+> patch is implemented only arm32 external abort hook handler (which is
+> called only when PCIe MMIO access happens and aborts).
+
+Yes, for the aarch64 rcar the same fix is implemented in atf (see below).
+
+>>>> Just like other PCI controller drivers, here we hook the fault handler,
+>>>> perform the fixup to help the controller enter L1 link state, and then
+>>>> restart the instruction which triggered the fault. Since the controller
+>>>> is in L1 link state now, the link can exit from L1 link state to L0 and
+>>>> successfully complete the access.
+> 
+> Link cannot directly goes to L0 from L1. It first goes to Recovery state
+> and in this state card can "disconnect" or reset...
+> 
+> What would happen if PCIe MMIO access is issued when link is not in some
+> L* state? (This can be manually triggered by PCIe Hot Reset - toggling
+> Secondary Bus Reset bit in Bridge Control register on parent PCIe Bridge
+> device) Is R-Car working in this case and does not crash?
+
+This seems to be exactly the situation the commit message describes -- 
+the controller is stuck between L states and needs manual register write 
+to proceed.
+
+[...]
+
+>>> To be clear, I'm not objecting to the patch.  It's a hardware problem
+>>> and we should work around it as best we can.
+> 
+> I'm not sure if current API of hook_fault_code or rather whole usage of
+> it is prepared to expand into more and more drivers. Last time I looked
+> at this arm32 part, it was possible to register only one callback from
+> driver. So extending usage of this hook API can result that two drivers
+> start fighting who register it earlier...
+
+There doesn't seem to be much ongoing HW development on the arm32 r-car, 
+so I don't expect this list of hooks to grow much on this platform.
+
+[...]
