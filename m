@@ -2,89 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 086643CD9A7
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 17:12:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C37C3CDB7E
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 17:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243748AbhGSObL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 10:31:11 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:35521 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244309AbhGSO3f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 10:29:35 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 08344101E9E91;
-        Mon, 19 Jul 2021 17:10:12 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id D1E8E1D2EC9; Mon, 19 Jul 2021 17:10:11 +0200 (CEST)
-Date:   Mon, 19 Jul 2021 17:10:11 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ethan Zhao <haifeng.zhao@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Ignore Link Down/Up caused by DPC
-Message-ID: <20210719151011.GA25258@wunner.de>
-References: <0be565d97438fe2a6d57354b3aa4e8626952a00b.1619857124.git.lukas@wunner.de>
- <20210616221945.GA3010216@bjorn-Precision-5520>
- <20210620073804.GA13118@wunner.de>
- <08c046b0-c9f2-3489-eeef-7e7aca435bb9@gmail.com>
+        id S236973AbhGSOnQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 10:43:16 -0400
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:42774 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245225AbhGSOiB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 10:38:01 -0400
+Received: by mail-lj1-f173.google.com with SMTP id r16so26826395ljk.9;
+        Mon, 19 Jul 2021 08:18:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qNIqat7cYfcb63IwviLUw0Xdroq3HYsAHAyWsh0CF1I=;
+        b=GQJzrRP+J6XHrvFhRRRah1X8HLVt5JOaXVH2tK8ICn4LXj4J4p8uW7VUkL+Z/UdnEy
+         1DYmLTvi1glHVDsZuF+ZORC7UCxA164GkvS0q5qQVJbVE5IAP2ge5BHdXzkEyebwXlTY
+         2P1qsCw3eIXHs+5r1lWX0gQiNWexs3tf66OK4c6kGvOSF6t08zDpmTydIz/pZdqRN2BH
+         Cn2x64RWqjPsEjE9Pu4zUaqqGB6gd84hiFkSm9YFujwwlp4SCjfqcycjrzE4MdAvtUgb
+         WaUevC5CPIomK/vbvsw0dyo7jO8PkdR+8QYrD7VPFTcrOs6krmlHEX4wDC+uUJCcak6O
+         BAXA==
+X-Gm-Message-State: AOAM530e4witZp921aEvbZwmnmjxCaNyUA4YEwXvNIJpJIR8sMjD4Dfd
+        qgkCR5634E2PdTK2NDH8WwQ=
+X-Google-Smtp-Source: ABdhPJy2Iy5SpdUFHLCw4EWwJAecbyGu4Lab48/CA34GciD86ngDPCOFSwH/fROYScyhpsd4Pkj63Q==
+X-Received: by 2002:a05:651c:1695:: with SMTP id bd21mr15632606ljb.312.1626707919411;
+        Mon, 19 Jul 2021 08:18:39 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id e7sm1400948ljq.9.2021.07.19.08.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jul 2021 08:18:38 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 17:18:37 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Use sysfs_emit() in "show" functions
+Message-ID: <20210719151837.GA473693@rocinante>
+References: <1626662666-15798-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <20210719034313.GA274232@rocinante>
+ <af1d4c61-53ff-f4e9-a708-33251b7e6470@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <08c046b0-c9f2-3489-eeef-7e7aca435bb9@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <af1d4c61-53ff-f4e9-a708-33251b7e6470@socionext.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 03:38:41PM -0500, stuart hayes wrote:
-> I have a system that is failing to recover after an EDR event with (or
-> without...) this patch.  It looks like the problem is similar to what this
-> patch is trying to fix, except that on my system, the hotplug port is
-> downstream of the root port that has DPC, so the "link down" event on it is
-> not being ignored.  So the hotplug code disables the slot (which contains an
-> NVMe device on this system) while the nvme driver is trying to use it, which
-> results in a failed recovery and another EDR event, and the kernel ends up
-> with the DPC trigger status bit set in the root port, so everything
-> downstream is gone.
+[+cc Sasha for visibility]
+
+Hi!
+
+[...]
+> > Nice catch!
 > 
-> I added the hack below so the hotplug code will ignore the "link down"
-> events on the ports downstream of the root port during DPC recovery, and it
-> recovers no problem.  (I'm not proposing this as a correct fix.)
+> I actually executed "cat" against configfs to meet the issue and found
+> your solution in pci-sysfs.
 
-Could you test if the below patch fixes the issue?
+Oh!  That's not good...  I am curious, which attribute caused this?
 
-Note, this is a hack as well, but I can turn it into a proper patch
-if it works as expected.
+Also, if this is fixing a bug, then it might warrant letting the folks who look
+after the long-term and stable kernels know.  I also wonder if there would be
+something to add for the "Fixes:" tag, if there is a previous commit this
+change fixes.
 
-Thanks!
-
-Lukas
-
--- >8 --
-
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index c7ff1eea225a..893c7ae1a54d 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -160,6 +160,10 @@ static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
- 
- static pci_ers_result_t pcie_portdrv_slot_reset(struct pci_dev *dev)
- {
-+	if (dev->is_hotplug_bridge)
-+		pcie_capability_write_word(dev, PCI_EXP_SLTSTA,
-+					   PCI_EXP_SLTSTA_DLLSC);
-+
- 	pci_restore_state(dev);
- 	pci_save_state(dev);
- 	return PCI_ERS_RESULT_RECOVERED;
+	Krzysztof
