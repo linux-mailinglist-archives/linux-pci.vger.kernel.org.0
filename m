@@ -2,345 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB683CE812
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 19:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 546BC3CEC30
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 22:11:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347825AbhGSQpx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 12:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351458AbhGSQnE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Jul 2021 12:43:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 01D8E61073;
-        Mon, 19 Jul 2021 17:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626715423;
-        bh=NjUIdfBlWi+BB6LMHJUtbmGn9+I09iKUmnsdMpyyiEk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JmiF49yAEMRzH7EwBrGfLrX5+7BSSn7H/t2FtzirJPlM87GiX1csUMcmkEXhpVy8f
-         wRDRR7KpRkxuOVmu9Z6QgBhWKLvaVg3x1ZH4UkFiz6j1e+SzuVaX/RtELW0MCcVnQ1
-         IN9yEkKZUg958uSku6b/venYXPy1ZRwePXZ8kbddILQDp8fnwOpHHyD8y5yO0q/gyA
-         dJFA2TQ+NPc14kTeerEoGLJDo+RIpXooX2uvPmFjUsmoZ6+fMJymY87zKA/z8IHIEW
-         8E5N3gdmAADbSGoZEYraxxiOpkY7dhkZzcoGpqnIq18q3L23kQUAhcBr82dwQToz1o
-         4xawlSQFGWmFg==
-Received: by pali.im (Postfix)
-        id 3C1E4ADB; Mon, 19 Jul 2021 19:23:40 +0200 (CEST)
-Date:   Mon, 19 Jul 2021 19:23:40 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, marek.vasut@gmail.com,
-        linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20210719172340.vvtnddbli2vgxndi@pali>
-References: <20210514200549.431275-1-marek.vasut@gmail.com>
- <20210717173334.GA2232818@bjorn-Precision-5520>
- <20210719085953.GA17481@lpieralisi>
+        id S1353460AbhGSRai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 13:30:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44209 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1379916AbhGSR13 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 13:27:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626718087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IBF1HhagFH513KCNaC2u9KBtrM6AyFS1DGmN7/wZdAA=;
+        b=DzQq+QCoN/o1crVKrN6gL19XA6Q5K3KT6CYgPy98lxSQ9rySP5Yy3Ey63TgcsjxaIqq6FH
+        +urCnX+HqOH4hpG9gHuIZ5Tl/tZlktvk41phRezR0VUN19TdSCfVxOOx6upy80ZBtRa658
+        DP1SgJXwjM3/68oW6Y54CvtYhjq/geE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-_Q69ehj8NUSZbCa1hvPJdw-1; Mon, 19 Jul 2021 14:08:06 -0400
+X-MC-Unique: _Q69ehj8NUSZbCa1hvPJdw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 254B41023F57;
+        Mon, 19 Jul 2021 18:08:05 +0000 (UTC)
+Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A38F460CA1;
+        Mon, 19 Jul 2021 18:07:52 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
+        tglx@linutronix.de, jesse.brandeburg@intel.com,
+        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
+        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
+        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
+        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
+        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, nilal@redhat.com,
+        tatyana.e.nikolova@intel.com, mustafa.ismail@intel.com,
+        ahs3@redhat.com, leonro@nvidia.com,
+        chandrakanth.patil@broadcom.com, bjorn.andersson@linaro.org,
+        chunkuang.hu@kernel.org, yongqiang.niu@mediatek.com,
+        baolin.wang7@gmail.com, poros@redhat.com, minlei@redhat.com,
+        emilne@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        _govind@gmx.com, ley.foon.tan@intel.com, kabel@kernel.org,
+        viresh.kumar@linaro.org, Tushar.Khandelwal@arm.com,
+        luobin9@huawei.com
+Subject: [PATCH v4 00/14] genirq: Cleanup the usage of irq_set_affinity_hint
+Date:   Mon, 19 Jul 2021 14:07:32 -0400
+Message-Id: <20210719180746.1008665-1-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210719085953.GA17481@lpieralisi>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 19 July 2021 09:59:53 Lorenzo Pieralisi wrote:
-> [+Pali]
-> 
-> On Sat, Jul 17, 2021 at 12:33:34PM -0500, Bjorn Helgaas wrote:
-> > On Fri, May 14, 2021 at 10:05:49PM +0200, marek.vasut@gmail.com wrote:
-> > > From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > 
-> > > The R-Car PCIe controller is capable of handling L0s/L1 link states.
-> > > While the controller can enter and exit L0s link state, and exit L1
-> > > link state, without any additional action from the driver, to enter
-> > > L1 link state, the driver must complete the link state transition by
-> > > issuing additional commands to the controller.
-> > > 
-> > > The problem is, this transition is not atomic. The controller sets
-> > > PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
-> > > the PCIe card, but then the controller enters some sort of inbetween
-> > > state. The driver must detect this condition and complete the link
-> > > state transition, by setting L1IATN bit in PMCTLR and waiting for
-> > > the link state transition to complete.
-> > > 
-> > > If a PCIe access happens inside this window, where the controller
-> > > is between L0 and L1 link states, the access generates a fault and
-> > > the ARM 'imprecise external abort' handler is invoked.
+The drivers currently rely on irq_set_affinity_hint() to either set the
+affinity_hint that is consumed by the userspace and/or to enforce a custom
+affinity.
 
-And if PCIe MMIO access does not happen, what fixes this issue? In this
-patch is implemented only arm32 external abort hook handler (which is
-called only when PCIe MMIO access happens and aborts).
+irq_set_affinity_hint() as the name suggests is originally introduced to
+only set the affinity_hint to help the userspace in guiding the interrupts
+and not the affinity itself. However, since the commit
 
-> > > Just like other PCI controller drivers, here we hook the fault handler,
-> > > perform the fixup to help the controller enter L1 link state, and then
-> > > restart the instruction which triggered the fault. Since the controller
-> > > is in L1 link state now, the link can exit from L1 link state to L0 and
-> > > successfully complete the access.
+        e2e64a932556 "genirq: Set initial affinity in irq_set_affinity_hint()"
 
-Link cannot directly goes to L0 from L1. It first goes to Recovery state
-and in this state card can "disconnect" or reset...
+irq_set_affinity_hint() also started applying the provided cpumask (if not
+NULL) as the affinity for the interrupts. The issue that this commit was
+trying to solve is to allow the drivers to enforce their affinity mask to
+distribute the interrupts across the CPUs such that they don't always end
+up on CPU0. This issue has been resolved within the irq subsystem since the
+commit
 
-What would happen if PCIe MMIO access is issued when link is not in some
-L* state? (This can be manually triggered by PCIe Hot Reset - toggling
-Secondary Bus Reset bit in Bridge Control register on parent PCIe Bridge
-device) Is R-Car working in this case and does not crash?
+        a0c9259dc4e1 "irq/matrix: Spread interrupts on allocation"
 
-> > > While it was suggested to disable L1 link state support completely on
-> > > the controller level, this would not prevent the L1 link state entry
-> > > initiated by the link partner. This happens e.g. in case a PCIe card
-> > > enters D3Hot state, which could be initiated from pci_set_power_state()
-> > > if the card indicates D3Hot support, which in turn means link must enter
-> > > L1 state. So instead, fix up the L1 link state after all.
-> > > 
-> > > Note that this fixup is applicable only to Aarch32 R-Car controllers,
-> > > the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
-> > > 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
-> > > [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
-> > 
-> > This patch is horribly ugly but it's working around a horrible
-> > hardware problem, and I don't have any better suggestions, so I guess
-> > we don't really have much choice.
-> 
-> Pali is doing some work on the matter (in particular [1] above) and I
-> was following that up to see if there was any outcome before merging
-> this code, I could not follow up myself for lack of time.
+Hence, there is no need for the drivers to overwrite the affinity to spread
+as it is dynamically performed at the time of allocation.
 
-Yes, I'm in process to remove similar hack / hook for pci aardvark
-controller space. Kernel now has better fix for aardvark issue
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f18139966d072dab8e4398c95ce955a9742e04f7
-so TF-A part of this hack could be disabled. But this is nothing for
-R-Car. The only change which is touching TF-A code outside of pci
-aardvark space is de-duplication of external abort handler code.
+Also, irq_set_affinity_hint() setting affinity unconditionally introduces
+issues for the drivers that only want to set their affinity_hint and not the
+affinity itself as for these driver interrupts the default_smp_affinity_mask
+is completely ignored (for detailed investigation please refer to [1]).
 
-> Lorenzo
-> 
-> > I do think the commit log is a bit glib:
-> > 
-> >   - "The R-Car PCIe controller is capable of handling L0s/L1 link
-> >     states."  AFAICT every PCIe device is required to handle L0 and L1
-> >     without software assistance.  So saying R-Car is "capable" puts a
-> >     better face on this than seems warranted.
-> > 
-> >     L0s doesn't seem relevant at all; at least it doesn't seem to play
-> >     a role in the patch.  There's no such thing as "returning to L0s"
-> >     as mentioned in the comment below; L0s is only reachable from L0.
-> >     Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
+Unfortunately reverting the commit e2e64a932556 is not an option at this
+point for two reasons [2]:
 
-IIRC from L1 you can only go to Recovery. And from L0s you go to L0 or
-Recovery. But I do not know what is or was changed in PCIe r5.0.
+- Several drivers for a valid reason (performance) rely on this API to
+  enforce their affinity mask
 
-> > 
-> >   - "The problem is, this transition is not atomic."  I think the
-> >     *problem* is the hardware is broken in the first place.  This
-> >     transition is supposed to be invisible to software.
-> > 
-> >   - "Just like other PCI controller drivers ..." suggests that this is
-> >     an ordinary situation that we shouldn't be concerned about.  This
-> >     patch may be the best we can do to work around a bad hardware
-> >     defect, but it's definitely not ordinary.
-> > 
-> >     I think the other hook_fault_code() uses are for reporting
-> >     legitimate PCIe errors, which most controllers log and turn
-> >     into ~0 data responses without generating an abort or machine
-> >     check, not things caused by hardware defects, so they're not
-> >     really comparable.
+- Until very recently this was the only exported interface that was
+  available
 
-Yes, other hooks translate read aborts to fabricated 0xFFFFFFFF
-response. But this one is totally different "hack" for buggy hw.
+To clear this out Thomas has come up with the following interfaces:
 
-> > Has Renesas documented this as an erratum?  Will future devices
-> > require additions to rcar_pcie_abort_handler_of_match[]?
-> > 
-> > It'd be nice if the commit log mentioned the user-visible effect of
-> > this problem.  I guess it does mention external aborts -- I assume you
-> > see those when downstream devices go to D3hot or when ASPM puts the
-> > link in L1?  And the abort results in a reboot?
+- irq_set_affinity(): only sets affinity of an IRQ [3]
+- irq_update_affinity_hint(): Only sets the hint [4]
+- irq_set_affinity_and_hint(): Sets both affinity and the hint mask [4]
 
-Normally these abort handlers reset cpu at the end, right? But maybe it
-can be configured...
+The first API is already merged in the linus's tree and the patch
+that introduces the other two interfaces is included with this patch-set.
 
-> > To be clear, I'm not objecting to the patch.  It's a hardware problem
-> > and we should work around it as best we can.
+To move to the stage where we can safely get rid of the
+irq_set_affinity_hint(), which has been marked deprecated, we have to
+move all its consumers to these new interfaces. In this patch-set, I have
+done that for a few drivers and will hopefully try to move the remaining of
+them in the coming days.
 
-I'm not sure if current API of hook_fault_code or rather whole usage of
-it is prepared to expand into more and more drivers. Last time I looked
-at this arm32 part, it was possible to register only one callback from
-driver. So extending usage of this hook API can result that two drivers
-start fighting who register it earlier...
+Testing
+-------
+In terms of testing, I have performed some basic testing on x86 to verify
+things such as the interrupts are evenly spread on all CPUs, hint mask is
+correctly set etc. for the drivers - i40e, iavf, mlx5, mlx4, ixgbe, and
+enic on top of:
 
-> > > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > Cc: linux-renesas-soc@vger.kernel.org
-> > > ---
-> > > V2: - Update commit message, add link to TFA repository commit
-> > >     - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
-> > >     - Cache clock and check whether they are enabled before register
-> > >       access
-> > > V3: - Fix commit message according to spellchecker
-> > >     - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
-> > >       (in case the kernel is multiplatform)
-> > > V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
-> > > V5: - Add mutex around rcar_pcie_aarch32_abort_handler()
-> > >     - Update commit message again to point out issues with L1/D3Hot states
-> > > V6: - Return 1 only if condition cannot be fixed
-> > > ---
-> > >  drivers/pci/controller/pcie-rcar-host.c | 84 +++++++++++++++++++++++++
-> > >  drivers/pci/controller/pcie-rcar.h      |  7 +++
-> > >  2 files changed, 91 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-> > > index 765cf2b45e24..0d3f8dc5ff8a 100644
-> > > --- a/drivers/pci/controller/pcie-rcar-host.c
-> > > +++ b/drivers/pci/controller/pcie-rcar-host.c
-> > > @@ -13,6 +13,7 @@
-> > >  
-> > >  #include <linux/bitops.h>
-> > >  #include <linux/clk.h>
-> > > +#include <linux/clk-provider.h>
-> > >  #include <linux/delay.h>
-> > >  #include <linux/interrupt.h>
-> > >  #include <linux/irq.h>
-> > > @@ -41,6 +42,21 @@ struct rcar_msi {
-> > >  	int irq2;
-> > >  };
-> > >  
-> > > +#ifdef CONFIG_ARM
-> > > +/*
-> > > + * Here we keep a static copy of the remapped PCIe controller address.
-> > > + * This is only used on aarch32 systems, all of which have one single
-> > > + * PCIe controller, to provide quick access to the PCIe controller in
-> > > + * the L1 link state fixup function, called from the ARM fault handler.
-> > > + */
-> > > +static void __iomem *pcie_base;
-> > > +/*
-> > > + * Static copy of bus clock pointer, so we can check whether the clock
-> > > + * is enabled or not.
-> > > + */
-> > > +static struct clk *pcie_bus_clk;
-> > > +#endif
-> > > +
-> > >  /* Structure representing the PCIe interface */
-> > >  struct rcar_pcie_host {
-> > >  	struct rcar_pcie	pcie;
-> > > @@ -776,6 +792,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
-> > >  	}
-> > >  	host->msi.irq2 = i;
-> > >  
-> > > +#ifdef CONFIG_ARM
-> > > +	/* Cache static copy for L1 link state fixup hook on aarch32 */
-> > > +	pcie_base = pcie->base;
-> > > +	pcie_bus_clk = host->bus_clk;
-> > > +#endif
+        git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
 
-Usage of global variables with address space is ugly and horrible too,
-but current hook_fault_code() does not provide nothing better.
+So more testing is probably required for these and the drivers that I didn't
+test and any help will be much appreciated.
 
-> > > +
-> > >  	return 0;
-> > >  
-> > >  err_irq2:
-> > > @@ -1031,4 +1053,66 @@ static struct platform_driver rcar_pcie_driver = {
-> > >  	},
-> > >  	.probe = rcar_pcie_probe,
-> > >  };
-> > > +
-> > > +#ifdef CONFIG_ARM
-> > > +static DEFINE_SPINLOCK(pmsr_lock);
-> > > +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-> > > +		unsigned int fsr, struct pt_regs *regs)
-> > > +{
-> > > +	unsigned long flags;
-> > > +	int ret = 0;
-> > > +	u32 pmsr;
-> > > +
-> > > +	spin_lock_irqsave(&pmsr_lock, flags);
-> > > +
-> > > +	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
-> > > +		ret = 1;
-> > > +		goto unlock_exit;
-> > > +	}
-> > > +
-> > > +	pmsr = readl(pcie_base + PMSR);
-> > > +
-> > > +	/*
-> > > +	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
-> > > +	 * the PCIe controller is not in L1 link state. If true, apply
-> > > +	 * fix, which will put the controller into L1 link state, from
-> > > +	 * which it can return to L0s/L0 on its own.
-> > > +	 */
-> > > +	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
-> > > +		writel(L1IATN, pcie_base + PMCTLR);
-> > > +		while (!(readl(pcie_base + PMSR) & L1FAEG))
-> > > +			;
 
-Infinite loop in abort handler is not a good idea. If this software
-workaround is not able to fix HW in broken state then it is better to
-let kernel finish abort handler and reboot machine (or whatever is
-default action for particular abort handler).
+Notes
+-----
+- For the mpt3sas driver I decided to go with the usage of
+  irq_set_affinity_and_hint over irq_set_affinity based on my analysis of
+  it and the megaraid driver. However, if we are sure that it is not
+  required then I can replace it with just irq_set_affinity as one of its
+  comment suggests.
 
-> > > +		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
-> > > +	}
-> > > +
-> > > +unlock_exit:
-> > > +	spin_unlock_irqrestore(&pmsr_lock, flags);
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
-> > > +	{ .compatible = "renesas,pcie-r8a7779" },
-> > > +	{ .compatible = "renesas,pcie-r8a7790" },
-> > > +	{ .compatible = "renesas,pcie-r8a7791" },
-> > > +	{ .compatible = "renesas,pcie-rcar-gen2" },
-> > > +	{},
-> > > +};
-> > > +
-> > > +static int __init rcar_pcie_init(void)
-> > > +{
-> > > +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-> > > +#ifdef CONFIG_ARM_LPAE
-> > > +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > +				"asynchronous external abort");
-> > > +#else
-> > > +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > +				"imprecise external abort");
-> > > +#endif
-> > > +	}
-> > > +
-> > > +	return platform_driver_register(&rcar_pcie_driver);
-> > > +}
-> > > +device_initcall(rcar_pcie_init);
-> > > +#else
-> > >  builtin_platform_driver(rcar_pcie_driver);
-> > > +#endif
-> > > diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-> > > index d4c698b5f821..9bb125db85c6 100644
-> > > --- a/drivers/pci/controller/pcie-rcar.h
-> > > +++ b/drivers/pci/controller/pcie-rcar.h
-> > > @@ -85,6 +85,13 @@
-> > >  #define  LTSMDIS		BIT(31)
-> > >  #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
-> > >  #define PMSR			0x01105c
-> > > +#define  L1FAEG			BIT(31)
-> > > +#define  PMEL1RX		BIT(23)
-> > > +#define  PMSTATE		GENMASK(18, 16)
-> > > +#define  PMSTATE_L1		(3 << 16)
-> > > +#define PMCTLR			0x011060
-> > > +#define  L1IATN			BIT(31)
-> > > +
-> > >  #define MACS2R			0x011078
-> > >  #define MACCGSPSETR		0x011084
-> > >  #define  SPCNGRSN		BIT(31)
-> > > -- 
-> > > 2.30.2
-> > > 
+Change from v3 [5]
+------------------
+- Replaced irq_set_affinity_and_hint with irq_update_affinity_hint in
+  irdma (Leon Romanovsky)
+- rebased the patches on top of 5.14-rc2
+
+
+Change from v2 [6]
+------------------
+
+- Rebased on top of 5.14-rc1 (Leon Romanovsky)
+  + After discussion with Leon [7], made changes in the mlx5 patch to use
+    irq_set_affinity_and_hint over irq_update_affinity_hint
+  + i40iw is replaced with irdma driver, hence made the respective changes
+    in irdma (also replcaed irq_update_affinity_hint with
+    irq_set_affinity_and_hint).
+
+Change from v1 [8]
+------------------
+- Fixed compilation error by adding the new interface definitions for cases
+  where CONFIG_SMP is not defined
+
+- Fixed function usage in megaraid_sas and removed unnecessary variable
+  (Robin Murphy)
+
+- Removed unwanted #if/endif from mlx4 (Leon Romanovsky)
+
+- Other indentation related fixes
+
+ 
+[1] https://lore.kernel.org/lkml/1a044a14-0884-eedb-5d30-28b4bec24b23@redhat.com/
+[2] https://lore.kernel.org/linux-pci/d1d5e797-49ee-4968-88c6-c07119343492@arm.com/
+[3] https://lore.kernel.org/linux-arm-kernel/20210518091725.046774792@linutronix.de/
+[4] https://lore.kernel.org/patchwork/patch/1434326/
+[5] https://lore.kernel.org/linux-scsi/20210713211502.464259-1-nitesh@redhat.com/
+[6] https://lore.kernel.org/lkml/20210629152746.2953364-1-nitesh@redhat.com/
+[7] https://lore.kernel.org/lkml/YO0eKv2GJcADQTHH@unreal/
+[8] https://lore.kernel.org/linux-scsi/20210617182242.8637-1-nitesh@redhat.com/
+
+Nitesh Narayan Lal (13):
+  iavf: Use irq_update_affinity_hint
+  i40e: Use irq_update_affinity_hint
+  scsi: megaraid_sas: Use irq_set_affinity_and_hint
+  scsi: mpt3sas: Use irq_set_affinity_and_hint
+  RDMA/irdma: Use irq_update_affinity_hint
+  enic: Use irq_update_affinity_hint
+  be2net: Use irq_update_affinity_hint
+  ixgbe: Use irq_update_affinity_hint
+  mailbox: Use irq_update_affinity_hint
+  scsi: lpfc: Use irq_set_affinity
+  hinic: Use irq_set_affinity_and_hint
+  net/mlx5: Use irq_set_affinity_and_hint
+  net/mlx4: Use irq_update_affinity_hint
+
+Thomas Gleixner (1):
+  genirq: Provide new interfaces for affinity hints
+
+ drivers/infiniband/hw/irdma/hw.c              |  4 +-
+ drivers/mailbox/bcm-flexrm-mailbox.c          |  4 +-
+ drivers/net/ethernet/cisco/enic/enic_main.c   |  8 +--
+ drivers/net/ethernet/emulex/benet/be_main.c   |  4 +-
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  4 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |  8 +--
+ drivers/net/ethernet/intel/iavf/iavf_main.c   |  8 +--
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 10 ++--
+ drivers/net/ethernet/mellanox/mlx4/eq.c       |  8 ++-
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  8 +--
+ drivers/scsi/lpfc/lpfc_init.c                 |  4 +-
+ drivers/scsi/megaraid/megaraid_sas_base.c     | 27 +++++-----
+ drivers/scsi/mpt3sas/mpt3sas_base.c           | 21 ++++----
+ include/linux/interrupt.h                     | 53 ++++++++++++++++++-
+ kernel/irq/manage.c                           |  8 +--
+ 15 files changed, 114 insertions(+), 65 deletions(-)
+
+--  
+
+
