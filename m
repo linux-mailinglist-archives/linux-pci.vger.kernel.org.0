@@ -2,113 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 455623CCB74
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 00:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8AED3CCC5B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jul 2021 04:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233564AbhGRWyB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Jul 2021 18:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
+        id S234097AbhGSCrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 18 Jul 2021 22:47:31 -0400
+Received: from mx.socionext.com ([202.248.49.38]:17409 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231846AbhGRWyB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 18 Jul 2021 18:54:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0A05761029;
-        Sun, 18 Jul 2021 22:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626648662;
-        bh=E1GZ9wrZahjmOXpHUuWjVZgdMkfsdbwei1t/mYpy9C4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fClH3BDDoUNpc0wpEmkVw6BZObdB09nhHWUouGZ9Nt9+0dBTqhSvf4UBJTG5G88Py
-         fnJ+3D9LUNTde008quKP3XAf/TjsMhADDwPJu6Ja42YByr3gBGr6cj+4r/7mODjot9
-         46UFpgUH5FnrZROfr7kPRgTen5UPZxso8aXPvSbaaBTGcp276PXXNVrzlcdmz6V4Yf
-         Oekv64bmFvz7I7WBOd5ljLtcuIsR6q1rbLFNJ/YMGoNT3WXuKPDExZzqxdm3DwMe7b
-         e3uk7Ik4tE68dZdn/nsCHqJrvHVdf9EiV1CdRl2l+DSN3YHkbpBfHUf4hp3+Iik7Zc
-         euDGV64UE/ULg==
-Received: by pali.im (Postfix)
-        id 448579EE; Mon, 19 Jul 2021 00:50:59 +0200 (CEST)
-Date:   Mon, 19 Jul 2021 00:50:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>, jesse.brandeburg@intel.com,
-        anthony.l.nguyen@intel.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 1/2] igc: don't rd/wr iomem when PCI is removed
-Message-ID: <20210718225059.hd3od4k4on3aopcu@pali>
-References: <CAOSf1CGVpogQGAatuY_N0db6OL2BFegGtj6VTLA9KFz0TqYBQg@mail.gmail.com>
- <20210708154550.GA1019947@bjorn-Precision-5520>
- <CAOSf1CHtHLyEHC58jwemZS6j=jAU2OrrYitkUYmdisJtuFu4dw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOSf1CHtHLyEHC58jwemZS6j=jAU2OrrYitkUYmdisJtuFu4dw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        id S233720AbhGSCrb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 18 Jul 2021 22:47:31 -0400
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 19 Jul 2021 11:44:31 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id B6ED1205902A;
+        Mon, 19 Jul 2021 11:44:31 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 19 Jul 2021 11:44:31 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id 7A9E9B631E;
+        Mon, 19 Jul 2021 11:44:31 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH] PCI: endpoint: Use sysfs_emit() in "show" functions
+Date:   Mon, 19 Jul 2021 11:44:26 +0900
+Message-Id: <1626662666-15798-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 19 July 2021 02:31:10 Oliver O'Halloran wrote:
-> On Fri, Jul 9, 2021 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > *snip*
-> >
-> > Apologies for rehashing what's probably obvious to everybody but me.
-> > I'm trying to get a better handle on benign vs poisonous errors.
-> >
-> > MMIO means CPU reads or writes to the device.  In PCI, writes are
-> > posted and don't receive a response, so a driver will never see
-> > writel() return an error (although an error may be reported
-> > asynchronously via AER or similar).
-> >
-> > So I think we're mostly talking about CPU reads here.  We expect a PCI
-> > response containing the data.  Sometimes there's no response or an
-> > error response.  The behavior of the host bridge in these error cases
-> > is not defined by PCI, so what the CPU sees is not consistent across
-> > platforms.  In some cases, the bridge handles this as a catastrophic
-> > error that forces a system restart.
-> >
-> > But in most cases, at least on x86, the bridge logs an error and
-> > fabricates ~0 data so the CPU read can complete.  Then it's up to
-> > software to recognize that an error occurred and decide what to do
-> > about it.  Is this a benign or a poisonous error?
-> >
-> > I'd say this is a benign error. It certainly can't be ignored, but as
-> > long as the driver recognizes the error, it should be able to deal
-> > with it without crashing the whole system and forcing a restart.
-> 
-> I was thinking more in terms of what the driver author sees rather
-> than what's happening on the CPU side. The crash seen in the OP
-> appears to be because the code is "doing an MMIO." However, the
-> reasons for the crash have nothing to do with the actual mechanics of
-> the operation (which should be benign). The point I was making is that
-> the pattern of:
-> 
-> if (is_disconnected())
->     return failure;
-> return do_mmio_read(addr);
-> 
-> does have some utility as a last-ditch attempt to prevent crashes in
-> the face of obnoxious bridges or bad hardware. Granted, that should be
-> a platform concern rather than something that should ever appear in
-> driver code, but considering drivers open-code readl()/writel() calls
-> there's not really any place to put that sort of workaround.
-> 
-> That all said, the case in the OP is due to an entirely avoidable
-> driver bug and that sort of hack is absolutely the wrong thing to do.
-> 
-> Oliver
+Convert sprintf() in sysfs "show" functions to sysfs_emit() in order to
+check for buffer overruns in sysfs outputs.
 
-And do we have some solution for this kind of issue? There are more PCIe
-controllers / platforms which do not like MMIO read/write operation when
-card / link is not connected.
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-ntb.c |  4 ++--
+ drivers/pci/endpoint/pci-ep-cfs.c            | 13 ++++++-------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
-If we do not provide a way how to solve these problems then we can
-expect that people would just hack ethernet / wifi / ... device drivers
-which are currently crashing by patches like in this thread.
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index bce274d..f5dfc63 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -1918,7 +1918,7 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
+ 	struct config_group *group = to_config_group(item);		\
+ 	struct epf_ntb *ntb = to_epf_ntb(group);			\
+ 									\
+-	return sprintf(page, "%d\n", ntb->_name);			\
++	return sysfs_emit(page, "%d\n", ntb->_name);			\
+ }
+ 
+ #define EPF_NTB_W(_name)						\
+@@ -1949,7 +1949,7 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
+ 									\
+ 	sscanf(#_name, "mw%d", &win_no);				\
+ 									\
+-	return sprintf(page, "%lld\n", ntb->mws_size[win_no - 1]);	\
++	return sysfs_emit(page, "%lld\n", ntb->mws_size[win_no - 1]);	\
+ }
+ 
+ #define EPF_NTB_MW_W(_name)						\
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index f3a8b83..b40a42f 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -198,8 +198,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+ 
+ static ssize_t pci_epc_start_show(struct config_item *item, char *page)
+ {
+-	return sprintf(page, "%d\n",
+-		       to_pci_epc_group(item)->start);
++	return sysfs_emit(page, "%d\n", to_pci_epc_group(item)->start);
+ }
+ 
+ CONFIGFS_ATTR(pci_epc_, start);
+@@ -321,7 +320,7 @@ static ssize_t pci_epf_##_name##_show(struct config_item *item,	char *page)    \
+ 	struct pci_epf *epf = to_pci_epf_group(item)->epf;		       \
+ 	if (WARN_ON_ONCE(!epf->header))					       \
+ 		return -EINVAL;						       \
+-	return sprintf(page, "0x%04x\n", epf->header->_name);		       \
++	return sysfs_emit(page, "0x%04x\n", epf->header->_name);	       \
+ }
+ 
+ #define PCI_EPF_HEADER_W_u32(_name)					       \
+@@ -390,8 +389,8 @@ static ssize_t pci_epf_msi_interrupts_store(struct config_item *item,
+ static ssize_t pci_epf_msi_interrupts_show(struct config_item *item,
+ 					   char *page)
+ {
+-	return sprintf(page, "%d\n",
+-		       to_pci_epf_group(item)->epf->msi_interrupts);
++	return sysfs_emit(page, "%d\n",
++			  to_pci_epf_group(item)->epf->msi_interrupts);
+ }
+ 
+ static ssize_t pci_epf_msix_interrupts_store(struct config_item *item,
+@@ -412,8 +411,8 @@ static ssize_t pci_epf_msix_interrupts_store(struct config_item *item,
+ static ssize_t pci_epf_msix_interrupts_show(struct config_item *item,
+ 					    char *page)
+ {
+-	return sprintf(page, "%d\n",
+-		       to_pci_epf_group(item)->epf->msix_interrupts);
++	return sysfs_emit(page, "%d\n",
++			  to_pci_epf_group(item)->epf->msix_interrupts);
+ }
+ 
+ PCI_EPF_HEADER_R(vendorid)
+-- 
+2.7.4
 
-Maybe PCI subsystem could provide wrapper function which implements
-above pattern and which can be used by device drivers?
