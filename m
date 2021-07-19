@@ -2,250 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 364093CEF0A
+	by mail.lfdr.de (Postfix) with ESMTP id EB3E93CEF0C
 	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 00:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244961AbhGSVYC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 17:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1386707AbhGSThU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Jul 2021 15:37:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1506460FDC;
-        Mon, 19 Jul 2021 20:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626725879;
-        bh=GLIPz6MDw/otVUbpLQGRowCU0+qqN2R+rIcrRfFxxAY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SQ5xsIRE9CgnWD1pLTDGvBzkktUWFCbFTIBA0u3KmZEyJeBtlo/mBuBt5R201Qq39
-         RXx58UBta2pEH7tPqzIYoZH6To3efXLjQAUS2Zbq/Yit+9RpUzGhnOUlKIHg+yq5Kl
-         kfJoVF/jRcEXCmB8PQlIMdAJr+MJ7UwbDRKOkNB9AW6kNWUq9R3GKqwy5A6fdBDjSn
-         IJw/1ZDDemHVYNjGQ8CJbOG5/1LbdqMobQcLRZj43gD1fRATJaJGeeXOsObQzX6H/u
-         0x+DGgzutLAP1aMdZ3iEMmgB02eRcbb62Ecy6wF5yQRmC481KlmyolvDhv+Q68xkhy
-         5wxQKxNe3GBMA==
-Message-ID: <c61af64fd275b3a329bbad699de9db661e3cf082.camel@kernel.org>
-Subject: Re: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
-From:   Saeed Mahameed <saeed@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        id S1346920AbhGSVYX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 17:24:23 -0400
+Received: from mail-bn8nam12on2094.outbound.protection.outlook.com ([40.107.237.94]:25094
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1384959AbhGSTw5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Jul 2021 15:52:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ntrSF+ivHc4D5M7CrEn6hTdOeqyfbOXY1XBNK1FBlBdGWgRbnAR2gVKs4qn/9kqWQQSYp2f0XHm9qm8Kxnl3Fy8r186VmDX8v59xKrUwdUTx9NlUnuauh8KLkqb2fAm5KjAUfiPmeo2KxwfHln5sh0vb+HErR0hBe2aJwkZqdbEP4DR4fq/4+eeIniD0NYkoI6Zb4O5ziI7kB6QATM02kyreswmz4RsJuUKydZZa6rbJVXZiJRzg422fGhyiISeUvX8F8hY5epJD2X7XrOxj8NwAZ8HoHydeOeOKVO2Zycg3Q0qR6OIxfi+Fo0BycGDaQYOlyW4lpBnKjaoHJwaaSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbE/GkTeN/gSd9oGbEFIjSC3QKMZS9qXGBTp0loZ1CA=;
+ b=HvleMr+VSQt9HtXgKUBA5ov9mEJb8RfFC0wJLcEqGq02ZZhk2KmZCWqhn64tustCN/gQM3KwknNO4EV5XtPdigvVTTUMdonLRvb3nbFQ56VFw27wYWHSBo5HyEX/7M2CiPtsAFipXoFPZjV2LYbsoUTxOh+BZ+VN3IiFCtz/6mHfHMVUNEegqkrrRqV6htw/61EuizoBnCsxVq3/tJ7/CIHAXt6hnw/l3i50ECMKN2KGr+/JfLtTxhPHnlMX7+/PbO06GssDuvqNsGKVBFtWrPHK0/xiijUrP8k4yc0jb8dGumefG5cMkRbgszSkeGAEbjwzqzDcAmWp8x98E07AEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbE/GkTeN/gSd9oGbEFIjSC3QKMZS9qXGBTp0loZ1CA=;
+ b=McrAjnPtbOgBquc+RxpQspBH9kuCFYdWXO3FXGFjkQj8ryN4fJyIMqihBTx5g26AgR6Lxf2+qyNhh4aJZ6OrS2Bo18zcu7gAVV1Aff4fYEpmlvpQGEMo/g583a8SnOPlARxJuc5KdhfQDPzbzH86b6e/ZkGVoIADg+i1Zl5xsyg=
+Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
+ by BY5PR21MB1491.namprd21.prod.outlook.com (2603:10b6:a03:233::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.0; Mon, 19 Jul
+ 2021 20:33:30 +0000
+Received: from BYAPR21MB1270.namprd21.prod.outlook.com
+ ([fe80::2c36:65ec:79ee:6f02]) by BYAPR21MB1270.namprd21.prod.outlook.com
+ ([fe80::2c36:65ec:79ee:6f02%5]) with mapi id 15.20.4331.014; Mon, 19 Jul 2021
+ 20:33:30 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Saeed Mahameed <saeed@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
         "'x86@kernel.org'" <x86@kernel.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Date:   Mon, 19 Jul 2021 13:17:58 -0700
-In-Reply-To: <YPPwel8mhaIdHP1y@unreal>
+Subject: RE: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
+Thread-Topic: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
+Thread-Index: Add5D8Zto2s5ndNhQDWxYbgsDd9OBQABZMKwAPF1LOYAAFUOYA==
+Date:   Mon, 19 Jul 2021 20:33:30 +0000
+Message-ID: <BYAPR21MB127077DE03164CA31AE0B33DBFE19@BYAPR21MB1270.namprd21.prod.outlook.com>
 References: <BYAPR21MB12703228F3E7A8B8158EB054BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
          <BYAPR21MB127099BADA8490B48910D3F1BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
          <YPPwel8mhaIdHP1y@unreal>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+ <c61af64fd275b3a329bbad699de9db661e3cf082.camel@kernel.org>
+In-Reply-To: <c61af64fd275b3a329bbad699de9db661e3cf082.camel@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=eecc8dcb-8c3f-4abd-916d-f291e37535a0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-07-19T20:27:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d8d3f08f-d0a3-47f5-cc47-08d94af478a8
+x-ms-traffictypediagnostic: BY5PR21MB1491:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR21MB14919A690132872DB911ADEEBFE19@BY5PR21MB1491.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bgklswPg3Y71Hloq3Eo4TBOUAss466qql+SjzsFjXzfCE5Dy+9cGwftoAcrYfHjjMStmHlJ1/AC50NZVyorIctRQx05ETc/p31EbbMQrpyqBg1Trs+PrDHRvRlpTtqQKH83Bs+5RuPgW6X5gJecF5ipF/Zk8mUpmI9maYwes8+/v0IxETuUL7fG1mcHuUjnTPMqREjpA6l+5kJKC/fXHMw/ZfINHzWFaFiHn+RmKvzmdeGtIyz9B9BvIqcQveEojMh1rmbkTAKnK23a4IGTsbAolKkevLPUD+9QjZzsQPk3Kli8oDolJp2mIbtgYIJso/RocZUnWNSR8dqAbi6hByPK18fRBo/LGXcAl/jnD4HBp49ZoIeqPRDmCngvkzxybUScxsPF5TR0A28dSsCtEIfjmH4f8K2XCMu9Jyl3w5t8PVVaiK0PFY5RB9conrw4hsUHrEbmOmpqyCfGn0cV1ioHCu8SJ7G0AiWfE1vuQ5xokNS/2esj65pCgrF98FgpIw6TZaMQslp1aokw1oU2Vx87bUFJ6lTIwVdVwaUX/M4aAX/EAMe7Nkra+bcTJFLmuH2Uuv/gHvn4xDb3IBDsJtZ1Iqk4fFTuScPgYPb6REVY/GS3ct5JtEZdsaknP8y3+mEByyJh3PFfIkJ8HzwSFZaQA1/RtZq5LGlc5vBUttOOLzbKNcuzRqq4s/Rg6Om9iEv7xml1uHNrcAqgM3PDPjw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(54906003)(10290500003)(66446008)(66946007)(76116006)(64756008)(66476007)(38100700002)(8936002)(122000001)(9686003)(66556008)(5660300002)(8676002)(4326008)(86362001)(110136005)(316002)(83380400001)(55016002)(71200400001)(186003)(508600001)(8990500004)(6506007)(82950400001)(2906002)(52536014)(7696005)(82960400001)(33656002)(26005)(38070700004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RXlUQ0luMXk3SnU3OGx0WHB1K0VrNVB6QlljQWlDa2d0blJ3U2R5alhTaFMz?=
+ =?utf-8?B?dzNHcTZFVStreFJiZ2x5S0lOTCs3ZHl0L0xzRmZCeHZwQjBEZE40ZkV0TElT?=
+ =?utf-8?B?dWNjRjlnQW1zN3dKRzBROFJVSnYvRVJZUjNvdU9RK0FTeDIrZGhTRVBrbExw?=
+ =?utf-8?B?Q1RHenFmTWZOMWVEOGx1cDhPQ3dwZ3dkVVhoQ3FBWmFjMVlQYmNhUE1CT1Ji?=
+ =?utf-8?B?Mjc5Z0VxUmN3RE1kekdaVmRyUmN5YmNuaW1XbExBTmVUSkpEWUNnZHR5dDFU?=
+ =?utf-8?B?YmVRZDFCRkhMcE1EdzI2NGRHcVUveVVwWkpzT2dpQmZxUkNINkZxWW1QWDFq?=
+ =?utf-8?B?TGMzOG5GSUlnMFBOZnlpUWIxUS83bDdFNW5oL3Q4cTJJbG1jdHdRcisrYUNI?=
+ =?utf-8?B?Z3M2K0Z2UldWUDg5VGFBZnFXSnhQZE1uVytHSlNYTnR4UUxUOWtxcEk4alps?=
+ =?utf-8?B?RHcrb0ZuZGFSL0l5dW1TRlBUUytCUFQxd2ZXMFl1dnZ1VGtzYVA5VXJtVVhC?=
+ =?utf-8?B?YzZwUnNiaFY1V0k1NHVWODlzcVBsMGU0SW90NXF1Rkw4dFB6K2lSZ00yY0xZ?=
+ =?utf-8?B?bHA5Znc5RllMekVyZ3lJMlJkTmZKR0ZjWHhiallDUDZZelQwUkVuUWhMSnNa?=
+ =?utf-8?B?bGZnQkJDa2ErNGdrZHMyTFY4cDZ0eEF5UHczbW1BdEQzUVBDRDdNbXRBeG0v?=
+ =?utf-8?B?OURXbWFOQU9DWEt6dXUxa3VQRVhIdFM5dk0vMVhGM1g5U2s5TmN1V2NLaDh2?=
+ =?utf-8?B?dlZZVDcxZHBHQmJtZVRzeWgxUElEUHBwempsQmhWWVVkY2ZKdHN1ZmVCb3lM?=
+ =?utf-8?B?TjZoK2ZBaDZHWitDc2xrb2RzVEFkUUZyR1A0M3BGemlpQUliTmE0M0k4VEZ0?=
+ =?utf-8?B?VHNweHpVMVdEbXg4VC80bGc3Vnc4SENYeU5DTjdsdHNJSlFiWVVRWmQ4ZE9I?=
+ =?utf-8?B?OFBLM0RvZGlvY3lPeVNyYlo4WWo0TERsR0JhNjJsNk0wTHVDRVNNWXAzZmtT?=
+ =?utf-8?B?My9wSmJkd2pNRjJVdlBSUlZCM2N0UDBIWGExZ3JxMlNCWWR3T3NKL2x0N1c3?=
+ =?utf-8?B?b0ZTdC9BdURmODB3dUJJWVp2bnh2OUp3d3RIbkVBRGx0NlBKQm9hbGZidWto?=
+ =?utf-8?B?aW03Y0RzRzZldHQxYzIvV1oxaUN5WTQ5S0hpVlljeXlRZzZTT2RxYXdteW9q?=
+ =?utf-8?B?MmJ0RW5QTm0xMHZpTlV2Nm1aelpGN1B1K1F6di9hMEEwM3U2UktNQS9PUjFY?=
+ =?utf-8?B?N3Y2Uy9ObVJQWHIzMnQ0L1JPclZxUFUvMUR2ZFZpdDd5M0MxTW5wVEhROER6?=
+ =?utf-8?B?SS90bUtBSDNLZnRJYWpLK0h0eERBR2FjdWlTcGRSbkNVL3NhV3BSLzRRNzA5?=
+ =?utf-8?B?cytvWGNyUTRrTUkwbktqTGFuTUNBb1lMTDFIRXQrcVdkeGVrRW9IVnd0b1JE?=
+ =?utf-8?B?K1FjYjRkUXZIM3IxaE41WkJ1U0E1eVp1aXpzeGM4MVNabkQyQTEzQWcva1M0?=
+ =?utf-8?B?QjQxU1AyQWUrK21NNS9kM1NZZGJQUWR2cC96SmRDWmlJNU1iR0ZKMjZxR2pj?=
+ =?utf-8?B?YWdJY1ZRdnlSNEdiU1lmenduL29jaVV0QTBvM2dWMG5MeC9tMVdLNVV5MmRx?=
+ =?utf-8?B?QkxKSFlYWERmNjJDWlFvMEkxb3lYK0VienVjd3M5bXd6VmZZbWM1dHMwU2VY?=
+ =?utf-8?B?WTZyR3RuUzQ4UVpvY0xza2V6VS94RmZLYngvUE10Rnk1R3JPeHBnWE9VSng5?=
+ =?utf-8?Q?2R+GbwrNhVgUBlvG0xKF+DAAwRvC5F1DWkygeVQ?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8d3f08f-d0a3-47f5-cc47-08d94af478a8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2021 20:33:30.5760
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6EIBVg9x3UhelEG2WoBocdWZ9JYP2E3NVXHUB8foumr3KC1wxx5Ph0vFaAE94TeAw81CTuahQB/rO08EH6XOtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1491
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 2021-07-18 at 12:12 +0300, Leon Romanovsky wrote:
-> On Thu, Jul 15, 2021 at 01:11:55AM +0000, Dexuan Cui wrote:
-> > > From: Dexuan Cui
-> > > Sent: Wednesday, July 14, 2021 5:39 PM
-> > > To: netdev@vger.kernel.org; x86@kernel.org
-> > > Cc: Haiyang Zhang <haiyangz@microsoft.com>;
-> > > linux-kernel@vger.kernel.org
-> > > Subject: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
-> > > 
-> > > Hi all,
-> > > I'm seeing a strange "no MSI-X interrupt" issue with the Mellanox
-> > > NIC
-> > > driver on a physical Linux host [1], if I only enable part of the
-> > > CPUs.
-> > > 
-> > > The physical host has 104 logical processors (2 sockets, and each
-> > > socket
-> > > has 26 cores with HT enabled). By default, the Mellanox driver
-> > > works fine
-> > > when Linux boots up.
-> > > 
-> > > If I only use 1, 2, 32, 64, 96 processors by the Linux kernel
-> > > parameter
-> > > "maxcpus=X" or "nr_cpus=X", everthing still works fine.
-> > > 
-> > > However, if the Linux host OS only uses 4, 8 or 16 processors, the
-> > > mlx5_core driver fails to load as it can not receive interrupt when
-> > > creating EQ (maxcpus=8 or 16), or the driver can load but it
-> > > reports a
-> > > timeout error when I try to bring the NIC up (maxcpus=4). This
-> > > issue is
-> > > a 100% repro.
-> > > 
-> > > For example, with "maxcpus=8", I get the below timeout error when
-> > > trying
-> > > to load mlx5_core:
-> > > 
-> > > # modprobe mlx5_core
-> > > [ 1475.716688] mlx5_core 0000:d8:00.0: firmware version: 16.25.8352
-> > > [ 1475.722742] mlx5_core 0000:d8:00.0: 126.016 Gb/s available PCIe
-> > > bandwidth (8.0 GT/s PCIe x16 link)
-> > > [ 1475.991398] mlx5_core 0000:d8:00.0: E-Switch: Total vports 2,
-> > > per vport:
-> > > max uc(1024) max mc(16384)
-> > > 
-> > > [ 1537.020001] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid
-> > > 1416):
-> > > Recovered 1 EQEs on cmd_eq
-> > > [ 1537.028969] mlx5_core 0000:d8:00.0:
-> > > wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]:
-> > > CREATE_EQ(0x301)
-> > > recovered after timeout
-> > > [ 1598.460003] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid
-> > > 1416):
-> > > Recovered 1 EQEs on cmd_eq
-> > > [ 1598.468978] mlx5_core 0000:d8:00.0:
-> > > wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]:
-> > > CREATE_EQ(0x301)
-> > > recovered after timeout
-> > > [ 1659.900010] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid
-> > > 1416):
-> > > Recovered 1 EQEs on cmd_eq
-> > > [ 1659.908987] mlx5_core 0000:d8:00.0:
-> > > wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]:
-> > > CREATE_EQ(0x301)
-> > > recovered after timeout
-> > > [ 1721.340006] mlx5_core 0000:d8:00.0: mlx5_cmd_eq_recover:245:(pid
-> > > 1416):
-> > > Recovered 1 EQEs on cmd_eq
-> > > [ 1721.348989] mlx5_core 0000:d8:00.0:
-> > > wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]:
-> > > CREATE_EQ(0x301)
-> > > recovered after timeout
-> > > 
-> > > When this happens, the mlx5_core driver is stuck with the below
-> > > call-trace, waiting for some interrupt:
-> > > 
-> > > # ps aux |grep modprobe
-> > > root        1416  0.0  0.0  11024  1472 ttyS0    D+   08:08   0:00
-> > > modprobe mlx5_core
-> > > root        1480  0.0  0.0   6440   736 pts/0    S+   08:15   0:00
-> > > grep --color=auto modprobe
-> > > 
-> > > # cat /proc/1416/stack
-> > > [<0>] cmd_exec+0x8a7/0x9b0 [mlx5_core]
-> > > [<0>] mlx5_cmd_exec+0x24/0x50 [mlx5_core]
-> > > [<0>] create_map_eq+0x2a6/0x380 [mlx5_core]
-> > > [<0>] mlx5_eq_table_create+0x504/0x710 [mlx5_core]
-> > > [<0>] mlx5_load+0x52/0x130 [mlx5_core]
-> > > [<0>] mlx5_init_one+0x1cc/0x250 [mlx5_core]
-> > > [<0>] probe_one+0x1d3/0x2a0 [mlx5_core]
-> > > [<0>] local_pci_probe+0x45/0x80
-> > > [<0>] pci_device_probe+0x10f/0x1c0
-> > > [<0>] really_probe+0x1c1/0x3b0
-> > > [<0>] __driver_probe_device+0x109/0x180
-> > > [<0>] driver_probe_device+0x23/0xa0
-> > > [<0>] __driver_attach+0xbd/0x160
-> > > [<0>] bus_for_each_dev+0x7c/0xc0
-> > > [<0>] driver_attach+0x1e/0x20
-> > > [<0>] bus_add_driver+0x152/0x1f0
-> > > [<0>] driver_register+0x74/0xd0
-> > > [<0>] __pci_register_driver+0x68/0x70
-> > > [<0>] init+0x6b/0x1000 [mlx5_core]
-> > > [<0>] do_one_initcall+0x46/0x1d0
-> > > [<0>] do_init_module+0x62/0x250
-> > > [<0>] load_module+0x2503/0x2730
-> > > [<0>] __do_sys_finit_module+0xbf/0x120
-> > > [<0>] __x64_sys_finit_module+0x1a/0x20
-> > > [<0>] do_syscall_64+0x38/0xc0
-> > > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > > 
-> > > To make the issue even weirder, when the issue happens (e.g. when
-> > > Linux
-> > > only uses 8 processors), if I manually bring CPU #8~#31 online [2]
-> > > and
-> > > then bring them offline [3], the Mellanox driver will work fine!
-> > > 
-> > > This is a x86-64 host. Is it possibe that the IOMMU Interrrupt
-> > > Remapping
-> > > is not proprely set up with maxcpus=4, 8 and 16?
-> > > 
-> > > The above tests were done with the recent Linux v5.14-rc1 kernel. I
-> > > also
-> > > tried Ubuntu 20.04's kernel "5.4.0-77-generic", and the Mellanox
-> > > driver
-> > > exhibits exactly the same issue.
-> > > 
-> > > I have Linux/Windows dual-boot on this physical machine, and
-> > > Windows
-> > > doesn't have the issue when I let it only use 4, 8 and 16
-> > > processors.
-> > > So this looks like somehow the issue is specific to Linux.
-> > > 
-> > > Can someone please shed some light on this strange issue? I'm ready
-> > > to provide more logs if needed. Thanks!
-> > > 
-> > > PS, the physical machine has 4 NVMe controllers and 4 Broadcom
-> > > NICs,
-> > > which are not affected by maxcpus=4, 8, and 16.
-> > > 
-> > > [1] This is the 'lspci' output of the Mellanox NIC:
-> > > d8:00.0 Ethernet controller: Mellanox Technologies MT27800 Family
-> > > [ConnectX-5]
-> > >         Subsystem: Mellanox Technologies MT27800 Family [ConnectX-
-> > > 5]
-> > >         Flags: bus master, fast devsel, latency 0, IRQ 33, NUMA
-> > > node 1
-> > >         Memory at f8000000 (64-bit, prefetchable) [size=32M]
-> > >         Expansion ROM at fbe00000 [disabled] [size=1M]
-> > >         Capabilities: [60] Express Endpoint, MSI 00
-> > >         Capabilities: [48] Vital Product Data
-> > >         Capabilities: [9c] MSI-X: Enable+ Count=64 Masked-
-> > >         Capabilities: [c0] Vendor Specific Information: Len=18 <?>
-> > >         Capabilities: [40] Power Management version 3
-> > >         Capabilities: [100] Advanced Error Reporting
-> > >         Capabilities: [150] Alternative Routing-ID Interpretation
-> > > (ARI)
-> > >         Capabilities: [180] Single Root I/O Virtualization (SR-IOV)
-> > >         Capabilities: [1c0] Secondary PCI Express
-> > >         Kernel driver in use: mlx5_core
-> > >         Kernel modules: mlx5_core
-> > > 00: b3 15 17 10 46 05 10 00 00 00 00 02 08 00 00 00
-> > > 10: 0c 00 00 f8 00 00 00 00 00 00 00 00 00 00 00 00
-> > > 20: 00 00 00 00 00 00 00 00 00 00 00 00 b3 15 80 00
-> > > 30: 00 00 e0 fb 60 00 00 00 00 00 00 00 ff 01 00 00
-> > > 
-> > > [2] for i in `seq 8 31`;  do echo 1 > 
-> > > /sys/devices/system/cpu/cpu$i/online;
-> > > done
-> > > [3] for i in `seq 8 31`;  do echo 0 > 
-> > > /sys/devices/system/cpu/cpu$i/online;
-> > > done
-> > > 
-> > > Thanks,
-> > > -- Dexuan
-> > 
-> > (+ the linux-pci list)
-> > 
-> > It turns out that adding "intremap=off" can work around the issue!
-> > 
-> > The root cause is still not clear yet. I don't know why Windows is
-> > good here.
-> 
-> The card is stuck in the FW, maybe Saeed knows why. I tried your
-> scenario and it worked for me.
-> 
-> Thanks
-
-I don't think the FW is stuck since we see the cmd completion after
-timeout, this means that the 1st interrupt from the device got lost.
-
-"wait_func_handle_exec_timeout:1062:(pid 1416): cmd[0]:
-CREATE_EQ(0x301) recovered after timeout"
-
-the fact that this happens on  5.14 and 5.4 kernels and the issue is
-worked around via bringing the cpus online, or disabling intremap,
-means that there is something wrong with the interrupt remapping
-mechanism, maybe the interrupt is being delivered on an offline cpu ? 
-is this a qemu/VM guest or a bare metal host ?
-
-
-
-
-
+PiBGcm9tOiBTYWVlZCBNYWhhbWVlZCA8c2FlZWRAa2VybmVsLm9yZz4NCj4gU2VudDogTW9uZGF5
+LCBKdWx5IDE5LCAyMDIxIDE6MTggUE0NCj4gPiA+IC4uLg0KPiA+ID4gSXQgdHVybnMgb3V0IHRo
+YXQgYWRkaW5nICJpbnRyZW1hcD1vZmYiIGNhbiB3b3JrIGFyb3VuZCB0aGUgaXNzdWUhDQo+ID4g
+Pg0KPiA+ID4gVGhlIHJvb3QgY2F1c2UgaXMgc3RpbGwgbm90IGNsZWFyIHlldC4gSSBkb24ndCBr
+bm93IHdoeSBXaW5kb3dzIGlzDQo+ID4gPiBnb29kIGhlcmUuDQo+ID4NCj4gPiBUaGUgY2FyZCBp
+cyBzdHVjayBpbiB0aGUgRlcsIG1heWJlIFNhZWVkIGtub3dzIHdoeS4gSSB0cmllZCB5b3VyDQo+
+ID4gc2NlbmFyaW8gYW5kIGl0IHdvcmtlZCBmb3IgbWUuDQo+ID4NCj4gPiBUaGFua3MNCj4gDQo+
+IEkgZG9uJ3QgdGhpbmsgdGhlIEZXIGlzIHN0dWNrIHNpbmNlIHdlIHNlZSB0aGUgY21kIGNvbXBs
+ZXRpb24gYWZ0ZXINCj4gdGltZW91dCwgdGhpcyBtZWFucyB0aGF0IHRoZSAxc3QgaW50ZXJydXB0
+IGZyb20gdGhlIGRldmljZSBnb3QgbG9zdC4NCj4gDQo+ICJ3YWl0X2Z1bmNfaGFuZGxlX2V4ZWNf
+dGltZW91dDoxMDYyOihwaWQgMTQxNik6IGNtZFswXToNCj4gQ1JFQVRFX0VRKDB4MzAxKSByZWNv
+dmVyZWQgYWZ0ZXIgdGltZW91dCINCj4gDQo+IHRoZSBmYWN0IHRoYXQgdGhpcyBoYXBwZW5zIG9u
+ICA1LjE0IGFuZCA1LjQga2VybmVscyBhbmQgdGhlIGlzc3VlIGlzDQo+IHdvcmtlZCBhcm91bmQg
+dmlhIGJyaW5naW5nIHRoZSBjcHVzIG9ubGluZSwgb3IgZGlzYWJsaW5nIGludHJlbWFwLA0KPiBt
+ZWFucyB0aGF0IHRoZXJlIGlzIHNvbWV0aGluZyB3cm9uZyB3aXRoIHRoZSBpbnRlcnJ1cHQgcmVt
+YXBwaW5nDQo+IG1lY2hhbmlzbSwgbWF5YmUgdGhlIGludGVycnVwdCBpcyBiZWluZyBkZWxpdmVy
+ZWQgb24gYW4gb2ZmbGluZSBjcHUgPw0KPiBpcyB0aGlzIGEgcWVtdS9WTSBndWVzdCBvciBhIGJh
+cmUgbWV0YWwgaG9zdCA/DQoNClRoYW5rcyBmb3IgdGhlIHJlcGxpZXMhIA0KDQpUaGlzIGlzIGEg
+YmFyZSBtZXRhbCB4ODYtNjQgaG9zdCB3aXRoIEludGVsIENQVXMuIFllcywgSSBiZWxpZXZlIHRo
+ZQ0KaXNzdWUgaXMgaW4gdGhlIElPTU1VIEludGVycnVwdCBSZW1hcHBpbmcgbWVjaGFuaXNtIHJh
+dGhlciBpbiB0aGUNCk5JQyBkcml2ZXIuIEkganVzdCBkb24ndCB1bmRlcnN0YW5kIHdoeSBicmlu
+Z2luZyB0aGUgQ1BVcyBvbmxpbmUgYW5kDQpvZmZsaW5lIGNhbiB3b3JrIGFyb3VuZCB0aGUgaXNz
+dWUuIEknbSB0cnlpbmcgdG8gZHVtcCB0aGUgSU9NTVUgSVINCnRhYmxlIGVudHJpZXMgdG8gbG9v
+ayBmb3IgYW55IGVycm9yLiANCg0KVGhhbmtzLA0KRGV4dWFuDQo=
