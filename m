@@ -2,62 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 805983CF07B
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 02:07:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BB3C3CF083
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 02:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbhGSXXm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 19:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1386326AbhGSVb7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Jul 2021 17:31:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A4B1761009;
-        Mon, 19 Jul 2021 22:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626732753;
-        bh=ywXebz7khwKBuJDP8OJ9Y9f3IjGDiPgo1ZdKMPBv1PA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tQxz58fpz1mY5XX0kdt+dFiv6jbaVWB+56C1EQuXdQjfzBwzfTaqh0NQiDPwYRktK
-         Qy+ER9m9hZEhZU3p9ZVqQtkHvpnH9SuW/jMyruW0XVfzQDc0hxQk7Cb/mEYPxFd+b1
-         9lk00Kg/cADsH4z6CuerM75C30yY5Huh6MLLhTckJML2/Y6bizBWSRBWMSvhbv9QCK
-         77TlqeVrogNTd/tMvqDLSN6P/GjTXZxg9a3akbUUulIVIeS/l1YNOrzjKt1WE/HKtS
-         hidAc2d6foYgIjL9lYcO8dns0NjEhw/8bK3uiPmUR9AvRMPZSqBlyrChYlZIoj/ZgA
-         CR3YjKjOZG2Lw==
-Received: by mail-ej1-f41.google.com with SMTP id qb4so31179229ejc.11;
-        Mon, 19 Jul 2021 15:12:33 -0700 (PDT)
-X-Gm-Message-State: AOAM533sPr7mwEu7kiPzKk/3zNCRDHv9UOdnDGasSJU8GgR6GG/p2ROI
-        14tevMqaV+/QAIMdQDWAEQppY24XUSwgBF6yoQ==
-X-Google-Smtp-Source: ABdhPJx7MW96k4Ls+bEI+HqOvpAQG4RH5seAXZmheOFPnHbto076DqoxZowrqK7C8eOSrfU4aPtD+WqCp8H7O1FAh/E=
-X-Received: by 2002:a17:906:8158:: with SMTP id z24mr29550707ejw.359.1626732752310;
- Mon, 19 Jul 2021 15:12:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210719220351.2662758-1-robh@kernel.org>
-In-Reply-To: <20210719220351.2662758-1-robh@kernel.org>
+        id S1355109AbhGSX1T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 19:27:19 -0400
+Received: from mail-io1-f44.google.com ([209.85.166.44]:40622 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1392359AbhGSWGn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 18:06:43 -0400
+Received: by mail-io1-f44.google.com with SMTP id l5so21934172iok.7;
+        Mon, 19 Jul 2021 15:47:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KvZduHEK4/JPd13AvRj7Dwo91+WDf4ZZkoTysoY/Z8c=;
+        b=C8ntqv2VbdZQLR0ghf46So1qeVVs/zRVH8+HvX8ekwXnt61iPsHBB5PdQz+bcMbrcI
+         t5CfL+MTiVz8ZEaEU/PCcG5dAOw8oh26hW7i4Ev0QpbdD8nc8We7weivWHB+rQfQqid6
+         t8Owmk+m4EwJoGKmugnSgn2HMnOvkT7kDORJedPE05ADZJaXzPLNTGSbYbQvChYrwp5u
+         Uck6PPyD/ZjfUEPNLEhO4cT6YjWfRwaEH+CXKvLj7PxzwK2c/2ymEH8vh9WzSk25Lxel
+         lid6a+Xrjva1u4IIkwp1x9HB1lz7ZuwxX2lq7zL1rNRFgXhwj/5EXcxQ8JTfDqVS0PJ2
+         3asA==
+X-Gm-Message-State: AOAM5321Z+feDVh/LHNpMVlc4jxBaLJ6ii/pEjd4E7BGuTQYqLmIAzJ9
+        caeKZBCNdHK1CW1TjYbc/w==
+X-Google-Smtp-Source: ABdhPJx2z9Xre7CdCLPouoO6dfskCrk/L/I3dMKprr4kx+Phkn3qCMvEw/eDabtuZvzFiQhg1hdthg==
+X-Received: by 2002:a6b:fe03:: with SMTP id x3mr1146470ioh.120.1626734842302;
+        Mon, 19 Jul 2021 15:47:22 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id w10sm10283737ilo.17.2021.07.19.15.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jul 2021 15:47:21 -0700 (PDT)
+Received: (nullmailer pid 2767559 invoked by uid 1000);
+        Mon, 19 Jul 2021 22:47:18 -0000
+Date:   Mon, 19 Jul 2021 16:47:18 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 19 Jul 2021 16:12:20 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+JjdB_FLe6nB=K+nHzdjsd-KA8-vzzm3oodwRsEu0REQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+JjdB_FLe6nB=K+nHzdjsd-KA8-vzzm3oodwRsEu0REQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: PCI: intel,lgm-pcie: Add reference to common schemas
-To:     devicetree@vger.kernel.org, Rahul Tanwar <rtanwar@maxlinear.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        jianjun.wang@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, bhelgaas@google.com,
+        ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com,
+        linux-pci@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org, yong.wu@mediatek.com
+Subject: Re: [PATCH v11 1/4] dt-bindings: PCI: mediatek: Update the Device
+ tree bindings
+Message-ID: <20210719224718.GA2766057@robh.at.kernel.org>
+References: <20210719073456.28666-1-chuanjia.liu@mediatek.com>
+ <20210719073456.28666-2-chuanjia.liu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210719073456.28666-2-chuanjia.liu@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 4:03 PM Rob Herring <robh@kernel.org> wrote:
->
-> Add a reference to snps,dw-pcie.yaml (and indirectly pci-bus.yaml) schemas.
-> With this, the common bus properties can be dropped from the schema.
->
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Dilip Kota <eswara.kota@linux.intel.com>
+On Mon, 19 Jul 2021 15:34:53 +0800, Chuanjia Liu wrote:
+> There are two independent PCIe controllers in MT2712 and MT7622
+> platform. Each of them should contain an independent MSI domain.
+> 
+> In old dts architecture, MSI domain will be inherited from the root
+> bridge, and all of the devices will share the same MSI domain.
+> Hence that, the PCIe devices will not work properly if the irq number
+> which required is more than 32.
+> 
+> Split the PCIe node for MT2712 and MT7622 platform to comply with
+> the hardware design and fix MSI issue.
+> 
+> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  .../bindings/pci/mediatek-pcie-cfg.yaml       |  39 ++++
+>  .../devicetree/bindings/pci/mediatek-pcie.txt | 206 ++++++++++--------
+>  2 files changed, 150 insertions(+), 95 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
+> 
 
-While at it, I'll change to a non-bouncing address for LGM SoC[1]:
-Rahul Tanwar <rtanwar@maxlinear.com>
 
-Rob
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-[1] https://lkml.org/lkml/2021/3/16/282
+If a tag was not added on purpose, please state why and what changed.
+
