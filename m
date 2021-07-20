@@ -2,158 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C03053CF291
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 05:29:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 690303CF3A9
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 06:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346615AbhGTCrs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 22:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244888AbhGTCrh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jul 2021 22:47:37 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F2B3CC061762;
-        Mon, 19 Jul 2021 20:28:15 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 611F89200C1; Tue, 20 Jul 2021 05:28:15 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 5AF8A9200C0;
-        Tue, 20 Jul 2021 05:28:15 +0200 (CEST)
-Date:   Tue, 20 Jul 2021 05:28:15 +0200 (CEST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Nikolai Zhubr <zhubr.2@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-cc:     x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] x86: Fix typo s/ECLR/ELCR/ for the PIC register
-In-Reply-To: <alpine.DEB.2.21.2107171813230.9461@angie.orcam.me.uk>
-Message-ID: <alpine.DEB.2.21.2107200251080.9461@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2107171813230.9461@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S236395AbhGTEGk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 00:06:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48231 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1346412AbhGTEBy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 00:01:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626756141;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fKQJw44KnWWw6kFQEoZm4t5SzBRdmsu+r00ClxkZDTU=;
+        b=bkjI4SRosP9ZyBqbDAqKPvHhDrV2c640m6tPnLkAfdA89KquV92+aMaSLnAPSBVudKcV7d
+        pDBLqndNZVQ8foMAlw6pE3QK9ehiYKAj0gzSW1bLyNd7gKf0DJ3G9fdZgr01SZbRY9a3pD
+        //b1n5fOam+LXAJYSJlC/s/6LXrvFs4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-z2E0QqyCN_2Q9H9fHiqZ4A-1; Tue, 20 Jul 2021 00:42:19 -0400
+X-MC-Unique: z2E0QqyCN_2Q9H9fHiqZ4A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABDBB800050;
+        Tue, 20 Jul 2021 04:42:18 +0000 (UTC)
+Received: from localhost (ovpn-12-178.pek2.redhat.com [10.72.12.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 260D860938;
+        Tue, 20 Jul 2021 04:42:13 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH V2] genirq/affinity: add helper of irq_affinity_calc_sets
+Date:   Tue, 20 Jul 2021 12:42:09 +0800
+Message-Id: <20210720044209.851141-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The proper spelling for the acronym referring to the Edge/Level Control 
-Register is ELCR rather than ECLR.  Adjust references accordingly.  No 
-functional change.
+When driver requests to allocate irq affinity managed vectors,
+pci_alloc_irq_vectors_affinity() may fallback to single vector
+allocation. In this situation, we don't need to call
+irq_create_affinity_masks for calling into ->calc_sets() for
+avoiding potential memory leak, so add the helper for this purpose.
 
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Fixes: c66d4bd110a1 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- arch/x86/kernel/acpi/boot.c |    6 +++---
- arch/x86/kvm/i8259.c        |   20 ++++++++++----------
- arch/x86/kvm/irq.h          |    2 +-
- 3 files changed, 14 insertions(+), 14 deletions(-)
+V2:
+	- move WARN_ON_ONCE() into irq_affinity_calc_sets
+	- don't install default calc_sets() callback as suggested by
+	  Christoph
 
-linux-x86-pic-elcr-typo.diff
-Index: linux-macro-pirq/arch/x86/kernel/acpi/boot.c
-===================================================================
---- linux-macro-pirq.orig/arch/x86/kernel/acpi/boot.c
-+++ linux-macro-pirq/arch/x86/kernel/acpi/boot.c
-@@ -558,10 +558,10 @@ acpi_parse_nmi_src(union acpi_subtable_h
-  * If a PIC-mode SCI is not recognized or gives spurious IRQ7's
-  * it may require Edge Trigger -- use "acpi_sci=edge"
-  *
-- * Port 0x4d0-4d1 are ECLR1 and ECLR2, the Edge/Level Control Registers
-+ * Port 0x4d0-4d1 are ELCR1 and ELCR2, the Edge/Level Control Registers
-  * for the 8259 PIC.  bit[n] = 1 means irq[n] is Level, otherwise Edge.
-- * ECLR1 is IRQs 0-7 (IRQ 0, 1, 2 must be 0)
-- * ECLR2 is IRQs 8-15 (IRQ 8, 13 must be 0)
-+ * ELCR1 is IRQs 0-7 (IRQ 0, 1, 2 must be 0)
-+ * ELCR2 is IRQs 8-15 (IRQ 8, 13 must be 0)
-  */
+ drivers/pci/msi.c         |  3 ++-
+ include/linux/interrupt.h |  7 +++++++
+ kernel/irq/affinity.c     | 28 +++++++++++++++++-----------
+ 3 files changed, 26 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 9232255c8515..4e6fbdf0741c 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1224,7 +1224,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 			 * for the single interrupt case.
+ 			 */
+ 			if (affd)
+-				irq_create_affinity_masks(1, affd);
++				irq_affinity_calc_sets(1, affd);
++
+ 			pci_intx(dev, 1);
+ 			return 1;
+ 		}
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 2ed65b01c961..c7ff84d60465 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -340,6 +340,7 @@ irq_create_affinity_masks(unsigned int nvec, struct irq_affinity *affd);
  
- void __init acpi_pic_sci_set_trigger(unsigned int irq, u16 trigger)
-Index: linux-macro-pirq/arch/x86/kvm/i8259.c
-===================================================================
---- linux-macro-pirq.orig/arch/x86/kvm/i8259.c
-+++ linux-macro-pirq/arch/x86/kvm/i8259.c
-@@ -541,17 +541,17 @@ static int picdev_slave_read(struct kvm_
- 			    addr, len, val);
+ unsigned int irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
+ 				       const struct irq_affinity *affd);
++int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd);
+ 
+ #else /* CONFIG_SMP */
+ 
+@@ -391,6 +392,12 @@ irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
+ 	return maxvec;
  }
  
--static int picdev_eclr_write(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
-+static int picdev_elcr_write(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
- 			     gpa_t addr, int len, const void *val)
- {
--	return picdev_write(container_of(dev, struct kvm_pic, dev_eclr),
-+	return picdev_write(container_of(dev, struct kvm_pic, dev_elcr),
- 			    addr, len, val);
++static inline int irq_affinity_calc_sets(unsigned int affvecs,
++					 struct irq_affinity *affd)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_SMP */
+ 
+ /*
+diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+index 4d89ad4fae3b..addd04d68d42 100644
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -405,6 +405,22 @@ static void default_calc_sets(struct irq_affinity *affd, unsigned int affvecs)
+ 	affd->set_size[0] = affvecs;
  }
  
--static int picdev_eclr_read(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
-+static int picdev_elcr_read(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
- 			    gpa_t addr, int len, void *val)
- {
--	return picdev_read(container_of(dev, struct kvm_pic, dev_eclr),
-+	return picdev_read(container_of(dev, struct kvm_pic, dev_elcr),
- 			    addr, len, val);
- }
++int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd)
++{
++	/*
++	 * Simple invocations do not provide a calc_sets() callback. Call
++	 * the generic one.
++	 */
++	if (!affd->calc_sets)
++		default_calc_sets(affd, affvecs);
++	else
++		affd->calc_sets(affd, affvecs);
++
++	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
++		return -ERANGE;
++	return 0;
++}
++
+ /**
+  * irq_create_affinity_masks - Create affinity masks for multiqueue spreading
+  * @nvecs:	The total number of vectors
+@@ -429,17 +445,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+ 	else
+ 		affvecs = 0;
  
-@@ -577,9 +577,9 @@ static const struct kvm_io_device_ops pi
- 	.write    = picdev_slave_write,
- };
+-	/*
+-	 * Simple invocations do not provide a calc_sets() callback. Install
+-	 * the generic one.
+-	 */
+-	if (!affd->calc_sets)
+-		affd->calc_sets = default_calc_sets;
+-
+-	/* Recalculate the sets */
+-	affd->calc_sets(affd, affvecs);
+-
+-	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
++	if (irq_affinity_calc_sets(affvecs, affd))
+ 		return NULL;
  
--static const struct kvm_io_device_ops picdev_eclr_ops = {
--	.read     = picdev_eclr_read,
--	.write    = picdev_eclr_write,
-+static const struct kvm_io_device_ops picdev_elcr_ops = {
-+	.read     = picdev_elcr_read,
-+	.write    = picdev_elcr_write,
- };
- 
- int kvm_pic_init(struct kvm *kvm)
-@@ -602,7 +602,7 @@ int kvm_pic_init(struct kvm *kvm)
- 	 */
- 	kvm_iodevice_init(&s->dev_master, &picdev_master_ops);
- 	kvm_iodevice_init(&s->dev_slave, &picdev_slave_ops);
--	kvm_iodevice_init(&s->dev_eclr, &picdev_eclr_ops);
-+	kvm_iodevice_init(&s->dev_elcr, &picdev_elcr_ops);
- 	mutex_lock(&kvm->slots_lock);
- 	ret = kvm_io_bus_register_dev(kvm, KVM_PIO_BUS, 0x20, 2,
- 				      &s->dev_master);
-@@ -613,7 +613,7 @@ int kvm_pic_init(struct kvm *kvm)
- 	if (ret < 0)
- 		goto fail_unreg_2;
- 
--	ret = kvm_io_bus_register_dev(kvm, KVM_PIO_BUS, 0x4d0, 2, &s->dev_eclr);
-+	ret = kvm_io_bus_register_dev(kvm, KVM_PIO_BUS, 0x4d0, 2, &s->dev_elcr);
- 	if (ret < 0)
- 		goto fail_unreg_1;
- 
-@@ -647,7 +647,7 @@ void kvm_pic_destroy(struct kvm *kvm)
- 	mutex_lock(&kvm->slots_lock);
- 	kvm_io_bus_unregister_dev(vpic->kvm, KVM_PIO_BUS, &vpic->dev_master);
- 	kvm_io_bus_unregister_dev(vpic->kvm, KVM_PIO_BUS, &vpic->dev_slave);
--	kvm_io_bus_unregister_dev(vpic->kvm, KVM_PIO_BUS, &vpic->dev_eclr);
-+	kvm_io_bus_unregister_dev(vpic->kvm, KVM_PIO_BUS, &vpic->dev_elcr);
- 	mutex_unlock(&kvm->slots_lock);
- 
- 	kvm->arch.vpic = NULL;
-Index: linux-macro-pirq/arch/x86/kvm/irq.h
-===================================================================
---- linux-macro-pirq.orig/arch/x86/kvm/irq.h
-+++ linux-macro-pirq/arch/x86/kvm/irq.h
-@@ -55,7 +55,7 @@ struct kvm_pic {
- 	int output;		/* intr from master PIC */
- 	struct kvm_io_device dev_master;
- 	struct kvm_io_device dev_slave;
--	struct kvm_io_device dev_eclr;
-+	struct kvm_io_device dev_elcr;
- 	void (*ack_notifier)(void *opaque, int irq);
- 	unsigned long irq_states[PIC_NUM_PINS];
- };
+ 	/* Nothing to assign? */
+-- 
+2.31.1
+
