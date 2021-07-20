@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E90583D05A5
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 01:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A183D05AB
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 01:42:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234456AbhGTWwU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 18:52:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49219 "EHLO
+        id S236815AbhGTWws (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 18:52:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48631 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235653AbhGTWqf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 18:46:35 -0400
+        by vger.kernel.org with ESMTP id S236022AbhGTWrD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 18:47:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626823633;
+        s=mimecast20190719; t=1626823657;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zuZd/erhcH5JqKd76Lbo99r5gRHYSZoylCGlNGoCcSY=;
-        b=FJIT0wQKWZrl5UPZho/U0SKV7P5ZqmcywYHQ9h8l0sAdlssUDycf3D1gaQ9W0xeppLSmyG
-        AR6y/WW235pqb6E39/0qU2w1LOjqSjUhJegs26nnYslaMxB4zAnCKOrbuLCYPbWiv47k0n
-        z4Wl84xP2ot9MN3p6mpabzRKvorO9Es=
+        bh=ecwwnWDuKz329Qn43UBtKxnyzBVsn+Nsa1FaVaBAbcw=;
+        b=RZqvpbmEbWv0ZLjAJ0Hsye7doo7r/tBh9Xc/dy+6A2cGeXJ9aqaAd7ak8M3DkSi5uU7+09
+        dOYI26idw9znT6Ffd5Y8E0gsCNR2l2qHowlsJQf0SwVcMBmUdkx8CDGpvpocW33UOuXLsT
+        UwOQITiBNXMwz4CqTmRzltDc2QcBh9s=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-6zAPg_1qOTCDfODJHYRTeQ-1; Tue, 20 Jul 2021 19:27:12 -0400
-X-MC-Unique: 6zAPg_1qOTCDfODJHYRTeQ-1
+ us-mta-463-fDpN_vZqP6-3KAsf2XI3QQ-1; Tue, 20 Jul 2021 19:27:24 -0400
+X-MC-Unique: fDpN_vZqP6-3KAsf2XI3QQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6166E1084F4B;
-        Tue, 20 Jul 2021 23:27:10 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 189F48030B5;
+        Tue, 20 Jul 2021 23:27:23 +0000 (UTC)
 Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AED9669CB4;
-        Tue, 20 Jul 2021 23:27:05 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BDD269CB4;
+        Tue, 20 Jul 2021 23:27:15 +0000 (UTC)
 From:   Nitesh Narayan Lal <nitesh@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
@@ -64,9 +64,9 @@ To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         emilne@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
         _govind@gmx.com, kabel@kernel.org, viresh.kumar@linaro.org,
         Tushar.Khandelwal@arm.com, kuba@kernel.org
-Subject: [PATCH v5 06/14] RDMA/irdma: Use irq_update_affinity_hint
-Date:   Tue, 20 Jul 2021 19:26:16 -0400
-Message-Id: <20210720232624.1493424-7-nitesh@redhat.com>
+Subject: [PATCH v5 08/14] be2net: Use irq_update_affinity_hint
+Date:   Tue, 20 Jul 2021 19:26:18 -0400
+Message-Id: <20210720232624.1493424-9-nitesh@redhat.com>
 In-Reply-To: <20210720232624.1493424-1-nitesh@redhat.com>
 References: <20210720232624.1493424-1-nitesh@redhat.com>
 MIME-Version: 1.0
@@ -89,31 +89,31 @@ that only updates the affinity_hint pointer.
 
 Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 ---
- drivers/infiniband/hw/irdma/hw.c | 4 ++--
+ drivers/net/ethernet/emulex/benet/be_main.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/irdma/hw.c b/drivers/infiniband/hw/irdma/hw.c
-index 7afb8a6a0526..ec8de708a4df 100644
---- a/drivers/infiniband/hw/irdma/hw.c
-+++ b/drivers/infiniband/hw/irdma/hw.c
-@@ -537,7 +537,7 @@ static void irdma_destroy_irq(struct irdma_pci_f *rf,
- 	struct irdma_sc_dev *dev = &rf->sc_dev;
+diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
+index 361c1c87c183..ece6c0692826 100644
+--- a/drivers/net/ethernet/emulex/benet/be_main.c
++++ b/drivers/net/ethernet/emulex/benet/be_main.c
+@@ -3491,7 +3491,7 @@ static int be_msix_register(struct be_adapter *adapter)
+ 		if (status)
+ 			goto err_msix;
  
- 	dev->irq_ops->irdma_dis_irq(dev, msix_vec->idx);
--	irq_set_affinity_hint(msix_vec->irq, NULL);
-+	irq_update_affinity_hint(msix_vec->irq, NULL);
- 	free_irq(msix_vec->irq, dev_id);
- }
- 
-@@ -1087,7 +1087,7 @@ irdma_cfg_ceq_vector(struct irdma_pci_f *rf, struct irdma_ceq *iwceq,
+-		irq_set_affinity_hint(vec, eqo->affinity_mask);
++		irq_update_affinity_hint(vec, eqo->affinity_mask);
  	}
- 	cpumask_clear(&msix_vec->mask);
- 	cpumask_set_cpu(msix_vec->cpu_affinity, &msix_vec->mask);
--	irq_set_affinity_hint(msix_vec->irq, &msix_vec->mask);
-+	irq_update_affinity_hint(msix_vec->irq, &msix_vec->mask);
- 	if (status) {
- 		ibdev_dbg(&rf->iwdev->ibdev, "ERR: ceq irq config fail\n");
- 		return IRDMA_ERR_CFG;
+ 
+ 	return 0;
+@@ -3552,7 +3552,7 @@ static void be_irq_unregister(struct be_adapter *adapter)
+ 	/* MSIx */
+ 	for_all_evt_queues(adapter, eqo, i) {
+ 		vec = be_msix_vec_get(adapter, eqo);
+-		irq_set_affinity_hint(vec, NULL);
++		irq_update_affinity_hint(vec, NULL);
+ 		free_irq(vec, eqo);
+ 	}
+ 
 -- 
 2.27.0
 
