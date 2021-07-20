@@ -2,158 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 690303CF3A9
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 06:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA0033CF4EB
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 08:57:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236395AbhGTEGk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 00:06:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48231 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1346412AbhGTEBy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 00:01:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626756141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=fKQJw44KnWWw6kFQEoZm4t5SzBRdmsu+r00ClxkZDTU=;
-        b=bkjI4SRosP9ZyBqbDAqKPvHhDrV2c640m6tPnLkAfdA89KquV92+aMaSLnAPSBVudKcV7d
-        pDBLqndNZVQ8foMAlw6pE3QK9ehiYKAj0gzSW1bLyNd7gKf0DJ3G9fdZgr01SZbRY9a3pD
-        //b1n5fOam+LXAJYSJlC/s/6LXrvFs4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-z2E0QqyCN_2Q9H9fHiqZ4A-1; Tue, 20 Jul 2021 00:42:19 -0400
-X-MC-Unique: z2E0QqyCN_2Q9H9fHiqZ4A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABDBB800050;
-        Tue, 20 Jul 2021 04:42:18 +0000 (UTC)
-Received: from localhost (ovpn-12-178.pek2.redhat.com [10.72.12.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 260D860938;
-        Tue, 20 Jul 2021 04:42:13 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH V2] genirq/affinity: add helper of irq_affinity_calc_sets
-Date:   Tue, 20 Jul 2021 12:42:09 +0800
-Message-Id: <20210720044209.851141-1-ming.lei@redhat.com>
+        id S242619AbhGTGRA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 02:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242755AbhGTGQu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 02:16:50 -0400
+X-Greylist: delayed 58640 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 19 Jul 2021 23:57:20 PDT
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8AA3C0613E0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Jul 2021 23:57:20 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id CA891100B0521;
+        Tue, 20 Jul 2021 08:57:18 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 985B230119; Tue, 20 Jul 2021 08:57:18 +0200 (CEST)
+Date:   Tue, 20 Jul 2021 08:57:18 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     stuart hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ethan Zhao <haifeng.zhao@intel.com>,
+        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: pciehp: Ignore Link Down/Up caused by DPC
+Message-ID: <20210720065718.GA21556@wunner.de>
+References: <0be565d97438fe2a6d57354b3aa4e8626952a00b.1619857124.git.lukas@wunner.de>
+ <20210616221945.GA3010216@bjorn-Precision-5520>
+ <20210620073804.GA13118@wunner.de>
+ <08c046b0-c9f2-3489-eeef-7e7aca435bb9@gmail.com>
+ <20210719151011.GA25258@wunner.de>
+ <a70a936d-d031-7199-4ed7-30753b3e7cfa@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a70a936d-d031-7199-4ed7-30753b3e7cfa@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When driver requests to allocate irq affinity managed vectors,
-pci_alloc_irq_vectors_affinity() may fallback to single vector
-allocation. In this situation, we don't need to call
-irq_create_affinity_masks for calling into ->calc_sets() for
-avoiding potential memory leak, so add the helper for this purpose.
+On Mon, Jul 19, 2021 at 02:00:51PM -0500, stuart hayes wrote:
+> On 7/19/2021 10:10 AM, Lukas Wunner wrote:
+> > Could you test if the below patch fixes the issue?
+> 
+> That does appear to fix the issue, thanks!  Without your patch, the PCIe
+> devices under 64:02.0 disappear (the triggered bit is still set in the DPC
+> capability).  With your patch, recovery is successful and all of the PCIe
+> devices are still there.
 
-Fixes: c66d4bd110a1 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
-V2:
-	- move WARN_ON_ONCE() into irq_affinity_calc_sets
-	- don't install default calc_sets() callback as suggested by
-	  Christoph
+Thanks for testing.
 
- drivers/pci/msi.c         |  3 ++-
- include/linux/interrupt.h |  7 +++++++
- kernel/irq/affinity.c     | 28 +++++++++++++++++-----------
- 3 files changed, 26 insertions(+), 12 deletions(-)
+The test patch clears DLLSC because the Hot Reset that is propagated
+down the hierarchy causes the link to flap.  I'm wondering though if
+that's sufficient or if PDC needs to be cleared as well.  According
+to PCIe Base Spec sec. 4.2.6, LTSSM transitions from "Hot Reset" state
+to "Detect", then "Polling".  If I understand the table "Link Status
+Mapped to the LTSSM" in the spec correctly, in-band presence is 0b
+in Detect state, hence I'd expect PDC to flap as well as a result of
+a Hot Reset being propagated down the hierarchy.
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 9232255c8515..4e6fbdf0741c 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1224,7 +1224,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 			 * for the single interrupt case.
- 			 */
- 			if (affd)
--				irq_create_affinity_masks(1, affd);
-+				irq_affinity_calc_sets(1, affd);
-+
- 			pci_intx(dev, 1);
- 			return 1;
- 		}
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 2ed65b01c961..c7ff84d60465 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -340,6 +340,7 @@ irq_create_affinity_masks(unsigned int nvec, struct irq_affinity *affd);
- 
- unsigned int irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
- 				       const struct irq_affinity *affd);
-+int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd);
- 
- #else /* CONFIG_SMP */
- 
-@@ -391,6 +392,12 @@ irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
- 	return maxvec;
- }
- 
-+static inline int irq_affinity_calc_sets(unsigned int affvecs,
-+					 struct irq_affinity *affd)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_SMP */
- 
- /*
-diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-index 4d89ad4fae3b..addd04d68d42 100644
---- a/kernel/irq/affinity.c
-+++ b/kernel/irq/affinity.c
-@@ -405,6 +405,22 @@ static void default_calc_sets(struct irq_affinity *affd, unsigned int affvecs)
- 	affd->set_size[0] = affvecs;
- }
- 
-+int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd)
-+{
-+	/*
-+	 * Simple invocations do not provide a calc_sets() callback. Call
-+	 * the generic one.
-+	 */
-+	if (!affd->calc_sets)
-+		default_calc_sets(affd, affvecs);
-+	else
-+		affd->calc_sets(affd, affvecs);
-+
-+	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
-+		return -ERANGE;
-+	return 0;
-+}
-+
- /**
-  * irq_create_affinity_masks - Create affinity masks for multiqueue spreading
-  * @nvecs:	The total number of vectors
-@@ -429,17 +445,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
- 	else
- 		affvecs = 0;
- 
--	/*
--	 * Simple invocations do not provide a calc_sets() callback. Install
--	 * the generic one.
--	 */
--	if (!affd->calc_sets)
--		affd->calc_sets = default_calc_sets;
--
--	/* Recalculate the sets */
--	affd->calc_sets(affd, affvecs);
--
--	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
-+	if (irq_affinity_calc_sets(affvecs, affd))
- 		return NULL;
- 
- 	/* Nothing to assign? */
--- 
-2.31.1
+Does the hotplug port at 0000:68:00.0 support In-Band Presence Disable?
+That would explain why only clearing DLLSC is sufficient.
 
+The problem is, if PDC is cleared as well, we lose the ability to
+detect that a device was hot-removed while the reset was ongoing,
+which is unfortunate.
+
+If an error is handled by aer_root_reset() (instead of dpc_reset_link())
+and the reset is performed at a hotplug port, then pciehp_reset_slot()
+is invoked:
+
+aer_root_reset()
+  pci_bus_error_reset()
+    pci_slot_reset()
+      pci_reset_hotplug_slot()
+        pciehp_reset_slot()
+
+pciehp_reset_slot() temporarily masks both DLLSC *and* PDC events,
+then performs a Secondary Bus Reset at the hotplug port.
+
+If there are further hotplug ports below that hotplug port
+where the SBR is performed, my expectation is that the Hot Reset
+is likewise propagated down the hierarchy (just as with DPC),
+so those cascaded hotplug ports should also see their link go down.
+
+In other words, the issue you're seeing isn't really DPC-specific.
+However, the test patch should fix the issue for AER-handled errors
+as well.  Do you agree with this analysis or did I miss anything?
+
+Thanks,
+
+Lukas
