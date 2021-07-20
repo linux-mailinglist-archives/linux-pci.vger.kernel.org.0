@@ -2,230 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F16553D054D
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 01:28:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7FC23D05C1
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 01:43:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233487AbhGTWqH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 18:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234499AbhGTWqD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Jul 2021 18:46:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3338E610D2;
-        Tue, 20 Jul 2021 23:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626823600;
-        bh=/8zNYfsDamCGJhQ1wohZAhFPeMbTvfp5/6fWraoi0qU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=U6qCzEKSTOjdHTiHe+WshSbfpyr/BZAD0T1G6dIy+oLAR2kMtYinpSuzpbFaaffEH
-         PyUJ8bwC0qkQxNbjJGDQ2KQmwjYTjo8jwuHMrnODiCB5vZS7xO2G5fxj22Tbg/D/fv
-         EJrVKqD75NcUDsZyBD9OgKophdSBfn0FTjEKby2b9Aadi1FMF/cFR9anz45KgMjLBr
-         tjJBSCBcvR3WoC/kDSs1Nuzwy3eykpu9lI8XNvvJmEkh50sckamsH+K5cncLBm+TpO
-         eAL/B0VHlfwH2fESXKOUOuUEdVNGK3uE/l/CKhTnocR8XBHNMz9TUKXsnTJPThWr/Z
-         SG/OFSWdnTdYA==
-Date:   Tue, 20 Jul 2021 18:26:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 2/9] PCI: kirin: add support for a PHY layer
-Message-ID: <20210720232638.GA140319@bjorn-Precision-5520>
+        id S231761AbhGTXBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 19:01:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32103 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235067AbhGTWqS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 18:46:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626823615;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nhh0ybWcggmNFHzIxWUnjcT654bVMG/l5DZlZ7Mot4o=;
+        b=h9UvARjV+/P0fJHsTKYJnmJ0v7eVWhoexzR2DmySQQY7iPFLfApYrS1tQPimLKC40/6pnj
+        8cpjYIEMkgHKHQ2v/AQsdjxYDpyavG4UoewJZJJUNT9PZuRB/fcGgmSesx77/ISGQhW6Xu
+        8XqOaDlMYZv0MuQzwO7Me3UVE5M1zgU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-_-xhb9uUOGux2J5_hNnWyw-1; Tue, 20 Jul 2021 19:26:54 -0400
+X-MC-Unique: _-xhb9uUOGux2J5_hNnWyw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C00EE100C610;
+        Tue, 20 Jul 2021 23:26:52 +0000 (UTC)
+Received: from virtlab719.virt.lab.eng.bos.redhat.com (virtlab719.virt.lab.eng.bos.redhat.com [10.19.153.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A76B069FAD;
+        Tue, 20 Jul 2021 23:26:44 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
+        tglx@linutronix.de, jesse.brandeburg@intel.com,
+        robin.murphy@arm.com, mtosatti@redhat.com, mingo@kernel.org,
+        jbrandeb@kernel.org, frederic@kernel.org, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com, rostedt@goodmis.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
+        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
+        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
+        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
+        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, nilal@redhat.com,
+        tatyana.e.nikolova@intel.com, mustafa.ismail@intel.com,
+        ahs3@redhat.com, leonro@nvidia.com,
+        chandrakanth.patil@broadcom.com, bjorn.andersson@linaro.org,
+        chunkuang.hu@kernel.org, yongqiang.niu@mediatek.com,
+        baolin.wang7@gmail.com, poros@redhat.com, minlei@redhat.com,
+        emilne@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        _govind@gmx.com, kabel@kernel.org, viresh.kumar@linaro.org,
+        Tushar.Khandelwal@arm.com, kuba@kernel.org
+Subject: [PATCH v5 03/14] i40e: Use irq_update_affinity_hint
+Date:   Tue, 20 Jul 2021 19:26:13 -0400
+Message-Id: <20210720232624.1493424-4-nitesh@redhat.com>
+In-Reply-To: <20210720232624.1493424-1-nitesh@redhat.com>
+References: <20210720232624.1493424-1-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f0580412968c2b2807251e36ba32da9aa092605.1626768323.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In subject:
+The driver uses irq_set_affinity_hint() for two purposes:
 
-  PCI: kirin: Add support for a PHY later
+- To set the affinity_hint which is consumed by the userspace for
+  distributing the interrupts
 
-(s/add/Add/)
+- To apply an affinity that it provides for the i40e interrupts
 
-On Tue, Jul 20, 2021 at 10:09:04AM +0200, Mauro Carvalho Chehab wrote:
-> While it is too late to remove the Kirin 960 PHY, the driver
-> should be able to support different PHYs used by other devices.
+The latter is done to ensure that all the interrupts are evenly spread
+across all available CPUs. However, since commit a0c9259dc4e1 ("irq/matrix:
+Spread interrupts on allocation") the spreading of interrupts is
+dynamically performed at the time of allocation. Hence, there is no need
+for the drivers to enforce their own affinity for the spreading of
+interrupts.
 
-Commit log doesn't actually say what this patch does.
+Also, irq_set_affinity_hint() applying the provided cpumask as an affinity
+for the interrupt is an undocumented side effect. To remove this side
+effect irq_set_affinity_hint() has been marked as deprecated and new
+interfaces have been introduced. Hence, replace the irq_set_affinity_hint()
+with the new interface irq_update_affinity_hint() that only sets the
+pointer for the affinity_hint.
 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 95 +++++++++++++++++++++----
->  1 file changed, 80 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index b4063a3434df..558188476372 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -8,16 +8,18 @@
->   * Author: Xiaowei Song <songxiaowei@huawei.com>
->   */
->  
-> -#include <linux/compiler.h>
->  #include <linux/clk.h>
-> +#include <linux/compiler.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/gpio.h>
->  #include <linux/interrupt.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_pci.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/pci.h>
->  #include <linux/pci_regs.h>
->  #include <linux/platform_device.h>
-> @@ -50,11 +52,18 @@
->  #define PCIE_DEBOUNCE_PARAM	0xF0F400
->  #define PCIE_OE_BYPASS		(0x3 << 28)
->  
-> +enum pcie_kirin_phy_type {
-> +	PCIE_KIRIN_INTERNAL_PHY,
-> +	PCIE_KIRIN_EXTERNAL_PHY
-> +};
-> +
->  struct kirin_pcie {
-> +	enum pcie_kirin_phy_type	type;
-> +
->  	struct dw_pcie	*pci;
->  	struct phy	*phy;
->  	void __iomem	*apb_base;
-> -	void		*phy_priv;	/* Needed for Kirin 960 PHY */
-> +	void		*phy_priv;	/* only for PCIE_KIRIN_INTERNAL_PHY */
->  };
->  
->  /*
-> @@ -476,8 +485,63 @@ static const struct dw_pcie_host_ops kirin_pcie_host_ops = {
->  	.host_init = kirin_pcie_host_init,
->  };
->  
-> +static const struct of_device_id kirin_pcie_match[] = {
-> +	{
-> +		.compatible = "hisilicon,kirin960-pcie",
-> +		.data = (void *)PCIE_KIRIN_INTERNAL_PHY
-> +	},
-> +	{},
-> +};
+Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+Acked-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+---
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Is there a benefit to moving kirin_pcie_match[] up here?  Seemed nice
-to have it close to its use in kirin_pcie_driver, and would make the
-diff easier to read.  But if it helps to move it, no big deal.
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 861e59a350bd..e2c525a6cab3 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -3873,10 +3873,10 @@ static int i40e_vsi_request_irq_msix(struct i40e_vsi *vsi, char *basename)
+ 		 *
+ 		 * get_cpu_mask returns a static constant mask with
+ 		 * a permanent lifetime so it's ok to pass to
+-		 * irq_set_affinity_hint without making a copy.
++		 * irq_update_affinity_hint without making a copy.
+ 		 */
+ 		cpu = cpumask_local_spread(q_vector->v_idx, -1);
+-		irq_set_affinity_hint(irq_num, get_cpu_mask(cpu));
++		irq_update_affinity_hint(irq_num, get_cpu_mask(cpu));
+ 	}
+ 
+ 	vsi->irqs_ready = true;
+@@ -3887,7 +3887,7 @@ static int i40e_vsi_request_irq_msix(struct i40e_vsi *vsi, char *basename)
+ 		vector--;
+ 		irq_num = pf->msix_entries[base + vector].vector;
+ 		irq_set_affinity_notifier(irq_num, NULL);
+-		irq_set_affinity_hint(irq_num, NULL);
++		irq_update_affinity_hint(irq_num, NULL);
+ 		free_irq(irq_num, &vsi->q_vectors[vector]);
+ 	}
+ 	return err;
+@@ -4695,7 +4695,7 @@ static void i40e_vsi_free_irq(struct i40e_vsi *vsi)
+ 			/* clear the affinity notifier in the IRQ descriptor */
+ 			irq_set_affinity_notifier(irq_num, NULL);
+ 			/* remove our suggested affinity mask for this IRQ */
+-			irq_set_affinity_hint(irq_num, NULL);
++			irq_update_affinity_hint(irq_num, NULL);
+ 			synchronize_irq(irq_num);
+ 			free_irq(irq_num, vsi->q_vectors[i]);
+ 
+-- 
+2.27.0
 
-> +static int kirin_pcie_power_on(struct platform_device *pdev,
-> +			       struct kirin_pcie *kirin_pcie)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY) {
-> +		ret = hi3660_pcie_phy_init(pdev, kirin_pcie);
-> +		if (ret)
-> +			return ret;
-> +
-> +		return hi3660_pcie_phy_power_on(kirin_pcie);
-> +	}
-> +
-> +	kirin_pcie->phy = devm_of_phy_get(dev, dev->of_node, NULL);
-> +	if (IS_ERR(kirin_pcie->phy))
-> +		return PTR_ERR(kirin_pcie->phy);
-> +
-> +	ret = phy_init(kirin_pcie->phy);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = phy_power_on(kirin_pcie->phy);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return 0;
-> +err:
-> +	phy_exit(kirin_pcie->phy);
-> +	return ret;
-> +}
-> +
-> +static int __exit kirin_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct kirin_pcie *kirin_pcie = platform_get_drvdata(pdev);
-> +
-> +	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY)
-> +		return 0;
-> +
-> +	phy_power_off(kirin_pcie->phy);
-> +	phy_exit(kirin_pcie->phy);
-> +
-> +	return 0;
-> +}
-> +
->  static int kirin_pcie_probe(struct platform_device *pdev)
->  {
-> +	enum pcie_kirin_phy_type phy_type;
-> +	const struct of_device_id *of_id;
->  	struct device *dev = &pdev->dev;
->  	struct kirin_pcie *kirin_pcie;
->  	struct dw_pcie *pci;
-> @@ -488,6 +552,14 @@ static int kirin_pcie_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> +	of_id = of_match_device(kirin_pcie_match, dev);
-> +	if (!of_id) {
-> +		dev_err(dev, "OF data missing\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	phy_type = (enum pcie_kirin_phy_type)of_id->data;
-> +
->  	kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie), GFP_KERNEL);
->  	if (!kirin_pcie)
->  		return -ENOMEM;
-> @@ -500,31 +572,24 @@ static int kirin_pcie_probe(struct platform_device *pdev)
->  	pci->ops = &kirin_dw_pcie_ops;
->  	pci->pp.ops = &kirin_pcie_host_ops;
->  	kirin_pcie->pci = pci;
-> -
-> -	ret = hi3660_pcie_phy_init(pdev, kirin_pcie);
-> -	if (ret)
-> -		return ret;
-> +	kirin_pcie->type = phy_type;
->  
->  	ret = kirin_pcie_get_resource(kirin_pcie, pdev);
->  	if (ret)
->  		return ret;
->  
-> -	ret = hi3660_pcie_phy_power_on(kirin_pcie);
-> -	if (ret)
-> -		return ret;
-> -
->  	platform_set_drvdata(pdev, kirin_pcie);
->  
-> +	ret = kirin_pcie_power_on(pdev, kirin_pcie);
-> +	if (ret)
-> +		return ret;
-> +
->  	return dw_pcie_host_init(&pci->pp);
->  }
->  
-> -static const struct of_device_id kirin_pcie_match[] = {
-> -	{ .compatible = "hisilicon,kirin960-pcie" },
-> -	{},
-> -};
-> -
->  static struct platform_driver kirin_pcie_driver = {
->  	.probe			= kirin_pcie_probe,
-> +	.remove	        	= __exit_p(kirin_pcie_remove),
->  	.driver			= {
->  		.name			= "kirin-pcie",
->  		.of_match_table		= kirin_pcie_match,
-> -- 
-> 2.31.1
-> 
