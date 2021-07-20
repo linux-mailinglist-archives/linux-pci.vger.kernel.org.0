@@ -2,108 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3E373CFB87
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 16:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB9D53CFCCC
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 16:59:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238981AbhGTNV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 09:21:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58654 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237435AbhGTNSy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 09:18:54 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16KDpOKR179444;
-        Tue, 20 Jul 2021 09:59:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=3lvLu6cinEqw0FGFqRgYpcY/s9Dp4BHVAc9DtIAt19A=;
- b=RbM2fNe5tDmCsKZFLuxlrAzC+lSl2vj+AAbAxujBaC8mj0xT4PCHcA+A9YqTdRe9lg7Y
- DD5t2WT6orj7pZTvXaxrzer9hDm69gC1mCtDdQ2iD8O+7IDgrKzgsNJnzE+lOSBdTNOz
- QSbmvPBinT7VXXedz5sA4b7IUwamod+lIdeWPR31Qr9XxFuKw86mck5aT6uRPyui9+H8
- 0Jsn9NX2nvj3aeddcuNoEruHooCwTkSsv3NCAwvCTQmKWMOvg2if7XnaR/RZfHg85z/g
- s53lQT6BhOmGY8IGWFg+lV79i0IPVSdWS4X+fDPKXSIqr0y54qxJbOHgCwHoP3OaHb/O Gw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39wyr60b0s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jul 2021 09:59:15 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 16KDpXWw180372;
-        Tue, 20 Jul 2021 09:59:15 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39wyr60axt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jul 2021 09:59:15 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 16KDwrM7017121;
-        Tue, 20 Jul 2021 13:59:12 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 39upu89bu8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jul 2021 13:59:12 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16KDx9ZM25559458
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Jul 2021 13:59:10 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B85E452073;
-        Tue, 20 Jul 2021 13:59:09 +0000 (GMT)
-Received: from sig-9-145-150-42.de.ibm.com (unknown [9.145.150.42])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5BE7F52052;
-        Tue, 20 Jul 2021 13:59:09 +0000 (GMT)
-Message-ID: <a8fca09bb18174e21d641e9cda0727307ecf9b9d.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] PCI: Move pci_dev_is/assign_added() to pci.h
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 20 Jul 2021 15:59:09 +0200
-In-Reply-To: <20210720095816.3660813-1-schnelle@linux.ibm.com>
-References: <20210720095816.3660813-1-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: HCLyOhtaq8QM3LWcyOg1rI6HxplqFhr9
-X-Proofpoint-GUID: OwpqnuiswPMkIsQPmC0YKJQDNIcnHprn
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-20_07:2021-07-19,2021-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- clxscore=1015 mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2107200087
+        id S235656AbhGTOSk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 10:18:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235601AbhGTN5u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Jul 2021 09:57:50 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B901A6101E;
+        Tue, 20 Jul 2021 14:38:28 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1m5qt8-00EWxu-LT; Tue, 20 Jul 2021 15:38:26 +0100
+Date:   Tue, 20 Jul 2021 15:38:26 +0100
+Message-ID: <87v95582zh.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC v5 8/8] PCI: hv: Turn on the host bridge probing on ARM64
+In-Reply-To: <20210720134429.511541-9-boqun.feng@gmail.com>
+References: <20210720134429.511541-1-boqun.feng@gmail.com>
+        <20210720134429.511541-9-boqun.feng@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: boqun.feng@gmail.com, bhelgaas@google.com, arnd@arndb.de, catalin.marinas@arm.com, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, sunilmut@microsoft.com, rppt@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2021-07-20 at 11:58 +0200, Niklas Schnelle wrote:
-> The helper function pci_dev_is_added() from drivers/pci/pci.h is used in
-> PCI arch code of both s390 and powerpc leading to awkward relative
-> includes. Move it to the global include/linux/pci.h and get rid of these
-> includes just for that one function.
+On Tue, 20 Jul 2021 14:44:29 +0100,
+Boqun Feng <boqun.feng@gmail.com> wrote:
 > 
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Now we have everything we need, just provide a proper sysdata type for
+> the bus to use on ARM64 and everything else works.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 > ---
-> Since v1:
-> - Fixed accidental removal of PCI_DPC_RECOVERED, PCI_DPC_RECOVERING
->   defines and also move these to include/linux/pci.h
-
-Please disregard I actually sent the old patch ;-(
-
+>  drivers/pci/controller/pci-hyperv.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
->  arch/powerpc/platforms/powernv/pci-sriov.c |  3 ---
->  arch/powerpc/platforms/pseries/setup.c     |  1 -
->  arch/s390/pci/pci_sysfs.c                  |  2 --
->  drivers/pci/hotplug/acpiphp_glue.c         |  1 -
->  drivers/pci/pci.h                          | 15 ---------------
->  include/linux/pci.h                        | 13 +++++++++++++
->  6 files changed, 13 insertions(+), 22 deletions(-)
-> 
-> 
-... snip ..
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6276aaa4659..62dbe98d1fe1 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-ecam.h>
+>  #include <linux/delay.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/irqdomain.h>
+> @@ -448,7 +449,11 @@ enum hv_pcibus_state {
+>  };
+>  
+>  struct hv_pcibus_device {
+> +#ifdef CONFIG_X86
+>  	struct pci_sysdata sysdata;
+> +#elif defined(CONFIG_ARM64)
+> +	struct pci_config_window sysdata;
+> +#endif
 
+Am I the only one who find this rather odd? Nothing ever populates
+this data structure on arm64, and its only purpose seems to serve as
+an anchor to retrieve the hbus via container_of().
+
+If that's indeed the case, I'd rather see an arch-specific to_hbus()
+helper that uses another (preexisting) field as the anchor for arm64.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
