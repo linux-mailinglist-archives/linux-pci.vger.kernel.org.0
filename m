@@ -2,104 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C7ED3CF106
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 02:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA65B3CF131
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 03:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232259AbhGTARh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jul 2021 20:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60262 "EHLO mail.kernel.org"
+        id S236973AbhGTAd0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jul 2021 20:33:26 -0400
+Received: from mx.socionext.com ([202.248.49.38]:10511 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1378032AbhGSXgg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Jul 2021 19:36:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 13FC960E0B;
-        Tue, 20 Jul 2021 00:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626740235;
-        bh=ThAzBxkXRInNWnuCLj/2tYEXJI4QZ0qGGXACtEnXypk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N9vo0oCzvSPqM5AAbzt5aELIl+pvnm98LRqL9Gad2lSDy0L6vK2L/NVDw3HYhII3c
-         CXtQSwzp1DLHTvwCOMmkDoXfu/dZCz4R9FXk5NuFA90a2qZof63QI4JmbcbT6mEi9B
-         h1ih9S0n4P1PSZGM1IGJAjGGqicUb56mAv6uZdoPqzZvwSi6t1jsfDRw9R/pS20SYx
-         JswE5eXjXXtR7S5xbJPQM6i0WvBpj/HorP1PL2mSc676T0y3Qxp0al7VtRYGis8t8V
-         42DdW8w9kH0FgHB+9iCvnSvwMooTK5jkLBbvKR+so53U3CmPzckto2d+PmMO7DEYAY
-         cvq9pJtbajRZA==
-Date:   Mon, 19 Jul 2021 19:17:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>, jesse.brandeburg@intel.com,
-        anthony.l.nguyen@intel.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 1/2] igc: don't rd/wr iomem when PCI is removed
-Message-ID: <20210720001713.GA38755@bjorn-Precision-5520>
+        id S1381046AbhGTA2Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Jul 2021 20:28:25 -0400
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 20 Jul 2021 10:08:53 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 8647A205902A;
+        Tue, 20 Jul 2021 10:08:53 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 20 Jul 2021 10:08:53 +0900
+Received: from yuzu2.css.socionext.com (yuzu2 [172.31.9.57])
+        by iyokan2.css.socionext.com (Postfix) with ESMTP id 52BE7B638F;
+        Tue, 20 Jul 2021 10:08:53 +0900 (JST)
+Received: from [10.212.31.2] (unknown [10.212.31.2])
+        by yuzu2.css.socionext.com (Postfix) with ESMTP id 161D9B1D52;
+        Tue, 20 Jul 2021 10:08:52 +0900 (JST)
+Subject: Re: [PATCH] PCI: endpoint: Use sysfs_emit() in "show" functions
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1626662666-15798-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <20210719034313.GA274232@rocinante>
+ <af1d4c61-53ff-f4e9-a708-33251b7e6470@socionext.com>
+ <20210719151837.GA473693@rocinante>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <6d10e89b-3518-faff-e320-6d03013567a1@socionext.com>
+Date:   Tue, 20 Jul 2021 10:08:51 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOSf1CHOrUBfibO0t6Zr2=SZ7GjLTiAzfoKBeZL8RXdcC+Ou3A@mail.gmail.com>
+In-Reply-To: <20210719151837.GA473693@rocinante>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 12:49:18PM +1000, Oliver O'Halloran wrote:
-> On Mon, Jul 19, 2021 at 8:51 AM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > And do we have some solution for this kind of issue? There are more PCIe
-> > controllers / platforms which do not like MMIO read/write operation when
-> > card / link is not connected.
-> 
-> Do you have some actual examples? The few times I've seen those
-> crashes were due to broken firmware-first error handling. The AER
-> notifications would be escalated into some kind of ACPI error which
-> the kernel didn't have a good way of dealing with so it panicked
-> instead.
-> 
-> Assuming it is a real problem then as Bjorn pointed out this sort of
-> hack doesn't really fix the issue because hotplug and AER
-> notifications are fundamentally asynchronous. If the driver is
-> actively using the device when the error / removal happens then the
-> pci_dev_is_disconnected() check will pass and the MMIO will go
-> through. If the MMIO is poisonous because of dumb hardware then this
-> sort of hack will only paper over the issue.
-> 
-> > If we do not provide a way how to solve these problems then we can
-> > expect that people would just hack ethernet / wifi / ... device drivers
-> > which are currently crashing by patches like in this thread.
-> >
-> > Maybe PCI subsystem could provide wrapper function which implements
-> > above pattern and which can be used by device drivers?
-> 
-> We could do that and I think there was a proposal to add some
-> pci_readl(pdev, <addr>) style wrappers at one point.
+Hi Krzysztof,
 
-Obviously this wouldn't help user-space mmaps, but in the kernel,
-Documentation/driver-api/device-io.rst [1] does say that drivers are
-supposed to use readl() et al even though on most arches it "works"
-to just dereference the result of ioremap(), so maybe we could make
-a useful wrapper.
+On 2021/07/20 0:18, Krzysztof Wilczy?ski wrote:
+ > [+cc Sasha for visibility]
+ >
+ > Hi!
+ >
+ > [...]
+ >>> Nice catch!
+ >>
+ >> I actually executed "cat" against configfs to meet the issue and found
+ >> your solution in pci-sysfs.
+ >
+ > Oh!  That's not good...  I am curious, which attribute caused this?
 
-Seems like we should do *something*, even if it's just a generic
-#define and some examples.  I took a stab at this [2] a couple years
-ago, but it was only for the PCI core, and it didn't go anywhere.
+Sorry I misunderstood.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/driver-api/device-io.rst?id=v5.13#n160
-[2] https://lore.kernel.org/linux-pci/20190822200551.129039-1-helgaas@kernel.org/
+I found this "cat" issue on next-20210713 and all configfs attribues had
+the same issue.
 
-> On powerpc
-> there's hooks in the arch provided MMIO functions to detect error
-> responses and kick off the error handling machinery when a problem is
-> detected. Those hooks are mainly there to help the platform detect
-> errors though and they don't make life much easier for drivers. Due to
-> locking concerns the driver's .error_detected() callback cannot be
-> called in the MMIO hook so even when the platform detects errors
-> synchronously the driver notifications must happen asynchronously. In
-> the meanwhile the driver still needs to handle the 0xFFs response
-> safely and there's not much we can do from the platform side to help
-> there.
-> 
-> Oliver
+However, my patch wasn't the solution for the issue. This has been fixed by
+7fe1e79b59ba ("configfs: implement the .read_iter and .write_iter methods").
+
+The function replacement was found in the process of finding the issue.
+
+ > Also, if this is fixing a bug, then it might warrant letting the folks who look
+ > after the long-term and stable kernels know.  I also wonder if there would be
+ > something to add for the "Fixes:" tag, if there is a previous commit this
+ > change fixes.
+
+So my patch doesn't fix any issues.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
