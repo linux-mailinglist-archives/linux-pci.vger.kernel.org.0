@@ -2,71 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C4B53D2CFE
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 21:51:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49F853D2D4C
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 22:09:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbhGVTKb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 15:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229556AbhGVTKb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 15:10:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A479F60E0C;
-        Thu, 22 Jul 2021 19:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626983466;
-        bh=qmh/XfiasDTjNxr5oY9wV0+zREgS9vDDrruaVzmUdSc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bJ5OrINsRYn2tg/gAdhEQI5SoF14V9HHqbdb0B7YEoi6iix0pPG/BG6uLziX9VVBo
-         k/S3PNWBIx31Y2PmCZ/ygTVpWWdOtASZF1RivL0QmO7d0NsN2jLE6/EppO4jQtDnYv
-         iXKNnBkVrrWymJaKgIhtPZJkCorF0pVXQ/JlUtmRwuKLwHORGX8/QpvWpBUAMyzDTn
-         7Le9RZ0w67TlrjufrdBUklypQFyx+5hKcmphsQAqGBHtzFMTLT259Mf5/VcAzjOBPW
-         YVwFc5Sde090KYfwqZs7WjJzSmtsqvS5AwO7AfndyOspGtYBLoP4/5s7GaHGvsluBB
-         nnBdya5LVeEfQ==
-Date:   Thu, 22 Jul 2021 14:51:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [pci:review/vga] BUILD SUCCESS WITH WARNING
- b6f0a577c4fbcc4f1e7eaf0e9a30bcfd20002b44
-Message-ID: <20210722195104.GA336804@bjorn-Precision-5520>
+        id S231140AbhGVT3H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 15:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230451AbhGVT3C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jul 2021 15:29:02 -0400
+Received: from 68-252-206-104.staticrdns.eonix.net (unknown [IPv6:2607:ff28:b005:2a:ec52:75ff:fe50:d321])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E586C06175F;
+        Thu, 22 Jul 2021 13:09:36 -0700 (PDT)
+Received: from User (localhost [IPv6:::1])
+        by 68-252-206-104.staticrdns.eonix.net (Postfix) with SMTP id D84C38F1F50;
+        Mon, 19 Jul 2021 22:13:39 -0400 (EDT)
+Reply-To: <mrs_hannah@rediffmail.com>
+From:   "Mrs. Hajia Hannah Ahmed" <info@247vidz.com>
+Subject: Re: I WANT TO INVESTMENT IN YOUR COUNTRY?
+Date:   Tue, 20 Jul 2021 05:13:12 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210722193529.GA333109@bjorn-Precision-5520>
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-Id: <20210720021340.D84C38F1F50@68-252-206-104.staticrdns.eonix.net>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 02:35:29PM -0500, Bjorn Helgaas wrote:
-> On Thu, Jul 22, 2021 at 02:06:19PM +0800, kernel test robot wrote:
-> > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git review/vga
-> > branch HEAD: b6f0a577c4fbcc4f1e7eaf0e9a30bcfd20002b44  FIXME PCI/VGA: Rework default VGA device selection
-> > 
-> > possible Warning in current branch:
-> > 
-> > drivers/pci/vgaarb.c:1045:8: warning: %d in format string (no. 6) requires 'int' but the argument type is 'unsigned int'. [invalidPrintfArgType_sint]
-> 
-> At b6f0a577c4fb ("FIXME PCI/VGA: Rework default VGA device
-> selection"), line 1045 in vgaarb.c does not contain a format string:
-> 
->   1042  #define PCI_INVALID_CARD       ((struct pci_dev *)-1UL)
->   1043
->   1044  /*
->   1045   * Each user has an array of these, tracking which cards have locks
->   1046   */
->   1047  struct vga_arb_user_card {
->   1048          struct pci_dev *pdev;
-> 
-> Where's the info so I can reproduce this?  Compiler version and
-> options, .config file, etc?
-
-Never mind, I think I found it manually.  At 4e5cfb7f1564 ("PCI/VGA:
-Move vgaarb to drivers/pci"), line 1045 *was* an snprintf that used %d
-for unsigned values.
-
-> > Warning ids grouped by kconfigs:
-> > 
-> > gcc_recent_errors
-> > `-- arm-randconfig-p001-20210720
-> >     `-- drivers-pci-vgaarb.c:warning:d-in-format-string-(no.-)-requires-int-but-the-argument-type-is-unsigned-int-.-invalidPrintfArgType_sint
+Attn:
+ 
+I am Mrs. Hajia Hannah Ahmed I am a Widow and member of the contract award committee and 14 project allocation manager, of the Department of Minerals and Natural Resources in Syria;
+ 
+Due to the war in Syria, I am in search of an agent or company to assist me to invest my fund  (USD$35Million) and subsequent investment in properties in your country. You will be required to. If you decide to render your service to me in this regard, 30% of the total sum of USD$35M will be given to you for your service. 
+ 
+Yours Faithfully,
+Mrs. Hajia Hannah Ahmed
