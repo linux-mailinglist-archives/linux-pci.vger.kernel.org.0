@@ -2,47 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33EB63CF5CB
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 10:11:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D5FB3CF5CE
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 10:11:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233854AbhGTHaB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 03:30:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49072 "EHLO mail.kernel.org"
+        id S233946AbhGTHaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 03:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233139AbhGTH2l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Jul 2021 03:28:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7DE61611EF;
+        id S233384AbhGTH2r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Jul 2021 03:28:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B27761208;
         Tue, 20 Jul 2021 08:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1626768559;
-        bh=hFWGGPOo8IffrLf2mAyywYfMVp92Yc9SBhf1dfFMTcw=;
+        bh=3mi8QxdBGafRmH7589wIkhaE/fpfuICdMXjq8jNzItw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cskzJO8Wsov2c4ra3deXGnRxhUJ99gXPfQ9TR9REzInKuig+awftl8pwt6MVRn2r9
-         7TDNmOxeoOVR9s6c2giHXTdo05wVQr5puhSprwM8XG0vjl0IZc0Uru/8G3u5kJKL9v
-         YJQeFvKAqbhwk9ON6jHDsdEMZSKcs+62Euuud+Q1ZhtwLi8Y371XSbW04nQbdPmORD
-         FnFCf6D+4W8xt1HGmndiJWX82JiRlPSRtxaSNHxBLKNT2906gcr2LqPsoWflzFQQgS
-         /Pa9dOIBPyg+mRidgpOimmY13JiUS1xGwxQDOGyr99dSfn1vNIzW1fG2Mi4S+oVFCJ
-         RH5v2bUeJAA3Q==
+        b=Cg+AxSF+80mTF0MXOti0yWHl9mN9DQMm2zXzRilG8fn2I50oKregIpSFKt64LskuB
+         HRCVhAHoWqxFBko8jdbulsEeToVl2L6jphmCltdzswXck7S8bC4PJfZQw2J1UtRb0+
+         Y4xGodgKE+7J3HkKhjh5Px6BchfBsPCzai3zu6F++op1J9teu/PJ/HCMfkmYsq7Kih
+         zSVhbozIiB/HCDJ4BDSvYlARqHzea0EFfWbjuc3495IB4JtZSlnAXzPO6uYNbqVkAl
+         B66kWpNkczDUfkchae7+uYYBUkd4t0qHeRXt4GIOuDWPdDxbmigqJ1qz4uivRCNVeV
+         lTBMTMKVCD63A==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1m5koX-000eTZ-Ou; Tue, 20 Jul 2021 10:09:17 +0200
+        id 1m5koX-000eTd-QK; Tue, 20 Jul 2021 10:09:17 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Binghui Wang <wangbinghui@hisilicon.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH v6 7/9] arm64: dts: HiSilicon: Add support for HiKey 970 PCIe controller hardware
-Date:   Tue, 20 Jul 2021 10:09:09 +0200
-Message-Id: <7ede6693e5cc2bbd23c1a68cbc571b5f4876917d.1626768323.git.mchehab+huawei@kernel.org>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v6 8/9] dt-bindings: PCI: kirin-pcie.txt: Convert it to yaml
+Date:   Tue, 20 Jul 2021 10:09:10 +0200
+Message-Id: <b755cdb5ff08a3df1e1f94cdb3372e58cd946117.1626768323.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626768323.git.mchehab+huawei@kernel.org>
 References: <cover.1626768323.git.mchehab+huawei@kernel.org>
@@ -53,143 +51,193 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Convert the file into a JSON description at the yaml format.
 
-Add DTS bindings for the HiKey 970 board's PCIe hardware.
-
-Co-developed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3670.dtsi     | 71 +++++++++++++++++++
- .../boot/dts/hisilicon/hikey970-pmic.dtsi     |  1 -
- drivers/pci/controller/dwc/pcie-kirin.c       | 12 ----
- 3 files changed, 71 insertions(+), 13 deletions(-)
+ .../bindings/pci/hisilicon,kirin-pcie.yaml    | 87 +++++++++++++++++++
+ .../devicetree/bindings/pci/kirin-pcie.txt    | 50 -----------
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
+ MAINTAINERS                                   |  2 +-
+ 4 files changed, 89 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-index 1f228612192c..6dfcfcfeedae 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-@@ -177,6 +177,12 @@ sctrl: sctrl@fff0a000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		pmctrl: pmctrl@fff31000 {
-+			compatible = "hisilicon,hi3670-pmctrl", "syscon";
-+			reg = <0x0 0xfff31000 0x0 0x1000>;
-+			#clock-cells = <1>;
-+		};
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+new file mode 100644
+index 000000000000..eabc651c9766
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/hisilicon,kirin-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 		iomcu: iomcu@ffd7e000 {
- 			compatible = "hisilicon,hi3670-iomcu", "syscon";
- 			reg = <0x0 0xffd7e000 0x0 0x1000>;
-@@ -660,6 +666,71 @@ gpio28: gpio@fff1d000 {
- 			clock-names = "apb_pclk";
- 		};
- 
-+		its_pcie: interrupt-controller@f4000000 {
-+			compatible = "arm,gic-v3-its";
-+			msi-controller;
-+			reg = <0x0 0xf5100000 0x0 0x100000>;
-+		};
++title: HiSilicon Kirin SoCs PCIe host DT description
 +
-+		pcie_phy: pcie-phy@fc000000 {
-+			compatible = "hisilicon,hi970-pcie-phy";
-+			reg = <0x0 0xfc000000 0x0 0x80000>;
++maintainers:
++  - Xiaowei Song <songxiaowei@hisilicon.com>
++  - Binghui Wang <wangbinghui@hisilicon.com>
 +
-+			phy-supply = <&ldo33>;
++description: |
++  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
++  It shares common functions with the PCIe DesignWare core driver and
++  inherits common properties defined in
++  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
 +
-+			clocks = <&crg_ctrl HI3670_CLK_GATE_PCIEPHY_REF>,
-+				 <&crg_ctrl HI3670_CLK_GATE_PCIEAUX>,
-+				 <&crg_ctrl HI3670_PCLK_GATE_PCIE_PHY>,
-+				 <&crg_ctrl HI3670_PCLK_GATE_PCIE_SYS>,
-+				 <&crg_ctrl HI3670_ACLK_GATE_PCIE>;
-+			clock-names = "phy_ref", "aux",
-+				      "apb_phy", "apb_sys",
-+				      "aclk";
++allOf:
++  - $ref: /schemas/pci/snps,dw-pcie.yaml#
 +
-+			reset-gpios = <&gpio7 0 0 >, <&gpio25 2 0 >,
-+				      <&gpio3 1 0 >, <&gpio27 4 0 >;
++properties:
++  compatible:
++    contains:
++      enum:
++        - hisilicon,kirin960-pcie
++        - hisilicon,kirin970-pcie
 +
-+			clkreq-gpios = <&gpio20 6 0 >, <&gpio27 3 0 >,
-+				       <&gpio17 0 0 >;
++  reg:
++    description: |
++      Should contain rc_dbi, apb, config registers location and length.
++    minItems: 3
++    maxItems: 4
 +
-+			/* vboost iboost pre post main */
-+			hisilicon,eye-diagram-param = <0xFFFFFFFF 0xFFFFFFFF
-+						       0xFFFFFFFF 0xFFFFFFFF
-+						       0xFFFFFFFF>;
++  reg-names:
++    items:
++      - const: dbi          # controller configuration registers
++      - const: apb          # apb Ctrl register defined by Kirin
++      - const: config       # PCIe configuration space registers
++      - const: phy          # apb PHY register used on Kirin 960 PHY
++    minItems: 3
++    maxItems: 4
 +
-+			#phy-cells = <0>;
-+		};
++  reset-gpios:
++    description: The GPIO(s) to generate PCIe PERST# assert and deassert signal.
++    minItems: 1
++    maxItems: 4
 +
-+		pcie@f4000000 {
-+			compatible = "hisilicon,kirin970-pcie";
-+			reg = <0x0 0xf4000000 0x0 0x1000000>,
-+			      <0x0 0xfc180000 0x0 0x1000>,
-+			      <0x0 0xf5000000 0x0 0x2000>;
-+			reg-names = "dbi", "apb", "config";
-+			bus-range = <0x0  0x1>;
-+			msi-parent = <&its_pcie>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			phys = <&pcie_phy>;
-+			ranges = <0x02000000 0x0 0x00000000
-+				  0x0 0xf6000000
-+				  0x0 0x02000000>;
-+			num-lanes = <1>;
-+			#interrupt-cells = <1>;
-+			interrupts = <0 283 4>;
-+			interrupt-names = "msi";
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0x0 0 0 1
-+					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x0 0 0 2
-+					 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x0 0 0 3
-+					 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x0 0 0 4
-+					 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-+		};
++required:
++  - compatible
++  - reg
++  - reg-names
 +
- 		/* UFS */
- 		ufs: ufs@ff3c0000 {
- 			compatible = "hisilicon,hi3670-ufs", "jedec,ufs-2.1";
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
-index 48c739eacba0..03452e627641 100644
---- a/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
-@@ -73,7 +73,6 @@ ldo33: LDO33 { /* PEX8606 */
- 					regulator-name = "ldo33";
- 					regulator-min-microvolt = <2500000>;
- 					regulator-max-microvolt = <3300000>;
--					regulator-boot-on;
- 				};
- 
- 				ldo34: LDO34 { /* GPS AUX IN VDD */
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index 7a92f633d746..4657a6d33f6f 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -347,18 +347,6 @@ static const struct regmap_config pcie_kirin_regmap_conf = {
- 	.reg_stride = 4,
- };
- 
--/* Registers in PCIeCTRL */
--static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
--					 u32 val, u32 reg)
--{
--	writel(val, kirin_pcie->apb_base + reg);
--}
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      pcie: pcie@f4000000 {
++        compatible = "hisilicon,kirin970-pcie";
++        reg = <0x0 0xf4000000 0x0 0x1000>,
++              <0x0 0xff3fe000 0x0 0x1000>,
++              <0x0 0xf4000000 0 0x2000>;
++        reg-names = "dbi", "apb", "config";
++        bus-range = <0x0  0x1>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        device_type = "pci";
++        ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
++        num-lanes = <1>;
++        #interrupt-cells = <1>;
++        interrupts = <0 283 4>;
++        interrupt-names = "msi";
++        interrupt-map-mask = <0xf800 0 0 7>;
++        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
++                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
++                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
++                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
++        reset-gpios = <&gpio7 0 0 >, <&gpio25 2 0 >,
++                      <&gpio3 1 0 >, <&gpio27 4 0 >;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+deleted file mode 100644
+index 7adab8999a6a..000000000000
+--- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-HiSilicon Kirin SoCs PCIe host DT description
 -
--static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie, u32 reg)
--{
--	return readl(kirin_pcie->apb_base + reg);
--}
+-Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
+-It shares common functions with the PCIe DesignWare core driver and
+-inherits common properties defined in
+-Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
 -
- static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 				    struct platform_device *pdev)
- {
+-Additional properties are described here:
+-
+-Required properties
+-- compatible:
+-	"hisilicon,kirin960-pcie"
+-- reg: Should contain rc_dbi, apb, phy, config registers location and length.
+-- reg-names: Must include the following entries:
+-  "dbi": controller configuration registers;
+-  "apb": apb Ctrl register defined by Kirin;
+-  "phy": apb PHY register defined by Kirin;
+-  "config": PCIe configuration space registers.
+-- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+-
+-Optional properties:
+-
+-Example based on kirin960:
+-
+-	pcie@f4000000 {
+-		compatible = "hisilicon,kirin960-pcie";
+-		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
+-		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
+-		reg-names = "dbi","apb","phy", "config";
+-		bus-range = <0x0  0x1>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		device_type = "pci";
+-		ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
+-		num-lanes = <1>;
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0xf800 0 0 7>;
+-		interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
+-				<0x0 0 0 2 &gic 0 0 0  283 4>,
+-				<0x0 0 0 3 &gic 0 0 0  284 4>,
+-				<0x0 0 0 4 &gic 0 0 0  285 4>;
+-		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
+-			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
+-			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
+-			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
+-			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+-		clock-names = "pcie_phy_ref", "pcie_aux",
+-			      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
+-		reset-gpios = <&gpio11 1 0 >;
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+index a8c1db879fb9..d80894a5abf5 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+@@ -34,7 +34,7 @@ properties:
+     minItems: 2
+     maxItems: 5
+     items:
+-      enum: [dbi, dbi2, config, atu, app, elbi, mgmt, ctrl, parf, cfg, link]
++      enum: [dbi, dbi2, config, atu, apb, app, elbi, mgmt, ctrl, parf, cfg, link]
+ 
+   num-lanes:
+     description: |
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b54bd9dd07ec..d5f53b2d3f9c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14420,7 +14420,7 @@ M:	Xiaowei Song <songxiaowei@hisilicon.com>
+ M:	Binghui Wang <wangbinghui@hisilicon.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/pci/kirin-pcie.txt
++F:	Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+ F:	drivers/pci/controller/dwc/pcie-kirin.c
+ 
+ PCIE DRIVER FOR HISILICON STB
 -- 
 2.31.1
 
