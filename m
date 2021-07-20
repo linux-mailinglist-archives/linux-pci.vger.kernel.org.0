@@ -2,186 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 789333CF9F0
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 14:57:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C9103CFB54
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 15:54:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbhGTMQw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 08:16:52 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:12230 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbhGTMQt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 08:16:49 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4GTdrV452mz1CLPX;
-        Tue, 20 Jul 2021 20:51:38 +0800 (CST)
-Received: from dggpemm500002.china.huawei.com (7.185.36.229) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 20 Jul 2021 20:57:24 +0800
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 20 Jul 2021 20:57:23 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <bhelgaas@google.com>, <keith.busch@intel.com>, <lukas@wunner.de>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wangxiongfeng2@huawei.com>
-Subject: [PATCH] PCI/sysfs: Take reference on device to be removed
-Date:   Tue, 20 Jul 2021 21:04:00 +0800
-Message-ID: <20210720130400.49153-1-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S239223AbhGTNNS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 09:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239051AbhGTNGg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 09:06:36 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B6BC061574;
+        Tue, 20 Jul 2021 06:46:30 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id m20so540082ili.9;
+        Tue, 20 Jul 2021 06:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UqleALOEBIm8KewjJS4m2YoZXF1tGe3ZuXoD4Uil2lI=;
+        b=rB5Lr/SXz6zRIJH22xI0zBsJHqVnUjFHYWbkpc11KHz1U8ifq0vksXkEYQ36mqzCmV
+         U7zBMVdR+uC0kW8XBZUJ8P7dvEgrkskuf5c21Fc2JXlNHGk2CLW629zjqbuhMzEsq5O0
+         gIQ2yIfB/YICdwemcSeWjZjr8UbrQVfbSfhgYYoO4JEfSb1pKjegxsZSwOHl7yV8YGx5
+         16Jg0iFQKCZdNnFzrVwB3sEcdiKYuMP+zD2+DP4bym2iMkOFiuoya7lKM02NvwZvUJw+
+         a+2sZb36y2QzyTZCD7DIeAra2Dcxf0Uxm1BhDTaxQyYdlDuEMPGy7KitGkxbfHMCOaV1
+         pCkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UqleALOEBIm8KewjJS4m2YoZXF1tGe3ZuXoD4Uil2lI=;
+        b=qRyLQ4vqZs4d6jm1QhTi3yE3uWWpRHfEzfmaA4LbgxgR3/DFbThvuzz/ujC9bZzGrn
+         PASxykHZ/LgYKHTU9HXMvlYE4L8EC6K02p6S/g54Lv/h/GAnCZ58gR0ZYa+byayKDRV7
+         +of7nZLNyr5tT+1zqMapelIGShD48e/mWd0ieHdPwxGQ6m8Ag07kJxeEN73QsSTdvACd
+         1H0+NBlW7wcReYz18UIBVhGU46hBNJeUntZw2Z2pRSqDhGtYa/a6SDMbXSV+BvCIeklf
+         1MMgS1rXsC6a6QXuvcMT8+3beuwC7ud1ij/3JpKlJ1T1NkQ6o8nvM8uyzUV6w+INWdvu
+         iBBg==
+X-Gm-Message-State: AOAM5331PR07emeLa+O3dHeUpOLfotA33eO4nmf6kULmQUlxVOZ1rVc3
+        yTMtgjwxtXfawoDyJa7/z48=
+X-Google-Smtp-Source: ABdhPJyIva65aopC9qc9dUyC7XykA+J49f+qwM5h7xk2CouBK89XwULCCFGHAK0hZyzzLw9ht0EBQA==
+X-Received: by 2002:a92:d4c4:: with SMTP id o4mr19508497ilm.39.1626788790235;
+        Tue, 20 Jul 2021 06:46:30 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id q5sm4292697ilt.75.2021.07.20.06.46.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jul 2021 06:46:29 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 79ECD27C0054;
+        Tue, 20 Jul 2021 09:46:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 20 Jul 2021 09:46:28 -0400
+X-ME-Sender: <xms:s9P2YKkbRzoWGOgXquE_sKjLVY1ZP4ylUSixtLlDH77C6QoXV1ul4Q>
+    <xme:s9P2YB254ghW95CSG1fa_3IUfIqwRaAeNOw7HmwOLizk45ps5u3D0iaZq1Hy2t3Yb
+    tXtcJ9VJISQSZ58Lg>
+X-ME-Received: <xmr:s9P2YIo39T6Ko6cOED8mnhbQBAi95wucj4MJYxB-KLbgxHK8fVjW7fecPks>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfedvgdeikecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeeiueevjeelheduteefveeflefgjeetfeehvdekudekgfegudeghfduhfetveejuden
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
+    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
+    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:s9P2YOkNakLvMsyu39ET4eDK_vMYJZ7Xjq7X_BBhZ5ZqXMwJ6ft33g>
+    <xmx:s9P2YI0Gt6zWxc_I1JTq3PgLmd1M_u3z1aIFmjTByBON731weIVGKA>
+    <xmx:s9P2YFsUs8q5EDVIQBjwwNaZOgm2dkMZjJxBfc2GTHorei1Mpul0lg>
+    <xmx:tNP2YPvPAcjXqFmNE08HwgYCV_mnfkDrI6O8HJT348s6DmIU_LA3rbPqLIs>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 Jul 2021 09:46:27 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: [RFC v5 0/8] PCI: hv: Support host bridge probing on ARM64
+Date:   Tue, 20 Jul 2021 21:44:21 +0800
+Message-Id: <20210720134429.511541-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500002.china.huawei.com (7.185.36.229)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When I do some aer-inject and sysfs remove stress tests, I got the
-following use-after-free Calltrace:
+Hi Bjorn, Arnd and Marc,
 
- ==================================================================
- BUG: KASAN: use-after-free in pci_stop_bus_device+0x174/0x178
- Read of size 8 at addr fffffc3e2e402218 by task bash/26311
+This is the v5 for the preparation of virtual PCI support on Hyper-V
+ARM64, Previous versions:
 
- CPU: 38 PID: 26311 Comm: bash Tainted: G        W         4.19.105+ #82
- Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V5.B161.01 06/10/2021
- Call trace:
-  dump_backtrace+0x0/0x360
-  show_stack+0x24/0x30
-  dump_stack+0x130/0x164
-  print_address_description+0x68/0x278
-  kasan_report+0x204/0x330
-  __asan_report_load8_noabort+0x30/0x40
-  pci_stop_bus_device+0x174/0x178
-  pci_stop_and_remove_bus_device_locked+0x24/0x40
-  remove_store+0x1c8/0x1e0
-  dev_attr_store+0x60/0x80
-  sysfs_kf_write+0x104/0x170
-  kernfs_fop_write+0x23c/0x430
-  __vfs_write+0xec/0x4e0
-  vfs_write+0x12c/0x3d0
-  ksys_write+0xe8/0x208
-  __arm64_sys_write+0x70/0xa0
-  el0_svc_common+0x10c/0x450
-  el0_svc_handler+0x50/0xc0
-  el0_svc+0x10/0x14
+v1:	https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
+v2:	https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
+v3:	https://lore.kernel.org/lkml/20210609163211.3467449-1-boqun.feng@gmail.com/
+v4:	https://lore.kernel.org/lkml/20210714102737.198432-1-boqun.feng@gmail.com/
 
- Allocated by task 684:
-  kasan_kmalloc+0xe0/0x190
-  kmem_cache_alloc_trace+0x110/0x240
-  pci_alloc_dev+0x4c/0x110
-  pci_scan_single_device+0x100/0x218
-  pci_scan_slot+0x8c/0x2d8
-  pci_scan_child_bus_extend+0x90/0x628
-  pci_scan_child_bus+0x24/0x30
-  pci_scan_bridge_extend+0x3b8/0xb28
-  pci_scan_child_bus_extend+0x350/0x628
-  pci_rescan_bus+0x24/0x48
-  pcie_do_fatal_recovery+0x390/0x4b0
-  handle_error_source+0x124/0x158
-  aer_isr+0x5a0/0x800
-  process_one_work+0x598/0x1250
-  worker_thread+0x384/0xf08
-  kthread+0x2a4/0x320
-  ret_from_fork+0x10/0x18
+Changes since last version:
 
- Freed by task 685:
-  __kasan_slab_free+0x120/0x228
-  kasan_slab_free+0x10/0x18
-  kfree+0x88/0x218
-  pci_release_dev+0xb4/0xd8
-  device_release+0x6c/0x1c0
-  kobject_put+0x12c/0x400
-  put_device+0x24/0x30
-  pci_dev_put+0x24/0x30
-  handle_error_source+0x12c/0x158
-  aer_isr+0x5a0/0x800
-  process_one_work+0x598/0x1250
-  worker_thread+0x384/0xf08
-  kthread+0x2a4/0x320
-  ret_from_fork+0x10/0x18
+*	Rebase to 5.14-rc2
 
- The buggy address belongs to the object at fffffc3e2e402200
-  which belongs to the cache kmalloc-4096 of size 4096
- The buggy address is located 24 bytes inside of
-  4096-byte region [fffffc3e2e402200, fffffc3e2e403200)
- The buggy address belongs to the page:
- page:ffff7ff0f8b90000 count:1 mapcount:0 mapping:ffffdc365f016e00 index:0x0 compound_mapcount: 0
- flags: 0x6ffffe0000008100(slab|head)
- raw: 6ffffe0000008100 ffff7f70d83aae00 0000000300000003 ffffdc365f016e00
- raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
- page dumped because: kasan: bad access detected
+*	Wording changes (Capitalization and more explanation on why) as
+	suggested by Bjorn.
 
- Memory state around the buggy address:
-  fffffc3e2e402100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  fffffc3e2e402180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- >fffffc3e2e402200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                             ^
-  fffffc3e2e402280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  fffffc3e2e402300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ==================================================================
+*	Split the patch #3 in previous into two patches as suggested by
+	Bjorn.
 
-It is caused by the following race condition:
+The basic problem we need to resolve is that ARM64 is an arch with
+PCI_DOMAINS_GENERIC=y, so the bus sysdata is pci_config_window. However,
+Hyper-V PCI provides a paravirtualized PCI interface, so there is no
+actual pci_config_window for a PCI host bridge, so no information can be
+retrieve from the pci_config_window of a Hyper-V virtual PCI bus. Also
+there is no corresponding ACPI device for the Hyper-V PCI root bridge,
+which introduces a special case when trying to find the ACPI device from
+the sysdata (see patch #3).
 
-	CPU0					CPU1
-remove_store()				aer_isr()
- device_remove_file_self()		 handle_error_source()
- pci_stop_and_remove_bus_device_locked	  pcie_do_fatal_recovery()
-  (blocked)				   pci_lock_rescan_remove()	#CPU1 acquire the lock
-					   pci_stop_and_remove_bus_device()
-					   pci_unlock_rescan_remove()   #CPU1 release the lock
-  pci_lock_rescan_remove()						#CPU0 acquire the lock
-					  pci_dev_put()			#free pci_dev
-  pci_stop_and_remove_bus_device()
-   pci_stop_bus_device()						#use-after-free
-  pci_unlock_rescan_remove()
+With this patchset, we could enable the virtual PCI on Hyper-V ARM64
+guest with other code under development.
 
-An AER interrupt is triggered on CPU1. CPU1 starts to process it. A work
-'aer_isr()' is scheduled on CPU1. It calling into
-pcie_do_fatal_recovery(), and aquire lock 'pci_rescan_remove_lock'.
-Before it removes the sysfs corresponding to the error pci device, a
-sysfs remove operation is executed on CPU0. CPU0 use
-device_remove_file_self() to remove the sysfs directory and wait for the
-lock to be released. After CPU1 finish pci_stop_and_remove_bus_device(),
-it release the lock and free the 'pci_dev' in pci_dev_put(). CPU0 acquire
-the lock and access the 'pci_dev'. Then a use-after-free is triggered.
+Comments and suggestions are welcome.
 
-To fix this issue, we increase the reference count in remove_store()
-before remove the device and decrease the reference count in the end.
+Regards,
+Boqun
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/pci/pci-sysfs.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Arnd Bergmann (1):
+  PCI: hv: Generify PCI probing
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 5d63df7c1820..2188e0c637fc 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -462,13 +462,17 @@ static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	unsigned long val;
- 
- 	if (kstrtoul(buf, 0, &val) < 0)
- 		return -EINVAL;
- 
-+	pci_dev_get(pdev);
- 	if (val && device_remove_file_self(dev, attr))
--		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-+		pci_stop_and_remove_bus_device_locked(pdev);
-+	pci_dev_put(pdev);
-+
- 	return count;
- }
- static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
+Boqun Feng (7):
+  PCI: Introduce domain_nr in pci_host_bridge
+  PCI: Support populating MSI domains of root buses via bridges
+  arm64: PCI: Restructure pcibios_root_bridge_prepare()
+  arm64: PCI: Support root bridge preparation for Hyper-V
+  PCI: hv: Set ->domain_nr of pci_host_bridge at probing time
+  PCI: hv: Set up MSI domain at bridge probing time
+  PCI: hv: Turn on the host bridge probing on ARM64
+
+ arch/arm64/kernel/pci.c             | 29 +++++++---
+ drivers/pci/controller/pci-hyperv.c | 86 +++++++++++++++++------------
+ drivers/pci/probe.c                 | 12 +++-
+ include/linux/pci.h                 | 10 ++++
+ 4 files changed, 92 insertions(+), 45 deletions(-)
+
 -- 
-2.20.1
+2.30.2
 
