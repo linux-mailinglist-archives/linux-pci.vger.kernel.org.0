@@ -2,124 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 458913CFEB1
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 18:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 205823CFF68
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jul 2021 18:28:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232541AbhGTP0Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 11:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48432 "EHLO mail.kernel.org"
+        id S231305AbhGTPrS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 11:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242796AbhGTPMc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Jul 2021 11:12:32 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C564D610FB;
-        Tue, 20 Jul 2021 15:53:10 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1m5s3Q-00EY34-Q9; Tue, 20 Jul 2021 16:53:08 +0100
-Date:   Tue, 20 Jul 2021 16:53:08 +0100
-Message-ID: <87tukp7ziz.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        id S230313AbhGTPqN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Jul 2021 11:46:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 32D9761029;
+        Tue, 20 Jul 2021 16:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626798411;
+        bh=oQdXwNsnov3I71IUbI4ZalJPD3H1vclSOvDUrvDehgM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BEDlTQJuCNmRb0S80L1HreKgM5vWdFUH4cWiZ8lcGEm31+R8K/+B4SgxU9uY3K1Ne
+         LbWmBKlvczn8+JRc1QifwdZNDa37iS+EGa+gNCpLkUFJGx9q6xY64tgrHbauenB5B4
+         5vJaK3F3kbbUSISyPa5XN8nah484lGaBnTiapH2gbhtIPVv1iYMHPOnONUIeOsJid2
+         sd5EmaawZ0eIG2AE1/Gt9qoeEwYRVhM5R2OChA/f0qMfD1o4K7b9YW6WlqmI/GhxVT
+         04fV0zs2soVWAc0/DYgxFNVd6wg9pDR1G2rvm8dO1a2ZNPc7h3fDIiND6RJJMNii+t
+         5VcfZlZCQjpmA==
+Received: by mail-ed1-f45.google.com with SMTP id h8so29224410eds.4;
+        Tue, 20 Jul 2021 09:26:51 -0700 (PDT)
+X-Gm-Message-State: AOAM532MR0zmwXSBBwHUd+WoE1MhwVF3UnWV+tVqyAB1NV6Tjsp0k7Zh
+        NK+5/5XoIs2xAO2oPqUKyzF4LsqOMhDaSoI2yw==
+X-Google-Smtp-Source: ABdhPJx0GdcRkiEP/Wr+vbI5/kjYFGNAHGXTDhqcSZ1dJavWwEGC3uFmRTPWxd/i8V27bJovNBzDreGIuAsGuq7iyRc=
+X-Received: by 2002:aa7:cb19:: with SMTP id s25mr42328404edt.194.1626798409815;
+ Tue, 20 Jul 2021 09:26:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210719073456.28666-1-chuanjia.liu@mediatek.com>
+ <20210719073456.28666-2-chuanjia.liu@mediatek.com> <20210719224718.GA2766057@robh.at.kernel.org>
+ <1626746843.2466.10.camel@mhfsdcap03>
+In-Reply-To: <1626746843.2466.10.camel@mhfsdcap03>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 20 Jul 2021 10:26:38 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJXN1b5Tq7uAngXfDmpTJoPvDmSzMedK3kr6efvuCgQ=w@mail.gmail.com>
+Message-ID: <CAL_JsqJXN1b5Tq7uAngXfDmpTJoPvDmSzMedK3kr6efvuCgQ=w@mail.gmail.com>
+Subject: Re: [PATCH v11 1/4] dt-bindings: PCI: mediatek: Update the Device
+ tree bindings
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC v5 8/8] PCI: hv: Turn on the host bridge probing on ARM64
-In-Reply-To: <YPbk3Ya20z1PDn2H@boqun-archlinux>
-References: <20210720134429.511541-1-boqun.feng@gmail.com>
-        <20210720134429.511541-9-boqun.feng@gmail.com>
-        <87v95582zh.wl-maz@kernel.org>
-        <YPbk3Ya20z1PDn2H@boqun-archlinux>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: boqun.feng@gmail.com, bhelgaas@google.com, arnd@arndb.de, catalin.marinas@arm.com, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, sunilmut@microsoft.com, rppt@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org, Yong Wu <yong.wu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 20 Jul 2021 15:59:41 +0100,
-Boqun Feng <boqun.feng@gmail.com> wrote:
-> 
-> On Tue, Jul 20, 2021 at 03:38:26PM +0100, Marc Zyngier wrote:
-> > On Tue, 20 Jul 2021 14:44:29 +0100,
-> > Boqun Feng <boqun.feng@gmail.com> wrote:
-> > > 
-> > > Now we have everything we need, just provide a proper sysdata type for
-> > > the bus to use on ARM64 and everything else works.
-> > > 
-> > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+On Mon, Jul 19, 2021 at 8:07 PM Chuanjia Liu <chuanjia.liu@mediatek.com> wrote:
+>
+> On Mon, 2021-07-19 at 16:47 -0600, Rob Herring wrote:
+> > On Mon, 19 Jul 2021 15:34:53 +0800, Chuanjia Liu wrote:
+> > > There are two independent PCIe controllers in MT2712 and MT7622
+> > > platform. Each of them should contain an independent MSI domain.
+> > >
+> > > In old dts architecture, MSI domain will be inherited from the root
+> > > bridge, and all of the devices will share the same MSI domain.
+> > > Hence that, the PCIe devices will not work properly if the irq number
+> > > which required is more than 32.
+> > >
+> > > Split the PCIe node for MT2712 and MT7622 platform to comply with
+> > > the hardware design and fix MSI issue.
+> > >
+> > > Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
+> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 > > > ---
-> > >  drivers/pci/controller/pci-hyperv.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > > index e6276aaa4659..62dbe98d1fe1 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -40,6 +40,7 @@
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/pci.h>
-> > > +#include <linux/pci-ecam.h>
-> > >  #include <linux/delay.h>
-> > >  #include <linux/semaphore.h>
-> > >  #include <linux/irqdomain.h>
-> > > @@ -448,7 +449,11 @@ enum hv_pcibus_state {
-> > >  };
-> > >  
-> > >  struct hv_pcibus_device {
-> > > +#ifdef CONFIG_X86
-> > >  	struct pci_sysdata sysdata;
-> > > +#elif defined(CONFIG_ARM64)
-> > > +	struct pci_config_window sysdata;
-> > > +#endif
-> > 
-> > Am I the only one who find this rather odd? Nothing ever populates
-> > this data structure on arm64, and its only purpose seems to serve as
-> > an anchor to retrieve the hbus via container_of().
-> > 
-> 
-> This field will also be used as the ->sysdata of pci_bus and
-> pci_host_bridge, and some of the PCI core code touches. Although I made
-> this field as all zeroed and make sure PCI core can handle (patch #4).
+> > >  .../bindings/pci/mediatek-pcie-cfg.yaml       |  39 ++++
+> > >  .../devicetree/bindings/pci/mediatek-pcie.txt | 206 ++++++++++--------
+> > >  2 files changed, 150 insertions(+), 95 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
+> > >
+> >
+> >
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> >
+> > If a tag was not added on purpose, please state why and what changed.
+> >
+> Hi,Rob
+> I have described in the cover letter:
+> v11:Rebase for 5.14-rc1 and add "interrupt-names", "linux,pci-domain"
+>     description in binding file. No code change.
+> if you still ok for this, I will add R-b in next version.
 
-Huh, I see. I missed this particular nugget. This is so convoluted...
+Yes, it's fine.
 
-> > If that's indeed the case, I'd rather see an arch-specific to_hbus()
-> > helper that uses another (preexisting) field as the anchor for arm64.
-> > 
-> 
-> I did a quick look, but I didn't find another field works: the field
-> needs to be placed inside hv_pcibus_device and the address can be
-> retrieved via pci_bus. I'm open to any suggestion in case that I missed
-> something.
+In the future, put the changelog for a patch in the patch.
 
-No, the above pretty much kills my suggestion.
-
-Thanks for the explanation,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Rob
