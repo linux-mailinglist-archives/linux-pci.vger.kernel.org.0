@@ -2,57 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F7AE3D18CA
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 23:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F3A23D18D7
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 23:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbhGUUa2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jul 2021 16:30:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:7490 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229545AbhGUUa2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Jul 2021 16:30:28 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10052"; a="208402604"
-X-IronPort-AV: E=Sophos;i="5.84,258,1620716400"; 
-   d="scan'208";a="208402604"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2021 14:11:04 -0700
-X-IronPort-AV: E=Sophos;i="5.84,258,1620716400"; 
-   d="scan'208";a="511935931"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2021 14:11:03 -0700
-Date:   Wed, 21 Jul 2021 14:10:36 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        x86@kernel.org, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [patch 0/8] PCI/MSI, x86: Cure a couple of inconsistencies
-Message-ID: <20210721211036.GA676232@otc-nc-03>
-References: <20210721191126.274946280@linutronix.de>
+        id S229862AbhGUUgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jul 2021 16:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229748AbhGUUgH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jul 2021 16:36:07 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E9DC061575;
+        Wed, 21 Jul 2021 14:16:43 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1626902202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SRiajcVUG8kkXW77JkyefMeF62lPa2D1xRVh/uS1Pcc=;
+        b=JsZSNBDhAtOGRXnmlDHSZO1xrzcJu8SnKp57KmfS1fAG6nAgrBz6aq/lo8/RGXsKA/m0a9
+        551fDtEVCTSy0XDd6EWOVhDe+WpVP2K5VgOm/rj9V5cFGgkn4uhHcARGIQgmRLEXkPg1Yq
+        DgSkcBx249z+Xhyw3PzUZFfKRJaN0eUK7ipxyN3SeHFkG/7RJRVBzr66gH3hPItV1JUelD
+        TvtWEgaSAH+niFBMNgODD9Zj1/yP44HNH8YiKMBPcMFa5EXxolPQMp8X5Oymhg8SNSgMKU
+        oPBHxWNS5uKBjXoiEFXKmoDH1OfE76cj2dSEM8Crmgk/1zD31lGpT7SnyNQbIQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1626902202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SRiajcVUG8kkXW77JkyefMeF62lPa2D1xRVh/uS1Pcc=;
+        b=UsiW6dIfwJVshmwQ9U09Xm7AkT9BJE+2U91TClDH7AZTjO8PGGwkd2ONGYbjcYkvVOSBrV
+        96W3g5agpmUFMoAA==
+To:     Dexuan Cui <decui@microsoft.com>,
+        Saeed Mahameed <saeed@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "'netdev\@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'x86\@kernel.org'" <x86@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "'linux-kernel\@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: RE: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
+In-Reply-To: <BYAPR21MB127077DE03164CA31AE0B33DBFE19@BYAPR21MB1270.namprd21.prod.outlook.com>
+References: <BYAPR21MB12703228F3E7A8B8158EB054BF129@BYAPR21MB1270.namprd21.prod.outlook.com> <BYAPR21MB127099BADA8490B48910D3F1BF129@BYAPR21MB1270.namprd21.prod.outlook.com> <YPPwel8mhaIdHP1y@unreal> <c61af64fd275b3a329bbad699de9db661e3cf082.camel@kernel.org> <BYAPR21MB127077DE03164CA31AE0B33DBFE19@BYAPR21MB1270.namprd21.prod.outlook.com>
+Date:   Wed, 21 Jul 2021 23:16:41 +0200
+Message-ID: <87czrbpdty.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210721191126.274946280@linutronix.de>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 09:11:26PM +0200, Thomas Gleixner wrote:
-> A recent discussion about the PCI/MSI management for virtio unearthed a
+Dexuan,
 
-nit:
-virtio or VFIO? :-)
+On Mon, Jul 19 2021 at 20:33, Dexuan Cui wrote:
+> This is a bare metal x86-64 host with Intel CPUs. Yes, I believe the
+> issue is in the IOMMU Interrupt Remapping mechanism rather in the
+> NIC driver. I just don't understand why bringing the CPUs online and
+> offline can work around the issue. I'm trying to dump the IOMMU IR
+> table entries to look for any error. 
 
-> violation of the MSI-X specification vs. writing the MSI-X message: under
-> certain circumstances the entry is written without being masked.
-> 
-> While looking at that and the related violation of the x86 non-remapped
-> interrupt affinity mechanism a few other issues were discovered by
-> inspection.
+can you please enable GENERIC_IRQ_DEBUGFS and provide the output of
 
-Cheers,
-Ashok
+cat /sys/kernel/debug/irq/irqs/$THENICIRQS
+
+Thanks,
+
+        tglx
