@@ -2,162 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C90503D0687
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 03:50:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 772013D087C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 07:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbhGUBJj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 21:09:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60344 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230296AbhGUBJ0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 21:09:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626832203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ycQUvev7iFjmkY/FUwE/4xwJ5iynNiXFiSZ1F9WCv/o=;
-        b=FZPkqgdu8hECNon5YsVqwX+3eLMQtdsAOb9JJ+B8pJoSe+kxn1yyyL8dngIMLiT0HT7QGO
-        ZbOcdCqt58GtPpPXhRborSvWBr93UDLxpGBpta8ShHjXkQ88qe4Zb4Au0cSP/wdEo4xBVB
-        VDqZxy+PG4ERnAYHf7grgpacvc9Ul/I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-517-_0U8Sy5fPjSCWUK8zaxCgw-1; Tue, 20 Jul 2021 21:50:01 -0400
-X-MC-Unique: _0U8Sy5fPjSCWUK8zaxCgw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AD7D19057A7;
-        Wed, 21 Jul 2021 01:50:00 +0000 (UTC)
-Received: from localhost (ovpn-12-206.pek2.redhat.com [10.72.12.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DA4CC60877;
-        Wed, 21 Jul 2021 01:49:55 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH V3] genirq/affinity: add helper of irq_affinity_calc_sets
-Date:   Wed, 21 Jul 2021 09:48:04 +0800
-Message-Id: <20210721014804.1059421-1-ming.lei@redhat.com>
+        id S229528AbhGUFFy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jul 2021 01:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233487AbhGUFFx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jul 2021 01:05:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C17C061574
+        for <linux-pci@vger.kernel.org>; Tue, 20 Jul 2021 22:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3ILXClfUuTZ1MDh8PxJhABjxWJ9KLFYrL9TpGq8wtgg=; b=caX4qMnkfw/x9Jwgd5iRmIm/H+
+        hvyi3mOKR54OWTgz84hlEgsk2zIWQh40t/XeEb+6kX8gYUBEoDkGjoaedQFhQPNxwUuR7KyA8HWPL
+        RM1nE4Rn7Iaj81YONChjgXLhWWEPxIqsNb+PdNMCQ2nySLphaCdAHbSI5BGdYp6mPsXmQwzvdW2ax
+        tJlL8yLslmmu4OtkCaztP3/17OVlzbAbsiYRUU31ArsCjJRM0QvmOs+75eu0WnfUkBD8T+2gNe0gO
+        7T/dXeAifIloFSRffBTHvoFfl6KPvfHpzr0d2fSBF87UiZNWxpFsjT8pqWUyv+fwDs8TmpfVIJ/k0
+        NUH49d6A==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m653L-008qLF-Ue; Wed, 21 Jul 2021 05:45:59 +0000
+Date:   Wed, 21 Jul 2021 06:45:55 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: vmd: Trigger secondary bus reset
+Message-ID: <YPe0k1bkj7v33vrM@infradead.org>
+References: <20210720205009.111806-1-nirmal.patel@linux.intel.com>
+ <20210720205009.111806-2-nirmal.patel@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210720205009.111806-2-nirmal.patel@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When driver requests to allocate irq affinity managed vectors,
-pci_alloc_irq_vectors_affinity() may fallback to single vector
-allocation. In this situation, we don't need to call
-irq_create_affinity_masks for calling into ->calc_sets() for
-avoiding potential memory leak, so add the helper for this purpose.
+On Tue, Jul 20, 2021 at 01:50:08PM -0700, Nirmal Patel wrote:
+> +#define PCI_HEADER_TYPE_MASK 0x7f
+> +#define PCI_CLASS_BRIDGE_PCI 0x0604
 
-Fixes: c66d4bd110a1 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
-V3:
-	- avoid pointless negations
-V2:
-	- move WARN_ON_ONCE() into irq_affinity_calc_sets
-	- don't install default calc_sets() callback as suggested by
-	Christoph
+Please use the existing definitions from pci_regs.h / pci_ids.h.
 
- drivers/pci/msi.c         |  3 ++-
- include/linux/interrupt.h |  7 +++++++
- kernel/irq/affinity.c     | 28 +++++++++++++++++-----------
- 3 files changed, 26 insertions(+), 12 deletions(-)
+>
+> +#define DEVICE_SPACE (8 * 4096)
+> +#define VMD_DEVICE_BASE(vmd, device) ((vmd)->cfgbar + (device) * DEVICE_SPACE)
+> +#define VMD_FUNCTION_BASE(vmd, device, fn) ((vmd)->cfgbar + (device) * (DEVICE_SPACE + (fn*4096)))
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 9232255c8515..4e6fbdf0741c 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1224,7 +1224,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 			 * for the single interrupt case.
- 			 */
- 			if (affd)
--				irq_create_affinity_masks(1, affd);
-+				irq_affinity_calc_sets(1, affd);
-+
- 			pci_intx(dev, 1);
- 			return 1;
- 		}
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 2ed65b01c961..c7ff84d60465 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -340,6 +340,7 @@ irq_create_affinity_masks(unsigned int nvec, struct irq_affinity *affd);
- 
- unsigned int irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
- 				       const struct irq_affinity *affd);
-+int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd);
- 
- #else /* CONFIG_SMP */
- 
-@@ -391,6 +392,12 @@ irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
- 	return maxvec;
- }
- 
-+static inline int irq_affinity_calc_sets(unsigned int affvecs,
-+					 struct irq_affinity *affd)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_SMP */
- 
- /*
-diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-index 4d89ad4fae3b..2030770e8cff 100644
---- a/kernel/irq/affinity.c
-+++ b/kernel/irq/affinity.c
-@@ -405,6 +405,22 @@ static void default_calc_sets(struct irq_affinity *affd, unsigned int affvecs)
- 	affd->set_size[0] = affvecs;
- }
- 
-+int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd)
-+{
-+	/*
-+	 * Simple invocations do not provide a calc_sets() callback. Call
-+	 * the generic one.
-+	 */
-+	if (affd->calc_sets)
-+		affd->calc_sets(affd, affvecs);
-+	else
-+		default_calc_sets(affd, affvecs);
-+
-+	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
-+		return -ERANGE;
-+	return 0;
-+}
-+
- /**
-  * irq_create_affinity_masks - Create affinity masks for multiqueue spreading
-  * @nvecs:	The total number of vectors
-@@ -429,17 +445,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
- 	else
- 		affvecs = 0;
- 
--	/*
--	 * Simple invocations do not provide a calc_sets() callback. Install
--	 * the generic one.
--	 */
--	if (!affd->calc_sets)
--		affd->calc_sets = default_calc_sets;
--
--	/* Recalculate the sets */
--	affd->calc_sets(affd, affvecs);
--
--	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
-+	if (irq_affinity_calc_sets(affvecs, affd))
- 		return NULL;
- 
- 	/* Nothing to assign? */
--- 
-2.31.1
+Plase turn thos into readable inline functions and avoid the overly long
+lines.
 
+> +	/*
+> +	* Subdevice config space may or many not be mapped linearly using 4k config
+> +	* space.
+> +	*/
+
+Please avoid the overly long line, especially in a comment.
