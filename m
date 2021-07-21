@@ -2,148 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9943D0630
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 02:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C2A3D063F
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 02:56:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbhGTXtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 19:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229745AbhGTXtg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Jul 2021 19:49:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 42F1960BBB;
-        Wed, 21 Jul 2021 00:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626827413;
-        bh=oA6LUVtEtIPCXpJhxFUKzyM7hTN95PCWkcpLTJ+YT4s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pbmtrLNrkZYFQkdU0kuOtTOeJfzUKbGu52QkdgdAuMv3fn9SroY+iz6gdFUVG5Yb/
-         enLzZ04deMTAR7bQPV3QY6J8+qIRDfmA/uh3OPf2cldVkua5juXwId6NUJv6mKE6AH
-         oS3g8bpcwuPWqhf5+Z4fzvdcsAkjAvMVQ09gqUREW/mElhJwEjl/2b/gG6+NR4seRZ
-         jieHyIu3xrHenFcCoHFtTCgnAIC/Mg13pMqC4O7czpnFnTpi0/bS6VwNCH4ILcmdYf
-         HWx+Mm8FgbuzFoPHj2djpLNP+S+CtX3V6thz08cJPHdhWZ/2JT4pF7W+gdv32zjUlG
-         twPnb45fzlmyg==
-Date:   Tue, 20 Jul 2021 19:30:11 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Daniel Wagner <dwagner@suse.de>,
-        Wen Xiong <wenxiong@us.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH V4 1/3] driver core: mark device as irq affinity managed
- if any irq is managed
-Message-ID: <20210721003011.GA144876@bjorn-Precision-5520>
+        id S229682AbhGUAPJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 20:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229629AbhGUAPI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 20:15:08 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64012C061574;
+        Tue, 20 Jul 2021 17:55:45 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id l5so535983iok.7;
+        Tue, 20 Jul 2021 17:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uBnvgqOzx7tQtgqIk0QrRjQar8YPI2MeErYJ3ki7qPQ=;
+        b=Q7m8XBnObca48gwtM237ZSo2IwP2GEv6hrXZSoVGBtWC8DMgbmXvbSeeOuG3qcwa9n
+         SbsMx+bcaGR5VgjzY0rUIBzEsswVDnjC+mvkXimaU5CSAmZ2BxvxPxtkfpVsnLHnP47l
+         Smxv6x/M5F0SzrIzRSq8xaoqEN0p+e/V1szOd9DTwGXWkQo1TrUgGWuRwWOG0sB+5P4K
+         Ff8ynVYJUel6Vk1Mu2h9GaaSJ4JY0ZTBdHYmJ07CQZH6vaWeZ+1D51WqDgWjPzU+JGyR
+         kubuxGY8KQWQKeFN8Y1PG+djau/+bUDfvYFZ07VE1oIqOfFNV4ZpD4BklYWpI1uJGD3f
+         ZwIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uBnvgqOzx7tQtgqIk0QrRjQar8YPI2MeErYJ3ki7qPQ=;
+        b=THdomSXqIbQBVNrnXUEVKUSy8MkFZGufsEAdqV9PxMw3CJISPoHCRQFjbcxk1XQufp
+         Xz/OZyIbkDv9MjEfF3RhkopnwOz1z/hI4ig1iL/tod/TSrVgXbmKxC/GOPtJVT2euH/K
+         UUXZSyhFbdqJCsXFDgQPW/dLHhKPFgA/DQH9HCFweoujIe5wyZA8DvkQZLrXlX0qEmoP
+         A7O19tRtGisBp30RHE9bFBkXC6FKMHah/BU8U8JWTBBWyk4WpKjZhl44pwSw+ZRJRg/F
+         GiXfmT08dt0CGhtggdQPYiBVxikSXz/vmXuqfCmklI14loyCZB4NtC+PyAnto/82+xVh
+         lBuQ==
+X-Gm-Message-State: AOAM532XVIUMxielJpoND6oxFw4ibV5VeJ7nrFdevVfRAIZ4FRvD2UGH
+        bFwHwJsxW5PfNLPvc0yzwO8=
+X-Google-Smtp-Source: ABdhPJyOMU2sMtSLrrQfyMVmnSnqBfjNhEWCyXSauqo1/vuGsZPP8HmxSe+n+X/mYNDo72pG+b3LpA==
+X-Received: by 2002:a02:620a:: with SMTP id d10mr29289532jac.22.1626828944668;
+        Tue, 20 Jul 2021 17:55:44 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id l18sm11949992ioc.13.2021.07.20.17.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jul 2021 17:55:44 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 0901927C0054;
+        Tue, 20 Jul 2021 20:55:42 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 20 Jul 2021 20:55:43 -0400
+X-ME-Sender: <xms:jXD3YB10x0wJYMJHeujmPTXK_V75G2EGjOrGaTmVwYshNxjfCzqvaQ>
+    <xme:jXD3YIGa8FueHoySJu47ggHzzHll5051-LLwpCshg8wufsnmdDxfcri4-yXlVp1ud
+    pXGEwEcyP3zeDGm1A>
+X-ME-Received: <xmr:jXD3YB4HjpRvzUJW6SXARHbqqfODQemHCwvUBKbZ9jPZyYdBdP13iLSgcp1X-Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeefgdefvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeehvdevteefgfeiudettdefvedvvdelkeejueffffelgeeuhffhjeetkeeiueeu
+    leenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvg
+X-ME-Proxy: <xmx:jXD3YO1nabPuCNiQJGwlBGVIBB3Q37Pm3FXjbAzEZg4ABsdYosyZIQ>
+    <xmx:jXD3YEHy_6f_EpY4ZZwig1WK0lNL84MtmPZzRR36VJr9XDeqPdGHtA>
+    <xmx:jXD3YP8nc64NgMJlilBDBPNxG5HpQrSAQNkOGd7cqfKcH-iw9yRgAQ>
+    <xmx:jnD3YC_ziFVnouzTn5uS8iYMhXekUaqoPc68kBrtUUpBjcK4Voa8YLbgIBo>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 Jul 2021 20:55:41 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: [RFC v5.1 1/8] PCI: Introduce domain_nr in pci_host_bridge
+Date:   Wed, 21 Jul 2021 08:53:36 +0800
+Message-Id: <20210721005336.517760-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <0210720134429.511541-2-boqun.feng@gmail.com>
+References: <0210720134429.511541-2-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YPKjQxZ4roigdvbq@T590>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 17, 2021 at 05:30:43PM +0800, Ming Lei wrote:
-> On Fri, Jul 16, 2021 at 03:01:54PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Jul 15, 2021 at 08:08:42PM +0800, Ming Lei wrote:
-> > > irq vector allocation with managed affinity may be used by driver, and
-> > > blk-mq needs this info because managed irq will be shutdown when all
-> > > CPUs in the affinity mask are offline.
-> > > 
-> > > The info of using managed irq is often produced by drivers(pci subsystem,
-> > 
-> > Add space between "drivers" and "(".
-> > s/pci/PCI/
-> 
-> OK.
-> 
-> > Does this "managed IRQ" (or "managed affinity", not sure what the
-> > correct terminology is here) have something to do with devm?
-> > 
-> > > platform device, ...), and it is consumed by blk-mq, so different subsystems
-> > > are involved in this info flow
-> > 
-> > Add period at end of sentence.
-> 
-> OK.
-> 
-> > > Address this issue by adding one field of .irq_affinity_managed into
-> > > 'struct device'.
-> > > 
-> > > Suggested-by: Christoph Hellwig <hch@lst.de>
-> > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > > ---
-> > >  drivers/base/platform.c | 7 +++++++
-> > >  drivers/pci/msi.c       | 3 +++
-> > >  include/linux/device.h  | 1 +
-> > >  3 files changed, 11 insertions(+)
-> > > 
-> > > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > > index 8640578f45e9..d28cb91d5cf9 100644
-> > > --- a/drivers/base/platform.c
-> > > +++ b/drivers/base/platform.c
-> > > @@ -388,6 +388,13 @@ int devm_platform_get_irqs_affinity(struct platform_device *dev,
-> > >  				ptr->irq[i], ret);
-> > >  			goto err_free_desc;
-> > >  		}
-> > > +
-> > > +		/*
-> > > +		 * mark the device as irq affinity managed if any irq affinity
-> > > +		 * descriptor is managed
-> > > +		 */
-> > > +		if (desc[i].is_managed)
-> > > +			dev->dev.irq_affinity_managed = true;
-> > >  	}
-> > >  
-> > >  	devres_add(&dev->dev, ptr);
-> > > diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> > > index 3d6db20d1b2b..7ddec90b711d 100644
-> > > --- a/drivers/pci/msi.c
-> > > +++ b/drivers/pci/msi.c
-> > > @@ -1197,6 +1197,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
-> > >  	if (flags & PCI_IRQ_AFFINITY) {
-> > >  		if (!affd)
-> > >  			affd = &msi_default_affd;
-> > > +		dev->dev.irq_affinity_managed = true;
-> > 
-> > This is really opaque to me.  I can't tell what the connection between
-> > PCI_IRQ_AFFINITY and irq_affinity_managed is.
-> 
-> Comment for PCI_IRQ_AFFINITY is 'Auto-assign affinity',
-> 'irq_affinity_managed' basically means that irq's affinity is managed by
-> kernel.
-> 
-> What blk-mq needs is exactly if PCI_IRQ_AFFINITY is applied when
-> allocating irq vectors. When PCI_IRQ_AFFINITY is used, genirq will
-> shutdown the irq when all CPUs in the assigned affinity are offline,
-> then blk-mq has to drain all in-flight IOs which will be completed
-> via this irq and prevent new IO. That is the connection.
-> 
-> Or you think 'irq_affinity_managed' isn't named well?
+Currently we retrieve the PCI domain number of the host bridge from the
+bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
+we have the information at PCI host bridge probing time, and it makes
+sense that we store it into pci_host_bridge. One benefit of doing so is
+the requirement for supporting PCI on Hyper-V for ARM64, because the
+host bridge of Hyper-V doesn't have pci_config_window, whereas ARM64 is
+a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
+number from pci_config_window on ARM64 Hyper-V guest.
 
-I've been looking at "devm" management where there is a concept of
-devm-managed IRQs, and you mentioned "managed IRQ" in the commit log.
-But IIUC this is a completely different sort of management.
+As the preparation for ARM64 Hyper-V PCI support, we introduce the
+domain_nr in pci_host_bridge and a sentinel value to allow drivers to
+set domain numbers properly at probing time. Currently
+CONFIG_PCI_DOMAINS_GENERIC=y archs are only users of this
+newly-introduced field.
 
-> > AFAICT the only place irq_affinity_managed is ultimately used is
-> > blk_mq_hctx_notify_offline(), and there's no obvious connection
-> > between that and this code.
-> 
-> I believe the connection is described in comment.
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/probe.c |  6 +++++-
+ include/linux/pci.h | 10 ++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-You mean the comment that says "hctx needn't to be deactivated in case
-managed irq isn't used"?  Sorry, that really doesn't explain to me why
-pci_alloc_irq_vectors_affinity() needs to set irq_affinity_managed.
-There's just a lot of magic here that cannot be deduced by reading the
-code.
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 79177ac37880..60c50d4f156f 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -594,6 +594,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+ 	bridge->native_pme = 1;
+ 	bridge->native_ltr = 1;
+ 	bridge->native_dpc = 1;
++	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
+ 
+ 	device_initialize(&bridge->dev);
+ }
+@@ -898,7 +899,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	bus->ops = bridge->ops;
+ 	bus->number = bus->busn_res.start = bridge->busnr;
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+-	bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
++	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
++		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
++	else
++		bus->domain_nr = bridge->domain_nr;
+ #endif
+ 
+ 	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 540b377ca8f6..ba61f4e144aa 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -526,6 +526,15 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
+ 	return (pdev->error_state != pci_channel_io_normal);
+ }
+ 
++/*
++* Currently in ACPI spec, for each PCI host bridge, PCI Segment Group number is
++* limited to a 16-bit value, therefore (int)-1 is not a valid PCI domain number,
++* and can be used as a sentinel value indicating ->domain_nr is not set by the
++* driver (and CONFIG_PCI_DOMAINS_GENERIC=y archs will set it with
++* pci_bus_find_domain_nr()).
++*/
++#define PCI_DOMAIN_NR_NOT_SET (-1)
++
+ struct pci_host_bridge {
+ 	struct device	dev;
+ 	struct pci_bus	*bus;		/* Root bus */
+@@ -533,6 +542,7 @@ struct pci_host_bridge {
+ 	struct pci_ops	*child_ops;
+ 	void		*sysdata;
+ 	int		busnr;
++	int		domain_nr;
+ 	struct list_head windows;	/* resource_entry */
+ 	struct list_head dma_ranges;	/* dma ranges resource list */
+ 	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
+-- 
+2.30.2
 
-Nit: s/needn't to be/needn't be/ in that comment.  Or maybe even
-"Deactivate hctx only when managed IRQ is used"?  I still have no idea
-what that means, but at least it's easier to read :)  Or maybe this is
-actually "draining a queue" instead of "deactivating"?
-
-Bjorn
