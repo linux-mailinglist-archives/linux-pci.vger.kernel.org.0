@@ -2,89 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41A873D0F43
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 15:10:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F8E3D123E
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 17:24:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237250AbhGUM37 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jul 2021 08:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232286AbhGUM37 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Jul 2021 08:29:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 414AF6120A;
-        Wed, 21 Jul 2021 13:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626873035;
-        bh=RyTa6MIG32jq2CsXun6DRYMHVllwbaPN2b34PGmMn1M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U/z85Hx/5xYT4WlwkQAIuVF+38cUNuHNXFEUE29SkU7anczFwcWnbr6GA7UJLib5+
-         aCvcEHN/7cYRm9D4/rV5wi8wUWQ3uSrRGE2AbfL0gPvHlNSAwpbR4CseZRwcnz9Ss5
-         z/z1zUwSwvbGXtiRQZOpX0LJnbPRUGu4k6xmqfYs5LWmbU+rYKv3K+G7U+rsgjWyMY
-         j8hu8XVRfCIKrlAnCsPlQAIQm0eE2WLnrmxVKdRwTDLe2iWqtc4tjNlEVT/ZWDLxOO
-         Pwqw+1HkDZg6rQoTHeDA9XiI0urXuaIaxHYdwkcvP0paJcKs3/P1sbbA+TFLmsJXI9
-         lUEKxG8qVGz6w==
-Date:   Wed, 21 Jul 2021 15:10:29 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Mauro Carvalho Chehab <mauro.chehab@huawei.com>,
-        Krzysztof =?UTF-8?B?V2ls?= =?UTF-8?B?Y3p5xYRza2k=?= 
-        <kw@linux.com>, Alex Dewar <alex.dewar90@gmail.com>,
-        Henry Styles <hes@sifive.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        id S238011AbhGUOnc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jul 2021 10:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237983AbhGUOnc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jul 2021 10:43:32 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B96AC061575;
+        Wed, 21 Jul 2021 08:24:07 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id p15-20020a05600c358fb0290245467f26a4so1211474wmq.0;
+        Wed, 21 Jul 2021 08:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Oi/kmLG+yo834vJn/MBYQrG1NfEUwztJBaDA0SorlMw=;
+        b=GPPygBoG0okZabi4k2zvS5PJYSyAiI3ZvpEMup6Ewo21SE5tPZ9ry+/FdFaeISL7Bc
+         6C60RiG56Ta8ZNUw6wo5CcrGvXvfzuHkf3VoixI1dsM6B0m7OVMA4Wv5B/gJhKBbCVkC
+         0d39uqHuQrS5YlATH1NFNKwUIS1Ne5KcvDwzjOf6a1foUQuBzkKg0IlGbs59zzJlbugF
+         g+1xoep1MxZevYMn9EoqWmp9RVieSWDnJfYE5b2MCo9v/Pa9fWtaLuwk6lkqjlTcjdWs
+         9wdH7hO+KBjL0VqQugznvQINceZLeeog51Lhh3dTJhsAUstG3ZIk7MuD2meazqGYLiI1
+         85lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Oi/kmLG+yo834vJn/MBYQrG1NfEUwztJBaDA0SorlMw=;
+        b=U8NXoktdBSJ3QlbNlOdAL1ZA22FzBvuzQLoA3HeR7Jvq1GlQjvAn4ScO6kMuOIyQ1j
+         OcZLBma+vVXdbjXrJcRqXbx+LIci6dT36KApNW01G0cHEOTPfKTu/Xi0HTsOV12gFcIC
+         HHxXSzOBFsgtRw+DeEDK9Cp3SrKUzKuxu0EUMoeks9vrZ6T94qpwTNgHKemgJheFSHj/
+         5Tp3Y4v4Pc/d3Vbo85nXelTl7QZwkbjxqvG9a2yMqvNzltrBthb5M4kPIo393FoYoXp9
+         0UkA7Jbsl7J54hha0rSuicICdCrqwE5kii2Wz8Fu7SEOze9N1mgXec9EUUKzEsdXZKwH
+         H/Hw==
+X-Gm-Message-State: AOAM532a0aNf0MmyJR3LOb8tVZlLmHwnM7m0Xtect9nwkyaPLECstPG+
+        +kHa8ZwPrKJQ34F4rYtZADw=
+X-Google-Smtp-Source: ABdhPJzUR2AgoD7KuBHSGj82WNYdT6Fbt0Qdp5E+r2m1Na+R4fuxAFwmQtgBNtidSvW66hH1r3tBLQ==
+X-Received: by 2002:a05:600c:350b:: with SMTP id h11mr4543981wmq.20.1626881046170;
+        Wed, 21 Jul 2021 08:24:06 -0700 (PDT)
+Received: from chgm-pc-linux.bachmann.at ([185.67.228.2])
+        by smtp.gmail.com with ESMTPSA id b8sm221299wmb.20.2021.07.21.08.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jul 2021 08:24:05 -0700 (PDT)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh@kernel.org>,
-        Wesley Sheng <wesley.sheng@amd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v7 11/10] PCI: kirin: Allow building it as a module
-Message-ID: <20210721151029.29c84c57@coco.lan>
-In-Reply-To: <CAK8P3a0fB48uES77a+z=OyyV9Rd4HbA4Q7gkVFCtPV5yispGYA@mail.gmail.com>
-References: <cover.1626855713.git.mchehab+huawei@kernel.org>
-        <8dbdde3eda0e5d22020f6a8bf153d7cfb775c980.1626862458.git.mchehab+huawei@kernel.org>
-        <CAK8P3a0fB48uES77a+z=OyyV9Rd4HbA4Q7gkVFCtPV5yispGYA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: dwc: do not ignore link errors
+Date:   Wed, 21 Jul 2021 17:23:47 +0200
+Message-Id: <20210721152347.2965403-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Wed, 21 Jul 2021 13:55:07 +0200
-Arnd Bergmann <arnd@arndb.de> escreveu:
+This fixes long boot delays of about 10 seconds.
 
-> On Wed, Jul 21, 2021 at 12:15 PM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > There's nothing preventing this driver to be loaded as a
-> > module. So, change its config from bool to tristate.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> 
-> No objections from me, but I wonder if you would also consider making the
-> module removable. It's currently marked as 'builtin_platform_driver',
-> so you can load but not remove it. Rob has done some bug fixes that make
-> it possible to remove similar drivers, so it's probably not much work
-> here either.
+I am working on a device powered by an TI am65 SoC where
+we have a PCIe expansion slot. If there is no PCIe device
+connected I see boot delays caused by pci_host_probe(..).
 
-Yeah, I can probably work on a patch to unbind/remove this driver.
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Never actually tried to write a patch removing the PCIe BUS, so no
-idea if the refcounts for the in-board Ethernet NIC, M.2 and mini-PCIe
-slots will be properly handled. If refcount is handled properly, I
-guess a patch like that won't be hard, at least for Kirin 970 PHY.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index a608ae1fad57..82ba429246f8 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -408,8 +408,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			goto err_free_msi;
+ 	}
+ 
+-	/* Ignore errors, the link may come up later */
+-	dw_pcie_wait_for_link(pci);
++	int ret = dw_pcie_wait_for_link(pci);
++	if (ret)
++		goto err_free_msi;
+ 
+ 	bridge->sysdata = pp;
+ 
+-- 
+2.31.1
 
-The Kirin 960 PHY will require a small change at the current version,
-as it currently misses the power_off logic.
-
-I also need to double-check if devm resources will be freed at the 
-driver removal time, as, with some past tests with media devices,
-we had some issues with that.
-
-Thanks,
-Mauro
