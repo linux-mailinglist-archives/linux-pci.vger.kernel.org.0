@@ -2,132 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED6D43D171A
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 21:29:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C766D3D17BD
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 22:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240244AbhGUSrx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jul 2021 14:47:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49056 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240246AbhGUSrw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jul 2021 14:47:52 -0400
-Message-Id: <20210721192650.867877313@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1626895707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=5qrlEv3rvmev48WbnJCr7JBARBHjEzrTBEeyqZzyuic=;
-        b=BkzKRIYsmCo9nDvtb5bf00bT+AO8kSlr8bXjrysAyaBwRtFcHOYXMe4f+hLHwtwjNkpKSm
-        UIpKxaV6OpbNIbNMZ89PFzXP6/o6nHMsJGQtS/Vq1vsc0uM25GA3j8nmClrjdnpEREjsPW
-        3tTUtBSv46HCaw0cQMEsvpTNc/e6ld9JG2lcxRtnncqUp8RoykanDI/diO+sNkgGEyxUB4
-        Dh+YnE7GWQHSDeazJHPfnH9s1zJMMFnT0Qwm/xvXP2ZHUjy64ZMo/PT4xrkRdQgmU0AxWZ
-        rUzw+dBdPh/DzqaL2GkQyWiydf6h3HPNgkCB7o/rmzP4y+J8ASV1j7s1xbaD3g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1626895707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=5qrlEv3rvmev48WbnJCr7JBARBHjEzrTBEeyqZzyuic=;
-        b=j+Plk8DTQ1tF2yqN0XdqRI0R18BoLcNcHr8753Q4wcT2AKGUNOgI8SpzhDqTm86CVjHf5s
-        NXfErO75q0V+ozDg==
-Date:   Wed, 21 Jul 2021 21:11:34 +0200
+        id S229703AbhGUTdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jul 2021 15:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229591AbhGUTdv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jul 2021 15:33:51 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94347C061575;
+        Wed, 21 Jul 2021 13:14:27 -0700 (PDT)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1626898465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ak+Uz43ZCaKXyDfbDB4j2Tp/dhk7l2jrFbDe0ZeXqe8=;
+        b=vVaCphZ/jjIrDSH1QTS7rs6NyR5B0Ujii1SubrsFPHXLn+QIQzFjgkzYTpOIXa+px6gD/n
+        4nI5KvVtN36fMSJAm+55kRDNNseodmKhGi2jyj4qb/7p5CyJeQqfZ8DSeYuKpaChbe5MS2
+        S+mIohlnzf7AwnCGGQwMc+M3Y1mkxx6Jh6obdSjb4Y39FdoY7FMySyeLefpXzkJrkhv/nL
+        me7MkFb1iPhqRFQoEJ7PjKtJ7rIFY2c18bJuIQJbgyMMjwX2ObgzAZZkxdD5sASUgvrWL+
+        iTMJqAT7yZXGZion8cRVyfbb0j4219BMrVbN3U18XWyvpISwDTFtJMBIOFN81A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1626898465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ak+Uz43ZCaKXyDfbDB4j2Tp/dhk7l2jrFbDe0ZeXqe8=;
+        b=XCIdlprRE3sr0wL5gMBZtUbRE+wbS41wXwE+yCmyf3noZk6JUIUaUb0jMMrOyCc00BmY10
+        NFogrSbcr1D42gAw==
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christoph Hellwig <hch@lst.de>, John Garry <john.garry@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        x86@kernel.org
-Subject: [patch 8/8] x86/msi: Force affinity setup before startup
-References: <20210721191126.274946280@linutronix.de>
+        Sagi Grimberg <sagi@grimberg.me>,
+        Daniel Wagner <dwagner@suse.de>,
+        Wen Xiong <wenxiong@us.ibm.com>,
+        Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH V4 1/3] driver core: mark device as irq affinity managed if any irq is managed
+In-Reply-To: <20210721072445.GA11257@lst.de>
+References: <20210715120844.636968-1-ming.lei@redhat.com> <20210715120844.636968-2-ming.lei@redhat.com> <5e534fdc-909e-39b2-521d-31f643a10558@huawei.com> <20210719094414.GC431@lst.de> <87lf60cevz.ffs@nanos.tec.linutronix.de> <20210721072445.GA11257@lst.de>
+Date:   Wed, 21 Jul 2021 22:14:25 +0200
+Message-ID: <871r7rqva6.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The X86 MSI mechanism cannot handle interrupt affinity changes safely after
-startup other than from an interrupt handler, unless interrupt remapping is
-enabled. The startup sequence in the generic interrupt code violates that
-assumption.
+On Wed, Jul 21 2021 at 09:24, Christoph Hellwig wrote:
 
-Mark the irq chips with the new IRQCHIP_AFFINITY_PRE_STARTUP flag so that
-the default interrupt setting happens before the interrupt is started up
-for the first time.
+> On Wed, Jul 21, 2021 at 09:20:00AM +0200, Thomas Gleixner wrote:
+>> > Just walking the list seems fine to me given that this is not a
+>> > performance criticial path.  But what are the locking implications?
+>> 
+>> At the moment there are none because the list is initialized in the
+>> setup path and never modified afterwards. Though that might change
+>> sooner than later to fix the virtio wreckage vs. MSI-X.
+>
+> What is the issue there?  Either way, if we keep the helper in the
+> IRQ code it should be easy to spot for anyone adding the locking.
 
-While the interrupt remapping MSI chip does not require this, there is no
-point in treating it differently as this might spare an interrupt to a CPU
-which is not in the default affinity mask.
+  https://lore.kernel.org/r/87o8bxcuxv.ffs@nanos.tec.linutronix.de
 
-For the non-remapping case go to the direct write path when the interrupt
-is not yet started similar to the not yet activated case.
+TLDR: virtio allocates ONE irq on msix_enable() and then when the guest
+actually unmasks another entry (e.g. request_irq()), it tears down the
+allocated one and set's up two. On the third one this repeats ....
 
-Fixes: 18404756765c ("genirq: Expose default irq affinity mask (take 3)")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/kernel/apic/msi.c |   11 ++++++++---
- arch/x86/kernel/hpet.c     |    2 +-
- 2 files changed, 9 insertions(+), 4 deletions(-)
+There are only two options:
 
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -58,11 +58,13 @@ msi_set_affinity(struct irq_data *irqd,
- 	 *   The quirk bit is not set in this case.
- 	 * - The new vector is the same as the old vector
- 	 * - The old vector is MANAGED_IRQ_SHUTDOWN_VECTOR (interrupt starts up)
-+	 * - The interrupt is not yet started up
- 	 * - The new destination CPU is the same as the old destination CPU
- 	 */
- 	if (!irqd_msi_nomask_quirk(irqd) ||
- 	    cfg->vector == old_cfg.vector ||
- 	    old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
-+	    !irqd_is_started(irqd) ||
- 	    cfg->dest_apicid == old_cfg.dest_apicid) {
- 		irq_msi_update_msg(irqd, cfg);
- 		return ret;
-@@ -150,7 +152,8 @@ static struct irq_chip pci_msi_controlle
- 	.irq_ack		= irq_chip_ack_parent,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_affinity	= msi_set_affinity,
--	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE |
-+				  IRQCHIP_AFFINITY_PRE_STARTUP,
- };
- 
- int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-@@ -219,7 +222,8 @@ static struct irq_chip pci_msi_ir_contro
- 	.irq_mask		= pci_msi_mask_irq,
- 	.irq_ack		= irq_chip_ack_parent,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
--	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE |
-+				  IRQCHIP_AFFINITY_PRE_STARTUP,
- };
- 
- static struct msi_domain_info pci_msi_ir_domain_info = {
-@@ -273,7 +277,8 @@ static struct irq_chip dmar_msi_controll
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_compose_msi_msg	= dmar_msi_compose_msg,
- 	.irq_write_msi_msg	= dmar_msi_write_msg,
--	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE |
-+				  IRQCHIP_AFFINITY_PRE_STARTUP,
- };
- 
- static int dmar_msi_init(struct irq_domain *domain,
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -508,7 +508,7 @@ static struct irq_chip hpet_msi_controll
- 	.irq_set_affinity = msi_domain_set_affinity,
- 	.irq_retrigger = irq_chip_retrigger_hierarchy,
- 	.irq_write_msi_msg = hpet_msi_write_msg,
--	.flags = IRQCHIP_SKIP_SET_WAKE,
-+	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_AFFINITY_PRE_STARTUP,
- };
- 
- static int hpet_msi_init(struct irq_domain *domain,
+  1) allocate everything upfront, which is undesired
+  2) append entries, which might need locking, but I'm still trying to
+     avoid that
 
+There is another problem vs. vector exhaustion which can't be fixed that
+way, but that's a different story.
+
+Thanks,
+
+        tglx
