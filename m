@@ -2,204 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C801D3D0643
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 02:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C90503D0687
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 03:50:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbhGUASq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jul 2021 20:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbhGUASl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 20:18:41 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61C2C061574;
-        Tue, 20 Jul 2021 17:59:17 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id u7so565454ion.3;
-        Tue, 20 Jul 2021 17:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N8UGTVobv7pdWmQ2vwYet8vbuI3Cy9tksvCSmZaqifE=;
-        b=SQulmDYHjdtCCYxwxLBmOOS/5aZ4SgPfHeYZAeD6ovEI5hYETGcopo4Al9+PNg+VPF
-         YjQu0w7tm7bB7hZ4fRXBr+q4up9Ls9lX+Uofp15fOIlyZJQ6Ysv0Ulu4ZKl5LYk42bS7
-         W6ulR3pSmXnc4BjNTTdFpfb/omG4u/h5BrK3SeZTPISQYIz2Se3pmZjBGCphC7D8VTY/
-         Wggbdy7pjFhXPCSW/ELnHQgaUfRmYMzDwiQqYGUb2jDdWR08u8EPLjw/8z8fcS4Xcox+
-         rEqvpcGg7xH8iRcHevxvh4W1pOFIyekg/IDu+PoUdCWGUK383a5yT+m0Y1SKGTABmrzW
-         Z45w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N8UGTVobv7pdWmQ2vwYet8vbuI3Cy9tksvCSmZaqifE=;
-        b=rsT5t3qI4TsqbifWzlTrKt0aiCAkW+3h+N+Bgz8jdDF3Z2KW+9ijFmo0XZ817/Yrq5
-         zPCzdt2o7T8oc2wMRY94j4/LsA9dWKUTMDunHoTdr5MHdgU7jCk5KQw2S5xPmVKHRfDM
-         CpVouKyvA2r9x5nIS7KBEtXeD589GO0sc3xeiTSrUFPi6fYIOKeiitMlHUuolJP1Hfti
-         otrcIk88Da9I+v18MC+7A2DWzbRFVDCM1HXKX6oXbDbDGAkuVJbOgu27QwMG/tpupel3
-         YObTZGql05SiiuF5B2pVXlmJTWK8OhuRI5m2ntBzDWaJKoOkIoyupGdJF8sc88+Xpjda
-         Kdiw==
-X-Gm-Message-State: AOAM532TyI8aFWfNffxBsbglck/Lx4oB/2vKeL8LY4AdNSWhwH7f8+Uq
-        L9Y9kaSOcBRKPrr5tFnsTwQ=
-X-Google-Smtp-Source: ABdhPJxwSPLKP/YJWc05noTHMfDpJLfw8xDeBwQLUjT3KLB7v054Yh+y2m4rr/uLeeTYnjLeRp8Usg==
-X-Received: by 2002:a6b:e207:: with SMTP id z7mr19528253ioc.111.1626829157144;
-        Tue, 20 Jul 2021 17:59:17 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id k4sm933090ilu.67.2021.07.20.17.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jul 2021 17:59:16 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 9F28E27C005A;
-        Tue, 20 Jul 2021 20:59:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 20 Jul 2021 20:59:15 -0400
-X-ME-Sender: <xms:YnH3YNNNm04uxJ2PPmQUV1itjUEnLMacYQu5MSLSB1sqvPFC6Shjfg>
-    <xme:YnH3YP_QhQDtn4n0WcI9d7i11z-amPhN57WpavUpnpe6GzgZY5DFCY9hqH-sPi7E3
-    8Oqv0lnZVAimEBCcw>
-X-ME-Received: <xmr:YnH3YMRuMzdIwtP8hRJ4oaTDRySyniqjEemd39BrpYtRv5QcHbs24YBNeMSUwQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeefgdefvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
-    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:YnH3YJut_Q-oIbvHXidl1mwBdN6p_HagK2gnDBKWvOd464jCwtVaoQ>
-    <xmx:YnH3YFfxI2rcgl_8fHiwjZj9gwNuIrsNz0rfSKksKZfx81jr-pkSTw>
-    <xmx:YnH3YF2IPOtyzbJT-T4d-JbKPgsdeGw6YjM-Vkw72Q9V5T1RMuhwiA>
-    <xmx:Y3H3YGCMbtdmD4ccr9tQKuAs_j_iPFWxTQictWJ2vT_JQjWZS8diF44UyE4>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 20 Jul 2021 20:59:14 -0400 (EDT)
-Date:   Wed, 21 Jul 2021 08:57:17 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC v5 1/8] PCI: Introduce domain_nr in pci_host_bridge
-Message-ID: <YPdw7YMXyFoHDhq4@boqun-archlinux>
-References: <20210720134429.511541-2-boqun.feng@gmail.com>
- <20210720224925.GA137627@bjorn-Precision-5520>
+        id S229903AbhGUBJj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jul 2021 21:09:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60344 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230296AbhGUBJ0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jul 2021 21:09:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626832203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ycQUvev7iFjmkY/FUwE/4xwJ5iynNiXFiSZ1F9WCv/o=;
+        b=FZPkqgdu8hECNon5YsVqwX+3eLMQtdsAOb9JJ+B8pJoSe+kxn1yyyL8dngIMLiT0HT7QGO
+        ZbOcdCqt58GtPpPXhRborSvWBr93UDLxpGBpta8ShHjXkQ88qe4Zb4Au0cSP/wdEo4xBVB
+        VDqZxy+PG4ERnAYHf7grgpacvc9Ul/I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-517-_0U8Sy5fPjSCWUK8zaxCgw-1; Tue, 20 Jul 2021 21:50:01 -0400
+X-MC-Unique: _0U8Sy5fPjSCWUK8zaxCgw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AD7D19057A7;
+        Wed, 21 Jul 2021 01:50:00 +0000 (UTC)
+Received: from localhost (ovpn-12-206.pek2.redhat.com [10.72.12.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA4CC60877;
+        Wed, 21 Jul 2021 01:49:55 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH V3] genirq/affinity: add helper of irq_affinity_calc_sets
+Date:   Wed, 21 Jul 2021 09:48:04 +0800
+Message-Id: <20210721014804.1059421-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210720224925.GA137627@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 05:49:25PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 20, 2021 at 09:44:22PM +0800, Boqun Feng wrote:
-> > Currently we retrieve the PCI domain number of the host bridge from the
-> > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
-> > we have the information at PCI host bridge probing time, and it makes
-> > sense that we store it into pci_host_bridge. One benefit of doing so is
-> > the requirement for supporting PCI on Hyper-V for ARM64, because the
-> > host bridge of Hyper-V doesn't have pci_config_window, whereas ARM64 is
-> > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
-> > number from pci_config_window on ARM64 Hyper-V guest.
-> > 
-> > As the preparation for ARM64 Hyper-V PCI support, we introduce the
-> > domain_nr in pci_host_bridge and a sentinel value to allow drivers to
-> > set domain numbers properly at probing time. Currently
-> > CONFIG_PCI_DOMAINS_GENERIC=y archs are only users of this
-> > newly-introduced field.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> 
-> Once all the issues are ironed out, Lorenzo should probably merge this
-> since it's primarily Hyper-V stuff, but I'm OK with this part:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
+When driver requests to allocate irq affinity managed vectors,
+pci_alloc_irq_vectors_affinity() may fallback to single vector
+allocation. In this situation, we don't need to call
+irq_create_affinity_masks for calling into ->calc_sets() for
+avoiding potential memory leak, so add the helper for this purpose.
 
-Thanks!
+Fixes: c66d4bd110a1 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+V3:
+	- avoid pointless negations
+V2:
+	- move WARN_ON_ONCE() into irq_affinity_calc_sets
+	- don't install default calc_sets() callback as suggested by
+	Christoph
 
-> But fix the comment issue below.
-> 
+ drivers/pci/msi.c         |  3 ++-
+ include/linux/interrupt.h |  7 +++++++
+ kernel/irq/affinity.c     | 28 +++++++++++++++++-----------
+ 3 files changed, 26 insertions(+), 12 deletions(-)
 
-Just send a v5.1 for this patch with the comment fixed and your
-Acked-by.
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 9232255c8515..4e6fbdf0741c 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1224,7 +1224,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 			 * for the single interrupt case.
+ 			 */
+ 			if (affd)
+-				irq_create_affinity_masks(1, affd);
++				irq_affinity_calc_sets(1, affd);
++
+ 			pci_intx(dev, 1);
+ 			return 1;
+ 		}
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 2ed65b01c961..c7ff84d60465 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -340,6 +340,7 @@ irq_create_affinity_masks(unsigned int nvec, struct irq_affinity *affd);
+ 
+ unsigned int irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
+ 				       const struct irq_affinity *affd);
++int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd);
+ 
+ #else /* CONFIG_SMP */
+ 
+@@ -391,6 +392,12 @@ irq_calc_affinity_vectors(unsigned int minvec, unsigned int maxvec,
+ 	return maxvec;
+ }
+ 
++static inline int irq_affinity_calc_sets(unsigned int affvecs,
++					 struct irq_affinity *affd)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_SMP */
+ 
+ /*
+diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+index 4d89ad4fae3b..2030770e8cff 100644
+--- a/kernel/irq/affinity.c
++++ b/kernel/irq/affinity.c
+@@ -405,6 +405,22 @@ static void default_calc_sets(struct irq_affinity *affd, unsigned int affvecs)
+ 	affd->set_size[0] = affvecs;
+ }
+ 
++int irq_affinity_calc_sets(unsigned int affvecs, struct irq_affinity *affd)
++{
++	/*
++	 * Simple invocations do not provide a calc_sets() callback. Call
++	 * the generic one.
++	 */
++	if (affd->calc_sets)
++		affd->calc_sets(affd, affvecs);
++	else
++		default_calc_sets(affd, affvecs);
++
++	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
++		return -ERANGE;
++	return 0;
++}
++
+ /**
+  * irq_create_affinity_masks - Create affinity masks for multiqueue spreading
+  * @nvecs:	The total number of vectors
+@@ -429,17 +445,7 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+ 	else
+ 		affvecs = 0;
+ 
+-	/*
+-	 * Simple invocations do not provide a calc_sets() callback. Install
+-	 * the generic one.
+-	 */
+-	if (!affd->calc_sets)
+-		affd->calc_sets = default_calc_sets;
+-
+-	/* Recalculate the sets */
+-	affd->calc_sets(affd, affvecs);
+-
+-	if (WARN_ON_ONCE(affd->nr_sets > IRQ_AFFINITY_MAX_SETS))
++	if (irq_affinity_calc_sets(affvecs, affd))
+ 		return NULL;
+ 
+ 	/* Nothing to assign? */
+-- 
+2.31.1
 
-Regards,
-Boqun
-
-> > ---
-> >  drivers/pci/probe.c |  6 +++++-
-> >  include/linux/pci.h | 10 ++++++++++
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 79177ac37880..60c50d4f156f 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -594,6 +594,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
-> >  	bridge->native_pme = 1;
-> >  	bridge->native_ltr = 1;
-> >  	bridge->native_dpc = 1;
-> > +	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
-> >  
-> >  	device_initialize(&bridge->dev);
-> >  }
-> > @@ -898,7 +899,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
-> >  	bus->ops = bridge->ops;
-> >  	bus->number = bus->busn_res.start = bridge->busnr;
-> >  #ifdef CONFIG_PCI_DOMAINS_GENERIC
-> > -	bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
-> > +	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
-> > +		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
-> > +	else
-> > +		bus->domain_nr = bridge->domain_nr;
-> >  #endif
-> >  
-> >  	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 540b377ca8f6..2c413a64d168 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -526,6 +526,15 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
-> >  	return (pdev->error_state != pci_channel_io_normal);
-> >  }
-> >  
-> > +/*
-> > +* Currently in ACPI spec, for each PCI host bridge, PCI Segment Group number is
-> > +* limited to a 16-bit value, therefore (int)-1 is not a valid PCI domain number,
-> > +* and can be used as a sentinel value indicating >domain_nr is not set by the
-> > +* driver (and CONFIG_PCI_DOMAINS_GENERIC=y archs will set it with
-> > +* pci_bus_find_domain_nr()).
-> > +*/
-> 
-> Fix comment indentation (follow style of other comments in this file).
-> 
-> s/>domain_nr/->domain_nr/
-> 
-> > +#define PCI_DOMAIN_NR_NOT_SET (-1)
-> > +
-> >  struct pci_host_bridge {
-> >  	struct device	dev;
-> >  	struct pci_bus	*bus;		/* Root bus */
-> > @@ -533,6 +542,7 @@ struct pci_host_bridge {
-> >  	struct pci_ops	*child_ops;
-> >  	void		*sysdata;
-> >  	int		busnr;
-> > +	int		domain_nr;
-> >  	struct list_head windows;	/* resource_entry */
-> >  	struct list_head dma_ranges;	/* dma ranges resource list */
-> >  	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
-> > -- 
-> > 2.30.2
-> > 
