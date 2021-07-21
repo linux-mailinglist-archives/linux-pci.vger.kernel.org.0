@@ -2,95 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 229423D14DE
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 19:11:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76EBD3D1536
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 19:40:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229861AbhGUQbJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jul 2021 12:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
+        id S229962AbhGUQ7W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jul 2021 12:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229459AbhGUQbI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Jul 2021 12:31:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A930F61222;
-        Wed, 21 Jul 2021 17:11:44 +0000 (UTC)
+        id S229597AbhGUQ7W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Jul 2021 12:59:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9CCB960BD3;
+        Wed, 21 Jul 2021 17:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626887505;
-        bh=AilQ46pk+2fIUx3ol9DVGFG0IMAI8bKWvoJej1mBTDY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JZBH5p2/I6tnBBYPmppaaMdzLEeyoueUbkDMHEmwNTSac4kmMsdlv8Xzhg2ayUNfn
-         ZMdqCJHCzoe08mLJPdx41/2RA3eMnIyqtxtjsOW0uB7RHoAfAhHHqt5zpdmbhXVGTN
-         9H69at2PaRgOYVqwmgYIiQsl0nG7G5xlC4ZfkqMGohQU1vgzqQFumFIexQpx+agXrA
-         75Q5FBQ5u1VOc9HECTS0hLfhoneoTjyTjveSfsmT5FKJvWyYvmsGxj7kl1c6sA2eTf
-         yacL3jFNU4/uVK4w7x/ab51b2wcOpC0p1ilcsm9olodqpNCgArVHBxKfGUKw1xQzQu
-         ki0I1YXSh8I+A==
-Date:   Wed, 21 Jul 2021 12:11:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: do not ignore link errors
-Message-ID: <20210721171142.GA189373@bjorn-Precision-5520>
+        s=k20201202; t=1626889198;
+        bh=vxkURe61iwE39hj0EF+5bZCTtjoEwnhfxCFjfgtQ36o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RdtxAIqyvftI0HvvwlX5/SxdplcftLcb7cHzSZzSBeVa053tupBtoEUKK+jimZAgJ
+         tkbIIqTOuadoy+qdAfeIwXRtAxi/Kj5wQCCqhizUXhqKy2B82y+oLePK4giBu6pt6R
+         T0KR7cKCQR7Nx7Pkp10A6FaE9CpMSnwN1fCoT0xROCJANG6NU+Yks+lR9+4zDGz9Ho
+         I9SrNfzJZbdDUxQYd1jQXzdOHKC1/tvvCPf8Ahi7a6lhaFHer4LpllGZif9PS8einL
+         3MruM1W5dRoxn6n0H6TMJSVkAdtto1AscM8fUMR60Z/NVHZqCzbZVYB/YJupz86Ask
+         /e+RQ5VmxKTTQ==
+Date:   Wed, 21 Jul 2021 20:39:54 +0300
+From:   Leon Romanovsky <leonro@kernel.org>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     bhelgaas@google.com, corbet@lwn.net, alex.williamson@redhat.com,
+        diana.craciun@oss.nxp.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, masahiroy@kernel.org,
+        michal.lkml@markovi.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        mgurtovoy@nvidia.com, jgg@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH 12/12] vfio/pci: Introduce vfio_pci_core.ko
+Message-ID: <YPhb6o06fX+/FiTY@unreal>
+References: <20210721161609.68223-1-yishaih@nvidia.com>
+ <20210721161609.68223-13-yishaih@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210721152821.2967356-1-christian.gmeiner@gmail.com>
+In-Reply-To: <20210721161609.68223-13-yishaih@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 05:28:21PM +0200, Christian Gmeiner wrote:
-> This fixes long boot delays of about 10 seconds.
+On Wed, Jul 21, 2021 at 07:16:09PM +0300, Yishai Hadas wrote:
+> From: Max Gurtovoy <mgurtovoy@nvidia.com>
 > 
-> I am working on a device powered by an TI am65 SoC where
-> we have a PCIe expansion slot. If there is no PCIe device
-> connected I see boot delays caused by pci_host_probe(..).
-
-I agree this is problematic.  Surely the controller can generate an
-interrupt when the link comes up?  If so, can we make an interrupt
-handler for that "Link Up" interrupt that calls or schedules
-pci_host_probe(), and get rid of dw_pcie_wait_for_link() altogether?
-
-I doubt we want to just return failure here if the link doesn't come
-up right away, because then we can never hot-add a device later.
-
-886a9c134755 ("PCI: dwc: Move link handling into common code")
-addresses this in the commit log:
-
-  The behavior for a link down was inconsistent as some drivers would
-  fail probe in that case while others succeed. Let's standardize this
-  to succeed as there are usecases where devices (and the link) appear
-  later even without hotplug. For example, a reconfigured FPGA device.
-
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> Now that vfio_pci has been split into two source modules, one focusing
+> on the "struct pci_driver" (vfio_pci.c) and a toolbox library of code
+> (vfio_pci_core.c), complete the split and move them into two different
+> kernel modules.
+> 
+> As before vfio_pci.ko continues to present the same interface under
+> sysfs and this change will have no functional impact.
+> 
+> Splitting into another module and adding exports allows creating new HW
+> specific VFIO PCI drivers that can implement device specific
+> functionality, such as VFIO migration interfaces or specialized device
+> requirements.
+> 
+> Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
 > ---
-> 
-> V2: fix compile
-> 
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index a608ae1fad57..ce7d3a6f9a03 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -408,8 +408,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			goto err_free_msi;
->  	}
->  
-> -	/* Ignore errors, the link may come up later */
-> -	dw_pcie_wait_for_link(pci);
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret)
-> +		goto err_free_msi;
->  
->  	bridge->sysdata = pp;
->  
-> -- 
-> 2.31.1
-> 
+>  drivers/vfio/pci/Kconfig                      | 30 ++++++++------
+>  drivers/vfio/pci/Makefile                     |  8 ++--
+>  drivers/vfio/pci/vfio_pci.c                   | 14 ++-----
+>  drivers/vfio/pci/vfio_pci_config.c            |  2 +-
+>  drivers/vfio/pci/vfio_pci_core.c              | 41 ++++++++++++++++---
+>  drivers/vfio/pci/vfio_pci_igd.c               |  2 +-
+>  drivers/vfio/pci/vfio_pci_intrs.c             |  2 +-
+>  drivers/vfio/pci/vfio_pci_rdwr.c              |  2 +-
+>  drivers/vfio/pci/vfio_pci_zdev.c              |  2 +-
+>  .../pci => include/linux}/vfio_pci_core.h     |  2 -
+>  10 files changed, 66 insertions(+), 39 deletions(-)
+>  rename {drivers/vfio/pci => include/linux}/vfio_pci_core.h (99%)
+
+<...>
+
+> -#include "vfio_pci_core.h"
+> +#include <linux/vfio_pci_core.h>
+> +
+> +#define DRIVER_VERSION  "0.2"
+
+<...>
+
+> +MODULE_VERSION(DRIVER_VERSION);
+
+Please don't add driver versions to the upstream kernel, they useless.
+
+Thanks
