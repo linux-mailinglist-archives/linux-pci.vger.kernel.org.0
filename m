@@ -2,70 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F3A23D18D7
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 23:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54E8B3D194C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jul 2021 23:38:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbhGUUgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jul 2021 16:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbhGUUgH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jul 2021 16:36:07 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E9DC061575;
-        Wed, 21 Jul 2021 14:16:43 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1626902202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SRiajcVUG8kkXW77JkyefMeF62lPa2D1xRVh/uS1Pcc=;
-        b=JsZSNBDhAtOGRXnmlDHSZO1xrzcJu8SnKp57KmfS1fAG6nAgrBz6aq/lo8/RGXsKA/m0a9
-        551fDtEVCTSy0XDd6EWOVhDe+WpVP2K5VgOm/rj9V5cFGgkn4uhHcARGIQgmRLEXkPg1Yq
-        DgSkcBx249z+Xhyw3PzUZFfKRJaN0eUK7ipxyN3SeHFkG/7RJRVBzr66gH3hPItV1JUelD
-        TvtWEgaSAH+niFBMNgODD9Zj1/yP44HNH8YiKMBPcMFa5EXxolPQMp8X5Oymhg8SNSgMKU
-        oPBHxWNS5uKBjXoiEFXKmoDH1OfE76cj2dSEM8Crmgk/1zD31lGpT7SnyNQbIQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1626902202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SRiajcVUG8kkXW77JkyefMeF62lPa2D1xRVh/uS1Pcc=;
-        b=UsiW6dIfwJVshmwQ9U09Xm7AkT9BJE+2U91TClDH7AZTjO8PGGwkd2ONGYbjcYkvVOSBrV
-        96W3g5agpmUFMoAA==
-To:     Dexuan Cui <decui@microsoft.com>,
-        Saeed Mahameed <saeed@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "'netdev\@vger.kernel.org'" <netdev@vger.kernel.org>,
-        "'x86\@kernel.org'" <x86@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "'linux-kernel\@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
-In-Reply-To: <BYAPR21MB127077DE03164CA31AE0B33DBFE19@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <BYAPR21MB12703228F3E7A8B8158EB054BF129@BYAPR21MB1270.namprd21.prod.outlook.com> <BYAPR21MB127099BADA8490B48910D3F1BF129@BYAPR21MB1270.namprd21.prod.outlook.com> <YPPwel8mhaIdHP1y@unreal> <c61af64fd275b3a329bbad699de9db661e3cf082.camel@kernel.org> <BYAPR21MB127077DE03164CA31AE0B33DBFE19@BYAPR21MB1270.namprd21.prod.outlook.com>
-Date:   Wed, 21 Jul 2021 23:16:41 +0200
-Message-ID: <87czrbpdty.ffs@nanos.tec.linutronix.de>
+        id S229667AbhGUU6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jul 2021 16:58:05 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28297 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229597AbhGUU6F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Jul 2021 16:58:05 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10052"; a="191796723"
+X-IronPort-AV: E=Sophos;i="5.84,258,1620716400"; 
+   d="scan'208";a="191796723"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2021 14:38:41 -0700
+X-IronPort-AV: E=Sophos;i="5.84,258,1620716400"; 
+   d="scan'208";a="501451075"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2021 14:38:41 -0700
+Date:   Wed, 21 Jul 2021 14:38:13 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Kevin Tian <kevin.tian@intel.com>,
+        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        x86@kernel.org, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [patch 1/8] PCI/MSI: Enable and mask MSIX early
+Message-ID: <20210721213813.GB676232@otc-nc-03>
+References: <20210721191126.274946280@linutronix.de>
+ <20210721192650.106154171@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210721192650.106154171@linutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dexuan,
+On Wed, Jul 21, 2021 at 09:11:27PM +0200, Thomas Gleixner wrote:
+> The ordering of MSI-X enable in hardware is disfunctional:
+> 
+>  1) MSI-X is disabled in the control register
+>  2) Various setup functions
+>  3) pci_msi_setup_msi_irqs() is invoked which ends up accessing
+>     the MSI-X table entries
+>  4) MSI-X is enabled and masked in the control register with the
+>     comment that enabling is required for some hardware to access
+>     the MSI-X table
+> 
+> #4 obviously contradicts #3. The history of this is an issue with the NIU
+> hardware. When #4 was introduced the table access actually happened in
+> msix_program_entries() which was invoked after enabling and masking MSI-X.
+> 
+> This was changed in commit d71d6432e105 ("PCI/MSI: Kill redundant call of
+> irq_set_msi_desc() for MSI-X interrupts") which removed the table write
+> from msix_program_entries().
+> 
+> Interestingly enough nobody noticed and either NIU still works or it did
+> not get any testing with a kernel 3.19 or later.
+> 
+> Nevertheless this is inconsistent and there is no reason why MSI-X can't be
+> enabled and masked in the control register early on, i.e. move #4 above to
 
-On Mon, Jul 19 2021 at 20:33, Dexuan Cui wrote:
-> This is a bare metal x86-64 host with Intel CPUs. Yes, I believe the
-> issue is in the IOMMU Interrupt Remapping mechanism rather in the
-> NIC driver. I just don't understand why bringing the CPUs online and
-> offline can work around the issue. I'm trying to dump the IOMMU IR
-> table entries to look for any error. 
+Does the above comment also apply to legacy MSI when it support per-vector
+masking capability? Probably not interesting since without IR, we only give
+1 vector to MSI. 
 
-can you please enable GENERIC_IRQ_DEBUGFS and provide the output of
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 
-cat /sys/kernel/debug/irq/irqs/$THENICIRQS
-
-Thanks,
-
-        tglx
+> #1. This preserves the NIU workaround and has no side effects on other
+> hardware.
+> 
+> Fixes: d71d6432e105 ("PCI/MSI: Kill redundant call of irq_set_msi_desc() for MSI-X interrupts")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> ---
+>  drivers/pci/msi.c |   28 +++++++++++++++-------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
+> 
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -772,18 +772,25 @@ static int msix_capability_init(struct p
+>  	u16 control;
+>  	void __iomem *base;
+>  
+> -	/* Ensure MSI-X is disabled while it is set up */
+> -	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+> +	/*
+> +	 * Some devices require MSI-X to be enabled before the MSI-X
+> +	 * registers can be accessed.  Mask all the vectors to prevent
+> +	 * interrupts coming in before they're fully set up.
+> +	 */
+> +	pci_msix_clear_and_set_ctrl(dev, 0, PCI_MSIX_FLAGS_MASKALL |
+> +				    PCI_MSIX_FLAGS_ENABLE);
+>  
+>  	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
+>  	/* Request & Map MSI-X table region */
+>  	base = msix_map_region(dev, msix_table_size(control));
+> -	if (!base)
+> -		return -ENOMEM;
+> +	if (!base) {
+> +		ret = -ENOMEM;
+> +		goto out_disable;
+> +	}
+>  
+>  	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+>  	if (ret)
+> -		return ret;
+> +		goto out_disable;
+>  
+>  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
+>  	if (ret)
+> @@ -794,14 +801,6 @@ static int msix_capability_init(struct p
+>  	if (ret)
+>  		goto out_free;
+>  
+> -	/*
+> -	 * Some devices require MSI-X to be enabled before we can touch the
+> -	 * MSI-X registers.  We need to mask all the vectors to prevent
+> -	 * interrupts coming in before they're fully set up.
+> -	 */
+> -	pci_msix_clear_and_set_ctrl(dev, 0,
+> -				PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE);
+> -
+>  	msix_program_entries(dev, entries);
+>  
+>  	ret = populate_msi_sysfs(dev);
+> @@ -836,6 +835,9 @@ static int msix_capability_init(struct p
+>  out_free:
+>  	free_msi_irqs(dev);
+>  
+> +out_disable:
+> +	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+> +
+>  	return ret;
+>  }
+>  
+> 
