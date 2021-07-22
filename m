@@ -2,153 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92DB53D1C25
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 04:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EBF83D1E00
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 08:07:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbhGVCSp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jul 2021 22:18:45 -0400
-Received: from mail-bn8nam12on2060.outbound.protection.outlook.com ([40.107.237.60]:54481
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230093AbhGVCSo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Jul 2021 22:18:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=od1uuUL3Jt28KvGrJzf2E+F5yrCowqRzvc/aWhEQZvxWDNmmJrteu2PyOfFaY4300wrv9rWcvv4R8NltEER8lh1Z9YWQYRWQ9ensNdaQe66ynUwZqOOcAVj7+Qs4bjHg1ykfM1BVgIE1my0c7VE/JJ6Y2HzdtaevGG5W0qzSKsHiKIeqtwlW0kQ3aNd2hfJZ45bNSK47vzf9KpKLlgZHA7vZ8jw4TM8e6z9aXXjtYHsLkfsR4qL8GaVNU83sAcCviAEgAHN90PbQGWhx7yZtcv0kFg0Fj36Xlb/FylfDyg3DKPTejLrHbSaVSiNxu1Jz54vKChy0d3nhFGz05X56Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J2GVBPzqojmxOUmgrz0GBFLre1kWa6IyIlJLKcqHsVM=;
- b=Jsr0E3vRdQfKuFitQ6dQU+bqAfFA/rAChJWwsNektW/AG1zXspUgc7NHZodfAbV8ePDVQfYrtueCrmJ9LF7cvXtuEoxqx4PcoRGcrcIpRN3aoo63PcpST+p3+dEAI6nXIW7qrq8MqqtOu2tZ4HJJGbnWUFA7xuqaJeJC20FFe0t20ZgzzZQU3p/RYYhewlr9yuYKe4+LwNr+swQheNNTrOYWIdvIIaI/aP7vWxyrcJkpIhSgardJLYSrqHYoPBvWMJtneo7YWwkZdLJbAC8MYqO/1PgWHP86vBoUG4R9ZW5w1G6j5j16ep1jWzKQVA1TrYv/cH55vrAvFEc77jPKdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J2GVBPzqojmxOUmgrz0GBFLre1kWa6IyIlJLKcqHsVM=;
- b=tqlOX0/sZGg6rKlYCYv6yclSoEbR8YAdZdAx/jnpAajnBp9S3Z9VqFzyTZmv2i65Et8/iuJQjFL1kft5mm0eowsZ0afQhdJEqyPPs59iEpz32hcmja6OPm8ac8Qo9mG0967uOLhJaJviq14OIdGk9OSkLOzpblnqMk7gQmNvGXs=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
- by BL1PR12MB5096.namprd12.prod.outlook.com (2603:10b6:208:316::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.25; Thu, 22 Jul
- 2021 02:59:19 +0000
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::8cb6:59d6:24d0:4dc3]) by BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::8cb6:59d6:24d0:4dc3%9]) with mapi id 15.20.4352.025; Thu, 22 Jul 2021
- 02:59:19 +0000
-From:   Alex Deucher <alexander.deucher@amd.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org
-Cc:     Marcin Bachry <hegel666@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        mario.limonciello@amd.com, prike.liang@amd.com,
-        shyam-sundar.s-k@amd.com
-Subject: [PATCH] PCI: quirks: Quirk PCI d3hot delay for AMD xhci
-Date:   Wed, 21 Jul 2021 22:58:58 -0400
-Message-Id: <20210722025858.220064-1-alexander.deucher@amd.com>
-X-Mailer: git-send-email 2.31.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0383.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::28) To BL1PR12MB5144.namprd12.prod.outlook.com
- (2603:10b6:208:316::6)
+        id S230308AbhGVF0p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 01:26:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54193 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230261AbhGVF0p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Jul 2021 01:26:45 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10052"; a="208459736"
+X-IronPort-AV: E=Sophos;i="5.84,260,1620716400"; 
+   d="scan'208";a="208459736"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2021 23:07:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,260,1620716400"; 
+   d="scan'208";a="662415659"
+Received: from lkp-server01.sh.intel.com (HELO b8b92b2878b0) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Jul 2021 23:07:20 -0700
+Received: from kbuild by b8b92b2878b0 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1m6Rrb-0000uK-DW; Thu, 22 Jul 2021 06:07:19 +0000
+Date:   Thu, 22 Jul 2021 14:06:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:review/vga] BUILD SUCCESS WITH WARNING
+ b6f0a577c4fbcc4f1e7eaf0e9a30bcfd20002b44
+Message-ID: <60f90adb.rxbx86YHocAbz6Dy%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (192.161.79.246) by BL1PR13CA0383.namprd13.prod.outlook.com (2603:10b6:208:2c0::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.11 via Frontend Transport; Thu, 22 Jul 2021 02:59:18 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 65bd516e-2c8f-44cf-4442-08d94cbcb312
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5096:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BL1PR12MB50960EB4D320817B1621607CF7E49@BL1PR12MB5096.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IEHmvEBDnsG4Crqq49TjWZ9rukjh/qVw5Xz/iWcXoouI88OGJFo6lhunTSba4coozIY4V5ZDKtoxgoY4bEmIwiSAUqdpdSfEU+v/cN0bGgUeGHfP9eD6Zzl3lCC1ZxbGJ/ev2RU8rUG4KAdzM2P9AUn4lg9AZpdB+4jySVtNC2v5ISodGTVMG1aghQBxQX+KX6MN+sfjxG37ZWX5pGr9siv5Y3pABy7WSjh5WaX9CKQnrGhdR7Ak2Mr9jdKHSBJE3Brdh03u/2Kq3jnGYgTezfACsqWiQn0fOJ8sOedGewJTJgwkvjfBnr1DiGw8X0xwWaaXLIkijEAmDgPJmbCTLxQ0oNmtITV2n9g8S6/10Q++WiF6bjJE9wRgiMMmooCh7jpSMxyFW5+EH1zvvIBZVzhIPNqJiEjbWcjaFEuMJ5uhBAdbBCF4pLuNphLRpnbK49sRGUXT0/de9lju4LJ7fwCecwGhIArAeqMH4+LS/9l+2qfY+mCePwY0M/E6Hj5Zf+uIpXHmYUqLdgaC2leJBp0CzpcQR2CLXdeR0YGos4zcWAyElZxMNiG8JstRlwwgy3JFkiwIi+kjV2D7BdVcFIY6iaO2DA35g6qv6p5NOOK37j8D7bhtviAKVmJ1FhsALgguaw3/LhFhzw7aRn77djdyH6/Nweueqq418EQOdOgXr0LXZrEFvt0EKR2b+KHVcpPUJjs4FriIR1d9evGFtX4lY9Idalsv6rTkK4Ujz+2dm2b+BqWkflOg8ZSY5iAc
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(39860400002)(376002)(346002)(2616005)(8676002)(6486002)(5660300002)(52116002)(54906003)(478600001)(8936002)(316002)(956004)(66556008)(36756003)(186003)(4326008)(38350700002)(6666004)(66476007)(38100700002)(66946007)(26005)(2906002)(86362001)(1076003)(6512007)(6506007)(83380400001)(42413003)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dc/Nzh+34TrSyUPpVB26BQmpxuSn7mBBMyVWqHjJy3HRLF8zxMVf0sv8obly?=
- =?us-ascii?Q?FLIU36uo6IxiLYRGRefiKUShCZkPud/t+TsV/BeEpBZVTP12cYYKqQCLTROi?=
- =?us-ascii?Q?8Xtnem6/iEYES86rLd4MO8KXDDY+ThETe5OgbVWQ5++9D+v4coA+3uy3eV6T?=
- =?us-ascii?Q?40j0LS7aJuiHblXNEaj7Gy3UIJ1qzvwh87qAp96Tg0dMhf60J/qzqnJPWOo0?=
- =?us-ascii?Q?BYCkLMNqW+8wWU3cNYWocmk5P6xqEm0uqXcT+HCwgKw3TPPhT4rvpXJZUYsA?=
- =?us-ascii?Q?lNjpERNK/CZgkuDziBskhNH7J+57ky5dAwnXUMGXX+VIeaZ5bBAjyssRqemM?=
- =?us-ascii?Q?+dg3Cug8zVMR1GY6hyy4YG8EIEHadFrmS5GwKs8ORtN4ICJ/P1DB/GLGE247?=
- =?us-ascii?Q?aacnOFuc2HC7siQiozUWI+h1ALKrxInazB+t6id7+vs6WWTanTk9dLD2/Rz4?=
- =?us-ascii?Q?/18qKKrQ3yE0CnaOZOtCTidVtFSAIhPpPaQPTkGRfKqynSy2gbiDrtNVHNJA?=
- =?us-ascii?Q?c3pK6yk7u9G7hW2i7bs3g84yS2HXkqBWpW8KsixwaaitPoIQCUqOJPR4OVv4?=
- =?us-ascii?Q?PTfwE7MaqqVpTePQVOjxb+InEP9P8HfxqmtZB9jXWe0v9zvXp5/U1GXyCiAF?=
- =?us-ascii?Q?1v/9rNh8CR3XtBOZfrhbQQ/2SQZc4mrRlAopM4tBF9QxDHpbozc4xEqvFu36?=
- =?us-ascii?Q?kEzssDWIf3PnQ0o0h10H9vvilk77BS+WMPIIniCu0N5b4i/9ajAvDn4zWMnL?=
- =?us-ascii?Q?pYeCrYxEGHwg3HXuX1cp0NiUn9qCvxTed5yrIVVoox9Y/2SYctGWBCtOcFZ8?=
- =?us-ascii?Q?2JRBDzQSeYoec9yM04l7Wwnt6Rs3zxBAp/V0RJzTx0PXqlsZsVeDtBkWoHYK?=
- =?us-ascii?Q?GpZcr21Qn1YqU6ewR8rokE5TOkf5kMKvsRNgTxx1+uEjrpAiFLgzpHm5WNbB?=
- =?us-ascii?Q?muZXfyfSYqb4uE7a5QIzn3nJ5D4TYJFltU2gCANqfcVn4hO8JneH041S9ygk?=
- =?us-ascii?Q?ZWc5i+REdmzYan/3hGSlYiOUQBZg9oXAimk7a6zH8Naj8iCnfrx0u6OrXrqx?=
- =?us-ascii?Q?Sm0+gwS8FNe0POyNHdocSuBJb1BJ3zGJxUHTws5ahp/Yuphu1+J0ozWNEvUq?=
- =?us-ascii?Q?QexuMvhIqTNQ4mTo5QN+Y/jlTtKFdblqOzGWPU5a0RNcHxMwplMRIMhsLjHv?=
- =?us-ascii?Q?XEgjJtLu1dilqNhzv3up859p+k+UjY0Q9co5YCN5R6c8caTEyvxJEt3MHzfB?=
- =?us-ascii?Q?XJfLe6mAxJzzKz/tnzfE282eXaMqyFQn5R155osPvo/xyO2rGP7qPjbZ4JJa?=
- =?us-ascii?Q?K7z+sp37PWEM36Y54mHgwa/P?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65bd516e-2c8f-44cf-4442-08d94cbcb312
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2021 02:59:19.3309
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1G8ka3hl6wFwMnCGLHE+hGn91MC2SXcpDoViScnTrYmciV18T+VUJ1WZKgWVigaiWwY9QZIivkW0/87EKEZHTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5096
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marcin Bachry <hegel666@gmail.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git review/vga
+branch HEAD: b6f0a577c4fbcc4f1e7eaf0e9a30bcfd20002b44  FIXME PCI/VGA: Rework default VGA device selection
 
-Renoir needs a similar delay.
+possible Warning in current branch:
 
-[Alex: I talked to the AMD USB hardware team and the
- AMD windows team and they are not aware of any HW
- errata or specific issues.  The HW works fine in
- windows.  I was told windows uses a rather generous
- default delay of 100ms for PCI state transitions.]
+drivers/pci/vgaarb.c:1045:8: warning: %d in format string (no. 6) requires 'int' but the argument type is 'unsigned int'. [invalidPrintfArgType_sint]
 
-Signed-off-by: Marcin Bachry <hegel666@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: mario.limonciello@amd.com
-Cc: prike.liang@amd.com
-Cc: shyam-sundar.s-k@amd.com
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+`-- arm-randconfig-p001-20210720
+    `-- drivers-pci-vgaarb.c:warning:d-in-format-string-(no.-)-requires-int-but-the-argument-type-is-unsigned-int-.-invalidPrintfArgType_sint
+
+elapsed time: 1884m
+
+configs tested: 163
+configs skipped: 3
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                       ebony_defconfig
+powerpc                      bamboo_defconfig
+arm                      integrator_defconfig
+arm                        multi_v7_defconfig
+powerpc                      pasemi_defconfig
+m68k                        mvme16x_defconfig
+sh                          r7785rp_defconfig
+sparc64                             defconfig
+arc                     nsimosci_hs_defconfig
+m68k                             allyesconfig
+m68k                       m5208evb_defconfig
+arm                           sama5_defconfig
+mips                       rbtx49xx_defconfig
+mips                          ath25_defconfig
+arm                       aspeed_g4_defconfig
+arm                          moxart_defconfig
+arm                           h3600_defconfig
+xtensa                    smp_lx200_defconfig
+powerpc                      tqm8xx_defconfig
+powerpc                    ge_imp3a_defconfig
+csky                             alldefconfig
+h8300                               defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                 mpc8313_rdb_defconfig
+sh                               j2_defconfig
+powerpc                       ppc64_defconfig
+mips                           jazz_defconfig
+sh                          sdk7786_defconfig
+arm                           stm32_defconfig
+arm                           viper_defconfig
+mips                        vocore2_defconfig
+sh                          rsk7201_defconfig
+arm                         bcm2835_defconfig
+powerpc                      mgcoge_defconfig
+ia64                                defconfig
+riscv                            alldefconfig
+microblaze                          defconfig
+mips                         tb0287_defconfig
+sh                            titan_defconfig
+arc                        nsim_700_defconfig
+riscv                          rv32_defconfig
+powerpc                  mpc866_ads_defconfig
+mips                     loongson2k_defconfig
+sh                ecovec24-romimage_defconfig
+arm                          ep93xx_defconfig
+powerpc                         wii_defconfig
+sh                           se7343_defconfig
+mips                  cavium_octeon_defconfig
+powerpc                      chrp32_defconfig
+powerpc                       holly_defconfig
+powerpc                      katmai_defconfig
+mips                         mpc30x_defconfig
+m68k                        m5407c3_defconfig
+arm                        realview_defconfig
+arm                            dove_defconfig
+arm                  colibri_pxa270_defconfig
+openrisc                 simple_smp_defconfig
+mips                     cu1830-neo_defconfig
+sh                          rsk7203_defconfig
+xtensa                    xip_kc705_defconfig
+mips                         db1xxx_defconfig
+arm                           sunxi_defconfig
+mips                           ip28_defconfig
+arm64                            alldefconfig
+mips                     cu1000-neo_defconfig
+riscv                    nommu_virt_defconfig
+mips                 decstation_r4k_defconfig
+xtensa                  nommu_kc705_defconfig
+arm                            pleb_defconfig
+arm                           omap1_defconfig
+xtensa                       common_defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+x86_64                            allnoconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20210720
+x86_64               randconfig-a006-20210720
+x86_64               randconfig-a001-20210720
+x86_64               randconfig-a005-20210720
+x86_64               randconfig-a004-20210720
+x86_64               randconfig-a002-20210720
+i386                 randconfig-a005-20210719
+i386                 randconfig-a004-20210719
+i386                 randconfig-a006-20210719
+i386                 randconfig-a001-20210719
+i386                 randconfig-a003-20210719
+i386                 randconfig-a002-20210719
+i386                 randconfig-a005-20210720
+i386                 randconfig-a003-20210720
+i386                 randconfig-a004-20210720
+i386                 randconfig-a002-20210720
+i386                 randconfig-a001-20210720
+i386                 randconfig-a006-20210720
+i386                 randconfig-a005-20210722
+i386                 randconfig-a003-20210722
+i386                 randconfig-a004-20210722
+i386                 randconfig-a002-20210722
+i386                 randconfig-a001-20210722
+i386                 randconfig-a006-20210722
+i386                 randconfig-a016-20210720
+i386                 randconfig-a013-20210720
+i386                 randconfig-a012-20210720
+i386                 randconfig-a014-20210720
+i386                 randconfig-a011-20210720
+i386                 randconfig-a015-20210720
+i386                 randconfig-a016-20210721
+i386                 randconfig-a013-20210721
+i386                 randconfig-a012-20210721
+i386                 randconfig-a014-20210721
+i386                 randconfig-a011-20210721
+i386                 randconfig-a015-20210721
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                    nommu_k210_defconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-b001-20210720
+x86_64               randconfig-a003-20210721
+x86_64               randconfig-a006-20210721
+x86_64               randconfig-a001-20210721
+x86_64               randconfig-a005-20210721
+x86_64               randconfig-a004-20210721
+x86_64               randconfig-a002-20210721
+
 ---
-
-Bjorn,
-
-With the above comment in mind, would you consider this patch
-or would you prefer to increase the default timeout on Linux?
-100ms seems a bit long and most devices seems to work within
-that limit.  Additionally, this patch doesn't seem to be
-required on all AMD platforms with the affected USB controller,
-so I suspect the current timeout on Linux is probably about
-right.  Increasing it seems to fix some of the marginal cases.
-
-Alex
-
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 22b2bb1109c9..dea10d62d5b9 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1899,6 +1899,7 @@ static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1639, quirk_ryzen_xhci_d3hot);
- 
- #ifdef CONFIG_X86_IO_APIC
- static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
--- 
-2.31.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
